@@ -1344,7 +1344,7 @@
         case cff_op_vvcurveto:
           FT_TRACE4(( " vvcurveto" ));
 
-          if ( cff_builder_start_point ( builder, x, y ) )
+          if ( cff_builder_start_point( builder, x, y ) )
             goto Memory_Error;
 
           args = stack;
@@ -1378,7 +1378,7 @@
         case cff_op_hhcurveto:
           FT_TRACE4(( " hhcurveto" ));
 
-          if ( cff_builder_start_point ( builder, x, y ) )
+          if ( cff_builder_start_point( builder, x, y ) )
             goto Memory_Error;
 
           args = stack;
@@ -1418,7 +1418,7 @@
             FT_TRACE4(( op == cff_op_vhcurveto ? " vhcurveto"
                                                : " hvcurveto" ));
 
-            if ( cff_builder_start_point ( builder, x, y ) )
+            if ( cff_builder_start_point( builder, x, y ) )
               goto Memory_Error;
 
             args = stack;
@@ -1608,7 +1608,7 @@
 
             /* adding six more points; 4 control points, 2 on-curve points */
             if ( cff_builder_start_point( builder, x, y ) ||
-                 check_points ( builder, 6 )              )
+                 check_points( builder, 6 )               )
               goto Memory_Error;
 
             /* record the starting point's y-position for later use */
@@ -1661,7 +1661,7 @@
             /* adding six more points; 4 control points, 2 on-curve points */
             if ( cff_builder_start_point( builder, x, y ) ||
                  check_points( builder, 6 )               )
-               goto Memory_Error;
+              goto Memory_Error;
 
             /* record the starting point's x, y postion for later use */
             start_x = x;
