@@ -159,6 +159,7 @@
 
     T1_Vector     left_bearing;
     T1_Vector     advance;
+    T1_Bool       no_recurse;
 
     T1_BBox       bbox;          /* bounding box */
     T1_Bool       path_begun;

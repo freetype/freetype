@@ -107,6 +107,7 @@
     T1_BBox       bbox;          /* bounding box */
     T1_Bool       path_begun;
     T1_Bool       load_points;
+    T1_Bool       no_recurse;
     
     T1_Error      error;         /* only used for memory errors */
     T1_Bool       metrics_only;

@@ -255,7 +255,7 @@
     cur->n_points   = 0;
     cur->n_contours = 0;
     cur->points     = base->points   + base->n_points;
-    cur->tags      = base->tags    + base->n_points;
+    cur->tags       = base->tags     + base->n_points;
     cur->contours   = base->contours + base->n_contours;
 
     error = T1_Parse_CharStrings( decoder,
@@ -268,48 +268,88 @@
 
     n_base_points   = cur->n_points;
 
-    /* save the left bearing and width of the base character */
-    /* as they will be erased by the next load..             */
-    left_bearing = decoder->builder.left_bearing;
-    advance      = decoder->builder.advance;
-
-    decoder->builder.left_bearing.x = 0;
-    decoder->builder.left_bearing.y = 0;    
-
-    /* Now load "achar" on top of */
-    /* the base outline           */
-    /*                            */ 
-    cur->n_points   = 0;
-    cur->n_contours = 0;
-    cur->points     = base->points   + base->n_points;
-    cur->tags      = base->tags    + base->n_points;
-    cur->contours   = base->contours + base->n_contours;
-
-    error = T1_Parse_CharStrings( decoder,
-                                  type1->charstrings    [achar_index],
-                                  type1->charstrings_len[achar_index],
-                                  type1->num_subrs,
-                                  type1->subrs,
-                                  type1->subrs_len );
-    if (error) return error;
-
-    /* adjust contours in accented character outline */
+    if ( decoder->builder.no_recurse )
     {
-      T1_Int  n;
+      /* if we're trying to load a composite glyph, do not load the */
+      /* accent character and return the array of subglyphs..       */
+      FT_GlyphSlot  glyph = (FT_GlyphSlot)decoder->builder.glyph;
+      FT_SubGlyph*  subg;
 
-      for ( n = 0; n < cur->n_contours; n++ )
-        cur->contours[n] += n_base_points;
+      /* reallocate subglyph array if necessary */        
+      if (glyph->max_subglyphs < 2)
+      {
+        FT_Memory  memory = decoder->builder.face->root.memory;
+        
+        if ( REALLOC_ARRAY( glyph->subglyphs, glyph->max_subglyphs,
+                            2, FT_SubGlyph ) )
+          return error;
+          
+        glyph->max_subglyphs = 2;
+      }
+
+      subg = glyph->subglyphs;
+      
+      /* subglyph 0 = base character */
+      subg->index = bchar_index;
+      subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES |
+                    FT_SUBGLYPH_FLAG_USE_MY_METRICS;
+      subg->arg1  = 0;
+      subg->arg2  = 0;
+      subg++;
+      
+      /* subglyph 1 = accent character */
+      subg->index = achar_index;
+      subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES;
+      subg->arg1  = adx - asb;
+      subg->arg2  = ady;
+
+      /* set up remaining glyph fields */
+      glyph->num_subglyphs = 2;
+      glyph->format        = ft_glyph_format_composite;
     }
-
-    /* restore the left side bearing and   */
-    /* advance width of the base character */
-    decoder->builder.left_bearing = left_bearing;
-    decoder->builder.advance      = advance;
-
-    /* Finally, move the accent */
-    FT_Outline_Translate( cur, adx - asb, ady );
-    
-    (void)asb;           /* ignore this parameter */
+    else
+    {
+      /* save the left bearing and width of the base character */
+      /* as they will be erased by the next load..             */
+      left_bearing = decoder->builder.left_bearing;
+      advance      = decoder->builder.advance;
+  
+      decoder->builder.left_bearing.x = 0;
+      decoder->builder.left_bearing.y = 0;    
+  
+      /* Now load "achar" on top of */
+      /* the base outline           */
+      /*                            */ 
+      cur->n_points   = 0;
+      cur->n_contours = 0;
+      cur->points     = base->points   + base->n_points;
+      cur->tags       = base->tags     + base->n_points;
+      cur->contours   = base->contours + base->n_contours;
+  
+      error = T1_Parse_CharStrings( decoder,
+                                    type1->charstrings    [achar_index],
+                                    type1->charstrings_len[achar_index],
+                                    type1->num_subrs,
+                                    type1->subrs,
+                                    type1->subrs_len );
+      if (error) return error;
+  
+      /* adjust contours in accented character outline */
+      {
+        T1_Int  n;
+  
+        for ( n = 0; n < cur->n_contours; n++ )
+          cur->contours[n] += n_base_points;
+      }
+  
+      /* restore the left side bearing and   */
+      /* advance width of the base character */
+      decoder->builder.left_bearing = left_bearing;
+      decoder->builder.advance      = advance;
+  
+      /* Finally, move the accent */
+      FT_Outline_Translate( cur, adx - asb, ady );
+    }
     return T1_Err_Ok;
   }
 
@@ -1416,6 +1456,9 @@
     T1_Bool         hinting;
     T1_Font*        type1 = &face->type1;
 
+    if (load_flags & FT_LOAD_NO_RECURSE)
+      load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
+
     glyph->x_scale = size->root.metrics.x_scale;
     glyph->y_scale = size->root.metrics.y_scale;
 
@@ -1470,6 +1513,7 @@
                        &gload_builder_interface );
 
       decoder.builder.pass = 1;
+      decoder.builder.no_recurse = 0;
 
       error = T1_Parse_CharStrings( &decoder,
                                     type1->charstrings    [glyph_index],
@@ -1483,11 +1527,14 @@
     }
     else
 #endif
+
     {
       T1_Init_Decoder( &decoder, &gload_hinter_interface );
 
       T1_Init_Builder( &decoder.builder, face, size, glyph,
                        &gload_builder_interface );
+  
+      decoder.builder.no_recurse = !!(load_flags & FT_LOAD_NO_RECURSE);
   
       /* now load the unscaled outline */
       error = T1_Parse_CharStrings( &decoder,
@@ -1507,82 +1554,92 @@
     /* bearing the yMax..                                   */
     if (!error)
     {
-      FT_BBox           cbox;
-      FT_Glyph_Metrics* metrics = &glyph->root.metrics;
-
-      FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
-
-      /* grid fit the bounding box if necessary */
-      if (hinting)
+      /* for composite glyphs, return only the left side bearing and the */
+      /* advance width..                                                 */
+      if ( load_flags & FT_LOAD_NO_RECURSE )
       {
-        cbox.xMin &= -64;
-        cbox.yMin &= -64;
-        cbox.xMax = ( cbox.xMax+63 ) & -64;
-        cbox.yMax = ( cbox.yMax+63 ) & -64;
+        glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
+        glyph->root.metrics.horiAdvance  = decoder.builder.advance.x;
       }
-
-      metrics->width  = cbox.xMax - cbox.xMin;
-      metrics->height = cbox.yMax - cbox.yMin;
-
-      metrics->horiBearingX = cbox.xMin;
-      metrics->horiBearingY = cbox.yMax;
-
-      /* copy the _unscaled_ advance width */
-      metrics->horiAdvance  = decoder.builder.advance.x;
-
-      /* make up vertical metrics */
-      metrics->vertBearingX = 0;
-      metrics->vertBearingY = 0;
-      metrics->vertAdvance  = 0;
-
-      glyph->root.format = ft_glyph_format_outline;
-
-      glyph->root.outline.flags &= ft_outline_owner;
-      
-      if ( size->root.metrics.y_ppem < 24 )
-        glyph->root.outline.flags |= ft_outline_high_precision;
-      
-      /*
-      glyph->root.outline.second_pass    = TRUE;
-      glyph->root.outline.high_precision = ( size->root.metrics.y_ppem < 24 );
-      glyph->root.outline.dropout_mode   = 2;
-      */
-
-      if ( hinting )
+      else
       {
-        /* adjust the advance width                  */
-        /* XXX : TODO : consider stem hints grid-fit */
-        metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,
-                                           glyph->x_scale );
-      }
-      else if ( (load_flags & FT_LOAD_NO_SCALE) == 0 )
-      {
-        /* scale the outline and the metrics */
-        T1_Int       n;
-        FT_Outline*  cur = &decoder.builder.base;
-        T1_Vector*   vec = cur->points;
-        T1_Fixed     x_scale = glyph->x_scale;
-        T1_Fixed     y_scale = glyph->y_scale;
-
-        /* First of all, scale the points */
-        for ( n = cur->n_points; n > 0; n--, vec++ )
+        FT_BBox           cbox;
+        FT_Glyph_Metrics* metrics = &glyph->root.metrics;
+  
+        FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
+  
+        /* grid fit the bounding box if necessary */
+        if (hinting)
         {
-          vec->x = FT_MulFix( vec->x, x_scale );
-          vec->y = FT_MulFix( vec->y, y_scale );
+          cbox.xMin &= -64;
+          cbox.yMin &= -64;
+          cbox.xMax = ( cbox.xMax+63 ) & -64;
+          cbox.yMax = ( cbox.yMax+63 ) & -64;
         }
-
-        /* Then scale the metrics */
-        metrics->width  = FT_MulFix( metrics->width,  x_scale );
-        metrics->height = FT_MulFix( metrics->height, y_scale );
-
-        metrics->horiBearingX = FT_MulFix( metrics->horiBearingX, x_scale );
-        metrics->horiBearingY = FT_MulFix( metrics->horiBearingY, y_scale );
-        metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
-
-        metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
-        metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
-        metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  x_scale );
-
+  
+        metrics->width  = cbox.xMax - cbox.xMin;
+        metrics->height = cbox.yMax - cbox.yMin;
+  
+        metrics->horiBearingX = cbox.xMin;
+        metrics->horiBearingY = cbox.yMax;
+  
+        /* copy the _unscaled_ advance width */
+        metrics->horiAdvance  = decoder.builder.advance.x;
+  
+        /* make up vertical metrics */
+        metrics->vertBearingX = 0;
+        metrics->vertBearingY = 0;
+        metrics->vertAdvance  = 0;
+  
+        glyph->root.format = ft_glyph_format_outline;
+  
+        glyph->root.outline.flags &= ft_outline_owner;
+        
+        if ( size->root.metrics.y_ppem < 24 )
+          glyph->root.outline.flags |= ft_outline_high_precision;
+        
+        /*
+        glyph->root.outline.second_pass    = TRUE;
+        glyph->root.outline.high_precision = ( size->root.metrics.y_ppem < 24 );
+        glyph->root.outline.dropout_mode   = 2;
+        */
+  
+        if ( hinting )
+        {
+          /* adjust the advance width                  */
+          /* XXX : TODO : consider stem hints grid-fit */
+          metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,
+                                             glyph->x_scale );
+        }
+        else if ( (load_flags & FT_LOAD_NO_SCALE) == 0 )
+        {
+          /* scale the outline and the metrics */
+          T1_Int       n;
+          FT_Outline*  cur = &decoder.builder.base;
+          T1_Vector*   vec = cur->points;
+          T1_Fixed     x_scale = glyph->x_scale;
+          T1_Fixed     y_scale = glyph->y_scale;
+  
+          /* First of all, scale the points */
+          for ( n = cur->n_points; n > 0; n--, vec++ )
+          {
+            vec->x = FT_MulFix( vec->x, x_scale );
+            vec->y = FT_MulFix( vec->y, y_scale );
+          }
+  
+          /* Then scale the metrics */
+          metrics->width  = FT_MulFix( metrics->width,  x_scale );
+          metrics->height = FT_MulFix( metrics->height, y_scale );
+  
+          metrics->horiBearingX = FT_MulFix( metrics->horiBearingX, x_scale );
+          metrics->horiBearingY = FT_MulFix( metrics->horiBearingY, y_scale );
+          metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
+  
+          metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
+          metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
+          metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  x_scale );
+  
+        }
       }
     }
 

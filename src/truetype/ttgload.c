@@ -474,7 +474,7 @@
     TT_ULong     ins_offset;
     
     /* check glyph index */
-    index = (TT_UInt)glyph_index;
+    index = glyph_index;
     if ( index >= (TT_UInt)face->root.num_glyphs )
     {
       error = TT_Err_Invalid_Glyph_Index;
@@ -698,9 +698,39 @@
         /* composite instructions, if we find some ..             */
         /* we will process them later..                           */
         ins_offset = FILE_Pos() + stream->cursor - stream->limit;
-        FORGET_Frame();
       }
 #endif
+      FORGET_Frame();
+
+      /* if the flag FT_LOAD_NO_RECURSE is set, we return the subglyph */
+      /* "as is" in the glyph slot (the client application will be     */
+      /* responsible for interpreting this data..)                     */
+      if ( loader->load_flags & FT_LOAD_NO_RECURSE )
+      {
+        FT_GlyphSlot  glyph = loader->glyph;
+
+        /* reallocate subglyph array if necessary */        
+        if (glyph->max_subglyphs < num_subglyphs)
+        {
+          FT_Memory  memory = loader->face->root.memory;
+          
+          if ( REALLOC_ARRAY( glyph->subglyphs, glyph->max_subglyphs,
+                              num_subglyphs, FT_SubGlyph ) )
+            goto Fail;
+            
+          glyph->max_subglyphs = num_subglyphs;
+        }
+
+        /* copy subglyph array */
+        MEM_Copy( glyph->subglyphs, subglyphs,
+                  num_subglyphs*sizeof(FT_SubGlyph));
+                  
+        /* set up remaining glyph fields */
+        glyph->num_subglyphs = num_subglyphs;
+        glyph->format        = ft_glyph_format_composite;
+        goto Load_End;
+      }
+
 
     /*************************************************************************/
     /*************************************************************************/
@@ -954,6 +984,7 @@
       y_scale = size->root.metrics.y_scale;
     }
     
+    if ( glyph->format != ft_glyph_format_composite )
     {
       TT_UInt  u;
       for ( u = 0; u < num_points + 2; u++ )
@@ -964,30 +995,31 @@
 
       for ( u = 0; u < num_contours; u++ )
         glyph->outline.contours[u] = loader->base.contours[u];
+
+      /* glyph->outline.second_pass = TRUE; */
+      glyph->outline.flags      &= ~ft_outline_single_pass;
+      glyph->outline.n_points    = num_points;
+      glyph->outline.n_contours  = num_contours;
+  
+      /* translate array so that (0,0) is the glyph's origin */
+      translate_array( (TT_UShort)(num_points + 2),
+                       glyph->outline.points,
+                       -loader->pp1.x,
+                       0 );
+  
+      FT_Outline_Get_CBox( &glyph->outline, &bbox );
+
+      if ( IS_HINTED(loader->load_flags) )
+      {
+        /* grid-fit the bounding box */
+        bbox.xMin &= -64;
+        bbox.yMin &= -64;
+        bbox.xMax  = (bbox.xMax + 63) & -64;
+        bbox.yMax  = (bbox.yMax + 63) & -64;
+      }
     }
-
-    glyph->outline.n_points    = num_points;
-    glyph->outline.n_contours  = num_contours;
-    
-    /* glyph->outline.second_pass = TRUE; */
-    glyph->outline.flags &= ~ft_outline_single_pass;
-
-    /* translate array so that (0,0) is the glyph's origin */
-    translate_array( (TT_UShort)(num_points + 2),
-                     glyph->outline.points,
-                     -loader->pp1.x,
-                     0 );
-
-    FT_Outline_Get_CBox( &glyph->outline, &bbox );
-
-    if ( IS_HINTED(loader->load_flags) )
-    {
-      /* grid-fit the bounding box */
-      bbox.xMin &= -64;
-      bbox.yMin &= -64;
-      bbox.xMax  = (bbox.xMax + 63) & -64;
-      bbox.yMax  = (bbox.yMax + 63) & -64;
-    }
+    else
+      bbox = loader->bbox;
 
     /* get the device-independent scaled horizontal metrics */
     /* take care of fixed-pitch fonts...                    */
@@ -1141,7 +1173,6 @@
     glyph->metrics.width  = bbox.xMax - bbox.xMin;
     glyph->metrics.height = bbox.yMax - bbox.yMin;
 
-    glyph->format = ft_glyph_format_outline;
   }
 
 
@@ -1174,14 +1205,17 @@
     stream = face->root.stream;
     memory = face->root.memory;
     error  = 0;
-    
-    if ( !size || (load_flags & FT_LOAD_NO_SCALE) )
+
+    if ( !size || (load_flags & FT_LOAD_NO_SCALE)  ||
+                  (load_flags & FT_LOAD_NO_RECURSE ))
     {
       size        = NULL;
       load_flags |= FT_LOAD_NO_SCALE   |
                     FT_LOAD_NO_HINTING |
                     FT_LOAD_NO_BITMAP;
     }
+
+    glyph->num_subglyphs = 0;
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     /*********************************************************************/
@@ -1245,6 +1279,9 @@
       goto Exit;
     }
     loader.base = *zone;
+    
+    loader.zone.n_points   = 0;
+    loader.zone.n_contours = 0;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     if ( size )
@@ -1289,6 +1326,7 @@
 #endif
 
     /* Main loading loop */
+    glyph->format = ft_glyph_format_outline;
     error = load_truetype_glyph( &loader, glyph_index );
     if (!error)
       compute_glyph_metrics( &loader, glyph_index );
@@ -1301,30 +1339,6 @@
   Exit:
     return error;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
