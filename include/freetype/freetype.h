@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType high-level API and common types (specification only).       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -2652,13 +2652,13 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Retrieves the ASCII Postscript name of a given face, if available. */
-  /*    This should only work with Postscript and TrueType fonts.          */
+  /*    This only works with Postscript and TrueType fonts.                */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face :: A handle to the source face object.                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    A pointer to the face's Postscript name.  NULL if un-available.    */
+  /*    A pointer to the face's Postscript name.  NULL if unavailable.     */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The returned pointer is owned by the face and will be destroyed    */

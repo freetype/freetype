@@ -1,9 +1,10 @@
 2005-03-06  David Turner  <david@freetype.org>
 
-  * src/otvalid/{otvgsub.c, otvgpos.c}: making static tables constant
+	* src/otvalid/otvgsub.c, src/otvalid/otvgpos.c: Make static tables
+	constant.
 
-  * src/autofit/aflatin.c (af_latin_metrics_init): fixing bug #12212
-  (auto-hinter refuses to work if no Unicode charmap in font)
+	* src/autofit/aflatin.c (af_latin_metrics_init): Fix Savannah bug
+	#12212 (auto-hinter refuses to work if no Unicode charmap in font).
 
 2005-03-05  Werner Lemberg  <wl@gnu.org>
 

@@ -377,7 +377,7 @@
   af_latin_metrics_init( AF_LatinMetrics  metrics,
                          FT_Face          face )
   {
-    FT_Error    error = 0;
+    FT_Error    error = FT_Err_Ok;
     FT_CharMap  oldmap = face->charmap;
     FT_UInt     ee;
 
@@ -397,7 +397,7 @@
     for ( ee = 0; latin_encodings[ee] != FT_ENCODING_NONE; ee++ )
     {
       error = FT_Select_Charmap( face, latin_encodings[ee] );
-      if (!error)
+      if ( !error )
         break;
     }
 
@@ -408,7 +408,7 @@
     }
 
     FT_Set_Charmap( face, oldmap );
-    return 0;
+    return FT_Err_Ok;
   }
 
 
