@@ -1,3 +1,9 @@
+2004-05-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffgload.h (CFF_Builder): Remove `error'
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Replace
+	`Memory_Error' with `Fail' und update all users.
+
 2004-05-11  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/psaux.h (T1_ParseState): New
