@@ -188,7 +188,16 @@
   BASE_FUNC
   void  FT_Forget_Frame( FT_Stream  stream )
   {
-    FT_Assert( stream && stream->cursor != 0 );
+    /* IMPORTANT: The assertion stream->cursor != 0 was removed, given    */
+    /*            that it is possible to access a frame of length 0 in    */
+    /*            some weird fonts (usually, when accessing an array of   */
+    /*            0 records, like in some strange kern tables)..          */
+    /*                                                                    */
+    /*  In this case, the loader code handles the 0-length table          */
+    /*  gracefully, however, stream.cursor is really set to 0 by the      */
+    /*  FT_Access_Frame call, and this is not an error..                  */
+    /*                                                                    */
+    FT_Assert( stream );
 
     if (stream->read)
     {
@@ -206,7 +215,7 @@
   {
     FT_Char  result;
 
-    FT_Assert( stream && stream->cursor && stream->cursor );
+    FT_Assert( stream && stream->cursor );
 
     result = 0;
     if (stream->cursor < stream->limit)
