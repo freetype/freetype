@@ -62,15 +62,20 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_STREAM_H
+
+#ifdef __GNUC__
+#include "../truetype/ttobjs.h"
+#include "../type1/t1objs.h"
+#include <Carbon/Carbon.h>
+#else
 #include "truetype/ttobjs.h"
 #include "type1/t1objs.h"
-
 #include <Resources.h>
 #include <Fonts.h>
 #include <Errors.h>
 #include <Files.h>
 #include <TextUtils.h>
-
+#endif
 
 #include FT_MAC_H
 
