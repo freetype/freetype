@@ -2375,8 +2375,10 @@
     if ( !memory )
       return FT_Err_Invalid_Argument;
 
+#ifdef FT_DEBUG_LEVEL_ERROR
     /* init debugging support */
     ft_debug_init();
+#endif
 
     /* first of all, allocate the library object */
     if ( FT_NEW( library ) )
