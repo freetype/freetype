@@ -1,3 +1,10 @@
+2003-08-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1gload.c (T1_Load_Glyph), src/cff/cffgload.c
+	(cff_slot_load), src/cid/cidgload.c (cid_slot_load_glyph): Apply
+	font matrix to advance also.
+	* docs/CHANGES: Updated.
+
 2003-07-26  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.ac (version_info): Set to 9:4:3.

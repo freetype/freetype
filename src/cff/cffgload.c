@@ -2411,6 +2411,7 @@
       {
         FT_BBox            cbox;
         FT_Glyph_Metrics*  metrics = &glyph->root.metrics;
+        FT_Vector          advance;
 
 
         /* copy the _unscaled_ advance width */
@@ -2439,6 +2440,14 @@
         FT_Outline_Translate( &glyph->root.outline,
                               font_offset.x,
                               font_offset.y );
+
+        advance.x = metrics->horiAdvance;
+        advance.y = metrics->vertAdvance;
+        FT_Vector_Transform( &advance, &font_matrix );
+        advance.x += font_offset.x;
+        advance.y += font_offset.y;
+        metrics->horiAdvance = advance.x;
+        metrics->vertAdvance = advance.y;
 
         if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
         {
