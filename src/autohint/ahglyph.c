@@ -996,8 +996,8 @@
       /* we do this by inserting fake segments when needed            */
       if ( dimension == 0 )
       {
-        AH_Point  point       =  outline->points;
-        AH_Point  point_limit =  point + outline->num_points;
+        AH_Point  point       = outline->points;
+        AH_Point  point_limit = point + outline->num_points;
 
         FT_Pos    min_pos =  32000;
         FT_Pos    max_pos = -32000;
@@ -1067,6 +1067,7 @@
       segments       = outline->vert_segments;
       major_dir      = AH_DIR_UP;
       p_num_segments = &outline->num_vsegments;
+
       ah_setup_uv( outline, AH_UV_FXY );
     }
   }
@@ -1485,7 +1486,7 @@
           edge->dir = up_dir;
 
         else if ( ups < downs )
-          edge->dir = - up_dir;
+          edge->dir = -up_dir;
 
         else if ( ups == downs )
           edge->dir = 0;  /* both up and down! */
@@ -1579,7 +1580,7 @@
         return;
     }
 
-    /* compute for each horizontal edge, which blue zone is closer */
+    /* for each horizontal edge search the blue zone which is closest */
     for ( ; edge < edge_limit; edge++ )
     {
       AH_Blue  blue;

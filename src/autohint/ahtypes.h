@@ -78,16 +78,6 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* If this option is defined, only weak interpolation will be used to    */
-  /* place the points between edges.  Otherwise, `strong' points are       */
-  /* detected and later hinted through strong interpolation to correct     */
-  /* some unpleasant artefacts.                                            */
-  /*                                                                       */
-#undef AH_OPTION_NO_STRONG_INTERPOLATION
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* Undefine this macro if you don't want to hint the metrics.  There is  */
   /* no reason to do this (at least for non-CJK scripts), except for       */
   /* experimentation.                                                      */
