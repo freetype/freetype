@@ -49,6 +49,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Order>                                                               */
   /*    FT_Byte                                                            */
+  /*    FT_Bytes                                                           */
   /*    FT_Char                                                            */
   /*    FT_Int                                                             */
   /*    FT_UInt                                                            */
@@ -60,6 +61,7 @@ FT_BEGIN_HEADER
   /*    FT_Offset                                                          */
   /*    FT_PtrDist                                                         */
   /*    FT_String                                                          */
+  /*    FT_Tag                                                             */
   /*    FT_Error                                                           */
   /*    FT_Fixed                                                           */
   /*    FT_Pointer                                                         */
@@ -146,6 +148,28 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
+  /*    FT_Bytes                                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A typedef for constant memory areas.                               */
+  /*                                                                       */
+  typedef const FT_Byte*  FT_Bytes;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_Tag                                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A typedef for 32bit tags (as used in the SFNT format).             */
+  /*                                                                       */
+  typedef FT_UInt32  FT_Tag;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
   /*    FT_String                                                          */
   /*                                                                       */
   /* <Description>                                                         */
@@ -184,7 +208,7 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    A typedef for the int type.                                        */
   /*                                                                       */
-  typedef int  FT_Int;
+  typedef signed int  FT_Int;
 
 
   /*************************************************************************/

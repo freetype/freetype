@@ -1,3 +1,11 @@
+2004-08-30  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/tttags.h (TTAG_BASE, TTAG_GDEF, TTAG_GPOS,
+	TTAG_JSTF): New tags.
+
+	* include/freetype/fttypes.h (FT_Bytes, FT_Tag): New typedefs.
+	(FT_Int): Add `signed'.
+
 2004-08-29  Werner Lemberg  <wl@gnu.org>
 
 	* src/otlayout/otlgpos.c (otl_gpos_subtable_validate): Add argument
