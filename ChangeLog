@@ -1,3 +1,15 @@
+2004-01-14  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/ftmemory.h,
+        src/autohint/ahhint.c, src/base/ftgloadr.c,
+        src/base/ftglyph.c, src/base/ftoutln.c,
+        src/base/ftstroke.c, src/cff/cffload.c, src/truetype/ttgload.c,
+        src/truetype/ttinterp.c:
+
+          introducing the new FT_ARRAY_COPY and FT_ARRAY_MOVE macros
+          to make copying arrays easier
+
+
 2004-01-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffload.c (cff_font_load): Load charstrings_index earlier.
@@ -19,7 +31,7 @@
 	(cff_get_cmap_info): New function.
 	(cff_service_get_cmap_info) New entry for cff_services.
 
-	* src/sfnt/ttcmap0.c: Exit loop after a format match has been found. 
+	* src/sfnt/ttcmap0.c: Exit loop after a format match has been found.
 	Suggested by Steve Hartwell <shspamsink@comcast.net>.
 
 2004-01-03  Masatake YAMATO  <jet@gyve.org>

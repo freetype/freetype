@@ -4106,9 +4106,9 @@
 
     K = CUR.stack[CUR.args - L];
 
-    FT_MEM_MOVE( &CUR.stack[CUR.args - L    ],
-                 &CUR.stack[CUR.args - L + 1],
-                 ( L - 1 ) * sizeof ( FT_Long ) );
+    FT_ARRAY_MOVE( &CUR.stack[CUR.args - L    ],
+                   &CUR.stack[CUR.args - L + 1],
+                   ( L - 1 ) );
 
     CUR.stack[CUR.args - 1] = K;
   }

@@ -253,14 +253,14 @@
       goto Exit;
 
     /* copy it */
-    FT_MEM_COPY( target->points, source->points,
-                 source->n_points * sizeof ( FT_Vector ) );
+    FT_ARRAY_COPY( target->points, source->points,
+                   source->n_points );
 
-    FT_MEM_COPY( target->tags, source->tags,
-                 source->n_points * sizeof ( FT_Byte ) );
+    FT_ARRAY_COPY( target->tags, source->tags,
+                   source->n_points );
 
-    FT_MEM_COPY( target->contours, source->contours,
-                 source->n_contours * sizeof ( FT_Short ) );
+    FT_ARRAY_COPY( target->contours, source->contours,
+                   source->n_contours );
 
     /* copy all flags, except the `FT_OUTLINE_OWNER' one */
     target->flags = source->flags | FT_OUTLINE_OWNER;
