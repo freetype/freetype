@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <cache/ftlru.h>
+#include <freetype/cache/ftlru.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftlist.h>
 
