@@ -151,9 +151,9 @@
 #endif /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
 
-  static
-  FT_Error  Load_Format_20( TT_Face    face,
-                            FT_Stream  stream )
+  static FT_Error
+  Load_Format_20( TT_Face    face,
+                  FT_Stream  stream )
   {
     FT_Memory  memory = stream->memory;
     FT_Error   error;
@@ -270,9 +270,9 @@
   }
 
 
-  static
-  FT_Error  Load_Format_25( TT_Face    face,
-                            FT_Stream  stream )
+  static FT_Error
+  Load_Format_25( TT_Face    face,
+                  FT_Stream  stream )
   {
     FT_Memory  memory = stream->memory;
     FT_Error   error;
@@ -333,8 +333,8 @@
   }
 
 
-  static
-  FT_Error  Load_Post_Names( TT_Face  face )
+  static FT_Error
+  Load_Post_Names( TT_Face  face )
   {
     FT_Stream  stream;
     FT_Error   error;
@@ -377,8 +377,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  TT_Free_Post_Names( TT_Face  face )
+  FT_LOCAL_DEF void
+  TT_Free_Post_Names( TT_Face  face )
   {
     FT_Memory       memory = face->root.memory;
     TT_Post_Names*  names  = &face->postscript_names;
@@ -441,10 +441,10 @@
   /* <Output>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Get_PS_Name( TT_Face      face,
-                            FT_UInt      index,
-                            FT_String**  PSname )
+  FT_LOCAL_DEF FT_Error
+  TT_Get_PS_Name( TT_Face      face,
+                  FT_UInt      index,
+                  FT_String**  PSname )
   {
     FT_Error            error;
     TT_Post_Names*      names;

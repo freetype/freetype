@@ -34,17 +34,22 @@
 #define FT_COMPONENT  trace_ttcmap
 
 
-  FT_CALLBACK_DEF(FT_UInt)   code_to_index0( TT_CMapTable*  charmap,
-                                             FT_ULong       char_code );
+  FT_CALLBACK_DEF( FT_UInt )
+  code_to_index0( TT_CMapTable*  charmap,
+                  FT_ULong       char_code );
                                              
-  FT_CALLBACK_DEF(FT_UInt)   code_to_index2( TT_CMapTable*  charmap,
-                                             FT_ULong       char_code );
+  FT_CALLBACK_DEF( FT_UInt )
+  code_to_index2( TT_CMapTable*  charmap,
+                  FT_ULong       char_code );
 
-  FT_CALLBACK_DEF(FT_UInt)   code_to_index4( TT_CMapTable*  charmap,
-                                             FT_ULong       char_code );
+  FT_CALLBACK_DEF( FT_UInt )
+  code_to_index4( TT_CMapTable*  charmap,
+                  FT_ULong       char_code );
 
-  FT_CALLBACK_DEF(FT_UInt)   code_to_index6( TT_CMapTable*  charmap,
-                                             FT_ULong       char_code );
+  FT_CALLBACK_DEF( FT_UInt )
+  code_to_index6( TT_CMapTable*  charmap,
+                  FT_ULong       char_code );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -69,10 +74,10 @@
   /*    opened).  In case of error, all partially allocated tables are     */
   /*    released.                                                          */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_CharMap_Load( TT_Face        face,
-                             TT_CMapTable*  cmap,
-                             FT_Stream      stream )
+  FT_LOCAL_DEF FT_Error
+  TT_CharMap_Load( TT_Face        face,
+                   TT_CMapTable*  cmap,
+                   FT_Stream      stream )
   {
     FT_Error   error;
     FT_Memory  memory;
@@ -287,9 +292,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_CharMap_Free( TT_Face        face,
-                             TT_CMapTable*  cmap )
+  FT_LOCAL_DEF FT_Error
+  TT_CharMap_Free( TT_Face        face,
+                   TT_CMapTable*  cmap )
   {
     FT_Memory  memory;
 
@@ -349,7 +354,7 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  FT_CALLBACK_DEF(FT_UInt)
+  FT_CALLBACK_DEF( FT_UInt )
   code_to_index0( TT_CMapTable*  cmap,
                   FT_ULong       charCode )
   {
@@ -375,7 +380,7 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  FT_CALLBACK_DEF(FT_UInt)
+  FT_CALLBACK_DEF( FT_UInt )
   code_to_index2( TT_CMapTable*  cmap,
                   FT_ULong       charCode )
   {
@@ -439,7 +444,7 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  FT_CALLBACK_DEF(FT_UInt)
+  FT_CALLBACK_DEF( FT_UInt )
   code_to_index4( TT_CMapTable*  cmap,
                   FT_ULong       charCode )
   {
@@ -522,7 +527,7 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  FT_CALLBACK_DEF(FT_UInt)
+  FT_CALLBACK_DEF( FT_UInt )
   code_to_index6( TT_CMapTable*  cmap,
                   FT_ULong       charCode )
   {

@@ -53,9 +53,9 @@
   /* <Return>                                                              */
   /*    A pointer to the table directory entry.  0 if not found.           */
   /*                                                                       */
-  FT_LOCAL_DEF
-  TT_Table*  TT_LookUp_Table( TT_Face   face,
-                              FT_ULong  tag  )
+  FT_LOCAL_DEF TT_Table*
+  TT_LookUp_Table( TT_Face   face,
+                   FT_ULong  tag  )
   {
     TT_Table*  entry;
     TT_Table*  limit;
@@ -104,11 +104,11 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Goto_Table( TT_Face    face,
-                           FT_ULong   tag,
-                           FT_Stream  stream,
-                           FT_ULong*  length )
+  FT_LOCAL_DEF FT_Error
+  TT_Goto_Table( TT_Face    face,
+                 FT_ULong   tag,
+                 FT_Stream  stream,
+                 FT_ULong*  length )
   {
     TT_Table*  table;
     FT_Error   error;
@@ -159,11 +159,11 @@
   /*    The header will be checked whether it is valid by looking at the   */
   /*    values of `search_range', `entry_selector', and `range_shift'.     */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_SFNT_Header( TT_Face       face,
-                                 FT_Stream     stream,
-                                 FT_Long       face_index,
-                                 SFNT_Header*  sfnt )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_SFNT_Header( TT_Face       face,
+                       FT_Stream     stream,
+                       FT_Long       face_index,
+                       SFNT_Header*  sfnt )
   {
     FT_Error   error;
     FT_ULong   format_tag;
@@ -294,10 +294,10 @@
   /* <Note>                                                                */
   /*    The stream cursor must be at the font file's origin.               */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Directory( TT_Face       face,
-                               FT_Stream     stream,
-                               SFNT_Header*  sfnt )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Directory( TT_Face       face,
+                     FT_Stream     stream,
+                     SFNT_Header*  sfnt )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -388,12 +388,12 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Any( TT_Face    face,
-                         FT_ULong   tag,
-                         FT_Long    offset,
-                         FT_Byte*   buffer,
-                         FT_ULong*  length )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Any( TT_Face    face,
+               FT_ULong   tag,
+               FT_Long    offset,
+               FT_Byte*   buffer,
+               FT_ULong*  length )
   {
     FT_Error   error;
     FT_Stream  stream;
@@ -453,10 +453,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  static
-  FT_Error  TT_Load_Generic_Header( TT_Face    face,
-                                    FT_Stream  stream,
-                                    FT_ULong   tag )
+  static FT_Error
+  TT_Load_Generic_Header( TT_Face    face,
+                          FT_Stream  stream,
+                          FT_ULong   tag )
   {
     FT_Error    error;
     TT_Header*  header;
@@ -519,9 +519,9 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Header( TT_Face    face,
-                            FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Header( TT_Face    face,
+                  FT_Stream  stream )
   {
     return TT_Load_Generic_Header( face, stream, TTAG_head );
   }
@@ -529,9 +529,9 @@
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Bitmap_Header( TT_Face    face,
-                                   FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Bitmap_Header( TT_Face    face,
+                         FT_Stream  stream )
   {
     return TT_Load_Generic_Header( face, stream, TTAG_bhed );
   }
@@ -554,9 +554,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_MaxProfile( TT_Face    face,
-                                FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_MaxProfile( TT_Face    face,
+                      FT_Stream  stream )
   {
     FT_Error        error;
     TT_MaxProfile*  maxProfile = &face->max_profile;
@@ -649,10 +649,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  static
-  FT_Error  TT_Load_Metrics( TT_Face    face,
-                             FT_Stream  stream,
-                             FT_Bool    vertical )
+  static FT_Error
+  TT_Load_Metrics( TT_Face    face,
+                   FT_Stream  stream,
+                   FT_Bool    vertical )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -789,10 +789,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Metrics_Header( TT_Face    face,
-                                    FT_Stream  stream,
-                                    FT_Bool    vertical )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Metrics_Header( TT_Face    face,
+                          FT_Stream  stream,
+                          FT_Bool    vertical )
   {
     FT_Error        error;
     TT_HoriHeader*  header;
@@ -888,9 +888,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Names( TT_Face    face,
-                           FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Names( TT_Face    face,
+                 FT_Stream  stream )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -1054,8 +1054,8 @@
   /* <Input>                                                               */
   /*    face :: A handle to the target face object.                        */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  TT_Free_Names( TT_Face  face )
+  FT_LOCAL_DEF void
+  TT_Free_Names( TT_Face  face )
   {
     FT_Memory      memory = face->root.driver->root.memory;
     TT_NameTable*  names  = &face->name_table;
@@ -1089,9 +1089,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_CMap( TT_Face    face,
-                          FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_CMap( TT_Face    face,
+                FT_Stream  stream )
   {
     FT_Error    error;
     FT_Memory   memory = stream->memory;
@@ -1204,9 +1204,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_OS2( TT_Face    face,
-                         FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_OS2( TT_Face    face,
+               FT_Stream  stream )
   {
     FT_Error  error;
     TT_OS2*   os2;
@@ -1341,9 +1341,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_PostScript( TT_Face    face,
-                                FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_PostScript( TT_Face    face,
+                      FT_Stream  stream )
   {
     FT_Error        error;
     TT_Postscript*  post = &face->postscript;
@@ -1399,9 +1399,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_PCLT( TT_Face    face,
-                          FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_PCLT( TT_Face    face,
+                FT_Stream  stream )
   {
     static const FT_Frame_Field  pclt_fields[] =
     {
@@ -1466,9 +1466,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Gasp( TT_Face    face,
-                          FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Gasp( TT_Face    face,
+                FT_Stream  stream )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -1520,6 +1520,11 @@
   }
 
 
+  FT_CALLBACK_DEF( int )
+  tt_kern_pair_compare( const void*  a,
+                        const void*  b );
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1538,13 +1543,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-
-  FT_CALLBACK_DEF(int)
-  tt_kern_pair_compare( const void* a, const void* b );
-
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Kern( TT_Face    face,
-                          FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Kern( TT_Face    face,
+                FT_Stream  stream )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -1656,7 +1657,7 @@
 #undef  TT_KERN_INDEX
 #define TT_KERN_INDEX( g1, g2 )  ( ( (FT_ULong)g1 << 16 ) | g2 )
 
-  FT_CALLBACK_DEF(int)
+  FT_CALLBACK_DEF( int )
   tt_kern_pair_compare( const void*  a,
                         const void*  b )
   {
@@ -1689,9 +1690,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Hdmx( TT_Face    face,
-                          FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Hdmx( TT_Face    face,
+                FT_Stream  stream )
   {
     FT_Error  error;
     FT_Memory memory = stream->memory;
@@ -1767,8 +1768,8 @@
   /* <Input>                                                               */
   /*    face :: A handle to the target face object.                        */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  TT_Free_Hdmx( TT_Face  face )
+  FT_LOCAL_DEF void
+  TT_Free_Hdmx( TT_Face  face )
   {
     if ( face )
     {

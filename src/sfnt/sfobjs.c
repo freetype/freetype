@@ -53,9 +53,9 @@
   /* <Return>                                                              */
   /*    Character string.  NULL if no name is present.                     */
   /*                                                                       */
-  static
-  FT_String*  Get_Name( TT_Face    face,
-                        FT_UShort  nameid )
+  static FT_String*
+  Get_Name( TT_Face    face,
+            FT_UShort  nameid )
   {
     FT_Memory    memory = face->root.memory;
     FT_UShort    n;
@@ -128,9 +128,9 @@
   }
 
 
-  static
-  FT_Encoding  find_encoding( int  platform_id,
-                              int  encoding_id )
+  static FT_Encoding
+  find_encoding( int  platform_id,
+                 int  encoding_id )
   {
     typedef struct  TEncoding
     {
@@ -178,12 +178,12 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  SFNT_Init_Face( FT_Stream      stream,
-                            TT_Face        face,
-                            FT_Int         face_index,
-                            FT_Int         num_params,
-                            FT_Parameter*  params )
+  FT_LOCAL_DEF FT_Error
+  SFNT_Init_Face( FT_Stream      stream,
+                  TT_Face        face,
+                  FT_Int         face_index,
+                  FT_Int         num_params,
+                  FT_Parameter*  params )
   {
     FT_Error            error;
     FT_Library          library = face->root.driver->root.library;
@@ -241,12 +241,12 @@
                       != SFNT_Err_Ok )
 
 
-  FT_LOCAL_DEF
-  FT_Error  SFNT_Load_Face( FT_Stream      stream,
-                            TT_Face        face,
-                            FT_Int         face_index,
-                            FT_Int         num_params,
-                            FT_Parameter*  params )
+  FT_LOCAL_DEF FT_Error
+  SFNT_Load_Face( FT_Stream      stream,
+                  TT_Face        face,
+                  FT_Int         face_index,
+                  FT_Int         num_params,
+                  FT_Parameter*  params )
   {
     FT_Error         error;
     FT_Bool          has_outline;
@@ -587,8 +587,8 @@
 #undef LOAD_
 
 
-  FT_LOCAL_DEF
-  void  SFNT_Done_Face( TT_Face  face )
+  FT_LOCAL_DEF void
+  SFNT_Done_Face( TT_Face  face )
   {
     FT_Memory        memory = face->root.memory;
     SFNT_Interface*  sfnt   = (SFNT_Interface*)face->sfnt;

@@ -26,8 +26,8 @@
 
 
   /* initialize renderer -- init its raster */
-  static
-  FT_Error  ft_smooth_init( FT_Renderer  render )
+  static FT_Error
+  ft_smooth_init( FT_Renderer  render )
   {
     FT_Library  library = FT_MODULE_LIBRARY( render );
 
@@ -41,10 +41,10 @@
 
 
   /* sets render-specific mode */
-  static
-  FT_Error  ft_smooth_set_mode( FT_Renderer  render,
-                                FT_ULong     mode_tag,
-                                FT_Pointer   data )
+  static FT_Error
+  ft_smooth_set_mode( FT_Renderer  render,
+                      FT_ULong     mode_tag,
+                      FT_Pointer   data )
   {
     /* we simply pass it to the raster */
     return render->clazz->raster_class->raster_set_mode( render->raster,
@@ -53,11 +53,11 @@
   }
 
   /* transform a given glyph image */
-  static
-  FT_Error  ft_smooth_transform( FT_Renderer   render,
-                                 FT_GlyphSlot  slot,
-                                 FT_Matrix*    matrix,
-                                 FT_Vector*    delta )
+  static FT_Error
+  ft_smooth_transform( FT_Renderer   render,
+                       FT_GlyphSlot  slot,
+                       FT_Matrix*    matrix,
+                       FT_Vector*    delta )
   {
     FT_Error  error = Smooth_Err_Ok;
 
@@ -80,10 +80,10 @@
 
 
   /* return the glyph's control box */
-  static
-  void  ft_smooth_get_cbox( FT_Renderer   render,
-                            FT_GlyphSlot  slot,
-                            FT_BBox*      cbox )
+  static void
+  ft_smooth_get_cbox( FT_Renderer   render,
+                      FT_GlyphSlot  slot,
+                      FT_BBox*      cbox )
   {
     MEM_Set( cbox, 0, sizeof ( *cbox ) );
 
@@ -93,11 +93,11 @@
 
 
   /* convert a slot's glyph image into a bitmap */
-  static
-  FT_Error  ft_smooth_render( FT_Renderer   render,
-                              FT_GlyphSlot  slot,
-                              FT_UInt       mode,
-                              FT_Vector*    origin )
+  static FT_Error
+  ft_smooth_render( FT_Renderer   render,
+                    FT_GlyphSlot  slot,
+                    FT_UInt       mode,
+                    FT_Vector*    origin )
   {
     FT_Error     error;
     FT_Outline*  outline;

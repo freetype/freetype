@@ -39,8 +39,8 @@
   /* we do deal with glyph variants by detecting a non-initial dot in    */
   /* the name, as in `A.swash' or `e.final', etc.                        */
   /*                                                                     */
-  static
-  FT_ULong  PS_Unicode_Value( const char*  glyph_name )
+  static FT_ULong
+  PS_Unicode_Value( const char*  glyph_name )
   {
     FT_Int  n;
     char    first = glyph_name[0];
@@ -129,7 +129,7 @@
 
 
   /* qsort callback to sort the unicode map */
-  FT_CALLBACK_DEF(int)
+  FT_CALLBACK_DEF( int )
   compare_uni_maps( const void*  a,
                     const void*  b )
   {
@@ -142,11 +142,11 @@
 
 
   /* Builds a table that maps Unicode values to glyph indices */
-  static
-  FT_Error  PS_Build_Unicode_Table( FT_Memory     memory,
-                                    FT_UInt       num_glyphs,
-                                    const char**  glyph_names,
-                                    PS_Unicodes*  table )
+  static FT_Error
+  PS_Build_Unicode_Table( FT_Memory     memory,
+                          FT_UInt       num_glyphs,
+                          const char**  glyph_names,
+                          PS_Unicodes*  table )
   {
     FT_Error  error;
 
@@ -208,9 +208,9 @@
   }
 
 
-  static
-  FT_UInt  PS_Lookup_Unicode( PS_Unicodes*  table,
-                              FT_ULong      unicode )
+  static FT_UInt
+  PS_Lookup_Unicode( PS_Unicodes*  table,
+                     FT_ULong      unicode )
   {
     PS_UniMap  *min, *max, *mid;
 
@@ -242,8 +242,8 @@
 #endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
 
 
-  static
-  const char*  PS_Macintosh_Name( FT_UInt  name_index )
+  static const char*
+  PS_Macintosh_Name( FT_UInt  name_index )
   {
     if ( name_index >= 258 )
       name_index = 0;
@@ -252,8 +252,8 @@
   }
 
 
-  static
-  const char*  PS_Standard_Strings( FT_UInt  sid )
+  static const char*
+  PS_Standard_Strings( FT_UInt  sid )
   {
     return ( sid < NUM_STD_GLYPHS ? t1_standard_glyphs[sid] : 0 );
   }
