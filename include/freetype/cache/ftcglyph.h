@@ -50,8 +50,6 @@
 #include FT_CACHE_H
 #include FT_CACHE_MANAGER_H
 
-#include <stddef.h>
-
 
 FT_BEGIN_HEADER
 
