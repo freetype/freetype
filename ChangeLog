@@ -1,3 +1,13 @@
+2001-06-18  Werner Lemberg  <wl@gnu.org>
+
+	Make the new error scheme source compatible with older FT versions
+	by introducing another layer.
+
+	* include/freetype/fterrors.h (FT_ERRORDEF_, FT_NOERRORDEF_): New
+	macros.
+	(FT_NOERRORDEF): Removed.
+	* include/*/*err*.h: Use FT_ERRORDEF_ and FT_NOERRORDEF_.
+
 2001-06-16  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h (FT_ENC_TAG): New macro.
