@@ -751,7 +751,7 @@
       /* fonts usually only, nothing serious will happen        */
       if ( num_shorts > num_shorts_checked && num_shorts_checked > 0 )
       {
-        FT_Short  val = *(shorts)[num_shorts_checked - 1];
+        FT_Short  val = (*shorts)[num_shorts_checked - 1];
 
 
         limit = *shorts + num_shorts;
