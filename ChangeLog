@@ -1,12 +1,19 @@
+2002-08-29  David Turner  <david@freetype.org>
+
+    * src/pshinter/pshalgo.c: slight modification to the Postscript hinter
+    to slightly increase the contrast of smooth hinting. This is very similar
+    to what the auto-hinter does when it comes to stem width computations.
+    However, it produces better results with well-hinted fonts..
+
 2002-08-27  David Turner  <david@freetype.org>
 
     * massive re-formatting changes to many, many source files. I don't
     want to list them all here. The operations performed were all logical
     transformations of the sources:
-    
+
       - trying to convert all enums and constants to CAPITALIZED_STYLE, with
         #define definitions like
-        
+
           #define  my_old_constants   MY_NEW_CONSTANT
 
       - big, big update of the documentation comments
@@ -14,7 +21,7 @@
     * include/freetype/freetype.h, src/base/ftobjs.c, src/smooth/ftsmooth.c,
     include/freetype/ftimage.h: adding support for LCD-optimized rendering
     though the new constants/enums:
-    
+
       FT_RENDER_MODE_LCD, FT_RENDER_MODE_LCD_V
       FT_PIXEL_MODE_LCD,  FT_PIXEL_MODE_LCD_V
 
@@ -23,12 +30,12 @@
 
     * adding new FT_LOAD_XXX flags, used to specify both hinting and rendering
     targets:
-    
+
       FT_LOAD_TARGET_NORMAL :: anti-aliased hinting & rendering
       FT_LOAD_TARGET_MONO   :: monochrome bitmaps
       FT_LOAD_TARGET_LCD    :: horizontal RGB/BGR decimated hinting & rendering
       FT_LOAD_TARGET_LCD_V  :: vertical RGB/BGR decimated hinting & rendering
-      
+
     note that FT_LOAD_TARGET_NORMAL is 0, which means that the default
     behaviour of the font engine is _unchanged_.
 
@@ -185,7 +192,7 @@
 
 2002-08-15  Graham Asher  <graham.asher@btinternet.com>
 
-	Implemented the incremental font loading system for the CFF driver. 
+	Implemented the incremental font loading system for the CFF driver.
 	Tested using the GhostScript-to-FreeType bridge (under development).
 
 	* src/cff/cffgload.c (cff_get_glyph_data, cff_free_glyph_data): New
@@ -300,7 +307,7 @@
 
 2002-07-18  Graham Asher  <graham.asher@btinternet.com>
 
-	Added types and structures to support incremental typeface loading. 
+	Added types and structures to support incremental typeface loading.
 	The FT_Incremental_Interface structure, defined in freetype.h, is
 	designed to be passed to FT_Open_Face to provide callback functions
 	to obtain glyph recipes and metrics, for fonts like those passed

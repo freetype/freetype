@@ -33,10 +33,8 @@
 #endif
 
 
-#undef  SNAP_STEMS
-#undef  ONLY_ALIGN_Y
-
-#define  COMPUTE_INFLEXS
+#define  COMPUTE_INFLEXS  /* compute inflection points to optimize "S" and others */
+#define  STRONGER         /* slightly increase the contrast of smooth hinting */
 
   /*************************************************************************/
   /*************************************************************************/
@@ -412,7 +410,7 @@
       /* perform stem snapping when requested */
       no_snapping = ( dimension == 0 && !glyph->no_horz_snapping ) ||
                     ( dimension == 1 && !glyph->no_vert_snapping );
-                    
+
       if ( !no_snapping )
       {
         /* compute fitted width/height */
@@ -499,6 +497,58 @@
           }
           else
           {
+#ifdef STRONGER
+            if ( len <= 64 )
+            {
+              /* the stem is less than one pixel, we will center it */
+              /* around the nearest pixel center                    */
+              /*                                                    */
+              pos = ( pos + (len >> 1) & -64 );
+              len = 64;
+            }
+            else
+            {
+              FT_Pos  delta = len - dim->stdw.widths[0].cur;
+
+
+              if ( delta < 0 )
+                delta = -delta;
+
+              if ( delta < 40 )
+              {
+                len = dim->stdw.widths[0].cur;
+                if ( len < 32 )
+                  len = 32;
+              }
+
+              if ( len < 3 * 64 )
+              {
+                delta = ( len & 63 );
+                len &= -64;
+
+                if ( delta < 10 )
+                  len += delta;
+
+                else if ( delta < 32 )
+                  len += 10;
+
+                else if ( delta < 54 )
+                  len += 54;
+
+                else
+                  len += delta;
+              }
+              else
+                len = ( len + 32 ) & -64;
+            }
+
+            /* now that we have a good hinted stem width, try to position */
+            /* the stem along a pixel grid integer coordinate             */
+            hint->cur_pos = pos + psh3_hint_snap_stem_side_delta( pos, len );
+            hint->cur_len = len;
+
+#else /* !STRONGER */
+
             /* Stems less than one pixel wide are easy - we want to
              * make them as dark as possible, so they must fall within
              * one pixel. If the stem is split between two pixels
@@ -541,7 +591,7 @@
               FT_Fixed delta_a, delta_b;
 
 
-              if ( len & 64 )           
+              if ( len & 64 )
               {
                 delta_a = ( center & -64 ) + 32 - center;
                 delta_b = ( ( center + 32 ) & - 64 ) - center;
@@ -573,6 +623,7 @@
                 pos += delta_b;
             }
             hint->cur_pos = pos;
+#endif /* !STRONGER */
           }
         }
       }
@@ -1712,7 +1763,7 @@
 
     glyph->no_horz_hints = 0;
     glyph->no_vert_hints = 0;
-    
+
     glyph->no_horz_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_NORMAL ||
                                        hint_mode == FT_RENDER_MODE_LCD_V  );
 
