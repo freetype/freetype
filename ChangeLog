@@ -1,3 +1,9 @@
+2003-07-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/cache/ftcsbits.c (ftc_sbit_node_compare): Only add `size' if
+	there is no error.  Reported by Knut St. Osmundsen
+	<bird-freetype@anduin.net>.
+
 2003-06-30  Werner Lemberg  <wl@gnu.org>
 
 	A new try to synchronize bitmap font access.

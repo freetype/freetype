@@ -308,14 +308,11 @@
         FT_ULong  size;
 
 
-        /* yes, it's safe to ignore errors here */
-        ftc_sbit_node_load( snode,
-                            cache->manager,
-                            FTC_SBIT_FAMILY( FTC_QUERY( squery )->family ),
-                            gindex,
-                            &size );
-
-        cache->manager->cur_weight += size;
+        if ( !ftc_sbit_node_load(
+                snode, cache->manager,
+                FTC_SBIT_FAMILY( FTC_QUERY( squery )->family ),
+                gindex, &size ) )
+          cache->manager->cur_weight += size;
       }
     }
 
