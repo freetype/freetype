@@ -1,5 +1,23 @@
 LATEST CHANGES
 
+  - found a memory leak in the "type1" driver
+  
+  - incorporated Tom's patches to support flex operators correctly
+    in OpenType/CFF fonts.. Now all I need is to support pure CFF
+    and CEF fonts to be done with this driver.. :-)
+
+  - added the Windows FNT/FON driver in "src/winfonts". For now,
+    it always "simulates" a Unicode charmap, so it shouldn't be
+    considered completed right now..
+    
+    It's there to be more a proof of concept than anything else
+    anyway. The driver is a single C source file, that compiles
+    to 3 Kb of code..
+    
+    I'm still working on the PCF/BDF drivers.. but I'm too lazy
+    to finish them now..
+
+
   - CHANGES TO THE HIGH-LEVEL API
   
     o FT_Get_Kerning has a new parameter that allows you to select

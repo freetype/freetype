@@ -1937,9 +1937,9 @@
     {
       metrics->x_scale = FT_DivFix( dim_x, face->units_per_EM );
       metrics->y_scale = FT_DivFix( dim_y, face->units_per_EM );
-    }
 
-    ft_recompute_scaled_metrics( face, metrics );
+      ft_recompute_scaled_metrics( face, metrics );
+    }
 
     if ( clazz->set_char_sizes )
       error = clazz->set_char_sizes( face->size,
@@ -2014,9 +2014,9 @@
 
       metrics->y_scale = FT_DivFix( metrics->y_ppem << 6,
                                     face->units_per_EM );
+                                    
+      ft_recompute_scaled_metrics( face, metrics );
     }
-
-    ft_recompute_scaled_metrics( face, metrics );
 
     if ( clazz->set_pixel_sizes )
       error = clazz->set_pixel_sizes( face->size,

@@ -175,6 +175,10 @@ typedef struct FT_Frame_Field_
 #define GET_ULong()    FT_GET_MACRO( FT_Get_Long, FT_ULong )
 #define GET_Tag4()     FT_GET_MACRO( FT_Get_Long, FT_ULong )
 
+#define GET_ShortLE()   FT_GET_MACRO( FT_Get_ShortLE, FT_Short )
+#define GET_UShortLE()  FT_GET_MACRO( FT_Get_ShortLE, FT_UShort )
+#define GET_LongLE()    FT_GET_MACRO( FT_Get_LongLE,  FT_Short )
+#define GET_ULongLE()   FT_GET_MACRO( FT_Get_LongLE,  FT_Short )
 
 #define FT_READ_MACRO( func, type, var )        \
           ( var = (type)func( stream, &error ), \
@@ -189,6 +193,10 @@ typedef struct FT_Frame_Field_
 #define READ_Long( var )     FT_READ_MACRO( FT_Read_Long, FT_Long, var )
 #define READ_ULong( var )    FT_READ_MACRO( FT_Read_Long, FT_ULong, var )
 
+#define READ_ShortLE( var )    FT_READ_MACRO( FT_Read_ShortLE, FT_Short, var )
+#define READ_UShortLE( var )   FT_READ_MACRO( FT_Read_ShortLE, FT_UShort, var )
+#define READ_LongLE( var )     FT_READ_MACRO( FT_Read_LongLE, FT_Long, var )
+#define READ_ULongLE( var )    FT_READ_MACRO( FT_Read_LongLE, FT_ULong, var )
 
 
   BASE_DEF(void) FT_New_Memory_Stream( FT_Library  library,
@@ -234,6 +242,9 @@ typedef struct FT_Frame_Field_
 
   BASE_DEF(FT_Long)   FT_Get_Long( FT_Stream  stream );
 
+  BASE_DEF(FT_Short)  FT_Get_ShortLE( FT_Stream  stream );
+
+  BASE_DEF(FT_Long)   FT_Get_LongLE( FT_Stream  stream );
 
 
   BASE_DEF(FT_Char)   FT_Read_Char( FT_Stream  stream,
@@ -247,6 +258,12 @@ typedef struct FT_Frame_Field_
 
   BASE_DEF(FT_Long)   FT_Read_Long( FT_Stream  stream,
                                     FT_Error*  error );
+
+  BASE_DEF(FT_Short)  FT_Read_ShortLE( FT_Stream  stream,
+                                       FT_Error*  error );
+
+  BASE_DEF(FT_Long)   FT_Read_LongLE( FT_Stream  stream,
+                                      FT_Error*  error );
 
   BASE_DEF(FT_Error)  FT_Read_Fields( FT_Stream             stream,
                                       const FT_Frame_Field* fields,

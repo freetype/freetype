@@ -96,6 +96,11 @@
                                            FT_Int       numContours,
                                            FT_Outline*  outline );
 
+  FT_EXPORT_DEF(FT_Error)  FT_Outline_New_Internal( FT_Memory    memory,
+                                                    FT_UInt      numPoints,
+                                                    FT_Int       numContours,
+                                                    FT_Outline*  outline );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -128,6 +133,9 @@
   /*                                                                       */
   FT_EXPORT_DEF(FT_Error)  FT_Outline_Done( FT_Library   library,
                                             FT_Outline*  outline );
+
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Done_Internal( FT_Memory    memory,
+                                                       FT_Outline*  outline );
 
   /*************************************************************************/
   /*                                                                       */

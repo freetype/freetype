@@ -301,6 +301,24 @@
   }
 
 
+  BASE_FUNC( FT_Short )  FT_Get_ShortLE( FT_Stream  stream )
+  {
+    FT_Byte*  p;
+    FT_Short  result;
+
+
+    FT_Assert( stream && stream->cursor );
+
+    result         = 0;
+    p              = stream->cursor;
+    if ( p + 1 < stream->limit )
+      result       = NEXT_ShortLE( p );
+    stream->cursor = p;
+
+    return result;
+  }
+
+
   BASE_FUNC( FT_Long )  FT_Get_Offset( FT_Stream  stream )
   {
     FT_Byte*  p;
@@ -330,6 +348,23 @@
     p              = stream->cursor;
     if ( p + 3 < stream->limit )
       result       = NEXT_Long( p );
+    stream->cursor = p;
+    return result;
+  }
+
+
+  BASE_FUNC( FT_Long )  FT_Get_LongLE( FT_Stream  stream )
+  {
+    FT_Byte*  p;
+    FT_Long   result;
+
+
+    FT_Assert( stream && stream->cursor );
+
+    result         = 0;
+    p              = stream->cursor;
+    if ( p + 3 < stream->limit )
+      result       = NEXT_LongLE( p );
     stream->cursor = p;
     return result;
   }
@@ -399,6 +434,52 @@
 
       if ( p )
         result = NEXT_Short( p );
+    }
+    else
+      goto Fail;
+
+    stream->pos += 2;
+
+    return result;
+
+  Fail:
+    *error = FT_Err_Invalid_Stream_Operation;
+    FT_ERROR(( "FT_Read_Short:" ));
+    FT_ERROR(( " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
+               stream->pos, stream->size ));
+
+    return 0;
+  }
+
+
+  BASE_FUNC( FT_Short )  FT_Read_ShortLE( FT_Stream  stream,
+                                          FT_Error*  error )
+  {
+    FT_Byte   reads[2];
+    FT_Byte*  p = 0;
+    FT_Short  result = 0;
+
+
+    FT_Assert( stream );
+
+    *error = FT_Err_Ok;
+
+    if ( stream->pos + 1 < stream->size )
+    {
+      if ( stream->read )
+      {
+        if ( stream->read( stream, stream->pos, reads, 2L ) != 2L )
+          goto Fail;
+
+        p = reads;
+      }
+      else
+      {
+        p = stream->base + stream->pos;
+      }
+
+      if ( p )
+        result = NEXT_ShortLE( p );
     }
     else
       goto Fail;
@@ -507,6 +588,54 @@
 
     return 0;
   }
+
+
+  BASE_FUNC( FT_Long )  FT_Read_LongLE( FT_Stream  stream,
+                                        FT_Error*  error )
+  {
+    FT_Byte   reads[4];
+    FT_Byte*  p = 0;
+    FT_Long   result = 0;
+
+
+    FT_Assert( stream );
+
+    *error = FT_Err_Ok;
+
+    if ( stream->pos + 3 < stream->size )
+    {
+      if ( stream->read )
+      {
+        if ( stream->read( stream, stream->pos, reads, 4L ) != 4L )
+          goto Fail;
+
+        p = reads;
+      }
+      else
+      {
+        p = stream->base + stream->pos;
+      }
+
+      if ( p )
+        result = NEXT_LongLE( p );
+    }
+    else
+      goto Fail;
+
+    stream->pos += 4;
+
+    return result;
+
+  Fail:
+    FT_ERROR(( "FT_Read_Long:" ));
+    FT_ERROR(( " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
+               stream->pos, stream->size ));
+    *error = FT_Err_Invalid_Stream_Operation;
+
+    return 0;
+  }
+
+
 
 
   BASE_FUNC( FT_Error ) FT_Read_Fields( FT_Stream              stream,

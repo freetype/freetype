@@ -270,6 +270,39 @@
   }
 
 
+  FT_EXPORT_FUNC( FT_Error )  FT_Outline_New_Internal( FT_Memory    memory,
+                                                       FT_UInt      numPoints,
+                                                       FT_Int       numContours,
+                                                       FT_Outline*  outline )
+  {
+    FT_Error   error;
+
+
+    if ( !outline )
+      return FT_Err_Invalid_Argument;
+
+    *outline = null_outline;
+
+    if ( ALLOC_ARRAY( outline->points,   numPoints * 2L, FT_Pos    ) ||
+         ALLOC_ARRAY( outline->tags,     numPoints,      FT_Byte   ) ||
+         ALLOC_ARRAY( outline->contours, numContours,    FT_UShort ) )
+      goto Fail;
+
+    outline->n_points    = (FT_UShort)numPoints;
+    outline->n_contours  = (FT_Short)numContours;
+    outline->flags      |= ft_outline_owner;
+
+    return FT_Err_Ok;
+
+  Fail:
+    outline->flags |= ft_outline_owner;
+    FT_Outline_Done_Internal( memory, outline );
+
+    return error;
+  }
+
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -302,39 +335,16 @@
   /*    The reason why this function takes a `library' parameter is simply */
   /*    to use the library's memory allocator.                             */
   /*                                                                       */
-  BASE_FUNC( FT_Error )  FT_Outline_New( FT_Library   library,
-                                         FT_UInt      numPoints,
-                                         FT_Int       numContours,
-                                         FT_Outline*  outline )
+  FT_EXPORT_FUNC( FT_Error )  FT_Outline_New( FT_Library   library,
+                                              FT_UInt      numPoints,
+                                              FT_Int       numContours,
+                                              FT_Outline*  outline )
   {
-    FT_Error   error;
-    FT_Memory  memory;
-
-
-    if ( !outline )
-      return FT_Err_Invalid_Argument;
-
-    *outline = null_outline;
-    memory   = library->memory;
-
-    if ( ALLOC_ARRAY( outline->points,   numPoints * 2L, FT_Pos    ) ||
-         ALLOC_ARRAY( outline->tags,     numPoints,      FT_Byte   ) ||
-         ALLOC_ARRAY( outline->contours, numContours,    FT_UShort ) )
-      goto Fail;
-
-    outline->n_points    = (FT_UShort)numPoints;
-    outline->n_contours  = (FT_Short)numContours;
-    outline->flags      |= ft_outline_owner;
-
-    return FT_Err_Ok;
-
-  Fail:
-    outline->flags |= ft_outline_owner;
-    FT_Outline_Done( library, outline );
-
-    return error;
+    return FT_Outline_New_Internal( library->memory, numPoints,
+                                    numContours, outline );
+    
   }
-
+  
 
   /*************************************************************************/
   /*                                                                       */
@@ -414,12 +424,10 @@
   /*    The reason why this function takes an `outline' parameter is       */
   /*    simply to use FT_Free().                                           */
   /*                                                                       */
-  BASE_FUNC( FT_Error )  FT_Outline_Done( FT_Library   library,
-                                          FT_Outline*  outline )
+
+  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Done_Internal( FT_Memory    memory,
+                                                        FT_Outline*  outline )
   {
-    FT_Memory  memory = library->memory;
-
-
     if ( outline )
     {
       if ( outline->flags & ft_outline_owner )
@@ -435,7 +443,14 @@
     else
       return FT_Err_Invalid_Argument;
   }
+                                          
+                                          
+  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Done( FT_Library   library,
+                                               FT_Outline*  outline )
 
+  {
+    return FT_Outline_Done_Internal( library->memory, outline );
+  }
 
   /*************************************************************************/
   /*                                                                       */
@@ -463,8 +478,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  BASE_FUNC( void )  FT_Outline_Get_CBox( FT_Outline*  outline,
-                                          FT_BBox*     cbox )
+  FT_EXPORT_FUNC( void )  FT_Outline_Get_CBox( FT_Outline*  outline,
+                                               FT_BBox*     cbox )
   {
     FT_Pos  xMin, yMin, xMax, yMax;
 
@@ -529,9 +544,9 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  BASE_FUNC( void )  FT_Outline_Translate( FT_Outline*  outline,
-                                           FT_Pos       xOffset,
-                                           FT_Pos       yOffset )
+  FT_EXPORT_FUNC( void )  FT_Outline_Translate( FT_Outline*  outline,
+                                                FT_Pos       xOffset,
+                                                FT_Pos       yOffset )
   {
     FT_UShort   n;
     FT_Vector*  vec = outline->points;
@@ -562,7 +577,7 @@
   /*    This functions toggles the bit flag `ft_outline_reverse_fill' in   */
   /*    the outline's `flags' field.                                       */
   /*                                                                       */
-  BASE_FUNC( void )  FT_Outline_Reverse( FT_Outline*  outline )
+  FT_EXPORT_FUNC( void )  FT_Outline_Reverse( FT_Outline*  outline )
   {
     FT_UShort  n;
     FT_Int     first, last;

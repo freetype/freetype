@@ -239,7 +239,7 @@
   const CID_Field_Rec  t1_field_records[] =
   {
 #include <cidtokens.h>
-    { 0 }
+    { 0, 0, 0, 0, 0, 0, 0, 0 }
   };
 
 

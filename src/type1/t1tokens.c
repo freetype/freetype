@@ -373,6 +373,7 @@
     return T1_Err_Ok;
 
   Fail:
+    FREE( tokzer->base );
     FREE( tokzer );
     return error;
   }
