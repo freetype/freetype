@@ -175,6 +175,10 @@
          charmap.encoding    = ft_encoding_unicode;
          
          FT_CMap_New( &pfr_cmap_class_rec, NULL, &charmap, NULL );
+
+         /* Select default charmap */
+         if (root->num_charmaps)
+           root->charmap = root->charmaps[0];
        }
      }
 

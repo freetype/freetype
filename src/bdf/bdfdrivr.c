@@ -448,6 +448,10 @@ THE SOFTWARE.
               }
 
               error = FT_CMap_New( &bdf_cmap_class, NULL, &charmap, NULL );
+
+              /* Select default charmap */
+              if (root->num_charmaps)
+                root->charmap = root->charmaps[0];
             }
 
 #else /* !FT_CONFIG_OPTION_USE_CMAPS */
@@ -481,11 +485,15 @@ THE SOFTWARE.
 
 
           charmap.face        = FT_FACE( face );
-          charmap.encoding    = ft_encoding_none;
-          charmap.platform_id = 0;
+          charmap.encoding    = ft_encoding_adobe_standard;
+          charmap.platform_id = 7;
           charmap.encoding_id = 0;
 
           error = FT_CMap_New( &bdf_cmap_class, NULL, &charmap, NULL );
+
+          /* Select default charmap */
+          if (root->num_charmaps)
+            root->charmap = root->charmaps[0];
         }
 
 #else /* !FT_CONFIG_OPTION_USE_CMAPS */
