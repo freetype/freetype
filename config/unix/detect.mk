@@ -38,6 +38,7 @@ else
 ifneq ($(findstring gcc,$(shell $(CC) --version)),)
 is_gcc := 1
 endif
+endif
 
 ifdef is_gcc
 CONFIG_RULES := $(BUILD)$(SEP)unix-gcc.mk
