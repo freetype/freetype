@@ -185,7 +185,7 @@
   }
 
 
-  const FT_Frame_Field  sbit_metrics_fields[] =
+  static const FT_Frame_Field  sbit_metrics_fields[] =
   {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_SBit_MetricsRec
@@ -400,7 +400,7 @@
     FT_ULong   num_strikes;
     FT_ULong   table_base;
 
-    const FT_Frame_Field  sbit_line_metrics_fields[] =
+    static const FT_Frame_Field  sbit_line_metrics_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_SBit_LineMetricsRec
@@ -423,7 +423,7 @@
       FT_FRAME_END
     };
 
-    const FT_Frame_Field  strike_start_fields[] =
+    static const FT_Frame_Field  strike_start_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_SBit_StrikeRec
@@ -436,7 +436,7 @@
       FT_FRAME_END
     };
 
-    const FT_Frame_Field  strike_end_fields[] =
+    static const FT_Frame_Field  strike_end_fields[] =
     {
       /* no FT_FRAME_START */
         FT_FRAME_USHORT( start_glyph ),
@@ -860,7 +860,7 @@
       {
         TT_SBit_SmallMetricsRec  smetrics;
 
-        const FT_Frame_Field  sbit_small_metrics_fields[] =
+        static const FT_Frame_Field  sbit_small_metrics_fields[] =
         {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_SBit_SmallMetricsRec

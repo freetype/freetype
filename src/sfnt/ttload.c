@@ -669,7 +669,7 @@
     FT_Error        error;
     TT_MaxProfile*  maxProfile = &face->max_profile;
 
-    const FT_Frame_Field  maxp_fields[] =
+    static const FT_Frame_Field  maxp_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_MaxProfile
@@ -680,7 +680,7 @@
       FT_FRAME_END
     };
 
-    const FT_Frame_Field  maxp_fields_extra[] =
+    static const FT_Frame_Field  maxp_fields_extra[] =
     {
       FT_FRAME_START( 26 ),
         FT_FRAME_USHORT( maxPoints ),
@@ -952,7 +952,7 @@
     FT_Error        error;
     TT_HoriHeader*  header;
 
-    const FT_Frame_Field  metrics_header_fields[] =
+    static const FT_Frame_Field  metrics_header_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_HoriHeader
@@ -1277,7 +1277,7 @@
     FT_Error  error;
     TT_OS2*   os2;
 
-    const FT_Frame_Field  os2_fields[] =
+    static const FT_Frame_Field  os2_fields[] =
     {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_OS2
@@ -1329,7 +1329,7 @@
       FT_FRAME_END
     };
 
-    const FT_Frame_Field  os2_fields_extra[] =
+    static const FT_Frame_Field  os2_fields_extra[] =
     {
       FT_FRAME_START( 8 ),
         FT_FRAME_ULONG( ulCodePageRange1 ),
@@ -1337,7 +1337,7 @@
       FT_FRAME_END
     };
 
-    const FT_Frame_Field  os2_fields_extra2[] =
+    static const FT_Frame_Field  os2_fields_extra2[] =
     {
       FT_FRAME_START( 10 ),
         FT_FRAME_SHORT ( sxHeight ),

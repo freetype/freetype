@@ -40,7 +40,7 @@
 			 GX_BinSrchHeader header )
   {
     FT_Error error;
-    const FT_Frame_Field fields[] =
+    static const FT_Frame_Field fields[] =
       {
 #undef FT_STRUCTURE
 #define FT_STRUCTURE GX_BinSrchHeaderRec

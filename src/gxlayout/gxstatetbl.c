@@ -36,7 +36,7 @@
 			     GX_StateHeader header )
   {
     FT_Error error;
-    const FT_Frame_Field state_header_fields[] =
+    static const FT_Frame_Field state_header_fields[] =
       {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE GX_StateHeaderRec
@@ -60,8 +60,8 @@
     FT_Error error;
     FT_Memory memory = stream->memory;
     FT_Byte * classArray;
-    FT_Int i; 
-    const FT_Frame_Field class_subtable_fields[] =
+    FT_Int i;
+    static const FT_Frame_Field class_subtable_fields[] =
       {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE GX_ClassSubtableRec
@@ -69,13 +69,13 @@
 	    FT_FRAME_USHORT ( firstGlyph ),
 	    FT_FRAME_USHORT ( nGlyphs ),
 	FT_FRAME_END
-      }; 
-    
+      };
+
     subtable->classArray = NULL;
 
     if ( FT_STREAM_SEEK(pos) )
       goto Exit;
-    
+
     if ( FT_STREAM_READ_FIELDS ( class_subtable_fields,  subtable ) )
       goto Exit;
 
@@ -84,10 +84,10 @@
 
     if ( FT_FRAME_ENTER( sizeof (classArray[0]) * subtable->nGlyphs ) )
       goto Failure;
-    
+
     for ( i = 0; i < subtable->nGlyphs; i++ )
       classArray[i] = FT_GET_BYTE();
-    
+
     FT_FRAME_EXIT();
     subtable->classArray = classArray;
   Exit:
@@ -117,13 +117,13 @@
 
     if ( FT_STREAM_SEEK(pos) )
       goto Exit;
-    
+
     if ( FT_FRAME_ENTER( sizeof (state_array[0]) * length ) )
       goto Exit;
 
     for ( i = 0; i < length; i++ )
       state_array[i] = FT_GET_BYTE();
-	
+
     FT_FRAME_EXIT();
   Exit:
     return error;
@@ -131,8 +131,8 @@
 
 /* - gx_StateTable_load_entry_subtable
    I assume FUNCS is not NULL. Set any kind of dummy in the caller if
-   necessary. 
-   To support both a state table and an extended state table, the type of nEntries 
+   necessary.
+   To support both a state table and an extended state table, the type of nEntries
    is FT_ULong. */
   static FT_Error
   gx_StateTable_load_entry_subtable ( GX_Face   face,
@@ -146,8 +146,8 @@
     FT_Error error;
     FT_Memory memory = face->root.driver->root.memory;
     FT_ULong i, j;
-    
-    const FT_Frame_Field entry_subtable_fields[] =
+
+    static const FT_Frame_Field entry_subtable_fields[] =
       {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE GX_EntrySubtableRec
@@ -155,7 +155,7 @@
 	    FT_FRAME_USHORT ( newState ),
 	    FT_FRAME_USHORT ( flags ),
 	FT_FRAME_END
-      }; 
+      };
 
     if ( FT_STREAM_SEEK( pos ) )
       goto Exit;
@@ -187,7 +187,7 @@
       finalizer(memory, &entry_subtable[i], user);
   }
 
-  static FT_Error 
+  static FT_Error
   gx_StateTable_Entry_default_loader ( GX_Face face,
 				       FT_Stream stream,
 				       GX_EntrySubtable entry_subtable,
@@ -218,7 +218,7 @@
       }
     return max_index;
   }
-				      
+
   FT_LOCAL_DEF ( FT_Error )
   gx_face_load_StateTable ( GX_Face face,
 			    FT_Stream stream,
@@ -242,14 +242,14 @@
 
     state_table->state_array = NULL;
     state_table->entry_subtable = NULL;
-    
+
     /* 1. Header */
     header = &state_table->header;
     if (( error  = gx_StateTable_load_header( face, stream,
 					      header ) ))
       goto Exit;
 
-    /* 2. class subtable */    
+    /* 2. class subtable */
     pos 	   = header->position + header->classTable;
     class_subtable = &state_table->class_subtable;
     if (( error = gx_StateTable_load_class_subtable( face,
@@ -259,9 +259,9 @@
       goto Exit;
 
 
-    /* 3. state array */    
+    /* 3. state array */
     /* To calculate the length of stateArray, we assume
-       the order of fields placement is classTable, stateArray, 
+       the order of fields placement is classTable, stateArray,
        entryTable */
     FT_ASSERT( header->classTable < header->stateArray );
     FT_ASSERT( header->stateArray < header->entryTable );
@@ -269,19 +269,19 @@
     pos 	    = header->position + header->stateArray;
     state_array_len = header->entryTable - header->stateArray;
     state_table->nStates = state_array_len / header->stateSize;
-    /* Calculate state_array_len again. 
+    /* Calculate state_array_len again.
        state_array_len must be a multiple of header->stateSize. */
     state_array_len = state_table->nStates  * header->stateSize;
     if (( FT_NEW_ARRAY ( state_array, state_array_len ) ))
       goto Failure;
-    
+
     if (( error = gx_StateTable_load_state_array( face,
 						  stream,
 						  pos,
 						  state_array_len,
 						  state_array ) ))
       goto Failure;
-    
+
     /* 4. entry subtable */
     if ( funcs )
       {
@@ -289,7 +289,7 @@
 	  funcs->loader = gx_StateTable_Entry_default_loader;
 	if (! funcs->finalizer )
 	  funcs->finalizer = gx_StateTable_Entry_default_finalizer;
-      }      
+      }
     else
       funcs = &default_funcs;
 
@@ -298,10 +298,10 @@
        which starts from 0. By adding 1 to the max index, get the length of the array. */
     state_table->nEntries = 1+ gx_StateTable_find_state_array_max_index(state_array_len,
 									state_array);
-    
+
     if (( FT_NEW_ARRAY( entry_subtable, state_table->nEntries) ))
       goto Failure;
-    if (( error = gx_StateTable_load_entry_subtable( face, 
+    if (( error = gx_StateTable_load_entry_subtable( face,
 						     stream,
 						     pos,
 						     state_table->nEntries,
@@ -331,7 +331,7 @@
   {
     if ( finalizer == NULL )
       finalizer = gx_StateTable_Entry_default_finalizer;
-    gx_StateTable_free_entry_subtable ( memory, 
+    gx_StateTable_free_entry_subtable ( memory,
 					state_table->nEntries,
 					state_table->entry_subtable,
 					finalizer,
@@ -374,7 +374,7 @@
  {
       return gx_EntrySubtable_traverse( state_table->entry_subtable,
 					state_table->nEntries,
-					action, 
+					action,
 					user );
   }
 #endif /* 0 */
@@ -386,11 +386,11 @@
     GX_ClassSubtable class_subtable;
     FT_Byte class_code;
     FT_UShort first_glyph, last_glyph;
-    
+
     class_subtable = &state_table->class_subtable;
     first_glyph    = class_subtable->firstGlyph;
     last_glyph     = first_glyph + class_subtable->nGlyphs;
-    
+
     if ( glyph == GX_DELETED_GLYPH_INDEX )
       class_code = GX_CLASS_DELETED_GLYPH;
     else if ( ( first_glyph <= glyph ) && ( glyph < last_glyph ) )
@@ -399,7 +399,7 @@
       class_code = GX_CLASS_OUT_OF_BOUNDS;
     return class_code;
   }
-	
+
   FT_LOCAL_DEF ( GX_EntrySubtable )
   gx_StateTable_get_entry_subtable ( GX_StateTable state_table,
 				     FT_UShort current_state,
@@ -410,7 +410,7 @@
     GX_EntrySubtable entry_subtable = state_table->entry_subtable;
     FT_Byte * state_array_for_current_state;
     FT_Byte entry_index;
-    
+
     state_array_for_current_state = &state_array[current_state - header->stateArray];
     entry_index 		  = state_array_for_current_state[class_code];
     return &entry_subtable[entry_index];
@@ -420,8 +420,8 @@
  * Extended State Table
  */
 
-#define gx_XStateTable_load_entry_subtable gx_StateTable_load_entry_subtable 
-#define gx_XStateTable_free_entry_subtable gx_StateTable_free_entry_subtable 
+#define gx_XStateTable_load_entry_subtable gx_StateTable_load_entry_subtable
+#define gx_XStateTable_free_entry_subtable gx_StateTable_free_entry_subtable
 
 #define gx_XStateTable_Entry_default_loader gx_StateTable_Entry_default_loader
 #define gx_XStateTable_Entry_default_finalizer gx_StateTable_Entry_default_finalizer
@@ -433,7 +433,7 @@
 			     GX_XStateHeader header )
   {
     FT_Error error;
-    const FT_Frame_Field xstate_header_fields[] =
+    static const FT_Frame_Field xstate_header_fields[] =
       {
 #undef FT_STRUCTURE
 #define FT_STRUCTURE GX_XStateHeaderRec
@@ -460,13 +460,13 @@
 
     if ( FT_STREAM_SEEK(pos) )
       goto Exit;
-    
+
     if ( FT_FRAME_ENTER( sizeof (state_array[0]) * length ) )
       goto Exit;
 
     for ( i = 0; i < length; i++ )
       state_array[i] = FT_GET_USHORT();
-	
+
     FT_FRAME_EXIT();
   Exit:
     return error;
@@ -509,23 +509,23 @@
     FT_Short  value_offset  = value->raw.s;
     FT_UShort segment_count = lastGlyph - firstGlyph + 1;
     FT_UShort * segment;
-    
+
     FT_Int i;
 
     /* -----------------------------------------------------------------
-     * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING 
+     * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
      * This code is correct?
-     * In spec: "Sometimes they are 16-bit offsets from the start of 
+     * In spec: "Sometimes they are 16-bit offsets from the start of
      * the table to the data. " The table? Is the table the lookup table
      * or a table that uses the lookup table?
      * Here I assume the table is the table that uses the lookup table.
-     * However, I have no conviction. 
+     * However, I have no conviction.
      * It seems that  pfaedit uses lookup_table_offset + value_offset.
      * ----------------------------------------------------------------- */
     FT_ASSERT(lookup_table->position + value_offset < lookup_data->table_end);
-    if (FT_STREAM_SEEK( lookup_table->position + value_offset ) ) 
+    if (FT_STREAM_SEEK( lookup_table->position + value_offset ) )
       goto Exit;
-    
+
     if ( FT_NEW_ARRAY(segment, segment_count ) )
       goto Exit;
 
@@ -539,8 +539,8 @@
     return error;
   Failure:
     /* TODO
-       Other value->extra.wordS loaded before the visitation to this 
-       value->extra.word must be freed if an error is occurred during 
+       Other value->extra.wordS loaded before the visitation to this
+       value->extra.word must be freed if an error is occurred during
        traverse. */
     FT_FREE(segment);
     return error;
@@ -572,25 +572,25 @@
     state_table->state_array 			  = NULL;
     state_table->entry_subtable 		  = NULL;
 
-    
+
     /* 1. Header */
     header = &state_table->header;
     if (( error = gx_XStateTable_load_header( face, stream, header ) ))
       goto Exit;
 
-    /* 2. class subtable */        
+    /* 2. class subtable */
     pos = header->position + header->classTableOffset;
     if ( FT_STREAM_SEEK( pos ) )
       goto Exit;
 
-    if (( error = gx_face_load_LookupTable( face, 
-					    stream, 
+    if (( error = gx_face_load_LookupTable( face,
+					    stream,
 					    &state_table->class_subtable ) ))
       goto Exit;
 
     if ( state_table->class_subtable.format == GX_LOOKUPTABLE_SEGMENT_ARRAY )
       {
-	
+
 	lookup_table_cb_data.stream       = stream;
 	lookup_table_cb_data.lookup_table = &state_table->class_subtable;
 	lookup_table_cb_data.table_end = header->position + header->stateArrayOffset;
@@ -599,24 +599,24 @@
 						    & lookup_table_cb_data ) ))
 	  goto Failure;
       }
-    
-    /* 3. state array */    
+
+    /* 3. state array */
     /* To calculate the length of stateArray, we assume
-       the order of fields placement is classTable, stateArray, 
+       the order of fields placement is classTable, stateArray,
        entryTable */
     FT_ASSERT( header->classTableOffset < header->stateArrayOffset );
     FT_ASSERT( header->stateArrayOffset < header->entryTableOffset );
-    
+
     pos = header->position + header->stateArrayOffset;
-    state_array_len = (header->entryTableOffset - header->stateArrayOffset) / sizeof( state_array[0] ); 
+    state_array_len = (header->entryTableOffset - header->stateArrayOffset) / sizeof( state_array[0] );
     state_table->nStates = state_array_len / header->nClasses;
-    /* Calculate state_array_len again. 
-       state_array_len must be a multiple of header->nClasses. */    
+    /* Calculate state_array_len again.
+       state_array_len must be a multiple of header->nClasses. */
     state_array_len = state_table->nStates  * header->nClasses;
 
     if (( FT_NEW_ARRAY ( state_array, state_array_len ) ))
       goto Failure;
-    
+
     if (( error = gx_XStateTable_load_state_array( face,
 						   stream,
 						   pos,
@@ -631,7 +631,7 @@
 	  funcs->loader = gx_XStateTable_Entry_default_loader;
 	if (! funcs->finalizer )
 	  funcs->finalizer = gx_XStateTable_Entry_default_finalizer;
-      }      
+      }
     else
       funcs = &default_XStateTable_funcs;
 
@@ -640,7 +640,7 @@
 									  state_array );
     if (( FT_NEW_ARRAY( entry_subtable, state_table->nEntries) ))
       goto Failure;
-    if (( error = gx_XStateTable_load_entry_subtable( face, 
+    if (( error = gx_XStateTable_load_entry_subtable( face,
 						      stream,
 						      pos,
 						      state_table->nEntries,
@@ -668,8 +668,8 @@
   {
     return gx_EntrySubtable_traverse( state_table->entry_subtable,
 				      state_table->nEntries,
-				      action, 
-				      user );    
+				      action,
+				      user );
   }
 
   static FT_Error
@@ -687,7 +687,7 @@
 
     value->extra.word = NULL;
     FT_FREE(segment);
-    return GX_Err_Ok; 
+    return GX_Err_Ok;
   }
 
   FT_LOCAL_DEF ( void )
@@ -699,10 +699,10 @@
     GX_LookupTable_FuncsRec lookup_table_funcs = GX_LOOKUP_TABLE_FUNC_ZERO;
 
     lookup_table_funcs.segment_array_func = gx_XStateTable_LookupTable_segment_array_finalizer;
-    
+
     if ( finalizer == NULL )
       finalizer = gx_StateTable_Entry_default_finalizer;
-    gx_XStateTable_free_entry_subtable ( memory, 
+    gx_XStateTable_free_entry_subtable ( memory,
 					 state_table->nEntries,
 					 state_table->entry_subtable,
 					 finalizer,
@@ -713,7 +713,7 @@
     FT_FREE( state_table->state_array );
     state_table->state_array = NULL;
 
-    
+
     if ( state_table->class_subtable.format == GX_LOOKUPTABLE_SEGMENT_ARRAY )
       gx_LookupTable_traverse_low( & state_table->class_subtable,
 				   &lookup_table_funcs,
@@ -728,11 +728,11 @@
     GX_LookupTable class_subtable;
     GX_LookupResultRec result;
     FT_UShort class_code;
-    
+
     class_subtable = &state_table->class_subtable;
     result 	   = gx_LookupTable_lookup ( class_subtable,
 					     glyph );
-    
+
     if ( result.value == NULL )
       class_code = GX_CLASS_OUT_OF_BOUNDS;
     else if ( result.firstGlyph == GX_LOOKUP_RESULT_NO_FIRST_GLYPH )
@@ -747,12 +747,12 @@
 				     FT_UShort current_state,
 				     FT_UShort class_code )
  {
-    GX_XStateHeader header  = &state_table->header; 
+    GX_XStateHeader header  = &state_table->header;
     FT_UShort * state_array = state_table->state_array;
     FT_UShort * state_array_for_current_state;
     FT_UShort entry_index;
     GX_EntrySubtable entry_subtable;
-    
+
     FT_ASSERT( current_state < state_table->nStates );
     FT_ASSERT( class_code < header->nClasses );
     state_array_for_current_state = &state_array[current_state * header->nClasses];
