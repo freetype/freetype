@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType objects manager (body).                                     */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -44,8 +44,6 @@
 #define FT_COMPONENT  trace_cffobjs
 
 
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                            SIZE FUNCTIONS                             */
@@ -60,7 +58,7 @@
   CFF_Size_Get_Globals_Funcs( CFF_Size  size )
   {
     CFF_Face          face     = (CFF_Face)size->face;
-    CFF_Font         font     = (CFF_FontRec *)face->extra.data;
+    CFF_Font          font     = (CFF_FontRec *)face->extra.data;
     PSHinter_Service  pshinter = (PSHinter_Service)font->pshinter;
     FT_Module         module;
 
@@ -101,10 +99,10 @@
     {
       PSH_Globals    globals;
       CFF_Face       face    = (CFF_Face)size->face;
-      CFF_Font      font    = (CFF_FontRec *)face->extra.data;
-      CFF_SubFont   subfont = &font->top_font;
+      CFF_Font       font    = (CFF_FontRec *)face->extra.data;
+      CFF_SubFont    subfont = &font->top_font;
 
-      CFF_Private   cpriv   = &subfont->private_dict;
+      CFF_Private    cpriv   = &subfont->private_dict;
       PS_PrivateRec  priv;
 
 
@@ -196,7 +194,7 @@
   CFF_GlyphSlot_Init( CFF_GlyphSlot  slot )
   {
     CFF_Face          face     = (CFF_Face)slot->root.face;
-    CFF_Font         font     = (CFF_FontRec *)face->extra.data;
+    CFF_Font          font     = (CFF_FontRec *)face->extra.data;
     PSHinter_Service  pshinter = (PSHinter_Service)font->pshinter;
 
 
@@ -256,12 +254,12 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    FT_Error             error;
+    FT_Error          error;
     SFNT_Service      sfnt;
     PSNames_Service   psnames;
     PSHinter_Service  pshinter;
-    FT_Bool              pure_cff    = 1;
-    FT_Bool              sfnt_format = 0;
+    FT_Bool           pure_cff    = 1;
+    FT_Bool           sfnt_format = 0;
 
 
     sfnt = (SFNT_Service)FT_Get_Module_Interface(
@@ -335,7 +333,7 @@
 
     /* now load and parse the CFF table in the file */
     {
-      CFF_Font  cff;
+      CFF_Font   cff;
       FT_Memory  memory = face->root.memory;
       FT_Face    root;
       FT_UInt    flags;
@@ -367,7 +365,7 @@
         {
           FT_ERROR(( "CFF_Face_Init:" ));
           FT_ERROR(( " cannot open CFF & CEF fonts\n" ));
-          FT_ERROR(( "             " ));
+          FT_ERROR(( "              " ));
           FT_ERROR(( " without the `PSNames' module\n" ));
           goto Bad_Format;
         }
@@ -449,7 +447,7 @@
 
         root->style_flags = flags;
         
-        /* XXX: no charmaps for pure CFF fonts for now !! */
+        /* XXX: no charmaps for pure CFF fonts currently! */
       }
     }
 
@@ -465,7 +463,7 @@
   FT_LOCAL_DEF( void )
   CFF_Face_Done( CFF_Face  face )
   {
-    FT_Memory        memory = face->root.memory;
+    FT_Memory     memory = face->root.memory;
     SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
 
 
@@ -488,36 +486,16 @@
   FT_LOCAL_DEF( FT_Error )
   CFF_Driver_Init( CFF_Driver  driver )
   {
-    /* init extension registry if needed */
-
-#ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
-
-    return TT_Init_Extensions( driver );
-
-#else
-
     FT_UNUSED( driver );
 
     return CFF_Err_Ok;
-
-#endif
   }
 
 
   FT_LOCAL_DEF( void )
   CFF_Driver_Done( CFF_Driver  driver )
   {
-    /* destroy extensions registry if needed */
-
-#ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
-
-    TT_Done_Extensions( driver );
-
-#else
-
     FT_UNUSED( driver );
-
-#endif
   }
 
 

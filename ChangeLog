@@ -1,16 +1,36 @@
 2002-03-30  David Turner  <david@freetype.org>
 
-        * src/sfnt/sfobjs.c (tt_face_get_name): bug-fix
+	* include/freetype/internal/tttypes.h: Adding comments to some of
+	the TT_FaceRec fields.
 
-        * include/freetype/internal/tttypes.h: adding comments to some of
-          the TT_FaceRec fields.
+	* src/sfnt/ttcmap0.c (TT_Build_CMaps): Removed compiler warnings.
 
-        * src/sfnt/ttcmap0.c (TT_Build_CMaps): removed compiler warnings
+	* src/sfnt/sfobjs.c (tt_face_get_name): Bug-fix.
 
 2002-03-30  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/t1tables.h (t1_blend_max): Fix typo.
 	* src/base/ftstream.c: Simplify FT_ERROR calls.
+	* src/cff/cffdrivr.c (cff_get_glyph_name): Fix debug message.
+
+	* src/cff/cffobjs.c (CFF_Driver_Init, CFF_Driver_Done)
+	[TT_CONFIG_OPTION_EXTEND_ENGINE]: Removed.
+	* src/cff/sfobjs.c (SFNT_Load_Face)
+	[TT_CONFIG_OPTION_EXTEND_ENGINE]: Ditto.
+	* src/truetype/ttobjs.c (TT_Init_Driver, TT_Done_Driver)
+	[TT_CONFIG_OPTION_EXTEND_ENGINE]: Ditto.
+
+	* src/truetype/ttdriver.c, src/truetype/ttobjs.c,
+	src/truetype/ttobjs.h: Renaming driver functions to the
+	FT_<Subject>_<Action> scheme:
+
+	  TT_Init_Driver => TT_Driver_Init
+	  TT_Done_Driver => TT_Driver_Done
+	  TT_Init_Face   => TT_Face_Init
+	  TT_Done_Face   => TT_Face_Done
+	  TT_Init_Size   => TT_Size_Init
+	  TT_Done_Size   => TT_Size_Done
+	  TT_Reset_Size  => TT_Size_Reset
 
 2002-03-29  Werner Lemberg  <wl@gnu.org>
 
@@ -102,6 +122,11 @@
 	  etc.
 
 	Also introduced the FT_PEEK_XXXX functions.
+
+	* src/cff/cffobjs.c (CFF_Build_Unicode_Charmap): Removed commented
+	out function.
+	(find_encoding): Removed.
+	(CFF_Face_Init): Remove charmap support.
 
 	* include/freetype/config/ftoption.h (FT_CONFIG_OPTION_USE_CMAPS,
 	TT_CONFIG_CMAP_FORMAT{0,2,4,6,8,10,12}): New macros to fine-tune

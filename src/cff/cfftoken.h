@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  cfftoken.h                                                             */
 /*                                                                         */
-/*    CFF token definitions                                                */
+/*    CFF token definitions (specification only).                          */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -20,7 +20,7 @@
 #define FT_STRUCTURE  CFF_FontRecDictRec
 
 #undef  CFFCODE
-#define CFFCODE        CFFCODE_TOPDICT
+#define CFFCODE       CFFCODE_TOPDICT
 
   CFF_FIELD_STRING  ( 0,     version )
   CFF_FIELD_STRING  ( 1,     notice )

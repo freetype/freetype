@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType and CFF data/program tables loader (body).                  */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1358,7 +1358,7 @@
 
   static void
   CFF_Done_FD_Select( CFF_FDSelect  select,
-                      FT_Stream       stream )
+                      FT_Stream     stream )
   {
     if ( select->data )
       FT_FRAME_RELEASE( select->data );
@@ -1371,9 +1371,9 @@
 
   static FT_Error
   CFF_Load_FD_Select( CFF_FDSelect  select,
-                      FT_UInt         num_glyphs,
-                      FT_Stream       stream,
-                      FT_ULong        offset )
+                      FT_UInt       num_glyphs,
+                      FT_Stream     stream,
+                      FT_ULong      offset )
   {
     FT_Error  error;
     FT_Byte   format;
@@ -1415,7 +1415,7 @@
 
   FT_LOCAL_DEF( FT_Byte )
   CFF_Get_FD( CFF_FDSelect  select,
-              FT_UInt         glyph_index )
+              FT_UInt       glyph_index )
   {
     FT_Byte  fd = 0;
 
@@ -1485,7 +1485,7 @@
 
   static void
   CFF_Done_Encoding( CFF_Encoding  encoding,
-                     FT_Stream      stream )
+                     FT_Stream     stream )
   {
     FT_Memory  memory = stream->memory;
 
@@ -1501,7 +1501,7 @@
 
   static void
   CFF_Done_Charset( CFF_Charset  charset,
-                    FT_Stream     stream )
+                    FT_Stream    stream )
   {
     FT_Memory  memory = stream->memory;
 
@@ -1529,7 +1529,7 @@
 
     /* Get the format of the table. */
     if ( FT_STREAM_SEEK( charset->offset ) ||
-         FT_READ_BYTE( charset->format ) )
+         FT_READ_BYTE( charset->format )   )
       goto Exit;
 
     /* If the the offset is greater than 2, we have to parse the */
@@ -1627,7 +1627,7 @@
 
         /* Copy the predefined charset into the allocated memory. */
         FT_MEM_COPY( charset->sids, cff_isoadobe_charset,
-                  num_glyphs * sizeof ( FT_UShort ) );
+                     num_glyphs * sizeof ( FT_UShort ) );
 
         break;
 
@@ -1646,7 +1646,7 @@
 
         /* Copy the predefined charset into the allocated memory.     */
         FT_MEM_COPY( charset->sids, cff_expert_charset,
-                  num_glyphs * sizeof ( FT_UShort ) );
+                     num_glyphs * sizeof ( FT_UShort ) );
 
         break;
 
@@ -1665,7 +1665,7 @@
 
         /* Copy the predefined charset into the allocated memory.     */
         FT_MEM_COPY( charset->sids, cff_expertsubset_charset,
-                  num_glyphs * sizeof ( FT_UShort ) );
+                     num_glyphs * sizeof ( FT_UShort ) );
 
         break;
 
@@ -1695,10 +1695,10 @@
   static FT_Error
   CFF_Load_Encoding( CFF_Encoding  encoding,
                      CFF_Charset   charset,
-                     FT_UInt        num_glyphs,
-                     FT_Stream      stream,
-                     FT_ULong       base_offset,
-                     FT_ULong       offset )
+                     FT_UInt       num_glyphs,
+                     FT_Stream     stream,
+                     FT_ULong      base_offset,
+                     FT_ULong      offset )
   {
     FT_Memory   memory = stream->memory;
     FT_Error    error  = 0;
@@ -1747,8 +1747,8 @@
 
       /* we need to parse the table to determine its size */
       if ( FT_STREAM_SEEK( encoding->offset ) ||
-           FT_READ_BYTE( encoding->format ) ||
-           FT_READ_BYTE( count )            )
+           FT_READ_BYTE( encoding->format )   ||
+           FT_READ_BYTE( count )              )
         goto Exit;
 
       switch ( encoding->format & 0x7F )
@@ -1867,7 +1867,7 @@
       case 0:
         /* First, copy the code to SID mapping. */
         FT_MEM_COPY( encoding->sids, cff_standard_encoding,
-                  256 * sizeof ( FT_UShort ) );
+                     256 * sizeof ( FT_UShort ) );
 
         /* Construct code to GID mapping from code */
         /* to SID mapping and charset.             */
@@ -1898,7 +1898,7 @@
       case 1:
         /* First, copy the code to SID mapping. */
         FT_MEM_COPY( encoding->sids, cff_expert_encoding,
-                  256 * sizeof ( FT_UShort ) );
+                     256 * sizeof ( FT_UShort ) );
 
         /* Construct code to GID mapping from code to SID mapping */
         /* and charset.                                           */
@@ -1958,17 +1958,17 @@
 
   static FT_Error
   CFF_Load_SubFont( CFF_SubFont  font,
-                    CFF_Index     idx,
-                    FT_UInt       font_index,
-                    FT_Stream     stream,
-                    FT_ULong      base_offset )
+                    CFF_Index    idx,
+                    FT_UInt      font_index,
+                    FT_Stream    stream,
+                    FT_ULong     base_offset )
   {
-    FT_Error        error;
-    CFF_ParserRec      parser;
-    FT_Byte*        dict;
-    FT_ULong        dict_len;
+    FT_Error         error;
+    CFF_ParserRec    parser;
+    FT_Byte*         dict;
+    FT_ULong         dict_len;
     CFF_FontRecDict  top  = &font->font_dict;
-    CFF_Private    priv = &font->private_dict;
+    CFF_Private      priv = &font->private_dict;
 
 
     CFF_Parser_Init( &parser, CFF_CODE_TOPDICT, &font->font_dict );
@@ -2010,7 +2010,7 @@
       CFF_Parser_Init( &parser, CFF_CODE_PRIVATE, priv );
 
       if ( FT_STREAM_SEEK( base_offset + font->font_dict.private_offset ) ||
-           FT_FRAME_ENTER( font->font_dict.private_size )              )
+           FT_FRAME_ENTER( font->font_dict.private_size )                 )
         goto Exit;
 
       error = CFF_Parser_Run( &parser,
@@ -2025,7 +2025,7 @@
     if ( priv->local_subrs_offset )
     {
       if ( FT_STREAM_SEEK( base_offset + top->private_offset +
-                      priv->local_subrs_offset ) )
+                           priv->local_subrs_offset ) )
         goto Exit;
 
       error = cff_new_index( &font->local_subrs_index, stream, 1 );
@@ -2045,7 +2045,7 @@
 
 
   static void
-  CFF_Done_SubFont( FT_Memory     memory,
+  CFF_Done_SubFont( FT_Memory    memory,
                     CFF_SubFont  subfont )
   {
     if ( subfont )
@@ -2059,7 +2059,7 @@
   FT_LOCAL_DEF( FT_Error )
   CFF_Load_Font( FT_Stream  stream,
                  FT_Int     face_index,
-                 CFF_Font  font )
+                 CFF_Font   font )
   {
     static const FT_Frame_Field  cff_header_fields[] =
     {
@@ -2074,9 +2074,9 @@
       FT_FRAME_END
     };
 
-    FT_Error        error;
-    FT_Memory       memory = stream->memory;
-    FT_ULong        base_offset;
+    FT_Error         error;
+    FT_Memory        memory = stream->memory;
+    FT_ULong         base_offset;
     CFF_FontRecDict  dict;
 
 
@@ -2138,7 +2138,7 @@
     if ( dict->cid_registry )
     {
       CFF_IndexRec  fd_index;
-      CFF_SubFont  sub;
+      CFF_SubFont   sub;
       FT_UInt       idx;
 
 
