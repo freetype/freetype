@@ -17,6 +17,9 @@ LATEST CHANGES BETWEEN 2.1.5 and 2.1.4
     - Numeric font dictionary entries for synthetic fonts are no longer
       overwritten.
 
+    - The font matrix wasn't applied to the advance width for Type1, CID,
+      and CFF fonts.
+
     - The test for the charset registry in BDF and PCF fonts is now
       case-insensitive.
 
