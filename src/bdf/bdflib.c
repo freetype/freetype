@@ -1,6 +1,6 @@
 /*
  * Copyright 2000 Computing Research Labs, New Mexico State University
- * Copyright 2001, 2002 Francesco Zappa Nardelli
+ * Copyright 2001, 2002, 2003 Francesco Zappa Nardelli
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -641,7 +641,7 @@
   {
     _bdf_line_func_t  cb;
     unsigned long     lineno;
-    int               n, res, done, refill, bytes, hold;
+    int               n, done, refill, bytes, hold;
     char              *ls, *le, *pp, *pe, *hp;
     char              *buf = 0;
     FT_Memory         memory = stream->memory;
@@ -661,7 +661,7 @@
     lineno = 1;
     buf[0] = 0;
 
-    res = done = 0;
+    done = 0;
     pp = ls = le = buf;
 
     bytes = 65536L;
@@ -1443,7 +1443,6 @@
     unsigned char*     bp;
     unsigned long      i, slen, nibbles;
 
-    _bdf_line_func_t*  next;
     _bdf_parse_t*      p;
     bdf_glyph_t*       glyph;
     bdf_font_t*        font;
@@ -1451,11 +1450,11 @@
     FT_Memory          memory;
     FT_Error           error = BDF_Err_Ok;
 
+    FT_UNUSED( call_data );
     FT_UNUSED( lineno );        /* only used in debug mode */
 
 
-    next = (_bdf_line_func_t *)call_data;
-    p    = (_bdf_parse_t *)    client_data;
+    p = (_bdf_parse_t *)client_data;
 
     font   = p->font;
     memory = font->memory;

@@ -2,7 +2,7 @@
 
     FreeType font driver for pcf fonts
 
-  Copyright 2000-2001, 2002 by
+  Copyright 2000, 2001, 2002, 2003 by
   Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -250,18 +250,22 @@ THE SOFTWARE.
                           FT_ULong  *aformat,
                           FT_ULong  *asize )
   {
-    FT_Error  error = 0;
+    FT_Error  error = PCF_Err_Invalid_File_Format;
     FT_Int    i;
 
 
     for ( i = 0; i < ntables; i++ )
       if ( tables[i].type == type )
       {
-        if ( stream->pos > tables[i].offset )
-          return PCF_Err_Invalid_Stream_Skip;
+        if ( stream->pos > tables[i].offset ) {
+          error = PCF_Err_Invalid_Stream_Skip;
+          goto Fail;
+        }
 
-        if ( FT_STREAM_SKIP( tables[i].offset - stream->pos ) )
-          return PCF_Err_Invalid_Stream_Skip;
+        if ( FT_STREAM_SKIP( tables[i].offset - stream->pos ) ) {
+          error = PCF_Err_Invalid_Stream_Skip;
+          goto Fail;
+        }
 
         *asize   = tables[i].size;  /* unused - to be removed */
         *aformat = tables[i].format;
@@ -269,7 +273,8 @@ THE SOFTWARE.
         return PCF_Err_Ok;
       }
 
-    return PCF_Err_Invalid_File_Format;
+  Fail:
+    return error;
   }
 
 
@@ -986,12 +991,11 @@ THE SOFTWARE.
         prop = pcf_find_property( face, "POINT_SIZE" );
         if ( prop != NULL )
         {
-          PCF_Property  xres, yres, avgw;
+          PCF_Property  xres, yres;
 
 
           xres = pcf_find_property( face, "RESOLUTION_X" );
           yres = pcf_find_property( face, "RESOLUTION_Y" );
-          avgw = pcf_find_property( face, "AVERAGE_WIDTH" );
 
           if ( ( yres != NULL ) && ( xres != NULL ) )
           {

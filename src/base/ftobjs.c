@@ -220,7 +220,7 @@
 
   FT_BASE_DEF( void )
   ft_glyphslot_set_bitmap( FT_GlyphSlot  slot,
-                           FT_Pointer    buffer )
+                           FT_Byte*      buffer )
   {
     ft_glyphslot_free_bitmap( slot );
     
@@ -429,10 +429,11 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( void )
-  FT_Set_Hint_Flags( FT_Face     face,
-                     FT_ULong    flags )
+  FT_Set_Hint_Flags( FT_Face   face,
+                     FT_ULong  flags )
   {
     FT_Face_Internal  internal;
+
 
     if ( !face )
       return;

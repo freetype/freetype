@@ -560,7 +560,7 @@ FT_BEGIN_HEADER
   */
   FT_BASE( void )
   ft_glyphslot_set_bitmap( FT_GlyphSlot  slot,
-                           FT_Pointer    buffer );
+                           FT_Byte*      buffer );
 
 
   /*************************************************************************/

@@ -397,16 +397,18 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  FT_LOCAL_DEF( FT_Error )
+  FT_LOCAL_DEF( void )
   pfr_face_get_kerning( PFR_Face    face,
                         FT_UInt     glyph1,
                         FT_UInt     glyph2,
                         FT_Vector*  kerning )
   {
-    FT_Error      error;
+    FT_Error      error = FT_Err_Ok;
     PFR_PhyFont   phy_font = &face->phy_font;
     PFR_KernItem  item     = phy_font->kern_items;
     FT_UInt32     idx      = PFR_KERN_INDEX( glyph1, glyph2 );
+
+    FT_UNUSED( error ); /* just needed as syntactical sugar */
 
 
     kerning->x = 0;
@@ -422,7 +424,7 @@
     }
 
     /* not found */
-    goto Exit;
+    return;
 
   Found_Item:
     {
@@ -434,7 +436,7 @@
 
       if ( FT_STREAM_SEEK( item->offset )                       ||
            FT_FRAME_ENTER( item->pair_count * item->pair_size ) )
-        goto Exit;
+        return;
 
       min = 0;
       max = item->pair_count;
@@ -475,9 +477,7 @@
 
       FT_FRAME_EXIT();
     }
-
-  Exit:
-    return 0;
   }
+
 
 /* END */

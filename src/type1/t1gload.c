@@ -226,7 +226,9 @@
     FT_Matrix               font_matrix;
     FT_Vector               font_offset;
     FT_Data                 glyph_data;
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
     FT_Bool                 glyph_data_loaded = 0;
+#endif
 
 
     if ( load_flags & FT_LOAD_NO_RECURSE )
@@ -267,7 +269,9 @@
                                                 &glyph_data );
     if ( error )
       goto Exit;
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
     glyph_data_loaded = 1;
+#endif
 
     font_matrix = decoder.font_matrix;
     font_offset = decoder.font_offset;
