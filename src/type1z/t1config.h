@@ -42,4 +42,11 @@
 /*                                                                 */
 #undef  T1_CONFIG_OPTION_DISABLE_HINTER
 
+/* Define this configuration macro if you want to prevent the      */
+/* compilation of "t1afm", which is in charge of reading Type1     */
+/* AFM files into an existing face. Note that when set, the T1     */
+/* driver will be unable to produce kerning distances..            */
+/*                                                                 */
+#undef  T1_CONFIG_OPTION_NO_AFM
+
 #endif /* T1CONFIG_H */

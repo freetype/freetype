@@ -63,10 +63,8 @@
 
 #include <t1types.h>
 #include <t1errors.h>
-#include <t1encode.h>
 #include <t1config.h>
 #include <t1load.h>
-
 #include <stdio.h>
 
 #undef  FT_COMPONENT
@@ -345,8 +343,12 @@
         {
           if ( cur[1] == 'e' &&
                cur[2] == 'f' &&
+               is_space(cur[-1]) &&
                is_space(cur[3]) )
-            break;
+          {
+              FT_TRACE6(( "encoding end\n" ));
+              break;
+          }
         }
         
         /* otherwise, we must find a number before anything else */
@@ -382,6 +384,7 @@
       }
       
       face->type1.encoding_type = t1_encoding_array;
+      parser->cursor            = cur;
     }
     /* Otherwise, we should have either "StandardEncoding" or */
     /* "ExpertEncoding"                                       */
@@ -433,6 +436,10 @@
       index = T1_ToInt(parser);
       if (!read_binary_data(parser,&size,&base)) return;
       
+      T1_Decrypt( base, size, 4330 );      
+      size -= face->type1.lenIV;
+      base += face->type1.lenIV;
+
       error = T1_Add_Table( table, index, base, size );
       if (error) goto Fail;
     }
@@ -481,11 +488,17 @@
       cur = parser->cursor;
       if (cur >= limit) break;
 
-      /* we stop when we find a "def" */
+      /* we stop when we find a "def" or "end" keyword */
       if (*cur    == 'd' && 
            cur+3 < limit &&
            cur[1] == 'e' &&
            cur[2] == 'f' )
+        break;
+
+      if (*cur == 'e'   &&
+          cur+3 < limit &&
+          cur[1] == 'n' &&
+          cur[2] == 'd' )
         break;
 
       if (*cur != '/')
@@ -497,6 +510,7 @@
         
         while (cur2 < limit && is_alpha(*cur2)) cur2++;
         len = cur2-cur-1;
+        
         error = T1_Add_Table( name_table, n, cur+1, len+1 );
         if (error) goto Fail;
        
@@ -505,7 +519,11 @@
        
         parser->cursor = cur2; 
         if (!read_binary_data(parser,&size,&base)) return;
-      
+
+        T1_Decrypt( base, size, 4330 );      
+        size -= face->type1.lenIV;
+        base += face->type1.lenIV;
+
         error = T1_Add_Table( code_table, n, base, size );
         if (error) goto Fail;
         
@@ -514,6 +532,7 @@
           break;
       }
     }
+    loader->num_glyphs = n;
     return;
     
   Fail:
@@ -562,7 +581,7 @@
   T1_Error  parse_dict( T1_Face     face,
                         T1_Loader*  loader,
                         T1_Byte*    base,
-                        T1_Int      size )
+                        T1_Long     size )
   {
     T1_Parser*  parser = &loader->parser;
     
@@ -571,8 +590,8 @@
     parser->error  = 0;
     
     {
-      T1_Byte*  cur   = base;
-      T1_Byte*  limit = cur + size;
+      T1_Byte*  cur     = base;
+      T1_Byte*  limit   = cur + size;
       
       for ( ;cur < limit; cur++ )
       {
@@ -587,7 +606,7 @@
           while (cur2 < limit && is_alpha(*cur2)) cur2++;
           len  = cur2-cur;
           
-          if (len > 0)
+          if (len > 0 && len < 20)
           {
             /* now, compare the immediate name to the keyword table */
             T1_KeyWord*  keyword = (T1_KeyWord*)t1_keywords;
@@ -617,6 +636,7 @@
                     return parser->error;
 
                   cur = parser->cursor;
+                  break;
                 }
               }
               keyword++;
@@ -631,9 +651,11 @@
   static
   void t1_init_loader( T1_Loader* loader, T1_Face  face )
   {
+    MEM_Set( loader, 0, sizeof(*loader) );
     loader->num_glyphs = 0;
     loader->num_chars  = 0;
-    
+
+    /* initialize the tables - simply set their 'init' field to 0 */    
     loader->encoding_table.init = 0;
     loader->charstrings.init    = 0;
     loader->glyph_names.init    = 0;
@@ -684,6 +706,18 @@
     /* now, propagate the subrs, charstrings and glyphnames tables */
     /* to the Type1 data                                           */
     type1->num_glyphs = loader.num_glyphs;
+    
+    if ( !loader.subrs.init )
+    {
+      FT_ERROR(( "T1.Open_Face: no subrs array in face !!\n" ));
+      error = FT_Err_Invalid_File_Format;
+    }
+    
+    if ( !loader.charstrings.init )
+    {
+      FT_ERROR(( "T1.Open_Face: no charstrings array in face !!\n" ));
+      error = FT_Err_Invalid_File_Format;
+    }
     
     loader.subrs.init  = 0;
     type1->num_subrs   = loader.num_subrs;

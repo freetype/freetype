@@ -17,8 +17,74 @@
 
 #include <t1gload.h>
 #include <ftdebug.h>
-#include <t1encode.h>
 #include <ftstream.h>
+
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_t1gload
+
+  typedef enum T1_Operator_
+  {
+    op_none = 0,
+    op_endchar,
+    op_hsbw,
+    op_seac,
+    op_sbw,
+    op_closepath,
+    op_hlineto,
+    op_hmoveto,
+    op_hvcurveto,
+    op_rlineto,
+    op_rmoveto,
+    op_rrcurveto,
+    op_vhcurveto,
+    op_vlineto,
+    op_vmoveto,
+    op_dotsection,
+    op_hstem,
+    op_hstem3,
+    op_vstem,
+    op_vstem3,
+    op_div,
+    op_callothersubr,
+    op_callsubr,
+    op_pop,
+    op_return,
+    op_setcurrentpoint,
+
+    op_max    /* never remove this one */
+
+  } T1_Operator;
+
+  static const T1_Int  t1_args_count[ op_max ] = 
+  {
+    0, /* none */
+    0, /* endchar */
+    2, /* hsbw */
+    5, /* seac */
+    4, /* sbw */
+    0, /* closepath */
+    1, /* hlineto */
+    1, /* hmoveto */
+    4, /* hvcurveto */
+    2, /* rlineto */
+    2, /* rmoveto */
+    6, /* rrcurveto */
+    4, /* vhcurveto */
+    1, /* vlineto */
+    1, /* vmoveto */
+    0, /* dotsection */
+    2, /* hstem */
+    6, /* hstem3 */
+    2, /* vstem */
+    6, /* vstem3 */
+    2, /* div */
+   -1, /* callothersubr */
+    1, /* callsubr */
+    0, /* pop */
+    0, /* return */
+    2  /* setcurrentpoint */
+  };
+
 
   /**********************************************************************/
   /**********************************************************************/
@@ -264,9 +330,9 @@
     if (outline->n_contours > 0)
       outline->contours[ outline->n_contours-1 ] = outline->n_points-1;
 
+    outline->n_contours++;
     return T1_Err_Ok;
   }
-
 
   /* if a path was begun, add its first on-curve point */
   static
@@ -274,7 +340,16 @@
                          T1_Pos       x,
                          T1_Pos       y )
   {
-    return builder->path_begun && add_point1( builder, x, y );
+    /* test wether we're building a new contour */
+    if (!builder->path_begun)
+    {
+      T1_Error  error;
+    
+      builder->path_begun = 1;
+      error = add_contour( builder );
+      if (error) return error;
+    }
+    return add_point1( builder, x, y );
   }
 
 
@@ -312,20 +387,22 @@
   T1_Int    lookup_glyph_by_stdcharcode( T1_Face  face,
                                          T1_Int   charcode )
   {
-    T1_Int            n;
-    const T1_String*  glyph_name;
+    T1_Int              n;
+    const T1_String*    glyph_name;
+    PSNames_Interface*  psnames = (PSNames_Interface*)face->psnames;
     
     /* check range of standard char code */
     if (charcode < 0 || charcode > 255)
       return -1;
       
-    glyph_name = t1_standard_strings[t1_standard_encoding[charcode]];
+    glyph_name = psnames->adobe_std_strings(
+                    psnames->adobe_std_encoding[charcode]);
     
     for ( n = 0; n < face->type1.num_glyphs; n++ )
     {
       T1_String*  name = (T1_String*)face->type1.glyph_names[n];
       
-      if ( name && name[0] == glyph_name[0] && strcmp(name,glyph_name) == 0 )
+      if ( name && strcmp(name,glyph_name) == 0 )
         return n;
     }
 
@@ -506,62 +583,364 @@
     while ( ip < limit )
     {
       T1_Int*      top      = decoder->top;
+      T1_Operator  op       = op_none;
+      T1_Long      value    = 0;
+
+      /********************************************************************/
+      /*                                                                  */
+      /* Decode operator or operand                                       */
+      /*                                                                  */
+      /*                                                                  */
 
       /* First of all, decompress operator or value */
       switch (*ip++)
       {
-        case 1:   /* hstem */
-        case 3:   /* vstem */
+        case 1:  op = op_hstem;     break;
+
+        case 3:  op = op_vstem;     break;
+        case 4:  op = op_vmoveto;   break;
+        case 5:  op = op_rlineto;   break;
+        case 6:  op = op_hlineto;   break;
+        case 7:  op = op_vlineto;   break;
+        case 8:  op = op_rrcurveto; break;
+        case 9:  op = op_closepath; break;
+        case 10: op = op_callsubr;  break;
+        case 11: op = op_return;    break;
+
+        case 13: op = op_hsbw;      break;
+        case 14: op = op_endchar;   break;
+
+        case 21: op = op_rmoveto;   break;
+        case 22: op = op_hmoveto;   break;
+
+        case 30: op = op_vhcurveto; break;
+        case 31: op = op_hvcurveto; break;
+
+        case 12:
           {
-   Clear_Stack:
-            top = decoder->stack;
+            if (ip > limit)
+            {
+              FT_ERROR(( "T1.Parse_CharStrings : invalid escape (12+EOF)\n" ));
+              goto Syntax_Error;
+            }
+
+            switch (*ip++)
+            {
+              case 0:  op = op_dotsection;      break;
+              case 1:  op = op_vstem3;          break;
+              case 2:  op = op_hstem3;          break;
+              case 6:  op = op_seac;            break;
+              case 7:  op = op_sbw;             break;
+              case 12: op = op_div;             break;
+              case 16: op = op_callothersubr;   break;
+              case 17: op = op_pop;             break;
+              case 33: op = op_setcurrentpoint; break;
+
+              default:
+                FT_ERROR(( "T1.Parse_CharStrings : invalid escape (12+%d)\n",
+                         ip[-1] ));
+                goto Syntax_Error;
+            }
+          }
+          break;
+
+        case 255:    /* four bytes integer */
+          {
+            if (ip+4 > limit)
+            {
+              FT_ERROR(( "T1.Parse_CharStrings : unexpected EOF in integer\n" ));
+              goto Syntax_Error;
+            }
+
+            value = ((long)ip[0] << 24) |
+                    ((long)ip[1] << 16) |
+                    ((long)ip[2] << 8)  |
+                           ip[3];
+            ip += 4;
+          }
+          break;
+
+        default:
+          if (ip[-1] >= 32)
+          {
+            if (ip[-1] < 247)
+              value = (long)ip[-1] - 139;
+            else
+            {
+              if (++ip > limit)
+              {
+                FT_ERROR(( "T1.Parse_CharStrings : unexpected EOF in integer\n" ));
+                goto Syntax_Error;
+              }
+
+              if (ip[-2] < 251)
+                value =  ((long)(ip[-2]-247) << 8) + ip[-1] + 108;
+              else
+                value = -((((long)ip[-2]-251) << 8) + ip[-1] + 108 );
+            }
+          }
+          else
+          {
+            FT_ERROR(( "T1.Parse_CharStrings : invalid byte (%d)\n",
+                     ip[-1] ));
+            goto Syntax_Error;
+          }
+      }
+
+      /********************************************************************/
+      /*                                                                  */
+      /*  Push value on stack, or process operator                        */
+      /*                                                                  */
+      /*                                                                  */
+      if ( op == op_none )
+      {
+        if ( top - decoder->stack >= T1_MAX_CHARSTRINGS_OPERANDS )
+        {
+          FT_ERROR(( "T1.Parse_CharStrings : Stack overflow !!\n" ));
+          goto Syntax_Error;
+        }
+
+        FT_TRACE4(( " %ld", value ));
+        *top++       = value;
+        decoder->top = top;
+      }
+      else if ( op == op_callothersubr )  /* callothersubr */
+      {
+        FT_TRACE4(( " callothersubr" ));
+        if ( top - decoder->stack < 2 )
+          goto Stack_Underflow;
+          
+        top -= 2;
+        switch ( top[1] )
+        {
+          case 1: /* start flex feature ---------------------- */
+            {
+              if ( top[0] != 0 ) goto Unexpected_OtherSubr;
+              
+              decoder->flex_state        = 1;
+              decoder->num_flex_vectors  = 0;
+              if ( start_point(builder, x, y) ||
+                   check_points(builder,6) ) goto Memory_Error;
+            }
+            break;
+  
+          case 2: /* add flex vectors ------------------------ */
+            {
+              T1_Int      index;
+              
+              if ( top[0] != 0 ) goto Unexpected_OtherSubr;
+              
+              /* note that we should not add a point for index 0 */
+              /* this will move our current position to the flex */
+              /* point without adding any point to the outline   */
+              index = decoder->num_flex_vectors++;
+              if (index > 0 && index < 7)
+                add_point( builder,
+                           x,
+                           y,
+                           (T1_Byte)( index==3 || index==6 ) );
+            }
+            break;
+            
+          case 0: /* end flex feature ------------------------- */
+            {
+              if ( top[0] != 3 ) goto Unexpected_OtherSubr;
+              
+              if ( decoder->flex_state       == 0 ||
+                   decoder->num_flex_vectors != 7 )
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: unexpected flex end\n" ));
+                goto Syntax_Error;
+              }
+              
+              /* now consume the remaining "pop pop setcurpoint" */
+              if ( ip+6 > limit ||
+                   ip[0] != 12  || ip[1] != 17 || /* pop */
+                   ip[2] != 12  || ip[3] != 17 || /* pop */
+                   ip[4] != 12  || ip[5] != 33 )  /* setcurpoint */
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: invalid flex charstring\n" ));
+                goto Syntax_Error;
+              }
+              
+              ip += 6;
+              decoder->flex_state = 0;
+              break;
+            }
+            
+          case 3:  /* change hints ---------------------------- */
+            {
+              if ( top[0] != 1 ) goto Unexpected_OtherSubr;
+              
+              /* eat the following "pop" */
+              if (ip+2 > limit)
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: invalid escape (12+%d)\n",
+                         ip[-1] ));
+                goto Syntax_Error;
+              }
+  
+              if (ip[0] != 12 || ip[1] != 17)
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: 'pop' expected, found (%d %d)\n",
+                         ip[0], ip[1] ));
+                goto Syntax_Error;
+              }
+              ip += 2;
+              break;;
+            }
+            
+          default:
+          Unexpected_OtherSubr:
+            FT_ERROR(( "T1.Parse_CharStrings: invalid othersubr [%d %d]!!\n",
+                       top[0], top[1] ));
+            goto Syntax_Error;
+        }
+        decoder->top = top;
+      }
+      else  /* general operator */
+      {
+        T1_Int  num_args = t1_args_count[op];
+
+        if ( top - decoder->stack < num_args )
+          goto Stack_Underflow;
+
+        top -= num_args;
+
+        switch (op)
+        {
+          case op_endchar: /*************************************************/
+          {
+            FT_TRACE4(( " endchar" ));
+            close_contour( builder );  
+
+            /* add current outline to the glyph slot */
+            builder->base.n_points   += builder->current.n_points;
+            builder->base.n_contours += builder->current.n_contours;
+            
+            /* return now !! */
+            FT_TRACE4(( "\n\n" ));
+            return T1_Err_Ok;
+          }
+
+
+          case op_hsbw: /****************************************************/
+          {
+            FT_TRACE4(( " hsbw" ));
+            builder->left_bearing.x += top[0];
+            builder->advance.x       = top[1];
+            builder->advance.y       = 0;
+        
+            builder->last.x = x = top[0];
+            builder->last.y = y = 0;
+            
+            /* the "metrics_only" indicates that we only want to compute */
+            /* the glyph's metrics (lsb + advance width), not load the   */
+            /* rest of it.. so exit immediately                          */
+            if (builder->metrics_only)
+              return T1_Err_Ok;
+              
             break;
           }
 
-        case 4:   /* vmoveto */
+
+          case op_seac: /****************************************************/
+            /* return immediately after the processing */
+            return t1operator_seac( decoder, top[0], top[1],
+                                             top[2], top[3], top[4] );
+
+          case op_sbw:  /****************************************************/
           {
-            USE_ARGS(1);
-            y += top[0];
-            builder->path_begun = 1;
-            goto Clear_Stack;
+            FT_TRACE4(( " sbw" ));
+            builder->left_bearing.x += top[0];
+            builder->left_bearing.y += top[1];
+            builder->advance.x       = top[2];
+            builder->advance.y       = top[3];
+        
+            builder->last.x = x = top[0];
+            builder->last.y = y = top[1];
+            
+            /* the "metrics_only" indicates that we only want to compute */
+            /* the glyph's metrics (lsb + advance width), not load the   */
+            /* rest of it.. so exit immediately                          */
+            if (builder->metrics_only)
+              return T1_Err_Ok;
+        
+            break;
           }
-          
-        case 5:   /* rlineto */
+
+
+          case op_closepath:  /**********************************************/
           {
+            FT_TRACE4(( " closepath" ));
+            close_contour( builder );
+            builder->path_begun = 0;
+          }
+          break;
+
+
+          case op_hlineto:  /************************************************/
+          {
+            FT_TRACE4(( " hlineto" ));
+            if ( start_point( builder, x, y ) ) goto Memory_Error;
+
+            x += top[0];
+            goto Add_Line;
+          }
+
+
+          case op_hmoveto:  /************************************************/
+          {
+            FT_TRACE4(( " hmoveto" ));
+            x += top[0];
+            break;
+          }
+
+
+          case op_hvcurveto:  /**********************************************/
+          {
+            FT_TRACE4(( " hvcurveto" ));
+            if ( start_point( builder, x, y ) ||
+                 check_points( builder, 3 )   ) goto Memory_Error;
+                 
+            x += top[0];
+            add_point( builder, x, y, 0 );
+            x += top[1];
+            y += top[2];
+            add_point( builder, x, y, 0 );
+            y += top[3];
+            add_point( builder, x, y, 1 );
+            break;
+          }
+
+
+          case op_rlineto: /*************************************************/
+          {
+            FT_TRACE4(( " rlineto" ));
             if ( start_point( builder, x, y ) ) goto Memory_Error;
               
-            USE_ARGS(2);
             x += top[0];
             y += top[1];
    Add_Line:
-            if (add_point1( builder, top[0], top[1] )) goto Memory_Error;
-            goto Clear_Stack;
+            if (add_point1( builder, x, y )) goto Memory_Error;
+            break;
           }
-          
-        case 6:   /* hlineto */
+
+
+          case op_rmoveto: /*************************************************/
           {
-            if ( start_point( builder, x, y ) ) goto Memory_Error;
-              
-            USE_ARGS(1);
+            FT_TRACE4(( " rmoveto" ));
             x += top[0];
-            goto Add_Line;
+            y += top[1];
+            break;
           }
-          
-        case 7:   /* vlineto */
+
+          case op_rrcurveto: /***********************************************/
           {
-            if ( start_point( builder, x, y ) ) goto Memory_Error;
-              
-            USE_ARGS(1);
-            y += top[0];
-            goto Add_Line;
-          }
-          
-        case 8:   /* rrcurveto */
-          {
+            FT_TRACE4(( " rcurveto" ));
             if ( start_point( builder, x, y ) ||
                  check_points( builder, 3 )   ) goto Memory_Error;
               
-            USE_ARGS(6);
             x += top[0];
             y += top[1];
             add_point( builder, x, y, 0 );
@@ -573,22 +952,64 @@
             x += top[4];
             y += top[5];
             add_point( builder, x, y, 1 );
-            goto Clear_Stack;
+            break;
           }    
-          
-        case 9:   /* closepath */
+
+
+          case op_vhcurveto:  /**********************************************/
           {
-            close_contour( builder );
-            builder->path_begun = 0;
+            FT_TRACE4(( " vhcurveto" ));
+            if ( start_point( builder, x, y ) ||
+                 check_points( builder, 3 )   ) goto Memory_Error;
+                 
+            y += top[0];
+            add_point( builder, x, y, 0 );
+            x += top[1];
+            y += top[2];
+            add_point( builder, x, y, 0 );
+            x += top[3];
+            add_point( builder, x, y, 1 );
+            break;
           }
-          break;
-          
-        case 10:  /* callsubr  */
+
+
+          case op_vlineto:  /************************************************/
+            {
+              FT_TRACE4(( " vlineto" ));
+              if ( start_point( builder, x, y ) ) goto Memory_Error;
+                
+              y += top[0];
+              goto Add_Line;
+            }
+
+
+          case op_vmoveto:  /************************************************/
+            {
+              FT_TRACE4(( " vmoveto" ));
+              y += top[0];
+              break;
+            }
+
+
+          case op_div:  /****************************************************/
+          {
+            FT_TRACE4(( " div" ));
+            if (top[1])
+              *top++ = top[0] / top[1];
+            else
+            {
+              FT_ERROR(( "T1.Parse_CharStrings : division by 0\n" ));
+              goto Syntax_Error;
+            }
+            break;
+          }
+
+
+          case op_callsubr:  /***********************************************/
           {
             T1_Int  index;
 
-            USE_ARGS(1);
-            
+            FT_TRACE4(( " callsubr" ));
             index = top[0];
             if ( index < 0 || index >= num_subrs )
             {
@@ -618,13 +1039,21 @@
             decoder->zone = zone;
             ip            = zone->base;
             limit         = zone->limit;
-            
-            /* do not clear stack */
+            break;
           }
-          break;
-          
-        case 11:  /* return */
+
+
+          case op_pop:  /****************************************************/
           {
+            FT_TRACE4(( " pop" ));
+            FT_ERROR(( "T1.Parse_CharStrings : unexpected POP\n" ));
+            goto Syntax_Error;
+          }
+
+
+          case op_return:  /************************************************/
+          {
+            FT_TRACE4(( " return" ));
             if ( zone <= decoder->zones )
             {
               FT_ERROR(( "T1.Parse_CharStrings : unexpected return\n" ));
@@ -635,306 +1064,58 @@
             ip            = zone->cursor;
             limit         = zone->limit;
             decoder->zone = zone;
+            break;
           }
-          break;
-          
-        case 13:  /* hsbw */
+
+          case op_dotsection:  /*********************************************/
           {
-            USE_ARGS(2);
-            builder->left_bearing.x += top[0];
-            builder->advance.x       = top[1];
-            builder->advance.y       = 0;
-        
-            builder->last.x = x = top[0];
-            builder->last.y = y = 0;
-            
-            /* the "metrics_only" indicates that we only want to compute */
-            /* the glyph's metrics (lsb + advance width), not load the   */
-            /* rest of it.. so exit immediately                          */
-            if (builder->metrics_only)
-              return T1_Err_Ok;
-              
-            goto Clear_Stack;
+            FT_TRACE4(( " dotsection" ));
+            break;
           }
 
-        case 14:  /* endchar */
+          case op_hstem:  /**************************************************/
           {
-            close_contour( builder );  
-
-            /* add current outline to the glyph slot */
-            builder->base.n_points   += builder->current.n_points;
-            builder->base.n_contours += builder->current.n_contours;
-            
-            /* return now !! */
-            return T1_Err_Ok;
+            FT_TRACE4(( " hstem" ));
+            break;
           }
-          
-        case 21:  /* rmoveto */
+
+          case op_hstem3:  /*************************************************/
           {
-            USE_ARGS(2);
-            x += top[0];
-            y += top[1];
-            goto Clear_Stack;
+            FT_TRACE4(( " hstem3" ));
+            break;
           }
-          
-        case 22:  /* hmoveto */
+
+          case op_vstem:  /**************************************************/
           {
-            USE_ARGS(1);
-            x += top[0];
-            goto Clear_Stack;
+            FT_TRACE4(( " vstem" ));
+            break;
           }
-          
-        case 30:  /* vhcurveto */
+
+          case op_vstem3:  /*************************************************/
           {
-            if ( start_point( builder, x, y ) ||
-                 check_points( builder, 3 )   ) goto Memory_Error;
-                 
-            USE_ARGS(4);
-            y += top[0];
-            add_point( builder, x, y, 0 );
-            x += top[1];
-            y += top[2];
-            add_point( builder, x, y, 0 );
-            x += top[3];
-            add_point( builder, x, y, 1 );
-            goto Clear_Stack;
+            FT_TRACE4(( " vstem3" ));
+            break;
           }
-          
-        case 31:  /* hvcurveto */
+
+          case op_setcurrentpoint:  /*****************************************/
           {
-            if ( start_point( builder, x, y ) ||
-                 check_points( builder, 3 )   ) goto Memory_Error;
-                 
-            USE_ARGS(4);
-            x += top[0];
-            add_point( builder, x, y, 0 );
-            x += top[1];
-            y += top[2];
-            add_point( builder, x, y, 0 );
-            y += top[3];
-            add_point( builder, x, y, 1 );
-            goto Clear_Stack;
+            FT_TRACE4(( " setcurrentpoint" ));
+            FT_ERROR(( "T1.Parse_CharStrings : unexpected SETCURRENTPOINT\n" ));
+            goto Syntax_Error;
           }
-          
 
-        case 12:
-          {
-            if (ip > limit)
-            {
-              FT_ERROR(( "T1.Parse_CharStrings : invalid escape (12+EOF)\n" ));
-              goto Syntax_Error;
-            }
+          default:
+            FT_ERROR(( "T1.Parse_CharStrings : unhandled opcode %d\n", op ));
+            goto Syntax_Error;
+        }
 
-            switch (*ip++)
-            {
-              case 0:  /* dotsection */
-              case 1:  /* vstem3 */
-              case 2:  /* hstem3 */
-                  goto Clear_Stack;
-                  
-              case 6:  /* seac */
-                {
-                  USE_ARGS(5);
-                  
-                  /* return immediately to implement an accented character */
-                  return t1operator_seac( decoder,
-                                          top[0], top[1], top[3],
-                                          top[4], top[5] );
-                }
-                  
-              case 7:  /* sbw */
-                {
-                  USE_ARGS(4);
-                  builder->left_bearing.x += top[0];
-                  builder->left_bearing.y += top[1];
-                  builder->advance.x       = top[2];
-                  builder->advance.y       = top[3];
-              
-                  builder->last.x = x = top[0];
-                  builder->last.y = y = top[1];
-                  
-                  /* the "metrics_only" indicates that we only want to compute */
-                  /* the glyph's metrics (lsb + advance width), not load the   */
-                  /* rest of it.. so exit immediately                          */
-                  if (builder->metrics_only)
-                    return T1_Err_Ok;
-              
-                  goto Clear_Stack;
-                }
-                  
-              case 12: /* div */
-                {
-                  USE_ARGS(2);
-                  top[0] /= top[1];
-                  top++;
-                }
-                break;
-                  
-              case 16: /* callothersubr */
-                {
-                  USE_ARGS(1);
-                  switch (top[0])
-                  {
-                    case 1: /* start flex feature ---------------------- */
-                      {
-                        decoder->flex_state        = 1;
-                        decoder->num_flex_vectors  = 0;
-                        if ( start_point(builder, x, y) ||
-                             check_points(builder,6) ) goto Memory_Error;
-                      }
-                      break;
+        decoder->top = top;
+      
+      } /* general operator processing */
 
-                    case 2: /* add flex vectors ------------------------ */
-                      {
-                        T1_Int      index;
-                        
-                        /* note that we should not add a point for index 0 */
-                        /* this will move our current position to the flex */
-                        /* point without adding any point to the outline   */
-                        index = decoder->num_flex_vectors++;
-                        if (index > 0 && index < 7)
-                          add_point( builder,
-                                     x,
-                                     y,
-                                     (T1_Byte)( index==3 || index==6 ) );
-                      }
-                      break;
-                      
-                    case 0: /* end flex feature ------------------------- */
-                      {
-                        USE_ARGS(3);  /* ignore parameters */
-                        
-                        if ( decoder->flex_state       == 0 ||
-                             decoder->num_flex_vectors != 7 )
-                        {
-                          FT_ERROR(( "T1.Parse_CharStrings: unexpected flex end\n" ));
-                          goto Syntax_Error;
-                        }
-                        
-                        /* now consume the remaining "pop pop setcurpoint" */
-                        if ( ip+6 > limit ||
-                             ip[0] != 12  || ip[1] != 17 || /* pop */
-                             ip[2] != 12  || ip[3] != 17 || /* pop */
-                             ip[4] != 12  || ip[5] != 33 )  /* setcurpoint */
-                        {
-                          FT_ERROR(( "T1.Parse_CharStrings: invalid flex charstring\n" ));
-                          goto Syntax_Error;
-                        }
-                        
-                        ip += 6;
-                        decoder->flex_state = 0;
-                        decoder->top        = top;
-                        
-                        goto Clear_Stack;
-                      }
-                      
-                    case 3:  /* change hints ---------------------------- */
-                      {
-                        /* eat the following "pop" */
-                        if (ip+2 > limit)
-                        {
-                          FT_ERROR(( "T1.Parse_CharStrings: invalid escape (12+%d)\n",
-                                   ip[-1] ));
-                          goto Syntax_Error;
-                        }
-          
-                        if (ip[0] != 12 || ip[1] != 17)
-                        {
-                          FT_ERROR(( "T1.Parse_CharStrings: 'pop' expected, found (%d %d)\n",
-                                   ip[0], ip[1] ));
-                          goto Syntax_Error;
-                        }
-                        ip += 2;
-                        goto Clear_Stack;
-                      }
-                      
-                    default:
-                      FT_ERROR(( "T1.Parse_CharStrings: invalid othersubr %d !!\n",
-                                 top[0] ));
-                      goto Syntax_Error;
-                  }
-                }
-
-              case 17:  /* pop - should not happen !! */
-                {
-                  FT_ERROR(( "T1.Parse_CharStrings : 'pop' should not happen !!\n" ));
-                  goto Syntax_Error;
-                }
-                
-              case 33: /* setcurrentpoint */
-                {
-                  FT_ERROR(( "T1.Parse_CharStrings : 'setcurrentpoint' should not happen !!\n" ));
-                  goto Syntax_Error;
-                }  
-
-              default:
-                FT_ERROR(( "T1.Parse_CharStrings : invalid escape (12+%d)\n",
-                         ip[-1] ));
-                goto Syntax_Error;
-            }
-          }
-          break;  /* escape - 12 */
-
-        case 255:    /* four bytes integer */
-          {
-            if (ip+4 > limit)
-            {
-              FT_ERROR(( "T1.Parse_CharStrings : unexpected EOF in integer\n" ));
-              goto Syntax_Error;
-            }
-
-            *top++ = ((long)ip[0] << 24) |
-                     ((long)ip[1] << 16) |
-                     ((long)ip[2] << 8)  |
-                            ip[3];
-            ip += 4;
-          }
-          break;
-
-        default:
-          {
-            T1_Long  v, v2;
-            
-            v = ip[-1];
-            if (v < 32)
-            {
-              FT_ERROR(( "T1.Parse_CharStrings : invalid byte (%d)\n",
-                         ip[-1] ));
-              goto Syntax_Error;
-            }
-            
-            /* compute value ----  */
-            /*                     */
-            if (v < 247)   /* 1-byte value */
-              v -= 139;
-            else
-            {
-              if (++ip > limit)  /* 2-bytes value, check limits */
-              {
-                FT_ERROR(( "T1.Parse_CharStrings : unexpected EOF in integer\n" ));
-                goto Syntax_Error;
-              }
-              
-              v2 = ip[-1] + 108;
-              if (v < 251)
-                v = ((v-247) << 8) + v2;
-              else
-                v = -(((v-251) << 8) + v2);
-            }
-            
-            /* store value - is there enough room  ?*/
-            if ( top >= decoder->stack + T1_MAX_CHARSTRINGS_OPERANDS )
-            {
-              FT_ERROR(( "T1.Parse_CharStrings : Stack overflow !!\n" ));
-              goto Syntax_Error;
-            }
-            
-            *top++ = v;
-            decoder->top = top;
-          }
-      } /* big switch */
       
     } /* while ip < limit */
+    FT_TRACE4(( "..end..\n\n" ));
     return error;
 
   Syntax_Error:

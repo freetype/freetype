@@ -108,16 +108,16 @@ T1Z_COMPILE := $(FT_COMPILE) $(T1Z_INCLUDE:%=$I%)
 T1Z_DRV_SRC := $(T1Z_DIR_)t1parse.c   \
                $(T1Z_DIR_)t1load.c    \
                $(T1Z_DIR_)t1driver.c  \
-   	           $(T1Z_DIR_)t1encode.c  \
+               $(T1Z_DIR_)t1afm.c     \
                $(T1Z_DIR_)t1gload.c
 
 
 # Type1 driver headers
 #
 T1Z_DRV_H := $(T1Z_DIR_)t1errors.h    \
-            $(T1Z_DIR_)t1config.h    \
-            $(T1SHARED_H)           \
-            $(T1Z_DRV_SRC:%.c=%.h)
+             $(T1Z_DIR_)t1config.h    \
+             $(T1SHARED_H)           \
+             $(T1Z_DRV_SRC:%.c=%.h)
 
 
 # driver object(s)

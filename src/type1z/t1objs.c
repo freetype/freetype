@@ -20,6 +20,7 @@
 
 #include <t1gload.h>
 #include <t1load.h>
+#include <psnames.h>
 
 /* Required by tracing mode */
 #undef   FT_COMPONENT
@@ -164,11 +165,24 @@
                           T1_Face    face )
   {
     T1_Error      error;
+    PSNames_Interface*  psnames;
 
     (void)face_index;
     (void)face;
 
     face->root.num_faces = 1;
+
+    psnames = (PSNames_Interface*)face->psnames;
+    if (!psnames)
+    {
+      /* look-up the PSNames driver */
+      FT_Driver  psnames_driver;
+      
+      psnames_driver = FT_Get_Driver( face->root.driver->library, "psnames" );
+      if (psnames_driver)
+        face->psnames = (PSNames_Interface*)
+                            (psnames_driver->interface.format_interface);
+    }
 
     /* open the tokenizer, this will also check the font format */
     error = T1_Open_Face( face );

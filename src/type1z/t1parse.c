@@ -367,9 +367,18 @@
       cur++;
 
     /* now, read the coordinates */
-    for ( ; cur < limit; cur++ )
+    for ( ; cur < limit; )
     {
-      c = *cur;
+      /* skip whitespace in front of data */
+      for (;;)
+      {
+        c = *cur;
+        if ( c != ' ' && c != '\t' ) break;
+        
+        cur++;
+        if (cur >= limit) goto Exit;
+      }
+      
       if (count >= max_coords || c == ender)
         break;
       
@@ -414,9 +423,18 @@
       cur++;
 
     /* now, read the values */
-    for ( ; cur < limit; cur++ )
+    for ( ; cur < limit; )
     {
-      c = *cur;
+      /* skip whitespace in front of data */
+      for (;;)
+      {
+        c = *cur;
+        if ( c != ' ' && c != '\t' ) break;
+        
+        cur++;
+        if (cur >= limit) goto Exit;
+      }
+
       if (count >= max_values || c == ender)
         break;
       
@@ -442,10 +460,19 @@
     T1_String*  result;
     FT_Error    error;
 
-    /* first of all, skip everything until we encounter a string */
-    while ( cur < limit && *cur != '(' ) cur++;
-    cur++;
-    if (cur >= limit) return 0;
+    /* XXX : some stupid fonts have a "Notice" or "Copyright" string     */
+    /*       that simply doesn't begin with an opening parenthesis, even */
+    /*       though they have a closing one !!! E.g. "amuncial.pfb"      */
+    /*                                                                   */
+    /*       We must deal with these ill-fated cases there. Note that    */
+    /*       these fonts didn't work with the old Type 1 driver as the   */
+    /*       notice/copyright was not recognized as a valid string token */
+    /*       and made the old token parser commit errors..               */
+
+    while ( cur < limit && (*cur == ' ' || *cur == '\t')) cur++;
+    if (cur+1 >= limit) return 0;
+    
+    if (*cur == '(') cur++;  /* skip the opening parenthesis, if there is one */
     
     *cursor = cur;
     count   = 0;
@@ -470,7 +497,7 @@
     /* now copy the string */
     MEM_Copy( result, *cursor, len );
     result[len] = '\0';
-
+    *cursor = cur;
     return result;    
   }
 
@@ -632,43 +659,44 @@
     else
       parser->in_pfb = 1;
 
-   /* now, try to load the "size" bytes of the "base" dictionary we */
-   /* found previously                                              */
-
-   /* if it's a memory-based resource, set up pointers */
-   if ( !stream->read )
-   {
-     parser->base_dict = (T1_Byte*)stream->base + stream->pos;
-     parser->base_len  = size;
-     parser->in_memory = 1;
-
-     /* check that the "size" field is valid */
-     if ( FILE_Skip(size) ) goto Exit;
-   }
-   else
-   {
-     /* read segment in memory */
-     if ( ALLOC( parser->base_dict, size )     ||
-          FILE_Read( parser->base_dict, size ) )
-       goto Exit;
-   }
-
-   /* Now check font format, we must see a '%!PS-AdobeFont-1' */
-   /* or a '%!FontType'                                       */
-   {
-     if ( size <= 16 ||
-          ( strncmp( (const char*)parser->base_dict, "%!PS-AdobeFont-1", 16 ) &&
-            strncmp( (const char*)parser->base_dict, "%!FontType", 10 )       ) )
-     {
-       FT_TRACE2(( "Not a Type1 font\n" ));
-       error = T1_Err_Invalid_File_Format;
-     }
-     else
-     {
-       parser->cursor = parser->base_dict;
-       parser->limit  = parser->cursor + parser->base_len;
-     }
-   }
+    /* now, try to load the "size" bytes of the "base" dictionary we */
+    /* found previously                                              */
+ 
+    /* if it's a memory-based resource, set up pointers */
+    if ( !stream->read )
+    {
+      parser->base_dict = (T1_Byte*)stream->base + stream->pos;
+      parser->base_len  = size;
+      parser->in_memory = 1;
+ 
+      /* check that the "size" field is valid */
+      if ( FILE_Skip(size) ) goto Exit;
+    }
+    else
+    {
+      /* read segment in memory */
+      if ( ALLOC( parser->base_dict, size )     ||
+           FILE_Read( parser->base_dict, size ) )
+        goto Exit;
+      parser->base_len = size;
+    }
+ 
+    /* Now check font format, we must see a '%!PS-AdobeFont-1' */
+    /* or a '%!FontType'                                       */
+    {
+      if ( size <= 16 ||
+           ( strncmp( (const char*)parser->base_dict, "%!PS-AdobeFont-1", 16 ) &&
+             strncmp( (const char*)parser->base_dict, "%!FontType", 10 )       ) )
+      {
+        FT_TRACE2(( "Not a Type1 font\n" ));
+        error = T1_Err_Invalid_File_Format;
+      }
+      else
+      {
+        parser->cursor = parser->base_dict;
+        parser->limit  = parser->cursor + parser->base_len;
+      }
+    }
 
   Exit:
     if (error && !parser->in_memory)
