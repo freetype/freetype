@@ -12,6 +12,9 @@
         * INSTALL: updated the instructions to build shared libraries with
         Jam.. they were simply erroneous..
 
+        * src/base/fttrigon.c (FT_Cos): fixed a small bug that caused slightly
+        improper results for FT_Cos and FT_Sin (example: FT_Sin(0) == -1 !!)
+
 
 2001-12-11  Detlef Würkner >TetiSoft@apg.lahn.de>
 
