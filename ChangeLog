@@ -1,3 +1,14 @@
+2003-09-02  David Turner  <david@freetype.org>
+
+        * include/freetype/config/ftoption.h: commenting out the
+        macro TT_CONFIG_OPTION_BYTECODE_INTERPRETER so that package
+        managers that define it with additionnal compilation command line
+        options (e.g. with -DTT_CONFIG_OPTION_BYTECODE_INTERPRETER) still
+        work correctly.
+
+        Also added a note to indicate that TT_CONFIG_OPTION_UNPATENTED_HINTING
+        doesn't work as advertised yet.
+
 2003-08-31  Manish Singh  <yosh@gimp.org>
 
 	* src/bdf/bdflib.c (_bdf_readstream): Don't use FT_MEM_COPY but
