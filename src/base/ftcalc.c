@@ -138,6 +138,7 @@
     FT_Int   s;
     FT_Long  d;
 
+
     s = 1;
     if ( a < 0 ) { a = -a; s = -1; }
     if ( b < 0 ) { b = -b; s = -s; }
@@ -146,7 +147,7 @@
     d = ( c > 0 ? ( (FT_Int64)a * b + ( c >> 1 ) ) / c
                 : 0x7FFFFFFFL );
 
-	return ( s > 0 ) ? d : -d;
+    return ( s > 0 ) ? d : -d;
   }
 
 
@@ -156,13 +157,14 @@
                                        FT_Long  b )
   {
     FT_Int   s = 1;
-	FT_Long  c;
+    FT_Long  c;
+
 
     if ( a < 0 ) { a = -a; s = -1; }
     if ( b < 0 ) { b = -b; s = -s; }
 
     c = (FT_Long)( ( (FT_Int64)a * b + 0x8000 ) >> 16 );
-	return ( s > 0 ) ? c : -c ;
+    return ( s > 0 ) ? c : -c ;
   }
 
 
