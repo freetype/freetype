@@ -62,7 +62,7 @@
   } FTC_BasicFamilyRec, *FTC_BasicFamily;
 
 
-  FT_CALLBACK_DEF( FT_Int )
+  FT_CALLBACK_DEF( FT_Bool )
   ftc_basic_family_compare( FTC_MruNode  ftcfamily,
                             FT_Pointer   ftcquery )
   {

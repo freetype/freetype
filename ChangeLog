@@ -12,6 +12,12 @@
         slot->metrics.width and slot->metrics.height when loading a Windows
         FNT glyph. Thanks to Huw Davies
 
+        * include/freetype/cache/ftcmru.h, src/cache/ftcbasic.c,
+        src/cache/ftccache.c, src/cache/ftcglyph.c, src/cache/ftcmanag.c,
+        src/cache/ftcsbits.c:
+        fixing some annoying bugs and inefficiencies in the cache sub-system.
+
+
 2004-06-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afloader.c (af_loader_load_g): Set `lsb_delta' and
