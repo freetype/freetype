@@ -1,3 +1,7 @@
+2002-05-02  Keith Packard  <keithp@keithp.com>
+
+	* src/bdf/bdfdrivr.c (BDF_Set_Pixel_Size): Initialize `max_advance'.
+
 2003-05-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/autohint/ahglyph.c (ah_test_extrema): Renamed to...

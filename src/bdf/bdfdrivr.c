@@ -464,9 +464,10 @@ THE SOFTWARE.
 
     if ( size->metrics.y_ppem == root->available_sizes->height )
     {
-      size->metrics.ascender  = face->bdffont->bbx.ascent << 6;
-      size->metrics.descender = face->bdffont->bbx.descent * ( -64 );
-      size->metrics.height    = face->bdffont->bbx.height << 6;
+      size->metrics.ascender    = face->bdffont->bbx.ascent << 6;
+      size->metrics.descender   = face->bdffont->bbx.descent * ( -64 );
+      size->metrics.height      = face->bdffont->bbx.height << 6;
+      size->metrics.max_advance = face->bdffont->bbx.width << 6;
 
       return BDF_Err_Ok;
     }
