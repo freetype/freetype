@@ -91,6 +91,14 @@
     trace_t2objs,
     trace_t2parse,
 
+    /* CID driver components */
+    trace_cidafm,
+    trace_ciddriver,
+    trace_cidgload,
+    trace_cidload,
+    trace_cidobjs,
+    trace_cidparse,
+
     /* other trace levels */
 
     /* the last level must always be `trace_max' */

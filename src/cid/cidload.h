@@ -1,22 +1,23 @@
-/*******************************************************************
- *
- *  t1load.h                                                    2.0
- *
- *    Type1 Loader.
- *
- *  Copyright 1996-2000 by
- *  David Turner, Robert Wilhelm, and Werner Lemberg.
- *
- *  This file is part of the FreeType project, and may only be used
- *  modified and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
- *  this file you indicate that you have read the license and
- *  understand and accept it fully.
- *
- ******************************************************************/
+/***************************************************************************/
+/*                                                                         */
+/*  cidload.h                                                              */
+/*                                                                         */
+/*    CID-keyed Type1 font loader (specification).                         */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
 
-#ifndef T1LOAD_H
-#define T1LOAD_H
+
+#ifndef CIDLOAD_H
+#define CIDLOAD_H
 
 #include <freetype/internal/ftstream.h>
 #include <cidparse.h>
@@ -25,30 +26,34 @@
   extern "C" {
 #endif
 
-  typedef struct CID_Loader_
-  {
-    CID_Parser        parser;          /* parser used to read the stream */
 
-    FT_Int           num_chars;       /* number of characters in encoding */
+  typedef struct  CID_Loader_
+  {
+    CID_Parser  parser;          /* parser used to read the stream */
+    T1_Int      num_chars;       /* number of characters in encoding */
 
   } CID_Loader;
 
-  LOCAL_DEF
-  FT_Long  cid_get_offset( FT_Byte** start, FT_Byte  offsize );
 
   LOCAL_DEF
-  void  cid_decrypt( FT_Byte*   buffer,
-                     FT_Int     length,
-                     FT_UShort  seed );
+  T1_Long  cid_get_offset( T1_Byte**  start,
+                           T1_Byte    offsize );
 
   LOCAL_DEF
-  FT_Error  CID_Open_Face( CID_Face  face );
+  void  cid_decrypt( T1_Byte*   buffer,
+                     T1_Int     length,
+                     T1_UShort  seed );
+
+  LOCAL_DEF
+  T1_Error  CID_Open_Face( CID_Face  face );
+
 
 #ifdef __cplusplus
   }
 #endif
 
-#endif /* T1LOAD_H */
+
+#endif /* CIDLOAD_H */
 
 
 /* END */

@@ -405,7 +405,7 @@
   }
 
 
-  /* add a new point, do not check room */
+  /* add a new point, do not check space */
   static
   void  add_point( T2_Builder*  builder,
                    TT_Pos       x,
@@ -528,7 +528,9 @@
   }
 
 
-#define USE_ARGS(n)  top -= n; if (top < decoder->stack) goto Stack_Underflow
+#define USE_ARGS( n )  top -= n;                   \
+                       if ( top < decoder->stack ) \
+                         goto Stack_Underflow
 
 
   /*************************************************************************/
@@ -578,7 +580,7 @@
     if ( seed == 0 )
       seed = 0x7384;
 
-    /* First of all, initialize the decoder */
+    /* initialize the decoder */
     decoder->top  = decoder->stack;
     decoder->zone = decoder->zones;
     zone          = decoder->zones;
@@ -607,7 +609,6 @@
       /********************************************************************/
       /*                                                                  */
       /* Decode operator or operand                                       */
-      /*                                                                  */
       /*                                                                  */
       v = *ip++;
       if ( v >= 32 || v == 28 )
@@ -1692,8 +1693,8 @@
     glyph->root.format = ft_glyph_format_none;
 
     {
-      FT_Byte*  charstring;
-      FT_ULong  charstring_len;
+      TT_Byte*  charstring;
+      TT_ULong  charstring_len;
 
 
       T2_Init_Decoder( &decoder, face, size, glyph );
@@ -1804,8 +1805,8 @@
         {
           cbox.xMin &= -64;
           cbox.yMin &= -64;
-          cbox.xMax = ( cbox.xMax+63 ) & -64;
-          cbox.yMax = ( cbox.yMax+63 ) & -64;
+          cbox.xMax = ( cbox.xMax + 63 ) & -64;
+          cbox.yMax = ( cbox.yMax + 63 ) & -64;
         }
 
         metrics->width  = cbox.xMax - cbox.xMin;

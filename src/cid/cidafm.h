@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef T1AFM_H
-#define T1AFM_H
+#ifndef CIDAFM_H
+#define CIDAFM_H
 
 #include <cidobjs.h>
 
@@ -55,7 +55,7 @@ void  CID_Get_Kerning( T1_AFM*     afm,
 
 #endif
 
-#endif /* T1AFM_H */
+#endif /* CIDAFM_H */
 
 
 /* END */

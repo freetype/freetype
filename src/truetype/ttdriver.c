@@ -175,7 +175,7 @@
   /*    vert_resolution :: The vertical resolution of the output device.   */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    size        :: A handle to the target size object.                 */
+  /*    size            :: A handle to the target size object.             */
   /*                                                                       */
   /* <Return>                                                              */
   /*    TrueType error code.  0 means success.                             */

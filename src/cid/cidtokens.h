@@ -1,22 +1,23 @@
-/*******************************************************************
- *
- *  t1tokens.h
- *
- *  Type 1 tokens definition
- *
- *  Copyright 2000 David Turner, Robert Wilhelm and Werner Lemberg.
- *
- *  This file is part of the FreeType project, and may only be used
- *  modified and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT. By continuing to use, modify or distribute
- *  this file you indicate that you have read the license and
- *  understand and accept it fully.
- *
- *  This file only contains macros that are expanded when compiling
- *  the "t1load.c" source file.
- *
- ******************************************************************/
+/***************************************************************************/
+/*                                                                         */
+/*  cidtokens.h                                                            */
+/*                                                                         */
+/*    CID token definitions (specification only).                          */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
 
+
+#undef  T1TYPE
+#undef  T1CODE
 #define T1TYPE  CID_Info
 #define T1CODE  t1_field_cid_info
 
@@ -33,7 +34,8 @@
   T1_FIELD_NUM     ( "FDBytes", fd_bytes )
   T1_FIELD_NUM     ( "GDBytes", gd_bytes )
   T1_FIELD_NUM     ( "CIDCount", cid_count )
-  
+
+
 #undef  T1TYPE
 #undef  T1CODE
 #define T1TYPE  T1_FontInfo
@@ -48,6 +50,7 @@
   T1_FIELD_BOOL  ( "isFixedPitch", is_fixed_pitch )
   T1_FIELD_NUM   ( "UnderlinePosition", underline_position )
   T1_FIELD_NUM   ( "UnderlineThickness", underline_thickness )
+
 
 #undef  T1TYPE
 #undef  T1CODE
@@ -64,21 +67,22 @@
   T1_FIELD_FIXED   ( "ForceBoldThreshold", forcebold_threshold )
   T1_FIELD_FIXED   ( "ExpansionFactor", expansion_factor )
   T1_FIELD_NUM     ( "StrokeWidth", stroke_width )
-  
+
+
 #undef  T1TYPE
 #undef  T1CODE
 #define T1TYPE  T1_Private
 #define T1CODE  t1_field_private
 
-  T1_FIELD_NUM  ( "UniqueID", unique_id )
-  T1_FIELD_NUM  ( "lenIV", lenIV )
-  T1_FIELD_NUM  ( "LanguageGroup", language_group )
-  T1_FIELD_NUM  ( "password", password )
-  
-  T1_FIELD_FIXED( "BlueScale", blue_scale )
-  T1_FIELD_NUM  ( "BlueShift", blue_shift )
-  T1_FIELD_NUM  ( "BlueFuzz",  blue_fuzz )
-  
+  T1_FIELD_NUM      ( "UniqueID", unique_id )
+  T1_FIELD_NUM      ( "lenIV", lenIV )
+  T1_FIELD_NUM      ( "LanguageGroup", language_group )
+  T1_FIELD_NUM      ( "password", password )
+
+  T1_FIELD_FIXED    ( "BlueScale", blue_scale )
+  T1_FIELD_NUM      ( "BlueShift", blue_shift )
+  T1_FIELD_NUM      ( "BlueFuzz",  blue_fuzz )
+
   T1_FIELD_NUM_TABLE( "BlueValues", blue_values, 14 )
   T1_FIELD_NUM_TABLE( "OtherBlues", other_blues, 10 )
   T1_FIELD_NUM_TABLE( "FamilyBlues", family_blues, 14 )
@@ -87,8 +91,9 @@
   T1_FIELD_NUM_TABLE2( "StdHW", standard_width,  1 )
   T1_FIELD_NUM_TABLE2( "StdVW", standard_height, 1 )
   T1_FIELD_NUM_TABLE2( "MinFeature", min_feature, 2 )
-  
+
   T1_FIELD_NUM_TABLE ( "StemSnapH", snap_widths, 12 )
   T1_FIELD_NUM_TABLE ( "StemSnapV", snap_heights, 12 )
 
 
+/* END */

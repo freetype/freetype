@@ -104,6 +104,7 @@
       FT_Driver             driver = face->driver;
       FT_Set_MM_Blend_Func  func;
 
+
       func = (FT_Set_MM_Blend_Func)driver->interface.get_interface(
                                              driver, "set_mm_blend" );
       if ( func )

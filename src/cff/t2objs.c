@@ -42,7 +42,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /*                       GLYPH ZONE FUNCTIONS                            */
+  /*                           FACE  FUNCTIONS                             */
   /*                                                                       */
   /*************************************************************************/
 
@@ -246,12 +246,14 @@
   /* <Input>                                                               */
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
+  /* <Output>                                                              */
+  /*    TrueType error code.  0 means success.                             */
+  /*                                                                       */
   LOCAL_DEF
   TT_Error  T2_Reset_Size( T2_Size  size )
   {
     T2_Face           face    = (T2_Face)size->face;
     FT_Size_Metrics*  metrics = &size->metrics;
-    TT_Error          error   = T2_Err_Ok;
 
 
     if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
@@ -270,7 +272,7 @@
     metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
                                         metrics->x_scale ) + 32 ) & -64;
 
-    return error;
+    return T2_Err_Ok;
   }
 
 
