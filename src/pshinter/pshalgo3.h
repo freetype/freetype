@@ -30,7 +30,7 @@ FT_BEGIN_HEADER
 
   /* handle to Hint structure */
   typedef struct PSH3_HintRec_*  PSH3_Hint;
- 
+
   /* hint bit-flags */
   typedef enum
   {
@@ -217,10 +217,10 @@ FT_BEGIN_HEADER
     FT_Int              major_dir;
     FT_Int              minor_dir;
 
-    FT_Bool             no_horz_hints;
-    FT_Bool             no_vert_hints;
-    FT_Bool             no_horz_snapping;
-    FT_Bool             no_vert_snapping;
+    FT_Bool             do_horz_hints;
+    FT_Bool             do_vert_hints;
+    FT_Bool             do_horz_snapping;
+    FT_Bool             do_vert_snapping;
 
   } PSH3_GlyphRec, *PSH3_Glyph;
 

@@ -2009,201 +2009,146 @@ FT_BEGIN_HEADER
                 FT_Int32  load_flags );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_NO_SCALE                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the vector outline being loaded should not be scaled to 26.6       */
-  /*    fractional pixels, but kept in notional units.                     */
-  /*                                                                       */
-#define FT_LOAD_NO_SCALE  0x1
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_NO_HINTING                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the vector outline being loaded should not be fitted to the pixel  */
-  /*    grid but simply scaled to 26.6 fractional pixels.                  */
-  /*                                                                       */
-  /*    This flag is ignored if FT_LOAD_NO_SCALE is set.                   */
-  /*                                                                       */
-#define FT_LOAD_NO_HINTING  0x2
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_RENDER                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the function should load the glyph and immediately convert it into */
-  /*    a bitmap, if necessary, by calling @FT_Render_Glyph.               */
-  /*                                                                       */
-  /*    Note that by default, @FT_Load_Glyph loads the glyph image in its  */
-  /*    native format.                                                     */
-  /*                                                                       */
-#define FT_LOAD_RENDER  0x4
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_NO_BITMAP                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the function should not load the bitmap or pixmap of a given       */
-  /*    glyph.  This is useful when you do not want to load the embedded   */
-  /*    bitmaps of scalable formats, as the native glyph image will be     */
-  /*    loaded, and can then be rendered through @FT_Render_Glyph.         */
-  /*                                                                       */
-#define FT_LOAD_NO_BITMAP  0x8
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_VERTICAL_LAYOUT                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the glyph image should be prepared for vertical layout.  This      */
-  /*    basically means that `face.glyph.advance' will correspond to the   */
-  /*    vertical advance height (instead of the default horizontal         */
-  /*    advance width), and that the glyph image will translated to match  */
-  /*    the vertical bearings positions.                                   */
-  /*                                                                       */
-#define FT_LOAD_VERTICAL_LAYOUT  0x10
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_FORCE_AUTOHINT                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the function should try to auto-hint the glyphs, even if a driver  */
-  /*    specific hinter is available.                                      */
-  /*                                                                       */
-  /*    Note that it is ignored if @FT_LOAD_NO_AUTOHINT is also set.       */
-  /*                                                                       */
-#define FT_LOAD_FORCE_AUTOHINT  0x20
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_CROP_BITMAP                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the font driver should try to crop the bitmap (i.e. remove all     */
-  /*    space around its black bits) when loading it.  For now, this       */
-  /*    really only works with embedded bitmaps in TrueType fonts.         */
-  /*                                                                       */
-#define FT_LOAD_CROP_BITMAP  0x40
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_PEDANTIC                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the glyph loader should perform a pedantic bytecode                */
-  /*    interpretation.  Many popular fonts come with broken glyph         */
-  /*    programs.  When this flag is set, loading them will return an      */
-  /*    error.  Otherwise, errors are ignored by the loader, sometimes     */
-  /*    resulting in ugly glyphs.                                          */
-  /*                                                                       */
-#define FT_LOAD_PEDANTIC  0x80
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the glyph loader should ignore the global advance width defined    */
-  /*    in the font.  As far as we know, this is only used by the          */
-  /*    X-TrueType font server, in order to deal correctly with the        */
-  /*    incorrect metrics contained in DynaLab's TrueType CJK fonts.       */
-  /*                                                                       */
+/****************************************************************************
+ *
+ * @enum: FT_LOAD_XXX
+ *
+ * @description:
+ *   a list of bit-field constants, used with @FT_Load_Glyph to indicate
+ *   what kind of operations to perform during glyph loading
+ *
+ * @values:
+ *   FT_LOAD_DEFAULT ::
+ *     corresponding to 0, this value is used a default glyph load. In this
+ *     case, the following will happen:
+ *
+ *     1/ FreeType will look for a bitmap for the glyph corresponding to
+ *        the face's current size. If one is found, the function returns.
+ *        the bitmap data can be accessed from the glyph slot (see note
+ *        below)
+ *
+ *     2/ If no embedded bitmap is searched or found, FreeType looks for
+ *        a scalable outline. If one is found, it is loaded from the font
+ *        file, scaled to device pixels, then "hinted" to the pixel grid
+ *        in order to optimize it. the outline data can be accessed from
+ *        the glyph slot (see note below)
+ *
+ *     Note that by default, the glyph loader doesn't render outlines into
+ *     bitmaps. the following flags are used to modify this default behaviour
+ *     to more specific and useful cases.
+ *
+ *   FT_LOAD_NO_SCALE ::
+ *     indicates that the vector outline being loaded should not be scaled
+ *     to 26.6 fractional pixels, but kept in font units. Note that this
+ *     also disables hinting and the loading of embedded bitmaps. You should
+ *     only use it when you want to retrieve the original glyph outlines
+ *     in font units.
+ *
+ *   FT_LOAD_NO_HINTING ::
+ *     indicates that the glyph outlines should not be hinted after their
+ *     scaling to device pixels. This generally generates "blurrier" glyphs
+ *     in anti-aliased modes.
+ *
+ *     this flag is ignored if @FT_LOAD_NO_SCALE is set
+ *
+ *   FT_LOAD_RENDER ::
+ *     indicates that the glyph outline should be rendered immediately into
+ *     a bitmap before the glyph loader returns. By default, the glyph is
+ *     rendered for the @FT_RENDER_MODE_NORMAL mode, which corresponds to
+ *     8-bit anti-aliased bitmaps using 256 opacity levels. You can use
+ *     either @FT_LOAD_TARGET_MONO or @FT_LOAD_MONOCHROME to render
+ *     1-bit monochrome bitmaps
+ *
+ *     This flag is ignored if @FT_LOAD_NO_SCALE is set
+ *
+ *
+ *   FT_LOAD_NO_BITMAP ::
+ *     indicates that you do not want to look for bitmaps when loading
+ *     the glyph. Only scalable outlines will be loaded when available,
+ *     and scaled/hinted/rendered depending on other bit flags
+ *
+ *     this does not prevent you from rendering outlines to bitmaps
+ *     with @FT_LOAD_RENDER however.
+ *
+ *   FT_LOAD_VERTICAL_LAYOUT:
+ *     indicates that the glyph image should be prepared for vertical
+ *     text layout. This basically means that 'face.glyph.advance' will
+ *     correspond to the vertical advance height (instead of the default
+ *     horizontal advance width), and that the glyph image will be
+ *     translated to match the vertical bearings positions
+ *
+ *   FT_LOAD_FORCE_AUTOHINT ::
+ *     indicates that you want to force the use of the FreeType auto-hinter
+ *     when a glyph outline is loaded. You shouldn't need this in a typical
+ *     application, since it's mostly used to experiment with its algorithm
+ *
+ *   FT_LOAD_CROP_BITMAP ::
+ *     indicates that the glyph loader should try to crop the bitmap (i.e.
+ *     remove all space around its black bits) when loading it. This is
+ *     only useful when loading embedded bitmaps in certain fonts, since
+ *     bitmaps rendered with @FT_LOAD_RENDER are always cropped by default
+ *
+ *   FT_LOAD_PEDANTIC ::
+ *     indicates that the glyph loader should perform pedantic verifications
+ *     during glyph loading. This is mostly used to detect broken glyphs in
+ *     fonts. By default, FreeType will always try to deal with such cases.
+ *
+ *   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ::
+ *     indicates that the glyph loader should ignore the global advance
+ *     width defined in the font. As far as we know, this is only used by the
+ *     X-TrueType font server, in order to deal correctly with the incorrect
+ *     metrics contained in DynaLab's TrueType CJK fonts.
+ *
+ *   FT_LOAD_NO_RECURSE ::
+ *     this flag is only used internally. It merely indicates that the glyph
+ *     loader should not load composite glyphs recursively. Instead, it should
+ *     set the 'num_subglyph' and 'subglyphs' values of the glyph slot
+ *     accordingly, and set "glyph->format" to @FT_GLYPH_FORMAT_COMPOSITE
+ *
+ *     the description of sub-glyphs is not available to client applications
+ *     for now
+ *
+ *   FT_LOAD_IGNORE_TRANSFORM ::
+ *     indicates that the glyph loader should not try to transform the
+ *     loaded glyph image. This doesn't prevent scaling/hinting/rendering
+ *
+ *   FT_LOAD_MONOCHROME ::
+ *     this flag is used with @FT_LOAD_RENDER to indicate that you want
+ *     to render a 1-bit monochrome glyph bitmap from a vectorial outline.
+ *
+ *     note that this has no effect on the hinting algorithm used by the
+ *     glyph loader. You'd better use @FT_LOAD_TARGET_MONO if you want to
+ *     render monochrome-optimized glyph images instead.
+ *
+ *   FT_LOAD_LINEAR_DESIGN ::
+ *     indicates that the function should return the linearly scaled metrics
+ *     expressed in original font units, instead of the default 16.16 pixel
+ *     values
+ *
+ *   FT_LOAD_NO_AUTOHINT ::
+ *     indicates that the auto-hinter should never be used to hint glyph
+ *     outlines. This doesn't prevent native format-specific hinters from
+ *     being used. This can be important for certain fonts where un-hinted
+ *     output is better than auto-hinted one.
+ *
+ *
+ *
+ *
+ *
+ */
+#define FT_LOAD_NO_SCALE                     0x1
+#define FT_LOAD_NO_HINTING                   0x2
+#define FT_LOAD_RENDER                       0x4
+#define FT_LOAD_NO_BITMAP                    0x8
+#define FT_LOAD_VERTICAL_LAYOUT              0x10
+#define FT_LOAD_FORCE_AUTOHINT               0x20
+#define FT_LOAD_CROP_BITMAP                  0x40
+#define FT_LOAD_PEDANTIC                     0x80
 #define FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH  0x200
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_NO_RECURSE                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the glyph loader should not load composite glyph recursively.      */
-  /*    Rather, when a composite glyph is encountered, it should set       */
-  /*    the values of `num_subglyphs' and `subglyphs', as well as set      */
-  /*    `face->glyph.format' to FT_GLYPH_FORMAT_COMPOSITE.                 */
-  /*                                                                       */
-  /*    This is for use by the auto-hinter and possibly other tools.       */
-  /*    For nearly all applications, this flags should be left unset       */
-  /*    when invoking @FT_Load_Glyph.                                      */
-  /*                                                                       */
-  /*    Note that the flag forces the load of unscaled glyphs.             */
-  /*                                                                       */
-#define FT_LOAD_NO_RECURSE  0x400
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_IGNORE_TRANSFORM                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the glyph loader should not try to transform the loaded glyph      */
-  /*    image.                                                             */
-  /*                                                                       */
-#define FT_LOAD_IGNORE_TRANSFORM  0x800
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_MONOCHROME                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Only used with FT_LOAD_RENDER set, it indicates that the returned  */
-  /*    glyph image should be 1-bit monochrome.  This really tells the     */
-  /*    glyph loader to use `FT_RENDER_MODE_MONO' when calling             */
-  /*    @FT_Render_Glyph.                                                  */
-  /*                                                                       */
+#define FT_LOAD_NO_RECURSE                   0x400
+#define FT_LOAD_IGNORE_TRANSFORM             0x800
 #define FT_LOAD_MONOCHROME  0x1000
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_LINEAR_DESIGN                                              */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the function should return the linearly scaled metrics expressed   */
-  /*    in original font units, instead of the default 16.16 pixel values. */
-  /*                                                                       */
 #define FT_LOAD_LINEAR_DESIGN  0x2000
-
 
   /* temporary hack! */
 #define FT_LOAD_SBITS_ONLY  0x4000

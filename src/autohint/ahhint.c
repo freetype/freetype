@@ -104,42 +104,42 @@
       sign = 1;
     }
 
-    if ( ( vertical  && hinter->no_vert_snapping ) ||
-         ( !vertical && hinter->no_horz_snapping ) )
+    if ( (  vertical && !hinter->do_vert_snapping ) ||
+         ( !vertical && !hinter->do_horz_snapping ) )
     {
       /* smooth hinting process, very lightly quantize the stem width */
       /*                                                              */
       if ( dist < 64 )
         dist = 64;
-  
+
       {
         FT_Pos  delta = dist - globals->stds[vertical];
-  
-  
+
+
         if ( delta < 0 )
           delta = -delta;
-  
+
         if ( delta < 40 )
         {
           dist = globals->stds[vertical];
-          if ( dist < 32 )
-            dist = 32;
+          if ( dist < 48 )
+            dist = 48;
         }
-  
+
         if ( dist < 3 * 64 )
         {
           delta = ( dist & 63 );
           dist &= -64;
-  
+
           if ( delta < 10 )
             dist += delta;
-  
+
           else if ( delta < 32 )
             dist += 10;
-  
+
           else if ( delta < 54 )
             dist += 54;
-  
+
           else
             dist += delta;
         }
@@ -154,7 +154,7 @@
       if ( vertical )
       {
         dist = ah_snap_width( globals->heights, globals->num_heights, dist );
-  
+
         /* in the case of vertical hinting, always round */
         /* the stem heights to integer pixels            */
         if ( dist >= 64 )
@@ -165,7 +165,7 @@
       else
       {
         dist = ah_snap_width( globals->widths,  globals->num_widths, dist );
-  
+
         if ( hinter->flags & AH_HINTER_MONOCHROME )
         {
           /* monochrome horizontal hinting: snap widths to integer pixels */
@@ -182,7 +182,7 @@
           /* is between 1 and 2 pixels to an integer, otherwise nothing  */
           if ( dist < 48 )
             dist = ( dist + 64 ) >> 1;
-  
+
           else if ( dist < 128 )
             dist = ( dist + 22 ) & -64;
           else
@@ -285,10 +285,10 @@
       int      has_serifs = 0;
 
 
-      if ( hinter->no_horz_hints && !dimension )
+      if ( !hinter->do_horz_hints && !dimension )
         goto Next_Dimension;
 
-      if ( hinter->no_vert_hints && dimension )
+      if ( !hinter->do_vert_hints && dimension )
         goto Next_Dimension;
 
       /* we begin by aligning all stems relative to the blue zone */
@@ -1169,7 +1169,7 @@
       /* perform feature detection */
       ah_outline_detect_features( outline );
 
-      if ( !hinter->no_vert_hints )
+      if ( hinter->do_vert_hints )
       {
         ah_outline_compute_blue_edges( outline, hinter->globals );
         ah_outline_scale_blue_edges( outline, hinter->globals );
@@ -1439,23 +1439,23 @@
     ah_loader_rewind( hinter->loader );
 
     /* reset hinting flags according to load flags and current render target */
-    hinter->no_horz_hints = FT_BOOL( load_flags & FT_LOAD_NO_AUTOHINT );
-    hinter->no_vert_hints = FT_BOOL( load_flags & FT_LOAD_NO_AUTOHINT );
-    
+    hinter->do_horz_hints = !FT_BOOL( load_flags & FT_LOAD_NO_AUTOHINT );
+    hinter->do_vert_hints = !FT_BOOL( load_flags & FT_LOAD_NO_AUTOHINT );
+
 #ifdef DEBUG_HINTER
-    hinter->no_horz_hints = ah_debug_disable_vert;  /* not a bug, the meaning */
-    hinter->no_vert_hints = ah_debug_disable_horz;  /* of h/v is inverted!    */
-#endif    
+    hinter->do_horz_hints = !ah_debug_disable_vert;  /* not a bug, the meaning */
+    hinter->do_vert_hints = !ah_debug_disable_horz;  /* of h/v is inverted!    */
+#endif
 
     /* we snap the width of vertical stems for the monochrome and         */
     /* horizontal LCD rendering targets only.  Corresponds to X snapping. */
-    hinter->no_horz_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_NORMAL ||
-                                        hint_mode == FT_RENDER_MODE_LCD_V  );
+    hinter->do_horz_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_MONO ||
+                                        hint_mode == FT_RENDER_MODE_LCD  );
 
     /* we snap the width of horizontal stems for the monochrome and     */
     /* vertical LCD rendering targets only.  Corresponds to Y snapping. */
-    hinter->no_vert_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_NORMAL ||
-                                        hint_mode == FT_RENDER_MODE_LCD    );
+    hinter->do_vert_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_MONO   ||
+                                        hint_mode == FT_RENDER_MODE_LCD_V  );
 
 #if 1
     load_flags  = FT_LOAD_NO_SCALE

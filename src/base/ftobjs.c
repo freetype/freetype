@@ -444,8 +444,8 @@
     hinter   = library->auto_hinter;
     autohint =
       FT_BOOL( hinter                                      &&
-               !( load_flags & ( FT_LOAD_NO_SCALE    | 
-                                 FT_LOAD_NO_HINTING  | 
+               !( load_flags & ( FT_LOAD_NO_SCALE    |
+                                 FT_LOAD_NO_HINTING  |
                                  FT_LOAD_NO_AUTOHINT ) )   &&
                FT_DRIVER_IS_SCALABLE( driver )             &&
                FT_DRIVER_USES_OUTLINES( driver )           );
@@ -553,10 +553,13 @@
          slot->format != FT_GLYPH_FORMAT_COMPOSITE &&
          load_flags & FT_LOAD_RENDER )
     {
-      error = FT_Render_Glyph( slot,
-                               ( load_flags & FT_LOAD_MONOCHROME )
-                                  ? FT_RENDER_MODE_MONO
-                                  : FT_RENDER_MODE_NORMAL );
+      FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
+
+      if ( mode == FT_RENDER_MODE_NORMAL      &&
+           (load_flags & FT_LOAD_MONOCHROME ) )
+        mode = FT_RENDER_MODE_MONO;
+
+      error = FT_Render_Glyph( slot, mode );
     }
 
   Exit:
