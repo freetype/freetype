@@ -1,3 +1,8 @@
+2004-09-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftdebug.c (ft_debug_init): Highest debug level is 7,
+	not 6.
+
 2004-08-30  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/tttags.h (TTAG_BASE, TTAG_GDEF, TTAG_GPOS,

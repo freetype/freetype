@@ -446,7 +446,7 @@ FT_BEGIN_HEADER
   /* work-around hinting system.  Note that for the moment, the algorithm  */
   /* is only used when selected at runtime through the parameter tag       */
   /* FT_PARAM_TAG_UNPATENTED_HINTING; or when the debug hook               */
-  /* FT_DEBUG_HOOK_UNPATENTED_HINTING is globally actived                  */
+  /* FT_DEBUG_HOOK_UNPATENTED_HINTING is globally actived.                 */
   /*                                                                       */
 #define TT_CONFIG_OPTION_UNPATENTED_HINTING
 
