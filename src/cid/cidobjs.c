@@ -58,8 +58,9 @@
     PSHinter_Interface*  pshinter;
 
 
-    face     = (CID_Face) slot->root.face;
-    pshinter = face->pshinter;
+    face     = (CID_Face)slot->root.face;
+    pshinter = (PSHinter_Interface *)face->pshinter;
+
 
     if ( pshinter )
     {
@@ -93,7 +94,7 @@
   CID_Size_Get_Globals_Funcs( CID_Size  size )
   {
     CID_Face             face     = (CID_Face)size->root.face;
-    PSHinter_Interface*  pshinter = face->pshinter;
+    PSHinter_Interface*  pshinter = (PSHinter_Interface *)face->pshinter;
     FT_Module            module;
 
 

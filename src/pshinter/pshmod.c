@@ -91,8 +91,8 @@
   }
 
 
-  FT_CALLBACK_DEF( PSHinter_Interface )
-  pshinter_interface =
+  static
+  const PSHinter_Interface  pshinter_interface =
   {
     pshinter_get_globals_funcs,
     pshinter_get_t1_funcs,

@@ -141,19 +141,14 @@ FT_BEGIN_HEADER
   } PSH_GlobalsRec;
 
 
-  typedef enum
-  {
-    PSH_BLUE_ALIGN_TOP = 1,
-    PSH_BLUE_ALIGN_BOT = 2
-
-  } PSH_Blue_Align;
-
+#define PSH_BLUE_ALIGN_TOP  1
+#define PSH_BLUE_ALIGN_BOT  2
 
   typedef struct  PSH_AlignmentRec_
   {
-    PSH_Blue_Align  align;
-    FT_Pos          align_top;
-    FT_Pos          align_bot;
+    int     align;
+    FT_Pos  align_top;
+    FT_Pos  align_bot;
 
   } PSH_AlignmentRec, *PSH_Alignment;
 

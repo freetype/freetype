@@ -112,7 +112,7 @@
       goto Fail;
 
     if ( size > current )
-      memset( (char*)Q + current, 0, size - current );
+      MEM_Set( (char*)Q + current, 0, size - current );
 
     *P = Q;
     return FT_Err_Ok;

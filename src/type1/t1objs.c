@@ -58,8 +58,8 @@
   static PSH_Globals_Funcs
   T1_Size_Get_Globals_Funcs( T1_Size  size )
   {
-    T1_Face              face     = (T1_Face) size->root.face;
-    PSHinter_Interface*  pshinter = face->pshinter;
+    T1_Face              face     = (T1_Face)size->root.face;
+    PSHinter_Interface*  pshinter = (PSHinter_Interface *)face->pshinter;
     FT_Module            module;
     
 
@@ -145,13 +145,15 @@
   {  
     T1_Face              face;
     PSHinter_Interface*  pshinter;
-    
+
+
     face     = (T1_Face) slot->root.face;
-    pshinter = face->pshinter;
-    if (pshinter)
+    pshinter = (PSHinter_Interface *)face->pshinter;
+    if ( pshinter )
     {
       FT_Module  module;
       
+
       module = FT_Get_Module( slot->root.face->driver->root.library, "pshinter" );
       if (module)
       {

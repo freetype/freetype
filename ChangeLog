@@ -1,3 +1,23 @@
+2002-03-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Realloc): Use MEM_Set instead of memset.
+
+2002-03-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffdrivr.c (cff_get_name_index): Fix compiler warnings.
+	* src/cff/cffobjs CFF_Size_Get_Globals_Funcs, CFF_Size_Init,
+	CFF_GlyphSlot_Init): Ditto.
+	* src/cid/cidobjs.c (CID_GlyphSlot_Init, CID_Size_Get_Globals_Funcs):
+	Ditto.
+	* src/type1/t1objs.c (T1_Size_Get_Globals_Funcs, T1_GlyphSlot_Init):
+	Ditto.
+
+	* src/pshinter/pshglob.h (PSH_Blue_Align): Replaced with ...
+	(PSH_BLUE_ALIGN_{TOP,BOT}): New defines.
+	(PSH_AlignmentRec): Updated.
+
+	* src/pshinter/pshmod.c (pshinter_interface): Use `static const'.
+
 2002-03-06  David Turner  <david@freetype.org>
 
         * docs/CHANGES: update to indicate the new FT_Library_Version API
