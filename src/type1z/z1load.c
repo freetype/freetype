@@ -1072,6 +1072,10 @@
     FT_Fixed    temp[4];
 
 
+    if ( matrix->xx || matrix->yx )
+      /*  with synthetic fonts, it's possible we get here twice  */
+      return;
+
     (void)Z1_ToFixedArray( parser, 4, temp, 3 );
     matrix->xx = temp[0];
     matrix->yx = temp[1];
@@ -1325,6 +1329,10 @@
     FT_Byte*    limit = parser->limit;
     FT_Int      n;
 
+
+    if ( loader->num_glyphs )
+      /*  with synthetic fonts, it's possible we get here twice  */
+      return;
 
     loader->num_glyphs = Z1_ToInt( parser );
     if ( parser->error )
