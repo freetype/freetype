@@ -105,7 +105,11 @@
 
 
 #undef  FT_NEED_EXTERN_C
+
+#undef  FT_ERR_XCAT
 #define FT_ERR_XCAT( x, y )  x ## y
+
+#undef  FT_ERR_CAT
 #define FT_ERR_CAT( x, y )   FT_ERR_XCAT( x, y )
 
 

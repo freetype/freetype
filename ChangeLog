@@ -1,3 +1,15 @@
+2002-03-06  David Turner  <david@freetype.org>
+
+        * src/pshinter/pshalgo2.c: changed 'print_zone' to 'psh2_print_zone'
+        * src/pshinter/pshalgo1.c: changed 'print_zone' to 'psh1_print_zone'
+
+        * include/freetype/fterrors.h: small update to prevent compiler
+        warnings regarding the re-definition of FT_ERR_XCAT and FT_ERR_CAT
+        (with Win32-LCC)
+
+        * src/autohint/ahhint.c, src/cache/ftcimage.c: removed compiler
+        warnings (with Visual C++)
+
 2002-03-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshglob.h (PSH_DimensionRec): s/std/stdw/.
@@ -31,7 +43,7 @@
 	that prevented correct bounding box values from being returned --
 	previous values were in 16.16 fixed format.
 
-	* src/sfnt/ttload.c (TT_Load_Names), src/sfnt/sfobj.c (Get_Name),
+	* src/sfnt/ttload.c (TT_Load_Names), src/sfnt/sfobjs.c (Get_Name),
 	src/sfnt/sfdriver.c (get_sfnt_postscript_name): Fixed the loader so
 	that it accepts broken fonts like "foxjump.ttf", which made FreeType
 	crash when trying to load them.

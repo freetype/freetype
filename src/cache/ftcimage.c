@@ -21,6 +21,7 @@
 #include FT_CACHE_IMAGE_H
 #include FT_CACHE_INTERNAL_GLYPH_H
 #include FT_INTERNAL_MEMORY_H
+#include FT_INTERNAL_DEBUG_H
 
 #include "ftcerror.h"
 

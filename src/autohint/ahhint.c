@@ -25,6 +25,7 @@
 #include "ahangles.h"
 #include "aherrors.h"
 #include FT_OUTLINE_H
+#include FT_INTERNAL_DEBUG_H
 
 
 #define FACE_GLOBALS( face )  ((AH_Face_Globals*)(face)->autohint.data)
