@@ -1,3 +1,49 @@
+2002-05-21  Roberto Alameda  <ojancano@geekmail.de>.
+
+	* src/type42/t42drivr.c: s/T42_ENCODING_TYPE_/T1_ENCODING_TYPE_/.
+	(parse_font_matrix): Remove unnecessary code.
+	(parse_sfnts): Initialize some variables.
+	(t42_driver_class) [TT_CONFIG_OPTION_BYTECODE_INTERPRETER]: Use
+	ft_module_driver_has_hinter conditionally.
+	Moved some type 42 specific structure definitions to...
+	* include/freetype/internal/t42types.h: New file.
+	* include/freetype/internal/internal.h (FT_INTERNAL_T42_TYPES_H):
+	New macro.
+
+2002-05-20  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/cache/ftcsbits.h (FTC_SBit): Added a new field
+	`num_grays' for specifying the number of used gray levels.
+	* src/cache/ftcsbits.c (ftc_sbit_node_load): Initialize it.
+
+2002-05-19  Werner Lemberg  <wl@gnu.org>
+
+	Adding a driver for BDF fonts written by Francesco Zappa Nardelli
+	<Francesco.Zappa.Nardelli@ens.fr>.  Heavily modified by me to
+	better adapt it to FreeType, removing unneeded stuff.  Additionally,
+	it now supports Mark Leisher's BDF extension for anti-aliased
+	bitmap glyphs with 2 and 4 bpp.
+
+	* src/bdf/*: New driver.
+	* include/freetype/internal/bdftypes.h: New file.
+	* include/freetype/internal/fttrace.h: Added BDF driver components.
+	* include/freetype/fterrdef.h: Added error codes for BDF driver.
+	* include/freetype/config/ftmodule.h, src/Jamfile: Updated.
+	* include/freetype/internal/internal.h (FT_INTERNAL_BDF_TYPES_H):
+	New macro.
+
+	* include/freetype/config/ftstdlib.h (ft_sprintf): New alias for
+	sprintf.
+
+2002-05-18  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/fttrace.h: Added Type 42 driver
+	component.
+	* src/type42/t42drivr.c: Use it.
+
+	* include/freetype/internal/internal.h (FT_INTERNAL_PCF_TYPES_H):
+	New macro.
+
 2002-05-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/type42/Jamfile: New file.

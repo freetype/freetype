@@ -1,9 +1,9 @@
-/*  bdfdriver.h  
+/*  bdfdrivr.h
 
     FreeType font driver for bdf fonts
 
-  Copyright (C) 2001 by            
-  Francesco Zappa Nardelli     
+  Copyright (C) 2001, 2002 by
+  Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,44 +25,50 @@ THE SOFTWARE.
 */
 
 
-#ifndef __BDF_DRIVER_H__
-#define __BDF_DRIVER_H__
+#ifndef __BDFDRIVR_H__
+#define __BDFDRIVR_H__
 
 #include <ft2build.h>
 #include FT_INTERNAL_DRIVER_H
 
 #include "bdf.h"
 
+
 FT_BEGIN_HEADER
 
-    typedef struct {
-      FT_Long   enc;
-      FT_Short  glyph;
-    } BDF_encoding_el;
 
-    typedef struct  BDF_FaceRec_
-    {
-      FT_FaceRec       root;
+  typedef struct  BDF_encoding_el_
+  {
+    FT_ULong  enc;
+    FT_Short  glyph;
 
-      char            *charset_encoding;
-      char            *charset_registry;
-
-      bdf_font_t      *bdffont;  
-
-      BDF_encoding_el *en_table;
-      
-      FT_CharMap       charmap_handle;
-      FT_CharMapRec    charmap;  /* a single charmap per face */
-    } BDF_FaceRec, *BDF_Face;
+  } BDF_encoding_el;
 
 
-    FT_EXPORT_VAR( const FT_Driver_ClassRec )  bdf_driver_class;
+  typedef struct  BDF_FaceRec_
+  {
+    FT_FaceRec        root;
+
+    char*             charset_encoding;
+    char*             charset_registry;
+
+    bdf_font_t*       bdffont;
+
+    BDF_encoding_el*  en_table;
+
+    FT_CharMap        charmap_handle;
+    FT_CharMapRec     charmap;  /* a single charmap per face */
+
+  } BDF_FaceRec, *BDF_Face;
+
+
+  FT_EXPORT_VAR( const FT_Driver_ClassRec )  bdf_driver_class;
+
 
 FT_END_HEADER
 
 
-#endif /* __BDF_DRIVER_H__ */
+#endif /* __BDFDRIVR_H__ */
 
 
 /* END */
-

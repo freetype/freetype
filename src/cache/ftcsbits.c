@@ -213,16 +213,23 @@
              CHECK_CHAR( xadvance )          &&
              CHECK_CHAR( yadvance )          )
         {
-          sbit->width    = (FT_Byte)bitmap->width;
-          sbit->height   = (FT_Byte)bitmap->rows;
-          sbit->pitch    = (FT_Char)bitmap->pitch;
-          sbit->left     = (FT_Char)slot->bitmap_left;
-          sbit->top      = (FT_Char)slot->bitmap_top;
-          sbit->xadvance = (FT_Char)xadvance;
-          sbit->yadvance = (FT_Char)yadvance;
-          sbit->format   = (FT_Byte)bitmap->pixel_mode;
+          sbit->width     = (FT_Byte)bitmap->width;
+          sbit->height    = (FT_Byte)bitmap->rows;
+          sbit->pitch     = (FT_Char)bitmap->pitch;
+          sbit->left      = (FT_Char)slot->bitmap_left;
+          sbit->top       = (FT_Char)slot->bitmap_top;
+          sbit->xadvance  = (FT_Char)xadvance;
+          sbit->yadvance  = (FT_Char)yadvance;
+          sbit->format    = (FT_Byte)bitmap->pixel_mode;
+          /* XXX: Fixme: We don't handle the number of gray levels      */
+          /*             consistently -- we say num_grays == 1 for      */
+          /*             monochrome but num_grays == 256 for gray.  It  */
+          /*             would be better to make this variable hold the */
+          /*             highest possible value so that it fits into    */
+          /*             a single byte.                                 */
+          sbit->num_grays = bitmap->num_grays;
 
-          /* grab the bitmap when possible - this is a hack !! */
+          /* grab the bitmap when possible - this is a hack! */
           if ( slot->flags & FT_GLYPH_OWN_BITMAP )
           {
             slot->flags &= ~FT_GLYPH_OWN_BITMAP;

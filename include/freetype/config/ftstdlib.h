@@ -91,6 +91,10 @@
 #define ft_memmove  memmove
 #define ft_memcmp   memcmp
 
+#include <stdio.h>
+
+#define ft_sprintf  sprintf
+
 
   /**********************************************************************/
   /*                                                                    */

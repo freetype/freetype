@@ -3,7 +3,7 @@
 #
 
 
-# Copyright (C) 2001 by
+# Copyright (C) 2001, 2002 by
 # Francesco Zappa Nardelli
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -38,14 +38,13 @@ BDF_COMPILE := $(FT_COMPILE) $I$(BDF_DIR)
 
 # bdf driver sources (i.e., C files)
 #
-BDF_DRV_SRC := $(BDF_DIR_)bdflib.c $(BDF_DIR_)bdfdriver.c
+BDF_DRV_SRC := $(BDF_DIR_)bdflib.c $(BDF_DIR_)bdfdrivr.c
 
 
 # bdf driver headers
 #
-#BDF_DRV_H := $(BDF_DRV_SRC:%.c=%.h)
 BDF_DRV_H := $(BDF_DIR_)bdf.h \
-             $(BDF_DIR_)bdfdriver.h
+             $(BDF_DIR_)bdfdrivr.h
 
 # bdf driver object(s)
 #
