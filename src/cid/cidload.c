@@ -332,7 +332,7 @@
           while ( cur2 < limit && is_alpha( *cur2 ) )
             cur2++;
 
-          len = cur2 - cur;
+          len = (FT_Int)( cur2 - cur );
           if ( len > 0 && len < 22 )
           {
             /* now compare the immediate name to the keyword table */

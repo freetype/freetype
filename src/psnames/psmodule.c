@@ -100,7 +100,7 @@
       while ( *p && *p != '.' )
         p++;
 
-      len = p - glyph_name;
+      len = (int)( p - glyph_name );
 
       if ( *p && len < 64 )
       {
@@ -181,7 +181,7 @@
       }
 
       /* now, compress the table a bit */
-      count = map - table->maps;
+      count = (FT_UInt)( map - table->maps );
 
       if ( count > 0 && REALLOC( table->maps,
                                  num_glyphs * sizeof ( PS_UniMap ),

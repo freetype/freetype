@@ -327,7 +327,7 @@
     if ( !error )
     {
       /* good, now set the gset index within the gset object */
-      gset->gset_index = node - lru->nodes;
+      gset->gset_index = (FT_UInt)( node - lru->nodes );
       node->root.data  = gset;
     }
 

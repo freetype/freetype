@@ -493,10 +493,10 @@
     else
     {
       /* otherwise, we must use the glyphIdArray to do it */
-      index1 = seg4->idRangeOffset / 2
-               + ( charCode - seg4->startCount )
-               + ( seg4 - cmap4->segments )
-               - segCount;
+      index1 = (FT_UInt)( seg4->idRangeOffset / 2
+                          + ( charCode - seg4->startCount )
+                          + ( seg4 - cmap4->segments )
+                          - segCount );
 
       if ( index1 < (FT_UInt)cmap4->numGlyphId       &&
            cmap4->glyphIdArray[index1] != 0 )

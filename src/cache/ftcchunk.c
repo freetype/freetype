@@ -300,7 +300,7 @@
     if ( !error )
     {
       /* good, now set the set index within the set object */
-      cset->cset_index = node - lru->nodes;
+      cset->cset_index = (FT_UInt)( node - lru->nodes );
       node->root.data  = cset;
     }
 

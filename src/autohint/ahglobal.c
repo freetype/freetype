@@ -157,7 +157,7 @@
         /* segment; we first need to find in which contour the extremum */
         /* lies, then see its previous and next points                  */
         {
-          FT_Int  index = extremum - points;
+          FT_Int  index = (FT_Int)( extremum - points );
           FT_Int  n;
           FT_Int  first, last, prev, next, end;
           FT_Pos  dist;

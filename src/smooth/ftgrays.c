@@ -1037,7 +1037,7 @@
 
     for (;;)
     {
-      int    len = limit - base;
+      int    len = (int)( limit - base );
       PCell  i, j, pivot;
 
 

@@ -109,7 +109,7 @@
         if ( p[0] == 'S' && strncmp( (char*)p, "StartData", 9 ) == 0 )
         {
           /* save offset of binary data after `StartData' */
-          offset = top_position - ( limit - p ) + 10;
+          offset = (FT_ULong)( top_position - ( limit - p ) + 10 );
           goto Found;
         }
       }
