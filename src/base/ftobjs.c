@@ -279,11 +279,19 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    ft_done_stream                                                     */
+  /*    FT_Done_Stream                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Closes and destroys a stream object.                               */
   /*                                                                       */
+  EXPORT_FUNC
+  void  FT_Done_Stream( FT_Stream  stream )
+  {
+    if ( stream->close )
+      stream->close( stream );
+  }
+
+
   static
   void  ft_done_stream( FT_Stream*  astream )
   {
@@ -296,8 +304,6 @@
     FREE( stream );
     *astream = 0;
   }
-
-
 
   /*************************************************************************/
   /*************************************************************************/
