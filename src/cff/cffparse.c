@@ -338,7 +338,8 @@
 
       temp = ABS( matrix->yy );
 
-      *upm = (FT_UShort)FT_DivFix( 0x10000L, FT_DivFix( temp, 1000 ) );
+      *upm = (FT_UShort)( FT_DivFix( 0x10000L,
+			  FT_DivFix( temp, 1000 ) ) >> 16 );
 
       if ( temp != 0x10000L )
       {
