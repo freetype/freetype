@@ -717,7 +717,7 @@ THE SOFTWARE.
       else
         encodingOffset = GET_ShortLE();
   
-      if ( encodingOffset != 0xFFFF )
+      if ( encodingOffset != (signed short)0xFFFF )
       {
         tmpEncoding[j].enc = ( ( ( i / ( lastCol - firstCol + 1 ) ) +
                                  firstRow ) * 256 ) +
