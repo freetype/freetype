@@ -541,14 +541,14 @@ FT_BEGIN_HEADER
   FT_Done_GlyphSlot( FT_GlyphSlot  slot );
 
  /* */
- 
+
  /*
   * Free the bitmap of a given glyphslot when needed
   * (i.e., only when it was allocated with ft_glyphslot_alloc_bitmap).
   */
   FT_BASE( void )
   ft_glyphslot_free_bitmap( FT_GlyphSlot  slot );
- 
+
 
  /*
   * Allocate a new bitmap buffer in a glyph slot.
@@ -673,8 +673,18 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-#define FT_DEBUG_HOOK_TRUETYPE  0
-#define FT_DEBUG_HOOK_TYPE1     1
+/* this hook is used by the TrueType debugger. It must be set to an alternate
+ * truetype bytecode interpreter function
+ */
+#define FT_DEBUG_HOOK_TRUETYPE            0
+
+
+/* set this debug hook to a non-null pointer to force unpatented hinting
+ * for all faces when both TT_CONFIG_OPTION_BYTECODE_INTERPRETER and
+ * TT_CONFIG_OPTION_UNPATENTED_HINTING are defined. this is only used
+ * during debugging
+ */
+#define FT_DEBUG_HOOK_UNPATENTED_HINTING  1
 
 
   /*************************************************************************/

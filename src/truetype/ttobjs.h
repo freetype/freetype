@@ -83,7 +83,7 @@ FT_BEGIN_HEADER
     FT_UnitVector  projVector;
     FT_UnitVector  freeVector;
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     FT_Bool        both_x_axis;
 #endif
 
