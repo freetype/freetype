@@ -12,7 +12,7 @@ LATEST CHANGES BETWEEN 2.0.2 and 2.0.1
 	  the definition of the TT_CONFIG_OPTION_BYTECODE_INTERPRETER macro
 	  in the file "include/freetype/config/ftoption.h"
 
-    - The CFF driver has been improved by Tom Kacvinsky:
+    - The CFF driver has been improved by Tom Kacvinsky and Sander van der Wal:
 	
 	      * support for "seac" emulation
 		  * support for "dotsection"
@@ -22,13 +22,15 @@ LATEST CHANGES BETWEEN 2.0.2 and 2.0.1
 	  Type 1 fonts converted to the CFF formats by Adobe Acrobat.
 
 
-    - the Type 1 driver was also improved by Tom:
+    - the Type 1 driver was also improved by Tom & others:
 	
 	      * better EM size computation
+		  
 		  * better support for synthetic (transformed) fonts
+		  
           * the Type 1 driver returns the charstrings corresponding to
 		    each glyph in the "glyph->control_data" field after a call to
-			"FT_Load_Glyph"
+			"FT_Load_Glyph" (thanks Ha Shao)
 
 
     - various other bugfixes, including the following:
