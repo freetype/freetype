@@ -1,3 +1,9 @@
+2003-06-25  Owen Taylor  <otaylor@redhat.com>
+
+	* src/sfnt/ttload.c (tt_face_load_hdmx): Don't assign
+	num_records until we actually decide to load the table,
+	otherwise, we'll segfault in tt_face_free_hdmx.
+
 2003-06-24  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffdrivr.c (cff_get_glyph_name): Protect agains zero

@@ -1776,6 +1776,7 @@
     FT_Memory  memory = stream->memory;
 
     TT_Hdmx    hdmx = &face->hdmx;
+    FT_Short   num_records;
     FT_Long    num_glyphs;
     FT_Long    record_size;
 
@@ -1793,7 +1794,7 @@
       goto Exit;
 
     hdmx->version     = FT_GET_USHORT();
-    hdmx->num_records = FT_GET_SHORT();
+    num_records       = FT_GET_SHORT();
     record_size       = FT_GET_LONG();
 
     FT_FRAME_EXIT();
@@ -1802,9 +1803,10 @@
     if ( hdmx->version != 0 )
       goto Exit;
 
-    if ( FT_NEW_ARRAY( hdmx->records, hdmx->num_records ) )
+    if ( FT_NEW_ARRAY( hdmx->records, num_records ) )
       goto Exit;
 
+    hdmx->num_records = num_records;
     num_glyphs   = face->root.num_glyphs;
     record_size -= num_glyphs + 2;
 
