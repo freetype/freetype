@@ -10,6 +10,10 @@
           updating the OpenType Layout code, adding support fot the first
           GSUB lookups. Nothing that really compiles for now though
 
+        * src/autohint/ahhint.c: disabled serif stem width quantization. It
+        produces slightly better shapes though this is not distinguishable
+        with many fonts.
+
 2002-11-05  David Turner  <david@freetype.org>
 
         * include/freetype/config/ftoption.h, src/gzip/ftgzip.c: added
