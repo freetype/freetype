@@ -323,7 +323,7 @@
 
 
   static FT_Error
-  fnt_cmap_init( FT_CMap  cmap )
+  fnt_cmap_init( FNT_CMap  cmap )
   {
     FNT_Face  face = (FNT_Face) FT_CMAP_FACE(cmap);
     FNT_Font  font = face->fonts;
@@ -336,7 +336,7 @@
 
 
   static FT_UInt
-  fnt_cmap_char_index( FT_CMap    cmap,
+  fnt_cmap_char_index( FNT_CMap   cmap,
                        FT_UInt32  char_code )
   {
     FT_UInt  gindex = 0;
@@ -350,7 +350,7 @@
 
 
   static FT_UInt
-  fnt_cmap_char_next( FT_CMap    cmap,
+  fnt_cmap_char_next( FNT_CMap   cmap,
                       FT_UInt32 *pchar_code )
   {
     FT_UInt    gindex = 0;
@@ -734,20 +734,29 @@
     (FT_Face_DoneFunc)     FNT_Face_Done,
     (FT_Size_InitFunc)     0,
     (FT_Size_DoneFunc)     0,
-    (FT_Slot_InitFunc)0,
-    (FT_Slot_DoneFunc)0,
+    (FT_Slot_InitFunc)     0,
+    (FT_Slot_DoneFunc)     0,
 
     (FT_Size_ResetPointsFunc) FNT_Size_Set_Pixels,
     (FT_Size_ResetPixelsFunc)FNT_Size_Set_Pixels,
-
     (FT_Slot_LoadFunc)    FNT_Load_Glyph,
+
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+    (FT_CharMap_CharIndexFunc) 0,
+#else
     (FT_CharMap_CharIndexFunc) FNT_Get_Char_Index,
+#endif
+    
 
     (FT_Face_GetKerningFunc)   0,
     (FT_Face_AttachFunc)   0,
     (FT_Face_GetAdvancesFunc)  0,
 
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+    (FT_CharMap_CharNextFunc)  0
+#else
     (FT_CharMap_CharNextFunc)  FNT_Get_Next_Char
+#endif    
   };
 
 

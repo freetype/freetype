@@ -76,7 +76,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-#undef  FT_CONFIG_OPTION_USE_CMAPS
+#define FT_CONFIG_OPTION_USE_CMAPS
 #define TT_CONFIG_CMAP_FORMAT_0
 #define TT_CONFIG_CMAP_FORMAT_2
 #define TT_CONFIG_CMAP_FORMAT_4

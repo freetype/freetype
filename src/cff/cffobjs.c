@@ -249,56 +249,6 @@
 
 
 
-
-  static FT_Encoding
-  find_encoding( int  platform_id,
-                 int  encoding_id )
-  {
-    typedef struct  TEncoding
-    {
-      int          platform_id;
-      int          encoding_id;
-      FT_Encoding  encoding;
-
-    } TEncoding;
-
-    static
-    const TEncoding  tt_encodings[] =
-    {
-      { TT_PLATFORM_ISO,           -1,                  ft_encoding_unicode },
-
-      { TT_PLATFORM_APPLE_UNICODE, -1,                  ft_encoding_unicode },
-
-      { TT_PLATFORM_MACINTOSH,     TT_MAC_ID_ROMAN,     ft_encoding_apple_roman },
-
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_UNICODE_CS, ft_encoding_unicode },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_SJIS,       ft_encoding_sjis },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_GB2312,     ft_encoding_gb2312 },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_BIG_5,      ft_encoding_big5 },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_WANSUNG,    ft_encoding_wansung },
-      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_JOHAB,      ft_encoding_johab }
-    };
-
-    const TEncoding  *cur, *limit;
-
-
-    cur   = tt_encodings;
-    limit = cur + sizeof ( tt_encodings ) / sizeof ( tt_encodings[0] );
-
-    for ( ; cur < limit; cur++ )
-    {
-      if ( cur->platform_id == platform_id )
-      {
-        if ( cur->encoding_id == encoding_id ||
-             cur->encoding_id == -1          )
-          return cur->encoding;
-      }
-    }
-
-    return ft_encoding_none;
-  }
-
-
   FT_LOCAL_DEF( FT_Error )
   CFF_Face_Init( FT_Stream      stream,
                  CFF_Face       face,
@@ -498,48 +448,8 @@
           flags |= FT_STYLE_FLAG_BOLD;
 
         root->style_flags = flags;
-
-        /* set the charmaps if any */
-        if ( sfnt_format )
-        {
-          /*****************************************************************/
-          /*                                                               */
-          /* Polish the charmaps.                                          */
-          /*                                                               */
-          /*   Try to set the charmap encoding according to the platform & */
-          /*   encoding ID of each charmap.                                */
-          /*                                                               */
-          TT_CharMap  charmap;
-          FT_Int      n;
-
-
-          charmap            = face->charmaps;
-          root->num_charmaps = face->num_charmaps;
-
-          /* allocate table of pointers */
-          if ( FT_NEW_ARRAY( root->charmaps, root->num_charmaps ) )
-            goto Exit;
-
-          for ( n = 0; n < root->num_charmaps; n++, charmap++ )
-          {
-            FT_Int  platform = charmap->cmap.platformID;
-            FT_Int  encoding = charmap->cmap.platformEncodingID;
-
-
-            charmap->root.face        = (FT_Face)face;
-            charmap->root.platform_id = (FT_UShort)platform;
-            charmap->root.encoding_id = (FT_UShort)encoding;
-            charmap->root.encoding    = find_encoding( platform, encoding );
-
-            /* now, set root->charmap with a unicode charmap */
-            /* wherever available                            */
-            if ( !root->charmap                                &&
-                 charmap->root.encoding == ft_encoding_unicode )
-              root->charmap = (FT_CharMap)charmap;
-
-            root->charmaps[n] = (FT_CharMap)charmap;
-          }
-        }
+        
+        /* XXX: no charmaps for pure CFF fonts for now !! */
       }
     }
 

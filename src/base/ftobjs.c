@@ -26,6 +26,37 @@
 #include FT_OUTLINE_H
 
 #include <string.h>     /* for strcmp() */
+#include <setjmp.h>     /* for setjmp() and longjmp() */
+
+  FT_BASE_DEF( void )
+  ft_validator_init( FT_Validator        valid,
+                     const FT_Byte*      base,
+                     const FT_Byte*      limit,
+                     FT_ValidationLevel  level )
+  {
+    valid->base  = base;
+    valid->limit = limit;
+    valid->level = level;
+    valid->error = 0;
+  }
+                       
+
+  FT_BASE_DEF( FT_Int )
+  ft_validator_run( FT_Validator  valid )
+  {
+    int  result;
+    
+    result = setjmp( valid->jump_buffer );
+    return result;
+  }
+
+  FT_BASE_DEF( void )
+  ft_validator_error( FT_Validator  valid,
+                      FT_Error      error )
+  {
+    valid->error = error;
+    longjmp( valid->jump_buffer, 1 );
+  }                      
 
 
   /*************************************************************************/
@@ -1443,28 +1474,46 @@
 
   /* documentation is in freetype.h */
 
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+
   FT_EXPORT_DEF( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
                      FT_ULong  charcode )
   {
-    FT_UInt    result;
+    FT_UInt  result = 0;
+
+
+    if ( face && face->charmap )
+    {
+      FT_CMap  cmap = FT_CMAP( face->charmap );
+      
+      result = cmap->clazz->char_index( cmap, charcode );
+    }
+    return  result;
+  }
+
+#else /* !FT_CONFIG_OPTION_USE_CMAPS */
+
+
+
+  FT_EXPORT_DEF( FT_UInt )
+  FT_Get_Char_Index( FT_Face   face,
+                     FT_ULong  charcode )
+  {
+    FT_UInt    result = 0;
     FT_Driver  driver;
 
 
-    result = 0;
     if ( face && face->charmap )
     {
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-      FT_CMap  cmap = FT_CMAP( face->charmap );
-
-      result = cmap->clazz->char_index( cmap, charcode );
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
       driver = face->driver;
       result = driver->clazz->get_char_index( face->charmap, charcode );
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
     }
     return result;
   }
+
+#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
+
 
   /* documentation is in freetype.h */
 
@@ -1490,6 +1539,35 @@
 
   /* documentation is in freetype.h */
 
+
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+
+  FT_EXPORT_DEF( FT_ULong )
+  FT_Get_Next_Char( FT_Face   face,
+                    FT_ULong  charcode,
+                    FT_UInt  *agindex )
+  {
+    FT_ULong   result = 0;
+    FT_UInt    gindex = 0;
+
+
+    if ( face && face->charmap )
+    {
+      FT_UInt32  code = (FT_UInt32)charcode;
+      FT_CMap    cmap = FT_CMAP( face->charmap );
+
+      gindex = cmap->clazz->char_next( cmap, &code );
+      result = ( gindex == 0 ) ? 0 : code;
+    }
+
+    if ( agindex )
+      *agindex = gindex;
+
+    return result;
+  }
+
+#else /* !FT_CONFIG_OPTION_USE_CMAPS */
+
   FT_EXPORT_DEF( FT_ULong )
   FT_Get_Next_Char( FT_Face   face,
                     FT_ULong  charcode,
@@ -1502,12 +1580,6 @@
 
     if ( face && face->charmap )
     {
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-      FT_CMap  cmap = FT_CMAP( face->charmap );
-
-      gindex = cmap->clazz->char_next( cmap, &charcode );
-      result = ( gindex == 0 ) ? 0 : charcode;
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
       driver = face->driver;
       result = driver->clazz->get_next_char( face->charmap, charcode );
       if ( result != 0 )
@@ -1516,7 +1588,6 @@
         if ( gindex == 0 )
           result = 0;
       }
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
     }
 
     if ( agindex )
@@ -1524,6 +1595,8 @@
 
     return result;
   }
+
+#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
 
   /* documentation is in freetype.h */

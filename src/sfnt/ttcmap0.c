@@ -1549,15 +1549,12 @@
   FT_LOCAL_DEF( FT_Error )
   TT_Build_CMaps( TT_Face   face )
   {
-    TT_CMap_Class    clazz;
-    FT_ValidatorRec  valid;
     FT_UInt          num_cmaps;
     FT_Byte*         table = face->cmap_table;
     FT_Byte*         limit = table + face->cmap_size;
     FT_Byte*         p     = table;
-    FT_UInt          format;
 
-    if ( p + 4 < limit )
+    if ( p + 4 > limit )
       return FT_Err_Invalid_Table;
 
     /* only recognize format 0 */
@@ -1582,29 +1579,31 @@
 
       if ( offset && table + offset + 2 < limit )
       {
-        FT_Byte*         cmap   = table + offset;
-        FT_UInt          format = TT_PEEK_USHORT(cmap);
-        TT_CMap_Class*   pclazz = tt_cmap_classes;
-        TT_CMap_Class    clazz;
+        FT_Byte*              cmap   = table + offset;
+        FT_UInt               format = TT_PEEK_USHORT(cmap);
+        const TT_CMap_Class*  pclazz = tt_cmap_classes;
+        TT_CMap_Class         clazz;
 
         for ( ; *pclazz; pclazz++ )
         {
           clazz = *pclazz;
           if ( clazz->format == format )
           {
-            volatile TT_Validator  valid;
-
+            volatile TT_ValidatorRec  valid;
+            
+            ft_validator_init( FT_VALIDATOR(&valid), cmap, limit,
+                               FT_VALIDATE_DEFAULT );
+                               
             valid.num_glyphs = face->root.num_glyphs;
 
-            if ( ft_validator_init( FT_VALIDATOR(&valid), cmap, limit,
-                                    FT_VALIDATE_LEVEL_DEFAULT ) == 0 )
+            if ( setjmp( FT_VALIDATOR(&valid)->jump_buffer ) == 0 )
             {
               /* validate this cmap sub-table */
               clazz->validate( cmap, FT_VALIDATOR(&valid) );
             }
 
-            if ( valid.error == 0 )
-              (void)FT_CMap_New( clazz, cmap, face, NULL );
+            if ( valid.validator.error == 0 )
+              (void)FT_CMap_New( (FT_CMap_Class)clazz, cmap, &charmap, NULL );
             else
               FT_ERROR(( "%s: broken cmap sub-table ignored !!\n",
                          "TT_Build_CMaps" ));

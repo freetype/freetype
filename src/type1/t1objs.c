@@ -436,7 +436,7 @@
       if ( psnames && psaux )
       {
         FT_CharMapRec    charmap;
-        FT_CMap_Classes  cmap_classes = psaux->cmap_classes;
+        T1_CMap_Classes  cmap_classes = psaux->t1_cmap_classes;
         FT_CMap_Class    clazz;
         
         charmap.face = root;
@@ -446,7 +446,7 @@
         charmap.encoding_id = 1;
         charmap.encoding    = ft_encoding_unicode;
         
-        FT_CMap_New( root, cmap_classes->unicode, &charmap, NULL );
+        FT_CMap_New( cmap_classes->unicode, NULL, &charmap, NULL );
         
         /* now, generate an Adobe Standard encoding when appropriate */
         charmap.platform_id = 7;
@@ -473,9 +473,9 @@
             break;
             
           case T1_ENCODING_TYPE_ISOLATIN1:
-            charmap.encoding    = ft_encoding_adobe_latin_1;
+            charmap.encoding    = ft_encoding_latin_1;
             charmap.encoding_id = 3;
-            clazz               = cmap_classes->latin_1;
+            clazz               = cmap_classes->unicode;
             break;
             
           default:
@@ -483,7 +483,7 @@
         }
         
         if ( clazz )
-          FT_CMap_New( root, clazz, &charmap, NULL );
+          FT_CMap_New( clazz, NULL, &charmap, NULL );
       }
     }
 
