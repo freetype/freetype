@@ -165,7 +165,7 @@
            FT_FRAME_END };
 
     FT_TRACE2(( "TT_Load_SFNT_Header(%08p, %ld )\n",
-                face, faceIndex ));
+                face, face_index ));
 
     face->ttc_header.Tag      = 0;
     face->ttc_header.version  = 0;
@@ -224,13 +224,15 @@
     /* now, check the values of "num_tables", "seach_range", etc.. */
     {
       TT_UInt  num_tables     = sfnt->num_tables;
-      TT_UInt  search_range   = sfnt->search_range;
       TT_ULong entry_selector = 1L << sfnt->entry_selector;
-      
-      if ( entry_selector    > num_tables || entry_selector*2 <= num_tables ||
-           search_range  != 16*entry_selector ||
-           num_tables*16 != search_range + sfnt->range_shift )
-      {           
+
+      /* IMPORTANT: Many fonts have an incorrect "search_range" value, so    */
+      /*            we only check the "entry_selector" correctness here..    */
+      /*                                                                     */
+      if ( num_tables == 0                ||
+           entry_selector > num_tables    ||
+           entry_selector*2 <= num_tables )
+      {
         FT_TRACE2(( "TT_Load_SFNT_Header: file is not SFNT !\n" ));
         error = FT_Err_Unknown_File_Format;
       }
@@ -271,8 +273,8 @@
 
     TT_Table *entry, *limit;
 
-    FT_TRACE2(( "TT_Load_Directory( %08p, %ld )\n",
-                face, faceIndex ));
+    FT_TRACE2(( "TT_Load_Directory( %08p )\n",
+                face ));
 
     FT_TRACE2(( "-- Tables count   : %12u\n",  sfnt->num_tables ));
     FT_TRACE2(( "-- Format version : %08lx\n", sfnt->format_tag ));
