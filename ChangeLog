@@ -1,3 +1,11 @@
+2002-09-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1parse.h (T1_ParserRec): Change type of `base_len'
+	and `private_len' to FT_Long.
+
+	* src/cache/ftcsbits.c (ftc_sbit_node_load): Remove unused label.
+	* src/pshinter/pshalgo3.c (psh3_hint_align): Remove unused variable.
+
 2002-09-14  Werner Lemberg  <wl@gnu.org>
 
 	Making ftgrays.c compile stand-alone again.
