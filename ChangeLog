@@ -1,3 +1,7 @@
+2002-10-22  Giuseppe Ghibò <ghibo@mandrakesoft.com>
+
+	* include/freetype/freetype.h (FT_Encoding): Fix entry for latin-2.
+
 2002-10-07  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h (FT_Open_Face): Use `const' for `args'
