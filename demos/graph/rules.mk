@@ -45,11 +45,11 @@
 #
 #
 
-GRAPH_INCLUDES := graph
-GRAPH_LIB      := $(OBJ_)graph.a
+GRAPH_INCLUDES := $(TOP2_)graph
+GRAPH_LIB      := $(OBJ_)graph.$A
 GRAPH_LINK     := $(GRAPH_LIB)
 
-GRAPH_ := graph$(SEP)
+GRAPH_ := $(TOP2_)graph$(SEP)
 
 GRAPH_H := $(GRAPH_)graph.h    \
            $(GRAPH_)grtypes.h  \
@@ -65,10 +65,15 @@ GRAPH_OBJS := $(OBJ_)grblit.$O   \
               $(OBJ_)grinit.$O
 
 
+# Default value for COMPILE_GRAPH_LIB
+# this value can be modified by the system-specific graphics drivers..
+#
+COMPILE_GRAPH_LIB = ar -r $@ $(GRAPH_OBJS)
+
 # Add the rules used to detect and compile graphics driver depending
 # on the current platform..
 #
-include $(wildcard config/*/rules.mk)
+include $(wildcard $(GRAPH_)/*/rules.mk)
 
 #########################################################################
 #
@@ -80,7 +85,7 @@ include $(wildcard config/*/rules.mk)
 #
 #
 $(GRAPH_LIB): $(GRAPH_OBJS)
-	ar -r $@ $(GRAPH_OBJS)
+	$(COMPILE_GRAPH_LIB)
 
 
 # pattern rule for normal sources

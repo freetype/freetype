@@ -1,6 +1,6 @@
 #include "grobjs.h"
 #include <stdlib.h>
-
+#include <memory.h>
 
   int  grError = 0;
 

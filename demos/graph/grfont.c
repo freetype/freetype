@@ -1,4 +1,5 @@
 #include "grfont.h"
+#include <string.h>
 
   /* font characters */
 
@@ -329,11 +330,14 @@
   {
     if (string)
     {
+	  grColor color;
+
+	  color.value = 127;
       grWriteCellString( gr_text_bitmap,
                          gr_margin_right + (gr_cursor_x << 3),
                          gr_margin_top   + (gr_cursor_y << 3),
                          string,
-                         (grColor)127L );
+                         color );
  
       gr_cursor_x += strlen(string);
     }

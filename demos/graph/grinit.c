@@ -13,6 +13,9 @@
 #include "gros2pm.h"
 #endif
 
+#ifdef DEVICE_WIN32
+#include "grwin32.h"
+#endif
 
 
  /**********************************************************************

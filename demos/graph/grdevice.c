@@ -1,6 +1,7 @@
 #include "grobjs.h"
 #include "grdevice.h"
 #include <stdlib.h>
+#include <string.h>
 
   grDeviceChain   gr_device_chain[ GR_MAX_DEVICES ];
   int             gr_num_devices = 0;
