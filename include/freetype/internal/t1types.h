@@ -77,10 +77,10 @@
 
   typedef enum  T1_EncodingType_
   {
-	t1_encoding_none = 0,
-	t1_encoding_array,
-	t1_encoding_standard,
-	t1_encoding_expert
+    t1_encoding_none = 0,
+    t1_encoding_array,
+    t1_encoding_standard,
+    t1_encoding_expert
 
   } T1_EncodingType;
 

@@ -22,6 +22,7 @@
 #include <freetype/internal/ftlist.h>
 #include <freetype/fterrors.h>
 
+
  /**************************************************************************/
  /**************************************************************************/
  /*****                                                                *****/
@@ -74,7 +75,7 @@
   /*************************************************************************/
  
 
-  static
+  LOCAL_FUNC_X
   void  ftc_done_glyph_image( FTC_Image_Queue  queue,
                               FTC_ImageNode    node )
   {
@@ -84,7 +85,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_ULong  ftc_size_bitmap_image( FTC_Image_Queue  queue,
                                    FTC_ImageNode    node )
   {
@@ -103,7 +104,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_ULong  ftc_size_outline_image( FTC_Image_Queue  queue,
                                     FTC_ImageNode    node )
   {
@@ -123,13 +124,14 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  ftc_init_glyph_image( FTC_Image_Queue  queue,
                                   FTC_ImageNode    node )
   {  
     FT_Face   face;
     FT_Size   size;
     FT_Error  error;
+
 
     error = FTC_Manager_Lookup_Size( queue->manager,
                                      &queue->descriptor.size,
@@ -140,29 +142,29 @@
       FT_UInt  load_flags  = FT_LOAD_DEFAULT;
       FT_UInt  image_type  = queue->descriptor.image_type;
       
-      if ( FTC_IMAGE_FORMAT(image_type) == ftc_image_format_bitmap )
+      if ( FTC_IMAGE_FORMAT( image_type ) == ftc_image_format_bitmap )
       {           
         load_flags |= FT_LOAD_RENDER;           
         if ( image_type & ftc_image_flag_monochrome )
           load_flags |= FT_LOAD_MONOCHROME;
           
         /* disable embedded bitmaps loading if necessary */
-        if (load_flags & ftc_image_flag_no_sbits)
+        if ( load_flags & ftc_image_flag_no_sbits )
           load_flags |= FT_LOAD_NO_BITMAP;
       }
-      else if ( FTC_IMAGE_FORMAT(image_type) == ftc_image_format_outline )
+      else if ( FTC_IMAGE_FORMAT( image_type ) == ftc_image_format_outline )
       {
         /* disable embedded bitmaps loading */
         load_flags |= FT_LOAD_NO_BITMAP;
         
-        if (image_type & ftc_image_flag_unscaled)
+        if ( image_type & ftc_image_flag_unscaled )
           load_flags |= FT_LOAD_NO_SCALE;
       }
           
-      if (image_type & ftc_image_flag_unhinted)
+      if ( image_type & ftc_image_flag_unhinted )
         load_flags |= FT_LOAD_NO_HINTING;
           
-      if (image_type & ftc_image_flag_autohinted)
+      if ( image_type & ftc_image_flag_autohinted )
         load_flags |= FT_LOAD_FORCE_AUTOHINT;
 
       error = FT_Load_Glyph( face, glyph_index, load_flags );
@@ -187,19 +189,14 @@
   }
 
 
-
-
-
-  static
-  const FTC_Image_Class   ftc_bitmap_image_class =
+  FT_CPLUSPLUS( const FTC_Image_Class )  ftc_bitmap_image_class =
   {
     ftc_init_glyph_image,
     ftc_done_glyph_image,
     ftc_size_bitmap_image
   };
   
-  static
-  const FTC_Image_Class   ftc_outline_image_class =
+  FT_CPLUSPLUS( const FTC_Image_Class )  ftc_outline_image_class =
   {
     ftc_init_glyph_image,
     ftc_done_glyph_image,
@@ -233,20 +230,20 @@
     if ( ALLOC_ARRAY( queue->buckets, queue->hash_size, FT_ListRec ) )
       goto Exit;
 
-    switch (FTC_IMAGE_FORMAT(desc->image_type))
+    switch ( FTC_IMAGE_FORMAT( desc->image_type ) )
     {
-      case ftc_image_format_bitmap:
-        clazz = &ftc_bitmap_image_class;
-        break;
+    case ftc_image_format_bitmap:
+      clazz = &ftc_bitmap_image_class;
+      break;
         
-      case ftc_image_format_outline:
-        clazz = &ftc_outline_image_class;
-        break;
+    case ftc_image_format_outline:
+      clazz = &ftc_outline_image_class;
+      break;
         
-      default:
-        /* invalid image type! */
-        error = FT_Err_Invalid_Argument;
-        goto Exit;
+    default:
+      /* invalid image type! */
+      error = FT_Err_Invalid_Argument;
+      goto Exit;
     }
 
     queue->clazz = (FTC_Image_Class*)clazz;
@@ -288,8 +285,8 @@
         queue->clazz->done_image( queue, inode );
         FT_List_Remove( glyphs_lru, lrunode );
         
-        cache->num_bytes -= queue->clazz->size_image(queue,inode) +
-                            sizeof(FTC_ImageNodeRec);
+        cache->num_bytes -= queue->clazz->size_image( queue, inode ) +
+                            sizeof( FTC_ImageNodeRec );
         
         FTC_ImageNode_Done( cache, inode );
       }
@@ -321,7 +318,7 @@
       FT_UInt  gindex;
       
       inode  = (FTC_ImageNode)node;
-      gindex = FTC_IMAGENODE_GET_GINDEX(inode);
+      gindex = FTC_IMAGENODE_GET_GINDEX( inode );
       
       if ( gindex == glyph_index )
       {
@@ -354,8 +351,8 @@
     /* insert the node at the start the global LRU glyph list */
     FT_List_Insert( &cache->glyphs_lru, FTC_IMAGENODE_TO_LISTNODE( inode ) );
     
-    cache->num_bytes += queue->clazz->size_image(queue,inode) +
-                        sizeof(FTC_ImageNodeRec);
+    cache->num_bytes += queue->clazz->size_image( queue, inode ) +
+                        sizeof( FTC_ImageNodeRec );
 
     *anode = inode;
 
@@ -381,7 +378,7 @@
           ( (FTC_Image_Queue)(node)->root.data )
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  ftc_image_cache_init_queue( FT_Lru      lru,
                                         FT_LruNode  node )
   {
@@ -403,7 +400,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   void  ftc_image_cache_done_queue( FT_Lru      lru,
                                     FT_LruNode  node )
   {
@@ -416,7 +413,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_Bool  ftc_image_cache_compare_queue( FT_LruNode  node,
                                           FT_LruKey   key )
   {
@@ -432,8 +429,7 @@
   }                                            
 
 
-  static
-  const FT_Lru_Class  ftc_image_queue_lru_class =
+  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_image_queue_lru_class =
   {
     sizeof( FT_LruRec ),
     ftc_image_cache_init_queue,

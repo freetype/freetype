@@ -44,7 +44,7 @@
 #define FT_COMPONENT  trace_cidgload
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  cid_load_glyph( T1_Decoder*  decoder,
                             FT_UInt      glyph_index )
   {

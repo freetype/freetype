@@ -21,6 +21,7 @@
 #include <freetype/internal/ftdebug.h> /* for FT_ERROR() */
 #include <freetype/internal/t1errors.h>
 #include <freetype/ftoutln.h>
+#include <freetype/internal/ftdebug.h>
 
 
   /*************************************************************************/
@@ -310,7 +311,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  LOCAL_FUNC_X
   FT_Error  T1_Decoder_Parse_Charstrings( T1_Decoder*  decoder,
                                           FT_Byte*     charstring_base,
                                           FT_UInt      charstring_len )
@@ -1011,7 +1012,7 @@
   }
 
 
-  LOCAL_FUNC
+  LOCAL_FUNC_X
   FT_Error  T1_Decoder_Init( T1_Decoder*          decoder,
                              FT_Face              face,
                              FT_Size              size,
@@ -1051,7 +1052,7 @@
   }
 
 
-  LOCAL_FUNC
+  LOCAL_FUNC_X
   void  T1_Decoder_Done( T1_Decoder*  decoder )
   {
     T1_Builder_Done( &decoder->builder );

@@ -35,14 +35,16 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  LOCAL_DEF
+
+  LOCAL_VAR
   const PS_Table_Funcs  ps_table_funcs;
 
-  LOCAL_DEF
+  LOCAL_VAR
   const T1_Parser_Funcs  t1_parser_funcs;
-  
-  LOCAL_DEF
+
+  LOCAL_VAR
   const T1_Builder_Funcs  t1_builder_funcs;
+
   
   LOCAL_DEF
   FT_Error  PS_Table_New( PS_Table*  table,

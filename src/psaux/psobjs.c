@@ -216,7 +216,8 @@
     if ( !old_base )
       return;
 
-    (void)REALLOC( table->block, table->capacity, table->cursor );
+    if ( REALLOC( table->block, table->capacity, table->cursor ) )
+      return;
     table->capacity = table->cursor;
 
     if ( old_base != table->block )

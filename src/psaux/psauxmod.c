@@ -21,8 +21,7 @@
 #include <psaux/t1decode.h>
 
 
-  LOCAL_FUNC
-  const PS_Table_Funcs  ps_table_funcs =
+  FT_CPLUSPLUS( const PS_Table_Funcs )  ps_table_funcs =
   {
     PS_Table_New,
     PS_Table_Done,
@@ -31,8 +30,7 @@
   };
 
 
-  LOCAL_FUNC
-  const T1_Parser_Funcs  t1_parser_funcs =
+  FT_CPLUSPLUS( const T1_Parser_Funcs )  t1_parser_funcs =
   {
     T1_Init_Parser,
     T1_Done_Parser,
@@ -49,8 +47,7 @@
   };
 
 
-  LOCAL_FUNC
-  const T1_Builder_Funcs  t1_builder_funcs =
+  FT_CPLUSPLUS( const T1_Builder_Funcs )  t1_builder_funcs =
   {
     T1_Builder_Init,
     T1_Builder_Done,
@@ -63,8 +60,7 @@
   };
 
 
-  LOCAL_FUNC
-  const T1_Decoder_Funcs  t1_decoder_funcs =
+  FT_CPLUSPLUS( const T1_Decoder_Funcs )  t1_decoder_funcs =
   {
     T1_Decoder_Init,
     T1_Decoder_Done,
