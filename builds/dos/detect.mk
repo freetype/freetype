@@ -23,7 +23,8 @@ ifeq ($(PLATFORM),ansi)
   # `make' utility is run).
   #
   # We test for the COMSPEC environment variable, then run the `ver'
-  # command-line program to see if its output contains the word `Dos'.
+  # command-line program to see if its output contains the word `Dos' or
+  # `DOS'.
   #
   # If this is true, we are running a Dos-ish platform (or an emulation).
   #
@@ -31,7 +32,7 @@ ifeq ($(PLATFORM),ansi)
     PLATFORM := dos
   else
     ifdef COMSPEC
-      is_dos := $(findstring Dos,$(shell ver))
+      is_dos := $(findstring DOS,$(subst Dos,DOS,$(shell ver)))
 
       # We try to recognize a Dos session under OS/2.  The `ver' command
       # returns `Operating System/2 ...' there, so `is_dos' should be empty.
@@ -63,6 +64,13 @@ ifeq ($(PLATFORM),dos)
 
   # additionally, we provide hooks for various other compilers
   #
+  ifneq ($(findstring emx,$(MAKECMDGOALS)),)        # EMX gcc
+    CONFIG_FILE := dos-emx.mk
+    CC          := gcc
+    emx: setup
+    .PHONY: emx
+  endif
+
   ifneq ($(findstring turboc,$(MAKECMDGOALS)),)     # Turbo C
     CONFIG_FILE := dos-tcc.mk
     CC          := tcc

@@ -1,9 +1,9 @@
 #
-# FreeType 2 Watcom-specific definitions
+# FreeType 2 emx-specific definitions
 #
 
 
-# Copyright 1996-2000, 2003 by
+# Copyright 2003 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -15,28 +15,27 @@
 
 # Compiler command line name
 #
-CC           := wcc386
-COMPILER_SEP := $(SEP)
+CC           := set GCCOPT="-ansi -pedantic"; gcc
+COMPILER_SEP := /
 
 
 # The object file extension (for standard and static libraries).  This can be
 # .o, .tco, .obj, etc., depending on the platform.
 #
-O  := obj
-SO := obj
-
+O  := o
+SO := o
 
 # The library file extension (for standard and static libraries).  This can
 # be .a, .lib, etc., depending on the platform.
 #
-A  := lib
-SA := lib
+A  := a
+SA := a
 
 
 # Path inclusion flag.  Some compilers use a different flag than `-I' to
 # specify an additional include path.  Examples are `/i=' or `-J'.
 #
-I := -I=
+I := -I
 
 
 # C flag used to define a macro before the compilation of a given source
@@ -53,8 +52,7 @@ L := -l
 
 # Target flag.
 #
-T := -FO=
-
+T := -o$(space)
 
 # C flags
 #
@@ -64,12 +62,12 @@ T := -FO=
 #   ANSI compliance.
 #
 ifndef CFLAGS
-  CFLAGS := -zq
+  CFLAGS := -c -g -O6 -Wall
 endif
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
-ANSIFLAGS := -za
+ANSIFLAGS :=
 
 
 # Library linking
@@ -77,9 +75,7 @@ ANSIFLAGS := -za
 ifndef CLEAN_LIBRARY
   CLEAN_LIBRARY = $(DELETE) $(subst /,$(SEP),$(PROJECT_LIBRARY))
 endif
-LINK_LIBRARY = $(subst /,$(COMPILER_SEP), \
-                 wlib -q -n $@; \
-                 $(foreach m, $(OBJECTS_LIST), wlib -q $@ +$(m);) \
-                 echo > nul)
+LINK_LIBRARY = $(foreach m,$(OBJECTS_LIST),$(AR) -r $@ $(m);) echo > nul
+
 
 # EOF
