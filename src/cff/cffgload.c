@@ -23,6 +23,7 @@
 #include FT_INTERNAL_SFNT_H
 #include FT_OUTLINE_H
 #include FT_TRUETYPE_TAGS_H
+#include FT_INTERNAL_POSTSCRIPT_HINTS_H
 
 #include "cffload.h"
 #include "cffgload.h"
@@ -701,6 +702,7 @@
     FT_Fixed           seed;
     FT_Fixed*          stack;
 
+    T2_Hints_Funcs     hinter;
 
     /* set default width */
     decoder->num_hints  = 0;
@@ -720,6 +722,8 @@
     zone          = decoder->zones;
     stack         = decoder->top;
 
+    hinter = (T2_Hints_Funcs) builder->hints_funcs;
+
     builder->path_begun = 0;
 
     zone->base           = charstring_base;
@@ -730,6 +734,10 @@
 
     x = builder->pos_x;
     y = builder->pos_y;
+
+    /* begin hints recording session, if any */
+    if ( hinter )
+      hinter->open( hinter->hints );
 
     /* now, execute loop */
     while ( ip < limit )
@@ -1053,24 +1061,41 @@
         case cff_op_vstem:
         case cff_op_hstemhm:
         case cff_op_vstemhm:
-          /* if the number of arguments is not even, the first one */
-          /* is simply the glyph width, encoded as the difference  */
-          /* to nominalWidthX                                      */
+          /* the number of arguments is always even here */
           FT_TRACE4(( op == cff_op_hstem   ? " hstem"   :
-                      op == cff_op_vstem   ? " vstem"   :
-                      op == cff_op_hstemhm ? " hstemhm" :
-                                             " vstemhm" ));
+                    ( op == cff_op_vstem   ? " vstem"   :
+                    ( op == cff_op_hstemhm ? " hstemhm" : " vstemhm" )) ));
+          
+          if ( hinter )
+            hinter->stems( hinter->hints,
+                           ( op == cff_op_vstem || op == cff_op_vstemhm ),
+                           num_args/2,
+                           args );
+            
           decoder->num_hints += num_args / 2;
           args = stack;
           break;
+        
 
         case cff_op_hintmask:
         case cff_op_cntrmask:
-          FT_TRACE4(( op == cff_op_hintmask ? " hintmask"
-                                            : " cntrmask" ));
+          FT_TRACE4(( op == cff_op_hintmask ? " hintmask" : " cntrmask" ));
 
           decoder->num_hints += num_args / 2;
 
+          if ( hinter )
+          {
+            if ( op == cff_op_hintmask )
+              hinter->hintmask( hinter->hints,
+                                builder->current->n_points,
+                                (decoder->num_hints+7) >> 3,
+                                ip );
+            else
+              hinter->counter( hinter->hints,
+                               (decoder->num_hints+7) >> 3,
+                               ip );
+          }
+                              
 #ifdef FT_DEBUG_LEVEL_TRACE
           {
             FT_UInt maskbyte;
@@ -1616,6 +1641,18 @@
             error = CFF_Err_Ok;
 
           close_contour( builder );
+
+          /* close hints recording session */
+          if ( hinter )
+          {
+            if (hinter->close( hinter->hints, builder->current->n_points ))
+              goto Syntax_Error;
+            
+            /* apply hints to the loaded glyph outline now */
+            hinter->apply( hinter->hints,
+                           builder->current,
+                           (PSH_Globals)builder->hints_globals );
+          }
 
           /* add current outline to the glyph slot */
           FT_GlyphLoader_Add( builder->loader );

@@ -345,6 +345,50 @@
     FT_UInt         num;
     PSH_Blue_Table  table = 0;
 
+    /*                                                        */
+    /* determine wether we need to suppress overshoots or not */
+    /* we simply need to compare the vertical scale parameter */
+    /* to the raw bluescale value. Here's why                 */
+    /*                                                        */
+    /*   we need to suppress overshoots for all pointsizes    */
+    /*   at 300dpi that satisfy:                              */
+    /*                                                        */
+    /*      pointsize < 240*bluescale + 0.49                  */
+    /*                                                        */
+    /*   this corresponds to:                                 */
+    /*                                                        */
+    /*      pixelsize < 1000*bluescale + 49/24                */
+    /*                                                        */
+    /*      scale*EM_Size < 1000*bluescale + 49/24            */
+    /*                                                        */
+    /*   however, for normal Type 1 fonts, EM_Size is 1000 !! */
+    /*   we thus only check:                                  */
+    /*                                                        */
+    /*      scale < bluescale + 49/24000                      */
+    /*                                                        */
+    /*   which we shorten to                                  */
+    /*                                                        */
+    /*      "scale < bluescale"                               */
+    /*                                                        */
+    blues->no_overshoots = FT_BOOL( scale < blues->blue_scale );
+
+    /*                                                        */
+    /*  the blue threshold is the font units distance under   */
+    /*  which overshoots are suppressed due to the BlueShift  */
+    /*  even if the scale is greater than BlueScale           */
+    /*                                                        */
+    /*  it's the smallest distance such that                  */
+    /*                                                        */
+    /*    dist <= BlueShift && dist*scale <= 0.5 pixels       */
+    /*                                                        */
+    {
+      FT_Int  threshold = blues->blue_shift;
+      
+      while ( threshold > 0 && FT_MulFix( threshold, scale ) > 32 )
+        threshold --;
+      
+      blues->blue_threshold = threshold;
+    }
 
     for ( num = 0; num < 4; num++ )
     {
@@ -388,7 +432,46 @@
       }
     }
 
-    /* XXX: we should process the family / normal tables here! */
+    /* process the families now */
+    for ( num = 0; num < 2; num++ )
+    { 
+      PSH_Blue_Zone    zone1, zone2;
+      FT_UInt          count1, count2;
+      PSH_Blue_Table   normal, family;
+      
+      switch (num)
+      {
+        case 0:
+          normal = &blues->normal_top;
+          family = &blues->family_top;
+          break;
+          
+        default:
+          normal = &blues->normal_bottom;
+          family = &blues->family_bottom;
+      }
+      
+      zone1  = normal->zones;
+      count1 = normal->count;
+      for ( ; count1 > 0; count1--, zone1++ )
+      {
+        /* try to find a family zone whose reference position is less */
+        /* than 1 pixel far from the current zone..                   */
+        zone2  = family->zones;
+        count2 = family->count;
+        for ( ; count2 > 0; count2--, zone2++ )
+        {
+          if ( FT_MulFix( zone1->org_ref - zone2->org_ref, scale ) < 64 )
+          {
+            zone1->cur_top    = zone2->cur_top;
+            zone1->cur_bottom = zone2->cur_bottom;
+            zone1->cur_ref    = zone2->cur_ref;
+            zone1->cur_delta  = zone2->cur_delta;
+            break;
+          }
+        }
+      }
+    }
   }
 
 
@@ -400,10 +483,14 @@
   {
     PSH_Blue_Table  table;
     FT_UInt         count;
+    FT_Pos          delta;
     PSH_Blue_Zone   zone;
+    FT_Int          no_shoots;
 
 
     alignment->align = 0;
+
+    no_shoots = blues->no_overshoots;
 
     /* lookup stem top in top zones table */
     table = &blues->normal_top;
@@ -412,13 +499,17 @@
 
     for ( ; count > 0; count--, zone++ )
     {
-      if ( stem_top < zone->org_bottom )
+      delta = stem_top - zone->org_bottom;
+      if ( delta < 0 )
         break;
 
       if ( stem_top <= zone->org_top )
       {
-        alignment->align    |= PSH_BLUE_ALIGN_TOP;
-        alignment->align_top = zone->cur_ref;
+        if ( no_shoots || delta <= blues->blue_threshold )
+        {
+          alignment->align    |= PSH_BLUE_ALIGN_TOP;
+          alignment->align_top = zone->cur_ref;
+        }
         break;
       }
     }
@@ -426,17 +517,21 @@
     /* look up stem bottom in bottom zones table */
     table = &blues->normal_bottom;
     count = table->count;
-    zone  = table->zones;
+    zone  = table->zones + count-1;
 
-    for ( ; count > 0; count--, zone++ )
+    for ( ; count > 0; count--, zone-- )
     {
-      if ( stem_bot < zone->org_bottom )
+      delta = zone->org_top - stem_bot;
+      if ( delta < 0 )
         break;
 
-      if ( stem_bot <= zone->org_top )
+      if ( stem_bot >= zone->org_bottom )
       {
-        alignment->align    |= PSH_BLUE_ALIGN_BOT;
-        alignment->align_bot = zone->cur_ref;
+        if ( no_shoots || delta < blues->blue_shift )
+        {
+          alignment->align    |= PSH_BLUE_ALIGN_BOT;
+          alignment->align_bot = zone->cur_ref;
+        }
         break;
       }
     }
@@ -542,6 +637,11 @@
       psh_blues_set_zones( &globals->blues, priv->num_family_blues,
                            priv->family_blues, priv->num_family_other_blues,
                            priv->family_other_blues, priv->blue_fuzz, 1 );
+
+      globals->blues.blue_scale = priv->blue_scale ? priv->blue_scale
+                                                   : (0.039625*0x400000L);
+      
+      globals->blues.blue_shift = priv->blue_shift;
 
       globals->dimension[0].scale_mult  = 0;
       globals->dimension[0].scale_delta = 0;
