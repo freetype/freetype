@@ -1,3 +1,43 @@
+2004-02-17  Masatake YAMATO  <jet@gyve.org>
+
+	Provide generic access to MacOS resource forks.
+
+	* src/base/ftrfork.c, include/freetype/internal/ftrfork.h: New
+	files.
+
+	* src/base/ftobjs.c: Include FT_INTERNAL_RFORK_H.
+	(Mac_Read_POST_Resource, Mac_Read_sfnt_Resource): Remove arguments
+	`resource_listoffset' and `resource_data' and adapt code
+	accordingly.  These values are calculated outside of the function
+	now.
+	Add new argument `offsets'.
+	(IsMacResource): Use `FT_Raccess_Get_HeaderInfo' and 
+	`FT_Raccess_Get_DataOffsets'.
+	(load_face_in_embedded_rfork): New function.
+	(load_mac_face): Use load_face_in_embedded_rfork.
+	(ft_input_stream_new): Renamed to...
+	(FT_Stream_New): This.  Use FT_BASE_DEF.  Updated all callers.
+	(ft_input_stream_free): Renamed to...
+	(FT_Stream_Free): This.  Use FT_BASE_DEF.  Updated all callers.
+
+	* src/base/ftbase.c: Include ftrfork.c.
+
+	* src/base/rules.mk (BASE_SRC), src/base/Jamfile: Updated.
+
+	* include/freetype/internal/internal.h (FT_INTERNAL_RFORK_H):
+	New macro.
+
+	* include/freetype/internal/fttrace.h: Added `rfork' as a new
+	trace definition.
+
+	* include/freetype/internal/ftstream.h: Declare FT_Stream_New and
+	FT_Stream_Free.
+
+	* include/freetype/config/ftoption.h, devel/ftoption.h
+	(FT_CONFIG_OPTION_GUESSING_EMBEDDED_RFORK): New option.
+
+	* include/freetype/config/ftstdlib.h (ft_strrchr): New macro.
+
 2004-02-23  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
