@@ -1,8 +1,33 @@
-/* Error definitions for FreeType                                        */
-/*                                                                       */
-/* You need to define both FT_ERRORDEF_ and FT_NOERRORDEF_ before        */
-/* including this file..                                                 */
-/*                                                                       */
+/***************************************************************************/
+/*                                                                         */
+/*  fterrdef.h                                                             */
+/*                                                                         */
+/*    FreeType error codes (specification).                                */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
+  /*******************************************************************/
+  /*******************************************************************/
+  /*****                                                         *****/
+  /*****                LIST OF ERROR CODES/MESSAGES             *****/
+  /*****                                                         *****/
+  /*******************************************************************/
+  /*******************************************************************/
+
+
+  /* You need to define both FT_ERRORDEF_ and FT_NOERRORDEF_ before */
+  /* including this file.                                           */
+
 
   /* generic errors */
 
@@ -183,3 +208,6 @@
   FT_ERRORDEF_( Stack_Underflow,                             0xA1, \
                "argument stack underflow" )
 
+
+
+/* END */

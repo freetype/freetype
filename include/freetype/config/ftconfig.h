@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    ANSI-specific configuration file (specification only).               */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -130,16 +130,15 @@ FT_BEGIN_HEADER
   /* now, lookup for an integer type that is at least 32 bits */
 #if FT_SIZEOF_INT >= 4
 
-  typedef int           FT_Fast;
-  typedef unsigned int  FT_UFast;
+  typedef int            FT_Fast;
+  typedef unsigned int   FT_UFast;
 
 #elif FT_SIZEOF_LONG >= 4
 
-  typedef long          FT_Fast;
-  typedef unsigned long FT_UFast;
+  typedef long           FT_Fast;
+  typedef unsigned long  FT_UFast;
 
 #endif
-
 
 
   /* determine whether we have a 64-bit int type for platforms without */
@@ -180,7 +179,7 @@ FT_BEGIN_HEADER
 #define FT_LONG64
 #define FT_INT64  long long int
 
-#endif /* !FT_LONG64 */
+#endif /* FT_SIZEOF_LONG == 8 */
 
 
   /*************************************************************************/
@@ -205,17 +204,17 @@ FT_BEGIN_HEADER
 
 #ifdef FT_MAKE_OPTION_SINGLE_OBJECT
 
-#define FT_LOCAL(x)      static  x
-#define FT_LOCAL_DEF(x)  static  x
+#define FT_LOCAL( x )      static  x
+#define FT_LOCAL_DEF( x )  static  x
 
 #else
 
 #ifdef __cplusplus
-#define FT_LOCAL(x)      extern "C" x
-#define FT_LOCAL_DEF(x)  extern "C" x
+#define FT_LOCAL( x )      extern "C"  x
+#define FT_LOCAL_DEF( x )  extern "C"  x
 #else
-#define FT_LOCAL(x)      extern x
-#define FT_LOCAL_DEF(x)  x
+#define FT_LOCAL( x )      extern  x
+#define FT_LOCAL_DEF( x )  x
 #endif
 
 #endif /* FT_MAKE_OPTION_SINGLE_OBJECT */
@@ -300,9 +299,9 @@ FT_BEGIN_HEADER
   /*                                                                 */
 #ifndef FT_CALLBACK_DEF
 #ifdef __cplusplus
-#define FT_CALLBACK_DEF( x )  extern "C" x
+#define FT_CALLBACK_DEF( x )  extern "C"  x
 #else
-#define FT_CALLBACK_DEF( x )  static x
+#define FT_CALLBACK_DEF( x )  static  x
 #endif
 #endif /* FT_CALLBACK_DEF */
 

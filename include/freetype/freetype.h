@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType high-level API and common types (specification only).       */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1345,26 +1345,28 @@ FT_BEGIN_HEADER
   /*    FT_Library_Version                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Return the version of the FreeType library being used. This        */
-  /*    is useful when dynamically linking to the library, since one       */
-  /*    cannot use the macros FT_FREETYPE_MAJOR, FT_FREETYPE_MINOR and     */
+  /*    Return the version of the FreeType library being used.  This is    */
+  /*    useful when dynamically linking to the library, since one cannot   */
+  /*    use the macros FT_FREETYPE_MAJOR, FT_FREETYPE_MINOR, and           */
   /*    FT_FREETYPE_PATCH.                                                 */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    library :: source library handle.                                  */
+  /*    library :: A source library handle.                                */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    amajor :: major version number                                     */
-  /*    aminor :: minor version number                                     */
-  /*    apatch :: patch version number                                     */
+  /*    amajor :: The major version number.                                */
+  /*                                                                       */
+  /*    aminor :: The minor version number.                                */
+  /*                                                                       */
+  /*    apatch :: The patch version number.                                */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    the reason why this function takes a 'library' argument is         */
-  /*    because certain programs implement library initialisation in       */
-  /*    a custom way that doesn't use FT_Init_FreeType.                    */
+  /*    The reason why this function takes a 'library' argument is because */
+  /*    certain programs implement library initialization in a custom way  */
+  /*    that doesn't use `FT_Init_FreeType'.                               */
   /*                                                                       */
-  /*    in certain such cases, the library version cannot be known until   */
-  /*    the library object has been created..                              */
+  /*    In such cases it can happen that the library version is not known  */
+  /*    until the library object has been created.                         */
   /*                                                                       */
   FT_EXPORT( void )
   FT_Library_Version( FT_Library   library,
@@ -2434,39 +2436,40 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    This function is used to return the first character code in the    */
-  /*    current charmap of a given face. It will also return the           */
+  /*    current charmap of a given face.  It will also return the          */
   /*    corresponding glyph index.                                         */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face     :: A handle to the source face object.                    */
+  /*    face    :: A handle to the source face object.                     */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    agindex  :: glyph index of first character code. 0 if charmap      */
-  /*                is empty..                                             */
+  /*    agindex :: Glyph index of first character code.  0 if charmap is   */
+  /*               empty.                                                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    the charmap's first character code.                                */
+  /*    The charmap's first character code.                                */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    you should use this function with @FT_Get_Next_Char to be able     */
-  /*    to parse all character codes available in a given charmap.         */
-  /*    the code should look like:                                         */
+  /*    You should use this function with @FT_Get_Next_Char to be able to  */
+  /*    parse all character codes available in a given charmap.  The code  */
+  /*    should look like this:                                             */
   /*                                                                       */
   /*    {                                                                  */
   /*      FT_ULong  charcode;                                              */
   /*      FT_UInt   gindex;                                                */
   /*                                                                       */
+  /*                                                                       */
   /*      charcode = FT_Get_First_Char( face, &gindex );                   */
   /*      while ( gindex != 0 )                                            */
   /*      {                                                                */
-  /*        .. do something with (charcode,gindex) pair                    */
+  /*        ... do something with (charcode,gindex) pair ...               */
   /*                                                                       */
   /*        charcode = FT_Get_Next_Char( face, charcode, &gindex );        */
   /*      }                                                                */
   /*    }                                                                  */
   /*                                                                       */
-  /*    note that '*agindex' will be set to 0 if the charmap is empty.     */
-  /*    the result itself can be 0 in two cases: if the charmap is empty   */
+  /*    Note that `*agindex' will be set to 0 if the charmap is empty.     */
+  /*    The result itself can be 0 in two cases: if the charmap is empty   */
   /*    or when the value 0 is the first valid character code.             */
   /*                                                                       */
   FT_EXPORT( FT_ULong )
@@ -2482,32 +2485,31 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    This function is used to return the next character code in the     */
   /*    current charmap of a given face following the value 'char_code',   */
-  /*    as well as the corresponding glyph index                           */
+  /*    as well as the corresponding glyph index.                          */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face      :: A handle to the source face object.                   */
-  /*    char_code :: starting character code                               */
+  /*    char_code :: The starting character code.                          */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    agindex  :: glyph index of first character code. 0 if charmap      */
-  /*                is empty..                                             */
+  /*    agindex   :: Glyph index of first character code.  0 if charmap    */
+  /*                 is empty.                                             */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    the charmap's next character code.                                 */
+  /*    The charmap's next character code.                                 */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    you should use this function with @FT_Get_First_Char to be able    */
-  /*    to parse all character codes available in a given charmap. see     */
-  /*    the note for this function for a simple code example..             */
+  /*    You should use this function with @FT_Get_First_Char to walk       */
+  /*    through all character codes available in a given charmap.  See     */
+  /*    the note for this function for a simple code example.              */
   /*                                                                       */
-  /*    note that '*agindex' will be set to 0 when there are no more       */
-  /*    codes in the charmap..                                             */
+  /*    Note that `*agindex' will be set to 0 when there are no more codes */
+  /*    in the charmap.                                                    */
   /*                                                                       */
   FT_EXPORT( FT_ULong )
   FT_Get_Next_Char( FT_Face    face,
                     FT_ULong   char_code,
                     FT_UInt   *agindex );
-
 
 
   /*************************************************************************/

@@ -1,3 +1,15 @@
+2002-03-29  Werner Lemberg  <wl@gnu.org>
+
+	* builds/vms/ftconfig.h: Rename LOCAL_DEF and LOCAL_FUNC to
+	FT_LOCAL and FT_LOCAL_DEF, respectively, as with other ftconfig.h
+	files.
+	* builds/unix/ftconfig.in: Add argument to FT_LOCAL and
+	FT_LOCAL_DEF.
+	* src/truetype/ttinterp.c: s/FT_Assert/FT_ASSERT/.
+	* builds/unix/configure.ac: Temporarily deactivate creation of
+	../../Jamfile.
+	* builds/unix/configure: Updated.
+
 2002-03-28  KUSANO Takayuki  <AE5T-KSN@asahi-net.or.jp>
 
 	* src/sfnt/sfdriver.c (get_sfnt_postscript_name): Fix serious typos.
@@ -34,9 +46,11 @@
 	src/sfnt/ttload.c, src/sfnt/ttcmap0.c, src/sfnt/ttcmap0.h: Updated
 	the SFNT charmap support to use FT_CMaps.
 
-	* include/freetype/config/ftheader.h, include/freetype/fterrors.h:
-	Modified "fterrors.h" to include the error definitions list found in
-	"fterrdef.h".
+	* include/freetype/fterrdef.h: New file.
+	* include/freetype/fterrors.h: Include it.  It contains all error
+	codes.
+	* include/freetype/config/ftheader.h (FT_ERROR_DEFINITIONS_H): New
+	macro.
 
 	* include/freetype/internal/ftmemory.h, and a lot of other files:
 	Changed the names of memory macros.  Examples:
@@ -74,6 +88,10 @@
 	  etc.
 
 	Also introduced the FT_PEEK_XXXX functions.
+
+	* include/freetype/config/ftoption.h (FT_CONFIG_OPTION_USE_CMAPS,
+	TT_CONFIG_CMAP_FORMAT{0,2,4,6,8,10,12}): New macros to fine-tune
+	support of cmaps.
 
 2002-03-21  David Turner  <david@freetype.org>
 
@@ -302,10 +320,10 @@
 
 	* include/freetype/ftconfig.h: Changed `FT_LOCAL xxxx' to
 	`FT_LOCAL( xxxx )' everywhere in the source.  The same goes for
-	`FT_LOCAL_DEF xxxx' translated to `FT_LOCAL_DEF( xxxxx )'.
+	`FT_LOCAL_DEF xxxx' which is translated to `FT_LOCAL_DEF( xxxxx )'.
 
-	* include/freetype/freetype.h: Changing version to 2.1.0 to indicate
-	an unstable branch.
+	* include/freetype/freetype.h (FREETYPE_MINOR, FREETYPE_PATCH):
+	Changing version to 2.1.0 to indicate an unstable branch.
 	Added the declarations of FT_Get_First_Char and FT_Get_Next_Char.
 
 	* src/base/ftobjs.c: Implement FT_Get_First_Char and
@@ -326,7 +344,7 @@
 	  typedef PS_StructRec  T1_Struct;  /* backwards-compatibility */
 
 	Hence, we increase the coherency of the source code by effectively
-        using the `Rec' prefix for structure types.
+	using the `Rec' prefix for structure types.
 
 2002-02-27  David Turner  <david@freetype.org>
 
@@ -375,6 +393,9 @@
 	  FT_Done_Stream  => FT_Stream_Close
 	  FT_Stream_IO    => FT_Stream_IOFunc
 	  FT_Stream_Close => FT_Stream_CloseFunc
+
+	  ft_close_stream => ft_ansi_stream_close (in base/ftsystem.c only)
+	  ft_io_stream    => ft_ansi_stream_io    (in base/ftsystem.c only)
 
 	* Moving all memory and list management code to "src/base/ftutil.c"
 	(previously in "ftobjs.c" and "ftlist.c" respectively).

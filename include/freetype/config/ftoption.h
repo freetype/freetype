@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    User-selectable configuration macros (specification only).           */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -76,14 +76,14 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* CMap support                                                          */
+  /*                                                                       */
+  /*   Define this if you want generic cmap support.                       */
+  /*                                                                       */
 #define FT_CONFIG_OPTION_USE_CMAPS
-#define TT_CONFIG_CMAP_FORMAT_0
-#define TT_CONFIG_CMAP_FORMAT_2
-#define TT_CONFIG_CMAP_FORMAT_4
-#define TT_CONFIG_CMAP_FORMAT_6
-#define TT_CONFIG_CMAP_FORMAT_8
-#define TT_CONFIG_CMAP_FORMAT_10
-#define TT_CONFIG_CMAP_FORMAT_12
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -365,6 +365,21 @@ FT_BEGIN_HEADER
   /* `freetype/ftnames.h'.                                                 */
   /*                                                                       */
 #define TT_CONFIG_OPTION_SFNT_NAMES
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* TrueType CMap support                                                 */
+  /*                                                                       */
+  /*   Here you can fine-tune which TrueType CMap table format shall be    */
+  /*   supported.                                                          */
+#define TT_CONFIG_CMAP_FORMAT_0
+#define TT_CONFIG_CMAP_FORMAT_2
+#define TT_CONFIG_CMAP_FORMAT_4
+#define TT_CONFIG_CMAP_FORMAT_6
+#define TT_CONFIG_CMAP_FORMAT_8
+#define TT_CONFIG_CMAP_FORMAT_10
+#define TT_CONFIG_CMAP_FORMAT_12
 
 
   /*************************************************************************/
