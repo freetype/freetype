@@ -54,12 +54,12 @@
   psh2_hint_table_done( PSH2_Hint_Table  table,
                         FT_Memory        memory )
   {
-    FREE( table->zones );
+    FT_FREE( table->zones );
     table->num_zones = 0;
     table->zone      = 0;
 
-    FREE( table->sort );
-    FREE( table->hints );
+    FT_FREE( table->sort );
+    FT_FREE( table->hints );
     table->num_hints   = 0;
     table->max_hints   = 0;
     table->sort_global = 0;
@@ -173,9 +173,9 @@
 
 
     /* allocate our tables */
-    if ( ALLOC_ARRAY( table->sort,  2 * count,     PSH2_Hint    ) ||
-         ALLOC_ARRAY( table->hints,     count,     PSH2_HintRec ) ||
-         ALLOC_ARRAY( table->zones, 2 * count + 1, PSH2_ZoneRec ) )
+    if ( FT_NEW_ARRAY( table->sort,  2 * count     ) ||
+         FT_NEW_ARRAY( table->hints,     count     ) ||
+         FT_NEW_ARRAY( table->zones, 2 * count + 1 ) )
       goto Exit;
 
     table->max_hints   = count;
@@ -814,8 +814,8 @@
     psh2_hint_table_done( &glyph->hint_tables[1], memory );
     psh2_hint_table_done( &glyph->hint_tables[0], memory );
 
-    FREE( glyph->points );
-    FREE( glyph->contours );
+    FT_FREE( glyph->points );
+    FT_FREE( glyph->contours );
 
     glyph->num_points   = 0;
     glyph->num_contours = 0;
@@ -866,10 +866,8 @@
     memory = globals->memory;
 
     /* allocate and setup points + contours arrays */
-    if ( ALLOC_ARRAY( glyph->points,   outline->n_points,
-                      PSH2_PointRec   )                     ||
-         ALLOC_ARRAY( glyph->contours, outline->n_contours,
-                      PSH2_ContourRec )                     )
+    if ( FT_NEW_ARRAY( glyph->points,   outline->n_points   ) ||
+         FT_NEW_ARRAY( glyph->contours, outline->n_contours ) )
       goto Exit;
 
     glyph->num_points   = outline->n_points;
@@ -1512,10 +1510,10 @@
     if ( ps2_debug_glyph )
     {
       psh2_glyph_done( ps2_debug_glyph );
-      FREE( ps2_debug_glyph );
+      FT_FREE( ps2_debug_glyph );
     }
 
-    if ( ALLOC( glyph, sizeof ( *glyph ) ) )
+    if ( FT_NEW( glyph ) )
       return error;
 
     ps2_debug_glyph = glyph;

@@ -95,8 +95,8 @@
 
     size = (FT_ULong)( pitch * bitmap->rows );
 
-    if ( !ALLOC( sbit->buffer, size ) )
-      MEM_Copy( sbit->buffer, bitmap->buffer, size );
+    if ( !FT_ALLOC( sbit->buffer, size ) )
+      FT_MEM_COPY( sbit->buffer, bitmap->buffer, size );
 
     return error;
   }
@@ -112,7 +112,7 @@
 
 
     for ( ; count > 0; sbit++, count-- )
-      FREE( sbit->buffer );
+      FT_FREE( sbit->buffer );
 
     ftc_glyph_node_done( FTC_GLYPH_NODE( snode ), cache );
   }

@@ -268,7 +268,7 @@
 
     count = face->type1.num_glyphs;
 
-    if ( !ALLOC_ARRAY( cmap->pairs, count, T1_CMapUniPairRec ) )
+    if ( !FT_NEW_ARRAY( cmap->pairs, count ) )
     {
       FT_UInt         n, new_count;
       T1_CMapUniPair  pair;
@@ -298,7 +298,7 @@
       if ( new_count == 0 )
       {
         /* there are no unicode characters in here !! */
-        FREE( cmap->pairs );
+        FT_FREE( cmap->pairs );
         error = FT_Err_Invalid_Argument;
       }
       else
@@ -307,7 +307,7 @@
         /* one..                                                          */
         if ( new_count != count && new_count < count/2 )
         {
-          (void)REALLOC_ARRAY( cmap->pairs, count, new_count, T1_CMapUniPairRec );
+          (void)FT_RENEW_ARRAY( cmap->pairs, count, new_count );
           error = 0;
         }
 
@@ -331,7 +331,7 @@
     FT_Face    face   = FT_CMAP_FACE(cmap);
     FT_Memory  memory = FT_FACE_MEMORY(face);
 
-    FREE( cmap->pairs );
+    FT_FREE( cmap->pairs );
     cmap->num_pairs = 0;
   }
 

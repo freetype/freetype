@@ -262,11 +262,11 @@
       if ( len >= buffer_max )
         len = buffer_max - 1;
 
-      MEM_Copy( buffer, gname, len );
+      FT_MEM_COPY( buffer, gname, len );
       ((FT_Byte*)buffer)[len] = 0;
     }
 
-    FREE ( gname );
+    FT_FREE ( gname );
     error = CFF_Err_Ok;
 
     Exit:
@@ -411,7 +411,7 @@
       result = strcmp( glyph_name, name );
 
       if ( sid > 390 )
-        FREE( name );
+        FT_FREE( name );
 
       if ( !result )
         return i;

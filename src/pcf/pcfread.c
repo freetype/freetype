@@ -105,7 +105,7 @@ THE SOFTWARE.
     if ( toc->version != PCF_FILE_VERSION )
       return PCF_Err_Invalid_File_Format;
 
-    if ( ALLOC( face->toc.tables, toc->count * sizeof ( PCF_TableRec ) ) )
+    if ( FT_NEW_ARRAY( face->toc.tables, toc->count ) )
       return PCF_Err_Out_Of_Memory;
 
     tables = face->toc.tables;
@@ -145,7 +145,7 @@ THE SOFTWARE.
     return PCF_Err_Ok;
 
   Exit:
-    FREE( face->toc.tables );
+    FT_FREE( face->toc.tables );
     return error;
   }
 
@@ -383,7 +383,7 @@ THE SOFTWARE.
 
     FT_TRACE4(( "get_prop: nprop = %d\n", nprops ));
 
-    if ( ALLOC( props, nprops * sizeof ( PCF_ParsePropertyRec ) ) )
+    if ( FT_NEW_ARRAY( props, nprops ) )
       goto Bail;
 
     for ( i = 0; i < nprops; i++ )
@@ -420,22 +420,21 @@ THE SOFTWARE.
 
     FT_TRACE4(( "get_prop: string_size = %ld\n", string_size ));
 
-    if ( ALLOC( strings, string_size * sizeof ( char ) ) )
+    if ( FT_NEW_ARRAY( strings, string_size ) )
       goto Bail;
 
     error = FT_Stream_Read( stream, (FT_Byte*)strings, string_size );
     if ( error )
       goto Bail;
 
-    if ( ALLOC( properties, nprops * sizeof ( PCF_PropertyRec ) ) )
+    if ( FT_NEW_ARRAY( properties, nprops ) )
       goto Bail;
 
     for ( i = 0; i < nprops; i++ )
     {
       /* XXX: make atom */
-      if ( ALLOC( properties[i].name,
-                     ( strlen( strings + props[i].name ) + 1 ) *
-                       sizeof ( char ) ) )
+      if ( FT_NEW_ARRAY( properties[i].name,
+                         strlen( strings + props[i].name ) + 1 ) )
         goto Bail;
       strcpy( properties[i].name,strings + props[i].name );
 
@@ -443,9 +442,8 @@ THE SOFTWARE.
 
       if ( props[i].isString )
       {
-        if ( ALLOC( properties[i].value.atom,
-                       ( strlen( strings + props[i].value ) + 1 ) *
-                         sizeof ( char ) ) )
+        if ( FT_NEW_ARRAY( properties[i].value.atom,
+                           strlen( strings + props[i].value ) + 1 ) )
           goto Bail;
         strcpy( properties[i].value.atom, strings + props[i].value );
       }
@@ -456,14 +454,14 @@ THE SOFTWARE.
     face->properties = properties;
     face->nprops = nprops;
 
-    FREE( props );
-    FREE( strings );
+    FT_FREE( props );
+    FT_FREE( strings );
 
     return PCF_Err_Ok;
 
   Bail:
-    FREE( props );
-    FREE( strings );
+    FT_FREE( props );
+    FT_FREE( strings );
 
     return error;
   }
@@ -516,7 +514,7 @@ THE SOFTWARE.
 
     face->nmetrics = nmetrics;
 
-    if ( ALLOC( face->metrics, nmetrics * sizeof ( PCF_MetricRec ) ) )
+    if ( FT_NEW_ARRAY( face->metrics, nmetrics ) )
       return PCF_Err_Out_Of_Memory;
 
     metrics = face->metrics;
@@ -541,7 +539,7 @@ THE SOFTWARE.
     }
 
     if ( error )
-      FREE( face->metrics );
+      FT_FREE( face->metrics );
     return error;
   }
 
@@ -586,7 +584,7 @@ THE SOFTWARE.
     if ( nbitmaps != face->nmetrics )
       return PCF_Err_Invalid_File_Format;
 
-    if ( ALLOC( offsets, nbitmaps * sizeof ( FT_ULong ) ) )
+    if ( FT_NEW_ARRAY( offsets, nbitmaps ) )
       return error;
 
     for ( i = 0; i < nbitmaps; i++ )
@@ -627,12 +625,12 @@ THE SOFTWARE.
 
     face->bitmapsFormat = format;
 
-    FREE ( offsets );
+    FT_FREE ( offsets );
     return error;
 
   Bail:
-    FREE ( offsets );
-    FREE ( bitmaps );
+    FT_FREE ( offsets );
+    FT_FREE ( bitmaps );
     return error;
   }
 
@@ -693,7 +691,7 @@ THE SOFTWARE.
 
     nencoding = ( lastCol - firstCol + 1 ) * ( lastRow - firstRow + 1 );
 
-    if ( ALLOC( tmpEncoding, nencoding * sizeof ( PCF_EncodingRec ) ) )
+    if ( FT_NEW_ARRAY( tmpEncoding, nencoding ) )
       return PCF_Err_Out_Of_Memory;
 
     error = FT_Stream_EnterFrame( stream, 2 * nencoding );
@@ -723,7 +721,8 @@ THE SOFTWARE.
     }
     FT_Stream_ExitFrame( stream );
 
-    if ( ALLOC( encoding, (--j) * sizeof ( PCF_EncodingRec ) ) )
+    j--;
+    if ( FT_NEW_ARRAY( encoding, j ) )
       goto Bail;
 
     for ( i = 0; i < j; i++ )
@@ -734,13 +733,13 @@ THE SOFTWARE.
 
     face->nencodings = j;
     face->encodings  = encoding;
-    FREE( tmpEncoding );
+    FT_FREE( tmpEncoding );
 
     return error;
 
   Bail:
-    FREE( encoding );
-    FREE( tmpEncoding );
+    FT_FREE( encoding );
+    FT_FREE( tmpEncoding );
     return error;
   }
 
@@ -957,7 +956,7 @@ THE SOFTWARE.
           int  l = strlen( prop->value.atom ) + 1;
 
 
-          if ( ALLOC( root->family_name, l * sizeof ( char ) ) )
+          if ( FT_NEW_ARRAY( root->family_name, l ) )
             goto Exit;
           strcpy( root->family_name, prop->value.atom );
         }
@@ -968,7 +967,7 @@ THE SOFTWARE.
       root->num_glyphs = face->nmetrics;
 
       root->num_fixed_sizes = 1;
-      if ( ALLOC_ARRAY( root->available_sizes, 1, FT_Bitmap_Size ) )
+      if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
         goto Exit;
 
       prop = pcf_find_property( face, "PIXEL_SIZE" );
@@ -1027,14 +1026,12 @@ THE SOFTWARE.
           if ( ( charset_registry->isString ) &&
                ( charset_encoding->isString ) )
           {
-            if ( ALLOC( face->charset_encoding,
-                        ( strlen( charset_encoding->value.atom ) + 1 ) *
-                          sizeof ( char ) ) )
+            if ( FT_NEW_ARRAY( face->charset_encoding,
+                               strlen( charset_encoding->value.atom ) + 1 ) )
               goto Exit;
               
-            if ( ALLOC( face->charset_registry,
-                        ( strlen( charset_registry->value.atom ) + 1 ) *
-                          sizeof ( char ) ) )
+            if ( FT_NEW_ARRAY( face->charset_registry,
+                               strlen( charset_registry->value.atom ) + 1 ) )
               goto Exit;
               
             strcpy( face->charset_registry, charset_registry->value.atom );

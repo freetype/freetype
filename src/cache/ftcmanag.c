@@ -336,7 +336,7 @@
   ftc_family_table_done( FTC_FamilyTable  table,
                          FT_Memory        memory )
   {
-    FREE( table->entries );
+    FT_FREE( table->entries );
     table->free  = 0;
     table->count = 0;
     table->size  = 0;
@@ -370,8 +370,7 @@
           new_size = 65534;
       }
 
-      if ( REALLOC_ARRAY( table->entries, old_size, new_size,
-                          FTC_FamilyEntryRec ) )
+      if ( FT_RENEW_ARRAY( table->entries, old_size, new_size ) )
         return error;
 
       table->size = new_size;
@@ -464,7 +463,7 @@
 
     memory = library->memory;
 
-    if ( ALLOC( manager, sizeof ( *manager ) ) )
+    if ( FT_NEW( manager ) )
       goto Exit;
 
     if ( max_faces == 0 )
@@ -508,7 +507,7 @@
     {
       FT_LruList_Destroy( manager->faces_list );
       FT_LruList_Destroy( manager->sizes_list );
-      FREE( manager );
+      FT_FREE( manager );
     }
 
     return error;
@@ -538,7 +537,7 @@
       if ( cache )
       {
         cache->clazz->cache_done( cache );
-        FREE( cache );
+        FT_FREE( cache );
         manager->caches[idx] = 0;
       }
     }
@@ -553,7 +552,7 @@
     FT_LruList_Destroy( manager->sizes_list );
     manager->sizes_list = 0;
 
-    FREE( manager );
+    FT_FREE( manager );
   }
 
 
@@ -716,7 +715,7 @@
         goto Exit;
       }
 
-      if ( !ALLOC( cache, clazz->cache_size ) )
+      if ( !FT_ALLOC( cache, clazz->cache_size ) )
       {
         cache->manager = manager;
         cache->memory  = memory;
@@ -734,7 +733,7 @@
             if ( clazz->cache_done )
               clazz->cache_done( cache );
 
-            FREE( cache );
+            FT_FREE( cache );
             goto Exit;
           }
         }

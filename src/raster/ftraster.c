@@ -186,8 +186,8 @@
 #endif /* _STANDALONE_ */
 
 
-#ifndef MEM_Set
-#define MEM_Set( d, s, c )  memset( d, s, c )
+#ifndef FT_MEM_SET
+#define FT_MEM_SET( d, s, c )  memset( d, s, c )
 #endif
 
 
@@ -3146,7 +3146,7 @@
 
 
      *araster = &the_raster;
-     MEM_Set( &the_raster, sizeof ( the_raster ), 0 );
+     FT_MEM_SET( &the_raster, sizeof ( the_raster ), 0 );
      ft_black_init( &the_raster );
 
      return 0;
@@ -3173,7 +3173,7 @@
 
 
     *araster = 0;
-    if ( !ALLOC( raster, sizeof ( *raster ) ) )
+    if ( !FT_NEW( raster ) )
     {
       raster->memory = memory;
       ft_black_init( raster );
@@ -3189,7 +3189,7 @@
   ft_black_done( TRaster_Instance*  raster )
   {
     FT_Memory  memory = (FT_Memory)raster->memory;
-    FREE( raster );
+    FT_FREE( raster );
   }
 
 

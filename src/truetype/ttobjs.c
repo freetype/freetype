@@ -71,10 +71,10 @@
     FT_Memory  memory = zone->memory;
 
 
-    FREE( zone->contours );
-    FREE( zone->tags );
-    FREE( zone->cur );
-    FREE( zone->org );
+    FT_FREE( zone->contours );
+    FT_FREE( zone->tags );
+    FT_FREE( zone->cur );
+    FT_FREE( zone->org );
 
     zone->max_points   = zone->n_points   = 0;
     zone->max_contours = zone->n_contours = 0;
@@ -114,13 +114,13 @@
     if ( maxPoints > 0 )
       maxPoints += 2;
 
-    MEM_Set( zone, 0, sizeof ( *zone ) );
+    FT_MEM_SET( zone, 0, sizeof ( *zone ) );
     zone->memory = memory;
 
-    if ( ALLOC_ARRAY( zone->org,      maxPoints * 2, FT_F26Dot6 ) ||
-         ALLOC_ARRAY( zone->cur,      maxPoints * 2, FT_F26Dot6 ) ||
-         ALLOC_ARRAY( zone->tags,     maxPoints,     FT_Byte    ) ||
-         ALLOC_ARRAY( zone->contours, maxContours,   FT_UShort  ) )
+    if ( FT_NEW_ARRAY( zone->org,      maxPoints * 2 ) ||
+         FT_NEW_ARRAY( zone->cur,      maxPoints * 2 ) ||
+         FT_NEW_ARRAY( zone->tags,     maxPoints     ) ||
+         FT_NEW_ARRAY( zone->contours, maxContours   ) )
     {
       TT_Done_GlyphZone( zone );
     }
@@ -241,11 +241,11 @@
       sfnt->done_face( face );
 
     /* freeing the locations table */
-    FREE( face->glyph_locations );
+    FT_FREE( face->glyph_locations );
     face->num_locations = 0;
 
     /* freeing the CVT */
-    FREE( face->cvt );
+    FT_FREE( face->cvt );
     face->cvt_size = 0;
 
     /* freeing the programs */
@@ -326,19 +326,10 @@
     }
 
     /* allocate function defs, instruction defs, cvt, and storage area */
-    if ( ALLOC_ARRAY( size->function_defs,
-                      size->max_function_defs,
-                      TT_DefRecord )                ||
-
-         ALLOC_ARRAY( size->instruction_defs,
-                      size->max_instruction_defs,
-                      TT_DefRecord )                ||
-
-         ALLOC_ARRAY( size->cvt,
-                      size->cvt_size, FT_Long )     ||
-
-         ALLOC_ARRAY( size->storage,
-                      size->storage_size, FT_Long ) )
+    if ( FT_NEW_ARRAY( size->function_defs, size->max_function_defs )       ||
+         FT_NEW_ARRAY( size->instruction_defs, size->max_instruction_defs ) ||
+         FT_NEW_ARRAY( size->cvt, size->cvt_size )                          ||
+         FT_NEW_ARRAY( size->storage, size->storage_size )                  )
 
       goto Fail_Memory;
 
@@ -480,18 +471,18 @@
       size->debug   = FALSE;
     }
 
-    FREE( size->cvt );
+    FT_FREE( size->cvt );
     size->cvt_size = 0;
 
     /* free storage area */
-    FREE( size->storage );
+    FT_FREE( size->storage );
     size->storage_size = 0;
 
     /* twilight zone */
     TT_Done_GlyphZone( &size->twilight );
 
-    FREE( size->function_defs );
-    FREE( size->instruction_defs );
+    FT_FREE( size->function_defs );
+    FT_FREE( size->instruction_defs );
 
     size->num_function_defs    = 0;
     size->max_function_defs    = 0;

@@ -46,7 +46,7 @@
 
         return FT_Err_Out_Of_Memory;
       }
-      MEM_Set( *P, 0, size );
+      FT_MEM_SET( *P, 0, size );
     }
     else
       *P = NULL;
@@ -88,7 +88,7 @@
       goto Fail;
 
     if ( size > current )
-      MEM_Set( (char*)Q + current, 0, size - current );
+      FT_MEM_SET( (char*)Q + current, 0, size - current );
 
     *P = Q;
     return FT_Err_Ok;
@@ -300,7 +300,7 @@
       if ( destroy )
         destroy( memory, data, user );
 
-      FREE( cur );
+      FT_FREE( cur );
       cur = next;
     }
 

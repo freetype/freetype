@@ -131,7 +131,7 @@
 
 
         len = (FT_UInt)rec->stringLength / 2;
-        if ( MEM_Alloc( string, len + 1 ) )
+        if ( FT_MEM_ALLOC( string, len + 1 ) )
           return NULL;
 
         for ( m = 0; m < len; m ++ )
@@ -140,10 +140,10 @@
       else
       {
         len = rec->stringLength;
-        if ( MEM_Alloc( string, len + 1 ) )
+        if ( FT_MEM_ALLOC( string, len + 1 ) )
           return NULL;
 
-        MEM_Copy( string, rec->string, len );
+        FT_MEM_COPY( string, rec->string, len );
       }
 
       string[len] = '\0';
@@ -458,7 +458,7 @@
       root->num_charmaps = face->num_charmaps;
 
       /* allocate table of pointers */
-      if ( ALLOC_ARRAY( root->charmaps, root->num_charmaps, FT_CharMap ) )
+      if ( FT_NEW_ARRAY( root->charmaps, root->num_charmaps ) )
         goto Exit;
 
       for ( n = 0; n < root->num_charmaps; n++, charmap++ )
@@ -497,9 +497,7 @@
 #endif
         root->num_fixed_sizes = face->num_sbit_strikes;
 
-        if ( ALLOC_ARRAY( root->available_sizes,
-                          face->num_sbit_strikes,
-                          FT_Bitmap_Size ) )
+        if ( FT_NEW_ARRAY( root->available_sizes, face->num_sbit_strikes ) )
           goto Exit;
 
         for ( n = 0 ; n < face->num_sbit_strikes ; n++ )
@@ -637,15 +635,15 @@
     }
 
     /* freeing the kerning table */
-    FREE( face->kern_pairs );
+    FT_FREE( face->kern_pairs );
     face->num_kern_pairs = 0;
 
     /* freeing the collection table */
-    FREE( face->ttc_header.offsets );
+    FT_FREE( face->ttc_header.offsets );
     face->ttc_header.count = 0;
 
     /* freeing table directory */
-    FREE( face->dir_tables );
+    FT_FREE( face->dir_tables );
     face->num_tables = 0;
 
     /* freeing the character mapping tables */
@@ -658,27 +656,27 @@
         sfnt->free_charmap( face, &face->charmaps[n].cmap );
     }
 
-    FREE( face->charmaps );
+    FT_FREE( face->charmaps );
     face->num_charmaps = 0;
 
-    FREE( face->root.charmaps );
+    FT_FREE( face->root.charmaps );
     face->root.num_charmaps = 0;
     face->root.charmap      = 0;
 
     /* freeing the horizontal metrics */
-    FREE( face->horizontal.long_metrics );
-    FREE( face->horizontal.short_metrics );
+    FT_FREE( face->horizontal.long_metrics );
+    FT_FREE( face->horizontal.short_metrics );
 
     /* freeing the vertical ones, if any */
     if ( face->vertical_info )
     {
-      FREE( face->vertical.long_metrics  );
-      FREE( face->vertical.short_metrics );
+      FT_FREE( face->vertical.long_metrics  );
+      FT_FREE( face->vertical.short_metrics );
       face->vertical_info = 0;
     }
 
     /* freeing the gasp table */
-    FREE( face->gasp.gaspRanges );
+    FT_FREE( face->gasp.gaspRanges );
     face->gasp.numRanges = 0;
 
     /* freeing the name table */
@@ -688,13 +686,13 @@
     sfnt->free_hdmx( face );
 
     /* freeing family and style name */
-    FREE( face->root.family_name );
-    FREE( face->root.style_name );
+    FT_FREE( face->root.family_name );
+    FT_FREE( face->root.style_name );
 
     /* freeing sbit size table */
     face->root.num_fixed_sizes = 0;
     if ( face->root.available_sizes )
-      FREE( face->root.available_sizes );
+      FT_FREE( face->root.available_sizes );
 
     face->sfnt = 0;
   }

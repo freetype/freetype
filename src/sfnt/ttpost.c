@@ -185,8 +185,8 @@
       FT_Int  n;
 
 
-      if ( ALLOC_ARRAY ( glyph_indices, num_glyphs, FT_UShort ) ||
-           FT_FRAME_ENTER( num_glyphs * 2L )                      )
+      if ( FT_NEW_ARRAY ( glyph_indices, num_glyphs ) ||
+           FT_FRAME_ENTER( num_glyphs * 2L )          )
         goto Fail;
 
       for ( n = 0; n < num_glyphs; n++ )
@@ -222,7 +222,7 @@
       FT_UShort  n;
 
 
-      if ( ALLOC_ARRAY( name_strings, num_names, FT_Char* ) )
+      if ( FT_NEW_ARRAY( name_strings, num_names ) )
         goto Fail;
 
       for ( n = 0; n < num_names; n++ )
@@ -230,9 +230,9 @@
         FT_UInt  len;
 
 
-        if ( FT_READ_BYTE  ( len )                               ||
-             ALLOC_ARRAY( name_strings[n], len + 1, FT_Char ) ||
-             FT_STREAM_READ  ( name_strings[n], len )              )
+        if ( FT_READ_BYTE  ( len )                    ||
+             FT_NEW_ARRAY( name_strings[n], len + 1 ) ||
+             FT_STREAM_READ  ( name_strings[n], len ) )
           goto Fail1;
 
         name_strings[n][len] = '\0';
@@ -258,12 +258,12 @@
 
 
       for ( n = 0; n < num_names; n++ )
-        FREE( name_strings[n] );
+        FT_FREE( name_strings[n] );
     }
 
   Fail:
-    FREE( name_strings );
-    FREE( glyph_indices );
+    FT_FREE( name_strings );
+    FT_FREE( glyph_indices );
 
   Exit:
     return error;
@@ -292,7 +292,7 @@
       goto Exit;
     }
 
-    if ( ALLOC    ( offset_table, num_glyphs ) ||
+    if ( FT_ALLOC    ( offset_table, num_glyphs ) ||
          FT_STREAM_READ( offset_table, num_glyphs ) )
       goto Fail;
 
@@ -326,7 +326,7 @@
     return SFNT_Err_Ok;
 
   Fail:
-    FREE( offset_table );
+    FT_FREE( offset_table );
 
   Exit:
     return error;
@@ -394,13 +394,13 @@
           FT_UShort    n;
 
 
-          FREE( table->glyph_indices );
+          FT_FREE( table->glyph_indices );
           table->num_glyphs = 0;
 
           for ( n = 0; n < table->num_names; n++ )
-            FREE( table->glyph_names[n] );
+            FT_FREE( table->glyph_names[n] );
 
-          FREE( table->glyph_names );
+          FT_FREE( table->glyph_names );
           table->num_names = 0;
         }
         break;
@@ -410,7 +410,7 @@
           TT_Post_25   table = &names->names.format_25;
 
 
-          FREE( table->offsets );
+          FT_FREE( table->offsets );
           table->num_glyphs = 0;
         }
         break;

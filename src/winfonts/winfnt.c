@@ -178,7 +178,7 @@
     for ( ; cur < limit; cur++ )
       fnt_font_done( cur, stream );
 
-    FREE( face->fonts );
+    FT_FREE( face->fonts );
     face->num_fonts = 0;
   }
 
@@ -260,8 +260,8 @@
           goto Exit;
         }
 
-        if ( FT_STREAM_SEEK( font_offset )                         ||
-             ALLOC_ARRAY( face->fonts, font_count, FNT_FontRec ) )
+        if ( FT_STREAM_SEEK( font_offset )           ||
+             FT_NEW_ARRAY( face->fonts, font_count ) )
           goto Exit;
 
         face->num_fonts = font_count;
@@ -447,7 +447,7 @@
 
     fnt_face_done_fonts( face );
 
-    FREE( face->root.available_sizes );
+    FT_FREE( face->root.available_sizes );
     face->root.num_fixed_sizes = 0;
   }
 
@@ -474,7 +474,7 @@
       /* this didn't work, now try to load a single FNT font */
       FNT_Font  font;
 
-      if ( ALLOC( face->fonts, sizeof ( *face->fonts ) ) )
+      if ( FT_NEW( face->fonts ) )
         goto Exit;
 
       face->num_fonts = 1;
@@ -511,8 +511,7 @@
         root->style_flags |= FT_STYLE_FLAG_BOLD;
 
       /* Setup the `fixed_sizes' array */
-      if ( ALLOC_ARRAY( root->available_sizes, face->num_fonts,
-                        FT_Bitmap_Size ) )
+      if ( FT_NEW_ARRAY( root->available_sizes, face->num_fonts ) )
         goto Fail;
 
       root->num_fixed_sizes = face->num_fonts;
@@ -677,7 +676,7 @@
       bitmap->rows       = font->header.pixel_height;
       bitmap->pixel_mode = ft_pixel_mode_mono;
 
-      if ( ALLOC( bitmap->buffer, pitch * bitmap->rows ) )
+      if ( FT_ALLOC( bitmap->buffer, pitch * bitmap->rows ) )
         goto Exit;
 
       column = (FT_Byte*)bitmap->buffer;

@@ -154,7 +154,7 @@
     table->num_maps = 0;
     table->maps     = 0;
 
-    if ( !ALLOC_ARRAY( table->maps, num_glyphs, PS_UniMap ) )
+    if ( !FT_NEW_ARRAY( table->maps, num_glyphs ) )
     {
       FT_UInt     n;
       FT_UInt     count;
@@ -185,14 +185,14 @@
       /* now, compress the table a bit */
       count = (FT_UInt)( map - table->maps );
 
-      if ( count > 0 && REALLOC( table->maps,
+      if ( count > 0 && FT_REALLOC( table->maps,
                                  num_glyphs * sizeof ( PS_UniMap ),
                                  count * sizeof ( PS_UniMap ) ) )
         count = 0;
 
       if ( count == 0 )
       {
-        FREE( table->maps );
+        FT_FREE( table->maps );
         if ( !error )
           error = PSnames_Err_Invalid_Argument;  /* no unicode chars here! */
       }

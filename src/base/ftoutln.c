@@ -263,9 +263,9 @@
 
     *anoutline = null_outline;
 
-    if ( ALLOC_ARRAY( anoutline->points,   numPoints * 2L, FT_Pos    ) ||
-         ALLOC_ARRAY( anoutline->tags,     numPoints,      FT_Byte   ) ||
-         ALLOC_ARRAY( anoutline->contours, numContours,    FT_UShort ) )
+    if ( FT_NEW_ARRAY( anoutline->points,   numPoints * 2L ) ||
+         FT_NEW_ARRAY( anoutline->tags,     numPoints      ) ||
+         FT_NEW_ARRAY( anoutline->contours, numContours    ) )
       goto Fail;
 
     anoutline->n_points    = (FT_UShort)numPoints;
@@ -357,13 +357,13 @@
          source->n_contours != target->n_contours )
       return FT_Err_Invalid_Argument;
 
-    MEM_Copy( target->points, source->points,
+    FT_MEM_COPY( target->points, source->points,
               source->n_points * sizeof ( FT_Vector ) );
 
-    MEM_Copy( target->tags, source->tags,
+    FT_MEM_COPY( target->tags, source->tags,
               source->n_points * sizeof ( FT_Byte ) );
 
-    MEM_Copy( target->contours, source->contours,
+    FT_MEM_COPY( target->contours, source->contours,
               source->n_contours * sizeof ( FT_Short ) );
 
     /* copy all flags, except the `ft_outline_owner' one */
@@ -385,9 +385,9 @@
     {
       if ( outline->flags & ft_outline_owner )
       {
-        FREE( outline->points   );
-        FREE( outline->tags     );
-        FREE( outline->contours );
+        FT_FREE( outline->points   );
+        FT_FREE( outline->tags     );
+        FT_FREE( outline->contours );
       }
       *outline = null_outline;
 

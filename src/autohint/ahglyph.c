@@ -307,7 +307,7 @@
     AH_Outline*  outline;
 
 
-    if ( !ALLOC( outline, sizeof ( *outline ) ) )
+    if ( !FT_NEW( outline ) )
     {
       outline->memory = memory;
       *aoutline = outline;
@@ -331,12 +331,12 @@
     FT_Memory memory = outline->memory;
 
 
-    FREE( outline->horz_edges );
-    FREE( outline->horz_segments );
-    FREE( outline->contours );
-    FREE( outline->points );
+    FT_FREE( outline->horz_edges );
+    FT_FREE( outline->horz_segments );
+    FT_FREE( outline->contours );
+    FT_FREE( outline->points );
 
-    FREE( outline );
+    FT_FREE( outline );
   }
 
 
@@ -408,8 +408,9 @@
       FT_Int  new_contours = ( num_contours + 3 ) & -4;
 
 
-      if ( REALLOC_ARRAY( outline->contours, outline->max_contours,
-                          new_contours, AH_Point* ) )
+      if ( FT_RENEW_ARRAY( outline->contours,
+                           outline->max_contours,
+                           new_contours ) )
         goto Exit;
 
       outline->max_contours = new_contours;
@@ -425,12 +426,9 @@
       FT_Int  max  = outline->max_points;
 
 
-      if ( REALLOC_ARRAY( outline->points,
-                          max, news, AH_Point )            ||
-           REALLOC_ARRAY( outline->horz_edges,
-                          max * 2, news * 2, AH_Edge )     ||
-           REALLOC_ARRAY( outline->horz_segments,
-                          max * 2, news * 2, AH_Segment ) )
+      if ( FT_RENEW_ARRAY( outline->points,        max,     news     ) ||
+           FT_RENEW_ARRAY( outline->horz_edges,    max * 2, news * 2 ) ||
+           FT_RENEW_ARRAY( outline->horz_segments, max * 2, news * 2 ) )
         goto Exit;
 
       /* readjust some pointers */
@@ -816,7 +814,7 @@
             segment_dir = point->out_dir;
 
             /* clear all segment fields */
-            MEM_Set( segment, 0, sizeof ( *segment ) );
+            FT_MEM_SET( segment, 0, sizeof ( *segment ) );
 
             segment->dir      = segment_dir;
             segment->flags    = ah_edge_normal;
@@ -878,7 +876,7 @@
         if ( min_point )
         {
           /* clear all segment fields */
-          MEM_Set( segment, 0, sizeof ( *segment ) );
+          FT_MEM_SET( segment, 0, sizeof ( *segment ) );
 
           segment->dir   = segment_dir;
           segment->flags = ah_edge_normal;
@@ -894,7 +892,7 @@
         if ( max_point )
         {
           /* clear all segment fields */
-          MEM_Set( segment, 0, sizeof ( *segment ) );
+          FT_MEM_SET( segment, 0, sizeof ( *segment ) );
 
           segment->dir   = segment_dir;
           segment->flags = ah_edge_normal;
@@ -1117,7 +1115,7 @@
           edge_limit++;
 
           /* clear all edge fields */
-          MEM_Set( edge, 0, sizeof ( *edge ) );
+          FT_MEM_SET( edge, 0, sizeof ( *edge ) );
 
           /* add the segment to the new edge's list */
           edge->first    = seg;

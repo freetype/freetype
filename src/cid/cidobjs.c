@@ -209,29 +209,29 @@
 
           if ( subr->code )
           {
-            FREE( subr->code[0] );
-            FREE( subr->code );
+            FT_FREE( subr->code[0] );
+            FT_FREE( subr->code );
           }
         }
 
-        FREE( face->subrs );
+        FT_FREE( face->subrs );
       }
 
       /* release FontInfo strings */
-      FREE( info->version );
-      FREE( info->notice );
-      FREE( info->full_name );
-      FREE( info->family_name );
-      FREE( info->weight );
+      FT_FREE( info->version );
+      FT_FREE( info->notice );
+      FT_FREE( info->full_name );
+      FT_FREE( info->family_name );
+      FT_FREE( info->weight );
 
       /* release font dictionaries */
-      FREE( cid->font_dicts );
+      FT_FREE( cid->font_dicts );
       cid->num_dicts = 0;
 
       /* release other strings */
-      FREE( cid->cid_font_name );
-      FREE( cid->registry );
-      FREE( cid->ordering );
+      FT_FREE( cid->cid_font_name );
+      FT_FREE( cid->registry );
+      FT_FREE( cid->ordering );
 
       face->root.family_name = 0;
       face->root.style_name  = 0;

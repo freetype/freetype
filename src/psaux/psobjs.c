@@ -62,8 +62,8 @@
 
 
     table->memory = memory;
-    if ( ALLOC_ARRAY( table->elements, count, FT_Byte*  ) ||
-         ALLOC_ARRAY( table->lengths, count, FT_Byte* )   )
+    if ( FT_NEW_ARRAY( table->elements, count ) ||
+         FT_NEW_ARRAY( table->lengths,  count ) )
       goto Exit;
 
     table->max_elems = count;
@@ -77,7 +77,7 @@
 
   Exit:
     if ( error )
-      FREE( table->elements );
+      FT_FREE( table->elements );
 
     return error;
   }
@@ -110,15 +110,15 @@
 
 
     /* allocate new base block */
-    if ( ALLOC( table->block, new_size ) )
+    if ( FT_ALLOC( table->block, new_size ) )
       return error;
 
     /* copy elements and shift offsets */
     if (old_base )
     {
-      MEM_Copy( table->block, old_base, table->capacity );
+      FT_MEM_COPY( table->block, old_base, table->capacity );
       shift_elements( table, old_base );
-      FREE( old_base );
+      FT_FREE( old_base );
     }
 
     table->capacity = new_size;
@@ -187,7 +187,7 @@
     /* add the object to the base block and adjust offset */
     table->elements[idx] = table->block + table->cursor;
     table->lengths [idx] = length;
-    MEM_Copy( table->block + table->cursor, object, length );
+    FT_MEM_COPY( table->block + table->cursor, object, length );
 
     table->cursor += length;
     return PSaux_Err_Ok;
@@ -221,13 +221,13 @@
     if ( !old_base )
       return;
 
-    if ( ALLOC( table->block, table->cursor ) )
+    if ( FT_ALLOC( table->block, table->cursor ) )
       return;
-    MEM_Copy( table->block, old_base, table->cursor );
+    FT_MEM_COPY( table->block, old_base, table->cursor );
     shift_elements( table, old_base );
 
     table->capacity = table->cursor;
-    FREE( old_base );
+    FT_FREE( old_base );
 
     FT_UNUSED( error );
   }
@@ -241,9 +241,9 @@
 
     if ( (FT_ULong)table->init == 0xDEADBEEFUL )
     {
-      FREE( table->block );
-      FREE( table->elements );
-      FREE( table->lengths );
+      FT_FREE( table->block );
+      FT_FREE( table->elements );
+      FT_FREE( table->lengths );
       table->init = 0;
     }
   }
@@ -735,11 +735,11 @@
     }
 
     len = cur - *cursor;
-    if ( cur >= limit || ALLOC( result, len + 1 ) )
+    if ( cur >= limit || FT_ALLOC( result, len + 1 ) )
       return 0;
 
     /* now copy the string */
-    MEM_Copy( result, *cursor, len );
+    FT_MEM_COPY( result, *cursor, len );
     result[len] = '\0';
     *cursor = cur;
     return result;
@@ -867,10 +867,10 @@
             /* with synthetic fonts, it's possible to find a field twice */
             break;
 
-          if ( ALLOC( string, len + 1 ) )
+          if ( FT_ALLOC( string, len + 1 ) )
             goto Exit;
 
-          MEM_Copy( string, cur, len );
+          FT_MEM_COPY( string, cur, len );
           string[len] = 0;
 
           *(FT_String**)q = string;

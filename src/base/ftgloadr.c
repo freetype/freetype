@@ -53,7 +53,7 @@
     FT_Error         error;
 
 
-    if ( !ALLOC( loader, sizeof ( *loader ) ) )
+    if ( !FT_NEW( loader ) )
     {
       loader->memory = memory;
       *aloader       = loader;
@@ -86,11 +86,11 @@
     FT_Memory memory = loader->memory;
 
 
-    FREE( loader->base.outline.points );
-    FREE( loader->base.outline.tags );
-    FREE( loader->base.outline.contours );
-    FREE( loader->base.extra_points );
-    FREE( loader->base.subglyphs );
+    FT_FREE( loader->base.outline.points );
+    FT_FREE( loader->base.outline.tags );
+    FT_FREE( loader->base.outline.contours );
+    FT_FREE( loader->base.extra_points );
+    FT_FREE( loader->base.subglyphs );
 
     loader->max_points    = 0;
     loader->max_contours  = 0;
@@ -110,7 +110,7 @@
 
 
       FT_GlyphLoader_Reset( loader );
-      FREE( loader );
+      FT_FREE( loader );
     }
   }
 
@@ -141,8 +141,7 @@
     FT_Memory  memory = loader->memory;
 
 
-    if ( !ALLOC_ARRAY( loader->base.extra_points,
-                       loader->max_points, FT_Vector ) )
+    if ( !FT_NEW_ARRAY( loader->base.extra_points, loader->max_points ) )
     {
       loader->use_extra = 1;
       FT_GlyphLoader_Adjust_Points( loader );
@@ -189,13 +188,12 @@
     {
       new_max = ( new_max + 7 ) & -8;
 
-      if ( REALLOC_ARRAY( base->points, old_max, new_max, FT_Vector ) ||
-           REALLOC_ARRAY( base->tags,   old_max, new_max, FT_Byte   ) )
+      if ( FT_RENEW_ARRAY( base->points, old_max, new_max ) ||
+           FT_RENEW_ARRAY( base->tags,   old_max, new_max ) )
        goto Exit;
 
       if ( loader->use_extra &&
-           REALLOC_ARRAY( loader->base.extra_points, old_max,
-                          new_max, FT_Vector ) )
+           FT_RENEW_ARRAY( loader->base.extra_points, old_max, new_max ) )
        goto Exit;
 
       adjust = 1;
@@ -209,7 +207,7 @@
     if ( new_max > old_max )
     {
       new_max = ( new_max + 3 ) & -4;
-      if ( REALLOC_ARRAY( base->contours, old_max, new_max, FT_Short ) )
+      if ( FT_RENEW_ARRAY( base->contours, old_max, new_max ) )
         goto Exit;
 
       adjust = 1;
@@ -245,7 +243,7 @@
     if ( new_max > old_max )
     {
       new_max = ( new_max + 1 ) & -2;
-      if ( REALLOC_ARRAY( base->subglyphs, old_max, new_max, FT_SubGlyphRec ) )
+      if ( FT_RENEW_ARRAY( base->subglyphs, old_max, new_max ) )
         goto Exit;
 
       loader->max_subglyphs = new_max;
@@ -319,16 +317,16 @@
       FT_Outline*  in  = &source->base.outline;
 
 
-      MEM_Copy( out->points, in->points,
+      FT_MEM_COPY( out->points, in->points,
                 num_points * sizeof ( FT_Vector ) );
-      MEM_Copy( out->tags, in->tags,
+      FT_MEM_COPY( out->tags, in->tags,
                 num_points * sizeof ( char ) );
-      MEM_Copy( out->contours, in->contours,
+      FT_MEM_COPY( out->contours, in->contours,
                 num_contours * sizeof ( short ) );
 
       /* do we need to copy the extra points? */
       if ( target->use_extra && source->use_extra )
-        MEM_Copy( target->base.extra_points, source->base.extra_points,
+        FT_MEM_COPY( target->base.extra_points, source->base.extra_points,
                   num_points * sizeof ( FT_Vector ) );
 
       out->n_points   = (short)num_points;

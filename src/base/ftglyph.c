@@ -131,8 +131,8 @@
 
     size = (FT_ULong)( pitch * source->rows );
 
-    if ( !ALLOC( target->buffer, size ) )
-      MEM_Copy( target->buffer, source->buffer, size );
+    if ( !FT_ALLOC( target->buffer, size ) )
+      FT_MEM_COPY( target->buffer, source->buffer, size );
 
     return error;
   }
@@ -191,7 +191,7 @@
     FT_Memory  memory = FT_GLYPH(glyph)->library->memory;
 
 
-    FREE( glyph->bitmap.buffer );
+    FT_FREE( glyph->bitmap.buffer );
   }
 
 
@@ -253,13 +253,13 @@
       goto Exit;
 
     /* copy it */
-    MEM_Copy( target->points, source->points,
+    FT_MEM_COPY( target->points, source->points,
               source->n_points * sizeof ( FT_Vector ) );
 
-    MEM_Copy( target->tags, source->tags,
+    FT_MEM_COPY( target->tags, source->tags,
               source->n_points * sizeof ( FT_Byte ) );
 
-    MEM_Copy( target->contours, source->contours,
+    FT_MEM_COPY( target->contours, source->contours,
               source->n_contours * sizeof ( FT_Short ) );
 
     /* copy all flags, except the `ft_outline_owner' one */
@@ -361,7 +361,7 @@
 
      *aglyph = 0;
 
-     if ( !ALLOC( glyph, clazz->glyph_size ) )
+     if ( !FT_ALLOC( glyph, clazz->glyph_size ) )
      {
        glyph->library = library;
        glyph->clazz   = clazz;
@@ -594,7 +594,7 @@
     if ( !clazz || !clazz->glyph_prepare )
       goto Bad;
 
-    MEM_Set( &dummy, 0, sizeof ( dummy ) );
+    FT_MEM_SET( &dummy, 0, sizeof ( dummy ) );
     dummy.library = glyph->library;
     dummy.format  = clazz->glyph_format;
 
@@ -671,7 +671,7 @@
       if ( clazz->glyph_done )
         clazz->glyph_done( glyph );
 
-      FREE( glyph );
+      FT_FREE( glyph );
     }
   }
 

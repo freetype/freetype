@@ -385,7 +385,7 @@
                       FT_Memory       memory )
   {
     /* free composite load stack */
-    FREE( exec->loadStack );
+    FT_FREE( exec->loadStack );
     exec->loadSize = 0;
 
     /* points zone */
@@ -393,22 +393,22 @@
     exec->maxContours = 0;
 
     /* free stack */
-    FREE( exec->stack );
+    FT_FREE( exec->stack );
     exec->stackSize = 0;
 
     /* free call stack */
-    FREE( exec->callStack );
+    FT_FREE( exec->callStack );
     exec->callSize = 0;
     exec->callTop  = 0;
 
     /* free glyph code range */
-    FREE( exec->glyphIns );
+    FT_FREE( exec->glyphIns );
     exec->glyphSize = 0;
 
     exec->size = NULL;
     exec->face = NULL;
 
-    FREE( exec );
+    FT_FREE( exec );
     return TT_Err_Ok;
   }
 
@@ -446,7 +446,7 @@
     exec->memory   = memory;
     exec->callSize = 32;
 
-    if ( ALLOC_ARRAY( exec->callStack, exec->callSize, TT_CallRec ) )
+    if ( FT_NEW_ARRAY( exec->callStack, exec->callSize ) )
       goto Fail_Memory;
 
     /* all values in the context are set to 0 already, but this is */
@@ -512,8 +512,8 @@
 
     if ( *size < new_max )
     {
-      FREE( *buff );
-      if ( ALLOC( *buff, new_max * multiplier ) )
+      FT_FREE( *buff );
+      if ( FT_ALLOC( *buff, new_max * multiplier ) )
         return error;
       *size = new_max;
     }
@@ -776,7 +776,7 @@
 
 
       /* allocate object */
-      if ( ALLOC( exec, sizeof ( *exec ) ) )
+      if ( FT_NEW( exec ) )
         goto Exit;
 
       /* initialize it */
@@ -792,7 +792,7 @@
     return driver->context;
 
   Fail:
-    FREE( exec );
+    FT_FREE( exec );
 
     return 0;
   }
@@ -3846,7 +3846,7 @@
 
     K = CUR.stack[CUR.args - L];
 
-    MEM_Move( &CUR.stack[CUR.args - L    ],
+    FT_MEM_MOVE( &CUR.stack[CUR.args - L    ],
               &CUR.stack[CUR.args - L + 1],
               ( L - 1 ) * sizeof ( FT_Long ) );
 

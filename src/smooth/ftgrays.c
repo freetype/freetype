@@ -145,8 +145,8 @@
 #endif /* _STANDALONE_ */
 
 
-#ifndef MEM_Set
-#define  MEM_Set( d, s, c )  memset( d, s, c )
+#ifndef FT_MEM_SET
+#define  FT_MEM_SET( d, s, c )  memset( d, s, c )
 #endif
 
   /* define this to dump debugging information */
@@ -1288,7 +1288,7 @@
 
       if ( coverage )
 #if 1
-        MEM_Set( p + spans->x, (unsigned char)coverage, spans->len );
+        FT_MEM_SET( p + spans->x, (unsigned char)coverage, spans->len );
 #else /* 1 */
       {
         q     = p + spans->x;
@@ -2057,7 +2057,7 @@
 
 
     *araster = (FT_Raster)&the_raster;
-    MEM_Set( &the_raster, 0, sizeof ( the_raster ) );
+    FT_MEM_SET( &the_raster, 0, sizeof ( the_raster ) );
 
 #ifdef GRAYS_USE_GAMMA
     grays_init_gamma( (PRaster)*araster );
@@ -2085,7 +2085,7 @@
 
 
     *araster = 0;
-    if ( !ALLOC( raster, sizeof ( TRaster ) ) )
+    if ( !FT_ALLOC( raster, sizeof ( TRaster ) ) )
     {
       raster->memory = memory;
       *araster = (FT_Raster)raster;
@@ -2105,7 +2105,7 @@
     FT_Memory  memory = (FT_Memory)((PRaster)raster)->memory;
 
 
-    FREE( raster );
+    FT_FREE( raster );
   }
 
 #endif /* _STANDALONE_ */

@@ -89,7 +89,7 @@
       /* the charstrings are encoded (stupid!)  */
       /* load the charstrings, then execute it  */
 
-      if ( ALLOC( charstring, glyph_len ) )
+      if ( FT_ALLOC( charstring, glyph_len ) )
         goto Exit;
 
       if ( !FT_STREAM_READ_AT( cid->data_offset + off1, charstring, glyph_len ) )
@@ -109,7 +109,7 @@
                                                   glyph_len  - cs_offset  );
       }
 
-      FREE( charstring );
+      FT_FREE( charstring );
     }
 
   Exit:

@@ -568,7 +568,7 @@
       globals->blues.family_top.count    = 0;
       globals->blues.family_bottom.count = 0;
 
-      FREE( globals );
+      FT_FREE( globals );
 
 #ifdef DEBUG_HINTER
       ps_debug_globals = 0;
@@ -586,7 +586,7 @@
     FT_Error     error;
 
 
-    if ( !ALLOC( globals, sizeof ( *globals ) ) )
+    if ( !FT_NEW( globals ) )
     {
       FT_UInt    count;
       FT_Short*  read;

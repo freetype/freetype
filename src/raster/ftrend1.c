@@ -86,7 +86,7 @@
                        FT_GlyphSlot  slot,
                        FT_BBox*      cbox )
   {
-    MEM_Set( cbox, 0, sizeof ( *cbox ) );
+    FT_MEM_SET( cbox, 0, sizeof ( *cbox ) );
 
     if ( slot->format == render->glyph_format )
       FT_Outline_Get_CBox( &slot->outline, cbox );
@@ -153,7 +153,7 @@
     /* release old bitmap buffer */
     if ( slot->flags & FT_GLYPH_OWN_BITMAP )
     {
-      FREE( bitmap->buffer );
+      FT_FREE( bitmap->buffer );
       slot->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
 
@@ -175,7 +175,7 @@
     bitmap->rows  = height;
     bitmap->pitch = pitch;
 
-    if ( ALLOC( bitmap->buffer, (FT_ULong)pitch * height ) )
+    if ( FT_ALLOC( bitmap->buffer, (FT_ULong)pitch * height ) )
       goto Exit;
 
     slot->flags |= FT_GLYPH_OWN_BITMAP;

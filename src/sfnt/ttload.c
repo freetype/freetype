@@ -221,10 +221,8 @@
         goto Exit;
 
       /* now read the offsets of each font in the file */
-      if ( ALLOC_ARRAY( face->ttc_header.offsets,
-                        face->ttc_header.count,
-                        FT_ULong )                     ||
-           FT_FRAME_ENTER( face->ttc_header.count * 4L ) )
+      if ( FT_NEW_ARRAY( face->ttc_header.offsets, face->ttc_header.count ) ||
+           FT_FRAME_ENTER( face->ttc_header.count * 4L )                    )
         goto Exit;
 
       for ( n = 0; n < face->ttc_header.count; n++ )
@@ -312,9 +310,7 @@
 
     face->num_tables = sfnt->num_tables;
 
-    if ( ALLOC_ARRAY( face->dir_tables,
-                      face->num_tables,
-                      TT_TableRec ) )
+    if ( FT_NEW_ARRAY( face->dir_tables, face->num_tables ) )
       goto Exit;
 
     if ( FT_FRAME_ENTER( face->num_tables * 16L ) )
@@ -749,8 +745,8 @@
       goto Exit;
     }
 
-    if ( ALLOC_ARRAY( *longs,  num_longs,  TT_LongMetricsRec )  ||
-         ALLOC_ARRAY( *shorts, num_shorts, TT_ShortMetrics ) )
+    if ( FT_NEW_ARRAY( *longs,  num_longs  ) ||
+         FT_NEW_ARRAY( *shorts, num_shorts ) )
       goto Exit;
 
     if ( FT_FRAME_ENTER( table_len ) )
@@ -987,7 +983,7 @@
     storageSize = (FT_ULong)(table_len - storageOffset);
 
     /* Allocate the array of name records. */
-    if ( ALLOC( names->names,
+    if ( FT_ALLOC( names->names,
                 names->numNameRecords*sizeof(TT_NameEntryRec) + storageSize )  ||
          FT_FRAME_ENTER( names->numNameRecords * 12L ) )
       goto Exit;
@@ -1097,10 +1093,10 @@
 
 
     /* free strings table */
-    FREE( names->names );
+    FT_FREE( names->names );
 
     /* free strings storage */
-    FREE( names->storage );
+    FT_FREE( names->storage );
 
     names->numNameRecords = 0;
     names->format         = 0;
@@ -1171,9 +1167,7 @@
       goto Exit;
 
     /* reserve space in face table for cmap tables */
-    if ( ALLOC_ARRAY( face->charmaps,
-                      cmap_dir.numCMaps,
-                      TT_CharMapRec ) )
+    if ( FT_NEW_ARRAY( face->charmaps, cmap_dir.numCMaps ) )
       goto Exit;
 
     face->num_charmaps = cmap_dir.numCMaps;
@@ -1534,8 +1528,8 @@
     num_ranges = face->gasp.numRanges;
     FT_TRACE3(( "number of ranges = %d\n", num_ranges ));
 
-    if ( ALLOC_ARRAY( gaspranges, num_ranges, TT_GaspRangeRec ) ||
-         FT_FRAME_ENTER( num_ranges * 4L )                     )
+    if ( FT_NEW_ARRAY( gaspranges, num_ranges ) ||
+         FT_FRAME_ENTER( num_ranges * 4L )      )
       goto Exit;
 
     face->gasp.gaspRanges = gaspranges;
@@ -1638,8 +1632,8 @@
         FT_FRAME_EXIT();
 
         /* allocate array of kerning pairs */
-        if ( ALLOC_ARRAY( face->kern_pairs, num_pairs, TT_Kern0_PairRec ) ||
-             FT_FRAME_ENTER( 6L * num_pairs )                             )
+        if ( FT_NEW_ARRAY( face->kern_pairs, num_pairs ) ||
+             FT_FRAME_ENTER( 6L * num_pairs )            )
           goto Exit;
 
         pair  = face->kern_pairs;
@@ -1763,7 +1757,7 @@
     if ( hdmx->version != 0 )
       goto Exit;
 
-    if ( ALLOC_ARRAY( hdmx->records, hdmx->num_records, TT_HdmxEntryRec ) )
+    if ( FT_NEW_ARRAY( hdmx->records, hdmx->num_records ) )
       goto Exit;
 
     num_glyphs   = face->root.num_glyphs;
@@ -1781,7 +1775,7 @@
              FT_READ_BYTE( cur->max_width ) )
           goto Exit;
 
-        if ( ALLOC( cur->widths, num_glyphs )     ||
+        if ( FT_ALLOC( cur->widths, num_glyphs )     ||
              FT_STREAM_READ( cur->widths, num_glyphs ) )
           goto Exit;
 
@@ -1817,9 +1811,9 @@
 
 
       for ( n = 0; n < face->hdmx.num_records; n++ )
-        FREE( face->hdmx.records[n].widths );
+        FT_FREE( face->hdmx.records[n].widths );
 
-      FREE( face->hdmx.records );
+      FT_FREE( face->hdmx.records );
       face->hdmx.num_records = 0;
     }
   }

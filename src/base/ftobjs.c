@@ -61,7 +61,7 @@
 
     *astream = 0;
     memory   = library->memory;
-    if ( ALLOC( stream, sizeof ( *stream ) ) )
+    if ( FT_NEW( stream ) )
       goto Exit;
 
     stream->memory = memory;
@@ -85,14 +85,14 @@
 
       /* in this case, we do not need to allocate a new stream object */
       /* since the caller is responsible for closing it himself       */
-      FREE( stream );
+      FT_FREE( stream );
       stream = args->stream;
     }
     else
       error = FT_Err_Invalid_Argument;
 
     if ( error )
-      FREE( stream );
+      FT_FREE( stream );
     else
       stream->memory = memory;  /* just to be certain */
 
@@ -115,7 +115,7 @@
       FT_Stream_Close( stream );
 
       if ( !external )
-        FREE( stream );
+        FT_FREE( stream );
     }
   }
 
@@ -149,7 +149,7 @@
 
     slot->library = driver->root.library;
 
-    if ( ALLOC( internal, sizeof ( *internal ) ) )
+    if ( FT_NEW( internal ) )
       goto Exit;
 
     slot->internal = internal;
@@ -174,14 +174,14 @@
       FT_Memory  memory = FT_FACE_MEMORY( slot->face );
 
 
-      FREE( slot->bitmap.buffer );
+      FT_FREE( slot->bitmap.buffer );
       slot->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
 
     /* clear all public fields in the glyph slot */
-    MEM_Set( &slot->metrics, 0, sizeof ( slot->metrics ) );
-    MEM_Set( &slot->outline, 0, sizeof ( slot->outline ) );
-    MEM_Set( &slot->bitmap,  0, sizeof ( slot->bitmap )  );
+    FT_MEM_SET( &slot->metrics, 0, sizeof ( slot->metrics ) );
+    FT_MEM_SET( &slot->outline, 0, sizeof ( slot->outline ) );
+    FT_MEM_SET( &slot->bitmap,  0, sizeof ( slot->bitmap )  );
 
     slot->bitmap_left   = 0;
     slot->bitmap_top    = 0;
@@ -210,7 +210,7 @@
 
     /* free bitmap buffer if needed */
     if ( slot->flags & FT_GLYPH_OWN_BITMAP )
-      FREE( slot->bitmap.buffer );
+      FT_FREE( slot->bitmap.buffer );
 
     /* free glyph loader */
     if ( FT_DRIVER_USES_OUTLINES( driver ) )
@@ -219,7 +219,7 @@
       slot->internal->loader = 0;
     }
 
-    FREE( slot->internal );
+    FT_FREE( slot->internal );
   }
 
 
@@ -246,7 +246,7 @@
     memory = driver->root.memory;
 
     FT_TRACE4(( "FT_New_GlyphSlot: Creating new slot object\n" ));
-    if ( !ALLOC( slot, clazz->slot_object_size ) )
+    if ( !FT_ALLOC( slot, clazz->slot_object_size ) )
     {
       slot->face = face;
 
@@ -254,7 +254,7 @@
       if ( error )
       {
         ft_glyphslot_done( slot );
-        FREE( slot );
+        FT_FREE( slot );
         goto Exit;
       }
 
@@ -290,7 +290,7 @@
         {
           *parent = cur->next;
           ft_glyphslot_done( slot );
-          FREE( slot );
+          FT_FREE( slot );
           break;
         }
         cur = cur->next;
@@ -547,8 +547,8 @@
     if ( driver->clazz->done_size )
       driver->clazz->done_size( size );
 
-    FREE( size->internal );
-    FREE( size );
+    FT_FREE( size->internal );
+    FT_FREE( size );
   }
 
 
@@ -594,10 +594,10 @@
     /* get rid of it */
     if ( face->internal )
     {
-      FREE( face->internal->postscript_name );
-      FREE( face->internal );
+      FT_FREE( face->internal->postscript_name );
+      FT_FREE( face->internal );
     }
-    FREE( face );
+    FT_FREE( face );
   }
 
 
@@ -642,10 +642,10 @@
     memory = driver->root.memory;
 
     /* allocate the face object and perform basic initialization */
-    if ( ALLOC( face, clazz->face_object_size ) )
+    if ( FT_ALLOC( face, clazz->face_object_size ) )
       goto Fail;
 
-    if ( ALLOC( internal, sizeof ( *internal ) ) )
+    if ( FT_NEW( internal ) )
       goto Fail;
 
     face->internal = internal;
@@ -668,8 +668,8 @@
     if ( error )
     {
       clazz->done_face( face );
-      FREE( face->internal );
-      FREE( face );
+      FT_FREE( face->internal );
+      FT_FREE( face );
       *aface = 0;
     }
 
@@ -845,7 +845,7 @@
       face->face_flags |= FT_FACE_FLAG_EXTERNAL_STREAM;
 
     /* add the face object to its driver's list */
-    if ( ALLOC( node, sizeof ( *node ) ) )
+    if ( FT_NEW( node ) )
       goto Fail;
 
     node->data = face;
@@ -996,7 +996,7 @@
       {
         /* remove face object from the driver's list */
         FT_List_Remove( &driver->faces_list, node );
-        FREE( node );
+        FT_FREE( node );
 
         /* now destroy the object proper */
         destroy_face( memory, face, driver );
@@ -1038,8 +1038,7 @@
     memory = face->memory;
 
     /* Allocate new size object and perform basic initialisation */
-    if ( ALLOC( size, clazz->size_object_size ) ||
-         ALLOC( node, sizeof ( FT_ListNodeRec ) ) )
+    if ( FT_ALLOC( size, clazz->size_object_size ) || FT_NEW( node ) )
       goto Exit;
 
     size->face = face;
@@ -1061,8 +1060,8 @@
   Exit:
     if ( error )
     {
-      FREE( node );
-      FREE( size );
+      FT_FREE( node );
+      FT_FREE( size );
     }
 
     return error;
@@ -1099,7 +1098,7 @@
     if ( node )
     {
       FT_List_Remove( &face->sizes_list, node );
-      FREE( node );
+      FT_FREE( node );
 
       if ( face->size == size )
       {
@@ -1386,7 +1385,7 @@
       if ( clazz->done )
         clazz->done( cmap );
 
-      FREE( cmap );
+      FT_FREE( cmap );
     }
   }
 
@@ -1408,7 +1407,7 @@
     face   = charmap->face;
     memory = FT_FACE_MEMORY(face);
 
-    if ( !ALLOC( cmap, clazz->size ) )
+    if ( !FT_ALLOC( cmap, clazz->size ) )
     {
       cmap->charmap = *charmap;
       cmap->clazz   = clazz;
@@ -1421,10 +1420,9 @@
       }
 
       /* add it to our list of charmaps */
-      if ( REALLOC_ARRAY( face->charmaps,
-                          face->num_charmaps,
-                          face->num_charmaps+1,
-                          FT_CharMap* ) )
+      if ( FT_RENEW_ARRAY( face->charmaps,
+                           face->num_charmaps,
+                           face->num_charmaps+1 ) )
         goto Fail;
 
       face->charmaps[ face->num_charmaps++ ] = (FT_CharMap) cmap;
@@ -1771,7 +1769,7 @@
     FT_ListNode  node;
 
 
-    if ( ALLOC( node, sizeof ( *node ) ) )
+    if ( FT_NEW( node ) )
       goto Exit;
 
     {
@@ -1803,7 +1801,7 @@
 
   Fail:
     if ( error )
-      FREE( node );
+      FT_FREE( node );
 
   Exit:
     return error;
@@ -1830,7 +1828,7 @@
 
       /* remove from list */
       FT_List_Remove( &library->renderers, node );
-      FREE( node );
+      FT_FREE( node );
 
       ft_set_current_renderer( library );
     }
@@ -2030,7 +2028,7 @@
       clazz->module_done( module );
 
     /* discard it */
-    FREE( module );
+    FT_FREE( module );
   }
 
 
@@ -2086,7 +2084,7 @@
     }
 
     /* allocate module object */
-    if ( ALLOC( module,clazz->module_size ) )
+    if ( FT_ALLOC( module,clazz->module_size ) )
       goto Exit;
 
     /* base initialization */
@@ -2156,7 +2154,7 @@
         renderer->clazz->raster_class->raster_done( renderer->raster );
     }
 
-    FREE( module );
+    FT_FREE( module );
     goto Exit;
   }
 
@@ -2278,14 +2276,14 @@
     ft_debug_init();
 
     /* first of all, allocate the library object */
-    if ( ALLOC( library, sizeof ( *library ) ) )
+    if ( FT_NEW( library ) )
       return error;
 
     library->memory = memory;
 
     /* allocate the render pool */
     library->raster_pool_size = FT_RENDER_POOL_SIZE;
-    if ( ALLOC( library->raster_pool, FT_RENDER_POOL_SIZE ) )
+    if ( FT_ALLOC( library->raster_pool, FT_RENDER_POOL_SIZE ) )
       goto Fail;
 
     /* That's ok now */
@@ -2294,7 +2292,7 @@
     return FT_Err_Ok;
 
   Fail:
-    FREE( library );
+    FT_FREE( library );
     return error;
   }
 
@@ -2371,10 +2369,10 @@
 #endif
 
     /* Destroy raster objects */
-    FREE( library->raster_pool );
+    FT_FREE( library->raster_pool );
     library->raster_pool_size = 0;
 
-    FREE( library );
+    FT_FREE( library );
     return FT_Err_Ok;
   }
 
