@@ -1,3 +1,40 @@
+2004-08-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/otlayout/otljstf.c (otl_jstf_gsub_mods_validate): Removed.
+	(otl_jstf_gpos_mods_validate): Renamed to...
+	(otl_jstf_gsubgpos_mods_validate): This.
+	Test whether lookup_count is zero.
+	(otl_jstf_priority_validate): Use otl_jstf_gsubgpos_mods_validate.
+	(otl_jstf_validate): Initialize gsub_lookup_count and
+	gpos_lookup_count if gsub or gpos is zero.
+
+	* src/otlayout/otlgsub.c: Rename counting variables to be more
+	meaningful.
+	Add copyright.
+	(otl_gsub_lookup1_validate): Simplify code.
+	(otl_gsub_lookup2_validate, otl_gsub_lookup3_validate,
+	otl_gsub_lookup4_validate, otl_gsub_lookup7_validate): Remove unused
+	variables.
+	(otl_gsub_lookup5_validate): Remove unused variable.
+	Fix call to otl_sub_rule_set_validate and
+	otl_sub_class_rule_set_validate.
+	(otl_chain_sub_class_rule_validate,
+	otl_chain_sub_class_set_validate): Removed.
+	(otl_gsub_lookup6_validate): Remove unused variable.
+	Fix call to otl_chain_sub_rule_set_validate.
+	(otl_gsub_lookup7_validate): Handle lookup type 8 also.
+	(otl_gsub_lookup8_validate: New function.
+	(otl_gsub_lookup1_apply, otl_gsub_lookup2_apply,
+	otl_gsub_lookup3_apply): Commented out.
+	(otl_gsub_validate_funcs): Add otl_gsub_lookup7_validate and
+	otl_gsub_lookup8_validate.
+	(otl_gsub_validate): Updated.
+
+	* src/otlayout/otlgsub.h: Add copyright.
+
+	* src/otlayout/otlcommn.c, src/otlayout/otlcommn.h
+	(otl_coverage_get_index): Comment out.
+
 2004-08-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/otlayout/otlcommn.c (otl_gsubgpos_get_lookup_count): New

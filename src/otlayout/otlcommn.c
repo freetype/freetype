@@ -47,7 +47,6 @@
 
         OTL_CHECK( num_glyphs * 2 );
 
-        /* XXX: check glyph indices */
       }
       break;
 
@@ -81,6 +80,9 @@
     default:
       OTL_INVALID_FORMAT;
     }
+
+    /* no need to check glyph indices used as input to coverage tables */
+    /* since even invalid glyph indices return a meaningful result     */
   }
 
 
@@ -122,6 +124,7 @@
   }
 
 
+#if 0
   OTL_LOCALDEF( OTL_Long )
   otl_coverage_get_index( OTL_Bytes  table,
                           OTL_UInt   glyph_index )
@@ -186,6 +189,7 @@
 
     return -1;
   }
+#endif
 
 
   /*************************************************************************/
@@ -219,7 +223,6 @@
 
         OTL_CHECK( num_glyphs * 2 );
 
-        /* XXX: check glyph indices */
       }
       break;
 
@@ -249,6 +252,9 @@
     default:
       OTL_INVALID_FORMAT;
     }
+
+    /* no need to check glyph indices used as input to class definition   */
+    /* tables since even invalid glyph indices return a meaningful result */
   }
 
 
