@@ -23,7 +23,7 @@
 #include FT_SOURCE_FILE(cff,cffparse.c)
 #include FT_SOURCE_FILE(cff,cffload.c)
 #include FT_SOURCE_FILE(cff,cffobjs.c)
-#include FT_SOURCE_FILE(cff,t2gload.c)
+#include FT_SOURCE_FILE(cff,cffgload.c)
 
 
 /* END */

@@ -35,7 +35,7 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_t2load
+#define FT_COMPONENT  trace_cffload
 
 
   static
@@ -1257,7 +1257,7 @@
       }
     }
     else
-      error = T2_Err_Invalid_Argument;
+      error = CFF_Err_Invalid_Argument;
 
   Exit:
     return error;
@@ -1398,7 +1398,7 @@
       break;
 
     default:    /* hmm... that's wrong */
-      error = T2_Err_Invalid_File_Format;
+      error = CFF_Err_Invalid_File_Format;
     }
 
   Exit:
@@ -2112,7 +2112,7 @@
     {
       FT_ERROR(( "CFF_Load_Font: incorrect face index = %d\n",
                  face_index ));
-      error = T2_Err_Invalid_Argument;
+      error = CFF_Err_Invalid_Argument;
     }
 
     /* in case of a font format check, simply exit now */

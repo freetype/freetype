@@ -33,36 +33,36 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    T2_Driver                                                          */
+  /*    CFF_Driver                                                          */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to an OpenType driver object.                             */
   /*                                                                       */
-  typedef struct T2_DriverRec_*  T2_Driver;
+  typedef struct CFF_DriverRec_*  CFF_Driver;
 
-  typedef TT_Face  T2_Face;
+  typedef TT_Face  CFF_Face;
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    T2_Size                                                            */
+  /*    CFF_Size                                                            */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to an OpenType size object.                               */
   /*                                                                       */
-  typedef FT_Size  T2_Size;
+  typedef FT_Size  CFF_Size;
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    T2_GlyphSlot                                                       */
+  /*    CFF_GlyphSlot                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to an OpenType glyph slot object.                         */
   /*                                                                       */
-  typedef struct T2_GlyphSlotRec_
+  typedef struct CFF_GlyphSlotRec_
   {
     FT_GlyphSlotRec  root;
 
@@ -72,7 +72,7 @@ FT_BEGIN_HEADER
     FT_Fixed         x_scale;
     FT_Fixed         y_scale;
 
-  } T2_GlyphSlotRec, *T2_GlyphSlot;
+  } CFF_GlyphSlotRec, *CFF_GlyphSlot;
 
 
 
@@ -80,34 +80,34 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* Subglyph transformation record.                                       */
   /*                                                                       */
-  typedef struct  T2_Transform_
+  typedef struct  CFF_Transform_
   {
     FT_Fixed    xx, xy;     /* transformation matrix coefficients */
     FT_Fixed    yx, yy;
     FT_F26Dot6  ox, oy;     /* offsets        */
 
-  } T2_Transform;
+  } CFF_Transform;
 
 
   /* this is only used in the case of a pure CFF font with no charmap */
-  typedef struct  T2_CharMapRec_
+  typedef struct  CFF_CharMapRec_
   {
     TT_CharMapRec  root;
     PS_Unicodes    unicodes;
 
-  } T2_CharMapRec, *T2_CharMap;
+  } CFF_CharMapRec, *CFF_CharMap;
 
 
   /***********************************************************************/
   /*                                                                     */
   /* TrueType driver class.                                              */
   /*                                                                     */
-  typedef struct  T2_DriverRec_
+  typedef struct  CFF_DriverRec_
   {
     FT_DriverRec  root;
     void*         extension_component;
 
-  } T2_DriverRec;
+  } CFF_DriverRec;
 
 
   /*************************************************************************/
@@ -115,14 +115,14 @@ FT_BEGIN_HEADER
   /* Face functions                                                        */
   /*                                                                       */
   FT_LOCAL
-  FT_Error  T2_Init_Face( FT_Stream      stream,
-                          T2_Face        face,
+  FT_Error  CFF_Init_Face( FT_Stream      stream,
+                          CFF_Face        face,
                           FT_Int         face_index,
                           FT_Int         num_params,
                           FT_Parameter*  params );
 
   FT_LOCAL
-  void  T2_Done_Face( T2_Face  face );
+  void  CFF_Done_Face( CFF_Face  face );
 
 
   /*************************************************************************/
@@ -130,10 +130,10 @@ FT_BEGIN_HEADER
   /* Driver functions                                                      */
   /*                                                                       */
   FT_LOCAL
-  FT_Error  T2_Init_Driver( T2_Driver  driver );
+  FT_Error  CFF_Init_Driver( CFF_Driver  driver );
 
   FT_LOCAL
-  void  T2_Done_Driver( T2_Driver  driver );
+  void  CFF_Done_Driver( CFF_Driver  driver );
 
 
 FT_END_HEADER
