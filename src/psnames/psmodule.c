@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PSNames module implementation (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2005 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -32,9 +32,9 @@
 #ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
 
 
-  /* return the Unicode value corresponding to a given glyph.  Note that */
+  /* Return the Unicode value corresponding to a given glyph.  Note that */
   /* we do deal with glyph variants by detecting a non-initial dot in    */
-  /* the name, as in `A.swash' or `e.final', etc.                        */
+  /* the name, as in `A.swash' or `e.final'.                             */
   /*                                                                     */
   static FT_UInt32
   ps_unicode_value( const char*  glyph_name )

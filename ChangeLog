@@ -1,16 +1,33 @@
+2005-03-10  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/glnames.py: Formatted.
+	Format output to be in sync with other FreeType code.
+	Import `re' and `os.path'.
+	(StringTable) <__init__>: Add parameter to initialize master table
+	name.
+	(StringTable) <dump>: Don't pass master table name.
+	(StringTable) <dump_sublist>: Emit explanatory comment.
+	Simplify and make output more human readable.
+	(t1_bias, glyph_list, adobe_glyph_names): Removed.  Unused.
+	(main): Use `basename' for file name in header.
+
+	* src/psnames/pstables.h: Regenerated.
+
 2005-03-09  David Turner  <david@freetype.org>
 
-  * src/tools/glnames.py: rewrote the generator for the 'pstables.h'
-    header, which contains various constant tables related to glyph
-    names. It now uses a different storage scheme that saves about 20
-    Kb and closes bug #12262
+	* src/tools/glnames.py: Rewrite the generator for the `pstables.h'
+	header file which contains various constant tables related to glyph
+	names.  It now uses a different, more compact storage scheme that
+	saves about 20KB.  This also closes Savannah bug #12262.
 
-  * src/psnames/pstables.h: re-generated header file
+	* src/psnames/pstables.h: Regenerated.
 
-  * src/psnames/psmodule.c: rewrote some parts to comply with recent
-    changes in 'pstables.h'
+	* src/psnames/psmodule.c (ps_unicode_value): Use
+	`ft_get_adobe_glyph_index', a new function defined in `pstables.h'.
+	(ps_get_macintosh_name, ps_get_standard_strings): Updated.
 
-  * src/base/ftobjs.c (FT_Set_Char_Sizes): fix for bug #12263
+	* src/base/ftobjs.c (FT_Set_Char_Sizes): Handle fractional sizes
+	more carefully.  This fixes Savannah bug #12263.
 
 2005-03-06  David Turner  <david@freetype.org>
 
