@@ -1020,7 +1020,7 @@
     }
 
     /* now, transform the glyph image when needed */
-    if ( face->transform_flags )
+    if ( face->transform_flags && !(load_flags & FT_LOAD_NO_RECURSE))
     {
       /* get renderer */
       FT_Renderer  renderer = ft_lookup_glyph_renderer( slot );

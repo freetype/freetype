@@ -1425,6 +1425,14 @@
         if ( size && size->root.metrics.y_ppem < 24 )
           glyph->root.outline.flags |= ft_outline_high_precision;
 
+        /* apply the font matrix */
+        FT_Outline_Transform( &glyph->root.outline,
+                              &face->type1.font_matrix );
+
+        FT_Outline_Translate( &glyph->root.outline,
+                              face->type1.font_offset.x,
+                              face->type1.font_offset.y );
+
 #if 0
         glyph->root.outline.second_pass    = TRUE;
         glyph->root.outline.high_precision = size->root.metrics.y_ppem < 24;
@@ -1457,10 +1465,6 @@
           metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
           metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
         }
-
-        /* apply the font matrix */
-        FT_Outline_Transform( &glyph->root.outline,
-                              &face->type1.font_matrix );
 
         /* compute the other metrics */
         FT_Outline_Get_CBox( &glyph->root.outline, &cbox );

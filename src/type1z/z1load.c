@@ -1069,18 +1069,33 @@
   {
     Z1_Parser*  parser = &loader->parser;
     FT_Matrix*  matrix = &face->type1.font_matrix;
-    FT_Fixed    temp[4];
+    FT_Vector*  offset = &face->type1.font_offset;
+    FT_Fixed    temp[6];
 
 
     if ( matrix->xx || matrix->yx )
       /*  with synthetic fonts, it's possible we get here twice  */
       return;
 
-    (void)Z1_ToFixedArray( parser, 4, temp, 3 );
+    (void)Z1_ToFixedArray( parser, 6, temp, 3 );
+
+    /* we need to scale the values by 1.0/temp[3] */
+    if ( temp[3] != 0x10000 )
+    {
+      temp[0] = FT_DivFix( temp[0], temp[3] );
+      temp[1] = FT_DivFix( temp[1], temp[3] );
+      temp[2] = FT_DivFix( temp[2], temp[3] );
+      temp[4] = FT_DivFix( temp[4], temp[3] );
+      temp[5] = FT_DivFix( temp[5], temp[3] );
+      temp[3] = 0x10000;
+    }
+
     matrix->xx = temp[0];
     matrix->yx = temp[1];
     matrix->xy = temp[2];
     matrix->yy = temp[3];
+    offset->x  = temp[4];
+    offset->y  = temp[5];
   }
 
 
