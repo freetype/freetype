@@ -1,5 +1,10 @@
 LATEST CHANGES
 
+  - deactivated the trueType bytecode interpreter by default
+  
+  - deactivated the "src/type1" font driver. Now "src/type1z" is
+    used by default..
+
   - updates to the build system. We now compile the library correctly
     under Unix system through "configure" which is automatically called
     on the first "make" invocation.
