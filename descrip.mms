@@ -44,6 +44,8 @@ all :
         $(MMS)$(MMSQUALIFIERS)
         set default [-.pcf]
         $(MMS)$(MMSQUALIFIERS)
+        set default [-.pfr]
+        $(MMS)$(MMSQUALIFIERS)
         set default [-.psaux]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.pshinter]
