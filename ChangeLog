@@ -1,20 +1,59 @@
+2005-03-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afdummy.c, src/autofit/afdummy.h
+	(af_dummy_script_class): Fix type.
+
+	* src/autofit/aflatin.c, src/autofit/aflatin.h
+	(af_latin_script_class): Fix type.
+
+	* src/autofit/rules.mk (AUTOF_DRV_SRC): Fix typo.
+
 2005-03-01  David Turner  <david@freetype.org>
 
-    * src/sfnt/{ttkern.c,ttsbit.h,ttsbit0.c,ttload.c},: removing compiler
-    warnings
+	* src/sfnt/ttkern.c (tt_face_load_kern, tt_face_get_kerning),
+	src/sfnt/ttsbit0.c (tt_face_load_sbit_strikes,
+	tt_sbit_decoder_load_byte_aligned, tt_sbit_decoder_load_compound,
+	tt_sbit_decoder_load_image), src/sfnt/ttload.c
+	(tt_face_load_metrics): Remove compiler warnings
+	-- redundant variables, missing initializations, etc.
 
-    * src/autofit/{rules.mk,module.mk,afangles.h}: adding missing files
+	* src/sfnt/ttsbit.h: Handle FT_OPTIMIZE_MEMORY.	
 
-    * src/autofit/afloader.c: fixing small bug that could crash the engine
-    with certain fonts.
+	* src/autofit/rules.mk, src/autofit/module.mk,
+	src/autofit/afangles.h: New files.
 
-    * src/autofit/{afhints.h,afhints.c,aflatin.h,aflatin.c,afloader.c}:
-    various bug-fixes and drastic heap usage reduction improvements.
+	* src/autofit/afhints.c (af_axis_hints_new_segment,
+	af_axis_hints_new_edge): New functions.
+	(af_glyph_hints_done): Do proper deallocation.
+	(af_glyph_hints_reload): Only reallocate points array.  This
+	drastically reduces heap usage.
 
-    * include/freetype/config/ftmodule.h: the auto-fitter is now the
-    only supported auto-hinting module
+	* src/autofit/afhints.h (AF_PointRec, AF_SegmentRec): Optimize
+	member types and positions.
+	(AF_AxisHintsRec): Add `max_segments' and `max_edges'.
+	(af_axis_hints_new_segment, af_axis_hints_new_edge): New prototypes.
 
-    * include/freetype/config/ftstdlib.h: adding FT_INT_MAX definition
+	* src/autofit/aflatin.c (af_latin_metricsc_scale): Don't call
+	AF_SCALER_EQUAL_SCALES.
+	(af_latin_hints_compute_segments): Change return type to FT_Error.
+	Update all callers.
+	Improve segment allocation.
+	(af_latin_hints_compute_edges): Change return type to FT_Error.
+	Update all callers.
+	Improve edge allocation and link handling.
+	(af_latin_hints_detect_features): Change return type to FT_Error.
+	Update all callers.
+
+	* src/autofit/aflatin.h: Updated.
+
+	* src/autofit/afloader.c (af_loader_load_g)
+	<FT_GLYPH_FORMAT_OUTLINE>: Assure axis->num_edges > 1.  This fixes
+	a bug with certain fonts.
+
+	* include/freetype/config/ftmodule.h: The auto-fitter is now the
+	only supported auto-hinting module.
+
+	* include/freetype/config/ftstdlib.h (FT_INT_MAX): New macro.
 
 2005-02-28  Werner Lemberg  <wl@gnu.org>
 

@@ -9,11 +9,13 @@
     FT_Error    error   = 0;
     AF_Segment  segment = NULL;
 
+
     if ( axis->num_segments >= axis->max_segments )
     {
       FT_Int  old_max = axis->max_segments;
       FT_Int  new_max = old_max;
-      FT_Int  big_max = FT_INT_MAX / sizeof(*segment);
+      FT_Int  big_max = FT_INT_MAX / sizeof ( *segment );
+
 
       if ( old_max >= big_max )
       {
@@ -21,7 +23,7 @@
         goto Exit;
       }
 
-      new_max += (new_max >> 1) + 4;
+      new_max += ( new_max >> 1 ) + 4;
       if ( new_max < old_max || new_max > big_max )
         new_max = big_max;
 
@@ -39,21 +41,24 @@
     return error;
   }
 
+
   FT_LOCAL( FT_Error)
   af_axis_hints_new_edge( AF_AxisHints  axis,
                           FT_Int        fpos,
                           FT_Memory     memory,
                           AF_Edge      *aedge )
   {
-    FT_Error    error = 0;
-    AF_Edge     edge  = NULL;
-    AF_Edge     edges;
+    FT_Error  error = 0;
+    AF_Edge   edge  = NULL;
+    AF_Edge   edges;
+
 
     if ( axis->num_edges >= axis->max_edges )
     {
       FT_Int  old_max = axis->max_edges;
       FT_Int  new_max = old_max;
-      FT_Int  big_max = FT_INT_MAX / sizeof(*edge);
+      FT_Int  big_max = FT_INT_MAX / sizeof ( *edge );
+
 
       if ( old_max >= big_max )
       {
@@ -61,7 +66,7 @@
         goto Exit;
       }
 
-      new_max += (new_max >> 1) + 4;
+      new_max += ( new_max >> 1 ) + 4;
       if ( new_max < old_max || new_max > big_max )
         new_max = big_max;
 
@@ -82,8 +87,8 @@
 
     axis->num_edges++;
 
-    FT_ZERO(edge);
-    edge->fpos = (FT_Short) fpos;
+    FT_ZERO( edge );
+    edge->fpos = (FT_Short)fpos;
 
   Exit:
     *aedge = edge;
@@ -95,22 +100,36 @@
 
 #include <stdio.h>
 
-  static const char* af_dir_str( AF_Direction  dir )
+  static const char*
+  af_dir_str( AF_Direction  dir )
   {
     const char*  result;
 
-    switch (dir)
+
+    switch ( dir )
     {
-     case AF_DIR_UP:    result = "up";    break;
-     case AF_DIR_DOWN:  result = "down";  break;
-     case AF_DIR_LEFT:  result = "left";  break;
-     case AF_DIR_RIGHT: result = "right"; break;
-     default:           result = "none";
+    case AF_DIR_UP:
+      result = "up";
+      break;
+    case AF_DIR_DOWN:
+      result = "down";
+      break;
+    case AF_DIR_LEFT:
+      result = "left";
+      break;
+    case AF_DIR_RIGHT:
+      result = "right";
+      break;
+    default:
+      result = "none";
     }
+
     return result;
   }
 
-#define  AF_INDEX_NUM(ptr,base)  ( (ptr) ? ((ptr)-(base)) : -1 )
+
+#define AF_INDEX_NUM( ptr, base )  ( (ptr) ? ( (ptr) - (base) ) : -1 )
+
 
   void
   af_glyph_hints_dump_points( AF_GlyphHints  hints )
@@ -119,11 +138,15 @@
     AF_Point  limit  = points + hints->num_points;
     AF_Point  point;
 
+
     printf( "Table of points:\n" );
-    printf(   "  [ index |  xorg |  yorg |  xscale |  yscale |  xfit  |  yfit  |  flags ]\n" );
+    printf(   "  [ index |  xorg |  yorg |  xscale |  yscale "
+              "|  xfit  |  yfit  |  flags ]\n" );
+
     for ( point = points; point < limit; point++ )
     {
-      printf( "  [ %5d | %5d | %5d | %-5.2f | %-5.2f | %-5.2f | %-5.2f | %c%c%c%c%c%c ]\n",
+      printf( "  [ %5d | %5d | %5d | %-5.2f | %-5.2f "
+              "| %-5.2f | %-5.2f | %c%c%c%c%c%c ]\n",
               point - points,
               point->fx,
               point->fy,
@@ -131,28 +154,28 @@
               point->oy/64.0,
               point->x/64.0,
               point->y/64.0,
-              (point->flags & AF_FLAG_WEAK_INTERPOLATION) ? 'w' : ' ',
-              (point->flags & AF_FLAG_INFLECTION)         ? 'i' : ' ',
-              (point->flags & AF_FLAG_EXTREMA_X)          ? '<' : ' ',
-              (point->flags & AF_FLAG_EXTREMA_Y)          ? 'v' : ' ',
-              (point->flags & AF_FLAG_ROUND_X)            ? '(' : ' ',
-              (point->flags & AF_FLAG_ROUND_Y)            ? 'u' : ' '
-            );
+              ( point->flags & AF_FLAG_WEAK_INTERPOLATION ) ? 'w' : ' ',
+              ( point->flags & AF_FLAG_INFLECTION )         ? 'i' : ' ',
+              ( point->flags & AF_FLAG_EXTREMA_X )          ? '<' : ' ',
+              ( point->flags & AF_FLAG_EXTREMA_Y )          ? 'v' : ' ',
+              ( point->flags & AF_FLAG_ROUND_X )            ? '(' : ' ',
+              ( point->flags & AF_FLAG_ROUND_Y )            ? 'u' : ' ');
     }
     printf( "\n" );
   }
 
 
-  /* A function used to dump the array of linked segments */
+  /* A function to dump the array of linked segments. */
   void
   af_glyph_hints_dump_segments( AF_GlyphHints  hints )
   {
-    AF_Point    points = hints->points;
-    FT_Int      dimension;
+    AF_Point  points = hints->points;
+    FT_Int    dimension;
+
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AF_AxisHints  axis = &hints->axis[dimension];
+      AF_AxisHints  axis     = &hints->axis[dimension];
       AF_Segment    segments = axis->segments;
       AF_Segment    limit    = segments + axis->num_segments;
       AF_Segment    seg;
@@ -183,18 +206,21 @@
   void
   af_glyph_hints_dump_edges( AF_GlyphHints  hints )
   {
-    FT_Int      dimension;
+    FT_Int  dimension;
+
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AF_AxisHints  axis  = &hints->axis[ dimension ];
+      AF_AxisHints  axis  = &hints->axis[dimension];
       AF_Edge       edges = axis->edges;
       AF_Edge       limit = edges + axis->num_edges;
       AF_Edge       edge;
 
-     /* note: AF_DIMENSION_HORZ corresponds to _vertical_ edges
-      * since they have constant X coordinate
-      */
+
+      /*
+       *  note: AF_DIMENSION_HORZ corresponds to _vertical_ edges
+       *        since they have constant a X coordinate.
+       */
       printf ( "Table of %s edges:\n",
                dimension == AF_DIMENSION_HORZ ? "vertical" : "horizontal" );
       printf ( "  [ index |  pos |  dir  | link |"
@@ -202,7 +228,8 @@
 
       for ( edge = edges; edge < limit; edge++ )
       {
-        printf ( "  [ %5d | %4d | %5s | %4d | %5d |   %c  | %5.2f | %5.2f ]\n",
+        printf ( "  [ %5d | %4d | %5s | %4d |"
+                 " %5d |   %c  | %5.2f | %5.2f ]\n",
                  edge - edges,
                  (int)edge->fpos,
                  af_dir_str( edge->dir ),
@@ -212,12 +239,9 @@
                  edge->opos / 64.0,
                  edge->pos / 64.0 );
       }
-
       printf( "\n" );
     }
   }
-
-
 
 #endif /* AF_DEBUG */
 
@@ -359,7 +383,6 @@
   }
 
 
-
   FT_LOCAL_DEF( void )
   af_glyph_hints_init( AF_GlyphHints  hints,
                        FT_Memory      memory )
@@ -367,7 +390,6 @@
     FT_ZERO( hints );
     hints->memory = memory;
   }
-
 
 
   FT_LOCAL_DEF( void )
@@ -378,12 +400,15 @@
       FT_Memory     memory = hints->memory;
       AF_Dimension  dim;
 
-     /* note that we don't need to free the segment and edge
-      * buffers, since they're really within the hints->points array
-      */
+
+      /*
+       *  note that we don't need to free the segment and edge
+       *  buffers, since they are really within the hints->points array
+       */
       for ( dim = 0; dim < 2; dim++ )
       {
-        AF_AxisHints  axis = &hints->axis[ dim ];
+        AF_AxisHints  axis = &hints->axis[dim];
+
 
         axis->num_segments = 0;
         axis->max_segments = 0;
@@ -407,7 +432,6 @@
   }
 
 
-
   FT_LOCAL_DEF( void )
   af_glyph_hints_rescale( AF_GlyphHints     hints,
                           AF_ScriptMetrics  metrics )
@@ -417,18 +441,19 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  af_glyph_hints_reload( AF_GlyphHints     hints,
-                         FT_Outline*       outline )
+  af_glyph_hints_reload( AF_GlyphHints  hints,
+                         FT_Outline*    outline )
   {
-    FT_Error     error        = FT_Err_Ok;
-    AF_Point     points;
-    FT_UInt      old_max, new_max;
-    AF_Scaler    scaler  = &hints->metrics->scaler;
-    FT_Fixed     x_scale = hints->x_scale;
-    FT_Fixed     y_scale = hints->y_scale;
-    FT_Pos       x_delta = hints->x_delta;
-    FT_Pos       y_delta = hints->y_delta;
-    FT_Memory    memory  = hints->memory;
+    FT_Error   error   = FT_Err_Ok;
+    AF_Point   points;
+    FT_UInt    old_max, new_max;
+    AF_Scaler  scaler  = &hints->metrics->scaler;
+    FT_Fixed   x_scale = hints->x_scale;
+    FT_Fixed   y_scale = hints->y_scale;
+    FT_Pos     x_delta = hints->x_delta;
+    FT_Pos     y_delta = hints->y_delta;
+    FT_Memory  memory  = hints->memory;
+
 
     hints->scaler_flags  = scaler->flags;
     hints->num_points    = 0;
@@ -439,13 +464,12 @@
     hints->axis[1].num_segments = 0;
     hints->axis[1].num_edges    = 0;
 
-   /* first of all, reallocate the contours array when necessary
-    */
-    new_max = (FT_UInt) outline->n_contours;
+    /* first of all, reallocate the contours array when necessary */
+    new_max = (FT_UInt)outline->n_contours;
     old_max = hints->max_contours;
     if ( new_max > old_max )
     {
-      new_max = (new_max + 3) & ~3;
+      new_max = ( new_max + 3 ) & ~3;
 
       if ( FT_RENEW_ARRAY( hints->contours, old_max, new_max ) )
         goto Exit;
@@ -453,10 +477,11 @@
       hints->max_contours = new_max;
     }
 
-   /* then, reallocate the points arrays if needed --
-    * note that we reserved two additional point positions, used to
-    * hint metrics appropriately
-    */
+    /*
+     *  then, reallocate the points arrays if needed --
+     *  note that we reserve two additional point positions, used to
+     *  hint metrics appropriately
+     */
     new_max = (FT_UInt)( outline->n_points + 2 );
     old_max = hints->max_points;
     if ( new_max > old_max )
@@ -472,17 +497,17 @@
     hints->num_points   = outline->n_points;
     hints->num_contours = outline->n_contours;
 
-    /* We can't rely on the value of `FT_Outline.flags' to know the fill  */
-    /* direction used for a glyph, given that some fonts are broken (e.g. */
-    /* the Arphic ones).  We thus recompute it each time we need to.      */
-    /*                                                                    */
-    hints->axis[ AF_DIMENSION_HORZ ].major_dir = AF_DIR_UP;
-    hints->axis[ AF_DIMENSION_VERT ].major_dir = AF_DIR_LEFT;
+    /* We can't rely on the value of `FT_Outline.flags' to know the fill   */
+    /* direction used for a glyph, given that some fonts are broken (e.g., */
+    /* the Arphic ones).  We thus recompute it each time we need to.       */
+    /*                                                                     */
+    hints->axis[AF_DIMENSION_HORZ].major_dir = AF_DIR_UP;
+    hints->axis[AF_DIMENSION_VERT].major_dir = AF_DIR_LEFT;
 
     if ( FT_Outline_Get_Orientation( outline ) == FT_ORIENTATION_POSTSCRIPT )
     {
-      hints->axis[ AF_DIMENSION_HORZ ].major_dir = AF_DIR_DOWN;
-      hints->axis[ AF_DIMENSION_VERT ].major_dir = AF_DIR_RIGHT;
+      hints->axis[AF_DIMENSION_HORZ].major_dir = AF_DIR_DOWN;
+      hints->axis[AF_DIMENSION_VERT].major_dir = AF_DIR_RIGHT;
     }
 
     hints->x_scale = x_scale;
@@ -499,7 +524,7 @@
       AF_Point  point_limit = points + hints->num_points;
 
 
-      /* compute coordinates & bezier flags */
+      /* compute coordinates & Bezier flags */
       {
         FT_Vector*  vec = outline->points;
         char*       tag = outline->tags;
@@ -582,9 +607,9 @@
       {
         for ( point = points; point < point_limit; point++ )
         {
-          AF_Point   prev;
-          AF_Point   next;
-          FT_Pos     in_x, in_y, out_x, out_y;
+          AF_Point  prev;
+          AF_Point  next;
+          FT_Pos    in_x, in_y, out_x, out_y;
 
 
           prev   = point->prev;
@@ -625,8 +650,7 @@
       }
     }
 
-   /* compute inflection points
-    */
+    /* compute inflection points */
     af_glyph_hints_compute_inflections( hints );
 
   Exit:
@@ -635,18 +659,19 @@
 
 
   FT_LOCAL_DEF( void )
-  af_glyph_hints_save( AF_GlyphHints   hints,
-                       FT_Outline*     outline )
+  af_glyph_hints_save( AF_GlyphHints  hints,
+                       FT_Outline*    outline )
   {
     AF_Point    point = hints->points;
     AF_Point    limit = point + hints->num_points;
     FT_Vector*  vec   = outline->points;
     char*       tag   = outline->tags;
 
+
     for ( ; point < limit; point++, vec++, tag++ )
     {
-      vec->x = (FT_Pos) point->x;
-      vec->y = (FT_Pos) point->y;
+      vec->x = (FT_Pos)point->x;
+      vec->y = (FT_Pos)point->y;
 
       if ( point->flags & AF_FLAG_CONIC )
         tag[0] = FT_CURVE_TAG_CONIC;
@@ -658,21 +683,22 @@
   }
 
 
- /*
-  *
-  *  E D G E   P O I N T   G R I D - F I T T I N G
-  *
-  */
+  /****************************************************************
+   *
+   *                     EDGE POINT GRID-FITTING
+   *
+   ****************************************************************/
 
 
   FT_LOCAL_DEF( void )
   af_glyph_hints_align_edge_points( AF_GlyphHints  hints,
                                     AF_Dimension   dim )
   {
-    AF_AxisHints  axis       = & hints->axis[ dim ];
+    AF_AxisHints  axis       = & hints->axis[dim];
     AF_Edge       edges      = axis->edges;
     AF_Edge       edge_limit = edges + axis->num_edges;
     AF_Edge       edge;
+
 
     for ( edge = edges; edge < edge_limit; edge++ )
     {
@@ -712,15 +738,16 @@
   }
 
 
- /*
-  *
-  *  S T R O N G   P O I N T   I N T E R P O L A T I O N
-  *
-  */
+  /****************************************************************
+   *
+   *                    STRONG POINT INTERPOLATION
+   *
+   ****************************************************************/
 
 
   /* hint the strong points -- this is equivalent to the TrueType `IP' */
   /* hinting instruction                                               */
+
   FT_LOCAL_DEF( void )
   af_glyph_hints_align_strong_points( AF_GlyphHints  hints,
                                       AF_Dimension   dim )
@@ -743,6 +770,7 @@
       AF_Point  point;
       AF_Edge   edge;
 
+
       for ( point = points; point < point_limit; point++ )
       {
         FT_Pos  u, ou, fu;  /* point position */
@@ -752,8 +780,9 @@
         if ( point->flags & touch_flag )
           continue;
 
-        /* if this point is candidate to weak interpolation, we will  */
+        /* if this point is candidate to weak interpolation, we       */
         /* interpolate it after all strong points have been processed */
+
         if (  ( point->flags & AF_FLAG_WEAK_INTERPOLATION ) &&
              !( point->flags & AF_FLAG_INFLECTION )         )
           continue;
@@ -831,7 +860,6 @@
           }
         }
 
-
       Store_Point:
 
         /* save the point position */
@@ -846,11 +874,12 @@
   }
 
 
- /*
-  *
-  *  W E A K   P O I N T   I N T E R P O L A T I O N
-  *
-  */
+  /****************************************************************
+   *
+   *                    WEAK POINT INTERPOLATION
+   *
+   ****************************************************************/
+
 
   static void
   af_iup_shift( AF_Point  p1,
@@ -974,7 +1003,7 @@
       }
     }
 
-    point   = points;
+    point = points;
 
     for ( ; contour < contour_limit; contour++ )
     {
@@ -1039,3 +1068,6 @@
         point->y = point->u;
     }
   }
+
+
+/* END */

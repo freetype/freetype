@@ -3,11 +3,13 @@
 #include "afglobal.h"
 #include "aflatin.h"
 
+
   FT_LOCAL_DEF( FT_Error )
   af_loader_init( AF_Loader  loader,
                   FT_Memory  memory )
   {
     FT_Error  error;
+
 
     FT_ZERO( loader );
 
@@ -28,13 +30,14 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  af_loader_reset( AF_Loader   loader,
-                   FT_Face     face )
+  af_loader_reset( AF_Loader  loader,
+                   FT_Face    face )
   {
-    FT_Error   error = 0;
+    FT_Error  error = FT_Err_Ok;
+
 
     loader->face    = face;
-    loader->globals = (AF_FaceGlobals) face->autohint.data;
+    loader->globals = (AF_FaceGlobals)face->autohint.data;
 
     FT_GlyphLoader_Rewind( loader->gloader );
 
@@ -43,16 +46,19 @@
       error = af_face_globals_new( face, &loader->globals );
       if ( !error )
       {
-        face->autohint.data      = (FT_Pointer) loader->globals;
-        face->autohint.finalizer = (FT_Generic_Finalizer) af_face_globals_free;
+        face->autohint.data =
+          (FT_Pointer)loader->globals;
+        face->autohint.finalizer =
+          (FT_Generic_Finalizer)af_face_globals_free;
       }
     }
+
     return error;
   }
 
 
   FT_LOCAL_DEF( void )
-  af_loader_done( AF_Loader   loader )
+  af_loader_done( AF_Loader  loader )
   {
     af_glyph_hints_done( &loader->hints );
 
@@ -71,13 +77,14 @@
                     FT_Int32   load_flags,
                     FT_UInt    depth )
   {
-    FT_Error          error    = 0;
+    FT_Error          error;
     FT_Face           face     = loader->face;
     FT_GlyphLoader    gloader  = loader->gloader;
     AF_ScriptMetrics  metrics  = loader->metrics;
     AF_GlyphHints     hints    = &loader->hints;
     FT_GlyphSlot      slot     = face->glyph;
     FT_Slot_Internal  internal = slot->internal;
+
 
     error = FT_Load_Glyph( face, glyph_index, load_flags );
     if ( error )
@@ -87,6 +94,7 @@
     if ( loader->transformed )
     {
       FT_Matrix  inverse;
+
 
       loader->trans_matrix = internal->glyph_matrix;
       loader->trans_delta  = internal->glyph_delta;
@@ -102,115 +110,114 @@
 
     switch ( slot->format )
     {
-      case FT_GLYPH_FORMAT_OUTLINE:
-       /* translate the loaded glyph when an internal transform
-        * is needed
-        */
-        if ( loader->transformed )
-          FT_Outline_Translate( &slot->outline,
-                                loader->trans_delta.x,
-                                loader->trans_delta.y );
+    case FT_GLYPH_FORMAT_OUTLINE:
+      /* translate the loaded glyph when an internal transform is needed */
+      if ( loader->transformed )
+        FT_Outline_Translate( &slot->outline,
+                              loader->trans_delta.x,
+                              loader->trans_delta.y );
 
-        /* copy the outline points in the loader's current               */
-        /* extra points which is used to keep original glyph coordinates */
-        error = FT_GlyphLoader_CheckPoints( gloader,
-                                            slot->outline.n_points + 4,
-                                            slot->outline.n_contours );
-        if ( error )
-          goto Exit;
+      /* copy the outline points in the loader's current               */
+      /* extra points which is used to keep original glyph coordinates */
+      error = FT_GlyphLoader_CheckPoints( gloader,
+                                          slot->outline.n_points + 4,
+                                          slot->outline.n_contours );
+      if ( error )
+        goto Exit;
 
-        FT_ARRAY_COPY( gloader->current.outline.points,
-                       slot->outline.points,
-                       slot->outline.n_points );
+      FT_ARRAY_COPY( gloader->current.outline.points,
+                     slot->outline.points,
+                     slot->outline.n_points );
 
-        FT_ARRAY_COPY( gloader->current.extra_points,
-                       slot->outline.points,
-                       slot->outline.n_points );
+      FT_ARRAY_COPY( gloader->current.extra_points,
+                     slot->outline.points,
+                     slot->outline.n_points );
 
-        FT_ARRAY_COPY( gloader->current.outline.contours,
-                       slot->outline.contours,
-                       slot->outline.n_contours );
+      FT_ARRAY_COPY( gloader->current.outline.contours,
+                     slot->outline.contours,
+                     slot->outline.n_contours );
 
-        FT_ARRAY_COPY( gloader->current.outline.tags,
-                       slot->outline.tags,
-                       slot->outline.n_points );
+      FT_ARRAY_COPY( gloader->current.outline.tags,
+                     slot->outline.tags,
+                     slot->outline.n_points );
 
-        gloader->current.outline.n_points   = slot->outline.n_points;
-        gloader->current.outline.n_contours = slot->outline.n_contours;
+      gloader->current.outline.n_points   = slot->outline.n_points;
+      gloader->current.outline.n_contours = slot->outline.n_contours;
 
-        /* compute original horizontal phantom points (and ignore */
-        /* vertical ones)                                         */
-        loader->pp1.x = hints->x_delta;
-        loader->pp1.y = hints->y_delta;
-        loader->pp2.x = FT_MulFix( slot->metrics.horiAdvance,
-                                   hints->x_scale ) + hints->x_delta;
-        loader->pp2.y = hints->y_delta;
+      /* compute original horizontal phantom points (and ignore */
+      /* vertical ones)                                         */
+      loader->pp1.x = hints->x_delta;
+      loader->pp1.y = hints->y_delta;
+      loader->pp2.x = FT_MulFix( slot->metrics.horiAdvance,
+                                 hints->x_scale ) + hints->x_delta;
+      loader->pp2.y = hints->y_delta;
 
-        /* be sure to check for spacing glyphs */
-        if ( slot->outline.n_points == 0 )
-          goto Hint_Metrics;
+      /* be sure to check for spacing glyphs */
+      if ( slot->outline.n_points == 0 )
+        goto Hint_Metrics;
 
-        /* now load the slot image into the auto-outline and run the */
-        /* automatic hinting process                                 */
-        metrics->clazz->script_hints_apply( hints,
-                                            &gloader->current.outline,
-                                            metrics );
+      /* now load the slot image into the auto-outline and run the */
+      /* automatic hinting process                                 */
+      metrics->clazz->script_hints_apply( hints,
+                                          &gloader->current.outline,
+                                          metrics );
 
-        /* we now need to hint the metrics according to the change in */
-        /* width/positioning that occured during the hinting process  */
+      /* we now need to hint the metrics according to the change in */
+      /* width/positioning that occured during the hinting process  */
+      {
+        FT_Pos        old_advance, old_rsb, old_lsb, new_lsb;
+        FT_Pos        pp1x_uh, pp2x_uh;
+        AF_AxisHints  axis  = &hints->axis[ AF_DIMENSION_HORZ ];
+        AF_Edge       edge1 = axis->edges;         /* leftmost edge  */
+        AF_Edge       edge2 = edge1 +
+                              axis->num_edges - 1; /* rightmost edge */
+
+
+        if ( axis->num_edges > 1 )
         {
-          FT_Pos        old_advance, old_rsb, old_lsb, new_lsb;
-          FT_Pos        pp1x_uh, pp2x_uh;
-          AF_AxisHints  axis  = &hints->axis[ AF_DIMENSION_HORZ ];
-          AF_Edge       edge1 = axis->edges;         /* leftmost edge  */
-          AF_Edge       edge2 = edge1 +
-                                axis->num_edges - 1; /* rightmost edge */
+          old_advance = loader->pp2.x;
+          old_rsb     = old_advance - edge2->opos;
+          old_lsb     = edge1->opos;
+          new_lsb     = edge1->pos;
 
+          /* remember unhinted values to later account */
+          /* for rounding errors                       */
 
-          if ( axis->num_edges > 1 )
-          {
-            old_advance = loader->pp2.x;
-            old_rsb     = old_advance - edge2->opos;
-            old_lsb     = edge1->opos;
-            new_lsb     = edge1->pos;
+          pp1x_uh = new_lsb    - old_lsb;
+          pp2x_uh = edge2->pos + old_rsb;
 
-            /* remember unhinted values to later account */
-            /* for rounding errors                       */
+          /* prefer too much space over too little space */
+          /* for very small sizes                        */
 
-            pp1x_uh = new_lsb    - old_lsb;
-            pp2x_uh = edge2->pos + old_rsb;
+          if ( old_lsb < 24 )
+            pp1x_uh -= 5;
 
-            /* prefer too much space over too little space */
-            /* for very small sizes                        */
+          if ( old_rsb < 24 )
+            pp2x_uh += 5;
 
-            if ( old_lsb < 24 )
-              pp1x_uh -= 5;
+          loader->pp1.x = FT_PIX_ROUND( pp1x_uh );
+          loader->pp2.x = FT_PIX_ROUND( pp2x_uh );
 
-            if ( old_rsb < 24 )
-              pp2x_uh += 5;
-
-            loader->pp1.x = FT_PIX_ROUND( pp1x_uh );
-            loader->pp2.x = FT_PIX_ROUND( pp2x_uh );
-
-            slot->lsb_delta = loader->pp1.x - pp1x_uh;
-            slot->rsb_delta = loader->pp2.x - pp2x_uh;
+          slot->lsb_delta = loader->pp1.x - pp1x_uh;
+          slot->rsb_delta = loader->pp2.x - pp2x_uh;
 
 #if 0
-            /* try to fix certain bad advance computations */
-            if ( loader->pp2.x + loader->pp1.x == edge2->pos && old_rsb > 4 )
-              loader->pp2.x += 64;
+          /* try to fix certain bad advance computations */
+          if ( loader->pp2.x + loader->pp1.x == edge2->pos && old_rsb > 4 )
+            loader->pp2.x += 64;
 #endif
-          }
-          else
-          {
-            loader->pp1.x = FT_PIX_ROUND( loader->pp1.x );
-            loader->pp2.x = FT_PIX_ROUND( loader->pp2.x );
-          }
-        }
 
-        /* good, we simply add the glyph to our loader's base */
-        FT_GlyphLoader_Add( gloader );
-        break;
+        }
+        else
+        {
+          loader->pp1.x = FT_PIX_ROUND( loader->pp1.x );
+          loader->pp2.x = FT_PIX_ROUND( loader->pp2.x );
+        }
+      }
+
+      /* good, we simply add the glyph to our loader's base */
+      FT_GlyphLoader_Add( gloader );
+      break;
 
     case FT_GLYPH_FORMAT_COMPOSITE:
       {
@@ -231,7 +238,7 @@
                        num_subglyphs );
 
         gloader->current.num_subglyphs = num_subglyphs;
-        num_base_subgs = gloader->base.num_subglyphs;
+        num_base_subgs                 = gloader->base.num_subglyphs;
 
         /* now, read each subglyph independently */
         for ( nn = 0; nn < num_subglyphs; nn++ )
@@ -325,8 +332,8 @@
             x = FT_MulFix( subglyph->arg1, hints->x_scale ) + hints->x_delta;
             y = FT_MulFix( subglyph->arg2, hints->y_scale ) + hints->y_delta;
 
-            x = FT_PIX_ROUND(x);
-            y = FT_PIX_ROUND(y);
+            x = FT_PIX_ROUND( x );
+            y = FT_PIX_ROUND( y );
           }
 
           {
@@ -364,10 +371,10 @@
 
       FT_Outline_Get_CBox( &gloader->base.outline, &bbox );
 
-      bbox.xMin  = FT_PIX_FLOOR(  bbox.xMin );
-      bbox.yMin  = FT_PIX_FLOOR(  bbox.yMin );
-      bbox.xMax  = FT_PIX_CEIL( bbox.xMax );
-      bbox.yMax  = FT_PIX_CEIL( bbox.yMax );
+      bbox.xMin = FT_PIX_FLOOR( bbox.xMin );
+      bbox.yMin = FT_PIX_FLOOR( bbox.yMin );
+      bbox.xMax = FT_PIX_CEIL(  bbox.xMax );
+      bbox.yMax = FT_PIX_CEIL(  bbox.yMax );
 
       slot->metrics.width        = bbox.xMax - bbox.xMin;
       slot->metrics.height       = bbox.yMax - bbox.yMin;
@@ -383,8 +390,6 @@
         slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance,
                                                x_scale );
 #else
-      /* for mono-width fonts (like Andale, Courier, etc.) we need */
-      /* to keep the original rounded advance width                */
       if ( !FT_IS_FIXED_WIDTH( slot->face ) )
         slot->metrics.horiAdvance = loader->pp2.x - loader->pp1.x;
       else
@@ -413,8 +418,6 @@
   }
 
 
-
-
   FT_LOCAL_DEF( FT_Error )
   af_loader_load_glyph( AF_Loader  loader,
                         FT_Face    face,
@@ -424,6 +427,7 @@
     FT_Error      error;
     FT_Size       size = face->size;
     AF_ScalerRec  scaler;
+
 
     if ( !size )
       return FT_Err_Invalid_Argument;
@@ -444,7 +448,9 @@
     {
       AF_ScriptMetrics  metrics;
 
-      error = af_face_globals_get_metrics( loader->globals, gindex, &metrics );
+
+      error = af_face_globals_get_metrics( loader->globals, gindex,
+                                           &metrics );
       if ( !error )
       {
         loader->metrics = metrics;
@@ -467,3 +473,6 @@
   Exit:
     return error;
   }
+
+
+/* END */
