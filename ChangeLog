@@ -1,3 +1,8 @@
+2002-02-20  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/install.mk (check): New dummy target.
+	(.PHONY): Add it.
+
 2002-02-19  Werner Lemberg  <wl@gnu.org>
 
 	* builds/freetype.mk (FT_CFLAGS): Use $(INCLUDE_FLAGS) first.
