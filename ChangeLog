@@ -1,3 +1,22 @@
+2002-02-28  David Turner   <david@freetype.org>
+
+        * src/sfnt/ttload.c (TT_Load_Names): simplifying and securing the
+        names table loader. Invalid individual name entries are now handled
+        correctly. This allows the loading of very buggy fonts like
+        "foxjump.ttf" without allocating tons of memory and causing crashes..
+
+        * src/otlayout/otlcommon.h, src/otlayout/otlcommon.c: adding (still
+        experimental) code for OpenType Layout tables validation and parsing
+
+        * src/type1/t1cmap.h, src/type1/t1cmap.c: adding (still experimental)
+        code for Type 1 charmap processing
+
+        * src/sfnt/ttcmap0.c: completing the experimental SFNT charmap
+        processing
+
+        * include/freetype/internal/ftobjs.h: adding validation support as
+        well as internal charmap object definitions (FT_CMap != FT_CharMap)
+
 2002-02-24  David Turner   <david@freetype.org>
 
         * renaming stream functions to the FT_Subject_Action scheme:
