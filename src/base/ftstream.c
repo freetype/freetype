@@ -674,7 +674,7 @@
           FT_UInt  len = fields->size;
 
 
-          if ( stream->cursor + len > stream->limit )
+          if ( cursor + len > stream->limit )
           {
             error = FT_Err_Invalid_Stream_Operation;
             goto Exit;
@@ -683,9 +683,9 @@
           if ( fields->value == ft_frame_bytes )
           {
             p = (FT_Byte*)structure + fields->offset;
-            MEM_Copy( p, stream->cursor, len );
+            MEM_Copy( p, cursor, len );
           }
-          stream->cursor += len;
+          cursor += len;
           fields++;
           continue;
         }

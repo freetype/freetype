@@ -22,7 +22,8 @@ DELETE   := rm -f
 SEP      := /
 HOSTSEP  := $(SEP)
 BUILD    := $(TOP)/builds/unix/devel # we use a special devel ftoption.h
-PLATFORM := unixdev # do not set it to `unix', or libtool will trick you
+# do not set the platform to `unix', or libtool will trick you
+PLATFORM := unixdev
 
 
 # The directory where all object files are placed.

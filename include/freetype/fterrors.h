@@ -97,6 +97,8 @@
                "invalid composite glyph" )
   FT_ERRORDEF( FT_Err_Too_Many_Hints,               0x0016, \
                "too many hints" )
+  FT_ERRORDEF( FT_Err_Invalid_Pixel_Size,           0x0017, \
+               "invalid pixel size" )
 
   /* handle errors */
 
