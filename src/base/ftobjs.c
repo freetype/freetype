@@ -22,6 +22,7 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_SFNT_H    /* for SFNT_Load_Table_Func */
 #include FT_TRUETYPE_TABLES_H
 #include FT_TRUETYPE_IDS_H
 #include FT_OUTLINE_H
@@ -1832,6 +1833,32 @@
 
   Exit:
     return table;
+  }
+
+
+  /* documentation is in tttables.h */
+
+  FT_EXPORT_DEF( FT_Error )
+  FT_Load_Sfnt_Table( FT_Face      face,
+                      FT_ULong     tag,
+                      FT_Long      offset,
+                      FT_Byte*     buffer,
+                      FT_ULong*    length )
+  {
+    SFNT_Load_Table_Func  func;
+    FT_Driver             driver;
+
+
+    if ( !face || !FT_IS_SFNT( face ) )
+      return FT_Err_Invalid_Face_Handle;
+
+    driver = face->driver;
+    func   = (SFNT_Load_Table_Func) driver->root.clazz->get_interface(
+                                      FT_MODULE( driver ), "load_sfnt" );
+    if ( !func )
+      return FT_Err_Unimplemented_Feature;
+
+    return func( face, tag, offset, buffer, length );
   }
 
 

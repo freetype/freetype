@@ -81,6 +81,23 @@ AC_SUBST(FTSYS_SRC)
 
 AC_CHECK_FUNCS(memcpy memmove)
 
+
+dnl Check for system zlib
+AC_ARG_WITH(zlib,
+  [  --without-zlib          use internal zlib instead of system-wide])
+if test x$with_zlib != xno && test -z "$LIBZ"; then
+  AC_CHECK_LIB(z, gzsetparams, [AC_CHECK_HEADER(zlib.h, LIBZ='-lz')])
+fi
+if test x$with_zlib != xno && test -n "$LIBZ"; then
+  CFLAGS="$CFLAGS -DFT_CONFIG_OPTION_SYSTEM_ZLIB"
+  SYSTEM_ZLIB=yes
+fi
+AC_SUBST(LIBZ)
+AC_SUBST(CFLAGS)
+AC_SUBST(SYSTEM_ZLIB)
+
+
+
 AC_PROG_LIBTOOL
 
 dnl create the Unix-specific sub-Makefiles `builds/unix/unix-def.mk'
