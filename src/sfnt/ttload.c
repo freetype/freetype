@@ -5,7 +5,7 @@
 /*    Load the basic TrueType tables, i.e., tables that can be either in   */
 /*    TTF or OTF fonts (body).                                             */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -740,12 +740,12 @@
       face->root.num_glyphs = maxProfile->numGlyphs;
 
       face->root.internal->max_points =
-        (FT_UShort)MAX( maxProfile->maxCompositePoints,
-                        maxProfile->maxPoints );
+        (FT_UShort)FT_MAX( maxProfile->maxCompositePoints,
+                           maxProfile->maxPoints );
 
       face->root.internal->max_contours =
-        (FT_Short)MAX( maxProfile->maxCompositeContours,
-                       maxProfile->maxContours );
+        (FT_Short)FT_MAX( maxProfile->maxCompositeContours,
+                          maxProfile->maxContours );
 
       face->max_components = (FT_ULong)maxProfile->maxComponentElements +
                              maxProfile->maxComponentDepth;
@@ -896,7 +896,8 @@
     /* do we have an inconsistent number of metric values? */
     {
       TT_ShortMetrics*  cur   = *shorts;
-      TT_ShortMetrics*  limit = cur + MIN( num_shorts, num_shorts_checked );
+      TT_ShortMetrics*  limit = cur +
+                                FT_MIN( num_shorts, num_shorts_checked );
 
 
       for ( ; cur < limit; cur++ )

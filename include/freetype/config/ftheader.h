@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Build macros of the FreeType 2 library.                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -149,6 +149,7 @@
 #ifndef FT_CONFIG_MODULES_H
 #define FT_CONFIG_MODULES_H  <freetype/config/ftmodule.h>
 #endif
+
 
   /* public headers */
 
@@ -376,6 +377,18 @@
   /*************************************************************************/
   /*                                                                       */
   /* @macro:                                                               */
+  /*    FT_LZW_H                                                           */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    the definitions of an API to support for LZW-compressed files.     */
+  /*                                                                       */
+#define FT_LZW_H  <freetype/ftlzw.h>
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
   /*    FT_WINFONTS_H                                                      */
   /*                                                                       */
   /* @description:                                                         */
@@ -383,6 +396,7 @@
   /*    the definitions of an API to support Windows .FNT files            */
   /*                                                                       */
 #define FT_WINFONTS_H   <freetype/ftwinfnt.h>
+
 
   /*************************************************************************/
   /*                                                                       */

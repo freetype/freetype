@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -64,19 +64,12 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* The min and max functions missing in C.  As usual, be careful not to  */
-  /* write things like MIN( a++, b++ ) to avoid side effects.              */
+  /* write things like FT_MIN( a++, b++ ) to avoid side effects.           */
   /*                                                                       */
-#ifndef MIN
-#define MIN( a, b )  ( (a) < (b) ? (a) : (b) )
-#endif
+#define FT_MIN( a, b )  ( (a) < (b) ? (a) : (b) )
+#define FT_MAX( a, b )  ( (a) > (b) ? (a) : (b) )
 
-#ifndef MAX
-#define MAX( a, b )  ( (a) > (b) ? (a) : (b) )
-#endif
-
-#ifndef ABS
-#define ABS( a )     ( (a) < 0 ? -(a) : (a) )
-#endif
+#define FT_ABS( a )     ( (a) < 0 ? -(a) : (a) )
 
 
 #define FT_PAD_FLOOR( x, n )  ( (x) & ~((n)-1) )

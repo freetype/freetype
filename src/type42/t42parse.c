@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 42 font parser (body).                                          */
 /*                                                                         */
-/*  Copyright 2002, 2003 by Roberto Alameda.                               */
+/*  Copyright 2002, 2003, 2004 by Roberto Alameda.                         */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -245,7 +245,7 @@
 
     (void)T1_ToFixedArray( parser, 6, temp, 3 );
 
-    temp_scale = ABS( temp[3] );
+    temp_scale = FT_ABS( temp[3] );
 
     /* Set Units per EM based on FontMatrix values.  We set the value to */
     /* 1000 / temp_scale, because temp_scale was already multiplied by   */

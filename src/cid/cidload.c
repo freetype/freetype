@@ -162,7 +162,7 @@
 
       (void)cid_parser_to_fixed_array( parser, 6, temp, 3 );
 
-      temp_scale = ABS( temp[3] );
+      temp_scale = FT_ABS( temp[3] );
 
       /* Set units per EM based on FontMatrix values.  We set the value to */
       /* `1000/temp_scale', because temp_scale was already multiplied by   */

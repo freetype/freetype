@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_GZIP_H
+#include FT_LZW_H
 #include FT_ERRORS_H
 #include FT_BDF_H
 
@@ -214,7 +215,7 @@ THE SOFTWARE.
 
     FT_TRACE4(( "PCF_Face_Done: done face\n" ));
 
-    /* close gzip stream if any */
+    /* close gzip/LZW stream if any */
     if ( face->root.stream == &face->gzip_stream )
     {
       FT_Stream_Close( &face->gzip_stream );
@@ -247,21 +248,44 @@ THE SOFTWARE.
 
       /* this didn't work, try gzip support! */
       error2 = FT_Stream_OpenGzip( &face->gzip_stream, stream );
-      if ( error2 == PCF_Err_Unimplemented_Feature )
+      if ( FT_ERROR_BASE( error2 ) == FT_Err_Unimplemented_Feature )
         goto Fail;
 
       error = error2;
       if ( error )
-        goto Fail;
+      {
+        FT_Error  error3;
 
-      face->gzip_source = stream;
-      face->root.stream = &face->gzip_stream;
 
-      stream = face->root.stream;
+        /* this didn't work, try LZW support! */
+        error3 = FT_Stream_OpenLZW( &face->gzip_stream, stream );
+        if ( FT_ERROR_BASE( error3 ) == FT_Err_Unimplemented_Feature )
+          goto Fail;
 
-      error = pcf_load_font( stream, face );
-      if ( error )
-        goto Fail;
+        error = error3;
+        if ( error )
+          goto Fail;
+
+        face->gzip_source = stream;
+        face->root.stream = &face->gzip_stream;
+
+        stream = face->root.stream;
+
+        error = pcf_load_font( stream, face );
+        if ( error )
+          goto Fail;
+      }
+      else
+      {
+        face->gzip_source = stream;
+        face->root.stream = &face->gzip_stream;
+
+        stream = face->root.stream;
+
+        error = pcf_load_font( stream, face );
+        if ( error )
+          goto Fail;
+      }
     }
 
     /* set-up charmap */

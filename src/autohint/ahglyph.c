@@ -5,7 +5,7 @@
 /*    Routines used to load and analyze a given glyph before hinting       */
 /*    (body).                                                              */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003 Catharon Productions Inc.              */
+/*  Copyright 2000-2001, 2002, 2003, 2004 Catharon Productions Inc.        */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -141,8 +141,8 @@
                         FT_Pos  dy )
   {
     AH_Direction  dir;
-    FT_Pos        ax = ABS( dx );
-    FT_Pos        ay = ABS( dy );
+    FT_Pos        ax = FT_ABS( dx );
+    FT_Pos        ay = FT_ABS( dy );
 
 
     dir = AH_DIR_NONE;
@@ -884,8 +884,8 @@
         if ( point == last )  /* skip singletons -- just in case */
           continue;
 
-        if ( ABS( last->out_dir )  == major_dir &&
-             ABS( point->out_dir ) == major_dir )
+        if ( FT_ABS( last->out_dir )  == major_dir &&
+             FT_ABS( point->out_dir ) == major_dir )
         {
           /* we are already on an edge, try to locate its start */
           last = point;
@@ -893,7 +893,7 @@
           for (;;)
           {
             point = point->prev;
-            if ( ABS( point->out_dir ) != major_dir )
+            if ( FT_ABS( point->out_dir ) != major_dir )
             {
               point = point->next;
               break;
@@ -958,7 +958,7 @@
             passed = 1;
           }
 
-          if ( !on_edge && ABS( point->out_dir ) == major_dir )
+          if ( !on_edge && FT_ABS( point->out_dir ) == major_dir )
           {
             /* this is the start of a new segment! */
             segment_dir = point->out_dir;

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Arithmetic computations (body).                                      */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -325,9 +325,9 @@
     if ( a == 0 || b == c )
       return a;
 
-    s  = a; a = ABS( a );
-    s ^= b; b = ABS( b );
-    s ^= c; c = ABS( c );
+    s  = a; a = FT_ABS( a );
+    s ^= b; b = FT_ABS( b );
+    s ^= c; c = FT_ABS( c );
 
     if ( a <= 46340L && b <= 46340L && c <= 176095L && c > 0 )
       a = ( a * b + ( c >> 1 ) ) / c;
@@ -364,9 +364,9 @@
     if ( a == 0 || b == c )
       return a;
 
-    s  = a; a = ABS( a );
-    s ^= b; b = ABS( b );
-    s ^= c; c = ABS( c );
+    s  = a; a = FT_ABS( a );
+    s ^= b; b = FT_ABS( b );
+    s ^= c; c = FT_ABS( c );
 
     if ( a <= 46340L && b <= 46340L && c > 0 )
       a = a * b / c;
@@ -401,8 +401,8 @@
     if ( a == 0 || b == 0x10000L )
       return a;
 
-    s  = a; a = ABS(a);
-    s ^= b; b = ABS(b);
+    s  = a; a = FT_ABS(a);
+    s ^= b; b = FT_ABS(b);
 
     ua = (FT_ULong)a;
     ub = (FT_ULong)b;
@@ -434,8 +434,8 @@
     FT_UInt32  q;
 
 
-    s  = a; a = ABS(a);
-    s ^= b; b = ABS(b);
+    s  = a; a = FT_ABS(a);
+    s ^= b; b = FT_ABS(b);
 
     if ( b == 0 )
     {
@@ -474,8 +474,8 @@
     FT_Int32  s;
 
 
-    s  = x; x = ABS( x );
-    s ^= y; y = ABS( y );
+    s  = x; x = FT_ABS( x );
+    s ^= y; y = FT_ABS( y );
 
     ft_multo64( x, y, z );
 
@@ -508,7 +508,7 @@
       x->lo = (FT_UInt32)-(FT_Int32)x->lo;
       x->hi = ~x->hi + !x->lo;
     }
-    s ^= y;  y = ABS( y );
+    s ^= y;  y = FT_ABS( y );
 
     /* Shortcut */
     if ( x->hi == 0 )
@@ -562,7 +562,7 @@
       x->lo = (FT_UInt32)-(FT_Int32)x->lo;
       x->hi = ~x->hi + !x->lo;
     }
-    s ^= y;  y = ABS( y );
+    s ^= y;  y = FT_ABS( y );
 
     /* Shortcut */
     if ( x->hi == 0 )

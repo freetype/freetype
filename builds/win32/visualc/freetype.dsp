@@ -235,6 +235,10 @@ SOURCE=..\..\..\src\gzip\ftgzip.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\src\lzw\ftlzw.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\src\base\ftinit.c
 # SUBTRACT CPP /Fr
 # End Source File

@@ -163,7 +163,7 @@
 
       /* now, compute size */
       if ( asize )
-        *asize = ABS( sbit->pitch ) * sbit->height;
+        *asize = FT_ABS( sbit->pitch ) * sbit->height;
 
     } /* glyph loading successful */
 
