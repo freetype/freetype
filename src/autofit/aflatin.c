@@ -176,7 +176,7 @@
         extremum    = point;
         point++;
 
-        if ( AF_IS_TOP_BLUE( bb ) )
+        if ( AF_LATIN_IS_TOP_BLUE( bb ) )
         {
           for ( ; point < point_limit; point++ )
             if ( point->y > extremum->y )
@@ -325,7 +325,6 @@
       AF_LOG(( "-- ref = %ld, shoot = %ld\n", *blue_ref, *blue_shoot ));
     }
 
-  Exit:
     return;
   }
 
@@ -398,7 +397,6 @@
       for ( nn = 0; nn < axis->blue_count; nn++ )
       {
         AF_LatinBlue  blue  = & axis->blues[nn];
-        FT_UInt       flags = blue->flags & ~AF_LATIN_BLUE_ACTIVE;
         FT_Pos        dist;
 
         blue->ref.cur = FT_MulFix( blue->ref.org, scale ) + delta;
@@ -1150,7 +1148,7 @@
     */
     if ( mode == FT_RENDER_MODE_MONO || mode == FT_RENDER_MODE_LCD_V )
       hints->other_flags |= AF_LATIN_HINTS_VERT_SNAP;
-      
+
    /* XXX
     */
     if ( mode != FT_RENDER_MODE_LIGHT )
@@ -1163,7 +1161,7 @@
     */
     if ( AF_HINTS_DO_HORIZONTAL(hints) )
       af_latin_hints_detect_features( hints, AF_DIMENSION_HORZ );
-     
+
     if ( AF_HINTS_DO_VERTICAL(hints) )
     {
       af_latin_hints_detect_features( hints, AF_DIMENSION_VERT );
@@ -1243,7 +1241,7 @@
     FT_Pos           dist     = width;
     FT_Int           sign     = 0;
     FT_Int           vertical = AF_HINTS_DO_VERTICAL( hints );
-      
+
 
     if ( !AF_LATIN_HINTS_DO_STEM_ADJUST( hints ) )
       return width;
@@ -1254,8 +1252,8 @@
       sign = 1;
     }
 
-    if ( (  vertical && !AF_LATIN_HINTS_DO_VERT_SNAPPING( hints ) ) ||
-         ( !vertical && !AF_LATIN_HINTS_DO_HORZ_SNAPPING( hints ) ) )
+    if ( (  vertical && !AF_LATIN_HINTS_DO_VERT_SNAP( hints ) ) ||
+         ( !vertical && !AF_LATIN_HINTS_DO_HORZ_SNAP( hints ) ) )
     {
       /* smooth hinting process: very lightly quantize the stem width */
       /*                                                              */
@@ -1282,7 +1280,7 @@
         if ( axis->width_count > 0 )
         {
           delta = dist - axis->widths[0].cur;
-          
+
           if ( delta < 0 )
             delta = -delta;
 
@@ -1699,7 +1697,7 @@
           anchor    = edge;
         }
         else
-          edge->pos = anchor->pos + 
+          edge->pos = anchor->pos +
                       FT_PIX_ROUND( edge->opos - anchor->opos );
 
         edge->flags |= AF_EDGE_DONE;
@@ -1722,11 +1720,14 @@
                         AF_LatinMetrics  metrics )
   {
     AF_Dimension  dim;
-    
+
+    FT_UNUSED( scaler );
+    FT_UNUSED( metrics );
+
     for ( dim = 0; dim < AF_DIMENSION_MAX; dim++ )
     {
-      if ( (dim == AF_DIMENSION_HORZ && AF_LATIN_HINTS_DO_HORIZONTAL(hints)) ||
-           (dim == AF_DIMENSION_VERT && AF_LATIN_HINTS_DO_VERTICAL(hints))   )
+      if ( (dim == AF_DIMENSION_HORZ && AF_HINTS_DO_HORIZONTAL(hints)) ||
+           (dim == AF_DIMENSION_VERT && AF_HINTS_DO_VERTICAL(hints))   )
       {
         af_latin_hint_edges( hints, dim );
         af_glyph_hints_align_edge_points( hints, dim );

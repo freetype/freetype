@@ -184,11 +184,10 @@
                                FT_UInt            gindex,
                                AF_ScriptMetrics  *ametrics )
   {
-    AF_Script         script;
     AF_ScriptMetrics  metrics = NULL;
     FT_UInt           index;
     AF_ScriptClass    clazz;
-    FT_Error          error;
+    FT_Error          error = 0;
 
     if ( gindex >= globals->glyph_count )
     {
@@ -203,6 +202,8 @@
     {
      /* create the global metrics object when needed
       */
+      FT_Memory  memory = globals->face->memory;
+
       if ( FT_ALLOC( metrics, clazz->script_metrics_size ) )
         goto Exit;
 
@@ -221,7 +222,7 @@
         }
       }
 
-      globals->metrics[ script ] = metrics;
+      globals->metrics[ clazz->script ] = metrics;
     }
 
   Exit:

@@ -20,12 +20,11 @@ FT_BEGIN_HEADER
   *
   */
   typedef struct AF_FaceGlobalsRec_*   AF_FaceGlobals;
-  
+
 
   FT_LOCAL( FT_Error )
   af_face_globals_new( FT_Face          face,
                        AF_FaceGlobals  *aglobals );
-
 
   FT_LOCAL( FT_Error )
   af_face_globals_get_metrics( AF_FaceGlobals     globals,
@@ -36,7 +35,7 @@ FT_BEGIN_HEADER
   af_face_globals_free( AF_FaceGlobals  globals );
 
  /* */
- 
+
 FT_END_HEADER
 
 #endif /* __AF_GLOBALS_H__ */
