@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Mac FOND support.  Written by just@letterror.com.                    */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  Just van Rossum, David Turner, Robert Wilhelm, and Werner Lemberg.     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -77,6 +77,10 @@
 #include <TextUtils.h>
 #endif
 
+#if defined( __MWERKS__ ) && !TARGET_RT_MAC_MACHO
+#include <FSp_fopen.h>
+#endif
+
 #include FT_MAC_H
 
 
@@ -87,12 +91,50 @@
 #define PREFER_LWFN 1
 #endif
 
+
+#if defined( __MWERKS__ ) && !TARGET_RT_MAC_MACHO
+
+#define STREAM_FILE( stream )  ( (FILE*)stream->descriptor.pointer )
+
+
+  FT_CALLBACK_DEF( void )
+  ft_FSp_stream_close( FT_Stream  stream )
+  {
+    fclose( STREAM_FILE( stream ) );
+
+    stream->descriptor.pointer = NULL;
+    stream->size               = 0;
+    stream->base               = 0;
+  }
+
+
+  FT_CALLBACK_DEF( unsigned long )
+  ft_FSp_stream_io( FT_Stream       stream,
+                    unsigned long   offset,
+                    unsigned char*  buffer,
+                    unsigned long   count )
+  {
+    FILE*  file;
+
+
+    file = STREAM_FILE( stream );
+
+    fseek( file, offset, SEEK_SET );
+
+    return (unsigned long)fread( buffer, 1, count, file );
+  }
+
+#endif  /* __MWERKS__ && !TARGET_RT_MAC_MACHO */
+
+
   /* Given a pathname, fill in a file spec. */
   static int
   file_spec_from_path( const char*  pathname,
                        FSSpec*      spec )
   {
-#if defined( TARGET_API_MAC_CARBON ) && !defined( __MWERKS__ )
+
+#if TARGET_API_MAC_CARBON && \
+    !( defined( __MWERKS__ ) && !TARGET_RT_MAC_MACHO )
 
     OSErr  e;
     FSRef  ref;
@@ -123,12 +165,13 @@
       return 0;
 
 #endif
+
   }
 
 
   /* Return the file type of the file specified by spec. */
   static OSType
-  get_file_type( FSSpec*  spec )
+  get_file_type( const FSSpec*  spec )
   {
     FInfo  finfo;
 
@@ -138,22 +181,6 @@
 
     return finfo.fdType;
   }
-
-
-#ifdef TARGET_API_MAC_CARBON
-
-  /* is this a Mac OS X .dfont file */
-  static Boolean
-  is_dfont( FSSpec*  spec )
-  {
-    int  nameLen = spec->name[0];
-
-
-    return nameLen >= 6                                      &&
-           !ft_memcmp( spec->name + nameLen - 5, ".dfont", 6 );
-  }
-
-#endif
 
 
   /* Given a PostScript font name, create the Macintosh LWFN file name. */
@@ -217,9 +244,9 @@
   /* Make a file spec for an LWFN file from a FOND resource and
      a file name. */
   static FT_Error
-  make_lwfn_spec( Handle          fond,
-                  unsigned char*  file_name,
-                  FSSpec*         spec )
+  make_lwfn_spec( Handle               fond,
+                  const unsigned char* file_name,
+                  FSSpec*              spec )
   {
     FT_Error  error;
     short     ref_num, v_ref_num;
@@ -240,12 +267,24 @@
   }
 
 
+  static short
+  count_faces_sfnt( char *fond_data )
+  {
+    /* The count is 1 greater than the value in the FOND.  */
+    /* Isn't that cute? :-)                                */
+
+    return 1 + *( (short *)( fond_data + sizeof ( FamRec ) ) );
+  }
+
+
   /* Look inside the FOND data, answer whether there should be an SFNT
      resource, and answer the name of a possible LWFN Type 1 file.
 
      Thanks to Paul Miller (paulm@profoundeffects.com) for the fix
      to load a face OTHER than the first one in the FOND!
   */
+
+
   static void
   parse_fond( char*   fond_data,
               short*  have_sfnt,
@@ -265,19 +304,24 @@
     fond       = (FamRec*)fond_data;
     assoc      = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
     base_assoc = assoc;
-    assoc     += face_index;        /* add on the face_index! */
 
-    /* if the face at this index is not scalable,
-       fall back to the first one (old behavior) */
-    if ( assoc->fontSize == 0 )
+    /* Let's do a little range checking before we get too excited here */
+    if ( face_index < count_faces_sfnt( fond_data ) )
     {
-      *have_sfnt = 1;
-      *sfnt_id   = assoc->fontID;
-    }
-    else if ( base_assoc->fontSize == 0 )
-    {
-      *have_sfnt = 1;
-      *sfnt_id   = base_assoc->fontID;
+      assoc += face_index;        /* add on the face_index! */
+
+      /* if the face at this index is not scalable,
+         fall back to the first one (old behavior) */
+      if ( assoc->fontSize == 0 )
+      {
+        *have_sfnt = 1;
+        *sfnt_id   = assoc->fontID;
+      }
+      else if ( base_assoc->fontSize == 0 )
+      {
+        *have_sfnt = 1;
+        *sfnt_id   = base_assoc->fontID;
+      }
     }
 
     if ( fond->ffStylOff )
@@ -344,6 +388,33 @@
   }
 
 
+  static short
+  count_faces( Handle  fond )
+  {
+    short   sfnt_id, have_sfnt, have_lwfn = 0;
+    Str255  lwfn_file_name;
+    FSSpec  lwfn_spec;
+
+
+    HLock( fond );
+    parse_fond( *fond, &have_sfnt, &sfnt_id, lwfn_file_name, 0 );
+    HUnlock( fond );
+
+    if ( lwfn_file_name[0] )
+    {
+      if ( make_lwfn_spec( fond, lwfn_file_name, &lwfn_spec ) == FT_Err_Ok )
+        have_lwfn = 1;  /* yeah, we got one! */
+      else
+        have_lwfn = 0;  /* no LWFN file found */
+    }
+
+    if ( have_lwfn && ( !have_sfnt || PREFER_LWFN ) )
+      return 1;
+    else
+      return count_faces_sfnt( *fond );
+  }
+
+
   /* Read Type 1 data from the POST resources inside the LWFN file,
      return a PFB buffer. This is somewhat convoluted because the FT2
      PFB parser wants the ASCII header as one chunk, and the LWFN
@@ -351,12 +422,12 @@
      of the same type together. */
   static FT_Error
   read_lwfn( FT_Memory  memory,
-             FSSpec*    lwfn_spec,
+             short      res_ref,
              FT_Byte**  pfb_data,
              FT_ULong*  size )
   {
     FT_Error       error = FT_Err_Ok;
-    short          res_ref, res_id;
+    short          res_id;
     unsigned char  *buffer, *p, *size_p = NULL;
     FT_ULong       total_size = 0;
     FT_ULong       post_size, pfb_chunk_size;
@@ -364,13 +435,10 @@
     char           code, last_code;
 
 
-    res_ref = FSpOpenResFile( lwfn_spec, fsRdPerm );
-    if ( ResError() )
-      return FT_Err_Out_Of_Memory;
     UseResFile( res_ref );
 
-    /* First pass: load all POST resources, and determine the size of
-       the output buffer. */
+    /* First pass: load all POST resources, and determine the size of */
+    /* the output buffer.                                             */
     res_id    = 501;
     last_code = -1;
 
@@ -397,8 +465,8 @@
     if ( FT_ALLOC( buffer, (FT_Long)total_size ) )
       goto Error;
 
-    /* Second pass: append all POST data to the buffer, add PFB fields.
-       Glue all consecutive chunks of the same type together. */
+    /* Second pass: append all POST data to the buffer, add PFB fields. */
+    /* Glue all consecutive chunks of the same type together.           */
     p              = buffer;
     res_id         = 501;
     last_code      = -1;
@@ -551,19 +619,59 @@
   }
 
 
+  static FT_Error
+  OpenFileAsResource( const FSSpec*  spec,
+                      short         *p_res_ref )
+  {
+    FT_Error  error;
+
+#if TARGET_API_MAC_CARBON
+
+    FSRef     hostContainerRef;
+
+
+    error = FSpMakeFSRef( spec, &hostContainerRef );
+    if ( error == noErr )
+      error = FSOpenResourceFile( &hostContainerRef,
+                                  0, NULL, fsRdPerm, p_res_ref );
+
+    /* If the above fails, then it is probably not a resource file       */
+    /* However, it has been reported that FSOpenResourceFile() sometimes */
+    /* fails on some old resource-fork files, which FSpOpenResFile() can */
+    /* open.  So, just try again with FSpOpenResFile() and see what      */
+    /* happens :-)                                                       */
+
+    if ( error != noErr )
+
+#endif  /* TARGET_API_MAC_CARBON */
+
+    {
+      *p_res_ref = FSpOpenResFile( spec, fsRdPerm );
+      error = ResError();
+    }
+
+    return error ? FT_Err_Cannot_Open_Resource : FT_Err_Ok;
+  }
+
+
   /* Create a new FT_Face from a file spec to an LWFN file. */
   static FT_Error
-  FT_New_Face_From_LWFN( FT_Library  library,
-                         FSSpec*     spec,
-                         FT_Long     face_index,
-                         FT_Face    *aface )
+  FT_New_Face_From_LWFN( FT_Library     library,
+                         const FSSpec*  lwfn_spec,
+                         FT_Long        face_index,
+                         FT_Face       *aface )
   {
     FT_Byte*  pfb_data;
     FT_ULong  pfb_size;
     FT_Error  error;
+    short     res_ref;
 
 
-    error = read_lwfn( library->memory, spec, &pfb_data, &pfb_size );
+    error = OpenFileAsResource( lwfn_spec, &res_ref );
+    if ( error )
+      return error;
+
+    error = read_lwfn( library->memory, res_ref, &pfb_data, &pfb_size );
     if ( error )
       return error;
 
@@ -624,34 +732,34 @@
   /* Create a new FT_Face from a file spec to a suitcase file. */
   static FT_Error
   FT_New_Face_From_Suitcase( FT_Library  library,
-                             FSSpec*     spec,
+                             short       res_ref,
                              FT_Long     face_index,
                              FT_Face    *aface )
   {
     FT_Error  error = FT_Err_Ok;
-    short     res_ref, res_index;
+    short     res_index;
     Handle    fond;
+    short     num_faces;
 
 
-    res_ref = FSpOpenResFile( spec, fsRdPerm );
-    if ( ResError() )
-      return FT_Err_Cannot_Open_Resource;
     UseResFile( res_ref );
 
-    /* face_index may be -1, in which case we
-       just need to do a sanity check */
-    if ( face_index < 0 )
-      res_index = 1;
-    else
+    for ( res_index = 1; ; ++res_index )
     {
-      res_index = (short)( face_index + 1 );
-      face_index = 0;
-    }
-    fond = Get1IndResource( 'FOND', res_index );
-    if ( ResError() )
-    {
-      error = FT_Err_Cannot_Open_Resource;
-      goto Error;
+      fond = Get1IndResource( 'FOND', res_index );
+      if ( ResError() )
+      {
+        error = FT_Err_Cannot_Open_Resource;
+        goto Error;
+      }
+      if ( face_index < 0 )
+        break;
+
+      num_faces = count_faces( fond );
+      if ( face_index < num_faces )
+        break;
+
+      face_index -= num_faces;
     }
 
     error = FT_New_Face_From_FOND( library, fond, face_index, aface );
@@ -660,57 +768,6 @@
     CloseResFile( res_ref );
     return error;
   }
-
-
-#ifdef TARGET_API_MAC_CARBON
-
-  /* Create a new FT_Face from a file spec to a suitcase file. */
-  static FT_Error
-  FT_New_Face_From_dfont( FT_Library  library,
-                          FSSpec*     spec,
-                          FT_Long     face_index,
-                          FT_Face*    aface )
-  {
-    FT_Error  error = FT_Err_Ok;
-    short     res_ref, res_index;
-    Handle    fond;
-    FSRef     hostContainerRef;
-
-
-    error = FSpMakeFSRef( spec, &hostContainerRef );
-    if ( error == noErr )
-      error = FSOpenResourceFile( &hostContainerRef,
-                                  0, NULL, fsRdPerm, &res_ref );
-
-    if ( error != noErr )
-      return FT_Err_Cannot_Open_Resource;
-
-    UseResFile( res_ref );
-
-    /* face_index may be -1, in which case we
-       just need to do a sanity check */
-    if ( face_index < 0 )
-      res_index = 1;
-    else
-    {
-      res_index = (short)( face_index + 1 );
-      face_index = 0;
-    }
-    fond = Get1IndResource( 'FOND', res_index );
-    if ( ResError() )
-    {
-      error = FT_Err_Cannot_Open_Resource;
-      goto Error;
-    }
-
-    error = FT_New_Face_From_FOND( library, fond, face_index, aface );
-
-  Error:
-    CloseResFile( res_ref );
-    return error;
-  }
-
-#endif
 
 
   /* documentation is in ftmac.h */
@@ -763,9 +820,9 @@
   /* documentation is in ftmac.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_GetFile_From_Mac_Name( char*     fontName,
-                            FSSpec*   pathSpec,
-                            FT_Long*  face_index )
+  FT_GetFile_From_Mac_Name( const char* fontName,
+                            FSSpec*     pathSpec,
+                            FT_Long*    face_index )
   {
     OptionBits            options = kFMUseGlobalScopeOption;
 
@@ -846,25 +903,6 @@
   }
 
 
-  static long
-  ResourceForkSize(FSSpec*  spec)
-  {
-    long   len;
-    short  refNum;
-    OSErr  e;
-
-
-    e = FSpOpenRF( spec, fsRdPerm, &refNum ); /* I.M. Files 2-155 */
-    if ( e == noErr )
-    {
-      e = GetEOF( refNum, &len );
-      FSClose( refNum );
-    }
-
-    return ( e == noErr ) ? len : 0;
-  }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -885,6 +923,8 @@
     FT_Open_Args  args;
     FSSpec        spec;
     OSType        file_type;
+    short         res_ref;
+    FT_Error      result;
 
 
     /* test for valid `library' and `aface' delayed to FT_Open_Face() */
@@ -894,31 +934,145 @@
     if ( file_spec_from_path( pathname, &spec ) )
       return FT_Err_Invalid_Argument;
 
-    /* Regardless of type, don't try to use the resource fork if it is */
-    /* empty.  Some TTF fonts have type `FFIL', for example, but they  */
-    /* only have data forks.                                           */
-
-    if ( ResourceForkSize( &spec ) != 0 )
+    if ( OpenFileAsResource( &spec, &res_ref ) == FT_Err_Ok )
     {
-      file_type = get_file_type( &spec );
-      if ( file_type == 'FFIL' || file_type == 'tfil' )
-        return FT_New_Face_From_Suitcase( library, &spec, face_index, aface );
+      /* LWFN is a (very) specific file format, check for it explicitly */
 
+      file_type = get_file_type( &spec );
       if ( file_type == 'LWFN' )
         return FT_New_Face_From_LWFN( library, &spec, face_index, aface );
+
+      /* Otherwise the file type doesn't matter (there are more than   */
+      /* `FFIL' and `tfil') -- just try opening it as a font suitcase; */
+      /* if it works, fine.                                            */
+
+      result = FT_New_Face_From_Suitcase( library, res_ref,
+                                          face_index, aface );
+      if ( result == 0 )
+        return result;
+
+      /* else forget about the resource fork and fall through to */
+      /* data fork formats                                       */
+
+      CloseResFile( res_ref );
     }
-
-#ifdef TARGET_API_MAC_CARBON
-
-    if ( is_dfont( &spec ) )
-      return FT_New_Face_From_dfont( library, &spec, face_index, aface );
-
-#endif
 
     /* let it fall through to normal loader (.ttf, .otf, etc.) */
     args.flags    = FT_OPEN_PATHNAME;
     args.pathname = (char*)pathname;
     return FT_Open_Face( library, &args, face_index, aface );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_Face_From_FSSpec                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    FT_New_Face_From_FSSpec is identical to FT_New_Face except it      */
+  /*    accepts an FSSpec instead of a path.                               */
+  /*                                                                       */
+  FT_EXPORT_DEF( FT_Error )
+  FT_New_Face_From_FSSpec( FT_Library     library,
+                           const FSSpec  *spec,
+                           FT_Long        face_index,
+                           FT_Face       *aface )
+  {
+    FT_Open_Args  args;
+    OSType        file_type;
+    short         res_ref;
+    FT_Error      error;
+    FT_Stream     stream;
+    FILE*         file;
+    FT_Memory     memory;
+
+
+    /* test for valid `library' and `aface' delayed to FT_Open_Face() */
+    if ( !spec )
+      return FT_Err_Invalid_Argument;
+
+    if ( OpenFileAsResource( spec, &res_ref ) == FT_Err_Ok )
+    {
+      /* LWFN is a (very) specific file format, check for it explicitly */
+
+      file_type = get_file_type( spec );
+      if ( file_type == 'LWFN' )
+        return FT_New_Face_From_LWFN( library, spec, face_index, aface );
+    
+      /* Otherwise the file type doesn't matter (there are more than   */
+      /* `FFIL' and `tfil') -- just try opening it as a font suitcase; */
+      /* if it works, fine.                                            */
+
+      error = FT_New_Face_From_Suitcase( library, res_ref,
+                                         face_index, aface );
+      if ( error == 0 )
+        return error;
+
+      /* else forget about the resource fork and fall through to */
+      /* data fork formats                                       */
+
+      CloseResFile( res_ref );
+    }
+
+    /* let it fall through to normal loader (.ttf, .otf, etc.) */
+
+#if defined( __MWERKS__ ) && !TARGET_RT_MAC_MACHO
+
+    /* Codewarrior's C library can open a FILE from a FSSpec */
+#include <FSp_fopen.h>
+
+    memory = library->memory;
+
+    if ( FT_NEW( stream ) )
+      return error;
+    stream->memory = memory;
+
+    file = FSp_fopen( spec, "rb" );
+    if ( !file )
+      return FT_Err_Cannot_Open_Resource;
+
+    fseek( file, 0, SEEK_END );
+    stream->size = ftell( file );
+    fseek( file, 0, SEEK_SET );
+
+    stream->descriptor.pointer = file;
+    stream->pathname.pointer   = NULL;
+    stream->pos                = 0;
+
+    stream->read  = ft_FSp_stream_io;
+    stream->close = ft_FSp_stream_close;
+
+    args.flags    = FT_OPEN_STREAM;
+    args.stream   = stream;
+
+    error = FT_Open_Face( library, &args, face_index, aface );
+    if ( error == FT_Err_Ok )
+      (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
+
+#else  /* !(__MWERKS__ && !TARGET_RT_MAC_MACHO) */
+
+    {
+      FSRef  ref;
+      UInt8  path[256];
+      OSErr  err;
+
+
+      err = FSpMakeFSRef(spec, &ref);
+      if ( !err )
+      {
+        err = FSRefMakePath( &ref, path, sizeof ( path ) );
+        if ( !err )
+          error = FT_New_Face( library, (const char*)path,
+                               face_index, aface );
+      }
+      if ( err )
+        error = FT_Err_Cannot_Open_Resource;
+    }
+
+#endif  /* !(__MWERKS__ && !TARGET_RT_MAC_MACHO) */
+
+    return error;
   }
 
 

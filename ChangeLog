@@ -1,3 +1,36 @@
+2004-02-25  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+2004-02-25  Garrick Meeker  <garrick@digitalanarchy.com>
+
+	Improve MacOS fond support.  Provide a new API
+	`FT_New_Face_From_FSSpec' similar to `FT_New_Face'.
+
+	* src/base/ftmac.c [__MWERKS__]: Include FSp_fpopen.h.
+	STREAM_FILE [__MWERKS__]: New macro.
+	(ft_FSp_stream_close, ft_FSp_stream_io) [__MWERKS__]: New functions.
+	(file_spec_from_path) [__MWERKS__]: Updated #if statement.
+	(get_file_type, make_lwfn_spec): Use `const' for argument.
+	(is_dfont) [TARGET_API_MAC_CARBON]: Removed.
+	(count_face_sfnt, count_faces): New functions.
+	(parse_fond): Do some range checking.
+	(read_lwfn): Change type of second argument.
+	No longer call FSpOpenResFile.
+	(OpenFileAsResource): New function.
+	(FT_New_Face_From_LWFN): Use `const' for second argument.
+	Use OpenFileAsResource.
+	(FT_New_Face_From_Suitcase): Change type of second argument.
+	No longer call FSpOpenResFile.
+	Loop over all resource indices.
+	(FT_New_Face_From_dfont) [TARGET_API_MAC_CARBON]: Removed.
+	(FT_GetFile_From_Mac_Name): Use `const' for first argument.
+	(ResourceForkSize): Removed.
+	(FT_New_Face): Updated to use new functions.
+	(FT_New_Face_From_FSSpec): New function.
+
+	* include/freetype/ftmac.h: Updated.
+
 2004-02-24  Malcolm Taylor  <mtaylor@clear.net.nz>
 
 	* src/autohint/ahhint.c (ah_hinter_load) <FT_GLYPH_FORMAT_OUTLINE>:

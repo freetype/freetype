@@ -112,9 +112,43 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FT_GetFile_From_Mac_Name( char*     fontName, 
-                            FSSpec*   pathSpec,
-                            FT_Long*  face_index );
+  FT_GetFile_From_Mac_Name( const char*  fontName, 
+                            FSSpec*      pathSpec,
+                            FT_Long*     face_index );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_Face_From_FSSpec                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new face object from a given resource and typeface index */
+  /*    using an FSSpec to the font file.                                  */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library    :: A handle to the library resource.                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    spec       :: FSSpec to the font file.                             */
+  /*                                                                       */
+  /*    face_index :: The index of the face within the resource.  The      */
+  /*                  first face has index 0.                              */
+  /* <Output>                                                              */
+  /*    aface      :: A handle to a new face object.                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    @FT_New_Face_From_FSSpec is identical to @FT_New_Face except       */
+  /*    it accepts an FSSpec instead of a path.                            */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_New_Face_From_FSSpec( FT_Library     library,
+                           const FSSpec  *spec,
+                           FT_Long        face_index,
+                           FT_Face       *aface );
 
   /* */
 
