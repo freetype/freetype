@@ -1,5 +1,13 @@
 2001-12-19  David Turner  <david@freetype.org>
 
+        * include/freetype/cache/ftcache.h: added comments to indicate that
+        some of the exported functions should only be used by applications
+        that need to implement custom cache types
+
+        * src/truetype/ttgload.c: fixed a nasty bug that prevent composites
+        from loading correctly. Believe it or not, this was due to an invalid
+        macro definition !!
+
         * src/sfnt/sfobjs.c (SFNT_Load_Face): make the "post" and "name"
         tables optional to load PCL fonts properly
 
