@@ -64,6 +64,7 @@ T := -o$(space)
 #
 ifndef CFLAGS
   CFLAGS := -c -g -O0 \
+            -fno-strict-aliasing \
             -Wall \
             -W \
             -Wundef \
