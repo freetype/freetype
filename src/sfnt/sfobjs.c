@@ -595,12 +595,14 @@
           charmap->encoding = sfnt_find_encoding( charmap->platform_id,
                                                   charmap->encoding_id );
 
+#if 0
           if ( root->charmap     == NULL &&
                charmap->encoding == ft_encoding_unicode )
           {
             /* set 'root->charmap' to the first Unicode encoding we find */
             root->charmap = charmap;
           }
+#endif
         }
       }
 

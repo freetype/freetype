@@ -8,8 +8,12 @@
     src/base/ftobjs.c, src/bdf/bdfdrivr.c, src/cff/cffobjs.c,
     src/pcf/pcfdrivr.c, src/sfnt/sfobjs.c, src/sfnt/ttcmap0.c,
     src/sfnt/ttcmap0.h, src/sfnt/ttload.c, src/type1/t1objs.c,
-    src/type42/t42objs.c, src/winfonts/winfnt.c: code cleanup,
-    FT_CONFIG_OPTION_USE_CMAPS is now the default
+    src/type42/t42objs.c, src/type42/t42objs.h, src/type42/t42drivr.c,
+    src/winfonts/winfnt.c: code cleanup, FT_CONFIG_OPTION_USE_CMAPS is now
+    the default
+
+    * src/sfnt/ttload.c (TT_Load_SFNT_Header): fixed a recent bug that prevented
+    OpenType fonts to be recognized by FreeType
 
 2002-07-11  David Turner  <david@freetype.org>
 

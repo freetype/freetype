@@ -228,7 +228,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_SFNT_HeaderRec                                             */
+  /*    TT_Load_SFNT_Header                                                */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the header of a SFNT font file.  Supports collections.       */
@@ -345,9 +345,6 @@
         goto Exit;
     }
 
-    if ( format_tag != 0x10000UL && format_tag != 0x74727565UL )
-      goto Bad_Format;
-
     /* the format tag was read, now check the rest of the header */
     sfnt->format_tag = format_tag;
     sfnt->offset     = offset;
@@ -359,7 +356,6 @@
     error = sfnt_dir_check( stream, offset, sfnt->num_tables );
     if ( error )
     {
-    Bad_Format:
       FT_TRACE2(( "TT_Load_SFNT_Header: file is not SFNT!\n" ));
       error = SFNT_Err_Unknown_File_Format;
     }

@@ -733,6 +733,26 @@
     if ( error )
       goto Fail;
 
+    /* select Unicode charmap by default */
+    {
+      FT_Int      nn;
+      FT_CharMap  unicmap = NULL, cmap;
+
+      for ( nn = 0; nn < face->num_charmaps; nn++ )
+      {
+        cmap = face->charmaps[nn];
+
+        if ( cmap->encoding == ft_encoding_unicode )
+        {
+          unicmap = cmap;
+          break;
+        }
+      }
+
+      if ( unicmap != NULL )
+        face->charmap = unicmap;
+    }
+
     *aface = face;
 
   Fail:
