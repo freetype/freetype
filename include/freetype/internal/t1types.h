@@ -21,8 +21,8 @@
 #ifndef T1TYPES_H
 #define T1TYPES_H
 
-#include <t1tables.h>
-#include <psnames.h>
+#include <freetype/t1tables.h>
+#include <freetype/internal/psnames.h>
 
 #ifdef __cplusplus
   extern "C" {

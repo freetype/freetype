@@ -16,12 +16,12 @@
 /***************************************************************************/
 
 
-#include <ftdebug.h>
-#include <ftobjs.h>
-#include <ftstream.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/tttags.h>
 
 #include <ttpload.h>
-#include <tttags.h>
 #include <tterrors.h>
 
 #undef  FT_COMPONENT

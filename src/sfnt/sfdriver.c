@@ -1,9 +1,9 @@
+#include <freetype/internal/sfnt.h>
 #include <sfdriver.h>
 #include <ttload.h>
 #include <ttsbit.h>
 #include <ttpost.h>
 #include <ttcmap.h>
-#include <sfnt.h>
 
   static const SFNT_Interface  sfnt_interface =
   {

@@ -19,7 +19,6 @@
 #ifndef TTERRORS_H
 #define TTERRORS_H
 
-
   /*************************************************************************/
   /*                                                                       */
   /* Error codes declaration                                               */
@@ -91,6 +90,9 @@
 #define TT_Err_Invalid_CodeRange        0x40F
 #define TT_Err_Invalid_Displacement     0x410
 #define TT_Err_Execution_Too_Long       0x411
+
+#define TT_Err_Too_Many_Instruction_Defs  0x412
+#define TT_Err_Too_Many_Function_Defs     0x412
 
   /* Other TrueType specific error codes. */
 

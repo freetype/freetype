@@ -23,9 +23,9 @@
   /*************************************************************************/
 
 
-#include <ftlist.h>
-#include <ftdebug.h>
-#include <ftobjs.h>
+#include <freetype/internal/ftlist.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftobjs.h>
 
 
   /*************************************************************************/

@@ -20,8 +20,8 @@
  *                                                                           
  **************************************************************************/
 
-#include <ftsystem.h>
-#include <fterrors.h>
+#include <freetype/ftsystem.h>
+#include <freetype/fterrors.h>
 
 #include <stdio.h>
 #include <stdlib.h>

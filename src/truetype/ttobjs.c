@@ -16,15 +16,14 @@
 /***************************************************************************/
 
 
-#include <freetype.h>
-#include <ftdebug.h>
-#include <ftcalc.h>
-#include <ftstream.h>
-#include <ttnameid.h>
-#include <tttags.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/ttnameid.h>
+#include <freetype/tttags.h>
 
-#include <sfnt.h>
-#include <psnames.h>
+#include <freetype/internal/sfnt.h>
+#include <freetype/internal/psnames.h>
 #include <ttobjs.h>
 
 #include <ttpload.h>

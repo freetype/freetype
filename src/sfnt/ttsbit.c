@@ -21,11 +21,11 @@
 /***************************************************************************/
 
 
-#include <ftdebug.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/tterrors.h>
+#include <freetype/tttags.h>
 
 #include <ttsbit.h>
-#include <tttags.h>
-#include <tterrors.h>
 
 
   /*************************************************************************/

@@ -6,8 +6,8 @@
  ***************************************************************************/
 
 #include <t1afm.h>
-#include <ftstream.h>
-#include <t1types.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/t1types.h>
 #include <stdlib.h>  /* for qsort */
 
   LOCAL_FUNC

@@ -24,17 +24,17 @@
   /*                                                                       */
   /*************************************************************************/
 
-#include <ftstream.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/tterrors.h>
+#include <freetype/tttags.h>
 
 #include <ttpost.h>
-#include <tterrors.h>
 #include <ttload.h>
-#include <tttags.h>
 
 /* When this configuration macro is defined, we rely on the "psnames" */
 /* module to grab the glyph names..                                   */
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-#include <psnames.h>
+#include <freetype/internal/psnames.h>
 #define  MAC_NAME(x)  ((TT_String*)psnames->macintosh_name(x))
 
 #else

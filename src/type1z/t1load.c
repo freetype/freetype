@@ -59,10 +59,10 @@
  *
  ******************************************************************/
 
-#include <ftdebug.h>
-#include <ftconfig.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/config/ftconfig.h>
 
-#include <t1types.h>
+#include <freetype/internal/t1types.h>
 #include <t1errors.h>
 #include <t1load.h>
 #include <stdio.h>

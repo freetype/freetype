@@ -16,15 +16,14 @@
 /***************************************************************************/
 
 
-#include <freetype.h>
-#include <ftdebug.h>
-#include <ftcalc.h>
-#include <ftstream.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/sfnt.h>
+#include <freetype/tttags.h>
 
-#include <sfnt.h>
+
 #include <ttgload.h>
-
-#include <tttags.h>
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 #include <ttinterp.h>

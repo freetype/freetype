@@ -18,7 +18,7 @@
 #ifndef T1LOAD_H
 #define T1LOAD_H
 
-#include <ftstream.h>
+#include <freetype/internal/ftstream.h>
 #include <t1parse.h>
 
 #ifdef __cplusplus

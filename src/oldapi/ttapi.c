@@ -21,17 +21,17 @@
  *
  ******************************************************************/
 
-#include <freetype.h>
+#include <freetype/freetype.h>
 
-#include <ftdebug.h>
-#include <ftstream.h>
-#include <ftcalc.h>
-#include <ftlist.h>
-#include <ftraster.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/ftlist.h>
+#include <freetype/internal/ftraster.h>
 
-#include <ttdriver.h>
-#include <ttobjs.h>
-#include <ttcmap.h>
+#include <../truetype/ttdriver.h>
+#include <../truetype/ttobjs.h>
+#include <../truetype/ttcmap.h>
 
 #define _TRUETYPE_
 #include <truetype.h>  /* backwards compatible interface */

@@ -19,7 +19,7 @@
 #ifndef TTCMAP_H
 #define TTCMAP_H
 
-#include <tttypes.h>
+#include <freetype/internal/tttypes.h>
 
 #ifdef __cplusplus
   extern "C" {

@@ -16,10 +16,10 @@
 /***************************************************************************/
 
 
-#include <ftdebug.h>
-#include <ftstream.h>
-#include <ttnameid.h>
-#include <sfnt.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/sfnt.h>
+#include <freetype/ttnameid.h>
 
 #include <ttdriver.h>
 #include <ttgload.h>

@@ -63,8 +63,8 @@
       change to ftobjs.c to make this work.
 */
 
-#include <ttobjs.h>
-#include <t1objs.h>
+#include <freetype/internal/ttobjs.h>
+#include <freetype/internal/t1objs.h>
 
 #include <Resources.h>
 #include <Fonts.h>

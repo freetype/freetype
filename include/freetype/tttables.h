@@ -19,7 +19,7 @@
 #ifndef TTTABLES_H
 #define TTTABLES_H
 
-#include <freetype.h>
+#include <freetype/freetype.h>
 
   /*************************************************************************/
   /*                                                                       */

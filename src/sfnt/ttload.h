@@ -21,8 +21,8 @@
 #define TTLOAD_H
 
 
-#include <ftstream.h>
-#include <tttypes.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/tttypes.h>
 /*
 #include <ttobjs.h>
 */

@@ -20,7 +20,7 @@
  *
  ******************************************************************/
 
-#include <ftdebug.h>
+#include <freetype/internal/ftdebug.h>
 #include <t1objs.h>
 #include <t1hinter.h>
 

@@ -1,7 +1,7 @@
 #ifndef FTSTREAM_H
 #define FTSTREAM_H
 
-#include <ftobjs.h>
+#include <freetype/internal/ftobjs.h>
 
 /* format of an 8-bit frame_op value = [ xxxxx | e | s ] */
 /* where s is set to 1 when the value is signed..        */

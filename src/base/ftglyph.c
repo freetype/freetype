@@ -23,8 +23,8 @@
 /*                                                                         */
 /***************************************************************************/
 
-#include <ftglyph.h>
-#include <ftobjs.h>
+#include <freetype/ftglyph.h>
+#include <freetype/internal/ftobjs.h>
 
   static
   void ft_prepare_glyph( FT_Glyph  glyph,

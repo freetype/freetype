@@ -19,9 +19,9 @@
 #include <t1gload.h>
 #include <t1afm.h>
 
-#include <ftdebug.h>
-#include <ftstream.h>
-#include <psnames.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/psnames.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1driver

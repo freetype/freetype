@@ -8,7 +8,7 @@
 #ifndef T1AFM_H
 #define T1AFM_H
 
-#include <ftobjs.h>
+#include <freetype/internal/ftobjs.h>
 
 /* In this version, we only read the kerning table from the */
 /* AFM file. We may add support for ligatures a bit later.. */

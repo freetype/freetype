@@ -62,7 +62,7 @@
   *
   */
 
-#include <freetype.h>
+#include <freetype/freetype.h>
 
   typedef struct FT_AutoHinterRec_  *FT_AutoHinter;
 

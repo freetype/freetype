@@ -24,7 +24,7 @@
 #define TTTYPES_H
 
 
-#include <tttables.h>
+#include <freetype/tttables.h>
 
 
 #ifdef __cplusplus

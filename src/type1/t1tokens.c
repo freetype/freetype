@@ -23,8 +23,8 @@
  *
  ******************************************************************/
 
-#include <ftstream.h>
-#include <ftdebug.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/ftdebug.h>
 
 #include <t1tokens.h>
 #include <t1load.h>

@@ -5,10 +5,10 @@
  *
  ***************************************************************************/
 
-#include <t1afm.h>
-#include <ftstream.h>
-#include <t1types.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/t1types.h>
 #include <stdlib.h>  /* for qsort */
+#include <t1afm.h>
 
   LOCAL_FUNC
   void  T1_Done_AFM( FT_Memory memory, T1_AFM*  afm )

@@ -19,8 +19,8 @@
 #ifndef SFNT_H
 #define SFNT_H
 
-#include <freetype.h>
-#include <tttypes.h>
+#include <freetype/freetype.h>
+#include <freetype/internal/tttypes.h>
 
 
   /*************************************************************************/

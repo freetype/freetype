@@ -1,5 +1,5 @@
-#include <ftstream.h>
-#include <ftdebug.h>
+#include <freetype/internal/ftstream.h>
+#include <freetype/internal/ftdebug.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_stream

@@ -39,13 +39,13 @@ BASE_SRC := $(BASE_)ftcalc.c    \
 
 # Base layer headers
 #
-BASE_H := $(BASE_)ftcalc.h    \
-          $(BASE_)ftdebug.h   \
-          $(BASE_)ftdriver.h  \
-          $(BASE_)ftextend.h  \
-          $(BASE_)ftlist.h    \
-          $(BASE_)ftobjs.h    \
-          $(BASE_)ftstream.h
+BASE_H := $(INTERNAL_)ftcalc.h    \
+          $(INTERNAL_)ftdebug.h   \
+          $(INTERNAL_)ftdriver.h  \
+          $(INTERNAL_)ftextend.h  \
+          $(INTERNAL_)ftlist.h    \
+          $(INTERNAL_)ftobjs.h    \
+          $(INTERNAL_)ftstream.h
 
 
 # Base layer `extensions' sources

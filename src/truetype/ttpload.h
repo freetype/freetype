@@ -19,7 +19,7 @@
 #ifndef TTPLOAD_H
 #define TTPLOAD_H
 
-#include <tttypes.h>
+#include <freetype/internal/tttypes.h>
 
 
 #ifdef __cplusplus

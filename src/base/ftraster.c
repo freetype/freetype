@@ -61,10 +61,9 @@
 #endif
 
 
-#include <ftraster.h>
+#include <freetype/ftraster.h>
 #ifndef _STANDALONE_
-#include <ftconfig.h>
-#include <ftdebug.h>
+#include <freetype/internal/ftdebug.h>
 #endif
 
 #ifndef EXPORT_FUNC
@@ -167,8 +166,8 @@
 
 #else /* _STANDALONE_ */
 
-#include <freetype.h>
-#include <ftconfig.h>
+#include <freetype/freetype.h>
+#include <freetype/config/ftconfig.h>
 
   /*************************************************************************/
   /*                                                                       */
@@ -3924,7 +3923,7 @@ Scan_DropOuts :
 
 #else
 
-#include "ftobjs.h"
+#include <freetype/internal/ftobjs.h>
 
   static
   int  ft_raster_new( FT_Memory  memory, FT_Raster*  araster )

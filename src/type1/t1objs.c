@@ -15,8 +15,8 @@
  *
  ******************************************************************/
 
-#include <ftdebug.h>
-#include <ftstream.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
 
 #include <t1gload.h>
 #include <t1load.h>
@@ -26,7 +26,7 @@
 #include <t1hinter.h>
 #endif
 
-#include <psnames.h>
+#include <freetype/internal/psnames.h>
 
 /* Required by tracing mode */
 #undef   FT_COMPONENT

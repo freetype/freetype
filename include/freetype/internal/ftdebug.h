@@ -43,7 +43,7 @@
 #ifndef FTDEBUG_H
 #define FTDEBUG_H
 
-#include <ftconfig.h>   /* for FT_DEBUG_LEVEL_TRACE, FT_DEBUG_LEVEL_ERROR */
+#include <freetype/config/ftconfig.h>   /* for FT_DEBUG_LEVEL_TRACE, FT_DEBUG_LEVEL_ERROR */
 
 
 #ifdef __cplusplus

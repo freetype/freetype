@@ -19,7 +19,7 @@
 #ifndef T1TABLES_H
 #define T1TABLES_H
 
-#include <freetype.h>
+#include <freetype/freetype.h>
 
  /* Note that we separate font data in T1_FontInfo and T1_Private structures */
  /* in order to later support multiple master fonts..                        */
@@ -103,6 +103,78 @@
   } T1_Private;
 
 
+ /*************************************************************************
+  *
+  * <Enum>  
+  *    T1_Blend_Flags
+  *
+  * <Description>
+  *    A set of flags used to indicate which fields are present in a
+  *    given blen dictionary (font info or private). Used to support  
+  *    multiple masters..
+  *
+  */
+  typedef enum
+  {
+    t1_blend_none = 0,
+
+    /* required fields in a FontInfo blend dictionary */
+    t1_blend_underline_position,
+    t1_blend_underline_thickness,
+    t1_blend_italic_angle,
+    
+    /* required fields in a Private blend dictionary */    
+    t1_blend_blue_values,
+    t1_blend_other_blues,
+    t1_blend_standard_width,
+    t1_blend_standard_height,
+    t1_blend_stem_snap_widths,
+    t1_blend_stem_snap_heights,
+    t1_blend_blue_scale,
+    t1_blend_blue_shift,
+    t1_blend_family_blues,
+    t1_blend_family_other_blues,
+    t1_blend_force_bold,
+
+    /* never remove */
+    t1_blend_max
+    
+  } T1_Flags;
+
+
+  typedef struct T1_Blend_Pos
+  {
+    FT_Fixed  min;
+    FT_Fixed  max;
+    
+  } T1_Blend_Pos;
+
+ /*************************************************************************
+  *
+  * <Struct>
+  *    T1_Blend
+  *
+  * <Description>
+  *    A structure used to describe the multiple-master fonts information
+  *    of a given Type 1 font.
+  *
+  */
+  typedef struct T1_Blend_
+  {
+    FT_Int       num_axis;
+    FT_String*   axis_types[4];
+    
+    /* XXXX : add /BlendDesignMap entries */   
+    
+    FT_Int       num_blends;
+    T1_Flags*    flags    [17];
+    T1_Private*  privates [17];
+    T1_FontInfo* fontinfos[17];
+  
+  } T1_Blend;
+
+
+
   typedef struct CID_FontDict_
   {
     T1_FontInfo   font_info;
@@ -140,6 +212,7 @@
     CID_FontDict*  font_dicts;
   
   } CID_Info;
+
 
 
 #endif /* T1TABLES_H */

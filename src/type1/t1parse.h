@@ -25,7 +25,7 @@
 #ifndef T1PARSE_H
 #define T1PARSE_H
 
-#include <ftstream.h>
+#include <freetype/internal/ftstream.h>
 #include <t1tokens.h>
 
 #ifdef __cplusplus

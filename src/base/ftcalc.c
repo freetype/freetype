@@ -30,9 +30,9 @@
   /*                                                                       */
   /*************************************************************************/
 
-#include <ftcalc.h>
-#include <ftdebug.h>
-#include <ftobjs.h>  /* for ABS() */
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftobjs.h>  /* for ABS() */
 
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS

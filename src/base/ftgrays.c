@@ -46,7 +46,7 @@
 /*     - faster than the standard renderer for small (< 20) pixel sizes      */
 /*                                                                           */
 
-#include <ftgrays.h>
+#include <freetype/ftgrays.h>
 
 #if 1
 #include <string.h>  /* for memcpy */
@@ -57,7 +57,7 @@
 #ifdef _STANDALONE_
 #error "implementation of FT_Outline_Decompose missing !!!"
 #else
-#include <freetype.h>  /* to link to FT_Outline_Decompose */
+#include <freetype/freetype.h>  /* to link to FT_Outline_Decompose */
 #endif
 
 /* define this to dump debugging information */
@@ -1428,7 +1428,7 @@ int  check_sort( PCell  cells, int count )
 
 #else
 
-#include "ftobjs.h"
+#include <freetype/internal/ftobjs.h>
 
   static
   int  grays_raster_new( FT_Memory  memory, FT_Raster*  araster )

@@ -1,6 +1,6 @@
+#include <freetype/internal/psnames.h>
+#include <freetype/internal/ftobjs.h>
 #include <psdriver.h>
-#include <psnames.h>
-#include <ftobjs.h>
 #include <stdlib.h>
 
 #ifndef FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES

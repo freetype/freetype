@@ -13,9 +13,7 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include "freetype.h"
-#include "ftobjs.h"
-#include "ftdriver.h"
+#include <freetype/freetype.h>
 
 #include <stdio.h>
 #include <stdlib.h>

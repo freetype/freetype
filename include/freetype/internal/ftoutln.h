@@ -1,6 +1,6 @@
 #ifndef FTOUTLN_H
 #define FTOUTLN_H
 
-#include <ftobjs.h>
+#include <freetype/internal/ftobjs.h>
 
 #endif /* FTOUTLN_H */

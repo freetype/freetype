@@ -31,7 +31,7 @@
   /*                                                                       */
 /* #define _STANDALONE_ */
 
-#include <ftimage.h>
+#include <freetype/freetype.h>
 
 #ifndef EXPORT_DEF
 #define EXPORT_DEF  /* nothing */

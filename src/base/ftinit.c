@@ -41,10 +41,10 @@
   /*************************************************************************/
 
 
-#include <ftobjs.h>
-#include <ftconfig.h>
-#include <ftdebug.h>
-#include <ftdriver.h>
+#include <freetype/config/ftconfig.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftdriver.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_init
@@ -52,7 +52,7 @@
 #undef  FT_DRIVER
 #define FT_DRIVER( x )  extern FT_DriverInterface  x;
 
-#include <ftmodule.h>
+#include <freetype/config/ftmodule.h>
 
 #undef  FT_DRIVER
 #define FT_DRIVER( x )  &x,
@@ -60,7 +60,7 @@
 static
 const FT_DriverInterface*  ft_default_drivers[] =
   {
-#include <ftmodule.h>
+#include <freetype/config/ftmodule.h>
     0
   };
 

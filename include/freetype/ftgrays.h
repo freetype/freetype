@@ -1,7 +1,7 @@
 #ifndef FTGRAYS_H
 #define FTGRAYS_H
 
-#include <ftimage.h>
+#include <freetype/ftimage.h>
 
   /*************************************************************************/
   /*                                                                       */

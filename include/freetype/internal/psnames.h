@@ -19,7 +19,7 @@
 #ifndef PSNAMES_H
 #define PSNAMES_H
 
-#include <freetype.h>
+#include <freetype/freetype.h>
 
  /**************************************************************************
   *

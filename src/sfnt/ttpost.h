@@ -29,8 +29,8 @@
 #ifndef TTPOST_H
 #define TTPOST_H
 
-#include <ftconfig.h>
-#include <tttypes.h>
+#include <freetype/config/ftconfig.h>
+#include <freetype/internal/tttypes.h>
 
 #ifdef __cplusplus
 extern "C" {

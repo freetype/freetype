@@ -26,7 +26,7 @@
 #ifndef FTGLYPH_H
 #define FTGLYPH_H
 
-#include <freetype.h>
+#include <freetype/freetype.h>
 
   typedef enum {
   

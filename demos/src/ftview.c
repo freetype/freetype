@@ -15,8 +15,7 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include "freetype.h"
-#include "ftoutln.h"
+#include <freetype/freetype.h>
 #include "common.h"
 
 #include <stdio.h>
@@ -27,7 +26,8 @@
 #include "graph.h"
 #include "grfont.h"
 
-#include "ftgrays.h"
+#include <freetype/ftgrays.h>
+#include "ftrast.h"
 #include "ftrast2.h"
 
 #define  DIM_X   500
@@ -60,9 +60,9 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   int  ptsize;                /* current point size */
   
   int  hinted      = 1;       /* is glyph hinting active ?    */
-  int  antialias = 1;       /* is anti-aliasing active ?    */
+  int  antialias   = 0;       /* is anti-aliasing active ?    */
   int  use_sbits   = 1;       /* do we use embedded bitmaps ? */
-  int  low_prec    = 1;       /* force low precision          */
+  int  low_prec    = 0;       /* force low precision          */
   int  Num;                   /* current first glyph index    */
 
   int    res = 72;
@@ -425,8 +425,10 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     
     error = 1;
     if ( !antialias)
-      error = FT_Set_Raster( library, &ft_black2_raster );
-      
+    {
+      error = FT_Set_Raster( library, use_grays ? &ft_black2_raster
+                                                : &ft_black_raster );
+    }                                                
     else if ( use_grays && antialias )
       error = FT_Set_Raster( library, &ft_grays_raster );
       

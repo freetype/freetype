@@ -52,9 +52,9 @@
 #define EXPORT_DEF  extern
 #endif
 
-#include <fterrors.h>
-#include <ftsystem.h>
-#include <ftimage.h>
+#include <freetype/fterrors.h>
+#include <freetype/ftsystem.h>
+#include <freetype/ftimage.h>
 
 #ifdef __cplusplus
   extern "C" {

@@ -19,8 +19,8 @@
 #ifndef FTCALC_H
 #define FTCALC_H
 
-#include <freetype.h>
-#include <ftconfig.h>   /* for LONG64 */
+#include <freetype/freetype.h>
+#include <freetype/config/ftconfig.h>   /* for LONG64 */
 
 #ifdef __cplusplus
   extern "C" {

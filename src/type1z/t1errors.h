@@ -18,7 +18,7 @@
 #ifndef T1ERRORS_H
 #define T1ERRORS_H
 
-#include <fterrors.h>
+#include <freetype/fterrors.h>
 
   /************************ error codes declaration **************/
 

@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#include <ftdebug.h>
+#include <freetype/internal/ftdebug.h>
 
 #ifdef FT_DEBUG_LEVEL_TRACE
   char  ft_trace_levels[trace_max];

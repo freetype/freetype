@@ -15,12 +15,12 @@
  *
  ******************************************************************/
 
-#include <ftdebug.h>
-#include <ftstream.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftstream.h>
 
 #include <t1gload.h>
 #include <t1load.h>
-#include <psnames.h>
+#include <freetype/internal/psnames.h>
 #include <t1afm.h>
 
 /* Required by tracing mode */

@@ -19,8 +19,7 @@
 #ifndef SFDRIVER_H
 #define SFDRIVER_H
 
-#include <freetype.h>
-#include <ftdriver.h>
+#include <freetype/internal/ftdriver.h>
 
   EXPORT_DEF
   const FT_DriverInterface  sfnt_driver_interface;

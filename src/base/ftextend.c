@@ -24,7 +24,7 @@
   /*                                                                       */
   /*************************************************************************/
 
-#include <ftextend.h>
+#include <freetype/internal/ftextend.h>
 
 /* required by the tracing mode */
 #undef  FT_COMPONENT

@@ -31,7 +31,7 @@
 #ifndef T1PARSE_H
 #define T1PARSE_H
 
-#include <t1types.h>
+#include <freetype/internal/t1types.h>
 
 #ifdef __cplusplus
   extern "C" {

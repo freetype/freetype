@@ -21,7 +21,7 @@
  ******************************************************************/
 
 #include "ftrast.h"
-#include <ftcalc.h>      /* for FT_MulDiv only */
+#include <freetype/internal/ftcalc.h>      /* for FT_MulDiv only */
 
   /*************************************************************************/
   /*                                                                       */
@@ -107,7 +107,7 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT      trace_raster
 
-#include <ftdebug.h>
+#include <freetype/internal/ftdebug.h>
 
 
 /* The default render pool size */
@@ -2941,7 +2941,7 @@ Scan_DropOuts :
 
 #else
 
-#include <ftobjs.h>
+#include <freetype/internal/ftobjs.h>
 
   static
   int  ft_black_new( FT_Memory  memory, TRaster_Instance*  *araster )

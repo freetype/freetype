@@ -19,11 +19,10 @@
 #ifndef TTDRIVER_H
 #define TTDRIVER_H
 
-#include <freetype.h>
-#include <ftdriver.h>
+#include <freetype/internal/ftdriver.h>
+#include <freetype/ttnameid.h>
 #include <ttobjs.h>
 #include <tterrors.h>
-#include <ttnameid.h>
 
 
   EXPORT_DEF

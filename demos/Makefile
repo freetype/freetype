@@ -267,8 +267,8 @@ else
 	  $(LINK)
 
 
-  $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftrast2.$O
-	  $(GRAPH_LINK) $(OBJ_)ftrast2.$O
+  $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftrast2.$O $(OBJ_)ftrast.$O
+	  $(GRAPH_LINK) $(OBJ_)ftrast2.$O $(OBJ_)ftrast.$O
 
   $(BIN_)ftstring$E: $(OBJ_)ftstring.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
 	  $(GRAPH_LINK)

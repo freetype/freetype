@@ -21,13 +21,12 @@
 /***************************************************************************/
 
 
-#include <ftdebug.h>
-#include <ftconfig.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/tterrors.h>
+#include <freetype/tttags.h>
 
 #include <ttload.h>
-#include <tttags.h>
 #include <ttcmap.h>
-#include <tterrors.h>
 
 /* required by the tracing mode */
 #undef  FT_COMPONENT

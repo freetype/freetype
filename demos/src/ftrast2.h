@@ -19,7 +19,7 @@
 #ifndef FTRAST2_H
 #define FTRAST2_H
 
-#include <ftimage.h>
+#include <freetype/ftimage.h>
 
 #ifdef __cplusplus
 extern "C" {

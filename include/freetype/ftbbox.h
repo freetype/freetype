@@ -30,7 +30,7 @@
 #ifndef FTBBOX_H
 #define FTBBOX_H
 
-#include <freetype.h>
+#include <freetype/freetype.h>
 
 #ifdef __cplusplus
   extern "C" {

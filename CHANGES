@@ -1,4 +1,31 @@
-LASTEST CHANGES - 14-apr-2000
+LATEST CHANGES - 
+
+
+
+  - updated the structure of FT_Outline_Funcs in order to allow
+    direct coordinate scaling within the outline decomposition routine
+    (this is important for virtual "on" points with TrueType outlines)
+    + updates to the rasters to support this..
+
+  - updated the OS/2 table loading code in "src/sfnt/ttload.c" in order
+    to support version 2 of the table (see OpenType 1.2 spec)
+
+  - created "include/tttables.h" and "include/t1tables.h" to allow
+    client applications to access some of the SFNT and T1 tables of a
+    face with a procedural interface (see FT_Get_Sfnt_Table())
+    + updates to internal source files to reflect the change..
+
+  - some cleanups in the source code to get rid of warnings when compiling
+    with the "-Wall -W -ansi -pedantic" options in gcc.
+
+  - debugged and moved the smooth renderer to "src/base/ftgrays.c" and
+    its header to "include/ftgrays.h"
+
+  - updated TT_MAX_SUBGLYPHS to 96 as some CJK fonts have composites with
+    up to 80 sub-glyphs !! Thanks to Werner
+
+================================================================================
+OLD CHANGES - 14-apr-2000
 
   - fixed a bug in the TrueType glyph loader that prevented the correct
     loading of some CJK glyphs in mingli.ttf

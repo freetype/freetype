@@ -26,7 +26,7 @@
 #endif
 
 
-#include "freetype.h"
+#include <freetype/freetype.h>
 #include "ttobjs.h"
 #include "ttdriver.h"
 #include "ttinterp.h"

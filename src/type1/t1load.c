@@ -1,7 +1,7 @@
-#include <ftconfig.h>
-#include <ftdebug.h>
+#include <freetype/config/ftconfig.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/t1types.h>
 
-#include <t1types.h>
 #include <t1tokens.h>
 #include <t1parse.h>
 

@@ -10,8 +10,8 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include "freetype.h"
-#include "ftglyph.h"
+#include <freetype/freetype.h>
+#include <freetype/ftglyph.h>
 #include "common.h"
 
 #include <stdio.h>
@@ -23,7 +23,7 @@
 #include "graph.h"
 #include "grfont.h"
 
-#include "ftgrays.h"
+#include <freetype/ftgrays.h>
 
 #define  DIM_X   500
 #define  DIM_Y   400

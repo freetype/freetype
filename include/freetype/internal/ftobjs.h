@@ -25,9 +25,9 @@
 #ifndef FTOBJS_H
 #define FTOBJS_H
 
-#include <ftconfig.h>
-#include <ftsystem.h>
-#include <ftdriver.h>
+#include <freetype/config/ftconfig.h>
+#include <freetype/ftsystem.h>
+#include <freetype/internal/ftdriver.h>
 
   /*************************************************************************/
   /*                                                                       */
@@ -66,7 +66,6 @@
 #ifndef ABS
 #define ABS( a )     ( (a) < 0 ? -(a) : (a) )
 #endif
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -165,6 +164,14 @@
                          (_count_)*sizeof(_type_) ) )
 
 #define FREE( _pointer_ )  FT_Free( memory, (void**)&(_pointer_) )
+
+  /* various useful types and definitions */
+
+  extern void FP_Panic( const char* message );
+
+  extern  FT_Memory  FP_New_Memory( void );
+
+
 
 
 

@@ -20,8 +20,8 @@
 #define TTOBJS_H
 
 
-#include <ftobjs.h>
-#include <tttypes.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/tttypes.h>
 #include <tterrors.h>
 
 

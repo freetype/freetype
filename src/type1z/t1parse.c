@@ -28,10 +28,10 @@
  *
  ******************************************************************/
  
-#include <ftdebug.h>
-#include <ftcalc.h>
-#include <ftobjs.h>
-#include <ftstream.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftstream.h>
 #include <t1errors.h>
 #include <t1parse.h>
 

@@ -20,7 +20,7 @@
 #define TTAGS_H
 
 
-#include <freetype.h>   /* for MAKE_TT_TAG() */
+#include <freetype/freetype.h>   /* for MAKE_TT_TAG() */
 
 
 #define TTAG_cmap  FT_MAKE_TAG( 'c', 'm', 'a', 'p' )

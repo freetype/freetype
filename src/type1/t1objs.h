@@ -18,11 +18,11 @@
 #ifndef T1OBJS_H
 #define T1OBJS_H
 
-#include <ftobjs.h>
-#include <ftconfig.h>
+#include <freetype/config/ftconfig.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/t1types.h>
 
 #include <t1errors.h>
-#include <t1types.h>
 
 #ifdef __cplusplus
   extern "C" {

@@ -18,7 +18,7 @@
 #ifndef FTEXTEND_H
 #define FTEXTEND_H
 
-#include <ftobjs.h>
+#include <freetype/internal/ftobjs.h>
 
 
 #ifdef __cplusplus

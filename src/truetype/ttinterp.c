@@ -16,11 +16,12 @@
 /***************************************************************************/
 
 
-#include <ftdebug.h>
-#include <ftsystem.h>
-#include <ftcalc.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/internal/ftcalc.h>
+#include <freetype/ftsystem.h>
 
 #include <ttobjs.h>
+#include <tterrors.h>
 #include <ttinterp.h>
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER

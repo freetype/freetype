@@ -37,12 +37,33 @@
  *
  ******************************************************************/
 
-#include "ftraster.h"
-#include <freetype.h>  /* for FT_Outline_Decompose */
+#include "ftrast2.h"
+#include <freetype/freetype.h>  /* for FT_Outline_Decompose */
 
 #ifndef EXPORT_FUNC
 #define EXPORT_FUNC  /* nothing */
 #endif
+
+
+/**************************************************************************/
+/*                                                                        */
+/* We need a 32-bit unsigned word for our optimized 2x2 filter.. The      */
+/* following uses the ANSI <limits.h> header file to compute exactly      */
+/* wether to use unsigned int or unsigned long                            */
+/*                                                                        */
+#include <limits.h>
+
+/* The number of bytes in an `int' type.  */
+#if   UINT_MAX == 0xFFFFFFFF
+typedef unsigned int  Word32;
+typedef int           Int32;
+#elif ULONG_MAX == 0xFFFFFFFF
+typedef unsigned long Word32;
+typedef long          Int32;
+#else
+#error "could not find a 32-bit word on this machine !!"
+#endif
+
 
 
 #ifndef _xxFREETYPE_
@@ -98,7 +119,7 @@
 /*   anti-aliasing mode.. Ignored if FT_RASTER_OPTION_ANTI_ALIAS isn't    */
 /*   defined..                                                            */
 /*                                                                        */
-#define FT_RASTER_ANTI_ALIAS_17
+#undef  FT_RASTER_ANTI_ALIAS_17
 
 /**************************************************************************/
 /*                                                                        */
@@ -250,7 +271,7 @@
   /* or high). These are ideals in order to subdivise bezier arcs in halves */
   /* though simple additions and shifts.                                    */
 
-  typedef  long   TPos, *PPos;
+  typedef  Int32   TPos, *PPos;
 
 
   /* The type of a scanline position/coordinate within a map */
@@ -472,7 +493,7 @@
 
     long      grays[20];        /* Palette of gray levels used for render */
 
-    int       gray_width;       /* length in bytes of the onochrome        */
+    int       gray_width;       /* length in bytes of the monochrome       */
                                 /* intermediate scanline of gray_lines.    */
                                 /* Each gray pixel takes 2 or 4 bits long  */
 
@@ -1068,367 +1089,6 @@
     base[3].y = (a+b)/2;
   }
 #endif
-
-
-
-
-#ifdef FT_RASTER_CONIC_BEZIERS
-/****************************************************************************/
-/*                                                                          */
-/* <Function>   Conic_Up                                                    */
-/*                                                                          */
-/* <Description>                                                            */
-/*     Computes the scan-line intersections of an ascending second-order    */
-/*     Bezier arc and stores them in the render pool. The arc is taken      */
-/*     from the top of the stack..                                          */
-/*                                                                          */
-/* <Input>                                                                  */
-/*     miny     :: minimum vertical grid coordinate                         */
-/*     maxy     :: maximum vertical grid coordinate                         */
-/*                                                                          */
-/* <Return>                                                                 */
-/*     SUCCESS or FAILURE                                                   */
-/*                                                                          */
-/****************************************************************************/
-
-  static 
-  TBool  Conic_Up( RAS_ARGS TPos  miny, TPos  maxy )
-  {
-    TPos  y1, y2, e, e2, e0;
-    int   f1;
-
-    TPoint*  arc;
-    TPoint*  start_arc;
-
-    PPos top;
-
-
-    arc = ras.arc;
-    y1  = arc[2].y;
-    y2  = arc[0].y;
-    top = ras.cursor; 
-
-    if ( y2 < miny || y1 > maxy )
-      goto Fin;
-    
-    e2 = FLOOR( y2 );
-
-    if ( e2 > maxy )
-      e2 = maxy;
-
-    e0 = miny;
-
-    if ( y1 < miny )
-      e = miny;
-    else
-    {
-      e  = CEILING( y1 );
-      f1 = FRAC( y1 );
-      e0 = e;
-
-      if ( f1 == 0 )
-      {
-        if ( ras.joint )
-        {
-          top--;
-          ras.joint = FALSE;
-        }
-
-        *top++ = arc[2].x;
-
-        DEBUG_PSET;
-
-        e += ras.precision;
-      }
-    }
-
-    if ( ras.fresh )
-    {
-      ras.cur_prof->start = TRUNC( e0 );
-      ras.fresh = FALSE;
-    }
-
-    if ( e2 < e )
-      goto Fin;
-
-    if ( ( top+TRUNC(e2-e)+1 ) >= ras.pool_limit )
-    {
-      ras.cursor = top;
-      ras.error  = ErrRaster_Overflow;
-      return FAILURE;
-    }
-
-    start_arc = arc;
-
-    while ( arc >= start_arc && e <= e2 )
-    {
-      ras.joint = FALSE;
-
-      y2 = arc[0].y;
-
-      if ( y2 > e )
-      {
-        y1 = arc[2].y;
-        if ( y2 - y1 >= ras.precision_step )
-        {
-          Split_Conic( arc );
-          arc += 2;
-        }
-        else
-        {
-          *top++ = arc[2].x + 
-                   FMulDiv( arc[0].x-arc[2].x, 
-                            e  - y1, 
-                            y2 - y1 );
-          DEBUG_PSET;
-            
-          arc -= 2;
-          e   += ras.precision;
-        }
-      }
-      else
-      {
-        if ( y2 == e )
-        {
-          ras.joint  = TRUE;
-          *top++     = arc[0].x;
-        
-          DEBUG_PSET;
-        
-          e += ras.precision;
-        }
-        arc -= 2;
-      }
-    }
-
-  Fin:
-    ras.cursor = top;
-    ras.arc   -= 2;
-    return SUCCESS;
-  }
-
-
-/****************************************************************************/
-/*                                                                          */
-/* <Function>   Conic_Down                                                  */
-/*                                                                          */
-/* <Description>                                                            */
-/*     Computes the scan-line intersections of a descending second-order    */
-/*     Bezier arc and stores them in the render pool. The arc is taken      */
-/*     from the top of the stack..                                          */
-/*                                                                          */
-/* <Input>                                                                  */
-/*     miny     :: minimum vertical grid coordinate                         */
-/*     maxy     :: maximum vertical grid coordinate                         */
-/*                                                                          */
-/* <Return>                                                                 */
-/*     SUCCESS or FAILURE                                                   */
-/*                                                                          */
-/****************************************************************************/
-
-  static 
-  TBool  Conic_Down( RAS_ARGS TPos  miny, TPos  maxy )
-  {
-    TPoint*  arc = ras.arc;
-    TBool     result, fresh;
-
-
-    arc[0].y = -arc[0].y;
-    arc[1].y = -arc[1].y; 
-    arc[2].y = -arc[2].y;
-
-    fresh = ras.fresh;
-
-    result = Conic_Up( RAS_VARS -maxy, -miny );
-
-    if ( fresh && !ras.fresh )
-      ras.cur_prof->start = -ras.cur_prof->start;
-
-    arc[0].y = -arc[0].y;
-    return result;
-  }
-
-#endif /* FT_RASTER_CONIC_BEZIERS */
-
-
-
-#ifdef FT_RASTER_CUBIC_BEZIERS
-/****************************************************************************/
-/*                                                                          */
-/* <Function>   Cubic_Up                                                    */
-/*                                                                          */
-/* <Description>                                                            */
-/*     Computes the scan-line intersections of an ascending third-order     */
-/*     bezier arc and stores them in the render pool                        */
-/*                                                                          */
-/* <Input>                                                                  */
-/*     miny     :: minimum vertical grid coordinate                         */
-/*     maxy     :: maximum vertical grid coordinate                         */
-/*                                                                          */
-/* <Return>                                                                 */
-/*     SUCCESS or FAILURE                                                   */
-/*                                                                          */
-/****************************************************************************/
-  static
-  TBool  Cubic_Up( RAS_ARGS TPos  miny, TPos  maxy )
-  {
-    TPos  y1, y2, e, e2, e0;
-    int   f1;
-
-    TPoint*  arc;
-    TPoint*  start_arc;
-
-    TPos*    top;
-
-
-    arc = ras.arc;
-    y1  = arc[3].y;
-    y2  = arc[0].y;
-    top = ras.cursor; 
-
-    if ( y2 < miny || y1 > maxy )
-      goto Fin;
-    
-    e2 = FLOOR( y2 );
-
-    if ( e2 > maxy )
-      e2 = maxy;
-
-    e0 = miny;
-
-    if ( y1 < miny )
-      e = miny;
-    else
-    {
-      e  = CEILING( y1 );
-      f1 = FRAC( y1 );
-      e0 = e;
-
-      if ( f1 == 0 )
-      {
-        if ( ras.joint )
-        {
-          top--;
-          ras.joint = FALSE;
-        }
-
-        *top++ = arc[3].x;
-
-        DEBUG_PSET;
-
-        e += ras.precision;
-      }
-    }
-
-    if ( ras.fresh )
-    {
-      ras.cur_prof->start = TRUNC( e0 );
-      ras.fresh = FALSE;
-    }
-
-    if ( e2 < e )
-      goto Fin;
-
-    if ( ( top+TRUNC(e2-e)+1 ) >= ras.pool_limit )
-    {
-      ras.cursor = top;
-      ras.error  = ErrRaster_Overflow;
-      return FAILURE;
-    }
-
-    start_arc = arc;
-
-    while ( arc >= start_arc && e <= e2 )
-    {
-      ras.joint = FALSE;
-
-      y2 = arc[0].y;
-
-      if ( y2 > e )
-      {
-        y1 = arc[3].y;
-        if ( y2 - y1 >= ras.precision_step )
-        {
-          Split_Cubic( arc );
-          arc += 3;
-        }
-        else
-        {
-          *top++ = arc[3].x + 
-                   FMulDiv( arc[0].x-arc[3].x, 
-                            e  - y1, 
-                            y2 - y1 );
-          DEBUG_PSET;
-            
-          arc -= 3;
-          e   += ras.precision;
-        }
-      }
-      else
-      {
-        if ( y2 == e )
-        {
-          ras.joint  = TRUE;
-          *top++     = arc[0].x;
-        
-          DEBUG_PSET;
-        
-          e += ras.precision;
-        }
-        arc -= 3;
-      }
-    }
-
-  Fin:
-    ras.cursor = top;
-    ras.arc   -= 3;
-    return SUCCESS;
-  }
-
-
-/****************************************************************************/
-/*                                                                          */
-/* <Function>   Cubic_Down                                                  */
-/*                                                                          */
-/* <Description>                                                            */
-/*     Computes the scan-line intersections of a descending third-order     */
-/*     bezier arc and stores them in the render pool                        */
-/*                                                                          */
-/* <Input>                                                                  */
-/*     miny     :: minimum vertical grid coordinate                         */
-/*     maxy     :: maximum vertical grid coordinate                         */
-/*                                                                          */
-/* <Return>                                                                 */
-/*     SUCCESS or FAILURE                                                   */
-/*                                                                          */
-/****************************************************************************/
-  static 
-  TBool  Cubic_Down( RAS_ARGS TPos  miny, TPos  maxy )
-  {
-    TPoint*  arc = ras.arc;
-    TBool     result, fresh;
-
-
-    arc[0].y = -arc[0].y;
-    arc[1].y = -arc[1].y; 
-    arc[2].y = -arc[2].y;
-    arc[3].y = -arc[3].y;
-
-    fresh = ras.fresh;
-
-    result = Cubic_Up( RAS_VARS -maxy, -miny );
-
-    if ( fresh && !ras.fresh )
-      ras.cur_prof->start = -ras.cur_prof->start;
-
-    arc[0].y = -arc[0].y;
-    return result;
-  }
-
-#endif /* FT_RASTER_CUBIC_BEZIERS */
-
-
-
 
 
  /* A function type describing the functions used to split bezier arcs */
@@ -2756,6 +2416,21 @@
 /*                                                                     */
 /***********************************************************************/
 
+  static
+  const  Word32  LMask5[17] =
+             { 0xF0F0F0F0, 0xF0F0F070, 0xF0F0F030, 0xF0F0F010,
+               0xF0F0F000, 0xF0F07000, 0xF0F03000, 0xF0F01000,
+               0xF0F00000, 0xF0700000, 0xF0300000, 0xF0100000,
+               0xF0000000, 0x70000000, 0x30000000, 0x10000000,
+               0x00000000 };
+
+  static
+  const  Word32  LPos5[17] =
+             { 0x80000000, 0x40000000, 0x20000000, 0x10000000,
+               0x00800000, 0x00400000, 0x00200000, 0x00100000,
+               0x00008000, 0x00004000, 0x00002000, 0x00001000,
+               0x00000080, 0x00000040, 0x00000020, 0x00000010 };
+
   static void  Vertical_Gray5_Sweep_Init( RAS_ARGS int*  min, int*  max )
   {
     long  pitch;
@@ -2775,29 +2450,12 @@
     ras.gray_max_x = -32000;
   }
 
-
   static void  Vertical_Gray5_Sweep_Span( RAS_ARGS TScan  y,
                                                    TPos   x1,
                                                    TPos   x2 )
   {
-    static
-    const unsigned int  LMask[17] =
-#ifdef FT_RASTER_LITTLE_ENDIAN
-             { 0xF0F0F0F0, 0xF0F0F070, 0xF0F0F030, 0xF0F0F010,
-               0xF0F0F000, 0xF0F07000, 0xF0F03000, 0xF0F01000,
-               0xF0F00000, 0xF0700000, 0xF0300000, 0xF0100000,
-               0xF0000000, 0x70000000, 0x30000000, 0x10000000,
-               0x00000000 };
-#else
-             { 0xF0F0F0F0, 0x70F0F0F0, 0x30F0F0F0, 0x10F0F0F0,
-               0x00F0F0F0, 0x0070F0F0, 0x0030F0F0, 0x0010F0F0,
-               0x0000F0F0, 0x000070F0, 0x000030F0, 0x000010F0,
-               0x000000F0, 0x00000070, 0x00000030, 0x00000010,
-               0x00000000 };
-#endif
-
-    TPos   e1, e2;
-    int    c1, c2;
+    TPos    e1, e2;
+    int     c1, c2;
     TByte*  target;
 
     unsigned int    f1, f2;
@@ -2823,9 +2481,9 @@
       c1 = e1 >> 4;
       c2 = e2 >> 4;
 
-      fill = LMask[0];
-      f1   = LMask[ e1 & 15 ];
-      f2   = fill ^ LMask[ 1+(e2 & 15) ];
+      fill = LMask5[0];
+      f1   = LMask5[ e1 & 15 ];
+      f2   = fill ^ LMask5[ 1+(e2 & 15) ];
 
       f1   >>= shift;
       f2   >>= shift;
@@ -2839,7 +2497,7 @@
 
       if (c2 > 0)
       {
-        int*  slice = (int*)target;
+        Word32*  slice = (Word32*)target;
         
         slice[0] |= f1;
         c2--;
@@ -2851,7 +2509,7 @@
         slice[1] |= f2;
       }
       else
-        ((int*)target)[0] |= ( f1 & f2 );
+        ((Word32*)target)[0] |= ( f1 & f2 );
     }
   }
 
@@ -2860,15 +2518,14 @@
   int  Vertical_Gray5_Test_Pixel( RAS_ARGS int  y,
                                            int  x )
   {
-    int c1    = x >> 2;
-    int f1    = x  & 3;
-    int mask  = (0x80 >> f1) >> ((y & 1)*4);
+    int     c1    = x >> 4;
+    Word32  mask  = LPos5[ x & 15 ] >> ((y & 1)*4);
 
     (void)y;
     
     return ( x >= 0                    && 
              x < ras.bit_width         && 
-             ras.bit_buffer[c1] & mask );
+             ((Word32*)ras.bit_buffer + c1)[0] & mask );
   }
 
 
@@ -2882,14 +2539,13 @@
 
     if ( x >= 0 && x < ras.bit_width )
     {
-      int c1   = x >> 2;
-      int f1   = x  & 3;
-      int mask = (0x80 >> f1) >> ((y & 1)*4);
+      int    c1   = x >> 4;
+      Word32 mask = LPos5[ x & 15 ] >> ((y & 1)*4);
   
-      if ( ras.gray_min_x > c1/4 ) ras.gray_min_x = c1/4;
-      if ( ras.gray_max_x < c1/4 ) ras.gray_max_x = c1/4;
+      if ( ras.gray_min_x > c1 ) ras.gray_min_x = c1;
+      if ( ras.gray_max_x < c1 ) ras.gray_max_x = c1;
 
-      ras.bit_buffer[c1] |= mask;
+      ((Word32*)ras.bit_buffer + c1)[0] |= mask;
     }
   }
 
@@ -3886,6 +3542,7 @@ Scan_DropOuts :
   static
   int  Raster_Render8( FT_Raster       raster )
   {
+    UNUSED_RASTER
     return ErrRaster_Unimplemented;
   }
 
@@ -4004,6 +3661,9 @@ void  Reset_Palette_17( RAS_ARG )
                               int          count,
                               const char*  palette )
   {
+    (void)raster;
+    (void)palette;
+    
     switch (count)
     {
 #ifdef FT_RASTER_OPTION_ANTI_ALIAS
@@ -4077,7 +3737,7 @@ void  Reset_Palette_17( RAS_ARG )
 
 #else
 
-#include <ftobjs.h>
+#include <freetype/internal/ftobjs.h>
 
   static
   int  ft_black2_new( FT_Memory  memory, FT_Raster  *araster )

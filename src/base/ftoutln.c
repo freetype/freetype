@@ -23,11 +23,10 @@
   /*************************************************************************/
 
 
-#include <freetype.h>
-#include <ftconfig.h>
-#include <ftobjs.h>
-#include <ftimage.h>
-#include <ftoutln.h>
+#include <freetype/freetype.h>
+#include <freetype/config/ftconfig.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftoutln.h>
 
   static
   const FT_Outline  null_outline = { 0, 0, 0, 0, 0, 0 };
