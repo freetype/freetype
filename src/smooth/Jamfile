@@ -1,0 +1,16 @@
+SubDir FT2_TOP src smooth ;
+
+SubDirHdrs [ FT2_SubDir src smooth ] ;
+
+ft2_smooth_sources = ftgrays.c ftsmooth.c ;
+
+if $(FT2_MULTI)
+{
+  Library $(FT2_LIB) : $(ft2_smooth_sources) ;
+}
+else
+{
+  Library $(FT2_LIB) : smooth.c ;
+}
+
+

@@ -1,0 +1,21 @@
+SubDir FT2_TOP src sfnt ;
+
+SubDirHdrs [ FT2_SubDir src sfnt ] ;
+
+{
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = sfobjs.c sfdriver.c ttcmap.c ttpost.c ttload.c ttsbit.c ;
+  }
+  else
+  {
+    _sources = sfnt.c ;
+  }
+
+  Library $(FT2_LIB) : $(_sources) ;
+}
+
+
+

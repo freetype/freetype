@@ -1,0 +1,31 @@
+SubDir FT2_TOP src base ;
+
+SubDirHdrs [ FT2_SubDir src base ] ;
+
+
+# First of all, which files form the core / base of FT2
+#
+ft2_base_sources = ftcalc.c ftextend.c ftlist.c ftobjs.c ftstream.c
+                   ftoutln.c ftnames.c ;
+
+if $(FT2_MULTI)
+{
+  Library  $(FT2_LIB) : $(ft2_base_sources) ;
+}
+else
+{
+  Library  $(FT2_LIB) : ftbase.c ;
+}
+
+# Add the optional/replaceable files
+#
+Library $(FT2_LIB) : ftsystem.c ftinit.c ftglyph.c ftmm.c ftbbox.c ftdebug.c ;
+
+# Add Macintosh-specific file to the library when necessary
+#
+if $(MAC)
+{
+  Library $(FT2_LIB) : ftmac.c ;
+}
+
+

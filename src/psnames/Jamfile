@@ -1,0 +1,20 @@
+SubDir FT2_TOP src psnames ;
+
+SubDirHdrs [ FT2_SubDir src psnames ] ;
+
+{
+  local _sources ;
+  
+  if $(FT2_MULTI)
+  {
+    _sources = psmodule.c ;
+  }
+  else
+  {
+    _sources = psnames.c ;
+  }
+  
+  Library $(FT2_LIB) : $(_sources) ;
+}
+
+

@@ -1,0 +1,21 @@
+SubDir FT2_TOP src autohint ;
+
+SubDirHdrs [ FT2_SubDir src autohint ] ;
+
+{
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = ahangles.c ahglobal.c ahglyph.c ahhint.c ahmodule.c ;
+  }
+  else
+  {
+    _sources = autohint.c ;
+  }
+
+  Library $(FT2_LIB) : $(_sources) ;
+}
+
+
+

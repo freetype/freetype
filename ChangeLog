@@ -1,7 +1,12 @@
 2000-03-24  David Turner  <david.turner@freetype.org>
 
+	* Jamrules, Jamfile, src/Jamfile, src/*/Jamfile: Adding jamfiles
+	to the source tree. see www.freetype.org/jam/index.html for details
+
+
 	* Version 2.0.2 released.
 	=========================
+
 
 2001-03-20  Werner Lemberg  <wl@gnu.org>
 
