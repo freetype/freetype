@@ -11,7 +11,7 @@ LATEST CHANGES BETWEEN 2.1.0 and 2.0.9
       to rounding errors.  The required vector computation routines have
       been optimized and placed within the "ttinterp.c" file.
 
-    - Fixed the parsing of accelerator tables in the PCF font driver
+    - Fixed the parsing of accelerator tables in the PCF font driver.
     
     - Fixed the Type1 glyph loader routine used to compute the font's
       maximum advance width.
