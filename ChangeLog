@@ -1,3 +1,15 @@
+2004-04-12  Werner Lemberg  <wl@gnu.org>
+
+	* configure: Accept makepp also.
+
+	* builds/unix/detect.mk: Use proper path to unix-def.mk.
+	* builds/unix/unix-def.in (BUILD_DIR, PLATFORM): Remove.
+	* builds/unix/unix.mk (BUILD_DIR, PLATFORM): Define.
+	Use BUILD_DIR.
+
+	* docs/INSTALL, docs/INSTALL.GNU, docs/INSTALL.UNX: Update
+	documentation on makepp.
+
 2004-04-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/lzw/zopen.c: Don't include sys/param.h and sys/stat.h.
