@@ -1,0 +1,17 @@
+The CVS archive doesn't contain pre-built configuration scripts for
+UNIXish platforms.  To generate them call `autogen.sh', which in turn
+depends on the following packages:
+
+  automake (1.9.4)
+  libtool (1.5.14)
+  autoconf (2.59b)
+
+The versions given in parentheses are known to work.
+
+For static builds which don't use platform specific optimizations no
+configure script is necessary at all; saying
+
+  make setup ansi
+  make
+
+should work on all platforms which have GNU make (or makepp).
