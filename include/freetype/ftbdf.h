@@ -95,12 +95,17 @@ FT_BEGIN_HEADER
   *    This structure models a given BDF/PCF property.
   *
   * @fields:
-  *    type       :: The property type.
+  *    type ::
+  *      The property type.
   *
-  *    u.atom     :: The atom string, if type is @BDF_PROPERTY_TYPE_ATOM.
-  *    u.integer  :: A signed integer, if type is @BDF_PROPERTY_TYPE_INTEGER.
-  *    u.cardinal :: An unsigned integer, if type is
-  *                  @BDF_PROPERTY_TYPE_CARDINAL.
+  *    u.atom ::
+  *      The atom string, if type is @BDF_PROPERTY_TYPE_ATOM.
+  *
+  *    u.integer ::
+  *      A signed integer, if type is @BDF_PROPERTY_TYPE_INTEGER.
+  *
+  *    u.cardinal ::
+  *      An unsigned integer, if type is @BDF_PROPERTY_TYPE_CARDINAL.
   */
   typedef struct  BDF_PropertyRec_
   {

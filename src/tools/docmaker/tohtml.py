@@ -7,23 +7,34 @@ import time
 # The following defines the HTML header used by all generated pages.
 #
 html_header_1 = """\
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<header>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <title>"""
 
 html_header_2= """ API Reference</title>
-<basefont face="Verdana,Geneva,Arial,Helvetica">
-<style content="text/css">
-  P { text-align=justify }
-  H1 { text-align=center }
-  LI { text-align=justify }
+<style type="text/css">
+  body { font-family: Verdana, Geneva, Arial, Helvetica, serif;
+         color: #000000;
+         background: #FFFFFF; }
+
+  p { text-align: justify; }
+  h1 { text-align: center; }
+  li { text-align: justify; }
+
+  a:link { color: #0000EF; }
+  a:visited { color: #51188E; }
+  a:hover { color: #FF0000; }
+
+  span.keyword { font-family: monospace;
+                 text-align: left;
+                 white-space: pre;
+                 color: darkblue; }
 </style>
-</header>
-<body text=#000000
-      bgcolor=#FFFFFF
-      link=#0000EF
-      vlink=#51188E
-      alink=#FF0000>
+</head>
+<body>
 <center><h1>"""
 
 html_header_3=""" API Reference</h1></center>
@@ -54,39 +65,39 @@ para_footer = "</p>"
 
 # Block header and footer.
 #
-block_header = "<center><table width=75%><tr><td>"
-block_footer = "</td></tr></table><hr width=75%></center>"
+block_header = '<table align=center width="75%"><tr><td>'
+block_footer = '</td></tr></table><hr width="75%">'
 
 # Description header/footer.
 #
-description_header = "<center><table width=87%><tr><td>"
-description_footer = "</td></tr></table></center><br>"
+description_header = '<table align=center width="87%"><tr><td>'
+description_footer = "</td></tr></table><br>"
 
 # Marker header/inter/footer combination.
 #
-marker_header = "<center><table width=87% cellpadding=5><tr bgcolor=#EEEEFF><td><em><b>"
+marker_header = '<table align=center width="87%" cellpadding=5><tr bgcolor="#EEEEFF"><td><em><b>'
 marker_inter  = "</b></em></td></tr><tr><td>"
-marker_footer = "</td></tr></table></center>"
+marker_footer = "</td></tr></table>"
 
 # Source code extracts header/footer.
 #
-source_header = "<center><table width=87%><tr bgcolor=#D6E8FF width=100%><td><pre>\n"
-source_footer = "\n</pre></table></center><br>"
+source_header = '<table align=center width="87%"><tr bgcolor="#D6E8FF"><td><pre>\n'
+source_footer = "\n</pre></table><br>"
 
 # Chapter header/inter/footer.
 #
-chapter_header = "<br><center><table width=75%><tr><td><h2>"
+chapter_header = '<br><table align=center width="75%"><tr><td><h2>'
 chapter_inter  = "</h2><ul>"
-chapter_footer = "</ul></td></tr></table></center>"
+chapter_footer = "</ul></td></tr></table>"
 
 
 # source language keyword coloration/styling
 #
-keyword_prefix = '<font color="darkblue">'
-keyword_suffix = '</font>'
+keyword_prefix = '<span class="keyword">'
+keyword_suffix = '</span>'
 
-section_synopsis_header = '<h2>Synopsis</h2><font color="cyan">'
-section_synopsis_footer = '</font>'
+section_synopsis_header = '<h2>Synopsis</h2>'
+section_synopsis_footer = ''
 
 # Translate a single line of source to HTML.  This will convert
 # a "<" into "&lt.", ">" into "&gt.", etc.
@@ -231,7 +242,7 @@ class HtmlFormatter(Formatter):
 
     def print_html_field( self, field ):
         if field.name:
-            print "<table valign=top><tr><td><b>"+field.name+"</b></td><td>"
+            print "<table><tr valign=top><td><b>"+field.name+"</b></td><td>"
 
         print self.make_html_items( field.items )
 
@@ -273,7 +284,7 @@ class HtmlFormatter(Formatter):
 
 
     def print_html_field_list( self, fields ):
-        print "<table valign=top cellpadding=3>"
+        print "<table cellpadding=3>"
         for field in fields:
             print "<tr valign=top><td><b>" + field.name + "</b></td><td>"
             self.print_html_items( field.items )
@@ -320,7 +331,7 @@ class HtmlFormatter(Formatter):
         count = len( self.block_index )
         rows  = (count + self.columns - 1)/self.columns
 
-        print "<center><table border=0 cellpadding=0 cellspacing=0>"
+        print "<table align=center border=0 cellpadding=0 cellspacing=0>"
         for r in range(rows):
             line = "<tr>"
             for c in range(self.columns):
@@ -334,7 +345,7 @@ class HtmlFormatter(Formatter):
             line = line + "</tr>"
             print line
 
-        print "</table></center>"
+        print "</table>"
         print self.html_footer
         self.index_items = {}
 
@@ -374,7 +385,7 @@ class HtmlFormatter(Formatter):
         print chapter_header + '<a href="' + index_filename + '">Global Index</a>' + chapter_inter + chapter_footer
 
     def  toc_exit( self ):
-        print "</table></center>"
+        print "</table>"
         print self.html_footer
 
     def  toc_dump( self, toc_filename = None, index_filename = None ):
@@ -398,7 +409,7 @@ class HtmlFormatter(Formatter):
 
         # print section synopsys
         print section_synopsis_header
-        print "<center><table cellspacing=5 cellpadding=0 border=0>"
+        print "<table align=center cellspacing=5 cellpadding=0 border=0>"
 
         maxwidth = 0
         for b in section.blocks.values():
@@ -425,7 +436,7 @@ class HtmlFormatter(Formatter):
             line = line + "</tr>"
             print line
 
-        print "</table></center><br><br>"
+        print "</table><br><br>"
         print section_synopsis_footer
 
         print description_header
@@ -437,9 +448,7 @@ class HtmlFormatter(Formatter):
 
         # place html anchor if needed
         if block.name:
-            print '<a name="' + block.name + '">'
-            print "<h4>" + block.name + "</h4>"
-            print "</a>"
+            print '<h4><a name="' + block.name + '">' + block.name + '</a></h4>'
 
         # dump the block C source lines now
         if block.code:

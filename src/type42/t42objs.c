@@ -203,7 +203,7 @@
     root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
     root->face_flags |= FT_FACE_FLAG_GLYPH_NAMES;
 
-    if ( info->is_fixed_pitch && *info->is_fixed_pitch )
+    if ( info->is_fixed_pitch )
       root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
     /* XXX: TODO -- add kerning with .afm support */
@@ -278,17 +278,15 @@
     root->max_advance_width  = face->ttf_face->max_advance_width;
     root->max_advance_height = face->ttf_face->max_advance_height;
 
-    if ( info->underline_position )
-      root->underline_position  = *info->underline_position >> 16;
-    if ( info->underline_thickness )
-      root->underline_thickness = *info->underline_thickness >> 16;
+    root->underline_position  = info->underline_position >> 16;
+    root->underline_thickness = info->underline_thickness >> 16;
 
     root->internal->max_points   = 0;
     root->internal->max_contours = 0;
 
     /* compute style flags */
     root->style_flags = 0;
-    if ( info->italic_angle && *info->italic_angle )
+    if ( info->italic_angle )
       root->style_flags |= FT_STYLE_FLAG_ITALIC;
 
     if ( face->ttf_face->style_flags & FT_STYLE_FLAG_BOLD )
@@ -387,11 +385,6 @@
       FT_FREE( info->full_name );
       FT_FREE( info->family_name );
       FT_FREE( info->weight );
-
-      FT_FREE( info->italic_angle );
-      FT_FREE( info->underline_position );
-      FT_FREE( info->underline_thickness );
-      FT_FREE( info->is_fixed_pitch );
 
       /* release top dictionary */
       FT_FREE( type1->charstrings_len );

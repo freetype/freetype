@@ -1450,11 +1450,16 @@
   };
 
 
+#define T1_FIELD_COUNT                                           \
+          ( sizeof ( t1_keywords ) / sizeof ( t1_keywords[0] ) )
+
+
   static FT_Error
   parse_dict( T1_Face    face,
               T1_Loader  loader,
               FT_Byte*   base,
-              FT_Long    size )
+              FT_Long    size,
+              FT_Byte*   keyword_flags )
   {
     T1_Parser  parser = &loader->parser;
 
@@ -1519,7 +1524,8 @@
           {
             {
               /* now, compare the immediate name to the keyword table */
-              T1_Field  keyword = (T1_Field)t1_keywords;
+              T1_Field  keyword      = (T1_Field)t1_keywords;
+              FT_Byte*  keyword_flag = keyword_flags;
 
 
               for (;;)
@@ -1546,17 +1552,25 @@
                     /* we found it -- run the parsing callback! */
                     parser->root.cursor = cur2;
                     T1_Skip_Spaces( parser );
-                    parser->root.error = t1_load_keyword( face,
-                                                          loader,
-                                                          keyword );
-                    if ( parser->root.error )
-                      return parser->root.error;
+                    
+                    /* we only record the first instance of any      */
+                    /* field to deal adequately with synthetic fonts */
+                    if ( keyword_flag[0] == 0 )
+                    {
+                      parser->root.error = t1_load_keyword( face,
+                                                            loader,
+                                                            keyword );
+                      if ( parser->root.error )
+                        return parser->root.error;
+                    }
+                    keyword_flag[0] = 1;
 
                     cur = parser->root.cursor;
                     break;
                   }
                 }
                 keyword++;
+                keyword_flag++;
               }
             }
           }
@@ -1612,6 +1626,7 @@
     T1_Parser      parser;
     T1_Font        type1 = &face->type1;
     FT_Error       error;
+    FT_Byte        keyword_flags[T1_FIELD_COUNT];
 
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
@@ -1632,7 +1647,16 @@
     if ( error )
       goto Exit;
 
-    error = parse_dict( face, &loader, parser->base_dict, parser->base_len );
+    {
+      FT_UInt  n;
+      
+
+      for ( n = 0; n < T1_FIELD_COUNT; n++ )
+        keyword_flags[n] = 0;
+    }
+
+    error = parse_dict( face, &loader, parser->base_dict, parser->base_len,
+                        keyword_flags );
     if ( error )
       goto Exit;
 
@@ -1641,7 +1665,8 @@
       goto Exit;
 
     error = parse_dict( face, &loader, parser->private_dict,
-                        parser->private_len );
+                        parser->private_len,
+                        keyword_flags );
     if ( error )
       goto Exit;
 

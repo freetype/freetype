@@ -57,25 +57,25 @@
 #undef  T1CODE
 #define T1CODE        T1_FIELD_LOCATION_FONT_INFO
 
-    T1_FIELD_STRING     ( "version",            version )
-    T1_FIELD_STRING     ( "Notice",             notice )
-    T1_FIELD_STRING     ( "FullName",           full_name )
-    T1_FIELD_STRING     ( "FamilyName",         family_name )
-    T1_FIELD_STRING     ( "Weight",             weight )
-    T1_FIELD_FIXED_P    ( "ItalicAngle",        italic_angle )
-    T1_FIELD_TYPE_BOOL_P( "isFixedPitch",       is_fixed_pitch )
-    T1_FIELD_FIXED_P    ( "UnderlinePosition",  underline_position )
-    T1_FIELD_FIXED_P    ( "UnderlineThickness", underline_thickness )
+    T1_FIELD_STRING( "version",            version )
+    T1_FIELD_STRING( "Notice",             notice )
+    T1_FIELD_STRING( "FullName",           full_name )
+    T1_FIELD_STRING( "FamilyName",         family_name )
+    T1_FIELD_STRING( "Weight",             weight )
+    T1_FIELD_FIXED ( "ItalicAngle",        italic_angle )
+    T1_FIELD_BOOL  ( "isFixedPitch",       is_fixed_pitch )
+    T1_FIELD_FIXED ( "UnderlinePosition",  underline_position )
+    T1_FIELD_FIXED ( "UnderlineThickness", underline_thickness )
 
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  T1_FontRec
 #undef  T1CODE
 #define T1CODE        T1_FIELD_LOCATION_FONT_DICT
 
-    T1_FIELD_KEY    ( "FontName",    font_name )
-    T1_FIELD_NUM_P  ( "PaintType",   paint_type )
-    T1_FIELD_NUM    ( "FontType",    font_type )
-    T1_FIELD_FIXED_P( "StrokeWidth", stroke_width )
+    T1_FIELD_KEY  ( "FontName",    font_name )
+    T1_FIELD_NUM  ( "PaintType",   paint_type )
+    T1_FIELD_NUM  ( "FontType",    font_type )
+    T1_FIELD_FIXED( "StrokeWidth", stroke_width )
 
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  FT_BBox
@@ -91,6 +91,10 @@
 
     { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0 }
   };
+
+
+#define T42_KEYWORD_COUNT                                          \
+          ( sizeof ( t42_keywords ) / sizeof ( t42_keywords[0] ) )
 
 
 #define T1_Add_Table( p, i, o, l )  (p)->funcs.add( (p), i, o, l )
@@ -814,7 +818,16 @@
     FT_Byte*    limit      = cur + size;
     FT_UInt     n_keywords = (FT_UInt)( sizeof ( t42_keywords ) / 
                                         sizeof ( t42_keywords[0] ) );
+                                        
+    FT_Byte     keyword_flags[T42_KEYWORD_COUNT];
 
+    {
+      FT_UInt  n;
+      
+
+      for ( n = 0; n < T42_KEYWORD_COUNT; n++ )
+        keyword_flags[n] = 0;
+    }
 
     parser->root.cursor = base;
     parser->root.limit  = base + size;
@@ -887,11 +900,19 @@
               /* we found it -- run the parsing callback! */
               parser->root.cursor = cur2;
               T1_Skip_Spaces( parser );
-              parser->root.error = t42_load_keyword(face,
-                                                    loader,
-                                                    keyword );
-              if ( parser->root.error )
-                return parser->root.error;
+             
+              /* only record the first instance of each field/keyword */
+              /* to deal with synthetic fonts correctly               */
+              if ( keyword_flags[i] == 0 )
+              {
+                parser->root.error = t42_load_keyword(face,
+                                                      loader,
+                                                      keyword );
+                if ( parser->root.error )
+                  return parser->root.error;
+              }
+              keyword_flags[i] = 1;
+              
               cur = parser->root.cursor;
               break;
             }

@@ -1,3 +1,68 @@
+2003-07-25  Werner Lemberg  <wl@gnu.org>
+
+	Make reference valid HTML 4.01 transitional.
+
+	* src/tools/docmaker/tohtml.py (html_header_1): Add doctype
+	and charset.
+	(html_header_2): Fix style elements and add some more.
+	Fix syntax.
+	(block_header, block_footer, description_header, description_footer,
+	marker_header, marker_footer, source_header, source_footer,
+	chapter_header, chapter_footer): Don't use <center>...</center> but
+	`align=center' table attribute.
+	Use double quotes around table widths given in percent.
+	(keyword_prefix, keyword_suffix): Don't change font colour directly
+	but use a new <span> class.
+	(section_synopsis_header, section_synopsis_footer): Don't change
+	colour.
+	(print_html_field): <tr> gets the `valign' attribute, not <table>.
+	(print_html_field_list): Ditto.
+	(index_exit): Don't use <center>...</center> but `align=center'
+	table attribute.
+	(toc_exit, section_enter): Ditto.
+	(block_enter): Use <h4><a>, not <a><h4>.
+
+2003-07-25  David Turner  <david@freetype.org>
+
+	This change reimplements fix from 2003-05-30 without breaking
+	binary compatibility.
+
+	* include/freetype/t1tables.h (PS_FontInfoRec): `italic_angle',
+	`is_fixed_pitch', `underline_position', `underline_thickness' are
+	reverted to be normal values.
+
+	* include/freetype/internal/psaux.h (T1_FieldType): Remove
+	`T1_FIELD_TYPE_BOOL_P', `T1_FIELD_TYPE_INTEGER_P',
+	`T1_FIELD_TYPE_FIXED_P', `T1_FIELD_TYPE_FIXED_1000_P'.
+	(T1_FIELD_TYPE_BOOL_P, T1_FIELD_NUM_P, T1_FIELD_FIXED_P,
+	T1_FIELD_FIXED_1000_P): Removed.
+	(T1_FIELD_TYPE_BOOL): Renamed to...
+	(T1_FIELD_BOOL): New macro.  Updated all callers.
+
+	* src/type42/t42parse.c: `italic_angle', `is_fixed_pitch',
+	`underline_position', `underline_thickness', `paint_type',
+	`stroke_width' are reverted to be normal values.
+	(T42_KEYWORD_COUNT): New macro.
+	(t42_parse_dict): New array `keyword_flags' to mark that a value has
+	already been assigned to a dictionary entry.
+	* src/type42/t42objs.c (T42_Face_Init, T42_Face_Done): Updated.
+
+	* src/cid/cidtoken.h: `italic_angle', `is_fixed_pitch',
+	`underline_position', `underline_thickness' are reverted to be
+	normal values.
+	* src/cid/cidobjs.c (cid_face_done, cid_face_init): Updated.
+
+	* src/psaux/psobjs.c (ps_parser_load_field): Updated.
+
+	* src/type1/t1tokens.h: `italic_angle', `is_fixed_pitch',
+	`underline_position', `underline_thickness', `paint_type',
+	`stroke_width' are reverted to be normal values.
+	* src/type1/t1objs.c (T1_Face_Done, T1_Face_Init): Updated.
+	* src/type1/t1load.c (T1_FIELD_COUNT): New macro.
+	(parse_dict): Add parameter for keyword flags.
+	Record only first instance of a field.
+	(T1_Open_Face): New array `keyword_flags'.
+
 2003-07-24  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 5.
