@@ -51,7 +51,7 @@ make_module_list: clean_module_list
 # removing.
 #
 ifneq ($(findstring $(PLATFORM),dos win32 win16 os2),)
-  OPEN_MODULE  := @echo #
+  OPEN_MODULE  := @echo$(space)
   CLOSE_MODULE :=  >> $(subst $(SEP),$(HOSTSEP),$(MODULE_LIST))
 else
   OPEN_MODULE  := @echo "
@@ -64,7 +64,7 @@ endif
 OPEN_DRIVER  := $(OPEN_MODULE)FT_USE_MODULE(
 CLOSE_DRIVER := )$(CLOSE_MODULE)
 
-ECHO_DRIVER      := @echo "* module: #
+ECHO_DRIVER      := @echo "* module:$(space)
 ECHO_DRIVER_DESC := (
 ECHO_DRIVER_DONE := )"
 

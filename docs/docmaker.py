@@ -97,7 +97,7 @@ current_section = None
 #  /*                        */
 #  /**************************/
 #
-# Each block contains a list of markers, each one can be followed by
+# Each block contains a list of markers; each one can be followed by
 # some arbitrary text or a list of fields. Here's an example:
 #
 #    <Struct>
@@ -111,18 +111,18 @@ current_section = None
 #       y :: vertical coordinate
 #
 #
-# This example defines three markers: 'Struct', 'Description' & 'Fields'
+# This example defines three markers: 'Struct', 'Description' & 'Fields'.
 # The first two markers contain arbitrary text, while the last one contains
-# a list of field
+# a list of fields.
 #
-# each field is simple of the format:  WORD :: TEXT....
+# Each field is simple of the format:  WORD :: TEXT...
 #
-# Note that typically, each comment block is followed by some source
-# code declaration that may need to be kept in the reference..
+# Note that typically each comment block is followed by some source
+# code declaration that may need to be kept in the reference.
 #
 # Note that markers can alternatively be written as "@MARKER:"
-# instead of "<MAKRER>". All marker identifiers are converted to
-# lower case during parsing, in order to simply sorting..
+# instead of "<MARKER>". All marker identifiers are converted to
+# lower case during parsing in order to simply sorting.
 #
 # We associate with each block the following source lines that do not
 # begin with a comment. For example, the following:
@@ -142,7 +142,7 @@ current_section = None
 #
 #
 #  will only keep the first two lines of sources with
-#  the "blabla" block
+#  the "blabla" block.
 #
 #  However, the comment will be kept, with following source lines
 #  if it contains a starting '#' or '@' as in:
@@ -155,16 +155,16 @@ current_section = None
 
 
 
-##############################################################################
+#############################################################################
 #
 # The DocCode class is used to store source code lines
 #
-#   self.lines contains a set of source code lines that will
+#   'self.lines' contains a set of source code lines that will
 #   be dumped as HTML in a <PRE> tag.
 #
-#   the object is filled line by line by the parser, it strips the
+#   The object is filled line by line by the parser; it strips the
 #   leading "margin" space from each input line before storing it
-#   in self.lines
+#   in 'self.lines'.
 #
 class DocCode:
 
@@ -172,8 +172,10 @@ class DocCode:
         self.lines  = []
         self.margin = margin
 
+
     def add( self, line ):
         # remove margin whitespace
+        #
         if string.strip( line[: self.margin] ) == "":
             line = line[self.margin :]
         self.lines.append( line )
@@ -184,13 +186,16 @@ class DocCode:
             print "--" + line
         print ""
 
+
     def get_identifier( self ):
         # this function should never be called
-        return "UNKNOWN_CODE_IDENTIFIER!!"
+        #
+        return "UNKNOWN_CODE_IDENTIFIER!"
+
 
     def dump_html( self ):
-
         # clean the last empty lines
+        #
         l = len( self.lines ) - 1
         while l > 0 and string.strip( self.lines[l - 1] ) == "":
             l = l - 1
@@ -201,48 +206,50 @@ class DocCode:
         print code_footer
 
 
-##############################################################################
+#############################################################################
 #
-# The DocParagraph is used to store text paragraphs
-# self.words is simply a list of words for the paragraph
+# The DocParagraph is used to store text paragraphs.
+# 'self.words' is simply a list of words for the paragraph.
 #
-# the paragraph is filled line by line by the parser..
+# The paragraph is filled line by line by the parser.
 #
 class DocParagraph:
 
     def __init__( self ):
         self.words = []
 
+
     def add( self, line ):
-        # get rid of unwanted spaces in the paragraph
+        # Get rid of unwanted spaces in the paragraph.
         #
-        # the following line is the same as
+        # The following line is the same as
         #
         #   self.words.extend( string.split( line ) )
         #
-        # but older Python versions don't have the `extend' attribute
+        # but older Python versions don't have the `extend' attribute.
         #
         last = len(self.words)
         self.words[last:last] = string.split( line )
 
-    # this function is used to retrieve the first word of a given
-    # paragraph..
+
+    # This function is used to retrieve the first word of a given
+    # paragraph.
+    #
     def get_identifier( self ):
         if self.words:
             return self.words[0]
 
         # should never happen
-        return "UNKNOWN_PARA_IDENTIFIER!!"
+        #
+        return "UNKNOWN_PARA_IDENTIFIER!"
 
 
     def dump( self ):
-
         max_width = 50
         cursor    = 0
         line      = ""
 
         for word in self.words:
-
             if cursor + len( word ) + 1 > max_width:
                 print line
                 cursor = 0
@@ -254,7 +261,7 @@ class DocParagraph:
         if cursor > 0:
             print line
 
-        #print "§" #for debugging only
+        # print "§" # for debugging only
 
 
     def dump_string( self ):
@@ -268,43 +275,43 @@ class DocParagraph:
 
 
     def dump_html( self ):
-
         print para_header
         self.dump()
         print para_footer
 
 
-###########################################################################
+#############################################################################
 #
 # DocContent is used to store the content of a given marker.
 #
-# the "self.items" list contains (field,elements) record, where
+# The "self.items" list contains (field,elements) records, where
 # "field" corresponds to a given structure fields or function
 # parameter (indicated by a "::"), or NULL for a normal section
-# of text/code
+# of text/code.
 #
-# hence, the following example:
+# Hence, the following example:
 #
 #   <MyMarker>
-#      this is an example of what can be put in a content section,
+#      This is an example of what can be put in a content section,
 #
-#      a second line of example text
+#      A second line of example text.
 #
-#      x :: a simple test field, with some content
-#      y :: even before, this field has some code content
+#      x :: A simple test field, with some contents.
+#      y :: Even before, this field has some code contents.
 #           {
 #             y = x+2;
 #           }
 #
 # should be stored as
+#
 #     [ ( None, [ DocParagraph, DocParagraph] ),
 #       ( "x",  [ DocParagraph ] ),
 #       ( "y",  [ DocParagraph, DocCode ] ) ]
 #
-# in self.items
+# in 'self.items'.
 #
-# the DocContent object is entirely built at creation time, you must
-# pass a list of input text lines lin the "lines_list" parameter..
+# The DocContent object is entirely built at creation time; you must
+# pass a list of input text lines in the "lines_list" parameter.
 #
 #
 class DocContent:
@@ -323,7 +330,6 @@ class DocContent:
         field       = None   # the current field
 
         for aline in lines_list:
-
             if code_mode == 0:
                 line   = string.lstrip( aline )
                 l      = len( line )
@@ -331,8 +337,8 @@ class DocContent:
 
                 # if the line is empty, this is the end of the current
                 # paragraph
+                #
                 if l == 0 or line == '{':
-
                     if paragraph:
                         elements.append( paragraph )
                         paragraph = None
@@ -351,21 +357,24 @@ class DocContent:
                 # the token `::'
                 #
                 if len( words ) >= 2 and words[1] == "::":
-
                     # start a new field - complete current paragraph if any
+                    #
                     if paragraph:
                         elements.append( paragraph )
                         paragraph = None
 
                     # append previous "field" to self.items
+                    #
                     self.items.append( ( field, elements ) )
 
                     # start new field and elements list
+                    #
                     field    = words[0]
                     elements = []
                     words    = words[2 :]
 
                 # append remaining words to current paragraph
+                #
                 if len( words ) > 0:
                     line = string.join( words )
                     if not paragraph:
@@ -373,14 +382,15 @@ class DocContent:
                     paragraph.add( line )
 
             else:
-                # we're in code mode..
+                # we're in code mode...
+                #
                 line = aline
 
-                # the code block ends with a line that has a single '}' on it
-                # that is located at the same column that the opening
-                # accolade..
+                # the code block ends with a line that has a single '}' on
+                # it that is located at the same column that the opening
+                # accolade...
+                #
                 if line == " " * code_margin + '}':
-
                     if code:
                         elements.append( code )
                         code = None
@@ -389,6 +399,7 @@ class DocContent:
                     code_margin = 0
 
                 # otherwise, add the line to the current paragraph
+                #
                 else:
                     if not code:
                         code = DocCode()
@@ -410,7 +421,8 @@ class DocContent:
                 return element.get_identifier()
 
         # should never happen
-        return "UNKNOWN_CONTENT_IDENTIFIER!!"
+        #
+        return "UNKNOWN_CONTENT_IDENTIFIER!"
 
 
     def get_title( self ):
@@ -420,7 +432,8 @@ class DocContent:
                 return element.dump_string()
 
         # should never happen
-        return "UNKNOWN_CONTENT_TITLE"
+        #
+        return "UNKNOWN_CONTENT_TITLE!"
 
 
     def dump( self ):
@@ -435,8 +448,8 @@ class DocContent:
             if field:
                 print "</field>        "
 
-    def dump_html( self ):
 
+    def dump_html( self ):
         n        = len( self.items )
         in_table = 0
 
@@ -445,13 +458,13 @@ class DocContent:
             field = item[0]
 
             if not field:
-
                 if in_table:
                     print "</td></tr></table>"
                     in_table = 0
 
                 for element in item[1]:
                     element.dump_html()
+
             else:
                 if not in_table:
                     print "<table cellpadding=4><tr valign=top><td>"
@@ -474,15 +487,15 @@ class DocContent:
 # The DocBlock class is used to store a given comment block. It contains
 # a list of markers, as well as a list of contents for each marker.
 #
-#   "self.items" is a list of ( marker, contents ) elements, where
+#   "self.items" is a list of (marker, contents) elements, where
 #   'marker' is a lowercase marker string, and 'contents' is a DocContent
-#   object
+#   object.
 #
 #   "self.source" is simply a list of text lines taken from the
-#   uncommented source itself..
+#   uncommented source itself.
 #
-#   finally, "self.identifier" is  a simple identifier used to
-#   uniquely identify the block
+#   Finally, "self.identifier" is a simple identifier used to
+#   uniquely identify the block.
 #
 class DocBlock:
 
@@ -529,19 +542,20 @@ class DocBlock:
             self.source = source_line_list
 
         # now retrieve block name when possible
+        #
         if self.items:
             first     = self.items[0]
             self.name = first[1].get_identifier()
 
 
-    # this function is used to add a new element to self.items
-    #  'marker' is a marker string, or None
-    #  'lines' is a list of text lines used to compute a list of
-    #          DocContent objects
+    # This function adds a new element to 'self.items'.
+    #   'marker' is a marker string, or None.
+    #   'lines'  is a list of text lines used to compute a list of
+    #            DocContent objects.
     #
     def add( self, marker, lines ):
-
         # remove the first and last empty lines from the content list
+        #
         l = len( lines )
         if l > 0:
             i = 0
@@ -552,10 +566,12 @@ class DocBlock:
             lines = lines[i : l]
             l     = len( lines )
 
-        # add a new marker only if its marker and its content list aren't empty
+        # add a new marker only if its marker and its content list
+        # aren't empty
+        #
         if l > 0 and marker:
-            content = DocContent(lines)
-            self.items.append( ( string.lower(marker), content ) )
+            content = DocContent( lines )
+            self.items.append( ( string.lower( marker ), content ) )
             if not self.identifier:
                 self.identifier = content.get_identifier()
 
@@ -567,27 +583,28 @@ class DocBlock:
         return None
 
 
-
     def dump( self ):
         for i in range( len( self.items ) ):
             print "[" + self.items[i][0] + "]"
             content = self.items[i][1]
             content.dump()
 
-    def dump_html( self ):
 
-	types = [ 'type', 'struct', 'functype', 'function', 'constant',
+    def dump_html( self ):
+        types = [ 'type', 'struct', 'functype', 'function', 'constant',
                   'enum', 'macro' ]
 
         if not self.items:
-              return
+            return
 
         # start of a block
+        #
         print block_header
 
         print "<h2>" + self.identifier + "</h2>"
 
         # print source code
+        #
         if not self.source:
             return
 
@@ -601,8 +618,8 @@ class DocBlock:
         print source_footer
 
         # dump each (marker,content) element
+        #
         for element in self.items:
-
             marker  = element[0]
             content = element[1]
 
@@ -611,7 +628,7 @@ class DocBlock:
                 content.dump_html()
                 print "</ul>"
 
-            elif not (marker in types):
+            elif not ( marker in types ):
                 print "<h4>" + marker + "</h4>"
                 print "<ul>"
                 content.dump_html()
@@ -624,10 +641,9 @@ class DocBlock:
 
 ######################################################################################
 #
+# The DocSection class is used to store a given documentation section.
 #
-# The DocSection class is used to store a given documentation section
-#
-# Each section is made of an identifier, an abstract and a description
+# Each section is made of an identifier, an abstract and a description.
 #
 # For example, look at:
 #
@@ -638,29 +654,31 @@ class DocBlock:
 #
 #   <Description>
 #      FreeType defines several basic data types for all its
-#      operations....
+#      operations...
 #
 class DocSection:
 
     def __init__( self, block ):
         self.block       = block
-        self.name        = string.lower(block.name)
-        self.abstract    = block.find_content("abstract")
-        self.description = block.find_content("description")
-        title_content    = block.find_content("title")
+        self.name        = string.lower( block.name )
+        self.abstract    = block.find_content( "abstract" )
+        self.description = block.find_content( "description" )
+        title_content    = block.find_content( "title" )
         if title_content:
-            self.title = title_content.get_title()
+            self.title   = title_content.get_title()
         else:
-            self.title = "UNKNOWN SECTION TITLE !!"
+            self.titles  = "UNKNOWN_SECTION_TITLE!"
         self.elements    = {}
         self.list        = []
         self.filename    = self.name + ".html"
 
-        #sys.stderr.write( "new section '"+self.name+"'" )
+        # sys.stderr.write( "new section '" + self.name + "'" )
+
 
     def add_element( self, block ):
         # check that we don't have a duplicate element in this
-        # section..
+        # section
+        #
         if self.elements.has_key( block.name ):
             sys.stderr.write( "ERROR - duplicate element definition for " + 
                               "'" + block.name + "' in section '" +
@@ -675,60 +693,65 @@ class DocSection:
         """make an HTML page from a given DocSection"""
 
         # print HTML header
+        #
         print html_header
 
         # print title
+        #
         print section_title_header
         print self.title
         print section_title_footer
 
         # print description
+        #
         print block_header
         self.description.dump_html()
         print block_footer
 
         # print elements
+        #
         for element in self.list:
             element.dump_html()
 
         print html_footer
 
 
-
-
-
 class DocSectionList:
 
-    def  __init__( self ):
+    def __init__( self ):
         self.sections        = {}
         self.list            = []
         self.current_section = None
 
 
-    def  append_section( self, block ):
-        name       = block.name
-        abstract   = block.find_content( "abstract" )
+    def append_section( self, block ):
+        name     = block.name
+        abstract = block.find_content( "abstract" )
 
-        if self.sections.has_key(name):
-            # there is already a section with this name in our
+        if self.sections.has_key( name ):
+            # There is already a section with this name in our
             # list. We'll try to complete it.
-
+            #
             section = self.sections[name]
             if section.abstract:
-                # this section already has an abstract defined,
+                # This section already has an abstract defined;
                 # simply check that the new section doesn't
                 # provide a new one.
+                #
                 if abstract:
                     stderr.write( "ERROR - duplicate section definition" +
                                   " for '" + name + "'" )
                     sys.quit()
             else:
-                # the old section didn't contain an abstract, we're
-                # now going to replace it
+                # The old section didn't contain an abstract; we're
+                # now going to replace it.
+                #
                 section.abstract    = abstract
                 section.description = block.find_content( "description" )
+
         else:
             # a new section
+            #
             section = DocSection( block )
             self.sections[name] = section
             self.list.append( section )
@@ -743,12 +766,13 @@ class DocSectionList:
                 self.append_section( block )
 
             elif self.current_section:
-                #sys.stderr.write( "  new block" )
+                # sys.stderr.write( "  new block" )
                 self.current_section.add_element( block )
 
 
     def dump_html_toc( self ):
         # dump an html table of contents
+        #
         print html_header
 
         print "<center><h1>Table of Contents</h1></center>"
@@ -756,7 +780,7 @@ class DocSectionList:
         print "<center><table cellpadding=5>"
         for section in self.list:
             print "<tr valign=top><td>"
-            print '<a href="'+section.filename+'">'
+            print '<a href="' + section.filename + '">'
             print section.title
             print "</a></td><td>"
             section.abstract.dump_html()
@@ -779,12 +803,11 @@ class DocSectionList:
 
 
 
-# filter a given list of DocBlocks. Returns a new list
+# Filter a given list of DocBlocks. Returns a new list
 # of DocBlock objects that only contains element whose
-# "type" (i.e. first marker) is in the "types" parameter
+# "type" (i.e. first marker) is in the "types" parameter.
 #
 def filter_blocks( block_list, types ):
-
     new_list = []
     for block in block_list:
         if block.items:
@@ -796,8 +819,8 @@ def filter_blocks( block_list, types ):
     return new_list
 
 
-# perform a lexicographical comparison of two DocBlock
-# objects. Returns -1, 0 or 1
+# Perform a lexicographical comparison of two DocBlock
+# objects. Returns -1, 0 or 1.
 #
 def block_lexicographical_compare( b1, b2 ):
     if not b1.identifier:
@@ -805,8 +828,9 @@ def block_lexicographical_compare( b1, b2 ):
     if not b2.identifier:
         return 1
 
-    id1 = string.lower(b1.identifier)
-    id2 = string.lower(b2.identifier)
+    id1 = string.lower( b1.identifier )
+    id2 = string.lower( b2.identifier )
+
     if id1 < id2:
         return -1
     elif id1 == id2:
@@ -828,7 +852,6 @@ def block_make_list( source_block_list ):
 # dump a list block as a single HTML page
 #
 def dump_html_1( block_list ):
-
     print html_header
 
     for block in block_list:
@@ -846,7 +869,7 @@ def make_block_list():
     block  = []
     format = 0
 
-    # we use "format" to store the state of our parser:
+    # We use "format" to store the state of our parser:
     #
     #  0 - wait for beginning of comment
     #  1 - parse comment format 1
@@ -855,18 +878,17 @@ def make_block_list():
     #  4 - wait for beginning of source (or comment ??)
     #  5 - process source
     #
-
     comment     = []
     source      = []
     state       = 0
 
     for line in fileinput.input():
-
         l = len( line )
         if l > 0 and line[l - 1] == '\012':
             line = line[0 : l - 1]
 
         # stripped version of the line
+        #
         line2 = string.strip( line )
         l     = len( line2 )
 
@@ -888,7 +910,6 @@ def make_block_list():
                 format = 0
 
         if format == 0:  #### wait for beginning of comment ####
-
             if l > 3 and line2[0 : 3] == '/**':
                 i = 3
                 while i < l and line2[i] == '*':
@@ -916,20 +937,23 @@ def make_block_list():
         #
         elif format == 1:
 
-            # if the line doesn't begin with a "*", something went
-            # wrong, and we must exit, and forget the current block..
+            # If the line doesn't begin with a "*", something went
+            # wrong, and we must exit, and forget the current block.
+            #
             if l == 0 or line2[0] != '*':
                 block  = []
                 format = 0
 
-            # otherwise, we test for an end of block, which is an
-            # arbitrary number of '*', followed by '/'
+            # Otherwise, we test for an end of block, which is an
+            # arbitrary number of '*', followed by '/'.
+            #
             else:
                 i = 1
                 while i < l and line2[i] == '*':
                     i = i + 1
 
                 # test for the end of the block
+                #
                 if i < l and line2[i] == '/':
                     if block != []:
                         format = 4
@@ -937,6 +961,7 @@ def make_block_list():
                         format = 0
                 else:
                     # otherwise simply append line to current block
+                    #
                     block.append( line2[i:] )
 
                 continue
@@ -947,8 +972,9 @@ def make_block_list():
         #
         elif format == 2:
 
-            # if the line doesn't begin with '/*' and end with '*/',
-            # this is the end of the format 2 format
+            # If the line doesn't begin with '/*' and end with '*/',
+            # this is the end of the format 2 format.
+            #
             if l < 4 or line2[: 2] != '/*' or line2[-2 :] != '*/':
                 if block != []:
                     format = 4
@@ -957,9 +983,11 @@ def make_block_list():
             else:
                 # remove the start and end comment delimiters, then
                 # right-strip the line
+                #
                 line2 = string.rstrip( line2[2 : -2] )
 
                 # check for end of a format2 block, i.e. a run of '*'
+                #
                 if string.count( line2, '*' ) == l - 4:
                     if block != []:
                         format = 4
@@ -967,26 +995,22 @@ def make_block_list():
                         format = 0
                 else:
                     # otherwise, add the line to the current block
+                    #
                     block.append( line2 )
 
                 continue
 
-
-
         if format >= 4:  #### source processing ####
-
             if l > 0:
                 format = 5
 
             if format == 5:
                 source.append( line )
 
-
     if format >= 4:
         list.append( [block, source] )
 
     return list
-
 
 
 # This function is only used for debugging
@@ -1003,7 +1027,6 @@ def dump_block_list( list ):
     print "---------the end-----------------------"
 
 
-
 def main( argv ):
     """main program loop"""
     sys.stderr.write( "extracting comment blocks from sources...\n" )
@@ -1017,14 +1040,14 @@ def main( argv ):
     section_list.dump_html_toc()
     section_list.dump_html_sections()
 
-    #list2 = filter_blocks( list, ['type','macro','enum','constant', 'functype'] )
-    #list2 = list
-    #list2.sort( block_lexicographical_compare )
+    # list2 = filter_blocks( list, ['type','macro','enum','constant', 'functype'] )
+    # list2 = list
+    # list2.sort( block_lexicographical_compare )
 
-    #dump_html_1( list2 )
-    #dump_doc_blocks( list )
-    #dump_block_lists( list )
-    #dump_html_1( list )
+    # dump_html_1( list2 )
+    # dump_doc_blocks( list )
+    # dump_block_lists( list )
+    # dump_html_1( list )
 
 
 # If called from the command line

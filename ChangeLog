@@ -1,36 +1,46 @@
+2000-12-06  Werner Lemberg  <wl@gnu.org>
+
+	* builds/module.mk: Replaced `xxx #' with `xxx$(space).
+	* builds/os2/detekt.mk, builds/win32/detekt.mk: Moved comment to
+	avoid trailing spaces in variable.
+	* builds/freetype.mk: Use $(D) instead of $D to make statement more
+	readable.
+
+	* docs/docmaker.py: Formatting.
+
 2000-12-05  David Turner  <david.turner@freetype.org>
 
-	* src/psaux/psauxmod.c: fixed a broken inclusion of component
-	header files (a FT_FLAT_COMPILE test was missing)
+	* src/psaux/psauxmod.c: Fixed a broken inclusion of component
+	header files (an FT_FLAT_COMPILE test was missing).
 
-	* src/cache/ftcmanag.c (FTC_Manager_Done): fixed a bug that caused
-        an occasional crash when the function was called (due to a dangling
-        pointer)
+	* src/cache/ftcmanag.c (FTC_Manager_Done): Fixed a bug that caused
+	an occasional crash when the function was called (due to a dangling
+	pointer).
 
-	* src/base/ftsystem.c (FT_Done_Memory): fixed an obvious bug,
-	the ANSI "free" function was called, instead of "memory->free()"
+	* src/base/ftsystem.c (FT_Done_Memory): Fixed an obvious bug:
+	The ANSI "free()" function was called instead of "memory->free()".
 
-	* docs/docmaker.py: added section filtering, multi-page generation
-	(index page generation is still missing though)
+	* docs/docmaker.py: Added section filtering, multi-page generation
+	(index page generation is still missing though).
 
 2000-12-04  David Turner  <david.turner@freetype.org>
 
-	* builds/unix/install.mk, builds/unix/ft2unix.h: the file "ft2unix.h"
-	is now installed as <ft2build.h> for Unix systems. Note that we still
-	use the "freetype2/freetype" installation path for now..
+	* builds/unix/install.mk, builds/unix/ft2unix.h: The file "ft2unix.h"
+	is now installed as <ft2build.h> for Unix systems.  Note that we
+	still use the "freetype2/freetype" installation path for now.
 
-	* many files: now using <ft2build.h> as the default build and setup
-	configuration file in all public headers. Internal source files still
-	need some changes though..
+	* many files: Now using <ft2build.h> as the default build and setup
+	configuration file in all public headers.  Internal source files
+	still need some changes though.
 
-	* builds/devel/ft2build.h, builds/devel/ftoption.h: created a new
+	* builds/devel/ft2build.h, builds/devel/ftoption.h: Created a new
 	directory to hold all development options for both the Unix and
-	Win32 developer builds..
+	Win32 developer builds.
 
 	* builds/win32/detect.mk, builds/win32/w32-bccd.mk,
-	builds/win32/w32-dev.mk: changed the developer build targets to
-	"devel-gcc" and "devel-bcc" in order to be able to develop with
-	the Borland C++ compiler.
+	builds/win32/w32-dev.mk: Changed the developer build targets to
+	"devel-gcc" and "devel-bcc" in order to be able to develop with the
+	Borland C++ compiler.
 
 2000-12-01  David Turner  <david.turner@freetype.org>
 

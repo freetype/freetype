@@ -21,7 +21,8 @@ ifeq ($(PLATFORM),ansi)
     COPY     := copy
     DELETE   := del
 
-    CONFIG_FILE := os2-gcc.mk   # gcc-emx by default
+    # gcc-emx by default
+    CONFIG_FILE := os2-gcc.mk
     SEP         := /
 
     # additionally, we provide hooks for various other compilers
