@@ -1,5 +1,8 @@
 2005-05-28  David Turner  <david@freetype.org>
 
+    * src/pshinter/pshglob.c (psh_blues_scale_zones): fixed a bug that
+    prevented family blue zones substitution from hapenning correctly
+
     * include/freetype/ftbdf.h: adding documentation comments for the
     API reference describing the new function FT_Get_BDF_Charset_ID.
 
