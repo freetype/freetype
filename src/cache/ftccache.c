@@ -196,7 +196,8 @@
       FTC_Node*  pold;
 
 
-      FT_ASSERT( old_index >= FTC_HASH_INITIAL_SIZE );
+      if ( old_index+1 <= FTC_HASH_INITIAL_SIZE )
+        goto Exit;
 
       if ( p == 0 )
       {

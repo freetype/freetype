@@ -1,3 +1,18 @@
+2003-01-07  David Turner  <david@freetype.org>
+
+        * src/base/ftstroker.c: probably the last bug-fixes to the stroker,
+        the API is likely to change however.
+
+        * src/base/fttrigon.c (FT_Angle_Diff): fixing function, it returned
+        invalid values for large negative angle differences (resulting in
+        incorrect stroker computations, among other things)
+
+        * src/cache/ftccache.c (ftc_node_unlink): removing incorrect
+        assertion, and changing code to avoid hash table size contraction
+
+        * src/base/Jamfile, src/base/rules.mk, src/base/descrip.mms:
+        adding "ftstroker.obj" to default build, as optional component
+
 2002-12-26  David Turner  <david@freetype.org>
 
         * src/gzip/adler32.c, src/gzip/infblock.c, src/gzip/inflate.c,
