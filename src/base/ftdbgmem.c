@@ -324,12 +324,13 @@
 
       table->size   = 0;
       table->nodes  = 0;
-      free( table );
 
       printf(
         "FreeType: total memory allocations = %ld\n", table->alloc_total );
       printf(
         "FreeType: maximum memory footprint = %ld\n", table->alloc_max );
+
+      free( table );
 
       if ( leak_count > 0 )
         ft_mem_debug_panic(
