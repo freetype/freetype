@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftobjs.c                                                               */
 /*                                                                         */
-/*  The FreeType private base classes (base).                              */
+/*    The FreeType private base classes (base).                            */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
@@ -15,12 +15,14 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftlist.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 
 #include <freetype/tttables.h>
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -54,8 +56,8 @@
   /*    zero-filled; this is a strong convention in many FreeType parts.   */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    memory :: A handle to a given `memory object' where allocation     */
-  /*              occurs.                                                  */
+  /*    memory :: A handle to a given `memory object' which handles        */
+  /*              allocation.                                              */
   /*                                                                       */
   /*    size   :: The size in bytes of the block to allocate.              */
   /*                                                                       */
@@ -66,9 +68,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  BASE_FUNC(FT_Error)  FT_Alloc( FT_Memory  memory,
-                                 FT_Long    size,
-                                 void**     P )
+  BASE_FUNC( FT_Error )  FT_Alloc( FT_Memory  memory,
+                                   FT_Long    size,
+                                   void**     P )
   {
     FT_Assert( P != 0 );
 
@@ -77,7 +79,7 @@
       *P = memory->alloc( memory, size );
       if ( !*P )
       {
-        FT_ERROR(( "FT.Alloc:" ));
+        FT_ERROR(( "FT_Alloc:" ));
         FT_ERROR(( " Out of memory? (%ld requested)\n",
                    size ));
 
@@ -106,10 +108,11 @@
   /*    from the heap, possibly changing `*P'.                             */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    memory  :: A handle to a given `memory object' where allocation    */
-  /*               occurs.                                                 */
+  /*    memory  :: A handle to a given `memory object' which handles       */
+  /*               reallocation.                                           */
   /*                                                                       */
   /*    current :: The current block size in bytes.                        */
+  /*                                                                       */
   /*    size    :: The new block size in bytes.                            */
   /*                                                                       */
   /* <InOut>                                                               */
@@ -130,10 +133,10 @@
   /*                                                                       */
   /*    (Some embedded systems do not have a working realloc function).    */
   /*                                                                       */
-  BASE_FUNC(FT_Error)  FT_Realloc( FT_Memory  memory,
-                                   FT_Long    current,
-                                   FT_Long    size,
-                                   void**     P )
+  BASE_FUNC( FT_Error )  FT_Realloc( FT_Memory  memory,
+                                     FT_Long    current,
+                                     FT_Long    size,
+                                     void**     P )
   {
     void*  Q;
 
@@ -159,7 +162,7 @@
     return FT_Err_Ok;
 
   Fail:
-    FT_ERROR(( "FT.Realloc:" ));
+    FT_ERROR(( "FT_Realloc:" ));
     FT_ERROR(( " Failed (current %ld, requested %ld)\n",
                current, size ));
     return FT_Err_Out_Of_Memory;
@@ -175,8 +178,8 @@
   /*    Releases a given block of memory allocated through FT_Alloc().     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    memory :: A handle to a given `memory object' where allocation     */
-  /*              occurred.                                                */
+  /*    memory :: A handle to a given `memory object' which handles        */
+  /*              memory deallocation                                      */
   /*                                                                       */
   /*    P      :: This is the _address_ of a _pointer_ which points to the */
   /*              allocated block.  It is always set to NULL on exit.      */
@@ -189,12 +192,12 @@
   /*    This is a strong convention within all of FreeType and its         */
   /*    drivers.                                                           */
   /*                                                                       */
-  BASE_FUNC(void)  FT_Free( FT_Memory  memory,
-                            void**     P )
+  BASE_FUNC( void )  FT_Free( FT_Memory  memory,
+                              void**     P )
   {
     FT_TRACE2(( "FT_Free:" ));
     FT_TRACE2(( " Freeing block 0x%08p, ref 0x%08p\n",
-                P, (P ? *P : (void*)0) ));
+                P, P ? *P : (void*)0 ));
 
     FT_Assert( P != 0 );
 
@@ -217,11 +220,12 @@
   static
   FT_Error  ft_new_input_stream( FT_Library     library,
                                  FT_Open_Args*  args,
-                                 FT_Stream     *astream )
+                                 FT_Stream*     astream )
   {
     FT_Error   error;
     FT_Memory  memory;
     FT_Stream  stream;
+
 
     *astream = 0;
     memory   = library->memory;
@@ -239,25 +243,24 @@
                             args->memory_size,
                             stream );
     }
-    else if (args->flags & ft_open_pathname)
+    else if ( args->flags & ft_open_pathname )
     {
       error = FT_New_Stream( args->pathname, stream );
       stream->pathname.pointer = args->pathname;
     }
-    else if (args->flags & ft_open_stream && args->stream)
+    else if ( args->flags & ft_open_stream && args->stream )
     {
       *stream        = *(args->stream);
       stream->memory = memory;
     }
     else
-    {
       error = FT_Err_Invalid_Argument;
-    }
 
     if ( error )
       FREE( stream );
 
     *astream = stream;
+
   Exit:
     return error;
   }
@@ -271,7 +274,10 @@
   /* <Description>                                                         */
   /*    Closes and destroys a stream object.                               */
   /*                                                                       */
-  FT_EXPORT_FUNC(void)  FT_Done_Stream( FT_Stream  stream )
+  /* <Input>                                                               */
+  /*    stream :: The stream to be closed and destroyed.                   */
+  /*                                                                       */
+  FT_EXPORT_FUNC( void )  FT_Done_Stream( FT_Stream  stream )
   {
     if ( stream->close )
       stream->close( stream );
@@ -284,12 +290,14 @@
     FT_Stream  stream = *astream;
     FT_Memory  memory = stream->memory;
 
+
     if ( stream->close )
       stream->close( stream );
 
     FREE( stream );
     *astream = 0;
   }
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -388,39 +396,43 @@
   }
 
 
- /*************************************************************************
-  *
-  * <Function>
-  *   FT_Get_Raster
-  *
-  * <Description>
-  *   Return a pointer to the raster corresponding to a given glyph
-  *   format tag.
-  *
-  * <Input>
-  *   library      :: handle to source library object
-  *   glyph_format :: glyph format tag
-  *
-  * <Output>
-  *   raster_funcs :: if this field is not 0, returns the raster's interface
-  *
-  * <Return>
-  *   a pointer to the corresponding raster object.
-  *
-  *************************************************************************/
-
-  FT_EXPORT_FUNC(FT_Raster)  FT_Get_Raster( FT_Library        library,
-                                            FT_Glyph_Format   glyph_format,
-                                            FT_Raster_Funcs  *raster_funcs )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*   FT_Get_Raster                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*   Returns the raster interface corresponding to a given glyph format  */
+  /*   tag.                                                                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*   library      :: A handle to the source library object.              */
+  /*                                                                       */
+  /*   glyph_format :: The glyph format tag.                               */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*   raster_funcs :: If this field is not 0, the raster's interface      */
+  /*                   functions are returned.                             */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*   A pointer to the corresponding raster object.                       */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Raster )  FT_Get_Raster(
+                                 FT_Library        library,
+                                 FT_Glyph_Format   glyph_format,
+                                 FT_Raster_Funcs*  raster_funcs )
   {
     FT_Int  n;
+
 
     for ( n = 0; n < FT_MAX_GLYPH_FORMATS; n++ )
     {
       FT_Raster_Funcs*  funcs = &library->raster_funcs[n];
-      if (funcs->glyph_format == glyph_format)
+
+
+      if ( funcs->glyph_format == glyph_format )
       {
-        if (raster_funcs)
+        if ( raster_funcs )
           *raster_funcs = *funcs;
         return library->rasters[n];
       }
@@ -428,34 +440,36 @@
     return 0;
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
   /*    FT_Set_Raster                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Register a given raster to the library.                            */
+  /*    Registers a given raster to the library.                           */
   /*                                                                       */
   /* <Input>                                                               */
   /*    library      :: A handle to a target library object.               */
-  /*    raster_funcs :: pointer to the raster's interface                  */
+  /*                                                                       */
+  /*    raster_funcs :: A pointer to the raster's interface functions.     */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    This function will do the following:                               */
   /*                                                                       */
-  /*    - a new raster object is created through raster_func.raster_new    */
-  /*      if this fails, then the function returns                         */
+  /*    - A new raster object is created through `raster_func.raster_new'. */
+  /*      If this fails, the function returns.                             */
   /*                                                                       */
-  /*    - if a raster is already registered for the glyph format           */
-  /*      specified in raster_funcs, it will be destroyed                  */
+  /*    - If a raster is already registered for the glyph format           */
+  /*      specified in raster_funcs, it will be destroyed.                 */
   /*                                                                       */
-  /*    - the new raster is registered for the glyph format                */
+  /*    - The new raster is registered for the glyph format.               */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Set_Raster( FT_Library        library,
-                                           FT_Raster_Funcs*  raster_funcs )
+  FT_EXPORT_FUNC( FT_Error )  FT_Set_Raster( FT_Library        library,
+                                             FT_Raster_Funcs*  raster_funcs )
   {
     FT_Glyph_Format  glyph_format = raster_funcs->glyph_format;
     FT_Raster_Funcs* funcs;
@@ -463,38 +477,41 @@
     FT_Error         error;
     FT_Int           n, index;
 
-    if ( glyph_format == ft_glyph_format_none)
+
+    if ( glyph_format == ft_glyph_format_none )
       return FT_Err_Invalid_Argument;
 
     /* create a new raster object */
     error = raster_funcs->raster_new( library->memory, &raster );
-    if (error) goto Exit;
+    if ( error )
+      goto Exit;
 
     raster_funcs->raster_reset( raster,
                                 library->raster_pool,
                                 library->raster_pool_size );
 
     index = -1;
-    for (n = 0; n < FT_MAX_GLYPH_FORMATS; n++)
+    for ( n = 0; n < FT_MAX_GLYPH_FORMATS; n++ )
     {
       FT_Raster_Funcs*  funcs = library->raster_funcs + n;
 
-      /* record the first vacant entry in "index" */
-      if (index < 0 && funcs->glyph_format == ft_glyph_format_none)
+
+      /* record the first vacant entry in `index' */
+      if ( index < 0 && funcs->glyph_format == ft_glyph_format_none )
         index = n;
 
       /* compare this entry's glyph format with the one we need */
-      if (funcs->glyph_format == glyph_format)
+      if ( funcs->glyph_format == glyph_format )
       {
-        /* a raster already exists for this glyph format, we will */
-        /* destroy it before updating its entry in the table      */
+        /* A raster already exists for this glyph format.  We will */
+        /* destroy it before updating its entry in the table.      */
         funcs->raster_done( library->rasters[n] );
         index = n;
         break;
       }
     }
 
-    if (index < 0)
+    if ( index < 0 )
     {
       /* the table is full and has no vacant entries */
       error = FT_Err_Too_Many_Glyph_Formats;
@@ -513,6 +530,7 @@
     goto Exit;
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -523,27 +541,32 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    library      :: A handle to a target library object.               */
-  /*    raster_funcs :: pointer to the raster's interface                  */
+  /*                                                                       */
+  /*    raster_funcs :: A pointer to the raster's interface functions.     */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Unset_Raster( FT_Library        library,
-                                            FT_Raster_Funcs*  raster_funcs )
+  FT_EXPORT_DEF( FT_Error )  FT_Unset_Raster(
+                               FT_Library        library,
+                               FT_Raster_Funcs*  raster_funcs )
   {
     FT_Glyph_Format  glyph_format = raster_funcs->glyph_format;
     FT_Error         error;
     FT_Int           n;
 
+
     error = FT_Err_Invalid_Argument;
-    if ( glyph_format == ft_glyph_format_none)
+
+    if ( glyph_format == ft_glyph_format_none )
       goto Exit;
 
-    for (n = 0; n < FT_MAX_GLYPH_FORMATS; n++)
+    for ( n = 0; n < FT_MAX_GLYPH_FORMATS; n++ )
     {
       FT_Raster_Funcs*  funcs = library->raster_funcs + n;
 
-      if (funcs->glyph_format == glyph_format)
+
+      if ( funcs->glyph_format == glyph_format )
       {
         funcs->raster_done( library->rasters[n] );
         library->rasters[n]                   = 0;
@@ -564,30 +587,37 @@
   /*    FT_Set_Raster_Mode                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Set a raster-specific mode.                                        */
+  /*    Sets a raster-specific mode.                                       */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library :: A handle to a target library object.                    */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    library :: A handle to a target library object.                    */
-  /*    format  :: the glyph format used to select the raster              */
-  /*    mode    :: the raster-specific mode descriptor                     */
-  /*    args    :: the mode arguments                                      */
-  /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    format  :: The glyph format used to select the raster.             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Set_Raster_Mode( FT_Library      library,
-                                                FT_Glyph_Format format,
-                                                unsigned long   mode,
-                                                void*           args )
+  /*    mode    :: The raster-specific mode descriptor.                    */
+  /*                                                                       */
+  /*    args    :: The mode arguments.                                     */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Error )  FT_Set_Raster_Mode( FT_Library       library,
+                                                  FT_Glyph_Format  format,
+                                                  unsigned long    mode,
+                                                  void*            args )
   {
     FT_Raster_Funcs  funcs;
     FT_Raster        raster;
 
+
     raster = FT_Get_Raster( library, format, &funcs );
-    if (raster && funcs.raster_set_mode )
+    if ( raster && funcs.raster_set_mode )
       return funcs.raster_set_mode( raster, mode, args );
     else
       return FT_Err_Invalid_Argument;
   }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -600,20 +630,23 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    library    :: A handle to the library object.                      */
+  /*                                                                       */
   /*    hook_index :: The index of the debug hook.  You should use the     */
   /*                  values defined in ftobjs.h, e.g.                     */
   /*                  FT_DEBUG_HOOK_TRUETYPE                               */
+  /*                                                                       */
   /*    debug_hook :: The function used to debug the interpreter.          */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Currently, four debug hook slots are available, but only two (for  */
   /*    the TrueType and the Type 1 interpreter) are defined.              */
   /*                                                                       */
-  FT_EXPORT_FUNC(void)  FT_Set_Debug_Hook( FT_Library         library,
-                                        FT_UInt            hook_index,
-                                        FT_DebugHook_Func  debug_hook )
+  FT_EXPORT_FUNC( void )  FT_Set_Debug_Hook( FT_Library         library,
+                                             FT_UInt            hook_index,
+                                             FT_DebugHook_Func  debug_hook )
   {
-    if ( hook_index < ( sizeof ( library->debug_hooks ) / sizeof ( void* ) ) )
+    if ( hook_index <
+           ( sizeof ( library->debug_hooks ) / sizeof ( void* ) ) )
       library->debug_hooks[hook_index] = debug_hook;
   }
 
@@ -637,11 +670,12 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_New_Library( FT_Memory    memory,
-                                            FT_Library*  alibrary )
+  FT_EXPORT_FUNC( FT_Error )  FT_New_Library( FT_Memory    memory,
+                                              FT_Library*  alibrary )
   {
     FT_Library library = 0;
     FT_Error   error;
+
 
     /* first of all, allocate the library object */
     if ( ALLOC( library, sizeof ( *library ) ) )
@@ -654,15 +688,15 @@
     if ( ALLOC( library->raster_pool, FT_RENDER_POOL_SIZE ) )
       goto Fail;
 
-    /* now register the default raster for the `outline' glyph image format */
-    /* for now, ignore the error...                                         */
+    /* now register the default raster for the `outline' glyph image */
+    /* format for now, ignore the error...                           */
     error = FT_Set_Raster( library, &ft_default_raster );
-
 
     /* That's ok now */
     *alibrary = library;
 
     return FT_Err_Ok;
+
   Fail:
     FREE( library );
     return error;
@@ -679,12 +713,12 @@
   /*    discards all resource objects.                                     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    library :: A handle to the target library                          */
+  /*    library :: A handle to the target library.                         */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Done_Library( FT_Library  library )
+  FT_EXPORT_FUNC( FT_Error )  FT_Done_Library( FT_Library  library )
   {
     FT_Memory  memory;
     FT_Int     n;
@@ -717,8 +751,8 @@
     library->raster_pool_size = 0;
 
     {
-      FT_Raster_Funcs*  cur   = library->raster_funcs;
-      FT_Raster_Funcs*  limit = cur + FT_MAX_GLYPH_FORMATS;
+      FT_Raster_Funcs*  cur    = library->raster_funcs;
+      FT_Raster_Funcs*  limit  = cur + FT_MAX_GLYPH_FORMATS;
       FT_Raster*        raster = library->rasters;
 
       for ( ; cur < limit; cur++, raster++ )
@@ -761,8 +795,9 @@
   /*    This function doesn't check whether the driver is already          */
   /*    installed!                                                         */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Add_Driver( FT_Library                 library,
-                                           const FT_DriverInterface*  driver_interface )
+  FT_EXPORT_FUNC( FT_Error )  FT_Add_Driver(
+                                FT_Library                 library,
+                                const FT_DriverInterface*  driver_interface )
   {
     FT_Error   error;
     FT_Driver  driver;
@@ -822,7 +857,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Remove_Driver( FT_Driver  driver )
+  FT_EXPORT_FUNC( FT_Error )  FT_Remove_Driver( FT_Driver  driver )
   {
     FT_Library  library;
     FT_Memory   memory;
@@ -885,8 +920,8 @@
   /* <Return>                                                              */
   /*    A handle to the driver object, 0 otherwise.                        */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Driver)  FT_Get_Driver( FT_Library  library,
-                                            char*       driver_name )
+  FT_EXPORT_FUNC( FT_Driver )  FT_Get_Driver( FT_Library  library,
+                                              char*       driver_name )
   {
     FT_Driver  *cur, *limit;
 
@@ -938,7 +973,11 @@
     face->memory = memory;
     face->stream = stream;
 
-    error = interface->init_face( stream, face, face_index, num_params, params );
+    error = interface->init_face( stream,
+                                  face,
+                                  face_index,
+                                  num_params,
+                                  params );
     if ( error )
       goto Fail;
 
@@ -956,7 +995,6 @@
   }
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -971,10 +1009,11 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    pathname   :: A path to the font file.                             */
+  /*                                                                       */
   /*    face_index :: The index of the face within the resource.  The      */
   /*                  first face has index 0.                              */
   /* <Output>                                                              */
-  /*    face       :: A handle to a new face object.                       */
+  /*    aface      :: A handle to a new face object.                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -994,15 +1033,17 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_New_Face( FT_Library   library,
-                                         const char*  pathname,
-                                         FT_Long      face_index,
-                                         FT_Face*     aface )
+  FT_EXPORT_FUNC( FT_Error )  FT_New_Face( FT_Library   library,
+                                           const char*  pathname,
+                                           FT_Long      face_index,
+                                           FT_Face*     aface )
   {
     FT_Open_Args  args;
 
+
     args.flags    = ft_open_pathname;
     args.pathname = (char*)pathname;
+
     return FT_Open_Face( library, &args, face_index, aface );
   }
 
@@ -1021,7 +1062,9 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    file_base  :: A pointer to the beginning of the font data.         */
+  /*                                                                       */
   /*    file_size  :: The size of the memory chunk used by the font data.  */
+  /*                                                                       */
   /*    face_index :: The index of the face within the resource.  The      */
   /*                  first face has index 0.                              */
   /* <Output>                                                              */
@@ -1045,17 +1088,19 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_New_Memory_Face( FT_Library   library,
-                                                void*        file_base,
-                                                FT_Long      file_size,
-                                                FT_Long      face_index,
-                                                FT_Face*     face )
+  FT_EXPORT_FUNC( FT_Error )  FT_New_Memory_Face( FT_Library   library,
+                                                  void*        file_base,
+                                                  FT_Long      file_size,
+                                                  FT_Long      face_index,
+                                                  FT_Face*     face )
   {
     FT_Open_Args  args;
+
 
     args.flags       = ft_open_memory;
     args.memory_base = file_base;
     args.memory_size = file_size;
+
     return FT_Open_Face( library, &args, face_index, face );
   }
 
@@ -1076,10 +1121,11 @@
   /* <Input>                                                               */
   /*    args       :: A pointer to an `FT_Open_Args' structure which must  */
   /*                  be filled by the caller.                             */
+  /*                                                                       */
   /*    face_index :: The index of the face within the resource.  The      */
   /*                  first face has index 0.                              */
   /* <Output>                                                              */
-  /*    face       :: A handle to a new face object.                       */
+  /*    aface      :: A handle to a new face object.                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -1099,10 +1145,10 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Open_Face( FT_Library     library,
-                                          FT_Open_Args*  args,
-                                          FT_Long        face_index,
-                                          FT_Face*       aface )
+  FT_EXPORT_FUNC( FT_Error )  FT_Open_Face( FT_Library     library,
+                                            FT_Open_Args*  args,
+                                            FT_Long        face_index,
+                                            FT_Face*       aface )
   {
     FT_Error     error;
     FT_Driver    driver;
@@ -1119,11 +1165,12 @@
 
     /* create input stream */
     error = ft_new_input_stream( library, args, &stream );
-    if ( error ) goto Exit;
+    if ( error )
+      goto Exit;
 
     memory = library->memory;
 
-    /* if the font driver is specified in the `args' structure, use */
+    /* If the font driver is specified in the `args' structure, use */
     /* it.  Otherwise, we'll scan the list of registered drivers.   */
     if ( args->flags & ft_open_driver && args->driver )
     {
@@ -1133,6 +1180,7 @@
       {
         FT_Int         num_params = 0;
         FT_Parameter*  params     = 0;
+
 
         if ( args->flags & ft_open_params )
         {
@@ -1165,6 +1213,7 @@
           FT_Int         num_params = 0;
           FT_Parameter*  params     = 0;
 
+
           if ( args->flags & ft_open_params )
           {
             num_params = args->num_params;
@@ -1194,8 +1243,8 @@
       goto Fail;
 
     node->data = face;
-    /* don't assume driver is the same as face->driver, so use
-       face->driver instead. (JvR 3/5/2000) */
+    /* don't assume driver is the same as face->driver, so use */
+    /* face->driver instead.                                   */
     FT_List_Add( &face->driver->faces_list, node );
 
     /* now allocate a glyph slot object for the face */
@@ -1209,7 +1258,7 @@
         goto Fail;
     }
 
-    /* finally allocate a size object for the face */
+    /* finally, allocate a size object for the face */
     {
       FT_Size  size;
 
@@ -1220,7 +1269,7 @@
         goto Fail;
     }
 
-    /* initialize transform for convenience functions */
+    /* initialize transformation for convenience functions */
     face->transform_matrix.xx = 0x10000L;
     face->transform_matrix.xy = 0;
     face->transform_matrix.yx = 0;
@@ -1270,16 +1319,18 @@
   /*    depends on the font format (and thus the font driver).             */
   /*                                                                       */
   /*    Client applications are expected to know what they are doing       */
-  /*    when invoking this function. Most  drivers simply do not implement */
+  /*    when invoking this function.  Most drivers simply do not implement */
   /*    file attachments.                                                  */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Attach_File( FT_Face      face,
-                                            const char*  filepathname )
+  FT_EXPORT_FUNC( FT_Error )  FT_Attach_File( FT_Face      face,
+                                              const char*  filepathname )
   {
     FT_Open_Args  open;
 
+
     open.flags    = ft_open_pathname;
     open.pathname = (char*)filepathname;
+
     return FT_Attach_Stream( face, &open );
   }
 
@@ -1290,27 +1341,28 @@
   /*    FT_Attach_Stream                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This function is similar to FT_Attach_File with the exception      */
+  /*    This function is similar to FT_Attach_File() with the exception    */
   /*    that it reads the attachment from an arbitrary stream.             */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face :: target face object                                         */
+  /*    face       :: The target face object.                              */
   /*                                                                       */
-  /*    args :: a pointer to an FT_Open_Args structure used to describe    */
-  /*            the input stream to FreeType                               */
+  /*    parameters :: A pointer to an FT_Open_Args structure used to       */
+  /*                  describe the input stream to FreeType.               */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  /*    The meaning of the "attach" (i.e. what really happens when the     */
-  /*    new file is read) is not fixed by FreeType itself. It really       */
+  /* <Note>                                                                */
+  /*    The meaning of the `attach' (i.e. what really happens when the     */
+  /*    new file is read) is not fixed by FreeType itself.  It really      */
   /*    depends on the font format (and thus the font driver).             */
   /*                                                                       */
-  /*    Client applications are expected to know what they're doing        */
-  /*    when invoking this function. Most drivers simply do not implement  */
-  /*    file attachments..                                                 */
+  /*    Client applications are expected to know what they are doing       */
+  /*    when invoking this function.  Most drivers simply do not implement */
+  /*    file attachments.                                                  */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Attach_Stream( FT_Face       face,
-                                              FT_Open_Args* parameters )
+  FT_EXPORT_FUNC( FT_Error )  FT_Attach_Stream( FT_Face       face,
+                                                FT_Open_Args* parameters )
   {
     FT_Stream  stream;
     FT_Error   error;
@@ -1318,24 +1370,28 @@
 
     FTDriver_getInterface  get_interface;
 
+
     if ( !face || !face->driver )
       return FT_Err_Invalid_Handle;
 
     driver = face->driver;
-    error = ft_new_input_stream( driver->library, parameters, &stream );
-    if (error) goto Exit;
+    error  = ft_new_input_stream( driver->library, parameters, &stream );
+    if ( error )
+      goto Exit;
 
     /* we implement FT_Attach_Stream in each driver through the */
-    /* "attach_file" interface..                                */
+    /* `attach_file' interface                                  */
+
     error = FT_Err_Unimplemented_Feature;
 
     get_interface = driver->interface.get_interface;
-    if (get_interface)
+    if ( get_interface )
     {
       FT_Attach_Reader  reader;
 
+
       reader = (FT_Attach_Reader)(get_interface( driver, "attach_file" ));
-      if (reader)
+      if ( reader )
         error = reader( face, stream );
     }
 
@@ -1345,7 +1401,6 @@
   Exit:
     return error;
   }
-
 
 
   /*************************************************************************/
@@ -1361,9 +1416,9 @@
   /*    face :: A handle to a target face object.                          */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Done_Face( FT_Face  face )
+  FT_EXPORT_FUNC( FT_Error )  FT_Done_Face( FT_Face  face )
   {
     FT_Error             error;
     FT_Driver            driver;
@@ -1372,7 +1427,7 @@
     FT_ListNode          node;
 
 
-    if (!face || !face->driver )
+    if ( !face || !face->driver )
       return FT_Err_Invalid_Face_Handle;
 
     driver    = face->driver;
@@ -1410,13 +1465,13 @@
   /*    face :: A handle to a parent face object.                          */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    size :: A handle to a new size object.                             */
+  /*    asize :: A handle to a new size object.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_New_Size( FT_Face   face,
-                                         FT_Size*  asize )
+  FT_EXPORT_FUNC( FT_Error )  FT_New_Size( FT_Face   face,
+                                           FT_Size*  asize )
   {
     FT_Error             error;
     FT_Memory            memory;
@@ -1475,12 +1530,12 @@
   /*    Discards a given size object.                                      */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    size :: A handle to a target size object                           */
+  /*    size :: A handle to a target size object.                          */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Done_Size( FT_Size  size )
+  FT_EXPORT_FUNC( FT_Error )  FT_Done_Size( FT_Size  size )
   {
     FT_Error     error;
     FT_Driver    driver;
@@ -1506,10 +1561,10 @@
       FT_List_Remove( &face->sizes_list, node );
       FREE( node );
 
-      if (face->size == size)
+      if ( face->size == size )
       {
         face->size = 0;
-        if (face->sizes_list.head)
+        if ( face->sizes_list.head )
           face->size = (FT_Size)(face->sizes_list.head->data);
       }
 
@@ -1528,26 +1583,39 @@
   /*    FT_Set_Char_Size                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Sets the character dimensions of a given size object.  The         */
-  /*    `char_size' value is used for the width and height, expressed in   */
-  /*    26.6 fractional points.  1 point = 1/72 inch.                      */
+  /*    Sets the character dimensions of a given face object.  The         */
+  /*    `char_width' and `char_height' values are used for the width and   */
+  /*    height, respectively, expressed in 26.6 fractional points.         */
+  /*                                                                       */
+  /*    If the horizontal or vertical resolution values are zero, a        */
+  /*    default value of 72dpi is used.  Similarly, if one of the          */
+  /*    character dimensions is zero, its value is set equal to the other. */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    size            :: A handle to a target size object.               */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    size      :: A handle to a target size object.                     */
-  /*    char_size :: The character size, in 26.6 fractional points.        */
+  /*    char_width      :: The character width, in 26.6 fractional points. */
+  /*                                                                       */
+  /*    char_height     :: The character height, in 26.6 fractional        */
+  /*                       points.                                         */
+  /*                                                                       */
+  /*    horz_resolution :: The horizontal resolution.                      */
+  /*                                                                       */
+  /*    vert_resolution :: The vertical resolution.                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    When dealing with fixed-size faces (i.e., non-scalable formats),   */
   /*    use the function FT_Set_Pixel_Sizes().                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Set_Char_Size( FT_Face     face,
-                                              FT_F26Dot6  char_width,
-                                              FT_F26Dot6  char_height,
-                                              FT_UInt     horz_resolution,
-                                              FT_UInt     vert_resolution )
+  FT_EXPORT_FUNC( FT_Error )  FT_Set_Char_Size( FT_Face     face,
+                                                FT_F26Dot6  char_width,
+                                                FT_F26Dot6  char_height,
+                                                FT_UInt     horz_resolution,
+                                                FT_UInt     vert_resolution )
   {
     FT_Error             error;
     FT_Driver            driver;
@@ -1556,39 +1624,39 @@
     FT_Size_Metrics*     metrics = &face->size->metrics;
     FT_Long              dim_x, dim_y;
 
-    if ( !face || !face->size || !face->driver)
+
+    if ( !face || !face->size || !face->driver )
       return FT_Err_Invalid_Face_Handle;
 
-    if (!char_width)
+    if ( !char_width )
       char_width = char_height;
-
-    else if (!char_height)
+    else if ( !char_height )
       char_height = char_width;
 
-    if (!horz_resolution)
+    if ( !horz_resolution )
       horz_resolution = 72;
-
-    if (!vert_resolution)
+    if ( !vert_resolution )
       vert_resolution = 72;
 
     driver    = face->driver;
     interface = &driver->interface;
     memory    = driver->memory;
 
-    /* default processing - this can be overriden by the driver */
-    if ( char_width  < 1*64 ) char_width  = 1*64;
-    if ( char_height < 1*64 ) char_height = 1*64;
+    /* default processing -- this can be overridden by the driver */
+    if ( char_width  < 1 * 64 ) char_width  = 1 * 64;
+    if ( char_height < 1 * 64 ) char_height = 1 * 64;
 
     /* Compute pixel sizes in 26.6 units */
-    dim_x = (((char_width  * horz_resolution) / 72) + 32) & -64;
-    dim_y = (((char_height * vert_resolution) / 72) + 32) & -64;
+    dim_x = ( ( ( char_width  * horz_resolution ) / 72 ) + 32 ) & -64;
+    dim_y = ( ( ( char_height * vert_resolution ) / 72 ) + 32 ) & -64;
 
-    metrics->x_ppem    = (FT_UShort)(dim_x >> 6);
-    metrics->y_ppem    = (FT_UShort)(dim_y >> 6);
+    metrics->x_ppem  = (FT_UShort)(dim_x >> 6);
+    metrics->y_ppem  = (FT_UShort)(dim_y >> 6);
 
-    metrics->x_scale = 0x10000;
-    metrics->y_scale = 0x10000;
-    if ( face->face_flags & FT_FACE_FLAG_SCALABLE)
+    metrics->x_scale = 0x10000L;
+    metrics->y_scale = 0x10000L;
+
+    if ( face->face_flags & FT_FACE_FLAG_SCALABLE )
     {
       metrics->x_scale = FT_DivFix( dim_x, face->units_per_EM );
       metrics->y_scale = FT_DivFix( dim_y, face->units_per_EM );
@@ -1609,26 +1677,33 @@
   /*    FT_Set_Pixel_Sizes                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Sets the character dimensions of a given size object.  The width   */
+  /*    Sets the character dimensions of a given face object.  The width   */
   /*    and height are expressed in integer pixels.                        */
   /*                                                                       */
+  /*    If one of the character dimensions is zero, its value is set equal */
+  /*    to the other.                                                      */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face         :: A handle to the target face object.                */
+  /*                                                                       */
   /* <Input>                                                               */
-  /*    size         :: A handle to a target size object.                  */
   /*    pixel_width  :: The character width, in integer pixels.            */
+  /*                                                                       */
   /*    pixel_height :: The character height, in integer pixels.           */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Set_Pixel_Sizes( FT_Face  face,
-                                                FT_UInt  pixel_width,
-                                                FT_UInt  pixel_height )
+  FT_EXPORT_FUNC( FT_Error )  FT_Set_Pixel_Sizes( FT_Face  face,
+                                                  FT_UInt  pixel_width,
+                                                  FT_UInt  pixel_height )
   {
     FT_Error             error;
     FT_Driver            driver;
     FT_Memory            memory;
     FT_DriverInterface*  interface;
     FT_Size_Metrics*     metrics = &face->size->metrics;
+
 
     if ( !face || !face->size || !face->driver )
       return FT_Err_Invalid_Face_Handle;
@@ -1637,11 +1712,10 @@
     interface = &driver->interface;
     memory    = driver->memory;
 
-    /* default processing - this can be overriden by the driver */
-    if (pixel_width == 0)
+    /* default processing -- this can be overridden by the driver */
+    if ( pixel_width == 0 )
       pixel_width = pixel_height;
-      
-    else if (pixel_height == 0)
+    else if ( pixel_height == 0 )
       pixel_height = pixel_width;
       
     if ( pixel_width  < 1 ) pixel_width  = 1;
@@ -1684,10 +1758,10 @@
   /*    aslot :: A handle to a new glyph slot object.                      */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_New_GlyphSlot( FT_Face        face,
-                                              FT_GlyphSlot*  aslot )
+  FT_EXPORT_FUNC( FT_Error )  FT_New_GlyphSlot( FT_Face        face,
+                                                FT_GlyphSlot*  aslot )
   {
     FT_Error             error;
     FT_Driver            driver;
@@ -1746,9 +1820,9 @@
   /* <Input>                                                               */
   /*    slot :: A handle to a target glyph slot.                           */
   /*                                                                       */
-  FT_EXPORT_FUNC(void)  FT_Done_GlyphSlot( FT_GlyphSlot  slot )
+  FT_EXPORT_FUNC( void )  FT_Done_GlyphSlot( FT_GlyphSlot  slot )
   {
-    if (slot)
+    if ( slot )
     {
       FT_Driver      driver = slot->face->driver;
       FT_Memory      memory = driver->memory;
@@ -1781,15 +1855,11 @@
   /*    FT_Load_Glyph                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A function used to load a single glyph within a given glyph slot,  */
-  /*    for a given size.                                                  */
+  /*    A function used to load a single glyph within a given face.        */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    slot        :: A handle to a target slot object where the glyph    */
+  /*    face        :: A handle to a target face object where the glyph    */
   /*                   will be loaded.                                     */
-  /*                                                                       */
-  /*    size        :: A handle to the source face size at which the glyph */
-  /*                   must be scaled/loaded.                              */
   /*                                                                       */
   /*    glyph_index :: The index of the glyph in the font file.            */
   /*                                                                       */
@@ -1798,23 +1868,17 @@
   /*                   glyph loading process (e.g., whether the outline    */
   /*                   should be scaled, whether to load bitmaps or not,   */
   /*                   whether to hint the outline, etc).                  */
-  /* <Output>                                                              */
-  /*    result      :: A set of bit flags indicating the type of data that */
-  /*                   was loaded in the glyph slot (outline or bitmap,    */
-  /*                   etc).                                               */
-  /*                                                                       */
-  /*                   You can set this field to 0 if you don't want this  */
-  /*                   information.                                        */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Load_Glyph( FT_Face  face,
-                                           FT_UInt  glyph_index,
-                                           FT_Int   load_flags )
+  FT_EXPORT_FUNC( FT_Error )  FT_Load_Glyph( FT_Face  face,
+                                             FT_UInt  glyph_index,
+                                             FT_Int   load_flags )
   {
     FT_Error   error;
     FT_Driver  driver;
+
 
     if ( !face || !face->size || !face->glyph )
       return FT_Err_Invalid_Face_Handle;
@@ -1825,7 +1889,7 @@
     driver = face->driver;
 
     /* when the flag NO_RECURSE is set, we disable hinting and scaling */
-    if (load_flags & FT_LOAD_NO_RECURSE)
+    if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
     error = driver->interface.load_glyph( face->glyph,
@@ -1837,21 +1901,47 @@
   }
 
 
-  FT_EXPORT_FUNC(FT_Error)  FT_Load_Char( FT_Face   face,
-                                          FT_ULong  char_code,
-                                          FT_Int    load_flags )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Load_Char                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A function used to load a single character within a given face     */
+  /*    and the selected charmap (to be done with the FT_Select_Charmap()  */
+  /*    function).                                                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face       :: A handle to a target face object where the           */
+  /*                  character will be loaded.                            */
+  /*                                                                       */
+  /*    char_code  :: The character code of the glyph in the font file.    */
+  /*                                                                       */
+  /*    load_flags :: A flag indicating what to load for this glyph.  The  */
+  /*                  FT_LOAD_XXX constants can be used to control the     */
+  /*                  glyph loading process (e.g., whether the outline     */
+  /*                  should be scaled, whether to load bitmaps or not,    */
+  /*                  whether to hint the outline, etc).                   */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Error )  FT_Load_Char( FT_Face   face,
+                                            FT_ULong  char_code,
+                                            FT_Int    load_flags )
   {
     FT_Error   error;
     FT_Driver  driver;
     FT_UInt    glyph_index;
 
-    if (!face || !face->size || !face->glyph || !face->charmap )
+
+    if ( !face || !face->size || !face->glyph || !face->charmap )
       return FT_Err_Invalid_Face_Handle;
 
     driver      = face->driver;
     glyph_index = FT_Get_Char_Index( face, char_code );
 
-    if (glyph_index == 0)
+    if ( glyph_index == 0 )
       error = FT_Err_Invalid_Character_Code;
     else
       error = driver->interface.load_glyph( face->glyph,
@@ -1860,6 +1950,7 @@
                                             load_flags );
     return error;
   }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1890,10 +1981,10 @@
   /*    kernings, are out of the scope of this API function -- they can be */
   /*    implemented through format-specific interfaces.                    */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Get_Kerning( FT_Face     face,
-                                            FT_UInt     left_glyph,
-                                            FT_UInt     right_glyph,
-                                            FT_Vector*  kerning )
+  FT_EXPORT_FUNC( FT_Error )  FT_Get_Kerning( FT_Face     face,
+                                              FT_UInt     left_glyph,
+                                              FT_UInt     right_glyph,
+                                              FT_Vector*  kerning )
   {
     FT_Error   error;
     FT_Driver  driver;
@@ -1911,8 +2002,10 @@
 
     if ( driver->interface.get_kerning )
     {
-      error = driver->interface.get_kerning( face, left_glyph,
-                                             right_glyph, kerning );
+      error = driver->interface.get_kerning( face,
+                                             left_glyph,
+                                             right_glyph,
+                                             kerning );
     }
     else
     {
@@ -1925,30 +2018,34 @@
     return error;
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
   /*    FT_Select_Charmap                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Selects a given charmap by its encoding tag.                       */
+  /*    Selects a given charmap by its encoding tag (as listed in          */
+  /*    `freetype.h').                                                     */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face     :: A handle to the source face object.                    */
-  /*    encoding :: handle to the selected charmap                         */
+  /*                                                                       */
+  /*    encoding :: A handle to the selected charmap.                      */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code. 0 means success.                                       */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    This function will return an error if no charmap in the face       */
-  /*    corresponds to the encoding queried here                           */
+  /*    corresponds to the encoding queried here.                          */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Select_Charmap( FT_Face      face,
-                                               FT_Encoding  encoding )
+  FT_EXPORT_FUNC( FT_Error )  FT_Select_Charmap( FT_Face      face,
+                                                 FT_Encoding  encoding )
   {
     FT_CharMap*  cur   = face->charmaps;
     FT_CharMap*  limit = cur + face->num_charmaps;
+
 
     for ( ; cur < limit; cur++ )
     {
@@ -1973,21 +2070,22 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face     :: A handle to the source face object.                    */
-  /*    charmap  :: handle to the selected charmap                         */
+  /*    charmap  :: A handle to the selected charmap.                      */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code. 0 means success.                                       */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    this function will return an error when the charmap is not part    */
-  /*    of the face (i.e. if it is not listed in the face->charmaps[]      */
+  /*    This function will return an error when the charmap is not part    */
+  /*    of the face (i.e., if it is not listed in the face->charmaps[]     */
   /*    table).                                                            */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Set_Charmap( FT_Face     face,
-                                            FT_CharMap  charmap )
+  FT_EXPORT_FUNC( FT_Error )  FT_Set_Charmap( FT_Face     face,
+                                              FT_CharMap  charmap )
   {
     FT_CharMap*  cur   = face->charmaps;
     FT_CharMap*  limit = cur + face->num_charmaps;
+
 
     for ( ; cur < limit; cur++ )
     {
@@ -2000,6 +2098,7 @@
     return FT_Err_Invalid_Argument;
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2010,17 +2109,18 @@
   /*    uses a charmap object to do the translation.                       */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    charmap  :: A handle to a filter charmap object.                   */
+  /*    face     :: A handle to the source face object.                    */
   /*    charcode :: The character code.                                    */
   /*                                                                       */
   /* <Return>                                                              */
   /*    The glyph index.  0 means `undefined character code'.              */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_UInt)  FT_Get_Char_Index( FT_Face  face,
-                                              FT_ULong charcode )
+  FT_EXPORT_FUNC( FT_UInt )  FT_Get_Char_Index( FT_Face  face,
+                                                FT_ULong charcode )
   {
     FT_UInt    result;
     FT_Driver  driver;
+
 
     result = 0;
     if ( face && face->charmap )
@@ -2032,53 +2132,52 @@
   }
 
 
- /***************************************************************************
-  *
-  * <Function>
-  *    FT_Get_Sfnt_Table
-  *
-  * <Description>
-  *    Returns a pointer to a given SFNT table within a face.
-  *
-  * <Input>
-  *    face  :: handle to source
-  *    tag   :: index if SFNT table
-  *
-  * <Return>
-  *    type-less pointer to the table. This will be 0 in case of error, or
-  *    when the corresponding table was not found *OR* loaded from the file.
-  *
-  * <Note>
-  *    The table is owned by the face object, and disappears with it.
-  *
-  *    This function is only useful to access Sfnt tables that are loaded
-  *    by the sfnt/truetype/opentype drivers. See FT_Sfnt_tag for a list.
-  *
-  *    You can load any table with a different function.. XXX
-  *
-  ***************************************************************************/
-
-
-  FT_EXPORT_FUNC(void*)  FT_Get_Sfnt_Table( FT_Face      face,
-                                            FT_Sfnt_Tag  tag )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Sfnt_Table                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Returns a pointer to a given SFNT table within a face.             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: A handle to the source face object.                        */
+  /*    tag  :: An index of an SFNT table.                                 */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A type-less pointer to the table.  This will be 0 in case of       */
+  /*    error, or if the corresponding table was not found *OR* loaded     */
+  /*    from the file.                                                     */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The table is owned by the face object, and disappears with it.     */
+  /*                                                                       */
+  /*    This function is only useful to access SFNT tables that are loaded */
+  /*    by the sfnt/truetype/opentype drivers.  See the FT_Sfnt_Tag        */
+  /*    enumeration in `tttables.h' for a list.                            */
+  /*                                                                       */
+  /*    You can load any table with a different function.. XXX             */
+  /*                                                                       */
+  FT_EXPORT_FUNC( void* )  FT_Get_Sfnt_Table( FT_Face      face,
+                                              FT_Sfnt_Tag  tag )
   {
     void*                   table = 0;
     FT_Get_Sfnt_Table_Func  func;
     FT_Driver               driver;
 
-    if (!face || !FT_IS_SFNT(face))
+
+    if ( !face || !FT_IS_SFNT( face ) )
       goto Exit;
 
     driver = face->driver;
     func = (FT_Get_Sfnt_Table_Func)driver->interface.get_interface(
-                 driver, "get_sfnt" );
-    if (func)
-      table = func(face,tag);
+                                             driver, "get_sfnt" );
+    if ( func )
+      table = func( face, tag );
 
   Exit:
     return table;
   }
-
 
 
   /*************************************************************************/
@@ -2094,14 +2193,15 @@
   /*    library :: A handle to the target library object.                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Done_FreeType( FT_Library  library )
+  FT_EXPORT_FUNC( FT_Error )  FT_Done_FreeType( FT_Library  library )
   {
     /* Discard the library object */
     FT_Done_Library( library );
 
     return FT_Err_Ok;
   }
+
 
 /* END */

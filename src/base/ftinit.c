@@ -17,22 +17,18 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /*  The purpose of this file is to implement the three following         */
+  /*  The purpose of this file is to implement the following two           */
   /*  functions:                                                           */
   /*                                                                       */
-  /*  FT_Default_Drivers:                                                  */
+  /*  FT_Default_Drivers():                                                */
   /*     This function is used to add the set of default drivers to a      */
-  /*     fresh new library object.  The set is computed at compile time    */
-  /*     from the Makefiles inclusions in Makefile.lib.  See the document  */
-  /*     `FreeType Internals' for more info.                               */
+  /*     fresh new library object.  The set is taken from the header file  */
+  /*     `freetype/config/ftmodule.h'.  See the document `FreeType 2.0     */
+  /*     Build System' for more information.                               */
   /*                                                                       */
-  /*  FT_Init_FreeType:                                                    */
+  /*  FT_Init_FreeType():                                                  */
   /*     This function creates a system object for the current platform,   */
   /*     builds a library out of it, then calls FT_Default_Drivers().      */
-  /*                                                                       */
-  /*  FT_Done_FreeType:                                                    */
-  /*     This function simply finalizes the library and the corresponding  */
-  /*     system object.                                                    */
   /*                                                                       */
   /*  Note that even if FT_Init_FreeType() uses the implementation of the  */
   /*  system object defined at build time, client applications are still   */
@@ -76,7 +72,7 @@ const FT_DriverInterface*  ft_default_drivers[] =
   /* <InOut>                                                               */
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
-  FT_EXPORT_FUNC(void)  FT_Default_Drivers( FT_Library  library )
+  FT_EXPORT_FUNC( void )  FT_Default_Drivers( FT_Library  library )
   {
     FT_Error                   error;
     const FT_DriverInterface* *cur;
@@ -89,7 +85,7 @@ const FT_DriverInterface*  ft_default_drivers[] =
       /* notify errors, but don't stop */
       if ( error )
       {
-        FT_ERROR(( "FT.Default_Drivers: Cannot install `%s', error = %x\n",
+        FT_ERROR(( "FT_Default_Drivers: Cannot install `%s', error = %x\n",
                    (*cur)->driver_name, error ));
       }
       cur++;
@@ -112,13 +108,13 @@ const FT_DriverInterface*  ft_default_drivers[] =
   /* <Return>                                                              */
   /*    FreeTyoe error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Init_FreeType( FT_Library*  library )
+  FT_EXPORT_FUNC( FT_Error )  FT_Init_FreeType( FT_Library*  library )
   {
     FT_Error   error;
     FT_Memory  memory;
 
 
-    /* First of all, allocate a new system object - -this function is part */
+    /* First of all, allocate a new system object -- this function is part */
     /* of the system-specific component, i.e. `ftsystem.c'.                */
 
     memory = FT_New_Memory();
