@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 2000, 2001 Catharon Productions Inc.
+# Copyright 2000, 2001, 2002 Catharon Productions Inc.
 # Author: David Turner
 #
 # This file is part of the Catharon Typography Project and shall only
@@ -29,17 +29,17 @@ AUTO_COMPILE := $(FT_COMPILE) $I$(AUTO_DIR)
 
 # AUTO driver sources (i.e., C files)
 #
-AUTO_DRV_SRC := $(AUTO_DIR_)ahangles.c  \
-                $(AUTO_DIR_)ahglobal.c  \
-                $(AUTO_DIR_)ahglyph.c   \
-                $(AUTO_DIR_)ahhint.c    \
+AUTO_DRV_SRC := $(AUTO_DIR_)ahangles.c \
+                $(AUTO_DIR_)ahglobal.c \
+                $(AUTO_DIR_)ahglyph.c  \
+                $(AUTO_DIR_)ahhint.c   \
                 $(AUTO_DIR_)ahmodule.c
 
 # AUTO driver headers
 #
 AUTO_DRV_H := $(AUTO_DRV_SRC:%c=%h)  \
               $(AUTO_DIR_)ahloader.h \
-              $(AUTO_DIR_)ahtypes.h \
+              $(AUTO_DIR_)ahtypes.h  \
               $(AUTO_DIR_)aherrors.h
 
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType auto hinting outline optimization (body).                   */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 Catharon Productions Inc.                    */
+/*  Copyright 2000-2001, 2002, 2003 Catharon Productions Inc.              */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -21,9 +21,9 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* This module is in charge of optimising the outlines produced by the   */
+  /* This module is in charge of optimizing the outlines produced by the   */
   /* auto-hinter in direct mode. This is required at small pixel sizes in  */
-  /* order to ensure coherent spacing, among other things..                */
+  /* order to ensure coherent spacing, among other things.                 */
   /*                                                                       */
   /* The technique used in this module is a simplified simulated           */
   /* annealing.                                                            */
@@ -42,17 +42,17 @@
 #define AH_BRUTE_FORCE
 
 
-#define xxxAH_DEBUG_OPTIM
+#define xxAH_DEBUG_OPTIM
 
 
-#undef LOG
+#undef AH_OPTIM_LOG
 #ifdef AH_DEBUG_OPTIM
 
-#define LOG( x )  optim_log ## x
+#define AH_OPTIM_LOG( x )  optim_log ## x
 
 #else
 
-#define LOG( x )
+#define AH_OPTIM_LOG( x )  do ; while ( 0 ) /* nothing */
 
 #endif /* AH_DEBUG_OPTIM */
 
@@ -87,13 +87,13 @@
     stem = optimizer->stems;
     for ( n = 0; n < optimizer->num_stems; n++, stem++ )
     {
-      LOG(( " %c%2d [%.1f:%.1f]={%.1f:%.1f}="
-            "<%1.f..%1.f> force=%.1f speed=%.1f\n",
-            optimizer->vertical ? 'V' : 'H', n,
-            FLOAT( stem->edge1->opos ), FLOAT( stem->edge2->opos ),
-            FLOAT( stem->edge1->pos ),  FLOAT( stem->edge2->pos ),
-            FLOAT( stem->min_pos ),     FLOAT( stem->max_pos ),
-            FLOAT( stem->force ),       FLOAT( stem->velocity ) ));
+      AH_OPTIM_LOG(( " %c%2d [%.1f:%.1f]={%.1f:%.1f}="
+                     "<%1.f..%1.f> force=%.1f speed=%.1f\n",
+                     optimizer->vertical ? 'V' : 'H', n,
+                     FLOAT( stem->edge1->opos ), FLOAT( stem->edge2->opos ),
+                     FLOAT( stem->edge1->pos ),  FLOAT( stem->edge2->pos ),
+                     FLOAT( stem->min_pos ),     FLOAT( stem->max_pos ),
+                     FLOAT( stem->force ),       FLOAT( stem->velocity ) ));
     }
   }
 
@@ -108,11 +108,11 @@
     stem = optimizer->stems;
     for ( n = 0; n < optimizer->num_stems; n++, stem++ )
     {
-      LOG(( " %c%2d [%.1f]=<%1.f..%1.f> force=%.1f speed=%.1f\n",
-            optimizer->vertical ? 'V' : 'H', n,
-            FLOAT( stem->pos ),
-            FLOAT( stem->min_pos ), FLOAT( stem->max_pos ),
-            FLOAT( stem->force ),   FLOAT( stem->velocity ) ));
+      AH_OPTIM_LOG(( " %c%2d [%.1f]=<%1.f..%1.f> force=%.1f speed=%.1f\n",
+                     optimizer->vertical ? 'V' : 'H', n,
+                     FLOAT( stem->pos ),
+                     FLOAT( stem->min_pos ), FLOAT( stem->max_pos ),
+                     FLOAT( stem->force ),   FLOAT( stem->velocity ) ));
     }
   }
 
@@ -127,19 +127,19 @@
 
     spring = optimizer->springs;
     stems  = optimizer->stems;
-    LOG(( "%cSprings ", optimizer->vertical ? 'V' : 'H' ));
+    AH_OPTIM_LOG(( "%cSprings ", optimizer->vertical ? 'V' : 'H' ));
 
     for ( n = 0; n < optimizer->num_springs; n++, spring++ )
     {
-      LOG(( " [%d-%d:%.1f:%1.f:%.1f]",
-            spring->stem1 - stems, spring->stem2 - stems,
-            FLOAT( spring->owidth ),
-            FLOAT( spring->stem2->pos -
-                   ( spring->stem1->pos + spring->stem1->width ) ),
-            FLOAT( spring->tension ) ));
+      AH_OPTIM_LOG(( " [%d-%d:%.1f:%1.f:%.1f]\n",
+                     spring->stem1 - stems, spring->stem2 - stems,
+                     FLOAT( spring->owidth ),
+                     FLOAT( spring->stem2->pos -
+                            ( spring->stem1->pos + spring->stem1->width ) ),
+                     FLOAT( spring->tension ) ));
     }
 
-    LOG(( "\n" ));
+    AH_OPTIM_LOG(( "\n" ));
   }
 
 #endif /* AH_DEBUG_OPTIM */
@@ -600,7 +600,8 @@
     {
       AH_Stem*  stem1 = spring->stem1;
       AH_Stem*  stem2 = spring->stem2;
-      FT_Pos  width;
+      FT_Pos    width;
+
 
       width  = stem2->pos - ( stem1->pos + stem1->width );
       width -= spring->owidth;
@@ -625,13 +626,13 @@
 
 
     distortion = optim_compute_distortion( optimizer );
-    LOG(( "config distortion = %.1f ", FLOAT( distortion * 64 ) ));
+    AH_OPTIM_LOG(( "config distortion = %.1f ", FLOAT( distortion * 64 ) ));
 
     /* check that we really need to add this configuration to our */
     /* sorted history                                             */
     if ( limit > configs && limit[-1].distortion < distortion )
     {
-      LOG(( "ejected\n" ));
+      AH_OPTIM_LOG(( "ejected\n" ));
       return;
     }
 
@@ -664,7 +665,7 @@
       config[0] = config[1];
       config[1] = temp;
     }
-    LOG(( "recorded!\n" ));
+    AH_OPTIM_LOG(( "recorded!\n" ));
   }
 
 
@@ -818,7 +819,7 @@
     optimizer->outline = outline;
     optimizer->memory  = memory;
 
-    LOG(( "initializing new optimizer\n" ));
+    AH_OPTIM_LOG(( "initializing new optimizer\n" ));
     /* compute stems and springs */
     error = optim_compute_stems  ( optimizer ) ||
             optim_compute_springs( optimizer );
@@ -862,7 +863,7 @@
 
     if ( optimizer->num_springs > 0 )
     {
-      LOG(( "horizontal optimization ------------------------\n" ));
+      AH_OPTIM_LOG(( "horizontal optimization ------------------------\n" ));
       optim_compute( optimizer );
     }
 
@@ -873,7 +874,7 @@
 
     if ( optimizer->num_springs )
     {
-      LOG(( "vertical optimization --------------------------\n" ));
+      AH_OPTIM_LOG(( "vertical optimization --------------------------\n" ));
       optim_compute( optimizer );
     }
   }

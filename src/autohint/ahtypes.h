@@ -251,9 +251,9 @@ FT_BEGIN_HEADER
   /*    contour    :: A pointer to the first point of the segment's        */
   /*                  contour.                                             */
   /*                                                                       */
-  /*    pos        :: The segment position in font units.                  */
+  /*    min_coord  :: The minimum coordinate of the segment.               */
   /*                                                                       */
-  /*    size       :: The segment size.                                    */
+  /*    max_coord  :: The maximum coordinate of the segment.               */
   /*                                                                       */
   /*    edge       :: The edge of the current segment.                     */
   /*                                                                       */
@@ -320,12 +320,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    serif      :: The serif edge.                                      */
   /*                                                                       */
-  /*    num_paired :: The number of other edges that pair to this one.     */
+  /*    num_linked :: The number of other edges that pair to this one.     */
   /*                                                                       */
   /*    score      :: Used to score the edge when selecting them.          */
   /*                                                                       */
   /*    blue_edge  :: Indicate the blue zone edge this edge is related to. */
-  /*                  Only set for some of the horizontal edges in a Latin */
+  /*                  Only set for some of the horizontal edges in a latin */
   /*                  font.                                                */
   /*                                                                       */
   typedef struct  AH_EdgeRec_
@@ -368,7 +368,7 @@ FT_BEGIN_HEADER
 
     FT_Int        max_contours;
     FT_Int        num_contours;
-    AH_Point *    contours;
+    AH_Point*     contours;
 
     FT_Int        num_hedges;
     AH_Edge       horz_edges;
@@ -399,7 +399,7 @@ FT_BEGIN_HEADER
 
 #define AH_BLUE_CAPITAL_TOP     0                              /* THEZOCQS */
 #define AH_BLUE_CAPITAL_BOTTOM  ( AH_BLUE_CAPITAL_TOP + 1 )    /* HEZLOCUS */
-#define AH_BLUE_SMALL_TOP       ( AH_BLUE_CAPITAL_BOTTOM + 1)  /* xzroesc  */
+#define AH_BLUE_SMALL_TOP       ( AH_BLUE_CAPITAL_BOTTOM + 1 ) /* xzroesc  */
 #define AH_BLUE_SMALL_BOTTOM    ( AH_BLUE_SMALL_TOP + 1 )      /* xzroesc  */
 #define AH_BLUE_SMALL_MINOR     ( AH_BLUE_SMALL_BOTTOM + 1 )   /* pqgjy    */
 #define AH_BLUE_MAX             ( AH_BLUE_SMALL_MINOR + 1 )
@@ -428,6 +428,9 @@ FT_BEGIN_HEADER
   /*    num_widths  :: The number of widths.                               */
   /*                                                                       */
   /*    num_heights :: The number of heights.                              */
+  /*                                                                       */
+  /*    stds        :: A two-element array giving the default stem width   */
+  /*                   and height.                                         */
   /*                                                                       */
   /*    widths      :: Snap widths, including standard one.                */
   /*                                                                       */
@@ -474,6 +477,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    y_scale :: The current vertical scale.                             */
   /*                                                                       */
+  /*    control_overshoot ::                                               */
+  /*               Currently unused.                                       */
+  /*                                                                       */
   typedef struct  AH_Face_GlobalsRec_
   {
     FT_Face        face;
@@ -486,39 +492,39 @@ FT_BEGIN_HEADER
   } AH_Face_GlobalsRec, *AH_Face_Globals;
 
 
-  typedef struct  AH_HinterRec
+  typedef struct  AH_HinterRec_
   {
-    FT_Memory         memory;
-    AH_Hinter_Flags   flags;
+    FT_Memory        memory;
+    AH_Hinter_Flags  flags;
 
-    FT_Int            algorithm;
-    FT_Face           face;
+    FT_Int           algorithm;
+    FT_Face          face;
 
-    AH_Face_Globals   globals;
+    AH_Face_Globals  globals;
 
-    AH_Outline        glyph;
+    AH_Outline       glyph;
 
-    AH_Loader         loader;
-    FT_Vector         pp1;
-    FT_Vector         pp2;
+    AH_Loader        loader;
+    FT_Vector        pp1;
+    FT_Vector        pp2;
 
-    FT_Bool           transformed;
-    FT_Vector         trans_delta;
-    FT_Matrix         trans_matrix;
+    FT_Bool          transformed;
+    FT_Vector        trans_delta;
+    FT_Matrix        trans_matrix;
 
-    FT_Bool           do_horz_hints;     /* disable X hinting            */
-    FT_Bool           do_vert_hints;     /* disable Y hinting            */
-    FT_Bool           do_horz_snapping;  /* disable X stem size snapping */
-    FT_Bool           do_vert_snapping;  /* disable Y stem size snapping */
-    FT_Bool           do_stem_adjust;    /* disable light stem snapping  */
+    FT_Bool          do_horz_hints;     /* disable X hinting            */
+    FT_Bool          do_vert_hints;     /* disable Y hinting            */
+    FT_Bool          do_horz_snapping;  /* disable X stem size snapping */
+    FT_Bool          do_vert_snapping;  /* disable Y stem size snapping */
+    FT_Bool          do_stem_adjust;    /* disable light stem snapping  */
 
   } AH_HinterRec, *AH_Hinter;
 
 
-#ifdef  DEBUG_HINTER
-  extern AH_Hinter   ah_debug_hinter;
-  extern FT_Bool     ah_debug_disable_horz;
-  extern FT_Bool     ah_debug_disable_vert;
+#ifdef DEBUG_HINTER
+  extern AH_Hinter  ah_debug_hinter;
+  extern FT_Bool    ah_debug_disable_horz;
+  extern FT_Bool    ah_debug_disable_vert;
 #else
 #define ah_debug_disable_horz  0
 #define ah_debug_disable_vert  0
