@@ -572,7 +572,7 @@
                       FT_Bool     destroy )
   {
     FT_GlyphSlotRec  dummy;
-    FT_Error         error;
+    FT_Error         error = FT_Err_Ok;
     FT_Glyph         glyph;
     FT_BitmapGlyph   bitmap = NULL;
 

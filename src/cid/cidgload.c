@@ -71,14 +71,15 @@
       fd_select = (FT_UInt)cid_get_offset( &p, (FT_Byte)cid->fd_bytes );
 
       if ( glyph_data.length != 0 )
-	  {
+      {
         glyph_length = glyph_data.length - cid->fd_bytes;
         FT_ALLOC( charstring, glyph_length );
-	    if ( !error )
-          ft_memcpy( charstring, glyph_data.pointer + cid->fd_bytes, glyph_length );
-	  }
+        if ( !error )
+          ft_memcpy( charstring, glyph_data.pointer + cid->fd_bytes,
+                     glyph_length );
+      }
 
-	  face->root.internal->incremental_interface->funcs->free_glyph_data(
+      face->root.internal->incremental_interface->funcs->free_glyph_data(
                 face->root.internal->incremental_interface->object,
                 &glyph_data );
 
@@ -162,6 +163,7 @@
     {
       FT_Bool                    found = FALSE;
       FT_Incremental_MetricsRec  metrics;
+
 
       error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
                 face->root.internal->incremental_interface->object,
