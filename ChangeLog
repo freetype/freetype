@@ -1,3 +1,8 @@
+2001-10-21  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/cff/cffload.c (CFF_Done_Font): Free the subfonts array to
+	avoid a memory leak.
+
 2001-10-21  David Turner <david@freetype.org>
 
 	* src/pshinter/pshalgo2.c, src/pshinter/pshalgo1.c,
