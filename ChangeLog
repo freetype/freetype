@@ -1,3 +1,11 @@
+2000-11-28  YAMANO-UCHI Hidetoshi <mer@din.or.jp>
+
+	* src/truetype/ttobjs.c (TT_Init_Size): Fix #ifdef's to work with
+	disabled interpreter also.
+
+	* src/base/ftnames.c (FT_Get_Sfnt_Name_Count): Fix incorrect
+	parentheses.
+
 2000-11-26  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/t2gload.c (T2_Parse_CharStrings): Added logic to glyph
