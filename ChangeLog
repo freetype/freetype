@@ -1,3 +1,11 @@
+2002-06-03  Werner Lemberg  <wl@gnu.org>
+
+	Add 8bpp support.
+
+	* src/bdf/bdflib.c (_bdf_parse_start): Handle 8bpp.
+	* src/bdf/bdfdrivr.c (BDF_Glyph_Load): Ditto.
+	* src/bdf/README: Updated.
+
 2002-06-02  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/pfr/pfrload.c (pfr_phy_font_done): Free `blue_values' array.

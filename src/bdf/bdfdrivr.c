@@ -432,6 +432,13 @@ THE SOFTWARE.
           p += glyph.bpr;
         }
         break;
+
+      case 8:
+        bitmap->num_grays = 256;
+
+        FT_MEM_COPY( bitmap->buffer, glyph.bitmap,
+                     bitmap->rows * bitmap->pitch );
+        break;
       }
     }
 

@@ -62,9 +62,9 @@ xmbdfed bitmap font editor.  Microsoft's SBIT tool expects bitmap fonts in
 that format for adding anti-aliased them to TrueType fonts.  It introduces a
 fourth field to the `SIZE' keyword which gives the bpp value (bits per
 pixel) of the glyph data in the font.  Possible values are 1 (the default),
-2 (four gray levels), and 4 (16 gray levels).  The driver returns either a
-bitmap with 1 bit per pixel or a pixmap with 8bits per pixel (using 4 and 16
-gray levels, respectively).
+2 (four gray levels), 4 (16 gray levels), and 8 (256 gray levels).  The
+driver returns either a bitmap with 1 bit per pixel or a pixmap with 8bits
+per pixel (using 4, 16, and 256 gray levels, respectively).
 
 
 Known problems

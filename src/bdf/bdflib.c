@@ -2150,20 +2150,28 @@
       /* Check for the bits per pixel field. */
       if ( p->list.used == 5 )
       {
-        p->font->bpp = _bdf_atos( p->list.field[4], 0, 10 );
-        if ( p->font->bpp > 1 && ( p->font->bpp & 1 ) )
+        unsigned short bitcount, i, shift;
+
+
+        p->font->bpp = (unsigned short)_bdf_atos( p->list.field[4], 0, 10 );
+
+        /* Only values 1, 2, 4, 8 are allowed. */
+        shift = p->font->bpp;
+        bitcount = 0;
+        for ( i = 0; shift > 0; i++ )
         {
-          /* Move up to the next bits per pixel value if an odd number */
-          /* is encountered.                                           */
-          p->font->bpp++;
-          if ( p->font->bpp <= 4 )
-            FT_TRACE2(( "_bdf_parse_start: " ACMSG11, p->font->bpp ));
+          if ( shift & 1 )
+            bitcount = i;
+          shift >>= 1;
         }
 
-        if ( p->font->bpp > 4 )
+        shift = ( bitcount > 3 ) ? 8 : ( 1 << bitcount );
+
+        if ( p->font->bpp > shift || p->font->bpp != shift )
         {
+          /* select next higher value */
+          p->font->bpp = shift << 1;
           FT_TRACE2(( "_bdf_parse_start: " ACMSG11, p->font->bpp ));
-          p->font->bpp = 4;
         }
       }
       else
