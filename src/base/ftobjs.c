@@ -2011,9 +2011,11 @@
       FT_UShort  x_ppem = (FT_UShort)( ( dim_x + 32 ) >> 6 );
       FT_UShort  y_ppem = (FT_UShort)( ( dim_y + 32 ) >> 6 );
 
+    /* this code is disabled, for an explanation, see bug#12263 */
+#if 0
       if ( x_ppem == metrics->x_ppem && y_ppem == metrics->y_ppem )
         return FT_Err_Ok;
-
+#endif
       metrics->x_ppem = x_ppem;
       metrics->y_ppem = y_ppem;
     }
