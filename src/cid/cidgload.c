@@ -48,7 +48,7 @@
     FT_Error      error  = 0;
     FT_Byte*      charstring = 0;
     FT_Memory     memory = face->root.memory;
-    FT_UInt       glyph_length = 0;
+    FT_ULong      glyph_length = 0;
 
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
@@ -107,8 +107,7 @@
       fd_select    = (FT_UInt) cid_get_offset( &p, (FT_Byte)cid->fd_bytes );
       off1         = (FT_ULong)cid_get_offset( &p, (FT_Byte)cid->gd_bytes );
       p           += cid->fd_bytes;
-      glyph_length = (FT_UInt) cid_get_offset(
-                                 &p, (FT_Byte)cid->gd_bytes ) - off1;
+      glyph_length = cid_get_offset( &p, (FT_Byte)cid->gd_bytes ) - off1;
       FT_FRAME_EXIT();
 
       if ( glyph_length == 0 )
@@ -148,9 +147,9 @@
       if ( decoder->lenIV >= 0 )
         cid_decrypt( charstring, glyph_length, 4330 );
 
-      error = decoder->funcs.parse_charstrings( decoder,
-                                                charstring + cs_offset,
-                                                glyph_length - cs_offset  );
+      error = decoder->funcs.parse_charstrings(
+                decoder, charstring + cs_offset,
+                (FT_Int)glyph_length - cs_offset  );
     }
 
     FT_FREE( charstring );

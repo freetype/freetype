@@ -1168,8 +1168,8 @@
 
       for ( n = 0; n < glyph->num_points; n++, point++ )
       {
-        FT_Int  n_prev = point->prev - points;
-        FT_Int  n_next = point->next - points;
+        FT_Int  n_prev = (FT_Int)( point->prev - points );
+        FT_Int  n_next = (FT_Int)( point->next - points );
         FT_Pos  dxi, dyi, dxo, dyo;
 
 
@@ -1448,7 +1448,8 @@
       for ( ; num_hints > 0; num_hints--, sort++ )
       {
         PSH_Hint  hint = sort[0];
-        FT_Pos    d, flag;
+        FT_Pos    d;
+        FT_Int    flag;
 
 
         if ( point->flags2 & min_flag )

@@ -861,8 +861,9 @@
             FT_Memory  memory = hints->memory;
 
 
-            error = ps_dimension_add_t1stem( dim, stems[0], stems[1],
-                                             memory, NULL );
+            error = ps_dimension_add_t1stem(
+                      dim, (FT_Int)stems[0], (FT_Int)stems[1],
+                      memory, NULL );
             if ( error )
             {
               FT_ERROR(( "ps_hints_stem: could not add stem"
@@ -917,8 +918,9 @@
         /* add the three stems to our hints/masks table */
         for ( count = 0; count < 3; count++, stems += 2 )
         {
-          error = ps_dimension_add_t1stem( dim, stems[0], stems[1],
-                                           memory, &idx[count] );
+          error = ps_dimension_add_t1stem(
+                    dim, (FT_Int)stems[0], (FT_Int)stems[1],
+                    memory, &idx[count] );
           if ( error )
             goto Fail;
         }
@@ -1164,7 +1166,8 @@
                   FT_Int     count,
                   FT_Fixed*  coords )
   {
-    FT_Pos  stems[32], y, n, total = count;
+    FT_Pos  stems[32], y, n;
+    FT_Int  total = count;
 
 
     y = 0;

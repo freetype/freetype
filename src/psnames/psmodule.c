@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PSNames module implementation (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -172,7 +172,7 @@
 
           if ( uni_char != 0 && uni_char != 0xFFFF )
           {
-            map->unicode     = uni_char;
+            map->unicode     = (FT_UInt)uni_char;
             map->glyph_index = n;
             map++;
           }

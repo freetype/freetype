@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Image cache (specification).                                */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 by                                           */
+/*  Copyright 2000-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -208,12 +208,12 @@ FT_BEGIN_HEADER
   /*    FTC_Image_Desc                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    THIS TYPE IS DEPRECATED.  Use @FTC_ImageDesc instead.              */
+  /*    THIS TYPE IS DEPRECATED.  Use @FTC_ImageDescRec instead.           */
   /*                                                                       */
   /*    A simple structure used to describe a given glyph image category.  */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    size       :: An @FTC_SizeRec used to describe the glyph's face    */
+  /*    font       :: An @FTC_FontRec used to describe the glyph's face    */
   /*                  and size.                                            */
   /*                                                                       */
   /*    image_type :: The glyph image's type.                              */

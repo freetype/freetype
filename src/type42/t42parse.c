@@ -383,7 +383,7 @@
 
 
       /* read the number of entries in the encoding, should be 256 */
-      count = T1_ToInt( parser );
+      count = (FT_Int)T1_ToInt( parser );
       if ( parser->root.error )
         return;
 
@@ -451,7 +451,7 @@
 
 
           parser->root.cursor = cur;
-          charcode = T1_ToInt( parser );
+          charcode = (FT_Int)T1_ToInt( parser );
           cur      = parser->root.cursor;
 
           /* skip whitespace */
@@ -715,7 +715,7 @@
     FT_Int         n;
 
 
-    loader->num_glyphs = T1_ToInt( parser );
+    loader->num_glyphs = (FT_Int)T1_ToInt( parser );
     if ( parser->root.error )
       return;
 
@@ -864,11 +864,11 @@
                   FT_Byte*    base,
                   FT_Long     size )
   {
-    T42_Parser  parser = &loader->parser;
-    FT_Byte*    cur    = base;
-    FT_Byte*    limit  = cur + size;
-    FT_UInt     n_keywords = sizeof ( t42_keywords ) / 
-                             sizeof ( t42_keywords[0] );
+    T42_Parser  parser     = &loader->parser;
+    FT_Byte*    cur        = base;
+    FT_Byte*    limit      = cur + size;
+    FT_UInt     n_keywords = (FT_UInt)( sizeof ( t42_keywords ) / 
+                                        sizeof ( t42_keywords[0] ) );
 
 
     parser->root.cursor = base;

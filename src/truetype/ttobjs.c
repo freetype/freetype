@@ -760,7 +760,7 @@
                                     strike->hori.max_width      +
                                     strike->hori.min_advance_SB ) << 6;
 
-      size->strike_index = strike_index;
+      size->strike_index = (FT_UInt)strike_index;
     }
     else
     {
