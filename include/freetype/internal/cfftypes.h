@@ -100,6 +100,7 @@ FT_BEGIN_HEADER
     FT_Int     paint_type;
     FT_Int     charstring_type;
     FT_Matrix  font_matrix;
+    FT_UShort  units_per_em;
     FT_Vector  font_offset;
     FT_ULong   unique_id;
     FT_BBox    font_bbox;
