@@ -1,4 +1,14 @@
+2001-10-18  David Turner  <david@freetype.org>
+
+        * src/base/ftcalc.c (FT_Div64by32): changed the implementation
+        slightly since the original code was mis-compiled on Mac machines
+        using the MPW C compiler..
+
+
 2001-10-17  David Turner  >david@freetype.org>
+
+	* Version 2.0.4 released.
+	=========================
 
 	* include/freetype/freetype.h, include/internal/ftobjs.h,
 	src/base/ftobjs.c, src/sfnt/sfdriver.c, type1/t1driver.c,
@@ -7,6 +17,7 @@
 	formats except pure CFF/CEF fonts (this will be added soon).
 
 	* README, docs/CHANGES: updated for 2.0.5 release
+
 
 2001-10-08  David Turner  <david@freetype.org>
 
