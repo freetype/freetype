@@ -17,7 +17,14 @@ PLATFORM := unix
 COPY     := cp
 DELETE   := rm -f
 
+# if `devel' is the requested target, use the development Makefile
+#
+ifneq ($(findstring devel,$(MAKECMDGOALS)),)
+CONFIG_RULES := $(BUILD)$(SEP)Makefile.devel
+devel: ;
+else
 CONFIG_RULES := $(BUILD)$(SEP)Makefile
+endif
 
 setup: std_setup
 

@@ -19,6 +19,10 @@
 #****************************************************************************
 
 
+# include the 'modules' rules file
+#
+include $(TOP)/config/modules.mk
+
 # The targets `objects', `library' and `multiple' are defined
 # at the end of this Makefile when all rules have been included..
 #
@@ -90,13 +94,6 @@ COMPONENTS_LIST :=
 DRIVERS_LIST    :=
 OBJECTS_LIST    :=
 
-# free the list of 'ftinit' variables
-#
-FTINIT_DRIVER_PATHS  :=
-FTINIT_DRIVER_H      :=
-FTINIT_DRIVER_MACROS :=
-
-
 # System-specific component - this must be defined in this Makefile
 # for easy updates
 #
@@ -152,7 +149,7 @@ include $(wildcard $(SRC)/*/rules.mk)
 FTINIT_SRC := $(BASE_DIR)$(SEP)ftinit.c
 FTINIT_OBJ := $(OBJ_)ftinit.$O
 
-$(FTINIT_OBJ): $(FTINIT_SRC) $(BASE_H) $(FTINIT_DRIVER_H)
+$(FTINIT_OBJ): $(FTINIT_SRC) $(BASE_H) $(FTINIT_DRIVER_H) $(FT_MODULE_LIST)
 	$(FT_COMPILE) $(FTINIT_DRIVER_PATHS:%=$I%) \
                       $(FTINIT_DRIVER_MACROS:%=$D%) $T$@ $<
 
