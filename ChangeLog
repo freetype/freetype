@@ -1,3 +1,7 @@
+2002-06-24  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 3.
+
 2002-06-21  Roberto Alameda  <ojancano@geekmail.de>.
 
 	* include/freetype/internal/t42types.h (T42_Font): Removed since
