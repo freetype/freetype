@@ -1,3 +1,48 @@
+LATEST CHANGES BETWEEN 2.0.5 and 2.0.4
+
+  NOTE THAT 2.0.5 DOES NOT CONTAIN THE POSTSCRIPT HINTER. THIS MODULE WILL
+  BE PART OF THE NEXT RELEASE (EITHER 2.0.6 or 2.1)
+
+
+  - fixed a bug that made certain glyphs, like "Cacute", "cacute" and "lslash"
+    unavailable from Unicode charmaps of Postscript fonts. This prevented the
+    correct display of Polish text, for example.
+
+  - the kerning table of Type 1 fonts was loaded by FreeType, when its AFM
+    file was attached to its face, but the FT_FACE_FLAG_HAS_KERNING bit flags
+    was not set correctly, preventing FT_Get_Kerning to return meaningful
+    values..
+  
+  - improved SFNT (TrueType & OpenType) charmap support. Slightly better
+    performance, as well as support for the new formats defined by the
+    OpenType 1.3 specification (8, 10 and 12)
+  
+  - fixed a serious typo in "src/base/ftcalc.c" which caused invalid
+    computations in certain rare cases, producing ugly artefacts..
+  
+  - the size of the EM square is computed with a more accurate algorithm
+    for Postscript fonts. The old one caused slight errors with embedded
+    fonts found in PDF documents..
+
+  - fixed a bug in the cache manager that prevented normal LRU behaviour
+    within the cache manager, causing unecessary reloads (for FT_Face and
+    FT_Size objects only)
+  
+  - added a new function named "FT_Get_Name_Index" to retrieve the glyph
+    index of a given glyph name, when found in a face.
+
+  - fixed a reallocation bug that generated a dangling pointer (and possibly
+    memory leaks) with Postscript fonts (in src/psaux/psobjs.c)
+    
+  - many 16-bit correctness fixes
+  
+  - removed many pedantic compiler warnings from the sources
+
+  - added an Amiga build directory in "builds/amiga"
+
+
+============================================================================
+
 LATEST CHANGES BETWEEN 2.0.4 and 2.0.3
 
   - Fixed a rather annoying bug that was introduced in 2.0.3.  Namely, the
