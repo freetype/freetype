@@ -17,8 +17,8 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE( cid, cidriver.h )
-#include FT_SOURCE_FILE( cid, cidgload.h )
+#include FT_SOURCE_FILE(cid,cidriver.h)
+#include FT_SOURCE_FILE(cid,cidgload.h)
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H

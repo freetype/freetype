@@ -17,12 +17,12 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE( type1, t1driver.h )
-#include FT_SOURCE_FILE( type1, t1gload.h )
-#include FT_SOURCE_FILE( type1, t1load.h )
+#include FT_SOURCE_FILE(type1,t1driver.h)
+#include FT_SOURCE_FILE(type1,t1gload.h)
+#include FT_SOURCE_FILE(type1,t1load.h)
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
-#include FT_SOURCE_FILE( type1, t1afm.h )
+#include FT_SOURCE_FILE(type1,t1afm.h)
 #endif
 
 #include FT_INTERNAL_DEBUG_H

@@ -19,8 +19,8 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE( smooth, ftgrays.c )
-#include FT_SOURCE_FILE( smooth, ftsmooth.c )
+#include FT_SOURCE_FILE(smooth,ftgrays.c)
+#include FT_SOURCE_FILE(smooth,ftsmooth.c)
 
 
 /* END */

@@ -25,8 +25,8 @@
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
-#include FT_SOURCE_FILE( cff, cffobjs.h )
-#include FT_SOURCE_FILE( cff, cffload.h )
+#include FT_SOURCE_FILE(cff,cffobjs.h)
+#include FT_SOURCE_FILE(cff,cffload.h)
 #include FT_INTERNAL_CFF_ERRORS_H
 
 #include <string.h>         /* for strlen() */

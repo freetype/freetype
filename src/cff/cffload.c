@@ -24,8 +24,8 @@
 #include FT_INTERNAL_CFF_ERRORS_H
 #include FT_TRUETYPE_TAGS_H
 
-#include FT_SOURCE_FILE( cff, cffload.h )
-#include FT_SOURCE_FILE( cff, cffparse.h )
+#include FT_SOURCE_FILE(cff,cffload.h)
+#include FT_SOURCE_FILE(cff,cffparse.h)
 
 
   /*************************************************************************/

@@ -25,7 +25,7 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE( autohint, ahtypes.h )
+#include FT_SOURCE_FILE(autohint,ahtypes.h)
 
 
 FT_BEGIN_HEADER

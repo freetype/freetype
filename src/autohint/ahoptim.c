@@ -33,7 +33,7 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H        /* for ALLOC_ARRAY() and FREE() */
-#include FT_SOURCE_FILE( autohint, ahoptim.h )
+#include FT_SOURCE_FILE(autohint,ahoptim.h)
 
 
   /* define this macro to use brute force optimisation -- this is slow,  */
