@@ -1,3 +1,9 @@
+2003-09-19  David Bevan  <dbevan@emtex.com>
+
+	* src/type1/t1parse.c (pfb_tag_fields): Removed.
+	(read_pfb_tag): Fix code so that it doesn't fail on end-of-file
+	indicated (0x8003).
+
 2003-09-16  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftserv.h (FT_FACE_FIND_SERVICE,

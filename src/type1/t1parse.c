@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 parser (body).                                                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -79,20 +79,6 @@
   } PFB_Tag;
 
 
-#undef  FT_STRUCTURE
-#define FT_STRUCTURE  PFB_Tag
-
-
-  static
-  const FT_Frame_Field  pfb_tag_fields[] =
-  {
-    FT_FRAME_START( 6 ),
-      FT_FRAME_USHORT ( tag ),
-      FT_FRAME_LONG_LE( size ),
-    FT_FRAME_END
-  };
-
-
   static FT_Error
   read_pfb_tag( FT_Stream   stream,
                 FT_UShort*  tag,
@@ -104,14 +90,18 @@
 
     *tag  = 0;
     *size = 0;
-    if ( !FT_STREAM_READ_FIELDS( pfb_tag_fields, &head ) )
+
+    if ( !FT_READ_USHORT( head.tag ) )
     {
       if ( head.tag == 0x8001U || head.tag == 0x8002U )
       {
-        *tag  = head.tag;
-        *size = head.size;
+        if ( !FT_READ_LONG_LE( head.size ) )
+          *size = head.size;
       }
+
+      *tag = head.tag;
     }
+
     return error;
   }
 
