@@ -199,35 +199,6 @@ FT_BEGIN_HEADER
   } FT_Glyph_Metrics;
 
 
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_Basic_Glyph_Metrics                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A small glyph metrics structure used to return information for     */
-  /*    incrementally defined fonts (see @FT_Incremental_Interface).       */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    bearing_x :: Left side bearing in font units.                      */
-  /*                                                                       */
-  /*    bearing_y :: Top side bearing in font units.                       */
-  /*                                                                       */
-  /*    advance   :: Advance in font units.                                */
-  /*                                                                       */
-  typedef struct  FT_Basic_Glyph_Metrics_
-  {
-    FT_Long  bearing_x;
-    FT_Long  bearing_y;
-    FT_Long  advance;
-
-  } FT_Basic_Glyph_Metrics;
-
-#endif /* #ifdef FT_CONFIG_OPTION_INCREMENTAL */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -508,126 +479,6 @@ FT_BEGIN_HEADER
   } FT_CharMapRec;
 
 
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-
-  
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    FT_Get_Glyph_Data_Func                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A type definition for a function to get glyph data from a face     */
-  /*    that supplies glyph data incrementally, after the face object has  */
-  /*    been created.                                                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    object :: A pointer to the user's data, specified by the `object'  */
-  /*              field in @FT_Incremental_Interface.                      */
-  /*                                                                       */
-  /*    index  :: The glyph index.                                         */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    data   :: The position and length of the data.                     */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  O means success.                             */
-  /*                                                                       */
-  typedef FT_Error
-  (*FT_Get_Glyph_Data_Func)( void*     object,
-                             FT_UInt   index,
-                             FT_Data*  data );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Type>                                                                */
-  /*    FT_Get_Glyph_Metrics_Func                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A type definition for a function to get glyph metrics from a face  */
-  /*    that supplies glyph metrics incrementally, after the face object   */
-  /*    has been created.                                                  */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    object   :: A pointer to the user's data, specified by the         */
-  /*                `object' field in @FT_Incremental_Interface.           */
-  /*                                                                       */
-  /*    index    :: The glyph index.                                       */
-  /*                                                                       */
-  /*    vertical :: True for vertical layout, false for horizontal layout. */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    metrics  :: The glyph metrics in font units.                       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  O means success.                             */
-  /*                                                                       */
-  typedef FT_Error
-  (*FT_Get_Glyph_Metrics_Func)( void*                    object,
-                                FT_UInt                  index,
-                                FT_Bool                  vertical,
-                                FT_Basic_Glyph_Metrics*  metrics,
-                                FT_Bool*                 found );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_Incremental_Interface_Funcs                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A table of functions for accessing fonts that load data            */
-  /*    incrementally.  Used in @FT_Incremental_Interface.                 */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    get_glyph_data    :: The function to get glyph data.  Must not be  */
-  /*                         null.                                         */
-  /*                                                                       */
-  /*    get_glyph_metrics :: The function to get glyph metrics.  May be    */
-  /*                         null if the font does not provide             */
-  /*                         overriding glyph metrics.                     */
-  /*                                                                       */
-  typedef struct  FT_Incremental_Interface_Funcs_
-  {
-    FT_Get_Glyph_Data_Func     get_glyph_data;
-    FT_Get_Glyph_Metrics_Func  get_glyph_metrics;
-
-  } FT_Incremental_Interface_Funcs;
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_Incremental_Interface                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This interface structure is provided to @FT_Open_Face to allow     */
-  /*    incremental faces to be opened.                                    */
-  /*                                                                       */
-  /*    An incremental face supplies no glyph data when it is opened.      */
-  /*    Instead, the glyph data is supplied using a callback function.     */
-  /*    Optionally, metrics that override the metrics in the typeface data */
-  /*    can also be supplied using another callback function.              */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*     funcs  :: The table of functions.                                 */
-  /*                                                                       */
-  /*     object :: The pointer passed to the functions.  Usually it points */
-  /*               to the object from which glyph and metric data is       */
-  /*               obtained.                                               */
-  /*                                                                       */
-  typedef struct  FT_Incremental_Interface_
-  {
-    const FT_Incremental_Interface_Funcs*  funcs;
-    void*                                  object;
-
-  } FT_Incremental_Interface;
-
-
-#endif /* FT_CONFIG_OPTION_INCREMENTAL */
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*                                                                       */
@@ -858,10 +709,6 @@ FT_BEGIN_HEADER
     void*             extensions;
 
     FT_Face_Internal  internal;
-
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-    FT_Incremental_Interface*  incremental_interface;
-#endif
 
     /*@private end */
 
@@ -1601,10 +1448,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    ft_open_params      :: Use the `num_params' & `params' field.      */
   /*                                                                       */
-  /*    ft_open_incremental :: Use the 'incremental_interface' field.      */
-  /*                           (Available if @FT_CONFIG_OPTION_INCREMENTAL */
-  /*                           is defined.)                                */
-  /*                                                                       */
   /* <Note>                                                                */
   /*    The `ft_open_memory', `ft_open_stream', and `ft_open_pathname'     */
   /*    flags are mutually exclusive.                                      */
@@ -1616,9 +1459,6 @@ FT_BEGIN_HEADER
     ft_open_pathname = 4,
     ft_open_driver   = 8,
     ft_open_params   = 16
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-    ,ft_open_incremental = 32
-#endif
 
   } FT_Open_Flags;
 
@@ -1680,11 +1520,6 @@ FT_BEGIN_HEADER
   /*    params      :: Extra parameters passed to the font driver when     */
   /*                   opening a new face.                                 */
   /*                                                                       */
-  /*    incremental_interface ::                                           */
-  /*                   If non-null, an interface used to implement         */
-  /*                   incremental font loading.  This field exists only   */
-  /*                   if @FT_CONFIG_OPTION_INCREMENTAL is defined.        */
-  /*                                                                       */
   /* <Note>                                                                */
   /*    The stream type is determined by the contents of `flags' which     */
   /*    are tested in the following order by @FT_Open_Face:                */
@@ -1705,10 +1540,6 @@ FT_BEGIN_HEADER
   /*    `num_params' and `params' will be used.  They are ignored          */
   /*    otherwise.                                                         */
   /*                                                                       */
-  /*    If the `ft_open_incremental' bit is set 'incremental_interface'    */
-  /*    will be used, else it is ignored.  This feature is available only  */
-  /*    if @FT_CONFIG_OPTION_INCREMENTAL is defined.                       */
-  /*                                                                       */
   typedef struct  FT_Open_Args_
   {
     FT_Open_Flags              flags;
@@ -1719,9 +1550,6 @@ FT_BEGIN_HEADER
     FT_Module                  driver;
     FT_Int                     num_params;
     FT_Parameter*              params;
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-    FT_Incremental_Interface*  incremental_interface;
-#endif
 
   } FT_Open_Args;
 

@@ -756,7 +756,9 @@
     FT_Bool         opened_frame = 0;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    struct FT_StreamRec_  inc_stream;
+    struct FT_StreamRec_   inc_stream;
+    FT_Data                glyph_data;
+	FT_Bool                glyph_data_loaded = 0;
 #endif
 
 
@@ -789,14 +791,14 @@
 
       /* If this is an incrementally loaded font see if there are */
       /* overriding metrics for this glyph.                       */
-      if ( face->root.incremental_interface &&
-           face->root.incremental_interface->funcs->get_glyph_metrics )
+      if ( face->root.internal->incremental_interface &&
+           face->root.internal->incremental_interface->funcs->get_glyph_metrics )
       {
-        FT_Basic_Glyph_Metrics  m;
+        FT_Incremental_MetricsRec  m;
 
 
-        error = face->root.incremental_interface->funcs->get_glyph_metrics(
-                  face->root.incremental_interface->object,
+        error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
+                  face->root.internal->incremental_interface->object,
                   glyph_index, FALSE, &m, &metrics_found );
         if ( error )
           goto Exit;
@@ -841,21 +843,19 @@
     /* the loader stream to a memory stream reading the data returned  */
     /* by the interface.                                               */
 
-    if ( face->root.incremental_interface )
+    if ( face->root.internal->incremental_interface )
     {
-      FT_Data data;
-
-
-      error = face->root.incremental_interface->funcs->get_glyph_data(
-                face->root.incremental_interface->object,
-                glyph_index, &data );
+      error = face->root.internal->incremental_interface->funcs->get_glyph_data(
+                face->root.internal->incremental_interface->object,
+                glyph_index, &glyph_data );
       if ( error )
         goto Exit;
 
+      glyph_data_loaded = 1;
       offset = 0;
-      count  = data.length;
+      count  = glyph_data.length;
       FT_MEM_ZERO( &inc_stream, sizeof ( inc_stream ) );
-      FT_Stream_OpenMemory( &inc_stream, data.pointer, data.length );
+      FT_Stream_OpenMemory( &inc_stream, glyph_data.pointer, glyph_data.length );
       loader->stream = &inc_stream;
     }
 
@@ -1264,6 +1264,14 @@
       face->forget_glyph_frame( loader );
 
   Exit:
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    if (glyph_data_loaded)
+	  face->root.internal->incremental_interface->funcs->free_glyph_data(
+                face->root.internal->incremental_interface->object,
+                &glyph_data );
+#endif
+
     return error;
   }
 
@@ -1353,13 +1361,13 @@
 
       /* If this is an incrementally loaded font see if there are */
       /* overriding metrics for this glyph.                       */
-      if ( face->root.incremental_interface &&
-           face->root.incremental_interface->funcs->get_glyph_metrics )
+      if ( face->root.internal->incremental_interface &&
+           face->root.internal->incremental_interface->funcs->get_glyph_metrics )
       {
-        FT_Basic_Glyph_Metrics  m;
-        FT_Error                error =
-          face->root.incremental_interface->funcs->get_glyph_metrics(
-            face->root.incremental_interface->object,
+        FT_Incremental_MetricsRec  m;
+        FT_Error                   error =
+          face->root.internal->incremental_interface->funcs->get_glyph_metrics(
+            face->root.internal->incremental_interface->object,
             glyph_index, TRUE, &m, &metrics_found );
 
 
@@ -1595,7 +1603,7 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
     /* Don't look for the glyph table if this is an incremental font. */
-    if ( !face->root.incremental_interface )
+    if ( !face->root.internal->incremental_interface )
 
 #endif
 
@@ -1656,7 +1664,7 @@
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
-    if ( face->root.incremental_interface )
+    if ( face->root.internal->incremental_interface )
       loader.glyf_offset = 0;
     else
 

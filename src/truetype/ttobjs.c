@@ -201,7 +201,7 @@
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
-        if ( !face->root.incremental_interface )
+        if ( !face->root.internal->incremental_interface )
           error = TT_Load_Locations( face, stream );
         if ( !error )
           error = TT_Load_CVT      ( face, stream ) ||
