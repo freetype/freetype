@@ -874,7 +874,7 @@ THE SOFTWARE.
     char  *istr = NULL, *bstr = NULL;
     char  *sstr = NULL, *astr = NULL;
 
-    int  parts = 0, len = 0;  
+    int  parts = 0, len = 0;
 
 
     face->style_flags = 0;
@@ -926,7 +926,7 @@ THE SOFTWARE.
       face->style_name = (char *)"Regular";
     else
     {
-      char          *style, *s; 
+      char          *style, *s;
       unsigned int  i;
 
 
@@ -1040,7 +1040,7 @@ THE SOFTWARE.
       if ( face->accel.constantWidth )
         root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
-      if ( ( error = pcf_interpret_style( face ) ) )
+      if ( ( error = pcf_interpret_style( face ) ) != 0 )
          goto Exit;
 
       prop = pcf_find_property( face, "FAMILY_NAME" );

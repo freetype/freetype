@@ -184,7 +184,7 @@ THE SOFTWARE.
     char  *istr = NULL, *bstr = NULL;
     char  *sstr = NULL, *astr = NULL;
 
-    int  parts = 0, len = 0;  
+    int  parts = 0, len = 0;
 
 
     face->style_flags = 0;
@@ -238,7 +238,7 @@ THE SOFTWARE.
       face->style_name = (char *)"Regular";
     else
     {
-      char          *style, *s; 
+      char          *style, *s;
       unsigned int  i;
 
 
@@ -386,7 +386,7 @@ THE SOFTWARE.
       else
         root->family_name = 0;
 
-      if ( ( error = bdf_interpret_style( face ) ) )
+      if ( ( error = bdf_interpret_style( face ) ) != 0 )
         goto Exit;
 
       root->num_glyphs = font->glyphs_size;     /* unencoded included */
@@ -739,7 +739,7 @@ THE SOFTWARE.
   *  BDF SERVICE
   *
   */
-  
+
   static FT_Error
   bdf_get_bdf_property( BDF_Face          face,
                         const char*       prop_name,
@@ -787,9 +787,9 @@ THE SOFTWARE.
   {
     *acharset_encoding = face->charset_encoding;
     *acharset_registry = face->charset_registry;
-    
+
     return 0;
-  }                      
+  }
 
 
   static const FT_Service_BDFRec  bdf_service_bdf =
@@ -804,7 +804,7 @@ THE SOFTWARE.
   *  SERVICES LIST
   *
   */
-  
+
   static const FT_ServiceDescRec  bdf_services[] =
   {
     { FT_SERVICE_ID_BDF,       &bdf_service_bdf },
