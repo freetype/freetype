@@ -101,6 +101,7 @@ extern void __stdargs KVPrintF( const char *formatString, const void *values );
   {
     const char*  ft2_debug = getenv( "FT2_DEBUG" );
     
+
     if ( ft2_debug )
     {
       const char*  p = ft2_debug;
@@ -167,13 +168,16 @@ extern void __stdargs KVPrintF( const char *formatString, const void *values );
     }
   }
 
+
 #else  /* !FT_DEBUG_LEVEL_TRACE */
+
 
   FT_BASE_DEF( void )
   ft_debug_init( void )
   {
     /* nothing */
   }
+
 
 #endif /* !FT_DEBUG_LEVEL_TRACE */
 
