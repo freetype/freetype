@@ -1,3 +1,7 @@
+2001-04-22  Werner Lemberg  <wl@gnu.org>
+
+	* builds/compiler/gcc-dev.mk: Add `-Wno-long-long' flag.
+
 2001-04-20  David Turner  <david@freetype.org>
 
 	* ftconfig.h, ftoption.h: Updated "ftconfig.h" to detect 64-bit int
