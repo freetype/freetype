@@ -121,7 +121,7 @@
       }
     }
 
-    y1 = y3 = FT_MulDiv( y2 - y1, y2 - y1, y1 - 2*y2 + y3 );
+    y1 = y3 = y1 - FT_MulDiv( y2 - y1, y2 - y1, y1 - 2*y2 + y3 );
 
   Suite:
     if ( y1 < *min ) *min = y1;
