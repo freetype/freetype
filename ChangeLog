@@ -84,7 +84,8 @@
 	* src/pcf/pcfdriver.c, src/pfr/pfrsbit.c,
 	src/sfnt/ttsbit.c, src/type42/t42objs.c, src/winfonts/winfnt.c:
 
-	* src/cache/ftlru.c: Fixed an invalid assertion check.
+	* src/cache/ftlru.c (FT_LruList_Lookup): Fixed an invalid assertion
+	check.
 
 	* src/autohint/ahglyph.c (ah_outline_load): Add two scaling
 	arguments.
@@ -92,8 +93,8 @@
 	* src/autohint/ahhint.c (ah_hinter_load): Updated.
 	* src/autohint/ahglobal.c (ah_hinter_compute_widths): Updated.
 
-	* src/cache/ftccache.c: Fixed small bug that could crash the cache
-	in rare circumstances (mostly with broken fonts).
+	* src/cache/ftccache.c (ftc_family_done): Fixed small bug that could
+	crash the cache in rare circumstances (mostly with broken fonts).
 
 2003-03-15  David Turner  <david@freetype.org>
 
@@ -119,9 +120,17 @@
 	Handle new environment variables.
 	* docs/DEBUG.TXT: Updated.
 
-	* src/cache/ftccache.c, src/cache/ftccmap.c, src/cache/ftcsbits.c,
-	src/cache/ftlru.c: Fixed the cache sub-system to correctly deal with
-	out-of-memory conditions.
+	Fixed the cache sub-system to correctly deal with out-of-memory
+	conditions.
+
+	* src/cache/ftccache.c (ftc_node_destroy): Comment out generic
+	check.
+	(ftc_cache_lookup): Implement loop.
+	* src/cache/ftccmap.c: Define FT_COMPONENT.
+	* src/cache/ftcsbits.c (ftc_sbit_node_load): Handle
+	FT_Err_Out_Of_Memory.
+	* src/cache/ftlru.c: Include FT_INTERNAL_DEBUG_H.
+	(FT_LruList_Lookup): Implement loop.
 
 	* src/pfr/pfrobjs.c, src/pfr/pfrsbits.c: Fixing compiler warnings
 	and a small memory leak.
@@ -142,8 +151,9 @@
 
 2003-02-25  Anthony Fok  <anthony@thizlinux.com>
 
-	* src/cache/ftccmap.c: The cmap cache now supports UCS-4 charmaps
-	when available in Asian fonts.
+	* src/cache/ftccmap.c: Include FT_TRUETYPE_IDS_H.
+	(ftc_cmap_family_init): The cmap cache now
+	supports UCS-4 charmaps when available in Asian fonts.
 
 	* src/sfnt/ttload.c, src/base/ftobjs.c: Changed "asian" to "Asian"
 	in comments.
@@ -218,10 +228,10 @@
 
 	* src/pfr/pfrsbit.c: Removed compiler warnings.
 
-	* src/cache/ftccmap.c: Changed an FT_ERROR into an FT_TRACE1 since
-	it caused "ftview" and others to dump too much junk when trying to
-	display a waterfall with a font without a Unicode charmap (e.g. 
-	SYMBOL.TTF).
+	* src/cache/ftccmap.c (ftc_cmap_family_init): Changed an FT_ERROR
+	into an FT_TRACE1 since it caused "ftview" and others to dump too
+	much junk when trying to display a waterfall with a font without a
+	Unicode charmap (e.g.  SYMBOL.TTF).
 
 	Implemented FT_CONFIG_CHESTER_BLUE_SCALE, corresponding to the last
 	patch from David Chester, but with a much simpler (and saner)
@@ -423,7 +433,7 @@
 	invalid values for large negative angle differences (resulting in
 	incorrect stroker computations, among other things).
 
-	* src/cache/ftccache.c (ftc_node_unlink): Removing incorrect
+	* src/cache/ftccache.c (ftc_node_hash_unlink): Removing incorrect
 	assertion, and changing code to avoid hash table size contraction.
 
 	* src/base/Jamfile, src/base/rules.mk, src/base/descrip.mms: Adding
