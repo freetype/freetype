@@ -1,3 +1,10 @@
+2001-10-21  David Turner <david@freetype.org>
+
+	* src/pshinter/pshalgo2.c, src/pshinter/pshalgo1.c,
+	src/pshinter/pshglob.c: removing compiler warnings in pedantic modes
+	(in multi-object compilation mode, mainly)
+
+
 2001-10-20  Tom Kacvinsky  <tjk@ams.org>
 	
 	* src/type1/t1load.c (parse_encoding): Add a test to make sure
@@ -11,6 +18,7 @@
 	leak that occured because the original memory blocks for these
 	objects were not deallocated when the objects were parsed the
 	second time.
+
 
 2001-10-19  David Turner <david@freetype.org>
 

@@ -100,6 +100,8 @@
     FT_UInt    count_top = top_table->count;
     FT_UInt    count_bot = bot_table->count;
     FT_Bool    first     = 1;
+
+    FT_UNUSED(target);
     
     for ( ; read_count > 0; read_count -= 2 )
     {
