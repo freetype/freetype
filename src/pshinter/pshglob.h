@@ -31,6 +31,26 @@ FT_BEGIN_HEADER
  /*****                                                            *****/
  /**********************************************************************/
  /**********************************************************************/
+ /****************************************************************
+  *
+  * @constant: PS_GLOBALS_MAX_BLUE_ZONES
+  *
+  * @description:
+  *   the maximum number of blue zones in a font global hints
+  *   structure. See @PS_Globals_BluesRec
+  */                                             
+#define  PS_GLOBALS_MAX_BLUE_ZONES  16
+
+ /****************************************************************
+  *
+  * @constant: PS_GLOBALS_MAX_STD_WIDTHS
+  *
+  * @description:
+  *   the maximum number of standard and snap widths in either the
+  *   horizontal or vertical direction. See @PS_Globals_WidthsRec
+  */                                             
+#define  PS_GLOBALS_MAX_STD_WIDTHS  16
+
 
  /* standard and snap width */
   typedef struct PSH_WidthRec_

@@ -151,6 +151,12 @@ FT_BEGIN_HEADER
   FT_LOCAL void
   t2_hints_funcs_init( T2_Hints_FuncsRec*  funcs );
 
+#define  xxxDEBUG_VIEW
+
+#ifdef DEBUG_VIEW
+  extern PS_Hints   the_ps_hints;
+#endif
+
  /* */
  
 FT_END_HEADER

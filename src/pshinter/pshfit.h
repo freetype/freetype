@@ -41,9 +41,11 @@ FT_BEGIN_HEADER
   } PSH_Hint_Flags;
 
 #define  psh_hint_is_active(x)  (((x)->flags  & PSH_HINT_FLAG_ACTIVE) != 0)
+#define  psh_hint_is_ghost(x)   (((x)->flags  & PSH_HINT_FLAG_GHOST ) != 0)  
+
 #define  psh_hint_activate(x)     (x)->flags |= PSH_HINT_FLAG_ACTIVE
 #define  psh_hint_deactivate(x)   (x)->flags &= ~PSH_HINT_FLAG_ACTIVE
-  
+
   typedef struct PSH_HintRec_
   {
     FT_Int    org_pos;
@@ -93,6 +95,15 @@ FT_BEGIN_HEADER
                   FT_Outline*  outline,
                   PSH_Globals  globals );
 
+
+#ifdef DEBUG_VIEW
+  extern  int             ps_debug_no_horz_hints;
+  extern  int             ps_debug_no_vert_hints;
+  extern  PSH_Hint_Table  ps_debug_hint_table;
+
+  typedef void  (*PSH_HintFunc)( PSH_Hint  hint, FT_Bool vertical );
+  extern  PSH_HintFunc    ps_debug_hint_func;
+#endif
 
 FT_END_HEADER
 

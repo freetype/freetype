@@ -1000,6 +1000,11 @@
         error = ps_dimension_end( &dim[1], end_point, memory );
       }
     }
+    
+#ifdef DEBUG_VIEW
+    if (!error)
+      the_ps_hints = hints;
+#endif    
     return error;
   }
   
@@ -1095,4 +1100,5 @@
     funcs->apply    = (T2_Hints_ApplyFunc)    ps_hints_apply;
   }
   
+
   

@@ -55,7 +55,7 @@
   /*************************************************************************/
 
   static PSH_Globals_Funcs
-  T1_Size_Get_Globals( T1_Size  size )
+  T1_Size_Get_Globals_Funcs( T1_Size  size )
   {
     T1_Face              face     = (T1_Face) size->root.face;
     PSHinter_Interface*  pshinter = face->pshinter;
@@ -75,7 +75,7 @@
     {
       PSH_Globals_Funcs    funcs;
     
-      funcs = T1_Size_Get_Globals(size);
+      funcs = T1_Size_Get_Globals_Funcs(size);
       if (funcs)
         funcs->destroy( (PSH_Globals) size->root.internal );
 
@@ -89,13 +89,15 @@
   FT_Error  T1_Size_Init( T1_Size  size )
   {
     FT_Error           error = 0;
-    PSH_Globals_Funcs  funcs = T1_Size_Get_Globals( size );
+    PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs( size );
     
     if ( funcs )
     {
-      PSH_Globals  globals;
+      PSH_Globals    globals;
+      T1_Face        face = (T1_Face) size->root.face;
       
-      error = funcs->create( size->root.face->memory, &globals );
+      error = funcs->create( size->root.face->memory, 
+                             &face->type1.private_dict, &globals );
       if (!error)
         size->root.internal = (FT_Size_Internal)(void*) globals;
     }
@@ -108,7 +110,7 @@
   FT_LOCAL_DEF
   FT_Error  T1_Size_Reset( T1_Size  size )
   {
-    PSH_Globals_Funcs  funcs = T1_Size_Get_Globals(size);
+    PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs(size);
     FT_Error           error = 0;
     
     if (funcs)

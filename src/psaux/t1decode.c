@@ -994,7 +994,10 @@
           
           /* record horizontal hint */
           if ( hinter )
+          {
+            /* top[0] += builder->left_bearing.y; */
             hinter->stem( hinter->hints, 0, top );
+          }
 
           break;
 
@@ -1012,7 +1015,10 @@
 
           /* record vertical  hint */
           if ( hinter )
+          {
+            top[0] += builder->left_bearing.x;
             hinter->stem( hinter->hints, 1, top );
+          }
 
           break;
 

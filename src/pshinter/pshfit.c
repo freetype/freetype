@@ -481,7 +481,7 @@
           {
             FT_Pos  x, *px;
             
-            px  = vertical ? &vec->y : &vec->x;
+            px  = vertical ? &vec->x : &vec->y;
             x   = *px;
             
             *px = psh_hint_table_tune_coord( table, (FT_Int)x );
@@ -501,12 +501,12 @@
       if ( vertical )
       {
         for ( ; count > 0; count--, vec++ )
-          vec->y = FT_MulFix( vec->y, scale ) + delta;
+          vec->x = FT_MulFix( vec->x, scale ) + delta;
       }
       else
       {
         for ( ; count > 0; count--, vec++ )
-          vec->x = FT_MulFix( vec->x, scale ) + delta;
+          vec->y = FT_MulFix( vec->y, scale ) + delta;
       }
     }
   }

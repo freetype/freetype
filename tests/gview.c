@@ -5,6 +5,10 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+/* include FreeType internals to debug hints */
+#include <../src/pshinter/pshrec.h>
+#include <../src/pshinter/pshfit.h>
+
 #include <time.h>    /* for clock() */
 
 /* SunOS 4.1.* does not define CLOCKS_PER_SEC, so include <sys/param.h> */
@@ -45,7 +49,19 @@ static  int   option_show_glyph  = 1;
 static  int   option_show_grid   = 1;
 static  int   option_show_em     = 0;
 
+static  int   option_show_ps_hints   = 1;
+static  int   option_show_horz_hints = 1;
+static  int   option_show_vert_hints = 1;
+
+
 static  int   option_hinting = 1;
+
+static  char  temp_message[1024];
+
+PS_Hints      the_ps_hints = 0;
+int           ps_debug_no_horz_hints = 0;
+int           ps_debug_no_vert_hints = 0;
+PSH_HintFunc  ps_debug_hint_func     = 0;
 
 #define  AXIS_COLOR        0xFFFF0000
 #define  GRID_COLOR        0xFFD0D0D0
@@ -54,6 +70,10 @@ static  int   option_hinting = 1;
 #define  BACKGROUND_COLOR  0xFFFFFFFF
 #define  TEXT_COLOR        0xFF000000
 #define  EM_COLOR          0x80008000
+
+#define  GHOST_HINT_COLOR  0xE00000FF
+#define  STEM_HINT_COLOR   0xE02020FF
+#define  STEM_JOIN_COLOR   0xE020FF20
 
 /* print message and abort program */
 static void
@@ -168,11 +188,105 @@ draw_grid( void )
 }
 
 
+static int pshint_cpos     = 0;
+static int pshint_vertical = -1;
+
+static void
+draw_ps_hint( PSH_Hint   hint, FT_Bool  vertical )
+{
+  int        x1, x2;
+  NV_Vector  v;
+  
+  
+  if ( pshint_vertical != vertical )
+  {
+    if (vertical)
+      pshint_cpos = 40;
+    else
+      pshint_cpos = 10;
+      
+    pshint_vertical = vertical;
+  }
+  
+  if (vertical)
+  {
+    if ( !option_show_vert_hints )
+      return;
+      
+    v.x = hint->cur_pos;
+    v.y = 0;
+    nv_vector_transform( &v, &size_transform );
+    x1 = (int)(v.x + 0.5);
+
+    v.x = hint->cur_pos + hint->cur_len;
+    v.y = 0;
+    nv_vector_transform( &v, &size_transform );
+    x2 = (int)(v.x + 0.5);
+
+    nv_pixmap_fill_rect( target, x1, 0, 1, target->height,
+                         psh_hint_is_ghost(hint)
+                         ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    if ( psh_hint_is_ghost(hint) )
+    {
+      x1 --;
+      x2 = x1 + 2;
+    }
+    else
+      nv_pixmap_fill_rect( target, x2, 0, 1, target->height,
+                           psh_hint_is_ghost(hint)
+                           ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    nv_pixmap_fill_rect( target, x1, pshint_cpos, x2+1-x1, 1,
+                         STEM_JOIN_COLOR );
+  }
+  else
+  {
+    if (!option_show_horz_hints)
+      return;
+      
+    v.y = hint->cur_pos;
+    v.x = 0;
+    nv_vector_transform( &v, &size_transform );
+    x1 = (int)(v.y + 0.5);
+
+    v.y = hint->cur_pos + hint->cur_len;
+    v.x = 0;
+    nv_vector_transform( &v, &size_transform );
+    x2 = (int)(v.y + 0.5);
+
+    nv_pixmap_fill_rect( target, 0, x1, target->width, 1,
+                         psh_hint_is_ghost(hint)
+                         ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    if ( psh_hint_is_ghost(hint) )
+    {
+      x1 --;
+      x2 = x1 + 2;
+    }
+    else
+      nv_pixmap_fill_rect( target, 0, x2, target->width, 1,
+                           psh_hint_is_ghost(hint)
+                           ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    nv_pixmap_fill_rect( target, pshint_cpos, x2, 1, x1+1-x2,
+                         STEM_JOIN_COLOR );
+  }
+
+  printf( "[%7.3f %7.3f] %c\n", hint->cur_pos/64.0, (hint->cur_pos+hint->cur_len)/64.0, vertical ? 'v' : 'h' );
+  
+  pshint_cpos += 10;
+}
+
+
+
 static void
 draw_glyph( int  glyph_index )
 {
   NV_Path   path;
-  NV_Scale  scale;
+
+  pshint_vertical    = -1;
+  ps_debug_hint_func = option_show_ps_hints ? draw_ps_hint : 0;
 
   error = FT_Load_Glyph( face, glyph_index, option_hinting
                                           ? FT_LOAD_NO_BITMAP
@@ -266,9 +380,114 @@ draw_glyph( int  glyph_index )
     
     sprintf( temp, "glyph %4d: %s", glyph_index, temp2 );
     nv_pixmap_cell_text( target, 0, 8, temp, TEXT_COLOR );
+    
+    if ( temp_message[0] )
+    {
+      nv_pixmap_cell_text( target, 0, 16, temp_message, TEXT_COLOR );
+      temp_message[0] = 0;
+    }
   }
 }
 
+
+#if 0
+
+static void
+draw_ps_hints( void )
+{
+  if ( option_show_ps_hints && the_ps_hints )
+  {
+    PS_Dimension  dim;
+    PS_Hint       hint;
+    NV_UInt       count;
+    NV_Int        cpos;
+    NV_Vector     v;
+    
+    /* draw vertical stems */
+    if ( option_show_vert_hints )
+    {
+      dim  = &the_ps_hints->dimension[1];
+      hint = dim->hints.hints;
+      cpos = 40;
+      for ( count = dim->hints.num_hints; count > 0; count--, hint++ )
+      {
+        NV_Int   x1, x2;
+  
+        v.x = hint->pos;
+        v.y = 0;
+        nv_vector_transform( &v, &glyph_transform );
+        x1  = (int)(v.x+0.5);
+        x1  = glyph_org_x + hint->pos*glyph_scale;
+        nv_pixmap_fill_rect( target, x1, 0, 1, target->height,
+                                  ps_hint_is_ghost(hint)
+                                  ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+        
+        if ( !ps_hint_is_ghost(hint) )
+        {
+          v.x = hint->pos + hint->len;
+          v.y = 0;
+          nv_vector_transform( &v, &glyph_transform );
+          x2  = (int)(v.x+0.5);
+          x2  = glyph_org_x + (hint->pos + hint->len)*glyph_scale;
+          nv_pixmap_fill_rect( target, x2, 0, 1, target->height,
+                                    STEM_HINT_COLOR );
+        }
+        else
+        {
+          x1 -= 1;
+          x2  = x1 + 2;
+        }
+        
+        nv_pixmap_fill_rect( target, x1, cpos, x2-x1+1, 1,
+                                  STEM_JOIN_COLOR );
+        cpos += 10;
+      }
+    }
+
+    /* draw horizontal stems */
+    if ( option_show_horz_hints )
+    {
+      dim  = &the_ps_hints->dimension[0];
+      hint = dim->hints.hints;
+      cpos = 10;
+      for ( count = dim->hints.num_hints; count > 0; count--, hint++ )
+      {
+        NV_Int   y1, y2;
+  
+        v.x = 0;
+        v.y = hint->pos;
+        nv_vector_transform( &v, &glyph_transform );
+        y1  = (int)(v.y+0.5);
+        y1  = glyph_org_y - hint->pos*glyph_scale;
+        nv_pixmap_fill_rect( target, 0, y1, target->width, 1,
+                                  ps_hint_is_ghost(hint)
+                                  ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+        
+        if ( !ps_hint_is_ghost(hint) )
+        {
+          v.x = 0;
+          v.y = hint->pos + hint->len;
+          nv_vector_transform( &v, &glyph_transform );
+          y2  = (int)(v.y+0.5);
+          y2  = glyph_org_y - (hint->pos + hint->len)*glyph_scale;
+          nv_pixmap_fill_rect( target, 0, y2, target->width, 1,
+                                    STEM_HINT_COLOR );
+        }
+        else
+        {
+          y1 -= 1;
+          y2  = y1 + 2;
+        }
+        
+        nv_pixmap_fill_rect( target, cpos, y2, 1, y1-y2+1,
+                                  STEM_JOIN_COLOR );
+        cpos += 10;
+      }
+    }
+  }
+}
+
+#endif
 
 static void
 handle_event( NVV_EventRec*   ev )
@@ -289,7 +508,7 @@ handle_event( NVV_EventRec*   ev )
         break;
       }
 
-    case NVV_KEY('a'):
+    case NVV_KEY('x'):
       {
         option_show_axis = !option_show_axis;
         break;
@@ -340,6 +559,7 @@ handle_event( NVV_EventRec*   ev )
       {
         pixel_size++;
         reset_size( pixel_size, grid_scale );
+        sprintf( temp_message, "pixel size = %d", pixel_size );
         break;
       }
 
@@ -349,14 +569,49 @@ handle_event( NVV_EventRec*   ev )
         {
           pixel_size--;
           reset_size( pixel_size, grid_scale );
+          sprintf( temp_message, "pixel size = %d", pixel_size );
         }
         break;
       }
+
+    case NVV_KEY('z'):
+      {
+        ps_debug_no_vert_hints = !ps_debug_no_vert_hints;
+        sprintf( temp_message, "vertical hints processing is now %s",
+                 ps_debug_no_vert_hints ? "off" : "on" );
+        break;
+      }      
+
+    case NVV_KEY('a'):
+      {
+        ps_debug_no_horz_hints = !ps_debug_no_horz_hints;
+        sprintf( temp_message, "horizontal hints processing is now %s",
+                 ps_debug_no_horz_hints ? "off" : "on" );
+        break;
+      }      
+
+    case NVV_KEY('Z'):
+      {
+        option_show_vert_hints = !option_show_vert_hints;
+        sprintf( temp_message, "vertical hints display is now %s",
+                 option_show_vert_hints ? "off" : "on" );
+        break;
+      }      
+
+    case NVV_KEY('A'):
+      {
+        option_show_horz_hints = !option_show_horz_hints;
+        sprintf( temp_message, "horizontal hints display is now %s",
+                 option_show_horz_hints ? "off" : "on" );
+        break;
+      }      
 
 
     case NVV_KEY('h'):
       {
         option_hinting = !option_hinting;
+        sprintf( temp_message, "hinting is now %s",
+                 option_hinting ? "off" : "on" );
         break;
       }      
   }
@@ -389,7 +644,7 @@ int  main( int  argc, char**  argv )
   error = FT_Init_FreeType( &freetype );
   if (error) Panic( "could not initialise FreeType" );
   
-  error = FT_New_Face( freetype, "c:/winnt/fonts/times.ttf", 0, &face );
+  error = FT_New_Face( freetype, "h:/fonts/cour.pfa", 0, &face );
   if (error) Panic( "could not open font face" );
 
   reset_size( pixel_size, grid_scale );
@@ -405,7 +660,11 @@ int  main( int  argc, char**  argv )
     {
       clear_background();
       draw_grid();
+
+      the_ps_hints = 0;
       draw_glyph( glyph_index );
+      /* draw_ps_hints(); */
+      
       nvv_surface_refresh( surface, NULL );
 
       nvv_surface_listen( surface, 0, &event );

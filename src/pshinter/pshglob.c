@@ -13,30 +13,6 @@
  /*************************************************************************/
  /*************************************************************************/
  
- /* reset the widths/heights table */
-  static void
-  psh_globals_reset_widths( PSH_Globals        globals,
-                            FT_UInt            direction,
-                            PS_Globals_Widths  widths )
-  {
-    PSH_Dimension  dim    = &globals->dimension[direction];
-    
-    /* simple copy of the original widths values - no sorting */
-    {
-      FT_UInt    count = widths->count;
-      PSH_Width  write = dim->std.widths;
-      FT_Int16*  read  = widths->widths;
-
-      dim->std.count = count;
-      for ( ; count > 0; count-- )
-      {
-        write->org = read[0];
-        write++;
-        read++;
-      }
-    }
-  }
-
 
  /* scale the widths/heights table */
   static void
@@ -109,40 +85,20 @@
  /*************************************************************************/
  /*************************************************************************/
 
- /* re-read blue zones from the original fonts, and store them into out    */
- /* private structure. This function re-orders, sanitizes and fuzz-expands */
- /* the zones as well..                                                    */
   static void
-  psh_blues_reset_zones( PSH_Blues         target,
-                         PS_Globals_Blues  source,
-                         FT_Int            family )
+  psh_blues_set_zones_0( PSH_Blues       target,
+                         FT_UInt         read_count,
+                         FT_Short*       read,
+                         PSH_Blue_Table  top_table,
+                         PSH_Blue_Table  bot_table )
   {
-    PSH_Blue_Table  top_table, bot_table;
-    FT_Int16*       read;
-    FT_Int          read_count, count, count_top, count_bot;
+    FT_UInt    count_top = top_table->count;
+    FT_UInt    count_bot = bot_table->count;
     
-    if ( family )
-    {
-      top_table  = &target->family_top;
-      bot_table  = &target->family_bottom;
-      read       = source->zones_family;
-      read_count = (FT_Int)source->count_family;
-    }
-    else
-    {
-      top_table  = &target->normal_top;
-      bot_table  = &target->normal_bottom;
-      read       = source->zones;
-      read_count = (FT_Int)source->count;
-    }
-    
-    /* read the input blue zones, and build two sorted tables */
-    /* (one for the top zones, the other for the bottom zones */
-    count_top = 0;
-    count_bot = 0;
-    for ( ; read_count > 0; read_count-- )
+    for ( ; read_count > 0; read_count -= 2 )
     {
       FT_Int         reference, delta;
+      FT_UInt        count;
       PSH_Blue_Zone  zones, zone;
       
       /* read blue zone entry, and select target top/bottom zone */
@@ -204,8 +160,49 @@
 
     top_table->count = count_top;
     bot_table->count = count_bot;
+  }                         
 
+
+ /* re-read blue zones from the original fonts, and store them into out    */
+ /* private structure. This function re-orders, sanitizes and fuzz-expands */
+ /* the zones as well..                                                    */
+  static void
+  psh_blues_set_zones( PSH_Blues         target,
+                       FT_UInt           count,
+                       FT_Short*         blues,
+                       FT_UInt           count_others,
+                       FT_Short*         other_blues,
+                       FT_Int            fuzz,
+                       FT_Int            family )
+  {
+    PSH_Blue_Table  top_table, bot_table;
+    FT_Int          count_top, count_bot;
+    
+    if ( family )
+    {
+      top_table  = &target->family_top;
+      bot_table  = &target->family_bottom;
+    }
+    else
+    {
+      top_table  = &target->normal_top;
+      bot_table  = &target->normal_bottom;
+    }
+    
+    /* read the input blue zones, and build two sorted tables */
+    /* (one for the top zones, the other for the bottom zones */
+    top_table->count = 0;
+    bot_table->count = 0;
+    
+    /* first, the blues */
+    psh_blues_set_zones_0( target, count, blues, top_table, bot_table );
+    psh_blues_set_zones_0( target, count_others, other_blues, top_table, bot_table );
+    
+    count_top = top_table->count;
+    count_bot = bot_table->count;
+    
     /* sanitize top table */
+    if ( count_top > 0 )
     {
       PSH_Blue_Zone  zone = top_table->zones;
       
@@ -223,6 +220,7 @@
     }
     
     /* sanitize bottom table */
+    if ( count_bot > 0 )
     {
       PSH_Blue_Zone  zone = bot_table->zones;
 
@@ -241,10 +239,9 @@
 
     /* expand top and bottom tables with blue fuzz */
     {
-      FT_Int         dim, top, bot, delta, fuzz;
+      FT_Int         dim, top, bot, delta;
       PSH_Blue_Zone  zone;
 
-      fuzz  = source->fuzz;      
       zone  = top_table->zones;
       count = count_top;
       
@@ -285,6 +282,7 @@
       }
     }
   }
+
 
 
  /* reset the blues table when the device transform changes */
@@ -404,35 +402,77 @@
 
   
   static FT_Error
-  psh_globals_new( FT_Memory  memory, PSH_Globals  *aglobals )
+  psh_globals_new( FT_Memory     memory,
+                   T1_Private*   priv,
+                   PSH_Globals  *aglobals )
   {
     PSH_Globals  globals;
     FT_Error     error;
     
     if ( !ALLOC( globals, sizeof(*globals) ) )
+    {
+      FT_UInt    count;
+      FT_Short*  read;
+      
       globals->memory = memory;
+
+      /* copy standard widths */      
+      {
+        PSH_Dimension  dim   = &globals->dimension[1];
+        PSH_Width      write = dim->std.widths;
+        
+        write->org = priv->standard_width[1];
+        write++;
+        
+        read = priv->snap_widths;
+        for ( count = priv->num_snap_widths; count > 0; count-- )
+        {
+          write->org = *read;
+          write++;
+          read++;
+        }
+        
+        dim->std.count = write - dim->std.widths;
+      }
+
+      /* copy standard heights */
+      {
+        PSH_Dimension  dim = &globals->dimension[0];
+        PSH_Width      write = dim->std.widths;
+        
+        write->org = priv->standard_height[1];
+        write++;
+        
+        read = priv->snap_heights;
+        for ( count = priv->num_snap_heights; count > 0; count-- )
+        {
+          write->org = *read;
+          write++;
+          read++;
+        }
+
+        dim->std.count = write - dim->std.widths;
+      }
+        
+      /* copy blue zones */        
+      psh_blues_set_zones( &globals->blues, priv->num_blue_values,
+                           priv->blue_values, priv->num_other_blues,
+                           priv->other_blues, priv->blue_fuzz, 0 );
+                           
+      psh_blues_set_zones( &globals->blues, priv->num_family_blues,
+                           priv->family_blues, priv->num_family_other_blues,
+                           priv->family_other_blues, priv->blue_fuzz, 1 );
+
+      globals->dimension[0].scale_mult  = 0;
+      globals->dimension[0].scale_delta = 0;
+      globals->dimension[1].scale_mult  = 0;
+      globals->dimension[1].scale_delta = 0;
+    }
     
     *aglobals = globals;
     return error;
   }
 
-
-  static FT_Error
-  psh_globals_reset( PSH_Globals  globals,
-                     PS_Globals   ps_globals )
-  {
-    psh_globals_reset_widths( globals, 0, &ps_globals->horizontal );
-    psh_globals_reset_widths( globals, 1, &ps_globals->vertical );
-    psh_blues_reset_zones( &globals->blues, &ps_globals->blues, 0 );
-    psh_blues_reset_zones( &globals->blues, &ps_globals->blues, 1 );
-    
-    globals->dimension[0].scale_mult  = 0;
-    globals->dimension[0].scale_delta = 0;
-    globals->dimension[1].scale_mult  = 0;
-    globals->dimension[1].scale_delta = 0;
-
-    return 0;
-  }
 
 
   static FT_Error
@@ -473,7 +513,6 @@
   psh_globals_funcs_init( PSH_Globals_FuncsRec*  funcs )
   {
     funcs->create    = psh_globals_new;
-    funcs->reset     = psh_globals_reset;
     funcs->set_scale = psh_globals_set_scale;
     funcs->destroy   = psh_globals_destroy;
   }
