@@ -2,7 +2,7 @@
 
     FreeType font driver for pcf fonts
 
-  Copyright 2000, 2001, 2002, 2003 by
+  Copyright 2000, 2001, 2002, 2003, 2004 by
   Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1070,39 +1070,47 @@ THE SOFTWARE.
 
       {
         FT_Bitmap_Size*  bsize = root->available_sizes;
+        FT_Short         resolution_x = 0, resolution_y = 0;
 
 
         FT_MEM_ZERO( bsize, sizeof ( FT_Bitmap_Size ) );
 
-        prop = pcf_find_property( face, "PIXEL_SIZE" );
-        if ( prop )
-          bsize->height = (FT_Short)prop->value.integer;
+        bsize->height = face->accel.fontAscent + face->accel.fontDescent;
 
         prop = pcf_find_property( face, "AVERAGE_WIDTH" );
         if ( prop )
           bsize->width = (FT_Short)( ( prop->value.integer + 5 ) / 10 );
+        else
+          bsize->width = bsize->height * 2/3;
 
         prop = pcf_find_property( face, "POINT_SIZE" );
         if ( prop )
-          /* convert from 722,7 decipoints to 72 points per inch */
+          /* convert from 722.7 decipoints to 72 points per inch */
           bsize->size =
             (FT_Pos)( ( prop->value.integer * 64 * 7200 + 36135L ) / 72270L );
 
+        prop = pcf_find_property( face, "PIXEL_SIZE" );
+        if ( prop )
+          bsize->y_ppem = (FT_Short)prop->value.integer << 6;
+
         prop = pcf_find_property( face, "RESOLUTION_X" );
         if ( prop )
-          bsize->x_ppem =
-            (FT_Pos)( ( prop->value.integer * bsize->size + 36 ) / 72 );
+          resolution_x = (FT_Short)prop->value.integer;
 
         prop = pcf_find_property( face, "RESOLUTION_Y" );
         if ( prop )
-          bsize->y_ppem =
-            (FT_Pos)( ( prop->value.integer * bsize->size + 36 ) / 72 );
+          resolution_y = (FT_Short)prop->value.integer;
 
-        if ( bsize->height == 0 )
-          bsize->height = (FT_Short)( ( bsize->y_ppem + 32 ) / 64 );
-
-        if ( bsize->height == 0 )
-          bsize->height = 12;
+        if ( bsize->y_ppem == 0 )
+        {
+          bsize->y_ppem = bsize->size;
+          if ( resolution_y )
+            bsize->y_ppem = bsize->y_ppem * resolution_y / 72;
+        }
+        if ( resolution_x && resolution_y )
+          bsize->x_ppem = bsize->y_ppem * resolution_x / resolution_y;
+        else
+          bsize->x_ppem = bsize->y_ppem;
       }
 
       /* set up charset */

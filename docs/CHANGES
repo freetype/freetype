@@ -32,6 +32,8 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
 
     - The flex operator didn't work for CFF fonts.
 
+    - Metrics for BDF and PCF bitmap font formats have been fixed.
+
 
   II. IMPORTANT CHANGES
 

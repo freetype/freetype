@@ -1,3 +1,11 @@
+2003-02-07  Keith Packard  <keithp@keithp.com>
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init, BDF_Set_Pixel_Size): Fix
+	computation of various vertical and horizontal metric values.
+
+	* src/pcfdrivr.c (PCF_Set_Pixel_Size), src/pcfread (pcf_load_font):
+	Ditto.
+
 2003-02-07  Werner Lemberg  <wl@gnu.org>
 
 	* builds/win32/visualc/index.html,
