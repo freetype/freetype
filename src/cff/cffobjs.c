@@ -60,7 +60,7 @@
   CFF_Size_Get_Globals_Funcs( CFF_Size  size )
   {
     CFF_Face          face     = (CFF_Face)size->face;
-    CFF_Font*         font     = (CFF_Font *)face->extra.data;
+    CFF_Font         font     = (CFF_FontRec *)face->extra.data;
     PSHinter_Service  pshinter = (PSHinter_Service)font->pshinter;
     FT_Module         module;
 
@@ -101,8 +101,8 @@
     {
       PSH_Globals    globals;
       CFF_Face       face    = (CFF_Face)size->face;
-      CFF_Font*      font    = (CFF_Font *)face->extra.data;
-      CFF_SubFont*   subfont = &font->top_font;
+      CFF_Font      font    = (CFF_FontRec *)face->extra.data;
+      CFF_SubFont   subfont = &font->top_font;
 
       CFF_Private   cpriv   = &subfont->private_dict;
       PS_PrivateRec  priv;
@@ -196,7 +196,7 @@
   CFF_GlyphSlot_Init( CFF_GlyphSlot  slot )
   {
     CFF_Face          face     = (CFF_Face)slot->root.face;
-    CFF_Font*         font     = (CFF_Font *)face->extra.data;
+    CFF_Font         font     = (CFF_FontRec *)face->extra.data;
     PSHinter_Service  pshinter = (PSHinter_Service)font->pshinter;
 
 
@@ -257,12 +257,12 @@
                              FT_ULong            base_offset,
                              PSNames_Service  psnames )
   {
-    CFF_Font*       font = (CFF_Font*)face->extra.data;
+    CFF_Font       font = (CFF_Font)face->extra.data;
     FT_Memory       memory = FT_FACE_MEMORY(face);
     FT_UInt         n, num_glyphs = face->root.num_glyphs;
     const char**    glyph_names;
     FT_Error        error;
-    CFF_Font_Dict*  dict = &font->top_font.font_dict;
+    CFF_FontRecDict  dict = &font->top_font.font_dict;
     FT_ULong        charset_offset;
     FT_Byte         format;
     FT_Stream       stream = face->root.stream;
@@ -527,7 +527,7 @@
 
     /* now load and parse the CFF table in the file */
     {
-      CFF_Font*  cff;
+      CFF_Font  cff;
       FT_Memory  memory = face->root.memory;
       FT_Face    root;
       FT_UInt    flags;
@@ -551,7 +551,7 @@
 
       if ( pure_cff )
       {
-        CFF_Font_Dict*  dict = &cff->top_font.font_dict;
+        CFF_FontRecDict  dict = &cff->top_font.font_dict;
 
 
         /* we need the `PSNames' module for pure-CFF and CEF formats */
@@ -716,7 +716,7 @@
       sfnt->done_face( face );
 
     {
-      CFF_Font*  cff = (CFF_Font*)face->extra.data;
+      CFF_Font  cff = (CFF_Font)face->extra.data;
 
 
       if ( cff )

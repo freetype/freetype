@@ -132,7 +132,7 @@ FT_BEGIN_HEADER
   typedef struct  CFF_Decoder_
   {
     CFF_Builder        builder;
-    CFF_Font*          cff;
+    CFF_Font          cff;
 
     FT_Fixed           stack[CFF_MAX_OPERANDS + 1];
     FT_Fixed*          top;

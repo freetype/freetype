@@ -228,7 +228,7 @@
                       FT_Pointer  buffer,
                       FT_UInt     buffer_max )
   {
-    CFF_Font*           font   = (CFF_Font*)face->extra.data;
+    CFF_Font           font   = (CFF_Font)face->extra.data;
     FT_Memory           memory = FT_FACE_MEMORY( face );
     FT_String*          gname;
     FT_UShort           sid;
@@ -383,8 +383,8 @@
   cff_get_name_index( CFF_Face    face,
                       FT_String*  glyph_name )
   {
-    CFF_Font*        cff;
-    CFF_Charset*     charset;
+    CFF_Font        cff;
+    CFF_Charset     charset;
     PSNames_Service  psnames;
     FT_Memory        memory = FT_FACE_MEMORY( face );
     FT_String*       name;
@@ -393,7 +393,7 @@
     FT_Int           result;
 
 
-    cff     = (CFF_Font *)face->extra.data;
+    cff     = (CFF_FontRec *)face->extra.data;
     charset = &cff->charset;
 
     psnames = (PSNames_Service)FT_Get_Module_Interface(

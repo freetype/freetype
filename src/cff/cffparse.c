@@ -313,7 +313,7 @@
   static FT_Error
   cff_parse_font_matrix( CFF_Parser*  parser )
   {
-    CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
+    CFF_FontRecDict  dict   = (CFF_FontRecDict)parser->object;
     FT_Matrix*      matrix = &dict->font_matrix;
     FT_Vector*      offset = &dict->font_offset;
     FT_UShort*      upm    = &dict->units_per_em;
@@ -361,7 +361,7 @@
   static FT_Error
   cff_parse_font_bbox( CFF_Parser*  parser )
   {
-    CFF_Font_Dict*  dict = (CFF_Font_Dict*)parser->object;
+    CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
     FT_BBox*        bbox = &dict->font_bbox;
     FT_Byte**       data = parser->stack;
     FT_Error        error;
@@ -385,7 +385,7 @@
   static FT_Error
   cff_parse_private_dict( CFF_Parser*  parser )
   {
-    CFF_Font_Dict*  dict = (CFF_Font_Dict*)parser->object;
+    CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
     FT_Byte**       data = parser->stack;
     FT_Error        error;
 
@@ -406,7 +406,7 @@
   static FT_Error
   cff_parse_cid_ros( CFF_Parser*  parser )
   {
-    CFF_Font_Dict*  dict = (CFF_Font_Dict*)parser->object;
+    CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
     FT_Byte**       data = parser->stack;
     FT_Error        error;
 

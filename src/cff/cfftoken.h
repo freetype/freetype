@@ -17,7 +17,7 @@
 
 
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  CFF_Font_Dict
+#define FT_STRUCTURE  CFF_FontRecDictRec
 
 #undef  CFFCODE
 #define CFFCODE        CFFCODE_TOPDICT

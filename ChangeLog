@@ -7,6 +7,11 @@
         (i.e. FT_AutoHinter_Interface  => FT_AutoHinter_ServiceRec, 
               FT_AutoHinter_Interface* => FT_AutoHinter_Service, etc..)
 
+        * include/freetype/internal/cfftypes.h, src/cff/*.c: updating the
+        type definitions of the CFF font driver
+        
+        (i.e. CFF_Font  => CFF_FontRec
+              CFF_Font* => CFF_Font, etc...)
 
 
 2002-03-13  Antoine Leca    <antoine@oriolnet.com>

@@ -55,14 +55,14 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   CFF_Load_Font( FT_Stream  stream,
                  FT_Int     face_index,
-                 CFF_Font*  font );
+                 CFF_Font  font );
 
   FT_LOCAL( void )
-  CFF_Done_Font( CFF_Font*  font );
+  CFF_Done_Font( CFF_Font  font );
 
 
   FT_LOCAL( FT_Byte )
-  CFF_Get_FD( CFF_FD_Select*  select,
+  CFF_Get_FD( CFF_FDSelect  select,
               FT_UInt         glyph_index );
 
 
