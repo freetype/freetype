@@ -92,7 +92,7 @@ FT_BEGIN_HEADER
   /* no reason to do this (at least for non-CJK scripts), except for       */
   /* experimentation.                                                      */
   /*                                                                       */
-#define AH_HINT_METRICS
+#undef  AH_HINT_METRICS
 
 
   /*************************************************************************/

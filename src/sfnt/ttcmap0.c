@@ -579,6 +579,12 @@
   /* Otherwise, a glyph index is taken from the glyph ids sub-array for    */
   /* the segment, and the value of `idDelta' is added to it.               */
   /*                                                                       */
+  /*                                                                       */
+  /* Finally, note that certain fonts contain invalid charmaps that        */
+  /* contain end=0xFFFF, start=0xFFFF, delta=0x0001, offset=0xFFFF at the  */
+  /* of their charmaps (e.g. opens___.ttf which comes with OpenOffice.org) */
+  /* we need special code to deal with them correctly...                   */
+  /*                                                                       */
 
 #ifdef TT_CONFIG_CMAP_FORMAT_4
 
@@ -680,7 +686,7 @@
             FT_INVALID_DATA;
         }
 
-        if ( offset )
+        if ( offset && offset != 0xFFFFU )
         {
           p += offset;  /* start of glyph id array */
 
@@ -692,10 +698,10 @@
           /* check glyph indices within the segment range */
           if ( valid->level >= FT_VALIDATE_TIGHT )
           {
-            FT_UInt  idx;
+            FT_UInt  i, idx;
 
 
-            for ( ; start < end; )
+            for ( i = start; i < end; i++ )
             {
               idx = FT_NEXT_USHORT( p );
               if ( idx != 0 )
@@ -707,6 +713,16 @@
               }
             }
           }
+        }
+        else if ( offset == 0xFFFFU )
+        {
+          /* Some fonts (erroneously?) use a range offset of 0xFFFF */
+          /* to mean missing glyph in cmap table                    */
+          /*                                                        */
+          if ( valid->level >= FT_VALIDATE_PARANOID                     ||
+               n != num_segs - 1                                        ||
+               !( start == 0xFFFFU && end == 0xFFFFU && delta == 0x1U ) )
+            FT_INVALID_DATA;
         }
 
         last = end;
@@ -769,6 +785,9 @@
             p += num_segs2;
             offset = TT_PEEK_USHORT( p );
 
+            if ( offset == 0xFFFFU )
+              goto Exit;
+
             if ( offset != 0 )
             {
               p  += offset + 2 * ( idx - start );
@@ -812,6 +831,9 @@
             delta = TT_PEEK_SHORT( p );
             p += num_segs2;
             offset = TT_PEEK_USHORT( p );
+
+            if ( offset == 0xFFFFU )
+              goto Exit;
 
             if ( offset != 0 )
             {
@@ -879,7 +901,7 @@
           p += num_segs2;
           offset = TT_PEEK_USHORT( p );
 
-          if ( offset != 0 )
+          if ( offset != 0 && offset != 0xFFFFU )
           {
             /* parse the glyph ids array for non-0 index */
             p += offset + ( code - start ) * 2;
@@ -894,6 +916,12 @@
               }
               code++;
             }
+          }
+          else if ( offset == 0xFFFFU )
+          {
+            /* an offset of 0xFFFF means an empty glyph in certain fonts !! */
+            code = end;
+            break;
           }
           else
             gindex = (FT_UInt)( code + delta ) & 0xFFFFU;
