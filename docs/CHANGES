@@ -9,6 +9,10 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
 
     - The stroker still had some serious bugs.
 
+    - Boris  Letocha  fixed a  bug in  the  TrueType interpreter:  The
+      NPUSHW instruction wasn't skipped correctly in IF clauses.  Some
+      fonts like `Helvetica 75 Bold' failed.
+
 
   II. IMPORTANT CHANGES
 
@@ -26,7 +30,7 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
     - A new API `FT_OpenType_Validate' (in FT_OPENTYPE_VALIDATE_H) has
       been added to validate OpenType tables  (BASE, GDEF, GPOS, GSUB,
       JSTF).   After validation  it is  no longer  necessary to  check
-      for errors in those tables.
+      for errors in those tables while accessing them.
 
 
 LATEST CHANGES BETWEEN 2.1.9 and 2.1.8

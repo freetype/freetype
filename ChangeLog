@@ -1,3 +1,16 @@
+2004-10-09  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+2004-10-09  Boris Letocha  <b.letocha@cz.gmc.net>
+
+	Fix handling of NPUSHW if skipped in data stream.
+
+	* src/truetype/ttinterp.c (opcode_length): Set value for NPUSHW
+	to -2.
+	(SkipCode, TT_RunIns): Use opcode_length value for computation of
+	bytes to be skipped.
+
 2004-09-10  Jouk Jansen  <joukj@hrem.stm.tudelft.nl>
 
 	* vms_make.com: Updated.
