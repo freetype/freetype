@@ -1,0 +1,187 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="David Turner">
+   <meta name="GENERATOR" content="Mozilla/4.5 [fr] (Win98; I) [Netscape]">
+   <title>FreeType 2 Internals - I/O Frames</title>
+</head>
+<body>
+
+<body text="#000000"
+      bgcolor="#FFFFFF"
+      link="#0000EF"
+      vlink="#51188E"
+      alink="#FF0000">
+
+<center>
+<h1>
+FreeType 2.0 I/O Frames</h1></center>
+
+<center>
+<h3>
+&copy; 2000 David Turner (<a href="fichier :///david@freetype.org">david@freetype.org</a>)<br>
+&copy; 2000 The FreeType Development Team (<a href="fichier :///devel@freetype.org">devel@freetype.org</a>)</h3></center>
+
+<p><br>
+<hr WIDTH="100%">
+<br>&nbsp;
+<h2>Introduction:</h2>
+<ul>
+	This document explains the concept of i/o <b>frames</b> as used in the FreeType 2
+	source code. It also enumerates the various functions and macros that can be used
+	to read them.
+	<p>
+	It is targetted to FreeType hackers, or more simply to developers who would like
+	a better understanding of the library's source code.
+</ul>
+
+<p><hr><p>
+
+<h2>I. What frames are:</h2>
+<ul>
+	Simply speaking, a frame is an array of bytes in a font file that is "preloaded"
+	into memory in order to be rapidly parsed. Frames are useful to ensure that every
+    "load" is checked against end-of-file overruns, and provides nice functions
+	to extract data in a variety of distinct formats.
+	<p>
+	But an example is certainly more meaningful than anything else:<p>
+	<ul>
+		<ul>
+		<tt>error = read_short(stream, &str.value1);<br>
+		<tt>if (error) goto ...<br>
+		<br>
+		<tt>error = read_ulong(stream, &str.value2);<br>
+		<tt>if (error) goto ...<br>
+		<br>
+		<tt>error = read_ulong(stream, &str.value3);<br>
+		<tt>if (error) goto ...<br>
+		</ul>
+		<p>
+		can easily be replaced with:<p>
+		<ul>
+			<tt>error = FT_Access_Frame(stream, 2+4+4);<br>
+			<tt>if (error) goto ...<br>
+			<br>
+			<tt>str.value1 = FT_Get_Short(stream);<br>
+			<tt>str.value2 = FT_Get_ULong(stream);<br>
+			<tt>str.value3 = FT_Get_ULong(stream);<br>
+			<br>
+			<tt>FT_Forget_Frame(stream);<br>
+		</ul>
+		<p>
+	</ul>
+	Here, the call to <tt>FT_Access_Frame</tt> will:<p>
+	<ul>
+		<li>Ensure that there are at least 2+4+4=10 bytes left in the stream.
+		<li>"Preload" (for disk-based streams) 10 bytes from the current stream position.
+		<li>Set the frame "cursor" to the first byte in the frame;
+	</ul>
+	<p>
+	Each <tt>FT_Get_Short</tt> or <tt>FT_Get_ULong</tt> call will read a big-endian integer
+	from the stream (2 bytes for <tt>FT_Get_Short</tt>, 4 bytes for <tt>FT_Get_ULong</tt>)
+	and advance the frame cursor accordingly.
+	<p>
+	<tt>FT_Forget_Frame</tt> "releases" the frame from memory
+	<p>
+	There are several advantages to using frames :<p>
+	<ul>
+		<li>single-check when loading tables
+		<li><em>making code clearer</em> by providing simple parsing functions.
+	</ul>
+	<p>
+</ul>
+
+<p><hr><p>
+
+<h2>II. Accessing and reading a frame with macros:</h2>
+<ul>
+	By convention in the FreeType source code, macros are able to use two implicit
+	variables named "<tt>error</tt>" and "<tt>stream</tt>". This is useful because
+	these two variables are extremely used in the library, and doing this only
+	reduces our typing requirements and make the source code much clearer.
+	<p>
+	<tt>error</tt> must be a local variable of type <tt>FT_Error</tt>,
+	while <tt>stream</tt> must be a local variable or argument of type <tt>FT_Stream</tt>;
+	<p>
+	The macro used to access a frame is <tt>ACCESS_Frame(_size_)</tt>, it will
+	translate to:<p>
+	<ul>
+		<tt>(error=FT_Access_Frame(stream,_size_)) != FT_Err_Ok</tt>.
+	</ul>
+	<p>
+	Similarly, the macro <tt>FORGET_Frame()</tt> translates to:<o>
+	<ul>
+		<tt>FT_Forget_Frame(stream)</tt>
+	</ul>
+	<p>
+	Extracting integers can be performed with the <tt>GET_xxx</tt> macros, like:<p>
+	<ul>
+		<table>
+			<tr><td><tt><b>GET_Byte()</b></tt>      <td>FT_Get_Byte(stream)
+			<tr><td><tt><b>GET_Char()</b></tt>		<td>((FT_Char)FT_Get_Byte(stream))
+			<tr><td><tt><b>GET_Short()</b></tt>     <td>FT_Get_Short(stream)
+			<tr><td><tt><b>GET_UShort()</b></tt>	<td>((FT_UShort)FT_Get_Short(stream))
+			<tr><td><tt><b>GET_Offset()</b></tt>    <td>FT_Get_Offset(stream)
+			<tr><td><tt><b>GET_UOffset()</b></tt>   <td>((FT_ULong)FT_Get_Offset(stream))
+			<tr><td><tt><b>GET_Long()</b></tt>		<td>FT_Get_Long(stream)
+			<tr><td><tt><b>GET_ULong()</b></tt>		<td>((FT_ULong)FT_Get_Long(stream))
+		</table>
+	</ul>
+	<p>
+	(Note that an <b>Offset</b> is an integer stored with 3 bytes on the file).
+    <p>
+	All this means that the following code:<p>
+	<ul>
+			<tt>error = FT_Access_Frame(stream, 2+4+4);<br>
+			<tt>if (error) goto ...<br>
+			<br>
+			<tt>str.value1 = FT_Get_Short(stream);<br>
+			<tt>str.value2 = FT_Get_ULong(stream);<br>
+			<tt>str.value3 = FT_Get_ULong(stream);<br>
+			<br>
+			<tt>FT_Forget_Frame(stream);<br>
+	</ul>
+	<p>
+	Can be replaced with macros by:<p>
+	<ul>
+			<tt>if ( ACCESS_Frame( 2+4+4 ) ) goto ...<br>
+			<br>
+			<tt>str.value1 = GET_Short();<br>
+			<tt>str.value2 = GET_ULong();<br>
+			<tt>str.value3 = GET_ULong();<br>
+			<br>
+			<tt>FORGET_Frame();<br>
+	</ul>
+	<p>
+	Which is clearer. Notice that <b>error</b> and <b>stream</b> must be defined
+	locally though for this code to work.. !!
+</ul>
+
+<p><hr><p>
+
+<h2>III. Alternatives:</h2>
+<ul>
+	It is sometimes useful to read small integers from a font file without using
+	a frame. Some functions have been introduced in FreeType 2 to do just that,
+	and they are of the form <tt>FT_Read_xxxx</tt>.
+	<p>
+	For example, <tt>FT_Read_Short( stream, &error )</tt> reads and returns a 2-byte
+    big-endian short from a <tt>stream</tt>, and place an error code in the <tt>error</tt>
+    variable.
+	<p>
+	Thus, reading a single big-endian integer is shorter than using a frame for it.
+	<p>
+	Note that there is also the macros <tt>READ_xxx()</tt> which translate to:<p>
+	<ul>
+		<tt>( FT_Read_xxx(stream,&error), error != FT_Err_Ok )</tt>
+	</ul> 
+	<p>
+	and can be used as in:<p>
+	<ul>
+		<tt>if ( READ_UShort(variable1) || READ_ULong (variable2) ) goto Fail;</tt><br> 
+	</ul>
+	<p>
+	when <b>error</b> and <b>stream</b> are already defined locally..
+</ul>
+
