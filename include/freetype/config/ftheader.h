@@ -352,6 +352,19 @@
   /*************************************************************************/
   /*                                                                       */
   /* @macro:                                                               */
+  /*    FT_BDF_H                                                           */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    the definitions of an API to access BDF-specific strings from a    */
+  /*    face.                                                              */
+  /*                                                                       */
+#define FT_BDF_H  <freetype/ftbdf.h>
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
   /*    FT_GLYPH_H                                                         */
   /*                                                                       */
   /* @description:                                                         */
@@ -371,19 +384,6 @@
   /*    the API of the optional exact bounding box computation routines.   */
   /*                                                                       */
 #define FT_BBOX_H  <freetype/ftbbox.h>
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* @macro:                                                               */
-  /*    FT_BEZIER_H                                                        */
-  /*                                                                       */
-  /* @description:                                                         */
-  /*    A macro used in #include statements to name the file containing    */
-  /*    a small useful API to handle bezier arcs.  Note that you _must_    */
-  /*    include FT_FREETYPE_H or FT_IMAGE_H before this header.            */
-  /*                                                                       */
-#define FT_BEZIER_H  <freetype/ftbezier.h>
 
 
   /*************************************************************************/

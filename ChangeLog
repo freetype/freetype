@@ -1,3 +1,10 @@
+2002-05-22  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftheader.h (FT_BEZIER_H): Removed.
+	(FT_BDF_H): New macro for accessing `ftbdf.h'.
+
+	* src/type42/t42drivr.c (hexval): Fix typo.
+
 2002-05-21  Martin Muskens  <mmuskens@aurelon.com>
 
 	* src/psaux/psobjs.c (T1Radix): New function.
@@ -8,12 +15,13 @@
 
 2002-05-21  David Turner  <david@freetype.org>
 
-	* src/bdf/bdflic.c: Removed compiler warning, and changed all tables
+	* src/bdf/bdflib.c: Removed compiler warning, and changed all tables
 	to the "static const" storage specifier (instead of simply
 	`static').
 
-	* src/type42/t32drivr.c, src/bdf/bdfdrivr.c: Removing compiler
-	warnings.
+	* src/type42/t42drivr.c (hexval): Use more efficient code.
+	Removing compiler warnings.
+	* src/bdf/bdfdrivr.c: Removing compiler warnings.
 
 	* include/freetype/internal/ftbdf.h, src/base/ftbdf.c,
 	src/base/descrip.mms, src/base/Jamfile, src/base/rules.mk
