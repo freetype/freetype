@@ -1035,7 +1035,10 @@
           {
             FT_TRACE4(( " div" ));
             if (top[1])
-              *top++ = top[0] / top[1];
+            {
+              *top = top[0] / top[1];
+              ++top;
+            }
             else
             {
               FT_ERROR(( "T1.Parse_CharStrings : division by 0\n" ));
