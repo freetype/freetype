@@ -70,7 +70,7 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  FT_WinFNT_HeaderRec
 
-    FT_FRAME_START( 146 ),
+    FT_FRAME_START( 148 ),
       FT_FRAME_USHORT_LE( version ),
       FT_FRAME_ULONG_LE ( file_size ),
       FT_FRAME_BYTES    ( copyright, 60 ),
@@ -105,7 +105,7 @@
       FT_FRAME_USHORT_LE( A_space ),
       FT_FRAME_USHORT_LE( B_space ),
       FT_FRAME_USHORT_LE( C_space ),
-      FT_FRAME_USHORT_LE( color_table_offset ),
+      FT_FRAME_ULONG_LE ( color_table_offset ),
       FT_FRAME_BYTES    ( reserved1, 16 ),
     FT_FRAME_END
   };
@@ -136,6 +136,8 @@
   {
     FT_Error          error;
     FT_WinFNT_Header  header = &font->header;
+    FT_Bool           new_format;
+    FT_UInt           size;
 
 
     /* first of all, read the FNT header */
@@ -146,6 +148,16 @@
     /* check header */
     if ( header->version != 0x200 &&
          header->version != 0x300 )
+    {
+      FT_TRACE2(( "[not a valid FNT file]\n" ));
+      error = FNT_Err_Unknown_File_Format;
+      goto Exit;
+    }
+
+    new_format = FT_BOOL( font->header.version == 0x300 );
+    size       = new_format ? 148 : 118;
+
+    if ( header->file_size < size )
     {
       FT_TRACE2(( "[not a valid FNT file]\n" ));
       error = FNT_Err_Unknown_File_Format;
@@ -572,7 +584,7 @@
     len        = new_format ? 6 : 4;
 
     /* jump to glyph entry */
-    p = font->fnt_frame + ( new_format ? 146 : 118 ) + len * glyph_index;
+    p = font->fnt_frame + ( new_format ? 148 : 118 ) + len * glyph_index;
 
     bitmap->width = FT_NEXT_SHORT_LE( p );
 
@@ -580,6 +592,13 @@
       offset = FT_NEXT_ULONG_LE( p );
     else
       offset = FT_NEXT_USHORT_LE( p );
+
+    if ( offset >= font->header.file_size )
+    {
+      FT_TRACE2(( "invalid FNT offset!\n" ));
+      error = FNT_Err_Invalid_File_Format;
+      goto Exit;
+    }
 
     /* jump to glyph data */
     p = font->fnt_frame + /* font->header.bits_offset */ + offset;

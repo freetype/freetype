@@ -1,3 +1,10 @@
+2003-10-02  Markus F.X.J. Oberhumer  <markus@oberhumer.com>
+
+	* src/winfonts/winfnt.c (FT_WinFNT_HeaderRec): `color_table_offset'
+	has four bytes, not two.
+	Fix all users.
+	(fnt_font_load, FNT_Load_Glyph): Add more font validity tests.
+
 2003-10-01  David Turner  <david@freetype.org>
 
         * src/autofit/*: adding first sources of the new multi-script
