@@ -201,7 +201,7 @@
 
 
     /* check for nested frame access */
-    FT_Assert( stream && stream->cursor == 0 );
+    FT_ASSERT( stream && stream->cursor == 0 );
 
     if ( stream->read )
     {
@@ -265,7 +265,7 @@
     /*  gracefully; however, stream.cursor is really set to 0 by the      */
     /*  FT_Access_Frame() call, and this is not an error.                 */
     /*                                                                    */
-    FT_Assert( stream );
+    FT_ASSERT( stream );
 
     if ( stream->read )
     {
@@ -285,7 +285,7 @@
     FT_Char  result;
 
 
-    FT_Assert( stream && stream->cursor );
+    FT_ASSERT( stream && stream->cursor );
 
     result = 0;
     if ( stream->cursor < stream->limit )
@@ -302,7 +302,7 @@
     FT_Short  result;
 
 
-    FT_Assert( stream && stream->cursor );
+    FT_ASSERT( stream && stream->cursor );
 
     result         = 0;
     p              = stream->cursor;
@@ -321,7 +321,7 @@
     FT_Short  result;
 
 
-    FT_Assert( stream && stream->cursor );
+    FT_ASSERT( stream && stream->cursor );
 
     result         = 0;
     p              = stream->cursor;
@@ -340,7 +340,7 @@
     FT_Long   result;
 
 
-    FT_Assert( stream && stream->cursor );
+    FT_ASSERT( stream && stream->cursor );
 
     result         = 0;
     p              = stream->cursor;
@@ -358,7 +358,7 @@
     FT_Long   result;
 
 
-    FT_Assert( stream && stream->cursor );
+    FT_ASSERT( stream && stream->cursor );
 
     result         = 0;
     p              = stream->cursor;
@@ -376,7 +376,7 @@
     FT_Long   result;
 
 
-    FT_Assert( stream && stream->cursor );
+    FT_ASSERT( stream && stream->cursor );
 
     result         = 0;
     p              = stream->cursor;
@@ -394,7 +394,7 @@
     FT_Byte  result = 0;
 
 
-    FT_Assert( stream );
+    FT_ASSERT( stream );
 
     *error = FT_Err_Ok;
 
@@ -433,7 +433,7 @@
     FT_Short  result = 0;
 
 
-    FT_Assert( stream );
+    FT_ASSERT( stream );
 
     *error = FT_Err_Ok;
 
@@ -480,7 +480,7 @@
     FT_Short  result = 0;
 
 
-    FT_Assert( stream );
+    FT_ASSERT( stream );
 
     *error = FT_Err_Ok;
 
@@ -527,7 +527,7 @@
     FT_Long   result = 0;
 
 
-    FT_Assert( stream );
+    FT_ASSERT( stream );
 
     *error = FT_Err_Ok;
 
@@ -574,7 +574,7 @@
     FT_Long   result = 0;
 
 
-    FT_Assert( stream );
+    FT_ASSERT( stream );
 
     *error = FT_Err_Ok;
 
@@ -621,7 +621,7 @@
     FT_Long   result = 0;
 
 
-    FT_Assert( stream );
+    FT_ASSERT( stream );
 
     *error = FT_Err_Ok;
 

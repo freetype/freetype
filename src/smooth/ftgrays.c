@@ -96,7 +96,7 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_aaraster
+#define FT_COMPONENT  trace_smooth
 
 
 #define ErrRaster_MemoryOverflow   -4

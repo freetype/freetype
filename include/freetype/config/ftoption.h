@@ -250,7 +250,7 @@ FT_BEGIN_HEADER
   /*   Don't define any of these macros to compile in `release' mode!      */
   /*                                                                       */
 #undef  FT_DEBUG_LEVEL_ERROR
-#undef  FT_DEBUG_LEVEL_TRACE
+#define FT_DEBUG_LEVEL_TRACE
 
 
   /*************************************************************************/

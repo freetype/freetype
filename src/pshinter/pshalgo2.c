@@ -523,7 +523,7 @@
 #include <stdio.h>
 
   static void
-  print_zone( PSH2_Zone  zone )
+  psh2_print_zone( PSH2_Zone  zone )
   {
     printf( "zone [scale,delta,min,max] = [%.3f,%.3f,%d,%d]\n",
              zone->scale/65536.0,
@@ -534,7 +534,7 @@
 
 #else
 
-#define print_zone( x )   do { } while ( 0 )
+#define psh2_print_zone( x )   do { } while ( 0 )
 
 #endif
 
@@ -576,7 +576,7 @@
     zone->min   = PSH2_ZONE_MIN;
     zone->max   = hint->org_pos;
 
-    print_zone( zone );
+    psh2_print_zone( zone );
 
     zone++;
 
@@ -597,7 +597,7 @@
         zone->max   = hint->org_pos + hint->org_len;
         zone->delta = hint->cur_pos - FT_MulFix( zone->min, scale2 );
 
-        print_zone( zone );
+        psh2_print_zone( zone );
 
         zone++;
       }
@@ -620,7 +620,7 @@
       zone->delta = hint->cur_pos + hint->cur_len -
                     FT_MulFix( zone->min, scale2 );
 
-      print_zone( zone );
+      psh2_print_zone( zone );
 
       zone++;
 
@@ -634,7 +634,7 @@
     zone->delta = hint->cur_pos + hint->cur_len -
                   FT_MulFix( zone->min, scale );
 
-    print_zone( zone );
+    psh2_print_zone( zone );
 
     zone++;
 

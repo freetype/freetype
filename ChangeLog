@@ -1,7 +1,38 @@
+2002-02-21  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/ftdebug.h, src/base/ftdebug.c: modified
+        the debug sub-system initialization. trace levels can now be specified
+        within the "FT2_DEBUG" environment variable. See the comments within
+        "ftdebug.c" for more details
+
+        * include/freetype/internal/fttrace.h: new file to define the trace
+        levels used for debugging. it is used both to define enums and
+        toggle names for FT2_DEBUG
+
+        * src/base/ftobjs.c, src/base/ftstream.c: FT_Assert renamed to
+        FT_ASSERT
+
+        * include/freetype/internal/ftextend.h, src/base/ftextend.c,
+        src/base/Jamfile, src/base/rules.mk: removing "ftextend" from the
+        library, since it is now completely obsolete..
+
+        * include/freetype/fterrors.h: adding "#undef FT_ERR_CAT" to avoid
+        warnings with certain compilers (like LCC)
+
+        * src/pshinter/pshalgo2.c: renaming 'print_zone' to 'psh2_print_zone'
+        to avoid errors during compilation of debug library
+
+
+2002-02-20  David Turner  <david@freetype.org>
+
+        * README: adding "devel@freetype.org" address for bug reports..
+
+
 2002-02-20  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/install.mk (check): New dummy target.
 	(.PHONY): Add it.
+
 
 2002-02-19  Werner Lemberg  <wl@gnu.org>
 

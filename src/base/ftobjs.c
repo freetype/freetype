@@ -57,7 +57,7 @@
             FT_Long    size,
             void*     *P )
   {
-    FT_Assert( P != 0 );
+    FT_ASSERT( P != 0 );
 
     if ( size > 0 )
     {
@@ -94,7 +94,7 @@
     void*  Q;
 
 
-    FT_Assert( P != 0 );
+    FT_ASSERT( P != 0 );
 
     /* if the original pointer is NULL, call FT_Alloc() */
     if ( !*P )
