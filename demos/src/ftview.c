@@ -42,8 +42,9 @@
 
   const unsigned char*  Text = (unsigned char*)
 "The quick brown fox jumped over the lazy dog 0123456789 \
-גךמûפהכןצüÿאשיטח &#~\"'(-`_^@)=+° ABCDEFGHIJKLMNOPQRSTUVWXYZ $£^¨*µש%!§:/;.,?<>";
-
+\342\352\356\373\364\344\353\357\366\374\377\340\371\351\350\347 \
+&#~\"\'(-`_^@)=+\260 ABCDEFGHIJKLMNOPQRSTUVWXYZ \
+$\243^\250*\265\371%!\247:/;.,?<>";
   FT_Library    library;      /* the FreeType library            */
   FT_Face       face;         /* the font face                   */
   FT_Size       size;         /* the font size                   */
