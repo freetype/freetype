@@ -988,8 +988,8 @@
     /* check the 'storageOffset' field */
     storageOffset = names->storageOffset;
 
-    /* some broken asian fonts have a storage offset whose value is */
-    /* 12*numNameRecords. We deal with them here..                  */
+    /* Some broken Asian fonts have a storage offset whose value is */
+    /* 12 * numNameRecords.  We deal with them here.                */
     if ( storageOffset == (FT_ULong)(12 * names->numNameRecords) )
       storageOffset += 6;
     

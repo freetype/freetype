@@ -670,9 +670,9 @@
         if ( start > end )
           FT_INVALID_DATA;
 
-        /* this test should be performed at default validation level   */
-        /* unfortunately, some popular asian fonts present overlapping */
-        /* ranges in their charmaps..                                  */
+        /* this test should be performed at default validation level;  */
+        /* unfortunately, some popular Asian fonts present overlapping */
+        /* ranges in their charmaps                                    */
         /*                                                             */
         if ( valid->level >= FT_VALIDATE_TIGHT )
         {
@@ -735,19 +735,19 @@
       num_segs2 = TT_PEEK_USHORT( p ) & -2;  /* be paranoid! */
 
 #if 1
-      /* some fonts have more than 170 segments in their charmaps !! */
-      /* we changed this function to use a more efficient binary     */
-      /* search to boost its performance                             */
+      /* Some fonts have more than 170 segments in their charmaps! */
+      /* We changed this function to use a more efficient binary   */
+      /* search for improving performance                          */
       {
-        FT_UInt   min = 0;
-        FT_UInt   max = num_segs2 >> 1;
-        FT_UInt   mid, start, end, offset;
+        FT_UInt  min = 0;
+        FT_UInt  max = num_segs2 >> 1;
+        FT_UInt  mid, start, end, offset;
         
 
         while ( min < max )
         {
           mid   = ( min + max ) >> 1;
-          p     = table + 14 + mid*2;
+          p     = table + 14 + mid * 2;
           end   = TT_NEXT_USHORT( p ); 
           p    += num_segs2;
           start = TT_PEEK_USHORT( p);
@@ -756,7 +756,7 @@
             max = mid;
           
           else if ( code > end )
-            min = mid+1;
+            min = mid + 1;
           
           else
           {
@@ -771,12 +771,12 @@
             
             if ( offset != 0 )
             {
-              p  += offset + 2*( idx - start );
+              p  += offset + 2 * ( idx - start );
               idx = TT_PEEK_USHORT( p );
             }
             
             if ( idx != 0 )
-              result = (FT_UInt)( idx + delta ) & 0xFFFU;
+              result = (FT_UInt)( idx + delta ) & 0xFFFFU;
             
             goto Exit;
           }
@@ -784,6 +784,7 @@
       }
 
 #else /* 0 - old code */
+
       {
         FT_UInt   n;
         FT_Byte*  q;
@@ -823,7 +824,9 @@
           }
         }
       }
+
 #endif /* 0 */
+
     }
     
   Exit:

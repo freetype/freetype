@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000 by
+# Copyright 1996-2000, 2002 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -276,7 +276,7 @@ distclean_project_std: clean_project_std
 # The Dos command shell does not support very long list of arguments, so
 # we are stuck with wildcards.
 #
-# Don't break the command lines with; this prevents the "del" command from
+# Don't break the command lines with \; this prevents the "del" command from
 # working correctly on Win9x.
 #
 clean_project_dos:

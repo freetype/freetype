@@ -1,42 +1,49 @@
+2002-05-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttcmap0.c (tt_cmap4_char_index): Fix serious typo
+	(0xFFFU -> 0xFFFFU).
+
+2002-05-01  Werner Lemberg  <wl@gnu.org>
+
+	* docs/INSTALL: Fix URL of makepp.
+
 2002-05-01  David Turner  <david@freetype.org>
 
-        * src/sfnt/sfobjs.c (tt_face_get_name): fixing a bug that
-          caused FreeType to crash when certain broken fonts (e.g.
-          "hya6gb.ttf") were opened.
+	* src/sfnt/sfobjs.c (tt_face_get_name): Fixing a bug that caused
+	FreeType to crash when certain broken fonts (e.g. "hya6gb.ttf")
+	were opened.
 
-        * src/sfnt/ttload.c (TT_Load_Names): applied a small work-around to
-          manage fonts containing a broken name table (e.g. "hya6gb.ttf")
+	* src/sfnt/ttload.c (TT_Load_Names): Applied a small work-around to
+	manage fonts containing a broken name table (e.g. "hya6gb.ttf").
 
-        * src/sfnt/ttcmap0.c (tt_cmap4_validate):
-          fixed over-restrictive validation test. the charmap validator
-          now accepts overlapping ranges in format 4 charmaps.
+	* src/sfnt/ttcmap0.c (tt_cmap4_validate): Fixed over-restrictive
+	validation test.  The charmap validator now accepts overlapping
+	ranges in format 4 charmaps.
 
-        * src/sfnt/ttcmap0.c (tt_cmap4_char_index):
-          switched to a binary search algorithm. Certain fonts contain
-          more than 170 distinct segments !!
+	* src/sfnt/ttcmap0.c (tt_cmap4_char_index): Switched to a binary
+	search algorithm.  Certain fonts contain more than 170 distinct
+	segments!
 
-        * include/freetype/config/ftstdlib.h: adding an alias for the
-          'exit' function. This will be used in the near future to panic
-          in case of un-expected exception (which shouldn't happen in
-          theory, but as everyone knows, shit happens :-) )
+	* include/freetype/config/ftstdlib.h: Adding an alias for the `exit'
+	function.  This will be used in the near future to panic in case of
+	unexpected exception (which shouldn't happen in theory).
 
-        * include/freetype/internal/fthash.h, src/base/fthash.c:
-          adding a generic implementation of dynamic hash tables using
-          linear algorithm (to get rid of 'stalls' during resizes). This
-          will be used in the future in at least three parts of the
-          library: the cache sub-system, the object sub-system and
-          the memory debugger.
+	* include/freetype/internal/fthash.h, src/base/fthash.c: Adding a
+	generic implementation of dynamic hash tables using a linear
+	algorithm (to get rid of `stalls' during resizes).  This will be
+	used in the future in at least three parts of the library: the cache
+	sub-system, the object sub-system, and the memory debugger.
 
-        * include/freetype/internal/ftcore.h: added this header file to
-          group all new definitions related to exception handling and
-          memory management. It's very likely that this file will disappear
-          or be renamed in the future..
+	* include/freetype/internal/ftcore.h: Added this header file to
+	group all new definitions related to exception handling and memory
+	management.  It is very likely that this file will disappear or be
+	renamed in the future.
 
-        * include/freetype/internal/ftobject.h, include/freetype/ftsysmem.h:
-          adding comments to better explain the object sub-system as well
-          as the new memory manager interface.
+	* include/freetype/internal/ftobject.h, include/freetype/ftsysmem.h:
+	Adding comments to better explain the object sub-system as well as
+	the new memory manager interface.
 
-2002-04-30  Wenlin Institute (Tom Bishop) <wenlin@wenlin.com>
+2002-04-30  Wenlin Institute (Tom Bishop)  <wenlin@wenlin.com>
 
 	* src/base/ftmac.c (p2c_str): Removed.
 	(file_spec_from_path) [TARGET_API_MAC_CARBON]: Added support for
@@ -167,10 +174,10 @@
 2002-04-18  David Turner  <david@freetype.org>
 
 	* src/base/ftobjs.c, builds/win32/ftdebug.c,
-        builds/amiga/src/base/ftdebug.c: Version 2.1.0 couldn't be linked
-        against applications in Win32 and Amiga builds due to changes to
-        "src/base/ftdebug.c" that were not properly propagated to
-        "builds/win32" and "builds/amiga".  This has been fixed.
+	builds/amiga/src/base/ftdebug.c: Version 2.1.0 couldn't be linked
+	against applications in Win32 and Amiga builds due to changes to
+	"src/base/ftdebug.c" that were not properly propagated to
+	"builds/win32" and "builds/amiga".  This has been fixed.
 
 	* include/freetype/internal/ftobject.h,
 	include/freetype/internal/ftexcept.h, include/freetype/ftsysmem.h,
