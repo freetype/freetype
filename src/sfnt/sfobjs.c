@@ -516,7 +516,6 @@
     {
       FT_Face    root = &face->root;
       FT_Int     flags = 0;
-      FT_Int     n;
       FT_Memory  memory;
 
 
@@ -614,11 +613,13 @@
       }
 
 
-
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
       if ( face->num_sbit_strikes )
       {
+        FT_Int  n;
+
+
         root->face_flags |= FT_FACE_FLAG_FIXED_SIZES;
 
 #if 0

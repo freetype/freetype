@@ -1,14 +1,32 @@
+2002-08-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffgload.c (cff_free_glyph_data),
+	src/cff/cffload.c (cff_font_load): Use FT_UNUSED.
+
+2002-08-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Initialize `error'.
+	* src/sfnt/sfobjs.c (SFNT_Load_Face): Fix compiler warning.
+
 2002-08-15  Graham Asher  <graham.asher@btinternet.com>
 
-    * src/cff/cffgload.c, src/cff/cffload.c, src/cff/cffload.h,
-    src/cff/cffobjs.c [FT_CONFIG_OPTION_INCREMENTAL]:
-    implemented the incremental font loading system for
-    the CFF driver.  Tested using the GhostScript-to-FreeType
-    bridge (under development).
+	Implemented the incremental font loading system for the CFF driver. 
+	Tested using the GhostScript-to-FreeType bridge (under development).
 
-    * src/cid/cidgload.c [FT_CONFIG_OPTION_INCREMENTAL]:
-	corrected the incremental font loading implementation to
-	use the new system introduced on 2002-08-01.
+	* src/cff/cffgload.c (cff_get_glyph_data, cff_free_glyph_data): New
+	functions.
+	(cff_operator_seac, cff_compute_max_advance, cff_slot_load): Use
+	them.
+	* src/cff/cffload.c (cff_font_load): Add `face' parameter.
+	Load charset and encoding only if there are glyphs.
+	[FT_CONFIG_OPTION_INCREMENTAL]: Incremental fonts don't need
+	character recipes.
+	* src/cff/cffload.h, src/cff/cffobjs.c: Updated.
+
+	* src/cid/cidgload.c (cid_load_glyph)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Corrected the incremental font
+	loading implementation to use the new system introduced on
+	2002-08-01.
 
 2002-08-06  Werner Lemberg  <wl@gnu.org>
 
