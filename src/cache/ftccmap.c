@@ -24,6 +24,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_TRUETYPE_IDS_H
 
+#include "ftccback.h"
 #include "ftcerror.h"
 
 #undef  FT_COMPONENT
@@ -190,8 +191,8 @@
     (FTC_Node_FreeFunc)   ftc_cmap_node_free,
 
     sizeof ( FTC_CacheRec ),
-    (FTC_Cache_InitFunc)  FTC_Cache_Init,
-    (FTC_Cache_DoneFunc)  FTC_Cache_Done,
+    (FTC_Cache_InitFunc)  ftc_cache_init,
+    (FTC_Cache_DoneFunc)  ftc_cache_done,
   };
 
 

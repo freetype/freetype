@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType internal cache interface (body).                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003 by                                     */
+/*  Copyright 2000-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -21,6 +21,7 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 
+#include "ftccback.h"
 #include "ftcerror.h"
 
 
@@ -314,6 +315,13 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Error )
+  ftc_cache_init( FTC_Cache  cache )
+  {
+    return FTC_Cache_Init( cache );
+  }
+
+
   FT_EXPORT_DEF( void )
   FTC_Cache_Clear( FTC_Cache  cache )
   {
@@ -369,6 +377,13 @@
 
       cache->memory = NULL;
     }
+  }
+
+
+  FT_LOCAL_DEF( void )
+  ftc_cache_done( FTC_Cache  cache )
+  {
+    FTC_Cache_Done( cache );
   }
 
 

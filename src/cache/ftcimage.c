@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Image cache (body).                                         */
 /*                                                                         */
-/*  Copyright 2000-2001, 2003 by                                           */
+/*  Copyright 2000-2001, 2003, 2004 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -21,6 +21,7 @@
 #include FT_CACHE_INTERNAL_IMAGE_H
 #include FT_INTERNAL_MEMORY_H
 
+#include "ftccback.h"
 #include "ftcerror.h"
 
 
@@ -40,6 +41,14 @@
 
     FTC_GNode_Done( FTC_GNODE( inode ), cache );
     FT_FREE( inode );
+  }
+
+
+  FT_LOCAL_DEF( void )
+  ftc_inode_free( FTC_INode  inode,
+                  FTC_Cache  cache )
+  {
+    FTC_INode_Free( inode, cache );
   }
 
 
@@ -72,6 +81,15 @@
 
     *pinode = inode;
     return error;
+  }
+
+
+  FT_LOCAL_DEF( FT_Error )
+  ftc_inode_new( FTC_INode   *pinode,
+                 FTC_GQuery   gquery,
+                 FTC_Cache    cache )
+  {
+    return FTC_INode_New( pinode, gquery, cache );
   }
 
 
@@ -114,6 +132,13 @@
 
     size += sizeof ( *inode );
     return size;
+  }
+
+
+  FT_LOCAL_DEF( FT_ULong )
+  ftc_inode_weight( FTC_INode  inode )
+  {
+    return FTC_INode_Weight( inode );
   }
 
 
