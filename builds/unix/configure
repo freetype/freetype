@@ -1131,7 +1131,7 @@ rm -f conftest.sh
 
 ac_config_headers="$ac_config_headers ftconfig.h:ftconfig.in"
 
-version_info='8:0:2'
+version_info='9:0:3'
 
 ft_version=`echo $version_info | tr : .`
 

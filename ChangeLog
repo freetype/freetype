@@ -1,12 +1,14 @@
-2002-03-09  David Turner    <david@freetype.org>
+2002-03-08  David Turner  <david@freetype.org>
 
-        * Jamfile.in: adding template file to support libtool with Jam on
-        Unix..
-
+	* Jamfile.in: Adding template file to support libtool with Jam on
+	Unix.
 
 2002-03-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Realloc): Use MEM_Set instead of memset.
+
+	* builds/unix/configure.ac (version_info): Set to `9:0:3'.
+	* builds/unix/configure: Regenerated.
 
 2002-03-07  Werner Lemberg  <wl@gnu.org>
 
