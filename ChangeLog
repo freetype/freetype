@@ -1,3 +1,14 @@
+2004-07-25  Kornfeld Eliyahu Peter  <peter@e-kadmon.net>
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Handle
+	TT_NAME_ID_PREFERRED_FAMILY and TT_NAME_ID_PREFERRED_SUBFAMILY.
+
+2004-07-24  Derek B. Noonburg  <derekn@foolabs.com>
+
+	* src/cff/cffload.c (cff_font_load): Always create inverse mapping.
+	Even if the charstring count id different from the CID count, it is
+	still possible that the font uses a different CID -> GID mapping.
+
 2004-07-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttobjs.c (tt_face_init): Accept 0x00020000 format tag

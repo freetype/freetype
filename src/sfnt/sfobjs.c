@@ -509,9 +509,16 @@
       goto Exit;
 
     face->root.family_name = tt_face_get_name( face,
-                                               TT_NAME_ID_FONT_FAMILY );
-    face->root.style_name  = tt_face_get_name( face,
-                                               TT_NAME_ID_FONT_SUBFAMILY );
+                                               TT_NAME_ID_PREFERRED_FAMILY );
+    if ( !face->root.family_name )
+      face->root.family_name = tt_face_get_name( face,
+                                                 TT_NAME_ID_FONT_FAMILY );
+
+    face->root.style_name = tt_face_get_name( face,
+                                              TT_NAME_ID_PREFERRED_SUBFAMILY );
+    if ( !face->root.style_name )
+      face->root.style_name  = tt_face_get_name( face,
+                                                 TT_NAME_ID_FONT_SUBFAMILY );
 
     /* now set up root fields */
     {
