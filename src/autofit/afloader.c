@@ -71,7 +71,6 @@
   {
     FT_Error          error    = 0;
     FT_Face           face     = loader->face;
-    AF_FaceGlobals    globals  = loader->globals;
     FT_GlyphLoader    gloader  = loader->gloader;
     AF_ScriptMetrics  metrics  = loader->metrics;
     AF_GlyphHints     hints    = &loader->hints;

@@ -49,7 +49,7 @@ THE SOFTWARE.
 
 
 #if defined( FT_DEBUG_LEVEL_TRACE )
-  static const char*  tableNames[] =
+  static const char* const  tableNames[] =
   {
     "prop", "accl", "mtrcs", "bmps", "imtrcs",
     "enc", "swidth", "names", "accel"

@@ -285,7 +285,7 @@
 #if 'A' == 65
   /* ASCII */
 
-  char ft_char_table[128] =
+  static const char ft_char_table[128] =
   {
     /* 0x00 */
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -306,7 +306,7 @@
 #if 'A' == 193
   /* EBCDIC */
 
-  char ft_char_table[128] =
+  static const char ft_char_table[128] =
   {
     /* 0x80 */
     -1, 10, 11, 12, 13, 14, 15, 16, 17, 18, -1, -1, -1, -1, -1, -1,

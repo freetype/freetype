@@ -73,7 +73,7 @@
 
     sbit_metrics = &size->strike_metrics;
 
-    error = sfnt->set_sbit_strike( face, 
+    error = sfnt->set_sbit_strike( face,
                                    metrics->x_ppem, metrics->y_ppem,
                                    &strike_index );
 
@@ -100,7 +100,7 @@
       size->strike_index = (FT_UInt)strike_index;
     }
     else
-    {   
+    {
       size->strike_index = 0xFFFFU;
 
       sbit_metrics->x_ppem      = 0;
@@ -113,7 +113,7 @@
 
     return error;
   }
-   
+
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
 
@@ -503,33 +503,50 @@
           char*  fullp  = full;
           char*  family = root->family_name;
 
-
+         /* we're going to try to extract the style name from the
+          * full name. We need to ignore spaces and dashes during
+          * the search.
+          */
           if ( full )
           {
             while ( *fullp )
             {
+             /* skip common characters at the start of both strings
+              */
               if ( *fullp == *family )
               {
                 family++;
                 fullp++;
+                continue;
               }
-              else
+
+             /* ignore spaces or dashes in full name during comparison
+              */
+              if ( *fullp == ' ' || *fullp == '-' )
               {
-                if ( *fullp == ' ' || *fullp == '-' )
-                  fullp++;
-                else if ( *family == ' ' || *family == '-' )
-                  family++;
-                else
-                {
-                  if ( !*family )
-                  {
-                    style_name = cff_strcpy( memory, fullp );
-                    FT_FREE( full );
-                  }
-                  break;
-                }
+                fullp++;
+                continue;
               }
+             /* ignore spaces and dashes in family name during comparison
+              */
+              if ( *family == ' ' || *family == '-' )
+              {
+                family++;
+                continue;
+              }
+
+              if ( !*family && *fullp )
+              {
+               /* the full name begins with the same characters than the
+                * family name, with spaces and dashes removed. In this
+                * case, the remaining string in "fullp" will be used
+                * as the style name
+                */
+                style_name = cff_strcpy( memory, fullp );
+              }
+              break;
             }
+            FT_FREE( full );
           }
         }
         else
