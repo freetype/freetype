@@ -202,6 +202,30 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
+  /*    FT_Basic_Glyph_Metrics                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A small glyph metrics structure used to return information         */
+  /*    for incrementally defined fonts (see FT_Incremental_Interface).    */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    bearing_x :: Left side bearing in font units.                      */
+  /*                                                                       */
+  /*    bearing_y :: Top side bearing in font units.                       */
+  /*                                                                       */
+  /*    advance :: Advance in font units.                                  */
+  /*                                                                       */
+  typedef struct FT_Basic_Glyph_Metrics_
+  {
+	FT_Long bearing_x;
+	FT_Long bearing_y;
+	FT_Long advance;
+  } FT_Basic_Glyph_Metrics;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
   /*    FT_Bitmap_Size                                                     */
   /*                                                                       */
   /* <Description>                                                         */
@@ -477,6 +501,111 @@ FT_BEGIN_HEADER
     FT_UShort    encoding_id;
 
   } FT_CharMapRec;
+
+  
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_Get_Glyph_Data_Func                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A type definition for a function to get glyph data from a          */
+  /*    face that supplies glyph data incrementally, after the face        */
+  /*    object has been created                                            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    object :: a pointer to the user's data, specified by the 'object'  */
+  /*    field in FT_Incremental_Interface                                  */
+  /*                                                                       */
+  /*    index :: the glyph index                                           */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    data :: the position and length of the data                        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    a standard error code                                              */
+  /*                                                                       */
+  typedef FT_Error (*FT_Get_Glyph_Data_Func)(void* object,FT_UInt index,FT_Data* data);
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_Get_Glyph_Metrics_Func                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A type definition for a function to get glyph metrics from a       */
+  /*    face that supplies glyph metrics incrementally, after the face     */
+  /*    object has been created                                            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    object :: a pointer to the user's data, specified by the 'object'  */
+  /*    field in FT_Incremental_Interface                                  */
+  /*                                                                       */
+  /*    index :: the glyph index                                           */
+  /*                                                                       */
+  /*    vertical :: true for vertical layout, false for horizontal layout  */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    metrics :: the glyph metrics in font units                         */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    a standard error code                                              */
+  /*                                                                       */
+  typedef FT_Error (*FT_Get_Glyph_Metrics_Func)(void* object,FT_UInt index,FT_Bool vertical,
+	FT_Basic_Glyph_Metrics* metrics,FT_Bool* found);
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_Incremental_Interface_Funcs                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A table of functions for accessing fonts that load data            */
+  /*    incrementally. Used in FT_Incremental_Interface                    */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    get_glyph_data :: The function to get glyph data. Must not be      */
+  /*                      null.                                            */
+  /*                                                                       */
+  /*    get_glyph_metrics :: The function to get glyph metrics. May be     */
+  /*                         null if the font does not provide             */
+  /*                         overriding glyph metrics.                     */
+  /*                                                                       */
+  typedef struct FT_Incremental_Interface_Funcs_
+  {
+    FT_Get_Glyph_Data_Func get_glyph_data;
+	FT_Get_Glyph_Metrics_Func get_glyph_metrics;	
+  } FT_Incremental_Interface_Funcs;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_Incremental_Interface                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*     This interface structure is provided to FT_Open_Face to allow     */
+  /*     incremental faces to be opened.                                   */
+  /*                                                                       */
+  /*     A incremental face supplies no glyph data when it is opened.      */
+  /*     Instead the glyph data is supplied using a callback function.     */
+  /*     Optionally, metrics that override the metrics in the typeface     */
+  /*     data can also be supplied using another callback function.        */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*     funcs :: The table of functions                                   */
+  /*                                                                       */
+  /*     object :: The pointer passed to the functions. Usually it         */
+  /*               points to the object from which glyph and metric        */
+  /*               data is obtained.                                       */
+  /*                                                                       */
+  typedef struct FT_Incremental_Interface_
+  {	
+    const FT_Incremental_Interface_Funcs* funcs;	
+	void* object;			
+  } FT_Incremental_Interface;
 
 
   /*************************************************************************/
