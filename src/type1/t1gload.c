@@ -93,6 +93,7 @@
                                            0, /* glyph slot */
                                            (FT_Byte**)type1->glyph_names,
                                            face->blend,
+                                           0,
                                            T1_Parse_Glyph );
     if ( error )
       return error;
@@ -172,6 +173,7 @@
                                  (FT_GlyphSlot)glyph,
                                  (FT_Byte**)type1->glyph_names,
                                  face->blend,
+                                 FT_BOOL(hinting),
                                  T1_Parse_Glyph );
     if ( error )
       goto Exit;
@@ -239,20 +241,15 @@
         if ( size && size->root.metrics.y_ppem < 24 )
           glyph->root.outline.flags |= ft_outline_high_precision;
 
-        /* apply the font matrix */
+/* XXXX: the following needs serious work to work properly with hinting !! */
+#if 0
+        /* apply the font matrix, if any.. */
         FT_Outline_Transform( &glyph->root.outline, &font_matrix );
 
         FT_Outline_Translate( &glyph->root.outline,
                               font_offset.x,
                               font_offset.y );
-
-#if 0
-
-        glyph->root.outline.second_pass    = TRUE;
-        glyph->root.outline.high_precision = size->root.metrics.y_ppem < 24;
-        glyph->root.outline.dropout_mode   = 2;
-
-#endif /* 0 */
+#endif
 
         if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
         {
@@ -264,12 +261,13 @@
           FT_Fixed     y_scale = glyph->y_scale;
 
 
-          /* First of all, scale the points */
-          for ( n = cur->n_points; n > 0; n--, vec++ )
-          {
-            vec->x = FT_MulFix( vec->x, x_scale );
-            vec->y = FT_MulFix( vec->y, y_scale );
-          }
+          /* First of all, scale the points, fi we're not hinting */
+          if ( !hinting )
+            for ( n = cur->n_points; n > 0; n--, vec++ )
+            {
+              vec->x = FT_MulFix( vec->x, x_scale );
+              vec->y = FT_MulFix( vec->y, y_scale );
+            }
 
           FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
 

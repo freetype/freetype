@@ -171,13 +171,16 @@ FT_BEGIN_HEADER
   /*    glyph_delta       :: The 2d translation vector corresponding to    */
   /*                         the glyph transformation, if necessary.       */
   /*                                                                       */
+  /*    glyph_hints       :: format-specific glyph hints management        */
+  /*                                                                       */
   typedef struct FT_Slot_InternalRec_
   {
     FT_GlyphLoader*   loader;
     FT_Bool           glyph_transformed;
     FT_Matrix         glyph_matrix;
     FT_Vector         glyph_delta;
-
+    void*             glyph_hints;
+  
   } FT_GlyphSlot_InternalRec;
 
 
