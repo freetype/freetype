@@ -21,7 +21,7 @@
 #ifdef FT_FLAT_COMPILE
 
 #include "psobjs.c"
-#include "psquxmod.c"
+#include "psauxmod.c"
 #include "t1decode.c"
 
 #else
