@@ -52,7 +52,7 @@
     SFNT_Get_Interface,
 
     TT_Load_Any,
-    TT_Load_Format_Tag,
+    TT_Load_SFNT_Header,
     TT_Load_Directory,
 
     TT_Load_Header,

@@ -116,19 +116,17 @@
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Load_Format_Tag                                                 */
+  /*    TT_Load_SFNT_Header                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the first 4 bytes of the font file. This is a tag that       */
-  /*    identifies the font format used.                                   */
+  /*    Loads the header of a SFNT font file. Supports collections..       */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face      :: A handle to the target face object.                   */
   /*    stream    :: The input stream.                                     */
-  /*    faceIndex :: The index of the TrueType font, if we're opening a    */
-  /*                 collection.                                           */
+  /*                                                                       */
   /* <Output>                                                              */
-  /*    format_tag :: a 4-byte tag                                         */
+  /*    sfnt      :: the sfnt header                                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    TrueType error code.  0 means success.                             */
@@ -137,11 +135,14 @@
   /*    The stream cursor must be at the font file's origin                */
   /*    This function recognizes fonts embedded in a "TrueType collection" */
   /*                                                                       */
+  /*    This function checks that the header is valid by looking at the    */
+  /*    values of "search_range", "entry_selector" and "range_shift"..     */
+  /*                                                                       */
   typedef
-  TT_Error  (*TT_Load_Format_Tag_Func)( TT_Face    face,
-                                        FT_Stream  stream,
-                                        TT_Long    faceIndex,
-                                        TT_ULong  *format_tag );
+  TT_Error  (*TT_Load_SFNT_Header_Func)( TT_Face      face,
+                                         FT_Stream    stream,
+                                         TT_Long      faceIndex,
+                                         SFNT_Header* sfnt );
 
   /*************************************************************************/
   /*                                                                       */
@@ -154,8 +155,7 @@
   /* <Input>                                                               */
   /*    face      :: A handle to the target face object.                   */
   /*    stream    :: The input stream.                                     */
-  /*    faceIndex :: The index of the TrueType font, if we're opening a    */
-  /*                 collection.                                           */
+  /*    sfnt      :: sfnt header                                           */
   /*                                                                       */
   /* <Return>                                                              */
   /*    TrueType error code.  0 means success.                             */
@@ -166,9 +166,9 @@
   /*    TT_Load_Format_Tag                                                 */
   /*                                                                       */
   typedef
-  TT_Error  (*TT_Load_Directory_Func)( TT_Face    face,
-                                       FT_Stream  stream,
-                                       TT_Long    faceIndex );
+  TT_Error  (*TT_Load_Directory_Func)( TT_Face       face,
+                                       FT_Stream     stream,
+                                       SFNT_Header*  sfnt );
 
 
   /*************************************************************************/
@@ -426,49 +426,49 @@
   /*                                                                       */
   typedef struct  SFNT_Interface_
   {
-    TT_Goto_Table_Func      goto_table;
+    TT_Goto_Table_Func       goto_table;
 
-    TT_Init_Face_Func       init_face;
-    TT_Load_Face_Func       load_face;
-    TT_Done_Face_Func       done_face;
-    SFNT_Get_Interface_Func get_interface;
+    TT_Init_Face_Func        init_face;
+    TT_Load_Face_Func        load_face;
+    TT_Done_Face_Func        done_face;
+    SFNT_Get_Interface_Func  get_interface;
     
-    TT_Load_Any_Func        load_any;
-    TT_Load_Format_Tag_Func load_format_tag;
-    TT_Load_Directory_Func  load_directory;
+    TT_Load_Any_Func         load_any;
+    TT_Load_SFNT_Header_Func load_sfnt_header;
+    TT_Load_Directory_Func   load_directory;
 
     /* these functions are called by "load_face" but they can also */
     /* be called from external modules, if there is a need to      */
-    TT_Load_Table_Func      load_header;
-    TT_Load_Metrics_Func    load_metrics;
-    TT_Load_Table_Func      load_charmaps;
-    TT_Load_Table_Func      load_max_profile;
-    TT_Load_Table_Func      load_os2;
-    TT_Load_Table_Func      load_psnames;
+    TT_Load_Table_Func       load_header;
+    TT_Load_Metrics_Func     load_metrics;
+    TT_Load_Table_Func       load_charmaps;
+    TT_Load_Table_Func       load_max_profile;
+    TT_Load_Table_Func       load_os2;
+    TT_Load_Table_Func       load_psnames;
 
-    TT_Load_Table_Func      load_names;
-    TT_Free_Table_Func      free_names;
+    TT_Load_Table_Func       load_names;
+    TT_Free_Table_Func       free_names;
 
     /* optional tables */
-    TT_Load_Table_Func      load_hdmx;
-    TT_Free_Table_Func      free_hdmx;
+    TT_Load_Table_Func       load_hdmx;
+    TT_Free_Table_Func       free_hdmx;
 
-    TT_Load_Table_Func      load_kerning;
-    TT_Load_Table_Func      load_gasp;
-	TT_Load_Table_Func      load_pclt;
+    TT_Load_Table_Func       load_kerning;
+    TT_Load_Table_Func       load_gasp;
+	TT_Load_Table_Func       load_pclt;
 
     /* see `ttsbit.h' */
-    TT_Load_Table_Func      load_sbits;
-    TT_Load_SBit_Image_Func load_sbit_image;
-    TT_Free_Table_Func      free_sbits;
+    TT_Load_Table_Func       load_sbits;
+    TT_Load_SBit_Image_Func  load_sbit_image;
+    TT_Free_Table_Func       free_sbits;
 
     /* see `ttpost.h' */
-    TT_Get_PS_Name_Func     get_psname;
-    TT_Free_Table_Func      free_psnames;
+    TT_Get_PS_Name_Func      get_psname;
+    TT_Free_Table_Func       free_psnames;
 
     /* see `ttcmap.h' */
-    TT_CharMap_Load_Func    load_charmap;
-    TT_CharMap_Free_Func    free_charmap;
+    TT_CharMap_Load_Func     load_charmap;
+    TT_CharMap_Free_Func     free_charmap;
 
   } SFNT_Interface;
 

@@ -369,6 +369,31 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
+  /*    SFNT_Header                                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    SFNT file format header.                                           */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    format_tag     :: font format tag..                                */
+  /*    num_tables     :: number of tables in file                         */
+  /*    search_range   :: must be 16*(max power of 2 <= num_tables)        */
+  /*    entry_selector :: log2 of search_range/16                          */
+  /*    range_shift    :: must be num_tables*16 - search_range             */
+  /*                                                                       */
+  typedef struct SFNT_Header_
+  {
+    TT_ULong   format_tag;
+    TT_UShort  num_tables;
+    TT_UShort  search_range;
+    TT_UShort  entry_selector;
+    TT_UShort  range_shift;
+  
+  } SFNT_Header;
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
   /*    TT_TableDir                                                        */
   /*                                                                       */
   /* <Description>                                                         */

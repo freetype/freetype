@@ -408,10 +408,10 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     grLn();
     grWriteln("  F3        : decrement first axis position by 20" );
     grWriteln("  F4        : increment first axis position by 20" );
-    grWriteln("  F3        : decrement second axis position by 20" );
-    grWriteln("  F4        : increment second axis position by 20" );
-    grWriteln("  F3        : decrement third axis position by 20" );
-    grWriteln("  F4        : increment third axis position by 20" );
+    grWriteln("  F5        : decrement second axis position by 20" );
+    grWriteln("  F6        : increment second axis position by 20" );
+    grWriteln("  F7        : decrement third axis position by 20" );
+    grWriteln("  F8        : increment third axis position by 20" );
     grLn();
     grWriteln("press any key to exit this help screen");
 

@@ -451,7 +451,7 @@
       /* the ranges are sorted in increasing order, if we're out of  */
       /* the range here, the char code isn't in the charmap, so exit */
       if ( charCode > seg4->endCount )
-        break;
+        continue;
         
       if ( charCode >= seg4->startCount )
         goto Found;

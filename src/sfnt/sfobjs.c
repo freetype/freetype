@@ -145,6 +145,7 @@
     FT_Error           error;
     SFNT_Interface*    sfnt;
     PSNames_Interface* psnames;
+    SFNT_Header        sfnt_header;
 
     /* for now, parameters are unused */
     UNUSED(num_params);
@@ -187,12 +188,14 @@
     }
 
     /* check that we have a valid TrueType file */
-    error = sfnt->load_format_tag( face, stream, face_index,
-                                    &face->format_tag );
+    error = sfnt->load_sfnt_header( face, stream, face_index, &sfnt_header );
     if (error) goto Exit;                                    
 
+    face->format_tag = sfnt_header.format_tag;
+    face->num_tables = sfnt_header.num_tables;
+
     /* Load font directory */
-    error = sfnt->load_directory( face, stream, face_index );
+    error = sfnt->load_directory( face, stream, &sfnt_header );
     if ( error ) goto Exit;
 
     face->root.num_faces = face->ttc_header.DirCount;

@@ -118,19 +118,17 @@
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Load_Format_Tag                                                 */
+  /*    TT_Load_SFNT_Header                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the first 4 bytes of the font file. This is a tag that       */
-  /*    identifies the font format used.                                   */
+  /*    Loads the header of a SFNT font file. Supports collections..       */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face      :: A handle to the target face object.                   */
   /*    stream    :: The input stream.                                     */
-  /*    faceIndex :: The index of the TrueType font, if we're opening a    */
-  /*                 collection.                                           */
+  /*                                                                       */
   /* <Output>                                                              */
-  /*    format_tag :: a 4-byte font format tag                             */
+  /*    sfnt      :: the sfnt header                                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    TrueType error code.  0 means success.                             */
@@ -139,24 +137,34 @@
   /*    The stream cursor must be at the font file's origin                */
   /*    This function recognizes fonts embedded in a "TrueType collection" */
   /*                                                                       */
+  /*    This function checks that the header is valid by looking at the    */
+  /*    values of "search_range", "entry_selector" and "range_shift"..     */
+  /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Format_Tag( TT_Face    face,
-                                FT_Stream  stream,
-                                TT_Long    faceIndex,
-                                TT_ULong  *format_tag )
+  TT_Error   TT_Load_SFNT_Header( TT_Face       face,
+                                  FT_Stream     stream,
+                                  TT_Long       face_index,
+                                  SFNT_Header*  sfnt )
   {
-    TT_Error   error;
-    FT_Memory  memory = stream->memory;
-
-#ifdef READ_FIELDS
+    TT_Error  error;
+    TT_ULong  format_tag;
+    FT_Memory memory = stream->memory;
+    
+    const FT_Frame_Field  sfnt_header_fields[] = {
+                  FT_FRAME_START(8),
+                    FT_FRAME_USHORT( SFNT_Header, num_tables ),
+                    FT_FRAME_USHORT( SFNT_Header, search_range ),
+                    FT_FRAME_USHORT( SFNT_Header, entry_selector ),
+                    FT_FRAME_USHORT( SFNT_Header, range_shift ),
+                  FT_FRAME_END };
+                  
     const FT_Frame_Field  ttc_header_fields[] = {
            FT_FRAME_START(8),  /* frame of 8 bytes */
              FT_FRAME_LONG( TTC_Header, version  ),
              FT_FRAME_LONG( TTC_Header, DirCount ),
            FT_FRAME_END };
-#endif
 
-    FT_TRACE2(( "TT_Load_Format_Tag(%08p, %ld )\n",
+    FT_TRACE2(( "TT_Load_SFNT_Header(%08p, %ld )\n",
                 face, faceIndex ));
 
     face->ttc_header.Tag      = 0;
@@ -168,28 +176,19 @@
     /* first of all, read the  first 4 bytes. If it's `ttcf', then the */
     /* file is a TrueType collection, otherwise it can be any other    */
     /* kind of font..                                                  */
-    if ( READ_ULong(*format_tag) ) goto Exit;
+    if ( READ_ULong(format_tag) ) goto Exit;
 
-    if ( *format_tag == TTAG_ttcf )
+    if ( format_tag == TTAG_ttcf )
     {
       TT_Int  n;
 
-      FT_TRACE4(( "TT_Load_Format_Tag: file is a collection\n" ));
+      FT_TRACE4(( "TT_Load_SFNT_Header: file is a collection\n" ));
 
       /* it's a TrueType collection, i.e. a file containing several */
       /* font files. Read the font directory now                    */
       /*                                                            */
-    #ifdef READ_FIELDS
       if ( READ_Fields( ttc_header_fields, &face->ttc_header ) )
         goto Exit;
-    #else
-      if ( ACCESS_Frame( 8 ) ) goto Exit;
-
-      face->ttc_header.version  = GET_Long();
-      face->ttc_header.DirCount = GET_Long();
-
-      FORGET_Frame();
-    #endif
 
       /* now read the offsets of each font in the file         */
       /*                                                       */
@@ -205,25 +204,42 @@
       FORGET_Frame();
 
       /* check face index */
-      if (faceIndex >= face->ttc_header.DirCount)
+      if (face_index >= face->ttc_header.DirCount)
       {
         error = TT_Err_Bad_Argument;
         goto Exit;
       }
 
-      /* if we're checking the font format, exit immediately */
-      if (faceIndex < 0)
-        goto Exit;
-
       /* seek to the appropriate TrueType file, then read tag */
-      if ( FILE_Seek( face->ttc_header.TableDirectory[faceIndex] ) ||
-           READ_Long( *format_tag )                                )
+      if ( FILE_Seek( face->ttc_header.TableDirectory[face_index] ) ||
+           READ_Long( format_tag )                                  )
         goto Exit;
+    }
+
+    /* the format tag was read, now check the rest of the header */
+    sfnt->format_tag = format_tag;
+    if ( READ_Fields( sfnt_header_fields, sfnt ) )
+      goto Exit;
+      
+    /* now, check the values of "num_tables", "seach_range", etc.. */
+    {
+      TT_UInt  num_tables     = sfnt->num_tables;
+      TT_UInt  search_range   = sfnt->search_range;
+      TT_ULong entry_selector = 1L << sfnt->entry_selector;
+      
+      if ( entry_selector    > num_tables || entry_selector*2 <= num_tables ||
+           search_range  != 16*entry_selector ||
+           num_tables*16 != search_range + sfnt->range_shift )
+      {           
+        FT_TRACE2(( "TT_Load_SFNT_Header: file is not SFNT !\n" ));
+        error = FT_Err_Unknown_File_Format;
+      }
     }
 
   Exit:
     return error;
-  }
+  }                                  
+
 
 
   /*************************************************************************/
@@ -237,8 +253,7 @@
   /* <Input>                                                               */
   /*    face      :: A handle to the target face object.                   */
   /*    stream    :: The input stream.                                     */
-  /*    faceIndex :: The index of the TrueType font, if we're opening a    */
-  /*                 collection.                                           */
+  /*    sfnt      :: sfnt directory header                                 */
   /*                                                                       */
   /* <Return>                                                              */
   /*    TrueType error code.  0 means success.                             */
@@ -247,49 +262,22 @@
   /*    The stream cursor must be at the font file's origin                */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Directory( TT_Face    face,
-                               FT_Stream  stream,
-                               TT_Long    faceIndex )
+  TT_Error  TT_Load_Directory( TT_Face       face,
+                               FT_Stream     stream,
+                               SFNT_Header*  sfnt )
   {
     TT_Error   error;
     FT_Memory  memory = stream->memory;
-#ifdef READ_FIELDS
-    const FT_Frame_Field table_dir_fields[] = {
-           FT_FRAME_START(8),
-             FT_FRAME_USHORT( TT_TableDir, numTables ),
-             FT_FRAME_USHORT( TT_TableDir, searchRange ),
-             FT_FRAME_USHORT( TT_TableDir, entrySelector ),
-             FT_FRAME_USHORT( TT_TableDir, rangeShift ),
-           FT_FRAME_END };
-#endif
-
-    TT_TableDir  tableDir;
 
     TT_Table *entry, *limit;
-
-    UNUSED(faceIndex);
 
     FT_TRACE2(( "TT_Load_Directory( %08p, %ld )\n",
                 face, faceIndex ));
 
-#ifdef READ_FIELDS
-    if ( READ_Fields( table_dir_fields, &tableDir ) )
-      goto Exit;
-#else
-    if ( ACCESS_Frame( 8L ) ) goto Exit;
+    FT_TRACE2(( "-- Tables count   : %12u\n",  sfnt->num_tables ));
+    FT_TRACE2(( "-- Format version : %08lx\n", sfnt->format_tag ));
 
-    tableDir.numTables     = GET_UShort();
-    tableDir.searchRange   = GET_UShort();
-    tableDir.entrySelector = GET_UShort();
-    tableDir.rangeShift    = GET_UShort();
-
-    FORGET_Frame();
-#endif
-
-    FT_TRACE2(( "-- Tables count   : %12u\n",  tableDir.numTables ));
-    FT_TRACE2(( "-- Format version : %08lx\n", tableDir.version ));
-
-    face->num_tables = tableDir.numTables;
+    face->num_tables = sfnt->num_tables;
 
     if ( ALLOC_ARRAY( face->dir_tables,
                       face->num_tables,
@@ -437,7 +425,7 @@
   {
     TT_Error    error;
     TT_Header*  header;
-#ifdef READ_FIELDS
+
     static const FT_Frame_Field  header_fields[] = {
             FT_FRAME_START(54),
               FT_FRAME_ULONG(  TT_Header, Table_Version ),
@@ -460,7 +448,6 @@
               FT_FRAME_SHORT(  TT_Header, Index_To_Loc_Format ),
               FT_FRAME_SHORT(  TT_Header, Glyph_Data_Format ),
             FT_FRAME_END };
-#endif
 
     FT_TRACE2(( "Load_TT_Header( %08p )\n", face ));
 
@@ -473,40 +460,9 @@
 
     header = &face->header;
 
-#ifdef READ_FIELDS
-    if ( READ_Fields( header_fields, header ) ) goto Exit;
-#else
-    if ( ACCESS_Frame( 54L ) )
+    if ( READ_Fields( header_fields, header ) )
       goto Exit;
 
-    header->Table_Version = GET_ULong();
-    header->Font_Revision = GET_ULong();
-
-    header->CheckSum_Adjust = GET_Long();
-    header->Magic_Number    = GET_Long();
-
-    header->Flags        = GET_UShort();
-    header->Units_Per_EM = GET_UShort();
-
-    header->Created [0] = GET_Long();
-    header->Created [1] = GET_Long();
-    header->Modified[0] = GET_Long();
-    header->Modified[1] = GET_Long();
-
-    header->xMin = GET_Short();
-    header->yMin = GET_Short();
-    header->xMax = GET_Short();
-    header->yMax = GET_Short();
-
-    header->Mac_Style       = GET_UShort();
-    header->Lowest_Rec_PPEM = GET_UShort();
-
-    header->Font_Direction      = GET_Short();
-    header->Index_To_Loc_Format = GET_Short();
-    header->Glyph_Data_Format   = GET_Short();
-
-    FORGET_Frame();
-#endif
     FT_TRACE2(( "    Units per EM : %8u\n", header->Units_Per_EM ));
     FT_TRACE2(( "    IndexToLoc   : %8d\n", header->Index_To_Loc_Format ));
     FT_TRACE2(( "Font Header Loaded.\n" ));
@@ -537,7 +493,7 @@
   {
     TT_Error        error;
     TT_MaxProfile*  maxProfile = &face->max_profile;
-#ifdef READ_FIELDS
+
     const FT_Frame_Field  maxp_fields[] = {
               FT_FRAME_START(32),
                 FT_FRAME_ULONG(  TT_MaxProfile, version ),
@@ -556,41 +512,13 @@
                 FT_FRAME_USHORT( TT_MaxProfile, maxComponentElements ),
                 FT_FRAME_USHORT( TT_MaxProfile, maxComponentDepth ),
               FT_FRAME_END };
-#endif
 
     FT_TRACE2(( "Load_TT_MaxProfile( %08p )\n", face ));
 
     error = face->goto_table( face, TTAG_maxp, stream, 0 );
     if (error) goto Exit;
 
-#ifdef READ_FIELDS
     if ( READ_Fields( maxp_fields, maxProfile ) ) goto Exit;
-#else
-    if ( ACCESS_Frame( 32L ) )
-      goto Exit;
-
-    /* read frame data into face table */
-    maxProfile->version               = GET_ULong();
-    maxProfile->numGlyphs             = GET_UShort();
-
-    maxProfile->maxPoints             = GET_UShort();
-    maxProfile->maxContours           = GET_UShort();
-    maxProfile->maxCompositePoints    = GET_UShort();
-    maxProfile->maxCompositeContours  = GET_UShort();
-
-    maxProfile->maxZones              = GET_UShort();
-    maxProfile->maxTwilightPoints     = GET_UShort();
-
-    maxProfile->maxStorage            = GET_UShort();
-    maxProfile->maxFunctionDefs       = GET_UShort();
-    maxProfile->maxInstructionDefs    = GET_UShort();
-    maxProfile->maxStackElements      = GET_UShort();
-    maxProfile->maxSizeOfInstructions = GET_UShort();
-    maxProfile->maxComponentElements  = GET_UShort();
-    maxProfile->maxComponentDepth     = GET_UShort();
-
-    FORGET_Frame();
-#endif
 
     /* XXX: an adjustment that is necessary to load certain */
     /*       broken fonts like `Keystrokes MT' :-(          */
@@ -783,7 +711,7 @@
   {
     TT_Error        error;
     TT_HoriHeader*  header;
-#ifdef READ_FIELDS
+
     const FT_Frame_Field  metrics_header_fields[] = {
               FT_FRAME_START(36),
                 FT_FRAME_ULONG(  TT_HoriHeader, Version ),
@@ -804,7 +732,7 @@
                 FT_FRAME_SHORT(  TT_HoriHeader, metric_Data_Format ),
                 FT_FRAME_USHORT( TT_HoriHeader, number_Of_HMetrics ),
               FT_FRAME_END };
-#endif
+
     FT_TRACE2(( vertical ? "Vertical header " : "Horizontal header " ));
 
     if ( vertical )
@@ -837,37 +765,7 @@
       header = &face->horizontal;
     }
 
-#ifdef READ_FIELDS
     if ( READ_Fields( metrics_header_fields, header ) ) goto Exit;
-#else
-    if ( ACCESS_Frame( 36L ) )
-      goto Exit;
-
-    header->Version   = GET_ULong();
-    header->Ascender  = GET_Short();
-    header->Descender = GET_Short();
-    header->Line_Gap  = GET_Short();
-
-    header->advance_Width_Max = GET_UShort();
-
-    header->min_Left_Side_Bearing  = GET_Short();
-    header->min_Right_Side_Bearing = GET_Short();
-    header->xMax_Extent            = GET_Short();
-    header->caret_Slope_Rise       = GET_Short();
-    header->caret_Slope_Run        = GET_Short();
-
-    header->Reserved[0] = GET_Short();  /* this is caret_Offset for
-                                           vertical headers */
-    header->Reserved[1] = GET_Short();
-    header->Reserved[2] = GET_Short();
-    header->Reserved[3] = GET_Short();
-    header->Reserved[4] = GET_Short();
-
-    header->metric_Data_Format = GET_Short();
-    header->number_Of_HMetrics = GET_UShort();
-
-    FORGET_Frame();
-#endif
 
     header->long_metrics  = NULL;
     header->short_metrics = NULL;
@@ -907,7 +805,7 @@
     TT_ULong   storageSize;
 
     TT_NameTable*  names;
-#ifdef READ_FIELDS
+
     const FT_Frame_Field  name_table_fields[] = {
               FT_FRAME_START(6),
                 FT_FRAME_USHORT( TT_NameTable, format ),
@@ -923,7 +821,6 @@
                 FT_FRAME_USHORT( TT_NameRec, stringLength ),
                 FT_FRAME_USHORT( TT_NameRec, stringOffset ),
               FT_FRAME_END };
-#endif
 
 
     FT_TRACE2(( "Names " ));
@@ -941,19 +838,7 @@
 
     names = &face->name_table;
 
-#ifdef READ_FIELDS
     if ( READ_Fields( name_table_fields, names ) ) goto Exit;
-#else
-    if ( ACCESS_Frame( 6L ) )
-      goto Exit;
-
-    /* Load the initial names data. */
-    names->format         = GET_UShort();
-    names->numNameRecords = GET_UShort();
-    names->storageOffset  = GET_UShort();
-
-    FORGET_Frame();
-#endif
 
     /* Allocate the array of name records. */
     if ( ALLOC_ARRAY( names->names,
@@ -974,16 +859,8 @@
       {
         TT_ULong  upper;
 
-#ifdef READ_FIELDS
         (void)READ_Fields( name_record_fields, cur );
-#else
-        cur->platformID   = GET_UShort();
-        cur->encodingID   = GET_UShort();
-        cur->languageID   = GET_UShort();
-        cur->nameID       = GET_UShort();
-        cur->stringLength = GET_UShort();
-        cur->stringOffset = GET_UShort();
-#endif
+
         upper = (TT_ULong)(cur->stringOffset + cur->stringLength);
         if ( upper > storageSize ) storageSize = upper;
       }
@@ -1101,7 +978,6 @@
     TT_Long     table_start;
     TT_CMapDir  cmap_dir;
 
-#ifdef READ_FIELDS
     const FT_Frame_Field  cmap_fields[] = {
               FT_FRAME_START(4),
                 FT_FRAME_USHORT( TT_CMapDir, tableVersionNumber ),
@@ -1114,7 +990,6 @@
                 FT_FRAME_USHORT( TT_CMapTable, length ),
                 FT_FRAME_USHORT( TT_CMapTable, version ),
               FT_FRAME_END };
-#endif
 
     FT_TRACE2(( "CMaps " ));
 
@@ -1127,17 +1002,7 @@
 
     table_start = FILE_Pos();
 
-#ifdef READ_FIELDS
     if ( READ_Fields( cmap_fields, &cmap_dir ) ) goto Exit;
-#else
-    if ( ACCESS_Frame( 4L ) )           /* 4 bytes cmap header */
-      goto Exit;
-
-    cmap_dir.tableVersionNumber = GET_UShort();
-    cmap_dir.numCMaps           = GET_UShort();
-
-    FORGET_Frame();
-#endif
 
     /* save space in face table for cmap tables */
     if ( ALLOC_ARRAY( face->charmaps,
@@ -1171,21 +1036,10 @@
       {
         TT_CMapTable* cmap = &charmap->cmap;
 
-#ifdef READ_FIELDS
         if ( FILE_Seek( table_start + (TT_Long)cmap->offset ) ||
              READ_Fields( cmap_rec_fields, cmap )             )
           goto Exit;
-#else
-        if ( FILE_Seek( table_start + (TT_Long)cmap->offset ) ||
-             ACCESS_Frame(6L) )
-          goto Exit;
 
-        cmap->format  = GET_UShort();
-        cmap->length  = GET_UShort();
-        cmap->version = GET_UShort();
-
-        FORGET_Frame();
-#endif
         cmap->offset = FILE_Pos();
       }
     }
@@ -1217,7 +1071,7 @@
   {
     TT_Error  error;
     TT_OS2*   os2;
-#ifdef READ_FIELDS
+
     const FT_Frame_Field  os2_fields[] = {
               FT_FRAME_START(78),
                 FT_FRAME_USHORT( TT_OS2, version ),
@@ -1279,10 +1133,6 @@
                 FT_FRAME_USHORT( TT_OS2, usBreakChar ),
                 FT_FRAME_USHORT( TT_OS2, usMaxContext ),
               FT_FRAME_END };
-#else
-    TT_Int    j;
-#endif
-
 
     FT_TRACE2(( "OS/2 Table " ));
 
@@ -1300,51 +1150,7 @@
 
     os2 = &face->os2;
 
-#ifdef READ_FIELDS
     if ( READ_Fields( os2_fields, os2 ) ) goto Exit;
-#else
-    if ( ACCESS_Frame( 78L ) )
-      goto Exit;
-
-    os2->version             = GET_UShort();
-    os2->xAvgCharWidth       = GET_Short();
-    os2->usWeightClass       = GET_UShort();
-    os2->usWidthClass        = GET_UShort();
-    os2->fsType              = GET_Short();
-    os2->ySubscriptXSize     = GET_Short();
-    os2->ySubscriptYSize     = GET_Short();
-    os2->ySubscriptXOffset   = GET_Short();
-    os2->ySubscriptYOffset   = GET_Short();
-    os2->ySuperscriptXSize   = GET_Short();
-    os2->ySuperscriptYSize   = GET_Short();
-    os2->ySuperscriptXOffset = GET_Short();
-    os2->ySuperscriptYOffset = GET_Short();
-    os2->yStrikeoutSize      = GET_Short();
-    os2->yStrikeoutPosition  = GET_Short();
-    os2->sFamilyClass        = GET_Short();
-
-    for ( j = 0; j < 10; j++ )
-      os2->panose[j] = GET_Byte();
-
-    os2->ulUnicodeRange1     = GET_ULong();
-    os2->ulUnicodeRange2     = GET_ULong();
-    os2->ulUnicodeRange3     = GET_ULong();
-    os2->ulUnicodeRange4     = GET_ULong();
-
-    for ( j = 0; j < 4; j++ )
-      os2->achVendID[j] = GET_Byte();
-
-    os2->fsSelection         = GET_UShort();
-    os2->usFirstCharIndex    = GET_UShort();
-    os2->usLastCharIndex     = GET_UShort();
-    os2->sTypoAscender       = GET_Short();
-    os2->sTypoDescender      = GET_Short();
-    os2->sTypoLineGap        = GET_Short();
-    os2->usWinAscent         = GET_UShort();
-    os2->usWinDescent        = GET_UShort();
-
-    FORGET_Frame();
-#endif
 
     os2->ulCodePageRange1 = 0;
     os2->ulCodePageRange2 = 0;
@@ -1352,35 +1158,12 @@
     if ( os2->version >= 0x0001 )
     {
       /* only version 1 tables */
-#ifdef READ_FIELDS
       if ( READ_Fields( os2_fields_extra, os2 ) ) goto Exit;
-#else
-      if ( ACCESS_Frame( 8L ) )  /* read into frame */
-        goto Exit;
-
-      os2->ulCodePageRange1 = GET_ULong();
-      os2->ulCodePageRange2 = GET_ULong();
-
-      FORGET_Frame();
-#endif
 
       if ( os2->version >= 0x0002 )
       {
         /* only version 2 tables */
-#ifdef READ_FIELDS
         if ( READ_Fields( os2_fields_extra2, os2 ) ) goto Exit;
-#else
-        if ( ACCESS_Frame( 10L ) )  /* read into frame */
-          goto Exit;
-
-        os2->sxHeight      = GET_Short();
-        os2->sCapHeight    = GET_Short();
-        os2->usDefaultChar = GET_UShort();
-        os2->usBreakChar   = GET_UShort();
-        os2->usMaxContext  = GET_UShort();
-
-        FORGET_Frame();
-#endif
       }
     }
 
@@ -1412,7 +1195,7 @@
   {
     TT_Error        error;
     TT_Postscript*  post = &face->postscript;
-#ifdef READ_FIELDS
+
     static const FT_Frame_Field  post_fields[] = {
               FT_FRAME_START(32),
                 FT_FRAME_ULONG( TT_Postscript, FormatType ),
@@ -1425,7 +1208,6 @@
                 FT_FRAME_ULONG( TT_Postscript, minMemType1 ),
                 FT_FRAME_ULONG( TT_Postscript, maxMemType1 ),
               FT_FRAME_END };
-#endif
 
     FT_TRACE2(( "PostScript " ));
 
@@ -1433,26 +1215,8 @@
     if (error)
       return TT_Err_Post_Table_Missing;
 
-#ifdef READ_FIELDS
     if ( READ_Fields( post_fields, post ) ) return error;
-#else
-    if ( ACCESS_Frame( 32L ) )
-      return error;
 
-    /* read frame data into face table */
-
-    post->FormatType         = GET_ULong();
-    post->italicAngle        = GET_ULong();
-    post->underlinePosition  = GET_Short();
-    post->underlineThickness = GET_Short();
-    post->isFixedPitch       = GET_ULong();
-    post->minMemType42       = GET_ULong();
-    post->maxMemType42       = GET_ULong();
-    post->minMemType1        = GET_ULong();
-    post->maxMemType1        = GET_ULong();
-
-    FORGET_Frame();
-#endif
     /* we don't load the glyph names, we do that in another */
     /* module (ttpost).                                     */
     FT_TRACE2(( "loaded\n" ));

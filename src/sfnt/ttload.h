@@ -44,16 +44,14 @@
 
 
   LOCAL_DEF
-  TT_Error  TT_Load_Format_Tag( TT_Face    face,
-                                FT_Stream  stream,
-                                TT_Long    faceIndex,
-                                TT_ULong  *format_tag );
-
+  TT_Error   TT_Load_SFNT_Header( TT_Face       face,
+                                  FT_Stream     stream,
+                                  TT_Long       face_index,
+                                  SFNT_Header*  sfnt );
   LOCAL_DEF
-  TT_Error  TT_Load_Directory( TT_Face    face,
-                               FT_Stream  stream,
-                               TT_Long    faceIndex );
-
+  TT_Error  TT_Load_Directory( TT_Face       face,
+                               FT_Stream     stream,
+                               SFNT_Header*  sfnt );
 
   LOCAL_DEF
   TT_Error  TT_Load_Any( TT_Face   face,
