@@ -1011,8 +1011,8 @@
     if ( face->autohint.finalizer )
       face->autohint.finalizer( face->autohint.data );
 
-    /* Discard glyph slots for this face                           */
-    /* Beware!  FT_Done_GlyphSlot() changes the field `face->slot' */
+    /* Discard glyph slots for this face                            */
+    /* Beware!  FT_Done_GlyphSlot() changes the field `face->glyph' */
     while ( face->glyph )
       FT_Done_GlyphSlot( face->glyph );
 
@@ -1037,7 +1037,11 @@
       ( face->face_flags & FT_FACE_FLAG_EXTERNAL_STREAM ) != 0 );
 
     /* get rid of it */
-    FREE( face->internal );
+    if ( face->internal )
+    {
+      FREE( face->internal->postscript_name );
+      FREE( face->internal );
+    }
     FREE( face );
   }
 
@@ -1903,6 +1907,38 @@
     }
 
     return error;
+  }
+
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( const char* )
+  FT_Get_Postscript_Name( FT_Face  face )
+  {
+    const char*  result = NULL;
+    
+    if ( !face )
+      goto Exit;
+
+    result = face->internal->postscript_name;
+    if ( !result )
+    {
+      /* now, lookup for glyph name */
+      FT_Driver        driver = face->driver;
+      FT_Module_Class* clazz  = FT_MODULE_CLASS( driver );
+
+      if ( clazz->get_interface )
+      {
+        FT_PSName_Requester  requester;
+
+        requester = (FT_PSName_Requester)clazz->get_interface(
+                      FT_MODULE( driver ), "postscript_name" );
+        if ( requester )
+          result = requester( face );
+      }
+    }
+  Exit:
+    return result;
   }
 
 

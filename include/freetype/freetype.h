@@ -2289,6 +2289,30 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    FT_Get_Postscript_Name                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Retrieves the ASCII Postscript name of a given face, when          */
+  /*    available. This should only work with Postscript and TrueType      */
+  /*    fonts..                                                            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: handle to source face object.                              */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    pointer to face's Postscript name. NULL when un-available          */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The returned pointer is owned by the face and will be destroyed    */
+  /*    with it.                                                           */
+  /*                                                                       */
+  FT_EXPORT( const char* )
+  FT_Get_Postscript_Name( FT_Face  face );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    FT_Select_Charmap                                                  */
   /*                                                                       */
   /* <Description>                                                         */

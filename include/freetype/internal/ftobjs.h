@@ -129,14 +129,18 @@ FT_BEGIN_HEADER
   /*    transform_flags  :: Some flags used to classify the transform.     */
   /*                        Only used by the convenience functions.        */
   /*                                                                       */
+  /*    postscript_name  :: Postscript font name for this face.            */
+  /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {
-    FT_UShort  max_points;
-    FT_Short   max_contours;
+    FT_UShort    max_points;
+    FT_Short     max_contours;
 
-    FT_Matrix  transform_matrix;
-    FT_Vector  transform_delta;
-    FT_Int     transform_flags;
+    FT_Matrix    transform_matrix;
+    FT_Vector    transform_delta;
+    FT_Int       transform_flags;
+
+    const char*  postscript_name;
 
   } FT_Face_InternalRec;
 
@@ -627,6 +631,9 @@ FT_BEGIN_HEADER
   FT_Render_Glyph_Internal( FT_Library    library,
                             FT_GlyphSlot  slot,
                             FT_UInt       render_mode );
+
+  typedef const char*
+  (*FT_PSName_Requester)( FT_Face   face );
 
   typedef FT_Error
   (*FT_Glyph_Name_Requester)( FT_Face     face,

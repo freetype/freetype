@@ -108,6 +108,13 @@
   }
 
 
+  static const char*
+  t1_get_ps_name( T1_Face    face )
+  {
+    return (const char*) face->type1.font_name;
+  }
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -147,6 +154,9 @@
 
     if ( strcmp( (const char*)interface, "name_index" ) == 0 )
       return (FT_Module_Interface)t1_get_name_index;
+
+    if ( strcmp( (const char*)interface, "postscript_name" ) == 0 )
+      return (FT_Module_Interface)t1_get_ps_name;
 
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
     if ( strcmp( (const char*)interface, "get_mm" ) == 0 )
