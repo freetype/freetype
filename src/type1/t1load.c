@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 font loader (body).                                           */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1793,9 +1793,9 @@
             }
           }
       }
-     /* yes, this happens, certain PDF-embedded fonts have only a ".notdef"
-      * glyph defined !
-      */
+      /* Yes, this happens: Certain PDF-embedded fonts have only a ".notdef"
+       * glyph defined!
+       */
       if ( min_char > max_char )
       {
         min_char = 0;

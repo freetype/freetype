@@ -5,7 +5,7 @@
 /*    Load the basic TrueType tables, i.e., tables that can be either in   */
 /*    TTF or OTF fonts (body).                                             */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -213,13 +213,13 @@
 
         has_head = 1;
 
-       /* the table length should be 0x36, but certain font tools
-        * make it 0x38, so we will just check that it is greater.
-        *
-        * note that according to the specification,
-        * the table must be padded to 32-bit lengths, but this doesn't
-        * apply to the value of its "Length" field !!
-        */
+        /* The table length should be 0x36, but certain font tools
+         * make it 0x38, so we will just check that it is greater.
+         *
+         * Note that according to the specification,
+         * the table must be padded to 32-bit lengths, but this doesn't
+         * apply to the value of its "Length" field!
+         */
         if ( table.Length < 0x36                 ||
              FT_STREAM_SEEK( table.Offset + 12 ) ||
              FT_READ_ULONG( magic )              ||
@@ -840,16 +840,16 @@
       {
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-      /* If this is an incrementally loaded font and there are    */
-      /* overriding metrics tolerate a missing 'hmtx' table.      */
+        /* If this is an incrementally loaded font and there are */
+        /* overriding metrics tolerate a missing 'hmtx' table.   */
         if ( face->root.internal->incremental_interface &&
              face->root.internal->incremental_interface->funcs->
-                 get_glyph_metrics )
+               get_glyph_metrics )
         {
           face->horizontal.number_Of_HMetrics = 0;
           error = SFNT_Err_Ok;
           goto Exit;
-	    }
+        }
 #endif
 
         FT_ERROR(( " no horizontal metrics in file!\n" ));

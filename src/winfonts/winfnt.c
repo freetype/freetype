@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType font driver for Windows FNT/FON files                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -618,7 +618,7 @@
 
     /* allocate and build bitmap */
     {
-      FT_Int     pitch  = ( bitmap->width + 7 ) >> 3;
+      FT_Int  pitch  = ( bitmap->width + 7 ) >> 3;
 
 
       bitmap->pitch      = pitch;
