@@ -2,14 +2,18 @@
 // malloc() realloc() and free() which can't be used in an amiga
 // shared run-time library linked with libinit.o
 
+#include <exec/memory.h>
+
 #ifdef __GNUC__
 // Avoid warnings "struct X declared inside parameter list"
-#include <exec/memory.h>
 #include <exec/devices.h>
 #include <exec/io.h>
 #include <exec/semaphores.h>
 #include <dos/exall.h>
 #endif
+
+// Necessary with OS3.9 includes
+#define __USE_SYSBASE
 
 #include <proto/exec.h>
 #include <proto/dos.h>

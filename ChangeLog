@@ -1,4 +1,14 @@
-2001-01-18  Ian Brown  <ian.brown@printsoft.de>
+2002-01-18  Ian Brown  <ian.brown@printsoft.de>
+
+	* builds/win32/ftdebug.c: New file.
+	* builds/win32/visualc/freetype.dsp: Updated.
+
+2002-01-18  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* builds/amiga/src/base/ftsystem.c: Updated for AmigaOS 3.9.
+	* builds/amiga/README: Updated.
+
+2002-01-18  Ian Brown  <ian.brown@printsoft.de>
 
 	* builds/win32/visualc/freetype.dsp: Updated.
 
