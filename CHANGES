@@ -9,7 +9,7 @@ LATEST CHANGES BETWEEN 2.0.1 and 2.0:
     
     - the library could not be compiled in debug mode with a very small
       number of C compilers whose pre-processors didn't implement the
-      "##" directive correctly (i.e. per se the ANSI C specification !!)
+      "##" directive correctly (i.e. per se the ANSI C specification!)
       An elegant fix was found.
   
     - added support for the free Borland command-line C++ Builder compiler
@@ -17,7 +17,7 @@ LATEST CHANGES BETWEEN 2.0.1 and 2.0:
       generated new warnings with BCC32.
   
     - fixed a bug in FT_Outline_Get_BBox when computing the extrema of
-      a conic bezier arc.
+      a conic Bezier arc.
   
     - updated the INSTALL file to add IDE compilation.
 
@@ -29,11 +29,11 @@ LATEST CHANGES BETWEEN 2.0.1 and 2.0:
 
 
   Finally, the "standard" scheme for including FreeType headers is now
-  gradually changing, but this will be explained in a later release..
-  (probably 2.0.2)
+  gradually changing, but this will be explained in a later release
+  (probably 2.0.2) ...
 
-  And very special thanks to Tom Kackvinsky and YAMANO-UCHI Hidetoshi for
-  their contributions !!
+  And very special thanks to Tom Kacvinsky and YAMANO-UCHI Hidetoshi for
+  their contributions!
 
 =========================================================================
 CHANGES BETWEEN beta8 and 2.0
