@@ -347,11 +347,12 @@
   /*    slot    :: The current glyph object.                               */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  cff_decoder_init( CFF_Decoder*   decoder,
-                    TT_Face        face,
-                    CFF_Size       size,
-                    CFF_GlyphSlot  slot,
-                    FT_Bool        hinting )
+  cff_decoder_init( CFF_Decoder*    decoder,
+                    TT_Face         face,
+                    CFF_Size        size,
+                    CFF_GlyphSlot   slot,
+                    FT_Bool         hinting,
+                    FT_Render_Mode  hint_mode )
   {
     CFF_Font  cff = (CFF_Font)face->extra.data;
 
@@ -366,6 +367,8 @@
     decoder->num_globals  = cff->num_global_subrs;
     decoder->globals      = cff->global_subrs;
     decoder->globals_bias = cff_compute_bias( decoder->num_globals );
+    
+    decoder->hint_mode    = hint_mode;
   }
 
 
@@ -2203,7 +2206,7 @@
     *max_advance = 0;
 
     /* Initialize load decoder */
-    cff_decoder_init( &decoder, face, 0, 0, 0 );
+    cff_decoder_init( &decoder, face, 0, 0, 0, 0 );
 
     decoder.builder.metrics_only = 1;
     decoder.builder.load_points  = 0;
@@ -2262,7 +2265,7 @@
   cff_slot_load( CFF_GlyphSlot  glyph,
                  CFF_Size       size,
                  FT_Int         glyph_index,
-                 FT_Int         load_flags )
+                 FT_Int32       load_flags )
   {
     FT_Error     error;
     CFF_Decoder  decoder;
@@ -2298,7 +2301,8 @@
       FT_ULong  charstring_len;
 
 
-      cff_decoder_init( &decoder, face, size, glyph, hinting );
+      cff_decoder_init( &decoder, face, size, glyph, hinting,
+                        FT_LOAD_TARGET_MODE(load_flags) );
 
       decoder.builder.no_recurse =
         (FT_Bool)( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );

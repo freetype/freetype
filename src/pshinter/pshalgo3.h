@@ -217,6 +217,11 @@ FT_BEGIN_HEADER
     FT_Int              major_dir;
     FT_Int              minor_dir;
 
+    FT_Bool             no_horz_hints;
+    FT_Bool             no_vert_hints;
+    FT_Bool             no_horz_snapping;
+    FT_Bool             no_vert_snapping;
+
   } PSH3_GlyphRec, *PSH3_Glyph;
 
 
@@ -234,10 +239,10 @@ FT_BEGIN_HEADER
 
 
   extern FT_Error
-  ps3_hints_apply( PS_Hints     ps_hints,
-                   FT_Outline*  outline,
-                   PSH_Globals  globals,
-                   FT_UInt32    hint_flags );
+  ps3_hints_apply( PS_Hints        ps_hints,
+                   FT_Outline*     outline,
+                   PSH_Globals     globals,
+                   FT_Render_Mode  hint_mode );
 
 
 FT_END_HEADER

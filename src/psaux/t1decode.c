@@ -752,8 +752,8 @@
             /* apply hints to the loaded glyph outline now */
             hinter->apply( hinter->hints,
                            builder->current,
-                           (PSH_Globals)builder->hints_globals,
-                           decoder->hint_flags );
+                           (PSH_Globals) builder->hints_globals,
+                           decoder->hint_mode );
           }
 
           /* add current outline to the glyph slot */
@@ -1122,6 +1122,7 @@
                    FT_Byte**            glyph_names,
                    PS_Blend             blend,
                    FT_Bool              hinting,
+                   FT_Render_Mode       hint_mode,
                    T1_Decoder_Callback  parse_callback )
   {
     FT_MEM_ZERO( decoder, sizeof ( *decoder ) );
@@ -1148,6 +1149,7 @@
     decoder->num_glyphs     = face->num_glyphs;
     decoder->glyph_names    = glyph_names;
     decoder->hint_flags     = face->internal->hint_flags;
+    decoder->hint_mode      = hint_mode;
     decoder->blend          = blend;
     decoder->parse_callback = parse_callback;
 

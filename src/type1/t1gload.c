@@ -164,6 +164,7 @@
                                            (FT_Byte**)type1->glyph_names,
                                            face->blend,
                                            0,
+                                           0,
                                            T1_Parse_Glyph );
     if ( error )
       return error;
@@ -214,7 +215,7 @@
   T1_Load_Glyph( T1_GlyphSlot  glyph,
                  T1_Size       size,
                  FT_UInt       glyph_index,
-                 FT_Int        load_flags )
+                 FT_Int32      load_flags )
   {
     FT_Error                error;
     T1_DecoderRec           decoder;
@@ -251,6 +252,7 @@
                                  (FT_Byte**)type1->glyph_names,
                                  face->blend,
                                  FT_BOOL( hinting ),
+                                 FT_LOAD_TARGET_MODE(load_flags),
                                  T1_Parse_Glyph );
     if ( error )
       goto Exit;

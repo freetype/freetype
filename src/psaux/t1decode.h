@@ -50,6 +50,7 @@ FT_BEGIN_HEADER
                    FT_Byte**            glyph_names,
                    PS_Blend             blend,
                    FT_Bool              hinting,
+                   FT_Render_Mode       hint_mode,
                    T1_Decoder_Callback  parse_glyph );
 
   FT_LOCAL( void )

@@ -40,7 +40,6 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#if 0
   /* snap a given width in scaled coordinates to one of the */
   /* current standard widths                                */
   static FT_Pos
@@ -86,11 +85,11 @@
 
     return width;
   }
-#endif
+
 
   /* compute the snapped width of a given stem */
   static FT_Pos
-  ah_compute_stem_width( AH_Hinter  hinter,
+  ah_compute_stem_width( AH_Hinter   hinter,
                          int         vertical,
                          FT_Pos      width )
   {
@@ -105,85 +104,93 @@
       sign = 1;
     }
 
-#if 1
-    if ( dist < 64 )
-      dist = 64;
-
+    if ( ( vertical  && hinter->no_vert_snapping ) ||
+         ( !vertical && hinter->no_horz_snapping ) )
     {
-      FT_Pos  delta = dist - globals->stds[vertical];
-
-
-      if ( delta < 0 )
-        delta = -delta;
-
-      if ( delta < 40 )
-      {
-        dist = globals->stds[vertical];
-        if ( dist < 32 )
-          dist = 32;
-      }
-
-      if ( dist < 3 * 64 )
-      {
-        delta = ( dist & 63 );
-        dist &= -64;
-
-        if ( delta < 10 )
-          dist += delta;
-
-        else if ( delta < 32 )
-          dist += 10;
-
-        else if ( delta < 54 )
-          dist += 54;
-
-        else
-          dist += delta;
-      }
-      else
-        dist = ( dist + 32 ) & -64;
-    }
-#else
-    if ( vertical )
-    {
-      dist = ah_snap_width( globals->heights, globals->num_heights, dist );
-
-      /* in the case of vertical hinting, always round */
-      /* the stem heights to integer pixels            */
-      if ( dist >= 64 )
-        dist = ( dist + 16 ) & -64;
-      else
+      /* smooth hinting process, very lightly quantize the stem width */
+      /*                                                              */
+      if ( dist < 64 )
         dist = 64;
+  
+      {
+        FT_Pos  delta = dist - globals->stds[vertical];
+  
+  
+        if ( delta < 0 )
+          delta = -delta;
+  
+        if ( delta < 40 )
+        {
+          dist = globals->stds[vertical];
+          if ( dist < 32 )
+            dist = 32;
+        }
+  
+        if ( dist < 3 * 64 )
+        {
+          delta = ( dist & 63 );
+          dist &= -64;
+  
+          if ( delta < 10 )
+            dist += delta;
+  
+          else if ( delta < 32 )
+            dist += 10;
+  
+          else if ( delta < 54 )
+            dist += 54;
+  
+          else
+            dist += delta;
+        }
+        else
+          dist = ( dist + 32 ) & -64;
+      }
     }
     else
     {
-      dist = ah_snap_width( globals->widths,  globals->num_widths, dist );
-
-      if ( hinter->flags & AH_HINTER_MONOCHROME )
+      /* strong hinting process, snap the stem width to integer pixels */
+      /*                                                               */
+      if ( vertical )
       {
-        /* monochrome horizontal hinting: snap widths to integer pixels */
-        /* with a different threshold                                   */
-        if ( dist < 64 )
-          dist = 64;
+        dist = ah_snap_width( globals->heights, globals->num_heights, dist );
+  
+        /* in the case of vertical hinting, always round */
+        /* the stem heights to integer pixels            */
+        if ( dist >= 64 )
+          dist = ( dist + 16 ) & -64;
         else
-          dist = ( dist + 32 ) & -64;
+          dist = 64;
       }
       else
       {
-        /* for horizontal anti-aliased hinting, we adopt a more subtle */
-        /* approach: we strengthen small stems, round stems whose size */
-        /* is between 1 and 2 pixels to an integer, otherwise nothing  */
-        if ( dist < 48 )
-          dist = ( dist + 64 ) >> 1;
-
-        else if ( dist < 128 )
-          dist = ( dist + 22 ) & -64;
+        dist = ah_snap_width( globals->widths,  globals->num_widths, dist );
+  
+        if ( hinter->flags & AH_HINTER_MONOCHROME )
+        {
+          /* monochrome horizontal hinting: snap widths to integer pixels */
+          /* with a different threshold                                   */
+          if ( dist < 64 )
+            dist = 64;
+          else
+            dist = ( dist + 32 ) & -64;
+        }
         else
-          /* XXX: round otherwise, prevent color fringes in LCD mode */
-          dist = ( dist + 32 ) & -64;
+        {
+          /* for horizontal anti-aliased hinting, we adopt a more subtle */
+          /* approach: we strengthen small stems, round stems whose size */
+          /* is between 1 and 2 pixels to an integer, otherwise nothing  */
+          if ( dist < 48 )
+            dist = ( dist + 64 ) >> 1;
+  
+          else if ( dist < 128 )
+            dist = ( dist + 22 ) & -64;
+          else
+            /* XXX: round otherwise, prevent color fringes in LCD mode */
+            dist = ( dist + 32 ) & -64;
+        }
       }
     }
-#endif
 
     if ( sign )
       dist = -dist;
@@ -278,10 +285,10 @@
       int       has_serifs = 0;
 
 
-      if ( ah_debug_disable_vert && !dimension )
+      if ( hinter->no_horz_hints && !dimension )
         goto Next_Dimension;
 
-      if ( ah_debug_disable_horz && dimension )
+      if ( hinter->no_vert_hints && dimension )
         goto Next_Dimension;
 
       /* we begin by aligning all stems relative to the blue zone */
@@ -467,38 +474,13 @@
 
 
   FT_LOCAL_DEF( void )
-  ah_hinter_hint_edges( AH_Hinter  hinter,
-                        FT_Bool     no_horz_edges,
-                        FT_Bool     no_vert_edges )
+  ah_hinter_hint_edges( AH_Hinter  hinter )
   {
-#if 0
-    ah_debug_disable_horz = no_horz_edges;
-    ah_debug_disable_vert = no_vert_edges;
-#else
-    FT_UNUSED( no_horz_edges );
-    FT_UNUSED( no_vert_edges );
-#endif
     /* AH_Interpolate_Blue_Edges( hinter ); -- doesn't seem to help      */
     /* reduce the problem of the disappearing eye in the `e' of Times... */
     /* also, creates some artifacts near the blue zones?                 */
     {
       ah_hint_edges_3( hinter );
-
-#if 0
-      /* outline optimizer removed temporarily */
-      if ( hinter->flags & AH_HINTER_OPTIMIZE )
-      {
-        AH_Optimizer  opt;
-
-
-        if ( !AH_Optimizer_Init( &opt, hinter->glyph, hinter->memory ) )
-        {
-          AH_Optimizer_Compute( &opt );
-          AH_Optimizer_Done( &opt );
-        }
-      }
-#endif
-
     }
   }
 
@@ -1048,7 +1030,7 @@
 
   /* create a face's autohint globals */
   FT_LOCAL_DEF( FT_Error )
-  ah_hinter_new_face_globals( AH_Hinter   hinter,
+  ah_hinter_new_face_globals( AH_Hinter    hinter,
                               FT_Face      face,
                               AH_Globals   globals )
   {
@@ -1091,9 +1073,9 @@
 
 
   static FT_Error
-  ah_hinter_load( AH_Hinter  hinter,
+  ah_hinter_load( AH_Hinter   hinter,
                   FT_UInt     glyph_index,
-                  FT_UInt     load_flags,
+                  FT_Int32    load_flags,
                   FT_UInt     depth )
   {
     FT_Face           face     = hinter->face;
@@ -1104,11 +1086,6 @@
     FT_Error          error;
     AH_Outline        outline  = hinter->glyph;
     AH_Loader         gloader  = hinter->loader;
-    FT_Bool           no_horz_hints = FT_BOOL(
-                        ( load_flags & AH_HINT_NO_HORZ_EDGES ) != 0 );
-    FT_Bool           no_vert_hints = FT_BOOL(
-                        ( load_flags & AH_HINT_NO_VERT_EDGES ) != 0 );
-
 
     /* load the glyph */
     error = FT_Load_Glyph( face, glyph_index, load_flags );
@@ -1191,14 +1168,14 @@
       /* perform feature detection */
       ah_outline_detect_features( outline );
 
-      if ( !no_horz_hints )
+      if ( !hinter->no_vert_hints )
       {
         ah_outline_compute_blue_edges( outline, hinter->globals );
         ah_outline_scale_blue_edges( outline, hinter->globals );
       }
 
       /* perform alignment control */
-      ah_hinter_hint_edges( hinter, no_horz_hints, no_vert_hints );
+      ah_hinter_hint_edges( hinter );
       ah_hinter_align( hinter );
 
       /* now save the current outline into the loader's current table */
@@ -1421,17 +1398,18 @@
 
   /* load and hint a given glyph */
   FT_LOCAL_DEF( FT_Error )
-  ah_hinter_load_glyph( AH_Hinter    hinter,
+  ah_hinter_load_glyph( AH_Hinter     hinter,
                         FT_GlyphSlot  slot,
                         FT_Size       size,
                         FT_UInt       glyph_index,
-                        FT_Int        load_flags )
+                        FT_Int32      load_flags )
   {
     FT_Face           face         = slot->face;
     FT_Error          error;
     FT_Fixed          x_scale      = size->metrics.x_scale;
     FT_Fixed          y_scale      = size->metrics.y_scale;
     AH_Face_Globals   face_globals = FACE_GLOBALS( face );
+    FT_Render_Mode    hint_mode    = FT_LOAD_TARGET_MODE(load_flags);
 
 
     /* first of all, we need to check that we're using the correct face and */
@@ -1458,6 +1436,25 @@
       ah_hinter_scale_globals( hinter, x_scale, y_scale );
 
     ah_loader_rewind( hinter->loader );
+
+    /* reset hinting flags according to load flags and current render target */
+    hinter->no_horz_hints = FT_BOOL( load_flags & FT_LOAD_NO_AUTOHINT );
+    hinter->no_vert_hints = FT_BOOL( load_flags & FT_LOAD_NO_AUTOHINT );
+    
+#ifdef DEBUG_HINTER
+    hinter->no_horz_hints = ah_debug_disable_vert;  /* not a bug, the meaning */
+    hinter->no_vert_hints = ah_debug_disable_horz;  /* of h/v is inverted !!  */
+#endif    
+
+    /* we snap the width of vertical stems for the monochrome and horizontal */
+    /* LCD rendering targets only. Corresponds to X snapping                 */
+    hinter->no_horz_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_NORMAL ||
+                                        hint_mode == FT_RENDER_MODE_LCD_V  );
+
+    /* we snap the width of horizontal stems for the monochrome and vertical */
+    /* LCD rendering targets only. Corresponds to Y snapping                 */
+    hinter->no_vert_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_NORMAL ||
+                                        hint_mode == FT_RENDER_MODE_LCD    );
 
 #if 1
     load_flags  = FT_LOAD_NO_SCALE
