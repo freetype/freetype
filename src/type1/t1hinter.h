@@ -97,8 +97,8 @@
   /*    hint_flags :: Some flags describing the stem properties.           */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The min and max edges of a ghost stem have the same position,      */
-  /*    even if they are coded in a weird way in the charstrings.          */
+  /*    The min and max edges of a ghost stem have the same position, even */
+  /*    if they are coded in a weird way in the charstrings.               */
   /*                                                                       */
   typedef struct  T1_Stem_Hint_
   {

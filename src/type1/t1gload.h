@@ -76,7 +76,6 @@
   } T1_Builder_Funcs;
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Structure>                                                           */
@@ -201,7 +200,6 @@
     T1_Hinter_Stem3        stem3;
 
   } T1_Hinter_Funcs;
-
 
 
   typedef enum  T1_Operator_

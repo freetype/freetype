@@ -172,6 +172,7 @@
     return T1_Reset_Size( size );
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -195,7 +196,8 @@
     FT_UInt             result = 0;
     PSNames_Interface*  psnames;
 
-    face = (T1_Face)charmap->face;
+
+    face    = (T1_Face)charmap->face;
     psnames = (PSNames_Interface*)face->psnames;
     if ( psnames )
       switch ( charmap->encoding )
@@ -205,7 +207,7 @@
         /* Unicode encoding support                                        */
         /*                                                                 */
       case ft_encoding_unicode:
-        /* use the `psnames' module to synthetize the Unicode charmap */
+        /* use the `PSNames' module to synthetize the Unicode charmap */
         result = psnames->lookup_unicode( &face->unicode_map,
                                           (FT_ULong)charcode );
 

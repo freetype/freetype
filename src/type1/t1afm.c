@@ -117,7 +117,7 @@
     while ( p < limit && !isdigit( *p ) )
     {
       sign = 1;
-      if (*p == '-')
+      if ( *p == '-' )
         sign = -1;
 
       p++;
@@ -248,7 +248,7 @@
                         FT_Vector*  kerning )
   {
     T1_Kern_Pair  *min, *mid, *max;
-    FT_ULong       index = KERN_INDEX( glyph1, glyph2 );
+    FT_ULong      index = KERN_INDEX( glyph1, glyph2 );
 
  
     /* simple binary search */
@@ -260,8 +260,9 @@
       FT_ULong  midi;
 
 
-      mid = min + ( max - min ) / 2;
+      mid  = min + ( max - min ) / 2;
       midi = KERN_INDEX( mid->glyph1, mid->glyph2 );
+
       if ( midi == index )
       {
         *kerning = mid->kerning;

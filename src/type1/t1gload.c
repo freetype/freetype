@@ -241,17 +241,17 @@
   /*    Implements the `seac' Type 1 operator for a Type 1 decoder.        */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    decoder  :: The current CID decoder.                               */
+  /*    decoder :: The current CID decoder.                                */
   /*                                                                       */
-  /*    asb      :: The accent's side bearing.                             */
+  /*    asb     :: The accent's side bearing.                              */
   /*                                                                       */
-  /*    adx      :: The horizontal offset of the accent.                   */
+  /*    adx     :: The horizontal offset of the accent.                    */
   /*                                                                       */
-  /*    ady      :: The vertical offset of the accent.                     */
+  /*    ady     :: The vertical offset of the accent.                      */
   /*                                                                       */
-  /*    bchar    :: The base character's StandardEncoding charcode.        */
+  /*    bchar   :: The base character's StandardEncoding charcode.         */
   /*                                                                       */
-  /*    achar    :: The accent character's StandardEncoding charcode.      */
+  /*    achar   :: The accent character's StandardEncoding charcode.       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -278,7 +278,8 @@
 
     if ( bchar_index < 0 || achar_index < 0 )
     {
-      FT_ERROR(( "t1operator_seac: invalid seac character code arguments\n" ));
+      FT_ERROR(( "t1operator_seac:" ));
+      FT_ERROR(( " invalid seac character code arguments\n" ));
       return T1_Err_Syntax_Error;
     }
 
@@ -371,6 +372,7 @@
         
       dummy.n_points = base->n_points - n_base_points;
       dummy.points   = base->points   + n_base_points;
+
       FT_Outline_Translate( &dummy, adx - asb, ady );
     }
 
@@ -450,17 +452,17 @@
   /*    Parses a given Type 1 charstrings program.                         */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    decoder          :: The current Type 1 decoder.                    */
+  /*    decoder         :: The current Type 1 decoder.                     */
   /*                                                                       */
-  /*    charstring_base  :: The base address of the charstring stream.     */
+  /*    charstring_base :: The base address of the charstring stream.      */
   /*                                                                       */
-  /*    charstring_len   :: The length in bytes of the charstring stream.  */
+  /*    charstring_len  :: The length in bytes of the charstring stream.   */
   /*                                                                       */
-  /*    num_subrs        :: The number of sub-routines.                    */
+  /*    num_subrs       :: The number of sub-routines.                     */
   /*                                                                       */
-  /*    subrs_base       :: An array of sub-routines addresses.            */
+  /*    subrs_base      :: An array of sub-routines addresses.             */
   /*                                                                       */
-  /*    subrs_len        :: An array of sub-routines lengths.              */
+  /*    subrs_len       :: An array of sub-routines lengths.               */
   /*                                                                       */
   /* <Return>                                                              */
   /*    Free error code.  0 means success.                                 */
@@ -481,7 +483,8 @@
     T1_Builder_Funcs*  builds  = &builder->funcs;
     T1_Hinter_Funcs*   hints   = &decoder->hinter;
 
-    static const FT_Int  args_count[op_max] =
+    static
+    const FT_Int  args_count[op_max] =
     {
       0, /* none */
       0, /* endchar */
@@ -528,9 +531,9 @@
     /* now, execute loop */
     while ( ip < limit )
     {
-      FT_Int*      top      = decoder->top;
-      T1_Operator  op       = op_none;
-      FT_Long      value    = 0;
+      FT_Int*      top   = decoder->top;
+      T1_Operator  op    = op_none;
+      FT_Long      value = 0;
 
 
       /* Start with the decompression of operator or value */
@@ -656,7 +659,8 @@
           {
             if ( ++ip > limit )
             {
-              FT_ERROR(( "T1_Parse_CharStrings: unexpected EOF in integer\n" ));
+              FT_ERROR(( "T1_Parse_CharStrings:" ));
+              FT_ERROR(( " unexpected EOF in integer\n" ));
               goto Syntax_Error;
             }
 
@@ -674,7 +678,7 @@
         }
       }
 
-      /* push value if needed */
+      /* push value if necessary */
       if ( op == op_none )
       {
         if ( top - decoder->stack >= T1_MAX_CHARSTRINGS_OPERANDS )
@@ -775,10 +779,10 @@
             goto Syntax_Error;
           }
 
-          if (ip[0] != 12 || ip[1] != 17)
+          if ( ip[0] != 12 || ip[1] != 17 )
           {
-            FT_ERROR(( "T1_Parse_CharStrings: `pop' expected, found (%d %d)\n",
-                       ip[0], ip[1] ));
+            FT_ERROR(( "T1_Parse_CharStrings:" ));
+            FT_ERROR(( " `pop' expected, found (%d %d)\n", ip[0], ip[1] ));
             goto Syntax_Error;
           }
 
@@ -966,7 +970,8 @@
           break;
 
         case op_setcurrentpoint:
-          FT_ERROR(( "T1_Parse_CharStrings: unexpected `setcurrentpoint'\n" ));
+          FT_ERROR(( "T1_Parse_CharStrings:" ));
+          FT_ERROR(( " unexpected `setcurrentpoint'\n" ));
           goto Syntax_Error;
           break;
 
@@ -1224,6 +1229,7 @@
           *point++ = *source_point--;
           *tags++  = *source_tags--;
           num_points--;
+
         } while ( num_points > 0 );
     }
 
@@ -1236,6 +1242,7 @@
   FT_Error  gload_closepath( T1_Builder*  builder )
   {
     FT_Outline*  cur = builder->current;
+
 
     /* XXXX: We must not include the last point in the path if it */
     /*       is located on the first point.                       */
@@ -1261,7 +1268,7 @@
       cur->contours[cur->n_contours - 1] = cur->n_points - 1;
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-    /* hint latest points if needed -- this is not strictly required     */
+    /* hint last points if necessary -- this is not strictly required    */
     /* there, but it helps for debugging, and doesn't affect performance */
     if ( builder->pass == 1 )
       T1_Hint_Points( builder );
@@ -1275,7 +1282,7 @@
   static
   FT_Error  gload_endchar( T1_Builder*  builder )
   {
-    FT_Error     error;
+    FT_Error  error;
 
 
     /* close path if needed */
@@ -1526,7 +1533,7 @@
     FT_Error         error;
     
 
-    /* Pass 1 - try to load first glyph, simply recording points */
+    /* Pass 1 -- try to load first glyph, simply recording points */
     old_points   = loader->base.outline.n_points;
     old_contours = loader->base.outline.n_contours;
     
@@ -1611,11 +1618,11 @@
       builder->base->n_points   = old_points;
       builder->base->n_contours = old_contours;
 
-      /* Pass 2 - record and scale/hint the points */
+      /* Pass 2 -- record and scale/hint the points */
       T1_Reset_Builder( builder, 0 );
       
-      builder->pass            = 1;
-      builder->no_recurse      = 0;
+      builder->pass       = 1;
+      builder->no_recurse = 0;
   
       error = T1_Parse_CharStrings( decoder,
                                     type1->charstrings    [glyph_index],
@@ -1634,7 +1641,7 @@
   }                                  
 
 
-#endif /* T1_CONFIG_OPTION_DISABLE_HINTER */
+#endif /* !T1_CONFIG_OPTION_DISABLE_HINTER */
 
 
   LOCAL_FUNC
@@ -1677,7 +1684,7 @@
     }
     else
 
-#endif /* T1_CONFIG_OPTION_DISABLE_HINTER */
+#endif /* !T1_CONFIG_OPTION_DISABLE_HINTER */
 
     {
       T1_Init_Decoder( &decoder, &gload_hinter_interface );
@@ -1770,6 +1777,7 @@
           FT_Vector*   vec = cur->points;
           FT_Fixed     x_scale = glyph->x_scale;
           FT_Fixed     y_scale = glyph->y_scale;
+
 
           /* First of all, scale the points */
           for ( n = cur->n_points; n > 0; n--, vec++ )

@@ -80,6 +80,7 @@
         swap = cur[-2]; cur[-2] = cur[0]; cur[0] = swap;
         swap = cur[-1]; cur[-1] = cur[1]; cur[1] = swap;
         cur -= 2;
+
       } while ( cur > blues );
     }
   }
@@ -658,7 +659,7 @@
       max = min;
     }
 
-    /* now scan the array.  If we find a stem with the same borders */
+    /* Now scan the array.  If we find a stem with the same borders */
     /* simply activate it.                                          */
     cur_stem = stems;
     new_stem = 1;
@@ -679,7 +680,7 @@
       }
     }
 
-    /* add a new stem to the array when necessary */
+    /* add a new stem to the array if necessary */
     if ( new_stem )
     {
       if ( cur_stem >= stems + T1_HINTER_MAX_EDGES )
@@ -701,7 +702,8 @@
       }
       else
       {
-        FT_ERROR(( "t1_hinter_stem: fatal glyph loader bug - pass2-stem\n" ));
+        FT_ERROR(( "t1_hinter_stem:" ));
+        FT_ERROR(( " fatal glyph loader bug -- pass2-stem\n" ));
         return T1_Err_Syntax_Error;
       }
     }
@@ -801,10 +803,10 @@
   static
   void  t1_sort_hints( T1_Stem_Table*  table )
   {
-    FT_Int         num_stems   = table->num_stems;
-    FT_Int         num_active  = 0;
-    FT_Int*        sort        = table->sort;
-    T1_Stem_Hint*  stems       = table->stems;
+    FT_Int         num_stems  = table->num_stems;
+    FT_Int         num_active = 0;
+    FT_Int*        sort       = table->sort;
+    T1_Stem_Hint*  stems      = table->stems;
     FT_Int         n;
 
 
@@ -815,7 +817,7 @@
         sort[num_active++] = n;
     }
 
-    /* now sort the indices.  There are usually very few stems, */
+    /* Now sort the indices.  There are usually very few stems, */
     /* and they are pre-sorted in 90% cases, so we choose a     */
     /* simple bubble sort (quicksort would be slower).          */
     for ( n = 1; n < num_active; n++ )
@@ -841,6 +843,7 @@
         sort[p    ] = sort[p + 1];
         sort[p + 1] = swap;
         p--;
+
       } while ( p >= 0 );
     }
 
@@ -1050,8 +1053,7 @@
         break;
 
       default:               /* no alignment */
-
-        /* XXXX TODO: Add management of controlled stems */
+        /* XXX TODO: Add management of controlled stems */
         bottom = ( SCALE( bottom_orus + top_orus ) - width_pix ) / 2;
 
         bottom_pix = ROUND( bottom );
@@ -1150,8 +1152,8 @@
 
       /* now place the snapped and rounded stem   */
 
-      /* XXXX TODO: implement controlled stems for the overlapping */
-      /*            cases                                          */
+      /* XXX TODO: implement controlled stems for the overlapping */
+      /*           cases                                          */
 
       left = ( SCALE( stem_left + stem_right ) - width_pix ) / 2;
 
@@ -1253,8 +1255,6 @@
   }
 
 
-#if 1
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1332,8 +1332,6 @@
                             builder->size->hints,
                             scale_x );
   }
-
-#endif /* 1 */
 
 
 /* END */
