@@ -1,3 +1,17 @@
+2002-06-14  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	Add new cmap support to BDF driver
+
+	* src/bdf/bdfdrivr.c (BDF_CMapRec) [FT_CONFIG_OPTION_USE_CMAPS]:
+	New structure.
+	(bdf_cmap_init, bdf_cmap_done, bdf_cmap_char_index,
+	bdf_cmap_char_next) [FT_CONFIG_OPTION_USE_CMAPS]: New functions.
+	(BDF_Get_Char_Index) [!FT_CONFIG_OPTION_USE_CMAPS]: Use only
+	conditionally.
+	(BDF_Face_Init): Handle `AVERAGE_WIDTH' and `POINT_SIZE' keywords.
+	Implement new cmap handling.
+	(bdf_driver_class): Updated.
+
 2002-06-14  Werner Lemberg  <wl@gnu.org>
 
 	* Makefile, configure, */*.mk, builds/unix/unix-def.in,
