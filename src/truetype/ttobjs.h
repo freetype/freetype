@@ -106,12 +106,14 @@
 
   } TT_GraphicsState;
 
+
   LOCAL_DEF void  TT_Done_GlyphZone( TT_GlyphZone*  zone );
 
   LOCAL_DEF FT_Error TT_New_GlyphZone( FT_Memory      memory,
                                        FT_UShort      maxPoints,
                                        FT_Short       maxContours,
                                        TT_GlyphZone*  zone );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -164,7 +166,6 @@
     FT_Bool  active;     /* is it active?                      */
 
   } TT_DefRecord, *TT_DefArray;
-
 
 
   /*************************************************************************/
@@ -297,10 +298,10 @@
   } TT_Size_Metrics;
 
 
-  /***********************************************************************/
-  /*                                                                     */
-  /* TrueType size class.                                                */
-  /*                                                                     */
+  /*************************************************************************/
+  /*                                                                       */
+  /* TrueType size class.                                                  */
+  /*                                                                       */
   typedef struct  TT_SizeRec_
   {
     FT_SizeRec         root;
@@ -346,10 +347,10 @@
   } TT_SizeRec;
 
 
-  /***********************************************************************/
-  /*                                                                     */
-  /* TrueType driver class.                                              */
-  /*                                                                     */
+  /*************************************************************************/
+  /*                                                                       */
+  /* TrueType driver class.                                                */
+  /*                                                                       */
   typedef struct  TT_DriverRec_
   {
     FT_DriverRec    root;
@@ -399,6 +400,7 @@
 
   LOCAL_DEF
   void  TT_Done_Driver( TT_Driver  driver );
+
 
 #ifdef __cplusplus
   }

@@ -16,8 +16,17 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #ifndef FTOUTLN_H
 #define FTOUTLN_H
+
+
+#include <freetype/freetype.h>
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -307,6 +316,12 @@
                                               FT_Raster_Params* params );
 
 
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* FTOUTLN_H */
+
+
+/* END */

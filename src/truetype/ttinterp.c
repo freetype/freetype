@@ -443,11 +443,8 @@
     FT_Error  error;
 
 
-    FT_TRACE1(( "TT.Create_Create: new object at 0x%08p, parent = 0x%08p\n",
+    FT_TRACE1(( "Init_Context: new object at 0x%08p, parent = 0x%08p\n",
                 exec, face ));
-
-    /* XXX: We don't reserve arrays anymore, this is done automatically */
-    /*      during a call to Context_Load().                            */
 
     exec->memory   = memory;
     exec->callSize = 32;
@@ -474,8 +471,8 @@
     return TT_Err_Ok;
 
   Fail_Memory:
-    FT_ERROR(( "TT.Context_Create: not enough memory for 0x%08lx\n",
-               (long)exec ));
+    FT_ERROR(( "Init_Context: not enough memory for 0x%08lx\n",
+               (FT_Long)exec ));
     TT_Destroy_Context( exec, memory );
 
     return error;
@@ -526,7 +523,6 @@
 
     return TT_Err_Ok;
   }
-
 
 
   /*************************************************************************/
@@ -796,7 +792,7 @@
 
     if ( !driver->context )
     {
-      FT_Error   error;
+      FT_Error  error;
 
 
       /* allocate object */
@@ -1203,7 +1199,7 @@
   const FT_Vector  Null_Vector = {0,0};
 
 
-#undef  PACK
+#undef PACK
 
 
 #undef  NULL_Vector
@@ -1237,15 +1233,22 @@
     else
     {
       FT_Long  x, y;
+
+
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
+
       x = TT_MULDIV( CUR.GS.projVector.x, CUR.tt_metrics.x_ratio, 0x4000 );
       y = TT_MULDIV( CUR.GS.projVector.y, CUR.tt_metrics.y_ratio, 0x4000 );
       CUR.tt_metrics.ratio = Norm( x, y );
+
 #else
+
       x = TT_MULDIV( CUR.GS.projVector.x, CUR.tt_metrics.x_ratio, 0x8000 );
       y = TT_MULDIV( CUR.GS.projVector.y, CUR.tt_metrics.y_ratio, 0x8000 );
       CUR.tt_metrics.ratio = FT_Sqrt32( x * x + y * y ) << 1;
+
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
+
     }
 
     return CUR.tt_metrics.ratio;
@@ -1286,6 +1289,7 @@
   {
     CUR.cvt[index] = value;
   }
+
 
   static
   void  Write_CVT_Stretched( EXEC_OP_ FT_ULong    index,
@@ -1420,14 +1424,20 @@
 
     if ( v != 0 )
     {
+
 #ifdef NO_APPLE_PATENT
+
       if ( ABS( CUR.F_dot_P ) > APPLE_THRESHOLD )
         zone->cur[point].x += distance;
+
 #else
+
       zone->cur[point].x += TT_MULDIV( distance,
                                        v * 0x10000L,
                                        CUR.F_dot_P );
+
 #endif
+
       zone->tags[point] |= FT_Curve_Tag_Touch_X;
     }
 
@@ -1435,14 +1445,20 @@
 
     if ( v != 0 )
     {
+
 #ifdef NO_APPLE_PATENT
+
       if ( ABS( CUR.F_dot_P ) > APPLE_THRESHOLD )
         zone->cur[point].y += distance;
+
 #else
+
       zone->cur[point].y += TT_MULDIV( distance,
                                        v * 0x10000L,
                                        CUR.F_dot_P );
+
 #endif
+
       zone->tags[point] |= FT_Curve_Tag_Touch_Y;
     }
   }
@@ -1457,6 +1473,7 @@
   /*                                                                       */
   /*************************************************************************/
 
+
   static
   void  Direct_Move_X( EXEC_OP_ TT_GlyphZone*  zone,
                                 FT_UShort      point,
@@ -1465,7 +1482,7 @@
     UNUSED_EXEC;
 
     zone->cur[point].x += distance;
-    zone->tags[point] |= FT_Curve_Tag_Touch_X;
+    zone->tags[point]  |= FT_Curve_Tag_Touch_X;
   }
 
 
@@ -1477,7 +1494,7 @@
     UNUSED_EXEC;
 
     zone->cur[point].y += distance;
-    zone->tags[point] |= FT_Curve_Tag_Touch_Y;
+    zone->tags[point]  |= FT_Curve_Tag_Touch_Y;
   }
 
 
@@ -2209,7 +2226,7 @@
 
       if ( W == 0 )
       {
-        /* XXX: UNDOCUMENTED! It seems that it's possible to try    */
+        /* XXX: UNDOCUMENTED! It seems that it is possible to try   */
         /*      to normalize the vector (0,0).  Return immediately. */
         return SUCCESS;
       }
@@ -2664,7 +2681,7 @@
     /*                                                  */
     /* It seems that the value that is read here is     */
     /* expressed in 16.16 format rather than in font    */
-    /* units..                                          */
+    /* units.                                           */
     /*                                                  */
 #define DO_SSW                                                 \
     CUR.GS.single_width_value = (FT_F26Dot6)( args[0] >> 10 );
@@ -3847,7 +3864,7 @@
   static
   void  Ins_AA( INS_ARG )
   {
-    /* Intentional - no longer supported */
+    /* intentionally no longer supported */
   }
 
 
@@ -3986,7 +4003,7 @@
   /*                                                                       */
   /* MANAGING THE FLOW OF CONTROL                                          */
   /*                                                                       */
-  /*  Instructions appear in the specification's order.                    */
+  /*   Instructions appear in the specification's order.                   */
   /*                                                                       */
   /*************************************************************************/
 
@@ -4100,7 +4117,7 @@
   /*                                                                       */
   /* DEFINING AND USING FUNCTIONS AND INSTRUCTIONS                         */
   /*                                                                       */
-  /*  Instructions appear in the specification's order.                    */
+  /*   Instructions appear in the specification's order.                   */
   /*                                                                       */
   /*************************************************************************/
 
@@ -4436,7 +4453,7 @@
   /*                                                                       */
   /* PUSHING DATA ONTO THE INTERPRETER STACK                               */
   /*                                                                       */
-  /*  Instructions appear in the specification's order.                    */
+  /*   Instructions appear in the specification's order.                   */
   /*                                                                       */
   /*************************************************************************/
 
@@ -4960,7 +4977,7 @@
   static
   void  Ins_SCANTYPE( INS_ARG )
   {
-    /* For compatibility with future enhancements, */
+    /* for compatibility with future enhancements, */
     /* we must ignore new modes                    */
 
     if ( args[0] >= 0 && args[0] <= 5 )
@@ -4977,7 +4994,7 @@
   /*                                                                       */
   /* MANAGING OUTLINES                                                     */
   /*                                                                       */
-  /*  Instructions appear in the specification's order.                    */
+  /*   Instructions appear in the specification's order.                   */
   /*                                                                       */
   /*************************************************************************/
 
@@ -4993,8 +5010,8 @@
   {
     FT_UShort  point;
 
-
     UNUSED_ARG;
+
 
     if ( CUR.top < CUR.GS.loop )
     {
@@ -5282,7 +5299,7 @@
     FT_F26Dot6   dx,
                  dy;
 
-    FT_UShort  last_point, i;
+    FT_UShort    last_point, i;
 
 
     if ( BOUNDS( args[0], 2 ) )
@@ -5918,7 +5935,7 @@
       return;
     }
 
-    /* XXX: there are some glyphs in some braindead but popular  */
+    /* XXX: There are some glyphs in some braindead but popular  */
     /*      fonts out there (e.g. [aeu]grave in monotype.ttf)    */
     /*      calling IP[] with bad values of rp[12].              */
     /*      Do something sane when this odd thing happens.       */
@@ -6020,7 +6037,7 @@
 
 
   /* Local variables for Ins_IUP: */
-  struct LOC_Ins_IUP
+  struct  LOC_Ins_IUP
   {
     FT_Vector*  orgs;   /* original and current coordinate */
     FT_Vector*  curs;   /* arrays                          */

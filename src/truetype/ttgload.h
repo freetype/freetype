@@ -36,7 +36,6 @@
                         FT_Short*       bearing,
                         FT_UShort*      advance );
 
-
   LOCAL_DEF
   void  TT_Init_Glyph_Loading( TT_Face  face );
 

@@ -181,10 +181,11 @@
     FT_F26Dot6      phase;      /* `SuperRounding'     */
     FT_F26Dot6      threshold;
 
-    /* this seems to be unused */
 #if 0
+    /* this seems to be unused */
     FT_Int          cur_ppem;       /* ppem along the current proj vector */
 #endif
+
     FT_Bool         instruction_trap;  /* If `True', the interpreter will */
                                        /* exit after each instruction     */
 

@@ -561,7 +561,7 @@
   /* <Note>                                                                */
   /*    The 2x2 transformation matrix is also applied to the glyph's       */
   /*    advance vector.                                                    */
-  /*
+  /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Glyph_Transform( FT_Glyph    glyph,
                                                   FT_Matrix*  matrix,
                                                   FT_Vector*  delta )

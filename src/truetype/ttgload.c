@@ -23,7 +23,6 @@
 #include <freetype/tttags.h>
 #include <freetype/ftoutln.h>
 
-
 #include <ttgload.h>
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
@@ -146,10 +145,10 @@
   }
 
 
-#define cur_to_org( n, zone )  \
+#define cur_to_org( n, zone ) \
           MEM_Copy( (zone)->org, (zone)->cur, n * sizeof ( FT_Vector ) )
 
-#define org_to_cur( n, zone )  \
+#define org_to_cur( n, zone ) \
           MEM_Copy( (zone)->cur, (zone)->org, n * sizeof ( FT_Vector ) )
 
 
@@ -165,6 +164,7 @@
   {
     FT_UInt  k;
 
+
     if ( delta_x )
       for ( k = 0; k < n; k++ )
         coords[k].x += delta_x;
@@ -175,10 +175,11 @@
   }
 
 
-  static  void  tt_prepare_zone( TT_GlyphZone*  zone,
-                                 FT_GlyphLoad*  load,
-                                 FT_UInt        start_point,
-                                 FT_UInt        start_contour )
+  static
+  void  tt_prepare_zone( TT_GlyphZone*  zone,
+                         FT_GlyphLoad*  load,
+                         FT_UInt        start_point,
+                         FT_UInt        start_contour )
   {
     zone->n_points   = load->outline.n_points - start_point;
     zone->n_contours = load->outline.n_contours - start_contour;
@@ -285,7 +286,6 @@
       
       outline = &gloader->current.outline;
     }
-
 
     /* reading the bytecode instructions */
     slot->control_len  = 0;
@@ -481,6 +481,7 @@
       subglyph->transform.yy = yy;
 
       num_subglyphs++;
+
     } while ( subglyph->flags & MORE_COMPONENTS );
 
     gloader->current.num_subglyphs = num_subglyphs;
@@ -574,6 +575,7 @@
       FT_Vector*  limit   = vec + n_points;
       FT_Fixed    x_scale = load->size->metrics.x_scale;
       FT_Fixed    y_scale = load->size->metrics.y_scale;
+
 
       /* first scale the glyph points */
       for ( ; vec < limit; vec++ )
@@ -726,6 +728,7 @@
         loader->exec->glyphSize = 0;
 
 #endif
+
       error = FT_Err_Ok;
       goto Exit;
     }
@@ -777,6 +780,7 @@
         goto Fail;
       
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
       {
         TT_Size size = (TT_Size)loader->size;
 
@@ -837,7 +841,6 @@
         
         goto Exit;
       }
-
 
       /*********************************************************************/
       /*********************************************************************/
@@ -963,7 +966,7 @@
         /*******************************************************************/
         /*******************************************************************/
 
-        /* we have finished loading all sub-glyphs, now, look for */
+        /* we have finished loading all sub-glyphs; now, look for */
         /* instructions for this composite!                       */
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
@@ -986,7 +989,7 @@
             goto Fail;
           FT_TRACE5(( "  Instructions size = %d\n", n_ins ));
 
-          /* in some fonts ?? */
+          /* in some fonts? */
           if ( n_ins == 0xFFFF )
             n_ins = 0;
 
@@ -1131,11 +1134,11 @@
       FT_Pos  advance = loader->advance;
 
 
-      /* the flag FT_LOAD_NO_ADVANCE_CHECK was introduced to      */
-      /* correctly support DynaLab fonts, which have an incorrect */
-      /* `advance_Width_Max' field!  It is used, to my knowledge, */
-      /* exclusively in the X-TrueType font server.               */
-      /*                                                          */
+      /* the flag FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH was introduced to */
+      /* correctly support DynaLab fonts, which have an incorrect       */
+      /* `advance_Width_Max' field!  It is used, to my knowledge,       */
+      /* exclusively in the X-TrueType font server.                     */
+      /*                                                                */
       if ( face->postscript.isFixedPitch                                    &&
            ( loader->load_flags & FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ) == 0 )
         advance = face->horizontal.advance_Width_Max;
@@ -1373,7 +1376,7 @@
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-    /* seek to the beginning of the glyph table.  For Type 43 fonts      */
+    /* seek to the beginning of the glyph table.  For Type 42 fonts      */
     /* the table might be accessed from a Postscript stream or something */
     /* else...                                                           */
 

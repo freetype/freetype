@@ -41,8 +41,8 @@
   /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
   /* messages during execution.                                            */
   /*                                                                       */
-#undef   FT_COMPONENT
-#define  FT_COMPONENT  trace_ttobjs
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_ttobjs
 
 
   /*************************************************************************/
@@ -62,9 +62,11 @@
   /* <Input>                                                               */
   /*    zone :: A pointer to the target glyph zone.                        */
   /*                                                                       */
-  LOCAL_FUNC void  TT_Done_GlyphZone( TT_GlyphZone*  zone )
+  LOCAL_FUNC
+  void  TT_Done_GlyphZone( TT_GlyphZone*  zone )
   {
     FT_Memory  memory = zone->memory;
+
 
     FREE( zone->contours );
     FREE( zone->tags );
@@ -97,12 +99,14 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC FT_Error TT_New_GlyphZone( FT_Memory      memory,
-                                        FT_UShort      maxPoints,
-                                        FT_Short       maxContours,
-                                        TT_GlyphZone*  zone )
+  LOCAL_FUNC
+  FT_Error TT_New_GlyphZone( FT_Memory      memory,
+                             FT_UShort      maxPoints,
+                             FT_Short       maxContours,
+                             TT_GlyphZone*  zone )
   {
-    FT_Error      error;
+    FT_Error  error;
+
 
     if ( maxPoints > 0 )
       maxPoints += 2;
@@ -155,6 +159,7 @@
     FT_Error         error;
     FT_Library       library;
     SFNT_Interface*  sfnt;
+
 
     library = face->root.driver->root.library;
     sfnt    = (SFNT_Interface*)FT_Get_Module_Interface( library, "sfnt" );
@@ -222,6 +227,7 @@
 
     SFNT_Interface*  sfnt = face->sfnt;
 
+
     /* for `extended TrueType formats' (i.e. compressed versions) */
     if ( face->extra.finalizer )
       face->extra.finalizer( face->extra.data );
@@ -269,7 +275,8 @@
   LOCAL_DEF
   FT_Error  TT_Init_Size( TT_Size  size )
   {
-    FT_Error   error = 0;
+    FT_Error  error = TT_Err_Ok;
+
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
@@ -546,23 +553,20 @@
     }
 
     /* Compute root ascender, descender, test height, and max_advance */
-    metrics->ascender = ( FT_MulFix( face->root.ascender,
-                                     metrics->y_scale ) + 32 ) & -64;
-
-    metrics->descender = ( FT_MulFix( face->root.descender,
-                                      metrics->y_scale ) + 32 ) & -64;
-
-    metrics->height = ( FT_MulFix( face->root.height,
-                                   metrics->y_scale ) + 32 ) & -64;
-
+    metrics->ascender    = ( FT_MulFix( face->root.ascender,
+                                          metrics->y_scale ) + 32 ) & -64;
+    metrics->descender   = ( FT_MulFix( face->root.descender,
+                                          metrics->y_scale ) + 32 ) & -64;
+    metrics->height      = ( FT_MulFix( face->root.height,
+                                          metrics->y_scale ) + 32 ) & -64;
     metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
-                                        metrics->x_scale ) + 32 ) & -64;
+                                          metrics->x_scale ) + 32 ) & -64;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
     {
-      TT_ExecContext    exec;
-      FT_UInt  i, j;
+      TT_ExecContext  exec;
+      FT_UInt         i, j;
 
 
       /* Scale the cvt values to the new ppem.          */
@@ -613,7 +617,7 @@
       {
         error = TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
         if ( error )
-          goto Fin;
+          goto End;
 
         if ( !size->debug )
           error = face->interpreter( exec );
@@ -624,7 +628,7 @@
       size->GS = exec->GS;
       /* save default graphics state */
 
-    Fin:
+    End:
       TT_Save_Context( exec, size );
 
       if ( !size->debug )
@@ -639,7 +643,6 @@
 
     return error;
   }
-
 
 
   /*************************************************************************/
@@ -659,7 +662,7 @@
   LOCAL_FUNC
   FT_Error  TT_Init_Driver( TT_Driver  driver )
   {
-    FT_Error   error;
+    FT_Error  error;
 
 
     /* set `extra' in glyph loader */
@@ -693,7 +696,9 @@
     /* destroy extensions registry if needed */
 
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
+
     TT_Done_Extensions( driver );
+
 #endif
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
@@ -706,6 +711,7 @@
     }
 
 #endif
+
   }
 
 
