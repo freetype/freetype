@@ -64,7 +64,7 @@
 #include <freetype/ftmm.h>
 
 #include <freetype/internal/t1types.h>
-#include <t1errors.h>
+#include <freetype/internal/t1errors.h>
 #include <t1load.h>
 #include <stdio.h>
 

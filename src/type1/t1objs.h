@@ -22,7 +22,7 @@
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/t1types.h>
 
-#include <t1errors.h>
+#include <freetype/internal/t1errors.h>
 
 #ifdef __cplusplus
   extern "C" {

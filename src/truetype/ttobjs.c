@@ -27,7 +27,7 @@
 #include <ttobjs.h>
 
 #include <ttpload.h>
-#include <tterrors.h>
+#include <freetype/internal/tterrors.h>
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 #include <ttinterp.h>

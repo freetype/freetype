@@ -49,7 +49,6 @@
 #define  TT_Err_Unimplemented_Feature    FT_Err_Unimplemented_Feature
 #define  TT_Err_Unavailable_Outline      FT_Err_Unavailable_Outline
 #define  TT_Err_Unavailable_Bitmap       FT_Err_Unavailable_Bitmap
-#define  TT_Err_Unavailable_Pixmap       FT_Err_Unavailable_Pixmap
 #define  TT_Err_File_Is_Not_Collection   FT_Err_File_Is_Not_Collection
 
 #define  TT_Err_Invalid_Engine           FT_Err_Invalid_Driver_Handle

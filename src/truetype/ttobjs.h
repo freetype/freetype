@@ -22,7 +22,7 @@
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/tttypes.h>
-#include <tterrors.h>
+#include <freetype/internal/tterrors.h>
 
 
 #ifdef __cplusplus

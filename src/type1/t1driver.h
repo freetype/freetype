@@ -19,7 +19,7 @@
 #define T1DRIVER_H
 
 #include <t1objs.h>
-#include <t1errors.h>
+#include <freetype/internal/t1errors.h>
 
   FT_EXPORT_VAR(const  FT_DriverInterface)  t1_driver_interface;
 

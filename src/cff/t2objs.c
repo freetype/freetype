@@ -27,7 +27,7 @@
 #include <t2objs.h>
 
 #include <t2load.h>
-#include <t2errors.h>
+#include <freetype/internal/t2errors.h>
 
 /* required by tracing mode */
 #undef   FT_COMPONENT

@@ -21,7 +21,7 @@
 #include <freetype/ftsystem.h>
 
 #include <ttobjs.h>
-#include <tterrors.h>
+#include <freetype/internal/tterrors.h>
 #include <ttinterp.h>
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER

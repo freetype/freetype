@@ -1,5 +1,5 @@
 #
-# FreeType 2 PSNames driver configuration rules
+# FreeType 2 TrueType driver configuration rules
 #
 
 
@@ -13,7 +13,7 @@
 # fully.
 
 
-# Include the rules defined for the SFNT driver, which is heavily used
+# Include the rules defined for the SFNT driver, which are heavily used
 # by the TrueType one.
 #
 include $(SRC_)sfnt/rules.mk
@@ -95,7 +95,6 @@ TT_DRV_SRC_S := $(TT_DIR_)truetype.c
 #
 $(TT_DRV_OBJ_S): $(BASE_H) $(TT_DRV_H) $(TT_DRV_SRC) $(TT_DRV_SRC_S)
 	$(TT_COMPILE) $T$@ $(TT_DRV_SRC_S)
-
 
 
 # driver - multiple objects

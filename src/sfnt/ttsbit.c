@@ -858,7 +858,7 @@
       if ( range->index_format == 2 || range->index_format == 5 )
         *metrics = range->metrics;
       else
-        return FT_Err_Invalid_File_Format;
+        return TT_Err_Invalid_File_Format;
    }
 
   Exit:

@@ -20,7 +20,7 @@
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/config/ftconfig.h>
-#include <t1errors.h>
+#include <freetype/internal/t1errors.h>
 #include <freetype/internal/t1types.h>
 
 #ifdef __cplusplus

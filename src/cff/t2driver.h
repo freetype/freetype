@@ -22,7 +22,7 @@
 #include <freetype/internal/ftdriver.h>
 #include <freetype/ttnameid.h>
 #include <t2objs.h>
-#include <t2errors.h>
+#include <freetype/internal/t2errors.h>
 
 
   FT_EXPORT_VAR(const FT_DriverInterface)  cff_driver_interface;

@@ -15,10 +15,6 @@
  *
  ******************************************************************/
 
-#ifndef FREETYPE_H
-#error "Don't include this file! Use t1driver.h instead."
-#endif
-
 #ifndef T1ERRORS_H
 #define T1ERRORS_H
 
@@ -47,7 +43,6 @@
 #define  T1_Err_Unimplemented_Feature    FT_Err_Unimplemented_Feature
 #define  T1_Err_Unavailable_Outline      FT_Err_Unavailable_Outline
 #define  T1_Err_Unavailable_Bitmap       FT_Err_Unavailable_Bitmap
-#define  T1_Err_Unavailable_Pixmap       FT_Err_Unavailable_Pixmap
 #define  T1_Err_File_Is_Not_Collection   FT_Err_File_Is_Not_Collection
 
 #define  T1_Err_Invalid_Engine           FT_Err_Invalid_Driver_Handle

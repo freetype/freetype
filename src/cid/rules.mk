@@ -48,8 +48,7 @@ CID_DRV_SRC := $(CID_DIR_)cidparse.c  \
 
 # Type1 driver headers
 #
-CID_DRV_H := $(CID_DIR_)t1errors.h   \
-             $(CID_DIR_)cidtokens.h  \
+CID_DRV_H := $(CID_DIR_)cidtokens.h  \
              $(T1SHARED_H)          \
              $(CID_DRV_SRC:%.c=%.h)
 
