@@ -32,8 +32,8 @@
   /*     cc -c -D_STANDALONE_ ftgrays.c                                    */
   /*                                                                       */
   /* The renderer can be initialized with a call to                        */
-  /* `ft_gray_raster.gray_raster_new'; an anti-aliased bitmap can be       */
-  /* generated with a call to `ft_gray_raster.gray_raster_render'.         */
+  /* `ft_gray_raster.raster_new'; an anti-aliased bitmap can be generated  */
+  /* with a call to `ft_gray_raster.raster_render'.                        */
   /*                                                                       */
   /* See the comments and documentation in the file `ftimage.h' for more   */
   /* details on how the raster works.                                      */
