@@ -1,6 +1,10 @@
 2002-05-21  David Turner  <david@freetype.org>
 
-        * src/type42/t32drivr.c: removing compiler warnings
+        * src/bdf/bdflic.c: removed compiler warning, and changed all tables
+          to the "static const" storage specifier (instead of simply 'static')
+
+        * src/type42/t32drivr.c, src/bdf/bdfdrivr.c:
+          removing compiler warnings
 
         * include/freetype/internal/ftbdf.h, src/base/ftbdf.c,
           src/base/descrip.mms, src/base/Jamfile, src/base/rules.mk:

@@ -57,7 +57,7 @@
   /*************************************************************************/
 
 
-  static bdf_options_t  _bdf_opts =
+  static const bdf_options_t  _bdf_opts =
   {
     1,                /* Correct metrics.               */
     1,                /* Preserve unencoded glyphs.     */
@@ -75,7 +75,7 @@
   /* List of most properties that might appear in a font.  Doesn't include */
   /* the RAW_* and AXIS_* properties in X11R6 polymorphic fonts.           */
 
-  static bdf_property_t  _bdf_properties[] =
+  static const bdf_property_t  _bdf_properties[] =
   {
     { (char *)"ADD_STYLE_NAME",          BDF_ATOM,     1, { 0 } },
     { (char *)"AVERAGE_WIDTH",           BDF_INTEGER,  1, { 0 } },
@@ -384,7 +384,7 @@
   } _bdf_parse_t;
 
 
-#define setsbit( m, cc )  ( m[(cc) >> 3] |= ( 1 << ( (cc) & 7 ) ) )
+#define setsbit( m, cc )  ( m[(cc) >> 3] |= (FT_Byte)( 1 << ( (cc) & 7 ) ) )
 #define sbitset( m, cc )  ( m[(cc) >> 3]  & ( 1 << ( (cc) & 7 ) ) )
 
 
@@ -581,7 +581,7 @@
         dp[j++] = *fp++;
 
       if ( i + 1 < list->used )
-        dp[j++] = c;
+        dp[j++] = (char)c;
     }
     dp[j] = 0;
 
@@ -723,8 +723,8 @@
           lineno++;
 
           /* Restore the character at the end of the line. */
-          *hp = hold;
-        }
+          *hp = (char)hold;
+        }     
       }
     }
 
@@ -737,7 +737,7 @@
 
   /* XXX: make this work with EBCDIC also */
 
-  static unsigned char  a2i[128] =
+  static const unsigned char  a2i[128] =
   {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -752,7 +752,7 @@
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
   };
 
-  static unsigned char  odigits[32] =
+  static const unsigned char  odigits[32] =
   {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -760,7 +760,7 @@
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   };
 
-  static unsigned char  ddigits[32] =
+  static const unsigned char  ddigits[32] =
   {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x03,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -768,7 +768,7 @@
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   };
 
-  static unsigned char  hdigits[32] =
+  static const unsigned char  hdigits[32] =
   {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x03,
     0x7e, 0x00, 0x00, 0x00, 0x7e, 0x00, 0x00, 0x00,
@@ -786,8 +786,8 @@
               char**  end,
               int     base )
   {
-    unsigned long   v;
-    unsigned char*  dmap;
+    unsigned long         v;
+    const unsigned char*  dmap;
 
 
     if ( s == 0 || *s == 0 )
@@ -833,8 +833,8 @@
              char**  end,
              int     base )
   {
-    long            v, neg;
-    unsigned char*  dmap;
+    long                  v, neg;
+    const unsigned char*  dmap;
 
 
     if ( s == 0 || *s == 0 )
@@ -888,8 +888,8 @@
              char**  end,
              int     base )
   {
-    short           v, neg;
-    unsigned char*  dmap;
+    short                 v, neg;
+    const unsigned char*  dmap;
 
 
     if ( s == 0 || *s == 0 )
@@ -928,12 +928,12 @@
     }
 
     for ( v = 0; isdigok( dmap, *s ); s++ )
-      v = v * base + a2i[(int)*s];
+      v = (short)(v * base + a2i[(int)*s]);
 
     if ( end != 0 )
       *end = s;
 
-    return ( !neg ) ? v : -v;
+    return (short)(( !neg ) ? v : -v );
   }
 
 
@@ -1030,7 +1030,7 @@
     if ( propid >= _num_bdf_properties )
       return font->user_props + ( propid - _num_bdf_properties );
 
-    return _bdf_properties + propid;
+    return (bdf_property_t*) _bdf_properties + propid;
   }
 
 
@@ -1217,7 +1217,7 @@
 
     /* Restore the character that was saved before any return can happen. */
     if ( hold != -1 )
-      *ep = hold;
+      *ep = (char) hold;
 
     /* If the property exists and is not an atom, just return here. */
     if ( p && p->format != BDF_ATOM )
@@ -1272,7 +1272,7 @@
       /* the value of the property with the current value.          */
       fp = font->props + (unsigned long)hn->data;
 
-      switch ( prop->format )
+      switch ( fp->format )
       {
       case BDF_ATOM:
         /* Delete the current atom if it exists. */
@@ -1300,8 +1300,11 @@
       case BDF_CARDINAL:
         fp->value.card32 = _bdf_atoul( value, 0, 10 );
         break;
+      
+      default:
+        ;
       }
-
+      
       goto Exit;
     }
 
@@ -1341,7 +1344,7 @@
     if ( propid >= _num_bdf_properties )
       prop = font->user_props + ( propid - _num_bdf_properties );
     else
-      prop = _bdf_properties + propid;
+      prop = (bdf_property_t*)_bdf_properties + propid;
 
     fp = font->props + font->props_used;
 
@@ -1416,7 +1419,7 @@
   }
 
 
-  static unsigned char nibble_mask[8] =
+  static const unsigned char nibble_mask[8] =
   {
     0xFF, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE
   };
@@ -1661,7 +1664,7 @@
     {
       /* If there are more rows than are specified in the glyph metrics, */
       /* ignore the remaining lines.                                     */
-      if ( p->row >= glyph->bbx.height )
+      if ( p->row >= (unsigned long)glyph->bbx.height )
       {
         if ( !( p->flags & _BDF_GLYPH_HEIGHT_CHECK ) )
         {
@@ -1681,7 +1684,7 @@
       for ( i = 0, *bp = 0; i < nibbles; i++ )
       {
         c = line[i];
-        *bp = ( *bp << 4 ) + a2i[c];
+        *bp = (FT_Byte)(( *bp << 4 ) + a2i[c]);
         if ( i + 1 < nibbles && ( i & 1 ) )
           *++bp = 0;
       }
@@ -1717,7 +1720,7 @@
       error = _bdf_split( (char *)" +", line, linelen, &p->list, memory );
       if ( error )
         goto Exit;
-      glyph->swidth = _bdf_atoul( p->list.field[1], 0, 10 );
+      glyph->swidth = (unsigned short)_bdf_atoul( p->list.field[1], 0, 10 );
       p->flags |= _BDF_SWIDTH;
 
       goto Exit;
@@ -1729,7 +1732,7 @@
       error = _bdf_split( (char *)" +", line, linelen, &p->list,memory );
       if ( error )
         goto Exit;
-      glyph->dwidth = _bdf_atoul( p->list.field[1], 0, 10 );
+      glyph->dwidth = (unsigned short)_bdf_atoul( p->list.field[1], 0, 10 );
 
       if ( !( p->flags & _BDF_SWIDTH ) )
       {
@@ -1761,15 +1764,15 @@
       glyph->bbx.y_offset = _bdf_atos( p->list.field[4], 0, 10 );
 
       /* Generate the ascent and descent of the character. */
-      glyph->bbx.ascent  = glyph->bbx.height + glyph->bbx.y_offset;
-      glyph->bbx.descent = -glyph->bbx.y_offset;
+      glyph->bbx.ascent  = (short)(glyph->bbx.height + glyph->bbx.y_offset);
+      glyph->bbx.descent = (short)(-glyph->bbx.y_offset);
 
       /* Determine the overall font bounding box as the characters are */
       /* loaded so corrections can be done later if indicated.         */
       p->maxas    = MAX( glyph->bbx.ascent, p->maxas );
       p->maxds    = MAX( glyph->bbx.descent, p->maxds );
 
-      p->rbearing = glyph->bbx.width + glyph->bbx.x_offset;
+      p->rbearing = (short)( glyph->bbx.width + glyph->bbx.x_offset );
 
       p->maxrb    = MAX( p->rbearing, p->maxrb );
       p->minlb    = MIN( glyph->bbx.x_offset, p->minlb );
@@ -1826,7 +1829,7 @@
 
       /* Allocate enough space for the bitmap. */
       glyph->bpr   = ( glyph->bbx.width * p->font->bpp + 7 ) >> 3;
-      glyph->bytes = glyph->bpr * glyph->bbx.height;
+      glyph->bytes = (unsigned short)(glyph->bpr * glyph->bbx.height);
 
       if ( FT_NEW_ARRAY( glyph->bitmap, glyph->bytes ) )
         goto Exit;
@@ -2029,7 +2032,7 @@
         error = hash_init( &(font->proptbl), memory );
         if ( error )
           goto Exit;
-        for ( i = 0, prop = _bdf_properties;
+        for ( i = 0, prop = (bdf_property_t*) _bdf_properties;
               i < _num_bdf_properties; i++, prop++ )
         {
           error = hash_insert( prop->name, (void *)i,
@@ -2088,8 +2091,10 @@
       p->font->bbx.x_offset = _bdf_atos( p->list.field[3], 0, 10 );
       p->font->bbx.y_offset = _bdf_atos( p->list.field[4], 0, 10 );
 
-      p->font->bbx.ascent  = p->font->bbx.height + p->font->bbx.y_offset;
-      p->font->bbx.descent = -p->font->bbx.y_offset;
+      p->font->bbx.ascent  = (short)( p->font->bbx.height + 
+                                      p->font->bbx.y_offset );
+
+      p->font->bbx.descent = (short)( -p->font->bbx.y_offset );
 
       p->flags |= _BDF_FONT_BBX;
 
@@ -2195,7 +2200,7 @@
 
     FT_MEM_SET( &p, 0, sizeof ( _bdf_parse_t ) );
 
-    p.opts   = ( opts != 0 ) ? opts : &_bdf_opts;
+    p.opts   = (bdf_options_t*)(( opts != 0 ) ? opts : &_bdf_opts);
     p.minlb  = 32767;
     p.memory = extmemory;  /* only during font creation */
 
@@ -2231,7 +2236,7 @@
         {
           FT_TRACE2(( "bdf_load_font: " ACMSG3,
                       p.font->bbx.width, p.maxrb - p.minlb ));
-          p.font->bbx.width = p.maxrb - p.minlb;
+          p.font->bbx.width = (unsigned short)(p.maxrb - p.minlb);
           p.font->modified  = 1;
         }
 
@@ -2256,7 +2261,7 @@
           FT_TRACE2(( "bdf_load_font: " ACMSG6,
                       p.font->bbx.descent, p.maxds ));
           p.font->bbx.descent  = p.maxds;
-          p.font->bbx.y_offset = -p.maxds;
+          p.font->bbx.y_offset = (short)(-p.maxds);
           p.font->modified     = 1;
         }
 
@@ -2264,7 +2269,7 @@
         {
           FT_TRACE2(( "bdf_load_font: " ACMSG7,
                       p.font->bbx.height, p.maxas + p.maxds ));
-          p.font->bbx.height = p.maxas + p.maxds;
+          p.font->bbx.height = (unsigned short)(p.maxas + p.maxds);
         }
 
         if ( p.flags & _BDF_SWIDTH_ADJ )
