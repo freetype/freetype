@@ -42,8 +42,8 @@ code_footer = "</pre></font>"
 para_header = "<p>"
 para_footer = "</p>"
 
-block_header = "<center><hr width=75%><table width=75%><tr><td>"
-block_footer = "</td></tr></table></center>"
+block_header = "<center><table width=75%><tr><td>"
+block_footer = "</td></tr></table><hr width=75%></center>"
 
 description_header = "<center><table width=87%><tr><td>"
 description_footer = "</td></tr></table></center><br>"
@@ -57,6 +57,41 @@ source_footer = "</pre></table></center><br>"
 
 
 current_section = None
+
+
+# this function is used to sort the index. it's a simple lexicographical
+# sort, except that it places capital letters before small ones
+#
+def index_sort( s1, s2 ):
+
+    if not s1:
+        return -1
+
+    if not s2:
+        return 1
+
+    l1 = len(s1)
+    l2 = len(s2)
+    m1 = string.lower(s1)
+    m2 = string.lower(s2)
+
+    for i in range(l1):
+        if i >= l2 or m1[i] > m2[i]:
+            return 1
+        
+        if m1[i] < m2[i]:
+            return -1
+
+        if s1[i] < s2[i]:
+            return -1
+
+        if s1[i] > s2[i]:
+            return 1
+    
+    if l2 > l1:
+        return -1
+    
+    return 0    
 
 
 # The FreeType 2 reference is extracted from the source files. These contain
@@ -237,6 +272,10 @@ class DocParagraph:
         # should never happen
         #
         return "UNKNOWN_PARA_IDENTIFIER!"
+
+
+    def get_words( self ):
+        return self.words[:]
 
 
     def dump( self, identifiers = None ):
@@ -882,6 +921,50 @@ class DocSectionList:
             else:
                 section.title = "UNKNOWN_SECTION_TITLE!"
 
+        # sort section elements according to the <order> marker when
+        # available
+        for section in self.sections.values():
+            order = section.block.find_content( "order" )
+            if order:
+                #sys.stderr.write( "<order> found at "+section.block.location()+'\n' )
+                order_list = []
+                for item in order.items:
+                    for element in item[1]:
+                        words = None
+                        try:
+                            words = element.get_words()
+                        except:
+                            sys.stderr.write( "WARNING:" +
+                                              section.block.location() +
+                                              ": invalid content in <order> marker\n" )
+                        if words:
+                            for word in words:
+                                block = self.identifiers.get( word )
+                                if block:
+                                    if block.section == section:
+                                        order_list.append( word )
+                                    else:
+                                        sys.stderr.write( "WARNING:" +
+                                                          section.block.location() +
+                                                          ": invalid reference to '"+word+"' defined in other section\n" )
+                                else:
+                                    sys.stderr.write( "WARNING:" +
+                                                      section.block.location() +
+                                                      ": invalid reference to '"+word+"'\n" )
+                                
+                # now sort the list of blocks according to the order list
+                #
+                new_list = []
+                old_list = section.list
+                for id in order_list:
+                    new_list.append( section.elements[id] )
+
+                for block in old_list:
+                    if not block.name in order_list:
+                        new_list.append( block )
+
+                section.list = new_list
+        
         # compute section filenames
         #
         for section in self.sections.values():
@@ -893,7 +976,7 @@ class DocSectionList:
         # compute the sorted list of identifiers for the index
         #
         self.index = self.identifiers.keys()
-        self.index.sort()
+        self.index.sort( index_sort )
 
 
     def dump_html_toc( self ):
@@ -972,6 +1055,8 @@ class DocSectionList:
         sys.stdout = old_stdout
 
 
+
+
 # Filter a given list of DocBlocks. Returns a new list
 # of DocBlock objects that only contains element whose
 # "type" (i.e. first marker) is in the "types" parameter.
@@ -1046,7 +1131,7 @@ def make_block_list():
     """parse a file and extract comments blocks from it"""
 
     file_list = []
-    sys.stderr.write( repr( sys.argv[1:] ) + '\n' )
+    #sys.stderr.write( repr( sys.argv[1:] ) + '\n' )
 
     for pathname in sys.argv[1:]:
         if string.find( pathname, '*' ) >= 0:
