@@ -157,16 +157,20 @@ FT_BEGIN_HEADER
 #define  FT_INVALID(_error)   ft_validator_error( valid, _error )
 
  /* called when a broken table is detected */
-#define  FT_INVALID_TOO_SHORT   FT_INVALID( FT_Err_Invalid_Format )
+#define  FT_INVALID_TOO_SHORT   FT_INVALID( FT_Err_Invalid_Table )
 
  /* called when an invalid offset is detected */
 #define  FT_INVALID_OFFSET      FT_INVALID( FT_Err_Invalid_Offset )
 
  /* called when an invalid format/value is detected */
-#define  FT_INVALID_FORMAT      FT_INVALID( FT_Err_Invalid_Format )
+#define  FT_INVALID_FORMAT      FT_INVALID( FT_Err_Invalid_Table )
 
  /* called when an invalid glyph index is detected */
-#define  FT_INVALID_GLYPH_ID    FT_INVALID( FT_Err_Invalid_Glyph_Id )
+#define  FT_INVALID_GLYPH_ID    FT_INVALID( FT_Err_Invalid_Glyph_Index )
+
+ /* called when an invalid field value is detected */
+#define  FT_INVALID_DATA        FT_INVALID( FT_Err_Invalid_Table )
+
 
 
   /*************************************************************************/

@@ -1120,6 +1120,40 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
+
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+
+  FT_LOCAL_DEF( FT_Error )
+  TT_Load_CMap( TT_Face    face,
+                FT_Stream  stream )
+  {
+    FT_Error       error;
+    FT_Memory      memory = stream->memory;
+    FT_Long        table_start;
+    TT_CMapDirRec  cmap_dir;
+
+    error = face->goto_table( face, TTAG_cmap, stream, &face->cmap_size );
+    if ( error )
+    {
+      FT_TRACE2(( "No 'cmap' table in font !\n" ));
+      error = SFNT_Err_CMap_Table_Missing;
+      goto Exit;
+    }
+    
+    if ( !FT_FRAME_EXTRACT( face->cmap_size, face->cmap_table ) )
+      FT_TRACE2(( "'cmap' table loaded\n" ));
+    else
+    {
+      FT_ERROR(( "'cmap' table is too short !!\n" ));
+      face->cmap_size = 0;
+    }
+    
+  Exit:
+    return error;
+  }
+
+#else /* !FT_CONFIG_OPTION_USE_CMAPS */
+  
   FT_LOCAL_DEF( FT_Error )
   TT_Load_CMap( TT_Face    face,
                 FT_Stream  stream )
@@ -1216,6 +1250,7 @@
     return error;
   }
 
+#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
   /*************************************************************************/
   /*                                                                       */

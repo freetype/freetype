@@ -1,5 +1,13 @@
 2002-03-22  David Turner    <david@freetype.org>
 
+        * include/freetype/internal/ftobjs.h,
+          src/sfnt/Jamfile, src/sfnt/rules.mk,
+          src/sfnt/sfnt.c, src/sfnt/sfobjs.c,
+          src/sfnt/ttload.c, src/sfnt/ttcmap0.c, src/sfnt/ttcmap0.h:
+          
+            updated the SFNT charmap support to use FT_CMaps
+
+
         * include/freetype/config/ftheader.h, include/freetype/fterrors.h:
         modified "fterrors.h" to include the error definitions list found
         in "fterrdef.h"

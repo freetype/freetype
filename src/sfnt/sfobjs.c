@@ -40,7 +40,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    Get_Name                                                           */
+  /*    tt_face_get_name                                                   */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Returns a given ENGLISH name record in ASCII.                      */
@@ -54,7 +54,7 @@
   /*    Character string.  NULL if no name is present.                     */
   /*                                                                       */
   static FT_String*
-  Get_Name( TT_Face    face,
+  tt_face_get_name( TT_Face    face,
             FT_UShort  nameid )
   {
     FT_Memory    memory = face->root.memory;
@@ -155,8 +155,8 @@
 
 
   static FT_Encoding
-  find_encoding( int  platform_id,
-                 int  encoding_id )
+  sfnt_find_encoding( int  platform_id,
+                      int  encoding_id )
   {
     typedef struct  TEncoding
     {
@@ -377,8 +377,8 @@
       goto Exit;
 #endif
 
-    face->root.family_name = Get_Name( face, TT_NAME_ID_FONT_FAMILY );
-    face->root.style_name  = Get_Name( face, TT_NAME_ID_FONT_SUBFAMILY );
+    face->root.family_name = tt_face_get_name( face, TT_NAME_ID_FONT_FAMILY );
+    face->root.style_name  = tt_face_get_name( face, TT_NAME_ID_FONT_SUBFAMILY );
 
     /* now set up root fields */
     {
@@ -454,6 +454,33 @@
       /*   Try to set the charmap encoding according to the platform &     */
       /*   encoding ID of each charmap.                                    */
       /*                                                                   */
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+
+      error = TT_Build_CMaps( face );
+      if (error) goto Exit;
+      
+      /* set the encoding fields */
+      {
+        FT_UInt  n;
+        
+        for ( n = 0; n < root->num_charmaps; n++ )
+        {
+          FT_CharMap  charmap = root->charmaps[n];
+          
+          charmap->encoding = sfnt_find_encoding( charmap->platform_id,
+                                                  charmap->encoding_id );
+                                             
+          if ( root->charmap     == NULL &&
+               charmap->encoding == ft_encoding_unicode )
+          {
+            /* set 'root->charmap' to the first Unicode encoding we find */
+            root->charmap = charmap;
+          }
+        }
+      }
+
+#else /* !FT_CONFIG_OPTION_USE_CMAPS */
+
       charmap            = face->charmaps;
       root->num_charmaps = face->num_charmaps;
 
@@ -470,7 +497,7 @@
         charmap->root.face        = (FT_Face)face;
         charmap->root.platform_id = (FT_UShort)platform;
         charmap->root.encoding_id = (FT_UShort)encoding;
-        charmap->root.encoding    = find_encoding( platform, encoding );
+        charmap->root.encoding    = sfnt_find_encoding( platform, encoding );
 
         /* now, set root->charmap with a unicode charmap */
         /* wherever available                            */
@@ -480,6 +507,9 @@
 
         root->charmaps[n] = (FT_CharMap)charmap;
       }
+
+#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
+
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
@@ -646,6 +676,18 @@
     FT_FREE( face->dir_tables );
     face->num_tables = 0;
 
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+
+    {
+      FT_Stream  stream = FT_FACE_STREAM(face);
+      
+      /* simply release the 'cmap' table frame */
+      FT_FRAME_RELEASE( face->cmap_table );
+      face->cmap_size = 0;
+    }
+
+#else /* !FT_CONFIG_OPTION_USE_CMAPS */
+
     /* freeing the character mapping tables */
     if ( sfnt && sfnt->load_charmaps )
     {
@@ -662,6 +704,8 @@
     FT_FREE( face->root.charmaps );
     face->root.num_charmaps = 0;
     face->root.charmap      = 0;
+
+#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
     /* freeing the horizontal metrics */
     FT_FREE( face->horizontal.long_metrics );
