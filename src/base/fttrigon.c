@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType trigonometric functions (body).                             */
 /*                                                                         */
-/*  Copyright 2001 by                                                      */
+/*  Copyright 2001, 2002, 2003 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -366,8 +366,8 @@
     FT_Vector  v;
 
 
-    v.x   = vec->x;
-    v.y   = vec->y;
+    v.x = vec->x;
+    v.y = vec->y;
 
     if ( angle && ( v.x != 0 || v.y != 0 ) )
     {

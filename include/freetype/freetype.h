@@ -1016,7 +1016,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* @macro:                                                               */
-  /*    FT_IS_FIXED_SIZES( face )                                          */
+  /*    FT_HAS_FIXED_SIZES( face )                                         */
   /*                                                                       */
   /* @description:                                                         */
   /*    A macro that returns true whenever a face object contains some     */

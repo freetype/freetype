@@ -588,6 +588,7 @@
     size_t     sfnt_size;
     FT_Error   error = 0;
     FT_Memory  memory = library->memory;
+    int        is_cff;
 
 
     sfnt = GetResource( 'sfnt', sfnt_id );
@@ -606,11 +607,16 @@
     HUnlock( sfnt );
     ReleaseResource( sfnt );
 
+    is_cff = rlen > 4 && sfnt_data[0] == 'O' &&
+                         sfnt_data[1] == 'T' &&
+                         sfnt_data[2] == 'T' &&
+                         sfnt_data[3] == 'O';
+
     return open_face_from_buffer( library,
                                   sfnt_data,
                                   sfnt_size,
                                   face_index,
-                                  "truetype",
+                                  is_cff ? "cff" : "truetype",
                                   aface );
   }
 
