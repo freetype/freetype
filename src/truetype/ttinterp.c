@@ -1249,47 +1249,41 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF
-  FT_F26Dot6  Read_CVT( EXEC_OP_ FT_ULong  index )
+  FT_CALLBACK_DEF(FT_F26Dot6)  Read_CVT( EXEC_OP_ FT_ULong  index )
   {
     return CUR.cvt[index];
   }
 
 
-  FT_CALLBACK_DEF
-  FT_F26Dot6  Read_CVT_Stretched( EXEC_OP_ FT_ULong  index )
+  FT_CALLBACK_DEF(FT_F26Dot6)  Read_CVT_Stretched( EXEC_OP_ FT_ULong  index )
   {
     return TT_MULFIX( CUR.cvt[index], CURRENT_Ratio() );
   }
 
 
-  FT_CALLBACK_DEF
-  void  Write_CVT( EXEC_OP_ FT_ULong    index,
-                            FT_F26Dot6  value )
+  FT_CALLBACK_DEF(voidà  Write_CVT( EXEC_OP_ FT_ULong    index,
+                                             FT_F26Dot6  value )
   {
     CUR.cvt[index] = value;
   }
 
 
-  FT_CALLBACK_DEF
-  void  Write_CVT_Stretched( EXEC_OP_ FT_ULong    index,
-                                      FT_F26Dot6  value )
+  FT_CALLBACK_DEF(void)  Write_CVT_Stretched( EXEC_OP_ FT_ULong    index,
+                                                       FT_F26Dot6  value )
   {
     CUR.cvt[index] = FT_DivFix( value, CURRENT_Ratio() );
   }
 
 
-  FT_CALLBACK_DEF
-  void  Move_CVT( EXEC_OP_ FT_ULong    index,
-                           FT_F26Dot6  value )
+  FT_CALLBACK_DEF(void)  Move_CVT( EXEC_OP_ FT_ULong    index,
+                                            FT_F26Dot6  value )
   {
     CUR.cvt[index] += value;
   }
 
 
-  FT_CALLBACK_DEF
-  void  Move_CVT_Stretched( EXEC_OP_ FT_ULong    index,
-                                     FT_F26Dot6  value )
+  FT_CALLBACK_DEF(void)  Move_CVT_Stretched( EXEC_OP_ FT_ULong    index,
+                                                      FT_F26Dot6  value )
   {
     CUR.cvt[index] += FT_DivFix( value, CURRENT_Ratio() );
   }

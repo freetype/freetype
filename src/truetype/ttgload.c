@@ -201,11 +201,11 @@
   /*                                                                       */
   /*************************************************************************/
 
-  FT_CALLBACK_DEF
-  FT_Error  TT_Access_Glyph_Frame( TT_Loader*  loader,
-                                   FT_UInt     glyph_index,
-                                   FT_ULong    offset,
-                                   FT_UInt     byte_count )
+  FT_CALLBACK_DEF(FT_Error)
+  TT_Access_Glyph_Frame( TT_Loader*  loader,
+                         FT_UInt     glyph_index,
+                         FT_ULong    offset,
+                         FT_UInt     byte_count )
   {
     FT_Error   error;
     FT_Stream  stream = loader->stream;
@@ -224,8 +224,8 @@
   }
 
 
-  FT_CALLBACK_DEF
-  void  TT_Forget_Glyph_Frame( TT_Loader*  loader )
+  FT_CALLBACK_DEF(void)
+  TT_Forget_Glyph_Frame( TT_Loader*  loader )
   {
     FT_Stream  stream = loader->stream;
 
@@ -234,8 +234,8 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  TT_Load_Glyph_Header( TT_Loader*  loader )
+  FT_CALLBACK_DEF(FT_Error)
+  TT_Load_Glyph_Header( TT_Loader*  loader )
   {
     FT_Stream   stream = loader->stream;
 
@@ -257,8 +257,8 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  TT_Load_Simple_Glyph( TT_Loader*  load )
+  FT_CALLBACK_DEF(FT_Error)
+  TT_Load_Simple_Glyph( TT_Loader*  load )
   {
     FT_Error         error;
     FT_Stream        stream     = load->stream;
@@ -416,8 +416,8 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  TT_Load_Composite_Glyph( TT_Loader*  loader )
+  FT_CALLBACK_DEF(FT_Error)
+  TT_Load_Composite_Glyph( TT_Loader*  loader )
   {
     FT_Error         error;
     FT_Stream        stream  = loader->stream;

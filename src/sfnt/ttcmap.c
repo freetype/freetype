@@ -34,19 +34,17 @@
 #define FT_COMPONENT  trace_ttcmap
 
 
-  FT_CALLBACK_DEF
-  FT_UInt  code_to_index0( TT_CMapTable*  charmap,
-                           FT_ULong       char_code );
-  FT_CALLBACK_DEF
-  FT_UInt  code_to_index2( TT_CMapTable*  charmap,
-                           FT_ULong       char_code );
-  FT_CALLBACK_DEF
-  FT_UInt  code_to_index4( TT_CMapTable*  charmap,
-                           FT_ULong       char_code );
-  FT_CALLBACK_DEF
-  FT_UInt  code_to_index6( TT_CMapTable*  charmap,
-                           FT_ULong       char_code );
+  FT_CALLBACK_DEF(FT_UInt)   code_to_index0( TT_CMapTable*  charmap,
+                                             FT_ULong       char_code );
+                                             
+  FT_CALLBACK_DEF(FT_UInt)   code_to_index2( TT_CMapTable*  charmap,
+                                             FT_ULong       char_code );
 
+  FT_CALLBACK_DEF(FT_UInt)   code_to_index4( TT_CMapTable*  charmap,
+                                             FT_ULong       char_code );
+
+  FT_CALLBACK_DEF(FT_UInt)   code_to_index6( TT_CMapTable*  charmap,
+                                             FT_ULong       char_code );
 
   /*************************************************************************/
   /*                                                                       */
@@ -351,9 +349,9 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  FT_CALLBACK_DEF
-  FT_UInt  code_to_index0( TT_CMapTable*  cmap,
-                           FT_ULong       charCode )
+  FT_CALLBACK_DEF(FT_UInt)
+  code_to_index0( TT_CMapTable*  cmap,
+                  FT_ULong       charCode )
   {
     TT_CMap0*  cmap0 = &cmap->c.cmap0;
 
@@ -377,9 +375,9 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  FT_CALLBACK_DEF
-  FT_UInt  code_to_index2( TT_CMapTable*  cmap,
-                           FT_ULong       charCode )
+  FT_CALLBACK_DEF(FT_UInt)
+  code_to_index2( TT_CMapTable*  cmap,
+                  FT_ULong       charCode )
   {
     FT_UInt             result, index1, offset;
     FT_UInt             char_lo;
@@ -441,9 +439,9 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  FT_CALLBACK_DEF
-  FT_UInt  code_to_index4( TT_CMapTable*  cmap,
-                           FT_ULong       charCode )
+  FT_CALLBACK_DEF(FT_UInt)
+  code_to_index4( TT_CMapTable*  cmap,
+                  FT_ULong       charCode )
   {
     FT_UInt          result, index1, segCount;
     TT_CMap4*        cmap4;
@@ -524,9 +522,9 @@
   /* <Return>                                                              */
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
-  FT_CALLBACK_DEF
-  FT_UInt  code_to_index6( TT_CMapTable*  cmap,
-                           FT_ULong       charCode )
+  FT_CALLBACK_DEF(FT_UInt)
+  code_to_index6( TT_CMapTable*  cmap,
+                  FT_ULong       charCode )
   {
     TT_CMap6*  cmap6;
     FT_UInt    result = 0;

@@ -91,9 +91,9 @@
   /* <Return>                                                              */
   /*    The address of newly allocated block.                              */
   /*                                                                       */
-  FT_CALLBACK_DEF
-  void*  ft_alloc( FT_Memory  memory,
-                   long       size )
+  FT_CALLBACK_DEF(void*)
+  ft_alloc( FT_Memory  memory,
+            long       size )
   {
     FT_UNUSED( memory );
 
@@ -121,11 +121,11 @@
   /* <Return>                                                              */
   /*    The address of the reallocated memory block.                       */
   /*                                                                       */
-  FT_CALLBACK_DEF
-  void*  ft_realloc( FT_Memory  memory,
-                     long       cur_size,
-                     long       new_size,
-                     void*      block )
+  FT_CALLBACK_DEF(void*)
+  ft_realloc( FT_Memory  memory,
+              long       cur_size,
+              long       new_size,
+              void*      block )
   {
     FT_UNUSED( memory );
     FT_UNUSED( cur_size );
@@ -147,9 +147,9 @@
   /*                                                                       */
   /*    block   :: The address of block in memory to be freed.             */
   /*                                                                       */
-  FT_CALLBACK_DEF
-  void  ft_free( FT_Memory  memory,
-                 void*      block )
+  FT_CALLBACK_DEF(void)
+  ft_free( FT_Memory  memory,
+           void*      block )
   {
     FT_UNUSED( memory );
 
@@ -189,8 +189,8 @@
   /* <Input>                                                               */
   /*    stream :: A pointer to the stream object.                          */
   /*                                                                       */
-  FT_CALLBACK_DEF
-  void  ft_close_stream( FT_Stream  stream )
+  FT_CALLBACK_DEF(void)
+  ft_close_stream( FT_Stream  stream )
   {
     munmap( (MUNMAP_ARG_CAST)stream->descriptor.pointer, stream->size );
 

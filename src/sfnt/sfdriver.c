@@ -114,9 +114,9 @@
 #endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
 
-  FT_CALLBACK_DEF
-  FT_Module_Interface  SFNT_Get_Interface( FT_Module    module,
-                                           const char*  interface )
+  FT_CALLBACK_DEF(FT_Module_Interface)
+  SFNT_Get_Interface( FT_Module    module,
+                      const char*  interface )
   {
     FT_UNUSED( module );
 

@@ -62,9 +62,9 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF
-  void  ftc_glyph_image_node_destroy( FTC_GlyphImage  node,
-                                      FTC_GlyphSet    gset )
+  FT_CALLBACK_DEF(void)
+  ftc_glyph_image_node_destroy( FTC_GlyphImage  node,
+                                FTC_GlyphSet    gset )
   {
     FT_Memory  memory = gset->memory;
 
@@ -74,10 +74,10 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ftc_glyph_image_node_new( FTC_GlyphSet     gset,
-                                      FT_UInt          glyph_index,
-                                      FTC_GlyphImage  *anode )
+  FT_CALLBACK_DEF(FT_Error)
+  ftc_glyph_image_node_new( FTC_GlyphSet     gset,
+                            FT_UInt          glyph_index,
+                            FTC_GlyphImage  *anode )
   {
     FT_Memory       memory   = gset->memory;
     FTC_ImageSet    imageset = (FTC_ImageSet)gset;
@@ -161,8 +161,8 @@
   /* this function is important because it is both part of */
   /* an FTC_GlyphSet_Class and an FTC_CacheNode_Class      */
   /*                                                       */
-  FT_CALLBACK_DEF
-  FT_ULong  ftc_glyph_image_node_size( FTC_GlyphImage  node )
+  FT_CALLBACK_DEF(FT_ULong)
+  ftc_glyph_image_node_size( FTC_GlyphImage  node )
   {
     FT_ULong  size  = 0;
     FT_Glyph  glyph = node->ft_glyph;
@@ -212,18 +212,18 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ftc_image_set_init( FTC_ImageSet     iset,
-                                FTC_Image_Desc*  type )
+  FT_CALLBACK_DEF(FT_Error)
+  ftc_image_set_init( FTC_ImageSet     iset,
+                      FTC_Image_Desc*  type )
   {
     iset->description = *type;
     return 0;
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Bool  ftc_image_set_compare( FTC_ImageSet     iset,
-                                  FTC_Image_Desc*  type )
+  FT_CALLBACK_DEF(FT_Bool)
+  ftc_image_set_compare( FTC_ImageSet     iset,
+                         FTC_Image_Desc*  type )
   {
     return FT_BOOL( !memcmp( &iset->description, type, sizeof ( *type ) ) );
   }

@@ -55,9 +55,9 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF
-  FT_Error  T1_Parse_Glyph( T1_Decoder*  decoder,
-                            FT_UInt      glyph_index )
+  FT_CALLBACK_DEF(FT_Error)
+  T1_Parse_Glyph( T1_Decoder*  decoder,
+                  FT_UInt      glyph_index )
   {
     T1_Face   face  = (T1_Face)decoder->builder.face;
     T1_Font*  type1 = &face->type1;

@@ -288,9 +288,9 @@
           ( (FTC_ChunkSet)(node)->root.data )
 
 
-  FT_CALLBACK_DEF
-  FT_Error  ftc_chunk_set_lru_init( FT_Lru      lru,
-                                    FT_LruNode  node )
+  FT_CALLBACK_DEF(FT_Error)
+  ftc_chunk_set_lru_init( FT_Lru      lru,
+                          FT_LruNode  node )
   {
     FTC_Chunk_Cache  cache = FTC_CSET_LRU_GET_CACHE( lru );
     FT_Error         error;
@@ -311,9 +311,9 @@
   }
 
 
-  FT_CALLBACK_DEF
-  void  ftc_chunk_set_lru_done( FT_Lru      lru,
-                                FT_LruNode  node )
+  FT_CALLBACK_DEF(void)
+  ftc_chunk_set_lru_done( FT_Lru      lru,
+                          FT_LruNode  node )
   {
     FTC_ChunkSet  cset = FTC_LRUNODE_CSET( node );
 
@@ -324,9 +324,9 @@
   }
 
 
-  FT_CALLBACK_DEF
-  FT_Bool  ftc_chunk_set_lru_compare( FT_LruNode  node,
-                                      FT_LruKey   key )
+  FT_CALLBACK_DEF(FT_Bool)
+  ftc_chunk_set_lru_compare( FT_LruNode  node,
+                             FT_LruKey   key )
   {
     FTC_ChunkSet  cset = FTC_LRUNODE_CSET( node );
 

@@ -129,9 +129,9 @@
 
 
   /* qsort callback to sort the unicode map */
-  FT_CALLBACK_DEF
-  int  compare_uni_maps( const void*  a,
-                         const void*  b )
+  FT_CALLBACK_DEF(int)
+  compare_uni_maps( const void*  a,
+                    const void*  b )
   {
     PS_UniMap*  map1 = (PS_UniMap*)a;
     PS_UniMap*  map2 = (PS_UniMap*)b;
