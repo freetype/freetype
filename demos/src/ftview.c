@@ -27,6 +27,8 @@
 #include "graph.h"
 #include "grfont.h"
 
+#include "ftgrays.h"
+
 #define  DIM_X   500
 #define  DIM_Y   400
 
@@ -71,6 +73,12 @@
   int  graph_init = 0;
 
   int  render_mode = 1;
+  int  use_grays   = 1;
+
+  TRaster  raster;
+  
+#define RASTER_BUFF_SIZE   32768
+  char     raster_buff[ RASTER_BUFF_SIZE ];
 
 #define DEBUGxxx
 
@@ -137,7 +145,7 @@
   static
   char   bit_buffer[ MAX_BUFFER ];
   
-  /* Render a single glyph */
+  /* Render a single glyph with the "grays" component */
   static FT_Error  Render_Glyph( int  x_offset,
                                  int  y_offset )
   {
@@ -182,8 +190,11 @@
 
       if (low_prec)
         glyph->outline.outline_flags &= ~ft_outline_high_precision;
-        
-      FT_Get_Outline_Bitmap( library, &glyph->outline, &bit2 );
+      
+      if (use_grays & gray_render)
+        error = grays_raster_render( &raster, &glyph->outline, &bit2 );
+      else
+        error = FT_Get_Outline_Bitmap( library, &glyph->outline, &bit2 );
     }
     else
     {
@@ -206,7 +217,6 @@
     grBlitGlyphToBitmap( &bit, &bit3, x_top, y_top, fore_color );
     return 0;
   }
-
 
   static FT_Error  Reset_Scale( int  pointSize )
   {
@@ -258,7 +268,7 @@
 
     i = first_glyph;
 
-    while ( i < num_glyphs )
+     while ( i < num_glyphs )
     {
       if ( !(error = LoadChar( i, hinted )) )
       {
@@ -381,6 +391,7 @@
     grWriteln("  h         : toggle outline hinting" );
     grWriteln("  b         : toggle embedded bitmaps" );
     grWriteln("  l         : toggle low precision rendering" );
+    grWriteln("  g         : toggle between 'smooth' and 'standard' anti-aliaser" );
     grWriteln("  space     : toggle rendering mode" );
     grLn();
     grWriteln("  Up        : increase pointsize by 1 unit" );
@@ -434,6 +445,13 @@
     case grKEY('p'):
       return (int)event->key;
 
+    case grKEY('g'):
+      use_grays = !use_grays;
+      new_header = ( use_grays
+                   ? "now using the smooth anti-aliaser"
+                   : "now using the standard anti-aliaser" );
+      break;
+                   
     case grKEY('l'):
       low_prec = !low_prec;
       new_header = ( low_prec
@@ -578,6 +596,9 @@
     /* Initialize engine */
     error = FT_Init_FreeType( &library );
     if (error) PanicZ( "Could not initialise FreeType library" );
+
+    error = grays_raster_init( (FT_Raster)&raster, (const char*)raster_buff, RASTER_BUFF_SIZE );
+    if (error) PanicZ( "Could not initialize anti-aliasing renderer" );
 
 /*    FT_Set_Raster_Palette( library, 17, palette_17 ); */
 

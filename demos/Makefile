@@ -182,6 +182,9 @@ else
   $(OBJ_)ftlint.$O: $(SRC_DIR_)ftlint.c
 	  $(COMPILE) $T$@ $<
 
+  $(OBJ_)ftgrays.$O: $(SRC_DIR_)ftgrays.c
+	  $(COMPILE) $T$@ $<
+
   $(OBJ_)fttry.$O: $(SRC_DIR_)fttry.c
 	  $(COMPILE) $T$@ $<
 
@@ -243,11 +246,11 @@ else
 	  $(LINK)
 
 
-  $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
-	  $(GRAPH_LINK) 
+  $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays.$O
+	  $(GRAPH_LINK) $(OBJ_)ftgrays.$O
 
-  $(BIN_)fttimer$E: $(OBJ_)fttimer.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
-	  $(GRAPH_LINK)
+  $(BIN_)fttimer$E: $(OBJ_)fttimer.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays.$O
+	  $(GRAPH_LINK) $(OBJ_)ftgrays.$O
 
 endif
 

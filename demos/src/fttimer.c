@@ -28,6 +28,7 @@
 #include <time.h>    /* for clock() */
 
 #include "graph.h"
+#include "ftgrays.h"
 
 /* SunOS 4.1.* does not define CLOCKS_PER_SEC, so include <sys/param.h> */
 /* to get the HZ macro which is the equivalent.                         */
@@ -66,6 +67,7 @@
   
   int             pixel_size   = CHARSIZE;
   int             repeat_count = 1;
+  int             use_grays    = 0;
 
   FT_Bitmap      Bit;
   grBitmap       bit;
@@ -78,6 +80,11 @@
   short  visual;      /* display glyphs while rendering */
   short  gray_render; /* smooth fonts with gray levels  */
   short  force_low;
+
+  TRaster  raster;
+  
+#define RASTER_BUFF_SIZE   128000
+  char     raster_buff[ RASTER_BUFF_SIZE ];
 
 
   static void Clear_Buffer();
@@ -212,7 +219,10 @@
   FT_Error  ConvertRaster( int  index )
   {
     outlines[index].outline_flags |= ~ft_outline_single_pass;
-    return FT_Get_Outline_Bitmap( library, &outlines[index], &Bit );
+    if (use_grays)
+      return grays_raster_render( &raster, &outlines[index], &Bit );
+    else
+      return FT_Get_Outline_Bitmap( library, &outlines[index], &Bit );
   }
 
 
@@ -226,6 +236,7 @@
       fprintf( stderr, "   -s : character pixel size (default is 600)\n" );
       fprintf( stderr, "   -v : display results..\n" );
       fprintf( stderr, "   -g : render anti-aliased glyphs\n" );
+      fprintf( stderr, "   -a : use smooth anti-aliaser\n" );
       fprintf( stderr, "   -l : force low quality even at small sizes\n" );
       exit(1);
   }
@@ -256,6 +267,10 @@
         gray_render = 1;
         break;
 
+      case 'a':
+        use_grays = 1;
+        break;
+        
       case 'l':
         force_low = 1;
         break;
@@ -318,6 +333,9 @@
     if ( (error = FT_Init_FreeType( &library )) )
       Panic( "Error while initializing engine" );
 
+    error = grays_raster_init( (FT_Raster)&raster, (const char*)raster_buff, RASTER_BUFF_SIZE );
+    if (error) Panic( "Could not initialize smooth anti-aliasing renderer" );
+    
     /* Load face */
 
     error = FT_New_Face( library, filename, 0, &face );
