@@ -209,8 +209,7 @@
 
 
   /* now include internal headers definitions from <freetype/internal/...> */
-#define FT2_INTERNAL_H  FT2_INTERNAL_FILE(internal.h)
-#include FT2_INTERNAL_H
+#include FT2_INTERNAL_FILE(internal.h)
 
 
 #endif /* __FT2_BUILD_H__ */
