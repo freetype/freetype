@@ -258,7 +258,7 @@ FT_BEGIN_HEADER
   /*   Don't define any of these macros to compile in `release' mode!      */
   /*                                                                       */
 #undef  FT_DEBUG_LEVEL_ERROR
-#define FT_DEBUG_LEVEL_TRACE
+#undef  FT_DEBUG_LEVEL_TRACE
 
 
   /*************************************************************************/
@@ -273,7 +273,7 @@ FT_BEGIN_HEADER
   /*   Note that the memory debugger is only activated at runtime when     */
   /*   when the _environment_ variable "FT_DEBUG_MEMORY" is also defined!  */
   /*                                                                       */
-#define FT_DEBUG_MEMORY
+#undef  FT_DEBUG_MEMORY
 
 
   /*************************************************************************/
@@ -294,19 +294,6 @@ FT_BEGIN_HEADER
   /*   FreeType library object.  16 is the default.                        */
   /*                                                                       */
 #define FT_MAX_MODULES  16
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* FT_MAX_EXTENSIONS                                                     */
-  /*                                                                       */
-  /*   The maximum number of extensions that can be registered in a single */
-  /*   font driver.  8 is the default.                                     */
-  /*                                                                       */
-  /*   If you don't know what this means, you certainly do not need to     */
-  /*   change this value.                                                  */
-  /*                                                                       */
-#define FT_MAX_EXTENSIONS  8
 
 
   /*************************************************************************/
