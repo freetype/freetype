@@ -27,6 +27,8 @@ LATEST CHANGES BETWEEN 2.1.1 and 2.1.0
     - "freetype.m4" is now installed by default by "make install" on Unix
       systems.
 
+    - The "FT_Get_PS_Font_Info" now works with CID and Type42 fonts as well
+
 ========================================================================
 LATEST CHANGES BETWEEN 2.1.1 and 2.1.0
 
