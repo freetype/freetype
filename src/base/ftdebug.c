@@ -85,12 +85,12 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
 
   /* array of trace levels, initialized to 0 */
-  int  ft_trace_levels[ trace_count ];
+  int  ft_trace_levels[trace_count];
 
- /* define array of trace toggle names */
-#define  FT_TRACE_DEF(x)   #x ,
+  /* define array of trace toggle names */
+#define FT_TRACE_DEF(x)  #x ,
 
-  static const char*  ft_trace_toggles[ trace_count+1 ] =
+  static const char*  ft_trace_toggles[trace_count + 1] =
   { 
 #include FT_INTERNAL_TRACE_H
     NULL
@@ -99,25 +99,24 @@
 #undef FT_TRACE_DEF
 
 
-
- /************************************************************************
-  *
-  *  initialize the tracing sub-system, this is done by retrieving the
-  *  value of the "FT2_DEBUG" environment variable. It must be a list of
-  *  toggles, separated by spaces, ';' or ':' for example:
-  *
-  *    "any=3 memory=6 stream=5"
-  *
-  *  will request that all levels be set to 3, except the trace level for
-  *  the memory and stream components which are respectively set to 6 and 5
-  *
-  *  see the file <freetype/internal/fttrace.h> for details of the available
-  *  toggle names.
-  *
-  *  the level is between 0 and 6, where 0 is quiet (except in important
-  *  runtime errors), and 6 is _very_ verbose
-  */
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* Initialize the tracing sub-system.  This is done by retrieving the    */
+  /* value of the "FT2_DEBUG" environment variable.  It must be a list of  */
+  /* toggles, separated by spaces, `;' or `:'.  Example:                   */
+  /*                                                                       */
+  /*    "any=3 memory=6 stream=5"                                          */
+  /*                                                                       */
+  /* This will request that all levels be set to 3, except the trace level */
+  /* for the memory and stream components which are set to 6 and 5,        */
+  /* respectively.                                                         */
+  /*                                                                       */
+  /* See the file <freetype/internal/fttrace.h> for details of the         */
+  /* available toggle names.                                               */
+  /*                                                                       */
+  /* The level must be between 0 and 6; 0 means quiet (except for serious  */
+  /* runtime errors), and 6 means _very_ verbose.                          */
+  /*                                                                       */
   FT_BASE_DEF( void )
   ft_debug_init( void )
   {
@@ -128,6 +127,7 @@
       const char*  p = ft2_debug;
       const char*  q;
       
+
       for ( ; *p; p++ )
       {
         /* skip leading whitespace and separators */
@@ -144,10 +144,12 @@
           int  n, i, len = p - q;
           int  level = -1, found = -1;
           
+
           for ( n = 0; n < trace_count; n++ )
           {
             const char*  toggle = ft_trace_toggles[n];
             
+
             for ( i = 0; i < len; i++ )
             {
               if ( toggle[i] != q[i] )
@@ -179,7 +181,7 @@
                 ft_trace_levels[n] = level;
             }
             else
-              ft_trace_levels[ found ] = level;
+              ft_trace_levels[found] = level;
           }
         }
       }

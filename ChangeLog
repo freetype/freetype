@@ -1,38 +1,55 @@
+2002-02-22  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftdebug.h (FT_Trace): Remove comma in
+	enum to avoid compiler warnings.
+
 2002-02-21  David Turner  <david@freetype.org>
 
-        * include/freetype/internal/ftdebug.h, src/base/ftdebug.c: modified
-        the debug sub-system initialization. trace levels can now be specified
-        within the "FT2_DEBUG" environment variable. See the comments within
-        "ftdebug.c" for more details
+	Modified the debug sub-system initialization.  Trace levels can now
+	be specified within the "FT2_DEBUG" environment variable.  See the
+	comments within "ftdebug.c" for more details.
 
-        * include/freetype/internal/fttrace.h: new file to define the trace
-        levels used for debugging. it is used both to define enums and
-        toggle names for FT2_DEBUG
+	* src/base/ftdebug.c: (FT_SetTraceLevel): Removed.
+	(ft_debug_init): New function.
+	(ft_debug_dummy): Removed.
+	Updated to changes in ftdebug.h
+	
+	* include/freetype/internal/ftdebug.h: Always define
+	FT_DEBUG_LEVEL_ERROR if FT_DEBUG_LEVEL_TRACE is defined.
+	(FT_Assert): Renamed to ...
+	(FT_ASSERT): This.
+	Some stuff from ftdebug.h has been moved to ...
 
-        * src/base/ftobjs.c, src/base/ftstream.c: FT_Assert renamed to
-        FT_ASSERT
+	* include/freetype/internal/fttrace.h: This new file to define the
+	trace levels used for debugging.  It is used both to define enums
+	and toggle names for FT2_DEBUG.
+	* include/freetype/internal/internal.h: Updated.
 
-        * include/freetype/internal/ftextend.h, src/base/ftextend.c,
-        src/base/Jamfile, src/base/rules.mk: removing "ftextend" from the
-        library, since it is now completely obsolete..
+	* src/base/ftobjs.c, src/base/ftstream.c: Updated.
 
-        * include/freetype/fterrors.h: adding "#undef FT_ERR_CAT" to avoid
-        warnings with certain compilers (like LCC)
+	* include/freetype/internal/ftextend.h, src/base/ftextend.c:
+	Removed.  Both files are now completely obsolete.
+	* src/base/Jamfile, src/base/rules.mk: Updated.
 
-        * src/pshinter/pshalgo2.c: renaming 'print_zone' to 'psh2_print_zone'
-        to avoid errors during compilation of debug library
+	* include/freetype/fterrors.h: Adding "#undef FT_ERR_CAT" and
+	`#undef FT_ERR_XCAT" to avoid warnings with certain compilers (like
+	LCC).
 
+	* src/pshinter/pshalgo2.c (print_zone): Renamed to ...
+	(psh2_print_zone): This to avoid errors during compilation of debug
+	library.
+
+	* src/smooth/ftgrays.c (FT_COMPONENT): Change definition to as
+	`trace_smooth'.
 
 2002-02-20  David Turner  <david@freetype.org>
 
-        * README: adding "devel@freetype.org" address for bug reports..
-
+	* README: Adding "devel@freetype.org" address for bug reports.
 
 2002-02-20  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/install.mk (check): New dummy target.
 	(.PHONY): Add it.
-
 
 2002-02-19  Werner Lemberg  <wl@gnu.org>
 
@@ -154,7 +171,7 @@
 2002-02-06  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/pcf/pcfdriver.c (FT_Done_Face): Fixed small memory leak.
-        
+
 	* src/pcf/pcfread.c (pcf_load_font): Now handles the "AVERAGE_WIDTH"
 	property to return correct character pixel (width/height) pairs for
 	embedded bitmaps.
@@ -454,7 +471,7 @@
 
 	* src/cff/cffgload.c (CFF_Parse_CharStrings), src/psaux/t1decode.c
 	(T1_Decoder_Parse_Charstrings), src/pshinter/pshalgo2.c (*), Fixed a
-	bug where the X and Y axis where inversed in the postscript hinter. 
+	bug where the X and Y axis where inversed in the postscript hinter.
 	This caused problem when displaying on non-square surfaces.
 
 	* src/pshinter/pshalgo2.c: s/vertical/dimension/.

@@ -28,11 +28,11 @@ FT_BEGIN_HEADER
 
 
 /* force the definition of FT_DEBUG_LEVEL_ERROR if FT_DEBUG_LEVEL_TRACE */
-/* is already defined.. this simplifies the following #ifdefs..         */
+/* is already defined; this simplifies the following #ifdefs            */
 /*                                                                      */
 #ifdef FT_DEBUG_LEVEL_TRACE
-#  undef  FT_DEBUG_LEVEL_ERROR
-#  define FT_DEBUG_LEVEL_ERROR
+#undef  FT_DEBUG_LEVEL_ERROR
+#define FT_DEBUG_LEVEL_ERROR
 #endif
 
 
@@ -45,24 +45,23 @@ FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
-#  define FT_TRACE_DEF(x)   trace_ ## x ,
+#define FT_TRACE_DEF( x )  trace_ ## x ,
 
- /* defining the enums */ 
+  /* defining the enums */ 
   typedef enum
   {
-#  include FT_INTERNAL_TRACE_H  
-    trace_count,
+#include FT_INTERNAL_TRACE_H  
+    trace_count
 
   } FT_Trace;
 
 
- /* defining the array of trace levels, provided by 'src/base/ftdebug.c' */
-  extern  int  ft_trace_levels [ trace_count ];
+  /* defining the array of trace levels, provided by `src/base/ftdebug.c' */
+  extern  int  ft_trace_levels[trace_count];
 
-#  undef FT_TRACE_DEF
+#undef FT_TRACE_DEF
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
-
 
 
   /*************************************************************************/
@@ -78,7 +77,7 @@ FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
-#  define FT_TRACE( level, varformat )                    \
+#define FT_TRACE( level, varformat )                      \
           do                                              \
           {                                               \
             if ( ft_trace_levels[FT_COMPONENT] >= level ) \
@@ -87,9 +86,10 @@ FT_BEGIN_HEADER
 
 #else /* !FT_DEBUG_LEVEL_TRACE */
 
-#  define FT_TRACE( level, varformat )  do ; while ( 0 )      /* nothing */
+#define FT_TRACE( level, varformat )  do ; while ( 0 )      /* nothing */
 
 #endif /* !FT_DEBUG_LEVEL_TRACE */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -109,7 +109,6 @@ FT_BEGIN_HEADER
 #define FT_TRACE7( varformat )  FT_TRACE( 7, varformat )
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /*  Define the FT_ERROR macro                                            */
@@ -118,11 +117,11 @@ FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_LEVEL_ERROR
 
-#  define FT_ERROR( varformat )  FT_Message  varformat
+#define FT_ERROR( varformat )  FT_Message  varformat
 
 #else  /* !FT_DEBUG_LEVEL_ERROR */
 
-#  define FT_ERROR( varformat )  do ; while ( 0 )      /* nothing */
+#define FT_ERROR( varformat )  do ; while ( 0 )      /* nothing */
 
 #endif /* !FT_DEBUG_LEVEL_ERROR */
 
@@ -145,7 +144,7 @@ FT_BEGIN_HEADER
 
 #else /* !FT_DEBUG_LEVEL_ERROR */
 
-#  define  FT_ASSERT( condition )      do ; while ( 0 )
+#define FT_ASSERT( condition )  do ; while ( 0 )
 
 #endif /* !FT_DEBUG_LEVEL_ERROR */
 
@@ -169,7 +168,6 @@ FT_BEGIN_HEADER
   FT_Panic( const char*  fmt, ... );
 
 #endif /* FT_DEBUG_LEVEL_ERROR */
-
 
 
   FT_BASE( void )   ft_debug_init( void );
