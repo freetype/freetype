@@ -32,12 +32,6 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( void )
-  TT_Get_Metrics( TT_HoriHeader*  header,
-                  FT_UInt         idx,
-                  FT_Short*       bearing,
-                  FT_UShort*      advance );
-
-  FT_LOCAL( void )
   TT_Init_Glyph_Loading( TT_Face  face );
 
   FT_LOCAL( FT_Error )

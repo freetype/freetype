@@ -112,11 +112,6 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  tt_face_load_kern( TT_Face    face,
-                     FT_Stream  stream );
-
-
-  FT_LOCAL( FT_Error )
   tt_face_load_gasp( TT_Face    face,
                      FT_Stream  stream );
 

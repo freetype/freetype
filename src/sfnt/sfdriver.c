@@ -385,6 +385,9 @@
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
+    /* see `ttkern.h' */
+    tt_face_get_kerning,
+
     /* see `ttpost.h' */
     tt_face_get_ps_name,
     tt_face_free_ps_names,

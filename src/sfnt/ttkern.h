@@ -1,10 +1,11 @@
 /***************************************************************************/
 /*                                                                         */
-/*  sfnt.c                                                                 */
+/*  ttkern.h                                                               */
 /*                                                                         */
-/*    Single object library component.                                     */
+/*    Load the basic TrueType kerning table. This doesn't handle           */
+/*    kerning data within the GPOS table at the moment.                    */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,22 +17,39 @@
 /***************************************************************************/
 
 
-#define FT_MAKE_OPTION_SINGLE_OBJECT
+#ifndef __TTKERN_H__
+#define __TTKERN_H__
+
 
 #include <ft2build.h>
-#include "ttload.c"
-#include "ttcmap.c"
-#include "ttkern.c"
-#include "sfobjs.c"
-#include "sfdriver.c"
+#include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_TRUETYPE_TYPES_H
 
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-#include "ttsbit.c"
+
+FT_BEGIN_HEADER
+
+
+  FT_LOCAL( FT_Error  )
+  tt_face_load_kern( TT_Face    face,
+                     FT_Stream  stream );
+
+  FT_LOCAL( void )
+  tt_face_done_kern( TT_Face  face );
+
+  FT_LOCAL( FT_Int )
+  tt_face_get_kerning( TT_Face     face,
+                       FT_UInt     left_glyph,
+                       FT_UInt     right_glyph );
+
+#ifdef FT_OPTIMIZE_MEMORY
+#  define  TT_FACE_HAS_KERNING(face)   ((face)->kern_avail_bits != 0)
+#else
+#  define  TT_FACE_HAS_KERNING(face)   ((face)->kern_pairs != NULL)
 #endif
 
-#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-#include "ttpost.c"
-#endif
+FT_END_HEADER
+
+#endif /* __TTKERN_H__ */
 
 
 /* END */

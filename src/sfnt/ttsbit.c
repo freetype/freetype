@@ -185,7 +185,7 @@
   }
 
 
-  const FT_Frame_Field  sbit_metrics_fields[] =
+  static const FT_Frame_Field  sbit_metrics_fields[] =
   {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_SBit_MetricsRec
