@@ -24,10 +24,9 @@
   /* 2) Incremental fonts making use of the GlyphDirectory keyword         */
   /*    will be loaded, but the rendering will be using the TrueType       */
   /*    tables.                                                            */
-  /* 3) The sfnts array is expected to be ASCII, not binary.               */
-  /* 4) As for Type1 fonts, CDevProc is not supported.                     */
-  /* 5) The Metrics dictionary is not supported.                           */
-  /* 6) AFM metrics are not supported.                                     */
+  /* 3) As for Type1 fonts, CDevProc is not supported.                     */
+  /* 4) The Metrics dictionary is not supported.                           */
+  /* 5) AFM metrics are not supported.                                     */
   /*                                                                       */
   /* In other words, this driver supports Type42 fonts derived from        */
   /* TrueType fonts in a non-CID manner, as done by usual conversion       */

@@ -1190,9 +1190,7 @@
 
       /* the format is simple:                    */
       /*   `/glyphname' + binary data             */
-      /*                                          */
-      /* note that we stop when we find a `def'   */
-      /*                                          */
+
       T1_Skip_Spaces( parser );
 
       cur = parser->root.cursor;
@@ -1236,8 +1234,9 @@
         /* add a trailing zero to the name table */
         name_table->elements[n][len] = '\0';
 
-        /* record index of /.notdef              */
-        if ( ft_strcmp( (const char*)".notdef",
+        /* record index of /.notdef */
+        if ( *cur == '.'                                              &&
+             ft_strcmp( ".notdef",
                         (const char*)(name_table->elements[n]) ) == 0 )
         {
           notdef_index = n;
@@ -1274,7 +1273,7 @@
 
     loader->num_glyphs = n;
 
-    /* if /.notdef is found but does not occupy index 0, do our magic.      */
+    /* if /.notdef is found but does not occupy index 0, do our magic. */
     if ( ft_strcmp( (const char*)".notdef",
                     (const char*)name_table->elements[0] ) &&
          notdef_found                                      )
