@@ -96,7 +96,7 @@
                                      &face, &size );
     if ( !error )
     {
-      FT_UInt  glyph_index = node->root.glyph_index;
+      FT_UInt  gindex = node->root.glyph_index;
       FT_UInt  load_flags  = FT_LOAD_DEFAULT;
       FT_UInt  image_type  = imageset->description.image_type;
 
@@ -126,7 +126,7 @@
       if ( image_type & ftc_image_flag_autohinted )
         load_flags |= FT_LOAD_FORCE_AUTOHINT;
 
-      error = FT_Load_Glyph( face, glyph_index, load_flags );
+      error = FT_Load_Glyph( face, gindex, load_flags );
       if ( !error )
       {
         if ( face->glyph->format == ft_glyph_format_bitmap  ||

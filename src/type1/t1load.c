@@ -972,7 +972,7 @@
       /* We need to `zero' out encoding_table.elements          */
       for ( n = 0; n < count; n++ )
       {
-        char*  notdef = ".notdef";
+        char*  notdef = (char *)".notdef";
 
 
         T1_Add_Table( char_table, n, notdef, 8 );
@@ -1342,7 +1342,7 @@
 
       /* 0 333 hsbw endchar                                      */
       FT_Byte  notdef_glyph[] = {0x8B, 0xF7, 0xE1, 0x0D, 0x0E};
-      char*    notdef_name    = ".notdef";
+      char*    notdef_name    = (char *)".notdef";
 
 
       error = T1_Add_Table( name_table, n,
