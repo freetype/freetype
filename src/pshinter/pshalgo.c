@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  pshalgo.c                                                              */
 /*                                                                         */
-/*    PostScript hinting algorithm 3 (body).                               */
+/*    PostScript hinting algorithm (body).                                 */
 /*                                                                         */
-/*  Copyright 2001, 2002, 2003 by                                          */
+/*  Copyright 2001, 2002, 2003, 2004 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -1110,7 +1110,7 @@
     /* clear all fields */
     FT_MEM_ZERO( glyph, sizeof ( *glyph ) );
 
-    memory = globals->memory;
+    memory = glyph->memory = globals->memory;
 
     /* allocate and setup points + contours arrays */
     if ( FT_NEW_ARRAY( glyph->points,   outline->n_points   ) ||
@@ -1217,7 +1217,6 @@
       }
     }
 
-    glyph->memory  = memory;
     glyph->outline = outline;
     glyph->globals = globals;
 
