@@ -24,12 +24,42 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
 
     - The computation of bearings in the BDF driver has been fixed.
 
+    - The Postscript hinter did crash when trying to hint certain glyphs
+      (more precisely, when trying to apply hints to an empty glyph outline !)
+
+    - The TrueType glyph loader now supports composites in "Apple format"
+      (they differ slightly from Microsoft/OpenType ones in the way transform
+      offsets are computed...)
 
   II. MISCELLANEOUS
 
     - The automatic and postscript hinters have both been updated.  This
       results in a relatively important increase of rendering quality since
-      many nasty defaults have been supressed.
+      many nasty defaults have been supressed. Please visit the web page:
+
+             http://www.freetype.org/freetype2/smooth-hinting.html
+
+      for additional details on this topic..
+
+    - Added support for the DESTDIR variable during "make install", to make
+      packager's life a bit less miserable :-)
+
+    - The DocMaker tool used to generate the on-line API reference has been
+      completely rewritten. If is now located in "src/tools/docmaker/docmaker.py"
+      It now provides:
+
+        - better cross-referenced output
+        - more polished output
+        - uses Python regular expressions (though it didn't speed the program)
+        - much more modular structure, which allows for different "backends"
+          in order to generate HTML, XML or whatever format...
+
+      one can re-generate the API reference by calling:
+
+         python src/tools/docmaker/docmaker.py --prefix=ft2 --title=FreeType-2.1.3
+         --output=<outputdirectory> include/freetype/*.h include/freetype/config/*.h
+         include/freetype/cache/*.h
+
 
     - A new, experimental, support for incremental font loading (i.e.,
       loading of fonts where the glyphs are not in the font file itself, but
@@ -38,7 +68,8 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
 
     - A new, experimental, path stroker has been added.  It doesn't suffer
       from severe rounding errors, and treat bezier arcs directly.  Still
-      work in progress.
+      work in progress (i.e. not part of the official API). See the file
+      <freetype/ftstroker.h> for some of the details...
 
     - The massive re-formatting of sources and internal re-design is still
       under-way.  Many internal functions, constants, and types have been
