@@ -244,6 +244,16 @@
 
   /*************************************************************************/
   /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_Pointer                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A simple typedef for a typeless pointer.                           */
+  /*                                                                       */
+  typedef void*  FT_Pointer;
+
+  /*************************************************************************/
+  /*                                                                       */
   /* <Struct>                                                              */
   /*    FT_UnitVector                                                      */
   /*                                                                       */
@@ -2514,6 +2524,20 @@
   /*                                                                       */
   EXPORT_DEF
   FT_Error  FT_Matrix_Invert( FT_Matrix*  matrix );
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Default_Drivers                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Adds the set of default drivers to a given library object.         */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library :: A handle to a new library object.                       */
+  /*                                                                       */
+  EXPORT_DEF
+  void  FT_Default_Drivers( FT_Library  library );
 
 #ifdef __cplusplus
   }
