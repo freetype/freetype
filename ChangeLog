@@ -1,3 +1,8 @@
+2002-03-30  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/tttypes.h: adding comments to some of
+          the TT_FaceRec fields.
+
 2002-03-30  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/t1tables.h (t1_blend_max): Fix typo.
