@@ -1597,7 +1597,9 @@
         
         if ( size->root.metrics.y_ppem < 24 )
           glyph->root.outline.flags |= ft_outline_high_precision;
-        
+
+        glyph->root.outline.flags |= ft_outline_reverse_fill;
+                
         /*
         glyph->root.outline.second_pass    = TRUE;
         glyph->root.outline.high_precision = ( size->root.metrics.y_ppem < 24 );
@@ -1642,7 +1644,7 @@
         }
       }
     }
-
+    
     return error;
   }
 
