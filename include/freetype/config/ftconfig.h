@@ -44,6 +44,11 @@
 #include <freetype/config/ftoption.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /*               PLATFORM-SPECIFIC CONFIGURATION MACROS                  */
@@ -180,6 +185,11 @@
 #ifndef  FT_EXPORT_VAR
 #define  FT_EXPORT_VAR( x )   extern  x
 #endif
+
+#ifdef __cplusplus
+  }
+#endif
+
 
 #endif /* FTCONFIG_H */
 

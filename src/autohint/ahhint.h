@@ -34,6 +34,11 @@
 #endif
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
 #define AH_HINT_DEFAULT        0
 #define AH_HINT_NO_ALIGNMENT   1
 #define AH_HINT_NO_HORZ_EDGES  0x20000L
@@ -64,6 +69,11 @@
 
   void  ah_hinter_done_global_hints( AH_Hinter*  hinter,
                                      void*       global_hints );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* AHHINT_H */

@@ -24,6 +24,11 @@
 #include <freetype/ftimage.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -392,6 +397,11 @@
 
 
 #define FT_IS_EMPTY( list )  ( (list).head == 0 )
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* FTTYPES_H */

@@ -36,6 +36,11 @@
 #define AHLOADER_H
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
 #ifdef _STANDALONE_
 
   typedef struct  AH_GlyphLoad_
@@ -117,6 +122,12 @@
   #define ah_loader_copy_points      FT_GlyphLoader_Copy_Points
 
 #endif /* _STANDALONE_ */
+
+
+#ifdef __cplusplus
+  }
+#endif
+
 
 #endif /* AHLOADER_H */
 

@@ -21,6 +21,12 @@
 
 #include <freetype/ftrender.h>
 
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
 #ifndef FT_CONFIG_OPTION_NO_STD_RASTER
   FT_EXPORT_VAR( const FT_Renderer_Class )  ft_std_renderer_class;
 #endif
@@ -28,6 +34,11 @@
 #ifndef FT_CONFIG_OPTION_NO_SMOOTH_RASTER
   FT_EXPORT_VAR( const FT_Renderer_Class )  ft_smooth_renderer_class;
 #endif
+
+#ifdef __cplusplus
+  }
+#endif
+
 
 #endif /* FTSMOOTH_H */
 

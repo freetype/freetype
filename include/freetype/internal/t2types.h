@@ -24,6 +24,11 @@
 #include <freetype/freetype.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -210,6 +215,11 @@
     CFF_FD_Select  fd_select;
 
   } CFF_Font;
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* T2TYPES_H */

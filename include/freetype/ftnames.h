@@ -26,6 +26,11 @@
 #include <freetype/freetype.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   typedef struct  FT_SfntName_
   {
     FT_UShort  platform_id;
@@ -45,6 +50,11 @@
                                                FT_UInt       index,
                                                FT_SfntName*  aname );
                                                
+
+#ifdef __cplusplus
+  }
+#endif
+
 
 #endif /* FTNAMES_H */
 

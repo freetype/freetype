@@ -21,7 +21,17 @@
 
 #include <freetype/internal/ftdriver.h>
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   FT_EXPORT_VAR( const FT_Driver_Class )  cff_driver_class;
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* T2DRIVER_H */

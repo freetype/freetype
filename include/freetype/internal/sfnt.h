@@ -25,6 +25,11 @@
 #include <freetype/internal/tttypes.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -484,6 +489,11 @@
     TT_CharMap_Free_Func      free_charmap;
 
   } SFNT_Interface;
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* SFNT_H */

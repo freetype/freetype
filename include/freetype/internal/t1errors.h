@@ -20,6 +20,11 @@
 #define T1ERRORS_H
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /************************ error codes declaration **************/
 
   /* The error codes are grouped into `classes' used to indicate the */
@@ -59,6 +64,11 @@
 #define T1_Err_Syntax_Error            FT_Err_Invalid_File_Format
 #define T1_Err_Stack_Underflow         FT_Err_Invalid_File_Format
 #define T1_Err_Stack_Overflow          FT_Err_Invalid_File_Format
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* T1ERRORS_H */
