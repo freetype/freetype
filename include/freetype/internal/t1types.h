@@ -188,4 +188,13 @@
   
   } CID_FaceRec;
 
+
+#ifdef __cplusplus
+  }
+#endif
+
+
 #endif /* T1TYPES_H */
+
+
+/* END */
