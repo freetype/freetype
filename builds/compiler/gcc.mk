@@ -50,7 +50,7 @@ L := -l
 
 # Target flag.
 #
-T := -o # Don't remove this comment line!  We need the space after `-o'.
+T := -o$(space)
 
 
 # C flags

@@ -52,7 +52,7 @@ L := -l
 
 # Target flag.
 #
-T := -o # don't remove this comment, we need a trailing space !!
+T := -o$(space)
 
 
 # C flags
