@@ -16,6 +16,12 @@
 	* src/bdf/bdfdrivr.c (BDF_Face_Init), src/pcf/pcfdriver.c
 	(PCF_Face_Init): Test for charset registry case-insensitively.
 
+	* src/gzip/ftgzip.c (ft_gzip_fil_io): Revert change from yesterday;
+	it has already been fixed differently.
+
+	* src/truetype/ttinterp.c (DO_SFVTL): Add missing braces around
+	if-clause.
+
 2003-05-21  Martin Zinser  <zinser@decus.de>
 
 	* t1load.c (parse_blend_axis_types): Fix compiler warning.

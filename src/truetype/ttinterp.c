@@ -2612,8 +2612,10 @@
                     (FT_UShort)args[0],               \
                     CUR.opcode,                       \
                     &CUR.GS.freeVector ) == SUCCESS ) \
+    {                                                 \
       GUESS_VECTOR( projVector );                     \
-      COMPUTE_Funcs();
+      COMPUTE_Funcs();                                \
+    }
 
 
 #define DO_SFVTPV                          \
