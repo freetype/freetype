@@ -614,6 +614,36 @@
   }
 
 
+  static
+  void*  tt_get_sfnt_table( TT_Face  face, FT_Sfnt_Tag  tag )
+  {
+    void*  table;
+    
+    switch (tag)
+    {
+      case ft_sfnt_head: table = &face->header;
+      case ft_sfnt_hhea: table = &face->horizontal;
+      case ft_sfnt_vhea: table = (face->vertical_info ? &face->vertical : 0 );
+      case ft_sfnt_os2:  table = (face->os2.version == 0xFFFF ? 0 : &face->os2 );
+      case ft_sfnt_post: table = &face->postscript;
+      
+      default:
+        table = 0;
+    }
+    return table;
+  }
+
+
+  static
+  FTDriver_Interface  tt_get_interface( TT_Driver  driver, const char* interface )
+  {
+    if (strcmp(interface,"get_sfnt")==0)
+      return (FTDriver_Interface)tt_get_sfnt_table;
+      
+    return 0;
+  }
+
+
   /* The FT_DriverInterface structure is defined in ftdriver.h. */
 
   const FT_DriverInterface  tt_driver_interface =
@@ -631,7 +661,7 @@
 
     (FTDriver_initDriver)        TT_Init_Driver,
     (FTDriver_doneDriver)        TT_Done_Driver,
-    (FTDriver_getInterface)      0,     /* no extra interface for now */
+    (FTDriver_getInterface)      tt_get_interface,
 
     (FTDriver_initFace)          Init_Face,
     (FTDriver_doneFace)          TT_Done_Face,
