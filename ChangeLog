@@ -103,8 +103,15 @@
 	* src/pfr/pfrsbit.c (pfr_slot_load_bitmap): Use
 	`ft_glyphslot_alloc_bitmap'.
 
-	* src/sfnt/ttsbit.c, src/type42/t42objs.c,
-	src/winfonts/winfnt.c:
+	* src/sfnt/ttsbit.c (Load_SBit_Image): Change 5th argument to type
+	`FT_GlyphSlot'.
+	Adding argument `depth' to handle recursive calls.
+	Use `ft_glyphslot_alloc_bitmap'.
+	(tt_face_load_sbit_image): Remove unused variable `memory'.
+	Don't handle `FT_GLYPH_OWN_BITMAP'.
+	Update call to Load_SBit_Image.
+
+	* src/type42/t42objs.c, src/winfonts/winfnt.c:
 
 	* src/cache/ftlru.c (FT_LruList_Lookup): Fixed an invalid assertion
 	check.
@@ -126,8 +133,9 @@
 
 2003-03-14  David Turner  <david@freetype.org>
 
-	* src/truetype/ttdriver.c: Fixing the small TrueType native
-	rendering glitches, they came from a small rounding error.
+	* src/truetype/ttdriver.c (Set_Char_Sizes): Fixing the small
+	TrueType native rendering glitches, they came from a small rounding
+	error.
 
 2003-03-13  David Turner  <david@freetype.org>
 
@@ -161,10 +169,11 @@
 	leak) that only happened when a try to resize an array would end in
 	an out-of-memory condition.
 
-	* src/smooth/ftgrays.c: Removed compiler warnings / volatile bug.
+	* src/smooth/ftgrays.c (gray_convert_glyph): Removed compiler
+	warnings / volatile bug.
 
-	* src/truetype/ttobjs.c: Removed segmentation fault that happened in
-	tight memory environments.
+	* src/truetype/ttobjs.c (tt_glyphzone_done): Removed segmentation
+	fault that happened in tight memory environments.
 
 2003-02-28  Pixel  <pixel@mandrakesoft.com>
 
@@ -232,8 +241,17 @@
 
 	* src/base/ftobjs.c (ft_recompute_scaled_metrics): Fix rounding.
 
-	* src/truetype/ttdriver.c, src/truetype/ttobjs.h,
-	src/truetype/ttobjs.c, src/truetype/ttinterp.c:
+	* src/truetype/ttdriver.c (Set_Char_Sizes): New variable `metrics2'.
+	[!TT_CONFIG_OPTION_BYTECODE_INTERPRETER]: Removed.
+
+	* src/truetype/ttobjs.h (TT_SizeRec): New field `metrics'.
+	* src/truetype/ttobjs.c (Reset_Outline_Size): Fix initialization of
+	`metrics'.
+	[FT_CONFIG_CHESTER_ASCENDER]: Code removed.
+	(Reset_SBit_Size): Fix initialization of `metrics'.
+
+	* src/truetype/ttinterp.c (TT_Load_Context): Fix initialization of
+	`exec->metrics'.
 
 	* src/autohint/ahhint.c (ah_hinter_load): Disabled the advance width
 	"correction" which seemed to provide more trouble than benefits.
@@ -249,8 +267,14 @@
 	Allow metrics to be overridden.
 	* src/cid/cidgload.c (cid_load_glyph) [FT_CONFIG_OPTION_INCREMENTAL]:
 	Ditto.
-	* src/truetype/ttgload.c, src/type1/t1gload.c
-	[FT_CONFIG_OPTION_INCREMENTAL]:
+
+	* src/truetype/ttgload.c (load_truetype_glyph)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Simplify.
+	(compute_glyph_metrics) [FT_CONFIG_OPTION_INCREMENTAL]: Code block
+	moved down.
+
+	* src/type1/t1gload.c [FT_CONFIG_OPTION_INCREMENTAL]:
+
 	* include/freetype/ftincrem.h: Updated.
 
 2003-01-31  David Turner  <david@freetype.org>
@@ -285,7 +309,12 @@
 
 	* src/base/ftobjs.c (FT_Set_Char_Size)
 	[FT_CONFIG_CHESTER_BLUE_SCALE]: Round differently.
-	* src/truetype/ttobjs.c:
+	* src/truetype/ttdriver.c (Set_Char_Sizes)
+	[TT_CONFIG_OPTION_BYTECODE_INTERPRETER]: Do some rounding only
+	if this macro is defined.
+
+	* src/truetype/ttobjs.c (Reset_Outline_Size)
+	[FT_CONFIG_CHESTER_ASCENDER]: Round differently.
 
 	* src/pshinter/pshalgo3.c: Improved the Postscript hinter.  Getting
 	rid of stem snapping seems to work well here (though the stems are
@@ -464,6 +493,11 @@
 
 	* src/truetype/ttgload.c: Fixing the TrueType loader to handle
 	invalid composites correctly by limiting the recursion depth.
+	(TT_MAX_COMPOSITE_RECURSE): New macro.
+	(load_truetype_glyph): Add argument `recurse_count'.
+	Load a composite only if the numbers of contours is -1, emit error
+	otherwise.
+	(TT_Load_Glyph): Updated.
 
 2003-01-08  David Turner  <david@freetype.org>
 
@@ -516,6 +550,9 @@
 
 	* include/freetype/tttables.h (FT_Load_Sfnt_Table): New function.
 	* src/base/ftobjs.c: Implement it.
+
+	* src/sfnt/sfdriver.c (sfnt_get_interface): Handle `load_sfnt'
+	module request.
 
 2002-12-17  David Turner  <david@freetype.org>
 
@@ -4244,7 +4281,7 @@
 
 	* include/freetype/internal/ftmemory.h, src/base/ftdbgmem.c:
 	Improvements to the memory debugger to report more information in
-	case of errors.  Also, some allocations that occured through REALLOC
+	case of errors.  Also, some allocations that occurred through REALLOC
 	couldn't be previously catched correctly.
 
 	* src/autohint/ahglyph.c (ah_outline_compute_segments,
@@ -4318,7 +4355,7 @@
 	* src/type1/t1load.c (parse_font_name, parse_subrs): Added a test
 	for when loading synthetic fonts to make sure that the font name
 	and subrotuines are not loaded twice.  This is to remove a memory
-	leak that occured because the original memory blocks for these
+	leak that occurred because the original memory blocks for these
 	objects were not deallocated when the objects were parsed the
 	second time.
 
@@ -5569,7 +5606,7 @@
 	* src/cff/cffobjs.c, src/cff/cffobjs.h, src/cff/cffparse.c,
 	src/cff/cffdrivr.c, src/cff/cff.c, src/cff/cffload.c,
 	src/cff/cffgload.c, src/cff/cffgload.h: Changed to use
-	cffgload.{c,h} instead of t2gload.{c,h}.  All occurences of t2_
+	cffgload.{c,h} instead of t2gload.{c,h}.  All occurrences of t2_
 	(T2_) were replaced with cff_ (CFF_, respectively).
 
 	* src/cff/t2gload.h: Renamed cffgload.h.
