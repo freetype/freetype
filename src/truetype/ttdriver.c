@@ -322,8 +322,8 @@
   /*                                                                       */
   static
   TT_Error  Get_Kerning( TT_Face     face,
-                         TT_UShort   left_glyph,
-                         TT_UShort   right_glyph,
+                         TT_UInt     left_glyph,
+                         TT_UInt     right_glyph,
                          TT_Vector*  kerning )
   {
     TT_Kern_0_Pair*  pair;
@@ -345,9 +345,9 @@
       left  = 0;
       right = face->num_kern_pairs - 1;
 
-      while ( left + 1 < right )
+      while ( left <= right )
       {
-        TT_Int    middle   = (left + right) >> 1;
+        TT_Int    middle   = left + ((right-left) >> 1);
         TT_ULong  cur_pair;
 
 
@@ -358,18 +358,10 @@
           goto Found;
 
         if ( cur_pair < search_tag )
-          left = middle;
+          left = middle+1;
         else
-          right = middle;
+          right = middle-1;
       }
-
-      pair = face->kern_pairs + left;
-      if ( PAIR_TAG( pair->left, pair->right ) == search_tag )
-        goto Found;
-
-      pair = face->kern_pairs + right;
-      if ( PAIR_TAG( pair->left, pair->right ) == search_tag )
-        goto Found;
     }
 
   Exit:
