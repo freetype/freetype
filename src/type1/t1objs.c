@@ -121,10 +121,29 @@
   LOCAL_FUNC
   T1_Error  T1_Reset_Size( T1_Size  size )
   {
+    /* recompute ascender, descender, etc.. */
+    T1_Face           face    = (T1_Face)size->root.face;
+    FT_Size_Metrics*  metrics = &size->root.metrics;
+
+    if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
+      return FT_Err_Invalid_Argument;
+
+    /* Compute root ascender, descender, test height, and max_advance */
+    metrics->ascender = ( FT_MulFix( face->root.ascender,
+                                     metrics->y_scale ) + 32 ) & -64;
+
+    metrics->descender = ( FT_MulFix( face->root.descender,
+                                      metrics->y_scale ) + 32 ) & -64;
+
+    metrics->height = ( FT_MulFix( face->root.height,
+                                   metrics->y_scale ) + 32 ) & -64;
+
+    metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
+                                        metrics->x_scale ) + 32 ) & -64;
+
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
     return T1_Reset_Size_Hinter( size );
 #else
-    (void)size;
     return 0;
 #endif
   }
