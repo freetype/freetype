@@ -70,11 +70,11 @@
 
 
     FT_TRACE3(( "TT_LookUp_Table: %08p, `%c%c%c%c' -- ",
-		face,
-		(FT_Char)( tag >> 24 ),
-		(FT_Char)( tag >> 16 ),
-		(FT_Char)( tag >> 8  ),
-		(FT_Char)( tag       ) ));
+                face,
+                (FT_Char)( tag >> 24 ),
+                (FT_Char)( tag >> 16 ),
+                (FT_Char)( tag >> 8  ),
+                (FT_Char)( tag       ) ));
 
     entry = face->dir_tables;
     limit = entry + face->num_tables;
@@ -83,7 +83,7 @@
     {
       if ( entry->Tag == tag )
       {
-	FT_TRACE3(( "found table.\n" ));
+        FT_TRACE3(( "found table.\n" ));
         return entry;
       }
     }
@@ -498,12 +498,13 @@
     };
 
 
-    FT_TRACE2(( "TT_Load_Generic_Header: %08p, looking up font table `%c%c%c%c'.\n",
-		face,
-		(FT_Char)( tag >> 24 ),
-		(FT_Char)( tag >> 16 ),
-		(FT_Char)( tag >> 8  ),
-		(FT_Char)( tag       ) ));
+    FT_TRACE2(( "TT_Load_Generic_Header: "
+                "%08p, looking up font table `%c%c%c%c'.\n",
+                face,
+                (FT_Char)( tag >> 24 ),
+                (FT_Char)( tag >> 16 ),
+                (FT_Char)( tag >> 8  ),
+                (FT_Char)( tag       ) ));
 
     error = face->goto_table( face, tag, stream, 0 );
     if ( error )
