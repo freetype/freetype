@@ -163,7 +163,7 @@
     size = (FT_ULong)( pitch * source->rows );
 
     if ( !ALLOC( target->buffer, size ) )
-      MEM_Copy( source->buffer, target->buffer, size );
+      MEM_Copy( target->buffer, source->buffer, size );
 
     return error;
   }
@@ -233,7 +233,7 @@
     cbox->xMin = glyph->left << 6;
     cbox->xMax = cbox->xMin + ( glyph->bitmap.width << 6 );
     cbox->yMax = glyph->top << 6;
-    cbox->yMin = cbox->xMax - ( glyph->bitmap.rows << 6 );
+    cbox->yMin = cbox->yMax - ( glyph->bitmap.rows << 6 );
   }
 
 
