@@ -21,6 +21,10 @@
 	added a units_per_em member to facilitate passing of units_per_em
 	from function cff_parse_font_matrix.
 
+	* src/type1/t1load.c (is_alpha): Make `-' a legal alphanumeric
+	character.  This is so that font names with `-' are fully parsed,
+	etc...
+
 2001-02-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/psobjs.c (shift_elements): Remove if clause (which is
