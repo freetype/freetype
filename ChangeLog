@@ -1,7 +1,16 @@
 2002-09-16  Werner Lemberg  <wl@gnu.org>
 
+	16bit fixes from Wolfgang Domröse.
+
 	* src/type1/t1parse.h (T1_ParserRec): Change type of `base_len'
 	and `private_len' to FT_Long.
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Remove cast for
+	`private_len'.
+	* src/type1/t1load.c: Use FT_Int cast for most calls of T1_ToInt.
+	Use FT_PtrDist where appropriate.
+	(parse_encoding): Use FT_Long for `count' and `n'.
+	(read_binary_data): Use FT_Long* for second parameter.
+	* src/type1/t1afm.c (afm_atoindex): Use FT_PtrDist.
 
 	* src/cache/ftcsbits.c (ftc_sbit_node_load): Remove unused label.
 	* src/pshinter/pshalgo3.c (psh3_hint_align): Remove unused variable.

@@ -415,16 +415,16 @@
     /* each token is an immediate containing the name of the axis */
     for ( n = 0; n < num_axis; n++ )
     {
-      T1_Token  token = axis_tokens + n;
-      FT_Byte*  name;
-      FT_Int    len;
+      T1_Token    token = axis_tokens + n;
+      FT_Byte*    name;
+      FT_PtrDist  len;
 
 
       /* skip first slash, if any */
       if ( token->start[0] == '/' )
         token->start++;
 
-      len = (FT_Int)( token->limit - token->start );
+      len = token->limit - token->start;
       if ( len <= 0 )
       {
         error = T1_Err_Invalid_File_Format;
@@ -794,7 +794,7 @@
 
   static int
   read_binary_data( T1_Parser  parser,
-                    FT_Int*    size,
+                    FT_Long*   size,
                     FT_Byte**  base )
   {
     FT_Byte*  cur;
@@ -838,13 +838,13 @@
   parse_font_name( T1_Face    face,
                    T1_Loader  loader )
   {
-    T1_Parser  parser = &loader->parser;
-    FT_Error   error;
-    FT_Memory  memory = parser->root.memory;
-    FT_Int     len;
-    FT_Byte*   cur;
-    FT_Byte*   cur2;
-    FT_Byte*   limit;
+    T1_Parser   parser = &loader->parser;
+    FT_Error    error;
+    FT_Memory   memory = parser->root.memory;
+    FT_PtrDist  len;
+    FT_Byte*    cur;
+    FT_Byte*    cur2;
+    FT_Byte*    limit;
 
 
     if ( face->type1.font_name )
@@ -864,7 +864,7 @@
     while ( cur2 < limit && is_alpha( *cur2 ) )
       cur2++;
 
-    len = (FT_Int)( cur2 - cur );
+    len = cur2 - cur;
     if ( len > 0 )
     {
       if ( FT_ALLOC( face->type1.font_name, len + 1 ) )
@@ -987,7 +987,7 @@
         return;
 
       /* read the number of entries in the encoding, should be 256 */
-      count = T1_ToInt( parser );
+      count = (FT_Int)T1_ToInt( parser );
       if ( parser->root.error )
         return;
 
@@ -1055,7 +1055,7 @@
 
 
           parser->root.cursor = cur;
-          charcode = T1_ToInt( parser );
+          charcode = (FT_Int)T1_ToInt( parser );
           cur      = parser->root.cursor;
 
           /* skip whitespace */
@@ -1066,14 +1066,14 @@
           {
             /* bingo, we have an immediate name -- it must be a */
             /* character name                                   */
-            FT_Byte*  cur2 = cur + 1;
-            FT_Int    len;
+            FT_Byte*    cur2 = cur + 1;
+            FT_PtrDist  len;
 
 
             while ( cur2 < limit && is_alpha( *cur2 ) )
               cur2++;
 
-            len = (FT_Int)( cur2 - cur - 1 );
+            len = cur2 - cur - 1;
 
             parser->root.error = T1_Add_Table( char_table, charcode,
                                                cur + 1, len + 1 );
@@ -1133,7 +1133,7 @@
       /*  with synthetic fonts, it's possible we get here twice  */
       return;
 
-    loader->num_subrs = T1_ToInt( parser );
+    loader->num_subrs = (FT_Int)T1_ToInt( parser );
     if ( parser->root.error )
       return;
 
@@ -1153,7 +1153,7 @@
     /*                                                       */
     for ( n = 0; n < loader->num_subrs; n++ )
     {
-      FT_Int    idx, size;
+      FT_Long   idx, size;
       FT_Byte*  base;
 
 
@@ -1237,7 +1237,7 @@
       /*  with synthetic fonts, it's possible we get here twice  */
       return;
 
-    loader->num_glyphs = T1_ToInt( parser );
+    loader->num_glyphs = (FT_Int)T1_ToInt( parser );
     if ( parser->root.error )
       return;
 
@@ -1268,7 +1268,7 @@
 
     for (;;)
     {
-      FT_Int    size;
+      FT_Long   size;
       FT_Byte*  base;
 
 
@@ -1300,13 +1300,13 @@
         T1_Skip_Alpha( parser );
       else
       {
-        FT_Byte*  cur2 = cur + 1;
-        FT_Int    len;
+        FT_Byte*    cur2 = cur + 1;
+        FT_PtrDist  len;
 
 
         while ( cur2 < limit && is_alpha( *cur2 ) )
           cur2++;
-        len = (FT_Int)( cur2 - cur - 1 );
+        len = cur2 - cur - 1;
 
         error = T1_Add_Table( name_table, n, cur + 1, len + 1 );
         if ( error )
@@ -1558,8 +1558,8 @@
         /* look for immediates */
         else if ( *cur == '/' && cur + 2 < limit )
         {
-          FT_Byte*  cur2;
-          FT_Int    len;
+          FT_Byte*    cur2;
+          FT_PtrDist  len;
 
 
           cur++;
@@ -1567,7 +1567,7 @@
           while ( cur2 < limit && is_alpha( *cur2 ) )
             cur2++;
 
-          len  = (FT_Int)( cur2 - cur );
+          len = cur2 - cur;
           if ( len > 0 && len < 22 )
           {
             {
@@ -1584,10 +1584,10 @@
                 if ( !name )
                   break;
 
-                if ( cur[0] == name[0]                             &&
-                     len == (FT_Int)ft_strlen( (const char*)name ) )
+                if ( cur[0] == name[0]                     &&
+                     len == ft_strlen( (const char*)name ) )
                 {
-                  FT_Int  n;
+                  FT_PtrDist  n;
 
 
                   for ( n = 1; n < len; n++ )
