@@ -1,3 +1,33 @@
+2003-09-15  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/services/bdf.h: Renamed to...
+	* include/freetype/internal/services/svbdf.h: This.
+	Add copyright notice.
+	* include/freetype/internal/services/glyfdict.h: Renamed to...
+	* include/freetype/internal/services/svgldict.h: This.
+	Add copyright notice.
+	* include/freetype/internal/services/multmast.h: Renamed to...
+	* include/freetype/internal/services/svmm.h: This.
+	Add copyright notice.
+	Add FT_BEGIN_HEADER and FT_END_HEADER.
+	* include/freetype/internal/services/sfnt.h: Renamed to...
+	* include/freetype/internal/services/svsfnt.h: This.
+	Add copyright notice.
+	* include/freetype/internal/services/postname.h: Renamed to...
+	* include/freetype/internal/services/svpostnm.h: This.
+	Add copyright notice.
+	* include/freetype/internal/services/xf86name.h: Renamed to...
+	* include/freetype/internal/services/svxf86nm.h: This.
+	Add copyright notice.
+
+	* include/freetype/internal/ftserv.h: Add FT_BEGIN_HEADER and
+	FT_END_HEADER.
+	Add copyright notice.
+	Update macro names of services header files.
+
+	* builds/freetype.mk (SERVICES_DIR): New variable.
+	(BASE_H): Add services header files.
+
 2003-09-11  Werner Lemberg  <wl@gnu.org>
 
 	* builds/toplevel.mk (distclean): Remove `builds/unix/freetype2.pc'.

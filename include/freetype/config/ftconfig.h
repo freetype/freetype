@@ -193,8 +193,9 @@ FT_BEGIN_HEADER
 
 
 #define FT_BEGIN_STMNT  do {
-#define FT_END_STMNT    } while (0)
+#define FT_END_STMNT    } while ( 0 )
 #define FT_DUMMY_STMNT  FT_BEGIN_STMNT FT_END_STMNT
+
 
   /*************************************************************************/
   /*                                                                       */

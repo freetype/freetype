@@ -69,7 +69,8 @@ FT_BEGIN_HEADER
 #define ft_module_driver_no_outlines  FT_MODULE_DRIVER_NO_OUTLINES
 #define ft_module_driver_has_hinter   FT_MODULE_DRIVER_HAS_HINTER
 
-  typedef  FT_Pointer   FT_Module_Interface;
+
+  typedef FT_Pointer  FT_Module_Interface;
 
   typedef FT_Error
   (*FT_Module_Constructor)( FT_Module  module );

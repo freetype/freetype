@@ -271,47 +271,50 @@ FT_BEGIN_HEADER
   /*    FreeType.                                                          */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    max_points       :: The maximal number of points used to store the */
-  /*                        vectorial outline of any glyph in this face.   */
-  /*                        If this value cannot be known in advance, or   */
-  /*                        if the face isn't scalable, this should be set */
-  /*                        to 0.  Only relevant for scalable formats.     */
+  /*    max_points ::                                                      */
+  /*      The maximal number of points used to store the vectorial outline */
+  /*      of any glyph in this face.  If this value cannot be known in     */
+  /*      advance, or if the face isn't scalable, this should be set to 0. */
+  /*      Only relevant for scalable formats.                              */
   /*                                                                       */
-  /*    max_contours     :: The maximal number of contours used to store   */
-  /*                        the vectorial outline of any glyph in this     */
-  /*                        face.  If this value cannot be known in        */
-  /*                        advance, or if the face isn't scalable, this   */
-  /*                        should be set to 0.  Only relevant for         */
-  /*                        scalable formats.                              */
+  /*    max_contours ::                                                    */
+  /*      The maximal number of contours used to store the vectorial       */
+  /*      outline of any glyph in this face.  If this value cannot be      */
+  /*      known in advance, or if the face isn't scalable, this should be  */
+  /*      set to 0.  Only relevant for scalable formats.                   */
   /*                                                                       */
-  /*    transform_matrix :: A 2x2 matrix of 16.16 coefficients used to     */
-  /*                        transform glyph outlines after they are loaded */
-  /*                        from the font.  Only used by the convenience   */
-  /*                        functions.                                     */
+  /*    transform_matrix ::                                                */
+  /*      A 2x2 matrix of 16.16 coefficients used to transform glyph       */
+  /*      outlines after they are loaded from the font.  Only used by the  */
+  /*      convenience functions.                                           */
   /*                                                                       */
-  /*    transform_delta  :: A translation vector used to transform glyph   */
-  /*                        outlines after they are loaded from the font.  */
-  /*                        Only used by the convenience functions.        */
+  /*    transform_delta ::                                                 */
+  /*      A translation vector used to transform glyph outlines after they */
+  /*      are loaded from the font.  Only used by the convenience          */
+  /*      functions.                                                       */
   /*                                                                       */
-  /*    transform_flags  :: Some flags used to classify the transform.     */
-  /*                        Only used by the convenience functions.        */
+  /*    transform_flags ::                                                 */
+  /*      Some flags used to classify the transform.  Only used by the     */
+  /*      convenience functions.                                           */
+  /*                                                                       */
+  /*    services ::                                                        */
+  /*      A cache for frequently used services.  It should be only         */
+  /*      accessed with the macro `FT_FACE_LOOKUP_SERVICE'.                */
   /*                                                                       */
   /*    incremental_interface ::                                           */
-  /*                        If non-null, the interface through             */
-  /*                        which glyph data and metrics are loaded        */
-  /*                        incrementally for faces that do not provide    */
-  /*                        all of this data when first opened.            */
-  /*                        This field exists only if                      */
-  /*                        @FT_CONFIG_OPTION_INCREMENTAL is defined.      */
+  /*      If non-null, the interface through which glyph data and metrics  */
+  /*      are loaded incrementally for faces that do not provide all of    */
+  /*      this data when first opened.  This field exists only if          */
+  /*      @FT_CONFIG_OPTION_INCREMENTAL is defined.                        */
   /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {
-    FT_UShort    max_points;
-    FT_Short     max_contours;
+    FT_UShort           max_points;
+    FT_Short            max_contours;
 
-    FT_Matrix    transform_matrix;
-    FT_Vector    transform_delta;
-    FT_Int       transform_flags;
+    FT_Matrix           transform_matrix;
+    FT_Vector           transform_delta;
+    FT_Int              transform_flags;
 
     FT_ServiceCacheRec  services;
 
@@ -701,6 +704,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    generic          :: Client data variable.  Used to extend the      */
   /*                        Library class by higher levels and clients.    */
+  /*                                                                       */
+  /*    version_major    :: The major version number of the library.       */
+  /*                                                                       */
+  /*    version_minor    :: The minor version number of the library.       */
+  /*                                                                       */
+  /*    version_patch    :: The current patch level of the library.        */
   /*                                                                       */
   /*    num_modules      :: The number of modules currently registered     */
   /*                        within this library.  This is set to 0 for new */
