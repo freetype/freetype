@@ -1,5 +1,34 @@
+/***************************************************************************/
+/*                                                                         */
+/*  psobjs.c                                                               */
+/*                                                                         */
+/*    Auxiliary functions for PostScript fonts (body).                     */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include <freetype/internal/psaux.h>
 #include <freetype/fterrors.h>
+
+#ifdef FT_FLAT_COMPILE
+
+#include "psobjs.h"
+
+#else
+
+#include <psaux/psobjs.h>
+
+#endif
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -15,7 +44,7 @@
   /*    T1_New_Table                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initialises a T1_Table.                                            */
+  /*    Initializes a T1_Table.                                            */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    table  :: The address of the target table.                         */
@@ -43,7 +72,7 @@
       goto Exit;
 
     table->max_elems = count;
-    table->init      = 0xDEADBEEF;
+    table->init      = 0xDEADBEEFL;
     table->num_elems = 0;
     table->block     = 0;
     table->capacity  = 0;
@@ -157,7 +186,6 @@
   }
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -181,7 +209,7 @@
     FT_Byte*   old_base;
 
 
-    /* should never fail, as rec.cursor <= rec.size */
+    /* should never fail, because rec.cursor <= rec.size */
     old_base = table->block;
     if ( !old_base )
       return;
@@ -194,14 +222,13 @@
   }
 
 
-
   LOCAL_FUNC
   void  T1_Release_Table( T1_Table*  table )
   {
     FT_Memory  memory = table->memory;
 
 
-    if ( table->init == (FT_Long)0xDEADBEEF )
+    if ( table->init == 0xDEADBEEFL )
     {
       FREE( table->block );
       FREE( table->elements );
@@ -211,7 +238,6 @@
   }
 
 
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -219,6 +245,7 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
+
 
 #define IS_T1_WHITESPACE( c )  ( (c) == ' '  || (c) == '\t' )
 #define IS_T1_LINESPACE( c )   ( (c) == '\r' || (c) == '\n' )
@@ -264,7 +291,6 @@
     }
     parser->cursor = cur;
   }
-
 
 
   LOCAL_FUNC
@@ -364,8 +390,8 @@
     T1_ToToken( parser, &master );
     if ( master.type == t1_token_array )
     {
-      FT_Byte*       old_cursor = parser->cursor;
-      FT_Byte*       old_limit  = parser->limit;
+      FT_Byte*   old_cursor = parser->cursor;
+      FT_Byte*   old_limit  = parser->limit;
       T1_Token*  cur        = tokens;
       T1_Token*  limit      = cur + max_tokens;
 
@@ -446,10 +472,10 @@
                        FT_Byte*   limit,
                        FT_Long    power_ten )
   {
-    FT_Byte* cur  = *cursor;
-    FT_Long  num, divider, result;
-    FT_Int   sign = 0;
-    FT_Byte  d;
+    FT_Byte*  cur  = *cursor;
+    FT_Long   num, divider, result;
+    FT_Int    sign = 0;
+    FT_Byte   d;
 
 
     if ( cur >= limit )
@@ -545,7 +571,7 @@
     if ( cur >= limit )
       goto Exit;
 
-    /* check for the beginning of an array. If not, only one number will */
+    /* check for the beginning of an array; if not, only one number will */
     /* be read                                                           */
     c     = *cur;
     ender = 0;
@@ -786,6 +812,7 @@
       FT_Long     val;
       FT_String*  string;
 
+
       switch ( field->type )
       {
       case t1_field_bool:
@@ -824,8 +851,9 @@
           FT_Memory  memory = parser->memory;
           FT_UInt    len    = limit-cur;
 
+
           if ( *(FT_String**)q )
-            /*  with synthetic fonts, it's possible to find a field twice  */
+            /* with synthetic fonts, it's possible to find a field twice */
             break;
 
           if ( ALLOC( string, len + 1 ) )
@@ -916,7 +944,7 @@
 
 
   LOCAL_FUNC
-  FT_Long  T1_ToInt  ( T1_Parser*  parser )
+  FT_Long  T1_ToInt( T1_Parser*  parser )
   {
     return t1_toint( &parser->cursor, parser->limit );
   }
@@ -970,10 +998,10 @@
 
 
   LOCAL_FUNC
-  void      T1_Init_Parser( T1_Parser*  parser,
-                            FT_Byte*    base,
-                            FT_Byte*    limit,
-                            FT_Memory   memory )
+  void  T1_Init_Parser( T1_Parser*  parser,
+                        FT_Byte*    base,
+                        FT_Byte*    limit,
+                        FT_Memory   memory )
   {
     parser->error  = 0;
     parser->base   = base;
@@ -984,10 +1012,11 @@
 
 
   LOCAL_FUNC
-  void      T1_Done_Parser( T1_Parser*  parser )
+  void  T1_Done_Parser( T1_Parser*  parser )
   {
-    FT_UNUSED(parser);
+    FT_UNUSED( parser );
   }
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -1193,6 +1222,7 @@
       FT_Vector*  p1    = outline->points + first;
       FT_Vector*  p2    = outline->points + outline->n_points - 1;
 
+
       if ( outline->n_contours > 1 )
       {
         first = outline->contours[outline->n_contours - 2] + 1;
@@ -1208,7 +1238,6 @@
   }
 
 
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -1216,10 +1245,6 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
-
-
 
 
   LOCAL_FUNC
@@ -1240,5 +1265,4 @@
   }
 
 
-
-
+/* END */

@@ -1080,14 +1080,14 @@
     (void)Z1_ToFixedArray( parser, 6, temp, 3 );
 
     /* we need to scale the values by 1.0/temp[3] */
-    if ( temp[3] != 0x10000 )
+    if ( temp[3] != 0x10000L )
     {
       temp[0] = FT_DivFix( temp[0], temp[3] );
       temp[1] = FT_DivFix( temp[1], temp[3] );
       temp[2] = FT_DivFix( temp[2], temp[3] );
       temp[4] = FT_DivFix( temp[4], temp[3] );
       temp[5] = FT_DivFix( temp[5], temp[3] );
-      temp[3] = 0x10000;
+      temp[3] = 0x10000L;
     }
 
     matrix->xx = temp[0];
