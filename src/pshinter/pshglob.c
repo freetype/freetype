@@ -5,7 +5,7 @@
 /*    PostScript hinter global hinting management (body).                  */
 /*    Inspired by the new auto-hinter module.                              */
 /*                                                                         */
-/*  Copyright 2001, 2002, 2003 by                                          */
+/*  Copyright 2001, 2002, 2003, 2004 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -377,7 +377,7 @@
     /* parameter to the raw bluescale value.  Here is why:    */
     /*                                                        */
     /*   We need to suppress overshoots for all pointsizes.   */
-    /*   At 300dpi that satisfy:                              */
+    /*   At 300dpi that satisfies:                            */
     /*                                                        */
     /*      pointsize < 240*bluescale + 0.49                  */
     /*                                                        */
@@ -396,7 +396,16 @@
     /*                                                        */
     /*      "scale < bluescale"                               */
     /*                                                        */
-    blues->no_overshoots = FT_BOOL( scale < blues->blue_scale );
+    /* Note that `blue_scale' is stored 1000 times its real   */
+    /* real value, and that `scale' converts from font units  */
+    /* to fractional pixels.                                  */
+    /*                                                        */
+
+    /* 1000 / 64 = 125 / 8 */
+    if ( scale >= 0x20C49BAL )
+      blues->no_overshoots = FT_BOOL( scale < blues->blue_scale * 8 / 125 );
+    else
+      blues->no_overshoots = FT_BOOL( scale * 125 < blues->blue_scale * 8 );
 
     /*                                                        */
     /*  The blue threshold is the font units distance under   */

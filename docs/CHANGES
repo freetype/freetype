@@ -63,6 +63,10 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       mechanism if compiled  with FT_DEBUG_LEVEL_TRACE.   See the file
       `ftdebug.h' for more details.
 
+    - YAMATO Masatake contributed improved  handling of MacOS resource
+      forks on non-MacOS platforms (for example, Linux can mount MacOS
+      file systems).
+
     - The cache sub-system has been rewritten.
 
       - There is now support for deinstallation of faces.
