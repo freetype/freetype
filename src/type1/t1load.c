@@ -960,6 +960,11 @@
       FT_Error      error;
 
 
+      if ( encode->char_index )
+        /*  with synthetic fonts, it's possible we get here twice  */
+        return;
+
+
       /* read the number of entries in the encoding, should be 256 */
       count = T1_ToInt( parser );
       if ( parser->root.error )
