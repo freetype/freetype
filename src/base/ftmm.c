@@ -95,9 +95,9 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Set_MM_Design_Coordinates(
-                                FT_Face   face,
-                                FT_UInt   num_coords,
-                                FT_Long*  coords )
+                               FT_Face   face,
+                               FT_UInt   num_coords,
+                               FT_Long*  coords )
   {
     FT_Error  error;
 
@@ -145,9 +145,9 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Set_MM_Blend_Coordinates(
-                                FT_Face    face,
-                                FT_UInt    num_coords,
-                                FT_Fixed*  coords )
+                               FT_Face    face,
+                               FT_UInt    num_coords,
+                               FT_Fixed*  coords )
   {
     FT_Error  error;
 

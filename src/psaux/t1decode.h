@@ -29,7 +29,8 @@
 #endif
 
 
-  FT_CALLBACK_TABLE const T1_Decoder_Funcs  t1_decoder_funcs;
+  FT_CALLBACK_TABLE
+  const T1_Decoder_Funcs  t1_decoder_funcs;
 
 
   FT_LOCAL

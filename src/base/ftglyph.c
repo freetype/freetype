@@ -424,7 +424,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Glyph_Copy( FT_Glyph   source,
-                                             FT_Glyph*  target )
+                                            FT_Glyph*  target )
   {
     FT_Glyph               copy;
     FT_Error               error;
@@ -761,7 +761,7 @@
   FT_EXPORT_DEF( FT_Error )  FT_Glyph_To_Bitmap( FT_Glyph*   the_glyph,
                                                  FT_ULong    render_mode,
                                                  FT_Vector*  origin,
-                                                  FT_Bool     destroy )
+                                                 FT_Bool     destroy )
   {
     FT_GlyphSlotRec  dummy;
     FT_Error         error;

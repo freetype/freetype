@@ -46,7 +46,7 @@
 
 
   FT_BASE_DEF( FT_Error )  FT_Seek_Stream( FT_Stream  stream,
-                                         FT_ULong   pos )
+                                           FT_ULong   pos )
   {
     FT_Error  error;
 

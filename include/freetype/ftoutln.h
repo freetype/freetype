@@ -53,9 +53,9 @@
   /*    FreeType error code.  0 means sucess.                              */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Outline_Decompose(
-                               FT_Outline*              outline,
-                               const FT_Outline_Funcs*  interface,
-                               void*                    user );
+                           FT_Outline*              outline,
+                           const FT_Outline_Funcs*  interface,
+                           void*                    user );
 
 
   /*************************************************************************/
@@ -97,10 +97,10 @@
 
 
   FT_EXPORT( FT_Error )  FT_Outline_New_Internal(
-                               FT_Memory    memory,
-                               FT_UInt      numPoints,
-                               FT_Int       numContours,
-                               FT_Outline*  outline );
+                           FT_Memory    memory,
+                           FT_UInt      numPoints,
+                           FT_Int       numContours,
+                           FT_Outline*  outline );
 
 
   /*************************************************************************/

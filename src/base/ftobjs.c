@@ -489,9 +489,9 @@
   /* DOESN'T change the number of points within the loader!                */
   /*                                                                       */
   FT_BASE_DEF( FT_Error ) FT_GlyphLoader_Check_Points(
-                          FT_GlyphLoader*  loader,
-                          FT_UInt          n_points,
-                          FT_UInt          n_contours )
+                            FT_GlyphLoader*  loader,
+                            FT_UInt          n_points,
+                            FT_UInt          n_contours )
   {
     FT_Memory    memory  = loader->memory;
     FT_Error     error   = FT_Err_Ok;
@@ -549,8 +549,8 @@
   /* NOT change the number of subglyphs within the loader!            */
   /*                                                                  */
   FT_BASE_DEF( FT_Error )  FT_GlyphLoader_Check_Subglyphs(
-                           FT_GlyphLoader*  loader,
-                           FT_UInt          n_subs )
+                             FT_GlyphLoader*  loader,
+                             FT_UInt          n_subs )
   {
     FT_Memory  memory = loader->memory;
     FT_Error   error  = FT_Err_Ok;
@@ -617,8 +617,9 @@
   }
 
 
-  FT_BASE_DEF( FT_Error )  FT_GlyphLoader_Copy_Points( FT_GlyphLoader*  target,
-                                                     FT_GlyphLoader*  source )
+  FT_BASE_DEF( FT_Error )  FT_GlyphLoader_Copy_Points(
+                             FT_GlyphLoader*  target,
+                             FT_GlyphLoader*  source )
   {
     FT_Error  error;
     FT_UInt   num_points   = source->base.outline.n_points;
@@ -679,7 +680,7 @@
 
     slot->library = driver->root.library;
 
-    if ( ALLOC( internal, sizeof( *internal ) ) )
+    if ( ALLOC( internal, sizeof ( *internal ) ) )
       goto Exit;
 
     slot->internal = internal;
@@ -1069,9 +1070,10 @@
 
 
         if ( renderer )
-          error = renderer->clazz->transform_glyph( renderer, slot,
-                                                    &internal->transform_matrix,
-                                                    &internal->transform_delta );
+          error = renderer->clazz->transform_glyph(
+                                     renderer, slot,
+                                     &internal->transform_matrix,
+                                     &internal->transform_delta );
         /* transform advance */
         FT_Vector_Transform( &slot->advance, &internal->transform_matrix );
       }
@@ -1257,7 +1259,7 @@
     if ( ALLOC( face, clazz->face_object_size ) )
       goto Fail;
 
-    if ( ALLOC( internal, sizeof(*internal) ) )
+    if ( ALLOC( internal, sizeof ( *internal ) ) )
       goto Fail;
       
     face->internal = internal;
@@ -2073,19 +2075,19 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    the values of "pixel_width" and "pixel_height" correspond to       */
-  /*    the pixel values of the _typographic_ character size, which are    */
-  /*    NOT necessarily the same as the dimensions of the glyph            */
-  /*    "bitmap cells".                                                    */
+  /*    The values of `pixel_width' and `pixel_height' correspond to the   */
+  /*    pixel values of the _typographic_ character size, which are NOT    */
+  /*    necessarily the same as the dimensions of the glyph `bitmap        */
+  /*    cells".                                                            */
   /*                                                                       */
-  /*    The "character size" is really the size of an abstract square      */
-  /*    called the "EM", used to design the font. However, depending       */
+  /*    The `character size' is really the size of an abstract square      */
+  /*    called the `EM', used to design the font.  However, depending      */
   /*    on the font design, glyphs will be smaller or greater than the     */
   /*    EM.                                                                */
   /*                                                                       */
-  /*    this means that setting the pixel size to 8x8 doesn't guarantee    */
-  /*    in any way that you'll end up with glyph bitmaps that all fit      */
-  /*    within an 8x8 cell.. far from it..                                 */
+  /*    This means that setting the pixel size to, say, 8x8 doesn't        */
+  /*    guarantee in any way that you will get glyph bitmaps that all fit  */
+  /*    within an 8x8 cell (sometimes even far from it).                   */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Set_Pixel_Sizes( FT_Face  face,
                                                  FT_UInt  pixel_width,
@@ -2690,7 +2692,7 @@
   FT_EXPORT( FT_Error )  FT_Set_Renderer( FT_Library     library,
                                           FT_Renderer    renderer,
                                           FT_UInt        num_params,
-                                              FT_Parameter*  parameters )
+                                          FT_Parameter*  parameters )
   {
     FT_ListNode  node;
     FT_Error     error = FT_Err_Ok;

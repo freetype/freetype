@@ -219,7 +219,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_New_Stream( const char*  filepathname,
-                                             FT_Stream    stream )
+                                            FT_Stream    stream )
   {
     int          file;
     struct stat  stat_buf;

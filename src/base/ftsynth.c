@@ -290,9 +290,9 @@
   }
 
 
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Embolden( FT_GlyphSlot original,
-                                                FT_Outline*  outline,
-                                                FT_Pos*      advance )
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Embolden( FT_GlyphSlot original,
+                                                  FT_Outline*  outline,
+                                                  FT_Pos*      advance )
   {
     FT_Vector   u, v;
     FT_Vector*  points;

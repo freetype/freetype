@@ -204,10 +204,10 @@
 
 
   FT_EXPORT_DEF( FT_Error )  FTC_ChunkSet_Lookup_Node(
-                                FTC_ChunkSet    cset,
-                                FT_UInt         glyph_index,
-                                FTC_ChunkNode*  anode,
-                                FT_UInt*        aindex )
+                               FTC_ChunkSet    cset,
+                               FT_UInt         glyph_index,
+                               FTC_ChunkNode*  anode,
+                               FT_UInt*        aindex )
   {
     FTC_Chunk_Cache      cache   = cset->cache;
     FTC_Manager          manager = cache->root.manager;

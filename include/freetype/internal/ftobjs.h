@@ -75,6 +75,7 @@
 #define ABS( a )     ( (a) < 0 ? -(a) : (a) )
 #endif
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -97,35 +98,44 @@
   /*    FT_Face_InternalRec                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    this structure contains the internal fields of each FT_Face        */
-  /*    object. These fields may change between different releases         */
-  /*    of FreeType.                                                       */
+  /*    This structure contains the internal fields of each FT_Face        */
+  /*    object.  These fields may change between different releases of     */
+  /*    FreeType.                                                          */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    transform_matrix    :: A 2x2 matrix of 16.16 coefficients used     */
-  /*                           to transform glyph outlines after they are  */
-  /*                           loaded from the font.  Only used by the     */
-  /*                           convenience functions.                      */
+  /*    max_points       :: The maximal number of points used to store the */
+  /*                        vectorial outline of any glyph in this face.   */
+  /*                        If this value cannot be known in advance, or   */
+  /*                        if the face isn't scalable, this should be set */
+  /*                        to 0.  Only relevant for scalable formats.     */
   /*                                                                       */
-  /*    transform_delta     :: A translation vector used to transform      */
-  /*                           glyph outlines after they are loaded from   */
-  /*                           the font.  Only used by the convenience     */
-  /*                           functions.                                  */
+  /*    max_contours     :: The maximal number of contours used to store   */
+  /*                        the vectorial outline of any glyph in this     */
+  /*                        face.  If this value cannot be known in        */
+  /*                        advance, or if the face isn't scalable, this   */
+  /*                        should be set to 0.  Only relevant for         */
+  /*                        scalable formats.                              */
   /*                                                                       */
-  /*    transform_flags     :: Some flags used to classify the transform.  */
-  /*                           Only used by the convenience functions.     */
+  /*    transform_matrix :: A 2x2 matrix of 16.16 coefficients used to     */
+  /*                        transform glyph outlines after they are loaded */
+  /*                        from the font.  Only used by the convenience   */
+  /*                        functions.                                     */
   /*                                                                       */
+  /*    transform_delta  :: A translation vector used to transform glyph   */
+  /*                        outlines after they are loaded from the font.  */
+  /*                        Only used by the convenience functions.        */
   /*                                                                       */
+  /*    transform_flags  :: Some flags used to classify the transform.     */
+  /*                        Only used by the convenience functions.        */
   /*                                                                       */
-  /*                                                                       */
-  typedef struct FT_Face_InternalRec_
+  typedef struct  FT_Face_InternalRec_
   {
-    FT_UShort        max_points;
-    FT_Short         max_contours;
+    FT_UShort  max_points;
+    FT_Short   max_contours;
 
-    FT_Matrix        transform_matrix;
-    FT_Vector        transform_delta;
-    FT_Int           transform_flags;
+    FT_Matrix  transform_matrix;
+    FT_Vector  transform_delta;
+    FT_Int     transform_flags;
   
   } FT_Face_InternalRec;
 
@@ -136,25 +146,25 @@
   /*    FT_Slot_InternalRec                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    this structure contains the internal fields of each FT_GlyphSlot   */
-  /*    object. These fields may change between different releases         */
-  /*    of FreeType.                                                       */
+  /*    This structure contains the internal fields of each FT_GlyphSlot   */
+  /*    object.  These fields may change between different releases of     */
+  /*    FreeType.                                                          */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    loader            :: the glyph loader object used to load          */
-  /*                         outlines in the glyph slot                    */
+  /*    loader            :: The glyph loader object used to load outlines */
+  /*                         into the glyph slot.                          */
   /*                                                                       */
-  /*    glyph_transformed :: boolean. set to TRUE when the loaded glyph    */
+  /*    glyph_transformed :: Boolean.  Set to TRUE when the loaded glyph   */
   /*                         must be transformed through a specific        */
-  /*                         font transform. this is _not_ the same as     */
-  /*                         the face transform set through                */
-  /*                         FT_Set_Transform                              */
+  /*                         font transformation.  This is _not_ the same  */
+  /*                         as the face transform set through             */
+  /*                         FT_Set_Transform().                           */
   /*                                                                       */
-  /*    glyph_matrix      :: the 2x2 matrix corresponding to the glyph     */
-  /*                         transform, when required                      */
+  /*    glyph_matrix      :: The 2x2 matrix corresponding to the glyph     */
+  /*                         transformation, if necessary.                 */
   /*                                                                       */
-  /*    glyph_delta       :: the 2d translation vector corresponding to    */
-  /*                         the glyph transform, when required            */
+  /*    glyph_delta       :: The 2d translation vector corresponding to    */
+  /*                         the glyph transformation, if necessary.       */
   /*                                                                       */
   typedef struct FT_Slot_InternalRec_
   {
@@ -380,13 +390,13 @@
   FT_BASE( void )      FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader );
 
   FT_BASE( FT_Error )  FT_GlyphLoader_Check_Points(
-                          FT_GlyphLoader*  loader,
-                          FT_UInt          n_points,
-                          FT_UInt          n_contours );
+                         FT_GlyphLoader*  loader,
+                         FT_UInt          n_points,
+                         FT_UInt          n_contours );
 
   FT_BASE( FT_Error )  FT_GlyphLoader_Check_Subglyphs(
-                          FT_GlyphLoader*  loader,
-                          FT_UInt          n_subs );
+                         FT_GlyphLoader*  loader,
+                         FT_UInt          n_subs );
 
   FT_BASE( void )      FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader );
 
@@ -573,12 +583,12 @@
 
 
   FT_BASE( FT_Renderer )  FT_Lookup_Renderer( FT_Library       library,
-                                               FT_Glyph_Format  format,
-                                               FT_ListNode*     node );
+                                              FT_Glyph_Format  format,
+                                              FT_ListNode*     node );
 
   FT_BASE( FT_Error )  FT_Render_Glyph_Internal( FT_Library    library,
-                                                  FT_GlyphSlot  slot,
-                                                  FT_UInt       render_mode );
+                                                 FT_GlyphSlot  slot,
+                                                 FT_UInt       render_mode );
 
   typedef FT_Error  (*FT_Glyph_Name_Requester)( FT_Face     face,
                                                 FT_UInt     glyph_index,

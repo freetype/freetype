@@ -151,7 +151,7 @@
   /*    FreeType error code.  0 means success.  An error is returned if a  */
   /*    reallocation fails.                                                */
   /*                                                                       */
-  FT_LOCAL
+  FT_LOCAL_DEF
   FT_Error  PS_Table_Add( PS_Table*  table,
                           FT_Int     index,
                           void*      object,
