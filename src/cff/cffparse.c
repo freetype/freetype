@@ -267,8 +267,12 @@
       power_ten++;
     }
 
+    /* Move the integer part into the high 16 bits. */
+    result <<= 16;
+
+    /* Place the decimal part into the low 16 bits. */
     if ( num )
-      result += FT_DivFix( num, divider );
+      result |= FT_DivFix( num, divider );
 
     if ( sign )
       result = -result;
@@ -299,6 +303,14 @@
                        : cff_parse_integer( d[0], d[1] ) << 16 );
   }
 
+  /* read a floating point number, either integer or real, */
+  /* but return 1000 times the number read in.             */
+  static
+  FT_Fixed cff_parse_fixed_thousand( FT_Byte** d )
+  {
+    return ( **d == 30 ? cff_parse_real      ( d[0], d[1], 3 )
+	               : (FT_Fixed)FT_MulFix ( cff_parse_integer( d[0], d[1] ) << 16, 1000 ) );
+  }
 
   static
   FT_Error  cff_parse_font_matrix( CFF_Parser*  parser )
@@ -306,6 +318,7 @@
     CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
     FT_Matrix*      matrix = &dict->font_matrix;
     FT_Vector*      offset = &dict->font_offset;
+    FT_UShort*      upm    = &dict->units_per_em;
     FT_Byte**       data   = parser->stack;
     FT_Error        error;
     FT_Fixed        temp;
@@ -315,14 +328,17 @@
 
     if ( parser->top >= parser->stack + 6 )
     {
-      matrix->xx = cff_parse_fixed( data++ );
-      matrix->yx = cff_parse_fixed( data++ );
-      matrix->xy = cff_parse_fixed( data++ );
-      matrix->yy = cff_parse_fixed( data++ );
-      offset->x  = cff_parse_fixed( data++ );
-      offset->y  = cff_parse_fixed( data   );
+      matrix->xx = cff_parse_fixed_thousand( data++ );
+      matrix->yx = cff_parse_fixed_thousand( data++ );
+      matrix->xy = cff_parse_fixed_thousand( data++ );
+      matrix->yy = cff_parse_fixed_thousand( data++ );
+      offset->x  = cff_parse_fixed_thousand( data++ );
+      offset->y  = cff_parse_fixed_thousand( data   );
 
       temp = ABS( matrix->yy );
+
+      *upm = (FT_UShort)FT_DivFix( 0x10000L, FT_DivFix( temp, 1000 ) );
+      fprintf (stderr, "cff_parse_font_matrix: matrix->xx = %08lX, upm = %d\n", matrix->xx, *upm) ;
 
       if ( temp != 0x10000L )
       {
