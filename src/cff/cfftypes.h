@@ -199,7 +199,7 @@ FT_BEGIN_HEADER
 
 
   /* maximum number of sub-fonts in a CID-keyed file */
-#define CFF_MAX_CID_FONTS  16
+#define CFF_MAX_CID_FONTS  32
 
 
   typedef struct  CFF_FontRec_

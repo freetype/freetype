@@ -1,3 +1,11 @@
+2003-12-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cfftypes.h (CFF_MAX_CID_FONTS): Increase to 32.  For
+	example, the Japanese Hiragino font already contains 15 subfonts.
+
+	* src/cff/cffload.c (cff_font_load): Deallocate `sids' array for
+	CID-keyed fonts.
+
 2003-12-18  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ttnameid.h (TT_ADOBE_ID_LATIN_1): New macro.

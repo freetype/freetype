@@ -663,6 +663,8 @@
       CFF_Font cff = (CFF_Font)(face->extra.data);
 
 
+      /* XXX: What about CID-keyed fonts? */
+
       bchar_index = cff_lookup_glyph_by_stdcharcode( cff, bchar );
       achar_index = cff_lookup_glyph_by_stdcharcode( cff, achar );
     }
