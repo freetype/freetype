@@ -55,6 +55,9 @@
 #undef  FT_USE_MODULE
 #define FT_USE_MODULE( x )  extern const FT_Module_Class*  x;
 
+#ifdef macintosh
+    FT_USE_MODULE(fond_driver_class)
+#endif
 #include <freetype/config/ftmodule.h>
 
 #undef  FT_USE_MODULE
@@ -63,6 +66,9 @@
 static
 const FT_Module_Class*  ft_default_modules[] =
   {
+#ifdef macintosh
+    FT_USE_MODULE(fond_driver_class)
+#endif
 #include <freetype/config/ftmodule.h>
     0
   };
