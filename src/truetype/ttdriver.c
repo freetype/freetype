@@ -477,7 +477,7 @@
   /* The FT_DriverInterface structure is defined in ftdriver.h. */
 
   FT_CALLBACK_TABLE_DEF
-  const FT_Driver_Class  tt_driver_class =
+  const FT_Driver_ClassRec  tt_driver_class =
   {
     {
       ft_module_font_driver     |
@@ -506,23 +506,23 @@
     sizeof ( FT_GlyphSlotRec ),
 
 
-    (FTDriver_initFace)     TT_Init_Face,
-    (FTDriver_doneFace)     TT_Done_Face,
-    (FTDriver_initSize)     TT_Init_Size,
-    (FTDriver_doneSize)     TT_Done_Size,
-    (FTDriver_initGlyphSlot)0,
-    (FTDriver_doneGlyphSlot)0,
+    (FT_Face_InitFunc)     TT_Init_Face,
+    (FT_Face_DoneFunc)     TT_Done_Face,
+    (FT_Size_InitFunc)     TT_Init_Size,
+    (FT_Size_DoneFunc)     TT_Done_Size,
+    (FT_Slot_InitFunc)0,
+    (FT_Slot_DoneFunc)0,
 
-    (FTDriver_setCharSizes) Set_Char_Sizes,
-    (FTDriver_setPixelSizes)Set_Pixel_Sizes,
-    (FTDriver_loadGlyph)    Load_Glyph,
-    (FTDriver_getCharIndex) Get_Char_Index,
+    (FT_Size_ResetPointsFunc) Set_Char_Sizes,
+    (FT_Size_ResetPixelsFunc)Set_Pixel_Sizes,
+    (FT_Slot_LoadFunc)    Load_Glyph,
+    (FT_CharMap_CharIndexFunc) Get_Char_Index,
 
-    (FTDriver_getKerning)   Get_Kerning,
-    (FTDriver_attachFile)   0,
-    (FTDriver_getAdvances)  0,
+    (FT_Face_GetKerningFunc)   Get_Kerning,
+    (FT_Face_AttachFunc)   0,
+    (FT_Face_GetAdvancesFunc)  0,
     
-    (FTDriver_getNextChar)  Get_Next_Char
+    (FT_CharMap_CharNextFunc)  Get_Next_Char
   };
 
 
@@ -548,7 +548,7 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_DEF( const FT_Driver_Class* )
+  FT_EXPORT_DEF( const FT_Driver_Class )
   getDriverClass( void )
   {
     return &tt_driver_class;

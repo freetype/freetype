@@ -325,7 +325,7 @@ THE SOFTWARE.
 
 
   FT_CALLBACK_TABLE_DEF
-  const FT_Driver_Class  pcf_driver_class =
+  const FT_Driver_ClassRec  pcf_driver_class =
   {
     {
       ft_module_font_driver,
@@ -346,24 +346,24 @@ THE SOFTWARE.
     sizeof( FT_SizeRec ),
     sizeof( FT_GlyphSlotRec ),
 
-    (FTDriver_initFace)     PCF_Face_Init,
-    (FTDriver_doneFace)     PCF_Face_Done,
-    (FTDriver_initSize)     0,
-    (FTDriver_doneSize)     0,
-    (FTDriver_initGlyphSlot)0,
-    (FTDriver_doneGlyphSlot)0,
+    (FT_Face_InitFunc)     PCF_Face_Init,
+    (FT_Face_DoneFunc)     PCF_Face_Done,
+    (FT_Size_InitFunc)     0,
+    (FT_Size_DoneFunc)     0,
+    (FT_Slot_InitFunc)0,
+    (FT_Slot_DoneFunc)0,
 
-    (FTDriver_setCharSizes) PCF_Set_Pixel_Size,
-    (FTDriver_setPixelSizes)PCF_Set_Pixel_Size,
+    (FT_Size_ResetPointsFunc) PCF_Set_Pixel_Size,
+    (FT_Size_ResetPixelsFunc)PCF_Set_Pixel_Size,
 
-    (FTDriver_loadGlyph)    PCF_Glyph_Load,
-    (FTDriver_getCharIndex) PCF_Char_Get_Index,
+    (FT_Slot_LoadFunc)    PCF_Glyph_Load,
+    (FT_CharMap_CharIndexFunc) PCF_Char_Get_Index,
 
-    (FTDriver_getKerning)   0,
-    (FTDriver_attachFile)   0,
-    (FTDriver_getAdvances)  0,
+    (FT_Face_GetKerningFunc)   0,
+    (FT_Face_AttachFunc)   0,
+    (FT_Face_GetAdvancesFunc)  0,
 
-    (FTDriver_getNextChar)  PCF_Char_Get_Next,
+    (FT_CharMap_CharNextFunc)  PCF_Char_Get_Next,
   };
 
 
@@ -389,7 +389,7 @@ THE SOFTWARE.
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_DEF( const FT_Driver_Class* )
+  FT_EXPORT_DEF( const FT_Driver_Class )
   getDriverClass( void )
   {
     return &pcf_driver_class;

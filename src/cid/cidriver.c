@@ -289,7 +289,7 @@
 
 
   FT_CALLBACK_TABLE_DEF
-  const FT_Driver_Class  t1cid_driver_class =
+  const FT_Driver_ClassRec  t1cid_driver_class =
   {
     /* first of all, the FT_Module_Class fields */
     {
@@ -314,26 +314,26 @@
     sizeof( CID_SizeRec ),
     sizeof( CID_GlyphSlotRec ),
 
-    (FTDriver_initFace)     CID_Face_Init,
-    (FTDriver_doneFace)     CID_Face_Done,
+    (FT_Face_InitFunc)     CID_Face_Init,
+    (FT_Face_DoneFunc)     CID_Face_Done,
 
-    (FTDriver_initSize)     CID_Size_Init,
-    (FTDriver_doneSize)     CID_Size_Done,
-    (FTDriver_initGlyphSlot)CID_GlyphSlot_Init,
-    (FTDriver_doneGlyphSlot)CID_GlyphSlot_Done,
+    (FT_Size_InitFunc)     CID_Size_Init,
+    (FT_Size_DoneFunc)     CID_Size_Done,
+    (FT_Slot_InitFunc)CID_GlyphSlot_Init,
+    (FT_Slot_DoneFunc)CID_GlyphSlot_Done,
 
-    (FTDriver_setCharSizes) CID_Size_Reset,
-    (FTDriver_setPixelSizes)CID_Size_Reset,
+    (FT_Size_ResetPointsFunc) CID_Size_Reset,
+    (FT_Size_ResetPixelsFunc)CID_Size_Reset,
 
-    (FTDriver_loadGlyph)    CID_Load_Glyph,
-    (FTDriver_getCharIndex) CID_Get_Char_Index,
+    (FT_Slot_LoadFunc)    CID_Load_Glyph,
+    (FT_CharMap_CharIndexFunc) CID_Get_Char_Index,
 
-    (FTDriver_getKerning)   0,
-    (FTDriver_attachFile)   0,
+    (FT_Face_GetKerningFunc)   0,
+    (FT_Face_AttachFunc)   0,
 
-    (FTDriver_getAdvances)  0,
+    (FT_Face_GetAdvancesFunc)  0,
     
-    (FTDriver_getNextChar)  CID_Get_Next_Char
+    (FT_CharMap_CharNextFunc)  CID_Get_Next_Char
   };
 
 
@@ -359,7 +359,7 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_DEF( const FT_Driver_Class* )
+  FT_EXPORT_DEF( const FT_Driver_Class )
   getDriverClass( void )
   {
     return &t1cid_driver_class;

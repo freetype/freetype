@@ -459,7 +459,7 @@
   /* The FT_DriverInterface structure is defined in ftdriver.h. */
 
   FT_CALLBACK_TABLE_DEF
-  const FT_Driver_Class  cff_driver_class =
+  const FT_Driver_ClassRec  cff_driver_class =
   {
     /* begin with the FT_Module_Class fields */
     {
@@ -484,24 +484,24 @@
     sizeof( FT_SizeRec ),
     sizeof( CFF_GlyphSlotRec ),
 
-    (FTDriver_initFace)     CFF_Face_Init,
-    (FTDriver_doneFace)     CFF_Face_Done,
-    (FTDriver_initSize)     CFF_Size_Init,
-    (FTDriver_doneSize)     CFF_Size_Done,
-    (FTDriver_initGlyphSlot)CFF_GlyphSlot_Init,
-    (FTDriver_doneGlyphSlot)CFF_GlyphSlot_Done,
+    (FT_Face_InitFunc)     CFF_Face_Init,
+    (FT_Face_DoneFunc)     CFF_Face_Done,
+    (FT_Size_InitFunc)     CFF_Size_Init,
+    (FT_Size_DoneFunc)     CFF_Size_Done,
+    (FT_Slot_InitFunc)CFF_GlyphSlot_Init,
+    (FT_Slot_DoneFunc)CFF_GlyphSlot_Done,
 
-    (FTDriver_setCharSizes) CFF_Size_Reset,
-    (FTDriver_setPixelSizes)CFF_Size_Reset,
+    (FT_Size_ResetPointsFunc) CFF_Size_Reset,
+    (FT_Size_ResetPixelsFunc)CFF_Size_Reset,
 
-    (FTDriver_loadGlyph)    Load_Glyph,
-    (FTDriver_getCharIndex) cff_get_char_index,
+    (FT_Slot_LoadFunc)    Load_Glyph,
+    (FT_CharMap_CharIndexFunc) cff_get_char_index,
 
-    (FTDriver_getKerning)   Get_Kerning,
-    (FTDriver_attachFile)   0,
-    (FTDriver_getAdvances)  0,
+    (FT_Face_GetKerningFunc)   Get_Kerning,
+    (FT_Face_AttachFunc)   0,
+    (FT_Face_GetAdvancesFunc)  0,
     
-    (FTDriver_getNextChar)  cff_get_next_char
+    (FT_CharMap_CharNextFunc)  cff_get_next_char
   };
 
 
@@ -527,7 +527,7 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_DEF( const FT_Driver_Class* )
+  FT_EXPORT_DEF( const FT_Driver_Class )
   getDriverClass( void )
   {
     return &cff_driver_class;
