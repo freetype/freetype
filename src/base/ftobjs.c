@@ -1999,14 +1999,13 @@
     if ( char_height < 1 * 64 )
       char_height = 1 * 64;
 
-    /* Compute pixel sizes in 26.6 units with rounding */
+    /* Compute pixel sizes in 26.6 units */
     dim_x = ( char_width  * horz_resolution + 36 ) / 72;
     dim_y = ( char_height * vert_resolution + 36 ) / 72;
 
     {
       FT_UShort  x_ppem = (FT_UShort)( ( dim_x + 32 ) >> 6 );
       FT_UShort  y_ppem = (FT_UShort)( ( dim_y + 32 ) >> 6 );
-
 
       if ( x_ppem == metrics->x_ppem && y_ppem == metrics->y_ppem )
         return FT_Err_Ok;
