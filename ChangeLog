@@ -1,3 +1,14 @@
+2001-03-12  Tom Kacvinsky  <tjk@ams.org>
+
+        * src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings):  Adjust
+        for lenIV seed  bytes at the start of a decrypted subroutine.
+
+	* src/cid/cidload.c (cid_read_subrs): Decrypt subroutines only
+	if lenIV >= 0.
+
+	* src/cid/cidgload.c (cid_load_glyph): Decrypt charstrings only
+	if lenIV >= 0.
+
 2001-03-11  Werner Lemberg  <wl@gnu.org>
 
 	* TODO: Updated.
