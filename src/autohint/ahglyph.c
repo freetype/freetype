@@ -198,6 +198,10 @@
       first = last + 1;
     }
 
+    /* compute the vectorial product -- since we know that the angle */
+    /* is <= 180 degrees (otherwise it wouldn't be an extremum) we   */
+    /* can determine the filling orientation if the product is       */
+    /* either positive or negative                                   */
     product = FT_MulDiv( cur->x  - prev->x,  /* in.x  */
                          next->y - cur->y,   /* out.y */
                          0x40 )
@@ -456,7 +460,7 @@
 
     /* We can't rely on the value of `FT_Outline.flags' to know the fill  */
     /* direction used for a glyph, given that some fonts are broken (e.g. */
-    /* the Arphic ones). We thus recompute it each time we need to.       */
+    /* the Arphic ones).  We thus recompute it each time we need to.      */
     /*                                                                    */
     outline->vert_major_dir = AH_DIR_UP;
     outline->horz_major_dir = AH_DIR_LEFT;
@@ -483,7 +487,7 @@
 
       /* compute coordinates */
       {
-        FT_Vector*  vec     = source->points;
+        FT_Vector*  vec = source->points;
 
 
         for ( point = points; point < point_limit; vec++, point++ )
@@ -507,9 +511,11 @@
           switch ( FT_CURVE_TAG( *tag ) )
           {
           case FT_CURVE_TAG_CONIC:
-            point->flags = AH_FLAG_CONIC; break;
+            point->flags = AH_FLAG_CONIC;
+            break;
           case FT_CURVE_TAG_CUBIC:
-            point->flags = AH_FLAG_CUBIC; break;
+            point->flags = AH_FLAG_CUBIC;
+            break;
           default:
             ;
           }
@@ -589,7 +595,7 @@
           point->out_dir = ah_compute_direction( ovec.x, ovec.y );
 
 #ifndef AH_OPTION_NO_WEAK_INTERPOLATION
-          if ( point->flags & (AH_FLAG_CONIC | AH_FLAG_CUBIC) )
+          if ( point->flags & ( AH_FLAG_CONIC | AH_FLAG_CUBIC ) )
           {
           Is_Weak_Point:
             point->flags |= AH_FLAG_WEAK_INTERPOLATION;
@@ -685,8 +691,8 @@
   static void
   ah_outline_compute_inflections( AH_Outline  outline )
   {
-    AH_Point*  contour       =  outline->contours;
-    AH_Point*  contour_limit =  contour + outline->num_contours;
+    AH_Point*  contour       = outline->contours;
+    AH_Point*  contour_limit = contour + outline->num_contours;
 
 
     /* load original coordinates in (u,v) */
@@ -696,10 +702,10 @@
     for ( ; contour < contour_limit; contour++ )
     {
       FT_Vector  vec;
-      AH_Point   point   = contour[0];
-      AH_Point   first   = point;
-      AH_Point   start   = point;
-      AH_Point   end     = point;
+      AH_Point   point = contour[0];
+      AH_Point   first = point;
+      AH_Point   start = point;
+      AH_Point   end   = point;
       AH_Point   before;
       AH_Point   after;
       AH_Angle   angle_in, angle_seg, angle_out;
@@ -773,7 +779,6 @@
         {
           /* diff_in and diff_out have different signs, we have */
           /* inflection points here...                          */
-
           do
           {
             start->flags |= AH_FLAG_INFLECTION;
@@ -833,10 +838,10 @@
       /* do each contour separately */
       for ( ; contour < contour_limit; contour++ )
       {
-        AH_Point  point   = contour[0];
-        AH_Point  last    = point->prev;
-        int       on_edge = 0;
-        FT_Pos    min_pos = +32000;  /* minimum segment pos != min_coord */
+        AH_Point  point   =  contour[0];
+        AH_Point  last    =  point->prev;
+        int       on_edge =  0;
+        FT_Pos    min_pos =  32000;  /* minimum segment pos != min_coord */
         FT_Pos    max_pos = -32000;  /* maximum segment pos != max_coord */
         FT_Bool   passed;
 
@@ -854,7 +859,7 @@
         }
 #endif
 
-        if ( point == last )  /* skip singletons -- just in case? */
+        if ( point == last )  /* skip singletons -- just in case */
           continue;
 
         if ( ABS( last->out_dir )  == major_dir &&
@@ -1268,7 +1273,7 @@
       /*                                                                   */
       /*  - edge's main direction                                          */
       /*  - stem edge, serif edge or both (which defaults to stem then)    */
-      /*  - rounded edge, straigth or both (which defaults to straight)    */
+      /*  - rounded edge, straight or both (which defaults to straight)    */
       /*  - link for edge                                                  */
       /*                                                                   */
       /*********************************************************************/
@@ -1390,7 +1395,7 @@
           edge->dir = - up_dir;
 
         else if ( ups == downs )
-          edge->dir = 0;  /* both up and down !! */
+          edge->dir = 0;  /* both up and down! */
 
         /* gets rid of serifs if link is set                */
         /* XXX: This gets rid of many unpleasant artefacts! */
@@ -1463,7 +1468,7 @@
 
         ref   = globals->blue_refs[blue];
         shoot = globals->blue_shoots[blue];
-        dist  = ref-shoot;
+        dist  = ref - shoot;
         if ( dist < 0 )
           dist = -dist;
 
@@ -1510,6 +1515,7 @@
                    FT_BOOL( AH_IS_TOP_BLUE( blue ) );
         FT_Bool  is_major_dir =
                    FT_BOOL( edge->dir == outline->horz_major_dir );
+
 
         if ( !blue_active[blue] )
           continue;
@@ -1573,7 +1579,7 @@
   /*    ah_outline_scale_blue_edges                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This functions must be called before hinting in order to re-adjust */
+  /*    This function must be called before hinting in order to re-adjust  */
   /*    the contents of the detected edges (basically change the `blue     */
   /*    edge' pointer from `design units' to `scaled ones').               */
   /*                                                                       */
