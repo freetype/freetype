@@ -1,3 +1,8 @@
+2001-06-11  Mike Owens  <MOwens@amtdatasouth.com>
+
+	* src/base/ftcalc.c (FT_MulDiv, FT_DivFix, FT_Sqrt64): Remove
+	compiler warnings.
+
 2001-06-08  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.in: Renamed to ...
