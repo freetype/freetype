@@ -299,8 +299,8 @@
                 FT_UInt32  lo,
                 FT_UInt32  y )
   {
-    FT_UInt  r, q;
-    FT_Int   i;
+    FT_UInt32  r, q;
+    FT_Int     i;
 
 
     q = 0;
