@@ -1972,7 +1972,7 @@
   {
     FT_Error         error;
     CFF_ParserRec    parser;
-    FT_Byte*         dict;
+    FT_Byte*         dict = NULL;
     FT_ULong         dict_len;
     CFF_FontRecDict  top  = &font->font_dict;
     CFF_Private      priv = &font->private_dict;

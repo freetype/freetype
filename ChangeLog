@@ -1,3 +1,7 @@
+2004-01-22  Garrick Meeker  <garrick@digitalanarchy.com>
+
+	* src/cff/cffload.c (cff_subfont_load): Initialize `dict'.
+
 2004-01-22  Werner Lemberg  <wl@gnu.org>
 
 	Add support for the hexadicimal representation of binary data
