@@ -261,8 +261,9 @@
     {
       psnames = (PSNames_Interface*)
                  FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "psnames" );
+                 
+      face->psnames = psnames;
     }
-    face->psnames = psnames;
     
     /* open the tokenizer, this will also check the font format */
     error = New_Tokenizer( stream, &tokenizer );

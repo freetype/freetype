@@ -29,39 +29,6 @@
   extern "C" {
 #endif
 
-  typedef struct  TT_Loader_
-  {
-    TT_Face         face;
-    TT_Size         size;
-    TT_GlyphSlot    glyph;
-    FT_GlyphLoader* gloader;
-
-    FT_ULong        load_flags;
-    FT_UInt         glyph_index;
-
-    FT_Stream       stream;
-    FT_Int          byte_len;
-
-    FT_BBox         bbox;
-    FT_Int          left_bearing;
-    FT_Int          advance;
-    FT_Bool         preserve_pps;
-    FT_Vector       pp1;
-    FT_Vector       pp2;
-
-    FT_ULong        glyf_offset;
-
-    /* the zone where we load our glyphs */
-    TT_GlyphZone    base;
-    TT_GlyphZone    zone;
-
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-    TT_ExecContext  exec;
-    FT_Byte*        instructions;
-#endif
-
-  } TT_Loader;
-
 
   LOCAL_DEF
   void  TT_Get_Metrics( TT_HoriHeader*  header,

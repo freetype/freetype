@@ -334,7 +334,6 @@
     {
       FT_Library  library = face->root.driver->root.library;
 
-
       face->interpreter = (TT_Interpreter)
                             library->debug_hooks[FT_DEBUG_HOOK_TRUETYPE];
       if ( !face->interpreter )

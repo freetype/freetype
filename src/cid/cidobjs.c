@@ -133,14 +133,10 @@
     psnames = (PSNames_Interface*)face->psnames;
     if ( !psnames )
     {
-      /* look-up the PSNames driver */
-      FT_Module  psnames_module;
+      psnames = (PSNames_Interface*)
+                FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "psnames" );
 
-      psnames_module = FT_Get_Module( face->root.driver->root.library,
-                                      "psnames" );
-      if (psnames_module)                                      
-        face->psnames = (PSNames_Interface*)
-                          (psnames_module->clazz->module_interface);
+      face->psnames = psnames;
     }
 
     /* open the tokenizer; this will also check the font format */

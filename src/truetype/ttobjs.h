@@ -106,44 +106,6 @@
 
   } TT_GraphicsState;
 
- /************************************************************************
-  *
-  *  <Struct>
-  *     TT_GlyphZone
-  *
-  *  <Description>
-  *     A glyph zone is used to load, scale and hint glyph outline
-  *     coordinates.
-  *
-  *  <Fields>
-  *     memory       :: handle to memory manager
-  *     max_points   :: max size in points of zone
-  *     max_contours :: max size in contours of zone
-  *     n_points     :: current number of points in zone
-  *     n_contours   :: current number of contours in zone
-  *     org          :: original glyph coordinates (font units/scaled)
-  *     cur          :: current glyph coordinates  (scaled/hinted)
-  *     tags         :: point control tags
-  *     contours     :: contour end points
-  *
-  ***********************************************************************/
-
-  typedef struct  TT_GlyphZone_
-  {
-    FT_Memory   memory;
-    FT_UShort   max_points;
-    FT_UShort   max_contours;
-    FT_UShort   n_points;   /* number of points in zone    */
-    FT_Short    n_contours; /* number of contours          */
-
-    FT_Vector*  org;        /* original point coordinates  */
-    FT_Vector*  cur;        /* current point coordinates   */
-
-    FT_Byte*    tags;       /* current touch flags         */
-    FT_UShort*  contours;   /* contour end points          */
-
-  } TT_GlyphZone;
-
   LOCAL_DEF void  TT_Done_GlyphZone( TT_GlyphZone*  zone );
 
   LOCAL_DEF FT_Error TT_New_GlyphZone( FT_Memory      memory,
@@ -333,16 +295,6 @@
     FT_Bool     stretched;          /* `is the glyph stretched?'-flag */
 
   } TT_Size_Metrics;
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* FreeType execution context type.                                      */
-  /*                                                                       */
-  /* This is a forward declaration; the full specification is in the file  */
-  /* `ttinterp.h'.                                                         */
-  /*                                                                       */
-  typedef struct TT_ExecContextRec_*  TT_ExecContext;
 
 
   /***********************************************************************/
