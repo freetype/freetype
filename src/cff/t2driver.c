@@ -78,7 +78,7 @@
   /*                   formats.                                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Only horizontal layouts (left-to-right & right-to-left) are        */
@@ -169,7 +169,7 @@
   /*                   whether to hint the outline, etc).                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Load_Glyph( T2_GlyphSlot  slot,
@@ -282,8 +282,10 @@
   {
     FT_Module  sfnt;
 
-    /* we simply pass our request to the "sfnt" module */
+
+    /* we simply pass our request to the `sfnt' module */
     sfnt = FT_Get_Module( driver->root.root.library, "sfnt" );
+
     return sfnt ? sfnt->clazz->get_interface( sfnt, interface ) : 0;
   }
 
@@ -297,14 +299,14 @@
       ft_module_font_driver | ft_module_driver_scalable,
       sizeof( T2_DriverRec ),
       "cff",
-      0x10000,
-      0x20000,
+      0x10000L,
+      0x20000L,
 
       0,   /* module-specific interface */
       
-      (FT_Module_Constructor)  T2_Init_Driver,
-      (FT_Module_Destructor)   T2_Done_Driver,
-      (FT_Module_Requester)    t2_get_interface,
+      (FT_Module_Constructor)T2_Init_Driver,
+      (FT_Module_Destructor) T2_Done_Driver,
+      (FT_Module_Requester)  t2_get_interface,
     },
     
     /* now the specific driver fields */
@@ -312,22 +314,22 @@
     sizeof( FT_SizeRec ),
     sizeof( T2_GlyphSlotRec ),
 
-    (FTDriver_initFace)       T2_Init_Face,
-    (FTDriver_doneFace)       T2_Done_Face,
-    (FTDriver_initSize)       0,
-    (FTDriver_doneSize)       0,
-    (FTDriver_initGlyphSlot)  0,
-    (FTDriver_doneGlyphSlot)  0,
+    (FTDriver_initFace)     T2_Init_Face,
+    (FTDriver_doneFace)     T2_Done_Face,
+    (FTDriver_initSize)     0,
+    (FTDriver_doneSize)     0,
+    (FTDriver_initGlyphSlot)0,
+    (FTDriver_doneGlyphSlot)0,
 
-    (FTDriver_setCharSizes)   0,
-    (FTDriver_setPixelSizes)  0,
+    (FTDriver_setCharSizes) 0,
+    (FTDriver_setPixelSizes)0,
     
-    (FTDriver_loadGlyph)      Load_Glyph,
-    (FTDriver_getCharIndex)   Get_Char_Index,
+    (FTDriver_loadGlyph)    Load_Glyph,
+    (FTDriver_getCharIndex) Get_Char_Index,
 
-    (FTDriver_getKerning)     Get_Kerning,
-    (FTDriver_attachFile)     0,
-    (FTDriver_getAdvances)    0
+    (FTDriver_getKerning)   Get_Kerning,
+    (FTDriver_attachFile)   0,
+    (FTDriver_getAdvances)  0
   };
 
 

@@ -210,8 +210,8 @@
         /* transform the outline -- note that the original metrics are NOT */
         /* transformed by this, only the outline points themselves...      */
         FT_Outline_Translate( &face->glyph->outline,
-                               origin_x,
-                               origin_y );
+                              origin_x,
+                              origin_y );
 
         /* compute the size in pixels of the outline */
         FT_Outline_Get_CBox( &face->glyph->outline, &cbox );

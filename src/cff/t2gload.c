@@ -232,6 +232,7 @@
     if ( glyph )
     {
       FT_GlyphLoader*  loader = glyph->root.loader;
+
       
       builder->loader  = loader;
       builder->base    = &loader->base.outline;
@@ -272,6 +273,7 @@
   void  T2_Done_Builder( T2_Builder*  builder )
   {
     T2_GlyphSlot  glyph = builder->glyph;
+
 
     if ( glyph )
       glyph->root.outline = *builder->base;
@@ -360,8 +362,7 @@
   FT_Error  check_points( T2_Builder*  builder,
                           FT_Int       count )
   {
-    return FT_GlyphLoader_Check_Points( builder->loader,
-                                        count, 0 );
+    return FT_GlyphLoader_Check_Points( builder->loader, count, 0 );
   }                                         
 
 
@@ -374,10 +375,12 @@
   {
     FT_Outline*  outline = builder->current;
 
+
     if ( builder->load_points )
     {
       FT_Vector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
+
 
       point->x = x >> 16;
       point->y = y >> 16;
@@ -397,6 +400,7 @@
   {
     FT_Error  error;
 
+
     error = check_points( builder, 1 );
     if ( !error )
       add_point( builder, x, y, 1 );
@@ -412,6 +416,7 @@
     FT_Outline*  outline = builder->current;
     FT_Error     error;
 
+
     if ( !builder->load_points )
     {
       outline->n_contours++;
@@ -419,13 +424,14 @@
     }
 
     error = FT_GlyphLoader_Check_Points( builder->loader, 0, 1 );
-    if (!error)
+    if ( !error )
     {
       if ( outline->n_contours > 0 )
         outline->contours[outline->n_contours - 1] = outline->n_points - 1;
   
       outline->n_contours++;
     }
+
     return error;
   }
 
@@ -440,6 +446,7 @@
     if ( !builder->path_begun )
     {
       FT_Error  error;
+
 
       builder->path_begun = 1;
       error = add_contour( builder );
@@ -456,6 +463,7 @@
   void  close_contour( T2_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
+
 
     if ( outline->n_contours > 0 )
       outline->contours[outline->n_contours - 1] = outline->n_points - 1;
@@ -484,7 +492,7 @@
   /*    charstring_len   :: The length in bytes of the charstring stream.  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  T2_Parse_CharStrings( T2_Decoder*  decoder,

@@ -119,7 +119,8 @@ ifdef BUILD_FREETYPE
   #   librarian library_file {list of object files} 
   #
   $(FT_LIBRARY): $(OBJECTS_LIST)
-  	lcclib /out:$(subst /,\\,$@) $(subst /,\\,$(OBJECTS_LIST))
+	  lcclib /out:$(subst $(SEP),$(HOSTSEP),$@) \
+                 $(subst $(SEP),$(HOSTSEP),$(OBJECTS_LIST))
 
 endif
 

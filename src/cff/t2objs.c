@@ -68,7 +68,7 @@
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  T2_Init_Face( FT_Stream      stream,
@@ -80,9 +80,10 @@
     FT_Error         error;
     SFNT_Interface*  sfnt;
 
-    sfnt = (SFNT_Interface*)
-              FT_Get_Module_Interface( face->root.driver->root.library,"sfnt" );
-    if ( !sfnt ) goto Bad_Format;
+    sfnt = (SFNT_Interface*)FT_Get_Module_Interface(
+             face->root.driver->root.library, "sfnt" );
+    if ( !sfnt )
+      goto Bad_Format;
 
     /* create input stream from resource */
     if ( FILE_Seek( 0 ) )
@@ -188,7 +189,7 @@
   /*    driver :: A handle to the target driver object.                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  T2_Init_Driver( T2_Driver  driver )

@@ -143,6 +143,7 @@
       FT_Int               n   = registry->num_extensions;
       FT_Extension_Class*  cur = registry->classes + n;
 
+
       if ( n >= FT_MAX_EXTENSIONS )
         return FT_Err_Too_Many_Extensions;
 

@@ -96,7 +96,7 @@
   /*    length :: The length of the table if found, undefined otherwise.   */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Goto_Table( TT_Face    face,
@@ -141,7 +141,7 @@
   /*    sfnt       :: The SFNT header.                                     */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The stream cursor must be at the font file's origin.               */
@@ -275,7 +275,7 @@
   /*    sfnt   :: The SFNT directory header.                               */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The stream cursor must be at the font file's origin.               */
@@ -373,7 +373,7 @@
   /*    buffer :: The address of target buffer.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_Any( TT_Face   face,
@@ -436,7 +436,7 @@
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_Header( TT_Face    face,
@@ -507,7 +507,7 @@
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_MaxProfile( TT_Face    face,
@@ -597,7 +597,7 @@
   /*    vertical :: A boolean flag.  If set, load vertical metrics.        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  TT_Load_Metrics( TT_Face    face,
@@ -733,7 +733,7 @@
   /*    vertical :: A boolean flag.  If set, load vertical metrics.        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_Metrics_Header( TT_Face    face,
@@ -829,7 +829,7 @@
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_Names( TT_Face    face,
@@ -1020,7 +1020,7 @@
   /*    stream :: A handle to the input stream.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*     TrueType error code.  0 means success.                            */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_CMap( TT_Face    face,
@@ -1129,7 +1129,7 @@
   /*    stream :: A handle to the input stream.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_OS2( TT_Face    face,
@@ -1263,7 +1263,7 @@
   /*    stream :: A handle to the input stream.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_PostScript( TT_Face    face,
@@ -1318,7 +1318,7 @@
   /*    stream :: A handle to the input stream.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_PCLT( TT_Face    face,
@@ -1389,7 +1389,7 @@
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_Gasp( TT_Face    face,
@@ -1461,7 +1461,7 @@
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_Kern( TT_Face    face,
@@ -1566,7 +1566,7 @@
   /*    stream :: A handle to the input stream.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_Hdmx( TT_Face    face,

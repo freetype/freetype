@@ -23,6 +23,8 @@
 
 #include <freetype/tttables.h>
 
+#include <string.h>     /* for strcmp() */
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -325,38 +327,43 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  /**************************************************************************
-   *
-   *  The glyph loader is a simple object which is used to load a set of
-   *  glyphs easily. It is critical for the correct loading of composites.
-   *
-   *  Ideally, one can see it as a stack of abstract "glyph" objects.
-   *
-   *  loader.base      is really the bottom of the stack. It describes a
-   *                   single glyph image made of the juxtaposition of several
-   *                   glyphs (those 'in the stack')
-   *
-   *  loader.current   describes the top of the stack, on which a new
-   *                   glyph can be loaded.
-   *
-   *  Rewind   clears the stack
-   *  Prepare  means set up "loader.current" for addition of a new glyph image
-   *  Add      means add the 'current' glyph image to the 'base' one, and
-   *           prepare for another one..
-   *
-   *  the glyph loader is now a base object. Each driver used to re-implement
-   *  it in one way or the other, which wasted code and energy..
-   *
-   *************************************************************************/
 
- /* create a new glyph loader */
-  BASE_FUNC(FT_Error)  FT_GlyphLoader_New( FT_Memory        memory,
-                                           FT_GlyphLoader* *aloader )
+  /*************************************************************************/
+  /*                                                                       */
+  /* The glyph loader is a simple object which is used to load a set of    */
+  /* glyphs easily.  It is critical for the correct loading of composites. */
+  /*                                                                       */
+  /* Ideally, one can see it as a stack of abstract `glyph' objects.       */
+  /*                                                                       */
+  /*   loader.base     Is really the bottom of the stack.  It describes a  */
+  /*                   single glyph image made of the juxtaposition of     */
+  /*                   several glyphs (those `in the stack').              */
+  /*                                                                       */
+  /*   loader.current  Describes the top of the stack, on which a new      */
+  /*                   glyph can be loaded.                                */
+  /*                                                                       */
+  /*   Rewind          Clears the stack.                                   */
+  /*   Prepare         Set up `loader.current' for addition of a new glyph */
+  /*                   image.                                              */
+  /*   Add             Add the `current' glyph image to the `base' one,    */
+  /*                   and prepare for another one.                        */
+  /*                                                                       */
+  /* The glyph loader is now a base object.  Each driver used to           */
+  /* re-implement it in one way or the other, which wasted code and        */
+  /* energy.                                                               */
+  /*                                                                       */
+  /*************************************************************************/
+
+
+  /* create a new glyph loader */
+  BASE_FUNC( FT_Error )  FT_GlyphLoader_New( FT_Memory         memory,
+                                             FT_GlyphLoader**  aloader )
   {
     FT_GlyphLoader*  loader;
     FT_Error         error;
 
-    if (!ALLOC(loader, sizeof(*loader)))
+
+    if ( !ALLOC( loader, sizeof ( *loader ) ) )
     {
       loader->memory = memory;
       *aloader       = loader;
@@ -365,11 +372,12 @@
   }
 
 
- /* rewind the glyph loader - reset counters to 0 */
-  BASE_FUNC(void)      FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader )
+  /* rewind the glyph loader - reset counters to 0 */
+  BASE_FUNC( void )  FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader )
   {
     FT_GlyphLoad*  base    = &loader->base;
     FT_GlyphLoad*  current = &loader->current;
+
 
     base->outline.n_points   = 0;
     base->outline.n_contours = 0;
@@ -379,10 +387,12 @@
   }
 
 
- /* reset the glyph loader, frees all allocated tables and starts from zero */
-  BASE_FUNC(void)      FT_GlyphLoader_Reset( FT_GlyphLoader*  loader )
+  /* reset the glyph loader, frees all allocated tables */
+  /* and starts from zero                               */
+  BASE_FUNC( void )  FT_GlyphLoader_Reset( FT_GlyphLoader*  loader )
   {
     FT_Memory memory = loader->memory;
+
 
     FREE( loader->base.outline.points );
     FREE( loader->base.outline.tags );
@@ -398,12 +408,13 @@
   }
 
 
- /* delete a glyph loader */
-  BASE_FUNC(void)     FT_GlyphLoader_Done( FT_GlyphLoader*  loader )
+  /* delete a glyph loader */
+  BASE_FUNC( void )  FT_GlyphLoader_Done( FT_GlyphLoader*  loader )
   {
-    if (loader)
+    if ( loader )
     {
       FT_Memory memory = loader->memory;
+
 
       FT_GlyphLoader_Reset(loader);
       FREE( loader );
@@ -411,56 +422,59 @@
   }
 
 
- /* re-adjust the 'current' outline fields */
-  static void FT_GlyphLoader_Adjust_Points( FT_GlyphLoader*  loader )
+  /* re-adjust the `current' outline fields */
+  static void  FT_GlyphLoader_Adjust_Points( FT_GlyphLoader*  loader )
   {
     FT_Outline*  base    = &loader->base.outline;
     FT_Outline*  current = &loader->current.outline;
+
 
     current->points   = base->points   + base->n_points;
     current->tags     = base->tags     + base->n_points;
     current->contours = base->contours + base->n_contours;
     
     /* handle extra points table - if any */
-    if (loader->use_extra)
-      loader->current.extra_points = loader->base.extra_points + base->n_points;
+    if ( loader->use_extra )
+      loader->current.extra_points =
+        loader->base.extra_points + base->n_points;
   }
 
 
-
-  BASE_FUNC(FT_Error)  FT_GlyphLoader_Create_Extra( FT_GlyphLoader*  loader )
+  BASE_FUNC( FT_Error )  FT_GlyphLoader_Create_Extra(
+                           FT_GlyphLoader*  loader )
   {
     FT_Error   error;
     FT_Memory  memory = loader->memory;
+
     
     if ( !ALLOC_ARRAY( loader->base.extra_points,
                        loader->max_points, FT_Vector ) )
     {
       loader->use_extra = 1;
-      FT_GlyphLoader_Adjust_Points(loader);
+      FT_GlyphLoader_Adjust_Points( loader );
     }
     return error;
   }
 
 
-
-
- /* re-adjust the 'current' subglyphs field */
-  static void FT_GlyphLoader_Adjust_Subglyphs( FT_GlyphLoader*  loader )
+  /* re-adjust the `current' subglyphs field */
+  static void  FT_GlyphLoader_Adjust_Subglyphs( FT_GlyphLoader*  loader )
   {
     FT_GlyphLoad* base    = &loader->base;
     FT_GlyphLoad* current = &loader->current;
+
 
     current->subglyphs = base->subglyphs + base->num_subglyphs;
   }
 
 
- /* ensure that we can add n_points and n_contours to our glyph. this */
- /* function reallocates its outline tables if necessary. Note that   */
- /* it DOESN'T change the number of points within the loader !!       */
-  BASE_FUNC(FT_Error) FT_GlyphLoader_Check_Points( FT_GlyphLoader* loader,
-                                                   FT_UInt         n_points,
-                                                   FT_UInt         n_contours )
+  /* Ensure that we can add `n_points' and `n_contours' to our glyph. this */
+  /* function reallocates its outline tables if necessary.  Note that it   */
+  /* DOESN'T change the number of points within the loader!                */
+  BASE_FUNC( FT_Error ) FT_GlyphLoader_Check_Points(
+                          FT_GlyphLoader*  loader,
+                          FT_UInt          n_points,
+                          FT_UInt          n_contours )
   {
     FT_Memory    memory  = loader->memory;
     FT_Error     error   = FT_Err_Ok;
@@ -470,18 +484,21 @@
 
     FT_UInt  new_max;
 
+
     /* check points & tags */
     new_max = base->n_points + current->n_points + n_points;
-    if (new_max > loader->max_points)
+    if ( new_max > loader->max_points )
     {
-      new_max = (new_max+7) & -8;
-      if ( REALLOC_ARRAY( base->points, base->n_points, new_max, FT_Vector ) ||
-           REALLOC_ARRAY( base->tags,   base->n_points, new_max, FT_Byte   ) )
+      new_max = ( new_max + 7 ) & -8;
+      if ( REALLOC_ARRAY( base->points, base->n_points,
+                          new_max, FT_Vector )          ||
+           REALLOC_ARRAY( base->tags, base->n_points,
+                          new_max, FT_Byte   )          )
        goto Exit;
 
       if ( loader->use_extra &&
-           REALLOC_ARRAY( loader->base.extra_points, base->n_points, new_max,
-                          FT_Vector ) )
+           REALLOC_ARRAY( loader->base.extra_points, base->n_points,
+                          new_max, FT_Vector ) )
        goto Exit;
 
       adjust = 1;
@@ -491,17 +508,18 @@
     /* check contours */
     new_max = base->n_contours + current->n_contours +
               n_contours;
-    if (new_max > loader->max_contours)
+    if ( new_max > loader->max_contours )
     {
-      new_max = (new_max+3) & -4;
-      if (REALLOC_ARRAY( base->contours, base->n_contours, new_max, FT_Short ))
+      new_max = ( new_max + 3 ) & -4;
+      if ( REALLOC_ARRAY( base->contours, base->n_contours,
+                          new_max, FT_Short ) )
         goto Exit;
 
       adjust = 1;
       loader->max_contours = new_max;
     }
 
-    if (adjust)
+    if ( adjust )
       FT_GlyphLoader_Adjust_Points( loader );
 
   Exit:
@@ -509,11 +527,12 @@
   }
 
 
- /* ensure that we can add n_subglyphs to our glyph. this function    */
- /* reallocates its subglyphs table if necessary. Note that it DOES   */
- /* NOT change the number of subglyphs within the loader !!           */
-  BASE_FUNC(FT_Error)  FT_GlyphLoader_Check_Subglyphs( FT_GlyphLoader*  loader,
-                                                       FT_UInt          n_subs )
+  /* Ensure that we can add `n_subglyphs' to our glyph. this function */
+  /* reallocates its subglyphs table if necessary.  Note that it DOES */
+  /* NOT change the number of subglyphs within the loader!            */
+  BASE_FUNC( FT_Error )  FT_GlyphLoader_Check_Subglyphs(
+                           FT_GlyphLoader*  loader,
+                           FT_UInt          n_subs )
   {
     FT_Memory  memory = loader->memory;
     FT_Error   error  = FT_Err_Ok;
@@ -522,12 +541,13 @@
     FT_GlyphLoad*  base    = &loader->base;
     FT_GlyphLoad*  current = &loader->current;
 
+
     new_max = base->num_subglyphs + current->num_subglyphs + n_subs;
-    if (new_max > loader->max_subglyphs)
+    if ( new_max > loader->max_subglyphs )
     {
-      new_max = (new_max+1) & -2;
-      if (REALLOC_ARRAY( base->subglyphs, base->num_subglyphs,
-                         new_max, FT_SubGlyph ))
+      new_max = ( new_max + 1 ) & -2;
+      if ( REALLOC_ARRAY( base->subglyphs, base->num_subglyphs,
+                          new_max, FT_SubGlyph ) )
         goto Exit;
 
       loader->max_subglyphs = new_max;
@@ -540,10 +560,11 @@
   }
 
 
- /* prepare loader for the addition of a new glyph on top of the base one */
-  BASE_FUNC(void)      FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader )
+  /* prepare loader for the addition of a new glyph on top of the base one */
+  BASE_FUNC( void )  FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader )
   {
     FT_GlyphLoad*  current = &loader->current;
+
 
     current->outline.n_points   = 0;
     current->outline.n_contours = 0;
@@ -554,8 +575,8 @@
   }
 
 
- /* add current glyph to the base image - and prepare for another */
-  BASE_FUNC(void)      FT_GlyphLoader_Add( FT_GlyphLoader*  loader )
+  /* add current glyph to the base image - and prepare for another */
+  BASE_FUNC( void )  FT_GlyphLoader_Add( FT_GlyphLoader*  loader )
   {
     FT_GlyphLoad*  base    = &loader->base;
     FT_GlyphLoad*  current = &loader->current;
@@ -563,6 +584,7 @@
     FT_UInt        n_curr_contours = current->outline.n_contours;
     FT_UInt        n_base_points   = base->outline.n_points;
     FT_UInt        n;
+
 
     base->outline.n_points   += current->outline.n_points;
     base->outline.n_contours += current->outline.n_contours;
@@ -577,36 +599,42 @@
   }
 
 
-  BASE_FUNC(FT_Error)   FT_GlyphLoader_Copy_Points( FT_GlyphLoader*  target,
-                                                    FT_GlyphLoader*  source )
+  BASE_FUNC( FT_Error )   FT_GlyphLoader_Copy_Points(
+                            FT_GlyphLoader*  target,
+                            FT_GlyphLoader*  source )
   {
     FT_Error  error;
     FT_UInt   num_points   = source->base.outline.n_points;
     FT_UInt   num_contours = source->base.outline.n_contours;
+
     
     error = FT_GlyphLoader_Check_Points( target, num_points, num_contours );
-    if (!error)
+    if ( !error )
     {
       FT_Outline*  out = &target->base.outline;
       FT_Outline*  in  = &source->base.outline;
+
       
-      MEM_Copy( out->points,   in->points, num_points * sizeof(FT_Vector) );
-      MEM_Copy( out->tags,     in->tags,   num_points * sizeof(char) );
-      MEM_Copy( out->contours, in->contours, num_contours * sizeof(short) );
+      MEM_Copy( out->points, in->points,
+                num_points * sizeof ( FT_Vector ) );
+      MEM_Copy( out->tags, in->tags,
+                num_points * sizeof ( char ) );
+      MEM_Copy( out->contours, in->contours,
+                num_contours * sizeof ( short ) );
       
-      /* do we need to copy the extra points ? */
-      if (target->use_extra && source->use_extra)
+      /* do we need to copy the extra points? */
+      if ( target->use_extra && source->use_extra )
         MEM_Copy( target->base.extra_points, source->base.extra_points,
-                  num_points * sizeof(FT_Vector) );
+                  num_points * sizeof ( FT_Vector ) );
                   
       out->n_points   = num_points;
       out->n_contours = num_contours;
       
       FT_GlyphLoader_Adjust_Points( target );
     }
+
     return error;                                         
   }                                           
-
 
 
   /*************************************************************************/
@@ -628,22 +656,23 @@
     FT_Memory         memory = driver->root.memory;
     FT_Error          error  = FT_Err_Ok;
 
-    if (FT_DRIVER_USES_OUTLINES(driver))
+
+    if ( FT_DRIVER_USES_OUTLINES( driver ) )
       error = FT_GlyphLoader_New( memory, &slot->loader );
 
-    if (!error && clazz->init_slot)
+    if ( !error && clazz->init_slot )
       error = clazz->init_slot( slot );
 
     return error;
   }
 
 
-  static  void      ft_glyphslot_clear( FT_GlyphSlot  slot )
+  static void  ft_glyphslot_clear( FT_GlyphSlot  slot )
   {
     /* clear all public fields in the glyph slot */
-    MEM_Set( &slot->metrics, 0, sizeof(slot->metrics) );
-    MEM_Set( &slot->outline, 0, sizeof(slot->outline) );
-    MEM_Set( &slot->bitmap,  0, sizeof(slot->bitmap)  );
+    MEM_Set( &slot->metrics, 0, sizeof ( slot->metrics ) );
+    MEM_Set( &slot->outline, 0, sizeof ( slot->outline ) );
+    MEM_Set( &slot->bitmap,  0, sizeof ( slot->bitmap )  );
 
     slot->bitmap_left   = 0;
     slot->bitmap_top    = 0;
@@ -659,28 +688,27 @@
   }
 
 
-  static  void      ft_glyphslot_done( FT_GlyphSlot  slot )
+  static void  ft_glyphslot_done( FT_GlyphSlot  slot )
   {
     FT_Driver         driver = slot->face->driver;
     FT_Driver_Class*  clazz  = driver->clazz;
     FT_Memory         memory = driver->root.memory;
+
 
     /* free bitmap buffer if needed */
     if ( slot->flags & ft_glyph_own_bitmap )
       FREE( slot->bitmap.buffer );
 
     /* free glyph loader */
-    if (FT_DRIVER_USES_OUTLINES(driver))
+    if ( FT_DRIVER_USES_OUTLINES( driver ) )
     {
       FT_GlyphLoader_Done( slot->loader );
       slot->loader = 0;
     }
 
-    if (clazz->done_slot)
+    if ( clazz->done_slot )
       clazz->done_slot( slot );
   }
-
-
 
 
   /*************************************************************************/
@@ -703,15 +731,15 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-
   FT_EXPORT_FUNC( FT_Error )  FT_New_GlyphSlot( FT_Face        face,
                                                 FT_GlyphSlot*  aslot )
   {
-    FT_Error           error;
-    FT_Driver          driver;
-    FT_Driver_Class*   clazz;
-    FT_Memory          memory;
-    FT_GlyphSlot       slot;
+    FT_Error          error;
+    FT_Driver         driver;
+    FT_Driver_Class*  clazz;
+    FT_Memory         memory;
+    FT_GlyphSlot      slot;
+
 
     *aslot = 0;
 
@@ -728,7 +756,7 @@
       slot->face = face;
 
       error = ft_glyphslot_init( slot );
-      if (error)
+      if ( error )
       {
         ft_glyphslot_done( slot );
         FREE( slot );
@@ -766,15 +794,17 @@
       FT_GlyphSlot*     parent;
       FT_GlyphSlot      cur;
 
+
       /* Remove slot from its parent face's list */
       parent = &slot->face->glyph;
       cur    = *parent;
+
       while ( cur )
       {
         if ( cur == slot )
         {
           *parent = cur->next;
-          ft_glyphslot_done(slot);
+          ft_glyphslot_done( slot );
           FREE( slot );
           break;
         }
@@ -784,9 +814,8 @@
   }
 
 
-
- /* forward declaration */
-  static  FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
+  /* forward declaration */
+  static FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
 
 
   /*************************************************************************/
@@ -796,8 +825,8 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A function used to set the transformation that is applied to glyph */
-  /*    images just before they're converted to bitmaps in a glyph slot    */
-  /*    when FT_Render_Glyph is called..                                   */
+  /*    images just before they are converted to bitmaps in a glyph slot   */
+  /*    when FT_Render_Glyph() is called.                                  */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    face   :: A handle to the source face object.                      */
@@ -882,10 +911,9 @@
   /*    transformed with the information passed to a previous call to      */
   /*    FT_Set_Transform.                                                  */
   /*                                                                       */
-  /*    Note that this also transforms the "face.glyph.advance" field,     */
-  /*    but **NOT** the values in "face.glyph.metrics"..                   */
+  /*    Note that this also transforms the `face.glyph.advance' field, but */
+  /*    *not* the values in `face.glyph.metrics'.                          */
   /*                                                                       */
-
   FT_EXPORT_FUNC( FT_Error )  FT_Load_Glyph( FT_Face  face,
                                              FT_UInt  glyph_index,
                                              FT_Int   load_flags )
@@ -893,6 +921,7 @@
     FT_Error      error;
     FT_Driver     driver;
     FT_GlyphSlot  slot;
+
 
     if ( !face || !face->size || !face->glyph )
       return FT_Err_Invalid_Face_Handle;
@@ -913,10 +942,11 @@
                                        face->size,
                                        glyph_index,
                                        load_flags );
-    if (error) goto Exit;
+    if ( error )
+      goto Exit;
 
     /* compute the advance */
-    if (load_flags & FT_LOAD_VERTICAL_LAYOUT)
+    if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
     {
       slot->advance.x = 0;
       slot->advance.y = slot->metrics.vertAdvance;
@@ -928,12 +958,13 @@
     }
 
     /* now, transform the glyph image when needed */
-    if (face->transform_flags)
+    if ( face->transform_flags )
     {
       /* get renderer */
       FT_Renderer  renderer = ft_lookup_glyph_renderer( slot );
       
-      if (renderer)
+
+      if ( renderer )
         error = renderer->clazz->transform_glyph( renderer, slot,
                                                   &face->transform_matrix,
                                                   &face->transform_delta );
@@ -953,7 +984,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A function used to load a single glyph within a given glyph slot,  */
-  /*    for a given size, according to its character code !                */
+  /*    for a given size, according to its character code.                 */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face        :: A handle to a target face object where the glyph    */
@@ -967,21 +998,22 @@
   /*                   glyph loading process (e.g., whether the outline    */
   /*                   should be scaled, whether to load bitmaps or not,   */
   /*                   whether to hint the outline, etc).                  */
+  /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    If the face has no current charmap, or if the character code       */
   /*    is not defined in the charmap, this function will return an        */
-  /*    error..                                                            */
+  /*    error.                                                             */
   /*                                                                       */
   /*    If the glyph image is not a bitmap, and if the bit flag            */
   /*    FT_LOAD_IGNORE_TRANSFORM is unset, the glyph image will be         */
   /*    transformed with the information passed to a previous call to      */
-  /*    FT_Set_Transform.                                                  */
+  /*    FT_Set_Transform().                                                */
   /*                                                                       */
-  /*    Note that this also transforms the "face.glyph.advance" field,     */
-  /*    but **NOT** the values in "face.glyph.metrics"..                   */
+  /*    Note that this also transforms the `face.glyph.advance' field, but */
+  /*    *not* the values in `face.glyph.metrics'.                          */
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Load_Char( FT_Face   face,
                                             FT_ULong  char_code,
@@ -989,18 +1021,17 @@
   {
     FT_UInt    glyph_index;
 
+
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
 
     glyph_index = (FT_UInt)char_code;
-    if (face->charmap)
+    if ( face->charmap )
       glyph_index = FT_Get_Char_Index( face, char_code );
 
     return glyph_index ? FT_Load_Glyph( face, glyph_index, load_flags )
                        : FT_Err_Invalid_Character_Code;
   }
-
-
 
 
   /* destructor for sizes list */
@@ -1010,11 +1041,11 @@
                       FT_Driver  driver )
   {
     /* finalize client-specific data */
-    if (size->generic.finalizer)
+    if ( size->generic.finalizer )
       size->generic.finalizer( size );
 
     /* finalize format-specific stuff */
-    if (driver->clazz->done_size)
+    if ( driver->clazz->done_size )
       driver->clazz->done_size( size );
 
     FREE( size );
@@ -1028,6 +1059,7 @@
                       FT_Driver  driver )
   {
     FT_Driver_Class*  clazz = driver->clazz;
+
 
     /* Discard glyph slots for this face                           */
     /* Beware!  FT_Done_GlyphSlot() changes the field `face->slot' */
@@ -1046,11 +1078,11 @@
       face->generic.finalizer( face );
 
     /* finalize format-specific stuff */
-    if (clazz->done_face)
-      clazz->done_face(face);
+    if ( clazz->done_face )
+      clazz->done_face( face );
 
     /* close the stream for this face if needed */
-    if ( (face->face_flags & FT_FACE_FLAG_EXTERNAL_STREAM) == 0 )
+    if ( ( face->face_flags & FT_FACE_FLAG_EXTERNAL_STREAM ) == 0 )
       ft_done_stream( &face->stream );
 
     /* get rid of it */
@@ -1066,12 +1098,9 @@
                       driver );
 
     /* see if we need to drop the driver's glyph loader */
-    if (FT_DRIVER_USES_OUTLINES(driver))
+    if ( FT_DRIVER_USES_OUTLINES( driver ) )
       FT_GlyphLoader_Done( driver->glyph_loader );
-      
-    
   }
-
 
 
   /*************************************************************************/
@@ -1094,6 +1123,7 @@
     FT_Driver_Class*  clazz;
     FT_Face           face = 0;
     FT_Error          error;
+
 
     clazz  = driver->clazz;
     memory = driver->root.memory;
@@ -1173,6 +1203,7 @@
   {
     FT_Open_Args  args;
 
+
     /* test for valid `library' and `aface' delayed to FT_Open_Face() */
     if ( !pathname )
       return FT_Err_Invalid_Argument;
@@ -1231,6 +1262,7 @@
                                                   FT_Face*     face )
   {
     FT_Open_Args  args;
+
 
     /* test for valid `library' and `face' delayed to FT_Open_Face() */
     if ( !file_base )
@@ -1315,13 +1347,14 @@
     /* it.  Otherwise, we'll scan the list of registered drivers.   */
     if ( args->flags & ft_open_driver && args->driver )
     {
-      driver = FT_DRIVER(args->driver);
+      driver = FT_DRIVER( args->driver );
 
       /* not all modules are drivers, so check... */
-      if ( FT_MODULE_IS_DRIVER(driver) )
+      if ( FT_MODULE_IS_DRIVER( driver ) )
       {
         FT_Int         num_params = 0;
         FT_Parameter*  params     = 0;
+
 
         if ( args->flags & ft_open_params )
         {
@@ -1346,15 +1379,17 @@
       FT_Module*  cur   = library->modules;
       FT_Module*  limit = cur + library->num_modules;
 
+
       for ( ; cur < limit; cur++ )
       {
         /* not all modules are font drivers, so check... */
-        if ( FT_MODULE_IS_DRIVER(cur[0]) )
+        if ( FT_MODULE_IS_DRIVER( cur[0] ) )
         {
           FT_Int         num_params = 0;
           FT_Parameter*  params     = 0;
 
-          driver     = FT_DRIVER(cur[0]);
+
+          driver = FT_DRIVER( cur[0] );
 
           if ( args->flags & ft_open_params )
           {
@@ -1525,6 +1560,7 @@
 
     FT_Driver_Class*  clazz;
 
+
     /* test for valid `parameters' delayed to ft_new_input_stream() */
 
     if ( !face )
@@ -1543,11 +1579,11 @@
 
     error = FT_Err_Unimplemented_Feature;
     clazz = driver->clazz;
-    if (clazz->attach_file)
+    if ( clazz->attach_file )
       error = clazz->attach_file( face, stream );
 
     /* close the attached stream */
-    if ( !parameters->stream || (parameters->flags & ft_open_stream) )
+    if ( !parameters->stream || ( parameters->flags & ft_open_stream ) )
       ft_done_stream( &stream );
 
   Exit:
@@ -1572,10 +1608,11 @@
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Done_Face( FT_Face  face )
   {
-    FT_Error          error;
-    FT_Driver         driver;
-    FT_Memory         memory;
-    FT_ListNode       node;
+    FT_Error     error;
+    FT_Driver    driver;
+    FT_Memory    memory;
+    FT_ListNode  node;
+
 
     error = FT_Err_Invalid_Face_Handle;
     if ( face && face->driver )
@@ -1628,6 +1665,7 @@
     FT_Size           size = 0;
     FT_ListNode       node = 0;
 
+
     *asize = 0;
 
     if ( !face || !asize || !face->driver )
@@ -1644,7 +1682,7 @@
 
     size->face = face;
 
-    if (clazz->init_size)
+    if ( clazz->init_size )
       error = clazz->init_size( size );
 
     /* in case of success, add to the face's list */
@@ -1725,6 +1763,24 @@
   }
 
 
+  static void  ft_recompute_scaled_metrics( FT_Face           face,
+                                            FT_Size_Metrics*  metrics )
+  {                                              
+    /* Compute root ascender, descender, test height, and max_advance */
+    metrics->ascender    = ( FT_MulFix( face->ascender,
+                                        metrics->y_scale ) + 32 ) & -64;
+
+    metrics->descender   = ( FT_MulFix( face->descender,
+                                        metrics->y_scale ) + 32 ) & -64;
+
+    metrics->height      = ( FT_MulFix( face->height,
+                                        metrics->y_scale ) + 32 ) & -64;
+
+    metrics->max_advance = ( FT_MulFix( face->max_advance_width,
+                                        metrics->x_scale ) + 32 ) & -64;
+  }
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1759,27 +1815,6 @@
   /*    When dealing with fixed-size faces (i.e., non-scalable formats),   */
   /*    use the function FT_Set_Pixel_Sizes().                             */
   /*                                                                       */
-  
-    static void  ft_recompute_scaled_metrics( FT_Face           face,
-                                              FT_Size_Metrics*  metrics )
-    {                                              
-      /* Compute root ascender, descender, test height, and max_advance */
-      metrics->ascender    = ( FT_MulFix( face->ascender,
-                                          metrics->y_scale ) + 32 ) & -64;
-  
-      metrics->descender   = ( FT_MulFix( face->descender,
-                                          metrics->y_scale ) + 32 ) & -64;
-  
-      metrics->height      = ( FT_MulFix( face->height,
-                                     metrics->y_scale ) + 32 ) & -64;
-  
-      metrics->max_advance = ( FT_MulFix( face->max_advance_width,
-                                          metrics->x_scale ) + 32 ) & -64;
-    }
-
-
-
-  
   FT_EXPORT_FUNC( FT_Error )  FT_Set_Char_Size( FT_Face     face,
                                                 FT_F26Dot6  char_width,
                                                 FT_F26Dot6  char_height,
@@ -1838,7 +1873,7 @@
 
     ft_recompute_scaled_metrics( face, metrics );
 
-    if (clazz->set_char_sizes)
+    if ( clazz->set_char_sizes )
       error = clazz->set_char_sizes( face->size,
                                      char_width,
                                      char_height,
@@ -1913,7 +1948,7 @@
 
     ft_recompute_scaled_metrics( face, metrics );
 
-    if (clazz->set_pixel_sizes)
+    if ( clazz->set_pixel_sizes )
       error = clazz->set_pixel_sizes( face->size,
                                       pixel_width,
                                       pixel_height );
@@ -1972,9 +2007,9 @@
     if ( driver->clazz->get_kerning )
     {
       error = driver->clazz->get_kerning( face,
-                                             left_glyph,
-                                             right_glyph,
-                                             kerning );
+                                          left_glyph,
+                                          right_glyph,
+                                          kerning );
     }
     else
     {
@@ -2156,7 +2191,7 @@
 
     driver = face->driver;
     func = (FT_Get_Sfnt_Table_Func)driver->root.clazz->get_interface(
-                                             FT_MODULE(driver), "get_sfnt" );
+                                     FT_MODULE( driver ), "get_sfnt" );
     if ( func )
       table = func( face, tag );
 
@@ -2180,28 +2215,30 @@
  /* lookup a renderer by glyph format in the library's list */
   static FT_Renderer  ft_lookup_renderer( FT_Library       library,
                                           FT_Glyph_Format  format,
-                                          FT_ListNode     *node )
+                                          FT_ListNode*     node )
   {
     FT_ListNode   cur    = library->renderers.head;
     FT_Renderer   result = 0;
+
     
-    if (node)
+    if ( node )
       *node = 0;
       
-    while (cur)
+    while ( cur )
     {
-      FT_Renderer  renderer = FT_RENDERER(cur->data);
+      FT_Renderer  renderer = FT_RENDERER( cur->data );
       
-      if (renderer->glyph_format == format)
+
+      if ( renderer->glyph_format == format )
       {
-        if (node)
+        if ( node )
           *node = cur;
         
         result = renderer;
         break;
       }
-        
     }
+
     return result;
   }
 
@@ -2209,10 +2246,11 @@
   static  FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot )
   {
     FT_Face     face    = slot->face;
-    FT_Library  library = FT_FACE_LIBRARY(face);
+    FT_Library  library = FT_FACE_LIBRARY( face );
     FT_Renderer result  = library->cur_renderer;
+
     
-    if (!result || result->glyph_format != slot->format)
+    if ( !result || result->glyph_format != slot->format )
       result = ft_lookup_renderer( library, slot->format, 0 );
     
     return result;
@@ -2235,12 +2273,13 @@
     FT_Error     error;
     FT_ListNode  node;
     
-    if (ALLOC(node,sizeof(*node)))
+    if ( ALLOC( node, sizeof ( *node ) ) )
       goto Exit;
       
     {
-      FT_Renderer         render = FT_RENDERER(module);
+      FT_Renderer         render = FT_RENDERER( module );
       FT_Renderer_Class*  clazz  = (FT_Renderer_Class*)module->clazz;
+
 
       render->clazz        = clazz;
       render->glyph_format = clazz->glyph_format;
@@ -2250,7 +2289,8 @@
            clazz->raster_class->raster_new )
       {
         error = clazz->raster_class->raster_new( memory, &render->raster );
-        if (error) goto Fail;
+        if ( error )
+          goto Fail;
         
         render->raster_render = clazz->raster_class->raster_render;
         render->render        = clazz->render_glyph;
@@ -2264,8 +2304,8 @@
     }
 
   Fail:
-    if (error)
-      FREE(node);
+    if ( error )
+      FREE( node );
 
   Exit:
     return error;
@@ -2278,13 +2318,15 @@
     FT_Memory    memory  = library->memory;
     FT_ListNode  node;
 
+
     node = FT_List_Find( &library->renderers, module );
-    if (node)
+    if ( node )
     {
-      FT_Renderer  render = FT_RENDERER(module);
+      FT_Renderer  render = FT_RENDERER( module );
       
+
       /* release raster object, if any */
-      if (render->raster)
+      if ( render->raster )
         render->clazz->raster_class->raster_done( render->raster );
       
       /* remove from list */
@@ -2296,74 +2338,73 @@
   }
 
 
-
- /*************************************************************************
-  *
-  *  <Function>
-  *     FT_Get_Renderer
-  *
-  *  <Description>
-  *     retrieves the current renderer for a given glyph format.
-  *
-  *  <Input>
-  *     library  :: handle to library object
-  *     format   :: glyph format
-  *
-  *  <Return>
-  *     renderer handle. 0 if none found.
-  *
-  *  <Note>
-  *     An error will be returned if a module already exists by that
-  *     name, or if the module requires a version of freetype that is
-  *     too great
-  *
-  *     To add a new renderer, simply use FT_Add_Module. To retrieve
-  *     a renderer by its name, use FT_Get_Module
-  *
-  *************************************************************************/
-  
-  FT_EXPORT_FUNC(FT_Renderer)  FT_Get_Renderer( FT_Library      library,
-                                               FT_Glyph_Format  format )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Renderer                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Retrieves the current renderer for a given glyph format.           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library :: A handle to the library object.                         */
+  /*                                                                       */
+  /*    format  :: The glyph format.                                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A renderer handle.  0 if none found.                               */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    An error will be returned if a module already exists by that name, */
+  /*    or if the module requires a version of FreeType that is too great. */
+  /*                                                                       */
+  /*    To add a new renderer, simply use FT_Add_Module().  To retrieve a  */
+  /*    renderer by its name, use FT_Get_Module().                         */
+  /*
+  FT_EXPORT_FUNC( FT_Renderer )  FT_Get_Renderer( FT_Library       library,
+                                                  FT_Glyph_Format  format )
   {
     return  ft_lookup_renderer( library, format, 0 );
   }                                               
 
 
- /*************************************************************************
-  *
-  *  <Function>
-  *     FT_Set_Renderer
-  *
-  *  <Description>
-  *     Sets the current renderer to use, and set additional mode
-  *
-  *  <Input>
-  *     library     :: handle to library object
-  *     renderer    :: handle to renderer object
-  *     num_params  :: number of additional parameters
-  *     params      :: additional parameters
-  *
-  *  <Return>
-  *     Error code. 0 means success.
-  *
-  *  <Note>
-  *     in case of success, the renderer will be used to convert glyph
-  *     images in the renderer's known format into bitmaps.
-  *
-  *     This doesn't change the current renderer for other formats..
-  *
-  *************************************************************************/
-  
-  FT_EXPORT_DEF(FT_Error) FT_Set_Renderer( FT_Library     library,
-                                           FT_Renderer    renderer,
-                                           FT_UInt        num_params,
-                                           FT_Parameter*  parameters )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Set_Renderer                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Sets the current renderer to use, and set additional mode.         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library    :: A handle to the library object.                      */
+  /*                                                                       */
+  /*    renderer   :: A handle to the renderer object.                     */
+  /*                                                                       */
+  /*    num_params :: The number of additional parameters.                 */
+  /*                                                                       */
+  /*    params     :: Additional parameters.                               */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    In case of success, the renderer will be used to convert glyph     */
+  /*    images in the renderer's known format into bitmaps.                */
+  /*                                                                       */
+  /*    This doesn't change the current renderer for other formats.        */
+  /*                                                                       */
+  FT_EXPORT_DEF( FT_Error ) FT_Set_Renderer( FT_Library     library,
+                                             FT_Renderer    renderer,
+                                             FT_UInt        num_params,
+                                             FT_Parameter*  parameters )
   {
     FT_ListNode  node;
     FT_Error     error = FT_Err_Ok;
     
+
     node = FT_List_Find( &library->renderers, renderer );
-    if (!node)
+    if ( !node )
     {
       error = FT_Err_Invalid_Argument;
       goto Exit;
@@ -2371,17 +2412,18 @@
       
     FT_List_Up( &library->renderers, node );
     
-    if (renderer->glyph_format == ft_glyph_format_outline )
+    if ( renderer->glyph_format == ft_glyph_format_outline )
       library->cur_renderer = renderer;
       
-    if (num_params > 0)
+    if ( num_params > 0 )
     {
       FTRenderer_setMode  set_mode = renderer->clazz->set_mode;
       
+
       for ( ; num_params > 0; num_params-- )
       {
         error = set_mode( renderer, parameters->tag, parameters->data );
-        if (error)
+        if ( error )
           break;
       }
     }
@@ -2391,68 +2433,67 @@
   }                                           
 
 
-
- /*************************************************************************
-  *
-  *  <Function>
-  *     FT_Render_Glyph
-  *
-  *  <Description>
-  *     Converts a given glyph image to a bitmap. It does so by inspecting
-  *     the glyph image format, find the relevant renderer, and invoke it
-  *
-  *  <Input>
-  *     slot        :: handle to the glyph slot containing the image to
-  *                    convert
-  *
-  *     render_mode :: a set of bit flags indicating which kind of bitmap
-  *                    to render. For now, only 'ft_render_mode_anti_alias'
-  *                    is supported by the available renderers, but others
-  *                    could appear later (e.g. LCD or TV optimised)
-  *
-  *  <Return>
-  *     Error code. 0 means success.
-  *
-  *  <Note>
-  *     in case of success, the renderer will be used to convert glyph
-  *     images in the renderer's known format into bitmaps.
-  *
-  *     This doesn't change the current renderer for other formats..
-  *
-  *     The slot's native image should be considered lost after the
-  *     conversion..
-  *
-  *************************************************************************/
-  
-  FT_EXPORT_FUNC(FT_Error)  FT_Render_Glyph( FT_GlyphSlot  slot,
-                                             FT_UInt       render_mode )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Render_Glyph                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Converts a given glyph image to a bitmap.  It does so by           */
+  /*    inspecting the glyph image format, find the relevant renderer, and */
+  /*    invoke it.                                                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    slot        :: A handle to the glyph slot containing the image to  */
+  /*                   convert.                                            */
+  /*                                                                       */
+  /*    render_mode :: A set of bit flags indicating which kind of bitmap  */
+  /*                   to render.  For now, only                           */
+  /*                   `ft_render_mode_anti_alias' is supported by the     */
+  /*                   available renderers, but others could appear later  */
+  /*                   (e.g. optimized for TV or LCD).                     */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    In case of success, the renderer will be used to convert glyph     */
+  /*    images in the renderer's known format into bitmaps.                */
+  /*                                                                       */
+  /*    This doesn't change the current renderer for other formats.        */
+  /*                                                                       */
+  /*    The slot's native image should be considered lost after the        */
+  /*    conversion.                                                        */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Error )  FT_Render_Glyph( FT_GlyphSlot  slot,
+                                               FT_UInt       render_mode )
   {
     FT_Error     error = FT_Err_Ok;
     FT_Renderer  renderer;
+
       
-    if (slot)
+    if ( slot )
     {
       FT_Face           face    = slot->face;
-      FT_Library        library = FT_FACE_LIBRARY(face);
+      FT_Library        library = FT_FACE_LIBRARY( face );
 
-      /* if it's already a bitmap, no need to do anything */
-      switch (slot->format)
+
+      /* if it is already a bitmap, no need to do anything */
+      switch ( slot->format )
       {
-        case ft_glyph_format_bitmap:   /* already a bitmap, don't do anything */
-          break;
+      case ft_glyph_format_bitmap:  /* already a bitmap, don't do anything */
+        break;
         
-        default:
-        {
-          /* small shortcut for the very common case */
-          if (slot->format == ft_glyph_format_outline)
-            renderer = library->cur_renderer;
-          else
-            renderer = ft_lookup_renderer( library, slot->format, 0 );
+      default:
+        /* small shortcut for the very common case */
+        if ( slot->format == ft_glyph_format_outline )
+          renderer = library->cur_renderer;
+        else
+          renderer = ft_lookup_renderer( library, slot->format, 0 );
             
-          error = FT_Err_Unimplemented_Feature;
-          if (renderer)
-            error = renderer->render( renderer, slot, render_mode );
-        }
+        error = FT_Err_Unimplemented_Feature;
+        if ( renderer )
+          error = renderer->render( renderer, slot, render_mode );
       }
     }
     else
@@ -2460,6 +2501,7 @@
     
     return error;
   }
+
   
   /*************************************************************************/
   /*************************************************************************/
@@ -2473,6 +2515,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2480,7 +2523,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    Destroys a given module object.  For drivers, this also destroys   */
-  /*    all child faces..                                                  */
+  /*    all child faces.                                                   */
   /*                                                                       */
   /* <InOut>                                                               */
   /*     module :: A handle to the target driver object.                   */
@@ -2494,59 +2537,60 @@
     FT_Memory         memory = module->memory;
     FT_Module_Class*  clazz  = module->clazz;
 
+
     /* finalize client-data - before anything else */
     if ( module->generic.finalizer )
       module->generic.finalizer( module );
 
     /* if the module is a renderer */
-    if (FT_MODULE_IS_RENDERER(module))
-      ft_remove_renderer(module);
+    if ( FT_MODULE_IS_RENDERER( module ) )
+      ft_remove_renderer( module );
 
     /* if the module is a font driver, add some steps */
-    if (FT_MODULE_IS_DRIVER(module))
-      Destroy_Driver( FT_DRIVER(module) );
+    if ( FT_MODULE_IS_DRIVER( module ) )
+      Destroy_Driver( FT_DRIVER( module ) );
 
     /* finalize the module object */
-    if (clazz->module_done)
-      clazz->module_done(module);
+    if ( clazz->module_done )
+      clazz->module_done( module );
 
     /* discard it */
     FREE( module );
   }
 
- /*************************************************************************
-  *
-  *  <Function>
-  *     FT_Add_Module
-  *
-  *  <Description>
-  *     Add a new module to a given library instance.
-  *
-  *  <Input>
-  *     library  :: handle to library object
-  *     clazz    :: pointer to class descriptor for the module
-  *
-  *  <Return>
-  *     Error code. 0 means success
-  *
-  *  <Note>
-  *     An error will be returned if a module already exists by that
-  *     name, or if the module requires a version of freetype that is
-  *     too great
-  *
-  *************************************************************************/
 
-  FT_EXPORT_FUNC(FT_Error) FT_Add_Module( FT_Library              library,
-                                          const FT_Module_Class*  clazz )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Add_Module                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Adds a new module to a given library instance.                     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library :: A handle to the library object.                         */
+  /*    clazz   :: A pointer to class descriptor for the module.           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    An error will be returned if a module already exists by that name, */
+  /*    or if the module requires a version of FreeType that is too great. */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Error )  FT_Add_Module( FT_Library              library,
+                                             const FT_Module_Class*  clazz )
   {
     FT_Error   error;
     FT_Memory  memory;
     FT_Module  module;
     FT_UInt    nn;
 
-    #define FREETYPE_VER_FIXED (((FT_Long)FREETYPE_MAJOR << 16) | FREETYPE_MINOR)
 
-    if (!library || !clazz)
+#define FREETYPE_VER_FIXED ( ( (FT_Long)FREETYPE_MAJOR << 16 ) |
+                               FREETYPE_MINOR                  )
+
+    if ( !library || !clazz )
       return FT_Err_Invalid_Argument;
 
     /* check freetype version */
@@ -2580,7 +2624,7 @@
     }
 
     /* allocate module object */
-    if (ALLOC(module,clazz->module_size))
+    if ( ALLOC( module,clazz->module_size ) )
       goto Exit;
 
     /* base initialisation */
@@ -2589,87 +2633,95 @@
     module->clazz   = (FT_Module_Class*)clazz;
 
     /* if the module is a renderer - this must be performed before */
-    /* the normal module initialisation..                          */
-    if (FT_MODULE_IS_RENDERER(module))
+    /* the normal module initialization.                           */
+    if ( FT_MODULE_IS_RENDERER( module ) )
     {
       /* add to the renderers list */
-      error = ft_add_renderer(module);
-      if (error) goto Fail;
+      error = ft_add_renderer( module );
+      if ( error )
+        goto Fail;
     }
 
     /* if the module is a font driver */
-    if (FT_MODULE_IS_DRIVER(module))
+    if ( FT_MODULE_IS_DRIVER( module ) )
     {
       /* allocate glyph loader if needed */
-      FT_Driver   driver = FT_DRIVER(module);
+      FT_Driver   driver = FT_DRIVER( module );
+
       
       driver->clazz = (FT_Driver_Class*)module->clazz;
-      if (FT_DRIVER_USES_OUTLINES(driver))
+      if ( FT_DRIVER_USES_OUTLINES( driver ) )
       {
         error = FT_GlyphLoader_New( memory, &driver->glyph_loader );
-        if (error) goto Fail;
+        if ( error )
+          goto Fail;
       }
     }
 
-    if (clazz->module_init)
+    if ( clazz->module_init )
     {
-      error = clazz->module_init(module);
-      if (error) goto Fail;
+      error = clazz->module_init( module );
+      if ( error )
+        goto Fail;
     }
 
     /* add module to the library's table */
-    library->modules[ library->num_modules++ ] = module;
+    library->modules[library->num_modules++] = module;
       
-    
   Exit:
     return error;
     
   Fail:
-    if (FT_MODULE_IS_DRIVER(module))
+    if ( FT_MODULE_IS_DRIVER( module ) )
     {
-      FT_Driver  driver = FT_DRIVER(module);
+      FT_Driver  driver = FT_DRIVER( module );
       
-      if (FT_DRIVER_USES_OUTLINES(driver))
+
+      if ( FT_DRIVER_USES_OUTLINES( driver ) )
         FT_GlyphLoader_Done( driver->glyph_loader );
     }
     
-    if (FT_MODULE_IS_RENDERER(module))
+    if ( FT_MODULE_IS_RENDERER( module ) )
     {
-      FT_Renderer  renderer = FT_RENDERER(module);
-      if (renderer->raster)
+      FT_Renderer  renderer = FT_RENDERER( module );
+
+
+      if ( renderer->raster )
         renderer->clazz->raster_class->raster_done( renderer->raster );
     }
-    FREE(module);
+
+    FREE( module );
     goto Exit;
   }
 
- /*************************************************************************
-  *
-  *  <Function>
-  *     FT_Get_Module
-  *
-  *  <Description>
-  *     Find a module by its name.
-  *
-  *  <Input>
-  *     library     :: handle to library object
-  *     module_name :: the module's ASCII name.
-  *
-  *  <Return>
-  *     Module handle, 0 if none was found.
-  *
-  *  <Note>
-  *     You'd better be familiar with FreeType internals to know which
-  *     module to look for :-)
-  *
-  *************************************************************************/
 
-  FT_EXPORT_FUNC(FT_Module) FT_Get_Module( FT_Library   library,
-                                           const char*  module_name )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Module                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Finds a module by its name.                                        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library     :: A handle to the library object.                     */
+  /*                                                                       */
+  /*    module_name :: The module's name (as an ASCII string).             */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A module handle.  0 if none was found.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    You should better be familiar with FreeType internals to know      */
+  /*    which module to look for :-)                                       */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Module ) FT_Get_Module( FT_Library   library,
+                                             const char*  module_name )
   {
     FT_Module  result = 0;
     FT_Module* cur    = library->modules;
     FT_Module* limit  = cur + library->num_modules;
+
 
     for ( ; cur < limit; cur++ )
       if ( strcmp( cur[0]->clazz->module_name, module_name ) == 0 )
@@ -2681,65 +2733,69 @@
     return result;
   }
 
- /*************************************************************************
-  *
-  *  <Function>
-  *     FT_Get_Module_Interface
-  *
-  *  <Description>
-  *     Find a module and returns it's specific interface as a void*
-  *
-  *  <Input>
-  *     library     :: handle to library object
-  *     module_name :: the module's ASCII name.
-  *
-  *  <Return>
-  *     Module specific interface, if any
-  *
-  *  <Note>
-  *     You'd better be familiar with FreeType internals to know which
-  *     module to look for, and what it's interface is :-)
-  *
-  *************************************************************************/
-  
-  FT_EXPORT_FUNC(const void*)  FT_Get_Module_Interface( FT_Library   library,
-                                                        const char*  mod_name )
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Module_Interface                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Finds a module and returns its specific interface as a typeless    */
+  /*    pointer.                                                           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library     :: A handle to the library object.                     */
+  /*                                                                       */
+  /*    module_name :: The module's name (as an ASCII string).             */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A module-specific interface if available, 0 otherwise.             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    You should better be familiar with FreeType internals to know      */
+  /*    which module to look for, and what its interface is :-)            */
+  /*                                                                       */
+  FT_EXPORT_FUNC(const void*)  FT_Get_Module_Interface(
+                                 FT_Library   library,
+                                 const char*  mod_name )
   {
     FT_Module  module;
     
+
     module = FT_Get_Module( library, mod_name );
+
     return module ? module->clazz->module_interface : 0;
   }                                                 
 
 
- /*************************************************************************
-  *
-  *  <Function>
-  *     FT_Remove_Module
-  *
-  *  <Description>
-  *     Removes a given module from a library instance.
-  *
-  *  <Input>
-  *     library  :: handle to library object
-  *     module   :: handle to module object
-  *
-  *  <Return>
-  *     Error code (module not listed)
-  *
-  *  <Note>
-  *     The module object is destroyed by the function in case of success
-  *
-  *************************************************************************/
-
-  FT_EXPORT_FUNC(FT_Error)  FT_Remove_Module( FT_Library  library,
-                                              FT_Module   module )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Remove_Module                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Removes a given module from a library instance.                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library  :: A handle to a library object.                          */
+  /*                                                                       */
+  /*    module   :: A handle to a module object.                           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The module object is destroyed by the function in case of success. */
+  /*
+  FT_EXPORT_FUNC( FT_Error )  FT_Remove_Module( FT_Library  library,
+                                                FT_Module   module )
   {
     /* try to find the module from the table, then remove it from there */
-    if (library && module)
+    if ( library && module )
     {
       FT_Module*  cur   = library->modules;
       FT_Module*  limit = cur + library->num_modules;
+
 
       for ( ; cur < limit; cur++ )
       {
@@ -2748,7 +2804,7 @@
           /* remove it from the table */
           library->num_modules--;
           limit--;
-          while (cur < limit)
+          while ( cur < limit )
           {
             cur[0] = cur[1];
             cur++;
@@ -2756,7 +2812,7 @@
           limit[0] = 0;
 
           /* destroy the module */
-          Destroy_Module(module);
+          Destroy_Module( module );
 
           return FT_Err_Ok;
         }
@@ -2764,13 +2820,6 @@
     }
     return FT_Err_Invalid_Handle;
   }
-
-
-
-
-
-
-
 
 
   /*************************************************************************/
@@ -2784,6 +2833,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2871,6 +2921,7 @@
     {
       FT_Module  module = library->modules[n];
 
+
       if ( module )
       {
         Destroy_Module( module );
@@ -2893,8 +2944,8 @@
   /*    FT_Set_Debug_Hook                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Sets a debug hook function for debugging the interpreter of a      */
-  /*    font format.                                                       */
+  /*    Sets a debug hook function for debugging the interpreter of a font */
+  /*    format.                                                            */
   /*                                                                       */
   /* <Input>                                                               */
   /*    library    :: A handle to the library object.                      */
@@ -2918,9 +2969,6 @@
            ( sizeof ( library->debug_hooks ) / sizeof ( void* ) ) )
       library->debug_hooks[hook_index] = debug_hook;
   }
-
-
-
 
 
   /*************************************************************************/

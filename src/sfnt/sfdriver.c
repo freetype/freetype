@@ -25,6 +25,7 @@
 #include <ttcmap.h>
 #include <sfobjs.h>
 
+
   static
   void*  get_sfnt_table( TT_Face      face,
                          FT_Sfnt_Tag  tag )
@@ -145,16 +146,15 @@
     sizeof( FT_ModuleRec ),
     
     "sfnt",     /* driver name                            */
-    0x10000,    /* driver version 1.0                     */
-    0x20000,    /* driver requires FreeType 2.0 or higher */
+    0x10000L,   /* driver version 1.0                     */
+    0x20000L,   /* driver requires FreeType 2.0 or higher */
     
     (const void*)&sfnt_interface,  /* module specific interface */
     
-    (FT_Module_Constructor)    0,
-    (FT_Module_Destructor)     0,
-    (FT_Module_Requester)      SFNT_Get_Interface
+    (FT_Module_Constructor)0,
+    (FT_Module_Destructor) 0,
+    (FT_Module_Requester)  SFNT_Get_Interface
   };
   
-
 
 /* END */

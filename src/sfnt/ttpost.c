@@ -427,7 +427,7 @@
   /*              You must not modify the returned string!                 */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Get_PS_Name( TT_Face      face,

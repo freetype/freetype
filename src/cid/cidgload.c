@@ -158,12 +158,13 @@
     if ( glyph )
     {
       FT_GlyphLoader*  loader = glyph->root.loader;
+
       
       builder->loader  = loader;
       builder->base    = &loader->base.outline;
       builder->current = &loader->current.outline;
       
-      FT_GlyphLoader_Rewind(loader);
+      FT_GlyphLoader_Rewind( loader );
     }
 
     if ( size )
@@ -245,6 +246,7 @@
   {
     FT_Outline*  outline = builder->current;
 
+
     if ( builder->load_points )
     {
       FT_Vector*  point   = outline->points + outline->n_points;
@@ -285,6 +287,7 @@
     FT_Outline*  outline = builder->current;
     FT_Error     error;
 
+
     if ( !builder->load_points )
     {
       outline->n_contours++;
@@ -292,7 +295,7 @@
     }
 
     error = FT_GlyphLoader_Check_Points( builder->loader, 0, 1 );
-    if (!error)
+    if ( !error )
     {
       if ( outline->n_contours > 0 )
         outline->contours[outline->n_contours - 1] = outline->n_points - 1;
@@ -314,6 +317,7 @@
     {
       FT_Error  error;
 
+
       builder->path_begun = 1;
       error = add_contour( builder );
       if ( error )
@@ -329,6 +333,7 @@
   void  close_contour( CID_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
+
 
     if ( outline->n_contours > 0 )
       outline->contours[outline->n_contours - 1] = outline->n_points - 1;
@@ -410,7 +415,7 @@
   /*    achar    :: The accent character's StandardEncoding charcode.      */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type 1 error code.  0 means success.                               */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  t1operator_seac( CID_Decoder*  decoder,
@@ -426,6 +431,7 @@
     FT_Outline*  base = decoder->builder.base;
     FT_Vector    left_bearing, advance;
 
+
     bchar_index = bchar;
     achar_index = achar;
 
@@ -435,19 +441,19 @@
       return T1_Err_Syntax_Error;
     }
 
-
     /* if we are trying to load a composite glyph, do not load the */
     /* accent character and return the array of subglyphs.         */
     if ( decoder->builder.no_recurse )
     {
-
       FT_GlyphSlot     glyph = (FT_GlyphSlot)decoder->builder.glyph;
       FT_GlyphLoader*  loader = glyph->loader;
       FT_SubGlyph*     subg;
 
+
       /* reallocate subglyph array if necessary */
       error = FT_GlyphLoader_Check_Subglyphs( loader, 2 );
-      if (error) goto Exit;
+      if ( error )
+        goto Exit;
       
       subg = loader->current.subglyphs;
 
@@ -474,11 +480,12 @@
 
     /* First load `bchar' in builder */
     /* now load the unscaled outline */
-    if (decoder->builder.loader)    
-      FT_GlyphLoader_Prepare( decoder->builder.loader );  /* prepare loader */
+    if ( decoder->builder.loader )    
+      FT_GlyphLoader_Prepare( decoder->builder.loader );
 
     error = cid_load_glyph( decoder, bchar_index );  /* load one glyph */
-    if ( error ) goto Exit;
+    if ( error )
+      goto Exit;
 
     n_base_points = cur->n_points;
 
@@ -508,6 +515,7 @@
       if ( decoder->builder.load_points )
       {
         FT_Outline  dummy;
+
         
         dummy.n_points = base->n_points - n_base_points;
         dummy.points   = base->points   + n_base_points;
@@ -541,7 +549,7 @@
   /*    charstring_len   :: The length in bytes of the charstring stream.  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  CID_Parse_CharStrings( CID_Decoder*  decoder,

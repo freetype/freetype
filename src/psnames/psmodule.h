@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level PSNames module interface (specification).                 */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -21,9 +21,9 @@
 
 #include <freetype/ftmodule.h>
 
-  FT_EXPORT_VAR(const FT_Module_Class)  psnames_module_class;
+  FT_EXPORT_VAR( const FT_Module_Class )  psnames_module_class;
 
-#endif /* PSMODULE_H */
+#endif /* PSDRIVER_H */
 
 
 /* END */

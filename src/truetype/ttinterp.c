@@ -257,7 +257,7 @@
   /*    exec  :: The target execution context.                             */
   /*                                                                       */
   /* <Return>                                                              */
-  /*   TrueType error code.  0 means success.                              */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Goto_CodeRange( TT_ExecContext  exec,
@@ -307,7 +307,7 @@
   /*    exec   :: The target execution context.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*   TrueType error code.  0 means success.                              */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Set_CodeRange( TT_ExecContext  exec,
@@ -339,7 +339,7 @@
   /*    exec  :: The target execution context.                             */
   /*                                                                       */
   /* <Return>                                                              */
-  /*   TrueType error code.  0 means success.                              */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Does not set the Error variable.                                   */
@@ -378,7 +378,7 @@
   /*    memory :: A handle to the parent memory object.                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
@@ -433,7 +433,7 @@
   /*    exec   :: A handle to the target execution context.                */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Init_Context( TT_ExecContext  exec,
@@ -504,7 +504,7 @@
   /*    buff       :: The address of the buffer base pointer.              */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Update_Max( FT_Memory  memory,
@@ -546,7 +546,7 @@
   /*    exec :: A handle to the target execution context.                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
@@ -649,7 +649,7 @@
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
@@ -834,7 +834,7 @@
   /*    exec :: A handle to the target execution context.                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
@@ -6781,7 +6781,7 @@
   /*    exec :: A handle to the target execution context.                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Only the object manager and debugger should call this function.    */

@@ -38,8 +38,8 @@
 
 
   static
-  FT_Module_Interface   CID_Get_Interface( FT_Driver         driver,
-                                           const FT_String*  interface )
+  FT_Module_Interface  CID_Get_Interface( FT_Driver         driver,
+                                          const FT_String*  interface )
   {
     UNUSED( driver );
     UNUSED( interface );
@@ -48,7 +48,7 @@
   }
 
 
-#ifdef xxxT1_CONFIG_OPTION_NO_AFM
+#ifndef T1_CONFIG_OPTION_NO_AFM
 
 
   static
@@ -71,20 +71,20 @@
   }
 
 
-#endif /* xxxT1_CONFIG_OPTION_NO_AFM */
-
+#endif /* !T1_CONFIG_OPTION_NO_AFM */
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    cid_get_char_index                                                 */
+  /*    Cid_Get_Char_Index                                                 */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Uses a charmap to return a given character code's glyph index.     */
   /*                                                                       */
   /* <Input>                                                               */
   /*    charmap  :: A handle to the source charmap object.                 */
+  /*                                                                       */
   /*    charcode :: The character code.                                    */
   /*                                                                       */
   /* <Return>                                                              */
@@ -97,6 +97,7 @@
     T1_Face             face;
     FT_UInt             result = 0;
     PSNames_Interface*  psnames;
+
 
     face = (T1_Face)charmap->face;
     psnames = (PSNames_Interface*)face->psnames;
@@ -173,7 +174,6 @@
   }
 
 
-
   const FT_Driver_Class  t1cid_driver_class =
   {
     /* firs of all, the FT_Module_Class fields */
@@ -181,14 +181,14 @@
       ft_module_font_driver | ft_module_driver_scalable,
       sizeof( FT_DriverRec ),
       "t1cid",   /* module name           */
-      0x10000,   /* version 1.0 of driver */
-      0x20000,   /* requires FreeType 2.0 */
+      0x10000L,  /* version 1.0 of driver */
+      0x20000L,  /* requires FreeType 2.0 */
       
       0,
       
-      (FT_Module_Constructor)   CID_Init_Driver,
-      (FT_Module_Destructor)    CID_Done_Driver,
-      (FT_Module_Requester)     CID_Get_Interface
+      (FT_Module_Constructor)CID_Init_Driver,
+      (FT_Module_Destructor) CID_Done_Driver,
+      (FT_Module_Requester)  CID_Get_Interface
     },
 
     /* then the other font drivers fields */
@@ -196,32 +196,30 @@
     sizeof( T1_SizeRec ),
     sizeof( T1_GlyphSlotRec ),
 
-    (FTDriver_initFace)      CID_Init_Face,
-    (FTDriver_doneFace)      CID_Done_Face,
+    (FTDriver_initFace)     CID_Init_Face,
+    (FTDriver_doneFace)     CID_Done_Face,
 
-    (FTDriver_initSize)      0,
-    (FTDriver_doneSize)      0,
-    (FTDriver_initGlyphSlot) 0,
-    (FTDriver_doneGlyphSlot) 0,
+    (FTDriver_initSize)     0,
+    (FTDriver_doneSize)     0,
+    (FTDriver_initGlyphSlot)0,
+    (FTDriver_doneGlyphSlot)0,
 
-    (FTDriver_setCharSizes)  0,
-    (FTDriver_setPixelSizes) 0,
+    (FTDriver_setCharSizes) 0,
+    (FTDriver_setPixelSizes)0,
 
-    (FTDriver_loadGlyph)     CID_Load_Glyph,
-    (FTDriver_getCharIndex)  CID_Get_Char_Index,
+    (FTDriver_loadGlyph)    CID_Load_Glyph,
+    (FTDriver_getCharIndex) CID_Get_Char_Index,
 
-#ifndef xxxxT1_CONFIG_OPTION_NO_AFM
-    (FTDriver_getKerning)    0,
-    (FTDriver_attachFile)    0,
+#ifdef T1_CONFIG_OPTION_NO_AFM
+    (FTDriver_getKerning)   0,
+    (FTDriver_attachFile)   0,
 #else
-    (FTDriver_getKerning)    cid_Get_Kerning,
-    (FTDriver_attachFile)    CID_Read_AFM,
+    (FTDriver_getKerning)   cid_Get_Kerning,
+    (FTDriver_attachFile)   CID_Read_AFM,
 #endif
 
     (FTDriver_getAdvances)  0
   };
-
-
 
 
 /* END */

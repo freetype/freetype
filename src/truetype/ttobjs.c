@@ -143,7 +143,7 @@
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  TT_Init_Face( FT_Stream      stream,
@@ -158,7 +158,8 @@
 
     library = face->root.driver->root.library;
     sfnt    = (SFNT_Interface*)FT_Get_Module_Interface( library, "sfnt" );
-    if (!sfnt) goto Bad_Format;
+    if ( !sfnt )
+      goto Bad_Format;
 
     /* create input stream from resource */
     if ( FILE_Seek( 0 ) )
@@ -190,7 +191,7 @@
             TT_Load_CVT      ( face, stream ) ||
             TT_Load_Programs ( face, stream );
 
-    /* initialise standard glyph loading routines */
+    /* initialize standard glyph loading routines */
     TT_Init_Glyph_Loading( face );
 
   Exit:
@@ -221,8 +222,8 @@
 
     SFNT_Interface*  sfnt = face->sfnt;
 
-    /* for "extended TrueType formats" (i.e. compressed versions) */
-    if (face->extra.finalizer)
+    /* for `extended TrueType formats' (i.e. compressed versions) */
+    if ( face->extra.finalizer )
       face->extra.finalizer( face->extra.data );
 
     if ( sfnt )
@@ -263,7 +264,7 @@
   /*    size :: A handle to the size object.                               */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  TT_Init_Size( TT_Size  size )
@@ -340,6 +341,7 @@
     /* set `face->interpreter' according to the debug hook present */
     {
       FT_Library  library = face->root.driver->root.library;
+
 
       face->interpreter = (TT_Interpreter)
                             library->debug_hooks[FT_DEBUG_HOOK_TRUETYPE];
@@ -652,20 +654,21 @@
   /*    driver :: A handle to the target driver object.                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Init_Driver( TT_Driver  driver )
   {
     FT_Error   error;
 
-    /* set 'extra' in glyph loader */
-    error = FT_GlyphLoader_Create_Extra( FT_DRIVER(driver)->glyph_loader );
+
+    /* set `extra' in glyph loader */
+    error = FT_GlyphLoader_Create_Extra( FT_DRIVER( driver )->glyph_loader );
     
     /* init extension registry if needed */
 
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
-    if (!error)
+    if ( !error )
       return TT_Init_Extensions( driver );
 #endif
 

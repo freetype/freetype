@@ -573,16 +573,17 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    Renders an outline within a bitmap using the current scan-convert. */
-  /*    This functions uses a FT_Raster_Params as argument, allowing       */
-  /*    advanced features like direct composition/translucency, etc.       */
+  /*    This functions uses an FT_Raster_Params structure as an argument,  */
+  /*    allowing advanced features like direct composition, translucency,  */
+  /*    etc.                                                               */
   /*                                                                       */
   /* <Input>                                                               */
   /*    library :: A handle to a FreeType library object.                  */
   /*                                                                       */
   /*    outline :: A pointer to the source outline descriptor.             */
   /*                                                                       */
-  /*    params  :: A pointer to a FT_Raster_Params used to describe        */
-  /*               the rendering operation.                                */
+  /*    params  :: A pointer to a FT_Raster_Params structure used to       */
+  /*               describe the rendering operation.                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -592,7 +593,7 @@
   /*    scan-line converter will be serialized.                            */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    You should know what you're doing and the role of FT_Raster_Params */
+  /*    You should know what you are doing and how FT_Raster_Params works  */
   /*    to use this function.                                              */
   /*                                                                       */
   /*    The field `params.source' will be set to `outline' before the scan */
@@ -605,6 +606,7 @@
   {
     FT_Error           error;
     FT_Renderer        renderer;
+
 
     if ( !library )
     {
@@ -620,7 +622,7 @@
 
     /* retrieve the current outline renderer */
     renderer = library->cur_renderer;
-    if (!renderer)
+    if ( !renderer )
     {
       /* XXXX: should use another error code */
       error = FT_Err_Invalid_Argument;
@@ -671,7 +673,8 @@
   {
     FT_Raster_Params  params;
 
-    if (!bitmap)
+
+    if ( !bitmap )
       return FT_Err_Invalid_Argument;
 
     /* other checks are delayed to FT_Outline_Render */
@@ -684,8 +687,6 @@
 
     return FT_Outline_Render( library, outline, &params );
   }
-
-
 
 
   /*************************************************************************/
@@ -713,6 +714,7 @@
   {
     FT_Pos xz, yz;
 
+
     xz = FT_MulFix( vector->x, matrix->xx ) +
          FT_MulFix( vector->y, matrix->xy );
 
@@ -722,8 +724,6 @@
     vector->x = xz;
     vector->y = yz;
   }
-
-
 
 
   /*************************************************************************/
@@ -753,6 +753,7 @@
     FT_Vector*  vec = outline->points;
     FT_Vector*  limit = vec + outline->n_points;
     
+
     for ( ; vec < limit; vec++ )
       FT_Vector_Transform( vec, matrix );
   }

@@ -75,7 +75,7 @@
   /*                   formats.                                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Only horizontal layouts (left-to-right & right-to-left) are        */
@@ -178,7 +178,7 @@
   /*    size            :: A handle to the target size object.             */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Set_Char_Sizes( TT_Size     size,
@@ -238,7 +238,7 @@
   /*    size         :: A handle to the target size object.                */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Set_Pixel_Sizes( TT_Size  size,
@@ -280,7 +280,7 @@
   /*                   whether to hint the outline, etc).                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Load_Glyph( TT_GlyphSlot  slot,
@@ -398,18 +398,20 @@
 
 
   static
-  FT_Module_Interface   tt_get_interface( TT_Driver    driver,
-                                          const char*  interface )
+  FT_Module_Interface  tt_get_interface( TT_Driver    driver,
+                                         const char*  interface )
   {
-    FT_Module        sfntd = FT_Get_Module( driver->root.root.library, "sfnt" );
+    FT_Module        sfntd = FT_Get_Module( driver->root.root.library,
+                                            "sfnt" );
     SFNT_Interface*  sfnt;
+
 
     /* only return the default interface from the SFNT module */
     if ( sfntd )
     {
-      sfnt = (SFNT_Interface*)(sfntd->clazz->module_interface);
+      sfnt = (SFNT_Interface*)( sfntd->clazz->module_interface );
       if ( sfnt )
-        return sfnt->get_interface( FT_MODULE(driver), interface );
+        return sfnt->get_interface( FT_MODULE( driver ), interface );
     }
 
     return 0;
@@ -425,14 +427,14 @@
       sizeof ( TT_DriverRec ),
     
       "truetype",      /* driver name                           */
-      0x10000,         /* driver version == 1.0                 */
-      0x20000,         /* driver requires FreeType 2.0 or above */
+      0x10000L,        /* driver version == 1.0                 */
+      0x20000L,        /* driver requires FreeType 2.0 or above */
   
       (void*)0,        /* driver specific interface */
   
-      (FT_Module_Constructor)   TT_Init_Driver,
-      (FT_Module_Destructor)    TT_Done_Driver,
-      (FT_Module_Requester)     tt_get_interface,
+      (FT_Module_Constructor)TT_Init_Driver,
+      (FT_Module_Destructor) TT_Done_Driver,
+      (FT_Module_Requester)  tt_get_interface,
     },
     
     sizeof ( TT_FaceRec ),
@@ -440,23 +442,21 @@
     sizeof ( FT_GlyphSlotRec ),
 
 
-    (FTDriver_initFace)       TT_Init_Face,
-    (FTDriver_doneFace)       TT_Done_Face,
-    (FTDriver_initSize)       TT_Init_Size,
-    (FTDriver_doneSize)       TT_Done_Size,
-    (FTDriver_initGlyphSlot)  0,
-    (FTDriver_doneGlyphSlot)  0,
+    (FTDriver_initFace)     TT_Init_Face,
+    (FTDriver_doneFace)     TT_Done_Face,
+    (FTDriver_initSize)     TT_Init_Size,
+    (FTDriver_doneSize)     TT_Done_Size,
+    (FTDriver_initGlyphSlot)0,
+    (FTDriver_doneGlyphSlot)0,
 
-    (FTDriver_setCharSizes)   Set_Char_Sizes,
-    (FTDriver_setPixelSizes)  Set_Pixel_Sizes,
-    (FTDriver_loadGlyph)      Load_Glyph,
-    (FTDriver_getCharIndex)   Get_Char_Index,
+    (FTDriver_setCharSizes) Set_Char_Sizes,
+    (FTDriver_setPixelSizes)Set_Pixel_Sizes,
+    (FTDriver_loadGlyph)    Load_Glyph,
+    (FTDriver_getCharIndex) Get_Char_Index,
     
-    (FTDriver_getKerning)     Get_Kerning,
-    (FTDriver_attachFile)     0,
-    (FTDriver_getAdvances)    0
-
-
+    (FTDriver_getKerning)   Get_Kerning,
+    (FTDriver_attachFile)   0,
+    (FTDriver_getAdvances)  0
   };
 
 

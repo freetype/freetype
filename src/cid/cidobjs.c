@@ -110,7 +110,7 @@
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  CID_Init_Face( FT_Stream      stream,
@@ -133,8 +133,8 @@
     psnames = (PSNames_Interface*)face->psnames;
     if ( !psnames )
     {
-      psnames = (PSNames_Interface*)
-                FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "psnames" );
+      psnames = (PSNames_Interface*)FT_Get_Module_Interface(
+                  FT_FACE_LIBRARY( face ), "psnames" );
 
       face->psnames = psnames;
     }
@@ -337,14 +337,14 @@
   /*    driver :: A handle to the target driver object.                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  CID_Init_Driver( T1_Driver  driver )
   {
     UNUSED( driver );
 
-    return FT_Err_Ok;
+    return T1_Err_Ok;
   }
 
 
