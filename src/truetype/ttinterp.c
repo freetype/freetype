@@ -221,7 +221,7 @@
 #undef  FAILURE
 #define FAILURE  1
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
 #define GUESS_VECTOR( V )                                         \
   if ( CUR.face->unpatented_hinting )                             \
   {                                                               \
@@ -722,7 +722,7 @@
     exec->GS.freeVector = exec->GS.projVector;
     exec->GS.dualVector = exec->GS.projVector;
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     exec->GS.both_x_axis = TRUE;
 #endif
 
@@ -754,7 +754,7 @@
     { 0x4000, 0 },
     { 0x4000, 0 },
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     TRUE,
 #endif
 
@@ -1358,7 +1358,7 @@
   {
     if ( !CUR.tt_metrics.ratio )
     {
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
       if ( CUR.face->unpatented_hinting )
       {
         if ( CUR.GS.both_x_axis )
@@ -1558,7 +1558,7 @@
     FT_F26Dot6  v;
 
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     FT_ASSERT( !CUR.face->unpatented_hinting );
 #endif
 
@@ -2122,7 +2122,7 @@
   Project( EXEC_OP_ FT_Vector*  v1,
                     FT_Vector*  v2 )
   {
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     FT_ASSERT( !CUR.face->unpatented_hinting );
 #endif
 
@@ -2223,7 +2223,7 @@
   static void
   Compute_Funcs( EXEC_OP )
   {
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     if ( CUR.face->unpatented_hinting )
     {
       /* If both vectors point rightwards along the x axis, set             */
@@ -2267,7 +2267,7 @@
 
       return;
     }
-#endif /* TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING */
+#endif /* TT_CONFIG_OPTION_UNPATENTED_HINTING */
 
     if ( CUR.GS.freeVector.x == 0x4000 )
       CUR.F_dot_P       = CUR.GS.projVector.x * 0x10000L;
@@ -2618,7 +2618,7 @@
   }
 
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
 #define DO_GPV                                   \
     if ( CUR.face->unpatented_hinting )          \
     {                                            \
@@ -2637,7 +2637,7 @@
 #endif
 
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
 #define DO_GFV                                   \
     if ( CUR.face->unpatented_hinting )          \
     {                                            \
@@ -5189,7 +5189,7 @@
 
     d = CUR_Func_project( zp.cur + p, zp.org + p );
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     if ( CUR.face->unpatented_hinting )
     {
       if ( CUR.GS.both_x_axis )
@@ -5224,7 +5224,7 @@
                            FT_F26Dot6  dy,
                            FT_Bool     touch )
   {
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     if ( CUR.face->unpatented_hinting )
     {
       if ( CUR.GS.both_x_axis )
@@ -5428,7 +5428,7 @@
       return;
     }
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     if ( CUR.face->unpatented_hinting )
     {
       if ( CUR.GS.both_x_axis )
@@ -6345,7 +6345,7 @@
     FT_ULong   C;
     FT_Long    B;
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     /* Delta hinting is covered by US Patent 5159668. */
     if ( CUR.face->unpatented_hinting )
       {
@@ -6437,7 +6437,7 @@
     FT_Long   B;
 
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     /* Delta hinting is covered by US Patent 5159668. */
     if ( CUR.face->unpatented_hinting )
     {

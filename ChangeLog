@@ -1,3 +1,16 @@
+2003-08-18  David Turner  <david@freetype.org>
+
+        * include/freetype/config/ftoption.h, devel/ftoption.h,
+        include/freetype/internal/ftobjs.h, include/freetype/internal/tttypes.h,
+        src/truetype/ttinterp.c, src/truetype/ttobjs.c, src/truetype/ttobjs.h:
+
+        changed the name of TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING to
+        the simpler TT_CONFIG_OPTION_UNPATENTED_HINTING
+
+        removed the macro TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING. Instead,
+        the same effect can be used by setting a debug-hook with
+        FT_DEBUG_HOOK_UNPATENTED_HINTING globally with FT_Set_Debug_Hook()
+
 2003-08-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1gload.c (T1_Load_Glyph), src/cff/cffgload.c
@@ -254,7 +267,7 @@
 	* src/winfonts/winfnt.c (FNT_Load_Glyph): Use first_char in
 	computation of glyph_index.
 	(FNT_Size_Set_Pixels): To find a strike, first check pixel_height
-	only, then try to find a better hit by comparing pixel_width also. 
+	only, then try to find a better hit by comparing pixel_width also.
 	Without this fix it isn't possible to access all strikes.
 	Also compute metrics.max_advance to be in sync with other bitmap
 	drivers.
@@ -548,7 +561,7 @@
 	* include/freetype/ftstroke.h: This.
 
 	* src/base/ftstroker.c: Renamed to...
-	* src/base/ftstroke.c: This.	
+	* src/base/ftstroke.c: This.
 
 	* include/freetype/config/ftheader.h (FT_STROKER_H): Updated.
 
@@ -635,7 +648,7 @@
 
 	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec),
 	include/freetype/internal/psaux.h (T1_DecoderRec),
-	src/cff/cffgload.h (CFF_Builder): Remove `hint_flags' field. 
+	src/cff/cffgload.h (CFF_Builder): Remove `hint_flags' field.
 	Unused.
 
 	* src/cff/cffgload.c (cff_builder_init): Updated.

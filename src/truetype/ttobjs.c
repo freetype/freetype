@@ -34,7 +34,7 @@
 #include "ttinterp.h"
 #endif
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
 #include FT_TRUETYPE_UNPATENTED_H
 #endif
 
@@ -225,14 +225,12 @@
 
     }
 
-#ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+#ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
 
     /* Determine whether unpatented hinting is to be used for this face. */
+    face->unpatented_hinting =
+       ( library->debug_hooks[ FT_DEBUG_HOOK_UNPATENTED_HINTING ] != NULL );
 
-#ifdef TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING
-    face->unpatented_hinting = TRUE;
-#else
-    face->unpatented_hinting = FALSE;
     {
       int i;
 
@@ -241,9 +239,8 @@
         if ( params[i].tag == FT_PARAM_TAG_UNPATENTED_HINTING )
           face->unpatented_hinting = TRUE;
     }
-#endif /* TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING */
 
-#endif /* TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING */
+#endif /* TT_CONFIG_OPTION_UNPATENTED_HINTING */
 
     /* initialize standard glyph loading routines */
     TT_Init_Glyph_Loading( face );
