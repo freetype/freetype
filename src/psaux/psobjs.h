@@ -108,6 +108,13 @@ FT_BEGIN_HEADER
   ps_parser_to_int( PS_Parser  parser );
 
 
+  FT_LOCAL( FT_Error )
+  ps_parser_to_bytes( PS_Parser  parser,
+                      FT_Byte*   bytes,
+                      FT_Int     max_bytes,
+                      FT_Int*    pnum_bytes );
+
+
   FT_LOCAL( FT_Fixed )
   ps_parser_to_fixed( PS_Parser  parser,
                       FT_Int     power_ten );
