@@ -33,10 +33,13 @@ import sys, string
 # This table is used to name the glyph according to the Macintosh
 # specification.  It is used by the TrueType Postscript names table
 #
+# see http://fonts.apple.com/TTRefMan/RM06/Chap6post.html
+# for the official list
+#
 mac_standard_names = \
 [
   # 0
-  ".notdef", ".null", "CR", "space", "exclam",
+  ".notdef", ".null", "nonmarkingreturn", "space", "exclam",
   "quotedbl", "numbersign", "dollar", "percent", "ampersand",
 
   # 10
@@ -104,7 +107,7 @@ mac_standard_names = \
   "radical", "florin", "approxequal", "Delta", "guillemotleft",
 
   # 170
-  "guillemotright", "ellipsis", "nbspace", "Agrave", "Atilde",
+  "guillemotright", "ellipsis", "nonbreakingspace", "Agrave", "Atilde",
   "Otilde", "OE", "oe", "endash", "emdash",
 
   # 180
@@ -137,12 +140,16 @@ mac_standard_names = \
   "onequarter", "threequarters", "franc", "Gbreve", "gbreve",
 
   # 250
-  "Idot", "Scedilla", "scedilla", "Cacute", "cacute",
-  "Ccaron", "ccaron", "dmacron"
+  "Idotaccent", "Scedilla", "scedilla", "Cacute", "cacute",
+  "Ccaron", "ccaron", "dcroat"
 ]
 
 
-t1_standard_strings = \
+# the list of standard "SID" glyph names. For the official list,
+# see Annex A of document at
+# http://partners.adobe.com/asn/developer/pdfs/tn/5176.CFF.pdf
+#
+sid_standard_names = \
 [
   # 0
   ".notdef", "space", "exclam", "quotedbl", "numbersign",
@@ -189,7 +196,7 @@ t1_standard_strings = \
   "quotedblleft", "guillemotleft", "guilsinglleft", "guilsinglright", "fi",
 
   # 110
-  "fl", "endash", "dagger", "daggerdbl", "periodcenter",
+  "fl", "endash", "dagger", "daggerdbl", "periodcentered",
   "paragraph", "bullet", "quotesinglbase", "quotedblbase", "quotedblright",
 
   # 120
@@ -202,7 +209,7 @@ t1_standard_strings = \
 
   # 140
   "Lslash", "Oslash", "OE", "ordmasculine", "ae",
-  "dotlessi", "Islash", "oslash", "oe", "germandbls",
+  "dotlessi", "lslash", "oslash", "oe", "germandbls",
 
   # 150
   "onesuperior", "logicalnot", "mu", "trademark", "Eth",
@@ -309,7 +316,7 @@ t1_standard_strings = \
     "Odieresissmall",
 
   # 370
-  "OEsmall", "Oslashsmall", "Ugravesmall", "Uacautesmall",
+  "OEsmall", "Oslashsmall", "Ugravesmall", "Uacutesmall",
     "Ucircumflexsmall",
   "Udieresissmall", "Yacutesmall", "Thornsmall", "Ydieresissmall",
     "001.000",
@@ -323,6 +330,9 @@ t1_standard_strings = \
 ]
 
 
+# this table maps character code of the Adobe Standard Type 1
+# encoding to glyph indexes in the sid_standard_names table
+#
 t1_standard_encoding = \
 [
     0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
@@ -359,6 +369,9 @@ t1_standard_encoding = \
 ]
 
 
+# this table maps character code of the Adobe Expert Type 1
+# encoding to glyph indexes in the sid_standard_names table
+#
 t1_expert_encoding = \
 [
     0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
@@ -381,7 +394,7 @@ t1_expert_encoding = \
 
     0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
     0, 304, 305, 306,   0,   0, 307, 308, 309, 310,
-  311,   0, 312,   0,   0, 312,   0,   0, 314, 315,
+  311,   0, 312,   0,   0, 313,   0,   0, 314, 315,
     0,   0, 316, 317, 318,   0,   0,   0, 158, 155,
   163, 319, 320, 321, 322, 323, 324, 325,   0,   0,
 
@@ -1459,8 +1472,8 @@ t1_bias    = 0
 glyph_list = []
 
 
-def the_adobe_glyph_list():
-  """return the list of glyph names in the adobe list"""
+def adobe_glyph_names():
+  """return the list of glyph names from the adobe list"""
 
   lines  = string.split( adobe_glyph_list, '\n' )
   glyphs = []
@@ -1474,8 +1487,8 @@ def the_adobe_glyph_list():
   return glyphs
 
 
-def the_adobe_glyphs():
-  """return the list of unicode values"""
+def adobe_glyph_values():
+  """return the list of glyph names and their unicode values"""
 
   lines  = string.split( adobe_glyph_list, '\n' )
   glyphs = []
@@ -1516,7 +1529,7 @@ def dump_mac_indices( file, t1_bias ):
   count = 0
   for name in mac_standard_names:
     try:
-      t1_index = t1_standard_strings.index( name )
+      t1_index = sid_standard_names.index( name )
       write( "    " + repr( t1_bias + t1_index ) + ",\n" )
     except:
       write( "    " + repr( count ) + ",\n" )
@@ -1533,7 +1546,7 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
 
   name_list = []
 
-  write( "  static const char* const  standard_glyph_names[] =\n" )
+  write( "  static const char* const  ps_glyph_names[] =\n" )
   write( "  {\n" )
 
   for name in glyph_list:
@@ -1551,7 +1564,7 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
   write( "\n" )
   write( "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */\n" )
   write( "\n" )
-  write( "    0\n" )
+  write( "    NULL\n" )
   write( "  };\n" )
   write( "\n" )
   write( "\n" )
@@ -1564,16 +1577,16 @@ def dump_unicode_values( file, base_list, adobe_list ):
 
   write = file.write
 
-  adobe_glyphs, uni_values = the_adobe_glyphs()
+  glyph_names, uni_values = adobe_glyph_values()
 
   write( "\n" )
-  write( "  static const unsigned short  names_to_unicode[" + \
+  write( "  static const unsigned short  ps_names_to_unicode[" + \
           repr( len( base_list ) + len( adobe_list ) + 1 ) + "] =\n" )
   write( "  {\n" )
 
   for name in base_list:
     try:
-      index = adobe_glyphs.index( name )
+      index = glyph_names.index( name )
       write( "    0x" + uni_values[index] + ",\n" )
     except:
       write( "    0,\n" )
@@ -1584,7 +1597,7 @@ def dump_unicode_values( file, base_list, adobe_list ):
 
   for name in adobe_list:
     try:
-      index = adobe_glyphs.index( name )
+      index = glyph_names.index( name )
       write( "    0x" + uni_values[index] + ",\n" )
     except:
       write( "    0,\n" )
@@ -1625,16 +1638,16 @@ def main():
   file  = open( sys.argv[1], "w\n" )
   write = file.write
 
-  count_sid = len( t1_standard_strings )
+  count_sid = len( sid_standard_names )
 
   # build mac index table & supplemental glyph names
-  mac_list   = count_extra_glyphs( mac_standard_names, t1_standard_strings )
+  mac_list   = count_extra_glyphs( mac_standard_names, adobe_glyph_names() )
   count_mac  = len( mac_list )
   t1_bias    = count_mac
-  base_list  = mac_list + t1_standard_strings
+  base_list  = mac_list + sid_standard_names
 
   # build adobe unicode index table & supplemental glyph names
-  adobe_list  = the_adobe_glyph_list()
+  adobe_list  = adobe_glyph_names()
   adobe_list  = count_extra_glyphs( adobe_list, base_list )
   count_adobe = len( adobe_list )
 
@@ -1646,7 +1659,7 @@ def main():
   write( "/*                                                                         */\n" )
   write( "/*    PostScript glyph names (specification only).                         */\n" )
   write( "/*                                                                         */\n" )
-  write( "/*  Copyright 2000 by                                                      */\n" )
+  write( "/*  Copyright 2000-2001 by                                                 */\n" )
   write( "/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */\n" )
   write( "/*                                                                         */\n" )
   write( "/*  This file is part of the FreeType project, and may only be used,       */\n" )
@@ -1666,12 +1679,12 @@ def main():
   name_list = dump_glyph_list( file, base_list, adobe_list )
 
   # dump t1_standard_list
-  write( "  static const char* const * const  t1_standard_glyphs = " \
-          + "standard_glyph_names + " + repr( t1_bias ) + ";\n" )
+  write( "  static const char* const * const  sid_standard_names = " \
+          + "ps_glyph_names + " + repr( t1_bias ) + ";\n" )
   write( "\n" )
   write( "\n" )
 
-  write( "#define NUM_STD_GLYPHS " + repr( len( t1_standard_strings ) ) + "\n" )
+  write( "#define NUM_SID_GLYPHS " + repr( len( sid_standard_names ) ) + "\n" )
   write( "\n" )
   write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
   write( "#define NUM_ADOBE_GLYPHS " + \

@@ -115,11 +115,11 @@
     /* now, look up the glyph in the Adobe Glyph List */
     for ( n = 0; n < NUM_ADOBE_GLYPHS; n++ )
     {
-      const char*  name = t1_standard_glyphs[n];
+      const char*  name = sid_standard_names[n];
 
 
       if ( first == name[0] && strcmp( glyph_name, name ) == 0 )
-        return names_to_unicode[n];
+        return ps_names_to_unicode[n];
     }
 
     /* not found, there is probably no Unicode value for this glyph name */
@@ -173,7 +173,7 @@
         {
           uni_char = PS_Unicode_Value( gname );
 
-          if ( uni_char && uni_char != 0xFFFF )
+          if ( uni_char != 0 && uni_char != 0xFFFF )
           {
             map->unicode     = uni_char;
             map->glyph_index = n;
@@ -247,14 +247,14 @@
     if ( name_index >= 258 )
       name_index = 0;
 
-    return standard_glyph_names[mac_standard_names[name_index]];
+    return ps_glyph_names[mac_standard_names[name_index]];
   }
 
 
   static const char*
   PS_Standard_Strings( FT_UInt  sid )
   {
-    return ( sid < NUM_STD_GLYPHS ? t1_standard_glyphs[sid] : 0 );
+    return ( sid < NUM_SID_GLYPHS ? sid_standard_names[sid] : 0 );
   }
 
 
