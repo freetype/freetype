@@ -545,6 +545,10 @@
     FT_UShort  glyph_sid;
 
 
+    /* CID-keyed fonts don't have glyph names */
+    if ( !cff->charset.sids )
+      return -1;
+
     /* check range of standard char code */
     if ( charcode < 0 || charcode > 255 )
       return -1;
@@ -662,8 +666,6 @@
     {
       CFF_Font cff = (CFF_Font)(face->extra.data);
 
-
-      /* XXX: What about CID-keyed fonts? */
 
       bchar_index = cff_lookup_glyph_by_stdcharcode( cff, bchar );
       achar_index = cff_lookup_glyph_by_stdcharcode( cff, achar );

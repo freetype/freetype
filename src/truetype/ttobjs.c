@@ -12,7 +12,7 @@
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
-/*            s                                                             */
+/*                                                                         */
 /***************************************************************************/
 
 
@@ -590,14 +590,15 @@
     }
 
     /* Compute root ascender, descender, text height, and max_advance */
-    metrics->ascender    = FT_PIX_ROUND( FT_MulFix( face->root.ascender,
-                                                       metrics->y_scale ) );
-    metrics->descender   = FT_PIX_ROUND( FT_MulFix( face->root.descender,
-                                                       metrics->y_scale ) );
-    metrics->height      = FT_PIX_ROUND( FT_MulFix( face->root.height,
-                                                       metrics->y_scale ) );
-    metrics->max_advance = FT_PIX_ROUND( FT_MulFix( face->root.max_advance_width,
-                                                       metrics->x_scale ) );
+    metrics->ascender =
+      FT_PIX_ROUND( FT_MulFix( face->root.ascender, metrics->y_scale ) );
+    metrics->descender =
+      FT_PIX_ROUND( FT_MulFix( face->root.descender, metrics->y_scale ) );
+    metrics->height =
+      FT_PIX_ROUND( FT_MulFix( face->root.height, metrics->y_scale ) );
+    metrics->max_advance =
+      FT_PIX_ROUND( FT_MulFix( face->root.max_advance_width,
+                               metrics->x_scale ) );
 
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS

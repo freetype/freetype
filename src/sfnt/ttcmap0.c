@@ -392,10 +392,13 @@
       else
       {
         /* a 16-bit character code */
-        p  += char_hi * 2;                          /* jump to key entry  */
-        sub = subs + ( FT_PAD_FLOOR( TT_PEEK_USHORT( p ), 8 ) );  /* jump to sub-header */
 
-        /* check that the hi byte isn't a valid one-byte value */
+        /* jump to key entry  */
+        p  += char_hi * 2;
+        /* jump to sub-header */
+        sub = subs + ( FT_PAD_FLOOR( TT_PEEK_USHORT( p ), 8 ) );
+
+        /* check that the high byte isn't a valid one-byte value */
         if ( sub == subs )
           goto Exit;
       }
