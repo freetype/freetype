@@ -1,0 +1,17 @@
+SubDir FT2_TOP src type1 ;
+
+SubDirHdrs [ FT2_SubDir src type1 ] ;
+
+ft2_type1_sources = t1afm.c t1driver.c t1objs.c t1load.c t1gload.c
+                    t1parse.c ;
+
+if $(FT2_MULTI)
+{
+  Library $(FT2_LIB) : $(ft2_type1_sources) ;
+}
+else
+{
+  Library $(FT2_LIB) : type1.c ;
+}
+
+

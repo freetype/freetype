@@ -1,0 +1,21 @@
+SubDir FT2_TOP src truetype ;
+
+SubDirHdrs [ FT2_SubDir src truetype ] ;
+
+{
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = ttdriver.c ttobjs.c ttpload.c ttgload.c ttinterp.c ;
+  }
+  else
+  {
+    _sources = truetype.c ;
+  }
+
+  Library $(FT2_LIB) : $(_sources) ;
+}
+
+
+

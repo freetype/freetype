@@ -1,0 +1,21 @@
+SubDir FT2_TOP src pcf ;
+
+SubDirHdrs [ FT2_SubDir src pcf ] ;
+
+{
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = pcfdriver.c pcfread.c pcfutil.c ;
+  }
+  else
+  {
+    _sources = pcf.c ;
+  }
+
+  Library $(FT2_LIB) : $(_sources) ;
+}
+
+
+

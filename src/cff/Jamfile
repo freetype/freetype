@@ -1,0 +1,21 @@
+SubDir FT2_TOP src cff ;
+
+SubDirHdrs [ FT2_SubDir src cff ] ;
+
+{
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = cffdrivr.c cffgload.c cffload.c cffobjs.c cffparse.c ;
+  }
+  else
+  {
+    _sources = cff.c ;
+  }
+
+  Library $(FT2_LIB) : $(_sources) ;
+}
+
+
+

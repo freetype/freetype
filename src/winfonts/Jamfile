@@ -1,0 +1,8 @@
+SubDir FT2_TOP src winfonts ;
+
+SubDirHdrs [ FT2_SubDir src winfonts ] ;
+
+Library $(FT2_LIB) : winfnt.c ;
+
+
+

@@ -1,0 +1,21 @@
+SubDir FT2_TOP src raster ;
+
+SubDirHdrs [ FT2_SubDir src raster ] ;
+
+{
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = ftraster.c ftrend1.c ;
+  }
+  else
+  {
+    _sources = raster.c ;
+  }
+
+  Library $(FT2_LIB) : $(_sources) ;
+}
+
+
+

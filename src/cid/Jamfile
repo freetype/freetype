@@ -1,0 +1,21 @@
+SubDir FT2_TOP src cid ;
+
+SubDirHdrs [ FT2_SubDir src cid ] ;
+
+{
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = cidobjs.c cidload.c cidgload.c cidriver.c cidparse.c ;
+  }
+  else
+  {
+    _sources = type1cid.c ;
+  }
+
+  Library $(FT2_LIB) : $(_sources) ;
+}
+
+
+

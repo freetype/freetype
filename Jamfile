@@ -1,0 +1,40 @@
+# FreeType 2 Jamfile (c) 2001 David Turner
+#
+
+# we need to invoke a SubDir rule if the FT2 source directory top
+# is not the current directory. This allows us to build FreeType 2 as
+# part of a larger project easily..
+#
+if $(FT2_TOP) != $(DOT)
+{
+  SubDir FT2_TOP ;
+}
+
+FT2_INCLUDE = [ FT2_SubDir include ] ;
+FT2_SRC     = [ FT2_SubDir src ] ;
+
+FT2_LIB     = $(LIBPREFIX)freetype ;
+
+# we need "freetype2/include" in the current include path in order to
+# compile any part of FreeType 2
+#
+SubDirHdr += $(FT2_INCLUDE) ;
+
+# uncomment the following line if you want to build individual source files
+# for each FreeType 2 module.
+#
+# FT2_MULTI = true;
+
+# the file <freetype/config/ft2build.h> is used to define macros that are
+# later used in #include statements.. it needs to be parsed in order to
+# record these definitions..
+#
+HDRMACRO [ FT2_SubDir  include freetype config ft2build.h ] ;
+
+# now include the Jamfile in "freetype2/src", used to drive the
+# compilation of each FreeType 2 component and/or module
+#
+SubInclude  FT2_TOP src ;
+
+
+

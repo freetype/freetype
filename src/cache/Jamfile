@@ -1,0 +1,23 @@
+SubDir FT2_TOP src cache ;
+
+SubDirHdrs [ FT2_SubDir src cache ] ;
+
+ft2_cache_sources = ftlru.c ftcmanag.c ftcglyph.c ftcchunk.c
+                    ftcsbits.c ftcimage.c ;
+
+# the file <freetype/ftcache.h> contains some macro definitions that are
+# later used in #include statements related to the cache sub-system.
+# it need to be parsed through a HDRMACRO rule for macro definitions
+#
+HDRMACRO  [ FT2_SubDir  include ftcache.h ] ;
+
+if $(FT2_MULTI)
+{
+  Library $(FT2_LIB) : $(ft2_cache_sources) ;
+}
+else
+{
+  Library $(FT2_LIB) : ftcache.c ;
+}
+
+

@@ -1,0 +1,16 @@
+SubDir FT2_TOP src psaux ;
+
+SubDirHdrs [ FT2_SubDir src psaux ] ;
+
+ft2_psaux_sources = psauxmod.c psobjs.c t1decode.c ;
+                    
+if $(FT2_MULTI)
+{
+  Library $(FT2_LIB) : $(ft2_psaux_sources) ;
+}
+else
+{
+  Library $(FT2_LIB) : psaux.c ;
+}
+
+
