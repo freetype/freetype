@@ -1,20 +1,35 @@
 /* memtest.c */
 
-#include <freetype.h>
-#include <ftobjs.h>
+#include <freetype/freetype.h>
+#include <freetype/internal/ftobjs.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+  FT_Error      error;
 
-  EXPORT_DEF
-  void  FT_Default_Drivers( FT_Library  library );
+  FT_Library    library;
+  FT_Face       face;
+  FT_Size       size;
+  FT_GlyphSlot  slot;
 
+  unsigned int  num_glyphs;
+  int           ptsize;
+
+  int  Fail;
+  int  Num;
+
+
+
+
+/****************************************************************************/
+/****************************************************************************/
+/****************************************************************************/
+/****************************************************************************/
 
 /* Our own memory allocator. To check that a single block isn't freed */
 /* several time, we simply do not call "free"..                       */
 
-
-#define MAX_RECORDED_BLOCKS  4096
+#define MAX_RECORDED_BLOCKS  1638400
 #define CHECK_DUPLICATES
 
 typedef  struct MyBlock
@@ -140,34 +155,169 @@ struct FT_MemoryRec_  my_memory =
   my_realloc
 };
 
-
-int  main( void )
+static void  dump_mem( void )
 {
-    FT_Library  library;
-    FT_Face     face;
-    int         glyphIndex;
-    int         result;
+  MyBlock*  block = my_blocks + num_my_blocks-1;
+  int       bad   = 0;
+
+  printf( "total allocated blocks = %d\n", num_my_blocks );
+  
+  /* we scan in reverse, because transient blocks are always located */
+  /* at the end of the table.. (it supposedly faster then..)         */
+  for ( ; block >= my_blocks; block-- )
+  {
+    if (block->size > 0)
+    {
+      fprintf( stderr, "%08lx (%6ld bytes) leaked !!\n", (long)block->base, (long)block->size );
+      bad = 1;
+    }
+  }
+  if (!bad)
+    fprintf( stderr, "no leaked memory block, congratulations ;-)" );
+}
+
+/****************************************************************************/
+/****************************************************************************/
+/****************************************************************************/
+/****************************************************************************/
+
+
+  static void  Usage( char*  name )
+  {
+    printf( "memtest: simple memory tester -- part of the FreeType project\n" );
+    printf( "-------------------------------------------------------------\n" );
+    printf( "\n" );
+    printf( "Usage: %s ppem fontname[.ttf|.ttc] [fontname2..]\n", name );
+    printf( "\n" );
+
+    exit( 1 );
+  }
+
+
+  static void  Panic( const char*  message )
+  {
+    fprintf( stderr, "%s\n  error code = 0x%04x\n", message, error );
+    exit(1);
+  }
+
+
+int  main( int argc, char** argv )
+{
+    int           i, file_index;
+    unsigned int  id;
+    char          filename[128 + 4];
+    char          alt_filename[128 + 4];
+    char*         execname;
+    char*         fname;
+
+    execname = argv[0];
+
+    if ( argc < 3 )
+      Usage( execname );
+
+    if ( sscanf( argv[1], "%d", &ptsize ) != 1 )
+      Usage( execname );
 
     /* Create a new library with our own memory manager */
-    result = FT_New_Library( &my_memory, &library );
+    error = FT_New_Library( &my_memory, &library );
+    if (error) Panic( "Could not create library object" );
     
     /* the new library has no drivers in it, add the default ones */
     /* (implemented in ftinit.c)..                                */
     FT_Default_Drivers(library);
 
-    result = FT_New_Face( library, "d:/ttf/arial.ttf", 0, &face );
-    result = FT_Set_Char_Size( face, 0, 16*64, 96, 96 );
 
-    glyphIndex = FT_Get_Char_Index( face, (int)'A' );
+    /* Now check all files */
+    for ( file_index = 2; file_index < argc; file_index++ )
+    {
+      fname = argv[file_index];
+      i     = strlen( fname );
+      while ( i > 0 && fname[i] != '\\' && fname[i] != '/' )
+      {
+        if ( fname[i] == '.' )
+          i = 0;
+        i--;
+      }
 
-    /* memory error occurs in FT_DoneFreeType() if FT_Load_Glyph() is called */
-    result = FT_Load_Glyph(face, glyphIndex, FT_LOAD_DEFAULT );
+      filename[128] = '\0';
+      alt_filename[128] = '\0';
 
-    result = FT_Done_Face( face );
+      strncpy( filename, fname, 128 );
+      strncpy( alt_filename, fname, 128 );
 
-    result = FT_Done_FreeType( library ); 
+#ifndef macintosh
+      if ( i >= 0 )
+      {
+        strncpy( filename + strlen( filename ), ".ttf", 4 );
+        strncpy( alt_filename + strlen( alt_filename ), ".ttc", 4 );
+      }
+#endif
+      i     = strlen( filename );
+      fname = filename;
 
-    return 0;
+      while ( i >= 0 )
+#ifndef macintosh
+        if ( filename[i] == '/' || filename[i] == '\\' )
+#else
+        if ( filename[i] == ':' )
+#endif
+        {
+          fname = filename + i + 1;
+          i = -1;
+        }
+        else 
+          i--;
+
+      printf( "%s: ", fname );
+
+      /* Load face */
+      error = FT_New_Face( library, filename, 0, &face );
+      if (error)
+      {
+        if (error == FT_Err_Invalid_File_Format)
+          printf( "unknown format\n" );
+        else
+          printf( "could not find/open file (error: %d)\n", error );
+        continue;
+      }
+      if (error) Panic( "Could not open file" );
+
+      num_glyphs = face->num_glyphs;
+
+      error = FT_Set_Char_Size( face, ptsize << 6, ptsize << 6, 72, 72 );
+      if (error) Panic( "Could not set character size" );
+
+      Fail = 0;
+      {
+        for ( id = 0; id < num_glyphs; id++ )
+        {
+          error = FT_Load_Glyph( face, id, FT_LOAD_DEFAULT );
+          if (error)
+          {
+            if ( Fail < 10 )
+              printf( "glyph %4u: 0x%04x\n" , id, error );
+            Fail++;
+          }
+        }
+      }
+
+      if ( Fail == 0 )
+        printf( "OK.\n" );
+      else
+        if ( Fail == 1 )
+          printf( "1 fail.\n" );
+        else
+          printf( "%d fails.\n", Fail );
+
+      FT_Done_Face( face );
+    }
+
+    FT_Done_FreeType(library);
+
+    dump_mem();
+
+    exit( 0 );      /* for safety reasons */
+    return 0;       /* never reached */
 }
 
 

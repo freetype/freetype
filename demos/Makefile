@@ -160,7 +160,7 @@ else
   #
   # The list of demonstration programs to build.
   #
-  EXES := ftlint ftview fttimer compos ftstring
+  EXES := ftlint ftview fttimer compos ftstring memtest
 
   ifneq ($(findstring $(PLATFORM),os2 unix win32),)
     EXES += ttdebug
@@ -260,6 +260,9 @@ else
   # over-ridden by system-specific things..
   #
   $(BIN_)ftlint$E: $(OBJ_)ftlint.$O $(FTLIB) $(COMMON_OBJ)
+	  $(COMMON_LINK)
+
+  $(BIN_)memtest$E: $(OBJ_)memtest.$O $(FTLIB) $(COMMON_OBJ)
 	  $(COMMON_LINK)
 
   $(BIN_)compos$E: $(OBJ_)compos.$O $(FTLIB) $(COMMON_OBJ)

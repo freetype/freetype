@@ -36,7 +36,7 @@
   static char  Header[128];
   static char* new_header = 0;
 
-  static unsigned char*  Text = "The quick brown fox jumps over the lazy dog";
+  static char*  Text = "The quick brown fox jumps over the lazy dog";
   
   static FT_Library    library;      /* the FreeType library            */
   static FT_Face       face;         /* the font face                   */
@@ -382,7 +382,7 @@
   *  XXX: For now, we perform a trivial conversion
   *
   */
-  static  void  prepare_text( const char*  string )
+  static  void  prepare_text( const unsigned char*  string )
   {
     const unsigned char*  p     = (const unsigned char*)string;
     PGlyph                glyph = glyphs;
@@ -710,7 +710,7 @@
     if (error) goto Display_Font;
 
     /* prepare the text to be rendered */
-    prepare_text( Text );
+    prepare_text( (unsigned char*)Text );
 
     file_loaded++;
     
