@@ -45,7 +45,8 @@
   /* <Description>                                                         */
   /*    This function is used as a `move_to' and `line_to' emitter during  */
   /*    FT_Outline_Decompose().  It simply records the destination point   */
-  /*    in `user->last'.                                                   */
+  /*    in `user->last'; no further computations are necessary since we    */
+  /*    the cbox as the starting bbox which must be refined.               */
   /*                                                                       */
   /* <Input>                                                               */
   /*    to   :: A pointer to the destination vector.                       */
@@ -99,13 +100,10 @@
                           FT_Pos*  min,
                           FT_Pos*  max )
   {
-    if( y1 == y3 )
+    if ( y1 == y3 )
     {
       if ( y2 == y1 )               /* Flat arc */
-      {
-        y3 = y1;
         goto Suite;
-      }
     }
     else if ( y1 < y3 )
     {
@@ -179,6 +177,8 @@
                         &user->bbox.yMin,
                         &user->bbox.yMax );
 
+    user->last = *to;
+
     return 0;
   }
 
@@ -232,10 +232,7 @@
       if ( y1 == y4 )
       {
         if ( y1 == y2 && y1 == y3 )                         /* Flat */
-        {
-          y4 = y1;
           goto Test;
-        }
       }
       else if ( y1 < y4 )
       {
@@ -329,6 +326,8 @@
                           to->y,
                           &user->bbox.yMin,
                           &user->bbox.yMax );
+
+    user->last = *to;
 
     return 0;
   }
