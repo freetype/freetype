@@ -697,168 +697,11 @@
   /*                                                                       */
   /*************************************************************************/
 
-#define Z1_NEW_STRING( _name, _field )          \
-          static                                \
-          const T1_Field  z1_field_ ## _field = \
-            T1_FIELD_STRING( _field );
-
-#define Z1_NEW_BOOL( _name, _field )            \
-          static                                \
-          const T1_Field  z1_field_ ## _field = \
-            T1_FIELD_BOOL( _field );
-
-#define Z1_NEW_NUM( _name, _field )             \
-          static                                \
-          const T1_Field  z1_field_ ## _field = \
-            T1_FIELD_NUM( _field );
-
-#define Z1_NEW_FIXED( _name, _field )           \
-          static                                \
-          const T1_Field  z1_field_ ## _field = \
-            T1_FIELD_FIXED( _field, _power );
-
-#define Z1_NEW_NUM_TABLE( _name, _field, _max, _count )  \
-          static                                         \
-          const T1_Field  z1_field_ ## _field =          \
-            T1_FIELD_NUM_ARRAY( _field, _count, _max );
-
-#define Z1_NEW_FIXED_TABLE( _name, _field, _max, _count ) \
-          static                                          \
-          const T1_Field  z1_field_ ## _field =           \
-            T1_FIELD_FIXED_ARRAY( _field, _count, _max );
-
-#define Z1_NEW_NUM_TABLE2( _name, _field, _max ) \
-          static                                 \
-          const T1_Field  z1_field_ ## _field =  \
-            T1_FIELD_NUM_ARRAY2( _field, _max );
-
-#define Z1_NEW_FIXED_TABLE2( _name, _field, _max ) \
-          static                                   \
-          const T1_Field  z1_field_ ## _field =    \
-            T1_FIELD_FIXED_ARRAY2( _field, _max );
-
-
-#define Z1_FONTINFO_STRING( n, f )          Z1_NEW_STRING( n, f )
-#define Z1_FONTINFO_NUM( n, f )             Z1_NEW_NUM( n, f )
-#define Z1_FONTINFO_BOOL( n, f )            Z1_NEW_BOOL( n, f )
-#define Z1_PRIVATE_NUM( n, f )              Z1_NEW_NUM( n, f )
-#define Z1_PRIVATE_FIXED( n, f )            Z1_NEW_FIXED( n, f )
-#define Z1_PRIVATE_NUM_TABLE( n, f, m, c )  Z1_NEW_NUM_TABLE( n, f, m, c )
-#define Z1_PRIVATE_NUM_TABLE2( n, f, m )    Z1_NEW_NUM_TABLE2( n, f, m )
-#define Z1_TOPDICT_NUM( n, f )              Z1_NEW_NUM( n, f )
-#define Z1_TOPDICT_NUM_FIXED2( n, f, m )    Z1_NEW_FIXED_TABLE2( n, f, m )
-
-
-  /* including this file defines all field variables */
-#ifdef FT_FLAT_COMPILE
-
-#include "z1tokens.h"
-
-#else
-
-#include <type1z/z1tokens.h>
-
-#endif
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* Second, define the keyword variables.  This is a set of Z1_KeyWord    */
-  /* structures used to model the way each keyword is `loaded'.            */
-  /*                                                                       */
-  /*************************************************************************/
-
-  typedef void  (*Z1_Parse_Func)( T1_Face     face,
-                                  Z1_Loader*  loader );
-
-
-  typedef enum  Z1_KeyWord_Type_
-  {
-    t1_keyword_callback = 0,
-    t1_keyword_field,
-    t1_keyword_field_table
-
-  } Z1_KeyWord_Type;
-
-
-  typedef enum  Z1_KeyWord_Location_
-  {
-    t1_keyword_type1 = 0,
-    t1_keyword_font_info,
-    t1_keyword_private
-
-  } Z1_KeyWord_Location;
-
-
-  typedef struct  Z1_KeyWord_
-  {
-    const char*          name;
-    Z1_KeyWord_Type      type;
-    Z1_KeyWord_Location  location;
-    Z1_Parse_Func        parsing;
-    const T1_Field*      field;
-
-  } Z1_KeyWord;
-
-
-#define Z1_KEYWORD_CALLBACK( name, callback )                      \
-        {                                                          \
-          name, t1_keyword_callback, t1_keyword_type1, callback, 0 \
-        }
-
-#define Z1_KEYWORD_TYPE1( name, f )                                    \
-        {                                                              \
-          name, t1_keyword_field, t1_keyword_type1, 0, &z1_field_ ## f \
-        }
-
-#define Z1_KEYWORD_FONTINFO( name, f )                                     \
-        {                                                                  \
-          name, t1_keyword_field, t1_keyword_font_info, 0, &z1_field_ ## f \
-        }
-
-#define Z1_KEYWORD_PRIVATE( name, f )                                    \
-        {                                                                \
-          name, t1_keyword_field, t1_keyword_private, 0, &z1_field_ ## f \
-        }
-
-#define Z1_KEYWORD_FONTINFO_TABLE( name, f )                     \
-        {                                                        \
-          name, t1_keyword_field_table, t1_keyword_font_info, 0, \
-          &z1_field_ ## f                                        \
-        }
-
-#define Z1_KEYWORD_PRIVATE_TABLE( name, f )                    \
-        {                                                      \
-          name, t1_keyword_field_table, t1_keyword_private, 0, \
-          &z1_field_ ## f                                      \
-        }
-
-
-#undef  Z1_FONTINFO_STRING
-#undef  Z1_FONTINFO_NUM
-#undef  Z1_FONTINFO_BOOL
-#undef  Z1_PRIVATE_NUM
-#undef  Z1_PRIVATE_FIXED
-#undef  Z1_PRIVATE_NUM_TABLE
-#undef  Z1_PRIVATE_NUM_TABLE2
-#undef  Z1_TOPDICT_NUM
-#undef  Z1_TOPDICT_NUM_FIXED2
-
-#define Z1_FONTINFO_STRING( n, f )          Z1_KEYWORD_FONTINFO( n, f ),
-#define Z1_FONTINFO_NUM( n, f )             Z1_KEYWORD_FONTINFO( n, f ),
-#define Z1_FONTINFO_BOOL( n, f )            Z1_KEYWORD_FONTINFO( n, f ),
-#define Z1_PRIVATE_NUM( n, f )              Z1_KEYWORD_PRIVATE( n, f ),
-#define Z1_PRIVATE_FIXED( n, f )            Z1_KEYWORD_PRIVATE( n, f ),
-#define Z1_PRIVATE_NUM_TABLE( n, f, m, c )  Z1_KEYWORD_PRIVATE_TABLE( n, f ),
-#define Z1_PRIVATE_NUM_TABLE2( n, f, m )    Z1_KEYWORD_PRIVATE_TABLE( n, f ),
-#define Z1_TOPDICT_NUM( n, f )              Z1_KEYWORD_TYPE1( n, f ),
-#define Z1_TOPDICT_NUM_FIXED2( n, f, m )    Z1_KEYWORD_TYPE1( n, f ),
-
 
   static
-  FT_Error  t1_load_keyword( T1_Face      face,
-                             Z1_Loader*   loader,
-                             Z1_KeyWord*  keyword )
+  FT_Error  t1_load_keyword( T1_Face     face,
+                             Z1_Loader*  loader,
+                             T1_Field*   field )
   {
     FT_Error   error;
     void*      dummy_object;
@@ -868,18 +711,18 @@
 
 
     /* if the keyword has a dedicated callback, call it */
-    if ( keyword->type == t1_keyword_callback )
+    if ( field->type == t1_field_callback )
     {
-      keyword->parsing( face, loader );
+      field->reader( (FT_Face)face, loader );
       error = loader->parser.root.error;
       goto Exit;
     }
 
     /* now, the keyword is either a simple field, or a table of fields; */
     /* we are now going to take care of it                              */
-    switch ( keyword->location )
+    switch ( field->location )
     {
-    case t1_keyword_font_info:
+    case t1_field_font_info:
       dummy_object = &face->type1.font_info;
       objects      = &dummy_object;
       max_objects  = 0;
@@ -891,7 +734,7 @@
       }
       break;
 
-    case t1_keyword_private:
+    case t1_field_private:
       dummy_object = &face->type1.private_dict;
       objects      = &dummy_object;
       max_objects  = 0;
@@ -909,11 +752,12 @@
       max_objects  = 0;
     }
 
-    if ( keyword->type == t1_keyword_field_table )
-      error = Z1_Load_Field_Table( &loader->parser, keyword->field,
+    if ( field->type == t1_field_integer_array ||
+         field->type == t1_field_fixed_array   )
+      error = Z1_Load_Field_Table( &loader->parser, field,
                                    objects, max_objects, 0 );
     else
-      error = Z1_Load_Field( &loader->parser, keyword->field,
+      error = Z1_Load_Field( &loader->parser, field,
                              objects, max_objects, 0 );
 
   Exit:
@@ -1426,7 +1270,7 @@
 
 
   static
-  const Z1_KeyWord  t1_keywords[] =
+  const T1_Field  t1_keywords[] =
   {
 
 #ifdef FT_FLAT_COMPILE
@@ -1440,22 +1284,22 @@
 #endif
 
     /* now add the special functions... */
-    Z1_KEYWORD_CALLBACK( "FontName", parse_font_name ),
-    Z1_KEYWORD_CALLBACK( "FontBBox", parse_font_bbox ),
-    Z1_KEYWORD_CALLBACK( "FontMatrix", parse_font_matrix ),
-    Z1_KEYWORD_CALLBACK( "Encoding", parse_encoding ),
-    Z1_KEYWORD_CALLBACK( "Subrs", parse_subrs ),
-    Z1_KEYWORD_CALLBACK( "CharStrings", parse_charstrings ),
+    T1_FIELD_CALLBACK( "FontName", parse_font_name )
+    T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
+    T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix )
+    T1_FIELD_CALLBACK( "Encoding", parse_encoding )
+    T1_FIELD_CALLBACK( "Subrs", parse_subrs )
+    T1_FIELD_CALLBACK( "CharStrings", parse_charstrings )
 
 #ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
-    Z1_KEYWORD_CALLBACK( "BlendDesignPositions", parse_blend_design_positions ),
-    Z1_KEYWORD_CALLBACK( "BlendDesignMap", parse_blend_design_map ),
-    Z1_KEYWORD_CALLBACK( "BlendAxisTypes", parse_blend_axis_types ),
-    Z1_KEYWORD_CALLBACK( "WeightVector", parse_weight_vector ),
-    Z1_KEYWORD_CALLBACK( "shareddict", parse_shared_dict ),
+    T1_FIELD_CALLBACK( "BlendDesignPositions", parse_blend_design_positions )
+    T1_FIELD_CALLBACK( "BlendDesignMap", parse_blend_design_map )
+    T1_FIELD_CALLBACK( "BlendAxisTypes", parse_blend_axis_types )
+    T1_FIELD_CALLBACK( "WeightVector", parse_weight_vector )
+    T1_FIELD_CALLBACK( "shareddict", parse_shared_dict )
 #endif
 
-    Z1_KEYWORD_CALLBACK( 0, 0 )
+    { 0,0,0,0, 0,0,0,0 }
   };
 
 
@@ -1534,7 +1378,7 @@
             else
             {
               /* now, compare the immediate name to the keyword table */
-              Z1_KeyWord*  keyword = (Z1_KeyWord*)t1_keywords;
+              T1_Field*  keyword = (T1_Field*)t1_keywords;
 
 
               for (;;)
@@ -1542,7 +1386,7 @@
                 FT_Byte*  name;
 
 
-                name = (FT_Byte*)keyword->name;
+                name = (FT_Byte*)keyword->ident;
                 if ( !name )
                   break;
 

@@ -195,6 +195,7 @@
     FT_Byte     paint_type;
     FT_Byte     font_type;
     FT_Matrix   font_matrix;
+    FT_Vector   font_offset;
 
     FT_UInt     num_subrs;
     FT_ULong    subrmap_offset;

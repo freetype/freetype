@@ -21,7 +21,6 @@
 
 #include <freetype/internal/ftstream.h>
 
-
 #ifdef FT_FLAT_COMPILE
 
 #include "cidparse.h"

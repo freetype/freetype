@@ -97,20 +97,22 @@
 
 
   static
-  FT_Error  cid_load_keyword( CID_Face              face,
-                              CID_Loader*           loader,
-                              const CID_Field_Rec*  keyword )
+  FT_Error  cid_load_keyword( CID_Face         face,
+                              CID_Loader*      loader,
+                              const T1_Field*  keyword )
   {
     FT_Error     error;
     CID_Parser*  parser = &loader->parser;
     FT_Byte*     object;
+    void*        dummy_object;
     CID_Info*    cid = &face->cid;
 
 
     /* if the keyword has a dedicated callback, call it */
     if ( keyword->type == t1_field_callback )
     {
-      error = keyword->reader( face, parser );
+      keyword->reader( (FT_Face)face, parser );
+      error = parser->root.error;
       goto Exit;
     }
 
@@ -151,13 +153,15 @@
       }
     }
 
+    dummy_object = object;
+    
     /* now, load the keyword data in the object's field(s) */
     if ( keyword->type == t1_field_integer_array ||
          keyword->type == t1_field_fixed_array   )
-      error = CID_Load_Field_Table( parser, keyword, object );
+      error = CID_Load_Field_Table( &loader->parser, keyword,
+                                    &dummy_object );
     else
-      error = CID_Load_Field( parser, keyword, object );
-
+      error = CID_Load_Field( &loader->parser, keyword, &dummy_object );
   Exit:
     return error;
   }
@@ -187,20 +191,36 @@
                                CID_Parser*  parser )
   {
     FT_Matrix*     matrix;
+    FT_Vector*     offset;
     CID_FontDict*  dict;
-    FT_Fixed       temp[4];
+    FT_Fixed       temp[6];
 
 
     if ( parser->num_dict >= 0 )
     {
       dict   = face->cid.font_dicts + parser->num_dict;
       matrix = &dict->font_matrix;
+      offset = &dict->font_offset;
 
-      (void)CID_ToFixedArray( parser, 4, temp, 3 );
+      (void)CID_ToFixedArray( parser, 6, temp, 3 );
+
+      /* we need to scale the values by 1.0/temp[3] */
+      if ( temp[3] != 0x10000L )
+      {
+        temp[0] = FT_DivFix( temp[0], temp[3] );
+        temp[1] = FT_DivFix( temp[1], temp[3] );
+        temp[2] = FT_DivFix( temp[2], temp[3] );
+        temp[4] = FT_DivFix( temp[4], temp[3] );
+        temp[5] = FT_DivFix( temp[5], temp[3] );
+        temp[3] = 0x10000L;
+      }
+
       matrix->xx = temp[0];
       matrix->yx = temp[1];
       matrix->xy = temp[2];
       matrix->yy = temp[3];
+      offset->x  = temp[4];
+      offset->y  = temp[5];
     }
 
     return T1_Err_Ok;       /* this is a callback function; */
@@ -247,7 +267,7 @@
 
 
   static
-  const CID_Field_Rec  t1_field_records[] =
+  const T1_Field  cid_field_records[] =
   {
 
 #ifdef FT_FLAT_COMPILE
@@ -260,7 +280,10 @@
 
 #endif
 
-    { 0, t1_field_cid_info, t1_field_none, 0, 0, 0, 0, 0 }
+    T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
+    T1_FIELD_CALLBACK( "FDArray", parse_fd_array )
+    T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix )
+    { 0, 0, 0, 0, 0, 0, 0, 0 }
   };
 
 
@@ -273,31 +296,19 @@
   }
 
 
-  static
-  void  skip_whitespace( CID_Parser*  parser )
-  {
-    FT_Byte*  cur = parser->cursor;
-
-
-    while ( cur < parser->limit && isspace( *cur ) )
-      cur++;
-
-    parser->cursor = cur;
-  }
-
 
   static
-  FT_Error  parse_dict( CID_Face     face,
-                        CID_Loader*  loader,
-                        FT_Byte*     base,
-                        FT_Long      size )
+  FT_Error  cid_parse_dict( CID_Face     face,
+                            CID_Loader*  loader,
+                            FT_Byte*     base,
+                            FT_Long      size )
   {
     CID_Parser*  parser = &loader->parser;
 
 
-    parser->cursor = base;
-    parser->limit  = base + size;
-    parser->error  = 0;
+    parser->root.cursor = base;
+    parser->root.limit  = base + size;
+    parser->root.error  = 0;
 
     {
       FT_Byte*  cur   = base;
@@ -334,7 +345,7 @@
           if ( len > 0 && len < 22 )
           {
             /* now compare the immediate name to the keyword table */
-            const CID_Field_Rec*  keyword = t1_field_records;
+            const T1_Field*  keyword = cid_field_records;
 
 
             for (;;)
@@ -359,13 +370,13 @@
                 if ( n >= len )
                 {
                   /* we found it - run the parsing callback */
-                  parser->cursor = cur2;
-                  skip_whitespace( parser );
-                  parser->error = cid_load_keyword( face, loader, keyword );
-                  if ( parser->error )
-                    return parser->error;
+                  parser->root.cursor = cur2;
+                  CID_Skip_Spaces( parser );
+                  parser->root.error = cid_load_keyword( face, loader, keyword );
+                  if ( parser->root.error )
+                    return parser->root.error;
 
-                  cur = parser->cursor;
+                  cur = parser->root.cursor;
                   break;
                 }
               }
@@ -375,7 +386,7 @@
         }
       }
     }
-    return parser->error;
+    return parser->root.error;
   }
 
 
@@ -515,13 +526,14 @@
     t1_init_loader( &loader, face );
 
     parser = &loader.parser;
-    error = CID_New_Parser( parser, face->root.stream, face->root.memory );
+    error = CID_New_Parser( parser, face->root.stream, face->root.memory,
+                            (PSAux_Interface*)face->psaux );
     if ( error )
       goto Exit;
 
-    error = parse_dict( face, &loader,
-                        parser->postscript,
-                        parser->postscript_len );
+    error = cid_parse_dict( face, &loader,
+                            parser->postscript,
+                            parser->postscript_len );
     if ( error )
       goto Exit;
 
