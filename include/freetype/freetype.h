@@ -2398,15 +2398,39 @@ FT_BEGIN_HEADER
   /*    FT_Get_Next_Char                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Returns the next charcode that is defined in the charmap.          */
+  /*    Returns the next charcode that is defined in a face's current      */
+  /*    charmap.                                                           */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face     :: A handle to the source face object.                    */
   /*                                                                       */
-  /*    charcode :: The character code.                                    */
+  /*    charcode :: The current character code.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    The charcode.  0 means `no encoded values above charcode'.         */
+  /*    The next character code in the current charmap. 0 means            */
+  /*    `no encoded values above charcode'.                                */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    You can always retrieve the first charcode in a given charmap      */
+  /*    by calling FT_Get_Next_Char(face,0)                                */
+  /*                                                                       */
+  /*    (this assumes that 0 is not a valid character code in any known    */
+  /*     charmap format, which is basically true for TrueType and Type1)   */
+  /*                                                                       */
+  /*    note that certain charmaps can map character codes to "empty"      */
+  /*    glyphs sometimes. Here are two examples:                           */
+  /*                                                                       */
+  /*      - the embedded bitmaps were stripped from the font, and certain  */
+  /*        glyphs didn't have a corresponding outline                     */
+  /*                                                                       */
+  /*      - the font is a sub-set of another one and was generated with    */
+  /*        a tool that simply changed the glyph tables, but not the       */
+  /*        charmap..                                                      */
+  /*                                                                       */
+  /*    you should thus use this function only to enumerate charmaps. If   */
+  /*    you need to determine the list of "displayable" glyphs, you'll     */
+  /*    need to use FT_Load_Glyph or wait until we provide another API     */
+  /*    to do that..                                                       */
   /*                                                                       */
   FT_EXPORT( FT_ULong )
   FT_Get_Next_Char( FT_Face   face,
