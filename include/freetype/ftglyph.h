@@ -162,7 +162,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Get_Glyph( FT_GlyphSlot  slot,
-                                       FT_Glyph*     aglyph );
+                                       FT_Glyph     *aglyph );
 
 
   /*************************************************************************/
@@ -184,7 +184,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Glyph_Copy( FT_Glyph   source,
-                                        FT_Glyph*  target );
+                                        FT_Glyph  *target );
 
 
   /*************************************************************************/
@@ -195,9 +195,10 @@
   /* <Description>                                                         */
   /*    Transforms a glyph image if its format is scalable.                */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    glyph  :: A handle to the target glyph object.                     */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    matrix :: A pointer to a 2x2 matrix to apply.                      */
   /*                                                                       */
   /*    delta  :: A pointer to a 2d vector to apply.  Coordinates are      */
@@ -232,7 +233,16 @@
   /*    FT_Glyph_Get_CBox                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Returns the glyph image's bounding box.                            */
+  /*    Returns a glyph's `control box'.  The control box encloses all the */
+  /*    outline's points, including Bezier control points.  Though it      */
+  /*    coincides with the exact bounding box for most glyphs, it can be   */
+  /*    slightly larger in some situations (like when rotating an outline  */
+  /*    which contains Bezier outside arcs).                               */
+  /*                                                                       */
+  /*    Computing the control box is very fast, while getting the bounding */
+  /*    box can take much more time as it needs to walk over all segments  */
+  /*    and arcs in the outline.  To get the latter, you can use the       */
+  /*    `ftbbox' component which is dedicated to this single task.         */
   /*                                                                       */
   /* <Input>                                                               */
   /*    glyph :: A handle to the source glyph object.                      */
@@ -241,8 +251,8 @@
   /*             bounding box values.                                      */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    box   :: The glyph bounding box.  Coordinates are expressed in     */
-  /*             1/64th of pixels if it is grid-fitted.                    */
+  /*    acbox :: The glyph coordinate bounding box.  Coordinates are       */
+  /*             expressed in 1/64th of pixels if it is grid-fitted.       */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Coordinates are relative to the glyph origin, using the Y-upwards  */
@@ -281,7 +291,7 @@
   /*                                                                       */
   FT_EXPORT( void )  FT_Glyph_Get_CBox( FT_Glyph  glyph,
                                         FT_UInt   bbox_mode,
-                                        FT_BBox*  cbox );
+                                        FT_BBox  *acbox );
 
 
   /*************************************************************************/
@@ -293,7 +303,7 @@
   /*    Converts a given glyph object to a bitmap glyph object.            */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    glyph       :: A pointer to a handle to the target glyph.          */
+  /*    the_glyph   :: A pointer to a handle to the target glyph.          */
   /*                                                                       */
   /* <Input>                                                               */
   /*    render_mode :: A set of bit flags that describe how the data is    */

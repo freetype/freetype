@@ -200,7 +200,7 @@
                                           FT_ULong            max_bytes,
                                           FTC_Face_Requester  requester,
                                           FT_Pointer          req_data,
-                                          FTC_Manager*        amanager );
+                                          FTC_Manager        *amanager );
 
 
   /*************************************************************************/
@@ -212,7 +212,7 @@
   /*    Empties a given cache manager.  This simply gets rid of all the    */
   /*    currently cached FT_Face & FT_Size objects within the manager.     */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    manager :: A handle to the manager.                                */
   /*                                                                       */
   FT_EXPORT( void )  FTC_Manager_Reset( FTC_Manager  manager );
@@ -266,7 +266,7 @@
   /*                                                                       */
   FT_EXPORT( FT_Error )  FTC_Manager_Lookup_Face( FTC_Manager  manager,
                                                   FTC_FaceID   face_id,
-                                                  FT_Face*     aface );
+                                                  FT_Face     *aface );
 
 
   /*************************************************************************/
@@ -283,7 +283,7 @@
   /*                                                                       */
   /*    size_id :: The ID of the `font size' to use.                       */
   /*                                                                       */
-  /* <InOut>                                                               */
+  /* <Output>                                                              */
   /*    aface   :: A pointer to the handle of the face object.  Set it to  */
   /*               zero if you don't need it.                              */
   /*                                                                       */
@@ -310,8 +310,8 @@
   /*                                                                       */
   FT_EXPORT( FT_Error )  FTC_Manager_Lookup_Size( FTC_Manager  manager,
                                                   FTC_Font     font,
-                                                  FT_Face*     aface,
-                                                  FT_Size*     asize );
+                                                  FT_Face     *aface,
+                                                  FT_Size     *asize );
 
 
   /* a cache class is used to describe a unique cache type to the manager */
@@ -323,7 +323,7 @@
   FT_EXPORT( FT_Error )  FTC_Manager_Register_Cache(
                            FTC_Manager       manager,
                            FTC_Cache_Class*  clazz,
-                           FTC_Cache*        acache );
+                           FTC_Cache        *acache );
 
 
 #ifdef __cplusplus

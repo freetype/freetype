@@ -54,7 +54,7 @@
 
 
   FT_EXPORT( FT_Error )  FTC_SBit_Cache_New( FTC_Manager      manager,
-                                             FTC_SBit_Cache*  acache );
+                                             FTC_SBit_Cache  *acache );
 
   FT_EXPORT( FT_Error )  FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
                                                 FTC_Image_Desc*  desc,

@@ -1168,12 +1168,12 @@
   /*    that are registered by this function is determined at build time.  */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    library :: A handle to a new library object.                       */
+  /*    alibrary :: A handle to a new library object.                      */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FT_Init_FreeType( FT_Library*  library );
+  FT_EXPORT( FT_Error )  FT_Init_FreeType( FT_Library  *alibrary );
 
 
   /*************************************************************************/
@@ -1349,13 +1349,13 @@
   /*    FT_New_Face() can be used to determine and/or check the font       */
   /*    format of a given font resource.  If the `face_index' field is     */
   /*    negative, the function will _not_ return any face handle in        */
-  /*    `*face'.  Its return value should be 0 if the resource is          */
+  /*    `aface'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_New_Face( FT_Library   library,
                                       const char*  filepathname,
                                       FT_Long      face_index,
-                                      FT_Face*     face );
+                                      FT_Face     *aface );
 
 
   /*************************************************************************/
@@ -1378,7 +1378,7 @@
   /*    face_index :: The index of the face within the resource.  The      */
   /*                  first face has index 0.                              */
   /* <Output>                                                              */
-  /*    face       :: A handle to a new face object.                       */
+  /*    aface      :: A handle to a new face object.                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -1395,14 +1395,14 @@
   /*    FT_New_Memory_Face() can be used to determine and/or check the     */
   /*    font format of a given font resource.  If the `face_index' field   */
   /*    is negative, the function will _not_ return any face handle in     */
-  /*    `*face'.  Its return value should be 0 if the resource is          */
+  /*    `aface'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_New_Memory_Face( FT_Library  library,
                                              FT_Byte*    file_base,
                                              FT_Long     file_size,
                                              FT_Long     face_index,
-                                             FT_Face*    face );
+                                             FT_Face    *aface );
 
 
   /*************************************************************************/
@@ -1448,7 +1448,7 @@
   FT_EXPORT( FT_Error )  FT_Open_Face( FT_Library     library,
                                        FT_Open_Args*  args,
                                        FT_Long        face_index,
-                                       FT_Face*       face );
+                                       FT_Face       *aface );
 
 
   /*************************************************************************/
@@ -1496,9 +1496,10 @@
   /*    This function is similar to FT_Attach_File() with the exception    */
   /*    that it reads the attachment from an arbitrary stream.             */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    face       :: The target face object.                              */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    parameters :: A pointer to an FT_Open_Args structure used to       */
   /*                  describe the input stream to FreeType.               */
   /* <Return>                                                              */
@@ -1613,10 +1614,11 @@
   /*    A function used to load a single glyph within a given glyph slot,  */
   /*    for a given size.                                                  */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    face        :: A handle to the target face object where the glyph  */
   /*                   will be loaded.                                     */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    glyph_index :: The index of the glyph in the font file.            */
   /*                                                                       */
   /*    load_flags  :: A flag indicating what to load for this glyph.  The */
@@ -1651,10 +1653,11 @@
   /*    A function used to load a single glyph within a given glyph slot,  */
   /*    for a given size, according to its character code.                 */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    face        :: A handle to a target face object where the glyph    */
   /*                   will be loaded.                                     */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    char_code   :: The glyph's character code, according to the        */
   /*                   current charmap used in the face.                   */
   /*                                                                       */
@@ -1968,10 +1971,11 @@
   /*    inspecting the glyph image format, find the relevant renderer, and */
   /*    invoke it.                                                         */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    slot        :: A handle to the glyph slot containing the image to  */
   /*                   convert.                                            */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    render_mode :: This is the render mode used to render the glyph    */
   /*                   image into a bitmap.  See FT_Render_Mode for a list */
   /*                   of possible values.                                 */
@@ -2031,7 +2035,7 @@
   /*                   kerning vector.                                     */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    kerning     :: The kerning vector.  This is in font units for      */
+  /*    akerning    :: The kerning vector.  This is in font units for      */
   /*                   scalable formats, and in pixels for fixed-sizes     */
   /*                   formats.                                            */
   /*                                                                       */
@@ -2048,7 +2052,7 @@
                                          FT_UInt     left_glyph,
                                          FT_UInt     right_glyph,
                                          FT_UInt     kern_mode,
-                                         FT_Vector*  kerning );
+                                         FT_Vector  *akerning );
 
 
   /*************************************************************************/
@@ -2065,11 +2069,12 @@
   /*                                                                       */
   /*    glyph_index :: The glyph index.                                    */
   /*                                                                       */
-  /*    buffer      :: A pointer to a target buffer where the name will be */
-  /*                   copied to.                                          */
-  /*                                                                       */
   /*    buffer_max  :: The maximal number of bytes available in the        */
   /*                   buffer.                                             */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    buffer      :: A pointer to a target buffer where the name will be */
+  /*                   copied to.                                          */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -2101,9 +2106,10 @@
   /*    Selects a given charmap by its encoding tag (as listed in          */
   /*    `freetype.h').                                                     */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    face     :: A handle to the source face object.                    */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    encoding :: A handle to the selected charmap.                      */
   /*                                                                       */
   /* <Return>                                                              */
@@ -2126,8 +2132,10 @@
   /*    Selects a given charmap for character code to glyph index          */
   /*    decoding.                                                          */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    face     :: A handle to the source face object.                    */
+  /*                                                                       */
+  /* <Input>                                                               */
   /*    charmap  :: A handle to the selected charmap.                      */
   /*                                                                       */
   /* <Return>                                                              */

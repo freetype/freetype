@@ -185,13 +185,13 @@
 
   FT_EXPORT( FT_Error )  FTC_ChunkSet_New( FTC_Chunk_Cache  cache,
                                            FT_Pointer       type,
-                                           FTC_ChunkSet*    aset );
+                                           FTC_ChunkSet    *aset );
 
   FT_EXPORT( FT_Error )  FTC_ChunkSet_Lookup_Node(
                                FTC_ChunkSet    cset,
                                FT_UInt         glyph_index,
                                FTC_ChunkNode*  anode,
-                               FT_UInt*        aindex );
+                               FT_UInt        *anindex );
 
 
 #ifdef __cplusplus
