@@ -1,6 +1,7 @@
 2001-05-08  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
 
-	* src/pcfdriver.c: Fixed incorrect bitmap width computation.
+	* src/pcfdriver.c (PCF_Load_Glyph): Fixed incorrect bitmap width
+	computation.
 
 2001-05-08  David Turner  <david@freetype.org>
 

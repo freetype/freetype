@@ -220,7 +220,7 @@ THE SOFTWARE.
       }
     }
 
-    slot->bitmap_left = 0;
+    slot->bitmap_left = metric->leftSideBearing;
     slot->bitmap_top  = metric->ascent;
 
     slot->metrics.horiAdvance  = metric->characterWidth << 6 ;
