@@ -1516,7 +1516,13 @@
       error = IsMacResource( library, stream, 0, face_index, aface );
 
 #ifdef FT_MACINTOSH
-
+    /*
+       I know this section is within code which is normally turned off 
+       for the Mac.  It provides an alternative approach to reading the
+       mac resource forks on OS/X in the event that a user does not wish
+       to compile ftmac.c.
+     */
+         
     if ( ( FT_ERROR_BASE( error ) == FT_Err_Unknown_File_Format      ||
            FT_ERROR_BASE( error ) == FT_Err_Invalid_Stream_Operation )  &&
            ( args->flags & FT_OPEN_PATHNAME )                           )
