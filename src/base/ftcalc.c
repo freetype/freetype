@@ -36,6 +36,16 @@
 #include <freetype/internal/ftobjs.h>  /* for ABS() */
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_calc
+
+
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
 
   static const FT_Long  ft_square_roots[63] =

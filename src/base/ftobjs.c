@@ -312,6 +312,11 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_objs
+
+
   /* destructor for sizes list */
   static
   void  destroy_size( FT_Memory  memory,
@@ -1798,7 +1803,7 @@
       pixel_width = pixel_height;
     else if ( pixel_height == 0 )
       pixel_height = pixel_width;
-      
+
     if ( pixel_width  < 1 ) pixel_width  = 1;
     if ( pixel_height < 1 ) pixel_height = 1;
 
@@ -1978,7 +1983,7 @@
 
     if ( glyph_index >= face->num_glyphs )
       return FT_Err_Invalid_Argument;
-      
+
     driver = face->driver;
 
     /* when the flag NO_RECURSE is set, we disable hinting and scaling */

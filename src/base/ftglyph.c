@@ -32,6 +32,16 @@
 #include <freetype/internal/ftobjs.h>
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_glyph
+
+
   static
   void  ft_prepare_glyph( FT_Glyph  glyph,
                           FT_Face   face,
@@ -522,8 +532,8 @@
       case ft_glyph_type_bitmap:
         {
           FT_BitmapGlyph  bit = (FT_BitmapGlyph)glyph;
-  
-  
+
+
           box->xMin = bit->left;
           box->xMax = box->xMin + bit->bitmap.width;
           box->yMax = bit->top;

@@ -41,19 +41,27 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
 
 
+  /* note that not all levels are used currently */
+
   typedef enum  FT_Trace_
   {
     /* the first level must always be `trace_any' */
     trace_any = 0,
 
-    /* we start with an enum for each common component */
-    trace_io,        /* i/o monitoring -- see ftsystem.c */
-    trace_memory,    /* memory manager -- see ftobjs.c   */
-    trace_stream,    /* stream manager -- see ftstream.c */
-    trace_calc,      /* computations   -- see ftcalc.c   */
-    trace_raster,    /* raster         -- see ftraster.c */
-    trace_list,      /* list manager   -- see ftlist.c   */
-    trace_objs,      /* base objects   -- see ftobjs.c   */
+    /* we start with an enum for each base component */
+    trace_aaraster,  /* anti-aliasing raster (ftgrays.c)  */
+    trace_calc,      /* calculations         (ftcalc.c)   */
+    trace_extend,    /* extension manager    (ftextend.c) */
+    trace_glyph,     /* glyph manager        (ftglyph.c)  */
+    trace_io,        /* i/o monitoring       (ftsystem.c) */
+    trace_init,      /* initialization       (ftinit.c)   */
+    trace_list,      /* list manager         (ftlist.c)   */
+    trace_memory,    /* memory manager       (ftobjs.c)   */
+    trace_mm,        /* MM interface         (ftmm.c)     */
+    trace_objs,      /* base objects         (ftobjs.c)   */
+    trace_outline,   /* outline management   (ftoutln.c)  */
+    trace_raster,    /* raster               (ftraster.c) */
+    trace_stream,    /* stream manager       (ftstream.c) */
 
     /* then define an enum for each TrueType driver component */
     trace_ttobjs,
@@ -64,7 +72,7 @@
     trace_ttextend,
     trace_ttdriver,
 
-    /* define an enum for each Type1 driver component */
+    /* define an enum for each Type 1 driver component */
     trace_t1objs,
     trace_t1load,
     trace_t1gload,
@@ -72,8 +80,6 @@
     trace_t1driver,
 
     /* other trace levels */
-    trace_init,
-    trace_extend,
 
     /* the last level must always be `trace_max' */
     trace_max
@@ -88,37 +94,37 @@
   /*                                                                       */
   /* IMPORTANT!                                                            */
   /*                                                                       */
-  /* Each component must define the macro FT_COMPONENT to a valid          */
-  /* Trace_Component value before using any TRACE macro.                   */
+  /* Each component must define the macro FT_COMPONENT to a valid FT_Trace */
+  /* value before using any TRACE macro.                                   */
   /*                                                                       */
   /*************************************************************************/
 
 
-#define FT_TRACE( level, varformat )                        \
-          do                                                \
-          {                                                 \
-            if ( ft_trace_levels[FT_COMPONENT] >= level )   \
-              FT_XCAT( FT_Message, varformat );             \
+#define FT_TRACE( level, varformat )                      \
+          do                                              \
+          {                                               \
+            if ( ft_trace_levels[FT_COMPONENT] >= level ) \
+              FT_XCAT( FT_Message, varformat );           \
           } while ( 0 )
 
 
-  FT_EXPORT_DEF(void)  FT_SetTraceLevel( FT_Trace  component,
-                                         char      level );
+  FT_EXPORT_DEF( void )  FT_SetTraceLevel( FT_Trace  component,
+                                           char      level );
 
 
 #elif defined( FT_DEBUG_LEVEL_ERROR )
 
 
-#define FT_TRACE( level, varformat )    while ( 0 ) { }     /* nothing */
+#define FT_TRACE( level, varformat )  do ; while ( 0 )      /* nothing */
 
 
 #else  /* release mode */
 
 
-#define FT_Assert( condition )          while ( 0 ) { }     /* nothing */
+#define FT_Assert( condition )        do ; while ( 0 )      /* nothing */
 
-#define FT_TRACE( level, varformat )    while ( 0 ) { }     /* nothing */
-#define FT_ERROR( varformat )           while ( 0 ) { }     /* nothing */
+#define FT_TRACE( level, varformat )  do ; while ( 0 )      /* nothing */
+#define FT_ERROR( varformat )         do ; while ( 0 )      /* nothing */
 
 
 #endif /* FT_DEBUG_LEVEL_TRACE, FT_DEBUG_LEVEL_ERROR */
@@ -133,10 +139,12 @@
   /*                                                                       */
   /*************************************************************************/
 
+
 #if defined( FT_DEBUG_LEVEL_TRACE ) || defined( FT_DEBUG_LEVEL_ERROR )
 
 
 #include "stdio.h"  /* for vprintf() */
+
 
 #define FT_Assert( condition )                                      \
           do                                                        \
@@ -147,19 +155,24 @@
           } while ( 0 )
 
   /* print a message */
-  FT_EXPORT_DEF(void)  FT_Message( const char*  fmt, ... );
+  FT_EXPORT_DEF( void )  FT_Message( const char*  fmt, ... );
 
   /* print a message and exit */
-  FT_EXPORT_DEF(void)  FT_Panic  ( const char*  fmt, ... );
+  FT_EXPORT_DEF( void )  FT_Panic  ( const char*  fmt, ... );
 
-#define FT_ERROR(varformat)  do { FT_XCAT( FT_Message, varformat ); } while(0)
+#define FT_ERROR( varformat )  FT_XCAT( FT_Message, varformat )
 
 
 #endif /* FT_DEBUG_LEVEL_TRACE || FT_DEBUG_LEVEL_ERROR */
 
 
-/* you need two opening resp. closing parentheses!
-   Example: FT_TRACE0(( "Value is %i", foo ))      */
+  /*************************************************************************/
+  /*                                                                       */
+  /* You need two opening resp. closing parentheses!                       */
+  /*                                                                       */
+  /* Example: FT_TRACE0(( "Value is %i", foo ))                            */
+  /*                                                                       */
+  /*************************************************************************/
 
 #define FT_TRACE0( varformat )  FT_TRACE( 0, varformat )
 #define FT_TRACE1( varformat )  FT_TRACE( 1, varformat )

@@ -31,7 +31,7 @@
   /*                                                                       */
   /*      cc -c -D_STANDALONE_ ftgrays.c                                   */
   /*                                                                       */
-  /*  The renderer can be initialised with a call to                       */
+  /*  The renderer can be initialized with a call to                       */
   /*  `ft_grays_raster.grays_raster_new'; an anti-aliased bitmap can be    */
   /*  generated with a call to `ft_grays_raster.grays_raster_render'.      */
   /*                                                                       */
@@ -83,9 +83,22 @@
 
 #include <string.h>             /* for memcpy() */
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_aaraster
+
+
 #define ErrRaster_Invalid_Outline  -1
 
+
 #ifdef _STANDALONE_
+
 
 #include "ftimage.h"
 #include "ftgrays.h"
@@ -94,15 +107,30 @@
   /* Its purpose is simply to reduce compiler warnings.  Note also that  */
   /* simply defining it as `(void)x' doesn't avoid warnings with certain */
   /* ANSI compilers (e.g. LCC).                                          */
-#define UNUSED( x )   (x) = (x)
+#define UNUSED( x )  (x) = (x)
+
+  /* Disable the tracing mechanism for simplicity -- developers can      */
+  /* activate it easily by redefining these two macros.                  */
+#ifndef FT_ERROR
+#define FT_ERROR( x )  do ; while ( 0 )     /* nothing */
+#endif
+
+#ifndef FT_TRACE
+#define FT_TRACE( x )  do ; while ( 0 )     /* nothing */
+#endif
+
 
 #else /* _STANDALONE_ */
 
+
 #include <freetype/ftgrays.h>
-#include <freetype/internal/ftobjs.h> /* for UNUSED()                      */
-#include <freetype/freetype.h>        /* to link to FT_Outline_Decompose() */
+#include <freetype/internal/ftobjs.h>  /* for UNUSED()                  */
+#include <freetype/internal/ftdebug.h> /* for FT_TRACE() and FT_ERROR() */
+#include <freetype/freetype.h>         /* for FT_Outline_Decompose()    */
+
 
 #endif /* _STANDALONE_ */
+
 
   /* define this to dump debugging information */
 #define xxxDEBUG_GRAYS
@@ -110,6 +138,7 @@
   /* as usual, for the speed hungry :-) */
 
 #ifndef FT_STATIC_RASTER
+
 
 #define RAS_ARG   PRaster  raster
 #define RAS_ARG_  PRaster  raster,
@@ -119,7 +148,9 @@
 
 #define ras       (*raster)
 
+
 #else /* FT_STATIC_RASTER */
+
 
 #define RAS_ARG   /* empty */
 #define RAS_ARG_  /* empty */
@@ -128,7 +159,9 @@
 
   static TRaster  ras;
 
+
 #endif /* FT_STATIC_RASTER */
+
 
   /* must be at least 6 bits! */
 #define PIXEL_BITS  8
@@ -1841,7 +1874,7 @@
 
     UNUSED( memory );
 
-    
+
     *araster = (FT_Raster)&the_raster;
     memset( &the_raster, 0, sizeof ( the_raster ) );
 

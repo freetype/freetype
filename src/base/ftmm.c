@@ -19,6 +19,17 @@
 #include <freetype/ftmm.h>
 #include <freetype/internal/ftobjs.h>
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_mm
+
+
   FT_EXPORT_FUNC( FT_Error )  FT_Get_Multi_Master( FT_Face           face,
                                                    FT_Multi_Master*  master )
   {
@@ -27,7 +38,7 @@
 
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
-    
+
     error = FT_Err_Invalid_Argument;
 
     if ( FT_HAS_MULTIPLE_MASTERS( face ) )
@@ -41,9 +52,9 @@
       if ( func )
         error = func( face, master );
     }
-      
+
     return error;
-  }                                                  
+  }
 
 
   FT_EXPORT_FUNC( FT_Error )  FT_Set_MM_Design_Coordinates(
@@ -53,7 +64,7 @@
   {
     FT_Error  error;
 
-    
+
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
 
@@ -70,19 +81,19 @@
       if ( func )
         error = func( face, num_coords, coords );
     }
-      
+
     return error;
-  }                                                           
+  }
 
 
   FT_EXPORT_FUNC( FT_Error )  FT_Set_MM_Blend_Coordinates(
                                 FT_Face    face,
                                 FT_UInt    num_coords,
                                 FT_Fixed*  coords )
-  {                                                          
+  {
     FT_Error  error;
 
-    
+
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
 
@@ -98,7 +109,7 @@
       if ( func )
         error = func( face, num_coords, coords );
     }
-      
+
     return error;
   }
 

@@ -154,19 +154,19 @@
   {
     FT_Error  error;
 
-    
+
     error = FT_Access_Frame( stream, count );
     if ( !error )
     {
       *pbytes = (FT_Byte*)stream->cursor;
-        
+
       /* equivalent to FT_Forget_Frame(), with no memory block release */
       stream->cursor = 0;
       stream->limit  = 0;
     }
 
     return error;
-  }                                         
+  }
 
 
   BASE_FUNC( void )  FT_Release_Frame( FT_Stream  stream,

@@ -128,11 +128,45 @@
   /*************************************************************************/
   /*************************************************************************/
 
-/* required by the tracing mode */
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_raster
 
-#include <freetype/internal/ftdebug.h>
+
+#ifdef _STANDALONE_
+
+
+  /* This macro is used to indicate that a function parameter is unused. */
+  /* Its purpose is simply to reduce compiler warnings.  Note also that  */
+  /* simply defining it as `(void)x' doesn't avoid warnings with certain */
+  /* ANSI compilers (e.g. LCC).                                          */
+#define UNUSED( x )  (x) = (x)
+
+  /* Disable the tracing mechanism for simplicity -- developers can      */
+  /* activate it easily by redefining these two macros.                  */
+#ifndef FT_ERROR
+#define FT_ERROR( x )  do ; while ( 0 )     /* nothing */
+#endif
+
+#ifndef FT_TRACE
+#define FT_TRACE( x )  do ; while ( 0 )     /* nothing */
+#endif
+
+
+#else /* _STANDALONE_ */
+
+
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftdebug.h> /* for FT_TRACE() and FT_ERROR() */
+
+
+#endif /* _STANDALONE_ */
+
 
 #define Raster_Err_None               0
 #define Raster_Err_Not_Ini           -1
@@ -583,7 +617,7 @@
     if ( h > 0 )
     {
       FT_TRACE1(( "Ending profile %lx, start = %ld, height = %ld\n",
-                (long)ras.cProfile, ras.cProfile->start, h ));
+                  (long)ras.cProfile, ras.cProfile->start, h ));
 
       oldProfile           = ras.cProfile;
       ras.cProfile->height = h;
@@ -1557,7 +1591,7 @@
     v_last.x  = SCALED( points[last].x );
     v_last.y  = SCALED( points[last].y );
 
-    if ( flipped ) 
+    if ( flipped )
     {
       SWAP_( v_start.x, v_start.y );
       SWAP_( v_last.x, v_last.y );
@@ -3087,6 +3121,7 @@
 
 #ifdef _STANDALONE_
 
+
   static
   int  ft_black_new( void*  memory,
                      FT_Raster *araster )
@@ -3109,9 +3144,9 @@
     raster->init = 0;
   }
 
+
 #else /* _STANDALONE_ */
 
-#include <freetype/internal/ftobjs.h>
 
   static
   int  ft_black_new( FT_Memory           memory,
@@ -3140,6 +3175,7 @@
     FT_Memory  memory = (FT_Memory)raster->memory;
     FREE( raster );
   }
+
 
 #endif /* _STANDALONE_ */
 
