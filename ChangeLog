@@ -1,3 +1,9 @@
+2002-08-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/pshinter/pshalgo3.c (psh3_glyph_compute_inflections,
+	psh3_glyph_compute_extrema, psh3_hint_table_find_strong_point): Fix
+	compiler warnings and resolve shadowing of local variables.
+
 2002-08-21  David Turner  <david@freetype.org>
 
         * src/pshinter/pshalgo3.c, src/autohint/ahangles.c,
@@ -32,11 +38,41 @@
 	src/autohint/ahmodule.c [DEBUG_HINTER]: Removing compiler warnings
 	(only used in development builds anyway).
 
-	* src/pshinter/pshalgo3.h, src/pshinter/pshalgo3.c: Removing
-	compiler warnings, and improving the support of local extrema
-	and stem edge points.
+	Improve support of local extrema and stem edge points.
 
-	* test/gview.c: Small updates to the hinting debugger.
+	* src/pshinter/pshalgo3.h (PSH3_Hint_TableRec): Use PSH3_ZoneRec
+	for `zones'.
+	(PSH3_DIR_UP, PSH3_DIR_DOWN): Exchange values.
+	(PSH3_DIR_HORIZONTAL, PSH3_DIR_VERTICAL): New macros.
+	(PSH3_DIR_COMPARE, PSH3_DIR_IS_HORIZONTAL, PSH3_IS_VERTICAL): New
+	macros.
+	(PSH3_POINT_INFLEX): New enum.
+	(psh3_point_{is,set}_{off,inflex}): New macros.
+	(PSH3_POINT_{EXTREMUM,POSITIVE,NEGATIVE,EDGE_MIN,EDGE_MAX): New
+	enum values.
+	(psh3_point_{is,set}_{extremum,positive,negative,edge_min,edge_max}):
+	New macros.
+	(PSH3_PointRec): New members `flags2' and `org_v'.
+	(PSH3_POINT_EQUAL_ARG, PSH3_POINT_ANGLE): New macros.
+
+	* src/pshinter/pshalgo3.c [DEBUG_HINTER]: Removing compiler
+	warnings.
+	(COMPUTE_INFLEXS): New macro.
+	(psh3_hint_align): Simplify some basic arithmetic computations.
+	(psh3_point_is_extremum): Removed.
+	(psh3_glyph_compute_inflections) [COMPUTE_INFLEXS]: New function.
+	(psh3_glyph_init) [COMPUTE_INFLEXS]: Use it.
+	(psh3_glyph_compute_extrema): New function.
+	(PSH3_STRONG_THRESHOLD): Increased to 30.
+	(psh3_hint_table_find_strong_point): Improved.
+	(psh3_glyph_find_strong_points,
+	psh3_glyph_interpolate_strong_points): Updated.
+	(psh3_hints_apply): Use psh3_glyph_compute_extrema.
+
+	* test/gview.c (draw_ps3_hint, ps3_draw_control_points): New
+	functions.
+	Other small updates.
+
 	* Jamfile: Small updates.
 
 2002-08-18  Arkadiusz Miskiewicz  <misiek@pld.ORG.PL>
