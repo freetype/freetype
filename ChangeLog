@@ -1,19 +1,30 @@
 2001-05-16  David Turner  <david@freetype.org>
 
-    * src/truetype/ttgload.c (load_truetype_glyph): fixed a bug in the
-    composite loader spotted by Keith Packard.
+	* src/truetype/ttgload.c (load_truetype_glyph): Fixed a bug in the
+	composite loader.  Spotted by Keith Packard.
+	* src/base/ftobjs.c (FT_GlyphLoader_Check_Points,
+	FT_GlyphLoader_Check_Subglyphs): Ditto.
 
 2001-05-14  David Turner  <david@freetype.org>
 
-    * src/base/ftcalc.c (FT_DivFix): fixed a bug in the 64-bit code that
-    created incorrect scale factors !!
+	Fixed the incorrect blue zone computations, and improved the
+	composite support.  Note that these changes result in improved
+	rendering, while sometimes introducing their own artefacts.  This is
+	probably the last big change to the autohinter before the
+	introduction of a complete replacement.
 
-    * src/autohint/ahglobal.c, src/autohint/ahglyph.c, src/autohint/ahhint.c:
-    fixed the incorrect blue zone computations, and improved the composite
-    support. Note that these changes result in improved rendering, while
-    sometimes introducing their own artefacts. That's probably the last
-    big change to the autohinter before the introduction of its complete
-    replacement..
+	* src/autohint/ahglobal.c (sort_values): Fix loop.
+	* src/autohint/ahglyph.c: Removed some obsolete code.
+	(ah_outline_compute_edges): Modify code to set the ah_edge_round
+	flag.
+	(ah_outline_compute_blue_edges): Add code to compute active blue
+	zones.
+	* src/autohint/ahhint.c (ah_hinter_glyph_load): Change load_flags
+	value.
+
+	* src/base/ftcalc.c (FT_DivFix): Fixed a bug in the 64-bit code that
+	created incorrect scale factors!
+	(FT_Round_Fix, FT_CeilFix, FT_FloorFix): Minor improvements.
 
 2001-05-12  Werner Lemberg  <wl@gnu.org>
 
