@@ -257,12 +257,17 @@
         angle_diff = FT_Angle_Diff( angle_in, angle_out );
         scale      = FT_Cos( angle_diff/2 );
 
-        if ( scale < 0x4000L )
-          scale = 0x4000L;
+        if ( scale < 0x400L && scale > -0x400L )
+        {
+          if ( scale >= 0 )
+            scale = 0x400L;
+          else
+            scale = -0x400L;
+        }
 
         d = FT_DivFix( distance, scale );
 
-        FT_Vector_From_Polar( &in, d, (angle_in+angle_out)/2 + rotate );
+        FT_Vector_From_Polar( &in, d, angle_in + angle_diff/2 - rotate );
 
         outline->points[n].x = v_cur.x + distance + in.x;
         outline->points[n].y = v_cur.y + distance + in.y;
