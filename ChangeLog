@@ -1,3 +1,8 @@
+2003-06-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/winfonts/winfnt.c (FNT_Load_Glyph): Revert change from
+	2003-03-20.
+
 2003-05-31  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/fttrigon.h (FT_Vector_Normalize): Removed.
