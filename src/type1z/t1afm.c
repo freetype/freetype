@@ -47,13 +47,13 @@
       FT_Int  n;
       
       /* copy glyph name to intermediate array */
-      MEM_Copy( temp, start, len );
+      MEM_Copy( temp, *start, len );
       temp[len] = 0;
       
       /* lookup glyph name in face array */
       for ( n = 0; n < type1->num_glyphs; n++ )
       {
-        char*  gname = (char*)type1->glyph_names;
+        char*  gname = (char*)type1->glyph_names[n];
         
         if ( gname && gname[0] == temp[0] && strcmp(gname,temp) == 0 )
         {
@@ -71,20 +71,27 @@
   static
   int  afm_atoi( FT_Byte** start, FT_Byte*  limit )
   {
-    FT_Byte*  p   = *start;
-    int       sum = 0;
+    FT_Byte*  p    = *start;
+    int       sum  = 0;
+    int       sign;
     
     /* skip everything that is not a number */
     while ( p < limit && (*p < '0' || *p > '9') )
+    {
+      sign = 1;
+      if (*p == '-')
+        sign = -1;
+        
       p++;
+    }
     
-    while ( p < limit && (*p >= '0' || *p < '9') )
+    while ( p < limit && (*p >= '0' && *p < '9') )
     {
       sum = sum*10 + (*p - '0');
       p++;
     }
     *start = p;
-    return sum;
+    return sum*sign;
   }
 
 
