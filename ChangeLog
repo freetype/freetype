@@ -52,6 +52,9 @@
 	* src/pshinter/pshalgo3.c: The hinter now performs as in 2.1.3 and
 	will ignore stem quantization only when FT_LOAD_TARGET_SMOOTH is
 	used.
+	(psh3_dimension_quantize_len): Enabled.
+	(psh3_hint_align): Enable commented code.
+	(psh3_hint_align_light): Commented out.
 
 	* src/base/ftobjs.c (FT_Set_Char_Size): Changed the default
 	computations to include rounding in all cases; this is required to
@@ -154,7 +157,7 @@
 	* src/pfr/pfrobjs.c (pfr_face_done): Fix memory leak.
 	(pfr_face_init): Fixing compiler warnings.
 
-	* src/psaux/psobjs.c (t1_reallocate_table): Fixed a bug (memory
+	* src/psaux/psobjs.c (reallocate_t1_table): Fixed a bug (memory
 	leak) that only happened when a try to resize an array would end in
 	an out-of-memory condition.
 
@@ -287,6 +290,9 @@
 	* src/pshinter/pshalgo3.c: Improved the Postscript hinter.  Getting
 	rid of stem snapping seems to work well here (though the stems are
 	still slightly moved to increase contrast).
+	(psh3_dimension_quantize_len): Commented out.
+	(psh3_hint_align_light): New function.
+	(psh3_hint_align): Comment out some code.
 
 	THIS IMPROVES ANTI-ALIASED RENDERING, BUT MONOCHROME AND LCD MODES
 	STILL SUCK.
@@ -444,12 +450,14 @@
 	Implemented the FT_RENDER_MODE_LIGHT hinting mode in the auto and
 	postscript hinters.
 
+	* src/autohint/ahtypes.h (AH_HinterRec): Add `do_stem_adjust'.
 	* src/autohint/ahhint.c (ah_compute_stem_width): Handle
 	hinter->do_stem_adjust.
 	(ah_hinter_load_glyph): Set hinter->do_stem_adjust.
 
-	* src/autohint/ahtypes.h (AH_HinterRec): Add `do_stem_adjust'.
-	* src/pshinter/pshalgo3.h, src/pshinter/pshalgo3.c:
+	* src/pshinter/pshalgo3.h (PSH3_GlyphRec): Add `do_stem_adjust'.
+	* src/pshinter/pshalgo3.c (psh3_hint_align): Use `do_stem_adjust'.
+	(ps3_hints_apply): Handle FT_RENDER_MODE_LIGHT.
 
 	* include/freetype/freetype.h (FT_Render_Mode): Add
 	FT_RENDER_MODE_LIGHT.
