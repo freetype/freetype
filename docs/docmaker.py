@@ -59,23 +59,22 @@ source_footer = "</pre></table></center><br>"
 current_section = None
 
 
-# this function is used to sort the index. it's a simple lexicographical
-# sort, except that it places capital letters before small ones
+# This function is used to sort the index.  It's a simple lexicographical
+# sort, except that it places capital letters before small ones.
 #
 def index_sort( s1, s2 ):
-
     if not s1:
         return -1
 
     if not s2:
         return 1
 
-    l1 = len(s1)
-    l2 = len(s2)
-    m1 = string.lower(s1)
-    m2 = string.lower(s2)
+    l1 = len( s1 )
+    l2 = len( s2 )
+    m1 = string.lower( s1 )
+    m2 = string.lower( s2 )
 
-    for i in range(l1):
+    for i in range( l1 ):
         if i >= l2 or m1[i] > m2[i]:
             return 1
         
@@ -921,12 +920,14 @@ class DocSectionList:
             else:
                 section.title = "UNKNOWN_SECTION_TITLE!"
 
-        # sort section elements according to the <order> marker when
+        # sort section elements according to the <order> marker if
         # available
+        #
         for section in self.sections.values():
             order = section.block.find_content( "order" )
             if order:
-                #sys.stderr.write( "<order> found at "+section.block.location()+'\n' )
+                # sys.stderr.write( "<order> found at "
+                #                   + section.block.location() + '\n' )
                 order_list = []
                 for item in order.items:
                     for element in item[1]:
@@ -934,9 +935,10 @@ class DocSectionList:
                         try:
                             words = element.get_words()
                         except:
-                            sys.stderr.write( "WARNING:" +
-                                              section.block.location() +
-                                              ": invalid content in <order> marker\n" )
+                            sys.stderr.write(
+                              "WARNING:" +
+                              section.block.location() +
+                              ": invalid content in <order> marker\n" )
                         if words:
                             for word in words:
                                 block = self.identifiers.get( word )
@@ -944,13 +946,18 @@ class DocSectionList:
                                     if block.section == section:
                                         order_list.append( word )
                                     else:
-                                        sys.stderr.write( "WARNING:" +
-                                                          section.block.location() +
-                                                          ": invalid reference to '"+word+"' defined in other section\n" )
+                                        sys.stderr.write(
+                                          "WARNING:" +
+                                          section.block.location() +
+                                          ": invalid reference to '" +
+                                          word +
+                                          "' defined in other section\n" )
                                 else:
-                                    sys.stderr.write( "WARNING:" +
-                                                      section.block.location() +
-                                                      ": invalid reference to '"+word+"'\n" )
+                                    sys.stderr.write(
+                                      "WARNING:" +
+                                      section.block.location() +
+                                      ": invalid reference to '" +
+                                      word + "'\n" )
                                 
                 # now sort the list of blocks according to the order list
                 #
@@ -1056,7 +1063,6 @@ class DocSectionList:
 
 
 
-
 # Filter a given list of DocBlocks. Returns a new list
 # of DocBlock objects that only contains element whose
 # "type" (i.e. first marker) is in the "types" parameter.
@@ -1131,7 +1137,7 @@ def make_block_list():
     """parse a file and extract comments blocks from it"""
 
     file_list = []
-    #sys.stderr.write( repr( sys.argv[1:] ) + '\n' )
+    # sys.stderr.write( repr( sys.argv[1:] ) + '\n' )
 
     for pathname in sys.argv[1:]:
         if string.find( pathname, '*' ) >= 0:
