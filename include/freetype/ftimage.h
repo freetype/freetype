@@ -577,11 +577,11 @@ FT_BEGIN_HEADER
   /*    This macro converts four letter tags into an unsigned long.        */
   /*                                                                       */
 #ifndef FT_IMAGE_TAG
-#define FT_IMAGE_TAG( _x1, _x2, _x3, _x4 ) \
-          ( ( (unsigned long)_x1 << 24 ) | \
-            ( (unsigned long)_x2 << 16 ) | \
-            ( (unsigned long)_x3 << 8  ) | \
-              (unsigned long)_x4         )
+#define FT_IMAGE_TAG( value, _x1, _x2, _x3, _x4 )  \
+          value = ( ( (unsigned long)_x1 << 24 ) | \
+                    ( (unsigned long)_x2 << 16 ) | \
+                    ( (unsigned long)_x3 << 8  ) | \
+                      (unsigned long)_x4         )
 #endif /* FT_IMAGE_TAG */
 
 
@@ -617,11 +617,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef enum  FT_Glyph_Format_
   {
-    ft_glyph_format_none      = 0,
-    ft_glyph_format_composite = FT_IMAGE_TAG( 'c', 'o', 'm', 'p' ),
-    ft_glyph_format_bitmap    = FT_IMAGE_TAG( 'b', 'i', 't', 's' ),
-    ft_glyph_format_outline   = FT_IMAGE_TAG( 'o', 'u', 't', 'l' ),
-    ft_glyph_format_plotter   = FT_IMAGE_TAG( 'p', 'l', 'o', 't' )
+    FT_IMAGE_TAG( ft_glyph_format_none, 0, 0, 0, 0 ),
+
+    FT_IMAGE_TAG( ft_glyph_format_composite, 'c', 'o', 'm', 'p' ),
+    FT_IMAGE_TAG( ft_glyph_format_bitmap,    'b', 'i', 't', 's' ),
+    FT_IMAGE_TAG( ft_glyph_format_outline,   'o', 'u', 't', 'l' ),
+    FT_IMAGE_TAG( ft_glyph_format_plotter,   'p', 'l', 'o', 't' )
 
   } FT_Glyph_Format;
 
