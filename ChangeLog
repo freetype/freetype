@@ -1,3 +1,10 @@
+2000-11-11  Tom Kacvinsky  <tjk@ams.org>
+
+	* builds/unix/freetype-config.in, builds/cygwin/freetype-config.in:
+	Added a --libtool option.  When freetype-config --libtool is
+	invoked, the absolute path to the libtool convenience library
+	is returned.
+
 2000-11-11  Werner Lemberg  <wl@gnu.org>
 
 	* builds/cygwin/cygwin-def.in: Same fix as previous.
