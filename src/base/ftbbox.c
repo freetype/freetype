@@ -383,7 +383,7 @@
 
     vec = outline->points;
     bbox.xMin = bbox.xMax = cbox.xMin = cbox.xMax = vec->x;
-    bbox.yMin = bbox.yMin = cbox.yMin = cbox.yMax = vec->y;
+    bbox.yMin = bbox.yMax = cbox.yMin = cbox.yMax = vec->y;
 
     for ( n = 1; n < outline->n_points; n++ )
     {
