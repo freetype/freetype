@@ -420,7 +420,7 @@
       if (token->start[0] == '/')
         token->start++;
 
-      len = token->limit - token->start;
+      len = (FT_Int)( token->limit - token->start );
       if ( len <= 0 )
       {
         error = T1_Err_Invalid_File_Format;
@@ -838,7 +838,7 @@
     while ( cur2 < limit && is_alpha( *cur2 ) )
       cur2++;
 
-    len = cur2 - cur;
+    len = (FT_Int)( cur2 - cur );
     if ( len > 0 )
     {
       if ( ALLOC( face->type1.font_name, len + 1 ) )
@@ -1039,7 +1039,7 @@
             while ( cur2 < limit && is_alpha( *cur2 ) )
               cur2++;
 
-            len = cur2 - cur - 1;
+            len = (FT_Int)( cur2 - cur - 1 );
 
             parser->root.error = T1_Add_Table( char_table, charcode,
                                           cur + 1, len + 1 );
@@ -1244,7 +1244,7 @@
 
         while ( cur2 < limit && is_alpha( *cur2 ) )
           cur2++;
-        len = cur2 - cur - 1;
+        len = (FT_Int)( cur2 - cur - 1 );
 
         error = T1_Add_Table( name_table, n, cur + 1, len + 1 );
         if ( error )
@@ -1467,7 +1467,7 @@
           while ( cur2 < limit && is_alpha( *cur2 ) )
             cur2++;
 
-          len  = cur2 - cur;
+          len  = (FT_Int)( cur2 - cur );
           if ( len > 0 && len < 22 )
           {
             {

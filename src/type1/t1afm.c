@@ -74,7 +74,7 @@
     while ( IS_ALPHANUM( *p ) && p < limit )
       p++;
 
-    len = p - *start;
+    len = (FT_Int)( p - *start );
 
     if ( len > 0 && len < 64 )
     {

@@ -84,7 +84,7 @@
   void  shift_elements( PS_Table*  table,
                         FT_Byte*   old_base )
   {
-    FT_Long    delta  = table->block - old_base;
+    FT_Long    delta  = (FT_Long)( table->block - old_base );
     FT_Byte**  offset = table->elements;
     FT_Byte**  limit  = offset + table->max_elems;
 
@@ -412,7 +412,7 @@
         cur++;
       }
 
-      *pnum_tokens = cur - tokens;
+      *pnum_tokens = (FT_Int)( cur - tokens );
 
       parser->cursor = old_cursor;
       parser->limit  = old_limit;
@@ -847,7 +847,7 @@
       case t1_field_string:
         {
           FT_Memory  memory = parser->memory;
-          FT_UInt    len    = limit-cur;
+          FT_UInt    len    = (FT_UInt)( limit - cur );
 
 
           if ( *(FT_String**)q )

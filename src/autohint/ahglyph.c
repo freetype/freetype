@@ -1109,7 +1109,7 @@
         }
       }
 
-      *p_num_edges = edge_limit - edges;
+      *p_num_edges = (FT_Int)( edge_limit - edges );
 
 
       /*********************************************************************/

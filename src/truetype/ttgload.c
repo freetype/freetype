@@ -494,7 +494,8 @@
       /* composite instructions, if we find some.               */
       /* we will process them later...                          */
       /*                                                        */
-      loader->ins_pos = FILE_Pos() + stream->cursor - stream->limit;
+      loader->ins_pos = (FT_ULong)( FILE_Pos() +
+                                    stream->cursor - stream->limit );
     }
 #endif
 

@@ -242,7 +242,8 @@
           if ( type_id == 0x8008 )
           {
             font_count  = count;
-            font_offset = FILE_Pos() + 4 + ( stream->cursor - stream->limit );
+            font_offset = (FT_ULong)( FILE_Pos() + 4 +
+                                      ( stream->cursor - stream->limit ) );
             break;
           }
 

@@ -620,7 +620,7 @@
     PProfile  oldProfile;
 
 
-    h = ras.top - ras.cProfile->offset;
+    h = (Long)( ras.top - ras.cProfile->offset );
 
     if ( h < 0 )
     {
@@ -1102,7 +1102,7 @@
     else
     {
       e  = CEILING( y1 );
-      f1 = FRAC( y1 );
+      f1 = (Short)( FRAC( y1 ) );
       e0 = e;
 
       if ( f1 == 0 )
@@ -2189,7 +2189,7 @@
           e1 = TRUNC( e1 );
 
           c1 = (Short)( e1 >> 3 );
-          f1 = e1 &  7;
+          f1 = (Short)( e1 &  7 );
 
           if ( e1 >= 0 && e1 < ras.bWidth                      &&
                ras.bTarget[ras.traceOfs + c1] & ( 0x80 >> f1 ) )
@@ -2215,7 +2215,7 @@
     if ( e1 >= 0 && e1 < ras.bWidth )
     {
       c1 = (Short)( e1 >> 3 );
-      f1 = e1 & 7;
+      f1 = (Short)( e1 & 7 );
 
       if ( ras.gray_min_x > c1 ) ras.gray_min_x = c1;
       if ( ras.gray_max_x < c1 ) ras.gray_max_x = c1;
@@ -2677,7 +2677,7 @@
       Q = P->link;
 
       bottom = (Short)P->start;
-      top    = (Short)P->start + P->height - 1;
+      top    = (Short)( P->start + P->height - 1 );
 
       if ( min_Y > bottom ) min_Y = bottom;
       if ( max_Y < top    ) max_Y = top;
@@ -2705,7 +2705,7 @@
 
     while ( P )
     {
-      P->countL = P->start - min_Y;
+      P->countL = (UShort)( P->start - min_Y );
       P = P->link;
     }
 

@@ -377,7 +377,7 @@
       /* dictionary.  We overwrite the base dictionary for disk-based */
       /* resources and allocate a new block otherwise                 */
 
-      size = parser->base_len - ( cur - parser->base_dict);
+      size = (FT_Long)( parser->base_len - ( cur - parser->base_dict ) );
 
       if ( parser->in_memory )
       {
@@ -440,7 +440,7 @@
         }
 
         /* put a safeguard */
-        parser->private_len = write - parser->private_dict;
+        parser->private_len = (FT_Int)( write - parser->private_dict );
         *write++ = 0;
       }
     }

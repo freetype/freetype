@@ -97,7 +97,7 @@
     error = TT_Get_PS_Name( face, glyph_index, &gname );
     if ( !error && buffer_max > 0 )
     {
-      FT_UInt  len = strlen( gname );
+      FT_UInt  len = (FT_UInt)( strlen( gname ) );
 
 
       if ( len >= buffer_max )
