@@ -1,3 +1,31 @@
+2001-08-08  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/cff/cffload.c: Removed definitions of cff_isoadobe_charset,
+	cff_expert_charset, cff_expertsubset_charset, cff_standard_encoding,
+	and cff_expert_encoding arrays to cffload.h.
+
+	* src/cff/cffload.h: Added definitions of cff_isoadobe_charset,
+	cff_expert_charset, cff_expertsubset_charset, cff_standard_encoding,
+	and cff_expert_encoding arrays.
+
+	* src/cff/cffdrivr.c (cff_get_name_index): New function, returned
+	when `cff_get_interface' is called with a request for the
+	"name_index" function.
+
+	(cff_get_interface): Modified so that it returns the function
+	`cff_get_name_index' when the "name_index" function is requested.
+
+	* src/base/ftobjs.c (FT_Get_Name_Index): New function, used to
+	return a glyph index for a given glyph name only if the driver
+	supports glyph names.
+
+	* include/freetype/internal/ftobjs.h (FT_Name_Index_Requester):
+	New function pointer type defintion used in the function
+	FT_Get_Name_Index.
+
+	* include/freetype/freetype.h (FT_Get_Name_Index): Added
+	documentation and prototype.
+
 2001-07-26  Werner Lemberg  <wl@gnu.org>
 
 	* builds/cygwin/*: Removed.  Use the unix stuff instead.
