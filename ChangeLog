@@ -5,6 +5,8 @@
     problem that occured due to the latest auto-hinter changes
 
 
+    * src/autohint/ahhint.c: disabled the advance width "correction" which
+    seemed to provide more trouble than benefits..
 
 2003-02-13  Graham Asher  <graham.asher@btinternet.com>
 
