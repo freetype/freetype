@@ -393,7 +393,7 @@
       {
         /* a 16-bit character code */
         p  += char_hi * 2;                          /* jump to key entry  */
-        sub = subs + ( TT_PEEK_USHORT( p ) & -8 );  /* jump to sub-header */
+        sub = subs + ( FT_PAD_FLOOR( TT_PEEK_USHORT( p ), 8 ) );  /* jump to sub-header */
 
         /* check that the hi byte isn't a valid one-byte value */
         if ( sub == subs )
@@ -481,7 +481,7 @@
           pos = (FT_UInt)( char_lo - start );
 
         p       += offset + pos * 2;
-        charcode = ( charcode & -256 ) + char_lo;
+        charcode = FT_PAD_FLOOR( charcode, 256 ) + char_lo;
 
         for ( ; pos < count; pos++, charcode++ )
         {
@@ -501,7 +501,7 @@
 
       /* jump to next sub-header, i.e. higher byte value */
     Next_SubHeader:
-      charcode = ( charcode & -256 ) + 256;
+      charcode = FT_PAD_FLOOR( charcode, 256 ) + 256;
     }
 
   Exit:
@@ -795,7 +795,7 @@
 
 
       p         = table + 6;
-      num_segs2 = TT_PEEK_USHORT( p ) & -2;  /* be paranoid! */
+      num_segs2 = FT_PAD_FLOOR( TT_PEEK_USHORT( p ), 2 );  /* be paranoid! */
 
 #if 1
       /* Some fonts have more than 170 segments in their charmaps! */
@@ -918,7 +918,7 @@
 
     code      = (FT_UInt)char_code + 1;
     p         = table + 6;
-    num_segs2 = TT_PEEK_USHORT(p) & -2;  /* ensure even-ness */
+    num_segs2 = FT_PAD_FLOOR( TT_PEEK_USHORT(p), 2 );  /* ensure even-ness */
 
 #if 1
 

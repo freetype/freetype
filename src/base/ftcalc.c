@@ -74,8 +74,8 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_RoundFix( FT_Fixed  a )
   {
-    return ( a >= 0 ) ?   ( a + 0x8000L ) & -0x10000L
-                      : -((-a + 0x8000L ) & -0x10000L );
+    return ( a >= 0 ) ?   ( a + 0x8000L ) & ~0xFFFFL
+                      : -((-a + 0x8000L ) & ~0xFFFFL );
   }
 
 
@@ -84,8 +84,8 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_CeilFix( FT_Fixed  a )
   {
-    return ( a >= 0 ) ?   ( a + 0xFFFFL ) & -0x10000L
-                      : -((-a + 0xFFFFL ) & -0x10000L );
+    return ( a >= 0 ) ?   ( a + 0xFFFFL ) & ~0xFFFFL
+                      : -((-a + 0xFFFFL ) & ~0xFFFFL );
   }
 
 
@@ -94,8 +94,8 @@
   FT_EXPORT_DEF( FT_Fixed )
   FT_FloorFix( FT_Fixed  a )
   {
-    return ( a >= 0 ) ?   a & -0x10000L
-                      : -((-a) & -0x10000L );
+    return ( a >= 0 ) ?   a & ~0xFFFFL
+                      : -((-a) & ~0xFFFFL );
   }
 
 

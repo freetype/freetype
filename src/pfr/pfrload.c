@@ -365,7 +365,7 @@
     /* re-allocate when needed */
     if ( phy_font->num_strikes + count > phy_font->max_strikes )
     {
-      FT_UInt  new_max = ( phy_font->num_strikes + count + 3 ) & -4;
+      FT_UInt  new_max = FT_PAD_CEIL( phy_font->num_strikes + count, 4 );
 
 
       if ( FT_RENEW_ARRAY( phy_font->strikes,

@@ -1781,7 +1781,7 @@
     }
     else
     {
-      val = -( ( compensation - distance + 32 ) & -64 );
+      val = -FT_PIX_ROUND( compensation - distance );
       if ( val > 0 )
         val = 0;
     }
@@ -1817,13 +1817,13 @@
 
     if ( distance >= 0 )
     {
-      val = ( ( distance + compensation ) & -64 ) + 32;
+      val = FT_PIX_FLOOR( distance + compensation ) + 32;
       if ( distance && val < 0 )
         val = 0;
     }
     else
     {
-      val = -( ( (compensation - distance) & -64 ) + 32 );
+      val = -( FT_PIX_FLOOR( compensation - distance ) + 32 );
       if ( val > 0 )
         val = 0;
     }
@@ -1911,7 +1911,7 @@
     }
     else
     {
-      val = -( ( compensation - distance + 63 ) & -64 );
+      val = - FT_PIX_CEIL( compensation - distance );
       if ( val > 0 )
         val = 0;
     }
@@ -1955,7 +1955,7 @@
     }
     else
     {
-      val = -( ( compensation - distance + 16 ) & -32 );
+      val = -FT_PAD_ROUND( compensation - distance, 32 );
       if ( val > 0 )
         val = 0;
     }
@@ -2994,11 +2994,11 @@
 
 
 #define DO_FLOOR    \
-    args[0] &= -64;
+    args[0] = FT_PIX_FLOOR( args[0] );
 
 
 #define DO_CEILING                    \
-    args[0] = ( args[0] + 63 ) & -64;
+    args[0] = FT_PIX_CEIL( args[0] );
 
 
 #define DO_RS                          \
@@ -5288,7 +5288,7 @@
       {
         *x = 0;
         *y = d;
-      }    
+      }
     }
     else
 #endif
