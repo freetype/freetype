@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (body).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -669,6 +669,28 @@
   }
 
 
+  static void
+  destroy_charmaps( FT_Face    face,
+                    FT_Memory  memory )
+  {
+    FT_Int  n;
+
+
+    for ( n = 0; n < face->num_charmaps; n++ )
+    {
+      FT_CMap  cmap = FT_CMAP( face->charmaps[n] );
+
+
+      FT_CMap_Done( cmap );
+
+      face->charmaps[n] = NULL;
+    }
+
+    FT_FREE( face->charmaps );
+    face->num_charmaps = 0;
+  }
+
+
   /* destructor for faces list */
   static void
   destroy_face( FT_Memory  memory,
@@ -699,25 +721,8 @@
       face->generic.finalizer( face );
 
     /* discard charmaps */
-    {
-      FT_Int  n;
-
-
-      for ( n = 0; n < face->num_charmaps; n++ )
-      {
-        FT_CMap  cmap = FT_CMAP( face->charmaps[n] );
-
-
-        FT_CMap_Done( cmap );
-
-        face->charmaps[n] = NULL;
-      }
-
-      FT_FREE( face->charmaps );
-      face->num_charmaps = 0;
-    }
-
-
+    destroy_charmaps( face, memory );
+    
     /* finalize format-specific stuff */
     if ( clazz->done_face )
       clazz->done_face( face );
@@ -924,6 +929,7 @@
   Fail:
     if ( error )
     {
+      destroy_charmaps( face, memory );
       clazz->done_face( face );
       FT_FREE( internal );
       FT_FREE( face );
