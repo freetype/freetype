@@ -11,6 +11,10 @@
 	without effect.
 	* src/truetype/ttdriver (Get_Char_Index, Get_Next_Char): Removed.
 
+	* src/pshinter/pshalgo3.c (psh3_hint_table_record,
+	psh3_hint_table_init, psh3_hint_table_activate_mask): Fix error
+	message.
+
 2002-07-24  Graham Asher  <graham.asher@btinternet.com>
 
 	* src/truetype/ttobjs.c: Fix for bug reported by Sven Neumann
