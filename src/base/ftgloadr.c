@@ -245,7 +245,7 @@
     if ( new_max > old_max )
     {
       new_max = ( new_max + 1 ) & -2;
-      if ( REALLOC_ARRAY( base->subglyphs, old_max, new_max, FT_SubGlyph ) )
+      if ( REALLOC_ARRAY( base->subglyphs, old_max, new_max, FT_SubGlyphRec ) )
         goto Exit;
 
       loader->max_subglyphs = new_max;
