@@ -1130,6 +1130,7 @@
       /* process secondary hints to "selected" points */
       if ( num_masks > 1 )
       {
+        first = mask->end_point;
         mask++;
         for ( ; num_masks > 1; num_masks--, mask++ )
         {
