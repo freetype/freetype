@@ -1,205 +1,208 @@
-/***************************************************************************
- *
- *  otlcommn.h
- *
- *    OpenType Layout common tables processing
- *
- *  this header provides several routines used to process common table
- *  found in various OpenType Layout tables..
- */
-#ifndef __OTLAYOUT_COMMON_H__
-#define __OTLAYOUT_COMMON_H__
+/***************************************************************************/
+/*                                                                         */
+/*  otlcommn.h                                                             */
+/*                                                                         */
+/*    OpenType layout support, common tables (specification).              */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
+#ifndef __OTLCOMMN_H__
+#define __OTLCOMMN_H__
 
 #include "otlayout.h"
 
 OTL_BEGIN_HEADER
 
 
- /*************************************************************************/
- /*************************************************************************/
- /*****                                                               *****/
- /*****                       COVERAGE TABLE                          *****/
- /*****                                                               *****/
- /*************************************************************************/
- /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                       COVERAGE TABLE                          *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
- /* validate coverage table */
+  /* validate coverage table */
   OTL_LOCALDEF( void )
   otl_coverage_validate( OTL_Bytes      base,
                          OTL_Validator  valid );
 
- /* return number of covered glyphs */
+  /* return number of covered glyphs */
   OTL_LOCALDEF( OTL_UInt )
-  otl_coverage_get_count( OTL_Bytes   base );
+  otl_coverage_get_count( OTL_Bytes  base );
 
-
- /* return the coverage index corresponding to a glyph glyph index. */
- /* returns -1 if the glyph isn't covered..                         */
+  /* Return the coverage index corresponding to a glyph glyph index. */
+  /* Return -1 if the glyph isn't covered.                           */
   OTL_LOCALDEF( OTL_Int )
-  otl_coverage_get_index( OTL_Bytes   base,
-                          OTL_UInt    glyph_index );
+  otl_coverage_get_index( OTL_Bytes  base,
+                          OTL_UInt   glyph_index );
 
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                  CLASS DEFINITION TABLE                       *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
- /*************************************************************************/
- /*************************************************************************/
- /*****                                                               *****/
- /*****                  CLASS DEFINITION TABLE                       *****/
- /*****                                                               *****/
- /*************************************************************************/
- /*************************************************************************/
-
- /* validate class definition table */
+  /* validate class definition table */
   OTL_LOCALDEF( void )
   otl_class_definition_validate( OTL_Bytes      table,
                                  OTL_Validator  valid );
 
- /* return class value for a given glyph index */
+  /* return class value for a given glyph index */
   OTL_LOCALDEF( OTL_UInt )
   otl_class_definition_get_value( OTL_Bytes  table,
                                   OTL_UInt   glyph_index );
 
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                      DEVICE TABLE                             *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
- /*************************************************************************/
- /*************************************************************************/
- /*****                                                               *****/
- /*****                      DEVICE TABLE                             *****/
- /*****                                                               *****/
- /*************************************************************************/
- /*************************************************************************/
-
- /* validate a device table */
+  /* validate a device table */
   OTL_LOCALDEF( void )
   otl_device_table_validate( OTL_Bytes      table,
                              OTL_Validator  valid );
 
-
- /* return a device table's first size */
+  /* return a device table's first size */
   OTL_LOCALDEF( OTL_UInt )
   otl_device_table_get_start( OTL_Bytes  table );
 
-
- /* return a device table's last size */
+  /* return a device table's last size */
   OTL_LOCALDEF( OTL_UInt )
   otl_device_table_get_end( OTL_Bytes  table );
 
-
- /* return pixel adjustment for a given size */
+  /* return pixel adjustment for a given size */
   OTL_LOCALDEF( OTL_Int )
-  otl_device_table_get_delta( OTL_Bytes   table,
-                              OTL_UInt    size );
+  otl_device_table_get_delta( OTL_Bytes  table,
+                              OTL_UInt   size );
 
 
- /*************************************************************************/
- /*************************************************************************/
- /*****                                                               *****/
- /*****                           LOOKUPS                             *****/
- /*****                                                               *****/
- /*************************************************************************/
- /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                           LOOKUPS                             *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
- /* validate lookup table */
+  /* validate lookup table */
   OTL_LOCALDEF( void )
   otl_lookup_validate( OTL_Bytes      table,
                        OTL_Validator  valid );
 
- /* return number of sub-tables in a lookup */
+  /* return number of sub-tables in a lookup */
   OTL_LOCALDEF( OTL_UInt )
   otl_lookup_get_count( OTL_Bytes  table );
 
 
- /* return lookup sub-table */
+  /* return lookup sub-table */
   OTL_LOCALDEF( OTL_Bytes )
   otl_lookup_get_table( OTL_Bytes  table,
-                        OTL_UInt   index );
+                        OTL_UInt   idx );
 
 
- /*************************************************************************/
- /*************************************************************************/
- /*****                                                               *****/
- /*****                      LOOKUP LISTS                             *****/
- /*****                                                               *****/
- /*************************************************************************/
- /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                      LOOKUP LISTS                             *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
- /* validate lookup list */
+  /* validate lookup list */
   OTL_LOCALDEF( void )
   otl_lookup_list_validate( OTL_Bytes      table,
                             OTL_Validator  valid );
 
- /* return number of lookups in list */
+  /* return number of lookups in list */
   OTL_LOCALDEF( OTL_UInt )
   otl_lookup_list_get_count( OTL_Bytes  table );
 
-
- /* return a given lookup from a list */
+  /* return a given lookup from a list */
   OTL_LOCALDEF( OTL_Bytes )
   otl_lookup_list_get_lookup( OTL_Bytes  table,
-                              OTL_UInt   index );
+                              OTL_UInt   idx );
 
-
- /* return lookup sub-table from a list */
+  /* return lookup sub-table from a list */
   OTL_LOCALDEF( OTL_Bytes )
   otl_lookup_list_get_table( OTL_Bytes  table,
                              OTL_UInt   lookup_index,
                              OTL_UInt   table_index );
 
- /* iterate over lookup list */
+  /* iterate over lookup list */
   OTL_LOCALDEF( void )
   otl_lookup_list_foreach( OTL_Bytes        table,
                            OTL_ForeachFunc  func,
                            OTL_Pointer      func_data );
 
- /*************************************************************************/
- /*************************************************************************/
- /*****                                                               *****/
- /*****                        FEATURES                               *****/
- /*****                                                               *****/
- /*************************************************************************/
- /*************************************************************************/
 
- /* validate feature table */
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                        FEATURES                               *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /* validate feature table */
   OTL_LOCALDEF( void )
   otl_feature_validate( OTL_Bytes      table,
                         OTL_Validator  valid );
 
- /* return feature's lookup count */
+  /* return feature's lookup count */
   OTL_LOCALDEF( OTL_UInt )
-  otl_feature_get_count( OTL_Bytes   table );
+  otl_feature_get_count( OTL_Bytes  table );
 
- /* get several lookups indices from a feature. returns the number of lookups */
- /* grabbed                                                                   */
+  /* get several lookups indices from a feature. returns the number of */
+  /* lookups grabbed                                                   */
   OTL_LOCALDEF( OTL_UInt )
-  otl_feature_get_lookups( OTL_Bytes   table,
-                           OTL_UInt    start,
-                           OTL_UInt    count,
-                           OTL_UInt   *lookups );
+  otl_feature_get_lookups( OTL_Bytes  table,
+                           OTL_UInt   start,
+                           OTL_UInt   count,
+                           OTL_UInt  *lookups );
 
- /*************************************************************************/
- /*************************************************************************/
- /*****                                                               *****/
- /*****                        FEATURE LIST                           *****/
- /*****                                                               *****/
- /*************************************************************************/
- /*************************************************************************/
 
- /* validate a feature list */
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                        FEATURE LIST                           *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /* validate a feature list */
   OTL_LOCALDEF( void )
   otl_feature_list_validate( OTL_Bytes      table,
                              OTL_Validator  valid );
 
- /* return number of features in list */
+  /* return number of features in list */
   OTL_LOCALDEF( OTL_UInt )
   otl_feature_list_get_count( OTL_Bytes  table );
 
 
- /* return a given feature from a list */
+  /* return a given feature from a list */
   OTL_LOCALDEF( OTL_Bytes )
   otl_feature_list_get_feature( OTL_Bytes  table,
-                                OTL_UInt   index );
+                                OTL_UInt   idx );
 
- /* iterate over all features in a list */
+  /* iterate over all features in a list */
   OTL_LOCALDEF( void )
   otl_feature_list_foreach( OTL_Bytes        table,
                             OTL_ForeachFunc  func,
@@ -209,4 +212,7 @@ OTL_BEGIN_HEADER
 
 OTL_END_HEADER
 
-#endif /* __OTLAYOUT_COMMON_H__ */
+#endif /* __OTLCOMMN_H__ */
+
+
+/* END */

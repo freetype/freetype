@@ -1,3 +1,11 @@
+2002-03-31  Yao Zhang  <yaoz@vidar.niaaa.nih.gov>
+
+	* src/truetype/ttobjs.c (TT_Size_Init): Fix typo.
+
+2002-03-31  Werner Lemberg  <wl@gnu.org>
+
+	* src/otlayout/otlcommn.c, src/otlayout/otlcommn.h: s/index/idx/.
+
 2002-03-30  David Turner  <david@freetype.org>
 
 	* include/freetype/internal/tttypes.h: Adding comments to some of

@@ -436,7 +436,7 @@
 
   Fail_Memory:
 
-    TT_Done_Size( size );
+    TT_Size_Done( size );
     return error;
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
