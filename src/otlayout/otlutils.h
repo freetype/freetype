@@ -22,7 +22,7 @@ OTL_BEGIN_HEADER
 
 #define  OTL_MEM_ALLOC(p,s)       otl_mem_alloc( (void**)&(p), (s), memory )
 #define  OTL_MEM_FREE(p)          otl_mem_free( (void**)&(p), memory )
-#define  OTL_MEM_REALLOC(p,c,n)   otl_mem_realloc( (void**)&(p), (c), (s), memory )
+#define  OTL_MEM_REALLOC(p,c,s)   otl_mem_realloc( (void**)&(p), (c), (s), memory )
 
 #define  OTL_MEM_NEW(p)   OTL_MEM_ALLOC(p,sizeof(*(p)))
 #define  OTL_MEM_NEW_ARRAY(p,c)  OTL_MEM_ALLOC(p,(c)*sizeof(*(p)))

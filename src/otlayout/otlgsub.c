@@ -1,5 +1,10 @@
 #include "otlgsub.h"
 #include "otlcommn.h"
+#include "otlparse.h"
+
+ /* forward declaration */
+  static OTL_ValidateFunc  otl_gsub_validate_funcs[];
+
 
  /************************************************************************/
  /************************************************************************/
@@ -92,12 +97,13 @@
 
     gindex = otl_parser_get_gindex( parser );
 
-    if ( !otl_parser_check_property( parser, gindex, &property ) )
+    otl_parser_check_property( parser, gindex, &property );
+    if ( parser->error )
       goto Exit;
 
     format   = OTL_NEXT_USHORT(p);
     coverage = table + OTL_NEXT_USHORT(p);
-    index    = otl_coverage_lookup( coverage, gindex );
+    index    = otl_coverage_get_index( coverage, gindex );
 
     if ( index >= 0 )
     {
@@ -219,22 +225,22 @@
   {
     OTL_Bytes  p = table;
     OTL_Bytes  coverage, sequence;
-    OTL_UInt   format, gindex, index, property;
-    OTL_Int    index;
+    OTL_UInt   format, gindex, index, property, context_len, seq_count, count;
     OTL_Bool   subst = 0;
 
-    if ( context_len != 0xFFFFU && context_len < 1 )
+    if ( parser->context_len != 0xFFFFU && parser->context_len < 1 )
       goto Exit;
 
     gindex = otl_parser_get_gindex( parser );
 
-    if ( !otl_parser_check_property( parser, gindex, &property ) )
+    otl_parser_check_property( parser, gindex, &property );
+    if ( parser->error )
       goto Exit;
 
     p        += 2;  /* skip format */
     coverage  = table + OTL_NEXT_USHORT(p);
     seq_count = OTL_NEXT_USHORT(p);
-    index     = otl_coverage_lookup( coverage, gindex );
+    index     = otl_coverage_get_index( coverage, gindex );
 
     if ( (OTL_UInt) index >= seq_count )
       goto Exit;
@@ -335,27 +341,27 @@
   {
     OTL_Bytes  p = table;
     OTL_Bytes  coverage, alternates;
-    OTL_UInt   format, gindex, index, property;
-    OTL_Int    index;
+    OTL_UInt   format, gindex, index, property, seq_count, count;
     OTL_Bool   subst = 0;
 
     OTL_GSUB_Alternate  alternate = parser->alternate;
 
-    if ( context_len != 0xFFFFU && context_len < 1 )
+    if ( parser->context_len != 0xFFFFU && parser->context_len < 1 )
       goto Exit;
 
-    if ( alternate == NULL )
+    if ( alternate == 0 )
       goto Exit;
 
     gindex = otl_parser_get_gindex( parser );
 
-    if ( !otl_parser_check_property( parser, gindex, &property ) )
+    otl_parser_check_property( parser, gindex, &property );
+    if ( parser->error )
       goto Exit;
 
     p        += 2;  /* skip format */
     coverage  = table + OTL_NEXT_USHORT(p);
     seq_count = OTL_NEXT_USHORT(p);
-    index     = otl_coverage_lookup( coverage, gindex );
+    index     = otl_coverage_get_index( coverage, gindex );
 
     if ( (OTL_UInt) index >= seq_count )
       goto Exit;
@@ -387,7 +393,8 @@
   otl_ligature_validate( OTL_Bytes      table,
                          OTL_Validator  valid )
   {
-    OTL_UInt  glyph_id, count;
+    OTL_Bytes  p = table;
+    OTL_UInt   glyph_id, count;
 
     OTL_CHECK( 4 );
     glyph_id = OTL_NEXT_USHORT( p );
@@ -473,7 +480,7 @@
     if ( glyph_count == 0 )
       OTL_INVALID_DATA;
 
-    OTL_CHECK( (glyph_count-1)*2 + substcount*4 );
+    OTL_CHECK( (glyph_count-1)*2 + subst_count*4 );
 
     /* XXX: check glyph indices and subst lookups */
   }
@@ -499,7 +506,8 @@
   otl_sub_class_rule_validate( OTL_Bytes      table,
                                OTL_Validator  valid )
   {
-    OTL_UInt  glyph_count, subst_count;
+    OTL_Bytes  p = table;
+    OTL_UInt   glyph_count, subst_count;
 
     OTL_CHECK( 4 );
     glyph_count = OTL_NEXT_USHORT( p );
@@ -508,7 +516,7 @@
     if ( glyph_count == 0 )
       OTL_INVALID_DATA;
 
-    OTL_CHECK( (glyph_count-1)*2 + substcount*4 );
+    OTL_CHECK( (glyph_count-1)*2 + subst_count*4 );
 
     /* XXX: check glyph indices and subst lookups */
   }
@@ -571,7 +579,7 @@
 
           OTL_CHECK( 2*count );
           for ( ; count > 0; count-- )
-            otl_sub_class_rule_set_validate( table + coveragen valid );
+            otl_sub_class_rule_set_validate( table + coverage, valid );
         }
         break;
 
@@ -745,7 +753,8 @@
 
           OTL_CHECK( 2*count );
           for ( ; count > 0; count-- )
-            otl_chain_sub_class_set( table + OTL_NEXT_USHORT( p ), valid );
+            otl_chain_sub_class_set_validate( table + OTL_NEXT_USHORT( p ),
+                                              valid );
         }
         break;
 
@@ -782,10 +791,11 @@
     }
   }
 
+
  /************************************************************************/
  /************************************************************************/
  /*****                                                              *****/
- /*****                 GSUB LOOKUP TYPE 6                           *****/
+ /*****                 GSUB LOOKUP TYPE 7                           *****/
  /*****                                                              *****/
  /************************************************************************/
  /************************************************************************/
@@ -824,7 +834,7 @@
   }
 
 
-  static const OTL_ValidateFunc  otl_gsub_validate_funcs[ 7 ] =
+  static OTL_ValidateFunc  otl_gsub_validate_funcs[ 7 ] =
   {
     otl_gsub_lookup1_validate,
     otl_gsub_lookup2_validate,
@@ -833,6 +843,7 @@
     otl_gsub_lookup5_validate,
     otl_gsub_lookup6_validate
   };
+
 
  /************************************************************************/
  /************************************************************************/

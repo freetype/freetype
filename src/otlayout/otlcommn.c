@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType layout support, common tables (body).                       */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2002, 2004 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -286,7 +286,7 @@
     case 2:
       {
         OTL_UInt  count = OTL_NEXT_USHORT( p );
-        OTL_UInt  min = 0, max = count, mid, gindex;
+        OTL_UInt  min = 0, max = count, mid, gindex, start, end;
 
 
         table += 4;
@@ -328,7 +328,7 @@
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   start, end, count, format, count;
+    OTL_UInt   start, end, count, format;
 
 
     if ( p + 8 > valid->limit )
@@ -374,7 +374,7 @@
   {
     OTL_Bytes  p = table;
     OTL_Int    result = 0;
-    OTL_UInt   start, end, format, idx, value;
+    OTL_UInt   start, end, format, idx, value, shift;
 
 
     start  = OTL_NEXT_USHORT( p );
@@ -393,7 +393,7 @@
         p     += idx / 16;
         value  = OTL_PEEK_USHORT( p );
         shift  = idx & 15;
-        result = (OTL_Short)( value << shift ) >> ( 14 - shift );
+        result = (OTL_Int16)( value << shift ) >> ( 14 - shift );
 
         break;
 
@@ -402,7 +402,7 @@
         p     += idx / 16;
         value  = OTL_PEEK_USHORT( p );
         shift  = idx & 15;
-        result = (OTL_Short)( value << shift ) >> ( 12 - shift );
+        result = (OTL_Int16)( value << shift ) >> ( 12 - shift );
 
         break;
 
@@ -411,7 +411,7 @@
         p     += idx / 16;
         value  = OTL_PEEK_USHORT( p );
         shift  = idx & 15;
-        result = (OTL_Short)( value << shift ) >> ( 8 - shift );
+        result = (OTL_Int16)( value << shift ) >> ( 8 - shift );
 
         break;
 
@@ -451,7 +451,7 @@
 
     for ( ; num_tables > 0; num_tables-- )
     {
-      offset = OTL_NEXT_USHORT( p );
+      OTL_UInt offset = OTL_NEXT_USHORT( p );
 
       if ( table + offset >= valid->limit )
         OTL_INVALID_OFFSET;
@@ -475,7 +475,7 @@
   otl_lookup_get_table( OTL_Bytes  table,
                         OTL_UInt   idx )
   {
-    OTL_Bytes  p, result = NULL;
+    OTL_Bytes  p, result = 0;
     OTL_UInt   count;
 
 
@@ -499,6 +499,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
+#if 0
   OTL_LOCALDEF( void )
   otl_lookup_list_validate( OTL_Bytes      table,
                             OTL_Validator  valid )
@@ -522,6 +523,7 @@
       otl_lookup_validate( table + offset, valid );
     }
   }
+#endif
 
 
   OTL_LOCALDEF( OTL_UInt )
@@ -559,7 +561,7 @@
                              OTL_UInt   lookup_index,
                              OTL_UInt   table_index )
   {
-    OTL_Bytes  result = NULL;
+    OTL_Bytes  result = 0;
 
 
     result = otl_lookup_list_get_lookup( table, lookup_index );
@@ -570,6 +572,7 @@
   }
 
 
+#if 0
   OTL_LOCALDEF( void )
   otl_lookup_list_foreach( OTL_Bytes        table,
                            OTL_ForeachFunc  func,
@@ -582,6 +585,7 @@
     for ( ; count > 0; count-- )
       func( table + OTL_NEXT_USHORT( p ), func_data );
   }
+#endif
 
 
   /*************************************************************************/
@@ -678,7 +682,7 @@
       p     += 4;                       /* skip tag */
       offset = OTL_NEXT_USHORT( p );
 
-      otl_feature_table_validate( table + offset, valid );
+      otl_feature_validate( table + offset, valid );
     }
   }
 
@@ -697,7 +701,7 @@
   otl_feature_list_get_feature( OTL_Bytes  table,
                                 OTL_UInt   idx )
   {
-    OTL_Bytes  p, result = NULL;
+    OTL_Bytes  p, result = 0;
     OTL_UInt   count;
 
 
@@ -714,6 +718,7 @@
   }
 
 
+#if 0
   OTL_LOCALDEF( void )
   otl_feature_list_foreach( OTL_Bytes        table,
                             OTL_ForeachFunc  func,
@@ -729,6 +734,7 @@
     for ( ; count > 0; count-- )
       func( table + OTL_NEXT_USHORT( p ), func_data );
   }
+#endif
 
 
   /*************************************************************************/
@@ -824,7 +830,7 @@
   otl_script_validate( OTL_Bytes      table,
                        OTL_Validator  valid )
   {
-    OTL_UInt   default_lang;
+    OTL_UInt   default_lang, num_langs;
     OTL_Bytes  p = table;
 
 
@@ -880,7 +886,7 @@
       p     += 4;                       /* skip tag */
       offset = OTL_NEXT_USHORT( p );
 
-      otl_script_table_validate( list + offset, valid );
+      otl_script_validate( list + offset, valid );
     }
   }
 

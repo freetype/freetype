@@ -1,3 +1,100 @@
+2004-08-12  Werner Lemberg  <wl@gnu.org>
+
+	Make otlayout module compile (without actually working).
+
+	* src/otlayout/*: s/OTL_Valid/OTL_Validator/.
+	s/NULL/0/.
+
+	* src/otlayout/otlayout.h: Fix various typos.
+	(OTL_Bool): New typedef.
+	(OTL_Int, OTL_Long, OTL_Int16, OTL_Int32): Use `signed' keyword.
+	(OTL_Err_InvalidArgument): Removed.
+	(OTL_Err_InvalidData, OTL_Err_InvalidSize): New enum values.
+	(OTL_MAKE_TAG): Add missing parenthesis.
+	(OTL_INVALID_DATA): Use OTL_Err_InvalidData.
+	(OTL_INVALID_TOO_SHORT): Use OTL_Err_InvalidSize.
+	(OTL_INVALID_FORMAT, OTL_INVALID_OFFSET): New macros.
+
+	* src/otlayout/otlgpos.c: s/FT_/OTL_/.
+	s/OTL_Short/OTL_Int16/.
+	(otl_gpos_pairset_validate): Add return type.
+	(otl_base_array_validate): Fix call to otl_anchor_validate.
+	(otl_liga_array_validate): Fix call to otl_liga_attach_validate.
+	(otl_gpos_lookup5_validate): Fix typos.
+	(otl_gpos_lookup6_validate): Fix call to otl_mark2_array_validate.
+	(otl_gpos_lookup7_validate): Comment out unfinished code.
+	Fix typos.
+
+	* src/otlayout/otlgsub.c: Add forward declaration for
+	otl_gsub_validate_funcs.
+	(otl_gsub_lookup1_apply, otl_gsub_lookup2_apply,
+	otl_gsub_lookup3_apply): Fix call to otl_parser_check_property. 
+	s/otl_coverage_lookup/otl_coverage_get_index/.
+	(otl_ligature_validate): Add missing variable declaration.
+	(otl_sub_rule_validate): Fix typo.
+	(otl_sub_class_rule_validate): Add missing variable declaration.
+	Fix typo.
+	(otl_gsub_lookup5_validate): Fix typo.
+	(otl_gsub_lookup6_validate): Fix call to
+	otl_chain_sub_class_set_validate.
+	(otl_gsub_validate_funcs): Don't use `const'.
+
+	* src/otlayout/otlcommn.c (otl_class_definition_get_value,
+	otl_device_table_validate, otl_device_table_get_delta,
+	otl_lookup_validate, otl_script_validate): Add missing
+	variable declarations.
+	(otl_lookup_list_validate): Comment out first definition.
+	(otl_lookup_list_foreach, otl_feature_list_foreach): Comment out.
+	(otl_feature_list_validate):
+	s/otl_feature_table_validate/otl_feature_validate/.
+	(otl_script_list_validate):
+	s/otl_script_table_validate/otl_script_validate/.
+
+	* src/otlayout/otlcommn.h: Comment out first declaration.
+	(otl_lookup_list_foreach, otl_feature_list_foreach): Comment out.
+
+	* src/otlayout/otlbase.c (otl_base_coord_validate): Fix call to
+	otl_device_table_validate.
+	(otl_base_scsript_validate): Add missing variable declarations.
+	(otl_base_script_list_validate): Fix call to
+	otl_base_script_validate.
+	(otl_axis_table_validate): Fix calls to otl_base_tag_list_validate
+	and otl_base_script_list_validate.
+	(otl_base_validate): Fix calls to otl_axis_table_validate.
+
+	* src/otlayout/otlgdef.c (otl_attach_list_validate): Fix call to
+	otl_attach_point_validate.
+	(otl_caret_value_validate): Add missing variable declaration.
+	Fix call to otl_device_table_validate.
+	(otl_ligature_glyph_validate): Fix call to otl_caret_value_validate.
+	(otl_ligature_caret_list_validate): Fix call to
+	otl_ligature_glyph_validate.
+	(otl_gdef_validate): Fix calls to otl_class_definition_validate,
+	otl_attach_list_validate, otl_ligature_caret_list_validate, and
+	otl_class_definition_validate.
+
+	* src/otlayout/otltable.h (otl_table_validate, otl_table_init,
+	otl_table_set_script): Comment out.
+
+	* src/otlayout/otlparse.h (OTL_ParserRec):
+	s/OTL_Alternate/OTL_GSUB_Alternate/.
+	(OTL_ParseError): Add OTL_Err_Parser_Memory and
+	OTL_Err_Parser_Internal.
+	(otl_parser_error): Fix typo.
+	(otl_parser_check_property): Remove third argument.
+
+	* src/otlayout/otlparse.c (otl_string_ensure):
+	s/OTL_Parse_Err_Memory/OTL_Err_Parser_Memory/.
+	(OTL_STRING_ENSURE, otl_parser_error, otl_parser_get_index,
+	otl_parser_replace_1, otl_parser_replace_n): Fix typos.
+	(OTL_PARSER_UNCOVERED): Removed.
+	(otl_parser_check_property): Remove third argument.
+
+	* src/otlayout/otljstf.c (otl_jstf_priority_validate): Add missing
+	variable declaration.
+
+	* src/otlayout/otlutils.h (OTL_MEM_REALLOC): Fix typo.
+
 2004-08-11  Danny  <dannyboynow@yahoo.com>
 
 	* src/base/ftstream.c (FT_Stream_Close): Don't reset stream->close

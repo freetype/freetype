@@ -47,7 +47,7 @@
       OTL_INVALID_TOO_SHORT;
 
     for ( ; count > 0; count-- )
-      otl_attach_point_validate( table + OTL_NEXT_USHORT( p ) );
+      otl_attach_point_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
 
@@ -64,6 +64,7 @@
                             OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
+    OTL_Int   format;
 
     if ( p + 4 > valid->limit )
       OTL_INVALID_TOO_SHORT;
@@ -83,7 +84,7 @@
           if ( p + 2 > valid->limit )
             OTL_INVALID_TOO_SHORT;
 
-          otl_device_table_validate( table + OTL_PEEK_USHORT( p ) );
+          otl_device_table_validate( table + OTL_PEEK_USHORT( p ), valid );
         }
         break;
 
@@ -109,7 +110,7 @@
       OTL_INVALID_TOO_SHORT;
 
     for ( ; count > 0; count-- )
-      otl_caret_value_validate( table + OTL_NEXT_USHORT( p ) );
+      otl_caret_value_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
 
@@ -135,7 +136,7 @@
       OTL_INVALID_TOO_SHORT;
 
     for ( ; count > 0; count-- )
-      otl_ligature_glyph_validate( table + OTL_NEXT_USHORT( p ) );
+      otl_ligature_glyph_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
 
@@ -161,15 +162,14 @@
       OTL_INVALID_FORMAT;
 
     /* validate class definition table */
-    otl_class_definition_validate( table + OTL_NEXT_USHORT( p ) );
+    otl_class_definition_validate( table + OTL_NEXT_USHORT( p ), valid );
 
     /* validate attachment point list */
-    otl_attach_list_validate( table + OTL_NEXT_USHORT( p ) );
+    otl_attach_list_validate( table + OTL_NEXT_USHORT( p ), valid );
 
     /* validate ligature caret list */
-    otl_ligature_caret_list_validate( table + OTL_NEXT_USHORT( p ) );
+    otl_ligature_caret_list_validate( table + OTL_NEXT_USHORT( p ), valid );
 
     /* validate mark attach class */
-    otl_class_definition_validate( table + OTL_NEXT_USHORT( p ) );
+    otl_class_definition_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
-
