@@ -14,6 +14,8 @@
         of the sub-table. This allows fonts like "mg______.ttf" (i.e.
         Marriage) to return accurate charmaps.
 
+        * docs/CHANGES: updating
+
 2002-10-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/smooth/ftgrays.c (SUBPIXELS): Add cast to `TPos'.
