@@ -642,7 +642,7 @@
         p = deltas  + n*2;  delta  = TT_PEEK_SHORT(p);
         p = offsets + n*2;  offset = TT_PEEK_USHORT(p);
 
-        if ( end > start )
+        if ( start > end )
           FT_INVALID_DATA;
 
         if ( n > 0 && start <= last )
@@ -713,14 +713,14 @@
 
         if ( code <= end )
         {
-          index = (FT_UInt)( char_code - start );
+          index = code;
 
           p  = q + num_segs2 - 2; delta  = TT_PEEK_SHORT(p);
           p += num_segs2;         offset = TT_PEEK_USHORT(p);
 
           if ( offset != 0 )
           {
-            p    += offset + 2*index;
+            p    += offset + 2*(index - start);
             index = TT_PEEK_USHORT(p);
           }
 
@@ -1575,6 +1575,8 @@
 
       charmap.platform_id = TT_NEXT_USHORT(p);
       charmap.encoding_id = TT_NEXT_USHORT(p);
+      charmap.face        = FT_FACE(face);
+      charmap.encoding    = 0;  /* will be filled later */
       offset              = TT_NEXT_ULONG(p);
 
       if ( offset && table + offset + 2 < limit )
