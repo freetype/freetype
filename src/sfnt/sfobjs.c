@@ -21,7 +21,7 @@
 #include "ttload.h"
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
-#include FT_TRUETYPE_NAMES_H
+#include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_TRUETYPE_ERRORS_H
 

@@ -1,5 +1,14 @@
 2001-03-20  David Turner    <david.turner@freetype.org>
 
+	* include/freetype/config/ftheader.h, include/freetype/ftsnames.h:
+	renamed "ftnames.h" to "ftsnames.h", and FT_NAMES_H to FT_SFNT_NAMES_H
+
+	* docs/docmaker.py: added generation of INDEX link in table of contents
+
+	* INSTALL, docs/BUILD: updated documentation to indicate that the
+	compilation process has changed slightly (no more 'src' required in
+	the include path).
+
 	* builds/*/*-def.mk: changed the objects directory from "obj" to "objs"
 
 	* include/freetype/config/ftheader.h: removed obsolete macros like

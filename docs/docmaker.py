@@ -901,7 +901,7 @@ class DocSectionList:
                 # provide a new one.
                 #
                 if abstract:
-                    print_error( "duplicate section definition for " +
+                    section.block.print_error( "duplicate section definition for " +
                                  "'" + name + "'\n" +
                                  "previous definition in " +
                                  "'" + section.block.location() + "'\n" +
@@ -1191,6 +1191,9 @@ class DocDocument:
             print "</table>"
 
             print chapter_footer
+
+        # index
+        print chapter_header + '<a href="' + self.section_list.index_filename + '">Index</a>' + chapter_footer
 
         print html_footer
 

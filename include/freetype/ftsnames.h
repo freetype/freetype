@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftnames.h                                                              */
+/*  ftsnames.h                                                             */
 /*                                                                         */
 /*    Simple interface to access SFNT name tables (which are used          */
 /*    to hold font names, copyright info, notices, etc.) (specification).  */
@@ -19,8 +19,8 @@
 /***************************************************************************/
 
 
-#ifndef __FTNAMES_H__
-#define __FTNAMES_H__
+#ifndef __FT_SFNT_NAMES_H__
+#define __FT_SFNT_NAMES_H__
 
 
 #include <ft2build.h>
@@ -71,9 +71,13 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    name_id     :: An identifier for `string'.                         */
   /*                                                                       */
-  /*    string      :: The `name' string.  Note that this string is in     */
-  /*                   Pascal convention, i.e., the string hasn't a final  */
-  /*                   null byte.                                          */
+  /*    string      :: The `name' string.  Note that its format differs    */
+  /*                   depending on the (platform,encoding) pair. It can   */
+  /*                   be a Pascal String, a UTF-16 one, etc..             */
+  /*                                                                       */
+  /*                   Generally speaking, the string is not               */
+  /*                   zero-terminated. Please refer to the TrueType       */
+  /*                   specification for details..                         */
   /*                                                                       */
   /*    string_len  :: The length of `string' in bytes.                    */
   /*                                                                       */
@@ -149,7 +153,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __FTNAMES_H__ */
+#endif /* __FT_SFNT_NAMES_H__ */
 
 
 /* END */

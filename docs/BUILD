@@ -13,6 +13,9 @@ instructions on how to compile the library on your favorite platform.
 I. QUICK COMMAND-LINE GUIDE
 ---------------------------
 
+  THE FOLLOWING WILL ONLY WORK WITH GNU MAKE, IT WILL FAIL MISERABLY
+  WITH OTHER MAKE TOOLS, FOR EXAMPLE "BSD MAKE"..
+
   Install GNU Make  (version 3.78.1 or newer), then  try the following
   on Unix or any system with gcc:
 
@@ -59,6 +62,9 @@ II. COMMAND-LINE COMPILATION
     Make -- trying to build the  library with any other Make tool will
     *fail*.
 
+    NEARLY ALL OTHER MAKE TOOLS WILL FAIL, INCLUDING "BSD MAKE", SO REALLY
+    INSTALL A RECENT VERSION OF GNU MAKE ON YOUR SYSTEM !!
+
     Make sure that you are invoking GNU Make from the command line, by
     typing something like:
 
@@ -66,7 +72,7 @@ II. COMMAND-LINE COMPILATION
 
     to display its version number.
 
-    Version 3.78.1 or newer is needed.
+    VERSION 3.78.1 OR NEWER IS NEEDED !!.
 
   b. Invoke `make'
 
@@ -177,12 +183,12 @@ III. DETAILED COMPILATION PROCEDURE
   However, you can  create a single object file  by compiling the file
   `src/base/ftbase.c', which basically contains
 
-      #include <base/ftcalc.c>
-      #include <base/ftobjs.c>
-      #include <base/ftstream.c>
-      #include <base/ftlist.c>
-      #include <base/ftoutln.c>
-      #include <base/ftextend.c>
+      #include "ftcalc.c"
+      #include "ftobjs.c"
+      #include "ftstream.c"
+      #include "ftlist.c"
+      #include "ftoutln.c"
+      #include "ftextend.c"
 
   Similarly, each component has a single `englobing' C file to compile
   it as a stand-alone object:
@@ -202,7 +208,7 @@ III. DETAILED COMPILATION PROCEDURE
     src/truetype/truetype.c   - the TrueType font driver
     src/type1/type1.c         - the Type 1 font driver
 
-  The last module of FreeType 2, winfonts (implementing support for
+  The last module of FreeType 2, "winfonts" (implementing support for
   Windows FNT format), is a single file.
 
   To compile one component, do the following:
@@ -210,21 +216,23 @@ III. DETAILED COMPILATION PROCEDURE
     - Add  the  top-level  `include'  directory  to  your  compilation
       include path
 
-    - Add the `src' directory to your compilation include path.
+    - Add the `src/<component>' directory to your compilation include path,
+      or simply 'cd' to the component's source directory
 
     - Compile the component `source'  file (see list below); you don't
-      need to be in the component's directory.
+      need to be in the component's directory if you added `src/<component>'
+      to your include path..
 
   For example, the following line  can be used to compile the truetype
   driver on Unix:
 
      cd freetype2/
-     cc -c -Iinclude -Isrc  src/truetype/truetype.c
+     cc -c -Iinclude -Isrc/truetype  src/truetype/truetype.c
 
   Alternatively:
 
      cd freetype2/src/truetype
-     cc -c -I../../include -I.. truetype.c
+     cc -c -I../../include truetype.c
 
   Finally, FreeType 2 contains some other components:
 
@@ -244,12 +252,8 @@ III. DETAILED COMPILATION PROCEDURE
 IV. Support for flat-directory compilation
 ------------------------------------------
 
-  It is now possible to put  all FreeType 2 source files into a single
+  It is possible to put  all FreeType 2 source files into a single
   directory, with the exception of the `include' hierarchy.
-
-  Note  that you  still need  to  only compile  the `wrapper'  sources
-  described   above.   Define   the   `FT_FLAT_COMPILE'   macro   when
-  compiling.  Here an example:
 
     1. Copy all files in current directory:
 
@@ -260,11 +264,13 @@ IV. Support for flat-directory compilation
 
     2. Compile sources:
 
-        cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftsystem.c
-        cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftinit.c
-        cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftdebug.c
-        cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftbase.c
+        cc -c -Ifreetype2/include ftsystem.c
+        cc -c -Ifreetype2/include ftinit.c
+        cc -c -Ifreetype2/include ftdebug.c
+        cc -c -Ifreetype2/include ftbase.c
         etc.
 
+   You don't need to define the FT_FLAT_COMPILATION macro (as this was required
+   in previous releases of FreeType 2)
 
 End of file

@@ -98,6 +98,7 @@ FT_BEGIN_HEADER
 
   } FT_Multi_Master;
 
+  /* */
 
   typedef FT_Error  (*FT_Get_MM_Func)( FT_Face           face,
                                        FT_Multi_Master*  master );
