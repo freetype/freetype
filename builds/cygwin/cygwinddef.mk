@@ -1,6 +1,6 @@
 #
 # FreeType 2 configuration rules templates for
-# developement under Unix with no configure (gcc only)
+# development under Unix with no configure (gcc only)
 #
 
 # Copyright 1996-2000 by
@@ -20,8 +20,10 @@ TOP := $(shell cd $(TOP); pwd)
 DELETE        := rm -f
 SEP           := /
 HOSTSEP       := $(SEP)
-BUILD         := $(TOP)/builds/cygwin/devel # we use a special devel ftoption.h
-PLATFORM      := cygwindev # do not set it to 'cygwin', or libtool will trick you
+# we use a special devel ftoption.h
+BUILD         := $(TOP)/builds/cygwin/devel
+# do not set it to 'cygwin', or libtool will trick you
+PLATFORM      := cygwindev
 
 # The directory where all object files are placed.
 #

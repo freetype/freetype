@@ -332,9 +332,12 @@
       FT_Int  max  = outline->max_points;
 
 
-      if ( REALLOC_ARRAY( outline->points, max, news, AH_Point )            ||
-           REALLOC_ARRAY( outline->horz_edges, max*2, news*2, AH_Edge )     ||
-           REALLOC_ARRAY( outline->horz_segments, max*2, news*2, AH_Segment ) )
+      if ( REALLOC_ARRAY( outline->points,
+                          max, news, AH_Point )            ||
+           REALLOC_ARRAY( outline->horz_edges,
+                          max * 2, news * 2, AH_Edge )     ||
+           REALLOC_ARRAY( outline->horz_segments,
+                          max * 2, news * 2, AH_Segment ) )
         goto Exit;
 
       /* readjust some pointers */

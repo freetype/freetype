@@ -27,11 +27,11 @@ ifeq ($(PLATFORM),ansi)
       is_cygwin := 1
     endif
 
-    # We test for the COMSPEC environment variable, then run the `ver'
-    # command-line program to see if its output contains the word `Windows'.
-    #
-    # If this is true, we are running a win32 platform (or an emulation).
-    #
+  # We test for the COMSPEC environment variable, then run the `ver'
+  # command-line program to see if its output contains the word `Windows'.
+  #
+  # If this is true, we are running a win32 platform (or an emulation).
+  #
   else
     ifeq ($(OSTYPE),cygwin)
       ifdef COMSPEC
@@ -46,9 +46,8 @@ ifeq ($(PLATFORM),ansi)
     COPY     := cp
     DELETE   := rm -f
 
-
     # If `devel' is the requested target, we use a special configuration
-    # file named "cygwin-dev.mk". It disables optimization and libtool..
+    # file named `cygwin-dev.mk'.  It disables optimization and libtool.
     #
     ifneq ($(findstring devel,$(MAKECMDGOALS)),)
       CONFIG_FILE := cygwin-dev.mk
@@ -71,7 +70,8 @@ ifeq ($(PLATFORM),ansi)
     setup: std_setup
 
     cygwin-def.mk: builds/cygwin/cygwin-def.in
-	    cd builds/cygwin; $(USE_CFLAGS) CONFIG_SHELL=/bin/bash ./configure $(CFG)
+	    cd builds/cygwin; \
+            $(USE_CFLAGS) CONFIG_SHELL=/bin/bash ./configure $(CFG)
 
   endif # test CygWin
 endif   # test PLATFORM
