@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=freetype - Win32 Debug Multithreaded
+CFG=freetype - Win32 Debug Singlethreaded
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,7 +13,7 @@ CFG=freetype - Win32 Debug Multithreaded
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "freetype.mak" CFG="freetype - Win32 Debug Multithreaded"
+!MESSAGE NMAKE /f "freetype.mak" CFG="freetype - Win32 Debug Singlethreaded"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -21,6 +21,8 @@ CFG=freetype - Win32 Debug Multithreaded
 !MESSAGE "freetype - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "freetype - Win32 Debug Multithreaded" (based on "Win32 (x86) Static Library")
 !MESSAGE "freetype - Win32 Release Multithreaded" (based on "Win32 (x86) Static Library")
+!MESSAGE "freetype - Win32 Release Singlethreaded" (based on "Win32 (x86) Static Library")
+!MESSAGE "freetype - Win32 Debug Singlethreaded" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -43,8 +45,8 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\..\..\objs\release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /Za /W4 /GX /Zi /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /FD /c
-# SUBTRACT CPP /YX
+# ADD CPP /MD /Za /W4 /Gm- /GX /Zi /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /FD /c
+# SUBTRACT CPP /nologo /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -67,8 +69,8 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\..\..\objs\debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /Za /W4 /Gm /GX /Zi /Od /I "..\..\..\include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_DEBUG_LEVEL_ERROR" /D "FT_DEBUG_LEVEL_TRACE" /FD /GZ /c
-# SUBTRACT CPP /X /YX
+# ADD CPP /MDd /Za /W4 /Gm- /GX /Zi /Od /I "..\..\..\include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_DEBUG_LEVEL_ERROR" /D "FT_DEBUG_LEVEL_TRACE" /FD /GZ /c
+# SUBTRACT CPP /nologo /X /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -92,8 +94,8 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /Za /W3 /Gm /GX /ZI /Od /I "..\freetype\include\\" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_FLAT_COMPILE" /YX /FD /GZ /c
 # SUBTRACT BASE CPP /X
-# ADD CPP /nologo /MTd /Za /W4 /Gm /GX /ZI /Od /I "..\..\..\include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_DEBUG_LEVEL_ERROR" /D "FT_DEBUG_LEVEL_TRACE" /FD /GZ /c
-# SUBTRACT CPP /X /YX
+# ADD CPP /MTd /Za /W4 /Gm- /GX /Zi /Od /I "..\..\..\include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_DEBUG_LEVEL_ERROR" /D "FT_DEBUG_LEVEL_TRACE" /FD /GZ /c
+# SUBTRACT CPP /nologo /X /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -116,8 +118,8 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\..\..\objs\release_mt"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /Za /W3 /GX /O2 /I "..\freetype\include\\" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_FLAT_COMPILE" /YX /FD /c
-# ADD CPP /nologo /MT /Za /W4 /GX /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /FD /c
-# SUBTRACT CPP /YX
+# ADD CPP /MT /Za /W4 /Gm- /GX /Zi /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /FD /c
+# SUBTRACT CPP /nologo /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -127,6 +129,57 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo /out:"lib\freetype200b8.lib"
 # ADD LIB32 /nologo /out:"..\..\..\objs\freetype206MT.lib"
 
+!ELSEIF  "$(CFG)" == "freetype - Win32 Release Singlethreaded"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "freetype___Win32_Release_Singlethreaded"
+# PROP BASE Intermediate_Dir "freetype___Win32_Release_Singlethreaded"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "..\..\..\objs\release_st"
+# PROP Intermediate_Dir "..\..\..\objs\release_st"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /Za /W4 /GX /Zi /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /FD /c
+# SUBTRACT BASE CPP /YX
+# ADD CPP /Za /W4 /Gm- /GX /Zi /O2 /I "..\..\..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /FD /c
+# SUBTRACT CPP /nologo /YX
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo /out:"..\..\..\objs\freetype206.lib"
+# ADD LIB32 /out:"..\..\..\objs\freetype206ST.lib"
+# SUBTRACT LIB32 /nologo
+
+!ELSEIF  "$(CFG)" == "freetype - Win32 Debug Singlethreaded"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "freetype___Win32_Debug_Singlethreaded"
+# PROP BASE Intermediate_Dir "freetype___Win32_Debug_Singlethreaded"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "..\..\..\objs\debug_st"
+# PROP Intermediate_Dir "..\..\..\objs\debug_st"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MDd /Za /W4 /Gm /GX /Zi /Od /I "..\..\..\include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_DEBUG_LEVEL_ERROR" /D "FT_DEBUG_LEVEL_TRACE" /FD /GZ /c
+# SUBTRACT BASE CPP /X /YX
+# ADD CPP /Za /W4 /Gm- /GX /Zi /Od /I "..\..\..\include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "FT_DEBUG_LEVEL_ERROR" /D "FT_DEBUG_LEVEL_TRACE" /FD /GZ /c
+# SUBTRACT CPP /nologo /X /YX
+# ADD BASE RSC /l 0x409 /d "_DEBUG"
+# ADD RSC /l 0x409 /d "_DEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo /out:"..\..\..\objs\freetype206_D.lib"
+# ADD LIB32 /nologo /out:"..\..\..\objs\freetype206ST_D.lib"
+
 !ENDIF 
 
 # Begin Target
@@ -135,6 +188,8 @@ LIB32=link.exe -lib
 # Name "freetype - Win32 Debug"
 # Name "freetype - Win32 Debug Multithreaded"
 # Name "freetype - Win32 Release Multithreaded"
+# Name "freetype - Win32 Release Singlethreaded"
+# Name "freetype - Win32 Debug Singlethreaded"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -152,20 +207,8 @@ SOURCE=..\..\..\src\base\ftbase.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\src\base\ftdebug.c
-
-!IF  "$(CFG)" == "freetype - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "freetype - Win32 Debug"
-
+SOURCE=..\ftdebug.c
 # ADD CPP /Ze
-
-!ELSEIF  "$(CFG)" == "freetype - Win32 Debug Multithreaded"
-
-!ELSEIF  "$(CFG)" == "freetype - Win32 Release Multithreaded"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
