@@ -64,15 +64,6 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Bool )
-  FTC_GNode_Compare( FTC_GNode   gnode,
-                     FTC_GQuery  gquery )
-  {
-    return FT_BOOL(  gnode->family == gquery->family &&
-                     gnode->gindex == gquery->gindex );
-  }
-
-
   FT_LOCAL_DEF( FT_Bool )
   ftc_gnode_compare( FTC_Node    ftcgnode,
                      FT_Pointer  ftcgquery,
@@ -82,8 +73,16 @@
     FTC_GQuery  gquery = (FTC_GQuery)ftcgquery;
     FT_UNUSED( cache );
 
+    return FT_BOOL(  gnode->family == gquery->family &&
+                     gnode->gindex == gquery->gindex );
+  }
 
-    return FTC_GNode_Compare( gnode, gquery );
+
+  FT_EXPORT_DEF( FT_Bool )
+  FTC_GNode_Compare( FTC_GNode   gnode,
+                     FTC_GQuery  gquery )
+  {
+    return ftc_gnode_compare( FTC_NODE(gnode), gquery, NULL );
   }
 
 
@@ -108,10 +107,11 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )
-  FTC_GCache_Init( FTC_GCache  cache )
+  FT_LOCAL_DEF( FT_Error )
+  ftc_gcache_init( FTC_Cache  ftccache )
   {
-    FT_Error error;
+    FTC_GCache  cache = (FTC_GCache)ftccache;
+    FT_Error    error;
 
     error = FTC_Cache_Init( FTC_CACHE( cache ) );
     if ( !error )
@@ -129,21 +129,17 @@
   }
 
 
-  FT_LOCAL_DEF( FT_Error )
-  ftc_gcache_init( FTC_Cache  ftccache )
+  FT_EXPORT_DEF( FT_Error )
+  FTC_GCache_Init( FTC_GCache  cache )
   {
-    FTC_GCache  cache = (FTC_GCache)ftccache;
-
-
-    return FTC_GCache_Init( cache );
+    return ftc_gcache_init( FTC_CACHE(cache) );
   }
 
 
   FT_EXPORT_DEF( void )
   FTC_GCache_Done( FTC_GCache  cache )
   {
-    FTC_Cache_Done( (FTC_Cache)cache );
-    FTC_MruList_Done( &cache->families );
+    return ftc_gcache_done( FTC_CACHE(cache) );
   }
 
 
@@ -153,7 +149,8 @@
     FTC_GCache  cache = (FTC_GCache)ftccache;
 
 
-    FTC_GCache_Done( cache );
+    FTC_Cache_Done( (FTC_Cache)cache );
+    FTC_MruList_Done( &cache->families );
   }
 
 

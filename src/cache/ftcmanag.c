@@ -92,7 +92,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_Int )
+  FT_CALLBACK_DEF( FT_Bool )
   ftc_size_node_compare( FTC_MruNode  ftcnode,
                          FT_Pointer   ftcscaler )
   {
@@ -156,7 +156,7 @@
 
 
   /* helper function used by ftc_face_node_done */
-  static FT_Int
+  static FT_Bool
   ftc_size_node_compare_faceid( FTC_MruNode  ftcnode,
                                 FT_Pointer   ftcface_id )
   {
@@ -269,7 +269,7 @@
   }
 
 
-  FT_CALLBACK_DEF( FT_Int )
+  FT_CALLBACK_DEF( FT_Bool )
   ftc_face_node_compare( FTC_MruNode  ftcnode,
                          FT_Pointer   ftcface_id )
   {
