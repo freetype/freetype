@@ -18,10 +18,10 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 
-#include <t1gload.h>
-#include <t1load.h>
+#include <z1gload.h>
+#include <z1load.h>
 #include <freetype/internal/psnames.h>
-#include <t1afm.h>
+#include <z1afm.h>
 
 /* Required by tracing mode */
 #undef   FT_COMPONENT
@@ -36,7 +36,7 @@
 
 /*******************************************************************
  *
- *  <Function> T1_Done_Face
+ *  <Function> Z1_Done_Face
  *
  *  <Description>
  *     The face object destructor.
@@ -50,7 +50,7 @@
  ******************************************************************/
 
   LOCAL_FUNC
-  void  T1_Done_Face( T1_Face  face )
+  void  Z1_Done_Face( T1_Face  face )
   {
     FT_Memory  memory;
     T1_Font*   type1 = &face->type1;
@@ -59,9 +59,9 @@
     {
       memory = face->root.memory;
 
-#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+#ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
       /* release multiple masters information */
-      T1_Done_Blend( face );
+      Z1_Done_Blend( face );
       face->blend = 0;
 #endif
 
@@ -91,10 +91,10 @@
       FREE( type1->encoding.char_index );
       FREE( type1->font_name );
 
-#ifndef T1_CONFIG_OPTION_NO_AFM
+#ifndef Z1_CONFIG_OPTION_NO_AFM
       /* release afm data if present */
       if ( face->afm_data)
-        T1_Done_AFM( memory, (T1_AFM*)face->afm_data );
+        Z1_Done_AFM( memory, (Z1_AFM*)face->afm_data );
 #endif
 
       /* release unicode map, if any */
@@ -108,7 +108,7 @@
 
 /*******************************************************************
  *
- *  <Function>  T1_Init_Face
+ *  <Function>  Z1_Init_Face
  *
  *  <Description>
  *     The face object constructor.
@@ -123,7 +123,7 @@
  ******************************************************************/
 
   LOCAL_FUNC
-  FT_Error  T1_Init_Face( FT_Stream      stream,
+  FT_Error  Z1_Init_Face( FT_Stream      stream,
                           T1_Face        face,
                           FT_Int         face_index,
                           FT_Int         num_params,
@@ -149,7 +149,7 @@
     }
 
     /* open the tokenizer, this will also check the font format */
-    error = T1_Open_Face( face );
+    error = Z1_Open_Face( face );
     if (error) goto Exit;
 
     /* if we just wanted to check the format, leave successfully now */
@@ -232,7 +232,7 @@
         {
           FT_Int  max_advance;
 
-          error = T1_Compute_Max_Advance( face, &max_advance );
+          error = Z1_Compute_Max_Advance( face, &max_advance );
 
           /* in case of error, keep the standard width */
           if (!error)
@@ -317,7 +317,7 @@
 
 /*******************************************************************
  *
- *  <Function>  T1_Init_Driver
+ *  <Function>  Z1_Init_Driver
  *
  *  <Description>
  *     Initialise a given Type 1 driver object
@@ -331,7 +331,7 @@
  ******************************************************************/
 
   LOCAL_FUNC
-  FT_Error  T1_Init_Driver( T1_Driver  driver )
+  FT_Error  Z1_Init_Driver( Z1_Driver  driver )
   {
     UNUSED(driver);
     return T1_Err_Ok;
@@ -341,7 +341,7 @@
 
 /*******************************************************************
  *
- *  <Function> T1_Done_Driver
+ *  <Function> Z1_Done_Driver
  *
  *  <Description>
  *     finalise a given Type 1 driver
@@ -352,7 +352,7 @@
  ******************************************************************/
 
   LOCAL_DEF
-  void  T1_Done_Driver( T1_Driver  driver )
+  void  Z1_Done_Driver( Z1_Driver  driver )
   {
     UNUSED(driver);
   }

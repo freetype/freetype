@@ -17,12 +17,12 @@
  *  The Type 1 glyph loader uses three distinct objects to build
  *  scaled and hinted outlines from a charstrings program. These are :
  *
- *  - a glyph builder, T1_Builder, used to store the built outline
+ *  - a glyph builder, Z1_Builder, used to store the built outline
  *
- *  - a glyph hinter, T1_Hinter, used to record and apply the stem
+ *  - a glyph hinter, Z1_Hinter, used to record and apply the stem
  *    hints
  *
- *  - a charstrings interpreter, T1_Decoder, used to parse the
+ *  - a charstrings interpreter, Z1_Decoder, used to parse the
  *    Type 1 charstrings stream, manage a stack and call the builder
  *    and/or hinter depending on the opcodes.
  *
@@ -35,7 +35,7 @@
 #ifndef T1GLOAD_H
 #define T1GLOAD_H
 
-#include <t1objs.h>
+#include <z1objs.h>
 
 #ifdef __cplusplus
   extern "C" {
@@ -44,7 +44,7 @@
 
 /*************************************************************************/
 /*                                                                       */
-/* <Structure> T1_Builder                                                */
+/* <Structure> Z1_Builder                                                */
 /*                                                                       */
 /* <Description>                                                         */
 /*     a structure used during glyph loading to store its outline.       */
@@ -81,11 +81,11 @@
 /*                     all of its points..                               */
 /*                                                                       */
 
-  typedef struct T1_Builder_
+  typedef struct Z1_Builder_
   {
     FT_Memory        memory;
     T1_Face          face;
-    T1_GlyphSlot     glyph;
+    Z1_GlyphSlot     glyph;
     FT_GlyphLoader*  loader;
 
     FT_Outline*      current;       /* the current glyph outline   */
@@ -110,28 +110,28 @@
     FT_Error         error;         /* only used for memory errors */
     FT_Bool          metrics_only;
 
-  } T1_Builder;
+  } Z1_Builder;
 
 
   /* execution context charstring zone */
-  typedef struct T1_Decoder_Zone_
+  typedef struct Z1_Decoder_Zone_
   {
     FT_Byte*  base;
     FT_Byte*  limit;
     FT_Byte*  cursor;
 
-  } T1_Decoder_Zone;
+  } Z1_Decoder_Zone;
 
 
-  typedef struct T1_Decoder_
+  typedef struct Z1_Decoder_
   {
-    T1_Builder         builder;
+    Z1_Builder         builder;
 
     FT_Int             stack[ T1_MAX_CHARSTRINGS_OPERANDS ];
     FT_Int*            top;
 
-    T1_Decoder_Zone    zones[ T1_MAX_SUBRS_CALLS+1 ];
-    T1_Decoder_Zone*   zone;
+    Z1_Decoder_Zone    zones[ T1_MAX_SUBRS_CALLS+1 ];
+    Z1_Decoder_Zone*   zone;
 
     FT_Int             flex_state;
     FT_Int             num_flex_vectors;
@@ -139,33 +139,33 @@
 
     T1_Blend*          blend;  /* for multiple masters */
 
-  } T1_Decoder;
+  } Z1_Decoder;
 
 
 
   LOCAL_DEF
-  void  T1_Init_Builder( T1_Builder*             builder,
+  void  Z1_Init_Builder( Z1_Builder*             builder,
                          T1_Face                 face,
-                         T1_Size                 size,
-                         T1_GlyphSlot            glyph );
+                         Z1_Size                 size,
+                         Z1_GlyphSlot            glyph );
 
   LOCAL_DEF
-  void T1_Done_Builder( T1_Builder*  builder );
+  void Z1_Done_Builder( Z1_Builder*  builder );
 
 
   LOCAL_DEF
-  void  T1_Init_Decoder( T1_Decoder* decoder );
+  void  Z1_Init_Decoder( Z1_Decoder* decoder );
 
 
   /* Compute the maximum advance width of a font through quick parsing */
   LOCAL_DEF
-  FT_Error  T1_Compute_Max_Advance( T1_Face  face,
+  FT_Error  Z1_Compute_Max_Advance( T1_Face  face,
                                     FT_Int  *max_advance );
 
 
   /* This function is exported, because it is used by the T1Dump utility */
   LOCAL_DEF
-  FT_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
+  FT_Error   Z1_Parse_CharStrings( Z1_Decoder*  decoder,
                                    FT_Byte*     charstring_base,
                                    FT_Int       charstring_len,
                                    FT_Int       num_subrs,
@@ -175,8 +175,8 @@
 
 
   LOCAL_DEF
-  FT_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
-                           T1_Size       size,
+  FT_Error  Z1_Load_Glyph( Z1_GlyphSlot  glyph,
+                           Z1_Size       size,
                            FT_Int        glyph_index,
                            FT_Int        load_flags );
 

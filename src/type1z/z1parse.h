@@ -16,7 +16,7 @@
  *  The Type 1 parser is in charge of the following:
  *
  *   - provide an implementation of a growing sequence of
- *     objects called a T1_Table (used to build various tables
+ *     objects called a Z1_Table (used to build various tables
  *     needed by the loader).
  *
  *   - opening .pfb and .pfa files to extract their top-level
@@ -39,7 +39,7 @@
 
 
   /* simple enumeration type used to identify token types */
-  typedef enum T1_Token_Type_
+  typedef enum Z1_Token_Type_
   {
     t1_token_none = 0,
     t1_token_any,
@@ -49,19 +49,19 @@
     /* do not remove */
     t1_token_max
     
-  } T1_Token_Type;
+  } Z1_Token_Type;
 
   /* a simple structure used to identify tokens */
-  typedef struct T1_Token_Rec_
+  typedef struct Z1_Token_Rec_
   {
     FT_Byte*       start;   /* first character of token in input stream */
     FT_Byte*       limit;   /* first character after the token          */
-    T1_Token_Type  type;    /* type of token..                          */
+    Z1_Token_Type  type;    /* type of token..                          */
   
-  } T1_Token_Rec;  
+  } Z1_Token_Rec;  
 
   /* enumeration type used to identify object fields */
-  typedef enum T1_Field_Type_
+  typedef enum Z1_Field_Type_
   {
     t1_field_none = 0,
     t1_field_bool,
@@ -74,73 +74,73 @@
     /* do not remove */
     t1_field_max
     
-  } T1_Field_Type;
+  } Z1_Field_Type;
 
   /* structure type used to model object fields */
-  typedef struct T1_Field_Rec_
+  typedef struct Z1_Field_Rec_
   {
-    T1_Field_Type  type;          /* type of field                        */
+    Z1_Field_Type  type;          /* type of field                        */
     FT_UInt        offset;        /* offset of field in object            */
     FT_UInt        size;          /* size of field in bytes               */
     FT_UInt        array_max;     /* maximum number of elements for array */
     FT_UInt        count_offset;  /* offset of element count for arrays   */
     FT_Int         flag_bit;      /* bit number for field flag            */
    
-  } T1_Field_Rec;
+  } Z1_Field_Rec;
 
-#define T1_FIELD_REF(s,f)  (((s*)0)->f)
+#define Z1_FIELD_REF(s,f)  (((s*)0)->f)
 
-#define T1_FIELD_BOOL( _ftype, _fname )               \
+#define Z1_FIELD_BOOL( _ftype, _fname )               \
     { t1_field_bool,                                  \
-      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
-      sizeof(T1_FIELD_REF(_ftype,_fname)),            \
+      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),   \
+      sizeof(Z1_FIELD_REF(_ftype,_fname)),            \
       0, 0, 0 }
 
-#define T1_FIELD_NUM( _ftype, _fname )                \
+#define Z1_FIELD_NUM( _ftype, _fname )                \
     { t1_field_integer,                               \
-      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
-      sizeof(T1_FIELD_REF(_ftype,_fname)),            \
+      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),   \
+      sizeof(Z1_FIELD_REF(_ftype,_fname)),            \
       0, 0, 0 }
 
-#define T1_FIELD_FIXED( _ftype, _fname, _power )      \
+#define Z1_FIELD_FIXED( _ftype, _fname, _power )      \
     { t1_field_fixed,                                 \
-      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
-      sizeof(T1_FIELD_REF(_ftype,_fname)),            \
+      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),   \
+      sizeof(Z1_FIELD_REF(_ftype,_fname)),            \
       0, 0, 0 }
 
-#define T1_FIELD_STRING( _ftype, _fname )             \
+#define Z1_FIELD_STRING( _ftype, _fname )             \
     { t1_field_string,                                \
-      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
-      sizeof(T1_FIELD_REF(_ftype,_fname)),            \
+      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),   \
+      sizeof(Z1_FIELD_REF(_ftype,_fname)),            \
       0, 0, 0 }
 
-#define T1_FIELD_NUM_ARRAY( _ftype, _fname, _fcount, _fmax ) \
+#define Z1_FIELD_NUM_ARRAY( _ftype, _fname, _fcount, _fmax ) \
     { t1_field_integer,                                      \
-      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),          \
-      sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                \
+      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),          \
+      sizeof(Z1_FIELD_REF(_ftype,_fname)[0]),                \
       _fmax,                                                 \
-      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fcount),         \
+      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fcount),         \
       0 }
 
-#define T1_FIELD_FIXED_ARRAY( _ftype, _fname, _fcount, _fmax ) \
+#define Z1_FIELD_FIXED_ARRAY( _ftype, _fname, _fcount, _fmax ) \
     { t1_field_fixed,                                          \
-      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),            \
-      sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                  \
+      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),            \
+      sizeof(Z1_FIELD_REF(_ftype,_fname)[0]),                  \
       _fmax,                                                   \
-      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fcount),           \
+      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fcount),           \
       0 }
 
-#define T1_FIELD_NUM_ARRAY2( _ftype, _fname, _fmax )         \
+#define Z1_FIELD_NUM_ARRAY2( _ftype, _fname, _fmax )         \
     { t1_field_integer,                                      \
-      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),          \
-      sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                \
+      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),          \
+      sizeof(Z1_FIELD_REF(_ftype,_fname)[0]),                \
       _fmax,                                                 \
       0, 0 }
 
-#define T1_FIELD_FIXED_ARRAY2( _ftype, _fname, _fmax )         \
+#define Z1_FIELD_FIXED_ARRAY2( _ftype, _fname, _fmax )         \
     { t1_field_fixed,                                          \
-      (FT_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),            \
-      sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                  \
+      (FT_UInt)(char*)&Z1_FIELD_REF(_ftype,_fname),            \
+      sizeof(Z1_FIELD_REF(_ftype,_fname)[0]),                  \
       _fmax,                                                   \
       0, 0 }
 
@@ -148,10 +148,10 @@
 
 /*************************************************************************
  *
- * <Struct> T1_Table
+ * <Struct> Z1_Table
  *
  * <Description>
- *    A T1_Table is a simple object used to store an array of objects
+ *    A Z1_Table is a simple object used to store an array of objects
  *    in a single memory block.
  *
  * <Fields>
@@ -175,7 +175,7 @@
  *    memory    :: memory object used for memory operations (alloc/realloc)
  */
 
-  typedef struct T1_Table_
+  typedef struct Z1_Table_
   {
     FT_Byte*   block;          /* current memory block           */
     FT_Int     cursor;         /* current cursor in memory block */
@@ -189,15 +189,15 @@
 
     FT_Memory  memory;
 
-  } T1_Table;
+  } Z1_Table;
 
 
 /*************************************************************************
  *
- * <Struct> T1_Parser
+ * <Struct> Z1_Parser
  *
  * <Description>
- *    A T1_Parser is an object used to parse a Type 1 fonts very
+ *    A Z1_Parser is an object used to parse a Type 1 fonts very
  *    quickly.
  *
  * <Fields>
@@ -221,7 +221,7 @@
  *
  *    error         :: current parsing error
  */
-  typedef struct T1_Parser_
+  typedef struct Z1_Parser_
   {
     FT_Stream  stream;
     FT_Memory  memory;
@@ -240,52 +240,52 @@
     FT_Byte*   limit;
     FT_Error   error;
 
-  } T1_Parser;
+  } Z1_Parser;
 
 
   LOCAL_DEF
-  FT_Error  T1_New_Table( T1_Table*  table,
+  FT_Error  Z1_New_Table( Z1_Table*  table,
                           FT_Int     count,
                           FT_Memory  memory );
 
 
   LOCAL_DEF
-  FT_Error  T1_Add_Table( T1_Table*  table,
+  FT_Error  Z1_Add_Table( Z1_Table*  table,
                           FT_Int     index,
                           void*      object,
                           FT_Int     length );
 
 #if 0
   LOCAL_DEF
-  void  T1_Done_Table( T1_Table*  table );
+  void  Z1_Done_Table( Z1_Table*  table );
 #endif
 
   LOCAL_DEF
-  void  T1_Release_Table( T1_Table*  table );
+  void  Z1_Release_Table( Z1_Table*  table );
 
   LOCAL_DEF
-  FT_Long  T1_ToInt  ( T1_Parser*  parser );
+  FT_Long  Z1_ToInt  ( Z1_Parser*  parser );
 
   LOCAL_DEF
-  FT_Long  T1_ToFixed( T1_Parser*  parser, FT_Int  power_ten );
+  FT_Long  Z1_ToFixed( Z1_Parser*  parser, FT_Int  power_ten );
 
   LOCAL_DEF
-  FT_Int  T1_ToCoordArray( T1_Parser* parser,
+  FT_Int  Z1_ToCoordArray( Z1_Parser* parser,
                            FT_Int     max_coords,
                            FT_Short*  coords );
 
   LOCAL_DEF
-  FT_Int  T1_ToFixedArray( T1_Parser* parser,
+  FT_Int  Z1_ToFixedArray( Z1_Parser* parser,
                            FT_Int     max_values,
                            FT_Fixed*  values,
                            FT_Int     power_ten );
 
 #if 0
   LOCAL_DEF
-  FT_String*  T1_ToString( T1_Parser* parser );
+  FT_String*  Z1_ToString( Z1_Parser* parser );
 
   LOCAL_DEF
-  FT_Bool   T1_ToBool( T1_Parser* parser );
+  FT_Bool   Z1_ToBool( Z1_Parser* parser );
 #endif
 
 
@@ -294,48 +294,48 @@
 
 
   LOCAL_DEF
-  void      T1_Skip_Spaces( T1_Parser*  parser );
+  void      Z1_Skip_Spaces( Z1_Parser*  parser );
 
   LOCAL_DEF
-  void      T1_ToToken( T1_Parser*    parser,
-                        T1_Token_Rec* token );
+  void      Z1_ToToken( Z1_Parser*    parser,
+                        Z1_Token_Rec* token );
 
   LOCAL_FUNC
-  void  T1_ToTokenArray( T1_Parser*     parser,
-                         T1_Token_Rec*  tokens,
+  void  Z1_ToTokenArray( Z1_Parser*     parser,
+                         Z1_Token_Rec*  tokens,
                          FT_UInt        max_tokens,
                          FT_Int*        pnum_tokens );
 
   LOCAL_DEF
-  FT_Error  T1_Load_Field( T1_Parser*           parser,
-                           const T1_Field_Rec*  field,
+  FT_Error  Z1_Load_Field( Z1_Parser*           parser,
+                           const Z1_Field_Rec*  field,
                            void**               objects,
                            FT_UInt              max_objects,
                            FT_ULong*            pflags );
 
   LOCAL_DEF
-  FT_Error  T1_Load_Field_Table( T1_Parser*           parser,
-                                 const T1_Field_Rec*  field,
+  FT_Error  Z1_Load_Field_Table( Z1_Parser*           parser,
+                                 const Z1_Field_Rec*  field,
                                  void**               objects,
                                  FT_UInt              max_objects,
                                  FT_ULong*            pflags );
 
 
   LOCAL_DEF
-  FT_Error  T1_New_Parser( T1_Parser*  parser,
+  FT_Error  Z1_New_Parser( Z1_Parser*  parser,
                            FT_Stream   stream,
                            FT_Memory   memory );
 
   LOCAL_DEF
-  FT_Error  T1_Get_Private_Dict( T1_Parser*  parser );
+  FT_Error  Z1_Get_Private_Dict( Z1_Parser*  parser );
 
   LOCAL_DEF
-  void  T1_Decrypt( FT_Byte*   buffer,
+  void  Z1_Decrypt( FT_Byte*   buffer,
                     FT_Int     length,
                     FT_UShort  seed );
 
   LOCAL_DEF
-  void  T1_Done_Parser( T1_Parser*  parser );
+  void  Z1_Done_Parser( Z1_Parser*  parser );
 
 #ifdef __cplusplus
   }

@@ -15,10 +15,10 @@
  *
  ******************************************************************/
 
-#include <t1driver.h>
-#include <t1gload.h>
-#include <t1load.h>
-#include <t1afm.h>
+#include <z1driver.h>
+#include <z1gload.h>
+#include <z1load.h>
+#include <z1afm.h>
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
@@ -61,21 +61,21 @@
     UNUSED(driver);
     UNUSED(interface);
     
-#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+#ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
     if ( strcmp( (const char*)interface, "get_mm" ) == 0 )
-      return (FT_Module_Interface)T1_Get_Multi_Master;
+      return (FT_Module_Interface)Z1_Get_Multi_Master;
       
     if ( strcmp( (const char*)interface, "set_mm_design") == 0 )
-      return (FT_Module_Interface)T1_Set_MM_Design;      
+      return (FT_Module_Interface)Z1_Set_MM_Design;      
 
     if ( strcmp( (const char*)interface, "set_mm_blend") == 0 )
-      return (FT_Module_Interface)T1_Set_MM_Blend;      
+      return (FT_Module_Interface)Z1_Set_MM_Blend;      
 #endif
     return 0;
   }
 
 
-#ifndef T1_CONFIG_OPTION_NO_AFM
+#ifndef Z1_CONFIG_OPTION_NO_AFM
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -114,14 +114,14 @@
                          FT_UInt     right_glyph,
                          FT_Vector*  kerning )
   {
-    T1_AFM*  afm;
+    Z1_AFM*  afm;
 
     kerning->x = 0;
     kerning->y = 0;
 
-    afm = (T1_AFM*)face->afm_data;
+    afm = (Z1_AFM*)face->afm_data;
     if (afm)
-      T1_Get_Kerning( afm, left_glyph, right_glyph, kerning );
+      Z1_Get_Kerning( afm, left_glyph, right_glyph, kerning );
 
     return T1_Err_Ok;
   }
@@ -235,17 +235,17 @@
   
       0,   /* format interface */
   
-      (FT_Module_Constructor)           T1_Init_Driver,
-      (FT_Module_Destructor)            T1_Done_Driver,
+      (FT_Module_Constructor)           Z1_Init_Driver,
+      (FT_Module_Destructor)            Z1_Done_Driver,
       (FT_Module_Requester)             Get_Interface,
     },
 
     sizeof( T1_FaceRec ),
-    sizeof( T1_SizeRec ),
-    sizeof( T1_GlyphSlotRec ),
+    sizeof( Z1_SizeRec ),
+    sizeof( Z1_GlyphSlotRec ),
 
-    (FTDriver_initFace)             T1_Init_Face,
-    (FTDriver_doneFace)             T1_Done_Face,
+    (FTDriver_initFace)             Z1_Init_Face,
+    (FTDriver_doneFace)             Z1_Done_Face,
     (FTDriver_initSize)             0,
     (FTDriver_doneSize)             0,
     (FTDriver_initGlyphSlot)        0,
@@ -253,15 +253,15 @@
 
     (FTDriver_setCharSizes)         0,
     (FTDriver_setPixelSizes)        0,
-    (FTDriver_loadGlyph)            T1_Load_Glyph,
+    (FTDriver_loadGlyph)            Z1_Load_Glyph,
     (FTDriver_getCharIndex)         Get_Char_Index,
 
-#ifdef T1_CONFIG_OPTION_NO_AFM
+#ifdef Z1_CONFIG_OPTION_NO_AFM
     (FTDriver_getKerning)           0,
     (FTDriver_attachFile)           0,
 #else
     (FTDriver_getKerning)           Get_Kerning,
-    (FTDriver_attachFile)           T1_Read_AFM,
+    (FTDriver_attachFile)           Z1_Read_AFM,
 #endif
     (FTDriver_getAdvances)          0
 

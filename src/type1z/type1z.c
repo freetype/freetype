@@ -29,13 +29,13 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include <t1parse.c>
-#include <t1load.c>
-#include <t1objs.c>
-#include <t1driver.c>
-#include <t1gload.c>
+#include <z1parse.c>
+#include <z1load.c>
+#include <z1objs.c>
+#include <z1driver.c>
+#include <z1gload.c>
 
-#ifndef T1_CONFIG_OPTION_NO_AFM
-#include <t1afm.c>
+#ifndef Z1_CONFIG_OPTION_NO_AFM
+#include <z1afm.c>
 #endif
 

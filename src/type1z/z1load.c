@@ -65,13 +65,13 @@
 
 #include <freetype/internal/t1types.h>
 #include <freetype/internal/t1errors.h>
-#include <t1load.h>
+#include <z1load.h>
 #include <stdio.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1load
 
-#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+#ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
  /***************************************************************************/
  /***************************************************************************/
  /*****                                                                 *****/
@@ -148,7 +148,7 @@
    goto Exit;
  }                                  
 
- LOCAL_FUNC  FT_Error  T1_Get_Multi_Master( T1_Face          face,
+ LOCAL_FUNC  FT_Error  Z1_Get_Multi_Master( T1_Face          face,
                                             FT_Multi_Master* master )
  {
    T1_Blend*  blend = face->blend;
@@ -175,7 +175,7 @@
  }                                            
 
 
- LOCAL_FUNC  FT_Error  T1_Set_MM_Blend( T1_Face    face,
+ LOCAL_FUNC  FT_Error  Z1_Set_MM_Blend( T1_Face    face,
                                         FT_UInt    num_coords,
                                         FT_Fixed*  coords )
  {
@@ -213,7 +213,7 @@
  }
  
 
- LOCAL_FUNC  FT_Error  T1_Set_MM_Design( T1_Face   face,
+ LOCAL_FUNC  FT_Error  Z1_Set_MM_Design( T1_Face   face,
                                          FT_UInt   num_coords,
                                          FT_Long*  coords )
  {
@@ -271,13 +271,13 @@
        final_blends[n] = the_blend;
      }
 
-     error = T1_Set_MM_Blend( face, num_coords, final_blends );     
+     error = Z1_Set_MM_Blend( face, num_coords, final_blends );     
    }
    return error;
  }
 
  
- LOCAL_FUNC  void T1_Done_Blend( T1_Face  face )
+ LOCAL_FUNC  void Z1_Done_Blend( T1_Face  face )
  {
    FT_Memory  memory = face->root.memory;
    T1_Blend*  blend  = face->blend;
@@ -324,16 +324,16 @@
 
 
 
- static  void  parse_blend_axis_types( T1_Face  face, T1_Loader*  loader )
+ static  void  parse_blend_axis_types( T1_Face  face, Z1_Loader*  loader )
  {
-   T1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
+   Z1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
    FT_Int        n, num_axis;
    FT_Error      error = 0;
    T1_Blend*     blend;
    FT_Memory     memory;
 
    /* take an array of objects */
-   T1_ToTokenArray( &loader->parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
+   Z1_ToTokenArray( &loader->parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
    if (num_axis <= 0 || num_axis > T1_MAX_MM_AXIS)
    {
      FT_ERROR(( "T1.parse_blend_axis_types: incorrect number of axis: %d\n",
@@ -352,7 +352,7 @@
    /* each token is an immediate containing the name of the axis */
    for ( n = 0; n < num_axis; n++ )
    {
-     T1_Token_Rec*  token = axis_tokens + n;
+     Z1_Token_Rec*  token = axis_tokens + n;
      FT_Byte*       name;
      FT_Int         len;
      
@@ -380,18 +380,18 @@
  }
  
  
- static void  parse_blend_design_positions( T1_Face  face, T1_Loader*  loader )
+ static void  parse_blend_design_positions( T1_Face  face, Z1_Loader*  loader )
  {
-   T1_Token_Rec  design_tokens[ T1_MAX_MM_DESIGNS ];
+   Z1_Token_Rec  design_tokens[ T1_MAX_MM_DESIGNS ];
    FT_Int        num_designs;
    FT_Int        num_axis;
-   T1_Parser*    parser = &loader->parser;
+   Z1_Parser*    parser = &loader->parser;
    
    FT_Error      error = 0;
    T1_Blend*     blend;
 
    /* get the array of design tokens - compute number of designs */   
-   T1_ToTokenArray( parser, design_tokens, T1_MAX_MM_DESIGNS, &num_designs );
+   Z1_ToTokenArray( parser, design_tokens, T1_MAX_MM_DESIGNS, &num_designs );
    if (num_designs <= 0 || num_designs > T1_MAX_MM_DESIGNS)
    {
      FT_ERROR(( "T1.design positions: incorrect number of designs: %d\n",
@@ -409,15 +409,15 @@
      num_axis = 0;  /* make compiler happy */
      for ( n = 0; n < (FT_UInt)num_designs; n++ )
      {
-       T1_Token_Rec  axis_tokens[ T1_MAX_MM_DESIGNS ];
-       T1_Token_Rec* token;
+       Z1_Token_Rec  axis_tokens[ T1_MAX_MM_DESIGNS ];
+       Z1_Token_Rec* token;
        FT_Int        axis, n_axis;
 
        /* read axis/coordinates tokens */
        token = design_tokens + n;
        parser->cursor = token->start - 1;
        parser->limit  = token->limit + 1;
-       T1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &n_axis );
+       Z1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &n_axis );
        
        if (n == 0)
        {
@@ -436,10 +436,10 @@
        /* now, read each axis token into the design position */
        for (axis = 0; axis < n_axis; axis++ )
        {
-         T1_Token_Rec*  token2 = axis_tokens + axis;
+         Z1_Token_Rec*  token2 = axis_tokens + axis;
          parser->cursor = token2->start;
          parser->limit  = token2->limit;
-         blend->design_pos[n][axis] = T1_ToFixed( parser, 0 );
+         blend->design_pos[n][axis] = Z1_ToFixed( parser, 0 );
        }
      }
      
@@ -451,18 +451,18 @@
    loader->parser.error = error;
  }
 
- static void  parse_blend_design_map( T1_Face  face, T1_Loader*  loader )
+ static void  parse_blend_design_map( T1_Face  face, Z1_Loader*  loader )
  {
    FT_Error      error  = 0;
-   T1_Parser*    parser = &loader->parser;
+   Z1_Parser*    parser = &loader->parser;
    T1_Blend*     blend;
-   T1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
+   Z1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
    FT_Int        n, num_axis;
    FT_Byte*      old_cursor;
    FT_Byte*      old_limit;
    FT_Memory     memory = face->root.memory;
    
-   T1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
+   Z1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
    if (num_axis <= 0 || num_axis > T1_MAX_MM_AXIS)
    {
      FT_ERROR(( "T1.design map: incorrect number of axis: %d\n",
@@ -481,7 +481,7 @@
    for ( n = 0; n < num_axis; n++ )
    {
      T1_DesignMap*   map = blend->design_map + n;
-     T1_Token_Rec*   token;
+     Z1_Token_Rec*   token;
      FT_Int          p, num_points;
      
      token = axis_tokens + n;
@@ -513,8 +513,8 @@
      
      for ( p = 0; p < num_points; p++ )
      {
-       map->design_points[p] = T1_ToInt( parser );
-       map->blend_points [p] = T1_ToFixed( parser, 0 );
+       map->design_points[p] = Z1_ToInt( parser );
+       map->blend_points [p] = Z1_ToFixed( parser, 0 );
      }
    }   
    
@@ -524,12 +524,12 @@
    parser->error = error;
  }
 
- static void parse_weight_vector( T1_Face   face, T1_Loader*  loader )
+ static void parse_weight_vector( T1_Face   face, Z1_Loader*  loader )
  {
    FT_Error      error  = 0;
-   T1_Parser*    parser = &loader->parser;
+   Z1_Parser*    parser = &loader->parser;
    T1_Blend*     blend  = face->blend;
-   T1_Token_Rec  master;
+   Z1_Token_Rec  master;
    FT_UInt       n;
    FT_Byte*      old_cursor;
    FT_Byte*      old_limit;
@@ -541,7 +541,7 @@
      goto Exit;
    }
    
-   T1_ToToken( parser, &master );
+   Z1_ToToken( parser, &master );
    if (master.type != t1_token_array)
    {
      FT_ERROR(( "t1.weight_vector: incorrect format !!\n" ));
@@ -557,7 +557,7 @@
    for ( n = 0; n < blend->num_designs; n++ )
    {
      blend->default_weight_vector[n] =
-     blend->weight_vector[n]         = T1_ToFixed( parser, 0 );
+     blend->weight_vector[n]         = Z1_ToFixed( parser, 0 );
    }
    
    parser->cursor = old_cursor;
@@ -569,9 +569,9 @@
  /* the keyword /shareddict appears in some multiple master fonts with a lot */
  /* of Postscript garbage behind it (that's completely out of spec !!), we   */
  /* detect it and terminate the parsing                                      */
- static  void parse_shared_dict( T1_Face  face, T1_Loader*  loader )
+ static  void parse_shared_dict( T1_Face  face, Z1_Loader*  loader )
  {
-   T1_Parser*  parser = &loader->parser;
+   Z1_Parser*  parser = &loader->parser;
    
    UNUSED(face);
    
@@ -591,126 +591,126 @@
  /*********************************************************************
   *
   *  First of all, define the token field static variables. This is
-  *  a set of T1_Field_Rec variables used later..
+  *  a set of Z1_Field_Rec variables used later..
   *
   *********************************************************************/
 
-#define T1_NEW_STRING( _name, _field ) \
-   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_STRING( T1TYPE, _field );
+#define Z1_NEW_STRING( _name, _field ) \
+   static const  Z1_Field_Rec  t1_field_ ## _field = Z1_FIELD_STRING( T1TYPE, _field );
 
-#define T1_NEW_BOOL( _name, _field )   \
-   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_BOOL( T1TYPE, _field );
+#define Z1_NEW_BOOL( _name, _field )   \
+   static const  Z1_Field_Rec  t1_field_ ## _field = Z1_FIELD_BOOL( T1TYPE, _field );
    
-#define T1_NEW_NUM( _name, _field )    \
-   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_NUM( T1TYPE, _field );
+#define Z1_NEW_NUM( _name, _field )    \
+   static const  Z1_Field_Rec  t1_field_ ## _field = Z1_FIELD_NUM( T1TYPE, _field );
    
-#define T1_NEW_FIXED( _name, _field )  \
-   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_FIXED( T1TYPE, _field, _power );
+#define Z1_NEW_FIXED( _name, _field )  \
+   static const  Z1_Field_Rec  t1_field_ ## _field = Z1_FIELD_FIXED( T1TYPE, _field, _power );
 
-#define T1_NEW_NUM_TABLE( _name, _field, _max, _count ) \
-   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_NUM_ARRAY( T1TYPE, _field, _count, _max );
+#define Z1_NEW_NUM_TABLE( _name, _field, _max, _count ) \
+   static const  Z1_Field_Rec  t1_field_ ## _field = Z1_FIELD_NUM_ARRAY( T1TYPE, _field, _count, _max );
    
-#define T1_NEW_FIXED_TABLE( _name, _field, _max, _count ) \
-   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_FIXED_ARRAY( T1TYPE, _field, _count, _max );
+#define Z1_NEW_FIXED_TABLE( _name, _field, _max, _count ) \
+   static const  Z1_Field_Rec  t1_field_ ## _field = Z1_FIELD_FIXED_ARRAY( T1TYPE, _field, _count, _max );
 
-#define T1_NEW_NUM_TABLE2( _name, _field, _max ) \
-   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_NUM_ARRAY2( T1TYPE, _field, _max );
+#define Z1_NEW_NUM_TABLE2( _name, _field, _max ) \
+   static const  Z1_Field_Rec  t1_field_ ## _field = Z1_FIELD_NUM_ARRAY2( T1TYPE, _field, _max );
    
-#define T1_NEW_FIXED_TABLE2( _name, _field, _max ) \
-   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_FIXED_ARRAY2( T1TYPE, _field, _max );
+#define Z1_NEW_FIXED_TABLE2( _name, _field, _max ) \
+   static const  Z1_Field_Rec  t1_field_ ## _field = Z1_FIELD_FIXED_ARRAY2( T1TYPE, _field, _max );
 
 
-#define T1_FONTINFO_STRING(n,f)        T1_NEW_STRING(n,f)
-#define T1_FONTINFO_NUM(n,f)           T1_NEW_NUM(n,f)
-#define T1_FONTINFO_BOOL(n,f)          T1_NEW_BOOL(n,f)
-#define T1_PRIVATE_NUM(n,f)            T1_NEW_NUM(n,f)
-#define T1_PRIVATE_FIXED(n,f)          T1_NEW_FIXED(n,f)
-#define T1_PRIVATE_NUM_TABLE(n,f,m,c)  T1_NEW_NUM_TABLE(n,f,m,c)
-#define T1_PRIVATE_NUM_TABLE2(n,f,m)   T1_NEW_NUM_TABLE2(n,f,m)
-#define T1_TOPDICT_NUM(n,f)            T1_NEW_NUM(n,f)
-#define T1_TOPDICT_NUM_FIXED2(n,f,m)   T1_NEW_FIXED_TABLE2(n,f,m)
+#define Z1_FONTINFO_STRING(n,f)        Z1_NEW_STRING(n,f)
+#define Z1_FONTINFO_NUM(n,f)           Z1_NEW_NUM(n,f)
+#define Z1_FONTINFO_BOOL(n,f)          Z1_NEW_BOOL(n,f)
+#define Z1_PRIVATE_NUM(n,f)            Z1_NEW_NUM(n,f)
+#define Z1_PRIVATE_FIXED(n,f)          Z1_NEW_FIXED(n,f)
+#define Z1_PRIVATE_NUM_TABLE(n,f,m,c)  Z1_NEW_NUM_TABLE(n,f,m,c)
+#define Z1_PRIVATE_NUM_TABLE2(n,f,m)   Z1_NEW_NUM_TABLE2(n,f,m)
+#define Z1_TOPDICT_NUM(n,f)            Z1_NEW_NUM(n,f)
+#define Z1_TOPDICT_NUM_FIXED2(n,f,m)   Z1_NEW_FIXED_TABLE2(n,f,m)
 
 /* including this file defines all field variables */
-#include <t1tokens.h>
+#include <z1tokens.h>
 
  /*********************************************************************
   *
-  *  Second, define the keyword variables. This is a set of T1_KeyWord
+  *  Second, define the keyword variables. This is a set of Z1_KeyWord
   *  structures used to model the way each keyword is "loaded"..
   *
   *********************************************************************/
 
-  typedef  void  (*T1_Parse_Func)( T1_Face   face, T1_Loader*  loader );
+  typedef  void  (*Z1_Parse_Func)( T1_Face   face, Z1_Loader*  loader );
 
-  typedef enum T1_KeyWord_Type_
+  typedef enum Z1_KeyWord_Type_
   {
     t1_keyword_callback = 0,
     t1_keyword_field,
     t1_keyword_field_table
     
-  } T1_KeyWord_Type;
+  } Z1_KeyWord_Type;
   
-  typedef enum T1_KeyWord_Location_
+  typedef enum Z1_KeyWord_Location_
   {
     t1_keyword_type1 = 0,
     t1_keyword_font_info,
     t1_keyword_private
   
-  } T1_KeyWord_Location;
+  } Z1_KeyWord_Location;
   
-  typedef  struct T1_KeyWord_
+  typedef  struct Z1_KeyWord_
   {
     const char*          name;
-    T1_KeyWord_Type      type;
-    T1_KeyWord_Location  location;
-    T1_Parse_Func        parsing;
-    const T1_Field_Rec*  field;
+    Z1_KeyWord_Type      type;
+    Z1_KeyWord_Location  location;
+    Z1_Parse_Func        parsing;
+    const Z1_Field_Rec*  field;
 
-  } T1_KeyWord;
+  } Z1_KeyWord;
 
 
-#define T1_KEYWORD_CALLBACK( name, callback )  \
+#define Z1_KEYWORD_CALLBACK( name, callback )  \
          { name, t1_keyword_callback, t1_keyword_type1, callback, 0 }
 
-#define T1_KEYWORD_TYPE1( name, f ) \
+#define Z1_KEYWORD_TYPE1( name, f ) \
          { name, t1_keyword_field, t1_keyword_type1, 0, &t1_field_ ## f }
          
-#define T1_KEYWORD_FONTINFO( name, f ) \
+#define Z1_KEYWORD_FONTINFO( name, f ) \
          { name, t1_keyword_field, t1_keyword_font_info, 0, &t1_field_ ## f }
 
-#define T1_KEYWORD_PRIVATE( name, f ) \
+#define Z1_KEYWORD_PRIVATE( name, f ) \
          { name, t1_keyword_field, t1_keyword_private, 0, &t1_field_ ## f }
 
-#define T1_KEYWORD_FONTINFO_TABLE( name, f ) \
+#define Z1_KEYWORD_FONTINFO_TABLE( name, f ) \
          { name, t1_keyword_field_table, t1_keyword_font_info, 0, &t1_field_ ## f }
 
-#define T1_KEYWORD_PRIVATE_TABLE( name, f ) \
+#define Z1_KEYWORD_PRIVATE_TABLE( name, f ) \
          { name, t1_keyword_field_table, t1_keyword_private, 0, &t1_field_ ## f }
 
-#undef  T1_FONTINFO_STRING
-#undef  T1_FONTINFO_NUM
-#undef  T1_FONTINFO_BOOL
-#undef  T1_PRIVATE_NUM
-#undef  T1_PRIVATE_FIXED
-#undef  T1_PRIVATE_NUM_TABLE
-#undef  T1_PRIVATE_NUM_TABLE2
-#undef  T1_TOPDICT_NUM
-#undef  T1_TOPDICT_NUM_FIXED2
+#undef  Z1_FONTINFO_STRING
+#undef  Z1_FONTINFO_NUM
+#undef  Z1_FONTINFO_BOOL
+#undef  Z1_PRIVATE_NUM
+#undef  Z1_PRIVATE_FIXED
+#undef  Z1_PRIVATE_NUM_TABLE
+#undef  Z1_PRIVATE_NUM_TABLE2
+#undef  Z1_TOPDICT_NUM
+#undef  Z1_TOPDICT_NUM_FIXED2
 
-#define T1_FONTINFO_STRING(n,f)        T1_KEYWORD_FONTINFO(n,f),
-#define T1_FONTINFO_NUM(n,f)           T1_KEYWORD_FONTINFO(n,f),
-#define T1_FONTINFO_BOOL(n,f)          T1_KEYWORD_FONTINFO(n,f),
-#define T1_PRIVATE_NUM(n,f)            T1_KEYWORD_PRIVATE(n,f),
-#define T1_PRIVATE_FIXED(n,f)          T1_KEYWORD_PRIVATE(n,f),
-#define T1_PRIVATE_NUM_TABLE(n,f,m,c)  T1_KEYWORD_PRIVATE_TABLE(n,f),
-#define T1_PRIVATE_NUM_TABLE2(n,f,m)   T1_KEYWORD_PRIVATE_TABLE(n,f),
-#define T1_TOPDICT_NUM(n,f)            T1_KEYWORD_TYPE1(n,f),
-#define T1_TOPDICT_NUM_FIXED2(n,f,m)   T1_KEYWORD_TYPE1(n,f),
+#define Z1_FONTINFO_STRING(n,f)        Z1_KEYWORD_FONTINFO(n,f),
+#define Z1_FONTINFO_NUM(n,f)           Z1_KEYWORD_FONTINFO(n,f),
+#define Z1_FONTINFO_BOOL(n,f)          Z1_KEYWORD_FONTINFO(n,f),
+#define Z1_PRIVATE_NUM(n,f)            Z1_KEYWORD_PRIVATE(n,f),
+#define Z1_PRIVATE_FIXED(n,f)          Z1_KEYWORD_PRIVATE(n,f),
+#define Z1_PRIVATE_NUM_TABLE(n,f,m,c)  Z1_KEYWORD_PRIVATE_TABLE(n,f),
+#define Z1_PRIVATE_NUM_TABLE2(n,f,m)   Z1_KEYWORD_PRIVATE_TABLE(n,f),
+#define Z1_TOPDICT_NUM(n,f)            Z1_KEYWORD_TYPE1(n,f),
+#define Z1_TOPDICT_NUM_FIXED2(n,f,m)   Z1_KEYWORD_TYPE1(n,f),
 
 
   static  FT_Error   t1_load_keyword( T1_Face     face,
-                                      T1_Loader*  loader,
-                                      T1_KeyWord* keyword )
+                                      Z1_Loader*  loader,
+                                      Z1_KeyWord* keyword )
   {
     FT_Error  error;
     void*     dummy_object;
@@ -763,9 +763,9 @@
     }
     
     if (keyword->type == t1_keyword_field_table)
-      error = T1_Load_Field_Table( &loader->parser, keyword->field, objects, max_objects, 0 );
+      error = Z1_Load_Field_Table( &loader->parser, keyword->field, objects, max_objects, 0 );
     else
-      error = T1_Load_Field( &loader->parser, keyword->field, objects, max_objects, 0 );
+      error = Z1_Load_Field( &loader->parser, keyword->field, objects, max_objects, 0 );
     
   Exit:
     return error;
@@ -789,7 +789,7 @@
   }
 
   static
-  void  skip_whitespace( T1_Parser* parser )
+  void  skip_whitespace( Z1_Parser* parser )
   {
     FT_Byte*  cur = parser->cursor;
 
@@ -800,7 +800,7 @@
   }
 
   static
-  void skip_blackspace( T1_Parser* parser )
+  void skip_blackspace( Z1_Parser* parser )
   {
     FT_Byte*  cur = parser->cursor;
 
@@ -811,7 +811,7 @@
   }
 
   static
-  int   read_binary_data( T1_Parser*  parser, FT_Int *size, FT_Byte* *base )
+  int   read_binary_data( Z1_Parser*  parser, FT_Int *size, FT_Byte* *base )
   {
     FT_Byte*  cur;
     FT_Byte*  limit = parser->limit;
@@ -826,7 +826,7 @@
 
     if ( cur < limit && (FT_Byte)(*cur-'0') < 10 )
     {
-      *size = T1_ToInt(parser);
+      *size = Z1_ToInt(parser);
 
       skip_whitespace(parser);
       skip_blackspace(parser);  /* "RD" or "-|" or something else */
@@ -850,9 +850,9 @@
   /* dictionaries..                                 */
 
   static
-  void  parse_font_name( T1_Face  face, T1_Loader*  loader )
+  void  parse_font_name( T1_Face  face, Z1_Loader*  loader )
   {
-    T1_Parser*  parser = &loader->parser;
+    Z1_Parser*  parser = &loader->parser;
     FT_Error    error;
     FT_Memory   memory = parser->memory;
     FT_Int      len;
@@ -884,13 +884,13 @@
   }
 
   static
-  void  parse_font_bbox( T1_Face  face, T1_Loader*  loader )
+  void  parse_font_bbox( T1_Face  face, Z1_Loader*  loader )
   {
-    T1_Parser*  parser = &loader->parser;
+    Z1_Parser*  parser = &loader->parser;
     FT_Short    temp[4];
     FT_BBox*    bbox = &face->type1.font_bbox;
 
-    (void)T1_ToCoordArray( parser, 4, temp );
+    (void)Z1_ToCoordArray( parser, 4, temp );
     bbox->xMin = temp[0];
     bbox->yMin = temp[1];
     bbox->xMax = temp[2];
@@ -898,13 +898,13 @@
   }
 
   static
-  void  parse_font_matrix( T1_Face  face, T1_Loader*  loader )
+  void  parse_font_matrix( T1_Face  face, Z1_Loader*  loader )
   {
-    T1_Parser*  parser = &loader->parser;
+    Z1_Parser*  parser = &loader->parser;
     FT_Matrix*  matrix = &face->type1.font_matrix;
     FT_Fixed    temp[4];
 
-    (void)T1_ToFixedArray( parser, 4, temp, 3 );
+    (void)Z1_ToFixedArray( parser, 4, temp, 3 );
     matrix->xx = temp[0];
     matrix->yx = temp[1];
     matrix->xy = temp[2];
@@ -914,9 +914,9 @@
 
 
   static
-  void  parse_encoding( T1_Face  face, T1_Loader*  loader )
+  void  parse_encoding( T1_Face  face, Z1_Loader*  loader )
   {
-    T1_Parser*  parser = &loader->parser;
+    Z1_Parser*  parser = &loader->parser;
     FT_Byte*    cur   = parser->cursor;
     FT_Byte*    limit = parser->limit;
 
@@ -938,19 +938,19 @@
     {
       T1_Encoding*  encode     = &face->type1.encoding;
       FT_Int        count, n;
-      T1_Table*     char_table = &loader->encoding_table;
+      Z1_Table*     char_table = &loader->encoding_table;
       FT_Memory     memory     = parser->memory;
       FT_Error      error;
 
       /* read the number of entries in the encoding, should be 256 */
-      count = T1_ToInt( parser );
+      count = Z1_ToInt( parser );
       if (parser->error) return;
 
-      /* we use a T1_Table to store our charnames */
+      /* we use a Z1_Table to store our charnames */
       encode->num_chars = count;
       if ( ALLOC_ARRAY( encode->char_index, count, FT_Short   ) ||
            ALLOC_ARRAY( encode->char_name,  count, FT_String* ) ||
-           (error = T1_New_Table( char_table, count, memory )) != 0     )
+           (error = Z1_New_Table( char_table, count, memory )) != 0     )
       {
         parser->error = error;
         return;
@@ -999,7 +999,7 @@
           FT_Int  charcode;
 
           parser->cursor = cur;
-          charcode = T1_ToInt(parser);
+          charcode = Z1_ToInt(parser);
           cur = parser->cursor;
 
           /* skip whitespace */
@@ -1014,7 +1014,7 @@
 
             while (cur2 < limit && is_alpha(*cur2)) cur2++;
             len = cur2-cur-1;
-            parser->error = T1_Add_Table( char_table, charcode, cur+1, len+1 );
+            parser->error = Z1_Add_Table( char_table, charcode, cur+1, len+1 );
             char_table->elements[charcode][len] = '\0';
             if (parser->error) return;
 
@@ -1050,19 +1050,19 @@
 
 
   static
-  void  parse_subrs( T1_Face  face, T1_Loader*  loader )
+  void  parse_subrs( T1_Face  face, Z1_Loader*  loader )
   {
-    T1_Parser*  parser = &loader->parser;
-    T1_Table*   table  = &loader->subrs;
+    Z1_Parser*  parser = &loader->parser;
+    Z1_Table*   table  = &loader->subrs;
     FT_Memory   memory = parser->memory;
     FT_Error    error;
     FT_Int      n;
 
-    loader->num_subrs = T1_ToInt( parser );
+    loader->num_subrs = Z1_ToInt( parser );
     if (parser->error) return;
 
     /* initialise subrs array */
-    error = T1_New_Table( table, loader->num_subrs, memory );
+    error = Z1_New_Table( table, loader->num_subrs, memory );
     if (error) goto Fail;
 
     /* the format is simple :                                */
@@ -1075,7 +1075,7 @@
       FT_Int    index, size;
       FT_Byte*  base;
 
-      index = T1_ToInt(parser);
+      index = Z1_ToInt(parser);
       if (!read_binary_data(parser,&size,&base)) return;
 
       /* some fonts use a value of -1 for lenIV to indicate that */
@@ -1085,12 +1085,12 @@
       /*                                                         */
       if (face->type1.private_dict.lenIV >= 0)
       {
-        T1_Decrypt( base, size, 4330 );
+        Z1_Decrypt( base, size, 4330 );
         size -= face->type1.private_dict.lenIV;
         base += face->type1.private_dict.lenIV;
       }
 
-      error = T1_Add_Table( table, index, base, size );
+      error = Z1_Add_Table( table, index, base, size );
       if (error) goto Fail;
     }
     return;
@@ -1103,11 +1103,11 @@
 
 
   static
-  void  parse_charstrings( T1_Face  face, T1_Loader*  loader )
+  void  parse_charstrings( T1_Face  face, Z1_Loader*  loader )
   {
-    T1_Parser*  parser     = &loader->parser;
-    T1_Table*   code_table = &loader->charstrings;
-    T1_Table*   name_table = &loader->glyph_names;
+    Z1_Parser*  parser     = &loader->parser;
+    Z1_Table*   code_table = &loader->charstrings;
+    Z1_Table*   name_table = &loader->glyph_names;
     FT_Memory   memory     = parser->memory;
     FT_Error    error;
 
@@ -1115,12 +1115,12 @@
     FT_Byte*    limit = parser->limit;
     FT_Int      n;
 
-    loader->num_glyphs = T1_ToInt( parser );
+    loader->num_glyphs = Z1_ToInt( parser );
     if (parser->error) return;
 
     /* initialise tables */
-    error = T1_New_Table( code_table, loader->num_glyphs, memory ) ||
-            T1_New_Table( name_table, loader->num_glyphs, memory );
+    error = Z1_New_Table( code_table, loader->num_glyphs, memory ) ||
+            Z1_New_Table( name_table, loader->num_glyphs, memory );
     if (error) goto Fail;
 
     n = 0;
@@ -1161,7 +1161,7 @@
         while (cur2 < limit && is_alpha(*cur2)) cur2++;
         len = cur2-cur-1;
 
-        error = T1_Add_Table( name_table, n, cur+1, len+1 );
+        error = Z1_Add_Table( name_table, n, cur+1, len+1 );
         if (error) goto Fail;
 
         /* add a trailing zero to the name table */
@@ -1177,12 +1177,12 @@
         /*                                                         */
         if (face->type1.private_dict.lenIV >= 0)
         {
-          T1_Decrypt( base, size, 4330 );
+          Z1_Decrypt( base, size, 4330 );
           size -= face->type1.private_dict.lenIV;
           base += face->type1.private_dict.lenIV;
         }
 
-        error = T1_Add_Table( code_table, n, base, size );
+        error = Z1_Add_Table( code_table, n, base, size );
         if (error) goto Fail;
 
         n++;
@@ -1201,35 +1201,35 @@
 
 
   static
-  const T1_KeyWord  t1_keywords[] =
+  const Z1_KeyWord  t1_keywords[] =
   {
-#include <t1tokens.h>  
+#include <z1tokens.h>  
     
     /* now add the special functions... */
-    T1_KEYWORD_CALLBACK( "FontName", parse_font_name ),
-    T1_KEYWORD_CALLBACK( "FontBBox", parse_font_bbox ),
-    T1_KEYWORD_CALLBACK( "FontMatrix", parse_font_matrix ),
-    T1_KEYWORD_CALLBACK( "Encoding", parse_encoding  ),
-    T1_KEYWORD_CALLBACK( "Subrs",    parse_subrs     ),
-    T1_KEYWORD_CALLBACK( "CharStrings", parse_charstrings ),
-#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
-    T1_KEYWORD_CALLBACK( "BlendDesignPositions", parse_blend_design_positions ),
-    T1_KEYWORD_CALLBACK( "BlendDesignMap", parse_blend_design_map ),
-    T1_KEYWORD_CALLBACK( "BlendAxisTypes", parse_blend_axis_types ),
-    T1_KEYWORD_CALLBACK( "WeightVector", parse_weight_vector ),
-    T1_KEYWORD_CALLBACK( "shareddict",   parse_shared_dict ),
+    Z1_KEYWORD_CALLBACK( "FontName", parse_font_name ),
+    Z1_KEYWORD_CALLBACK( "FontBBox", parse_font_bbox ),
+    Z1_KEYWORD_CALLBACK( "FontMatrix", parse_font_matrix ),
+    Z1_KEYWORD_CALLBACK( "Encoding", parse_encoding  ),
+    Z1_KEYWORD_CALLBACK( "Subrs",    parse_subrs     ),
+    Z1_KEYWORD_CALLBACK( "CharStrings", parse_charstrings ),
+#ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
+    Z1_KEYWORD_CALLBACK( "BlendDesignPositions", parse_blend_design_positions ),
+    Z1_KEYWORD_CALLBACK( "BlendDesignMap", parse_blend_design_map ),
+    Z1_KEYWORD_CALLBACK( "BlendAxisTypes", parse_blend_axis_types ),
+    Z1_KEYWORD_CALLBACK( "WeightVector", parse_weight_vector ),
+    Z1_KEYWORD_CALLBACK( "shareddict",   parse_shared_dict ),
 #endif    
-    T1_KEYWORD_CALLBACK( 0, 0 )
+    Z1_KEYWORD_CALLBACK( 0, 0 )
   };
 
 
   static
   FT_Error  parse_dict( T1_Face     face,
-                        T1_Loader*  loader,
+                        Z1_Loader*  loader,
                         FT_Byte*    base,
                         FT_Long     size )
   {
-    T1_Parser*  parser   = &loader->parser;
+    Z1_Parser*  parser   = &loader->parser;
 
     parser->cursor = base;
     parser->limit  = base + size;
@@ -1257,12 +1257,12 @@
           
           if (cur < limit)
           {
-            T1_Token_Rec  token;
+            Z1_Token_Rec  token;
             
             /* skip the "known" keyword and the token following it */
             cur += 5;
             loader->parser.cursor = cur;
-            T1_ToToken( &loader->parser, &token );
+            Z1_ToToken( &loader->parser, &token );
             
             /* if the last token was an array, skip it !! */
             if (token.type == t1_token_array)
@@ -1291,7 +1291,7 @@
             else
             {
               /* now, compare the immediate name to the keyword table */
-              T1_KeyWord*  keyword = (T1_KeyWord*)t1_keywords;
+              Z1_KeyWord*  keyword = (Z1_KeyWord*)t1_keywords;
   
               for (;;)
               {
@@ -1332,7 +1332,7 @@
   }
 
   static
-  void t1_init_loader( T1_Loader* loader, T1_Face  face )
+  void t1_init_loader( Z1_Loader* loader, T1_Face  face )
   {
     UNUSED(face);
 
@@ -1349,25 +1349,25 @@
   }
 
   static
-  void t1_done_loader( T1_Loader* loader )
+  void t1_done_loader( Z1_Loader* loader )
   {
-    T1_Parser*  parser = &loader->parser;
+    Z1_Parser*  parser = &loader->parser;
 
     /* finalize tables */
-    T1_Release_Table( &loader->encoding_table );
-    T1_Release_Table( &loader->charstrings );
-    T1_Release_Table( &loader->glyph_names );
-    T1_Release_Table( &loader->subrs );
+    Z1_Release_Table( &loader->encoding_table );
+    Z1_Release_Table( &loader->charstrings );
+    Z1_Release_Table( &loader->glyph_names );
+    Z1_Release_Table( &loader->subrs );
 
     /* finalize parser */
-    T1_Done_Parser( parser );
+    Z1_Done_Parser( parser );
   }
 
   LOCAL_FUNC
-  FT_Error  T1_Open_Face( T1_Face  face )
+  FT_Error  Z1_Open_Face( T1_Face  face )
   {
-    T1_Loader  loader;
-    T1_Parser* parser;
+    Z1_Loader  loader;
+    Z1_Parser* parser;
     T1_Font*   type1 = &face->type1;
     FT_Error   error;
 
@@ -1377,13 +1377,13 @@
     type1->private_dict.lenIV = 4;
 
     parser = &loader.parser;
-    error = T1_New_Parser( parser, face->root.stream, face->root.memory );
+    error = Z1_New_Parser( parser, face->root.stream, face->root.memory );
     if (error) goto Exit;
 
     error = parse_dict( face, &loader, parser->base_dict, parser->base_len );
     if (error) goto Exit;
 
-    error = T1_Get_Private_Dict( parser );
+    error = Z1_Get_Private_Dict( parser );
     if (error) goto Exit;
 
     error = parse_dict( face, &loader, parser->private_dict, parser->private_len );

@@ -15,14 +15,14 @@
  *
  ******************************************************************/
 
-#include <t1gload.h>
+#include <z1gload.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1gload
 
-  typedef enum T1_Operator_
+  typedef enum Z1_Operator_
   {
     op_none = 0,
     op_endchar,
@@ -53,7 +53,7 @@
 
     op_max    /* never remove this one */
 
-  } T1_Operator;
+  } Z1_Operator;
 
   static const FT_Int  t1_args_count[ op_max ] =
   {
@@ -101,7 +101,7 @@
 /*********************************************************************
  *
  * <Function>
- *    T1_Init_Builder
+ *    Z1_Init_Builder
  *
  * <Description>
  *    Initialise a given glyph builder.
@@ -115,10 +115,10 @@
  *********************************************************************/
 
   LOCAL_FUNC
-  void  T1_Init_Builder( T1_Builder*   builder,
+  void  Z1_Init_Builder( Z1_Builder*   builder,
                          T1_Face       face,
-                         T1_Size       size,
-                         T1_GlyphSlot  glyph )
+                         Z1_Size       size,
+                         Z1_GlyphSlot  glyph )
   {
     builder->path_begun  = 0;
     builder->load_points = 1;
@@ -157,7 +157,7 @@
 /*********************************************************************
  *
  * <Function>
- *    T1_Done_Builder
+ *    Z1_Done_Builder
  *
  * <Description>
  *    Finalise a given glyph builder. Its content can still be
@@ -170,9 +170,9 @@
  *********************************************************************/
 
   LOCAL_FUNC
-  void T1_Done_Builder( T1_Builder*  builder )
+  void Z1_Done_Builder( Z1_Builder*  builder )
   {
-    T1_GlyphSlot  glyph = builder->glyph;
+    Z1_GlyphSlot  glyph = builder->glyph;
 
     if (glyph)
       glyph->root.outline = *builder->base;
@@ -183,7 +183,7 @@
 /*********************************************************************
  *
  * <Function>
- *    T1_Init_Decoder
+ *    Z1_Init_Decoder
  *
  * <Description>
  *    Initialise a given Type 1 decoder for parsing
@@ -195,7 +195,7 @@
  *********************************************************************/
 
   LOCAL_FUNC
-  void  T1_Init_Decoder( T1_Decoder* decoder )
+  void  Z1_Init_Decoder( Z1_Decoder* decoder )
   {
     decoder->top              = 0;
     decoder->zone             = 0;
@@ -210,7 +210,7 @@
 
   /* check that there is enough room for "count" more points */
   static
-  FT_Error  check_points( T1_Builder*  builder,
+  FT_Error  check_points( Z1_Builder*  builder,
                           FT_Int       count )
   {
     return FT_GlyphLoader_Check_Points( builder->loader, count, 0 );
@@ -219,7 +219,7 @@
 
   /* add a new point, do not check room */
   static
-  void  add_point( T1_Builder*  builder,
+  void  add_point( Z1_Builder*  builder,
                    FT_Pos       x,
                    FT_Pos       y,
                    FT_Byte      flag )
@@ -244,7 +244,7 @@
 
   /* check room for a new on-curve point, then add it */
   static
-  FT_Error  add_point1( T1_Builder*  builder,
+  FT_Error  add_point1( Z1_Builder*  builder,
                         FT_Pos       x,
                         FT_Pos       y )
   {
@@ -260,7 +260,7 @@
 
   /* check room for a new contour, then add it */
   static
-  FT_Error  add_contour( T1_Builder*  builder )
+  FT_Error  add_contour( Z1_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
     FT_Error     error;
@@ -285,7 +285,7 @@
 
   /* if a path was begun, add its first on-curve point */
   static
-  FT_Error  start_point( T1_Builder*  builder,
+  FT_Error  start_point( Z1_Builder*  builder,
                          FT_Pos       x,
                          FT_Pos       y )
   {
@@ -304,7 +304,7 @@
 
   /* close the current contour */
   static
-  void  close_contour( T1_Builder*  builder )
+  void  close_contour( Z1_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
 
@@ -382,7 +382,7 @@
  *********************************************************************/
 
   static
-  FT_Error  t1operator_seac( T1_Decoder*  decoder,
+  FT_Error  t1operator_seac( Z1_Decoder*  decoder,
                              FT_Pos       asb,
                              FT_Pos       adx,
                              FT_Pos       ady,
@@ -447,7 +447,7 @@
     
     FT_GlyphLoader_Prepare( decoder->builder.loader );  /* prepare loader */
 
-    error = T1_Parse_CharStrings( decoder,
+    error = Z1_Parse_CharStrings( decoder,
                                   type1->charstrings    [bchar_index],
                                   type1->charstrings_len[bchar_index],
                                   type1->num_subrs,
@@ -469,7 +469,7 @@
 
       /* Now load `achar' on top of */
       /* the base outline           */
-      error = T1_Parse_CharStrings( decoder,
+      error = Z1_Parse_CharStrings( decoder,
                                     type1->charstrings    [achar_index],
                                     type1->charstrings_len[achar_index],
                                     type1->num_subrs,
@@ -501,7 +501,7 @@
 /*********************************************************************
  *
  * <Function>
- *    T1_Parse_CharStrings
+ *    Z1_Parse_CharStrings
  *
  * <Description>
  *    Parses a given Type 1 charstrings program
@@ -522,7 +522,7 @@
 #define USE_ARGS(n)  top -= n; if (top < decoder->stack) goto Stack_Underflow
 
   LOCAL_FUNC
-  FT_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
+  FT_Error   Z1_Parse_CharStrings( Z1_Decoder*  decoder,
                                    FT_Byte*     charstring_base,
                                    FT_Int       charstring_len,
                                    FT_Int       num_subrs,
@@ -530,10 +530,10 @@
                                    FT_Int*      subrs_len )
   {
     FT_Error            error;
-    T1_Decoder_Zone*    zone;
+    Z1_Decoder_Zone*    zone;
     FT_Byte*            ip;
     FT_Byte*            limit;
-    T1_Builder*         builder = &decoder->builder;
+    Z1_Builder*         builder = &decoder->builder;
     FT_Outline*         outline;
     FT_Pos              x, y;
 
@@ -558,7 +558,7 @@
     while ( ip < limit )
     {
       FT_Int*      top      = decoder->top;
-      T1_Operator  op       = op_none;
+      Z1_Operator  op       = op_none;
       FT_Long      value    = 0;
 
       /********************************************************************/
@@ -791,7 +791,7 @@
               }
               
               num_points = top[1] - 13 + (top[1] == 18);
-              if (top[0] != num_points*blend->num_designs)
+              if (top[0] != (FT_Int)(num_points*blend->num_designs))
               {
                 FT_ERROR(( "T1.Parse_CharStrings: incorrect number of mm arguments\n" ));
                 goto Syntax_Error;
@@ -1192,19 +1192,19 @@
   /**********************************************************************/
 
   LOCAL_FUNC
-  FT_Error  T1_Compute_Max_Advance( T1_Face  face,
+  FT_Error  Z1_Compute_Max_Advance( T1_Face  face,
                                     FT_Int  *max_advance )
   {
     FT_Error    error;
-    T1_Decoder  decoder;
+    Z1_Decoder  decoder;
     FT_Int      glyph_index;
     T1_Font*    type1 = &face->type1;
 
     *max_advance = 0;
 
     /* Initialise load decoder */
-    T1_Init_Decoder( &decoder );
-    T1_Init_Builder( &decoder.builder, face, 0, 0 );
+    Z1_Init_Decoder( &decoder );
+    Z1_Init_Builder( &decoder.builder, face, 0, 0 );
 
     decoder.blend                = face->blend;
     decoder.builder.metrics_only = 1;
@@ -1215,7 +1215,7 @@
     for ( glyph_index = 0; glyph_index < type1->num_glyphs; glyph_index++ )
     {
       /* now get load the unscaled outline */
-      error = T1_Parse_CharStrings( &decoder,
+      error = Z1_Parse_CharStrings( &decoder,
                                     type1->charstrings    [glyph_index],
                                     type1->charstrings_len[glyph_index],
                                     type1->num_subrs,
@@ -1246,13 +1246,13 @@
 
 
   LOCAL_FUNC
-  FT_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
-                           T1_Size       size,
+  FT_Error  Z1_Load_Glyph( Z1_GlyphSlot  glyph,
+                           Z1_Size       size,
                            FT_Int        glyph_index,
                            FT_Int        load_flags )
   {
     FT_Error        error;
-    T1_Decoder      decoder;
+    Z1_Decoder      decoder;
     T1_Face         face = (T1_Face)glyph->root.face;
     FT_Bool         hinting;
     T1_Font*        type1 = &face->type1;
@@ -1269,17 +1269,17 @@
     hinting = ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
               ( load_flags & FT_LOAD_NO_HINTING ) == 0;
 
-    glyph->root.format = ft_glyph_format_none;
+    glyph->root.format = ft_glyph_format_outline;
 
     {
-      T1_Init_Decoder( &decoder );
-      T1_Init_Builder( &decoder.builder, face, size, glyph );
+      Z1_Init_Decoder( &decoder );
+      Z1_Init_Builder( &decoder.builder, face, size, glyph );
 
       decoder.blend              = ((T1_Face)glyph->root.face)->blend;
       decoder.builder.no_recurse = (FT_Bool)!!(load_flags & FT_LOAD_NO_RECURSE);
 
       /* now load the unscaled outline */
-      error = T1_Parse_CharStrings( &decoder,
+      error = Z1_Parse_CharStrings( &decoder,
                                     type1->charstrings    [glyph_index],
                                     type1->charstrings_len[glyph_index],
                                     type1->num_subrs,
@@ -1287,7 +1287,7 @@
                                     type1->subrs_len );
 
       /* save new glyph tables */
-      T1_Done_Builder( &decoder.builder );
+      Z1_Done_Builder( &decoder.builder );
     }
 
     /* Now, set the metrics.. - this is rather simple, as : */

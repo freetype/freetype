@@ -21,50 +21,50 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/t1types.h>
 #include <freetype/ftmm.h>
-#include <t1parse.h>
+#include <z1parse.h>
 
 #ifdef __cplusplus
   extern "C" {
 #endif
 
-  typedef struct T1_Loader_
+  typedef struct Z1_Loader_
   {
-    T1_Parser        parser;          /* parser used to read the stream */
+    Z1_Parser        parser;          /* parser used to read the stream */
 
     FT_Int           num_chars;       /* number of characters in encoding */
-    T1_Table         encoding_table;  /* T1_Table used to store the       */
+    Z1_Table         encoding_table;  /* Z1_Table used to store the       */
                                 /* encoding character names         */
 
     FT_Int           num_glyphs;
-    T1_Table         glyph_names;
-    T1_Table         charstrings;
+    Z1_Table         glyph_names;
+    Z1_Table         charstrings;
 
     FT_Int           num_subrs;
-    T1_Table         subrs;
+    Z1_Table         subrs;
     FT_Bool          fontdata;
 
-  } T1_Loader;
+  } Z1_Loader;
 
   LOCAL_DEF
-  FT_Error  T1_Open_Face( T1_Face  face );
+  FT_Error  Z1_Open_Face( T1_Face  face );
 
-#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+#ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
   LOCAL_DEF
-  FT_Error  T1_Get_Multi_Master( T1_Face           face,
+  FT_Error  Z1_Get_Multi_Master( T1_Face           face,
                                  FT_Multi_Master*  master );
 
   LOCAL_DEF
-  FT_Error  T1_Set_MM_Blend( T1_Face    face,
+  FT_Error  Z1_Set_MM_Blend( T1_Face    face,
                              FT_UInt    num_coords,
                              FT_Fixed*  coords );
 
   LOCAL_DEF
-  FT_Error  T1_Set_MM_Design( T1_Face   face,
+  FT_Error  Z1_Set_MM_Design( T1_Face   face,
                               FT_UInt   num_coords,
                               FT_Long*  coords );
 
   LOCAL_DEF
-  void  T1_Done_Blend( T1_Face  face );
+  void  Z1_Done_Blend( T1_Face  face );
 #endif
 
 #ifdef __cplusplus

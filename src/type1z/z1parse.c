@@ -16,7 +16,7 @@
  *  The Type 1 parser is in charge of the following:
  *
  *   - provide an implementation of a growing sequence of
- *     objects called a T1_Table (used to build various tables
+ *     objects called a Z1_Table (used to build various tables
  *     needed by the loader).
  *
  *   - opening .pfb and .pfa files to extract their top-level
@@ -33,7 +33,7 @@
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/t1errors.h>
-#include <t1parse.h>
+#include <z1parse.h>
 
 #undef FT_COMPONENT
 #define FT_COMPONENT  trace_t1load
@@ -42,7 +42,7 @@
 /*************************************************************************/
 /*************************************************************************/
 /*****                                                               *****/
-/*****           IMPLEMENTATION OF T1_TABLE OBJECT                   *****/
+/*****           IMPLEMENTATION OF Z1_TABLE OBJECT                   *****/
 /*****                                                               *****/
 /*****                                                               *****/
 /*************************************************************************/
@@ -52,10 +52,10 @@
 
 /*************************************************************************/
 /*                                                                       */
-/* <Function> T1_New_Table                                               */
+/* <Function> Z1_New_Table                                               */
 /*                                                                       */
 /* <Description>                                                         */
-/*    Initialise a T1_Table.                                             */
+/*    Initialise a Z1_Table.                                             */
 /*                                                                       */
 /* <Input>                                                               */
 /*    table  :: address of target table                                  */
@@ -67,7 +67,7 @@
 /*                                                                       */
 
   LOCAL_FUNC
-  FT_Error  T1_New_Table( T1_Table*  table,
+  FT_Error  Z1_New_Table( Z1_Table*  table,
                           FT_Int     count,
                           FT_Memory  memory )
   {
@@ -95,10 +95,10 @@
 
 /*************************************************************************/
 /*                                                                       */
-/* <Function> T1_Add_Table                                               */
+/* <Function> Z1_Add_Table                                               */
 /*                                                                       */
 /* <Description>                                                         */
-/*    Adds an object to a T1_Table, possibly growing its memory block    */
+/*    Adds an object to a Z1_Table, possibly growing its memory block    */
 /*                                                                       */
 /* <Input>                                                               */
 /*    table  :: target table                                             */
@@ -112,7 +112,7 @@
 /*                                                                       */
 
 
-      static void  shift_elements( T1_Table*  table, FT_Byte*  old_base )
+      static void  shift_elements( Z1_Table*  table, FT_Byte*  old_base )
       {
         FT_Long    delta  = table->block - old_base;
         FT_Byte**  offset = table->elements;
@@ -127,7 +127,7 @@
       }
 
       static
-      FT_Error  reallocate_t1_table( T1_Table*  table,
+      FT_Error  reallocate_t1_table( Z1_Table*  table,
                                      FT_Int     new_size )
       {
         FT_Memory  memory   = table->memory;
@@ -150,7 +150,7 @@
 
 
   LOCAL_FUNC
-  FT_Error  T1_Add_Table( T1_Table*  table,
+  FT_Error  Z1_Add_Table( Z1_Table*  table,
                           FT_Int     index,
                           void*      object,
                           FT_Int     length )
@@ -186,10 +186,10 @@
 
 /*************************************************************************/
 /*                                                                       */
-/* <Function> T1_Done_Table                                              */
+/* <Function> Z1_Done_Table                                              */
 /*                                                                       */
 /* <Description>                                                         */
-/*    Finalise a T1_Table. (realloc it to its current cursor).           */
+/*    Finalise a Z1_Table. (realloc it to its current cursor).           */
 /*                                                                       */
 /* <Input>                                                               */
 /*    table :: target table                                              */
@@ -200,7 +200,7 @@
 /*                                                                       */
 #if 0
   LOCAL_FUNC
-  void  T1_Done_Table( T1_Table*  table )
+  void  Z1_Done_Table( Z1_Table*  table )
   {
     FT_Memory  memory = table->memory;
     FT_Error   error;
@@ -220,7 +220,7 @@
 #endif
 
   LOCAL_FUNC
-  void  T1_Release_Table( T1_Table*  table )
+  void  Z1_Release_Table( Z1_Table*  table )
   {
     FT_Memory  memory = table->memory;
 
@@ -244,13 +244,13 @@
 /*************************************************************************/
 /*************************************************************************/
 
-  #define IS_T1_WHITESPACE(c)  ( (c) == ' '  || (c) == '\t' )
-  #define IS_T1_LINESPACE(c)   ( (c) == '\r' || (c) == '\n' )
+  #define IS_Z1_WHITESPACE(c)  ( (c) == ' '  || (c) == '\t' )
+  #define IS_Z1_LINESPACE(c)   ( (c) == '\r' || (c) == '\n' )
 
-  #define IS_T1_SPACE(c)  ( IS_T1_WHITESPACE(c) || IS_T1_LINESPACE(c) )
+  #define IS_Z1_SPACE(c)  ( IS_Z1_WHITESPACE(c) || IS_Z1_LINESPACE(c) )
 
   LOCAL_FUNC
-  void     T1_Skip_Spaces( T1_Parser*  parser )
+  void     Z1_Skip_Spaces( Z1_Parser*  parser )
   {
     FT_Byte* cur   = parser->cursor;
     FT_Byte* limit = parser->limit;
@@ -258,7 +258,7 @@
     while (cur < limit)
     {
       FT_Byte  c = *cur;
-      if (!IS_T1_SPACE(c))
+      if (!IS_Z1_SPACE(c))
         break;
       cur++;
     }
@@ -266,8 +266,8 @@
   }
 
   LOCAL_FUNC
-  void  T1_ToToken( T1_Parser*     parser,
-                    T1_Token_Rec*  token )
+  void  Z1_ToToken( Z1_Parser*     parser,
+                    Z1_Token_Rec*  token )
   {
     FT_Byte*  cur;
     FT_Byte*  limit;
@@ -279,7 +279,7 @@
     token->limit = 0;
 
     /* first of all, skip space */
-    T1_Skip_Spaces(parser);
+    Z1_Skip_Spaces(parser);
 
     cur   = parser->cursor;
     limit = parser->limit;
@@ -330,7 +330,7 @@
         default:
           token->start = cur++;
           token->type  = t1_token_any;
-          while (cur < limit && !IS_T1_SPACE(*cur))
+          while (cur < limit && !IS_Z1_SPACE(*cur))
             cur++;
 
           token->limit = cur;
@@ -348,31 +348,31 @@
 
 
   LOCAL_FUNC
-  void  T1_ToTokenArray( T1_Parser*     parser,
-                         T1_Token_Rec*  tokens,
+  void  Z1_ToTokenArray( Z1_Parser*     parser,
+                         Z1_Token_Rec*  tokens,
                          FT_UInt        max_tokens,
                          FT_Int        *pnum_tokens )
   {
-    T1_Token_Rec  master;
+    Z1_Token_Rec  master;
 
     *pnum_tokens = -1;
 
-    T1_ToToken( parser, &master );
+    Z1_ToToken( parser, &master );
     if (master.type == t1_token_array)
     {
       FT_Byte*       old_cursor = parser->cursor;
       FT_Byte*       old_limit  = parser->limit;
-      T1_Token_Rec*  cur        = tokens;
-      T1_Token_Rec*  limit      = cur + max_tokens;
+      Z1_Token_Rec*  cur        = tokens;
+      Z1_Token_Rec*  limit      = cur + max_tokens;
 
       parser->cursor = master.start;
       parser->limit  = master.limit;
 
       while (parser->cursor < parser->limit)
       {
-        T1_Token_Rec  token;
+        Z1_Token_Rec  token;
         
-        T1_ToToken( parser, &token );
+        Z1_ToToken( parser, &token );
         if (!token.type)
           break;
           
@@ -707,20 +707,20 @@
 
  /* Loads a simple field (i.e. non-table) into the current list of objects */
   LOCAL_FUNC
-  FT_Error  T1_Load_Field( T1_Parser*           parser,
-                           const T1_Field_Rec*  field,
+  FT_Error  Z1_Load_Field( Z1_Parser*           parser,
+                           const Z1_Field_Rec*  field,
                            void**               objects,
                            FT_UInt              max_objects,
                            FT_ULong*            pflags )
   {
-    T1_Token_Rec  token;
+    Z1_Token_Rec  token;
     FT_Byte*      cur;
     FT_Byte*      limit;
     FT_UInt       count;
     FT_UInt       index;
     FT_Error      error;
 
-    T1_ToToken( parser, &token );
+    Z1_ToToken( parser, &token );
     if (!token.type)
       goto Fail;
 
@@ -807,21 +807,21 @@
 #define T1_MAX_TABLE_ELEMENTS  32
 
   LOCAL_FUNC
-  FT_Error  T1_Load_Field_Table( T1_Parser*           parser,
-                                 const T1_Field_Rec*  field,
+  FT_Error  Z1_Load_Field_Table( Z1_Parser*           parser,
+                                 const Z1_Field_Rec*  field,
                                  void**               objects,
                                  FT_UInt              max_objects,
                                  FT_ULong*            pflags )
   {
-    T1_Token_Rec  elements[T1_MAX_TABLE_ELEMENTS];
-    T1_Token_Rec* token;
+    Z1_Token_Rec  elements[T1_MAX_TABLE_ELEMENTS];
+    Z1_Token_Rec* token;
     FT_Int        num_elements;
     FT_Error      error = 0;
     FT_Byte*      old_cursor;
     FT_Byte*      old_limit;
-    T1_Field_Rec  fieldrec = *(T1_Field_Rec*)field;
+    Z1_Field_Rec  fieldrec = *(Z1_Field_Rec*)field;
     
-    T1_ToTokenArray( parser, elements, 32, &num_elements );
+    Z1_ToTokenArray( parser, elements, 32, &num_elements );
     if (num_elements < 0)
       goto Fail;
 
@@ -840,7 +840,7 @@
     {
       parser->cursor = token->start;
       parser->limit  = token->limit;
-      T1_Load_Field( parser, &fieldrec, objects, max_objects, 0 );
+      Z1_Load_Field( parser, &fieldrec, objects, max_objects, 0 );
       fieldrec.offset += fieldrec.size;
     }
 
@@ -864,21 +864,21 @@
 
 
   LOCAL_FUNC
-  FT_Long  T1_ToInt  ( T1_Parser*  parser )
+  FT_Long  Z1_ToInt  ( Z1_Parser*  parser )
   {
     return t1_toint( &parser->cursor, parser->limit );
   }
 
 
   LOCAL_FUNC
-  FT_Long  T1_ToFixed( T1_Parser*  parser, FT_Int power_ten )
+  FT_Long  Z1_ToFixed( Z1_Parser*  parser, FT_Int power_ten )
   {
     return t1_tofixed( &parser->cursor, parser->limit, power_ten );
   }
 
 
   LOCAL_FUNC
-  FT_Int  T1_ToCoordArray( T1_Parser* parser,
+  FT_Int  Z1_ToCoordArray( Z1_Parser* parser,
                            FT_Int     max_coords,
                            FT_Short*  coords )
   {
@@ -887,7 +887,7 @@
 
 
   LOCAL_FUNC
-  FT_Int  T1_ToFixedArray( T1_Parser* parser,
+  FT_Int  Z1_ToFixedArray( Z1_Parser* parser,
                            FT_Int     max_values,
                            FT_Fixed*  values,
                            FT_Int     power_ten )
@@ -898,14 +898,14 @@
 
 #if 0
   LOCAL_FUNC
-  FT_String*  T1_ToString( T1_Parser* parser )
+  FT_String*  Z1_ToString( Z1_Parser* parser )
   {
     return t1_tostring( &parser->cursor, parser->limit, parser->memory );
   }
 
 
   LOCAL_FUNC
-  FT_Bool   T1_ToBool( T1_Parser* parser )
+  FT_Bool   Z1_ToBool( Z1_Parser* parser )
   {
     return t1_tobool( &parser->cursor, parser->limit );
   }
@@ -938,7 +938,7 @@
 
 
   LOCAL_FUNC
-  FT_Error  T1_New_Parser( T1_Parser*  parser,
+  FT_Error  Z1_New_Parser( Z1_Parser*  parser,
                            FT_Stream   stream,
                            FT_Memory   memory )
   {
@@ -1041,7 +1041,7 @@
 
 
   LOCAL_FUNC
-  void  T1_Done_Parser( T1_Parser*  parser )
+  void  Z1_Done_Parser( Z1_Parser*  parser )
   {
     FT_Memory   memory = parser->memory;
 
@@ -1074,7 +1074,7 @@
 
 
   LOCAL_FUNC
-  void  T1_Decrypt( FT_Byte*   buffer,
+  void  Z1_Decrypt( FT_Byte*   buffer,
                     FT_Int     length,
                     FT_UShort  seed )
   {
@@ -1091,7 +1091,7 @@
 
 
   LOCAL_FUNC
-  FT_Error  T1_Get_Private_Dict( T1_Parser*  parser )
+  FT_Error  Z1_Get_Private_Dict( Z1_Parser*  parser )
   {
     FT_Stream  stream = parser->stream;
     FT_Memory  memory = parser->memory;
@@ -1258,7 +1258,7 @@
     }
 
     /* we now decrypt the encoded binary private dictionary */
-    T1_Decrypt( parser->private_dict, parser->private_len, 55665 );
+    Z1_Decrypt( parser->private_dict, parser->private_len, 55665 );
     parser->cursor = parser->private_dict;
     parser->limit  = parser->cursor + parser->private_len;
 

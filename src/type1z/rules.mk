@@ -31,17 +31,17 @@ T1Z_COMPILE := $(FT_COMPILE) $(T1Z_CFLAGS)
 
 # Type1 driver sources (i.e., C files)
 #
-T1Z_DRV_SRC := $(T1Z_DIR_)t1parse.c  \
-               $(T1Z_DIR_)t1load.c   \
-               $(T1Z_DIR_)t1driver.c \
-               $(T1Z_DIR_)t1afm.c    \
-               $(T1Z_DIR_)t1gload.c  \
-               $(T1Z_DIR_)t1objs.c
+T1Z_DRV_SRC := $(T1Z_DIR_)z1parse.c  \
+               $(T1Z_DIR_)z1load.c   \
+               $(T1Z_DIR_)z1driver.c \
+               $(T1Z_DIR_)z1afm.c    \
+               $(T1Z_DIR_)z1gload.c  \
+               $(T1Z_DIR_)z1objs.c
 
 # Type1 driver headers
 #
 T1Z_DRV_H := $(T1Z_DRV_SRC:%.c=%.h) \
-             $(T1Z_DIR_)t1tokens.h
+             $(T1Z_DIR_)z1tokens.h
 
 
 # Type1z driver object(s)

@@ -28,42 +28,42 @@
 #endif
 
   /* The following structures must be defined by the hinter */
-  typedef struct T1_Size_Hints_   T1_Size_Hints;
-  typedef struct T1_Glyph_Hints_  T1_Glyph_Hints;
+  typedef struct Z1_Size_Hints_   Z1_Size_Hints;
+  typedef struct Z1_Glyph_Hints_  Z1_Glyph_Hints;
 
   /***********************************************************************/
   /*                                                                     */
-  /* <Type> T1_Driver                                                    */
+  /* <Type> Z1_Driver                                                    */
   /*                                                                     */
   /* <Description>                                                       */
   /*    A handle to a Type 1 driver object.                              */
   /*                                                                     */
-  typedef struct T1_DriverRec_   *T1_Driver;
+  typedef struct Z1_DriverRec_   *Z1_Driver;
 
 
   /***********************************************************************/
   /*                                                                     */
-  /* <Type> T1_Size                                                      */
+  /* <Type> Z1_Size                                                      */
   /*                                                                     */
   /* <Description>                                                       */
   /*    A handle to a Type 1 size object.                                */
   /*                                                                     */
-  typedef struct T1_SizeRec_*  T1_Size;
+  typedef struct Z1_SizeRec_*  Z1_Size;
 
 
   /***********************************************************************/
   /*                                                                     */
-  /* <Type> T1_GlyphSlot                                                 */
+  /* <Type> Z1_GlyphSlot                                                 */
   /*                                                                     */
   /* <Description>                                                       */
   /*    A handle to a Type 1 glyph slot object.                          */
   /*                                                                     */
-  typedef struct T1_GlyphSlotRec_*  T1_GlyphSlot;
+  typedef struct Z1_GlyphSlotRec_*  Z1_GlyphSlot;
 
 
   /***********************************************************************/
   /*                                                                     */
-  /* <Type> T1_CharMap                                                   */
+  /* <Type> Z1_CharMap                                                   */
   /*                                                                     */
   /* <Description>                                                       */
   /*    A handle to a Type 1 character mapping object.                   */
@@ -73,7 +73,7 @@
   /*    The driver is responsible for making up charmap objects          */
   /*    corresponding to these tables..                                  */
   /*                                                                     */
-  typedef struct T1_CharMapRec_*   T1_CharMap;
+  typedef struct Z1_CharMapRec_*   Z1_CharMap;
 
 
 
@@ -86,31 +86,31 @@
 
   /***************************************************/
   /*                                                 */
-  /*  T1_Size :                                      */
+  /*  Z1_Size :                                      */
   /*                                                 */
   /*    Type 1 size record..                         */
   /*                                                 */
 
-  typedef struct T1_SizeRec_
+  typedef struct Z1_SizeRec_
   {
     FT_SizeRec      root;
     FT_Bool         valid;
-    T1_Size_Hints*  hints;  /* defined in the hinter. This allows */
+    Z1_Size_Hints*  hints;  /* defined in the hinter. This allows */
                             /* us to experiment with different    */
                             /* hinting schemes without having to  */
                             /* change 't1objs' each time..        */
-  } T1_SizeRec;
+  } Z1_SizeRec;
 
 
 
   /***************************************************/
   /*                                                 */
-  /*  T1_GlyphSlot :                                 */
+  /*  Z1_GlyphSlot :                                 */
   /*                                                 */
   /*    TrueDoc glyph record..                       */
   /*                                                 */
 
-  typedef struct T1_GlyphSlotRec_
+  typedef struct Z1_GlyphSlotRec_
   {
     FT_GlyphSlotRec  root;
 
@@ -123,14 +123,14 @@
     FT_Fixed         x_scale;
     FT_Fixed         y_scale;
 
-    T1_Glyph_Hints*  hints;  /* defined in the hinter */
+    Z1_Glyph_Hints*  hints;  /* defined in the hinter */
 
-  } T1_GlyphSlotRec;
+  } Z1_GlyphSlotRec;
 
 
 /*******************************************************************
  *
- *  <Function>  T1_Init_Face
+ *  <Function>  Z1_Init_Face
  *
  *  <Description>
  *     Initialise a given Type 1 face object
@@ -146,7 +146,7 @@
  ******************************************************************/
 
   LOCAL_DEF
-  FT_Error  T1_Init_Face( FT_Stream     stream,
+  FT_Error  Z1_Init_Face( FT_Stream     stream,
                           T1_Face       face,
                           FT_Int        face_index,
                           FT_Int        num_params,
@@ -156,7 +156,7 @@
 
 /*******************************************************************
  *
- *  <Function> T1_Done_Face
+ *  <Function> Z1_Done_Face
  *
  *  <Description>
  *     Finalise a given face object
@@ -167,12 +167,12 @@
  ******************************************************************/
 
   LOCAL_DEF
-  void  T1_Done_Face( T1_Face  face );
+  void  Z1_Done_Face( T1_Face  face );
 
 
 /*******************************************************************
  *
- *  <Function>  T1_Init_Driver
+ *  <Function>  Z1_Init_Driver
  *
  *  <Description>
  *     Initialise a given Type 1 driver object
@@ -186,13 +186,13 @@
  ******************************************************************/
 
   LOCAL_DEF
-  FT_Error  T1_Init_Driver( T1_Driver  driver );
+  FT_Error  Z1_Init_Driver( Z1_Driver  driver );
 
 
 
 /*******************************************************************
  *
- *  <Function> T1_Done_Driver
+ *  <Function> Z1_Done_Driver
  *
  *  <Description>
  *     finalise a given Type 1 driver
@@ -203,7 +203,7 @@
  ******************************************************************/
 
   LOCAL_DEF
-  void  T1_Done_Driver( T1_Driver  driver );
+  void  Z1_Done_Driver( Z1_Driver  driver );
 
 #ifdef __cplusplus
   }
