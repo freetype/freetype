@@ -460,13 +460,9 @@ THE SOFTWARE.
 
     (FT_Slot_LoadFunc)        PCF_Glyph_Load,
 
-    (FT_CharMap_CharIndexFunc)0,
-
     (FT_Face_GetKerningFunc)  0,
     (FT_Face_AttachFunc)      0,
-    (FT_Face_GetAdvancesFunc) 0,
-
-    (FT_CharMap_CharNextFunc) 0
+    (FT_Face_GetAdvancesFunc) 0
   };
 
 

@@ -1483,17 +1483,8 @@ FT_BEGIN_HEADER
     TT_OS2                os2;          /* TrueType OS/2 table            */
     TT_Postscript         postscript;   /* TrueType Postscript table      */
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
     FT_Byte*              cmap_table;   /* extracted 'cmap' table */
     FT_ULong              cmap_size;
-
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-    FT_Int                num_charmaps;
-    TT_CharMap            charmaps;     /* array of TT_CharMapRec */
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
     TT_Loader_GotoTableFunc   goto_table;
 

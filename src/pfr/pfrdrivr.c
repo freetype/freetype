@@ -57,13 +57,10 @@
     (FT_Size_ResetPointsFunc) NULL,
     (FT_Size_ResetPixelsFunc) NULL,
     (FT_Slot_LoadFunc)        pfr_slot_load,
-    (FT_CharMap_CharIndexFunc)NULL,
 
     (FT_Face_GetKerningFunc)  pfr_face_get_kerning,
     (FT_Face_AttachFunc)      0,
-    (FT_Face_GetAdvancesFunc) 0,
-
-    (FT_CharMap_CharNextFunc) NULL
+    (FT_Face_GetAdvancesFunc) 0
   };
 
 

@@ -1628,8 +1628,6 @@
 #endif /* TT_CONFIG_CMAP_FORMAT_12 */
 
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
   static const TT_CMap_Class  tt_cmap_classes[] =
   {
 #ifdef TT_CONFIG_CMAP_FORMAT_0
@@ -1743,8 +1741,6 @@
 
     return 0;
   }
-
-#endif /* FT_CONFIG_OPTION_USE_CMAPS */
 
 
 /* END */

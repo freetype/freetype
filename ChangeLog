@@ -4,6 +4,13 @@
     src/cache/ftccache.c: cleaning up the cache sub-system code, linear
     hashing is now the default
 
+    * include/freetype/config/ftoption.h, include/freetype/internal/tttypes.h,
+    src/base/ftobjs.c, src/bdf/bdfdrivr.c, src/cff/cffobjs.c,
+    src/pcf/pcfdrivr.c, src/sfnt/sfobjs.c, src/sfnt/ttcmap0.c,
+    src/sfnt/ttcmap0.h, src/sfnt/ttload.c, src/type1/t1objs.c,
+    src/type42/t42objs.c, src/winfonts/winfnt.c: code cleanup,
+    FT_CONFIG_OPTION_USE_CMAPS is now the default
+
 2002-07-11  David Turner  <david@freetype.org>
 
     * src/sfnt/ttload.c, src/sfnt/ttload.h, src/sfnt/ttdriver.c: changing

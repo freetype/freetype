@@ -275,94 +275,6 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    cff_get_char_index                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Uses a charmap to return a given character code's glyph index.     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    charmap  :: A handle to the source charmap object.                 */
-  /*    charcode :: The character code.                                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Glyph index.  0 means `undefined character code'.                  */
-  /*                                                                       */
-  static FT_UInt
-  cff_get_char_index( TT_CharMap  charmap,
-                      FT_Long     charcode )
-  {
-    FT_Error      error;
-    CFF_Face      face;
-    TT_CMapTable  cmap;
-
-
-    cmap = &charmap->cmap;
-    face = (CFF_Face)charmap->root.face;
-
-    /* Load table if needed */
-    if ( !cmap->loaded )
-    {
-      SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
-
-
-      error = sfnt->load_charmap( face, cmap, face->root.stream );
-      if ( error )
-        return 0;
-
-      cmap->loaded = TRUE;
-    }
-
-    return ( cmap->get_index ? cmap->get_index( cmap, charcode ) : 0 );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    cff_get_next_char                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Uses a charmap to return the next encoded charcode.                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    charmap  :: A handle to the source charmap object.                 */
-  /*    charcode :: The character code.                                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Char code.  0 means `no encoded chars above the given one'.        */
-  /*                                                                       */
-  static FT_Long
-  cff_get_next_char( TT_CharMap  charmap,
-                     FT_Long     charcode )
-  {
-    FT_Error      error;
-    CFF_Face      face;
-    TT_CMapTable  cmap;
-
-
-    cmap = &charmap->cmap;
-    face = (CFF_Face)charmap->root.face;
-
-    /* Load table if needed */
-    if ( !cmap->loaded )
-    {
-      SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
-
-
-      error = sfnt->load_charmap( face, cmap, face->root.stream );
-      if ( error )
-        return 0;
-
-      cmap->loaded = TRUE;
-    }
-
-    return ( cmap->get_next_char ? cmap->get_next_char( cmap, charcode )
-                                 : 0 );
-  }
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -469,7 +381,7 @@
       ft_module_font_driver       |
       ft_module_driver_scalable   |
       ft_module_driver_has_hinter,
-      
+
       sizeof( CFF_DriverRec ),
       "cff",
       0x10000L,
@@ -498,13 +410,10 @@
     (FT_Size_ResetPixelsFunc) cff_size_reset,
 
     (FT_Slot_LoadFunc)        Load_Glyph,
-    (FT_CharMap_CharIndexFunc)cff_get_char_index,
 
     (FT_Face_GetKerningFunc)  Get_Kerning,
     (FT_Face_AttachFunc)      0,
     (FT_Face_GetAdvancesFunc) 0,
-    
-    (FT_CharMap_CharNextFunc) cff_get_next_char
   };
 
 

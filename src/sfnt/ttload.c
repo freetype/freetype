@@ -1200,8 +1200,6 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
   FT_LOCAL_DEF( FT_Error )
   TT_Load_CMap( TT_Face    face,
                 FT_Stream  stream )
@@ -1229,105 +1227,6 @@
     return error;
   }
 
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-  FT_LOCAL_DEF( FT_Error )
-  TT_Load_CMap( TT_Face    face,
-                FT_Stream  stream )
-  {
-    FT_Error       error;
-    FT_Memory      memory = stream->memory;
-    FT_Long        table_start;
-    TT_CMapDirRec  cmap_dir;
-
-    const FT_Frame_Field  cmap_fields[] =
-    {
-#undef  FT_STRUCTURE
-#define FT_STRUCTURE  TT_CMapDirRec
-
-      FT_FRAME_START( 4 ),
-        FT_FRAME_USHORT( tableVersionNumber ),
-        FT_FRAME_USHORT( numCMaps ),
-      FT_FRAME_END
-    };
-
-    const FT_Frame_Field  cmap_rec_fields[] =
-    {
-#undef  FT_STRUCTURE
-#define FT_STRUCTURE  TT_CMapTableRec
-
-      FT_FRAME_START( 4 ),
-        FT_FRAME_USHORT( format ),
-        FT_FRAME_USHORT( length ),
-      FT_FRAME_END
-    };
-
-
-    FT_TRACE2(( "CMaps " ));
-
-    error = face->goto_table( face, TTAG_cmap, stream, 0 );
-    if ( error )
-    {
-      error = SFNT_Err_CMap_Table_Missing;
-      goto Exit;
-    }
-
-    table_start = FT_STREAM_POS();
-
-    if ( FT_STREAM_READ_FIELDS( cmap_fields, &cmap_dir ) )
-      goto Exit;
-
-    /* reserve space in face table for cmap tables */
-    if ( FT_NEW_ARRAY( face->charmaps, cmap_dir.numCMaps ) )
-      goto Exit;
-
-    face->num_charmaps = cmap_dir.numCMaps;
-    {
-      TT_CharMap  charmap = face->charmaps;
-      TT_CharMap  limit   = charmap + face->num_charmaps;
-
-
-      /* read the header of each charmap first */
-      if ( FT_FRAME_ENTER( face->num_charmaps * 8L ) )
-        goto Exit;
-
-      for ( ; charmap < limit; charmap++ )
-      {
-        TT_CMapTable  cmap;
-
-
-        charmap->root.face = (FT_Face)face;
-        cmap               = &charmap->cmap;
-
-        cmap->loaded             = FALSE;
-        cmap->platformID         = FT_GET_USHORT();
-        cmap->platformEncodingID = FT_GET_USHORT();
-        cmap->offset             = (FT_ULong)FT_GET_LONG();
-      }
-
-      FT_FRAME_EXIT();
-
-      /* now read the rest of each table */
-      for ( charmap = face->charmaps; charmap < limit; charmap++ )
-      {
-        TT_CMapTable  cmap = &charmap->cmap;
-
-
-        if ( FT_STREAM_SEEK( table_start + (FT_Long)cmap->offset ) ||
-             FT_STREAM_READ_FIELDS( cmap_rec_fields, cmap )        )
-          goto Exit;
-
-        cmap->offset = FT_STREAM_POS();
-      }
-    }
-
-    FT_TRACE2(( "loaded\n" ));
-
-  Exit:
-    return error;
-  }
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
 
   /*************************************************************************/
