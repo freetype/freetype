@@ -1,3 +1,12 @@
+2001-06-07  Werner Lemberg  <wl@gnu.org>
+
+	Updating to libtool 1.4.0.
+
+	* builds/unix/ltconfig: Removed.
+	* builds/unix/ltmain.sh, builds/unix/configure.in,
+	builds/unix/aclocal.m4: Updated.
+	* builds/unix/configure: Regenerated.
+
 2001-06-06  Werner Lemberg  <wl@gnu.org>
 
 	Complete redesign of error codes.  Please check ftmoderr.h for more
