@@ -185,6 +185,104 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    Cid_Get_Next_Char                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Uses a charmap to return the next encoded char after.              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charmap  :: A handle to the source charmap object.                 */
+  /*                                                                       */
+  /*    charcode :: The character code.                                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Next char code.  0 means `no more char codes'.                     */
+  /*                                                                       */
+  static FT_Long
+  CID_Get_Next_Char( FT_CharMap  charmap,
+                     FT_Long     charcode )
+  {
+    T1_Face             face;
+    PSNames_Interface*  psnames;
+
+
+    face    = (T1_Face)charmap->face;
+    psnames = (PSNames_Interface*)face->psnames;
+
+    if ( psnames )
+      switch ( charmap->encoding )
+      {
+        /*******************************************************************/
+        /*                                                                 */
+        /* Unicode encoding support                                        */
+        /*                                                                 */
+      case ft_encoding_unicode:
+        /* use the `PSNames' module to synthetize the Unicode charmap */
+        return psnames->next_unicode (&face->unicode_map,
+                                      (FT_ULong)charcode );
+
+        /*******************************************************************/
+        /*                                                                 */
+        /* Custom Type 1 encoding                                          */
+        /*                                                                 */
+      case ft_encoding_adobe_custom:
+        {
+          T1_Encoding*  encoding = &face->type1.encoding;
+
+
+          charcode++;
+          if ( charcode < encoding->code_first )
+            charcode = encoding->code_first;
+          while ( charcode <= encoding->code_last )
+          {
+            if ( encoding->char_index[charcode] )
+              return charcode;
+            charcode++;
+          }
+        }
+        break;
+
+        /*******************************************************************/
+        /*                                                                 */
+        /* Adobe Standard & Expert encoding support                        */
+        /*                                                                 */
+      default:
+        while ( ++charcode < 256 )
+        {
+          FT_UInt      code;
+          FT_Int       n;
+          const char*  glyph_name;
+
+
+          code = psnames->adobe_std_encoding[charcode];
+          if ( charmap->encoding == ft_encoding_adobe_expert )
+            code = psnames->adobe_expert_encoding[charcode];
+
+          glyph_name = psnames->adobe_std_strings( code );
+          if ( !glyph_name )
+            continue;
+
+          for ( n = 0; n < face->type1.num_glyphs; n++ )
+          {
+            const char*  gname = face->type1.glyph_names[n];
+
+
+            if ( gname && gname[0] == glyph_name[0] &&
+                 strcmp( gname, glyph_name ) == 0   )
+            {
+              return charcode;
+            }
+          }
+        }
+      }
+
+    return 0;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_Class  t1cid_driver_class =
   {
@@ -228,7 +326,9 @@
     (FTDriver_getKerning)   0,
     (FTDriver_attachFile)   0,
 
-    (FTDriver_getAdvances)  0
+    (FTDriver_getAdvances)  0,
+    
+    (FTDriver_getNextChar)  CID_Get_Next_Char
   };
 
 

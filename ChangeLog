@@ -1,3 +1,43 @@
+2002-02-04  Keith Packard  <keithp@keithp.com>
+
+	Adding the function `FT_Get_Next_Char', doing the obvious thing
+	w.r.t. the selected charmap.
+
+	* include/freetype/freetype.h: Add prototype.
+	* include/freetype/internal/ftdriver.h: Add `FTDriver_getNextChar'
+	typedef.
+	(FT_Driver_Class): Use it.
+	* include/freetype/internal/psnames.h: Add `PS_Next_Unicode_Func'
+	typedef.
+	(PSNames_Interface): Use it.
+	* include/freetype/internal/tttypes.h: Add `TT_CharNext_Func'
+	typedef.
+	(TT_CMapTable): Use it.
+
+	* src/base/ftobjs.c (FT_Get_Next_Char): New function, implementing
+	high-level API.
+	* src/cff/cffdrivr.c (cff_get_next_char): New function.
+	(cff_driver_class): Add it.
+	* src/cid/cidriver.c (Cid_Get_Next_Char): New function.
+	(t1cid_driver_class): Add it.
+	* src/pcf/pcfdriver.c (PCF_Get_Next_Char): New function.
+	(pcf_driver_class): Add it.
+	* src/psnames/psmodule.c (PS_Next_Unicode): New function.
+	(psnames_interface): Add it.
+	* src/sfnt/ttcmap.c (code_to_next0, code_to_next2, code_to_next4,
+	code_to_next6, code_to_next_8_12, code_to_next_10): New auxiliary
+	functions.
+	(TT_CharMap_Load): Use them.
+	* src/truetype/ttdriver.c (Get_Next_Char): New function.
+	(tt_driver_class): Add it.
+	* src/type1/t1driver.c (Get_Next_Char): New function.
+	(t1_driver_class): Add it.
+	* src/winfnt/winfnt.c (FNT_Get_Next_Char): New function.
+	(winfnt_driver_class): Add it.
+
+	* src/pcf/pcfread.c (pcf_load_font): For now, report Unicode for
+	Unicode and Latin 1 encodings.
+
 2002-02-02  Keith Packard  <keithp@keithp.com>
 
 	* builds/unix/freetype-config.in: Add missing `fi'.

@@ -1049,6 +1049,10 @@ FT_BEGIN_HEADER
   (*TT_CharMap_Func)( TT_CMapTable*  charmap,
                       FT_ULong       char_code );
 
+  typedef FT_ULong
+  (*TT_CharNext_Func)( TT_CMapTable* charmap,
+                       FT_ULong      char_code );
+
 
   /* charmap table */
   struct  TT_CMapTable_
@@ -1072,6 +1076,7 @@ FT_BEGIN_HEADER
     } c;
 
     TT_CharMap_Func  get_index;
+    TT_CharNext_Func get_next_char;
   };
 
 

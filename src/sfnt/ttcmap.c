@@ -38,25 +38,49 @@
   code_to_index0( TT_CMapTable*  charmap,
                   FT_ULong       char_code );
 
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next0( TT_CMapTable*  charmap,
+                 FT_ULong       char_code );
+
   FT_CALLBACK_DEF( FT_UInt )
   code_to_index2( TT_CMapTable*  charmap,
                   FT_ULong       char_code );
+
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next2( TT_CMapTable*  charmap,
+                 FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_UInt )
   code_to_index4( TT_CMapTable*  charmap,
                   FT_ULong       char_code );
 
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next4( TT_CMapTable*  charmap,
+                 FT_ULong       char_code );
+
   FT_CALLBACK_DEF( FT_UInt )
   code_to_index6( TT_CMapTable*  charmap,
                   FT_ULong       char_code );
+
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next6( TT_CMapTable*  charmap,
+                 FT_ULong       char_code );
 
   FT_CALLBACK_DEF( FT_UInt )
   code_to_index8_12( TT_CMapTable*  charmap,
                      FT_ULong       char_code );
 
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next8_12( TT_CMapTable*  charmap,
+                    FT_ULong       char_code );
+
   FT_CALLBACK_DEF( FT_UInt )
   code_to_index10( TT_CMapTable*  charmap,
                    FT_ULong       char_code );
+
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next10( TT_CMapTable*  charmap,
+                  FT_ULong       char_code );
 
 
   /*************************************************************************/
@@ -125,6 +149,7 @@
         goto Fail;
 
       cmap->get_index = code_to_index0;
+      cmap->get_next_char = code_to_next0;
       break;
 
     case 2:
@@ -196,6 +221,7 @@
       FORGET_Frame();
 
       cmap->get_index = code_to_index2;
+      cmap->get_next_char = code_to_next2;
       break;
 
     case 4:
@@ -262,6 +288,7 @@
       cmap4->last_segment = cmap4->segments;
 
       cmap->get_index = code_to_index4;
+      cmap->get_next_char = code_to_next4;
       break;
 
     case 6:
@@ -287,6 +314,7 @@
 
       FORGET_Frame();
       cmap->get_index = code_to_index6;
+      cmap->get_next_char = code_to_next6;
       break;
 
     case 8:
@@ -328,6 +356,7 @@
       cmap8_12->last_group = cmap8_12->groups;
 
       cmap->get_index = code_to_index8_12;
+      cmap->get_next_char = code_to_next8_12;
       break;
 
     case 10:
@@ -354,6 +383,7 @@
 
       FORGET_Frame();
       cmap->get_index = code_to_index10;
+      cmap->get_next_char = code_to_next10;
       break;
 
     default:   /* corrupt character mapping table */
@@ -471,6 +501,37 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    code_to_next0                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Finds the next encoded character after the given one.  Uses        */
+  /*    format 0. `charCode' must be in the range 0x00-0xFF (otherwise 0   */
+  /*    is returned).                                                      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charCode :: The wanted character code.                             */
+  /*    cmap0    :: A pointer to a cmap table in format 0.                 */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Next char code.  0 if no higher one is encoded.                    */
+  /*                                                                       */
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next0( TT_CMapTable*  cmap,
+                 FT_ULong       charCode )
+  {
+    TT_CMap0*  cmap0 = &cmap->c.cmap0;
+
+
+    while ( ++charCode <= 0xFF )
+      if ( cmap0->glyphIdArray[charCode] )
+        return ( charCode );
+    return ( 0 );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    code_to_index2                                                     */
   /*                                                                       */
   /* <Description>                                                         */
@@ -530,6 +591,89 @@
     }
 
     return result;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    code_to_next2                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Find the next encoded character.  Uses format 2.                   */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charCode :: The wanted character code.                             */
+  /*    cmap2    :: A pointer to a cmap table in format 2.                 */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Next encoded character.  0 if none exists.                         */
+  /*                                                                       */
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next2( TT_CMapTable*  cmap,
+                 FT_ULong       charCode )
+  {
+    FT_UInt             index1, offset;
+    FT_UInt             char_lo;
+    FT_ULong            char_hi;
+    TT_CMap2SubHeader*  sh2;
+    TT_CMap2*           cmap2;
+
+
+    cmap2 = &cmap->c.cmap2;
+    charCode++;
+
+    /*
+     * This is relatively simplistic -- look for a subHeader containing
+     * glyphs and then walk to the first glyph in that subHeader.
+     */
+    while ( charCode < 0x10000 )
+    {
+      char_lo = (FT_UInt)( charCode & 0xFF );
+      char_hi = charCode >> 8;
+  
+      if ( char_hi == 0 )
+      {
+        /* an 8-bit character code -- we use the subHeader 0 in this case */
+        /* to test whether the character code is in the charmap           */
+        index1 = cmap2->subHeaderKeys[char_lo];
+        if ( index1 != 0 )
+        {
+          charCode++;
+          continue;
+        }
+      }
+      else
+      {
+        /* a 16-bit character code */
+        index1 = cmap2->subHeaderKeys[char_hi & 0xFF];
+        if ( index1 == 0 )
+        {
+          charCode = ( char_hi + 1 ) << 8;
+          continue;
+        }
+      }
+  
+      sh2      = cmap2->subHeaders + index1;
+      char_lo -= sh2->firstCode;
+  
+      if ( char_lo > (FT_UInt)sh2->entryCount )
+      {
+        charCode = ( char_hi + 1 ) << 8;
+        continue;
+      }
+      
+      offset = sh2->idRangeOffset / 2 + char_lo;
+      if ( offset >= (FT_UInt)cmap2->numGlyphId ||
+           cmap2->glyphIdArray[offset] == 0     )
+      {
+        charCode++;
+        continue;
+      }
+      
+      return charCode;
+    }
+    return 0;
   }
 
 
@@ -620,6 +764,73 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    code_to_next4                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Find the next encoded character.  Uses format 4.                   */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charCode :: The wanted character code.                             */
+  /*    cmap     :: A pointer to a cmap table in format 4.                 */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Next encoded character.  0 if none exists.                         */
+  /*                                                                       */
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next4( TT_CMapTable*  cmap,
+                 FT_ULong       charCode )
+  {
+    FT_UInt          index1, segCount;
+    TT_CMap4*        cmap4;
+    TT_CMap4Segment  *seg4, *limit;
+
+
+    cmap4    = &cmap->c.cmap4;
+    segCount = cmap4->segCountX2 / 2;
+    limit    = cmap4->segments + segCount;
+
+    charCode++;
+
+    for ( seg4 = cmap4->segments; seg4 < limit; seg4++ )
+    {
+      /* The ranges are sorted in increasing order.  If we are out of */
+      /* the range here, the char code isn't in the charmap, so exit. */
+
+      if ( charCode <= (FT_UInt)seg4->endCount )
+        goto Found;
+    }
+    return 0;
+
+  Found:
+    if ( charCode < seg4->startCount )
+      charCode = seg4->startCount;
+
+    /* if the idRangeOffset is 0, all chars in the map exist */
+
+    if ( seg4->idRangeOffset == 0 )
+      return ( charCode );
+    
+    while ( charCode <= (FT_UInt) seg4->endCount )
+    {
+      /* otherwise, we must use the glyphIdArray to do it */
+      index1 = (FT_UInt)( seg4->idRangeOffset / 2
+                          + ( charCode - seg4->startCount )
+                          + ( seg4 - cmap4->segments )
+                          - segCount );
+
+      if ( index1 < (FT_UInt)cmap4->numGlyphId &&
+           cmap4->glyphIdArray[index1] != 0    )
+        return ( charCode );
+      charCode++;
+    }
+
+    return 0;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    code_to_index6                                                     */
   /*                                                                       */
   /* <Description>                                                         */
@@ -647,6 +858,48 @@
       result = cmap6->glyphIdArray[charCode];
 
     return result;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    code_to_next6                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Find the next encoded character.  Uses format 6.                   */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charCode :: The wanted character code.                             */
+  /*    cmap     :: A pointer to a cmap table in format 6.                 */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Next encoded character.  0 if none exists.                         */
+  /*                                                                       */
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next6( TT_CMapTable*  cmap,
+                 FT_ULong       charCode )
+  {
+    TT_CMap6*  cmap6;
+
+
+    charCode++;
+    
+    cmap6 = &cmap->c.cmap6;
+    
+    if ( charCode < cmap6->firstCode )
+      charCode = cmap6->firstCode;
+    
+    charCode -= cmap6->firstCode;
+
+    while ( charCode < (FT_UInt)cmap6->entryCount )
+    {
+      if ( cmap6->glyphIdArray[charCode] != 0 )
+        return charCode + cmap6->firstCode;
+      charCode++;
+    }
+
+    return 0;
   }
 
 
@@ -718,6 +971,51 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    code_to_next8_12                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Find the next encoded character.  Uses format 8 or 12.             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charCode :: The wanted character code.                             */
+  /*    cmap     :: A pointer to a cmap table in format 8 or 12.           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Next encoded character.  0 if none exists.                         */
+  /*                                                                       */
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next8_12( TT_CMapTable*  cmap,
+                    FT_ULong       charCode )
+  {
+    TT_CMap8_12*  cmap8_12;
+    TT_CMapGroup  *group, *limit;
+
+
+    charCode++;
+    cmap8_12 = &cmap->c.cmap8_12;
+    limit    = cmap8_12->groups + cmap8_12->nGroups;
+
+    for ( group = cmap8_12->groups; group < limit; group++ )
+    {
+      /* the ranges are sorted in increasing order.  If we are out of */
+      /* the range here, the char code isn't in the charmap, so exit. */
+
+      if ( charCode <= group->endCharCode )
+        goto Found;
+    }
+    return 0;
+
+  Found:
+    if ( charCode < group->startCharCode )
+      charCode = group->startCharCode;
+    
+    return charCode;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    code_to_index10                                                    */
   /*                                                                       */
   /* <Description>                                                         */
@@ -750,6 +1048,51 @@
       result = cmap10->glyphs[charCode];
 
     return result;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    code_to_next10                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Find the next encoded character.  Uses format 10.                  */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charCode :: The wanted character code.                             */
+  /*    cmap     :: A pointer to a cmap table in format 10.                */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Next encoded character.  0 if none exists.                         */
+  /*                                                                       */
+  FT_CALLBACK_DEF( FT_ULong )
+  code_to_next10( TT_CMapTable*  cmap,
+                  FT_ULong       charCode )
+  {
+    TT_CMap10*  cmap10;
+
+
+    charCode++;
+    cmap10 = &cmap->c.cmap10;
+    
+    if ( charCode < cmap10->startCharCode )
+      charCode = cmap10->startCharCode;
+    
+    charCode -= cmap10->startCharCode;
+
+    /* the overflow trick for comparison works here also since the number */
+    /* of glyphs (even if numChars is specified as ULong in the specs) in */
+    /* an OpenType font is limited to 64k                                 */
+
+    while ( charCode < cmap10->numChars )
+    {
+      if ( cmap10->glyphs[charCode] )
+        return ( charCode + cmap10->startCharCode );
+      charCode++;
+    }
+
+    return 0;
   }
 
 

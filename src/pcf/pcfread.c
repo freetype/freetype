@@ -1021,9 +1021,13 @@ THE SOFTWARE.
         root->available_sizes->height = 12;
       }
 
-      /* XXX: charmaps */
+      /* XXX: charmaps.  For now, report unicode for Unicode and Latin 1 */
       root->charmaps     = &face->charmap_handle;
       root->num_charmaps = 1;
+
+      face->charmap.encoding    = ft_encoding_none;
+      face->charmap.platform_id = 0;
+      face->charmap.encoding_id = 0;
 
       {
         PCF_Property  charset_registry = 0, charset_encoding = 0;
@@ -1049,28 +1053,21 @@ THE SOFTWARE.
             strcpy( face->charset_registry, charset_registry->value.atom );
             strcpy( face->charset_encoding, charset_encoding->value.atom );
 
-#if 0
-            if ( !strcmp( charset_registry, "ISO10646" ) )
+            if ( !strcmp( face->charset_registry, "ISO10646" ) ||
+                 ( !strcmp( face->charset_registry, "ISO8859" ) &&
+                   !strcmp( face->charset_encoding, "1" ) ) )
             {
               face->charmap.encoding    = ft_encoding_unicode;
               face->charmap.platform_id = 3;
               face->charmap.encoding_id = 1;
-              face->charmap.face        = root;
-              face->charmap_handle
-
-              return PCF_Err_Ok;
             }
-#endif
           }
         }
       }
 
-      face->charmap.encoding    = ft_encoding_none;
-      face->charmap.platform_id = 0;
-      face->charmap.encoding_id = 0;
-      face->charmap.face        = root;
-      face->charmap_handle      = &face->charmap;
-      root->charmap             = face->charmap_handle;
+      face->charmap.face   = root;
+      face->charmap_handle = &face->charmap;
+      root->charmap        = face->charmap_handle;
     }
     return PCF_Err_Ok;
 

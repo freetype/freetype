@@ -166,6 +166,10 @@ FT_BEGIN_HEADER
   (*PS_Lookup_Unicode_Func)( PS_Unicodes*  unicodes,
                              FT_UInt       unicode );
 
+  typedef FT_ULong
+  (*PS_Next_Unicode_Func)( PS_Unicodes*  unicodes,
+                           FT_ULong      unicode );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -221,6 +225,7 @@ FT_BEGIN_HEADER
     const unsigned short*      adobe_std_encoding;
     const unsigned short*      adobe_expert_encoding;
 
+    PS_Next_Unicode_Func       next_unicode;
   } PSNames_Interface;
 
 

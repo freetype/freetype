@@ -122,6 +122,7 @@ FT_BEGIN_HEADER
   /*    FT_Set_Transform                                                   */
   /*    FT_Load_Glyph                                                      */
   /*    FT_Get_Char_Index                                                  */
+  /*    FT_Get_Next_Char                                                   */
   /*    FT_Get_Name_Index                                                  */
   /*    FT_Load_Char                                                       */
   /*                                                                       */
@@ -2389,6 +2390,27 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
                      FT_ULong  charcode );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Next_Char                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Returns the next charcode that is defined in the charmap.          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face     :: A handle to the source face object.                    */
+  /*                                                                       */
+  /*    charcode :: The character code.                                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The charcode.  0 means `no encoded values above charcode'.         */
+  /*                                                                       */
+  FT_EXPORT( FT_ULong )
+  FT_Get_Next_Char( FT_Face   face,
+                    FT_ULong  charcode );
 
 
   /*************************************************************************/

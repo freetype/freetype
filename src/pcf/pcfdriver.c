@@ -276,6 +276,46 @@ THE SOFTWARE.
   }
 
 
+  static FT_Long
+  PCF_Get_Next_Char( FT_CharMap  charmap,
+                     FT_Long     char_code )
+  {
+    PCF_Face      face     = (PCF_Face)charmap->face;
+    PCF_Encoding  en_table = face->encodings;
+    int           low, high, mid;
+
+
+    FT_TRACE4(( "get_char_index %ld\n", char_code ));
+    
+    char_code++;
+    low  = 0;
+    high = face->nencodings - 1;
+
+    while ( low <= high )
+    {
+      mid = ( low + high ) / 2;
+      if ( char_code < en_table[mid].enc )
+        high = mid - 1;
+      else if ( char_code > en_table[mid].enc )
+        low = mid + 1;
+      else
+        return char_code;
+    }
+
+    if ( high < 0 )
+      high = 0;
+    
+    while ( high < face->nencodings )
+    {
+      if ( en_table[high].enc >= char_code )
+        return en_table[high].enc;
+      high++;
+    }
+
+    return 0;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_Class  pcf_driver_class =
   {
@@ -313,7 +353,9 @@ THE SOFTWARE.
 
     (FTDriver_getKerning)   0,
     (FTDriver_attachFile)   0,
-    (FTDriver_getAdvances)  0
+    (FTDriver_getAdvances)  0,
+
+    (FTDriver_getNextChar)  PCF_Get_Next_Char
   };
 
 
