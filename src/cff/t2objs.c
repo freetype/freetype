@@ -69,6 +69,7 @@
   }
 
 
+#if 0
   /* this function is used to build a Unicode charmap from the glyph names */
   /* in a file..                                                           */
   static
@@ -93,6 +94,9 @@
       error = FT_Err_Invalid_File_Format;
       goto Exit;
     }
+
+    /* allocate the charmap */
+    if ( ALLOC( face->charmap, 
 
     /* seek to charset table and allocate glyph names table */
     if ( FILE_Seek( base_offset + charset_offset )           ||
@@ -177,6 +181,58 @@
   Exit:
     return error;
   }
+#endif
+
+
+
+  static
+  FT_Encoding  find_encoding( int  platform_id,
+                              int  encoding_id )
+  {
+    typedef struct  TEncoding
+    {
+      int          platform_id;
+      int          encoding_id;
+      FT_Encoding  encoding;
+
+    } TEncoding;
+
+    static
+    const TEncoding  tt_encodings[] =
+    {
+      { TT_PLATFORM_ISO,           -1,                  ft_encoding_unicode },
+
+      { TT_PLATFORM_APPLE_UNICODE, -1,                  ft_encoding_unicode },
+
+      { TT_PLATFORM_MACINTOSH,     TT_MAC_ID_ROMAN,     ft_encoding_apple_roman },
+
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_UNICODE_CS, ft_encoding_unicode },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_SJIS,       ft_encoding_sjis },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_GB2312,     ft_encoding_gb2312 },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_BIG_5,      ft_encoding_big5 },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_WANSUNG,    ft_encoding_wansung },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_JOHAB,      ft_encoding_johab }
+    };
+
+    const TEncoding  *cur, *limit;
+
+
+    cur   = tt_encodings;
+    limit = cur + sizeof ( tt_encodings ) / sizeof ( tt_encodings[0] );
+
+    for ( ; cur < limit; cur++ )
+    {
+      if ( cur->platform_id == platform_id )
+      {
+        if ( cur->encoding_id == encoding_id ||
+             cur->encoding_id == -1          )
+          return cur->encoding;
+      }
+    }
+
+    return ft_encoding_none;
+  }
+
   
   /*************************************************************************/
   /*                                                                       */
@@ -284,11 +340,14 @@
       FT_Memory  memory = face->root.memory;
       FT_Face    root;
       FT_UInt    flags;
+      FT_ULong   base_offset;
 
 
       if ( ALLOC( cff, sizeof ( *cff ) ) )
         goto Exit;
 
+      base_offset = FILE_Pos();
+      
       face->extra.data = cff;
       error = T2_Load_CFF_Font( stream, face_index, cff );
       if ( error )
@@ -371,6 +430,47 @@
             flags |= FT_STYLE_FLAG_BOLD;
             
           root->style_flags = flags;
+          
+          /* set the charmaps if any */
+          if (sfnt_format)
+          {
+            /*********************************************************************/
+            /*                                                                   */
+            /* Polish the charmaps.                                              */
+            /*                                                                   */
+            /*   Try to set the charmap encoding according to the platform &     */
+            /*   encoding ID of each charmap.                                    */
+            /*                                                                   */
+            TT_CharMap  charmap;
+            FT_Int      n;
+
+            charmap            = face->charmaps;
+            root->num_charmaps = face->num_charmaps;
+      
+            /* allocate table of pointers */
+            if ( ALLOC_ARRAY( root->charmaps, root->num_charmaps, FT_CharMap ) )
+              goto Exit;
+      
+            for ( n = 0; n < root->num_charmaps; n++, charmap++ )
+            {
+              FT_Int  platform = charmap->cmap.platformID;
+              FT_Int  encoding = charmap->cmap.platformEncodingID;
+      
+      
+              charmap->root.face        = (FT_Face)face;
+              charmap->root.platform_id = platform;
+              charmap->root.encoding_id = encoding;
+              charmap->root.encoding    = find_encoding( platform, encoding );
+      
+              /* now, set root->charmap with a unicode charmap */
+              /* wherever available                            */
+              if ( !root->charmap                                &&
+                   charmap->root.encoding == ft_encoding_unicode )
+                root->charmap = (FT_CharMap)charmap;
+      
+              root->charmaps[n] = (FT_CharMap)charmap;
+            }
+          }
       }
     }
     

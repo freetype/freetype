@@ -23,7 +23,7 @@
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/t2types.h>
 #include <freetype/internal/t2errors.h>
-
+#include <freetype/internal/psnames.h>
 
 #ifdef __cplusplus
   extern "C" {
@@ -87,6 +87,15 @@
     FT_F26Dot6  ox, oy;     /* offsets        */
 
   } T2_Transform;
+
+
+ /* this is only used in the case of a pure CFF font with no charmap */
+  typedef struct T2_CharMapRec_
+  {
+    TT_CharMapRec  root;
+    PS_Unicodes    unicodes;
+    
+  } T2_CharMapRec, *T2_CharMap;
 
 
   /***********************************************************************/

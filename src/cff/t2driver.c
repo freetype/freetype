@@ -241,8 +241,8 @@
   /*    Glyph index.  0 means `undefined character code'.                  */
   /*                                                                       */
   static
-  FT_UInt  Get_Char_Index( TT_CharMap  charmap,
-                           FT_Long     charcode )
+  FT_UInt  t2_get_char_index( TT_CharMap  charmap,
+                              FT_Long     charcode )
   {
     FT_Error       error;
     T2_Face        face;
@@ -331,7 +331,7 @@
     (FTDriver_setPixelSizes)0,
 
     (FTDriver_loadGlyph)    Load_Glyph,
-    (FTDriver_getCharIndex) Get_Char_Index,
+    (FTDriver_getCharIndex) t2_get_char_index,
 
     (FTDriver_getKerning)   Get_Kerning,
     (FTDriver_attachFile)   0,
