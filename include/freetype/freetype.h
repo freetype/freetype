@@ -920,7 +920,7 @@ FT_BEGIN_HEADER
   /*    FT_FACE_FLAG_SCALABLE ::                                           */
   /*      Indicates that the face provides vectorial outlines.  This       */
   /*      doesn't prevent embedded bitmaps, i.e., a face can have both     */
-  /*      this bit and @FT_FACE_FLAG_FIXED_SIZES set                       */
+  /*      this bit and @FT_FACE_FLAG_FIXED_SIZES set.                      */
   /*                                                                       */
   /*    FT_FACE_FLAG_FIXED_SIZES ::                                        */
   /*      Indicates that the face contains `fixed sizes', i.e., bitmap     */
