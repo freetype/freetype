@@ -1,3 +1,8 @@
+2002-11-29  Antoine Leca  <Antoine-FreetypeLeca-Marti.org>
+
+        * include/freetype/ftgzip.h: Correct the name of the controlling
+        macro (was __FTXF86_H__ ...)
+
 2002-11-23  David Turner  <david@freetype.org>
 
         * src/cff/cffload.c (cff_charser_load): modified charset loader to
