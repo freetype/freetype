@@ -1,3 +1,11 @@
+2004-07-11  David Turner  <david@freetype.org>
+
+        * src/base/ftstroke.c: fixed a bug that prevented the stroker to
+        correctly generate stroked paths from closed paths, i.e. nearly
+        all glyphs in vectorial fonts :-)
+
+        The code is still _very_ buggy though, treat with special care.
+
 2004-06-26  Peter Kovar  <peter.kovar@r3.roburnet.sk>
 
 	* src/truetype/ttgload.c (load_truetype_glyph): Fix typo.
