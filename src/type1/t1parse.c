@@ -512,7 +512,7 @@
     {
       /* get rid of '['/']', or '{'/'}' */
       T1_Byte*  base  = parser->tokenizer->base + token->start + 1;
-      T1_Byte*  limit = base + token->len - 1;
+      T1_Byte*  limit = base + token->len - 2;
       T1_Byte*  cur;
       T1_Byte*  start;
 
@@ -564,7 +564,7 @@
     {
       /* get rid of '[' and ']' */
       T1_Byte*  base  = parser->tokenizer->base + token->start + 1;
-      T1_Byte*  limit = base + token->len - 1;
+      T1_Byte*  limit = base + token->len - 2;
       T1_Byte*  cur;
       T1_Byte*  start;
       T1_Int    n;

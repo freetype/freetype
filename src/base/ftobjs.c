@@ -1813,6 +1813,9 @@
     if ( !face || !face->size || !face->glyph )
       return FT_Err_Invalid_Face_Handle;
 
+    if ( glyph_index >= face->num_glyphs )
+      return FT_Err_Invalid_Argument;
+      
     driver = face->driver;
 
     /* when the flag NO_RECURSE is set, we disable hinting and scaling */
