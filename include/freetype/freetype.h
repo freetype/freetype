@@ -639,8 +639,6 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /*                       FreeType base face object                       */
-  /*                                                                       */
   /* <Struct>                                                              */
   /*    FT_FaceRec                                                         */
   /*                                                                       */
@@ -1177,8 +1175,6 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /*                       FreeType base size class                        */
-  /*                                                                       */
   /* <Struct>                                                              */
   /*    FT_SizeRec                                                         */
   /*                                                                       */
@@ -1235,8 +1231,6 @@ FT_BEGIN_HEADER
 
 
   /*************************************************************************/
-  /*                                                                       */
-  /*                  FreeType Glyph Slot base class                       */
   /*                                                                       */
   /* <Struct>                                                              */
   /*    FT_GlyphSlotRec                                                    */
@@ -2069,7 +2063,7 @@ FT_BEGIN_HEADER
  *     this does not prevent you from rendering outlines to bitmaps
  *     with @FT_LOAD_RENDER however.
  *
- *   FT_LOAD_VERTICAL_LAYOUT:
+ *   FT_LOAD_VERTICAL_LAYOUT ::
  *     indicates that the glyph image should be prepared for vertical
  *     text layout. This basically means that 'face.glyph.advance' will
  *     correspond to the vertical advance height (instead of the default
@@ -2146,59 +2140,24 @@ FT_BEGIN_HEADER
 #define FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH  0x200
 #define FT_LOAD_NO_RECURSE                   0x400
 #define FT_LOAD_IGNORE_TRANSFORM             0x800
-#define FT_LOAD_MONOCHROME  0x1000
-#define FT_LOAD_LINEAR_DESIGN  0x2000
+#define FT_LOAD_MONOCHROME                   0x1000
+#define FT_LOAD_LINEAR_DESIGN                0x2000
 
   /* temporary hack! */
-#define FT_LOAD_SBITS_ONLY  0x4000
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_NO_AUTOHINT                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the auto-hinter should never be run.  This can be important for    */
-  /*    certain fonts where un-hinted output is better than auto-hinted    */
-  /*    one.                                                               */
-  /*                                                                       */
-  /*    Note that this will _not_ prevent a native hinter to be run        */
-  /*    when available (i.e. for Postscript fonts, or for TrueType ones    */
-  /*    when the bytecode interpreter was compiled in).                    */
-  /*                                                                       */
-  /*    If you want to completely disable hinting, use @FT_LOAD_NO_HINTING */
-  /*    instead.                                                           */
-  /*                                                                       */
-  /*    The @FT_LOAD_FORCE_AUTOHINT flag will not work if this flag is     */
-  /*    set.                                                               */
-  /*                                                                       */
-#define FT_LOAD_NO_AUTOHINT  0x8000U
+#define FT_LOAD_SBITS_ONLY                   0x4000
+#define FT_LOAD_NO_AUTOHINT                  0x8000U
 
   /* */
 
 #define FT_LOAD_TARGET_( x )      ( (FT_Int32)( (x) & 7 ) << 16 )
 #define FT_LOAD_TARGET_MODE( x )  ( (FT_Render_Mode)( ( (x) >> 16 ) & 7 ) )
 
-#define FT_LOAD_TARGET_NORMAL  FT_LOAD_TARGET_( FT_RENDER_MODE_NORMAL )
-#define FT_LOAD_TARGET_MONO    FT_LOAD_TARGET_( FT_RENDER_MODE_MONO   )
-#define FT_LOAD_TARGET_LCD     FT_LOAD_TARGET_( FT_RENDER_MODE_LCD    )
-#define FT_LOAD_TARGET_LCD_V   FT_LOAD_TARGET_( FT_RENDER_MODE_LCD_V  )
+#define FT_LOAD_TARGET_NORMAL     FT_LOAD_TARGET_( FT_RENDER_MODE_NORMAL )
+#define FT_LOAD_TARGET_MONO       FT_LOAD_TARGET_( FT_RENDER_MODE_MONO   )
+#define FT_LOAD_TARGET_LCD        FT_LOAD_TARGET_( FT_RENDER_MODE_LCD    )
+#define FT_LOAD_TARGET_LCD_V      FT_LOAD_TARGET_( FT_RENDER_MODE_LCD_V  )
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_LOAD_DEFAULT                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the function should try to load the glyph normally, i.e.,          */
-  /*    embedded bitmaps are favored over outlines, vectors are always     */
-  /*    scaled and grid-fitted.                                            */
-  /*                                                                       */
-#define FT_LOAD_DEFAULT  0x0
+#define FT_LOAD_DEFAULT           0x0
 
 
   /*************************************************************************/
@@ -2243,7 +2202,7 @@ FT_BEGIN_HEADER
   /*    conversion performed on the outline, as well as specific           */
   /*    hinting optimizations.                                             */
   /*                                                                       */
-  /* <Fields>                                                              */
+  /* <Values>                                                              */
   /*    FT_RENDER_MODE_NORMAL ::                                           */
   /*      This is the default render mode; it corresponds to 8-bit         */
   /*      anti-aliased bitmaps, using 256 levels of opacity.               */
@@ -2333,7 +2292,7 @@ FT_BEGIN_HEADER
   /*    An enumeration used to specify which kerning values to return in   */
   /*    @FT_Get_Kerning.                                                   */
   /*                                                                       */
-  /* <Fields>                                                              */
+  /* <Values>                                                              */
   /*    FT_KERNING_DEFAULT  :: Return scaled and grid-fitted kerning       */
   /*                           distances (value is 0).                     */
   /*                                                                       */
@@ -2880,67 +2839,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Vector_Transform( FT_Vector*  vec,
                        FT_Matrix*  matrix );
-
-
-  /*@***********************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Hint_Flags                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to set a number of flags that are used to control  */
-  /*    the hinting process when glyphs are loaded.                        */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    face   :: A handle to the source face object.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    flags  :: A set of bit flags that control the hinting process.     */
-  /*              See the FT_HINT_XXX constants for details.               */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The interpretation of the flags depends on the hinter module in    */
-  /*    use.  Not all modules will support all flags.                      */
-  /*                                                                       */
-  FT_EXPORT( void )
-  FT_Set_Hint_Flags( FT_Face   face,
-                     FT_ULong  hint_flags );
-
-
-  /*@***********************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_HINT_NO_INTEGER_STEM                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Set_Hint_Flags to to suppress  */
-  /*    snapping of stem widths to integer values.                         */
-  /*                                                                       */
-#define FT_HINT_NO_INTEGER_STEM  1
-
-
-  /*@***********************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_HINT_NO_HSTEM_ALIGN                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Set_Hint_Flags to to suppress  */
-  /*    alignment of horizontal stems with the pixel grid.                 */
-  /*                                                                       */
-#define FT_HINT_NO_HSTEM_ALIGN  2
-
-
-  /*@***********************************************************************/
-  /*                                                                       */
-  /* <Constant>                                                            */
-  /*    FT_HINT_NO_VSTEM_ALIGN                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A bit-field constant, used with @FT_Set_Hint_Flags to to suppress  */
-  /*    alignment of vertical stems with the pixel grid.                   */
-  /*                                                                       */
-#define FT_HINT_NO_VSTEM_ALIGN  4
 
 
   /* */

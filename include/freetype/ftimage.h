@@ -117,7 +117,10 @@ FT_BEGIN_HEADER
   /*    given bitmap.  Note that additional formats may be added in the    */
   /*    future.                                                            */
   /*                                                                       */
-  /* <Fields>                                                              */
+  /* <Values>                                                              */
+  /*    FT_PIXEL_MODE_NONE ::                                              */
+  /*      Value 0 is reserved.                                             */
+  /*                                                                       */
   /*    FT_PIXEL_MODE_MONO ::                                              */
   /*      A monochrome bitmap, using 1 bit per pixel.  Note that pixels    */
   /*      are stored in most-significant order (MSB), which means that     */
@@ -360,7 +363,9 @@ FT_BEGIN_HEADER
   /*    A simple type used to enumerates the flags in an outline's         */
   /*    `outline_flags' field.                                             */
   /*                                                                       */
-  /* <Fields>                                                              */
+  /* <Values>                                                              */
+  /*    FT_OUTLINE_NONE           :: Value 0 is reserved.                  */
+  /*                                                                       */
   /*    FT_OUTLINE_OWNER          :: If set, this flag indicates that the  */
   /*                                 outline's field arrays (i.e.          */
   /*                                 `points', `flags' & `contours') are   */
@@ -422,88 +427,30 @@ FT_BEGIN_HEADER
   } FT_Outline_Flags;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Const>                                                               */
-  /*    ft_outline_none                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This constant is deprecated.  Please use @FT_OUTLINE_NONE          */
-  /*    instead.                                                           */
-  /*                                                                       */
-#define ft_outline_none  FT_OUTLINE_NONE
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Const>                                                               */
-  /*    ft_outline_owner                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This constant is deprecated.  Please use @FT_OUTLINE_OWNER         */
-  /*    instead.                                                           */
-  /*                                                                       */
-#define ft_outline_owner  FT_OUTLINE_OWNER
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Const>                                                               */
-  /*    ft_outline_even_odd_fill                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This constant is deprecated.  Please use @FT_OUTLINE_EVEN_ODD_FILL */
-  /*    instead.                                                           */
-  /*                                                                       */
-#define ft_outline_even_odd_fill  FT_OUTLINE_EVEN_ODD_FILL
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Const>                                                               */
-  /*    ft_outline_reverse_fill                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This constant is deprecated.  Please use @FT_OUTLINE_REVERSE_FILL  */
-  /*    instead.                                                           */
-  /*                                                                       */
-#define ft_outline_reverse_fill  FT_OUTLINE_REVERSE_FILL
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Const>                                                               */
-  /*    ft_outline_ignore_dropouts                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This constant is deprecated.  Please use                           */
-  /*    @FT_OUTLINE_IGNORE_DROPOUTS instead.                               */
-  /*                                                                       */
+ /*************************************************************************
+  *
+  * @enum: ft_outline_xxx
+  *
+  * @description:
+  *   these constants are deprecated. Please use the corresponding
+  *   @FT_OUTLINE_XXX values
+  *
+  * @values:
+  *   ft_outline_none            :: see @FT_OUTLINE_NONE
+  *   ft_outline_owner           :: see @FT_OUTLINE_OWNER
+  *   ft_outline_even_odd_fill   :: see @FT_OUTLINE_EVEN_ODD_FILL
+  *   ft_outline_reverse_fill    :: see @FT_OUTLINE_REVERSE_FILL
+  *   ft_outline_ignore_dropouts :: see @FT_OUTLINE_IGNORE_DROPOUTS
+  *   ft_outline_high_precision  :: see @FT_OUTLINE_HIGH_PRECISION
+  *   ft_outline_single_pass     :: see @FT_OUTLINE_SINGLE_PASS
+  */
+#define ft_outline_none             FT_OUTLINE_NONE
+#define ft_outline_owner            FT_OUTLINE_OWNER
+#define ft_outline_even_odd_fill    FT_OUTLINE_EVEN_ODD_FILL
+#define ft_outline_reverse_fill     FT_OUTLINE_REVERSE_FILL
 #define ft_outline_ignore_dropouts  FT_OUTLINE_IGNORE_DROPOUTS
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Const>                                                               */
-  /*    ft_outline_high_precision                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This constant is deprecated.  Please use                           */
-  /*    @FT_OUTLINE_HIGH_PRECISION instead.                                */
-  /*                                                                       */
-#define ft_outline_high_precision  FT_OUTLINE_HIGH_PRECISION
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Const>                                                               */
-  /*    ft_outline_single_pass                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This constant is deprecated.  Please use @FT_OUTLINE_SINGLE_PASS   */
-  /*    instead.                                                           */
-  /*                                                                       */
-#define ft_outline_single_pass  FT_OUTLINE_SINGLE_PASS
+#define ft_outline_high_precision   FT_OUTLINE_HIGH_PRECISION
+#define ft_outline_single_pass      FT_OUTLINE_SINGLE_PASS
 
   /* */
 
@@ -823,7 +770,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
-  /*    Raster                                                             */
+  /*    raster                                                             */
   /*                                                                       */
   /* <Title>                                                               */
   /*    Scanline converter                                                 */
@@ -995,7 +942,7 @@ FT_BEGIN_HEADER
   /*    An enumeration to list the bit flags as used in the `flags' field  */
   /*    of a FT_Raster_Params structure.                                   */
   /*                                                                       */
-  /* <Fields>                                                              */
+  /* <Values>                                                              */
   /*    FT_RASTER_FLAG_DEFAULT :: This value is 0.                         */
   /*                                                                       */
   /*    FT_RASTER_FLAG_AA      :: This flag is set to indicate that an     */

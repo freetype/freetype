@@ -1,3 +1,15 @@
+2002-09-17  David Turner  <david@freetype.org>
+
+        * include/freetype/freetype.h, include/freetype/ftimage.h,
+        include/freetype/ftstroker.h, include/freetype/ftsysio.h,
+        include/freetype/ftsysmem.h, include/freetype/ttnameid.h:
+        updating the in-source documentation
+
+        * src/tools/docmaker/tohtml.py: updating the HTML formatter in the
+        DocMaker tool
+
+        * src/tools/docmaker.py: removing obsolete file
+
 2002-09-17  Werner Lemberg  <wl@gnu.org>
 
 	More 16bit fixes.
