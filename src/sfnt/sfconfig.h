@@ -28,6 +28,7 @@
 #define SFCONFIG_H
 
 
+#if 0
   /*************************************************************************/
   /*                                                                       */
   /* Define TT_CONFIG_OPTION_EMBEDDED_BITMAPS if you want to support       */
@@ -50,7 +51,7 @@
   /* be built without the "psnames" module.                                */
   /*                                                                       */
 #define  TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-
+#endif
 
 
 #endif /* SFCONFIG_H */

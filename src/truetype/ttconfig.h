@@ -27,7 +27,7 @@
 #ifndef TTCONFIG_H
 #define TTCONFIG_H
 
-
+#if 0
   /*************************************************************************/
   /*                                                                       */
   /* Define TT_CONFIG_OPTION_BYTECODE_INTERPRETER if you want to compile   */
@@ -72,6 +72,7 @@
 #define TT_MAX_SUBGLYPHS  32
 
 #define  TT_USE_FIXED
+#endif
 
 #endif /* TTCONFIG_H */
 

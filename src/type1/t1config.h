@@ -18,6 +18,7 @@
 #ifndef T1CONFIG_H
 #define T1CONFIG_H
 
+#if 0
 /* T1_MAX_STACK_DEPTH is the maximal depth of the token stack used */
 /* by the Type 1 parser (see t1load.c). A minimum of 16 is required */
 /*                                                                 */
@@ -48,5 +49,6 @@
 /* driver will be unable to produce kerning distances..            */
 /*                                                                 */
 #undef  T1_CONFIG_OPTION_NO_AFM
+#endif
 
 #endif /* T1CONFIG_H */

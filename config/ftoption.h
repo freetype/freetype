@@ -36,6 +36,13 @@
   /*                                                                       */
   /*************************************************************************/
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /**** G E N E R A L   F R E E T Y P E   2   C O N F I G U R A T I O N ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   /*************************************************************************/
   /*                                                                       */
@@ -224,6 +231,117 @@
   /*    the relatively low number of current formats ;-)                   */
   /*                                                                       */
 #define FT_MAX_GLYPH_FORMATS  8
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****        S F N T   D R I V E R    C O N F I G U R A T I O N       ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_EMBEDDED_BITMAPS if you want to support       */
+  /* embedded bitmaps in all formats using the SFNT module (namely         */
+  /* TrueType & OpenType).                                                 */
+  /*                                                                       */
+#define  TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_POSTSCRIPT_NAMES if you want to be able to    */
+  /* load and enumerate the glyph Postscript names in a TrueType or        */
+  /* OpenType file.                                                        */
+  /*                                                                       */
+  /* Note that when you do not compile the "psnames" module by undefining  */
+  /* the above FT_CONFIG_OPTION_POSTSCRIPT_NAMES, the "sfnt" module will   */
+  /* contain additional code used to read the PS Names table from a font.  */
+  /*                                                                       */
+  /* (by default, the module uses "psnames" to extract glyph names)..      */
+  /*                                                                       */
+#define  TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****    T R U E T Y P E   D R I V E R    C O N F I G U R A T I O N   ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_BYTECODE_INTERPRETER if you want to compile   */
+  /* a bytecode interpreter in the TrueType driver. Note that there are    */
+  /* important patent issues related to the use of the interpreter.        */
+  /*                                                                       */
+  /* By undefining this, you'll only compile the code necessary to load    */
+  /* TrueType glyphs without hinting..                                     */
+  /*                                                                       */
+#define  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_INTERPRETER_SWITCH to compile the TrueType    */
+  /* bytecode interpreter with a huge switch statement, rather than a      */
+  /* call table.  This results in smaller and faster code for a number of  */
+  /* architectures.                                                        */
+  /*                                                                       */
+  /* Note however that on some compiler/processor combinations, undefining */
+  /* this macro will generate a faster, though larger, code.               */
+  /*                                                                       */
+#define TT_CONFIG_OPTION_INTERPRETER_SWITCH
+
+  /* The maximum number of sub-glyphs in a TrueType composite glyph */
+#define TT_MAX_SUBGLYPHS  32
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****      T Y P E 1   D R I V E R    C O N F I G U R A T I O N       ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+/********************************************************************/
+/* T1_MAX_STACK_DEPTH is the maximal depth of the token stack used  */
+/* by the Type 1 parser (see t1load.c). A minimum of 16 is required */
+/*                                                                  */
+#define T1_MAX_STACK_DEPTH  16
+
+/*******************************************************************/
+/* T1_MAX_DICT_DEPTH is the maximal depth of nest dictionaries and */
+/* arrays in the Type 1 stream (see t1load.c). A minimum of 4 is   */
+/* required                                                        */
+#define T1_MAX_DICT_DEPTH   5
+
+/***********************************************************************/
+/* T1_MAX_SUBRS_CALLS details the maximum number of nested sub-routine */
+/* calls during glyph loading                                          */
+#define T1_MAX_SUBRS_CALLS   8
+
+/*****************************************************************/
+/* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity */
+#define T1_MAX_CHARSTRINGS_OPERANDS  32
+
+
+/*******************************************************************/
+/* Define T1_CONFIG_OPTION_DISABLE_HINTER if you want to generate  */
+/* a driver with no hinter. This can be useful to debug the parser */
+/*                                                                 */
+#undef  T1_CONFIG_OPTION_DISABLE_HINTER
+
+/*******************************************************************/
+/* Define this configuration macro if you want to prevent the      */
+/* compilation of "t1afm", which is in charge of reading Type1     */
+/* AFM files into an existing face. Note that when set, the T1     */
+/* driver will be unable to produce kerning distances..            */
+/*                                                                 */
+#undef  T1_CONFIG_OPTION_NO_AFM
+
 
 
 #endif /* FTOPTION_H */
