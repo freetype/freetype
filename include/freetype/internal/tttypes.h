@@ -1053,6 +1053,8 @@
   /* a function type used for the truetype bytecode interpreter hooks */
   typedef FT_Error  (*TT_Interpreter)( void*  exec_context );
 
+  /* forward declaration */
+  typedef struct TT_Loader_  TT_Loader;
 
   /*************************************************************************/
   /*                                                                       */
@@ -1081,6 +1083,70 @@
                                    FT_ULong   tag,
                                    FT_Stream  stream,
                                    FT_ULong  *length );
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Access_Glyph_Frame                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Seeks a stream to the start of a given glyph element, and          */
+  /*    opens a frame for it..                                             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    loader      :: the current TrueType glyph loader object            */
+  /*    glyph index :: index of glyph to access                            */
+  /*    offset      :: offset of glyph according to locations table        */
+  /*    byte_count  :: size of frame in bytes                              */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    TrueType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function is normally equivalent to FILE_Seek(offset)          */
+  /*    followed by ACCESS_Frame(byte_count) with the loader's stream      */
+  /*    but alternative formats (compressed ones) might use something      */
+  /*    different..                                                        */
+  /*                                                                       */
+  typedef
+  FT_Error  (*TT_Access_Glyph_Frame_Func)( TT_Loader*  loader,
+                                           FT_UInt     glyph_index,
+                                           FT_ULong    offset,
+                                           FT_UInt     byte_count );
+  
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Load_Glyph_Element                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Reads one glyph element (its header, a simple glyph, or a          */
+  /*    composite) from the loader's current stream frame..                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    loader      :: the current TrueType glyph loader object            */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    TrueType error code.  0 means success.                             */
+  /*                                                                       */
+  typedef
+  FT_Error  (*TT_Load_Glyph_Element_Func)( TT_Loader*  loader );
+  
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Forget_Frame_Element                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Closes the current loader stream frame for the glyph..             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    loader      :: the current TrueType glyph loader object            */
+  /*                                                                       */
+  typedef
+  void      (*TT_Forget_Glyph_Frame_Func)( TT_Loader*  loader );
+
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1276,6 +1342,12 @@
     /* might need something different, e.g. Type 42 fonts              */
     TT_Goto_Table_Func       goto_table;
 
+    TT_Access_Glyph_Frame_Func  access_glyph_frame;
+    TT_Load_Glyph_Element_Func  read_glyph_header;
+    TT_Load_Glyph_Element_Func  read_simple_glyph;
+    TT_Load_Glyph_Element_Func  read_composite_glyph;
+    TT_Forget_Glyph_Frame_Func  forget_glyph_frame;
+
     /* a typeless pointer to the SFNT_Interface table used to load     */
     /* the basic TrueType tables in the face object                    */
     void*              sfnt;
@@ -1347,7 +1419,7 @@
     /*                                                                     */
     /***********************************************************************/
 
-    void*              other;
+    FT_Generic      extra;
 
   } TT_FaceRec;
 
@@ -1397,7 +1469,7 @@
   typedef struct TT_ExecContextRec_*  TT_ExecContext;
 
  /* glyph loader structure */
-  typedef struct  TT_Loader_
+  struct  TT_Loader_
   {
     FT_Face         face;
     FT_Size         size;
@@ -1427,8 +1499,11 @@
     TT_ExecContext  exec;
     FT_Byte*        instructions;
     FT_ULong        ins_pos;
+    
+    /* for possible extensibility in other formats */
+    void*           other;
 
-  } TT_Loader;
+  };
 
 
 

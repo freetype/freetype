@@ -250,12 +250,12 @@
 
 
   static
-  FT_Error  TT_Load_Simple_Glyph( TT_Loader*  load,
-                                  FT_Int      n_contours )
+  FT_Error  TT_Load_Simple_Glyph( TT_Loader*  load )
   {
     FT_Error         error;
-    FT_Stream        stream  = load->stream;
-    FT_GlyphLoader*  gloader = load->gloader;
+    FT_Stream        stream     = load->stream;
+    FT_GlyphLoader*  gloader    = load->gloader;
+    FT_Int           n_contours = load->n_contours;
     FT_Outline*      outline;
     TT_Face          face    = (TT_Face)load->face;
     TT_GlyphSlot     slot    = (TT_GlyphSlot)load->glyph;
@@ -405,8 +405,7 @@
 
 
   static
-  FT_Error  TT_Load_Composite_Glyph( TT_Loader*  loader,
-                                     FT_UInt     byte_count )
+  FT_Error  TT_Load_Composite_Glyph( TT_Loader*  loader )
   {
     FT_Error         error;
     FT_Stream        stream = loader->stream;
@@ -489,6 +488,16 @@
     return error;
   }
 
+
+  LOCAL_FUNC
+  void  TT_Init_Glyph_Loading( TT_Face  face )
+  {
+    face->access_glyph_frame   = TT_Access_Glyph_Frame;
+    face->read_glyph_header    = TT_Load_Glyph_Header;
+    face->read_simple_glyph    = TT_Load_Simple_Glyph;
+    face->read_composite_glyph = TT_Load_Composite_Glyph;
+    face->forget_glyph_frame   = TT_Forget_Glyph_Frame;
+  }
 
 
   /*************************************************************************/
@@ -708,13 +717,13 @@
     offset = loader->glyf_offset + offset;
 
     /* access glyph frame */
-    error = TT_Access_Glyph_Frame( loader, glyph_index, offset, count );
+    error = face->access_glyph_frame( loader, glyph_index, offset, count );
     if (error) goto Exit;
 
     opened_frame = 1;
 
     /* read first glyph header */
-    error = TT_Load_Glyph_Header( loader );
+    error = face->read_glyph_header( loader );
     if (error) goto Fail;
 
     contours_count = loader->n_contours;
@@ -744,7 +753,7 @@
       error = FT_GlyphLoader_Check_Points( gloader, 0, contours_count );
       if (error) goto Fail;
 
-      error = TT_Load_Simple_Glyph( loader, contours_count );
+      error = face->read_simple_glyph( loader );
       if (error) goto Fail;
       
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
@@ -779,10 +788,10 @@
       start_contour = gloader->base.outline.n_contours;
     
       
-      error = TT_Load_Composite_Glyph( loader, count );
+      error = face->read_composite_glyph( loader );
       if (error) goto Fail;
 
-      TT_Forget_Glyph_Frame( loader );
+      face->forget_glyph_frame( loader );
       opened_frame = 0;
 
       /* if the flag FT_LOAD_NO_RECURSE is set, we return the subglyph */
@@ -1031,7 +1040,7 @@
 
   Fail:
     if (opened_frame)
-      TT_Forget_Glyph_Frame( loader );
+      face->forget_glyph_frame( loader );
 
   Exit:
     return error;

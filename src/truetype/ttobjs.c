@@ -27,6 +27,7 @@
 #include <ttobjs.h>
 
 #include <ttpload.h>
+#include <ttgload.h>
 #include <freetype/internal/tterrors.h>
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
@@ -189,6 +190,9 @@
             TT_Load_CVT      ( face, stream ) ||
             TT_Load_Programs ( face, stream );
 
+    /* initialise standard glyph loading routines */
+    TT_Init_Glyph_Loading( face );
+
   Exit:
     return error;
      
@@ -217,6 +221,9 @@
 
     SFNT_Interface*  sfnt = face->sfnt;
 
+    /* for "extended TrueType formats" (i.e. compressed versions) */
+    if (face->extra.finalizer)
+      face->extra.finalizer( face->extra.data );
 
     if ( sfnt )
       sfnt->done_face( face );

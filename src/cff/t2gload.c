@@ -333,7 +333,7 @@
                          T2_Size      size,
                          T2_GlyphSlot slot )
   {
-    CFF_Font*  cff = (CFF_Font*)face->other;
+    CFF_Font*  cff = (CFF_Font*)face->extra.data;
 
 
     /* clear everything */
@@ -1608,7 +1608,7 @@
     T2_Decoder  decoder;
     TT_Face     face = (TT_Face)glyph->root.face;
     FT_Bool     hinting;
-    CFF_Font*   cff = (CFF_Font*)face->other;
+    CFF_Font*   cff = (CFF_Font*)face->extra.data;
 
 
     if ( load_flags & FT_LOAD_NO_RECURSE )

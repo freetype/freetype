@@ -122,7 +122,7 @@
       if ( ALLOC( cff, sizeof ( *cff ) ) )
         goto Exit;
 
-      face->other = cff;
+      face->extra.data = cff;
       error = T2_Load_CFF_Font( stream, face_index, cff );
       if ( error )
         goto Exit;
@@ -164,13 +164,13 @@
       sfnt->done_face( face );
 
     {
-      CFF_Font*  cff = (CFF_Font*)face->other;
+      CFF_Font*  cff = (CFF_Font*)face->extra.data;
 
 
       if ( cff )
       {
         T2_Done_CFF_Font( cff );
-        FREE( face->other );
+        FREE( face->extra.data );
       }
     }
   }
