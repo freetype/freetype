@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Tracing handling (specification only).                               */
 /*                                                                         */
-/*  Copyright 2002, 2004 by                                                */
+/*  Copyright 2002, 2004, 2005 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -43,6 +43,7 @@ FT_TRACE_DEF( cache )     /* cache sub-system        (ftcache.c, etc.) */
   /* SFNT driver components */
 FT_TRACE_DEF( sfobjs )    /* SFNT object handler     (sfobjs.c)   */
 FT_TRACE_DEF( ttcmap )    /* charmap handler         (ttcmap.c)   */
+FT_TRACE_DEF( ttkern )    /* kerning handler         (ttkern.c)   */
 FT_TRACE_DEF( ttload )    /* basic TrueType tables   (ttload.c)   */
 FT_TRACE_DEF( ttpost )    /* PS table processing     (ttpost.c)   */
 FT_TRACE_DEF( ttsbit )    /* TrueType sbit handling  (ttsbit.c)   */

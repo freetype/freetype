@@ -5,7 +5,7 @@
 /*    Load the basic TrueType tables, i.e., tables that can be either in   */
 /*    TTF or OTF fonts (body).                                             */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -801,6 +801,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
 #ifdef FT_OPTIMIZE_MEMORY
+
   static FT_Error
   tt_face_load_metrics( TT_Face    face,
                         FT_Stream  stream,
@@ -822,7 +823,7 @@
       ptable      = &face->vert_metrics;
       ptable_size = &face->vert_metrics_size;
       
-      /* The table is optional, quit silently if it wasn't found       */
+      /* The table is optional, quit silently if it wasn't found.      */
       /*                                                               */
       /* XXX: Some fonts have a valid vertical header with a non-null  */
       /*      `number_of_VMetrics' fields, but no corresponding `vmtx' */
@@ -849,10 +850,10 @@
       {
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
         /* If this is an incrementally loaded font and there are */
-        /* overriding metrics tolerate a missing 'hmtx' table.   */
-        if ( face->root.internal->incremental_interface &&
+        /* overriding metrics, tolerate a missing `hmtx' table.  */
+        if ( face->root.internal->incremental_interface          &&
              face->root.internal->incremental_interface->funcs->
-               get_glyph_metrics )
+               get_glyph_metrics                                 )
         {
           face->horizontal.number_Of_HMetrics = 0;
           error = SFNT_Err_Ok;
@@ -876,6 +877,7 @@
   }
 
 #else /* !OPTIMIZE_MEMORY */
+
   static FT_Error
   tt_face_load_metrics( TT_Face    face,
                         FT_Stream  stream,
@@ -897,7 +899,7 @@
 
     if ( vertical )
     {
-      /* The table is optional, quit silently if it wasn't found       */
+      /* The table is optional, quit silently if it wasn't found.      */
       /*                                                               */
       /* XXX: Some fonts have a valid vertical header with a non-null  */
       /*      `number_of_VMetrics' fields, but no corresponding `vmtx' */
@@ -927,10 +929,10 @@
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
         /* If this is an incrementally loaded font and there are */
-        /* overriding metrics tolerate a missing 'hmtx' table.   */
-        if ( face->root.internal->incremental_interface &&
+        /* overriding metrics, tolerate a missing `hmtx' table.  */
+        if ( face->root.internal->incremental_interface          &&
              face->root.internal->incremental_interface->funcs->
-               get_glyph_metrics )
+               get_glyph_metrics                                 )
         {
           face->horizontal.number_Of_HMetrics = 0;
           error = SFNT_Err_Ok;
@@ -993,9 +995,9 @@
       for ( ; cur < limit; cur++ )
         *cur = FT_GET_SHORT();
 
-      /* we fill up the missing left side bearings with the     */
+      /* We fill up the missing left side bearings with the     */
       /* last valid value.  Since this will occur for buggy CJK */
-      /* fonts usually only, nothing serious will happen        */
+      /* fonts usually only, nothing serious will happen.       */
       if ( num_shorts > num_shorts_checked && num_shorts_checked > 0 )
       {
         FT_Short  val = (*shorts)[num_shorts_checked - 1];
@@ -1014,7 +1016,9 @@
   Exit:
     return error;
   }
+
 #endif /* !FT_OPTIMIZE_METRICS */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1704,6 +1708,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
 #ifdef FT_OPTIMIZE_MEMORY
+
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_hdmx( TT_Face    face,
                      FT_Stream  stream )
@@ -1714,6 +1719,7 @@
     FT_ULong   table_size, record_size;
     FT_Byte*   p;
     FT_Byte*   limit;
+
 
     /* this table is optional */
     error = face->goto_table( face, TTAG_hdmx, stream, &table_size );
@@ -1726,9 +1732,9 @@
     p     = face->hdmx_table;
     limit = p + table_size;
 
-    version     = FT_NEXT_USHORT(p);
-    num_records = FT_NEXT_USHORT(p);
-    record_size = FT_NEXT_ULONG(p);
+    version     = FT_NEXT_USHORT( p );
+    num_records = FT_NEXT_USHORT( p );
+    record_size = FT_NEXT_ULONG( p );
 
     if ( version != 0 || num_records > 255 || record_size > 0x40000 )
     {
@@ -1741,7 +1747,7 @@
 
     for ( nn = 0; nn < num_records; nn++ )
     {
-      if ( p+record_size > limit )
+      if ( p + record_size > limit )
         break;
         
       face->hdmx_record_sizes[nn] = p[0];
@@ -1767,11 +1773,13 @@
     FT_Stream  stream = face->root.stream;
     FT_Memory  memory = stream->memory;
     
+
     FT_FREE( face->hdmx_record_sizes );
     FT_FRAME_RELEASE( face->hdmx_table );
   }
 
 #else /* !FT_OPTIMIZE_MEMORY */
+
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_hdmx( TT_Face    face,
                      FT_Stream  stream )
@@ -1797,9 +1805,9 @@
     if ( FT_FRAME_ENTER( 8L ) )
       goto Exit;
 
-    hdmx->version     = FT_GET_USHORT();
-    num_records       = FT_GET_SHORT();
-    record_size       = FT_GET_LONG();
+    hdmx->version = FT_GET_USHORT();
+    num_records   = FT_GET_SHORT();
+    record_size   = FT_GET_LONG();
 
     FT_FRAME_EXIT();
 
@@ -1831,7 +1839,7 @@
              FT_READ_BYTE( cur->max_width ) )
           goto Exit;
 
-        if ( FT_QALLOC( cur->widths, num_glyphs )       ||
+        if ( FT_QALLOC( cur->widths, num_glyphs )      ||
              FT_STREAM_READ( cur->widths, num_glyphs ) )
           goto Exit;
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType glyph data/program tables loader (body).                    */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2004 by                                     */
+/*  Copyright 1996-2001, 2002, 2004, 2005 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -79,29 +79,29 @@
 
     if ( face->header.Index_To_Loc_Format != 0 )
     {
-      if ( table_len >= 040000 )
+      if ( table_len >= 0x40000 )
       {
-        FT_TRACE2(( "table too large !!\n" ));
+        FT_TRACE2(( "table too large!\n" ));
         error = TT_Err_Invalid_Table;
         goto Exit;
       }
-      face->num_locations = (FT_UInt)(table_len >> 2);
+      face->num_locations = (FT_UInt)( table_len >> 2 );
     }
     else
     {
       if ( table_len >= 0x20000 )
       {
-        FT_TRACE2(( "table too large !!\n" ));
+        FT_TRACE2(( "table too large!\n" ));
         error = TT_Err_Invalid_Table;
         goto Exit;
       }
-      face->num_locations = (FT_UInt)(table_len >> 1);
+      face->num_locations = (FT_UInt)( table_len >> 1 );
     }
 
-
-   /* extract the frame. We don't need to decompress it since
-    * we'll be able to parse it directly
-    */
+    /*
+     * Extract the frame.  We don't need to decompress it since
+     * we are able to parse it directly.
+     */
     if ( FT_FRAME_EXTRACT( table_len, face->glyph_locations ) )
       goto Exit;
 
@@ -113,45 +113,47 @@
 
 
   FT_LOCAL_DEF( FT_ULong )
-  tt_face_get_location( TT_Face    face,
-                        FT_UInt    gindex,
-                        FT_UInt   *asize )
+  tt_face_get_location( TT_Face   face,
+                        FT_UInt   gindex,
+                        FT_UInt  *asize )
   {
     FT_ULong  pos1, pos2;
     FT_Byte*  p;
     FT_Byte*  p_limit;
 
+
     pos1 = pos2 = 0;
+
     if ( gindex < face->num_locations )
     {
       if ( face->header.Index_To_Loc_Format != 0 )
       {
-        p       = face->glyph_locations + gindex*4;
-        p_limit = face->glyph_locations + face->num_locations*4;
+        p       = face->glyph_locations + gindex * 4;
+        p_limit = face->glyph_locations + face->num_locations * 4;
 
-        pos1 = FT_NEXT_ULONG(p);
+        pos1 = FT_NEXT_ULONG( p );
         pos2 = pos1;
 
-        if ( p+4 <= p_limit )
-          pos2 = FT_NEXT_ULONG(p);
+        if ( p + 4 <= p_limit )
+          pos2 = FT_NEXT_ULONG( p );
       }
       else
       {
-        p       = face->glyph_locations + gindex*2;
-        p_limit = face->glyph_locations + face->num_locations*2;
+        p       = face->glyph_locations + gindex * 2;
+        p_limit = face->glyph_locations + face->num_locations * 2;
 
-        pos1 = FT_NEXT_USHORT(p);
+        pos1 = FT_NEXT_USHORT( p );
         pos2 = pos1;
 
-        if ( p+2 <= p_limit )
-          pos2 = FT_NEXT_USHORT(p);
+        if ( p + 2 <= p_limit )
+          pos2 = FT_NEXT_USHORT( p );
 
         pos1 <<= 1;
         pos2 <<= 1;
       }
     }
 
-    *asize = (FT_UInt)(pos2 - pos1);
+    *asize = (FT_UInt)( pos2 - pos1 );
 
     return pos1;
   }
@@ -160,15 +162,16 @@
   FT_LOCAL_DEF( void )
   tt_face_done_loca( TT_Face  face )
   {
-    FT_Stream     stream = face->root.stream;
+    FT_Stream  stream = face->root.stream;
+
 
     FT_FRAME_RELEASE( face->glyph_locations );
     face->num_locations = 0;
   }
 
 
-
 #else /* !FT_OPTIMIZE_MEMORY */
+
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_loca( TT_Face    face,
@@ -224,6 +227,7 @@
 
       if ( FT_FRAME_ENTER( face->num_locations * 2L ) )
         goto Exit;
+
       {
         FT_Long*  loc   = face->glyph_locations;
         FT_Long*  limit = loc + face->num_locations;
@@ -232,6 +236,7 @@
         for ( ; loc < limit; loc++ )
           *loc = (FT_Long)( (FT_ULong)FT_GET_USHORT() * 2 );
       }
+
       FT_FRAME_EXIT();
     }
 
@@ -243,12 +248,13 @@
 
 
   FT_LOCAL_DEF( FT_ULong )
-  tt_face_get_location( TT_Face    face,
-                        FT_UInt    gindex,
-                        FT_UInt   *asize )
+  tt_face_get_location( TT_Face   face,
+                        FT_UInt   gindex,
+                        FT_UInt  *asize )
   {
     FT_ULong  offset;
     FT_UInt   count;
+
 
     offset = face->glyph_locations[gindex];
     count  = 0;
@@ -264,12 +270,12 @@
   FT_LOCAL_DEF( void )
   tt_face_done_loca( TT_Face  face )
   {
-    FT_Memory     memory = face->root.memory;
+    FT_Memory  memory = face->root.memory;
+
 
     FT_FREE( face->glyph_locations );
     face->num_locations = 0;
   }
-
 
 
 #endif /* !FT_OPTIMIZE_MEMORY */
@@ -345,10 +351,13 @@
   Exit:
     return error;
 
-#else /* !BYTECODE_INTERPRETER */
-    FT_UNUSED(face);
-    FT_UNUSED(stream);
+#else /* !FT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+
+    FT_UNUSED( face   );
+    FT_UNUSED( stream );
+
     return 0;
+
 #endif
   }
 
@@ -423,10 +432,13 @@
   Exit:
     return error;
 
-#else /* !BYTECODE_INTERPRETER */
-    FT_UNUSED(face);
-    FT_UNUSED(stream);
+#else /* !FT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+
+    FT_UNUSED( face   );
+    FT_UNUSED( stream );
+
     return 0;
+
 #endif
   }
 

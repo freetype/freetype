@@ -1,11 +1,11 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ttkern.h                                                               */
+/*  ttkern.c                                                               */
 /*                                                                         */
-/*    Load the basic TrueType kerning table. This doesn't handle           */
+/*    Load the basic TrueType kerning table.  This doesn't handle          */
 /*    kerning data within the GPOS table at the moment.                    */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -21,6 +21,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
+#include "ttkern.h"
 #include "ttload.h"
 
 #include "sferrors.h"
@@ -33,7 +34,7 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttload
+#define FT_COMPONENT  trace_ttkern
 
 
 #undef  TT_KERN_INDEX
@@ -72,15 +73,15 @@
       FT_ERROR(( "could not extract kerning table\n" ));
       goto Exit;
     }
-      
+
     face->kern_table_size = table_size;
-    
+
     p       = face->kern_table;
     p_limit = p + table_size;
 
     p         += 2; /* skip version */
-    num_tables = FT_NEXT_USHORT(p);
-    
+    num_tables = FT_NEXT_USHORT( p );
+
     if ( num_tables > 32 ) /* we only support up to 32 sub-tables */
       num_tables = 32;
 
@@ -89,56 +90,61 @@
       FT_UInt    num_pairs, version, length, coverage;
       FT_Byte*   p_next;
       FT_UInt32  mask = 1UL << nn;
-      
+
+
       if ( p + 6 > p_limit )
         break;
 
       p_next = p;
-      
-      version  = FT_NEXT_USHORT(p);
-      length   = FT_NEXT_USHORT(p);
-      coverage = FT_NEXT_USHORT(p);
-      
+
+      version  = FT_NEXT_USHORT( p );
+      length   = FT_NEXT_USHORT( p );
+      coverage = FT_NEXT_USHORT( p );
+
       if ( length <= 6 )
         break;
 
       p_next += length;
-      
-      if ( (coverage & ~8) != 0x0001 ||  /* only use horizontal kerning tables */
-           p+8 > p_limit               )
+
+      /* only use horizontal kerning tables */
+      if ( ( coverage & ~8 ) != 0x0001 ||
+           p + 8 > p_limit             )
         goto NextTable;
 
-      num_pairs = FT_NEXT_USHORT(p);
+      num_pairs = FT_NEXT_USHORT( p );
       p        += 6;
-      
-      if ( p + 6*num_pairs > p_limit )
+
+      if ( p + 6 * num_pairs > p_limit )
         goto NextTable;
 
       avail |= mask;
-      
-     /* now, try to see if the pairs in this table are ordered.
-      * when they are, we'll be able to use binary search
-      */
+
+      /*
+       *  Now check whether the pairs in this table are ordered.
+       *  We then can use binary search.
+       */
       if ( num_pairs > 0 )
       {
-        FT_UInt    count;
-        FT_UInt    old_pair;
-        
-        old_pair = FT_NEXT_ULONG(p);
+        FT_UInt  count;
+        FT_UInt  old_pair;
+
+
+        old_pair = FT_NEXT_ULONG( p );
         p       += 2;
 
-        for ( count = num_pairs-1; count > 0; count-- )
+        for ( count = num_pairs - 1; count > 0; count-- )
         {
           FT_UInt32  cur_pair;
-          
-          cur_pair = FT_NEXT_ULONG(p);
+
+
+          cur_pair = FT_NEXT_ULONG( p );
           if ( cur_pair <= old_pair )
             break;
 
           p += 2;
           old_pair = cur_pair;
         }
-        
+
         if ( count == 0 )
           ordered |= mask;
       }
@@ -150,7 +156,7 @@
     face->num_kern_tables = nn;
     face->kern_avail_bits = avail;
     face->kern_order_bits = ordered;
-    
+
   Exit:
     return error;
   }
@@ -160,7 +166,8 @@
   tt_face_done_kern( TT_Face  face )
   {
     FT_Stream  stream = face->root.stream;
-    
+
+
     FT_FRAME_RELEASE( face->kern_table );
     face->kern_table_size = 0;
     face->num_kern_tables = 0;
@@ -179,6 +186,7 @@
     FT_Byte*  p       = face->kern_table;
     FT_Byte*  p_limit = p + face->kern_table_size;
 
+
     p   += 4;
     mask = 0x0001;
 
@@ -186,88 +194,95 @@
     {
       FT_Byte* base     = p;
       FT_Byte* next     = base;
-      FT_UInt  version  = FT_NEXT_USHORT(p);
-      FT_UInt  length   = FT_NEXT_USHORT(p);
-      FT_UInt  coverage = FT_NEXT_USHORT(p);
+      FT_UInt  version  = FT_NEXT_USHORT( p );
+      FT_UInt  length   = FT_NEXT_USHORT( p );
+      FT_UInt  coverage = FT_NEXT_USHORT( p );
       FT_Int   value    = 0;
-      
+
+
       next = base + length;
-      
-      if ( (face->kern_avail_bits & mask) == 0 )
+
+      if ( ( face->kern_avail_bits & mask ) == 0 )
         goto NextTable;
 
-      if ( p+8 > next )
+      if ( p + 8 > next )
         goto NextTable;
 
       switch ( coverage >> 8 )
       {
       case 0:
+        {
+          FT_UInt   num_pairs = FT_NEXT_USHORT( p );
+          FT_ULong  key0      = TT_KERN_INDEX( left_glyph, right_glyph );
+
+
+          p += 6;
+
+          if ( face->kern_order_bits & mask )   /* binary search */
           {
-            FT_UInt   num_pairs = FT_NEXT_USHORT(p);
-            FT_ULong  key0      = TT_KERN_INDEX(left_glyph,right_glyph);
+            FT_UInt   min = 0;
+            FT_UInt   max = num_pairs;
+            FT_Byte*  q;
 
-            p += 6;
-            
-            if ( face->kern_order_bits & mask )   /* binary search */
-            {
-              FT_UInt   min = 0;
-              FT_UInt   max = num_pairs;
-              FT_Byte*  q;
-              
-              while ( min < max )
-              {
-                FT_UInt   mid = (min+max) >> 1;
-                FT_Byte*  q = p + 6*mid;
-                FT_ULong   key;
-                
-                key   = FT_NEXT_ULONG(q);
-                
-                if ( key == key0 )
-                {
-                  value = FT_PEEK_SHORT(q);
-                  goto Found;
-                }
-                if ( key < key0 )
-                  min = mid+1;
-                else
-                  max = mid;
-              }
-            }
-            else /* linear search */
-            {
-              FT_UInt  count = num_pairs;
 
-              for ( ; count > 0; count-- )
+            while ( min < max )
+            {
+              FT_UInt   mid = ( min + max ) >> 1;
+              FT_Byte*  q   = p + 6 * mid;
+              FT_ULong  key;
+
+
+              key = FT_NEXT_ULONG( q );
+
+              if ( key == key0 )
               {
-                FT_ULong  key = FT_NEXT_ULONG(p);
-                
-                if ( key == key0 )
-                {
-                  value = FT_PEEK_SHORT(p);
-                  goto Found;
-                }
-                p += 2;
+                value = FT_PEEK_SHORT( q );
+                goto Found;
               }
+              if ( key < key0 )
+                min = mid + 1;
+              else
+                max = mid;
             }
           }
-          break;
+          else /* linear search */
+          {
+            FT_UInt  count = num_pairs;
 
-      /* we don't support format 2 because we've never seen a single font
-       * using it in real life...
-       */
+
+            for ( ; count > 0; count-- )
+            {
+              FT_ULong  key = FT_NEXT_ULONG( p );
+
+
+              if ( key == key0 )
+              {
+                value = FT_PEEK_SHORT( p );
+                goto Found;
+              }
+              p += 2;
+            }
+          }
+        }
+        break;
+
+       /*
+        *  We don't support format 2 because we've never seen a single font
+        *  using it in real life...
+        */
 
       default:
-          ;
+        ;
       }
 
       goto NextTable;
-      
+
     Found:
-      if ( coverage & 8 ) /* overide or addition */
+      if ( coverage & 8 ) /* overide or add */
         result = value;
       else
         result += value;
-        
+
     NextTable:
       p = next;
     }
@@ -276,8 +291,7 @@
     return result;
   }
 
-  
-#else /* !OPTMIZE_MEMORY */
+#else /* !OPTIMIZE_MEMORY */
 
   FT_CALLBACK_DEF( int )
   tt_kern_pair_compare( const void*  a,
@@ -365,20 +379,20 @@
         {
           TT_Kern0_Pair  pair0 = face->kern_pairs;
           FT_ULong       prev  = TT_KERN_INDEX( pair0->left, pair0->right );
-          
+
 
           for ( pair0++; pair0 < limit; pair0++ )
           {
             FT_ULong  next = TT_KERN_INDEX( pair0->left, pair0->right );
-            
+
 
             if ( next < prev )
               goto SortIt;
-              
+
             prev = next;
           }
           goto Exit;
-          
+
         SortIt:
           ft_qsort( (void*)face->kern_pairs, (int)num_pairs,
                     sizeof ( TT_Kern0_PairRec ), tt_kern_pair_compare );
@@ -400,6 +414,7 @@
     return error;
   }
 
+
   FT_CALLBACK_DEF( int )
   tt_kern_pair_compare( const void*  a,
                         const void*  b )
@@ -410,9 +425,9 @@
     FT_ULong  index1 = TT_KERN_INDEX( pair1->left, pair1->right );
     FT_ULong  index2 = TT_KERN_INDEX( pair2->left, pair2->right );
 
-
-    return ( index1 < index2 ? -1 :
-           ( index1 > index2 ?  1 : 0 ));
+    return index1 < index2 ? -1
+                           : ( index1 > index2 ? 1
+                                               : 0 );
   }
 
 
@@ -420,17 +435,17 @@
   tt_face_done_kern( TT_Face  face )
   {
     FT_Memory  memory = face->root.stream->memory;
-    
+
+
     FT_FREE( face->kern_pairs );
     face->num_kern_pairs = 0;
   }
 
 
-
   FT_LOCAL_DEF( FT_Int )
-  tt_face_get_kerning( TT_Face     face,
-                       FT_UInt     left_glyph,
-                       FT_UInt     right_glyph )
+  tt_face_get_kerning( TT_Face  face,
+                       FT_UInt  left_glyph,
+                       FT_UInt  right_glyph )
   {
     FT_Int         result = 0;
     TT_Kern0_Pair  pair;
@@ -477,5 +492,5 @@
 
 
 #undef TT_KERN_INDEX
-  
+
 /* END */

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType and OpenType embedded bitmap support (body).                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -584,12 +584,11 @@
       }
     }
 
-   /* now set up the root fields to indicate the strikes
-    */
+    /* now set up the root fields to indicate the strikes */
     if ( face->num_sbit_strikes )
     {
       FT_ULong  n;
-      FT_Face   root = FT_FACE(face);
+      FT_Face   root = FT_FACE( face );
 
 
       if ( FT_NEW_ARRAY( root->available_sizes, face->num_sbit_strikes ) )
@@ -608,9 +607,9 @@
 
         /* assume 72dpi */
         bsize->height =
-          (FT_Short)( ( height * strike->y_ppem + fupem/2 ) / fupem );
+          (FT_Short)( ( height * strike->y_ppem + fupem / 2 ) / fupem );
         bsize->width  =
-          (FT_Short)( ( avg * strike->y_ppem + fupem/2 ) / fupem );
+          (FT_Short)( ( avg * strike->y_ppem + fupem / 2 ) / fupem );
         bsize->size   = strike->y_ppem << 6;
         bsize->x_ppem = strike->x_ppem << 6;
         bsize->y_ppem = strike->y_ppem << 6;
@@ -1514,6 +1513,7 @@
     return error;
   }
 
+#endif /* !OPTIMIZE_MEMORY */
+
 
 /* END */
-#endif /* !OPTIMIZE_MEMORY */

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level SFNT driver interface (body).                             */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -366,8 +366,8 @@
     /* see `ttsbit.h' and `sfnt.h' */
     tt_face_set_sbit_strike,
     tt_face_load_sbit_strikes,
-    NULL /* tt_find_sbit_image */,
-    NULL /* tt_load_sbit_metrics */,
+    0 /* tt_find_sbit_image */,
+    0 /* tt_load_sbit_metrics */,
     tt_face_load_sbit_image,
     tt_face_free_sbit_strikes,
 
