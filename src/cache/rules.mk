@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 2000, 2001, 2003 by
+# Copyright 2000, 2001, 2003, 2004 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -41,7 +41,8 @@ CACHE_DRV_H := $(CACHE_H_DIR)/ftcmru.h   \
                $(CACHE_H_DIR)/ftcglyph.h \
                $(CACHE_H_DIR)/ftcimage.h \
                $(CACHE_H_DIR)/ftccmap.h  \
-               $(CACHE_DIR)/ftcerror.h
+               $(CACHE_DIR)/ftcerror.h   \
+               $(CACHE_DIR)/ftccback.h
 
 
 # Cache driver object(s)

@@ -1,3 +1,41 @@
+2004-02-17  Werner Lemberg  <wl@gnu.org>
+
+	Fix callback functions in cache module.
+
+	* src/cache/ftccback.h: New file for callback declarations.
+
+	* src/cache/ftcbasic.c (ftc_basic_family_compare,
+	ftc_basic_family_init, ftc_basic_family_get_count,
+	ftc_basic_family_load_bitmap, ftc_basic_family_load_glyph,
+	ftc_basic_gnode_compare_faceid): Use FT_CALLBACK_DEF.
+	(ftc_basic_image_family_class, ftc_basic_image_cache_class,
+	ftc_basic_sbit_family_class, ftc_basic_sbit_cache_class):
+	Use FT_CALLBACK_TABLE_DEF and local wrapper functions.
+
+	* src/cache/ftccache.c: Include ftccback.h.
+	(ftc_cache_init, ftc_cache_done): New wrapper functions which use
+	FT_LOCAL_DEF.
+
+	* src/cache/ftccmap.c: Include ftccback.h.
+	(ftc_cmap_cache_class): Use local wrapper functions.
+
+	* src/cache/ftcglyph.c: Include ftccback.h.
+	(ftc_gnode_compare, ftc_gcache_init, ftc_gcache_done): New wrapper
+	functions which use FT_LOCAL_DEF.
+
+	* src/cache/ftcimage.c: Include ftccback.h.
+	(ftc_inode_free, ftc_inode_new, ftc_inode_weight): New wrapper
+	functions which use FT_LOCAL_DEF.
+
+	* src/cache/ftcmanag.c (ftc_size_list_class, ftc_face_list_class):
+	Use FT_CALLBACK_TABLE_DEF.
+
+	* src/cache;/ftcsbits.c: Include ftccback.h.
+	(ftc_snode_free, ftc_snode_new, ftc_snode_weight,
+	ftc_snode_compare): New wrapper functions which use FT_LOCAL_DEF.
+
+	* src/cache/rules.mk (CACHE_DRV_H): Add ftccback.h.
+
 2004-02-17  Masatake YAMATO  <jet@gyve.org>
 
 	* include/freetype/ftmac.h (FT_GetFile_From_Mac_Name): Fix a typo

@@ -23,6 +23,7 @@
 #include FT_CACHE_INTERNAL_SBITS_H
 #include FT_INTERNAL_MEMORY_H
 
+#include "ftccback.h"
 #include "ftcerror.h"
 
 
@@ -61,7 +62,7 @@
   } FTC_BasicFamilyRec, *FTC_BasicFamily;
 
 
-  static FT_Bool
+  FT_CALLBACK_DEF( FT_Bool )
   ftc_basic_family_compare( FTC_BasicFamily  family,
                             FTC_BasicQuery   query )
   {
@@ -69,7 +70,7 @@
   }
 
 
-  static FT_Error
+  FT_CALLBACK_DEF( FT_Error )
   ftc_basic_family_init( FTC_BasicFamily  family,
                          FTC_BasicQuery   query,
                          FTC_Cache        cache )
@@ -80,7 +81,7 @@
   }
 
 
-  static FT_UInt
+  FT_CALLBACK_DEF( FT_UInt )
   ftc_basic_family_get_count( FTC_BasicFamily  family,
                               FTC_Manager      manager )
   {
@@ -98,7 +99,7 @@
   }
 
 
-  static FT_Error
+  FT_CALLBACK_DEF( FT_Error )
   ftc_basic_family_load_bitmap( FTC_BasicFamily  family,
                                 FT_UInt          gindex,
                                 FTC_Manager      manager,
@@ -124,7 +125,7 @@
   }
 
 
-  static FT_Error
+  FT_CALLBACK_DEF( FT_Error )
   ftc_basic_family_load_glyph( FTC_BasicFamily  family,
                                FT_UInt          gindex,
                                FTC_Cache        cache,
@@ -171,7 +172,7 @@
   }
 
 
-  static FT_Bool
+  FT_CALLBACK_DEF( FT_Bool )
   ftc_basic_gnode_compare_faceid( FTC_GNode   gnode,
                                   FTC_FaceID  face_id,
                                   FTC_Cache   cache )
@@ -198,7 +199,8 @@
   *
   */
 
-  static const FTC_IFamilyClassRec  ftc_basic_image_family_class =
+  FT_CALLBACK_TABLE_DEF
+  const FTC_IFamilyClassRec  ftc_basic_image_family_class =
   {
     {
       sizeof( FTC_BasicFamilyRec ),
@@ -211,18 +213,19 @@
   };
 
 
-  static const FTC_GCacheClassRec  ftc_basic_image_cache_class =
+  FT_CALLBACK_TABLE_DEF
+  const FTC_GCacheClassRec  ftc_basic_image_cache_class =
   {
     {
-      (FTC_Node_NewFunc)    FTC_INode_New,
-      (FTC_Node_WeightFunc) FTC_INode_Weight,
-      (FTC_Node_CompareFunc)FTC_GNode_Compare,
+      (FTC_Node_NewFunc)    ftc_inode_new,
+      (FTC_Node_WeightFunc) ftc_inode_weight,
+      (FTC_Node_CompareFunc)ftc_gnode_compare,
       (FTC_Node_CompareFunc)ftc_basic_gnode_compare_faceid,
-      (FTC_Node_FreeFunc)   FTC_INode_Free,
+      (FTC_Node_FreeFunc)   ftc_inode_free,
 
       sizeof( FTC_GCacheRec ),
-      (FTC_Cache_InitFunc)  FTC_GCache_Init,
-      (FTC_Cache_DoneFunc)  FTC_GCache_Done
+      (FTC_Cache_InitFunc)  ftc_gcache_init,
+      (FTC_Cache_DoneFunc)  ftc_gcache_done
     },
     (FTC_MruListClass)&ftc_basic_image_family_class
   };
@@ -311,7 +314,8 @@
   */
 
 
-  static const FTC_SFamilyClassRec  ftc_basic_sbit_family_class =
+  FT_CALLBACK_TABLE_DEF
+  const FTC_SFamilyClassRec  ftc_basic_sbit_family_class =
   {
     {
       sizeof( FTC_BasicFamilyRec ),
@@ -325,18 +329,19 @@
   };
 
 
-  static const FTC_GCacheClassRec  ftc_basic_sbit_cache_class =
+  FT_CALLBACK_TABLE_DEF
+  const FTC_GCacheClassRec  ftc_basic_sbit_cache_class =
   {
     {
-      (FTC_Node_NewFunc)    FTC_SNode_New,
-      (FTC_Node_WeightFunc) FTC_SNode_Weight,
-      (FTC_Node_CompareFunc)FTC_SNode_Compare,
+      (FTC_Node_NewFunc)    ftc_snode_new,
+      (FTC_Node_WeightFunc) ftc_snode_weight,
+      (FTC_Node_CompareFunc)ftc_snode_compare,
       (FTC_Node_CompareFunc)ftc_basic_gnode_compare_faceid,
-      (FTC_Node_FreeFunc)   FTC_SNode_Free,
+      (FTC_Node_FreeFunc)   ftc_snode_free,
 
       sizeof( FTC_GCacheRec ),
-      (FTC_Cache_InitFunc)  FTC_GCache_Init,
-      (FTC_Cache_DoneFunc)  FTC_GCache_Done
+      (FTC_Cache_InitFunc)  ftc_gcache_init,
+      (FTC_Cache_DoneFunc)  ftc_gcache_done
     },
     (FTC_MruListClass)&ftc_basic_sbit_family_class
   };

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Glyph Image (FT_Glyph) cache (body).                        */
 /*                                                                         */
-/*  Copyright 2000-2001, 2003 by                                           */
+/*  Copyright 2000-2001, 2003, 2004 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -23,6 +23,7 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 
+#include "ftccback.h"
 #include "ftcerror.h"
 
 
@@ -72,6 +73,14 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Bool )
+  ftc_gnode_compare( FTC_GNode   gnode,
+                     FTC_GQuery  gquery )
+  {
+    return FTC_GNode_Compare( gnode, gquery );
+  }
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -114,11 +123,25 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Error )
+  ftc_gcache_init( FTC_GCache  cache )
+  {
+    return FTC_GCache_Init( cache );
+  }
+
+
   FT_EXPORT_DEF( void )
   FTC_GCache_Done( FTC_GCache  cache )
   {
     FTC_Cache_Done( (FTC_Cache)cache );
     FTC_MruList_Done( &cache->families );
+  }
+
+
+  FT_LOCAL_DEF( void )
+  ftc_gcache_done( FTC_GCache  cache )
+  {
+    FTC_GCache_Done( cache );
   }
 
 

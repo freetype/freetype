@@ -23,6 +23,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_ERRORS_H
 
+#include "ftccback.h"
 #include "ftcerror.h"
 
 
@@ -72,6 +73,14 @@
     FTC_GNode_Done( FTC_GNODE( snode ), cache );
 
     FT_FREE( snode );
+  }
+
+
+  FT_LOCAL_DEF( void )
+  ftc_snode_free( FTC_SNode  snode,
+                  FTC_Cache  cache )
+  {
+    FTC_SNode_Free( snode, cache );
   }
 
 
@@ -228,6 +237,15 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Error )
+  ftc_snode_new( FTC_SNode  *psnode,
+                 FTC_GQuery  gquery,
+                 FTC_Cache   cache )
+  {
+    return FTC_SNode_New( psnode, gquery, cache );
+  }
+
+
   FT_EXPORT_DEF( FT_ULong )
   FTC_SNode_Weight( FTC_SNode  snode )
   {
@@ -256,6 +274,13 @@
     }
 
     return size;
+  }
+
+
+  FT_LOCAL_DEF( FT_ULong )
+  ftc_snode_weight( FTC_SNode  snode )
+  {
+    return FTC_SNode_Weight( snode );
   }
 
 
@@ -291,6 +316,15 @@
     }
 
     return result;
+  }
+
+
+  FT_LOCAL_DEF( FT_Bool )
+  ftc_snode_compare( FTC_SNode   snode,
+                     FTC_GQuery  gquery,
+                     FTC_Cache   cache )
+  {
+    return FTC_SNode_Compare( snode, gquery, cache );
   }
 
 

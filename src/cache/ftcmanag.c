@@ -129,7 +129,8 @@
   }
 
 
-  static const FTC_MruListClassRec  ftc_size_list_class =
+  FT_CALLBACK_TABLE_DEF
+  const FTC_MruListClassRec  ftc_size_list_class =
   {
     sizeof( FTC_SizeNodeRec ),
     (FTC_MruNode_CompareFunc)ftc_size_node_compare,
@@ -249,7 +250,8 @@
   }
 
 
-  static const FTC_MruListClassRec  ftc_face_list_class =
+  FT_CALLBACK_TABLE_DEF
+  const FTC_MruListClassRec  ftc_face_list_class =
   {
     sizeof( FTC_FaceNodeRec),
 
