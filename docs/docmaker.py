@@ -45,14 +45,14 @@ para_footer = "</p>"
 block_header = "<center><hr width=75%><table width=75%><tr><td>"
 block_footer = "</td></tr></table></center>"
 
-description_header = "<center><table width=65%><tr><td>"
+description_header = "<center><table width=87%><tr><td>"
 description_footer = "</td></tr></table></center><br>"
 
-marker_header = "<center><table width=65% cellpadding=5><tr bgcolor=#EEEEFF><td><em><b>"
+marker_header = "<center><table width=87% cellpadding=5><tr bgcolor=#EEEEFF><td><em><b>"
 marker_inter  = "</b></em></td></tr><tr><td>"
 marker_footer = "</td></tr></table></center>"
 
-source_header = "<center><table width=65%><tr bgcolor=#D6E8FF width=100%><td><pre>"
+source_header = "<center><table width=87%><tr bgcolor=#D6E8FF width=100%><td><pre>"
 source_footer = "</pre></table></center><br>"
 
 
@@ -184,7 +184,7 @@ class DocCode:
         return "UNKNOWN_CODE_IDENTIFIER!"
 
 
-    def dump_html( self ):
+    def dump_html( self, identifiers = None ):
         # clean the last empty lines
         #
         l = len( self.lines ) - 1
@@ -239,19 +239,55 @@ class DocParagraph:
         return "UNKNOWN_PARA_IDENTIFIER!"
 
 
-    def dump( self ):
+    def dump( self, identifiers = None ):
         max_width = 50
         cursor    = 0
         line      = ""
+        extra     = None
+        alphanum  = string.lowercase + string.uppercase + string.digits + '_'
 
         for word in self.words:
+
+            # process cross references when needed
+            if identifiers and word and word[0] == '@':
+                word  = word[1:]
+
+                # we need to find non alpha numeric charaters
+                i = len(word)
+                while i > 0 and not word[i-1] in alphanum:
+                    i = i-1
+                    
+                if i > 0:
+                    extra = word[i:]
+                    word  = word[0:i]
+
+                block = identifiers.get( word )
+                if block:
+                    word = '<a href="'+block.html_address()+'">' + word + '</a>'
+                else:
+                    word = '?'+word
+
             if cursor + len( word ) + 1 > max_width:
                 print line
                 cursor = 0
                 line = ""
 
-            line   = line + word + " "
+            line   = line + word
+            if not extra:
+                line = line + " "
             cursor = cursor + len( word ) + 1
+
+            # handle trailing periods, commas, etc.. at the end of
+            # cross references..
+            if extra:
+                if cursor + len( extra ) + 1 > max_width:
+                    print line
+                    cursor = 0
+                    line = ""
+
+                line   = line + extra + " "
+                cursor = cursor + len( extra ) + 1
+                extra  = None
 
         if cursor > 0:
             print line
@@ -269,9 +305,9 @@ class DocParagraph:
         return s
 
 
-    def dump_html( self ):
+    def dump_html( self, identifiers = None ):
         print para_header
-        self.dump()
+        self.dump( identifiers )
         print para_footer
 
 
@@ -444,7 +480,7 @@ class DocContent:
                 print "</field>"
 
 
-    def dump_html( self ):
+    def dump_html( self, identifiers = None ):
         n        = len( self.items )
         in_table = 0
 
@@ -458,7 +494,7 @@ class DocContent:
                     in_table = 0
 
                 for element in item[1]:
-                    element.dump_html()
+                    element.dump_html( identifiers )
 
             else:
                 if not in_table:
@@ -470,13 +506,13 @@ class DocContent:
                 print "<b>" + field + "</b></td><td>"
 
                 for element in item[1]:
-                    element.dump_html()
+                    element.dump_html( identifiers )
 
         if in_table:
             print "</td></tr></table>"
 
 
-    def dump_html_in_table( self ):
+    def dump_html_in_table( self, identifiers = None ):
         n        = len( self.items )
         in_table = 0
 
@@ -488,14 +524,14 @@ class DocContent:
                 if item[1]:
                     print "<tr><td colspan=2>"
                     for element in item[1]:
-                        element.dump_html()
+                        element.dump_html( identifiers )
                     print "</td></tr>"
 
             else:
                 print "<tr><td><b>" + field + "</b></td><td>"
 
                 for element in item[1]:
-                    element.dump_html()
+                    element.dump_html( identifiers )
 
                 print "</td></tr>"
 
@@ -526,8 +562,10 @@ class DocContent:
 class DocBlock:
 
     def __init__( self, block_line_list = [], source_line_list = [] ):
-        self.items   = []                # current ( marker, contents ) list
-        self.section = None              # section this block belongs to
+        self.items    = []                # current ( marker, contents ) list
+        self.section  = None              # section this block belongs to
+        self.filename = "unknown"         # filename defining this block
+        self.lineno   = 0                 # line number in filename
 
         marker       = None              # current marker
         content      = []                # current content lines list
@@ -607,6 +645,17 @@ class DocBlock:
                 return item[1]
         return None
 
+    def html_address( self ):
+        section = self.section
+        if section and section.filename:
+            return section.filename+'#'+self.name
+
+        return ""  # this block is not in a section ??
+
+
+    def location( self ):
+        return self.filename + ':' + str(self.lineno)
+
 
     def dump( self ):
         for i in range( len( self.items ) ):
@@ -615,9 +664,9 @@ class DocBlock:
             content.dump()
 
 
-    def dump_html( self ):
+    def dump_html( self, identifiers = None ):
         types      = [ 'type', 'struct', 'functype', 'function',
-                       'constant', 'enum', 'macro' ]
+                       'constant', 'enum', 'macro', 'structure', 'also' ]
 
         parameters = [ 'input', 'inout', 'output', 'return' ]
 
@@ -638,6 +687,7 @@ class DocBlock:
         # print source code
         #
         if not self.source:
+            print block_footer
             return
 
         lines = self.source
@@ -660,14 +710,14 @@ class DocBlock:
 
             if marker == "description":
                 print description_header
-                content.dump_html()
+                content.dump_html( identifiers )
                 print description_footer
 
             elif not ( marker in types ):
                 sys.stdout.write( marker_header )
                 sys.stdout.write( marker )
                 sys.stdout.write( marker_inter + '\n' )
-                content.dump_html()
+                content.dump_html( identifiers )
                 print marker_footer
 
         print ""
@@ -716,14 +766,14 @@ class DocSection:
         if self.elements.has_key( block.name ):
             sys.stderr.write( "ERROR - duplicate element definition for " +
                               "'" + block.name + "' in section '" +
-                              section.name + "'" )
-            sys.quit()
+                              self.name + "'" )
+            sys.exit()
 
         self.elements[ block.name ] = block
         self.list.append( block )
 
 
-    def dump_html( self ):
+    def dump_html( self, identifiers = None ):
         """make an HTML page from a given DocSection"""
 
         # print HTML header
@@ -739,13 +789,13 @@ class DocSection:
         # print description
         #
         print block_header
-        self.description.dump_html()
+        self.description.dump_html( identifiers )
         print block_footer
 
         # print elements
         #
         for element in self.list:
-            element.dump_html()
+            element.dump_html( identifiers )
 
         print html_footer
 
@@ -753,12 +803,11 @@ class DocSection:
 class DocSectionList:
 
     def __init__( self ):
-        self.sections        = {}
-        self.list            = []
-        self.current_section = None
-        self.index           = []    # sorted list of blocks that
-                                     # are not sections
-
+        self.sections        = {}    # map section names to section objects
+        self.list            = []    # list of sections (in creation order)
+        self.current_section = None  # current section
+        self.identifiers     = {}    # map identifiers to blocks
+                                     
     def append_section( self, block ):
         name     = string.lower( block.name )
         abstract = block.find_content( "abstract" )
@@ -776,6 +825,10 @@ class DocSectionList:
                 if abstract:
                     stderr.write( "ERROR - duplicate section definition" +
                                   " for '" + name + "'" )
+                    stderr.write( "previous definition in" +
+                                  " '" + section.location() )
+                    stderr.write( "second definition in" +
+                                  " '" + block.location() )
                     sys.quit()
             else:
                 # The old section didn't contain an abstract; we are
@@ -802,10 +855,9 @@ class DocSectionList:
                 self.append_section( block )
 
             elif self.current_section:
-                # sys.stderr.write( "  new block" )
                 self.current_section.add_element( block )
                 block.section = self.current_section
-                self.index.append( block )
+                self.identifiers[block.name] = block
 
 
     def prepare_files( self, file_prefix = None ):
@@ -834,9 +886,10 @@ class DocSectionList:
         self.toc_filename   = prefix + "toc.html"
         self.index_filename = prefix + "index.html"
 
-        # compute the sorted block list for the index
+        # compute the sorted list of identifiers for the index
         #
-        self.index.sort( block_lexicographical_compare )
+        self.index = self.identifiers.keys()
+        self.index.sort()
 
 
     def dump_html_toc( self ):
@@ -857,7 +910,7 @@ class DocSectionList:
                 sys.stdout.write( '<a href="' + section.filename + '">' )
                 sys.stdout.write( section.title )
                 sys.stdout.write( "</a></td><td>" + '\n' )
-                section.abstract.dump_html()
+                section.abstract.dump_html( self.identifiers )
                 print "</td></tr>"
 
         print "</table></center>"
@@ -874,7 +927,7 @@ class DocSectionList:
             if section.filename:
                 new_file   = open( section.filename, "w" )
                 sys.stdout = new_file
-                section.dump_html()
+                section.dump_html( self.identifiers )
                 new_file.close()
 
         sys.stdout = old_stdout
@@ -893,17 +946,20 @@ class DocSectionList:
         print "<center><h1>General Index</h1></center>"
         print "<center><table cellpadding=5><tr valign=top><td>"
 
-        for block in self.index:
-            sys.stdout.write( '<a href="' + block.section.filename +
-                              '#' + block.name + '">' )
-            sys.stdout.write( block.name )
-            sys.stdout.write( "</a><br>" + '\n' )
+        for ident in self.index:
+            block = self.identifiers[ident]
+            if block:
+                sys.stdout.write( '<a href="' + block.html_address() + '">' )
+                sys.stdout.write( block.name )
+                sys.stdout.write( '</a><br>' + '\n' )
 
-            if line * num_columns >= total:
-                print "</td><td>"
-                line = 0
+                if line * num_columns >= total:
+                    print "</td><td>"
+                    line = 0
+                else:
+                    line = line + 1
             else:
-                line = line + 1
+                sys.stderr.write( "identifier '"+ident+"' has no definition" + '\n' )
 
         print "</tr></table></center>"
         print html_footer
@@ -962,24 +1018,51 @@ def dump_html_1( block_list ):
     print html_footer
 
 
-def make_block_list_inner():
+def file_exists( pathname ):
+    result = 1
+    try:
+        file = open( pathname, "r" )
+        file.close()
+    except:
+        result = None
+
+    return result
+
+
+def add_new_block( list, filename, lineno, block_lines, source_lines ):
+    """add a new block to the list"""
+    block = DocBlock( block_lines, source_lines )
+    block.filename = filename
+    block.lineno   = lineno
+    list.append( block )
+
+
+def make_block_list():
     """parse a file and extract comments blocks from it"""
 
     file_list = []
     sys.stderr.write( repr( sys.argv[1:] ) + '\n' )
 
     for pathname in sys.argv[1:]:
-        newpath = glob.glob( pathname )
-        sys.stderr.write( repr(newpath) + '\n' )
+        if string.find( pathname, '*' ) >= 0:
+            newpath = glob.glob( pathname )
+            newpath.sort()  # sort files, this is important because the order of files
+        else:
+            newpath = [ pathname ]
+
         last = len( file_list )
         file_list[last:last] = newpath
 
     if len( file_list ) == 0:
         file_list = None
+    else:
+        # now filter the file list to remove non-existing ones
+        file_list = filter( file_exists, file_list )
 
     list   = []
     block  = []
     format = 0
+    lineno = 0
 
     # We use "format" to store the state of our parser:
     #
@@ -1018,7 +1101,7 @@ def make_block_list_inner():
         if format >= 4 and l > 2 and line2[0 : 2] == '/*':
             if l < 4 or ( line2[3] != '@' and line2[3:4] != ' @' and
                           line2[3] != '#' and line2[3:4] != ' #'):
-                list.append( ( block, source ) )
+                add_new_block( list, fileinput.filename(), lineno, block, source )
                 format = 0
 
         if format == 0:  #### wait for beginning of comment ####
@@ -1034,6 +1117,7 @@ def make_block_list_inner():
                     block  = []
                     source = []
                     format = 1
+                    lineno = fileinput.lineno()
 
                 elif i == l - 1 and line2[i] == '/':
                     # this is '/**' followed by any number of '*', followed
@@ -1042,6 +1126,7 @@ def make_block_list_inner():
                     block  = []
                     source = []
                     format = 2
+                    lineno = fileinput.lineno()
 
         ##############################################################
         #
@@ -1120,22 +1205,10 @@ def make_block_list_inner():
                 source.append( line )
 
     if format >= 4:
-        list.append( [block, source] )
+        add_new_block( list, fileinput.filename(), lineno, block, source )
 
     return list
 
-
-# create a list of DocBlock elements
-#
-def make_block_list():
-    source_block_list = make_block_list_inner()
-    list              = []
-
-    for block in source_block_list:
-        docblock = DocBlock( block[0], block[1] )
-        list.append( docblock )
-
-    return list
 
 
 # This function is only used for debugging
