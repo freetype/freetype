@@ -1375,7 +1375,9 @@ FT_BEGIN_HEADER
   /*                            It must be called after the header was     */
   /*                            read, and before the `forget'.             */
   /*                                                                       */
-  /*    sfnt                 :: A pointer to the SFNT `driver' interface.  */
+  /*    sfnt                 :: A pointer to the SFNT service.             */
+  /*                                                                       */
+  /*    psnames              :: A pointer to the PostScript names service. */
   /*                                                                       */
   /*    hdmx                 :: The face's horizontal device metrics       */
   /*                            (`hdmx' table).  This table is optional in */
@@ -1494,13 +1496,14 @@ FT_BEGIN_HEADER
     TT_Loader_ReadGlyphFunc   read_simple_glyph;
     TT_Loader_ReadGlyphFunc   read_composite_glyph;
 
-    /* a typeless pointer to the SFNT_Interface table used to load     */
-    /* the basic TrueType tables in the face object                    */
+    /* a typeless pointer to the SFNT_Interface table used to load */
+    /* the basic TrueType tables in the face object                */
     void*                 sfnt;
 
-    /* a typeless pointer to the FT_Service_PsNamesRec table used to       */
-    /* handle glyph names <-> unicode & Mac values                     */
+    /* a typeless pointer to the FT_Service_PsNamesRec table used to */
+    /* handle glyph names <-> unicode & Mac values                   */
     void*                 psnames;
+
 
     /***********************************************************************/
     /*                                                                     */

@@ -23,7 +23,6 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_SFNT_H
-#include FT_SERVICE_POSTSCRIPT_NAMES_H
 
 #include "ttgload.h"
 #include "ttpload.h"

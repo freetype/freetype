@@ -339,10 +339,10 @@
   {
 #ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
 
-    (PS_Unicode_ValueFunc)          ps_unicode_value,
-    (PS_Unicodes_InitFunc)          ps_unicodes_init,
-    (PS_Unicodes_CharIndexFunc)     ps_unicodes_char_index,
-    (PS_Unicodes_CharNextFunc)      ps_unicodes_char_next,
+    (PS_Unicode_ValueFunc)     ps_unicode_value,
+    (PS_Unicodes_InitFunc)     ps_unicodes_init,
+    (PS_Unicodes_CharIndexFunc)ps_unicodes_char_index,
+    (PS_Unicodes_CharNextFunc) ps_unicodes_char_next,
 
 #else
 
@@ -353,8 +353,8 @@
 
 #endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
 
-    (PS_Macintosh_Name_Func)    ps_get_macintosh_name,
-    (PS_Adobe_Std_Strings_Func) ps_get_standard_strings,
+    (PS_Macintosh_Name_Func)   ps_get_macintosh_name,
+    (PS_Adobe_Std_Strings_Func)ps_get_standard_strings,
 
     t1_standard_encoding,
     t1_expert_encoding
@@ -363,9 +363,10 @@
 
   static const FT_ServiceDescRec  psnames_services[] =
   {
-    { FT_SERVICE_ID_POSTSCRIPT_NAMES, & psnames_interface },
+    { FT_SERVICE_ID_POSTSCRIPT_NAMES, &psnames_interface },
     { NULL, NULL }
   };
+
 
   static FT_Pointer
   psnames_get_service( FT_Module    module,

@@ -40,17 +40,17 @@ FT_BEGIN_HEADER
    *   FT_FACE_FIND_SERVICE
    *
    * @description:
-   *   This macro is used to lookup a service from a face's driver module.
+   *   This macro is used to look up a service from a face's driver module.
    *
    * @input:
+   *   face ::
+   *     The source face handle.
+   *
    *   id ::
    *     A string describing the service as defined in the service's
    *     header files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
    *     `multi-masters').  It is automatically prefixed with
    *     `FT_SERVICE_ID_'.
-   *
-   *   face ::
-   *     The source face handle.
    *
    * @output:
    *   ptr ::
@@ -60,22 +60,48 @@ FT_BEGIN_HEADER
 #define FT_FACE_FIND_SERVICE( face, ptr, id )                               \
   FT_BEGIN_STMNT                                                            \
     FT_Module    module = FT_MODULE( FT_FACE(face)->driver );               \
-    FT_Pointer*  Pptr   = (FT_Pointer*) &(ptr);                             \
     /* the strange cast is to allow C++ compilation */                      \
+    FT_Pointer*  Pptr   = (FT_Pointer*) &(ptr);                             \
+                                                                            \
+                                                                            \
     *Pptr = NULL;                                                           \
     if ( module->clazz->get_interface )                                     \
       *Pptr = module->clazz->get_interface( module, FT_SERVICE_ID_ ## id ); \
   FT_END_STMNT
 
 
-#define FT_FACE_FIND_GLOBAL_SERVICE( face, ptr, id )                        \
-  FT_BEGIN_STMNT                                                            \
-    FT_Module    module = FT_MODULE( FT_FACE(face)->driver );               \
-    FT_Pointer*  Pptr   = (FT_Pointer*) &(ptr);                             \
-                                                                            \
-    /* the strange cast is to allow C++ compilation */                      \
-    *Pptr = ft_module_get_service( module, FT_SERVICE_ID_ ## id );          \
+  /*
+   * @macro:
+   *   FT_FACE_FIND_GLOBAL_SERVICE
+   *
+   * @description:
+   *   This macro is used to look up a service from all modules.
+   *
+   * @input:
+   *   face ::
+   *     The source face handle.
+   *
+   *   id ::
+   *     A string describing the service as defined in the service's
+   *     header files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
+   *     `multi-masters').  It is automatically prefixed with
+   *     `FT_SERVICE_ID_'.
+   *
+   * @output:
+   *   ptr ::
+   *     A variable that receives the service pointer.  Will be NULL
+   *     if not found.
+   */
+#define FT_FACE_FIND_GLOBAL_SERVICE( face, ptr, id )               \
+  FT_BEGIN_STMNT                                                   \
+    FT_Module    module = FT_MODULE( FT_FACE(face)->driver );      \
+    /* the strange cast is to allow C++ compilation */             \
+    FT_Pointer*  Pptr   = (FT_Pointer*) &(ptr);                    \
+                                                                   \
+                                                                   \
+    *Pptr = ft_module_get_service( module, FT_SERVICE_ID_ ## id ); \
   FT_END_STMNT
+
 
   /*************************************************************************/
   /*************************************************************************/

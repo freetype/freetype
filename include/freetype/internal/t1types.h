@@ -23,8 +23,8 @@
 
 #include <ft2build.h>
 #include FT_TYPE1_TABLES_H
-#include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
+#include FT_INTERNAL_SERVICE_H
 #include FT_SERVICE_POSTSCRIPT_NAMES_H
 
 
