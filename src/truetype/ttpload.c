@@ -57,7 +57,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Load_Locations( TT_Face    face,
                                FT_Stream  stream )
   {
@@ -150,7 +150,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Load_CVT( TT_Face    face,
                          FT_Stream  stream )
   {
@@ -217,7 +217,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Load_Programs( TT_Face    face,
                               FT_Stream  stream )
   {

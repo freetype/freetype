@@ -37,7 +37,7 @@
   /*************************************************************************/
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  ftc_manager_init_face( FT_Lru      lru,
                                    FT_LruNode  node )
   {
@@ -63,7 +63,7 @@
 
 
   /* helper function for ftc_manager_done_face() */
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Bool  ftc_manager_size_selector( FT_Lru      lru,
                                       FT_LruNode  node,
                                       FT_Pointer  data )
@@ -74,7 +74,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  ftc_manager_done_face( FT_Lru      lru,
                                FT_LruNode  node )
   {
@@ -103,7 +103,7 @@
   } FTC_FontRequest;
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  ftc_manager_init_size( FT_Lru      lru,
                                    FT_LruNode  node )
   {
@@ -132,7 +132,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  ftc_manager_done_size( FT_Lru      lru,
                                FT_LruNode  node )
   {
@@ -142,7 +142,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  ftc_manager_flush_size( FT_Lru      lru,
                                     FT_LruNode  node,
                                     FT_LruKey   key )
@@ -169,7 +169,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Bool  ftc_manager_compare_size( FT_LruNode  node,
                                      FT_LruKey   key )
   {
@@ -185,7 +185,8 @@
   }
 
 
-  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_face_lru_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_Lru_Class  ftc_face_lru_class =
   {
     sizeof ( FT_LruRec ),
     ftc_manager_init_face,
@@ -195,7 +196,8 @@
   };
 
 
-  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_size_lru_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_Lru_Class  ftc_size_lru_class =
   {
     sizeof ( FT_LruRec ),
     ftc_manager_init_size,
@@ -205,13 +207,13 @@
   };
 
 
-  FT_EXPORT_FUNC( FT_Error )  FTC_Manager_New( FT_Library          library,
-                                               FT_UInt             max_faces,
-                                               FT_UInt             max_sizes,
-                                               FT_ULong            max_bytes,
-                                               FTC_Face_Requester  requester,
-                                               FT_Pointer          req_data,
-                                               FTC_Manager*        amanager )
+  FT_EXPORT_DEF( FT_Error )  FTC_Manager_New( FT_Library          library,
+                                              FT_UInt             max_faces,
+                                              FT_UInt             max_sizes,
+                                              FT_ULong            max_bytes,
+                                              FTC_Face_Requester  requester,
+                                              FT_Pointer          req_data,
+                                              FTC_Manager*        amanager )
   {
     FT_Error     error;
     FT_Memory    memory;
@@ -271,7 +273,7 @@
   }
 
 
-  FT_EXPORT_DEF( void )  FTC_Manager_Done( FTC_Manager  manager )
+  FT_EXPORT( void )  FTC_Manager_Done( FTC_Manager  manager )
   {
     FT_Memory  memory;
     FT_UInt    index;
@@ -304,7 +306,7 @@
   }
 
 
-  FT_EXPORT_DEF( void )  FTC_Manager_Reset( FTC_Manager  manager )
+  FT_EXPORT( void )  FTC_Manager_Reset( FTC_Manager  manager )
   {
     if (manager )
     {
@@ -315,9 +317,9 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Manager_Lookup_Face( FTC_Manager  manager,
-                                                      FTC_FaceID   face_id,
-                                                      FT_Face*     aface )
+  FT_EXPORT( FT_Error )  FTC_Manager_Lookup_Face( FTC_Manager  manager,
+                                                  FTC_FaceID   face_id,
+                                                  FT_Face*     aface )
   {
     if ( !manager )
       return FT_Err_Invalid_Cache_Handle;
@@ -328,10 +330,10 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Manager_Lookup_Size( FTC_Manager  manager,
-                                                      FTC_Font     font,
-                                                      FT_Face*     aface,
-                                                      FT_Size*     asize )
+  FT_EXPORT( FT_Error )  FTC_Manager_Lookup_Size( FTC_Manager  manager,
+                                                  FTC_Font     font,
+                                                  FT_Face*     aface,
+                                                  FT_Size*     asize )
   {
     FTC_FontRequest  req;
     FT_Error         error;
@@ -375,7 +377,7 @@
   /* `Compress' the manager's data, i.e., get rid of old cache nodes */
   /* that are not referenced anymore in order to limit the total     */
   /* memory used by the cache.                                       */
-  FT_EXPORT_FUNC( void )  FTC_Manager_Compress( FTC_Manager  manager )
+  FT_EXPORT_DEF( void )  FTC_Manager_Compress( FTC_Manager  manager )
   {
     FT_ListNode  node;
 
@@ -423,7 +425,7 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Manager_Register_Cache(
+  FT_EXPORT( FT_Error )  FTC_Manager_Register_Cache(
                                FTC_Manager       manager,
                                FTC_Cache_Class*  clazz,
                                FTC_Cache*        acache )

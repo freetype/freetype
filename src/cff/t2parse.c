@@ -75,7 +75,7 @@
   } T2_Field_Handler;
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T2_Parser_Init( T2_Parser*  parser,
                         FT_UInt     code,
                         void*       object )
@@ -441,7 +441,7 @@
   };
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T2_Parser_Run( T2_Parser*  parser,
                            FT_Byte*    start,
                            FT_Byte*    limit )

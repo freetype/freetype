@@ -123,8 +123,8 @@
   /*    An error will be returned if a module already exists by that name, */
   /*    or if the module requires a version of FreeType that is too great. */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Add_Module( FT_Library              library,
-                                            const FT_Module_Class*  clazz );
+  FT_EXPORT( FT_Error )  FT_Add_Module( FT_Library              library,
+                                        const FT_Module_Class*  clazz );
 
 
   /*************************************************************************/
@@ -147,8 +147,8 @@
   /*    You should better be familiar with FreeType internals to know      */
   /*    which module to look for :-)                                       */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Module )  FT_Get_Module( FT_Library   library,
-                                             const char*  module_name );
+  FT_EXPORT( FT_Module )  FT_Get_Module( FT_Library   library,
+                                         const char*  module_name );
 
 
   /*************************************************************************/
@@ -170,8 +170,8 @@
   /* <Note>                                                                */
   /*    The module object is destroyed by the function in case of success. */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Remove_Module( FT_Library  library,
-                                               FT_Module   module );
+  FT_EXPORT( FT_Error )  FT_Remove_Module( FT_Library  library,
+                                           FT_Module   module );
 
 
   /*************************************************************************/
@@ -193,8 +193,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_New_Library( FT_Memory    memory,
-                                             FT_Library*  library );
+  FT_EXPORT( FT_Error )  FT_New_Library( FT_Memory    memory,
+                                         FT_Library*  library );
 
 
   /*************************************************************************/
@@ -212,7 +212,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Done_Library( FT_Library  library );
+  FT_EXPORT( FT_Error )  FT_Done_Library( FT_Library  library );
 
 
 
@@ -241,9 +241,9 @@
   /*    Currently, four debug hook slots are available, but only two (for  */
   /*    the TrueType and the Type 1 interpreter) are defined.              */
   /*                                                                       */
-  FT_EXPORT_DEF( void )  FT_Set_Debug_Hook( FT_Library         library,
-                                            FT_UInt            hook_index,
-                                            FT_DebugHook_Func  debug_hook );
+  FT_EXPORT( void )  FT_Set_Debug_Hook( FT_Library         library,
+                                        FT_UInt            hook_index,
+                                        FT_DebugHook_Func  debug_hook );
 
 
 
@@ -260,7 +260,7 @@
   /* <InOut>                                                               */
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
-  FT_EXPORT_DEF( void )  FT_Add_Default_Modules( FT_Library  library );
+  FT_EXPORT( void )  FT_Add_Default_Modules( FT_Library  library );
 
 
 #ifdef __cplusplus

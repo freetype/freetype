@@ -34,7 +34,7 @@
 #endif
 
 
-#include <freetype/internal/ftobjs.h>  /* for LOCAL_DEF/LOCAL_FUNC */
+#include <freetype/internal/ftobjs.h>  /* for FT_LOCAL/FT_LOCAL_DEF */
 
 
 #ifdef __cplusplus
@@ -47,7 +47,7 @@
 
 
   /* compute global metrics automatically */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  ah_hinter_compute_globals( AH_Hinter*  hinter );
 
 

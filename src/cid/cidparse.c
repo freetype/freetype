@@ -58,7 +58,7 @@
   /*************************************************************************/
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  CID_New_Parser( CID_Parser*       parser,
                             FT_Stream         stream,
                             FT_Memory         memory,
@@ -147,7 +147,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  CID_Done_Parser( CID_Parser*  parser )
   {
     /* always free the private dictionary */

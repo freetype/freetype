@@ -269,7 +269,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Goto_CodeRange( TT_ExecContext  exec,
                                FT_Int          range,
                                FT_Long         IP )
@@ -319,7 +319,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Set_CodeRange( TT_ExecContext  exec,
                               FT_Int          range,
                               void*           base,
@@ -354,7 +354,7 @@
   /* <Note>                                                                */
   /*    Does not set the Error variable.                                   */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Clear_CodeRange( TT_ExecContext  exec,
                                 FT_Int          range )
   {
@@ -393,7 +393,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Destroy_Context( TT_ExecContext  exec,
                                 FT_Memory       memory )
   {
@@ -557,7 +557,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Load_Context( TT_ExecContext  exec,
                              TT_Face         face,
                              TT_Size         size )
@@ -660,7 +660,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Save_Context( TT_ExecContext  exec,
                              TT_Size         size )
   {
@@ -707,7 +707,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Run_Context( TT_ExecContext  exec,
                             FT_Bool         debug )
   {
@@ -784,7 +784,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  FT_EXPORT_FUNC( TT_ExecContext )  TT_New_Context( TT_Face  face )
+  FT_EXPORT_DEF( TT_ExecContext )  TT_New_Context( TT_Face  face )
   {
     TT_Driver       driver;
     TT_ExecContext  exec;
@@ -844,7 +844,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Done_Context( TT_ExecContext  exec )
   {
     /* Nothing at all for now */
@@ -1278,21 +1278,21 @@
   /*************************************************************************/
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_F26Dot6  Read_CVT( EXEC_OP_ FT_ULong  index )
   {
     return CUR.cvt[index];
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_F26Dot6  Read_CVT_Stretched( EXEC_OP_ FT_ULong  index )
   {
     return TT_MULFIX( CUR.cvt[index], CURRENT_Ratio() );
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  Write_CVT( EXEC_OP_ FT_ULong    index,
                             FT_F26Dot6  value )
   {
@@ -1300,7 +1300,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  Write_CVT_Stretched( EXEC_OP_ FT_ULong    index,
                                       FT_F26Dot6  value )
   {
@@ -1308,7 +1308,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  Move_CVT( EXEC_OP_ FT_ULong    index,
                            FT_F26Dot6  value )
   {
@@ -1316,7 +1316,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  Move_CVT_Stretched( EXEC_OP_ FT_ULong    index,
                                      FT_F26Dot6  value )
   {
@@ -6815,7 +6815,7 @@
   /*    This function is publicly exported because it is directly          */
   /*    invoked by the TrueType debugger.                                  */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  TT_RunIns( TT_ExecContext  exc )
+  FT_EXPORT_DEF( FT_Error )  TT_RunIns( TT_ExecContext  exc )
   {
     FT_Long  ins_counter = 0;  /* executed instructions counter */
 

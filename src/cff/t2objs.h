@@ -115,14 +115,14 @@
   /*                                                                       */
   /* Face functions                                                        */
   /*                                                                       */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T2_Init_Face( FT_Stream      stream,
                           T2_Face        face,
                           FT_Int         face_index,
                           FT_Int         num_params,
                           FT_Parameter*  params );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  T2_Done_Face( T2_Face  face );
 
 
@@ -130,10 +130,10 @@
   /*                                                                       */
   /* Driver functions                                                      */
   /*                                                                       */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T2_Init_Driver( T2_Driver  driver );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  T2_Done_Driver( T2_Driver  driver );
 
 

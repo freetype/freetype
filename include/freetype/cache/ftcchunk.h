@@ -164,10 +164,10 @@
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  FT_EXPORT_FUNC( FT_Error )  FTC_ChunkNode_Init( FTC_ChunkNode  node,
-                                                  FTC_ChunkSet   cset,
-                                                  FT_UInt        index,
-                                                  FT_Bool        alloc );
+  FT_EXPORT( FT_Error )  FTC_ChunkNode_Init( FTC_ChunkNode  node,
+                                             FTC_ChunkSet   cset,
+                                             FT_UInt        index,
+                                             FT_Bool        alloc );
 
 #define FTC_ChunkNode_Ref( n ) \
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count++
@@ -176,18 +176,18 @@
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count--
 
 
-  FT_EXPORT_DEF( void )      FTC_ChunkNode_Destroy( FTC_ChunkNode    node );
+  FT_EXPORT( void )      FTC_ChunkNode_Destroy( FTC_ChunkNode    node );
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Chunk_Cache_Init(  FTC_Chunk_Cache  cache );
+  FT_EXPORT( FT_Error )  FTC_Chunk_Cache_Init(  FTC_Chunk_Cache  cache );
 
-  FT_EXPORT_DEF( void )      FTC_Chunk_Cache_Done(  FTC_Chunk_Cache  cache );
+  FT_EXPORT( void )      FTC_Chunk_Cache_Done(  FTC_Chunk_Cache  cache );
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_ChunkSet_New( FTC_Chunk_Cache  cache,
-                                               FT_Pointer       type,
-                                               FTC_ChunkSet*    aset );
+  FT_EXPORT( FT_Error )  FTC_ChunkSet_New( FTC_Chunk_Cache  cache,
+                                           FT_Pointer       type,
+                                           FTC_ChunkSet*    aset );
 
-  FT_EXPORT_DEF( FT_Error )  FTC_ChunkSet_Lookup_Node(
+  FT_EXPORT( FT_Error )  FTC_ChunkSet_Lookup_Node(
                                FTC_ChunkSet    cset,
                                FT_UInt         glyph_index,
                                FTC_ChunkNode*  anode,

@@ -56,17 +56,17 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  BASE_DEF( FT_Error )  FT_Alloc( FT_Memory  memory,
-                                  FT_Long    size,
-                                  void**     P );
+  FT_BASE( FT_Error )  FT_Alloc( FT_Memory  memory,
+                                 FT_Long    size,
+                                 void**     P );
 
-  BASE_DEF( FT_Error )  FT_Realloc( FT_Memory  memory,
-                                    FT_Long    current,
-                                    FT_Long    size,
-                                    void**     P );
+  FT_BASE( FT_Error )  FT_Realloc( FT_Memory  memory,
+                                   FT_Long    current,
+                                   FT_Long    size,
+                                   void**     P );
 
-  BASE_DEF( void )  FT_Free( FT_Memory  memory,
-                             void**     P );
+  FT_BASE( void )  FT_Free( FT_Memory  memory,
+                            void**     P );
 
 
 

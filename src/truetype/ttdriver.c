@@ -430,7 +430,8 @@
 
   /* The FT_DriverInterface structure is defined in ftdriver.h. */
 
-  FT_CPLUSPLUS( const FT_Driver_Class )  tt_driver_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_Driver_Class  tt_driver_class =
   {
     {
       ft_module_font_driver     |
@@ -499,7 +500,7 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_FUNC( const FT_Driver_Class* )  getDriverClass( void )
+  FT_EXPORT_DEF( const FT_Driver_Class* )  getDriverClass( void )
   {
     return &tt_driver_class;
   }

@@ -65,7 +65,7 @@
   /* <Input>                                                               */
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  CID_Done_Face( CID_Face  face )
   {
     FT_Memory  memory;
@@ -124,7 +124,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  CID_Init_Face( FT_Stream      stream,
                            CID_Face       face,
                            FT_Int         face_index,
@@ -361,7 +361,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  CID_Init_Driver( CID_Driver  driver )
   {
     FT_UNUSED( driver );
@@ -381,7 +381,7 @@
   /* <Input>                                                               */
   /*    driver :: A handle to the target CID driver.                       */
   /*                                                                       */
-  LOCAL_DEF
+  FT_LOCAL
   void  CID_Done_Driver( CID_Driver  driver )
   {
     FT_UNUSED( driver );

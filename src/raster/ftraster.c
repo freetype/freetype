@@ -2971,7 +2971,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  Render_Glyph( RAS_ARG )
   {
     FT_Error  error;
@@ -3033,7 +3033,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  Render_Gray_Glyph( RAS_ARG )
   {
     Long      pixel_width;
@@ -3093,7 +3093,7 @@
 
 #else /* FT_RASTER_OPTION_ANTI_ALIASING */
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  Render_Gray_Glyph( RAS_ARG )
   {
     FT_UNUSED_RASTER;

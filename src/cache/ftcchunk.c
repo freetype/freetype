@@ -33,10 +33,10 @@
 
 
   /* create a new chunk node, setting its cache index and ref count */
-  FT_EXPORT_FUNC( FT_Error )  FTC_ChunkNode_Init( FTC_ChunkNode  node,
-                                                  FTC_ChunkSet   cset,
-                                                  FT_UInt        index,
-                                                  FT_Bool        alloc )
+  FT_EXPORT_DEF( FT_Error )  FTC_ChunkNode_Init( FTC_ChunkNode  node,
+                                                 FTC_ChunkSet   cset,
+                                                 FT_UInt        index,
+                                                 FT_Bool        alloc )
   {
     FTC_Chunk_Cache      cache = cset->cache;
     FTC_CacheNode_Data*  data  = FTC_CACHENODE_TO_DATA_P( &node->root );
@@ -65,7 +65,7 @@
   }
 
 
-  FT_EXPORT_FUNC( void )  FTC_ChunkNode_Destroy( FTC_ChunkNode  node )
+  FT_EXPORT_DEF( void )  FTC_ChunkNode_Destroy( FTC_ChunkNode  node )
   {
     FTC_ChunkSet  cset = node->cset;
 
@@ -78,7 +78,7 @@
   }
 
 
-  FT_EXPORT_FUNC( FT_ULong )  FTC_ChunkNode_Size( FTC_ChunkNode  node )
+  FT_EXPORT_DEF( FT_ULong )  FTC_ChunkNode_Size( FTC_ChunkNode  node )
   {
     FTC_ChunkSet  cset = node->cset;
 
@@ -87,7 +87,8 @@
   }
 
 
-  FT_CPLUSPLUS( const FTC_CacheNode_Class )  ftc_chunk_cache_node_class =
+  FT_CALLBACK_TABLE_DEF
+  const FTC_CacheNode_Class  ftc_chunk_cache_node_class =
   {
     (FTC_CacheNode_SizeFunc)   FTC_ChunkNode_Size,
     (FTC_CacheNode_DestroyFunc)FTC_ChunkNode_Destroy
@@ -103,9 +104,9 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_FUNC( FT_Error )  FTC_ChunkSet_New( FTC_Chunk_Cache  cache,
-                                                FT_Pointer       type,
-                                                FTC_ChunkSet*    aset )
+  FT_EXPORT_DEF( FT_Error )  FTC_ChunkSet_New( FTC_Chunk_Cache  cache,
+                                               FT_Pointer       type,
+                                               FTC_ChunkSet*    aset )
   {
     FT_Error      error;
     FT_Memory     memory  = cache->root.memory;
@@ -163,7 +164,7 @@
   }
 
 
-  FT_EXPORT_FUNC( void )  FTC_ChunkSet_Destroy( FTC_ChunkSet  cset )
+  FT_EXPORT_DEF( void )  FTC_ChunkSet_Destroy( FTC_ChunkSet  cset )
   {
     FTC_Chunk_Cache      cache        = cset->cache;
     FTC_Manager          manager      = cache->root.manager;
@@ -202,7 +203,7 @@
   }
 
 
-  FT_EXPORT_FUNC( FT_Error )  FTC_ChunkSet_Lookup_Node(
+  FT_EXPORT_DEF( FT_Error )  FTC_ChunkSet_Lookup_Node(
                                 FTC_ChunkSet    cset,
                                 FT_UInt         glyph_index,
                                 FTC_ChunkNode*  anode,
@@ -279,7 +280,7 @@
           ( (FTC_ChunkSet)(node)->root.data )
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  ftc_chunk_set_lru_init( FT_Lru      lru,
                                     FT_LruNode  node )
   {
@@ -302,7 +303,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  ftc_chunk_set_lru_done( FT_Lru      lru,
                                 FT_LruNode  node )
   {
@@ -315,7 +316,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Bool  ftc_chunk_set_lru_compare( FT_LruNode  node,
                                       FT_LruKey   key )
   {
@@ -326,7 +327,8 @@
   }
 
 
-  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_chunk_set_lru_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_Lru_Class  ftc_chunk_set_lru_class =
   {
     sizeof( FT_LruRec ),
     ftc_chunk_set_lru_init,
@@ -345,7 +347,7 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_FUNC( FT_Error )  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache )
+  FT_EXPORT_DEF( FT_Error )  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache )
   {
     FT_Memory  memory = cache->root.memory;
     FT_Error   error;
@@ -365,7 +367,7 @@
   }
 
 
-  FT_EXPORT_FUNC( void )  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache )
+  FT_EXPORT_DEF( void )  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache )
   {
     /* discard glyph sets */
     FT_Lru_Done( cache->csets_lru );

@@ -85,7 +85,7 @@ const FT_Module_Class*  const ft_default_modules[] =
   /* <InOut>                                                               */
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Add_Default_Modules( FT_Library  library )
+  FT_EXPORT_DEF( void )  FT_Add_Default_Modules( FT_Library  library )
   {
     FT_Error                       error;
     const FT_Module_Class* const*  cur;
@@ -123,7 +123,7 @@ const FT_Module_Class*  const ft_default_modules[] =
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Init_FreeType( FT_Library*  library )
+  FT_EXPORT_DEF( FT_Error )  FT_Init_FreeType( FT_Library*  library )
   {
     FT_Error   error;
     FT_Memory  memory;
@@ -165,7 +165,7 @@ const FT_Module_Class*  const ft_default_modules[] =
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Done_FreeType( FT_Library  library )
+  FT_EXPORT_DEF( FT_Error )  FT_Done_FreeType( FT_Library  library )
   {
     if ( library )
     {

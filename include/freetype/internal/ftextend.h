@@ -130,7 +130,7 @@
   } FT_Extension_Class;
 
 
-  FT_EXPORT_DEF( FT_Error )  FT_Register_Extension(
+  FT_EXPORT( FT_Error )  FT_Register_Extension(
                                FT_Driver            driver,
                                FT_Extension_Class*  clazz );
 
@@ -139,21 +139,21 @@
 
 
   /* Initialize the extension component */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  FT_Init_Extensions( FT_Library  library );
 
   /* Finalize the extension component */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  FT_Done_Extensions( FT_Library  library );
 
   /* Create an extension within a face object.  Called by the */
   /* face object constructor.                                 */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  FT_Create_Extensions( FT_Face  face );
 
   /* Destroy all extensions within a face object.  Called by the */
   /* face object destructor.                                     */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  FT_Destroy_Extensions( FT_Face  face );
 
 
@@ -161,7 +161,7 @@
 
 
   /* return an extension's data & interface according to its ID */
-  FT_EXPORT_DEF( void* )  FT_Get_Extension(
+  FT_EXPORT( void* )  FT_Get_Extension(
                             FT_Face      face,
                             const char*  extension_id,
                             void**       extension_interface );

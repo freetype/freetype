@@ -63,7 +63,7 @@
   /*************************************************************************/
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  T1_Parse_Glyph( T1_Decoder*  decoder,
                             FT_UInt      glyph_index )
   {
@@ -81,7 +81,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T1_Compute_Max_Advance( T1_Face  face,
                                     FT_Int*  max_advance )
   {
@@ -143,7 +143,7 @@
   /*************************************************************************/
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
                            T1_Size       size,
                            FT_Int        glyph_index,
@@ -216,6 +216,9 @@
       {
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
         glyph->root.metrics.horiAdvance  = decoder.builder.advance.x;
+        glyph->root.glyph_matrix         = font_matrix;
+        glyph->root.glyph_delta          = font_offset;
+        glyph->root.glyph_transformed    = 1;
       }
       else
       {
@@ -226,6 +229,7 @@
         /* copy the _unscaled_ advance width */
         metrics->horiAdvance          = decoder.builder.advance.x;
         glyph->root.linearHoriAdvance = decoder.builder.advance.x;
+/*        glyph->root.transformed       = 0; */
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;

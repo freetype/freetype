@@ -36,14 +36,14 @@
 #endif
 
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Load_SBit_Strikes( TT_Face    face,
                                   FT_Stream  stream );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  TT_Free_SBit_Strikes( TT_Face  face );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Load_SBit_Image( TT_Face           face,
                                 FT_Int            x_ppem,
                                 FT_Int            y_ppem,

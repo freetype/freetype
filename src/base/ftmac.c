@@ -644,10 +644,10 @@
   /*      fond = GetResource( 'FOND', fontName );                          */
   /*      error = FT_New_Face_From_FOND( library, fond, 0, &face );        */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_New_Face_From_FOND( FT_Library  library,
-                                                     Handle      fond,
-                                                     FT_Long     face_index,
-                                                     FT_Face*    aface )
+  FT_EXPORT_DEF( FT_Error )  FT_New_Face_From_FOND( FT_Library  library,
+                                                    Handle      fond,
+                                                    FT_Long     face_index,
+                                                    FT_Face*    aface )
   {
     short     sfnt_id, have_sfnt, have_lwfn = 0;
     Str255    lwfn_file_name;
@@ -700,10 +700,10 @@
   /*    accepts pathnames to Mac suitcase files.  For further              */
   /*    documentation see the original FT_New_Face() in ftobjs.c.          */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_New_Face( FT_Library   library,
-                                           const char*  pathname,
-                                           FT_Long      face_index,
-                                           FT_Face*     aface )
+  FT_EXPORT_DEF( FT_Error )  FT_New_Face( FT_Library   library,
+                                          const char*  pathname,
+                                          FT_Long      face_index,
+                                          FT_Face*     aface )
   {
     FT_Open_Args  args;
     FSSpec        spec;

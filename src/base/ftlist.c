@@ -53,8 +53,8 @@
   /* <Return>                                                              */
   /*    List node.  NULL if it wasn't found.                               */
   /*                                                                       */
-  BASE_FUNC( FT_ListNode )  FT_List_Find( FT_List  list,
-                                          void*    data )
+  FT_BASE_DEF( FT_ListNode )  FT_List_Find( FT_List  list,
+                                            void*    data )
   {
     FT_ListNode  cur;
 
@@ -84,8 +84,8 @@
   /*    list :: A pointer to the parent list.                              */
   /*    node :: The node to append.                                        */
   /*                                                                       */
-  BASE_FUNC( void )  FT_List_Add( FT_List      list,
-                                  FT_ListNode  node )
+  FT_BASE_DEF( void )  FT_List_Add( FT_List      list,
+                                    FT_ListNode  node )
   {
     FT_ListNode  before = list->tail;
 
@@ -114,8 +114,8 @@
   /*    list :: A pointer to parent list.                                  */
   /*    node :: The node to insert.                                        */
   /*                                                                       */
-  BASE_FUNC( void )  FT_List_Insert( FT_List      list,
-                                     FT_ListNode  node )
+  FT_BASE_DEF( void )  FT_List_Insert( FT_List      list,
+                                       FT_ListNode  node )
   {
     FT_ListNode  after = list->head;
 
@@ -147,8 +147,8 @@
   /* <InOut>                                                               */
   /*    list :: A pointer to the parent list.                              */
   /*                                                                       */
-  BASE_FUNC( void )  FT_List_Remove( FT_List      list,
-                                     FT_ListNode  node )
+  FT_BASE_DEF( void )  FT_List_Remove( FT_List      list,
+                                       FT_ListNode  node )
   {
     FT_ListNode  before, after;
 
@@ -181,8 +181,8 @@
   /*    list :: A pointer to the parent list.                              */
   /*    node :: The node to move.                                          */
   /*                                                                       */
-  BASE_FUNC( void )  FT_List_Up( FT_List      list,
-                                 FT_ListNode  node )
+  FT_BASE_DEF( void )  FT_List_Up( FT_List      list,
+                                   FT_ListNode  node )
   {
     FT_ListNode  before, after;
 
@@ -228,9 +228,9 @@
   /* <Return>                                                              */
   /*    The result (a FreeType error code) of the last iterator call.      */
   /*                                                                       */
-  BASE_FUNC( FT_Error )  FT_List_Iterate( FT_List            list,
-                                          FT_List_Iterator   iterator,
-                                          void*              user )
+  FT_BASE_DEF( FT_Error )  FT_List_Iterate( FT_List            list,
+                                            FT_List_Iterator   iterator,
+                                            void*              user )
   {
     FT_ListNode  cur   = list->head;
     FT_Error     error = FT_Err_Ok;
@@ -271,10 +271,10 @@
   /*    user    :: A user-supplied field which is passed as the last       */
   /*               argument to the destructor.                             */
   /*                                                                       */
-  BASE_FUNC( void )  FT_List_Finalize( FT_List             list,
-                                       FT_List_Destructor  destroy,
-                                       FT_Memory           memory,
-                                       void*               user )
+  FT_BASE_DEF( void )  FT_List_Finalize( FT_List             list,
+                                         FT_List_Destructor  destroy,
+                                         FT_Memory           memory,
+                                         void*               user )
   {
     FT_ListNode  cur;
 

@@ -29,20 +29,19 @@
 #endif
 
 
-  LOCAL_VAR
-  const T1_Decoder_Funcs  t1_decoder_funcs;
+  FT_CALLBACK_TABLE const T1_Decoder_Funcs  t1_decoder_funcs;
 
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T1_Decoder_Parse_Glyph( T1_Decoder*  decoder,
                                     FT_UInt      glyph_index );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T1_Decoder_Parse_Charstrings( T1_Decoder*  decoder,
                                           FT_Byte*     base,
                                           FT_UInt      len );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T1_Decoder_Init( T1_Decoder*          decoder,
                              FT_Face              face,
                              FT_Size              size,
@@ -51,7 +50,7 @@
                              T1_Blend*            blend,
                              T1_Decoder_Callback  parse_glyph );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  T1_Decoder_Done( T1_Decoder*  decoder );
 
 

@@ -44,7 +44,7 @@
 #define FT_COMPONENT  trace_cidgload
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  cid_load_glyph( T1_Decoder*  decoder,
                             FT_UInt      glyph_index )
   {
@@ -138,7 +138,7 @@
   /*************************************************************************/
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  CID_Compute_Max_Advance( CID_Face  face,
                                      FT_Int*   max_advance )
   {
@@ -200,7 +200,7 @@
   /*************************************************************************/
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  CID_Load_Glyph( CID_GlyphSlot  glyph,
                             CID_Size       size,
                             FT_Int         glyph_index,
@@ -266,6 +266,10 @@
       {
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
         glyph->root.metrics.horiAdvance  = decoder.builder.advance.x;
+
+        glyph->root.glyph_matrix         = font_matrix;
+        glyph->root.glyph_delta          = font_offset;
+        glyph->root.glyph_transformed    = 1;
       }
       else
       {
@@ -276,6 +280,7 @@
         /* copy the _unscaled_ advance width */
         metrics->horiAdvance          = decoder.builder.advance.x;
         glyph->root.linearHoriAdvance = decoder.builder.advance.x;
+        glyph->root.glyph_transformed = 0;
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;

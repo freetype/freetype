@@ -72,8 +72,8 @@
   /* <Note>                                                                */
   /*    The result is undefined if either `a' or `b' is zero.              */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Matrix_Multiply( FT_Matrix*  a,
-                                              FT_Matrix*  b )
+  FT_EXPORT_DEF( void )  FT_Matrix_Multiply( FT_Matrix*  a,
+                                             FT_Matrix*  b )
   {
     FT_Fixed  xx, xy, yx, yy;
 
@@ -109,7 +109,7 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Matrix_Invert( FT_Matrix*  matrix )
+  FT_EXPORT_DEF( FT_Error )  FT_Matrix_Invert( FT_Matrix*  matrix )
   {
     FT_Pos  delta, xx, yy;
 
@@ -423,7 +423,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Glyph_Copy( FT_Glyph   source,
+  FT_EXPORT_DEF( FT_Error )  FT_Glyph_Copy( FT_Glyph   source,
                                              FT_Glyph*  target )
   {
     FT_Glyph               copy;
@@ -475,8 +475,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Get_Glyph( FT_GlyphSlot  slot,
-                                            FT_Glyph*     aglyph )
+  FT_EXPORT_DEF( FT_Error )  FT_Get_Glyph( FT_GlyphSlot  slot,
+                                           FT_Glyph*     aglyph )
   {
     FT_Library  library = slot->library;
     FT_Error    error;
@@ -562,9 +562,9 @@
   /*    The 2x2 transformation matrix is also applied to the glyph's       */
   /*    advance vector.                                                    */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Glyph_Transform( FT_Glyph    glyph,
-                                                  FT_Matrix*  matrix,
-                                                  FT_Vector*  delta )
+  FT_EXPORT_DEF( FT_Error )  FT_Glyph_Transform( FT_Glyph    glyph,
+                                                 FT_Matrix*  matrix,
+                                                 FT_Vector*  delta )
   {
     const FT_Glyph_Class*  clazz;
     FT_Error               error = FT_Err_Ok;
@@ -644,9 +644,9 @@
   /*                                                                       */
   /*    The default value for `bbox_mode' is `ft_glyph_bbox_pixels'.       */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Glyph_Get_CBox( FT_Glyph  glyph,
-                                             FT_UInt   bbox_mode,
-                                             FT_BBox*  cbox )
+  FT_EXPORT_DEF( void )  FT_Glyph_Get_CBox( FT_Glyph  glyph,
+                                            FT_UInt   bbox_mode,
+                                            FT_BBox*  cbox )
   {
     const FT_Glyph_Class*  clazz;
     FT_Error               error = FT_Err_Ok;
@@ -758,9 +758,9 @@
   /*    This function will always fail if the glyph's format isn't         */
   /*    scalable.                                                          */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Glyph_To_Bitmap( FT_Glyph*   the_glyph,
-                                                  FT_ULong    render_mode,
-                                                  FT_Vector*  origin,
+  FT_EXPORT_DEF( FT_Error )  FT_Glyph_To_Bitmap( FT_Glyph*   the_glyph,
+                                                 FT_ULong    render_mode,
+                                                 FT_Vector*  origin,
                                                   FT_Bool     destroy )
   {
     FT_GlyphSlotRec  dummy;
@@ -855,7 +855,7 @@
   /* <Input>                                                               */
   /*    glyph :: A handle to the target glyph object.                      */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Done_Glyph( FT_Glyph  glyph )
+  FT_EXPORT_DEF( void )  FT_Done_Glyph( FT_Glyph  glyph )
   {
     if ( glyph )
     {

@@ -228,44 +228,44 @@
   extern const TT_GraphicsState  tt_default_graphics_state;
 
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Goto_CodeRange( TT_ExecContext  exec,
                                FT_Int          range,
                                FT_Long         IP );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Set_CodeRange( TT_ExecContext  exec,
                               FT_Int          range,
                               void*           base,
                               FT_Long         length );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Clear_CodeRange( TT_ExecContext  exec,
                                 FT_Int          range );
 
-  FT_EXPORT_DEF( TT_ExecContext )  TT_New_Context( TT_Face  face );
+  FT_EXPORT( TT_ExecContext )  TT_New_Context( TT_Face  face );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Done_Context( TT_ExecContext  exec );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Destroy_Context( TT_ExecContext  exec,
                                 FT_Memory       memory );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Load_Context( TT_ExecContext  exec,
                              TT_Face         face,
                              TT_Size         size );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Save_Context( TT_ExecContext  exec,
                              TT_Size         ins );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Run_Context( TT_ExecContext  exec,
                             FT_Bool         debug );
 
-  FT_EXPORT_DEF( FT_Error )  TT_RunIns( TT_ExecContext  exec );
+  FT_EXPORT( FT_Error )  TT_RunIns( TT_ExecContext  exec );
 
 
 #ifdef __cplusplus

@@ -354,8 +354,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Get_BBox( FT_Outline*  outline,
-                                                   FT_BBox*     abbox )
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Get_BBox( FT_Outline*  outline,
+                                                  FT_BBox*     abbox )
   {
     FT_BBox     cbox;
     FT_BBox     bbox;

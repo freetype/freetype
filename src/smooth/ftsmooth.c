@@ -189,7 +189,8 @@
   }
 
 
-  FT_CPLUSPLUS( const FT_Renderer_Class )  ft_smooth_renderer_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_Renderer_Class  ft_smooth_renderer_class =
   {
     {
       ft_module_renderer,

@@ -21,7 +21,8 @@
 #include <psaux/t1decode.h>
 
 
-  FT_CPLUSPLUS( const PS_Table_Funcs )  ps_table_funcs =
+  FT_CALLBACK_TABLE_DEF
+  const PS_Table_Funcs  ps_table_funcs =
   {
     PS_Table_New,
     PS_Table_Done,
@@ -30,7 +31,8 @@
   };
 
 
-  FT_CPLUSPLUS( const T1_Parser_Funcs )  t1_parser_funcs =
+  FT_CALLBACK_TABLE_DEF
+  const T1_Parser_Funcs  t1_parser_funcs =
   {
     T1_Init_Parser,
     T1_Done_Parser,
@@ -47,7 +49,8 @@
   };
 
 
-  FT_CPLUSPLUS( const T1_Builder_Funcs )  t1_builder_funcs =
+  FT_CALLBACK_TABLE_DEF
+  const T1_Builder_Funcs  t1_builder_funcs =
   {
     T1_Builder_Init,
     T1_Builder_Done,
@@ -60,7 +63,8 @@
   };
 
 
-  FT_CPLUSPLUS( const T1_Decoder_Funcs )  t1_decoder_funcs =
+  FT_CALLBACK_TABLE_DEF
+  const T1_Decoder_Funcs  t1_decoder_funcs =
   {
     T1_Decoder_Init,
     T1_Decoder_Done,
@@ -80,7 +84,8 @@
   };
 
 
-  FT_CPLUSPLUS( const FT_Module_Class )  psaux_module_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_Module_Class  psaux_module_class =
   {
     0,
     sizeof( FT_ModuleRec ),

@@ -341,7 +341,7 @@
   /*                                                                       */
   /*    slot    :: The current glyph object.                               */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T2_Init_Decoder( T2_Decoder*  decoder,
                          TT_Face      face,
                          T2_Size      size,
@@ -364,7 +364,7 @@
 
 
   /* this function is used to select the locals subrs array */
-  LOCAL_DEF
+  FT_LOCAL_DEF
   void  T2_Prepare_Decoder( T2_Decoder*  decoder,
                             FT_UInt      glyph_index )
   {
@@ -551,7 +551,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T2_Parse_CharStrings( T2_Decoder*  decoder,
                                   FT_Byte*     charstring_base,
                                   FT_Int       charstring_len )
@@ -1832,7 +1832,7 @@
 #if 0 /* unused until we support pure CFF fonts */
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T2_Compute_Max_Advance( TT_Face  face,
                                     FT_Int*  max_advance )
   {
@@ -1899,7 +1899,7 @@
   /*************************************************************************/
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T2_Load_Glyph( T2_GlyphSlot  glyph,
                            T2_Size       size,
                            FT_Int        glyph_index,

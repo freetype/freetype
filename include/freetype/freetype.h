@@ -1099,9 +1099,6 @@
   /*                         Note that the app will need to know about the */
   /*                         image format.                                 */
   /*                                                                       */
-  /*    loader            :: This is a private object for the glyph slot.  */
-  /*                         Do not touch this.                            */
-  /*                                                                       */
   /* <Note>                                                                */
   /*    If FT_Load_Glyph() is called with default flags (FT_LOAD_DEFAULT), */
   /*    the glyph image is loaded in the glyph slot in its native format   */
@@ -1152,6 +1149,9 @@
     /*@private begin */
 
     FT_GlyphLoader*   loader;
+    FT_Bool           glyph_transformed;
+    FT_Matrix         glyph_matrix;
+    FT_Vector         glyph_delta;
 
     /*@private end */
 
@@ -1182,7 +1182,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Init_FreeType( FT_Library*  library );
+  FT_EXPORT( FT_Error )  FT_Init_FreeType( FT_Library*  library );
 
 
   /*************************************************************************/
@@ -1200,7 +1200,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Done_FreeType( FT_Library  library );
+  FT_EXPORT( FT_Error )  FT_Done_FreeType( FT_Library  library );
 
 
   /*************************************************************************/
@@ -1361,10 +1361,10 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_New_Face( FT_Library   library,
-                                          const char*  filepathname,
-                                          FT_Long      face_index,
-                                          FT_Face*     face );
+  FT_EXPORT( FT_Error )  FT_New_Face( FT_Library   library,
+                                      const char*  filepathname,
+                                      FT_Long      face_index,
+                                      FT_Face*     face );
 
 
   /*************************************************************************/
@@ -1407,11 +1407,11 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_New_Memory_Face( FT_Library  library,
-                                                 FT_Byte*    file_base,
-                                                 FT_Long     file_size,
-                                                 FT_Long     face_index,
-                                                 FT_Face*    face );
+  FT_EXPORT( FT_Error )  FT_New_Memory_Face( FT_Library  library,
+                                             FT_Byte*    file_base,
+                                             FT_Long     file_size,
+                                             FT_Long     face_index,
+                                             FT_Face*    face );
 
 
   /*************************************************************************/
@@ -1454,10 +1454,10 @@
   /*    `*face'.  Its return value should be 0 if the resource is          */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Open_Face( FT_Library     library,
-                                           FT_Open_Args*  args,
-                                           FT_Long        face_index,
-                                           FT_Face*       face );
+  FT_EXPORT( FT_Error )  FT_Open_Face( FT_Library     library,
+                                       FT_Open_Args*  args,
+                                       FT_Long        face_index,
+                                       FT_Face*       face );
 
 
   /*************************************************************************/
@@ -1492,8 +1492,8 @@
   /*    when invoking this function.  Most drivers simply do not implement */
   /*    file attachments.                                                  */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Attach_File( FT_Face      face,
-                                             const char*  filepathname );
+  FT_EXPORT( FT_Error )  FT_Attach_File( FT_Face      face,
+                                         const char*  filepathname );
 
 
   /*************************************************************************/
@@ -1522,8 +1522,8 @@
   /*    when invoking this function.  Most drivers simply do not implement */
   /*    file attachments.                                                  */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Attach_Stream( FT_Face        face,
-                                               FT_Open_Args*  parameters );
+  FT_EXPORT( FT_Error )  FT_Attach_Stream( FT_Face        face,
+                                           FT_Open_Args*  parameters );
 
 
   /*************************************************************************/
@@ -1541,7 +1541,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Done_Face( FT_Face  face );
+  FT_EXPORT( FT_Error )  FT_Done_Face( FT_Face  face );
 
 
   /*************************************************************************/
@@ -1578,11 +1578,11 @@
   /*    When dealing with fixed-size faces (i.e., non-scalable formats),   */
   /*    use the function FT_Set_Pixel_Sizes().                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Set_Char_Size( FT_Face     face,
-                                               FT_F26Dot6  char_width,
-                                               FT_F26Dot6  char_height,
-                                               FT_UInt     horz_resolution,
-                                               FT_UInt     vert_resolution );
+  FT_EXPORT( FT_Error )  FT_Set_Char_Size( FT_Face     face,
+                                           FT_F26Dot6  char_width,
+                                           FT_F26Dot6  char_height,
+                                           FT_UInt     horz_resolution,
+                                           FT_UInt     vert_resolution );
 
 
   /*************************************************************************/
@@ -1608,9 +1608,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Set_Pixel_Sizes( FT_Face  face,
-                                                 FT_UInt  pixel_width,
-                                                 FT_UInt  pixel_height );
+  FT_EXPORT( FT_Error )  FT_Set_Pixel_Sizes( FT_Face  face,
+                                             FT_UInt  pixel_width,
+                                             FT_UInt  pixel_height );
 
 
   /*************************************************************************/
@@ -1646,9 +1646,9 @@
   /*    Note that this also transforms the `face.glyph.advance' field, but */
   /*    *not* the values in `face.glyph.metrics'.                          */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Load_Glyph( FT_Face  face,
-                                            FT_UInt  glyph_index,
-                                            FT_Int   load_flags );
+  FT_EXPORT( FT_Error )  FT_Load_Glyph( FT_Face  face,
+                                        FT_UInt  glyph_index,
+                                        FT_Int   load_flags );
 
 
   /*************************************************************************/
@@ -1689,9 +1689,9 @@
   /*    Note that this also transforms the `face.glyph.advance' field, but */
   /*    *not* the values in `face.glyph.metrics'.                          */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Load_Char( FT_Face   face,
-                                           FT_ULong  char_code,
-                                           FT_Int    load_flags );
+  FT_EXPORT( FT_Error )  FT_Load_Char( FT_Face   face,
+                                       FT_ULong  char_code,
+                                       FT_Int    load_flags );
 
 
   /*************************************************************************/
@@ -1927,9 +1927,9 @@
   /*    the transformation and is performed on the character size given in */
   /*    the last call to FT_Set_Char_Sizes() or FT_Set_Pixel_Sizes().      */
   /*                                                                       */
-  FT_EXPORT_DEF( void )  FT_Set_Transform( FT_Face     face,
-                                           FT_Matrix*  matrix,
-                                           FT_Vector*  delta );
+  FT_EXPORT( void )  FT_Set_Transform( FT_Face     face,
+                                       FT_Matrix*  matrix,
+                                       FT_Vector*  delta );
 
 
   /*************************************************************************/
@@ -1988,8 +1988,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Render_Glyph( FT_GlyphSlot  slot,
-                                              FT_UInt       render_mode );
+  FT_EXPORT( FT_Error )  FT_Render_Glyph( FT_GlyphSlot  slot,
+                                          FT_UInt       render_mode );
 
 
   /*************************************************************************/
@@ -2053,11 +2053,11 @@
   /*    kernings, are out of the scope of this API function -- they can be */
   /*    implemented through format-specific interfaces.                    */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Get_Kerning( FT_Face     face,
-                                             FT_UInt     left_glyph,
-                                             FT_UInt     right_glyph,
-                                             FT_UInt     kern_mode,
-                                             FT_Vector*  kerning );
+  FT_EXPORT( FT_Error )  FT_Get_Kerning( FT_Face     face,
+                                         FT_UInt     left_glyph,
+                                         FT_UInt     right_glyph,
+                                         FT_UInt     kern_mode,
+                                         FT_Vector*  kerning );
 
 
   /*************************************************************************/
@@ -2095,10 +2095,10 @@
   /*    macro FT_CONFIG_OPTION_NO_GLYPH_NAMES is defined in                */
   /*    `include/freetype/config/ftoptions.h'                              */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Get_Glyph_Name( FT_Face     face,
-                                                FT_UInt     glyph_index,
-                                                FT_Pointer  buffer,
-                                                FT_UInt     buffer_max );
+  FT_EXPORT( FT_Error )  FT_Get_Glyph_Name( FT_Face     face,
+                                            FT_UInt     glyph_index,
+                                            FT_Pointer  buffer,
+                                            FT_UInt     buffer_max );
 
 
   /*************************************************************************/
@@ -2122,8 +2122,8 @@
   /*    This function will return an error if no charmap in the face       */
   /*    corresponds to the encoding queried here.                          */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Select_Charmap( FT_Face      face,
-                                                FT_Encoding  encoding );
+  FT_EXPORT( FT_Error )  FT_Select_Charmap( FT_Face      face,
+                                            FT_Encoding  encoding );
 
 
   /*************************************************************************/
@@ -2147,8 +2147,8 @@
   /*    the face (i.e., if it is not listed in the face->charmaps[]        */
   /*    table).                                                            */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Set_Charmap( FT_Face     face,
-                                             FT_CharMap  charmap );
+  FT_EXPORT( FT_Error )  FT_Set_Charmap( FT_Face     face,
+                                         FT_CharMap  charmap );
 
 
   /*************************************************************************/
@@ -2168,8 +2168,8 @@
   /* <Return>                                                              */
   /*    The glyph index.  0 means `undefined character code'.              */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_UInt )  FT_Get_Char_Index( FT_Face   face,
-                                               FT_ULong  charcode );
+  FT_EXPORT( FT_UInt )  FT_Get_Char_Index( FT_Face   face,
+                                           FT_ULong  charcode );
 
 
   /*************************************************************************/
@@ -2195,9 +2195,9 @@
   /*    divide by zero; it simply returns `MaxInt' or `MinInt' depending   */
   /*    on the signs of `a' and `b'.                                       */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Long )  FT_MulDiv( FT_Long  a,
-                                       FT_Long  b,
-                                       FT_Long  c );
+  FT_EXPORT( FT_Long )  FT_MulDiv( FT_Long  a,
+                                   FT_Long  b,
+                                   FT_Long  c );
 
 
   /*************************************************************************/
@@ -2229,8 +2229,8 @@
   /*    _second_ argument of this function; this can make a great          */
   /*    difference.                                                        */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Long )  FT_MulFix( FT_Long  a,
-                                       FT_Long  b );
+  FT_EXPORT( FT_Long )  FT_MulFix( FT_Long  a,
+                                   FT_Long  b );
 
 
   /*************************************************************************/
@@ -2256,8 +2256,8 @@
   /*    32 bits, then the division is computed directly.  Otherwise, we    */
   /*    use a specialized version of the old FT_MulDiv64().                */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Long )  FT_DivFix( FT_Long  a,
-                                       FT_Long  b );
+  FT_EXPORT( FT_Long )  FT_DivFix( FT_Long  a,
+                                   FT_Long  b );
 
 
   /*************************************************************************/
@@ -2280,8 +2280,8 @@
   /* <Note>                                                                */
   /*    The result is undefined if either `vector' or `matrix' is invalid. */
   /*                                                                       */
-  FT_EXPORT_DEF( void )  FT_Vector_Transform( FT_Vector*  vec,
-                                              FT_Matrix*  matrix );
+  FT_EXPORT( void )  FT_Vector_Transform( FT_Vector*  vec,
+                                          FT_Matrix*  matrix );
 
   /* */
 

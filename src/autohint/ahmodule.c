@@ -41,21 +41,21 @@
   } FT_AutoHinterRec;
 
 
-  static
+  FT_CALLBACK_DEF
   FT_Error  ft_autohinter_init( FT_AutoHinter  module )
   {
     return ah_hinter_new( module->root.library, &module->hinter );
   }
 
 
-  static
+  FT_CALLBACK_DEF
   void  ft_autohinter_done( FT_AutoHinter  module )
   {
     ah_hinter_done( module->hinter );
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  ft_autohinter_load( FT_AutoHinter  module,
                                 FT_GlyphSlot   slot,
                                 FT_Size        size,
@@ -67,7 +67,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void   ft_autohinter_reset( FT_AutoHinter  module,
                               FT_Face        face )
   {
@@ -78,7 +78,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  ft_autohinter_get_globals( FT_AutoHinter  module,
                                    FT_Face        face,
                                    void**         global_hints,
@@ -89,7 +89,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  ft_autohinter_done_globals( FT_AutoHinter  module,
                                     void*          global_hints )
   {
@@ -97,7 +97,7 @@
   }
 
 
-  static
+  FT_CALLBACK_TABLE_DEF
   const FT_AutoHinter_Interface  autohinter_interface =
   {
     ft_autohinter_reset,
@@ -107,7 +107,8 @@
   };
 
 
-  FT_CPLUSPLUS( const FT_Module_Class ) autohint_module_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_Module_Class  autohint_module_class =
   {
     ft_module_hinter,
     sizeof ( FT_AutoHinterRec ),

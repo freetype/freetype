@@ -182,7 +182,8 @@
   }
 
 
-  FT_CPLUSPLUS( const FT_Driver_Class )  t1cid_driver_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_Driver_Class  t1cid_driver_class =
   {
     /* first of all, the FT_Module_Class fields */
     {
@@ -247,7 +248,7 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_FUNC( const FT_Driver_Class* )  getDriverClass( void )
+  FT_EXPORT_DEF( const FT_Driver_Class* )  getDriverClass( void )
   {
     return &t1cid_driver_class;
   }

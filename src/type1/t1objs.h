@@ -134,20 +134,20 @@
   } T1_GlyphSlotRec;
 
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T1_Init_Face( FT_Stream      stream,
                           T1_Face        face,
                           FT_Int         face_index,
                           FT_Int         num_params,
                           FT_Parameter*  params );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  T1_Done_Face( T1_Face  face );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T1_Init_Driver( T1_Driver  driver );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  T1_Done_Driver( T1_Driver  driver );
 
 

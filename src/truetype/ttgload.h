@@ -44,16 +44,16 @@
 #endif
 
 
-  LOCAL_DEF
+  FT_LOCAL
   void  TT_Get_Metrics( TT_HoriHeader*  header,
                         FT_UInt         index,
                         FT_Short*       bearing,
                         FT_UShort*      advance );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  TT_Init_Glyph_Loading( TT_Face  face );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Load_Glyph( TT_Size       size,
                            TT_GlyphSlot  glyph,
                            FT_UShort     glyph_index,

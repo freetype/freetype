@@ -59,7 +59,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  PS_Table_New( PS_Table*  table,
                           FT_Int     count,
                           FT_Memory  memory )
@@ -151,7 +151,7 @@
   /*    FreeType error code.  0 means success.  An error is returned if a  */
   /*    reallocation fails.                                                */
   /*                                                                       */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  PS_Table_Add( PS_Table*  table,
                           FT_Int     index,
                           void*      object,
@@ -203,7 +203,7 @@
   /*    This function does NOT release the heap's memory block.  It is up  */
   /*    to the caller to clean it, or reference it in its own structures.  */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  PS_Table_Done( PS_Table*  table )
   {
     FT_Memory  memory = table->memory;
@@ -225,7 +225,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  PS_Table_Release( PS_Table*  table )
   {
     FT_Memory  memory = table->memory;
@@ -256,7 +256,7 @@
 #define IS_T1_SPACE( c )  ( IS_T1_WHITESPACE( c ) || IS_T1_LINESPACE( c ) )
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Skip_Spaces( T1_Parser*  parser )
   {
     FT_Byte* cur   = parser->cursor;
@@ -276,7 +276,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Skip_Alpha( T1_Parser*  parser )
   {
     FT_Byte* cur   = parser->cursor;
@@ -296,7 +296,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_ToToken( T1_Parser*  parser,
                     T1_Token*   token )
   {
@@ -379,7 +379,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_ToTokenArray( T1_Parser*  parser,
                          T1_Token*   tokens,
                          FT_UInt     max_tokens,
@@ -775,7 +775,7 @@
 
 
   /* Load a simple field (i.e. non-table) into the current list of objects */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T1_Load_Field( T1_Parser*       parser,
                            const T1_Field*  field,
                            void**           objects,
@@ -896,7 +896,7 @@
 #define T1_MAX_TABLE_ELEMENTS  32
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T1_Load_Field_Table( T1_Parser*       parser,
                                  const T1_Field*  field,
                                  void**           objects,
@@ -959,14 +959,14 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Long  T1_ToInt( T1_Parser*  parser )
   {
     return t1_toint( &parser->cursor, parser->limit );
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Fixed  T1_ToFixed( T1_Parser*  parser,
                         FT_Int      power_ten )
   {
@@ -974,7 +974,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Int  T1_ToCoordArray( T1_Parser*  parser,
                            FT_Int      max_coords,
                            FT_Short*   coords )
@@ -984,7 +984,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Int  T1_ToFixedArray( T1_Parser*  parser,
                            FT_Int      max_values,
                            FT_Fixed*   values,
@@ -997,14 +997,14 @@
 
 #if 0
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_String*  T1_ToString( T1_Parser*  parser )
   {
     return t1_tostring( &parser->cursor, parser->limit, parser->memory );
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Bool  T1_ToBool( T1_Parser*  parser )
   {
     return t1_tobool( &parser->cursor, parser->limit );
@@ -1013,7 +1013,7 @@
 #endif /* 0 */
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Init_Parser( T1_Parser*  parser,
                         FT_Byte*    base,
                         FT_Byte*    limit,
@@ -1028,7 +1028,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Done_Parser( T1_Parser*  parser )
   {
     FT_UNUSED( parser );
@@ -1061,7 +1061,7 @@
   /*                                                                       */
   /*    glyph   :: The current glyph object.                               */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Builder_Init( T1_Builder*   builder,
                          FT_Face       face,
                          FT_Size       size,
@@ -1116,7 +1116,7 @@
   /* <Input>                                                               */
   /*    builder :: A pointer to the glyph builder to finalize.             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Builder_Done( T1_Builder*  builder )
   {
     FT_GlyphSlot  glyph = builder->glyph;
@@ -1128,7 +1128,7 @@
 
 
   /* check that there is enough room for `count' more points */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T1_Builder_Check_Points( T1_Builder*  builder,
                                      FT_Int       count )
   {
@@ -1137,7 +1137,7 @@
 
 
   /* add a new point, do not check space */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Builder_Add_Point( T1_Builder*  builder,
                               FT_Pos       x,
                               FT_Pos       y,
@@ -1168,7 +1168,7 @@
 
 
   /* check space for a new on-curve point, then add it */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T1_Builder_Add_Point1( T1_Builder*  builder,
                                    FT_Pos       x,
                                    FT_Pos       y )
@@ -1185,7 +1185,7 @@
 
 
   /* check room for a new contour, then add it */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T1_Builder_Add_Contour( T1_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
@@ -1212,7 +1212,7 @@
 
 
   /* if a path was begun, add its first on-curve point */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T1_Builder_Start_Point( T1_Builder*  builder,
                                     FT_Pos       x,
                                     FT_Pos       y )
@@ -1233,7 +1233,7 @@
 
 
   /* close the current contour */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Builder_Close_Contour( T1_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
@@ -1275,7 +1275,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Decrypt( FT_Byte*   buffer,
                     FT_Int     length,
                     FT_UShort  seed )

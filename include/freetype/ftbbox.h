@@ -58,8 +58,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_Outline_Get_BBox( FT_Outline*  outline,
-                                                  FT_BBox*     bbox );
+  FT_EXPORT( FT_Error )  FT_Outline_Get_BBox( FT_Outline*  outline,
+                                              FT_BBox*     bbox );
 
 
 #ifdef __cplusplus
