@@ -1349,14 +1349,13 @@
     /*                                                           */
     coverage = area >> ( PIXEL_BITS * 2 + 1 - 8);  /* use range 0..256 */
 
+    if ( coverage < 0 )
+      coverage = -coverage;
+
     if ( ras.outline.flags & ft_outline_even_odd_fill )
     {
-      if ( coverage < 0 )
-        coverage = -coverage;
-
-      while ( coverage >= 512 )
-        coverage -= 512;
-
+      coverage &= 511;
+      
       if ( coverage > 256 )
         coverage = 512 - coverage;
       else if ( coverage == 256 )
@@ -1365,12 +1364,10 @@
     else
     {
       /* normal non-zero winding rule */
-      if ( coverage < 0 )
-        coverage = -coverage;
-
       if ( coverage >= 256 )
         coverage = 255;
     }
+
 
     y += ras.min_ey;
     x += ras.min_ex;
