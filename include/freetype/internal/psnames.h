@@ -105,7 +105,7 @@
   /*                                                                       */
   /* <Note>                                                                */
   /*    This function will not be compiled if the configuration macro      */
-  /*    FT_CONFIG_OPTION_POSTSCRIPT_NAMES is undefined.                    */ 
+  /*    FT_CONFIG_OPTION_POSTSCRIPT_NAMES is undefined.                    */
   /*                                                                       */
   typedef const char*  (*PS_Macintosh_Name_Func)( FT_UInt  name_index );
 

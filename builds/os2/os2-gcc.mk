@@ -123,11 +123,11 @@ ifdef BUILD_FREETYPE
   FT_LIBRARIAN := $(AR) -r
 
 
-  # This final rule is used to link all object files into a single library. 
+  # This final rule is used to link all object files into a single library.
   # It is part of the system-specific sub-Makefile because not all
   # librarians accept a simple syntax like
   #
-  #   librarian library_file {list of object files} 
+  #   librarian library_file {list of object files}
   #
   $(FT_LIBRARY): $(OBJECTS_LIST)
 	  -$(DELETE) $(subst $(SEP),$(HOSTSEP),$(FT_LIBRARY)) 2> nul

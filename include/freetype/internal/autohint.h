@@ -64,7 +64,7 @@
   /* I initially thought that it would be a good idea to cache the glyph   */
   /* hints too.  However, my general idea now is that if you really need   */
   /* to cache these too, you are simply in need of a new font format,      */
-  /* where all this information could be stored within the font file and   */ 
+  /* where all this information could be stored within the font file and   */
   /* decoded on the fly.                                                   */
   /*                                                                       */
   /*************************************************************************/

@@ -63,16 +63,16 @@
     FT_Error  (*init)   ( PS_Table*  table,
                           FT_Int     count,
                           FT_Memory  memory );
-  
-    void      (*done)   ( PS_Table*  table );                              
-  
+
+    void      (*done)   ( PS_Table*  table );
+
     FT_Error  (*add)    ( PS_Table*  table,
                           FT_Int     index,
                           void*      object,
                           FT_Int     length );
 
-    void      (*release)( PS_Table*  table );                              
-  
+    void      (*release)( PS_Table*  table );
+
   } PS_Table_Funcs;
 
 
@@ -186,7 +186,7 @@
 
     /* do not remove */
     t1_field_location_max
-  
+
   } T1_Field_Location;
 
 
@@ -297,10 +297,10 @@
                                  FT_Memory   memory );
 
     void      (*done)          ( T1_Parser*  parser );
-    
+
     void      (*skip_spaces)   ( T1_Parser*  parser );
     void      (*skip_alpha)    ( T1_Parser*  parser );
-  
+
     FT_Long   (*to_int)        ( T1_Parser*  parser );
     FT_Fixed  (*to_fixed)      ( T1_Parser*  parser,
                                  FT_Int      power_ten );
@@ -310,21 +310,21 @@
     FT_Int    (*to_fixed_array)( T1_Parser*  parser,
                                  FT_Int      max_values,
                                  FT_Fixed*   values,
-                                 FT_Int      power_ten );    
-  
+                                 FT_Int      power_ten );
+
     void      (*to_token)      ( T1_Parser*  parser,
                                  T1_Token*   token );
     void      (*to_token_array)( T1_Parser*  parser,
                                  T1_Token*   tokens,
                                  FT_UInt     max_tokens,
                                  FT_Int*     pnum_tokens );
-                                 
+
     FT_Error  (*load_field)    ( T1_Parser*       parser,
                                  const T1_Field*  field,
                                  void**           objects,
                                  FT_UInt          max_objects,
                                  FT_ULong*        pflags );
-    
+
     FT_Error  (*load_field_table)( T1_Parser*       parser,
                                    const T1_Field*  field,
                                    void**           objects,
@@ -333,7 +333,7 @@
 
   } T1_Parser_Funcs;
 
-  
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -362,7 +362,7 @@
     FT_Byte*         limit;
     FT_Error         error;
     FT_Memory        memory;
-    
+
     T1_Parser_Funcs  funcs;
   };
 
@@ -382,16 +382,16 @@
 
   typedef FT_Error  (*T1_Builder_Check_Points_Func) ( T1_Builder*  builder,
                                                      FT_Int       count );
-                                                      
+
   typedef void      (*T1_Builder_Add_Point_Func)    ( T1_Builder*  builder,
                                                       FT_Pos       x,
                                                       FT_Pos       y,
-                                                      FT_Byte      flag );    
-  
+                                                      FT_Byte      flag );
+
   typedef FT_Error  (*T1_Builder_Add_Point1_Func)   ( T1_Builder*  builder,
                                                       FT_Pos       x,
                                                       FT_Pos       y );
-                                                    
+
   typedef FT_Error  (*T1_Builder_Add_Contour_Func)  ( T1_Builder*  builder );
 
   typedef FT_Error  (*T1_Builder_Start_Point_Func)  ( T1_Builder*  builder,
@@ -407,16 +407,16 @@
                        FT_Face       face,
                        FT_Size       size,
                        FT_GlyphSlot  slot );
-  
+
     void      (*done)( T1_Builder*   builder );
-    
+
     T1_Builder_Check_Points_Func   check_points;
     T1_Builder_Add_Point_Func      add_point;
     T1_Builder_Add_Point1_Func     add_point1;
     T1_Builder_Add_Contour_Func    add_contour;
     T1_Builder_Start_Point_Func    start_point;
     T1_Builder_Close_Contour_Func  close_contour;
-  
+
   } T1_Builder_Funcs;
 
 
@@ -543,7 +543,7 @@
     FT_Byte*  cursor;
     FT_Byte*  base;
     FT_Byte*  limit;
-    
+
   } T1_Decoder_Zone;
 
 
@@ -564,9 +564,9 @@
                         FT_Byte**            glyph_names,
                         T1_Blend*            blend,
                         T1_Decoder_Callback  callback );
-    
+
     void      (*done) ( T1_Decoder*  decoder );
-    
+
     FT_Error  (*parse_charstrings)( T1_Decoder*  decoder,
                                     FT_Byte*     base,
                                     FT_UInt      len );
@@ -600,7 +600,7 @@
     FT_Vector            flex_vectors[7];
 
     T1_Blend*            blend;       /* for multiple master support */
-    
+
     T1_Decoder_Callback  parse_callback;
     T1_Decoder_Funcs     funcs;
   };

@@ -27,7 +27,7 @@ ifeq ($(PLATFORM),ansi)
     #
     ifneq ($(OSTYPE),cygwin)
       is_dos := $(findstring Dos,$(shell ver))
-  
+
       # We try to recognize a Dos session under OS/2.  The `ver' command
       # returns `Operating System/2 ...' there, so `is_dos' should be empty.
       #

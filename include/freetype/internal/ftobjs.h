@@ -112,7 +112,7 @@
     FT_Library        library;
     FT_Memory         memory;
     FT_Generic        generic;
-    
+
   } FT_ModuleRec;
 
 
@@ -186,7 +186,7 @@
 #define FT_FACE( x )          ((FT_Face)(x))
 #define FT_SIZE( x )          ((FT_Size)(x))
 #define FT_SLOT( x )          ((FT_GlyphSlot)(x))
-  
+
 #define FT_FACE_DRIVER( x )   FT_FACE( x )->driver
 #define FT_FACE_LIBRARY( x )  FT_FACE_DRIVER( x )->root.library
 #define FT_FACE_MEMORY( x )   FT_FACE( x )->memory
@@ -258,7 +258,7 @@
     FT_UInt       num_subglyphs; /* number of subglyphs */
     FT_SubGlyph*  subglyphs;     /* subglyphs           */
     FT_Vector*    extra_points;  /* extra points table  */
-  
+
   } FT_GlyphLoad;
 
 
@@ -274,27 +274,27 @@
     FT_GlyphLoad  current;
 
     void*         other;            /* for possible future extension? */
-    
+
   };
 
 
   BASE_DEF( FT_Error )  FT_GlyphLoader_New( FT_Memory         memory,
                                             FT_GlyphLoader**  aloader );
-                                          
+
   BASE_DEF( FT_Error )  FT_GlyphLoader_Create_Extra(
-                          FT_GlyphLoader*  loader );                                        
-  
+                          FT_GlyphLoader*  loader );
+
   BASE_DEF( void )      FT_GlyphLoader_Done( FT_GlyphLoader*  loader );
-  
+
   BASE_DEF( void )      FT_GlyphLoader_Reset( FT_GlyphLoader*  loader );
-  
+
   BASE_DEF( void )      FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader );
-  
+
   BASE_DEF( FT_Error )  FT_GlyphLoader_Check_Points(
                           FT_GlyphLoader*  loader,
                           FT_UInt          n_points,
                           FT_UInt          n_contours );
-                               
+
   BASE_DEF( FT_Error )  FT_GlyphLoader_Check_Subglyphs(
                           FT_GlyphLoader*  loader,
                           FT_UInt          n_subs );
@@ -336,7 +336,7 @@
     FT_Raster              raster;
     FT_Raster_Render_Func  raster_render;
     FTRenderer_render      render;
-  
+
   } FT_RendererRec;
 
 
@@ -391,10 +391,10 @@
   {
     FT_ModuleRec      root;
     FT_Driver_Class*  clazz;
-    
+
     FT_ListRec        faces_list;
     void*             extensions;
-    
+
     FT_GlyphLoader*   glyph_loader;
 
   } FT_DriverRec;

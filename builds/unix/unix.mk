@@ -30,16 +30,16 @@ ifdef BUILD_PROJECT
   distclean_project: distclean_project_unix
 
 
-  # This final rule is used to link all object files into a single library. 
+  # This final rule is used to link all object files into a single library.
   # It is part of the system-specific sub-Makefile because not all
   # librarians accept a simple syntax like
   #
-  #   librarian library_file {list of object files} 
+  #   librarian library_file {list of object files}
   #
   $(PROJECT_LIBRARY): $(OBJECTS_LIST)
-ifdef CLEAN_LIBRARY  
+ifdef CLEAN_LIBRARY
 	  -$(CLEAN_LIBRARY) $(NO_OUTPUT)
-endif          
+endif
 	  $(LINK_LIBRARY)
 
 endif

@@ -300,7 +300,7 @@
   {
 
     FT_Int64  z;
-    
+
     z = (FT_Int64)(x) << 16;
     return FT_Sqrt64( z );
   }
@@ -773,7 +773,7 @@
   {
     FT_Int64  z;
 
-    
+
     z.hi = (FT_UInt32)((FT_Int32)(x) >> 16);
     z.lo = (FT_UInt32)( x << 16 );
     return FT_Sqrt64( &z );

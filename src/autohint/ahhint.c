@@ -1115,7 +1115,7 @@
                       ( new_width + new_lsb - old_width - old_lsb );
 
         hinter->pp1.x = ( ( new_lsb - old_lsb ) + 32 ) & -64;
-        hinter->pp2.x = ( ( edge2->pos + 
+        hinter->pp2.x = ( ( edge2->pos +
                             ( old_advance - edge2->opos ) ) + 32 ) & -64;
       }
 

@@ -516,15 +516,15 @@
 
         root->ascender  = face->horizontal.Ascender;
         root->descender = face->horizontal.Descender;
-        
+
         root->height    = root->ascender - root->descender +
                           face->horizontal.Line_Gap;
-                          
+
         /* if the line_gap is 0, we add an extra 15% to the text height --  */
         /* this computation is based on various versions of Times New Roman */
         if ( face->horizontal.Line_Gap == 0 )
           root->height = ( root->height * 115 + 50 ) / 100;
-          
+
 #if 0
 
         /* some fonts have the OS/2 "sTypoAscender", "sTypoDescender" & */
@@ -532,11 +532,11 @@
         if ( face->os2.version != 0xFFFF && root->ascender )
         {
           FT_Int  height;
-          
+
 
           root->ascender  =  face->os2.sTypoAscender;
           root->descender = -face->os2.sTypoDescender;
-          
+
           height = root->ascender + root->descender + face->os2.sTypoLineGap;
           if ( height > root->height )
             root->height = height;

@@ -86,11 +86,11 @@ mac_standard_names = \
   # 120
   "ntilde", "oacute", "ograve", "ocircumflex", "odieresis",
   "otilde", "uacute", "ugrave", "ucircumflex", "udieresis",
- 
+
   # 130
   "dagger", "degree", "cent", "sterling", "section",
   "bullet", "paragraph", "germandbls", "registered", "copyright",
- 
+
   # 140
   "trademark", "acute", "dieresis", "notequal", "AE",
   "Oslash", "infinity", "plusminus", "lessequal", "greaterequal",
@@ -1502,7 +1502,7 @@ def count_extra_glyphs( alist, filter ):
       filtered_index = filter.index( name )
     except:
       extras.append( name )
-            
+
   return extras
 
 
@@ -1521,7 +1521,7 @@ def dump_mac_indices( file ):
     except:
       write( "    " + repr( count ) + ",\n" )
       count = count + 1
-      
+
   write( "    0\n" )
   write( "  };\n" )
   write( "\n" )
@@ -1555,7 +1555,7 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
   write( "  };\n" )
   write( "\n" )
   write( "\n" )
-  
+
   return name_list
 
 
@@ -1570,7 +1570,7 @@ def dump_unicode_values( file, base_list, adobe_list ):
   write( "  static const unsigned short  names_to_unicode[" + \
           repr( len( base_list ) + len( adobe_list ) + 1 ) + "] =\n" )
   write( "  {\n" )
-             
+
   for name in base_list:
     try:
       index = adobe_glyphs.index( name )
@@ -1626,13 +1626,13 @@ def main():
   write = file.write
 
   count_sid = len( t1_standard_strings )
-    
+
   # build mac index table & supplemental glyph names
   mac_list   = count_extra_glyphs( mac_standard_names, t1_standard_strings )
-  count_mac  = len( mac_list )  
+  count_mac  = len( mac_list )
   t1_bias    = count_mac
   base_list  = mac_list + t1_standard_strings
-    
+
   # build adobe unicode index table & supplemental glyph names
   adobe_list  = the_adobe_glyph_list()
   adobe_list  = count_extra_glyphs( adobe_list, base_list )
@@ -1664,7 +1664,7 @@ def main():
 
   # dump glyph list
   name_list = dump_glyph_list( file, base_list, adobe_list )
-    
+
   # dump t1_standard_list
   write( "  static const char**  t1_standard_glyphs = " \
           + "standard_glyph_names + " + repr( t1_bias ) + ";\n" )
@@ -1684,17 +1684,17 @@ def main():
   write( "\n" )
 
   # dump mac indices table
-  dump_mac_indices( file )    
+  dump_mac_indices( file )
 
   # discard mac names from base list
   base_list = base_list[t1_bias:]
-  
+
   # dump unicode values table
   dump_unicode_values( file, base_list, adobe_list )
 
   dump_encoding( file, "t1_standard_encoding", t1_standard_encoding )
   dump_encoding( file, "t1_expert_encoding", t1_expert_encoding )
-    
+
   write( "/* END */\n" )
 
 

@@ -11,7 +11,7 @@ directory. Quick starter: go to "freetype2-beta8", then:
 
 
   Unix (+GNU Make):
-     
+
      - make  (don't worry, this will invoke a configure script)
      - make
 
@@ -22,21 +22,20 @@ directory. Quick starter: go to "freetype2-beta8", then:
      - make
 
 
-  Windows + gcc + GNU Make:     
-     
+  Windows + gcc + GNU Make:
+
      - make
      - make
 
   Windows + Visual C++ + GNU Make:
 
      - make setup visualc
-     - make     
-   
+     - make
+
   Windows + Win32-LCC + GNU Make:
-  
+
      - make setup lcc
      - make
-  
+
   etc...
-  
 

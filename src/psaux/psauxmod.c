@@ -75,7 +75,7 @@
     &t1_parser_funcs,
     &t1_builder_funcs,
     &t1_decoder_funcs,
-    
+
     T1_Decrypt
   };
 
@@ -87,9 +87,9 @@
     "psaux",
     0x10000L,
     0x20000L,
-    
+
     &psaux_interface,  /* module-specific interface */
-    
+
     (FT_Module_Constructor)0,
     (FT_Module_Destructor) 0,
     (FT_Module_Requester)  0

@@ -52,7 +52,7 @@ LIBRARY := $(PROJECT)
 
 
 # The NO_OUTPUT macro is used to ignore the output of commands.
-# 
+#
 NO_OUTPUT = &> nul
 
 
@@ -68,11 +68,11 @@ ifdef BUILD_PROJECT
   clean_project: clean_project_dos
   distclean_project: distclean_project_dos
 
-  # This final rule is used to link all object files into a single library. 
+  # This final rule is used to link all object files into a single library.
   # It is part of the system-specific sub-Makefile because not all
   # librarians accept a simple syntax like
   #
-  #   librarian library_file {list of object files} 
+  #   librarian library_file {list of object files}
   #
   $(PROJECT_LIBRARY): $(OBJECTS_LIST)
 	  -$(CLEAN_LIBRARY) $(NO_OUTPUT)

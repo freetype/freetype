@@ -69,7 +69,7 @@
     FT_UShort         cset_index;
     FT_UShort         num_elements;
     FT_Byte*          elements;
-  
+
   } FTC_ChunkNodeRec;
 
 
@@ -153,7 +153,7 @@
     FTC_CacheRec  root;
     FT_Lru        csets_lru;        /* static chunk set lru list */
     FTC_ChunkSet  last_cset;        /* small cache :-)           */
-    
+
   } FTC_Chunk_CacheRec;
 
 

@@ -17,7 +17,7 @@
       alink="#FF0000">
 
 
-<font size=1>http://www.freetype.org</font><p> 
+<font size=1>http://www.freetype.org</font><p>
 
 <center>
   <a href="freetype.html">
@@ -61,7 +61,7 @@ ubiquitous products.</p>
 	 returns and manages outline font data (images & metrics).</p>
    </ul>
    </p></li>
- 
+
   <li><p>
     <b>Support for several font formats through loadable modules:</b><br>
     <ul>
@@ -71,8 +71,8 @@ ubiquitous products.</p>
 	 the font.</p>
     </ul>
   </p></li>
-  
-  
+
+
   <li><p>
     <b>High-quality anti-aliasing:</b><br>
     <ul>
@@ -95,9 +95,9 @@ ubiquitous products.</p>
 	  memory, compressed file, network, etc..).
        </p>
      </ul>
-     	    
+     	
   </ul>
-  
+
   <p>Note that <em>the beta of FreeType 2 is available <b>now</b></em>. For more
   info, check our <a href="download.html">Download page</a> or see the source
   and its diffs through our <a href="cgi-bin/cvsweb.cgi">CVS Web interface</a>.
@@ -144,7 +144,7 @@ ubiquitous products.</p>
    Apple. We're currently in contact with Apple to discuss the importance
    of such patents and their use in open source projects like FreeType.
    </p>
-   
+
 <p>In the meantime, we have developped our own alternative technology that
    is capable of automatically hinting scalable glyph images. It is
    now part of the FreeType 2 source tree as the "autohint" module,
@@ -166,12 +166,12 @@ ubiquitous products.</p>
    only compile the features you need. As each module is between
    10 and 20 Kb in size, it's possible to build a bare-bones
    font engine that supports anti-aliasing in about 30 Kb !!</p>
-   
+
 <p>Configuration is performed by  modifications of only two header
    files (one to select global features, another one to select modules)
    and don't need tweaking of source code. Note that it is however
    possible to provide your own implementation of certain components.</p>
-   
+
 <p>For example, when building on Unix, the engine will automatically
    use memory-mapped files when available on the target platform,
    thus significantly increasing font file i/o.</p>
@@ -188,7 +188,7 @@ ubiquitous products.</p>
    glyph images from font files. These images can be bitmaps, scalable
    bezier outlines or even anything else. (e.g. bi-color or metafont
    glyphs, as long as they're supported by a module).</p>
-   
+
 <p>Each scalable glyph image can be transformed, measured and
    rendered into a monochrome or anti-aliased bitmaps easily
    through a uniform interface.
@@ -205,10 +205,10 @@ ubiquitous products.</p>
 
 <p>The FreeType 2 API is useful to retrieve advanced information from
    various fonts:</p>
-   
+
 <ul>
   <li>vertical metrics are available whenever found in the font file</li>
-  
+
   <li>kerning distances are available when found in the font file. It
       is also possible to "attach" a given additional file to a given
       font face. This is useful to load kerning distances from an
@@ -216,7 +216,7 @@ ubiquitous products.</p>
 
   <li>provides ASCII glyph names whenever available in the font
       (TrueType, OpenType, Type1, etc..)</li>
-      
+
   <li>provides access to important tables for SFNT-based font formats
       (i.e. TrueType, OpenType, CEF, etc..), like the name table,
       font header, maximum profile, etc...</li>
@@ -225,15 +225,15 @@ ubiquitous products.</p>
       those fonts or formats that do not provide one. This is
       extremely useful with Type 1 fonts which are normally
       limited to a stupid 256-characters encoding.</li>
-</ul>      
+</ul>
 
-  
+
 <h3>Simple & clean API</h3>
 
 <p>The FreeType 2 high-level API is simple and straightforward, as it
    has been specifically designed to make the most commmon font operations
    easy</p>
-   
+
 <p>As a comparison, the number of function calls needed to perform a
    the tasks of font face creation/opening and glyph loading/rendering
    has been reduced by a factor of 4 !!</p>
@@ -242,7 +242,7 @@ ubiquitous products.</p>
    it provides standard extensions to access format-specific tables and
    information. More extensions can also be easily added through new
    modules</p>
-   
+
 
 <h3>Robust & Portable code</h3>
 
@@ -257,7 +257,7 @@ ubiquitous products.</p>
    a disk file, memory, or through a client-provided input stream. This
    allows to support compressed font files, remote fonts, fonts embedded
    in other streams (e.g. Type42 fonts), etc..</p>
-   
+
 <p>An advanced i/o sub-system is used to optimise file access, as well
    as reduce memory usage of the library when the file is memory-based
    ( ROM, RAM, memory-mapped ).</p>
@@ -268,13 +268,13 @@ ubiquitous products.</p>
 <p>Finally, FreeType 2 is released under its own BSD-like open source
    license, one of the less restricting licenses available, and this
    means that:</p>
-   
+
 <ul>
   <li><p>
     It can be included in all kinds of products, be they proprietary
     or not.
   </p></li>
-  
+
   <li><p>
     As any module can be added or replaced anytime, any third party
     vendor  has the ability to provide its own set of modules (under
@@ -327,7 +327,7 @@ ubiquitous products.</p>
    is covered by the Apple patents. However, this piece of code is never
    compiled by default in this release (unlike in previous betas) making
    a default build of the library <em>entirely patent-free !!</em></p>
-   
+
 <p>Note that in order to compile the interpreter, one needs to define
    the configuration macro <tt><b>TT_CONFIG_OPTION_BYTECODE_INTERPRETER</b></tt> configuration
    macro in the file "<tt>ftoption.h</tt>". More details are available in

@@ -143,7 +143,7 @@
       LOG(( " [%d-%d:%.1f:%1.f:%.1f]",
             spring->stem1 - stems, spring->stem2 - stems,
             FLOAT( spring->owidth ),
-            FLOAT( spring->stem2->pos - 
+            FLOAT( spring->stem2->pos -
                    ( spring->stem1->pos + spring->stem1->width ) ),
             FLOAT( spring->tension ) ));
     }

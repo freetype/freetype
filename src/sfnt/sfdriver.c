@@ -100,23 +100,23 @@
   {
     FT_String*  gname;
     FT_Error    error;
-    
+
 
     error = TT_Get_PS_Name( face, glyph_index, &gname );
     if ( !error && buffer_max > 0 )
     {
       FT_UInt  len = strlen( gname );
-      
+
 
       if ( len >= buffer_max )
         len = buffer_max - 1;
-        
+
       MEM_Copy( buffer, gname, len );
       ((FT_Byte*)buffer)[len] = 0;
     }
-    
+
     return error;
-  }                                  
+  }
 
 
 #endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */

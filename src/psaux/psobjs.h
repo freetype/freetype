@@ -45,12 +45,12 @@
   LOCAL_VAR
   const T1_Builder_Funcs  t1_builder_funcs;
 
-  
+
   LOCAL_DEF
   FT_Error  PS_Table_New( PS_Table*  table,
                           FT_Int     count,
                           FT_Memory  memory );
- 
+
   LOCAL_DEF
   FT_Error  PS_Table_Add( PS_Table*  table,
                           FT_Int     index,
@@ -89,21 +89,21 @@
                          T1_Token*   tokens,
                          FT_UInt     max_tokens,
                          FT_Int*     pnum_tokens );
- 
+
   LOCAL_DEF
   FT_Error  T1_Load_Field( T1_Parser*       parser,
                            const T1_Field*  field,
                            void**           objects,
                            FT_UInt          max_objects,
                            FT_ULong*        pflags );
- 
+
   LOCAL_DEF
   FT_Error  T1_Load_Field_Table( T1_Parser*       parser,
                                  const T1_Field*  field,
                                  void**           objects,
                                  FT_UInt          max_objects,
                                  FT_ULong*        pflags );
- 
+
   LOCAL_DEF
   FT_Long  T1_ToInt( T1_Parser*  parser );
 
@@ -151,11 +151,11 @@
 
   LOCAL_DEF
   void  T1_Builder_Done( T1_Builder*  builder );
-  
+
   LOCAL_DEF
   FT_Error  T1_Builder_Check_Points( T1_Builder*  builder,
                                      FT_Int       count );
-  
+
   LOCAL_DEF
   void  T1_Builder_Add_Point( T1_Builder*  builder,
                               FT_Pos       x,
@@ -166,10 +166,10 @@
   FT_Error  T1_Builder_Add_Point1( T1_Builder*  builder,
                                    FT_Pos       x,
                                    FT_Pos       y );
-                                   
+
   LOCAL_DEF
   FT_Error  T1_Builder_Add_Contour( T1_Builder*  builder );
-  
+
 
   LOCAL_DEF
   FT_Error  T1_Builder_Start_Point( T1_Builder*  builder,

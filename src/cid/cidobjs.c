@@ -157,7 +157,7 @@
     {
       psaux = (PSAux_Interface*)FT_Get_Module_Interface(
                   FT_FACE_LIBRARY( face ), "psaux" );
-                  
+
       face->psaux = psaux;
     }
 

@@ -154,7 +154,7 @@
     }
 
     dummy_object = object;
-    
+
     /* now, load the keyword data in the object's field(s) */
     if ( keyword->type == t1_field_integer_array ||
          keyword->type == t1_field_fixed_array   )
@@ -219,7 +219,7 @@
       matrix->yx = temp[1];
       matrix->xy = temp[2];
       matrix->yy = temp[3];
-      
+
       /* note that the font offsets are expressed in integer font units */
       offset->x  = temp[4] >> 16;
       offset->y  = temp[5] >> 16;

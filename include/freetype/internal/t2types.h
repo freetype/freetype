@@ -89,7 +89,7 @@
     FT_ULong   private_size;
     FT_Long    synthetic_base;
     FT_UInt    embedded_postscript;
-    FT_UInt    base_font_name;       
+    FT_UInt    base_font_name;
     FT_UInt    postscript;
 
     /* these should only be used for the top-level font dictionary */
@@ -107,26 +107,26 @@
     FT_UInt    cid_font_name;
 
   } CFF_Font_Dict;
-  
-  
+
+
   typedef struct  CFF_Private_
   {
     FT_Byte   num_blue_values;
     FT_Byte   num_other_blues;
     FT_Byte   num_family_blues;
     FT_Byte   num_family_other_blues;
-    
+
     FT_Pos    blue_values[14];
     FT_Pos    other_blues[10];
     FT_Pos    family_blues[14];
     FT_Pos    family_other_blues[10];
-    
+
     FT_Fixed  blue_scale;
     FT_Pos    blue_shift;
     FT_Pos    blue_fuzz;
     FT_Pos    standard_width;
     FT_Pos    standard_height;
-    
+
     FT_Byte   num_snap_widths;
     FT_Byte   num_snap_heights;
     FT_Pos    snap_widths[13];
@@ -140,7 +140,7 @@
     FT_ULong  local_subrs_offset;
     FT_Pos    default_width;
     FT_Pos    nominal_width;
-  
+
   } CFF_Private;
 
 
@@ -157,7 +157,7 @@
     FT_UInt   cache_first;
     FT_UInt   cache_count;
     FT_Byte   cache_fd;
-    
+
   } CFF_FD_Select;
 
 
@@ -167,7 +167,7 @@
   {
     CFF_Font_Dict  font_dict;
     CFF_Private    private_dict;
-    
+
     CFF_Index      local_subrs_index;
     FT_UInt        num_local_subrs;
     FT_Byte**      local_subrs;
@@ -177,7 +177,7 @@
 
   /* maximum number of sub-fonts in a CID-keyed file */
 #define CFF_MAX_CID_FONTS  16
-  
+
 
   typedef struct  CFF_Font_
   {
@@ -185,20 +185,20 @@
     FT_Memory      memory;
     FT_UInt        num_faces;
     FT_UInt        num_glyphs;
-    
+
     FT_Byte        version_major;
     FT_Byte        version_minor;
     FT_Byte        header_size;
     FT_Byte        absolute_offsize;
 
-  
+
     CFF_Index      name_index;
     CFF_Index      top_dict_index;
     CFF_Index      string_index;
     CFF_Index      global_subrs_index;
-  
+
     /* we don't load the Encoding and CharSet tables */
-  
+
     CFF_Index      charstrings_index;
     CFF_Index      font_dict_index;
     CFF_Index      private_index;

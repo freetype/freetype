@@ -439,7 +439,7 @@
       ft_module_driver_has_hinter,
 #else
       0,
-#endif            
+#endif
 
       sizeof ( TT_DriverRec ),
 

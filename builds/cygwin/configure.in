@@ -79,7 +79,7 @@ AC_CHECK_FUNCS(memcpy memmove)
 
 AM_PROG_LIBTOOL
 
-dnl create the CygWin-specific sub-Makefile `builds/cygwin/cygwin-def.mk' 
+dnl create the CygWin-specific sub-Makefile `builds/cygwin/cygwin-def.mk'
 dnl and 'builds/cygwin/cygwin-cc.mk' that will be used by the build system
 dnl
 AC_OUTPUT(cygwin-cc.mk:cygwin-cc.in cygwin-def.mk:cygwin-def.in)

@@ -194,7 +194,7 @@
   void  ft_close_stream( FT_Stream  stream )
   {
     munmap( (MUNMAP_ARG_CAST)stream->descriptor.pointer, stream->size );
-        
+
     stream->descriptor.pointer = NULL;
     stream->size               = 0;
     stream->base               = 0;
@@ -243,7 +243,7 @@
       FT_ERROR(( " could not `fstat' file `%s'\n", filepathname ));
       goto Fail_Map;
     }
-      
+
     stream->size = stat_buf.st_size;
     stream->pos  = 0;
     stream->base = (unsigned char *)mmap( NULL,
@@ -264,23 +264,23 @@
 
     stream->descriptor.pointer = stream->base;
     stream->pathname.pointer   = (char*)filepathname;
-    
+
     stream->close = ft_close_stream;
     stream->read  = 0;
-    
+
     FT_TRACE1(( "FT_New_Stream:" ));
     FT_TRACE1(( " opened `%s' (%d bytes) successfully\n",
                 filepathname, stream->size ));
 
     return FT_Err_Ok;
-    
+
   Fail_Map:
     close( file );
 
     stream->base = NULL;
     stream->size = 0;
     stream->pos  = 0;
-    
+
     return FT_Err_Cannot_Open_Stream;
   }
 
@@ -299,7 +299,7 @@
   FT_EXPORT_FUNC( FT_Memory )  FT_New_Memory( void )
   {
     FT_Memory  memory;
-    
+
 
     memory = (FT_Memory)malloc( sizeof ( *memory ) );
     if ( memory )

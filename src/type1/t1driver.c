@@ -57,24 +57,24 @@
                                FT_UInt     buffer_max )
   {
     FT_String*  gname;
-    
+
 
     gname = face->type1.glyph_names[glyph_index];
 
     if ( buffer_max > 0 )
     {
       FT_UInt  len = strlen( gname );
-      
+
 
       if (len >= buffer_max)
         len = buffer_max - 1;
-        
+
       MEM_Copy( buffer, gname, len );
       ((FT_Byte*)buffer)[len] = 0;
     }
 
     return T1_Err_Ok;
-  }                                  
+  }
 
 
   /*************************************************************************/

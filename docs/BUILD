@@ -32,7 +32,7 @@ I. QUICK COMMAND-LINE GUIDE
   Note that on Unix, the  first `make' invocation will run a configure
   script (which is located  in `freetype2/builds/unix/'.  You can also
   pass parameters to this script with the CFG variable, as in:
-  
+
       make CFG="--prefix=/usr/local"
       make
 
@@ -61,11 +61,11 @@ II. COMMAND-LINE COMPILATION
 
     Make sure that you are invoking GNU Make from the command line, by
     typing something like:
-     
+
         make -v
-        
+
     to display its version number.
-     
+
   b. Invoke `make'
 
     Go to  the root  directory of FreeType  2, then simply  invoke GNU
@@ -248,16 +248,16 @@ IV. Support for flat-directory compilation
   Note  that you  still need  to  only compile  the `wrapper'  sources
   described   above.   Define   the   `FT_FLAT_COMPILE'   macro   when
   compiling.  Here an example:
-  
+
     1. Copy all files in current directory:
-   
+
         cp freetype2/src/base/*.[hc] .
         cp freetype2/src/raster1/*.[hc] .
         cp freetype2/src/smooth/*.[hc] .
         etc.
 
     2. Compile sources:
-        
+
         cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftsystem.c
         cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftinit.c
         cc -c -DFT_FLAT_COMPILE -Ifreetype2/include ftdebug.c

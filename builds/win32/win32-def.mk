@@ -55,7 +55,7 @@ LIBRARY := $(PROJECT)
 
 
 # The NO_OUTPUT macro is used to ignore the output of commands.
-# 
+#
 NO_OUTPUT = 2> nul
 
 # EOF
