@@ -325,7 +325,7 @@
   static FT_Error
   fnt_cmap_init( FT_CMap  cmap )
   {
-    FNT_Face   face = (FNT_Face) FT_CMAP_FACE(cmap);
+    FNT_Face  face = (FNT_Face) FT_CMAP_FACE(cmap);
     FNT_Font  font = face->fonts;
 
     cmap->first = (FT_UInt32) font->header.first_char;
@@ -339,7 +339,7 @@
   fnt_cmap_char_index( FT_CMap    cmap,
                        FT_UInt32  char_code )
   {
-    FT_UInt    gindex = 0;
+    FT_UInt  gindex = 0;
 
     char_code -= cmap->first;
     if ( char_code < cmap->count )

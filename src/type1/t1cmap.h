@@ -11,11 +11,9 @@ FT_BEGIN_HEADER
  /***************************************************************************/
  /***************************************************************************/
 
-  typedef struct T1_CMapStrRec_*       T1_CMapStd;
+ /* standard (and expert) encoding cmaps */
+  typedef struct T1_CMapStdRec_*       T1_CMapStd;
 
-  typedef struct T1_CMapUnicodeRec_*   T1_CMapUnicode;
-
-  
   typedef struct T1_CMapStdRec_
   {
     FT_CMapRec          cmap;
@@ -64,14 +62,15 @@ FT_BEGIN_HEADER
  /***************************************************************************/
  /***************************************************************************/
 
-  typedef struct T1_CMapUniPairRec_*   T1_CMapUniPair;
-  
+ /* unicode (syntehtic) cmaps */
+  typedef struct T1_CMapUnicodeRec_*   T1_CMapUnicode;
+
   typedef struct T1_CMapUniPairRec_
   {
     FT_UInt32  unicode;
     FT_UInt    gindex;
   
-  } T1_CMapUniPairRec;
+  } T1_CMapUniPairRec, *T1_CMapUniPair;
 
 
   typedef struct T1_CMapUnicodeRec_

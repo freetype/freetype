@@ -290,32 +290,14 @@
 
     face->root.num_faces = 1;
 
-    psnames = (PSNames_Service)face->psnames;
-    if ( !psnames )
-    {
-      psnames = (PSNames_Service)
-                FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "psnames" );
+    psnames = face->psnames = (PSNames_Service)
+               FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "psnames" );
 
-      face->psnames = psnames;
-    }
+    psaux = face->psaux   = (PSAux_Service)
+               FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "psaux" );
 
-    psaux = (PSAux_Service)face->psaux;
-    if ( !psaux )
-    {
-      psaux = (PSAux_Service)
-              FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "psaux" );
-
-      face->psaux = psaux;
-    }
-
-    pshinter = (PSHinter_Service)face->pshinter;
-    if ( !pshinter )
-    {
-      pshinter = (PSHinter_Service)
-                 FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "pshinter" );
-
-      face->pshinter = pshinter;
-    }
+    pshinter = face->pshinter = (PSHinter_Service)
+               FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "pshinter" );
 
     /* open the tokenizer, this will also check the font format */
     error = T1_Open_Face( face );
