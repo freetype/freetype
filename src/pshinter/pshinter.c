@@ -21,8 +21,9 @@
 #include <ft2build.h>
 #include "pshrec.c"  
 #include "pshglob.c"
-#include "pshfit.c"
+#include "pshalgo1.c" 
+#include "pshalgo2.c"
 #include "pshmod.c"
-#include "pshoptim.c"
+
 
 /* END */

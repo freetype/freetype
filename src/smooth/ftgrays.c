@@ -82,7 +82,7 @@
 
 
 #include <string.h>             /* for memcpy() */
-
+#include <setjmp.h>
 
   /*************************************************************************/
   /*                                                                       */
@@ -93,6 +93,8 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_aaraster
 
+
+#define ErrRaster_MemoryOverflow   -4
 
 #ifdef _STANDALONE_
 
@@ -264,12 +266,13 @@
     void*                render_span_data;
     int                  span_y;
 
-    int    band_size;
-    int    band_shoot;
-    int    conic_level;
-    int    cubic_level;
+    int     band_size;
+    int     band_shoot;
+    int     conic_level;
+    int     cubic_level;
 
-    void*  memory;
+    void*   memory;
+    jmp_buf  jump_buffer;
 
   } TRaster, *PRaster;
 
@@ -296,10 +299,11 @@
   /* Compute the outline bounding box.                                     */
   /*                                                                       */
   static
-  void  compute_cbox( RAS_ARG_ FT_Outline*  outline )
+  void  compute_cbox( RAS_ARG )
   {
-    FT_Vector*  vec   = outline->points;
-    FT_Vector*  limit = vec + outline->n_points;
+    FT_Outline*  outline = &ras.outline;
+    FT_Vector*   vec     = outline->points;
+    FT_Vector*   limit   = vec + outline->n_points;
 
 
     if ( outline->n_points <= 0 )
@@ -339,7 +343,7 @@
   /* Record the current cell in the table.                                 */
   /*                                                                       */
   static
-  int  record_cell( RAS_ARG )
+  void  record_cell( RAS_ARG )
   {
     PCell  cell;
 
@@ -347,7 +351,7 @@
     if ( !ras.invalid && ( ras.area | ras.cover ) )
     {
       if ( ras.num_cells >= ras.max_cells )
-        return 1;
+        longjmp( ras.jump_buffer, 1 );
 
       cell        = ras.cells + ras.num_cells++;
       cell->x     = ras.ex - ras.min_ex;
@@ -355,8 +359,6 @@
       cell->area  = ras.area;
       cell->cover = ras.cover;
     }
-
-    return 0;
   }
 
 
@@ -365,8 +367,8 @@
   /* Set the current cell to a new position.                               */
   /*                                                                       */
   static
-  int  set_cell( RAS_ARG_ TScan  ex,
-                          TScan  ey )
+  void  set_cell( RAS_ARG_ TScan  ex,
+                           TScan  ey )
   {
     int  invalid, record, clean;
 
@@ -402,8 +404,8 @@
 
     /* record the previous cell if needed (i.e., if we changed the cell */
     /* position, of changed the `invalid' flag)                         */
-    if ( ( ras.invalid != invalid || record ) && record_cell( RAS_VAR ) )
-      return 1;
+    if ( ras.invalid != invalid || record )
+      record_cell( RAS_VAR );
 
     if ( clean )
     {
@@ -414,7 +416,6 @@
     ras.invalid = invalid;
     ras.ex      = ex;
     ras.ey      = ey;
-    return 0;
   }
 
 
@@ -436,7 +437,7 @@
     ras.last_ey = SUBPIXELS( ey );
     ras.invalid = 0;
 
-    (void)set_cell( RAS_VAR_ ex, ey );
+    set_cell( RAS_VAR_ ex, ey );
   }
 
 
@@ -445,11 +446,11 @@
   /* Render a scanline as one or more cells.                               */
   /*                                                                       */
   static
-  int  render_scanline( RAS_ARG_  TScan  ey,
-                                  TPos   x1,
-                                  TScan  y1,
-                                  TPos   x2,
-                                  TScan  y2 )
+  void  render_scanline( RAS_ARG_  TScan  ey,
+                                   TPos   x1,
+                                   TScan  y1,
+                                   TPos   x2,
+                                   TScan  y2 )
   {
     TScan  ex1, ex2, fx1, fx2, delta;
     long   p, first, dx;
@@ -465,7 +466,10 @@
 
     /* trivial case.  Happens often */
     if ( y1 == y2 )
-      return set_cell( RAS_VAR_ ex2, ey );
+    {
+      set_cell( RAS_VAR_ ex2, ey );
+      return;
+    }
 
     /* everything is located in a single cell.  That is easy! */
     /*                                                        */
@@ -474,7 +478,7 @@
       delta      = y2 - y1;
       ras.area  += ( fx1 + fx2 ) * delta;
       ras.cover += delta;
-      return 0;
+      return;
     }
 
     /* ok, we'll have to render a run of adjacent cells on the same */
@@ -504,8 +508,7 @@
     ras.cover += delta;
 
     ex1 += incr;
-    if ( set_cell( RAS_VAR_ ex1, ey ) )
-      goto Error;
+    set_cell( RAS_VAR_ ex1, ey );
     y1  += delta;
 
     if ( ex1 != ex2 )
@@ -535,19 +538,13 @@
         ras.cover += delta;
         y1        += delta;
         ex1       += incr;
-        if ( set_cell( RAS_VAR_ ex1, ey ) )
-          goto Error;
+        set_cell( RAS_VAR_ ex1, ey );
       }
     }
 
     delta      = y2 - y1;
     ras.area  += ( fx2 + ONE_PIXEL - first ) * delta;
     ras.cover += delta;
-
-    return 0;
-
-  Error:
-    return 1;
   }
 
 
@@ -556,7 +553,7 @@
   /* Render a given line as a series of scanlines.                         */
   /*                                                                       */
   static
-  int  render_line( RAS_ARG_ TPos  to_x,
+  void render_line( RAS_ARG_ TPos  to_x,
                              TPos  to_y )
   {
     TScan  ey1, ey2, fy1, fy2;
@@ -594,8 +591,7 @@
     /* everything is on a single scanline */
     if ( ey1 == ey2 )
     {
-      if ( render_scanline( RAS_VAR_ ey1, ras.x, fy1, to_x, fy2 ) )
-        goto Error;
+      render_scanline( RAS_VAR_ ey1, ras.x, fy1, to_x, fy2 );
       goto End;
     }
 
@@ -621,12 +617,10 @@
     }
 
     x = ras.x + delta;
-    if ( render_scanline( RAS_VAR_ ey1, ras.x, fy1, x, first ) )
-      goto Error;
+    render_scanline( RAS_VAR_ ey1, ras.x, fy1, x, first );
 
     ey1 += incr;
-    if ( set_cell( RAS_VAR_ TRUNC( x ), ey1 ) )
-      goto Error;
+    set_cell( RAS_VAR_ TRUNC( x ), ey1 );
 
     if ( ey1 != ey2 )
     {
@@ -651,29 +645,20 @@
         }
 
         x2 = x + delta;
-        if ( render_scanline( RAS_VAR_ ey1,
-                              x, ONE_PIXEL - first, x2, first ) )
-          goto Error;
+        render_scanline( RAS_VAR_ ey1, x, ONE_PIXEL - first, x2, first );
         x = x2;
+
         ey1 += incr;
-        if ( set_cell( RAS_VAR_ TRUNC( x ), ey1 ) )
-          goto Error;
+        set_cell( RAS_VAR_ TRUNC( x ), ey1 );
       }
     }
 
-    if ( render_scanline( RAS_VAR_ ey1,
-                          x, ONE_PIXEL - first, to_x, fy2 ) )
-      goto Error;
+    render_scanline( RAS_VAR_ ey1, x, ONE_PIXEL - first, to_x, fy2 );
 
   End:
     ras.x       = to_x;
     ras.y       = to_y;
     ras.last_ey = SUBPIXELS( ey2 );
-
-    return 0;
-
-  Error:
-    return 1;
   }
 
 
@@ -698,7 +683,7 @@
 
 
   static
-  int  render_conic( RAS_ARG_ FT_Vector*  control,
+  void render_conic( RAS_ARG_ FT_Vector*  control,
                               FT_Vector*  to )
   {
     TPos        dx, dy;
@@ -737,8 +722,9 @@
       mid_x = ( ras.x + to_x + 2 * UPSCALE( control->x ) ) / 4;
       mid_y = ( ras.y + to_y + 2 * UPSCALE( control->y ) ) / 4;
 
-      return render_line( RAS_VAR_ mid_x, mid_y ) ||
-             render_line( RAS_VAR_ to_x, to_y );
+      render_line( RAS_VAR_ mid_x, mid_y );
+      render_line( RAS_VAR_ to_x, to_y );
+      return;
     }
 
     arc       = ras.bez_stack;
@@ -792,15 +778,14 @@
         mid_x = ( ras.x + to_x + 2 * arc[1].x ) / 4;
         mid_y = ( ras.y + to_y + 2 * arc[1].y ) / 4;
 
-        if ( render_line( RAS_VAR_ mid_x, mid_y ) ||
-             render_line( RAS_VAR_ to_x, to_y )   )
-          return 1;
+        render_line( RAS_VAR_ mid_x, mid_y );
+        render_line( RAS_VAR_ to_x, to_y );
 
         top--;
         arc -= 2;
       }
     }
-    return 0;
+    return;
   }
 
 
@@ -833,7 +818,7 @@
 
 
   static
-  int  render_cubic( RAS_ARG_ FT_Vector*  control1,
+  void render_cubic( RAS_ARG_ FT_Vector*  control1,
                               FT_Vector*  control2,
                               FT_Vector*  to )
   {
@@ -885,8 +870,9 @@
       mid_y = ( ras.y + to_y +
                 3 * UPSCALE( control1->y + control2->y ) ) / 8;
 
-      return render_line( RAS_VAR_ mid_x, mid_y ) ||
-             render_line( RAS_VAR_ to_x, to_y );
+      render_line( RAS_VAR_ mid_x, mid_y );
+      render_line( RAS_VAR_ to_x, to_y );
+      return;
     }
 
     arc      = ras.bez_stack;
@@ -941,14 +927,13 @@
         mid_x = ( ras.x + to_x + 3 * ( arc[1].x + arc[2].x ) ) / 8;
         mid_y = ( ras.y + to_y + 3 * ( arc[1].y + arc[2].y ) ) / 8;
 
-        if ( render_line( RAS_VAR_ mid_x, mid_y ) ||
-             render_line( RAS_VAR_ to_x, to_y )   )
-          return 1;
+        render_line( RAS_VAR_ mid_x, mid_y );
+        render_line( RAS_VAR_ to_x, to_y );
         top --;
         arc -= 3;
       }
     }
-    return 0;
+    return;
   }
 
 
@@ -1157,7 +1142,9 @@
     /* start to a new position */
     x = UPSCALE( to->x );
     y = UPSCALE( to->y );
+    
     start_cell( (PRaster)raster, TRUNC( x ), TRUNC( y ) );
+      
     ((PRaster)raster)->x = x;
     ((PRaster)raster)->y = y;
     return 0;
@@ -1168,8 +1155,9 @@
   int  Line_To( FT_Vector*  to,
                 FT_Raster   raster )
   {
-    return render_line( (PRaster)raster,
-                        UPSCALE( to->x ), UPSCALE( to->y ) );
+    render_line( (PRaster)raster,
+                  UPSCALE( to->x ), UPSCALE( to->y ) );
+    return 0;
   }
 
 
@@ -1178,7 +1166,8 @@
                  FT_Vector*  to,
                  FT_Raster   raster )
   {
-    return render_conic( (PRaster)raster, control, to );
+    render_conic( (PRaster)raster, control, to );
+    return 0;
   }
 
 
@@ -1188,7 +1177,8 @@
                  FT_Vector*  to,
                  FT_Raster   raster )
   {
-    return render_cubic( (PRaster)raster, control1, control2, to );
+    render_cubic( (PRaster)raster, control1, control2, to );
+    return 0;
   }
 
 
@@ -1487,7 +1477,11 @@
                              void*                    user )
   {
 #undef SCALED
-#define SCALED( x )  ( ( (x) << shift ) - delta )
+#if 0
+#  define SCALED( x )  ( ( (x) << shift ) - delta )
+#else
+#  define SCALED( x)   (x)
+#endif
 
     FT_Vector   v_last;
     FT_Vector   v_control;
@@ -1502,8 +1496,10 @@
     int     error;
     char    tag;       /* current point's state           */
 
+#if 0
     int     shift = interface->shift;
     FT_Pos  delta = interface->delta;
+#endif
 
 
     first = 0;
@@ -1691,8 +1687,8 @@
   } TBand;
 
 
-  static
-  int  grays_convert_glyph( RAS_ARG_ FT_Outline*  outline )
+  static int
+  grays_convert_glyph_inner( RAS_ARG )
   {
     static
     const FT_Outline_Funcs  interface =
@@ -1705,6 +1701,25 @@
       0
     };
 
+    volatile int  error = 0;
+    
+    if ( setjmp( ras.jump_buffer ) == 0 )
+    {
+      error = FT_Outline_Decompose( &ras.outline, &interface, &ras );
+      record_cell( RAS_VAR );
+    }
+    else
+    {
+      error = ErrRaster_MemoryOverflow;
+    }
+
+    return error;
+  }
+
+
+  static
+  int  grays_convert_glyph( RAS_ARG_ FT_Outline*  outline )
+  {
     TBand     bands[40], *band;
     int       n, num_bands;
     TPos      min, max, max_y;
@@ -1712,7 +1727,7 @@
 
 
     /* Set up state in the raster object */
-    compute_cbox( RAS_VAR_ outline );
+    compute_cbox( RAS_VAR );
 
     /* clip to target bitmap, exit if nothing to do */
     clip = &ras.clip_box;
@@ -1776,8 +1791,12 @@
         ras.min_ey    = band->min;
         ras.max_ey    = band->max;
 
+#if 1
+        error = grays_convert_glyph_inner( RAS_VAR );
+#else       
         error = FT_Outline_Decompose( outline, &interface, &ras ) ||
                 record_cell( RAS_VAR );
+#endif
 
         if ( !error )
         {
@@ -1796,6 +1815,8 @@
           band--;
           continue;
         }
+        else if ( error != ErrRaster_MemoryOverflow )
+          return 1;
 
         /* render pool overflow, we will reduce the render band by half */
         bottom = band->min;

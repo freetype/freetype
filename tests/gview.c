@@ -7,7 +7,17 @@
 
 /* include FreeType internals to debug hints */
 #include <../src/pshinter/pshrec.h>
-#include <../src/pshinter/pshfit.h>
+#include <../src/pshinter/pshalgo1.h>
+#include <../src/pshinter/pshalgo2.h>
+
+ /************************************************************************/
+ /************************************************************************/
+ /*****                                                              *****/
+ /*****                     ROOT DEFINITIONS                         *****/
+ /*****                                                              *****/
+ /************************************************************************/
+ /************************************************************************/
+
 
 #include <time.h>    /* for clock() */
 
@@ -18,7 +28,7 @@
 #define CLOCKS_PER_SEC HZ
 #endif
 
-static int  depth = 0;
+static int  first_glyph = 0;
 
 static NV_Renderer   renderer;
 static NV_Painter    painter;
@@ -42,12 +52,23 @@ static  NV_Scale      grid_scale = 1.0;
 
 static  int   glyph_index;
 static  int   pixel_size = 12;
+
+ /************************************************************************/
+ /************************************************************************/
+ /*****                                                              *****/
+ /*****                 OPTIONS, COLORS and OTHERS                   *****/
+ /*****                                                              *****/
+ /************************************************************************/
+ /************************************************************************/
+
 static  int   option_show_axis   = 1;
 static  int   option_show_dots   = 1;
-static  int   option_show_stroke = 1;
+static  int   option_show_stroke = 0;
 static  int   option_show_glyph  = 1;
 static  int   option_show_grid   = 1;
 static  int   option_show_em     = 0;
+static  int   option_show_smooth = 1;
+static  int   option_show_blues  = 0;
 
 static  int   option_show_ps_hints   = 1;
 static  int   option_show_horz_hints = 1;
@@ -58,18 +79,18 @@ static  int   option_hinting = 1;
 
 static  char  temp_message[1024];
 
-PS_Hints      the_ps_hints = 0;
-int           ps_debug_no_horz_hints = 0;
-int           ps_debug_no_vert_hints = 0;
-PSH_HintFunc  ps_debug_hint_func     = 0;
-
 #define  AXIS_COLOR        0xFFFF0000
 #define  GRID_COLOR        0xFFD0D0D0
 #define  ON_COLOR          0xFFFF2000
 #define  OFF_COLOR         0xFFFF0080
+#define  STRONG_COLOR      0xFF404040
+#define  INTERP_COLOR      0xFF206040
+#define  SMOOTH_COLOR      0xF000B040
 #define  BACKGROUND_COLOR  0xFFFFFFFF
 #define  TEXT_COLOR        0xFF000000
 #define  EM_COLOR          0x80008000
+#define  BLUES_TOP_COLOR   0x4000008F
+#define  BLUES_BOT_COLOR   0x40008F00
 
 #define  GHOST_HINT_COLOR  0xE00000FF
 #define  STEM_HINT_COLOR   0xE02020FF
@@ -84,6 +105,13 @@ Panic( const char*  message )
 }
 
 
+ /************************************************************************/
+ /************************************************************************/
+ /*****                                                              *****/
+ /*****                     COMMON GRID DRAWING ROUTINES             *****/
+ /*****                                                              *****/
+ /************************************************************************/
+ /************************************************************************/
 
 static void
 reset_scale( NV_Scale  scale )
@@ -188,11 +216,114 @@ draw_grid( void )
 }
 
 
+ /************************************************************************/
+ /************************************************************************/
+ /*****                                                              *****/
+ /*****            POSTSCRIPT GLOBALS ROUTINES                       *****/
+ /*****                                                              *****/
+ /************************************************************************/
+ /************************************************************************/
+
+#include <../src/pshinter/pshglob.h>
+
+static void
+draw_ps_blue_zones( void )
+{
+  if ( option_show_blues && ps_debug_globals )
+  {
+    PSH_Blues       blues = &ps_debug_globals->blues;
+    PSH_Blue_Table  table;
+    NV_Vector       v;
+    FT_Int          y1, y2;
+    FT_UInt         count;
+    PSH_Blue_Zone   zone;
+    
+    /* draw top zones */
+    table = &blues->normal_top;
+    count = table->count;
+    zone  = table->zones;
+    
+    for ( ; count > 0; count--, zone++ )
+    {
+      v.x = 0;
+      if ( !ps_debug_no_horz_hints )
+      {
+        v.y = zone->cur_ref + zone->cur_delta;
+        nv_vector_transform( &v, &size_transform );
+      }
+      else
+      {
+        v.y = zone->org_ref + zone->org_delta;
+        nv_vector_transform( &v, &glyph_transform );
+      }
+      y1  = (int)(v.y + 0.5);
+      
+      v.x = 0;
+      if ( !ps_debug_no_horz_hints )
+      {
+        v.y = zone->cur_ref;
+        nv_vector_transform( &v, &size_transform );
+      }
+      else
+      {
+        v.y = zone->org_ref;
+        nv_vector_transform( &v, &glyph_transform );
+      }
+      y2 = (int)(v.y + 0.5);
+      
+      nv_pixmap_fill_rect( target, 0, y1,
+                           target->width, y2-y1+1,
+                           BLUES_TOP_COLOR );
+
+#if 0                           
+      printf( "top [%.3f %.3f]\n", zone->cur_bottom/64.0, zone->cur_top/64.0 );
+#endif      
+    }
+    
+    
+    /* draw bottom zones */
+    table = &blues->normal_bottom;
+    count = table->count;
+    zone  = table->zones;
+    
+    for ( ; count > 0; count--, zone++ )
+    {
+      v.x = 0;
+      v.y = zone->cur_ref;
+      nv_vector_transform( &v, &size_transform );
+      y1  = (int)(v.y + 0.5);
+      
+      v.x = 0;
+      v.y = zone->cur_ref + zone->cur_delta;
+      nv_vector_transform( &v, &size_transform );
+      y2 = (int)(v.y + 0.5);
+      
+      nv_pixmap_fill_rect( target, 0, y1,
+                           target->width, y2-y1+1,
+                           BLUES_BOT_COLOR );
+
+#if 0
+      printf( "bot [%.3f %.3f]\n", zone->cur_bottom/64.0, zone->cur_top/64.0 );
+#endif
+    }
+  }
+}
+
+ /************************************************************************/
+ /************************************************************************/
+ /*****                                                              *****/
+ /*****            POSTSCRIPT HINTER ALGORITHM 1 ROUTINES            *****/
+ /*****                                                              *****/
+ /************************************************************************/
+ /************************************************************************/
+
+#include <../src/pshinter/pshalgo1.h>
+
 static int pshint_cpos     = 0;
 static int pshint_vertical = -1;
 
 static void
-draw_ps_hint( PSH_Hint   hint, FT_Bool  vertical )
+draw_ps1_hint( PSH1_Hint   hint, FT_Bool  vertical )
 {
   int        x1, x2;
   NV_Vector  v;
@@ -224,17 +355,17 @@ draw_ps_hint( PSH_Hint   hint, FT_Bool  vertical )
     x2 = (int)(v.x + 0.5);
 
     nv_pixmap_fill_rect( target, x1, 0, 1, target->height,
-                         psh_hint_is_ghost(hint)
+                         psh1_hint_is_ghost(hint)
                          ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
 
-    if ( psh_hint_is_ghost(hint) )
+    if ( psh1_hint_is_ghost(hint) )
     {
       x1 --;
       x2 = x1 + 2;
     }
     else
       nv_pixmap_fill_rect( target, x2, 0, 1, target->height,
-                           psh_hint_is_ghost(hint)
+                           psh1_hint_is_ghost(hint)
                            ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
 
     nv_pixmap_fill_rect( target, x1, pshint_cpos, x2+1-x1, 1,
@@ -256,29 +387,198 @@ draw_ps_hint( PSH_Hint   hint, FT_Bool  vertical )
     x2 = (int)(v.y + 0.5);
 
     nv_pixmap_fill_rect( target, 0, x1, target->width, 1,
-                         psh_hint_is_ghost(hint)
+                         psh1_hint_is_ghost(hint)
                          ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
 
-    if ( psh_hint_is_ghost(hint) )
+    if ( psh1_hint_is_ghost(hint) )
     {
       x1 --;
       x2 = x1 + 2;
     }
     else
       nv_pixmap_fill_rect( target, 0, x2, target->width, 1,
-                           psh_hint_is_ghost(hint)
+                           psh1_hint_is_ghost(hint)
                            ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
 
     nv_pixmap_fill_rect( target, pshint_cpos, x2, 1, x1+1-x2,
                          STEM_JOIN_COLOR );
   }
 
+#if 0
   printf( "[%7.3f %7.3f] %c\n", hint->cur_pos/64.0, (hint->cur_pos+hint->cur_len)/64.0, vertical ? 'v' : 'h' );
+#endif
   
   pshint_cpos += 10;
 }
 
 
+
+ /************************************************************************/
+ /************************************************************************/
+ /*****                                                              *****/
+ /*****            POSTSCRIPT HINTER ALGORITHM 2 ROUTINES            *****/
+ /*****                                                              *****/
+ /************************************************************************/
+ /************************************************************************/
+
+#include <../src/pshinter/pshalgo2.h>
+
+static void
+draw_ps2_hint( PSH2_Hint   hint, FT_Bool  vertical )
+{
+  int        x1, x2;
+  NV_Vector  v;
+  
+  if ( pshint_vertical != vertical )
+  {
+    if (vertical)
+      pshint_cpos = 40;
+    else
+      pshint_cpos = 10;
+      
+    pshint_vertical = vertical;
+  }
+  
+  if (vertical)
+  {
+    if ( !option_show_vert_hints )
+      return;
+      
+    v.x = hint->cur_pos;
+    v.y = 0;
+    nv_vector_transform( &v, &size_transform );
+    x1 = (int)(v.x + 0.5);
+
+    v.x = hint->cur_pos + hint->cur_len;
+    v.y = 0;
+    nv_vector_transform( &v, &size_transform );
+    x2 = (int)(v.x + 0.5);
+
+    nv_pixmap_fill_rect( target, x1, 0, 1, target->height,
+                         psh2_hint_is_ghost(hint)
+                         ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    if ( psh2_hint_is_ghost(hint) )
+    {
+      x1 --;
+      x2 = x1 + 2;
+    }
+    else
+      nv_pixmap_fill_rect( target, x2, 0, 1, target->height,
+                           psh2_hint_is_ghost(hint)
+                           ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    nv_pixmap_fill_rect( target, x1, pshint_cpos, x2+1-x1, 1,
+                         STEM_JOIN_COLOR );
+  }
+  else
+  {
+    if (!option_show_horz_hints)
+      return;
+      
+    v.y = hint->cur_pos;
+    v.x = 0;
+    nv_vector_transform( &v, &size_transform );
+    x1 = (int)(v.y + 0.5);
+
+    v.y = hint->cur_pos + hint->cur_len;
+    v.x = 0;
+    nv_vector_transform( &v, &size_transform );
+    x2 = (int)(v.y + 0.5);
+
+    nv_pixmap_fill_rect( target, 0, x1, target->width, 1,
+                         psh2_hint_is_ghost(hint)
+                         ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    if ( psh2_hint_is_ghost(hint) )
+    {
+      x1 --;
+      x2 = x1 + 2;
+    }
+    else
+      nv_pixmap_fill_rect( target, 0, x2, target->width, 1,
+                           psh2_hint_is_ghost(hint)
+                           ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    nv_pixmap_fill_rect( target, pshint_cpos, x2, 1, x1+1-x2,
+                         STEM_JOIN_COLOR );
+  }
+
+#if 0
+  printf( "[%7.3f %7.3f] %c\n", hint->cur_pos/64.0, (hint->cur_pos+hint->cur_len)/64.0, vertical ? 'v' : 'h' );
+#endif
+  
+  pshint_cpos += 10;
+}
+
+
+static void
+ps2_draw_control_points( void )
+{
+  if ( ps2_debug_glyph )
+  {
+    PSH2_Glyph    glyph = ps2_debug_glyph;
+    PSH2_Point    point = glyph->points;
+    FT_UInt       count = glyph->num_points;
+    NV_Transform  transform, *trans = &transform;
+    NV_Path       vert_rect;
+    NV_Path       horz_rect;
+    NV_Path       dot, circle;
+    
+    nv_path_new_rectangle( renderer, -1, -6, 2, 12, 0, 0, &vert_rect );
+    nv_path_new_rectangle( renderer, -6, -1, 12, 2, 0, 0, &horz_rect );
+    nv_path_new_circle( renderer, 0, 0, 3., &dot );
+    nv_path_stroke( dot, 0.6, nv_path_linecap_butt, nv_path_linejoin_miter, 1., &circle );
+    
+    for ( ; count > 0; count--, point++ )
+    {
+      NV_Vector  vec;
+      
+      vec.x = point->cur_x;
+      vec.y = point->cur_y;
+      nv_vector_transform( &vec, &size_transform );
+      
+      nv_transform_set_translate( trans, vec.x, vec.y );
+
+      if ( option_show_smooth && !psh2_point_is_smooth(point) )
+      {
+        nv_painter_set_color( painter, SMOOTH_COLOR, 256 );
+        nv_painter_fill_path( painter, trans, 0, circle );
+      }
+        
+      if (option_show_horz_hints)
+      {
+        if ( point->flags_y & PSH2_POINT_STRONG )
+        {
+          nv_painter_set_color( painter, STRONG_COLOR, 256 );
+          nv_painter_fill_path( painter, trans, 0, horz_rect );
+        }
+      }
+      
+      if (option_show_vert_hints)
+      {
+        if ( point->flags_x & PSH2_POINT_STRONG )
+        {
+          nv_painter_set_color( painter, STRONG_COLOR, 256 );
+          nv_painter_fill_path( painter, trans, 0, vert_rect );
+        }
+      }
+    }
+
+    nv_path_destroy( circle );
+    nv_path_destroy( dot );    
+    nv_path_destroy( horz_rect );
+    nv_path_destroy( vert_rect );
+  }
+}
+
+ /************************************************************************/
+ /************************************************************************/
+ /*****                                                              *****/
+ /*****                        MAIN LOOP(S)                          *****/
+ /*****                                                              *****/
+ /************************************************************************/
+ /************************************************************************/
 
 static void
 draw_glyph( int  glyph_index )
@@ -286,7 +586,9 @@ draw_glyph( int  glyph_index )
   NV_Path   path;
 
   pshint_vertical    = -1;
-  ps_debug_hint_func = option_show_ps_hints ? draw_ps_hint : 0;
+  
+  ps1_debug_hint_func = option_show_ps_hints ? draw_ps1_hint : 0;
+  ps2_debug_hint_func = option_show_ps_hints ? draw_ps2_hint : 0;
 
   error = FT_Load_Glyph( face, glyph_index, option_hinting
                                           ? FT_LOAD_NO_BITMAP
@@ -334,6 +636,7 @@ draw_glyph( int  glyph_index )
     NV_Int      n, first, last;
 
     nv_path_new_circle( renderer, 0, 0, 2., &plot );
+    
     nv_path_get_outline( path, NULL, memory, &out );
     
     first = 0;
@@ -355,8 +658,10 @@ draw_glyph( int  glyph_index )
         vec = out.points + m;
 
         nv_transform_set_translate( &trans, vec->x/64.0, vec->y/64.0 );        
+
         nv_painter_set_color( painter, color, 256 );
         nv_painter_fill_path( painter, &trans, 0, plot );
+
       }
       
       first = last + 1;
@@ -390,105 +695,25 @@ draw_glyph( int  glyph_index )
 }
 
 
-#if 0
 
-static void
-draw_ps_hints( void )
-{
-  if ( option_show_ps_hints && the_ps_hints )
-  {
-    PS_Dimension  dim;
-    PS_Hint       hint;
-    NV_UInt       count;
-    NV_Int        cpos;
-    NV_Vector     v;
-    
-    /* draw vertical stems */
-    if ( option_show_vert_hints )
-    {
-      dim  = &the_ps_hints->dimension[1];
-      hint = dim->hints.hints;
-      cpos = 40;
-      for ( count = dim->hints.num_hints; count > 0; count--, hint++ )
-      {
-        NV_Int   x1, x2;
-  
-        v.x = hint->pos;
-        v.y = 0;
-        nv_vector_transform( &v, &glyph_transform );
-        x1  = (int)(v.x+0.5);
-        x1  = glyph_org_x + hint->pos*glyph_scale;
-        nv_pixmap_fill_rect( target, x1, 0, 1, target->height,
-                                  ps_hint_is_ghost(hint)
-                                  ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
-        
-        if ( !ps_hint_is_ghost(hint) )
-        {
-          v.x = hint->pos + hint->len;
-          v.y = 0;
-          nv_vector_transform( &v, &glyph_transform );
-          x2  = (int)(v.x+0.5);
-          x2  = glyph_org_x + (hint->pos + hint->len)*glyph_scale;
-          nv_pixmap_fill_rect( target, x2, 0, 1, target->height,
-                                    STEM_HINT_COLOR );
-        }
-        else
-        {
-          x1 -= 1;
-          x2  = x1 + 2;
-        }
-        
-        nv_pixmap_fill_rect( target, x1, cpos, x2-x1+1, 1,
-                                  STEM_JOIN_COLOR );
-        cpos += 10;
-      }
-    }
+#define  TOGGLE_OPTION(var,prefix)                           \
+            {                                                \
+              var = !var;                                    \
+              sprintf( temp_message, prefix " is now %s",    \
+                       var ? "on" : "off" );                 \
+              break;                                         \
+            }
 
-    /* draw horizontal stems */
-    if ( option_show_horz_hints )
-    {
-      dim  = &the_ps_hints->dimension[0];
-      hint = dim->hints.hints;
-      cpos = 10;
-      for ( count = dim->hints.num_hints; count > 0; count--, hint++ )
-      {
-        NV_Int   y1, y2;
-  
-        v.x = 0;
-        v.y = hint->pos;
-        nv_vector_transform( &v, &glyph_transform );
-        y1  = (int)(v.y+0.5);
-        y1  = glyph_org_y - hint->pos*glyph_scale;
-        nv_pixmap_fill_rect( target, 0, y1, target->width, 1,
-                                  ps_hint_is_ghost(hint)
-                                  ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
-        
-        if ( !ps_hint_is_ghost(hint) )
-        {
-          v.x = 0;
-          v.y = hint->pos + hint->len;
-          nv_vector_transform( &v, &glyph_transform );
-          y2  = (int)(v.y+0.5);
-          y2  = glyph_org_y - (hint->pos + hint->len)*glyph_scale;
-          nv_pixmap_fill_rect( target, 0, y2, target->width, 1,
-                                    STEM_HINT_COLOR );
-        }
-        else
-        {
-          y1 -= 1;
-          y2  = y1 + 2;
-        }
-        
-        nv_pixmap_fill_rect( target, cpos, y2, 1, y1-y2+1,
-                                  STEM_JOIN_COLOR );
-        cpos += 10;
-      }
-    }
-  }
-}
 
-#endif
+#define  TOGGLE_OPTION_NEG(var,prefix)                       \
+            {                                                \
+              var = !var;                                    \
+              sprintf( temp_message, prefix " is now %s",    \
+                       !var ? "on" : "off" );                \
+              break;                                         \
+            }
 
+            
 static void
 handle_event( NVV_EventRec*   ev )
 {
@@ -509,34 +734,19 @@ handle_event( NVV_EventRec*   ev )
       }
 
     case NVV_KEY('x'):
-      {
-        option_show_axis = !option_show_axis;
-        break;
-      }
+      TOGGLE_OPTION( option_show_axis, "grid axis display" )
 
     case NVV_KEY('s'):
-      {
-        option_show_stroke = !option_show_stroke;
-        break;
-      }
+      TOGGLE_OPTION( option_show_stroke, "glyph stroke display" )
     
     case NVV_KEY('g'):
-      {
-        option_show_glyph = !option_show_glyph;
-        break;
-      }
+      TOGGLE_OPTION( option_show_glyph, "glyph fill display" )
       
     case NVV_KEY('d'):
-      {
-        option_show_dots = !option_show_dots;
-        break;
-      }
+      TOGGLE_OPTION( option_show_dots, "control points display" )
       
     case NVV_KEY('e'):
-      {
-        option_show_em = !option_show_em;
-        break;
-      }
+      TOGGLE_OPTION( option_show_em, "EM square display" )
     
     case NVV_KEY('+'):
       {
@@ -575,51 +785,90 @@ handle_event( NVV_EventRec*   ev )
       }
 
     case NVV_KEY('z'):
-      {
-        ps_debug_no_vert_hints = !ps_debug_no_vert_hints;
-        sprintf( temp_message, "vertical hints processing is now %s",
-                 ps_debug_no_vert_hints ? "off" : "on" );
-        break;
-      }      
+      TOGGLE_OPTION_NEG( ps_debug_no_vert_hints, "vertical hints processing" )
 
     case NVV_KEY('a'):
-      {
-        ps_debug_no_horz_hints = !ps_debug_no_horz_hints;
-        sprintf( temp_message, "horizontal hints processing is now %s",
-                 ps_debug_no_horz_hints ? "off" : "on" );
-        break;
-      }      
+      TOGGLE_OPTION_NEG( ps_debug_no_horz_hints, "horizontal hints processing" )
 
     case NVV_KEY('Z'):
-      {
-        option_show_vert_hints = !option_show_vert_hints;
-        sprintf( temp_message, "vertical hints display is now %s",
-                 option_show_vert_hints ? "off" : "on" );
-        break;
-      }      
+      TOGGLE_OPTION( option_show_vert_hints, "vertical hints display" )
 
     case NVV_KEY('A'):
-      {
-        option_show_horz_hints = !option_show_horz_hints;
-        sprintf( temp_message, "horizontal hints display is now %s",
-                 option_show_horz_hints ? "off" : "on" );
-        break;
-      }      
+      TOGGLE_OPTION( option_show_horz_hints, "horizontal hints display" )
 
+    case NVV_KEY('S'):
+      TOGGLE_OPTION( option_show_smooth, "smooth points display" );
+
+    case NVV_KEY('b'):
+      TOGGLE_OPTION( option_show_blues, "blue zones display" );
 
     case NVV_KEY('h'):
-      {
-        option_hinting = !option_hinting;
-        sprintf( temp_message, "hinting is now %s",
-                 option_hinting ? "off" : "on" );
-        break;
-      }      
+      TOGGLE_OPTION( option_hinting, "hinting" )
+      
+    default:
+      ;
   }
 }
 
 
+
+static void
+usage()
+{
+  Panic( "no usage" );
+}
+
+
+#define  OPTION1(n,code)   \
+           case n :        \
+             code          \
+             argc--;       \
+             argv++;       \
+             break;
+
+#define  OPTION2(n,code)     \
+           case n :          \
+             code            \
+             argc -= 2;      \
+             argv += 2;      \
+             break;
+
+
+static void
+parse_options( int*  argc_p, char*** argv_p )
+{
+  int    argc = *argc_p;
+  char** argv = *argv_p;
+  
+  while (argc > 2 && argv[1][0] == '-')
+  {
+    switch (argv[1][1])
+    {
+      OPTION2( 'f', first_glyph = atoi( argv[2] ); )
+
+      OPTION2( 's', pixel_size = atoi( argv[2] ); )
+      
+      default:
+        usage();
+    }
+  }
+  
+  *argc_p = argc;
+  *argv_p = argv;
+}
+  
+  
+
 int  main( int  argc, char**  argv )
 {
+  char*  filename = "/fonts/lcdxsr.pfa";
+  
+  parse_options( &argc, &argv );
+  
+  if ( argc >= 2 )
+    filename = argv[1];
+   
+  
   /* create library */
   error = nv_renderer_new( 0, &renderer );
   if (error) Panic( "could not create Nirvana renderer" );
@@ -629,7 +878,7 @@ int  main( int  argc, char**  argv )
   error = nvv_display_new( renderer, &display );
   if (error) Panic( "could not create display" );
   
-  error = nvv_surface_new( display, 400, 400, nv_pixmap_type_argb, &surface );
+  error = nvv_surface_new( display, 460, 460, nv_pixmap_type_argb, &surface );
   if (error) Panic( "could not create surface" );
 
   target = nvv_surface_get_pixmap( surface );
@@ -644,7 +893,7 @@ int  main( int  argc, char**  argv )
   error = FT_Init_FreeType( &freetype );
   if (error) Panic( "could not initialise FreeType" );
   
-  error = FT_New_Face( freetype, "h:/fonts/cour.pfa", 0, &face );
+  error = FT_New_Face( freetype, filename, 0, &face );
   if (error) Panic( "could not open font face" );
 
   reset_size( pixel_size, grid_scale );
@@ -655,15 +904,16 @@ int  main( int  argc, char**  argv )
   {
     NVV_EventRec  event;
 
-    glyph_index = 0;    
+    glyph_index = first_glyph;    
     for ( ;; )
     {
       clear_background();
       draw_grid();
 
-      the_ps_hints = 0;
+      ps_debug_hints = 0;
+      draw_ps_blue_zones();
       draw_glyph( glyph_index );
-      /* draw_ps_hints(); */
+      ps2_draw_control_points();
       
       nvv_surface_refresh( surface, NULL );
 

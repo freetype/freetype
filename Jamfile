@@ -15,6 +15,13 @@ FT2_SRC     = [ FT2_SubDir src ] ;
 
 FT2_LIB     = $(LIBPREFIX)freetype ;
 
+if $(DEBUG_HINTER)
+{
+  CCFLAGS += -DDEBUG_HINTER ;
+}
+
+
+
 # We need "freetype2/include" in the current include path in order to
 # compile any part of FreeType 2.
 #
@@ -38,8 +45,11 @@ HDRMACRO  [ FT2_SubDir  include freetype internal internal.h ] ;
 SubInclude  FT2_TOP src ;
 
 
-# tests files
+# tests files (hinter debugging)
 #
-SubInclude FT2_TOP tests ;
+if $(DEBUG_HINTER)
+{
+  SubInclude FT2_TOP tests ;
+}
 
 # end of top Jamfile

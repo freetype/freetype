@@ -3,6 +3,10 @@
 #include FT_INTERNAL_OBJECTS_H
 #include "pshglob.h"
 
+#ifdef DEBUG_HINTER
+  extern PSH_Globals   ps_debug_globals = 0;
+#endif  
+
 /* "simple" ps hinter globals management, inspired from the new auto-hinter */
 
  /*************************************************************************/
@@ -87,6 +91,7 @@
 
   static void
   psh_blues_set_zones_0( PSH_Blues       target,
+                         FT_Bool         is_others,
                          FT_UInt         read_count,
                          FT_Short*       read,
                          PSH_Blue_Table  top_table,
@@ -94,26 +99,34 @@
   {
     FT_UInt    count_top = top_table->count;
     FT_UInt    count_bot = bot_table->count;
+    FT_Bool    first     = 1;
     
     for ( ; read_count > 0; read_count -= 2 )
     {
       FT_Int         reference, delta;
       FT_UInt        count;
       PSH_Blue_Zone  zones, zone;
+      FT_Bool        top;
       
       /* read blue zone entry, and select target top/bottom zone */
-      reference = read[0];
-      delta     = read[1] - reference;
-      
-      if ( delta >= 0 )
+      top = 0;
+      if ( first || is_others )
       {
-        zones = top_table->zones;
-        count = count_top;
+        reference = read[1];
+        delta     = read[0] - reference;
+
+        zones = bot_table->zones;
+        count = count_bot;
+        first = 0;
       }
       else
       {
-        zones = bot_table->zones;
-        count = count_bot;
+        reference = read[0];
+        delta     = read[1] - reference;
+      
+        zones = top_table->zones;
+        count = count_top;
+        top   = 1;
       }
       
       /* insert into sorted table */
@@ -149,7 +162,7 @@
       zone->org_ref   = reference;
       zone->org_delta = delta;
       
-      if ( delta >= 0 )
+      if ( top )
         count_top ++;
       else
         count_bot ++;
@@ -195,8 +208,8 @@
     bot_table->count = 0;
     
     /* first, the blues */
-    psh_blues_set_zones_0( target, count, blues, top_table, bot_table );
-    psh_blues_set_zones_0( target, count_others, other_blues, top_table, bot_table );
+    psh_blues_set_zones_0( target, 0, count, blues, top_table, bot_table );
+    psh_blues_set_zones_0( target, 1, count_others, other_blues, top_table, bot_table );
     
     count_top = top_table->count;
     count_bot = bot_table->count;
@@ -206,13 +219,16 @@
     {
       PSH_Blue_Zone  zone = top_table->zones;
       
-      for ( count = count_top-1; count > 0; count--, zone++ )
+      for ( count = count_top; count > 0; count--, zone++ )
       {
         FT_Int  delta;
-      
-        delta = zone[1].org_ref - zone[0].org_ref;
-        if ( zone->org_delta > delta )
-          zone->org_delta = delta;
+        
+        if ( count > 1 )
+        {
+          delta = zone[1].org_ref - zone[0].org_ref;
+          if ( zone->org_delta > delta )
+            zone->org_delta = delta;
+        }
           
         zone->org_bottom = zone->org_ref;
         zone->org_top    = zone->org_delta + zone->org_ref;
@@ -224,13 +240,16 @@
     {
       PSH_Blue_Zone  zone = bot_table->zones;
 
-      for ( count = count_bot-1; count > 0; count--, zone++ )
+      for ( count = count_bot; count > 0; count--, zone++ )
       {
         FT_Int  delta;
         
-        delta = zone[0].org_ref - zone[1].org_ref;
-        if ( zone->org_delta < delta )
-          zone->org_delta = delta;
+        if ( count > 1 )
+        {
+          delta = zone[0].org_ref - zone[1].org_ref;
+          if ( zone->org_delta < delta )
+            zone->org_delta = delta;
+        }
           
         zone->org_top    = zone->org_ref;
         zone->org_bottom = zone->org_delta + zone->org_ref;
@@ -256,7 +275,7 @@
           /* checking that the interval is smaller than the fuzz */
           top = zone->org_top;
           
-          for ( count--; count > 0; count--, zone++ )
+          for ( count--; count > 0; count-- )
           {
             bot   = zone[1].org_bottom;
             delta = bot - top;
@@ -318,6 +337,13 @@
         
         /* round scaled reference position */
         zone->cur_ref = ( zone->cur_ref + 32 ) & -64;
+
+#if 0        
+        if ( zone->cur_ref > zone->cur_top )
+          zone->cur_ref -= 64;
+        else if ( zone->cur_ref < zone->cur_bottom )
+          zone->cur_ref += 64;
+#endif          
       }
     }
     
@@ -326,10 +352,10 @@
 
 
   FT_LOCAL_DEF void
-  psh_blues_snap_stem( PSH_Blues            blues,
-                       FT_Int               stem_top,
-                       FT_Int               stem_bot,
-                       PSH_Blue_Alignement  alignment )
+  psh_blues_snap_stem( PSH_Blues      blues,
+                       FT_Int         stem_top,
+                       FT_Int         stem_bot,
+                       PSH_Alignment  alignment )
   {
     PSH_Blue_Table  table;
     FT_UInt         count;
@@ -341,7 +367,7 @@
     table = &blues->normal_top;
     count = table->count;
     zone  = table->zones;
-    for ( ; count > 0; count-- )
+    for ( ; count > 0; count--, zone++ )
     {
       if ( stem_top < zone->org_bottom )
         break;
@@ -358,7 +384,7 @@
     table = &blues->normal_bottom;
     count = table->count;
     zone  = table->zones;
-    for ( ; count > 0; count-- )
+    for ( ; count > 0; count--, zone++ )
     {
       if ( stem_bot < zone->org_bottom )
         break;
@@ -367,6 +393,7 @@
       {
         alignment->align    |= PSH_BLUE_ALIGN_BOT;
         alignment->align_bot = zone->cur_ref;
+        break;
       }
     }
   }
@@ -397,6 +424,10 @@
       globals->blues.family_bottom.count = 0;
       
       FREE( globals );
+
+#ifdef DEBUG_HINTER
+      ps_debug_globals = 0;
+#endif      
     }
   }
 
@@ -467,6 +498,10 @@
       globals->dimension[0].scale_delta = 0;
       globals->dimension[1].scale_mult  = 0;
       globals->dimension[1].scale_delta = 0;
+
+#ifdef DEBUG_HINTER
+      ps_debug_globals = globals;
+#endif      
     }
     
     *aglobals = globals;

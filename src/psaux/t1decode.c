@@ -141,7 +141,7 @@
       FT_String*  name = (FT_String*)decoder->glyph_names[n];
 
 
-      if ( name && strcmp( name,glyph_name ) == 0 )
+      if ( name && name[0] == glyph_name[0] && strcmp( name,glyph_name ) == 0 )
         return n;
     }
 
@@ -245,6 +245,7 @@
       glyph->format        = ft_glyph_format_composite;
 
       loader->current.num_subglyphs = 2;
+      goto Exit;
     }
 
     /* First load `bchar' in builder */
@@ -318,7 +319,7 @@
     FT_Byte*          ip;
     FT_Byte*          limit;
     T1_Builder*       builder = &decoder->builder;
-    FT_Pos            x, y;
+    FT_Pos            x, y, orig_x, orig_y;
 
     T1_Hints_Funcs    hinter;
 
@@ -345,8 +346,8 @@
 
     error = PSaux_Err_Ok;
 
-    x = builder->pos_x;
-    y = builder->pos_y;
+    x = orig_x = builder->pos_x;
+    y = orig_y = builder->pos_y;
 
     /* begin hints recording session, if any */
     if ( hinter )
@@ -740,8 +741,8 @@
           builder->advance.x       = top[1];
           builder->advance.y       = 0;
 
-          builder->last.x = x = builder->pos_x + top[0];
-          builder->last.y = y = builder->pos_y;
+          orig_x = builder->last.x = x = builder->pos_x + top[0];
+          orig_y = builder->last.y = y = builder->pos_y;
 
           /* the `metrics_only' indicates that we only want to compute */
           /* the glyph's metrics (lsb + advance width), not load the   */
@@ -1016,7 +1017,7 @@
           /* record vertical  hint */
           if ( hinter )
           {
-            top[0] += builder->left_bearing.x;
+            top[0] += orig_x;
             hinter->stem( hinter->hints, 1, top );
           }
 
@@ -1027,8 +1028,14 @@
 
           /* record vertical counter-controlled hints */
           if ( hinter )
+          {
+            FT_Pos  dx = orig_x;
+            
+            top[0] += dx;
+            top[2] += dx;
+            top[4] += dx;
             hinter->stem3( hinter->hints, 1, top );
-                           
+          }
           break;
 
         case op_setcurrentpoint:

@@ -141,7 +141,7 @@ FT_BEGIN_HEADER
     FT_Pos           align_top;
     FT_Pos           align_bot;
     
-  } PSH_Blue_AlignementRec, *PSH_Blue_Alignement;
+  } PSH_AlignmentRec, *PSH_Alignment;
 
 
   FT_LOCAL void
@@ -156,12 +156,15 @@ FT_BEGIN_HEADER
 
  /* snap a stem to one or two blue zones */
   FT_LOCAL void
-  psh_blues_snap_stem( PSH_Blues            blues,
-                       FT_Int               stem_top,
-                       FT_Int               stem_bot,
-                       PSH_Blue_Alignement  alignment );
+  psh_blues_snap_stem( PSH_Blues      blues,
+                       FT_Int         stem_top,
+                       FT_Int         stem_bot,
+                       PSH_Alignment  alignment );
   /* */
-  
+
+#ifdef DEBUG_HINTER
+  extern PSH_Globals   ps_debug_globals;
+#endif  
 
 FT_END_HEADER
 

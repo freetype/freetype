@@ -16,7 +16,7 @@ NIRVANA_LINKLIBS = $(NV_TOP)\\objs\\nirvana$(SUFLIB) ;
     Main  $(t) : $(t).c ;
     
     LinkLibraries $(t) : $(FT2_LIB) ;
-
+    
     if $(TOOLSET) = MINGW
     {
       LINKKLIBS on $(t)$(SUFEXE) = "-luser32 -lgdi32" ;

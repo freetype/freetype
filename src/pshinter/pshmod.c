@@ -18,6 +18,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include "pshrec.h"
+#include "pshalgo.h"
 
  /* the Postscript Hinter module structure */
   typedef struct
