@@ -61,7 +61,7 @@
    /* table of Mac names.  Thus, it is possible to build a version of */
    /* FreeType without the Type 1 driver & PSNames module.            */
 
-#define  MAC_NAME( x )  TT_Post_Default_Names[x]
+#define MAC_NAME( x )  TT_Post_Default_Names[x]
 
   /* the 258 default Mac PS glyph names */
 

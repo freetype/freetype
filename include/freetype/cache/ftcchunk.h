@@ -55,7 +55,7 @@ FT_BEGIN_HEADER
 
 
   /* maximum number of chunk sets in a given chunk cache */
-#define  FTC_MAX_CHUNK_SETS  16
+#define FTC_MAX_CHUNK_SETS  16
 
 
   typedef struct FTC_ChunkNodeRec_*    FTC_ChunkNode;

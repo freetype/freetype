@@ -6841,8 +6841,8 @@
         FT_Byte   opcode = CUR.opcode;
 
 
-#undef   ARRAY_BOUND_ERROR
-#define  ARRAY_BOUND_ERROR  goto Set_Invalid_Ref
+#undef  ARRAY_BOUND_ERROR
+#define ARRAY_BOUND_ERROR  goto Set_Invalid_Ref
 
 
         switch ( opcode )

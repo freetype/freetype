@@ -107,7 +107,9 @@
 
 #endif /* FT_DEBUG_LEVEL_TRACE || FT_DEBUG_LEVEL_ERROR */
 
-  /* needed by pedantic ANSI compilers */
+
+  /* ANSI C doesn't allow empty files, so we insert a dummy symbol */
   extern const int  ft_debug_dummy;
+
 
 /* END */

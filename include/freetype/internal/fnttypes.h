@@ -67,8 +67,8 @@ FT_BEGIN_HEADER
   } WinResourceInfo;
 
 
-#define  WINFNT_MZ_MAGIC  0x5A4D
-#define  WINFNT_NE_MAGIC  0x454E
+#define WINFNT_MZ_MAGIC  0x5A4D
+#define WINFNT_NE_MAGIC  0x454E
 
 
   typedef struct  WinFNT_Header_

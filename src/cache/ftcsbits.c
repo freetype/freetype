@@ -26,7 +26,7 @@
 #include <string.h>         /* memcmp() */
 
 
-#define  FTC_SBITSET_ELEMENT_COUNT  16
+#define FTC_SBITSET_ELEMENT_COUNT  16
 
 
   typedef struct  FTC_SBitSetRec_

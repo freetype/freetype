@@ -63,10 +63,10 @@ T := /Fo
 #   ANSI compliance.
 #
 #   Note that the Intel C/C++ compiler version 4.5 complains about
-#   the use of FT_FIELD_OFFSET with "value must be arithmetic type !!"
-#   this really looks like a bug in the compiler because the macro
+#   the use of FT_FIELD_OFFSET with "value must be arithmetic type"!
+#   This really looks like a bug in the compiler because the macro
 #   _does_ compute an arithmetic value, so we disable this warning
-#   with "/Qwd32" !!
+#   with "/Qwd32".
 #
 ifndef CFLAGS
   CFLAGS := /nologo /c /Ox /G5 /W3 /Qwd32

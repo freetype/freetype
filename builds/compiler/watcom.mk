@@ -17,11 +17,13 @@
 #
 CC := wcc386
 
+
 # The object file extension (for standard and static libraries).  This can be
 # .o, .tco, .obj, etc., depending on the platform.
 #
 O  := obj
 SO := obj
+
 
 # The library file extension (for standard and static libraries).  This can
 # be .a, .lib, etc., depending on the platform.
