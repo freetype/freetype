@@ -1807,7 +1807,7 @@
 
 
     if ( p + 4 > limit )
-      return FT_Err_Invalid_Table;
+      return SFNT_Err_Invalid_Table;
 
     /* only recognize format 0 */
     if ( TT_NEXT_USHORT( p ) != 0 )
@@ -1815,7 +1815,7 @@
       p -= 2;
       FT_ERROR(( "tt_face_build_cmaps: unsupported `cmap' table format = %d\n",
                  TT_PEEK_USHORT( p ) ));
-      return FT_Err_Invalid_Table;
+      return SFNT_Err_Invalid_Table;
     }
 
     num_cmaps = TT_NEXT_USHORT( p );

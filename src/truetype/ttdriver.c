@@ -242,11 +242,6 @@
   /*    A driver method used to reset a size's character sizes (horizontal */
   /*    and vertical) expressed in integer pixels.                         */
   /*                                                                       */
-  /* <Input>                                                               */
-  /*    pixel_width  :: The character width expressed in integer pixels.   */
-  /*                                                                       */
-  /*    pixel_height :: The character height expressed in integer pixels.  */
-  /*                                                                       */
   /* <InOut>                                                               */
   /*    size         :: A handle to the target size object.                */
   /*                                                                       */
@@ -254,13 +249,8 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static FT_Error
-  Set_Pixel_Sizes( TT_Size  size,
-                   FT_UInt  pixel_width,
-                   FT_UInt  pixel_height )
+  Set_Pixel_Sizes( TT_Size  size )
   {
-    FT_UNUSED( pixel_width );
-    FT_UNUSED( pixel_height );
-
     /* many things have been pre-computed by the base layer */
 
     size->metrics         = size->root.metrics;

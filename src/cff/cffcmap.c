@@ -189,7 +189,7 @@
       {
         /* there are no unicode characters in here! */
         FT_FREE( cmap->pairs );
-        error = FT_Err_Invalid_Argument;
+        error = CFF_Err_Invalid_Argument;
       }
       else
       {

@@ -85,7 +85,7 @@
       }
 
       /* there must be exactly four hex digits */
-      if ( *p == '\0' && count == 0 )
+      if ( ( *p == '\0' || *p == '.' ) && count == 0 )
         return value;
     }
 
@@ -120,7 +120,7 @@
         value = ( value << 4 ) + d;
       }
 
-      if ( *p == '\0' && count <= 2 )
+      if ( ( *p == '\0' || *p == '.' ) && count <= 2 )
         return value;
     }
 

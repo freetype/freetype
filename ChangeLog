@@ -1,3 +1,61 @@
+2003-06-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/winfonts/winfnt.c (FNT_Load_Glyph): Use first_char in
+	computation of glyph_index.
+	(FNT_Size_Set_Pixels): To find a strike, first check pixel_height
+	only, then try to find a better hit by comparing pixel_width also. 
+	Without this fix it isn't possible to access all strikes.
+	Also compute metrics.max_advance to be in sync with other bitmap
+	drivers.
+
+	* src/base/ftobjs.c (FT_Set_Char_Size): Remove redundant code.
+	(FT_Set_Pixel_Size): Assign value to `metrics' after validation of
+	arguments.
+
+2003-06-20  Werner Lemberg  <wl@gnu.org>
+
+	Synchronize computation of height and width for bitmap strikes.  The
+	`width' field in the FT_Bitmap_Size structure is now only useful to
+	enumerate different strikes.  The `max_advance' field of the
+	FT_Size_Metrics structure should be used to get the (maximum) width
+	of a strike.
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Don't use AVERAGE_WIDTH for
+	computing `available_sizes->width' but make it always equal to
+	`available_sizes->height'.
+
+	* src/pcf/pcfread.c (pcf_load_font): Don't use RESOLUTION_X for
+	computing `available_sizes->width' but make it always equal to
+	`available_sizes->height'.
+
+	* src/truetype/ttdriver.c (Set_Pixel_Sizes): Pass only single
+	argument to function.
+
+	* src/psnames/psmodule.c (ps_unicode_value): Handle `.' after
+	`uniXXXX' and `uXXXX[X[X]]'.
+
+2003-06-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdfdrivr.c: s/FT_Err_/BDF_Err/.
+	* src/cache/ftccache.c, src/cache/ftcsbits.c, src/cache/ftlru.c:
+	s/FT_Err_/FTC_Err_/.
+	* src/cff/cffcmap.c: s/FT_Err_/CFF_Err_/.
+	* src/pcf/pcfdrivr.c: s/FT_Err_/PCF_Err_/.
+	* src/psaux/t1cmap.c: Include psauxerr.h.
+	s/FT_Err_/PSaux_Err_/.
+	* src/pshinter/pshnterr.h: New file.
+	* src/pshinter/rules.mk: Updated.
+	* src/pshinter/pshalgo.c, src/pshinter/pshrec.c: Include pshnterr.h.
+	s/FT_Err_/PSH_Err_/.
+	* src/pfr/pfrdrivr.c, src/pfr/pfrobjs.c, src/pfr/pfrsbit.c:
+	s/FT_Err_/PFR_Err_/.
+	* src/sfnt/sfdriver.c, src/sfnt/sfobjs.c, src/sfnt/ttcmap0.c,
+	src/sfnt/ttload.c: s/FT_Err_/SFNT_Err_/.
+	* src/truetype/ttgload.c: s/FT_Err_/TT_Err_/.
+	* src/gzip/ftgzip.c: Load FT_MODULE_ERRORS_H and define
+	FT_ERR_PREFIX and FT_ERR_BASE.
+	s/FT_Err_/Gzip_Err_/.
+
 2003-06-19  Dirck Blaskey  <listtarget@danbala.com>
 
 	* src/cff/cffload (cff_encoding_load): `nleft' must be FT_UInt,
@@ -376,7 +434,7 @@
 2003-05-30  Werner Lemberg  <wl@gnu.org>
 
 	Avoid overwriting of numeric font dictionary entries for synthetic
-	fonts. Additionally, some entries were handled as `integer' instead
+	fonts.  Additionally, some entries were handled as `integer' instead
 	of `number'.
 
 	* include/freetype/internal/psaux.h (T1_FieldType): Add
@@ -443,7 +501,7 @@
 	s/ps3/ps/.
 
 	* src/pshinter/pshrec.c, src/pshinter/pshinter.c: Updated.
-	* src/pshinter/rules.mk, src/pshinter/Jamfile: Updated
+	* src/pshinter/rules.mk, src/pshinter/Jamfile: Updated.
 
 	* src/pshinter/pshglob.[ch] (psh_dimension_snap_width): Commented
 	out.

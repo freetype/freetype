@@ -235,7 +235,7 @@
     return  error;
 
   Bad_Format:
-    error = FT_Err_Unknown_File_Format;
+    error = SFNT_Err_Unknown_File_Format;
     goto Exit;
   }
 

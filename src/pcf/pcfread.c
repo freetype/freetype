@@ -919,7 +919,6 @@ THE SOFTWARE.
     {
       FT_Face       root = FT_FACE( face );
       PCF_Property  prop;
-      int           size_set = 0;
 
 
       root->num_faces = 1;
@@ -986,45 +985,32 @@ THE SOFTWARE.
 
       prop = pcf_find_property( face, "PIXEL_SIZE" );
       if ( prop != NULL )
-      {
-        root->available_sizes->height =
-        root->available_sizes->width  = (FT_Short)( prop->value.integer );
-
-        size_set = 1;
-      }
+        root->available_sizes->height = (FT_Short)( prop->value.integer );
       else
       {
         prop = pcf_find_property( face, "POINT_SIZE" );
         if ( prop != NULL )
         {
-          PCF_Property  xres, yres;
+          PCF_Property  yres;
 
 
-          xres = pcf_find_property( face, "RESOLUTION_X" );
           yres = pcf_find_property( face, "RESOLUTION_Y" );
-
-          if ( ( yres != NULL ) && ( xres != NULL ) )
-          {
+          if ( yres != NULL )
             root->available_sizes->height =
               (FT_Short)( prop->value.integer *
                           yres->value.integer / 720 );
-
-              root->available_sizes->width =
-                (FT_Short)( prop->value.integer *
-                            xres->value.integer / 720 );
-
-            size_set = 1;
-          }
         }
       }
 
-      if (size_set == 0 )
-      {
-        root->available_sizes->width  = 12;
+      if ( root->available_sizes->height == 0 )
         root->available_sizes->height = 12;
-      }
 
-      /* set-up charset */
+      /* `width' is just an enumeration value for different bitmap strikes */
+      /* in a single font.  Since a PCF font has a single strike only,     */
+      /* make this value the same as the height.                           */  
+      root->available_sizes->width = root->available_sizes->height;
+                        
+      /* set up charset */
       {
         PCF_Property  charset_registry = 0, charset_encoding = 0;
 

@@ -33,7 +33,8 @@ PSHINTER_DRV_SRC := $(PSHINTER_DIR)/pshrec.c  \
 
 # PSHINTER driver headers
 #
-PSHINTER_DRV_H := $(PSHINTER_DRV_SRC:%c=%h)
+PSHINTER_DRV_H := $(PSHINTER_DRV_SRC:%c=%h) \
+                  $(PSHINTER_DIR)/pshnterr.h
 
 
 # PSHINTER driver object(s)

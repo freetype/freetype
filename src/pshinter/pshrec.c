@@ -23,6 +23,8 @@
 #include "pshrec.h"
 #include "pshalgo.h"
 
+#include "pshnterr.h"
+
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pshrec
 
@@ -820,7 +822,7 @@
       break;
 
     default:
-      hints->error     = FT_Err_Invalid_Argument;
+      hints->error     = PSH_Err_Invalid_Argument;
       hints->hint_type = hint_type;
 
       FT_ERROR(( "ps_hints_open: invalid charstring type!\n" ));
@@ -934,7 +936,7 @@
       else
       {
         FT_ERROR(( "ps_hints_t1stem3: called with invalid hint type!\n" ));
-        error = FT_Err_Invalid_Argument;
+        error = PSH_Err_Invalid_Argument;
         goto Fail;
       }
     }
@@ -975,7 +977,7 @@
       else
       {
         /* invalid hint type */
-        error = FT_Err_Invalid_Argument;
+        error = PSH_Err_Invalid_Argument;
         goto Fail;
       }
     }

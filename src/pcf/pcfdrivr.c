@@ -63,7 +63,7 @@ THE SOFTWARE.
     cmap->num_encodings = (FT_UInt)face->nencodings;
     cmap->encodings     = face->encodings;
 
-    return FT_Err_Ok;
+    return PCF_Err_Ok;
   }
 
 
@@ -245,7 +245,7 @@ THE SOFTWARE.
 
       /* this didn't work, try gzip support! */
       error2 = FT_Stream_OpenGzip( &face->gzip_stream, stream );
-      if ( error2 == FT_Err_Unimplemented_Feature )
+      if ( error2 == PCF_Err_Unimplemented_Feature )
         goto Fail;
 
       error = error2;
@@ -454,9 +454,9 @@ THE SOFTWARE.
     slot->bitmap_left = metric->leftSideBearing;
     slot->bitmap_top  = metric->ascent;
 
-    slot->metrics.horiAdvance  = metric->characterWidth << 6 ;
-    slot->metrics.horiBearingX = metric->leftSideBearing << 6 ;
-    slot->metrics.horiBearingY = metric->ascent << 6 ;
+    slot->metrics.horiAdvance  = metric->characterWidth << 6;
+    slot->metrics.horiBearingX = metric->leftSideBearing << 6;
+    slot->metrics.horiBearingY = metric->ascent << 6;
     slot->metrics.width        = ( metric->rightSideBearing -
                                    metric->leftSideBearing ) << 6;
     slot->metrics.height       = bitmap->rows << 6;
@@ -499,7 +499,7 @@ THE SOFTWARE.
       return 0;
     }
 
-    return FT_Err_Invalid_Argument;
+    return PCF_Err_Invalid_Argument;
   }
 
 

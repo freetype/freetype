@@ -26,6 +26,17 @@
 #include FT_INTERNAL_DEBUG_H
 #include <string.h>
 
+
+#include FT_MODULE_ERRORS_H
+
+#undef __FTERRORS_H__
+
+#define FT_ERR_PREFIX  Gzip_Err_
+#define FT_ERR_BASE    FT_Mod_Err_Gzip
+
+#include FT_ERRORS_H
+
+
 #ifdef FT_CONFIG_OPTION_USE_ZLIB
 
 #ifdef FT_CONFIG_OPTION_SYSTEM_ZLIB
@@ -181,7 +192,7 @@
          head[2] != Z_DEFLATED        ||
         (head[3] & FT_GZIP_RESERVED)  )
     {
-      error = FT_Err_Invalid_File_Format;
+      error = Gzip_Err_Invalid_File_Format;
       goto Exit;
     }
 
@@ -276,7 +287,7 @@
     if ( inflateInit2( zstream, -MAX_WBITS ) != Z_OK ||
          zstream->next_in == NULL                     )
     {
-      error = FT_Err_Invalid_File_Format;
+      error = Gzip_Err_Invalid_File_Format;
       goto Exit;
     }
 
@@ -347,7 +358,7 @@
       size = stream->read( stream, stream->pos, zip->input,
                            FT_GZIP_BUFFER_SIZE );
       if ( size == 0 )
-        return FT_Err_Invalid_Stream_Operation;
+        return Gzip_Err_Invalid_Stream_Operation;
     }
     else
     {
@@ -356,7 +367,7 @@
         size = FT_GZIP_BUFFER_SIZE;
 
       if ( size == 0 )
-        return FT_Err_Invalid_Stream_Operation;
+        return Gzip_Err_Invalid_Stream_Operation;
 
       FT_MEM_COPY( zip->input, stream->base + stream->pos, size );
     }
@@ -398,12 +409,12 @@
       {
         zip->limit = zstream->next_out;
         if ( zip->limit == zip->cursor )
-          error = FT_Err_Invalid_Stream_Operation;
+          error = Gzip_Err_Invalid_Stream_Operation;
         break;
       }
       else if ( err != Z_OK )
       {
-        error = FT_Err_Invalid_Stream_Operation;
+        error = Gzip_Err_Invalid_Stream_Operation;
         break;
       }
     }
@@ -585,7 +596,7 @@
     FT_UNUSED( stream );
     FT_UNUSED( source );
 
-    return FT_Err_Unimplemented_Feature;
+    return Gzip_Err_Unimplemented_Feature;
   }
 
 #endif /* !FT_CONFIG_OPTION_USE_ZLIB */
