@@ -158,8 +158,8 @@
     glyph->left   = slot->bitmap_left;
     glyph->top    = slot->bitmap_top;
 
-    if ( slot->flags & ft_glyph_own_bitmap )
-      slot->flags &= ~ft_glyph_own_bitmap;
+    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
+      slot->flags &= ~FT_GLYPH_OWN_BITMAP;
     else
     {
       /* copy the bitmap into a new buffer */

@@ -1,3 +1,7 @@
+2002-02-24  David Turner   <david@freetype.org>
+
+        * renaming "ft_glyph_own_bitmap" into "FT_GLYPH_OWN_BITMAP"
+
 2002-02-22  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftdebug.h (FT_Trace): Remove comma in
@@ -13,7 +17,7 @@
 	(ft_debug_init): New function.
 	(ft_debug_dummy): Removed.
 	Updated to changes in ftdebug.h
-	
+
 	* include/freetype/internal/ftdebug.h: Always define
 	FT_DEBUG_LEVEL_ERROR if FT_DEBUG_LEVEL_TRACE is defined.
 	(FT_Assert): Renamed to ...
@@ -155,7 +159,7 @@
 	better (delaying format checks out of FT_Access_Frame ..
 	FT_Forget_Frame blocks to avoid leaving the stream in an incorrect
 	state when encountering an invalid PCF font).
-	
+
 	* src/pcf/pcfdriver.c (PCF_Done_Face): Renamed to ...
 	(PCF_Face_Done): This.
 	(PCF_Init_Face): Renamed to ...
@@ -165,7 +169,7 @@
 	(PCF_Get_Next_Char): Renamed to ...
 	(PCF_Char_Get_Next): This.
 	(pcf_driver_class): Updated.
-	
+
 	* src/pcf/pcf.h (PCF_Done_Face): Removed.
 
 2002-02-06  Detlef Würkner  <TetiSoft@apg.lahn.de>

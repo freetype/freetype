@@ -644,13 +644,13 @@
   ft_glyphslot_clear( FT_GlyphSlot  slot )
   {
     /* free bitmap if needed */
-    if ( slot->flags & ft_glyph_own_bitmap )
+    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
     {
       FT_Memory  memory = FT_FACE_MEMORY( slot->face );
 
 
       FREE( slot->bitmap.buffer );
-      slot->flags &= ~ft_glyph_own_bitmap;
+      slot->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
 
     /* clear all public fields in the glyph slot */
@@ -684,7 +684,7 @@
       clazz->done_slot( slot );
 
     /* free bitmap buffer if needed */
-    if ( slot->flags & ft_glyph_own_bitmap )
+    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
       FREE( slot->bitmap.buffer );
 
     /* free glyph loader */

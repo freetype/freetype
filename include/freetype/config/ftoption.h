@@ -265,7 +265,7 @@ FT_BEGIN_HEADER
   /*   Note that the memory debugger is only activated at runtime when     */
   /*   when the _environment_ variable "FT_DEBUG_MEMORY" is also defined!  */
   /*                                                                       */
-#undef  FT_DEBUG_MEMORY
+#define FT_DEBUG_MEMORY
 
 
   /*************************************************************************/

@@ -225,9 +225,9 @@
           sbit->format   = (FT_Byte)bitmap->pixel_mode;
 
           /* grab the bitmap when possible - this is a hack !! */
-          if ( slot->flags & ft_glyph_own_bitmap )
+          if ( slot->flags & FT_GLYPH_OWN_BITMAP )
           {
-            slot->flags &= ~ft_glyph_own_bitmap;
+            slot->flags &= ~FT_GLYPH_OWN_BITMAP;
             sbit->buffer = bitmap->buffer;
           }
           else

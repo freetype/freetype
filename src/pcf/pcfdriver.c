@@ -247,7 +247,7 @@ THE SOFTWARE.
 
     slot->linearHoriAdvance = (FT_Fixed)bitmap->width << 16;
     slot->format            = ft_glyph_format_bitmap;
-    slot->flags             = ft_glyph_own_bitmap;
+    slot->flags             = FT_GLYPH_OWN_BITMAP;
 
     FT_TRACE4(( " --- ok\n" ));
 

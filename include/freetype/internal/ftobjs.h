@@ -369,7 +369,7 @@ FT_BEGIN_HEADER
 
   enum
   {
-    ft_glyph_own_bitmap = 1
+    FT_GLYPH_OWN_BITMAP = 1
   };
 
 
