@@ -223,7 +223,12 @@
 
     hash = FTC_CMAP_HASH( face_id, cmap_index, char_code );
 
+#if 1
+    FTC_CACHE_LOOKUP_CMP( cache, ftc_cmap_node_compare, hash, &query,
+                          node, error );
+#else
     error = FTC_Cache_Lookup( cache, hash, &query, (FTC_Node*) &node );
+#endif    
     if ( error )
       goto Exit;
 

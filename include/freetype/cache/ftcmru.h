@@ -53,7 +53,8 @@
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
 
-#define xxFT_DEBUG_ERROR
+#define  xxFT_DEBUG_ERROR
+#define  FTC_INLINE
 
 FT_BEGIN_HEADER
 
@@ -145,6 +146,7 @@ FT_BEGIN_HEADER
   FTC_MruList_Lookup( FTC_MruList   list,
                       FT_Pointer    key,
                       FTC_MruNode  *pnode );
+                      
 
   FT_EXPORT( void )
   FTC_MruList_Remove( FTC_MruList  list,
@@ -154,6 +156,66 @@ FT_BEGIN_HEADER
   FTC_MruList_RemoveSelection( FTC_MruList              list,
                                FTC_MruNode_CompareFunc  select,
                                FT_Pointer               key );
+
+
+#ifdef FTC_INLINE
+
+#define  FTC_MRULIST_LOOKUP( list, key, node, error )                    \
+  FT_BEGIN_STMNT                                                         \
+    FTC_MruNode_CompareFunc  _compare = (list)->clazz.node_compare;      \
+    FTC_MruNode              _first, _node;                              \
+                                                                         \
+    error  = 0;                                                          \
+    _first = (list)->nodes;                                              \
+    _node  = NULL;                                                       \
+                                                                         \
+    if ( _first )                                                        \
+    {                                                                    \
+      _node = _first;                                                    \
+      do                                                                 \
+      {                                                                  \
+        if ( _compare( _node, (key) ) )                                  \
+        {                                                                \
+          *(FTC_MruNode*)&(node) = _node;                                \
+          goto _Ok;                                                      \
+        }                                                                \
+        _node = _node->next;                                             \
+      }                                                                  \
+      while ( _node != _first) ;                                         \
+    }                                                                    \
+                                                                         \
+    error = FTC_MruList_New( (list), (key), (FTC_MruNode*)&(node) );     \
+  _Ok:                                                                   \
+    ;                                                                    \
+  FT_END_STMNT
+
+#else  /* !FTC_INLINE */
+
+#define  FTC_MRULIST_LOOKUP_CMP( list, key, node, error )   \
+  error = FTC_MruList_Lookup( (list), (key), (FTC_MruNode*)&(node) ) 
+
+#endif /* !FTC_INLINE */
+
+
+#define  FTC_MRULIST_LOOP( list, node )       \
+  FT_BEGIN_STMNT                              \
+    FTC_MruNode   _first = (list)->nodes;     \
+                                              \
+    if ( _first )                             \
+    {                                         \
+      FTC_MruNode  _node = _first;            \
+      do                                      \
+      {                                       \
+        *(FTC_MruNode*)&(node) = _node;
+
+
+#define  FTC_MRULIST_LOOP_END()              \
+        _node = _node->next;                 \
+      }                                      \
+      while ( _node != _first );             \
+    }                                        \
+  FT_END_STMNT
+
  /* */
 
 FT_END_HEADER

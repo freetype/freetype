@@ -141,10 +141,9 @@
 
     query->gindex = gindex;
 
-    error = FTC_MruList_Lookup( &cache->families, query,
-                                (FTC_MruNode*) &query->family );
+    FTC_MRULIST_LOOKUP( &cache->families, query, query->family, error );
     if ( !error )
-    error = FTC_Cache_Lookup( FTC_CACHE(cache), hash, query, anode );
+      error = FTC_Cache_Lookup( FTC_CACHE(cache), hash, query, anode );
 
     return error;
   }
