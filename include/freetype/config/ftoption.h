@@ -424,7 +424,7 @@ FT_BEGIN_HEADER
   /* For this to work you must also define                                 */
   /* TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING.                          */
   /*                                                                       */
-#define TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING
+#undef  TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING
 
 
   /*************************************************************************/
