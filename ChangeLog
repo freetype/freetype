@@ -1,3 +1,11 @@
+2000-11-10  Tom Kacvinsky  <tjk@ams.org>
+
+	* builds/unix/unix-defs.in
+	Add
+		INSTALL_PROGRAM := @INSTALL_PROGRAM@
+		INSTALL_SCRIPT  := @INSTALL_SCRIPT@
+	So that install of freetype-config does not fail.
+
 2000-11-10  Werner Lemberg  <wl@gnu.org>
 
 	* builds/cygwin/freetype-config.in, builds/unix/freetype-config.in:
