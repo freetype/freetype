@@ -10,7 +10,17 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) gxlayout ;
 
   if $(FT2_MULTI)
   {
-    _sources = gxdriver gxload gxobjs gxlayout gxaccess gxfeatreg gxlfeatreg gxstatetbl gxlookuptbl gxvm gxutils
+    _sources = gxdriver
+               gxload
+               gxobjs
+               gxlayout
+               gxaccess
+               gxfeatreg
+               gxlfeatreg
+               gxstatetbl
+               gxlookuptbl
+               gxvm gxutils
+               ;
   }
   else
   {

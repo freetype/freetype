@@ -69,7 +69,6 @@ FT2_COMPONENTS ?= autofit    # auto-fitter
                   cff        # CFF/CEF font driver
                   cid        # PostScript CID-keyed font driver
                   gzip       # support for gzip-compressed files
-                  lzw        # support for LZW-compressed files
                   pcf        # PCF font driver
                   pfr        # PFR/TrueDoc font driver
                   psaux      # common PostScript routines module
