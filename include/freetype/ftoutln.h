@@ -389,6 +389,69 @@ FT_BEGIN_HEADER
                      FT_Raster_Params*  params );
 
 
+ /**************************************************************************
+  *
+  * @enum: FT_Orientation
+  *  
+  * @description:
+  *   a list of values used to describe an outline's contour orientation
+  *
+  *   The TrueType and Postscript specifications used different conventions
+  *   to determine wether outline contours should be filled or unfilled.
+  *   
+  * @values:
+  *   FT_ORIENTATION_TRUETYPE ::
+  *     according to the TrueType specification, clockwise contours must
+  *     be filled, and counter-clockwise ones must be unfilled
+  *
+  *   FT_ORIENTATION_POSTSCRIPT ::
+  *     according to the Postscript specification, counter-clockwise contours
+  *     must be filled, and clockwise ones must be unfilled
+  *
+  *   FT_ORIENTATION_FILL_RIGHT ::
+  *     this is identical to @FT_ORIENTATION_TRUETYPE, but is used to
+  *     remember that in TrueType, everything that is to the right of
+  *     the drawing direction of a contour must be filled.
+  *
+  *   FT_ORIENTATION_FILL_LEFT ::
+  *     this is identical to @FT_ORIENTATION_POSTSCRIPT, but is used to
+  *     remember that in Postscript, everything that is to the left of
+  *     the drawing direction of a contour must be filled
+  */
+  typedef enum
+  {
+    FT_ORIENTATION_TRUETYPE   = 0,
+    FT_ORIENTATION_POSTSCRIPT = 1,
+    FT_ORIENTATION_FILL_RIGHT = FT_ORIENTATION_TRUETYPE,
+    FT_ORIENTATION_FILL_LEFT  = FT_ORIENTATION_POSTSCRIPT
+  
+  } FT_Orientation;
+
+
+ /**************************************************************************
+  *
+  * @function: FT_Outline_Get_Orientation
+  *  
+  * @description:
+  *   this function analyzes a glyph outline and tries to compute its
+  *   fill orientation (see @FT_Orientation). This is done by computing
+  *   the direction of each global horizontal and/or vertical extrema
+  *   within the outline.
+  *
+  *   note that this will return @FT_ORIENTATION_TRUETYPE for empty
+  *   outlines.
+  *
+  * @input:
+  *   outline :: handle to source outline
+  *
+  * @return:
+  *   orientation
+  *
+  */
+  FT_EXPORT( FT_Orientation )
+  FT_Outline_Get_Orientation( FT_Outline*  outline );
+
+
   /* */
 
 

@@ -216,8 +216,8 @@ FT_BEGIN_HEADER
       FT_FACE(face)->internal->services. service_ ## id =        \
         (FT_Pointer)( svc != NULL ? svc                          \
                                   : FT_SERVICE_UNAVAILABLE );    \
-      *pptr = svc;                                               \
     }                                                            \
+    *pptr = svc;                                                 \
   FT_END_STMNT
 
 

@@ -1,3 +1,16 @@
+2003-10-01  David Turner  <david@freetype.org>
+
+        * src/autofit/*: adding first sources of the new multi-script
+        "auto-fitter"
+
+        * include/freetype/ftoutln.h, src/base/ftoutln.c: adding the
+        definition of FT_Outline_Get_Orientation, used to compute the
+        fill orientation of a given glyph outline.
+
+        * include/freetype/internal/ftserv.h: fixed trivial bug which
+        could crashed the font engine when a cached service pointer was
+        retrieved with FT_FACE_LOOKUP_SERVICE
+
 2003-09-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidload.c (cid_parse_dict): Skip token if no keyword is
@@ -21,9 +34,9 @@
 2003-09-29  David Turner  <david@freetype.org>
 
 	Added new service to handle glyph name dictionaries, replacing the
-	old internal header named `psnames.h' by `services/svpsname.h'. 
+	old internal header named `psnames.h' by `services/svpsname.h'.
 	Note that this is different from `services/svpostnm.h' which only
-	handles the retrieval of PostScript font names for a given face. 
+	handles the retrieval of PostScript font names for a given face.
 	(Should we merge these two services into a single header?)
 
 	* include/freetype/internal/psnames.h: Removed.  Most of its
