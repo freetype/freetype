@@ -1,3 +1,8 @@
+2002-06-07  Graham Asher  <graham.asher@btinternet.com>
+
+        * src/base/ftobjs.c (FT_Render_Glyph_Internal): changed definition
+          from FT_EXPORT_DEF to FT_BASE_DEF
+
 2002-06-07  David Turner   <david@freetype.org>
 
         * src/type42/t42drivr.c, src/type42/t42drivr.h, src/type42/t42parse.c,
