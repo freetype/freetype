@@ -28,7 +28,7 @@
 #include "grfont.h"
 
 #include "ftgrays.h"
-#include "ftrast.h"
+#include "ftrast2.h"
 
 #define  DIM_X   500
 #define  DIM_Y   400
@@ -425,7 +425,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     
     error = 1;
     if ( !antialias)
-      error = FT_Set_Raster( library, &ft_black_raster );
+      error = FT_Set_Raster( library, &ft_black2_raster );
       
     else if ( use_grays && antialias )
       error = FT_Set_Raster( library, &ft_grays_raster );

@@ -23,6 +23,75 @@
 #include "ftrast.h"
 #include <ftcalc.h>      /* for FT_MulDiv only */
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* A simple technical note on how the raster works:                      */
+  /*                                                                       */
+  /*   Converting an outline into a bitmap is achieved in several steps    */
+  /*   which are:                                                          */
+  /*                                                                       */
+  /*   1 - Decomposing the outline into successive `profiles'.  Each       */
+  /*       profile is simply an array of scanline intersections on a given */
+  /*       dimension.  A profile's main attributes are                     */
+  /*                                                                       */
+  /*       o its scanline position boundaries, i.e. `Ymin' and `Ymax'.     */
+  /*                                                                       */
+  /*       o an array of intersection coordinates for each scanline        */
+  /*         between `Ymin' and `Ymax'.                                    */
+  /*                                                                       */
+  /*       o a direction, indicating wether is was built going `up' or     */
+  /*         `down', as this is very important for filling rules.          */
+  /*                                                                       */
+  /*   2 - Sweeping the target map's scanlines in order to compute segment */
+  /*       `spans' which are then filled.  Additionaly, this pass performs */
+  /*       drop-out control.                                               */
+  /*                                                                       */
+  /*   The outline data is parsed during step 1 only.  The profiles are    */
+  /*   built from the bottom of the render pool, used as a stack.  The     */
+  /*   following graphics shows the profile list under construction:       */
+  /*                                                                       */
+  /*     ____________________________________________________________ _ _  */
+  /*    |         |                   |         |                 |        */
+  /*    | profile | coordinates for   | profile | coordinates for |-->     */
+  /*    |    1    |  profile 1        |    2    |  profile 2      |-->     */
+  /*    |_________|___________________|_________|_________________|__ _ _  */
+  /*                                                                       */
+  /*    ^                                                         ^        */
+  /*    |                                                         |        */
+  /*    start of render pool                                   top         */
+  /*                                                                       */
+  /*   The top of the profile stack is kept in the `top' variable.         */
+  /*                                                                       */
+  /*   As you can see, a profile record is pushed on top of the render     */
+  /*   pool, which is then followed by its coordinates/intersections.  If  */
+  /*   a change of direction is detected in the outline, a new profile is  */
+  /*   generated until the end of the outline.                             */
+  /*                                                                       */
+  /*   Note that when all profiles have been generated, the function       */
+  /*   Finalize_Profile_Table() is used to record, for each profile, its   */
+  /*   bottom-most scanline as well as the scanline above its upmost       */
+  /*   boundary.  These positions are called `y-turns' because they (sort  */
+  /*   of) correspond to local extrema.  They are stored in a sorted list  */
+  /*   built from the top of the render pool as a downwards stack:         */
+  /*                                                                       */
+  /*      _ _ _______________________________________                      */
+  /*                            |                    |                     */
+  /*                         <--| sorted list of     |                     */
+  /*                         <--|  extrema scanlines |                     */
+  /*      _ _ __________________|____________________|                     */
+  /*                                                                       */
+  /*                            ^                    ^                     */
+  /*                            |                    |                     */
+  /*                       maxBuff             sizeBuff = end of pool      */
+  /*                                                                       */
+  /*   This list is later used during the sweep phase in order to          */
+  /*   optimize performance (see technical note on the sweep below).       */
+  /*                                                                       */
+  /*   Of course, the raster detects whether the two stacks collide and    */
+  /*   handles the situation propertly.                                    */
+  /*                                                                       */
+  /*************************************************************************/
+
   /****************************************************************/
   /****************************************************************/
   /**                                                            **/
