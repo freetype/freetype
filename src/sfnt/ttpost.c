@@ -346,8 +346,10 @@
   static
   FT_Error  Load_Post_Names( TT_Face  face )
   {
-    FT_Stream   stream;
-    FT_Error    error;
+    FT_Stream  stream;
+    FT_Error   error;
+    FT_Fixed   format;
+
 
     /* get a stream for the face's resource */
     stream = face->root.stream;
@@ -357,8 +359,14 @@
     if ( error )
       goto Exit;
 
+    format = face->postscript.FormatType;
+
+    /* go to beginning of subtable */
+    if ( FILE_Skip( 32 ) )
+      goto Exit;
+
     /* now read postscript table */
-    switch ( face->postscript.FormatType )
+    switch ( format )
     {
     case 0x00020000L:
       error = Load_Format_20( face, stream );
