@@ -214,11 +214,11 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   typedef
-  FT_Error  (*TT_Load_Any_Func)( TT_Face   face,
-                                 FT_ULong  tag,
-                                 FT_Long   offset,
-                                 void*     buffer,
-                                 FT_Long*  length );
+  FT_Error  (*TT_Load_Any_Func)( TT_Face    face,
+                                 FT_ULong   tag,
+                                 FT_Long    offset,
+                                 FT_Byte*   buffer,
+                                 FT_ULong*  length );
 
 
   /*************************************************************************/

@@ -702,7 +702,7 @@
     slot->control_data  = 0;
     slot->control_len   = 0;
     slot->other         = 0;
-    slot->format        = 0;
+    slot->format        = ft_glyph_format_none;
 
     slot->linearHoriAdvance = 0;
     slot->linearVertAdvance = 0;
@@ -1314,7 +1314,7 @@
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_New_Memory_Face( FT_Library  library,
-                                                  void*       file_base,
+                                                  FT_Byte*    file_base,
                                                   FT_Long     file_size,
                                                   FT_Long     face_index,
                                                   FT_Face*    face )

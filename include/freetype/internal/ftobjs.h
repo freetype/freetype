@@ -30,6 +30,12 @@
 #include <freetype/internal/ftdriver.h>
 #include <freetype/internal/autohint.h>
 
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* Some generic definitions.                                             */
@@ -403,8 +409,8 @@
     FT_Renderer         cur_renderer;  /* current outline renderer */
     FT_Module           auto_hinter;
 
-    void*               raster_pool;      /* scan-line conversion render pool */
-    unsigned long       raster_pool_size; /* size of render pool in bytes     */
+    FT_Byte*            raster_pool;      /* scan-line conversion render pool */
+    FT_ULong            raster_pool_size; /* size of render pool in bytes     */
 
     FT_DebugHook_Func   debug_hooks[4];
 
@@ -438,6 +444,11 @@
 /*                                                                                           */
 #ifndef FT_NO_DEFAULT_RASTER
   FT_EXPORT_VAR(FT_Raster_Funcs)  ft_default_raster;
+#endif
+
+
+#ifdef __cplusplus
+  }
 #endif
 
 

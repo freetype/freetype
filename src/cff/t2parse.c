@@ -563,6 +563,7 @@
                   case 1:
                     *(FT_Byte*)q = (FT_Byte)val;
                     break;
+
                   case 2:
                     *(FT_Short*)q = (FT_Short)val;
                     break;

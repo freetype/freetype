@@ -223,7 +223,7 @@
                                         FT_Long  b )
   {
     FT_Int32   s;
-    FT_Word32  q;
+    FT_UInt32  q;
 
 
     s  = a; a = ABS(a);
@@ -366,7 +366,7 @@
 
       FT_MulTo64( a, b, &temp );
       temp2.hi = (FT_Int32)( c >> 31 );
-      temp2.lo = (FT_Word32)( c / 2 );
+      temp2.lo = (FT_UInt32)( c / 2 );
       FT_Add64( &temp, &temp2, &temp );
       a = FT_Div64by32( &temp, c );
     }
@@ -469,7 +469,7 @@
                                         FT_Long  b )
   {
     FT_Int32   s;
-    FT_Word32  q;
+    FT_UInt32  q;
 
 
     s  = a; a = ABS(a);
@@ -483,12 +483,12 @@
     else if ( ( a >> 16 ) == 0 )
     {
       /* compute result directly */
-      q = (FT_Word32)( a << 16 ) / (FT_Word32)b;
+      q = (FT_UInt32)( a << 16 ) / (FT_UInt32)b;
     }
     else
     {
       /* we need more bits; we have to do it by hand */
-      FT_Word32  c;
+      FT_UInt32  c;
 
 
       q  = ( a / b ) << 16;
@@ -531,7 +531,7 @@
                                     FT_Int64*  y,
                                     FT_Int64*  z )
   {
-    register FT_Word32  lo, hi;
+    register FT_UInt32  lo, hi;
 
 
     lo = x->lo + y->lo;
@@ -571,7 +571,7 @@
     s ^= y; y = ABS( y );
 
     {
-      FT_Word32  lo1, hi1, lo2, hi2, lo, hi, i1, i2;
+      FT_UInt32  lo1, hi1, lo2, hi2, lo, hi, i1, i2;
 
 
       lo1 = x & 0x0000FFFF;  hi1 = x >> 16;
@@ -600,7 +600,7 @@
 
     if ( s < 0 )
     {
-      z->lo = (FT_Word32)-(FT_Int32)z->lo;
+      z->lo = (FT_UInt32)-(FT_Int32)z->lo;
       z->hi = ~z->hi + !( z->lo );
     }
   }
@@ -629,13 +629,13 @@
                                             FT_Int32   y )
   {
     FT_Int32   s;
-    FT_Word32  q, r, i, lo;
+    FT_UInt32  q, r, i, lo;
 
 
     s  = x->hi;
     if ( s < 0 )
     {
-      x->lo = (FT_Word32)-(FT_Int32)x->lo;
+      x->lo = (FT_UInt32)-(FT_Int32)x->lo;
       x->hi = ~x->hi + !( x->lo );
     }
     s ^= y;  y = ABS( y );
@@ -654,7 +654,7 @@
     r  = x->hi;
     lo = x->lo;
 
-    if ( r >= (FT_Word32)y ) /* we know y is to be treated as unsigned here */
+    if ( r >= (FT_UInt32)y ) /* we know y is to be treated as unsigned here */
       return ( s < 0 ? 0x80000001UL : 0x7FFFFFFFUL );
                              /* Return Max/Min Int32 if division overflow.  */
                              /* This includes division by zero!             */
@@ -665,7 +665,7 @@
       q <<= 1;
       r  |= lo >> 31;
 
-      if ( r >= (FT_Word32)y )
+      if ( r >= (FT_UInt32)y )
       {
         r -= y;
         q |= 1;
@@ -687,7 +687,7 @@
                   FT_Int64*  y,
                   FT_Int64*  z )
   {
-    register FT_Word32  lo, hi;
+    register FT_UInt32  lo, hi;
 
 
     lo = x->lo - y->lo;
@@ -701,7 +701,7 @@
   static
   int  ft_order64( FT_Int64*  z )
   {
-    FT_Word32  i;
+    FT_UInt32  i;
     int        j;
 
 

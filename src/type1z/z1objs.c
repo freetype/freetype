@@ -201,7 +201,8 @@
             full++;
           }
 
-          root->style_name = ( *full == ' ' ? full+1 : "Regular" );
+          root->style_name = ( *full == ' ' ? full + 1
+                                            : (char *)"Regular" );
         }
         else
         {

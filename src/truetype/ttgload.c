@@ -187,7 +187,7 @@
     zone->cur        = load->outline.points + start_point;
     zone->tags       = (FT_Byte*)load->outline.tags + start_point;
     zone->contours   = (FT_UShort*)load->outline.contours + start_contour;
-  }                                 
+  }
 
 
 #undef  IS_HINTED
@@ -210,14 +210,14 @@
   {
     FT_Error  error;
     FT_Stream stream = loader->stream;
-    
+
 
     /* the following line sets the `error' variable through macros! */
     (void)( FILE_Seek( offset ) || ACCESS_Frame( byte_count ) );
-    
+
     FT_TRACE5(( "Glyph %ld\n", glyph_index ));
     return error;
-  }                                   
+  }
 
 
   static
@@ -227,14 +227,14 @@
 
 
     FORGET_Frame();
-  }                                   
+  }
 
 
   static
   FT_Error  TT_Load_Glyph_Header( TT_Loader*  loader )
   {
     FT_Stream   stream = loader->stream;
-    
+
 
     loader->n_contours = GET_Short();
 
@@ -248,9 +248,9 @@
                                             loader->bbox.xMax ));
     FT_TRACE5(( "  yMin: %4d  yMax: %4d\n", loader->bbox.yMin,
                                             loader->bbox.yMax ));
-    
+
     return FT_Err_Ok;
-  }                                  
+  }
 
 
   static
@@ -271,11 +271,11 @@
     {
       short*  cur   = gloader->current.outline.contours;
       short*  limit = cur + n_contours;
-      
+
 
       for ( ; cur < limit; cur++ )
         cur[0] = GET_UShort();
-        
+
       n_points = 0;
       if ( n_contours > 0 )
         n_points = cur[-1] + 1;
@@ -283,14 +283,14 @@
       error = FT_GlyphLoader_Check_Points( gloader, n_points + 2, 0 );
       if ( error )
         goto Fail;
-      
+
       outline = &gloader->current.outline;
     }
 
     /* reading the bytecode instructions */
     slot->control_len  = 0;
     slot->control_data = 0;
-    
+
     n_ins = GET_UShort();
 
     FT_TRACE5(( "  Instructions size: %d\n", n_ins ));
@@ -317,7 +317,7 @@
     {
       slot->control_len  = n_ins;
       slot->control_data = load->instructions;
-      
+
       MEM_Copy( load->instructions, stream->cursor, n_ins );
     }
 
@@ -407,7 +407,7 @@
     outline->n_points   = n_points;
     outline->n_contours = n_contours;
 
-  Fail:          
+  Fail:
     return error;
   }
 
@@ -433,7 +433,7 @@
       error = FT_GlyphLoader_Check_Subglyphs( gloader, num_subglyphs + 1 );
       if ( error )
         goto Fail;
-      
+
       subglyph = gloader->current.subglyphs + num_subglyphs;
 
       subglyph->arg1 = subglyph->arg2 = 0;
@@ -609,7 +609,7 @@
                                   load->exec->glyphIns, n_ins );
         if ( error )
           goto Exit;
-          
+
         load->exec->is_composite     = FALSE;
         load->exec->pedantic_hinting = (FT_Bool)( load->load_flags &
                                                   FT_LOAD_PEDANTIC );
@@ -619,7 +619,7 @@
         error = TT_Run_Context( load->exec, debug );
         if ( error && load->exec->pedantic_hinting )
           goto Exit;
-          
+
         error = FT_Err_Ok;  /* ignore bytecode errors in non-pedantic mode */
       }
 
@@ -778,7 +778,7 @@
       error = face->read_simple_glyph( loader );
       if ( error )
         goto Fail;
-      
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
       {
@@ -815,10 +815,11 @@
       FT_UInt       start_point, start_contour;
       FT_ULong      ins_pos;  /* position of composite instructions, if any */
 
+
       /* for each subglyph, read composite header */
       start_point   = gloader->base.outline.n_points;
       start_contour = gloader->base.outline.n_contours;
-    
+
       error = face->read_composite_glyph( loader );
       if ( error )
         goto Fail;
@@ -835,11 +836,11 @@
       {
         /* set up remaining glyph fields */
         FT_GlyphLoader_Add( gloader );
-        
+
         glyph->num_subglyphs  = gloader->base.num_subglyphs;
         glyph->format         = ft_glyph_format_composite;
         glyph->subglyphs      = gloader->base.subglyphs;
-        
+
         goto Exit;
       }
 
@@ -851,13 +852,13 @@
       {
         FT_Int        n, num_base_points, num_new_points;
         FT_SubGlyph*  subglyph = 0;
-        
+
         FT_UInt num_subglyphs  = gloader->current.num_subglyphs;
         FT_UInt num_base_subgs = gloader->base.num_subglyphs;
-        
+
 
         FT_GlyphLoader_Add( gloader );
-        
+
         for ( n = 0; n < (FT_Int)num_subglyphs; n++ )
         {
           FT_Vector  pp1, pp2;
@@ -937,7 +938,7 @@
 
             p1 = gloader->base.outline.points + start_point + k;
             p2 = gloader->base.outline.points + start_point + l;
-            
+
             x = p1->x - p2->x;
             y = p1->y - p2->y;
           }
@@ -1111,7 +1112,7 @@
       /* copy outline to our glyph slot */
       FT_GlyphLoader_Copy_Points( glyph->loader, loader->gloader );
       glyph->outline = glyph->loader->base.outline;
-      
+
       /* translate array so that (0,0) is the glyph's origin */
       FT_Outline_Translate( &glyph->outline, -loader->pp1.x, 0 );
 
@@ -1394,11 +1395,11 @@
     {
       FT_GlyphLoader*  gloader = FT_FACE_DRIVER(face)->glyph_loader;
 
-      
+
       loader.gloader = gloader;
-      
+
       FT_GlyphLoader_Rewind( gloader );
-      
+
       tt_prepare_zone( &loader.zone, &gloader->base, 0, 0 );
       tt_prepare_zone( &loader.base, &gloader->base, 0, 0 );
     }
@@ -1436,7 +1437,7 @@
     loader.size   = (FT_Size)size;
     loader.glyph  = (FT_GlyphSlot)glyph;
     loader.stream = stream;
-    
+
     loader.glyf_offset  = FILE_Pos();
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER

@@ -21,6 +21,12 @@
 #include <freetype/ftmodule.h>
 #include <freetype/ftglyph.h>
 
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
  /* create a new glyph object */
   typedef  FT_Error  (*FT_Glyph_Init_Func)( FT_Glyph      glyph,
                                             FT_GlyphSlot  slot );
@@ -175,6 +181,11 @@
                                            FT_UInt        num_params,
                                            FT_Parameter*  parameters );
 
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* FTMODULE_H */

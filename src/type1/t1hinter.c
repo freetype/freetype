@@ -763,7 +763,6 @@
   }
 
 
-  LOCAL_FUNC
   const T1_Hinter_Funcs  t1_hinter_funcs =
   {
     (T1_Hinter_ChangeHints)t1_hinter_changehints,

@@ -196,10 +196,10 @@
   /*    The number of bytes actually read.                                 */
   /*                                                                       */
   static
-  unsigned long  ft_io_stream( FT_Stream      stream,
-                               unsigned long  offset,
-                               char*          buffer,
-                               unsigned long  count )
+  unsigned long  ft_io_stream( FT_Stream       stream,
+                               unsigned long   offset,
+                               unsigned char*  buffer,
+                               unsigned long   count )
   {
     FILE*  file;
 

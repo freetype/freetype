@@ -225,7 +225,7 @@
     FT_Memory  memory = face->root.memory;
     FT_Stream  stream = face->root.stream;
 
-    SFNT_Interface*  sfnt = face->sfnt;
+    SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
 
 
     /* for `extended TrueType formats' (i.e. compressed versions) */

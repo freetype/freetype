@@ -936,7 +936,8 @@
     if ( ACCESS_Frame( 31 ) )
       goto Exit;
 
-    if ( strncmp( stream->cursor, "%!PS-Adobe-3.0 Resource-CIDFont", 31 ) )
+    if ( strncmp( (char *)stream->cursor,
+                  "%!PS-Adobe-3.0 Resource-CIDFont", 31 ) )
     {
       FT_TRACE2(( "[not a valid CID-keyed font]\n" ));
       error = FT_Err_Unknown_File_Format;
@@ -950,7 +951,7 @@
     buff_len = 256;
     for (;;)
     {
-      FT_Byte *p, *limit = buffer + 256;
+      FT_Byte  *p, *limit = buffer + 256;
 
       /* fill input buffer */
       buff_len -= 256;

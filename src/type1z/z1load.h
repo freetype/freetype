@@ -15,8 +15,8 @@
  *
  ******************************************************************/
 
-#ifndef T1LOAD_H
-#define T1LOAD_H
+#ifndef Z1LOAD_H
+#define Z1LOAD_H
 
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/t1types.h>
@@ -71,7 +71,7 @@
   }
 #endif
 
-#endif /* T1LOAD_H */
+#endif /* Z1LOAD_H */
 
 
 /* END */

@@ -20,9 +20,6 @@
 #define TTDRIVER_H
 
 #include <freetype/internal/ftdriver.h>
-#include <freetype/ttnameid.h>
-#include <ttobjs.h>
-#include <freetype/internal/tterrors.h>
 
 
   FT_EXPORT_VAR( const FT_Driver_Class )  tt_driver_class;

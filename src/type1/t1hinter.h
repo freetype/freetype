@@ -225,8 +225,7 @@
   /*    A table containing the address of various functions used during    */
   /*    the loading of an hinted scaled outline.                           */
   /*                                                                       */
-  LOCAL_DEF
-  const T1_Hinter_Funcs  t1_hinter_funcs;
+  extern const T1_Hinter_Funcs  t1_hinter_funcs;
 
 
   LOCAL_DEF

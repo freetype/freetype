@@ -135,7 +135,7 @@
 
 
 #undef  KERN_INDEX
-#define KERN_INDEX( g1, g2 ) ( ( (FT_ULong)g1 << 16 ) | g2 )
+#define KERN_INDEX( g1, g2 )  ( ( (FT_ULong)g1 << 16 ) | g2 )
 
 
   /* compare two kerning pairs */
@@ -154,7 +154,7 @@
   }
 
 
-  /* parse an AFM file - for now, only read the kerning pairs */
+  /* parse an AFM file -- for now, only read the kerning pairs */
   LOCAL_FUNC
   FT_Error  T1_Read_AFM( FT_Face    t1_face,
                          FT_Stream  stream )
@@ -178,7 +178,7 @@
     p     = start;
 
     /* we are now going to count the occurences of `KP' or `KPX' in */
-    /* the AFM file.                                                */
+    /* the AFM file                                                 */
     count = 0;
     for ( p = start; p < limit - 3; p++ )
     {
@@ -250,7 +250,7 @@
     T1_Kern_Pair  *min, *mid, *max;
     FT_ULong      index = KERN_INDEX( glyph1, glyph2 );
 
- 
+
     /* simple binary search */
     min = afm->kern_pairs;
     max = min + afm->num_pairs - 1;

@@ -22,6 +22,11 @@
 #include <freetype/internal/ftobjs.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   typedef struct  T1_Kern_Pair_
   {
     FT_UInt    glyph1;
@@ -29,6 +34,7 @@
     FT_Vector  kerning;
 
   } T1_Kern_Pair;
+
 
   typedef struct  T1_AFM_
   {
@@ -51,6 +57,11 @@
                         FT_UInt     glyph1,
                         FT_UInt     glyph2,
                         FT_Vector*  kerning );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* T1AFM_H */

@@ -376,11 +376,11 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  FT_Error  TT_Load_Any( TT_Face   face,
-                         FT_ULong  tag,
-                         FT_Long   offset,
-                         void*     buffer,
-                         FT_Long*  length )
+  FT_Error  TT_Load_Any( TT_Face    face,
+                         FT_ULong   tag,
+                         FT_Long    offset,
+                         FT_Byte*   buffer,
+                         FT_ULong*  length )
   {
     FT_Error   error;
     FT_Stream  stream;
@@ -923,7 +923,7 @@
       /* allocate the name storage area in memory, then read it */
       if ( ALLOC( names->storage, storageSize )               ||
            FILE_Read_At( table_pos + names->storageOffset,
-                         (void*)names->storage, storageSize ) )
+                         names->storage, storageSize ) )
         goto Exit;
 
       /* Go through and assign the string pointers to the name records. */

@@ -3,6 +3,12 @@
 
 #include <freetype/internal/ftobjs.h>
 
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
 /* format of an 8-bit frame_op value = [ xxxxx | e | s ] */
 /* where s is set to 1 when the value is signed..        */
 /* where e is set to 1 when the value is little-endian   */
@@ -185,27 +191,27 @@ typedef struct FT_Frame_Field_
 
 
 
-  BASE_DEF(void) FT_New_Memory_Stream( FT_Library     library,
-                                       void*          base,
-                                       unsigned long  size,
-                                       FT_Stream      stream );
+  BASE_DEF(void) FT_New_Memory_Stream( FT_Library  library,
+                                       FT_Byte*    base,
+                                       FT_ULong    size,
+                                       FT_Stream   stream );
 
   BASE_DEF(FT_Error)  FT_Seek_Stream( FT_Stream  stream,
                                       FT_ULong   pos );
 
   BASE_DEF(FT_Error)  FT_Skip_Stream( FT_Stream  stream,
-                                                FT_Long    distance );
+                                      FT_Long    distance );
 
   BASE_DEF(FT_Long)   FT_Stream_Pos( FT_Stream  stream );
 
 
   BASE_DEF(FT_Error)  FT_Read_Stream( FT_Stream  stream,
-                                      void*      buffer,
+                                      FT_Byte*   buffer,
                                       FT_ULong   count );
 
   BASE_DEF(FT_Error)  FT_Read_Stream_At( FT_Stream  stream,
                                          FT_ULong   pos,
-                                         void*      buffer,
+                                         FT_Byte*   buffer,
                                          FT_ULong   count );
 
   BASE_DEF(FT_Error)  FT_Access_Frame( FT_Stream  stream,
@@ -274,18 +280,24 @@ typedef struct FT_Frame_Field_
 #define FILE_Pos() \
           FT_Stream_Pos( stream )
 
-#define FILE_Read( buffer, count )                         \
-          FT_SET_ERROR( FT_Read_Stream( stream,            \
-                                        (FT_Char*)buffer,  \
+#define FILE_Read( buffer, count )                        \
+          FT_SET_ERROR( FT_Read_Stream( stream,           \
+                                        (FT_Byte*)buffer, \
                                         count ) )
 
 #define FILE_Read_At( position, buffer, count )              \
           FT_SET_ERROR( FT_Read_Stream_At( stream,           \
                                            position,         \
-                                           (FT_Char*)buffer, \
+                                           (FT_Byte*)buffer, \
                                            count ) )
 
 #define READ_Fields( fields, object )  \
           ((error = FT_Read_Fields( stream, fields, object )) != FT_Err_Ok)
+
+
+#ifdef __cplusplus
+  }
+#endif
+
 
 #endif /* FTSTREAM_H */

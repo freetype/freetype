@@ -1,31 +1,20 @@
 /***************************************************************************/
 /*                                                                         */
-/*  type1.c                                                                */
+/*  type1z.c                                                               */
 /*                                                                         */
-/*  FreeType Type 1 driver component                                       */
+/*    FreeType experimental Type 1 driver component (body only).           */
 /*                                                                         */
-/*  Copyright 1996-1998 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
-/*                                                                         */
-/*  This file is used to compile the FreeType Type 1  font driver.         */
-/*  It relies on all components included in the "base" layer (see          */
-/*  the file "ftbase.c"). Source code is located in "freetype/ttlib"       */
-/*  and contains :                                                         */
-/*                                                                         */
-/*     - a driver interface                                                */
-/*     - an object manager                                                 */
-/*     - a table loader                                                    */
-/*     - a glyph loader                                                    */
-/*     - a glyph hinter                                                    */
-/*                                                                         */
 /***************************************************************************/
+
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
@@ -39,3 +28,5 @@
 #include <z1afm.c>
 #endif
 
+
+/* END */

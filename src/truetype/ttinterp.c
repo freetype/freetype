@@ -31,7 +31,7 @@
 #define TT_MULFIX   FT_MulFix
 #define TT_MULDIV   FT_MulDiv
 
-#define TT_FT_INT64    FT_Int64
+#define TT_INT64    FT_Int64
 
 
   /*************************************************************************/
@@ -743,7 +743,6 @@
   }
 
 
-  LOCAL_FUNC
   const TT_GraphicsState  tt_default_graphics_state =
   {
     0, 0, 0,
@@ -850,7 +849,7 @@
   static FT_F26Dot6  Norm( FT_F26Dot6  X,
                            FT_F26Dot6  Y )
   {
-    TT_FT_INT64  T1, T2;
+    TT_INT64  T1, T2;
 
 
     MUL_64( X, X, T1 );

@@ -1367,7 +1367,7 @@
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
   FT_EXPORT_DEF(FT_Error)  FT_New_Memory_Face( FT_Library   library,
-                                               void*        file_base,
+                                               FT_Byte*     file_base,
                                                FT_Long      file_size,
                                                FT_Long      face_index,
                                                FT_Face*     face );

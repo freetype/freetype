@@ -194,7 +194,7 @@
           }
 
           root->style_name = ( *full == ' ' ) ? full + 1
-                                              : "Regular";
+                                              : (char *)"Regular";
         }
         else
         {

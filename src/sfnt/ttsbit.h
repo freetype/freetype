@@ -22,6 +22,11 @@
 #include <ttload.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   LOCAL_DEF
   FT_Error  TT_Load_SBit_Strikes( TT_Face    face,
                                   FT_Stream  stream );
@@ -38,6 +43,11 @@
                                 FT_Stream         stream,
                                 FT_Bitmap*        map,
                                 TT_SBit_Metrics*  metrics );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* TTSBIT_H */

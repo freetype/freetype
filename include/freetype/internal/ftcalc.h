@@ -50,8 +50,8 @@
 
   typedef struct  FT_Int64_
   {
-    FT_Word32  lo;
-    FT_Word32  hi;
+    FT_UInt32  lo;
+    FT_UInt32  hi;
 
   } FT_Int64;
 

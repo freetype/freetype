@@ -459,7 +459,7 @@
     FT_UShort     tag;
     FT_ULong      size;
 
-    FT_Byte*      private;
+    FT_Byte*      private_dict;
 
     /* are we already in the private dictionary ? */
     if ( tokzer->in_private )
@@ -471,8 +471,8 @@
       /* made of several segments.  We thus first read the number of  */
       /* segments to compute the total size of the private dictionary */
       /* then re-read them into memory.                               */
-      FT_Long   start_pos    = FILE_Pos();
-      FT_ULong  private_size = 0;
+      FT_Long   start_pos         = FILE_Pos();
+      FT_ULong  private_dict_size = 0;
 
 
       for (;;)
@@ -481,7 +481,7 @@
         if ( error || tag != 0x8002 )
           break;
 
-        private_size += size;
+        private_dict_size += size;
 
         if ( FILE_Skip( size ) )
           goto Fail;
@@ -489,7 +489,7 @@
 
       /* check that we have a private dictionary there */
       /* and allocate private dictionary buffer        */
-      if ( private_size == 0 )
+      if ( private_dict_size == 0 )
       {
         FT_ERROR(( "Open_PrivateDict:" ));
         FT_ERROR(( " invalid private dictionary section\n" ));
@@ -497,14 +497,14 @@
         goto Fail;
       }
 
-      if ( ALLOC( private, private_size ) )
+      if ( ALLOC( private_dict, private_dict_size ) )
         goto Fail;
 
       /* read all sections into buffer */
       if ( FILE_Seek( start_pos ) )
         goto Fail_Private;
 
-      private_size = 0;
+      private_dict_size = 0;
       for (;;)
       {
         error = Read_PFB_Tag( stream, &tag, &size );
@@ -514,10 +514,10 @@
           break;
         }
 
-        if ( FILE_Read( private + private_size, size ) )
+        if ( FILE_Read( private_dict + private_dict_size, size ) )
           goto Fail_Private;
 
-        private_size += size;
+        private_dict_size += size;
       }
 
       /* we must free the field `tokzer.base' if we are in a disk-based */
@@ -525,10 +525,10 @@
       if ( stream->read )
         FREE( tokzer->base );
 
-      tokzer->base   = private;
+      tokzer->base   = private_dict;
       tokzer->cursor = 0;
-      tokzer->limit  = private_size;
-      tokzer->max    = private_size;
+      tokzer->limit  = private_dict_size;
+      tokzer->max    = private_dict_size;
     }
     else
     {
@@ -570,14 +570,14 @@
         {
           size = stream->size - tokzer->cursor - 1; /* remaining bytes */
 
-          if ( ALLOC( private, size ) )  /* allocate private dict buffer */
+          if ( ALLOC( private_dict, size ) )  /* alloc private dict buffer */
             goto Fail;
 
           /* copy eexec-encrypted bytes */
-          MEM_Copy( private, tokzer->base + tokzer->cursor + 1, size );
+          MEM_Copy( private_dict, tokzer->base + tokzer->cursor + 1, size );
 
           /* reset pointers - forget about file mapping */
-          tokzer->base   = private;
+          tokzer->base   = private_dict;
           tokzer->limit  = size;
           tokzer->max    = size;
           tokzer->cursor = 0;
@@ -613,10 +613,10 @@
         count = stream->size - tokzer->cursor;
         size  = count / 2;
 
-        if ( ALLOC( private, size ) )   /* allocate private dict buffer */
+        if ( ALLOC( private_dict, size ) )   /* alloc private dict buffer */
           goto Fail;
 
-        write = private;
+        write = private_dict;
         cur   = tokzer->base + tokzer->cursor;
         limit = tokzer->base + tokzer->limit;
 
@@ -664,7 +664,7 @@
           FREE( tokzer->base );
 
         /* set up pointers */
-        tokzer->base   = private;
+        tokzer->base   = private_dict;
         tokzer->limit  = size;
         tokzer->max    = size;
         tokzer->cursor = 0;
@@ -679,7 +679,7 @@
     return error;
 
   Fail_Private:
-    FREE( private );
+    FREE( private_dict );
     goto Fail;
   }
 
@@ -1004,7 +1004,9 @@
                            tok->token.len - 1,
                            t1_immediates,
                            imm_max - imm_first_ );
-        tok->token.kind2 = ( index >= 0 ) ? imm_first_ + index : 0;
+        tok->token.kind2 = ( index >= 0 )
+                              ? (T1_TokenType)( imm_first_ + index )
+                              : tok_error;
         break;
 
       case tok_any:         /* test for keyword */
@@ -1015,14 +1017,14 @@
         if ( index >= 0 )
         {
           tok->token.kind  = tok_keyword;
-          tok->token.kind2 = key_first_ + index;
+          tok->token.kind2 = (T1_TokenType)( key_first_ + index );
         }
         else
-          tok->token.kind2 = 0;
+          tok->token.kind2 = tok_error;
         break;
 
       default:
-         tok->token.kind2 = 0;
+         tok->token.kind2 = tok_error;
       }
     }
     return tokenizer->error;

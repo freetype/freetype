@@ -347,7 +347,7 @@
           flags |= FT_STYLE_FLAG_ITALIC;
       }
 
-      face->root.style_flags = flags;
+      root->style_flags = flags;
 
       /*********************************************************************/
       /*                                                                   */
@@ -387,17 +387,17 @@
 
       if ( face->num_sbit_strikes )
       {
-       face->root.num_fixed_sizes = face->num_sbit_strikes;
-       if ( ALLOC_ARRAY( face->root.available_sizes,
+       root->num_fixed_sizes = face->num_sbit_strikes;
+       if ( ALLOC_ARRAY( root->available_sizes,
                          face->num_sbit_strikes,
                          FT_Bitmap_Size ) )
          return error;
 
         for ( n = 0 ; n < face->num_sbit_strikes ; n++ )
         {
-          face->root.available_sizes[n].width =
+          root->available_sizes[n].width =
             face->sbit_strikes[n].x_ppem;
-          face->root.available_sizes[n].height =
+          root->available_sizes[n].height =
             face->sbit_strikes[n].y_ppem;
         }
       }
@@ -464,7 +464,7 @@
   void  SFNT_Done_Face( TT_Face  face )
   {
     FT_Memory        memory = face->root.memory;
-    SFNT_Interface*  sfnt   = face->sfnt;
+    SFNT_Interface*  sfnt   = (SFNT_Interface*)face->sfnt;
 
 
     if ( sfnt )

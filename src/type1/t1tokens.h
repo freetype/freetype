@@ -21,6 +21,12 @@
 
 #include <t1objs.h>
 
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /* enum value of first keyword */
 #define key_first_  100
 
@@ -231,6 +237,11 @@
   void  t1_decrypt( FT_Byte*   buffer,
                     FT_Int     length,
                     FT_UShort  seed );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif /* T1TOKENS_H */
 

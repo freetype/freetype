@@ -30,13 +30,13 @@
 #define FT_COMPONENT  trace_stream
 
 
-  BASE_FUNC( void )  FT_New_Memory_Stream( FT_Library     library,
-                                           void*          base,
-                                           unsigned long  size,
-                                           FT_Stream      stream )
+  BASE_FUNC( void )  FT_New_Memory_Stream( FT_Library  library,
+                                           FT_Byte*    base,
+                                           FT_ULong    size,
+                                           FT_Stream   stream )
   {
     stream->memory = library->memory;
-    stream->base   = (char*)base;
+    stream->base   = base;
     stream->size   = size;
     stream->pos    = 0;
     stream->cursor = 0;
@@ -97,7 +97,7 @@
 
 
   BASE_FUNC( FT_Error )  FT_Read_Stream( FT_Stream  stream,
-                                         void*      buffer,
+                                         FT_Byte*   buffer,
                                          FT_ULong   count )
   {
     return FT_Read_Stream_At( stream, stream->pos, buffer, count );
@@ -106,7 +106,7 @@
 
   BASE_FUNC( FT_Error )  FT_Read_Stream_At( FT_Stream  stream,
                                             FT_ULong   pos,
-                                            void*      buffer,
+                                            FT_Byte*   buffer,
                                             FT_ULong   count )
   {
     FT_Error  error = FT_Err_Ok;
@@ -285,7 +285,7 @@
 
   BASE_FUNC( FT_Short )  FT_Get_Short( FT_Stream  stream )
   {
-    char*     p;
+    FT_Byte*  p;
     FT_Short  result;
 
 
@@ -303,8 +303,8 @@
 
   BASE_FUNC( FT_Long )  FT_Get_Offset( FT_Stream  stream )
   {
-    char*    p;
-    FT_Long  result;
+    FT_Byte*  p;
+    FT_Long   result;
 
 
     FT_Assert( stream && stream->cursor );
@@ -320,8 +320,8 @@
 
   BASE_FUNC( FT_Long )  FT_Get_Long( FT_Stream  stream )
   {
-    char*    p;
-    FT_Long  result;
+    FT_Byte*  p;
+    FT_Long   result;
 
 
     FT_Assert( stream && stream->cursor );
@@ -338,7 +338,7 @@
   BASE_FUNC( FT_Char )  FT_Read_Char( FT_Stream  stream,
                                       FT_Error*  error )
   {
-    char  result = 0;
+    FT_Byte  result = 0;
 
 
     FT_Assert( stream );
@@ -374,8 +374,8 @@
   BASE_FUNC( FT_Short )  FT_Read_Short( FT_Stream  stream,
                                         FT_Error*  error )
   {
-    char      reads[2];
-    char*     p = 0;
+    FT_Byte   reads[2];
+    FT_Byte*  p = 0;
     FT_Short  result = 0;
 
 
@@ -420,9 +420,9 @@
   BASE_FUNC( FT_Long )  FT_Read_Offset( FT_Stream  stream,
                                         FT_Error*  error )
   {
-    char     reads[3];
-    char*    p = 0;
-    FT_Long  result = 0;
+    FT_Byte   reads[3];
+    FT_Byte*  p = 0;
+    FT_Long   result = 0;
 
 
     FT_Assert( stream );
@@ -466,9 +466,9 @@
   BASE_FUNC( FT_Long )  FT_Read_Long( FT_Stream  stream,
                                       FT_Error*  error )
   {
-    char     reads[4];
-    char*    p = 0;
-    FT_Long  result = 0;
+    FT_Byte   reads[4];
+    FT_Byte*  p = 0;
+    FT_Long   result = 0;
 
 
     FT_Assert( stream );
@@ -543,24 +543,23 @@
       case ft_frame_skip:   /* skip some bytes      */
         {
           FT_Int  len = fields->size;
-          
-          if (stream->cursor + len > stream->limit)
+
+
+          if ( stream->cursor + len > stream->limit )
           {
             error = FT_Err_Invalid_Stream_Operation;
             goto Exit;
           }
-          
-          if (fields->value == ft_frame_bytes)
+
+          if ( fields->value == ft_frame_bytes )
           {
             p = (FT_Byte*)structure + fields->offset;
             MEM_Copy( p, stream->cursor, len );
           }
-          stream->cursor += len;  
+          stream->cursor += len;
           fields++;
           continue;
         }
-
-        
 
       case ft_frame_byte:
       case ft_frame_schar:  /* read a single byte */
@@ -577,7 +576,7 @@
       case ft_frame_short_le:
       case ft_frame_ushort_le:  /* read a 2-byte little-endian short */
         {
-          char* p;
+          FT_Byte*  p;
 
 
           value = 0;
@@ -601,7 +600,7 @@
       case ft_frame_long_le:
       case ft_frame_ulong_le:  /* read a 4-byte little-endian long */
         {
-          char* p;
+          FT_Byte*  p;
 
 
           value = 0;
@@ -628,7 +627,7 @@
       case ft_frame_off3_le:
       case ft_frame_uoff3_le:  /* read a 3-byte little-endian long */
         {
-          char* p;
+          FT_Byte*  p;
 
 
           value = 0;
@@ -671,7 +670,7 @@
         *(FT_UInt32*)p = (FT_UInt32)value;
         break;
 
-      default:  /* for 64-bits systems */
+      default:  /* for 64-bit systems */
         *(FT_ULong*)p = (FT_ULong)value;
       }
 

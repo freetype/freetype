@@ -39,6 +39,12 @@
   FT_Error  TT_Load_Programs( TT_Face    face,
                               FT_Stream  stream );
 
+
+#ifdef __cplusplus
+  }
+#endif
+
+
 #endif /* TTPLOAD_H */
 
 

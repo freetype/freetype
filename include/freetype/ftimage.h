@@ -22,6 +22,12 @@
 #ifndef FTIMAGE_H
 #define FTIMAGE_H
 
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -206,14 +212,14 @@
 
   typedef struct FT_Bitmap_
   {
-    int    rows;
-    int    width;
-    int    pitch;
-    void*  buffer;
-    short  num_grays;
-    char   pixel_mode;
-    char   palette_mode;
-    void*  palette;
+    int             rows;
+    int             width;
+    int             pitch;
+    unsigned char*  buffer;
+    short           num_grays;
+    char            pixel_mode;
+    char            palette_mode;
+    void*           palette;
 
   } FT_Bitmap;
 
@@ -861,9 +867,9 @@
   *
   **************************************************************************/
 
-  typedef void (*FT_Raster_Reset_Func)( FT_Raster    raster,
-                                        const char*  pool_base,
-                                        long         pool_size );
+  typedef void (*FT_Raster_Reset_Func)( FT_Raster       raster,
+                                        unsigned char*  pool_base,
+                                        unsigned long   pool_size );
 
 
  /**************************************************************************
@@ -954,6 +960,12 @@
     FT_Raster_Done_Func      raster_done;
 
   } FT_Raster_Funcs;
+
+
+#ifdef __cplusplus
+  }
+#endif
+
 
 #endif /* FTIMAGE_H */
 

@@ -125,7 +125,7 @@
 
 
 #include "ftgrays.h"
-#include <freetype/internal/ftobjs.h>  /* for FT_UNUSED()                  */
+#include <freetype/internal/ftobjs.h>  /* for FT_UNUSED()               */
 #include <freetype/internal/ftdebug.h> /* for FT_TRACE() and FT_ERROR() */
 #include <freetype/ftoutln.h>          /* for FT_Outline_Decompose()    */
 

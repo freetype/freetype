@@ -82,8 +82,8 @@
     TT_CMap4*  cmap4;
     TT_CMap6*  cmap6;
 
-    TT_CMap2SubHeader* cmap2sub;
-    TT_CMap4Segment*   segments;
+    TT_CMap2SubHeader*  cmap2sub;
+    TT_CMap4Segment*    segments;
 
 
     if ( cmap->loaded )
@@ -100,7 +100,7 @@
       cmap0 = &cmap->c.cmap0;
 
       if ( ALLOC( cmap0->glyphIdArray, 256L )            ||
-           FILE_Read( (void*)cmap0->glyphIdArray, 256L ) )
+           FILE_Read( cmap0->glyphIdArray, 256L ) )
          goto Fail;
 
       cmap->get_index = code_to_index0;

@@ -23,6 +23,11 @@
 #include <freetype/internal/ftobjs.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   LOCAL_DEF
   FT_Error  SFNT_Init_Face( FT_Stream      stream,
                             TT_Face        face,
@@ -39,6 +44,11 @@
 
   LOCAL_DEF
   void  SFNT_Done_Face( TT_Face  face );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* SFDRIVER_H */

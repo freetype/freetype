@@ -24,10 +24,6 @@
 #include <freetype/t1tables.h>
 #include <freetype/internal/psnames.h>
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
 
 
 /*************************************************************************/
@@ -188,11 +184,6 @@
     CID_Subrs*    subrs;
   
   } CID_FaceRec;
-
-
-#ifdef __cplusplus
-  }
-#endif
 
 
 #endif /* T1TYPES_H */

@@ -28,8 +28,8 @@
  *
  ******************************************************************/
 
-#ifndef T1PARSE_H
-#define T1PARSE_H
+#ifndef Z1PARSE_H
+#define Z1PARSE_H
 
 #include <freetype/internal/t1types.h>
 
@@ -341,7 +341,7 @@
   }
 #endif
 
-#endif /* T1PARSE_H */
+#endif /* Z1PARSE_H */
 
 
 /* END */

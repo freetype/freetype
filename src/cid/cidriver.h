@@ -19,8 +19,7 @@
 #ifndef CIDRIVER_H
 #define CIDRIVER_H
 
-#include <cidobjs.h>
-#include <freetype/internal/t1errors.h>
+#include <freetype/internal/ftdriver.h>
 
   FT_EXPORT_VAR( const  FT_Driver_Class )  t1cid_driver_class;
 

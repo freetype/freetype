@@ -32,8 +32,8 @@
  *
  ******************************************************************/
 
-#ifndef T1GLOAD_H
-#define T1GLOAD_H
+#ifndef Z1GLOAD_H
+#define Z1GLOAD_H
 
 #include <z1objs.h>
 
@@ -185,4 +185,4 @@
   }
 #endif
 
-#endif /* T1GLOAD_H */
+#endif /* Z1GLOAD_H */

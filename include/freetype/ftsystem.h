@@ -67,16 +67,16 @@
 
   typedef struct FT_StreamRec_*  FT_Stream;
 
-  typedef  unsigned long (*FT_Stream_IO)( FT_Stream      stream,
-                                          unsigned long  offset,
-                                          char*          buffer,
-                                          unsigned long  count );
+  typedef  unsigned long (*FT_Stream_IO)( FT_Stream       stream,
+                                          unsigned long   offset,
+                                          unsigned char*  buffer,
+                                          unsigned long   count );
 
   typedef  void (*FT_Stream_Close)( FT_Stream  stream );
 
   struct FT_StreamRec_
   {
-    char*           base;
+    unsigned char*  base;
     unsigned long   size;
     unsigned long   pos;
 
@@ -87,8 +87,8 @@
     FT_Stream_Close close;
 
     FT_Memory       memory;
-    char*           cursor;
-    char*           limit;
+    unsigned char*  cursor;
+    unsigned char*  limit;
   };
 
 

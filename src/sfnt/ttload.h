@@ -52,11 +52,11 @@
                                SFNT_Header*  sfnt );
 
   LOCAL_DEF
-  FT_Error  TT_Load_Any( TT_Face   face,
-                         FT_ULong  tag,
-                         FT_Long   offset,
-                         void*     buffer,
-                         FT_Long*  length );
+  FT_Error  TT_Load_Any( TT_Face    face,
+                         FT_ULong   tag,
+                         FT_Long    offset,
+                         FT_Byte*   buffer,
+                         FT_ULong*  length );
 
 
   LOCAL_DEF
@@ -119,6 +119,11 @@
   LOCAL_DEF
   FT_Error  TT_Load_Gasp( TT_Face    face,
                           FT_Stream  stream );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* TTLOAD_H */

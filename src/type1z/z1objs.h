@@ -15,8 +15,8 @@
  *
  ******************************************************************/
 
-#ifndef T1OBJS_H
-#define T1OBJS_H
+#ifndef Z1OBJS_H
+#define Z1OBJS_H
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/config/ftconfig.h>
@@ -209,7 +209,7 @@
   }
 #endif
 
-#endif /* T1OBJS_H */
+#endif /* Z1OBJS_H */
 
 
 /* END */

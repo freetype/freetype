@@ -27,10 +27,6 @@
 #include <freetype/freetype.h>
 
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
  /*************************************************************************
   *
   * <Struct>
@@ -215,9 +211,8 @@
 
   } CFF_Font;
 
-#ifdef __cplusplus
-  }
-#endif
 
 #endif /* T2TYPES_H */
+
+
 /* END */

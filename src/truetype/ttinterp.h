@@ -216,8 +216,7 @@
   } TT_ExecContextRec;
 
 
-  LOCAL_DEF
-  const TT_GraphicsState  tt_default_graphics_state;
+  extern const TT_GraphicsState  tt_default_graphics_state;
 
 
   LOCAL_DEF

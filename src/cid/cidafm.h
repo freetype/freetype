@@ -22,6 +22,11 @@
 #include <cidobjs.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   typedef struct  CID_Kern_Pair_
   {
     FT_UInt    glyph1;
@@ -51,6 +56,11 @@
                          FT_UInt     glyph1,
                          FT_UInt     glyph2,
                          FT_Vector*  kerning );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* CIDAFM_H */

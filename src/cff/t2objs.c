@@ -159,7 +159,7 @@
   void  T2_Done_Face( T2_Face  face )
   {
     FT_Memory        memory = face->root.memory;
-    SFNT_Interface*  sfnt   = face->sfnt;
+    SFNT_Interface*  sfnt   = (SFNT_Interface*)face->sfnt;
 
 
     if ( sfnt )

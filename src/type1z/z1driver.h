@@ -15,12 +15,12 @@
  *
  ******************************************************************/
 
-#ifndef T1DRIVER_H
-#define T1DRIVER_H
+#ifndef Z1DRIVER_H
+#define Z1DRIVER_H
 
 #include <freetype/internal/ftdriver.h>
 
   FT_EXPORT_VAR(const  FT_Driver_Class)  t1z_driver_class;
 
-#endif /* T1DRIVER_H */
+#endif /* Z1DRIVER_H */
 
