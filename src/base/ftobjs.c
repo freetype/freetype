@@ -979,8 +979,10 @@
     /* do we need to load the glyph through the auto-hinter? */
     library  = driver->root.library;
     hinter   = library->auto_hinter;
-    autohint = hinter &&
-               !( load_flags & ( FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING ) );
+    autohint = hinter                                                      &&
+               !( load_flags & ( FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING ) ) &&
+               FT_DRIVER_IS_SCALABLE(driver) &&
+               FT_DRIVER_USES_OUTLINES(driver);
     if ( autohint )
     {
       if ( FT_DRIVER_HAS_HINTER( driver ) &&
