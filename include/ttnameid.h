@@ -4,7 +4,7 @@
  *
  *    TrueType Name ID definitions
  *
- *  Copyright 1996-1999 by
+ *  Copyright 1996-2000 by
  *  David Turner, Robert Wilhelm, and Werner Lemberg.
  *
  *  This file is part of the FreeType project, and may only be used
@@ -25,7 +25,7 @@
 
 #define TT_PLATFORM_APPLE_UNICODE       0
 #define TT_PLATFORM_MACINTOSH           1
-#define TT_PLATFORM_ISO                 2
+#define TT_PLATFORM_ISO                 2 /* deprecated */
 #define TT_PLATFORM_MICROSOFT           3
 
 
@@ -36,9 +36,9 @@
  */
 
 #define TT_APPLE_ID_DEFAULT             0
-#define TT_APPLE_ID_UNICODE_1_1         1
-#define TT_APPLE_ID_ISO_10646           2
-#define TT_APPLE_ID_UNICODE_2_0         3
+#define TT_APPLE_ID_UNICODE_1_1         1 /* specify Hangul at U+34xx */
+#define TT_APPLE_ID_ISO_10646           2 /* deprecated */
+#define TT_APPLE_ID_UNICODE_2_0         3 /* or later */
 
 
 /*
@@ -87,6 +87,8 @@
  * possible values of the platform specific encoding identifier field in
  * the name records of the TTF "name" table when the 'Platform' identifier
  * code is TT_PLATFORM_ISO
+ *
+ * This use is now deprecated
  */
 
 #define TT_ISO_ID_7BIT_ASCII    0
@@ -169,6 +171,7 @@
 #define TT_MAC_LANGID_UZBEK                             47
 #define TT_MAC_LANGID_KAZAKH                            48
 #define TT_MAC_LANGID_AZERBAIJANI                       49
+#define TT_MAC_LANGID_AZERBAIJANI_CYRILLIC_SCRIPT       49
 #define TT_MAC_LANGID_AZERBAIJANI_ARABIC_SCRIPT         50
 #define TT_MAC_LANGID_ARMENIAN                          51
 #define TT_MAC_LANGID_GEORGIAN                          52
@@ -177,6 +180,7 @@
 #define TT_MAC_LANGID_TAJIKI                            55
 #define TT_MAC_LANGID_TURKMEN                           56
 #define TT_MAC_LANGID_MONGOLIAN                         57
+#define TT_MAC_LANGID_MONGOLIAN_MONGOLIAN_SCRIPT        57
 #define TT_MAC_LANGID_MONGOLIAN_CYRILLIC_SCRIPT         58
 #define TT_MAC_LANGID_PASHTO                            59
 #define TT_MAC_LANGID_KURDISH                           60
@@ -226,10 +230,24 @@
 #define TT_MAC_LANGID_DZONGKHA                          137
 #define TT_MAC_LANGID_JAVANESE                          138
 #define TT_MAC_LANGID_SUNDANESE                         139
+
+#if 0  /* these seem to be errors that have been dropped */
 #define TT_MAC_LANGID_SCOTTISH_GAELIC                   140
 #define TT_MAC_LANGID_IRISH_GAELIC                      141
+#endif
+
+/* The following codes are new as of 2000-03-10 */
+#define TT_MAC_LANGID_GALICIAN                          140
+#define TT_MAC_LANGID_AFRIKAANS                         141
 #define TT_MAC_LANGID_BRETON                            142
 #define TT_MAC_LANGID_INUKTITUT                         143
+#define TT_MAC_LANGID_SCOTTISH_GAELIC                   144
+#define TT_MAC_LANGID_MANX_GAELIC                       145
+#define TT_MAC_LANGID_IRISH_GAELIC                      146
+#define TT_MAC_LANGID_TONGAN                            147
+#define TT_MAC_LANGID_GREEK_POLYTONIC                   148
+#define TT_MAC_LANGID_GREELANDIC                        149
+#define TT_MAC_LANGID_AZERBAIJANI_ROMAN_SCRIPT          150
 
 
 /*
@@ -419,6 +437,8 @@
 #define TT_NAME_ID_PREFERRED_FAMILY     16
 #define TT_NAME_ID_PREFERRED_SUBFAMILY  17
 #define TT_NAME_ID_MAC_FULL_NAME        18
+/* The following code is new as of 2000-01-21 */
+#define TT_NAME_ID_SAMPLE_TEXT          19
 
 
 /*
@@ -586,6 +606,32 @@
                                                              U+FFF0-U+FFFF */
 /* Bit 70   Tibetan */
 #define TT_UCR_TIBETAN                         (1L <<  6) /* U+0F00-U+0FBF */
+/* Bit 71   Syriac */
+#define TT_UCR_SYRIAC                          (1L <<  7) /* U+0700-U+074F */
+/* Bit 72   Thaana */
+#define TT_UCR_THAANA                          (1L <<  8) /* U+0780-U+07BF */
+/* Bit 73   Sinhala */
+#define TT_UCR_SINHALA                         (1L <<  9) /* U+0D80-U+0DFF */
+/* Bit 74   Myanmar */
+#define TT_UCR_MYANMAR                         (1L << 10) /* U+1000-U+109F */
+/* Bit 75   Ethiopic */
+#define TT_UCR_ETHIOPIC                        (1L << 11) /* U+1200-U+12BF */
+/* Bit 76   Cherokee */
+#define TT_UCR_CHEROKEE                        (1L << 12) /* U+13A0-U+13FF */
+/* Bit 77   Canadian Aboriginal Syllabics */
+#define TT_UCR_CANADIAN_ABORIGINAL_SYLLABICS   (1L << 13) /* U+1400-U+14DF */
+/* Bit 78   Ogham */
+#define TT_UCR_OGHAM                           (1L << 14) /* U+1680-U+169F */
+/* Bit 79   Runic */
+#define TT_UCR_RUNIC                           (1L << 15) /* U+16A0-U+16FF */
+/* Bit 80   Khmer */
+#define TT_UCR_KHMER                           (1L << 16) /* U+1780-U+17FF */
+/* Bit 81   Mongolian */
+#define TT_UCR_MONGOLIAN                       (1L << 17) /* U+1800-U+18AF */
+/* Bit 82   Braille */
+#define TT_UCR_BRAILLE                         (1L << 18) /* U+2800-U+28FF */
+/* Bit 83   Yi */
+#define TT_UCR_YI                              (1L << 19) /* U+A000-U+A4CF */
 
 
 /* Some compilers have a very limited length of identifiers. */
