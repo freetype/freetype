@@ -86,20 +86,20 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* HERE BEGINS THE TYPE1 SPECIFIC STUFF                                  */
+  /* HERE BEGINS THE TYPE 1 SPECIFIC STUFF                                 */
   /*                                                                       */
   /*************************************************************************/
 
 
-  typedef struct CID_SizeRec_
+  typedef struct  CID_SizeRec_
   {
-    FT_SizeRec      root;
-    FT_Bool         valid;
+    FT_SizeRec  root;
+    FT_Bool     valid;
 
   } CID_SizeRec;
 
 
-  typedef struct CID_GlyphSlotRec_
+  typedef struct  CID_GlyphSlotRec_
   {
     FT_GlyphSlotRec  root;
 
@@ -113,11 +113,11 @@
 
 
   LOCAL_DEF
-  FT_Error  CID_Init_Face( FT_Stream     stream,
-                           CID_Face      face,
-                           FT_Int        face_index,
-                           FT_Int        num_params,
-                           FT_Parameter* params );
+  FT_Error  CID_Init_Face( FT_Stream      stream,
+                           CID_Face       face,
+                           FT_Int         face_index,
+                           FT_Int         num_params,
+                           FT_Parameter*  params );
 
   LOCAL_DEF
   void  CID_Done_Face( CID_Face  face );

@@ -1659,7 +1659,7 @@
         T2_Forget_Element( &cff->charstrings_index, &charstring );
       }
 
-      /* ignore the error if one has occured - skip to next glyph */
+      /* ignore the error if one has occurred -- skip to next glyph */
       error = 0;
     }
 
@@ -1800,10 +1800,10 @@
 
           /* Then scale the metrics */
           metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
+          metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  y_scale );
 
           metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
           metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
-          metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  x_scale );
         }
 
 #if 0

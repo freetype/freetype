@@ -38,7 +38,7 @@
 #define FT_COMPONENT  trace_cidload
 
 
- /* read a single offset */
+  /* read a single offset */
   LOCAL_FUNC
   FT_Long  cid_get_offset( FT_Byte**  start,
                            FT_Byte    offsize )
@@ -48,7 +48,10 @@
 
 
     for ( result = 0; offsize > 0; offsize-- )
-      result = ( result << 8 ) | *p++;
+    {
+      result <<= 8;
+      result  |= *p++;
+    }
 
     *start = p;
     return result;
@@ -87,10 +90,10 @@
                               CID_Loader*           loader,
                               const CID_Field_Rec*  keyword )
   {
-    FT_Error    error;
-    CID_Parser* parser = &loader->parser;
-    FT_Byte*    object;
-    CID_Info*   cid = &face->cid;
+    FT_Error     error;
+    CID_Parser*  parser = &loader->parser;
+    FT_Byte*     object;
+    CID_Info*    cid = &face->cid;
 
 
     /* if the keyword has a dedicated callback, call it */
@@ -309,7 +312,7 @@
           len = cur2 - cur;
           if ( len > 0 && len < 22 )
           {
-            /* now, compare the immediate name to the keyword table */
+            /* now compare the immediate name to the keyword table */
             const CID_Field_Rec*  keyword = t1_field_records;
 
 
@@ -408,8 +411,8 @@
       /* allocate, and read them                     */
       data_len = offsets[num_subrs] - offsets[0];
 
-      if ( ALLOC_ARRAY( subr->code, num_subrs+1, FT_Byte* ) ||
-           ALLOC( subr->code[0], data_len )                 )
+      if ( ALLOC_ARRAY( subr->code, num_subrs + 1, FT_Byte* ) ||
+           ALLOC( subr->code[0], data_len )                   )
         goto Fail;
 
       if ( FILE_Seek( cid->data_offset + offsets[0] ) ||
@@ -463,7 +466,7 @@
   void t1_init_loader( CID_Loader*  loader,
                        CID_Face     face )
   {
-    UNUSED(face);
+    UNUSED( face );
 
     MEM_Set( loader, 0, sizeof ( *loader ) );
   }

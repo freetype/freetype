@@ -1783,11 +1783,12 @@
 
           metrics->horiBearingX = FT_MulFix( metrics->horiBearingX, x_scale );
           metrics->horiBearingY = FT_MulFix( metrics->horiBearingY, y_scale );
-          metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
 
           metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
           metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
-          metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  x_scale );
+
+          metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
+          metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  y_scale );
         }
       }
     }

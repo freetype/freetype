@@ -76,7 +76,8 @@
 
   } CID_Operator;
 
-  static const FT_Int  t1_args_count[op_max] =
+  static
+  const FT_Int  t1_args_count[op_max] =
   {
     0, /* none */
     0, /* endchar */
@@ -220,7 +221,7 @@
   /*    decoder :: A pointer to the glyph builder to initialize.           */
   /*                                                                       */
   LOCAL_FUNC
-  void  CID_Init_Decoder( CID_Decoder* decoder )
+  void  CID_Init_Decoder( CID_Decoder*  decoder )
   {
     MEM_Set( decoder, 0, sizeof ( *decoder ) );
 
@@ -229,7 +230,7 @@
   }
 
 
-  /* check that there is enough room for `count' more points */
+  /* check that there is enough space for `count' more points */
   static
   FT_Error  check_points( CID_Builder*  builder,
                           FT_Int        count )
@@ -238,7 +239,7 @@
   }
 
 
-  /* add a new point, do not check space */
+  /* add a new point, but do not check space */
   static
   void  add_point( CID_Builder*  builder,
                    FT_Pos        x,
@@ -265,13 +266,14 @@
   }
 
 
-  /* check room for a new on-curve point, then add it */
+  /* check space for a new on-curve point, then add it */
   static
   FT_Error  add_point1( CID_Builder*  builder,
                         FT_Pos        x,
                         FT_Pos        y )
   {
     FT_Error  error;
+
 
     error = check_points( builder, 1 );
     if ( !error )
@@ -307,7 +309,7 @@
   }
 
 
-  /* if a path was begun, add its first on-curve point */
+  /* if a path has been started, add its first on-curve point */
   static
   FT_Error  start_point( CID_Builder*  builder,
                          FT_Pos        x,
@@ -335,8 +337,9 @@
   {
     FT_Outline*  outline = builder->current;
 
-    /* XXXX: We must not include the last point in the path if it */
-    /*       is located on the first point.                       */
+
+    /* XXX: We must not include the last point in the path if it */
+    /*      is located on the first point.                       */
     if ( outline->n_points > 1 )
     {
       FT_Int      first = 0;
@@ -456,7 +459,8 @@
 
     if ( bchar_index < 0 || achar_index < 0 )
     {
-      FT_ERROR(( "t1operator_seac: invalid seac character code arguments\n" ));
+      FT_ERROR(( "t1operator_seac: ));
+      FT_ERROR(( " invalid seac character code arguments\n" ));
       return T1_Err_Syntax_Error;
     }
 
@@ -542,14 +546,18 @@
         FT_Outline_Translate( &dummy, adx - asb, ady );
       }
     }
+
   Exit:
     return error;
   }
 
 
-#define USE_ARGS( n )  top -= n;                   \
-                       if ( top < decoder->stack ) \
-                         goto Stack_Underflow
+#define USE_ARGS( n )  do                            \
+                       {                             \
+                         top -= n;                   \
+                         if ( top < decoder->stack ) \
+                           goto Stack_Underflow;     \
+                       } while ( 0 )
 
 
   /*************************************************************************/
@@ -561,12 +569,12 @@
   /*    Parses a given CID charstrings program.                            */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    decoder          :: The current CID decoder.                       */
+  /*    decoder         :: The current CID decoder.                        */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    charstring_base  :: The base of the charstring stream.             */
+  /*    charstring_base :: The base of the charstring stream.              */
   /*                                                                       */
-  /*    charstring_len   :: The length in bytes of the charstring stream.  */
+  /*    charstring_len  :: The length in bytes of the charstring stream.   */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -738,7 +746,8 @@
           {
             if ( ++ip > limit )
             {
-              FT_ERROR(( "CID_Parse_CharStrings: unexpected EOF in integer\n" ));
+              FT_ERROR(( "CID_Parse_CharStrings:" ));
+              FT_ERROR(( " unexpected EOF in integer\n" ));
               goto Syntax_Error;
             }
 
@@ -775,6 +784,7 @@
       else if ( op == op_callothersubr )  /* callothersubr */
       {
         FT_TRACE4(( " callothersubr" ));
+
         if ( top - decoder->stack < 2 )
           goto Stack_Underflow;
 
@@ -819,7 +829,7 @@
           if ( decoder->flex_state       == 0 ||
                decoder->num_flex_vectors != 7 )
           {
-            FT_ERROR(( "CID)Parse_CharStrings: unexpected flex end\n" ));
+            FT_ERROR(( "CID_Parse_CharStrings: unexpected flex end\n" ));
             goto Syntax_Error;
           }
 
@@ -851,7 +861,8 @@
 
           if ( ip[0] != 12 || ip[1] != 17 )
           {
-            FT_ERROR(( "CID_Parse_CharStrings: `pop' expected, found (%d %d)\n",
+            FT_ERROR(( "CID_Parse_CharStrings:" ));
+            FT_ERROR(( " `pop' expected, found (%d %d)\n",
                        ip[0], ip[1] ));
             goto Syntax_Error;
           }
@@ -877,16 +888,19 @@
             FT_Int*    delta;
             FT_Int*    values;
 
+
             if ( !blend )
             {
-              FT_ERROR(( "CID_Parse_CharStrings: unexpected multiple masters operator!\n" ));
+              FT_ERROR(( "CID_Parse_CharStrings:" ));
+              FT_ERROR(( " unexpected multiple masters operator!\n" ));
               goto Syntax_Error;
             }
 
             num_points = top[1] - 13 + ( top[1] == 18 );
             if ( top[0] != num_points * blend->num_designs )
             {
-              FT_ERROR(( "CID_Parse_CharStrings: incorrect number of mm arguments\n" ));
+              FT_ERROR(( "CID_Parse_CharStrings:" ));
+              FT_ERROR(( " incorrect number of mm arguments\n" ));
               goto Syntax_Error;
             }
 
@@ -894,12 +908,12 @@
             if ( top < decoder->stack )
               goto Stack_Underflow;
 
-            /* we want to compute:                                   */
+            /* We want to compute:                                   */
             /*                                                       */
             /*  a0*w0 + a1*w1 + ... + ak*wk                          */
             /*                                                       */
-            /* but we only have the a0, a1-a0, a2-a0, .. ak-a0       */
-            /* however, given that w0 + w1 + ... + wk == 1, we can   */
+            /* but we only have the a0, a1-a0, a2-a0, .. ak-a0.      */
+            /* However, given that w0 + w1 + ... + wk == 1, we can   */
             /* rewrite it easily as:                                 */
             /*                                                       */
             /*  a0 + (a1-a0)*w1 + (a2-a0)*w2 + .. + (ak-a0)*wk       */
@@ -908,7 +922,6 @@
             /*                                                       */
             /* I guess that's why it's written in this `compact'     */
             /* form...                                               */
-            /*                                                       */
             /*                                                       */
             delta  = top + num_points;
             values = top;
@@ -970,7 +983,7 @@
           builder->last.x = x = top[0];
           builder->last.y = y = 0;
 
-          /* the `metrics_only' indicates that we only want to compute */
+          /* The `metrics_only' indicates that we only want to compute */
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it.  So exit immediately.                         */
           if ( builder->metrics_only )
@@ -979,7 +992,7 @@
           break;
 
         case op_seac:
-          /* return immediately after the processing */
+          /* return immediately after processing */
           return t1operator_seac( decoder, top[0], top[1],
                                            top[2], top[3], top[4] );
 
@@ -994,7 +1007,7 @@
           builder->last.x = x = top[0];
           builder->last.y = y = top[1];
 
-          /* the `metrics_only' indicates that we only want to compute */
+          /* The `metrics_only' indicates that we only want to compute */
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it.  So exit immediately.                         */
           if ( builder->metrics_only )
@@ -1087,6 +1100,7 @@
 
         case op_vhcurveto:
           FT_TRACE4(( " vhcurveto" ));
+
           if ( start_point( builder, x, y ) ||
                check_points( builder, 3 )   )
             goto Memory_Error;
@@ -1175,7 +1189,7 @@
         case op_pop:
           FT_TRACE4(( " pop" ));
 
-          /* theorically, the arguments are already on the stack */
+          /* theoretically, the arguments are already on the stack */
           top++;
           break;
 
@@ -1223,7 +1237,8 @@
         case op_setcurrentpoint:
           FT_TRACE4(( " setcurrentpoint" ));
 
-          FT_ERROR(( "CID_Parse_CharStrings: unexpected `setcurrentpoint'\n" ));
+          FT_ERROR(( "CID_Parse_CharStrings:" ));
+          FT_ERROR(( " unexpected `setcurrentpoint'\n" ));
           goto Syntax_Error;
 
         default:
@@ -1252,6 +1267,9 @@
   }
 
 
+#if 0
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -1268,9 +1286,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
-#if 0
 
 
   LOCAL_FUNC
@@ -1291,14 +1306,14 @@
     decoder.builder.metrics_only = 1;
     decoder.builder.load_points  = 0;
 
-    /* For each glyph, parse the glyph charstring and extract */
-    /* the advance width.                                     */
+    /* for each glyph, parse the glyph charstring and extract */
+    /* the advance width                                      */
     for ( glyph_index = 0; glyph_index < face->root.num_glyphs;
           glyph_index++ )
     {
       /* now get load the unscaled outline */
       error = cid_load_glyph( &decoder, glyph_index );
-      /* ignore the error if one occured - skip to next glyph */
+      /* ignore the error if one occurred - skip to next glyph */
     }
 
     *max_advance = decoder.builder.advance.x;
@@ -1395,7 +1410,6 @@
   }
 
 
-
   LOCAL_FUNC
   FT_Error  CID_Load_Glyph( CID_GlyphSlot  glyph,
                             CID_Size       size,
@@ -1442,7 +1456,7 @@
     if ( !error )
     {
       /* for composite glyphs, return only the left side bearing and the */
-      /* advance width..                                                 */
+      /* advance width                                                   */
       if ( load_flags & FT_LOAD_NO_RECURSE )
       {
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
@@ -1455,7 +1469,7 @@
 
 
         /* copy the _unscaled_ advance width */
-        metrics->horiAdvance  = decoder.builder.advance.x;
+        metrics->horiAdvance = decoder.builder.advance.x;
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;
@@ -1497,10 +1511,10 @@
 
           /* Then scale the metrics */
           metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
+          metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  y_scale );
 
           metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
           metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
-          metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  x_scale );
         }
 
         /* apply the font matrix */
@@ -1514,8 +1528,8 @@
         {
           cbox.xMin &= -64;
           cbox.yMin &= -64;
-          cbox.xMax = ( cbox.xMax + 63 ) & -64;
-          cbox.yMax = ( cbox.yMax + 63 ) & -64;
+          cbox.xMax  = ( cbox.xMax + 63 ) & -64;
+          cbox.yMax  = ( cbox.yMax + 63 ) & -64;
         }
 
         metrics->width  = cbox.xMax - cbox.xMin;

@@ -354,7 +354,7 @@
         }
         break;
 
-        /* **************** otherwise, it's any token **********/
+        /* **************** otherwise, it is any token **********/
       default:
         token->start = cur++;
         token->type  = t1_token_any;
@@ -504,7 +504,8 @@
       for (;;)
       {
         d = (FT_Byte)( *cur - '0' );
-        if ( d >= 10 ) break;
+        if ( d >= 10 )
+          break;
 
         if ( divider < 10000000L )
         {
@@ -706,7 +707,6 @@
   }
 
 
-
   /* Loads a simple field (i.e. non-table) into the current */
   /* list of objects                                        */
   LOCAL_FUNC
@@ -761,6 +761,12 @@
             *(FT_UShort*)q = (FT_UShort)val;
             break;
 
+#if SIZEOF_INT == 4
+          case 4:
+            *(FT_Int*)q = (FT_Int)val;
+            break;
+#endif
+
           default:
             *(FT_Long*)q = val;
         }
@@ -783,7 +789,7 @@
         break;
 
       default:
-        /* an error occured */
+        /* an error occurred */
         goto Fail;
       }
     }
@@ -958,12 +964,12 @@
 
       buff_len = 256 + 10;
 
-      /* look for "StartData" */
+      /* look for `StartData' */
       for ( p = buffer; p < limit; p++ )
       {
         if ( p[0] == 'S' && strncmp( (char*)p, "StartData", 9 ) == 0 )
         {
-          /* save offset of binary data after "StartData" */
+          /* save offset of binary data after `StartData' */
           offset = FILE_Pos() - ( limit - p ) + 10;
           goto Found;
         }
@@ -971,7 +977,7 @@
     }
 
   Found:
-    /* all right, we found the start of the binary data.  We will now  */
+    /* we have found the start of the binary data.  We will now        */
     /* rewind and extract the frame of corresponding to the Postscript */
     /* section                                                         */
 

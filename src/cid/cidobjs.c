@@ -177,10 +177,10 @@
         if ( face->cid.font_info.is_fixed_pitch )
           root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
-        /* XXX: TO DO - add kerning with .afm support */
+        /* XXX: TODO: add kerning with .afm support */
 
-        /* get style name - be careful, some broken fonts only */
-        /* have a /FontName dictionary entry!                  */
+        /* get style name -- be careful, some broken fonts only */
+        /* have a /FontName dictionary entry!                   */
         root->family_name = face->cid.font_info.family_name;
         if ( root->family_name )
         {
@@ -259,7 +259,7 @@
       FT_CharMap   charmap = face->charmaprecs;
 
 
-      /* synthesize a Unicode charmap if there is support in the "psnames" */
+      /* synthesize a Unicode charmap if there is support in the `psnames' */
       /* module                                                            */
       if ( face->psnames )
       {

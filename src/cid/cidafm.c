@@ -36,8 +36,6 @@
 #define FT_COMPONENT  trace_cidafm
 
 
-#if 1
-
   LOCAL_FUNC
   void  CID_Done_AFM( FT_Memory  memory,
                       CID_AFM*   afm )
@@ -120,7 +118,7 @@
     while ( p < limit && !isdigit( *p ) )
     {
       sign = 1;
-      if (*p == '-')
+      if ( *p == '-' )
         sign = -1;
 
       p++;
@@ -138,7 +136,7 @@
 
 
 #undef  KERN_INDEX
-#define KERN_INDEX( g1, g2 ) ( ( (FT_ULong)g1 << 16 ) | g2 )
+#define KERN_INDEX( g1, g2 )  ( ( (FT_ULong)g1 << 16 ) | g2 )
 
 
   /* compare two kerning pairs */
@@ -157,7 +155,7 @@
   }
 
 
-  /* parse an AFM file - for now, only read the kerning pairs */
+  /* parse an AFM file -- for now, only read the kerning pairs */
   LOCAL_FUNC
   FT_Error  CID_Read_AFM( FT_Face    cid_face,
                           FT_Stream  stream )
@@ -180,8 +178,8 @@
     limit = (FT_Byte*)stream->limit;
     p     = start;
 
-    /* we are now going to count the occurences of `KP' or `KPX' in */
-    /* the AFM file.                                                */
+    /* we are now going to count the occurrences of `KP' or `KPX' in */
+    /* the AFM file.                                                 */
     count = 0;
     for ( p = start; p < limit - 3; p++ )
     {
@@ -212,7 +210,7 @@
         FT_Byte*  q;
 
 
-        /* skip keyword (KP or KPX) */
+        /* skip keyword (`KP' or `KPX') */
         q = p + 2;
         if ( *q == 'X' )
           q++;
@@ -280,8 +278,6 @@
     kerning->x = 0;
     kerning->y = 0;
   }
-
-#endif /* 1 */
 
 
 /* END */
