@@ -1,3 +1,15 @@
+2002-10-31  David Turner  <david@freetype.org>
+
+        * include/freetype/ftgzip.h, src/gzip/ftgzip.c:
+        adding support for gzip compressed streams !!
+
+        * src/pcf/pcfdriver.c: adding automatic support for gzip-compressed
+        PCF files
+
+2002-10-30  David Turner  <david@freetype.org>
+
+        * FreeType 2.1.3rc3 released
+
 2002-10-25  David Turner  <david@freetype.org>
 
 	* include/freetype/ftcache.h (FT_POINTER_TO_ULONG): New macro.
