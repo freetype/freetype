@@ -192,7 +192,6 @@
   {
     FT_Size_Metrics*  metrics = &size->root.metrics;
     TT_Face           face    = (TT_Face)size->root.face;
-    FT_Long           dim_x, dim_y;
 
 
     /* This bit flag, when set, indicates that the pixel size must be */
@@ -204,9 +203,12 @@
     /* really don't know whether this is useful, but hey, that's the  */
     /* spec :-)                                                       */
     /*                                                                */
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     if ( ( face->header.Flags & 8 ) == 0 )
     {
       /* Compute pixel sizes in 26.6 units */
+      FT_Long  dim_x, dim_y;
+
       dim_x = ( char_width  * horz_resolution + 36 ) / 72;
       dim_y = ( char_height * vert_resolution + 36 ) / 72;
 
@@ -216,6 +218,15 @@
       metrics->x_ppem  = (FT_UShort)( dim_x >> 6 );
       metrics->y_ppem  = (FT_UShort)( dim_y >> 6 );
     }
+#else
+	FT_UNUSED( vert_resolution );
+	FT_UNUSED( horz_resolution );
+	FT_UNUSED( char_height );
+	FT_UNUSED( char_width );
+
+	FT_UNUSED( face );
+	FT_UNUSED( metrics );
+#endif
 
     size->ttmetrics.valid = FALSE;
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS

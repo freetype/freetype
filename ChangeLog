@@ -1,8 +1,28 @@
-2002-11-18  David Turner  <david@freetype.org>
+2002-01-31  David Turner  <david@freetype.org>
 
+    * src/gzip/adler32.c, src/gzip/ftgzip.c, src/gzip/infblock.c,
+    src/gzip/infcodes.c, src/gzip/inflate.c, src/gzip/inftrees.c,
+    src/gzip/infutil.c: removed old-style (K&R)function definitions. This
+    avoids warnings with Visual C++ at its most pedantic mode.
 
-	* Version 2.1.4 is released.
-	============================
+    * src/pfr/pfrsbit.c: removed compiler warnings
+
+    * src/cache/ftccmap.c: changed a FT_ERROR into a FT_TRACE1 since the
+    it caused "ftview" and others to dump too much junk when trying to
+    display a waterfall with a font without a Unicode charmap (e.g.
+    SYMBOL.TTF)
+
+    * src/autohint/ahtypes.h, src/autohint/ahhint.c, src/base/ftobjs.c,
+    src/truetype/ttobjs.c: implemented FT_CONFIG_CHESTER_BLUE_SCALE,
+    corresponding to the last patch from David Chester, but with a
+    much simpler (and saner) implementation.
+
+    * src/pshinter/pshalgo3.c: improved the Postscript hinter. Getting rid
+    of stem snapping seems to work well here (though the stems are still
+    slightly moved to increase contrast).
+
+    THIS IMPROVES ANTI-ALIASED RENDERING, BUT MONOCHROME AND LCD MODES
+    STILL SUCK... I need to work this a bit
 
 2003-01-22  David Chester  <davidchester@qmx.net>
 

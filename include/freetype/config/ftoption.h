@@ -258,8 +258,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Don't define any of these macros to compile in `release' mode!      */
   /*                                                                       */
- #define  FT_DEBUG_LEVEL_ERROR
- #define  FT_DEBUG_LEVEL_TRACE
+/* #define  FT_DEBUG_LEVEL_ERROR */
+/* #define  FT_DEBUG_LEVEL_TRACE */
 
 
   /*************************************************************************/
@@ -469,6 +469,13 @@ FT_BEGIN_HEADER
 
  /* */
 
+/*
+ * the FT_CONFIG_OPTION_CHESTER_XXXX macros are used to toggle some recent
+ * improvements to the auto-hinter contributed by David Chester. They will
+ * most likely disappear completely in the next release. For now, you should
+ * always keep them defined
+ *
+ */
 #define  FT_CONFIG_OPTION_CHESTER_HINTS
 
 #ifdef   FT_CONFIG_OPTION_CHESTER_HINTS
@@ -477,6 +484,7 @@ FT_BEGIN_HEADER
 #  define  FT_CONFIG_CHESTER_ASCENDER
 #  define  FT_CONFIG_CHESTER_SERIF
 #  define  FT_CONFIG_CHESTER_STEM
+#  define  FT_CONFIG_CHESTER_BLUE_SCALE
 
 #endif /* FT_CONFIG_OPTION_CHESTER_HINTS */
 

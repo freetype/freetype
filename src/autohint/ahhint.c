@@ -1310,8 +1310,8 @@
     FT_Face           face     = hinter->face;
     FT_GlyphSlot      slot     = face->glyph;
     FT_Slot_Internal  internal = slot->internal;
-    FT_Fixed          x_scale  = face->size->metrics.x_scale;
-    FT_Fixed          y_scale  = face->size->metrics.y_scale;
+    FT_Fixed          x_scale  = hinter->globals->x_scale;
+    FT_Fixed          y_scale  = hinter->globals->y_scale;
     FT_Error          error;
     AH_Outline        outline  = hinter->glyph;
     AH_Loader         gloader  = hinter->loader;
@@ -1659,6 +1659,36 @@
 
     }
 
+#ifdef FT_CONFIG_CHESTER_BLUE_SCALE
+   /* try to optimize the y_scale so that the top of non-capital letters
+    * is aligned on a pixel boundary whenever possible
+    */
+    {
+      AH_Globals  design = &face_globals->design;
+      FT_Pos      shoot  = design->blue_shoots[ AH_BLUE_SMALL_TOP ];
+
+     /* the value of 'shoot' will be -1000 if the font doesn't have */
+     /* small latin letters; we simply check the sign here...       */
+      if ( shoot > 0 )
+      {
+        FT_Pos  scaled = FT_MulFix( shoot, y_scale );
+        FT_Pos  fitted = ( scaled + 32 ) & -64;
+
+        if ( scaled != fitted )
+        {
+         /* adjust y_scale
+          */
+          y_scale = FT_MulDiv( y_scale, fitted, scaled );
+
+         /* adust x_scale
+          */
+          if ( fitted < scaled )
+            x_scale -= x_scale/50;  /* x_scale*0.98 with integers */
+        }
+      }
+    }
+#endif /* FT_CONFIG_CHESTER_BLUE_SCALE */
+
     /* now, we must check the current character pixel size to see if we */
     /* need to rescale the global metrics                               */
     if ( face_globals->x_scale != x_scale ||
@@ -1668,8 +1698,8 @@
     ah_loader_rewind( hinter->loader );
 
     /* reset hinting flags according to load flags and current render target */
-    hinter->do_horz_hints = !FT_BOOL( load_flags & FT_LOAD_NO_AUTOHINT );
-    hinter->do_vert_hints = !FT_BOOL( load_flags & FT_LOAD_NO_AUTOHINT );
+    hinter->do_horz_hints = FT_BOOL( !(load_flags & FT_LOAD_NO_AUTOHINT) );
+    hinter->do_vert_hints = FT_BOOL( !(load_flags & FT_LOAD_NO_AUTOHINT) );
 
 #ifdef DEBUG_HINTER
     hinter->do_horz_hints = !ah_debug_disable_vert;  /* not a bug, the meaning */

@@ -1538,10 +1538,10 @@
         {
           if ( FT_FRAME_ENTER( ( num_glyphs - 1 ) * 2 ) )
             goto Exit;
-            
+
           for ( j = 1; j < num_glyphs; j++ )
             charset->sids[j] = FT_GET_USHORT();
-          
+
           FT_FRAME_EXIT();
         }
         break;
@@ -1748,7 +1748,7 @@
       case 0:
         {
           FT_Byte*  p;
-          
+
           /* by convention, GID 0 is always ".notdef" and is never */
           /* coded in the font. Hence, the number of codes found   */
           /* in the table is 'count+1'                             */
@@ -1759,7 +1759,7 @@
             goto Exit;
 
           p = (FT_Byte*)stream->cursor;
-          
+
           for ( j = 1; j <= count; j++ )
           {
             glyph_code = *p++;
@@ -1774,7 +1774,7 @@
               encoding->sids[glyph_code] = charset->sids[j];
             }
           }
-          
+
           FT_FRAME_EXIT();
         }
         break;
@@ -1801,11 +1801,11 @@
 
             /* Increment nleft, so we read `nleft + 1' codes/sids. */
             nleft++;
-            
+
             /* compute max number of character codes */
-            if ( nleft > encoding->count )
+            if ( (FT_UInt)nleft > encoding->count )
               encoding->count = nleft;
-            
+
             /* Fill in the range of codes/sids. */
             for ( k = i; k < nleft + i; k++, glyph_code++ )
             {
@@ -1820,7 +1820,7 @@
               }
             }
           }
-          
+
           /* simple check, one never knows what can be found in a font */
           if ( encoding->count > 256 )
             encoding->count = 256;
@@ -1896,7 +1896,7 @@
       Populate:
         /* Construct code to GID mapping from code to SID mapping */
         /* and charset.                                           */
-        
+
         encoding->count = 0;
 
 
@@ -1921,7 +1921,7 @@
             else
             {
               encoding->codes[j] = (FT_UShort)i;
-              
+
               /* update encoding count */
               if ( encoding->count < j+1 )
                 encoding->count = j+1;
