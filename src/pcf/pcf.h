@@ -124,10 +124,10 @@ FT_BEGIN_HEADER
   } PCF_AccelRec, *PCF_Accel;
 
 
-  typedef struct  PCD_EncodingRec_
+  typedef struct  PCF_EncodingRec_
   {
-    FT_Long   enc;
-    FT_Short  glyph;
+    FT_Long    enc;
+    FT_UShort  glyph;
 
   } PCF_EncodingRec, *PCF_Encoding;
 
