@@ -1,3 +1,47 @@
+2004-08-11  Danny  <dannyboynow@yahoo.com>
+
+	* src/base/ftstream.c (FT_Stream_Close): Don't reset stream->close
+	to NULL.  This allows custom close functions to delete the FT_STREAM
+	object.
+
+2004-08-11  Werner Lemberg  <wl@gnu.org>
+
+	Add API to get information about SFNT tables.
+
+	* include/freetype/internal/services/svsfnt.h
+	(FT_SFNT_Table_Info_Func): New typedef.
+	(SFNT_Table): Add it.
+
+	* src/base/ftobjs (FT_Sfnt_Table_Info): New function.
+
+	* include/freetype/tttables.h: Updated.
+
+	* src/sfnt/sfdriver.c (sfnt_table_info): New function.
+	(sfnt_service_sfnt_table): Add it.
+
+	* docs/CHANGES: Updated.
+
+
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 10.
+
+	* builds/unix/configure.ac (version_info): Set to 9:8:3.
+	* builds/unix/configure: Updated.
+
+	* builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj: s/219/2110/, s/2.1.9/2.1.10/.
+
+	* builds/freetype.mk (refdoc), README, Jamfile (RefDoc):
+	s/2.1.8/2.1.9/.
+
+	* docs/CHANGES, docs/VERSION.DLL: Updated.
+
+2004-08-11  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/base/ftrfork.c (FT_Raccess_Guess)
+	[!FT_CONFIG_OPTION_GUESSING_EMBEDDED_FORK]: Remove compiler
+	warnings.
+
 2004-08-06  Adam Piotrowski  <st_intel@poczta.onet.pl>
 
 	* src/pfr/pfrload.c (pfr_sort_kerning_pairs): Single-byte
