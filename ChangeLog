@@ -1,3 +1,9 @@
+2003-05-20  Werner Lemberg  <wl@gnu.org>
+
+	* src/autohint/ahhint.c (ah_hinter_load_glyph): Oops!  David's
+	patch from yesterday has been resolved already in a different
+	way.  Reverted.
+
 2003-05-19  David Chester  <davidchester@qmx.net>
 
 	* src/autohint/ahhint.c (ah_hinter_load_glyph): Don't scale

@@ -1758,12 +1758,12 @@
         {
          /* adjust y_scale
           */
-          face->size->metrics.y_scale = FT_MulDiv( y_scale, fitted, scaled );
+          y_scale = FT_MulDiv( y_scale, fitted, scaled );
 
          /* adust x_scale
           */
           if ( fitted < scaled )
-            face->size->metrics.x_scale -= x_scale/50;  /* x_scale*0.98 */
+            x_scale -= x_scale/50;  /* x_scale*0.98 with integers */
         }
       }
     }
@@ -1774,9 +1774,7 @@
     /* need to rescale the global metrics                               */
     if ( face_globals->x_scale != x_scale ||
          face_globals->y_scale != y_scale )
-      ah_hinter_scale_globals( hinter,
-                               face->size->metrics.x_scale,
-                               face->size->metrics.y_scale );
+      ah_hinter_scale_globals( hinter, x_scale, y_scale );
 
     ah_loader_rewind( hinter->loader );
 
