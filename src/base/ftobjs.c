@@ -202,13 +202,13 @@
   FT_BASE_DEF( void )
   ft_glyphslot_free_bitmap( FT_GlyphSlot  slot )
   {
-    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
+    if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
     {
       FT_Memory  memory = FT_FACE_MEMORY( slot->face );
 
 
       FT_FREE( slot->bitmap.buffer );
-      slot->flags &= ~FT_GLYPH_OWN_BITMAP;
+      slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
     else
     {
@@ -227,7 +227,7 @@
 
     slot->bitmap.buffer = buffer;
 
-    FT_ASSERT( (slot->flags & FT_GLYPH_OWN_BITMAP) == 0 );
+    FT_ASSERT( (slot->internal->flags & FT_GLYPH_OWN_BITMAP) == 0 );
   }
 
 
@@ -238,10 +238,10 @@
     FT_Memory  memory = FT_FACE_MEMORY( slot->face );
 
 
-    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
+    if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
       FT_FREE( slot->bitmap.buffer );
     else
-      slot->flags |= FT_GLYPH_OWN_BITMAP;
+      slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
 
     return FT_MEM_ALLOC( slot->bitmap.buffer, size );
   }
@@ -1074,7 +1074,7 @@
     args.stream = stream;
     if ( driver_name )
     {
-      args.flags = (FT_Open_Flags)( args.flags | FT_OPEN_DRIVER );
+      args.flags = args.flags | FT_OPEN_DRIVER;
       args.driver = FT_Get_Module( library, driver_name );
     }
 

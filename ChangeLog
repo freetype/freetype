@@ -1,3 +1,24 @@
+2003-06-16  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h (FT_Open_Flags): Replaced with
+	#defines for the constants.
+	(FT_Open_Args): Change type of `flags' to FT_UInt.
+	(FT_GlyphSlot): Move `flags' to FT_Slot_Internal.
+
+	* include/freetype/ftimage.h (FT_Outline_Flags, FT_Raster_Flag):
+	Replaced with #defines for the constants.
+
+	* include/freetype/internal/ftobjs.h (FT_Slot_Internal): New
+	field `flags' (from FT_GlyphSlot).
+	Updated all affected source files.
+	(FT_GLYPH_OWN_BITMAP): New macro (from ftgloadr.h).
+
+	* include/freetype/internal/ftgloadr.h (FT_GLYPH_OWN_BITMAP): Moved
+	to ftobjs.h.
+
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Use dummy
+	FT_GlyphSlot_Internal object.
+
 2003-06-15  Werner Lemberg  <wl@gnu.org>
 
 	* builds/compiler/gcc.mk, builds/compiler/gcc-dev.mk (CFLAGS):
@@ -2339,7 +2360,7 @@
 	interface is hidden in an internal part of the face record, and all
 	the definitions are in ftincrem.h.
 
-	* include/freetype/freeetype.h [FT_CONFIG_OPTION_INCREMENTAL]:
+	* include/freetype/freetype.h [FT_CONFIG_OPTION_INCREMENTAL]:
 	Removed.
 	* include/freetype/internal/ftobjs.h [FT_CONFIG_OPTION_INCREMENTAL]:
 	Include FT_INCREMENTAL_H.

@@ -143,10 +143,10 @@
     memory = render->root.memory;
 
     /* release old bitmap buffer */
-    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
+    if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
     {
       FT_FREE( bitmap->buffer );
-      slot->flags &= ~FT_GLYPH_OWN_BITMAP;
+      slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
 
     /* allocate new one, depends on pixel format */
@@ -169,7 +169,7 @@
     if ( FT_ALLOC( bitmap->buffer, (FT_ULong)pitch * height ) )
       goto Exit;
 
-    slot->flags |= FT_GLYPH_OWN_BITMAP;
+    slot->internal->flags |= FT_GLYPH_OWN_BITMAP;
 
     /* translate outline to render it into the bitmap */
     FT_Outline_Translate( outline, -cbox.xMin, -cbox.yMin );

@@ -158,8 +158,8 @@
     glyph->left   = slot->bitmap_left;
     glyph->top    = slot->bitmap_top;
 
-    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
-      slot->flags &= ~FT_GLYPH_OWN_BITMAP;
+    if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
+      slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     else
     {
       /* copy the bitmap into a new buffer */
@@ -573,12 +573,13 @@
                       FT_Vector*      origin,
                       FT_Bool         destroy )
   {
-    FT_GlyphSlotRec  dummy;
-    FT_Error         error = FT_Err_Ok;
-    FT_Glyph         glyph;
-    FT_BitmapGlyph   bitmap = NULL;
+    FT_GlyphSlotRec           dummy;
+    FT_GlyphSlot_InternalRec  dummy_internal;
+    FT_Error                  error = FT_Err_Ok;
+    FT_Glyph                  glyph;
+    FT_BitmapGlyph            bitmap = NULL;
 
-    const FT_Glyph_Class*  clazz;
+    const FT_Glyph_Class*     clazz;
 
 
     /* check argument */
@@ -602,8 +603,10 @@
       goto Bad;
 
     FT_MEM_ZERO( &dummy, sizeof ( dummy ) );
-    dummy.library = glyph->library;
-    dummy.format  = clazz->glyph_format;
+    FT_MEM_ZERO( &dummy_internal, sizeof ( dummy_internal ) );
+    dummy.internal = &dummy_internal;
+    dummy.library  = glyph->library;
+    dummy.format   = clazz->glyph_format;
 
     /* create result bitmap glyph */
     error = ft_new_glyph( glyph->library, &ft_bitmap_glyph_class,
