@@ -1,3 +1,8 @@
+2003-06-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffdrivr.c (cff_get_glyph_name): Protect agains zero
+	glyph name pointer.  Reported by Mikey Anbary <manbary@vizrt.com>.
+
 2003-06-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/glnames.py: Updated to AGL 2.0.

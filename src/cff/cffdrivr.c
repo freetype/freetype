@@ -255,7 +255,7 @@
     /* now, lookup the name itself */
     gname = cff_index_get_sid_string( &font->string_index, sid, psnames );
 
-    if ( buffer_max > 0 )
+    if ( gname && buffer_max > 0 )
     {
       FT_UInt  len = (FT_UInt)ft_strlen( gname );
 
