@@ -971,7 +971,7 @@
         return;
 
       /* we use a T1_Table to store our charnames */
-      encode->num_chars = count;
+      loader->num_chars = encode->num_chars = count;
       if ( ALLOC_ARRAY( encode->char_index, count, FT_Short   ) ||
            ALLOC_ARRAY( encode->char_name,  count, FT_String* ) ||
            ( error = psaux->ps_table_funcs->init(
@@ -1164,12 +1164,21 @@
       /*                                                         */
       if ( face->type1.private_dict.lenIV >= 0 )
       {
-        psaux->t1_decrypt( base, size, 4330 );
-        size -= face->type1.private_dict.lenIV;
-        base += face->type1.private_dict.lenIV;
-      }
+        FT_Byte*  temp;
 
-      error = T1_Add_Table( table, index, base, size );
+
+        /* t1_decrypt() shouldn't write to base -- make temporary copy */
+        if ( ALLOC( temp, size ) )
+          goto Fail;
+        MEM_Copy( temp, base, size );
+        psaux->t1_decrypt( temp, size, 4330 );
+        size -= face->type1.private_dict.lenIV;
+        error = T1_Add_Table( table, index,
+                              temp + face->type1.private_dict.lenIV, size );
+        FREE( temp );
+      }
+      else
+        error = T1_Add_Table( table, index, base, size );
       if ( error )
         goto Fail;
     }
@@ -1296,12 +1305,21 @@
 
         if ( face->type1.private_dict.lenIV >= 0 )
         {
-          psaux->t1_decrypt( base, size, 4330 );
-          size -= face->type1.private_dict.lenIV;
-          base += face->type1.private_dict.lenIV;
-        }
+          FT_Byte*  temp;
 
-        error = T1_Add_Table( code_table, n, base, size );
+
+          /* t1_decrypt() shouldn't write to base -- make temporary copy */
+          if ( ALLOC( temp, size ) )
+            goto Fail;
+          MEM_Copy( temp, base, size );
+          psaux->t1_decrypt( temp, size, 4330 );
+          size -= face->type1.private_dict.lenIV;
+          error = T1_Add_Table( code_table, n,
+                                temp + face->type1.private_dict.lenIV, size );
+          FREE( temp );
+        }
+        else
+          error = T1_Add_Table( code_table, n, base, size );
         if ( error )
           goto Fail;
 
@@ -1425,9 +1443,7 @@
 
       /* we added a glyph. */
       loader->num_glyphs = n + 1;
-
     }
-
 
     return;
 
@@ -1734,7 +1750,7 @@
       type1->encoding.code_first = min_char;
       type1->encoding.code_last  = max_char;
       type1->encoding.num_chars  = loader.num_chars;
-   }
+    }
 
   Exit:
     t1_done_loader( &loader );

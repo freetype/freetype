@@ -1,3 +1,12 @@
+2002-01-28  Roberto Alameda  <ojancano@geekmail.de>
+
+	* src/type1/t1load.c (parse_encoding): Set `loader->num_chars'.
+
+2002-01-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_subrs, parse_charstrings): Use copy
+	of `base' string for decrypting to not modify the original data.
+
 2002-01-27  Giuliano Pochini  <pochini@shiny.it>
 
 	* src/smooth/ftgrays.c (gray_render_scanline): Fix bug which caused
