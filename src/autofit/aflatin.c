@@ -58,7 +58,10 @@
         FT_UInt       num_widths = 0;
         FT_Pos        edge_distance_threshold = 32000;
 
-        af_latin_hints_compute_segments( hints, dim );
+        error = af_latin_hints_compute_segments( hints, dim );
+        if ( error )
+          goto Exit;
+
         af_latin_hints_link_segments   ( hints, dim );
 
         seg   = axhints->segments;
@@ -506,9 +509,6 @@
   af_latin_metrics_scale( AF_LatinMetrics  metrics,
                           AF_Scaler        scaler )
   {
-    if ( AF_SCALER_EQUAL_SCALES( scaler, &metrics->root.scaler ) )
-      return;
-
     af_latin_metrics_scale_dim( metrics, scaler, AF_DIMENSION_HORZ );
     af_latin_metrics_scale_dim( metrics, scaler, AF_DIMENSION_VERT );
   }
@@ -522,14 +522,14 @@
  /***************************************************************************/
  /***************************************************************************/
 
-  FT_LOCAL_DEF( void )
+  FT_LOCAL_DEF( FT_Error )
   af_latin_hints_compute_segments( AF_GlyphHints  hints,
                                    AF_Dimension   dim )
   {
-    AF_AxisHints  axis = &hints->axis[dim];
-    AF_Segment    segments = axis->segments;
-    AF_Segment    segment       =  segments;
-    FT_Int        num_segments  =  0;
+    AF_AxisHints  axis          = &hints->axis[dim];
+    FT_Memory     memory        = hints->memory;
+    FT_Error      error         = 0;
+    AF_Segment    segment       =  NULL;
     AF_Point*     contour       =  hints->contours;
     AF_Point*     contour_limit =  contour + hints->num_contours;
     AF_Direction  major_dir, segment_dir;
@@ -543,6 +543,8 @@
 
     major_dir   = FT_ABS( axis->major_dir );
     segment_dir = major_dir;
+
+    axis->num_segments = 0;
 
     /* set up (u,v) in each point */
     if ( dim == AF_DIMENSION_HORZ )
@@ -656,8 +658,7 @@
             segment->max_coord = max_pos;
 
             on_edge = 0;
-            num_segments++;
-            segment++;
+            segment = NULL;
             /* fallthrough */
           }
         }
@@ -676,7 +677,9 @@
           segment_dir = point->out_dir;
 
           /* clear all segment fields */
-          FT_ZERO( segment );
+          error = af_axis_hints_new_segment( axis, memory, &segment );
+          if ( error )
+            goto Exit;
 
           segment->dir      = segment_dir;
           segment->flags    = AF_EDGE_NORMAL;
@@ -740,7 +743,9 @@
       if ( min_point )
       {
         /* clear all segment fields */
-        FT_ZERO( segment );
+        error = af_axis_hints_new_segment( axis, memory, &segment );
+        if ( error )
+          goto Exit;
 
         segment->dir   = segment_dir;
         segment->flags = AF_EDGE_NORMAL;
@@ -750,15 +755,16 @@
         segment->score = 32000;
         segment->link  = NULL;
 
-        num_segments++;
-        segment++;
+        segment = NULL;
       }
 
       /* insert maximum segment */
       if ( max_point )
       {
         /* clear all segment fields */
-        FT_ZERO( segment );
+        error = af_axis_hints_new_segment( axis, memory, &segment );
+        if ( error)
+          goto Exit;
 
         segment->dir   = segment_dir;
         segment->flags = AF_EDGE_NORMAL;
@@ -768,13 +774,13 @@
         segment->score = 32000;
         segment->link  = NULL;
 
-        num_segments++;
-        segment++;
+        segment = NULL;
       }
     }
 #endif /* AF_HINT_METRICS */
 
-    axis->num_segments = num_segments;
+  Exit:
+    return error;
   }
 
 
@@ -858,14 +864,14 @@
   }
 
 
-  FT_LOCAL_DEF( void )
+  FT_LOCAL_DEF( FT_Error )
   af_latin_hints_compute_edges( AF_GlyphHints  hints,
                                 AF_Dimension   dim )
   {
-    AF_AxisHints  axis = &hints->axis[dim];
+    AF_AxisHints  axis   = &hints->axis[dim];
+    FT_Error      error  = 0;
+    FT_Memory     memory = hints->memory;
     AF_LatinAxis  laxis = &((AF_LatinMetrics)hints->metrics)->axis[dim];
-    AF_Edge       edges = axis->edges;
-    AF_Edge       edge, edge_limit;
 
     AF_Segment    segments = axis->segments;
     AF_Segment    segment_limit = segments + axis->num_segments;
@@ -875,6 +881,7 @@
     FT_Fixed      scale;
     FT_Pos        edge_distance_threshold;
 
+    axis->num_edges = 0;
 
     scale = ( dim == AF_DIMENSION_HORZ ) ? hints->x_scale
                                          : hints->y_scale;
@@ -906,16 +913,16 @@
     edge_distance_threshold = FT_DivFix( edge_distance_threshold,
                                          scale );
 
-    edge_limit = edges;
     for ( seg = segments; seg < segment_limit; seg++ )
     {
       AF_Edge  found = 0;
-
+      FT_Int   ee;
 
       /* look for an edge corresponding to the segment */
-      for ( edge = edges; edge < edge_limit; edge++ )
+      for ( ee = 0; ee < axis->num_edges; ee++ )
       {
-        FT_Pos  dist;
+        AF_Edge  edge = axis->edges + ee;
+        FT_Pos   dist;
 
 
         dist = seg->pos - edge->fpos;
@@ -931,19 +938,17 @@
 
       if ( !found )
       {
+        AF_Edge   edge;
+
         /* insert a new edge in the list and */
         /* sort according to the position    */
-        while ( edge > edges && edge[-1].fpos > seg->pos )
-        {
-          edge[0] = edge[-1];
-          edge--;
-        }
-        edge_limit++;
-
-        /* clear all edge fields */
-        FT_ZERO( edge );
+        error = af_axis_hints_new_edge( axis, seg->pos, memory, &edge );
+        if ( error )
+          goto Exit;
 
         /* add the segment to the new edge's list */
+        FT_ZERO(edge);
+
         edge->first    = seg;
         edge->last     = seg;
         edge->fpos     = seg->pos;
@@ -954,12 +959,11 @@
       {
         /* if an edge was found, simply add the segment to the edge's */
         /* list                                                       */
-        seg->edge_next        = edge->first;
-        edge->last->edge_next = seg;
-        edge->last            = seg;
+        seg->edge_next         = found->first;
+        found->last->edge_next = seg;
+        found->last            = seg;
       }
     }
-    axis->num_edges = (FT_Int)( edge_limit - edges );
 
 
     /*********************************************************************/
@@ -982,133 +986,148 @@
      * code above.  For some reason, it slows down execution
      * speed -- on a Sun.
      */
-    for ( edge = edges; edge < edge_limit; edge++ )
     {
-      seg = edge->first;
-      if ( seg )
+      AF_Edge  edges      = axis->edges;
+      AF_Edge  edge_limit = edges + axis->num_edges;
+      AF_Edge  edge;
+
+      for ( edge = edges; edge < edge_limit; edge++ )
+      {
+        seg = edge->first;
+        if ( seg )
+          do
+          {
+            seg->edge = edge;
+            seg       = seg->edge_next;
+          }
+          while ( seg != edge->first );
+      }
+
+      /* now, compute each edge properties */
+      for ( edge = edges; edge < edge_limit; edge++ )
+      {
+        FT_Int  is_round    = 0;  /* does it contain round segments?    */
+        FT_Int  is_straight = 0;  /* does it contain straight segments? */
+        FT_Pos  ups         = 0;  /* number of upwards segments         */
+        FT_Pos  downs       = 0;  /* number of downwards segments       */
+
+
+        seg = edge->first;
+
         do
         {
-          seg->edge = edge;
-          seg       = seg->edge_next;
-        }
-        while ( seg != edge->first );
-    }
-
-    /* now, compute each edge properties */
-    for ( edge = edges; edge < edge_limit; edge++ )
-    {
-      FT_Int  is_round    = 0;  /* does it contain round segments?    */
-      FT_Int  is_straight = 0;  /* does it contain straight segments? */
-      FT_Pos  ups         = 0;  /* number of upwards segments         */
-      FT_Pos  downs       = 0;  /* number of downwards segments       */
+          FT_Bool  is_serif;
 
 
-      seg = edge->first;
+          /* check for roundness of segment */
+          if ( seg->flags & AF_EDGE_ROUND )
+            is_round++;
+          else
+            is_straight++;
 
-      do
-      {
-        FT_Bool  is_serif;
+          /* check for segment direction */
+          if ( seg->dir == up_dir )
+            ups   += seg->max_coord-seg->min_coord;
+          else
+            downs += seg->max_coord-seg->min_coord;
 
+          /* check for links -- if seg->serif is set, then seg->link must */
+          /* be ignored                                                   */
+          is_serif = (FT_Bool)( seg->serif && seg->serif->edge != edge );
 
-        /* check for roundness of segment */
-        if ( seg->flags & AF_EDGE_ROUND )
-          is_round++;
-        else
-          is_straight++;
-
-        /* check for segment direction */
-        if ( seg->dir == up_dir )
-          ups   += seg->max_coord-seg->min_coord;
-        else
-          downs += seg->max_coord-seg->min_coord;
-
-        /* check for links -- if seg->serif is set, then seg->link must */
-        /* be ignored                                                   */
-        is_serif = (FT_Bool)( seg->serif && seg->serif->edge != edge );
-
-        if ( seg->link || is_serif )
-        {
-          AF_Edge     edge2;
-          AF_Segment  seg2;
-
-
-          edge2 = edge->link;
-          seg2  = seg->link;
-
-          if ( is_serif )
+          if ( seg->link || is_serif )
           {
-            seg2  = seg->serif;
-            edge2 = edge->serif;
-          }
-
-          if ( edge2 )
-          {
-            FT_Pos  edge_delta;
-            FT_Pos  seg_delta;
+            AF_Edge     edge2;
+            AF_Segment  seg2;
 
 
-            edge_delta = edge->fpos - edge2->fpos;
-            if ( edge_delta < 0 )
-              edge_delta = -edge_delta;
+            edge2 = edge->link;
+            seg2  = seg->link;
 
-            seg_delta = seg->pos - seg2->pos;
-            if ( seg_delta < 0 )
-              seg_delta = -seg_delta;
+            if ( is_serif )
+            {
+              seg2  = seg->serif;
+              edge2 = edge->serif;
+            }
 
-            if ( seg_delta < edge_delta )
+            if ( edge2 )
+            {
+              FT_Pos  edge_delta;
+              FT_Pos  seg_delta;
+
+
+              edge_delta = edge->fpos - edge2->fpos;
+              if ( edge_delta < 0 )
+                edge_delta = -edge_delta;
+
+              seg_delta = seg->pos - seg2->pos;
+              if ( seg_delta < 0 )
+                seg_delta = -seg_delta;
+
+              if ( seg_delta < edge_delta )
+                edge2 = seg2->edge;
+            }
+            else
               edge2 = seg2->edge;
+
+            if ( is_serif )
+            {
+              edge->serif   = edge2;
+              edge2->flags |= AF_EDGE_SERIF;
+            }
+            else
+              edge->link  = edge2;
           }
-          else
-            edge2 = seg2->edge;
 
-          if ( is_serif )
-          {
-            edge->serif   = edge2;
-            edge2->flags |= AF_EDGE_SERIF;
-          }
-          else
-            edge->link  = edge2;
-        }
+          seg = seg->edge_next;
 
-        seg = seg->edge_next;
+        } while ( seg != edge->first );
 
-      } while ( seg != edge->first );
+        /* set the round/straight flags */
+        edge->flags = AF_EDGE_NORMAL;
 
-      /* set the round/straight flags */
-      edge->flags = AF_EDGE_NORMAL;
+        if ( is_round > 0 && is_round >= is_straight )
+          edge->flags |= AF_EDGE_ROUND;
 
-      if ( is_round > 0 && is_round >= is_straight )
-        edge->flags |= AF_EDGE_ROUND;
+        /* set the edge's main direction */
+        edge->dir = AF_DIR_NONE;
 
-      /* set the edge's main direction */
-      edge->dir = AF_DIR_NONE;
+        if ( ups > downs )
+          edge->dir = up_dir;
 
-      if ( ups > downs )
-        edge->dir = up_dir;
+        else if ( ups < downs )
+          edge->dir = -up_dir;
 
-      else if ( ups < downs )
-        edge->dir = -up_dir;
+        else if ( ups == downs )
+          edge->dir = 0;  /* both up and down! */
 
-      else if ( ups == downs )
-        edge->dir = 0;  /* both up and down! */
+        /* gets rid of serifs if link is set                */
+        /* XXX: This gets rid of many unpleasant artefacts! */
+        /*      Example: the `c' in cour.pfa at size 13     */
 
-      /* gets rid of serifs if link is set                */
-      /* XXX: This gets rid of many unpleasant artefacts! */
-      /*      Example: the `c' in cour.pfa at size 13     */
-
-      if ( edge->serif && edge->link )
-        edge->serif = 0;
+        if ( edge->serif && edge->link )
+          edge->serif = 0;
+      }
     }
+
+  Exit:
+    return error;
   }
 
 
-  FT_LOCAL_DEF( void )
+  FT_LOCAL_DEF( FT_Error )
   af_latin_hints_detect_features( AF_GlyphHints  hints,
                                   AF_Dimension   dim )
   {
-    af_latin_hints_compute_segments( hints, dim );
-    af_latin_hints_link_segments   ( hints, dim );
-    af_latin_hints_compute_edges   ( hints, dim );
+    FT_Error  error;
+
+    error = af_latin_hints_compute_segments( hints, dim );
+    if ( !error )
+    {
+      af_latin_hints_link_segments   ( hints, dim );
+      error = af_latin_hints_compute_edges   ( hints, dim );
+    }
+    return error;
   }
 
 
@@ -1812,11 +1831,18 @@
    /* analyze glyph outline
     */
     if ( AF_HINTS_DO_HORIZONTAL(hints) )
-      af_latin_hints_detect_features( hints, AF_DIMENSION_HORZ );
+    {
+      error = af_latin_hints_detect_features( hints, AF_DIMENSION_HORZ );
+      if ( error )
+        goto Exit;
+    }
 
     if ( AF_HINTS_DO_VERTICAL(hints) )
     {
-      af_latin_hints_detect_features( hints, AF_DIMENSION_VERT );
+      error =  af_latin_hints_detect_features( hints, AF_DIMENSION_VERT );
+      if ( error )
+        goto Exit;
+
       af_latin_hints_compute_blue_edges( hints, metrics );
     }
 

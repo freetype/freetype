@@ -1,4 +1,4 @@
-FT_USE_MODULE(autohint_module_class)
+FT_USE_MODULE(autofit_module_class)
 FT_USE_MODULE(tt_driver_class)
 FT_USE_MODULE(t1_driver_class)
 FT_USE_MODULE(cff_driver_class)

@@ -140,7 +140,7 @@ FT_BEGIN_HEADER
  /* this shouldn't normally be exported. However, other scripts might
   * like to use this function as-is
   */
-  FT_LOCAL( void )
+  FT_LOCAL( FT_Error )
   af_latin_hints_compute_segments( AF_GlyphHints  hints,
                                    AF_Dimension   dim );
 
@@ -154,11 +154,11 @@ FT_BEGIN_HEADER
  /* this shouldn't normally be exported. However, other scripts might
   * want to use this function as-is
   */
-  FT_LOCAL( void )
+  FT_LOCAL( FT_Error )
   af_latin_hints_compute_edges( AF_GlyphHints  hints,
                                 AF_Dimension   dim );
 
-  FT_LOCAL( void )
+  FT_LOCAL( FT_Error )
   af_latin_hints_detect_features( AF_GlyphHints  hints,
                                   AF_Dimension   dim );
 
