@@ -4145,7 +4145,7 @@
 	(FT_Get_PS_Font_Info): Make it work with CID and Type 42 drivers
 	also.
 
-2002-06-19  Sebastien BARRE  <sebastien@barre.nom.fr>
+2002-06-19  Sebastien BARRE  <http://barre.nom.fr/contact.html#email>
 
 	* src/type42/t42parse.c (t42_parse_sfnts): Fix compiler warning.
 
