@@ -48,6 +48,8 @@
 
 #if defined( FT_DEBUG_LEVEL_ERROR )
 
+  /* documentation is in ftdebug.h */
+
   FT_EXPORT_DEF( void )
   FT_Message( const char*  fmt, ... )
   {
@@ -59,6 +61,8 @@
     va_end( ap );
   }
 
+
+  /* documentation is in ftdebug.h */
 
   FT_EXPORT_DEF( void )
   FT_Panic( const char*  fmt, ... )

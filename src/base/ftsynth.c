@@ -35,6 +35,8 @@
   /*************************************************************************/
   /*************************************************************************/
 
+  /* documentation is in ftsynth.h */
+
   FT_EXPORT_DEF( void )
   FT_GlyphSlot_Oblique( FT_GlyphSlot  slot )
   {
@@ -70,6 +72,7 @@
   /*************************************************************************/
 
 
+  /* documentation is in ftsynth.h */
 
   FT_EXPORT_DEF( void )
   FT_GlyphSlot_Embolden( FT_GlyphSlot  slot )

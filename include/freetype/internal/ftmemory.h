@@ -124,6 +124,28 @@ FT_BEGIN_HEADER
             void*     *P );
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_QAlloc                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Allocates a new block of memory.  The returned area is *not*       */
+  /*    zero-filled, making allocation quicker.                            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory :: A handle to a given `memory object' which handles        */
+  /*              allocation.                                              */
+  /*                                                                       */
+  /*    size   :: The size in bytes of the block to allocate.              */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    P      :: A pointer to the fresh new block.  It should be set to   */
+  /*              NULL if `size' is 0, or in case of error.                */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   FT_BASE( FT_Error )
   FT_QAlloc( FT_Memory  memory,
              FT_Long    size,
@@ -137,7 +159,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Reallocates a block of memory pointed to by `*P' to `Size' bytes   */
-  /*    from the heap, possibly changing `*P'.                             */
+  /*    from the heap, possibly changing `*P'.  The returned area is       */
+  /*    zero-filled.                                                       */
   /*                                                                       */
   /* <Input>                                                               */
   /*    memory  :: A handle to a given `memory object' which handles       */
@@ -165,6 +188,35 @@ FT_BEGIN_HEADER
               void*     *P );
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Realloc                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Reallocates a block of memory pointed to by `*P' to `Size' bytes   */
+  /*    from the heap, possibly changing `*P'.  The returned area is *not* */
+  /*    zero-filled, making reallocation quicker.                          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory  :: A handle to a given `memory object' which handles       */
+  /*               reallocation.                                           */
+  /*                                                                       */
+  /*    current :: The current block size in bytes.                        */
+  /*                                                                       */
+  /*    size    :: The new block size in bytes.                            */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    P       :: A pointer to the fresh new block.  It should be set to  */
+  /*               NULL if `size' is 0, or in case of error.               */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    All callers of FT_Realloc() _must_ provide the current block size  */
+  /*    as well as the new one.                                            */
+  /*                                                                       */
   FT_BASE( FT_Error )
   FT_QRealloc( FT_Memory  memory,
                FT_Long    current,
