@@ -1,10 +1,11 @@
 2002-04-11  David Turner  <david@freetype.org>
 
-        * README, docs/CHANGES, Jamfile.in: updating for the 2.1.0 release
+	* README, docs/CHANGES: Updates for the 2.1.0 release.
+	* Jamfile.in: New file.
 
-2002-04-11  Maxim Shemanarev <mcseemagg@yahoo.com>
+2002-04-11  Maxim Shemanarev  <mcseemagg@yahoo.com>
 
-        * src/smooth/ftgrays.c (gray_hline): very minor optimization. :-)
+	* src/smooth/ftgrays.c (gray_hline): Minor optimization.
 
 2002-04-02  Werner Lemberg  <wl@gnu.org>
 

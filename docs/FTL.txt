@@ -43,15 +43,14 @@ Introduction
   assume no liability related to The FreeType Project.
 
 
-  Finally, many people asked us for a preffered form a credit/disclaimer
-  to use in compliance with this license. We thus encourage you to use the
-  following text:
+  Finally,  many  people  asked  us  for  a  preferred  form  for  a
+  credit/disclaimer to use in compliance with this license.  We thus
+  encourage you to use the following text:
 
    """  
     Portions of this software are copyright © 1996-2002 The FreeType Project 
-    (www.freetype.org). All Rights Reserved
+    (www.freetype.org).  All rights reserved.
    """
-
 
 
 Legal Terms
