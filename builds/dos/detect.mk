@@ -43,6 +43,20 @@ ifeq ($(PLATFORM),ansi)
       ifeq ($(is_dos),)
         is_dos := $(findstring MDOS\COMMAND,$(COMSPEC))
       endif
+
+      # We also try to recognize Dos 7.x without Windows 9X launched.
+      # See builds\win32\detect.mk for explanations about the logic.
+      ifeq ($(is_dos),)
+        ifdef winbootdir
+#ifneq ($(OS),Windows_NT)
+          # If Win32 is available, do not trigger this test
+          ifndef windir
+            is_dos := $(findstring Windows,$(strip $(shell ver)))
+          endif
+#endif
+        endif
+      endif
+
     endif # test COMSPEC
 
     ifneq ($(is_dos),)
@@ -107,7 +121,17 @@ ifeq ($(PLATFORM),dos)
   else
     SEP    := $(BACKSLASH)
     DELETE := del
-    COPY   := copy
+
+    # Setting COPY is a bit trickier. We can be running DJGPP on some
+    # Windows NT derivatives, like XP. See builds\win32\detect.mk for
+    # explanations why we need hacking here.
+    #
+    ifeq ($(OS),Windows_NT)
+      COPY := cmd.exe /c copy
+    else
+      COPY := copy
+    endif  # test NT
+
     setup: dos_setup
   endif
 
