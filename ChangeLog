@@ -1,3 +1,12 @@
+2001-10-08  David Turner  <david@freetype.org>
+
+	* src/psnames/pstables.h, src/psnames/psmodule.c, src/tools/glnames.py:
+	fixed a bug in 'glnames.py' that prevented it from generating correct
+	glyph names table. This resulted in the unavailability of certain glyphs
+	like "Cacute", "cacute" and "lslash" in Unicode charmaps, even if these
+	were present in the font (causing problems for Polish users).
+
+
 2001-10-07  Richard Barber <rich@solutionuk.com>
 
 	* src/cache/ftlru.c (FT_Lru_Lookup_Node): fixed a bug that prevented
