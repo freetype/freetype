@@ -8,7 +8,7 @@
   BASE_FUNC
   void  FT_New_Memory_Stream( FT_Library     library,
                               void*          base,
-     			      unsigned long  size,
+                              unsigned long  size,
                               FT_Stream      stream )
   {
     stream->memory = library->memory;
