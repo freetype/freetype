@@ -31,6 +31,7 @@
 #include FT_RENDER_H
 #include FT_SIZES_H
 #include FT_INTERNAL_MEMORY_H
+#include FT_INTERNAL_GLYPH_LOADER_H
 #include FT_INTERNAL_DRIVER_H
 #include FT_INTERNAL_AUTOHINT_H
 
@@ -71,22 +72,6 @@ FT_BEGIN_HEADER
 #ifndef ABS
 #define ABS( a )     ( (a) < 0 ? -(a) : (a) )
 #endif
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_GlyphLoader                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The glyph loader is an internal object used to load several glyphs */
-  /*    together (for example, in the case of composites).                 */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The glyph loader implementation is not part of the high-level API, */
-  /*    hence the forward structure declaration.                           */
-  /*                                                                       */
-  typedef struct FT_GlyphLoader_  FT_GlyphLoader;
 
 
   /*************************************************************************/
@@ -171,12 +156,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_Slot_InternalRec_
   {
-    FT_GlyphLoader*  loader;
+    FT_GlyphLoader   loader;
     FT_Bool          glyph_transformed;
     FT_Matrix        glyph_matrix;
     FT_Vector        glyph_delta;
     void*            glyph_hints;
-  
+
   } FT_GlyphSlot_InternalRec;
 
 
@@ -345,6 +330,8 @@ FT_BEGIN_HEADER
   FT_Done_GlyphSlot( FT_GlyphSlot  slot );
 
 
+#if 0
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -444,6 +431,7 @@ FT_BEGIN_HEADER
   FT_GlyphLoader_Copy_Points( FT_GlyphLoader*  target,
                               FT_GlyphLoader*  source );
 
+#endif
 
   /*************************************************************************/
   /*************************************************************************/
@@ -533,7 +521,7 @@ FT_BEGIN_HEADER
     FT_ListRec        faces_list;
     void*             extensions;
 
-    FT_GlyphLoader*   glyph_loader;
+    FT_GlyphLoader    glyph_loader;
 
   } FT_DriverRec;
 

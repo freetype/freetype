@@ -508,7 +508,7 @@ FT_BEGIN_HEADER
     FT_Memory         memory;
     FT_Face           face;
     FT_GlyphSlot      glyph;
-    FT_GlyphLoader*   loader;
+    FT_GlyphLoader    loader;
     FT_Outline*       base;
     FT_Outline*       current;
 
@@ -535,7 +535,7 @@ FT_BEGIN_HEADER
     void*             hints_funcs;    /* hinter-specific */
     void*             hints_globals;  /* hinter-specific */
 
-    T1_Builder_Funcs  funcs;      
+    T1_Builder_Funcs  funcs;
   };
 
 

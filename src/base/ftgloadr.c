@@ -1,5 +1,6 @@
 #include <ft2build.h>
 #include FT_INTERNAL_GLYPH_LOADER_H
+#include FT_INTERNAL_MEMORY_H
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gloader
@@ -65,8 +66,8 @@
   FT_BASE_DEF( void )
   FT_GlyphLoader_Rewind( FT_GlyphLoader   loader )
   {
-    FT_GlyphLoad*  base    = &loader->base;
-    FT_GlyphLoad*  current = &loader->current;
+    FT_GlyphLoad  base    = &loader->base;
+    FT_GlyphLoad  current = &loader->current;
 
 
     base->outline.n_points   = 0;
@@ -154,8 +155,8 @@
   static void
   FT_GlyphLoader_Adjust_Subglyphs( FT_GlyphLoader   loader )
   {
-    FT_GlyphLoad* base    = &loader->base;
-    FT_GlyphLoad* current = &loader->current;
+    FT_GlyphLoad  base    = &loader->base;
+    FT_GlyphLoad  current = &loader->current;
 
 
     current->subglyphs = base->subglyphs + base->num_subglyphs;
@@ -235,8 +236,8 @@
     FT_Error   error  = FT_Err_Ok;
     FT_UInt    new_max, old_max;
 
-    FT_GlyphLoad*  base    = &loader->base;
-    FT_GlyphLoad*  current = &loader->current;
+    FT_GlyphLoad  base    = &loader->base;
+    FT_GlyphLoad  current = &loader->current;
 
 
     new_max = base->num_subglyphs + current->num_subglyphs + n_subs;
@@ -261,7 +262,7 @@
   FT_BASE_DEF( void )
   FT_GlyphLoader_Prepare( FT_GlyphLoader   loader )
   {
-    FT_GlyphLoad*  current = &loader->current;
+    FT_GlyphLoad  current = &loader->current;
 
 
     current->outline.n_points   = 0;
@@ -277,8 +278,8 @@
   FT_BASE_DEF( void )
   FT_GlyphLoader_Add( FT_GlyphLoader   loader )
   {
-    FT_GlyphLoad*  base    = &loader->base;
-    FT_GlyphLoad*  current = &loader->current;
+    FT_GlyphLoad   base    = &loader->base;
+    FT_GlyphLoad   current = &loader->current;
 
     FT_UInt        n_curr_contours = current->outline.n_contours;
     FT_UInt        n_base_points   = base->outline.n_points;

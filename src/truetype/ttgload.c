@@ -176,7 +176,7 @@
 
   static void
   tt_prepare_zone( TT_GlyphZone*  zone,
-                   FT_GlyphLoad*  load,
+                   FT_GlyphLoad   load,
                    FT_UInt        start_point,
                    FT_UInt        start_contour )
   {
@@ -267,7 +267,7 @@
   {
     FT_Error         error;
     FT_Stream        stream     = load->stream;
-    FT_GlyphLoader*  gloader    = load->gloader;
+    FT_GlyphLoader   gloader    = load->gloader;
     FT_Int           n_contours = load->n_contours;
     FT_Outline*      outline;
     TT_Face          face    = (TT_Face)load->face;
@@ -470,7 +470,7 @@
   {
     FT_Error         error;
     FT_Stream        stream  = loader->stream;
-    FT_GlyphLoader*  gloader = loader->gloader;
+    FT_GlyphLoader   gloader = loader->gloader;
     FT_SubGlyph*     subglyph;
     FT_UInt          num_subglyphs;
     FT_Int           byte_len = loader->byte_len;
@@ -606,7 +606,7 @@
   TT_Process_Simple_Glyph( TT_Loader*  load,
                            FT_Bool     debug )
   {
-    FT_GlyphLoader*  gloader  = load->gloader;
+    FT_GlyphLoader   gloader  = load->gloader;
     FT_Outline*      outline  = &gloader->current.outline;
     FT_UInt          n_points = outline->n_points;
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
@@ -751,7 +751,7 @@
     FT_Int           contours_count;
     FT_UInt          index, num_points, count;
     FT_Fixed         x_scale, y_scale;
-    FT_GlyphLoader*  gloader = loader->gloader;
+    FT_GlyphLoader   gloader = loader->gloader;
     FT_Bool          opened_frame = 0;
 
 
@@ -1519,7 +1519,7 @@
 
     /* update the glyph zone bounds */
     {
-      FT_GlyphLoader*  gloader = FT_FACE_DRIVER(face)->glyph_loader;
+      FT_GlyphLoader  gloader = FT_FACE_DRIVER(face)->glyph_loader;
 
 
       loader.gloader = gloader;

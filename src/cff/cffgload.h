@@ -89,7 +89,7 @@ FT_BEGIN_HEADER
     FT_Memory         memory;
     TT_Face           face;
     CFF_GlyphSlot     glyph;
-    FT_GlyphLoader*   loader;
+    FT_GlyphLoader    loader;
     FT_Outline*       base;
     FT_Outline*       current;
 
