@@ -1,3 +1,8 @@
+2001-05-16  David Turner  <david@freetype.org>
+
+    * src/truetype/ttgload.c (load_truetype_glyph): fixed a bug in the
+    composite loader spotted by Keith Packard.
+
 2001-05-14  David Turner  <david@freetype.org>
 
     * src/base/ftcalc.c (FT_DivFix): fixed a bug in the 64-bit code that
