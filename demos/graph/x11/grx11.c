@@ -425,11 +425,23 @@
       byte*  _read  = read;
       byte*  limit  = _write + 4*w;
 
-      for ( ; _write < limit; _write += 4, _read++ )
+      if (sizeof(long) > 4)
       {
-        byte  color = *_read;
-
-        *(unsigned long*)_write = surface->color[color].pixel;
+        for ( ; _write < limit; _write += 4, _read++ )
+        {
+          byte  color = *_read;
+  
+          *(unsigned int*)_write = surface->color[color].pixel;
+        }
+      }
+      else
+      {
+        for ( ; _write < limit; _write += 4, _read++ )
+        {
+          byte  color = *_read;
+  
+          *(unsigned long*)_write = surface->color[color].pixel;
+        }
       }
 
       write += target->pitch;
