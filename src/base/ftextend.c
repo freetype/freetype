@@ -27,7 +27,13 @@
 
 #include <freetype/internal/ftextend.h>
 
-/* required by the tracing mode */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_extend
 
@@ -70,6 +76,8 @@
     registry->num_extensions = 0;
     registry->cur_offset     = 0;
     driver->extensions       = registry;
+
+    FT_TRACE2(( "FT_Init_Extensions: success" ));
 
     return FT_Err_Ok;
   }
@@ -144,6 +152,9 @@
 
       registry->num_extensions++;
       registry->cur_offset += ( cur->size + FT_ALIGNMENT-1 ) & -FT_ALIGNMENT;
+
+      FT_TRACE1(( "FT_Register_Extension: `%s' successfully registered",
+                  cur->id ));
     }
 
     return FT_Err_Ok;
@@ -192,11 +203,16 @@
         if ( strcmp( cur->id, extension_id ) == 0 )
         {
           *extension_interface = cur->interface;
+
+          FT_TRACE1(( "FT_Get_Extension: got `%s'", extension_id ));
+
           return (void*)((char*)face->extensions + cur->offset);
         }
     }
 
     /* could not find the extension id */
+
+    FT_ERROR(( "FT_Get_Extension: couldn't find `%s'", extension_id ));
 
     *extension_interface = 0;
 

@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftsystem.h                                                             */
+/*  ftsystem.c                                                             */
 /*                                                                         */
 /*    ANSI-specific FreeType low-level system interface (body).            */
 /*                                                                         */
@@ -26,6 +26,7 @@
 
 
 #include <freetype/config/ftconfig.h>
+#include <freetype/internal/ftdebug.h>
 #include <freetype/ftsystem.h>
 #include <freetype/fterrors.h>
 #include <freetype/fttypes.h>
@@ -137,6 +138,17 @@
   /*************************************************************************/
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_io
+
+  /* We use the macro STREAM_FILE for convenience to extract the       */
+  /* system-specific stream handle from a given FreeType stream object */
 #define STREAM_FILE( stream )  ( (FILE*)stream->descriptor.pointer )
 
 
@@ -155,6 +167,10 @@
   void  ft_close_stream( FT_Stream  stream )
   {
     fclose( STREAM_FILE( stream ) );
+
+    stream->descriptor.pointer = NULL;
+    stream->size               = 0;
+    stream->base               = 0;
   }
 
 
@@ -220,17 +236,27 @@
 
     file = fopen( filepathname, "rb" );
     if ( !file )
+    {
+      FT_ERROR(( "FT_New_Stream:" ));
+      FT_ERROR(( " could not open `%s'\n", filepathname ));
+
       return FT_Err_Cannot_Open_Resource;
+    }
 
     fseek( file, 0, SEEK_END );
     stream->size = ftell( file );
     fseek( file, 0, SEEK_SET );
 
     stream->descriptor.pointer = file;
+    stream->pathname.pointer   = (char*)filepathname;
     stream->pos                = 0;
 
     stream->read  = ft_io_stream;
     stream->close = ft_close_stream;
+
+    FT_TRACE1(( "FT_New_Stream:" ));
+    FT_TRACE1(( " opened `%s' (%d bytes) successfully\n",
+                filepathname, stream->size ));
 
     return FT_Err_Ok;
   }

@@ -15,46 +15,28 @@
 /*                                                                         */
 /***************************************************************************/
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* This component contains various macros and functions used to ease the */
-  /* debugging of the FreeType engine.  Its main purpose is in assertion   */
-  /* checking, tracing, and error detection.                               */
-  /*                                                                       */
-  /* There are now three debugging modes:                                  */
-  /*                                                                       */
-  /* - trace mode                                                          */
-  /*                                                                       */
-  /*   Error and trace messages are sent to the log file (which can be the */
-  /*   standard error output).                                             */
-  /*                                                                       */
-  /* - error mode                                                          */
-  /*                                                                       */
-  /*   Only error messages are generated.                                  */
-  /*                                                                       */
-  /* - release mode:                                                       */
-  /*                                                                       */
-  /*   No error message is sent or generated.  The code is free from any   */
-  /*   debugging parts.                                                    */
-  /*                                                                       */
-  /*************************************************************************/
-
 
 #ifndef FTDEBUG_H
 #define FTDEBUG_H
 
-#include <freetype/config/ftconfig.h>   /* for FT_DEBUG_LEVEL_TRACE, FT_DEBUG_LEVEL_ERROR */
-
+#include <freetype/config/ftconfig.h>   /* for FT_DEBUG_LEVEL_TRACE, */
+                                        /* FT_DEBUG_LEVEL_ERROR      */
 
 #ifdef __cplusplus
   extern "C" {
 #endif
 
 
-/* A very stupid pre-processor trick. See K&R version 2 */
-/* section A12.3 for details..                          */
-#define FT_CAT(x,y)   x ## y
-#define FT_XCAT(x,y)  FT_CAT(x,y)
+  /* A very stupid pre-processor trick.  See K&R version 2 */
+  /* section A12.3 for details...                          */
+  /*                                                       */
+  /* It is also described in the section `Separate         */
+  /* Expansion of Macro Arguments' in the info file        */
+  /* `cpp.info', describing GNU cpp.                       */
+  /*                                                       */
+#define FT_CAT( x, y )   x ## y
+#define FT_XCAT( x, y )  FT_CAT( x, y )
+
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
@@ -64,15 +46,14 @@
     /* the first level must always be `trace_any' */
     trace_any = 0,
 
-    /* first, define an enum for each common component */
-    trace_io,        /* in ftsys */
-    trace_memory,    /* in ftsys */
-    trace_sync,      /* in ftsys */
-    trace_stream,    /* stream manager - see ftstream.c */
-    trace_calc,      /* computations   - see ftcalc.c   */
-    trace_raster,    /* raster         - see ftraster.c */
-    trace_list,      /* list manager   - see ftlist.c   */
-    trace_objs,      /* base objects   - see ftobjs.c   */
+    /* we start with an enum for each common component */
+    trace_io,        /* i/o monitoring -- see ftsystem.c */
+    trace_memory,    /* memory manager -- see ftobjs.c   */
+    trace_stream,    /* stream manager -- see ftstream.c */
+    trace_calc,      /* computations   -- see ftcalc.c   */
+    trace_raster,    /* raster         -- see ftraster.c */
+    trace_list,      /* list manager   -- see ftlist.c   */
+    trace_objs,      /* base objects   -- see ftobjs.c   */
 
     /* then define an enum for each TrueType driver component */
     trace_ttobjs,
@@ -92,6 +73,7 @@
 
     /* other trace levels */
     trace_init,
+    trace_extend,
 
     /* the last level must always be `trace_max' */
     trace_max

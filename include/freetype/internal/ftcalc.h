@@ -41,11 +41,12 @@
 
 #define SQRT_64( z )  FT_Sqrt64( z )
 
-  FT_EXPORT_DEF(FT_Int32)  FT_Sqrt64( FT_Int64  x );
+  FT_EXPORT_DEF( FT_Int32 )  FT_Sqrt64( FT_Int64  l );
 
 #endif /* OLD_CALCS */
 
 #else /* LONG64 */
+
 
   typedef struct  FT_Int64_
   {
@@ -58,17 +59,22 @@
 #define MUL_64( x, y, z )  FT_MulTo64( x, y, &z )
 #define DIV_64( x, y )     FT_Div64by32( &x, y )
 
-  FT_EXPORT_DEF(void)      FT_Add64    ( FT_Int64* x, FT_Int64* y, FT_Int64*  z );
+  FT_EXPORT_DEF( void )      FT_Add64    ( FT_Int64*  x,
+                                           FT_Int64*  y,
+                                           FT_Int64*  z );
 
-  FT_EXPORT_DEF(void)      FT_MulTo64  ( FT_Int32  x, FT_Int32  y, FT_Int64*  z );
+  FT_EXPORT_DEF( void )      FT_MulTo64  ( FT_Int32   x,
+                                           FT_Int32   y,
+                                           FT_Int64*  z );
 
-  FT_EXPORT_DEF(FT_Int32)  FT_Div64by32( FT_Int64* x, FT_Int32  y );
+  FT_EXPORT_DEF( FT_Int32 )  FT_Div64by32( FT_Int64*  x,
+                                           FT_Int32   y );
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
 
 #define SQRT_64( z )  FT_Sqrt64( &z )
 
-  FT_EXPORT_DEF(FT_Int32)  FT_Sqrt64( FT_Int64*  x );
+  FT_EXPORT_DEF( FT_Int32 )  FT_Sqrt64( FT_Int64*  x );
 
 #endif /* OLD_CALC */
 
@@ -77,10 +83,12 @@
 
 #ifndef FT_CONFIG_OPTION_OLD_CALCS
 
-#define SQRT_32( x )       FT_Sqrt32( x )
+#define SQRT_32( x )  FT_Sqrt32( x )
 
-  BASE_DEF(FT_Int32)  FT_Sqrt32( FT_Int32  l );
-#endif
+  BASE_DEF(FT_Int32)  FT_Sqrt32( FT_Int32  x );
+
+#endif /* FT_CONFIG_OPTION_OLD_CALCS */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -95,8 +103,8 @@
 #define F2DOT14_TO_FIXED( x )  ( (FT_Long)(x) << 2  )
 #define FLOAT_TO_FIXED( x )    ( (FT_Long)(x * 65536.0) )
 
-#define ROUND_F26DOT6( x )     ( x >= 0 ? (   ((x) + 32) & -64) \
-                                        : ( -((32 - (x)) & -64) ) )
+#define ROUND_F26DOT6( x )     ( x >= 0 ? (    ( (x) + 32 ) & -64 )     \
+                                        : ( -( ( 32 - (x) ) & -64 ) ) )
 
 #ifdef __cplusplus
   }

@@ -16,6 +16,31 @@
 /***************************************************************************/
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* This component contains various macros and functions used to ease the */
+  /* debugging of the FreeType engine.  Its main purpose is in assertion   */
+  /* checking, tracing, and error detection.                               */
+  /*                                                                       */
+  /* There are now three debugging modes:                                  */
+  /*                                                                       */
+  /* - trace mode                                                          */
+  /*                                                                       */
+  /*   Error and trace messages are sent to the log file (which can be the */
+  /*   standard error output).                                             */
+  /*                                                                       */
+  /* - error mode                                                          */
+  /*                                                                       */
+  /*   Only error messages are generated.                                  */
+  /*                                                                       */
+  /* - release mode:                                                       */
+  /*                                                                       */
+  /*   No error message is sent or generated.  The code is free from any   */
+  /*   debugging parts.                                                    */
+  /*                                                                       */
+  /*************************************************************************/
+
+
 #include <freetype/internal/ftdebug.h>
 
 #ifdef FT_DEBUG_LEVEL_TRACE

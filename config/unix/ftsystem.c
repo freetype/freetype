@@ -1,6 +1,6 @@
 /**************************************************************************
  *
- *  ftsystem.h                                                        1.0
+ *  ftsystem.c                                                        1.0
  *
  *    Unix-specific FreeType low-level system interface
  *
@@ -9,7 +9,7 @@
  *    as thread synchronisation.              
  *
  *
- *  Copyright 1996-1999 by                                                   
+ *  Copyright 1996-2000 by                                                   
  *  David Turner, Robert Wilhelm, and Werner Lemberg                         
  *                                                                           
  *  This file is part of the FreeType project, and may only be used          
@@ -208,14 +208,14 @@
     if (file < 0)
     {
       FT_ERROR(( "FT.Unix.Open:" ));
-      FT_ERROR(( " could not open '%s'\n", filepathname ));
+      FT_ERROR(( " could not open `%s'\n", filepathname ));
       return FT_Err_Cannot_Open_Stream;
     }
 
     if (fstat( file, &stat_buf ) < 0)
     {
       FT_ERROR(( "FT.Unix.Open:" ));
-      FT_ERROR(( " could not 'fstat' file '%s'\n", filepathname ));
+      FT_ERROR(( " could not `fstat' file `%s'\n", filepathname ));
       goto Fail_Map;
     }
       
@@ -231,7 +231,7 @@
     if ( (long)stream->base == -1 )
     {
       FT_ERROR(( "FT.Unix.Open:" ));
-      FT_ERROR(( " Could not map file '%s'\n", filepathname ));
+      FT_ERROR(( " Could not map file `%s'\n", filepathname ));
       goto Fail_Map;
     }
 
@@ -244,7 +244,7 @@
     stream->read  = 0;
     
     FT_TRACE1(( "FT.Unix.Open:" ));
-    FT_TRACE1(( " opened '%s' (%d bytes) succesfully\n",
+    FT_TRACE1(( " opened `%s' (%d bytes) successfully\n",
                 filepathname, stream->size ));
 
     return FT_Err_Ok;
