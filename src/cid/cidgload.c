@@ -43,75 +43,112 @@
     CID_Face      face = (CID_Face)decoder->builder.face;
     CID_FaceInfo  cid  = &face->cid;
     FT_Byte*      p;
-    FT_UInt       entry_len = cid->fd_bytes + cid->gd_bytes;
     FT_UInt       fd_select;
-    FT_ULong      off1, glyph_len;
     FT_Stream     stream = face->root.stream;
     FT_Error      error  = 0;
+    FT_Byte*      charstring = 0;
+	FT_Memory     memory = face->root.memory;
+    FT_UInt       glyph_length = 0;
 
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+	/* For incremental fonts get the character data using the callback function. */
+    if (face->root.incremental_interface)
+    {
+      FT_Data glyph_data;
+      error = face->root.incremental_interface->funcs->get_glyph_data(face->root.incremental_interface->object,
+        glyph_index,&glyph_data);
+      if (error)
+        goto Exit;
+      p = (FT_Byte*)glyph_data.pointer;
+      fd_select = (FT_UInt)cid_get_offset(&p,(FT_Byte)cid->fd_bytes);
+      glyph_data.pointer += cid->fd_bytes;
+      glyph_data.length -= cid->fd_bytes;
+      glyph_length = glyph_data.length;
 
-    /* read the CID font dict index and charstring offset from the CIDMap */
-    if ( FT_STREAM_SEEK( cid->data_offset + cid->cidmap_offset +
-                         glyph_index * entry_len )               ||
-         FT_FRAME_ENTER( 2 * entry_len )                         )
-      goto Exit;
+      if (glyph_length == 0)
+        goto Exit;
+      if (FT_ALLOC(charstring,glyph_length))
+        goto Exit;
+      ft_memcpy(charstring,glyph_data.pointer,glyph_length);
+    }
+else
+#endif
 
-    p = (FT_Byte*)stream->cursor;
-    fd_select = (FT_UInt) cid_get_offset( &p, (FT_Byte)cid->fd_bytes );
-    off1      = (FT_ULong)cid_get_offset( &p, (FT_Byte)cid->gd_bytes );
-    p        += cid->fd_bytes;
-    glyph_len = cid_get_offset( &p, (FT_Byte)cid->gd_bytes ) - off1;
+    /* For ordinary fonts read the CID font dictionary index and charstring offset from the CIDMap. */
+    {
+      FT_UInt entry_len = cid->fd_bytes + cid->gd_bytes;
+      FT_ULong off1;
+      if ( FT_STREAM_SEEK( cid->data_offset + cid->cidmap_offset +
+           glyph_index * entry_len ) ||
+           FT_FRAME_ENTER( 2 * entry_len ) )
+        goto Exit;
 
-    FT_FRAME_EXIT();
+      p = (FT_Byte*)stream->cursor;
+      fd_select = (FT_UInt) cid_get_offset( &p, (FT_Byte)cid->fd_bytes );
+      off1      = (FT_ULong)cid_get_offset( &p, (FT_Byte)cid->gd_bytes );
+      p        += cid->fd_bytes;
+      glyph_length = cid_get_offset( &p, (FT_Byte)cid->gd_bytes ) - off1;
+      FT_FRAME_EXIT();
 
-    /* now, if the glyph is not empty, set up the subrs array, and parse */
-    /* the charstrings                                                   */
-    if ( glyph_len > 0 )
+      if (glyph_length == 0)
+        goto Exit;
+      if (FT_ALLOC(charstring,glyph_length))
+        goto Exit;
+      if (FT_STREAM_READ_AT(cid->data_offset + off1,charstring,glyph_length))
+        goto Exit;
+    }
+
+    /* Now set up the subrs array and parse the charstrings. */
     {
       CID_FaceDict  dict;
       CID_Subrs     cid_subrs = face->subrs + fd_select;
-      FT_Byte*      charstring;
-      FT_Memory     memory = face->root.memory;
+	  FT_Int  cs_offset;
 
-
-      /* setup subrs */
+      /* Set up subrs */
       decoder->num_subrs = cid_subrs->num_subrs;
       decoder->subrs     = cid_subrs->code;
       decoder->subrs_len = 0;
 
-      /* setup font matrix */
+      /* Set up font matrix */
       dict                 = cid->font_dicts + fd_select;
 
       decoder->font_matrix = dict->font_matrix;
       decoder->font_offset = dict->font_offset;
       decoder->lenIV       = dict->private_dict.lenIV;
 
-      /* the charstrings are encoded (stupid!)  */
-      /* load the charstrings, then execute it  */
+	  /* Decode the charstring. */
 
-      if ( FT_ALLOC( charstring, glyph_len ) )
-        goto Exit;
+      /* Adjustment for seed bytes. */
+      cs_offset = ( decoder->lenIV >= 0 ? decoder->lenIV : 0 );
 
-      if ( !FT_STREAM_READ_AT( cid->data_offset + off1,
-                               charstring, glyph_len ) )
-      {
-        FT_Int  cs_offset;
+      /* Decrypt only if lenIV >= 0. */
+      if ( decoder->lenIV >= 0 )
+        cid_decrypt( charstring, glyph_length, 4330 );
 
-
-        /* Adjustment for seed bytes. */
-        cs_offset = ( decoder->lenIV >= 0 ? decoder->lenIV : 0 );
-
-        /* Decrypt only if lenIV >= 0. */
-        if ( decoder->lenIV >= 0 )
-          cid_decrypt( charstring, glyph_len, 4330 );
-
-        error = decoder->funcs.parse_charstrings( decoder,
-                                                  charstring + cs_offset,
-                                                  glyph_len  - cs_offset  );
+      error = decoder->funcs.parse_charstrings( decoder,
+                                                charstring + cs_offset,
+                                                glyph_length  - cs_offset  );
       }
 
-      FT_FREE( charstring );
+    FT_FREE( charstring );
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    /* Incremental fonts can optionally override the metrics. */
+    if (!error && face->root.incremental_interface && face->root.incremental_interface->funcs->get_glyph_metrics)
+    {
+      FT_Bool found = FALSE;
+      FT_Basic_Glyph_Metrics metrics;
+      error = face->root.incremental_interface->funcs->get_glyph_metrics(face->root.incremental_interface->object,
+        glyph_index,FALSE,&metrics,&found);
+      if (found)
+      {
+        decoder->builder.left_bearing.x = metrics.bearing_x;
+        decoder->builder.left_bearing.y = metrics.bearing_y;
+        decoder->builder.advance.x = metrics.advance;
+        decoder->builder.advance.y = 0;
+      }
     }
+#endif
 
   Exit:
     return error;
