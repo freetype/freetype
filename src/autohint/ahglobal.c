@@ -102,14 +102,14 @@
     AH_LOG(( "blue zones computation\n" ));
     AH_LOG(( "------------------------------------------------\n" ));
 
-    for ( blue = (AH_Blue)0; blue < ah_blue_max; blue++ )
+    for ( blue = ah_blue_capital_top; blue < ah_blue_max; blue++ )
     {
       const char*  p     = blue_chars[blue];
       const char*  limit = p + MAX_TEST_CHARACTERS;
       FT_Pos       *blue_ref, *blue_shoot;
 
 
-      AH_LOG(( "blue %3d: ", (int)blue ));
+      AH_LOG(( "blue %3d: ", blue ));
 
       num_flats  = 0;
       num_rounds = 0;
