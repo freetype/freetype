@@ -224,7 +224,7 @@
     FT_Pos  sign = 1;
 
     FT_UNUSED( hinter );
-
+    FT_UNUSED( vertical );
 
     dist = serif->opos - base->opos;
     if ( dist < 0 )

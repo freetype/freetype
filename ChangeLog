@@ -1,3 +1,13 @@
+2002-12-16  David Turner  <david@freetype.org>
+
+        * docs/VERSION.DLL: updating document to better explain the differences between
+        the three version numbers being used on Unix, as well as provide the AutoConf
+        fragment provided by Lars Clausen
+
+        * src/smooth/ftgrays.c (gray_render_conic): fixed small bug that
+        prevented bezier arcs with negative vertical coordinates to be rendered
+        appropriately
+
 2002-12-02  Antoine Leca  <Antoine-FreetypeLeca-Marti.org>
 
         * src/base/ftobjs.c: modified the logic to get Unicode charmaps.
@@ -10,6 +20,13 @@
 
         * include/freetype/ftgzip.h: Correct the name of the controlling
         macro (was __FTXF86_H__ ...)
+
+2002-11-27  Vincent Caron <v.caron@zerodeux.net>
+
+        * builds/unix/unix-def.in, builds/unix/freetype-config.in,
+        builds/unix/configure.ac, src/gzip/rules.mk, src/gzip/ftgzip.c:
+        adding support for system zlib installations when available on the
+        target platform (Unix only)
 
 2002-11-23  David Turner  <david@freetype.org>
 

@@ -857,7 +857,7 @@
         if ( y < min ) min = y;
         if ( y > max ) max = y;
 
-        if ( TRUNC( min ) >= ras.max_ey || TRUNC( max ) < 0 )
+        if ( TRUNC( min ) >= ras.max_ey || TRUNC( max ) < ras.min_ey )
           goto Draw;
 
         gray_split_conic( arc );

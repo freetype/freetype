@@ -1133,6 +1133,14 @@
       /*  with synthetic fonts, it's possible we get here twice  */
       return;
 
+    if ( parser->root.cursor + 2 > parser->root.limit &&
+         parser->root.cursor[0] == '['                &&
+         parser->root.cursor[1] == ']'                )
+    {
+      /* empty array */
+      return;
+    }
+
     loader->num_subrs = (FT_Int)T1_ToInt( parser );
     if ( parser->root.error )
       return;
@@ -1483,9 +1491,9 @@
 
     /* now add the special functions... */
     T1_FIELD_CALLBACK( "FontName", parse_font_name )
-#if 0    
+#if 0
     T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
-#endif    
+#endif
     T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix )
     T1_FIELD_CALLBACK( "Encoding", parse_encoding )
     T1_FIELD_CALLBACK( "Subrs", parse_subrs )
