@@ -32,6 +32,9 @@
   {
     "THEZOCQS",
     "HEZLOCUS",
+#ifdef FT_CONFIG_CHESTER_SMALL_F
+    "fijkdbh",
+#endif
     "xzroesc",
     "xzroesc",
     "pqgjy"

@@ -566,15 +566,26 @@
       size->ttmetrics.y_ratio = 0x10000L;
     }
 
+#ifdef FT_CONFIG_CHESTER_ASCENDER
+
+    /* Compute root ascender, descender, test height, and max_advance */
+    metrics->ascender    = ( FT_MulFix( face->root.ascender,
+                                        metrics->y_scale ) + 63 ) & -64;
+    metrics->descender   = ( FT_MulFix( face->root.descender,
+                                        metrics->y_scale ) + 0  ) & -64;
+#else /* !CHESTER_ASCENDER */
     /* Compute root ascender, descender, test height, and max_advance */
     metrics->ascender    = ( FT_MulFix( face->root.ascender,
                                         metrics->y_scale ) + 32 ) & -64;
     metrics->descender   = ( FT_MulFix( face->root.descender,
                                         metrics->y_scale ) + 32 ) & -64;
+#endif /* !CHESTER_ASCENDER */
+
     metrics->height      = ( FT_MulFix( face->root.height,
                                         metrics->y_scale ) + 32 ) & -64;
     metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
                                         metrics->x_scale ) + 32 ) & -64;
+
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     /* set to `invalid' by default */
