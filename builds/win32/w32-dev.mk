@@ -25,7 +25,7 @@ endif
 DELETE   := del
 SEP      := /
 HOSTSEP  := $(strip \ )
-BUILD    := $(TOP)/builds/win32
+BUILD    := $(TOP)/builds/win32/devel
 PLATFORM := win32
 CC       := gcc
 
