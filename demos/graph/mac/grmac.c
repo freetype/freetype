@@ -198,6 +198,7 @@
           case updateEvt:
             if ( theWindow && (WindowPtr)mac_event.message == theWindow )
             {
+              SetPort( theWindow );
               BeginUpdate( theWindow );
               refresh_rectangle( surface,
                                  0, 0,
@@ -230,6 +231,10 @@
                     *grevent = our_grevent;
                     return;
                   }
+                }
+                else if (part == inContent)
+                {
+                  SelectWindow( theWindow );
                 }
               }
               else
