@@ -55,6 +55,18 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
+  /*************************************************************************
+   *
+   * <Section> Base_Interface
+   *
+   * <Title> Base Interface
+   *
+   * <Abstract>
+   *    The FreeType 2 base font interface
+   *
+   * <Description>
+   *    This sections details the public high-level API of FreeType 2
+   */
 
   /*************************************************************************/
   /*                                                                       */
@@ -97,59 +109,6 @@ FT_BEGIN_HEADER
     FT_Pos  vertAdvance;   /* advance height for vertical layout    */
 
   } FT_Glyph_Metrics;
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <FuncType>                                                            */
-  /*    FT_Generic_Finalizer                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Describes a function used to destroy the `client' data of any      */
-  /*    FreeType object.  See the description of the FT_Generic type for   */
-  /*    details of usage.                                                  */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    The address of the FreeType object which is under finalization.    */
-  /*    Its client data is accessed through its `generic' field.           */
-  /*                                                                       */
-  typedef void  (*FT_Generic_Finalizer)(void*  object);
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FT_Generic                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Client applications often need to associate their own data to a    */
-  /*    variety of FreeType core objects.  For example, a text layout API  */
-  /*    might want to associate a glyph cache to a given size object.      */
-  /*                                                                       */
-  /*    Most FreeType object contains a `generic' field, of type           */
-  /*    FT_Generic, which usage is left to client applications and font    */
-  /*    servers.                                                           */
-  /*                                                                       */
-  /*    It can be used to store a pointer to client-specific data, as well */
-  /*    as the address of a `finalizer' function, which will be called by  */
-  /*    FreeType when the object is destroyed (for example, the previous   */
-  /*    client example would put the address of the glyph cache destructor */
-  /*    in the `finalizer' field).                                         */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    data      :: A typeless pointer to any client-specified data. This */
-  /*                 field is completely ignored by the FreeType library.  */
-  /*                                                                       */
-  /*    finalizer :: A pointer to a `generic finalizer' function, which    */
-  /*                 will be called when the object is destroyed.  If this */
-  /*                 field is set to NULL, no code will be called.         */
-  /*                                                                       */
-  typedef struct  FT_Generic_
-  {
-    void*                 data;
-    FT_Generic_Finalizer  finalizer;
-
-  } FT_Generic;
 
 
   /*************************************************************************/

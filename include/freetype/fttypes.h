@@ -29,6 +29,19 @@
 
 FT_BEGIN_HEADER
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section> Basic_Types                                                 */
+  /*                                                                       */
+  /* <Title> Basic Data Types                                              */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    The basic data types defined by the library                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This sections contains the basic data types defined by FreeType 2, */
+  /*    rangine from simple scalar types to font specific ones             */
+  /*                                                                       */
 
   /*************************************************************************/
   /*                                                                       */
@@ -277,6 +290,60 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    FT_Generic_Finalizer                                               */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Describes a function used to destroy the `client' data of any      */
+  /*    FreeType object.  See the description of the FT_Generic type for   */
+  /*    details of usage.                                                  */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    The address of the FreeType object which is under finalization.    */
+  /*    Its client data is accessed through its `generic' field.           */
+  /*                                                                       */
+  typedef void  (*FT_Generic_Finalizer)(void*  object);
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_Generic                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Client applications often need to associate their own data to a    */
+  /*    variety of FreeType core objects.  For example, a text layout API  */
+  /*    might want to associate a glyph cache to a given size object.      */
+  /*                                                                       */
+  /*    Most FreeType object contains a `generic' field, of type           */
+  /*    FT_Generic, which usage is left to client applications and font    */
+  /*    servers.                                                           */
+  /*                                                                       */
+  /*    It can be used to store a pointer to client-specific data, as well */
+  /*    as the address of a `finalizer' function, which will be called by  */
+  /*    FreeType when the object is destroyed (for example, the previous   */
+  /*    client example would put the address of the glyph cache destructor */
+  /*    in the `finalizer' field).                                         */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    data      :: A typeless pointer to any client-specified data. This */
+  /*                 field is completely ignored by the FreeType library.  */
+  /*                                                                       */
+  /*    finalizer :: A pointer to a `generic finalizer' function, which    */
+  /*                 will be called when the object is destroyed.  If this */
+  /*                 field is set to NULL, no code will be called.         */
+  /*                                                                       */
+  typedef struct  FT_Generic_
+  {
+    void*                 data;
+    FT_Generic_Finalizer  finalizer;
+
+  } FT_Generic;
+
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* <Macro>                                                               */
   /*    FT_MAKE_TAG                                                        */
   /*                                                                       */
@@ -299,6 +366,10 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
+  /**************************************************************************
+   *
+   *  <Section> list_processing
+   */
 
   /*************************************************************************/
   /*                                                                       */

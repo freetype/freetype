@@ -27,6 +27,19 @@
 
 FT_BEGIN_HEADER
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section> TrueType_Tables                                             */
+  /*                                                                       */
+  /* <Title> TrueType Tables                                               */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    TrueType-specific table types and functions                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This sections contains the definition of TrueType-specific tables  */
+  /*    as well as some routines used to access and process them.          */
+  /*                                                                       */
 
   /*************************************************************************/
   /*                                                                       */
@@ -520,6 +533,8 @@ FT_BEGIN_HEADER
   } TT_MaxProfile;
 
 
+  /* */
+
   typedef enum
   {
     ft_sfnt_head = 0,
@@ -568,6 +583,8 @@ FT_BEGIN_HEADER
   FT_EXPORT( void* )  FT_Get_Sfnt_Table( FT_Face      face,
                                          FT_Sfnt_Tag  tag );
 
+
+  /* */
 
 FT_END_HEADER
 
