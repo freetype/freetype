@@ -1,3 +1,7 @@
+2004-04-29  Werner Lemberg  <wl@gnu.org>
+
+	* docs/formats.txt: Add more information on PFR format.
+
 2004-04-28  Werner Lemberg  <wl@gnu.org>
 
 	* docs/formats.txt: New file.
