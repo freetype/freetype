@@ -246,6 +246,7 @@
       builder->current = &loader->current.outline;
       FT_GlyphLoader_Rewind( loader );
 
+      builder->hint_flags    = FT_FACE(face)->internal->hint_flags;
       builder->hints_globals = 0;
       builder->hints_funcs   = 0;
 
@@ -1676,7 +1677,8 @@
             /* apply hints to the loaded glyph outline now */
             hinter->apply( hinter->hints,
                            builder->current,
-                           (PSH_Globals)builder->hints_globals );
+                           (PSH_Globals)builder->hints_globals,
+                           builder->hint_flags );
           }
 
           /* add current outline to the glyph slot */

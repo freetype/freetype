@@ -267,6 +267,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   globals :: The hinter globals for this font.                        */
   /*                                                                       */
+  /*   hint_flags :: hinter bit flags                                      */
+  /*                                                                       */
   /* @return:                                                              */
   /*   FreeType error code.  0 means success.                              */
   /*                                                                       */
@@ -280,7 +282,8 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*T1_Hints_ApplyFunc)( T1_Hints     hints,
                          FT_Outline*  outline,
-                         PSH_Globals  globals );
+                         PSH_Globals  globals,
+                         FT_UInt32    hint_flags );
 
 
   /*************************************************************************/
@@ -545,6 +548,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    globals :: The hinter globals for this font.                       */
   /*                                                                       */
+  /*    hint_flags :: hinter bit flags                                     */
+  /*                                                                       */
   /* @return:                                                              */
   /*   FreeType error code.  0 means success.                              */
   /*                                                                       */
@@ -558,7 +563,8 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*T2_Hints_ApplyFunc)( T2_Hints     hints,
                          FT_Outline*  outline,
-                         PSH_Globals  globals );
+                         PSH_Globals  globals,
+                         FT_UInt32    hint_flags );
 
 
   /*************************************************************************/

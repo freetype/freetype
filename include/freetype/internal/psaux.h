@@ -142,10 +142,10 @@ FT_BEGIN_HEADER
   typedef struct PS_ParserRec_*  PS_Parser;
 
   typedef struct T1_TokenRec_*   T1_Token;
-  
+
   typedef struct T1_FieldRec_*   T1_Field;
 
-  
+
   /* simple enumeration type used to identify token types */
   typedef enum  T1_TokenType_
   {
@@ -388,7 +388,7 @@ FT_BEGIN_HEADER
     FT_Memory  memory;
 
     PS_Parser_FuncsRec  funcs;
-    
+
   } PS_ParserRec;
 
 
@@ -544,7 +544,7 @@ FT_BEGIN_HEADER
     void*           hints_globals;  /* hinter-specific */
 
     T1_Builder_FuncsRec  funcs;
-    
+
   } T1_BuilderRec;
 
 
@@ -613,7 +613,7 @@ FT_BEGIN_HEADER
     (*parse_charstrings)( T1_Decoder  decoder,
                           FT_Byte*    base,
                           FT_UInt     len );
-                          
+
   } T1_Decoder_FuncsRec;
 
 
@@ -645,9 +645,11 @@ FT_BEGIN_HEADER
 
     PS_Blend             blend;       /* for multiple master support */
 
+    FT_UInt32            hint_flags;
+
     T1_Decoder_Callback  parse_callback;
     T1_Decoder_FuncsRec  funcs;
-    
+
   } T1_DecoderRec;
 
 
@@ -667,9 +669,9 @@ FT_BEGIN_HEADER
     FT_CMap_Class  expert;
     FT_CMap_Class  custom;
     FT_CMap_Class  unicode;
-  
+
   } T1_CMap_ClassesRec;
-  
+
 
   /*************************************************************************/
   /*************************************************************************/

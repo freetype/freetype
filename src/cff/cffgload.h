@@ -114,6 +114,8 @@ FT_BEGIN_HEADER
     FT_Error        error;         /* only used for memory errors */
     FT_Bool         metrics_only;
 
+    FT_UInt32       hint_flags;
+
     void*           hints_funcs;    /* hinter-specific */
     void*           hints_globals;  /* hinter-specific */
 
