@@ -1,3 +1,8 @@
+2002-01-27  Giuliano Pochini  <pochini@shiny.it>
+
+	* src/smooth/ftgrays.c (gray_render_scanline): Fix bug which caused
+	bad rendering of thin lines (less than one pixel thick).
+
 2002-01-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffdrivr.c (cff_get_name_index): Make last patch work
