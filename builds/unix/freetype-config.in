@@ -73,17 +73,25 @@ fi
 if test "$echo_prefix" = "yes"; then
  echo $prefix
 fi
+
 if test "$echo_exec_prefix" = "yes"; then
  echo $exec_prefix
 fi
+
 if test "$echo_cflags" = "yes"; then
  cflags="-I@includedir@/freetype2"
  echo $cflags $includes
 fi
+
 if test "$echo_libs" = "yes"; then
  libs="-lfreetype"
- echo -L@libdir@ $libs
+ if test "@libdir@" != "/usr/lib" ; then
+  echo -L@libdir@ $libs
+ else
+  echo $libs
+ fi
 fi
+
 if test "$echo_libtool" = "yes"; then
  convlib="libfreetype.la"
  echo @libdir@/$convlib

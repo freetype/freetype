@@ -1,11 +1,23 @@
-2001-12-11  Detlef Würkner (TetiSoft@apg.lahn.de)
+2001-12-11  David Turner  <david@freetype.org>
+
+        * builds/unix/freetype-config.in: modified the script to prevent
+        passing "-L/usr/lib" to gcc
+
+        * docs/FTL.TXT: simple fix (change "LICENSE.TXT" to "FTL.TXT")
+
+        * builds/unix/freetype2.m4: added autoconf macro, we need to install
+        it in $(prefix)/share/aclocal/freetype2.m4 but I didn't modified
+        builds/unix/install.mk yet..
+
+        * INSTALL: updated the instructions to build shared libraries with
+        Jam.. they were simply erroneous..
+
+
+2001-12-11  Detlef Würkner >TetiSoft@apg.lahn.de>
 
         * include/freetype/internal/ftstream.h: fixed the definitions of
         GET_LongLE and GET_ULongLE which where incorrect (creating problems
         in the pcf driver)..
-
-        * INSTALL: updated the instructions to build shared libraries with
-        Jam.. they were simply erroneous..
 
 2001-12-10  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
 
