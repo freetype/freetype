@@ -302,7 +302,7 @@
   {
     /* if it is not a standard string, return it */
     if ( sid > 390 )
-      return T2_Get_Name( index, sid - 390 );
+      return T2_Get_Name( index, sid - 391 );
 
     /* that's a standard string, fetch a copy from the PSName module */
     {
