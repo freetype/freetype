@@ -482,9 +482,9 @@
 
       char_code -= first;
       if ( char_code < count )
-        result = char_code;
+        result = char_code+1;
       else
-        result = font->header.default_char - first;
+        result = 0;
     }
 
     return result;
@@ -515,6 +515,11 @@
       goto Exit;
     }
 
+    if (glyph_index > 0)
+      glyph_index--;
+    else
+      glyph_index = font->header.default_char - font->header.first_char;
+      
     new_format = font->header.version == 0x300;
     len        = new_format ? 6 : 4;
 
