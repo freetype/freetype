@@ -217,8 +217,6 @@
   *
   */
 
-#include FT_SERVICE_GLYPH_DICT_H
-
   static FT_Error
   cff_get_glyph_name( CFF_Face    face,
                       FT_UInt     glyph_index,

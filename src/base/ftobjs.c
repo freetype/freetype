@@ -27,6 +27,7 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_OUTLINE_H
 
+#include FT_SERVICE_SFNT_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H
 #include FT_SERVICE_GLYPH_DICT_H
 
