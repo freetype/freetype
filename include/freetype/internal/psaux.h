@@ -114,15 +114,15 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  PS_TableRec_
   {
-    FT_Byte*        block;          /* current memory block           */
-    FT_Offset       cursor;         /* current cursor in memory block */
-    FT_Offset       capacity;       /* current size of memory block   */
-    FT_Long         init;
+    FT_Byte*           block;          /* current memory block           */
+    FT_Offset          cursor;         /* current cursor in memory block */
+    FT_Offset          capacity;       /* current size of memory block   */
+    FT_Long            init;
 
-    FT_Int          max_elems;
-    FT_Int          num_elems;
-    FT_Byte**       elements;       /* addresses of table elements */
-    FT_Int*         lengths;        /* lengths of table elements   */
+    FT_Int             max_elems;
+    FT_Int             num_elems;
+    FT_Byte**          elements;       /* addresses of table elements */
+    FT_Int*            lengths;        /* lengths of table elements   */
 
     FT_Memory          memory;
     PS_Table_FuncsRec  funcs;
@@ -146,7 +146,7 @@ FT_BEGIN_HEADER
 
   
   /* simple enumeration type used to identify token types */
-  typedef enum  T1_Token_Type_
+  typedef enum  T1_TokenType_
   {
     T1_TOKEN_TYPE_NONE = 0,
     T1_TOKEN_TYPE_ANY,
@@ -156,7 +156,7 @@ FT_BEGIN_HEADER
     /* do not remove */
     T1_TOKEN_TYPE_MAX
 
-  } T1_Token_Type;
+  } T1_TokenType;
 
 
   /* a simple structure used to identify tokens */
@@ -164,13 +164,13 @@ FT_BEGIN_HEADER
   {
     FT_Byte*       start;   /* first character of token in input stream */
     FT_Byte*       limit;   /* first character after the token          */
-    T1_Token_Type  type;    /* type of token                            */
+    T1_TokenType  type;    /* type of token                            */
 
   } T1_TokenRec;
 
 
   /* enumeration type used to identify object fields */
-  typedef enum  T1_Field_Type_
+  typedef enum  T1_FieldType_
   {
     T1_FIELD_TYPE_NONE = 0,
     T1_FIELD_TYPE_BOOL,
@@ -184,39 +184,39 @@ FT_BEGIN_HEADER
     /* do not remove */
     T1_FIELD_TYPE_MAX
 
-  } T1_Field_Type;
+  } T1_FieldType;
 
-  typedef enum  T1_Field_Location_
+  typedef enum  T1_FieldLocation_
   {
-    t1_field_cid_info,
-    t1_field_font_dict,
-    t1_field_font_info,
-    t1_field_private,
+    T1_FIELD_LOCATION_CID_INFO,
+    T1_FIELD_LOCATION_FONT_DICT,
+    T1_FIELD_LOCATION_FONT_INFO,
+    T1_FIELD_LOCATION_PRIVATE,
 
     /* do not remove */
-    t1_field_location_max
+    T1_FIELD_LOCATION_MAX
 
-  } T1_Field_Location;
+  } T1_FieldLocation;
 
 
   typedef void
-  (*T1_Field_Parser)( FT_Face     face,
-                      FT_Pointer  parser );
+  (*T1_Field_ParseFunc)( FT_Face     face,
+                         FT_Pointer  parser );
 
 
   /* structure type used to model object fields */
   typedef struct  T1_FieldRec_
   {
-    const char*        ident;        /* field identifier               */
-    T1_Field_Location  location;
-    T1_Field_Type      type;         /* type of field                  */
-    T1_Field_Parser    reader;
-    FT_UInt            offset;       /* offset of field in object      */
-    FT_Byte            size;         /* size of field in bytes         */
-    FT_UInt            array_max;    /* maximal number of elements for */
-                                     /* array                          */
-    FT_UInt            count_offset; /* offset of element count for    */
-                                     /* arrays                         */
+    const char*         ident;        /* field identifier               */
+    T1_FieldLocation    location;
+    T1_FieldType        type;         /* type of field                  */
+    T1_Field_ParseFunc  reader;
+    FT_UInt             offset;       /* offset of field in object      */
+    FT_Byte             size;         /* size of field in bytes         */
+    FT_UInt             array_max;    /* maximal number of elements for */
+                                      /* array                          */
+    FT_UInt             count_offset; /* offset of element count for    */
+                                      /* arrays                         */
   } T1_FieldRec;
 
 
@@ -232,7 +232,7 @@ FT_BEGIN_HEADER
 #define T1_NEW_CALLBACK_FIELD( _ident, _reader ) \
           {                                      \
             _ident, T1CODE, T1_FIELD_TYPE_CALLBACK,   \
-            (T1_Field_Parser)_reader,            \
+            (T1_Field_ParseFunc)_reader,            \
             0, 0,                                \
             0, 0                                 \
           },
@@ -402,34 +402,34 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  typedef struct T1_Builder_  T1_Builder;
+  typedef struct T1_BuilderRec_*  T1_Builder;
 
 
   typedef FT_Error
-  (*T1_Builder_Check_Points_Func)( T1_Builder*  builder,
-                                  FT_Int       count );
+  (*T1_Builder_Check_Points_Func)( T1_Builder  builder,
+                                   FT_Int      count );
 
   typedef void
-  (*T1_Builder_Add_Point_Func)( T1_Builder*  builder,
+  (*T1_Builder_Add_Point_Func)( T1_Builder  builder,
                                 FT_Pos       x,
                                 FT_Pos       y,
                                 FT_Byte      flag );
 
   typedef FT_Error
-  (*T1_Builder_Add_Point1_Func)( T1_Builder*  builder,
+  (*T1_Builder_Add_Point1_Func)( T1_Builder  builder,
                                  FT_Pos       x,
                                  FT_Pos       y );
 
   typedef FT_Error
-  (*T1_Builder_Add_Contour_Func)( T1_Builder*  builder );
+  (*T1_Builder_Add_Contour_Func)( T1_Builder  builder );
 
   typedef FT_Error
-  (*T1_Builder_Start_Point_Func)( T1_Builder*  builder,
+  (*T1_Builder_Start_Point_Func)( T1_Builder  builder,
                                   FT_Pos       x,
                                   FT_Pos       y );
 
   typedef void
-  (*T1_Builder_Close_Contour_Func)( T1_Builder*  builder );
+  (*T1_Builder_Close_Contour_Func)( T1_Builder  builder );
 
 
   typedef const struct T1_Builder_FuncsRec_*  T1_Builder_Funcs;
@@ -437,14 +437,14 @@ FT_BEGIN_HEADER
   typedef struct  T1_Builder_FuncsRec_
   {
     void
-    (*init)( T1_Builder*   builder,
+    (*init)( T1_Builder    builder,
              FT_Face       face,
              FT_Size       size,
              FT_GlyphSlot  slot,
              FT_Bool       hinting );
 
     void
-    (*done)( T1_Builder*   builder );
+    (*done)( T1_Builder   builder );
 
     T1_Builder_Check_Points_Func   check_points;
     T1_Builder_Add_Point_Func      add_point;
@@ -459,7 +459,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Structure>                                                           */
-  /*    T1_Builder                                                         */
+  /*    T1_BuilderRec                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*     A structure used during glyph loading to store its outline.       */
@@ -512,7 +512,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    funcs        :: An array of function pointers for the builder.     */
   /*                                                                       */
-  struct  T1_Builder_
+  typedef struct  T1_BuilderRec_
   {
     FT_Memory            memory;
     FT_Face              face;
@@ -545,7 +545,8 @@ FT_BEGIN_HEADER
     void*                hints_globals;  /* hinter-specific */
 
     T1_Builder_FuncsRec  funcs;
-  };
+    
+  } T1_BuilderRec;
 
 
   /*************************************************************************/
@@ -602,7 +603,7 @@ FT_BEGIN_HEADER
               FT_Size              size,
               FT_GlyphSlot         slot,
               FT_Byte**            glyph_names,
-              PS_Blend            blend,
+              PS_Blend             blend,
               FT_Bool              hinting,
               T1_Decoder_Callback  callback );
 
@@ -619,7 +620,7 @@ FT_BEGIN_HEADER
 
   typedef struct  T1_DecoderRec_
   {
-    T1_Builder           builder;
+    T1_BuilderRec        builder;
 
     FT_Long              stack[T1_MAX_CHARSTRINGS_OPERANDS];
     FT_Long*             top;
@@ -643,7 +644,7 @@ FT_BEGIN_HEADER
     FT_Int               num_flex_vectors;
     FT_Vector            flex_vectors[7];
 
-    PS_Blend            blend;       /* for multiple master support */
+    PS_Blend             blend;       /* for multiple master support */
 
     T1_Decoder_Callback  parse_callback;
     T1_Decoder_FuncsRec  funcs;
@@ -661,10 +662,10 @@ FT_BEGIN_HEADER
 
   typedef struct  PSAux_Interface_
   {
-    const PS_Table_FuncsRec*    ps_table_funcs;
-    const PS_Parser_FuncsRec*   ps_parser_funcs;
-    const T1_Builder_FuncsRec*  t1_builder_funcs;
-    const T1_Decoder_FuncsRec*  t1_decoder_funcs;
+    const PS_Table_Funcs    ps_table_funcs;
+    const PS_Parser_Funcs   ps_parser_funcs;
+    const T1_Builder_Funcs  t1_builder_funcs;
+    const T1_Decoder_Funcs  t1_decoder_funcs;
 
     void
     (*t1_decrypt)( FT_Byte*   buffer,

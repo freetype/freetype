@@ -133,7 +133,7 @@
   /*    PS_Table_Add                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Adds an object to a PS_TableRec, possibly growing its memory block.   */
+  /*    Adds an object to a PS_Table, possibly growing its memory block.   */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    table  :: The target table.                                        */
@@ -1071,7 +1071,7 @@
   /*    glyph   :: The current glyph object.                               */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  T1_Builder_Init( T1_Builder*   builder,
+  T1_Builder_Init( T1_Builder   builder,
                    FT_Face       face,
                    FT_Size       size,
                    FT_GlyphSlot  glyph,
@@ -1133,7 +1133,7 @@
   /*    builder :: A pointer to the glyph builder to finalize.             */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  T1_Builder_Done( T1_Builder*  builder )
+  T1_Builder_Done( T1_Builder  builder )
   {
     FT_GlyphSlot  glyph = builder->glyph;
 
@@ -1145,7 +1145,7 @@
 
   /* check that there is enough room for `count' more points */
   FT_LOCAL_DEF( FT_Error )
-  T1_Builder_Check_Points( T1_Builder*  builder,
+  T1_Builder_Check_Points( T1_Builder  builder,
                            FT_Int       count )
   {
     return FT_GlyphLoader_Check_Points( builder->loader, count, 0 );
@@ -1154,7 +1154,7 @@
 
   /* add a new point, do not check space */
   FT_LOCAL_DEF( void )
-  T1_Builder_Add_Point( T1_Builder*  builder,
+  T1_Builder_Add_Point( T1_Builder  builder,
                         FT_Pos       x,
                         FT_Pos       y,
                         FT_Byte      flag )
@@ -1185,7 +1185,7 @@
 
   /* check space for a new on-curve point, then add it */
   FT_LOCAL_DEF( FT_Error )
-  T1_Builder_Add_Point1( T1_Builder*  builder,
+  T1_Builder_Add_Point1( T1_Builder  builder,
                          FT_Pos       x,
                          FT_Pos       y )
   {
@@ -1202,7 +1202,7 @@
 
   /* check room for a new contour, then add it */
   FT_LOCAL_DEF( FT_Error )
-  T1_Builder_Add_Contour( T1_Builder*  builder )
+  T1_Builder_Add_Contour( T1_Builder  builder )
   {
     FT_Outline*  outline = builder->current;
     FT_Error     error;
@@ -1230,7 +1230,7 @@
 
   /* if a path was begun, add its first on-curve point */
   FT_LOCAL_DEF( FT_Error )
-  T1_Builder_Start_Point( T1_Builder*  builder,
+  T1_Builder_Start_Point( T1_Builder  builder,
                           FT_Pos       x,
                           FT_Pos       y )
   {
@@ -1251,7 +1251,7 @@
 
   /* close the current contour */
   FT_LOCAL_DEF( void )
-  T1_Builder_Close_Contour( T1_Builder*  builder )
+  T1_Builder_Close_Contour( T1_Builder  builder )
   {
     FT_Outline*  outline = builder->current;
 
