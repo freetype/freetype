@@ -450,7 +450,7 @@
     TT_Post_Names*      names;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-    PSNames_Interface*  psnames;
+    PSNames_Service  psnames;
 #endif
 
 
@@ -461,7 +461,7 @@
       return SFNT_Err_Invalid_Glyph_Index;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-    psnames = (PSNames_Interface*)face->psnames;
+    psnames = (PSNames_Service)face->psnames;
     if ( !psnames )
       return SFNT_Err_Unimplemented_Feature;
 #endif

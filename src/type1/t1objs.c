@@ -59,7 +59,7 @@
   T1_Size_Get_Globals_Funcs( T1_Size  size )
   {
     T1_Face              face     = (T1_Face) size->root.face;
-    PSHinter_Interface*  pshinter = face->pshinter;
+    PSHinter_Service  pshinter = face->pshinter;
     FT_Module            module;
 
 
@@ -144,7 +144,7 @@
   T1_GlyphSlot_Init( T1_GlyphSlot   slot )
   {
     T1_Face              face;
-    PSHinter_Interface*  pshinter;
+    PSHinter_Service  pshinter;
 
     face     = (T1_Face) slot->root.face;
     pshinter = face->pshinter;
@@ -275,9 +275,9 @@
                 FT_Parameter*  params )
   {
     FT_Error             error;
-    PSNames_Interface*   psnames;
-    PSAux_Interface*     psaux;
-    PSHinter_Interface*  pshinter;
+    PSNames_Service   psnames;
+    PSAux_Service     psaux;
+    PSHinter_Service  pshinter;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -287,28 +287,28 @@
 
     face->root.num_faces = 1;
 
-    psnames = (PSNames_Interface*)face->psnames;
+    psnames = (PSNames_Service)face->psnames;
     if ( !psnames )
     {
-      psnames = (PSNames_Interface*)
+      psnames = (PSNames_Service)
                 FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "psnames" );
 
       face->psnames = psnames;
     }
 
-    psaux = (PSAux_Interface*)face->psaux;
+    psaux = (PSAux_Service)face->psaux;
     if ( !psaux )
     {
-      psaux = (PSAux_Interface*)
+      psaux = (PSAux_Service)
               FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "psaux" );
 
       face->psaux = psaux;
     }
 
-    pshinter = (PSHinter_Interface*)face->pshinter;
+    pshinter = (PSHinter_Service)face->pshinter;
     if ( !pshinter )
     {
-      pshinter = (PSHinter_Interface*)
+      pshinter = (PSHinter_Service)
                  FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "pshinter" );
 
       face->pshinter = pshinter;

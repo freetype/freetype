@@ -56,7 +56,7 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  T1_Parse_Glyph( T1_Decoder*  decoder,
+  T1_Parse_Glyph( T1_Decoder  decoder,
                   FT_UInt      glyph_index )
   {
     T1_Face   face  = (T1_Face)decoder->builder.face;
@@ -78,10 +78,10 @@
                           FT_Int*  max_advance )
   {
     FT_Error          error;
-    T1_Decoder        decoder;
+    T1_DecoderRec        decoder;
     FT_Int            glyph_index;
     T1_Font*          type1 = &face->type1;
-    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
     *max_advance = 0;
@@ -143,12 +143,12 @@
                  FT_Int        load_flags )
   {
     FT_Error                error;
-    T1_Decoder              decoder;
+    T1_DecoderRec           decoder;
     T1_Face                 face = (T1_Face)glyph->root.face;
     FT_Bool                 hinting;
     T1_Font*                type1         = &face->type1;
-    PSAux_Interface*        psaux         = (PSAux_Interface*)face->psaux;
-    const T1_Decoder_Funcs* decoder_funcs = psaux->t1_decoder_funcs;
+    PSAux_Service           psaux         = (PSAux_Service)face->psaux;
+    const T1_Decoder_Funcs  decoder_funcs = psaux->t1_decoder_funcs;
 
     FT_Matrix               font_matrix;
     FT_Vector               font_offset;

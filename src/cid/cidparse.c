@@ -54,7 +54,7 @@
   CID_New_Parser( CID_Parser*       parser,
                   FT_Stream         stream,
                   FT_Memory         memory,
-                  PSAux_Interface*  psaux )
+                  PSAux_Service  psaux )
   {
     FT_Error  error;
     FT_ULong  base_offset, offset, ps_len;
@@ -63,7 +63,7 @@
 
 
     MEM_Set( parser, 0, sizeof ( *parser ) );
-    psaux->t1_parser_funcs->init( &parser->root, 0, 0, memory );
+    psaux->ps_parser_funcs->init( &parser->root, 0, 0, memory );
 
     parser->stream = stream;
 

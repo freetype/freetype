@@ -384,11 +384,11 @@
   parse_blend_axis_types( T1_Face     face,
                           T1_Loader*  loader )
   {
-    T1_Token   axis_tokens[ T1_MAX_MM_AXIS ];
-    FT_Int     n, num_axis;
-    FT_Error   error = 0;
-    T1_Blend*  blend;
-    FT_Memory  memory;
+    T1_TokenRec   axis_tokens[ T1_MAX_MM_AXIS ];
+    FT_Int        n, num_axis;
+    FT_Error      error = 0;
+    T1_Blend*     blend;
+    FT_Memory     memory;
 
 
     /* take an array of objects */
@@ -413,7 +413,7 @@
     /* each token is an immediate containing the name of the axis */
     for ( n = 0; n < num_axis; n++ )
     {
-      T1_Token*  token = axis_tokens + n;
+      T1_Token  token = axis_tokens + n;
       FT_Byte*   name;
       FT_Int     len;
 
@@ -445,10 +445,10 @@
   parse_blend_design_positions( T1_Face     face,
                                 T1_Loader*  loader )
   {
-    T1_Token       design_tokens[ T1_MAX_MM_DESIGNS ];
+    T1_TokenRec       design_tokens[ T1_MAX_MM_DESIGNS ];
     FT_Int         num_designs;
     FT_Int         num_axis;
-    T1_ParserRec*  parser = &loader->parser;
+    T1_Parser  parser = &loader->parser;
 
     FT_Error       error = 0;
     T1_Blend*      blend;
@@ -476,8 +476,8 @@
 
       for ( n = 0; n < (FT_UInt)num_designs; n++ )
       {
-        T1_Token   axis_tokens[ T1_MAX_MM_DESIGNS ];
-        T1_Token*  token;
+        T1_TokenRec   axis_tokens[ T1_MAX_MM_DESIGNS ];
+        T1_Token  token;
         FT_Int     axis, n_axis;
 
 
@@ -505,7 +505,7 @@
         /* now, read each axis token into the design position */
         for ( axis = 0; axis < n_axis; axis++ )
         {
-          T1_Token*  token2 = axis_tokens + axis;
+          T1_Token  token2 = axis_tokens + axis;
 
 
           parser->root.cursor = token2->start;
@@ -528,9 +528,9 @@
                           T1_Loader*  loader )
   {
     FT_Error       error  = 0;
-    T1_ParserRec*  parser = &loader->parser;
+    T1_Parser  parser = &loader->parser;
     T1_Blend*      blend;
-    T1_Token       axis_tokens[ T1_MAX_MM_AXIS ];
+    T1_TokenRec       axis_tokens[ T1_MAX_MM_AXIS ];
     FT_Int         n, num_axis;
     FT_Byte*       old_cursor;
     FT_Byte*       old_limit;
@@ -557,7 +557,7 @@
     for ( n = 0; n < num_axis; n++ )
     {
       T1_DesignMap* map = blend->design_map + n;
-      T1_Token*     token;
+      T1_Token     token;
       FT_Int        p, num_points;
 
 
@@ -609,9 +609,9 @@
                        T1_Loader*  loader )
   {
     FT_Error       error  = 0;
-    T1_ParserRec*  parser = &loader->parser;
+    T1_Parser  parser = &loader->parser;
     T1_Blend*      blend  = face->blend;
-    T1_Token       master;
+    T1_TokenRec       master;
     FT_UInt        n;
     FT_Byte*       old_cursor;
     FT_Byte*       old_limit;
@@ -625,7 +625,7 @@
     }
 
     T1_ToToken( parser, &master );
-    if ( master.type != t1_token_array )
+    if ( master.type != T1_TOKEN_TYPE_ARRAY )
     {
       FT_ERROR(( "parse_weight_vector: incorrect format!\n" ));
       error = T1_Err_Invalid_File_Format;
@@ -660,7 +660,7 @@
   parse_shared_dict( T1_Face     face,
                      T1_Loader*  loader )
   {
-    T1_ParserRec*  parser = &loader->parser;
+    T1_Parser  parser = &loader->parser;
 
     FT_UNUSED( face );
 
@@ -684,7 +684,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* First of all, define the token field static variables.  This is a set */
-  /* of T1_Field variables used later.                                     */
+  /* of T1_FieldRec variables used later.                                     */
   /*                                                                       */
   /*************************************************************************/
 
@@ -692,7 +692,7 @@
   static FT_Error
   t1_load_keyword( T1_Face     face,
                    T1_Loader*  loader,
-                   T1_Field*   field )
+                   T1_Field   field )
   {
     FT_Error   error;
     void*      dummy_object;
@@ -702,7 +702,7 @@
 
 
     /* if the keyword has a dedicated callback, call it */
-    if ( field->type == t1_field_callback )
+    if ( field->type == T1_FIELD_TYPE_CALLBACK )
     {
       field->reader( (FT_Face)face, loader );
       error = loader->parser.root.error;
@@ -743,8 +743,8 @@
       max_objects  = 0;
     }
 
-    if ( field->type == t1_field_integer_array ||
-         field->type == t1_field_fixed_array   )
+    if ( field->type == T1_FIELD_TYPE_INTEGER_ARRAY ||
+         field->type == T1_FIELD_TYPE_FIXED_ARRAY   )
       error = T1_Load_Field_Table( &loader->parser, field,
                                    objects, max_objects, 0 );
     else
@@ -774,7 +774,7 @@
 
 
   static int
-  read_binary_data( T1_ParserRec*  parser,
+  read_binary_data( T1_Parser  parser,
                     FT_Int*        size,
                     FT_Byte**      base )
   {
@@ -819,7 +819,7 @@
   parse_font_name( T1_Face     face,
                    T1_Loader*  loader )
   {
-    T1_ParserRec*  parser = &loader->parser;
+    T1_Parser  parser = &loader->parser;
     FT_Error       error;
     FT_Memory      memory = parser->root.memory;
     FT_Int         len;
@@ -865,7 +865,7 @@
   parse_font_bbox( T1_Face     face,
                    T1_Loader*  loader )
   {
-    T1_ParserRec*  parser = &loader->parser;
+    T1_Parser  parser = &loader->parser;
     FT_Fixed       temp[4];
     FT_BBox*       bbox   = &face->type1.font_bbox;
 
@@ -882,7 +882,7 @@
   parse_font_matrix( T1_Face     face,
                      T1_Loader*  loader )
   {
-    T1_ParserRec*  parser = &loader->parser;
+    T1_Parser  parser = &loader->parser;
     FT_Matrix*     matrix = &face->type1.font_matrix;
     FT_Vector*     offset = &face->type1.font_offset;
     FT_Face        root   = (FT_Face)&face->root;
@@ -931,11 +931,11 @@
   parse_encoding( T1_Face     face,
                   T1_Loader*  loader )
   {
-    T1_ParserRec*  parser = &loader->parser;
+    T1_Parser  parser = &loader->parser;
     FT_Byte*       cur    = parser->root.cursor;
     FT_Byte*       limit  = parser->root.limit;
 
-    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
     /* skip whitespace */
@@ -956,7 +956,7 @@
     {
       T1_Encoding*  encode     = &face->type1.encoding;
       FT_Int        count, n;
-      PS_Table*     char_table = &loader->encoding_table;
+      PS_Table      char_table = &loader->encoding_table;
       FT_Memory     memory     = parser->root.memory;
       FT_Error      error;
 
@@ -1099,13 +1099,13 @@
   parse_subrs( T1_Face     face,
                T1_Loader*  loader )
   {
-    T1_ParserRec*  parser = &loader->parser;
-    PS_Table*      table  = &loader->subrs;
+    T1_Parser  parser = &loader->parser;
+    PS_Table      table  = &loader->subrs;
     FT_Memory      memory = parser->root.memory;
     FT_Error       error;
     FT_Int         n;
 
-    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
     if ( loader->num_subrs )
@@ -1197,14 +1197,14 @@
   parse_charstrings( T1_Face     face,
                      T1_Loader*  loader )
   {
-    T1_ParserRec*  parser     = &loader->parser;
-    PS_Table*      code_table = &loader->charstrings;
-    PS_Table*      name_table = &loader->glyph_names;
-    PS_Table*      swap_table = &loader->swap_table;
+    T1_Parser  parser     = &loader->parser;
+    PS_Table      code_table = &loader->charstrings;
+    PS_Table      name_table = &loader->glyph_names;
+    PS_Table      swap_table = &loader->swap_table;
     FT_Memory      memory     = parser->root.memory;
     FT_Error       error;
 
-    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
     FT_Byte*    cur;
     FT_Byte*    limit = parser->root.limit;
@@ -1457,7 +1457,7 @@
 
 
   static
-  const T1_Field  t1_keywords[] =
+  const T1_FieldRec  t1_keywords[] =
   {
 
 #include "t1tokens.h"
@@ -1478,7 +1478,7 @@
     T1_FIELD_CALLBACK( "shareddict", parse_shared_dict )
 #endif
 
-    { 0, t1_field_cid_info, t1_field_none, 0, 0, 0, 0, 0 }
+    { 0, t1_field_cid_info, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0 }
   };
 
 
@@ -1488,7 +1488,7 @@
               FT_Byte*    base,
               FT_Long     size )
   {
-    T1_ParserRec*  parser = &loader->parser;
+    T1_Parser  parser = &loader->parser;
 
 
     parser->root.cursor = base;
@@ -1520,7 +1520,7 @@
 
           if ( cur < limit )
           {
-            T1_Token  token;
+            T1_TokenRec  token;
 
 
             /* skip the `known' keyword and the token following it */
@@ -1529,7 +1529,7 @@
             T1_ToToken( &loader->parser, &token );
 
             /* if the last token was an array, skip it! */
-            if ( token.type == t1_token_array )
+            if ( token.type == T1_TOKEN_TYPE_ARRAY )
               cur2 = parser->root.cursor;
           }
           cur = cur2;
@@ -1551,7 +1551,7 @@
           {
             {
               /* now, compare the immediate name to the keyword table */
-              T1_Field*  keyword = (T1_Field*)t1_keywords;
+              T1_Field  keyword = (T1_Field)t1_keywords;
 
 
               for (;;)
@@ -1622,7 +1622,7 @@
   static void
   t1_done_loader( T1_Loader*  loader )
   {
-    T1_ParserRec*  parser = &loader->parser;
+    T1_Parser  parser = &loader->parser;
 
 
     /* finalize tables */
@@ -1640,12 +1640,12 @@
   FT_LOCAL_DEF FT_Error
   T1_Open_Face( T1_Face  face )
   {
-    T1_Loader      loader;
-    T1_ParserRec*  parser;
-    T1_Font*       type1 = &face->type1;
-    FT_Error       error;
+    T1_Loader  loader;
+    T1_Parser  parser;
+    T1_Font*   type1 = &face->type1;
+    FT_Error   error;
 
-    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
     t1_init_loader( &loader, face );

@@ -55,7 +55,7 @@
   CID_GlyphSlot_Init( CID_GlyphSlot   slot )
   {
     CID_Face             face;
-    PSHinter_Interface*  pshinter;
+    PSHinter_Service  pshinter;
 
 
     face     = (CID_Face) slot->root.face;
@@ -93,7 +93,7 @@
   CID_Size_Get_Globals_Funcs( CID_Size  size )
   {
     CID_Face             face     = (CID_Face)size->root.face;
-    PSHinter_Interface*  pshinter = face->pshinter;
+    PSHinter_Service  pshinter = face->pshinter;
     FT_Module            module;
 
 
@@ -270,9 +270,9 @@
                  FT_Parameter*  params )
   {
     FT_Error             error;
-    PSNames_Interface*   psnames;
-    PSAux_Interface*     psaux;
-    PSHinter_Interface*  pshinter;
+    PSNames_Service   psnames;
+    PSAux_Service     psaux;
+    PSHinter_Service  pshinter;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -282,28 +282,28 @@
 
     face->root.num_faces = 1;
 
-    psnames = (PSNames_Interface*)face->psnames;
+    psnames = (PSNames_Service)face->psnames;
     if ( !psnames )
     {
-      psnames = (PSNames_Interface*)FT_Get_Module_Interface(
+      psnames = (PSNames_Service)FT_Get_Module_Interface(
                   FT_FACE_LIBRARY( face ), "psnames" );
 
       face->psnames = psnames;
     }
 
-    psaux = (PSAux_Interface*)face->psaux;
+    psaux = (PSAux_Service)face->psaux;
     if ( !psaux )
     {
-      psaux = (PSAux_Interface*)FT_Get_Module_Interface(
+      psaux = (PSAux_Service)FT_Get_Module_Interface(
                 FT_FACE_LIBRARY( face ), "psaux" );
 
       face->psaux = psaux;
     }
 
-    pshinter = (PSHinter_Interface*)face->pshinter;
+    pshinter = (PSHinter_Service)face->pshinter;
     if ( !pshinter )
     {
-      pshinter = (PSHinter_Interface*)FT_Get_Module_Interface(
+      pshinter = (PSHinter_Service)FT_Get_Module_Interface(
                    FT_FACE_LIBRARY( face ), "pshinter" );
 
       face->pshinter = pshinter;
@@ -436,7 +436,7 @@
       /* module                                                            */
       if ( face->psnames )
       {
-        PSNames_Interface*  psnames = (PSNames_Interface*)face->psnames;
+        PSNames_Service  psnames = (PSNames_Service)face->psnames;
 
 
         if ( psnames->unicode_value )

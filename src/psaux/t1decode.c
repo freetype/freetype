@@ -121,12 +121,12 @@
   /*    glyph wasn't found.                                                */
   /*                                                                       */
   static FT_Int
-  t1_lookup_glyph_by_stdcharcode( T1_Decoder*  decoder,
+  t1_lookup_glyph_by_stdcharcode( T1_Decoder  decoder,
                                   FT_Int       charcode )
   {
     FT_UInt             n;
     const FT_String*    glyph_name;
-    PSNames_Interface*  psnames = decoder->psnames;
+    PSNames_Service  psnames = decoder->psnames;
 
 
     /* check range of standard char code */
@@ -175,7 +175,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static FT_Error
-  t1operator_seac( T1_Decoder*  decoder,
+  t1operator_seac( T1_Decoder  decoder,
                    FT_Pos       asb,
                    FT_Pos       adx,
                    FT_Pos       ady,
@@ -331,12 +331,12 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF FT_Error
-  T1_Decoder_Parse_Charstrings( T1_Decoder*  decoder,
+  T1_Decoder_Parse_Charstrings( T1_Decoder  decoder,
                                 FT_Byte*     charstring_base,
                                 FT_UInt      charstring_len )
   {
     FT_Error          error;
-    T1_Decoder_Zone*  zone;
+    T1_Decoder_Zone  zone;
     FT_Byte*          ip;
     FT_Byte*          limit;
     T1_Builder*       builder = &decoder->builder;
@@ -1098,7 +1098,7 @@
 
   /* parse a single Type 1 glyph */
   FT_LOCAL_DEF FT_Error
-  T1_Decoder_Parse_Glyph( T1_Decoder*  decoder,
+  T1_Decoder_Parse_Glyph( T1_Decoder  decoder,
                           FT_UInt      glyph )
   {
     return decoder->parse_callback( decoder, glyph );
@@ -1107,7 +1107,7 @@
 
   /* initialise T1 decoder */
   FT_LOCAL_DEF FT_Error
-  T1_Decoder_Init( T1_Decoder*          decoder,
+  T1_Decoder_Init( T1_Decoder          decoder,
                    FT_Face              face,
                    FT_Size              size,
                    FT_GlyphSlot         slot,
@@ -1120,10 +1120,10 @@
 
     /* retrieve PSNames interface from list of current modules */
     {
-      PSNames_Interface*  psnames = 0;
+      PSNames_Service  psnames = 0;
 
 
-      psnames = (PSNames_Interface*)FT_Get_Module_Interface(
+      psnames = (PSNames_Service)FT_Get_Module_Interface(
                    FT_FACE_LIBRARY(face), "psnames" );
       if ( !psnames )
       {
@@ -1149,7 +1149,7 @@
 
   /* finalize T1 decoder */
   FT_LOCAL_DEF void
-  T1_Decoder_Done( T1_Decoder*  decoder )
+  T1_Decoder_Done( T1_Decoder  decoder )
   {
     T1_Builder_Done( &decoder->builder );
   }

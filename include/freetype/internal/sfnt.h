@@ -522,6 +522,9 @@ FT_BEGIN_HEADER
   } SFNT_Interface;
 
 
+  /* transitional */
+  typedef SFNT_Interface*   SFNT_Service;
+
 FT_END_HEADER
 
 #endif /* __SFNT_H__ */

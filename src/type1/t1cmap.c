@@ -13,7 +13,7 @@
                     FT_Int       is_expert )
   {
     T1_Face             face    = (T1_Face) FT_CMAP_FACE(cmap);
-    PSNames_Interface*  psnames = face->psnames;
+    PSNames_Service  psnames = face->psnames;
 
     cmap->num_glyphs  = face->type1.num_glyphs;
     cmap->glyph_names = face->type1.glyph_names;
