@@ -1,51 +1,47 @@
 2001-12-07  David Turner  <david@freetype.org>
 
-    * include/freetype/cache/ftccmap.h, src/cache/ftccmap.c: added new
-    charmap cache
-
+	* include/freetype/cache/ftccmap.h, src/cache/ftccmap.c: Added new
+	charmap cache.
 
 2001-12-06  Leonard Rosenthol  <leonardr@lazerware.com>
 
-	* src/base/ftmac.c: Added support for reading .dfont files on 
-	Mac OS X.  Aldo added a new routine (FT_GetFile_From_Mac_Name())
-	which looks up a given font by name in the Mac OS and returns
-	the disk file where it resides.
-	
-	* include/freetype/ftmac.h: Exported FT_GetFile_From_Mac_Name()
+	Added support for reading .dfont files on Mac OS X.  Also added a
+	new routine which looks up a given font by name in the Mac OS and
+	returns the disk file where it resides.
 
+	* src/base/ftmac.c (is_dfont): New auxiliary function.
+	(FT_New_Face_From_dfont): New function.
+	(FT_GetFile_From_Mac_Name): New exported function.
+	(FT_New_Face): Updated.
+	* include/freetype/ftmac.h: Updated.
+
+2001-12-06  David Turner  <david@freetype.org>
+
+	* src/cache/Jamfile: Updated.
 
 2001-12-06  Werner Lemberg  <wl@gnu.org>
 
 	* INSTALL: Small update.
 
-
 2001-12-05  David Turner  <david@freetype.org>
 
-    * src/base/ftglyph.c (FT_Glyph_To_Bitmap): re-ordered code for debugging
-    purposes..
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Re-ordered code for
+	debugging purposes.
 
-    * src/smooth/ftsmooth.c (ft_smooth_render): fixed a nasty hidden bug where
-    outline shifting wasn't correctly undone after bitmap rasterization. this
-    created problems with certain glyphs (like '"' of certain fonts..) and
-    the cache system..
+	* src/smooth/ftsmooth.c (ft_smooth_render): Fixed a nasty hidden bug
+	where outline shifting wasn't correctly undone after bitmap
+	rasterization.  This created problems with certain glyphs (like '"'
+	of certain fonts) and the cache system.
 
+	* src/pshinter/pshalgo1.c (psh1_hint_table_init): Fix typo.
+	* src/pshinter/pshalgo2.c (psh2_hint_table_init): Fix typo.
+	(ps2_hints_apply): Small fix.
 
 2001-12-05  David Turner  <david@freetype.org>
-
-    First of all, a big thanks to Werner and Antoine for their latest work !!
-    
-    * src/pshinter/pshalgo2.c (psh2_hint_table_init),
-      src/pshinter/pshalgo1.c (psh1_hint_table_init): removed compiler
-      warnings
-
-    * include/freetype/cache/*, src/cache/*: yet another massive rewrite of
-    the caching sub-system, in order to both increase performance and allow
-    simpler cache sub-classing. As an example, the code for the image and
-    sbit caches is now much simpler
 
 	* src/pshinter/pshalgo2.c (psh2_hint_table_init),
 	src/pshinter/pshalgo1.c (psh1_hint_table_init): Removed compiler
-	warnings
+	warnings.
 
 	* include/freetype/cache/*, src/cache/*: Yet another massive rewrite
 	of the caching sub-system in order to both increase performance and
@@ -280,7 +276,7 @@
 2001-10-18  David Turner  <david@freetype.org>
 
 	* src/psnames/pstables.h, src/tools/glnames.py: Rewrote the
-	"glnames.py" script used to generate the "pstables.h" header file. 
+	"glnames.py" script used to generate the "pstables.h" header file.
 	The old one contained a serious bug that made FreeType return
 	incorrect glyph names for certain glyphs.
 

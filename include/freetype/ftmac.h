@@ -25,8 +25,8 @@
 /***************************************************************************/
 
 
-#ifndef __FT_MAC_H__
-#define __FT_MAC_H__
+#ifndef __FTMAC_H__
+#define __FTMAC_H__
 
 
 #include <ft2build.h>
@@ -95,35 +95,34 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_GetFile_From_Mac_Name				           */
+  /*    FT_GetFile_From_Mac_Name                                           */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Returns an FSSpec for the disk file containing the named font.     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    fontName   :: Mac OS name of the font (eg. Times New Roman Bold)   */
+  /*    fontName   :: Mac OS name of the font (eg. Times New Roman Bold).  */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    pathSpec   :: FSSpec to the file.  For passing to FT_New_Face      */
+  /*    pathSpec   :: FSSpec to the file.  For passing to @FT_New_Face.    */
   /*                                                                       */
-  /*    face_index :: index of the face  For passing to FT_New_Face        */
+  /*    face_index :: Index of the face.  For passing to @FT_New_Face.     */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  /*                                                                       */
   FT_EXPORT_DEF( FT_Error )
-	FT_GetFile_From_Mac_Name( char* fontName, 
-				  FSSpec* pathSpec,
-				  FT_Long* face_index );
-	
+  FT_GetFile_From_Mac_Name( char*     fontName, 
+                            FSSpec*   pathSpec,
+                            FT_Long*  face_index );
+
   /* */
 
 
 FT_END_HEADER
 
 
-#endif /* __FT_MAC_H__ */
+#endif /* __FTMAC_H__ */
 
 
 /* END */
