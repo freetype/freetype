@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -86,36 +86,36 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
- /* handle to a validation object */
-  typedef struct FT_ValidatorRec_*   FT_Validator;
+  /* handle to a validation object */
+  typedef struct FT_ValidatorRec_*  FT_Validator;
 
- /**************************************************************************
-  *
-  *  there are three distinct validation levels defined here:
-  *
-  *  FT_VALIDATE_DEFAULT ::
-  *    a table that passes this validation level can be used reliably by
-  *    FreeType. It generally means that all offsets have been checked to
-  *    prevent out-of-bound reads, array counts are correct, etc..
-  *
-  *
-  *  FT_VALIDATE_TIGHT ::
-  *    a table that passes this validation level can be used reliably and
-  *    doesn't contain invalid data. For example, a charmap table that
-  *    returns invalid glyph indices will not pass, even though it can
-  *    be used with FreeType in default mode (the library will simply
-  *    return an error later when trying to load the glyph)
-  *
-  *    it also check that fields that must be a multiple of 2, 4 or 8 don't
-  *    have incorrect values, etc..
-  *
-  *
-  *  FT_VALIDATE_PARANOID ::
-  *    only for font facists. Checks that a table follows the specification
-  *    100%. Very few fonts will be able to pass this level anyway but it
-  *    can be useful for certain tools like font editors/converters..
-  */
-  typedef enum FT_ValidationLevel_
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* There are three distinct validation levels defined here:              */
+  /*                                                                       */
+  /* FT_VALIDATE_DEFAULT ::                                                */
+  /*   A table that passes this validation level can be used reliably by   */
+  /*   FreeType.  It generally means that all offsets have been checked to */
+  /*   prevent out-of-bound reads, array counts are correct, etc.          */
+  /*                                                                       */
+  /* FT_VALIDATE_TIGHT ::                                                  */
+  /*   A table that passes this validation level can be used reliably and  */
+  /*   doesn't contain invalid data.  For example, a charmap table that    */
+  /*   returns invalid glyph indices will not pass, even though it can     */
+  /*   be used with FreeType in default mode (the library will simply      */
+  /*   return an error later when trying to load the glyph).               */
+  /*                                                                       */
+  /*   It also check that fields that must be a multiple of 2, 4, or 8     */
+  /*   dont' have incorrect values, etc.                                   */
+  /*                                                                       */
+  /* FT_VALIDATE_PARANOID ::                                               */
+  /*   Only for font debugging.  Checks that a table follows the           */
+  /*   specification by 100%.  Very few fonts will be able to pass this    */
+  /*   level anyway but it can be useful for certain tools like font       */
+  /*   editors/converters.                                                 */
+  /*                                                                       */
+  typedef enum  FT_ValidationLevel_
   {
     FT_VALIDATE_DEFAULT = 0,
     FT_VALIDATE_TIGHT,
@@ -124,19 +124,21 @@ FT_BEGIN_HEADER
   } FT_ValidationLevel;
 
 
- /* validator structure */
-  typedef struct FT_ValidatorRec_
+  /* validator structure */
+  typedef struct  FT_ValidatorRec_
   {
-    const FT_Byte*      base;   /* address of table in memory           */
-    const FT_Byte*      limit;  /* 'base' + sizeof(table) in memory     */
-    FT_ValidationLevel  level;  /* validation level                     */
-    FT_Error            error;  /* error returned. 0 means success      */
+    const FT_Byte*      base;   /* address of table in memory       */
+    const FT_Byte*      limit;  /* `base' + sizeof(table) in memory */
+    FT_ValidationLevel  level;  /* validation level                 */
+    FT_Error            error;  /* error returned. 0 means success  */
 
     jmp_buf             jump_buffer;  /* used for exception handling */
 
   } FT_ValidatorRec;
 
-#define FT_VALIDATOR(x)  ((FT_Validator)(x))
+
+#define FT_VALIDATOR( x )  ((FT_Validator)( x ))
+
 
   FT_BASE( void )
   ft_validator_init( FT_Validator        valid,
@@ -147,34 +149,34 @@ FT_BEGIN_HEADER
   FT_BASE( FT_Int )
   ft_validator_run( FT_Validator  valid );
 
- /* sets the error field in a validator, then calls 'longjmp' to return */
- /* to high-level caller. Using 'setjmp/longjmp' avoids many stupid     */
- /* error checks within the validation routines..                       */
- /*                                                                     */
+  /* Sets the error field in a validator, then calls `longjmp' to return */
+  /* to high-level caller.  Using `setjmp/longjmp' avoids many stupid    */
+  /* error checks within the validation routines.                        */
+  /*                                                                     */
   FT_BASE( void )
   ft_validator_error( FT_Validator  valid,
                       FT_Error      error );
 
- /* calls ft_validate_error. Assumes that the 'valid' local variable holds */
- /* a pointer to the current validator object..                            */
- /*                                                                        */
-#define  FT_INVALID(_error)   ft_validator_error( valid, _error )
 
- /* called when a broken table is detected */
-#define  FT_INVALID_TOO_SHORT   FT_INVALID( FT_Err_Invalid_Table )
+  /* Calls ft_validate_error.  Assumes that the `valid' local variable */
+  /* holds a pointer to the current validator object.                  */
+  /*                                                                   */
+#define FT_INVALID( _error )  ft_validator_error( valid, _error )
 
- /* called when an invalid offset is detected */
-#define  FT_INVALID_OFFSET      FT_INVALID( FT_Err_Invalid_Offset )
+  /* called when a broken table is detected */
+#define FT_INVALID_TOO_SHORT  FT_INVALID( FT_Err_Invalid_Table )
 
- /* called when an invalid format/value is detected */
-#define  FT_INVALID_FORMAT      FT_INVALID( FT_Err_Invalid_Table )
+  /* called when an invalid offset is detected */
+#define FT_INVALID_OFFSET     FT_INVALID( FT_Err_Invalid_Offset )
 
- /* called when an invalid glyph index is detected */
-#define  FT_INVALID_GLYPH_ID    FT_INVALID( FT_Err_Invalid_Glyph_Index )
+  /* called when an invalid format/value is detected */
+#define FT_INVALID_FORMAT     FT_INVALID( FT_Err_Invalid_Table )
 
- /* called when an invalid field value is detected */
-#define  FT_INVALID_DATA        FT_INVALID( FT_Err_Invalid_Table )
+  /* called when an invalid glyph index is detected */
+#define FT_INVALID_GLYPH_ID   FT_INVALID( FT_Err_Invalid_Glyph_Index )
 
+  /* called when an invalid field value is detected */
+#define FT_INVALID_DATA       FT_INVALID( FT_Err_Invalid_Table )
 
 
   /*************************************************************************/
@@ -189,43 +191,48 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
- /* handle to internal charmap object */
+  /* handle to internal charmap object */
   typedef struct FT_CMapRec_*              FT_CMap;
 
- /* handle to charmap class structure */
-  typedef const struct FT_CMap_ClassRec_*   FT_CMap_Class;
+  /* handle to charmap class structure */
+  typedef const struct FT_CMap_ClassRec_*  FT_CMap_Class;
 
- /* internal charmap object structure */
-  typedef struct FT_CMapRec_
+  /* internal charmap object structure */
+  typedef struct  FT_CMapRec_
   {
     FT_CharMapRec  charmap;
     FT_CMap_Class  clazz;
 
   } FT_CMapRec;
 
- /* typecase any pointer to a charmap handle */
-#define  FT_CMAP(x)               ((FT_CMap)(x))
+  /* typecase any pointer to a charmap handle */
+#define FT_CMAP( x )              ((FT_CMap)( x ))
 
- /* obvious macros */
-#define  FT_CMAP_PLATFORM_ID(x)   FT_CMAP(x)->charmap.platform_id
-#define  FT_CMAP_ENCODING_ID(x)   FT_CMAP(x)->charmap.encoding_id
-#define  FT_CMAP_ENCODING(x)      FT_CMAP(x)->charmap.encoding
-#define  FT_CMAP_FACE(x)          FT_CMAP(x)->charmap.face
+  /* obvious macros */
+#define FT_CMAP_PLATFORM_ID( x )  FT_CMAP( x )->charmap.platform_id
+#define FT_CMAP_ENCODING_ID( x )  FT_CMAP( x )->charmap.encoding_id
+#define FT_CMAP_ENCODING( x )     FT_CMAP( x )->charmap.encoding
+#define FT_CMAP_FACE( x )         FT_CMAP( x )->charmap.face
 
 
- /* class method definitions */
-  typedef FT_Error  (*FT_CMap_InitFunc)( FT_CMap     cmap,
-                                         FT_Pointer  init_data );
+  /* class method definitions */
+  typedef FT_Error
+  (*FT_CMap_InitFunc)( FT_CMap     cmap,
+                       FT_Pointer  init_data );
 
-  typedef void      (*FT_CMap_DoneFunc)( FT_CMap     cmap );
+  typedef void
+  (*FT_CMap_DoneFunc)( FT_CMap  cmap );
 
-  typedef FT_UInt   (*FT_CMap_CharIndexFunc)( FT_CMap      cmap,
-                                              FT_UInt32    char_code );
+  typedef FT_UInt
+  (*FT_CMap_CharIndexFunc)( FT_CMap    cmap,
+                            FT_UInt32  char_code );
 
-  typedef FT_UInt   (*FT_CMap_CharNextFunc)( FT_CMap     cmap,
-                                             FT_UInt32  *achar_code );
+  typedef FT_UInt
+  (*FT_CMap_CharNextFunc)( FT_CMap     cmap,
+                           FT_UInt32  *achar_code );
 
-  typedef struct FT_CMap_ClassRec_
+
+  typedef struct  FT_CMap_ClassRec_
   {
     FT_UInt                size;
     FT_CMap_InitFunc       init;
@@ -236,14 +243,14 @@ FT_BEGIN_HEADER
   } FT_CMap_ClassRec;
 
 
- /* create a new charmap and add it to charmap->face */
+  /* create a new charmap and add it to charmap->face */
   FT_BASE( FT_Error )
   FT_CMap_New( FT_CMap_Class  clazz,
                FT_Pointer     init_data,
                FT_CharMap     charmap,
                FT_CMap       *acmap );
 
- /* destroy a charmap (don't remove it from face's list though) */
+  /* destroy a charmap (don't remove it from face's list though) */
   FT_BASE( void )
   FT_CMap_Done( FT_CMap  cmap );
 
@@ -330,11 +337,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_Slot_InternalRec_
   {
-    FT_GlyphLoader   loader;
-    FT_Bool          glyph_transformed;
-    FT_Matrix        glyph_matrix;
-    FT_Vector        glyph_delta;
-    void*            glyph_hints;
+    FT_GlyphLoader  loader;
+    FT_Bool         glyph_transformed;
+    FT_Matrix       glyph_matrix;
+    FT_Vector       glyph_delta;
+    void*           glyph_hints;
 
   } FT_GlyphSlot_InternalRec;
 
@@ -380,10 +387,11 @@ FT_BEGIN_HEADER
 
 
   /* typecast an object to a FT_Module */
-#define FT_MODULE( x )          ((FT_Module)(x))
-#define FT_MODULE_CLASS( x )    FT_MODULE(x)->clazz
-#define FT_MODULE_LIBRARY( x )  FT_MODULE(x)->library
-#define FT_MODULE_MEMORY( x )   FT_MODULE(x)->memory
+#define FT_MODULE( x )          ((FT_Module)( x ))
+#define FT_MODULE_CLASS( x )    FT_MODULE( x )->clazz
+#define FT_MODULE_LIBRARY( x )  FT_MODULE( x )->library
+#define FT_MODULE_MEMORY( x )   FT_MODULE( x )->memory
+
 
 #define FT_MODULE_IS_DRIVER( x )  ( FT_MODULE_CLASS( x )->module_flags & \
                                     ft_module_font_driver )
@@ -397,13 +405,13 @@ FT_BEGIN_HEADER
 #define FT_MODULE_IS_STYLER( x )  ( FT_MODULE_CLASS( x )->module_flags & \
                                     ft_module_styler )
 
-#define FT_DRIVER_IS_SCALABLE( x )  ( FT_MODULE_CLASS(x)->module_flags & \
+#define FT_DRIVER_IS_SCALABLE( x )  ( FT_MODULE_CLASS( x )->module_flags & \
                                       ft_module_driver_scalable )
 
-#define FT_DRIVER_USES_OUTLINES( x )  !( FT_MODULE_CLASS(x)->module_flags & \
+#define FT_DRIVER_USES_OUTLINES( x )  !( FT_MODULE_CLASS( x )->module_flags & \
                                          ft_module_driver_no_outlines )
 
-#define FT_DRIVER_HAS_HINTER( x )  ( FT_MODULE_CLASS(x)->module_flags & \
+#define FT_DRIVER_HAS_HINTER( x )  ( FT_MODULE_CLASS( x )->module_flags & \
                                      ft_module_driver_has_hinter )
 
 
@@ -587,13 +595,13 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_DriverRec_
   {
-    FT_ModuleRec      root;
-    FT_Driver_Class   clazz;
+    FT_ModuleRec     root;
+    FT_Driver_Class  clazz;
 
-    FT_ListRec        faces_list;
-    void*             extensions;
+    FT_ListRec       faces_list;
+    void*            extensions;
 
-    FT_GlyphLoader    glyph_loader;
+    FT_GlyphLoader   glyph_loader;
 
   } FT_DriverRec;
 
@@ -611,8 +619,8 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-#define FT_DEBUG_HOOK_TRUETYPE   0
-#define FT_DEBUG_HOOK_TYPE1      1
+#define FT_DEBUG_HOOK_TRUETYPE  0
+#define FT_DEBUG_HOOK_TYPE1     1
 
 
   /*************************************************************************/
@@ -677,7 +685,7 @@ FT_BEGIN_HEADER
     FT_Module          auto_hinter;
 
     FT_Byte*           raster_pool;      /* scan-line conversion */
-                                          /* render pool          */
+                                         /* render pool          */
     FT_ULong           raster_pool_size; /* size of render pool in bytes */
 
     FT_DebugHook_Func  debug_hooks[4];

@@ -5,7 +5,7 @@
 /*    Basic Windows FNT/FON type definitions and interface (specification  */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -115,13 +115,13 @@ FT_BEGIN_HEADER
 
   typedef struct  FNT_FontRec_
   {
-    FT_ULong       offset;
-    FT_Int         size_shift;
+    FT_ULong          offset;
+    FT_Int            size_shift;
 
     WinFNT_HeaderRec  header;
 
-    FT_Byte*       fnt_frame;
-    FT_ULong       fnt_size;
+    FT_Byte*          fnt_frame;
+    FT_ULong          fnt_size;
 
   } FNT_FontRec, *FNT_Font;
 
@@ -129,7 +129,7 @@ FT_BEGIN_HEADER
   typedef struct  FNT_SizeRec_
   {
     FT_SizeRec  root;
-    FNT_Font   font;
+    FNT_Font    font;
 
   } FNT_SizeRec, *FNT_Size;
 

@@ -1,3 +1,21 @@
+/***************************************************************************/
+/*                                                                         */
+/*  fttrace.h                                                              */
+/*                                                                         */
+/*    Tracing handling (specification only).                               */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 /* definitions of trace levels for FreeType 2 */
 
 /* the first level must always be `trace_any' */
@@ -73,3 +91,6 @@ FT_TRACE_DEF( winfnt )
 /* PCF fonts component */
 FT_TRACE_DEF( pcfdriver )
 FT_TRACE_DEF( pcfread )
+
+
+/* END */

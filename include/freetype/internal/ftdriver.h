@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType font driver interface (specification).                      */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -76,14 +76,14 @@ FT_BEGIN_HEADER
                                FT_Long     charcode );
 
   typedef FT_Long
-  (*FT_CharMap_CharNextFunc)( FT_CharMap   charmap,
-                              FT_Long      charcode );
+  (*FT_CharMap_CharNextFunc)( FT_CharMap  charmap,
+                              FT_Long     charcode );
 
   typedef FT_Error
-  (*FT_Face_GetKerningFunc)( FT_Face      face,
-                             FT_UInt      left_glyph,
-                             FT_UInt      right_glyph,
-                             FT_Vector*   kerning );
+  (*FT_Face_GetKerningFunc)( FT_Face     face,
+                             FT_UInt     left_glyph,
+                             FT_UInt     right_glyph,
+                             FT_Vector*  kerning );
 
 
   typedef FT_Error
@@ -167,31 +167,31 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_Driver_ClassRec_
   {
-    FT_Module_Class            root;
+    FT_Module_Class           root;
 
-    FT_Int                     face_object_size;
-    FT_Int                     size_object_size;
-    FT_Int                     slot_object_size;
+    FT_Int                    face_object_size;
+    FT_Int                    size_object_size;
+    FT_Int                    slot_object_size;
 
-    FT_Face_InitFunc           init_face;
-    FT_Face_DoneFunc           done_face;
+    FT_Face_InitFunc          init_face;
+    FT_Face_DoneFunc          done_face;
 
-    FT_Size_InitFunc           init_size;
-    FT_Size_DoneFunc           done_size;
+    FT_Size_InitFunc          init_size;
+    FT_Size_DoneFunc          done_size;
 
-    FT_Slot_InitFunc           init_slot;
-    FT_Slot_DoneFunc           done_slot;
+    FT_Slot_InitFunc          init_slot;
+    FT_Slot_DoneFunc          done_slot;
 
-    FT_Size_ResetPointsFunc    set_char_sizes;
-    FT_Size_ResetPixelsFunc    set_pixel_sizes;
+    FT_Size_ResetPointsFunc   set_char_sizes;
+    FT_Size_ResetPixelsFunc   set_pixel_sizes;
 
-    FT_Slot_LoadFunc           load_glyph;
-    FT_CharMap_CharIndexFunc   get_char_index;
+    FT_Slot_LoadFunc          load_glyph;
+    FT_CharMap_CharIndexFunc  get_char_index;
 
-    FT_Face_GetKerningFunc     get_kerning;
-    FT_Face_AttachFunc         attach_file;
-    FT_Face_GetAdvancesFunc    get_advances;
-    FT_CharMap_CharNextFunc    get_next_char;
+    FT_Face_GetKerningFunc    get_kerning;
+    FT_Face_AttachFunc        attach_file;
+    FT_Face_GetAdvancesFunc   get_advances;
+    FT_CharMap_CharNextFunc   get_next_char;
 
   } FT_Driver_ClassRec, *FT_Driver_Class;
 

@@ -142,6 +142,10 @@
 	  FT_AutoHinter_Interface* => FT_AutoHinter_Service
 	  etc.
 
+	  FT_AutoHinter_Get_Global_Func  => FT_AutoHinter_GlobalGetFunc
+	  FT_AutoHinter_Done_Global_Func => FT_AutoHinter_GlobalDoneFunc
+	  etc.
+
 	* include/freetype/internal/cfftypes.h, src/cff/*.c: Updating the
 	type definitions of the CFF font driver.
 
@@ -160,6 +164,10 @@
 	src/truetype/ttdriver.h, src/type1/t1driver.c, src/type1/t1driver.h,
 	src/winfonts/winfnt.c, src/winfonts/winfnt.h: Updating type
 	definitions for font drivers.
+
+	  FTDriver_initFace      => FT_Face_InitFunc
+	  FTDriver_initGlyphSlot => FT_Slot_InitFunc
+	  etc.
 
 	* include/freetype/internal/ftobjs.h, src/base/ftapi.c,
 	src/base/ftobjs.c: Updated a few face method definitions:
@@ -400,12 +408,16 @@
 	* Moving all memory and list management code to "src/base/ftutil.c"
 	(previously in "ftobjs.c" and "ftlist.c" respectively).
 
-	* Moving all code related to glyph loaders to "internal/ftgloadr.h"
-	and "src/base/ftgloadr.c".
+	* include/freetype/internal/ftobjs.h: Moving all code related to
+	glyph loaders to ...
+	* include/freetype/"internal/ftgloadr.h: This new file.
 	"FT_GlyphLoader" is now a pointer to the structure
 	"FT_GlyphLoaderRec".
-
-	* Renaming "ft_glyph_own_bitmap" into "FT_GLYPH_OWN_BITMAP".
+	(ft_glyph_own_bitmap): Renamed to ...
+	(FT_GLYPH_OWN_BITMAP): This.
+	* src/base/ftobjs.c: Moving all code related to glyph loaders
+	to ...
+	* src/base/ftgloadr.c: This new file.
 
 2002-02-22  Werner Lemberg  <wl@gnu.org>
 
@@ -429,9 +441,9 @@
 	(FT_ASSERT): This.
 	Some stuff from ftdebug.h has been moved to ...
 
-	* include/freetype/internal/fttrace.h: This new file to define the
-	trace levels used for debugging.  It is used both to define enums
-	and toggle names for FT2_DEBUG.
+	* include/freetype/internal/fttrace.h: New file, to define the trace
+	levels used for debugging.  It is used both to define enums and
+	toggle names for FT2_DEBUG.
 	* include/freetype/internal/internal.h: Updated.
 
 	* src/base/ftobjs.c, src/base/ftstream.c: Updated.
