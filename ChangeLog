@@ -1,3 +1,9 @@
+2001-03-17  David Turner   <david.turner@freetype.org>
+
+	* src/cid/cidobjs.c, src/cid/cidload.c, src/pcf/pcfread.c,         
+	src/type1/t1load.c, src/type1/t1objs.c: added a few casts to remove
+    compiler warnings in pedantic modes..
+
 2001-03-17  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/cffparse.c (cff_parse_font_bbox): Obtain rounded FT_Fixed
