@@ -1,3 +1,9 @@
+2004-09-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/tools/docmaker/sources.py (re_source_block_format2) <column>:
+	Use lookahead assertion to not match `*/'.  This removes spurious
+	insertions of `/' in the HTML output.
+
 2004-09-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgxvar.c (TT_Vary_Get_Glyph_Deltas): Fix call to
