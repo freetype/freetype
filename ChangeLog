@@ -1,3 +1,9 @@
+2004-12-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffobjs.c (cff_face_init): A CFF within an SFNT can have
+	only a single font.  This is undocumented but has been verified on
+	the opentype list.
+
 2004-12-26  Werner Lemberg  <wl@gnu.org>
 
 	* Jamfile (FT2_COMPONENTS): Add `otvalid'.

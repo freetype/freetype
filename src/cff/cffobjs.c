@@ -367,6 +367,7 @@
     FT_Bool             pure_cff    = 1;
     FT_Bool             sfnt_format = 0;
 
+
 #if 0
     FT_FACE_FIND_GLOBAL_SERVICE( face, sfnt,     SFNT );
     FT_FACE_FIND_GLOBAL_SERVICE( face, psnames,  POSTSCRIPT_NAMES );
@@ -403,6 +404,14 @@
       /* if we are performing a simple font format check, exit immediately */
       if ( face_index < 0 )
         return CFF_Err_Ok;
+
+      /* UNDOCUMENTED!  A CFF in an SFNT can have only a single font. */
+      if ( face_index > 0 )
+      {
+        FT_ERROR(( "cff_face_init: invalid face index\n" ));
+        error = CFF_Err_Invalid_Argument;
+        goto Exit;
+      }
 
       sfnt_format = 1;
 
