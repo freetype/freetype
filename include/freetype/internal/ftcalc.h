@@ -146,8 +146,6 @@ FT_BEGIN_HEADER
                                        FT_Int32   y );
 
 
-  FT_EXPORT( FT_Int32 )  FT_SqrtFixed( FT_Int32  x );
-
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
 
 #define SQRT_64( z )  FT_Sqrt64( &z )
@@ -174,6 +172,9 @@ FT_BEGIN_HEADER
 
 
 #endif /* FT_LONG64 */
+
+
+  FT_EXPORT( FT_Int32 )  FT_SqrtFixed( FT_Int32  x );
 
 
 #ifndef FT_CONFIG_OPTION_OLD_CALCS
