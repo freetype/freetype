@@ -136,11 +136,11 @@
     1 | T2_COUNT_CHECK_WIDTH | T2_COUNT_EXACT,
     1 | T2_COUNT_CHECK_WIDTH | T2_COUNT_EXACT,
 
-    0 | T2_COUNT_CLEAR_STACK,  /* rlineto */
+    0 | T2_COUNT_CLEAR_STACK, /* rlineto */
     0 | T2_COUNT_CLEAR_STACK,
     0 | T2_COUNT_CLEAR_STACK,
 
-    0 | T2_COUNT_CLEAR_STACK,  /* rrcurveto */
+    0 | T2_COUNT_CLEAR_STACK, /* rrcurveto */
     0 | T2_COUNT_CLEAR_STACK,
     0 | T2_COUNT_CLEAR_STACK,
     0 | T2_COUNT_CLEAR_STACK,
@@ -153,7 +153,7 @@
     9,
     11,
 
-    0, /* endchar */
+    0 | T2_COUNT_CHECK_WIDTH, /* endchar */
 
     2 | T2_COUNT_CHECK_WIDTH, /* hstem */
     2 | T2_COUNT_CHECK_WIDTH,
@@ -849,13 +849,25 @@
         if ( req_args & T2_COUNT_CHECK_WIDTH )
         {
           args = stack;
-          if ( num_args & 1 && decoder->read_width )
+
+          /* If there is a number here, it is either a difference against  */
+          /* `nominal_width', or it is a width itself.                     */            
+
+          if ( num_args > 0 && decoder->read_width )
           {
-            decoder->glyph_width = decoder->nominal_width +
-                                     ( stack[0] >> 16 );
+            /* If `nominal_width' is non-zero, the number is really a      */
+            /* difference against `nominal_width'.                         */
+            if ( decoder->nominal_width )
+              decoder->glyph_width = decoder->nominal_width +
+                                       ( stack[0] >> 16 );
+            /* Else, the number here is truly a width, not a difference.   */
+            else
+              decoder->glyph_width = stack[0] >> 16;
+
             num_args--;
             args++;
           }
+
           decoder->read_width  = 0;
           req_args = 0;
         }
