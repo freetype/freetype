@@ -1,5 +1,12 @@
 2002-02-24  David Turner   <david@freetype.org>
 
+        * moving all code related to glyph loaders to "internal/ftgloadr.h"
+        and "src/base/ftgloadr.c".
+
+        Note also that the type "FT_GlyphLoader" is now a pointer to the
+        structure "FT_GlyphLoaderRec"..
+
+
         * renaming "ft_glyph_own_bitmap" into "FT_GLYPH_OWN_BITMAP"
 
 2002-02-22  Werner Lemberg  <wl@gnu.org>

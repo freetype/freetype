@@ -351,7 +351,7 @@
   /*                                                                       */
   FT_LOCAL_DEF void
   ah_outline_save( AH_Outline*  outline,
-                   AH_Loader*   gloader )
+                   AH_Loader    gloader )
   {
     AH_Point*   point       = outline->points;
     AH_Point*   point_limit = point + outline->num_points;

@@ -238,7 +238,7 @@
 
     if ( glyph )
     {
-      FT_GlyphLoader*  loader = glyph->root.internal->loader;
+      FT_GlyphLoader  loader = glyph->root.internal->loader;
 
 
       builder->loader  = loader;
@@ -248,7 +248,7 @@
 
       builder->hints_globals = 0;
       builder->hints_funcs   = 0;
-            
+
       if ( hinting && size )
       {
         builder->hints_globals = size->internal;
@@ -588,7 +588,7 @@
     if ( decoder->builder.no_recurse )
     {
       FT_GlyphSlot     glyph  = (FT_GlyphSlot)decoder->builder.glyph;
-      FT_GlyphLoader*  loader = glyph->internal->loader;
+      FT_GlyphLoader   loader = glyph->internal->loader;
       FT_SubGlyph*     subg;
 
 
@@ -1091,7 +1091,7 @@
         case cff_op_hintmask:
         case cff_op_cntrmask:
           FT_TRACE4(( op == cff_op_hintmask ? " hintmask" : " cntrmask" ));
-  
+
           /* implement vstem when needed --                        */
           /* the specification doesn't say it, but this also works */
           /* with the 'cntrmask' operator                          */
@@ -1103,7 +1103,7 @@
                              0,
                              num_args / 2,
                              args );
-          
+
             decoder->num_hints += num_args / 2;
           }
 

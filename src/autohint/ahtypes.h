@@ -477,7 +477,7 @@ FT_BEGIN_HEADER
 
     AH_Outline*       glyph;
 
-    AH_Loader*        loader;
+    AH_Loader         loader;
     FT_Vector         pp1;
     FT_Vector         pp2;
 

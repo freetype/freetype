@@ -388,7 +388,7 @@
     ah_debug_disable_vert = no_vert_edges;
 #else
     FT_UNUSED( no_horz_edges );
-    FT_UNUSED( no_vert_edges );    
+    FT_UNUSED( no_vert_edges );
 #endif
     /* AH_Interpolate_Blue_Edges( hinter ); -- doesn't seem to help      */
     /* reduce the problem of the disappearing eye in the `e' of Times... */
@@ -1011,7 +1011,7 @@
     FT_Fixed          y_scale  = face->size->metrics.y_scale;
     FT_Error          error;
     AH_Outline*       outline  = hinter->glyph;
-    AH_Loader*        gloader  = hinter->loader;
+    AH_Loader         gloader  = hinter->loader;
     FT_Bool           no_horz_hints = FT_BOOL(
                         ( load_flags & AH_HINT_NO_HORZ_EDGES ) != 0 );
     FT_Bool           no_vert_hints = FT_BOOL(

@@ -33,7 +33,7 @@
 #define FT_INTERNAL_DRIVER_H              <freetype/internal/ftdriver.h>
 #define FT_INTERNAL_EXTEND_H              <freetype/internal/ftextend.h>
 #define FT_INTERNAL_TRACE_H               <freetype/internal/fttrace.h>
-
+#define FT_INTERNAL_GLYPH_LOADER_H        <freetype/internal/ftgloadr.h>
 #define FT_INTERNAL_SFNT_H                <freetype/internal/sfnt.h>
 
 #define FT_INTERNAL_TRUETYPE_TYPES_H      <freetype/internal/tttypes.h>

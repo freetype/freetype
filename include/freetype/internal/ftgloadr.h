@@ -32,7 +32,7 @@ FT_BEGIN_HEADER
   /*    The glyph loader implementation is not part of the high-level API, */
   /*    hence the forward structure declaration.                           */
   /*                                                                       */
-  typedef struct FT_GlyphLoader_  FT_GlyphLoader ;
+  typedef struct FT_GlyphLoaderRec_*  FT_GlyphLoader ;
 
 
 #define FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS          1
@@ -89,7 +89,7 @@ FT_BEGIN_HEADER
  /* create new empty glyph loader */
   FT_BASE( FT_Error )
   FT_GlyphLoader_New( FT_Memory         memory,
-                       FT_GlyphLoader   *aloader );
+                      FT_GlyphLoader   *aloader );
 
  /* add an extra points table to a glyph loader */
   FT_BASE( FT_Error )

@@ -79,7 +79,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL void
   ah_outline_save( AH_Outline*  outline,
-                   AH_Loader*   loader );
+                   AH_Loader    loader );
 
   FT_LOCAL void
   ah_outline_done( AH_Outline*  outline );
