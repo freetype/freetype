@@ -23,6 +23,7 @@
 #include "cidload.h"
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include FT_INTERNAL_POSTSCRIPT_HINTS_H
 
 #include "ciderrs.h"
 
@@ -37,6 +38,127 @@
 #define FT_COMPONENT  trace_cidobjs
 
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /*                            SLOT  FUNCTIONS                            */
+  /*                                                                       */
+  /*************************************************************************/
+
+  FT_LOCAL_DEF void
+  CID_GlyphSlot_Done( CID_GlyphSlot  slot )
+  {
+    slot->root.internal->glyph_hints = 0;
+  }
+
+
+  FT_LOCAL_DEF FT_Error
+  CID_GlyphSlot_Init( CID_GlyphSlot   slot )
+  {  
+    CID_Face             face;
+    PSHinter_Interface*  pshinter;
+    
+    face     = (CID_Face) slot->root.face;
+    pshinter = face->pshinter;
+    if (pshinter)
+    {
+      FT_Module  module;
+      
+      module = FT_Get_Module( slot->root.face->driver->root.library, "pshinter" );
+      if (module)
+      {
+        T1_Hints_Funcs  funcs;
+        
+        funcs = pshinter->get_t1_funcs( module );
+        slot->root.internal->glyph_hints = (void*)funcs;                   
+      }
+    }
+    return 0;
+  }
+  
+
+  /*************************************************************************/
+  /*                                                                       */
+  /*                           SIZE  FUNCTIONS                             */
+  /*                                                                       */
+  /*************************************************************************/
+
+
+  static PSH_Globals_Funcs
+  CID_Size_Get_Globals_Funcs( CID_Size  size )
+  {
+    CID_Face              face     = (CID_Face) size->root.face;
+    PSHinter_Interface*  pshinter = face->pshinter;
+    FT_Module            module;
+    
+
+    module = FT_Get_Module( size->root.face->driver->root.library,
+                            "pshinter" );
+    return ( module && pshinter && pshinter->get_globals_funcs )
+           ? pshinter->get_globals_funcs( module )
+           : 0 ;
+  }
+
+
+  FT_LOCAL_DEF void
+  CID_Size_Done( CID_Size  size )
+  {
+    if ( size->root.internal )
+    {
+      PSH_Globals_Funcs  funcs;
+    
+
+      funcs = CID_Size_Get_Globals_Funcs( size );
+      if ( funcs )
+        funcs->destroy( (PSH_Globals)size->root.internal );
+
+      size->root.internal = 0;
+    }
+  }
+
+
+  FT_LOCAL_DEF FT_Error
+  CID_Size_Init( CID_Size  size )
+  {
+    FT_Error           error = 0;
+    PSH_Globals_Funcs  funcs = CID_Size_Get_Globals_Funcs( size );
+    
+
+    if ( funcs )
+    {
+      PSH_Globals  globals;
+      CID_Face      face = (CID_Face)size->root.face;
+      CID_FontDict* dict = face->cid.font_dicts + face->root.face_index;
+      T1_Private*   priv = &dict->private_dict;
+      
+
+      error = funcs->create( size->root.face->memory, priv, &globals );
+      if ( !error )
+        size->root.internal = (FT_Size_Internal)(void*)globals;
+    }
+    
+    return error;
+  }
+
+
+  FT_LOCAL_DEF FT_Error
+  CID_Size_Reset( CID_Size  size )
+  {
+    PSH_Globals_Funcs  funcs = CID_Size_Get_Globals_Funcs( size );
+    FT_Error           error = 0;
+
+    
+    if ( funcs )
+      error = funcs->set_scale( (PSH_Globals)size->root.internal,
+                                 size->root.metrics.x_scale,
+                                 size->root.metrics.y_scale,
+                                 0, 0 );
+    return error;                                
+  }
+
+
+
+
   /*************************************************************************/
   /*                                                                       */
   /*                           FACE  FUNCTIONS                             */
@@ -47,7 +169,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    CID_Done_Face                                                      */
+  /*    CID_Face_Done                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finalizes a given face object.                                     */
@@ -56,7 +178,7 @@
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
   FT_LOCAL_DEF void
-  CID_Done_Face( CID_Face  face )
+  CID_Face_Done( CID_Face  face )
   {
     FT_Memory  memory;
 
@@ -94,7 +216,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    CID_Init_Face                                                      */
+  /*    CID_Face_Init                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given CID face object.                               */
@@ -115,7 +237,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF FT_Error
-  CID_Init_Face( FT_Stream      stream,
+  CID_Face_Init( FT_Stream      stream,
                  CID_Face       face,
                  FT_Int         face_index,
                  FT_Int         num_params,
@@ -124,6 +246,7 @@
     FT_Error            error;
     PSNames_Interface*  psnames;
     PSAux_Interface*    psaux;
+    PSHinter_Interface* pshinter;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -151,6 +274,17 @@
       face->psaux = psaux;
     }
 
+
+    pshinter = (PSHinter_Interface*)face->pshinter;
+    if ( !pshinter )
+    {
+      pshinter = (PSHinter_Interface*)
+                 FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "pshinter" );
+
+      face->pshinter = pshinter;
+    }
+
+
     /* open the tokenizer; this will also check the font format */
     if ( FILE_Seek( 0 ) )
       goto Exit;
@@ -166,7 +300,7 @@
     /* check the face index */
     if ( face_index != 0 )
     {
-      FT_ERROR(( "CID_Init_Face: invalid face index\n" ));
+      FT_ERROR(( "CID_Face_Init: invalid face index\n" ));
       error = CID_Err_Invalid_Argument;
       goto Exit;
     }
@@ -342,7 +476,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    CID_Init_Driver                                                    */
+  /*    CID_Driver_Init                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given CID driver object.                             */
@@ -354,7 +488,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF FT_Error
-  CID_Init_Driver( CID_Driver  driver )
+  CID_Driver_Init( CID_Driver  driver )
   {
     FT_UNUSED( driver );
 
@@ -365,7 +499,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    CID_Done_Driver                                                    */
+  /*    CID_Driver_Done                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finalizes a given CID driver.                                      */
@@ -374,7 +508,7 @@
   /*    driver :: A handle to the target CID driver.                       */
   /*                                                                       */
   FT_LOCAL_DEF void
-  CID_Done_Driver( CID_Driver  driver )
+  CID_Driver_Done( CID_Driver  driver )
   {
     FT_UNUSED( driver );
   }
