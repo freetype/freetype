@@ -1,10 +1,9 @@
 2001-12-21  David Turner  <david@freetype.org>
 
-        * src/pshinter/pshglob.c (psh_globals_new): replaced a floating point
-        constant with a fixed-float equivalent. For some reason, some compilers
-        aren't capable of directly computing a floating pointer constant casted
-        to FT_Fixed, and will link a math library instead !!
-
+	* src/pshinter/pshglob.c (psh_globals_new): Replaced a floating
+	point constant with a fixed-float equivalent.  For some reasons not
+	all compilers are capable of directly computing a floating pointer
+	constant casted to FT_Fixed, and will link a math library instead.
 
 2001-12-20  Werner Lemberg  <wl@gnu.org>
 
