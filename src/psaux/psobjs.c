@@ -276,8 +276,8 @@
   FT_LOCAL_DEF( void )
   ps_parser_skip_spaces( PS_Parser  parser )
   {
-    FT_Byte* cur   = parser->cursor;
-    FT_Byte* limit = parser->limit;
+    FT_Byte*  cur   = parser->cursor;
+    FT_Byte*  limit = parser->limit;
 
 
     while ( cur < limit )
@@ -296,8 +296,8 @@
   FT_LOCAL_DEF( void )
   ps_parser_skip_alpha( PS_Parser  parser )
   {
-    FT_Byte* cur   = parser->cursor;
-    FT_Byte* limit = parser->limit;
+    FT_Byte*  cur   = parser->cursor;
+    FT_Byte*  limit = parser->limit;
 
 
     while ( cur < limit )

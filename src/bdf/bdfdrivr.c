@@ -703,7 +703,8 @@ THE SOFTWARE.
   const FT_Driver_ClassRec  bdf_driver_class =
   {
     {
-      ft_module_font_driver,
+      FT_MODULE_FONT_DRIVER         |
+      FT_MODULE_DRIVER_NO_OUTLINES,
       sizeof ( FT_DriverRec ),
 
       "bdf",

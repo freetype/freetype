@@ -563,21 +563,21 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   ft_encoding_apple_roman    :: see @FT_ENCODING_APPLE_ROMAN          */
   /*                                                                       */
-#define  ft_encoding_none            FT_ENCODING_NONE
-#define  ft_encoding_unicode         FT_ENCODING_UNICODE
-#define  ft_encoding_symbol          FT_ENCODING_MS_SYMBOL
-#define  ft_encoding_latin_1         FT_ENCODING_ADOBE_LATIN_1
-#define  ft_encoding_latin_2         FT_ENCODING_OLD_LATIN_2
-#define  ft_encoding_sjis            FT_ENCODING_MS_SJIS
-#define  ft_encoding_gb2312          FT_ENCODING_MS_GB2312
-#define  ft_encoding_big5            FT_ENCODING_MS_BIG5
-#define  ft_encoding_wansung         FT_ENCODING_MS_WANSUNG
-#define  ft_encoding_johab           FT_ENCODING_MS_JOHAB
+#define ft_encoding_none            FT_ENCODING_NONE
+#define ft_encoding_unicode         FT_ENCODING_UNICODE
+#define ft_encoding_symbol          FT_ENCODING_MS_SYMBOL
+#define ft_encoding_latin_1         FT_ENCODING_ADOBE_LATIN_1
+#define ft_encoding_latin_2         FT_ENCODING_OLD_LATIN_2
+#define ft_encoding_sjis            FT_ENCODING_MS_SJIS
+#define ft_encoding_gb2312          FT_ENCODING_MS_GB2312
+#define ft_encoding_big5            FT_ENCODING_MS_BIG5
+#define ft_encoding_wansung         FT_ENCODING_MS_WANSUNG
+#define ft_encoding_johab           FT_ENCODING_MS_JOHAB
 
-#define  ft_encoding_adobe_standard  FT_ENCODING_ADOBE_STANDARD
-#define  ft_encoding_adobe_expert    FT_ENCODING_ADOBE_EXPERT
-#define  ft_encoding_adobe_custom    FT_ENCODING_ADOBE_CUSTOM
-#define  ft_encoding_apple_roman     FT_ENCODING_APPLE_ROMAN
+#define ft_encoding_adobe_standard  FT_ENCODING_ADOBE_STANDARD
+#define ft_encoding_adobe_expert    FT_ENCODING_ADOBE_EXPERT
+#define ft_encoding_adobe_custom    FT_ENCODING_ADOBE_CUSTOM
+#define ft_encoding_apple_roman     FT_ENCODING_APPLE_ROMAN
 
 
   /*************************************************************************/
@@ -1312,7 +1312,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    outline           :: The outline descriptor for the current glyph  */
   /*                         image if its format is                        */
-  /*                         ft_glyph_bitmap_outline.                      */
+  /*                         FT_GLYPH_FORMAT_OUTLINE.                      */
   /*                                                                       */
   /*    num_subglyphs     :: The number of subglyphs in a composite glyph. */
   /*                         This format is only valid for the composite   */

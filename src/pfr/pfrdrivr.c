@@ -129,8 +129,8 @@
   const FT_Driver_ClassRec  pfr_driver_class =
   {
     {
-      ft_module_font_driver      |
-      ft_module_driver_scalable,
+      FT_MODULE_FONT_DRIVER     |
+      FT_MODULE_DRIVER_SCALABLE,
 
       sizeof( FT_DriverRec ),
 

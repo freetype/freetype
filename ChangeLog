@@ -1,3 +1,32 @@
+2003-06-14  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftglyph.h (ft_glyph_bbox_unscaled,
+	ft_glyph_bbox_subpixels, ft_glyph_bbox_gridfit,
+	ft_glyph_bbox_truncate, ft_glyph_bbox_pixels): Replaced with
+	FT_GLYPH_BBOX_UNSCALED, FT_GLYPH_BBOX_SUBPIXELS,
+	FT_GLYPH_BBIX_GRIDFIT, FT_GLYPH_BBOX_TRUNCATE, FT_GLYPH_BBOX_PIXELS.
+	The lowercase variants are now (deprecated aliases) to the uppercase
+	versions.
+	Updated all other files.
+
+	* include/freetype/ftmodule.h (ft_module_font_driver,
+	ft_module_renderer, ft_module_hinter, ft_module_styler,
+	ft_module_driver_scalable, ft_module_driver_no_outlines,
+	ft_module_driver_has_hinter): Replaced with FT_MODULE_FONT_DRIVER,
+	FT_MODULE_RENDERER, FT_MODULE_HINTER, FT_MODULE_STYLER,
+	FT_MODULE_DRIVER_SCALABLE, FT_MODULE_DRIVER_NO_OUTLINES,
+	FT_MODULE_DRIVER_HAS_HINTER.
+	The lowercase variants are now (deprecated aliases) to the uppercase
+	versions.
+	Updated all other files.
+
+	* src/base/ftglyph.c (FT_Glyph_Get_CBox): Handle bbox_mode better
+	as enumeration.
+
+	* src/pcf/pcfdrivr.c (pcf_driver_class), src/winfonts/winfnt.c
+	(winfnt_driver_class), src/bdf/bdfdrivr.c (bdf_driver_class): Add
+	the FT_MODULE_DRIVER_NO_OUTLINES flag.
+
 2003-06-13  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/pfr/pfrobjs.c (pfr_slot_load): Apply font matrix.
