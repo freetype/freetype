@@ -509,30 +509,28 @@ FT_BEGIN_HEADER
   /*     mathematical symbols in the 32..255 character code range.  For    */
   /*     more information, see `http://www.ceviz.net/symbol.htm'.          */
   /*                                                                       */
-  /*   FT_ENCODING_MS_SJIS ::                                              */
-  /*     Corresponds to Microsoft's Japanese SJIS encoding.  More info     */
+  /*   FT_ENCODING_SJIS ::                                                 */
+  /*     Corresponds to Japanese SJIS encoding.  More info at              */
   /*     at `http://langsupport.japanreference.com/encoding.shtml'.        */
   /*     See note on multi-byte encodings below.                           */
   /*                                                                       */
-  /*   FT_ENCODING_MS_GB2312 ::                                            */
-  /*     Corresponds to the encoding system for Simplified Chinese, as     */
-  /*     used in China.  Only found in some TrueType fonts.                */
+  /*   FT_ENCODING_GB2312 ::                                               */
+  /*     Corresponds to an encoding system for Simplified Chinese as used  */
+  /*     used in mainland China.                                           */
   /*                                                                       */
-  /*   FT_ENCODING_MS_BIG5 ::                                              */
-  /*     Corresponds to the encoding system for Traditional Chinese, as    */
-  /*     used in Taiwan and Hong Kong.  Only found in some TrueType fonts. */
+  /*   FT_ENCODING_BIG5 ::                                                 */
+  /*     Corresponds to an encoding system for Traditional Chinese as used */
+  /*     in Taiwan and Hong Kong.                                          */
   /*                                                                       */
-  /*   FT_ENCODING_MS_WANSUNG ::                                           */
+  /*   FT_ENCODING_WANSUNG ::                                              */
   /*     Corresponds to the Korean encoding system known as Wansung.       */
-  /*     This is a Microsoft encoding that is only found in some TrueType  */
-  /*     fonts.  For more information, see                                 */
+  /*     For more information see                                          */
   /*     `http://www.microsoft.com/typography/unicode/949.txt'.            */
   /*                                                                       */
-  /*   FT_ENCODING_MS_JOHAB ::                                             */
+  /*   FT_ENCODING_JOHAB ::                                                */
   /*     The Korean standard character set (KS C-5601-1992), which         */
-  /*     corresponds to Windows code page 1361.  This character set        */
+  /*     corresponds to MS Windows code page 1361.  This character set     */
   /*     includes all possible Hangeul character combinations.             */
-  /*     Only found on some rare TrueType fonts.                           */
   /*                                                                       */
   /*   FT_ENCODING_ADOBE_LATIN_1 ::                                        */
   /*     Corresponds to a Latin-1 encoding as defined in a Type 1          */
@@ -561,6 +559,21 @@ FT_BEGIN_HEADER
   /*     This value is deprecated and was never used nor reported by       */
   /*     FreeType.  Don't use or test for it.                              */
   /*                                                                       */
+  /*   FT_ENCODING_MS_SJIS ::                                              */
+  /*     Same as FT_ENCODING_SJIS.  Deprecated.                            */
+  /*                                                                       */
+  /*   FT_ENCODING_MS_GB2312 ::                                            */
+  /*     Same as FT_ENCODING_GB2312.  Deprecated.                          */
+  /*                                                                       */
+  /*   FT_ENCODING_MS_BIG5 ::                                              */
+  /*     Same as FT_ENCODING_BIG5.  Deprecated.                            */
+  /*                                                                       */
+  /*   FT_ENCODING_MS_WANSUNG ::                                           */
+  /*     Same as FT_ENCODING_WANSUNG.  Deprecated.                         */
+  /*                                                                       */
+  /*   FT_ENCODING_MS_JOHAB ::                                             */
+  /*     Same as FT_ENCODING_JOHAB.  Deprecated.                           */
+  /*                                                                       */
   /* <Note>                                                                */
   /*   By default, FreeType automatically synthetizes a Unicode charmap    */
   /*   for Postscript fonts, using their glyph names dictionaries.         */
@@ -575,11 +588,18 @@ FT_BEGIN_HEADER
     FT_ENC_TAG( FT_ENCODING_MS_SYMBOL,  's', 'y', 'm', 'b' ),
     FT_ENC_TAG( FT_ENCODING_UNICODE,    'u', 'n', 'i', 'c' ),
 
-    FT_ENC_TAG( FT_ENCODING_MS_SJIS,    's', 'j', 'i', 's' ),
-    FT_ENC_TAG( FT_ENCODING_MS_GB2312,  'g', 'b', ' ', ' ' ),
-    FT_ENC_TAG( FT_ENCODING_MS_BIG5,    'b', 'i', 'g', '5' ),
-    FT_ENC_TAG( FT_ENCODING_MS_WANSUNG, 'w', 'a', 'n', 's' ),
-    FT_ENC_TAG( FT_ENCODING_MS_JOHAB,   'j', 'o', 'h', 'a' ),
+    FT_ENC_TAG( FT_ENCODING_SJIS,    's', 'j', 'i', 's' ),
+    FT_ENC_TAG( FT_ENCODING_GB2312,  'g', 'b', ' ', ' ' ),
+    FT_ENC_TAG( FT_ENCODING_BIG5,    'b', 'i', 'g', '5' ),
+    FT_ENC_TAG( FT_ENCODING_WANSUNG, 'w', 'a', 'n', 's' ),
+    FT_ENC_TAG( FT_ENCODING_JOHAB,   'j', 'o', 'h', 'a' ),
+
+    /* for backwards compatibility */
+    FT_ENCODING_MS_SJIS    = FT_ENCODING_SJIS,
+    FT_ENCODING_MS_GB2312  = FT_ENCODING_GB2312,
+    FT_ENCODING_MS_BIG5    = FT_ENCODING_BIG5,
+    FT_ENCODING_MS_WANSUNG = FT_ENCODING_WANSUNG,
+    FT_ENCODING_MS_JOHAB   = FT_ENCODING_JOHAB,
 
     FT_ENC_TAG( FT_ENCODING_ADOBE_STANDARD, 'A', 'D', 'O', 'B' ),
     FT_ENC_TAG( FT_ENCODING_ADOBE_EXPERT,   'A', 'D', 'B', 'E' ),
@@ -607,11 +627,11 @@ FT_BEGIN_HEADER
   /*   ft_encoding_unicode :: see @FT_ENCODING_UNICODE                     */
   /*   ft_encoding_latin_2 :: see @FT_ENCODING_OLD_LATIN_2                 */
   /*   ft_encoding_symbol  :: see @FT_ENCODING_MS_SYMBOL                   */
-  /*   ft_encoding_sjis    :: see @FT_ENCODING_MS_SJIS                     */
-  /*   ft_encoding_gb2312  :: see @FT_ENCODING_MS_GB2312                   */
-  /*   ft_encoding_big5    :: see @FT_ENCODING_MS_BIG5                     */
-  /*   ft_encoding_wansung :: see @FT_ENCODING_MS_WANSUNG                  */
-  /*   ft_encoding_johab   :: see @FT_ENCODING_MS_JOHAB                    */
+  /*   ft_encoding_sjis    :: see @FT_ENCODING_SJIS                        */
+  /*   ft_encoding_gb2312  :: see @FT_ENCODING_GB2312                      */
+  /*   ft_encoding_big5    :: see @FT_ENCODING_BIG5                        */
+  /*   ft_encoding_wansung :: see @FT_ENCODING_WANSUNG                     */
+  /*   ft_encoding_johab   :: see @FT_ENCODING_JOHAB                       */
   /*                                                                       */
   /*   ft_encoding_adobe_standard :: see @FT_ENCODING_ADOBE_STANDARD       */
   /*   ft_encoding_adobe_expert   :: see @FT_ENCODING_ADOBE_EXPERT         */
@@ -625,11 +645,11 @@ FT_BEGIN_HEADER
 #define ft_encoding_symbol          FT_ENCODING_MS_SYMBOL
 #define ft_encoding_latin_1         FT_ENCODING_ADOBE_LATIN_1
 #define ft_encoding_latin_2         FT_ENCODING_OLD_LATIN_2
-#define ft_encoding_sjis            FT_ENCODING_MS_SJIS
-#define ft_encoding_gb2312          FT_ENCODING_MS_GB2312
-#define ft_encoding_big5            FT_ENCODING_MS_BIG5
-#define ft_encoding_wansung         FT_ENCODING_MS_WANSUNG
-#define ft_encoding_johab           FT_ENCODING_MS_JOHAB
+#define ft_encoding_sjis            FT_ENCODING_SJIS
+#define ft_encoding_gb2312          FT_ENCODING_GB2312
+#define ft_encoding_big5            FT_ENCODING_BIG5
+#define ft_encoding_wansung         FT_ENCODING_WANSUNG
+#define ft_encoding_johab           FT_ENCODING_JOHAB
 
 #define ft_encoding_adobe_standard  FT_ENCODING_ADOBE_STANDARD
 #define ft_encoding_adobe_expert    FT_ENCODING_ADOBE_EXPERT

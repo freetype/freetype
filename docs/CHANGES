@@ -64,6 +64,10 @@ LATEST CHANGES BETWEEN 2.1.5 and 2.1.4
 
     - ft_module_xxx flags are now deprecated in favour of FT_MODULE_XXX.
 
+    - FT_ENCODING_MS_{SJIS,GB2312,BIG5,WANSUNG,JOHAB} are now deprecated
+      in favour of FT_ENCODING_{SJIS,GB2312,GIB5,WANSONG,JOHAB} -- those
+      encodings are not specific to Microsoft.
+
 
   III. MISCELLANEOUS
 

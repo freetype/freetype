@@ -696,7 +696,7 @@
           le -= n;
           n   = pe - pp;
 
-          FT_MEM_COPY( buf, pp, n );
+          FT_MEM_MOVE( buf, pp, n );
 
           pp     = buf + n;
           bytes  = 65536L - n;

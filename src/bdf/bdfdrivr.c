@@ -326,7 +326,7 @@ THE SOFTWARE.
 
         prop = bdf_get_font_property( font, "POINT_SIZE" );
         if ( prop != NULL )
-          /* convert from 722,7 decipoints to 72 points per inch */
+          /* convert from 722.7 decipoints to 72 points per inch */
           bsize->size =
             (FT_Pos)( ( prop->value.int32 * 64 * 7200 + 36135L ) / 72270L );
 

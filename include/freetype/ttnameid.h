@@ -231,30 +231,29 @@ FT_BEGIN_HEADER
    *
    * @values:
    *   TT_MS_ID_SYMBOL_CS ::
-   *     Corresponds to symbol encodings. see @FT_ENCODING_MS_SYMBOL.
+   *     Corresponds to Microsoft symbol encoding. See
+   *     @FT_ENCODING_MS_SYMBOL.
    *
    *   TT_MS_ID_UNICODE_CS ::
    *     Corresponds to a Microsoft WGL4 charmap, matching Unicode.  See
    *     @FT_ENCODING_UNICODE.
    *
    *   TT_MS_ID_SJIS ::
-   *     Corresponds to Microsoft SJIS Japanese encoding.
-   *     See @FT_ENCODING_MS_SJIS.
+   *     Corresponds to SJIS Japanese encoding.  See @FT_ENCODING_SJIS.
    *
    *   TT_MS_ID_GB2312 ::
-   *     Corresponds to Microsoft Simplified Chinese as used in Mainland
-   *     China.  See @FT_ENCODING_MS_GB2312.
+   *     Corresponds to Simplified Chinese as used in Mainland China.  See
+   *     @FT_ENCODING_GB2312.
    *
    *   TT_MS_ID_BIG_5 ::
-   *     Corresponds to Microsoft Traditional Chinese as used in Taiwan and
-   *     Hong Kong.  See @FT_ENCODING_MS_BIG5.
+   *     Corresponds to Traditional Chinese as used in Taiwan and Hong Kong.
+   *     See @FT_ENCODING_BIG5.
    *
    *   TT_MS_ID_WANSUNG ::
-   *     Corresponds to Microsoft Korean Wansung encoding.  See
-   *     @FT_ENCODING_MS_WANSUNG.
+   *     Corresponds to Korean Wansung encoding.  See @FT_ENCODING_WANSUNG.
    *
    *   TT_MS_ID_JOHAB ::
-   *     Corresponds to Microsoft Johab encoding.  See @FT_ENCODING_MS_JOHAB.
+   *     Corresponds to Johab encoding.  See @FT_ENCODING_JOHAB.
    *
    *   TT_MS_ID_UCS_4 ::
    *     Corresponds to UCS-4 or UTF-32 charmaps.  This has been added to
