@@ -2,6 +2,7 @@
 
 #include <ttload.c>
 #include <ttcmap.c>
+#include <sfobjs.c>
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 #include <ttsbit.c>

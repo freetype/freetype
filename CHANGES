@@ -1,5 +1,12 @@
 LATEST_CHANGES
 
+  - moved a lot of stuff from the TrueType driver to the SFNT module,
+    this allows greater code re-use between font drivers (e.g. TrueType,
+    OpenType, Compact-TrueType, etc..)
+
+  - added a tiny segment cache to the SFNT Charmap 4 decoder, in order
+    to minimally speed it up..
+
   - added support for Multiple Master fonts in "type1z". There is also
     a new file named <freetype/ftmm.h> which defines functions to
     manage them from client applications.

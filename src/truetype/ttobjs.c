@@ -45,95 +45,6 @@
   /*************************************************************************/
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Get_Name                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns a given ENGLISH name record in ASCII.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face   :: A handle to the source face object.                      */
-  /*                                                                       */
-  /*    nameid :: The name id of the name record to return.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Char string.  NULL if no name is present.                          */
-  /*                                                                       */
-  static
-  FT_String*  Get_Name( TT_Face    face,
-                        TT_UShort  nameid )
-  {
-    FT_Memory    memory = face->root.memory;
-    TT_UShort    n;
-    TT_NameRec*  rec;
-    TT_Bool      wide_chars = 1;
-
-    /* first pass, look for a given name record */
-    rec = face->name_table.names;
-    for ( n = 0; n < face->name_table.numNameRecords; n++, rec++ )
-    {
-      if ( rec->nameID == nameid )
-      {
-        /* found the name - now create an ASCII string from it */
-        TT_Bool  found = 0;
-
-        /* Test for Microsoft English language */
-        if ( rec->platformID == TT_PLATFORM_MICROSOFT &&
-             rec->encodingID <= TT_MS_ID_UNICODE_CS   &&
-             (rec->languageID & 0x3FF) == 0x009 )
-          found = 1;
-
-        /* Test for Apple Unicode encoding */
-        else if ( rec->platformID == TT_PLATFORM_APPLE_UNICODE )
-          found = 1;
-
-        /* Test for Apple Roman */
-        else if ( rec->platformID == TT_PLATFORM_MACINTOSH &&
-                  rec->languageID == TT_MAC_ID_ROMAN       )
-        {
-          found      = 1;
-          wide_chars = 0;
-        }
-
-        /* Found a Unicode Name */
-        if ( found )
-        {
-          TT_String*  string;
-          TT_UInt     len;
-
-          if ( wide_chars )
-          {
-            TT_UInt   m;
-
-            len = (TT_UInt)rec->stringLength / 2;
-            if ( MEM_Alloc( string, len + 1 ) )
-              return NULL;
-
-            for ( m = 0; m < len; m ++ )
-              string[m] = rec->string[2*m + 1];
-          }
-          else
-          {
-            len = rec->stringLength;
-            if ( MEM_Alloc( string, len + 1 ) )
-              return NULL;
-
-            MEM_Copy( string, rec->string, len );
-          }
-
-          string[len] = '\0';
-          return string;
-        }
-      }
-    }
-    return NULL;
-  }
-
-
-#undef  LOAD_
-#define LOAD_(x)   ( (error = sfnt->load_##x( face, stream )) != TT_Err_Ok )
 
 
   /*************************************************************************/
@@ -160,125 +71,50 @@
                           FT_Parameter*  params )
   {
     TT_Error           error;
-    TT_ULong           format_tag;
+    FT_Driver          sfnt_driver;
     SFNT_Interface*    sfnt;
-    PSNames_Interface* psnames;
 
-    /* for now, parameters are unused */
-    UNUSED(num_params);
-    UNUSED(params);
+    sfnt_driver = FT_Get_Driver( face->root.driver->library, "sfnt" );
+    if (!sfnt_driver) goto Bad_Format;
 
-    sfnt = (SFNT_Interface*)face->sfnt;
-    if (!sfnt)
-    {
-      /* look-up the SFNT driver */
-      FT_Driver  sfnt_driver;
-
-      sfnt_driver = FT_Get_Driver( face->root.driver->library, "sfnt" );
-      if (!sfnt_driver)
-        return FT_Err_Invalid_File_Format;
-
-      sfnt = (SFNT_Interface*)(sfnt_driver->interface.format_interface);
-      if (!sfnt)
-        return FT_Err_Invalid_File_Format;
-
-      face->sfnt       = sfnt;
-      face->goto_table = sfnt->goto_table;
-    }
-
-    psnames = (PSNames_Interface*)face->psnames;
-    if (!psnames)
-    {
-      /* look-up the PSNames driver */
-      FT_Driver  psnames_driver;
-
-      psnames_driver = FT_Get_Driver( face->root.driver->library, "psnames" );
-      if (psnames_driver)
-        face->psnames = (PSNames_Interface*)
-                            (psnames_driver->interface.format_interface);
-    }
+    sfnt = (SFNT_Interface*)(sfnt_driver->interface.format_interface);
+    if (!sfnt) goto Bad_Format;
 
     /* create input stream from resource */
     if ( FILE_Seek(0) )
       goto Exit;
 
     /* check that we have a valid TrueType file */
-    error = sfnt->load_format_tag( face, stream, face_index, &format_tag );
+    error = sfnt->init_face( stream, face, face_index, num_params, params );
     if (error) goto Exit;
 
     /* We must also be able to accept Mac/GX fonts, as well as OT ones */
-    if ( format_tag != 0x00010000 &&    /* MS fonts  */
-         format_tag != TTAG_true  )     /* Mac fonts */
+    if ( face->format_tag != 0x00010000 &&    /* MS fonts  */
+         face->format_tag != TTAG_true  )     /* Mac fonts */
     {
       FT_TRACE2(( "[not a valid TTF font]" ));
-      error = FT_Err_Unknown_File_Format;
-      goto Exit;
+      goto Bad_Format;
     }
-
-    /* store format tag */
-    face->format_tag = format_tag;
-	
-    /* Load font directory */
-    error = sfnt->load_directory( face, stream, face_index );
-    if ( error ) goto Exit;
-
-    face->root.num_faces = face->ttc_header.DirCount;
-    if ( face->root.num_faces < 1 )
-      face->root.num_faces = 1;
 
     /* If we're performing a simple font format check, exit immediately */
     if ( face_index < 0 )
       return TT_Err_Ok;
 
-    /* Load tables */
+    /* Load font directory */
+    error = sfnt->load_face( stream, face, face_index, num_params, params );
+    if ( error ) goto Exit;
 
-    if ( LOAD_( header )        ||
-         LOAD_( max_profile )   ||
-
-         (error = sfnt->load_metrics( face, stream, 0 )) != TT_Err_Ok  ||
-         /* load the `hhea' & `hmtx' tables at once */
-
-         (error = sfnt->load_metrics( face, stream, 1 )) != TT_Err_Ok ||
-         /* try to load the `vhea' & `vmtx' at once if present */
-
-         LOAD_( charmaps )      ||
-         LOAD_( names )         ||
-         LOAD_( os2 )           ||
-         LOAD_( psnames )       )
-     goto Exit;
-
-    /* the optional tables */
-
-    /* embedded bitmap support. */
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-    if (sfnt->load_sbits && LOAD_(sbits)) goto Exit;
-#endif
-
-    if ( LOAD_( hdmx )          ||
-         LOAD_( gasp )          ||
-         LOAD_( kerning )       ||
-		 LOAD_( pclt )          ||
-
-         (error = TT_Load_Locations( face, stream )) != TT_Err_Ok ||
-         (error = TT_Load_CVT      ( face, stream )) != TT_Err_Ok ||
-         (error = TT_Load_Programs ( face, stream )) != TT_Err_Ok )
-
-      goto Exit;
-
-#ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
-    if ( ( error = TT_Extension_Create( face ) ) != TT_Err_Ok )
-      goto Exit;
-#endif
-
-    face->root.family_name = Get_Name( face, TT_NAME_ID_FONT_FAMILY );
-    face->root.style_name  = Get_Name( face, TT_NAME_ID_FONT_SUBFAMILY );
-
+    error = TT_Load_Locations( face, stream ) ||
+            TT_Load_CVT      ( face, stream ) ||
+            TT_Load_Programs ( face, stream );
   Exit:
     return error;
+     
+  Bad_Format:
+    error = FT_Err_Unknown_File_Format;
+    goto Exit;
   }
 
-
-#undef LOAD_
 
 
   /*************************************************************************/
@@ -295,94 +131,27 @@
   LOCAL_DEF
   void  TT_Done_Face( TT_Face  face )
   {
-    TT_UShort  n;
     FT_Memory  memory = face->root.memory;
+    FT_Stream  stream = face->root.stream;
 
     SFNT_Interface*  sfnt = face->sfnt;
 
     if (sfnt)
-    {
-      /* destroy the postscript names table if it is supported */
-      if (sfnt->free_psnames)
-        sfnt->free_psnames( face );
-
-      /* destroy the embedded bitmaps table if it is supported */
-      if (sfnt->free_sbits)
-        sfnt->free_sbits( face );
-    }
-
-    /* freeing the kerning table */
-    FREE( face->kern_pairs );
-    face->num_kern_pairs = 0;
-
-    /* freeing the collection table */
-    FREE( face->ttc_header.TableDirectory );
-    face->ttc_header.DirCount = 0;
-
-    /* freeing table directory */
-    FREE( face->dir_tables );
-    face->num_tables = 0;
+      sfnt->done_face(face);
 
     /* freeing the locations table */
     FREE( face->glyph_locations );
     face->num_locations = 0;
 
-    /* freeing the character mapping tables */
-    if (sfnt && sfnt->load_charmaps )
-    {
-      for ( n = 0; n < face->num_charmaps; n++ )
-        sfnt->free_charmap( face, &face->charmaps[n].cmap );
-    }
-
-    FREE( face->charmaps );
-    face->num_charmaps = 0;
-
-    FREE( face->root.charmaps );
-    face->root.num_charmaps = 0;
-    face->root.charmap      = 0;
-
     /* freeing the CVT */
     FREE( face->cvt );
     face->cvt_size = 0;
 
-    /* freeing the horizontal metrics */
-    FREE( face->horizontal.long_metrics );
-    FREE( face->horizontal.short_metrics );
-
-    /* freeing the vertical ones, if any */
-    if ( face->vertical_info )
-    {
-      FREE( face->vertical.long_metrics  );
-      FREE( face->vertical.short_metrics );
-      face->vertical_info = 0;
-    }
-
     /* freeing the programs */
-    FREE( face->font_program );
-    FREE( face->cvt_program );
+    RELEASE_Frame( face->font_program );
+    RELEASE_Frame( face->cvt_program );
     face->font_program_size = 0;
     face->cvt_program_size  = 0;
-
-    /* freeing the gasp table */
-    FREE( face->gasp.gaspRanges );
-    face->gasp.numRanges = 0;
-
-    /* freeing the name table */
-    sfnt->free_names( face );
-
-    /* freeing the hdmx table */
-    sfnt->free_hdmx( face );
-
-    /* freeing family and style name */
-    FREE( face->root.family_name );
-    FREE( face->root.style_name );
-
-    /* freeing sbit size table */
-    face->root.num_fixed_sizes = 0;
-    if ( face->root.available_sizes )
-      FREE( face->root.available_sizes );
-
-    face->sfnt = 0;
   }
 
 

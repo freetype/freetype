@@ -199,9 +199,7 @@
                               FT_Stream  stream )
   {
     TT_Error   error;
-    FT_Memory  memory = stream->memory;
     TT_ULong   table_len;
-
 
     FT_TRACE2(( "Font program " ));
 
@@ -216,12 +214,7 @@
     else
     {
       face->font_program_size = table_len;
-
-      if ( ALLOC( face->font_program,
-                  face->font_program_size ) ||
-
-           FILE_Read( (void*)face->font_program,
-                      face->font_program_size )   )
+      if ( EXTRACT_Frame( table_len, face->font_program ) )
         goto Exit;
 
       FT_TRACE2(( "loaded, %12d bytes\n", face->font_program_size ));
@@ -241,14 +234,8 @@
     else
     {
       face->cvt_program_size = table_len;
-
-      if ( ALLOC( face->cvt_program,
-                  face->cvt_program_size )           ||
-
-           FILE_Read( (void*)face->cvt_program,
-                      face->cvt_program_size ) )
-        return error;
-
+      if ( EXTRACT_Frame( table_len, face->cvt_program ) )
+        goto Exit;
       FT_TRACE2(( "loaded, %12d bytes\n", face->cvt_program_size ));
     }
 

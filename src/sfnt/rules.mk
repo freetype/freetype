@@ -38,12 +38,14 @@ ifndef SFNT_INCLUDE
                   $(SFNT_DIR_)ttcmap.c   \
                   $(SFNT_DIR_)ttsbit.c   \
                   $(SFNT_DIR_)ttpost.c   \
+                  $(SFNT_DIR_)sfobjs.c   \
                   $(SFNT_DIR_)sfdriver.c
 
 
   # driver headers
   #
   SFNT_DRV_H := $(BASE_H)              \
+                $(SFNT_DIR_)sfobjs.h   \
                 $(SFNT_DIR_)ttload.h   \
                 $(SFNT_DIR_)ttsbit.h   \
                 $(SFNT_DIR_)ttcmap.h   \

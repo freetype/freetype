@@ -195,7 +195,12 @@ typedef struct FT_Frame_Field_
 
   BASE_DEF(void)      FT_Forget_Frame( FT_Stream  stream );
 
+  BASE_DEF(FT_Error)  FT_Extract_Frame( FT_Stream  stream,
+                                        FT_ULong   count,
+                                        FT_Byte*  *pbytes );
 
+  BASE_DEF(void)      FT_Release_Frame( FT_Stream  stream,
+                                        FT_Byte*  *pbytes );
 
   BASE_DEF(FT_Char)   FT_Get_Char( FT_Stream  stream );
 
@@ -233,13 +238,14 @@ typedef struct FT_Frame_Field_
 #define ACCESS_Frame( size )  \
           FT_SET_ERROR( FT_Access_Frame( stream, size ) )
 
-#define ACCESS_Compressed_Frame( size )  \
-          FT_SET_ERROR( FT_Access_Compressed_Frame( stream, size ) )
-
-
 #define FORGET_Frame() \
           FT_Forget_Frame( stream )
 
+#define EXTRACT_Frame( size, bytes ) \
+          FT_SET_ERROR( FT_Extract_Frame( stream, size, (FT_Byte**)&(bytes) ) )
+          
+#define RELEASE_Frame( bytes ) \
+          FT_Release_Frame( stream, (FT_Byte**)&(bytes) )
 
 #define FILE_Seek( position )  \
           FT_SET_ERROR( FT_Seek_Stream( stream, position ) )

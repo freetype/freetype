@@ -149,6 +149,24 @@
                                                  FT_Face        face );
 
 
+ /***********************************************************************
+  *
+  * <FuncType>
+  *    FT_AutoHinter_Reset_Func
+  *
+  * <Description>
+  *    This function is used to recompute the global metrics in a given   
+  *    font. This is useful when global font data changes (e.g. multiple
+  *    masters fonts where blend coordinates change..)
+  *
+  * <Input>
+  *    hinter      :: handle to source auto-hinter
+  *    face        :: handle to the face.
+  *
+  *
+  */
+  typedef  FT_Error    (*FT_AutoHinter_Reset_Func)( FT_AutoHinter  hinter,
+                                                    FT_Face        face );
 
  /***********************************************************************
   *
@@ -189,6 +207,7 @@
   {
     FT_AutoHinter_Init_Func   init_autohinter;
     FT_AutoHinter_Done_Func   done_autohinter;
+    FT_AutoHinter_Reset_Func  reset_face;
     FT_AutoHinter_Load_Func   load_glyph;
 
     FT_AutoHinter_Get_Global_Func   get_global_hints;

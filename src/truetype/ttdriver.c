@@ -43,270 +43,6 @@
   /*************************************************************************/
 
 
- /******************************************************************
-  *
-  * <Function>
-  *    find_encoding
-  *
-  * <Description>
-  *    return the FT_Encoding corresponding to a given
-  *    (platform_id,encoding_id) pair, as found in TrueType charmaps
-  *
-  * <Input>
-  *   platform_id ::
-  *   encoding_id ::
-  *
-  * <Return>
-  *   the corresponding FT_Encoding tag. ft_encoding_none by default
-  *
-  *****************************************************************/
-
-  static
-  FT_Encoding   find_encoding( int  platform_id,
-                               int  encoding_id )
-  {
-    typedef struct  TEncoding
-    {
-      int          platform_id;
-      int          encoding_id;
-      FT_Encoding  encoding;
-
-    } TEncoding;
-
-    static
-    const TEncoding   tt_encodings[] =
-    {
-      { TT_PLATFORM_ISO,                         -1, ft_encoding_unicode },
-
-      { TT_PLATFORM_APPLE_UNICODE,               -1, ft_encoding_unicode },
-
-      { TT_PLATFORM_MACINTOSH,      TT_MAC_ID_ROMAN, ft_encoding_apple_roman },
-
-      { TT_PLATFORM_MICROSOFT,  TT_MS_ID_UNICODE_CS, ft_encoding_unicode },
-      { TT_PLATFORM_MICROSOFT,  TT_MS_ID_SJIS,       ft_encoding_sjis },
-      { TT_PLATFORM_MICROSOFT,  TT_MS_ID_BIG_5,      ft_encoding_big5 }
-    };
-
-    const TEncoding  *cur, *limit;
-
-    cur   = tt_encodings;
-    limit = cur + sizeof(tt_encodings)/sizeof(tt_encodings[0]);
-
-    for ( ; cur < limit; cur++ )
-    {
-      if (cur->platform_id == platform_id)
-      {
-        if (cur->encoding_id == encoding_id ||
-            cur->encoding_id == -1          )
-          return cur->encoding;
-      }
-    }
-    return ft_encoding_none;
-  }
-
-
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Init_Face                                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A driver method used to initialize a new TrueType face object.     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    resource       :: A handle to the source resource.                 */
-  /*                                                                       */
-  /*    typeface_index :: An index of the face in the font resource.  Used */
-  /*                      to access individual faces in font collections.  */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    face           :: A handle to the face object.                     */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The `typeface_index' parameter field will be set to -1 if the      */
-  /*    engine only wants to test the format of the resource.  This means  */
-  /*    that font drivers should simply check the font format, then return */
-  /*    immediately with an error code of 0 (meaning success).  The field  */
-  /*    `num_faces' should be set.                                         */
-  /*                                                                       */
-  /*    Done_Face() will be called subsequently, whatever the result was.  */
-  /*                                                                       */
-  static
-  TT_Error  Init_Face( FT_Stream      stream,
-                       TT_Face        face,
-                       FT_Int         typeface_index,
-                       FT_Int         num_params,
-                       FT_Parameter*  params )
-  {
-    TT_Error     error;
-
-    /* initialize the TrueType face object */
-    error = TT_Init_Face( stream, face, typeface_index, num_params, params );
-
-    /* now set up root fields */
-    if ( !error && typeface_index >= 0 )
-    {
-      FT_Face     root = &face->root;
-      FT_Int      flags;
-      TT_CharMap  charmap;
-      TT_Int      n;
-      FT_Memory   memory;
-
-      memory = root->memory;
-
-      /*****************************************************************/
-      /*                                                               */
-      /* Compute face flags.                                           */
-      /*                                                               */
-      flags = FT_FACE_FLAG_SCALABLE  |    /* scalable outlines */
-              FT_FACE_FLAG_SFNT      |    /* SFNT file format  */
-              FT_FACE_FLAG_HORIZONTAL;    /* horizontal data   */
-
-      /* fixed width font ? */
-      if ( face->postscript.isFixedPitch )
-        flags |= FT_FACE_FLAG_FIXED_WIDTH;
-
-      /* vertical information ? */
-      if ( face->vertical_info )
-        flags |= FT_FACE_FLAG_VERTICAL;
-
-      /* kerning available ? */
-      if ( face->kern_pairs )
-        flags |= FT_FACE_FLAG_KERNING;
-
-      root->face_flags = flags;
-
-      /*****************************************************************/
-      /*                                                               */
-      /* Compute style flags.                                          */
-      /*                                                               */
-      flags = 0;
-
-      if ( face->os2.version != 0xFFFF )
-      {
-        /* We have an OS/2 table, use the `fsSelection' field */
-        if ( face->os2.fsSelection & 1 )
-          flags |= FT_STYLE_FLAG_ITALIC;
-
-        if ( face->os2.fsSelection & 32 )
-          flags |= FT_STYLE_FLAG_BOLD;
-      }
-      else
-      {
-        /* This is an old Mac font, use the header field */
-        if ( face->header.Mac_Style & 1 )
-          flags |= FT_STYLE_FLAG_BOLD;
-
-        if ( face->header.Mac_Style & 2 )
-          flags |= FT_STYLE_FLAG_ITALIC;
-      }
-
-      face->root.style_flags = flags;
-
-      /*****************************************************************/
-      /*                                                               */
-      /* Polish the charmaps.                                          */
-      /*                                                               */
-      /*   Try to set the charmap encoding according to the platform & */
-      /*   encoding ID of each charmap.                                */
-      /*                                                               */
-      charmap            = face->charmaps;
-      root->num_charmaps = face->num_charmaps;
-
-      /* allocate table of pointers */
-      if ( ALLOC_ARRAY( root->charmaps, root->num_charmaps, FT_CharMap ) )
-        return error;
-
-      for ( n = 0; n < root->num_charmaps; n++, charmap++ )
-      {
-        FT_Int  platform = charmap->cmap.platformID;
-        FT_Int  encoding = charmap->cmap.platformEncodingID;
-
-        charmap->root.face        = (FT_Face)face;
-        charmap->root.platform_id = platform;
-        charmap->root.encoding_id = encoding;
-        charmap->root.encoding    = find_encoding(platform,encoding);
-
-        /* now, set root->charmap with a unicode charmap wherever available */
-        if (!root->charmap && charmap->root.encoding == ft_encoding_unicode)
-          root->charmap = (FT_CharMap)charmap;
-
-        root->charmaps[n] = (FT_CharMap)charmap;
-      }
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-      if ( face->num_sbit_strikes )
-      {
-       face->root.num_fixed_sizes = face->num_sbit_strikes;
-       if ( ALLOC_ARRAY( face->root.available_sizes,
-                         face->num_sbit_strikes,
-                         FT_Bitmap_Size ) )
-         return error;
-
-       for ( n = 0 ; n < face->num_sbit_strikes ; n++ )
-       {
-         face->root.available_sizes[n].width =
-           face->sbit_strikes[n].x_ppem;
-         face->root.available_sizes[n].height =
-           face->sbit_strikes[n].y_ppem;
-       }
-      }
-      else
-#else
-      {
-       root->num_fixed_sizes = 0;
-       root->available_sizes = 0;
-      }
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
-      /*****************************************************************/
-      /*                                                               */
-      /*  Set up metrics.                                              */
-      /*                                                               */
-      root->bbox.xMin    = face->header.xMin;
-      root->bbox.yMin    = face->header.yMin;
-      root->bbox.xMax    = face->header.xMax;
-      root->bbox.yMax    = face->header.yMax;
-      root->units_per_EM = face->header.Units_Per_EM;
-
-      /* The ascender/descender/height are computed from the OS/2 table   */
-      /* when found.  Otherwise, they're taken from the horizontal header */
-      if ( face->os2.version != 0xFFFF )
-      {
-        root->ascender  =  face->os2.sTypoAscender;
-        root->descender = -face->os2.sTypoDescender;
-        root->height    =  root->ascender + root->descender +
-                           face->os2.sTypoLineGap;
-      }
-      else
-      {
-        root->ascender  = face->horizontal.Ascender;
-        root->descender = face->horizontal.Descender;
-        root->height    = root->ascender + root->descender +
-                          face->horizontal.Line_Gap;
-      }
-
-      root->max_advance_width  = face->horizontal.advance_Width_Max;
-
-      root->max_advance_height = root->height;
-      if ( face->vertical_info )
-        root->max_advance_height = face->vertical.advance_Height_Max;
-
-      root->underline_position  = face->postscript.underlinePosition;
-      root->underline_thickness = face->postscript.underlineThickness;
-
-      /* root->max_points      - already set up */
-      /* root->max_contours    - already set up */
-
-    }
-    return error;
-  }
-
 
 #undef  PAIR_TAG
 #define PAIR_TAG( left, right )  ( ((TT_ULong)left << 16) | (TT_ULong)right )
@@ -639,35 +375,18 @@
 
 
   static
-  void*  tt_get_sfnt_table( TT_Face  face, FT_Sfnt_Tag  tag )
-  {
-    void*  table;
-
-    switch (tag)
-    {
-      case ft_sfnt_head: table = &face->header; break;
-      case ft_sfnt_hhea: table = &face->horizontal; break;
-      case ft_sfnt_vhea: table = (face->vertical_info ? &face->vertical : 0 ); break;
-      case ft_sfnt_os2:  table = (face->os2.version == 0xFFFF ? 0 : &face->os2 ); break;
-      case ft_sfnt_post: table = &face->postscript; break;
-      case ft_sfnt_maxp: table = &face->max_profile; break;
-	  case ft_sfnt_pclt: table = face->pclt.Version ? &face->pclt : 0 ; break;
-
-      default:
-        table = 0;
-    }
-    return table;
-  }
-
-
-  static
   FTDriver_Interface  tt_get_interface( TT_Driver  driver, const char* interface )
   {
-    UNUSED(driver);
-
-    if (strcmp(interface,"get_sfnt")==0)
-      return (FTDriver_Interface)tt_get_sfnt_table;
-
+    FT_Driver        sfntd = FT_Get_Driver( driver->root.library, "sfnt" );
+    SFNT_Interface*  sfnt;
+    
+    /* only return the default interface from the SFNT module */
+    if (sfntd)
+    {
+      sfnt = (SFNT_Interface*)(sfntd->interface.format_interface);
+      if (sfnt)
+        return sfnt->get_interface( (FT_Driver)driver, interface );
+    }
     return 0;
   }
 
@@ -691,7 +410,7 @@
     (FTDriver_doneDriver)        TT_Done_Driver,
     (FTDriver_getInterface)      tt_get_interface,
 
-    (FTDriver_initFace)          Init_Face,
+    (FTDriver_initFace)          TT_Init_Face,
     (FTDriver_doneFace)          TT_Done_Face,
     (FTDriver_getKerning)        Get_Kerning,
 

@@ -5,10 +5,51 @@
 #include <ttsbit.h>
 #include <ttpost.h>
 #include <ttcmap.h>
+#include <sfobjs.h>
+
+  static
+  void*  get_sfnt_table( TT_Face  face, FT_Sfnt_Tag  tag )
+  {
+    void*  table;
+
+    switch (tag)
+    {
+      case ft_sfnt_head: table = &face->header; break;
+      case ft_sfnt_hhea: table = &face->horizontal; break;
+      case ft_sfnt_vhea: table = (face->vertical_info ? &face->vertical : 0 ); break;
+      case ft_sfnt_os2:  table = (face->os2.version == 0xFFFF ? 0 : &face->os2 ); break;
+      case ft_sfnt_post: table = &face->postscript; break;
+      case ft_sfnt_maxp: table = &face->max_profile; break;
+	  case ft_sfnt_pclt: table = face->pclt.Version ? &face->pclt : 0 ; break;
+
+      default:
+        table = 0;
+    }
+    return table;
+  }
+
+
+  static
+  FTDriver_Interface  SFNT_Get_Interface( FT_Driver    driver,
+                                          const char*  interface )
+  {
+    UNUSED(driver);
+
+    if (strcmp(interface,"get_sfnt")==0)
+      return (FTDriver_Interface)get_sfnt_table;
+
+    return 0;
+  }
+
 
   static const SFNT_Interface  sfnt_interface =
   {
     TT_Goto_Table,
+
+    SFNT_Init_Face,
+    SFNT_Load_Face,
+    SFNT_Done_Face,
+    SFNT_Get_Interface,
 
     TT_Load_Any,
     TT_Load_Format_Tag,

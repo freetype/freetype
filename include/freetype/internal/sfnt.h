@@ -26,6 +26,96 @@
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
+  /*    TT_Init_Face_Func                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    First part of the SFNT face object initialisation. This will       */
+  /*    find the face in a SFNT file or collection, and load its           */
+  /*    format tag in face->format_tag.                                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    stream     :: The input stream.                                    */
+  /*    face       :: A handle to the target face object.                  */
+  /*    faceIndex  :: The index of the TrueType font, if we're opening a   */
+  /*                  collection.                                          */
+  /*    num_params :: number of additional parameters                      */
+  /*    params     :: optional additional parameters                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The stream cursor must be at the font file's origin                */
+  /*    This function recognizes fonts embedded in a "TrueType collection" */
+  /*                                                                       */
+  /*    Once the format tag has been validated by the font driver, it      */
+  /*    should then call the TT_Load_Face_Func callback to read the rest   */
+  /*    of the SFNT tables in the object..                                 */
+  /*                                                                       */
+  typedef
+  FT_Error  (*TT_Init_Face_Func)( FT_Stream      stream,
+                                  TT_Face        face,
+                                  FT_Int         face_index,
+                                  FT_Int         num_params,
+                                  FT_Parameter*  params );
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Load_Face_Func                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Second part of the SFNT face object initialisation. This will      */
+  /*    load the common SFNT tables (head, OS/2, maxp, metrics, etc..)     */
+  /*    in the face object..                                               */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    stream     :: The input stream.                                    */
+  /*    face       :: A handle to the target face object.                  */
+  /*    faceIndex  :: The index of the TrueType font, if we're opening a   */
+  /*                  collection.                                          */
+  /*    num_params :: number of additional parameters                      */
+  /*    params     :: optional additional parameters                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function must be called after TT_Init_Face_Func               */
+  /*                                                                       */
+  typedef
+  FT_Error  (*TT_Load_Face_Func)( FT_Stream      stream,
+                                  TT_Face        face,
+                                  FT_Int         face_index,
+                                  FT_Int         num_params,
+                                  FT_Parameter*  params );
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Done_Face_Func                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A callback used to delete the common SFNT data from a face.        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face       :: A handle to the target face object.                  */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function does NOT destroy the face object..                   */
+  /*                                                                       */
+  typedef
+  void    (*TT_Done_Face_Func)( TT_Face   face );
+
+
+  typedef
+  FTDriver_Interface  (*SFNT_Get_Interface_Func)( FT_Driver    driver,
+                                                  const char*  interface );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
   /*    TT_Load_Format_Tag                                                 */
   /*                                                                       */
   /* <Description>                                                         */
@@ -338,10 +428,17 @@
   {
     TT_Goto_Table_Func      goto_table;
 
+    TT_Init_Face_Func       init_face;
+    TT_Load_Face_Func       load_face;
+    TT_Done_Face_Func       done_face;
+    SFNT_Get_Interface_Func get_interface;
+    
     TT_Load_Any_Func        load_any;
     TT_Load_Format_Tag_Func load_format_tag;
     TT_Load_Directory_Func  load_directory;
 
+    /* these functions are called by "load_face" but they can also */
+    /* be called from external modules, if there is a need to      */
     TT_Load_Table_Func      load_header;
     TT_Load_Metrics_Func    load_metrics;
     TT_Load_Table_Func      load_charmaps;
