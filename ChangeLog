@@ -1,3 +1,7 @@
+2000-12-06  David Turner  <david.turner@freetype.org>
+
+	* src/cache/ftlru.c (FT_Lru_Done): fixed a small memory leak
+
 2000-12-06  Werner Lemberg  <wl@gnu.org>
 
 	* builds/module.mk: Replaced `xxx #' with `xxx$(space).
