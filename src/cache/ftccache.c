@@ -512,7 +512,6 @@
     FT_LruNode  lru;
 
 
-    /* some argument checks are delayed to ftc_glyph_cache_lookup */
     if ( !cache || !query || !anode )
       return FTC_Err_Invalid_Argument;
 
@@ -534,7 +533,7 @@
       {
         FT_ERROR((
           "ftc_cache_lookup: invalid query (bad 'family' field)\n" ));
-        return FT_Err_Invalid_Argument;
+        return FTC_Err_Invalid_Argument;
       }
 
       if ( *bucket )

@@ -32,7 +32,7 @@
   /* codes to equivalent glyph indices.                                    */
   /*                                                                       */
   /* For now, the implementation is very basic: Each node maps a range of  */
-  /* 128 consecutive character codes to their correspondingglyph indices.  */
+  /* 128 consecutive character codes to their corresponding glyph indices. */
   /*                                                                       */
   /* We could do more complex things, but I don't think it is really very  */
   /* useful.                                                               */
@@ -228,7 +228,7 @@
 
   Bad_Descriptor:
     FT_ERROR(( "ftp_cmap_family_init: invalid charmap descriptor\n" ));
-    return FT_Err_Invalid_Argument;
+    return FTC_Err_Invalid_Argument;
   }
 
 
