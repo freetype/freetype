@@ -772,7 +772,7 @@
     FT_Byte*  p_limit    = decoder->eblc_limit;
     FT_ULong  num_ranges = decoder->strike_index_count;
     FT_UInt   start, end, index_format, image_format;
-    FT_ULong  image_start, image_end, image_offset;
+    FT_ULong  image_start = 0, image_end = 0, image_offset;
 
 
     if ( p + 8 * num_ranges > p_limit )
