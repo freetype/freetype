@@ -1,11 +1,57 @@
 2001-10-18  David Turner  <david@freetype.org>
 
+        * src/truetype/ttdriver.c: changing computation of pixel size from
+        character size to use rounding. This is an experiment to see if this
+        gives values similar to Windows for scaled ascent/descent/etc..
+
         * src/base/ftcalc.c (FT_Div64by32): changed the implementation
         slightly since the original code was mis-compiled on Mac machines
         using the MPW C compiler..
 
+        * src/base/ftobjs.c (FT_Realloc): when a memory block was grown
+        through FT_Realloc, the new bytes were not set to 0, which created
+        some strange bugs in the Postscript hinter
 
-2001-10-17  David Turner  >david@freetype.org>
+        * src/cid/cidgload.c: adding support to new postscript hinter
+        
+        * include/freetype/internal/psglobal.h,
+          include/freetype/internal/pshints.h,
+          include/freetype/config/ftmodule.h,
+          src/pshinter/Jamfile,
+          src/pshinter/pshalgo.h,
+          src/pshinter/pshalgo1.h,
+          src/pshinter/pshalgo1.c,
+          src/pshinter/pshalgo2.h,
+          src/pshinter/pshalgo2.c,
+          src/pshinter/pshglob.h,
+          src/pshinter/pshglob.c,
+          src/pshinter/pshinter.c,
+          src/pshinter/pshmod.c,
+          src/pshinter/pshmod.h,
+          src/pshinter/pshrec.c,
+          src/pshinter/pshrec.h : Adding new postscript hinter module
+
+        * include/freetype/internal/ftobjs.h,
+          include/freetype/internal/internal.h,
+          include/freetype/internal/psaux.h,
+          include/freetype/internal/t1types.h,
+          src/psaux/psobjs.c,
+          src/psaux/psobjs.h,
+          src/psaux/t1decode.h,
+          src/psaux/t1decode.c,
+          src/type1/t1driver.c,
+          src/type1/t1gload.c,
+          src/type1/t1objs.c,
+          src/type1/t1objs.h : updates to use the new postscript hinter
+
+        * tests/Jamfile, tests/gview.c: Adding a new glyph hinting
+        viewer/debugger to the source tree. Note that you will _not_ be
+        able to compile it since it depends on an unavailable graphics
+        library named "Nirvana" to render vector images..
+
+
+
+2001-10-17  David Turner  <david@freetype.org>
 
 	* Version 2.0.5 released.
 	=========================
