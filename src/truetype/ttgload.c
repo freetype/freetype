@@ -659,7 +659,11 @@
   FT_Error  load_truetype_glyph( TT_Loader*  loader,
                                  FT_UInt     glyph_index )
   {
+
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     FT_Stream        stream = loader->stream;
+#endif
+
     FT_Error         error;
     TT_Face          face   = (TT_Face)loader->face;
     FT_ULong         offset;
