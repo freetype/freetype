@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftsystem.h                                                             */
 /*                                                                         */
-/*    FreeType low-level system interface definition                       */
+/*    FreeType low-level system interface definition (specification).      */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

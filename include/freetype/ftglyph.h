@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftglyph.h                                                              */
 /*                                                                         */
-/*    FreeType convenience functions to handle glyphs..                    */
+/*    FreeType convenience functions to handle glyphs (specification).     */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

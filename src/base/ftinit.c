@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftinit.c                                                               */
 /*                                                                         */
-/*    FreeType initialisation layer (body).                                */
+/*    FreeType initialization layer (body).                                */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  fterrors.h                                                             */
 /*                                                                         */
-/*  FreeType error codes (specification).                                  */
+/*    FreeType error codes (specification).                                */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

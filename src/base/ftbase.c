@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftbase.c                                                               */
 /*                                                                         */
-/*    Single object library component.                                     */
+/*    Single object library component (body only).                         */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

@@ -5,10 +5,10 @@
 /*  The FreeType private base classes (specification).                     */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -141,6 +141,32 @@
 
 #define  FT_DRIVER_HAS_HINTER(x)  (FT_MODULE_CLASS(x)->module_flags & \
                                        ft_module_driver_has_hinter )
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Module_Interface                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Finds a module and returns its specific interface as a typeless    */
+  /*    pointer.                                                           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library     :: A handle to the library object.                     */
+  /*                                                                       */
+  /*    module_name :: The module's name (as an ASCII string).             */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A module-specific interface if available, 0 otherwise.             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    You should better be familiar with FreeType internals to know      */
+  /*    which module to look for, and what its interface is :-)            */
+  /*                                                                       */
+  BASE_DEF( const void* )  FT_Get_Module_Interface( FT_Library   library,
+                                                    const char*  mod_name );
+
 
   /*************************************************************************/
   /*************************************************************************/

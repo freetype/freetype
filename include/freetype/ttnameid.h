@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ttmakeid.h                                                             */
 /*                                                                         */
-/*    TrueType name ID definitions                                         */
+/*    TrueType name ID definitions (specification only).                   */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

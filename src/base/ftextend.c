@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftextend.h                                                             */
 /*                                                                         */
-/*  FreeType extensions implementation (body).                             */
+/*    FreeType extensions implementation (body).                           */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

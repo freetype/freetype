@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  fttypes.h                                                              */
 /*                                                                         */
-/*    FreeType simple types definitions                                    */
+/*    FreeType simple types definitions (specification only).              */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

@@ -2,7 +2,8 @@
 /*                                                                         */
 /*  t1tables.h                                                             */
 /*                                                                         */
-/*    Basic Type 1/Type 2 tables definitions and interface                 */
+/*    Basic Type 1/Type 2 tables definitions and interface (specification  */
+/*    only).                                                               */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -139,7 +140,7 @@
 
   /* maximum number of Multiple Masters designs, as defined in the spec */
 #define T1_MAX_MM_DESIGNS     16
-  
+
   /* maximum number of Multiple Masters axes, as defined in the spec */
 #define T1_MAX_MM_AXIS         4
 
@@ -153,7 +154,7 @@
     FT_Byte    num_points;
     FT_Fixed*  design_points;
     FT_Fixed*  blend_points;
-    
+
   } T1_DesignMap;
 
 
@@ -161,19 +162,19 @@
   {
     FT_UInt       num_designs;
     FT_UInt       num_axis;
-    
+
     FT_String*    axis_names[T1_MAX_MM_AXIS];
     FT_Fixed*     design_pos[T1_MAX_MM_DESIGNS];
     T1_DesignMap  design_map[T1_MAX_MM_AXIS];
-    
+
     FT_Fixed*     weight_vector;
     FT_Fixed*     default_weight_vector;
-    
+
     T1_FontInfo*  font_infos[T1_MAX_MM_DESIGNS + 1];
     T1_Private*   privates  [T1_MAX_MM_DESIGNS + 1];
-    
+
     FT_ULong      blend_bitflags;
-  
+
   } T1_Blend;
 
 
@@ -185,7 +186,7 @@
     FT_Fixed    forcebold_threshold;
     FT_Pos      stroke_width;
     FT_Fixed    expansion_factor;
-    
+
     FT_Byte     paint_type;
     FT_Byte     font_type;
     FT_Matrix   font_matrix;

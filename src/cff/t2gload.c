@@ -1264,7 +1264,7 @@
 
             args = stack;
 
-            /* adding six more points; 4 control points, 2 on-curve point */
+            /* adding six more points; 4 control points, 2 on-curve points */
             if ( start_point( builder, x, y ) ||
                  check_points ( builder, 6 )  )
               goto Memory_Error;
@@ -1316,7 +1316,7 @@
 
             FT_TRACE4(( " flex1" ));
 
-            /* adding five more points; 4 control points, 1 on-curve point */
+            /* adding six more points; 4 control points, 2 on-curve points */
             if ( start_point( builder, x, y ) ||
                  check_points( builder, 6 )   )
                goto Memory_Error;
@@ -1355,7 +1355,7 @@
               args += 2;
             }
 
-            /* is last operand a x or y delta ? */
+            /* is last operand an x- or y-delta? */
             if ( horizontal )
             {
               x += args[0];
@@ -1389,7 +1389,8 @@
             {
               x += args[0];
               y += args[1];
-              add_point( builder, x, y, (FT_Bool)( count == 3 || count == 0) );
+              add_point( builder, x, y,
+                         (FT_Bool)( count == 3 || count == 0 ) );
               args += 2;
             }
 

@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftmm.h                                                                 */
 /*                                                                         */
-/*    FreeType Multiple Master font interface.                             */
+/*    FreeType Multiple Master font interface (specification).             */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -47,7 +47,7 @@
     FT_String*  name;
     FT_Long     minimum;
     FT_Long     maximum;
-  
+
   } FT_MM_Axis;
 
 
@@ -75,13 +75,13 @@
     FT_UInt     num_axis;
     FT_UInt     num_designs;
     FT_MM_Axis  axis[T1_MAX_MM_AXIS];
-  
+
   } FT_Multi_Master;
 
 
   typedef FT_Error  (*FT_Get_MM_Func)( FT_Face           face,
                                        FT_Multi_Master*  master );
-  
+
   typedef FT_Error  (*FT_Set_MM_Design_Func)( FT_Face   face,
                                               FT_UInt   num_coords,
                                               FT_Long*  coords );

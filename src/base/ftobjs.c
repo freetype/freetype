@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftobjs.c                                                               */
 /*                                                                         */
-/*    The FreeType private base classes (base).                            */
+/*    The FreeType private base classes (body).                            */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -2088,31 +2088,29 @@
     driver = face->driver;
     memory = driver->root.memory;
 
+    kerning->x = 0;
+    kerning->y = 0;
+
     if ( driver->clazz->get_kerning )
     {
       error = driver->clazz->get_kerning( face,
                                           left_glyph,
                                           right_glyph,
                                           kerning );
-    }
-    if ( !error )
-    {
-      if ( kern_mode != ft_kerning_unscaled )
+      if ( !error )
       {
-        kerning->x = FT_MulFix( kerning->x, face->size->metrics.x_scale );
-        kerning->y = FT_MulFix( kerning->y, face->size->metrics.y_scale );
-
-        if ( kern_mode != ft_kerning_unfitted )
+        if ( kern_mode != ft_kerning_unscaled )
         {
-          kerning->x = ( kerning->x + 32 ) & -64;
-          kerning->y = ( kerning->y + 32 ) & -64;
+          kerning->x = FT_MulFix( kerning->x, face->size->metrics.x_scale );
+          kerning->y = FT_MulFix( kerning->y, face->size->metrics.y_scale );
+
+          if ( kern_mode != ft_kerning_unfitted )
+          {
+            kerning->x = ( kerning->x + 32 ) & -64;
+            kerning->y = ( kerning->y + 32 ) & -64;
+          }
         }
       }
-    }
-    else
-    {
-      kerning->x = 0;
-      kerning->y = 0;
     }
 
     return error;
@@ -2922,9 +2920,8 @@
   /*    You should better be familiar with FreeType internals to know      */
   /*    which module to look for, and what its interface is :-)            */
   /*                                                                       */
-  FT_EXPORT_FUNC( const void* )  FT_Get_Module_Interface(
-                                   FT_Library   library,
-                                   const char*  mod_name )
+  BASE_FUNC( const void* )  FT_Get_Module_Interface( FT_Library   library,
+                                                     const char*  mod_name )
   {
     FT_Module  module;
 

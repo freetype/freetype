@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftmodule.h                                                             */
 /*                                                                         */
-/*    FreeType modules public interface.                                   */
+/*    FreeType modules public interface (specification).                   */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -99,7 +99,7 @@
     FT_Module_Constructor  module_init;
     FT_Module_Destructor   module_done;
     FT_Module_Requester    get_interface;
-    
+
   } FT_Module_Class;
 
 
@@ -149,32 +149,6 @@
   /*                                                                       */
   FT_EXPORT_DEF( FT_Module )  FT_Get_Module( FT_Library   library,
                                              const char*  module_name );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Module_Interface                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Finds a module and returns its specific interface as a typeless    */
-  /*    pointer.                                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library     :: A handle to the library object.                     */
-  /*                                                                       */
-  /*    module_name :: The module's name (as an ASCII string).             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A module-specific interface if available, 0 otherwise.             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    You should better be familiar with FreeType internals to know      */
-  /*    which module to look for, and what its interface is :-)            */
-  /*                                                                       */
-  FT_EXPORT_DEF( const void* )  FT_Get_Module_Interface(
-                                  FT_Library   library,
-                                  const char*  mod_name );
 
 
   /*************************************************************************/
@@ -244,7 +218,7 @@
 
   typedef void  (*FT_DebugHook_Func)( void*  arg );
 
-  
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */

@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftrender.h                                                             */
 /*                                                                         */
-/*    FreeType renderer modules public interface                           */
+/*    FreeType renderer modules public interface (specification).          */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

@@ -3,6 +3,7 @@
 /*  tttables.h                                                             */
 /*                                                                         */
 /*    Basic SFNT/TrueType tables definitions and interface                 */
+/*    (specification only).                                                */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -428,7 +429,7 @@
     FT_Char    WidthType;
     FT_Byte    SerifStyle;
     FT_Byte    Reserved;
-    
+
   } TT_PCLT;
 
 
