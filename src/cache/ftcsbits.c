@@ -169,7 +169,7 @@
 
     /* ignore the errors that might have occurred --   */
     /* we mark unloaded glyphs with `sbit.buffer == 0' */
-    /* and 'width == 255', 'height == 0'               */
+    /* and `width == 255', `height == 0'               */
     /*                                                 */
     if ( error && error != FTC_Err_Out_Of_Memory )
     {
@@ -178,6 +178,8 @@
       sbit->height = 0;
       sbit->buffer = NULL;
       error        = 0;
+      if ( asize )
+        *asize = 0;
     }
 
     return error;

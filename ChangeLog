@@ -1,3 +1,8 @@
+2004-04-14  Alex Strelnikov  <ptktyrf@mail.ru>
+
+	* src/cache/ftcsbits.c (ftc_snode_load): Initialize `*asize' in case
+	of error.
+
 2004-04-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftmac.c [__GNUC__]: Define OS_INLINE.
