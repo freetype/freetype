@@ -1,3 +1,9 @@
+2004-01-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffload.c (cff_font_load): Load charstrings_index earlier.
+	Use number of charstrings as argument to CFF_Load_FD_Select (as
+	documented in the CFF specs).
+
 2004-01-13  Graham Asher  <graham.asher@btinternet.com>
 
 	* src/pshinter/pshalgo.c (psh_glyph_init): Move assignment of
