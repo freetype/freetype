@@ -129,6 +129,8 @@
     {
       if ( blend->num_designs == 0 )
       {
+        FT_UInt  nn;
+        
         /* allocate the blend `private' and `font_info' dictionaries */
         if ( ALLOC_ARRAY( blend->font_infos[1], num_designs, T1_FontInfo )  ||
              ALLOC_ARRAY( blend->privates[1], num_designs, T1_Private )     ||
@@ -139,6 +141,13 @@
 
         blend->font_infos[0] = &face->type1.font_info;
         blend->privates  [0] = &face->type1.private_dict;
+        
+        for ( nn = 2; nn <= num_designs; nn++ )
+        {
+          blend->privates[nn]   = blend->privates[nn-1]+1;
+          blend->font_infos[nn] = blend->font_infos[nn-1]+1;
+        }
+        
         blend->num_designs   = num_designs;
       }
       else if ( blend->num_designs != num_designs )
@@ -1250,6 +1259,13 @@
 
 
       index = Z1_ToInt( parser );
+      
+      /*  make sure we get subr index and loop count in sync     */
+      /*  in some cases, the dictionary count is simply the last */
+      /*  subr index + 1, with possible holes in the table..     */
+      if (index > n)
+        n = index;
+        
       if ( !read_binary_data( parser, &size, &base ) )
         return;
 
