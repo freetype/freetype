@@ -76,10 +76,22 @@ ftbbox.ppc.o: $(FTSRC)/base/ftbbox.c
 ftbdf.ppc.o: $(FTSRC)/base/ftbdf.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
+ftbitmap.ppc.o: $(FTSRC)/base/ftbitmap.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
 ftglyph.ppc.o: $(FTSRC)/base/ftglyph.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 ftmm.ppc.o: $(FTSRC)/base/ftmm.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+ftotval.ppc.o: $(FTSRC)/base/ftotval.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+ftpfr.ppc.o: $(FTSRC)/base/ftpfr.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+ftstroke.ppc.o: $(FTSRC)/base/ftstroke.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 ftsynth.ppc.o: $(FTSRC)/base/ftsynth.c
@@ -89,6 +101,9 @@ fttype1.ppc.o: $(FTSRC)/base/fttype1.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 ftwinfnt.ppc.o: $(FTSRC)/base/ftwinfnt.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+ftxf86.ppc.o: $(FTSRC)/base/ftxf86.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 #
@@ -211,8 +226,9 @@ winfnt.ppc.o: $(FTSRC)/winfonts/winfnt.c
 otvalid.ppc.o: $(FTSRC)/otvalid/otvalid.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-BASEPPC = ftbase.ppc.o ftbdf.ppc.o ftglyph.ppc.o ftbbox.ppc.o ftmm.ppc.o\
-	  ftsynth.ppc.o fttype1.ppc.o ftwinfnt.ppc.o
+BASEPPC = ftbase.ppc.o ftbbox.ppc.o ftbdf.ppc.o ftbitmap.ppc.o ftglyph.ppc.o \
+	  ftmm.ppc.o ftotval.ppc.o ftpfr.ppc.o ftstroke.ppc.o ftsynth.ppc.o \
+	  fttype1.ppc.o ftwinfnt.ppc.o ftxf86.ppc.o
 
 DEBUGPPC = ftdebug.ppc.o ftdebugpure.ppc.o
 

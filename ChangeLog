@@ -1,3 +1,11 @@
+2005-03-26  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	Update of the Amiga port.
+
+	* builds/amiga/makefile, builds/amiga/makefile.os4,
+	builds/amiga/smakefile: Included the base extension files
+	(ftbitmap.c, ftotval.c, ftpfr.c, ftstroke.c, ftxf86.c).
+
 2005-03-25  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	Update of the Amiga port.
