@@ -23,7 +23,8 @@ LATEST CHANGES BETWEEN 2.1.6 and 2.1.5
     - The internal  module API  has been heavily  changed in  favor of
       massive simplifications within the font engine.  This also means
       that authors of third-party modules must adapt their code to the
-      new scheme.
+      new scheme. NOTE: THE NEW SCHEME IS NOT FINISHED. PLEASE WAIT
+      UNTIL AT LEAST ANOTHER RELEASE !!
 
     - The PostScript  parser has been enhanced to  handle comments and
       strings   correctly.   Additionally,   more  syntax   forms  are

@@ -1,3 +1,12 @@
+2003-11-07  David Turner  <david@freetype.org>
+
+
+	* Version 2.1.5 released.
+	=========================
+
+
+        * updating README and docs/VERSION.DLL, re-tagging VER-2-1-6
+
 2003-11-06  David Turner  <david@freetype.org>
 
         * install: removed obsolete file
