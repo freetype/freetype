@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType high-level API and common types (specification only).       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1492,15 +1492,15 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_OPEN_PARAMS      :: Use the `num_params' & `params' field.      */
   /*                                                                       */
-  /*    ft_open_memory :: deprecated. use @FT_OPEN_MEMORY instead          */
+  /*    ft_open_memory      :: Deprecated. use @FT_OPEN_MEMORY instead.    */
   /*                                                                       */
-  /*    ft_open_stream :: deprecated. use @FT_OPEN_STREAM instead          */
+  /*    ft_open_stream      :: Deprecated. use @FT_OPEN_STREAM instead.    */
   /*                                                                       */
-  /*    ft_open_pathname :: deprecated. use @FT_OPEN_PATHNAME instead      */
+  /*    ft_open_pathname    :: Deprecated. use @FT_OPEN_PATHNAME instead.  */
   /*                                                                       */
-  /*    ft_open_driver :: deprecated, use @FT_OPEN_DRIVER instead          */
+  /*    ft_open_driver      :: Deprecated, use @FT_OPEN_DRIVER instead.    */
   /*                                                                       */
-  /*    ft_open_params :: deprecated, use @FT_OPEN_PARAMS instead          */
+  /*    ft_open_params      :: Deprecated, use @FT_OPEN_PARAMS instead.    */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The `FT_OPEN_MEMORY', `FT_OPEN_STREAM', and `FT_OPEN_PATHNAME'     */
@@ -1516,11 +1516,11 @@ FT_BEGIN_HEADER
 
   } FT_Open_Flags;
 
-#define  ft_open_memory    FT_OPEN_MEMORY     /* deprecated */
-#define  ft_open_stream    FT_OPEN_STREAM     /* deprecated */
-#define  ft_open_pathname  FT_OPEN_PATHNAME   /* deprecated */
-#define  ft_open_driver    FT_OPEN_DRIVER     /* deprecated */
-#define  ft_open_params    FT_OPEN_PARAMS     /* deprecated */
+#define ft_open_memory    FT_OPEN_MEMORY     /* deprecated */
+#define ft_open_stream    FT_OPEN_STREAM     /* deprecated */
+#define ft_open_pathname  FT_OPEN_PATHNAME   /* deprecated */
+#define ft_open_driver    FT_OPEN_DRIVER     /* deprecated */
+#define ft_open_params    FT_OPEN_PARAMS     /* deprecated */
 
 
   /*************************************************************************/
@@ -2212,11 +2212,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_RENDER_MODE_LIGHT ::                                            */
   /*      This is similar to @FT_RENDER_MODE_NORMAL, except that this      */
-  /*      changes the hinting to prevent stem width quantization. This     */
+  /*      changes the hinting to prevent stem width quantization.  This    */
   /*      results in glyph shapes that are more similar to the original,   */
   /*      while being a bit more fuzzy ("better shapes", instead of        */
-  /*      "better contrast" if you want :-) THIS IS STILL EXPERIMENTAL,    */
-  /*      FOR NOW, THIS WILL PRODUCE RESULTS SIMILAR TO NORMAL MODE !!     */
+  /*      "better contrast" if you want :-).                               */
   /*                                                                       */
   /*    FT_RENDER_MODE_MONO ::                                             */
   /*      This mode corresponds to 1-bit bitmaps.                          */
@@ -2225,8 +2224,7 @@ FT_BEGIN_HEADER
   /*      This mode corresponds to horizontal RGB/BGR sub-pixel displays,  */
   /*      like LCD-screens.  It produces 8-bit bitmaps that are 3 times    */
   /*      the width of the original glyph outline in pixels, and which use */
-  /*      the @FT_PIXEL_MODE_LCD mode. THIS IS STILL EXPERIMENTAL, DO NOT  */
-  /*      USE FOR NOW !!                                                   */
+  /*      the @FT_PIXEL_MODE_LCD mode.                                     */
   /*                                                                       */
   /*    FT_RENDER_MODE_LCD_V ::                                            */
   /*      This mode corresponds to vertical RGB/BGR sub-pixel displays     */
@@ -2237,8 +2235,7 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*   The LCD-optimized glyph bitmaps produced by FT_Render_Glyph are     */
   /*   _not filtered_ to reduce color-fringes.  It is up to the caller to  */
-  /*   perform this pass. THIS IS STILL EXPERIMENTAL, DO NOT USE FOR NOW   */
-  /*   !!                                                                  */
+  /*   perform this pass.                                                  */
   /*                                                                       */
   typedef enum  FT_Render_Mode_
   {
