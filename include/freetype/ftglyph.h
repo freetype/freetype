@@ -218,8 +218,9 @@
 
   enum
   {
+    ft_glyph_bbox_unscaled  = 0, /* return unscaled font units           */
     ft_glyph_bbox_subpixels = 0, /* return unfitted 26.6 coordinates     */
-    ft_glyph_bbox_gridfit   = 1, /* return grid-fitted coordinates       */
+    ft_glyph_bbox_gridfit   = 1, /* return grid-fitted 26.6 coordinates  */
     ft_glyph_bbox_truncate  = 2, /* return coordinates in integer pixels */
     ft_glyph_bbox_pixels    = 3  /* return grid-fitted pixel coordinates */
   };
@@ -236,8 +237,8 @@
   /* <Input>                                                               */
   /*    glyph :: A handle to the source glyph object.                      */
   /*                                                                       */
-  /*    mode  :: A set of bit flags that indicate how to interpret the     */
-  /*             returned bounding box values.                             */
+  /*    mode  :: The mode which indicates how to interpret the returned    */
+  /*             bounding box values.                                      */
   /*                                                                       */
   /* <Output>                                                              */
   /*    box   :: The glyph bounding box.  Coordinates are expressed in     */
@@ -247,9 +248,12 @@
   /*    Coordinates are relative to the glyph origin, using the Y-upwards  */
   /*    convention.                                                        */
   /*                                                                       */
-  /*    If `ft_glyph_bbox_subpixels' is set in `mode', the bbox            */
+  /*    If the glyph has been loaded with FT_LOAD_NO_SCALE, `bbox_mode'    */
+  /*    must be set to `ft_glyph_bbox_unscaled' to get unscaled font       */
+  /*    units.                                                             */
+  /*                                                                       */
+  /*    If `bbox_mode' is set to `ft_glyph_bbox_subpixels' the bbox        */
   /*    coordinates are returned in 26.6 pixels (i.e. 1/64th of pixels).   */
-  /*    Otherwise, coordinates are expressed in integer pixels.            */
   /*                                                                       */
   /*    Note that the maximum coordinates are exclusive, which means that  */
   /*    one can compute the width and height of the glyph image (be it in  */
@@ -258,16 +262,22 @@
   /*      width  = bbox.xMax - bbox.xMin;                                  */
   /*      height = bbox.yMax - bbox.yMin;                                  */
   /*                                                                       */
-  /*    Note also that for 26.6 coordinates, if the                        */
-  /*    `ft_glyph_bbox_gridfit' flag is set in `mode;, the coordinates     */
-  /*    will also be grid-fitted, which corresponds to:                    */
+  /*    Note also that for 26.6 coordinates, if `bbox_mode' is set to      */
+  /*    `ft_glyph_bbox_gridfit', the coordinates will also be grid-fitted, */
+  /*    which corresponds to:                                              */
   /*                                                                       */
   /*      bbox.xMin = FLOOR(bbox.xMin);                                    */
   /*      bbox.yMin = FLOOR(bbox.yMin);                                    */
   /*      bbox.xMax = CEILING(bbox.xMax);                                  */
   /*      bbox.yMax = CEILING(bbox.yMax);                                  */
   /*                                                                       */
-  /*    The default value (0) for `bbox_mode' is `ft_glyph_bbox_pixels'.   */
+  /*    To get the bbox in pixel coordinates, set `bbox_mode' to           */
+  /*    `ft_glyph_bbox_truncate'.                                          */
+  /*                                                                       */
+  /*    To get the bbox in grid-fitted pixel coordinates, set `bbox_mode'  */
+  /*    to `ft_glyph_bbox_pixels'.                                         */
+  /*                                                                       */
+  /*    The default value for `bbox_mode' is `ft_glyph_bbox_pixels'.       */
   /*                                                                       */
   FT_EXPORT_DEF( void )  FT_Glyph_Get_CBox( FT_Glyph  glyph,
                                             FT_UInt   bbox_mode,
