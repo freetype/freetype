@@ -37,7 +37,8 @@ BASE_SRC := $(BASE_)ftcalc.c   \
             $(BASE_)ftlist.c   \
             $(BASE_)ftobjs.c   \
             $(BASE_)ftstream.c \
-            $(BASE_)ftoutln.c
+            $(BASE_)ftoutln.c  \
+            $(BASE_)ftnames.c
 
 # Base layer `extensions' sources
 #
@@ -46,7 +47,6 @@ BASE_SRC := $(BASE_)ftcalc.c   \
 # symbols is used by the application.
 #
 BASE_EXT_SRC := $(BASE_)ftglyph.c \
-                $(BASE_)ftnames.c \
                 $(BASE_)ftmm.c
 
 # Default extensions objects
