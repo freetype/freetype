@@ -20,17 +20,19 @@ BUILD    := $(TOP)$(SEP)config$(SEP)win32
 PLATFORM := win32
 CC       := icc
 
+
 # The directory where all object files are placed.
 #
-# Note that this is not $(TOP)/obj!
 # This lets you build the library in your own directory with something like
 #
 #   set TOP=.../path/to/freetype2/top/dir...
-#   mkdir obj
+#   set OBJ_DIR=.../path/to/obj/dir
 #   make -f %TOP%/Makefile setup [options]
 #   make -f %TOP%/Makefile
 #
-OBJ_DIR := obj
+ifndef OBJ_DIR
+  OBJ_DIR := $(TOP)$(SEP)obj
+endif
 
 
 # The directory where all library files are placed.
