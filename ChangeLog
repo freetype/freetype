@@ -1,3 +1,7 @@
+2001-09-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/type1/t1afm.c (T1_Done_AFM): Free `afm'.
+
 2001-09-10  Yao Zhang  <yzhang@sharemedia.com>
 
 	* src/sfnt/ttcmap.c (code_to_index2): Handle code values with
