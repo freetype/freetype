@@ -3307,7 +3307,9 @@
       {
         b = bits[0];
         if (b < 127) b++;
-        bits[0] = (64-x1) + (b >> 1);
+        b = (Byte)((64-x1) + (b >> 1));
+        /* if (b < 32) b = 32; */
+        bits[0] = b;
 
         if ( ras.precision > 64 )
         {
@@ -3331,14 +3333,18 @@
           bits += incr;
           b     = bits[0];
           if (b < 127) b++;
-          bits[0] = (Byte)(x2 + (b >> 1));
+          b     = (Byte)(x2 + (b >> 1));
+          /* if (b < 32) b = 32; */
+          bits[0] = b;
         }
       }
       else
       {
         b = bits[0];
         if (b < 127) b++;
-        bits[0] = (Byte)((b >> 1)+(x2-x1));
+        b = (Byte)((b >> 1)+(x2-x1));
+        /* if (b < 32) b = 32; */
+        bits[0] = b;
       }
     }
   }
@@ -3411,9 +3417,8 @@
       color += *pixel;
       if (color < 64)
         color = 64;
-/*
+
       *pixel = (color >= 127 ? 127 : (unsigned char)color );
- */
     }
   }
 
