@@ -550,8 +550,8 @@
     /* now load the glyph outline if necessary */
     error = TT_Load_Glyph( size, slot, glyph_index, load_flags );
 
-    /* force drop-out mode to 2 */
-    slot->outline.dropout_mode = 2;
+    /* force drop-out mode to 2 - irrelevant now */
+    /* slot->outline.dropout_mode = 2; */
 
     return error;
   }

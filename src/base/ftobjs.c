@@ -2256,7 +2256,7 @@
 
 
   static
-  const FT_Outline  null_outline = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  const FT_Outline  null_outline = { 0, 0, 0, 0, 0, 0 };
 
 
   /*************************************************************************/
@@ -2314,14 +2314,14 @@
          ALLOC_ARRAY( outline->contours, numContours,    FT_UShort ) )
       goto Fail;
 
-    outline->n_points   = (FT_UShort)numPoints;
-    outline->n_contours = (FT_Short)numContours;
-    outline->owner      = TRUE;
+    outline->n_points       = (FT_UShort)numPoints;
+    outline->n_contours     = (FT_Short)numContours;
+    outline->outline_flags |= ft_outline_owner;
 
     return FT_Err_Ok;
 
   Fail:
-    outline->owner = TRUE;
+    outline->outline_flags |= ft_outline_owner;
     FT_Done_Outline( library, outline );
 
     return error;
@@ -2366,7 +2366,7 @@
 
     if ( outline )
     {
-      if ( outline->owner )
+      if ( outline->outline_flags & ft_outline_owner )
       {
         FREE( outline->points   );
         FREE( outline->flags    );

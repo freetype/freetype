@@ -151,11 +151,11 @@
     if ( error )
       return error;
 
-    glyph->outline.second_pass    = 0;
-    glyph->outline.dropout_mode   = 0;
+    glyph->outline.outline_flags |= ft_outline_single_pass |
+                                    ft_outline_ignore_dropouts;
 
     if (force_low)
-      glyph->outline.high_precision = 0;
+      glyph->outline.outline_flags &= ~ft_outline_high_precision;
 
     /* debugging */
 #if 0
@@ -176,9 +176,9 @@
                     &outlines[cur_glyph] );
 
     /* copy the glyph outline into it */
-    glyph->outline.second_pass    = 0;
+    glyph->outline.outline_flags |= ft_outline_single_pass;
     if (force_low)
-      glyph->outline.high_precision = 0;
+      glyph->outline.outline_flags &= ~ft_outline_high_precision;
 
     FT_Copy_Outline( &glyph->outline, &outlines[cur_glyph] );
 
@@ -211,7 +211,7 @@
 
   FT_Error  ConvertRaster( int  index )
   {
-    outlines[index].second_pass    = 0;
+    outlines[index].outline_flags |= ~ft_outline_single_pass;
     return FT_Get_Outline_Bitmap( library, &outlines[index], &Bit );
   }
 

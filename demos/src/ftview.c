@@ -181,7 +181,7 @@
       memset( bit_buffer, 0, size );
 
       if (low_prec)
-        glyph->outline.high_precision = 0;
+        glyph->outline.outline_flags &= ~ft_outline_high_precision;
         
       FT_Get_Outline_Bitmap( library, &glyph->outline, &bit2 );
     }

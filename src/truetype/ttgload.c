@@ -968,7 +968,9 @@
 
     glyph->outline.n_points    = num_points;
     glyph->outline.n_contours  = num_contours;
-    glyph->outline.second_pass = TRUE;
+    
+    /* glyph->outline.second_pass = TRUE; */
+    glyph->outline.outline_flags &= ~ft_outline_single_pass;
 
     /* translate array so that (0,0) is the glyph's origin */
     translate_array( (TT_UShort)(num_points + 2),
@@ -1125,11 +1127,14 @@
         glyph->metrics.horiAdvance = widths[glyph_index] << 6;
     }
 
+/* drop-out mode is irrelevant, we always use mode 2 */
+#if 0
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     if (loader->exec)
       glyph->outline.dropout_mode = (TT_Char)loader->exec->GS.scan_type;
 #else
     glyph->outline.dropout_mode = 2;
+#endif
 #endif
 
     /* set glyph dimensions */
@@ -1257,8 +1262,11 @@
     }
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
-    if (size)
-      glyph->outline.high_precision = ( size->root.metrics.y_ppem < 24 );
+    /* clear all outline flags, except the "owner" one */
+    glyph->outline.outline_flags &= ft_outline_owner;
+    
+    if (size && size->root.metrics.y_ppem < 24 )
+      glyph->outline.outline_flags |= ft_outline_high_precision;
 
     /************************************************************************/
     /* let's initialise the rest of our loader now                          */

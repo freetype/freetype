@@ -250,34 +250,10 @@
   /*                      defined by the points `contours[0]+1' to         */
   /*                      `contours[1]', etc.                              */
   /*                                                                       */
-  /*    owner          :: This flag is a boolean which is set whenever the */
-  /*                      outline structure/object owns the arrays it      */
-  /*                      refers to in the fields `points', `flags', and   */
-  /*                      `contours'.                                      */
-  /*                                                                       */
-  /*    high_precision :: This flag is set automatically by the FreeType   */
-  /*                      library.  It indicates that the scan-line        */
-  /*                      converter should use a higher precision when     */
-  /*                      rendering the outline.  This is useful at small  */
-  /*                      pixel sizes to get adequate results, though at   */
-  /*                      the price of slower rendering.  Don't try to     */
-  /*                      render large outlines with this flag set.  Note  */
-  /*                      that it may be ignored in later implementations. */
-  /*                                                                       */
-  /*    second_pass    :: A boolean which is set when the scan-line        */
-  /*                      converter should perform a second pass to        */
-  /*                      eliminate vertical drop-outs (only vertical      */
-  /*                      drop-outs are checked on the first pass).  This  */
-  /*                      field may be ignored by later implementations.   */
-  /*                                                                       */
-  /*    dropout_mode   :: Specifies the drop-out control mode to use while */
-  /*                      rendering an outline.  Valid values are 0 (no    */
-  /*                      drop out check), 1, 2, 4, and 5.  See the        */
-  /*                      TrueType specification for more details.  A      */
-  /*                      value of 2 is usually an excellent generic       */
-  /*                      choice. This field may be ignored by some        */
-  /*                      raster implementations.                          */
-  /*                                                                       */
+  /*    outline_flags  :: a set of bit flags used to characterize the      */
+  /*                      outline and give hints to the scan-converter     */
+  /*                      and hinter on how to convert/grid-fit it..       */
+  /*                      see FT_Outline_Flags..                           */
   /*                                                                       */
   typedef struct  FT_Outline_
   {
@@ -288,14 +264,70 @@
     char*       flags;           /* the points flags                   */
     short*      contours;        /* the contour end points             */
 
-    char        owner;           /* the outline owns the coordinates,  */
-                                 /* flags, and contours array it uses  */
-
-    char        high_precision;  /* high precision rendering           */
-    char        second_pass;     /* two sweeps rendering               */
-    char        dropout_mode;    /* dropout mode                       */
-
+    int         outline_flags;   /* outline masks                      */
+    
   } FT_Outline;
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Enum>                                                                */
+  /*   FT_Outline_Flags                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*   A simple type used to enumerates the flags in an outline's          */
+  /*   "outline_flags" field.                                              */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*   ft_outline_owner  ::                                                */
+  /*       when set, this flag indicates that the outline's field arrays   */
+  /*       (i.e. "points", "flags" & "contours") are "owned" by the        */
+  /*       outline object, and should thus be freed when it is destroyed.  */
+  /*                                                                       */
+  /*   ft_outline_even_odd_fill ::                                         */
+  /*       by default, outlines are filled using the non-zero winding      */
+  /*       rule. When set to 1, the outline will be filled using the       */
+  /*       even-odd fill rule.. (XXX: unimplemented)                       */
+  /*                                                                       */
+  /*   ft_outline_reverse_fill ::                                          */
+  /*       By default, outside contours of an outline are oriented in      */
+  /*       clock-wise direction, as defined in the TrueType specification. */
+  /*       This flag is set when the outline uses the opposite direction,  */
+  /*       (typically for Type 1 fonts). This flag is ignored by the       */
+  /*       scan-converter. However, it is very important for the           */
+  /*       auto-hinter..                                                   */
+  /*                                                                       */
+  /*   ft_outline_ignore_dropouts ::                                       */
+  /*       By default, the scan converter will try to detect drop-outs     */
+  /*       in an outline and correct the glyph bitmap to ensure consistent */
+  /*       shape continuity. When set, this flag hints the scan-line       */
+  /*       converter to ignore such cases.                                 */
+  /*                                                                       */
+  /*   ft_outline_high_precision ::                                        */
+  /*       this flag indicates that the scan-line converter should try     */
+  /*       to convert this outline to bitmaps with the highest possible    */
+  /*       quality. It is typically set for small character sizes. Note    */
+  /*       that this is only a hint, that might be completely ignored      */
+  /*       by a given scan-converter.                                      */
+  /*                                                                       */
+  /*   ft_outline_single_pass ::                                           */
+  /*       this flag is set to force a given scan-converter to only        */
+  /*       use a single pass over the outline to render a bitmap glyph     */
+  /*       image. Normally, it is set for very large character sizes.      */
+  /*       It is only a hint, that might be completely ignored by a        */
+  /*       given scan-converter.                                           */
+  /*                                                                       */
+  typedef enum FT_Outline_Flags_
+  {
+    ft_outline_none            = 0,
+    ft_outline_owner           = 1,
+    ft_outline_even_odd_fill   = 2,
+    ft_outline_reverse_fill    = 4,
+    ft_outline_ignore_dropouts = 8,
+    ft_outline_high_precision  = 256,
+    ft_outline_single_pass     = 512
+  
+  } FT_Outline_Flags;
+
 
 
 #define FT_CURVE_TAG( flag )  (flag & 3)

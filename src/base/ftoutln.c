@@ -50,6 +50,8 @@
   FT_Error  FT_Copy_Outline( FT_Outline*  source,
                              FT_Outline*  target )
   {
+    FT_Int  is_owner;
+    
     if ( !source            || !target            ||
          source->n_points   != target->n_points   ||
          source->n_contours != target->n_contours )
@@ -64,10 +66,12 @@
     MEM_Copy( target->contours, source->contours,
               source->n_contours * sizeof ( FT_Short ) );
 
-    target->high_precision = source->high_precision;
-    target->second_pass    = target->second_pass;
-    target->dropout_mode   = source->dropout_mode;
-
+    /* copy all flags, except the "ft_outline_owner" one */
+    is_owner = target->outline_flags & ft_outline_owner;
+    target->outline_flags = source->outline_flags;
+    
+    target->outline_flags &= ~ft_outline_owner;
+    target->outline_flags |= is_owner;
     return FT_Err_Ok;
   }
 

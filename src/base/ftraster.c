@@ -4121,10 +4121,17 @@ Scan_DropOuts :
 
     ras.outline  = outline;
     ras.target   = *target_map;
-
+    
+    /* Note that we always use drop-out mode 2, because it seems that */
+    /* it's the only way to do to get results consistent with Windows */
+    /* rendering..                                                    */
+#if 0
     ras.dropout_mode = outline->dropout_mode;
-    ras.second_pass  = outline->second_pass;
-    SET_High_Precision( outline->high_precision );
+#else
+    ras.dropout_mode = 2;
+#endif
+    ras.second_pass  = (outline->outline_flags & ft_outline_single_pass) == 0;
+    SET_High_Precision( outline->outline_flags & ft_outline_high_precision );
 
     switch ( target_map->pixel_mode )
     {

@@ -1537,9 +1537,16 @@
 
       glyph->root.format = ft_glyph_format_outline;
 
+      glyph->root.outline.outline_flags &= ft_outline_owner;
+      
+      if ( size->root.metrics.y_ppem < 24 )
+        glyph->root.outline.outline_flags |= ft_outline_high_precision;
+      
+      /*
       glyph->root.outline.second_pass    = TRUE;
       glyph->root.outline.high_precision = ( size->root.metrics.y_ppem < 24 );
       glyph->root.outline.dropout_mode   = 2;
+      */
 
       if ( hinting )
       {
