@@ -23,6 +23,8 @@
 #include "pfrdrivr.h"
 #include "pfrobjs.h"
 
+#include "pfrerror.h"
+
 
   static FT_Error
   pfr_get_kerning( PFR_Face    face,

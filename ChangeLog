@@ -7,6 +7,11 @@
 	* include/freetype/internal/ftserv.h (FT_SERVICE_SFNT_H): New macro.
 	* src/base/ftobjs.c: Include FT_SERVICE_SFNT_H.
 
+	* src/cff/cffcmap.c: Include `cfferrs.h'.
+	* src/pfr/pfrdrivr.c: Include `pfrerror.h'.
+	* src/sfnt/sfdriver.c: Include `sferrors.h'.
+	* src/psaux/psobjs.h: Add declaration for `ps_parser_to_bytes'.
+
 2003-09-11  David Turner  <david@freetype.org>
 
 	Introducing the concept of `module services'.  This is the first

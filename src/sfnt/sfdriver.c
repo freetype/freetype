@@ -25,6 +25,8 @@
 #include "ttcmap.h"
 #include "sfobjs.h"
 
+#include "sferrors.h"
+
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 #include "ttsbit.h"
 #endif
