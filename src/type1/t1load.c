@@ -1712,7 +1712,7 @@
     }
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    if (!face->root.internal->incremental_interface)
+    if ( !face->root.internal->incremental_interface )
 #endif
       if ( !loader.charstrings.init )
       {

@@ -121,19 +121,21 @@
   T1_Parse_Glyph( T1_Decoder  decoder,
                   FT_UInt     glyph_index )
   {
-    FT_Data  glyph_data;
-    FT_Error error = T1_Parse_Glyph_And_Get_Char_String( decoder, glyph_index, &glyph_data );
+    FT_Data   glyph_data;
+    FT_Error  error = T1_Parse_Glyph_And_Get_Char_String( 
+                        decoder, glyph_index, &glyph_data );
+
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    if ( !error)
+    if ( !error )
     {
-      T1_Face   face  = (T1_Face)decoder->builder.face;
+      T1_Face  face = (T1_Face)decoder->builder.face;
 
 
 	  if ( face->root.internal->incremental_interface )
-	    face->root.internal->incremental_interface->funcs->free_glyph_data(
-                  face->root.internal->incremental_interface->object,
-                  &glyph_data );
+        face->root.internal->incremental_interface->funcs->free_glyph_data(
+          face->root.internal->incremental_interface->object,
+          &glyph_data );
     }
 #endif
 
@@ -225,7 +227,8 @@
     FT_Matrix               font_matrix;
     FT_Vector               font_offset;
     FT_Data                 glyph_data;
-	FT_Bool                 glyph_data_loaded = 0;
+    FT_Bool                 glyph_data_loaded = 0;
+
 
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
@@ -264,7 +267,7 @@
                                                 &glyph_data );
     if ( error )
       goto Exit;
-	glyph_data_loaded = 1;
+    glyph_data_loaded = 1;
 
     font_matrix = decoder.font_matrix;
     font_offset = decoder.font_offset;
@@ -394,11 +397,11 @@
     if ( glyph_data_loaded && face->root.internal->incremental_interface )
     {
       face->root.internal->incremental_interface->funcs->free_glyph_data(
-                  face->root.internal->incremental_interface->object,
-                  &glyph_data );
+        face->root.internal->incremental_interface->object,
+        &glyph_data );
 
       /* Set the control data to null - it is no longer available if   */
-	  /* loaded incrementally.                                         */
+      /* loaded incrementally.                                         */
       glyph->root.control_data = 0;
       glyph->root.control_len  = 0;
     }

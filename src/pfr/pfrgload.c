@@ -409,7 +409,7 @@
         cur = pos;
         for ( n = 0; n < args_count; n++ )
         {
-          FT_Int  index, delta;
+          FT_Int  idx, delta;
 
 
           /* read the X argument */
@@ -417,9 +417,9 @@
           {
           case 0:                           /* 8-bit index */
             PFR_CHECK( 1 );
-            index  = PFR_NEXT_BYTE( p );
-            cur->x = glyph->x_control[index];
-            FT_TRACE7(( " cx#%d", index ));
+            idx  = PFR_NEXT_BYTE( p );
+            cur->x = glyph->x_control[idx];
+            FT_TRACE7(( " cx#%d", idx ));
             break;
 
           case 1:                           /* 16-bit value */
@@ -445,9 +445,9 @@
           {
           case 0:                           /* 8-bit index */
             PFR_CHECK( 1 );
-            index  = PFR_NEXT_BYTE( p );
-            cur->y = glyph->y_control[index];
-            FT_TRACE7(( " cy#%d", index ));
+            idx  = PFR_NEXT_BYTE( p );
+            cur->y = glyph->y_control[idx];
+            FT_TRACE7(( " cy#%d", idx ));
             break;
 
           case 1:                           /* 16-bit absolute value */
