@@ -1,3 +1,16 @@
+2001-05-29  Werner Lemberg  <wl@gnu.org>
+
+	* INSTALL: Minor fixes.
+
+
+	* Version 2.0.3 released.
+	=========================
+
+
+2001-05-29  David Turner  <david@freetype.org>
+
+	* INSTALL, docs/CHANGES: Updated.
+
 2001-05-25  David Turner  <david@freetype.org>
 
 	Moved several documents from the top-level to the "docs" directory.
