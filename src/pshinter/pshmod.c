@@ -34,7 +34,7 @@
 
 
  /* finalize module */
-  FT_CALLBACK_DEF void
+  FT_CALLBACK_DEF(void)
   ps_hinter_done( PS_Hinter_Module  module )
   {
     module->t1_funcs.hints = NULL;
@@ -45,7 +45,7 @@
 
 
  /* initialise module, create hints recorder and the interface */
-  FT_CALLBACK_DEF FT_Error
+  FT_CALLBACK_DEF(FT_Error)
   ps_hinter_init( PS_Hinter_Module  module )
   {
     FT_Memory  memory = module->root.memory;
@@ -65,7 +65,7 @@
 
 
  /* returns global hints interface */
-  FT_CALLBACK_DEF PSH_Globals_Funcs 
+  FT_CALLBACK_DEF(PSH_Globals_Funcs)
   pshinter_get_globals_funcs( FT_Module  module )
   {
     return &((PS_Hinter_Module)module)->globals_funcs;
@@ -73,7 +73,7 @@
 
 
  /* return Type 1 hints interface */
-  FT_CALLBACK_DEF T1_Hints_Funcs
+  FT_CALLBACK_DEF(T1_Hints_Funcs)
   pshinter_get_t1_funcs( FT_Module  module )
   {
     return &((PS_Hinter_Module)module)->t1_funcs;
@@ -81,15 +81,15 @@
 
 
  /* return Type 2 hints interface */
-  FT_CALLBACK_DEF T2_Hints_Funcs
+  FT_CALLBACK_DEF(T2_Hints_Funcs)
   pshinter_get_t2_funcs( FT_Module  module )
   {
     return &((PS_Hinter_Module)module)->t2_funcs;
   }
   
   
-  FT_CALLBACK_DEF
-  PSHinter_Interface  pshinter_interface =
+  FT_CALLBACK_DEF(PSHinter_Interface)
+  pshinter_interface =
   {
     pshinter_get_globals_funcs,
     pshinter_get_t1_funcs,

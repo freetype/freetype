@@ -1,5 +1,10 @@
 2001-10-18  David Turner  <david@freetype.org>
 
+        * src/psnames/pstables.h, src/tools/glnames.py: rewrote the "glnames.py"
+        script used to generate the "pstables.h" header file. The old one
+        contained a bug (yes !!) that made FreeType return incorrect glyph
+        names for certain glyphs..
+
         * src/truetype/ttdriver.c: changing computation of pixel size from
         character size to use rounding. This is an experiment to see if this
         gives values similar to Windows for scaled ascent/descent/etc..

@@ -1504,8 +1504,8 @@ def adobe_glyph_values():
   return glyphs, values
 
 
-def count_extra_glyphs( alist, filter ):
-  """count the number of extra glyphs"""
+def filter_glyph_names( alist, filter ):
+  """filter 'alist' by taking _out_ all glyph names that are in 'filter'"""
 
   count  = 0
   extras = []
@@ -1519,21 +1519,15 @@ def count_extra_glyphs( alist, filter ):
   return extras
 
 
-def dump_mac_indices( file, t1_bias ):
+def dump_mac_indices( file, all_glyphs ):
   write = file.write
 
   write( "  static const unsigned short  mac_standard_names[" + \
         repr( len( mac_standard_names ) + 1 ) + "] =\n" )
   write( "  {\n" )
 
-  count = 0
   for name in mac_standard_names:
-    try:
-      t1_index = sid_standard_names.index( name )
-      write( "    " + repr( t1_bias + t1_index ) + ",\n" )
-    except:
-      write( "    " + repr( count ) + ",\n" )
-      count = count + 1
+    write( "    " + repr( all_glyphs.index(name) ) + ",\n" )
 
   write( "    0\n" )
   write( "  };\n" )
@@ -1541,7 +1535,7 @@ def dump_mac_indices( file, t1_bias ):
   write( "\n" )
 
 
-def dump_glyph_list( file, glyph_list, adobe_extra ):
+def dump_glyph_list( file, base_list, adobe_list ):
   write = file.write
 
   name_list = []
@@ -1549,7 +1543,7 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
   write( "  static const char* const  ps_glyph_names[] =\n" )
   write( "  {\n" )
 
-  for name in glyph_list:
+  for name in base_list:
     write( '    "' + name + '",\n' )
     name_list.append( name )
 
@@ -1557,7 +1551,7 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
   write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
   write( "\n" )
 
-  for name in adobe_extra:
+  for name in adobe_list:
     write( '    "' + name + '",\n' )
     name_list.append( name )
 
@@ -1572,22 +1566,22 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
   return name_list
 
 
-def dump_unicode_values( file, base_list, adobe_list ):
+def dump_unicode_values( file, sid_list, adobe_list ):
   """build the glyph names to unicode values table"""
 
   write = file.write
 
-  glyph_names, uni_values = adobe_glyph_values()
+  agl_names, agl_unicodes = adobe_glyph_values()
 
   write( "\n" )
   write( "  static const unsigned short  ps_names_to_unicode[" + \
-          repr( len( base_list ) + len( adobe_list ) + 1 ) + "] =\n" )
+          repr( len( sid_list ) + len( adobe_list ) + 1 ) + "] =\n" )
   write( "  {\n" )
 
-  for name in base_list:
+  for name in sid_list:
     try:
-      index = glyph_names.index( name )
-      write( "    0x" + uni_values[index] + ",\n" )
+      index = agl_names.index( name )
+      write( "    0x" + agl_unicodes[index] + ",\n" )
     except:
       write( "    0,\n" )
 
@@ -1597,8 +1591,8 @@ def dump_unicode_values( file, base_list, adobe_list ):
 
   for name in adobe_list:
     try:
-      index = glyph_names.index( name )
-      write( "    0x" + uni_values[index] + ",\n" )
+      index = agl_names.index( name )
+      write( "    0x" + agl_unicodes[index] + ",\n" )
     except:
       write( "    0,\n" )
 
@@ -1640,16 +1634,25 @@ def main():
 
   count_sid = len( sid_standard_names )
 
-  # build mac index table & supplemental glyph names
-  mac_list   = count_extra_glyphs( mac_standard_names, adobe_glyph_names() )
-  count_mac  = len( mac_list )
-  t1_bias    = count_mac
-  base_list  = mac_list + sid_standard_names
+  # mac_extras contains the list of glyph names in the Macintosh standard
+  # encoding which are not in either the Adobe Glyph List or the SID Standard Names
+  #
+  mac_extras = filter_glyph_names( mac_standard_names, adobe_glyph_names() )
+  mac_extras = filter_glyph_names( mac_extras, sid_standard_names )
 
-  # build adobe unicode index table & supplemental glyph names
-  adobe_list  = adobe_glyph_names()
-  adobe_list  = count_extra_glyphs( adobe_list, base_list )
-  count_adobe = len( adobe_list )
+  # base_list contains the first names of our final glyph names table. It consists
+  # of the "mac_extras" glyph names, followed by the SID Standard names
+  #
+  mac_extras_count = len( mac_extras )
+  t1_bias          = mac_extras_count
+  base_list        = mac_extras + sid_standard_names
+
+  # adobe_list contains the glyph names that are in the AGL, but no in
+  # the base_list, they will be placed after base_list glyph names in
+  # our final table..
+  #
+  adobe_list  = filter_glyph_names( adobe_glyph_names(), base_list )
+  adobe_count = len( adobe_list )
 
   write( "/***************************************************************************/\n" )
   write( "/*                                                                         */\n" )
@@ -1675,7 +1678,8 @@ def main():
   write( "\n" )
   write( "\n" )
 
-  # dump glyph list
+  # dump final glyph list (mac extras + sid standard names + AGL glyph names)
+  #
   name_list = dump_glyph_list( file, base_list, adobe_list )
 
   # dump t1_standard_list
@@ -1697,13 +1701,10 @@ def main():
   write( "\n" )
 
   # dump mac indices table
-  dump_mac_indices( file, t1_bias )
-
-  # discard mac names from base list
-  base_list = base_list[t1_bias:]
+  dump_mac_indices( file, name_list )
 
   # dump unicode values table
-  dump_unicode_values( file, base_list, adobe_list )
+  dump_unicode_values( file, sid_standard_names, adobe_list )
 
   dump_encoding( file, "t1_standard_encoding", t1_standard_encoding )
   dump_encoding( file, "t1_expert_encoding", t1_expert_encoding )
