@@ -181,7 +181,7 @@
 #define Raster_Err_Overflow     FT_Err_Raster_Overflow
 #define Raster_Err_Neg_Height   FT_Err_Raster_Negative_Height
 #define Raster_Err_Invalid      FT_Err_Invalid_Outline
-#define Raster_Err_Unsupported  FT_Err_Unimplemented_Feature
+#define Raster_Err_Unsupported  FT_Err_Cannot_Render_Glyph
 
 
 #endif /* _STANDALONE_ */
