@@ -1,4 +1,4 @@
-#include <psaux/psmodule.h>
+#include <psaux/psauxmod.h>
 #include <psaux/psobjs.h>
 #include <psaux/t1decode.h>
 

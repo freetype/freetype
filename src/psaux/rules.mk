@@ -28,7 +28,7 @@ PSAUX_COMPILE := $(FT_COMPILE)
 #
 PSAUX_DRV_SRC := $(PSAUX_DIR_)psobjs.c   \
                  $(PSAUX_DIR_)t1decode.c \
-                 $(PSAUX_DIR_)psmodule.c
+                 $(PSAUX_DIR_)psauxmod.c
 
 # PSAUX driver headers
 #
