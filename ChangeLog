@@ -1,3 +1,8 @@
+2000-12-21  David Turner <david.turner@freetype.org>
+
+	* src/cid/cidafm.c, src/cid/cidafm.h: removed un-needed files, 
+	we'll work on supporting CID AFM files later I guess :-)
+
 2000-12-21  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/autohint/ahhint.c (ah_hinter_load, ah_hinter_load_glyph):
