@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 font loader (body).                                           */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -101,7 +101,7 @@
                      FT_UInt  num_designs,
                      FT_UInt  num_axis )
   {
-    PS_Blend  blend;
+    PS_Blend   blend;
     FT_Memory  memory = face->root.memory;
     FT_Error   error  = 0;
 
@@ -184,8 +184,8 @@
                        FT_Multi_Master*  master )
   {
     PS_Blend  blend = face->blend;
-    FT_UInt    n;
-    FT_Error   error;
+    FT_UInt   n;
+    FT_Error  error;
 
 
     error = T1_Err_Invalid_Argument;
@@ -217,8 +217,8 @@
                    FT_Fixed*  coords )
   {
     PS_Blend  blend = face->blend;
-    FT_Error   error;
-    FT_UInt    n, m;
+    FT_Error  error;
+    FT_UInt   n, m;
 
 
     error = T1_Err_Invalid_Argument;
@@ -263,8 +263,8 @@
                     FT_Long*  coords )
   {
     PS_Blend  blend = face->blend;
-    FT_Error   error;
-    FT_UInt    n, p;
+    FT_Error  error;
+    FT_UInt   n, p;
 
 
     error = T1_Err_Invalid_Argument;
@@ -276,12 +276,13 @@
 
       for ( n = 0; n < blend->num_axis; n++ )
       {
-        FT_Long        design  = coords[n];
-        FT_Fixed       the_blend;
+        FT_Long       design  = coords[n];
+        FT_Fixed      the_blend;
         PS_DesignMap  map     = blend->design_map + n;
-        FT_Fixed*      designs = map->design_points;
-        FT_Fixed*      blends  = map->blend_points;
-        FT_Int         before  = -1, after = -1;
+        FT_Fixed*     designs = map->design_points;
+        FT_Fixed*     blends  = map->blend_points;
+        FT_Int        before  = -1, after = -1;
+
 
         for ( p = 0; p < (FT_UInt)map->num_points; p++ )
         {
@@ -331,7 +332,7 @@
   T1_Done_Blend( T1_Face  face )
   {
     FT_Memory  memory = face->root.memory;
-    PS_Blend  blend  = face->blend;
+    PS_Blend   blend  = face->blend;
 
 
     if ( blend )
@@ -383,11 +384,11 @@
   parse_blend_axis_types( T1_Face     face,
                           T1_Loader*  loader )
   {
-    T1_TokenRec   axis_tokens[ T1_MAX_MM_AXIS ];
-    FT_Int        n, num_axis;
-    FT_Error      error = 0;
+    T1_TokenRec  axis_tokens[ T1_MAX_MM_AXIS ];
+    FT_Int       n, num_axis;
+    FT_Error     error = 0;
     PS_Blend     blend;
-    FT_Memory     memory;
+    FT_Memory    memory;
 
 
     /* take an array of objects */
@@ -413,11 +414,12 @@
     for ( n = 0; n < num_axis; n++ )
     {
       T1_Token  token = axis_tokens + n;
-      FT_Byte*   name;
-      FT_Int     len;
+      FT_Byte*  name;
+      FT_Int    len;
+
 
       /* skip first slash, if any */
-      if (token->start[0] == '/')
+      if ( token->start[0] == '/' )
         token->start++;
 
       len = (FT_Int)( token->limit - token->start );
@@ -444,13 +446,13 @@
   parse_blend_design_positions( T1_Face     face,
                                 T1_Loader*  loader )
   {
-    T1_TokenRec       design_tokens[ T1_MAX_MM_DESIGNS ];
-    FT_Int         num_designs;
-    FT_Int         num_axis;
-    T1_Parser  parser = &loader->parser;
+    T1_TokenRec  design_tokens[ T1_MAX_MM_DESIGNS ];
+    FT_Int       num_designs;
+    FT_Int       num_axis;
+    T1_Parser    parser = &loader->parser;
 
-    FT_Error       error = 0;
-    PS_Blend      blend;
+    FT_Error     error = 0;
+    PS_Blend     blend;
 
 
     /* get the array of design tokens - compute number of designs */
@@ -475,9 +477,9 @@
 
       for ( n = 0; n < (FT_UInt)num_designs; n++ )
       {
-        T1_TokenRec   axis_tokens[ T1_MAX_MM_DESIGNS ];
-        T1_Token  token;
-        FT_Int     axis, n_axis;
+        T1_TokenRec  axis_tokens[ T1_MAX_MM_DESIGNS ];
+        T1_Token     token;
+        FT_Int       axis, n_axis;
 
 
         /* read axis/coordinates tokens */
@@ -526,14 +528,14 @@
   parse_blend_design_map( T1_Face     face,
                           T1_Loader*  loader )
   {
-    FT_Error       error  = 0;
-    T1_Parser  parser = &loader->parser;
-    PS_Blend      blend;
-    T1_TokenRec       axis_tokens[ T1_MAX_MM_AXIS ];
-    FT_Int         n, num_axis;
-    FT_Byte*       old_cursor;
-    FT_Byte*       old_limit;
-    FT_Memory      memory = face->root.memory;
+    FT_Error     error  = 0;
+    T1_Parser    parser = &loader->parser;
+    PS_Blend     blend;
+    T1_TokenRec  axis_tokens[T1_MAX_MM_AXIS];
+    FT_Int       n, num_axis;
+    FT_Byte*     old_cursor;
+    FT_Byte*     old_limit;
+    FT_Memory    memory = face->root.memory;
 
 
     T1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
@@ -555,8 +557,8 @@
     /* now, read each axis design map */
     for ( n = 0; n < num_axis; n++ )
     {
-      PS_DesignMap map = blend->design_map + n;
-      T1_Token     token;
+      PS_DesignMap  map = blend->design_map + n;
+      T1_Token      token;
       FT_Int        p, num_points;
 
 
@@ -607,13 +609,13 @@
   parse_weight_vector( T1_Face     face,
                        T1_Loader*  loader )
   {
-    FT_Error       error  = 0;
-    T1_Parser  parser = &loader->parser;
-    PS_Blend      blend  = face->blend;
-    T1_TokenRec       master;
-    FT_UInt        n;
-    FT_Byte*       old_cursor;
-    FT_Byte*       old_limit;
+    FT_Error     error  = 0;
+    T1_Parser    parser = &loader->parser;
+    PS_Blend     blend  = face->blend;
+    T1_TokenRec  master;
+    FT_UInt      n;
+    FT_Byte*     old_cursor;
+    FT_Byte*     old_limit;
 
 
     if ( !blend || blend->num_designs == 0 )
@@ -683,7 +685,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* First of all, define the token field static variables.  This is a set */
-  /* of T1_FieldRec variables used later.                                     */
+  /* of T1_FieldRec variables used later.                                  */
   /*                                                                       */
   /*************************************************************************/
 
@@ -691,13 +693,13 @@
   static FT_Error
   t1_load_keyword( T1_Face     face,
                    T1_Loader*  loader,
-                   T1_Field   field )
+                   T1_Field    field )
   {
     FT_Error   error;
     void*      dummy_object;
     void**     objects;
     FT_UInt    max_objects;
-    PS_Blend  blend = face->blend;
+    PS_Blend   blend = face->blend;
 
 
     /* if the keyword has a dedicated callback, call it */
@@ -774,8 +776,8 @@
 
   static int
   read_binary_data( T1_Parser  parser,
-                    FT_Int*        size,
-                    FT_Byte**      base )
+                    FT_Int*    size,
+                    FT_Byte**  base )
   {
     FT_Byte*  cur;
     FT_Byte*  limit = parser->root.limit;
@@ -819,12 +821,12 @@
                    T1_Loader*  loader )
   {
     T1_Parser  parser = &loader->parser;
-    FT_Error       error;
-    FT_Memory      memory = parser->root.memory;
-    FT_Int         len;
-    FT_Byte*       cur;
-    FT_Byte*       cur2;
-    FT_Byte*       limit;
+    FT_Error   error;
+    FT_Memory  memory = parser->root.memory;
+    FT_Int     len;
+    FT_Byte*   cur;
+    FT_Byte*   cur2;
+    FT_Byte*   limit;
 
 
     if ( face->type1.font_name )
@@ -865,8 +867,8 @@
                    T1_Loader*  loader )
   {
     T1_Parser  parser = &loader->parser;
-    FT_Fixed       temp[4];
-    FT_BBox*       bbox   = &face->type1.font_bbox;
+    FT_Fixed   temp[4];
+    FT_BBox*   bbox   = &face->type1.font_bbox;
 
 
     (void)T1_ToFixedArray( parser, 4, temp, 0 );
@@ -881,12 +883,12 @@
   parse_font_matrix( T1_Face     face,
                      T1_Loader*  loader )
   {
-    T1_Parser  parser = &loader->parser;
-    FT_Matrix*     matrix = &face->type1.font_matrix;
-    FT_Vector*     offset = &face->type1.font_offset;
-    FT_Face        root   = (FT_Face)&face->root;
-    FT_Fixed       temp[6];
-    FT_Fixed       temp_scale;
+    T1_Parser   parser = &loader->parser;
+    FT_Matrix*  matrix = &face->type1.font_matrix;
+    FT_Vector*  offset = &face->type1.font_offset;
+    FT_Face     root   = (FT_Face)&face->root;
+    FT_Fixed    temp[6];
+    FT_Fixed    temp_scale;
 
 
     if ( matrix->xx || matrix->yx )
@@ -930,11 +932,11 @@
   parse_encoding( T1_Face     face,
                   T1_Loader*  loader )
   {
-    T1_Parser  parser = &loader->parser;
+    T1_Parser      parser = &loader->parser;
     FT_Byte*       cur    = parser->root.cursor;
     FT_Byte*       limit  = parser->root.limit;
 
-    PSAux_Service  psaux = (PSAux_Service)face->psaux;
+    PSAux_Service  psaux  = (PSAux_Service)face->psaux;
 
 
     /* skip whitespace */
@@ -954,10 +956,10 @@
     if ( (FT_Byte)( *cur - '0' ) < 10 )
     {
       T1_Encoding  encode     = &face->type1.encoding;
-      FT_Int        count, n;
-      PS_Table      char_table = &loader->encoding_table;
-      FT_Memory     memory     = parser->root.memory;
-      FT_Error      error;
+      FT_Int       count, n;
+      PS_Table     char_table = &loader->encoding_table;
+      FT_Memory    memory     = parser->root.memory;
+      FT_Error     error;
 
 
       if ( encode->char_index )
@@ -1104,7 +1106,7 @@
     FT_Error       error;
     FT_Int         n;
 
-    PSAux_Service  psaux = (PSAux_Service)face->psaux;
+    PSAux_Service  psaux  = (PSAux_Service)face->psaux;
 
 
     if ( loader->num_subrs )
@@ -1129,7 +1131,6 @@
     /*                                                       */
     /*   `index' + binary data                               */
     /*                                                       */
-
     for ( n = 0; n < loader->num_subrs; n++ )
     {
       FT_Int    idx, size;
@@ -1196,20 +1197,20 @@
   parse_charstrings( T1_Face     face,
                      T1_Loader*  loader )
   {
-    T1_Parser  parser     = &loader->parser;
-    PS_Table      code_table = &loader->charstrings;
-    PS_Table      name_table = &loader->glyph_names;
-    PS_Table      swap_table = &loader->swap_table;
-    FT_Memory      memory     = parser->root.memory;
+    T1_Parser      parser       = &loader->parser;
+    PS_Table       code_table   = &loader->charstrings;
+    PS_Table       name_table   = &loader->glyph_names;
+    PS_Table       swap_table   = &loader->swap_table;
+    FT_Memory      memory       = parser->root.memory;
     FT_Error       error;
 
-    PSAux_Service  psaux = (PSAux_Service)face->psaux;
+    PSAux_Service  psaux        = (PSAux_Service)face->psaux;
 
-    FT_Byte*    cur;
-    FT_Byte*    limit = parser->root.limit;
-    FT_Int      n;
-    FT_UInt     notdef_index = 0;
-    FT_Byte     notdef_found = 0;
+    FT_Byte*       cur;
+    FT_Byte*       limit        = parser->root.limit;
+    FT_Int         n;
+    FT_UInt        notdef_index = 0;
+    FT_Byte        notdef_found = 0;
 
 
     if ( loader->num_glyphs )
@@ -1400,11 +1401,10 @@
     }
     else if ( !notdef_found )
     {
-
-      /* notdef_index is already 0, or /.notdef is undefined in  */
-      /* charstrings dictionary. Worry about /.notdef undefined. */
-      /* We take index 0 and add it to the end of the table(s)   */
-      /* and add our own /.notdef glyph to index 0.              */
+      /* notdef_index is already 0, or /.notdef is undefined in   */
+      /* charstrings dictionary.  Worry about /.notdef undefined. */
+      /* We take index 0 and add it to the end of the table(s)    */
+      /* and add our own /.notdef glyph to index 0.               */
 
       /* 0 333 hsbw endchar                                      */
       FT_Byte  notdef_glyph[] = {0x8B, 0xF7, 0xE1, 0x0D, 0x0E};
@@ -1639,10 +1639,10 @@
   FT_LOCAL_DEF( FT_Error )
   T1_Open_Face( T1_Face  face )
   {
-    T1_Loader  loader;
-    T1_Parser  parser;
-    T1_Font   type1 = &face->type1;
-    FT_Error   error;
+    T1_Loader      loader;
+    T1_Parser      parser;
+    T1_Font        type1 = &face->type1;
+    FT_Error       error;
 
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
@@ -1653,10 +1653,10 @@
     type1->private_dict.lenIV = 4;
 
     parser = &loader.parser;
-    error = T1_New_Parser( parser,
-                           face->root.stream,
-                           face->root.memory,
-                           psaux );
+    error  = T1_New_Parser( parser,
+                            face->root.stream,
+                            face->root.memory,
+                            psaux );
     if ( error )
       goto Exit;
 

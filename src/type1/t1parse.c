@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 parser (body).                                                */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -108,7 +108,7 @@
     *size = 0;
     if ( !FT_STREAM_READ_FIELDS( pfb_tag_fields, &head ) )
     {
-      if ( head.tag == 0x8001 || head.tag == 0x8002 )
+      if ( head.tag == 0x8001U || head.tag == 0x8002U )
       {
         *tag  = head.tag;
         *size = head.size;
@@ -165,7 +165,7 @@
     if ( error )
       goto Exit;
 
-    if ( tag != 0x8001 )
+    if ( tag != 0x8001U )
     {
       /* assume that this is a PFA file for now; an error will */
       /* be produced later when more things are checked        */
@@ -230,7 +230,7 @@
   FT_LOCAL_DEF( void )
   T1_Finalize_Parser( T1_Parser  parser )
   {
-    FT_Memory   memory = parser->root.memory;
+    FT_Memory  memory = parser->root.memory;
 
 
     /* always free the private dictionary */
@@ -294,7 +294,7 @@
         if ( error )
           goto Fail;
 
-        if ( tag != 0x8002 )
+        if ( tag != 0x8002U )
           break;
 
         parser->private_len += size;
@@ -321,7 +321,7 @@
       for (;;)
       {
         error = read_pfb_tag( stream, &tag, &size );
-        if ( error || tag != 0x8002 )
+        if ( error || tag != 0x8002U )
         {
           error = T1_Err_Ok;
           break;

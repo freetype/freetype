@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 Glyph Loader (body).                                          */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -57,9 +57,9 @@
 
   FT_CALLBACK_DEF( FT_Error )
   T1_Parse_Glyph( T1_Decoder  decoder,
-                  FT_UInt      glyph_index )
+                  FT_UInt     glyph_index )
   {
-    T1_Face   face  = (T1_Face)decoder->builder.face;
+    T1_Face  face  = (T1_Face)decoder->builder.face;
     T1_Font  type1 = &face->type1;
 
 
@@ -77,10 +77,10 @@
   T1_Compute_Max_Advance( T1_Face  face,
                           FT_Int*  max_advance )
   {
-    FT_Error          error;
-    T1_DecoderRec        decoder;
-    FT_Int            glyph_index;
-    T1_Font          type1 = &face->type1;
+    FT_Error       error;
+    T1_DecoderRec  decoder;
+    FT_Int         glyph_index;
+    T1_Font        type1 = &face->type1;
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
@@ -146,12 +146,13 @@
     T1_DecoderRec           decoder;
     T1_Face                 face = (T1_Face)glyph->root.face;
     FT_Bool                 hinting;
-    T1_Font                type1         = &face->type1;
+    T1_Font                 type1         = &face->type1;
     PSAux_Service           psaux         = (PSAux_Service)face->psaux;
     const T1_Decoder_Funcs  decoder_funcs = psaux->t1_decoder_funcs;
 
     FT_Matrix               font_matrix;
     FT_Vector               font_offset;
+
 
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;

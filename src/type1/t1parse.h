@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 parser (specification).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -97,19 +97,19 @@ FT_BEGIN_HEADER
 #define T1_ToInt( p )       (p)->root.funcs.to_int( &(p)->root )
 #define T1_ToFixed( p, t )  (p)->root.funcs.to_fixed( &(p)->root, t )
 
-#define T1_ToCoordArray( p, m, c )    \
+#define T1_ToCoordArray( p, m, c )                           \
           (p)->root.funcs.to_coord_array( &(p)->root, m, c )
-#define T1_ToFixedArray( p, m, f, t ) \
+#define T1_ToFixedArray( p, m, f, t )                           \
           (p)->root.funcs.to_fixed_array( &(p)->root, m, f, t )
-#define T1_ToToken( p, t )            \
+#define T1_ToToken( p, t )                          \
           (p)->root.funcs.to_token( &(p)->root, t )
-#define T1_ToTokenArray( p, t, m, c ) \
+#define T1_ToTokenArray( p, t, m, c )                           \
           (p)->root.funcs.to_token_array( &(p)->root, t, m, c )
 
-#define T1_Load_Field( p, f, o, m, pf )       \
+#define T1_Load_Field( p, f, o, m, pf )                         \
           (p)->root.funcs.load_field( &(p)->root, f, o, m, pf )
 
-#define T1_Load_Field_Table( p, f, o, m, pf ) \
+#define T1_Load_Field_Table( p, f, o, m, pf )                         \
           (p)->root.funcs.load_field_table( &(p)->root, f, o, m, pf )
 
 

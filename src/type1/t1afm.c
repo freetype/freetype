@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    AFM support for Type 1 fonts (body).                                 */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -167,7 +167,7 @@
     FT_Byte*       p;
     FT_Int         count = 0;
     T1_Kern_Pair*  pair;
-    T1_Font       type1 = &((T1_Face)t1_face)->type1;
+    T1_Font        type1 = &((T1_Face)t1_face)->type1;
     T1_AFM*        afm   = 0;
 
 
