@@ -27,6 +27,7 @@
 
 #include <string.h>     /* for strncpy(), strncmp(), strlen() */
 
+
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
