@@ -1,3 +1,8 @@
+2001-12-22  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
+
+	* src/pfc/pcfread.c (pcf_load_font): Handle property `POINT_SIZE'
+	and fix incorrect computation of `available_sizes'.
+
 2001-12-22  David Turner  <david@freetype.org>
 
 	* src/autohint/ahhint.c (ah_hinter_load): Auto-hinted glyphs had an
