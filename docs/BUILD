@@ -13,8 +13,8 @@ instructions on how to compile the library on your favorite platform.
 I. QUICK COMMAND-LINE GUIDE
 ---------------------------
 
-  Install GNU Make, then try the  following on Unix or any system with
-  gcc:
+  Install GNU Make (version 3.78  or newer), then try the following on
+  Unix or any system with gcc:
 
       make    // this will setup the build
       make    // this will build the library
@@ -65,6 +65,8 @@ II. COMMAND-LINE COMPILATION
         make -v
 
     to display its version number.
+
+    Version 3.78 or newer is needed.
 
   b. Invoke `make'
 
