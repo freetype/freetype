@@ -62,7 +62,6 @@ FT2_BUILD_INCLUDE ?= ;
 #            if you modify this list or provide your own.
 #
 FT2_COMPONENTS ?= autofit    # auto-fitter
-                  autohint   # auto-hinter
                   base       # base component (public APIs)
                   bdf        # BDF font driver
                   cache      # cache sub-system

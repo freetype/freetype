@@ -1,3 +1,8 @@
+2005-03-22  David Turner  <david@freetype.org>
+
+	* src/autohint/*, Jamfile: removing the 'autohint' module
+	from the build.
+
 2005-03-15  David Turner  <david@freetype.org>
 
 	* src/bdf/bdflib.c: Remove compiler warnings.
