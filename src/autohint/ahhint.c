@@ -1030,6 +1030,7 @@
     {
       FT_Matrix  imatrix;
 
+
       imatrix              = internal->glyph_matrix;
       hinter->trans_delta  = internal->glyph_delta;
       hinter->trans_matrix = imatrix;

@@ -43,7 +43,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    This section contains the basic data types defined by FreeType 2,  */
-  /*    ranging from simple scalar types to bitmap descriptors. More       */
+  /*    ranging from simple scalar types to bitmap descriptors.  More      */
   /*    font-specific structures are defined in a different section.       */
   /*                                                                       */
   /* <Order>                                                               */
