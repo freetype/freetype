@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType's OpenType validation module implementation (body).         */
 /*                                                                         */
-/*  Copyright 2004 by                                                      */
+/*  Copyright 2004, 2005 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -178,6 +178,17 @@
     *ot_jstf = (FT_Bytes)jstf;
 
   Exit:
+    if ( error ) {
+      FT_Memory  memory = FT_FACE_MEMORY( face );
+
+
+      FT_FREE( base );
+      FT_FREE( gdef );
+      FT_FREE( gpos );
+      FT_FREE( gsub );
+      FT_FREE( jstf );
+    }
+
     return error;
   }
 
