@@ -1575,7 +1575,7 @@
       charmap.platform_id = TT_NEXT_USHORT(p);
       charmap.encoding_id = TT_NEXT_USHORT(p);
       charmap.face        = FT_FACE(face);
-      charmap.encoding    = 0;  /* will be filled later */
+      charmap.encoding    = ft_encoding_none;  /* will be filled later */
       offset              = TT_NEXT_ULONG(p);
 
       if ( offset && table + offset + 2 < limit )

@@ -277,7 +277,7 @@
                 FT_Int         num_params,
                 FT_Parameter*  params )
   {
-    FT_Error             error;
+    FT_Error          error;
     PSNames_Service   psnames;
     PSAux_Service     psaux;
     PSHinter_Service  pshinter;
@@ -290,14 +290,17 @@
 
     face->root.num_faces = 1;
 
-    psnames = face->psnames = (PSNames_Service)
-               FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "psnames" );
+    face->psnames = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
+                                             "psnames" );
+    psnames = (PSNames_Service)face->psnames;
 
-    psaux = face->psaux   = (PSAux_Service)
-               FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "psaux" );
+    face->psaux = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
+                                           "psaux" );
+    psaux = (PSAux_Service)face->psaux;
 
-    pshinter = face->pshinter = (PSHinter_Service)
-               FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "pshinter" );
+    face->pshinter = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
+                                              "pshinter" );
+    pshinter = (PSHinter_Service)face->pshinter;
 
     /* open the tokenizer, this will also check the font format */
     error = T1_Open_Face( face );

@@ -39,14 +39,15 @@
 
   /* backwards compatibility API */
 
-
   FT_BASE_DEF( void )
   FT_New_Memory_Stream( FT_Library  library,
                         FT_Byte*    base,
                         FT_ULong    size,
                         FT_Stream   stream )
   {
-    return FT_Stream_OpenMemory( library, base, size, stream );
+    FT_UNUSED( library );
+
+    FT_Stream_OpenMemory( stream, base, size );
   }                        
 
 
