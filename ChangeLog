@@ -1,3 +1,24 @@
+2004-08-05  David Turner  <david@freetype.org>
+
+	`Activate' gray-scale specifing hinting within the TrueType
+	bytecode interpreter.  This is an experimental feature which
+	should probably be made optional.
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph,
+	load_truetype_glyph): Move the code to set the pedantic_hinting flag
+	to...
+	(TT_Load_Glyph): Here.
+	Set `grayscale' flag except for `FT_LOAD_TARGET_MONO'.
+
+	* src/truetyep/ttinterp.c (Ins_GETINFO): Return MS rasterizer
+	version 1.7.
+	Return rotation and stretching info only if glyph is rotated or
+	stretched, respectively.
+	Handle grayscale info.
+
+	* src/truetype/ttinterp.h (TT_ExecContextRec): Add `grayscale'
+	member.
+
 2004-08-02  George Williams  <gww@silcom.com>
 
 	* src/base/ftobjs.c (FT_Attach_File): Initialize `open.stream'.
