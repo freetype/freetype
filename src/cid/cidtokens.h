@@ -74,19 +74,19 @@
 #define T1TYPE  T1_Private
 #define T1CODE  t1_field_private
 
-  CID_FIELD_NUM      ( "UniqueID", unique_id )
-  CID_FIELD_NUM      ( "lenIV", lenIV )
-  CID_FIELD_NUM      ( "LanguageGroup", language_group )
-  CID_FIELD_NUM      ( "password", password )
+  CID_FIELD_NUM       ( "UniqueID", unique_id )
+  CID_FIELD_NUM       ( "lenIV", lenIV )
+  CID_FIELD_NUM       ( "LanguageGroup", language_group )
+  CID_FIELD_NUM       ( "password", password )
 
-  CID_FIELD_FIXED    ( "BlueScale", blue_scale )
-  CID_FIELD_NUM      ( "BlueShift", blue_shift )
-  CID_FIELD_NUM      ( "BlueFuzz",  blue_fuzz )
+  CID_FIELD_FIXED     ( "BlueScale", blue_scale )
+  CID_FIELD_NUM       ( "BlueShift", blue_shift )
+  CID_FIELD_NUM       ( "BlueFuzz",  blue_fuzz )
 
-  CID_FIELD_NUM_TABLE( "BlueValues", blue_values, 14 )
-  CID_FIELD_NUM_TABLE( "OtherBlues", other_blues, 10 )
-  CID_FIELD_NUM_TABLE( "FamilyBlues", family_blues, 14 )
-  CID_FIELD_NUM_TABLE( "FamilyOtherBlues", family_other_blues, 10 )
+  CID_FIELD_NUM_TABLE ( "BlueValues", blue_values, 14 )
+  CID_FIELD_NUM_TABLE ( "OtherBlues", other_blues, 10 )
+  CID_FIELD_NUM_TABLE ( "FamilyBlues", family_blues, 14 )
+  CID_FIELD_NUM_TABLE ( "FamilyOtherBlues", family_other_blues, 10 )
 
   CID_FIELD_NUM_TABLE2( "StdHW", standard_width,  1 )
   CID_FIELD_NUM_TABLE2( "StdVW", standard_height, 1 )

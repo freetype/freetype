@@ -25,6 +25,8 @@
 #include <ttcmap.h>
 #include <sfobjs.h>
 
+#include <string.h>     /* for strcmp() */
+
 
   static
   void*  get_sfnt_table( TT_Face      face,
@@ -84,7 +86,8 @@
   }
 
 
-  static const SFNT_Interface  sfnt_interface =
+  static
+  const SFNT_Interface  sfnt_interface =
   {
     TT_Goto_Table,
 
@@ -115,23 +118,31 @@
     TT_Load_PCLT,
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
     /* see `ttsbit.h' */
     TT_Load_SBit_Strikes,
     TT_Load_SBit_Image,
     TT_Free_SBit_Strikes,
+
 #else /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
     0,
     0,
     0,
+
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+
     /* see `ttpost.h' */
     TT_Get_PS_Name,
     TT_Free_Post_Names,
+
 #else /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
+
     0,
     0,
+
 #endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
     /* see `ttcmap.h' */
@@ -140,7 +151,8 @@
   };
 
 
-  const FT_Module_Class  sfnt_module_class =
+  const
+  FT_Module_Class  sfnt_module_class =
   {
     0,  /* not a font driver or renderer */
     sizeof( FT_ModuleRec ),

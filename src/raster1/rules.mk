@@ -13,15 +13,15 @@
 # fully.
 
 
-# renderer driver directory
+# raster1 driver directory
 #
 RAS1_DIR  := $(SRC_)raster1
 RAS1_DIR_ := $(RAS1_DIR)$(SEP)
 
-
 # additional include flags used when compiling the driver
 #
 RAS1_INCLUDE := $(RAS1_DIR)
+
 
 # compilation flags for the driver
 #
@@ -29,17 +29,18 @@ RAS1_CFLAGS  := $(RAS1_INCLUDE:%=$I%)
 RAS1_COMPILE := $(FT_COMPILE) $(RAS1_CFLAGS)
 
 
-# RASTER1 driver sources (i.e., C files)
+# raster1 driver sources (i.e., C files)
 #
-RAS1_DRV_SRC := $(RAS1_DIR_)ftraster.c  \
+RAS1_DRV_SRC := $(RAS1_DIR_)ftraster.c \
                 $(RAS1_DIR_)ftrend1.c
 
-# RASTER1 driver headers
+
+# raster1 driver headers
 #
-RAS1_DRV_H := $(RAS1_DRV_SRC:%c=%h)
+RAS1_DRV_H := $(RAS1_DRV_SRC:%.c=%.h)
 
 
-# RASTER1 driver object(s)
+# raster1 driver object(s)
 #
 #   RAS1_DRV_OBJ_M is used during `multi' builds.
 #   RAS1_DRV_OBJ_S is used during `single' builds.

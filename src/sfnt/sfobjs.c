@@ -64,7 +64,7 @@
     {
       if ( rec->nameID == nameid )
       {
-        /* found the name - now create an ASCII string from it */
+        /* found the name -- now create an ASCII string from it */
         FT_Bool  found = 0;
 
 
@@ -136,7 +136,8 @@
 
     } TEncoding;
 
-    static const TEncoding  tt_encodings[] =
+    static
+    const TEncoding  tt_encodings[] =
     {
       { TT_PLATFORM_ISO,           -1,                  ft_encoding_unicode },
 
@@ -231,7 +232,8 @@
 
 
 #undef  LOAD_
-#define LOAD_( x )  ( (error = sfnt->load_##x( face, stream )) != TT_Err_Ok )
+#define LOAD_( x )  ( ( error = sfnt->load_##x( face, stream ) ) \
+                      != TT_Err_Ok )
 
 
   LOCAL_FUNC
@@ -382,6 +384,7 @@
       }
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
       if ( face->num_sbit_strikes )
       {
        face->root.num_fixed_sizes = face->num_sbit_strikes;
@@ -399,11 +402,14 @@
         }
       }
       else
+
 #else /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
       {
        root->num_fixed_sizes = 0;
        root->available_sizes = 0;
       }
+
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
       /*********************************************************************/
@@ -442,8 +448,8 @@
       root->underline_position  = face->postscript.underlinePosition;
       root->underline_thickness = face->postscript.underlineThickness;
 
-      /* root->max_points      - already set up */
-      /* root->max_contours    - already set up */
+      /* root->max_points     -- already set up */
+      /* root->max_contours   -- already set up */
     }
 
   Exit:
@@ -485,7 +491,7 @@
     face->num_tables = 0;
 
     /* freeing the character mapping tables */
-    if (sfnt && sfnt->load_charmaps )
+    if ( sfnt && sfnt->load_charmaps )
     {
       FT_UShort  n;
 

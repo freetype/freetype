@@ -47,7 +47,7 @@
   }
 
 
-#if 0 /* unimplemented for now.. */
+#if 0 /* unimplemented yet */
 
   static
   FT_Error  cid_Get_Kerning( T1_Face     face,
@@ -174,7 +174,7 @@
 
   const FT_Driver_Class  t1cid_driver_class =
   {
-    /* firs of all, the FT_Module_Class fields */
+    /* first of all, the FT_Module_Class fields */
     {
       ft_module_font_driver | ft_module_driver_scalable,
       sizeof( FT_DriverRec ),
@@ -213,6 +213,37 @@
 
     (FTDriver_getAdvances)  0
   };
+
+
+#ifdef FT_CONFIG_OPTION_DYNAMIC_DRIVERS
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    getDriverClass                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This function is used when compiling the TrueType driver as a      */
+  /*    shared library (`.DLL' or `.so').  It will be used by the          */
+  /*    high-level library of FreeType to retrieve the address of the      */
+  /*    driver's generic interface.                                        */
+  /*                                                                       */
+  /*    It shouldn't be implemented in a static build, as each driver must */
+  /*    have the same function as an exported entry point.                 */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The address of the TrueType's driver generic interface.  The       */
+  /*    format-specific interface can then be retrieved through the method */
+  /*    interface->get_format_interface.                                   */
+  /*                                                                       */
+  EXPORT_FUNC( FT_Driver_Class* )  getDriverClass( void )
+  {
+    return &t1cid_driver_class;
+  }
+
+
+#endif /* CONFIG_OPTION_DYNAMIC_DRIVERS */
 
 
 /* END */

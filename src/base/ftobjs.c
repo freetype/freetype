@@ -664,6 +664,7 @@
     FT_Memory         memory = driver->root.memory;
     FT_Error          error  = FT_Err_Ok;
 
+
     slot->library = driver->root.library;
     
     if ( FT_DRIVER_USES_OUTLINES( driver ) )
@@ -2040,8 +2041,9 @@
   /*                                                                       */
   /*    right_glyph :: The index of the right glyph in the kern pair.      */
   /*                                                                       */
-  /*    kern_mode   :: see FT_Kerning_Mode for more info. Determines the   */
-  /*                   scale/dimension of the returned kerning vector      */
+  /*    kern_mode   :: See FT_Kerning_Mode() for more information.         */
+  /*                   Determines the scale/dimension of the returned      */
+  /*                   kerning vector.                                     */
   /*                                                                       */
   /* <Output>                                                              */
   /*    kerning     :: The kerning vector.  This is in font units for      */
@@ -2057,15 +2059,16 @@
   /*    kernings, are out of the scope of this API function -- they can be */
   /*    implemented through format-specific interfaces.                    */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Get_Kerning( FT_Face     face,
-                                            FT_UInt     left_glyph,
-                                            FT_UInt     right_glyph,
-                                            FT_UInt     kern_mode,
-                                            FT_Vector*  kerning )
+  FT_EXPORT_FUNC( FT_Error )  FT_Get_Kerning( FT_Face     face,
+                                              FT_UInt     left_glyph,
+                                              FT_UInt     right_glyph,
+                                              FT_UInt     kern_mode,
+                                              FT_Vector*  kerning )
   {
     FT_Error   error = FT_Err_Ok;
     FT_Driver  driver;
     FT_Memory  memory;
+
 
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
@@ -2083,17 +2086,17 @@
                                           right_glyph,
                                           kerning );
     }
-    if (!error)
+    if ( !error )
     {
-      if (kern_mode != ft_kerning_unscaled)
+      if ( kern_mode != ft_kerning_unscaled )
       {
         kerning->x = FT_MulFix( kerning->x, face->size->metrics.x_scale );
         kerning->y = FT_MulFix( kerning->y, face->size->metrics.y_scale );
         
-        if (kern_mode != ft_kerning_unfitted)
+        if ( kern_mode != ft_kerning_unfitted )
         {
-          kerning->x = (kerning->x+32) & -64;
-          kerning->y = (kerning->y+32) & -64;
+          kerning->x = ( kerning->x + 32 ) & -64;
+          kerning->y = ( kerning->y + 32 ) & -64;
         }
       }
     }
@@ -2617,9 +2620,9 @@
   /*    slot        :: A handle to the glyph slot containing the image to  */
   /*                   convert.                                            */
   /*                                                                       */
-  /*    render_mode :: this is the render mode used to render the glyph    */
-  /*                   image into a bitmap. See FT_Render_Mode for a list  */
-  /*                   of possible values.                                 */
+  /*    render_mode :: This is the render mode used to render the glyph    */
+  /*                   image into a bitmap.  See FT_Render_Mode() for a    */
+  /*                   list of possible values.                            */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */

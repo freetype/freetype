@@ -62,7 +62,7 @@
   /*    memory    :: The memory object used for memory operations          */
   /*                 (allocation resp. reallocation).                      */
   /*                                                                       */
-  typedef struct CID_Table_
+  typedef struct  CID_Table_
   {
     FT_Byte*   block;          /* current memory block           */
     FT_Int     cursor;         /* current cursor in memory block */
@@ -81,8 +81,8 @@
 
   LOCAL_DEF
   FT_Error  CID_New_Table( CID_Table*  table,
-                           FT_Int       count,
-                           CID_Memory   memory );
+                           FT_Int      count,
+                           CID_Memory  memory );
 
   LOCAL_DEF
   FT_Error  CID_Add_Table( CID_Table*  table,
@@ -168,22 +168,22 @@
   FT_Long  CID_ToInt( CID_Parser*  parser );
 
   LOCAL_DEF
-  FT_Int  CID_ToCoordArray( CID_Parser* parser,
-                            FT_Int     max_coords,
-                            FT_Short*  coords );
+  FT_Int  CID_ToCoordArray( CID_Parser*  parser,
+                            FT_Int       max_coords,
+                            FT_Short*    coords );
 
   LOCAL_DEF
-  FT_Int  CID_ToFixedArray( CID_Parser* parser,
-                            FT_Int      max_values,
-                            FT_Fixed*   values,
-                            FT_Int      power_ten );
+  FT_Int  CID_ToFixedArray( CID_Parser*  parser,
+                            FT_Int       max_values,
+                            FT_Fixed*    values,
+                            FT_Int       power_ten );
 
   LOCAL_DEF
   void  CID_Skip_Spaces( CID_Parser*  parser );
 
 
   /* simple enumeration type used to identify token types */
-  typedef enum CID_Token_Type_
+  typedef enum  CID_Token_Type_
   {
     t1_token_none = 0,
     t1_token_any,
@@ -197,7 +197,7 @@
 
 
   /* a simple structure used to identify tokens */
-  typedef struct CID_Token_Rec_
+  typedef struct  CID_Token_Rec_
   {
     FT_Byte*        start;   /* first character of token in input stream */
     FT_Byte*        limit;   /* first character after the token          */
@@ -207,12 +207,12 @@
 
 
   LOCAL_DEF
-  void  CID_ToToken( CID_Parser*    parser,
+  void  CID_ToToken( CID_Parser*     parser,
                      CID_Token_Rec*  token );
 
 
   /* enumeration type used to identify object fields */
-  typedef enum CID_Field_Type_
+  typedef enum  CID_Field_Type_
   {
     t1_field_none = 0,
     t1_field_bool,
@@ -228,7 +228,7 @@
 
   } CID_Field_Type;
 
-  typedef enum CID_Field_Location_
+  typedef enum  CID_Field_Location_
   {
     t1_field_cid_info,
     t1_field_font_dict,
@@ -245,7 +245,7 @@
                                          CID_Parser*  parser );
 
   /* structure type used to model object fields */
-  typedef struct CID_Field_Rec_
+  typedef struct  CID_Field_Rec_
   {
     const char*         ident;        /* field identifier                  */
     CID_Field_Location  location;
@@ -313,19 +313,19 @@
 
 #define CID_FIELD_NUM_TABLE( _ident, _fname, _fmax )               \
           CID_NEW_TABLE_FIELD( _ident, t1_field_integer_array,     \
-                              _fname, _fmax )
+                               _fname, _fmax )
 
 #define CID_FIELD_FIXED_TABLE( _ident, _fname, _fmax )             \
           CID_NEW_TABLE_FIELD( _ident, t1_field_fixed_array,       \
-                              _fname, _fmax )
+                               _fname, _fmax )
 
 #define CID_FIELD_NUM_TABLE2( _ident, _fname, _fmax )              \
           CID_NEW_TABLE_FIELD2( _ident, t1_field_integer_array,    \
-                               _fname, _fmax )
+                                _fname, _fmax )
 
 #define CID_FIELD_FIXED_TABLE2( _ident, _fname, _fmax )            \
           CID_NEW_TABLE_FIELD2( _ident, t1_field_fixed_array,      \
-                               _fname, _fmax )
+                                _fname, _fmax )
 
 #define CID_FIELD_CALLBACK( _ident, _name )                        \
           CID_NEW_CALLBACK_FIELD( _ident, parse_ ## _name )

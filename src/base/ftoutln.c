@@ -815,6 +815,7 @@
     FT_Vector*  vec = outline->points;
     FT_Vector*  limit = vec + outline->n_points;
 
+
     for ( ; vec < limit; vec++ )
       FT_Vector_Transform( vec, matrix );
   }

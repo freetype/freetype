@@ -22,6 +22,7 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/ftoutln.h>
 
+
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -862,7 +863,7 @@
           if ( ip[0] != 12 || ip[1] != 17 )
           {
             FT_ERROR(( "CID_Parse_CharStrings:" ));
-            FT_ERROR(( " 'pop' expected, found (%d %d)\n",
+            FT_ERROR(( " `pop' expected, found (%d %d)\n",
                        ip[0], ip[1] ));
             goto Syntax_Error;
           }

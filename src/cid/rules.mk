@@ -31,10 +31,10 @@ CID_COMPILE := $(FT_COMPILE) $(CID_CFLAGS)
 
 # CID driver sources (i.e., C files)
 #
-CID_DRV_SRC := $(CID_DIR_)cidparse.c  \
-               $(CID_DIR_)cidload.c   \
-               $(CID_DIR_)cidriver.c  \
-               $(CID_DIR_)cidgload.c  \
+CID_DRV_SRC := $(CID_DIR_)cidparse.c \
+               $(CID_DIR_)cidload.c  \
+               $(CID_DIR_)cidriver.c \
+               $(CID_DIR_)cidgload.c \
                $(CID_DIR_)cidobjs.c
 
 # CID driver headers

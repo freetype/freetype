@@ -514,8 +514,8 @@ error:
       sizeof ( FT_DriverRec ),
 
       "fond",          /* driver name                           */
-      100,             /* driver version == 1.0                 */
-      200,             /* driver requires FreeType 2.0 or above */
+      0x10000L,        /* driver version == 1.0                 */
+      0x20000L,        /* driver requires FreeType 2.0 or above */
   
       (void*)0,
   

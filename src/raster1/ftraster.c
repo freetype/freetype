@@ -28,7 +28,8 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* A simple technical note on how the raster works:                      */
+  /* A simple technical note on how the raster works                       */
+  /* -----------------------------------------------                       */
   /*                                                                       */
   /*   Converting an outline into a bitmap is achieved in several steps:   */
   /*                                                                       */
@@ -60,7 +61,7 @@
   /*                                                                       */
   /*    ^                                                         ^        */
   /*    |                                                         |        */
-  /*    start of render pool                                   top         */
+  /*  start of render pool                                       top       */
   /*                                                                       */
   /*   The top of the profile stack is kept in the `top' variable.         */
   /*                                                                       */
@@ -84,7 +85,7 @@
   /*                                                                       */
   /*                            ^                    ^                     */
   /*                            |                    |                     */
-  /*                       maxBuff             sizeBuff = end of pool      */
+  /*                         maxBuff           sizeBuff = end of pool      */
   /*                                                                       */
   /*   This list is later used during the sweep phase in order to          */
   /*   optimize performance (see technical note on the sweep below).       */
@@ -176,7 +177,7 @@
 #define Raster_Err_Gray_Unsupported  -5
 #define Raster_Err_Unsupported       -6
 
-  /* FMulDiv means `Fast MulDiv', it is used in case where `b' is       */
+  /* FMulDiv means `Fast MulDiv'; it is used in case where `b' is       */
   /* typically a small value and the result of a*b is known to fit into */
   /* 32 bits.                                                           */
 #define FMulDiv( a, b, c )  ( (a) * (b) / (c) )
@@ -303,6 +304,7 @@
 
 #ifdef TT_STATIC_RASTER
 
+
 #define RAS_ARGS       /* void */
 #define RAS_ARG        /* void */
 
@@ -311,7 +313,9 @@
 
 #define UNUSED_RASTER  do ; while ( 0 )
 
+
 #else /* TT_STATIC_RASTER */
+
 
 #define RAS_ARGS       TRaster_Instance*  raster,
 #define RAS_ARG        TRaster_Instance*  raster
@@ -320,6 +324,7 @@
 #define RAS_VAR        raster
 
 #define UNUSED_RASTER  UNUSED( raster )
+
 
 #endif /* TT_STATIC_RASTER */
 
@@ -394,6 +399,7 @@
     PProfile  fProfile;             /* head of linked list of profiles     */
     PProfile  gProfile;             /* contour's first profile in case     */
                                     /* of impact                           */
+
     TStates   state;                /* rendering state                     */
 
     FT_Bitmap   target;             /* description of target bit/pixmap    */
@@ -422,6 +428,7 @@
                                     /* Render_Glyph.  Note that there is   */
                                     /* no horizontal pass during gray      */
                                     /* rendering.                          */
+
     TPoint    arcs[2 * MaxBezier + 1]; /* The Bezier stack                 */
 
     TBand     band_stack[16];       /* band stack used for sub-banding     */
@@ -442,6 +449,7 @@
                                 /* graylevels pixmaps.                     */
                                 /* gray_lines is a buffer holding two      */
                                 /* monochrome scanlines                    */
+
     Short     gray_width;       /* width in bytes of one monochrome        */
                                 /* intermediate scanline of gray_lines.    */
                                 /* Each gray pixel takes 2 bits long there */
@@ -779,7 +787,7 @@
   static
   void  Split_Conic( TPoint*  base )
   {
-    Long     a, b;
+    Long  a, b;
 
 
     base[4].x = base[2].x;
@@ -794,8 +802,8 @@
     b = base[1].y = ( base[0].y + b ) / 2;
     base[2].y = ( a + b ) / 2;
 
-    /* hand optimized.  gcc doesn't seem too good at common expression */
-    /* substitution and instruction scheduling ;-)                     */
+    /* hand optimized.  gcc doesn't seem to be too good at common      */
+    /* expression substitution and instruction scheduling ;-)          */
   }
 
 
@@ -867,9 +875,12 @@
   /*    SUCCESS on success, FAILURE on render pool overflow.               */
   /*                                                                       */
   static
-  Bool  Line_Up( RAS_ARGS Long  x1, Long  y1,
-                          Long  x2, Long  y2,
-                          Long  miny, Long  maxy )
+  Bool  Line_Up( RAS_ARGS Long  x1,
+                          Long  y1,
+                          Long  x2,
+                          Long  y2,
+                          Long  miny,
+                          Long  maxy )
   {
     Long   Dx, Dy;
     Int    e1, e2, f1, f2, size;     /* XXX: is `Short' sufficient? */
@@ -1003,9 +1014,12 @@
   /*    SUCCESS on success, FAILURE on render pool overflow.               */
   /*                                                                       */
   static
-  Bool  Line_Down( RAS_ARGS Long  x1, Long  y1,
-                            Long  x2, Long  y2,
-                            Long  miny, Long  maxy )
+  Bool  Line_Down( RAS_ARGS Long  x1,
+                            Long  y1,
+                            Long  x2,
+                            Long  y2,
+                            Long  miny,
+                            Long  maxy )
   {
     Bool  result, fresh;
 
@@ -1275,8 +1289,8 @@
     switch ( ras.state )
     {
     case Ascending:
-      if ( Line_Up ( RAS_VARS ras.lastX, ras.lastY,
-                     x, y, ras.minY, ras.maxY ) )
+      if ( Line_Up( RAS_VARS ras.lastX, ras.lastY,
+                    x, y, ras.minY, ras.maxY ) )
         return FAILURE;
       break;
 
@@ -1498,7 +1512,7 @@
       }
       else
       {
-        state_bez = y1 <= y4 ? Ascending : Descending;
+        state_bez = ( y1 <= y4 ) ? Ascending : Descending;
 
         /* detect a change of direction */
         if ( ras.state != state_bez )
@@ -1659,59 +1673,57 @@
         }
 
       case FT_Curve_Tag_Conic:  /* consume conic arcs */
+        v_control.x = SCALED( point[0].x );
+        v_control.y = SCALED( point[0].y );
+
+        if ( flipped )
+          SWAP_( v_control.x, v_control.y );
+
+      Do_Conic:
+        if ( point < limit )
         {
-          v_control.x = SCALED( point[0].x );
-          v_control.y = SCALED( point[0].y );
+          FT_Vector  v_middle;
+          Long       x, y;
+
+
+          point++;
+          tags++;
+          tag = FT_CURVE_TAG( tags[0] );
+
+          x = SCALED( point[0].x );
+          y = SCALED( point[0].y );
 
           if ( flipped )
-            SWAP_( v_control.x, v_control.y );
+            SWAP_( x, y );
 
-        Do_Conic:
-          if ( point < limit )
+          if ( tag == FT_Curve_Tag_On )
           {
-            FT_Vector  v_middle;
-            Long       x, y;
-
-
-            point++;
-            tags++;
-            tag = FT_CURVE_TAG( tags[0] );
-
-            x = SCALED( point[0].x );
-            y = SCALED( point[0].y );
-
-            if ( flipped )
-              SWAP_( x, y );
-
-            if ( tag == FT_Curve_Tag_On )
-            {
-              if ( Conic_To( RAS_VARS v_control.x, v_control.y, x, y ) )
-                goto Fail;
-              continue;
-            }
-
-            if ( tag != FT_Curve_Tag_Conic )
-              goto Invalid_Outline;
-
-            v_middle.x = ( v_control.x + x ) / 2;
-            v_middle.y = ( v_control.y + y ) / 2;
-
-            if ( Conic_To( RAS_VARS v_control.x, v_control.y,
-                                    v_middle.x,  v_middle.y ) )
+            if ( Conic_To( RAS_VARS v_control.x, v_control.y, x, y ) )
               goto Fail;
-
-            v_control.x = x;
-            v_control.y = y;
-
-            goto Do_Conic;
+            continue;
           }
 
+          if ( tag != FT_Curve_Tag_Conic )
+            goto Invalid_Outline;
+
+          v_middle.x = ( v_control.x + x ) / 2;
+          v_middle.y = ( v_control.y + y ) / 2;
+
           if ( Conic_To( RAS_VARS v_control.x, v_control.y,
-                                  v_start.x,   v_start.y ) )
+                                  v_middle.x,  v_middle.y ) )
             goto Fail;
 
-          goto Close;
+          v_control.x = x;
+          v_control.y = y;
+
+          goto Do_Conic;
         }
+
+        if ( Conic_To( RAS_VARS v_control.x, v_control.y,
+                                v_start.x,   v_start.y ) )
+          goto Fail;
+
+        goto Close;
 
       default:  /* FT_Curve_Tag_Cubic */
         {
@@ -2005,8 +2017,8 @@
   /*                                                                       */
   /*  Vertical Sweep Procedure Set                                         */
   /*                                                                       */
-  /*  These four routines are used during the vertical black/white         */
-  /*  sweep phase by the generic Draw_Sweep() function.                    */
+  /*  These four routines are used during the vertical black/white sweep   */
+  /*  phase by the generic Draw_Sweep() function.                          */
   /*                                                                       */
   /*************************************************************************/
 
@@ -2057,14 +2069,16 @@
 
     if ( e2 >= 0 && e1 < ras.bWidth )
     {
-      if ( e1 < 0 )           e1 = 0;
-      if ( e2 >= ras.bWidth ) e2 = ras.bWidth - 1;
+      if ( e1 < 0 )
+        e1 = 0;
+      if ( e2 >= ras.bWidth )
+        e2 = ras.bWidth - 1;
 
       c1 = (Short)( e1 >> 3 );
       c2 = (Short)( e2 >> 3 );
 
-      f1 =   (unsigned char)0xFF >> ( e1 & 7 );
-      f2 = ~((unsigned char)0x7F >> ( e2 & 7 ));
+      f1 =    (unsigned char)0xFF >> ( e1 & 7 );
+      f2 = ~( (unsigned char)0x7F >> ( e2 & 7 ) );
 
       if ( ras.gray_min_x > c1 ) ras.gray_min_x = c1;
       if ( ras.gray_max_x < c2 ) ras.gray_max_x = c2;
@@ -2447,6 +2461,7 @@
         Int    last_bit   = last_pixel & 3;
         Bool   over       = 0;
 
+
         if ( ras.gray_max_x >= last_cell && last_bit != 3 )
         {
           ras.gray_max_x = last_cell - 1;
@@ -2625,13 +2640,13 @@
   static
   Bool  Draw_Sweep( RAS_ARG )
   {
-    Short  y, y_change, y_height;
+    Short         y, y_change, y_height;
 
-    PProfile  P, Q, P_Left, P_Right;
+    PProfile      P, Q, P_Left, P_Right;
 
-    Short  min_Y, max_Y, top, bottom, dropouts;
+    Short         min_Y, max_Y, top, bottom, dropouts;
 
-    Long  x1, x2, xs, e1, e2;
+    Long          x1, x2, xs, e1, e2;
 
     TProfileList  wait;
     TProfileList  draw_left, draw_right;
@@ -2647,8 +2662,8 @@
     /* first, compute min and max Y */
 
     P     = ras.fProfile;
-    max_Y = (short)TRUNC( ras.minY );
-    min_Y = (short)TRUNC( ras.maxY );
+    max_Y = (Short)TRUNC( ras.minY );
+    min_Y = (Short)TRUNC( ras.maxY );
 
     while ( P )
     {
@@ -2783,9 +2798,9 @@
           P_Right = P_Right->link;
         }
 
-        /* now perform the dropouts _after_ the span drawing   */
-        /* drop-outs processing has been moved out of the loop */
-        /* for performance tuning                              */
+        /* now perform the dropouts _after_ the span drawing -- */
+        /* drop-outs processing has been moved out of the loop  */
+        /* for performance tuning                               */
         if ( dropouts > 0 )
           goto Scan_DropOuts;
 
@@ -3032,7 +3047,6 @@
     ras.dropOutControl = 2;
     ras.second_pass    = !( ras.outline.flags & ft_outline_single_pass );
 
-
     /* Vertical Sweep */
 
     ras.band_top            = 0;
@@ -3055,7 +3069,7 @@
     ras.Proc_Sweep_Step = Vertical_Gray_Sweep_Step;
 
     error = Render_Single_Pass( RAS_VARS 0 );
-    if (error)
+    if ( error )
       return error;
 
     /* Horizontal Sweep */
@@ -3071,7 +3085,7 @@
       ras.band_stack[0].y_max = ras.target.width * 2 - 1;
 
       error = Render_Single_Pass( RAS_VARS 1 );
-      if (error)
+      if ( error )
         return error;
     }
 
@@ -3084,10 +3098,11 @@
   FT_Error  Render_Gray_Glyph( RAS_ARG )
   {
     UNUSED_RASTER;
+
     return FT_Err_Cannot_Render_Glyph;
   }
 
-#endif
+#endif /* FT_RASTER_OPTION_ANTI_ALIASING */
 
 
   static
@@ -3095,6 +3110,7 @@
   {
     FT_UInt  n;
     FT_ULong c;
+
 
     /* setup count table */
     for ( n = 0; n < 256; n++ )
@@ -3110,23 +3126,27 @@
     }
 
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
+
     /* set default 5-levels gray palette */
     for ( n = 0; n < 5; n++ )
       raster->grays[n] = n * 255 / 4;
 
     raster->gray_width = RASTER_GRAY_LINES / 2;
+
 #endif    
   }
 
+
   /**** RASTER OBJECT CREATION: In standalone mode, we simply use *****/
   /****                         a static object.                  *****/
+
 
 #ifdef _STANDALONE_
 
 
   static
-  int  ft_black_new( void*  memory,
-                     FT_Raster *araster )
+  int  ft_black_new( void*      memory,
+                     FT_Raster  *araster )
   {
      static FT_RasterRec_  the_raster;
 
@@ -3183,9 +3203,9 @@
 
 
   static
-  void ft_black_reset( TRaster_Instance* raster,
-                       const char*       pool_base,
-                       long              pool_size )
+  void ft_black_reset( TRaster_Instance*  raster,
+                       const char*        pool_base,
+                       long               pool_size )
   {
     if ( raster && pool_base && pool_size >= 4096 )
     {
@@ -3202,6 +3222,7 @@
                           const char*       palette )
   {
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING  
+
     if ( mode == FT_MAKE_TAG( 'p', 'a', 'l', '5' ) )
     {
       /* set 5-levels gray palette */
@@ -3211,10 +3232,13 @@
       raster->grays[3] = palette[3];
       raster->grays[4] = palette[4];
     }
+
 #else
-    UNUSED(raster);
-    UNUSED(mode);
-    UNUSED(palette);    
+
+    UNUSED( raster );
+    UNUSED( mode );
+    UNUSED( palette );    
+
 #endif    
   }
 
@@ -3250,7 +3274,7 @@
     ras.outline  = *outline;
     ras.target   = *target_map;
 
-    return ( params->flags & ft_raster_flag_aa
+    return ( ( params->flags & ft_raster_flag_aa )
                ? Render_Gray_Glyph( raster )
                : Render_Glyph( raster ) );
   }

@@ -20,15 +20,15 @@
 #include <freetype/internal/ftobjs.h>
 #include <psmodule.h>
 
-#include <stdlib.h>
+#include <stdlib.h>     /* for qsort()             */
 #include <string.h>     /* for strcmp(), strncpy() */
 
 
 #ifndef FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES
 
 
-  /* see the python script `freetype2/docs/glnames.py' which is used */
-  /* to generate the following tables...                             */
+  /* see the Python script `freetype2/docs/glnames.py' which is used */
+  /* to generate the following file                                  */
 #include <pstables.h>
 
 
@@ -53,7 +53,12 @@
          glyph_name[1] == 'n' &&
          glyph_name[2] == 'i' )
     {
-      /* determine wether the following characters are hexadecimal */
+      /* determine whether the next four characters following are */
+      /* hexadecimal.                                             */
+
+      /* XXX: Add code to deal with ligatures, i.e. glyph names like */
+      /*      `uniXXXXYYYYZZZZ'...                                   */
+
       FT_Int       count;
       FT_ULong     value = 0;
       const char*  p     = glyph_name + 4;
@@ -74,11 +79,13 @@
           else
             d += 10;
         }
-        /* exit if a non-uppercase-hexadecimal character was found */
+
+        /* exit if a non-uppercase hexadecimal character was found */
         if ( d >= 16 )
           break;
 
         value = ( value << 4 ) + d;
+
         if ( count == 0 )
           return value;
       }
@@ -92,8 +99,10 @@
 
 
       p = glyph_name;
+
       while ( *p && *p != '.' )
         p++;
+
       len = p - glyph_name;
 
       if ( *p && len < 64 )
@@ -104,7 +113,7 @@
       }
     }
 
-    /* now, lookup the glyph in the Adobe Glyph List */
+    /* now, look up the glyph in the Adobe Glyph List */
     for ( n = 0; n < NUM_ADOBE_GLYPHS; n++ )
     {
       const char*  name = t1_standard_glyphs[n];
@@ -156,6 +165,7 @@
 
 
       map = table->maps;
+
       for ( n = 0; n < num_glyphs; n++ )
       {
         const char*  gname = glyph_names[n];
@@ -164,6 +174,7 @@
         if ( gname )
         {
           uni_char = PS_Unicode_Value( gname );
+
           if ( uni_char && uni_char != 0xFFFF )
           {
             map->unicode     = uni_char;
@@ -175,6 +186,7 @@
 
       /* now, compress the table a bit */
       count = map - table->maps;
+
       if ( count > 0 && REALLOC( table->maps,
                                  num_glyphs * sizeof ( PS_UniMap ),
                                  count * sizeof ( PS_UniMap ) ) )
@@ -205,6 +217,7 @@
 
 
     /* perform a binary search on the table */
+
     min = table->maps;
     max = min + table->num_maps - 1;
 
@@ -280,8 +293,8 @@
     sizeof( FT_ModuleRec ),
 
     "psnames",  /* driver name                         */
-    100,        /* driver version                      */
-    200,        /* driver requires FreeType 2 or above */
+    0x10000L,   /* driver version                      */
+    0x20000L,   /* driver requires FreeType 2 or above */
 
 #ifdef FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES
     0,
