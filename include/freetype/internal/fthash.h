@@ -125,7 +125,7 @@ FT_BEGIN_HEADER
     FT_Hash_EqualFunc    node_equal;
     FT_Memory            memory;
 
-  } FT_HashRec, *FT_Hash;
+  } FT_HashRec;
 
 
  /***********************************************************
@@ -270,7 +270,7 @@ FT_BEGIN_HEADER
   */
   FT_BASE_DEF( FT_HashLookup )
   ft_hash_lookup( FT_Hash      table,
-                  FT_HashNode  keynode )
+                  FT_HashNode  keynode );
 
 
  /****************************************************************
@@ -380,7 +380,7 @@ FT_BEGIN_HEADER
   */
   FT_BASE( FT_Error )
   ft_hash_remove( FT_Hash        table,
-                  FT_HashLookup  lookup )
+                  FT_HashLookup  lookup );
 
 
 

@@ -288,14 +288,17 @@ FT_BEGIN_HEADER
   *
   * @note:
   *   if 'obj_init' is NULL, the class will use it's parent
-  *   constructor.
+  *   constructor, if any
   *
   *   if 'obj_done' is NULL, the class will use it's parent
-  *   finalizer.
+  *   finalizer, if any
   *
   *   the object sub-system allocates a new class, copies
   *   the content of its super-class into the new structure,
   *   _then_ calls 'clazz_init'.
+  *
+  *   'class_init' and 'class_done' can be NULL, in which case
+  *   the parent's class constructor and destructor wil be used
   */
   typedef struct FT_TypeRec_
   {
@@ -337,7 +340,7 @@ FT_BEGIN_HEADER
   * @return:
   *   1 iff the handle points to a valid object. 0 otherwise
   */
-  FT_BASE_DEF( FT_Int )
+  FT_BASE( FT_Int )
   ft_object_check( FT_Pointer  obj );
 
 
@@ -357,7 +360,7 @@ FT_BEGIN_HEADER
   *   1 iff the handle points to a valid 'clazz' instance. 0
   *   otherwise.
   */
-  FT_BASE_DEF( FT_Int )
+  FT_BASE( FT_Int )
   ft_object_is_a( FT_Pointer  obj,
                   FT_Class    clazz );
 
@@ -379,7 +382,7 @@ FT_BEGIN_HEADER
   * @return:
   *   error code. 0 means success
   */
-  FT_BASE_DEF( FT_Error )
+  FT_BASE( FT_Error )
   ft_object_create( FT_Object  *aobject,
                     FT_Class    clazz,
                     FT_Pointer  init_data );
@@ -408,7 +411,7 @@ FT_BEGIN_HEADER
   *   this is equivalent to calling @ft_class_from_type followed by
   *   @ft_object_create
   */
-  FT_BASE_DEF( FT_Error )
+  FT_BASE( FT_Error )
   ft_object_create_from_type( FT_Object  *aobject,
                               FT_Type     type,
                               FT_Pointer  init_data,
@@ -438,7 +441,7 @@ FT_BEGIN_HEADER
   *   code returned by the object constructor.
   */
 #define  FT_CREATE( _obj, _clazz, _init )  \
-             FT_MEM_SET( FT_OBJ_CREATE( _obj, _clazz, _init ) )
+             FT_SET_ERROR( FT_OBJ_CREATE( _obj, _clazz, _init ) )
 
  /**************************************************************
   *
@@ -462,7 +465,7 @@ FT_BEGIN_HEADER
   *   code returned by the object constructor.
   */
 #define  FT_CREATE_FROM_TYPE( _obj, _type, _init, _lib )  \
-             FT_MEM_SET( FT_OBJ_CREATE( _obj, _type, _init, _lib ) )
+             FT_SET_ERROR( FT_OBJ_CREATE_FROM_TYPE( _obj, _type, _init, _lib ) )
 
 
  /* */
@@ -486,39 +489,12 @@ FT_BEGIN_HEADER
   * @return:
   *   error code. 0 means success
   */
-  FT_BASE_DEF( FT_Error )
+  FT_BASE( FT_Error )
   ft_class_from_type( FT_Class   *aclass,
                       FT_Type     type,
                       FT_Library  library );
 
 
- /**************************************************************
-  *
-  * @function: ft_class_from_name
-  *
-  * @description:
-  *   retrieves the class object corresponding to a given type
-  *   name. The class is created when needed
-  *
-  * @output:
-  *   aclass  :: handle to corresponding class object. NULL
-  *              in case of error
-  *
-  * @input:
-  *   name    :: class name
-  *   library :: library handle
-  *
-  * @return:
-  *   error code. 0 means success
-  *
-  * @note:
-  *   this function is _very_ slow. You should only use it for
-  *   debugging purposes..
-  */
-  FT_BASE_DEF( FT_Error )
-  ft_class_from_name( FT_Class   *aclass,
-                      FT_CString  class_name,
-                      FT_Library  library );
  /* */
 
 #include FT_INTERNAL_HASH_H
@@ -542,12 +518,12 @@ FT_BEGIN_HEADER
 
 
  /* initialize meta class */
-  FT_BASE_DEF( FT_Error )
+  FT_BASE( FT_Error )
   ft_metaclass_init( FT_MetaClass  meta,
                      FT_Library    library );
 
  /* finalize meta class - destroy all registered class objects */
-  FT_BASE_DEF( void )
+  FT_BASE( void )
   ft_metaclass_done( FT_MetaClass  meta );
 
  /* */
