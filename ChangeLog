@@ -9,11 +9,11 @@
 
     * include/freetype/freetype.h:
     Added types and structures to support incremental typeface loading.
-	The FT_Incremental_Interface structure, defined in freetype.h,
-	is designed to be passed to FT_Open_Face to provide callback
-	functions to obtain glyph recipes and metrics, for fonts like
-	those passed from PostScript that do not necessarily provide
-	all, or any, glyph information, when first opened.
+    The FT_Incremental_Interface structure, defined in freetype.h,
+    is designed to be passed to FT_Open_Face to provide callback
+    functions to obtain glyph recipes and metrics, for fonts like
+    those passed from PostScript that do not necessarily provide
+    all, or any, glyph information, when first opened.
 
     * include/freetype/config/ftoption.h
     Added a new configuration macro, FT_CONFIG_OPTION_INCREMENTAL,
