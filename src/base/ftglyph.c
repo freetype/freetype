@@ -591,6 +591,11 @@
       goto Bad;
 
     clazz = glyph->clazz;
+
+    /* when called with a bitmap glyph, do nothing and return succesfully */
+    if ( clazz == &ft_bitmap_glyph_class )
+      goto Exit;
+
     if ( !clazz || !clazz->glyph_prepare )
       goto Bad;
 
