@@ -17,6 +17,9 @@
 
 2002-07-07  Owen Taylor  <owen@redhat.com>
 
+    * src/pshinter/pshglob.h, src/pshinter/pshglob.c: adding support for
+    blue fuzz
+
     * include/freetype/freetype.h, src/base/ftobjs.h,
     freetype/internal/ftobjs.h, freetype/internal/psaux.h,
     freetype/internal/pshints.h, src/psaux/t1decode.c, src/cff/cffgload.h,
