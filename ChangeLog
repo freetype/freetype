@@ -1,3 +1,11 @@
+2004-04-25  George Williams  <gww@silcom.com>
+
+	* src/truetype/ttgxvar.c (ft_var_apply_tuple): Fix typo.
+
+2004-04-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/Jamfile, docs/CHANGES: Updated.
+
 2004-04-24  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfdrivr.c: Revert change from 2004-04-17.

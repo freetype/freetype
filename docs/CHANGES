@@ -9,6 +9,14 @@ LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
       cmap caches.)
 
 
+  II. IMPORTANT CHANGES
+
+    - George  Williams   contributed  code  to   handle  Apple's  font
+      distortion technology found in GX fonts (`avar', `cvar', `fvar',
+      and `gvar' tables;  the Multiple Masters  API has been  slightly
+      extended to cope with the new functionality.
+
+
 ======================================================================
 
 LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
