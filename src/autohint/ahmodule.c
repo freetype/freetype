@@ -24,6 +24,10 @@
 #include "ahhint.h"
 
 
+#ifdef  DEBUG_HINTER
+   extern AH_Hinter*  ah_debug_hinter = NULL;
+#endif
+
   typedef struct  FT_AutoHinterRec_
   {
     FT_ModuleRec  root;
@@ -35,7 +39,14 @@
   FT_CALLBACK_DEF( FT_Error )
   ft_autohinter_init( FT_AutoHinter  module )
   {
-    return ah_hinter_new( module->root.library, &module->hinter );
+    FT_Error  error;
+
+    error = ah_hinter_new( module->root.library, &module->hinter );
+#ifdef DEBUG_HINTER
+    if ( !error )
+      ah_debug_hinter = module->hinter;
+#endif
+    return error;
   }
 
 
@@ -43,6 +54,10 @@
   ft_autohinter_done( FT_AutoHinter  module )
   {
     ah_hinter_done( module->hinter );
+
+#ifdef DEBUG_HINTER
+    ah_debug_hinter = NULL;
+#endif
   }
 
 

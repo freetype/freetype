@@ -10,6 +10,8 @@
 #include <../src/pshinter/pshalgo1.h>
 #include <../src/pshinter/pshalgo2.h>
 
+#include <../src/autohint/ahtypes.h>
+
  /************************************************************************/
  /************************************************************************/
  /*****                                                              *****/
@@ -79,6 +81,14 @@ static  int   option_hinting = 1;
 
 static  char  temp_message[1024];
 
+static  NV_Path   symbol_dot     = NULL;
+static  NV_Path   symbol_circle  = NULL;
+static  NV_Path   symbol_square  = NULL;
+static  NV_Path   symbol_rect_h  = NULL;
+static  NV_Path   symbol_rect_v  = NULL;
+
+
+
 #define  AXIS_COLOR        0xFFFF0000
 #define  GRID_COLOR        0xFFD0D0D0
 #define  ON_COLOR          0xFFFF2000
@@ -104,6 +114,33 @@ Panic( const char*  message )
   exit(1);
 }
 
+
+static void
+init_symbols( void )
+{
+  nv_path_new_rectangle( renderer, -1, -1, 3, 3, 0, 0, &symbol_square );
+  nv_path_new_rectangle( renderer, -1, -6, 2, 12, 0, 0, &symbol_rect_v );
+  nv_path_new_rectangle( renderer, -6, -1, 12, 2, 0, 0, &symbol_rect_h );
+  nv_path_new_circle( renderer, 0, 0, 3., &symbol_dot );
+  nv_path_stroke( symbol_dot, 0.6,
+                  nv_path_linecap_butt,
+                  nv_path_linejoin_miter, 1.,
+                  &symbol_circle );
+
+  nv_path_destroy( symbol_dot );
+  nv_path_new_circle( renderer, 0, 0, 2., &symbol_dot );
+
+ }
+
+static void
+done_symbols( void )
+{
+  nv_path_destroy( symbol_circle );
+  nv_path_destroy( symbol_dot );
+  nv_path_destroy( symbol_rect_v );
+  nv_path_destroy( symbol_rect_h );
+  nv_path_destroy( symbol_square );
+}
 
  /************************************************************************/
  /************************************************************************/
@@ -525,11 +562,6 @@ ps2_draw_control_points( void )
     NV_Path       horz_rect;
     NV_Path       dot, circle;
     
-    nv_path_new_rectangle( renderer, -1, -6, 2, 12, 0, 0, &vert_rect );
-    nv_path_new_rectangle( renderer, -6, -1, 12, 2, 0, 0, &horz_rect );
-    nv_path_new_circle( renderer, 0, 0, 3., &dot );
-    nv_path_stroke( dot, 0.6, nv_path_linecap_butt, nv_path_linejoin_miter, 1., &circle );
-    
     for ( ; count > 0; count--, point++ )
     {
       NV_Vector  vec;
@@ -543,7 +575,7 @@ ps2_draw_control_points( void )
       if ( option_show_smooth && !psh2_point_is_smooth(point) )
       {
         nv_painter_set_color( painter, SMOOTH_COLOR, 256 );
-        nv_painter_fill_path( painter, trans, 0, circle );
+        nv_painter_fill_path( painter, trans, 0, symbol_circle );
       }
         
       if (option_show_horz_hints)
@@ -551,7 +583,7 @@ ps2_draw_control_points( void )
         if ( point->flags_y & PSH2_POINT_STRONG )
         {
           nv_painter_set_color( painter, STRONG_COLOR, 256 );
-          nv_painter_fill_path( painter, trans, 0, horz_rect );
+          nv_painter_fill_path( painter, trans, 0, symbol_rect_h );
         }
       }
       
@@ -560,16 +592,33 @@ ps2_draw_control_points( void )
         if ( point->flags_x & PSH2_POINT_STRONG )
         {
           nv_painter_set_color( painter, STRONG_COLOR, 256 );
-          nv_painter_fill_path( painter, trans, 0, vert_rect );
+          nv_painter_fill_path( painter, trans, 0, symbol_rect_v );
         }
       }
     }
-
-    nv_path_destroy( circle );
-    nv_path_destroy( dot );    
-    nv_path_destroy( horz_rect );
-    nv_path_destroy( vert_rect );
   }
+}
+
+ /************************************************************************/
+ /************************************************************************/
+ /*****                                                              *****/
+ /*****            AUTOHINTER DRAWING ROUTINES                       *****/
+ /*****                                                              *****/
+ /************************************************************************/
+ /************************************************************************/
+
+static void
+ah_draw_smooth_points( AH_Hinter  hinter )
+{
+  if ( ah_debug_hinter )
+  {
+    
+  }
+}
+
+static void
+ah_draw_edges( AH_Hinter  hinter )
+{
 }
 
  /************************************************************************/
@@ -589,6 +638,8 @@ draw_glyph( int  glyph_index )
   
   ps1_debug_hint_func = option_show_ps_hints ? draw_ps1_hint : 0;
   ps2_debug_hint_func = option_show_ps_hints ? draw_ps2_hint : 0;
+
+  ah_debug_hinter = NULL;
 
   error = FT_Load_Glyph( face, glyph_index, option_hinting
                                           ? FT_LOAD_NO_BITMAP
@@ -635,8 +686,6 @@ draw_glyph( int  glyph_index )
     NV_Scale    r = 2;
     NV_Int      n, first, last;
 
-    nv_path_new_circle( renderer, 0, 0, 2., &plot );
-    
     nv_path_get_outline( path, NULL, memory, &out );
     
     first = 0;
@@ -660,14 +709,12 @@ draw_glyph( int  glyph_index )
         nv_transform_set_translate( &trans, vec->x/64.0, vec->y/64.0 );        
 
         nv_painter_set_color( painter, color, 256 );
-        nv_painter_fill_path( painter, &trans, 0, plot );
+        nv_painter_fill_path( painter, &trans, 0, symbol_dot );
 
       }
       
       first = last + 1;
     }
-
-    nv_path_destroy( plot );
   }
 
   nv_path_destroy( path );
@@ -872,8 +919,9 @@ int  main( int  argc, char**  argv )
   /* create library */
   error = nv_renderer_new( 0, &renderer );
   if (error) Panic( "could not create Nirvana renderer" );
-  
+
   memory = nv_renderer_get_memory( renderer );
+  init_symbols();
 
   error = nvv_display_new( renderer, &display );
   if (error) Panic( "could not create display" );
@@ -939,6 +987,8 @@ int  main( int  argc, char**  argv )
   
   /* destroy display (and surface) */
   nvv_display_unref( display );
+
+  done_symbols();
   nv_renderer_unref( renderer );
 
   return 0;

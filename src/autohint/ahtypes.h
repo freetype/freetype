@@ -26,7 +26,12 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
+
+#ifdef DEBUG_HINTER
+#include <../src/autohint/ahloader.h>
+#else
 #include "ahloader.h"
+#endif
 
 
 #define xxAH_DEBUG
@@ -186,7 +191,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    fx, fy    :: The current coordinates in font units.                */
   /*                                                                       */
-  /*    x,  y     :: The current hinter coordinates.                       */
+  /*    x,  y     :: The current hinted coordinates.                       */
   /*                                                                       */
   /*    u, v      :: Point coordinates -- meaning varies with context.     */
   /*                                                                       */
@@ -484,6 +489,10 @@ FT_BEGIN_HEADER
     FT_Bool           disable_vert_edges;
   } AH_Hinter;
 
+
+#ifdef    DEBUG_HINTER
+  extern AH_Hinter*   ah_debug_hinter;
+#endif  /* DEBUG_HINTER */
 
 FT_END_HEADER
 
