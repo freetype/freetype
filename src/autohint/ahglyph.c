@@ -1115,7 +1115,7 @@
           edge_limit++;
 
           /* clear all edge fields */
-          FT_MEM_SET( edge, 0, sizeof ( *edge ) );
+          FT_MEM_ZERO( edge, sizeof ( *edge ) );
 
           /* add the segment to the new edge's list */
           edge->first    = seg;

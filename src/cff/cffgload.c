@@ -357,7 +357,7 @@
 
 
     /* clear everything */
-    FT_MEM_SET( decoder, 0, sizeof ( *decoder ) );
+    FT_MEM_ZERO( decoder, sizeof ( *decoder ) );
 
     /* initialize builder */
     cff_builder_init( &decoder->builder, face, size, slot, hinting );

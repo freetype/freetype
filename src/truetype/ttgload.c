@@ -854,7 +854,7 @@
 
       offset = 0;
       count  = data.length;
-      ft_memset( &inc_stream, 0, sizeof ( inc_stream ) );
+      FT_MEM_ZERO( &inc_stream, sizeof ( inc_stream ) );
       FT_Stream_OpenMemory( &inc_stream, data.pointer, data.length );
       loader->stream = &inc_stream;
     }
@@ -1608,7 +1608,7 @@
       }
     }
 
-    FT_MEM_SET( &loader, 0, sizeof ( loader ) );
+    FT_MEM_ZERO( &loader, sizeof ( loader ) );
 
     /* update the glyph zone bounds */
     {

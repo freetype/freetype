@@ -3146,7 +3146,7 @@
 
 
      *araster = &the_raster;
-     FT_MEM_SET( &the_raster, sizeof ( the_raster ), 0 );
+     FT_MEM_ZERO( &the_raster, sizeof ( the_raster ) );
      ft_black_init( &the_raster );
 
      return 0;

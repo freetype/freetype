@@ -224,7 +224,7 @@
 
     if ( FT_NEW_ARRAY( ht->table, ht->size ) )
       goto Exit;
-    FT_MEM_SET( ht->table, 0, sizeof ( hashnode ) * ht->size );
+    FT_MEM_ZERO( ht->table, sizeof ( hashnode ) * ht->size );
 
     for ( i = 0, bp = obp; i < sz; i++, bp++ )
     {
@@ -255,7 +255,7 @@
 
     if ( FT_NEW_ARRAY( ht->table, sz ) )
       goto Exit;
-    FT_MEM_SET( ht->table, 0, sizeof ( hashnode ) * sz );
+    FT_MEM_ZERO( ht->table, sizeof ( hashnode ) * sz );
 
   Exit:
     return error;
@@ -427,7 +427,7 @@
     }
 
     /* Prepare the separator bitmap. */
-    FT_MEM_SET( seps, 0, 32 );
+    FT_MEM_ZERO( seps, 32 );
 
     /* If the very last character of the separator string is a plus, then */
     /* set the `mult' flag to indicate that multiple separators should be */
@@ -993,7 +993,7 @@
     }
 
     p = font->user_props + font->nuser_props;
-    FT_MEM_SET( p, 0, sizeof ( bdf_property_t ) );
+    FT_MEM_ZERO( p, sizeof ( bdf_property_t ) );
 
     n = (unsigned long)( ft_strlen( name ) + 1 );
     if ( FT_NEW_ARRAY( p->name, n ) )
@@ -1341,7 +1341,7 @@
       }
 
       fp = font->props + font->props_size;
-      FT_MEM_SET( fp, 0, sizeof ( bdf_property_t ) );
+      FT_MEM_ZERO( fp, sizeof ( bdf_property_t ) );
       font->props_size++;
     }
 
@@ -1599,9 +1599,8 @@
                                font->glyphs_size,
                                font->glyphs_size + 64 ) )
             goto Exit;
-          FT_MEM_SET( font->glyphs + font->glyphs_size,
-                      0,
-                      sizeof ( bdf_glyph_t ) * 64 ); /* FZ inutile */
+          FT_MEM_ZERO( font->glyphs + font->glyphs_size,
+                       sizeof ( bdf_glyph_t ) * 64 ); /* FZ inutile */
           font->glyphs_size += 64;
         }
 
@@ -2209,7 +2208,7 @@
     FT_Error       error  = BDF_Err_Ok;
 
 
-    FT_MEM_SET( &p, 0, sizeof ( _bdf_parse_t ) );
+    FT_MEM_ZERO( &p, sizeof ( _bdf_parse_t ) );
 
     p.opts   = (bdf_options_t*)( ( opts != 0 ) ? opts : &_bdf_opts );
     p.minlb  = 32767;

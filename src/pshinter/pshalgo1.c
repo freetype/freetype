@@ -760,7 +760,7 @@
 
 
       /* initialize hints table */
-      ft_memset( &hints, 0, sizeof ( hints ) );
+      FT_MEM_ZERO( &hints, sizeof ( hints ) );
       error = psh1_hint_table_init( &hints,
                                     &dim->hints,
                                     &dim->masks,

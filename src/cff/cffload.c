@@ -1091,7 +1091,7 @@
     FT_UShort  count;
 
 
-    FT_MEM_SET( idx, 0, sizeof ( *idx ) );
+    FT_MEM_ZERO( idx, sizeof ( *idx ) );
 
     idx->stream = stream;
     if ( !FT_READ_USHORT( count ) &&
@@ -1167,7 +1167,7 @@
         FT_FRAME_RELEASE( idx->bytes );
 
       FT_FREE( idx->offsets );
-      FT_MEM_SET( idx, 0, sizeof ( *idx ) );
+      FT_MEM_ZERO( idx, sizeof ( *idx ) );
     }
   }
 
@@ -1941,7 +1941,7 @@
     cff_parser_init( &parser, CFF_CODE_TOPDICT, &font->font_dict );
 
     /* set defaults */
-    FT_MEM_SET( top, 0, sizeof ( *top ) );
+    FT_MEM_ZERO( top, sizeof ( *top ) );
 
     top->underline_position  = -100;
     top->underline_thickness = 50;
@@ -1966,7 +1966,7 @@
     if ( top->private_offset && top->private_size )
     {
       /* set defaults */
-      FT_MEM_SET( priv, 0, sizeof ( *priv ) );
+      FT_MEM_ZERO( priv, sizeof ( *priv ) );
 
       priv->blue_shift       = 7;
       priv->blue_fuzz        = 1;

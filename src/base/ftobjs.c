@@ -211,9 +211,9 @@
     }
 
     /* clear all public fields in the glyph slot */
-    FT_MEM_SET( &slot->metrics, 0, sizeof ( slot->metrics ) );
-    FT_MEM_SET( &slot->outline, 0, sizeof ( slot->outline ) );
-    FT_MEM_SET( &slot->bitmap,  0, sizeof ( slot->bitmap )  );
+    FT_MEM_ZERO( &slot->metrics, sizeof ( slot->metrics ) );
+    FT_MEM_ZERO( &slot->outline, sizeof ( slot->outline ) );
+    FT_MEM_ZERO( &slot->bitmap,  sizeof ( slot->bitmap )  );
 
     slot->bitmap_left   = 0;
     slot->bitmap_top    = 0;
