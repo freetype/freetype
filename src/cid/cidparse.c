@@ -67,10 +67,10 @@
 
     parser->stream = stream;
 
-    base_offset = FILE_Pos();
+    base_offset = FT_STREAM_POS();
 
     /* first of all, check the font format in the  header */
-    if ( ACCESS_Frame( 31 ) )
+    if ( FT_FRAME_ENTER( 31 ) )
       goto Exit;
 
     if ( strncmp( (char *)stream->cursor,
@@ -80,7 +80,7 @@
       error = CID_Err_Unknown_File_Format;
     }
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
     if ( error )
       goto Exit;
 
@@ -99,10 +99,10 @@
 
       p = buffer + buff_len;
 
-      if ( FILE_Read( p, 256 + 10 - buff_len ) )
+      if ( FT_STREAM_READ( p, 256 + 10 - buff_len ) )
         goto Exit;
 
-      top_position = FILE_Pos() - buff_len;
+      top_position = FT_STREAM_POS() - buff_len;
       buff_len = 256 + 10;
 
       /* look for `StartData' */
@@ -123,8 +123,8 @@
     /* section                                                         */
 
     ps_len = offset - base_offset;
-    if ( FILE_Seek( base_offset )                    ||
-         EXTRACT_Frame( ps_len, parser->postscript ) )
+    if ( FT_STREAM_SEEK( base_offset )                    ||
+         FT_FRAME_EXTRACT( ps_len, parser->postscript ) )
       goto Exit;
 
     parser->data_offset    = offset;
@@ -148,7 +148,7 @@
       FT_Stream  stream = parser->stream;
 
 
-      RELEASE_Frame( parser->postscript );
+      FT_FRAME_RELEASE( parser->postscript );
     }
     parser->root.funcs.done( &parser->root );
   }

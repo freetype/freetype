@@ -171,7 +171,7 @@
       goto Bad_Format;
 
     /* create input stream from resource */
-    if ( FILE_Seek( 0 ) )
+    if ( FT_STREAM_SEEK( 0 ) )
       goto Exit;
 
     /* check that we have a valid TrueType file */
@@ -249,8 +249,8 @@
     face->cvt_size = 0;
 
     /* freeing the programs */
-    RELEASE_Frame( face->font_program );
-    RELEASE_Frame( face->cvt_program );
+    FT_FRAME_RELEASE( face->font_program );
+    FT_FRAME_RELEASE( face->cvt_program );
     face->font_program_size = 0;
     face->cvt_program_size  = 0;
   }

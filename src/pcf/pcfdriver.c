@@ -211,8 +211,8 @@ THE SOFTWARE.
     if ( ALLOC( bitmap->buffer, bytes ) )
       goto Exit;
 
-    if ( FILE_Seek( metric->bits )        ||
-         FILE_Read( bitmap->buffer, bytes ) )
+    if ( FT_STREAM_SEEK( metric->bits )        ||
+         FT_STREAM_READ( bitmap->buffer, bytes ) )
       goto Exit;
 
     if ( PCF_BIT_ORDER( face->bitmapsFormat ) != MSBFirst )

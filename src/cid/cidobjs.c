@@ -310,7 +310,7 @@
     }
 
     /* open the tokenizer; this will also check the font format */
-    if ( FILE_Seek( 0 ) )
+    if ( FT_STREAM_SEEK( 0 ) )
       goto Exit;
 
     error = CID_Open_Face( face );

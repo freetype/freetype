@@ -135,7 +135,7 @@
 
     memory = stream->memory;
 
-    if ( FILE_Seek( cmap->offset ) )
+    if ( FT_STREAM_SEEK( cmap->offset ) )
       return error;
 
     switch ( cmap->format )
@@ -145,7 +145,7 @@
 
       if ( READ_UShort( cmap0->language )         ||
            ALLOC( cmap0->glyphIdArray, 256L )     ||
-           FILE_Read( cmap0->glyphIdArray, 256L ) )
+           FT_STREAM_READ( cmap0->glyphIdArray, 256L ) )
         goto Fail;
 
       cmap->get_index = code_to_index0;
@@ -159,7 +159,7 @@
       /* allocate subheader keys */
 
       if ( ALLOC_ARRAY( cmap2->subHeaderKeys, 256, FT_UShort ) ||
-           ACCESS_Frame( 2L + 512L )                           )
+           FT_FRAME_ENTER( 2L + 512L )                           )
         goto Fail;
 
       cmap2->language = GET_UShort();
@@ -173,7 +173,7 @@
           num_SH = u;
       }
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       /* load subheaders */
 
@@ -183,7 +183,7 @@
       if ( ALLOC_ARRAY( cmap2->subHeaders,
                         num_SH + 1,
                         TT_CMap2SubHeaderRec )    ||
-           ACCESS_Frame( ( num_SH + 1 ) * 8L ) )
+           FT_FRAME_ENTER( ( num_SH + 1 ) * 8L ) )
       {
         FREE( cmap2->subHeaderKeys );
         goto Fail;
@@ -203,12 +203,12 @@
         cmap2sub++;
       }
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       /* load glyph IDs */
 
       if ( ALLOC_ARRAY( cmap2->glyphIdArray, l, FT_UShort ) ||
-           ACCESS_Frame( l * 2L )                           )
+           FT_FRAME_ENTER( l * 2L )                           )
       {
         FREE( cmap2->subHeaders );
         FREE( cmap2->subHeaderKeys );
@@ -218,7 +218,7 @@
       for ( i = 0; i < l; i++ )
         cmap2->glyphIdArray[i] = GET_UShort();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       cmap->get_index = code_to_index2;
       cmap->get_next_char = code_to_next2;
@@ -229,7 +229,7 @@
 
       /* load header */
 
-      if ( ACCESS_Frame( 10L ) )
+      if ( FT_FRAME_ENTER( 10L ) )
         goto Fail;
 
       cmap4->language      = GET_UShort();
@@ -240,14 +240,14 @@
 
       num_Seg = (FT_UShort)( cmap4->segCountX2 / 2 );
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       /* load segments */
 
       if ( ALLOC_ARRAY( cmap4->segments,
                         num_Seg,
                         TT_CMap4SegmentRec )           ||
-           ACCESS_Frame( ( num_Seg * 4 + 1 ) * 2L ) )
+           FT_FRAME_ENTER( ( num_Seg * 4 + 1 ) * 2L ) )
         goto Fail;
 
       segments = cmap4->segments;
@@ -266,7 +266,7 @@
       for ( i = 0; i < num_Seg; i++ )
         segments[i].idRangeOffset = GET_UShort();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       cmap4->numGlyphId = l = (FT_UShort)(
         ( ( cmap->length - ( 16L + 8L * num_Seg ) ) & 0xFFFF ) / 2 );
@@ -274,7 +274,7 @@
       /* load IDs */
 
       if ( ALLOC_ARRAY( cmap4->glyphIdArray, l, FT_UShort ) ||
-           ACCESS_Frame( l * 2L )                           )
+           FT_FRAME_ENTER( l * 2L )                           )
       {
         FREE( cmap4->segments );
         goto Fail;
@@ -283,7 +283,7 @@
       for ( i = 0; i < l; i++ )
         cmap4->glyphIdArray[i] = GET_UShort();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       cmap4->last_segment = cmap4->segments;
 
@@ -294,25 +294,25 @@
     case 6:
       cmap6 = &cmap->c.cmap6;
 
-      if ( ACCESS_Frame( 6L ) )
+      if ( FT_FRAME_ENTER( 6L ) )
         goto Fail;
 
       cmap6->language   = GET_UShort();
       cmap6->firstCode  = GET_UShort();
       cmap6->entryCount = GET_UShort();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       l = cmap6->entryCount;
 
       if ( ALLOC_ARRAY( cmap6->glyphIdArray, l, FT_Short ) ||
-           ACCESS_Frame( l * 2L )                          )
+           FT_FRAME_ENTER( l * 2L )                          )
         goto Fail;
 
       for ( i = 0; i < l; i++ )
         cmap6->glyphIdArray[i] = GET_UShort();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
       cmap->get_index = code_to_index6;
       cmap->get_next_char = code_to_next6;
       break;
@@ -321,16 +321,16 @@
     case 12:
       cmap8_12 = &cmap->c.cmap8_12;
 
-      if ( ACCESS_Frame( 8L ) )
+      if ( FT_FRAME_ENTER( 8L ) )
         goto Fail;
 
       cmap->length       = GET_ULong();
       cmap8_12->language = GET_ULong();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       if ( cmap->format == 8 )
-        if ( FILE_Skip( 8192L ) )
+        if ( FT_STREAM_SKIP( 8192L ) )
           goto Fail;
 
       if ( READ_ULong( cmap8_12->nGroups ) )
@@ -339,7 +339,7 @@
       n = cmap8_12->nGroups;
 
       if ( ALLOC_ARRAY( cmap8_12->groups, n, TT_CMapGroupRec ) ||
-           ACCESS_Frame( n * 3 * 4L )                       )
+           FT_FRAME_ENTER( n * 3 * 4L )                       )
         goto Fail;
 
       groups = cmap8_12->groups;
@@ -351,7 +351,7 @@
         groups[j].startGlyphID  = GET_ULong();
       }
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       cmap8_12->last_group = cmap8_12->groups;
 
@@ -362,7 +362,7 @@
     case 10:
       cmap10 = &cmap->c.cmap10;
 
-      if ( ACCESS_Frame( 16L ) )
+      if ( FT_FRAME_ENTER( 16L ) )
         goto Fail;
 
       cmap->length          = GET_ULong();
@@ -370,18 +370,18 @@
       cmap10->startCharCode = GET_ULong();
       cmap10->numChars      = GET_ULong();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       n = cmap10->numChars;
 
       if ( ALLOC_ARRAY( cmap10->glyphs, n, FT_Short ) ||
-           ACCESS_Frame( n * 2L )                     )
+           FT_FRAME_ENTER( n * 2L )                     )
         goto Fail;
 
       for ( j = 0; j < n; j++ )
         cmap10->glyphs[j] = GET_UShort();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
       cmap->get_index = code_to_index10;
       cmap->get_next_char = code_to_next10;
       break;

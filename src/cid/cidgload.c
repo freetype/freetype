@@ -51,9 +51,9 @@
 
 
     /* read the CID font dict index and charstring offset from the CIDMap */
-    if ( FILE_Seek( cid->data_offset + cid->cidmap_offset +
+    if ( FT_STREAM_SEEK( cid->data_offset + cid->cidmap_offset +
                     glyph_index * entry_len )               ||
-         ACCESS_Frame( 2 * entry_len )                      )
+         FT_FRAME_ENTER( 2 * entry_len )                      )
       goto Exit;
 
     p = (FT_Byte*)stream->cursor;
@@ -62,7 +62,7 @@
     p        += cid->fd_bytes;
     glyph_len = cid_get_offset( &p, (FT_Byte)cid->gd_bytes ) - off1;
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
 
     /* now, if the glyph is not empty, set up the subrs array, and parse */
     /* the charstrings                                                   */
@@ -92,7 +92,7 @@
       if ( ALLOC( charstring, glyph_len ) )
         goto Exit;
 
-      if ( !FILE_Read_At( cid->data_offset + off1, charstring, glyph_len ) )
+      if ( !FT_STREAM_READ_AT( cid->data_offset + off1, charstring, glyph_len ) )
       {
         FT_Int cs_offset;
 

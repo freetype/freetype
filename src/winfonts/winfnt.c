@@ -116,7 +116,7 @@
                  FT_Stream  stream )
   {
     if ( font->fnt_frame )
-      RELEASE_Frame( font->fnt_frame );
+      FT_FRAME_RELEASE( font->fnt_frame );
 
     font->fnt_size  = 0;
     font->fnt_frame = 0;
@@ -132,8 +132,8 @@
 
 
     /* first of all, read the FNT header */
-    if ( FILE_Seek( font->offset )                   ||
-         READ_Fields( winfnt_header_fields, header ) )
+    if ( FT_STREAM_SEEK( font->offset )                   ||
+         FT_STREAM_READ_FIELDS( winfnt_header_fields, header ) )
       goto Exit;
 
     /* check header */
@@ -157,8 +157,8 @@
       header->pixel_width = header->pixel_height;
 
     /* this is a FNT file/table, we now extract its frame */
-    if ( FILE_Seek( font->offset )                           ||
-         EXTRACT_Frame( header->file_size, font->fnt_frame ) )
+    if ( FT_STREAM_SEEK( font->offset )                           ||
+         FT_FRAME_EXTRACT( header->file_size, font->fnt_frame ) )
       goto Exit;
 
   Exit:
@@ -196,8 +196,8 @@
     face->num_fonts = 0;
 
     /* does it begin with a MZ header? */
-    if ( FILE_Seek( 0 )                                 ||
-         READ_Fields( winmz_header_fields, &mz_header ) )
+    if ( FT_STREAM_SEEK( 0 )                                 ||
+         FT_STREAM_READ_FIELDS( winmz_header_fields, &mz_header ) )
       goto Exit;
 
     error = FNT_Err_Unknown_File_Format;
@@ -207,8 +207,8 @@
       WinNE_HeaderRec  ne_header;
 
 
-      if ( FILE_Seek( mz_header.lfanew )                  ||
-           READ_Fields( winne_header_fields, &ne_header ) )
+      if ( FT_STREAM_SEEK( mz_header.lfanew )                  ||
+           FT_STREAM_READ_FIELDS( winne_header_fields, &ne_header ) )
         goto Exit;
 
       error = FNT_Err_Unknown_File_Format;
@@ -223,8 +223,8 @@
         FT_ULong   font_offset = 0;
 
 
-        if ( FILE_Seek( res_offset ) ||
-             ACCESS_Frame( ne_header.rname_tab_offset -
+        if ( FT_STREAM_SEEK( res_offset ) ||
+             FT_FRAME_ENTER( ne_header.rname_tab_offset -
                            ne_header.resource_tab_offset ) )
           goto Exit;
 
@@ -244,14 +244,14 @@
           if ( type_id == 0x8008 )
           {
             font_count  = count;
-            font_offset = (FT_ULong)( FILE_Pos() + 4 +
+            font_offset = (FT_ULong)( FT_STREAM_POS() + 4 +
                                       ( stream->cursor - stream->limit ) );
             break;
           }
 
           stream->cursor += 4 + count * 12;
         }
-        FORGET_Frame();
+        FT_FRAME_EXIT();
 
         if ( !font_count || !font_offset )
         {
@@ -260,13 +260,13 @@
           goto Exit;
         }
 
-        if ( FILE_Seek( font_offset )                         ||
+        if ( FT_STREAM_SEEK( font_offset )                         ||
              ALLOC_ARRAY( face->fonts, font_count, FNT_FontRec ) )
           goto Exit;
 
         face->num_fonts = font_count;
 
-        if ( ACCESS_Frame( (FT_Long)font_count * 12 ) )
+        if ( FT_FRAME_ENTER( (FT_Long)font_count * 12 ) )
           goto Exit;
 
         /* now read the offset and position of each FNT font */
@@ -283,7 +283,7 @@
             stream->cursor += 8;
           }
         }
-        FORGET_Frame();
+        FT_FRAME_EXIT();
 
         /* finally, try to load each font there */
         {

@@ -85,7 +85,7 @@
                         FT_Long ) )
         goto Exit;
 
-      if ( ACCESS_Frame( face->num_locations * 4L ) )
+      if ( FT_FRAME_ENTER( face->num_locations * 4L ) )
         goto Exit;
 
       {
@@ -97,7 +97,7 @@
           *loc = GET_Long();
       }
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
     }
     else
     {
@@ -110,7 +110,7 @@
                         FT_Long ) )
         goto Exit;
 
-      if ( ACCESS_Frame( face->num_locations * 2L ) )
+      if ( FT_FRAME_ENTER( face->num_locations * 2L ) )
         goto Exit;
       {
         FT_Long*  loc   = face->glyph_locations;
@@ -120,7 +120,7 @@
         for ( ; loc < limit; loc++ )
           *loc = (FT_Long)( (FT_ULong)GET_UShort() * 2 );
       }
-      FORGET_Frame();
+      FT_FRAME_EXIT();
     }
 
     FT_TRACE2(( "loaded\n" ));
@@ -177,7 +177,7 @@
                       FT_Short ) )
       goto Exit;
 
-    if ( ACCESS_Frame( face->cvt_size * 2L ) )
+    if ( FT_FRAME_ENTER( face->cvt_size * 2L ) )
       goto Exit;
 
     {
@@ -189,7 +189,7 @@
         *cur = GET_Short();
     }
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
     FT_TRACE2(( "loaded\n" ));
 
   Exit:
@@ -236,7 +236,7 @@
     else
     {
       face->font_program_size = table_len;
-      if ( EXTRACT_Frame( table_len, face->font_program ) )
+      if ( FT_FRAME_EXTRACT( table_len, face->font_program ) )
         goto Exit;
 
       FT_TRACE2(( "loaded, %12d bytes\n", face->font_program_size ));
@@ -256,7 +256,7 @@
     else
     {
       face->cvt_program_size = table_len;
-      if ( EXTRACT_Frame( table_len, face->cvt_program ) )
+      if ( FT_FRAME_EXTRACT( table_len, face->cvt_program ) )
         goto Exit;
 
       FT_TRACE2(( "loaded, %12d bytes\n", face->cvt_program_size ));
