@@ -42,7 +42,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL
   void  cid_decrypt( FT_Byte*   buffer,
-                     FT_Int     length,
+                     FT_Offset  length,
                      FT_UShort  seed );
 
   FT_LOCAL
