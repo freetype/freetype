@@ -859,6 +859,7 @@
       FT_Byte*     old_cur   = parser->cursor;
       FT_Byte*     old_limit = parser->limit;
       
+
       parser->cursor = token.start;
       parser->limit  = token.limit;
       
@@ -945,10 +946,11 @@
           FT_Fixed  temp[4];
           FT_BBox*  bbox = (FT_BBox*)q;
           
+
           /* we need the '[' and ']' delimiters */
           token.start--;
           token.limit++;
-          (void) t1_tofixedarray( &token.start, token.limit, 4, temp, 0 );
+          (void)t1_tofixedarray( &token.start, token.limit, 4, temp, 0 );
 
           bbox->xMin = FT_RoundFix( temp[0] );
           bbox->yMin = FT_RoundFix( temp[1] );

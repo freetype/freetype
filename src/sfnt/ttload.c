@@ -135,33 +135,32 @@
   }
 
 
- /* in theory, we should check the values of `search_range',               */
- /* `entry_selector' and `range_shift' to detect non-SFNT based files      */
+ /* In theory, we should check the values of `search_range',               */
+ /* `entry_selector', and `range_shift' to detect non-SFNT based files     */
  /* whose header might also start with 0x100000L (yes, these exist).       */
  /*                                                                        */
  /* Very unfortunately, many TrueType fonts don't have these fields        */
- /* set correctly and we must ignore them to support them. An alternative  */
+ /* set correctly and we must ignore them to support them.  An alternative */
  /* way to check the font file is thus to:                                 */
  /*                                                                        */
  /* - check that `num_tables' is valid                                     */
  /* - look for a "head" table, check its size, and parse it to             */
- /*   see if its "magic" field is correctly set to                         */
+ /*   see if its "magic" field is correctly set                            */
  /*                                                                        */
- /* Voila, here comes robust though tolerant font format checking :-)      */
- /*                                                                        */
- /* When checking directory entries ignore the tables 'glyx' and 'locx'    */
- /* which are hacked-out versions of 'glyf' and 'loca' in some PostScript  */
+ /* When checking directory entries, ignore the tables `glyx' and `locx'   */
+ /* which are hacked-out versions of `glyf' and `loca' in some PostScript  */
  /* Type 42 fonts, and will generally be invalid.                          */
  /*                                                                        */
- static FT_Error
-  sfnt_dir_check( FT_Stream    stream,
-                  FT_ULong     offset,
-                  FT_UInt      num_tables )
+  static FT_Error
+  sfnt_dir_check( FT_Stream  stream,
+                  FT_ULong   offset,
+                  FT_UInt    num_tables )
    {
-    FT_Error  error;
-    FT_UInt   nn, has_head = 0;
-	const FT_ULong glyx_tag = FT_MAKE_TAG('g','l','y','x');
-	const FT_ULong locx_tag = FT_MAKE_TAG('l','o','c','x');
+    FT_Error        error;
+    FT_UInt         nn, has_head = 0;
+
+	const FT_ULong  glyx_tag = FT_MAKE_TAG('g','l','y','x');
+	const FT_ULong  locx_tag = FT_MAKE_TAG('l','o','c','x');
 
     static const FT_Frame_Field  sfnt_dir_entry_fields[] =
     {
@@ -176,10 +175,12 @@
       FT_FRAME_END
     };
 
+
     /* if 'num_tables' is 0, read the table count from the file */
     if ( num_tables == 0 )
     {
       FT_ULong  format_tag;
+
 
       if ( FT_STREAM_SEEK( offset )     ||
            FT_READ_ULONG ( format_tag ) ||
@@ -197,16 +198,18 @@
     {
       TT_TableRec  table;
 
+
       if ( FT_STREAM_READ_FIELDS( sfnt_dir_entry_fields, &table ) )
         goto Bad_Format;
 
       if ( offset + table.Offset + table.Length > stream->size &&
-		   table.Tag != glyx_tag && table.Tag != locx_tag )
+		   table.Tag != glyx_tag && table.Tag != locx_tag      )
         goto Bad_Format;
 
       if ( table.Tag == TTAG_head )
       {
         FT_UInt32  magic;
+
 
         has_head = 1;
 
@@ -231,6 +234,7 @@
     error = FT_Err_Unknown_File_Format;
     goto Exit;
   }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -263,10 +267,10 @@
   /*    values of `search_range', `entry_selector', and `range_shift'.     */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_SFNT_Header( TT_Face       face,
-                       FT_Stream     stream,
-                       FT_Long       face_index,
-                       SFNT_Header   sfnt )
+  TT_Load_SFNT_Header( TT_Face      face,
+                       FT_Stream    stream,
+                       FT_Long      face_index,
+                       SFNT_Header  sfnt )
   {
     FT_Error   error;
     FT_ULong   format_tag, offset;

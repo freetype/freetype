@@ -98,6 +98,7 @@
     FT_Pos       dist    = width;
     FT_Int       sign    = 0;
 
+
     if ( dist < 0 )
     {
       dist = -width;
@@ -111,6 +112,7 @@
     {
       FT_Pos  delta = dist - globals->stds[vertical];
 
+
       if ( delta < 0 )
         delta = -delta;
 
@@ -121,27 +123,25 @@
           dist = 32;
       }
 
+      if ( dist < 3 * 64 )
       {
-        if ( dist < 3*64 )
-        {
-          delta = (dist & 63);
-          dist &= -64;
+        delta = ( dist & 63 );
+        dist &= -64;
 
-          if ( delta < 10 )
-            dist += delta;
+        if ( delta < 10 )
+          dist += delta;
 
-          else if ( delta < 32 )
-            dist += 10;
+        else if ( delta < 32 )
+          dist += 10;
 
-          else if ( delta < 54 )
-            dist += 54;
+        else if ( delta < 54 )
+          dist += 54;
 
-          else
-            dist += delta;
-        }
         else
-          dist = (dist+32) & -64;
+          dist += delta;
       }
+      else
+        dist = ( dist + 32 ) & -64;
     }
 #else
     if ( vertical )
@@ -199,7 +199,8 @@
                         AH_Edge*    stem_edge,
                         int         vertical )
   {
-    FT_Pos       dist    = stem_edge->opos - base_edge->opos;
+    FT_Pos  dist = stem_edge->opos - base_edge->opos;
+
 
     stem_edge->pos = base_edge->pos +
                      ah_compute_stem_width( hinter, vertical, dist );
@@ -348,12 +349,12 @@
 
         /* now, align the stem */
 
-        /* this should not happen, but it's better to be safe.. */
+        /* this should not happen, but it's better to be safe. */
         if ( edge2->blue_edge || edge2 < edge )
         {
 
 #if 0
-          printf( "strange blue alignement, edge %d to %d\n",
+          printf( "strange blue alignment, edge %d to %d\n",
                   edge - edges, edge2 - edges );
 #endif
 
@@ -363,7 +364,10 @@
         }
 
         {
+#if 0
           FT_Bool  min = 0;
+#endif
+
 
           if ( !anchor )
           {
@@ -382,17 +386,17 @@
 
             org_pos    = anchor->pos + (edge->opos - anchor->opos);
             org_len    = edge2->opos - edge->opos;
-            org_center = org_pos + (org_len >> 1);
+            org_center = org_pos + ( org_len >> 1 );
 
             cur_len    = ah_compute_stem_width( hinter, dimension, org_len );
 
             cur_pos1   = ( org_pos + 32 ) & -64;
-            delta1     = ( cur_pos1 + (cur_len >> 1) - org_center );
+            delta1     = ( cur_pos1 + ( cur_len >> 1 ) - org_center );
             if ( delta1 < 0 )
               delta1 = -delta1;
 
-            cur_pos2   = (( org_pos + org_len + 32 ) & -64) - cur_len;
-            delta2     = ( cur_pos2 + (cur_len >> 1) - org_center );
+            cur_pos2   = ( ( org_pos + org_len + 32 ) & -64 ) - cur_len;
+            delta2     = ( cur_pos2 + ( cur_len >> 1 ) - org_center );
             if ( delta2 < 0 )
               delta2 = -delta2;
 
@@ -434,9 +438,7 @@
           continue;
 
         if ( edge->serif )
-        {
           ah_align_serif_edge( hinter, edge->serif, edge, dimension );
-        }
         else if ( !anchor )
         {
           edge->pos = ( edge->opos + 32 ) & -64;

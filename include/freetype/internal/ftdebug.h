@@ -15,8 +15,8 @@
 /*                                                                         */
 /*                                                                         */
 /*  IMPORTANT: A description of FreeType's debugging support can be        */
-/*             found in "docs/DEBUG.TXT". Read it if you need to use       */
-/*             or understand this code.                                    */
+/*             found in "docs/DEBUG.TXT".  Read it if you need to use or   */
+/*             understand this code.                                       */
 /*                                                                         */
 /***************************************************************************/
 

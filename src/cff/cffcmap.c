@@ -12,10 +12,10 @@
   FT_CALLBACK_DEF( FT_Error )
   cff_cmap_encoding_init( CFF_CMapStd  cmap )
   {
-    TT_Face          face     = (TT_Face)FT_CMAP_FACE( cmap );
-    CFF_Font         cff      = face->extra.data;
-    CFF_Encoding     encoding = &cff->encoding;
-    PSNames_Service  psnames  = cff->psnames;
+    TT_Face       face     = (TT_Face)FT_CMAP_FACE( cmap );
+    CFF_Font      cff      = face->extra.data;
+    CFF_Encoding  encoding = &cff->encoding;
+
 
     cmap->count = encoding->count;
     cmap->gids  = encoding->codes;

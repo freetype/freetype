@@ -983,14 +983,14 @@
               if ( max > seg2->max_coord )
                 max = seg2->max_coord;
 
-              len   = max - min;
+              len = max - min;
               if ( len >= 8 )
               {
-                dist  = seg2->pos - seg1->pos;
+                dist = seg2->pos - seg1->pos;
                 if ( dist < 0 )
                   dist = -dist;
   
-                score = dist + 3000/len;
+                score = dist + 3000 / len;
   
                 if ( score < best_score )
                 {
@@ -1008,7 +1008,6 @@
 
           best_segment->num_linked++;
         }
-
 
       } /* edges 1 */
 

@@ -537,7 +537,7 @@
       if ( delta < -blues->blue_fuzz )
         break;
 
-      if ( stem_top <= zone->org_top + blues->blue_fuzz)
+      if ( stem_top <= zone->org_top + blues->blue_fuzz )
       {
         if ( no_shoots || delta <= blues->blue_threshold )
         {

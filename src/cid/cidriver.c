@@ -90,23 +90,23 @@
     sizeof( CID_SizeRec ),
     sizeof( CID_GlyphSlotRec ),
 
-    (FT_Face_InitFunc)        CID_Face_Init,
-    (FT_Face_DoneFunc)        CID_Face_Done,
+    (FT_Face_InitFunc)       CID_Face_Init,
+    (FT_Face_DoneFunc)       CID_Face_Done,
 
-    (FT_Size_InitFunc)        CID_Size_Init,
-    (FT_Size_DoneFunc)        CID_Size_Done,
-    (FT_Slot_InitFunc)        CID_GlyphSlot_Init,
-    (FT_Slot_DoneFunc)        CID_GlyphSlot_Done,
+    (FT_Size_InitFunc)       CID_Size_Init,
+    (FT_Size_DoneFunc)       CID_Size_Done,
+    (FT_Slot_InitFunc)       CID_GlyphSlot_Init,
+    (FT_Slot_DoneFunc)       CID_GlyphSlot_Done,
 
-    (FT_Size_ResetPointsFunc) CID_Size_Reset,
-    (FT_Size_ResetPixelsFunc) CID_Size_Reset,
+    (FT_Size_ResetPointsFunc)CID_Size_Reset,
+    (FT_Size_ResetPixelsFunc)CID_Size_Reset,
 
-    (FT_Slot_LoadFunc)        CID_Load_Glyph,
+    (FT_Slot_LoadFunc)       CID_Load_Glyph,
 
-    (FT_Face_GetKerningFunc)  0,
-    (FT_Face_AttachFunc)      0,
+    (FT_Face_GetKerningFunc) 0,
+    (FT_Face_AttachFunc)     0,
 
-    (FT_Face_GetAdvancesFunc) 0,
+    (FT_Face_GetAdvancesFunc)0,
   };
 
 

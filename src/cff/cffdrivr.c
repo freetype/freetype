@@ -399,21 +399,21 @@
     sizeof( FT_SizeRec ),
     sizeof( CFF_GlyphSlotRec ),
 
-    (FT_Face_InitFunc)        cff_face_init,
-    (FT_Face_DoneFunc)        cff_face_done,
-    (FT_Size_InitFunc)        cff_size_init,
-    (FT_Size_DoneFunc)        cff_size_done,
-    (FT_Slot_InitFunc)        cff_slot_init,
-    (FT_Slot_DoneFunc)        cff_slot_done,
+    (FT_Face_InitFunc)       cff_face_init,
+    (FT_Face_DoneFunc)       cff_face_done,
+    (FT_Size_InitFunc)       cff_size_init,
+    (FT_Size_DoneFunc)       cff_size_done,
+    (FT_Slot_InitFunc)       cff_slot_init,
+    (FT_Slot_DoneFunc)       cff_slot_done,
 
-    (FT_Size_ResetPointsFunc) cff_size_reset,
-    (FT_Size_ResetPixelsFunc) cff_size_reset,
+    (FT_Size_ResetPointsFunc)cff_size_reset,
+    (FT_Size_ResetPixelsFunc)cff_size_reset,
 
-    (FT_Slot_LoadFunc)        Load_Glyph,
+    (FT_Slot_LoadFunc)       Load_Glyph,
 
-    (FT_Face_GetKerningFunc)  Get_Kerning,
-    (FT_Face_AttachFunc)      0,
-    (FT_Face_GetAdvancesFunc) 0,
+    (FT_Face_GetKerningFunc) Get_Kerning,
+    (FT_Face_AttachFunc)     0,
+    (FT_Face_GetAdvancesFunc)0,
   };
 
 

@@ -179,15 +179,16 @@ FT_BEGIN_HEADER
   /*    FT_Angle_Diff                                                      */
   /*                                                                       */
   /* @description:                                                         */
-  /*    Returns the difference between two angles. The result is always    */
-  /*    constrained to the ]-PI..PI] interval                              */
+  /*    Return the difference between two angles.  The result is always    */
+  /*    constrained to the ]-PI..PI] interval.                             */
   /*                                                                       */
   /* @input:                                                               */
-  /*    angle1 :: first angle                                              */
-  /*    angle2 :: second angle                                             */
+  /*    angle1 :: First angle.                                             */
+  /*                                                                       */
+  /*    angle2 :: Second angle.                                            */
   /*                                                                       */
   /* @return:                                                              */
-  /*    contrainted value of 'value2-value1'                               */
+  /*    Contrainted value of `value2-value1'.                              */
   /*                                                                       */
   FT_EXPORT( FT_Angle )
   FT_Angle_Diff( FT_Angle  angle1,
