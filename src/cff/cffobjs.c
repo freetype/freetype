@@ -387,11 +387,15 @@
           root->num_glyphs = cff->charstrings_index.count;
 
         /* set global bbox, as well as EM size */
-        root->units_per_EM = 1000;
         root->bbox         = dict->font_bbox;
         root->ascender     = (FT_Short)root->bbox.yMax;
         root->descender    = (FT_Short)root->bbox.yMin;
         root->height       = ( ( root->ascender - root->descender ) * 12 ) / 10;
+
+        if ( dict->units_per_em )
+          root->units_per_EM = dict->units_per_em;
+        else
+          root->units_per_EM = 1000;
 
         /* retrieve font family & style name */
         root->family_name  = CFF_Get_Name( &cff->name_index, face_index );
