@@ -1,5 +1,10 @@
 2003-01-08  David Turner  <david@freetype.org>
 
+        * src/base/ftobjs.c (find_unicode_charmap): fixed the error code
+        returned when the font doesn't contain a Unicode charmap. This
+        allows FT2 to load "symbol.ttf" and a few others correctly since
+        the last release
+
         * Jamrules, Jamfile, Jamfile.in, src/*/Jamfile: small changes to
         support the compilation of FreeType 2 as part of larger projects with
         their own configuration options (only with Jam)
