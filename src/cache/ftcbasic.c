@@ -57,15 +57,7 @@
                          FTC_BasicQuery    query,
                          FTC_Cache         cache )
   {
-    ftc_family_init( FTC_FAMILY( family ), cache );
-    family->attrs = query->attrs;
-    return 0;
-  }
-
-  static FT_Error
-  ftc_basic_family_reset( FTC_BasicFamily  family,
-                          FTC_BasicQuery   query )
-  {
+    FTC_Family_Init( FTC_FAMILY( family ), cache );
     family->attrs = query->attrs;
     return 0;
   }
@@ -188,7 +180,7 @@
       sizeof( FTC_BasicFamilyRec ),
       (FTC_MruNode_CompareFunc)  ftc_basic_family_compare,
       (FTC_MruNode_InitFunc)     ftc_basic_family_init,
-      (FTC_MruNode_ResetFunc)    ftc_basic_family_reset,
+      (FTC_MruNode_ResetFunc)    NULL,
       (FTC_MruNode_DoneFunc)     NULL
     },
     (FTC_IFamily_LoadGlyphFunc)  ftc_basic_family_load_glyph
@@ -290,7 +282,7 @@
       sizeof( FTC_BasicFamilyRec ),
       (FTC_MruNode_CompareFunc)  ftc_basic_family_compare,
       (FTC_MruNode_InitFunc)     ftc_basic_family_init,
-      (FTC_MruNode_ResetFunc)    ftc_basic_family_reset,
+      (FTC_MruNode_ResetFunc)    NULL,
       (FTC_MruNode_DoneFunc)     NULL
     },
     (FTC_SFamily_GetCountFunc)   ftc_basic_family_get_count,

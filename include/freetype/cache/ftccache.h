@@ -19,7 +19,7 @@
 #ifndef __FTCCACHE_H__
 #define __FTCCACHE_H__
 
-
+#include FT_CACHE_INTERNAL_MRU_H
 
 FT_BEGIN_HEADER
 
@@ -52,12 +52,11 @@ FT_BEGIN_HEADER
   /* structure size should be 20 bytes on 32-bits machines */
   typedef struct  FTC_NodeRec_
   {
-    FTC_Node   mru_next;     /* circular mru list pointer           */
-    FTC_Node   mru_prev;     /* circular mru list pointer           */
-    FTC_Node   link;         /* used for hashing                    */
-    FT_UInt32  hash;         /* used for hashing too                */
-    FT_UShort  cache_index;  /* index of cache the node belongs to  */
-    FT_Short   ref_count;    /* reference count for this node       */
+    FTC_MruNodeRec  mru;          /* circular mru list pointer           */
+    FTC_Node        link;         /* used for hashing                    */
+    FT_UInt32       hash;         /* used for hashing too                */
+    FT_UShort       cache_index;  /* index of cache the node belongs to  */
+    FT_Short        ref_count;    /* reference count for this node       */
 
   } FTC_NodeRec;
 
@@ -65,6 +64,8 @@ FT_BEGIN_HEADER
 #define FTC_NODE( x )    ( (FTC_Node)(x) )
 #define FTC_NODE_P( x )  ( (FTC_Node*)(x) )
 
+#define FTC_NODE__MRU_NEXT(x)  FTC_NODE( (x)->mru.next )
+#define FTC_NODE__MRU_PREV(x)  FTC_NODE( (x)->mru.prev )
 
   /*************************************************************************/
   /*                                                                       */

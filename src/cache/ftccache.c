@@ -29,7 +29,7 @@
 #define FTC_HASH_SUB_LOAD  ( FTC_HASH_MAX_LOAD - FTC_HASH_MIN_LOAD )
 
 /* this one _must_ be a power of 2! */
-#define FTC_HASH_INITIAL_SIZE  8
+#define FTC_HASH_INITIAL_SIZE  512
 
 
   /*************************************************************************/
@@ -45,31 +45,7 @@
   ftc_node_mru_link( FTC_Node     node,
                      FTC_Manager  manager )
   {
-    FTC_Node  first = manager->nodes_list;
-
-
-    if ( first )
-    {
-      FTC_Node  last = first->mru_prev;
-
-
-      FT_ASSERT( last->mru_next == first );
-
-      node->mru_prev = last;
-      node->mru_next = first;
-
-      last->mru_next  = node;
-      first->mru_prev = node;
-    }
-    else
-    {
-      FT_ASSERT( manager->num_nodes == 0 );
-
-      node->mru_next = node;
-      node->mru_prev = node;
-    }
-
-    manager->nodes_list = node;
+    FTC_MruNode_Prepend( (FTC_MruNode*)&manager->nodes_list, (FTC_MruNode)node );
     manager->num_nodes++;
   }
 
@@ -79,29 +55,7 @@
   ftc_node_mru_unlink( FTC_Node     node,
                        FTC_Manager  manager )
   {
-    FTC_Node  first = manager->nodes_list;
-    FTC_Node  prev  = node->mru_prev;
-    FTC_Node  next  = node->mru_next;
-
-
-    FT_ASSERT( first != NULL && manager->num_nodes > 0 );
-    FT_ASSERT( next->mru_prev == node );
-    FT_ASSERT( prev->mru_next == node );
-
-    next->mru_prev = prev;
-    prev->mru_next = next;
-
-    if ( node == first )
-    {
-      /* this is the last node in the list; update its head pointer */
-      if ( node == next )
-        manager->nodes_list = NULL;
-      else
-        manager->nodes_list = next;
-    }
-
-    node->mru_next = NULL;
-    node->mru_prev = NULL;
+    FTC_MruNode_Remove( (FTC_MruNode*)&manager->nodes_list, (FTC_MruNode)node );
     manager->num_nodes--;
   }
 
@@ -111,27 +65,7 @@
   ftc_node_mru_up( FTC_Node     node,
                    FTC_Manager  manager )
   {
-    FTC_Node  first = manager->nodes_list;
-
-
-    if ( node != first )
-    {
-      FTC_Node  prev = node->mru_prev;
-      FTC_Node  next = node->mru_next;
-      FTC_Node  last;
-
-
-      prev->mru_next = next;
-      next->mru_prev = prev;
-
-      last            = first->mru_prev;
-      node->mru_next  = first;
-      node->mru_prev  = last;
-      first->mru_prev = node;
-      last->mru_next  = node;
-
-      manager->nodes_list = node;
-    }
+    FTC_MruNode_Up( (FTC_MruNode*)&manager->nodes_list, (FTC_MruNode)node );
   }
 
 
@@ -142,6 +76,9 @@
   static void
   ftc_cache_resize( FTC_Cache  cache )
   {
+#if 1
+    FT_UNUSED(cache);
+#else
     for (;;)
     {
       FTC_Node   node, *pnode;
@@ -236,6 +173,7 @@
       else /* the hash table is balanced */
         break;
     }
+#endif
   }
 
 
@@ -559,6 +497,10 @@
     }
 
   AddNode:
+    node->ref_count   = 0;
+    node->cache_index = (FT_UInt16) cache->index;
+    node->hash        = hash;
+
    /* don't assume that the cache has the same number of buckets, since
     * our allocation request might have triggered global cache flushing
     */
@@ -623,5 +565,6 @@
 
     ftc_cache_resize( cache );
   }
+
 
 /* END */

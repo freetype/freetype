@@ -54,12 +54,12 @@
    *
    *
    *  a typical FTC_GCache implementation must provide at least the following:
-   *  
+   *
    *  - FTC_GNode sub-class, e.g. MyNode, with relevant methods, i.e:
    *        my_node_new            ( must call FTC_GNode_Init )
    *        my_node_free           ( must call FTC_GNode_Done )
    *        my_node_compare        ( must call FTC_GNode_Compare )
-   *        my_node_remove_faceid  ( must call ftc_gnode_unselect in case 
+   *        my_node_remove_faceid  ( must call ftc_gnode_unselect in case
    *                                 of match )
    *
    *
@@ -130,13 +130,14 @@ FT_BEGIN_HEADER
   *
   *  families are implemented as MRU list nodes. They are reference-counted
   */
-  
+
   typedef struct  FTC_FamilyRec_
   {
-    FTC_MruNode       mrunode;
+    FTC_MruNodeRec    mrunode;
     FT_UInt           num_nodes;   /* current number of nodes in this family */
+    FTC_Cache         cache;
     FTC_MruListClass  clazz;
-  
+
   } FTC_FamilyRec, *FTC_Family;
 
 #define  FTC_FAMILY(x)    ( (FTC_Family)(x) )
@@ -166,15 +167,6 @@ FT_BEGIN_HEADER
 
 
 
-  /* each glyph node contains a 'chunk' of glyph items; */
-  /* translate a glyph index into a chunk index         */
-#define FTC_FAMILY_CHUNK( gfam, gindex )                  \
-          ( ( gindex ) / FTC_FAMILY( gfam )->item_count )
-
-  /* find a glyph index's chunk, and return its start index */
-#define FTC_FAMILY_START( gfam, gindex )       \
-          ( FTC_FAMILY_CHUNK( gfam, gindex ) * \
-            FTC_FAMILY( gfam )->item_count )
 
   /*************************************************************************/
   /*                                                                       */
@@ -208,6 +200,10 @@ FT_BEGIN_HEADER
   FTC_GNode_Done( FTC_GNode  node,
                   FTC_Cache      cache );
 
+
+  FT_EXPORT( void )
+  FTC_Family_Init( FTC_Family  family,
+                   FTC_Cache   cache );
 
   typedef struct FTC_GCacheRec_
   {
@@ -243,6 +239,7 @@ FT_BEGIN_HEADER
 #define  FTC_GCACHE_CLASS(x)  ((FTC_GCacheClass)(x))
 
 #define  FTC_CACHE__GCACHE_CLASS(x)  FTC_GCACHE_CLASS( FTC_CACHE(x)->org_class )
+#define  FTC_CACHE__FAMILY_CLASS(x)  ((FTC_MruListClass) FTC_CACHE__GCACHE_CLASS(x)->family_class)
 
 
  /* convenience function. use instead of FTC_Manager_Register_Cache */
@@ -259,7 +256,7 @@ FT_BEGIN_HEADER
                      FTC_Node    *anode );
 
   /* */
- 
+
 FT_END_HEADER
 
 
