@@ -4,6 +4,10 @@
         allocation bug that was due to un-careful renaming of the FT_SubGlyph
         type..
 
+        * src/base/ftdbgmem.c (ft_mem_table_destroy): fixed a small bug that
+        caused the library to crash with Electric Fence when memory debugging
+        is used..
+
         * renaming stream macros. Examples:
         
            FILE_Skip    => FT_STREAM_SKIP
