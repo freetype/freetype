@@ -149,7 +149,7 @@ THE SOFTWARE.
   }                      
 
 
-  FT_CALLBACK_TABLE const FT_CMap_ClassRec  pcf_cmap_class =
+  FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec  pcf_cmap_class =
   {
     sizeof( PCF_CMapRec ),
     (FT_CMap_InitFunc)       pcf_cmap_init,

@@ -157,7 +157,7 @@
       header->pixel_width = header->pixel_height;
 
     /* this is a FNT file/table, we now extract its frame */
-    if ( FT_STREAM_SEEK( font->offset )                           ||
+    if ( FT_STREAM_SEEK( font->offset )                         ||
          FT_FRAME_EXTRACT( header->file_size, font->fnt_frame ) )
       goto Exit;
 
@@ -225,7 +225,7 @@
 
         if ( FT_STREAM_SEEK( res_offset ) ||
              FT_FRAME_ENTER( ne_header.rname_tab_offset -
-                           ne_header.resource_tab_offset ) )
+                             ne_header.resource_tab_offset ) )
           goto Exit;
 
         size_shift = FT_GET_USHORT_LE();
@@ -349,15 +349,14 @@
   }
 
 
-  static FT_UInt32
+  static FT_UInt
   fnt_cmap_char_next( FT_CMap    cmap,
-                      FT_UInt32  char_code,
-                      FT_UInt   *agindex )
+                      FT_UInt32 *pchar_code )
   {
     FT_UInt    gindex = 0;
     FT_UInt32  result = 0;
+    FT_UInt32  char_code = *pchar_code + 1;
 
-    char_code ++;
     if ( char_code <= cmap->first )
     {
       result = cmap->first;
@@ -373,8 +372,8 @@
       }
     }
 
-    *agindex = gindex;
-    return result;
+    *pchar_code = result;
+    return gindex;
   }
 
   static FT_CMap_ClassRec  fnt_cmap_class_rec =
