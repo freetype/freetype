@@ -2331,7 +2331,7 @@ FT_BEGIN_HEADER
   /*    FT_RoundFix                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A very simple function used to round a 16.16 fixed number          */
+  /*    A very simple function used to round a 16.16 fixed number.         */
   /*                                                                       */
   /* <Input>                                                               */
   /*    a :: The number to be rounded.                                     */
@@ -2340,10 +2340,10 @@ FT_BEGIN_HEADER
   /*    The result of `(a + 0x8000) & -0x10000'.                           */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This function assumes that the target platform supports 32 bit     */
+  /*    This function assumes that the target platform supports 32-bit     */
   /*    signed integers.                                                   */
   /*                                                                       */
-  FT_EXPORT( FT_Fixed ) FT_RoundFix( FT_Fixed a );
+  FT_EXPORT( FT_Fixed )  FT_RoundFix( FT_Fixed  a );
 
 
   /*************************************************************************/
@@ -2353,7 +2353,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to compute the ceiling function of a   */
-  /*    16.16 fixed number                                                 */
+  /*    16.16 fixed number.                                                */
   /*                                                                       */
   /* <Input>                                                               */
   /*    a :: The number for which the ceiling function is to be computed.  */
@@ -2362,10 +2362,10 @@ FT_BEGIN_HEADER
   /*    The result of `(a + 0x10000 - 1) & -0x10000'.                      */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This function assumes that the target platform supports 32 bit     */
+  /*    This function assumes that the target platform supports 32-bit     */
   /*    signed integers.                                                   */
   /*                                                                       */
-  FT_EXPORT( FT_Fixed ) FT_CeilFix( FT_Fixed a );
+  FT_EXPORT( FT_Fixed )  FT_CeilFix( FT_Fixed  a );
 
 
   /*************************************************************************/
@@ -2375,7 +2375,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A very simple function used to compute the floor function of a     */
-  /*    16.16 fixed number                                                 */
+  /*    16.16 fixed number.                                                */
   /*                                                                       */
   /* <Input>                                                               */
   /*    a :: The number for which the floor function is to be computed.    */
@@ -2384,10 +2384,10 @@ FT_BEGIN_HEADER
   /*    The result of `a & -0x10000'.                                      */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This function assumes that the target platform supports 32 bit     */
+  /*    This function assumes that the target platform supports 32-bit     */
   /*    signed integers.                                                   */
   /*                                                                       */
-  FT_EXPORT( FT_Fixed ) FT_FloorFix( FT_Fixed a );
+  FT_EXPORT( FT_Fixed )  FT_FloorFix( FT_Fixed  a );
 
 
   /*************************************************************************/

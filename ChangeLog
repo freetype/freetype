@@ -1,29 +1,29 @@
+2001-03-11  Werner Lemberg  <wl@gnu.org>
+
+	* TODO: Updated.
+
 2001-03-10  Tom Kacvinsky  <tjk@ams.org>
 
 	* TODO: New file.
-	
+
 	* include/freetype/freetype.h: Added prototypes and notes for
 	three new functions: FT_RoundFix, FT_CeilFix, and FT_FloorFix.
-
 	* src/base/ftcalc.c (FT_RoundFix, FT_CeilFix, FT_FloorFix): Added
 	implementation code.
 
 	* src/cid/cidobjs.c (CID_Init_Face): Use calculated units_per_EM,
 	and if that is not available, default to 1000 units per EM.  Changed
 	assignment code for ascender and descender values.
-
-	* src/cid/cidload.c (parse_font_matrix):  Added units_per_EM
+	* src/cid/cidload.c (parse_font_matrix): Added units_per_EM
 	processing.
-
 	(parse_font_bbox): Changed to use FT_Fixed number handling.
 
 	* src/type1/t1objs.c (T1_Init_Face): Changed the assignment code
 	for ascender, descender, and max_advance_width.
-
-	* src/type1/t1load.c (parse_font_bbox):  Changed to use FT_Fixed
+	* src/type1/t1load.c (parse_font_bbox): Changed to use FT_Fixed
 	number handling.
 
-2001-03-10  Henrik Grubbström <grubba@roxen.com>
+2001-03-10  Henrik Grubbström  <grubba@roxen.com>
 
 	* src/*/*.c: Added many casts to make code more 64bit-safe.
 
