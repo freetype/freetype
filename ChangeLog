@@ -1,3 +1,11 @@
+2004-11-26  Jouk Jansen  <joukj@hrem.stm.tudelft.nl>
+
+	* vms_make.com: Include ftbbox.c.
+	Fix `ccopt'.
+	Handle `otvalid' module.
+	Update `vmslib.dat' default values.
+	Fixes to `libs.opt'.
+
 2004-11-23  Anders Kaseorg  <anders@kaseorg.com>
 
 	* src/base/ftoutln.c (FT_OrientationExtremumRec,
