@@ -50,16 +50,16 @@
 #undef FT_NEED_EXTERN_C
 
 
-#ifndef   FT_ERRORDEF
+#ifndef FT_ERRORDEF
 
-#  define FT_ERRORDEF( e, v, s )  e = v,
-#  define FT_ERROR_START_LIST     enum {
-#  define FT_ERROR_END_LIST       FT_Err_Max };
+#define FT_ERRORDEF( e, v, s )  e = v,
+#define FT_ERROR_START_LIST     enum {
+#define FT_ERROR_END_LIST       FT_Err_Max };
 
-#  ifdef __cplusplus
-#    define FT_NEED_EXTERN_C
-     extern "C" {
-#  endif
+#ifdef __cplusplus
+#define FT_NEED_EXTERN_C
+  extern "C" {
+#endif
 
 #endif /* !FT_ERRORDEF */
 

@@ -139,44 +139,31 @@ FT_BEGIN_HEADER
   } FT_LruRec;
 
 
-  FT_EXPORT( FT_Error )
-  FT_Lru_New( const FT_Lru_Class*  clazz,
-              FT_UInt              max_elements,
-              FT_Pointer           user_data,
-              FT_Memory            memory,
-              FT_Bool              pre_alloc,
-              FT_Lru              *anlru );
+  FT_EXPORT( FT_Error )  FT_Lru_New( const FT_Lru_Class*  clazz,
+                                     FT_UInt              max_elements,
+                                     FT_Pointer           user_data,
+                                     FT_Memory            memory,
+                                     FT_Bool              pre_alloc,
+                                     FT_Lru              *anlru );
 
+  FT_EXPORT( void )      FT_Lru_Reset( FT_Lru  lru );
 
-  FT_EXPORT( void )
-  FT_Lru_Reset( FT_Lru  lru );
+  FT_EXPORT( void )      FT_Lru_Done ( FT_Lru  lru );
 
+  FT_EXPORT( FT_Error )  FT_Lru_Lookup_Node( FT_Lru        lru,
+                                             FT_LruKey     key,
+                                             FT_LruNode   *anode );
 
-  FT_EXPORT( void )
-  FT_Lru_Done ( FT_Lru  lru );
+  FT_EXPORT( FT_Error )  FT_Lru_Lookup( FT_Lru       lru,
+                                        FT_LruKey    key,
+                                        FT_Pointer  *anobject );
 
-
-  FT_EXPORT( FT_Error )
-  FT_Lru_Lookup_Node( FT_Lru        lru,
-                      FT_LruKey     key,
-                      FT_LruNode   *anode );
-
-
-  FT_EXPORT( FT_Error )
-  FT_Lru_Lookup( FT_Lru       lru,
-                 FT_LruKey    key,
-                 FT_Pointer  *anobject );
-
-
-  FT_EXPORT( void )
-  FT_Lru_Remove_Node( FT_Lru      lru,
-                      FT_LruNode  node );
+  FT_EXPORT( void )      FT_Lru_Remove_Node( FT_Lru      lru,
+                                             FT_LruNode  node );
 		      
-
-  FT_EXPORT( void )
-  FT_Lru_Remove_Selection( FT_Lru           lru,
-                           FT_Lru_Selector  selector,
-                           FT_Pointer       data );
+  FT_EXPORT( void )      FT_Lru_Remove_Selection( FT_Lru           lru,
+                                                  FT_Lru_Selector  selector,
+                                                  FT_Pointer       data );
 
 FT_END_HEADER
 

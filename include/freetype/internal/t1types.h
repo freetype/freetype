@@ -49,7 +49,7 @@ FT_BEGIN_HEADER
   /*    T1_Encoding                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A structure modeling a custom encoding                             */
+  /*    A structure modeling a custom encoding.                            */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    num_chars  :: The number of character codes in the encoding.       */

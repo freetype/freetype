@@ -89,7 +89,7 @@ ifeq ($(PLATFORM),ansi)
       mingw32: setup
     endif
 
-    ifneq ($(findstring bcc32,$(MAKECMDGOALS)),)         # Borland C++
+    ifneq ($(findstring bcc32,$(MAKECMDGOALS)),)       # Borland C++
       CONFIG_FILE := w32-bcc.mk
       SEP         := $(BACKSLASH)
       CC          := bcc32

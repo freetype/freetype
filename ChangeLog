@@ -1,27 +1,44 @@
+2000-12-01  Werner Lemberg  <wl@gnu.org>
+
+	* INSTALL: Revised.
+	* builds/compiler/bcc-dev.mk, builds/compiler/visualage.mk,
+	builds/compiler/bcc.mk, builds/win32/w32-bcc.mk,
+	builds/win32/w32-bccd.mk: Revised.
+	* include/freetype/config/ftbuild.h,
+	include/freetype/internal/internal.h: Revised.
+	* include/freetype/ftimage.h: Updated to new header inclusion scheme.
+
+2000-11-30  Werner Lemberg  <wl@gnu.org>
+
+	* builds/toplevel.mk (.PHONY): Adding `distclean'.
+	* builds/unix/detect.mk (.PHONY): Adding `devel', `unix', `lcc',
+	`setup'.
+
 2000-11-30  David Turner  <david.turner@freetype.ogr>
 
-	* INSTALL: slightly updated the quick starter documentation to
-	include IDE compilation, prevent agains BSD Make, and specify
-	"make setup" instead of a single "make" for build configuration.
+	* INSTALL: Slightly updated the quick starter documentation to
+	include IDE compilation, prevent against BSD Make, and specify "make
+	setup" instead of a single "make" for build configuration.
 
-	* include/config/ftbuild.h, include/internal/internal.h: added
-	a new configuration file used to determine where are all public,
-	configuration and internal header files for FreeType 2. I also
-	modified all headers under "include/freetype" to reflect this
-	change. Note that we still need to change the library source 
-	files themselves though..
+	* include/config/ftbuild.h, include/internal/internal.h: Added new
+	configuration files used to determine the location of all public,
+	configuration, and internal header files for FreeType 2.  Modified
+	all headers under "include/freetype" to reflect this change.  Note
+	that we still need to change the library source files themselves
+	though.
 
 	* builds/compiler/bcc.mk, builds/compiler/bcc-dev.mk,
 	builds/win32/w32-bcc.mk, builds/win32/w32-bccd.mk,
-	builds/win32/detect.mk: added new files to support compilation with
-	the free Borland C++ command-line compiler. Modified the detection
-	rules to recognize the new "bcc32" target in "make setup bcc32"
+	builds/win32/detect.mk: Added new files to support compilation with
+	the free Borland C++ command-line compiler.  Modified the detection
+	rules to recognize the new "bcc32" target in "make setup bcc32".
 
 	* src/sfnt/ttcmap.c, src/sfnt/ttpost.c, src/sfnt/ttsbit.c,
-	src/truetype/ttobjs.c, src/truetype/ttgload.c, src/truetype/ttinterp.c:
-	fixed a few comparisons that Borland C++ didn't really like. Basically,
-	this compiler complains when a FT_UInt is compared to a FT_UShort
-	(apparently, it promotes the UShort to an Int in these cases)
+	src/truetype/ttobjs.c, src/truetype/ttgload.c,
+	src/truetype/ttinterp.c: Fixed a few comparisons that Borland C++
+	didn't really like.  Basically, this compiler complains when FT_UInt
+	is compared to FT_UShort (apparently, it promotes `UShort' to `Int'
+	in these cases).
 
 2000-11-30  Tom Kacvinsky  <tjk@ams.org>
 
