@@ -576,13 +576,13 @@
 
       /* count the number of map points */
       {
-        FT_Byte*  p     = token->start;
+        FT_Byte*  ptr   = token->start;
         FT_Byte*  limit = token->limit;
 
 
         num_points = 0;
-        for ( ; p < limit; p++ )
-          if ( p[0] == '[' )
+        for ( ; ptr < limit; ptr++ )
+          if ( ptr[0] == '[' )
             num_points++;
       }
       if ( num_points <= 0 || num_points > T1_MAX_MM_MAP_POINTS )
@@ -1692,7 +1692,7 @@
       for ( ; charcode < loader.encoding_table.num_elems; charcode++ )
       {
         type1->encoding.char_index[charcode] = 0;
-        type1->encoding.char_name [charcode] = ".notdef";
+        type1->encoding.char_name [charcode] = (char *)".notdef";
 
         char_name = loader.encoding_table.elements[charcode];
         if ( char_name )

@@ -68,6 +68,9 @@ if test "$ac_cv_func_mmap_fixed_mapped" != yes; then
   FTSYS_SRC='$(BASE_)ftsystem.c'
 else
   FTSYS_SRC='$(BUILD)/ftsystem.c'
+
+  FT_MUNMAP_DECL
+  FT_MUNMAP_PARAM
 fi
 AC_SUBST(FTSYS_SRC)
 

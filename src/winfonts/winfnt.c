@@ -347,7 +347,6 @@
     if ( error )
     {
       /* this didn't work, now try to load a single FNT font */
-      FT_Memory  memory = FT_FACE_MEMORY( face );
       FNT_Font*  font;
 
       if ( ALLOC( face->fonts, sizeof ( *face->fonts ) ) )
@@ -423,17 +422,17 @@
 
       root->family_name = (FT_String*)fonts->fnt_frame +
                           fonts->header.face_name_offset;
-      root->style_name  = "Regular";
+      root->style_name  = (char *)"Regular";
 
       if ( root->style_flags & FT_STYLE_FLAG_BOLD )
       {
         if ( root->style_flags & FT_STYLE_FLAG_ITALIC )
-          root->style_name = "Bold Italic";
+          root->style_name = (char *)"Bold Italic";
         else
-          root->style_name = "Bold";
+          root->style_name = (char *)"Bold";
       }
       else if ( root->style_flags & FT_STYLE_FLAG_ITALIC )
-        root->style_name = "Italic";
+        root->style_name = (char *)"Italic";
     }
 
   Fail:

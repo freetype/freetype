@@ -503,12 +503,11 @@
 
       while ( count > 0 )
       {
-        (void)READ_Fields( strike_start_fields, strike );
-
-        (void)READ_Fields( sbit_line_metrics_fields, &strike->hori );
-        (void)READ_Fields( sbit_line_metrics_fields, &strike->vert );
-
-        (void)READ_Fields( strike_end_fields, strike );
+        if ( READ_Fields( strike_start_fields, strike )             ||
+             READ_Fields( sbit_line_metrics_fields, &strike->hori ) ||
+             READ_Fields( sbit_line_metrics_fields, &strike->vert ) ||
+             READ_Fields( strike_end_fields, strike )               )
+          break;
 
         count--;
         strike++;
@@ -884,7 +883,8 @@
     case 7:
     case 9:
       /* variable big metrics */
-      (void)READ_Fields( sbit_metrics_fields, metrics );
+      if ( READ_Fields( sbit_metrics_fields, metrics ) )
+        goto Exit;
       break;
 
     case 5:

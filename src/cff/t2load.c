@@ -126,7 +126,8 @@
       else
       {
         /* skip the data */
-        (void)FILE_Skip( data_size );
+        if ( FILE_Skip( data_size ) )
+          goto Exit;
       }
     }
 
@@ -609,7 +610,8 @@
     }
 
     /* skip the rest of the header */
-    (void)FILE_Skip( font->header_size - 4 );
+    if ( FILE_Skip( font->header_size - 4 ) )
+      goto Exit;
 
     /* read the name, top dict, string and global subrs index */
     error = t2_new_cff_index( &font->name_index, stream, 0 )       ||

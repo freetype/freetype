@@ -597,7 +597,6 @@
     {
       T2_Operator  op;
       FT_Byte      v;
-      FT_Byte      count;
 
 
       /********************************************************************/
@@ -841,7 +840,7 @@
           goto Syntax_Error;
 
         /* check arguments */
-        req_args = count = t2_argument_counts[op];
+        req_args = t2_argument_counts[op];
         if ( req_args & T2_COUNT_CHECK_WIDTH )
         {
           args = stack;
@@ -1534,8 +1533,8 @@
 
         case t2_op_roll:
           {
-            FT_Int count = (FT_Int)( args[0] >> 16 );
-            FT_Int index = (FT_Int)( args[1] >> 16 );
+            FT_Int  count = (FT_Int)( args[0] >> 16 );
+            FT_Int  index = (FT_Int)( args[1] >> 16 );
 
 
             FT_TRACE4(( " roll" ));
@@ -1551,8 +1550,8 @@
             {
               while ( index > 0 )
               {
-                FT_Fixed tmp = args[count - 1];
-                FT_Int   i;
+                FT_Fixed  tmp = args[count - 1];
+                FT_Int    i;
 
 
                 for ( i = count - 2; i >= 0; i-- )

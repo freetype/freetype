@@ -1,3 +1,31 @@
+## FreeType specific autoconf tests
+
+AC_DEFUN(FT_MUNMAP_DECL,
+[AC_MSG_CHECKING([whether munmap must be declared])
+AC_CACHE_VAL(ft_cv_munmap_decl,
+[AC_TRY_COMPILE([
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#include <sys/mman.h>],
+[char *(*pfn) = (char *(*))munmap],
+ft_cv_munmap_decl=no,
+ft_cv_munmap_decl=yes)])
+AC_MSG_RESULT($ft_cv_munmap_decl)
+if test $ft_cv_munmap_decl = yes; then
+	AC_DEFINE(NEED_MUNMAP_DECL)
+fi])
+
+AC_DEFUN(FT_MUNMAP_PARAM,
+[AC_MSG_CHECKING([for munmap's first parameter type])
+AC_TRY_COMPILE([
+#include <unistd.h>
+#include <sys/mman.h>
+int munmap(void *, size_t);],,
+  AC_MSG_RESULT([void *]);AC_DEFINE(MUNMAP_USES_VOIDP),
+  AC_MSG_RESULT([char *]))
+])
+
 ## libtool.m4 - Configure libtool for the target system. -*-Shell-script-*-
 ## Copyright (C) 1996-1999 Free Software Foundation, Inc.
 ## Originally by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996

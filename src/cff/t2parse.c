@@ -563,7 +563,6 @@
                 FT_Byte*   qcount = (FT_Byte*)parser->object +
                                       field->count_offset;
 
-                FT_Long    val;
                 FT_Byte**  data = parser->stack;
 
 

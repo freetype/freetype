@@ -27,7 +27,7 @@
 #include <string.h>
 
 
-  /* memory-mapping includes and definitions                            */
+  /* memory-mapping includes and definitions */
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -37,16 +37,26 @@
 #define MAP_FILE  0x00
 #endif
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The prototype for munmap() is not provided on SunOS.  This needs to   */
-  /* have a check added later to see if the GNU C library is being used.   */
-  /* If so, then this prototype is not needed.                             */
-  /*                                                                       */
-#if defined( __sun__ ) && !defined( SVR4 ) && !defined( __SVR4 )
-  extern int  munmap( caddr_t  addr,
-                      int      len );
+#ifdef MUNMAP_USES_VOIDP
+#define MUNMAP_ARG_CAST  void *
+#else
+#define MUNMAP_ARG_CAST  char *
 #endif
+
+#ifdef NEED_MUNMAP_DECL
+
+#ifdef __cplusplus
+  extern "C"
+#else
+  extern
+#endif
+  int  munmap( char*  addr,
+               int    len );
+
+#define MUNMAP_ARG_CAST  char *
+
+#endif /* NEED_DECLARATION_MUNMAP */
+
 
 #include <sys/stat.h>
 
@@ -182,7 +192,7 @@
   static
   void  ft_close_stream( FT_Stream  stream )
   {
-    munmap ( stream->descriptor.pointer, stream->size );
+    munmap( (MUNMAP_ARG_CAST)stream->descriptor.pointer, stream->size );
         
     stream->descriptor.pointer = NULL;
     stream->size               = 0;
@@ -235,12 +245,12 @@
       
     stream->size = stat_buf.st_size;
     stream->pos  = 0;
-    stream->base = (unsigned char*)mmap( NULL,
-                                         stream->size,
-                                         PROT_READ,
-                                         MAP_FILE | MAP_PRIVATE,
-                                         file,
-                                         0 );
+    stream->base = (unsigned char *)mmap( NULL,
+                                          stream->size,
+                                          PROT_READ,
+                                          MAP_FILE | MAP_PRIVATE,
+                                          file,
+                                          0 );
 
     if ( (long)stream->base == -1 )
     {
