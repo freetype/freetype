@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2003 by
+# Copyright 1996-2000, 2003, 2004 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -45,11 +45,12 @@ ifeq ($(PLATFORM),ansi)
       endif
 
       # We also try to recognize Dos 7.x without Windows 9X launched.
-      # See builds\win32\detect.mk for explanations about the logic.
+      # See builds/win32/detect.mk for explanations about the logic.
+      #
       ifeq ($(is_dos),)
         ifdef winbootdir
 #ifneq ($(OS),Windows_NT)
-          # If Win32 is available, do not trigger this test
+          # If win32 is available, do not trigger this test.
           ifndef windir
             is_dos := $(findstring Windows,$(strip $(shell ver)))
           endif
@@ -122,8 +123,8 @@ ifeq ($(PLATFORM),dos)
     SEP    := $(BACKSLASH)
     DELETE := del
 
-    # Setting COPY is a bit trickier. We can be running DJGPP on some
-    # Windows NT derivatives, like XP. See builds\win32\detect.mk for
+    # Setting COPY is a bit trickier.  We can be running DJGPP on some
+    # Windows NT derivatives, like XP.  See builds/win32/detect.mk for
     # explanations why we need hacking here.
     #
     ifeq ($(OS),Windows_NT)
