@@ -124,9 +124,8 @@
           } while ( 0 )
 
 
-  EXPORT_DEF
-  void  FT_SetTraceLevel( FT_Trace  component,
-                          char      level );
+  EXPORT_DEF(void)  FT_SetTraceLevel( FT_Trace  component,
+                                      char      level );
 
 
 #elif defined( FT_DEBUG_LEVEL_ERROR )
@@ -170,10 +169,10 @@
           } while ( 0 )
 
   /* print a message */
-  extern void  FT_Message( const char*  fmt, ... );
+  EXPORT_DEF(void)  FT_Message( const char*  fmt, ... );
 
   /* print a message and exit */
-  extern void  FT_Panic  ( const char*  fmt, ... );
+  EXPORT_DEF(void)  FT_Panic  ( const char*  fmt, ... );
 
 #define FT_ERROR( varformat )  FT_Message##varformat
 

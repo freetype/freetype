@@ -52,7 +52,7 @@
  *
  *********************************************************************/
 
-  EXPORT_FUNC
+  LOCAL_FUNC
   void  T1_Init_Builder( T1_Builder*             builder,
                          T1_Face                 face,
                          T1_Size                 size,
@@ -113,7 +113,7 @@
  *
  *********************************************************************/
 
-  EXPORT_FUNC
+  LOCAL_FUNC
   void T1_Done_Builder( T1_Builder*  builder )
   {
     T1_GlyphSlot  glyph = builder->glyph;
@@ -142,7 +142,7 @@
  *
  *********************************************************************/
 
-  EXPORT_FUNC
+  LOCAL_FUNC
   void  T1_Init_Decoder( T1_Decoder*             decoder,
                          const T1_Hinter_Funcs*  funcs )
   {
@@ -438,7 +438,7 @@
  *
  *********************************************************************/
 
-  EXPORT_FUNC
+  LOCAL_FUNC
   T1_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
                                    T1_Byte*     charstring_base,
                                    T1_Int       charstring_len,

@@ -19,7 +19,8 @@
  *  understand and accept it fully.                                          
  *                                                                           
  **************************************************************************/
-
+ 
+#include <freetype/config/ftconfig.h>
 #include <freetype/ftsystem.h>
 #include <freetype/fterrors.h>
 
@@ -172,9 +173,8 @@
   }
 
 
-  extern
-  int  FT_New_Stream( const char*  filepathname,
-                      FT_Stream    stream )
+  EXPORT_FUNC(int)  FT_New_Stream( const char*  filepathname,
+                                   FT_Stream    stream )
   {
     FILE*  file;
     
@@ -196,8 +196,7 @@
   }
 
 
-  extern
-  FT_Memory  FT_New_Memory( void )
+  EXPORT_FUNC(FT_Memory)  FT_New_Memory( void )
   {
     FT_Memory  memory;
     

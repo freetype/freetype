@@ -299,7 +299,7 @@
  *
  *********************************************************************/
 
-  EXPORT_DEF
+  LOCAL_DEF
   void  T1_Init_Builder( T1_Builder*             builder,
                          T1_Face                 face,
                          T1_Size                 size,
@@ -326,7 +326,7 @@
  *
  *********************************************************************/
 
-  EXPORT_DEF
+  LOCAL_DEF
   void T1_Done_Builder( T1_Builder*  builder );
 
 
@@ -349,7 +349,7 @@
  *
  *********************************************************************/
 
-  EXPORT_DEF
+  LOCAL_DEF
   void  T1_Init_Decoder( T1_Decoder*             decoder,
                          const T1_Hinter_Funcs*  funcs );
 
@@ -362,7 +362,7 @@
 
 
   /* This function is exported, because it is used by the T1Dump utility */
-  EXPORT_DEF
+  LOCAL_DEF
   T1_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
                                    T1_Byte*     charstring_base,
                                    T1_Int       charstring_len,

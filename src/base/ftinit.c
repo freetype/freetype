@@ -76,8 +76,7 @@ const FT_DriverInterface*  ft_default_drivers[] =
   /* <InOut>                                                               */
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
-  EXPORT_FUNC
-  void  FT_Default_Drivers( FT_Library  library )
+  EXPORT_FUNC(void)  FT_Default_Drivers( FT_Library  library )
   {
     FT_Error                   error;
     const FT_DriverInterface* *cur;
@@ -111,8 +110,7 @@ const FT_DriverInterface*  ft_default_drivers[] =
   /* <Return>                                                              */
   /*    FreeTyoe error code.  0 means success.                             */
   /*                                                                       */
-  EXPORT_FUNC
-  FT_Error  FT_Init_FreeType( FT_Library*  library )
+  EXPORT_FUNC(FT_Error)  FT_Init_FreeType( FT_Library*  library )
   {
     FT_Error   error;
     FT_Memory  memory;

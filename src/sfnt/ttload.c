@@ -50,7 +50,7 @@
   /* <Return>                                                              */
   /*    pointer to table directory entry. 0 if not found..                 */
   /*                                                                       */
-  EXPORT_FUNC
+  LOCAL_FUNC
   TT_Table*  TT_LookUp_Table( TT_Face   face,
                               TT_ULong  tag  )
   {
@@ -91,7 +91,7 @@
   /* <Return>                                                              */
   /*    pointer to table directory entry. 0 if not found..                 */
   /*                                                                       */
-  EXPORT_FUNC
+  LOCAL_FUNC
   TT_Error   TT_Goto_Table( TT_Face    face,
                             TT_ULong   tag,
                             FT_Stream  stream,

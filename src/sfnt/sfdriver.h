@@ -21,8 +21,7 @@
 
 #include <freetype/internal/ftdriver.h>
 
-  EXPORT_DEF
-  const FT_DriverInterface  sfnt_driver_interface;
+  EXPORT_VAR(const FT_DriverInterface)  sfnt_driver_interface;
 
 #endif /* SFDRIVER_H */
 

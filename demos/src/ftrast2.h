@@ -25,12 +25,11 @@
 extern "C" {
 #endif
 
-#ifndef EXPORT_DEF
-#define EXPORT_DEF  /* nothing */
+#ifndef EXPORT_VAR
+#define EXPORT_VAR(x)  extern x
 #endif
 
-  EXPORT_DEF
-  FT_Raster_Funcs   ft_black2_raster;
+  EXPORT_VAR(FT_Raster_Funcs)   ft_black2_raster;
 
 #ifdef __cplusplus
 }

@@ -32,7 +32,7 @@
 #endif
 
 
-  EXPORT_DEF
+  LOCAL_DEF
   TT_Table*  TT_LookUp_Table( TT_Face   face,
                               TT_ULong  tag );
 

@@ -55,12 +55,9 @@
   /* <Return>                                                              */
   /*    Error code.  0 means sucess.                                       */
   /*                                                                       */
-#if 1
-
-  EXPORT_FUNC
-  int  FT_Outline_Decompose( FT_Outline*        outline,
-                             FT_Outline_Funcs*  interface,
-                             void*              user )
+  EXPORT_FUNC(int)  FT_Outline_Decompose( FT_Outline*        outline,
+                                          FT_Outline_Funcs*  interface,
+                                          void*              user )
   {
 #undef SCALED
 #define SCALED( x )   ( ((x) << shift) - delta )
@@ -243,176 +240,6 @@
   Invalid_Outline:
     return -1;
   }
-#else
-  EXPORT_FUNC
-  int  FT_Outline_Decompose( FT_Outline*        outline,
-                             FT_Outline_Funcs*  interface,
-                             void*              user )
-  {
-    typedef enum  _phases
-    {
-      phase_point,
-      phase_conic,
-      phase_cubic,
-      phase_cubic2
-
-    } TPhase;
-
-    FT_Vector  v_first;
-    FT_Vector  v_last;
-    FT_Vector  v_control;
-    FT_Vector  v_start;
-
-    FT_Vector* point;
-    FT_Vector* limit;
-    char*      tags;
-
-    int    n;         /* index of contour in outline     */
-    int    first;     /* index of first point in contour */
-    int    error;
-    char   tag;       /* current point's state           */
-
-
-    first = 0;
-
-    for ( n = 0; n < outline->n_contours; n++ )
-    {
-      int  last;  /* index of last point in contour */
-
-      last  = outline->contours[n];
-      limit = outline->points + last;
-
-      v_first = outline->points[first];
-      v_last  = outline->points[last];
-
-      v_start = v_control = v_first;
-
-      point = outline->points + first;
-      tags  = outline->tags  + first;
-      tag   = FT_CURVE_TAG( tags[0] );
-
-      /* A contour cannot start with a cubic control point! */
-      if ( tag == FT_Curve_Tag_Cubic )
-        goto Invalid_Outline;
-
-      /* check first point to determine origin */
-      if ( tag == FT_Curve_Tag_Conic )
-      {
-        /* first point is conic control.  Yes, this happens. */
-        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_Curve_Tag_On )
-        {
-          /* start at last point if it is on the curve */
-          v_start = v_last;
-          limit--;
-        }
-        else
-        {
-          /* if both first and last points are conic,         */
-          /* start at their middle and record its position    */
-          /* for closure                                      */
-          v_start.x = ( v_start.x + v_last.x ) / 2;
-          v_start.y = ( v_start.y + v_last.y ) / 2;
-
-          v_last = v_start;
-        }
-        point--;
-        tags--;
-      }
-
-      error = interface->move_to( &v_start, user );
-      if (error) goto Exit;
-
-      while (point < limit)
-      {
-        point++;
-        tags++;
-  
-        tag = FT_CURVE_TAG( tags[0] );
-        switch (tag)
-        {
-          case FT_Curve_Tag_On:  /* emit a single line_to */
-            {
-              error = interface->line_to( point, user );
-              if (error) goto Exit;
-              continue;
-            }
-
-          
-          case FT_Curve_Tag_Conic:  /* consume conic arcs */
-            {
-              v_control = point[0];
-              
-            Do_Conic:
-              if (point < limit)
-              {
-                FT_Vector  v_middle;
-                
-                point++;
-                tags++;
-                tag = FT_CURVE_TAG( tags[0] );
-                
-                if (tag == FT_Curve_Tag_On)
-                {
-                  error = interface->conic_to( &v_control, point, user );
-                  if (error) goto Exit;
-                  continue;
-                }
-                
-                if (tag != FT_Curve_Tag_Conic)
-                  goto Invalid_Outline;
-  
-                v_middle.x = (v_control.x + point->x)/2;
-                v_middle.y = (v_control.y + point->y)/2;
-  
-                error = interface->conic_to( &v_control, &v_middle, user );
-                if (error) goto Exit;
-                
-                v_control = point[0];
-                goto Do_Conic;
-              }
-              
-              error = interface->conic_to( &v_control, &v_start, user );
-              goto Close;
-            }
-          
-          default:  /* FT_Curve_Tag_Cubic */
-            {
-              if ( point+1 > limit         ||
-                   FT_CURVE_TAG( tags[1] ) != FT_Curve_Tag_Cubic )
-                goto Invalid_Outline;
-                
-              point += 2;
-              tags  += 2;
-              
-              if (point <= limit)
-              {
-                error = interface->cubic_to( point-2, point-1, point, user );
-                if (error) goto Exit;
-                continue;
-              }
-              
-              error = interface->cubic_to( point-2, point-1, &v_start, user );
-              goto Close;
-            }
-        }
-      }
-
-      /* close the contour with a line segment */
-      error = interface->line_to( &v_start, user );
-      
-   Close:
-      if (error) goto Exit;
-      first = last+1;
-    }
-
-    return 0;
-  Exit:
-    return error;
-    
-  Invalid_Outline:
-    return -1;
-  }
-#endif
 
   /*************************************************************************/
   /*                                                                       */
@@ -448,11 +275,10 @@
   /*    code of this function, replacing allocations with `malloc()' if    */
   /*    you want to control where the objects go.                          */
   /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Outline_New( FT_Library   library,
-                            FT_UInt      numPoints,
-                            FT_Int       numContours,
-                            FT_Outline*  outline )
+  BASE_FUNC(FT_Error)  FT_Outline_New( FT_Library   library,
+                                       FT_UInt      numPoints,
+                                       FT_Int       numContours,
+                                       FT_Outline*  outline )
   {
     FT_Error   error;
     FT_Memory  memory;
@@ -512,9 +338,8 @@
   /*    of this function, replacing allocations with `malloc()' in your    */
   /*    application if you want something simpler.                         */
   /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Outline_Done( FT_Library   library,
-                             FT_Outline*  outline )
+  BASE_FUNC(FT_Error)  FT_Outline_Done( FT_Library   library,
+                                        FT_Outline*  outline )
   {
     FT_Memory  memory = library->memory;
 
@@ -561,9 +386,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  BASE_FUNC
-  void  FT_Outline_Get_CBox( FT_Outline*  outline,
-                             FT_BBox*     cbox )
+  BASE_FUNC(void)  FT_Outline_Get_CBox( FT_Outline*  outline,
+                                        FT_BBox*     cbox )
   {
     FT_Pos  xMin, yMin, xMax, yMax;
     
@@ -623,10 +447,9 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  BASE_FUNC
-  void  FT_Outline_Translate( FT_Outline*  outline,
-                              FT_Pos       xOffset,
-                              FT_Pos       yOffset )
+  BASE_FUNC(void)  FT_Outline_Translate( FT_Outline*  outline,
+                                         FT_Pos       xOffset,
+                                         FT_Pos       yOffset )
   {
     FT_UShort   n;
     FT_Vector*  vec = outline->points;
@@ -655,8 +478,7 @@
   /*    This functions toggles the bit flag ft_outline_reverse_fill in     */
   /*    the outline's "flags" field..                                      */
   /*                                                                       */
-  BASE_FUNC
-  void  FT_Outline_Reverse( FT_Outline*  outline )
+  BASE_FUNC(void)  FT_Outline_Reverse( FT_Outline*  outline )
   {
     FT_UShort  n;
     FT_Int     first, last;
@@ -714,8 +536,7 @@
   /* <Input>                                                               */
   /*    zone  :: pointer to the target glyph zone.                         */
   /*                                                                       */
-  BASE_FUNC 
-  void  FT_Done_GlyphZone( FT_GlyphZone*  zone )
+  BASE_FUNC(void)  FT_Done_GlyphZone( FT_GlyphZone*  zone )
   {
     FT_Memory  memory = zone->memory;
     
@@ -749,11 +570,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  BASE_FUNC 
-  FT_Error  FT_New_GlyphZone( FT_Memory      memory,
-                              FT_UShort      maxPoints,
-                              FT_Short       maxContours,
-                              FT_GlyphZone*  zone )
+  BASE_FUNC(FT_Error)  FT_New_GlyphZone( FT_Memory      memory,
+                                         FT_UShort      maxPoints,
+                                         FT_Short       maxContours,
+                                         FT_GlyphZone*  zone )
   {
     FT_Error      error;
 
@@ -796,10 +616,9 @@
   /*    maxContours :: The address of the zone's current capacity for      */
   /*                   contours.                                           */
   /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Update_GlyphZone( FT_GlyphZone*  zone,
-                                 FT_UShort      newPoints,
-                                 FT_Short       newContours )
+  BASE_FUNC(FT_Error)  FT_Update_GlyphZone( FT_GlyphZone*  zone,
+                                            FT_UShort      newPoints,
+                                            FT_Short       newContours )
   {
     FT_Error      error  = FT_Err_Ok;
     FT_Memory     memory = zone->memory;
@@ -856,10 +675,9 @@
   /*                                                                       */
   /*    It will use the raster correponding to the default glyph format.   */
   /*                                                                       */
-  EXPORT_FUNC
-  FT_Error  FT_Outline_Get_Bitmap( FT_Library   library,
-                                   FT_Outline*  outline,
-                                   FT_Bitmap*   map )
+  EXPORT_FUNC(FT_Error)  FT_Outline_Get_Bitmap( FT_Library   library,
+                                                FT_Outline*  outline,
+                                                FT_Bitmap*   map )
   {
     FT_Error          error;
     FT_Raster         raster;
@@ -912,10 +730,9 @@
   /*    scan converter is called, which means that the value you give it   */
   /*    is actually ignored..                                              */
   /*                                                                       */
-  EXPORT_FUNC
-  FT_Error  FT_Outline_Render( FT_Library        library,
-                               FT_Outline*       outline,
-                               FT_Raster_Params* params )
+  EXPORT_FUNC(FT_Error)  FT_Outline_Render( FT_Library        library,
+                                            FT_Outline*       outline,
+                                            FT_Raster_Params* params )
   {                               
     FT_Error         error;
     FT_Raster        raster;
@@ -968,9 +785,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Outline_Copy( FT_Outline*  source,
-                             FT_Outline*  target )
+  BASE_FUNC(FT_Error)  FT_Outline_Copy( FT_Outline*  source,
+                                        FT_Outline*  target )
   {
     FT_Int  is_owner;
     
@@ -1018,9 +834,8 @@
   /*    You can use FT_Outline_Translate() if you need to translate the    */
   /*    outline's points.                                                  */
   /*                                                                       */
-  BASE_FUNC
-  void  FT_Outline_Transform( FT_Outline*  outline,
-                              FT_Matrix*   matrix )
+  BASE_FUNC(void)  FT_Outline_Transform( FT_Outline*  outline,
+                                         FT_Matrix*   matrix )
   {
     FT_UShort   n;
     FT_Vector*  vec;
@@ -1061,9 +876,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  EXPORT_DEF
-  void  FT_Vector_Transform( FT_Vector*  vector,
-                             FT_Matrix*  matrix )
+  EXPORT_FUNC(void)  FT_Vector_Transform( FT_Vector*  vector,
+                                          FT_Matrix*  matrix )
   {
     FT_Pos xz, yz;
 
@@ -1095,9 +909,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  BASE_FUNC
-  void  FT_Matrix_Multiply( FT_Matrix*  a,
-                            FT_Matrix*  b )
+  BASE_FUNC(void)  FT_Matrix_Multiply( FT_Matrix*  a,
+                                       FT_Matrix*  b )
   {
     FT_Fixed  xx, xy, yx, yy;
 
@@ -1130,8 +943,7 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Matrix_Invert( FT_Matrix*  matrix )
+  BASE_FUNC(FT_Error)  FT_Matrix_Invert( FT_Matrix*  matrix )
   {
     FT_Pos  delta, xx, yy;
 

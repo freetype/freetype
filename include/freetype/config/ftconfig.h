@@ -165,19 +165,23 @@
 #endif
 
 #ifdef FT_MAKE_OPTION_SINGLE_LIBRARY_OBJECT
-#define  BASE_DEF    LOCAL_DEF
-#define  BASE_FUNC   LOCAL_FUNC
+#define  BASE_DEF(x)    static  x
+#define  BASE_FUNC(x)   static  x
 #else
-#define  BASE_DEF    extern
-#define  BASE_FUNC   /* nothing */
+#define  BASE_DEF(x)    extern   x
+#define  BASE_FUNC(x)   extern   x /* nothing */
 #endif
 
 #ifndef  EXPORT_DEF
-#define  EXPORT_DEF   extern
+#define  EXPORT_DEF(x)   extern  x
 #endif
 
 #ifndef  EXPORT_FUNC
-#define  EXPORT_FUNC  /* nothing */
+#define  EXPORT_FUNC(x)     extern  x
+#endif
+
+#ifndef  EXPORT_VAR
+#define  EXPORT_VAR(x)  extern x
 #endif
 
 #endif /* FTCONFIG_H */

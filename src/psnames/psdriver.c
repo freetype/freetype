@@ -222,7 +222,6 @@
   };
   
 
-  EXPORT_FUNC
   const FT_DriverInterface  psnames_driver_interface =
   {
     sizeof(FT_DriverRec),
@@ -239,7 +238,6 @@
 
 #else
 
-  EXPORT_FUNC
   const FT_DriverInterface  psnames_driver_interface =
   {
     0,

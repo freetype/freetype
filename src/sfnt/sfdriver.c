@@ -55,7 +55,6 @@
   };
   
 
-  EXPORT_FUNC
   const FT_DriverInterface  sfnt_driver_interface =
   {
     sizeof(FT_DriverRec),

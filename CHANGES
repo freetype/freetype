@@ -1,10 +1,46 @@
 LATEST CHANGES - 
 
+  - yet another massive grunt work. I've changed the definition of the
+    EXPORT_DEF, EXPORT_FUNC, BASE_DEF & BASE_FUNC macros. These now take
+    an argument, which is the function's return value type.
+    
+    This is necessary to compile FreeType as a DLL on Windows and OS/2.
+    Depending on the compiler used, a compiler-specific keyword like __export
+    or __system must be placed before (VisualC++) or after (BorlandC++)
+    the type..
+    
+    Of course, this needed a lot of changes throughout the source code
+    to make it compile again... All cleaned up now, apparently..
+
+    Note also that there is a new EXPORT_VAR macro defined to allow the
+    _declaration_ of an exportable public (constant) variable. This is the
+    case of the raster interfaces (see ftraster.h and ftgrays.h), as well
+    as each module's interface (see sfdriver.h, psdriver.h, etc..)
+
+  - new feature: it is now possible to pass extra parameters to font
+                 drivers when creating a new face object. For now, this
+                 capability is unused. It could however prove to be useful
+                 in a near future..
+
+      the FT_Open_Args structure was changes, as well as the internal
+      driver interface (the specific "init_face" module function has now
+      a different signature).
+
+  - updated the tutorial (not finished though).
+
+  - added the declaration of FT_New_Memory_Face in <freetype/freetype.h>, as
+    it was missing from the public header (the implementation was already
+    in "ftobjs.c").
+
+  - the file <freetype/fterrors.h> has been seriously updated in order to
+    allow the automatic generation of error message tables. See the comments
+    within it for more information.
+
   - major directory hierarchy re-organisation. This was done for two things:
   
       * first, to ease the "manual" compilation of the library by requiring
         at lot less include paths :-)
-        
+
       * second, to allow external programs to effectively access internal
         data fields. For example, this can be extremely useful if someone
         wants to write a font producer or a font manager on top of FreeType.

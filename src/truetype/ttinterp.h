@@ -314,8 +314,10 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  EXPORT_DEF
-  TT_ExecContext  TT_New_Context( TT_Face  face );
+  /*    This function is publicly exported because it is directly          */
+  /*    invoked by the TrueType debugger..                                 */
+  /*                                                                       */
+  EXPORT_DEF(TT_ExecContext)  TT_New_Context( TT_Face  face );
 
 
   /*************************************************************************/
@@ -335,7 +337,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  EXPORT_DEF
+  LOCAL_DEF
   TT_Error  TT_Done_Context( TT_ExecContext  exec );
 
 
@@ -381,7 +383,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  EXPORT_DEF
+  LOCAL_DEF
   TT_Error  TT_Load_Context( TT_ExecContext  exec,
                              TT_Face         face,
                              TT_Size         size );
@@ -456,8 +458,10 @@
   /* <Note>                                                                */
   /*    Only object manager and debugger should call this function.        */
   /*                                                                       */
-  EXPORT_DEF
-  TT_Error  TT_RunIns( TT_ExecContext  exec );
+  /*    This function is publicly exported because it is directly          */
+  /*    invoked by the TrueType debugger..                                 */
+  /*                                                                       */
+  EXPORT_DEF(TT_Error)  TT_RunIns( TT_ExecContext  exec );
 
 
 #ifdef __cplusplus

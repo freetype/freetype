@@ -403,7 +403,7 @@
   /* <Output>                                                              */
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
-  EXPORT_FUNC
+  LOCAL_FUNC
   TT_Error  TT_Get_PS_Name( TT_Face      face,
                             TT_UInt      index,
                             TT_String**  PSname )

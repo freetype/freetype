@@ -167,79 +167,61 @@ typedef struct FT_Frame_Field_
 
 
 
-  BASE_DEF
-  void  FT_New_Memory_Stream( FT_Library     library,
-                              void*          base,
-     			      unsigned long  size,
-                              FT_Stream      stream );
+  BASE_DEF(void) FT_New_Memory_Stream( FT_Library     library,
+                                       void*          base,
+                                       unsigned long  size,
+                                       FT_Stream      stream );
  
-  BASE_DEF
-  FT_Error  FT_Seek_Stream( FT_Stream  stream,
-                            FT_ULong   pos );
+  BASE_DEF(FT_Error)  FT_Seek_Stream( FT_Stream  stream,
+                                      FT_ULong   pos );
 
-  BASE_DEF
-  FT_Error  FT_Skip_Stream( FT_Stream  stream,
-                            FT_Long    distance );
+  BASE_DEF(FT_Error)  FT_Skip_Stream( FT_Stream  stream,
+                                                FT_Long    distance );
                             
-  BASE_DEF
-  FT_Long   FT_Stream_Pos( FT_Stream  stream );
+  BASE_DEF(FT_Long)   FT_Stream_Pos( FT_Stream  stream );
 
 
-  BASE_DEF
-  FT_Error  FT_Read_Stream( FT_Stream  stream,
-                            void*      buffer,
-                            FT_ULong   count );
-                            
-  BASE_DEF
-  FT_Error  FT_Read_Stream_At( FT_Stream  stream,
-                               FT_ULong   pos,
-                               void*      buffer,
-                               FT_ULong   count );
+  BASE_DEF(FT_Error)  FT_Read_Stream( FT_Stream  stream,
+                                      void*      buffer,
+                                      FT_ULong   count );
+                                      
+  BASE_DEF(FT_Error)  FT_Read_Stream_At( FT_Stream  stream,
+                                         FT_ULong   pos,
+                                         void*      buffer,
+                                         FT_ULong   count );
                                
-  BASE_DEF
-  FT_Error  FT_Access_Frame( FT_Stream  stream,
-                             FT_ULong   count );
+  BASE_DEF(FT_Error)  FT_Access_Frame( FT_Stream  stream,
+                                       FT_ULong   count );
                              
-  BASE_DEF
-  void      FT_Forget_Frame( FT_Stream  stream );
+  BASE_DEF(void)      FT_Forget_Frame( FT_Stream  stream );
 
 
 
-  BASE_DEF
-  FT_Char   FT_Get_Char( FT_Stream  stream );
+  BASE_DEF(FT_Char)   FT_Get_Char( FT_Stream  stream );
   
-  BASE_DEF
-  FT_Short  FT_Get_Short( FT_Stream  stream );
+  BASE_DEF(FT_Short)  FT_Get_Short( FT_Stream  stream );
   
-  BASE_DEF
-  FT_Long   FT_Get_Offset( FT_Stream  stream );
+  BASE_DEF(FT_Long)   FT_Get_Offset( FT_Stream  stream );
   
-  BASE_DEF
-  FT_Long   FT_Get_Long( FT_Stream  stream );
+  BASE_DEF(FT_Long)   FT_Get_Long( FT_Stream  stream );
 
 
 
-  BASE_DEF
-  FT_Char  FT_Read_Char( FT_Stream  stream,
-                         FT_Error*  error ); 
+  BASE_DEF(FT_Char)   FT_Read_Char( FT_Stream  stream,
+                                    FT_Error*  error ); 
 
-  BASE_DEF
-  FT_Short  FT_Read_Short( FT_Stream  stream,
-                           FT_Error*  error ); 
+  BASE_DEF(FT_Short)  FT_Read_Short( FT_Stream  stream,
+                                     FT_Error*  error ); 
 
-  BASE_DEF
-  FT_Long  FT_Read_Offset( FT_Stream  stream,
-                           FT_Error*  error ); 
+  BASE_DEF(FT_Long)   FT_Read_Offset( FT_Stream  stream,
+                                      FT_Error*  error ); 
 
-  BASE_DEF
-  FT_Long  FT_Read_Long( FT_Stream  stream,
-                         FT_Error*  error ); 
+  BASE_DEF(FT_Long)   FT_Read_Long( FT_Stream  stream,
+                                    FT_Error*  error ); 
 
-  BASE_DEF
-  FT_Error FT_Read_Fields( FT_Stream             stream,
-                           const FT_Frame_Field* fields,
-                           void*                 structure );
-
+  BASE_DEF(FT_Error)  FT_Read_Fields( FT_Stream             stream,
+                                      const FT_Frame_Field* fields,
+                                      void*                 structure );
 
 #define USE_Stream( resource, stream )  \
           FT_SET_ERROR( FT_Open_Stream( resource, stream ) )

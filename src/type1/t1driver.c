@@ -360,7 +360,6 @@
   /*        return a loaded glyph's metrics.                        */
   /*                                                                */
 
-  EXPORT_FUNC
   const  FT_DriverInterface  t1_driver_interface =
   {
     sizeof( FT_DriverRec ),
@@ -427,8 +426,7 @@
 
 #ifdef FT_CONFIG_OPTION_DYNAMIC_DRIVERS
   
-  EXPORT_FUNC
-  FT_DriverInterface*  getDriverInterface( void )
+  EXPORT_FUNC(FT_DriverInterface*)  getDriverInterface( void )
   {
     return &t1_driver_interface;
   }

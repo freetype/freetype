@@ -200,13 +200,12 @@
   *
   ***********************************************************************/
 
-  EXPORT_DEF
-  FT_Error  FT_Get_Glyph_Bitmap( FT_Face         face,
-                                 FT_UInt         glyph_index,
-                                 FT_UInt         load_flags,
-                                 FT_Int          grays,
-                                 FT_Vector*      origin,
-                                 FT_BitmapGlyph  *abitglyph );
+  EXPORT_DEF(FT_Error)  FT_Get_Glyph_Bitmap( FT_Face         face,
+                                             FT_UInt         glyph_index,
+                                             FT_UInt         load_flags,
+                                             FT_Int          grays,
+                                             FT_Vector*      origin,
+                                             FT_BitmapGlyph  *abitglyph );
 
 
  /***********************************************************************
@@ -238,11 +237,10 @@
   *
   ***********************************************************************/
   
-  EXPORT_DEF
-  FT_Error  FT_Get_Glyph_Outline( FT_Face           face,
-                                  FT_UInt           glyph_index,
-                                  FT_UInt           load_flags,
-                                  FT_OutlineGlyph  *vecglyph );
+  EXPORT_DEF(FT_Error)  FT_Get_Glyph_Outline( FT_Face           face,
+                                              FT_UInt           glyph_index,
+                                              FT_UInt           load_flags,
+                                              FT_OutlineGlyph  *vecglyph );
 
 
  /***********************************************************************
@@ -266,10 +264,9 @@
   *
   ***********************************************************************/
   
-  EXPORT_DEF
-  void FT_Set_Transform( FT_Face     face,
-                         FT_Matrix*  matrix,
-                         FT_Vector*  delta );
+  EXPORT_DEF(void)  FT_Set_Transform( FT_Face     face,
+                                      FT_Matrix*  matrix,
+                                      FT_Vector*  delta );
 
 
  /***********************************************************************
@@ -285,8 +282,7 @@
   *
   ***********************************************************************/
   
-  EXPORT_DEF
-  void  FT_Done_Glyph( FT_Glyph  glyph );
+  EXPORT_DEF(void)  FT_Done_Glyph( FT_Glyph  glyph );
 
 
  /***********************************************************************
@@ -313,8 +309,7 @@
   *
   ***********************************************************************/
   
-  EXPORT_DEF
-  void  FT_Glyph_Get_Box( FT_Glyph  glyph,
-                          FT_BBox  *box );
+  EXPORT_DEF(void)  FT_Glyph_Get_Box( FT_Glyph  glyph,
+                                      FT_BBox  *box );
 
 #endif /* FTGLYPH_H */

@@ -66,7 +66,7 @@ extern "C" {
   /* <Output>                                                              */
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
-  EXPORT_DEF
+  LOCAL_DEF
   TT_Error TT_Get_PS_Name( TT_Face      face,
                            TT_UInt      index,
                            TT_String**  PSname );

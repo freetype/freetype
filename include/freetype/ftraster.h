@@ -33,12 +33,11 @@
 
 #include <freetype/freetype.h>
 
-#ifndef EXPORT_DEF
-#define EXPORT_DEF  /* nothing */
+#ifndef EXPORT_VAR
+#define EXPORT_VAR(x)  x
 #endif
 
-  EXPORT_DEF
-  FT_Raster_Funcs  ft_raster_funcs;
+  EXPORT_VAR(FT_Raster_Funcs)  ft_raster_funcs;
 
 #ifdef __cplusplus
   }

@@ -198,7 +198,7 @@
  *
  *********************************************************************/
 
-  EXPORT_FUNC
+  LOCAL_FUNC
   void  T1_Init_Decoder( T1_Decoder* decoder )
   {
     decoder->top              = 0;

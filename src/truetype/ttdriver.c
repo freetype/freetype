@@ -707,8 +707,7 @@
   /*                                                                       */
 #ifdef FT_CONFIG_OPTION_DYNAMIC_DRIVERS
 
-  EXPORT_FUNC
-  FT_DriverInterface*  getDriverInterface( void )
+  EXPORT_FUNC(FT_DriverInterface*)  getDriverInterface( void )
   {
     return &tt_driver_interface;
   }

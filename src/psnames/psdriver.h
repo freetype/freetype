@@ -19,11 +19,9 @@
 #ifndef PSDRIVER_H
 #define PSDRIVER_H
 
-#include <freetype/freetype.h>
 #include <freetype/internal/ftdriver.h>
 
-  EXPORT_DEF
-  const FT_DriverInterface  psnames_driver_interface;
+  EXPORT_VAR(const FT_DriverInterface)  psnames_driver_interface;
 
 #endif /* PSDRIVER_H */
 

@@ -254,7 +254,7 @@
   /* <Return>                                                              */
   /*   TrueType error code.  0 means success.                              */
   /*                                                                       */
-  EXPORT_FUNC
+  LOCAL_FUNC
   TT_Error  TT_Goto_CodeRange( TT_ExecContext  exec,
                                TT_Int          range,
                                TT_Long         IP )
@@ -302,7 +302,7 @@
   /* <Return>                                                              */
   /*   TrueType error code.  0 means success.                              */
   /*                                                                       */
-  EXPORT_FUNC
+  LOCAL_FUNC
   TT_Error  TT_Set_CodeRange( TT_ExecContext  exec,
                               TT_Int          range,
                               void*           base,
@@ -337,7 +337,7 @@
   /* <Note>                                                                */
   /*    Does not set the Error variable.                                   */
   /*                                                                       */
-  EXPORT_FUNC
+  LOCAL_FUNC
   TT_Error  TT_Clear_CodeRange( TT_ExecContext  exec,
                                 TT_Int          range )
   {
@@ -540,7 +540,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  EXPORT_FUNC
+  LOCAL_FUNC
   TT_Error  TT_Load_Context( TT_ExecContext  exec,
                              TT_Face         face,
                              TT_Size         size )
@@ -642,7 +642,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  EXPORT_FUNC
+  LOCAL_FUNC
   TT_Error  TT_Save_Context( TT_ExecContext  exec,
                              TT_Size         size )
   {
@@ -686,7 +686,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  EXPORT_FUNC
+  LOCAL_FUNC
   TT_Error  TT_Run_Context( TT_ExecContext  exec,
                             TT_Bool         debug )
   {
@@ -762,8 +762,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  EXPORT_FUNC
-  TT_ExecContext  TT_New_Context( TT_Face  face )
+  EXPORT_FUNC(TT_ExecContext)  TT_New_Context( TT_Face  face )
   {
     TT_Driver       driver = (TT_Driver)face->root.driver;
     TT_ExecContext  exec;
@@ -817,7 +816,7 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  EXPORT_FUNC
+  LOCAL_FUNC
   TT_Error  TT_Done_Context( TT_ExecContext  exec )
   {
     /* Nothing at all for now */
@@ -6668,18 +6667,13 @@
   /*************************************************************************/
 
 
-  EXPORT_FUNC
-#ifndef DEBUG_INTERPRETER
-  TT_Error  TT_RunIns( TT_ExecContext  exc )
-#else
-  TT_Error  TT_RunIns2( TT_ExecContext  exc )
-#endif
+  EXPORT_FUNC(TT_Error)  TT_RunIns( TT_ExecContext  exc )
   {
     TT_Long    ins_counter = 0;  /* executed instructions counter */
 
-#ifdef TT_CONFIG_OPTION_STATIC_RASTER
+    #ifdef TT_CONFIG_OPTION_STATIC_RASTER
     cur = *exc;
-#endif
+    #endif
 
     /* set CVT functions */
     CUR.tt_metrics.ratio = 0;
@@ -7361,694 +7355,21 @@
     } while ( !CUR.instruction_trap );
 
   LNo_Error_:
-#ifdef TT_CONFIG_OPTION_STATIC_RASTER
+    #ifdef TT_CONFIG_OPTION_STATIC_RASTER
     *exc = cur;
-#endif
+    #endif
     return TT_Err_Ok;
 
   LErrorCodeOverflow_:
     CUR.error = TT_Err_Code_Overflow;
 
   LErrorLabel_:
-#ifdef TT_CONFIG_OPTION_STATIC_RASTER
+    #ifdef TT_CONFIG_OPTION_STATIC_RASTER
     *exc = cur;
-#endif
+    #endif
     return CUR.error;
   }
 
-
-#if 0
-
-  /* This function must be declared by the debugger front end */
-  /* in order to specify which code range to debug.           */
-
-  int  debug_coderange = tt_coderange_glyph;
-
-  static char  tempStr[128];
-
-  static const char*  OpStr[256] =
-  {
-    "SVTCA y",       /* Set vectors to coordinate axis y    */
-    "SVTCA x",       /* Set vectors to coordinate axis x    */
-    "SPvTCA y",      /* Set Proj. vec. to coord. axis y     */
-    "SPvTCA x",      /* Set Proj. vec. to coord. axis x     */
-    "SFvTCA y",      /* Set Free. vec. to coord. axis y     */
-    "SFvTCA x",      /* Set Free. vec. to coord. axis x     */
-    "SPvTL //",      /* Set Proj. vec. parallel to segment  */
-    "SPvTL +",       /* Set Proj. vec. normal to segment    */
-    "SFvTL //",      /* Set Free. vec. parallel to segment  */
-    "SFvTL +",       /* Set Free. vec. normal to segment    */
-    "SPvFS",         /* Set Proj. vec. from stack           */
-    "SFvFS",         /* Set Free. vec. from stack           */
-    "GPV",           /* Get projection vector               */
-    "GFV",           /* Get freedom vector                  */
-    "SFvTPv",        /* Set free. vec. to proj. vec.        */
-    "ISECT",         /* compute intersection                */
-
-    "SRP0",          /* Set reference point 0               */
-    "SRP1",          /* Set reference point 1               */
-    "SRP2",          /* Set reference point 2               */
-    "SZP0",          /* Set Zone Pointer 0                  */
-    "SZP1",          /* Set Zone Pointer 1                  */
-    "SZP2",          /* Set Zone Pointer 2                  */
-    "SZPS",          /* Set all zone pointers               */
-    "SLOOP",         /* Set loop counter                    */
-    "RTG",           /* Round to Grid                       */
-    "RTHG",          /* Round to Half-Grid                  */
-    "SMD",           /* Set Minimum Distance                */
-    "ELSE",          /* Else                                */
-    "JMPR",          /* Jump Relative                       */
-    "SCvTCi",        /* Set CVT                             */
-    "SSwCi",         /*                                     */
-    "SSW",           /*                                     */
-
-    "DUP",
-    "POP",
-    "CLEAR",
-    "SWAP",
-    "DEPTH",
-    "CINDEX",
-    "MINDEX",
-    "AlignPTS",
-    "INS_$28",
-    "UTP",
-    "LOOPCALL",
-    "CALL",
-    "FDEF",
-    "ENDF",
-    "MDAP[-]",
-    "MDAP[r]",
-
-    "IUP[y]",
-    "IUP[x]",
-    "SHP[0]",
-    "SHP[1]",
-    "SHC[0]",
-    "SHC[1]",
-    "SHZ[0]",
-    "SHZ[1]",
-    "SHPIX",
-    "IP",
-    "MSIRP[0]",
-    "MSIRP[1]",
-    "AlignRP",
-    "RTDG",
-    "MIAP[-]",
-    "MIAP[r]",
-
-    "NPushB",
-    "NPushW",
-    "WS",
-    "RS",
-    "WCvtP",
-    "RCvt",
-    "GC[0]",
-    "GC[1]",
-    "SCFS",
-    "MD[0]",
-    "MD[1]",
-    "MPPEM",
-    "MPS",
-    "FlipON",
-    "FlipOFF",
-    "DEBUG",
-
-    "LT",
-    "LTEQ",
-    "GT",
-    "GTEQ",
-    "EQ",
-    "NEQ",
-    "ODD",
-    "EVEN",
-    "IF",
-    "EIF",
-    "AND",
-    "OR",
-    "NOT",
-    "DeltaP1",
-    "SDB",
-    "SDS",
-
-    "ADD",
-    "SUB",
-    "DIV",
-    "MUL",
-    "ABS",
-    "NEG",
-    "FLOOR",
-    "CEILING",
-    "ROUND[G]",
-    "ROUND[B]",
-    "ROUND[W]",
-    "ROUND[?]",
-    "NROUND[G]",
-    "NROUND[B]",
-    "NROUND[W]",
-    "NROUND[?]",
-
-    "WCvtF",
-    "DeltaP2",
-    "DeltaP3",
-    "DeltaC1",
-    "DeltaC2",
-    "DeltaC3",
-    "SROUND",
-    "S45Round",
-    "JROT",
-    "JROF",
-    "ROFF",
-    "INS_$7B",
-    "RUTG",
-    "RDTG",
-    "SANGW",
-    "AA",
-
-    "FlipPT",
-    "FlipRgON",
-    "FlipRgOFF",
-    "INS_$83",
-    "INS_$84",
-    "ScanCTRL",
-    "SDPVTL[0]",
-    "SDPVTL[1]",
-    "GetINFO",
-    "IDEF",
-    "ROLL",
-    "MAX",
-    "MIN",
-    "ScanTYPE",
-    "IntCTRL",
-    "INS_$8F",
-
-    "INS_$90",
-    "INS_$91",
-    "INS_$92",
-    "INS_$93",
-    "INS_$94",
-    "INS_$95",
-    "INS_$96",
-    "INS_$97",
-    "INS_$98",
-    "INS_$99",
-    "INS_$9A",
-    "INS_$9B",
-    "INS_$9C",
-    "INS_$9D",
-    "INS_$9E",
-    "INS_$9F",
-
-    "INS_$A0",
-    "INS_$A1",
-    "INS_$A2",
-    "INS_$A3",
-    "INS_$A4",
-    "INS_$A5",
-    "INS_$A6",
-    "INS_$A7",
-    "INS_$A8",
-    "INS_$A9",
-    "INS_$AA",
-    "INS_$AB",
-    "INS_$AC",
-    "INS_$AD",
-    "INS_$AE",
-    "INS_$AF",
-
-    "PushB[0]",
-    "PushB[1]",
-    "PushB[2]",
-    "PushB[3]",
-    "PushB[4]",
-    "PushB[5]",
-    "PushB[6]",
-    "PushB[7]",
-    "PushW[0]",
-    "PushW[1]",
-    "PushW[2]",
-    "PushW[3]",
-    "PushW[4]",
-    "PushW[5]",
-    "PushW[6]",
-    "PushW[7]",
-
-    "MDRP[G]",
-    "MDRP[B]",
-    "MDRP[W]",
-    "MDRP[?]",
-    "MDRP[rG]",
-    "MDRP[rB]",
-    "MDRP[rW]",
-    "MDRP[r?]",
-    "MDRP[mG]",
-    "MDRP[mB]",
-    "MDRP[mW]",
-    "MDRP[m?]",
-    "MDRP[mrG]",
-    "MDRP[mrB]",
-    "MDRP[mrW]",
-    "MDRP[mr?]",
-    "MDRP[pG]",
-    "MDRP[pB]",
-
-    "MDRP[pW]",
-    "MDRP[p?]",
-    "MDRP[prG]",
-    "MDRP[prB]",
-    "MDRP[prW]",
-    "MDRP[pr?]",
-    "MDRP[pmG]",
-    "MDRP[pmB]",
-    "MDRP[pmW]",
-    "MDRP[pm?]",
-    "MDRP[pmrG]",
-    "MDRP[pmrB]",
-    "MDRP[pmrW]",
-    "MDRP[pmr?]",
-
-    "MIRP[G]",
-    "MIRP[B]",
-    "MIRP[W]",
-    "MIRP[?]",
-    "MIRP[rG]",
-    "MIRP[rB]",
-    "MIRP[rW]",
-    "MIRP[r?]",
-    "MIRP[mG]",
-    "MIRP[mB]",
-    "MIRP[mW]",
-    "MIRP[m?]",
-    "MIRP[mrG]",
-    "MIRP[mrB]",
-    "MIRP[mrW]",
-    "MIRP[mr?]",
-    "MIRP[pG]",
-    "MIRP[pB]",
-
-    "MIRP[pW]",
-    "MIRP[p?]",
-    "MIRP[prG]",
-    "MIRP[prB]",
-    "MIRP[prW]",
-    "MIRP[pr?]",
-    "MIRP[pmG]",
-    "MIRP[pmB]",
-    "MIRP[pmW]",
-    "MIRP[pm?]",
-    "MIRP[pmrG]",
-    "MIRP[pmrB]",
-    "MIRP[pmrW]",
-    "MIRP[pmr?]"
-  };
-
-
-  const char* Cur_U_Line( TT_ExecContext exec )
-  {
-    char  s[32];
-
-    int  op, i, n;
-
-    op = exec->code[exec->IP];
-
-    sprintf( tempStr, "%s", OpStr[op] );
-
-    if ( op == 0x40 )
-    {
-      n = exec->code[exec->IP + 1];
-      sprintf( s, "(%d)", n );
-      strncat( tempStr, s, 8 );
-
-      if ( n > 20 ) n = 20; /* limit output */
-
-      for ( i = 0; i < n; i++ )
-      {
-        sprintf( s, " $%02hx", exec->code[exec->IP + i + 2] );
-        strncat( tempStr, s, 8 );
-      }
-    }
-    else if ( op == 0x41 )
-    {
-      n = exec->code[exec->IP + 1];
-      sprintf( s, "(%d)", n );
-      strncat( tempStr, s, 8 );
-
-      if ( n > 20 ) n = 20; /* limit output */
-
-      for ( i = 0; i < n; i++ )
-      {
-        sprintf( s, " $%02hx%02hx", exec->code[exec->IP + i*2 + 2],
-                                    exec->code[exec->IP + i*2 + 3] );
-        strncat( tempStr, s, 8 );
-      }
-    }
-    else if ( (op & 0xF8) == 0xB0 )
-    {
-      n = op - 0xB0;
-
-      for ( i = 0; i <= n; i++ )
-      {
-        sprintf( s, " $%02hx", exec->code[exec->IP + i + 1] );
-        strncat( tempStr, s, 8 );
-      }
-    }
-    else if ( (op & 0xF8) == 0xB8 )
-    {
-      n = op-0xB8;
-
-      for ( i = 0; i <= n; i++ )
-      {
-        sprintf( s, " $%02hx%02hx", exec->code[exec->IP + i*2 + 1],
-                                    exec->code[exec->IP + i*2 + 2] );
-        strncat( tempStr, s, 8 );
-      }
-    }
-
-    return (char*)tempStr;
-  }
-
-
-  EXPORT_FUNC
-  TT_Error  TT_RunIns( TT_ExecContext  exc )
-  {
-    TT_Int    A, diff;
-    TT_ULong  next_IP;
-    TT_Char   ch, oldch;
-    char     *temp;
-    int       key;
-    FT_Memory memory;
-
-    TT_Error  error = 0;
-
-    FT_GlyphZone  save;
-    FT_GlyphZone  pts;
-
-#define TT_Round_Off             5
-#define TT_Round_To_Half_Grid    0
-#define TT_Round_To_Grid         1
-#define TT_Round_To_Double_Grid  2
-#define TT_Round_Up_To_Grid      4
-#define TT_Round_Down_To_Grid    3
-#define TT_Round_Super           6
-#define TT_Round_Super_45        7
-
-    const char*  round_str[8] =
-    {
-      "to half-grid",
-      "to grid",
-      "to double grid",
-      "down to grid",
-      "up to grid",
-      "off",
-      "super",
-      "super 45"
-    };
-
-    /* Check that we're running the code range that is effectively */
-    /* asked by the debugger front end.                            */
-    if ( exc->curRange != debug_coderange )
-      return TT_RunIns2( exc );
-
-    pts = exc->pts;
-
-    memory = exc->face->root.memory;
-
-    save.n_points   = pts.n_points;
-    save.n_contours = pts.n_contours;
-
-    MEM_Alloc( save.org, sizeof ( TT_Vector ) * save.n_points );
-    MEM_Alloc( save.cur, sizeof ( TT_Vector ) * save.n_points );
-    MEM_Alloc( save.tags, sizeof ( TT_Byte ) * save.n_points );
-
-    exc->instruction_trap = 1;
-
-    oldch = '\0';
-
-    do
-    {
-      if ( exc->IP < exc->codeSize )
-      {
-#ifdef TT_CONFIG_OPTION_STATIC_INTERPRETER
-        cur = *exc;
-#endif
-        if ( ( CUR.length = opcode_length[CUR.opcode] ) < 0 )
-        {
-          if ( CUR.IP + 1 > CUR.codeSize )
-            goto LErrorCodeOverflow_;
-
-          CUR.length = CUR.code[CUR.IP + 1] + 2;
-        }
-
-        exc->args = exc->top - (Pop_Push_Count[exc->opcode] >> 4);
-
-        /* `args' is the top of the stack once arguments have been popped. */
-        /* One can also interpret it as the index of the last argument.    */
-
-        /* Print the current line.  We use a 80-columns console with the   */
-        /* following formatting:                                           */
-        /*                                                                 */
-        /* [loc]:[addr] [opcode]  [disassemby]          [a][b]|[c][d]      */
-        /*                                                                 */
-
-        {
-          char      temp[80];
-          int       n, col, pop;
-          int       args = CUR.args;
-
-
-          sprintf( temp, "%78c\n", ' ' );
-
-          /* first letter of location */
-          switch ( CUR.curRange )
-          {
-          case tt_coderange_glyph:
-            temp[0] = 'g';
-            break;
-          case tt_coderange_cvt:
-            temp[0] = 'c';
-            break;
-          default:
-            temp[0] = 'f';
-          }
-
-          /* current IP */
-          sprintf( temp+1, "%04lx: %02x  %-36.36s",
-                   CUR.IP,
-                   CUR.opcode,
-                   Cur_U_Line(&CUR) );
-
-          strncpy( temp+46, " (", 2 );
-
-          args = CUR.top - 1;
-          pop  = Pop_Push_Count[CUR.opcode] >> 4;
-          col  = 48;
-          for ( n = 6; n > 0; n-- )
-          {
-            if ( pop == 0 )
-              temp[col-1] = (temp[col-1] == '(' ? ' ' : ')' );
-
-            if ( args < CUR.top && args >= 0 )
-              sprintf( temp+col, "%04lx", CUR.stack[args] );
-            else
-              sprintf( temp+col, "    " );
-
-            temp[col+4] = ' ';
-            col += 5;
-            pop--;
-            args--;
-          }
-          temp[78] = '\n';
-          temp[79] = '\0';
-          FT_TRACE0(( temp ));
-        }
-
-        /* First, check for empty stack and overflow */
-        if ( CUR.args < 0 )
-        {
-          FT_TRACE0(( "ERROR : Too few arguments\n" ));
-          exc->error = TT_Err_Too_Few_Arguments;
-          goto LErrorLabel_;
-        }
-
-        CUR.new_top = CUR.args + (Pop_Push_Count[CUR.opcode] & 15);
-
-      /* new_top  is the new top of the stack, after the instruction's */
-      /* execution. top will be set to new_top after the 'case'        */
-
-        if ( CUR.new_top > CUR.stackSize )
-        {
-          FT_TRACE0(( "ERROR : Stack overflow\n" ));
-          exc->error = TT_Err_Stack_Overflow;
-          goto LErrorLabel_;
-        }
-      }
-      else
-        FT_TRACE0(( "End of program reached.\n" ));
-
-      key = 0;
-      do
-      {
-       /* read keyboard */
-
-        ch = getch();
-
-        switch ( ch )
-        {
-        /* Help - show keybindings */
-        case '?':
-          FT_TRACE0(( "FDebug Help\n\n" ));
-          FT_TRACE0(( "?   Show this page\n" ));
-          FT_TRACE0(( "q   Quit debugger\n" ));
-          FT_TRACE0(( "n   Skip to next instruction\n" ));
-          FT_TRACE0(( "s   Step into\n" ));
-          FT_TRACE0(( "v   Show vector info\n" ));
-          FT_TRACE0(( "g   Show graphics state\n" ));
-          FT_TRACE0(( "p   Show points zone\n\n" ));
-          break;
-
-        /* Show vectors */
-        case 'v':
-          FT_TRACE0(( "freedom    (%04hx,%04hx)\n", exc->GS.freeVector.x,
-                                                  exc->GS.freeVector.y ));
-          FT_TRACE0(( "projection (%04hx,%04hx)\n", exc->GS.projVector.x,
-                                                  exc->GS.projVector.y ));
-          FT_TRACE0(( "dual       (%04hx,%04hx)\n\n", exc->GS.dualVector.x,
-                                                    exc->GS.dualVector.y ));
-          break;
-
-        /* Show graphics state */
-        case 'g':
-          FT_TRACE0(( "rounding   %s\n", round_str[exc->GS.round_state] ));
-          FT_TRACE0(( "min dist   %04lx\n", exc->GS.minimum_distance ));
-          FT_TRACE0(( "cvt_cutin  %04lx\n", exc->GS.control_value_cutin ));
-          break;
-
-        /* Show points table */
-        case 'p':
-          for ( A = 0; A < exc->pts.n_points; A++ )
-          {
-            FT_TRACE0(( "%02hx  ", A ));
-            FT_TRACE0(( "%08lx,%08lx - ", pts.org[A].x, pts.org[A].y ));
-            FT_TRACE0(( "%08lx,%08lx\n",  pts.cur[A].x, pts.cur[A].y ));
-          }
-          FT_TRACE0(( "\n" ));
-          break;
-
-        default:
-          key = 1;
-        }
-      } while ( !key );
-
-      MEM_Copy( save.org,   pts.org, pts.n_points * sizeof ( TT_Vector ) );
-      MEM_Copy( save.cur,   pts.cur, pts.n_points * sizeof ( TT_Vector ) );
-      MEM_Copy( save.tags, pts.tags, pts.n_points );
-
-      /* a return indicate the last command */
-      if (ch == '\r')
-        ch = oldch;
-
-      switch ( ch )
-      {
-      /* Quit debugger */
-      case 'q':
-        goto LErrorLabel_;
-
-      /* Step over */
-      case 'n':
-        if ( exc->IP < exc->codeSize )
-        {
-          /* `step over' is equivalent to `step into' except if  */
-          /* the current opcode is a CALL or LOOPCALL            */
-          if ( CUR.opcode != 0x2a && CUR.opcode != 0x2b )
-            goto Step_into;
-
-          /* otherwise, loop execution until we reach the next opcode */
-          next_IP = CUR.IP + CUR.length;
-          while ( exc->IP != next_IP )
-          {
-            if ( ( error = TT_RunIns2( exc ) ) )
-              goto LErrorLabel_;
-          }
-        }
-        oldch = ch;
-        break;
-
-      /* Step into */
-      case 's':
-        if ( exc->IP < exc->codeSize )
-
-      Step_into:
-          if ( ( error = TT_RunIns2( exc ) ) )
-            goto LErrorLabel_;
-        oldch = ch;
-        break;
-
-      default:
-        FT_TRACE0(( "unknown command. Press ? for help\n" ));
-        oldch = '\0';
-      }
-
-      for ( A = 0; A < pts.n_points; A++ )
-      {
-        diff = 0;
-        if ( save.org[A].x != pts.org[A].x ) diff |= 1;
-        if ( save.org[A].y != pts.org[A].y ) diff |= 2;
-        if ( save.cur[A].x != pts.cur[A].x ) diff |= 4;
-        if ( save.cur[A].y != pts.cur[A].y ) diff |= 8;
-        if ( save.tags[A] != pts.tags[A] ) diff |= 16;
-
-        if ( diff )
-        {
-          FT_TRACE0(( "%02hx  ", A ));
-
-          if ( diff & 16 ) temp = "(%01hx)"; else temp = " %01hx ";
-          FT_TRACE0(( temp, save.tags[A] & 7 ));
-
-          if ( diff & 1 ) temp = "(%08lx)"; else temp = " %08lx ";
-          FT_TRACE0(( temp, save.org[A].x ));
-
-          if ( diff & 2 ) temp = "(%08lx)"; else temp = " %08lx ";
-          FT_TRACE0(( temp, save.org[A].y ));
-
-          if ( diff & 4 ) temp = "(%08lx)"; else temp = " %08lx ";
-          FT_TRACE0(( temp, save.cur[A].x ));
-
-          if ( diff & 8 ) temp = "(%08lx)"; else temp = " %08lx ";
-          FT_TRACE0(( temp, save.cur[A].y ));
-
-          FT_TRACE0(( "\n" ));
-
-          FT_TRACE0(( "%02hx  ", A ));
-
-          if ( diff & 16 ) temp = "[%01hx]"; else temp = " %01hx ";
-          FT_TRACE0(( temp, pts.tags[A] & 7 ));
-
-          if ( diff & 1 ) temp = "[%08lx]"; else temp = " %08lx ";
-          FT_TRACE0(( temp, pts.org[A].x ));
-
-          if ( diff & 2 ) temp = "[%08lx]"; else temp = " %08lx ";
-          FT_TRACE0(( temp, pts.org[A].y ));
-
-          if ( diff & 4 ) temp = "[%08lx]"; else temp = " %08lx ";
-          FT_TRACE0(( temp, pts.cur[A].x ));
-
-          if ( diff & 8 ) temp = "[%08lx]"; else temp = " %08lx ";
-          FT_TRACE0(( temp, pts.cur[A].y ));
-
-          FT_TRACE0(( "\n\n" ));
-        }
-      }
-    } while ( TRUE );
-
-  LErrorLabel_:
-
-    return error;
-
-  LErrorCodeOverflow_:
-    error = TT_Err_Code_Overflow;
-    return error;
-  }
-
-#endif /* DEBUG_INTERPRETER */
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
