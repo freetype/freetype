@@ -1,3 +1,12 @@
+2004-01-01  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+2004-01-01  Michael Jansson  <mjan@em2-solutions.com>
+
+	* src/winfonts/winfnt.c (FNT_Size_Set_Pixels): Fix sign of
+	size->metrics.descender.
+
 2003-12-31  Wolfgang Domröse  <porthos.domroese@harz.de>
 
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
