@@ -708,10 +708,12 @@
         root->height    = (FT_Short)( root->ascender - root->descender +
                                       face->horizontal.Line_Gap );
 
+#if 0
         /* if the line_gap is 0, we add an extra 15% to the text height --  */
         /* this computation is based on various versions of Times New Roman */
         if ( face->horizontal.Line_Gap == 0 )
           root->height = (FT_Short)( ( root->height * 115 + 50 ) / 100 );
+#endif
 
 #if 0
 

@@ -421,8 +421,8 @@
   /*************************************************************************/
 
 
-  static void
-  ah_hint_edges( AH_Hinter  hinter )
+  FT_LOCAL_DEF( void )
+  ah_hinter_hint_edges( AH_Hinter  hinter )
   {
     AH_Edge     edges;
     AH_Edge     edge_limit;
@@ -785,18 +785,6 @@
     Next_Dimension:
       edges      = outline->vert_edges;
       edge_limit = edges + outline->num_vedges;
-    }
-  }
-
-
-  FT_LOCAL_DEF( void )
-  ah_hinter_hint_edges( AH_Hinter  hinter )
-  {
-    /* AH_Interpolate_Blue_Edges( hinter ); -- doesn't seem to help      */
-    /* reduce the problem of the disappearing eye in the `e' of Times... */
-    /* also, creates some artifacts near the blue zones?                 */
-    {
-      ah_hint_edges( hinter );
     }
   }
 

@@ -427,24 +427,6 @@
   }
 
 
-  /* documentation is in freetype.h */
-
-  FT_EXPORT_DEF( void )
-  FT_Set_Hint_Flags( FT_Face   face,
-                     FT_ULong  flags )
-  {
-    FT_Face_Internal  internal;
-
-
-    if ( !face )
-      return;
-
-    internal = face->internal;
-
-    internal->hint_flags = (FT_UInt)flags;
-  }
-
-
   static FT_Renderer
   ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
 
