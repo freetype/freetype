@@ -1,3 +1,63 @@
+LATEST CHANGES BETWEEN 2.1.4 and 2.1.3
+
+  I. IMPORTANT BUG FIXES
+
+    - updated to newest libtool version, fixes build problems on various
+      platforms.
+
+    - a fix in the Gzip stream reader, it couldn't read certain .gz files
+      properly due to a small typo
+
+    - the configure script now looks tries to use the system-wide zlib when
+      it finds one (instead of the copy found in src/gzip). And
+      "freetype-config" has been updated to return relevant flags in this
+      case when invoked with "--libs" (e.g. "-lzlib")
+
+    - certain fonts couldn't be loaded by 2.1.3 because they lacked a
+      Unicode charmap (e.g. SYMBOL.TTF). FreeType erroneously rejected
+      them.
+
+    - the CFF loader was modified to accept fonts which only
+      contain a subset of their reference charset. This prevented the
+      correct use of PDF-embedded fonts.
+
+    - the logic to detect Unicode charmaps has been modified. this is required
+      to support fonts which include both 16-bit and 32-bit charmaps (like
+      very recent asian ones) using the new 10 and 12 SFNT formats.
+
+    - the TrueType loader now limits the depth of composite glyphs. This is
+      necessary to prevent broken fonts to break the engine by blowing the
+      stack with recursive glyph definitions.
+
+  II. IMPORTANT CHANGES
+
+    - David Chester contributed some enhancements to the auto-hinter that
+      significantly increase the quality of its output. Try it !!
+
+    - the FT_RENDER_MODE_LIGHT render mode was implemented
+
+    - a new API, called FT_Get_BDF_Property has been added to FT_BDF_H to
+      retrieve BDF properties from BDF _and_ PCF font files. THIS IS STILL
+      EXPERIMENTAL, since it hasn't been properly tested yet.
+
+    - a Windows FNT specific API has been added, mostly to access font
+      headers. This is used by Wine
+
+    - TrueType tables without a "hmtx" table are now tolerated when an
+      incremental interface is used. This happens for certain Type42 fonts
+      passed from Ghostscript to FreeType.
+
+  III. MISCELLANEOUS
+
+    - the path stroker in FT_STROKER_H has entered beta stage. It now works
+      very well, but it's interface might change a bit in the future. More
+      on this in later releases
+
+    - the documentation for FT_Size_Metrics didn't appear properly in the
+      API reference
+
+
+==============================================================================
 LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
 
   I. IMPORTANT BUG FIXES
