@@ -1,5 +1,75 @@
 LATEST CHANGES - 
 
+  - major directory hierarchy re-organisation. This was done for two things:
+  
+      * first, to ease the "manual" compilation of the library by requiring
+        at lot less include paths :-)
+        
+      * second, to allow external programs to effectively access internal
+        data fields. For example, this can be extremely useful if someone
+        wants to write a font producer or a font manager on top of FreeType.
+
+    Basically, you should now use the 'freetype/' prefix for header inclusion,
+    as in:
+    
+        #include <freetype/freetype.h>
+        #include <freetype/ftglyph.h>
+
+    Some new include sub-directories are available:
+    
+     a. the "freetype/config" directory, contains two files used to
+        configure the build of the library. Client applications should
+        not need to look at these normally, but they can if they want.
+        
+        #include <freetype/config/ftoption.h>
+        #include <freetype/config/ftconfig.h>
+     
+     b. the "freetype/internal" directory, contains header files that
+        describes library internals. These are the header files that were
+        previously found in the "src/base" and "src/shared" directories.
+
+
+    As usual, the build system and the demos have been updated to reflect
+    the change..
+    
+    Here's a layout of the new directory hierarchy:
+    
+    TOP
+      include/
+         freetype/
+            freetype.h
+            ...
+            config/
+              ftoption.h
+              ftconfig.h
+              ftmodule.h
+              
+            internal/
+              ftobjs.h
+              ftstream.h
+              ftcalc.h
+              ...
+            
+      src/
+         base/
+            ...
+            
+         sfnt/
+         psnames/
+         truetype/
+         type1/
+         type1z/
+
+
+    Compiling a module is now much easier, for example, the following should
+    work when in the TOP directory on an ANSI system:
+    
+       gcc -c -I./include -I./src/base src/base/ftbase.c
+       gcc -c -I./include -I./src/sfnt src/sfnt/sfnt.c
+       etc..
+
+    (of course, using -Iconfig/<system> if you provide system-specific
+     configuration files).
 
 
   - updated the structure of FT_Outline_Funcs in order to allow
