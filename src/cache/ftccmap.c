@@ -27,6 +27,9 @@
 
 #include "ftcerror.h"
 
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_cache
+
   /*************************************************************************/
   /*                                                                       */
   /* Each FTC_CMapNode contains a simple array to map a range of character */

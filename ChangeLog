@@ -1,3 +1,25 @@
+2003-03-13  David Turner  <david@freetype.org>
+
+    * src/base/ftdbgmem.c, docs/DEBUG.TXT: added new environment variables
+    to control memory debugging with FreeType. See the description of
+    "FT2_DEBUG_MEMORY", "FT2_ALLOC_TOTAL_MAX" and "FT2_ALLOC_COUNT_MAX"
+    in DEBUG.TXT
+
+    * src/cache/ftccache.c, src/cache/ftccmap.c, src/cache/ftcsbits.c,
+    ftlru.c: fixed the cache sub-system to correctly deal with out-of-memory
+    conditions.
+
+    * src/pfr/pfrobjs.c, src/pfr/pfrsbits.c: fixing compiler warnings and a
+    small memory leak
+
+    * src/psaux/psobjs.c (t1_reallocate_table): fixed a bug (memory leak) that
+    only happened when trying to resize an array would end in an OOM.
+
+    * src/smooth/ftgrays.c: removed compiler warnings / volatile bug
+
+    * src/truetype/ttobjs.c: removed segmentation fault that happened in
+    tight memory environments.
+
 2003-02-28  Pixel  <pixel@mandrakesoft.com>
 
     * src/gzip/ftgzip.c (ft_gzip_file_done): fixed memory leak, the ZLib
