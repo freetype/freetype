@@ -935,13 +935,16 @@ THE SOFTWARE.
       if ( prop != NULL )
         if ( prop->isString )
           if ( ( *(prop->value.atom) == 'O' ) ||
-               ( *(prop->value.atom) == 'I' ) )
+               ( *(prop->value.atom) == 'o' ) ||
+               ( *(prop->value.atom) == 'I' ) ||
+               ( *(prop->value.atom) == 'i' ) )
             root->style_flags |= FT_STYLE_FLAG_ITALIC;
 
       prop = pcf_find_property( face, "WEIGHT_NAME" );
       if ( prop != NULL )
         if ( prop->isString )
-          if ( *(prop->value.atom) == 'B' )
+          if ( ( *(prop->value.atom) == 'B' ) ||
+               ( *(prop->value.atom) == 'b' ) )
             root->style_flags |= FT_STYLE_FLAG_BOLD;
 
       root->style_name = (char *)"Regular";
