@@ -1,9 +1,9 @@
-/*  pcfutil.h                                                                 
+/*  pcfutil.h
 
     FreeType font driver for pcf fonts
 
-  Copyright 2000 by            
-  Francesco Zappa Nardelli     
+  Copyright 2000 by
+  Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,21 +32,25 @@ THE SOFTWARE.
 #include <ft2build.h>
 
 
-  void  BitOrderInvert( unsigned char*  buf,
-                        int             nbytes);
+  void
+  BitOrderInvert( unsigned char*  buf,
+                  int             nbytes);
 
-  void  TwoByteSwap   ( unsigned char*  buf,
-                        int             nbytes);
+  void
+  TwoByteSwap( unsigned char*  buf,
+               int             nbytes);
 
-  void  FourByteSwap  ( unsigned char*  buf,
-                        int             nbytes);
+  void
+  FourByteSwap( unsigned char*  buf,
+                int             nbytes);
 
-  int   RepadBitmap   ( char*           pSrc,
-                        char*           pDst, 
-                        unsigned int    srcPad,
-                        unsigned int    dstPad, 
-                        int             width,
-                        int             height);
+  int
+  RepadBitmap( char*           pSrc,
+               char*           pDst,
+               unsigned int    srcPad,
+               unsigned int    dstPad,
+               int             width,
+               int             height);
 
 #endif /* __PCFUTIL_H__ */
 

@@ -1,9 +1,9 @@
-/*  pcf.h                                                                 
+/*  pcf.h
 
   FreeType font driver for pcf fonts
 
-  Copyright (C) 2000 by            
-  Francesco Zappa Nardelli     
+  Copyright (C) 2000 by
+  Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ FT_BEGIN_HEADER
   } PCF_TableRec, *PCF_Table;
 
 
-  typedef struct  PCF_TocRec_ 
+  typedef struct  PCF_TocRec_
   {
     FT_ULong   version;
     FT_ULong   count;
@@ -54,7 +54,7 @@ FT_BEGIN_HEADER
   } PCF_TocRec, *PCF_Toc;
 
 
-  typedef struct  PCF_ParseProperty_ 
+  typedef struct  PCF_ParseProperty_
   {
     FT_Long  name;
     FT_Byte  isString;
@@ -76,10 +76,10 @@ FT_BEGIN_HEADER
 
     } value;
 
-  } PCF_PropertyRec, *PCF_Property;      
+  } PCF_PropertyRec, *PCF_Property;
 
 
-  typedef struct  PCF_Compressed_Metric_ 
+  typedef struct  PCF_Compressed_Metric_
   {
     FT_Byte  leftSideBearing;
     FT_Byte  rightSideBearing;
@@ -88,9 +88,9 @@ FT_BEGIN_HEADER
     FT_Byte  descent;
 
   } PCF_Compressed_MetricRec, *PCF_Compressed_Metric;
-    
 
-  typedef struct  PCF_Metric_ 
+
+  typedef struct  PCF_Metric_
   {
     FT_Short  leftSideBearing;
     FT_Short  rightSideBearing;
@@ -134,7 +134,7 @@ FT_BEGIN_HEADER
   typedef struct  PCF_FaceRec_
   {
     FT_FaceRec     root;
-      
+
     char*          charset_encoding;
     char*          charset_registry;
 
@@ -148,7 +148,7 @@ FT_BEGIN_HEADER
     PCF_Metric     metrics;
     FT_Long        nencodings;
     PCF_Encoding   encodings;
-      
+
     FT_Short       defaultChar;
 
     FT_ULong       bitmapsFormat;
@@ -160,8 +160,8 @@ FT_BEGIN_HEADER
 
 
   /* XXX hack */
-  FT_LOCAL
-  FT_Error  PCF_Done_Face( PCF_Face  face );
+  FT_LOCAL FT_Error
+  PCF_Done_Face( PCF_Face  face );
 
 
   /* macros for pcf font format */
@@ -173,7 +173,7 @@ FT_BEGIN_HEADER
                                   ( 'c' << 16 ) | \
                                   ( 'f' <<  8 ) | 1 )
 #define PCF_FORMAT_MASK         0xFFFFFF00L
-    
+
 #define PCF_DEFAULT_FORMAT      0x00000000L
 #define PCF_INKBOUNDS           0x00000200L
 #define PCF_ACCEL_W_INKBOUNDS   0x00000100L
@@ -226,10 +226,10 @@ FT_BEGIN_HEADER
 
 #define GLYPHPADOPTIONS  4 /* I'm not sure about this */
 
-  FT_LOCAL
-  FT_Error  pcf_load_font( FT_Stream,
-                           PCF_Face );
-    
+  FT_LOCAL FT_Error
+  pcf_load_font( FT_Stream,
+                 PCF_Face );
+
 
 FT_END_HEADER
 

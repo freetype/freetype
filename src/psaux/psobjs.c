@@ -53,10 +53,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  PS_Table_New( PS_Table*  table,
-                          FT_Int     count,
-                          FT_Memory  memory )
+  FT_LOCAL_DEF FT_Error
+  PS_Table_New( PS_Table*  table,
+                FT_Int     count,
+                FT_Memory  memory )
   {
     FT_Error  error;
 
@@ -82,9 +82,9 @@
   }
 
 
-  static
-  void  shift_elements( PS_Table*  table,
-                        FT_Byte*   old_base )
+  static void
+  shift_elements( PS_Table*  table,
+                  FT_Byte*   old_base )
   {
     FT_Long    delta  = (FT_Long)( table->block - old_base );
     FT_Byte**  offset = table->elements;
@@ -99,9 +99,9 @@
   }
 
 
-  static
-  FT_Error  reallocate_t1_table( PS_Table*  table,
-                                 FT_Int     new_size )
+  static FT_Error
+  reallocate_t1_table( PS_Table*  table,
+                       FT_Int     new_size )
   {
     FT_Memory  memory   = table->memory;
     FT_Byte*   old_base = table->block;
@@ -148,11 +148,11 @@
   /*    FreeType error code.  0 means success.  An error is returned if a  */
   /*    reallocation fails.                                                */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  PS_Table_Add( PS_Table*  table,
-                          FT_Int     index,
-                          void*      object,
-                          FT_Int     length )
+  FT_LOCAL_DEF FT_Error
+  PS_Table_Add( PS_Table*  table,
+                FT_Int     index,
+                void*      object,
+                FT_Int     length )
   {
     if ( index < 0 || index > table->max_elems )
     {
@@ -200,8 +200,8 @@
   /*    This function does NOT release the heap's memory block.  It is up  */
   /*    to the caller to clean it, or reference it in its own structures.  */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  PS_Table_Done( PS_Table*  table )
+  FT_LOCAL_DEF void
+  PS_Table_Done( PS_Table*  table )
   {
     FT_Memory  memory = table->memory;
     FT_Error   error;
@@ -222,8 +222,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  PS_Table_Release( PS_Table*  table )
+  FT_LOCAL_DEF void
+  PS_Table_Release( PS_Table*  table )
   {
     FT_Memory  memory = table->memory;
 
@@ -253,8 +253,8 @@
 #define IS_T1_SPACE( c )  ( IS_T1_WHITESPACE( c ) || IS_T1_LINESPACE( c ) )
 
 
-  FT_LOCAL_DEF
-  void  T1_Skip_Spaces( T1_Parser*  parser )
+  FT_LOCAL_DEF void
+  T1_Skip_Spaces( T1_Parser*  parser )
   {
     FT_Byte* cur   = parser->cursor;
     FT_Byte* limit = parser->limit;
@@ -273,8 +273,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  T1_Skip_Alpha( T1_Parser*  parser )
+  FT_LOCAL_DEF void
+  T1_Skip_Alpha( T1_Parser*  parser )
   {
     FT_Byte* cur   = parser->cursor;
     FT_Byte* limit = parser->limit;
@@ -293,9 +293,9 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  T1_ToToken( T1_Parser*  parser,
-                    T1_Token*   token )
+  FT_LOCAL_DEF void
+  T1_ToToken( T1_Parser*  parser,
+              T1_Token*   token )
   {
     FT_Byte*  cur;
     FT_Byte*  limit;
@@ -376,11 +376,11 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  T1_ToTokenArray( T1_Parser*  parser,
-                         T1_Token*   tokens,
-                         FT_UInt     max_tokens,
-                         FT_Int*     pnum_tokens )
+  FT_LOCAL_DEF void
+  T1_ToTokenArray( T1_Parser*  parser,
+                   T1_Token*   tokens,
+                   FT_UInt     max_tokens,
+                   FT_Int*     pnum_tokens )
   {
     T1_Token  master;
 
@@ -422,9 +422,9 @@
   }
 
 
-  static
-  FT_Long  t1_toint( FT_Byte**  cursor,
-                     FT_Byte*   limit )
+  static FT_Long
+  t1_toint( FT_Byte**  cursor,
+            FT_Byte*   limit )
   {
     FT_Long   result = 0;
     FT_Byte*  cur    = *cursor;
@@ -467,10 +467,10 @@
   }
 
 
-  static
-  FT_Long  t1_tofixed( FT_Byte**  cursor,
-                       FT_Byte*   limit,
-                       FT_Long    power_ten )
+  static FT_Long
+  t1_tofixed( FT_Byte**  cursor,
+              FT_Byte*   limit,
+              FT_Long    power_ten )
   {
     FT_Byte*  cur  = *cursor;
     FT_Long   num, divider, result;
@@ -557,11 +557,11 @@
   }
 
 
-  static
-  FT_Int  t1_tocoordarray( FT_Byte**  cursor,
-                           FT_Byte*   limit,
-                           FT_Int     max_coords,
-                           FT_Short*  coords )
+  static FT_Int
+  t1_tocoordarray( FT_Byte**  cursor,
+                   FT_Byte*   limit,
+                   FT_Int     max_coords,
+                   FT_Short*  coords )
   {
     FT_Byte*  cur   = *cursor;
     FT_Int    count = 0;
@@ -616,12 +616,12 @@
   }
 
 
-  static
-  FT_Int  t1_tofixedarray( FT_Byte**  cursor,
-                           FT_Byte*   limit,
-                           FT_Int     max_values,
-                           FT_Fixed*  values,
-                           FT_Int     power_ten )
+  static FT_Int
+  t1_tofixedarray( FT_Byte**  cursor,
+                   FT_Byte*   limit,
+                   FT_Int     max_values,
+                   FT_Fixed*  values,
+                   FT_Int     power_ten )
   {
     FT_Byte*  cur   = *cursor;
     FT_Int    count = 0;
@@ -677,10 +677,10 @@
 
 #if 0
 
-  static
-  FT_String*  t1_tostring( FT_Byte**  cursor,
-                           FT_Byte*   limit,
-                           FT_Memory  memory )
+  static FT_String*
+  t1_tostring( FT_Byte**  cursor,
+               FT_Byte*   limit,
+               FT_Memory  memory )
   {
     FT_Byte*    cur = *cursor;
     FT_Int      len = 0;
@@ -737,9 +737,9 @@
 #endif /* 0 */
 
 
-  static
-  int  t1_tobool( FT_Byte**  cursor,
-                  FT_Byte*   limit )
+  static int
+  t1_tobool( FT_Byte**  cursor,
+             FT_Byte*   limit )
   {
     FT_Byte*  cur    = *cursor;
     FT_Bool   result = 0;
@@ -772,12 +772,12 @@
 
 
   /* Load a simple field (i.e. non-table) into the current list of objects */
-  FT_LOCAL_DEF
-  FT_Error  T1_Load_Field( T1_Parser*       parser,
-                           const T1_Field*  field,
-                           void**           objects,
-                           FT_UInt          max_objects,
-                           FT_ULong*        pflags )
+  FT_LOCAL_DEF FT_Error
+  T1_Load_Field( T1_Parser*       parser,
+                 const T1_Field*  field,
+                 void**           objects,
+                 FT_UInt          max_objects,
+                 FT_ULong*        pflags )
   {
     T1_Token  token;
     FT_Byte*  cur;
@@ -893,12 +893,12 @@
 #define T1_MAX_TABLE_ELEMENTS  32
 
 
-  FT_LOCAL_DEF
-  FT_Error  T1_Load_Field_Table( T1_Parser*       parser,
-                                 const T1_Field*  field,
-                                 void**           objects,
-                                 FT_UInt          max_objects,
-                                 FT_ULong*        pflags )
+  FT_LOCAL_DEF FT_Error
+  T1_Load_Field_Table( T1_Parser*       parser,
+                       const T1_Field*  field,
+                       void**           objects,
+                       FT_UInt          max_objects,
+                       FT_ULong*        pflags )
   {
     T1_Token   elements[T1_MAX_TABLE_ELEMENTS];
     T1_Token*  token;
@@ -957,36 +957,36 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Long  T1_ToInt( T1_Parser*  parser )
+  FT_LOCAL_DEF FT_Long
+  T1_ToInt( T1_Parser*  parser )
   {
     return t1_toint( &parser->cursor, parser->limit );
   }
 
 
-  FT_LOCAL_DEF
-  FT_Fixed  T1_ToFixed( T1_Parser*  parser,
-                        FT_Int      power_ten )
+  FT_LOCAL_DEF FT_Fixed
+  T1_ToFixed( T1_Parser*  parser,
+              FT_Int      power_ten )
   {
     return t1_tofixed( &parser->cursor, parser->limit, power_ten );
   }
 
 
-  FT_LOCAL_DEF
-  FT_Int  T1_ToCoordArray( T1_Parser*  parser,
-                           FT_Int      max_coords,
-                           FT_Short*   coords )
+  FT_LOCAL_DEF FT_Int
+  T1_ToCoordArray( T1_Parser*  parser,
+                   FT_Int      max_coords,
+                   FT_Short*   coords )
   {
     return t1_tocoordarray( &parser->cursor, parser->limit,
                             max_coords, coords );
   }
 
 
-  FT_LOCAL_DEF
-  FT_Int  T1_ToFixedArray( T1_Parser*  parser,
-                           FT_Int      max_values,
-                           FT_Fixed*   values,
-                           FT_Int      power_ten )
+  FT_LOCAL_DEF FT_Int
+  T1_ToFixedArray( T1_Parser*  parser,
+                   FT_Int      max_values,
+                   FT_Fixed*   values,
+                   FT_Int      power_ten )
   {
     return t1_tofixedarray( &parser->cursor, parser->limit,
                             max_values, values, power_ten );
@@ -995,15 +995,15 @@
 
 #if 0
 
-  FT_LOCAL_DEF
-  FT_String*  T1_ToString( T1_Parser*  parser )
+  FT_LOCAL_DEF FT_String*
+  T1_ToString( T1_Parser*  parser )
   {
     return t1_tostring( &parser->cursor, parser->limit, parser->memory );
   }
 
 
-  FT_LOCAL_DEF
-  FT_Bool  T1_ToBool( T1_Parser*  parser )
+  FT_LOCAL_DEF FT_Bool
+  T1_ToBool( T1_Parser*  parser )
   {
     return t1_tobool( &parser->cursor, parser->limit );
   }
@@ -1011,11 +1011,11 @@
 #endif /* 0 */
 
 
-  FT_LOCAL_DEF
-  void  T1_Init_Parser( T1_Parser*  parser,
-                        FT_Byte*    base,
-                        FT_Byte*    limit,
-                        FT_Memory   memory )
+  FT_LOCAL_DEF void
+  T1_Init_Parser( T1_Parser*  parser,
+                  FT_Byte*    base,
+                  FT_Byte*    limit,
+                  FT_Memory   memory )
   {
     parser->error  = 0;
     parser->base   = base;
@@ -1026,8 +1026,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  T1_Done_Parser( T1_Parser*  parser )
+  FT_LOCAL_DEF void
+  T1_Done_Parser( T1_Parser*  parser )
   {
     FT_UNUSED( parser );
   }
@@ -1059,11 +1059,11 @@
   /*                                                                       */
   /*    glyph   :: The current glyph object.                               */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  T1_Builder_Init( T1_Builder*   builder,
-                         FT_Face       face,
-                         FT_Size       size,
-                         FT_GlyphSlot  glyph )
+  FT_LOCAL_DEF void
+  T1_Builder_Init( T1_Builder*   builder,
+                   FT_Face       face,
+                   FT_Size       size,
+                   FT_GlyphSlot  glyph )
   {
     builder->path_begun  = 0;
     builder->load_points = 1;
@@ -1114,8 +1114,8 @@
   /* <Input>                                                               */
   /*    builder :: A pointer to the glyph builder to finalize.             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  T1_Builder_Done( T1_Builder*  builder )
+  FT_LOCAL_DEF void
+  T1_Builder_Done( T1_Builder*  builder )
   {
     FT_GlyphSlot  glyph = builder->glyph;
 
@@ -1126,20 +1126,20 @@
 
 
   /* check that there is enough room for `count' more points */
-  FT_LOCAL_DEF
-  FT_Error  T1_Builder_Check_Points( T1_Builder*  builder,
-                                     FT_Int       count )
+  FT_LOCAL_DEF FT_Error
+  T1_Builder_Check_Points( T1_Builder*  builder,
+                           FT_Int       count )
   {
     return FT_GlyphLoader_Check_Points( builder->loader, count, 0 );
   }
 
 
   /* add a new point, do not check space */
-  FT_LOCAL_DEF
-  void  T1_Builder_Add_Point( T1_Builder*  builder,
-                              FT_Pos       x,
-                              FT_Pos       y,
-                              FT_Byte      flag )
+  FT_LOCAL_DEF void
+  T1_Builder_Add_Point( T1_Builder*  builder,
+                        FT_Pos       x,
+                        FT_Pos       y,
+                        FT_Byte      flag )
   {
     FT_Outline*  outline = builder->current;
 
@@ -1166,10 +1166,10 @@
 
 
   /* check space for a new on-curve point, then add it */
-  FT_LOCAL_DEF
-  FT_Error  T1_Builder_Add_Point1( T1_Builder*  builder,
-                                   FT_Pos       x,
-                                   FT_Pos       y )
+  FT_LOCAL_DEF FT_Error
+  T1_Builder_Add_Point1( T1_Builder*  builder,
+                         FT_Pos       x,
+                         FT_Pos       y )
   {
     FT_Error  error;
 
@@ -1183,8 +1183,8 @@
 
 
   /* check room for a new contour, then add it */
-  FT_LOCAL_DEF
-  FT_Error  T1_Builder_Add_Contour( T1_Builder*  builder )
+  FT_LOCAL_DEF FT_Error
+  T1_Builder_Add_Contour( T1_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
     FT_Error     error;
@@ -1211,10 +1211,10 @@
 
 
   /* if a path was begun, add its first on-curve point */
-  FT_LOCAL_DEF
-  FT_Error  T1_Builder_Start_Point( T1_Builder*  builder,
-                                    FT_Pos       x,
-                                    FT_Pos       y )
+  FT_LOCAL_DEF FT_Error
+  T1_Builder_Start_Point( T1_Builder*  builder,
+                          FT_Pos       x,
+                          FT_Pos       y )
   {
     FT_Error  error = 0;
 
@@ -1232,8 +1232,8 @@
 
 
   /* close the current contour */
-  FT_LOCAL_DEF
-  void  T1_Builder_Close_Contour( T1_Builder*  builder )
+  FT_LOCAL_DEF void
+  T1_Builder_Close_Contour( T1_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
 
@@ -1275,10 +1275,10 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  FT_LOCAL_DEF
-  void  T1_Decrypt( FT_Byte*   buffer,
-                    FT_Offset  length,
-                    FT_UShort  seed )
+  FT_LOCAL_DEF void
+  T1_Decrypt( FT_Byte*   buffer,
+              FT_Offset  length,
+              FT_UShort  seed )
   {
     while ( length > 0 )
     {

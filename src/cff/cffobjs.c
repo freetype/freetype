@@ -49,9 +49,9 @@
   /*                                                                       */
   /*************************************************************************/
 
-  static
-  FT_String*  CFF_StrCopy( FT_Memory         memory,
-                           const FT_String*  source )
+  static FT_String*
+  CFF_StrCopy( FT_Memory         memory,
+               const FT_String*  source )
   {
     FT_Error    error;
     FT_String*  result = 0;
@@ -71,10 +71,10 @@
 
   /* this function is used to build a Unicode charmap from the glyph names */
   /* in a file                                                             */
-  static
-  FT_Error  CFF_Build_Unicode_Charmap( CFF_Face            face,
-                                       FT_ULong            base_offset,
-                                       PSNames_Interface*  psnames )
+  static FT_Error
+  CFF_Build_Unicode_Charmap( CFF_Face            face,
+                             FT_ULong            base_offset,
+                             PSNames_Interface*  psnames )
   {
     CFF_Font*       font = (CFF_Font*)face->extra.data;
     FT_Memory       memory = FT_FACE_MEMORY(face);
@@ -188,9 +188,9 @@
 #endif /* 0 */
 
 
-  static
-  FT_Encoding  find_encoding( int  platform_id,
-                              int  encoding_id )
+  static FT_Encoding
+  find_encoding( int  platform_id,
+                 int  encoding_id )
   {
     typedef struct  TEncoding
     {
@@ -260,12 +260,12 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  CFF_Init_Face( FT_Stream      stream,
-                           CFF_Face       face,
-                           FT_Int         face_index,
-                           FT_Int         num_params,
-                           FT_Parameter*  params )
+  FT_LOCAL_DEF FT_Error
+  CFF_Init_Face( FT_Stream      stream,
+                 CFF_Face       face,
+                 FT_Int         face_index,
+                 FT_Int         num_params,
+                 FT_Parameter*  params )
   {
     FT_Error            error;
     SFNT_Interface*     sfnt;
@@ -511,8 +511,8 @@
   /* <Input>                                                               */
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  CFF_Done_Face( CFF_Face  face )
+  FT_LOCAL_DEF void
+  CFF_Done_Face( CFF_Face  face )
   {
     FT_Memory        memory = face->root.memory;
     SFNT_Interface*  sfnt   = (SFNT_Interface*)face->sfnt;
@@ -548,8 +548,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  CFF_Init_Driver( CFF_Driver  driver )
+  FT_LOCAL_DEF FT_Error
+  CFF_Init_Driver( CFF_Driver  driver )
   {
     /* init extension registry if needed */
 
@@ -578,8 +578,8 @@
   /* <Input>                                                               */
   /*    driver :: A handle to the target OpenType driver.                  */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  CFF_Done_Driver( CFF_Driver  driver )
+  FT_LOCAL_DEF void
+  CFF_Done_Driver( CFF_Driver  driver )
   {
     /* destroy extensions registry if needed */
 

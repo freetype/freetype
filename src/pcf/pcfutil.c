@@ -72,8 +72,9 @@ in this Software without prior written authorization from The Open Group.
    *  Invert bit order within each BYTE of an array.
    */
 
-  void  BitOrderInvert( unsigned char*  buf,
-                        int             nbytes )
+  void
+  BitOrderInvert( unsigned char*  buf,
+                  int             nbytes )
   {
     const unsigned char*  rev = _reverse_byte;
 
@@ -87,8 +88,9 @@ in this Software without prior written authorization from The Open Group.
    *  Invert byte order within each 16-bits of an array.
    */
 
-  void  TwoByteSwap( unsigned char*  buf,
-                     int             nbytes )
+  void
+  TwoByteSwap( unsigned char*  buf,
+               int             nbytes )
   {
     unsigned char  c;
 
@@ -105,8 +107,9 @@ in this Software without prior written authorization from The Open Group.
    *  Invert byte order within each 32-bits of an array.
    */
 
-  void  FourByteSwap( unsigned char*  buf,
-                      int             nbytes )
+  void
+  FourByteSwap( unsigned char*  buf,
+                int             nbytes )
   {
     unsigned char  c;
 
@@ -128,12 +131,13 @@ in this Software without prior written authorization from The Open Group.
    *  Repad a bitmap.
    */
 
-  int  RepadBitmap( char*         pSrc,
-                    char*         pDst, 
-                    unsigned int  srcPad,
-                    unsigned int  dstPad, 
-                    int           width,
-                    int           height )
+  int
+  RepadBitmap( char*         pSrc,
+               char*         pDst,
+               unsigned int  srcPad,
+               unsigned int  dstPad,
+               int           width,
+               int           height )
   {
     int   srcWidthBytes, dstWidthBytes;
     int   row, col;
@@ -142,7 +146,7 @@ in this Software without prior written authorization from The Open Group.
 
     switch ( srcPad )
     {
-    case 1:     
+    case 1:
       srcWidthBytes = ( width + 7 ) >> 3;
       break;
 
@@ -150,12 +154,12 @@ in this Software without prior written authorization from The Open Group.
       srcWidthBytes = ( ( width + 15 ) >> 4 ) << 1;
       break;
 
-    case 4:     
+    case 4:
       srcWidthBytes = ( ( width + 31 ) >> 5 ) << 2;
       break;
 
-    case 8:     
-      srcWidthBytes = ( ( width + 63 ) >> 6 ) << 3; 
+    case 8:
+      srcWidthBytes = ( ( width + 63 ) >> 6 ) << 3;
       break;
 
     default:
@@ -164,7 +168,7 @@ in this Software without prior written authorization from The Open Group.
 
     switch ( dstPad )
     {
-    case 1:     
+    case 1:
       dstWidthBytes = ( width + 7 ) >> 3;
       break;
 
@@ -172,12 +176,12 @@ in this Software without prior written authorization from The Open Group.
       dstWidthBytes = ( ( width + 15 ) >> 4 ) << 1;
       break;
 
-    case 4:     
+    case 4:
       dstWidthBytes = ( ( width + 31 ) >> 5 ) << 2;
       break;
 
-    case 8:     
-      dstWidthBytes = ( ( width + 63 ) >> 6 ) << 3; 
+    case 8:
+      dstWidthBytes = ( ( width + 63 ) >> 6 ) << 3;
       break;
 
     default:
