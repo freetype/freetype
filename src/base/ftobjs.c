@@ -1135,9 +1135,10 @@
     FT_Error   error  = FT_Err_Cannot_Open_Resource;
     FT_Memory  memory = library->memory;
     FT_Byte*   pfb_data;
-    int        i, type, flags, len;
+    int        i, type, flags;
+    FT_Long    len;
     FT_Long    pfb_len, pfb_pos, pfb_lenpos;
-    FT_Long    rlen, junk, temp;
+    FT_Long    rlen, temp;
     FT_Long   *offsets;
 
 
@@ -1156,12 +1157,11 @@
     /* Find all the POST resource offsets */
     for ( i = 0; i < resource_cnt; ++i )
     {
-      (void)FT_READ_USHORT( junk ); /* resource id */
-      (void)FT_READ_USHORT( junk ); /* rsource name */
+      (void)FT_STREAM_SKIP( 4 );    /* resource id and resource name */
       if ( FT_READ_LONG( temp ) )
         goto Exit;
       offsets[i] = resource_data + ( temp & 0xFFFFFFL );
-      (void)FT_READ_LONG( junk );   /* mbz */
+      (void)FT_STREAM_SKIP( 4 );    /* mbz */
     }
 
     /* Find the length of all the POST resources, concatenated.  Assume */
@@ -1273,7 +1273,7 @@
     FT_Error   error;
     int        i;
     FT_Long    flag_offset= 0xFFFFFFL;
-    FT_Long    rlen, junk;
+    FT_Long    rlen;
     int        is_cff;
 
 
@@ -1288,12 +1288,11 @@
 
     for ( i = 0; i <= face_index; ++i )
     {
-      (void)FT_READ_USHORT( junk );     /* resource id */
-      (void)FT_READ_USHORT( junk );     /* rsource name */
+      (void)FT_STREAM_SKIP( 4 );    /* resource id and resource name */
       if ( FT_READ_LONG( flag_offset ) )
         goto Exit;
       flag_offset &= 0xFFFFFFL;
-      (void)FT_READ_LONG( junk );       /* mbz */
+      (void)FT_STREAM_SKIP( 4 );    /* mbz */
     }
 
     if ( flag_offset == 0xFFFFFFL )
@@ -1344,9 +1343,9 @@
   {
     FT_Error       error;
     unsigned char  head[16], head2[16];
-    FT_Long        rdata_pos, map_pos, rdata_len, map_len;
+    FT_Long        rdata_pos, map_pos, rdata_len;
     int            allzeros, allmatch, i, cnt, subcnt;
-    FT_Long        type_list, rpos, junk;
+    FT_Long        type_list, rpos;
     FT_ULong       tag;
 
 
@@ -1369,10 +1368,7 @@
                 ( head[ 9] << 16 ) |
                 ( head[10] <<  8 ) |
                   head[11];
-    map_len   = ( head[12] << 24 ) |
-                ( head[13] << 16 ) |
-                ( head[14] <<  8 ) |
-                  head[15];
+    /* map_len = head[12] .. head[15] */
 
     if ( rdata_pos + rdata_len != map_pos || map_pos == resource_offset )
       return FT_Err_Unknown_File_Format;
@@ -1402,9 +1398,9 @@
     /* If we've gotten this far then it's probably a mac resource file. */
     /* Now, does it contain any interesting resources?                  */
 
-    (void)FT_READ_LONG( junk );    /* skip handle to next resource map */
-    (void)FT_READ_USHORT( junk );  /* skip file resource number */
-    (void)FT_READ_USHORT( junk );  /* skip attributes */
+    /* Skip handle to next resource map, the file resource number, and  */
+    /* attributes.                                                      */
+    (void)FT_STREAM_SKIP( 4 + 2 + 2 );
 
     if ( FT_READ_USHORT( type_list ) )
       goto Exit;
@@ -1675,7 +1671,7 @@
          FT_ERROR_BASE( error ) != FT_Err_Invalid_Stream_Operation )
       goto Fail2;
 
-#ifndef FT_MACINTOSH
+#if !defined( FT_MACINTOSH ) && defined( FT_CONFIG_OPTION_MAC_FONTS )
     error = load_mac_face( library, stream, face_index, aface, args );
     if ( !error )
     {
@@ -1690,7 +1686,7 @@
 
     if ( FT_ERROR_BASE( error ) != FT_Err_Unknown_File_Format )
       goto Fail2;
-#endif  /* !FT_MACINTOSH */
+#endif  /* !FT_MACINTOSH && FT_CONFIG_OPTION_MAC_FONTS */
 
       /* no driver is able to handle this format */
       error = FT_Err_Unknown_File_Format;

@@ -658,10 +658,10 @@
 
   typedef struct  FT_OrientationExtremumRec_
   {
-    FT_Int  index;
-    FT_Int  pos;
-    FT_Int  first;
-    FT_Int  last;
+    FT_Int   index;
+    FT_Long  pos;
+    FT_Int   first;
+    FT_Int   last;
   
   } FT_OrientationExtremumRec;
 

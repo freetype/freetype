@@ -703,7 +703,7 @@
       /* the third (lowest) stem aligns with the base line; it might end up */
       /* one pixel higher or lower.                                         */
 
-      n_edges = edge_limit - edges;
+      n_edges = (FT_Int)( edge_limit - edges );
       if ( !dimension && ( n_edges == 6 || n_edges == 12 ) )
       {
         AH_EdgeRec  *edge1, *edge2, *edge3;
@@ -943,7 +943,7 @@
 
             /* find enclosing edges */
             min = 0;
-            max = edge_limit - edges;
+            max = (FT_UInt)( edge_limit - edges );
 
             while ( min < max )
             {
