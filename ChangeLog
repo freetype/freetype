@@ -1,35 +1,41 @@
+2002-09-10  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.ac (version_info): Set to 9:2:3.
+	* builds/unix/configure: Regenerated.
+	* docs/VERSION.DLL: Updated.
+
 2002-09-09  David Turner  <david@freetype.org>
 
-        * src/cache/ftccache.i: fixed a bug that prevented compilation in
-        debug mode of template instantiation
+	* src/cache/ftccache.i: fixed a bug that prevented compilation in
+	debug mode of template instantiation
 
-        * src/cff/cffparse.c: fixed the CFF table loader. It didn't accept
-        empty arrays, and this prevented the loading of certain fonts.
+	* src/cff/cffparse.c: fixed the CFF table loader. It didn't accept
+	empty arrays, and this prevented the loading of certain fonts.
 
-        * src/pshinter/pshalgo2.c, src/pshinter/pshalgo3.c: adding fix to
-        prevent seg fault when hints are provided in an empty glyph !!
+	* src/pshinter/pshalgo2.c, src/pshinter/pshalgo3.c: adding fix to
+	prevent seg fault when hints are provided in an empty glyph !!
 
 2002-09-09  Owen Taylor  <owen@redhat.com>
 
-        * src/pcf/pcfdriver.c (PCF_Glyph_Load): fixing incorrect computation
-        of bitmap metrics.
+	* src/pcf/pcfdriver.c (PCF_Glyph_Load): fixing incorrect computation
+	of bitmap metrics.
 
 2002-09-08  David Turner  <david@freetype.org>
 
-        * src/smooth/ftsmooth.c, src/base/ftobjs.c,
-        include/freetype/config/ftmodule.h: updated to correctly support
-        sub-pixel rendering
+	* src/smooth/ftsmooth.c, src/base/ftobjs.c,
+	include/freetype/config/ftmodule.h: updated to correctly support
+	sub-pixel rendering
 
-        * include/freetype/cache/ftcimage.h, include/freetype/cache/ftcsbits.h,
-        src/cache/ftcimage.c, src/cache/ftcsbit.c: updated to support sub-pixel
-        rendering correctly. Definition of FTC_ImageTypeRec that replaces the
-        obsolete FTC_ImageDesc, and has slightly different fields. The
-        image type is now determined directly by "load_flags" values.
+	* include/freetype/cache/ftcimage.h, include/freetype/cache/ftcsbits.h,
+	src/cache/ftcimage.c, src/cache/ftcsbit.c: updated to support sub-pixel
+	rendering correctly. Definition of FTC_ImageTypeRec that replaces the
+	obsolete FTC_ImageDesc, and has slightly different fields. The
+	image type is now determined directly by "load_flags" values.
 
-        * src/autohint/ahtypes.h, src/autohint/ahhint.c,
-        src/pshinter/pshalgo3.c, src/pshinter/pshalgo3.h: various enhancements
-        to the automatic and Postscript hinters !! and sub-pixel hinting now
-        works correctly (see demo programs)
+	* src/autohint/ahtypes.h, src/autohint/ahhint.c,
+	src/pshinter/pshalgo3.c, src/pshinter/pshalgo3.h: various enhancements
+	to the automatic and Postscript hinters !! and sub-pixel hinting now
+	works correctly (see demo programs)
 
 2002-09-05  Werner Lemberg  <wl@gnu.org>
 

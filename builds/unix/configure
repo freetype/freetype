@@ -1359,7 +1359,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 ac_config_headers="$ac_config_headers ftconfig.h:ftconfig.in"
 
 
-version_info='9:1:3'
+version_info='9:2:3'
 
 ft_version=`echo $version_info | tr : .`
 
