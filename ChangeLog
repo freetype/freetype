@@ -1,3 +1,7 @@
+2000-01-04  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ttnameid.h: Updated Unicode code range comments.
+
 2001-01-03  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/rules.mk: Use cffgload.{c,h} instead of t2gload.{c,h}.
