@@ -119,12 +119,6 @@
 
     limit = hint_mask->num_bits; 
     
-    if ( limit != table->max_hints )
-    {
-      FT_ERROR(( "%s.activate_mask: invalid bit count (%d instead of %d)\n",
-                 "ps.fitter", hint_mask->num_bits, table->max_hints ));
-    }
-        
     for ( index = 0; index < limit; index++ )
     {
       if ( mask == 0 )

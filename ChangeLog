@@ -1,5 +1,8 @@
 2001-10-22  David Turner  <david@freetype.org>
 
+        * src/pshinter/pshalgo2.c (psh2_hint_table_record_mask): removed some
+        bogus warnings..
+
         * include/freetype/internal/ftmemory.h, src/base/ftdbgmem.c: modified
         the debugging memory manager to report the location (source file name
         + line number) where leaked memory blocks are allocated in the source
