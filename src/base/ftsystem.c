@@ -65,7 +65,7 @@
   /*    size   :: The requested size in bytes.                             */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    block  :: The address of newly allocated block.                    */
+  /*    The address of newly allocated block.                              */
   /*                                                                       */
   static
   void*  ft_alloc( FT_Memory  memory,

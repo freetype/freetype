@@ -73,7 +73,7 @@
       goto Exit;
 
     table->max_elems = count;
-    table->init      = 0xDEADBEEFL;
+    table->init      = 0xDEADBEEFUL;
     table->num_elems = 0;
     table->block     = 0;
     table->capacity  = 0;

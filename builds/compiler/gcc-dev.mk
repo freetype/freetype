@@ -61,7 +61,16 @@ T := -o$(space)
 #   ANSI compliance.
 #
 ifndef CFLAGS
-  CFLAGS := -c -g -O0 -Wall
+  CFLAGS := -c -g -O0 \
+            -Wall \
+            -W \
+            -Wundef \
+            -Wshadow \
+            -Wpointer-arith \
+            -Wwrite-strings \
+            -Wstrict-prototypes \
+            -Wredundant-decls \
+            -Wnested-externs
 endif
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.

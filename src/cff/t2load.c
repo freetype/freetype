@@ -48,7 +48,7 @@
 #define FT_COMPONENT  trace_t2load
 
 
- /* read a CFF offset from memory */
+  /* read a CFF offset from memory */
   static
   FT_ULong  t2_get_offset( FT_Byte*  p,
                            FT_Byte   off_size )
