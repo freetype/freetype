@@ -6,21 +6,12 @@
 
 FT_BEGIN_HEADER
 
-  typedef struct FT_XHandlerRec_*  FT_XHandler;
-  
-  typedef struct FT_XHandlerRec_
-  {
-    FT_XHandler        previous;
-    ft_jmp_buf         jump_buffer;
-    volatile FT_Error  error;
-    FT_Pointer         cleanup;
-  
-  } FT_XHandlerRec;
 
 
-  typedef void  (*FT_CleanupFunc)( FT_Pointer  item,
-                                   FT_Pointer  item_data );
+ /* I can't find a better place for this for now */
 
+<<<<<<< ftexcept.h
+=======
 
 /* the size of a cleanup chunk in bytes is FT_CLEANUP_CHUNK_SIZE*12 + 4 */
 /* this must be a small power of 2 whenever possible..                  */
@@ -85,6 +76,7 @@ FT_BEGIN_HEADER
   ft_cleanup_throw( FT_CleanupStack  stack,
                     FT_Error         error );
 
+>>>>>>> 1.2
 FT_END_HEADER
 
 #endif /* __FT_EXCEPT_H__ */
