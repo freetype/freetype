@@ -19,7 +19,7 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(psnames,psmodule.c)
+#include FT_SOURCE_FILE( psnames, psmodule.c )
 
 
 /* END */

@@ -19,12 +19,12 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(cache,ftlru.c)
-#include FT_SOURCE_FILE(cache,ftcmanag.c)
-#include FT_SOURCE_FILE(cache,ftcglyph.c)
-#include FT_SOURCE_FILE(cache,ftcchunk.c)
-#include FT_SOURCE_FILE(cache,ftcimage.c)
-#include FT_SOURCE_FILE(cache,ftcsbits.c)
+#include FT_SOURCE_FILE( cache, ftlru.c )
+#include FT_SOURCE_FILE( cache, ftcmanag.c )
+#include FT_SOURCE_FILE( cache, ftcglyph.c )
+#include FT_SOURCE_FILE( cache, ftcchunk.c )
+#include FT_SOURCE_FILE( cache, ftcimage.c )
+#include FT_SOURCE_FILE( cache, ftcsbits.c )
 
 
 /* END */

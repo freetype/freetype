@@ -1,8 +1,27 @@
+2000-12-12  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ft2build.h (FT2_ROOT, FT2_CONFIG_ROOT):
+	Removed.  ANSI C doesn't (explicitly) allow macro expansion in
+	arguments using `##'.
+	(FT2_PUBLIC_FILE, FT2_CONFIG_FILE, FT2_INTERNAL_FILE): Use directory
+	names directly.  Make them configurable.  Use `##' to strip leading
+	and trailing spaces from arguments.
+
+	* builds/unix/ft2unix.h: Adapted.
+
+	* src/base/ftsystem.c (ft_alloc, ft_realloc, ft_free, ft_io_stream,
+	ft_close_stream): Use FT_CALLBACK_DEF.
+
+	* builds/unix/ftsystem.c: Use new header scheme.
+	(FT_Done_Memory): Use free() from FT_Memory structure.
+
+	* src/base/ftinit.c, src/base/ftmac.c: Header scheme fixes.
+
 2000-12-11  Werner Lemberg  <wl@gnu.org>
 
-	* include/freetype/config/build.h (FT2_CONFIG_ROOT, FT2_PUBLIC_FILE,
-	FT2_CONFIG_FILE, FT2_INTERNAL_FILE, FT_SOURCE_FILE): Use `##'
-	operator to be really ANSI C compliant.
+	* include/freetype/config/ft2build.h (FT2_CONFIG_ROOT,
+	FT2_PUBLIC_FILE, FT2_CONFIG_FILE, FT2_INTERNAL_FILE,
+	FT_SOURCE_FILE): Use `##' operator to be really ANSI C compliant.
 
 2000-12-09  Werner Lemberg  <wl@gnu.org>
 

@@ -22,7 +22,7 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_STREAM_H
-#include FT_SOURCE_FILE(cid,cidparse.h)
+#include FT_SOURCE_FILE( cid, cidparse.h )
 
 
 FT_BEGIN_HEADER

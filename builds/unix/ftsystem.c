@@ -16,17 +16,13 @@
 /***************************************************************************/
 
 
-#include <ftconfig.h>
-#include <freetype/internal/ftdebug.h>
-#include <freetype/ftsystem.h>
-#include <freetype/fterrors.h>
-#include <freetype/fttypes.h>
-#include <freetype/internal/ftobjs.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include <ft2build.h>
+#include FT_CONFIG_CONFIG_H
+#include FT_INTERNAL_DEBUG_H
+#include FT_SYSTEM_H
+#include FT_ERRORS_H
+#include FT_TYPES_h
+#include FT_INTERNAL_FTOBJS_H
 
   /* memory-mapping includes and definitions */
 #ifdef HAVE_UNISTD_H
@@ -87,10 +83,11 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    memory :: A pointer to the memory object.                          */
+  /*                                                                       */
   /*    size   :: The requested size in bytes.                             */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    block  :: The address of newly allocated block.                    */
+  /*    The address of newly allocated block.                              */
   /*                                                                       */
   FT_CALLBACK_DEF
   void*  ft_alloc( FT_Memory  memory,
@@ -201,23 +198,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_Stream                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Creates a new stream object.                                       */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    filepathname :: The name of the stream (usually a file) to be      */
-  /*                    opened.                                            */
-  /*                                                                       */
-  /*    stream       :: A pointer to the stream object.                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftobjs.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_New_Stream( const char*  filepathname,
                                             FT_Stream    stream )
   {
@@ -285,17 +267,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_Memory                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Creates a new memory object.                                       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A pointer to the new memory object.  0 in case of error.           */
-  /*                                                                       */
+  /* documentation is in ftobjs.h */
+
   FT_EXPORT_DEF( FT_Memory )  FT_New_Memory( void )
   {
     FT_Memory  memory;
@@ -314,20 +287,11 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_Memory                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Discards memory manager.                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory :: A handle to the memory manager.                          */
-  /*                                                                       */
+  /* documentation is in ftobjs.h */
+
   FT_EXPORT_DEF( void )  FT_Done_Memory( FT_Memory  memory )
   {
-    free( memory );
+    memory->free( memory, memory );
   }
 
 

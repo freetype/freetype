@@ -26,11 +26,11 @@
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_TRUETYPE_ERRORS_H
 
-#include FT_SOURCE_FILE(truetype,ttgload.h)
-#include FT_SOURCE_FILE(truetype,ttpload.h)
+#include FT_SOURCE_FILE( truetype, ttgload.h )
+#include FT_SOURCE_FILE( truetype, ttpload.h )
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-#include FT_SOURCE_FILE(truetype,ttinterp.h)
+#include FT_SOURCE_FILE( truetype, ttinterp.h )
 #endif
 
 

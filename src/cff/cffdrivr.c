@@ -24,8 +24,8 @@
 #include FT_TRUETYPE_NAMES_H
 #include FT_INTERNAL_CFF_ERRORS_H
 
-#include FT_SOURCE_FILE(cff,cffdrivr.h)
-#include FT_SOURCE_FILE(cff,t2gload.h)
+#include FT_SOURCE_FILE( cff, cffdrivr.h )
+#include FT_SOURCE_FILE( cff, t2gload.h )
 
 
   /*************************************************************************/

@@ -68,7 +68,7 @@
 #include FT_INTERNAL_TYPE1_TYPES_H
 #include FT_INTERNAL_TYPE1_ERRORS_H
 
-#include FT_SOURCE_FILE(type1,t1load.h)
+#include FT_SOURCE_FILE( type1, t1load.h )
 
 #include <string.h>     /* for strncmp(), strcmp() */
 #include <ctype.h>      /* for isalnum()           */
@@ -1372,7 +1372,7 @@
   const T1_Field  t1_keywords[] =
   {
 
-#include FT_SOURCE_FILE(type1,t1tokens.h)
+#include FT_SOURCE_FILE( type1, t1tokens.h )
 
     /* now add the special functions... */
     T1_FIELD_CALLBACK( "FontName", parse_font_name )

@@ -19,8 +19,8 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(raster,ftraster.c)
-#include FT_SOURCE_FILE(raster,ftrend1.c)
+#include FT_SOURCE_FILE( raster, ftraster.c )
+#include FT_SOURCE_FILE( raster, ftrend1.c )
 
 
 /* END */

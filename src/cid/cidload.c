@@ -22,7 +22,7 @@
 #include FT_MULTIPLE_MASTERS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
 #include FT_INTERNAL_TYPE1_ERRORS_H
-#include FT_SOURCE_FILE(cid,cidload.h)
+#include FT_SOURCE_FILE( cid, cidload.h )
 
 #include <stdio.h>
 #include <ctype.h>  /* for isspace(), isalnum() */

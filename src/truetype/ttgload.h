@@ -21,10 +21,10 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(truetype,ttobjs.h)
+#include FT_SOURCE_FILE( truetype, ttobjs.h )
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-#include FT_SOURCE_FILE(truetype,ttinterp.h)
+#include FT_SOURCE_FILE( truetype, ttinterp.h )
 #endif
 
 

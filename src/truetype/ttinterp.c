@@ -20,7 +20,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
 #include FT_SYSTEM_H
-#include FT_SOURCE_FILE(truetype,ttinterp.h)
+#include FT_SOURCE_FILE( truetype, ttinterp.h )
 #include FT_INTERNAL_TRUETYPE_ERRORS_H
 
 
