@@ -1524,7 +1524,7 @@
     else
       error = FT_Err_Invalid_Size_Handle;
 
-    return FT_Err_Ok;
+    return error;
   }
 
 
@@ -1558,7 +1558,6 @@
   {
     FT_Error          error = FT_Err_Ok;
     FT_Driver         driver;
-    FT_Memory         memory;
     FT_Driver_Class*  clazz;
     FT_Size_Metrics*  metrics;
     FT_Long           dim_x, dim_y;
@@ -1584,7 +1583,6 @@
 
     driver = face->driver;
     clazz  = driver->clazz;
-    memory = driver->root.memory;
 
     /* default processing -- this can be overridden by the driver */
     if ( char_width  < 1 * 64 )
@@ -1628,7 +1626,6 @@
   {
     FT_Error          error = FT_Err_Ok;
     FT_Driver         driver;
-    FT_Memory         memory;
     FT_Driver_Class*  clazz;
     FT_Size_Metrics*  metrics = &face->size->metrics;
 
@@ -1638,7 +1635,6 @@
 
     driver = face->driver;
     clazz  = driver->clazz;
-    memory = driver->root.memory;
 
     /* default processing -- this can be overridden by the driver */
     if ( pixel_width == 0 )
@@ -1684,7 +1680,6 @@
   {
     FT_Error   error = FT_Err_Ok;
     FT_Driver  driver;
-    FT_Memory  memory;
 
 
     if ( !face )
@@ -1694,7 +1689,6 @@
       return FT_Err_Invalid_Argument;
 
     driver = face->driver;
-    memory = driver->root.memory;
 
     akerning->x = 0;
     akerning->y = 0;

@@ -247,7 +247,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* This must be greater than 4kByte.                                     */
   /*                                                                       */
-#define FT_RENDER_POOL_SIZE  32768
+#define FT_RENDER_POOL_SIZE  32768L
 
 
   /*************************************************************************/

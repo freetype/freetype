@@ -515,16 +515,20 @@
                                             FT_BBox  *acbox )
   {
     const FT_Glyph_Class*  clazz;
-    FT_Error               error = FT_Err_Ok;
 
 
-    if ( !acbox || !glyph || !glyph->clazz )
-      error = FT_Err_Invalid_Argument;
+    if ( !acbox )
+      return;
+
+    acbox->xMin = acbox->yMin = acbox->xMax = acbox->yMax = 0;
+
+    if ( !glyph || !glyph->clazz )
+      return;
     else
     {
       clazz = glyph->clazz;
       if ( !clazz->glyph_bbox )
-        error = FT_Err_Invalid_Glyph_Format;
+        return;
       else
       {
         /* retrieve bbox in 26.6 coordinates */

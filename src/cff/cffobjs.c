@@ -346,13 +346,10 @@
       FT_Memory  memory = face->root.memory;
       FT_Face    root;
       FT_UInt    flags;
-      FT_ULong   base_offset;
 
 
       if ( ALLOC( cff, sizeof ( *cff ) ) )
         goto Exit;
-
-      base_offset = FILE_Pos();
 
       face->extra.data = cff;
       error = CFF_Load_Font( stream, face_index, cff );

@@ -1,5 +1,46 @@
 2001-06-18  Werner Lemberg  <wl@gnu.org>
 
+	Minor cleanups to remove compiler warnings.
+
+	* include/freetype/cache/ftcmanag.h (FTC_MAX_BYTES_DEFAULT): Use
+	`L' for constant.
+	* include/freetype/config/ftoption.h (FT_RENDER_POOL_SIZE): Ditto.
+	* src/base/ftcalc.c (FT_MulDiv): Use `L' for constant.
+	* src/base/ftglyph.c (FT_Glyph_Get_CBox): Remove `error' variable.
+	* src/base/fttrigon.c (ft_trig_arctan_table): Use `L' for constants.
+	* src/base/ftobjs.c (FT_Done_Size): Fix return value.
+	(FT_Set_Char_Size, FT_Set_Pixel_Sizes, FT_Get_Kerning): Remove
+	unused `memory' variable.
+	* src/autohint/ahglyph.c (ah_get_orientation): Use `L' for constant.
+	* src/autohint/ahhint.c (ah_hint_edges_3,
+	ah_hinter_align_edge_points): Remove unused `before' and `after'
+	variables.
+	(ah_hinter_align_weak_points): Remove unused `edge_limit' variable.
+	(ah_hinter_load): Remove unused `new_advance', `start_contour',
+	and `metrics' variables.
+	* src/cff/cffload.c (CFF_Load_Encoding): Remove dead code to avoid
+	compiler warning.
+	* src/cff/cffobjs.c (CFF_Init_Face): Remove unused `base_offset'
+	variable.
+	* src/cff/cffgload.c (CFF_Parse_CharStrings): Remove unused
+	`outline' variable.
+	(cff_compute_bias): Use `U' for constant.
+	* src/cid/cidload.c (cid_decrypt): Ditto.
+	* src/psaux/psobjs.c (T1_Decrypt): Ditto.
+	* src/psaux/t1decode.c (T1_Decoder_Parse_CharStrings): Ditto.
+	* src/sfnt/ttload.c (TT_Load_Kern): Remove unused `version'
+	variable.
+	* src/sfnt/ttsbit.c (TT_Load_SBit_Image): Remove unused `top'
+	variable.
+	* src/truetype/ttgload.c (load_truetype_glyph): Remove unused
+	`num_contours' and `ins_offset' variables.
+	(compute_glyph_metrics): Remove unused `Top' and `x_scale'
+	variables.
+	(TT_Load_Glyph): Remove unused `memory' variable.
+	* src/smooth/ftgrays.c (grays_raster_render): Use `L' for constants.
+
+2001-06-18  Werner Lemberg  <wl@gnu.org>
+
 	Make the new error scheme source compatible with older FT versions
 	by introducing another layer.
 

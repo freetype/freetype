@@ -1919,7 +1919,6 @@
         FT_ERROR(( "CFF_Load_Encoding: invalid table format!\n" ));
         error = CFF_Err_Invalid_File_Format;
         goto Exit;
-       break;
       }
     }
 

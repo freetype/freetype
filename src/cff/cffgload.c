@@ -306,10 +306,10 @@
 
     if ( num_subrs < 1240 )
       result = 107;
-    else if ( num_subrs < 33900 )
+    else if ( num_subrs < 33900U )
       result = 1131;
     else
-      result = 32768;
+      result = 32768U;
 
     return result;
   }
@@ -695,7 +695,6 @@
     FT_Byte*           ip;
     FT_Byte*           limit;
     CFF_Builder*       builder = &decoder->builder;
-    FT_Outline*        outline;
     FT_Pos             x, y;
     FT_Fixed           seed;
     FT_Fixed*          stack;
@@ -725,8 +724,7 @@
     limit = zone->limit  = charstring_base + charstring_len;
     ip    = zone->cursor = zone->base;
 
-    error   = CFF_Err_Ok;
-    outline = builder->current;
+    error = CFF_Err_Ok;
 
     x = builder->pos_x;
     y = builder->pos_y;

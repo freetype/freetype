@@ -1443,11 +1443,9 @@
     {
       /* in case of a horizontal strike only */
       FT_Int  advance;
-      FT_Int  top;
 
 
       advance = strike->hori.ascender - strike->hori.descender;
-      top     = advance / 10;
 
       /* some heuristic values */
 
