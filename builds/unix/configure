@@ -3044,7 +3044,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 # get compiler flags right
 
 if test "x$CC" = xgcc; then
-  XX_CFLAGS="-Wall"
+  XX_CFLAGS="-Wall -fno-strict-aliasing"
   XX_ANSIFLAGS="-pedantic -ansi"
 else
   case "$host" in

@@ -1323,7 +1323,7 @@
       return TT_Err_Invalid_Argument;
 
     /* to be freed by the caller */
-    if ( FT_NEW_ARRAY( delta_xy, n_points ) != 0 )
+    if ( FT_NEW_ARRAY( delta_xy, n_points ) )
       goto Exit;
     *deltas = delta_xy;
 
