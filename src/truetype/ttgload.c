@@ -738,15 +738,25 @@
     if ( ((TT_Face)load->face)->doblend )
     {
       /* Deltas apply to the unscaled data. */
-      FT_Vector*  deltas;
-      FT_Memory   memory = load->face->memory;
-      FT_UInt     i;
+      FT_Vector*    deltas;
+      FT_Memory     memory       = load->face->memory;
+      FT_StreamRec  saved_stream = *(load->stream);
+      FT_UInt       i;
 
 
-      if ( ( error = TT_Vary_Get_Glyph_Deltas( (TT_Face)(load->face),
-                                               load->glyph_index,
-                                               &deltas,
-                                               n_points ) ) )
+      /* TT_Vary_Get_Glyph_Deltas uses a frame, thus we have to save */
+      /* (and restore) the current one                               */
+      load->stream->cursor = 0;
+      load->stream->limit  = 0;
+
+      error = TT_Vary_Get_Glyph_Deltas( (TT_Face)(load->face),
+                                        load->glyph_index,
+                                        &deltas,
+                                        n_points );
+
+      *(load->stream) = saved_stream;
+
+      if ( error )
         goto Exit;
 
       for ( i = 0; i < n_points; ++i )
@@ -863,7 +873,7 @@
 #endif
 
     FT_Error        error;
-    TT_Face         face   = (TT_Face)loader->face;
+    TT_Face         face = (TT_Face)loader->face;
     FT_ULong        offset;
     FT_Int          contours_count;
     FT_UInt         num_points, count;
@@ -872,9 +882,9 @@
     FT_Bool         opened_frame = 0;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    struct FT_StreamRec_  inc_stream;
-    FT_Data               glyph_data;
-    FT_Bool               glyph_data_loaded = 0;
+    FT_StreamRec    inc_stream;
+    FT_Data         glyph_data;
+    FT_Bool         glyph_data_loaded = 0;
 #endif
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT

@@ -203,8 +203,8 @@
     /* reset the size object if necessary */
     if ( size )
     {
-      /* these two object must have the same parent */
-      if ( size->root.face != slot->root.face )
+      /* these two objects must have the same parent */
+      if ( cffsize->face != cffslot->face )
         return CFF_Err_Invalid_Face_Handle;
     }
 

@@ -1,3 +1,29 @@
+2004-05-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffobjs.c (cff_size_done, cff_size_init, cff_size_reset,
+	cff_slot_done, cff_slot_init, cff_face_init, cff_face_done): Access
+	root fields directly.
+	* src/cff/cffdrivr.c (Load_Glyph): Access root fields directly.
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Save current
+	frame before calling TT_Vary_Get_Glyph_Deltas.
+
+	* src/pcf/pcfdrivr.c (PCF_CMapRec): Rename `cmap' to `root' for
+	consistency.
+	(pcf_cmap_init, pcf_cmap_done, pcf_cmap_char_index,
+	pcf_cmap_char_next): Don't use PCF_XXX but FT_XXX arguments which
+	are typecast to the proper PCF_XXX types within the function. 
+	Update code accordingly.
+	(pcf_cmap_class): Remove casts.
+	(PCF_Face_Done, PCF_Face_Init, PCF_Set_Pixel_Size): Don't use
+	PCF_XXX but FT_XXX arguments which are typecast to the proper
+	PCF_XXX types within the function.
+	Update code accordingly.
+	Use FT_CALLBACK_DEF throughout.
+	(PCF_Set_Point_Size): New wrapper function.
+	(PCF_Glyph_Load, pcf_driver_requester): Use FT_CALLBACK_DEF.
+	(pcf_driver_class): Remove casts.
+
 2004-05-04  Steve Hartwell  <shspamsink@comcast.net>
 
 	* src/truetype/ttobjs.c (tt_driver_done): Fix typo.

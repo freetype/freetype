@@ -131,10 +131,10 @@ FT_BEGIN_HEADER
                         FT_UInt     vert_resolution );
 
   FT_LOCAL( void )
-  cff_slot_done( FT_GlyphSlot  slot );      /* CFF_GlyphSlot */
+  cff_slot_done( FT_GlyphSlot  slot );
 
   FT_LOCAL( FT_Error )
-  cff_slot_init( FT_GlyphSlot   slot );     /* CFF_GlyphSlot */
+  cff_slot_init( FT_GlyphSlot  slot );
 
 
   /*************************************************************************/
