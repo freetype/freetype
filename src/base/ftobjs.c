@@ -700,6 +700,11 @@
              FT_Long        face_index,
              FT_Int         num_params,
              FT_Parameter*  params,
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+			 FT_Incremental_Interface*	incremental_interface,
+#endif
+
              FT_Face*       aface )
   {
     FT_Memory         memory;
@@ -724,6 +729,9 @@
     face->driver   = driver;
     face->memory   = memory;
     face->stream   = stream;
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+	face->incremental_interface = incremental_interface;
+#endif
 
     error = clazz->init_face( stream,
                               face,
@@ -868,6 +876,10 @@
         FT_Int         num_params = 0;
         FT_Parameter*  params     = 0;
 
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+		FT_Incremental_Interface* incremental_interface =
+			(args->flags & ft_open_incremental) ? args->incremental_interface : 0;
+#endif
 
         if ( args->flags & ft_open_params )
         {
@@ -875,8 +887,14 @@
           params     = args->params;
         }
 
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+        error = open_face( driver, stream, face_index,
+                           num_params, params, incremental_interface, &face );
+#else
         error = open_face( driver, stream, face_index,
                            num_params, params, &face );
+#endif
+
         if ( !error )
           goto Success;
       }
@@ -901,6 +919,10 @@
           FT_Int         num_params = 0;
           FT_Parameter*  params     = 0;
 
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+		  FT_Incremental_Interface* incremental_interface =
+            (args->flags & ft_open_incremental) ? args->incremental_interface : 0;
+#endif
 
           driver = FT_DRIVER( cur[0] );
 
@@ -910,8 +932,14 @@
             params     = args->params;
           }
 
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
           error = open_face( driver, stream, face_index,
-                             num_params, params, &face );
+                            num_params, params, incremental_interface, &face );
+#else
+          error = open_face( driver, stream, face_index,
+                            num_params, params, &face );
+#endif
+
           if ( !error )
             goto Success;
 
