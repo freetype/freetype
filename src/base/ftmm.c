@@ -48,7 +48,8 @@
     
     if ( FT_HAS_MULTIPLE_MASTERS( face ) )
     {
-      FT_FACE_LOOKUP_SERVICE( face, *aservice,
+      FT_FACE_LOOKUP_SERVICE( face,
+                              FT_Service_MultiMasters, *aservice,
                               multi_masters,
                               FT_SERVICE_ID_MULTI_MASTERS );
     }

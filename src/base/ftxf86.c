@@ -26,8 +26,10 @@
   {
     const char*  result = NULL;
 
+
     if ( face )
-      FT_FACE_FIND_SERVICE( result, face, FT_SERVICE_ID_XF86_NAME );
+      FT_FACE_FIND_SERVICE( const char*, result,
+                            face, FT_SERVICE_ID_XF86_NAME );
 
     return result;
   }

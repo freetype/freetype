@@ -22,8 +22,8 @@
   /*  generally corresponds to a structure containing function pointers.   */
   /*                                                                       */
   /*  Note that a service's data cannot be a mere function pointer because */
-  /*  in C it is possible that function pointers might are implemented     */
-  /*  differently from data pointers (e.g. 48 bits instead of 32).         */
+  /*  in C it is possible that function pointers might be implemented      */
+  /*  differently than data pointers (e.g. 48 bits instead of 32).         */
   /*                                                                       */
   /*************************************************************************/
 
@@ -35,35 +35,39 @@
 FT_BEGIN_HEADER
 
 
- /*
-  * @macro:
-  *   FT_FACE_FIND_SERVICE
-  *
-  * @description:
-  *   This macro is used to lookup a service from a face's driver module.
-  *
-  * @input:
-  *   id ::
-  *     A string describing the service as defined in the service's
-  *     header files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
-  *     `multi-masters').
-  *
-  *   face ::
-  *     The source face handle.
-  *
-  * @output:
-  *   ptr ::
-  *     A variable that receives the service pointer.  Will be NULL
-  *     if not found.
-  */
-#define FT_FACE_FIND_SERVICE( ptr, face, id )               \
-  FT_BEGIN_STMNT                                            \
-    FT_Module  module = FT_MODULE( FT_FACE(face)->driver ); \
-                                                            \
-                                                            \
-    (ptr) = NULL;                                           \
-    if ( module->clazz->get_interface )                     \
-      (ptr) = module->clazz->get_interface( module, id );   \
+  /*
+   * @macro:
+   *   FT_FACE_FIND_SERVICE
+   *
+   * @description:
+   *   This macro is used to lookup a service from a face's driver module.
+   *
+   * @input:
+   *   id ::
+   *     A string describing the service as defined in the service's
+   *     header files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
+   *     `multi-masters').
+   *
+   *   face ::
+   *     The source face handle.
+   *
+   *   ptrtype ::
+   *     The pointer type of `ptr'.  This is needed to make FreeType
+   *     compile cleanly with C++.
+   *
+   * @output:
+   *   ptr ::
+   *     A variable that receives the service pointer.  Will be NULL
+   *     if not found.
+   */
+#define FT_FACE_FIND_SERVICE( ptrtype, ptr, face, id )             \
+  FT_BEGIN_STMNT                                                   \
+    FT_Module  module = FT_MODULE( FT_FACE(face)->driver );        \
+                                                                   \
+                                                                   \
+    (ptr) = NULL;                                                  \
+    if ( module->clazz->get_interface )                            \
+      (ptr) = (ptrtype)module->clazz->get_interface( module, id ); \
   FT_END_STMNT
 
 
@@ -152,18 +156,22 @@ FT_BEGIN_HEADER
    *   id ::
    *     The service ID.
    *
+   *   ptrtype ::
+   *     The pointer type of `ptr'.  This is needed to make FreeType
+   *     compile cleanly with C++.
+   *
    * @output:
    *   ptr ::
    *     A variable receiving the service data.  NULL if not available.
    */
-#define FT_FACE_LOOKUP_SERVICE( face, ptr, field, id )          \
+#define FT_FACE_LOOKUP_SERVICE( face, ptrtype, ptr, field, id ) \
   FT_BEGIN_STMNT                                                \
-    (ptr) = FT_FACE(face)->internal->services.field ;           \
+    (ptr) = (ptrtype)FT_FACE(face)->internal->services.field ;  \
     if ( (ptr) == FT_SERVICE_UNAVAILABLE )                      \
       (ptr) = NULL;                                             \
     else if ( (ptr) == NULL )                                   \
     {                                                           \
-      FT_FACE_FIND_SERVICE( ptr, face, id );                    \
+      FT_FACE_FIND_SERVICE( ptrtype, ptr, face, id );           \
                                                                 \
       FT_FACE(face)->internal->services.field =                 \
         (FT_Pointer)( (ptr) != NULL ? (ptr)                     \
