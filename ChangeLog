@@ -1,3 +1,15 @@
+2001-08-30  Martin Muskens <mmuskens@aurelon.com>
+
+	* src/type1/t1load.c (parse_font_matrix): a new way to compute the
+	units per EM with greater accuracy (important for embedded T1 fonts in
+	PDF documents that were automatically generated from TrueType ones).
+
+	* src/type1/t1load.c (is_alpha): now supports "+" in font names, this
+	is used in embedded fonts..
+
+	* src/psaux/psobjs.c (PS_Table_Add): fixed a reallocation bug that
+	generated a dangling pointer reference.
+
 2001-08-30  Anthony Feik  <afeick@hotmail.com>
 
 	* src/type1/t1afm.c (T1_Read_Afm): now correctly sets the flag

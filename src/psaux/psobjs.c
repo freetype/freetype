@@ -164,8 +164,12 @@
     if ( table->cursor + length > table->capacity )
     {
       FT_Error   error;
-      FT_Offset  new_size = table->capacity;
-
+      FT_Offset  new_size  = table->capacity;
+      FT_Long    in_offset;
+      
+      in_offset = (FT_Long)((FT_Byte*)object - table->block);
+      if ( (FT_ULong)in_offset >= table->capacity )
+        in_offset = -1;
 
       while ( new_size < table->cursor + length )
         new_size += 1024;
@@ -173,6 +177,9 @@
       error = reallocate_t1_table( table, new_size );
       if ( error )
         return error;
+      
+      if ( in_offset >= 0 )
+        object = table->block + in_offset;
     }
 
     /* add the object to the base block and adjust offset */
