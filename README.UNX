@@ -23,7 +23,7 @@ SPECIAL NOTE FOR UNIX USERS
       
       - locate a line that says:
       
-          #undef TT_CONFIG_OPTION_BYTECODE_ITNERPRETER
+          #undef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
       - change it to:
 

@@ -1,3 +1,8 @@
+2002-01-29  Werner Lemberg  <wl@gnu.org>
+
+	* README.UNX: Fix typo.
+	* builds/unix/install.mk (uninstall): Fix library name for libtool.
+
 2002-01-28  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
 
 	* src/pcf/pcfdriver.c (PCF_Done_Face): Fix incorrect destruction of
