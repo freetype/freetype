@@ -225,8 +225,8 @@
         if ( !root->units_per_EM )
           root->units_per_EM  = 1000;
 
-        root->ascender     = face->cid.font_bbox.yMax >> 16;
-        root->descender    = face->cid.font_bbox.yMin >> 16;
+        root->ascender     = (FT_Short)(face->cid.font_bbox.yMax >> 16);
+        root->descender    = (FT_Short)(face->cid.font_bbox.yMin >> 16);
         root->height       = ( ( root->ascender + root->descender ) * 12 )
                              / 10;
 
