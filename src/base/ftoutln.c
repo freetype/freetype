@@ -26,6 +26,7 @@
 #include <ft2build.h>
 #include FT_OUTLINE_H
 #include FT_INTERNAL_OBJECTS_H
+#include FT_TRIGONOMETRY_H
 
 
   /*************************************************************************/
@@ -654,5 +655,141 @@
       FT_Vector_Transform( vec, matrix );
   }
 
+
+
+  typedef FT_OrientationExtremumRec_
+  {
+    FT_Int   index;
+    FT_Int   pos;
+    FT_Int   first;
+    FT_Int   last;
+  
+  } FT_OrientationExtremumRec;
+
+ 
+  static FT_Orientation
+  ft_orientation_extremum_compute( FT_OrientationExtremumRec*  extremum,
+                                   FT_Outline*                 outline )
+  {
+    FT_Vector  *point, *first, *last, *prev, *next;
+    FT_Vector*  points = outline->points;
+    FT_Angle    angle_in, angle_out;
+    
+   /* compute the previous and next points in the same contour
+    */
+    point = points + extremum->index;
+    first = points + extremum->first;
+    last  = points + extremum->last;
+   
+    do
+    {
+      prev = ( point == first ) ? last : point-1;
+     
+      if ( prev == point )
+        return FT_ORIENTATION_TRUETYPE;  /* degenerate case */
+      
+    } while ( prev->x != point->x || prev->y != point->y );
+    
+    do
+    {
+      next = ( point == last ) ? first : point+1;
+      
+      if ( next == point )
+        return FT_ORIENTATION_TRUETYPE;  /* shouldn't happen */
+        
+    } while ( next->x != point->x || next->y != point->y );
+    
+   /* now, compute the orientation of the "out" vector relative
+    * to the "in" vector.
+    */
+    angle_in  = FT_Atan2( point->x - prev->x,  point->y - prev->y );
+    angle_out = FT_Atan2( next->x  - point->x, next->y  - point->y );
+    
+    return ( FT_Angle_Diff( angle_in, angle_out ) >= 0 )
+           ? FT_ORIENTATION_TRUETYPE
+           : FT_ORIENTATION_POSTSCRIPT;
+  }
+
+
+  FT_EXPORT_DEF( FT_Orientation )
+  FT_Outline_Get_Orientation( FT_Outline*  outline )
+  {
+    FT_Orientation  result = FT_ORIENTATION_TRUETYPE;
+    
+    if ( outline && outline->n_points > 0 )
+    {
+      FT_OrientationExtremumRec  xmin, ymin, xmax, ymax;
+      FT_Int                     n;
+      FT_Int                     first, last;
+      FT_Vector*                 points = outline->points;
+      
+      xmin.pos = ymin.pos = +32768L;
+      xmax.pos = ymax.pos = -32768L;
+      
+      xmin.index = ymin.index = xmax.index = ymax.index = -1;
+
+      first = 0;
+      for ( n = 0; n < outline->n_contours; n++, first = last+1 )
+      {
+        last = outline->contours[n];
+
+       /* skip single-point contours, these are degenerated cases
+        */
+        if ( last > first+1 )
+        {
+          FT_Int  i;
+          
+          for ( i = first; i < last; i++ )
+          {
+            x = points[i].x;
+            y = points[i].y;
+            
+            if ( x < xmin.pos )
+            {
+              xmin.pos   = x;
+              xmin.index = i;
+              xmin.first = first;
+              xmin.last  = last;
+            }
+            if ( x > xmax.pos )
+            {
+              xmax.pos   = x;
+              xmax.index = i;
+              xmax.first = first;
+              xmax.last  = last;
+            }
+            if ( y < ymin.pos )
+            {
+              ymin.pos   = y;
+              ymin.index = i;
+              ymin.first = first;
+              ymin.last  = last;
+            }
+            if ( y > ymax.pos )
+            {
+              ymax.pos   = y;
+              ymax.index = i;
+              ymax.first = first;
+              ymax.last  = last;
+            }
+          }
+        }
+        
+        if ( xmin.index >= 0 )
+          result = ft_orientation_extremum_compute( &xmin, outline );
+          
+        else if ( xmax.index >= 0 )
+          result = ft_orientation_extremum_compute( &xmax, outline );
+          
+        else if ( ymin.index >= 0 )
+          result = ft_orientation_extremum_compute( &ymin, outline );
+          
+        else if ( ymax.index >= 0 )
+          result = ft_orientation_extremum_compute( &ymax, outline );
+      }
+    }
+    
+    return result;
+  }
 
 /* END */
