@@ -1024,12 +1024,12 @@
   /*    linearHoriAdvance :: For scalable formats only, this field holds   */
   /*                         the linearly scaled horizontal advance width  */
   /*                         for the glyph (i.e. the scaled and unhinted   */
-  /*                         value of the hori advance). This can be       */
-  /*                         important to perform correct WYSIWYG layout   */
+  /*                         value of the hori advance).  This can be      */
+  /*                         important to perform correct WYSIWYG layout.  */
   /*                                                                       */
   /*                         Note that this value is expressed by default  */
   /*                         in 16.16 pixels. However, when the glyph is   */
-  /*                         loaded with the FT_LOAD_UNSCALED_LINEAR flag, */
+  /*                         loaded with the FT_LOAD_LINEAR_DESIGN flag,   */
   /*                         this field contains simply the value of the   */
   /*                         advance in original font units.               */
   /*                                                                       */
