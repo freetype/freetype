@@ -73,7 +73,7 @@ COMPILE_GRAPH_LIB = ar -r $@ $(GRAPH_OBJS)
 # Add the rules used to detect and compile graphics driver depending
 # on the current platform..
 #
-include $(wildcard $(GRAPH_)/*/rules.mk)
+include $(wildcard $(TOP2)/graph/*/rules.mk)
 
 #########################################################################
 #
