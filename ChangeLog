@@ -1,3 +1,13 @@
+2003-05-15  David Turner  <david@freetype.org>
+
+	* src/base/fttrigon.c (FT_Vector_Rotate): Avoid rounding errors
+	for small values.
+
+2003-05-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/autohint/ahtypes.h (AH_PointRec): Remove unused `in_angle'
+	and `out_angle' fields.
+
 2003-05-14  George Williams  <gww@silcom.com>
 
 	* src/base/ftmac.c (FT_New_Face_From_SFNT): Handle CFF files also.

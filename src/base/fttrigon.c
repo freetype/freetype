@@ -356,6 +356,14 @@
   }
 
 
+  /* these macros return 0 for positive numbers,
+     and -1 for negative ones */
+#define FT_SIGN_LONG( x )   ( (x) >> ( FT_SIZEOF_LONG * 8 - 1 ) )
+#define FT_SIGN_INT( x )    ( (x) >> ( FT_SIZEOF_INT * 8 - 1 ) )
+#define FT_SIGN_INT32( x )  ( (x) >> 31 )
+#define FT_SIGN_INT16( x )  ( (x) >> 15 )
+
+
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
@@ -366,8 +374,8 @@
     FT_Vector  v;
 
 
-    v.x = vec->x;
-    v.y = vec->y;
+    v.x   = vec->x;
+    v.y   = vec->y;
 
     if ( angle && ( v.x != 0 || v.y != 0 ) )
     {
@@ -376,10 +384,13 @@
       v.x = ft_trig_downscale( v.x );
       v.y = ft_trig_downscale( v.y );
 
-      if ( shift >= 0 )
+      if ( shift > 0 )
       {
-        vec->x = v.x >> shift;
-        vec->y = v.y >> shift;
+        FT_Int32  half = 1L << ( shift - 1 );
+
+
+        vec->x = ( v.x + half + FT_SIGN_LONG( v.x ) ) >> shift;
+        vec->y = ( v.y + half + FT_SIGN_LONG( v.y ) ) >> shift;
       }
       else
       {
