@@ -1,3 +1,21 @@
+2001-01-01  Francesco Zappa Nardelli  <francesco.zappa.nardelli@ens.fr>
+
+	* src/pcf/*: New driver module for PCF font format (used in
+	X Windows).
+	* include/freetype/internal/ftdebug.h (FT_Trace): Added values for
+	PCF driver.
+	* include/freetype/internal/pcftypes.h: New file.
+	* include/freetype/config/ftmodule.h: Added PCF driver module.
+
+2001-01-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/winfonts/winfnt.c (FNT_Get_Char_Index): Fix parameter type.
+
+2000-12-31  Werner Lemberg  <wl@gnu.org>
+
+	* builds/modules.mk (clean_module_list): Fixed deletion of module
+	file in case `make make_module_list' is called before `make setup'.
+
 2000-12-30  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffload.c (CFF_Load_Charset): Improved error messages.

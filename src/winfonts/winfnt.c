@@ -469,16 +469,16 @@
 
   static
   FT_UInt  FNT_Get_Char_Index( FT_CharMap  charmap,
-                               FT_ULong    char_code )
+                               FT_Long     char_code )
   {
-    FT_UInt  result = char_code;
+    FT_Long  result = char_code;
 
 
     if ( charmap )
     {
       FNT_Font*  font  = ((FNT_Face)charmap->face)->fonts;
-      FT_UInt    first = font->header.first_char;
-      FT_UInt    count = font->header.last_char - first + 1;
+      FT_Long    first = font->header.first_char;
+      FT_Long    count = font->header.last_char - first + 1;
 
 
       char_code -= first;
