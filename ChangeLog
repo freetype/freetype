@@ -1,3 +1,16 @@
+2005-03-04  David Turner  <david@freetype.org>
+
+    * include/freetype/internal/{ftmemory.h,ftserv.h}: removing
+    compiler warnings with GCC 3.3 and above...
+
+    * include/freetype/internal/ftobjs.h, src/base/ftutil.c (ft_highpow2),
+    src/pfr/pfrload.c, src/pfr/pfrobjs.c, src/pfr/pfrtypes.h: implement
+    FT_OPTIMIZE_MEMORY, the kerning table is not loaded into the heap
+    anymore.
+
+    * src/sfnt/ttsbit0.c, src/truetype/ttpload.c: removing compiler
+    warnings
+
 2005-03-03  Werner Lemberg  <wl@gnu.org>
 
 	* devel/ftoption.h: Updated to recent changes.
@@ -21,7 +34,7 @@
 	(tt_face_load_metrics): Remove compiler warnings
 	-- redundant variables, missing initializations, etc.
 
-	* src/sfnt/ttsbit.h: Handle FT_OPTIMIZE_MEMORY.	
+	* src/sfnt/ttsbit.h: Handle FT_OPTIMIZE_MEMORY.
 
 	* src/autofit/rules.mk, src/autofit/module.mk,
 	src/autofit/afangles.h: New files.
