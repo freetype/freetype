@@ -107,17 +107,17 @@
   {
     FT_Error          error;
     FT_Glyph_Format*  format;
-    
+
     error  = FT_Err_Invalid_Glyph_Format;
     format = FT_Get_Glyph_Format( library, ft_glyph_format_outline );
     if (!format) goto Exit;
-    
+
     error = FT_Err_Invalid_Glyph_Format;
     if (!format->raster) goto Exit;
 
     error = format->raster_interface->render( format->raster, outline, map );
   Exit:
-    return error; 
+    return error;
   }
 
 

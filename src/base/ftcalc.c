@@ -55,7 +55,7 @@
   {
     FT_ULong  val, root, newroot, mask;
 
-    
+
     root = 0;
     mask = 0x40000000;
     val  = (FT_ULong)x;
@@ -73,11 +73,11 @@
       mask >>= 2;
     }
     while ( mask != 0 );
-    
+
     return root;
   }
 
-  
+
 #ifdef LONG64
 
 
@@ -203,7 +203,7 @@
       /* check for divide by 0 */
       q = 0x7FFFFFFF;
 
-    else 
+    else
       /* compute result directly */
       q = ((FT_Int64)a << 16) / b;
 
@@ -481,7 +481,7 @@
     {
       FT_Word32  lo1, hi1, lo2, hi2, lo, hi, i1, i2;
 
-    
+
       lo1 = x & 0x0000FFFF;  hi1 = x >> 16;
       lo2 = y & 0x0000FFFF;  hi2 = y >> 16;
 

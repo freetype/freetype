@@ -4,7 +4,7 @@
 /*                                                                         */
 /*  The FreeType private base classes (base).                              */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -19,6 +19,8 @@
 #include <ftlist.h>
 #include <ftdebug.h>
 #include <ftstream.h>
+
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -35,7 +37,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the PTRACE() and PERROR() macros, used to print/log      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
@@ -71,13 +73,13 @@
   {
     FT_Assert( P != 0 );
 
-    if (size > 0)
+    if ( size > 0 )
     {
       *P = memory->alloc( memory, size );
-      if (!*P)
+      if ( !*P )
       {
         FT_ERROR(( "FT.Alloc:" ));
-        FT_ERROR(( " out of memory ? (%ld requested)\n",
+        FT_ERROR(( " Out of memory? (%ld requested)\n",
                    size ));
 
         return FT_Err_Out_Of_Memory;
@@ -109,7 +111,7 @@
   /*              occurs.                                                  */
   /*                                                                       */
   /*    current :: current block size in bytes                             */
-  /*    size    :: the new block size in bytes                              */
+  /*    size    :: the new block size in bytes                             */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    P      :: A pointer to the fresh new block.  It should be set to   */
@@ -122,10 +124,10 @@
   /*    All callers of FT_Realloc _must_ provide the current block size    */
   /*    as well as the new one.                                            */
   /*                                                                       */
-  /*    When the memory object's flag FT_SYSTEM_FLAG_NO_REALLOC is         */
-  /*    set, this function will try to emulate a realloc through uses      */
-  /*    of FT_Alloc and FT_Free. Otherwise, it will call the system-       */
-  /*    specific "realloc" implementation.                                 */
+  /*    If the memory object's flag FT_SYSTEM_FLAG_NO_REALLOC is set, this */
+  /*    function will try to emulate a reallocation using FT_Alloc() and   */
+  /*    FT_Free().  Otherwise, it will call the system-specific `realloc'  */
+  /*    implementation.                                                    */
   /*                                                                       */
   /*    (Some embedded systems do not have a working realloc).             */
   /*                                                                       */
@@ -136,6 +138,7 @@
                         void*     *P )
   {
     void*  Q;
+
 
     FT_Assert( P != 0 );
 
@@ -151,14 +154,15 @@
     }
 
     Q = memory->realloc( memory, current, size, *P );
-    if ( !Q ) goto Fail;
+    if ( !Q )
+      goto Fail;
 
     *P = Q;
     return FT_Err_Ok;
 
   Fail:
     FT_ERROR(( "FT.Realloc:" ));
-    FT_ERROR(( " failed (current %ld, requested %ld)\n",
+    FT_ERROR(( " Failed (current %ld, requested %ld)\n",
                current, size ));
     return FT_Err_Out_Of_Memory;
   }
@@ -189,20 +193,22 @@
   /*                                                                       */
   BASE_FUNC
   void  FT_Free( FT_Memory  memory,
-                     void*     *P )
+                 void*     *P )
   {
     FT_TRACE2(( "FT_Free:" ));
     FT_TRACE2(( " Freeing block 0x%08lx, ref 0x%08lx\n",
                 (long)P, (P ? (long)*P : -1) ));
 
     FT_Assert( P != 0 );
-    
+
     if ( *P )
     {
       memory->free( memory, *P );
       *P = 0;
     }
   }
+
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -216,46 +222,46 @@
   /*************************************************************************/
   /*************************************************************************/
 
-      /* destructor for sizes list */
-      static
-      void  destroy_size( FT_Memory  memory,
-                          FT_Size    size,
-                          FT_Driver  driver )
-      {
-        /* finalize format-specific stuff */
-        driver->interface.done_size( size );
-        FREE( size );
-      }
+  /* destructor for sizes list */
+  static
+  void  destroy_size( FT_Memory  memory,
+                      FT_Size    size,
+                      FT_Driver  driver )
+  {
+    /* finalize format-specific stuff */
+    driver->interface.done_size( size );
+    FREE( size );
+  }
 
 
-      /* destructor for faces list */
-      static
-      void  destroy_face( FT_Memory  memory,
-                          FT_Face    face,
-                          FT_Driver  driver )
-      {
-        /* Discard glyph slots for this face                                */
-        /* XXX: Beware!  FT_Done_GlyphSlot() changes the field `face->slot' */
-        while ( face->glyph )
-          FT_Done_GlyphSlot( face->glyph );
-    
-        /* Discard all sizes for this face */
-        FT_List_Finalize( &face->sizes_list,
-                         (FT_List_Destructor)destroy_size,
-                         memory,
-                         driver );
-        face->size = 0;
-    
-        /* finalize format-specific stuff */
-        driver->interface.done_face( face );
-    
-        /* Now discard client data */
-        if ( face->generic.finalizer )
-          face->generic.finalizer( face );
-    
-        /* get rid of it */
-        FREE( face );
-      }
+  /* destructor for faces list */
+  static
+  void  destroy_face( FT_Memory  memory,
+                      FT_Face    face,
+                      FT_Driver  driver )
+  {
+    /* Discard glyph slots for this face                                */
+    /* XXX: Beware!  FT_Done_GlyphSlot() changes the field `face->slot' */
+    while ( face->glyph )
+      FT_Done_GlyphSlot( face->glyph );
+
+    /* Discard all sizes for this face */
+    FT_List_Finalize( &face->sizes_list,
+                     (FT_List_Destructor)destroy_size,
+                     memory,
+                     driver );
+    face->size = 0;
+
+    /* finalize format-specific stuff */
+    driver->interface.done_face( face );
+
+    /* Now discard client data */
+    if ( face->generic.finalizer )
+      face->generic.finalizer( face );
+
+    /* get rid of it */
+    FREE( face );
+  }
 
 
   /*************************************************************************/
@@ -267,19 +273,17 @@
   /*    Destroys a given driver object.  This also destroys all child      */
   /*    faces.                                                             */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    driver :: A handle to the target driver object.                    */
   /*                                                                       */
-  /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
-  /*                                                                       */
   /* <Note>                                                                */
-  /*    The driver _must_ be LOCKED!                                      */
+  /*    The driver _must_ be LOCKED!                                       */
   /*                                                                       */
   static
-  void   Destroy_Driver( FT_Driver  driver )
+  void  Destroy_Driver( FT_Driver  driver )
   {
-    FT_Memory  memory  = driver->memory;
+    FT_Memory  memory = driver->memory;
+
 
     /* now, finalize all faces in the driver list */
     FT_List_Finalize( &driver->faces_list,
@@ -288,34 +292,47 @@
                       driver );
 
     /* finalize the driver object */
-    if (driver->interface.done_driver)
-      driver->interface.done_driver(driver);
+    if ( driver->interface.done_driver )
+      driver->interface.done_driver( driver );
 
     /* finalize client-data */
-    if (driver->generic.finalizer)
-      driver->generic.finalizer(driver);
+    if ( driver->generic.finalizer )
+      driver->generic.finalizer( driver );
 
     /* discard it */
     FREE( driver );
   }
 
 
-
-
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Glyph_Format                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Gets the glyph format for a given format tag.                      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library    :: A handle to the library object.                      */
+  /*    format_tag :: A tag identifying the glyph format.                  */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A pointer to a glyph format.  0 if `format_tag' isn't defined.     */
+  /*                                                                       */
   BASE_FUNC
   FT_Glyph_Format*  FT_Get_Glyph_Format( FT_Library    library,
                                          FT_Glyph_Tag  format_tag )
   {
     FT_Glyph_Format*  cur   = library->glyph_formats;
     FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
-    
+
+
     for ( ; cur < limit; cur ++ )
     {
       if ( cur->format_tag == format_tag )
         return cur;
     }
-    
+
     return 0;
   }
 
@@ -326,18 +343,19 @@
   /*    FT_Set_Raster                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This function is used to change the raster module used to convert  */
-  /*    from a given memory object.  It is thus possible to use libraries  */
-  /*    with distinct memory allocators within the same program.           */
+  /*    This function changes the raster module used to convert from a     */
+  /*    given memory object.  It is thus possible to use libraries with    */
+  /*    distinct memory allocators within the same program.                */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    memory  :: A handle to the original memory object.                 */
+  /*    library   :: A handle to the library object.                       */
+  /*    interface :: A pointer to the interface of the new raster module.  */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    library :: A handle to a new library object.                       */
+  /*    raster    :: A handle to the raster object.                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   EXPORT_FUNC
   FT_Error  FT_Set_Raster( FT_Library            library,
@@ -348,6 +366,7 @@
     FT_Error          error  = FT_Err_Ok;
     FT_Glyph_Format*  format;
 
+
     /* allocate the render pool if necessary */
     if ( !library->raster_pool &&
          ALLOC( library->raster_pool, FT_RENDER_POOL_SIZE ) )
@@ -355,37 +374,37 @@
 
     /* find the glyph formatter for the raster's format */
     format = FT_Get_Glyph_Format( library, interface->format_tag );
-    if (!format)
+    if ( !format )
     {
       error = FT_Err_Invalid_Argument;
       goto Exit;
     }
-    
+
     /* free previous raster object if necessary */
-    if (format->raster_allocated)
+    if ( format->raster_allocated )
     {
       FREE( format->raster );
       format->raster_allocated = 0;
     }
-    
+
     /* allocate new raster object is necessary */
-    if (!raster)
+    if ( !raster )
     {
       if ( ALLOC( raster, interface->size ) )
         goto Exit;
-        
+
       format->raster_allocated = 1;
     }
     format->raster           = raster;
     format->raster_interface = interface;
-    
+
     /* initialize the raster object */
     error = interface->init( raster,
                              (char*)library->raster_pool,
                              FT_RENDER_POOL_SIZE );
-    if (error)
+    if ( error )
     {
-      if (format->raster_allocated)
+      if ( format->raster_allocated )
       {
         FREE( format->raster );
         format->raster_allocated = 0;
@@ -396,54 +415,106 @@
     return error;
   }
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Set_Debug_Hook                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Sets a debug hook function for debugging the interpreter of a      */
+  /*    font format.                                                       */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library     :: A handle to the library object.                     */
+  /*    hook_index  :: The index of the debug hook.  You should use the    */
+  /*                   values defined in ftobjs.h, e.g.                    */
+  /*                   FT_DEBUG_HOOK_TRUETYPE                              */
+  /*    debug_hook  :: The function used to debug the interpreter.         */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Currently, four debug hook slots are available, but only two (for  */
+  /*    the TrueType and the Type 1 interpreter) are defined.              */
+  /*                                                                       */
   EXPORT_FUNC
   void  FT_Set_Debug_Hook( FT_Library         library,
                            FT_UInt            hook_index,
                            FT_DebugHook_Func  debug_hook )
   {
-    if (hook_index < (sizeof(library->debug_hooks)/sizeof(void*)))
-    {
+    if ( hook_index < ( sizeof ( library->debug_hooks ) / sizeof ( void* ) ) )
       library->debug_hooks[hook_index] = debug_hook;
-    }
   }
-                           
-  
-  
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Add_Glyph_Format                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Adds a glyph format to the library.                                */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library :: A handle to the library object.                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    format  :: A pointer to the new glyph format.                      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   BASE_FUNC
   FT_Error  FT_Add_Glyph_Format( FT_Library        library,
                                  FT_Glyph_Format*  format )
   {
     FT_Glyph_Format*  new = 0;
-    
+
     {
-      FT_Glyph_Format*  cur = library->glyph_formats;
+      FT_Glyph_Format*  cur   = library->glyph_formats;
       FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
-      
+
+
       for ( ; cur < limit; cur++ )
       {
         /* return an error if the format is already registered */
         if ( cur->format_tag == format->format_tag )
           return FT_Err_Invalid_Glyph_Format;
-          
+
         if ( cur->format_tag == 0 && new == 0 )
           new = cur;
       }
     }
-      
+
     /* if there is no place to hold the new format, return an error */
     if (!new)
       return FT_Err_Too_Many_Glyph_Formats;
-        
+
     *new = *format;
-    
+
     /* now, create a raster object if we need to */
     return FT_Set_Raster( library,
                           format->raster_interface,
                           format->raster );
   }
-  
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Remove_Glyph_Format                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Removes a glyph format from the library.                           */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library    :: A handle to the library object.                      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    format_tag :: A tag identifying the format to be removed.          */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   BASE_FUNC
   FT_Error  FT_Remove_Glyph_Format( FT_Library    library,
                                     FT_Glyph_Tag  format_tag )
@@ -451,14 +522,15 @@
     FT_Memory         memory;
     FT_Glyph_Format*  cur   = library->glyph_formats;
     FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
-    
+
+
     memory = library->memory;
-    
+
     for ( ; cur < limit; cur++ )
     {
-      if (cur->format_tag == format_tag)
+      if ( cur->format_tag == format_tag )
       {
-        if (cur->raster_allocated)
+        if ( cur->raster_allocated )
         {
           FREE( cur->raster );
           cur->raster_allocated = 0;
@@ -467,7 +539,7 @@
         return FT_Err_Ok;
       }
     }
-    
+
     return FT_Err_Invalid_Argument;
   }
 
@@ -483,13 +555,13 @@
   /*    with distinct memory allocators within the same program.           */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    memory  :: A handle to the original memory object.                 */
+  /*    memory   :: A handle to the original memory object.                */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    library :: A handle to a new library object.                       */
+  /*    alibrary :: A pointer to handle of a new library object.           */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   EXPORT_FUNC
   FT_Error  FT_New_Library( FT_Memory    memory,
@@ -497,6 +569,7 @@
   {
     FT_Library library      = 0;
     FT_Error   error;
+
 
     /* First of all, allocate the library object */
     if ( ALLOC( library, sizeof ( *library ) ) )
@@ -513,7 +586,8 @@
         0,
         0
       };
-      
+
+
       error = FT_Add_Glyph_Format( library, &outline_format );
     }
 
@@ -537,7 +611,7 @@
   /*    library :: A handle to the target library                          */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   EXPORT_FUNC
   FT_Error  FT_Done_Library( FT_Library  library )
@@ -552,13 +626,14 @@
     memory = library->memory;
 
     /* Discard client-data */
-    if( library->generic.finalizer )
+    if ( library->generic.finalizer )
       library->generic.finalizer( library );
 
     /* Close all drivers in the library */
     for ( n = 0; n < library->num_drivers; n++ )
     {
       FT_Driver  driver = library->drivers[n];
+
 
       if ( driver )
       {
@@ -569,11 +644,12 @@
 
     /* Destroy raster object */
     FREE( library->raster_pool   );
-    
+
     {
-      FT_Glyph_Format*  cur = library->glyph_formats;
+      FT_Glyph_Format*  cur   = library->glyph_formats;
       FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
-      
+
+
       for ( ; cur < limit; cur++ )
       {
         if ( cur->raster_allocated )
@@ -596,15 +672,18 @@
   /*    FT_Set_Raster_Mode                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Set a raster-specific mode.                                        */
+  /*    Sets a raster-specific mode.                                       */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library :: A handle to a target library object.                    */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    library :: A handle to a target library object.                    */
-  /*    format  :: the glyph format used to select the raster              */
-  /*    mode    :: the raster-specific mode descriptor                     */
-  /*    args    :: the mode arguments                                      */
+  /*    format  :: The glyph format used to select the raster.             */
+  /*    mode    :: The raster-specific mode descriptor.                    */
+  /*    args    :: The mode arguments.                                     */
+  /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   EXPORT_FUNC
   FT_Error  FT_Set_Raster_Mode( FT_Library    library,
@@ -616,13 +695,15 @@
     FT_Error          error;
     FT_Glyph_Format*  format = 0;
 
+
     {
       FT_Glyph_Format*  cur   = library->glyph_formats;
       FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
-      
-      for (; cur < limit; cur++)
+
+
+      for ( ; cur < limit; cur++ )
       {
-        if (cur->format_tag == format_tag)
+        if ( cur->format_tag == format_tag )
         {
           format = cur;
           break;
@@ -630,14 +711,15 @@
       }
     }
 
-    if (!format)
+    if ( !format )
       return FT_Err_Invalid_Argument;
 
     memory = library->memory;
 
     error = FT_Err_Ok;
-    if (format->raster)
-      error = format->raster_interface->set_mode( format->raster, mode, args );
+    if ( format->raster )
+      error = format->raster_interface->set_mode( format->raster,
+                                                  mode, args );
 
     return error;
   }
@@ -650,16 +732,17 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    Registers a new driver in a given library object.  This function   */
-  /*    takes only a pointer to a driver interface.  It uses it to create  */
+  /*    takes only a pointer to a driver interface; it uses it to create   */
   /*    the new driver, then sets up some important fields.                */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    library          :: A handle to the target library object.         */
   /*                                                                       */
+  /* <Input>                                                               */
   /*    driver_interface :: A pointer to a driver interface table.         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    This function doesn't check whether the driver is already          */
@@ -672,6 +755,7 @@
     FT_Error   error;
     FT_Driver  driver;
     FT_Memory  memory;
+
 
     if ( !library || !driver_interface )
       return FT_Err_Invalid_Library_Handle;
@@ -690,10 +774,11 @@
       driver->memory    = memory;
       driver->interface = *driver_interface;
 
-      if (driver_interface->init_driver)
+      if ( driver_interface->init_driver )
       {
         error = driver_interface->init_driver( driver );
-        if ( error ) goto Fail;
+        if ( error )
+          goto Fail;
       }
 
       library->drivers[library->num_drivers++] = driver;
@@ -714,7 +799,7 @@
   /*    FT_Remove_Driver                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Unregister a given driver.  This closes the driver, which in turn  */
+  /*    Unregisters a given driver.  This closes the driver, which in turn */
   /*    destroys all faces, sizes, slots, etc. associated with it.         */
   /*                                                                       */
   /*    This function also DESTROYS the driver object.                     */
@@ -723,7 +808,7 @@
   /*    driver :: A handle to target driver object.                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   EXPORT_FUNC
   FT_Error  FT_Remove_Driver( FT_Driver  driver )
@@ -756,7 +841,7 @@
         Destroy_Driver( driver );
 
         /* now move the last driver in the table to the vacant slot */
-        if (cur < last)
+        if ( cur < last )
         {
           *cur  = *last;
           *last = 0;
@@ -778,25 +863,26 @@
   /*    FT_Get_Driver                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    returns the handle of the driver responsible for a given format    */
+  /*    Returns the handle of the driver responsible for a given format    */
   /*    (or service) according to its `name'.                              */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    library     :: handle to library object.                           */
-  /*    driver_name :: name of driver to look-up.                          */
+  /*    library     :: A handle to the library object.                     */
+  /*    driver_name :: The name of the driver to look up.                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    handle to driver object. 0 otherwise                               */
+  /*    A handle to the driver object,  0 otherwise.                       */
   /*                                                                       */
   EXPORT_FUNC
   FT_Driver  FT_Get_Driver( FT_Library  library,
                             char*       driver_name )
   {
     FT_Driver  *cur, *limit;
-    
-    if (!library || !driver_name)
+
+
+    if ( !library || !driver_name )
       return 0;
-      
+
     cur   = library->drivers;
     limit = cur + library->num_drivers;
     for ( ; cur < limit; cur++ )
@@ -806,7 +892,6 @@
     }
     return 0;
   }
-
 
 
   static
@@ -868,7 +953,7 @@
   /*    face       :: A handle to a new face object.                       */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Unlike FreeType 1.1, this function automatically creates a glyph   */
@@ -894,28 +979,30 @@
     FT_Stream  stream;
     FT_Memory  memory;
     FT_Error   error;
-    
+
+
     memory = library->memory;
-    if ( ALLOC( stream, sizeof(*stream) ) )
+    if ( ALLOC( stream, sizeof ( *stream ) ) )
       goto Fail;
-      
+
     stream->memory = memory;
-    
+
     error = FT_New_Stream( pathname, stream );
     if (error) goto Fail_Stream;
-    
+
     error = FT_Open_Face( library, stream, face_index, aface );
-    if (!error)
+    if ( !error )
       return error;
 
     /* close stream in case of error */
     stream->close( stream );
-    
+
   Fail_Stream:
-    FREE(stream);
+    FREE( stream );
   Fail:
     return error;
   }
+
 
   EXPORT_FUNC
   FT_Error  FT_New_Memory_Face( FT_Library   library,
@@ -927,15 +1014,15 @@
     FT_Stream  stream;
     FT_Memory  memory;
     FT_Error   error;
-    
+
     memory = library->memory;
     if ( ALLOC( stream, sizeof(*stream) ) )
       goto Fail;
-      
+
     stream->memory = memory;
-    
+
     FT_New_Memory_Stream( library, (void*)file_base, file_size, stream );
-    
+
     error = FT_Open_Face( library, stream, face_index, face );
     if (!error)
       return error;
@@ -945,7 +1032,7 @@
     return error;
   }
 
-  
+
   EXPORT_FUNC
   FT_Error  FT_Open_Face( FT_Library library,
                           FT_Stream  stream,
@@ -967,8 +1054,8 @@
 
     {
       /* check each font driver for an appropriate format */
-	  FT_Driver*  cur   = library->drivers;
-	  FT_Driver*  limit = cur + library->num_drivers;
+      FT_Driver*  cur   = library->drivers;
+      FT_Driver*  limit = cur + library->num_drivers;
 
       for ( ; cur < limit; cur++ )
       {
@@ -1019,7 +1106,7 @@
       error = FT_New_GlyphSlot( face, &slot );
       if ( error ) goto Fail;
     }
-    
+
     /****************************************************************/
     /* finally allocate a size object for the face                  */
     {
@@ -1029,7 +1116,7 @@
       error = FT_New_Size( face, &size );
       if ( error ) goto Fail;
     }
-    
+
     *aface = face;
     goto Exit;
 
@@ -1037,7 +1124,7 @@
     FT_Done_Face( face );
 
   Bad_Resource:
-    
+
   Exit:
     FT_TRACE4(( "FT_Open_Face: Return %d\n", error ));
     return error;
@@ -1148,7 +1235,7 @@
       *asize     = size;
       node->data = size;
       FT_List_Add( &face->sizes_list, node );
-      
+
       /* record as current size for the face */
       face->size = size;
     }
@@ -1259,13 +1346,13 @@
 
     if (!char_width)
       char_width = char_height;
-      
+
     else if (!char_height)
       char_height = char_width;
-      
+
     if (!horz_resolution)
       horz_resolution = 72;
-      
+
     if (!vert_resolution)
       vert_resolution = 72;
 
@@ -1367,7 +1454,7 @@
       goto Exit;
 
     slot->face = face;
-    
+
     slot->max_subglyphs = 0;
     slot->num_subglyphs = 0;
     slot->subglyphs     = 0;
@@ -1497,13 +1584,13 @@
     FT_Error   error;
     FT_Driver  driver;
     FT_UInt    glyph_index;
-    
+
     if (!face || !face->size || !face->glyph || !face->charmap )
       return FT_Err_Invalid_Face_Handle;
-      
+
     driver      = face->driver;
     glyph_index = FT_Get_Char_Index( face, char_code );
-    
+
     if (glyph_index == 0)
       error = FT_Err_Invalid_Character_Code;
     else

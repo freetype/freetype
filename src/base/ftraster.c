@@ -683,7 +683,7 @@
 
     x = ras.cursor[-1];
 
-    switch ( ras.cur_prof->flow )  
+    switch ( ras.cur_prof->flow )
     {
     case FT_Flow_Up:
       o = Vio_ScanLineWidth *
@@ -1202,7 +1202,7 @@
       Ix --;
       Rx += Dy;
     }
-    
+
     Ax   = -Dy;
     Rx <<= 1;
     Dy <<= 1;
@@ -1332,7 +1332,7 @@
       e  = CEILING( y1 );   /* integer start y == current scanline */
       f1 = FRAC( y1 );      /* fractional shift of start y         */
       e0 = e;               /* first integer scanline to be pushed */
-      
+
       if ( f1 == 0 )        /* do we start on an integer scanline? */
       {
         if ( ras.joint )
@@ -1381,7 +1381,7 @@
       if ( y2 > e )   /* the arc intercepts the current scanline */
       {
         y1 = arc[degree].y;  /* start y of top-most arc */
-        
+
         if ( y2 - y1 >= ras.precision_step )
         {
           /* if the arc's height is too great, split it */
@@ -1726,7 +1726,7 @@
   {
     TPos  scaled_x, scaled_y;
 
-    
+
     /* if there was already a contour being built, perform some checks */
     if ( ras.start_prof )
       if ( Check_Contour( RAS_VAR ) )
@@ -1735,7 +1735,7 @@
     /* set the `current last point' */
     scaled_x = SCALED( to->x );
     scaled_y = SCALED( to->y );
-    
+
     if ( ras.flipped )
     {
       ras.last.x = scaled_y;
@@ -1803,7 +1803,7 @@
 
 
       if ( ras.state != new_state )
-      {      
+      {
         if ( ras.state != Unknown   &&
              End_Profile( RAS_VAR ) )
           goto Fail;
@@ -1811,7 +1811,7 @@
         if ( New_Profile( RAS_VAR_  new_state ) )
           goto Fail;
       }
-    }        
+    }
 
     /* Then compute the lines */
     switch ( ras.state )
@@ -1896,7 +1896,7 @@
         ymin = y3;
         ymax = y1;
       }
-      
+
       if ( y2 < ymin || y2 > ymax )
       {
         /* this arc has no given direction, split it !! */
@@ -1919,12 +1919,12 @@
           if ( ras.state != Unknown   &&
                End_Profile( RAS_VAR ) )
             goto Fail;
-            
+
           /* create a new profile */
           if ( New_Profile( RAS_VAR_ state_bez ) )
             goto Fail;
         }
-        
+
         /* now call the appropriate routine */
         if ( state_bez == Ascending )
         {
@@ -1934,7 +1934,7 @@
         else
           if ( Bezier_Down( RAS_VAR_  2, Split_Conic, ras.minY, ras.maxY ) )
             goto Fail;
-      }    
+      }
 
     } while ( ras.arc >= ras.arcs );
 
@@ -2023,7 +2023,7 @@
         ymin1 = y4;
         ymax1 = y1;
       }
-      
+
       if ( y2 <= y3 )
       {
         ymin2 = y2;
@@ -2034,7 +2034,7 @@
         ymin2 = y3;
         ymax2 = y2;
       }
-      
+
       if ( ymin2 < ymin1 || ymax2 > ymax1 )
       {
         /* this arc has no given direction, split it! */
@@ -2045,11 +2045,11 @@
       {
         /* this arc is flat, ignore it and pop it from the bezier stack */
         ras.arc -= 3;
-      }        
+      }
       else
       {
         state_bez = ( y1 <= y4 ) ? Ascending : Descending;
-     
+
         /* detect a change of direction */
         if ( ras.state != state_bez )
         {
@@ -2616,11 +2616,11 @@
   void  Vertical_Sweep_Init( RAS_ARG_ int*  min, int*  max )
   {
     long  pitch;
-    
+
     UNUSED( max );
 
     pitch          = ras.target.pitch;
-    
+
     /* start from the bottom line, going up !! */
     ras.trace_bit  = - *min * pitch;
     ras.trace_incr = -pitch;
@@ -2874,10 +2874,10 @@
         {
           long pitch  = ras.target.pitch;
           long offset = - pitch * e1;
-          
+
           if (pitch > 0)
             offset += (ras.target.rows-1)*pitch;
-            
+
           bits[offset] |= f1;
         }
       }
@@ -2906,10 +2906,10 @@
     int    f1     = (Byte)(0x80 >> (y & 7));
     long   pitch  = ras.target.pitch;
     long   offset = - pitch * x;
-    
+
     if (pitch > 0)
       offset += (ras.target.rows-1)*pitch;
-      
+
     return ( x >= 0 && x < ras.target.rows && (bits[0] & f1) );
   }
 
@@ -2943,9 +2943,9 @@
     {
       long pitch  = ras.target.pitch;
       long offset = - x*pitch;
-      
+
       if (pitch > 0)
-        offset += (ras.target.rows-1)*pitch; 
+        offset += (ras.target.rows-1)*pitch;
 
       bits[offset] |= f1;
     }
@@ -3009,15 +3009,15 @@
   void  Vertical_Gray_Sweep_Init( RAS_ARG_ int*  min, int*  max )
   {
     long  pitch;
-    
+
     UNUSED( max );
 
     pitch          = ras.target.pitch;
-    
+
     /* start from the bottom line, going up */
     ras.trace_incr = -pitch;
     ras.trace_bit  = - *min * pitch;
-    
+
     if (pitch > 0)
       ras.trace_bit += (ras.target.rows-1)*pitch;
   }
@@ -3050,15 +3050,15 @@
 
     x1 += ras.precision_half;
     x2 += ras.precision_half;
-   
-#ifdef FT_RASTER_OPTION_CONTRAST   
+
+#ifdef FT_RASTER_OPTION_CONTRAST
     if ( x2-x1 < ras.precision )
     {
 	  x1 = ((x1+x2) >> 1) - ras.precision_half;
 	  x2 = x1 + ras.precision;
 	}
 #endif
-        
+
     e1 = TRUNC( x1 );
     e2 = TRUNC( x2 );
 
@@ -3081,7 +3081,7 @@
 
       target = ras.bit_buffer + ras.trace_bit + e1;
       e2    -= e1;
-      
+
       if ( e2 > 0 )
       {
         if (x1 > 0) target[0] += (Byte)(64-x1) << 1;
@@ -3124,7 +3124,7 @@
 #if 0
     /* as a rule of thumb, do not add a drop-out if the current */
     /* gray level is over 0.5                                   */
-    
+
     return ( x >= 0 && x < ras.bit_width &&
              ras.bit_buffer[ras.trace_bit + x] >= 64 );
 #else
@@ -3158,9 +3158,9 @@
     if ( x >= 0 && x < ras.bit_width )
     {
       unsigned char*  pixel;
-      
+
       pixel = ras.bit_buffer + ras.trace_bit + x;
-      
+
       /* do not add too much to the pixel gray level */
       color += *pixel;
       if (color < 64)
@@ -3267,14 +3267,14 @@
     x1 += ras.precision_half;
     x2 += ras.precision_half;
 
-#ifdef FT_RASTER_OPTION_CONTRAST   
+#ifdef FT_RASTER_OPTION_CONTRAST
     if (x2-x1 < ras.precision)
 	{
 	  x1 = ((x1+x2) >> 1) - ras.precision_half;
 	  x2 = x1 + ras.precision;
 	}
 #endif
-        
+
     e1 = TRUNC( x1 );
     e2 = TRUNC( x2 );
 
@@ -3299,16 +3299,16 @@
       bits  = ras.bit_buffer + y;
       bits += incr * e1;
       if (incr < 0)
-        bits -= incr*(ras.target.rows-1); 
+        bits -= incr*(ras.target.rows-1);
 
       e2 -= e1;
-      
+
       if ( e2 > 0 )
       {
         b = bits[0];
         if (b < 127) b++;
         bits[0] = (64-x1) + (b >> 1);
-        
+
         if ( ras.precision > 64 )
         {
           e2--;
@@ -3316,16 +3316,16 @@
           {
             bits += incr;
             b     = bits[0];
-           
+
             if (b < 127)
-              bits[0] = (Byte)(63+((b+1) >> 1));  
-          
+              bits[0] = (Byte)(63+((b+1) >> 1));
+
             e2--;
           }
         }
         else
           bits += incr*(e2-1);
-          
+
         if (x2)
         {
           bits += incr;
@@ -3403,10 +3403,10 @@
     if ( x >= 0 && x < ras.target.rows )
     {
       long  pitch  = ras.target.pitch;
-      
+
       pixel -= pitch*x;
       if (pitch > 0)
-        pixel += pitch*(ras.target.rows-1); 
+        pixel += pitch*(ras.target.rows-1);
 
       color += *pixel;
       if (color < 64)
@@ -4273,7 +4273,7 @@ Scan_DropOuts :
     /* clear anti-alias intermediate lines */
     {
       char*  p     = raster->gray_lines;
-      char*  limit = p + ANTI_ALIAS_BUFFER_SIZE; 
+      char*  limit = p + ANTI_ALIAS_BUFFER_SIZE;
 
       do *p++ = 0; while ( p < limit );
     }
@@ -4383,10 +4383,10 @@ Scan_DropOuts :
   {
     sizeof( struct FT_RasterRec_ ),
     ft_glyph_format_outline,
-    
+
     (FT_Raster_Init_Proc)     FT_Raster_Init,
     (FT_Raster_Set_Mode_Proc) 0,
-    (FT_Raster_Render_Proc)   FT_Raster_Render    
+    (FT_Raster_Render_Proc)   FT_Raster_Render
   };
 
 

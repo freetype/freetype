@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Generic list support for FreeType (body).                            */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -15,11 +15,10 @@
 /*                                                                         */
 /***************************************************************************/
 
-
   /*************************************************************************/
   /*                                                                       */
   /*  This file implements functions relative to list processing.  Its     */
-  /*  data structures are defined in freetype.h.                           */
+  /*  data structures are defined in `freetype.h'.                         */
   /*                                                                       */
   /*************************************************************************/
 
@@ -54,7 +53,7 @@
     cur = list->head;
     while ( cur )
     {
-      if (cur->data == data)
+      if ( cur->data == data )
         return cur;
 
       cur = cur->next;
@@ -70,7 +69,7 @@
   /*    FT_List_Add                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Appends an element at the end of a list.                           */
+  /*    Appends an element to the end of a list.                           */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    list :: A pointer to the parent list.                              */
@@ -222,7 +221,7 @@
   /*                argument to the iterator.                              */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    The result of the last iterator call.                              */
+  /*    The result (an error code) of the last iterator call.              */
   /*                                                                       */
   BASE_FUNC
   FT_Error  FT_List_Iterate( FT_List            list,
@@ -270,10 +269,10 @@
   /*               argument to the destructor.                             */
   /*                                                                       */
   BASE_FUNC
-  void  FT_List_Finalize( FT_List            list,
-                          FT_List_Destructor destroy,
-                          FT_Memory          memory,
-                          void*              user )
+  void  FT_List_Finalize( FT_List             list,
+                          FT_List_Destructor  destroy,
+                          FT_Memory           memory,
+                          void*               user )
   {
     FT_ListNode  cur;
 
