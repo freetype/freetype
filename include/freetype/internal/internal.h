@@ -41,8 +41,8 @@
 #define FT_INTERNAL_TYPE1_ERRORS_H      <freetype/internal/t1errors.h>
 #define FT_INTERNAL_TYPE1_TYPES_H       <freetype/internal/t1types.h>
 
-#define FT_INTERNAL_CFF_ERRORS_H        <freetype/internal/t2errors.h>
-#define FT_INTERNAL_CFF_TYPES_H         <freetype/internal/t2types.h>
+#define FT_INTERNAL_CFF_ERRORS_H        <freetype/internal/cfferrs.h>
+#define FT_INTERNAL_CFF_TYPES_H         <freetype/internal/cfftypes.h>
 
 #define FT_INTERNAL_POSTSCRIPT_NAMES_H  <freetype/internal/psnames.h>
 #define FT_INTERNAL_POSTSCRIPT_AUX_H    <freetype/internal/psaux.h>
