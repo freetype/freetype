@@ -1,3 +1,9 @@
+2001-03-07  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/type1/t1objs.c (T1_Done_Face): Free `char_name' table to
+	avoid a memory leak.
+	Submitted by Sander van der Wal <svdwal@xs4all.nl>
+
 2001-03-05  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/cffgload.c (CFF_Load_Glyph): Set glyph control data to the
