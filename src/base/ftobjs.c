@@ -883,6 +883,22 @@
       FT_AutoHinter_Interface*  hinting;
 
 
+      /* try to load embedded bitmaps first when available          */
+      
+      /* XXX: this is really a temporary hack that should disappear */
+      /*      promptly with FreeType 2.1 !!                         */
+      /*                                                            */
+      if ( FT_HAS_FIXED_SIZES( face ) )
+      {
+        error = driver->clazz->load_glyph( slot, face->size,
+                                           glyph_index,
+                                           load_flags | FT_LOAD_SBITS_ONLY );
+
+        if ( !error && slot->format == ft_glyph_format_bitmap )
+          goto Load_Ok;
+      }
+
+      /* load auto-hinted outline */
       hinting = (FT_AutoHinter_Interface*)hinter->clazz->module_interface;
 
       error   = hinting->load_glyph( (FT_AutoHinter)hinter,
@@ -897,6 +913,7 @@
     if ( error )
       goto Exit;
 
+  Load_Ok:
     /* compute the advance */
     if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
     {
