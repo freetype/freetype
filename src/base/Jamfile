@@ -10,8 +10,8 @@ SubDirHdrs  [ FT2_SubDir  src base ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = ftcalc ftgloadr ftlist ftobjs ftstream ftoutln ftnames fttrigon
-               ftdbgmem ;
+    _sources = ftutil ftdbgmem ftstream ftcalc fttrigon ftgloadr ftoutln
+               ftobjs ftnames ;
   }
   else
   {

@@ -638,43 +638,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_New_Stream                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Creates a new stream object.                                       */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    filepathname :: The name of the stream (usually a file) to be      */
-  /*                    opened.                                            */
-  /*                                                                       */
-  /*    stream       :: A pointer to the stream object.                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_EXPORT( FT_Error )
-  FT_New_Stream( const char*  filepathname,
-                 FT_Stream    astream );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_Stream                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Closes and destroys a stream object.                               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    stream :: The stream to be closed and destroyed.                   */
-  /*                                                                       */
-  FT_EXPORT( void )
-  FT_Done_Stream( FT_Stream  stream );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
   /*    FT_New_Memory                                                      */
   /*                                                                       */
   /* <Description>                                                         */

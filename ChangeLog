@@ -1,5 +1,43 @@
 2002-02-24  David Turner   <david@freetype.org>
 
+        * renaming stream functions to the FT_Subject_Action scheme:
+
+          FT_Seek_Stream         => FT_Stream_Seek
+          FT_Skip_Stream         => FT_Stream_Skip
+          FT_Read_Stream         => FT_Stream_Read
+          FT_Read_Stream_At      => FT_Stream_Read_At
+          FT_Access_Frame        => FT_Stream_Enter_Frame
+          FT_Forget_Frame        => FT_Stream_Exit_Frame
+          FT_Extract_Frame       => FT_Stream_Extract_Frame
+          FT_Release_Frame       => FT_Stream_Release_Frame
+          FT_Get_XXXX            => FT_Stream_Get_XXXX
+          FT_Read_XXXX           => FT_Stream_Read_XXXX
+
+          note also that:
+
+          FT_New_Stream( filename, stream ) =>
+            FT_Stream_Open( stream, filename )
+
+          (the function doesn't create the FT_Stream structure, it simply
+           initializes it for reading)
+
+          FT_New_Memory_Stream( library, FT_Byte*  base, size, stream ) =>
+            FT_Stream_Open_Memory( stream, const FT_Byte* base, size )
+
+          FT_Done_Stream => FT_Stream_Close
+
+          note that the name of the stream methods, defined in
+          "include/freetype/ftsystem.h" have also been changed without
+          problems:
+
+            FT_Stream_IO    => FT_Stream_IOFunc
+            FT_Stream_Close => FT_Stream_CloseFunc
+
+
+
+        * moving all memory and list management code to "src/base/ftutil.c"
+        (previously in "ftobjs.c" and "ftlist.c" respectively)
+
         * moving all code related to glyph loaders to "internal/ftgloadr.h"
         and "src/base/ftgloadr.c".
 

@@ -1285,7 +1285,7 @@
                                range->image_format, metrics, stream );
 
     case 8:  /* compound format */
-      FT_Skip_Stream( stream, 1L );
+      FT_Stream_Skip( stream, 1L );
       /* fallthrough */
 
     case 9:

@@ -307,22 +307,22 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   /* documentation is in ftobjs.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_New_Stream( const char*  filepathname,
-                 FT_Stream    astream )
+  FT_Stream_Open( FT_Stream    stream,
+                  const char*  filepathname )
   {
 //  FILE*  file;
     BPTR   file;                // TetiSoft
     struct FileInfoBlock *fib;  // TetiSoft
 
 
-    if ( !astream )
+    if ( !stream )
       return FT_Err_Invalid_Stream_Handle;
 
 //  file = fopen( filepathname, "rb" );
     file = Open( filepathname, MODE_OLDFILE );  // TetiSoft
     if ( !file )
     {
-      FT_ERROR(( "FT_New_Stream:" ));
+      FT_ERROR(( "FT_Stream_Open:" ));
       FT_ERROR(( " could not open `%s'\n", filepathname ));
 
       return FT_Err_Cannot_Open_Resource;
@@ -335,7 +335,7 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
     if ( !fib )
     {
       Close ( file );
-      FT_ERROR(( "FT_New_Stream:" ));
+      FT_ERROR(( "FT_Stream_Open:" ));
       FT_ERROR(( " could not open `%s'\n", filepathname ));
 
       return FT_Err_Cannot_Open_Resource;
@@ -344,26 +344,26 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
     {
       FreeDosObject(DOS_FIB, fib);
       Close ( file );
-      FT_ERROR(( "FT_New_Stream:" ));
+      FT_ERROR(( "FT_Stream_Open:" ));
       FT_ERROR(( " could not open `%s'\n", filepathname ));
 
       return FT_Err_Cannot_Open_Resource;
     }
-    astream->size = fib->fib_Size;
+    stream->size = fib->fib_Size;
     FreeDosObject(DOS_FIB, fib);
 
-//  astream->descriptor.pointer = file;
-    astream->descriptor.pointer = (void *)file;
+//  stream->descriptor.pointer = file;
+    stream->descriptor.pointer = (void *)file;
 
-    astream->pathname.pointer   = (char*)filepathname;
-    astream->pos                = 0;
+    stream->pathname.pointer   = (char*)filepathname;
+    stream->pos                = 0;
 
-    astream->read  = ft_io_stream;
-    astream->close = ft_close_stream;
+    stream->read  = ft_io_stream;
+    stream->close = ft_close_stream;
 
-    FT_TRACE1(( "FT_New_Stream:" ));
+    FT_TRACE1(( "FT_Stream_Open:" ));
     FT_TRACE1(( " opened `%s' (%d bytes) successfully\n",
-                filepathname, astream->size ));
+                filepathname, stream->size ));
 
     return FT_Err_Ok;
   }
@@ -374,12 +374,12 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
 
   extern FT_Int
   ft_mem_debug_init( FT_Memory  memory );
-  
+
   extern void
   ft_mem_debug_done( FT_Memory  memory );
-  
-#endif  
-      
+
+#endif
+
 
   /* documentation is in ftobjs.h */
 
@@ -411,7 +411,7 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
         memory->free    = ft_free;
 #ifdef FT_DEBUG_MEMORY
         ft_mem_debug_init( memory );
-#endif    
+#endif
       }
     }
 
@@ -426,7 +426,7 @@ void FreeVecPooled(APTR poolHeader, APTR memory)
   {
 #ifdef FT_DEBUG_MEMORY
     ft_mem_debug_done( memory );
-#endif  
+#endif
 
 #ifdef __GNUC__
     DeletePool( memory->user );
