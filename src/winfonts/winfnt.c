@@ -379,7 +379,7 @@
     (FT_CMap_CharNextFunc) fnt_cmap_char_next
   };
 
-  static const FT_CMap_Class  fnt_cmap_class = &fnt_cmap_class_rec;
+  static FT_CMap_Class const  fnt_cmap_class = &fnt_cmap_class_rec;
 
 
   static void
