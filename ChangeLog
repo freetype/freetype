@@ -1,5 +1,8 @@
 2002-07-10  David Turner  <david@freetype.org>
 
+    * src/cff/cffobjs.c: small fix to allow OpenType fonts to support Adobe
+    charmaps when needed.
+
     * src/cff/cffcmap.c, src/cff/cffcmap.h, Jamfile, rules.mk: new files added
     to support charmaps for CFF fonts
 
