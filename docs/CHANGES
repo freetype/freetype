@@ -3,6 +3,13 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
 
   I. IMPORTANT BUG FIXES
 
+    - The native  TrueType hinter contained some  bugs which prevented
+      some fonts to be rendered correctly, most notably Legendum.otf.
+
+    - The  linear advance  width  and height  values were  incorrectly
+      rounded,  making  them virtually  unusable  if  not loaded  with
+      FT_LOAD_LINEAR_DESIGN.
+
 
   II. IMPORTANT CHANGES
 
