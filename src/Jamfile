@@ -14,7 +14,6 @@ SubDirHdrs  [ FT2_SubDir  src ] ;
 #
 HDRMACRO  [ FT2_SubDir  include internal internal.h ] ;
 
-SubInclude  FT2_TOP src pshinter ;
 SubInclude  FT2_TOP src autohint ;
 SubInclude  FT2_TOP src base ;
 SubInclude  FT2_TOP src bdf ;
@@ -24,6 +23,7 @@ SubInclude  FT2_TOP src cid ;
 SubInclude  FT2_TOP src pcf ;
 SubInclude  FT2_TOP src pfr ;
 SubInclude  FT2_TOP src psaux ;
+SubInclude  FT2_TOP src pshinter ;
 SubInclude  FT2_TOP src psnames ;
 SubInclude  FT2_TOP src raster ;
 SubInclude  FT2_TOP src sfnt ;

@@ -1,9 +1,9 @@
-/*  bdf.c
+/*  bdftypes.h
 
-    FreeType font driver for bdf files
+  FreeType font driver for bdf fonts
 
-    Copyright (C) 2001, 2002 by
-    Francesco Zappa Nardelli 
+  Copyright (C) 2001, 2002 by
+  Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#define FT_MAKE_OPTION_SINGLE_OBJECT
+#ifndef __BDFTYPES_H__
+#define __BDFTYPES_H__
 
 #include <ft2build.h>
-#include "bdflib.c"
-#include "bdfdrivr.c"
+#include FT_FREETYPE_H
+
+
+FT_BEGIN_HEADER
+
+
+  typedef struct  BDF_Public_FaceRec_
+  {
+    FT_FaceRec  root;
+
+    char*       charset_encoding;
+    char*       charset_registry;
+
+  } BDF_Public_FaceRec, *BDF_Public_Face;
+
+
+FT_END_HEADER
+
+
+#endif  /* __BDFTYPES_H__ */
 
 
 /* END */

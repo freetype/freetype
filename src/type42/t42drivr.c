@@ -32,69 +32,22 @@
 #include FT_INTERNAL_DRIVER_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_INTERNAL_TYPE42_TYPES_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_STREAM_H
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_t42
+
+
   /********************* Data Definitions ******************/
-
-  typedef enum  T42_EncodingType_
-  {
-    T42_ENCODING_TYPE_NONE = 0,
-    T42_ENCODING_TYPE_ARRAY,
-    T42_ENCODING_TYPE_STANDARD,
-    T42_ENCODING_TYPE_EXPERT,
-    T42_ENCODING_TYPE_ISOLATIN1
-  
-  } T42_EncodingType;
-
-
-  typedef struct  T42_Font_ 
-  {
-    /* font info dictionary */
-    PS_FontInfoRec   font_info; 
-
-    /* top-level dictionary */
-    FT_String*        font_name;
-
-    T42_EncodingType  encoding_type; 
-    T1_EncodingRec    encoding;
-
-    FT_Byte*          charstrings_block;
-    FT_Byte*          glyph_names_block;
-
-    FT_Int            num_glyphs;
-    FT_String**       glyph_names;       /* array of glyph names       */
-    FT_Byte**         charstrings;       /* array of glyph charstrings */
-    FT_Int*           charstrings_len;
-
-    FT_Byte           paint_type;
-    FT_Byte           font_type;
-    FT_Matrix         font_matrix; /* From FontMatrix field: a, b, c, d */
-    FT_Vector         font_offset; /* From FontMatrix field: tx, ty */
-    FT_BBox           font_bbox;
-
-    FT_Int            stroke_width;  
-
-  } T42_FontRec, *T42_Font;
-
-
-  typedef struct  T42_FaceRec_
-  {
-    FT_FaceRec     root;
-    T42_FontRec    type42;
-    void*          psnames;
-    void*          psaux;
-    void*          afm_data;
-    FT_Byte*       ttf_data;
-    FT_ULong       ttf_size;
-    FT_Face        ttf_face;
-    FT_CharMapRec  charmaprecs[2];
-    FT_CharMap     charmaps[2];
-    PS_Unicodes    unicode_map;
-
-  } T42_FaceRec, *T42_Face;
-
 
   typedef struct  T42_DriverRec_
   {
@@ -431,11 +384,6 @@
     FT_Fixed    temp_scale;
 
 
-    /* XXX: Are these three lines necessary */
-    if ( matrix->xx || matrix->yx )
-      /* with synthetic fonts, it's possible we get here twice  */
-      return;
-
     (void)T1_ToFixedArray( parser, 6, temp, 3 );
 
     temp_scale = ABS( temp[3] );
@@ -604,7 +552,7 @@
           cur++;
       }
 
-      face->type42.encoding_type = T42_ENCODING_TYPE_ARRAY;
+      face->type42.encoding_type = T1_ENCODING_TYPE_ARRAY;
       parser->root.cursor        = cur;
     }
     /* Otherwise, we should have either `StandardEncoding', */
@@ -613,15 +561,15 @@
     {
       if ( cur + 17 < limit                                            &&
            ft_strncmp( (const char*)cur, "StandardEncoding", 16 ) == 0 )
-        face->type42.encoding_type = T42_ENCODING_TYPE_STANDARD;
+        face->type42.encoding_type = T1_ENCODING_TYPE_STANDARD;
 
       else if ( cur + 15 < limit                                          &&
                 ft_strncmp( (const char*)cur, "ExpertEncoding", 14 ) == 0 )
-        face->type42.encoding_type = T42_ENCODING_TYPE_EXPERT;
+        face->type42.encoding_type = T1_ENCODING_TYPE_EXPERT;
 
       else if ( cur + 18 < limit                                             &&
                 ft_strncmp( (const char*)cur, "ISOLatin1Encoding", 17 ) == 0 )
-        face->type42.encoding_type = T42_ENCODING_TYPE_ISOLATIN1;
+        face->type42.encoding_type = T1_ENCODING_TYPE_ISOLATIN1;
 
       else {
         FT_ERROR(( "parse_encoding: invalid token!\n" ));
@@ -654,10 +602,10 @@
     FT_Byte*    cur    = parser->root.cursor;
     FT_Byte*    limit  = parser->root.limit;
     FT_Error    error;
-    FT_Int      num_tables, status;
-    FT_ULong    count, ttf_size, string_size;
+    FT_Int      num_tables = 0, status;
+    FT_ULong    count, ttf_size = 0, string_size = 0;
     FT_Bool     in_string  = 0;
-    FT_Byte     v;
+    FT_Byte     v = 0;
 
 
     /* The format is `/sfnts [ <...> <...> ... ] def' */
@@ -1151,7 +1099,7 @@
     loader.glyph_names.elements = 0;
 
     /* we must now build type42.encoding when we have a custom array */
-    if ( type42->encoding_type == T42_ENCODING_TYPE_ARRAY )
+    if ( type42->encoding_type == T1_ENCODING_TYPE_ARRAY )
     {
       FT_Int    charcode, idx, min_char, max_char;
       FT_Byte*  char_name;
@@ -1416,22 +1364,22 @@
 
     switch ( face->type42.encoding_type )
     {
-    case T42_ENCODING_TYPE_STANDARD:
+    case T1_ENCODING_TYPE_STANDARD:
       charmap->encoding    = ft_encoding_adobe_standard;
       charmap->encoding_id = 0;
       break;
 
-    case T42_ENCODING_TYPE_EXPERT:
+    case T1_ENCODING_TYPE_EXPERT:
       charmap->encoding    = ft_encoding_adobe_expert;
       charmap->encoding_id = 1;
       break;
 
-    case T42_ENCODING_TYPE_ARRAY:
+    case T1_ENCODING_TYPE_ARRAY:
       charmap->encoding    = ft_encoding_adobe_custom;
       charmap->encoding_id = 2;
       break;
 
-    case T42_ENCODING_TYPE_ISOLATIN1:
+    case T1_ENCODING_TYPE_ISOLATIN1:
       charmap->encoding    = ft_encoding_latin_1;
       charmap->encoding_id = 3;
       break;
@@ -1539,12 +1487,6 @@
 
     ttmodule = FT_Get_Module( driver->root.root.library, "truetype" );
     driver->ttclazz = (FT_Driver_Class)ttmodule->clazz;
-
-    /* XXX: What about hinter support? */
-#if 0
-    if (ttmodule->clazz->module_flags & ft_module_driver_has_hinter)
-      driver->root.clazz->root.module_flags |= ft_module_driver_has_hinter;
-#endif
 
     return T42_Err_Ok;
   }
@@ -2063,7 +2005,11 @@
     {
       ft_module_font_driver      |
       ft_module_driver_scalable  |
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
       ft_module_driver_has_hinter,
+#else
+      0,
+#endif
 
       sizeof ( T42_DriverRec ),
 

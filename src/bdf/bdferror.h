@@ -1,5 +1,5 @@
 /*
- * Copyright 2001 Francesco Zappa Nardelli
+ * Copyright 2001, 2002 Francesco Zappa Nardelli
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* This file is used to define the PCF error enumeration constants.      */
+  /* This file is used to define the BDF error enumeration constants.      */
   /*                                                                       */
   /*************************************************************************/
 
@@ -38,7 +38,7 @@
 
 #include FT_ERRORS_H
 
-#endif /* __PCFERROR_H__ */
+#endif /* __BDFERROR_H__ */
 
 
 /* END */
