@@ -106,7 +106,7 @@
       FT_FRAME_USHORT_LE( B_space ),
       FT_FRAME_USHORT_LE( C_space ),
       FT_FRAME_USHORT_LE( color_table_offset ),
-      FT_FRAME_BYTES    ( reserved, 16 ),
+      FT_FRAME_BYTES    ( reserved2, 16 ),
     FT_FRAME_END
   };
 
