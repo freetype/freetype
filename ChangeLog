@@ -1,3 +1,8 @@
+2002-02-07  David Turner  <david@freetype.org>
+
+        * src/pcf/pcfread.c (pcf_load_font): removed immature support of
+        the AVERAGE_WIDTH property..
+
 2002-02-06  David Turner   <david@freetype.org>
 
         * src/sfnt/sfobjs.c (SFNT_Load_Face): since many fonts embedded in

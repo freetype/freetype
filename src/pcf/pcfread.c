@@ -972,10 +972,12 @@ THE SOFTWARE.
       {
         root->available_sizes->height = 
         root->available_sizes->width  = (FT_Short)( prop->value.integer );
-        
+
+#if 0  /* average width property support removed until maturation */
         prop = pcf_find_property( face, "AVERAGE_WIDTH" );
         if ( prop != NULL )
           root->available_sizes->width = (FT_Short)( prop->value.integer / 10 );
+#endif
         
         size_set = 1;
       }
@@ -991,16 +993,18 @@ THE SOFTWARE.
           yres = pcf_find_property( face, "RESOLUTION_Y" );
           avgw = pcf_find_property( face, "AVERAGE_WIDTH" );
 
-          if ( ( yres != NULL ) && ( ( xres != NULL ) || ( avgw == NULL ) ) )
+          if ( ( yres != NULL ) && ( xres != NULL ) )
           {
             root->available_sizes->height =
               (FT_Short)( prop->value.integer *  
                           yres->value.integer / 720 ); 
 
+#if 0  /* average width property support removed until maturation */
             if ( avgw != NULL )
               root->available_sizes->width =
                 (FT_Short)( avgw->value.integer / 10 );
             else
+#endif            
               root->available_sizes->width =
                 (FT_Short)( prop->value.integer *  
                             xres->value.integer / 720 );
