@@ -2294,12 +2294,14 @@
     FT_Vector  v;
     FT_Angle   angle;
 
+    FT_UNUSED_EXEC;
+
     angle = FT_Atan2( Vx, Vy );
 
     FT_Vector_Unit( &v, angle );
 
-    R->x = v.x >> 2;
-    R->y = v.y >> 2;
+    R->x = (short)(v.x >> 2);
+    R->y = (short)(v.y >> 2);
 
     return SUCCESS;
   }
@@ -3943,12 +3945,12 @@
         break;
 
       case 0x1B:      /* ELSE */
-        Out = ( nIfs == 1 );
+        Out = FT_BOOL( nIfs == 1 );
         break;
 
       case 0x59:      /* EIF */
         nIfs--;
-        Out = ( nIfs == 0 );
+        Out = FT_BOOL( nIfs == 0 );
         break;
       }
     } while ( Out == 0 );
@@ -4404,7 +4406,7 @@
     FT_UShort  L, K;
 
 
-    L = (FT_UShort)CUR.opcode - 0xB0 + 1;
+    L = (FT_UShort)(CUR.opcode - 0xB0 + 1);
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
     {
@@ -4429,7 +4431,7 @@
     FT_UShort  L, K;
 
 
-    L = (FT_UShort)CUR.opcode - 0xB8 + 1;
+    L = (FT_UShort)(CUR.opcode - 0xB8 + 1);
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
     {
@@ -4789,8 +4791,8 @@
     if ( L != 0 )
         L = K;
 
-    CUR.GS.instruct_control =
-      (FT_Byte)( CUR.GS.instruct_control & ~(FT_Byte)K ) | (FT_Byte)L;
+    CUR.GS.instruct_control = FT_BOOL(
+      ( (FT_Byte)CUR.GS.instruct_control & ~(FT_Byte)K ) | (FT_Byte)L );
   }
 
 
@@ -5140,7 +5142,7 @@
     if ( contour == 0 )
       first_point = 0;
     else
-      first_point = CUR.pts.contours[contour - 1] + 1;
+      first_point = (FT_UShort)(CUR.pts.contours[contour - 1] + 1);
 
     last_point = CUR.pts.contours[contour];
 
@@ -5149,7 +5151,7 @@
     if ( last_point > CUR.zp2.n_points )
     {
       if ( CUR.zp2.n_points > 0 )
-        last_point = CUR.zp2.n_points - 1;
+        last_point = (FT_UShort)(CUR.zp2.n_points - 1);
       else
         last_point = 0;
     }
@@ -5191,7 +5193,7 @@
       return;
 
     if ( CUR.zp2.n_points > 0 )
-      last_point = CUR.zp2.n_points - 1;
+      last_point = (FT_UShort)(CUR.zp2.n_points - 1);
     else
       last_point = 0;
 
@@ -6758,8 +6760,8 @@
             FT_Short AA, BB;
 
 
-            AA = (FT_Short)( opcode & 1 ) << 14;
-            BB = AA ^ (FT_Short)0x4000;
+            AA = (FT_Short)(( opcode & 1 ) << 14);
+            BB = (FT_Short)( AA ^ 0x4000 );
 
             if ( opcode < 4 )
             {
