@@ -401,9 +401,6 @@
       FT_FREE( type1->encoding.char_name );
       FT_FREE( type1->font_name );
 
-      FT_FREE( type1->paint_type );
-      FT_FREE( type1->stroke_width );
-
       FT_FREE( face->ttf_data );
 
 #if 0

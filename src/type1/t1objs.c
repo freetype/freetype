@@ -229,9 +229,6 @@
       FT_FREE( type1->encoding.char_name );
       FT_FREE( type1->font_name );
 
-      FT_FREE( type1->paint_type );
-      FT_FREE( type1->stroke_width );
-
 #ifndef T1_CONFIG_OPTION_NO_AFM
       /* release afm data if present */
       if ( face->afm_data )
