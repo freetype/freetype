@@ -190,8 +190,11 @@
     if ( error )
       goto Exit;
 
-    /* We must also be able to accept Mac/GX fonts, as well as OT ones */
+    /* We must also be able to accept Mac/GX fonts, as well as OT ones. */
+    /* The 0x00020000 tag is completely undocumented; some fonts from   */
+    /* Arphic made for Chinese Windows 3.1 have this.                   */
     if ( face->format_tag != 0x00010000L &&    /* MS fonts  */
+         face->format_tag != 0x00020000L &&    /* CJK fonts for Win 3.1 */
          face->format_tag != TTAG_true   )     /* Mac fonts */
     {
       FT_TRACE2(( "[not a valid TTF font]\n" ));
