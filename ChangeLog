@@ -1,3 +1,10 @@
+2001-12-12  David Turner  <david@freetype.org>
+
+    * src/pshint/pshglob.c: adding correct BlueScale/BlueShift support,
+    plus family blues processing
+
+    * src/cff/cffgload.c: started adding support for the Postscript hinter
+
 2001-12-12  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/freetype2.m4: Some portability fixes.

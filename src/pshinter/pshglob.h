@@ -120,7 +120,11 @@ FT_BEGIN_HEADER
     PSH_Blue_TableRec  normal_bottom;
     PSH_Blue_TableRec  family_top;
     PSH_Blue_TableRec  family_bottom;
+
     FT_Fixed           blue_scale;
+    FT_Int             blue_shift;
+    FT_Int             blue_threshold;
+    FT_Bool            no_overshoots;
 
   } PSH_BluesRec, *PSH_Blues;
 
