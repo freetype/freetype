@@ -1,3 +1,8 @@
+2000-12-13  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/ftsystem.c: Fixed typos.  Fixed inclusion of wrong
+	ftconfig.h file.
+
 2000-12-12  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/config/ft2build.h (FT2_ROOT, FT2_CONFIG_ROOT):
