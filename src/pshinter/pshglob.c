@@ -52,7 +52,7 @@
     if ( count > 0 )
     {
       width->cur = FT_MulFix( width->org, scale );
-      width->fit = FT_RoundFix( width->cur );
+      width->fit = FT_PIX_ROUND( width->cur );
 
       width++;
       count--;
@@ -72,7 +72,7 @@
           w = stand->cur;
 
         width->cur = w;
-        width->fit = FT_RoundFix( w );
+        width->fit = FT_PIX_ROUND( w );
       }
     }
   }
@@ -574,7 +574,7 @@
 
       if ( stem_bot >= zone->org_bottom - blues->blue_fuzz )
       {
-        if ( no_shoots || delta < blues->blue_shift )
+        if ( no_shoots || delta < blues->blue_threshold )
         {
           alignment->align    |= PSH_BLUE_ALIGN_BOT;
           alignment->align_bot = zone->cur_ref;

@@ -1,3 +1,17 @@
+2004-03-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/pshinter/pshglob.c (psh_globals_scale_widths): Don't use
+	FT_RoundFix but FT_PIX_ROUND.
+	(psh_blues_snap_stem): Don't use blue_shift but blue_threshold.
+
+	*src/pshinter/pshalgo.c (PSH_STRONG_THRESHOLD_MAXIMUM): New macro.
+	(psh_glyph_find_string_points): Use PSH_STRONG_THRESHOLD_MAXIMUM. 
+	(psh_glyph_find_blue_points): New function.  Needed for fonts like
+	p052003l.pfb (URW Palladio L Roman) which have flex curves at the
+	base line within blue zones, but the flex curves aren't covered by
+	hints.
+	(ps_hints_apply): Use psh_glyph_find_blue_points.
+
 2004-02-27  Garrick Meeker  <garrick@digitalanarchy.com>
 
 	* builds/unix/configure.ac: Fix compiler flags for
