@@ -1,3 +1,8 @@
+2004-06-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/autofit/afloader.c (af_loader_load_g): Set `lsb_delta' and
+	`rsb_delta' in slot->metrics and tune side bearings slightly.
+
 2004-06-04  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
@@ -10,7 +15,7 @@
 	`lsb_delta' and `rsb_delta'.
 
 	* src/autohint/ahhint.c (ah_hinter_load): Set `lsb_delta' and
-	`rsb_delta' in slot->metrics.
+	`rsb_delta' in slot->metrics and tune side bearings slightly.
 
 2004-06-04  David Turner  <david@freetype.org>
 
