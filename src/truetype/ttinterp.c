@@ -1261,7 +1261,7 @@
   }
 
 
-  FT_CALLBACK_DEF(voidà  Write_CVT( EXEC_OP_ FT_ULong    index,
+  FT_CALLBACK_DEF(void)  Write_CVT( EXEC_OP_ FT_ULong    index,
                                              FT_F26Dot6  value )
   {
     CUR.cvt[index] = value;
