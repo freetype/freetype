@@ -16,22 +16,13 @@
 /***************************************************************************/
 
 
-#ifdef FT_FLAT_COMPILE
-
-#include "winfnt.h"
-
-#else
-
-#include <winfonts/winfnt.h>
-
-#endif
-
-
-#include <freetype/fterrors.h>
-#include <freetype/internal/ftstream.h>
-#include <freetype/internal/ftdebug.h>
-#include <freetype/internal/ftobjs.h>
-#include <freetype/internal/fnttypes.h>
+#include <ft2build.h>
+#include FT_ERRORS_H
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_OBJECTS_H
+#include FT_INTERNAL_FNT_TYPES_H
+#include FT_SOURCE_FILE(winfonts,winfnt.h)
 
 
   /*************************************************************************/

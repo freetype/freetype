@@ -19,8 +19,8 @@
 /***************************************************************************/
 
 
-#ifndef AHOPTIM_H
-#define AHOPTIM_H
+#ifndef __AHOPTIM_H__
+#define __AHOPTIM_H__
 
 
 #include <ft2build.h>
@@ -128,7 +128,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* AHOPTIM_H */
+#endif /* __AHOPTIM_H__ */
 
 
 /* END */

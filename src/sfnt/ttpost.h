@@ -17,8 +17,8 @@
 /***************************************************************************/
 
 
-#ifndef TTPOST_H
-#define TTPOST_H
+#ifndef __TTPOST_H__
+#define __TTPOST_H__
 
 
 #include <ft2build.h>
@@ -44,7 +44,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* TTPOST_H */
+#endif /* __TTPOST_H__ */
 
 
 /* END */

@@ -20,9 +20,10 @@
 #define __T2ERRORS_H__
 
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
+#include <ft2build.h>
+
+
+FT_BEGIN_HEADER
 
 
   /*************************************************************************/
@@ -120,9 +121,7 @@
 #define T2_Err_Could_Not_Find_Context     0x550
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
 
 #endif /* __T2ERRORS_H__ */

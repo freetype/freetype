@@ -20,10 +20,13 @@
 #ifndef __PSNAMES_H__
 #define __PSNAMES_H__
 
-#include   <ft2build.h>
-#include   FT_FREETYPE_H
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*                                                                       */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef CIDGLOAD_H
-#define CIDGLOAD_H
+#ifndef __CIDGLOAD_H__
+#define __CIDGLOAD_H__
 
 
 #include <ft2build.h>
@@ -25,6 +25,7 @@
 
 
 FT_BEGIN_HEADER
+
 
 #if 0
 
@@ -44,7 +45,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* CIDGLOAD_H */
+#endif /* __CIDGLOAD_H__ */
 
 
 /* END */

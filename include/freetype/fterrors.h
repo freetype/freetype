@@ -23,7 +23,7 @@
   /* something like                                                        */
   /*                                                                       */
   /*   {                                                                   */
-  /*     #undef FTERRORS_H                                                 */
+  /*     #undef __FTERRORS_H__                                             */
   /*     #define FT_ERRORDEF( e, v, s )  { e, s },                         */
   /*     #define FT_ERROR_START_LIST  {                                    */
   /*     #define FT_ERROR_END_LIST    { 0, 0 } };                          */
@@ -34,7 +34,7 @@
   /*       const char*  err_msg                                            */
   /*     } ft_errors[] =                                                   */
   /*                                                                       */
-  /*     #include <freetype/fterrors.h>                                    */
+  /*     #include FT_ERRORS_H                                              */
   /*   }                                                                   */
   /*                                                                       */
   /* For C++ it might be necessary to use `extern "C" {' and to define     */

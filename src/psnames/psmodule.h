@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef PSDRIVER_H
-#define PSDRIVER_H
+#ifndef __PSMODULE_H__
+#define __PSMODULE_H__
 
 
 #include <ft2build.h>
@@ -32,7 +32,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* PSDRIVER_H */
+#endif /* __PSMODULE_H__ */
 
 
 /* END */

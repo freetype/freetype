@@ -30,6 +30,7 @@
 
 #include <ft2build.h>
 
+
 FT_BEGIN_HEADER
 
 
@@ -993,7 +994,6 @@ FT_BEGIN_HEADER
 
 
 FT_END_HEADER
-
 
 #endif /* __FTIMAGE_H__ */
 

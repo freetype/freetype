@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef TTSBIT_H
-#define TTSBIT_H
+#ifndef __TTSBIT_H__
+#define __TTSBIT_H__
 
 
 #include <ft2build.h>
@@ -53,7 +53,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* TTSBIT_H */
+#endif /* __TTSBIT_H__ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef T1DRIVER_H
-#define T1DRIVER_H
+#ifndef __T1DRIVER_H__
+#define __T1DRIVER_H__
 
 
 #include <ft2build.h>
@@ -32,7 +32,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* T1DRIVER_H */
+#endif /* __T1DRIVER_H__ */
 
 
 /* END */

@@ -1,6 +1,14 @@
+2000-12-08  Werner Lemberg  <wl@gnu.org>
+
+	* */*.h: Changed body inclusion macro names to start and end with
+	`__' (those which haven't converted yet).  Fixed minor conversion
+	issues.
+
+	* src/winfonts/winfnt.c: Updated to new header inclusion scheme.
+
 2000-12-07  David Turner  <david.turner@freetype.org>
 
-	* many files: Changed source files to adhere to the new
+	* */*.[ch]: Changed source files to adhere to the new
 	header inclusion scheme.  Not completely tested but works for now
 	here.
 
@@ -22,6 +30,8 @@
 	* src/cff/cffparse.h: New file.
 	* src/cff/t2tokens.h: Renamed and updated to...
 	* src/cff/cfftoken.h: New file.
+
+	* src/cff/cff.c, src/cff/rules.mk: Updated.
 
 2000-12-06  David Turner  <david.turner@freetype.org>
 
@@ -58,7 +68,7 @@
 	is now installed as <ft2build.h> for Unix systems.  Note that we
 	still use the "freetype2/freetype" installation path for now.
 
-	* many files: Now using <ft2build.h> as the default build and setup
+	* */*.[ch]: Now using <ft2build.h> as the default build and setup
 	configuration file in all public headers.  Internal source files
 	still need some changes though.
 

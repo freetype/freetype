@@ -30,10 +30,13 @@
 #ifndef FTBBOX_H
 #define FTBBOX_H
 
-#include   <ft2build.h>
-#include   FT_FREETYPE_H
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -61,6 +64,7 @@ FT_BEGIN_HEADER
 
 
   /* */
+
 
 FT_END_HEADER
 

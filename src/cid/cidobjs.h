@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef CIDOBJS_H
-#define CIDOBJS_H
+#ifndef __CIDOBJS_H__
+#define __CIDOBJS_H__
 
 
 #include <ft2build.h>
@@ -28,6 +28,7 @@
 
 
 FT_BEGIN_HEADER
+
 
   /* The following structures must be defined by the hinter */
   typedef struct CID_Size_Hints_   CID_Size_Hints;
@@ -131,7 +132,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* CIDOBJS_H */
+#endif /* __CIDOBJS_H__ */
 
 
 /* END */

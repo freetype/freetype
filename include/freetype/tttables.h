@@ -20,10 +20,13 @@
 #ifndef __TTTABLES_H__
 #define __TTTABLES_H__
 
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*                                                                       */

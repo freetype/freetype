@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftcimage.c                                                             */
+/*  ftcimage.h                                                             */
 /*                                                                         */
 /*    FreeType Image cache (body).                                         */
 /*                                                                         */
@@ -26,9 +26,11 @@
 #ifndef __FTCIMAGE_H__
 #define __FTCIMAGE_H__
 
-#include   <ft2build.h>
-#include   FT_CACHE_H
-#include   FT_CACHE_INTERNAL_GLYPH_H
+
+#include <ft2build.h>
+#include FT_CACHE_H
+#include FT_CACHE_INTERNAL_GLYPH_H
+
 
 FT_BEGIN_HEADER
 

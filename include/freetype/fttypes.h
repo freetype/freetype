@@ -19,12 +19,15 @@
 #ifndef __FTTYPES_H__
 #define __FTTYPES_H__
 
-#include   <ft2build.h>
-#include   FT_SYSTEM_H
-#include   FT_IMAGE_H
-#include   <stddef.h>
+
+#include <ft2build.h>
+#include FT_SYSTEM_H
+#include FT_IMAGE_H
+#include <stddef.h>
+
 
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -395,6 +398,7 @@ FT_BEGIN_HEADER
   /* */
 
 #define FT_IS_EMPTY( list )  ( (list).head == 0 )
+
 
 FT_END_HEADER
 

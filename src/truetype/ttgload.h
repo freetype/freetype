@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef TTGLOAD_H
-#define TTGLOAD_H
+#ifndef __TTGLOAD_H__
+#define __TTGLOAD_H__
 
 
 #include <ft2build.h>
@@ -49,7 +49,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* TTGLOAD_H */
+#endif /* __TTGLOAD_H__ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef CFFLOAD_H
-#define CFFLOAD_H
+#ifndef __CFFLOAD_H__
+#define __CFFLOAD_H__
 
 
 #include <ft2build.h>
@@ -64,7 +64,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* CFFLOAD_H */
+#endif /* __CFFLOAD_H__ */
 
 
 /* END */

@@ -20,9 +20,10 @@
 #define __T1ERRORS_H__
 
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
+#include <ft2build.h>
+
+
+FT_BEGIN_HEADER
 
 
   /************************ error codes declaration **************/
@@ -66,10 +67,7 @@
 #define T1_Err_Stack_Overflow          FT_Err_Invalid_File_Format
 
 
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* __T1ERRORS_H__ */
 

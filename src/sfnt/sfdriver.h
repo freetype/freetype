@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef SFDRIVER_H
-#define SFDRIVER_H
+#ifndef __SFDRIVER_H__
+#define __SFDRIVER_H__
 
 
 #include <ft2build.h>
@@ -32,7 +32,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* SFDRIVER_H */
+#endif /* __SFDRIVER_H__ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef FTSMOOTH_H
-#define FTSMOOTH_H
+#ifndef __FTSMOOTH_H__
+#define __FTSMOOTH_H__
 
 
 #include <ft2build.h>
@@ -38,7 +38,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* FTSMOOTH_H */
+#endif /* __FTSMOOTH_H__ */
 
 
 /* END */

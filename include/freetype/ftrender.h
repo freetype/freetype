@@ -19,9 +19,11 @@
 #ifndef __FTRENDER_H__
 #define __FTRENDER_H__
 
-#include   <ft2build.h>
-#include   FT_MODULE_H
-#include   FT_GLYPH_H
+
+#include <ft2build.h>
+#include FT_MODULE_H
+#include FT_GLYPH_H
+
 
 FT_BEGIN_HEADER
 
@@ -179,6 +181,7 @@ FT_BEGIN_HEADER
                                           FT_Parameter*  parameters );
 
   /* */
+
 
 FT_END_HEADER
 

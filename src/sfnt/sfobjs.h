@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef SFOBJS_H
-#define SFOBJS_H
+#ifndef __SFOBJS_H__
+#define __SFOBJS_H__
 
 
 #include <ft2build.h>
@@ -26,6 +26,7 @@
 
 
 FT_BEGIN_HEADER
+
 
   FT_LOCAL
   FT_Error  SFNT_Init_Face( FT_Stream      stream,
@@ -47,7 +48,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* SFDRIVER_H */
+#endif /* __SFDRIVER_H__ */
 
 
 /* END */

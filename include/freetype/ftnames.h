@@ -22,8 +22,10 @@
 #ifndef __FTNAMES_H__
 #define __FTNAMES_H__
 
-#include   <ft2build.h>
-#include   FT_FREETYPE_H
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 
 FT_BEGIN_HEADER
 

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef FTGRAYS_H
-#define FTGRAYS_H
+#ifndef __FTGRAYS_H__
+#define __FTGRAYS_H__
 
 #ifdef __cplusplus
   extern "C" {
@@ -51,7 +51,7 @@
   }
 #endif
 
-#endif /* FTGRAYS_H */
+#endif /* __FTGRAYS_H__ */
 
 
 /* END */

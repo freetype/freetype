@@ -20,8 +20,10 @@
 #ifndef __FTOUTLN_H__
 #define __FTOUTLN_H__
 
-#include   <ft2build.h>
-#include   FT_FREETYPE_H
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 
 FT_BEGIN_HEADER
 
@@ -312,6 +314,7 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )  FT_Outline_Render( FT_Library         library,
                                             FT_Outline*        outline,
                                             FT_Raster_Params*  params );
+
 
 FT_END_HEADER
 

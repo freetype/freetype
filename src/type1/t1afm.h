@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef T1AFM_H
-#define T1AFM_H
+#ifndef __T1AFM_H__
+#define __T1AFM_H__
 
 #include <ft2build.h>
 #include FT_SOURCE_FILE(type1,t1objs.h)
@@ -60,7 +60,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* T1AFM_H */
+#endif /* __T1AFM_H__ */
 
 
 /* END */

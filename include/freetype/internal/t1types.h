@@ -20,9 +20,11 @@
 #ifndef __T1TYPES_H__
 #define __T1TYPES_H__
 
-#include  <ft2build.h>
-#include   FT_TYPE1_TABLES_H
-#include   FT_INTERNAL_POSTSCRIPT_NAMES_H
+
+#include<ft2build.h>
+#include FT_TYPE1_TABLES_H
+#include FT_INTERNAL_POSTSCRIPT_NAMES_H
+
 
 FT_BEGIN_HEADER
 

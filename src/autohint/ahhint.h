@@ -19,8 +19,8 @@
 /***************************************************************************/
 
 
-#ifndef AHHINT_H
-#define AHHINT_H
+#ifndef __AHHINT_H__
+#define __AHHINT_H__
 
 
 #include <ft2build.h>
@@ -28,6 +28,7 @@
 
 
 FT_BEGIN_HEADER
+
 
 #define AH_HINT_DEFAULT        0
 #define AH_HINT_NO_ALIGNMENT   1
@@ -65,9 +66,10 @@ FT_BEGIN_HEADER
   void  ah_hinter_done_global_hints( AH_Hinter*  hinter,
                                      void*       global_hints );
 
+
 FT_END_HEADER
 
-#endif /* AHHINT_H */
+#endif /* __AHHINT_H__ */
 
 
 /* END */
