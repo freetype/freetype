@@ -1,3 +1,23 @@
+2003-06-06  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftstroker.h: Renamed to...
+	* include/freetype/ftstroke.h: This.
+
+	* src/base/ftstroker.c: Renamed to...
+	* src/base/ftstroke.c: This.	
+
+	* include/freetype/config/ftheader.h (FT_STROKER_H): Updated.
+
+	* src/base/descrip.mms, src/base/Jamfile, src/base/rules.mk:
+	Updated.
+
+	* src/pcf/pcfdriver.c: Renamed to...
+	* src/pcf/pcfdrivr.c: This.
+	* src/pcf/pcfdriver.h: Renamed to...
+	* src/pcf/pcfdrivr.h: This.
+
+	* src/pcf/Jamfile, src/pcf/rules.mk: Updated.
+
 2003-06-05  Wenlin Institute (Tom Bishop)  <wenlin@wenlin.com>
 
 	* src/base/ftmac.c (file_spec_from_path) [TARGET_API_MAC_CARBON]:

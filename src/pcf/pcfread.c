@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include FT_INTERNAL_OBJECTS_H
 
 #include "pcf.h"
-#include "pcfdriver.h"
+#include "pcfdrivr.h"
 #include "pcfread.h"
 
 #include "pcferror.h"

@@ -1,4 +1,4 @@
-/*  pcfdriver.c
+/*  pcfdrivr.c
 
     FreeType font driver for pcf files
 
@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include FT_BDF_H
 
 #include "pcf.h"
-#include "pcfdriver.h"
+#include "pcfdrivr.h"
 #include "pcfutil.h"
 #include "pcfread.h"
 
