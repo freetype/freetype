@@ -64,10 +64,8 @@
 	* src/type1/t1load.c (is_name_char): The Type 1 loader now accepts
 	more general names according to the PostScript specification (the
 	previous one was too restrictive).
-
 	(parse_font_name, parse_encoding, parse_charstrings, parse_dict):
 	Use `is_name_char'.
-
 	(parse_subrs): Handle empty arrays.
 
 2003-03-20  David Turner  <david@freetype.org>
@@ -145,7 +143,7 @@
 2003-03-14  David Turner  <david@freetype.org>
 
 	* src/truetype/ttdriver.c (Set_Char_Sizes): Fixing the small
-	TrueType native rendering glitches, they came from a small rounding
+	TrueType native rendering glitches; they came from a small rounding
 	error.
 
 2003-03-13  David Turner  <david@freetype.org>
@@ -204,8 +202,7 @@
 
 	* src/gzip/ftgzip.c (ft_gzip_file_fill_output): Fixed a bug that
 	caused FreeType to loop endlessly when trying to read certain
-	compressed gzip files.  The following test could be used to reveal
-	the bug:
+	compressed gzip files.  The following test reveals the bug:
 
 	  touch 0123456789 ; gzip 0123456789 ; ftdump 0123456789.gz
 
@@ -271,7 +268,7 @@
 
 	Changed the incremental loading interface in a way that makes it
 	simpler and allows glyph metrics to be changed (e.g., by adding a
-	constant, as required by CFF fonts) rather than just overridden. 
+	constant, as required by CFF fonts) rather than just overridden.
 	This was required to make the GhostScript-to-FreeType bridge work.
 
 	* src/cff/cffgload.c (cff_slot_load) [FT_CONFIG_OPTION_INCREMENTAL]:
@@ -405,9 +402,11 @@
 
 	* include/freetype/config/ftheader.h (FT_WINFONTS_H): New macro
 	for ftwinfnt.h.
-	* include/freetype/internal/fnttypes.h: Move Windows FNT definition
-	to...
+	* include/freetype/internal/fnttypes.h: Include FT_WINFONTS_H.
+	(FNT_FontRec): Updated.
+	Move Windows FNT definition to...
 	* include/freetype/ftwinfnt.h: This new file.
+	(FT_WinFNT_HeaderRec): Rename `reserved2' to `reserved1'.
 	* src/base/ftwinfnt.c: New file, providing `FT_Get_WinFNT_Header'.
 	* src/winfonts/winfnt.c (winfnt_header_fields): Updated.
 	Rename `reserved2' to `reserved1'.
@@ -434,7 +433,7 @@
 
 2003-01-11  David Chester  <davidchester@qmx.net>
 
-	Patches to the auto-hinter in order to slightly improve the output. 
+	Patches to the auto-hinter in order to slightly improve the output.
 	Note that everything is controlled through the new
 	FT_CONFIG_OPTION_CHESTER_HINTS defined in "ftoption.h".  There are
 	also individual FT_CONFIG_CHESTER_XXX macros to control individual
@@ -474,8 +473,8 @@
 
 2003-01-11  David Turner  <david@freetype.org>
 
-	* include/freetype/internal/fnttypes.h: Fixed a structure field
-	definition to avoid memory overwrites.
+	* include/freetype/internal/fnttypes.h (WinFNT_HeaderRec): Increase
+	size of `reserved2' to avoid memory overwrites.
 
 2003-01-08  Huw Dawies  <huw@codeweavers.com>
 
@@ -572,9 +571,8 @@
 
 	* src/base/ftobjs.c (find_unicode_charmap): Added some comments to
 	better explain what's happening there.
-
-	* src/base/ftobjs.c (open_face): Included Graham Asher's fix to
-	prevent faces without Unicode charmaps from loading.
+	(open_face): Included Graham Asher's fix to prevent faces without
+	Unicode charmaps from loading.
 
 	* src/winfonts/winfnt.c: Included George Williams's fix to support
 	version 2 fonts correctly.
@@ -663,7 +661,7 @@
 	the use of system-wide zlib.
 
 	Note that this macro, as well as
-	FT_CONFIG_OPTION_BYTECODE_INTERPRETER, is not #undef-ed anymore. 
+	FT_CONFIG_OPTION_BYTECODE_INTERPRETER, is not #undef-ed anymore.
 	This allows the build system to define them depending on the
 	configuration (typically by adding -D flags at compile time).
 
@@ -753,7 +751,7 @@
 
 2002-10-30  David Turner  <david@freetype.org>
 
-	* FreeType 2.1.3rc3 released
+	* FreeType 2.1.3rc3 released.
 
 2002-10-25  David Turner  <david@freetype.org>
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -823,9 +823,10 @@
       {
         FT_Incremental_MetricsRec  metrics;
 
-		metrics.bearing_x = left_bearing;
-		metrics.bearing_y = 0;
-		metrics.advance = advance_width;
+
+        metrics.bearing_x = left_bearing;
+        metrics.bearing_y = 0;
+        metrics.advance = advance_width;
         error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
                   face->root.internal->incremental_interface->object,
                   glyph_index, FALSE, &metrics );
@@ -1066,7 +1067,7 @@
           num_base_points = gloader->base.outline.n_points;
 
           error = load_truetype_glyph( loader, subglyph->index,
-                                       recurse_count+1 );
+                                       recurse_count + 1 );
           if ( error )
             goto Fail;
 
@@ -1492,9 +1493,10 @@
         FT_Incremental_MetricsRec  metrics;
         FT_Error                   error = 0;
 
-		metrics.bearing_x = 0;
-		metrics.bearing_y = top_bearing;
-		metrics.advance = advance_height;
+
+        metrics.bearing_x = 0;
+        metrics.bearing_y = top_bearing;
+        metrics.advance = advance_height;
         error =
           face->root.internal->incremental_interface->funcs->get_glyph_metrics(
             face->root.internal->incremental_interface->object,

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 Glyph Loader (body).                                          */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -98,8 +98,8 @@
       FT_Incremental_MetricsRec  metrics;
 
       metrics.bearing_x = decoder->builder.left_bearing.x;
-	  metrics.bearing_y = decoder->builder.left_bearing.y;
-	  metrics.advance   = decoder->builder.advance.x;
+      metrics.bearing_y = decoder->builder.left_bearing.y;
+      metrics.advance   = decoder->builder.advance.x;
       error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
                 face->root.internal->incremental_interface->object,
                 glyph_index, FALSE, &metrics );
@@ -130,7 +130,7 @@
       T1_Face  face = (T1_Face)decoder->builder.face;
 
 
-	  if ( face->root.internal->incremental_interface )
+      if ( face->root.internal->incremental_interface )
         face->root.internal->incremental_interface->funcs->free_glyph_data(
           face->root.internal->incremental_interface->object,
           &glyph_data );
