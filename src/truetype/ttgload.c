@@ -1046,7 +1046,7 @@
                            start_point, start_contour );
           pts = &exec->pts;
 
-          pts->n_points   = num_points + 2;
+          pts->n_points   = (short)(num_points + 2);
           pts->n_contours = gloader->base.outline.n_contours;
 
           /* add phantom points */

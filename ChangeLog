@@ -1,3 +1,9 @@
+2001-07-07  David Turner  <david@freetype.org>
+
+	* src/truetype/ttgload.c, src/truetype/ttinterp.c, src/pcf/pcfread:
+	removed pedantic compiler warnings when the bytecode interpreter is
+	compiled in
+
 2001-07-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/autohint/ahhint.c (ah_hinter_align_weak_points): Remove
