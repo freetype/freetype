@@ -42,7 +42,6 @@
  /* original ZLib.                                                   */
 
 #define NO_DUMMY_DECL
-#define BUILDFIXED    /* save code size */
 #define MY_ZCALLOC
 
 #include "zlib.h"

@@ -1,3 +1,20 @@
+2003-06-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftmac.c (FT_New_Face_From_SFNT): s/rlen/sfnt_size/ to
+	make it compile.
+
+2002-06-07  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* include/freetype/internal/psaux.h, src/truetype/ttgload.h:
+	s/index/idx/ to fix compiler warnings.
+
+	* src/sfnt/ttcmap0.c (tt_face_build_cmaps): Use more `volatile' to
+	fix compiler warning.
+
+	* src/gzip/ftgzip.c (BUILDFIXED): Removed.
+	* src/gzip/inftrees.c (inflate_trees_fixed) [!BUILDFIXED]: Use
+	FT_UNUSED to remove compiler warning.
+
 2003-06-06  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftstroker.h: Renamed to...
@@ -193,7 +210,7 @@
 	* src/pshinter/pshglob.c, src/pshinter/pshglob.h
 	(psh_globals_set_scale): Make it a local function.
 
-	* test/gview.c: Fix remaming ps3->ps typo.
+	* test/gview.c: Fix renaming ps3->ps typo.
 	Formatting.
 
 2003-05-29  Werner Lemberg  <wl@gnu.org>

@@ -607,10 +607,10 @@
     HUnlock( sfnt );
     ReleaseResource( sfnt );
 
-    is_cff = rlen > 4 && sfnt_data[0] == 'O' &&
-                         sfnt_data[1] == 'T' &&
-                         sfnt_data[2] == 'T' &&
-                         sfnt_data[3] == 'O';
+    is_cff = sfnt_size > 4 && sfnt_data[0] == 'O' &&
+                              sfnt_data[1] == 'T' &&
+                              sfnt_data[2] == 'T' &&
+                              sfnt_data[3] == 'O';
 
     return open_face_from_buffer( library,
                                   sfnt_data,
