@@ -467,6 +467,10 @@ FT_BEGIN_HEADER
   FT_Get_Module_Interface( FT_Library   library,
                            const char*  mod_name );
 
+  FT_BASE( FT_Pointer )
+  ft_module_get_service( FT_Module    module,
+                         const char*  service_id );
+
  /* */
 
 

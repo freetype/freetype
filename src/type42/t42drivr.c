@@ -54,7 +54,7 @@
   *  GLYPH DICT SERVICE
   *
   */
-  
+
   static FT_Error
   t42_get_glyph_name( T42_Face    face,
                       FT_UInt     glyph_index,
@@ -116,15 +116,15 @@
   */
 
   static const char*
-  t42_get_ps_name( T42_Face  face )
+  t42_get_ps_font_name( T42_Face  face )
   {
     return (const char*)face->type1.font_name;
   }
 
 
-  static FT_Service_PsNameRec  t42_service_ps_name =
+  static FT_Service_PsFontNameRec  t42_service_ps_font_name =
   {
-    (FT_PsName_GetFunc)t42_get_ps_name
+    (FT_PsName_GetFunc)t42_get_ps_font_name
   };
 
 
@@ -136,9 +136,9 @@
 
   static const FT_ServiceDescRec  t42_services[] =
   {
-    { FT_SERVICE_ID_GLYPH_DICT,      &t42_service_glyph_dict },
-    { FT_SERVICE_ID_POSTSCRIPT_NAME, &t42_service_ps_name    },
-    { FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_TYPE_42   },
+    { FT_SERVICE_ID_GLYPH_DICT,           &t42_service_glyph_dict },
+    { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &t42_service_ps_font_name },
+    { FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_TYPE_42   },
     { NULL, NULL }
   };
 

@@ -29,12 +29,12 @@
 
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_POSTSCRIPT_NAMES_H
 
 #include FT_SERVICE_MULTIPLE_MASTERS_H
 #include FT_SERVICE_GLYPH_DICT_H
 #include FT_SERVICE_XFREE86_NAME_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H
+#include FT_SERVICE_POSTSCRIPT_NAMES_H
 
   /*************************************************************************/
   /*                                                                       */
@@ -114,7 +114,7 @@
     return (const char*) face->type1.font_name;
   }
 
-  static const FT_Service_PsNameRec  t1_service_ps_name =
+  static const FT_Service_PsFontNameRec  t1_service_ps_name =
   {
     (FT_PsName_GetFunc)  t1_get_ps_name
   };
@@ -142,7 +142,7 @@
 
   static const FT_ServiceDescRec  t1_services[] =
   {
-    { FT_SERVICE_ID_POSTSCRIPT_NAME, &t1_service_ps_name },
+    { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &t1_service_ps_name },
     { FT_SERVICE_ID_GLYPH_DICT, &t1_service_glyph_dict },
     { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_TYPE_1 },
 

@@ -39,9 +39,7 @@
       FT_Service_BDF  service;
 
 
-      FT_FACE_FIND_SERVICE( service,
-                            face,
-                            BDF );
+      FT_FACE_FIND_SERVICE( face, service, BDF );
 
       if ( service && service->get_charset_id )
         error = service->get_charset_id( face, &encoding, &registry );
@@ -74,9 +72,7 @@
       FT_Service_BDF  service;
 
 
-      FT_FACE_FIND_SERVICE( service,
-                            face,
-                            BDF );
+      FT_FACE_FIND_SERVICE( face, service, BDF );
 
       if ( service && service->get_property )
         error = service->get_property( face, prop_name, aproperty );

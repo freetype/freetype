@@ -22,7 +22,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_IDS_H
-#include FT_INTERNAL_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_NAMES_H
 
 #include "cffdrivr.h"
 #include "cffgload.h"
@@ -223,17 +223,15 @@
                       FT_Pointer  buffer,
                       FT_UInt     buffer_max )
   {
-    CFF_Font         font   = (CFF_Font)face->extra.data;
-    FT_Memory        memory = FT_FACE_MEMORY( face );
-    FT_String*       gname;
-    FT_UShort        sid;
-    PSNames_Service  psnames;
-    FT_Error         error;
+    CFF_Font            font   = (CFF_Font)face->extra.data;
+    FT_Memory           memory = FT_FACE_MEMORY( face );
+    FT_String*          gname;
+    FT_UShort           sid;
+    FT_Service_PsNames  psnames;
+    FT_Error            error;
 
 
-    psnames = (PSNames_Service)FT_Get_Module_Interface(
-                face->root.driver->root.library, "psnames" );
-
+    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_NAMES );
     if ( !psnames )
     {
       FT_ERROR(( "cff_get_glyph_name:" ));
@@ -274,22 +272,20 @@
   cff_get_name_index( CFF_Face    face,
                       FT_String*  glyph_name )
   {
-    CFF_Font         cff;
-    CFF_Charset      charset;
-    PSNames_Service  psnames;
-    FT_Memory        memory = FT_FACE_MEMORY( face );
-    FT_String*       name;
-    FT_UShort        sid;
-    FT_UInt          i;
-    FT_Int           result;
+    CFF_Font            cff;
+    CFF_Charset         charset;
+    FT_Service_PsNames  psnames;
+    FT_Memory           memory = FT_FACE_MEMORY( face );
+    FT_String*          name;
+    FT_UShort           sid;
+    FT_UInt             i;
+    FT_Int              result;
 
 
     cff     = (CFF_FontRec *)face->extra.data;
     charset = &cff->charset;
 
-    psnames = (PSNames_Service)FT_Get_Module_Interface(
-                face->root.driver->root.library, "psnames" );
-
+    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_NAMES );
     for ( i = 0; i < cff->num_glyphs; i++ )
     {
       sid = charset->sids[i];
