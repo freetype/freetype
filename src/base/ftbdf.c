@@ -90,11 +90,15 @@
       BDF_GetPropertyFunc  func;
 
 
-      func = (BDF_GetPropertyFunc)driver->root.clazz->get_interface(
-                                    FT_MODULE( driver ), "get_bdf_property" );
-      if ( func )
-        error = func( face, prop_name, aproperty );
+      if ( driver->root.clazz->get_interface )
+      {
+        func = (BDF_GetPropertyFunc)driver->root.clazz->get_interface(
+                 FT_MODULE( driver ), "get_bdf_property" );
+        if ( func )
+          error = func( face, prop_name, aproperty );
+      }
     }
+
     return error;
   }
 
