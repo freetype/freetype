@@ -1,3 +1,8 @@
+2004-05-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttload.c (tt_face_free_names): Check that `table->names'
+	is not NULL.  Reported by Gordon Childs <gchilds@quickcut.com.au>.
+
 2004-04-29  Werner Lemberg  <wl@gnu.org>
 
 	* docs/formats.txt: Add more information on PFR format.
