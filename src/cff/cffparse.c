@@ -306,10 +306,11 @@
   /* read a floating point number, either integer or real, */
   /* but return 1000 times the number read in.             */
   static
-  FT_Fixed cff_parse_fixed_thousand( FT_Byte** d )
+  FT_Fixed  cff_parse_fixed_thousand( FT_Byte**  d )
   {
-    return ( **d == 30 ? cff_parse_real      ( d[0], d[1], 3 )
-	               : (FT_Fixed)FT_MulFix ( cff_parse_integer( d[0], d[1] ) << 16, 1000 ) );
+    return **d ==
+      30 ? cff_parse_real     ( d[0], d[1], 3 )
+         : (FT_Fixed)FT_MulFix( cff_parse_integer( d[0], d[1] ) << 16, 1000 );
   }
 
   static
