@@ -154,9 +154,10 @@
   /* the abstract glyph cache object */
   typedef struct  FTC_Glyph_CacheRec_
   {
-    FTC_CacheRec  root;
-    FT_Lru        gsets_lru;        /* static sets lru list */
-    FTC_GlyphSet  last_gset;        /* small cache :-)      */
+    FTC_CacheRec              root;
+    FT_Lru                    gsets_lru;    /* static sets lru list */
+    FTC_GlyphSet              last_gset;    /* small cache :-)      */
+    FTC_GlyphSet_CompareFunc  compare;      /* useful shortcut      */
 
   } FTC_Glyph_CacheRec;
 
@@ -195,6 +196,11 @@
                            FTC_GlyphSet    gset,
                            FT_UInt         glyph_index,
                            FTC_GlyphNode  *anode );
+
+  FT_EXPORT( FT_Error )  FTC_Glyph_Cache_Lookup( FTC_Glyph_Cache  cache,
+                                                 FT_Pointer       type,
+                                                 FT_UInt          gindex,
+                                                 FTC_GlyphNode   *anode );
 
 
 #ifdef __cplusplus

@@ -274,50 +274,22 @@
   FT_EXPORT( FT_Error )  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
                                                  FTC_Image_Desc*  desc,
                                                  FT_UInt          gindex,
-                                                 FT_Glyph*        aglyph )
+                                                 FT_Glyph        *aglyph )
   {
     FT_Error       error;
-    FTC_GlyphSet   gset;
     FTC_GlyphNode  node;
-    FTC_Manager    manager;
 
-    FTC_ImageSet   img_set;
+    /* some argument checks are delayed to FTC_Glyph_Cache_Lookup */
 
-
-    /* check for valid `desc' delayed to FT_Lru_Lookup() */
-
-    if ( !cache || !aglyph )
+    if (!aglyph)
       return FT_Err_Invalid_Argument;
 
-    *aglyph  = 0;
-    gset     = cache->root.last_gset;
-    img_set  = (FTC_ImageSet)gset;
-    if ( !gset || memcmp( &img_set->description, desc, sizeof ( *desc ) ) )
-    {
-      error = FT_Lru_Lookup( cache->root.gsets_lru,
-                             (FT_LruKey)desc,
-                             (FT_Pointer*)&gset );
-      cache->root.last_gset = gset;
-      if ( error )
-        goto Exit;
-    }
+    error = FTC_Glyph_Cache_Lookup( (FTC_Glyph_Cache)cache,
+                                    desc, gindex, &node );
+                                    
+    if (!error)
+      *aglyph = ((FTC_GlyphImage)node)->ft_glyph;
 
-    error = FTC_GlyphSet_Lookup_Node( gset, gindex, &node );
-    if ( error )
-      goto Exit;
-
-    /* now compress the manager's cache pool if needed */
-    manager = cache->root.root.manager;
-    if ( manager->num_bytes > manager->max_bytes )
-    {
-      FTC_GlyphNode_Ref   ( node );
-      FTC_Manager_Compress( manager );
-      FTC_GlyphNode_Unref ( node );
-    }
-
-    *aglyph = ((FTC_GlyphImage)node)->ft_glyph;
-
-  Exit:
     return error;
   }
 

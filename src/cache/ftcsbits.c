@@ -248,6 +248,7 @@
 
     /* the node itself */
     size  = sizeof ( *node );
+    
     /* the sbit records */
     size += cset->element_count * sizeof ( FTC_SBitRec );
 
@@ -369,53 +370,21 @@
                                                 FTC_SBit*        asbit )
   {
     FT_Error       error;
-    FTC_ChunkSet   cset;
     FTC_ChunkNode  node;
     FT_UInt        cindex;
-    FTC_Manager    manager;
 
-    FTC_SBitSet    sset;
-    FTC_SBit       sbit;
-
-
-    /* check for valid `desc' delayed to FT_Lru_Lookup() */
-
-    if ( !cache || !asbit )
+    /* argument checks delayed to FTC_Chunk_Cache_Lookup */
+    if (!asbit)
       return FT_Err_Invalid_Argument;
-
+      
     *asbit = 0;
-    cset   = cache->root.last_cset;
-    sset   = (FTC_SBitSet)cset;
-
-    if ( !cset || memcmp( &sset->desc, desc, sizeof ( *desc ) ) )
-    {
-      error = FT_Lru_Lookup( cache->root.csets_lru,
-                             (FT_LruKey)desc,
-                             (FT_Pointer*)&cset );
-      cache->root.last_cset = cset;
-      if ( error )
-        goto Exit;
-    }
-
-    error = FTC_ChunkSet_Lookup_Node( cset, gindex, &node, &cindex );
-    if ( error )
-      goto Exit;
-
-    /* now compress the manager's cache pool if needed */
-    manager = cache->root.root.manager;
-    if ( manager->num_bytes > manager->max_bytes )
-    {
-      FTC_ChunkNode_Ref   ( node );
-      FTC_Manager_Compress( manager );
-      FTC_ChunkNode_Unref ( node );
-    }
-
-    sbit   = ((FTC_SBit)((FTC_ChunkNode)node)->elements) + cindex;
-    *asbit = sbit;
-
-  Exit:
+    error  = FTC_Chunk_Cache_Lookup( &cache->root, desc, gindex,
+                                     &node, &cindex );
+    if (!error)
+      *asbit = (FTC_SBit)node->elements + cindex;
+    
     return error;
   }
-
+                                    
 
 /* END */
