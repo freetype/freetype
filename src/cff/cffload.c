@@ -38,7 +38,6 @@
 #define FT_COMPONENT  trace_cffload
 
 
-  static
   const FT_UShort  cff_isoadobe_charset[229] =
   {
     0,
@@ -272,7 +271,6 @@
     228
   };
 
-  static
   const FT_UShort  cff_expert_charset[166] =
   {
     0,
@@ -443,7 +441,6 @@
     378
   };
 
-  static
   const FT_UShort  cff_expertsubset_charset[87] =
   {
     0,
@@ -535,7 +532,6 @@
     346
   };
 
-  static
   const FT_UShort  cff_standard_encoding[256] =
   {
     0,
@@ -796,7 +792,6 @@
     0
   };
 
-  static
   const FT_UShort  cff_expert_encoding[256] =
   {
     0,
@@ -1588,7 +1583,7 @@
 
       default:
         FT_ERROR(( "CFF_Load_Charset: invalid table format!\n" ));
-        error = FT_Err_Invalid_File_Format;
+        error = CFF_Err_Invalid_File_Format;
         goto Exit;
       }
     }
@@ -1610,7 +1605,7 @@
         {
           FT_ERROR(("CFF_Load_Charset: implicit charset not equal to\n"
                     "predefined charset (Adobe ISO-Latin)!\n" ));
-          error = FT_Err_Invalid_File_Format;
+          error = CFF_Err_Invalid_File_Format;
           goto Exit;
         }
 
@@ -1629,7 +1624,7 @@
         {
           FT_ERROR(( "CFF_Load_Charset: implicit charset not equal to\n"
                      "predefined charset (Adobe Expert)!\n" ));
-          error = FT_Err_Invalid_File_Format;
+          error = CFF_Err_Invalid_File_Format;
           goto Exit;
         }
 
@@ -1648,7 +1643,7 @@
         {
           FT_ERROR(( "CFF_Load_Charset: implicit charset not equal to\n"
                      "predefined charset (Adobe Expert Subset)!\n" ));
-          error = FT_Err_Invalid_File_Format;
+          error = CFF_Err_Invalid_File_Format;
           goto Exit;
         }
 
@@ -1663,7 +1658,7 @@
         break;
 
       default:
-        error = FT_Err_Invalid_File_Format;
+        error = CFF_Err_Invalid_File_Format;
         goto Exit;
       }
     }
@@ -1704,7 +1699,7 @@
     /* Check for charset->sids.  If we do not have this, we fail. */
     if ( !charset->sids )
     {
-      error = FT_Err_Invalid_File_Format;
+      error = CFF_Err_Invalid_File_Format;
       goto Exit;
     }
 
@@ -1805,7 +1800,7 @@
 
       default:
         FT_ERROR(( "CFF_Load_Encoding: invalid table format!\n" ));
-        error = FT_Err_Invalid_File_Format;
+        error = CFF_Err_Invalid_File_Format;
         goto Exit;
       }
 
@@ -1921,7 +1916,7 @@
 
       default:
         FT_ERROR(( "CFF_Load_Encoding: invalid table format!\n" ));
-        error = FT_Err_Invalid_File_Format;
+        error = CFF_Err_Invalid_File_Format;
         goto Exit;
        break;
       }
@@ -2091,7 +2086,7 @@
          font->absolute_offsize > 4 )
     {
       FT_TRACE2(( "[not a CFF font header!]\n" ));
-      error = FT_Err_Unknown_File_Format;
+      error = CFF_Err_Unknown_File_Format;
       goto Exit;
     }
 
@@ -2189,7 +2184,7 @@
     if ( dict->charstrings_offset == 0 )
     {
       FT_ERROR(( "CFF_Load_Font: no charstrings offset!\n" ));
-      error = FT_Err_Unknown_File_Format;
+      error = CFF_Err_Unknown_File_Format;
       goto Exit;
     }
 

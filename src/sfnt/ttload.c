@@ -262,7 +262,7 @@
            entry_selector * 2 <= num_tables )
       {
         FT_TRACE2(( "TT_Load_SFNT_Header: file is not SFNT!\n" ));
-        error = FT_Err_Unknown_File_Format;
+        error = TT_Err_Unknown_File_Format;
       }
     }
 

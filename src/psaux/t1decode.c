@@ -344,7 +344,7 @@
     limit = zone->limit  = charstring_base + charstring_len;
     ip    = zone->cursor = zone->base;
 
-    error   = FT_Err_Ok;
+    error   = T1_Err_Ok;
     outline = builder->current;
 
     x = builder->pos_x;
@@ -713,7 +713,7 @@
 
           /* return now! */
           FT_TRACE4(( "\n\n" ));
-          return FT_Err_Ok;
+          return T1_Err_Ok;
 
         case op_hsbw:
           FT_TRACE4(( " hsbw" ));
@@ -729,7 +729,7 @@
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it; so exit immediately                           */
           if ( builder->metrics_only )
-            return FT_Err_Ok;
+            return T1_Err_Ok;
 
           break;
 
@@ -753,7 +753,7 @@
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it; so exit immediately                           */
           if ( builder->metrics_only )
-            return FT_Err_Ok;
+            return T1_Err_Ok;
 
           break;
 
@@ -1054,7 +1054,7 @@
       {
         FT_ERROR(( "T1_Decoder_Init: " ));
         FT_ERROR(( "the `psnames' module is not available\n" ));
-        return FT_Err_Unimplemented_Feature;
+        return T1_Err_Unimplemented_Feature;
       }
 
       decoder->psnames = psnames;

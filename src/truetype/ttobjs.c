@@ -152,7 +152,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL
+  FT_LOCAL_DEF
   FT_Error  TT_Init_Face( FT_Stream      stream,
                           TT_Face        face,
                           FT_Int         face_index,
@@ -207,7 +207,7 @@
     return error;
 
   Bad_Format:
-    error = FT_Err_Unknown_File_Format;
+    error = TT_Err_Unknown_File_Format;
     goto Exit;
   }
 
@@ -223,7 +223,7 @@
   /* <Input>                                                               */
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
-  FT_LOCAL
+  FT_LOCAL_DEF
   void  TT_Done_Face( TT_Face  face )
   {
     FT_Memory  memory = face->root.memory;
@@ -276,7 +276,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL
+  FT_LOCAL_DEF
   FT_Error  TT_Init_Size( TT_Size  size )
   {
     FT_Error  error = TT_Err_Ok;

@@ -27,6 +27,12 @@
 
 FT_BEGIN_HEADER
 
+  extern const FT_UShort  cff_isoadobe_charset[];
+  extern const FT_UShort  cff_expert_charset[];
+  extern const FT_UShort  cff_expertsubset_charset[];
+  extern const FT_UShort  cff_standard_encoding[];
+  extern const FT_UShort  cff_expert_encoding[];
+
   FT_LOCAL
   FT_String*  CFF_Get_Name( CFF_Index*  index,
                             FT_UInt     element );

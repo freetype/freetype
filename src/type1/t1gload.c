@@ -112,7 +112,7 @@
     }
 
     *max_advance = decoder.builder.advance.x;
-    return FT_Err_Ok;
+    return T1_Err_Ok;
   }
 
 

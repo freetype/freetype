@@ -226,7 +226,7 @@
     if ( blend && blend->num_axis == num_coords )
     {
       /* recompute the weight vector from the blend coordinates */
-      error = FT_Err_Ok;
+      error = T1_Err_Ok;
 
       for ( n = 0; n < blend->num_designs; n++ )
       {
@@ -251,7 +251,7 @@
         blend->weight_vector[n] = result;
       }
 
-      error = FT_Err_Ok;
+      error = T1_Err_Ok;
     }
     return error;
   }

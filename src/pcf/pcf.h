@@ -160,7 +160,7 @@ FT_BEGIN_HEADER
 
 
   /* XXX hack */
-  static
+  FT_LOCAL
   FT_Error  PCF_Done_Face( PCF_Face  face );
 
 

@@ -259,7 +259,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL
+  FT_LOCAL_DEF
   FT_Error  CFF_Init_Face( FT_Stream      stream,
                            CFF_Face       face,
                            FT_Int         face_index,
@@ -336,7 +336,7 @@
       /* rewind to start of file; we are going to load a pure-CFF font */
       if ( FILE_Seek( 0 ) )
         goto Exit;
-      error = FT_Err_Ok;
+      error = CFF_Err_Ok;
     }
 
     /* now load and parse the CFF table in the file */
@@ -496,7 +496,7 @@
     return error;
 
   Bad_Format:
-    error = FT_Err_Unknown_File_Format;
+    error = CFF_Err_Unknown_File_Format;
     goto Exit;
   }
 
@@ -512,7 +512,7 @@
   /* <Input>                                                               */
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
-  FT_LOCAL
+  FT_LOCAL_DEF
   void  CFF_Done_Face( CFF_Face  face )
   {
     FT_Memory        memory = face->root.memory;

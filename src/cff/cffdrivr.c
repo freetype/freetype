@@ -241,7 +241,7 @@
       FT_ERROR(( " cannot open CFF & CEF fonts\n" ));
       FT_ERROR(( "             " ));
       FT_ERROR(( " without the `PSNames' module\n" ));
-      error = FT_Err_Unknown_File_Format;
+      error = CFF_Err_Unknown_File_Format;
       goto Exit;
     }
 

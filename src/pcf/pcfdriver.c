@@ -47,7 +47,7 @@ THE SOFTWARE.
 #define FT_COMPONENT  trace_pcfdriver
 
 
-  static
+  FT_LOCAL_DEF
   FT_Error  PCF_Done_Face( PCF_Face  face )
   { 
     FT_Memory    memory = FT_FACE_MEMORY( face );

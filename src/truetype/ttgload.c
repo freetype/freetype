@@ -251,7 +251,7 @@
     FT_TRACE5(( "  yMin: %4d  yMax: %4d\n", loader->bbox.yMin,
                                             loader->bbox.yMax ));
 
-    return FT_Err_Ok;
+    return TT_Err_Ok;
   }
 
 
@@ -534,7 +534,7 @@
     FT_UInt          n_points = outline->n_points;
     FT_UInt          n_ins;
     TT_GlyphZone*    zone     = &load->zone;
-    FT_Error         error    = FT_Err_Ok;
+    FT_Error         error    = TT_Err_Ok;
 
     FT_UNUSED( debug );  /* used by truetype interpreter only */
 
@@ -625,7 +625,7 @@
         if ( error && load->exec->pedantic_hinting )
           goto Exit;
 
-        error = FT_Err_Ok;  /* ignore bytecode errors in non-pedantic mode */
+        error = TT_Err_Ok;  /* ignore bytecode errors in non-pedantic mode */
       }
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
@@ -740,7 +740,7 @@
 
 #endif
 
-      error = FT_Err_Ok;
+      error = TT_Err_Ok;
       goto Exit;
     }
 

@@ -75,7 +75,7 @@
                   "%!PS-Adobe-3.0 Resource-CIDFont", 31 ) )
     {
       FT_TRACE2(( "[not a valid CID-keyed font]\n" ));
-      error = FT_Err_Unknown_File_Format;
+      error = T1_Err_Unknown_File_Format;
     }
 
     FORGET_Frame();

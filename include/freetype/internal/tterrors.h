@@ -43,6 +43,7 @@ FT_BEGIN_HEADER
 
   /* High level API errors. */
 
+#define TT_Err_Unknown_File_Format        FT_Err_Unknown_File_Format
 #define TT_Err_Invalid_File_Format        FT_Err_Invalid_File_Format
 #define TT_Err_Invalid_Argument           FT_Err_Invalid_Argument
 #define TT_Err_Invalid_Driver_Handle      FT_Err_Invalid_Driver_Handle
