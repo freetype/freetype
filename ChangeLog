@@ -1,3 +1,12 @@
+2000-11-12  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/sfnt/ttload.c: Change tracing output in functions
+	TT_LookUp_Table and TT_Load_Generic_Table.  Change comments
+	preceding TT_Load_Generic_Table.
+	* src/sfnt/sfobjs.c: In function SFNT_Load_Face, set boolean
+	variable has-outline to true only if the font has a `glyf' or
+	`CFF ' table.
+
 2000-11-11  Werner Lemberg  <wl@gnu.org>
 
 	* builds/win32/visualc/freetype.dsp: Fix raster1->raster and
