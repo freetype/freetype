@@ -836,6 +836,12 @@
                cur[3] == 'e' && cur[4] == 'c' )
           {
             cur += 6; /* we skip the newling after the "eexec" */
+            
+            /* XXX: Some fonts use DOS-linefeeds, i.e. \r\n, we need to skip */
+            /*      the extra \n when we find it..                           */
+            if (cur[0] == '\n')
+              cur++;
+              
             break;
           }
         }
