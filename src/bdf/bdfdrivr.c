@@ -617,7 +617,8 @@ THE SOFTWARE.
     /* FZ XXX: TODO: vertical metrics */
     slot->metrics.horiAdvance  = glyph.dwidth << 6;
     slot->metrics.horiBearingX = glyph.bbx.x_offset << 6;
-    slot->metrics.horiBearingY = glyph.bbx.y_offset << 6;
+    slot->metrics.horiBearingY = ( glyph.bbx.y_offset +
+                                   glyph.bbx.height ) << 6;
     slot->metrics.width        = bitmap->width << 6;
     slot->metrics.height       = bitmap->rows << 6;
 
