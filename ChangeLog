@@ -1,3 +1,9 @@
+2001-06-08  David Turner    <david@freetype.org>
+
+        * src/autohint/ahhint.c (ah_hinter_load_glyph): fixed a bug that
+        corrupted transformed glyphs that were auto-hinted (the transform
+        was applied twice !!)
+
 2001-06-07  Werner Lemberg  <wl@gnu.org>
 
 	Updating to libtool 1.4.0.
