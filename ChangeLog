@@ -2,6 +2,8 @@
 
 	* src/type1/t1load.c (parse_subrs, parse_dict): Handle synthetic
 	fonts properly.
+	(parse_charstrings): Copy correct number of characters into
+	`name_table'.
 
 2003-10-06  Werner Lemberg  <wl@gnu.org>
 

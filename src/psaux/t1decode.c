@@ -143,7 +143,7 @@
 
 
       if ( name && name[0] == glyph_name[0]  &&
-           ft_strcmp( name,glyph_name ) == 0 )
+           ft_strcmp( name, glyph_name ) == 0 )
         return n;
     }
 

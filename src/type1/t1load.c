@@ -1055,10 +1055,14 @@
     T1_Skip_PS_Token( parser );         /* `array' */
     T1_Skip_Spaces  ( parser );
 
-    /* initialize subrs array */
-    error = psaux->ps_table_funcs->init( table, num_subrs, memory );
-    if ( error )
-      goto Fail;
+    /* initialize subrs array -- with synthetic fonts it is possible */
+    /* we get here twice                                             */
+    if ( !loader->num_subrs )
+    {
+      error = psaux->ps_table_funcs->init( table, num_subrs, memory );
+      if ( error )
+        goto Fail;
+    }
 
     /* the format is simple:                                 */
     /*                                                       */
@@ -1220,23 +1224,23 @@
           break;
       }
 
-      if ( *cur != '/' )
-        T1_Skip_PS_Token( parser );
-      else
+      T1_Skip_PS_Token( parser );
+
+      if ( *cur == '/' )
       {
         FT_PtrDist  len;
 
 
-        T1_Skip_PS_Token( parser );
-        if ( cur >= limit )
+        if ( cur + 1 >= limit )
         {
           error = T1_Err_Invalid_File_Format;
           goto Fail;
         }
 
+        cur++;                              /* skip `/' */
         len = parser->root.cursor - cur;
 
-        error = T1_Add_Table( name_table, n, cur + 1, len + 1 );
+        error = T1_Add_Table( name_table, n, cur, len + 1 );
         if ( error )
           goto Fail;
 
