@@ -8,6 +8,11 @@
 	* src/psaux/psobjs.c (T1_Decrypt): Ditto.
 	* src/type1/t1parse.c (T1_Get_Private_Dict): Ditto.
 
+2001-06-28  David Turner <david@freetype.org>
+
+	* include/internal/ftstream.h: modified the definitions
+	of the FT_GET_XXXX and NEXT_XXXX macros for 16-bit correctness
+
 2001-06-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidload.c, src/cid/cidload.h (cid_decrypt): Use FT_Offset
