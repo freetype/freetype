@@ -308,7 +308,7 @@
  
 #ifdef DEBUG_HINTER
   static void
-  ps_simple_scale( PSH2_Hint_Table  table,
+  ps2_simple_scale( PSH2_Hint_Table  table,
                    FT_Fixed         scale,
                    FT_Fixed         delta,
                    FT_Int           vertical )
@@ -466,13 +466,13 @@
 
     if ( ps_debug_no_vert_hints && vertical )
     {
-      ps_simple_scale( table, scale, delta, vertical );
+      ps2_simple_scale( table, scale, delta, vertical );
       return;
     }
       
     if ( ps_debug_no_horz_hints && !vertical )
     {
-      ps_simple_scale( table, scale, delta, vertical );
+      ps2_simple_scale( table, scale, delta, vertical );
       return;
     }
 #endif
@@ -1435,6 +1435,9 @@
 
     memory = globals->memory;
 
+    FT_UNUSED(glyphrec);
+    
+
 #ifdef DEBUG_HINTER
     if ( ps2_debug_glyph )
     {
@@ -1449,7 +1452,7 @@
 #else 
     glyph = &glyphrec;    
 #endif
-    
+
     error = psh2_glyph_init( glyph, outline, ps_hints, globals );
     if (error) goto Exit;
     

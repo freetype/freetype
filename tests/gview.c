@@ -858,6 +858,42 @@ ah_draw_edges( void )
           }
         }
       }
+
+      if ( option_show_horz_hints && option_show_links )
+      {
+        AH_Segment*  seg   = glyph->horz_segments;
+        FT_UInt      count = glyph->num_hsegments;
+        
+        for ( ; count > 0; count--, seg++ )
+        {
+          AH_Segment*  seg2 = NULL;
+          NV_Path      link;
+          NV_Vector    v1, v2;
+          
+          if ( seg->link )
+          {
+            if ( seg->link > seg )
+              seg2 = seg->link;
+          }
+          else if ( seg->serif )
+            seg2 = seg->serif;
+          
+          if ( seg2 )
+          {
+            v1.y = seg->first->y;
+            v2.y = seg2->first->y;
+            v1.x = (seg->first->x + seg->last->x)/2 - pp1;
+            v2.x = (seg2->first->x + seg2->last->x)/2 - pp1;
+            
+            link = ah_link_path( &v1, &v2, 0 );
+            
+            nv_painter_set_color( painter, seg->serif ? SERIF_LINK_COLOR : LINK_COLOR, 256 );
+            nv_painter_fill_path( painter, &size_transform, 0, link );
+  
+            nv_path_destroy( link );
+          }
+        }
+      }
     }
   }
 }
