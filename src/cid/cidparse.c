@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 parser (body).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -59,6 +59,7 @@
     FT_Byte   buffer[256 + 10];
     FT_Int    buff_len;
     FT_Byte   *cur, *limit;
+    FT_Byte   *arg1, *arg2;
 
 
     FT_MEM_ZERO( parser, sizeof ( *parser ) );
@@ -135,16 +136,26 @@
     parser->root.limit     = parser->root.cursor + ps_len;
     parser->num_dict       = -1;
 
-    /* finally we check whether `StartData' was real -- it could be */
-    /* in a comment or string                                       */
+    /* Finally, we check whether `StartData' was real -- it could be  */
+    /* in a comment or string.  We also get its arguments to find out */
+    /* whether the data is represented in binary or hex format.       */
 
     limit = parser->root.limit;
     cur   = parser->root.cursor;
+
+    arg1 = cur;
+    cid_parser_skip_PS_token( parser );
+    cid_parser_skip_spaces  ( parser );
+    arg2 = cur;
+    cid_parser_skip_PS_token( parser );
+    cid_parser_skip_spaces  ( parser );
 
     while ( cur < limit )
     {
       if ( *cur == 'S' && ft_strncmp( (char*)cur, "StartData", 9 ) == 0 )
       {
+        if ( ft_strncmp( (char*)arg1, "(Hex)", 5 ) == 0 )
+          parser->data_type = 1;
         limit = parser->root.limit;
         cur   = parser->root.cursor;
         goto Exit;
@@ -152,7 +163,9 @@
 
       cid_parser_skip_PS_token( parser );
       cid_parser_skip_spaces  ( parser );
-      cur = parser->root.cursor;
+      arg1 = arg2;
+      arg2 = cur;
+      cur  = parser->root.cursor;
     }
 
     /* we haven't found the correct `StartData'; go back and continue */

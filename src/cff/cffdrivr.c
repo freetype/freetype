@@ -29,6 +29,7 @@
 #include "cffdrivr.h"
 #include "cffgload.h"
 #include "cffload.h"
+#include "cffcmap.h"
 
 #include "cfferrs.h"
 
@@ -340,22 +341,40 @@
 
 
   /*
-   *  (empty) TT CMAP INFO
+   * TT CMAP INFO
    *
-   *  Hide TT CMAP INFO service defined in SFNT module;
-   *  just return 0.
+   * If the charmap is a synthetic Unicode encoding cmap or 
+   * a Type 1 standard (or expert) encoding cmap, hide TT CMAP INFO 
+   * service defined in SFNT module.
+   *
+   * Otherwise call the service function in the sfnt module.
    *
    */
-
   static FT_Error
   cff_get_cmap_info( FT_CharMap    charmap,
                      TT_CMapInfo  *cmap_info )
   {
-    FT_UNUSED( charmap );
+    FT_CMap   cmap  = FT_CMAP( charmap );
+    FT_Error  error = CFF_Err_Ok;
+
 
     cmap_info->language = 0;
 
-    return CFF_Err_Ok;
+    if ( cmap->clazz != &cff_cmap_encoding_class_rec && 
+         cmap->clazz != &cff_cmap_unicode_class_rec  )
+    {
+      FT_Face             face    = FT_CMAP_FACE( cmap );
+      FT_Library          library = FT_FACE_LIBRARY( face );
+      FT_Module           sfnt    = FT_Get_Module( library, "sfnt" );
+      FT_Service_TTCMaps  service = ft_module_get_service (
+                                      sfnt, FT_SERVICE_ID_TT_CMAP );
+
+
+      if ( service && service->get_cmap_info )
+        error = service->get_cmap_info( charmap, cmap_info );
+    }
+
+    return error;
   }
 
 

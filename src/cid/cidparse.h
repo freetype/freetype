@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 parser (specification).                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -50,6 +50,9 @@ FT_BEGIN_HEADER
   /*    data_offset    :: The start position of the binary data (i.e., the */
   /*                      end of the data to be parsed.                    */
   /*                                                                       */
+  /*    data_type      :: If true, the binary data is represented in       */
+  /*                      hexadecimal format.                              */
+  /*                                                                       */
   /*    cid            :: A structure which holds the information about    */
   /*                      the current font.                                */
   /*                                                                       */
@@ -64,6 +67,7 @@ FT_BEGIN_HEADER
     FT_Long       postscript_len;
 
     FT_ULong      data_offset;
+    FT_Bool       data_type;
 
     CID_FaceInfo  cid;
     FT_Int        num_dict;

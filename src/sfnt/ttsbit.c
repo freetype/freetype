@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType and OpenType embedded bitmap support (body).                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -636,7 +636,7 @@
     for ( i = 0; i < face->num_sbit_strikes; i++ )
     {
       if ( ( (FT_UInt)face->sbit_strikes[i].y_ppem == y_ppem )     &&
-           ( ( x_ppem == 0 )                            ||
+           ( ( x_ppem == 0 )                                     ||
              ( (FT_UInt)face->sbit_strikes[i].x_ppem == x_ppem ) ) )
       {
         *astrike_index = i;

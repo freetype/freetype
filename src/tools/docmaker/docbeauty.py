@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  DocBeauty 0.1 (c) 2003 David Turner <david@freetype.org>
+#  DocBeauty (c) 2003, 2004 David Turner <david@freetype.org>
 #
 # This program is used to beautify the documentation comments used
 # in the FreeType 2 public headers.

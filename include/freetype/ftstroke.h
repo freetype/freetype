@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType path stroker (specification).                               */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2002, 2003, 2004 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -242,8 +242,9 @@ FT_BEGIN_HEADER
    *
    * @description:
    *   Reset a stroker object without changing its attributes.
-   *   you should call this function before beginning a new
-   *   series of calls to @FT_Stroker_BeginSubPath/@FT_Stroker_EndSubPath
+   *   You should call this function before beginning a new
+   *   series of calls to @FT_Stroker_BeginSubPath or
+   *   @FT_Stroker_EndSubPath.
    *
    * @input:
    *   stroker ::
@@ -284,7 +285,7 @@ FT_BEGIN_HEADER
    *   If `opened' is 1, the outline is processed as an open path, and the
    *   stroker will generate a single `stroke' outline.
    *
-   *   this function calls @FT_Stroker_Rewind automatically
+   *   This function calls @FT_Stroker_Rewind automatically.
    */
   FT_EXPORT( FT_Error )
   FT_Stroker_ParseOutline( FT_Stroker   stroker,
@@ -612,24 +613,25 @@ FT_BEGIN_HEADER
    *   FT_Glyph_Stroke
    *
    * @description:
-   *   stroke a given outline glyph object with a given stroker
+   *   Stroke a given outline glyph object with a given stroker.
    *
    * @inout:
-   *   pglyph :: source glyph handle on input, new glyph handle
+   *   pglyph :: Source glyph handle on input, new glyph handle
    *             on output.
    *
    * @input:
    *   stroker ::
    *     A stroker handle.
    *
-   *   destroy :: boolean. If TRUE, the source glyph object is destroyed
-   *              on success
+   *   destroy ::
+   *     A Boolean.  If TRUE, the source glyph object is destroyed
+   *     on success.
    *
    * @return:
-   *    FreeType error code. 0 means success
+   *    FreeType error code.  0 means success.
    *
    * @note:
-   *   the source glyph is untouched in case of error.
+   *   The source glyph is untouched in case of error.
    */
   FT_EXPORT( FT_Error )
   FT_Glyph_Stroke( FT_Glyph    *pglyph,
@@ -643,28 +645,30 @@ FT_BEGIN_HEADER
    *   FT_Glyph_StrokeBorder
    *
    * @description:
-   *   stroke a given outline glyph object with a given stroker, but
-   *   only returns either its inside or outside border
+   *   Stroke a given outline glyph object with a given stroker, but
+   *   only return either its inside or outside border.
    *
    * @inout:
-   *   pglyph :: source glyph handle on input, new glyph handle
-   *             on output.
+   *   pglyph ::
+   *     Source glyph handle on input, new glyph handle on output.
    *
    * @input:
    *   stroker ::
    *     A stroker handle.
    *
-   *   inside  :: boolean. If TRUE, return the inside border; otherwise,
-   *              the outside border
+   *   inside ::
+   *     A Boolean.  If TRUE, return the inside border, otherwise
+   *     the outside border.
    *
-   *   destroy :: boolean. If TRUE, the source glyph object is destroyed
-   *              on success
+   *   destroy ::
+   *     A Boolean.  If TRUE, the source glyph object is destroyed
+   *     on success.
    *
    * @return:
-   *    FreeType error code. 0 means success
+   *    FreeType error code.  0 means success.
    *
    * @note:
-   *   the source glyph is untouched in case of error.
+   *   The source glyph is untouched in case of error.
    */
   FT_EXPORT( FT_Error )
   FT_Glyph_StrokeBorder( FT_Glyph    *pglyph,
