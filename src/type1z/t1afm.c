@@ -73,7 +73,7 @@
   {
     FT_Byte*  p    = *start;
     int       sum  = 0;
-    int       sign;
+    int       sign = 1;
     
     /* skip everything that is not a number */
     while ( p < limit && (*p < '0' || *p > '9') )

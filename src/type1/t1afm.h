@@ -31,8 +31,8 @@ typedef struct T1_AFM_
 
 
 LOCAL_DEF
-FT_Error  T1_Read_AFM( FT_Stream stream,
-                       FT_Face   face );
+FT_Error  T1_Read_AFM( FT_Face   face,
+                       FT_Stream stream );
 
 LOCAL_DEF
 void      T1_Done_AFM( FT_Memory  memory,
