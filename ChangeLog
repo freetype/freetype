@@ -212,6 +212,8 @@
 	  FTDriver_initGlyphSlot => FT_Slot_InitFunc
 	  etc.
 
+	* src/cid/cidobjs.c (CID_Face_Init): Remove dead code.
+
 	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c: Updated a
 	few face method definitions:
 

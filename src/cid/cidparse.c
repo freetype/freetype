@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 parser (body).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -51,9 +51,9 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  CID_New_Parser( CID_Parser*       parser,
-                  FT_Stream         stream,
-                  FT_Memory         memory,
+  CID_New_Parser( CID_Parser*    parser,
+                  FT_Stream      stream,
+                  FT_Memory      memory,
                   PSAux_Service  psaux )
   {
     FT_Error  error;

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID driver interface (body).                                         */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -38,14 +38,14 @@
 #define FT_COMPONENT  trace_ciddriver
 
 
-
   static const char*
   cid_get_postscript_name( CID_Face  face )
   {
     const char*  result = face->cid.cid_font_name;
     
+
     if ( result && result[0] == '/' )
-      result ++;
+      result++;
       
     return result;
   }
@@ -86,7 +86,6 @@
     return CID_Err_Ok;
   }
 
-
 #endif /* 0 */
 
 
@@ -110,8 +109,8 @@
   CID_Get_Char_Index( FT_CharMap  charmap,
                       FT_Long     charcode )
   {
-    T1_Face             face;
-    FT_UInt             result = 0;
+    T1_Face          face;
+    FT_UInt          result = 0;
     PSNames_Service  psnames;
 
 
@@ -210,7 +209,7 @@
   CID_Get_Next_Char( FT_CharMap  charmap,
                      FT_Long     charcode )
   {
-    T1_Face             face;
+    T1_Face          face;
     PSNames_Service  psnames;
 
 
@@ -314,26 +313,26 @@
     sizeof( CID_SizeRec ),
     sizeof( CID_GlyphSlotRec ),
 
-    (FT_Face_InitFunc)     CID_Face_Init,
-    (FT_Face_DoneFunc)     CID_Face_Done,
+    (FT_Face_InitFunc)        CID_Face_Init,
+    (FT_Face_DoneFunc)        CID_Face_Done,
 
-    (FT_Size_InitFunc)     CID_Size_Init,
-    (FT_Size_DoneFunc)     CID_Size_Done,
-    (FT_Slot_InitFunc)CID_GlyphSlot_Init,
-    (FT_Slot_DoneFunc)CID_GlyphSlot_Done,
+    (FT_Size_InitFunc)        CID_Size_Init,
+    (FT_Size_DoneFunc)        CID_Size_Done,
+    (FT_Slot_InitFunc)        CID_GlyphSlot_Init,
+    (FT_Slot_DoneFunc)        CID_GlyphSlot_Done,
 
     (FT_Size_ResetPointsFunc) CID_Size_Reset,
-    (FT_Size_ResetPixelsFunc)CID_Size_Reset,
+    (FT_Size_ResetPixelsFunc) CID_Size_Reset,
 
-    (FT_Slot_LoadFunc)    CID_Load_Glyph,
-    (FT_CharMap_CharIndexFunc) CID_Get_Char_Index,
+    (FT_Slot_LoadFunc)        CID_Load_Glyph,
+    (FT_CharMap_CharIndexFunc)CID_Get_Char_Index,
 
-    (FT_Face_GetKerningFunc)   0,
-    (FT_Face_AttachFunc)   0,
+    (FT_Face_GetKerningFunc)  0,
+    (FT_Face_AttachFunc)      0,
 
-    (FT_Face_GetAdvancesFunc)  0,
+    (FT_Face_GetAdvancesFunc) 0,
     
-    (FT_CharMap_CharNextFunc)  CID_Get_Next_Char
+    (FT_CharMap_CharNextFunc) CID_Get_Next_Char
   };
 
 

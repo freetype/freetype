@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 font loader (body).                                  */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -88,15 +88,15 @@
 
 
   static FT_Error
-  cid_load_keyword( CID_Face         face,
-                    CID_Loader*      loader,
+  cid_load_keyword( CID_Face        face,
+                    CID_Loader*     loader,
                     const T1_Field  keyword )
   {
-    FT_Error     error;
-    CID_Parser*  parser = &loader->parser;
-    FT_Byte*     object;
-    void*        dummy_object;
-    CID_FaceInfo    cid = &face->cid;
+    FT_Error      error;
+    CID_Parser*   parser = &loader->parser;
+    FT_Byte*      object;
+    void*         dummy_object;
+    CID_FaceInfo  cid = &face->cid;
 
 
     /* if the keyword has a dedicated callback, call it */
@@ -181,12 +181,12 @@
   parse_font_matrix( CID_Face     face,
                      CID_Parser*  parser )
   {
-    FT_Matrix*     matrix;
-    FT_Vector*     offset;
+    FT_Matrix*    matrix;
+    FT_Vector*    offset;
     CID_FaceDict  dict;
-    FT_Face        root = (FT_Face)&face->root;
-    FT_Fixed       temp[6];
-    FT_Fixed       temp_scale;
+    FT_Face       root = (FT_Face)&face->root;
+    FT_Fixed      temp[6];
+    FT_Fixed      temp_scale;
 
 
     if ( parser->num_dict >= 0 )
@@ -236,9 +236,9 @@
                   CID_Parser*  parser )
   {
     CID_FaceInfo  cid    = &face->cid;
-    FT_Memory  memory = face->root.memory;
-    FT_Error   error  = CID_Err_Ok;
-    FT_Long    num_dicts;
+    FT_Memory     memory = face->root.memory;
+    FT_Error      error  = CID_Err_Ok;
+    FT_Long       num_dicts;
 
 
     num_dicts = CID_ToInt( parser );
@@ -390,14 +390,14 @@
   static FT_Error
   cid_read_subrs( CID_Face  face )
   {
-    CID_FaceInfo   cid    = &face->cid;
-    FT_Memory   memory = face->root.memory;
-    FT_Stream   stream = face->root.stream;
-    FT_Error    error;
-    FT_Int      n;
-    CID_Subrs  subr;
-    FT_UInt     max_offsets = 0;
-    FT_ULong*   offsets = 0;
+    CID_FaceInfo  cid    = &face->cid;
+    FT_Memory     memory = face->root.memory;
+    FT_Stream     stream = face->root.stream;
+    FT_Error      error;
+    FT_Int        n;
+    CID_Subrs     subr;
+    FT_UInt       max_offsets = 0;
+    FT_ULong*     offsets = 0;
 
 
     if ( FT_NEW_ARRAY( face->subrs, cid->num_dicts ) )
@@ -407,10 +407,10 @@
     for ( n = 0; n < cid->num_dicts; n++, subr++ )
     {
       CID_FaceDict  dict  = cid->font_dicts + n;
-      FT_Int         lenIV = dict->private_dict.lenIV;
-      FT_UInt        count, num_subrs = dict->num_subrs;
-      FT_ULong       data_len;
-      FT_Byte*       p;
+      FT_Int        lenIV = dict->private_dict.lenIV;
+      FT_UInt       count, num_subrs = dict->num_subrs;
+      FT_ULong      data_len;
+      FT_Byte*      p;
 
 
       /* reallocate offsets array if needed */
@@ -518,9 +518,9 @@
   FT_LOCAL_DEF( FT_Error )
   CID_Open_Face( CID_Face  face )
   {
-    CID_Loader  loader;
-    CID_Parser* parser;
-    FT_Error   error;
+    CID_Loader   loader;
+    CID_Parser*  parser;
+    FT_Error     error;
 
 
     t1_init_loader( &loader, face );
