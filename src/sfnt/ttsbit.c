@@ -4,19 +4,14 @@
 /*                                                                         */
 /*    TrueType and OpenType embedded bitmap support (body).                */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
-/*                                                                         */
-/*                                                                         */
-/*  WARNING: This file should not be compiled directly, it is meant to be  */
-/*           included in the source of several font drivers (i.e., the TTF */
-/*           and OTF drivers).                                             */
 /*                                                                         */
 /***************************************************************************/
 
@@ -76,10 +71,10 @@
     line_incr = target->pitch;
     line_buff = target->buffer;
 
-    if (line_incr < 0)
-      line_buff -= line_incr*(target->rows-1);
+    if ( line_incr < 0 )
+      line_buff -= line_incr * ( target->rows - 1 );
 
-    line_buff += (x_offset >> 3) + y_offset * line_incr;
+    line_buff += ( x_offset >> 3 ) + y_offset * line_incr;
 
     /***********************************************************************/
     /*                                                                     */
@@ -112,16 +107,17 @@
           {
             FT_Byte  val;
 
+
             /* ensure that there are at least 8 bits in the accumulator */
             if ( loaded < 8 )
             {
-              acc    |= (FT_UShort)*source++ << (8 - loaded);
+              acc    |= (FT_UShort)*source++ << ( 8 - loaded );
               loaded += 8;
             }
 
             /* now write one byte */
-            val = (FT_Byte)(acc >> 8);
-            if (shift)
+            val = (FT_Byte)( acc >> 8 );
+            if ( shift )
             {
               cur[0] |= val >> shift;
               cur[1] |= val << space;
@@ -150,12 +146,12 @@
         /* ensure that there are at least `count' bits in the accumulator */
         if ( loaded < count )
         {
-          acc    |= (FT_UShort)*source++ << (8 - loaded);
+          acc    |= (FT_UShort)*source++ << ( 8 - loaded );
           loaded += 8;
         }
 
         /* now write remaining bits */
-        val     = ((FT_Byte)(acc >> 8)) & ~(0xFF >> count);
+        val     = ( (FT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count );
         cur[0] |= val >> shift;
 
         if ( count > space )
@@ -288,6 +284,7 @@
   {
     TT_Error  error;
 
+
     if ( !ACCESS_Frame( 12L ) )
     {
       range->image_size = GET_ULong();
@@ -353,7 +350,7 @@
     {
       range->glyph_codes[n] = GET_UShort();
 
-      if (load_offsets)
+      if ( load_offsets )
         range->glyph_offsets[n] = (TT_ULong)range->image_offset +
                                   GET_UShort();
     }
@@ -375,6 +372,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    range  :: The target range.                                        */
+  /*                                                                       */
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
@@ -395,24 +393,23 @@
       {
         TT_ULong  num_glyphs, n;
         TT_Int    size_elem;
-        TT_Bool   large = (range->index_format == 1);
+        TT_Bool   large = ( range->index_format == 1 );
 
 
         num_glyphs        = range->last_glyph - range->first_glyph + 1L;
         range->num_glyphs = num_glyphs;
-        num_glyphs++;    /* XXX : BEWARE - see spec */
+        num_glyphs++;                       /* XXX: BEWARE - see spec */
 
-        size_elem  = ( large ? 4 : 2 );
+        size_elem  = large ? 4 : 2;
 
         if ( ALLOC_ARRAY( range->glyph_offsets,
                           num_glyphs, TT_ULong )    ||
-
              ACCESS_Frame( num_glyphs * size_elem ) )
           goto Exit;
 
         for ( n = 0; n < num_glyphs; n++ )
           range->glyph_offsets[n] = (TT_ULong)( range->image_offset +
-                                     (large ? GET_ULong() : GET_UShort()) );
+                                     large ? GET_ULong() : GET_UShort() );
         FORGET_Frame();
       }
       break;
@@ -427,7 +424,7 @@
 
     case 5:
       error = Load_SBit_Const_Metrics( range, stream ) ||
-              Load_SBit_Range_Codes( range, stream, 0 );
+              Load_SBit_Range_Codes( range, stream, 0  );
       break;
 
     default:
@@ -449,6 +446,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: The target face object.                                  */
+  /*                                                                       */
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
@@ -464,11 +462,12 @@
     TT_ULong   num_strikes;
     TT_ULong   table_base;
 
+
     face->num_sbit_strikes = 0;
 
     /* this table is optional */
     error = face->goto_table( face, TTAG_EBLC, stream, 0 );
-    if (error)
+    if ( error )
     {
       error = 0;
       goto Exit;
@@ -503,6 +502,7 @@
     {
       TT_SBit_Strike*  strike = face->sbit_strikes;
       TT_ULong         count  = num_strikes;
+
 
       if ( ACCESS_Frame( 48L * num_strikes ) )
         goto Exit;
@@ -543,8 +543,8 @@
 
       while ( count > 0 )
       {
-        TT_SBit_Range* range;
-        TT_ULong       count2 = strike->num_ranges;
+        TT_SBit_Range*  range;
+        TT_ULong        count2 = strike->num_ranges;
 
 
         if ( ALLOC_ARRAY( strike->sbit_ranges,
@@ -629,6 +629,7 @@
       {
         TT_SBit_Range*  range       = strike->sbit_ranges;
         TT_SBit_Range*  range_limit = range + strike->num_ranges;
+
 
         if ( range )
         {
@@ -772,7 +773,7 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    TrueType error code.  0 means success.  Returns                    */
-  /*    TT_Err_Invalid_Argument if no sbit exist for the requested glyph.  */
+  /*    TT_Err_Invalid_Argument if no sbit exists for the requested glyph. */
   /*                                                                       */
   static
   TT_Error  Find_SBit_Image( TT_Face           face,
@@ -788,7 +789,7 @@
     TT_SBit_Strike*  strike_limit = strike + face->num_sbit_strikes;
 
 
-    if ( !strike)
+    if ( !strike )
       goto Fail;
 
     for ( ; strike < strike_limit; strike++ )
@@ -828,6 +829,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    stream      :: The input stream.                                   */
+  /*                                                                       */
   /*    range       :: The SBit range containing the glyph.                */
   /*                                                                       */
   /* <Output>                                                              */
@@ -858,29 +860,30 @@
     case 2:
     case 8:
         /* variable small metrics */
-        {
-          TT_SBit_Small_Metrics  smetrics;
+      {
+        TT_SBit_Small_Metrics  smetrics;
 
-          /* read small metrics */
-          if ( ACCESS_Frame( 5L ) )
-            goto Exit;
-          TT_Load_Small_SBit_Metrics( &smetrics, stream );
-          FORGET_Frame();
 
-          /* convert it to a big metrics */
-          metrics->height       = smetrics.height;
-          metrics->width        = smetrics.width;
-          metrics->horiBearingX = smetrics.bearingX;
-          metrics->horiBearingY = smetrics.bearingY;
-          metrics->horiAdvance  = smetrics.advance;
+        /* read small metrics */
+        if ( ACCESS_Frame( 5L ) )
+          goto Exit;
+        TT_Load_Small_SBit_Metrics( &smetrics, stream );
+        FORGET_Frame();
 
-          /* these metrics are made up at a higher level when */
-          /* needed.                                          */
-          metrics->vertBearingX = 0;
-          metrics->vertBearingY = 0;
-          metrics->vertAdvance  = 0;
-        }
-        break;
+        /* convert it to a big metrics */
+        metrics->height       = smetrics.height;
+        metrics->width        = smetrics.width;
+        metrics->horiBearingX = smetrics.bearingX;
+        metrics->horiBearingY = smetrics.bearingY;
+        metrics->horiAdvance  = smetrics.advance;
+
+        /* these metrics are made up at a higher level when */
+        /* needed.                                          */
+        metrics->vertBearingX = 0;
+        metrics->vertBearingY = 0;
+        metrics->vertAdvance  = 0;
+      }
+      break;
 
     case 6:
     case 7:
@@ -895,7 +898,7 @@
       break;
 
     case 5:
-   default:  /* constant metrics */
+    default:  /* constant metrics */
       if ( range->index_format == 2 || range->index_format == 5 )
         *metrics = range->metrics;
       else
@@ -1058,7 +1061,7 @@
 
 
           val    = cur[1];
-          cur[0] = old | (val >> 7);
+          cur[0] = old | ( val >> 7 );
           old    = val << 1;
           cur++;
         }
@@ -1080,14 +1083,14 @@
     /*                                                                     */
     do
     {
-      TT_Int    right = map->width-1;
+      TT_Int    right = map->width - 1;
       TT_Byte*  limit;
       TT_Byte   mask;
 
 
-      line  = (TT_Byte*)map->buffer + (right >> 3);
-      limit = line + rows*line_len;
-      mask  = 0x80 >> (right & 7);
+      line  = (TT_Byte*)map->buffer + ( right >> 3 );
+      limit = line + rows * line_len;
+      mask  = 0x80 >> ( right & 7 );
 
       for ( ; line < limit; line += line_len )
         if ( line[0] & mask )
@@ -1150,10 +1153,10 @@
 
           switch ( pix_bits )
           {
-          case 1:  line_length = (glyph_width+7) >> 3;   break;
-          case 2:  line_length = (glyph_width+3) >> 2;   break;
-          case 4:  line_length = (glyph_width+1) >> 1;   break;
-          default: line_length =  glyph_width;
+          case 1:  line_length = ( glyph_width + 7 ) >> 3;   break;
+          case 2:  line_length = ( glyph_width + 3 ) >> 2;   break;
+          case 4:  line_length = ( glyph_width + 1 ) >> 1;   break;
+          default: line_length =   glyph_width;
           }
 
           glyph_size = glyph_height * line_length;
@@ -1201,8 +1204,8 @@
                             FT_Stream         stream,
                             TT_SBit_Metrics*  metrics )
   {
-    FT_Memory            memory = stream->memory;
-    TT_Error             error;
+    FT_Memory  memory = stream->memory;
+    TT_Error   error;
 
 
     /* place stream at beginning of glyph data and read metrics */
@@ -1229,15 +1232,15 @@
       {
       case 1:
         map->pixel_mode = ft_pixel_mode_mono;
-        map->pitch      = (map->width+7) >> 3;
+        map->pitch      = ( map->width + 7 ) >> 3;
         break;
       case 2:
         map->pixel_mode = ft_pixel_mode_pal2;
-        map->pitch      = (map->width+3) >> 2;
+        map->pitch      = ( map->width + 3 ) >> 2;
         break;
       case 4:
         map->pixel_mode = ft_pixel_mode_pal4;
-        map->pitch      = (map->width+1) >> 1;
+        map->pitch      = ( map->width + 1 ) >> 1;
         break;
       case 8:
         map->pixel_mode = ft_pixel_mode_grays;
@@ -1364,10 +1367,14 @@
   /*                                                                       */
   /*    glyph_index :: The current glyph index.                            */
   /*                                                                       */
+  /*    load_flags  :: The glyph load flags (the code checks for the flag  */
+  /*                   FT_LOAD_CROP_BITMAP                                 */
+  /*                                                                       */
   /*    stream      :: The input stream.                                   */
   /*                                                                       */
   /* <Output>                                                              */
   /*    map         :: The target pixmap.                                  */
+  /*                                                                       */
   /*    metrics     :: A big sbit metrics structure for the glyph image.   */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1404,12 +1411,13 @@
     /* now, find the location of the `EBDT' table in */
     /* the font file                                 */
     error = face->goto_table( face, TTAG_EBDT, stream, 0 );
-    if (error) goto Exit;
+    if ( error )
+      goto Exit;
 
     ebdt_pos = FILE_Pos();
 
     /* clear the bitmap & load the bitmap */
-    if (face->root.glyph->flags & ft_glyph_own_bitmap)
+    if ( face->root.glyph->flags & ft_glyph_own_bitmap )
       FREE( map->buffer );
 
     map->rows = map->pitch = map->width = 0;
@@ -1439,7 +1447,7 @@
     }
 
     /* Crop the bitmap now, unless specified otherwise */
-    if (load_flags & FT_LOAD_CROP_BITMAP)
+    if ( load_flags & FT_LOAD_CROP_BITMAP )
       Crop_Bitmap( map, metrics );
 
   Exit:

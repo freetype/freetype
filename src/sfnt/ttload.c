@@ -160,7 +160,7 @@
     TT_Error  error;
     TT_ULong  format_tag;
     FT_Memory memory = stream->memory;
-    
+
     const FT_Frame_Field  sfnt_header_fields[] =
     {
       FT_FRAME_START( 8 ),
@@ -170,7 +170,7 @@
         FT_FRAME_USHORT( SFNT_Header, range_shift ),
       FT_FRAME_END
     };
-                  
+
     const FT_Frame_Field  ttc_header_fields[] =
     {
       FT_FRAME_START( 8 ),
@@ -235,7 +235,7 @@
     sfnt->format_tag = format_tag;
     if ( READ_Fields( sfnt_header_fields, sfnt ) )
       goto Exit;
-      
+
     /* now, check the values of `num_tables', `seach_range', etc. */
     {
       TT_UInt  num_tables     = sfnt->num_tables;
@@ -256,7 +256,7 @@
 
   Exit:
     return error;
-  }                                  
+  }
 
 
   /*************************************************************************/
@@ -1336,7 +1336,7 @@
         FT_FRAME_USHORT( TT_PCLT, CapHeight ),
       FT_FRAME_END
     };
-  
+
     static const FT_Frame_Field  pclt_fields2[] =
     {
       FT_FRAME_START( 4 ),
@@ -1346,11 +1346,11 @@
         FT_FRAME_BYTE( TT_PCLT, Reserved ),
       FT_FRAME_END
     };
-  
+
     TT_Error  error;
     TT_PCLT*  pclt = &face->pclt;
 
-    
+
     FT_TRACE2(( "PCLT " ));
 
     /* optional table */
@@ -1361,17 +1361,17 @@
       pclt->Version = 0;
       return TT_Err_Ok;
     }
-    
+
     if ( READ_Fields( pclt_fields, pclt )            ||
          FILE_Read  ( pclt->TypeFace, 16 )           ||
          FILE_Read  ( pclt->CharacterComplement, 8 ) ||
          FILE_Read  ( pclt->FileName, 6 )            ||
          READ_Fields( pclt_fields2, pclt )           )
       goto Exit;
-    
+
     FT_TRACE2(( "loaded\n" ));
 
-  Exit:    
+  Exit:
     return error;
   }
 

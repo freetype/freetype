@@ -218,7 +218,7 @@
     /* check that we have a valid TrueType file */
     error = sfnt->load_sfnt_header( face, stream, face_index, &sfnt_header );
     if ( error )
-      goto Exit;                                    
+      goto Exit;
 
     face->format_tag = sfnt_header.format_tag;
     face->num_tables = sfnt_header.num_tables;

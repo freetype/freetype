@@ -5,25 +5,16 @@
 /*    Postcript name table processing for TrueType and OpenType fonts      */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* The post table is not completely loaded by the core engine.  This     */
-  /* file loads the missing PS glyph names and implements an API to access */
-  /* them.                                                                 */
-  /*                                                                       */
-  /*************************************************************************/
 
 
 #ifndef TTPOST_H
@@ -47,25 +38,6 @@ extern "C" {
 #endif
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Get_PS_Name                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Gets the PostScript glyph name of a glyph.                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    index  :: The glyph index.                                         */
-  /*                                                                       */
-  /*    PSname :: The address of a string pointer.  Will be NULL in case   */
-  /*              of error, otherwise it is a pointer to the glyph name.   */
-  /*                                                                       */
-  /*              You must not modify the returned string!                 */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error TT_Get_PS_Name( TT_Face      face,
                            TT_UInt      index,

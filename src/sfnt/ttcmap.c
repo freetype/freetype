@@ -225,7 +225,7 @@
       FORGET_Frame();
 
       cmap->get_index = code_to_index4;
-      
+
       cmap4->last_segment = cmap4->segments;
       break;
 
@@ -462,18 +462,18 @@
       /* the range here, the char code isn't in the charmap, so exit. */
       if ( charCode > seg4->endCount )
         continue;
-        
+
       if ( charCode >= seg4->startCount )
         goto Found;
     }
     return 0;
 
- Found:    
+ Found:
     cmap4->last_segment = seg4;
-    
+
     /* if the idRangeOffset is 0, we can compute the glyph index */
     /* directly                                                  */
-    
+
     if ( seg4->idRangeOffset == 0 )
       result = ( charCode + seg4->idDelta ) & 0xFFFF;
     else

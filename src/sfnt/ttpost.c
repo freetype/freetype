@@ -2,19 +2,19 @@
 /*                                                                         */
 /*  ttpost.c                                                               */
 /*                                                                         */
-/*    Postscript names table processing (body).                            */
+/*    Postcript name table processing for TrueType and OpenType fonts      */
+/*    (body).                                                              */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -24,6 +24,7 @@
   /*                                                                       */
   /*************************************************************************/
 
+
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/tterrors.h>
 #include <freetype/tttags.h>
@@ -31,19 +32,22 @@
 #include <ttpost.h>
 #include <ttload.h>
 
-/* When this configuration macro is defined, we rely on the "psnames" */
-/* module to grab the glyph names..                                   */
+  /* If this configuration macro is defined, we rely on the `psnames' */
+  /* module to grab the glyph names.                                  */
+
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
+
 #include <freetype/internal/psnames.h>
-#define  MAC_NAME(x)  ((TT_String*)psnames->macintosh_name(x))
 
-#else
+#define MAC_NAME( x )  ( (TT_String*)psnames->macintosh_name( x ) )
 
-/* Otherwise, we ignore the "psnames" module, then provide our own */
-/* table of Mac names.. Thus, it is possible to build a version of */
-/* FreeType without the Type 1 driver & PSNames module             */
+#else /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
-#define  MAC_NAME(x)  TT_Post_Default_Names[x]
+   /* Otherwise, we ignore the `psnames' module, and provide our own  */
+   /* table of Mac names.  Thus, it is possible to build a version of */
+   /* FreeType without the Type 1 driver & PSNames module.            */
+
+#define  MAC_NAME( x )  TT_Post_Default_Names[x]
 
   /* the 258 default Mac PS glyph names */
 
@@ -128,7 +132,8 @@
     "Idot", "Scedilla", "scedilla", "Cacute", "cacute",
     "Ccaron", "ccaron", "dmacron",
   };
-#endif
+
+#endif /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
 
   static
@@ -164,6 +169,7 @@
     {
       TT_Int  n;
 
+
       if ( ALLOC_ARRAY ( glyph_indices, num_glyphs, TT_UShort ) ||
            ACCESS_Frame( num_glyphs * 2L )                      )
         goto Fail;
@@ -178,11 +184,13 @@
     {
       TT_Int  n;
 
+
       num_names = 0;
 
       for ( n = 0; n < num_glyphs; n++ )
       {
         TT_Int  index;
+
 
         index = glyph_indices[n];
         if ( index >= 258 )
@@ -198,12 +206,14 @@
     {
       TT_Int  n;
 
+
       if ( ALLOC_ARRAY( name_strings, num_names, TT_Char* ) )
         goto Fail;
 
       for ( n = 0; n < num_names; n++ )
       {
         TT_UInt  len;
+
 
         if ( READ_Byte  ( len )                             ||
              ALLOC_ARRAY( name_strings[n], len+1, TT_Char ) ||
@@ -218,6 +228,7 @@
     {
       TT_Post_20*  table = &face->postscript_names.names.format_20;
 
+
       table->num_glyphs    = num_glyphs;
       table->num_names     = num_names;
       table->glyph_indices = glyph_indices;
@@ -229,6 +240,7 @@
   Fail1:
     {
       TT_Int  n;
+
 
       for ( n = 0; n < num_names; n++ )
         FREE( name_strings[n] );
@@ -317,16 +329,17 @@
 
     /* seek to the beginning of the PS names table */
     error = face->goto_table( face, TTAG_post, stream, 0 );
-    if (error) goto Exit;
+    if ( error )
+      goto Exit;
 
     /* now read postscript table */
     switch ( face->postscript.FormatType )
     {
-    case 0x00020000:
+    case 0x00020000L:
       error = Load_Format_20( face, stream );
       break;
 
-    case 0x00028000:
+    case 0x00028000L:
       error = Load_Format_25( face, stream );
       break;
 
@@ -352,7 +365,7 @@
     {
       switch ( face->postscript.FormatType )
       {
-      case 0x00020000:
+      case 0x00020000L:
         {
           TT_Post_20*  table = &names->names.format_20;
           TT_UInt      n;
@@ -369,7 +382,7 @@
         }
         break;
 
-      case 0x00028000:
+      case 0x00028000L:
         {
           TT_Post_25*  table = &names->names.format_25;
 
@@ -393,6 +406,8 @@
   /*    Gets the PostScript glyph name of a glyph.                         */
   /*                                                                       */
   /* <Input>                                                               */
+  /*    face   :: A handle to the parent face.                             */
+  /*                                                                       */
   /*    index  :: The glyph index.                                         */
   /*                                                                       */
   /*    PSname :: The address of a string pointer.  Will be NULL in case   */
@@ -410,9 +425,12 @@
   {
     TT_Error            error;
     TT_Post_Names*      names;
+
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     PSNames_Interface*  psnames;
 #endif
+
+
     if ( !face )
       return TT_Err_Invalid_Face_Handle;
 
@@ -421,23 +439,23 @@
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     psnames = (PSNames_Interface*)face->psnames;
-    if (!psnames)
+    if ( !psnames )
       return TT_Err_Unimplemented_Feature;
 #endif
 
-    names   = &face->postscript_names;
+    names = &face->postscript_names;
 
     /* `.notdef' by default */
-    *PSname = MAC_NAME(0);
+    *PSname = MAC_NAME( 0 );
 
     switch ( face->postscript.FormatType )
     {
-    case 0x00010000:
+    case 0x00010000L:
       if ( index < 258 )                    /* paranoid checking */
-        *PSname = MAC_NAME(index);
+        *PSname = MAC_NAME( index );
       break;
 
-    case 0x00020000:
+    case 0x00020000L:
       {
         TT_Post_20*  table = &names->names.format_20;
 
@@ -455,14 +473,14 @@
 
 
           if ( name_index < 258 )
-            *PSname = MAC_NAME(name_index);
+            *PSname = MAC_NAME( name_index );
           else
             *PSname = (TT_String*)table->glyph_names[name_index - 258];
         }
       }
       break;
 
-    case 0x00028000:
+    case 0x00028000L:
       {
         TT_Post_25*  table = &names->names.format_25;
 
@@ -477,12 +495,12 @@
         if ( index < table->num_glyphs )    /* paranoid checking */
         {
           index  += table->offsets[index];
-          *PSname = MAC_NAME(index);
+          *PSname = MAC_NAME( index );
         }
       }
       break;
 
-    case 0x00030000:
+    case 0x00030000L:
       break;                                /* nothing to do */
     }
 
