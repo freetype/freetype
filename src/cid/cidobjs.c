@@ -231,7 +231,7 @@
           FT_Int  max_advance;
 
 
-          error = T1_Compute_Max_Advance( face, &max_advance );
+          error = CID_Compute_Max_Advance( face, &max_advance );
 
           /* in case of error, keep the standard width */
           if ( !error )
@@ -340,7 +340,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  FT_Error  CID_Init_Driver( T1_Driver  driver )
+  FT_Error  CID_Init_Driver( CID_Driver  driver )
   {
     UNUSED( driver );
 
@@ -360,7 +360,7 @@
   /*    driver :: A handle to the target CID driver.                       */
   /*                                                                       */
   LOCAL_DEF
-  void  CID_Done_Driver( T1_Driver  driver )
+  void  CID_Done_Driver( CID_Driver  driver )
   {
     UNUSED( driver );
   }

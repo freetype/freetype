@@ -82,7 +82,7 @@
   {
     FT_Memory        memory;
     CID_Face         face;
-    T1_GlyphSlot     glyph;
+    CID_GlyphSlot     glyph;
     FT_GlyphLoader*  loader;
     FT_Outline*      base;
     FT_Outline*      current;
@@ -144,8 +144,8 @@
   LOCAL_DEF
   void  CID_Init_Builder( CID_Builder*  builder,
                           CID_Face      face,
-                          T1_Size       size,
-                          T1_GlyphSlot  glyph );
+                          CID_Size       size,
+                          CID_GlyphSlot  glyph );
 
   LOCAL_DEF
   void CID_Done_Builder( CID_Builder*  builder );
@@ -171,8 +171,8 @@
                                    FT_Int        charstring_len );
 
   LOCAL_DEF
-  FT_Error  CID_Load_Glyph( T1_GlyphSlot  glyph,
-                            T1_Size       size,
+  FT_Error  CID_Load_Glyph( CID_GlyphSlot  glyph,
+                            CID_Size       size,
                             FT_Int        glyph_index,
                             FT_Int        load_flags );
 

@@ -85,7 +85,7 @@
   static
   FT_Error  cid_load_keyword( CID_Face             face,
                               CID_Loader*          loader,
-                              const T1_Field_Rec*  keyword )
+                              const CID_Field_Rec*  keyword )
   {
     FT_Error    error;
     CID_Parser* parser = &loader->parser;
@@ -233,10 +233,10 @@
 
 
   static
-  const T1_Field_Rec  t1_field_records[] =
+  const CID_Field_Rec  t1_field_records[] =
   {
 #include <cidtokens.h>
-    { 0, 0, 0, 0, 0, 0 }
+    { 0, 0, 0, 0, 0, 0, 0, 0 }
   };
 
 
@@ -310,7 +310,7 @@
           if ( len > 0 && len < 22 )
           {
             /* now, compare the immediate name to the keyword table */
-            const T1_Field_Rec*  keyword = t1_field_records;
+            const CID_Field_Rec*  keyword = t1_field_records;
 
 
             for (;;)
@@ -363,7 +363,7 @@
     FT_Memory   memory = face->root.memory;
     FT_Stream   stream = face->root.stream;
     FT_Error    error;
-    FT_UInt     n;
+    FT_Int      n;
     CID_Subrs*  subr;
     FT_UInt     max_offsets = 0;
     FT_ULong*   offsets = 0;

@@ -38,7 +38,7 @@
                             FT_UInt       glyph_index );
 
 
-  typedef enum  T1_Operator_
+  typedef enum  CID_Operator_
   {
     op_none = 0,
 
@@ -74,7 +74,7 @@
 
     op_max    /* never remove this one */
 
-  } T1_Operator;
+  } CID_Operator;
 
   static const FT_Int  t1_args_count[op_max] =
   {
@@ -145,8 +145,8 @@
   LOCAL_FUNC
   void  CID_Init_Builder( CID_Builder*  builder,
                           CID_Face      face,
-                          T1_Size       size,
-                          T1_GlyphSlot  glyph )
+                          CID_Size       size,
+                          CID_GlyphSlot  glyph )
   {
     builder->path_begun  = 0;
     builder->load_points = 1;
@@ -200,7 +200,7 @@
   LOCAL_FUNC
   void  CID_Done_Builder( CID_Builder*  builder )
   {
-    T1_GlyphSlot  glyph = builder->glyph;
+    CID_GlyphSlot  glyph = builder->glyph;
 
     if ( glyph )
       glyph->root.outline = *builder->base;
@@ -586,7 +586,7 @@
     while ( ip < limit )
     {
       FT_Int*      top   = decoder->top;
-      T1_Operator  op    = op_none;
+      CID_Operator  op    = op_none;
       FT_Long      value = 0;
 
 
@@ -1118,7 +1118,7 @@
             FT_TRACE4(( " callsubr" ));
 
             index = top[0];
-            if ( index < 0 || index >= decoder->subrs->num_subrs )
+            if ( index < 0 || index >= (FT_Int)decoder->subrs->num_subrs )
             {
               FT_ERROR(( "CID_Parse_CharStrings: invalid subrs index\n" ));
               goto Syntax_Error;
@@ -1374,8 +1374,8 @@
 
 
   LOCAL_FUNC
-  FT_Error  CID_Load_Glyph( T1_GlyphSlot  glyph,
-                            T1_Size       size,
+  FT_Error  CID_Load_Glyph( CID_GlyphSlot  glyph,
+                            CID_Size       size,
                             FT_Int        glyph_index,
                             FT_Int        load_flags )
   {

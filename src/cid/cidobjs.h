@@ -31,47 +31,47 @@
 
 
   /* The following structures must be defined by the hinter */
-  typedef struct T1_Size_Hints_   T1_Size_Hints;
-  typedef struct T1_Glyph_Hints_  T1_Glyph_Hints;
+  typedef struct CID_Size_Hints_   CID_Size_Hints;
+  typedef struct CID_Glyph_Hints_  CID_Glyph_Hints;
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    T1_Driver                                                          */
+  /*    CID_Driver                                                          */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to a Type 1 driver object.                                */
   /*                                                                       */
-  typedef struct T1_DriverRec_*  T1_Driver;
+  typedef struct CID_DriverRec_*  CID_Driver;
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    T1_Size                                                            */
+  /*    CID_Size                                                            */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to a Type 1 size object.                                  */
   /*                                                                       */
-  typedef struct T1_SizeRec_*  T1_Size;
+  typedef struct CID_SizeRec_*  CID_Size;
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    T1_GlyphSlot                                                       */
+  /*    CID_GlyphSlot                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to a Type 1 glyph slot object.                            */
   /*                                                                       */
-  typedef struct T1_GlyphSlotRec_*  T1_GlyphSlot;
+  typedef struct CID_GlyphSlotRec_*  CID_GlyphSlot;
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    T1_CharMap                                                         */
+  /*    CID_CharMap                                                         */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to a Type 1 character mapping object.                     */
@@ -81,7 +81,7 @@
   /*    The driver is responsible for making up charmap objects            */
   /*    corresponding to these tables.                                     */
   /*                                                                       */
-  typedef struct T1_CharMapRec_*   T1_CharMap;
+  typedef struct CID_CharMapRec_*   CID_CharMap;
 
 
   /*************************************************************************/
@@ -91,15 +91,15 @@
   /*************************************************************************/
 
 
-  typedef struct T1_SizeRec_
+  typedef struct CID_SizeRec_
   {
     FT_SizeRec      root;
     FT_Bool         valid;
 
-  } T1_SizeRec;
+  } CID_SizeRec;
 
 
-  typedef struct  T1_GlyphSlotRec_
+  typedef struct  CID_GlyphSlotRec_
   {
     FT_GlyphSlotRec  root;
 
@@ -109,7 +109,7 @@
     FT_Fixed         x_scale;
     FT_Fixed         y_scale;
 
-  } T1_GlyphSlotRec;
+  } CID_GlyphSlotRec;
 
 
   LOCAL_DEF
@@ -124,10 +124,10 @@
 
 
   LOCAL_DEF
-  FT_Error  CID_Init_Driver( T1_Driver  driver );
+  FT_Error  CID_Init_Driver( CID_Driver  driver );
 
   LOCAL_DEF
-  void  CID_Done_Driver( T1_Driver  driver );
+  void  CID_Done_Driver( CID_Driver  driver );
 
 
 #ifdef __cplusplus

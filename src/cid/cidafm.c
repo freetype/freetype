@@ -40,7 +40,7 @@
 
   LOCAL_FUNC
   void  CID_Done_AFM( FT_Memory  memory,
-                      T1_AFM*    afm )
+                      CID_AFM*    afm )
   {
     FREE( afm->kern_pairs );
     afm->num_pairs = 0;
@@ -146,8 +146,8 @@
   int  compare_kern_pairs( const void*  a,
                            const void*  b )
   {
-    T1_Kern_Pair*  pair1 = (T1_Kern_Pair*)a;
-    T1_Kern_Pair*  pair2 = (T1_Kern_Pair*)b;
+    CID_Kern_Pair*  pair1 = (CID_Kern_Pair*)a;
+    CID_Kern_Pair*  pair2 = (CID_Kern_Pair*)b;
 
     FT_ULong  index1 = KERN_INDEX( pair1->glyph1, pair1->glyph2 );
     FT_ULong  index2 = KERN_INDEX( pair2->glyph1, pair2->glyph2 );
@@ -168,9 +168,9 @@
     FT_Byte*       limit;
     FT_Byte*       p;
     FT_Int         count = 0;
-    T1_Kern_Pair*  pair;
+    CID_Kern_Pair*  pair;
     T1_Font*       type1 = &((T1_Face)t1_face)->type1;
-    T1_AFM*        afm   = 0;
+    CID_AFM*        afm   = 0;
 
 
     if ( ACCESS_Frame( stream->size ) )
@@ -195,7 +195,7 @@
 
     /* allocate the pairs */
     if ( ALLOC( afm, sizeof ( *afm ) )                       ||
-         ALLOC_ARRAY( afm->kern_pairs, count, T1_Kern_Pair ) )
+         ALLOC_ARRAY( afm->kern_pairs, count, CID_Kern_Pair ) )
       goto Exit;
 
     /* now, read each kern pair */
@@ -230,7 +230,7 @@
     }
 
     /* now, sort the kern pairs according to their glyph indices */
-    qsort( afm->kern_pairs, count, sizeof ( T1_Kern_Pair ),
+    qsort( afm->kern_pairs, count, sizeof ( CID_Kern_Pair ),
            compare_kern_pairs );
 
   Exit:
@@ -245,12 +245,12 @@
 
   /* find the kerning for a given glyph pair */
   LOCAL_FUNC
-  void  CID_Get_Kerning( T1_AFM*     afm,
+  void  CID_Get_Kerning( CID_AFM*     afm,
                          FT_UInt     glyph1,
                          FT_UInt     glyph2,
                          FT_Vector*  kerning )
   {
-    T1_Kern_Pair  *min, *mid, *max;
+    CID_Kern_Pair  *min, *mid, *max;
     FT_ULong       index = KERN_INDEX( glyph1, glyph2 );
 
 

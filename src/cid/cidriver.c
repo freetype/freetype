@@ -50,20 +50,19 @@
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
 
-
   static
   FT_Error  cid_Get_Kerning( T1_Face     face,
                              FT_UInt     left_glyph,
                              FT_UInt     right_glyph,
                              FT_Vector*  kerning )
   {
-    T1_AFM*  afm;
+    CID_AFM*  afm;
 
 
     kerning->x = 0;
     kerning->y = 0;
 
-    afm = (T1_AFM*)face->afm_data;
+    afm = (CID_AFM*)face->afm_data;
     if ( afm )
       CID_Get_Kerning( afm, left_glyph, right_glyph, kerning );
 
@@ -193,8 +192,8 @@
 
     /* then the other font drivers fields */
     sizeof( CID_FaceRec ),
-    sizeof( T1_SizeRec ),
-    sizeof( T1_GlyphSlotRec ),
+    sizeof( CID_SizeRec ),
+    sizeof( CID_GlyphSlotRec ),
 
     (FTDriver_initFace)     CID_Init_Face,
     (FTDriver_doneFace)     CID_Done_Face,

@@ -42,7 +42,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****           IMPLEMENTATION OF T1_TABLE OBJECT                   *****/
+  /*****           IMPLEMENTATION OF CID_TABLE OBJECT                   *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
@@ -52,10 +52,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_New_Table                                                       */
+  /*    CID_New_Table                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initializes a T1_Table.                                            */
+  /*    Initializes a CID_Table.                                            */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    table  :: The address of the target table.                         */
@@ -70,7 +70,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  FT_Error  T1_New_Table( T1_Table*  table,
+  FT_Error  CID_New_Table( CID_Table*  table,
                           FT_Int     count,
                           FT_Memory  memory )
   {
@@ -98,7 +98,7 @@
 
 
   static
-  void  shift_elements( T1_Table*  table,
+  void  shift_elements( CID_Table*  table,
                         FT_Byte*   old_base )
   {
     FT_Long    delta  = table->block - old_base;
@@ -116,7 +116,7 @@
 
 
   static
-  FT_Error  reallocate_t1_table( T1_Table*  table,
+  FT_Error  reallocate_t1_table( CID_Table*  table,
                                  FT_Int     new_size )
   {
     FT_Memory  memory   = table->memory;
@@ -141,10 +141,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Add_Table                                                       */
+  /*    CID_Add_Table                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Adds an object to a T1_Table, possibly growing its memory block.   */
+  /*    Adds an object to a CID_Table, possibly growing its memory block.   */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    table  :: The target table.                                        */
@@ -161,14 +161,14 @@
   /*    reallocation fails.                                                */
   /*                                                                       */
   LOCAL_FUNC
-  FT_Error  T1_Add_Table( T1_Table*  table,
+  FT_Error  CID_Add_Table( CID_Table*  table,
                           FT_Int     index,
                           void*      object,
                           FT_Int     length )
   {
     if ( index < 0 || index > table->max_elems )
     {
-      FT_ERROR(( "T1_Add_Table: invalid index\n" ));
+      FT_ERROR(( "CID_Add_Table: invalid index\n" ));
       return T1_Err_Syntax_Error;
     }
 
@@ -202,10 +202,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Done_Table                                                      */
+  /*    CID_Done_Table                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Finalizes a T1_Table (reallocate it to its current cursor).        */
+  /*    Finalizes a CID_Table (reallocate it to its current cursor).        */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    table :: The target table.                                         */
@@ -215,7 +215,7 @@
   /*    to the caller to clean it, or reference it in its own structures.  */
   /*                                                                       */
   LOCAL_FUNC
-  void  T1_Done_Table( T1_Table*  table )
+  void  CID_Done_Table( CID_Table*  table )
   {
     FT_Memory  memory = table->memory;
     FT_Error   error;
@@ -236,7 +236,7 @@
 
 
   LOCAL_FUNC
-  void  T1_Release_Table( T1_Table*  table )
+  void  CID_Release_Table( CID_Table*  table )
   {
     FT_Memory  memory = table->memory;
 
@@ -264,10 +264,10 @@
   /*************************************************************************/
 
 
-#define IS_T1_WHITESPACE( c )  ( (c) == ' '  || (c) == '\t' )
-#define IS_T1_LINESPACE( c )   ( (c) == '\r' || (c) == '\n' )
+#define IS_CID_WHITESPACE( c )  ( (c) == ' '  || (c) == '\t' )
+#define IS_CID_LINESPACE( c )   ( (c) == '\r' || (c) == '\n' )
 
-#define IS_T1_SPACE( c )  ( IS_T1_WHITESPACE( c ) || IS_T1_LINESPACE( c ) )
+#define IS_CID_SPACE( c )  ( IS_CID_WHITESPACE( c ) || IS_CID_LINESPACE( c ) )
 
 
   LOCAL_FUNC
@@ -282,7 +282,7 @@
       FT_Byte  c = *cur;
 
 
-      if ( !IS_T1_SPACE( c ) )
+      if ( !IS_CID_SPACE( c ) )
         break;
       cur++;
     }
@@ -293,7 +293,7 @@
 
   LOCAL_FUNC
   void  CID_ToToken( CID_Parser*    parser,
-                     T1_Token_Rec*  token )
+                     CID_Token_Rec*  token )
   {
     FT_Byte*  cur;
     FT_Byte*  limit;
@@ -358,7 +358,7 @@
       default:
         token->start = cur++;
         token->type  = t1_token_any;
-        while ( cur < limit && !IS_T1_SPACE( *cur ) )
+        while ( cur < limit && !IS_CID_SPACE( *cur ) )
           cur++;
 
         token->limit = cur;
@@ -377,11 +377,11 @@
 
   LOCAL_FUNC
   void  CID_ToTokenArray( CID_Parser*    parser,
-                          T1_Token_Rec*  tokens,
+                          CID_Token_Rec*  tokens,
                           FT_UInt        max_tokens,
                           FT_Int*        pnum_tokens )
   {
-    T1_Token_Rec  master;
+    CID_Token_Rec  master;
 
 
     *pnum_tokens = -1;
@@ -392,8 +392,8 @@
     {
       FT_Byte*       old_cursor = parser->cursor;
       FT_Byte*       old_limit  = parser->limit;
-      T1_Token_Rec*  cur        = tokens;
-      T1_Token_Rec*  limit      = cur + max_tokens;
+      CID_Token_Rec*  cur        = tokens;
+      CID_Token_Rec*  limit      = cur + max_tokens;
 
 
       parser->cursor = master.start;
@@ -401,7 +401,7 @@
 
       while ( parser->cursor < parser->limit )
       {
-        T1_Token_Rec  token;
+        CID_Token_Rec  token;
 
 
         CID_ToToken( parser, &token );
@@ -711,10 +711,10 @@
   /* list of objects                                        */
   LOCAL_FUNC
   FT_Error  CID_Load_Field( CID_Parser*          parser,
-                            const T1_Field_Rec*  field,
+                            const CID_Field_Rec*  field,
                             void*                object )
   {
-    T1_Token_Rec  token;
+    CID_Token_Rec  token;
     FT_Byte*      cur;
     FT_Byte*      limit;
     FT_UInt       count;
@@ -799,21 +799,21 @@
   }
 
 
-#define CID_MAX_TABLE_ELEMENTS  32
+#define T1_MAX_TABLE_ELEMENTS  32
 
 
   LOCAL_FUNC
   FT_Error  CID_Load_Field_Table( CID_Parser*          parser,
-                                  const T1_Field_Rec*  field,
+                                  const CID_Field_Rec*  field,
                                   void*                object )
   {
-    T1_Token_Rec   elements[CID_MAX_TABLE_ELEMENTS];
-    T1_Token_Rec*  token;
+    CID_Token_Rec   elements[T1_MAX_TABLE_ELEMENTS];
+    CID_Token_Rec*  token;
     FT_Int         num_elements;
     FT_Error       error = 0;
     FT_Byte*       old_cursor;
     FT_Byte*       old_limit;
-    T1_Field_Rec   fieldrec = *(T1_Field_Rec*)field;
+    CID_Field_Rec   fieldrec = *(CID_Field_Rec*)field;
 
 
     fieldrec.type = t1_field_integer;
@@ -824,8 +824,8 @@
     if ( num_elements < 0 )
       goto Fail;
 
-    if ( num_elements > CID_MAX_TABLE_ELEMENTS )
-      num_elements = CID_MAX_TABLE_ELEMENTS;
+    if ( num_elements > T1_MAX_TABLE_ELEMENTS )
+      num_elements = T1_MAX_TABLE_ELEMENTS;
 
     old_cursor = parser->cursor;
     old_limit  = parser->limit;

@@ -22,20 +22,20 @@
 #include <cidobjs.h>
 
 
-  typedef struct  T1_Kern_Pair_
+  typedef struct  CID_Kern_Pair_
   {
     FT_UInt    glyph1;
     FT_UInt    glyph2;
     FT_Vector  kerning;
 
-  } T1_Kern_Pair;
+  } CID_Kern_Pair;
 
-  typedef struct  T1_AFM_
+  typedef struct  CID_AFM_
   {
     FT_Int         num_pairs;
-    T1_Kern_Pair*  kern_pairs;
+    CID_Kern_Pair*  kern_pairs;
 
-  } T1_AFM;
+  } CID_AFM;
 
 
 #if 1
@@ -46,10 +46,10 @@
 
   LOCAL_DEF
   void  CID_Done_AFM( FT_Memory  memory,
-                      T1_AFM*    afm );
+                      CID_AFM*    afm );
 
   LOCAL_DEF
-  void  CID_Get_Kerning( T1_AFM*     afm,
+  void  CID_Get_Kerning( CID_AFM*     afm,
                          FT_UInt     glyph1,
                          FT_UInt     glyph2,
                          FT_Vector*  kerning );

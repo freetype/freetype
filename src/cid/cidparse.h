@@ -32,10 +32,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    T1_Table                                                           */
+  /*    CID_Table                                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A T1_Table is a simple object used to store an array of objects    */
+  /*    A CID_Table is a simple object used to store an array of objects    */
   /*    in a single memory block.                                          */
   /*                                                                       */
   /* <Fields>                                                              */
@@ -62,7 +62,7 @@
   /*    memory    :: The memory object used for memory operations          */
   /*                 (allocation resp. reallocation).                      */
   /*                                                                       */
-  typedef struct  T1_Table_
+  typedef struct  CID_Table_
   {
     FT_Byte*   block;          /* current memory block           */
     FT_Int     cursor;         /* current cursor in memory block */
@@ -76,22 +76,22 @@
 
     FT_Memory  memory;
 
-  } T1_Table;
+  } CID_Table;
 
 
   LOCAL_DEF
-  FT_Error  T1_New_Table( T1_Table*  table,
+  FT_Error  CID_New_Table( CID_Table*  table,
                           FT_Int     count,
-                          T1_Memory  memory );
+                          CID_Memory  memory );
 
   LOCAL_DEF
-  FT_Error  T1_Add_Table( T1_Table*  table,
+  FT_Error  CID_Add_Table( CID_Table*  table,
                           FT_Int     index,
                           void*      object,
                           FT_Int     length );
 
   LOCAL_DEF
-  void  T1_Release_Table( T1_Table*  table );
+  void  CID_Release_Table( CID_Table*  table );
 
 #endif /* 0 */
 
@@ -183,7 +183,7 @@
 
 
   /* simple enumeration type used to identify token types */
-  typedef enum  T1_Token_Type_
+  typedef enum  CID_Token_Type_
   {
     t1_token_none = 0,
     t1_token_any,
@@ -193,26 +193,26 @@
     /* do not remove */
     t1_token_max
 
-  } T1_Token_Type;
+  } CID_Token_Type;
 
 
   /* a simple structure used to identify tokens */
-  typedef struct T1_Token_Rec_
+  typedef struct CID_Token_Rec_
   {
     FT_Byte*       start;   /* first character of token in input stream */
     FT_Byte*       limit;   /* first character after the token          */
-    T1_Token_Type  type;    /* type of token..                          */
+    CID_Token_Type  type;    /* type of token..                          */
 
-  } T1_Token_Rec;
+  } CID_Token_Rec;
 
 
   LOCAL_DEF
   void  CID_ToToken( CID_Parser*    parser,
-                     T1_Token_Rec*  token );
+                     CID_Token_Rec*  token );
 
 
   /* enumeration type used to identify object fields */
-  typedef enum  T1_Field_Type_
+  typedef enum  CID_Field_Type_
   {
     t1_field_none = 0,
     t1_field_bool,
@@ -226,9 +226,9 @@
     /* do not remove */
     t1_field_max
 
-  } T1_Field_Type;
+  } CID_Field_Type;
 
-  typedef enum  T1_Field_Location_
+  typedef enum  CID_Field_Location_
   {
     t1_field_cid_info,
     t1_field_font_dict,
@@ -238,18 +238,18 @@
     /* do not remove */
     t1_field_location_max
 
-  } T1_Field_Location;
+  } CID_Field_Location;
 
 
   typedef FT_Error  (*CID_Field_Parser)( CID_Face     face,
                                          CID_Parser*  parser );
 
   /* structure type used to model object fields */
-  typedef struct  T1_Field_Rec_
+  typedef struct  CID_Field_Rec_
   {
     const char*        ident;         /* field identifier                  */
-    T1_Field_Location  location;
-    T1_Field_Type      type;          /* type of field                     */
+    CID_Field_Location  location;
+    CID_Field_Type      type;          /* type of field                     */
     CID_Field_Parser   reader;
     FT_UInt            offset;        /* offset of field in object         */
     FT_UInt            size;          /* size of field in bytes            */
@@ -257,21 +257,21 @@
                                       /* array                             */
     FT_UInt            count_offset;  /* offset of element count for       */
                                       /* arrays                            */
-  } T1_Field_Rec;
+  } CID_Field_Rec;
 
 
-#define T1_FIELD_REF( s, f )  ( ((s*)0)->f )
+#define CID_FIELD_REF( s, f )  ( ((s*)0)->f )
 
-#define T1_NEW_SIMPLE_FIELD( _ident, _type, _fname )         \
+#define CID_NEW_SIMPLE_FIELD( _ident, _type, _fname )         \
           {                                                  \
             _ident, T1CODE, _type,                           \
             0,                                               \
-            (FT_UInt)(char*)&T1_FIELD_REF( T1TYPE, _fname ), \
-            sizeof ( T1_FIELD_REF( T1TYPE, _fname ) ),       \
+            (FT_UInt)(char*)&CID_FIELD_REF( T1TYPE, _fname ), \
+            sizeof ( CID_FIELD_REF( T1TYPE, _fname ) ),       \
             0, 0                                             \
           },
 
-#define T1_NEW_CALLBACK_FIELD( _ident, _reader ) \
+#define CID_NEW_CALLBACK_FIELD( _ident, _reader ) \
           {                                      \
             _ident, T1CODE, t1_field_callback,   \
             _reader,                             \
@@ -279,66 +279,66 @@
             0, 0                                 \
           },
 
-#define T1_NEW_TABLE_FIELD( _ident, _type, _fname, _max )           \
+#define CID_NEW_TABLE_FIELD( _ident, _type, _fname, _max )           \
           {                                                         \
             _ident, T1CODE, _type,                                  \
             0,                                                      \
-            (FT_UInt)(char*)&T1_FIELD_REF( T1TYPE, _fname ),        \
-            sizeof ( T1_FIELD_REF( T1TYPE, _fname )[0] ),           \
+            (FT_UInt)(char*)&CID_FIELD_REF( T1TYPE, _fname ),        \
+            sizeof ( CID_FIELD_REF( T1TYPE, _fname )[0] ),           \
             _max,                                                   \
-            (FT_UInt)(char*)&T1_FIELD_REF( T1TYPE, num_ ## _fname ) \
+            (FT_UInt)(char*)&CID_FIELD_REF( T1TYPE, num_ ## _fname ) \
           },
 
-#define T1_NEW_TABLE_FIELD2( _ident, _type, _fname, _max )   \
+#define CID_NEW_TABLE_FIELD2( _ident, _type, _fname, _max )   \
           {                                                  \
             _ident, T1CODE, _type,                           \
             0,                                               \
-            (FT_UInt)(char*)&T1_FIELD_REF( T1TYPE, _fname ), \
-            sizeof ( T1_FIELD_REF( T1TYPE, _fname )[0] ),    \
+            (FT_UInt)(char*)&CID_FIELD_REF( T1TYPE, _fname ), \
+            sizeof ( CID_FIELD_REF( T1TYPE, _fname )[0] ),    \
             _max, 0                                          \
           },
 
 
-#define T1_FIELD_BOOL( _ident, _fname )                        \
-          T1_NEW_SIMPLE_FIELD( _ident, t1_field_bool, _fname )
+#define CID_FIELD_BOOL( _ident, _fname )                        \
+          CID_NEW_SIMPLE_FIELD( _ident, t1_field_bool, _fname )
 
-#define T1_FIELD_NUM( _ident, _fname )                            \
-          T1_NEW_SIMPLE_FIELD( _ident, t1_field_integer, _fname )
+#define CID_FIELD_NUM( _ident, _fname )                            \
+          CID_NEW_SIMPLE_FIELD( _ident, t1_field_integer, _fname )
 
-#define T1_FIELD_FIXED( _ident, _fname )                        \
-          T1_NEW_SIMPLE_FIELD( _ident, t1_field_fixed, _fname )
+#define CID_FIELD_FIXED( _ident, _fname )                        \
+          CID_NEW_SIMPLE_FIELD( _ident, t1_field_fixed, _fname )
 
-#define T1_FIELD_STRING( _ident, _fname )                        \
-          T1_NEW_SIMPLE_FIELD( _ident, t1_field_string, _fname )
+#define CID_FIELD_STRING( _ident, _fname )                        \
+          CID_NEW_SIMPLE_FIELD( _ident, t1_field_string, _fname )
 
-#define T1_FIELD_NUM_TABLE( _ident, _fname, _fmax )           \
-          T1_NEW_TABLE_FIELD( _ident, t1_field_integer_array, \
+#define CID_FIELD_NUM_TABLE( _ident, _fname, _fmax )           \
+          CID_NEW_TABLE_FIELD( _ident, t1_field_integer_array, \
                               _fname, _fmax )
 
-#define T1_FIELD_FIXED_TABLE( _ident, _fname, _fmax )       \
-          T1_NEW_TABLE_FIELD( _ident, t1_field_fixed_array, \
+#define CID_FIELD_FIXED_TABLE( _ident, _fname, _fmax )       \
+          CID_NEW_TABLE_FIELD( _ident, t1_field_fixed_array, \
                               _fname, _fmax )
 
-#define T1_FIELD_NUM_TABLE2( _ident, _fname, _fmax )           \
-          T1_NEW_TABLE_FIELD2( _ident, t1_field_integer_array, \
+#define CID_FIELD_NUM_TABLE2( _ident, _fname, _fmax )           \
+          CID_NEW_TABLE_FIELD2( _ident, t1_field_integer_array, \
                                _fname, _fmax )
 
-#define T1_FIELD_FIXED_TABLE2( _ident, _fname, _fmax )       \
-          T1_NEW_TABLE_FIELD2( _ident, t1_field_fixed_array, \
+#define CID_FIELD_FIXED_TABLE2( _ident, _fname, _fmax )       \
+          CID_NEW_TABLE_FIELD2( _ident, t1_field_fixed_array, \
                                _fname, _fmax )
 
-#define T1_FIELD_CALLBACK( _ident, _name )                 \
-          T1_NEW_CALLBACK_FIELD( _ident, parse_ ## _name )
+#define CID_FIELD_CALLBACK( _ident, _name )                 \
+          CID_NEW_CALLBACK_FIELD( _ident, parse_ ## _name )
 
 
   LOCAL_DEF
   FT_Error  CID_Load_Field( CID_Parser*          parser,
-                            const T1_Field_Rec*  field,
+                            const CID_Field_Rec*  field,
                             void*                object );
 
   LOCAL_DEF
   FT_Error  CID_Load_Field_Table( CID_Parser*          parser,
-                                  const T1_Field_Rec*  field,
+                                  const CID_Field_Rec*  field,
                                   void*                object );
 
 
