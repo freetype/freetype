@@ -71,7 +71,7 @@
 
 
       plain     = ( *buffer ^ ( seed >> 8 ) );
-      seed      = ( *buffer + seed ) * 52845 + 22719;
+      seed      = ( *buffer + seed ) * 52845U + 22719;
       *buffer++ = plain;
       length--;
     }

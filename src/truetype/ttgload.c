@@ -670,9 +670,8 @@
     TT_Face          face   = (TT_Face)loader->face;
     FT_ULong         offset;
     FT_Int           contours_count;
-    FT_UInt          index, num_points, num_contours, count;
+    FT_UInt          index, num_points, count;
     FT_Fixed         x_scale, y_scale;
-    FT_ULong         ins_offset;
     FT_GlyphLoader*  gloader = loader->gloader;
     FT_Bool          opened_frame = 0;
 
@@ -686,9 +685,7 @@
     }
 
     loader->glyph_index = glyph_index;
-    num_contours = 0;
     num_points   = 0;
-    ins_offset   = 0;
 
     x_scale = 0x10000L;
     y_scale = 0x10000L;
@@ -1119,18 +1116,14 @@
   {
     FT_BBox       bbox;
     TT_Face       face = (TT_Face)loader->face;
-    FT_Fixed      x_scale, y_scale;
+    FT_Fixed      y_scale;
     TT_GlyphSlot  glyph = loader->glyph;
     TT_Size       size = (TT_Size)loader->size;
 
 
-    x_scale = 0x10000L;
     y_scale = 0x10000L;
     if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
-    {
-      x_scale = size->root.metrics.x_scale;
       y_scale = size->root.metrics.y_scale;
-    }
 
     if ( glyph->format != ft_glyph_format_composite )
     {
@@ -1190,7 +1183,6 @@
       FT_UShort  advance_height; /* vertical advance height   (EM units) */
 
       FT_Pos  left;     /* scaled vertical left side bearing         */
-      FT_Pos  Top;      /* scaled original vertical top side bearing */
       FT_Pos  top;      /* scaled vertical top side bearing          */
       FT_Pos  advance;  /* scaled vertical advance height            */
 
@@ -1244,14 +1236,12 @@
       /* scale the metrics */
       if ( !( loader->load_flags & FT_LOAD_NO_SCALE ) )
       {
-        Top     = FT_MulFix( top_bearing, y_scale );
         top     = FT_MulFix( top_bearing + loader->bbox.yMax, y_scale )
                     - bbox.yMax;
         advance = FT_MulFix( advance_height, y_scale );
       }
       else
       {
-        Top     = top_bearing;
         top     = top_bearing + loader->bbox.yMax - bbox.yMax;
         advance = advance_height;
       }
@@ -1332,7 +1322,6 @@
     SFNT_Interface*  sfnt;
     TT_Face          face;
     FT_Stream        stream;
-    FT_Memory        memory;
     FT_Error         error;
     TT_Loader        loader;
 
@@ -1340,7 +1329,6 @@
     face   = (TT_Face)glyph->face;
     sfnt   = (SFNT_Interface*)face->sfnt;
     stream = face->root.stream;
-    memory = face->root.memory;
     error  = 0;
 
     if ( !size || ( load_flags & FT_LOAD_NO_SCALE )   ||

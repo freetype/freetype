@@ -230,8 +230,8 @@
     indices.xMax = -1;
     indices.yMax = -1;
 
-    box.xMin = box.yMin =  32767;
-    box.xMax = box.yMax = -32768;
+    box.xMin = box.yMin =  32767L;
+    box.xMax = box.yMax = -32768L;
 
     /* is it empty? */
     if ( outline->n_contours < 1 )

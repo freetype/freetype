@@ -1542,7 +1542,7 @@
     FT_Error   error;
     FT_Memory  memory = stream->memory;
 
-    FT_UInt    n, num_tables, version;
+    FT_UInt    n, num_tables;
 
 
     /* the kern table is optional; exit silently if it is missing */
@@ -1553,7 +1553,7 @@
     if ( ACCESS_Frame( 4L ) )
       goto Exit;
 
-    version    = GET_UShort();
+    (void)GET_UShort();         /* version */
     num_tables = GET_UShort();
 
     FORGET_Frame();
@@ -1567,7 +1567,7 @@
       if ( ACCESS_Frame( 6L ) )
         goto Exit;
 
-      version  = GET_UShort();      /* version                 */
+      (void)GET_UShort();           /* version                 */
       length   = GET_UShort() - 6;  /* substract header length */
       coverage = GET_UShort();
 

@@ -323,7 +323,6 @@
     FT_Byte*          ip;
     FT_Byte*          limit;
     T1_Builder*       builder = &decoder->builder;
-    FT_Outline*       outline;
     FT_Pos            x, y;
 
 
@@ -346,8 +345,7 @@
     limit = zone->limit  = charstring_base + charstring_len;
     ip    = zone->cursor = zone->base;
 
-    error   = PSaux_Err_Ok;
-    outline = builder->current;
+    error = PSaux_Err_Ok;
 
     x = builder->pos_x;
     y = builder->pos_y;

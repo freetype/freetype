@@ -205,8 +205,6 @@
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
       AH_Edge*  edge;
-      AH_Edge*  before = 0;
-      AH_Edge*  after  = 0;
       AH_Edge*  anchor = 0;
       int       has_serifs = 0;
 
@@ -264,8 +262,6 @@
 
       /* now, we will align all stem edges, trying to maintain the */
       /* relative order of stems in the glyph..                    */
-      before = 0;
-      after  = 0;
       for ( edge = edges; edge < edge_limit; edge++ )
       {
         AH_Edge  *edge2;
@@ -434,12 +430,7 @@
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
       AH_Edge*   edge;
-      AH_Edge*   before;
-      AH_Edge*   after;
 
-
-      before = 0;
-      after  = 0;
 
       edge = edges;
       for ( ; edge < edge_limit; edge++ )
@@ -706,7 +697,6 @@
     AH_Outline*  outline = hinter->glyph;
     FT_Int       dimension;
     AH_Edge*     edges;
-    AH_Edge*     edge_limit;
     AH_Point*    points;
     AH_Point*    point_limit;
     AH_Point**   contour_limit;
@@ -719,7 +709,6 @@
     /* PASS 1: Move segment points to edge positions */
 
     edges      = outline->horz_edges;
-    edge_limit = edges + outline->num_hedges;
     touch_flag = ah_flah_touch_y;
 
     contour_limit = outline->contours + outline->num_contours;
@@ -1012,7 +1001,6 @@
     FT_Slot_Internal  internal = slot->internal;
     FT_Fixed          x_scale  = face->size->metrics.x_scale;
     FT_Fixed          y_scale  = face->size->metrics.y_scale;
-    FT_Glyph_Metrics  metrics;  /* temporary metrics */
     FT_Error          error;
     AH_Outline*       outline  = hinter->glyph;
     AH_Loader*        gloader  = hinter->loader;
@@ -1041,9 +1029,6 @@
       FT_Matrix_Invert( &imatrix );
       FT_Vector_Transform( &hinter->trans_delta, &imatrix );
     }
-
-    /* save current glyph metrics */
-    metrics = slot->metrics;
 
     /* set linear horizontal metrics */
     slot->linearHoriAdvance = slot->metrics.horiAdvance;
@@ -1122,7 +1107,7 @@
       /* width/positioning that occured during the hinting process  */
       {
         FT_Pos    old_width, new_width;
-        FT_Pos    old_advance, new_advance;
+        FT_Pos    old_advance;
         FT_Pos    old_lsb, new_lsb;
         AH_Edge*  edge1 = outline->vert_edges;     /* leftmost edge  */
         AH_Edge*  edge2 = edge1 +
@@ -1136,9 +1121,6 @@
         old_lsb     = edge1->opos;
         new_lsb     = edge1->pos;
 
-        new_advance = old_advance +
-                      ( new_width + new_lsb - old_width - old_lsb );
-
         hinter->pp1.x = ( ( new_lsb - old_lsb ) + 32 ) & -64;
         hinter->pp2.x = ( ( edge2->pos +
                             ( old_advance - edge2->opos ) ) + 32 ) & -64;
@@ -1151,12 +1133,11 @@
     case ft_glyph_format_composite:
       {
         FT_UInt       nn, num_subglyphs = slot->num_subglyphs;
-        FT_UInt       num_base_subgs, start_point, start_contour;
+        FT_UInt       num_base_subgs, start_point;
         FT_SubGlyph*  subglyph;
 
 
         start_point   = gloader->base.outline.n_points;
-        start_contour = gloader->base.outline.n_contours;
 
         /* first of all, copy the subglyph descriptors in the glyph loader */
         error = ah_loader_check_subglyphs( gloader, num_subglyphs );

@@ -81,7 +81,7 @@ FT_BEGIN_HEADER
 
 #define FTC_MAX_FACES_DEFAULT  2
 #define FTC_MAX_SIZES_DEFAULT  4
-#define FTC_MAX_BYTES_DEFAULT  200000  /* 200kByte by default! */
+#define FTC_MAX_BYTES_DEFAULT  200000L  /* 200kByte by default! */
 
   /* maximum number of caches registered in a single manager */
 #define FTC_MAX_CACHES         16

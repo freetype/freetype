@@ -1876,10 +1876,10 @@
     }
     else
     {
-      ras.clip_box.xMin = -32768;
-      ras.clip_box.yMin = -32768;
-      ras.clip_box.xMax =  32767;
-      ras.clip_box.yMax =  32767;
+      ras.clip_box.xMin = -32768L;
+      ras.clip_box.yMin = -32768L;
+      ras.clip_box.xMax =  32767L;
+      ras.clip_box.yMax =  32767L;
     }
 
     ras.outline   = *outline;
