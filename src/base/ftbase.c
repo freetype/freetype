@@ -21,6 +21,7 @@
 #define  FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include "ftcalc.c"
+#include "fttrigon.c"
 #include "ftobjs.c"
 #include "ftstream.c"
 #include "ftlist.c"

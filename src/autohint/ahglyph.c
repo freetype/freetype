@@ -359,7 +359,7 @@
       outline->horz_major_dir = ah_dir_right;
     }
 
-#else
+#else  /* !1 */
 
     /* Compute the vertical and horizontal major directions; this is     */
     /* currently done by inspecting the `ft_outline_reverse_fill' flag.  */
@@ -374,7 +374,7 @@
       outline->horz_major_dir = ah_dir_right;
     }
 
-#endif /* 1 */
+#endif /* !1 */
 
     outline->x_scale = face->size->metrics.x_scale;
     outline->y_scale = face->size->metrics.y_scale;

@@ -1240,14 +1240,15 @@
             goto Success;
 
           if ( error != FT_Err_Unknown_File_Format )
-            goto Fail;
+            goto Fail2;
         }
       }
 
-      ft_done_stream( &stream, external_stream );
-
       /* no driver is able to handle this format */
       error = FT_Err_Unknown_File_Format;
+
+  Fail2:
+      ft_done_stream( &stream, external_stream );
       goto Fail;
     }
 

@@ -436,7 +436,7 @@
 
   /* */
 
- 
+#define FT_TRIGONOMETRY_H          <freetype/fttrigon.h>
 #define FT_SYNTHESIS_H             <freetype/ftsynth.h>
 
 #define FT_CACHE_MANAGER_H         <freetype/cache/ftcmanag.h>

@@ -131,22 +131,25 @@ std_setup:
 	@echo ""
 	@$(COPY) $(CONFIG_RULES) $(CONFIG_MK)
 
+
+# special case for Dos, Windows, OS/2, where echo "" doesn't work correctly !!
+#
 dos_setup:
-	@echo ÿ
+	@type builds\newline
 	@echo $(PROJECT_TITLE) build system -- automatic system detection
-	@echo ÿ
+	@type builds\newline
 	@echo The following settings are used:
-	@echo ÿ
-	@echo ÿÿplatformÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ$(PLATFORM)
-	@echo ÿÿcompilerÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ$(CC)
-	@echo ÿÿconfiguration directoryÿÿÿÿÿÿ$(BUILD)
-	@echo ÿÿconfiguration rulesÿÿÿÿÿÿÿÿÿÿ$(CONFIG_RULES)
-	@echo ÿ
+	@type builds\newline
+	@echo   platformÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ$(PLATFORM)
+	@echo   compilerÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ$(CC)
+	@echo   configuration directoryÿÿÿÿÿÿ$(BUILD)
+	@echo   configuration rulesÿÿÿÿÿÿÿÿÿÿ$(CONFIG_RULES)
+	@type builds\newline
 	@echo If this does not correspond to your system or settings please remove the file
 	@echo '$(CONFIG_MK)' from this directory then read the INSTALL file for help.
-	@echo ÿ
+	@type builds\newline
 	@echo Otherwise, simply type 'make' again to build the library.
-	@echo ÿ
+	@type builds\newline
 	@$(COPY) $(subst /,\,$(CONFIG_RULES) $(CONFIG_MK)) > nul
 
 # EOF

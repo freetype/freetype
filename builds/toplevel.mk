@@ -97,13 +97,20 @@ ifdef check_platform
   # GNU make.  Similarly, `nul' is created if e.g. `make setup win32' has
   # been erroneously used.
   #
-  distclean:
+  # note: this test is duplicated in "builds/toplevel.mk"
+  is_unix := $(strip $(wildcard /sbin/init) $(wildcard /hurd/auth))
+  ifneq ($(is_unix),)
+
+
+    distclean:
 	  $(RM) builds/unix/config.cache
 	  $(RM) builds/unix/config.log
 	  $(RM) builds/unix/config.status
 	  $(RM) builds/unix/unix-def.mk
 	  $(RM) builds/unix/unix-cc.mk
 	  $(RM) nul
+
+  endif # test is_unix
 
   # IMPORTANT:
   #

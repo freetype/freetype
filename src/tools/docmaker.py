@@ -25,7 +25,7 @@
 #   - David
 #
 
-import fileinput, sys, os, string, glob, getopt
+import fileinput, sys, os, time, string, glob, getopt
 
 # The Project's title.  This can be overridden from the command line with
 # the options "-t" or "--title".
@@ -215,6 +215,11 @@ def check_output( ):
         else:
             output_dir = None
 
+
+def compute_time_html( ):
+    global html_footer
+    time_string = time.asctime( time.localtime( time.time() ) )
+    html_footer = "<p><center><font size=""-2"">generated on " + time_string + "</font></p></center>" + html_footer
 
 # The FreeType 2 reference is extracted from the source files.  These
 # contain various comment blocks that follow one of the following formats:
@@ -1628,6 +1633,7 @@ def main( argv ):
 
     html_header = html_header_1 + project_title + html_header_2 + project_title + html_header_3
     check_output( )
+    compute_time_html()
 
     # we begin by simply building a list of DocBlock elements
     #

@@ -278,13 +278,13 @@
 #else
 
   static void
-  test_cubic_zero( FT_Pos    y1,
-                   FT_Pos    y2,
-                   FT_Pos    y3,
-                   FT_Pos    y4,
-                   FT_Fixed  u,
-                   FT_Pos*   min,
-                   FT_Pos*   max )
+  test_cubic_extrema( FT_Pos    y1,
+                      FT_Pos    y2,
+                      FT_Pos    y3,
+                      FT_Pos    y4,
+                      FT_Fixed  u,
+                      FT_Pos*   min,
+                      FT_Pos*   max )
   {
  /* FT_Pos    a = y4 - 3*y3 + 3*y2 - y1; */
     FT_Pos    b = y3 - 2*y2 + y1;
@@ -373,34 +373,81 @@
         int       shift = 0;
 
 
+        /* technical explanation of what's happening there             */
+        /*                                                             */
+        /*   the following computation is based on the fact that for   */
+        /*   any value "y", if "n" is the position of the most         */
+        /*   significant bit of "abs(y)" (starting from 0 for the      */
+        /*   least significant bit), then y is in the range            */
+        /*                                                             */
+        /*                  "-2^n..2^n-1"                              */
+        /*                                                             */
+        /*   we want to shift "a", "b" and "c" concurrently in order   */
+        /*   to ensure that they all fit in 8.16 values, which maps    */
+        /*   to the integer range "-2^23..2^23-1"                      */
+        /*                                                             */
+        /*   necessarily, we need to shift "a", "b" and "c" so that    */
+        /*   the most significant bit of their absolute values is at   */
+        /*   _most_ at position 23                                     */
+        /*                                                             */
+        /*   we begin by computing "t1" as the bitwise "or" of the     */
+        /*   absolute values of "a", "b", "c"                          */
+        /*                                                             */
         t1  = (FT_ULong)((a >= 0) ? a : -a );
         t2  = (FT_ULong)((b >= 0) ? b : -b );
         t1 |= t2;
         t2  = (FT_ULong)((c >= 0) ? c : -c );
         t1 |= t2;
 
+        /*   now, the most significant bit of "t1" is sure to be the   */
+        /*   msb of one of "a", "b", "c", depending on which one is    */
+        /*   expressed in the greatest integer range..                 */
+        /*                                                             */
+        /*   we will now compute the "shift", by shifting "t1" as many */
+        /*   times as necessary to move its msb to position 23.        */
+        /*                                                             */
+        /*   this corresponds to a value of t1 that is in the range    */
+        /*   0x40_0000..0x7F_FFFF                                      */
+        /*                                                             */
+        /*   finally, we shift "a", "b" and "c" by the same amount.    */
+        /*   this ensure that all values are now in the range          */
+        /*   -2^23..2^23, i.e. that they're now expressed as 8.16      */
+        /*   fixed float numbers..                                     */
+        /*                                                             */
+        /*   this also means that we're using 24 bits of precision     */
+        /*   to compute the zeros, independently of the range of       */
+        /*   the original polynom coefficients.                        */
+        /*                                                             */
+        /*   this should ensure reasonably accurate values for the     */
+        /*   zeros. Note that the latter are only expressed with       */
+        /*   16 bits when computing the extrema (the zeros need to     */
+        /*   be in 0..1 exclusive to be considered part of the arc)    */
+        /*                                                             */
+
         if ( t1 == 0 )  /* all coefficients are 0! */
           return;
 
-        if ( t1 > 0x7FFFFFL )
+        if ( t1 > 0x7FFFFFUL )
         {
           do
           {
             shift++;
             t1 >>= 1;
-          } while ( t1 > 0x7FFFFFL );
+          } while ( t1 > 0x7FFFFFUL );
 
+          /* losing some bits of precision, but we'll use 24 of them */
+          /* for the computation anyway..                            */
           a >>= shift;
           b >>= shift;
           c >>= shift;
         }
-        else if ( t1 < 0x400000L )
+        else if ( t1 < 0x400000UL )
         {
           do
           {
             shift++;
             t1 <<= 1;
-          } while ( t1 < 0x400000L );
+          } while ( t1 < 0x400000UL );
 
           a <<= shift;
           b <<= shift;
@@ -414,7 +461,7 @@
         if ( b != 0 )
         {
           t = - FT_DivFix( c, b ) / 2;
-          test_cubic_zero( y1, y2, y3, y4, t, min, max );
+          test_cubic_extrema( y1, y2, y3, y4, t, min, max );
         }
       }
       else
@@ -428,17 +475,17 @@
         {
           /* there is a single split point at -b/a */
           t = - FT_DivFix( b, a );
-          test_cubic_zero( y1, y2, y3, y4, t, min, max );
+          test_cubic_extrema( y1, y2, y3, y4, t, min, max );
         }
         else
         {
           /* there are two solutions; we need to filter them though */
           d = FT_SqrtFixed( (FT_Int32)d );
           t = - FT_DivFix( b - d, a );
-          test_cubic_zero( y1, y2, y3, y4, t, min, max );
+          test_cubic_extrema( y1, y2, y3, y4, t, min, max );
 
           t = - FT_DivFix( b + d, a );
-          test_cubic_zero( y1, y2, y3, y4, t, min, max );
+          test_cubic_extrema( y1, y2, y3, y4, t, min, max );
         }
       }
     }

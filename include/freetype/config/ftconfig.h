@@ -127,6 +127,20 @@ FT_BEGIN_HEADER
 #error "no 32bit type found -- please check your configuration files"
 #endif
 
+/* now, lookup for an integer type that is at least 32 bits */
+#if FT_SIZEOF_INT >= 4
+
+  typedef int           FT_Fast;
+  typedef unsigned int  FT_UFast;
+
+#elif FT_SIZEOF_LONG >= 4
+
+  typedef long          FT_Fast
+  typedef unsigned long FT_UFast
+  
+#endif
+
+
 
   /* determine whether we have a 64-bit int type for platforms without */
   /* Autoconf                                                          */
