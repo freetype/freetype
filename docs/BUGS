@@ -186,16 +186,15 @@ ADVANCED-COMPOSITES
 
 GLYPH_TO_BITMAP-BUG
 
-  Calling FT_Glyph_To_Bitmap sometimes modifies the original glyph outline,
-  creating weird alignment artefacts.
+  Calling FT_Glyph_To_Bitmap() sometimes modifies the original glyph
+  outline, creating weird alignment artefacts.
   
-  this subtle bug was really in the file src/smooth/ftsmooth.c. Basically,
+  This subtle bug was really in the file src/smooth/ftsmooth.c.  Basically,
   the outline was shifted before rendering it into a new bitmap buffer.
-  However, it wasn't properly un-shifted after that operation..
+  However, it wasn't properly un-shifted after that operation.
 
-  this was only noticeable with certain glyphs or certain fonts and crept
-  for a long time here..
+  This was only noticeable with certain glyphs or certain fonts; it crept in
+  a long time ago.
   
-
 
 === end of file ===

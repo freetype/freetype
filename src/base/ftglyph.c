@@ -601,10 +601,10 @@
     /* create result bitmap glyph */
     error = ft_new_glyph( glyph->library, &ft_bitmap_glyph_class,
                           (FT_Glyph*)&bitmap );
-    if (error)
+    if ( error )
       goto Exit;
 
-#if 0      
+#if 0
     /* if `origin' is set, translate the glyph image */
     if ( origin )
       FT_Glyph_Transform( glyph, 0, origin );
@@ -627,7 +627,7 @@
     }
 #endif
 
-    if (error)
+    if ( error )
       goto Exit;
 
     /* in case of success, copy the bitmap to the glyph bitmap */
@@ -644,9 +644,9 @@
     *the_glyph = FT_GLYPH( bitmap );
 
   Exit:
-    if (error && bitmap)
-      FT_Done_Glyph( FT_GLYPH(bitmap) );
-      
+    if ( error && bitmap )
+      FT_Done_Glyph( FT_GLYPH( bitmap ) );
+
     return error;
 
   Bad:
