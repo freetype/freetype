@@ -295,7 +295,7 @@
   Load_Glyph( TT_GlyphSlot  slot,
               TT_Size       size,
               FT_UShort     glyph_index,
-              FT_UInt       load_flags )
+              FT_Int32      load_flags )
   {
     FT_Error  error;
 

@@ -1,3 +1,10 @@
+2002-09-21  Wolfgang Domröse  <porthos.domroese@harz.de>
+
+	* src/truetype/ttdriver.c (Load_Glyph): Fourth parameter must be
+	FT_Int32.
+	* src/truetype/ttgload.c, src/truetype/ttgload.h (TT_Load_Glyph):
+	Ditto.
+
 2002-09-19  Wolfgang Domröse  <porthos.domroese@harz.de>
 
 	More 16bit fixes.
