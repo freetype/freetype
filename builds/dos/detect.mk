@@ -80,20 +80,20 @@ ifeq ($(PLATFORM),dos)
     .PHONY: watcom
   endif
 
-  ifneq ($(findstring borlandc16,$(MAKECMDGOALS)),) # Borland C/C++ 16-bit
-    CONFIG_FILE := dos-bcc.mk
-    SEP         := $(BACKSLASH)
-    CC          := bcc
-    borlandc16: setup
-    .PHONY: borlandc16
-  endif
-
   ifneq ($(findstring borlandc,$(MAKECMDGOALS)),)   # Borland C/C++ 32-bit
     CONFIG_FILE := dos-bcc.mk
     SEP         := $(BACKSLASH)
     CC          := bcc32
     borlandc: setup
     .PHONY: borlandc
+  endif
+
+  ifneq ($(findstring borlandc16,$(MAKECMDGOALS)),) # Borland C/C++ 16-bit
+    CONFIG_FILE := dos-bcc.mk
+    SEP         := $(BACKSLASH)
+    CC          := bcc
+    borlandc16: setup
+    .PHONY: borlandc16
   endif
 
   ifneq ($(findstring bash,$(SHELL)),)              # check for bash
