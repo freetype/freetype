@@ -1576,6 +1576,8 @@ FT_BEGIN_HEADER
 
     FT_Generic            extra;
 
+    const char*           postscript_name;
+
   } TT_FaceRec;
 
 

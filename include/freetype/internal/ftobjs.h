@@ -34,7 +34,7 @@
 #include FT_INTERNAL_GLYPH_LOADER_H
 #include FT_INTERNAL_DRIVER_H
 #include FT_INTERNAL_AUTOHINT_H
-#include FT_INTERNAL_OBJECT_H
+#include FT_INTERNAL_SERVICE_H
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 #include FT_INCREMENTAL_H
@@ -296,8 +296,6 @@ FT_BEGIN_HEADER
   /*    transform_flags  :: Some flags used to classify the transform.     */
   /*                        Only used by the convenience functions.        */
   /*                                                                       */
-  /*    postscript_name  :: Postscript font name for this face.            */
-  /*                                                                       */
   /*    incremental_interface ::                                           */
   /*                        If non-null, the interface through             */
   /*                        which glyph data and metrics are loaded        */
@@ -315,7 +313,7 @@ FT_BEGIN_HEADER
     FT_Vector    transform_delta;
     FT_Int       transform_flags;
 
-    const char*  postscript_name;
+    FT_ServiceCacheRec  services;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     FT_Incremental_InterfaceRec*  incremental_interface;
@@ -753,8 +751,6 @@ FT_BEGIN_HEADER
     FT_ULong           raster_pool_size; /* size of render pool in bytes */
 
     FT_DebugHook_Func  debug_hooks[4];
-
-    FT_MetaClassRec    meta_class;
 
   } FT_LibraryRec;
 

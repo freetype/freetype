@@ -25,6 +25,8 @@
 
 #include "ciderrs.h"
 
+#include FT_SERVICE_POSTSCRIPT_NAME_H
+#include FT_SERVICE_XFREE86_NAME_H
 
   /*************************************************************************/
   /*                                                                       */
@@ -36,6 +38,11 @@
 #define FT_COMPONENT  trace_ciddriver
 
 
+ /*
+  *  POSTSCRIPT NAME SERVICE
+  *
+  */
+  
   static const char*
   cid_get_postscript_name( CID_Face  face )
   {
@@ -47,7 +54,23 @@
 
     return result;
   }
+ 
+  static const FT_Service_PsNameRec  cid_service_ps_name =
+  {
+    (FT_PsName_GetFunc) cid_get_postscript_name
+  };
 
+ /*
+  *  SERVICE LIST
+  *
+  */
+  
+  static const FT_ServiceDescRec  cid_services[] =
+  {
+    { FT_SERVICE_ID_POSTSCRIPT_NAME, & cid_service_ps_name },
+    { FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_CID },
+    { NULL, NULL }
+  };
 
   static FT_Module_Interface
   cid_get_interface( FT_Driver         driver,
@@ -56,10 +79,7 @@
     FT_UNUSED( driver );
     FT_UNUSED( cid_interface );
 
-    if ( ft_strcmp( (const char*)cid_interface, "postscript_name" ) == 0 )
-      return (FT_Module_Interface)cid_get_postscript_name;
-
-    return 0;
+    return ft_service_list_lookup( cid_services, cid_interface );
   }
 
 

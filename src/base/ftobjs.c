@@ -27,6 +27,29 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_OUTLINE_H
 
+#include FT_SERVICE_POSTSCRIPT_NAME_H
+#include FT_SERVICE_GLYPH_DICT_H
+
+  FT_BASE_DEF( FT_Pointer )
+  ft_service_list_lookup( FT_ServiceDesc  service_descriptors,
+                          const char*     service_id )
+  {
+    FT_Pointer      result = NULL;
+    FT_ServiceDesc  desc   = service_descriptors;
+    
+    if ( desc && service_id )
+    {
+      for ( ; desc->serv_id != NULL; desc++ )
+      {
+        if ( ft_strcmp( desc->serv_id, service_id ) == 0 )
+        {
+          result = (FT_Pointer) desc->serv_data;
+          break;
+        }
+      }
+    }
+    return result;
+  }                          
 
   FT_BASE_DEF( void )
   ft_validator_init( FT_Validator        valid,
@@ -704,7 +727,6 @@
     /* get rid of it */
     if ( face->internal )
     {
-      FT_FREE( face->internal->postscript_name );
       FT_FREE( face->internal );
     }
     FT_FREE( face );
@@ -1154,14 +1176,14 @@
     if ( FT_ALLOC( pfb_data, (FT_Long)pfb_len + 2 ) )
       goto Exit;
 
-    pfb_pos             = 0;
-    pfb_data[pfb_pos++] = 0x80;
-    pfb_data[pfb_pos++] = 1;            /* Ascii section */
-    pfb_lenpos          = pfb_pos;
-    pfb_data[pfb_pos++] = 0;            /* 4-byte length, fill in later */
-    pfb_data[pfb_pos++] = 0;
-    pfb_data[pfb_pos++] = 0;
-    pfb_data[pfb_pos++] = 0;
+    pfb_data[0] = 0x80;
+    pfb_data[1] = 1;            /* Ascii section */
+    pfb_data[2] = 0;            /* 4-byte length, fill in later */
+    pfb_data[3] = 0;
+    pfb_data[4] = 0;
+    pfb_data[5] = 0;
+    pfb_pos     = 7;
+    pfb_lenpos  = 2;      
 
     len = 0;
     type = 1;
@@ -1179,10 +1201,10 @@
         len += rlen;
       else
       {
-        pfb_data[pfb_lenpos    ] =   len         & 0xFF;
-        pfb_data[pfb_lenpos + 1] = ( len >>  8 ) & 0xFF;
-        pfb_data[pfb_lenpos + 2] = ( len >> 16 ) & 0xFF;
-        pfb_data[pfb_lenpos + 3] = ( len >> 24 ) & 0xFF;
+        pfb_data[pfb_lenpos    ] = (FT_Byte)( len );
+        pfb_data[pfb_lenpos + 1] = (FT_Byte)( len >> 8 );
+        pfb_data[pfb_lenpos + 2] = (FT_Byte)( len >> 16 );
+        pfb_data[pfb_lenpos + 3] = (FT_Byte)( len >> 24 );
 
         if ( ( flags >> 8 ) == 5 )      /* End of font mark */
           break;
@@ -1192,8 +1214,8 @@
         type = flags >> 8;
         len = rlen;
 
-        pfb_data[pfb_pos++] = type;
-        pfb_lenpos          = pfb_pos;
+        pfb_data[pfb_pos++] = (FT_Byte) type;
+        pfb_lenpos          = (FT_Byte) pfb_pos;
         pfb_data[pfb_pos++] = 0;        /* 4-byte length, fill in later */
         pfb_data[pfb_pos++] = 0;
         pfb_data[pfb_pos++] = 0;
@@ -1207,10 +1229,10 @@
     pfb_data[pfb_pos++] = 0x80;
     pfb_data[pfb_pos++] = 3;
 
-    pfb_data[pfb_lenpos    ] =   len         & 0xFF;
-    pfb_data[pfb_lenpos + 1] = ( len >>  8 ) & 0xFF;
-    pfb_data[pfb_lenpos + 2] = ( len >> 16 ) & 0xFF;
-    pfb_data[pfb_lenpos + 3] = ( len >> 24 ) & 0xFF;
+    pfb_data[pfb_lenpos    ] = (FT_Byte)( len );
+    pfb_data[pfb_lenpos + 1] = (FT_Byte)( len >> 8 );
+    pfb_data[pfb_lenpos + 2] = (FT_Byte)( len >> 16 );
+    pfb_data[pfb_lenpos + 3] = (FT_Byte)( len >> 24 );
 
     return open_face_from_buffer( library,
                                   pfb_data,
@@ -1320,7 +1342,8 @@
     unsigned char  head[16], head2[16];
     FT_Long        rdata_pos, map_pos, rdata_len, map_len;
     int            allzeros, allmatch, i, cnt, subcnt;
-    FT_Long        type_list, tag, rpos, junk;
+    FT_Long        type_list, rpos, junk;
+    FT_ULong       tag;
 
 
     error = FT_Stream_Seek( stream, resource_offset );
@@ -1354,7 +1377,7 @@
     if ( error )
       goto Exit;
 
-    head2[15] = head[15] + 1;       /* make it be different */
+    head2[15] = (FT_Byte)(head[15] + 1);       /* make it be different */
 
     error = FT_Stream_Read( stream, (FT_Byte*)head2, 16 );
     if ( error )
@@ -2368,23 +2391,33 @@
 
     if ( face && FT_HAS_GLYPH_NAMES( face ) )
     {
-      /* now, lookup for glyph name */
-      FT_Driver         driver = face->driver;
-      FT_Module_Class*  clazz  = FT_MODULE_CLASS( driver );
+      FT_Service_GlyphDict  service;
 
+#if 0
+      FT_FACE_LOOKUP_SERVICE( face, service,
+                              glyph_dict,
+                              FT_SERVICE_ID_GLYPH_DICT );
+#else
+     service = face->internal->services . glyph_dict;
+     if ( service == FT_SERVICE_UNAVAILABLE )
+       service = NULL;
+     else if ( service == NULL )
+     {
+       FT_Module  module = FT_MODULE(face->driver);
+       
+       if ( module->clazz->get_interface )
+         service = module->clazz->get_interface( module,
+                                                 FT_SERVICE_ID_GLYPH_DICT );
+     
+       face->internal->services . glyph_dict = service != NULL
+                                             ? service
+                                             : FT_SERVICE_UNAVAILABLE;
+     }
 
-      if ( clazz->get_interface )
-      {
-        FT_Face_GetGlyphNameIndexFunc  requester;
-
-
-        requester = (FT_Face_GetGlyphNameIndexFunc)clazz->get_interface(
-                      FT_MODULE( driver ), "name_index" );
-        if ( requester )
-          result = requester( face, glyph_name );
+#endif
+      if ( service && service->name_index )
+        result = service->name_index( face, glyph_name );
       }
-    }
-
     return result;
   }
 
@@ -2408,20 +2441,15 @@
          glyph_index <= (FT_UInt)face->num_glyphs &&
          FT_HAS_GLYPH_NAMES( face )               )
     {
-      /* now, lookup for glyph name */
-      FT_Driver         driver = face->driver;
-      FT_Module_Class*  clazz  = FT_MODULE_CLASS( driver );
+      FT_Service_GlyphDict  service;
 
+      FT_FACE_LOOKUP_SERVICE( face, service,
+                              glyph_dict,
+                              FT_SERVICE_ID_GLYPH_DICT );
 
-      if ( clazz->get_interface )
+      if ( service && service->get_name )
       {
-        FT_Face_GetGlyphNameFunc  requester;
-
-
-        requester = (FT_Face_GetGlyphNameFunc)clazz->get_interface(
-                      FT_MODULE( driver ), "glyph_name" );
-        if ( requester )
-          error = requester( face, glyph_index, buffer, buffer_max );
+        error = service->get_name( face, glyph_index, buffer, buffer_max );
       }
     }
 
@@ -2440,24 +2468,16 @@
     if ( !face )
       goto Exit;
 
-    result = face->internal->postscript_name;
     if ( !result )
     {
-      /* now, look up glyph name */
-      FT_Driver         driver = face->driver;
-      FT_Module_Class*  clazz  = FT_MODULE_CLASS( driver );
+      FT_Service_PsName  service;
 
+      FT_FACE_LOOKUP_SERVICE( face, service,
+                              postscript_name,
+                              FT_SERVICE_ID_POSTSCRIPT_NAME );
 
-      if ( clazz->get_interface )
-      {
-        FT_Face_GetPostscriptNameFunc  requester;
-
-
-        requester = (FT_Face_GetPostscriptNameFunc)clazz->get_interface(
-                      FT_MODULE( driver ), "postscript_name" );
-        if ( requester )
-          result = requester( face );
-      }
+      if ( service && service->get_ps_name )
+        result = service->get_ps_name( face );
     }
   Exit:
     return result;
@@ -2471,20 +2491,15 @@
                      FT_Sfnt_Tag  tag )
   {
     void*                   table = 0;
-    FT_Get_Sfnt_Table_Func  func;
-    FT_Driver               driver;
+    FT_Service_SFNT_Table   service;
 
-
-    if ( !face || !FT_IS_SFNT( face ) )
-      goto Exit;
-
-    driver = face->driver;
-    func = (FT_Get_Sfnt_Table_Func)driver->root.clazz->get_interface(
-                                     FT_MODULE( driver ), "get_sfnt" );
-    if ( func )
-      table = func( face, tag );
-
-  Exit:
+    if ( face && FT_IS_SFNT( face ) )
+    {
+      FT_FACE_FIND_SERVICE( face, service, FT_SERVICE_ID_SFNT_TABLE );
+      if ( service != NULL )
+        table = service->get_table( face, tag );
+    }
+      
     return table;
   }
 
@@ -2498,20 +2513,17 @@
                       FT_Byte*   buffer,
                       FT_ULong*  length )
   {
-    SFNT_Load_Table_Func  func;
-    FT_Driver             driver;
+    FT_Service_SFNT_Table  service;
 
 
     if ( !face || !FT_IS_SFNT( face ) )
       return FT_Err_Invalid_Face_Handle;
 
-    driver = face->driver;
-    func   = (SFNT_Load_Table_Func) driver->root.clazz->get_interface(
-                                      FT_MODULE( driver ), "load_sfnt" );
-    if ( !func )
+    FT_FACE_FIND_SERVICE( face, service, FT_SERVICE_ID_SFNT_TABLE );
+    if ( service == NULL )
       return FT_Err_Unimplemented_Feature;
-
-    return func( face, tag, offset, buffer, length );
+      
+    return service->load_table( face, tag, offset, buffer, length );
   }
 
 

@@ -31,6 +31,9 @@ THE SOFTWARE.
 #include FT_INTERNAL_OBJECTS_H
 #include FT_BDF_H
 
+#include FT_SERVICE_BDF_H
+#include FT_SERVICE_XFREE86_NAME_H
+
 #include "bdf.h"
 #include "bdfdrivr.h"
 
@@ -649,6 +652,12 @@ THE SOFTWARE.
   }
 
 
+ /*
+  *
+  *  BDF SERVICE
+  *
+  */
+  
   static FT_Error
   bdf_get_bdf_property( BDF_Face          face,
                         const char*       prop_name,
@@ -689,6 +698,38 @@ THE SOFTWARE.
     return BDF_Err_Invalid_Argument;
   }
 
+  static FT_Error
+  bdf_get_charset_id( BDF_Face      face,
+                      const char*  *acharset_encoding,
+                      const char*  *acharset_registry )
+  {
+    *acharset_encoding = face->charset_encoding;
+    *acharset_registry = face->charset_registry;
+    
+    return 0;
+  }                      
+
+
+  static const FT_Service_BDFRec  bdf_service_bdf =
+  {
+    (FT_BDF_GetCharsetIdFunc)  bdf_get_charset_id,
+    (FT_BDF_GetPropertyFunc)   bdf_get_bdf_property
+  };
+
+
+ /*
+  *
+  *  SERVICES LIST
+  *
+  */
+  
+  static const FT_ServiceDescRec  bdf_services[] =
+  {
+    { FT_SERVICE_ID_BDF,       &bdf_service_bdf },
+    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_BDF },
+    { NULL, NULL }
+  };
+
 
   static FT_Module_Interface
   bdf_driver_requester( FT_Module    module,
@@ -696,11 +737,9 @@ THE SOFTWARE.
   {
     FT_UNUSED( module );
 
-    if ( name && ft_strcmp( name, "get_bdf_property" ) == 0 )
-      return (FT_Module_Interface)bdf_get_bdf_property;
-
-    return NULL;
+    return ft_service_list_lookup( bdf_services, name );
   }
+
 
 
   FT_CALLBACK_TABLE_DEF
