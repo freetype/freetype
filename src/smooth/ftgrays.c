@@ -22,10 +22,10 @@
   /* put the files `ftgrays.h' and `ftimage.h' into the current            */
   /* compilation directory.  Typically, you could do something like        */
   /*                                                                       */
-  /* - copy `src/base/ftgrays.c' to your current directory                 */
+  /* - copy `src/smooth/ftgrays.c' (this file) to your current directory   */
   /*                                                                       */
-  /* - copy `include/freetype/ftimage.h' and `include/freetype/ftgrays.h'  */
-  /*   to the same directory                                               */
+  /* - copy `include/freetype/ftimage.h' and `src/smooth/ftgrays.h' to the */
+  /*   same directory                                                      */
   /*                                                                       */
   /* - compile `ftgrays' with the _STANDALONE_ macro defined, as in        */
   /*                                                                       */
@@ -106,13 +106,18 @@
 #include <limits.h>
 #define FT_UINT_MAX  UINT_MAX
 
-#define  ft_setjmp   setjmp
-#define  ft_longjmp  longjmp
-#define  ft_jmp_buf  jmp_buf
+#define ft_memset   memset
+
+#define ft_setjmp   setjmp
+#define ft_longjmp  longjmp
+#define ft_jmp_buf  jmp_buf
 
 
 #define ErrRaster_Invalid_Mode     -2
 #define ErrRaster_Invalid_Outline  -1
+
+#define FT_BEGIN_HEADER
+#define FT_END_HEADER
 
 #include "ftimage.h"
 #include "ftgrays.h"
@@ -154,6 +159,10 @@
 
 #ifndef FT_MEM_SET
 #define FT_MEM_SET( d, s, c )  ft_memset( d, s, c )
+#endif
+
+#ifndef FT_MEM_ZERO
+#define FT_MEM_ZERO( dest, count )  FT_MEM_SET( dest, 0, count )
 #endif
 
   /* define this to dump debugging information */
@@ -210,7 +219,7 @@
   /* increases the number of cells available in the render pool but slows  */
   /* down the rendering a bit.  It is useful if you have a really tiny     */
   /* render pool.                                                          */
-#undef  GRAYS_COMPACT
+#undef GRAYS_COMPACT
 
 
   /*************************************************************************/
@@ -316,7 +325,7 @@
     ft_jmp_buf  jump_buffer;
 
 #ifdef GRAYS_USE_GAMMA
-    FT_Byte  gamma[257];
+    unsigned char  gamma[257];
 #endif
 
   } TRaster, *PRaster;
@@ -1284,11 +1293,11 @@
 
     for ( ; count > 0; count--, spans++ )
     {
-      FT_UInt  coverage = spans->coverage;
+      unsigned char  coverage = spans->coverage;
 
 
 #ifdef GRAYS_USE_GAMMA
-      coverage = raster->gamma[(FT_Byte)coverage];
+      coverage = raster->gamma[coverage];
 #endif
 
       if ( coverage )
@@ -2033,7 +2042,7 @@
   static void
   grays_init_gamma( PRaster  raster )
   {
-    FT_UInt  x, a;
+    unsigned int  x, a;
 
 
     for ( x = 0; x < 256; x++ )
@@ -2044,7 +2053,7 @@
         a = M_Y + ( ( x - M_X ) * ( M_MAX - M_Y ) +
             ( M_MAX - M_X ) / 2 ) / ( M_MAX - M_X );
 
-      raster->gamma[x] = (FT_Byte)a;
+      raster->gamma[x] = (unsigned char)a;
     }
   }
 

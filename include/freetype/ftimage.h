@@ -28,7 +28,10 @@
 #define __FTIMAGE_H__
 
 
+/* _STANDALONE_ is from ftgrays.c */
+#ifndef _STANDALONE_
 #include <ft2build.h>
+#endif
 
 
 FT_BEGIN_HEADER

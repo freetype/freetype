@@ -206,7 +206,7 @@ THE SOFTWARE.
     FT_FREE( face->charset_encoding );
     FT_FREE( face->charset_registry );
 
-    FT_TRACE4(( "DONE_FACE!!!\n" ));
+    FT_TRACE4(( "PCF_Face_Done: done face\n" ));
 
     return PCF_Err_Ok;
   }

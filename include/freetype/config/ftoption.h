@@ -301,9 +301,9 @@ FT_BEGIN_HEADER
   /* FT_MAX_MODULES                                                        */
   /*                                                                       */
   /*   The maximum number of modules that can be registered in a single    */
-  /*   FreeType library object.  16 is the default.                        */
+  /*   FreeType library object.  32 is the default.                        */
   /*                                                                       */
-#define FT_MAX_MODULES  16
+#define FT_MAX_MODULES  32
 
 
   /*************************************************************************/
