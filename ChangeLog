@@ -1,14 +1,13 @@
 2005-02-10  David Turner  <david@freetype.org>
 
-	* src/pfr/pfrgload.c (pfr_glyph_load): fixed an unbounded growing
-	dynamic array when loading a glyph from a PFR font. This fixes
-	bug #11921
+	* src/pfr/pfrgload.c (pfr_glyph_load): Fix an unbounded growing
+	dynamic array when loading a glyph from a PFR font (Savannah bug
+	#11921).
 
-	* src/base/ftbitmap.c (FT_Bitmap_Convert): small improvements to the
-	conversion function (mainly stupid optimization, because I like
-	these... shame on me)
+	* src/base/ftbitmap.c (FT_Bitmap_Convert): Small improvements to the
+	conversion function (mainly stupid optimization).
 
-	* src/base/Jamfile: adding ftbitmap.c to the list of compiled files
+	* src/base/Jamfile: Adding ftbitmap.c to the list of compiled files.
 
 2005-02-10  Werner Lemberg  <wl@gnu.org>
 

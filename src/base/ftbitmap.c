@@ -63,6 +63,7 @@
         FT_Int   pad;
         FT_Long  old_size;
 
+
         old_size = target->rows * target->pitch;
         if ( old_size < 0 )
           old_size = -old_size;
@@ -81,7 +82,7 @@
 
         target->pitch = source->width + pad;
 
-        if ( target->rows * target->pitch > old_size &&
+        if ( target->rows * target->pitch > old_size             &&
              FT_QREALLOC( target->buffer,
                           old_size, target->rows * target->pitch ) )
           return error;
@@ -100,6 +101,7 @@
         FT_Byte*  t = target->buffer;
         FT_Int    i;
 
+
         target->num_grays = 2;
 
         for ( i = source->rows; i > 0; i-- )
@@ -108,10 +110,12 @@
           FT_Byte*  tt = t;
           FT_Int    j;
 
+
           /* get the full bytes */
           for ( j = source->width >> 3; j > 0; j-- )
           {
             FT_Int  val = ss[0]; /* avoid a byte->int cast on each line */
+
 
             tt[0] = (FT_Byte)( ( val & 0x80 ) >> 7 );
             tt[1] = (FT_Byte)( ( val & 0x40 ) >> 6 );
@@ -132,9 +136,10 @@
           {
             FT_Int  val = *ss;
 
+
             for ( ; j > 0; j-- )
             {
-              tt[0] = (FT_Byte)(( val & 0x80 ) >> 7);
+              tt[0] = (FT_Byte)( ( val & 0x80 ) >> 7);
               val <<= 1;
               tt   += 1;
             }
@@ -156,6 +161,7 @@
         FT_Int    t_pitch = target->pitch;
         FT_Int    i;
 
+
         target->num_grays = 256;
 
         for ( i = source->rows; i > 0; i-- )
@@ -175,6 +181,7 @@
         FT_Byte*  t = target->buffer;
         FT_Int    i;
 
+
         target->num_grays = 4;
 
         for ( i = source->rows; i > 0; i-- )
@@ -183,15 +190,17 @@
           FT_Byte*  tt = t;
           FT_Int    j;
 
+
           /* get the full bytes */
           for ( j = source->width >> 2; j > 0; j-- )
           {
             FT_Int  val = ss[0];
 
-            tt[0] = (FT_Byte)( (val & 0xC0) >> 6 );
-            tt[1] = (FT_Byte)( (val & 0x30) >> 4 );
-            tt[2] = (FT_Byte)( (val & 0x0C) >> 2 );
-            tt[3] = (FT_Byte)( (val & 0x03) );
+
+            tt[0] = (FT_Byte)( ( val & 0xC0 ) >> 6 );
+            tt[1] = (FT_Byte)( ( val & 0x30 ) >> 4 );
+            tt[2] = (FT_Byte)( ( val & 0x0C ) >> 2 );
+            tt[3] = (FT_Byte)( ( val & 0x03 ) );
 
             ss += 1;
             tt += 4;
@@ -201,6 +210,7 @@
           if ( j > 0 )
           {
             FT_Int  val = ss[0];
+
 
             for ( ; j > 0; j-- )
             {
@@ -223,6 +233,7 @@
         FT_Byte*  t = target->buffer;
         FT_Int    i;
 
+
         target->num_grays = 16;
 
         for ( i = source->rows; i > 0; i-- )
@@ -231,13 +242,15 @@
           FT_Byte*  tt = t;
           FT_Int    j;
 
+
           /* get the full bytes */
           for ( j = source->width >> 1; j > 0; j-- )
           {
             FT_Int  val = ss[0];
 
-            tt[0] = (FT_Byte)( (val & 0xF0) >> 4 );
-            tt[1] = (FT_Byte)( (val & 0x0F) );
+
+            tt[0] = (FT_Byte)( ( val & 0xF0 ) >> 4 );
+            tt[1] = (FT_Byte)( ( val & 0x0F ) );
 
             ss += 1;
             tt += 2;
@@ -251,6 +264,7 @@
         }
       }
       break;
+
 
     default:
       ;
