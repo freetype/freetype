@@ -1,69 +1,98 @@
+/***************************************************************************/
+/*                                                                         */
+/*  renderer.c                                                             */
+/*                                                                         */
+/*    FreeType renderer module (body).                                     */
+/*                                                                         */
+/*  Copyright 2000 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include <freetype/internal/ftobjs.h>
 
- /* initialise renderer - init its raster */
-  static FT_Error ft_renderer_init( FT_Renderer  render )
+
+  /* initialize renderer - init its raster */
+  static
+  FT_Error  ft_renderer_init( FT_Renderer  render )
   {
-    FT_Library  library = FT_MODULE_LIBRARY(render);
+    FT_Library  library = FT_MODULE_LIBRARY( render );
+
     
     render->clazz->raster_class->raster_reset( render->raster,
-        library->raster_pool, library->raster_pool_size );
+                                               library->raster_pool,
+                                               library->raster_pool_size );
 
     return 0;
   }
   
 
-
- /* sets render-specific mode */
-  static  FT_Error  ft_renderer_set_mode( FT_Renderer  render,
-                                          FT_ULong     mode_tag,
-                                          FT_Pointer   data )
+  /* set render-specific mode */
+  static
+  FT_Error  ft_renderer_set_mode( FT_Renderer  render,
+                                  FT_ULong     mode_tag,
+                                  FT_Pointer   data )
   {
     /* we simply pass it to the raster */
-    return render->clazz->raster_class->raster_set_mode(
-                    render->raster, mode_tag, data );
+    return render->clazz->raster_class->raster_set_mode( render->raster,
+                                                         mode_tag,
+                                                         data );
   }                                          
 
- /* transform a given glyph image */
-  static  FT_Error  ft_renderer_transform( FT_Renderer   render,
-                                           FT_GlyphSlot  slot,
-                                           FT_Matrix*    matrix,
-                                           FT_Vector*    delta )
+
+  /* transform a given glyph image */
+  static
+  FT_Error  ft_renderer_transform( FT_Renderer   render,
+                                   FT_GlyphSlot  slot,
+                                   FT_Matrix*    matrix,
+                                   FT_Vector*    delta )
   {
     FT_Error error = FT_Err_Ok;
     
-    if (slot->format != render->glyph_format)
+
+    if ( slot->format != render->glyph_format )
     {
       error = FT_Err_Invalid_Argument;
       goto Exit;
     }
     
-    if (matrix)
+    if ( matrix )
       FT_Outline_Transform( &slot->outline, matrix );
       
-    if (delta)
+    if ( delta )
       FT_Outline_Translate( &slot->outline, delta->x, delta->y );
     
   Exit:
     return error;
   }
 
- /* return the glyph's control box */
-  static  void  ft_renderer_get_cbox( FT_Renderer   render,
-                                      FT_GlyphSlot  slot,
-                                      FT_BBox      *cbox )
-  {
-    MEM_Set( cbox, 0, sizeof(*cbox) );
 
-    if (slot->format == render->glyph_format)
+  /* return the glyph's control box */
+  static
+  void  ft_renderer_get_cbox( FT_Renderer   render,
+                              FT_GlyphSlot  slot,
+                              FT_BBox*      cbox )
+  {
+    MEM_Set( cbox, 0, sizeof ( *cbox ) );
+
+    if ( slot->format == render->glyph_format )
       FT_Outline_Get_CBox( &slot->outline, cbox );
   }                                      
   
 
- /* convert a slot's glyph image into a bitmap */
-  static  FT_Error  ft_renderer_render( FT_Renderer  render,
-                                        FT_GlyphSlot slot,
-                                        FT_UInt      mode,
-                                        FT_Vector*   origin )
+  /* convert a slot's glyph image into a bitmap */
+  static
+  FT_Error  ft_renderer_render( FT_Renderer   render,
+                                FT_GlyphSlot  slot,
+                                FT_UInt       mode,
+                                FT_Vector*    origin )
   {
     FT_Error     error;
     FT_Outline*  outline;
@@ -74,8 +103,9 @@
     
     FT_Raster_Params  params;
     
+
     /* check glyph image format */
-    if (slot->format != render->glyph_format)
+    if ( slot->format != render->glyph_format )
     {
       error = FT_Err_Invalid_Argument;
       goto Exit;
@@ -84,7 +114,7 @@
     outline = &slot->outline;
     
     /* translate the outline to the new origin if needed */
-    if (origin)
+    if ( origin )
       FT_Outline_Translate( outline, origin->x, origin->y );
     
     /* compute the control box, and grid fit it */
@@ -92,18 +122,18 @@
     
     cbox.xMin &= -64;
     cbox.yMin &= -64;
-    cbox.xMax  = (cbox.xMax+63) & -64;
-    cbox.yMax  = (cbox.yMax+63) & -64;
+    cbox.xMax  = ( cbox.xMax + 63 ) & -64;
+    cbox.yMax  = ( cbox.yMax + 63 ) & -64;
 
-    width  = (cbox.xMax - cbox.xMin) >> 6;
-    height = (cbox.yMax - cbox.yMin) >> 6;
+    width  = ( cbox.xMax - cbox.xMin ) >> 6;
+    height = ( cbox.yMax - cbox.yMin ) >> 6;
     bitmap = &slot->bitmap;
     memory = slot->face->memory;
     
     /* release old bitmap buffer */
-    if ((slot->flags & ft_glyph_own_bitmap))
+    if ( ( slot->flags & ft_glyph_own_bitmap ) )
     {
-      FREE(bitmap->buffer);
+      FREE( bitmap->buffer );
       slot->flags &= ~ft_glyph_own_bitmap;
     }
       
@@ -116,7 +146,7 @@
     }
     else
     {
-      pitch  = (width+7) >> 3;
+      pitch = ( width + 7 ) >> 3;
       bitmap->pixel_mode = ft_pixel_mode_mono;
     }
 
@@ -124,7 +154,7 @@
     bitmap->rows  = height;
     bitmap->pitch = pitch;
     
-    if (ALLOC( bitmap->buffer, (FT_ULong)pitch * height ))
+    if ( ALLOC( bitmap->buffer, (FT_ULong)pitch * height ) )
       goto Exit;
 
     slot->flags |= ft_glyph_own_bitmap;
@@ -142,7 +172,8 @@
 
     /* render outline into the bitmap */
     error = render->raster_render( render->raster, &params );
-    if (error) goto Exit;
+    if ( error )
+      goto Exit;
     
     slot->format = ft_glyph_format_bitmap;
     slot->bitmap_left = cbox.xMin >> 6;
@@ -152,68 +183,79 @@
     return error;
   }
 
+
 #ifndef  FT_CONFIG_OPTION_NO_STD_RASTER
+
 
 #include <ftraster.h>
 
-  const FT_Renderer_Class   ft_standard_renderer_class =
+
+  const FT_Renderer_Class  ft_standard_renderer_class =
   {
     {
       ft_module_renderer,
-      sizeof( FT_RendererRec ),
+      sizeof ( FT_RendererRec ),
       
       "standard renderer",
-      0x10000,
-      0x20000,
+      0x10000L,
+      0x20000L,
       
       0,    /* module specific interface */
       
-      (FT_Module_Constructor)  ft_renderer_init,
-      (FT_Module_Destructor)   0,
-      (FT_Module_Requester)    0
+      (FT_Module_Constructor)ft_renderer_init,
+      (FT_Module_Destructor) 0,
+      (FT_Module_Requester)  0
     },
     
     ft_glyph_format_outline,
     
-    (FTRenderer_render)       ft_renderer_render,
-    (FTRenderer_transform)    ft_renderer_transform,
-    (FTRenderer_getCBox)      ft_renderer_get_cbox,
-    (FTRenderer_setMode)      ft_renderer_set_mode,
+    (FTRenderer_render)   ft_renderer_render,
+    (FTRenderer_transform)ft_renderer_transform,
+    (FTRenderer_getCBox)  ft_renderer_get_cbox,
+    (FTRenderer_setMode)  ft_renderer_set_mode,
     
-    (FT_Raster_Funcs*)        &ft_standard_raster
+    (FT_Raster_Funcs*)    &ft_standard_raster
   };
   
+
 #endif /* !FT_CONFIG_OPTION_NO_STD_RASTER */
+
 
 #ifndef FT_CONFIG_OPTION_NO_SMOOTH_RASTER
 
+
 #include <ftgrays.h>
+
 
   const FT_Renderer_Class  ft_smooth_renderer_class =
   {
     {
       ft_module_renderer,
-      sizeof( FT_RendererRec ),
+      sizeof ( FT_RendererRec ),
       
       "smooth renderer",
-      0x10000,
-      0x20000,
+      0x10000L,
+      0x20000L,
       
       0,    /* module specific interface */
       
-      (FT_Module_Constructor)  ft_renderer_init,
-      (FT_Module_Destructor)   0,
-      (FT_Module_Requester)    0
+      (FT_Module_Constructor)ft_renderer_init,
+      (FT_Module_Destructor) 0,
+      (FT_Module_Requester)  0
     },
 
     ft_glyph_format_outline,
     
-    (FTRenderer_render)       ft_renderer_render,
-    (FTRenderer_transform)    ft_renderer_transform,
-    (FTRenderer_getCBox)      ft_renderer_get_cbox,
-    (FTRenderer_setMode)      ft_renderer_set_mode,
+    (FTRenderer_render)   ft_renderer_render,
+    (FTRenderer_transform)ft_renderer_transform,
+    (FTRenderer_getCBox)  ft_renderer_get_cbox,
+    (FTRenderer_setMode)  ft_renderer_set_mode,
     
-    (FT_Raster_Funcs*)        &ft_grays_raster
+    (FT_Raster_Funcs*)    &ft_grays_raster
   };
 
+
 #endif /* !FT_CONFIG_OPTION_NO_SMOOTH_RASTER */
+
+
+/* END */

@@ -60,7 +60,7 @@
   /*                                                                       */
   /*    ^                                                         ^        */
   /*    |                                                         |        */
-  /*    start of render pool                                   top         */
+  /*    start of render pool                                     top       */
   /*                                                                       */
   /*   The top of the profile stack is kept in the `top' variable.         */
   /*                                                                       */
@@ -236,6 +236,7 @@
   typedef unsigned char   Byte, *PByte;
   typedef char            Bool;
 
+
   typedef struct  TPoint_
   {
     Long  x;
@@ -303,6 +304,7 @@
 
 #ifdef TT_STATIC_RASTER
 
+
 #define RAS_ARGS       /* void */
 #define RAS_ARG        /* void */
 
@@ -311,7 +313,9 @@
 
 #define UNUSED_RASTER  do ; while ( 0 )
 
+
 #else /* TT_STATIC_RASTER */
+
 
 #define RAS_ARGS       TRaster_Instance*  raster,
 #define RAS_ARG        TRaster_Instance*  raster
@@ -320,6 +324,7 @@
 #define RAS_VAR        raster
 
 #define UNUSED_RASTER  UNUSED( raster )
+
 
 #endif /* TT_STATIC_RASTER */
 

@@ -1,6 +1,6 @@
 make_module_list: add_renderer_module
 
-# XXX: important, the standard renderer *MUST* be first on this list..
+# XXX: important, the standard renderer *MUST* be first on this list!
 #
 add_renderer_module:
 	$(OPEN_DRIVER)ft_standard_renderer_class$(CLOSE_DRIVER)

@@ -29,18 +29,18 @@ REND_CFLAGS  := $(REND_INCLUDE:%=$I%)
 REND_COMPILE := $(FT_COMPILE) $(REND_CFLAGS)
 
 
-# REND driver sources (i.e., C files)
+# renderer driver sources (i.e., C files)
 #
-REND_DRV_SRC := $(REND_DIR_)ftraster.c  \
-                $(REND_DIR_)ftgrays.c   \
+REND_DRV_SRC := $(REND_DIR_)ftraster.c \
+                $(REND_DIR_)ftgrays.c  \
                 $(REND_DIR_)renderer.c
 
-# REND driver headers
+# renderer driver headers
 #
 REND_DRV_H := $(REND_DRV_SRC:%c=%h)
 
 
-# REND driver object(s)
+# renderer driver object(s)
 #
 #   REND_DRV_OBJ_M is used during `multi' builds.
 #   REND_DRV_OBJ_S is used during `single' builds.
@@ -48,19 +48,19 @@ REND_DRV_H := $(REND_DRV_SRC:%c=%h)
 REND_DRV_OBJ_M := $(REND_DRV_SRC:$(REND_DIR_)%.c=$(OBJ_)%.$O)
 REND_DRV_OBJ_S := $(REND_DRV_OBJ_M)
 
-# REND driver source file for single build
+# renderer driver source file for single build
 #
 #REND_DRV_SRC_S := $(REND_DIR_)renderer.c
 
 
-# REND driver - single object
+# renderer driver - single object
 #
 #$(REND_DRV_OBJ_S): $(REND_DRV_SRC_S) $(REND_DRV_SRC) \
 #                   $(FREETYPE_H) $(REND_DRV_H)
 #	$(REND_COMPILE) $T$@ $(REND_DRV_SRC_S)
 
 
-# REND driver - multiple objects
+# renderer driver - multiple objects
 #
 $(OBJ_)%.$O: $(REND_DIR_)%.c $(FREETYPE_H) $(REND_DRV_H)
 	$(REND_COMPILE) $T$@ $<

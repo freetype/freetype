@@ -15,12 +15,15 @@
 /*                                                                         */
 /***************************************************************************/
 
+
 #ifndef FTGRAYS_H
 #define FTGRAYS_H
+
 
 #ifdef __cplusplus
   extern "C" {
 #endif
+
 
 #ifdef _STANDALONE_
 #include "ftimage.h"
@@ -28,22 +31,28 @@
 #include <freetype/ftimage.h>
 #endif
 
+
   /*************************************************************************/
   /*                                                                       */
   /* To make ftgrays.h independent from configuration files we check       */
-  /* whether FT_EXPORT_DEF has been defined already.                          */
+  /* whether FT_EXPORT_VAR has been defined already.                       */
   /*                                                                       */
   /* On some systems and compilers (Win32 mostly), an extra keyword is     */
   /* necessary to compile the library as a DLL.                            */
   /*                                                                       */
 #ifndef FT_EXPORT_VAR
-#define FT_EXPORT_VAR(x)  extern  x
+#define FT_EXPORT_VAR( x )  extern  x
 #endif
 
-  FT_EXPORT_VAR(FT_Raster_Funcs)  ft_grays_raster;
+  FT_EXPORT_VAR( FT_Raster_Funcs )  ft_grays_raster;
 
-  #ifdef __cplusplus
-  }
-  #endif
 
+#ifdef __cplusplus
+}
 #endif
+
+
+#endif /* FTGRAYS_H */
+
+
+/* END */

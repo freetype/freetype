@@ -50,7 +50,7 @@
   /*  It is based on ideas that I initially found in Raph Levien's         */
   /*  excellent LibArt graphics library (see http://www.levien.com/libart  */
   /*  for more information, though the web pages do not tell anything      */
-  /*  about the renderer; you'll have to dive into the source code to      */
+  /*  about the renderer; you will have to dive into the source code to    */
   /*  understand how it works).                                            */
   /*                                                                       */
   /*  Note, however, that this is a _very_ different implementation        */
@@ -103,6 +103,7 @@
 #include "ftimage.h"
 #include "ftgrays.h"
 
+
   /* This macro is used to indicate that a function parameter is unused. */
   /* Its purpose is simply to reduce compiler warnings.  Note also that  */
   /* simply defining it as `(void)x' doesn't avoid warnings with certain */
@@ -134,6 +135,7 @@
 
   /* define this to dump debugging information */
 #define xxxDEBUG_GRAYS
+
 
   /* as usual, for the speed hungry :-) */
 
@@ -225,7 +227,7 @@
 #endif /* GRAYS_COMPACT */
 
 
-  typedef struct TRaster_
+  typedef struct  TRaster_
   {
     PCell  cells;
     int    max_cells;
@@ -965,8 +967,8 @@
 
 #ifdef SHELL_SORT
 
-  /* A simple shell sort algorithm that works directly on our */
-  /* cells table..                                            */
+  /* a simple shell sort algorithm that works directly on our */
+  /* cells table                                              */
   static
   void  shell_sort ( PCell  cells,
                      int    count )
@@ -1440,7 +1442,7 @@
   /*************************************************************************/
   /*                                                                       */
   /*  The following function should only compile in stand_alone mode,      */
-  /*  i.e., when building this component without the rest of FreeType.     */
+  /*  i.e., if building this component without the rest of FreeType.       */
   /*                                                                       */
   /*************************************************************************/
 
@@ -1684,8 +1686,8 @@
     static
     FT_Outline_Funcs  interface =
     {
-      (FT_Outline_MoveTo_Func)Move_To,
-      (FT_Outline_LineTo_Func)Line_To,
+      (FT_Outline_MoveTo_Func) Move_To,
+      (FT_Outline_LineTo_Func) Line_To,
       (FT_Outline_ConicTo_Func)Conic_To,
       (FT_Outline_CubicTo_Func)Cubic_To,
       0,
@@ -1840,7 +1842,7 @@
       return -1;
 
     /* XXXX: this version does not support monochrome rendering yet! */
-    if ( !(params->flags & ft_raster_flag_aa) )
+    if ( !( params->flags & ft_raster_flag_aa ) )
       return -1;
 
     ras.outline   = *outline;
