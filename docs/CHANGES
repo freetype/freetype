@@ -19,28 +19,28 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
 
     - FreeType didn't properly parse empty Type 1 glyphs.
     
-    - An unbounded dynamic buffer growth was fixed in the PFR loader
+    - An unbound dynamic buffer growth was fixed in the PFR loader.
     
-    - Several bugs were fixed in the cache sub-system.
+    - Several bugs have been fixed in the cache sub-system.
 
-    - Fixed bug #12263: incorrect behaviour when resizing to distinct but
-      very close character pixel sizes through FT_Set_Char_Size
+    - FreeType behaved incorrectly when resizing two distinct but very
+      close character pixel sizes through `FT_Set_Char_Size' (Savannah
+      bug #12263).
       
-    - The auto-hinter didn't work when a font didn't have a Unicode charmap.
-      it even refused to load the glyphs !
+    - The auto-hinter didn't work properly for fonts without a Unicode
+      charmap -- it even refused to load the glyphs.
 
 
   II. IMPORTANT CHANGES
 
-    - a LOT of work has been done in order to drastically reduce the
-      amount of heap memory used by FreeType, especially when using
-      memory-mapped font files (which is the default on Unix systems
-      which support them). This should be good news for any Unix distribution
-      upgrading to this release of the font engine.
+    - Many fixes have been applied to drastically reduce the amount of
+      heap   memory   used   by   FreeType,   especially   when  using
+      memory-mapped font files  (which is the default on Unix  systems
+      which support them).
 
-    - The auto-hinter has been completely rewritten as a new module,
-      called the 'auto-fitter'. The latter is the new default auto-hinting
-      module. It also consumes a lot less memory than its predecessor.
+    - The auto-hinter  has been completely rewritten  as a new module,
+      called the `auto-fitter',  which is now the default auto-hinting
+      module.  It consumes a lot less memory than its predecessor.
 
     - George Williams  contributed code to read  kerning data from PFM
       files.
@@ -62,6 +62,7 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       `FT_Bitmap_Done')  has  been  added.   Its  use  is  to  convert
       an FT_Bitmap structure in 1bpp, 2bpp, 4bpp, or 8bpp format  into
       another 8bpp FT_Bitmap, probably using a different pitch.
+
 
   III. MISCELLANEOUS
 
@@ -86,6 +87,9 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       This saves about 16Kb per process linked to FreeType. We also store
       the array in a novel compressed way that saves about 20 Kb of code
       as well.
+
+
+======================================================================
 
 LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
 

@@ -44,9 +44,10 @@ in this Software without prior written authorization from The Open Group.
     {
       unsigned int  val = *buf;
       
-      val = ((val >> 1) & 0x55) | ((val << 1) & 0xAA);
-      val = ((val >> 2) & 0x33) | ((val << 2) & 0xCC);
-      val = ((val >> 4) & 0x0F) | ((val << 4) & 0xF0);
+
+      val = ( ( val >> 1 ) & 0x55 ) | ( ( val << 1 ) & 0xAA );
+      val = ( ( val >> 2 ) & 0x33 ) | ( ( val << 2 ) & 0xCC );
+      val = ( ( val >> 4 ) & 0x0F ) | ( ( val << 4 ) & 0xF0 );
       
       *buf = (unsigned char)val;
     }

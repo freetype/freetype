@@ -102,6 +102,7 @@
     FT_UShort  tag;
     FT_Long    size;
 
+
     if ( FT_STREAM_SEEK( 0 ) )
       goto Exit;
       
@@ -149,7 +150,7 @@
     parser->in_memory    = 0;
     parser->single_block = 0;
 
-   /* check the header format */
+    /* check the header format */
     error = check_type1_format( stream, "%!PS-AdobeFont-1", 16 );
     if ( error )
     {
@@ -216,8 +217,8 @@
     }
     else
     {
-      /* read segment in memory - yeah that sucks, but so does the format */
-      if ( FT_ALLOC( parser->base_dict, size )     ||
+      /* read segment in memory - this is clumsy, but so does the format */
+      if ( FT_ALLOC( parser->base_dict, size )       ||
            FT_STREAM_READ( parser->base_dict, size ) )
         goto Exit;
       parser->base_len = size;

@@ -1,25 +1,48 @@
 2005-03-15  David Turner  <david@freetype.org>
 
-    * src/bdf/bdflib.c: removing compiler warnings
+	* src/bdf/bdflib.c: Remove compiler warnings.
+	(hash_rehash, hash_init): Don't call FT_MEM_ZERO.
+	(_bdf_list_t): Add `memory' field.
+	(_bdf_list_init, _bdf_list_done, _bdf_list_ensure): New functions.
+	(_bdf_shift, _bdf_join): Rename to...
+	(_bdf_list_shift, _bdf_list_join): This.
+	(_bdf_split): Renamed to...
+	(_bdf_list_split): This.  Use new functions.
+	(bdf_internal_readstream): Removed.
+	(NO_SKIP): New macro.
+	(_bdf_readstream): Rewritten.
+	(bdf_create_property, _bdf_add_comment): Improve allocation.
+	(_bdf_set_default_spacing, _bdf_parse_glyphs): Updated.  Improve
+	allocation.
+	(_bdf_parse_properties, _bdf_parse_start): Updated.
+	(bdf_load_font): Updated to use new functions.
 
-    * docs/CHANGES: updating
-    
-    * src/type1/t1parse.c (T1_New_Parser), src/type42/t42parse.c
-    (t42_parser_init): modifying functions to check the font header before
-    allocating anything on the heap.
+	* src/type1/t1parse.c (check_type1_format): New function.
+	(T1_New_Parser): Use it to check font header before allocating
+	anything on the heap.
 
-    * internal/freetype/ftmemory.h: introducing the new macros FT_ARRAY_MAX
-    and FT_ARRAY_CHECK
-    
-    * src/pcf/pcfread.c, src/pcf/pcfutil.c: minor fixes and simplifications.
-    try to protect the PCF driver from doing stupid things with broken fonts.
+	* src/type42/t42parse.c	(t42_parser_init): Modify functions to check
+	the font header before allocating anything on the heap.
 
-    * src/lzw/ftlzw.c (FT_Stream_OpenLZW): modified the function to check
-    the LZW header before doing anything else. This helps avoid un-necessary
-    heap allocations (400 Kb of heap memory for the LZW decoder ! Oh my !)
+	* include/freetype/internal/ftmemory.h (FT_ARRAY_MAX,
+	FT_ARRAY_CHECK): New macros.
 
-    * src/gzip/ftgzip.c (FT_Stream_OpenGZip): ditto for the .gz decoder,
-    though the code savings is smaller.
+	* src/base/ftstream.c (FT_Stream_TryRead): New function.
+	* include/freetype/internal/ftstream.h: Updated.
+
+	* src/pcf/pcfread.c (pcf_read_TOC), src/pcf/pcfutil.c
+	(BitOrderInvert, TwoByteSwap, FourByteSwap): Minor fixes and
+	simplifications.  Try to protect the PCF driver from doing stupid
+	things with broken fonts.
+
+	* src/lzw/ftlzw.c (FT_Stream_OpenLZW): Check the LZW header before
+	doing anything else.  This avoids unnecessary heap allocations
+	(400KByte of heap memory for the LZW decoder).
+
+	* src/gzip/ftgzip.c (FT_Stream_OpenGZip): Ditto for the gzip
+	decoder, although the code savings are smaller.
+
+	* docs/CHANGES: Updated.
 
 2005-03-10  David Turner  <david@freetype.org>
 

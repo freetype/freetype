@@ -1,6 +1,6 @@
 /*
  * Copyright 2000 Computing Research Labs, New Mexico State University
- * Copyright 2001, 2002, 2003, 2004 Francesco Zappa Nardelli
+ * Copyright 2001, 2002, 2003, 2004, 2005 Francesco Zappa Nardelli
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -392,19 +392,21 @@
   _bdf_list_init( _bdf_list_t*  list,
                   FT_Memory     memory )
   {
-    FT_ZERO(list);
+    FT_ZERO( list );
     list->memory = memory;
   }
+
 
   static void
   _bdf_list_done( _bdf_list_t*  list )
   {
     FT_Memory  memory = list->memory;
 
+
     if ( memory )
     {
       FT_FREE( list->field );
-      FT_ZERO(list);
+      FT_ZERO( list );
     }
   }
 
@@ -413,18 +415,20 @@
   _bdf_list_ensure( _bdf_list_t*  list,
                     int           num_items )
   {
-    FT_Error  error = 0;
+    FT_Error  error = BDF_Err_Ok;
+
 
     if ( num_items > (int)list->size )
     {
-      int  oldsize = list->size;
-      int  newsize = oldsize + (oldsize >> 1) + 4;
-      int  bigsize = FT_INT_MAX / sizeof(char*);
+      int        oldsize = list->size;
+      int        newsize = oldsize + ( oldsize >> 1 ) + 4;
+      int        bigsize = FT_INT_MAX / sizeof ( char* );
       FT_Memory  memory  = list->memory;
+
 
       if ( oldsize == bigsize )
       {
-        error = FT_Err_Out_Of_Memory;
+        error = BDF_Err_Out_Of_Memory;
         goto Exit;
       }
       else if ( newsize < oldsize || newsize > bigsize )
@@ -435,6 +439,7 @@
 
       list->size = newsize;
     }
+
   Exit:
     return error;
   }
@@ -493,11 +498,9 @@
   }
 
 
-
   /* An empty string for empty fields. */
 
   static const char  empty[1] = { 0 };      /* XXX eliminate this */
-
 
 
   static FT_Error
@@ -553,7 +556,7 @@
       /* Resize the list if necessary. */
       if ( list->used == list->size )
       {
-        error = _bdf_list_ensure( list, list->used+1 );
+        error = _bdf_list_ensure( list, list->used + 1 );
         if ( error )
           goto Exit;
       }
@@ -582,7 +585,7 @@
     /* Finally, NULL-terminate the list. */
     if ( list->used + final_empty >= list->size )
     {
-      error = _bdf_list_ensure( list, list->used+final_empty+1 );
+      error = _bdf_list_ensure( list, list->used + final_empty + 1 );
       if ( error )
         goto Exit;
     }
@@ -597,8 +600,8 @@
   }
 
 
-
 #define NO_SKIP  256  /* this value cannot be stored in a 'char' */
+
 
   static FT_Error
   _bdf_readstream( FT_Stream         stream,
@@ -621,29 +624,28 @@
       goto Exit;
     }
 
-   /* initial size and allocation of the input buffer
-    */
+    /* initial size and allocation of the input buffer */
     buf_size = 1024;
 
     if ( FT_NEW_ARRAY( buf, buf_size ) )
       goto Exit;
 
-    cb         = callback;
-    lineno     = 1;
-    buf[0]     = 0;
-    start      = 0;
-    end        = 0;
-    avail      = 0;
-    cursor     = 0;
-    refill     = 1;
-    to_skip    = NO_SKIP;
-    bytes      = 0;  /* make compiler happy */
+    cb      = callback;
+    lineno  = 1;
+    buf[0]  = 0;
+    start   = 0;
+    end     = 0;
+    avail   = 0;
+    cursor  = 0;
+    refill  = 1;
+    to_skip = NO_SKIP;
+    bytes   = 0;        /* make compiler happy */
 
     for (;;)
     {
       if ( refill )
       {
-        bytes = (int) FT_Stream_TryRead( stream, (FT_Byte*)buf + cursor,
+        bytes  = (int)FT_Stream_TryRead( stream, (FT_Byte*)buf + cursor,
                                          (FT_ULong)(buf_size - cursor) );
         avail  = cursor + bytes;
         cursor = 0;
@@ -652,7 +654,7 @@
 
       end = start;
 
-      /* should we skip an optional character like \n or \r ? */
+      /* should we skip an optional character like \n or \r? */
       if ( start < avail && buf[start] == to_skip )
       {
         start  += 1;
@@ -664,9 +666,8 @@
       while ( end < avail && buf[end] != '\n' && buf[end] != '\r' )
         end++;
 
-     /* if we hit the end of the buffer, try shifting its content
-      * or even resizing it
-      */
+      /* if we hit the end of the buffer, try shifting its content */
+      /* or even resizing it                                       */
       if ( end >= avail )
       {
         if ( bytes == 0 )  /* last line in file doesn't end in \r or \n */
@@ -674,18 +675,18 @@
 
         if ( start == 0 )
         {
-         /* this line is definitely too long, try resizing the input buffer
-          * a bit to handle it.
-          */
+          /* this line is definitely too long; try resizing the input */
+          /* buffer a bit to handle it.                               */
           FT_ULong  new_size;
 
-          if ( buf_size >= 65536UL )  /* limit ourselves to 64 Kb */
+
+          if ( buf_size >= 65536UL )  /* limit ourselves to 64KByte */
           {
             error = BDF_Err_Invalid_Argument;
             goto Exit;
           }
 
-          new_size = buf_size*2;
+          new_size = buf_size * 2;
           if ( FT_RENEW_ARRAY( buf, buf_size, new_size ) )
             goto Exit;
 
@@ -696,7 +697,7 @@
         {
           bytes = avail - start;
 
-          FT_MEM_COPY( buf, buf+start, bytes );
+          FT_MEM_COPY( buf, buf + start, bytes );
 
           cursor = bytes;
           avail -= bytes;
@@ -713,14 +714,15 @@
       /* XXX: Use encoding independent value for 0x1a */
       if ( buf[start] != '#' && buf[start] != 0x1a && end > start )
       {
-        error = (*cb)( buf+start, end-start, lineno, (void*)&cb, client_data );
+        error = (*cb)( buf + start, end - start, lineno,
+                       (void*)&cb, client_data );
         if ( error )
           break;
       }
 
       lineno  += 1;
       buf[end] = (char)hold;
-      start    = end+1;
+      start    = end + 1;
 
       if ( hold == '\n' )
         to_skip = '\r';
