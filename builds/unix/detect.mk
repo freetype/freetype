@@ -63,7 +63,7 @@ ifeq ($(PLATFORM),ansi)
     setup: std_setup
 
     unix-def.mk: $(TOP)/builds/unix/unix-def.in
-	    cd builds/unix; $(USE_CFLAGS) ./configure $(CFG)
+	    cd builds/unix; ./configure $(CFG)
 
   endif # test Unix
 endif   # test PLATFORM

@@ -70,7 +70,7 @@
   /* installed on the particular system.                                   */
   /*                                                                       */
 #ifndef FT2_CONFIG_ROOT
-#define FT2_CONFIG_ROOT  FT2_ROOT/config
+#define FT2_CONFIG_ROOT  FT2_ROOT ## / ## config
 #endif
 
 
@@ -80,7 +80,7 @@
   /* Its parameter is the file pathname, relative to the public root of a  */
   /* given header file.                                                    */
   /*                                                                       */
-#define FT2_PUBLIC_FILE( x )  <FT2_ROOT/x>
+#define FT2_PUBLIC_FILE( x )  < ## FT2_ROOT ## / ## x ## >
 
 
   /*************************************************************************/
@@ -89,7 +89,7 @@
   /* Its parameter is the file pathname, relative to the configuration     */
   /* root directory of a given header file.                                */
   /*                                                                       */
-#define FT2_CONFIG_FILE( x )  <FT2_CONFIG_ROOT/x>
+#define FT2_CONFIG_FILE( x )  < ## FT2_CONFIG_ROOT ## / ## x ## >
 
 
   /*************************************************************************/
@@ -98,7 +98,7 @@
   /* file.  Its parameter is the file pathname, relative to the            */
   /* configuration root directory of a given header file.                  */
   /*                                                                       */
-#define FT2_INTERNAL_FILE( x )  <FT2_ROOT/internal/x>
+#define FT2_INTERNAL_FILE( x )  < ## FT2_ROOT ## / ## internal ## / ## x ## >
 
 
   /*************************************************************************/
@@ -118,7 +118,7 @@
 #ifdef FT_FLAT_COMPILATION
 #define FT_SOURCE_FILE( d, x )  #x
 #else
-#define FT_SOURCE_FILE( d, x )  <d/x>
+#define FT_SOURCE_FILE( d, x )  < ## d ## / ## x ## >
 #endif
 
 
