@@ -1,18 +1,25 @@
+2002-05-21  Martin Muskens  <mmuskens@aurelon.com>
+
+	* src/psaux/psobjs.c (T1Radix): New function.
+	(t1_toint): Use it to handle numbers in radix format.
+
+	* src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings): Add dummy
+	for undocumented, obsolete opcode 15.
+
 2002-05-21  David Turner  <david@freetype.org>
 
-        * src/bdf/bdflic.c: removed compiler warning, and changed all tables
-          to the "static const" storage specifier (instead of simply 'static')
+	* src/bdf/bdflic.c: Removed compiler warning, and changed all tables
+	to the "static const" storage specifier (instead of simply
+	`static').
 
-        * src/type42/t32drivr.c, src/bdf/bdfdrivr.c:
-          removing compiler warnings
+	* src/type42/t32drivr.c, src/bdf/bdfdrivr.c: Removing compiler
+	warnings.
 
-        * include/freetype/internal/ftbdf.h, src/base/ftbdf.c,
-          src/base/descrip.mms, src/base/Jamfile, src/base/rules.mk:
-          
-          Adding a new API called "FT_Get_BDF_Charset_ID" to retrieve
-          BDF-specific strings from a face. This is much cleaner
-          than accessing the internal types "BDF_Public_Face" defined in
-          FT_INTERNAL_BDF_TYPES_H
+	* include/freetype/internal/ftbdf.h, src/base/ftbdf.c,
+	src/base/descrip.mms, src/base/Jamfile, src/base/rules.mk
+	(FT_Get_BDF_Charset_ID): New API to retrieve BDF-specific strings
+	from a face.  This is much cleaner than accessing the internal types
+	"BDF_Public_Face" defined in FT_INTERNAL_BDF_TYPES_H.
 
 2002-05-21  Werner Lemberg  <wl@gnu.org>
 
