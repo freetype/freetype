@@ -736,10 +736,10 @@
         a->maximum = axis_rec.maxValue;     /* A Fixed */
         a->strid   = axis_rec.nameID;
 
-        a->name[0] =   a->tag >> 24;
-        a->name[1] = ( a->tag >> 16 ) & 0xFF;
-        a->name[2] = ( a->tag >>  8 ) & 0xFF;
-        a->name[3] = ( a->tag       ) & 0xFF;
+        a->name[0] = (FT_String)(   a->tag >> 24 );
+        a->name[1] = (FT_String)( ( a->tag >> 16 ) & 0xFF );
+        a->name[2] = (FT_String)( ( a->tag >>  8 ) & 0xFF );
+        a->name[3] = (FT_String)( ( a->tag       ) & 0xFF );
         a->name[4] = 0;
 
         ++a;
@@ -1238,13 +1238,15 @@
       {
         /* this means that there are deltas for every entry in cvt */
         for ( j = 0; j < face->cvt_size; ++j )
-          face->cvt[j] += FT_MulFix( deltas[j], apply );
+          face->cvt[j] += (FT_Short)FT_MulFix( deltas[j],
+                                               apply );
       }
 
       else
       {
         for ( j = 0; j < point_count; ++j )
-          face->cvt[localpoints[j]] += FT_MulFix( deltas[j], apply );
+          face->cvt[localpoints[j]] += (FT_Short)FT_MulFix( deltas[j],
+                                                            apply );
       }
 
       if ( localpoints != ALL_POINTS )

@@ -416,7 +416,7 @@ THE SOFTWARE.
 
         FT_MEM_ZERO( bsize, sizeof ( FT_Bitmap_Size ) );
 
-        bsize->height = font->font_ascent + font->font_descent;
+        bsize->height = (FT_Short)( font->font_ascent + font->font_descent );
 
         prop = bdf_get_font_property( font, "AVERAGE_WIDTH" );
         if ( prop )

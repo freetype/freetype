@@ -1102,7 +1102,8 @@ THE SOFTWARE.
 
         FT_MEM_ZERO( bsize, sizeof ( FT_Bitmap_Size ) );
 
-        bsize->height = face->accel.fontAscent + face->accel.fontDescent;
+        bsize->height = (FT_Short)( face->accel.fontAscent +
+                                    face->accel.fontDescent );
 
         prop = pcf_find_property( face, "AVERAGE_WIDTH" );
         if ( prop )
