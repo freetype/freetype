@@ -175,7 +175,6 @@
                        FT_UInt  right_glyph )
   {
     FT_Int    result = 0;
-    FT_Int    value;
     FT_UInt   count, mask = 1;
     FT_Byte*  p       = face->kern_table;
     FT_Byte*  p_limit = p + face->kern_table_size;
@@ -190,6 +189,7 @@
       FT_UInt  version  = FT_NEXT_USHORT(p);
       FT_UInt  length   = FT_NEXT_USHORT(p);
       FT_UInt  coverage = FT_NEXT_USHORT(p);
+      FT_Int   value    = 0;
       
       next = base + length;
       
@@ -205,8 +205,7 @@
           {
             FT_UInt   num_pairs = FT_NEXT_USHORT(p);
             FT_ULong  key0      = TT_KERN_INDEX(left_glyph,right_glyph);
-            FT_Int    value     = 0;
-            
+
             p += 6;
             
             if ( face->kern_order_bits & mask )   /* binary search */
@@ -226,7 +225,7 @@
                 if ( key == key0 )
                 {
                   value = FT_PEEK_SHORT(q);
-                  break;
+                  goto Found;
                 }
                 if ( key < key0 )
                   min = mid+1;
@@ -245,7 +244,7 @@
                 if ( key == key0 )
                 {
                   value = FT_PEEK_SHORT(p);
-                  break;
+                  goto Found;
                 }
                 p += 2;
               }
@@ -261,6 +260,9 @@
           ;
       }
 
+      goto NextTable;
+      
+    Found:
       if ( coverage & 8 ) /* overide or addition */
         result = value;
       else
