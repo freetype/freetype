@@ -4,8 +4,7 @@
 /*                                                                         */
 /*    High-level Type 42 driver interface (specification).                 */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*  Copyright 2002 by Roberto Alameda.                                     */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -16,8 +15,8 @@
 /***************************************************************************/
 
 
-#ifndef __T42DRIVER_H__
-#define __T42DRIVER_H__
+#ifndef __T42DRIVR_H__
+#define __T42DRIVR_H__
 
 
 #include <ft2build.h>
@@ -32,7 +31,8 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __T42DRIVER_H__ */
+
+#endif /* __T42DRIVR_H__ */
 
 
 /* END */

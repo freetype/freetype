@@ -26,12 +26,12 @@
 
 #ifdef FTC_CACHE_USE_LINEAR_HASHING
 
-#define  FTC_HASH_MAX_LOAD  2
-#define  FTC_HASH_MIN_LOAD  1
-#define  FTC_HASH_SUB_LOAD  (FTC_HASH_MAX_LOAD-FTC_HASH_MIN_LOAD)
+#define FTC_HASH_MAX_LOAD  2
+#define FTC_HASH_MIN_LOAD  1
+#define FTC_HASH_SUB_LOAD  ( FTC_HASH_MAX_LOAD - FTC_HASH_MIN_LOAD )
 
-/* this one _must_ be a power of 2 !! */
-#define  FTC_HASH_INITIAL_SIZE  8
+/* this one _must_ be a power of 2! */
+#define FTC_HASH_INITIAL_SIZE  8
 
 #endif /* FTC_CACHE_USE_LINEAR_HASHING */
 
@@ -72,6 +72,7 @@
     {
       FTC_Node  last = first->mru_prev;
 
+
       FT_ASSERT( last->mru_next == first );
 
       node->mru_prev = last;
@@ -102,6 +103,7 @@
     FTC_Node  prev  = node->mru_prev;
     FTC_Node  next  = node->mru_next;
 
+
     FT_ASSERT( first != NULL && manager->num_nodes > 0 );
     FT_ASSERT( next->mru_prev == node );
     FT_ASSERT( prev->mru_next == node );
@@ -111,6 +113,7 @@
 
     if ( node == first )
     {
+      /* this is the last node in the list; update its head pointer */
       if ( node == next )
         manager->nodes_list = NULL;
       else
@@ -137,6 +140,7 @@
       FTC_Node  next = node->mru_next;
       FTC_Node  last;
 
+
       prev->mru_next = next;
       next->mru_prev = prev;
 
@@ -162,9 +166,10 @@
     FTC_Node  *pnode;
     FT_UInt    index, num_buckets;
 
+  
     index = (FT_UInt)( node->hash & cache->mask );
     if ( index < cache->p )
-      index = (FT_UInt)( node->hash & (2*cache->mask+1) );
+      index = (FT_UInt)( node->hash & ( 2 * cache->mask + 1 ) );
 
     pnode = cache->buckets + index;
 
@@ -172,8 +177,8 @@
     {
       if ( *pnode == NULL )
       {
-        FT_ERROR(( "FreeType.cache.hash_unlink: unknown node!\n" ));
-        return 0;
+        FT_ERROR(( "ftc_node_hash_unlink: unknown node!\n" ));
+        return FT_Err_Ok;
       }
 
       if ( *pnode == node )
@@ -186,14 +191,15 @@
       pnode = &(*pnode)->link;
     }
 
-    num_buckets = ( cache->p + cache->mask + 1) ;
+    num_buckets = ( cache->p + cache->mask + 1 );
 
-    if ( ++ cache->slack > (FT_Long)num_buckets*FTC_HASH_SUB_LOAD )
+    if ( ++cache->slack > (FT_Long)num_buckets * FTC_HASH_SUB_LOAD )
     {
       FT_UInt    p         = cache->p;
       FT_UInt    mask      = cache->mask;
       FT_UInt    old_index = p + mask;
       FTC_Node*  pold;
+
 
       FT_ASSERT( old_index >= FTC_HASH_INITIAL_SIZE );
 
@@ -205,9 +211,9 @@
         cache->mask >>= 1;
         p             = cache->mask;
 
-        if ( FT_RENEW_ARRAY( cache->buckets, (mask+1)*2, (mask) ) )
+        if ( FT_RENEW_ARRAY( cache->buckets, ( mask + 1 ) * 2, mask ) )
         {
-          FT_ERROR(( "FreeType.cache.hash_unlink: couldn't shunk buckets !\n" ));
+          FT_ERROR(( "ftc_node_hash_unlink: couldn't shunk buckets!\n" ));
           goto Exit;
         }
       }
@@ -238,6 +244,7 @@
                         FTC_Cache  cache )
   {
     FTC_Node  *pnode = cache->buckets + ( node->hash % cache->size );
+
 
     for (;;)
     {
@@ -274,9 +281,10 @@
     FT_UInt    index;
     FT_Error   error = 0;
 
+
     index = (FT_UInt)( node->hash & cache->mask );
     if ( index < cache->p )
-      index = (FT_UInt)( node->hash & (2*cache->mask+1) );
+      index = (FT_UInt)( node->hash & (2 * cache->mask + 1 ) );
 
     pnode = cache->buckets + index;
 
@@ -289,16 +297,18 @@
       FT_UInt    mask  = cache->mask;
       FTC_Node   new_list;
 
+
       /* split a single bucket */
       new_list = NULL;
       pnode    = cache->buckets + p;
+
       for (;;)
       {
         node = *pnode;
         if ( node == NULL )
           break;
 
-        if ( node->hash & (mask+1) )
+        if ( node->hash & ( mask + 1 ) )
         {
           *pnode     = node->link;
           node->link = new_list;
@@ -308,7 +318,7 @@
           pnode = &node->link;
       }
 
-      cache->buckets[ p + mask + 1 ] = new_list;
+      cache->buckets[p + mask + 1] = new_list;
 
       cache->slack += FTC_HASH_MAX_LOAD;
 
@@ -317,13 +327,14 @@
         FT_Memory  memory = cache->memory;
 
 
-        if ( FT_RENEW_ARRAY( cache->buckets, (mask+1)*2, (mask+1)*4 ) )
+        if ( FT_RENEW_ARRAY( cache->buckets,
+                             ( mask + 1 ) * 2, ( mask + 1 ) * 4 ) )
         {
-          FT_ERROR(( "FreeType.cache.hash_unlink: couldn't expand buckets !\n" ));
+          FT_ERROR(( "ftc_node_hash_link: couldn't expand buckets!\n" ));
           goto Exit;
         }
 
-        cache->mask = 2*mask + 1;
+        cache->mask = 2 * mask + 1;
         cache->p    = 0;
       }
       else
@@ -342,6 +353,7 @@
                       FTC_Cache  cache )
   {
     FTC_Node  *pnode = cache->buckets + ( node->hash % cache->size );
+
 
     node->link = *pnode;
     *pnode     = node;
@@ -466,6 +478,7 @@
 
 #ifdef FTC_CACHE_USE_LINEAR_HASHING
 
+  /* nothing */
 
 #else /* !FTC_CACHE_USE_LINEAR_HASHING */
 
@@ -583,6 +596,7 @@
 
 #endif /* !FTC_CACHE_USE_LINEAR_HASHING */
 
+
   FT_EXPORT_DEF( FT_Error )
   ftc_cache_init( FTC_Cache  cache )
   {
@@ -594,13 +608,14 @@
 #ifdef FTC_CACHE_USE_LINEAR_HASHING
 
     cache->p     = 0;
-    cache->mask  = FTC_HASH_INITIAL_SIZE-1;
-    cache->slack = FTC_HASH_INITIAL_SIZE*FTC_HASH_MAX_LOAD;
+    cache->mask  = FTC_HASH_INITIAL_SIZE - 1;
+    cache->slack = FTC_HASH_INITIAL_SIZE * FTC_HASH_MAX_LOAD;
 
-    if ( FT_NEW_ARRAY( cache->buckets, FTC_HASH_INITIAL_SIZE*2 ) )
+    if ( FT_NEW_ARRAY( cache->buckets, FTC_HASH_INITIAL_SIZE * 2 ) )
       goto Exit;
 
 #else /* !FTC_CACHE_USE_LINEAR_HASHING */
+
     cache->nodes = 0;
     cache->size  = FTC_PRIMES_MIN;
 
@@ -728,7 +743,7 @@
                     FTC_Query   query,
                     FTC_Node   *anode )
   {
-    FT_Error    error = 0;
+    FT_Error    error = FT_Err_Ok;
     FT_LruNode  lru;
 
 
@@ -740,11 +755,12 @@
     query->hash   = 0;
     query->family = NULL;
 
-    /* XXX: we break encapsulation for the sake of speed !! */
 #if 1
+
+    /* XXX: we break encapsulation for the sake of speed! */
     {
       /* first of all, find the relevant family */
-      FT_LruList              list  = cache->families;
+      FT_LruList              list    = cache->families;
       FT_LruNode              fam, *pfam;
       FT_LruNode_CompareFunc  compare = list->clazz->node_compare;
 
@@ -780,27 +796,35 @@
       lru = fam;
 
     Skip:
+      ;
     }
+
 #else
+
     error = FT_LruList_Lookup( cache->families, query, &lru );
     if ( !error )
+
 #endif
     {
       FTC_Family  family = (FTC_Family) lru;
       FT_UFast    hash    = query->hash;
       FTC_Node*   bucket;
 
-
 #ifdef FTC_CACHE_USE_LINEAR_HASHING
+
       FT_UInt  index;
+
 
       index = hash & cache->mask;
       if ( index < cache->p )
-        index = hash & (cache->mask*2+1);
+        index = hash & ( cache->mask * 2 + 1 );
 
       bucket  = cache->buckets + index;
+
 #else
+
       bucket  = cache->buckets + (hash % cache->size);
+
 #endif
 
 

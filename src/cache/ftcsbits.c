@@ -464,18 +464,18 @@
 
 #ifdef FTC_CACHE_USE_INLINE
 
-#  define GEN_CACHE_FAMILY_COMPARE(f,q,c)  \
-             ftc_sbit_family_compare( (FTC_SBitFamily)(f), (FTC_SBitQuery)(q) )
+#define GEN_CACHE_FAMILY_COMPARE( f, q, c ) \
+          ftc_sbit_family_compare( (FTC_SBitFamily)(f), (FTC_SBitQuery)(q) )
 
-#  define GEN_CACHE_NODE_COMPARE(n,q,c)  \
-             ftc_sbit_node_compare( (FTC_SBitNode)(n), (FTC_SBitQuery)(q), c )
+#define GEN_CACHE_NODE_COMPARE( n, q, c ) \
+          ftc_sbit_node_compare( (FTC_SBitNode)(n), (FTC_SBitQuery)(q), c )
 
-#  define GEN_CACHE_LOOKUP          ftc_sbit_cache_lookup
-#  include "ftccache.i"
+#define GEN_CACHE_LOOKUP  ftc_sbit_cache_lookup
+#include "ftccache.i"
 
 #else  /* !FTC_CACHE_USE_INLINE */
 
-#  define ftc_sbit_cache_lookup  ftc_cache_lookup
+#define ftc_sbit_cache_lookup  ftc_cache_lookup
 
 #endif /* !FTC_CACHE_USE_INLINE */
 

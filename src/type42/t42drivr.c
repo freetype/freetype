@@ -1,9 +1,29 @@
+/***************************************************************************/
+/*                                                                         */
+/*  t42drivr.c                                                             */
+/*                                                                         */
+/*    High-level Type 42 driver interface (body).                          */
+/*                                                                         */
+/*  Copyright 2002 by Roberto Alameda.                                     */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "t42drivr.h"
 #include "t42objs.h"
+#include "t42error.h"
 #include FT_INTERNAL_DEBUG_H
+
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t42
+
 
   static FT_Error
   t42_get_glyph_name( T42_Face    face,
@@ -28,7 +48,7 @@
       ((FT_Byte*)buffer)[len] = 0;
     }
 
-    return FT_Err_Ok;
+    return T42_Err_Ok;
   }
 
 
@@ -127,3 +147,5 @@
     (FT_CharMap_CharNextFunc) T42_CMap_CharNext,
   };
 
+
+/* END */
