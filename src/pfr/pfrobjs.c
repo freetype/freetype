@@ -120,9 +120,9 @@
          root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
        if ( phy_font->flags & PFR_PHY_VERTICAL )
-         root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
-       else
          root->face_flags |= FT_FACE_FLAG_VERTICAL;
+       else
+         root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
 
        /* XXX: kerning and embedded bitmap support isn't there yet */
 
