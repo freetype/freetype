@@ -194,18 +194,18 @@ THE SOFTWARE.
                       xres->value.int32,
                       yres->value.int32 ));
           root->available_sizes->width =
-             (FT_Short)( prop->value.int32 * 75 / xres->value.int32 );
+            (FT_Short)( prop->value.int32 * 75 / xres->value.int32 );
              
           root->available_sizes->height =
-             (FT_Short)( prop->value.int32 * 75 / yres->value.int32 );
+            (FT_Short)( prop->value.int32 * 75 / yres->value.int32 );
         }
       }
       else
       {
         /* some fonts have broken SIZE declaration (jiskan24.bdf) */
         FT_ERROR(( "BDF_Face_Init: reading size\n" ));
-        root->available_sizes->width  = (FT_Short) font->point_size ;
-        root->available_sizes->height = (FT_Short) font->point_size ;
+        root->available_sizes->width  = (FT_Short)font->point_size ;
+        root->available_sizes->height = (FT_Short)font->point_size ;
       }
 
       /* encoding table */
@@ -221,7 +221,7 @@ THE SOFTWARE.
         {
           (face->en_table[n]).enc = cur[n].encoding;
           FT_TRACE4(( "idx %d, val 0x%lX\n", n, cur[n].encoding ));
-          (face->en_table[n]).glyph = (FT_Short) n;
+          (face->en_table[n]).glyph = (FT_Short)n;
         }
       }
 
@@ -367,10 +367,10 @@ THE SOFTWARE.
           /* get the full bytes */
           for ( j = 0; j < ( bitmap->width >> 2 ); j++ )
           {
-            bitmap->buffer[count++] = (FT_Byte)(( *pp & 0xC0 ) >> 6);
-            bitmap->buffer[count++] = (FT_Byte)(( *pp & 0x30 ) >> 4);
-            bitmap->buffer[count++] = (FT_Byte)(( *pp & 0x0C ) >> 2);
-            bitmap->buffer[count++] = (FT_Byte)(  *pp & 0x03 );
+            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0xC0 ) >> 6 );
+            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0x30 ) >> 4 );
+            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0x0C ) >> 2 );
+            bitmap->buffer[count++] = (FT_Byte)(   *pp & 0x03 );
 
             pp++;
           }
@@ -379,13 +379,13 @@ THE SOFTWARE.
           switch ( bitmap->width & 3 )
           {
           case 3:
-            bitmap->buffer[count++] = (FT_Byte)(( *pp & 0xC0 ) >> 6);
+            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0xC0 ) >> 6 );
             /* fall through */
           case 2:
-            bitmap->buffer[count++] = (FT_Byte)(( *pp & 0x30 ) >> 4);
+            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0x30 ) >> 4 );
             /* fall through */
           case 1:
-            bitmap->buffer[count++] = (FT_Byte)(( *pp & 0x0C ) >> 2);
+            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0x0C ) >> 2 );
             /* fall through */
           case 0:
             break;
@@ -408,8 +408,8 @@ THE SOFTWARE.
           /* get the full bytes */
           for ( j = 0; j < ( bitmap->width >> 1 ); j++ )
           {
-            bitmap->buffer[count++] = (FT_Byte)(( *pp & 0xF0 ) >> 4);
-            bitmap->buffer[count++] = (FT_Byte)(  *pp & 0x0F );
+            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0xF0 ) >> 4 );
+            bitmap->buffer[count++] = (FT_Byte)(   *pp & 0x0F );
 
             pp++;
           }
@@ -418,7 +418,7 @@ THE SOFTWARE.
           switch ( bitmap->width & 1 )
           {
           case 1:
-            bitmap->buffer[count++] = (FT_Byte)(( *pp & 0xF0 ) >> 4);
+            bitmap->buffer[count++] = (FT_Byte)( ( *pp & 0xF0 ) >> 4 );
             /* fall through */
           case 0:
             break;

@@ -591,7 +591,7 @@
       goto Exit;
     }
       
-    d = (FT_UInt)( v - 'A' );
+    d = (FT_UInt)( v - 'a' );
     if ( d < 6 )
     {
       d += 10;
