@@ -791,7 +791,7 @@
     goto NoBitmap;
 
   FoundRange:
-    image_offset = FT_NEXT_ULONG(p);
+    image_offset = FT_NEXT_ULONG( p );
     p = decoder->eblc_base + decoder->strike_index_array + image_offset;
     if ( p + 8 > p_limit )
       goto NoBitmap;
@@ -949,9 +949,10 @@
     TT_SBitDecoderRec  decoder[1];
     FT_Error           error;
 
-    FT_UNUSED(map);
-    FT_UNUSED(stream);
-    FT_UNUSED(load_flags);
+    FT_UNUSED( load_flags );
+    FT_UNUSED( stream );
+    FT_UNUSED( map );
+
 
     error = tt_sbit_decoder_init( decoder, face, strike_index, metrics );
     if ( !error )

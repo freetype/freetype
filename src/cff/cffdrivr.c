@@ -103,7 +103,7 @@
                    FT_Vector*  kerning )
   {
     TT_Face       face = (TT_Face)ttface;
-    SFNT_Service  sfnt = face->sfnt;
+    SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
 
     kerning->x = 0;

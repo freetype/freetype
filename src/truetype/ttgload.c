@@ -25,6 +25,7 @@
 #include FT_OUTLINE_H
 
 #include "ttgload.h"
+#include "ttpload.h"
 
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include "ttgxvar.h"

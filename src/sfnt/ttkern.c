@@ -246,10 +246,7 @@
           }
           else /* linear search */
           {
-            FT_UInt  count = num_pairs;
-
-
-            for ( ; count > 0; count-- )
+            for ( count = num_pairs; count > 0; count-- )
             {
               FT_ULong  key = FT_NEXT_ULONG( p );
 
