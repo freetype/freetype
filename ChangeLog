@@ -6,6 +6,11 @@
 	parameter.
 	(PS_Table_Add): Use FT_Offset for `new_size'.
 
+	Add support for version 0.5 maxp tables.
+
+	* src/sfnt/ttload.c (TT_Load_MaxProfile): Implement it.
+	(TT_Load_OS2): Initialize some values.
+
 2001-07-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftsynth.c: Include ftcalc.h unconditionally.
