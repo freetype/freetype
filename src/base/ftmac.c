@@ -66,6 +66,10 @@
 #ifdef __GNUC__
 #include "../truetype/ttobjs.h"
 #include "../type1/t1objs.h"
+  /* This is for Mac OS X.  Without redefinition, OS_INLINE */
+  /* expands to `static inline' which doesn't survive the   */
+  /* -ansi compilation flag of GCC.                         */
+#define OS_INLINE  static __inline__
 #include <Carbon/Carbon.h>
 #else
 #include "truetype/ttobjs.h"

@@ -1,3 +1,15 @@
+2004-04-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftmac.c [__GNUC__]: Define OS_INLINE.
+	* builds/unix/configure.ac: Don't try to remove `-ansi' compilation
+	switch on the Mac.
+
+	* builds/unix/ltmain.sh: Regenerated with `libtoolize --force
+	--copy' from libtool 1.5.6.
+	* builds/unix/aclocal.m4: Regenerated with `aclocal -I .' from
+	automake 1.8a.
+	* builds/unix/configure: Regenerated with autoconf 2.59a.
+
 2004-04-13  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/config/ftconfig.h: Use CHAR_BIT to define
