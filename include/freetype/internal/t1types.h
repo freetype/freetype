@@ -87,7 +87,6 @@
 
   typedef struct  T1_Font_
   {
-
     /* font info dictionary */
     T1_FontInfo      font_info;
 

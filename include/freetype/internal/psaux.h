@@ -1,7 +1,33 @@
+/***************************************************************************/
+/*                                                                         */
+/*  psaux.h                                                                */
+/*                                                                         */
+/*    Auxiliary functions and data structures related to PostScript fonts  */
+/*    (specification).                                                     */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #ifndef PSAUX_H
 #define PSAUX_H
 
+
 #include <freetype/internal/ftobjs.h>
+
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -119,7 +145,7 @@
   {
     FT_Byte*       start;   /* first character of token in input stream */
     FT_Byte*       limit;   /* first character after the token          */
-    T1_Token_Type  type;    /* type of token..                          */
+    T1_Token_Type  type;    /* type of token                            */
 
   } T1_Token;
 
@@ -239,17 +265,18 @@
   /*    T1_Parser                                                          */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A T1_Parser is an object used to parse a Type 1 font very          */
-  /*    quickly.                                                           */
+  /*    A T1_Parser is an object used to parse a Type 1 font very quickly. */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    cursor       :: current position in text.                          */
-  /*    base         :: start of processed text.                           */
-  /*    limit        :: end of processed text.                             */
-  /*    error        :: last error returned.                               */
+  /*    cursor :: The current position in the text.                        */
   /*                                                                       */
-
-  typedef struct T1_Parser_
+  /*    base   :: Start of the processed text.                             */
+  /*                                                                       */
+  /*    limit  :: End of the processed text.                               */
+  /*                                                                       */
+  /*    error  :: The last error returned.                                 */
+  /*                                                                       */
+  typedef struct  T1_Parser_
   {
     FT_Byte*   cursor;
     FT_Byte*   base;
@@ -260,7 +287,7 @@
   } T1_Parser;
 
 
-  typedef struct T1_Parser_Funcs_
+  typedef struct  T1_Parser_Funcs_
   {
     void      (*init)          ( T1_Parser*  parser,
                                  FT_Byte*    base,
@@ -284,11 +311,11 @@
                                  FT_Int      power_ten );    
   
     void      (*to_token)      ( T1_Parser*  parser,
-                                 T1_Token   *token );
+                                 T1_Token*   token );
     void      (*to_token_array)( T1_Parser*  parser,
                                  T1_Token*   tokens,
                                  FT_UInt     max_tokens,
-                                 FT_Int     *pnum_tokens );
+                                 FT_Int*     pnum_tokens );
                                  
     FT_Error  (*load_field)    ( T1_Parser*       parser,
                                  const T1_Field*  field,
@@ -305,11 +332,10 @@
   } T1_Parser_Funcs;
 
 
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****                            T1 BUILDER                         *****/
+  /*****                         T1 BUILDER                            *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
@@ -330,9 +356,11 @@
   /*                                                                       */
   /*    glyph        :: The current glyph slot.                            */
   /*                                                                       */
-  /*    current      :: The current glyph outline.                         */
+  /*    loader       :: XXX                                                */
   /*                                                                       */
   /*    base         :: The base glyph outline.                            */
+  /*                                                                       */
+  /*    current      :: The current glyph outline.                         */
   /*                                                                       */
   /*    max_points   :: maximum points in builder outline                  */
   /*                                                                       */
@@ -398,28 +426,28 @@
   } T1_Builder;
 
 
-  typedef  FT_Error  (*T1_Builder_Check_Points_Func)( T1_Builder*  builder,
-                                                      FT_Int       count );
+  typedef FT_Error  (*T1_Builder_Check_Points_Func)( T1_Builder*  builder,
+                                                     FT_Int       count );
                                                       
-  typedef  void      (*T1_Builder_Add_Point_Func) ( T1_Builder*  builder,
-                                                    FT_Pos       x,
-                                                    FT_Pos       y,
-                                                    FT_Byte      flag );    
+  typedef void  (*T1_Builder_Add_Point_Func)( T1_Builder*  builder,
+                                              FT_Pos       x,
+                                              FT_Pos       y,
+                                              FT_Byte      flag );    
   
-  typedef  void      (*T1_Builder_Add_Point1_Func)( T1_Builder*  builder,
+  typedef void  (*T1_Builder_Add_Point1_Func)( T1_Builder*  builder,
+                                               FT_Pos       x,
+                                               FT_Pos       y );
+                                                    
+  typedef FT_Error  (*T1_Builder_Add_Contour_Func)( T1_Builder*  builder );                                                    
+
+  typedef FT_Error  (*T1_Builder_Start_Point_Func)( T1_Builder*  builder,
                                                     FT_Pos       x,
                                                     FT_Pos       y );
-                                                    
-  typedef  FT_Error  (*T1_Builder_Add_Contour_Func)( T1_Builder*  builder );                                                    
 
-  typedef  FT_Error  (*T1_Builder_Start_Point_Func)( T1_Builder*  builder,
-                                                     FT_Pos       x,
-                                                     FT_Pos       y );
-
-  typedef  void      (*T1_Builder_Close_Contour_Func)( T1_Builder*  builder );
+  typedef void  (*T1_Builder_Close_Contour_Func)( T1_Builder*  builder );
 
 
-  typedef struct T1_Builder_Funcs_
+  typedef struct  T1_Builder_Funcs_
   {
     FT_Error  (*init)( T1_Builder*   builder,
                        FT_Face       face,
@@ -437,6 +465,7 @@
   
   } T1_Builder_Funcs;
 
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -445,15 +474,20 @@
   /*************************************************************************/
   /*************************************************************************/
 
-
-
-  typedef struct PSAux_Interface_
+  typedef struct  PSAux_Interface_
   {
-    const T1_Table_Funcs*   t1_table_funcs;
-    const T1_Parser_Funcs*  t1_parser_funcs;
-    const T1_Builder_Funcs* t1_builder_funcs;
+    const T1_Table_Funcs*    t1_table_funcs;
+    const T1_Parser_Funcs*   t1_parser_funcs;
+    const T1_Builder_Funcs*  t1_builder_funcs;
 
   } PSAux_Interface;
 
 
+#ifdef __cplusplus
+  }
+#endif
+
 #endif /* PSAUX_H */
+
+
+/* END */

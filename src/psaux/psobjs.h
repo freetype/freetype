@@ -1,7 +1,30 @@
+/***************************************************************************/
+/*                                                                         */
+/*  psobjs.h                                                               */
+/*                                                                         */
+/*    Auxiliary functions for PostScript fonts (specification).            */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #ifndef PSOBJS_H
 #define PSOBJS_H
 
 #include <freetype/internal/psaux.h>
+
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
 
 
   /*************************************************************************/
@@ -29,7 +52,6 @@
 
   LOCAL_DEF
   void  T1_Release_Table( T1_Table*  table );
-
 
 
   /*************************************************************************/
@@ -72,7 +94,7 @@
                                  FT_ULong*        pflags );
  
   LOCAL_DEF
-  FT_Long  T1_ToInt  ( T1_Parser*  parser );
+  FT_Long  T1_ToInt( T1_Parser*  parser );
 
 
   LOCAL_DEF
@@ -93,14 +115,13 @@
 
 
   LOCAL_DEF
-  void      T1_Init_Parser( T1_Parser*  parser,
-                            FT_Byte*    base,
-                            FT_Byte*    limit,
-                            FT_Memory   memory );
+  void  T1_Init_Parser( T1_Parser*  parser,
+                        FT_Byte*    base,
+                        FT_Byte*    limit,
+                        FT_Memory   memory );
 
   LOCAL_DEF
-  void      T1_Done_Parser( T1_Parser*  parser )
-
+  void  T1_Done_Parser( T1_Parser*  parser )
 
 
   LOCAL_DEF
@@ -109,5 +130,12 @@
                     FT_UShort  seed );
 
 
+#ifdef __cplusplus
+  }
+#endif
+
+
 #endif /* PSOBJS_H */
 
+
+/* END */
