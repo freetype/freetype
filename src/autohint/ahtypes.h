@@ -121,7 +121,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /* see agangles.h */
+  /* see ahangles.h */
   typedef FT_Int  AH_Angle;
 
 

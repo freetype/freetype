@@ -120,8 +120,8 @@
                                : ( seg->dir == AH_DIR_RIGHT
                                      ? "right"
                                      : "none" ) ) ),
-                 seg->link ? (seg->link-segments) : -1,
-                 seg->serif ? (seg->serif-segments) : -1,
+                 seg->link ? ( seg->link - segments ) : -1,
+                 seg->serif ? ( seg->serif - segments ) : -1,
                  (int)seg->num_linked,
                  seg->first - points,
                  seg->last - points );
@@ -135,7 +135,7 @@
 #endif /* AH_DEBUG */
 
 
-  /* compute the direction value of a given vector.. */
+  /* compute the direction value of a given vector */
   static AH_Direction
   ah_compute_direction( FT_Pos  dx,
                         FT_Pos  dy )
@@ -146,6 +146,8 @@
 
 
     dir = AH_DIR_NONE;
+
+    /* atan(1/12) == 4.7 degrees */
 
     /* test for vertical direction */
     if ( ax * 12 < ay )
@@ -163,10 +165,10 @@
 
 
   /* this function is used by ah_get_orientation (see below) to test */
-  /* the fill direction of a given bbox extrema                      */
+  /* the fill direction of given bbox extremum                       */
   static FT_Int
-  ah_test_extrema( FT_Outline*  outline,
-                   FT_Int       n )
+  ah_test_extremum( FT_Outline*  outline,
+                    FT_Int       n )
   {
     FT_Vector  *prev, *cur, *next;
     FT_Pos      product;
@@ -175,7 +177,9 @@
 
 
     /* we need to compute the `previous' and `next' point */
-    /* for these extrema                                  */
+    /* for this extremum; we check whether the extremum   */
+    /* is start or end of a contour and providing         */
+    /* appropriate values if so                           */
     cur  = outline->points + n;
     prev = cur - 1;
     next = cur + 1;
@@ -183,7 +187,7 @@
     first = 0;
     for ( c = 0; c < outline->n_contours; c++ )
     {
-      last  = outline->contours[c];
+      last = outline->contours[c];
 
       if ( n == first )
         prev = outline->points + last;
@@ -218,7 +222,7 @@
   /* We do this by computing bounding box points, and computing their      */
   /* curvature.                                                            */
   /*                                                                       */
-  /* The function returns either 1 or -1.                                  */
+  /* The function returns either 1 or 2.                                   */
   /*                                                                       */
   static FT_Int
   ah_get_orientation( FT_Outline*  outline )
@@ -272,20 +276,20 @@
       }
     }
 
-    /* test orientation of the xmin */
-    n = ah_test_extrema( outline, indices_xMin );
+    /* test orientation of the extrema */
+    n = ah_test_extremum( outline, indices_xMin );
     if ( n )
       goto Exit;
 
-    n = ah_test_extrema( outline, indices_yMin );
+    n = ah_test_extremum( outline, indices_yMin );
     if ( n )
       goto Exit;
 
-    n = ah_test_extrema( outline, indices_xMax );
+    n = ah_test_extremum( outline, indices_xMax );
     if ( n )
       goto Exit;
 
-    n = ah_test_extrema( outline, indices_yMax );
+    n = ah_test_extremum( outline, indices_yMax );
     if ( !n )
       n = 1;
 
@@ -306,14 +310,14 @@
   ah_outline_new( FT_Memory    memory,
                   AH_Outline*  aoutline )
   {
-    FT_Error     error;
-    AH_Outline   outline;
+    FT_Error    error;
+    AH_Outline  outline;
 
 
     if ( !FT_NEW( outline ) )
     {
       outline->memory = memory;
-      *aoutline = outline;
+      *aoutline       = outline;
     }
 
     return error;
