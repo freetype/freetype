@@ -1,3 +1,10 @@
+2002-01-30  David Turner  <david@freetype.org>
+
+	* INSTALL, docs/INSTALL: moved the INSTALL document from the top
+	level directory to "docs". That's because it conflicts with the
+	"install" script on Windows, where the filesystem doesn't
+	preserve case.
+
 2002-01-29  David Turner  <david@freetype.org>
 
 	* configure: fixed the script. it previously didn't accept more
