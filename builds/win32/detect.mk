@@ -82,6 +82,13 @@ ifeq ($(PLATFORM),ansi)
       lcc: setup
     endif
 
+    ifneq ($(findstring mingw32,$(MAKECMDGOALS)),)     # mingw32
+      CONFIG_FILE := w32-mingw32.mk
+      SEP         := $(BACKSLASH)
+      CC          := gcc
+      mingw32: setup
+    endif
+
     ifneq ($(findstring devel,$(MAKECMDGOALS)),)       # development target
       CONFIG_FILE := w32-dev.mk
       CC          := gcc

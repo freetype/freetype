@@ -64,7 +64,7 @@ SA := a
 # The name of the final library file.  Note that the DOS-specific Makefile
 # uses a shorter (8.3) name.
 #
-LIBRARY := libfreetype
+LIBRARY := lib$(PROJECT)
 
 
 # Path inclusion flag.  Some compilers use a different flag than `-I' to
