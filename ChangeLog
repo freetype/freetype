@@ -1,3 +1,14 @@
+2001-10-19  David Turner <david@freetype.org>
+
+	* src/pshinter/module.mk, src/pshinter/rules.mk: adding control files
+	to build the postscript hinter with the "old" build system
+
+
+2001-10-19  Jacob Jansen <joukj@hrem.stm.tudelft.nl>
+
+	* descrip.mms, src/pshinter/descrip.mms: updates to the VMS build
+	files.
+
 2001-10-18  David Turner  <david@freetype.org>
 
         * src/psnames/pstables.h, src/tools/glnames.py: rewrote the "glnames.py"
