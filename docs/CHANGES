@@ -1,140 +1,139 @@
 LATEST CHANGES BETWEEN 2.0.4 and 2.0.3
 
-  - fixed a rather annoying bug that was introduced in 2.0.3.
-    Namely, the font transform set through FT_Set_Transform was applied
-    twiced to auto-hinted glyphs, resulting in incorrect rotated text
-    output
+  - Fixed a rather annoying bug that was introduced in 2.0.3.  Namely, the
+    font transformation set through FT_Set_Transform was applied twice to
+    auto-hinted glyphs, resulting in incorrectly rotated text output.
     
-  - fixed _many_ compiler warnings. FT2 should now compile cleanly with
-    Visual C++'s most pedantic warning level (/W4). It already compiled
-    fine with GCC and a few other compilers..
+  - Fixed _many_ compiler warnings.  FT2 should now compile cleanly with
+    Visual C++'s most pedantic warning level (/W4).  It already compiled
+    fine with GCC and a few other compilers.
 
-  - fixed the Visual C++ project files located in "builds/win32/visualc"
-    (previous versions used older names of the library)
+  - Fixed the Visual C++ project files located in "builds/win32/visualc"
+    (previous versions used older names of the library).
   
-  - many 32-bit constants have an "L" appended to their value, in order
-    to improve the 16-bitness of the code. Someone is actually trying to
-    use FT2 on an Atari ST machine !!
+  - Many 32-bit constants have an "L" appended to their value, in order
+    to improve the 16-bitness of the code.  Someone is actually trying to
+    use FT2 on an Atari ST machine!
 
-  - updated the "builds/detect.mk" file in order to automatically build
-    FT2 on AIX systems. AIX does define "/usr/sbin/init" instead of
-    "/sbin/init" and wasn't previously detected as a Unix platform. by
-    the FreeType build system.
+  - Updated the "builds/detect.mk" file in order to automatically build
+    FT2 on AIX systems.  AIX uses "/usr/sbin/init" instead of "/sbin/init"
+    and wasn't previously detected as a Unix platform by the FreeType build
+    system.
                                                        
-  - updated the Unix-specific portions of the build system (new libtool
-    version, etc..)
+  - Updated the Unix-specific portions of the build system (new libtool
+    version, etc.).
 
 ============================================================================
+
 LATEST CHANGES BETWEEN 2.0.3 and 2.0.2
 
-  I. CHANGES TO THE MODULES / FONT DRIVERS :
+  I. CHANGES TO THE MODULES / FONT DRIVERS
   
     - THE AUTO-HINTER HAS BEEN SLIGHTLY IMPROVED, in order to fix several
       annoying artefacts, mainly:
       
-        - blue zone alignement of horizontal stems wasn't performed
-          correctly, resulting in artefacts like the "d" being placed
-          one pixel below the "b" in some fonts like Time New Roman
+        - Blue zone alignement of horizontal stems wasn't performed
+          correctly, resulting in artefacts like the "d" being placed one
+          pixel below the "b" in some fonts like Time New Roman.
           
-        - overshoot thresholding wasn't performed correctly, creating
-          unpleasant artefacts at large character pixel sizes
+        - Overshoot thresholding wasn't performed correctly, creating
+          unpleasant artefacts at large character pixel sizes.
           
-        - composite glyph loading has been simplified. This gets rid
+        - Composite glyph loading has been simplified.  This gets rid
           of various artefacts where the components of a composite glyphs
           were not correctly spaced.
           
-      These are the last changes to the current auto-hinting module.
-      A new hinting sub-system is currently in the work in order to
-      support native hints in Type 1 / CFF / OpenType fonts, as well
-      as globally improve rendering
+      These are the last changes to the current auto-hinting module.  A new
+      hinting sub-system is currently in the work in order to support native
+      hints in Type 1 / CFF / OpenType fonts, as well as globally improve
+      rendering.
 
-
-    - The PCF driver has been fixed. It reported invalid glyph dimensions
+    - The PCF driver has been fixed.  It reported invalid glyph dimensions
       for the fonts available on Solaris.
     
     - The Type 1, CID and CFF drivers have been modified to fix the
-      computation of the EM size
+      computation of the EM size.
 
     - The Type 1 driver has been fixed to avoid a dangerous bug that
-      crashed the library with non-conforming fonts (i.e. ones that
-      do not place the .notdef glyph at position 0)
+      crashed the library with non-conforming fonts (i.e. ones that do not
+      place the .notdef glyph at position 0).
 
     - The TrueType driver had a rather subtle bug (dangling pointer when
       loading composite glyphs) that could crash the library in rare
-      occasions !
+      occasions!
 
 
-  II. HIGH-LEVEL API CHANGES :
+  II. HIGH-LEVEL API CHANGES
                               
-    - the error code enumeration values have been changed. An error
-      value is decomposed in a generic error code, and a module number.
-      see <freetype/fterrors.h> for details     
+    - The error code enumeration values have been changed.  An error value
+      is decomposed in a generic error code, and a module number.  see
+      <freetype/fterrors.h> for details.
 
-    - a new public header file has been introduced, named FT_TRIGONOMETRY_H
+    - A new public header file has been introduced, named FT_TRIGONOMETRY_H
       (include/freetype/fttrig.h), providing trigonometric functions to
-      compute sines, cosines, arctangents, etc.. with 16.16 fixed
-      precision. The implementation is based on the CORDIC algorithm
-      and is very fast while being sufficiently accurate.
+      compute sines, cosines, arctangents, etc. with 16.16 fixed precision. 
+      The implementation is based on the CORDIC algorithm and is very fast
+      while being sufficiently accurate.
 
 
-  III. INTERNALS :
+  III. INTERNALS
              
-    - added BeOS-specific files in the old build sub-system. Note that
+    - Added BeOS-specific files in the old build sub-system.  Note that
       no changes were required to compile the library with Jam.
 
-    - the configuration is now capable of automatically detecting 64-bit
-      integers on a set of predefined compilers (GCC,Visual C++,Borland C++)
-      and will use them by default. This provides a small performance
-      boost
+    - The configuration is now capable of automatically detecting 64-bit
+      integers on a set of predefined compilers (GCC, Visual C++, Borland
+      C++) and will use them by default.  This provides a small performance
+      boost.
 
-    - a small memory leak that happened when opening 0-sized files (duh !!)
-      have been fixed..
+    - A small memory leak that happened when opening 0-sized files (duh!)
+      have been fixed.
           
-    - fixed bezier stack depth bug in the routines provided by the
-      FT_BBOX_H header file. Also fixed similar bugs in the rasterizers.
+    - Fixed bezier stack depth bug in the routines provided by the
+      FT_BBOX_H header file.  Also fixed similar bugs in the rasterizers.
 
-    - the outling bounding box code has been rewritten to use direct
-      computations, instead of bezier sub-division, to compute the
-      exact bounding box of glyphs. This is slightly slower but more
-      accurate.
+    - The outline bounding box code has been rewritten to use direct
+      computations, instead of bezier sub-division, to compute the exact
+      bounding box of glyphs.  This is slightly slower but more accurate.
 
     - The build system has been improved and fixed, mainly to support "make"
-      on Windows 2000 correctly, avoid problems with "make distclean" on
-      non Unix systems, etc..
+      on Windows 2000 correctly, avoid problems with "make distclean" on non
+      Unix systems, etc.
       
-    - hexadecimal constants have been suffixed with "U" to avoid problems
+    - Hexadecimal constants have been suffixed with "U" to avoid problems
       with certain compilers on 64-bit platforms.
 
-    - a new directory named "src/tools" has been created. It contains
+    - A new directory named "src/tools" has been created.  It contains
       Python scripts and simple unit test programs used to develop the
       library.
       
-    - the DocMaker tool has been moved from "docs" to "src/tools" and
+    - The DocMaker tool has been moved from "docs" to "src/tools" and
       has been updated with the following:
       
-         - now accepts the "--title=XXXX" or "-t XXXX" option from the
-           command line to set the project's name in the generated
-           API reference
+         - Now accepts the "--title=XXXX" or "-t XXXX" option from the
+           command line to set the project's name in the generated API
+           reference.
            
-         - now accepts the "--output=DIR" or "-o DIR" option from the
-           command line to set the output directory for all generated
-           HTML files
+         - Now accepts the "--output=DIR" or "-o DIR" option from the
+           command line to set the output directory for all generated HTML
+           files.
            
-         - now accepts the "--prefix=XXXX" or "-p XXX" option from the
-           command line to set the file prefix to use for all generated
-           HTML files.
+         - Now accepts the "--prefix=XXXX" or "-p XXX" option from the
+           command line to set the file prefix to use for all generated HTML
+           files.
 
-         - now generates the current time/data on each generated page
+         - Now generates the current time/data on each generated page
            in order to distinguish between versions.
 
-      DocMaker can be used with other projects now, not only FT2
-      (e.g. MLib, FTLayout, etc..)
+      DocMaker can be used with other projects now, not only FT2 (e.g. MLib,
+      FTLayout, etc.).
                                                                 
 ===========================================================================
+
 LATEST CHANGES BETWEEN 2.0.2 and 2.0.1
 
 
-  I. CHANGES TO THE MODULES / FONT DRIVERS:
+  I. CHANGES TO THE MODULES / FONT DRIVERS
 
     - THE TRUETYPE BYTECODE INTERPRETER IS NOW TURNED OFF, in order to
       avoid legal problems  with the Apple patents.  It  seems that we
@@ -226,7 +225,6 @@ LATEST CHANGES BETWEEN 2.0.2 and 2.0.1
 
   III. CHANGES TO THE BUILD PROCESS
 
-
     - If you  are not  building FreeType 2  with its own  build system
       (but with your own Makefiles or project files), you will need to
       be  aware that  the  build  process has  changed  a little  bit.
@@ -256,8 +254,7 @@ LATEST CHANGES BETWEEN 2.0.2 and 2.0.1
 
 ======================================================================
 
-LATEST CHANGES BETWEEN 2.0.1 and 2.0:
-
+LATEST CHANGES BETWEEN 2.0.1 and 2.0
 
   2.0.1 introduces a few changes:
 
