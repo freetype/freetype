@@ -1,3 +1,9 @@
+2004-11-22  Werner Lemberg  <wl@gnu.org>
+
+	* builds/detect.mk: Undo change from 2004-11-20.
+	* builds/win32/detect.mk: If the `OS' environment variable contains
+	`Windows_NT', use `cmd.exe /c copy' for copying files.
+
 2004-11-20  Werner Lemberg  <wl@gnu.org>
 
 	* builds/detect.mk (dos_setup): Use `cmd.exe' for copying
