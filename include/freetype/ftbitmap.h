@@ -39,6 +39,15 @@ FT_BEGIN_HEADER
   /* <Section>                                                             */
   /*    bitmap_handling                                                    */
   /*                                                                       */
+  /* <Title>                                                               */
+  /*    Bitmap Handling                                                    */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    Handling FT_Bitmap objects.                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This section contains functions for converting FT_Bitmap objects.  */
+  /*                                                                       */
   /*************************************************************************/
 
 
