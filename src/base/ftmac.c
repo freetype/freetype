@@ -84,8 +84,8 @@
 
   /* Quick'n'dirty Pascal string to C string converter.
      Warning: this call is not thread safe! Use with caution. */
-  static
-  char*  p2c_str( unsigned char*  pstr )
+  static char*
+  p2c_str( unsigned char*  pstr )
   {
     static char  cstr[256];
 
@@ -97,9 +97,9 @@
 
 
   /* Given a pathname, fill in a file spec. */
-  static
-  int file_spec_from_path( const char*  pathname,
-                           FSSpec*      spec )
+  static int
+  file_spec_from_path( const char*  pathname,
+                       FSSpec*      spec )
   {
     Str255    p_path;
     FT_ULong  path_len;
@@ -120,8 +120,8 @@
 
 
   /* Return the file type of the file specified by spec. */
-  static
-  OSType  get_file_type( FSSpec*  spec )
+  static OSType
+  get_file_type( FSSpec*  spec )
   {
     FInfo  finfo;
 
@@ -134,9 +134,9 @@
 
 
   /* Given a PostScript font name, create the Macintosh LWFN file name. */
-  static
-  void create_lwfn_name( char*   ps_name,
-                         Str255  lwfn_file_name )
+  static void
+  create_lwfn_name( char*   ps_name,
+                    Str255  lwfn_file_name )
   {
     int       max = 5, count = 0;
     FT_Byte*  p = lwfn_file_name;
@@ -166,11 +166,11 @@
 
   /* Given a file reference, answer its location as a vRefNum
      and a dirID. */
-  static
-  FT_Error get_file_location( short           ref_num,
-                              short*          v_ref_num,
-                              long*           dir_id,
-                              unsigned char*  file_name )
+  static FT_Error
+  get_file_location( short           ref_num,
+                     short*          v_ref_num,
+                     long*           dir_id,
+                     unsigned char*  file_name )
   {
     FCBPBRec  pb;
     OSErr     error;
@@ -193,10 +193,10 @@
 
   /* Make a file spec for an LWFN file from a FOND resource and
      a file name. */
-  static
-  FT_Error make_lwfn_spec( Handle          fond,
-                           unsigned char*  file_name,
-                           FSSpec*         spec )
+  static FT_Error
+  make_lwfn_spec( Handle          fond,
+                  unsigned char*  file_name,
+                  FSSpec*         spec )
   {
     FT_Error  error;
     short     ref_num, v_ref_num;
@@ -219,11 +219,11 @@
 
   /* Look inside the FOND data, answer whether there should be an SFNT
      resource, and answer the name of a possible LWFN Type 1 file. */
-  static
-  void parse_fond(  char*   fond_data,
-                    short*  have_sfnt,
-                    short*  sfnt_id,
-                    Str255  lwfn_file_name )
+  static void
+  parse_fond( char*   fond_data,
+              short*  have_sfnt,
+              short*  sfnt_id,
+              Str255  lwfn_file_name )
   {
     AsscEntry*  assoc;
     FamRec*     fond;
@@ -285,11 +285,11 @@
      PFB parser wants the ASCII header as one chunk, and the LWFN
      chunks are often not organized that way, so we'll glue chunks
      of the same type together. */
-  static
-  FT_Error read_lwfn( FT_Memory  memory,
-                      FSSpec*    lwfn_spec,
-                      FT_Byte**  pfb_data,
-                      FT_ULong*  size )
+  static FT_Error
+  read_lwfn( FT_Memory  memory,
+             FSSpec*    lwfn_spec,
+             FT_Byte**  pfb_data,
+             FT_ULong*  size )
   {
     FT_Error       error = FT_Err_Ok;
     short          res_ref, res_id;
@@ -394,8 +394,8 @@
 
   /* Finalizer for a memory stream; gets called by FT_Done_Face().
      It frees the memory it uses. */
-  static
-  void  memory_stream_close( FT_Stream  stream )
+  static void
+  memory_stream_close( FT_Stream  stream )
   {
     FT_Memory  memory = stream->memory;
 
@@ -409,12 +409,12 @@
 
 
   /* Create a new memory stream from a buffer and a size. */
-  static
-  FT_Error new_memory_stream( FT_Library       library,
-                              FT_Byte*         base,
-                              FT_ULong         size,
-                              FT_Stream_Close  close,
-                              FT_Stream*       astream )
+  static FT_Error
+  new_memory_stream( FT_Library       library,
+                     FT_Byte*         base,
+                     FT_ULong         size,
+                     FT_Stream_Close  close,
+                     FT_Stream*       astream )
   {
       FT_Error   error;
       FT_Memory  memory;
@@ -447,13 +447,13 @@
 
 
   /* Create a new FT_Face given a buffer and a driver name. */
-  static
-  FT_Error open_face_from_buffer( FT_Library  library,
-                                  FT_Byte*    base,
-                                  FT_ULong    size,
-                                  FT_Long     face_index,
-                                  char*       driver_name,
-                                  FT_Face*    aface )
+  static FT_Error
+  open_face_from_buffer( FT_Library  library,
+                         FT_Byte*    base,
+                         FT_ULong    size,
+                         FT_Long     face_index,
+                         char*       driver_name,
+                         FT_Face*    aface )
   {
     FT_Open_Args  args;
     FT_Error      error;
@@ -493,11 +493,11 @@
 
 
   /* Create a new FT_Face from a file spec to an LWFN file. */
-  static
-  FT_Error  FT_New_Face_From_LWFN( FT_Library  library,
-                                   FSSpec*     spec,
-                                   FT_Long     face_index,
-                                   FT_Face*    aface )
+  static FT_Error
+  FT_New_Face_From_LWFN( FT_Library  library,
+                         FSSpec*     spec,
+                         FT_Long     face_index,
+                         FT_Face*    aface )
   {
     FT_Byte*   pfb_data;
     FT_ULong   pfb_size;
@@ -536,11 +536,11 @@
 
 
   /* Create a new FT_Face from an SFNT resource, specified by res ID. */
-  static
-  FT_Error  FT_New_Face_From_SFNT( FT_Library  library,
-                                   short       sfnt_id,
-                                   FT_Long     face_index,
-                                   FT_Face*    aface )
+  static FT_Error
+  FT_New_Face_From_SFNT( FT_Library  library,
+                         short       sfnt_id,
+                         FT_Long     face_index,
+                         FT_Face*    aface )
   {
     Handle     sfnt = NULL;
     FT_Byte*   sfnt_data;
@@ -576,11 +576,11 @@
 
 
   /* Create a new FT_Face from a file spec to a suitcase file. */
-  static
-  FT_Error  FT_New_Face_From_Suitcase( FT_Library  library,
-                                       FSSpec*     spec,
-                                       FT_Long     face_index,
-                                       FT_Face*    aface )
+  static FT_Error
+  FT_New_Face_From_Suitcase( FT_Library  library,
+                             FSSpec*     spec,
+                             FT_Long     face_index,
+                             FT_Face*    aface )
   {
     FT_Error  error = FT_Err_Ok;
     short     res_ref, res_index;
@@ -618,10 +618,11 @@
 
   /* documentation in ftmac.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_New_Face_From_FOND( FT_Library  library,
-                                                    Handle      fond,
-                                                    FT_Long     face_index,
-                                                    FT_Face    *aface )
+  FT_EXPORT_DEF( FT_Error )
+  FT_New_Face_From_FOND( FT_Library  library,
+                         Handle      fond,
+                         FT_Long     face_index,
+                         FT_Face    *aface )
   {
     short     sfnt_id, have_sfnt, have_lwfn = 0;
     Str255    lwfn_file_name;
@@ -674,10 +675,11 @@
   /*    accepts pathnames to Mac suitcase files.  For further              */
   /*    documentation see the original FT_New_Face() in freetype.h.        */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FT_New_Face( FT_Library   library,
-                                          const char*  pathname,
-                                          FT_Long      face_index,
-                                          FT_Face     *aface )
+  FT_EXPORT_DEF( FT_Error )
+  FT_New_Face( FT_Library   library,
+               const char*  pathname,
+               FT_Long      face_index,
+               FT_Face     *aface )
   {
     FT_Open_Args  args;
     FSSpec        spec;

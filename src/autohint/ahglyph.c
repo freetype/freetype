@@ -32,7 +32,8 @@
 
 #ifdef AH_DEBUG
 
-  void  ah_dump_edges( AH_Outline*  outline )
+  void
+  ah_dump_edges( AH_Outline*  outline )
   {
     AH_Edge*     edges;
     AH_Edge*     edge_limit;
@@ -83,7 +84,8 @@
 
 
   /* A function used to dump the array of linked segments */
-  void  ah_dump_segments( AH_Outline*  outline )
+  void
+  ah_dump_segments( AH_Outline*  outline )
   {
     AH_Segment*  segments;
     AH_Segment*  segment_limit;
@@ -135,9 +137,9 @@
 
 
   /* compute the direction value of a given vector.. */
-  static
-  AH_Direction  ah_compute_direction( FT_Pos  dx,
-                                      FT_Pos  dy )
+  static AH_Direction
+  ah_compute_direction( FT_Pos  dx,
+                        FT_Pos  dy )
   {
     AH_Direction  dir;
     FT_Pos        ax = ABS( dx );
@@ -163,9 +165,9 @@
 
   /* this function is used by ah_get_orientation (see below) to test */
   /* the fill direction of a given bbox extrema                      */
-  static
-  int  ah_test_extrema( FT_Outline*  outline,
-                        int          n )
+  static int
+  ah_test_extrema( FT_Outline*  outline,
+                   int          n )
   {
     FT_Vector  *prev, *cur, *next;
     FT_Pos      product;
@@ -217,8 +219,8 @@
   /*                                                                       */
   /* The function returns either 1 or -1.                                  */
   /*                                                                       */
-  static
-  int  ah_get_orientation( FT_Outline*  outline )
+  static int
+  ah_get_orientation( FT_Outline*  outline )
   {
     FT_BBox  box;
     FT_BBox  indices;
@@ -299,9 +301,9 @@
   /* <Description>                                                         */
   /*    Creates a new and empty AH_Outline object.                         */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  ah_outline_new( FT_Memory     memory,
-                            AH_Outline**  aoutline )
+  FT_LOCAL_DEF FT_Error
+  ah_outline_new( FT_Memory     memory,
+                  AH_Outline**  aoutline )
   {
     FT_Error     error;
     AH_Outline*  outline;
@@ -325,8 +327,8 @@
   /* <Description>                                                         */
   /*    Destroys a given AH_Outline object.                                */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  ah_outline_done( AH_Outline*  outline )
+  FT_LOCAL_DEF void
+  ah_outline_done( AH_Outline*  outline )
   {
     FT_Memory memory = outline->memory;
 
@@ -349,9 +351,9 @@
   /*    Saves the content of a given AH_Outline object into a face's glyph */
   /*    slot.                                                              */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  ah_outline_save( AH_Outline*  outline,
-                         AH_Loader*   gloader )
+  FT_LOCAL_DEF void
+  ah_outline_save( AH_Outline*  outline,
+                   AH_Loader*   gloader )
   {
     AH_Point*   point       = outline->points;
     AH_Point*   point_limit = point + outline->num_points;
@@ -384,9 +386,9 @@
   /*    Loads an unscaled outline from a glyph slot into an AH_Outline     */
   /*    object.                                                            */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  ah_outline_load( AH_Outline*  outline,
-                             FT_Face      face )
+  FT_LOCAL_DEF FT_Error
+  ah_outline_load( AH_Outline*  outline,
+                   FT_Face      face )
   {
     FT_Memory   memory       = outline->memory;
     FT_Error    error        = AH_Err_Ok;
@@ -619,9 +621,9 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  ah_setup_uv( AH_Outline*  outline,
-                     AH_UV        source )
+  FT_LOCAL_DEF void
+  ah_setup_uv( AH_Outline*  outline,
+               AH_UV        source )
   {
     AH_Point*  point       = outline->points;
     AH_Point*  point_limit = point + outline->num_points;
@@ -673,8 +675,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  ah_outline_compute_segments( AH_Outline*  outline )
+  FT_LOCAL_DEF void
+  ah_outline_compute_segments( AH_Outline*  outline )
   {
     int           dimension;
     AH_Segment*   segments;
@@ -916,8 +918,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  ah_outline_link_segments( AH_Outline*  outline )
+  FT_LOCAL_DEF void
+  ah_outline_link_segments( AH_Outline*  outline )
   {
     AH_Segment*  segments;
     AH_Segment*  segment_limit;
@@ -1036,9 +1038,8 @@
   }
 
 
-
-  static
-  void  ah_outline_compute_edges( AH_Outline*  outline )
+  static void
+  ah_outline_compute_edges( AH_Outline*  outline )
   {
     AH_Edge*      edges;
     AH_Segment*   segments;
@@ -1290,8 +1291,8 @@
   /* <Description>                                                         */
   /*    Performs feature detection on a given AH_Outline object.           */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  ah_outline_detect_features( AH_Outline*  outline )
+  FT_LOCAL_DEF void
+  ah_outline_detect_features( AH_Outline*  outline )
   {
     ah_outline_compute_segments( outline );
     ah_outline_link_segments   ( outline );
@@ -1308,9 +1309,9 @@
   /*    Computes the `blue edges' in a given outline (i.e. those that must */
   /*    be snapped to a blue zone edge (top or bottom).                    */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  ah_outline_compute_blue_edges( AH_Outline*       outline,
-                                       AH_Face_Globals*  face_globals )
+  FT_LOCAL_DEF void
+  ah_outline_compute_blue_edges( AH_Outline*       outline,
+                                 AH_Face_Globals*  face_globals )
   {
     AH_Edge*     edge       = outline->horz_edges;
     AH_Edge*     edge_limit = edge + outline->num_hedges;
@@ -1442,9 +1443,9 @@
   /*    the contents of the detected edges (basically change the `blue     */
   /*    edge' pointer from `design units' to `scaled ones').               */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  ah_outline_scale_blue_edges( AH_Outline*       outline,
-                                     AH_Face_Globals*  globals )
+  FT_LOCAL_DEF void
+  ah_outline_scale_blue_edges( AH_Outline*       outline,
+                               AH_Face_Globals*  globals )
   {
     AH_Edge*  edge       = outline->horz_edges;
     AH_Edge*  edge_limit = edge + outline->num_hedges;
@@ -1459,8 +1460,6 @@
         edge->blue_edge += delta;
     }
   }
-
-
 
 
 /* END */

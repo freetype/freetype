@@ -276,8 +276,7 @@ FT_BEGIN_HEADER
 #endif /* !FT_EXPORT_VAR */
 
   /* The following macros are needed to compile the library with a   */
-  /* C++ compiler.  Note that we do this for convenience -- please   */
-  /* don't ask for more C++ features.                                */
+  /* C++ compiler and with 16bit compilers.                          */
   /*                                                                 */
 
   /* This is special.  Within C++, you must specify `extern "C"' for */
@@ -295,24 +294,27 @@ FT_BEGIN_HEADER
   /* FT_CALLBACK_TABLE_DEF is used to _define_ a constant variable   */
   /* that contains pointers to callback functions.                   */
   /*                                                                 */
-
+  /*                                                                 */
+  /* Some 16bit compilers have to redefine these macros to insert    */
+  /* the infamous `_cdecl' or `__fastcall' declarations.             */
+  /*                                                                 */
 #ifndef FT_CALLBACK_DEF
-#  ifdef __cplusplus
-#    define FT_CALLBACK_DEF(x)  extern "C" x
-#  else
-#    define FT_CALLBACK_DEF(x)  static x
-#  endif
+#ifdef __cplusplus
+#define FT_CALLBACK_DEF( x )  extern "C" x
+#else
+#define FT_CALLBACK_DEF( x )  static x
 #endif
+#endif /* FT_CALLBACK_DEF */
 
 #ifndef FT_CALLBACK_TABLE
-#  ifdef __cplusplus
-#    define FT_CALLBACK_TABLE      extern "C"
-#    define FT_CALLBACK_TABLE_DEF  extern "C"
-#  else
-#    define FT_CALLBACK_TABLE      extern
-#    define FT_CALLBACK_TABLE_DEF
-#  endif
+#ifdef __cplusplus
+#define FT_CALLBACK_TABLE      extern "C"
+#define FT_CALLBACK_TABLE_DEF  extern "C"
+#else
+#define FT_CALLBACK_TABLE      extern
+#define FT_CALLBACK_TABLE_DEF  /* nothing */
 #endif
+#endif /* FT_CALLBACK_TABLE */
 
 
 FT_END_HEADER

@@ -62,7 +62,7 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF(void)
+  FT_CALLBACK_DEF( void )
   ftc_glyph_image_node_destroy( FTC_GlyphImage  node,
                                 FTC_GlyphSet    gset )
   {
@@ -74,7 +74,7 @@
   }
 
 
-  FT_CALLBACK_DEF(FT_Error)
+  FT_CALLBACK_DEF( FT_Error )
   ftc_glyph_image_node_new( FTC_GlyphSet     gset,
                             FT_UInt          glyph_index,
                             FTC_GlyphImage  *anode )
@@ -161,7 +161,7 @@
   /* this function is important because it is both part of */
   /* an FTC_GlyphSet_Class and an FTC_CacheNode_Class      */
   /*                                                       */
-  FT_CALLBACK_DEF(FT_ULong)
+  FT_CALLBACK_DEF( FT_ULong )
   ftc_glyph_image_node_size( FTC_GlyphImage  node )
   {
     FT_ULong  size  = 0;
@@ -212,7 +212,7 @@
   /*************************************************************************/
 
 
-  FT_CALLBACK_DEF(FT_Error)
+  FT_CALLBACK_DEF( FT_Error )
   ftc_image_set_init( FTC_ImageSet     iset,
                       FTC_Image_Desc*  type )
   {
@@ -221,7 +221,7 @@
   }
 
 
-  FT_CALLBACK_DEF(FT_Bool)
+  FT_CALLBACK_DEF( FT_Bool )
   ftc_image_set_compare( FTC_ImageSet     iset,
                          FTC_Image_Desc*  type )
   {
@@ -265,8 +265,9 @@
   };
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_New( FTC_Manager       manager,
-                                                  FTC_Image_Cache  *acache )
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Image_Cache_New( FTC_Manager       manager,
+                       FTC_Image_Cache  *acache )
   {
     return FTC_Manager_Register_Cache(
              manager,
@@ -275,10 +276,11 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
-                                                     FTC_Image_Desc*  desc,
-                                                     FT_UInt          gindex,
-                                                     FT_Glyph        *aglyph )
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
+                          FTC_Image_Desc*  desc,
+                          FT_UInt          gindex,
+                          FT_Glyph        *aglyph )
   {
     FT_Error       error;
     FTC_GlyphNode  node;

@@ -68,7 +68,7 @@
   /* <Return>                                                              */
   /*    The address of newly allocated block.                              */
   /*                                                                       */
-  FT_CALLBACK_DEF(void*)
+  FT_CALLBACK_DEF( void* )
   ft_alloc( FT_Memory  memory,
             long       size )
   {
@@ -98,7 +98,7 @@
   /* <Return>                                                              */
   /*    The address of the reallocated memory block.                       */
   /*                                                                       */
-  FT_CALLBACK_DEF(void*)
+  FT_CALLBACK_DEF( void* )
   ft_realloc( FT_Memory  memory,
               long       cur_size,
               long       new_size,
@@ -124,7 +124,7 @@
   /*                                                                       */
   /*    block   :: The address of block in memory to be freed.             */
   /*                                                                       */
-  FT_CALLBACK_DEF(void)
+  FT_CALLBACK_DEF( void )
   ft_free( FT_Memory  memory,
            void*      block )
   {
@@ -166,7 +166,7 @@
   /* <Input>                                                               */
   /*    stream :: A pointer to the stream object.                          */
   /*                                                                       */
-  FT_CALLBACK_DEF(void)
+  FT_CALLBACK_DEF( void )
   ft_close_stream( FT_Stream  stream )
   {
     fclose( STREAM_FILE( stream ) );
@@ -197,7 +197,7 @@
   /* <Return>                                                              */
   /*    The number of bytes actually read.                                 */
   /*                                                                       */
-  FT_CALLBACK_DEF(unsigned long)
+  FT_CALLBACK_DEF( unsigned long )
   ft_io_stream( FT_Stream       stream,
                 unsigned long   offset,
                 unsigned char*  buffer,
@@ -216,8 +216,9 @@
 
   /* documentation is in ftobjs.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_New_Stream( const char*  filepathname,
-                                            FT_Stream    astream )
+  FT_EXPORT_DEF( FT_Error )
+  FT_New_Stream( const char*  filepathname,
+                 FT_Stream    astream )
   {
     FILE*  file;
 
@@ -255,7 +256,8 @@
 
   /* documentation is in ftobjs.h */
 
-  FT_EXPORT_DEF( FT_Memory )  FT_New_Memory( void )
+  FT_EXPORT_DEF( FT_Memory )
+  FT_New_Memory( void )
   {
     FT_Memory  memory;
 
@@ -275,7 +277,8 @@
 
   /* documentation is in ftobjs.h */
 
-  FT_EXPORT_DEF( void )  FT_Done_Memory( FT_Memory  memory )
+  FT_EXPORT_DEF( void )
+  FT_Done_Memory( FT_Memory  memory )
   {
     memory->free( memory, memory );
   }

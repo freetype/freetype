@@ -25,10 +25,10 @@
 #include "ftcerror.h"
 
 
-  static
-  void  lru_build_free_list( FT_LruNode  nodes,
-                             FT_UInt     count,
-                             FT_List     free_list )
+  static void
+  lru_build_free_list( FT_LruNode  nodes,
+                       FT_UInt     count,
+                       FT_List     free_list )
   {
     FT_LruNode  node  = nodes;
     FT_LruNode  limit = node + count;
@@ -40,12 +40,13 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FT_Lru_New( const FT_Lru_Class*  clazz,
-                                         FT_UInt              max_elements,
-                                         FT_Pointer           user_data,
-                                         FT_Memory            memory,
-                                         FT_Bool              pre_alloc,
-                                         FT_Lru              *anlru )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Lru_New( const FT_Lru_Class*  clazz,
+              FT_UInt              max_elements,
+              FT_Pointer           user_data,
+              FT_Memory            memory,
+              FT_Bool              pre_alloc,
+              FT_Lru              *anlru )
   {
     FT_Error  error;
     FT_Lru    lru;
@@ -84,7 +85,8 @@
   }
 
 
-  FT_EXPORT_DEF( void )  FT_Lru_Reset( FT_Lru  lru )
+  FT_EXPORT_DEF( void )
+  FT_Lru_Reset( FT_Lru  lru )
   {
     FT_ListNode    node;
     FT_Lru_Class*  clazz;
@@ -119,7 +121,8 @@
   }
 
 
-  FT_EXPORT_DEF( void )  FT_Lru_Done( FT_Lru  lru )
+  FT_EXPORT_DEF( void )
+  FT_Lru_Done( FT_Lru  lru )
   {
     FT_Memory  memory;
 
@@ -136,9 +139,10 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FT_Lru_Lookup_Node( FT_Lru       lru,
-                                                 FT_LruKey    key,
-                                                 FT_LruNode  *anode )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Lru_Lookup_Node( FT_Lru       lru,
+                      FT_LruKey    key,
+                      FT_LruNode  *anode )
   {
     FT_Error       error = 0;
     FT_ListNode    node;
@@ -262,9 +266,10 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FT_Lru_Lookup( FT_Lru       lru,
-                                            FT_LruKey    key,
-                                            FT_Pointer  *anobject )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Lru_Lookup( FT_Lru       lru,
+                 FT_LruKey    key,
+                 FT_Pointer  *anobject )
   {
     FT_Error    error;
     FT_LruNode  node;
@@ -284,8 +289,9 @@
   }
 
 
-  FT_EXPORT_DEF( void )  FT_Lru_Remove_Node( FT_Lru      lru,
-                                             FT_LruNode  node )
+  FT_EXPORT_DEF( void )
+  FT_Lru_Remove_Node( FT_Lru      lru,
+                      FT_LruNode  node )
   {
     if ( !lru || !node )
       return;
@@ -310,9 +316,10 @@
   }
 
 
-  FT_EXPORT_DEF( void )  FT_Lru_Remove_Selection( FT_Lru           lru,
-                                                  FT_Lru_Selector  selector,
-                                                  FT_Pointer       data )
+  FT_EXPORT_DEF( void )
+  FT_Lru_Remove_Selection( FT_Lru           lru,
+                           FT_Lru_Selector  selector,
+                           FT_Pointer       data )
   {
     if ( !lru || !selector )
       return;

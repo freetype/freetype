@@ -39,9 +39,9 @@
 
 
   /* simple insertion sort */
-  static
-  void  sort_values( FT_Int   count,
-                     FT_Pos*  table )
+  static void
+  sort_values( FT_Int   count,
+               FT_Pos*  table )
   {
     FT_Int  i, j, swap;
 
@@ -61,8 +61,8 @@
   }
 
 
-  static
-  FT_Error  ah_hinter_compute_blues( AH_Hinter*  hinter )
+  static FT_Error
+  ah_hinter_compute_blues( AH_Hinter*  hinter )
   {
     AH_Blue       blue;
     AH_Globals*   globals = &hinter->globals->design;
@@ -285,8 +285,8 @@
   }
 
 
-  static
-  FT_Error  ah_hinter_compute_widths( AH_Hinter*  hinter )
+  static FT_Error
+  ah_hinter_compute_widths( AH_Hinter*  hinter )
   {
     /* scan the array of segments in each direction */
     AH_Outline*  outline = hinter->glyph;
@@ -384,8 +384,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  ah_hinter_compute_globals( AH_Hinter*  hinter )
+  FT_LOCAL_DEF FT_Error
+  ah_hinter_compute_globals( AH_Hinter*  hinter )
   {
     return ah_hinter_compute_widths( hinter ) ||
            ah_hinter_compute_blues ( hinter );

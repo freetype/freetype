@@ -33,8 +33,9 @@
 
   /* documentation is in ftmm.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Get_Multi_Master( FT_Face           face,
-                                                  FT_Multi_Master  *amaster )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_Multi_Master( FT_Face           face,
+                       FT_Multi_Master  *amaster )
   {
     FT_Error  error;
 
@@ -62,10 +63,10 @@
 
   /* documentation is in ftmm.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Set_MM_Design_Coordinates(
-                               FT_Face   face,
-                               FT_UInt   num_coords,
-                               FT_Long*  coords )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Set_MM_Design_Coordinates( FT_Face   face,
+                                FT_UInt   num_coords,
+                                FT_Long*  coords )
   {
     FT_Error  error;
 
@@ -93,8 +94,8 @@
 
   /* documentation is in ftmm.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Set_MM_Blend_Coordinates(
-                               FT_Face    face,
+  FT_EXPORT_DEF( FT_Error )
+  FT_Set_MM_Blend_Coordinates( FT_Face    face,
                                FT_UInt    num_coords,
                                FT_Fixed*  coords )
   {

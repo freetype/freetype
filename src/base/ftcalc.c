@@ -74,7 +74,8 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Fixed )  FT_RoundFix( FT_Fixed  a )
+  FT_EXPORT_DEF( FT_Fixed )
+  FT_RoundFix( FT_Fixed  a )
   {
     return ( a >= 0 ) ?   ( a + 0x8000L ) & -0x10000L
                       : -((-a + 0x8000L ) & -0x10000L );
@@ -83,7 +84,8 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Fixed )  FT_CeilFix( FT_Fixed  a )
+  FT_EXPORT_DEF( FT_Fixed )
+  FT_CeilFix( FT_Fixed  a )
   {
     return ( a >= 0 ) ?   ( a + 0xFFFFL ) & -0x10000L
                       : -((-a + 0xFFFFL ) & -0x10000L );
@@ -92,7 +94,8 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Fixed )  FT_FloorFix( FT_Fixed  a )
+  FT_EXPORT_DEF( FT_Fixed )
+  FT_FloorFix( FT_Fixed  a )
   {
     return ( a >= 0 ) ?   a & -0x10000L
                       : -((-a) & -0x10000L );
@@ -122,7 +125,8 @@
 
   /* documentation is in ftcalc.h */
 
-  FT_EXPORT_DEF( FT_Int32 )  FT_Sqrt32( FT_Int32  x )
+  FT_EXPORT_DEF( FT_Int32 )
+  FT_Sqrt32( FT_Int32  x )
   {
     FT_ULong  val, root, newroot, mask;
 
@@ -155,9 +159,10 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Long )  FT_MulDiv( FT_Long  a,
-                                       FT_Long  b,
-                                       FT_Long  c )
+  FT_EXPORT_DEF( FT_Long )
+  FT_MulDiv( FT_Long  a,
+             FT_Long  b,
+             FT_Long  c )
   {
     FT_Int   s;
     FT_Long  d;
@@ -177,8 +182,9 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Long )  FT_MulFix( FT_Long  a,
-                                       FT_Long  b )
+  FT_EXPORT_DEF( FT_Long )
+  FT_MulFix( FT_Long  a,
+             FT_Long  b )
   {
     FT_Int   s = 1;
     FT_Long  c;
@@ -194,8 +200,9 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Long )  FT_DivFix( FT_Long  a,
-                                       FT_Long  b )
+  FT_EXPORT_DEF( FT_Long )
+  FT_DivFix( FT_Long  a,
+             FT_Long  b )
   {
     FT_Int32   s;
     FT_UInt32  q;
@@ -219,8 +226,8 @@
 
   /* a helper function for FT_Sqrt64() */
 
-  static
-  int  ft_order64( FT_Int64  z )
+  static int
+  ft_order64( FT_Int64  z )
   {
     int  j = 0;
 
@@ -236,7 +243,8 @@
 
   /* documentation is in ftcalc.h */
 
-  FT_EXPORT_DEF( FT_Int32 )  FT_Sqrt64( FT_Int64  l )
+  FT_EXPORT_DEF( FT_Int32 )
+  FT_Sqrt64( FT_Int64  l )
   {
     FT_Int64  r, s;
 
@@ -330,9 +338,10 @@
 
   /* documentation is in ftcalc.h */
 
-  FT_EXPORT_DEF( void )  FT_Add64( FT_Int64*  x,
-                                   FT_Int64*  y,
-                                   FT_Int64  *z )
+  FT_EXPORT_DEF( void )
+  FT_Add64( FT_Int64*  x,
+            FT_Int64*  y,
+            FT_Int64  *z )
   {
     register FT_UInt32  lo, hi, max;
 
@@ -348,9 +357,10 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Long )  FT_MulDiv( FT_Long  a,
-                                       FT_Long  b,
-                                       FT_Long  c )
+  FT_EXPORT_DEF( FT_Long )
+  FT_MulDiv( FT_Long  a,
+             FT_Long  b,
+             FT_Long  c )
   {
     long  s;
 
@@ -387,8 +397,9 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Long )  FT_MulFix( FT_Long  a,
-                                       FT_Long  b )
+  FT_EXPORT_DEF( FT_Long )
+  FT_MulFix( FT_Long  a,
+             FT_Long  b )
   {
     FT_Long   s;
     FT_ULong  ua, ub;
@@ -422,8 +433,9 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Long )  FT_DivFix( FT_Long  a,
-                                       FT_Long  b )
+  FT_EXPORT_DEF( FT_Long )
+  FT_DivFix( FT_Long  a,
+             FT_Long  b )
   {
     FT_Int32   s;
     FT_UInt32  q;
@@ -461,9 +473,10 @@
 
   /* documentation is in ftcalc.h */
 
-  FT_EXPORT_DEF( void )  FT_MulTo64( FT_Int32   x,
-                                     FT_Int32   y,
-                                     FT_Int64  *z )
+  FT_EXPORT_DEF( void )
+  FT_MulTo64( FT_Int32   x,
+              FT_Int32   y,
+              FT_Int64  *z )
   {
     FT_Int32  s;
 
@@ -483,8 +496,9 @@
 
   /* documentation is in ftcalc.h */
 
-  FT_EXPORT_DEF( FT_Int32 )  FT_Div64by32( FT_Int64*  x,
-                                           FT_Int32   y )
+  FT_EXPORT_DEF( FT_Int32 )
+  FT_Div64by32( FT_Int64*  x,
+                FT_Int32   y )
   {
     FT_Int32   s;
     FT_UInt32  q;
@@ -520,10 +534,10 @@
 
   /* two helper functions for FT_Sqrt64() */
 
-  static
-  void  FT_Sub64( FT_Int64*  x,
-                  FT_Int64*  y,
-                  FT_Int64*  z )
+  static void
+  FT_Sub64( FT_Int64*  x,
+            FT_Int64*  y,
+            FT_Int64*  z )
   {
     register FT_UInt32  lo, hi;
 
@@ -536,8 +550,8 @@
   }
 
 
-  static
-  int  ft_order64( FT_Int64*  z )
+  static int
+  ft_order64( FT_Int64*  z )
   {
     FT_UInt32  i;
     int        j;
@@ -562,7 +576,8 @@
 
   /* documentation is in ftcalc.h */
 
-  FT_EXPORT_DEF( FT_Int32 )  FT_Sqrt64( FT_Int64*  l )
+  FT_EXPORT_DEF( FT_Int32 )
+  FT_Sqrt64( FT_Int64*  l )
   {
     FT_Int64  l2;
     FT_Int32  r, s;
@@ -598,7 +613,8 @@
 
   /* a not-so-fast but working 16.16 fixed point square root function */
 
-  FT_EXPORT_DEF( FT_Int32 )  FT_SqrtFixed( FT_Int32  x )
+  FT_EXPORT_DEF( FT_Int32 )
+  FT_SqrtFixed( FT_Int32  x )
   {
     FT_UInt32  root, rem_hi, rem_lo, test_div;
     FT_Int     count;

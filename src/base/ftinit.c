@@ -67,8 +67,8 @@
 #undef  FT_USE_MODULE
 #define FT_USE_MODULE( x )  (const FT_Module_Class*)&x,
 
-static
-const FT_Module_Class*  const ft_default_modules[] =
+  static
+  const FT_Module_Class*  const ft_default_modules[] =
   {
 #include FT_CONFIG_MODULES_H
     0
@@ -77,7 +77,8 @@ const FT_Module_Class*  const ft_default_modules[] =
 
   /* documentation is in ftmodule.h */
 
-  FT_EXPORT_DEF( void )  FT_Add_Default_Modules( FT_Library  library )
+  FT_EXPORT_DEF( void )
+  FT_Add_Default_Modules( FT_Library  library )
   {
     FT_Error                       error;
     const FT_Module_Class* const*  cur;
@@ -102,7 +103,8 @@ const FT_Module_Class*  const ft_default_modules[] =
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Init_FreeType( FT_Library  *alibrary )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Init_FreeType( FT_Library  *alibrary )
   {
     FT_Error   error;
     FT_Memory  memory;
@@ -131,7 +133,8 @@ const FT_Module_Class*  const ft_default_modules[] =
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Done_FreeType( FT_Library  library )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Done_FreeType( FT_Library  library )
   {
     if ( library )
     {
