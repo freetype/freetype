@@ -496,6 +496,7 @@ FT_BEGIN_HEADER
     FT_Bool           do_vert_hints;     /* disable Y hinting            */
     FT_Bool           do_horz_snapping;  /* disable X stem size snapping */
     FT_Bool           do_vert_snapping;  /* disable Y stem size snapping */
+    FT_Bool           do_stem_adjust;    /* disable light stem snapping  */
 
   } AH_HinterRec, *AH_Hinter;
 

@@ -516,17 +516,20 @@
           hint->cur_pos = pos;
           hint->cur_len = fit_len;
 
-          if ( len <= 64 )
+          if ( glyph->do_stem_adjust )
           {
-            /* the stem is less than one pixel, we will center it */
-            /* around the nearest pixel center                    */
-            /*                                                    */
-            pos = ( pos + ( (len >> 1) & -64 ) );
-            len = 64;
-          }
-          else
-          {
-            len = psh3_dimension_quantize_len( dim, len, 0 );
+            if ( len <= 64 )
+            {
+              /* the stem is less than one pixel, we will center it */
+              /* around the nearest pixel center                    */
+              /*                                                    */
+              pos = ( pos + ( (len >> 1) & -64 ) );
+              len = 64;
+            }
+            else
+            {
+              len = psh3_dimension_quantize_len( dim, len, 0 );
+            }
           }
 
           /* now that we have a good hinted stem width, try to position */
@@ -1719,6 +1722,8 @@
 
     glyph->do_vert_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_MONO  ||
                                        hint_mode == FT_RENDER_MODE_LCD_V );
+
+    glyph->do_stem_adjust   = FT_BOOL( hint_mode != FT_RENDER_MODE_LIGHT );
 
     for ( dimension = 0; dimension < 2; dimension++ )
     {
