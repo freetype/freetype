@@ -1,3 +1,15 @@
+2005-03-09  David Turner  <david@freetype.org>
+
+  * src/tools/glnames.py: rewrote the generator for the 'pstables.h'
+    header, which contains various constant tables related to glyph
+    names. It now uses a different storage scheme that saves about 20
+    Kb and closes bug #12262
+
+  * src/psnames/pstables.h: re-generated header file
+
+  * src/psnames/psmodule.c: rewrote some parts to comply with recent
+    changes in 'pstables.h'
+
 2005-03-06  David Turner  <david@freetype.org>
 
 	* src/otvalid/otvgsub.c, src/otvalid/otvgpos.c: Make static tables
