@@ -63,8 +63,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  FT_Init_Extensions( FT_Driver  driver )
+  FT_LOCAL_DEF FT_Error
+  FT_Init_Extensions( FT_Driver  driver )
   {
     FT_Error                error;
     FT_Memory               memory;
@@ -99,8 +99,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  FT_Done_Extensions( FT_Driver  driver )
+  FT_LOCAL_DEF FT_Error
+  FT_Done_Extensions( FT_Driver  driver )
   {
     FT_Memory  memory = driver->root.memory;
 
@@ -112,9 +112,9 @@
 
   /* documentation is in ftextend.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Register_Extension(
-                               FT_Driver            driver,
-                               FT_Extension_Class*  clazz )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Register_Extension( FT_Driver            driver,
+                         FT_Extension_Class*  clazz )
   {
     FT_Extension_Registry*  registry;
 
@@ -153,10 +153,10 @@
 
   /* documentation is in ftextend.h */
 
-  FT_EXPORT_DEF( void* )  FT_Get_Extension(
-                            FT_Face      face,
-                            const char*  extension_id,
-                            void**       extension_interface )
+  FT_EXPORT_DEF( void* )
+  FT_Get_Extension( FT_Face      face,
+                    const char*  extension_id,
+                    void**       extension_interface )
   {
     FT_Extension_Registry*  registry;
 
@@ -209,8 +209,8 @@
   /* <Note>                                                                */
   /*    Called by the face object destructor.                              */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  FT_Destroy_Extensions( FT_Face  face )
+  FT_LOCAL_DEF FT_Error
+  FT_Destroy_Extensions( FT_Face  face )
   {
     FT_Extension_Registry*  registry;
     FT_Memory               memory;
@@ -257,8 +257,8 @@
   /* <Note>                                                                */
   /*    Called by the face object constructor.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  FT_Create_Extensions( FT_Face  face )
+  FT_LOCAL_DEF FT_Error
+  FT_Create_Extensions( FT_Face  face )
   {
     FT_Extension_Registry*  registry;
     FT_Memory               memory;

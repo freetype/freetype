@@ -41,7 +41,8 @@
 #ifdef FT_CONFIG_HAS_INT64
 
   /* multiply a given value by the CORDIC shrink factor */
-  static FT_Fixed  ft_trig_downscale( FT_Fixed  val )
+  static FT_Fixed
+  ft_trig_downscale( FT_Fixed  val )
   {
     FT_Fixed  s;
     FT_Int64  v;
@@ -59,7 +60,8 @@
 #else /* !FT_CONFIG_HAS_INT64 */
 
   /* multiply a given value by the CORDIC shrink factor */
-  static FT_Fixed  ft_trig_downscale( FT_Fixed  val )
+  static FT_Fixed
+  ft_trig_downscale( FT_Fixed  val )
   {
     FT_Fixed   s;
     FT_UInt32  v1, v2, k1, k2, hi, lo1, lo2, lo3;
@@ -93,7 +95,8 @@
 #endif /* !FT_CONFIG_HAS_INT64 */
 
 
-  static FT_Int  ft_trig_prenorm( FT_Vector*  vec )
+  static FT_Int
+  ft_trig_prenorm( FT_Vector*  vec )
   {
     FT_Fixed  x, y, z;
     FT_Int    shift;
@@ -132,8 +135,9 @@
   }
     
 
-  static void  ft_trig_pseudo_rotate( FT_Vector*  vec,
-                                      FT_Angle    theta )
+  static void
+  ft_trig_pseudo_rotate( FT_Vector*  vec,
+                         FT_Angle    theta )
   {
     FT_Int           i;
     FT_Fixed         x, y, xtemp;
@@ -201,7 +205,8 @@
   }
 
 
-  static void  ft_trig_pseudo_polarize( FT_Vector*  vec )
+  static void
+  ft_trig_pseudo_polarize( FT_Vector*  vec )
   {
     FT_Fixed         theta;
     FT_Fixed         yi, i;
@@ -277,7 +282,8 @@
 
   /* documentation is in fttrigon.h */
 
-  FT_EXPORT_DEF( FT_Fixed )  FT_Cos( FT_Angle  angle )
+  FT_EXPORT_DEF( FT_Fixed )
+  FT_Cos( FT_Angle  angle )
   {
     FT_Vector  v;
     
@@ -292,7 +298,8 @@
 
   /* documentation is in fttrigon.h */
 
-  FT_EXPORT_DEF( FT_Fixed )  FT_Sin( FT_Angle  angle )
+  FT_EXPORT_DEF( FT_Fixed )
+  FT_Sin( FT_Angle  angle )
   {
     return FT_Cos( FT_ANGLE_PI2 - angle );
   }
@@ -300,7 +307,8 @@
 
   /* documentation is in fttrigon.h */
 
-  FT_EXPORT_DEF( FT_Fixed )  FT_Tan( FT_Angle  angle )
+  FT_EXPORT_DEF( FT_Fixed )
+  FT_Tan( FT_Angle  angle )
   {
     FT_Vector  v;
     
@@ -315,8 +323,9 @@
 
   /* documentation is in fttrigon.h */
 
-  FT_EXPORT_DEF( FT_Angle )  FT_Atan2( FT_Fixed  dx,
-                                       FT_Fixed  dy )
+  FT_EXPORT_DEF( FT_Angle )
+  FT_Atan2( FT_Fixed  dx,
+            FT_Fixed  dy )
   {
     FT_Vector  v;
     
@@ -335,8 +344,9 @@
 
   /* documentation is in fttrigon.h */
 
-  FT_EXPORT_DEF( void )  FT_Vector_Unit( FT_Vector*  vec,
-                                         FT_Angle    angle )
+  FT_EXPORT_DEF( void )
+  FT_Vector_Unit( FT_Vector*  vec,
+                  FT_Angle    angle )
   {
     vec->x = FT_TRIG_COSCALE >> 2;
     vec->y = 0;
@@ -348,8 +358,9 @@
 
   /* documentation is in fttrigon.h */
 
-  FT_EXPORT_DEF( void )  FT_Vector_Rotate( FT_Vector*  vec,
-                                           FT_Angle    angle )
+  FT_EXPORT_DEF( void )
+  FT_Vector_Rotate( FT_Vector*  vec,
+                    FT_Angle    angle )
   {
     FT_Int     shift;
     FT_Vector  v;
@@ -382,7 +393,8 @@
 
   /* documentation is in fttrigon.h */
 
-  FT_EXPORT_DEF( FT_Fixed )  FT_Vector_Length( FT_Vector*  vec )
+  FT_EXPORT_DEF( FT_Fixed )
+  FT_Vector_Length( FT_Vector*  vec )
   {
     FT_Int     shift;
     FT_Vector  v;
@@ -411,9 +423,10 @@
 
   /* documentation is in fttrigon.h */
 
-  FT_EXPORT_DEF( void )  FT_Vector_Polarize( FT_Vector*  vec,
-                                             FT_Fixed   *length,
-                                             FT_Angle   *angle )
+  FT_EXPORT_DEF( void )
+  FT_Vector_Polarize( FT_Vector*  vec,
+                      FT_Fixed   *length,
+                      FT_Angle   *angle )
   {
     FT_Int     shift;
     FT_Vector  v;

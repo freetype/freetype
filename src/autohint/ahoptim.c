@@ -65,8 +65,8 @@
 
 #define FLOAT( x )  ( (float)( (x) / 64.0 ) )
 
-  static
-  void  optim_log( const char*  fmt, ... )
+  static void
+  optim_log( const char*  fmt, ... )
   {
     va_list  ap;
 
@@ -77,8 +77,8 @@
   }
 
 
-  static
-  void  AH_Dump_Stems( AH_Optimizer*  optimizer )
+  static void
+  AH_Dump_Stems( AH_Optimizer*  optimizer )
   {
     int       n;
     AH_Stem*  stem;
@@ -98,8 +98,8 @@
   }
 
 
-  static
-  void  AH_Dump_Stems2( AH_Optimizer*  optimizer )
+  static void
+  AH_Dump_Stems2( AH_Optimizer*  optimizer )
   {
     int       n;
     AH_Stem*  stem;
@@ -117,8 +117,8 @@
   }
 
 
-  static
-  void  AH_Dump_Springs( AH_Optimizer*  optimizer )
+  static void
+  AH_Dump_Springs( AH_Optimizer*  optimizer )
   {
     int  n;
     AH_Spring*  spring;
@@ -156,9 +156,9 @@
   /*************************************************************************/
 
 
-  static
-  int  valid_stem_segments( AH_Segment*  seg1,
-                            AH_Segment*  seg2 )
+  static int
+  valid_stem_segments( AH_Segment*  seg1,
+                       AH_Segment*  seg2 )
   {
     return seg1->serif == 0                   &&
            seg2                               &&
@@ -170,8 +170,8 @@
 
 
   /* compute all stems in an outline */
-  static
-  int  optim_compute_stems( AH_Optimizer*  optimizer )
+  static int
+  optim_compute_stems( AH_Optimizer*  optimizer )
   {
     AH_Outline*  outline = optimizer->outline;
     FT_Fixed     scale;
@@ -332,9 +332,9 @@
 
 
   /* returns the spring area between two stems, 0 if none */
-  static
-  FT_Pos  stem_spring_area( AH_Stem*  stem1,
-                            AH_Stem*  stem2 )
+  static FT_Pos
+  stem_spring_area( AH_Stem*  stem1,
+                    AH_Stem*  stem2 )
   {
     FT_Pos  area1 = stem1->max_coord - stem1->min_coord;
     FT_Pos  area2 = stem2->max_coord - stem2->min_coord;
@@ -362,8 +362,8 @@
 
 
   /* compute all springs in an outline */
-  static
-  int  optim_compute_springs( AH_Optimizer*  optimizer )
+  static int
+  optim_compute_springs( AH_Optimizer*  optimizer )
   {
     /* basically, a spring exists between two stems if most of their */
     /* surface is aligned                                            */
@@ -469,8 +469,8 @@
 #ifndef AH_BRUTE_FORCE
 
   /* compute all spring tensions */
-  static
-  void  optim_compute_tensions( AH_Optimizer*  optimizer )
+  static void
+  optim_compute_tensions( AH_Optimizer*  optimizer )
   {
     AH_Spring*  spring = optimizer->springs;
     AH_Spring*  limit  = spring + optimizer->num_springs;
@@ -527,8 +527,8 @@
 
 
   /* compute all stem movements -- returns 0 if nothing moved */
-  static
-  int  optim_compute_stem_movements( AH_Optimizer*  optimizer )
+  static int
+  optim_compute_stem_movements( AH_Optimizer*  optimizer )
   {
     AH_Stem*  stems = optimizer->stems;
     AH_Stem*  limit = stems + optimizer->num_stems;
@@ -588,8 +588,8 @@
 
 
   /* compute current global distortion from springs */
-  static
-  FT_Pos  optim_compute_distortion( AH_Optimizer*  optimizer )
+  static FT_Pos
+  optim_compute_distortion( AH_Optimizer*  optimizer )
   {
     AH_Spring*  spring = optimizer->springs;
     AH_Spring*  limit  = spring + optimizer->num_springs;
@@ -615,8 +615,8 @@
 
 
   /* record stems configuration in `best of' history */
-  static
-  void  optim_record_configuration( AH_Optimizer*  optimizer )
+  static void
+  optim_record_configuration( AH_Optimizer*  optimizer )
   {
     FT_Pos             distortion;
     AH_Configuration*  configs = optimizer->configs;
@@ -671,8 +671,8 @@
 #ifdef AH_BRUTE_FORCE
 
   /* optimize outline in a single direction */
-  static
-  void  optim_compute( AH_Optimizer*  optimizer )
+  static void
+  optim_compute( AH_Optimizer*  optimizer )
   {
     int       n;
     FT_Bool   moved;
@@ -729,8 +729,8 @@
 #else /* AH_BRUTE_FORCE */
 
   /* optimize outline in a single direction */
-  static
-  void  optim_compute( AH_Optimizer*  optimizer )
+  static void
+  optim_compute( AH_Optimizer*  optimizer )
   {
     int  n, counter, counter2;
 
@@ -788,7 +788,8 @@
 
 
   /* releases the optimization data */
-  void AH_Optimizer_Done( AH_Optimizer*  optimizer )
+  void
+  AH_Optimizer_Done( AH_Optimizer*  optimizer )
   {
     if ( optimizer )
     {
@@ -805,9 +806,10 @@
 
 
   /* loads the outline into the optimizer */
-  int  AH_Optimizer_Init( AH_Optimizer*  optimizer,
-                          AH_Outline*    outline,
-                          FT_Memory      memory )
+  int
+  AH_Optimizer_Init( AH_Optimizer*  optimizer,
+                     AH_Outline*    outline,
+                     FT_Memory      memory )
   {
     FT_Error  error;
 
@@ -851,7 +853,8 @@
 
 
   /* compute optimal outline */
-  void  AH_Optimizer_Compute( AH_Optimizer*  optimizer )
+  void
+  AH_Optimizer_Compute( AH_Optimizer*  optimizer )
   {
     optimizer->num_stems   = optimizer->num_hstems;
     optimizer->stems       = optimizer->horz_stems;

@@ -1617,19 +1617,20 @@
         face->kern_table_index = n;
         
         /* ensure that the kerning pair table is sorted (yes, some */
-        /* fonts have unsorted tables !!)                          */
+        /* fonts have unsorted tables!)                            */
         {
           FT_UInt          i;
-          TT_Kern_0_Pair*  pair;
+          TT_Kern_0_Pair*  pair0;
           
-          pair = face->kern_pairs;
 
-          for ( i=1; i < num_pairs; i++, pair++ )
+          pair0 = face->kern_pairs;
+
+          for ( i = 1; i < num_pairs; i++, pair0++ )
           {
-            if ( tt_kern_pair_compare( pair, pair+1 ) != -1 )
+            if ( tt_kern_pair_compare( pair0, pair0 + 1 ) != -1 )
             {
               qsort( (void*)face->kern_pairs, (int)num_pairs,
-                     sizeof(TT_Kern_0_Pair), tt_kern_pair_compare );
+                     sizeof ( TT_Kern_0_Pair ), tt_kern_pair_compare );
               break;
             }
           }
@@ -1651,11 +1652,13 @@
     return error;
   }
 
+
 #undef  TT_KERN_INDEX
-#define TT_KERN_INDEX(g1,g2)   (((FT_ULong)g1 << 16) | g2)
+#define TT_KERN_INDEX( g1, g2 )  ( ( (FT_ULong)g1 << 16 ) | g2 )
 
   FT_CALLBACK_DEF(int)
-  tt_kern_pair_compare( const void* a, const void* b )
+  tt_kern_pair_compare( const void*  a,
+                        const void*  b )
   {
     TT_Kern_0_Pair*  pair1 = (TT_Kern_0_Pair*)a;
     TT_Kern_0_Pair*  pair2 = (TT_Kern_0_Pair*)b;
@@ -1663,11 +1666,13 @@
     FT_ULong  index1 = TT_KERN_INDEX( pair1->left, pair1->right );
     FT_ULong  index2 = TT_KERN_INDEX( pair2->left, pair2->right );
 
+
     return ( index1 < index2 ? -1 :
            ( index1 > index2 ?  1 : 0 ));
   }
 
 #undef TT_KERN_INDEX
+
 
   /*************************************************************************/
   /*                                                                       */

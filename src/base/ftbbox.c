@@ -59,9 +59,9 @@
   /* <Return>                                                              */
   /*    Always 0.  Needed for the interface only.                          */
   /*                                                                       */
-  static
-  int  BBox_Move_To( FT_Vector*  to,
-                     TBBox_Rec*  user )
+  static int
+  BBox_Move_To( FT_Vector*  to,
+                TBBox_Rec*  user )
   {
     user->last = *to;
 
@@ -95,9 +95,9 @@
   /*    min :: The address of the current minimum.                         */
   /*    max :: The address of the current maximum.                         */
   /*                                                                       */
-  static
-  void  BBox_Conic_Check( FT_Pos   y1,
-                          FT_Pos   y2,
+  static void
+  BBox_Conic_Check( FT_Pos   y1,
+                    FT_Pos   y2,
                           FT_Pos   y3,
                           FT_Pos*  min,
                           FT_Pos*  max )
@@ -156,10 +156,10 @@
   /*    In the case of a non-monotonous arc, we compute directly the       */
   /*    extremum coordinates, as it is sufficiently fast.                  */
   /*                                                                       */
-  static
-  int  BBox_Conic_To( FT_Vector*  control,
-                      FT_Vector*  to,
-                      TBBox_Rec*  user )
+  static int
+  BBox_Conic_To( FT_Vector*  control,
+                 FT_Vector*  to,
+                 TBBox_Rec*  user )
   {
     /* we don't need to check `to' since it is always an `on' point, thus */
     /* within the bbox                                                    */
@@ -207,13 +207,13 @@
   /*    max :: The address of the current maximum.                         */
   /*                                                                       */
 #if 0
-  static
-  void  BBox_Cubic_Check( FT_Pos   p1,
-                          FT_Pos   p2,
-                          FT_Pos   p3,
-                          FT_Pos   p4,
-                          FT_Pos*  min,
-                          FT_Pos*  max )
+  static void
+  BBox_Cubic_Check( FT_Pos   p1,
+                    FT_Pos   p2,
+                    FT_Pos   p3,
+                    FT_Pos   p4,
+                    FT_Pos*  min,
+                    FT_Pos*  max )
   {
     FT_Pos  stack[32*3 + 1], *arc;
 
@@ -319,13 +319,13 @@
   }
 
 
-  static
-  void  BBox_Cubic_Check( FT_Pos   y1,
-                          FT_Pos   y2,
-                          FT_Pos   y3,
-                          FT_Pos   y4,
-                          FT_Pos*  min,
-                          FT_Pos*  max )
+  static void
+  BBox_Cubic_Check( FT_Pos   y1,
+                    FT_Pos   y2,
+                    FT_Pos   y3,
+                    FT_Pos   y4,
+                    FT_Pos*  min,
+                    FT_Pos*  max )
   {
     /* always compare first and last points */
     if      ( y1 < *min )  *min = y1;
@@ -519,11 +519,11 @@
   /*    In the case of a non-monotonous arc, we don't compute directly     */
   /*    extremum coordinates, we subdivise instead.                        */
   /*                                                                       */
-  static
-  int  BBox_Cubic_To( FT_Vector*  control1,
-                      FT_Vector*  control2,
-                      FT_Vector*  to,
-                      TBBox_Rec*  user )
+  static int
+  BBox_Cubic_To( FT_Vector*  control1,
+                 FT_Vector*  control2,
+                 FT_Vector*  to,
+                 TBBox_Rec*  user )
   {
     /* we don't need to check `to' since it is always an `on' point, thus */
     /* within the bbox                                                    */
@@ -556,8 +556,9 @@
 
   /* documentation is in ftbbox.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Outline_Get_BBox( FT_Outline*  outline,
-                                                  FT_BBox     *abbox )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Outline_Get_BBox( FT_Outline*  outline,
+                       FT_BBox     *abbox )
   {
     FT_BBox     cbox;
     FT_BBox     bbox;

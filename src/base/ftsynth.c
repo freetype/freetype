@@ -33,9 +33,10 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  FT_EXPORT_DEF( FT_Error )  FT_Outline_Oblique( FT_GlyphSlot  original,
-                                                 FT_Outline*   outline,
-                                                 FT_Pos*       advance )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Outline_Oblique( FT_GlyphSlot  original,
+                      FT_Outline*   outline,
+                      FT_Pos*       advance )
   {
     FT_Matrix  transform;
 
@@ -75,8 +76,8 @@
 
 #include <freetype/internal/ftcalc.h>
 
-  static
-  FT_Pos  ft_norm( FT_Vector*  vec )
+  static FT_Pos
+  ft_norm( FT_Vector*  vec )
   {
     FT_Int64  t1, t2;
 
@@ -90,8 +91,8 @@
 
 #else /* FT_CONFIG_OPTION_OLD_CALCS */
 
-  static
-  FT_Pos  ft_norm( FT_Vector*  vec )
+  static FT_Pos
+  ft_norm( FT_Vector*  vec )
   {
     FT_F26Dot6  u, v, d;
     FT_Int      shift;
@@ -163,9 +164,9 @@
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
-  static
-  int  ft_test_extrema( FT_Outline*  outline,
-                        int          n )
+  static int
+  ft_test_extrema( FT_Outline*  outline,
+                   int          n )
   {
     FT_Vector  *prev, *cur, *next;
     FT_Pos      product;
@@ -217,8 +218,8 @@
   /*                                                                       */
   /* The function returns either 1 or -1.                                  */
   /*                                                                       */
-  static
-  int  ft_get_orientation( FT_Outline*  outline )
+  static int
+  ft_get_orientation( FT_Outline*  outline )
   {
     FT_BBox  box;
     FT_BBox  indices;
@@ -291,9 +292,10 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FT_Outline_Embolden( FT_GlyphSlot original,
-                                                  FT_Outline*  outline,
-                                                  FT_Pos*      advance )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Outline_Embolden( FT_GlyphSlot original,
+                       FT_Outline*  outline,
+                       FT_Pos*      advance )
   {
     FT_Vector   u, v;
     FT_Vector*  points;

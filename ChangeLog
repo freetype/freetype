@@ -1,14 +1,22 @@
+	* Version 2.0.4 released.
+	=========================
+
+
 2001-06-27  David Turner <david@freetype.org>
 
-	* src/sfnt/ttload.c (TT_Load_Kern): the kern table loader now ensures
+	* builds/unix/ftconfig.in: Changed the definition of the
+	FT_CALLBACK_DEF macro.
+
+	* include/freetype/ftconfig.h, src/*/*.c: Changed the definition and
+	use of the FT_CALLBACK_DEF macro in order to support 16-bit
+	compilers.
+
+	* builds/unix/ftconfig.in: Changed the definition of the
+	FT_CALLBACK_DEF macro.
+
+	* src/sfnt/ttload.c (TT_Load_Kern): The kern table loader now ensures
 	that the kerning table is correctly sorted (some problem fonts don't
-	have a correct kern table !!)
-
-	* builds/unix/ftconfig.in: changed the definition of the
-	FT_CALLBACK_DEF macro
-
-	* include/freetype/ftconfig.h, src/*/*.c: changed the definition and
-	uses of the FT_CALLBACK_DEF macro in order to support 16-bit compilers
+	have a correct kern table).
 
 2001-06-26  Wolfgang Domröse  <porthos.domroese@harz.de>
 

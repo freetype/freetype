@@ -43,10 +43,10 @@
 
   /* snap a given width in scaled coordinates to one of the */
   /* current standard widths                                */
-  static
-  FT_Pos  ah_snap_width( FT_Pos*  widths,
-                         FT_Int   count,
-                         FT_Pos   width )
+  static FT_Pos
+  ah_snap_width( FT_Pos*  widths,
+                 FT_Int   count,
+                 FT_Pos   width )
   {
     int     n;
     FT_Pos  best      = 64 + 32 + 2;
@@ -88,11 +88,11 @@
 
 
   /* align one stem edge relative to the previous stem edge */
-  static
-  void  ah_align_linked_edge( AH_Hinter*  hinter,
-                              AH_Edge*    base_edge,
-                              AH_Edge*    stem_edge,
-                              int         vertical )
+  static void
+  ah_align_linked_edge( AH_Hinter*  hinter,
+                        AH_Edge*    base_edge,
+                        AH_Edge*    stem_edge,
+                        int         vertical )
   {
     FT_Pos       dist    = stem_edge->opos - base_edge->opos;
     AH_Globals*  globals = &hinter->globals->scaled;
@@ -146,10 +146,10 @@
   }
 
 
-  static
-  void  ah_align_serif_edge( AH_Hinter*  hinter,
-                             AH_Edge*    base,
-                             AH_Edge*    serif )
+  static void
+  ah_align_serif_edge( AH_Hinter*  hinter,
+                       AH_Edge*    base,
+                       AH_Edge*    serif )
   {
     FT_Pos  dist;
     FT_Pos  sign = 1;
@@ -190,8 +190,8 @@
 
 
   /* Another alternative edge hinting algorithm */
-  static
-  void  ah_hint_edges_3( AH_Hinter*  hinter )
+  static void
+  ah_hint_edges_3( AH_Hinter*  hinter )
   {
     AH_Edge*     edges;
     AH_Edge*     edge_limit;
@@ -372,10 +372,10 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  ah_hinter_hint_edges( AH_Hinter*  hinter,
-                              FT_Bool     no_horz_edges,
-                              FT_Bool     no_vert_edges )
+  FT_LOCAL_DEF void
+  ah_hinter_hint_edges( AH_Hinter*  hinter,
+                        FT_Bool     no_horz_edges,
+                        FT_Bool     no_vert_edges )
   {
     hinter->disable_horz_edges = no_horz_edges;
     hinter->disable_vert_edges = no_vert_edges;
@@ -415,8 +415,8 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  static
-  void  ah_hinter_align_edge_points( AH_Hinter*  hinter )
+  static void
+  ah_hinter_align_edge_points( AH_Hinter*  hinter )
   {
     AH_Outline*  outline = hinter->glyph;
     AH_Edge*     edges;
@@ -476,8 +476,8 @@
 
 
   /* hint the strong points -- this is equivalent to the TrueType `IP' */
-  static
-  void  ah_hinter_align_strong_points( AH_Hinter*  hinter )
+  static void
+  ah_hinter_align_strong_points( AH_Hinter*  hinter )
   {
     AH_Outline*  outline = hinter->glyph;
     FT_Int       dimension;
@@ -605,10 +605,10 @@
 
 #ifndef AH_OPTION_NO_WEAK_INTERPOLATION
 
-  static
-  void  ah_iup_shift( AH_Point*  p1,
-                      AH_Point*  p2,
-                      AH_Point*  ref )
+  static void
+  ah_iup_shift( AH_Point*  p1,
+                AH_Point*  p2,
+                AH_Point*  ref )
   {
     AH_Point*  p;
     FT_Pos     delta = ref->u - ref->v;
@@ -622,11 +622,11 @@
   }
 
 
-  static
-  void  ah_iup_interp( AH_Point*  p1,
-                       AH_Point*  p2,
-                       AH_Point*  ref1,
-                       AH_Point*  ref2 )
+  static void
+  ah_iup_interp( AH_Point*  p1,
+                 AH_Point*  p2,
+                 AH_Point*  ref1,
+                 AH_Point*  ref2 )
   {
     AH_Point*  p;
     FT_Pos     u;
@@ -691,8 +691,8 @@
 
 
   /* interpolate weak points -- this is equivalent to the TrueType `IUP' */
-  static
-  void  ah_hinter_align_weak_points( AH_Hinter*  hinter )
+  static void
+  ah_hinter_align_weak_points( AH_Hinter*  hinter )
   {
     AH_Outline*  outline = hinter->glyph;
     FT_Int       dimension;
@@ -799,8 +799,8 @@
 #endif /* !AH_OPTION_NO_WEAK_INTERPOLATION */
 
 
-  FT_LOCAL_DEF
-  void  ah_hinter_align_points( AH_Hinter*  hinter )
+  FT_LOCAL_DEF void
+  ah_hinter_align_points( AH_Hinter*  hinter )
   {
     ah_hinter_align_edge_points( hinter );
 
@@ -826,10 +826,10 @@
 
 
   /* scale and fit the global metrics */
-  static
-  void  ah_hinter_scale_globals( AH_Hinter*  hinter,
-                                 FT_Fixed    x_scale,
-                                 FT_Fixed    y_scale )
+  static void
+  ah_hinter_scale_globals( AH_Hinter*  hinter,
+                           FT_Fixed    x_scale,
+                           FT_Fixed    y_scale )
   {
     FT_Int            n;
     AH_Face_Globals*  globals = hinter->globals;
@@ -879,8 +879,8 @@
   }
 
 
-  static
-  void  ah_hinter_align( AH_Hinter*  hinter )
+  static void
+  ah_hinter_align( AH_Hinter*  hinter )
   {
     ah_hinter_align_edge_points( hinter );
     ah_hinter_align_points( hinter );
@@ -888,8 +888,8 @@
 
 
   /* finalize a hinter object */
-  FT_LOCAL_DEF
-  void ah_hinter_done( AH_Hinter*  hinter )
+  FT_LOCAL_DEF void
+  ah_hinter_done( AH_Hinter*  hinter )
   {
     if ( hinter )
     {
@@ -911,9 +911,9 @@
 
 
   /* create a new empty hinter object */
-  FT_LOCAL_DEF
-  FT_Error  ah_hinter_new( FT_Library   library,
-                           AH_Hinter**  ahinter )
+  FT_LOCAL_DEF FT_Error
+  ah_hinter_new( FT_Library   library,
+                 AH_Hinter**  ahinter )
   {
     AH_Hinter*  hinter = 0;
     FT_Memory   memory = library->memory;
@@ -947,10 +947,10 @@
 
 
   /* create a face's autohint globals */
-  FT_LOCAL_DEF
-  FT_Error  ah_hinter_new_face_globals( AH_Hinter*   hinter,
-                                        FT_Face      face,
-                                        AH_Globals*  globals )
+  FT_LOCAL_DEF FT_Error
+  ah_hinter_new_face_globals( AH_Hinter*   hinter,
+                              FT_Face      face,
+                              AH_Globals*  globals )
   {
     FT_Error          error;
     FT_Memory         memory = hinter->memory;
@@ -979,8 +979,8 @@
 
 
   /* discard a face's autohint globals */
-  FT_LOCAL_DEF
-  void  ah_hinter_done_face_globals( AH_Face_Globals*  globals )
+  FT_LOCAL_DEF void
+  ah_hinter_done_face_globals( AH_Face_Globals*  globals )
   {
     FT_Face    face   = globals->face;
     FT_Memory  memory = face->memory;
@@ -990,11 +990,11 @@
   }
 
 
-  static
-  FT_Error  ah_hinter_load( AH_Hinter*  hinter,
-                            FT_UInt     glyph_index,
-                            FT_UInt     load_flags,
-                            FT_UInt     depth )
+  static FT_Error
+  ah_hinter_load( AH_Hinter*  hinter,
+                  FT_UInt     glyph_index,
+                  FT_UInt     load_flags,
+                  FT_UInt     depth )
   {
     FT_Face           face     = hinter->face;
     FT_GlyphSlot      slot     = face->glyph;
@@ -1308,12 +1308,12 @@
 
 
   /* load and hint a given glyph */
-  FT_LOCAL_DEF
-  FT_Error  ah_hinter_load_glyph( AH_Hinter*    hinter,
-                                  FT_GlyphSlot  slot,
-                                  FT_Size       size,
-                                  FT_UInt       glyph_index,
-                                  FT_Int        load_flags )
+  FT_LOCAL_DEF FT_Error
+  ah_hinter_load_glyph( AH_Hinter*    hinter,
+                        FT_GlyphSlot  slot,
+                        FT_Size       size,
+                        FT_UInt       glyph_index,
+                        FT_Int        load_flags )
   {
     FT_Face           face         = slot->face;
     FT_Error          error;
@@ -1362,11 +1362,11 @@
 
 
   /* retrieve a face's autohint globals for client applications */
-  FT_LOCAL_DEF
-  void  ah_hinter_get_global_hints( AH_Hinter*  hinter,
-                                    FT_Face     face,
-                                    void**      global_hints,
-                                    long*       global_len )
+  FT_LOCAL_DEF void
+  ah_hinter_get_global_hints( AH_Hinter*  hinter,
+                              FT_Face     face,
+                              void**      global_hints,
+                              long*       global_len )
   {
     AH_Globals*  globals = 0;
     FT_Memory    memory  = hinter->memory;
@@ -1399,9 +1399,9 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  ah_hinter_done_global_hints( AH_Hinter*  hinter,
-                                     void*       global_hints )
+  FT_LOCAL_DEF void
+  ah_hinter_done_global_hints( AH_Hinter*  hinter,
+                               void*       global_hints )
   {
     FT_Memory  memory = hinter->memory;
 

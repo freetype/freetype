@@ -50,9 +50,10 @@
 
   /* documentation is in ftmemory.h */
 
-  FT_BASE_DEF( FT_Error )  FT_Alloc( FT_Memory  memory,
-                                     FT_Long    size,
-                                     void*     *P )
+  FT_BASE_DEF( FT_Error )
+  FT_Alloc( FT_Memory  memory,
+            FT_Long    size,
+            void*     *P )
   {
     FT_Assert( P != 0 );
 
@@ -82,10 +83,11 @@
 
   /* documentation is in ftmemory.h */
 
-  FT_BASE_DEF( FT_Error )  FT_Realloc( FT_Memory  memory,
-                                       FT_Long    current,
-                                       FT_Long    size,
-                                       void**     P )
+  FT_BASE_DEF( FT_Error )
+  FT_Realloc( FT_Memory  memory,
+              FT_Long    current,
+              FT_Long    size,
+              void**     P )
   {
     void*  Q;
 
@@ -120,8 +122,9 @@
 
   /* documentation is in ftmemory.h */
 
-  FT_BASE_DEF( void )  FT_Free( FT_Memory  memory,
-                                void**     P )
+  FT_BASE_DEF( void )
+  FT_Free( FT_Memory  memory,
+           void**     P )
   {
     FT_TRACE7(( "FT_Free:" ));
     FT_TRACE7(( " Freeing block 0x%08p, ref 0x%08p\n",
@@ -159,10 +162,10 @@
   /* <Note>                                                                */
   /*    The function expects a valid `astream' parameter.                  */
   /*                                                                       */
-  static
-  FT_Error  ft_new_input_stream( FT_Library     library,
-                                 FT_Open_Args*  args,
-                                 FT_Stream*     astream )
+  static FT_Error
+  ft_new_input_stream( FT_Library     library,
+                       FT_Open_Args*  args,
+                       FT_Stream*     astream )
   {
     FT_Error   error;
     FT_Memory  memory;
@@ -218,7 +221,8 @@
 
   /* documentation is in ftobjs.h */
 
-  FT_EXPORT_DEF( void )  FT_Done_Stream( FT_Stream  stream )
+  FT_EXPORT_DEF( void )
+  FT_Done_Stream( FT_Stream  stream )
   {
     if ( stream && stream->close )
     {
@@ -228,9 +232,9 @@
   }
 
 
-  static
-  void  ft_done_stream( FT_Stream*  astream,
-                        FT_Int      external )
+  static void
+  ft_done_stream( FT_Stream*  astream,
+                  FT_Int      external )
   {
     FT_Stream  stream = *astream;
 
@@ -294,8 +298,9 @@
 
 
   /* create a new glyph loader */
-  FT_BASE_DEF( FT_Error )  FT_GlyphLoader_New( FT_Memory         memory,
-                                               FT_GlyphLoader*  *aloader )
+  FT_BASE_DEF( FT_Error )
+  FT_GlyphLoader_New( FT_Memory         memory,
+                      FT_GlyphLoader*  *aloader )
   {
     FT_GlyphLoader*  loader;
     FT_Error         error;
@@ -311,7 +316,8 @@
 
 
   /* rewind the glyph loader - reset counters to 0 */
-  FT_BASE_DEF( void )  FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader )
+  FT_BASE_DEF( void )
+  FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader )
   {
     FT_GlyphLoad*  base    = &loader->base;
     FT_GlyphLoad*  current = &loader->current;
@@ -327,7 +333,8 @@
 
   /* reset the glyph loader, frees all allocated tables */
   /* and starts from zero                               */
-  FT_BASE_DEF( void )  FT_GlyphLoader_Reset( FT_GlyphLoader*  loader )
+  FT_BASE_DEF( void )
+  FT_GlyphLoader_Reset( FT_GlyphLoader*  loader )
   {
     FT_Memory memory = loader->memory;
 
@@ -347,7 +354,8 @@
 
 
   /* delete a glyph loader */
-  FT_BASE_DEF( void )  FT_GlyphLoader_Done( FT_GlyphLoader*  loader )
+  FT_BASE_DEF( void )
+  FT_GlyphLoader_Done( FT_GlyphLoader*  loader )
   {
     if ( loader )
     {
@@ -361,8 +369,8 @@
 
 
   /* re-adjust the `current' outline fields */
-  static
-  void  FT_GlyphLoader_Adjust_Points( FT_GlyphLoader*  loader )
+  static void
+  FT_GlyphLoader_Adjust_Points( FT_GlyphLoader*  loader )
   {
     FT_Outline*  base    = &loader->base.outline;
     FT_Outline*  current = &loader->current.outline;
@@ -379,8 +387,8 @@
   }
 
 
-  FT_BASE_DEF( FT_Error )  FT_GlyphLoader_Create_Extra(
-                             FT_GlyphLoader*  loader )
+  FT_BASE_DEF( FT_Error )
+  FT_GlyphLoader_Create_Extra( FT_GlyphLoader*  loader )
   {
     FT_Error   error;
     FT_Memory  memory = loader->memory;
@@ -397,8 +405,8 @@
 
 
   /* re-adjust the `current' subglyphs field */
-  static
-  void  FT_GlyphLoader_Adjust_Subglyphs( FT_GlyphLoader*  loader )
+  static void
+  FT_GlyphLoader_Adjust_Subglyphs( FT_GlyphLoader*  loader )
   {
     FT_GlyphLoad* base    = &loader->base;
     FT_GlyphLoad* current = &loader->current;
@@ -412,10 +420,10 @@
   /* function reallocates its outline tables if necessary.  Note that it   */
   /* DOESN'T change the number of points within the loader!                */
   /*                                                                       */
-  FT_BASE_DEF( FT_Error )  FT_GlyphLoader_Check_Points(
-                             FT_GlyphLoader*  loader,
-                             FT_UInt          n_points,
-                             FT_UInt          n_contours )
+  FT_BASE_DEF( FT_Error )
+  FT_GlyphLoader_Check_Points( FT_GlyphLoader*  loader,
+                               FT_UInt          n_points,
+                               FT_UInt          n_contours )
   {
     FT_Memory    memory  = loader->memory;
     FT_Error     error   = FT_Err_Ok;
@@ -473,9 +481,9 @@
   /* reallocates its subglyphs table if necessary.  Note that it DOES */
   /* NOT change the number of subglyphs within the loader!            */
   /*                                                                  */
-  FT_BASE_DEF( FT_Error )  FT_GlyphLoader_Check_Subglyphs(
-                             FT_GlyphLoader*  loader,
-                             FT_UInt          n_subs )
+  FT_BASE_DEF( FT_Error )
+  FT_GlyphLoader_Check_Subglyphs( FT_GlyphLoader*  loader,
+                                  FT_UInt          n_subs )
   {
     FT_Memory  memory = loader->memory;
     FT_Error   error  = FT_Err_Ok;
@@ -504,7 +512,8 @@
 
 
   /* prepare loader for the addition of a new glyph on top of the base one */
-  FT_BASE_DEF( void )  FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader )
+  FT_BASE_DEF( void )
+  FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader )
   {
     FT_GlyphLoad*  current = &loader->current;
 
@@ -519,7 +528,8 @@
 
 
   /* add current glyph to the base image - and prepare for another */
-  FT_BASE_DEF( void )  FT_GlyphLoader_Add( FT_GlyphLoader*  loader )
+  FT_BASE_DEF( void )
+  FT_GlyphLoader_Add( FT_GlyphLoader*  loader )
   {
     FT_GlyphLoad*  base    = &loader->base;
     FT_GlyphLoad*  current = &loader->current;
@@ -546,9 +556,9 @@
   }
 
 
-  FT_BASE_DEF( FT_Error )  FT_GlyphLoader_Copy_Points(
-                             FT_GlyphLoader*  target,
-                             FT_GlyphLoader*  source )
+  FT_BASE_DEF( FT_Error )
+  FT_GlyphLoader_Copy_Points( FT_GlyphLoader*  target,
+                              FT_GlyphLoader*  source )
   {
     FT_Error  error;
     FT_UInt   num_points   = source->base.outline.n_points;
@@ -597,8 +607,8 @@
   /*************************************************************************/
 
 
-  static
-  FT_Error  ft_glyphslot_init( FT_GlyphSlot  slot )
+  static FT_Error
+  ft_glyphslot_init( FT_GlyphSlot  slot )
   {
     FT_Driver         driver = slot->face->driver;
     FT_Driver_Class*  clazz  = driver->clazz;
@@ -625,8 +635,8 @@
   }
 
 
-  static
-  void  ft_glyphslot_clear( FT_GlyphSlot  slot )
+  static void
+  ft_glyphslot_clear( FT_GlyphSlot  slot )
   {
     /* free bitmap if needed */
     if ( slot->flags & ft_glyph_own_bitmap )
@@ -657,8 +667,8 @@
   }
 
 
-  static
-  void  ft_glyphslot_done( FT_GlyphSlot  slot )
+  static void
+  ft_glyphslot_done( FT_GlyphSlot  slot )
   {
     FT_Driver         driver = slot->face->driver;
     FT_Driver_Class*  clazz  = driver->clazz;
@@ -685,8 +695,9 @@
 
   /* documentation is in ftobjs.h */
 
-  FT_BASE_DEF( FT_Error )  FT_New_GlyphSlot( FT_Face        face,
-                                             FT_GlyphSlot  *aslot )
+  FT_BASE_DEF( FT_Error )
+  FT_New_GlyphSlot( FT_Face        face,
+                    FT_GlyphSlot  *aslot )
   {
     FT_Error          error;
     FT_Driver         driver;
@@ -728,7 +739,8 @@
 
   /* documentation is in ftobjs.h */
 
-  FT_BASE_DEF( void )  FT_Done_GlyphSlot( FT_GlyphSlot  slot )
+  FT_BASE_DEF( void )
+  FT_Done_GlyphSlot( FT_GlyphSlot  slot )
   {
     if ( slot )
     {
@@ -759,9 +771,10 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( void )  FT_Set_Transform( FT_Face     face,
-                                           FT_Matrix*  matrix,
-                                           FT_Vector*  delta )
+  FT_EXPORT_DEF( void )
+  FT_Set_Transform( FT_Face     face,
+                    FT_Matrix*  matrix,
+                    FT_Vector*  delta )
   {
     FT_Face_Internal  internal;
 
@@ -805,14 +818,16 @@
   }
 
 
-  static FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
+  static FT_Renderer
+  ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
 
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Load_Glyph( FT_Face  face,
-                                            FT_UInt  glyph_index,
-                                            FT_Int   load_flags )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Load_Glyph( FT_Face  face,
+                 FT_UInt  glyph_index,
+                 FT_Int   load_flags )
   {
     FT_Error      error;
     FT_Driver     driver;
@@ -945,9 +960,10 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Load_Char( FT_Face   face,
-                                           FT_ULong  char_code,
-                                           FT_Int    load_flags )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Load_Char( FT_Face   face,
+                FT_ULong  char_code,
+                FT_Int    load_flags )
   {
     FT_UInt  glyph_index;
 
@@ -964,10 +980,10 @@
 
 
   /* destructor for sizes list */
-  static
-  void  destroy_size( FT_Memory  memory,
-                      FT_Size    size,
-                      FT_Driver  driver )
+  static void
+  destroy_size( FT_Memory  memory,
+                FT_Size    size,
+                FT_Driver  driver )
   {
     /* finalize client-specific data */
     if ( size->generic.finalizer )
@@ -983,10 +999,10 @@
 
 
   /* destructor for faces list */
-  static
-  void  destroy_face( FT_Memory  memory,
-                      FT_Face    face,
-                      FT_Driver  driver )
+  static void
+  destroy_face( FT_Memory  memory,
+                FT_Face    face,
+                FT_Driver  driver )
   {
     FT_Driver_Class*  clazz = driver->clazz;
 
@@ -1026,8 +1042,8 @@
   }
 
 
-  static
-  void  Destroy_Driver( FT_Driver  driver )
+  static void
+  Destroy_Driver( FT_Driver  driver )
   {
     FT_List_Finalize( &driver->faces_list,
                       (FT_List_Destructor)destroy_face,
@@ -1048,13 +1064,13 @@
   /* <Description>                                                         */
   /*    This function does some work for FT_Open_Face().                   */
   /*                                                                       */
-  static
-  FT_Error  open_face( FT_Driver      driver,
-                       FT_Stream      stream,
-                       FT_Long        face_index,
-                       FT_Int         num_params,
-                       FT_Parameter*  params,
-                       FT_Face*       aface )
+  static FT_Error
+  open_face( FT_Driver      driver,
+             FT_Stream      stream,
+             FT_Long        face_index,
+             FT_Int         num_params,
+             FT_Parameter*  params,
+             FT_Face*       aface )
   {
     FT_Memory         memory;
     FT_Driver_Class*  clazz;
@@ -1109,10 +1125,11 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_New_Face( FT_Library   library,
-                                          const char*  pathname,
-                                          FT_Long      face_index,
-                                          FT_Face     *aface )
+  FT_EXPORT_DEF( FT_Error )
+  FT_New_Face( FT_Library   library,
+               const char*  pathname,
+               FT_Long      face_index,
+               FT_Face     *aface )
   {
     FT_Open_Args  args;
 
@@ -1132,11 +1149,12 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_New_Memory_Face( FT_Library      library,
-                                                 const FT_Byte*  file_base,
-                                                 FT_Long         file_size,
-                                                 FT_Long         face_index,
-                                                 FT_Face        *aface )
+  FT_EXPORT_DEF( FT_Error )
+  FT_New_Memory_Face( FT_Library      library,
+                      const FT_Byte*  file_base,
+                      FT_Long         file_size,
+                      FT_Long         face_index,
+                      FT_Face        *aface )
   {
     FT_Open_Args  args;
 
@@ -1155,10 +1173,11 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Open_Face( FT_Library     library,
-                                           FT_Open_Args*  args,
-                                           FT_Long        face_index,
-                                           FT_Face       *aface )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Open_Face( FT_Library     library,
+                FT_Open_Args*  args,
+                FT_Long        face_index,
+                FT_Face       *aface )
   {
     FT_Error     error;
     FT_Driver    driver;
@@ -1332,8 +1351,9 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Attach_File( FT_Face      face,
-                                             const char*  filepathname )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Attach_File( FT_Face      face,
+                  const char*  filepathname )
   {
     FT_Open_Args  open;
 
@@ -1352,8 +1372,9 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Attach_Stream( FT_Face        face,
-                                               FT_Open_Args*  parameters )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Attach_Stream( FT_Face        face,
+                    FT_Open_Args*  parameters )
   {
     FT_Stream  stream;
     FT_Error   error;
@@ -1395,7 +1416,8 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Done_Face( FT_Face  face )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Done_Face( FT_Face  face )
   {
     FT_Error     error;
     FT_Driver    driver;
@@ -1428,8 +1450,9 @@
 
   /* documentation is in ftobjs.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_New_Size( FT_Face   face,
-                                          FT_Size  *asize )
+  FT_EXPORT_DEF( FT_Error )
+  FT_New_Size( FT_Face   face,
+               FT_Size  *asize )
   {
     FT_Error          error;
     FT_Memory         memory;
@@ -1489,7 +1512,8 @@
 
   /* documentation is in ftobjs.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Done_Size( FT_Size  size )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Done_Size( FT_Size  size )
   {
     FT_Error     error;
     FT_Driver    driver;
@@ -1534,9 +1558,9 @@
   }
 
 
-  static
-  void  ft_recompute_scaled_metrics( FT_Face           face,
-                                     FT_Size_Metrics*  metrics )
+  static void
+  ft_recompute_scaled_metrics( FT_Face           face,
+                               FT_Size_Metrics*  metrics )
   {
     /* Compute root ascender, descender, test height, and max_advance */
 
@@ -1556,11 +1580,12 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Set_Char_Size( FT_Face     face,
-                                               FT_F26Dot6  char_width,
-                                               FT_F26Dot6  char_height,
-                                               FT_UInt     horz_resolution,
-                                               FT_UInt     vert_resolution )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Set_Char_Size( FT_Face     face,
+                    FT_F26Dot6  char_width,
+                    FT_F26Dot6  char_height,
+                    FT_UInt     horz_resolution,
+                    FT_UInt     vert_resolution )
   {
     FT_Error          error = FT_Err_Ok;
     FT_Driver         driver;
@@ -1626,9 +1651,10 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Set_Pixel_Sizes( FT_Face  face,
-                                                 FT_UInt  pixel_width,
-                                                 FT_UInt  pixel_height )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Set_Pixel_Sizes( FT_Face  face,
+                      FT_UInt  pixel_width,
+                      FT_UInt  pixel_height )
   {
     FT_Error          error = FT_Err_Ok;
     FT_Driver         driver;
@@ -1678,11 +1704,12 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Get_Kerning( FT_Face     face,
-                                             FT_UInt     left_glyph,
-                                             FT_UInt     right_glyph,
-                                             FT_UInt     kern_mode,
-                                             FT_Vector  *akerning )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_Kerning( FT_Face     face,
+                  FT_UInt     left_glyph,
+                  FT_UInt     right_glyph,
+                  FT_UInt     kern_mode,
+                  FT_Vector  *akerning )
   {
     FT_Error   error = FT_Err_Ok;
     FT_Driver  driver;
@@ -1727,8 +1754,9 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Select_Charmap( FT_Face      face,
-                                                FT_Encoding  encoding )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Select_Charmap( FT_Face      face,
+                     FT_Encoding  encoding )
   {
     FT_CharMap*  cur;
     FT_CharMap*  limit;
@@ -1758,8 +1786,9 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Set_Charmap( FT_Face     face,
-                                             FT_CharMap  charmap )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Set_Charmap( FT_Face     face,
+                  FT_CharMap  charmap )
   {
     FT_CharMap*  cur;
     FT_CharMap*  limit;
@@ -1788,8 +1817,9 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_UInt )  FT_Get_Char_Index( FT_Face   face,
-                                               FT_ULong  charcode )
+  FT_EXPORT_DEF( FT_UInt )
+  FT_Get_Char_Index( FT_Face   face,
+                     FT_ULong  charcode )
   {
     FT_UInt    result;
     FT_Driver  driver;
@@ -1807,10 +1837,11 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Get_Glyph_Name( FT_Face     face,
-                                                FT_UInt     glyph_index,
-                                                FT_Pointer  buffer,
-                                                FT_UInt     buffer_max )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Get_Glyph_Name( FT_Face     face,
+                     FT_UInt     glyph_index,
+                     FT_Pointer  buffer,
+                     FT_UInt     buffer_max )
   {
     FT_Error  error = FT_Err_Invalid_Argument;
 
@@ -1846,8 +1877,9 @@
 
   /* documentation is in tttables.h */
 
-  FT_EXPORT_DEF( void* )  FT_Get_Sfnt_Table( FT_Face      face,
-                                             FT_Sfnt_Tag  tag )
+  FT_EXPORT_DEF( void* )
+  FT_Get_Sfnt_Table( FT_Face      face,
+                     FT_Sfnt_Tag  tag )
   {
     void*                   table = 0;
     FT_Get_Sfnt_Table_Func  func;
@@ -1881,9 +1913,10 @@
   /*************************************************************************/
 
   /* lookup a renderer by glyph format in the library's list */
-  FT_BASE_DEF( FT_Renderer )  FT_Lookup_Renderer( FT_Library       library,
-                                                  FT_Glyph_Format  format,
-                                                  FT_ListNode*     node )
+  FT_BASE_DEF( FT_Renderer )
+  FT_Lookup_Renderer( FT_Library       library,
+                      FT_Glyph_Format  format,
+                      FT_ListNode*     node )
   {
     FT_ListNode   cur;
     FT_Renderer   result = 0;
@@ -1922,8 +1955,8 @@
   }
 
 
-  static
-  FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot )
+  static FT_Renderer
+  ft_lookup_glyph_renderer( FT_GlyphSlot  slot )
   {
     FT_Face      face    = slot->face;
     FT_Library   library = FT_FACE_LIBRARY( face );
@@ -1937,8 +1970,8 @@
   }
 
 
-  static
-  void  ft_set_current_renderer( FT_Library  library )
+  static void
+  ft_set_current_renderer( FT_Library  library )
   {
     FT_Renderer  renderer;
 
@@ -1948,8 +1981,8 @@
   }
 
 
-  static
-  FT_Error  ft_add_renderer( FT_Module  module )
+  static FT_Error
+  ft_add_renderer( FT_Module  module )
   {
     FT_Library   library = module->library;
     FT_Memory    memory  = library->memory;
@@ -1996,8 +2029,8 @@
   }
 
 
-  static
-  void  ft_remove_renderer( FT_Module  module )
+  static void
+  ft_remove_renderer( FT_Module  module )
   {
     FT_Library   library = module->library;
     FT_Memory    memory  = library->memory;
@@ -2025,8 +2058,9 @@
 
   /* documentation is in ftrender.h */
 
-  FT_EXPORT_DEF( FT_Renderer )  FT_Get_Renderer( FT_Library       library,
-                                                 FT_Glyph_Format  format )
+  FT_EXPORT_DEF( FT_Renderer )
+  FT_Get_Renderer( FT_Library       library,
+                   FT_Glyph_Format  format )
   {
     /* test for valid `library' delayed to FT_Lookup_Renderer() */
 
@@ -2036,10 +2070,11 @@
 
   /* documentation is in ftrender.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Set_Renderer( FT_Library     library,
-                                              FT_Renderer    renderer,
-                                              FT_UInt        num_params,
-                                              FT_Parameter*  parameters )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Set_Renderer( FT_Library     library,
+                   FT_Renderer    renderer,
+                   FT_UInt        num_params,
+                   FT_Parameter*  parameters )
   {
     FT_ListNode  node;
     FT_Error     error = FT_Err_Ok;
@@ -2081,10 +2116,10 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FT_Render_Glyph_Internal(
-                               FT_Library    library,
-                               FT_GlyphSlot  slot,
-                               FT_UInt       render_mode )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Render_Glyph_Internal( FT_Library    library,
+                            FT_GlyphSlot  slot,
+                            FT_UInt       render_mode )
   {
     FT_Error     error = FT_Err_Ok;
     FT_Renderer  renderer;
@@ -2142,8 +2177,9 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Render_Glyph( FT_GlyphSlot  slot,
-                                              FT_UInt       render_mode )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Render_Glyph( FT_GlyphSlot  slot,
+                   FT_UInt       render_mode )
   {
     FT_Library   library;
 
@@ -2185,8 +2221,8 @@
   /* <Note>                                                                */
   /*     The driver _must_ be LOCKED!                                      */
   /*                                                                       */
-  static
-  void  Destroy_Module( FT_Module  module )
+  static void
+  Destroy_Module( FT_Module  module )
   {
     FT_Memory         memory  = module->memory;
     FT_Module_Class*  clazz   = module->clazz;
@@ -2219,8 +2255,9 @@
 
   /* documentation is in ftmodule.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Add_Module( FT_Library              library,
-                                            const FT_Module_Class*  clazz )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Add_Module( FT_Library              library,
+                 const FT_Module_Class*  clazz )
   {
     FT_Error   error;
     FT_Memory  memory;
@@ -2345,8 +2382,9 @@
 
   /* documentation is in ftmodule.h */
 
-  FT_EXPORT_DEF( FT_Module ) FT_Get_Module( FT_Library   library,
-                                            const char*  module_name )
+  FT_EXPORT_DEF( FT_Module )
+  FT_Get_Module( FT_Library   library,
+                 const char*  module_name )
   {
     FT_Module   result = 0;
     FT_Module*  cur;
@@ -2372,8 +2410,9 @@
 
   /* documentation is in ftobjs.h */
 
-  FT_BASE_DEF( const void* )  FT_Get_Module_Interface( FT_Library   library,
-                                                       const char*  mod_name )
+  FT_BASE_DEF( const void* )
+  FT_Get_Module_Interface( FT_Library   library,
+                           const char*  mod_name )
   {
     FT_Module  module;
 
@@ -2388,8 +2427,9 @@
 
   /* documentation is in ftmodule.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Remove_Module( FT_Library  library,
-                                               FT_Module   module )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Remove_Module( FT_Library  library,
+                    FT_Module   module )
   {
     /* try to find the module from the table, then remove it from there */
 
@@ -2442,8 +2482,9 @@
 
   /* documentation is in ftmodule.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_New_Library( FT_Memory    memory,
-                                             FT_Library  *alibrary )
+  FT_EXPORT_DEF( FT_Error )
+  FT_New_Library( FT_Memory    memory,
+                  FT_Library  *alibrary )
   {
     FT_Library  library = 0;
     FT_Error    error;
@@ -2476,7 +2517,8 @@
 
   /* documentation is in ftmodule.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_Done_Library( FT_Library  library )
+  FT_EXPORT_DEF( FT_Error )
+  FT_Done_Library( FT_Library  library )
   {
     FT_Memory  memory;
     FT_UInt    n;
@@ -2515,9 +2557,10 @@
 
   /* documentation is in ftmodule.h */
 
-  FT_EXPORT_DEF( void )  FT_Set_Debug_Hook( FT_Library         library,
-                                            FT_UInt            hook_index,
-                                            FT_DebugHook_Func  debug_hook )
+  FT_EXPORT_DEF( void )
+  FT_Set_Debug_Hook( FT_Library         library,
+                     FT_UInt            hook_index,
+                     FT_DebugHook_Func  debug_hook )
   {
     if ( library && debug_hook &&
          hook_index <

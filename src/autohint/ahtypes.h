@@ -413,7 +413,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    blue_shoots :: The overshoot positions of blue zones.              */
   /*                                                                       */
-  typedef struct AH_Globals_
+  typedef struct  AH_Globals_
   {
     FT_Int    num_widths;
     FT_Int    num_heights;

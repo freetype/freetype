@@ -23,8 +23,8 @@ LATEST CHANGES BETWEEN 2.0.4 and 2.0.3
   - Updated the Unix-specific portions of the build system (new libtool
     version, etc.).
 
-  - the SFNT kerning lodaer now ensures that the table is sorted (since some
-    problem fonts do not meet this requirement !!)
+  - The SFNT kerning lodaer now ensures that the table is sorted (since some
+    problem fonts do not meet this requirement).
 
 ============================================================================
 
