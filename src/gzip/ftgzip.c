@@ -479,8 +479,6 @@
 
 
       delta = (FT_ULong)( zip->limit - zip->cursor );
-      if ( delta == 0 )
-        break;
       if ( delta >= count )
         delta = count;
 
