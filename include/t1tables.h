@@ -102,4 +102,44 @@
     
   } T1_Private;
 
+
+  typedef struct CID_FontDict_
+  {
+    T1_FontInfo   font_info;
+    T1_Private    private;
+
+    FT_UInt       num_subrs;
+    FT_ULong      subrmap_offset;
+    FT_Int        sd_bytes;
+  
+  } CID_FontDict;
+
+  
+  typedef struct CID_Info_
+  {
+    FT_String*  cid_font_name;
+    FT_Fixed    cid_version;
+    FT_Int      cid_font_type;
+  
+    FT_String*  registry;
+    FT_String*  ordering;
+    FT_Int      supplement;
+
+    FT_ULong    uid_base;
+
+    FT_Int      num_xuid;
+    FT_ULong    xuid[16];
+    
+    
+    FT_ULong    cidmap_offset;
+    FT_Int      fd_bytes;
+    FT_Int      gd_bytes;
+    FT_ULong    cid_count;
+    
+    FT_Int         num_font_dicts;
+    CIF_FontDict*  font_dicts;
+  
+  } CID_Info;
+
+
 #endif /* T1TABLES_H */
