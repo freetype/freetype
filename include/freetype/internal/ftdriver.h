@@ -102,7 +102,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    FT_Driver_ClassRec                                                    */
+  /*    FT_Driver_ClassRec                                                 */
   /*                                                                       */
   /* <Description>                                                         */
   /*    The font driver class.  This structure mostly contains pointers to */
