@@ -541,7 +541,7 @@
 
     face = (TT_Face)size->root.face;
 
-    metrics = &size->root.metrics;
+    metrics = &size->metrics;
 
     if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
       return TT_Err_Invalid_PPem;
@@ -566,21 +566,11 @@
       size->ttmetrics.y_ratio = 0x10000L;
     }
 
-#ifdef FT_CONFIG_CHESTER_ASCENDER
-
-    /* Compute root ascender, descender, test height, and max_advance */
-    metrics->ascender    = ( FT_MulFix( face->root.ascender,
-                                        metrics->y_scale ) + 63 ) & -64;
-    metrics->descender   = ( FT_MulFix( face->root.descender,
-                                        metrics->y_scale ) + 0  ) & -64;
-#else /* !CHESTER_ASCENDER */
     /* Compute root ascender, descender, test height, and max_advance */
     metrics->ascender    = ( FT_MulFix( face->root.ascender,
                                         metrics->y_scale ) + 32 ) & -64;
     metrics->descender   = ( FT_MulFix( face->root.descender,
                                         metrics->y_scale ) + 32 ) & -64;
-#endif /* !CHESTER_ASCENDER */
-
     metrics->height      = ( FT_MulFix( face->root.height,
                                         metrics->y_scale ) + 32 ) & -64;
     metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
@@ -701,7 +691,7 @@
     SFNT_Service      sfnt;
 
 
-    metrics = &size->root.metrics;
+    metrics = &size->metrics;
 
     if ( size->strike_index != 0xFFFFU )
       return TT_Err_Ok;
@@ -739,8 +729,8 @@
                                   sbit_metrics->descender;
 
       /* XXX: Is this correct? */
-      sbit_metrics->max_advance = ( strike->hori.min_origin_SB +
-                                    strike->hori.max_width     +
+      sbit_metrics->max_advance = ( strike->hori.min_origin_SB  +
+                                    strike->hori.max_width      +
                                     strike->hori.min_advance_SB ) << 6;
 
       size->strike_index = strike_index;

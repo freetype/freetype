@@ -1330,10 +1330,10 @@
     /* Compute root ascender, descender, test height, and max_advance */
 
     metrics->ascender    = ( FT_MulFix( face->ascender,
-                                        metrics->y_scale ) + 32 ) & -64;
+                                        metrics->y_scale ) + 63 ) & -64;
 
     metrics->descender   = ( FT_MulFix( face->descender,
-                                        metrics->y_scale ) + 32 ) & -64;
+                                        metrics->y_scale ) + 0 ) & -64;
 
     metrics->height      = ( FT_MulFix( face->height,
                                         metrics->y_scale ) + 32 ) & -64;
