@@ -1,5 +1,13 @@
 2005-03-10  Werner Lemberg  <wl@gnu.org>
 
+	* src/truetype/ttpload.c (tt_face_load_cvt, tt_face_load_fpgm):
+	Fix serious typo which prevented correct TT rendering.
+
+	* include/freetype/internal/ftmemory.h: Undo change from 2005-03-03.
+	To suppress warnings it is sufficient to use `-fno-strict-aliasing'.
+
+2005-03-10  Werner Lemberg  <wl@gnu.org>
+
 	* src/tools/glnames.py: Formatted.
 	Format output to be in sync with other FreeType code.
 	Import `re' and `os.path'.
@@ -5986,7 +5994,7 @@
 	the use of system-wide zlib.
 
 	Note that this macro, as well as
-	FT_CONFIG_OPTION_BYTECODE_INTERPRETER, is not #undef-ed anymore.
+	TT_CONFIG_OPTION_BYTECODE_INTERPRETER, is not #undef-ed anymore.
 	This allows the build system to define them depending on the
 	configuration (typically by adding -D flags at compile time).
 
