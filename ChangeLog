@@ -1,5 +1,22 @@
 2005-05-28  David Turner  <david@freetype.org>
 
+    * include/freetype/ftxf86.h, src/base/ftxf86.c: added a new API named
+    FT_Get_X11_Font_Format to return an X11-compatible string describing the
+    font format of a given face. This was put in a new optional base source
+    file, corresponding to a new public header (named FT_XFREE86_H since
+    this function should only be used within the XFree86 font server IMO).
+
+    * include/freetype/config/ftheader.h: adding FT_XFREE86_H, though it's
+    not documented yet.
+
+    * include/freetype/t1tables.h, src/base/fttype1.c: adding two new APIs
+    named "FT_Get_PS_Font_Info" and "FT_Has_PS_Glyph_Names". This required
+    a new optional source in 'src/base' named "fttype1.c"
+
+    * src/base/Jamfile, src/base/rules.mk, src/base/descrip.mms: updating
+    build control files for the new files "ftxf86.c" and "fttype1.c" in
+    src/base
+
     * src/pshinter/pshglob.c (psh_blues_scale_zones): fixed a bug that
     prevented family blue zones substitution from hapenning correctly
 
