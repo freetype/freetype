@@ -1,3 +1,8 @@
+2004-06-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (compute_glyph_metrics): Fix compiler
+	warnings.
+
 2004-06-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (tt_face_get_name): Make sure that an English
