@@ -575,14 +575,56 @@
     }
 
     /* Compute root ascender, descender, test height, and max_advance */
-    metrics->ascender    = ( FT_MulFix( face->root.ascender,
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
+    if ( ( !( face->root.face_flags & FT_FACE_FLAG_SCALABLE ) &&
+           ( face->root.face_flags & FT_FACE_FLAG_FIXED_SIZES ) ) )
+    {
+      FT_Int i;
+
+
+      for ( i = 0; i < face->root.num_fixed_sizes; i++ )
+      {
+        if ( ( face->sbit_strikes[i].x_ppem  == metrics->x_ppem ) &&
+             ( face->sbit_strikes[i].y_ppem == metrics->y_ppem ) )
+        {
+          /*
+           * XXX: We now set horizontal metrics,
+           *      but this is not valid if we use vertical layout style
+           */
+          metrics->ascender =
+            face->sbit_strikes[i].hori.ascender * 64;
+          metrics->descender =
+            face->sbit_strikes[i].hori.descender * 64;
+          metrics->height =
+            ( face->sbit_strikes[i].hori.ascender -
+              face->sbit_strikes[i].hori.descender ) * 64;
+          /* XXX: Is this correct? */
+          metrics->max_advance =
+            ( face->sbit_strikes[i].hori.min_origin_SB +
+              face->sbit_strikes[i].hori.max_width +
+              face->sbit_strikes[i].hori.min_advance_SB ) * 64;
+          break;
+        }
+      }
+      if ( i == face->root.num_fixed_sizes )
+        return TT_Err_Invalid_PPem;
+    }
+    else
+
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
+    {
+      metrics->ascender    = ( FT_MulFix( face->root.ascender,
                                           metrics->y_scale ) + 32 ) & -64;
-    metrics->descender   = ( FT_MulFix( face->root.descender,
+      metrics->descender   = ( FT_MulFix( face->root.descender,
                                           metrics->y_scale ) + 32 ) & -64;
-    metrics->height      = ( FT_MulFix( face->root.height,
+      metrics->height      = ( FT_MulFix( face->root.height,
                                           metrics->y_scale ) + 32 ) & -64;
-    metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
+      metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
                                           metrics->x_scale ) + 32 ) & -64;
+    }
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
