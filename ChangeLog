@@ -1,5 +1,9 @@
 2002-03-22  David Turner    <david@freetype.org>
 
+        * include/freetype/config/ftheader.h, include/freetype/fterrors.h:
+        modified "fterrors.h" to include the error definitions list found
+        in "fterrdef.h"
+
         * include/freetype/internal/ftmemory.h, and a lot of other files !!:
         
             changed the names of memory macros. Examples:
