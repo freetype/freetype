@@ -1311,7 +1311,7 @@
     FT_SubGlyph*      subglyphs;
 
     void*             control_data;
-    void*             control_len;
+    long              control_len;
 
     void*             other;
 
@@ -1794,6 +1794,17 @@
   /*                                                                       */
 #define FT_LOAD_LINEAR  16
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_LOAD_FORCE_AUTOHINT                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit-field constant, used with FT_Load_Glyph() to indicate that   */
+  /*    the function should try to auto-hint the glyphs, even if a driver- */
+  /*    -specific hinter is available..                                    */
+  /*                                                                       */
+#define FT_LOAD_FORCE_AUTOHINT  32
 
   /*************************************************************************/
   /*                                                                       */
