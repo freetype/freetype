@@ -199,6 +199,8 @@ FT_BEGIN_HEADER
   } FT_Glyph_Metrics;
 
 
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -221,6 +223,8 @@ FT_BEGIN_HEADER
 	FT_Long bearing_y;
 	FT_Long advance;
   } FT_Basic_Glyph_Metrics;
+
+#endif /* #ifdef FT_CONFIG_OPTION_INCREMENTAL */
 
 
   /*************************************************************************/
@@ -502,6 +506,8 @@ FT_BEGIN_HEADER
 
   } FT_CharMapRec;
 
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
   
   /*************************************************************************/
   /*                                                                       */
@@ -606,6 +612,8 @@ FT_BEGIN_HEADER
     const FT_Incremental_Interface_Funcs* funcs;	
 	void* object;			
   } FT_Incremental_Interface;
+
+#endif /* #ifdef FT_CONFIG_OPTION_INCREMENTAL */
 
 
   /*************************************************************************/
@@ -838,6 +846,10 @@ FT_BEGIN_HEADER
     void*             extensions;
 
     FT_Face_Internal  internal;
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+	FT_Incremental_Interface* incremental_interface;
+#endif
 
     /*@private end */
 
@@ -1576,6 +1588,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    ft_open_params   :: Use the `num_params' & `params' field.         */
   /*                                                                       */
+  /*    ft_open_incremental :: Use the 'incremental_interface' field.	   */
+  /*        (Available if FT_CONFIG_OPTION_INCREMENTAL is defined.)        */
+  /*                                                                       */
   /* <Note>                                                                */
   /*    The `ft_open_memory', `ft_open_stream', and `ft_open_pathname'     */
   /*    flags are mutually exclusive.                                      */
@@ -1587,6 +1602,9 @@ FT_BEGIN_HEADER
     ft_open_pathname = 4,
     ft_open_driver   = 8,
     ft_open_params   = 16
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+	,ft_open_incremental = 32
+#endif
 
   } FT_Open_Flags;
 
@@ -1648,6 +1666,11 @@ FT_BEGIN_HEADER
   /*    params      :: Extra parameters passed to the font driver when     */
   /*                   opening a new face.                                 */
   /*                                                                       */
+  /*	incremental_interface		:: If non-null, an interface used to   */
+  /*				   implement incremental font loading. This field      */
+  /*                   exists only if FT_CONFIG_OPTION_INCREMENTAL is      */
+  /*                   defined.                                            */
+  /*                                                                       */
   /* <Note>                                                                */
   /*    The stream type is determined by the contents of `flags' which     */
   /*    are tested in the following order by @FT_Open_Face:                */
@@ -1668,16 +1691,23 @@ FT_BEGIN_HEADER
   /*    `num_params' and `params' will be used.  They are ignored          */
   /*    otherwise.                                                         */
   /*                                                                       */
+  /*    If the `ft_open_incremental' bit is set 'incremental_interface'    */
+  /*    will be used, else it is ignored. This feature is available only   */
+  /*    if FT_CONFIG_OPTION_INCREMENTAL is defined.                        */
+  /*                                                                       */
   typedef struct  FT_Open_Args_
   {
-    FT_Open_Flags   flags;
-    const FT_Byte*  memory_base;
-    FT_Long         memory_size;
-    FT_String*      pathname;
-    FT_Stream       stream;
-    FT_Module       driver;
-    FT_Int          num_params;
-    FT_Parameter*   params;
+    FT_Open_Flags                flags;
+    const FT_Byte*               memory_base;
+    FT_Long                      memory_size;
+    FT_String*                   pathname;
+    FT_Stream                    stream;
+    FT_Module                    driver;
+    FT_Int                       num_params;
+    FT_Parameter*                params;
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+	FT_Incremental_Interface*   incremental_interface;
+#endif
 
   } FT_Open_Args;
 
