@@ -1539,7 +1539,7 @@
       ah_outline_save( outline, gloader );
 
       /* we now need to hint the metrics according to the change in */
-      /* width/positioning that occured during the hinting process  */
+      /* width/positioning that occurred during the hinting process */
       if ( outline->num_vedges > 0 )
       {
         FT_Pos   old_advance, old_rsb, old_lsb, new_lsb, pp1x_uh, pp2x_uh;

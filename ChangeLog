@@ -1,3 +1,8 @@
+2004-12-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (ft_glyphslot_clear): Reset `lsb_delta' and
+	`rsb_delta'.
+
 2004-12-05  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/install.mk (install): Use $(OBJ_BUILD) for ftconfig.h.
