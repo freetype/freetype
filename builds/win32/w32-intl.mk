@@ -1,5 +1,5 @@
 #
-# FreeType 2 Intel C/C++ on Win32
+# FreeType 2 configuration rules for Intel C/C++ on Win32
 #
 
 

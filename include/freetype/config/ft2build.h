@@ -47,13 +47,13 @@
 
 
   /* this macro is used to enclose its argument in brackets */
-#define  FT2_ENCLOSE(x)   <x>
+#define FT2_ENCLOSE(x)  <x>
 
   /* this macro is used to join a path and a file name */
-#define  FT2_JOINPATH(d,x)   d/x
+#define FT2_JOINPATH(d,x)  d/x
 
   /* this macro is used to format a path in "<d/x>" format easily */
-#define  FT2_PUBLIC_PATH(d,x)   FT2_ENCLOSE(d/x)
+#define FT2_PUBLIC_PATH(d,x)  FT2_ENCLOSE(d/x)
 
 
 

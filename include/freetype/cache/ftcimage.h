@@ -46,25 +46,25 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-#define  FTC_IMAGE_FORMAT( x )  ( (x) & 7 )
+#define FTC_IMAGE_FORMAT( x )  ( (x) & 7 )
 
 
-#define  ftc_image_format_bitmap      0
-#define  ftc_image_format_outline     1
+#define ftc_image_format_bitmap      0
+#define ftc_image_format_outline     1
 
-#define  ftc_image_flag_monochrome   16
-#define  ftc_image_flag_unhinted     32
-#define  ftc_image_flag_autohinted   64
-#define  ftc_image_flag_unscaled    128
-#define  ftc_image_flag_no_sbits    256
+#define ftc_image_flag_monochrome   16
+#define ftc_image_flag_unhinted     32
+#define ftc_image_flag_autohinted   64
+#define ftc_image_flag_unscaled    128
+#define ftc_image_flag_no_sbits    256
 
   /* monochrome bitmap */
-#define  ftc_image_mono             ftc_image_format_bitmap | \
+#define ftc_image_mono             ftc_image_format_bitmap | \
                                     ftc_image_flag_monochrome
   /* anti-aliased bitmap */
-#define  ftc_image_grays            ftc_image_format_bitmap
+#define ftc_image_grays            ftc_image_format_bitmap
   /* scaled outline */
-#define  ftc_image_outline          ftc_image_format_outline
+#define ftc_image_outline          ftc_image_format_outline
 
 
   /*************************************************************************/

@@ -442,7 +442,7 @@
   static const CFF_Field_Handler  cff_field_handlers[] =
   {
 
-#include  FT_SOURCE_FILE(cff,cfftoken.h)
+#include FT_SOURCE_FILE(cff,cfftoken.h)
 
     { 0, 0, 0, 0, 0, 0, 0 }
   };

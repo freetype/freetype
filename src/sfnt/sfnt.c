@@ -18,18 +18,18 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include  <ft2build.h>
-#include  FT_SOURCE_FILE(sfnt,ttload.c)
-#include  FT_SOURCE_FILE(sfnt,ttcmap.c)
-#include  FT_SOURCE_FILE(sfnt,sfobjs.c)
-#include  FT_SOURCE_FILE(sfnt,sfdriver.c)
+#include <ft2build.h>
+#include FT_SOURCE_FILE(sfnt,ttload.c)
+#include FT_SOURCE_FILE(sfnt,ttcmap.c)
+#include FT_SOURCE_FILE(sfnt,sfobjs.c)
+#include FT_SOURCE_FILE(sfnt,sfdriver.c)
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-#include  FT_SOURCE_FILE(sfnt,ttsbit.c)
+#include FT_SOURCE_FILE(sfnt,ttsbit.c)
 #endif
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-#include  FT_SOURCE_FILE(sfnt,ttpost.c)
+#include FT_SOURCE_FILE(sfnt,ttpost.c)
 #endif
 
 

@@ -27,11 +27,11 @@ ifeq ($(PLATFORM),ansi)
       is_windows := 1
     endif
 
-    # We test for the COMSPEC environment variable, then run the `ver'
-    # command-line program to see if its output contains the word `Windows'.
-    #
-    # If this is true, we are running a win32 platform (or an emulation).
-    #
+  # We test for the COMSPEC environment variable, then run the `ver'
+  # command-line program to see if its output contains the word `Windows'.
+  #
+  # If this is true, we are running a win32 platform (or an emulation).
+  #
   else
     ifneq ($(OSTYPE),cygwin)
       ifdef COMSPEC
@@ -42,29 +42,29 @@ ifeq ($(PLATFORM),ansi)
 
   ifdef is_windows
 
-      PLATFORM    := win32
-      DELETE      := del
-      COPY        := copy
-      CONFIG_FILE := none
+    PLATFORM    := win32
+    DELETE      := del
+    COPY        := copy
+    CONFIG_FILE := none
 
     ifneq ($(findstring list,$(MAKECMDGOALS)),)  # test for the "list" target
 
       .PHONY: dump_target_list setup list
       
       dump_target_list:
-	@echo ÿ
-	@echo $(PROJECT_TITLE) build system -- supported compilers
-	@echo ÿ
-	@echo Several command-line compilers are supported on Win32:
-	@echo ÿ
-	@echo ÿÿmake setupÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿgcc (with Mingw)
-	@echo ÿÿmake setup visualcÿÿÿÿÿÿÿÿÿÿÿÿÿMicrosoft Visual C++
-	@echo ÿÿmake setup bcc32ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBorland C/C++
-	@echo ÿÿmake setup lccÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿWin32-LCC
-	@echo ÿÿmake setup intelcÿÿÿÿÿÿÿÿÿÿÿÿÿÿIntel C/C++
-	@echo ÿ
+	      @echo ÿ
+	      @echo $(PROJECT_TITLE) build system -- supported compilers
+	      @echo ÿ
+	      @echo Several command-line compilers are supported on Win32:
+	      @echo ÿ
+	      @echo ÿÿmake setupÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿgcc (with Mingw)
+	      @echo ÿÿmake setup visualcÿÿÿÿÿÿÿÿÿÿÿÿÿMicrosoft Visual C++
+	      @echo ÿÿmake setup bcc32ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿBorland C/C++
+	      @echo ÿÿmake setup lccÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿWin32-LCC
+	      @echo ÿÿmake setup intelcÿÿÿÿÿÿÿÿÿÿÿÿÿÿIntel C/C++
+	      @echo ÿ
 
-        setup: dump_target_list
+      setup: dump_target_list
 	
     else  # test "list"
 
@@ -104,9 +104,10 @@ ifeq ($(PLATFORM),ansi)
         CC          := icl
         intelc: setup
       endif
-#
-# The following build targets are not officialy supported for now
-#
+
+      #
+      # The following build targets are not officially supported for now
+      #
 
       ifneq ($(findstring visualage,$(MAKECMDGOALS)),)   # Visual Age C++
         CONFIG_FILE := w32-icc.mk
