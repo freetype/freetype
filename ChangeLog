@@ -1,3 +1,11 @@
+2004-04-02  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/ltmain.sh: Regenerated with `libtoolize --force
+	--copy' from libtool 1.5.2.
+	* builds/unix/aclocal.m4: Regenerated with `aclocal -I .' from
+	automake 1.8a.
+	* builds/unix/configure: Regenerated with autoconf 2.59a.
+
 2004-04-01  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ft-munmap.m4 (FT_MUNMAP_PARAM): Fix arguments of
