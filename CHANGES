@@ -1,5 +1,12 @@
 LATEST_CHANGES
 
+  - bug-fixed the OpenType/CFF parser. It now loads and displays my two
+    fonts nicely, but I'm pretty certain that more testing is needed :-)
+    
+  - fixed the crummy Type 1 hinter, it now handles accented characters
+    correctly (well, the accent is not always well placed, but that's
+    another problem..)
+
   - added the CID-keyed Type 1 driver in "src/cid". Works pretty well for
     only 13 Kb of code ;-) Doesn't read AFM files though, nor the really
     useful CMAP files..
