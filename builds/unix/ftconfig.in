@@ -231,19 +231,23 @@ FT_BEGIN_HEADER
   /* FT_CALLBACK_TABLE_DEF is used to _define_ a constant variable   */
   /* that contains pointers to callback functions.                   */
   /*                                                                 */
-#ifdef __cplusplus
+#ifndef FT_CALLBACK_DEF
+#  ifdef __cplusplus
+#    define FT_CALLBACK_DEF(x)  extern "C" x
+#  else
+#    define FT_CALLBACK_DEF(x)  static x
+#  endif
+#endif
 
-#define FT_CALLBACK_DEF        extern "C"
-#define FT_CALLBACK_TABLE      extern "C"
-#define FT_CALLBACK_TABLE_DEF  extern "C"
-
-#else
-
-#define FT_CALLBACK_DEF        static
-#define FT_CALLBACK_TABLE      extern
-#define FT_CALLBACK_TABLE_DEF  /* nothing */
-
-#endif /* __cplusplus */
+#ifndef FT_CALLBACK_TABLE
+#  ifdef __cplusplus
+#    define FT_CALLBACK_TABLE      extern "C"
+#    define FT_CALLBACK_TABLE_DEF  extern "C"
+#  else
+#    define FT_CALLBACK_TABLE      extern
+#    define FT_CALLBACK_TABLE_DEF  /* nothing */
+#  endif
+#endif
 
 
 FT_END_HEADER

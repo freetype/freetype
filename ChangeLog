@@ -1,5 +1,8 @@
 2001-06-27  David Turner <david@freetype.org>
 
+	* builds/unix/ftconfig.in: changed the definition of the
+	FT_CALLBACK_DEF macro
+
 	* include/freetype/ftconfig.h, src/*/*.c: changed the definition and
 	uses of the FT_CALLBACK_DEF macro in order to support 16-bit compilers
 
