@@ -155,6 +155,8 @@
   }
 
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_Long )
@@ -176,6 +178,8 @@
 
     return ( s > 0 ) ? d : -d;
   }
+
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
 
   /* documentation is in freetype.h */
@@ -347,6 +351,8 @@
   }
 
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
   FT_BASE_DEF( FT_Long )
   FT_MulDiv_No_Round( FT_Long  a,
                       FT_Long  b,
@@ -378,6 +384,8 @@
 
     return ( s < 0 ? -a : a );
   }
+
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
 
   /* documentation is in freetype.h */
