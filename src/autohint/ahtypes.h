@@ -201,10 +201,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    out_dir   :: The direction of the outwards vector (point->next).   */
   /*                                                                       */
-  /*    in_angle  :: The angle of the inwards vector.                      */
-  /*                                                                       */
-  /*    out_angle :: The angle of the outwards vector.                     */
-  /*                                                                       */
   /*    next      :: The next point in same contour.                       */
   /*                                                                       */
   /*    prev      :: The previous point in same contour.                   */
@@ -219,9 +215,6 @@ FT_BEGIN_HEADER
 
     AH_Direction  in_dir;   /* direction of inwards vector  */
     AH_Direction  out_dir;  /* direction of outwards vector */
-
-    AH_Angle      in_angle;
-    AH_Angle      out_angle;
 
     AH_Point      next;     /* next point in contour     */
     AH_Point      prev;     /* previous point in contour */
