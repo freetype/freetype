@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2001, 2002, 2003, 2004 by
+# Copyright 1996-2000, 2001, 2002, 2003 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -153,7 +153,7 @@ dos_setup:
 	@echo Otherwise, simply type 'make' again to build the library.
 	@echo or 'make refdoc' to build the API reference (the latter needs python).
 	@type builds\newline
-	@cmd.exe /c @$(COPY) $(subst /,\,$(CONFIG_RULES) $(CONFIG_MK)) > nul
+	@$(COPY) $(subst /,\,$(CONFIG_RULES) $(CONFIG_MK)) > nul
 
 
 # EOF

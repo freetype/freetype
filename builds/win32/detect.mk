@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2003 by
+# Copyright 1996-2000, 2003, 2004 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -19,21 +19,26 @@
 ifeq ($(PLATFORM),ansi)
 
   # Detecting Windows NT is easy, as the OS variable must be defined and
-  # contains `Windows_NT'.  Untested with Windows 2K, but I guess it should
-  # work...
+  # contains `Windows_NT'.  This also works with W2K, XP, and Windows 98.
   #
   ifeq ($(OS),Windows_NT)
 
     is_windows := 1
 
+    # We have to use the shell for copying files to preserve the case of
+    # file names.  Without this, we get a `CONFIG.MK' file which isn't
+    # found later on by `make'.
+    COPY := cmd.exe /c copy
+
+  else
     # We test for the COMSPEC environment variable, then run the `ver'
     # command-line program to see if its output contains the word `Windows'.
     #
     # If this is true, we are running a win32 platform (or an emulation).
     #
-  else
     ifdef COMSPEC
       is_windows := $(findstring Windows,$(strip $(shell ver)))
+      COPY := copy
     endif
   endif  # test NT
 
@@ -47,7 +52,6 @@ endif # test PLATFORM ansi
 ifeq ($(PLATFORM),win32)
 
   DELETE := del
-  COPY   := copy
   SEP    := $(BACKSLASH)
 
   # gcc Makefile by default
