@@ -1,3 +1,8 @@
+2000-11-11  Werner Lemberg  <wl@gnu.org>
+
+	* builds/win32/visualc/freetype.dsp: Fix raster1->raster and
+	type1z->type1.
+
 2000-11-11  Tom Kacvinsky  <tjk@ams.org>
 
 	* builds/unix/freetype-config.in, builds/cygwin/freetype-config.in:
