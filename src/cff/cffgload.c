@@ -366,7 +366,7 @@
     decoder->num_globals  = cff->num_global_subrs;
     decoder->globals      = cff->global_subrs;
     decoder->globals_bias = cff_compute_bias( decoder->num_globals );
-    
+
     decoder->hint_mode    = hint_mode;
   }
 
@@ -2488,11 +2488,11 @@
 
           if ( hinting )
           {
-            metrics->horiAdvance  = ( metrics->horiAdvance + 32 ) & -64;
-            metrics->vertAdvance  = ( metrics->vertAdvance + 32 ) & -64;
+            metrics->horiAdvance  = FT_PIX_ROUND( metrics->horiAdvance );
+            metrics->vertAdvance  = FT_PIX_ROUND( metrics->vertAdvance );
 
-            metrics->vertBearingX = ( metrics->vertBearingX + 32 ) & -64;
-            metrics->vertBearingY = ( metrics->vertBearingY + 32 ) & -64;
+            metrics->vertBearingX = FT_PIX_ROUND( metrics->vertBearingX );
+            metrics->vertBearingY = FT_PIX_ROUND( metrics->vertBearingY );
           }
         }
 

@@ -12,7 +12,7 @@
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
-/*                                                                         */
+/*            s                                                             */
 /***************************************************************************/
 
 
@@ -590,14 +590,14 @@
     }
 
     /* Compute root ascender, descender, text height, and max_advance */
-    metrics->ascender    = ( FT_MulFix( face->root.ascender,
-                                        metrics->y_scale ) + 32 ) & -64;
-    metrics->descender   = ( FT_MulFix( face->root.descender,
-                                        metrics->y_scale ) + 32 ) & -64;
-    metrics->height      = ( FT_MulFix( face->root.height,
-                                        metrics->y_scale ) + 32 ) & -64;
-    metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
-                                        metrics->x_scale ) + 32 ) & -64;
+    metrics->ascender    = FT_PIX_ROUND( FT_MulFix( face->root.ascender,
+                                                       metrics->y_scale ) );
+    metrics->descender   = FT_PIX_ROUND( FT_MulFix( face->root.descender,
+                                                       metrics->y_scale ) );
+    metrics->height      = FT_PIX_ROUND( FT_MulFix( face->root.height,
+                                                       metrics->y_scale ) );
+    metrics->max_advance = FT_PIX_ROUND( FT_MulFix( face->root.max_advance_width,
+                                                       metrics->x_scale ) );
 
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
@@ -748,7 +748,8 @@
       sbit_metrics->descender = strike->hori.descender << 6;
 
       /* XXX: Is this correct? */
-      sbit_metrics->height = sbit_metrics->ascender - sbit_metrics->descender;
+      sbit_metrics->height = sbit_metrics->ascender -
+                             sbit_metrics->descender;
 
       /* XXX: Is this correct? */
       sbit_metrics->max_advance = ( strike->hori.min_origin_SB  +

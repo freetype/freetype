@@ -276,7 +276,7 @@
     /* re-allocate array when necessary */
     if ( count > glyph->max_xy_control )
     {
-      FT_UInt  new_max = ( count + 7 ) & -8;
+      FT_UInt  new_max = FT_PAD_CEIL( count, 8 );
 
 
       if ( FT_RENEW_ARRAY( glyph->x_control,

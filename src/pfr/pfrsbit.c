@@ -635,7 +635,7 @@
         glyph->root.metrics.height       = (FT_Long)ysize << 6;
         glyph->root.metrics.horiBearingX = xpos << 6;
         glyph->root.metrics.horiBearingY = ypos << 6;
-        glyph->root.metrics.horiAdvance  = ( ( advance >> 2 ) + 32 ) & -64;
+        glyph->root.metrics.horiAdvance  = FT_PIX_ROUND( ( advance >> 2 ) );
         glyph->root.metrics.vertBearingX = - glyph->root.metrics.width >> 1;
         glyph->root.metrics.vertBearingY = 0;
         glyph->root.metrics.vertAdvance  = size->root.metrics.height;

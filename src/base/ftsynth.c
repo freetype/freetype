@@ -279,7 +279,7 @@
       first = last + 1;
     }
 
-    slot->metrics.horiAdvance = ( slot->metrics.horiAdvance + distance*4 ) & -64;
+    slot->metrics.horiAdvance = ( slot->metrics.horiAdvance + distance*4 ) & ~63;
   }
 
 

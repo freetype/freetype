@@ -208,8 +208,8 @@
      /* we need to use rounding in the following computations. Otherwise,
       * the resulting hinted outlines will be very slightly distorted
       */
-      dim_x = ( ( char_width  * horz_resolution + (36+32*72) ) / 72 ) & -64;
-      dim_y = ( ( char_height * vert_resolution + (36+32*72) ) / 72 ) & -64;
+      dim_x = ( ( char_width  * horz_resolution + (36+32*72) ) / 72 ) & ~63;
+      dim_y = ( ( char_height * vert_resolution + (36+32*72) ) / 72 ) & ~63;
     }
     else
     {

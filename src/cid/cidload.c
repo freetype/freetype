@@ -388,7 +388,7 @@
       /* reallocate offsets array if needed */
       if ( num_subrs + 1 > max_offsets )
       {
-        FT_UInt  new_max = ( num_subrs + 1 + 3 ) & -4;
+        FT_UInt  new_max = FT_PAD_CEIL( num_subrs + 1, 4 );
 
 
         if ( FT_RENEW_ARRAY( offsets, max_offsets, new_max ) )

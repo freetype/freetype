@@ -205,7 +205,7 @@
 
     if ( new_max > old_max )
     {
-      new_max = ( new_max + 7 ) & -8;
+      new_max = FT_PAD_CEIL( new_max, 8 );
 
       if ( FT_RENEW_ARRAY( base->points, old_max, new_max ) ||
            FT_RENEW_ARRAY( base->tags,   old_max, new_max ) )
@@ -225,7 +225,7 @@
               n_contours;
     if ( new_max > old_max )
     {
-      new_max = ( new_max + 3 ) & -4;
+      new_max = FT_PAD_CEIL( new_max, 4 );
       if ( FT_RENEW_ARRAY( base->contours, old_max, new_max ) )
         goto Exit;
 
@@ -261,7 +261,7 @@
     old_max = loader->max_subglyphs;
     if ( new_max > old_max )
     {
-      new_max = ( new_max + 1 ) & -2;
+      new_max = FT_PAD_CEIL( new_max, 2 );
       if ( FT_RENEW_ARRAY( base->subglyphs, old_max, new_max ) )
         goto Exit;
 

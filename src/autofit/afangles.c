@@ -6,7 +6,7 @@
   static const FT_Fixed
   af_angle_arctan_table[9] =
   {
-    90, 64, 38, 20, 10, 5, 3, 1, 1 
+    90, 64, 38, 20, 10, 5, 3, 1, 1
   };
 
 
@@ -116,9 +116,9 @@
 
     /* round theta */
     if ( theta >= 0 )
-      theta = ( theta + 2 ) & -4;
+      theta = FT_PAD_ROUND( theta, 4 );
     else
-      theta = - (( -theta + 2 ) & -4);
+      theta = - FT_PAD_ROUND( -theta, 4 );
 
     vec->x = x;
     vec->y = theta;
@@ -152,18 +152,18 @@
                  AF_Angle  angle2 )
   {
     AF_Angle  delta = angle2 - angle1;
-    
+
     delta %= AF_ANGLE_2PI;
     if ( delta < 0 )
       delta += AF_ANGLE_2PI;
-    
+
     if ( delta > AF_ANGLE_PI )
       delta -= AF_ANGLE_2PI;
-      
-    return delta;
-  }                 
 
- 
+    return delta;
+  }
+
+
  /* well, this needs to be somewhere, right :-)
   */
 
@@ -187,5 +187,5 @@
         table[j - 1] = swap;
       }
     }
-  }               
+  }
  

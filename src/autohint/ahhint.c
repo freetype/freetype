@@ -71,7 +71,7 @@
       }
     }
 
-    scaled = ( reference + 32 ) & -64;
+    scaled = FT_PIX_ROUND( reference );
 
     if ( width >= reference )
     {
@@ -167,7 +167,7 @@
             dist += delta;
         }
         else
-          dist = ( dist + 32 ) & -64;
+          dist = ( dist + 32 ) & ~63;
       }
     }
     else
@@ -181,7 +181,7 @@
         /* in the case of vertical hinting, always round */
         /* the stem heights to integer pixels            */
         if ( dist >= 64 )
-          dist = ( dist + 16 ) & -64;
+          dist = ( dist + 16 ) & ~63;
         else
           dist = 64;
       }
@@ -196,7 +196,7 @@
           if ( dist < 64 )
             dist = 64;
           else
-            dist = ( dist + 32 ) & -64;
+            dist = ( dist + 32 ) & ~63;
         }
         else
         {
@@ -207,10 +207,10 @@
             dist = ( dist + 64 ) >> 1;
 
           else if ( dist < 128 )
-            dist = ( dist + 22 ) & -64;
+            dist = ( dist + 22 ) & ~63;
           else
             /* XXX: round otherwise to prevent color fringes in LCD mode */
-            dist = ( dist + 32 ) & -64;
+            dist = ( dist + 32 ) & ~63;
         }
       }
     }
@@ -284,7 +284,7 @@
             dist += delta;
         }
         else
-          dist = ( dist + 32 ) & -64;
+          dist = ( dist + 32 ) & ~63;
       }
     }
     else
@@ -298,7 +298,7 @@
         /* in the case of vertical hinting, always round */
         /* the stem heights to integer pixels            */
         if ( dist >= 64 )
-          dist = ( dist + 16 ) & -64;
+          dist = ( dist + 16 ) & ~63;
         else
           dist = 64;
       }
@@ -313,7 +313,7 @@
           if ( dist < 64 )
             dist = 64;
           else
-            dist = ( dist + 32 ) & -64;
+            dist = ( dist + 32 ) & ~63;
         }
         else
         {
@@ -324,10 +324,10 @@
             dist = ( dist + 64 ) >> 1;
 
           else if ( dist < 128 )
-            dist = ( dist + 22 ) & -64;
+            dist = ( dist + 22 ) & ~63;
           else
             /* XXX: round otherwise to prevent color fringes in LCD mode */
-            dist = ( dist + 32 ) & -64;
+            dist = ( dist + 32 ) & ~63;
         }
       }
     }
@@ -396,7 +396,7 @@
     if ( base->flags & AH_EDGE_DONE )
     {
       if ( dist >= 64 )
-        dist = ( dist + 8 ) & -64;
+        dist = ( dist + 8 ) & ~63;
 
       else if ( dist <= 32 && !vertical )
         dist = ( dist + 33 ) >> 1;
@@ -545,7 +545,7 @@
           {
             org_center = edge->opos + ( org_len >> 1 );
 
-            cur_pos1   = ( org_center + 32 ) & -64;
+            cur_pos1   = FT_PIX_ROUND( org_center );
 
             error1 = org_center - ( cur_pos1 - u_off );
             if ( error1 < 0 )
@@ -565,7 +565,7 @@
 
           }
           else
-            edge->pos = ( edge->opos + 32 ) & -64;
+            edge->pos = FT_PIX_ROUND( edge->opos );
 
           anchor = edge;
 
@@ -575,7 +575,7 @@
 
 #else /* !FT_CONFIG_CHESTER_STEM */
 
-          edge->pos = ( edge->opos + 32 ) & -64;
+          edge->pos = FT_PIX_ROUND( edge->opos );
           anchor    = edge;
 
           edge->flags |= AH_EDGE_DONE;
@@ -614,7 +614,7 @@
             FT_Pos  u_off, d_off;
 
 
-            cur_pos1 = ( org_center + 32 ) & -64;
+            cur_pos1 = FT_PIX_ROUND( org_center );
 
             if (cur_len <= 64 )
               u_off = d_off = 32;
@@ -649,12 +649,12 @@
             cur_len    = ah_compute_stem_width( hinter, dimension, org_len,
                                                 edge->flags, edge2->flags );
 
-            cur_pos1   = ( org_pos + 32 ) & -64;
+            cur_pos1   = FT_PIX_ROUND( org_pos );
             delta1     = ( cur_pos1 + ( cur_len >> 1 ) - org_center );
             if ( delta1 < 0 )
               delta1 = -delta1;
 
-            cur_pos2   = ( ( org_pos + org_len + 32 ) & -64 ) - cur_len;
+            cur_pos2   = FT_PIX_ROUND( org_pos + org_len ) - cur_len;
             delta2     = ( cur_pos2 + ( cur_len >> 1 ) - org_center );
             if ( delta2 < 0 )
               delta2 = -delta2;
@@ -665,12 +665,12 @@
 
 #else /* !FT_CONFIG_CHESTER_STEM */
 
-          cur_pos1   = ( org_pos + 32 ) & -64;
+          cur_pos1   = FT_PIX_ROUND( org_pos );
           delta1     = ( cur_pos1 + ( cur_len >> 1 ) - org_center );
           if ( delta1 < 0 )
             delta1 = -delta1;
 
-          cur_pos2   = ( ( org_pos + org_len + 32 ) & -64 ) - cur_len;
+          cur_pos2   = FT_PIX_ROUND( org_pos + org_len ) - cur_len;
           delta2     = ( cur_pos2 + ( cur_len >> 1 ) - org_center );
           if ( delta2 < 0 )
             delta2 = -delta2;
@@ -764,12 +764,12 @@
           ah_align_serif_edge( hinter, edge->serif, edge, dimension );
         else if ( !anchor )
         {
-          edge->pos = ( edge->opos + 32 ) & -64;
+          edge->pos = FT_PIX_ROUND( edge->opos );
           anchor    = edge;
         }
         else
           edge->pos = anchor->pos +
-                      ( ( edge->opos-anchor->opos + 32 ) & -64 );
+                      FT_PIX_ROUND( edge->opos - anchor->opos );
 
         edge->flags |= AH_EDGE_DONE;
 
@@ -1299,15 +1299,16 @@
       if ( delta2 < 32 )
         delta2 = 0;
       else if ( delta2 < 64 )
-        delta2 = 32 + ( ( ( delta2 - 32 ) + 16 ) & -32 );
+        delta2 = 32 + ( ( ( delta2 - 32 ) + 16 ) & ~31 );
       else
-        delta2 = ( delta2 + 32 ) & -64;
+        delta2 = FT_PIX_ROUND( delta2 );
 
       if ( delta < 0 )
         delta2 = -delta2;
 
       scaled->blue_refs[n] =
-        ( FT_MulFix( design->blue_refs[n], y_scale ) + 32 ) & -64;
+        FT_PIX_ROUND( FT_MulFix( design->blue_refs[n], y_scale ) );
+
       scaled->blue_shoots[n] = scaled->blue_refs[n] + delta2;
     }
 
@@ -1551,8 +1552,8 @@
         old_lsb     = edge1->opos;
         new_lsb     = edge1->pos;
 
-        hinter->pp1.x = ( ( new_lsb    - old_lsb ) + 32 ) & -64;
-        hinter->pp2.x = ( ( edge2->pos + old_rsb ) + 32 ) & -64;
+        hinter->pp1.x = FT_PIX_ROUND( new_lsb    - old_lsb );
+        hinter->pp2.x = FT_PIX_ROUND( edge2->pos + old_rsb );
 
 #if 0
         /* try to fix certain bad advance computations */
@@ -1677,8 +1678,8 @@
             x = FT_MulFix( subglyph->arg1, x_scale );
             y = FT_MulFix( subglyph->arg2, y_scale );
 
-            x = ( x + 32 ) & -64;
-            y = ( y + 32 ) & -64;
+            x = FT_PIX_ROUND(x);
+            y = FT_PIX_ROUND(y);
           }
 
           {
@@ -1715,10 +1716,10 @@
         FT_Outline_Translate( &gloader->base.outline, -hinter->pp1.x, 0 );
 
       FT_Outline_Get_CBox( &gloader->base.outline, &bbox );
-      bbox.xMin &= -64;
-      bbox.yMin &= -64;
-      bbox.xMax  = ( bbox.xMax + 63 ) & -64;
-      bbox.yMax  = ( bbox.yMax + 63 ) & -64;
+      bbox.xMin  = FT_PIX_FLOOR(  bbox.xMin );
+      bbox.yMin  = FT_PIX_FLOOR(  bbox.yMin );
+      bbox.xMax  = FT_PIX_CEIL( bbox.xMax );
+      bbox.yMax  = FT_PIX_CEIL( bbox.yMax );
 
       slot->metrics.width        = bbox.xMax - bbox.xMin;
       slot->metrics.height       = bbox.yMax - bbox.yMin;
@@ -1733,7 +1734,7 @@
         slot->metrics.horiAdvance = FT_MulFix( slot->metrics.horiAdvance,
                                                x_scale );
 
-      slot->metrics.horiAdvance = ( slot->metrics.horiAdvance + 32 ) & -64;
+      slot->metrics.horiAdvance = FT_PIX_ROUND( slot->metrics.horiAdvance );
 
       /* now copy outline into glyph slot */
       ah_loader_rewind( slot->internal->loader );
@@ -1802,7 +1803,7 @@
       if ( shoot > 0 )
       {
         FT_Pos  scaled = FT_MulFix( shoot, y_scale );
-        FT_Pos  fitted = ( scaled + 32 ) & -64;
+        FT_Pos  fitted = FT_PIX_ROUND( scaled );
 
 
         if ( scaled != fitted )

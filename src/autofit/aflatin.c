@@ -1173,7 +1173,7 @@
       }
     }
 
-    scaled = ( reference + 32 ) & -64;
+    scaled = FT_PIX_ROUND( reference );
 
     if ( width >= reference )
     {
@@ -1268,7 +1268,7 @@
             dist += delta;
         }
         else
-          dist = ( dist + 32 ) & -64;
+          dist = ( dist + 32 ) & ~63;
       }
     }
     else
@@ -1282,7 +1282,7 @@
         /* in the case of vertical hinting, always round */
         /* the stem heights to integer pixels            */
         if ( dist >= 64 )
-          dist = ( dist + 16 ) & -64;
+          dist = ( dist + 16 ) & ~63;
         else
           dist = 64;
       }
@@ -1297,7 +1297,7 @@
           if ( dist < 64 )
             dist = 64;
           else
-            dist = ( dist + 32 ) & -64;
+            dist = ( dist + 32 ) & ~63;
         }
         else
         {
@@ -1308,10 +1308,10 @@
             dist = ( dist + 64 ) >> 1;
 
           else if ( dist < 128 )
-            dist = ( dist + 22 ) & -64;
+            dist = ( dist + 22 ) & ~63;
           else
             /* XXX: round otherwise to prevent color fringes in LCD mode */
-            dist = ( dist + 32 ) & -64;
+            dist = ( dist + 32 ) & ~63;
         }
       }
     }
@@ -1472,7 +1472,7 @@
         {
           org_center = edge->opos + ( org_len >> 1 );
 
-          cur_pos1   = ( org_center + 32 ) & -64;
+          cur_pos1   = FT_PIX_ROUND( org_center );
 
           error1 = org_center - ( cur_pos1 - u_off );
           if ( error1 < 0 )
@@ -1492,7 +1492,7 @@
 
         }
         else
-          edge->pos = ( edge->opos + 32 ) & -64;
+          edge->pos = FT_PIX_ROUND( edge->opos );
 
         anchor = edge;
 
@@ -1518,7 +1518,7 @@
           FT_Pos  u_off, d_off;
 
 
-          cur_pos1 = ( org_center + 32 ) & -64;
+          cur_pos1 = FT_PIX_ROUND( org_center );
 
           if (cur_len <= 64 )
             u_off = d_off = 32;
@@ -1553,12 +1553,12 @@
           cur_len    = af_compute_stem_width( hinter, dimension, org_len,
                                               edge->flags, edge2->flags );
 
-          cur_pos1   = ( org_pos + 32 ) & -64;
+          cur_pos1   = FT_PIX_ROUND( org_pos );
           delta1     = ( cur_pos1 + ( cur_len >> 1 ) - org_center );
           if ( delta1 < 0 )
             delta1 = -delta1;
 
-          cur_pos2   = ( ( org_pos + org_len + 32 ) & -64 ) - cur_len;
+          cur_pos2   = FT_PIX_ROUND( org_pos + org_len ) - cur_len;
           delta2     = ( cur_pos2 + ( cur_len >> 1 ) - org_center );
           if ( delta2 < 0 )
             delta2 = -delta2;
@@ -1651,12 +1651,12 @@
           af_align_serif_edge( hinter, edge->serif, edge, dimension );
         else if ( !anchor )
         {
-          edge->pos = ( edge->opos + 32 ) & -64;
+          edge->pos = FT_PIX_ROUND( edge->opos );
           anchor    = edge;
         }
         else
           edge->pos = anchor->pos +
-                      ( ( edge->opos-anchor->opos + 32 ) & -64 );
+                      FT_PIX_ROUND( edge->opos - anchor->opos );
 
         edge->flags |= AF_EDGE_DONE;
 
