@@ -42,15 +42,18 @@
   /*************************************************************************/
 
 
-#ifndef FTCCHUNK_H
-#define FTCCHUNK_H
+#ifndef __FTCCHUNK_H__
+#define __FTCCHUNK_H__
 
-#include <freetype/cache/ftcmanag.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_CACHE_H
+#include   FT_CACHE_MANAGER_H
+
+FT_BEGIN_HEADER
+
 
   /* maximum number of chunk sets in a given chunk cache */
 #define  FTC_MAX_CHUNK_SETS  16
@@ -205,12 +208,9 @@
                                                  FT_UInt         *aindex );
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* FTCCHUNK_H */
+#endif /* __FTCCHUNK_H__ */
 
 
 /* END */

@@ -25,8 +25,8 @@
 /***************************************************************************/
 
 
-#ifndef FT_MAC_H
-#define FT_MAC_H
+#ifndef __FT_MAC_H__
+#define __FT_MAC_H__
 
 
 #ifdef __cplusplus
@@ -75,7 +75,7 @@
 #endif
 
 
-#endif /* FT_MAC_H */
+#endif /* __FT_MAC_H__ */
 
 
 /* END */

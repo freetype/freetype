@@ -1,3 +1,15 @@
+2000-11-30  David Turner  <david.turner@freetype.ogr>
+
+	* include/config/ftbuild.h, include/internal/internal.h: added
+	a new configuration file used to determine where are all public,
+	configuration and internal header files for FreeType 2. I also
+	modified all headers under "include/freetype" to reflect this
+	change. Note that we still need to change the library source 
+	files themselves though..
+
+	* include/freetype.h: modified all public, configuration and
+	internal header files to use the new
+	
 2000-11-30  Tom Kacvinsky  <tjk@ams.org>
 
 	* t2objs.c (T2_Init_Face): Added calculation of `face->height' for

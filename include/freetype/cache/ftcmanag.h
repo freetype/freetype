@@ -59,17 +59,17 @@
   /*************************************************************************/
 
 
-#ifndef FTCMANAG_H
-#define FTCMANAG_H
+#ifndef __FTCMANAG_H__
+#define __FTCMANAG_H__
 
-#include <freetype/ftcache.h>
-#include <freetype/cache/ftlru.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_CACHE_H
+#include   FT_CACHE_INTERNAL_LRU_H
 
+FT_BEGIN_HEADER
 
 #define FTC_MAX_FACES_DEFAULT  2
 #define FTC_MAX_SIZES_DEFAULT  4
@@ -360,13 +360,11 @@
 
   } FTC_CacheRec;
 
+  /* */
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* FTCMANAG_H */
+#endif /* __FTCMANAG_H__ */
 
 
 /* END */

@@ -16,16 +16,17 @@
 /***************************************************************************/
 
 
-#ifndef FTRENDER_H
-#define FTRENDER_H
+#ifndef __FTRENDER_H__
+#define __FTRENDER_H__
 
-#include <freetype/ftmodule.h>
-#include <freetype/ftglyph.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_MODULE_H
+#include   FT_GLYPH_H
+
+FT_BEGIN_HEADER
 
 
   /* create a new glyph object */
@@ -180,13 +181,11 @@
                                           FT_UInt        num_params,
                                           FT_Parameter*  parameters );
 
+  /* */
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* FTRENDER_H */
+#endif /* __FTRENDER_H__ */
 
 
 /* END */

@@ -24,8 +24,8 @@
   /*************************************************************************/
 
 
-#ifndef AUTOHINT_H
-#define AUTOHINT_H
+#ifndef __AUTOHINT_H__
+#define __AUTOHINT_H__
 
 
   /*************************************************************************/
@@ -69,14 +69,13 @@
   /*                                                                       */
   /*************************************************************************/
 
-
-#include <freetype/freetype.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H  <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_FREETYPE_H
 
+FT_BEGIN_HEADER
 
   typedef struct FT_AutoHinterRec_  *FT_AutoHinter;
 
@@ -194,12 +193,9 @@
   } FT_AutoHinter_Interface;
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* AUTOHINT_H */
+#endif /* __AUTOHINT_H__ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef TTERRORS_H
-#define TTERRORS_H
+#ifndef __TTERRORS_H__
+#define __TTERRORS_H__
 
 
 #ifdef __cplusplus
@@ -125,7 +125,7 @@
 #endif
 
 
-#endif /* TTERRORS_H */
+#endif /* __TTERRORS_H__ */
 
 
 /* END */

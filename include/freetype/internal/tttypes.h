@@ -17,17 +17,17 @@
 /***************************************************************************/
 
 
-#ifndef TTTYPES_H
-#define TTTYPES_H
+#ifndef __TTTYPES_H__
+#define __TTTYPES_H__
 
-
-#include <freetype/tttables.h>
-#include <freetype/internal/ftobjs.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H  <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_TRUETYPE_TABLES_H
+#include   FT_INTERNAL_OBJECTS_H
+
+FT_BEGIN_HEADER
 
 
   /*************************************************************************/
@@ -1591,12 +1591,9 @@
   };
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* TTTYPES_H */
+#endif /* __TTTYPES_H__ */
 
 
 /* END */

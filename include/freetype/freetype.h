@@ -16,9 +16,14 @@
 /***************************************************************************/
 
 
-#ifndef FREETYPE_H
-#define FREETYPE_H
+#ifndef __FREETYPE_H__
+#define __FREETYPE_H__
 
+/* include potentially build-specific directives and macros */
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
+#endif
+#include   FT_BUILD_H
 
   /*************************************************************************/
   /*                                                                       */
@@ -38,15 +43,11 @@
 #define FREETYPE_MINOR 0
 
 
-#include <freetype/config/ftconfig.h>   /* read configuration information */
-#include <freetype/fterrors.h>
-#include <freetype/fttypes.h>
+#include FT_CONFIG_CONFIG_H
+#include FT_ERRORS_H
+#include FT_TYPES_H
 
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*************************************************************************/
@@ -2287,12 +2288,9 @@
 
   /* */
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* FREETYPE_H */
+#endif /* __FREETYPE_H__ */
 
 
 /* END */

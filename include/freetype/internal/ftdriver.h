@@ -16,17 +16,16 @@
 /***************************************************************************/
 
 
-#ifndef FTDRIVER_H
-#define FTDRIVER_H
+#ifndef __FTDRIVER_H__
+#define __FTDRIVER_H__
 
-
-#include <freetype/ftmodule.h>
-#include <freetype/config/ftconfig.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H  <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_MODULE_H
+
+FT_BEGIN_HEADER
 
 
   typedef FT_Error  (*FTDriver_initFace)     ( FT_Stream      stream,
@@ -181,12 +180,9 @@
   } FT_Driver_Class;
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* FTDRIVER_H */
+#endif /* __FTDRIVER_H__ */
 
 
 /* END */

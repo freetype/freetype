@@ -30,12 +30,13 @@
 #ifndef FTBBOX_H
 #define FTBBOX_H
 
-#include <freetype/freetype.h>
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_FREETYPE_H
 
+FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
@@ -62,9 +63,9 @@
                                               FT_BBox     *abbox );
 
 
-#ifdef __cplusplus
-  }
-#endif
+  /* */
+
+FT_END_HEADER
 
 #endif /* FTBBOX_H */
 

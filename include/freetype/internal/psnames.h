@@ -17,17 +17,16 @@
 /***************************************************************************/
 
 
-#ifndef PSNAMES_H
-#define PSNAMES_H
+#ifndef __PSNAMES_H__
+#define __PSNAMES_H__
 
-
-#include <freetype/freetype.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H  <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+#include   FT_FREETYPE_H
 
+FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
@@ -219,12 +218,9 @@
   } PSNames_Interface;
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* PSNAMES_H */
+#endif /* __PSNAMES_H__ */
 
 
 /* END */

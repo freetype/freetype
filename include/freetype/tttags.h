@@ -16,17 +16,17 @@
 /***************************************************************************/
 
 
-#ifndef TTAGS_H
-#define TTAGS_H
+#ifndef __TTAGS_H__
+#define __TTAGS_H__
 
-
-#include <freetype/freetype.h>   /* for MAKE_TT_TAG() */
-
-
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
 
+#include FT_BUILD_H
+#include FT_FREETYPE_H
+
+FT_BEGIN_HEADER
 
 #define TTAG_cmap  FT_MAKE_TAG( 'c', 'm', 'a', 'p' )
 #define TTAG_cvt   FT_MAKE_TAG( 'c', 'v', 't', ' ' )
@@ -66,12 +66,9 @@
 #define TTAG_vhea  FT_MAKE_TAG( 'v', 'h', 'e', 'a' )
 #define TTAG_vmtx  FT_MAKE_TAG( 'v', 'm', 't', 'x' )
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* TTAGS_H */
+#endif /* __TTAGS_H__ */
 
 
 /* END */
