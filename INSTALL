@@ -5,6 +5,44 @@ directory.  This is only a quick starter.
 I. From the command line
 ------------------------
 
+  There are two ways to quickly build FreeType 2 from the command line.
+  
+  The first, and favorite one, is to use the "Jam" build tool. Jam is
+  a highly portable replacement for Make whose control files do not
+  depend on the current platform or compiler toolset.
+  
+  For more information, please see: http://www.freetype.org/jam/index.html
+  
+  The second one is to use "GNU Make" (and NO OTHER MAKE TOOL).
+     
+     
+  1. Building FT2 with "Jam":
+  ===========================
+  
+    once you've got *our version* of the Jam tool installed on your
+    system, simply go to the top-level FT2 directory, then type:
+    
+      "jam"
+      
+    on the command line. This will build the library and place it
+    in the "objs" directory.
+    
+    By default, a static library is built. On Unix systems, it's possible
+    to build a shared library through the "libtool" script. You'll need
+    to have libtool installed on your system, then re-define a few
+    environment variables before invoking Jam, as in:
+
+       export CC="libtool --mode=compile"
+       export LINK="libtool --mode=link"
+       jam
+               
+    In later releases of FT2, building shared libraries with Jam should
+    become automatic..
+    
+    
+  2. Building FT2 with "GNU Make":
+  ================================
+  
   You need  to have  GNU Make (version  3.78.1 or newer)  installed on
   your system to compile the library from the command line.  This will
   _NOT_ work with other make tools (including BSD make)!
@@ -29,6 +67,7 @@ I. From the command line
       - make
       - make install
 
+
   - Windows:
 
     We provide a  version of GNU Make for Win32  on the FreeType site.
@@ -48,14 +87,11 @@ I. From the command line
 
     - other compilers:
     
-          - make setup xxxx
-          - make
+        - make setup bcc32    -> Borland C++ 32 bits
+        - make setup intelc   -> Intel C++
+        - make setup watcom   -> Watcom C++
+        - make setup lcc      -> Win32-LCC
           
-      where "xxxx" is a special target corresponding to your compiler.
-      To see a list of supported compilers in this release, type:
-      
-          make setup list
-      
 
 II. In your own environment (IDE)
 ---------------------------------
@@ -103,5 +139,6 @@ II. In your own environment (IDE)
 
        etc.
 
+For more information, please consult "docs/BUILD" !!
 
 --- end of INSTALL --
