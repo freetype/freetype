@@ -183,6 +183,7 @@ FT_BEGIN_HEADER
     T1_FIELD_TYPE_FIXED_1000,
     T1_FIELD_TYPE_FIXED_1000_P,
     T1_FIELD_TYPE_STRING,
+    T1_FIELD_TYPE_KEY,
     T1_FIELD_TYPE_BBOX,
     T1_FIELD_TYPE_INTEGER_ARRAY,
     T1_FIELD_TYPE_FIXED_ARRAY,
@@ -292,6 +293,9 @@ FT_BEGIN_HEADER
 
 #define T1_FIELD_STRING( _ident, _fname )                             \
           T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_STRING, _fname )
+
+#define T1_FIELD_KEY( _ident, _fname )                             \
+          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_KEY, _fname )
 
 #define T1_FIELD_BBOX( _ident, _fname )                             \
           T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_BBOX, _fname )

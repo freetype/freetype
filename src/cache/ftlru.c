@@ -227,7 +227,7 @@
   
           if ( node == NULL )
           {
-            FT_ASSERT( list->nodes == 0 );
+            FT_ASSERT( list->num_nodes == 0 );
             error = FT_Err_Out_Of_Memory;
             goto Exit;
           }
@@ -245,7 +245,7 @@
            * a classic destroy/create cycle.
            */
           *pnode = NULL;
-          list->num_nodes -= 1;
+          list->num_nodes--;
   
           if ( clazz->node_flush )
           {
@@ -379,6 +379,7 @@
           clazz->node_done( node, list );
 
         FT_FREE( node );
+        list->num_nodes--;
       }
       else
         pnode = &(*pnode)->next;

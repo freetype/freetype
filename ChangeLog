@@ -1,3 +1,19 @@
+2003-06-12  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/psaux.h (T1_FieldType): Add
+	T1_FIELD_TYPE_KEY.
+	(T1_FIELD_KEY): New macro.
+	* src/psaux/psobjs.c (ps_parser_load_field): Handle
+	T1_FIELD_TYPE_KEY.
+
+	* src/cid/cidtoken.h: Use T1_FIELD_KEY for /CIDFontName.
+
+2003-06-11  Alexander Malmberg  <alexander@malmberg.org>
+
+	* src/cache/ftlru.c (FT_LruList_Remove_Selection): Decrease
+	number of nodes.
+	(FT_LruList_Lookup): Fix assertion for out-of-memory case.
+
 2003-06-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidload.c (cid_decrypt): Removed.
