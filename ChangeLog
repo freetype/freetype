@@ -1,3 +1,17 @@
+2004-03-31  Werner Lemberg  <wl@gnu.org>
+
+	Handle broken FNT files which don't have a trailing NULL byte
+	in the face name string.
+
+	* src/winfnt/winfnt.h (FNT_FontRec): New member `family_name'.
+	* src/winfnt/winfnt.c (fnt_font_done): Free font->family_name.
+	(FNT_Face_Init): Append a final zero byte to the font face name.
+
+2004-03-30  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttload.c (tt_face_load_sfnt_header): Fix change from
+	2004-03-19.
+
 2004-03-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/descrip.mms (OBJS): Add ftbbox.obj.

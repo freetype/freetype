@@ -357,11 +357,6 @@
            FT_READ_LONG( format_tag )                             )
         goto Exit;
     }
-    else if ( face_index > 0 )
-    {
-      error = SFNT_Err_Bad_Argument;
-      goto Exit;
-    }
 
     /* the format tag was read, now check the rest of the header */
     sfnt->format_tag = format_tag;
@@ -376,7 +371,12 @@
     {
       FT_TRACE2(( "tt_face_load_sfnt_header: file is not SFNT!\n" ));
       error = SFNT_Err_Unknown_File_Format;
+      goto Exit;
     }
+
+    /* disallow face index values > 0 for non-TTC files */
+    if ( format_tag != TTAG_ttcf && face_index > 0 )
+      error = SFNT_Err_Bad_Argument;
 
   Exit:
     return error;
