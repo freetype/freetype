@@ -23,7 +23,9 @@ ifndef TOP
   TOP := .
 endif
 
-SEP := /
+SEP   := /
+BUILD := $(TOP)/builds/win32/devel
+
 include $(TOP)/builds/win32/win32-def.mk
 include $(TOP)/builds/compiler/gcc-dev.mk
 
