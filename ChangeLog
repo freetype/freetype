@@ -1,3 +1,12 @@
+2004-08-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/otlayout/otlgpos.c (otl_value_length): Return number of bytes,
+	not number of 16bit entities.
+	(otl_gpos_lookup2_validate): Check class definition tables for
+	format 2.
+	Fix loop for format 2.
+	(otl_liga_mark2_validate): Fix offset for otl_anchor_validate.
+
 2004-08-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftmac.c: Don't include truetype/ttobjs.h.
