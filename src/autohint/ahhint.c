@@ -1286,12 +1286,12 @@
       /* XXX: TO DO - slot->linearHoriAdvance */
 
       /* now copy outline into glyph slot */
-      ah_loader_rewind( slot->loader );
-      error = ah_loader_copy_points( slot->loader, gloader );
+      ah_loader_rewind( slot->internal->loader );
+      error = ah_loader_copy_points( slot->internal->loader, gloader );
       if ( error )
         goto Exit;
 
-      slot->outline = slot->loader->base.outline;
+      slot->outline = slot->internal->loader->base.outline;
       slot->format  = ft_glyph_format_outline;
     }
 

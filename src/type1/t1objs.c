@@ -292,8 +292,8 @@
       root->underline_position  = face->type1.font_info.underline_position;
       root->underline_thickness = face->type1.font_info.underline_thickness;
 
-      root->max_points   = 0;
-      root->max_contours = 0;
+      root->internal->max_points   = 0;
+      root->internal->max_contours = 0;
     }
 
     /* charmap support -- synthetize unicode charmap if possible */

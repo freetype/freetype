@@ -1127,8 +1127,8 @@
       glyph->outline.flags &= ~ft_outline_single_pass;
 
       /* copy outline to our glyph slot */
-      FT_GlyphLoader_Copy_Points( glyph->loader, loader->gloader );
-      glyph->outline = glyph->loader->base.outline;
+      FT_GlyphLoader_Copy_Points( glyph->internal->loader, loader->gloader );
+      glyph->outline = glyph->internal->loader->base.outline;
 
       /* translate array so that (0,0) is the glyph's origin */
       FT_Outline_Translate( &glyph->outline, -loader->pp1.x, 0 );

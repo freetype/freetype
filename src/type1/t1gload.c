@@ -214,11 +214,14 @@
       /* advance width                                           */
       if ( load_flags & FT_LOAD_NO_RECURSE )
       {
+        FT_Slot_Internal  internal = glyph->root.internal;
+        
+        
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
         glyph->root.metrics.horiAdvance  = decoder.builder.advance.x;
-        glyph->root.glyph_matrix         = font_matrix;
-        glyph->root.glyph_delta          = font_offset;
-        glyph->root.glyph_transformed    = 1;
+        internal->glyph_matrix         = font_matrix;
+        internal->glyph_delta          = font_offset;
+        internal->glyph_transformed    = 1;
       }
       else
       {
@@ -229,7 +232,7 @@
         /* copy the _unscaled_ advance width */
         metrics->horiAdvance          = decoder.builder.advance.x;
         glyph->root.linearHoriAdvance = decoder.builder.advance.x;
-/*        glyph->root.transformed       = 0; */
+        glyph->root.internal->glyph_transformed = 0;
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;

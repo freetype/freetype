@@ -674,16 +674,23 @@
     FT_Driver_Class*  clazz  = driver->clazz;
     FT_Memory         memory = driver->root.memory;
     FT_Error          error  = FT_Err_Ok;
+    FT_Slot_Internal  internal;
 
 
     slot->library = driver->root.library;
 
+    if ( ALLOC( internal, sizeof( *internal ) ) )
+      goto Exit;
+
+    slot->internal = internal;
+
     if ( FT_DRIVER_USES_OUTLINES( driver ) )
-      error = FT_GlyphLoader_New( memory, &slot->loader );
+      error = FT_GlyphLoader_New( memory, &internal->loader );
 
     if ( !error && clazz->init_slot )
       error = clazz->init_slot( slot );
 
+  Exit:
     return error;
   }
 
@@ -728,6 +735,9 @@
     FT_Memory         memory = driver->root.memory;
 
 
+    if ( clazz->done_slot )
+      clazz->done_slot( slot );
+
     /* free bitmap buffer if needed */
     if ( slot->flags & ft_glyph_own_bitmap )
       FREE( slot->bitmap.buffer );
@@ -735,12 +745,11 @@
     /* free glyph loader */
     if ( FT_DRIVER_USES_OUTLINES( driver ) )
     {
-      FT_GlyphLoader_Done( slot->loader );
-      slot->loader = 0;
+      FT_GlyphLoader_Done( slot->internal->loader );
+      slot->internal->loader = 0;
     }
 
-    if ( clazz->done_slot )
-      clazz->done_slot( slot );
+    FREE( slot->internal );
   }
 
 
@@ -876,40 +885,45 @@
                                            FT_Matrix*  matrix,
                                            FT_Vector*  delta )
   {
+    FT_Face_Internal  internal;
+    
+
     if ( !face )
       return;
 
-    face->transform_flags = 0;
+    internal = face->internal;
+
+    internal->transform_flags = 0;
 
     if ( !matrix )
     {
-      face->transform_matrix.xx = 0x10000L;
-      face->transform_matrix.xy = 0;
-      face->transform_matrix.yx = 0;
-      face->transform_matrix.yy = 0x10000L;
-      matrix = &face->transform_matrix;
+      internal->transform_matrix.xx = 0x10000L;
+      internal->transform_matrix.xy = 0;
+      internal->transform_matrix.yx = 0;
+      internal->transform_matrix.yy = 0x10000L;
+      matrix = &internal->transform_matrix;
     }
     else
-      face->transform_matrix = *matrix;
+      internal->transform_matrix = *matrix;
 
     /* set transform_flags bit flag 0 if `matrix' isn't the identity */
     if ( ( matrix->xy | matrix->yx ) ||
          matrix->xx != 0x10000L      ||
          matrix->yy != 0x10000L      )
-      face->transform_flags |= 1;
+      internal->transform_flags |= 1;
 
     if ( !delta )
     {
-      face->transform_delta.x = 0;
-      face->transform_delta.y = 0;
-      delta = &face->transform_delta;
+      internal->transform_delta.x = 0;
+      internal->transform_delta.y = 0;
+      delta = &internal->transform_delta;
     }
     else
-      face->transform_delta = *delta;
+      internal->transform_delta = *delta;
 
     /* set transform_flags bit flag 1 if `delta' isn't the null vector */
     if ( delta->x | delta->y )
-      face->transform_flags |= 2;
+      internal->transform_flags |= 2;
   }
 
 
@@ -1044,8 +1058,11 @@
 
     if ( ( load_flags & FT_LOAD_IGNORE_TRANSFORM ) == 0 )
     {
+      FT_Face_Internal  internal = face->internal;
+      
+      
       /* now, transform the glyph image if needed */
-      if ( face->transform_flags )
+      if ( internal->transform_flags )
       {
         /* get renderer */
         FT_Renderer  renderer = ft_lookup_glyph_renderer( slot );
@@ -1053,10 +1070,10 @@
 
         if ( renderer )
           error = renderer->clazz->transform_glyph( renderer, slot,
-                                                    &face->transform_matrix,
-                                                    &face->transform_delta );
+                                                    &internal->transform_matrix,
+                                                    &internal->transform_delta );
         /* transform advance */
-        FT_Vector_Transform( &slot->advance, &face->transform_matrix );
+        FT_Vector_Transform( &slot->advance, &internal->transform_matrix );
       }
     }
 
@@ -1147,6 +1164,7 @@
     if ( driver->clazz->done_size )
       driver->clazz->done_size( size );
 
+    FREE( size->internal );
     FREE( size );
   }
 
@@ -1190,6 +1208,7 @@
       ( face->face_flags & FT_FACE_FLAG_EXTERNAL_STREAM ) != 0 );
 
     /* get rid of it */
+    FREE( face->internal );
     FREE( face );
   }
 
@@ -1228,6 +1247,7 @@
     FT_Driver_Class*  clazz;
     FT_Face           face = 0;
     FT_Error          error;
+    FT_Face_Internal  internal;
 
 
     clazz  = driver->clazz;
@@ -1237,9 +1257,14 @@
     if ( ALLOC( face, clazz->face_object_size ) )
       goto Fail;
 
-    face->driver = driver;
-    face->memory = memory;
-    face->stream = stream;
+    if ( ALLOC( internal, sizeof(*internal) ) )
+      goto Fail;
+      
+    face->internal = internal;
+
+    face->driver   = driver;
+    face->memory   = memory;
+    face->stream   = stream;
 
     error = clazz->init_face( stream,
                               face,
@@ -1255,6 +1280,7 @@
     if ( error )
     {
       clazz->done_face( face );
+      FREE( face->internal );
       FREE( face );
       *aface = 0;
     }
@@ -1574,14 +1600,19 @@
       face->size = size;
     }
 
-    /* initialize transformation for convenience functions */
-    face->transform_matrix.xx = 0x10000L;
-    face->transform_matrix.xy = 0;
-    face->transform_matrix.yx = 0;
-    face->transform_matrix.yy = 0x10000L;
+    /* initialize internal face data */
+    {
+      FT_Face_Internal  internal = face->internal;
+      
 
-    face->transform_delta.x = 0;
-    face->transform_delta.y = 0;
+      internal->transform_matrix.xx = 0x10000L;
+      internal->transform_matrix.xy = 0;
+      internal->transform_matrix.yx = 0;
+      internal->transform_matrix.yy = 0x10000L;
+  
+      internal->transform_delta.x = 0;
+      internal->transform_delta.y = 0;
+    }
 
     *aface = face;
     goto Exit;
@@ -1809,6 +1840,9 @@
       goto Exit;
 
     size->face = face;
+    
+    /* for now, do not use any internal fields in size objects */
+    size->internal = 0;
 
     if ( clazz->init_size )
       error = clazz->init_size( size );
@@ -2037,6 +2071,21 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    the values of "pixel_width" and "pixel_height" correspond to       */
+  /*    the pixel values of the _typographic_ character size, which are    */
+  /*    NOT necessarily the same as the dimensions of the glyph            */
+  /*    "bitmap cells".                                                    */
+  /*                                                                       */
+  /*    The "character size" is really the size of an abstract square      */
+  /*    called the "EM", used to design the font. However, depending       */
+  /*    on the font design, glyphs will be smaller or greater than the     */
+  /*    EM.                                                                */
+  /*                                                                       */
+  /*    this means that setting the pixel size to 8x8 doesn't guarantee    */
+  /*    in any way that you'll end up with glyph bitmaps that all fit      */
+  /*    within an 8x8 cell.. far from it..                                 */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Set_Pixel_Sizes( FT_Face  face,
                                                  FT_UInt  pixel_width,
