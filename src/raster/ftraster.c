@@ -251,6 +251,14 @@
   typedef unsigned char   Byte, *PByte;
   typedef char            Bool;
 
+  typedef union
+  {
+    long    l;
+    void*   p;
+    void  (*f)(void);
+
+  } Alignment, *PAlignment;
+
   typedef struct  TPoint_
   {
     Long  x;
@@ -313,7 +321,7 @@
 
 
 #define AlignProfileSize \
-          ( ( sizeof ( TProfile ) + sizeof ( long ) - 1 ) / sizeof ( long ) )
+          ( ( sizeof ( TProfile ) + sizeof ( Alignment ) - 1 ) / sizeof ( long ) )
 
 
 #ifdef TT_STATIC_RASTER

@@ -190,8 +190,8 @@
             loader->pp1.x = FT_PIX_ROUND( pp1x_uh );
             loader->pp2.x = FT_PIX_ROUND( pp2x_uh );
 
-            slot->metrics.lsb_delta = hinter->pp1.x - pp1x_uh;
-            slot->metrics.rsb_delta = hinter->pp2.x - pp2x_uh;
+            slot->lsb_delta = loader->pp1.x - pp1x_uh;
+            slot->rsb_delta = loader->pp2.x - pp2x_uh;
 
 #if 0
             /* try to fix certain bad advance computations */

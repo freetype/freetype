@@ -1,3 +1,13 @@
+2004-06-08  David Turner  <david@freetype.org>
+
+	* include/freetype/freetype.h (FT_Glyph_Metrics, FT_GlyphSlotRec),
+	src/autofit/afloader.c, src/autohint/ahhint.c:
+	moved the definition of 'lsb_delta' and 'rsb_delta' from FT_GlyphMetrics
+	to FT_GlyphSlotRec. The old location did BREAK BINARY COMPATIBILITY
+	of the library !!
+
+        * src/sfnt/sfobjs.c: removing compiler warning
+
 2004-06-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afloader.c (af_loader_load_g): Set `lsb_delta' and
@@ -10,9 +20,6 @@
 2004-06-04  David Chester  <davidchester@gmx.net>
 
 	Improve inter-letter spacing for autohinted glyphs.
-
-	* include/freetype/freetype.h (FT_Glyph_Metrics): Add elements
-	`lsb_delta' and `rsb_delta'.
 
 	* src/autohint/ahhint.c (ah_hinter_load): Set `lsb_delta' and
 	`rsb_delta' in slot->metrics and tune side bearings slightly.
