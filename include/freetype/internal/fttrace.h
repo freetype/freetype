@@ -92,6 +92,9 @@ FT_TRACE_DEF( winfnt )
 FT_TRACE_DEF( pcfdriver )
 FT_TRACE_DEF( pcfread )
 
+/* BDF fonts component */
+FT_TRACE_DEF( bdf )
+
 /* PFR fonts component */
 FT_TRACE_DEF( pfr )
 
