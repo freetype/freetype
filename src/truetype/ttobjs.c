@@ -88,7 +88,7 @@
         /* Test for Apple Unicode encoding */
         else if ( rec->platformID == TT_PLATFORM_APPLE_UNICODE )
           found = 1;
-        
+
         /* Test for Apple Roman */
         else if ( rec->platformID == TT_PLATFORM_MACINTOSH &&
                   rec->languageID == TT_MAC_ID_ROMAN       )
@@ -106,11 +106,11 @@
           if ( wide_chars )
           {
             TT_UInt   m;
-            
+
             len = (TT_UInt)rec->stringLength / 2;
             if ( MEM_Alloc( string, len + 1 ) )
               return NULL;
-    
+
             for ( m = 0; m < len; m ++ )
               string[m] = rec->string[2*m + 1];
           }
@@ -173,31 +173,31 @@
     {
       /* look-up the SFNT driver */
       FT_Driver  sfnt_driver;
-      
+
       sfnt_driver = FT_Get_Driver( face->root.driver->library, "sfnt" );
       if (!sfnt_driver)
         return FT_Err_Invalid_File_Format;
-        
+
       sfnt = (SFNT_Interface*)(sfnt_driver->interface.format_interface);
       if (!sfnt)
         return FT_Err_Invalid_File_Format;
-        
+
       face->sfnt       = sfnt;
       face->goto_table = sfnt->goto_table;
     }
-    
+
     psnames = (PSNames_Interface*)face->psnames;
     if (!psnames)
     {
       /* look-up the PSNames driver */
       FT_Driver  psnames_driver;
-      
+
       psnames_driver = FT_Get_Driver( face->root.driver->library, "psnames" );
       if (psnames_driver)
         face->psnames = (PSNames_Interface*)
                             (psnames_driver->interface.format_interface);
     }
-    
+
     /* create input stream from resource */
     if ( FILE_Seek(0) )
       goto Exit;
@@ -205,7 +205,7 @@
     /* check that we have a valid TrueType file */
     error = sfnt->load_format_tag( face, stream, face_index, &format_tag );
     if (error) goto Exit;
-    
+
     /* We must also be able to accept Mac/GX fonts, as well as OT ones */
     if ( format_tag != 0x00010000 &&    /* MS fonts  */
          format_tag != TTAG_true  )     /* Mac fonts */
@@ -245,7 +245,7 @@
      goto Exit;
 
     /* the optional tables */
-    
+
     /* embedded bitmap support. */
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     if (sfnt->load_sbits && LOAD_(sbits)) goto Exit;
@@ -295,13 +295,13 @@
     FT_Memory  memory = face->root.memory;
 
     SFNT_Interface*  sfnt = face->sfnt;
-    
+
     if (sfnt)
     {
       /* destroy the postscript names table if it is supported */
       if (sfnt->free_psnames)
         sfnt->free_psnames( face );
-        
+
       /* destroy the embedded bitmaps table if it is supported */
       if (sfnt->free_sbits)
         sfnt->free_sbits( face );
@@ -372,7 +372,7 @@
     /* freeing family and style name */
     FREE( face->root.family_name );
     FREE( face->root.style_name );
-    
+
     face->sfnt = 0;
   }
 
@@ -402,7 +402,7 @@
   TT_Error  TT_Init_Size( TT_Size  size )
   {
     TT_Error   error = 0;
-    
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     TT_Face    face   = (TT_Face)size->root.face;
     FT_Memory  memory = face->root.memory;
@@ -470,7 +470,7 @@
     /* set `face->interpreter' according to the debug hook present */
     {
       FT_Library  library = face->root.driver->library;
-      
+
       face->interpreter = (TT_Interpreter)
                             library->debug_hooks[ FT_DEBUG_HOOK_TRUETYPE ];
       if (!face->interpreter)
@@ -682,13 +682,13 @@
     {
       TT_ExecContext    exec;
       TT_UInt  i, j;
-      
+
       /* Scale the cvt values to the new ppem.          */
       /* We use by default the y ppem to scale the CVT. */
-  
+
       for ( i = 0; i < size->cvt_size; i++ )
         size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
-  
+
       /* All twilight points are originally zero */
       for ( j = 0; j < size->twilight.n_points; j++ )
       {
@@ -697,55 +697,55 @@
         size->twilight.cur[j].x = 0;
         size->twilight.cur[j].y = 0;
       }
-  
+
       /* clear storage area */
       for ( i = 0; i < size->storage_size; i++ )
         size->storage[i] = 0;
-  
+
       size->GS = tt_default_graphics_state;
-  
+
       /* get execution context and run prep program */
       if ( size->debug )
         exec = size->context;
       else
         exec = TT_New_Context( face );
       /* debugging instances have their own context */
-  
+
       if ( !exec )
         return TT_Err_Could_Not_Find_Context;
-  
+
       TT_Load_Context( exec, face, size );
-  
+
       TT_Set_CodeRange( exec,
                         tt_coderange_cvt,
                         face->cvt_program,
                         face->cvt_program_size );
-  
+
       TT_Clear_CodeRange( exec, tt_coderange_glyph );
-  
+
       exec->instruction_trap = FALSE;
-  
+
       exec->top     = 0;
       exec->callTop = 0;
-  
+
       if ( face->cvt_program_size > 0 )
       {
         error = TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
         if ( error )
           goto Fin;
-  
+
         if ( !size->debug )
           error = face->interpreter( exec );
       }
       else
         error = TT_Err_Ok;
-  
+
       size->GS = exec->GS;
       /* save default graphics state */
-  
+
     Fin:
       TT_Save_Context( exec, size );
-  
+
       if ( !size->debug )
         TT_Done_Context( exec );
       /* debugging instances keep their context */
@@ -806,7 +806,10 @@
   void  TT_Done_GlyphSlot( TT_GlyphSlot  slot )
   {
     FT_Library  library = slot->face->driver->library;
+    FT_Memory   memory  = library->memory;
 
+    if (slot->flags & ft_glyph_own_bitmap)
+      FREE( slot->bitmap.buffer );
 
     FT_Outline_Done( library, &slot->outline );
     return;
@@ -832,10 +835,10 @@
   {
     FT_Memory  memory = driver->root.memory;
     FT_Error   error;
-    
+
     error = FT_New_GlyphZone( memory, 0, 0, &driver->zone );
     if (error) return error;
-    
+
     /* init extension registry if needed */
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
     return TT_Init_Extensions( driver );

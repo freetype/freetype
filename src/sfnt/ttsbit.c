@@ -1403,7 +1403,9 @@
     ebdt_pos = FILE_Pos();
 
     /* clear the bitmap & load the bitmap */
-    FREE( map->buffer );
+    if (face->root.glyph->flags & ft_glyph_own_bitmap)
+      FREE( map->buffer );
+      
     map->rows = map->pitch = map->width = 0;
 
     error = Load_SBit_Image( strike, range, ebdt_pos, glyph_offset,
@@ -1411,6 +1413,9 @@
     if ( error )
       goto Exit;
 
+    /* the glyph slot owns this bitmap buffer */
+    face->root.glyph->flags |= ft_glyph_own_bitmap;
+    
     /* setup vertical metrics if needed */
     if ( strike->flags & 1 )
     {

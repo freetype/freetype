@@ -53,6 +53,9 @@ LATEST CHANGES -
   - updated the tutorial (not finished though).
   - updated the top-level BUILD  document
 
+  - fixed a potential memory leak that could occur when loading embedded
+    bitmaps.
+
   - added the declaration of FT_New_Memory_Face in <freetype/freetype.h>, as
     it was missing from the public header (the implementation was already
     in "ftobjs.c").

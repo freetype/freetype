@@ -1304,10 +1304,17 @@
   /*                returned by FT_Load_Glyph().                           */
   /*                                                                       */
   /*                                                                       */
+  
+  enum
+  {
+    ft_glyph_own_bitmap = 1
+  };
+  
   typedef struct  FT_GlyphSlotRec_
   {
     FT_Face           face;
     FT_GlyphSlot      next;
+    FT_UInt           flags;
 
     FT_Glyph_Metrics  metrics;
     FT_Glyph_Metrics  metrics2;
