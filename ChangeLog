@@ -1,3 +1,13 @@
+2001-03-19  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/type1/t1load.c (parse_font_matrix): Assign the units per em
+	value an unsigned short value, first by shifting right 16 bits,
+	then by casting the results to FT_UShort.
+
+	* src/cff/cffparse.c (cff_parse_font_bbox): Assign the units per em
+	value an unsigned short value, first by shifting right 16 bits,
+	then by casting the results to FT_UShort.
+	
 2001-03-17  David Turner   <david.turner@freetype.org>
 
 	* src/cid/cidobjs.c, src/cid/cidload.c, src/pcf/pcfread.c,         
