@@ -1,3 +1,28 @@
+2002-04-30  Wenlin Institute (Tom Bishop) <wenlin@wenlin.com>
+
+	* src/base/ftmac.c (p2c_str): Removed.
+	(file_spec_from_path) [TARGET_API_MAC_CARBON]: Added support for
+	OS X.
+	(is_dfont) [TARGET_API_MAC_CARBON]: Define only for OS X.
+	Handle `nameLen' <= 6 also.
+	(parse_fond): Remove unused variable `name_table'.
+	Use functionality of old p2c_str directly.
+	Add safety checks.
+	(read_lwfn): Initialize `size_p'.
+	Check for size_p == NULL.
+	(new_memory_stream, open_face_from_buffer): Updated to FreeType 2.1.
+	(FT_New_Face_From_LWFN): Remove unused variable `memory'.
+	Remove some dead code.
+	(FT_New_Face_From_SFNT): Remove unused variable `stream'.
+	(FT_New_Face_From_dfont) [TARGET_API_MAC_CARBON]: Define only for
+	OS X.
+	(FT_New_Face_From_FOND): Remove unused variable `error'.
+	(ResourceForkSize): New function.
+	(FT_New_Face): Use it.
+	Handle empty resource forks.
+	Conditionalize some code for OS X.
+	Add code to call normal loader as a fallback.
+
 2002-04-30  Werner Lemberg  <wl@gnu.org>
 
 	`interface' is reserved on the Mac.
@@ -14,6 +39,21 @@
 	* src/smooth/ftgrays.c: s/interface/func_interface/.
 	* src/truetype/ttdriver.c: s/interface/tt_interface/.
 	* src/type1/t1driver.c: s/interface/t1_interface/.
+
+	Some more variable renames to avoid troubles on the Mac.
+
+	* src/raster/ftraster.c:
+	s/Unknown|Ascending|Descending|Flat/\1_State/.
+	* src/smooth/ftgrays.c: s/TScan/TCoord/.
+
+	Other changes for the Mac.
+
+	* include/freetype/config/ftconfig.h: Define FT_MACINTOSH for
+	Mac platforms.
+	* src/base/ftobjs.c: s/macintosh/FT_MACINTOSH/.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Make `pitch' always
+	an even number.
 
 2002-04-29  Jouk Jansen  <joukj@hrem.stm.tudelft.nl>
 

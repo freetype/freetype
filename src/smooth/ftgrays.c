@@ -217,8 +217,8 @@
   /* need to define them to "float" or "double" when experimenting with   */
   /* new algorithms                                                       */
 
-  typedef int   TScan;   /* integer scanline/pixel coordinate */
-  typedef long  TPos;    /* sub-pixel coordinate              */
+  typedef int   TCoord;   /* integer scanline/pixel coordinate */
+  typedef long  TPos;     /* sub-pixel coordinate              */
 
   /* determine the type used to store cell areas.  This normally takes at */
   /* least PIXEL_BYTES*2 + 1.  On 16-bit systems, we need to use `long'   */
@@ -259,10 +259,10 @@
 
   typedef struct  TCell_
   {
-    TScan  x;
-    TScan  y;
-    int    cover;
-    TArea  area;
+    TCoord  x;
+    TCoord  y;
+    int     cover;
+    TArea   area;
 
   } TCell, *PCell;
 
@@ -271,22 +271,22 @@
 
   typedef struct  TRaster_
   {
-    PCell  cells;
-    int    max_cells;
-    int    num_cells;
+    PCell   cells;
+    int     max_cells;
+    int     num_cells;
 
-    TScan  min_ex, max_ex;
-    TScan  min_ey, max_ey;
+    TCoord  min_ex, max_ex;
+    TCoord  min_ey, max_ey;
 
-    TArea  area;
-    int    cover;
-    int    invalid;
+    TArea   area;
+    int     cover;
+    int     invalid;
 
-    TScan  ex, ey;
-    TScan  cx, cy;
-    TPos   x,  y;
+    TCoord  ex, ey;
+    TCoord  cx, cy;
+    TPos    x,  y;
 
-    TScan  last_ey;
+    TCoord  last_ey;
 
     FT_Vector   bez_stack[32 * 3 + 1];
     int         lev_stack[32];
@@ -407,8 +407,8 @@
   /* Set the current cell to a new position.                               */
   /*                                                                       */
   static void
-  gray_set_cell( RAS_ARG_ TScan  ex,
-                          TScan  ey )
+  gray_set_cell( RAS_ARG_ TCoord  ex,
+                          TCoord  ey )
   {
     int  invalid, record, clean;
 
@@ -464,8 +464,8 @@
   /* Start a new contour at a given cell.                                  */
   /*                                                                       */
   static void
-  gray_start_cell( RAS_ARG_  TScan  ex,
-                             TScan  ey )
+  gray_start_cell( RAS_ARG_  TCoord  ex,
+                             TCoord  ey )
   {
     if ( ex < ras.min_ex )
       ex = ras.min_ex - 1;
@@ -486,15 +486,15 @@
   /* Render a scanline as one or more cells.                               */
   /*                                                                       */
   static void
-  gray_render_scanline( RAS_ARG_  TScan  ey,
-                                  TPos   x1,
-                                  TScan  y1,
-                                  TPos   x2,
-                                  TScan  y2 )
+  gray_render_scanline( RAS_ARG_  TCoord  ey,
+                                  TPos    x1,
+                                  TCoord  y1,
+                                  TPos    x2,
+                                  TCoord  y2 )
   {
-    TScan  ex1, ex2, fx1, fx2, delta;
-    long   p, first, dx;
-    int    incr, lift, mod, rem;
+    TCoord  ex1, ex2, fx1, fx2, delta;
+    long    p, first, dx;
+    int     incr, lift, mod, rem;
 
 
     dx = x2 - x1;
@@ -596,9 +596,9 @@
   gray_render_line( RAS_ARG_ TPos  to_x,
                              TPos  to_y )
   {
-    TScan  ey1, ey2, fy1, fy2;
-    TPos   dx, dy, x, x2;
-    int    p, rem, mod, lift, delta, first, incr;
+    TCoord  ey1, ey2, fy1, fy2;
+    TPos    dx, dy, x, x2;
+    int     p, rem, mod, lift, delta, first, incr;
 
 
     ey1 = TRUNC( ras.last_ey );
@@ -614,7 +614,7 @@
 
     /* perform vertical clipping */
     {
-      TScan  min, max;
+      TCoord  min, max;
 
 
       min = ey1;
@@ -640,9 +640,9 @@
 
     if ( dx == 0 )
     {
-      TScan  ex     = TRUNC( ras.x );
-      TScan  two_fx = ( ras.x - SUBPIXELS( ex ) ) << 1;
-      TPos   area;
+      TCoord  ex     = TRUNC( ras.x );
+      TCoord  two_fx = ( ras.x - SUBPIXELS( ex ) ) << 1;
+      TPos    area;
 
 
       first = ONE_PIXEL;
@@ -1332,10 +1332,10 @@
 
 
   static void
-  gray_hline( RAS_ARG_ TScan  x,
-                       TScan  y,
-                       TPos   area,
-                       int    acount )
+  gray_hline( RAS_ARG_ TCoord  x,
+                       TCoord  y,
+                       TPos    area,
+                       int     acount )
   {
     FT_Span*   span;
     int        count;
@@ -1431,11 +1431,12 @@
   static void
   gray_sweep( RAS_ARG_ FT_Bitmap*  target )
   {
-    TScan  x, y, cover;
-    TArea  area;
-    PCell  start, cur, limit;
+    TCoord  x, y, cover;
+    TArea   area;
+    PCell   start, cur, limit;
 
     FT_UNUSED( target );
+
 
     if ( ras.num_cells == 0 )
       return;
