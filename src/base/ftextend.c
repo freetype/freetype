@@ -70,7 +70,7 @@
     FT_Extension_Registry*  registry;
 
 
-    memory = driver->library->memory;
+    memory = driver->root.library->memory;
     if ( ALLOC( registry, sizeof ( *registry ) ) )
       return error;
 
@@ -101,7 +101,7 @@
   LOCAL_FUNC
   FT_Error  FT_Done_Extensions( FT_Driver  driver )
   {
-    FT_Memory  memory = driver->memory;
+    FT_Memory  memory = driver->root.memory;
 
 
     FREE( driver->extensions );
@@ -126,7 +126,7 @@
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Register_Extension(
                                 FT_Driver            driver,
-                                FT_Extension_Class*  class )
+                                FT_Extension_Class*  clazz )
   {
     FT_Extension_Registry*  registry;
 
@@ -134,7 +134,7 @@
     if ( !driver )
       return FT_Err_Invalid_Driver_Handle;
 
-    if ( !class )
+    if ( !clazz )
       return FT_Err_Invalid_Argument;
 
     registry = (FT_Extension_Registry*)driver->extensions;
@@ -143,11 +143,10 @@
       FT_Int               n   = registry->num_extensions;
       FT_Extension_Class*  cur = registry->classes + n;
 
-
       if ( n >= FT_MAX_EXTENSIONS )
         return FT_Err_Too_Many_Extensions;
 
-      *cur = *class;
+      *cur = *clazz;
 
       cur->offset  = registry->cur_offset;
 
@@ -260,7 +259,7 @@
           cur->finalize( ext, face );
       }
 
-      memory = face->driver->memory;
+      memory = face->driver->root.memory;
       FREE( face->extensions );
     }
 
@@ -302,7 +301,7 @@
     if ( !registry )
       return FT_Err_Ok;
 
-    memory = face->driver->memory;
+    memory = face->driver->root.memory;
     if ( ALLOC( face->extensions, registry->cur_offset ) )
       return error;
 

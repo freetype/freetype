@@ -22,7 +22,7 @@
 #include <cidobjs.h>
 #include <freetype/internal/t1errors.h>
 
-  FT_EXPORT_VAR( const  FT_DriverInterface )  t1cid_driver_interface;
+  FT_EXPORT_VAR( const  FT_Driver_Class )  t1cid_driver_class;
 
 #endif /* CIDRIVER_H */
 

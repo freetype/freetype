@@ -31,7 +31,7 @@ PSNAMES_COMPILE := $(FT_COMPILE) $(PSNAMES_CFLAGS)
 
 # PSNames driver sources (i.e., C files)
 #
-PSNAMES_DRV_SRC := $(PSNAMES_DIR_)psdriver.c
+PSNAMES_DRV_SRC := $(PSNAMES_DIR_)psmodule.c
 
 
 # PSNames driver headers
@@ -50,7 +50,7 @@ PSNAMES_DRV_OBJ_S := $(OBJ_)psnames.$O
 
 # PSNames driver source file for single build
 #
-PSNAMES_DRV_SRC_S := $(PSNAMES_DIR_)psdriver.c
+PSNAMES_DRV_SRC_S := $(PSNAMES_DIR_)psmodule.c
 
 
 # PSNames driver - single object

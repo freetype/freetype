@@ -26,6 +26,7 @@
 #define FTOBJS_H
 
 #include <freetype/internal/ftmemory.h>
+#include <freetype/ftrender.h>
 #include <freetype/internal/ftdriver.h>
 
   /*************************************************************************/
@@ -67,11 +68,102 @@
 #endif
 
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****                         M O D U L E S                           ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
 
+ /************************************************************************
+  *
+  *  <Struct>
+  *     FT_ModuleRec
+  *
+  *  <Description>
+  *     A module object instance.
+  *
+  *  <Fields>
+  *     clazz   ::  pointer to module's class
+  *     library ::  handle to parent library object
+  *     memory  ::  handle to memory manager
+  *     generic ::  generic structure for user-level extensibility (?)
+  *
+  ************************************************************************/
+  
+  typedef struct FT_ModuleRec_
+  {
+    FT_Module_Class*  clazz;
+    FT_Library        library;
+    FT_Memory         memory;
+    FT_Generic        generic;
+    
+  } FT_ModuleRec;
+
+  /* typecast an object to a FT_Module */
+  #define  FT_MODULE(x)          ((FT_Module)(x))
+  #define  FT_MODULE_CLASS(x)    FT_MODULE(x)->clazz
+  #define  FT_MODULE_LIBRARY(x)  FT_MODULE(x)->library
+  #define  FT_MODULE_MEMORY(x)   FT_MODULE(x)->memory
+
+  #define  FT_MODULE_IS_DRIVER(x)  (FT_MODULE_CLASS(x)->module_flags & \
+                                        ft_module_font_driver )
+
+  #define  FT_MODULE_IS_DRIVER(x)  (FT_MODULE_CLASS(x)->module_flags & \
+                                        ft_module_font_driver )
+
+  #define  FT_MODULE_IS_RENDERER(x)  (FT_MODULE_CLASS(x)->module_flags & \
+                                        ft_module_renderer )
+
+  #define  FT_DRIVER_IS_SCALABLE(x)  (FT_MODULE_CLASS(x)->module_flags & \
+                                        ft_module_driver_scalable )
+
+  #define  FT_DRIVER_USES_OUTLINES(x)  !(FT_MODULE_CLASS(x)->module_flags & \
+                                         ft_module_driver_no_outlines )
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****               FACE, SIZE & GLYPH SLOT OBJECTS                   ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /* a few macros used to perform easy typecasts with minimal brain damage */
+
+  #define  FT_FACE(x)  ((FT_Face)x)
+  #define  FT_SIZE(x)  ((FT_Size)x)
+  #define  FT_SLOT(x)  ((FT_GlyphSlot)x)
+  
+  #define  FT_FACE_DRIVER(x)   FT_FACE(x)->driver
+  #define  FT_FACE_LIBRARY(x)  FT_FACE_DRIVER(x)->root.library
+  #define  FT_FACE_MEMORY(x)   FT_FACE(x)->memory
+
+  #define  FT_SIZE_FACE(x)  FT_SIZE(x)->face
+  #define  FT_SLOT_FACE(x)  FT_SLOT(x)->face
+
+  #define  FT_FACE_SLOT(x)  FT_FACE(x)->glyph
+  #define  FT_FACE_SIZE(x)  FT_FACE(x)->size
+
+
+  /* this must be kept exported - this will be used later in our own */
+  /* high-level caching font manager called SemTex (way after the    */
+  /* 2.0 release though..                                            */
   FT_EXPORT_DEF(FT_Error)  FT_New_Size( FT_Face   face,
                                         FT_Size*  size );
 
   FT_EXPORT_DEF(FT_Error)  FT_Done_Size( FT_Size  size );
+
 
   FT_EXPORT_DEF(FT_Error)  FT_New_GlyphSlot( FT_Face        face,
                                              FT_GlyphSlot*  aslot );
@@ -80,18 +172,113 @@
 
 
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****                   G L Y P H   L O A D E R                       ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  typedef struct FT_GlyphLoad_
+  {
+    FT_Outline    outline;       /* outline                          */
+    FT_UInt       num_subglyphs; /* number of subglyphs              */
+    FT_SubGlyph*  subglyphs;     /* subglyphs                        */
+    FT_Vector*    extra_points;  /* extra points table..             */
+  
+  } FT_GlyphLoad;
+
+
+  struct FT_GlyphLoader_
+  {
+    FT_Memory     memory;
+    FT_UInt       max_points;
+    FT_UInt       max_contours;
+    FT_UInt       max_subglyphs;
+    FT_Bool       use_extra;
+
+    FT_GlyphLoad  base;
+    FT_GlyphLoad  current;
+
+    void*         other;            /* for possible future extension ? */
+    
+  };
+
+
+  BASE_DEF(FT_Error)  FT_GlyphLoader_New( FT_Memory         memory,
+                                          FT_GlyphLoader*  *aloader );
+                                          
+  BASE_DEF(FT_Error)  FT_GlyphLoader_Create_Extra( FT_GlyphLoader*  loader );                                        
+  
+  BASE_DEF(void)      FT_GlyphLoader_Done( FT_GlyphLoader*  loader );
+  
+  BASE_DEF(void)      FT_GlyphLoader_Reset( FT_GlyphLoader*  loader );
+  
+  BASE_DEF(void)      FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader );
+  
+  BASE_DEF(FT_Error)  FT_GlyphLoader_Check_Points( FT_GlyphLoader* loader,
+                                                   FT_UInt         n_points,
+                                                   FT_UInt         n_contours );
+                               
+  BASE_DEF(FT_Error)  FT_GlyphLoader_Check_Subglyphs( FT_GlyphLoader*  loader,
+                                                      FT_UInt          n_subs );
+
+  BASE_DEF(void)      FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader );
+
+  
+  BASE_DEF(void)      FT_GlyphLoader_Add( FT_GlyphLoader*  loader );
+
+  BASE_DEF(FT_Error)  FT_GlyphLoader_Copy_Points( FT_GlyphLoader*  target,
+                                                  FT_GlyphLoader*  source );
 
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
   /****                                                                 ****/
-  /****                         D R I V E R S                           ****/
+  /****                        R E N D E R E R S                        ****/
   /****                                                                 ****/
   /****                                                                 ****/
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
+
+  #define FT_RENDERER(x)  ((FT_Renderer)(x))
+
+  typedef struct FT_RendererRec_
+  {
+    FT_ModuleRec           root;
+    FT_Renderer_Class*     clazz;
+    FT_Glyph_Format        glyph_format;
+
+    FT_Raster              raster;
+    FT_Raster_Render_Func  raster_render;
+    FTRenderer_render      render;
+  
+  } FT_RendererRec;
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****                    F O N T   D R I V E R S                      ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  /* typecast a module into a driver easily */
+  #define FT_DRIVER(x)  ((FT_Driver)(x))
+
+  /* typecast a module as a driver, and get its driver class */
+  #define FT_DRIVER_CLASS(x)  FT_DRIVER(x)->clazz
 
   /*************************************************************************/
   /*                                                                       */
@@ -103,28 +290,11 @@
   /*    managing and loading font files of a given format.                 */
   /*                                                                       */
   /*  <Fields>                                                             */
-  /*     library     :: A handle to the driver's parent library.           */
+  /*     root        :: contains the fields of the root module class       */
   /*                                                                       */
-  /*     memory      :: A handle to the driver's memory object.  This is a */
-  /*                    duplicate of `library->memory'.                    */
-  /*                                                                       */
-  /*     interface   :: A set of driver methods that implement its         */
-  /*                    behaviour.  These methods are called by the        */
-  /*                    various FreeType functions like FT_New_Face(),     */
-  /*                    FT_Load_Glyph(), etc.                              */
-  /*                                                                       */
-  /*     format      :: A typeless pointer, used to store the address of   */
-  /*                    the driver's format specific interface.  This is a */
-  /*                    table of other driver methods that are specific to */
-  /*                    its format.  Format specific interfaces are        */
-  /*                    defined in the driver's header files (e.g.,        */
-  /*                    `freetype/drivers/ttlib/ttdriver.h').              */
-  /*                                                                       */
-  /*     version     :: The driver's version.  It can be used for          */
-  /*                    versioning and dynamic driver update if needed.    */
-  /*                                                                       */
-  /*     description :: An ASCII string describing the driver's supported  */
-  /*                    format, like `truetype', `type1', etc.             */
+  /*     clazz       :: a pointer to the font driver's class. Note that    */
+  /*                    this is NOT root.clazz. 'class' wasn't used        */
+  /*                    as it's a reserved word in C++                     */
   /*                                                                       */
   /*     faces_list  :: The list of faces currently opened by this driver. */
   /*                                                                       */
@@ -132,37 +302,20 @@
   /*                    registry, when they are supported through the      */
   /*                    config macro FT_CONFIG_OPTION_EXTENSIONS           */
   /*                                                                       */
+  /*     glyph_loader :: glyph loader for all faces managed by this driver */
+  /*                     this object isn't defined for unscalable formats  */
+  /*                                                                       */
   typedef struct  FT_DriverRec_
   {
-    FT_Library          library;
-    FT_Memory           memory;
-
-    FT_Generic          generic;
-
-    FT_DriverInterface  interface;
-    FT_FormatInterface  format;
-
-    FT_Int              version;      /* driver version     */
-    FT_String*          description;  /* format description */
-
-    FT_ListRec          faces_list;   /* driver's faces list    */
-
-    void*               extensions;
+    FT_ModuleRec      root;
+    FT_Driver_Class*  clazz;
+    
+    FT_ListRec        faces_list;
+    void*             extensions;
+    
+    FT_GlyphLoader*   glyph_loader;
 
   } FT_DriverRec;
-
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /****                      G L Y P H   Z O N E S                      ****/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
 
 
   /*************************************************************************/
@@ -197,31 +350,45 @@
   /*    generic        :: Client data variable.  Used to extend the        */
   /*                      Library class by higher levels and clients.      */
   /*                                                                       */
-  /*    num_drivers    :: The number of drivers currently registered       */
+  /*    num_modules    :: The number of modules currently registered       */
   /*                      within this library.  This is set to 0 for new   */
-  /*                      libraries.  New drivers are added through the    */
-  /*                      FT_Add_Driver() API function.                    */
+  /*                      libraries.  New modules are added through the    */
+  /*                      FT_Add_Module() API function.                    */
   /*                                                                       */
-  /*    drivers        :: A table used to store handles to the currently   */
-  /*                      registered font drivers.  Note that each driver  */
+  /*    modules        :: A table used to store handles to the currently   */
+  /*                      registered modules. Note that each font driver   */
   /*                      contains a list of its opened faces.             */
+  /*                                                                       */
+  /*    renderers      :: the list of renderers currently registered       */
+  /*                      within the library.                              */
+  /*                                                                       */
+  /*    cur_renderer   :: current outline renderer. This is a short cut    */
+  /*                      used to avoid parsing the list on each call to   */
+  /*                      FT_Outline_Render. It is a handle to the current */
+  /*                      renderer for the ft_glyph_format_outline format. */
   /*                                                                       */
   /*    raster_pool    :: The raster object's render pool.  This can       */
   /*                      ideally be changed dynamically at run-time.      */
   /*                                                                       */
+  /*    raster_pool_size :: size of the render pool in bytes               */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
   typedef  void  (*FT_DebugHook_Func)( void* arg );
+
 
   typedef struct  FT_LibraryRec_
   {
-    FT_Memory           memory;         /* library's memory object          */
+    FT_Memory           memory;         /* library's memory manager */
 
     FT_Generic          generic;
 
-    FT_Int              num_drivers;
-    FT_Driver           drivers[ FT_MAX_DRIVERS ];  /* driver objects  */
+    FT_Int              num_modules;
+    FT_Module           modules[ FT_MAX_MODULES ];  /* module objects  */
 
-    FT_Raster_Funcs     raster_funcs[ FT_MAX_GLYPH_FORMATS ];
-    FT_Raster           rasters     [ FT_MAX_GLYPH_FORMATS ];
+    FT_ListRec          renderers;     /* list of renderers        */
+    FT_Renderer         cur_renderer;  /* current outline renderer */
 
     void*               raster_pool;      /* scan-line conversion render pool */
     long                raster_pool_size; /* size of render pool in bytes     */
@@ -239,20 +406,12 @@
 
 
 
-  FT_EXPORT_DEF(void)  FT_Set_Debug_Hook( FT_Library         library,
-                                          FT_UInt            hook_index,
-                                          FT_DebugHook_Func  debug_hook );
+  FT_EXPORT_DEF(void)      FT_Set_Debug_Hook( FT_Library         library,
+                                              FT_UInt            hook_index,
+                                              FT_DebugHook_Func  debug_hook );
 
 
-  FT_EXPORT_DEF(FT_Error)  FT_Add_Driver( FT_Library                 library,
-                                          const FT_DriverInterface*  driver_interface );
 
-
-  FT_EXPORT_DEF(FT_Error)  FT_Remove_Driver( FT_Driver  driver );
-
-
-  FT_EXPORT_DEF(FT_Driver) FT_Get_Driver( FT_Library  library,
-                                          char*       driver_name );
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM
 
@@ -264,6 +423,7 @@
   FT_EXPORT_DEF(FT_Memory)  FT_New_Memory( void );
 
 #endif
+
 
 /* Define default raster's interface. The default raster is located in `src/base/ftraster.c' */
 /*                                                                                           */

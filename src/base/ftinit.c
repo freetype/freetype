@@ -20,8 +20,8 @@
   /*  The purpose of this file is to implement the following two           */
   /*  functions:                                                           */
   /*                                                                       */
-  /*  FT_Default_Drivers():                                                */
-  /*     This function is used to add the set of default drivers to a      */
+  /*  FT_Add_Default_Modules():                                            */
+  /*     This function is used to add the set of default modules to a      */
   /*     fresh new library object.  The set is taken from the header file  */
   /*     `freetype/config/ftmodule.h'.  See the document `FreeType 2.0     */
   /*     Build System' for more information.                               */
@@ -40,7 +40,7 @@
 #include <freetype/config/ftconfig.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>
-#include <freetype/internal/ftdriver.h>
+#include <freetype/ftmodule.h>
 
 
   /*************************************************************************/
@@ -52,16 +52,16 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_init
 
-#undef  FT_DRIVER
-#define FT_DRIVER( x )  extern FT_DriverInterface  x;
+#undef  FT_USE_MODULE
+#define FT_USE_MODULE( x )  extern const FT_Module_Class*  x;
 
 #include <freetype/config/ftmodule.h>
 
-#undef  FT_DRIVER
-#define FT_DRIVER( x )  &x,
+#undef  FT_USE_MODULE
+#define FT_USE_MODULE( x )  (const FT_Module_Class*)&x,
 
 static
-const FT_DriverInterface*  ft_default_drivers[] =
+const FT_Module_Class*  ft_default_modules[] =
   {
 #include <freetype/config/ftmodule.h>
     0
@@ -71,7 +71,7 @@ const FT_DriverInterface*  ft_default_drivers[] =
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Default_Drivers                                                 */
+  /*    FT_Add_Default_Modules                                             */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Adds the set of default drivers to a given library object.         */
@@ -79,23 +79,22 @@ const FT_DriverInterface*  ft_default_drivers[] =
   /* <InOut>                                                               */
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Default_Drivers( FT_Library  library )
+  FT_EXPORT_FUNC( void )  FT_Add_Default_Modules( FT_Library  library )
   {
-    FT_Error                    error;
-    const FT_DriverInterface**  cur;
+    FT_Error                 error;
+    const FT_Module_Class**  cur;
 
+    /* test for valid library delayed to FT_Add_Module() */
 
-    /* test for valid library delayed to FT_Add_Driver() */
-
-    cur = ft_default_drivers;
+    cur = ft_default_modules;
     while ( *cur )
     {
-      error = FT_Add_Driver( library, *cur );
+      error = FT_Add_Module( library, *cur );
       /* notify errors, but don't stop */
       if ( error )
       {
-        FT_ERROR(( "FT_Default_Drivers: Cannot install `%s', error = %x\n",
-                   (*cur)->driver_name, error ));
+        FT_ERROR(( "FT_Add_Default_Module: Cannot install `%s', error = %x\n",
+                   (*cur)->module_name, error ));
       }
       cur++;
     }
@@ -115,7 +114,7 @@ const FT_DriverInterface*  ft_default_drivers[] =
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    FreeTyoe error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Init_FreeType( FT_Library*  library )
   {
@@ -139,7 +138,7 @@ const FT_DriverInterface*  ft_default_drivers[] =
 
     error = FT_New_Library( memory, library );
     if ( !error )
-      FT_Default_Drivers( *library );
+      FT_Add_Default_Modules( *library );
 
     return error;
   }

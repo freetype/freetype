@@ -95,12 +95,8 @@
   {
     FT_SizeRec      root;
     FT_Bool         valid;
-    T1_Size_Hints*  hints;  /* defined in the hinter.  This allows */
-                            /* us to experiment with different     */
-                            /* hinting schemes without having to   */
-                            /* change `cidobjs' each time.         */
-  } T1_SizeRec;
 
+  } T1_SizeRec;
 
 
   typedef struct  T1_GlyphSlotRec_
@@ -110,13 +106,8 @@
     FT_Bool          hint;
     FT_Bool          scaled;
 
-    FT_Int           max_points;
-    FT_Int           max_contours;
-
     FT_Fixed         x_scale;
     FT_Fixed         y_scale;
-
-    T1_Glyph_Hints*  hints;  /* defined in the hinter */
 
   } T1_GlyphSlotRec;
 
@@ -130,23 +121,6 @@
 
   LOCAL_DEF
   void  CID_Done_Face( CID_Face  face );
-
-
-  LOCAL_DEF
-  FT_Error  CID_Init_Size( T1_Size  size );
-
-  LOCAL_DEF
-  void  CID_Done_Size( T1_Size  size );
-
-  LOCAL_DEF
-  FT_Error  CID_Reset_Size( T1_Size  size );
-
-
-  LOCAL_DEF
-  FT_Error  CID_Init_GlyphSlot( T1_GlyphSlot  slot );
-
-  LOCAL_DEF
-  void  CID_Done_GlyphSlot( T1_GlyphSlot  slot );
 
 
   LOCAL_DEF

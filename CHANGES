@@ -1,5 +1,135 @@
 LATEST CHANGES
 
+  - MAJOR INTERNAL REDESIGN:
+  
+    A lot of internal modifications have been performed lately on the
+    source in order to provide the following enhancements:
+    
+      - more generic module support:
+      
+        The FT_Module type is now defined to represent a handle to a given
+        module. The file <freetype/ftmodule.h> contains the FT_Module_Class
+        definition, as well as the module-loading public API
+
+        The FT_Driver type is still defined, and still represents a pointer
+        to a font driver. Note that FT_Add_Driver is replaced by FT_Add_Module,
+        FT_Get_Driver by FT_Get_Module, etc..
+
+
+      - support for generic glyph image types:
+
+        The FT_Renderer type is a pointer to a module used to perform various
+        operations on glyph image.
+        
+        Each renderer is capable of handling images in a single format
+        (e.g. ft_glyph_format_outline). Its functions are used to:
+        
+           - transform an glyph image
+           - render a glyph image into a bitmap
+           - return the control box (dimensions) of a given glyph image
+
+
+        The scan converters "ftraster.c" and "ftgrays.c" have been moved
+        to the new directory "src/renderer", and are used to provide two
+        default renderer modules.
+        
+        One corresponds to the "standard" scan-converter, the other to the
+        "smooth" one.
+        
+        The current renderer can be set through the new function
+        FT_Set_Renderer.
+        
+        The old raster-related function FT_Set_Raster, FT_Get_Raster and
+        FT_Set_Raster_Mode have now disappeared, in favor of the new:
+        
+           FT_Get_Renderer
+           FT_Set_Renderer
+
+        see the file <freetype/ftrender.h> for more details..
+
+        These changes were necessary to properly support different scalable
+        formats in the future, like bi-color glyphs, etc..
+
+
+      - glyph loader object:
+
+        A new internal object, called a 'glyph loader' has been introduced
+        in the base layer. It is used by all scalable format font drivers
+        to load glyphs and composites.
+        
+        This object has been created to reduce the code size of each driver,
+        as each one of them basically re-implemented its functionality.
+
+        See <freetype/internal/ftobjs.h> and the FT_GlyphLoader type for
+        more information..
+
+
+
+      - FT_GlyphSlot had new fields:
+
+        In order to support extended features (see below), the FT_GlyphSlot
+        structure has a few new fields:
+        
+           linearHoriAdvance:  this field gives the linearly scaled (i.e.
+                               scaled but unhinted) advance width for the glyph,
+                               expressed as a 16.16 fixed pixel value. This
+                               is useful to perform WYSIWYG text.
+                               
+           linearVertAdvance:  this field gives the linearly scaled advance
+                               height for the glyph (relevant in vertical glyph
+                               layouts only). This is useful to perform
+                               WYSIWYG text.                               
+
+        Note that the two above field replace the removed "metrics2" field
+        in the glyph slot.
+        
+           advance:   this field is a vector that gives the transformed
+                      advance for the glyph. By default, it corresponds
+                      to the advance width, unless FT_LOAD_VERTICAL_LAYOUT
+                      was specified when calling FT_Load_Glyph or FT_Load_Char
+
+           bitmap_left: this field gives the distance in integer pixels from
+                        the current pen position to the left-most pixel of
+                        a glyph image WHEN IT IS A BITMAP. It is only valid
+                        when the "format" field is set to
+                        "ft_glyph_format_bitmap", for example, after calling
+                        the new function FT_Render_Glyph.
+                        
+           bitmap_top:  this field gives the distance in integer pixels from
+                        the current pen position (located on the baseline) to
+                        the top-most pixel of the glyph image WHEN IT IS A
+                        BITMAP. Positive values correspond to upwards Y.
+
+           loader:  this is a new private field for the glyph slot. Client
+                    applications should not touch it..
+
+
+      - support for transforms and direct rendering in FT_Load_Glyph:
+
+        Most of the functionality found in <freetype/ftglyph.h> has been
+        moved to the core library. Hence, the following:
+        
+          - a transform can be specified for a face through FT_Set_Transform.
+            this transform is applied by FT_Load_Glyph to scalable glyph images
+            (i.e. NOT TO BITMAPS) before the function returns, unless the
+            bit flag FT_LOAD_IGNORE_TRANSFORM was set in the load flags..
+
+
+          - once a glyph image has been loaded, it can be directly converted to
+            a bitmap by using the new FT_Render_Glyph function. Note that this
+            function takes the glyph image from the glyph slot, and converts
+            it to a bitmap whose properties are returned in "face.glyph.bitmap",
+            "face.glyph.bitmap_left" and "face.glyph.bitmap_top". The original
+            native image might be lost after the conversion.
+
+
+          - when using the new bit flag FT_LOAD_RENDER, the FT_Load_Glyph
+            and FT_Load_Char functions will call FT_Render_Glyph automatically
+            when needed.
+
+
+
+
   - reformated all modules source code in order to get rid of the basic
     data types redifinitions (i.e. "TT_Int" instead of "FT_Int", "T1_Fixed"
     instead of "FT_Fixed"). Hence the format-specific prefixes like "TT_",

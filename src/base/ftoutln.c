@@ -569,70 +569,6 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Outline_Get_Bitmap                                              */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Renders an outline within a bitmap.  The outline's image is simply */
-  /*    OR-ed to the target bitmap.                                        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to a FreeType library object.                  */
-  /*                                                                       */
-  /*    outline :: A pointer to the source outline descriptor.             */
-  /*                                                                       */
-  /*    map     :: A pointer to the target bitmap descriptor.              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    YES.  Rendering is synchronized, so that concurrent calls to the   */
-  /*    scan-line converter will be serialized.                            */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function does NOT CREATE the bitmap, it only renders an       */
-  /*    outline image within the one you pass to it!                       */
-  /*                                                                       */
-  /*    It will use the raster correponding to the default glyph format.   */
-  /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Get_Bitmap( FT_Library   library,
-                                                     FT_Outline*  outline,
-                                                     FT_Bitmap*   bitmap )
-  {
-    FT_Error          error;
-    FT_Raster         raster;
-    FT_Raster_Funcs   funcs;
-    FT_Raster_Params  params;
-
-
-    if ( !library )
-      return FT_Err_Invalid_Library_Handle;
-
-    if ( !outline || !bitmap )
-      return FT_Err_Invalid_Argument;
-
-    error  = FT_Err_Invalid_Glyph_Format;
-    raster = FT_Get_Raster( library, ft_glyph_format_outline, &funcs );
-    if ( !raster )
-      goto Exit;
-
-    params.target = bitmap;
-    params.source = outline;
-    params.flags  = 0;
-
-    if ( bitmap->pixel_mode == ft_pixel_mode_grays )
-      params.flags |= ft_raster_flag_aa;
-
-    error = funcs.raster_render( raster, &params );
-
-  Exit:
-    return error;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
   /*    FT_Outline_Render                                                  */
   /*                                                                       */
   /* <Description>                                                         */
@@ -667,28 +603,127 @@
                                                  FT_Outline*        outline,
                                                  FT_Raster_Params*  params )
   {
-    FT_Error         error;
-    FT_Raster        raster;
-    FT_Raster_Funcs  funcs;
-
+    FT_Error           error;
+    FT_Renderer        renderer;
 
     if ( !library )
-      return FT_Err_Invalid_Library_Handle;
+    {
+      error = FT_Err_Invalid_Library_Handle;
+      goto Exit;
+    }
 
     if ( !outline || !params )
-      return FT_Err_Invalid_Argument;
-
-    error  = FT_Err_Invalid_Glyph_Format;
-    raster = FT_Get_Raster( library, ft_glyph_format_outline, &funcs );
-    if ( !raster )
+    {
+      error = FT_Err_Invalid_Argument;
       goto Exit;
+    }
+
+    /* retrieve the current outline renderer */
+    renderer = library->cur_renderer;
+    if (!renderer)
+    {
+      /* XXXX: should use another error code */
+      error = FT_Err_Invalid_Argument;
+      goto Exit;
+    }
 
     params->source = (void*)outline;
-    error = funcs.raster_render( raster, params );
+    
+    error = renderer->raster_render( renderer->raster, params );
 
   Exit:
     return error;
   }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Outline_Get_Bitmap                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Renders an outline within a bitmap.  The outline's image is simply */
+  /*    OR-ed to the target bitmap.                                        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library :: A handle to a FreeType library object.                  */
+  /*                                                                       */
+  /*    outline :: A pointer to the source outline descriptor.             */
+  /*                                                                       */
+  /*    map     :: A pointer to the target bitmap descriptor.              */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <MT-Note>                                                             */
+  /*    YES.  Rendering is synchronized, so that concurrent calls to the   */
+  /*    scan-line converter will be serialized.                            */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function does NOT CREATE the bitmap, it only renders an       */
+  /*    outline image within the one you pass to it!                       */
+  /*                                                                       */
+  /*    It will use the raster correponding to the default glyph format.   */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Get_Bitmap( FT_Library   library,
+                                                     FT_Outline*  outline,
+                                                     FT_Bitmap*   bitmap )
+  {
+    FT_Raster_Params  params;
+
+    if (!bitmap)
+      return FT_Err_Invalid_Argument;
+
+    /* other checks are delayed to FT_Outline_Render */
+
+    params.target = bitmap;
+    params.flags  = 0;
+
+    if ( bitmap->pixel_mode == ft_pixel_mode_grays )
+      params.flags |= ft_raster_flag_aa;
+
+    return FT_Outline_Render( library, outline, &params );
+  }
+
+
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Vector_Transform                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Transforms a single vector through a 2x2 matrix.                   */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    vector :: The target vector to transform.                          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    matrix :: A pointer to the source 2x2 matrix.                      */
+  /*                                                                       */
+  /* <MT-Note>                                                             */
+  /*    Yes.                                                               */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The result is undefined if either `vector' or `matrix' is invalid. */
+  /*                                                                       */
+  FT_EXPORT_FUNC( void )  FT_Vector_Transform( FT_Vector*  vector,
+                                               FT_Matrix*  matrix )
+  {
+    FT_Pos xz, yz;
+
+    xz = FT_MulFix( vector->x, matrix->xx ) +
+         FT_MulFix( vector->y, matrix->xy );
+
+    yz = FT_MulFix( vector->x, matrix->yx ) +
+         FT_MulFix( vector->y, matrix->yy );
+
+    vector->x = xz;
+    vector->y = yz;
+  }
+
+
 
 
   /*************************************************************************/
@@ -715,26 +750,11 @@
   BASE_FUNC( void )  FT_Outline_Transform( FT_Outline*  outline,
                                            FT_Matrix*   matrix )
   {
-    FT_UShort   n;
-    FT_Vector*  vec;
-
-
-    vec = outline->points;
-    for ( n = 0; n < outline->n_points; n++ )
-    {
-      FT_Pos  x, y;
-
-
-      x = FT_MulFix( vec->x, matrix->xx ) +
-          FT_MulFix( vec->y, matrix->xy );
-
-      y = FT_MulFix( vec->x, matrix->yx ) +
-          FT_MulFix( vec->y, matrix->yy );
-
-      vec->x = x;
-      vec->y = y;
-      vec++;
-    }
+    FT_Vector*  vec = outline->points;
+    FT_Vector*  limit = vec + outline->n_points;
+    
+    for ( ; vec < limit; vec++ )
+      FT_Vector_Transform( vec, matrix );
   }
 
 
@@ -804,46 +824,6 @@
     target->flags |= is_owner;
 
     return FT_Err_Ok;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Vector_Transform                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Transforms a single vector through a 2x2 matrix.                   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    vector :: The target vector to transform.                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    matrix :: A pointer to the source 2x2 matrix.                      */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The result is undefined if either `vector' or `matrix' is invalid. */
-  /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Vector_Transform( FT_Vector*  vector,
-                                               FT_Matrix*  matrix )
-  {
-    FT_Pos xz, yz;
-
-
-    if ( !vector || !matrix )
-      return;
-
-    xz = FT_MulFix( vector->x, matrix->xx ) +
-         FT_MulFix( vector->y, matrix->xy );
-
-    yz = FT_MulFix( vector->x, matrix->yx ) +
-         FT_MulFix( vector->y, matrix->yy );
-
-    vector->x = xz;
-    vector->y = yz;
   }
 
 

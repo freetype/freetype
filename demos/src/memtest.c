@@ -224,7 +224,7 @@ int  main( int argc, char** argv )
 
     /* the new library has no drivers in it, add the default ones */
     /* (implemented in ftinit.c)..                                */
-    FT_Default_Drivers(library);
+    FT_Add_Default_Modules(library);
 
 
     /* Now check all files */

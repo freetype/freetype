@@ -40,7 +40,7 @@ endif
 #
 clean_module_list:
 	@-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(FT_MODULE_LIST))
-	@-echo Regenerating the font drivers list in $(FT_MODULE_LIST)...
+	@-echo Regenerating the modules list in $(FT_MODULE_LIST)...
 
 make_module_list: clean_module_list
 	@echo done.
@@ -60,10 +60,10 @@ endif
 # $(OPEN_DRIVER) & $(CLOSE_DRIVER) are used to specify a given font driver
 # in the `module.mk' rules file.
 #
-OPEN_DRIVER  := $(OPEN_MODULE)FT_DRIVER(
+OPEN_DRIVER  := $(OPEN_MODULE)FT_USE_MODULE(
 CLOSE_DRIVER := )$(CLOSE_MODULE)
 
-ECHO_DRIVER      := @echo "* driver: #
+ECHO_DRIVER      := @echo "* module: #
 ECHO_DRIVER_DESC := (
 ECHO_DRIVER_DONE := )"
 

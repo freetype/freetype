@@ -37,97 +37,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /*                           SIZE  FUNCTIONS                             */
-  /*                                                                       */
-  /*************************************************************************/
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    CID_Done_Size                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The CID size object finalizer.                                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to the target size object.                        */
-  /*                                                                       */
-  LOCAL_FUNC
-  void  CID_Done_Size( T1_Size  size )
-  {
-    UNUSED( size );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    CID_Init_Size                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a new CID size object.                                 */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    size :: A handle to the size object.                               */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_DEF
-  FT_Error  CID_Init_Size( T1_Size  size )
-  {
-    size->valid = 0;
-
-    return T1_Err_Ok;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    CID_Reset_Size                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Resets a OpenType size when resolutions and character dimensions   */
-  /*    have been changed.                                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to the target size object.                        */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_FUNC
-  FT_Error  CID_Reset_Size( T1_Size  size )
-  {
-    /* recompute ascender, descender, etc. */
-    CID_Face          face    = (CID_Face)size->root.face;
-    FT_Size_Metrics*  metrics = &size->root.metrics;
-
-
-    if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
-      return T1_Err_Invalid_Argument;
-
-    /* Compute root ascender, descender, test height, and max_advance */
-    metrics->ascender = ( FT_MulFix( face->root.ascender,
-                                     metrics->y_scale ) + 32 ) & -64;
-
-    metrics->descender = ( FT_MulFix( face->root.descender,
-                                      metrics->y_scale ) + 32 ) & -64;
-
-    metrics->height = ( FT_MulFix( face->root.height,
-                                   metrics->y_scale ) + 32 ) & -64;
-
-    metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
-                                        metrics->x_scale ) + 32 ) & -64;
-
-    return T1_Err_Ok;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /*                           FACE  FUNCTIONS                             */
   /*                                                                       */
   /*************************************************************************/
@@ -201,7 +110,7 @@
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  CID_Init_Face( FT_Stream      stream,
@@ -225,13 +134,13 @@
     if ( !psnames )
     {
       /* look-up the PSNames driver */
-      FT_Driver  psnames_driver;
+      FT_Module  psnames_module;
 
-
-      psnames_driver = FT_Get_Driver( face->root.driver->library, "psnames" );
-      if ( psnames_driver )
+      psnames_module = FT_Get_Module( face->root.driver->root.library,
+                                      "psnames" );
+      if (psnames_module)                                      
         face->psnames = (PSNames_Interface*)
-                          (psnames_driver->interface.format_interface);
+                          (psnames_module->clazz->module_interface);
     }
 
     /* open the tokenizer; this will also check the font format */
@@ -423,60 +332,6 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    CID_Done_GlyphSlot                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The CID glyph slot finalizer.                                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    slot :: A handle to the glyph slot object.                         */
-  /*                                                                       */
-  LOCAL_FUNC
-  void  CID_Done_GlyphSlot( T1_GlyphSlot  glyph )
-  {
-    FT_Memory  memory  = glyph->root.face->memory;
-    FT_Library library = glyph->root.face->driver->library;
-
-
-	/* the bitmaps are created on demand */
-	FREE( glyph->root.bitmap.buffer );
-    FT_Outline_Done( library, &glyph->root.outline );
-
-    return;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    CID_Init_GlyphSlot                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The CID glyph slot initializer.                                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    slot :: The glyph record to build.                                 */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_FUNC
-  FT_Error  CID_Init_GlyphSlot( T1_GlyphSlot  glyph )
-  {
-    FT_Library  library = glyph->root.face->driver->library;
-
-
-    glyph->max_points         = 0;
-    glyph->max_contours       = 0;
-    glyph->root.bitmap.buffer = 0;
-
-    return FT_Outline_New( library, 0, 0, &glyph->root.outline );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
   /*    CID_Init_Driver                                                    */
   /*                                                                       */
   /* <Description>                                                         */
@@ -486,14 +341,14 @@
   /*    driver :: A handle to the target driver object.                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  CID_Init_Driver( T1_Driver  driver )
   {
     UNUSED( driver );
 
-    return T1_Err_Ok;
+    return FT_Err_Ok;
   }
 
 

@@ -25,7 +25,6 @@
 #include <ttcmap.h>
 #include <sfobjs.h>
 
-
   static
   void*  get_sfnt_table( TT_Face      face,
                          FT_Sfnt_Tag  tag )
@@ -72,13 +71,13 @@
 
 
   static
-  FTDriver_Interface  SFNT_Get_Interface( FT_Driver    driver,
-                                          const char*  interface )
+  FT_Module_Interface  SFNT_Get_Interface( FT_Module    module,
+                                           const char*  interface )
   {
-    UNUSED( driver );
+    UNUSED( module );
 
     if ( strcmp( interface, "get_sfnt" ) == 0 )
-      return (FTDriver_Interface)get_sfnt_table;
+      return (FT_Module_Interface)get_sfnt_table;
 
     return 0;
   }
@@ -140,22 +139,22 @@
   };
 
 
-  const FT_DriverInterface  sfnt_driver_interface =
+  const FT_Module_Class  sfnt_module_class =
   {
-    sizeof ( FT_DriverRec ), 0, 0, 0,
-
-    "sfnt",     /* driver name                          */
-    1,          /* driver version                       */
-    2,          /* driver requires FreeType 2 or higher */
-
-    (void*)&sfnt_interface,
-
-    0, 0, 0,
-    0, 0, 0,
-    0, 0, 0, 0,
-    0, 0, 0,
-    0,
+    0,  /* not a font driver or renderer */
+    sizeof( FT_ModuleRec ),
+    
+    "sfnt",     /* driver name                            */
+    0x10000,    /* driver version 1.0                     */
+    0x20000,    /* driver requires FreeType 2.0 or higher */
+    
+    (const void*)&sfnt_interface,  /* module specific interface */
+    
+    (FT_Module_Constructor)    0,
+    (FT_Module_Destructor)     0,
+    (FT_Module_Requester)      SFNT_Get_Interface
   };
+  
 
 
 /* END */

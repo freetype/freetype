@@ -67,7 +67,7 @@
   /*              reallocations.                                           */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    Type1 error code.  0 means success.                                */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  T1_New_Table( T1_Table*  table,
@@ -157,7 +157,7 @@
   /*    length :: The length in bytes of the source object.                */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.  An error is returned if    */
+  /*    Type1 error code.  0 means success.  An error is returned if       */
   /*    reallocation fails.                                                */
   /*                                                                       */
   LOCAL_FUNC
@@ -934,7 +934,7 @@
 
     if ( strncmp( stream->cursor, "%!PS-Adobe-3.0 Resource-CIDFont", 31 ) )
     {
-      FT_ERROR(( "[not a valid CID-keyed font]\n" ));
+      FT_TRACE2(( "[not a valid CID-keyed font]\n" ));
       error = FT_Err_Unknown_File_Format;
     }
 

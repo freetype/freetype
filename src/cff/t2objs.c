@@ -68,7 +68,7 @@
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeTrue error code.  0 means success.                             */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  T2_Init_Face( FT_Stream      stream,
@@ -78,17 +78,11 @@
                           FT_Parameter*  params )
   {
     FT_Error         error;
-    FT_Driver        sfnt_driver;
     SFNT_Interface*  sfnt;
 
-
-    sfnt_driver = FT_Get_Driver( face->root.driver->library, "sfnt" );
-    if ( !sfnt_driver )
-      goto Bad_Format;
-
-    sfnt = (SFNT_Interface*)(sfnt_driver->interface.format_interface);
-    if ( !sfnt )
-      goto Bad_Format;
+    sfnt = (SFNT_Interface*)
+              FT_Get_Module_Interface( face->root.driver->root.library,"sfnt" );
+    if ( !sfnt ) goto Bad_Format;
 
     /* create input stream from resource */
     if ( FILE_Seek( 0 ) )
@@ -163,12 +157,8 @@
   void  T2_Done_Face( T2_Face  face )
   {
     FT_Memory  memory = face->root.memory;
-#if 0
-    FT_Stream  stream = face->root.stream;
-#endif
 
     SFNT_Interface*  sfnt = face->sfnt;
-
 
     if ( sfnt )
       sfnt->done_face( face );
@@ -188,150 +178,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /*                           SIZE  FUNCTIONS                             */
-  /*                                                                       */
-  /*************************************************************************/
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T2_Init_Size                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a new OpenType size object.                            */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    size :: A handle to the size object.                               */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_DEF
-  FT_Error  T2_Init_Size( T2_Size  size )
-  {
-    UNUSED( size );
-
-    return 0;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T2_Done_Size                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The OpenType size object finalizer.                                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to the target size object.                        */
-  /*                                                                       */
-  LOCAL_FUNC
-  void  T2_Done_Size( T2_Size  size )
-  {
-    UNUSED( size );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T2_Reset_Size                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Resets a OpenType size when resolutions and character dimensions   */
-  /*    have been changed.                                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to the target size object.                        */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_DEF
-  FT_Error  T2_Reset_Size( T2_Size  size )
-  {
-    T2_Face           face    = (T2_Face)size->face;
-    FT_Size_Metrics*  metrics = &size->metrics;
-
-
-    if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
-      return T2_Err_Invalid_PPem;
-
-    /* Compute root ascender, descender, test height, and max_advance */
-    metrics->ascender = ( FT_MulFix( face->root.ascender,
-                                     metrics->y_scale ) + 32 ) & -64;
-
-    metrics->descender = ( FT_MulFix( face->root.descender,
-                                      metrics->y_scale ) + 32 ) & -64;
-
-    metrics->height = ( FT_MulFix( face->root.height,
-                                   metrics->y_scale ) + 32 ) & -64;
-
-    metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
-                                        metrics->x_scale ) + 32 ) & -64;
-
-    return T2_Err_Ok;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T2_Init_GlyphSlot                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The OpenType glyph slot initializer.                               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    slot :: The glyph record to build.                                 */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_FUNC
-  FT_Error  T2_Init_GlyphSlot( T2_GlyphSlot  slot )
-  {
-    FT_Library  library = slot->root.face->driver->library;
-
-
-    slot->max_points         = 0;
-    slot->max_contours       = 0;
-    slot->root.bitmap.buffer = 0;
-
-    return FT_Outline_New( library, 0, 0, &slot->root.outline );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T2_Done_GlyphSlot                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The OpenType glyph slot finalizer.                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    slot :: A handle to the glyph slot object.                         */
-  /*                                                                       */
-  LOCAL_FUNC
-  void  T2_Done_GlyphSlot( T2_GlyphSlot  slot )
-  {
-    FT_Library  library = slot->root.face->driver->library;
-    FT_Memory   memory  = library->memory;
-
-
-    if ( slot->root.flags & ft_glyph_own_bitmap )
-      FREE( slot->root.bitmap.buffer );
-
-    FT_Outline_Done( library, &slot->root.outline );
-    return;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* <Function>                                                            */
   /*    T2_Init_Driver                                                     */
   /*                                                                       */
@@ -342,7 +188,7 @@
   /*    driver :: A handle to the target driver object.                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  T2_Init_Driver( T2_Driver  driver )

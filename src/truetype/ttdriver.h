@@ -25,7 +25,7 @@
 #include <freetype/internal/tterrors.h>
 
 
-  FT_EXPORT_VAR( const FT_DriverInterface )  tt_driver_interface;
+  FT_EXPORT_VAR( const FT_Driver_Class )  tt_driver_class;
 
 
 #endif /* TTDRIVER_H */

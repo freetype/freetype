@@ -212,6 +212,19 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
+  /*    FT_Module                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A handle to a given FreeType module object. Each module can be     */
+  /*    a font driver, a renderer, or anything else that provides services */
+  /*    to the formers..                                                   */
+  /*                                                                       */
+  typedef struct FT_ModuleRec_*  FT_Module;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
   /*    FT_Driver                                                          */
   /*                                                                       */
   /* <Description>                                                         */
@@ -223,6 +236,22 @@
   /*    formats.                                                           */
   /*                                                                       */
   typedef struct FT_DriverRec_*  FT_Driver;
+
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FT_Renderer                                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A handle to a given FreeType renderer. A renderer is in charge     */
+  /*    of converting a glyph image to a bitmap, when necessary. Each      */
+  /*    supports a given glyph image format, and one or more target        */
+  /*    surface depths..                                                   */
+  /*                                                                       */
+  typedef struct FT_RendererRec_*  FT_Renderer;
+
 
 
   /*************************************************************************/
@@ -607,7 +636,7 @@
 
     /************************************************************/
     /* The following fields should be considered private and    */
-    /* rarely, if ever, used by client applications..           */
+    /* rarely, if ever, used driectly by client applications..  */
 
     FT_Driver        driver;
     FT_Memory        memory;
@@ -748,6 +777,19 @@
   /*    multiple masters and is capable of interpolating between them..    */
   /*                                                                       */
 #define FT_FACE_FLAG_MULTIPLE_MASTERS  0x100
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_FACE_FLAG_EXTERNAL_STREAM                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This bit field is used internally by FreeType to indicate that     */
+  /*    a face's stream was provided by the client application and should  */
+  /*    not be destroyed by FT_Done_Face                                   */
+  /*                                                                       */
+#define FT_FACE_FLAG_EXTERNAL_STREAM   0x4000
 
 
 #define FT_HAS_HORIZONTAL(face)  (face->face_flags & FT_FACE_FLAG_HORIZONTAL)
@@ -921,6 +963,25 @@
 #define FT_SUBGLYPH_FLAG_USE_MY_METRICS        0x200
 
 
+ /**********************************************************************
+  *
+  *  <Struct>
+  *     FT_Glyph_Loader
+  *
+  *  <Description>
+  *     The glyph loader is an internal object used to load several
+  *     glyphs together (for example, in the case of composites)
+  *
+  *  <Note>
+  *     the glyph loader implementation is not part of the high-level
+  *     API, hence the forward structure declaration;
+  *
+  *
+  *********************************************************************/
+  
+  typedef struct FT_GlyphLoader_    FT_GlyphLoader;
+
+  
   /*************************************************************************/
   /*                                                                       */
   /*                  FreeType Glyph Slot base class                       */
@@ -941,35 +1002,104 @@
   /*                rare, the glyph slots are listed through a direct,     */
   /*                single-linked list using its `next' field.             */
   /*                                                                       */
-  /*    metrics  :: The metrics of the last loaded glyph in the slot.  The */
-  /*                returned values depend on the last load flags (see the */
-  /*                FT_Load_Glyph() API function) and can be expressed     */
-  /*                either in 26.6 fractional pixels or font units.        */
-  /*                                                                       */
-  /*    metrics2 :: This field is used to return alternate glyph metrics   */
-  /*                for scalable formats. Only four fields in it are       */
-  /*                valid: horiBearingX, horiAdvance, vertBearingY and     */
-  /*                vertAdvance. All other fields should be ignored.       */
-  /*                By default, it contains the glyph metrics expressed    */
-  /*                in font units. However, when FT_Load_Glyph() is called */
-  /*                with FT_LOAD_LINEAR set, the metrics are expressed     */
-  /*                in 16.16 unhinted pixel values.. This can be useful    */
-  /*                to perform WYSIWYG glyph layout..                      */
-  /*                                                                       */
   /*    generic  :: A typeless pointer which is unused by the FreeType     */
   /*                library or any of its drivers.  It can be used by      */
   /*                client applications to link their own data to each     */
   /*                size object.                                           */
   /*                                                                       */
-  /*    outline  :: The outline descriptor for the current glyph, if it    */
-  /*                is a vectorial one.  The nature of the last loaded     */
-  /*                glyph can be retrieved through the result value        */
-  /*                returned by FT_Load_Glyph().                           */
+  /*    metrics  :: The metrics of the last loaded glyph in the slot.  The */
+  /*                returned values depend on the last load flags (see the */
+  /*                FT_Load_Glyph() API function) and can be expressed     */
+  /*                either in 26.6 fractional pixels or font units.        */
   /*                                                                       */
-  /*    bitmap   :: The bitmap/graymap descriptor for the current glyph,   */
-  /*                if it is a fixed-width one.  The nature of the last    */
-  /*                loaded glyph can be retrieved through the result value */
-  /*                returned by FT_Load_Glyph().                           */
+  /*                Note that even when the glyph image is transformed,    */
+  /*                the metrics aren't..                                   */
+  /*                                                                       */
+  /*    linearHoriAdvance :: For scalable formats only, this field holds   */
+  /*                         the linearly scaled horizontal advance width  */
+  /*                         for the glyph (i.e. the scaled and unhinted   */
+  /*                         value of the hori advance). This can be       */
+  /*                         important to perform correct WYSIWYG layout   */
+  /*                                                                       */
+  /*                         Note that this value is expressed by default  */
+  /*                         in 16.16 pixels. However, when the glyph is   */
+  /*                         loaded with the FT_LOAD_UNSCALED_LINEAR flag, */
+  /*                         this field contains simply the value of the   */
+  /*                         advance in original font units.               */
+  /*                                                                       */
+  /*    linearVertAdvance :: For scalable formats only, this field holds   */
+  /*                         the linearly scaled vertical advance height   */
+  /*                         for the glyph. See linearHoriAdvance for      */
+  /*                         comments.                                     */
+  /*                                                                       */
+  /*    advance  :: this is the transformed advance width for the glyph    */
+  /*                                                                       */
+  /*    format   :: this field indicates the format of the image           */
+  /*                contained in the glyph slot. Typically                 */
+  /*                ft_glyph_format_bitmap, ft_glyph_format_outline        */
+  /*                & ft_glyph_format_composite, but others are possible   */
+  /*                                                                       */
+  /*    bitmap   :: this field is used as a bitmap descriptor when the     */
+  /*                slot format is ft_glyph_format_bitmap. Note that       */
+  /*                the address and content of the bitmap buffer can       */
+  /*                change between calls of FT_Load_Glyph and a few        */
+  /*                other functions.                                       */
+  /*                                                                       */
+  /*    bitmap_left  :: this is the bitmap's left bearing expressed in     */
+  /*                    integer pixels. Of course, this is only valid      */
+  /*                    when the format is ft_glyph_format_bitmap          */
+  /*                                                                       */
+  /*    bitmap_top   :: this is the bitmap's top bearing expressed in      */
+  /*                    integer pixels. Remember that this is the          */
+  /*                    distance from the baseline to the top-most         */
+  /*                    glyph scanline, upwards y coordinates being        */
+  /*                    *positive*                                         */
+  /*                                                                       */
+  /*    outline  :: The outline descriptor for the current glyph image     */
+  /*                when it's format is ft_glyph_bitmap_outline.           */
+  /*                                                                       */
+  /*    num_subglyphs :: the number of subglyphs in a composite glyph.     */
+  /*                     this format is only valid for the composite       */
+  /*                     glyph format, that should normally only be        */
+  /*                     loaded with the FT_LOAD_NO_RECURSE flag..         */
+  /*                                                                       */
+  /*    subglyphs     :: an array of subglyph descriptors for composite    */
+  /*                     glyphs. There are 'num_subglyphs' elements in     */
+  /*                     in there..                                        */
+  /*                                                                       */
+  /*    control_data  :: certain font drivers can also return the control  */
+  /*                     data for a given glyph image (e.g. TrueType       */
+  /*                     bytecode, Type 1 charstrings, etc..). This field  */
+  /*                     is a pointer to such data..                       */
+  /*                                                                       */
+  /*    control_len   :: this is the length in bytes of the control data   */
+  /*                                                                       */
+  /*    other         :: really wicked format can use this pointer to      */
+  /*                     present their own glyph image to client apps.     */
+  /*                     Note that the app will need to know about the     */
+  /*                     image format,                                     */
+  /*                                                                       */
+  /*    loader        :: this is a private object for the glyph slot. Do   */
+  /*                     not touch this..                                  */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    When FT_Load_Glyph is called with default flags (FT_LOAD_DEFAULT), */
+  /*    the glyph image is loaded in the glyph slot in its native format   */
+  /*    (e.g. a vectorial outline for TrueType and Type 1 formats)         */
+  /*                                                                       */
+  /*    This image can later be converted into a bitmap by calling         */
+  /*    FT_Render_Glyph. This function finds the current renderer for the  */
+  /*    native image's format then invokes it.                             */
+  /*                                                                       */
+  /*    The renderer is in charge of transforming the native image through */
+  /*    the slot's face transformation fields, then convert it into a      */
+  /*    bitmap that is returned in "slot->bitmap".                         */
+  /*                                                                       */
+  /*    Note that "slot->bitmap_left" and "slot->bitmap_top" are also      */
+  /*    used to specify the position of the bitmap relative to the current */
+  /*    pen position (e.g. coordinates [0,0] on the baseline). Of course,  */
+  /*    "slot->format" is also changed to "ft_glyph_format_bitmap"..       */
+  /*                                                                       */
   /*                                                                       */
 
   enum
@@ -977,27 +1107,38 @@
     ft_glyph_own_bitmap = 1
   };
 
+
+
   typedef struct  FT_GlyphSlotRec_
   {
     FT_Face           face;
     FT_GlyphSlot      next;
     FT_UInt           flags;
+    FT_Generic        generic;
 
     FT_Glyph_Metrics  metrics;
-    FT_Glyph_Metrics  metrics2;
+    FT_Fixed          linearHoriAdvance;
+    FT_Fixed          linearVertAdvance;
+    FT_Vector         advance;
 
     FT_Glyph_Format   format;
+    
     FT_Bitmap         bitmap;
+    FT_Int            bitmap_left;
+    FT_Int            bitmap_top;
+    
     FT_Outline        outline;
 
-    FT_Int            num_subglyphs;
-    FT_Int            max_subglyphs;
+    FT_UInt           num_subglyphs;
     FT_SubGlyph*      subglyphs;
 
     void*             control_data;
     long              control_len;
 
     void*             other;
+
+    /* private fields */
+    FT_GlyphLoader*   loader;
 
   } FT_GlyphSlotRec;
 
@@ -1149,7 +1290,7 @@
     FT_Long        memory_size;
     FT_String*     pathname;
     FT_Stream      stream;
-    FT_Driver      driver;
+    FT_Module      driver;
     FT_Int         num_params;
     FT_Parameter*  params;
 
@@ -1438,6 +1579,15 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    If the glyph image is not a bitmap, and if the bit flag            */
+  /*    FT_LOAD_IGNORE_TRANSFORM is unset, the glyph image will be         */
+  /*    transformed with the information passed to a previous call to      */
+  /*    FT_Set_Transform.                                                  */
+  /*                                                                       */
+  /*    Note that this also transforms the "face.glyph.advance" field,     */
+  /*    but **NOT** the values in "face.glyph.metrics"..                   */
+  /*                                                                       */
   FT_EXPORT_DEF(FT_Error)   FT_Load_Glyph( FT_Face  face,
                                            FT_UInt  glyph_index,
                                            FT_Int   load_flags );
@@ -1471,6 +1621,14 @@
   /*    If the face has no current charmap, or if the character code       */
   /*    is not defined in the charmap, this function will return an        */
   /*    error..                                                            */
+  /*                                                                       */
+  /*    If the glyph image is not a bitmap, and if the bit flag            */
+  /*    FT_LOAD_IGNORE_TRANSFORM is unset, the glyph image will be         */
+  /*    transformed with the information passed to a previous call to      */
+  /*    FT_Set_Transform.                                                  */
+  /*                                                                       */
+  /*    Note that this also transforms the "face.glyph.advance" field,     */
+  /*    but **NOT** the values in "face.glyph.metrics"..                   */
   /*                                                                       */
   FT_EXPORT_DEF(FT_Error)   FT_Load_Char( FT_Face   face,
                                           FT_ULong  char_code,
@@ -1507,15 +1665,17 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Constant>                                                            */
-  /*    FT_LOAD_NO_OUTLINE                                                 */
+  /*    FT_LOAD_RENDER                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A bit-field constant, used with FT_Load_Glyph() to indicate that   */
-  /*    the function should not load the vector outline of a given glyph.  */
-  /*    If an embedded bitmap exists for the glyph in the font, it will be */
-  /*    loaded, otherwise nothing is returned and an error is produced.    */
+  /*    the function should load the glyph and immediately convert it      */
+  /*    into a bitmap, when necessary, by calling FT_Render_Glyph.         */
   /*                                                                       */
-#define FT_LOAD_NO_OUTLINE  4
+  /*    Note that by default, FT_Load_Glyph loads the glyph image in its   */
+  /*    native format..                                                    */
+  /*                                                                       */
+#define FT_LOAD_RENDER     4
 
 
   /*************************************************************************/
@@ -1526,8 +1686,9 @@
   /* <Description>                                                         */
   /*    A bit-field constant, used with FT_Load_Glyph() to indicate that   */
   /*    the function should not load the bitmap or pixmap of a given       */
-  /*    glyph.  If an outline exists for the glyph in the font, it is      */
-  /*    loaded, otherwise nothing is returned and an error is produced.    */
+  /*    glyph.  This is useful when you do not want to load the embedded   */
+  /*    bitmaps of scalable formats, as the native glyph image will be     */
+  /*    loaded, and can then be renderer through FT_Render_Glyph           */
   /*                                                                       */
 #define FT_LOAD_NO_BITMAP  8
 
@@ -1535,15 +1696,18 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Constant>                                                            */
-  /*    FT_LOAD_LINEAR                                                     */
+  /*    FT_LOAD_VERTICAL_LAYOUT                                            */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A bit-field constant, used with FT_Load_Glyph() to indicate that   */
-  /*    the function should return the linearly scaled metrics for the     */
-  /*    glyph in `slot->metrics2' (these metrics are not grid-fitted).     */
-  /*    Otherwise, `metrics2' gives the original font units values.        */
+  /*    the glyph image should be prepared for vertical layout. This       */
+  /*    basically means that "face.glyph.advance" will correspond to the   */
+  /*    vertical advance height (instead of the default horizontal         */
+  /*    advance width), and that the glyph image will translated to        */
+  /*    match the vertical bearings positions..                            */
   /*                                                                       */
-#define FT_LOAD_LINEAR  16
+#define FT_LOAD_VERTICAL_LAYOUT  16
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1556,6 +1720,7 @@
   /*    -specific hinter is available..                                    */
   /*                                                                       */
 #define FT_LOAD_FORCE_AUTOHINT  32
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1570,6 +1735,7 @@
   /*                                                                       */
   /*                                                                       */
 #define FT_LOAD_CROP_BITMAP  64
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1601,6 +1767,7 @@
   /*                                                                       */
 #define FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH 512
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Constant>                                                            */
@@ -1621,6 +1788,49 @@
   /*                                                                       */
 #define FT_LOAD_NO_RECURSE 1024
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_LOAD_IGNORE_TRANSFORM                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit-field constant, used with FT_Load_Glyph() to indicate that   */
+  /*    the glyph loader should not try to transform the loaded glyph      */
+  /*    image.                                                             */
+  /*                                                                       */
+#define FT_LOAD_IGNORE_TRANSFORM 2048
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_LOAD_ANTI_ALIAS                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Only used with FT_LOAD_RENDER set, indicates that the returned     */
+  /*    glyph image should be anti-aliased. This basically tells the       */
+  /*    glyph loader to use 'ft_render_mode_antialias' when calling        */
+  /*    FT_Render_Glyph.                                                   */
+  /*                                                                       */
+  /*                                                                       */
+#define FT_LOAD_LINEAR_ANTI_ALIAS  4096
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_LOAD_LINEAR_DESIGN                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit-field constant, used with FT_Load_Glyph() to indicate that   */
+  /*    the function should return the linearly scaled metrics expressed   */
+  /*    in original font units, instead of the default 16.16 pixel values. */
+  /*                                                                       */
+#define FT_LOAD_LINEAR_DESIGN 8192
+
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Constant>                                                            */
@@ -1635,6 +1845,69 @@
 #define FT_LOAD_DEFAULT  0
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Set_Transform                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A function used to set the transformation that is applied to glyph */
+  /*    images just before they're converted to bitmaps in a glyph slot    */
+  /*    when FT_Render_Glyph is called..                                   */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face   :: A handle to the source face object.                      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    matrix :: A pointer to the transformation's 2x2 matrix.  Use 0 for */
+  /*              the identity matrix.                                     */
+  /*    delta  :: A pointer to the translation vector.  Use 0 for the null */
+  /*              vector.                                                  */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The transformation is only applied to scalable image formats.      */
+  /*                                                                       */
+  FT_EXPORT_DEF( void )  FT_Set_Transform( FT_Face     face,
+                                           FT_Matrix*  matrix,
+                                           FT_Vector*  delta );
+
+
+ /*************************************************************************
+  *
+  *  <Function>
+  *     FT_Render_Glyph
+  *
+  *  <Description>
+  *     Converts a given glyph image to a bitmap. It does so by inspecting
+  *     the glyph image format, find the relevant renderer, and invoke it
+  *
+  *  <Input>
+  *     slot        :: handle to the glyph slot containing the image to
+  *                    convert
+  *
+  *     render_mode :: a set of bit flags indicating which kind of bitmap
+  *                    to render. For now, only 'ft_render_mode_anti_alias'
+  *                    is supported by the available renderers, but others
+  *                    could appear later (e.g. LCD or TV optimised)
+  *
+  *  <Return>
+  *     Error code. 0 means success.
+  *
+  *  <Note>
+  *     in case of success, the renderer will be used to convert glyph
+  *     images in the renderer's known format into bitmaps.
+  *
+  *     This doesn't change the current renderer for other formats..
+  *
+  *     The slot's native image should be considered lost after the
+  *     conversion..
+  *
+  *************************************************************************/
+  
+  FT_EXPORT_DEF(FT_Error)  FT_Render_Glyph( FT_GlyphSlot  slot,
+                                            FT_UInt       render_mode );
+
+                                            
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1829,6 +2102,27 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    FT_Vector_Transform                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Transforms a single vector through a 2x2 matrix.                   */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    vector :: The target vector to transform                           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    matrix :: A pointer to the source 2x2 matrix.                      */
+  /*                                                                       */
+  /* <MT-Note>                                                             */
+  /*    Yes.                                                               */
+  /*                                                                       */
+  FT_EXPORT_DEF(void)  FT_Vector_Transform( FT_Vector*  vector,
+                                            FT_Matrix*  matrix );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    FT_Outline_Get_Bitmap                                              */
   /*                                                                       */
   /* <Description>                                                         */
@@ -1892,6 +2186,7 @@
   FT_EXPORT_DEF(FT_Error)  FT_Outline_Render( FT_Library        library,
                                               FT_Outline*       outline,
                                               FT_Raster_Params* params );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2045,6 +2340,7 @@
                                              FT_Pos       yOffset );
 
 
+#if 0
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2146,7 +2442,7 @@
                                                FT_Glyph_Format format,
                                                unsigned long   mode,
                                                void*           args );
-
+#endif
 
  /***************************************************************************/
  /***************************************************************************/
@@ -2231,25 +2527,6 @@
   FT_EXPORT_DEF(void)  FT_Outline_Reverse( FT_Outline*  outline );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Vector_Transform                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Transforms a single vector through a 2x2 matrix.                   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    vector :: The target vector to transform                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    matrix :: A pointer to the source 2x2 matrix.                      */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Vector_Transform( FT_Vector*  vector,
-                                            FT_Matrix*  matrix );
 
 
   /*************************************************************************/

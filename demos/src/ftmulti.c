@@ -13,8 +13,7 @@
 /****************************************************************************/
 
 #include <freetype/freetype.h>
-#include <freetype/ftraster.h>
-#include <freetype/ftgrays.h>
+#include <freetype/ftrender.h>
 #include <freetype/ftmm.h>
 
 #include "common.h"
@@ -76,7 +75,8 @@
   int  use_grays   = 1;
 
   /* the standard raster's interface */
-  FT_Raster_Funcs  std_raster;
+  FT_Renderer   std_renderer;
+  FT_Renderer   smooth_renderer;
 
   FT_Multi_Master  multimaster;
   FT_Long          design_pos[T1_MAX_MM_AXIS];
@@ -460,10 +460,10 @@
   static
   void  reset_raster( void )
   {
-    if ( antialias && use_grays )
-      FT_Set_Raster( library, &ft_grays_raster );
+    if ( antialias && use_grays && smooth_renderer )
+      FT_Set_Renderer( library, smooth_renderer, 0, 0 );
     else
-      FT_Set_Raster( library, &std_raster );
+      FT_Set_Renderer( library, std_renderer, 0, 0 );
   }
 
 
@@ -715,8 +715,11 @@
       PanicZ( "Could not initialize FreeType library" );
 
     /* retrieve the standard raster's interface */
-    (void)FT_Get_Raster( library, ft_glyph_format_outline, &std_raster );
-    reset_raster();
+    std_renderer = (FT_Renderer)FT_Get_Module( library, "standard renderer" );
+    if (!std_renderer)
+      PanicZ( "Could not retrieve standard renderer" );
+
+    smooth_renderer = (FT_Renderer)FT_Get_Module( library, "smooth renderer" );
 
   NewFile:
     ptsize      = orig_ptsize;

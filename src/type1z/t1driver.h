@@ -18,10 +18,9 @@
 #ifndef T1DRIVER_H
 #define T1DRIVER_H
 
-#include <t1objs.h>
-#include <freetype/internal/t1errors.h>
+#include <freetype/internal/ftdriver.h>
 
-  FT_EXPORT_VAR(const  FT_DriverInterface)  t1z_driver_interface;
+  FT_EXPORT_VAR(const  FT_Driver_Class)  t1z_driver_class;
 
 #endif /* T1DRIVER_H */
 

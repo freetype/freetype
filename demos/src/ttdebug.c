@@ -1203,7 +1203,7 @@ int    glyph_size;
     if (error) Panic( "could not initialise FreeType library" );
 
     memory = library->memory;
-    driver = FT_Get_Driver( library, "truetype" );
+    driver = (FT_Driver)FT_Get_Module( library, "truetype" );
     if (!driver) Panic( "could not find the TrueType driver in FreeType 2\n" );
 
     FT_Set_Debug_Hook( library,

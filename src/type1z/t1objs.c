@@ -29,103 +29,6 @@
 
 /*******************************************************************
  *                                                                 *
- *                         SIZE  FUNCTIONS                         *
- *                                                                 *
- *                                                                 *
- *******************************************************************/
-
-/*******************************************************************
- *
- * <Function>  T1_Done_Size
- *
- * <Description>
- *    The TrueDoc instance object destructor. Used to discard
- *    a given instance object..
- *
- * <Input>
- *    instance   :: handle to the target instance object
- *
- * <Return>
- *    TrueDoc error code. 0 means success
- *
- ******************************************************************/
-
-  LOCAL_FUNC
-  void  T1_Done_Size( T1_Size  size )
-  {
-    UNUSED(size);
-  }
-
-
-/*******************************************************************
- *
- *  <Function> T1_Init_Size
- *
- *  <Description>
- *     The instance object constructor
- *
- *  <Input>
- *     instance  : handle to new instance object
- *     face      : pointer to parent face object
- *
- *  <Return>
- *     TrueDoc error code. 0 means success.
- *
- ******************************************************************/
-
-  LOCAL_DEF
-  FT_Error  T1_Init_Size( T1_Size  size )
-  {
-    size->valid = 0;
-    return T1_Err_Ok;
-  }
-
-
-/*******************************************************************
- *
- *  <Function> T1_Reset_Size
- *
- *  <Description>
- *     Resets an instance to a new pointsize/transform.
- *     This function is in charge of resetting the blue zones,
- *     As well as the stem snap tables for a given size..
- *
- *  <Input>
- *     instance   the instance object to destroy
- *
- *  <Output>
- *     Error code.
- *
- ******************************************************************/
-
-  LOCAL_FUNC
-  FT_Error  T1_Reset_Size( T1_Size  size )
-  {
-    /* recompute ascender, descender, etc.. */
-    T1_Face           face    = (T1_Face)size->root.face;
-    FT_Size_Metrics*  metrics = &size->root.metrics;
-
-    if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
-      return T1_Err_Invalid_Argument;
-
-    /* Compute root ascender, descender, test height, and max_advance */
-    metrics->ascender = ( FT_MulFix( face->root.ascender,
-                                     metrics->y_scale ) + 32 ) & -64;
-
-    metrics->descender = ( FT_MulFix( face->root.descender,
-                                      metrics->y_scale ) + 32 ) & -64;
-
-    metrics->height = ( FT_MulFix( face->root.height,
-                                   metrics->y_scale ) + 32 ) & -64;
-
-    metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
-                                        metrics->x_scale ) + 32 ) & -64;
-    return 0;
-  }
-
-
-/*******************************************************************
- *                                                                 *
  *                         FACE  FUNCTIONS                         *
  *                                                                 *
  *                                                                 *
@@ -238,15 +141,8 @@
 
     psnames = (PSNames_Interface*)face->psnames;
     if (!psnames)
-    {
-      /* look-up the PSNames driver */
-      FT_Driver  psnames_driver;
-
-      psnames_driver = FT_Get_Driver( face->root.driver->library, "psnames" );
-      if (psnames_driver)
-        face->psnames = (PSNames_Interface*)
-                            (psnames_driver->interface.format_interface);
-    }
+      psnames = (PSNames_Interface*)
+                 FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "psnames" );
 
     /* open the tokenizer, this will also check the font format */
     error = T1_Open_Face( face );
@@ -412,57 +308,6 @@
     }
   Exit:
     return error;
-  }
-
-
-/*******************************************************************
- *
- *  Function    :  Glyph_Destroy
- *
- *  Description :  The glyph object destructor.
- *
- *  Input  :  _glyph  typeless pointer to the glyph record to destroy
- *
- *  Output :  Error code.
- *
- ******************************************************************/
-
-  LOCAL_FUNC
-  void  T1_Done_GlyphSlot( T1_GlyphSlot  glyph )
-  {
-    FT_Memory  memory  = glyph->root.face->memory;
-    FT_Library library = glyph->root.face->driver->library;
-
-	/* the bitmaps are created on demand */
-	FREE( glyph->root.bitmap.buffer );
-    FT_Outline_Done( library, &glyph->root.outline );
-    return;
-  }
-
-
-/*******************************************************************
- *
- *  Function    :  Glyph_Create
- *
- *  Description :  The glyph object constructor.
- *
- *  Input  :  glyph   glyph record to build.
- *            face    the glyph's parent face.
- *
- *  Output :  Error code.
- *
- ******************************************************************/
-
-  LOCAL_FUNC
-  FT_Error  T1_Init_GlyphSlot( T1_GlyphSlot  glyph )
-  {
-    FT_Library  library = glyph->root.face->driver->library;
-
-    glyph->max_points         = 0;
-    glyph->max_contours       = 0;
-    glyph->root.bitmap.buffer = 0;
-
-    return FT_Outline_New( library, 0, 0, &glyph->root.outline );
   }
 
 

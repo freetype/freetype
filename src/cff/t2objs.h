@@ -69,9 +69,6 @@
     FT_Bool          hint;
     FT_Bool          scaled;
 
-    FT_Int           max_points;
-    FT_Int           max_contours;
-
     FT_Fixed         x_scale;
     FT_Fixed         y_scale;
 
@@ -118,31 +115,6 @@
 
   LOCAL_DEF
   void  T2_Done_Face( T2_Face  face );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* Size functions                                                        */
-  /*                                                                       */
-  LOCAL_DEF
-  FT_Error  T2_Init_Size( T2_Size  size );
-
-  LOCAL_DEF
-  void  T2_Done_Size( T2_Size  size );
-
-  LOCAL_DEF
-  FT_Error  T2_Reset_Size( T2_Size  size );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* GlyphSlot functions                                                   */
-  /*                                                                       */
-  LOCAL_DEF
-  FT_Error  T2_Init_GlyphSlot( T2_GlyphSlot  slot );
-
-  LOCAL_DEF
-  void  T2_Done_GlyphSlot( T2_GlyphSlot  slot );
 
 
   /*************************************************************************/

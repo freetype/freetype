@@ -231,9 +231,12 @@
 
     if ( glyph )
     {
-      builder->base         = glyph->root.outline;
-      builder->max_points   = glyph->max_points;
-      builder->max_contours = glyph->max_contours;
+      FT_GlyphLoader*  loader = glyph->root.loader;
+      
+      builder->loader  = loader;
+      builder->base    = &loader->base.outline;
+      builder->current = &loader->current.outline;
+      FT_GlyphLoader_Rewind( loader );
     }
 
     if ( size )
@@ -249,10 +252,6 @@
     builder->left_bearing.y = 0;
     builder->advance.x      = 0;
     builder->advance.y      = 0;
-
-    builder->base.n_points   = 0;
-    builder->base.n_contours = 0;
-    builder->current         = builder->base;
   }
 
 
@@ -274,13 +273,8 @@
   {
     T2_GlyphSlot  glyph = builder->glyph;
 
-
     if ( glyph )
-    {
-      glyph->root.outline = builder->base;
-      glyph->max_points   = builder->max_points;
-      glyph->max_contours = builder->max_contours;
-    }
+      glyph->root.outline = *builder->base;
   }
 
 
@@ -366,43 +360,9 @@
   FT_Error  check_points( T2_Builder*  builder,
                           FT_Int       count )
   {
-    FT_Outline*  base    = &builder->base;
-    FT_Outline*  outline = &builder->current;
-
-
-    if ( !builder->load_points )
-      return T2_Err_Ok;
-
-    count += base->n_points + outline->n_points;
-
-    /* realloc points table if necessary */
-    if ( count >= builder->max_points )
-    {
-      FT_Error   error;
-      FT_Memory  memory    = builder->memory;
-      FT_Int     increment = outline->points - base->points;
-      FT_Int     current   = builder->max_points;
-
-
-      while ( builder->max_points < count )
-        builder->max_points += 8;
-
-      if ( REALLOC_ARRAY( base->points, current,
-                          builder->max_points, FT_Vector )  ||
-
-           REALLOC_ARRAY( base->tags, current,
-                          builder->max_points, FT_Byte )    )
-      {
-        builder->error = error;
-        return error;
-      }
-
-      outline->points = base->points + increment;
-      outline->tags  = base->tags  + increment;
-    }
-
-    return T2_Err_Ok;
-  }
+    return FT_GlyphLoader_Check_Points( builder->loader,
+                                        count, 0 );
+  }                                         
 
 
   /* add a new point, do not check space */
@@ -412,14 +372,12 @@
                    FT_Pos       y,
                    FT_Byte      flag )
   {
-    FT_Outline*  outline = &builder->current;
-
+    FT_Outline*  outline = builder->current;
 
     if ( builder->load_points )
     {
       FT_Vector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
-
 
       point->x = x >> 16;
       point->y = y >> 16;
@@ -427,7 +385,6 @@
 
       builder->last = *point;
     }
-
     outline->n_points++;
   }
 
@@ -439,7 +396,6 @@
                         FT_Pos       y )
   {
     FT_Error  error;
-
 
     error = check_points( builder, 1 );
     if ( !error )
@@ -453,9 +409,8 @@
   static
   FT_Error  add_contour( T2_Builder*  builder )
   {
-    FT_Outline*  base    = &builder->base;
-    FT_Outline*  outline = &builder->current;
-
+    FT_Outline*  outline = builder->current;
+    FT_Error     error;
 
     if ( !builder->load_points )
     {
@@ -463,34 +418,15 @@
       return T2_Err_Ok;
     }
 
-    /* realloc contours array if necessary */
-    if ( base->n_contours + outline->n_contours >= builder->max_contours &&
-         builder->load_points )
+    error = FT_GlyphLoader_Check_Points( builder->loader, 0, 1 );
+    if (!error)
     {
-      FT_Error  error;
-      FT_Memory memory    = builder->memory;
-      FT_Int    increment = outline->contours - base->contours;
-      FT_Int    current   = builder->max_contours;
-
-
-      builder->max_contours += 4;
-
-      if ( REALLOC_ARRAY( base->contours,
-                          current, builder->max_contours, FT_Short ) )
-      {
-        builder->error = error;
-        return error;
-      }
-
-      outline->contours = base->contours + increment;
+      if ( outline->n_contours > 0 )
+        outline->contours[outline->n_contours - 1] = outline->n_points - 1;
+  
+      outline->n_contours++;
     }
-
-    if ( outline->n_contours > 0 )
-      outline->contours[outline->n_contours - 1] = outline->n_points - 1;
-
-    outline->n_contours++;
-
-    return T2_Err_Ok;
+    return error;
   }
 
 
@@ -504,7 +440,6 @@
     if ( !builder->path_begun )
     {
       FT_Error  error;
-
 
       builder->path_begun = 1;
       error = add_contour( builder );
@@ -520,8 +455,7 @@
   static
   void  close_contour( T2_Builder*  builder )
   {
-    FT_Outline*  outline = &builder->current;
-
+    FT_Outline*  outline = builder->current;
 
     if ( outline->n_contours > 0 )
       outline->contours[outline->n_contours - 1] = outline->n_points - 1;
@@ -550,7 +484,7 @@
   /*    charstring_len   :: The length in bytes of the charstring stream.  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  T2_Parse_CharStrings( T2_Decoder*  decoder,
@@ -593,7 +527,7 @@
     ip    = zone->cursor = zone->base;
 
     error   = T2_Err_Ok;
-    outline = &builder->current;
+    outline = builder->current;
 
     x = builder->pos_x;
     y = builder->pos_y;
@@ -1182,8 +1116,7 @@
           close_contour( builder );
 
           /* add current outline to the glyph slot */
-          builder->base.n_points   += builder->current.n_points;
-          builder->base.n_contours += builder->current.n_contours;
+          FT_GlyphLoader_Add( builder->loader );
 
           /* return now! */
           FT_TRACE4(( "\n\n" ));
@@ -1769,7 +1702,7 @@
         {
           /* scale the outline and the metrics */
           FT_Int       n;
-          FT_Outline*  cur     = &decoder.builder.base;
+          FT_Outline*  cur     = &glyph->root.outline;
           FT_Vector*   vec     = cur->points;
           FT_Fixed     x_scale = glyph->x_scale;
           FT_Fixed     y_scale = glyph->y_scale;

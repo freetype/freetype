@@ -110,8 +110,8 @@
 
 
   typedef
-  FTDriver_Interface  (*SFNT_Get_Interface_Func)( FT_Driver    driver,
-                                                  const char*  interface );
+  FT_Module_Interface  (*SFNT_Get_Interface_Func)( FT_Module    module,
+                                                   const char*  interface );
 
 
   /*************************************************************************/

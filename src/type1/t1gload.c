@@ -1,20 +1,19 @@
-/***************************************************************************/
-/*                                                                         */
-/*  t1gload.c                                                              */
-/*                                                                         */
-/*    Type 1 Glyph Loader (body).                                          */
-/*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
-
+/*******************************************************************
+ *
+ *  t1gload.c                                                   1.0
+ *
+ *    Type1 Glyph Loader.
+ *
+ *  Copyright 1996-1999 by
+ *  David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ *  This file is part of the FreeType project, and may only be used
+ *  modified and distributed under the terms of the FreeType project
+ *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ *  this file you indicate that you have read the license and
+ *  understand and accept it fully.
+ *
+ ******************************************************************/
 
 #include <t1gload.h>
 #include <freetype/internal/ftdebug.h>
@@ -24,33 +23,37 @@
 #include <t1hinter.h>
 #endif
 
+  /**********************************************************************/
+  /**********************************************************************/
+  /**********************************************************************/
+  /**********                                                   *********/
+  /**********                                                   *********/
+  /**********           GENERIC CHARSTRINGS PARSING             *********/
+  /**********                                                   *********/
+  /**********                                                   *********/
+  /**********************************************************************/
+  /**********************************************************************/
+  /**********************************************************************/
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
-#undef  FT_COMPONENT
-#define FT_COMPONENT  trace_t1gload
-
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /**********                                                      *********/
-  /**********                                                      *********/
-  /**********             GENERIC CHARSTRING PARSING               *********/
-  /**********                                                      *********/
-  /**********                                                      *********/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-
+/*********************************************************************
+ *
+ * <Function>
+ *    T1_Init_Builder
+ *
+ * <Description>
+ *    Initialise a given glyph builder.
+ *
+ * <Input>
+ *    builder :: glyph builder to initialise
+ *    face    :: current face object
+ *    size    :: current size object
+ *    glyph   :: current glyph object
+ *    funcs   :: glyph builder functions (or "methods").
+ *
+ *********************************************************************/
 
   static
-  void  T1_Reset_Builder( T1_Builder*  builder,
-                          FT_Bool      reset_base )
+  void  T1_Reset_Builder( T1_Builder*  builder, FT_Bool  reset_base )
   {
     builder->pos_x = 0;
     builder->pos_y = 0;
@@ -63,52 +66,22 @@
     builder->pass       = 0;
     builder->hint_point = 0;
 
-    if ( reset_base )
+    if (builder->loader)
     {
-      builder->base.n_points   = 0;
-      builder->base.n_contours = 0;
-    }
+      if (reset_base)
+        FT_GlyphLoader_Rewind( builder->loader );
     
-    {
-      FT_Outline*  base = &builder->base;
-      FT_Outline*  cur  = &builder->current;
-
-      
-      cur->n_points   = 0;
-      cur->n_contours = 0;
-      cur->points     = base->points   + base->n_points;
-      cur->tags       = base->tags     + base->n_points;
-      cur->contours   = base->contours + base->n_contours;
+      FT_GlyphLoader_Prepare( builder->loader );
     }
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T1_Init_Builder                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a given glyph builder.                                 */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    builder :: A pointer to the glyph builder to initialize.           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face    :: The current face object.                                */
-  /*                                                                       */
-  /*    size    :: The current size object.                                */
-  /*                                                                       */
-  /*    glyph   :: The current glyph object.                               */
-  /*                                                                       */
-  /*    funcs   :: Glyph builder functions (or `methods').                 */
-  /*                                                                       */
   LOCAL_FUNC
-  void  T1_Init_Builder( T1_Builder*              builder,
-                         T1_Face                  face,
-                         T1_Size                  size,
-                         T1_GlyphSlot             glyph,
-                         const T1_Builder_Funcs*  funcs )
+  void  T1_Init_Builder( T1_Builder*             builder,
+                         T1_Face                 face,
+                         T1_Size                 size,
+                         T1_GlyphSlot            glyph,
+                         const T1_Builder_Funcs* funcs )
   {
     builder->funcs       = *funcs;
     builder->path_begun  = 0;
@@ -119,14 +92,16 @@
     builder->glyph  = glyph;
     builder->memory = face->root.memory;
 
-    if ( glyph )
+    if (glyph)
     {
-      builder->base         = glyph->root.outline;
-      builder->max_points   = glyph->max_points;
-      builder->max_contours = glyph->max_contours;
+      FT_GlyphLoader*  loader = FT_SLOT(glyph)->loader;
+      
+      builder->loader  = loader;
+      builder->base    = &loader->base.outline;
+      builder->current = &loader->current.outline;
     }
 
-    if ( size )
+    if (size)
     {
       builder->scale_x = size->root.metrics.x_scale;
       builder->scale_y = size->root.metrics.y_scale;
@@ -136,47 +111,47 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T1_Done_Builder                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Finalizes a given glyph builder.  Its contents can still be used   */
-  /*    after the call, but the function saves important information       */
-  /*    within the corresponding glyph slot.                               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    builder :: A pointer to the glyph builder to finalize.             */
-  /*                                                                       */
+/*********************************************************************
+ *
+ * <Function>
+ *    T1_Done_Builder
+ *
+ * <Description>
+ *    Finalise a given glyph builder. Its content can still be
+ *    used after the call, but the function saves important information
+ *    within the corresponding glyph slot.
+ *
+ * <Input>
+ *    builder :: glyph builder to initialise
+ *
+ *********************************************************************/
+
   LOCAL_FUNC
-  void  T1_Done_Builder( T1_Builder*  builder )
+  void T1_Done_Builder( T1_Builder*  builder )
   {
     T1_GlyphSlot  glyph = builder->glyph;
 
-
-    if ( glyph )
-    {
-      glyph->root.outline = builder->base;
-      glyph->max_points   = builder->max_points;
-      glyph->max_contours = builder->max_contours;
-    }
+    if (glyph)
+      glyph->root.outline = *builder->base;
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T1_Init_Decoder                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a given glyph decoder.                                 */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    decoder :: A pointer to the glyph builder to initialize.           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    funcs   :: The hinting functions interface.                        */
+
+/*********************************************************************
+ *
+ * <Function>
+ *    T1_Init_Decoder
+ *
+ * <Description>
+ *    Initialise a given Type 1 decoder for parsing
+ *
+ * <Input>
+ *    decoder :: Type 1 decoder to initialise
+ *    funcs   :: hinter functions interface
+ *
+ *********************************************************************/
+
+
   LOCAL_FUNC
   void  T1_Init_Decoder( T1_Decoder*             decoder,
                          const T1_Hinter_Funcs*  funcs )
@@ -189,50 +164,49 @@
     decoder->num_flex_vectors = 0;
 
     /* Clear loader */
-    MEM_Set( &decoder->builder, 0, sizeof ( decoder->builder ) );
+    MEM_Set( &decoder->builder, 0, sizeof(decoder->builder) );
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    lookup_glyph_by_stdcharcode                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Looks up a given glyph by its StandardEncoding charcode.  Used     */
-  /*    to implement the SEAC Type 1 operator.                             */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face     :: The current face object.                               */
-  /*                                                                       */
-  /*    charcode :: The character code to look for.                        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A glyph index in the font face.  Returns -1 if the corresponding   */
-  /*    glyph wasn't found.                                                */
-  /*                                                                       */
+/*********************************************************************
+ *
+ * <Function>
+ *    lookup_glyph_by_stdcharcode
+ *
+ * <Description>
+ *    Lookup a given glyph by its StandardEncoding charcode. Used
+ *    to implement the SEAC Type 1 operator.
+ *
+ * <Input>
+ *    face     :: current face object
+ *    charcode :: charcode to look for
+ *
+ * <Return>
+ *    glyph index in font face. Returns -1 if the corresponding
+ *    glyph wasn't found.
+ *
+ *********************************************************************/
+
   static
-  FT_Int  lookup_glyph_by_stdcharcode( T1_Face  face,
-                                       FT_Int   charcode )
+  FT_Int    lookup_glyph_by_stdcharcode( T1_Face  face,
+                                         FT_Int   charcode )
   {
     FT_Int              n;
     const FT_String*    glyph_name;
     PSNames_Interface*  psnames = (PSNames_Interface*)face->psnames;
 
-
     /* check range of standard char code */
-    if ( charcode < 0 || charcode > 255 )
+    if (charcode < 0 || charcode > 255)
       return -1;
 
     glyph_name = psnames->adobe_std_strings(
-                   psnames->adobe_std_encoding[charcode]);
+                    psnames->adobe_std_encoding[charcode]);
 
     for ( n = 0; n < face->type1.num_glyphs; n++ )
     {
       FT_String*  name = (FT_String*)face->type1.glyph_names[n];
 
-
-      if ( name && strcmp( name, glyph_name ) == 0 )
+      if ( name && strcmp(name,glyph_name) == 0 )
         return n;
     }
 
@@ -240,30 +214,27 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    t1operator_seac                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Implements the `seac' Type 1 operator for a Type 1 decoder.        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    decoder  :: The current CID decoder.                               */
-  /*                                                                       */
-  /*    asb      :: The accent's side bearing.                             */
-  /*                                                                       */
-  /*    adx      :: The horizontal offset of the accent.                   */
-  /*                                                                       */
-  /*    ady      :: The vertical offset of the accent.                     */
-  /*                                                                       */
-  /*    bchar    :: The base character's StandardEncoding charcode.        */
-  /*                                                                       */
-  /*    achar    :: The accent character's StandardEncoding charcode.      */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+/*********************************************************************
+ *
+ * <Function>
+ *    t1operator_seac
+ *
+ * <Description>
+ *    Implements the "seac" Type 1 operator for a Type 1 decoder
+ *
+ * <Input>
+ *    decoder  :: current Type 1 decoder
+ *    asb      :: accent's side bearing
+ *    adx      :: horizontal position of accent
+ *    ady      :: vertical position of accent
+ *    bchar    :: base character's StandardEncoding charcode
+ *    achar    :: accent character's StandardEncoding charcode
+ *
+ * <Return>
+ *    Error code. 0 means success.
+ *
+ *********************************************************************/
+
   static
   FT_Error  t1operator_seac( T1_Decoder*  decoder,
                              FT_Pos       asb,
@@ -273,13 +244,12 @@
                              FT_Int       achar )
   {
     FT_Error     error;
-    T1_Face      face = decoder->builder.face;
     FT_Int       bchar_index, achar_index, n_base_points;
-    FT_Outline*  cur  = &decoder->builder.current;
-    FT_Outline*  base = &decoder->builder.base;
+    FT_Outline*  cur  = decoder->builder.current;
+    FT_Outline*  base = decoder->builder.base;
     FT_Vector    left_bearing, advance;
+    T1_Face      face  = decoder->builder.face;
     T1_Font*     type1 = &face->type1;
-
 
     bchar_index = lookup_glyph_by_stdcharcode( face, bchar );
     achar_index = lookup_glyph_by_stdcharcode( face, achar );
@@ -290,29 +260,20 @@
       return T1_Err_Syntax_Error;
     }
 
+    /* if we are trying to load a composite glyph, do not load the */
+    /* accent character and return the array of subglyphs.         */
     if ( decoder->builder.no_recurse )
     {
-      /* if we are trying to load a composite glyph, do not load the */
-      /* accent character and return the array of subglyphs.         */
 
-      FT_GlyphSlot  glyph = (FT_GlyphSlot)decoder->builder.glyph;
-      FT_SubGlyph*  subg;
-
+      FT_GlyphSlot     glyph = (FT_GlyphSlot)decoder->builder.glyph;
+      FT_GlyphLoader*  loader = glyph->loader;
+      FT_SubGlyph*     subg;
 
       /* reallocate subglyph array if necessary */
-      if ( glyph->max_subglyphs < 2 )
-      {
-        FT_Memory  memory = decoder->builder.face->root.memory;
-
-
-        if ( REALLOC_ARRAY( glyph->subglyphs, glyph->max_subglyphs,
-                            2, FT_SubGlyph ) )
-          return error;
-
-        glyph->max_subglyphs = 2;
-      }
-
-      subg = glyph->subglyphs;
+      error = FT_GlyphLoader_Check_Subglyphs( loader, 2 );
+      if (error) goto Exit;
+      
+      subg = loader->current.subglyphs;
 
       /* subglyph 0 = base character */
       subg->index = bchar_index;
@@ -331,29 +292,27 @@
       /* set up remaining glyph fields */
       glyph->num_subglyphs = 2;
       glyph->format        = ft_glyph_format_composite;
+      
+      loader->current.num_subglyphs = 2;
     }
-    else
+
+    /* First load `bchar' in builder */
+    /* now load the unscaled outline */
+    
+    if (decoder->builder.loader)
+      FT_GlyphLoader_Prepare( decoder->builder.loader );  /* prepare loader */
+
+    error = T1_Parse_CharStrings( decoder,
+                                  type1->charstrings    [bchar_index],
+                                  type1->charstrings_len[bchar_index],
+                                  type1->num_subrs,
+                                  type1->subrs,
+                                  type1->subrs_len );
+    if ( error ) goto Exit;
+
+    n_base_points = cur->n_points;
+
     {
-      /* First load `bchar' in builder */
-      /* now load the unscaled outline */
-
-      cur->n_points   = 0;
-      cur->n_contours = 0;
-      cur->points     = base->points   + base->n_points;
-      cur->tags       = base->tags     + base->n_points;
-      cur->contours   = base->contours + base->n_contours;
-  
-      error = T1_Parse_CharStrings( decoder,
-                                    type1->charstrings    [bchar_index],
-                                    type1->charstrings_len[bchar_index],
-                                    type1->num_subrs,
-                                    type1->subrs,
-                                    type1->subrs_len );
-      if ( error )
-        return error;
-  
-      n_base_points   = cur->n_points;
-
       /* save the left bearing and width of the base character */
       /* as they will be erased by the next load.              */
 
@@ -365,29 +324,13 @@
 
       /* Now load `achar' on top of */
       /* the base outline           */
-
-      cur->n_points   = 0;
-      cur->n_contours = 0;
-      cur->points     = base->points   + base->n_points;
-      cur->tags       = base->tags     + base->n_points;
-      cur->contours   = base->contours + base->n_contours;
-
       error = T1_Parse_CharStrings( decoder,
                                     type1->charstrings    [achar_index],
                                     type1->charstrings_len[achar_index],
                                     type1->num_subrs,
                                     type1->subrs,
                                     type1->subrs_len );
-      if ( error )
-        return error;
-
-      /* adjust contours in accented character outline */
-      {
-        FT_Int  n;
-
-        for ( n = 0; n < cur->n_contours; n++ )
-          cur->contours[n] += n_base_points;
-      }
+      if ( error ) return error;
 
       /* restore the left side bearing and   */
       /* advance width of the base character */
@@ -396,30 +339,38 @@
       decoder->builder.advance      = advance;
 
       /* Finally, move the accent */
-      FT_Outline_Translate( cur, adx - asb, ady );
+      if ( decoder->builder.load_points )
+      {
+        FT_Outline  dummy;
+        
+        dummy.n_points = base->n_points - n_base_points;
+        dummy.points   = base->points   + n_base_points;
+        FT_Outline_Translate( &dummy, adx - asb, ady );
+      }
     }
-
-    return T1_Err_Ok;
+  Exit:
+    return error;
   }
 
+/*********************************************************************
+ *
+ * <Function>
+ *    t1operator_flex
+ *
+ * <Description>
+ *    Implements the "flex" Type 1 operator for a Type 1 decoder
+ *
+ * <Input>
+ *    decoder   :: current Type 1 decoder
+ *    threshold :: threshold
+ *    end_x     :: position of final flex point
+ *    end_y     :: position of final flex point
+ *
+ * <Return>
+ *    Error code. 0 means success.
+ *
+ *********************************************************************/
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    t1operator_flex                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Implements the `flex' Type 1 operator for a Type 1 decoder.        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    decoder   :: The current Type 1 decoder.                           */
-  /*    threshold :: The threshold.                                        */
-  /*    end_x     :: The horizontal position of the final flex point.      */
-  /*    end_y     :: The vertical position of the final flex point.        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
   static
   FT_Error  t1operator_flex( T1_Decoder*  decoder,
                              FT_Pos       threshold,
@@ -430,15 +381,10 @@
     FT_Vector*   flex  = decoder->flex_vectors;
     FT_Int       n;
 
-    UNUSED( threshold );
-    UNUSED( end_x );
-    UNUSED( end_y );
-
-
-    /* we don't even try to test the threshold in the non-hinting   */
+    /* we don't even try to test the threshold in the non-hinting  */
     /* builder, even if the flex operator is said to be a path      */
-    /* construction statement in the specification.  This is better */
-    /* left to the hinter.                                          */
+    /* construction statement in the specification. This is better */
+    /* left to the hinter..                                        */
 
     flex = decoder->flex_vectors;
     vec  = *flex++;
@@ -450,6 +396,11 @@
 
       vec = *flex++;
     }
+
+
+    UNUSED(threshold);
+    UNUSED(end_x);
+    UNUSED(end_y);
 
     flex  = decoder->flex_vectors;
 
@@ -465,37 +416,34 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T1_Parse_CharStrings                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Parses a given Type 1 charstrings program.                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    decoder          :: The current Type 1 decoder.                    */
-  /*                                                                       */
-  /*    charstring_base  :: The base address of the charstring stream.     */
-  /*                                                                       */
-  /*    charstring_len   :: The length in bytes of the charstring stream.  */
-  /*                                                                       */
-  /*    num_subrs        :: The number of sub-routines.                    */
-  /*                                                                       */
-  /*    subrs_base       :: An array of sub-routines addresses.            */
-  /*                                                                       */
-  /*    subrs_len        :: An array of sub-routines lengths.              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Free error code.  0 means success.                                 */
-  /*                                                                       */
+/*********************************************************************
+ *
+ * <Function>
+ *    T1_Parse_CharStrings
+ *
+ * <Description>
+ *    Parses a given Type 1 charstrings program
+ *
+ * <Input>
+ *    decoder          :: current Type 1 decoder
+ *    charstring_base  :: base of the charstring stream
+ *    charstring_len   :: length in bytes of the charstring stream
+ *    num_subrs        :: number of sub-routines
+ *    subrs_base       :: array of sub-routines addresses
+ *    subrs_len        :: array of sub-routines lengths
+ *
+ * <Return>
+ *    Error code. 0 means success.
+ *
+ *********************************************************************/
+
   LOCAL_FUNC
-  FT_Error  T1_Parse_CharStrings( T1_Decoder*  decoder,
-                                  FT_Byte*     charstring_base,
-                                  FT_Int       charstring_len,
-                                  FT_Int       num_subrs,
-                                  FT_Byte**    subrs_base,
-                                  FT_Int*      subrs_len )
+  FT_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
+                                   FT_Byte*     charstring_base,
+                                   FT_Int       charstring_len,
+                                   FT_Int       num_subrs,
+                                   FT_Byte**    subrs_base,
+                                   FT_Int*      subrs_len )
   {
     FT_Error            error;
     T1_Decoder_Zone*    zone;
@@ -505,7 +453,7 @@
     T1_Builder_Funcs*   builds  = &builder->funcs;
     T1_Hinter_Funcs*    hints   = &decoder->hinter;
 
-    static const FT_Int  args_count[op_max] =
+    static const FT_Int  args_count[ op_max ] =
     {
       0, /* none */
       0, /* endchar */
@@ -535,8 +483,7 @@
       2  /* setcurrentpoint */
     };
 
-
-    /* First of all, initialize the decoder */
+    /* First of all, initialise the decoder */
     decoder->top  = decoder->stack;
     decoder->zone = decoder->zones;
     zone          = decoder->zones;
@@ -556,146 +503,99 @@
       T1_Operator  op       = op_none;
       FT_Long      value    = 0;
 
-
-      /* Start with the decompression of operator or value */
-      switch ( *ip++ )
+      /* First of all, decompress operator or value */
+      switch (*ip++)
       {
-      case 1:
-        op = op_hstem;
-        break;
+        case 1:  op = op_hstem;     break;
 
-      case 3:
-        op = op_vstem;
-        break;
-      case 4:
-        op = op_vmoveto;
-        break;
-      case 5:
-        op = op_rlineto;
-        break;
-      case 6:
-        op = op_hlineto;
-        break;
-      case 7:
-        op = op_vlineto;
-        break;
-      case 8:
-        op = op_rrcurveto;
-        break;
-      case 9:
-        op = op_closepath;
-        break;
-      case 10:
-        op = op_callsubr;
-        break;
-      case 11:
-        op = op_return;
-        break;
+        case 3:  op = op_vstem;     break;
+        case 4:  op = op_vmoveto;   break;
+        case 5:  op = op_rlineto;   break;
+        case 6:  op = op_hlineto;   break;
+        case 7:  op = op_vlineto;   break;
+        case 8:  op = op_rrcurveto; break;
+        case 9:  op = op_closepath; break;
+        case 10: op = op_callsubr;  break;
+        case 11: op = op_return;    break;
 
-      case 13:
-        op = op_hsbw;
-        break;
-      case 14:
-        op = op_endchar;
-        break;
+        case 13: op = op_hsbw;      break;
+        case 14: op = op_endchar;   break;
 
-      case 21:
-        op = op_rmoveto;
-        break;
-      case 22:
-        op = op_hmoveto;
-        break;
+        case 21: op = op_rmoveto;   break;
+        case 22: op = op_hmoveto;   break;
 
-      case 30:
-        op = op_vhcurveto;
-        break;
-      case 31:
-        op = op_hvcurveto;
-        break;
+        case 30: op = op_vhcurveto; break;
+        case 31: op = op_hvcurveto; break;
 
-      case 12:
-        if ( ip > limit )
-        {
-          FT_ERROR(( "T1_Parse_CharStrings: invalid escape (12+EOF)\n" ));
-          goto Syntax_Error;
-        }
-
-        switch ( *ip++ )
-        {
-        case 0:
-          op = op_dotsection;
-          break;
-        case 1:
-          op = op_vstem3;
-          break;
-        case 2:
-          op = op_hstem3;
-          break;
-        case 6:
-          op = op_seac;
-          break;
-        case 7:
-          op = op_sbw;
-          break;
         case 12:
-          op = op_div;
-          break;
-        case 16:
-          op = op_callothersubr;
-          break;
-        case 17:
-          op = op_pop;
-          break;
-        case 33:
-          op = op_setcurrentpoint;
-          break;
-
-        default:
-          FT_ERROR(( "T1_Parse_CharStrings: invalid escape (12+%d)\n",
-                     ip[-1] ));
-          goto Syntax_Error;
-        }
-        break;
-
-      case 255:    /* four bytes integer */
-        if ( ip + 4 > limit )
-        {
-          FT_ERROR(( "T1_Parse_CharStrings: unexpected EOF in integer\n" ));
-          goto Syntax_Error;
-        }
-
-        value = ( (FT_Long)ip[0] << 24 ) |
-                ( (FT_Long)ip[1] << 16 ) |
-                ( (FT_Long)ip[2] << 8  ) |
-                           ip[3];
-          ip += 4;
-        break;
-
-      default:
-        if ( ip[-1] >= 32 )
-        {
-          if ( ip[-1] < 247 )
-            value = (FT_Long)ip[-1] - 139;
-          else
           {
-            if ( ++ip > limit )
+            if (ip > limit)
             {
-              FT_ERROR(( "T1_Parse_CharStrings: unexpected EOF in integer\n" ));
+              FT_ERROR(( "T1.Parse_CharStrings : invalid escape (12+EOF)\n" ));
               goto Syntax_Error;
             }
 
-            if ( ip[-2] < 251 )
-              value = ( (FT_Long)( ip[-2] - 247 ) << 8 ) + ip[-1] + 108;
-            else
-              value = -( ( ( (FT_Long)ip[-2] - 251 ) << 8 ) + ip[-1] + 108 );
+            switch (*ip++)
+            {
+              case 0:  op = op_dotsection;      break;
+              case 1:  op = op_vstem3;          break;
+              case 2:  op = op_hstem3;          break;
+              case 6:  op = op_seac;            break;
+              case 7:  op = op_sbw;             break;
+              case 12: op = op_div;             break;
+              case 16: op = op_callothersubr;   break;
+              case 17: op = op_pop;             break;
+              case 33: op = op_setcurrentpoint; break;
+
+              default:
+                FT_ERROR(( "T1.Parse_CharStrings : invalid escape (12+%d)\n",
+                         ip[-1] ));
+                goto Syntax_Error;
+            }
           }
-        }
-        else
-        {
-          FT_ERROR(( "T1_Parse_CharStrings: invalid byte (%d)\n",
+          break;
+
+        case 255:    /* four bytes integer */
+          {
+            if (ip+4 > limit)
+            {
+              FT_ERROR(( "T1.Parse_CharStrings : unexpected EOF in integer\n" ));
+              goto Syntax_Error;
+            }
+
+            value = ((long)ip[0] << 24) |
+                    ((long)ip[1] << 16) |
+                    ((long)ip[2] << 8)  |
+                           ip[3];
+            ip += 4;
+          }
+          break;
+
+        default:
+          if (ip[-1] >= 32)
+          {
+            if (ip[-1] < 247)
+              value = (long)ip[-1] - 139;
+            else
+            {
+              if (++ip > limit)
+              {
+                FT_ERROR(( "T1.Parse_CharStrings : unexpected EOF in integer\n" ));
+                goto Syntax_Error;
+              }
+
+              if (ip[-2] < 251)
+                value =  ((long)(ip[-2]-247) << 8) + ip[-1] + 108;
+              else
+                value = -((((long)ip[-2]-251) << 8) + ip[-1] + 108 );
+            }
+          }
+          else
+          {
+            FT_ERROR(( "T1.Parse_CharStrings : invalid byte (%d)\n",
                      ip[-1] ));
-          goto Syntax_Error;
-        }
+            goto Syntax_Error;
+          }
       }
 
       /* push value if needed */
@@ -703,120 +603,123 @@
       {
         if ( top - decoder->stack >= T1_MAX_CHARSTRINGS_OPERANDS )
         {
-          FT_ERROR(( "T1_Parse_CharStrings: Stack overflow!\n" ));
+          FT_ERROR(( "T1.Parse_CharStrings : Stack overflow !!\n" ));
           goto Syntax_Error;
         }
 
         *top++       = value;
         decoder->top = top;
       }
+
       else if ( op == op_callothersubr ) /* check arguments differently */
       {
-        if ( top - decoder->stack < 2 )
+        if ( top - decoder->stack < 2)
           goto Stack_Underflow;
 
         top -= 2;
 
-        switch ( top[1] )
+        switch (top[1])
         {
-        case 1:   /* start flex feature ----------------------------- */
-          if ( top[0] != 0 )
-            goto Unexpected_OtherSubr;
-
-          decoder->flex_state        = 1;
-          decoder->num_flex_vectors  = 0;
-          decoder->flex_vectors[0].x = 0;
-          decoder->flex_vectors[0].y = 0;
-          break;
-
-
-        case 2:   /* add flex vector ------------------------------- */
-          {
-            FT_Int      index;
-            FT_Vector*  flex;
-
-
-            if ( top[0] != 0 )
-              goto Unexpected_OtherSubr;
-
-            top -= 2;
-            if ( top < decoder->stack )
-              goto Stack_Underflow;
-
-            index = decoder->num_flex_vectors++;
-            if ( index >= 7 )
+          case 1:   /* start flex feature ----------------------------- */
             {
-              FT_ERROR(( "T1_Parse_CharStrings: too many flex vectors!\n" ));
-              goto Syntax_Error;
+              if (top[0] != 0) goto Unexpected_OtherSubr;
+
+              decoder->flex_state        = 1;
+              decoder->num_flex_vectors  = 0;
+              decoder->flex_vectors[0].x = 0;
+              decoder->flex_vectors[0].y = 0;
             }
+            break;
 
-            flex = decoder->flex_vectors + index;
-            flex->x += top[0];
-            flex->y += top[1];
-          }
-          break;
 
-        case 0:   /* end flex feature ------------------------------ */
-          if ( decoder->flex_state       == 0 ||
-               decoder->num_flex_vectors != 7 )
-          {
-            FT_ERROR(( "T1_Parse_CharStrings: unexpected flex end\n" ));
-            goto Syntax_Error;
-          }
+          case 2:   /* add flex vector ------------------------------- */
+            {
+              FT_Int      index;
+              FT_Vector*  flex;
 
-          if ( top[0] != 3 )
-            goto Unexpected_OtherSubr;
+              if (top[0] != 0) goto Unexpected_OtherSubr;
 
-          top -= 3;
-          if ( top < decoder->stack )
-            goto Stack_Underflow;
+              top -= 2;
+              if (top < decoder->stack) goto Stack_Underflow;
 
-          /* now consume the remaining `pop pop setcurrentpoint' */
-          if ( ip + 6 > limit              ||
-               ip[0] != 12  || ip[1] != 17 ||   /* pop */
-               ip[2] != 12  || ip[3] != 17 ||   /* pop */
-               ip[4] != 12  || ip[5] != 33 )    /* setcurrentpoint */
-          {
-            FT_ERROR(( "T1_Parse_CharStrings: invalid flex charstring\n" ));
-            goto Syntax_Error;
-          }
+              index = decoder->num_flex_vectors++;
+              if (index >= 7)
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: too many flex vectors !\n" ));
+                goto Syntax_Error;
+              }
 
-          decoder->flex_state = 0;
-          decoder->top        = top;
+              flex = decoder->flex_vectors + index;
+              flex->x += top[0];
+              flex->y += top[1];
 
-          error = t1operator_flex( decoder, top[0], top[1], top[2] );
-          break;
+            }
+            break;
 
-        case 3:  /* change hints ------------------------------------ */
-          if ( top[0] != 1 )
-            goto Unexpected_OtherSubr;
 
-          /* eat the following `pop' */
-          if ( ip + 2 > limit )
-          {
-            FT_ERROR(( "T1_Parse_CharStrings: invalid escape (12+%d)\n",
-                       ip[-1] ));
-            goto Syntax_Error;
-          }
+          case 0:   /* end flex feature ------------------------------ */
+            {
+              if ( decoder->flex_state       == 0 ||
+                   decoder->num_flex_vectors != 7 )
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: unexpected flex end\n" ));
+                goto Syntax_Error;
+              }
 
-          if (ip[0] != 12 || ip[1] != 17)
-          {
-            FT_ERROR(( "T1_Parse_CharStrings: `pop' expected, found (%d %d)\n",
-                       ip[0], ip[1] ));
-            goto Syntax_Error;
-          }
+              if (top[0] != 3) goto Unexpected_OtherSubr;
 
-          ip += 2;
+              top -= 3;
+              if (top < decoder->stack) goto Stack_Underflow;
 
-          error = hints->change_hints( builder );
-          break;
+              /* now consume the remaining "pop pop setcurrentpoint" */
+              if ( ip+6 > limit ||
+                   ip[0] != 12  || ip[1] != 17 ||   /* pop */
+                   ip[2] != 12  || ip[3] != 17 ||   /* pop */
+                   ip[4] != 12  || ip[5] != 33 )    /* setcurrentpoint */
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: invalid flex charstring\n" ));
+                goto Syntax_Error;
+              }
 
-        default:
-          /* invalid OtherSubrs call */
-        Unexpected_OtherSubr:
-          FT_ERROR(( "T1_Parse_CharStrings: unexpected OtherSubrs [%d %d]\n",
+              decoder->flex_state = 0;
+              decoder->top        = top;
+
+              error = t1operator_flex( decoder, top[0], top[1], top[2] );
+            }
+            break;
+
+
+          case 3:  /* change hints ------------------------------------ */
+            {
+              if (top[0] != 1) goto Unexpected_OtherSubr;
+
+              /* eat the following "pop" */
+              if (ip+2 > limit)
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: invalid escape (12+%d)\n",
+                         ip[-1] ));
+                goto Syntax_Error;
+              }
+
+              if (ip[0] != 12 || ip[1] != 17)
+              {
+                FT_ERROR(( "T1.Parse_CharStrings: 'pop' expected, found (%d %d)\n",
+                         ip[0], ip[1] ));
+                goto Syntax_Error;
+              }
+
+              ip    += 2;
+              error  = hints->change_hints(builder);
+            }
+            break;
+
+
+          default:
+            /* invalid OtherSubrs call */
+          Unexpected_OtherSubr:
+            FT_ERROR(( "T1.Parse_CharStrings: unexpected OtherSubrs [%d %d]\n",
                      top[0], top[1] ));
-          goto Syntax_Error;
+            goto Syntax_Error;
         }
         decoder->top = top;
       }
@@ -824,176 +727,177 @@
       {
         FT_Int  num_args = args_count[op];
 
-
         if ( top - decoder->stack < num_args )
           goto Stack_Underflow;
 
         top -= num_args;
 
-        switch ( op )
+        switch (op)
         {
-        case op_endchar:
-          error = builds->end_char( builder );
-          break;
+          case op_endchar:
+            error = builds->end_char( builder );
+            break;
 
-        case op_hsbw:
-          error = builds->set_bearing_point( builder, top[0], 0,
-                                                       top[1], 0 );
-          break;
+          case op_hsbw:
+            error = builds->set_bearing_point( builder, top[0], 0,
+                                                         top[1], 0 );
+            break;
 
-        case op_seac:
-          /* return immediately after the processing */
-          return t1operator_seac( decoder, top[0], top[1],
-                                           top[2], top[3], top[4] );
+          case op_seac:
+            /* return immediately after the processing */
+            return t1operator_seac( decoder, top[0], top[1],
+                                             top[2], top[3], top[4] );
 
-        case op_sbw:
-          error = builds->set_bearing_point( builder, top[0], top[1],
-                                                      top[2], top[3] );
-          break;
+          case op_sbw:
+            error = builds->set_bearing_point( builder, top[0], top[1],
+                                                        top[2], top[3] );
+            break;
 
-        case op_closepath:
-          error = builds->close_path( builder );
-          break;
+          case op_closepath:
+            error = builds->close_path( builder );
+            break;
 
-        case op_hlineto:
-          error = builds->rline_to( builder, top[0], 0 );
-          break;
+          case op_hlineto:
+            error = builds->rline_to( builder, top[0], 0 );
+            break;
 
-        case op_hmoveto:
-          error = builds->rmove_to( builder, top[0], 0 );
-          break;
+          case op_hmoveto:
+            error = builds->rmove_to( builder, top[0], 0 );
+            break;
 
-        case op_hvcurveto:
-          error = builds->rcurve_to( builder, top[0], 0,
-                                              top[1], top[2],
-                                              0,      top[3] );
-          break;
+          case op_hvcurveto:
+            error = builds->rcurve_to( builder, top[0], 0,
+                                                top[1], top[2],
+                                                0,      top[3] );
+            break;
 
-        case op_rlineto:
-          error = builds->rline_to( builder, top[0], top[1] );
-          break;
+          case op_rlineto:
+            error = builds->rline_to( builder, top[0], top[1] );
+            break;
 
-        case op_rmoveto:
-          /* ignore operator when in flex mode */
-          if ( decoder->flex_state == 0 )
-            error = builds->rmove_to( builder, top[0], top[1] );
-          else
-            top += 2;
-          break;
+          case op_rmoveto:
+            /* ignore operator when in flex mode */
+            if (decoder->flex_state == 0)
+              error = builds->rmove_to( builder, top[0], top[1] );
+            else
+              top += 2;
+            break;
 
-        case op_rrcurveto:
-          error = builds->rcurve_to( builder, top[0], top[1],
-                                              top[2], top[3],
-                                              top[4], top[5] );
-          break;
+          case op_rrcurveto:
+            {
+              error = builds->rcurve_to( builder, top[0], top[1],
+                                                  top[2], top[3],
+                                                  top[4], top[5] );
+            }
+            break;
 
-        case op_vhcurveto:
-          error = builds->rcurve_to( builder,      0, top[0],
-                                              top[1], top[2],
-                                              top[3],      0 );
-          break;
+          case op_vhcurveto:
+            error = builds->rcurve_to( builder,      0, top[0],
+                                                top[1], top[2],
+                                                top[3],      0 );
+            break;
 
-        case op_vlineto:
-          error = builds->rline_to( builder, 0, top[0] );
-          break;
+          case op_vlineto:
+            error = builds->rline_to( builder, 0, top[0] );
+            break;
 
-        case op_vmoveto:
-          error = builds->rmove_to( builder, 0, top[0] );
-          break;
+          case op_vmoveto:
+            error = builds->rmove_to( builder, 0, top[0] );
+            break;
 
-        case op_dotsection:
-          error = hints->dot_section( builder );
-          break;
+          case op_dotsection:
+            error = hints->dot_section( builder );
+            break;
 
-        case op_hstem:
-          error = hints->stem( builder, top[0], top[1], 0 );
-          break;
+          case op_hstem:
+            error = hints->stem( builder, top[0], top[1], 0 );
+            break;
 
-        case op_hstem3:
-          error = hints->stem3( builder, top[0], top[1], top[2],
-                                         top[3], top[4], top[5], 0 );
-          break;
+          case op_hstem3:
+            error = hints->stem3( builder, top[0], top[1], top[2],
+                                           top[3], top[4], top[5], 0 );
+            break;
 
-        case op_vstem:
-          error = hints->stem( builder, top[0], top[1], 1 );
-          break;
+          case op_vstem:
+            error = hints->stem( builder, top[0], top[1], 1 );
+            break;
 
-        case op_vstem3:
-          error = hints->stem3( builder, top[0], top[1], top[2],
-                                         top[3], top[4], top[5], 1 );
-          break;
+          case op_vstem3:
+            error = hints->stem3( builder, top[0], top[1], top[2],
+                                           top[3], top[4], top[5], 1 );
+            break;
 
-        case op_div:
-          if ( top[1] )
-            *top++ = top[0] / top[1];
-          else
-          {
-            FT_ERROR(( "T1_Parse_CHarStrings: division by 0\n" ));
+          case op_div:
+            if (top[1])
+              *top++ = top[0] / top[1];
+            else
+            {
+              FT_ERROR(( "T1.Parse_CHarStrings : division by 0\n" ));
+              goto Syntax_Error;
+            }
+            break;
+
+          case op_callsubr:
+            {
+              FT_Int  index = top[0];
+
+              if ( index < 0 || index >= num_subrs )
+              {
+                FT_ERROR(( "T1.Parse_CharStrings : invalid subrs index\n" ));
+                goto Syntax_Error;
+              }
+
+              if ( zone - decoder->zones >= T1_MAX_SUBRS_CALLS )
+              {
+                FT_ERROR(( "T1.Parse_CharStrings : too many nested subrs\n" ));
+                goto Syntax_Error;
+              }
+
+              zone->cursor = ip;  /* save current instruction pointer */
+
+              zone++;
+              zone->base    = subrs_base[index];
+              zone->limit   = zone->base + subrs_len[index];
+              zone->cursor  = zone->base;
+
+              if (!zone->base)
+              {
+                FT_ERROR(( "T1.Parse_CharStrings : invoking empty subrs !!\n" ));
+                goto Syntax_Error;
+              }
+
+              decoder->zone = zone;
+              ip            = zone->base;
+              limit         = zone->limit;
+            }
+            break;
+
+          case op_pop:
+            FT_ERROR(( "T1.Parse_CharStrings : unexpected POP\n" ));
             goto Syntax_Error;
-          }
-          break;
-
-        case op_callsubr:
-          {
-            FT_Int  index = top[0];
 
 
-            if ( index < 0 || index >= num_subrs )
+          case op_return:
+            if ( zone <= decoder->zones )
             {
-              FT_ERROR(( "T1_Parse_CharStrings: invalid subrs index\n" ));
+              FT_ERROR(( "T1.Parse_CharStrings : unexpected return\n" ));
               goto Syntax_Error;
             }
 
-            if ( zone - decoder->zones >= T1_MAX_SUBRS_CALLS )
-            {
-              FT_ERROR(( "T1_Parse_CharStrings: too many nested subrs\n" ));
-              goto Syntax_Error;
-            }
-
-            zone->cursor = ip;  /* save current instruction pointer */
-
-            zone++;
-            zone->base   = subrs_base[index];
-            zone->limit  = zone->base + subrs_len[index];
-            zone->cursor = zone->base;
-
-            if ( !zone->base )
-            {
-              FT_ERROR(( "T1_Parse_CharStrings: invoking empty subrs!\n" ));
-              goto Syntax_Error;
-            }
-
-            decoder->zone = zone;
-            ip            = zone->base;
+            zone--;
+            ip            = zone->cursor;
             limit         = zone->limit;
-          }
-          break;
+            decoder->zone = zone;
+            break;
 
-        case op_pop:
-          FT_ERROR(( "T1_Parse_CharStrings: unexpected POP\n" ));
-          goto Syntax_Error;
-
-        case op_return:
-          if ( zone <= decoder->zones )
-          {
-            FT_ERROR(( "T1_Parse_CharStrings: unexpected return\n" ));
+          case op_setcurrentpoint:
+            FT_ERROR(( "T1.Parse_CharStrings : unexpected SETCURRENTPOINT\n" ));
             goto Syntax_Error;
-          }
+            break;
 
-          zone--;
-          ip            = zone->cursor;
-          limit         = zone->limit;
-          decoder->zone = zone;
-          break;
-
-        case op_setcurrentpoint:
-          FT_ERROR(( "T1_Parse_CharStrings: unexpected `setcurrentpoint'\n" ));
-          goto Syntax_Error;
-          break;
-
-        default:
-          FT_ERROR(( "T1_Parse_CharStrings : unhandled opcode %d\n", op ));
-          goto Syntax_Error;
+          default:
+            FT_ERROR(( "T1.Parse_CharStrings : unhandled opcode %d\n", op ));
+            goto Syntax_Error;
         }
 
         decoder->top = top;
@@ -1010,138 +914,81 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T1_Add_Points                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Checks that there is enough room in the current load glyph outline */
-  /*    to accept `num_points' additional outline points.  If not, this    */
-  /*    function grows the load outline's arrays accordingly.              */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    builder    :: A pointer to the glyph builder object.               */
-  /*                                                                       */
-  /*    num_points :: The number of points that will be added later.       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function does NOT update the points count in the glyph        */
-  /*    builder.  This must be done by the caller itself, after this       */
-  /*    function has been invoked.                                         */
-  /*                                                                       */
+
+/*************************************************************************/
+/*                                                                       */
+/* <Function> T1_Add_Points                                              */
+/*                                                                       */
+/* <Description>                                                         */
+/*    Checks that there is enough room in the current load glyph outline */
+/*    to accept "num_points" additional outline points. If not, this     */
+/*    function grows the load outline's arrays accordingly..             */
+/*                                                                       */
+/* <Input>                                                               */
+/*    builder    :: pointer to glyph builder object                      */
+/*    num_points :: number of points that will be added later            */
+/*                                                                       */
+/* <Return>                                                              */
+/*    Type1 error code. 0 means success                                  */
+/*                                                                       */
+/* <Note>                                                                */
+/*    This function does NOT update the points count in the glyph builder*/
+/*    This must be done by the caller itself, after this function is     */
+/*    invoked..                                                          */
+/*                                                                       */
   LOCAL_FUNC
   FT_Error  T1_Add_Points( T1_Builder*  builder,
                            FT_Int       num_points )
   {
-    FT_Int    new_points;
-
-
-    new_points = builder->base.n_points +
-                 builder->current.n_points +
-                 num_points;
-
-    if ( new_points > builder->max_points )
-    {
-      FT_Memory  memory    = builder->memory;
-      FT_Error   error;
-      FT_Int     increment = builder->current.points - builder->base.points;
-      FT_Int     current   = builder->max_points;
-
-
-      while ( builder->max_points < new_points )
-        builder->max_points += 16;
-
-      if ( REALLOC_ARRAY( builder->base.points,
-                          current, builder->max_points, FT_Vector )  ||
-
-           REALLOC_ARRAY( builder->base.tags,
-                          current, builder->max_points, FT_Byte )    )
-        return error;
-
-      builder->current.points = builder->base.points + increment;
-      builder->current.tags   = builder->base.tags   + increment;
-    }
-
-    return T1_Err_Ok;
+    return FT_GlyphLoader_Check_Points( builder->loader, num_points, 0 );
   }
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    T1_Add_Contours                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Checks that there is enough room in the current load glyph outline */
-  /*    to accept `num_contours' additional contours.  If not, this        */
-  /*    function grows the load outline's arrays accordingly.              */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    builder      :: A pointer to the glyph builder object.             */
-  /*                                                                       */
-  /*    num_contours :: The number of contours that will be added later.   */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function does NOT update the contours count in the load glyph */
-  /*    This must be done by the caller itself, after this function is     */
-  /*    invoked.                                                           */
-  /*                                                                       */
+/*************************************************************************/
+/*                                                                       */
+/* <Function> T1_Add_Contours                                            */
+/*                                                                       */
+/* <Description>                                                         */
+/*    Checks that there is enough room in the current load glyph outline */
+/*    to accept "num_contours" additional contours. If not, this func    */
+/*    the load outline's arrays accordingly..                            */
+/*                                                                       */
+/* <Input>                                                               */
+/*    builder       :: pointer to glyph builder object                   */
+/*    num_contours :: number of contours that will be added later        */
+/*                                                                       */
+/* <Return>                                                              */
+/*    Type1 error code. 0 means success                                  */
+/*                                                                       */
+/* <Note>                                                                */
+/*    This function does NOT update the contours count in the load glyph */
+/*    This must be done by the caller itself, after this function is     */
+/*    invoked..                                                          */
+/*                                                                       */
   LOCAL_FUNC
   FT_Error  T1_Add_Contours( T1_Builder*  builder,
                              FT_Int       num_contours )
   {
-    FT_Int    new_contours;
-
-
-    new_contours = builder->base.n_contours +
-                   builder->current.n_contours +
-                   num_contours;
-
-    if ( new_contours > builder->max_contours && builder->load_points )
-    {
-      FT_Error  error;
-      FT_Memory memory = builder->memory;
-      FT_Int    increment = builder->current.contours -
-                              builder->base.contours;
-      FT_Int    current   = builder->max_contours;
-
-
-      while ( builder->max_contours < new_contours )
-        builder->max_contours += 4;
-
-      if ( REALLOC_ARRAY( builder->base.contours,
-                          current, builder->max_contours, FT_Short ) )
-        return error;
-
-      builder->current.contours = builder->base.contours + increment;
-    }
-
-    return T1_Err_Ok;
+    return FT_GlyphLoader_Check_Points( builder->loader, 0, num_contours );
   }
 
 
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /**********                                                      *********/
-  /**********            COMPUTE THE MAXIMUM ADVANCE WIDTH         *********/
-  /**********                                                      *********/
-  /**********    The following code is in charge of computing      *********/
-  /**********    the maximum advance width of the font.  It        *********/
-  /**********    quickly processes each glyph charstring to        *********/
-  /**********    extract the value from either a `sbw' or `seac'   *********/
-  /**********    operator.                                         *********/
-  /**********                                                      *********/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
+  /**********************************************************************/
+  /**********************************************************************/
+  /**********************************************************************/
+  /**********                                                   *********/
+  /**********                                                   *********/
+  /**********           COMPUTE THE MAXIMUM ADVANCE WIDTH       *********/
+  /**********                                                   *********/
+  /**********   The following code is in charge of computing    *********/
+  /**********   the maximum advance width of the font. It       *********/
+  /**********   quickly process each glyph charstring to        *********/
+  /**********   extract the value from either a "sbw" or "seac" *********/
+  /**********   operator.                                       *********/
+  /**********                                                   *********/
+  /**********************************************************************/
+  /**********************************************************************/
+  /**********************************************************************/
+
 
 
   static
@@ -1151,13 +998,12 @@
                         FT_Pos       wx,
                         FT_Pos       wy )
   {
-    UNUSED( sbx );
-    UNUSED( sby );
-    UNUSED( wy );
-
-    if ( wx > decoder->builder.advance.x )
+    if (wx > decoder->builder.advance.x)
       decoder->builder.advance.x = wx;
 
+    UNUSED(sbx);
+    UNUSED(sby);
+    UNUSED(wy);
     return -1;    /* return an error code to exit the Type 1 parser */
                   /* immediately.                                   */
   }
@@ -1170,57 +1016,56 @@
     return -2;
   }
 
-
   /* the maxadv_gbuilder_interface is used when computing the maximum  */
-  /* advance width of all glyphs in a given font.  We only process the */
-  /* `sbw' operator here, and return an error for all others.          */
+  /* advance width of all glyphs in a given font. We only process the */
+  /* 'sbw' operator here, and return an error for all others..        */
 
-  /* Note that `seac' is processed by the T1_Decoder.                  */
+  /* Note that "seac" is processed by the T1_Decoder                  */
   static
   const T1_Builder_Funcs  maxadv_builder_interface =
   {
-    (T1_Builder_EndChar)  maxadv_error,
-    (T1_Builder_Sbw)      maxadv_sbw,
-    (T1_Builder_ClosePath)maxadv_error,
-    (T1_Builder_RLineTo)  maxadv_error,
-    (T1_Builder_RMoveTo)  maxadv_error,
-    (T1_Builder_RCurveTo) maxadv_error
+    (T1_Builder_EndChar)     maxadv_error,
+    (T1_Builder_Sbw)         maxadv_sbw,
+    (T1_Builder_ClosePath)   maxadv_error,
+    (T1_Builder_RLineTo)     maxadv_error,
+    (T1_Builder_RMoveTo)     maxadv_error,
+    (T1_Builder_RCurveTo)    maxadv_error
   };
 
 
-  /* the maxadv_hinter_interface always return an error. */
-
+  /* the maxadv_interface is used when computing the maximum advance */
+  /* with of the set of glyphs in a given font file. We only process */
+  /* the "seac" operator and return immediately..                    */
   static
   const T1_Hinter_Funcs  maxadv_hinter_interface =
   {
-    (T1_Hinter_DotSection) maxadv_error,
-    (T1_Hinter_ChangeHints)maxadv_error,
-    (T1_Hinter_Stem)       maxadv_error,
-    (T1_Hinter_Stem3)      maxadv_error,
+    (T1_Hinter_DotSection)   maxadv_error,
+    (T1_Hinter_ChangeHints)  maxadv_error,
+    (T1_Hinter_Stem)         maxadv_error,
+    (T1_Hinter_Stem3)        maxadv_error,
   };
+
 
 
   LOCAL_FUNC
   FT_Error  T1_Compute_Max_Advance( T1_Face  face,
-                                    FT_Int*  max_advance )
+                                    FT_Int  *max_advance )
   {
     FT_Error    error;
     T1_Decoder  decoder;
     FT_Int      glyph_index;
     T1_Font*    type1 = &face->type1;
 
-
     *max_advance = 0;
 
-    /* Initialize load decoder */
+    /* Initialise load decoder */
     T1_Init_Decoder( &decoder, &maxadv_hinter_interface );
 
     T1_Init_Builder( &decoder.builder, face, 0, 0,
                      &maxadv_builder_interface );
 
     /* For each glyph, parse the glyph charstring and extract */
-    /* the advance width.                                     */
-
+    /* the advance width..                                    */
     for ( glyph_index = 0; glyph_index < type1->num_glyphs; glyph_index++ )
     {
       /* now get load the unscaled outline */
@@ -1230,49 +1075,49 @@
                                     type1->num_subrs,
                                     type1->subrs,
                                     type1->subrs_len );
-      /* ignore error if one occured - skip to next glyph */
+      /* ignore the error if one occured - skip to next glyph */
     }
 
     *max_advance = decoder.builder.advance.x;
-
     return T1_Err_Ok;
   }
 
 
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /**********                                                      *********/
-  /**********               UNHINTED GLYPH LOADER                  *********/
-  /**********                                                      *********/
-  /**********    The following code is in charge of loading a      *********/
-  /**********    single outline.  It completely ignores hinting    *********/
-  /**********    and is used when FT_LOAD_NO_HINTING is set.       *********/
-  /**********                                                      *********/
-  /**********      The Type 1 hinter is located in `t1hint.c'      *********/
-  /**********                                                      *********/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
+  /**********************************************************************/
+  /**********************************************************************/
+  /**********************************************************************/
+  /**********                                                   *********/
+  /**********                                                   *********/
+  /**********              UNHINTED GLYPH LOADER                *********/
+  /**********                                                   *********/
+  /**********   The following code is in charge of loading a    *********/
+  /**********   single outline. It completely ignores hinting   *********/
+  /**********   and is used when FT_LOAD_NO_HINTING is set.     *********/
+  /**********                                                   *********/
+  /**********     The Type 1 hinter is located in "t1hint.c"    *********/
+  /**********                                                   *********/
+  /**********************************************************************/
+  /**********************************************************************/
+  /**********************************************************************/
+
 
 
   static
   FT_Error  close_open_path( T1_Builder*  builder )
   {
     FT_Error     error;
-    FT_Outline*  cur = &builder->current;
+    FT_Outline*  cur = builder->current;
     FT_Int       num_points;
     FT_Int       first_point;
 
+    /* Some fonts, like Hershey, are made of "open paths" which are    */
+    /* now managed directly by FreeType. In this case, it is necessary */
+    /* to close the path by duplicating its points in reverse order,   */
+    /* which is precisely the purpose of this function                 */
 
-    /* Some fonts, like Hershey, are made of `open paths' which are     */
-    /* now managed directly by FreeType.  In this case, it is necessary */
-    /* to close the path by duplicating its points in reverse order,    */
-    /* which is precisely the purpose of this function.                 */
-
-    /* first compute the number of points to duplicate. */
-    if ( cur->n_contours > 1 )
-      first_point = cur->contours[cur->n_contours - 2] + 1;
+    /* first compute the number of points to duplicate..           */
+    if (cur->n_contours > 1)
+      first_point = cur->contours[ cur->n_contours-2 ]+1;
     else
       first_point = 0;
 
@@ -1284,16 +1129,14 @@
       FT_Vector*  point;
       char*       tags;
 
-
       error = T1_Add_Points( builder, num_points );
-      if ( error )
-        return error;
+      if (error) return error;
 
       point = cur->points + cur->n_points;
-      tags  = cur->tags   + cur->n_points;
+      tags  = cur->tags  + cur->n_points;
 
-      source_point = point - 2;
-      source_tags  = tags  - 2;
+      source_point   = point - 2;
+      source_tags   = tags - 2;
 
       cur->n_points += num_points;
 
@@ -1301,14 +1144,13 @@
         do
         {
           *point++ = *source_point--;
-          *tags++  = *source_tags--;
+          *tags++ = *source_tags--;
           num_points--;
         }
-        while ( num_points > 0 );
+        while (num_points > 0);
     }
 
     builder->path_begun = 0;
-
     return T1_Err_Ok;
   }
 
@@ -1316,50 +1158,44 @@
   static
   FT_Error  gload_closepath( T1_Builder*  builder )
   {
-    FT_Outline*  cur = &builder->current;
-
+    FT_Outline*  cur = builder->current;
 
     /* save current contour, if any */
     if ( cur->n_contours > 0 )
-      cur->contours[cur->n_contours - 1] = cur->n_points - 1;
+      cur->contours[cur->n_contours-1] = cur->n_points-1;
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-
     /* hint latest points if needed - this is not strictly required      */
     /* there, but it helps for debugging, and doesn't affect performance */
     if ( builder->pass == 1 )
       T1_Hint_Points( builder );
-
-#endif /* T1_CONFIG_OPTION_DISABLE_HINTER */
+#endif
 
     builder->path_begun = 0;
-
     return T1_Err_Ok;
   }
+
 
 
   static
   FT_Error  gload_endchar( T1_Builder*  builder )
   {
-    FT_Outline*  cur = &builder->current;
     FT_Error     error;
 
-
     /* close path if needed */
-    if ( builder->path_begun )
+    if (builder->path_begun)
     {
       error = close_open_path( builder );
-      if ( error )
-        return error;
+      if (error) return error;
     }
 
     error = gload_closepath( builder );
 
-    builder->base.n_points   += cur->n_points;
-    builder->base.n_contours += cur->n_contours;
+    FT_GlyphLoader_Add( builder->loader );
 
     return error;
   }
+
 
 
   static
@@ -1376,9 +1212,10 @@
 
     builder->last.x = sbx;
     builder->last.y = sby;
-
     return 0;
   }
+
+
 
 
   static
@@ -1387,14 +1224,12 @@
                            FT_Pos       dy )
   {
     FT_Error     error;
-    FT_Outline*  cur = &builder->current;
+    FT_Outline*  cur = builder->current;
     FT_Vector    vec;
 
-
     /* grow buffer if necessary */
-    error = T1_Add_Points( builder, 1 );
-    if ( error )
-      return error;
+    error = T1_Add_Points  ( builder, 1 );
+    if (error) return error;
 
     if ( builder->load_points )
     {
@@ -1403,14 +1238,13 @@
       vec.y = builder->last.y + dy;
 
       cur->points[cur->n_points] = vec;
-      cur->tags  [cur->n_points] = FT_Curve_Tag_On;
+      cur->tags [cur->n_points] = FT_Curve_Tag_On;
 
       builder->last = vec;
     }
     cur->n_points++;
 
-    builder->path_begun = 1;
-
+    builder->path_begun  = 1;
     return T1_Err_Ok;
   }
 
@@ -1421,35 +1255,31 @@
                            FT_Pos       dy )
   {
     FT_Error     error;
-    FT_Outline*  cur = &builder->current;
+    FT_Outline*  cur = builder->current;
     FT_Vector    vec;
 
-
-    /* in the case where `path_begun' is set, we have an `rmoveto' */
-    /* after some normal path definition. If the face's paint type */
-    /* is set to 1, this means that we have an `open path', also   */
-    /* called a `stroke'.  The FreeType raster doesn't support     */
-    /* opened paths, so we'll close it explicitely there.          */
-
+    /* in the case where "path_begun" is set, we have a rmoveto    */
+    /* after some normal path definition. When the face's paint    */
+    /* type is set to 1, this means that we have an "open path",   */
+    /* also called a 'stroke'. The FreeType raster doesn't support */
+    /* opened path, so we'll close it explicitely there..          */
     if ( builder->path_begun && builder->face->type1.paint_type == 1 )
     {
       if ( builder->face->type1.paint_type == 1 )
       {
         error = close_open_path( builder );
-        if ( error )
-          return error;
+        if (error) return error;
       }
     }
 
     /* grow buffer if necessary */
     error = T1_Add_Contours( builder, 1 ) ||
             T1_Add_Points  ( builder, 1 );
-    if ( error )
-      return error;
+    if (error) return error;
 
     /* save current contour, if any */
     if ( cur->n_contours > 0 )
-      cur->contours[cur->n_contours - 1] = cur->n_points - 1;
+      cur->contours[cur->n_contours-1] = cur->n_points-1;
 
     if ( builder->load_points )
     {
@@ -1457,7 +1287,7 @@
       vec.x = builder->last.x + dx;
       vec.y = builder->last.y + dy;
       cur->points[cur->n_points] = vec;
-      cur->tags  [cur->n_points] = FT_Curve_Tag_On;
+      cur->tags [cur->n_points] = FT_Curve_Tag_On;
 
       builder->last = vec;
     }
@@ -1479,36 +1309,32 @@
                              FT_Pos       dy3 )
   {
     FT_Error     error;
-    FT_Outline*  cur = &builder->current;
+    FT_Outline*  cur = builder->current;
     FT_Vector    vec;
     FT_Vector*   points;
     char*        tags;
 
     /* grow buffer if necessary */
-    error = T1_Add_Points( builder, 3 );
-    if ( error )
-      return error;
+    error = T1_Add_Points  ( builder, 3 );
+    if (error) return error;
 
     if ( builder->load_points )
     {
       /* save point */
       points = cur->points + cur->n_points;
-      tags   = cur->tags   + cur->n_points;
+      tags  = cur->tags  + cur->n_points;
 
       vec.x = builder->last.x + dx1;
       vec.y = builder->last.y + dy1;
-      points[0] = vec;
-      tags[0]   = FT_Curve_Tag_Cubic;
+      points[0] = vec;  tags[0] = FT_Curve_Tag_Cubic;
 
       vec.x += dx2;
       vec.y += dy2;
-      points[1] = vec;
-      tags[1]   = FT_Curve_Tag_Cubic;
+      points[1] = vec;  tags[1] = FT_Curve_Tag_Cubic;
 
       vec.x += dx3;
       vec.y += dy3;
-      points[2] = vec;
-      tags[2]   = FT_Curve_Tag_On;
+      points[2] = vec;  tags[2] = FT_Curve_Tag_On;
 
       builder->last = vec;
     }
@@ -1517,6 +1343,8 @@
     builder->path_begun = 1;
     return T1_Err_Ok;
   }
+
+
 
 
   static
@@ -1541,30 +1369,31 @@
   static
   const T1_Builder_Funcs  gload_builder_interface_null =
   {
-    (T1_Builder_EndChar)  gload_ignore,
-    (T1_Builder_Sbw)      gload_sbw,      /* record left bearing */
-    (T1_Builder_ClosePath)gload_ignore,
-    (T1_Builder_RLineTo)  gload_ignore,
-    (T1_Builder_RMoveTo)  gload_ignore,
-    (T1_Builder_RCurveTo) gload_ignore
+    (T1_Builder_EndChar)    gload_ignore,
+    (T1_Builder_Sbw)        gload_sbw,      /* record left bearing */
+    (T1_Builder_ClosePath)  gload_ignore,
+    (T1_Builder_RLineTo)    gload_ignore,
+    (T1_Builder_RMoveTo)    gload_ignore,
+    (T1_Builder_RCurveTo)   gload_ignore
   };
 
 
   static
   const T1_Hinter_Funcs   gload_hinter_interface =
   {
-    (T1_Hinter_DotSection) gload_ignore,   /* dotsection         */
-    (T1_Hinter_ChangeHints)gload_ignore,   /* changehints        */
-    (T1_Hinter_Stem)       gload_ignore,   /* hstem & vstem      */
-    (T1_Hinter_Stem3)      gload_ignore,   /* hstem3 & vestem3   */
+    (T1_Hinter_DotSection)   gload_ignore,   /* dotsection         */
+    (T1_Hinter_ChangeHints)  gload_ignore,   /* changehints        */
+    (T1_Hinter_Stem)         gload_ignore,   /* hstem & vstem      */
+    (T1_Hinter_Stem3)        gload_ignore,   /* hstem3 & vestem3   */
   };
+
 
 
   /*****************************************************************/
   /*                                                               */
   /*  Hinter overview :                                            */
   /*                                                               */
-  /*    This is a two-pass hinter.  On the first pass, the hints   */
+  /*    This is a two-pass hinter. On the first pass, the hints    */
   /*    are all recorded by the hinter, and no point is loaded     */
   /*    in the outline.                                            */
   /*                                                               */
@@ -1582,15 +1411,19 @@
                                   FT_UInt      glyph_index,
                                   FT_Bool      recurse )
   {
-    T1_Builder*   builder = &decoder->builder;
-    T1_GlyphSlot  glyph   = builder->glyph;
-    T1_Font*      type1   = &builder->face->type1;
-    FT_Outline    old_base;
-    FT_Error      error;
+    T1_Builder*      builder = &decoder->builder;
+    T1_GlyphSlot     glyph   = builder->glyph;
+    T1_Font*         type1   = &builder->face->type1;
+    FT_UInt          old_points, old_contours;
+    FT_GlyphLoader*  loader = decoder->builder.loader;
+    FT_Error         error;
     
-
     /* Pass 1 - try to load first glyph, simply recording points */
-    old_base = builder->base;
+    old_points   = loader->base.outline.n_points;
+    old_contours = loader->base.outline.n_contours;
+    
+    FT_GlyphLoader_Prepare( decoder->builder.loader );
+
     T1_Reset_Builder( builder, 0 );
     
     builder->no_recurse                = recurse;
@@ -1604,61 +1437,51 @@
                                   type1->num_subrs,
                                   type1->subrs,
                                   type1->subrs_len );
-    if ( error )
-      goto Exit;                                  
+    if (error) goto Exit;                                  
 
-    /* check for composite (i.e. `seac' operator) */
+    /* check for composite (i.e. "seac" operator) */
     if ( glyph->root.format == ft_glyph_format_composite )
     {
       /* this is a composite glyph, we must then load the first one, */
       /* then load the second one on top of it and translate it by a */
-      /* fixed amount.                                               */
-
-      FT_Outline*   cur  = &builder->current;
-      FT_UInt       n_base_points;
-      FT_SubGlyph*  subglyph = glyph->root.subglyphs;
-      T1_Size       size = builder->size;
-      FT_Pos        dx, dy;
-      FT_Vector     left_bearing, advance;
-
+      /* fixed amount..                                              */
+      FT_UInt      n_base_points;
+      FT_SubGlyph* subglyph = loader->base.subglyphs;
+      T1_Size      size = builder->size;
+      FT_Pos       dx, dy;
+      FT_Vector    left_bearing, advance;
 
       /* clean glyph format */
       glyph->root.format = ft_glyph_format_none;
 
-      /* First load `bchar' in builder */
+      /* First load "bchar" in builder */
       builder->no_recurse = 0;
       error = t1_load_hinted_glyph( decoder, subglyph->index, 0 );
-      if ( error )
-        goto Exit;
+      if (error) goto Exit;
 
       /* save the left bearing and width of the base character */
-      /* as they will be erased by the next load.              */
+      /* as they will be erased by the next load..             */
       left_bearing = builder->left_bearing;
       advance      = builder->advance;
 
-      /* Then load `achar' in builder */
-      n_base_points = builder->base.n_points;
+      /* Then load "achar" in builder */
+      n_base_points = builder->base->n_points;
       subglyph++;
-
       error = t1_load_hinted_glyph( decoder, subglyph->index, 0 );
-      if ( error )
-        goto Exit;
+      if (error) goto Exit;
       
-      /* adjust contours in accented character outline */
-      {
-        FT_Int  n;
-
-
-        for ( n = 0; n < cur->n_contours; n++ )
-          cur->contours[n] += n_base_points;
-      }
-
       /* Finally, move the accent */
       dx = FT_MulFix( subglyph->arg1, size->root.metrics.x_scale );
       dy = FT_MulFix( subglyph->arg2, size->root.metrics.y_scale );
-      dx = ( dx + 32 ) & -64;
-      dy = ( dy + 32 ) & -64;
-      FT_Outline_Translate( cur, dx, dy );
+      dx = (dx+32) & -64;
+      dy = (dy+32) & -64;
+      {
+        FT_Outline  dummy;
+        
+        dummy.n_points = loader->base.outline.n_points - n_base_points;
+        dummy.points   = loader->base.outline.points   + n_base_points;
+        FT_Outline_Translate( &dummy, dx, dy );
+      }
 
       /* restore the left side bearing and   */
       /* advance width of the base character */
@@ -1671,11 +1494,11 @@
       T1_Hint_Stems( &decoder->builder );
       
       /* undo the end-char */
-      builder->base.n_points   -= builder->current.n_points;
-      builder->base.n_contours -= builder->current.n_contours;
+      builder->base->n_points   = old_points;
+      builder->base->n_contours = old_contours;
 
       /* Pass 2 - record and scale/hint the points */
-      T1_Reset_Builder( &decoder->builder, 0 );
+      T1_Reset_Builder( builder, 0 );
       
       builder->pass            = 1;
       builder->no_recurse      = 0;
@@ -1689,16 +1512,15 @@
     }
     
     /* save new glyph tables */
-    if ( recurse )
+    if (recurse)
       T1_Done_Builder( builder );
     
   Exit:
     return error;
   }                                  
-
-
-#endif /* T1_CONFIG_OPTION_DISABLE_HINTER */
+#endif
   
+
 
   LOCAL_FUNC
   FT_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
@@ -1706,14 +1528,13 @@
                            FT_Int        glyph_index,
                            FT_Int        load_flags )
   {
-    FT_Error    error;
-    T1_Decoder  decoder;
-    T1_Face     face = (T1_Face)glyph->root.face;
-    FT_Bool     hinting;
-    T1_Font*    type1 = &face->type1;
+    FT_Error        error;
+    T1_Decoder      decoder;
+    T1_Face         face = (T1_Face)glyph->root.face;
+    FT_Bool         hinting;
+    T1_Font*        type1 = &face->type1;
 
-
-    if ( load_flags & FT_LOAD_NO_RECURSE )
+    if (load_flags & FT_LOAD_NO_RECURSE)
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
     glyph->x_scale = size->root.metrics.x_scale;
@@ -1728,7 +1549,7 @@
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
 
-    hinting = ( load_flags & ( FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING ) ) == 0;
+    hinting = (load_flags & (FT_LOAD_NO_SCALE|FT_LOAD_NO_HINTING)) == 0;
 
     if ( hinting )
     {
@@ -1739,8 +1560,7 @@
       error = t1_load_hinted_glyph( &decoder, glyph_index, 1 );
     }
     else
-
-#endif /* T1_CONFIG_OPTION_DISABLE_HINTER */
+#endif
 
     {
       T1_Init_Decoder( &decoder, &gload_hinter_interface );
@@ -1748,7 +1568,7 @@
       T1_Init_Builder( &decoder.builder, face, size, glyph,
                        &gload_builder_interface );
 
-      decoder.builder.no_recurse = ( load_flags & FT_LOAD_NO_RECURSE ) != 0;
+      decoder.builder.no_recurse = !!(load_flags & FT_LOAD_NO_RECURSE);
 
       /* now load the unscaled outline */
       error = T1_Parse_CharStrings( &decoder,
@@ -1762,13 +1582,14 @@
       T1_Done_Builder( &decoder.builder );
     }
 
-    /* Now, set the metrics - this is rather simple, as    */
-    /* the left side bearing is the xMin, and the top side */
-    /* bearing the yMax.                                   */
-    if ( !error )
+
+    /* Now, set the metrics.. - this is rather simple, as : */
+    /* the left side bearing is the xMin, and the top side  */
+    /* bearing the yMax..                                   */
+    if (!error)
     {
       /* for composite glyphs, return only the left side bearing and the */
-      /* advance width.                                                  */
+      /* advance width..                                                 */
       if ( load_flags & FT_LOAD_NO_RECURSE )
       {
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
@@ -1779,20 +1600,18 @@
         FT_BBox           cbox;
         FT_Glyph_Metrics* metrics = &glyph->root.metrics;
 
-
         /* apply the font matrix */
-        FT_Outline_Transform( &glyph->root.outline,
-                              &face->type1.font_matrix );
+        FT_Outline_Transform( &glyph->root.outline, &face->type1.font_matrix );
 
         FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
 
         /* grid fit the bounding box if necessary */
-        if ( hinting )
+        if (hinting)
         {
           cbox.xMin &= -64;
           cbox.yMin &= -64;
-          cbox.xMax  = ( cbox.xMax + 63 ) & -64;
-          cbox.yMax  = ( cbox.yMax + 63 ) & -64;
+          cbox.xMax = ( cbox.xMax+63 ) & -64;
+          cbox.yMax = ( cbox.yMax+63 ) & -64;
         }
 
         metrics->width  = cbox.xMax - cbox.xMin;
@@ -1802,7 +1621,7 @@
         metrics->horiBearingY = cbox.yMax;
 
         /* copy the _unscaled_ advance width */
-        metrics->horiAdvance = decoder.builder.advance.x;
+        metrics->horiAdvance  = decoder.builder.advance.x;
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;
@@ -1818,28 +1637,27 @@
 
         glyph->root.outline.flags |= ft_outline_reverse_fill;
 
-#if 0
+        /*
         glyph->root.outline.second_pass    = TRUE;
-        glyph->root.outline.high_precision = size->root.metrics.y_ppem < 24;
+        glyph->root.outline.high_precision = ( size->root.metrics.y_ppem < 24 );
         glyph->root.outline.dropout_mode   = 2;
-#endif
+        */
 
         if ( hinting )
         {
-          /* adjust the advance width               */
-          /* XXX TODO: consider stem hints grid-fit */
+          /* adjust the advance width                  */
+          /* XXX : TODO : consider stem hints grid-fit */
           metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,
                                              glyph->x_scale );
         }
-        else if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
+        else if ( (load_flags & FT_LOAD_NO_SCALE) == 0 )
         {
           /* scale the outline and the metrics */
           FT_Int       n;
-          FT_Outline*  cur = &decoder.builder.base;
+          FT_Outline*  cur = decoder.builder.base;
           FT_Vector*   vec = cur->points;
           FT_Fixed     x_scale = glyph->x_scale;
           FT_Fixed     y_scale = glyph->y_scale;
-
 
           /* First of all, scale the points */
           for ( n = cur->n_points; n > 0; n--, vec++ )
@@ -1859,6 +1677,7 @@
           metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
           metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
           metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  x_scale );
+
         }
       }
     }
@@ -1866,5 +1685,3 @@
     return error;
   }
 
-
-/* END */

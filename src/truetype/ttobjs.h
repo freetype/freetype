@@ -151,10 +151,6 @@
                                        FT_Short       maxContours,
                                        TT_GlyphZone*  zone );
 
-  LOCAL_DEF FT_Error TT_Update_GlyphZone( TT_GlyphZone*  zone,
-                                          FT_UShort      newPoints,
-                                          FT_Short       newContours );
-
   /*************************************************************************/
   /*                                                                       */
   /*  EXECUTION SUBTABLES                                                  */
@@ -440,17 +436,6 @@
 
   LOCAL_DEF
   FT_Error  TT_Reset_Size( TT_Size  size );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* GlyphSlot functions                                                   */
-  /*                                                                       */
-  LOCAL_DEF
-  FT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot );
-
-  LOCAL_DEF
-  void  TT_Done_GlyphSlot( TT_GlyphSlot  slot );
 
 
   /*************************************************************************/

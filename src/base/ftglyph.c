@@ -209,11 +209,9 @@
 
         /* transform the outline -- note that the original metrics are NOT */
         /* transformed by this, only the outline points themselves...      */
-        FT_Outline_Transform( &face->glyph->outline,
-                              &face->transform_matrix );
         FT_Outline_Translate( &face->glyph->outline,
-                              face->transform_delta.x + origin_x,
-                              face->transform_delta.y + origin_y );
+                               origin_x,
+                               origin_y );
 
         /* compute the size in pixels of the outline */
         FT_Outline_Get_CBox( &face->glyph->outline, &cbox );
@@ -257,7 +255,7 @@
         FT_Outline_Translate( &face->glyph->outline,
                               -cbox.xMin,
                               -cbox.yMin );
-        error = FT_Outline_Get_Bitmap( face->driver->library,
+        error = FT_Outline_Get_Bitmap( face->driver->root.library,
                                        &face->glyph->outline,
                                        &bitglyph->bitmap );
         if ( error )
@@ -327,8 +325,8 @@
 
     *vecglyph = 0;
 
-    /* check that NO_OUTLINE and NO_RECURSE are not set */
-    if ( load_flags & ( FT_LOAD_NO_OUTLINE | FT_LOAD_NO_RECURSE ) )
+    /* check that RENDER and NO_RECURSE are not set */
+    if ( load_flags & ( FT_LOAD_RENDER | FT_LOAD_NO_RECURSE ) )
     {
       error = FT_Err_Invalid_Argument;
       goto Exit;
@@ -348,16 +346,6 @@
       goto Exit;
     }
 
-    /* transform the outline -- note that the original metrics are NOT */
-    /* transformed by this, only the outline points themselves...      */
-    if ( face->transform_flags )
-    {
-      FT_Outline_Transform( &face->glyph->outline, &face->transform_matrix );
-      FT_Outline_Translate( &face->glyph->outline,
-                            face->transform_delta.x,
-                            face->transform_delta.y );
-    }
-
     /* now, create a new outline glyph and copy everything */
     memory = face->memory;
     if ( ALLOC( glyph, sizeof ( *glyph ) ) )
@@ -366,7 +354,7 @@
     ft_prepare_glyph( (FT_Glyph)glyph, face, 0 );
     glyph->metrics.glyph_type = ft_glyph_type_outline;
 
-    error = FT_Outline_New( face->driver->library,
+    error = FT_Outline_New( face->driver->root.library,
                             face->glyph->outline.n_points,
                             face->glyph->outline.n_contours,
                             &glyph->outline );
@@ -383,72 +371,6 @@
   Fail:
     FREE( glyph );
     goto Exit;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Transform                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to set the transformation that is applied to glyph */
-  /*    images just after they are loaded in the face's glyph slot, and    */
-  /*    before they are returned by either FT_Get_Glyph_Bitmap() or        */
-  /*    FT_Get_Glyph_Outline().                                            */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    face   :: A handle to the source face object.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    matrix :: A pointer to the transformation's 2x2 matrix.  Use 0 for */
-  /*              the identity matrix.                                     */
-  /*    delta  :: A pointer to the translation vector.  Use 0 for the null */
-  /*              vector.                                                  */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The transformation is only applied to glyph outlines if they are   */
-  /*    found in a font face.  It is unable to transform embedded glyph    */
-  /*    bitmaps.                                                           */
-  /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Set_Transform( FT_Face     face,
-                                            FT_Matrix*  matrix,
-                                            FT_Vector*  delta )
-  {
-    if ( !face )
-      return;
-
-    face->transform_flags = 0;
-
-    if ( !matrix )
-    {
-      face->transform_matrix.xx = 0x10000L;
-      face->transform_matrix.xy = 0L;
-      face->transform_matrix.yx = 0L;
-      face->transform_matrix.yy = 0x10000L;
-      matrix = &face->transform_matrix;
-    }
-    else
-      face->transform_matrix = *matrix;
-
-    /* set transform_flags bit flag 0 if `matrix' isn't the identity */
-    if ( ( matrix->xy | matrix->yx ) ||
-         matrix->xx != 0x10000L      ||
-         matrix->yy != 0x10000L      )
-      face->transform_flags |= 1;
-
-    if ( !delta )
-    {
-      face->transform_delta.x = 0;
-      face->transform_delta.y = 0;
-      delta = &face->transform_delta;
-    }
-    else
-      face->transform_delta = *delta;
-
-    /* set transform_flags bit flag 1 if `delta' isn't the null vector */
-    if ( delta->x | delta->y )
-      face->transform_flags |= 2;
   }
 
 

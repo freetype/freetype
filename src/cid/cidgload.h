@@ -80,34 +80,31 @@
   /*                                                                       */
   typedef struct  CID_Builder_
   {
-    FT_Memory     memory;
-    CID_Face      face;
-    T1_GlyphSlot  glyph;
+    FT_Memory        memory;
+    CID_Face         face;
+    T1_GlyphSlot     glyph;
+    FT_GlyphLoader*  loader;
+    FT_Outline*      base;
+    FT_Outline*      current;
 
-    FT_Outline    current;       /* the current glyph outline   */
-    FT_Outline    base;          /* the composite glyph outline */
+    FT_Vector        last;
 
-    FT_Int        max_points;    /* capacity of base outline in points   */
-    FT_Int        max_contours;  /* capacity of base outline in contours */
+    FT_Fixed         scale_x;
+    FT_Fixed         scale_y;
 
-    FT_Vector     last;
+    FT_Pos           pos_x;
+    FT_Pos           pos_y;
 
-    FT_Fixed      scale_x;
-    FT_Fixed      scale_y;
+    FT_Vector        left_bearing;
+    FT_Vector        advance;
 
-    FT_Pos        pos_x;
-    FT_Pos        pos_y;
+    FT_BBox          bbox;          /* bounding box */
+    FT_Bool          path_begun;
+    FT_Bool          load_points;
+    FT_Bool          no_recurse;
 
-    FT_Vector     left_bearing;
-    FT_Vector     advance;
-
-    FT_BBox       bbox;          /* bounding box */
-    FT_Bool       path_begun;
-    FT_Bool       load_points;
-    FT_Bool       no_recurse;
-
-    FT_Error      error;         /* only used for memory errors */
-    FT_Bool       metrics_only;
+    FT_Error         error;         /* only used for memory errors */
+    FT_Bool          metrics_only;
 
   } CID_Builder;
 

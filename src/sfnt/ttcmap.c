@@ -59,7 +59,7 @@
   /*    table  :: A pointer to a cmap object.                              */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The function assumes that the stream is already in use (i.e.,      */
@@ -281,7 +281,7 @@
   /*    cmap :: A handle to a cmap object.                                 */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_CharMap_Free( TT_Face        face,
@@ -293,7 +293,7 @@
     if ( !cmap )
       return TT_Err_Ok;
 
-    memory = face->root.driver->memory;
+    memory = face->root.driver->root.memory;
 
     switch ( cmap->format )
     {

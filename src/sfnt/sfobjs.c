@@ -180,30 +180,18 @@
                             FT_Parameter*  params )
   {
     FT_Error            error;
+    FT_Library          library = face->root.driver->root.library;
     SFNT_Interface*     sfnt;
-    PSNames_Interface*  psnames;
     SFNT_Header         sfnt_header;
 
     /* for now, parameters are unused */
     UNUSED( num_params );
     UNUSED( params );
 
-
     sfnt = (SFNT_Interface*)face->sfnt;
     if ( !sfnt )
     {
-      /* look-up the SFNT driver */
-      FT_Driver  sfnt_driver;
-
-
-      sfnt_driver = FT_Get_Driver( face->root.driver->library, "sfnt" );
-      if ( !sfnt_driver )
-      {
-        error = FT_Err_Invalid_File_Format;
-        goto Exit;
-      }
-
-      sfnt = (SFNT_Interface*)( sfnt_driver->interface.format_interface );
+      sfnt = (SFNT_Interface*)FT_Get_Module_Interface( library, "sfnt" );
       if ( !sfnt )
       {
         error = FT_Err_Invalid_File_Format;
@@ -214,17 +202,10 @@
       face->goto_table = sfnt->goto_table;
     }
 
-    psnames = (PSNames_Interface*)face->psnames;
-    if ( !psnames )
+    if ( !face->psnames )
     {
-      /* look-up the PSNames driver */
-      FT_Driver  psnames_driver;
-
-
-      psnames_driver = FT_Get_Driver( face->root.driver->library, "psnames" );
-      if ( psnames_driver )
-        face->psnames = (PSNames_Interface*)
-                          ( psnames_driver->interface.format_interface );
+      face->psnames = (PSNames_Interface*)
+                       FT_Get_Module_Interface( library, "psnames" );
     }
 
     /* check that we have a valid TrueType file */

@@ -259,15 +259,11 @@
     psnames = (PSNames_Interface*)face->psnames;
     if (!psnames)
     {
-      /* look-up the PSNames driver */
-      FT_Driver  psnames_driver;
-
-      psnames_driver = FT_Get_Driver( face->root.driver->library, "psnames" );
-      if (psnames_driver)
-        face->psnames = (PSNames_Interface*)
-                            (psnames_driver->interface.format_interface);
+      psnames = (PSNames_Interface*)
+                 FT_Get_Module_Interface( FT_FACE_LIBRARY(face), "psnames" );
     }
-
+    face->psnames = psnames;
+    
     /* open the tokenizer, this will also check the font format */
     error = New_Tokenizer( stream, &tokenizer );
     if (error) goto Fail;
@@ -458,16 +454,11 @@
   LOCAL_FUNC
   void  T1_Done_GlyphSlot( T1_GlyphSlot  glyph )
   {
-    FT_Memory  memory  = glyph->root.face->memory;
-    FT_Library library = glyph->root.face->driver->library;
-
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
     T1_Done_Glyph_Hinter( glyph );
+#else
+    UNUSED(glyph)    
 #endif
-	/* the bitmaps are created on demand */
-	FREE( glyph->root.bitmap.buffer );
-    FT_Outline_Done( library, &glyph->root.outline );
-    return;
   }
 
 
@@ -487,66 +478,15 @@
   LOCAL_FUNC
   FT_Error  T1_Init_GlyphSlot( T1_GlyphSlot  glyph )
   {
-    FT_Library  library = glyph->root.face->driver->library;
-    FT_Error    error;
-
-    glyph->max_points         = 0;
-    glyph->max_contours       = 0;
-    glyph->root.bitmap.buffer = 0;
-
-    error = FT_Outline_New( library, 0, 0, &glyph->root.outline );
-    if (error) return error;
+    FT_Error    error = FT_Err_Ok;
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
     error = T1_New_Glyph_Hinter( glyph );
-    if (error)
-      FT_Outline_Done( library, &glyph->root.outline );
+#else
+    UNUSED(glyph);    
 #endif
 
     return error;
-  }
-
-
-/*******************************************************************
- *
- *  <Function>  T1_Init_Driver
- *
- *  <Description>
- *     Initialise a given Type 1 driver object
- *
- *  <Input>
- *     driver ::  handle to target driver object
- *
- *  <Return>
- *     Error code.
- *
- ******************************************************************/
-
-  LOCAL_FUNC
-  FT_Error  T1_Init_Driver( T1_Driver  driver )
-  {
-    UNUSED(driver);
-    return T1_Err_Ok;
-  }
-
-
-
-/*******************************************************************
- *
- *  <Function> T1_Done_Driver
- *
- *  <Description>
- *     finalise a given Type 1 driver
- *
- *  <Input>
- *     driver  :: handle to target Type 1 driver
- *
- ******************************************************************/
-
-  LOCAL_DEF
-  void  T1_Done_Driver( T1_Driver  driver )
-  {
-    UNUSED(driver);
   }
 
 

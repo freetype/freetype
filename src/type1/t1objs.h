@@ -260,40 +260,6 @@
 
 
 
-/*******************************************************************
- *
- *  <Function>  T1_Init_Driver
- *
- *  <Description>
- *     Initialise a given Type 1 driver object
- *
- *  <Input>
- *     driver ::  handle to target driver object
- *
- *  <Return>
- *     Error code.
- *
- ******************************************************************/
-
-  LOCAL_DEF
-  FT_Error  T1_Init_Driver( T1_Driver  driver );
-
-
-
-/*******************************************************************
- *
- *  <Function> T1_Done_Driver
- *
- *  <Description>
- *     finalise a given Type 1 driver
- *
- *  <Input>
- *     driver  :: handle to target Type 1 driver
- *
- ******************************************************************/
-
-  LOCAL_DEF
-  void  T1_Done_Driver( T1_Driver  driver );
 
 #ifdef __cplusplus
   }

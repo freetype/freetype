@@ -22,7 +22,7 @@
   /*************************************************************************/
 
 
-#include <freetype/ftraster.h>
+#include "ftraster.h"
 #include <freetype/internal/ftcalc.h>      /* for FT_MulDiv() only */
 
 
@@ -3248,7 +3248,7 @@
   }
 
 
-  FT_Raster_Funcs  ft_default_raster =
+  FT_Raster_Funcs  ft_standard_raster =
   {
     ft_glyph_format_outline,
     (FT_Raster_New_Func)     ft_black_new,

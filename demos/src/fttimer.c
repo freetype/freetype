@@ -20,6 +20,7 @@
 /****************************************************************************/
 
 #include <freetype/freetype.h>
+#include <freetype/ftrender.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -331,8 +332,12 @@
     /* set-up smooth anti-aliaser */
     if (use_grays)
     {
-      error = FT_Set_Raster( library, &ft_grays_raster );
-      if (error) Panic( "Could not initialize smooth anti-aliasing renderer" );
+      FT_Renderer  smooth;
+      
+      smooth = (FT_Renderer)FT_Get_Module( library, "smooth renderer" );
+      if (!smooth) Panic( "Could not initialize smooth anti-aliasing renderer" );
+      
+      FT_Set_Renderer( library, smooth, 0, 0 );
     }
 
     /* Load face */

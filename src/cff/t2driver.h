@@ -19,12 +19,9 @@
 #ifndef T2DRIVER_H
 #define T2DRIVER_H
 
-#include <freetype/freetype.h>
 #include <freetype/internal/ftdriver.h>
-#include <t2objs.h>
 
-
-  FT_EXPORT_VAR( const FT_DriverInterface )  cff_driver_interface;
+  FT_EXPORT_VAR( const FT_Driver_Class )  cff_driver_class;
 
 
 #endif /* T2DRIVER_H */

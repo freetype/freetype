@@ -34,14 +34,13 @@
     TT_Face         face;
     TT_Size         size;
     TT_GlyphSlot    glyph;
+    FT_GlyphLoader* gloader;
 
     FT_ULong        load_flags;
     FT_UInt         glyph_index;
 
     FT_Stream       stream;
     FT_Int          byte_len;
-    FT_Int          left_points;
-    FT_Int          left_contours;
 
     FT_BBox         bbox;
     FT_Int          left_bearing;

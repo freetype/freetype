@@ -251,16 +251,12 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /*    FT_MAX_DRIVERS                                                     */
+  /*    FT_MAX_MODULES                                                     */
   /*                                                                       */
-  /*    The maximum number of font drivers that can be registered in a     */
-  /*    single FreeType library object.  8 seems to be a good choice due   */
-  /*    to the relative low actual number of drivers ;-)                   */
+  /*    The maximum number ofmodules that can be registered in a single    */
+  /*    FreeType library object. 16 seems to be a good choice for now :-)  */
   /*                                                                       */
-  /*    If you don't intend to register new drivers at runtime, you        */
-  /*    certainly do not need to change this value..                       */
-  /*                                                                       */
-#define FT_MAX_DRIVERS  8
+#define FT_MAX_MODULES  16
 
 
   /*************************************************************************/

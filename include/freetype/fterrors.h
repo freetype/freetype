@@ -64,6 +64,8 @@ FT_ERROR_START_LIST
   FT_ERRORDEF( FT_Err_Invalid_CharMap_Handle,  0x0035, "invalid charmap handle" )
   FT_ERRORDEF( FT_Err_Invalid_Outline,         0x0036, "invalid outline" )
   FT_ERRORDEF( FT_Err_Invalid_Dimensions,      0x0037, "invalid dimensions" )
+  FT_ERRORDEF( FT_Err_Invalid_Version,         0x0038, "invalid FreeType version" )
+  FT_ERRORDEF( FT_Err_Lower_Module_Version,    0x0039, "module version is too low" )
 
   FT_ERRORDEF( FT_Err_Unavailable_Outline,     0x0040, "unavailable outline" )
   FT_ERRORDEF( FT_Err_Unavailable_Bitmap,      0x0041, "unavailable bitmap" )

@@ -124,65 +124,6 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Update_GlyphZone                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Checks the size of a zone and reallocates it if necessary.         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    newPoints   :: The new capacity for points.  We add two slots for  */
-  /*                   phantom points.                                     */
-  /*                                                                       */
-  /*    newContours :: The new capacity for contours.                      */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    zone        :: The address of the target zone.                     */
-  /*                                                                       */
-  LOCAL_FUNC FT_Error   TT_Update_GlyphZone( TT_GlyphZone*  zone,
-                                             FT_UShort      newPoints,
-                                             FT_Short       newContours )
-  {
-    FT_Error      error  = FT_Err_Ok;
-    FT_Memory     memory = zone->memory;
-
-
-    newPoints += 2;
-
-    if ( zone->max_points < newPoints )
-    {
-      /* reallocate the points arrays */
-      if ( REALLOC_ARRAY( zone->org,  zone->max_points * 2,
-                                      newPoints * 2, FT_F26Dot6 ) ||
-           REALLOC_ARRAY( zone->cur,  zone->max_points * 2,
-                                      newPoints * 2, FT_F26Dot6 ) ||
-           REALLOC_ARRAY( zone->tags, zone->max_points * 2,
-                                      newPoints,     FT_Byte    ) )
-        goto Exit;
-
-      zone->max_points = newPoints;
-    }
-
-    if ( zone->max_contours < newContours )
-    {
-      /* reallocate the contours array */
-      if ( REALLOC_ARRAY( zone->contours, zone->max_contours,
-                                          newContours, FT_UShort ) )
-        goto Exit;
-
-      zone->max_contours = newContours;
-    }
-
-  Exit:
-    return error;
-  }
-
-
-
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
   /*    TT_Init_Face                                                       */
   /*                                                                       */
   /* <Description>                                                         */
@@ -201,7 +142,7 @@
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  TT_Init_Face( FT_Stream      stream,
@@ -211,17 +152,12 @@
                           FT_Parameter*  params )
   {
     FT_Error         error;
-    FT_Driver        sfnt_driver;
+    FT_Library       library;
     SFNT_Interface*  sfnt;
 
-
-    sfnt_driver = FT_Get_Driver( face->root.driver->library, "sfnt" );
-    if ( !sfnt_driver )
-      goto Bad_Format;
-
-    sfnt = (SFNT_Interface*)(sfnt_driver->interface.format_interface);
-    if ( !sfnt )
-      goto Bad_Format;
+    library = face->root.driver->root.library;
+    sfnt    = (SFNT_Interface*)FT_Get_Module_Interface( library, "sfnt" );
+    if (!sfnt) goto Bad_Format;
 
     /* create input stream from resource */
     if ( FILE_Seek( 0 ) )
@@ -320,7 +256,7 @@
   /*    size :: A handle to the size object.                               */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  TT_Init_Size( TT_Size  size )
@@ -396,7 +332,7 @@
 
     /* set `face->interpreter' according to the debug hook present */
     {
-      FT_Library  library = face->root.driver->library;
+      FT_Library  library = face->root.driver->root.library;
 
 
       face->interpreter = (TT_Interpreter)
@@ -697,63 +633,6 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Init_GlyphSlot                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The TrueType glyph slot initializer.                               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    slot :: The glyph record to build.                                 */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_FUNC
-  FT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot )
-  {
-    /* allocate the outline space */
-    FT_Face     face    = slot->face;
-    FT_Library  library = face->driver->library;
-
-
-    FT_TRACE4(( "TT_Init_GlyphSlot: Creating outline maxp = %d, maxc = %d\n",
-                face->max_points, face->max_contours ));
-
-    return FT_Outline_New( library,
-                           face->max_points + 2,
-                           face->max_contours,
-                           &slot->outline );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Done_GlyphSlot                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The TrueType glyph slot finalizer.                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    slot :: A handle to the glyph slot object.                         */
-  /*                                                                       */
-  LOCAL_FUNC
-  void  TT_Done_GlyphSlot( TT_GlyphSlot  slot )
-  {
-    FT_Library  library = slot->face->driver->library;
-    FT_Memory   memory  = library->memory;
-
-
-    if ( slot->flags & ft_glyph_own_bitmap )
-      FREE( slot->bitmap.buffer );
-
-    FT_Outline_Done( library, &slot->outline );
-    return;
-  }
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -767,25 +646,24 @@
   /*    driver :: A handle to the target driver object.                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Init_Driver( TT_Driver  driver )
   {
-    FT_Memory  memory = driver->root.memory;
     FT_Error   error;
 
-    error = TT_New_GlyphZone( memory, 0, 0, &driver->zone );
-    if ( error )
-      return error;
-
+    /* set 'extra' in glyph loader */
+    error = FT_GlyphLoader_Create_Extra( FT_DRIVER(driver)->glyph_loader );
+    
     /* init extension registry if needed */
 
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
-    return TT_Init_Extensions( driver );
-#else
-    return TT_Err_Ok;
+    if (!error)
+      return TT_Init_Extensions( driver );
 #endif
+
+    return error;
   }
 
 
@@ -809,15 +687,12 @@
     TT_Done_Extensions( driver );
 #endif
 
-    /* remove the loading glyph zone */
-    TT_Done_GlyphZone( &driver->zone );
-
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
     /* destroy the execution context */
     if ( driver->context )
     {
-      TT_Destroy_Context( driver->context, driver->root.memory );
+      TT_Destroy_Context( driver->context, driver->root.root.memory );
       driver->context = NULL;
     }
 

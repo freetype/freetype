@@ -123,7 +123,7 @@
 #else /* _STANDALONE_ */
 
 
-#include <freetype/ftgrays.h>
+#include "ftgrays.h"
 #include <freetype/internal/ftobjs.h>  /* for UNUSED()                  */
 #include <freetype/internal/ftdebug.h> /* for FT_TRACE() and FT_ERROR() */
 #include <freetype/freetype.h>         /* for FT_Outline_Decompose()    */

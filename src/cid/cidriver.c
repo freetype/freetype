@@ -37,36 +37,9 @@
 #define FT_COMPONENT  trace_ciddriver
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Get_Interface                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Each driver can provide one or more extensions to the base         */
-  /*    FreeType API.  These can be used to access format specific         */
-  /*    features (e.g., all TrueType/OpenType resources share a common     */
-  /*    file structure and common tables which can be accessed through the */
-  /*    `sfnt' interface), or more simply generic ones (e.g., the          */
-  /*    `postscript names' interface which can be used to retrieve the     */
-  /*     PostScript name of a given glyph index).                          */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    driver    :: A handle to a driver object.                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    interface :: A string designing the interface.  Examples are       */
-  /*                 `sfnt', `post_names', `charmaps', etc.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A typeless pointer to the extension's interface (normally a table  */
-  /*    of function pointers).  Returns NULL if the requested extension    */
-  /*    isn't available (i.e., wasn't compiled in the driver at build      */
-  /*    time).                                                             */
-  /*                                                                       */
   static
-  FTDriver_Interface  Get_Interface( FT_Driver         driver,
-                                     const FT_String*  interface )
+  FT_Module_Interface   CID_Get_Interface( FT_Driver         driver,
+                                           const FT_String*  interface )
   {
     UNUSED( driver );
     UNUSED( interface );
@@ -75,152 +48,37 @@
   }
 
 
-#ifndef T1_CONFIG_OPTION_NO_AFM
+#ifdef xxxT1_CONFIG_OPTION_NO_AFM
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Get_Kerning                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A driver method used to return the kerning vector between two      */
-  /*    glyphs of the same face.                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face        :: A handle to the source face object.                 */
-  /*                                                                       */
-  /*    left_glyph  :: The index of the left glyph in the kern pair.       */
-  /*                                                                       */
-  /*    right_glyph :: The index of the right glyph in the kern pair.      */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    kerning     :: The kerning vector.  This is in font units for      */
-  /*                   scalable formats, and in pixels for fixed-sizes     */
-  /*                   formats.                                            */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Only horizontal layouts (left-to-right & right-to-left) are        */
-  /*    supported by this function.  Other layouts, or more sophisticated  */
-  /*    kernings are out of scope of this method (the basic driver         */
-  /*    interface is meant to be simple).                                  */
-  /*                                                                       */
-  /*    They can be implemented by format-specific interfaces.             */
-  /*                                                                       */
   static
-  FT_Error  Get_Kerning( T1_Face     face,
-                         FT_UInt     left_glyph,
-                         FT_UInt     right_glyph,
-                         FT_Vector*  kerning )
+  FT_Error  cid_Get_Kerning( T1_Face     face,
+                             FT_UInt     left_glyph,
+                             FT_UInt     right_glyph,
+                             FT_Vector*  kerning )
   {
-#if 0
-
     T1_AFM*  afm;
-
-#endif
 
 
     kerning->x = 0;
     kerning->y = 0;
 
-#if 0
-
     afm = (T1_AFM*)face->afm_data;
     if ( afm )
       CID_Get_Kerning( afm, left_glyph, right_glyph, kerning );
-
-#endif /* 0 */
 
     return T1_Err_Ok;
   }
 
 
-#endif /* !T1_CONFIG_OPTION_NO_AFM */
+#endif /* xxxT1_CONFIG_OPTION_NO_AFM */
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Set_Char_Sizes                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A driver method used to reset a size's character sizes (horizontal */
-  /*    and vertical) expressed in fractional points.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    char_width      :: The character width expressed in 26.6           */
-  /*                       fractional points.                              */
-  /*                                                                       */
-  /*    char_height     :: The character height expressed in 26.6          */
-  /*                       fractional points.                              */
-  /*                                                                       */
-  /*    horz_resolution :: The horizontal resolution of the output device. */
-  /*                                                                       */
-  /*    vert_resolution :: The vertical resolution of the output device.   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    size            :: A handle to the target size object.             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  static
-  FT_Error  Set_Char_Sizes( T1_Size     size,
-                            FT_F26Dot6  char_width,
-                            FT_F26Dot6  char_height,
-                            FT_UInt     horz_resolution,
-                            FT_UInt     vert_resolution )
-  {
-    UNUSED( char_width );
-    UNUSED( char_height );
-    UNUSED( horz_resolution );
-    UNUSED( vert_resolution );
-
-    size->valid = FALSE;
-    return CID_Reset_Size( size );
-  }
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    Set_Pixel_Sizes                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A driver method used to reset a size's character sizes (horizontal */
-  /*    and vertical) expressed in integer pixels.                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    pixel_width  :: The character width expressed in integer pixels.   */
-  /*                                                                       */
-  /*    pixel_height :: The character height expressed in integer pixels.  */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    size         :: A handle to the target size object.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  static
-  FT_Error  Set_Pixel_Sizes( T1_Size  size,
-                             FT_Int   pixel_width,
-                             FT_Int   pixel_height )
-  {
-    UNUSED( pixel_width );
-    UNUSED( pixel_height );
-
-    size->valid = FALSE;
-    return CID_Reset_Size( size );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Get_Char_Index                                                     */
+  /*    cid_get_char_index                                                 */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Uses a charmap to return a given character code's glyph index.     */
@@ -233,13 +91,12 @@
   /*    Glyph index.  0 means `undefined character code'.                  */
   /*                                                                       */
   static
-  FT_UInt  Get_Char_Index( FT_CharMap  charmap,
-                           FT_Long     charcode )
+  FT_UInt  CID_Get_Char_Index( FT_CharMap  charmap,
+                               FT_Long     charcode )
   {
     T1_Face             face;
     FT_UInt             result = 0;
     PSNames_Interface*  psnames;
-
 
     face = (T1_Face)charmap->face;
     psnames = (PSNames_Interface*)face->psnames;
@@ -316,75 +173,55 @@
   }
 
 
-  const FT_DriverInterface  t1cid_driver_interface =
+
+  const FT_Driver_Class  t1cid_driver_class =
   {
-    sizeof( FT_DriverRec ),
+    /* firs of all, the FT_Module_Class fields */
+    {
+      ft_module_font_driver | ft_module_driver_scalable,
+      sizeof( FT_DriverRec ),
+      "t1cid",   /* module name           */
+      0x10000,   /* version 1.0 of driver */
+      0x20000,   /* requires FreeType 2.0 */
+      
+      0,
+      
+      (FT_Module_Constructor)   CID_Init_Driver,
+      (FT_Module_Destructor)    CID_Done_Driver,
+      (FT_Module_Requester)     CID_Get_Interface
+    },
+
+    /* then the other font drivers fields */
     sizeof( CID_FaceRec ),
     sizeof( T1_SizeRec ),
     sizeof( T1_GlyphSlotRec ),
 
-    "t1cid",
-    100,
-    200,
+    (FTDriver_initFace)      CID_Init_Face,
+    (FTDriver_doneFace)      CID_Done_Face,
 
-    0,   /* format interface */
+    (FTDriver_initSize)      0,
+    (FTDriver_doneSize)      0,
+    (FTDriver_initGlyphSlot) 0,
+    (FTDriver_doneGlyphSlot) 0,
 
-    (FTDriver_initDriver)   CID_Init_Driver,
-    (FTDriver_doneDriver)   CID_Done_Driver,
+    (FTDriver_setCharSizes)  0,
+    (FTDriver_setPixelSizes) 0,
 
-    (FTDriver_getInterface) Get_Interface,
+    (FTDriver_loadGlyph)     CID_Load_Glyph,
+    (FTDriver_getCharIndex)  CID_Get_Char_Index,
 
-    (FTDriver_initFace)     CID_Init_Face,
-    (FTDriver_doneFace)     CID_Done_Face,
-
-#ifdef T1_CONFIG_OPTION_NO_AFM
-    (FTDriver_getKerning)   0,
+#ifndef xxxxT1_CONFIG_OPTION_NO_AFM
+    (FTDriver_getKerning)    0,
+    (FTDriver_attachFile)    0,
 #else
-    (FTDriver_getKerning)   Get_Kerning,
+    (FTDriver_getKerning)    cid_Get_Kerning,
+    (FTDriver_attachFile)    CID_Read_AFM,
 #endif
 
-    (FTDriver_initSize)     CID_Init_Size,
-    (FTDriver_doneSize)     CID_Done_Size,
-    (FTDriver_setCharSizes) Set_Char_Sizes,
-    (FTDriver_setPixelSizes)Set_Pixel_Sizes,
-
-    (FTDriver_initGlyphSlot)CID_Init_GlyphSlot,
-    (FTDriver_doneGlyphSlot)CID_Done_GlyphSlot,
-    (FTDriver_loadGlyph)    CID_Load_Glyph,
-
-    (FTDriver_getCharIndex) Get_Char_Index,
+    (FTDriver_getAdvances)  0
   };
 
 
-#ifdef FT_CONFIG_OPTION_DYNAMIC_DRIVERS
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    getDriverInterface                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This function is used when compiling the CID driver as a shared    */
-  /*    library (`.DLL' or `.so').  It will be used by the high-level      */
-  /*    library of FreeType to retrieve the address of the driver's        */
-  /*    generic interface.                                                 */
-  /*                                                                       */
-  /*    It shouldn't be implemented in a static build, as each driver must */
-  /*    have the same function as an exported entry point.                 */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    The address of the CID's driver generic interface.  The            */
-  /*    format-specific interface can then be retrieved through the method */
-  /*    interface->get_format_interface.                                   */
-  /*                                                                       */
-  EXPORT_FUNC( FT_DriverInterface* )  getDriverInterface( void )
-  {
-    return &t1cid_driver_interface;
-  }
-
-
-#endif /* FT_CONFIG_OPTION_DYNAMIC_DRIVERS */
 
 
 /* END */

@@ -78,7 +78,7 @@
   /*                   formats.                                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Only horizontal layouts (left-to-right & right-to-left) are        */
@@ -144,114 +144,6 @@
 #undef PAIR_TAG
 
 
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /****                           S I Z E S                             ****/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Set_Char_Sizes                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A driver method used to reset a size's character sizes (horizontal */
-  /*    and vertical) expressed in fractional points.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    char_width      :: The character width expressed in 26.6           */
-  /*                       fractional points.                              */
-  /*                                                                       */
-  /*    char_height     :: The character height expressed in 26.6          */
-  /*                       fractional points.                              */
-  /*                                                                       */
-  /*    horz_resolution :: The horizontal resolution of the output device. */
-  /*                                                                       */
-  /*    vert_resolution :: The vertical resolution of the output device.   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    size        :: A handle to the target size object.                 */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  static
-  FT_Error  Set_Char_Sizes( T2_Size     size,
-                            FT_F26Dot6  char_width,
-                            FT_F26Dot6  char_height,
-                            FT_UInt     horz_resolution,
-                            FT_UInt     vert_resolution )
-  {
-    FT_Size_Metrics*  metrics = &size->metrics;
-    T2_Face           face    = (T2_Face)size->face;
-    FT_Long           dim_x, dim_y;
-
-
-    /* This bit flag, when set, indicates that the pixel size must be */
-    /* truncated to an integer.  Nearly all TrueType fonts have this  */
-    /* bit set, as hinting won't work really well otherwise.          */
-    /*                                                                */
-    /* However, for those rare fonts who do not set it, we override   */
-    /* the default computations performed by the base layer.  I       */
-    /* really don't know whether this is useful, but hey, that's the  */
-    /* spec :-)                                                       */
-    /*                                                                */
-    if ( ( face->header.Flags & 8 ) == 0 )
-    {
-      /* Compute pixel sizes in 26.6 units */
-      dim_x = ( char_width  * horz_resolution ) / 72;
-      dim_y = ( char_height * vert_resolution ) / 72;
-
-      metrics->x_scale = FT_DivFix( dim_x, face->root.units_per_EM );
-      metrics->y_scale = FT_DivFix( dim_y, face->root.units_per_EM );
-
-      metrics->x_ppem  = (FT_UShort)( dim_x >> 6 );
-      metrics->y_ppem  = (FT_UShort)( dim_y >> 6 );
-    }
-
-    return T2_Reset_Size( size );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Set_Pixel_Sizes                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A driver method used to reset a size's character sizes (horizontal */
-  /*    and vertical) expressed in integer pixels.                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    pixel_width  :: The character width expressed in integer pixels.   */
-  /*                                                                       */
-  /*    pixel_height :: The character height expressed in integer pixels.  */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    size         :: A handle to the target size object.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  static
-  FT_Error  Set_Pixel_Sizes( T2_Size  size,
-                             FT_UInt  pixel_width,
-                             FT_UInt  pixel_height )
-  {
-    UNUSED( pixel_width );
-    UNUSED( pixel_height );
-
-    return T2_Reset_Size( size );
-  }
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -277,7 +169,7 @@
   /*                   whether to hint the outline, etc).                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Load_Glyph( T2_GlyphSlot  slot,
@@ -385,58 +277,57 @@
 
 
   static
-  FTDriver_Interface  t2_get_interface( T2_Driver    driver,
-                                        const char*  interface )
+  FT_Module_Interface  t2_get_interface( T2_Driver    driver,
+                                         const char*  interface )
   {
-    FT_Driver        sfntd = FT_Get_Driver( driver->root.library, "sfnt" );
-    SFNT_Interface*  sfnt;
+    FT_Module  sfnt;
 
-
-    /* only return the default interface from the SFNT module */
-    if ( sfntd )
-    {
-      sfnt = (SFNT_Interface*)(sfntd->interface.format_interface);
-      if ( sfnt )
-        return sfnt->get_interface( (FT_Driver)driver, interface );
-    }
-
-    return 0;
+    /* we simply pass our request to the "sfnt" module */
+    sfnt = FT_Get_Module( driver->root.root.library, "sfnt" );
+    return sfnt ? sfnt->clazz->get_interface( sfnt, interface ) : 0;
   }
 
 
   /* The FT_DriverInterface structure is defined in ftdriver.h. */
 
-  const FT_DriverInterface  cff_driver_interface =
+  const FT_Driver_Class   cff_driver_class =
   {
-    sizeof ( T2_DriverRec ),
-    sizeof ( TT_FaceRec ),
-    sizeof ( FT_SizeRec ),
-    sizeof ( T2_GlyphSlotRec ),
+    /* begin with the FT_Module_Class fields */
+    {
+      ft_module_font_driver | ft_module_driver_scalable,
+      sizeof( T2_DriverRec ),
+      "cff",
+      0x10000,
+      0x20000,
 
-    "cff",           /* driver name                           */
-    100,             /* driver version == 1.0                 */
-    200,             /* driver requires FreeType 2.0 or above */
-
-    (void*)0,
-
-    (FTDriver_initDriver)     T2_Init_Driver,
-    (FTDriver_doneDriver)     T2_Done_Driver,
-    (FTDriver_getInterface)   t2_get_interface,
+      0,   /* module-specific interface */
+      
+      (FT_Module_Constructor)  T2_Init_Driver,
+      (FT_Module_Destructor)   T2_Done_Driver,
+      (FT_Module_Requester)    t2_get_interface,
+    },
+    
+    /* now the specific driver fields */
+    sizeof( TT_FaceRec ),
+    sizeof( FT_SizeRec ),
+    sizeof( T2_GlyphSlotRec ),
 
     (FTDriver_initFace)       T2_Init_Face,
     (FTDriver_doneFace)       T2_Done_Face,
-    (FTDriver_getKerning)     Get_Kerning,
+    (FTDriver_initSize)       0,
+    (FTDriver_doneSize)       0,
+    (FTDriver_initGlyphSlot)  0,
+    (FTDriver_doneGlyphSlot)  0,
 
-    (FTDriver_initSize)       T2_Init_Size,
-    (FTDriver_doneSize)       T2_Done_Size,
-    (FTDriver_setCharSizes)   Set_Char_Sizes,
-    (FTDriver_setPixelSizes)  Set_Pixel_Sizes,
-
-    (FTDriver_initGlyphSlot)  T2_Init_GlyphSlot,
-    (FTDriver_doneGlyphSlot)  T2_Done_GlyphSlot,
+    (FTDriver_setCharSizes)   0,
+    (FTDriver_setPixelSizes)  0,
+    
     (FTDriver_loadGlyph)      Load_Glyph,
-
     (FTDriver_getCharIndex)   Get_Char_Index,
+
+    (FTDriver_getKerning)     Get_Kerning,
+    (FTDriver_attachFile)     0,
+    (FTDriver_getAdvances)    0
   };
 
 
@@ -446,7 +337,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    getDriverInterface                                                 */
+  /*    getDriverClass                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This function is used when compiling the TrueType driver as a      */
@@ -462,9 +353,9 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  EXPORT_FUNC( FT_DriverInterface* )  getDriverInterface( void )
+  EXPORT_FUNC( FT_Driver_Class* )  getDriverClass( void )
   {
-    return &cff_driver_interface;
+    return &cff_driver_class;
   }
 
 

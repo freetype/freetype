@@ -5,6 +5,9 @@
 /*  This file defines the glyph image formats recognized by FreeType, as   */
 /*  well as the default raster interface.                                  */
 /*                                                                         */
+/*  Note: a "raster" is simply a scan-line converter, used to render       */
+/*        FT_Outlines into FT_Bitmaps                                      */
+/*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
 /*                                                                         */
@@ -187,6 +190,10 @@
    *                    for paletted pixel modes.
    *
    * <Note>
+   *   For now, the only pixel mode supported by FreeType are mono and grays.
+   *   However, drivers might be added in the future to support more "colorful"
+   *   options..
+   *
    *   When using pixel modes pal2, pal4 and pal8 with a void `palette'
    *   field, a gray pixmap with respectively 4, 16 and 256 levels of gray
    *   is assumed. This, in order to be compatible with some embedded bitmap
@@ -194,7 +201,6 @@
    *
    *   Note that no font was found presenting such embedded bitmaps, so this
    *   is currently completely unhandled by the library.
-   *
    *
    *************************************************************************/
 
@@ -220,8 +226,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    This structure is used to describe an outline to the scan-line     */
-  /*    converter.  It's a copy of the TT_Outline type that was defined    */
-  /*    in FreeType 1.x.                                                   */
+  /*    converter.                                                         */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    n_contours :: The number of contours in the outline.               */
@@ -268,6 +273,7 @@
 
   } FT_Outline;
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
@@ -286,7 +292,7 @@
   /*   ft_outline_even_odd_fill ::                                         */
   /*       by default, outlines are filled using the non-zero winding      */
   /*       rule. When set to 1, the outline will be filled using the       */
-  /*       even-odd fill rule.. (XXX: unimplemented)                       */
+  /*       even-odd fill rule.. (only works with the smooth raster)        */
   /*                                                                       */
   /*   ft_outline_reverse_fill ::                                          */
   /*       By default, outside contours of an outline are oriented in      */
@@ -460,6 +466,23 @@
   /*    conic_to :: The second-order Bezier arc emitter.                   */
   /*    cubic_to :: The third-order Bezier arc emitter.                    */
   /*                                                                       */
+  /*    shift    :: the shift that is applied to coordinates before        */
+  /*                they're sent to the emmiter                            */
+  /*                                                                       */
+  /*    delta    :: the delta that is applied to coordinates before        */
+  /*                they're sent to the emitter, but after the shift       */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The point coordinates sent to the emitters are the transformed     */
+  /*    version of the original coordinates (this is important for high    */
+  /*    accuracy during scan-conversion). The transform is simply:         */
+  /*                                                                       */
+  /*     x' = (x << shift) - delta                                         */
+  /*     y' = (x << shift) - delta                                         */
+  /*                                                                       */
+  /*    Set the value of 'shift' and 'delta' to 0 to get the original      */
+  /*    point coordinates..                                                */
+  /*                                                                       */
   typedef struct  FT_Outline_Funcs_
   {
     FT_Outline_MoveTo_Func   move_to;
@@ -479,13 +502,12 @@
   /*    FT_IMAGE_TAG                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This macro converts four letter tags which are used to label       */
-  /*    TrueType tables into an unsigned long to be used within FreeType.  */
+  /*    This macro converts four letter tags into unsigned longs..         */
   /*                                                                       */
 #define FT_IMAGE_TAG( _x1, _x2, _x3, _x4 ) \
-          (((unsigned long)_x1 << 24) |        \
-           ((unsigned long)_x2 << 16) |        \
-           ((unsigned long)_x3 << 8)  |        \
+          (((unsigned long)_x1 << 24) |    \
+           ((unsigned long)_x2 << 16) |    \
+           ((unsigned long)_x3 << 8)  |    \
             (unsigned long)_x4)
 
 
@@ -495,7 +517,7 @@
   *    FT_Glyph_Format
   *
   * <Description>
-  *    An enumeration type used to describethe format of a given glyph
+  *    An enumeration type used to describe the format of a given glyph
   *    image. Note that this version of FreeType only supports two image
   *    formats, even though future font drivers will be able to register
   *    their own format.
@@ -541,12 +563,12 @@
 
  /**************************************************************************
   *
+  *  A raster is a scan converter, in charge of rendering an outline into a
+  *  a bitmap. This section contains the public API for rasters.
   *
-  *
-  *
-  *
-  *
-  *
+  *  Note that in FreeType 2, all rasters are now encapsulated within
+  *  specific modules called "renderers". See <freetype/internal/ftrender.h>
+  *  for more details on renderers..
   *
   **************************************************************************/
 
@@ -934,5 +956,4 @@
   } FT_Raster_Funcs;
 
 #endif /* FTIMAGE_H */
-
 
