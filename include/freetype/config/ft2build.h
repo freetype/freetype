@@ -26,8 +26,8 @@
 /*     #ifndef __FT_BUILD_UNIX_H__                                         */
 /*     #define __FT_BUILD_UNIX_H__                                         */
 /*                                                                         */
-/*     #define  FT_ROOT  freetype2                                         */
-/*     #include <FT_ROOT/config/ft2build.h>                                */
+/*     #define  FT2_ROOT  freetype2                                        */
+/*     #include <FT2_ROOT/config/ft2build.h>                               */
 /*                                                                         */
 /*     #endif // __FT_BUILD_UNIX_H__                                       */
 /*                                                                         */
@@ -101,23 +101,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* The macro FT2_COMPONENT_FILE is used to include a given FreeType 2    */
-  /* component source file (be it a header, a C source file, or an         */
-  /* included file).                                                       */
-  /*                                                                       */
-  /* Its first argument is the component/module's directory according to   */
-  /* the normal FreeType 2 source directory hierarchy, and the second one  */
-  /* the file name.                                                        */
-  /*                                                                       */
-  /* Note that you can also put all library source files in a single       */
-  /* directory and compile them normally by defining the macro             */
-  /* FT_FLAT_COMPILATION.                                                  */
-  /*                                                                       */
-#define FT2_COMPONENT_FILE( d, x )  <FT2_ROOT/d/x>
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* The macro FT2_SOURCE_FILE is used to include a given FreeType 2       */
   /* component source file (be it a header, a C source file, or an         */
   /* included file).                                                       */
@@ -130,10 +113,10 @@
   /* directory and compile them normally by defining the macro             */
   /* FT_FLAT_COMPILATION.                                                  */
   /*                                                                       */
-#ifdef  FT2_FLAT_COMPILATION
-#define FT2_SOURCE_FILE( d, x )  <d/x>
+#ifdef  FT_FLAT_COMPILATION
+#define FT_SOURCE_FILE( d, x )  <d/x>
 #else
-#define FT2_SOURCE_FILE( d, x )  "x"
+#define FT_SOURCE_FILE( d, x )  #x
 #endif
 
 
