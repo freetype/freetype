@@ -13,10 +13,10 @@ For each new public release of FreeType 2, there are generally *three*
 distinct "version" numbers to consider:
 
   * the official FT2 release number, like 2.0.9, or 2.1.3
-  
+
   * the libtool (and Unix) specific version number, like "9.2.3". This
     is what "freetype-config --version" will return
-  
+
   * the platform-specific shared object number, used for example when
     the library is installed as "/usr/lib/libfreetype.so.6.3.2"
 
@@ -35,10 +35,10 @@ macros defined in FT_FREETYPE_H:
   - FREETYPE_MINOR : minor release number
   - FREETYPE_PATCH : patch release number
 
-see below for some Autoconf fragment to 
+see below for some Autoconf fragment to
 
 
-the release number is also available at *runtime* through the 
+the release number is also available at *runtime* through the
 "FT_Library_Version" API. Unfortunately, this one wasn't available or
 working correctly before the 2.1.3 official release !!
 
@@ -51,6 +51,7 @@ found on _most_ systems, but not all of them:
 
   release       libtool        so
 -------------------------------------
+   2.1.4         9.3.3         6.3.3
    2.1.3         9.2.3         6.3.2
    2.1.2         9.1.3         6.3.1
    2.1.1           ?            ?

@@ -51,7 +51,7 @@ struct internal_state {
 };
 
 
-int ZEXPORT inflateReset(z)
+ZEXPORT(int) inflateReset(z)
 z_streamp z;
 {
   if (z == Z_NULL || z->state == Z_NULL)
@@ -65,7 +65,7 @@ z_streamp z;
 }
 
 
-int ZEXPORT inflateEnd(z)
+ZEXPORT(int) inflateEnd(z)
 z_streamp z;
 {
   if (z == Z_NULL || z->state == Z_NULL || z->zfree == Z_NULL)
@@ -79,7 +79,7 @@ z_streamp z;
 }
 
 
-int ZEXPORT inflateInit2_(z, w, version, stream_size)
+ZEXPORT(int) inflateInit2_(z, w, version, stream_size)
 z_streamp z;
 int w;
 const char *version;
@@ -144,7 +144,7 @@ int stream_size;
 #define NEXTBYTE (z->avail_in--,z->total_in++,*z->next_in++)
 
 
-int ZEXPORT inflate(z, f)
+ZEXPORT(int) inflate(z, f)
 z_streamp z;
 int f;
 {
