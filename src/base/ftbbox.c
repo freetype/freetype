@@ -382,25 +382,25 @@
         if ( t1 == 0 )  /* all coefficients are 0! */
           return;
 
-        if ( t1 > 0xFFFFFFL )
+        if ( t1 > 0x7FFFFFL )
         {
           do
           {
-            shift--;
+            shift++;
             t1 >>= 1;
-          } while ( t1 > 0xFFFFFFL );
+          } while ( t1 > 0x7FFFFFL );
 
           a >>= shift;
           b >>= shift;
           c >>= shift;
         }
-        else if ( t1 < 0x800000L )
+        else if ( t1 < 0x400000L )
         {
           do
           {
             shift++;
             t1 <<= 1;
-          } while ( t1 < 0x800000L );
+          } while ( t1 < 0x400000L );
 
           a <<= shift;
           b <<= shift;
