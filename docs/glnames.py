@@ -98,7 +98,7 @@ t1_standard_strings = [
     "period", "slash", "zero", "one", "two",
 
     "three", "four", "five", "six", "seven",
-    "height", "nine", "colon", "semicolon", "less",
+    "eight", "nine", "colon", "semicolon", "less",
 
     "equal", "greater", "question", "at", "A",
     "B", "C", "D", "E", "F",
