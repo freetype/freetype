@@ -1,3 +1,7 @@
+2003-10-20  Graham Asher  <graham.asher@btinternet.com>
+
+	* src/winfonts/winfnt.c (fnt_cmap_class): Fix position of `const'.
+
 2003-10-19  Werner Lemberg  <wl@gnu.org>
 
 	* src/autohint/ahhint.c (ah_hinter_load_glyph): Patch from
