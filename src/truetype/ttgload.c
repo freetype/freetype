@@ -1411,7 +1411,7 @@
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-    /* return immediately if we only wanted the embedded bitmaps */
+    /* return immediately if we only want the embedded bitmaps */
     if ( load_flags & FT_LOAD_SBITS_ONLY )
       return FT_Err_Invalid_Argument;
 

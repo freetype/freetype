@@ -1,27 +1,26 @@
 2001-12-19  David Turner  <david@freetype.org>
 
-        * src/truetype/ttgload.c (TT_Load_Glyph), src/base/ftobjs.c
-        (FT_Load_Glyph): "fixed" the bug that prevented embedded bitmaps from
-        begin loaded when the auto-hinter is used.. This actually is a hack
-        but will be enough until the internal re-design scheduled for
-        FreeType 2.1
+	* include/freetype/cache/ftcache.h: Added comments to indicate that
+	some of the exported functions should only be used by applications
+	that need to implement custom cache types.
 
+	* src/truetype/ttgload.c (cur_to_org, org_to_cur): Fixed a nasty bug
+	that prevented composites from loading correctly, due to missing
+	parentheses around macro parameters.
 
-        * include/freetype/cache/ftcache.h: added comments to indicate that
-        some of the exported functions should only be used by applications
-        that need to implement custom cache types
+	* src/sfnt/sfobjs.c (SFNT_Load_Face): Make the "post" and "name"
+	tables optional to load PCL fonts properly.
 
-        * src/truetype/ttgload.c: fixed a nasty bug that prevent composites
-        from loading correctly. Believe it or not, this was due to an invalid
-        macro definition !!
+	* src/truetype/ttgload.c (TT_Load_Glyph), src/base/ftobjs.c
+	(FT_Load_Glyph), include/freetype/freetype.h (FT_LOAD_SBITS_ONLY):
+	"Fixed" the bug that prevented embedded bitmaps to be loaded when
+	the auto-hinter is used.  This actually is a hack but will be enough
+	until the internal re-design scheduled for FreeType 2.1.
 
-        * src/sfnt/sfobjs.c (SFNT_Load_Face): make the "post" and "name"
-        tables optional to load PCL fonts properly
+	* src/raster/ftrend1.c (ft_raster1_render): Fixed a nasty outline
+	shifting bug in the monochrome renderer.
 
-        * src/raster/ftrend1.c (ft_raster1_render): fixed a nasty outline
-        shifting bug in the monochrome renderer.
-
-        * README: updated version numbers to 2.0.6
+	* README: Updated version numbers to 2.0.6.
 
 2001-12-17  Werner Lemberg  <wl@gnu.org>
 

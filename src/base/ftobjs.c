@@ -851,7 +851,7 @@
 
     driver = face->driver;
 
-    /* when the flag NO_RECURSE is set, we disable hinting and scaling */
+    /* if the flag NO_RECURSE is set, we disable hinting and scaling */
     if ( load_flags & FT_LOAD_NO_RECURSE )
     {
       /* disable scaling, hinting, and transformation */
@@ -883,10 +883,10 @@
       FT_AutoHinter_Interface*  hinting;
 
 
-      /* try to load embedded bitmaps first when available          */
-      
-      /* XXX: this is really a temporary hack that should disappear */
-      /*      promptly with FreeType 2.1 !!                         */
+      /* try to load embedded bitmaps first if available            */
+      /*                                                            */
+      /* XXX: This is really a temporary hack that should disappear */
+      /*      promptly with FreeType 2.1!                           */
       /*                                                            */
       if ( FT_HAS_FIXED_SIZES( face ) )
       {
