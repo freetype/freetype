@@ -602,6 +602,9 @@
     FT_Short         underline_position;
     FT_Short         underline_thickness;
 
+    FT_GlyphSlot     glyph;
+    FT_Size          size;
+
     /************************************************************/
     /* The following fields should be considered private and    */
     /* rarely, if ever, used by client applications..           */
@@ -610,8 +613,6 @@
     FT_Memory        memory;
     FT_Stream        stream;
 
-    FT_GlyphSlot     glyph;
-    FT_Size          size;
     FT_CharMap       charmap;
     FT_ListRec       sizes_list;
 
