@@ -13,6 +13,11 @@ LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
 
     - Handling of `bhed' table has been fixed.
 
+    - The TrueType driver with enabled byte code interpreter sometimes
+      returned artifacts due to incorrect rounding.  This bug has been
+      introduced after version 2.1.4.
+
+
   II. IMPORTANT CHANGES
 
     - George  Williams   contributed  code  to   handle  Apple's  font
