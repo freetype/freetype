@@ -1,3 +1,10 @@
+2004-12-11  Robert Clark  <freetype@ratty.org.uk>
+
+	* src/base/ftobjs.c (FT_Get_Kerning): Make kerning amount
+	dependent on ppem by scaling down for ppem < 25, then do normal
+	rounding.  This gives slightly better results than rounding towards
+	zero.
+
 2004-12-09  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Get_Kerning): Always round towards zero

@@ -1436,7 +1436,7 @@
     error = face->goto_table( face, TTAG_EBDT, stream, 0 );
     if ( error )
       error = face->goto_table( face, TTAG_bdat, stream, 0 );
-    if (error)
+    if ( error )
       goto Exit;
 
     ebdt_pos = FT_STREAM_POS();
