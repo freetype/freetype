@@ -175,8 +175,8 @@
 #define  BASE_DEF(x)    static  x
 #define  BASE_FUNC(x)   static  x
 #else
-#define  BASE_DEF(x)    extern   x
-#define  BASE_FUNC(x)   extern   x /* nothing */
+#define  BASE_DEF(x)    extern  x
+#define  BASE_FUNC(x)   extern  x
 #endif
 
 #ifndef  EXPORT_DEF
@@ -184,7 +184,7 @@
 #endif
 
 #ifndef  EXPORT_FUNC
-#define  EXPORT_FUNC(x)     extern  x
+#define  EXPORT_FUNC(x)  extern  x
 #endif
 
 #ifndef  EXPORT_VAR

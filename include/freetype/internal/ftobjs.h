@@ -4,7 +4,7 @@
 /*                                                                         */
 /*  The FreeType private base classes (specification).                     */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -25,8 +25,7 @@
 #ifndef FTOBJS_H
 #define FTOBJS_H
 
-#include <freetype/config/ftconfig.h>
-#include <freetype/ftsystem.h>
+#include <freetype/internal/ftmemory.h>
 #include <freetype/internal/ftdriver.h>
 
   /*************************************************************************/
@@ -66,101 +65,6 @@
 #ifndef ABS
 #define ABS( a )     ( (a) < 0 ? -(a) : (a) )
 #endif
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Macro>                                                               */
-  /*    FT_SET_ERROR                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This macro is used to set an implicit `error' variable to a given  */
-  /*    expression's value (usually a function call), and convert it to a  */
-  /*    boolean which is set whenever the value is != 0.                   */
-  /*                                                                       */
-#undef  FT_SET_ERROR
-#define FT_SET_ERROR( expression ) \
-          ( (error = (expression)) != 0 )
-
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /****                           M E M O R Y                           ****/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-
-  BASE_DEF(FT_Error)  FT_Alloc( FT_Memory  memory,
-                                FT_Long    size,
-                                void**     P );
-
-  BASE_DEF(FT_Error)  FT_Realloc( FT_Memory  memory,
-                                  FT_Long    current,
-                                  FT_Long    size,
-                                  void**     P );
-
-  BASE_DEF(void)      FT_Free( FT_Memory  memory,
-                               void**     P );
-
-
-
-  /* This include is needed by the MEM_xxx() macros, it should be */
-  /* available on every platform we know !!                       */
-#include <string.h>
-
-#define MEM_Set( dest, byte, count )  memset( dest, byte, count )
-
-#ifdef HAVE_MEMCPY
-#define MEM_Copy( dest, source, count )  memcpy( dest, source, count )
-#else
-#define MEM_Copy( dest, source, count )  bcopy( source, dest, count )
-#endif
-
-#define MEM_Move( dest, source, count )  memmove( dest, source, count )
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* We now support closures to produce completely reentrant code.  This   */
-  /* means the allocation functions now takes an additional argument       */
-  /* (`memory').  It is a handle to a given memory object, responsible for */
-  /* all low-level operations, including memory management and             */
-  /* synchronisation.                                                      */
-  /*                                                                       */
-  /* In order to keep our code readable and use the same macros in the     */
-  /* font drivers and the rest of the library, MEM_Alloc(), ALLOC(), and   */
-  /* ALLOC_ARRAY() now use an implicit variable, `memory'.  It must be     */
-  /* defined at all locations where a memory operation is queried.         */
-  /*                                                                       */
-
-  /*                                                                       */
-  /* Note that ALL memory allocation functions need an IMPLICIT argument   */
-  /* called `memory' to point to the current memory object.                */
-  /*                                                                       */
-#define MEM_Alloc( _pointer_, _size_ ) \
-          FT_Alloc( memory, _size_, (void**)&(_pointer_) )
-
-#define MEM_Realloc( _pointer_, _current_, _size_ ) \
-          FT_Realloc( memory, _current_, _size_, (void**)&(_pointer_) )
-
-#define ALLOC( _pointer_, _size_ ) \
-          FT_SET_ERROR( MEM_Alloc( _pointer_, _size_ ) )
-
-#define REALLOC( _pointer_, _current_, _size_ ) \
-          FT_SET_ERROR( MEM_Realloc( _pointer_, _current_, _size_ ) )
-
-#define ALLOC_ARRAY( _pointer_, _count_, _type_ ) \
-          FT_SET_ERROR( MEM_Alloc( _pointer_, (_count_)*sizeof (_type_) ) )
-
-#define REALLOC_ARRAY( _pointer_, _current_, _count_, _type_ ) \
-          FT_SET_ERROR( MEM_Realloc( _pointer_, (_current_)*sizeof(_type_), \
-                         (_count_)*sizeof(_type_) ) )
-
-#define FREE( _pointer_ )  FT_Free( memory, (void**)&(_pointer_) )
 
 
 
