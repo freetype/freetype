@@ -540,10 +540,15 @@
     FT_Long      line_no   = table->line_no;
 
 
+    /* the following is valid according to ANSI C */
+#if 0
     if ( block == NULL || cur_size == 0 )
       ft_mem_debug_panic( "trying to reallocate NULL in (%s:%ld)",
-                           file_name, line_no );
+                          file_name, line_no );
+#endif
 
+    /* while the following is allowed in ANSI C also, we abort since */
+    /* such code shouldn't be in FreeType...                         */
     if ( new_size <= 0 )
       ft_mem_debug_panic(
         "trying to reallocate %p to size 0 (current is %ld) in (%s:%ld)",

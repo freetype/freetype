@@ -304,15 +304,7 @@
     {
       segment->pairCount = FT_GET_USHORT();
       if ( FT_NEW_ARRAY( segment->correspondence, segment->pairCount ) )
-      {
-        /* Failure.  Free everything we have done so far. */
-
-        for ( j = i - 1; j >= 0; --j )
-          FT_FREE( blend->avar_segment[j].correspondence );
-
-        FT_FREE( blend->avar_segment );
         goto Exit;
-      }
 
       for ( j = 0; j < segment->pairCount; ++j )
       {
@@ -408,7 +400,7 @@
 
     if ( gvar_head.flags & 1 )
     {
-      /* long offsets (one more offset than glyph, to mark size of last) */
+      /* long offsets (one more offset than glyphs, to mark size of last) */
       if ( FT_FRAME_ENTER( ( blend->gv_glyphcnt + 1 ) * 4L ) )
         goto Exit;
     
@@ -419,9 +411,10 @@
     }
     else
     {
-      /* short offsets (one more offset than glyph, to mark size of last) */
+      /* short offsets (one more offset than glyphs, to mark size of last) */
       if ( FT_FRAME_ENTER( ( blend->gv_glyphcnt + 1 ) * 2L ) )
         goto Exit;
+
       for ( i = 0; i <= blend->gv_glyphcnt; ++i )
         blend->glyphoffsets[i] = OffsetToData + FT_GET_USHORT() * 2;
                                               /* XXX: Undocumented: `*2'! */
@@ -435,10 +428,8 @@
                          gvar_head.axisCount * blend->tuplecount ) )
         goto Exit;
 
-      if ( FT_STREAM_SEEK( gvar_start + gvar_head.offsetToCoord ) ||
-           FT_FRAME_ENTER( blend->tuplecount
-                           * gvar_head.axisCount
-                           * sizeof ( short ) )                   )
+      if ( FT_STREAM_SEEK( gvar_start + gvar_head.offsetToCoord )       ||
+           FT_FRAME_ENTER( blend->tuplecount * gvar_head.axisCount * 2L )                   )
         goto Exit;
       
       for ( i = 0; i < blend->tuplecount; ++i )
@@ -469,11 +460,11 @@
   /*    tupleIndex      :: A flag saying whether this is an intermediate   */
   /*                       tuple or not.                                   */
   /*                                                                       */
-  /*    tuple_coords    :: The coordiates of the tuple in normalized axis  */
+  /*    tuple_coords    :: The coordinates of the tuple in normalized axis */
   /*                       units.                                          */
   /*                                                                       */
-  /*    im_start_coords :: The initial coordinatess where this tuple       */
-  /*                       starts to apply (for intermediate coordinates). */
+  /*    im_start_coords :: The initial coordinates where this tuple starts */
+  /*                       to apply (for intermediate coordinates).        */
   /*                                                                       */
   /*    im_end_coords   :: The final coordinates after which this tuple no */
   /*                       longer applies (for intermediate coordinates).  */
@@ -621,7 +612,7 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  GX_FVar_Head
 
-      FT_FRAME_START( 14 ),
+      FT_FRAME_START( 16 ),
         FT_FRAME_LONG  ( version ),
         FT_FRAME_USHORT( offsetToData ),
         FT_FRAME_USHORT( countSizePairs ),
@@ -745,7 +736,7 @@
       ns = mmvar->namedstyle;
       for ( i = 0; i < fvar_head.instanceCount; ++i )
       {
-        if ( FT_FRAME_ENTER( 4 + 4 * fvar_head.axisCount ) )
+        if ( FT_FRAME_ENTER( 4L + 4L * fvar_head.axisCount ) )
           goto Exit;
 
         ns->strid       =    FT_GET_USHORT();
@@ -1304,9 +1295,9 @@
     FT_ULong    OffsetToData;
     FT_ULong    here;
     FT_UInt     i, j;
-    FT_Fixed*   tuple_coords = NULL;
+    FT_Fixed*   tuple_coords    = NULL;
     FT_Fixed*   im_start_coords = NULL;
-    FT_Fixed*   im_end_coords = NULL;
+    FT_Fixed*   im_end_coords   = NULL;
     FT_UInt     point_count, spoint_count = 0;
     FT_UShort*  sharedpoints = NULL;
     FT_UShort*  localpoints;
@@ -1317,8 +1308,9 @@
     if ( !face->doblend || blend == NULL )
       return TT_Err_Invalid_Argument;
 
+    /* to be freed by the caller */
     if ( ( error = FT_NEW_ARRAY( delta_xy, n_points ) ) )
-      goto Fail;
+      goto Exit;
     *deltas = delta_xy;
 
     if ( glyph_index >= blend->gv_glyphcnt      ||
@@ -1329,7 +1321,7 @@
     if ( FT_STREAM_SEEK( blend->glyphoffsets[glyph_index] )   ||
          FT_FRAME_ENTER( blend->glyphoffsets[glyph_index + 1] -
                            blend->glyphoffsets[glyph_index] ) )
-      goto Fail;
+      goto Fail1;
 
     glyph_start = FT_Stream_FTell( stream );
 
@@ -1339,7 +1331,7 @@
     if ( FT_NEW_ARRAY( tuple_coords, blend->num_axis )    ||
          FT_NEW_ARRAY( im_start_coords, blend->num_axis ) ||
          FT_NEW_ARRAY( im_end_coords, blend->num_axis )   )
-      goto Exit;
+      goto Fail2;
 
     tupleCount   = FT_GET_USHORT();
     OffsetToData = glyph_start + FT_GET_USHORT();
@@ -1375,7 +1367,7 @@
       else if ( ( tupleIndex & GX_TI_TUPLE_INDEX_MASK ) >= blend->tuplecount )
       {
         error = TT_Err_Invalid_Table;
-        goto Fail;
+        goto Fail3;
       }
       else
       {
@@ -1428,7 +1420,7 @@
                                                            : point_count );
 
       if ( points == NULL || deltas_y == NULL || deltas_x == NULL )
-        /* failure, ignore it */;
+        ; /* failure, ignore it */
 
       else if ( points == ALL_POINTS )
       {
@@ -1459,17 +1451,22 @@
       FT_Stream_SeekSet( stream, here );
     }
 
+    FT_FRAME_EXIT();
     goto Exit;
 
-  Fail:
-    FT_FREE( delta_xy );
-    *deltas = NULL;
-
-  Exit:
+  Fail3:
     FT_FREE( tuple_coords );
     FT_FREE( im_start_coords );
     FT_FREE( im_end_coords );
 
+  Fail2:
+    FT_FRAME_EXIT();
+
+  Fail1:
+    FT_FREE( delta_xy );
+    *deltas = NULL;
+
+  Exit:
     return error;
   }
 

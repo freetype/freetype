@@ -135,8 +135,11 @@
 
 
   FT_LOCAL_DEF( void )
-  cff_size_done( CFF_Size  size )
+  cff_size_done( FT_Size  cffsize )        /* CFF_Size */
   {
+    CFF_Size  size = (CFF_Size)cffsize;
+
+
     if ( size->root.internal )
     {
       PSH_Globals_Funcs  funcs;
@@ -152,8 +155,9 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  cff_size_init( CFF_Size  size )
+  cff_size_init( FT_Size  cffsize )         /* CFF_Size */
   {
+    CFF_Size           size  = (CFF_Size)cffsize;
     FT_Error           error = CFF_Err_Ok;
     PSH_Globals_Funcs  funcs = cff_size_get_globals_funcs( size );
 
@@ -225,11 +229,17 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  cff_size_reset( CFF_Size  size )
+  cff_size_reset( FT_Size  cffsize,         /* CFF_Size */
+                  FT_UInt  char_width,
+                  FT_UInt  char_height )
   {
+    CFF_Size           size  = (CFF_Size)cffsize;
     PSH_Globals_Funcs  funcs = cff_size_get_globals_funcs( size );
     FT_Error           error = CFF_Err_Ok;
     FT_Face            face  = size->root.face;
+
+    FT_UNUSED( char_width );
+    FT_UNUSED( char_height );
 
 
     if ( funcs )
@@ -257,6 +267,22 @@
   }
 
 
+  FT_LOCAL_DEF( FT_Error )
+  cff_point_size_reset( FT_Size     cffsize,
+                        FT_F26Dot6  char_width,
+                        FT_F26Dot6  char_height,
+                        FT_UInt     horz_resolution,
+                        FT_UInt     vert_resolution )
+  {
+    FT_UNUSED( char_width );
+    FT_UNUSED( char_height );
+    FT_UNUSED( horz_resolution );
+    FT_UNUSED( vert_resolution );
+
+    return cff_size_reset( cffsize, 0, 0 );
+  }
+
+
   /*************************************************************************/
   /*                                                                       */
   /*                            SLOT  FUNCTIONS                            */
@@ -264,15 +290,18 @@
   /*************************************************************************/
 
   FT_LOCAL_DEF( void )
-  cff_slot_done( CFF_GlyphSlot  slot )
+  cff_slot_done( FT_GlyphSlot  cffslot )        /* CFF_GlyphSlot */
   {
+    CFF_GlyphSlot  slot = (CFF_GlyphSlot)cffslot;
+
     slot->root.internal->glyph_hints = 0;
   }
 
 
   FT_LOCAL_DEF( FT_Error )
-  cff_slot_init( CFF_GlyphSlot  slot )
+  cff_slot_init( FT_GlyphSlot  cffslot )        /* CFF_GlyphSlot */
   {
+    CFF_GlyphSlot     slot     = (CFF_GlyphSlot)cffslot;
     CFF_Face          face     = (CFF_Face)slot->root.face;
     CFF_Font          font     = (CFF_FontRec *)face->extra.data;
     PSHinter_Service  pshinter = (PSHinter_Service)font->pshinter;
@@ -328,11 +357,12 @@
 
   FT_LOCAL_DEF( FT_Error )
   cff_face_init( FT_Stream      stream,
-                 CFF_Face       face,
+                 FT_Face        cffface,        /* CFF_Face */
                  FT_Int         face_index,
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
+    CFF_Face            face = (CFF_Face)cffface;
     FT_Error            error;
     SFNT_Service        sfnt;
     FT_Service_PsCMaps  psnames;
@@ -708,8 +738,9 @@
 
 
   FT_LOCAL_DEF( void )
-  cff_face_done( CFF_Face  face )
+  cff_face_done( FT_Face  cffface )         /* CFF_Face */
   {
+    CFF_Face      face   = (CFF_Face)cffface;
     FT_Memory     memory = face->root.memory;
     SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
 
@@ -731,18 +762,18 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  cff_driver_init( CFF_Driver  driver )
+  cff_driver_init( FT_Module  module )
   {
-    FT_UNUSED( driver );
+    FT_UNUSED( module );
 
     return CFF_Err_Ok;
   }
 
 
   FT_LOCAL_DEF( void )
-  cff_driver_done( CFF_Driver  driver )
+  cff_driver_done( FT_Module  module )
   {
-    FT_UNUSED( driver );
+    FT_UNUSED( module );
   }
 
 
