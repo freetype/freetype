@@ -32,23 +32,23 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_String* )
-  CFF_Get_Name( CFF_Index  index,
+  CFF_Get_Name( CFF_Index  idx,
                 FT_UInt    element );
 
   FT_LOCAL( FT_String* )
-  CFF_Get_String( CFF_Index        index,
+  CFF_Get_String( CFF_Index        idx,
                   FT_UInt          sid,
                   PSNames_Service  interface );
 
 
   FT_LOCAL( FT_Error )
-  CFF_Access_Element( CFF_Index  index,
+  CFF_Access_Element( CFF_Index  idx,
                       FT_UInt    element,
                       FT_Byte**  pbytes,
                       FT_ULong*  pbyte_len );
 
   FT_LOCAL( void )
-  CFF_Forget_Element( CFF_Index  index,
+  CFF_Forget_Element( CFF_Index  idx,
                       FT_Byte**  pbytes );
 
 

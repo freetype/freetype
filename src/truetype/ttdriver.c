@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType font driver implementation (body).                          */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -365,9 +365,9 @@
   Get_Char_Index( TT_CharMap  charmap,
                   FT_Long     charcode )
   {
-    FT_Error       error;
-    TT_Face        face;
-    TT_CMapTable   cmap;
+    FT_Error      error;
+    TT_Face       face;
+    TT_CMapTable  cmap;
 
 
     cmap = &charmap->cmap;
@@ -412,9 +412,9 @@
   Get_Next_Char( TT_CharMap  charmap,
                  FT_Long     charcode )
   {
-    FT_Error       error;
-    TT_Face        face;
-    TT_CMapTable   cmap;
+    FT_Error      error;
+    TT_Face       face;
+    TT_CMapTable  cmap;
 
 
     cmap = &charmap->cmap;
@@ -457,8 +457,8 @@
   tt_get_interface( TT_Driver    driver,
                     const char*  interface )
   {
-    FT_Module        sfntd = FT_Get_Module( driver->root.root.library,
-                                            "sfnt" );
+    FT_Module     sfntd = FT_Get_Module( driver->root.root.library,
+                                         "sfnt" );
     SFNT_Service  sfnt;
 
 
@@ -506,23 +506,23 @@
     sizeof ( FT_GlyphSlotRec ),
 
 
-    (FT_Face_InitFunc)     TT_Face_Init,
-    (FT_Face_DoneFunc)     TT_Face_Done,
-    (FT_Size_InitFunc)     TT_Size_Init,
-    (FT_Size_DoneFunc)     TT_Size_Done,
-    (FT_Slot_InitFunc)0,
-    (FT_Slot_DoneFunc)0,
+    (FT_Face_InitFunc)        TT_Face_Init,
+    (FT_Face_DoneFunc)        TT_Face_Done,
+    (FT_Size_InitFunc)        TT_Size_Init,
+    (FT_Size_DoneFunc)        TT_Size_Done,
+    (FT_Slot_InitFunc)        0,
+    (FT_Slot_DoneFunc)        0,
 
     (FT_Size_ResetPointsFunc) Set_Char_Sizes,
-    (FT_Size_ResetPixelsFunc)Set_Pixel_Sizes,
-    (FT_Slot_LoadFunc)    Load_Glyph,
-    (FT_CharMap_CharIndexFunc) Get_Char_Index,
+    (FT_Size_ResetPixelsFunc) Set_Pixel_Sizes,
+    (FT_Slot_LoadFunc)        Load_Glyph,
+    (FT_CharMap_CharIndexFunc)Get_Char_Index,
 
-    (FT_Face_GetKerningFunc)   Get_Kerning,
-    (FT_Face_AttachFunc)   0,
-    (FT_Face_GetAdvancesFunc)  0,
+    (FT_Face_GetKerningFunc)  Get_Kerning,
+    (FT_Face_AttachFunc)      0,
+    (FT_Face_GetAdvancesFunc) 0,
     
-    (FT_CharMap_CharNextFunc)  Get_Next_Char
+    (FT_CharMap_CharNextFunc) Get_Next_Char
   };
 
 

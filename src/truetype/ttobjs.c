@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Objects manager (body).                                              */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -66,7 +66,7 @@
   /*    zone :: A pointer to the target glyph zone.                        */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  TT_Done_GlyphZone( TT_GlyphZone   zone )
+  TT_Done_GlyphZone( TT_GlyphZone  zone )
   {
     FT_Memory  memory = zone->memory;
 
@@ -103,10 +103,10 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_New_GlyphZone( FT_Memory      memory,
-                    FT_UShort      maxPoints,
-                    FT_Short       maxContours,
-                    TT_GlyphZone   zone )
+  TT_New_GlyphZone( FT_Memory     memory,
+                    FT_UShort     maxPoints,
+                    FT_Short      maxContours,
+                    TT_GlyphZone  zone )
   {
     FT_Error  error;
 
@@ -160,8 +160,8 @@
                 FT_Int         num_params,
                 FT_Parameter*  params )
   {
-    FT_Error         error;
-    FT_Library       library;
+    FT_Error      error;
+    FT_Library    library;
     SFNT_Service  sfnt;
 
 
@@ -227,10 +227,10 @@
   FT_LOCAL_DEF( void )
   TT_Face_Done( TT_Face  face )
   {
-    FT_Memory  memory = face->root.memory;
-    FT_Stream  stream = face->root.stream;
+    FT_Memory     memory = face->root.memory;
+    FT_Stream     stream = face->root.stream;
 
-    SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
+    SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
 
 
     /* for `extended TrueType formats' (i.e. compressed versions) */
@@ -326,10 +326,10 @@
     }
 
     /* allocate function defs, instruction defs, cvt, and storage area */
-    if ( FT_NEW_ARRAY( size->function_defs, size->max_function_defs )       ||
+    if ( FT_NEW_ARRAY( size->function_defs,    size->max_function_defs    ) ||
          FT_NEW_ARRAY( size->instruction_defs, size->max_instruction_defs ) ||
-         FT_NEW_ARRAY( size->cvt, size->cvt_size )                          ||
-         FT_NEW_ARRAY( size->storage, size->storage_size )                  )
+         FT_NEW_ARRAY( size->cvt,              size->cvt_size             ) ||
+         FT_NEW_ARRAY( size->storage,          size->storage_size         ) )
 
       goto Fail_Memory;
 
@@ -513,8 +513,8 @@
   static FT_Error
   Reset_Outline_Size( TT_Size  size )
   {
-    TT_Face   face;
-    FT_Error  error = TT_Err_Ok;
+    TT_Face           face;
+    FT_Error          error = TT_Err_Ok;
 
     FT_Size_Metrics*  metrics;
 
@@ -561,7 +561,7 @@
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     /* set to `invalid' by default */
-    size->strike_index = 0xFFFF;
+    size->strike_index = 0xFFFFU;
 #endif
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
@@ -670,12 +670,12 @@
     FT_ULong          strike_index;
     FT_Size_Metrics*  metrics;
     FT_Size_Metrics*  sbit_metrics;
-    SFNT_Service   sfnt;
+    SFNT_Service      sfnt;
 
 
     metrics = &size->root.metrics;
 
-    if ( size->strike_index != 0xFFFF )
+    if ( size->strike_index != 0xFFFFU )
       return TT_Err_Ok;
 
     face = (TT_Face)size->root.face;
@@ -689,7 +689,7 @@
 
     if ( !error )
     {
-      TT_SBit_Strike   strike = face->sbit_strikes + strike_index;
+      TT_SBit_Strike  strike = face->sbit_strikes + strike_index;
 
 
       sbit_metrics->x_ppem      = metrics->x_ppem;
@@ -719,7 +719,7 @@
     }
     else
     {
-      size->strike_index = 0xFFFF;
+      size->strike_index = 0xFFFFU;
 
       sbit_metrics->x_ppem      = 0;
       sbit_metrics->y_ppem      = 0;
@@ -769,7 +769,7 @@
 
     if ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
     {
-      if ( size->strike_index == 0xFFFF )
+      if ( size->strike_index == 0xFFFFU )
         error = Reset_SBit_Size( size );
 
       if ( !error && !( face->face_flags & FT_FACE_FLAG_SCALABLE ) )

@@ -326,7 +326,7 @@ FT_BEGIN_HEADER
   /*    Gets the PostScript glyph name of a glyph.                         */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    index  :: The glyph index.                                         */
+  /*    idx  :: The glyph index.                                           */
   /*                                                                       */
   /*    PSname :: The address of a string pointer.  Will be NULL in case   */
   /*              of error, otherwise it is a pointer to the glyph name.   */
@@ -338,7 +338,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef FT_Error
   (*TT_Get_PS_Name_Func)( TT_Face      face,
-                          FT_UInt      index,
+                          FT_UInt      idx,
                           FT_String**  PSname );
 
 
