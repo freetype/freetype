@@ -269,7 +269,8 @@
   }
 
 
-  static const PSNames_Interface  psnames_interface =
+  static
+  const PSNames_Interface  psnames_interface =
   {
 #ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
 

@@ -30,7 +30,7 @@
 
 #else
 
-#include <type1z/z1parse.h>
+#include <type1/z1parse.h>
 
 #endif
 

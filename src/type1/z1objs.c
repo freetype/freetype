@@ -28,9 +28,9 @@
 
 #else
 
-#include <type1z/z1gload.h>
-#include <type1z/z1load.h>
-#include <type1z/z1afm.h>
+#include <type1/z1gload.h>
+#include <type1/z1load.h>
+#include <type1/z1afm.h>
 
 #endif
 

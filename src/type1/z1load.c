@@ -75,7 +75,7 @@
 
 #else
 
-#include <type1z/z1load.h>
+#include <type1/z1load.h>
 
 #endif
 
@@ -1388,7 +1388,7 @@
 
 #else
 
-#include <type1z/z1tokens.h>
+#include <type1/z1tokens.h>
 
 #endif
 
