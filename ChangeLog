@@ -1,3 +1,8 @@
+2004-02-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Set_Char_Size): Return immediately if
+	ppem values don't change.  Suggested by Graham Asher.
+
 2004-02-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidload.c (cid_face_open): Always allocate

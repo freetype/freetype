@@ -2042,8 +2042,17 @@
     dim_x = ( char_width  * horz_resolution + 36 ) / 72;
     dim_y = ( char_height * vert_resolution + 36 ) / 72;
 
-    metrics->x_ppem  = (FT_UShort)( ( dim_x + 32 ) >> 6 );
-    metrics->y_ppem  = (FT_UShort)( ( dim_y + 32 ) >> 6 );
+    {
+      FT_UShort  x_ppem = (FT_UShort)( ( dim_x + 32 ) >> 6 );
+      FT_UShort  y_ppem = (FT_UShort)( ( dim_y + 32 ) >> 6 );
+
+
+      if ( x_ppem == metrics->x_ppem && y_ppem == metrics->y_ppem )
+        return
+
+      metrics->x_ppem = x_ppem;
+      metrics->y_ppem = y_ppem;
+    }
 
     metrics->x_scale = 0x10000L;
     metrics->y_scale = 0x10000L;
