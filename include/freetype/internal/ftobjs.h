@@ -338,9 +338,43 @@
   FT_EXPORT( FT_Error )  FT_Done_Size( FT_Size  size );
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_GlyphSlot                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    It is sometimes useful to have more than one glyph slot for a      */
+  /*    given face object.  This function is used to create additional     */
+  /*    slots.  All of them are automatically discarded when the face is   */
+  /*    destroyed.                                                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face  :: A handle to a parent face object.                         */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    aslot :: A handle to a new glyph slot object.                      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   FT_BASE( FT_Error )    FT_New_GlyphSlot( FT_Face        face,
-                                           FT_GlyphSlot*  aslot );
+                                           FT_GlyphSlot  *aslot );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Done_GlyphSlot                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Destroys a given glyph slot.  Remember however that all slots are  */
+  /*    automatically destroyed with its parent.  Using this function is   */
+  /*    not always mandatory.                                              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    slot :: A handle to a target glyph slot.                           */
+  /*                                                                       */
   FT_BASE( void )  FT_Done_GlyphSlot( FT_GlyphSlot  slot );
 
 
@@ -409,10 +443,10 @@
 
 
   FT_BASE( FT_Error )  FT_GlyphLoader_New( FT_Memory         memory,
-                                           FT_GlyphLoader**  aloader );
+                                           FT_GlyphLoader*  *aloader );
 
   FT_BASE( FT_Error )  FT_GlyphLoader_Create_Extra(
-                                   FT_GlyphLoader*  loader );
+                         FT_GlyphLoader*  loader );
 
   FT_BASE( void )      FT_GlyphLoader_Done( FT_GlyphLoader*  loader );
 

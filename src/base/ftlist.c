@@ -38,21 +38,8 @@
 #define FT_COMPONENT  trace_list
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_List_Find                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Finds the list node for a given listed object.                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    list :: A pointer to the parent list.                              */
-  /*    data :: The address of the listed object.                          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    List node.  NULL if it wasn't found.                               */
-  /*                                                                       */
+  /* documentation is in ftlist.h */
+
   FT_BASE_DEF( FT_ListNode )  FT_List_Find( FT_List  list,
                                             void*    data )
   {
@@ -72,18 +59,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_List_Add                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Appends an element to the end of a list.                           */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    list :: A pointer to the parent list.                              */
-  /*    node :: The node to append.                                        */
-  /*                                                                       */
+  /* documentation is in ftlist.h */
+
   FT_BASE_DEF( void )  FT_List_Add( FT_List      list,
                                     FT_ListNode  node )
   {
@@ -102,18 +79,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_List_Insert                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Inserts an element at the head of a list.                          */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    list :: A pointer to parent list.                                  */
-  /*    node :: The node to insert.                                        */
-  /*                                                                       */
+  /* documentation is in ftlist.h */
+
   FT_BASE_DEF( void )  FT_List_Insert( FT_List      list,
                                        FT_ListNode  node )
   {
@@ -132,21 +99,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_List_Remove                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Removes a node from a list.  This function doesn't check whether   */
-  /*    the node is in the list!                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    node :: The node to remove.                                        */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    list :: A pointer to the parent list.                              */
-  /*                                                                       */
+  /* documentation is in ftlist.h */
+
   FT_BASE_DEF( void )  FT_List_Remove( FT_List      list,
                                        FT_ListNode  node )
   {
@@ -168,19 +122,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_List_Up                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Moves a node to the head/top of a list.  Used to maintain LRU      */
-  /*    lists.                                                             */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    list :: A pointer to the parent list.                              */
-  /*    node :: The node to move.                                          */
-  /*                                                                       */
+  /* documentation is in ftlist.h */
+
   FT_BASE_DEF( void )  FT_List_Up( FT_List      list,
                                    FT_ListNode  node )
   {
@@ -208,26 +151,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_List_Iterate                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Parses a list and calls a given iterator function on each element. */
-  /*    Note that parsing is stopped as soon as one of the iterator calls  */
-  /*    returns a non-zero value.                                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    list     :: A handle to the list.                                  */
-  /*    iterator :: An interator function, called on each node of the      */
-  /*                list.                                                  */
-  /*    user     :: A user-supplied field which is passed as the second    */
-  /*                argument to the iterator.                              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    The result (a FreeType error code) of the last iterator call.      */
-  /*                                                                       */
+  /* documentation is in ftlist.h */
+
   FT_BASE_DEF( FT_Error )  FT_List_Iterate( FT_List            list,
                                             FT_List_Iterator   iterator,
                                             void*              user )
@@ -252,25 +177,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_List_Finalize                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Destroys all elements in the list as well as the list itself.      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    list    :: A handle to the list.                                   */
-  /*                                                                       */
-  /*    destroy :: A list destructor that will be applied to each element  */
-  /*               of the list.                                            */
-  /*                                                                       */
-  /*    memory  :: The current memory object which handles deallocation.   */
-  /*                                                                       */
-  /*    user    :: A user-supplied field which is passed as the last       */
-  /*               argument to the destructor.                             */
-  /*                                                                       */
+  /* documentation is in ftlist.h */
+
   FT_BASE_DEF( void )  FT_List_Finalize( FT_List             list,
                                          FT_List_Destructor  destroy,
                                          FT_Memory           memory,
