@@ -42,7 +42,15 @@
   /* load and enumerate the glyph Postscript names in a TrueType or        */
   /* OpenType file.                                                        */
   /*                                                                       */
+  /* Note that if FT_CONFIG_OPTION_POSTSCRIPT_NAMES is also defined,       */
+  /* the TrueType driver will use the "psnames" module to fetch the        */
+  /* glyph names.                                                          */
+  /*                                                                       */
+  /* Otherwise, the driver will provide its own set of glyph names to      */
+  /* be built without the "psnames" module.                                */
+  /*                                                                       */
 #define TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+
 
 
 #endif /* SFCONFIG_H */
