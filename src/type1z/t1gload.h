@@ -163,7 +163,7 @@
 
 
   /* This function is exported, because it is used by the T1Dump utility */
-  EXPORT_DEF
+  LOCAL_DEF
   T1_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
                                    T1_Byte*     charstring_base,
                                    T1_Int       charstring_len,
@@ -171,57 +171,6 @@
                                    T1_Byte**    subrs_base,
                                    T1_Int*      subrs_len );
 
-
-
-/*************************************************************************/
-/*                                                                       */
-/* <Function> T1_Add_Points                                              */
-/*                                                                       */
-/* <Description>                                                         */
-/*    Checks that there is enough room in the current load glyph outline */
-/*    to accept "num_points" additional outline points. If not, this     */
-/*    function grows the load outline's arrays accordingly..             */
-/*                                                                       */
-/* <Input>                                                               */
-/*    builder    :: pointer to glyph builder object                      */
-/*    num_points :: number of points that will be added later            */
-/*                                                                       */
-/* <Return>                                                              */
-/*    Type1 error code. 0 means success                                  */
-/*                                                                       */
-/* <Note>                                                                */
-/*    This function does NOT update the points count in the glyph loader */
-/*    This must be done by the caller itself, after this function is     */
-/*    invoked..                                                          */
-/*                                                                       */
-  LOCAL_DEF
-  T1_Error  T1_Add_Points( T1_Builder*  builder,
-                           T1_Int       num_points );
-
-/*************************************************************************/
-/*                                                                       */
-/* <Function> T1_Add_Contours                                            */
-/*                                                                       */
-/* <Description>                                                         */
-/*    Checks that there is enough room in the current load glyph outline */
-/*    to accept "num_contours" additional contours. If not, this func    */
-/*    the load outline's arrays accordingly..                            */
-/*                                                                       */
-/* <Input>                                                               */
-/*    builder      :: pointer to glyph builder object                    */
-/*    num_contours :: number of contours that will be added later        */
-/*                                                                       */
-/* <Return>                                                              */
-/*    Type1 error code. 0 means success                                  */
-/*                                                                       */
-/* <Note>                                                                */
-/*    This function does NOT update the contours count in the load glyph */
-/*    This must be done by the caller itself, after this function is     */
-/*    invoked..                                                          */
-/*                                                                       */
-  LOCAL_DEF
-  T1_Error  T1_Add_Contours( T1_Builder*  builder,
-                             T1_Int       num_contours );
 
 
   LOCAL_DEF

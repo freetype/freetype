@@ -546,7 +546,7 @@
 
 #define USE_ARGS(n)  top -= n; if (top < decoder->stack) goto Stack_Underflow
 
-  EXPORT_FUNC
+  LOCAL_FUNC
   T1_Error   T1_Parse_CharStrings( T1_Decoder*  decoder,
                                    T1_Byte*     charstring_base,
                                    T1_Int       charstring_len,

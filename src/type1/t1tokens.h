@@ -303,7 +303,7 @@
  T1_Error  Read_Token( T1_Tokenizer  tokenizer );
 
 
-
+#if 0
  /*************************************************************************/
  /*                                                                       */
  /*  <Function> Read_CharStrings                                          */
@@ -330,7 +330,7 @@
  T1_Error  Read_CharStrings( T1_Tokenizer  tokenizer,
                              T1_Int        num_chars,
                              T1_Byte*      buffer );
-
+#endif
 
  /*************************************************************************/
  /*                                                                       */

@@ -946,6 +946,7 @@
  }
 
 
+#if 0
  /*************************************************************************/
  /*                                                                       */
  /*  <Function> Read_CharStrings                                          */
@@ -991,4 +992,4 @@
      if ( grow(tokenizer) ) return tokenizer->error;
    }
  }
-
+#endif

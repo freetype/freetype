@@ -177,10 +177,10 @@
   LOCAL_DEF
   T1_Bool   T1_ToBool( T1_Parser* parser );
 
-
+#if 0
   LOCAL_DEF
   T1_Int  T1_ToImmediate( T1_Parser*  parser );
-
+#endif
 
   LOCAL_DEF
   T1_Error  T1_New_Parser( T1_Parser*  parser,
