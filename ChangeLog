@@ -1,8 +1,12 @@
+2002-06-17  Sven Neumann  <sven@gimp.org>
+
+	* src/pfr/pfrobjs.c (pfr_face_init): Fix typo.
+
 2002-06-16  Leonard Rosenthol  <leonardr@lazerware.com>
 
 	Updated Win32/VC++ projects to include the new PFR driver
 
-	* builds\win32\visualc\freetype.dsp
+	* builds\win32\visualc\freetype.dsp: Updated.
 
 2002-06-16  Anthony Fok  <fok@debian.org>
 
