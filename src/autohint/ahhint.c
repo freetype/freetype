@@ -40,10 +40,6 @@
   /*************************************************************************/
 
 
-  static int  disable_horz_edges = 0;
-  static int  disable_vert_edges = 0;
-
-
   /* snap a given width in scaled coordinates to one of the */
   /* current standard widths                                */
   static
@@ -214,10 +210,10 @@
       int       has_serifs = 0;
 
 
-      if ( disable_vert_edges && !dimension )
+      if ( hinter->disable_vert_edges && !dimension )
         goto Next_Dimension;
 
-      if ( disable_horz_edges && dimension )
+      if ( hinter->disable_horz_edges && dimension )
         goto Next_Dimension;
 
       /* we begin by aligning all stems relative to the blue zone */
@@ -381,11 +377,11 @@
 
   FT_LOCAL_DEF
   void  ah_hinter_hint_edges( AH_Hinter*  hinter,
-                              int         no_horz_edges,
-                              int         no_vert_edges )
+                              FT_Bool     no_horz_edges,
+                              FT_Bool     no_vert_edges )
   {
-    disable_horz_edges = no_horz_edges;
-    disable_vert_edges = no_vert_edges;
+    hinter->disable_horz_edges = no_horz_edges;
+    hinter->disable_vert_edges = no_vert_edges;
 
     /* AH_Interpolate_Blue_Edges( hinter ); -- doesn't seem to help      */
     /* reduce the problem of the disappearing eye in the `e' of Times... */

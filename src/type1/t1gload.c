@@ -297,8 +297,8 @@
         metrics->horiBearingY = cbox.yMax;
       }
       
-      /* set control data to the glyph charstrings. Note that this is */
-      /* _not_ 0 terminated..                                         */
+      /* Set control data to the glyph charstrings.  Note that this is */
+      /* _not_ zero-terminated.                                        */
       glyph->root.control_data = type1->charstrings    [glyph_index];
       glyph->root.control_len  = type1->charstrings_len[glyph_index];
     }

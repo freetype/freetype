@@ -30,32 +30,51 @@
 FT_BEGIN_HEADER
 
 
-  /*************************************************************************
-   *
-   * <Section>
-   *    basic_types
-   *
-   * <Title>
-   *    Basic Types
-   *
-   * <Abstract>
-   *    The basic data types defined by the library.
-   *
-   * <Description>
-   *    This section contains the basic data types defined by FreeType 2,
-   *    ranging from simple scalar types to font specific ones
-   *
-   * <Order>
-   *    FT_Byte FT_Char FT_Int FT_UInt FT_Short FT_UShort FT_Long FT_ULong
-   *    FT_Bool FT_Error FT_Fixed FT_Pointer FT_Pos FT_Vector FT_BBox
-   *    FT_Matrix 
-   *
-   *    FT_Generic FT_Generic_Finalizer 
-   *
-   *    FT_Bitmap FT_Pixel_Mode FT_Palette_Mode FT_Glyph_Format FT_IMAGE_TAG
-   *    FT_Glyph_Format
-   *
-   */
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    basic_types                                                        */
+  /*                                                                       */
+  /* <Title>                                                               */
+  /*    Basic Types                                                        */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    The basic data types defined by the library.                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This section contains the basic data types defined by FreeType 2,  */
+  /*    ranging from simple scalar types to font specific ones.            */
+  /*                                                                       */
+  /* <Order>                                                               */
+  /*    FT_Byte                                                            */
+  /*    FT_Char                                                            */
+  /*    FT_Int                                                             */
+  /*    FT_UInt                                                            */
+  /*    FT_Short                                                           */
+  /*    FT_UShort                                                          */
+  /*    FT_Long                                                            */
+  /*    FT_ULong                                                           */
+  /*    FT_Bool                                                            */
+  /*    FT_Error                                                           */
+  /*    FT_Fixed                                                           */
+  /*    FT_Pointer                                                         */
+  /*    FT_Pos                                                             */
+  /*    FT_Vector                                                          */
+  /*    FT_BBox                                                            */
+  /*    FT_Matrix                                                          */
+  /*                                                                       */
+  /*    FT_Generic                                                         */
+  /*    FT_Generic_Finalizer                                               */
+  /*                                                                       */
+  /*    FT_Bitmap                                                          */
+  /*    FT_Pixel_Mode                                                      */
+  /*    FT_Palette_Mode                                                    */
+  /*    FT_Glyph_Format                                                    */
+  /*    FT_IMAGE_TAG                                                       */
+  /*    FT_Glyph_Format                                                    */
+  /*                                                                       */
+  /*************************************************************************/
+
    
   /*************************************************************************/
   /*                                                                       */

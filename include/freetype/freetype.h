@@ -55,71 +55,102 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /*************************************************************************
-   *
-   * <Section>
-   *    base_interface
-   *
-   * <Title>
-   *    Base Interface
-   *
-   * <Abstract>
-   *    The FreeType 2 base font interface
-   *
-   * <Description>
-   *    This section describes the public high-level API of FreeType 2
-   *
-   * <Order>
-   *    FT_Library  FT_Face  FT_Size  FT_GlyphSlot  FT_CharMap FT_Encoding
-   *
-   *    FT_FaceRec
-   *
-   *    FT_FACE_FLAG_SCALABLE
-   *    FT_FACE_FLAG_FIXED_SIZES
-   *    FT_FACE_FLAG_FIXED_WIDTH
-   *    FT_FACE_FLAG_HORIZONTAL
-   *    FT_FACE_FLAG_VERTICAL
-   *    FT_FACE_FLAG_SFNT
-   *    FT_FACE_FLAG_KERNING
-   *    FT_FACE_FLAG_MULTIPLE_MASTERS
-   *    FT_FACE_FLAG_GLYPH_NAMES
-   *    FT_FACE_FLAG_EXTERNAL_STREAM
-   *    FT_FACE_FLAG_FAST_GLYPHS
-   *
-   *    FT_STYLE_FLAG_BOLD
-   *    FT_STYLE_FLAG_ITALIC
-   *
-   *    FT_SizeRec FT_Size_Metrics
-   *
-   *    FT_GlyphSlotRec FT_Glyph_Metrics FT_SubGlyph
-   *
-   *    FT_Bitmap_Size
-   *
-   *    FT_Init_FreeType FT_Done_FreeType
-   *
-   *    FT_New_Face FT_Done_Face FT_New_Memory_Face
-   *    FT_Open_Face FT_Open_Args FT_Open_Flags FT_Parameter
-   *    FT_Attach_File FT_Attach_Stream
-   *    
-   *    FT_Set_Char_Size FT_Set_Pixel_Sizes FT_Set_Transform
-   *    FT_Load_Glyph FT_Get_Char_Index FT_Load_Char
-   *
-   *    FT_LOAD_DEFAULT        FT_LOAD_RENDER          FT_LOAD_MONOCHROME 
-   *    FT_LOAD_LINEAR_DESIGN  FT_LOAD_NO_SCALE        FT_LOAD_NO_HINTING
-   *    FT_LOAD_NO_BITMAP      FT_LOAD_CROP_BITMAP
-   *
-   *    FT_LOAD_VERTICAL_LAYOUT  FT_LOAD_IGNORE_TRANSFORM
-   *    FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH  FT_LOAD_FORCE_AUTOHINT
-   *    FT_LOAD_NO_RECURSE FT_LOAD_PEDANTIC
-   *
-   *    FT_Render_Glyph FT_Render_Mode
-   *    FT_Get_Kerning  FT_Kerning_Mode FT_Get_Glyph_Name
-   *
-   *    FT_CharMapRec FT_Select_Charmap FT_Set_Charmap    
-   *
-   */
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    base_interface                                                     */
+  /*                                                                       */
+  /* <Title>                                                               */
+  /*    Base Interface                                                     */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    The FreeType 2 base font interface.                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This section describes the public high-level API of FreeType 2.    */
+  /*                                                                       */
+  /* <Order>                                                               */
+  /*    FT_Library                                                         */
+  /*    FT_Face                                                            */
+  /*    FT_Size                                                            */
+  /*    FT_GlyphSlot                                                       */
+  /*    FT_CharMap                                                         */
+  /*    FT_Encoding                                                        */
+  /*                                                                       */
+  /*    FT_FaceRec                                                         */
+  /*                                                                       */
+  /*    FT_FACE_FLAG_SCALABLE                                              */
+  /*    FT_FACE_FLAG_FIXED_SIZES                                           */
+  /*    FT_FACE_FLAG_FIXED_WIDTH                                           */
+  /*    FT_FACE_FLAG_HORIZONTAL                                            */
+  /*    FT_FACE_FLAG_VERTICAL                                              */
+  /*    FT_FACE_FLAG_SFNT                                                  */
+  /*    FT_FACE_FLAG_KERNING                                               */
+  /*    FT_FACE_FLAG_MULTIPLE_MASTERS                                      */
+  /*    FT_FACE_FLAG_GLYPH_NAMES                                           */
+  /*    FT_FACE_FLAG_EXTERNAL_STREAM                                       */
+  /*    FT_FACE_FLAG_FAST_GLYPHS                                           */
+  /*                                                                       */
+  /*    FT_STYLE_FLAG_BOLD                                                 */
+  /*    FT_STYLE_FLAG_ITALIC                                               */
+  /*                                                                       */
+  /*    FT_SizeRec                                                         */
+  /*    FT_Size_Metrics                                                    */
+  /*                                                                       */
+  /*    FT_GlyphSlotRec                                                    */
+  /*    FT_Glyph_Metrics                                                   */
+  /*    FT_SubGlyph                                                        */
+  /*                                                                       */
+  /*    FT_Bitmap_Size                                                     */
+  /*                                                                       */
+  /*    FT_Init_FreeType                                                   */
+  /*    FT_Done_FreeType                                                   */
+  /*                                                                       */
+  /*    FT_New_Face                                                        */
+  /*    FT_Done_Face                                                       */
+  /*    FT_New_Memory_Face                                                 */
+  /*    FT_Open_Face                                                       */
+  /*    FT_Open_Args                                                       */
+  /*    FT_Open_Flags                                                      */
+  /*    FT_Parameter                                                       */
+  /*    FT_Attach_File                                                     */
+  /*    FT_Attach_Stream                                                   */
+  /*                                                                       */
+  /*    FT_Set_Char_Size                                                   */
+  /*    FT_Set_Pixel_Sizes                                                 */
+  /*    FT_Set_Transform                                                   */
+  /*    FT_Load_Glyph                                                      */
+  /*    FT_Get_Char_Index                                                  */
+  /*    FT_Load_Char                                                       */
+  /*                                                                       */
+  /*    FT_LOAD_DEFAULT                                                    */
+  /*    FT_LOAD_RENDER                                                     */
+  /*    FT_LOAD_MONOCHROME                                                 */
+  /*    FT_LOAD_LINEAR_DESIGN                                              */
+  /*    FT_LOAD_NO_SCALE                                                   */
+  /*    FT_LOAD_NO_HINTING                                                 */
+  /*    FT_LOAD_NO_BITMAP                                                  */
+  /*    FT_LOAD_CROP_BITMAP                                                */
+  /*                                                                       */
+  /*    FT_LOAD_VERTICAL_LAYOUT                                            */
+  /*    FT_LOAD_IGNORE_TRANSFORM                                           */
+  /*    FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH                                */
+  /*    FT_LOAD_FORCE_AUTOHINT                                             */
+  /*    FT_LOAD_NO_RECURSE                                                 */
+  /*    FT_LOAD_PEDANTIC                                                   */
+  /*                                                                       */
+  /*    FT_Render_Glyph                                                    */
+  /*    FT_Render_Mode                                                     */
+  /*    FT_Get_Kerning                                                     */
+  /*    FT_Kerning_Mode                                                    */
+  /*    FT_Get_Glyph_Name                                                  */
+  /*                                                                       */
+  /*    FT_CharMapRec                                                      */
+  /*    FT_Select_Charmap                                                  */
+  /*    FT_Set_Charmap                                                     */ 
+  /*                                                                       */
+  /*************************************************************************/
    
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -2193,10 +2224,15 @@ FT_BEGIN_HEADER
   /*    computations on 16.16 fixed-float numbers or 2d vectors.           */
   /*                                                                       */
   /* <Order>                                                               */
-  /*    FT_MulDiv FT_MulFix FT_DivFix FT_Vector_Transform                  */
-  /*    FT_Matrix_Multiply FT_Matrix_Invert                                */
+  /*    FT_MulDiv                                                          */
+  /*    FT_MulFix                                                          */
+  /*    FT_DivFix                                                          */
+  /*    FT_Vector_Transform                                                */
+  /*    FT_Matrix_Multiply                                                 */
+  /*    FT_Matrix_Invert                                                   */
   /*                                                                       */
   /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */

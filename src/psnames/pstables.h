@@ -19,7 +19,7 @@
   /* this file has been generated automatically -- do not edit! */
 
 
-  static const char*  standard_glyph_names[] =
+  static const char* const  standard_glyph_names[] =
   {
     ".null",
     "CR",
@@ -1094,7 +1094,8 @@
   };
 
 
-  static const char**  t1_standard_glyphs = standard_glyph_names + 31;
+  static const char* const * const  t1_standard_glyphs =
+    standard_glyph_names + 31;
 
 
 #define NUM_STD_GLYPHS 391

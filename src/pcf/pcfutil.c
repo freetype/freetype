@@ -32,7 +32,7 @@ in this Software without prior written authorization from The Open Group.
 
   /* Utility functions for reformatting font bitmaps */
 
-  static unsigned char _reverse_byte[0x100] =
+  static const unsigned char  _reverse_byte[0x100] =
   {
     0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
     0x10, 0x90, 0x50, 0xd0, 0x30, 0xb0, 0x70, 0xf0,
@@ -75,7 +75,7 @@ in this Software without prior written authorization from The Open Group.
   void  BitOrderInvert( unsigned char*  buf,
                         int             nbytes )
   {
-    unsigned char*  rev = _reverse_byte;
+    const unsigned char*  rev = _reverse_byte;
 
 
     for ( ; --nbytes >= 0; buf++ )
