@@ -2227,6 +2227,9 @@ FT_BEGIN_HEADER
   /*    FT_MulDiv                                                          */
   /*    FT_MulFix                                                          */
   /*    FT_DivFix                                                          */
+  /*    FT_RoundFix                                                        */
+  /*    FT_CeilFix                                                         */
+  /*    FT_FloorFix                                                        */  
   /*    FT_Vector_Transform                                                */
   /*    FT_Matrix_Multiply                                                 */
   /*    FT_Matrix_Invert                                                   */
@@ -2320,6 +2323,71 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Long )  FT_DivFix( FT_Long  a,
                                    FT_Long  b );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_RoundFix                                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A very simple function used to round a 16.16 fixed number          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    a :: The number to be rounded.                                     */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The result of `(a + 0x8000) & -0x10000'.                           */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function assumes that the target platform supports 32 bit     */
+  /*    signed integers.                                                   */
+  /*                                                                       */
+  FT_EXPORT( FT_Fixed ) FT_RoundFix( FT_Fixed a );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_CeilFix                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A very simple function used to compute the ceiling function of a   */
+  /*    16.16 fixed number                                                 */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    a :: The number for which the ceiling function is to be computed.  */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The result of `(a + 0x10000 - 1) & -0x10000'.                      */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function assumes that the target platform supports 32 bit     */
+  /*    signed integers.                                                   */
+  /*                                                                       */
+  FT_EXPORT( FT_Fixed ) FT_CeilFix( FT_Fixed a );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_FloorFix                                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A very simple function used to compute the floor function of a     */
+  /*    16.16 fixed number                                                 */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    a :: The number for which the floor function is to be computed.    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The result of `a & -0x10000'.                                      */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function assumes that the target platform supports 32 bit     */
+  /*    signed integers.                                                   */
+  /*                                                                       */
+  FT_EXPORT( FT_Fixed ) FT_FloorFix( FT_Fixed a );
 
 
   /*************************************************************************/
