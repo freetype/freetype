@@ -1,3 +1,11 @@
+2004-11-20  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
+
+	* builds/win32/detect.mk: Corrected logic that detects
+        Windows NT to use the previous change even when win32 is
+        forced. Corrected detection of win32 on Win9X.
+	* builds/dos/detect.mk: Added same correction as for win32
+        about COPY on Windows NT. Detection of plain DOS 7.x.
+
 2004-11-22  Werner Lemberg  <wl@gnu.org>
 
 	* builds/detect.mk: Undo change from 2004-11-20.
