@@ -202,13 +202,12 @@
     FT_Memory  memory = stream->memory;
     TT_ULong   table_len;
 
-    FT_TRACE2(( "Font program " ));
 
-    error = TT_Err_Ok;
+    FT_TRACE2(( "Font program " ));
 
     /* The font program is optional */
     error = face->goto_table( face, TTAG_fpgm, stream, &table_len );
-    if (error)
+    if ( error )
     {
       face->font_program      = NULL;
       face->font_program_size = 0;
@@ -231,10 +230,11 @@
     FT_TRACE2(( "Prep program " ));
 
     error = face->goto_table( face, TTAG_prep, stream, &table_len );
-    if (error)
+    if ( error )
     {
       face->cvt_program      = NULL;
       face->cvt_program_size = 0;
+      error                  = TT_Err_Ok;
 
       FT_TRACE2(( "is missing!\n" ));
     }
