@@ -25,7 +25,7 @@ endif
 DELETE   := rm -f
 SEP      := /
 HOSTSEP  := $(SEP)
-BUILD    := $(TOP)/builds/unix
+BUILD    := $(TOP)/builds/unix/devel
 PLATFORM := unixdev  # do not set it to "unix", or libtool will trick you..
 CC       := gcc
 
