@@ -1,7 +1,8 @@
 2003-11-27  David Turner  <david@freetype.org>
 
-	* src/pfr/pfrdrivr.c (pfr_get_metrics): reverting to previous
-	behaviour. Werner's "fix" was incorrect !!
+	* src/pfr/pfrdrivr.c (pfr_get_metrics): Revert incorrect change of
+	2003-11-23: For PFR fonts, metrics->x_scale and metrics->y_scale are
+	the scaling values for outline units, not for metric units.
 
 2003-11-25  Werner Lemberg  <wl@gnu.org>
 
