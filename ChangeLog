@@ -4,6 +4,9 @@
         to demonstrate a "cleaner" API to support incremental font loading.
         comments appreciated...
 
+        * src/tools/docmaker/*: adding new (more advanced) version of
+        the DocMaker tool. Python with regular expressions rocks..
+
 2002-07-28  Werner Lemberg  <wl@gnu.org>
 
 	s/ft_memset/FT_MEM_SET/.
