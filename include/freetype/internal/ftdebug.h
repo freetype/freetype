@@ -82,11 +82,11 @@ FT_BEGIN_HEADER
     trace_psobjs,
 
     /* Type 2 driver components */
-    trace_t2driver,
-    trace_t2gload,
-    trace_t2load,
-    trace_t2objs,
-    trace_t2parse,
+    trace_cffdriver,
+    trace_cffgload,
+    trace_cffload,
+    trace_cffobjs,
+    trace_cffparse,
 
     /* CID driver components */
     trace_cidafm,
