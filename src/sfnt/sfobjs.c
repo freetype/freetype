@@ -160,6 +160,8 @@
     FT_Int            found_win     = -1;
     FT_Int            found_unicode = -1;
 
+    FT_Bool           is_english;
+
     TT_NameEntry_ConvertFunc  convert;
 
 
@@ -205,7 +207,8 @@
             case TT_MS_ID_SYMBOL_CS:
             case TT_MS_ID_UNICODE_CS:
             case TT_MS_ID_UCS_4:
-              found_win = n;
+              is_english = ( rec->languageID & 0x3FF ) == 0x009;
+              found_win  = n;
               break;
 
             default:
@@ -222,9 +225,10 @@
 
     /* some fonts contain invalid Unicode or Macintosh formatted entries; */
     /* we will thus favor names encoded in Windows formats if available   */
+    /* (provided it is an English name)                                   */
     /*                                                                    */
     convert = NULL;
-    if ( found_win >= 0 )
+    if ( found_win >= 0 && !( found_apple >= 0 && !is_english ) )
     {
       rec = face->name_table.names + found_win;
       switch ( rec->encodingID )

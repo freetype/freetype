@@ -1,3 +1,10 @@
+2004-06-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (tt_face_get_name): Make sure that an English
+	name record for the Apple platform is preferred to a non-English
+	entry for the Microsoft platform.  Problem reported by HANDA
+	Ken'ichi.
+
 2004-05-19  George Williams  <gww@silcom.com>
 
 	* src/type1/t1load.c (mm_axis_unmap, mm_weights_unmap): New
