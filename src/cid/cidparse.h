@@ -55,7 +55,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    num_dict       :: The number of font dictionaries.                 */
   /*                                                                       */
-  typedef struct CID_Parser_
+  typedef struct  CID_Parser_
   {
     T1_Parser  root;
     FT_Stream  stream;
@@ -71,14 +71,14 @@ FT_BEGIN_HEADER
   } CID_Parser;
 
 
-  FT_LOCAL
-  FT_Error  CID_New_Parser( CID_Parser*       parser,
-                            FT_Stream         stream,
-                            FT_Memory         memory,
-                            PSAux_Interface*  psaux );
+  FT_LOCAL FT_Error
+  CID_New_Parser( CID_Parser*       parser,
+                  FT_Stream         stream,
+                  FT_Memory         memory,
+                  PSAux_Interface*  psaux );
 
-  FT_LOCAL
-  void  CID_Done_Parser( CID_Parser*  parser );
+  FT_LOCAL void
+  CID_Done_Parser( CID_Parser*  parser );
 
 
   /*************************************************************************/

@@ -113,26 +113,26 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* Face functions                                                        */
   /*                                                                       */
-  FT_LOCAL
-  FT_Error  CFF_Init_Face( FT_Stream      stream,
-                           CFF_Face       face,
-                           FT_Int         face_index,
-                           FT_Int         num_params,
-                           FT_Parameter*  params );
+  FT_LOCAL FT_Error
+  CFF_Init_Face( FT_Stream      stream,
+                 CFF_Face       face,
+                 FT_Int         face_index,
+                 FT_Int         num_params,
+                 FT_Parameter*  params );
 
-  FT_LOCAL
-  void  CFF_Done_Face( CFF_Face  face );
+  FT_LOCAL void
+  CFF_Done_Face( CFF_Face  face );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* Driver functions                                                      */
   /*                                                                       */
-  FT_LOCAL
-  FT_Error  CFF_Init_Driver( CFF_Driver  driver );
+  FT_LOCAL FT_Error
+  CFF_Init_Driver( CFF_Driver  driver );
 
-  FT_LOCAL
-  void  CFF_Done_Driver( CFF_Driver  driver );
+  FT_LOCAL void
+  CFF_Done_Driver( CFF_Driver  driver );
 
 
 FT_END_HEADER

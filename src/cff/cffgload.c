@@ -220,11 +220,11 @@
   /*                                                                       */
   /*    glyph   :: The current glyph object.                               */
   /*                                                                       */
-  static
-  void  CFF_Init_Builder( CFF_Builder*   builder,
-                          TT_Face        face,
-                          CFF_Size       size,
-                          CFF_GlyphSlot  glyph )
+  static void
+  CFF_Init_Builder( CFF_Builder*   builder,
+                    TT_Face        face,
+                    CFF_Size       size,
+                    CFF_GlyphSlot  glyph )
   {
     builder->path_begun  = 0;
     builder->load_points = 1;
@@ -273,8 +273,8 @@
   /* <Input>                                                               */
   /*    builder :: A pointer to the glyph builder to finalize.             */
   /*                                                                       */
-  static
-  void  CFF_Done_Builder( CFF_Builder*  builder )
+  static void
+  CFF_Done_Builder( CFF_Builder*  builder )
   {
     CFF_GlyphSlot  glyph = builder->glyph;
 
@@ -298,8 +298,8 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    The bias value.                                                    */
-  static
-  FT_Int  cff_compute_bias( FT_UInt  num_subrs )
+  static FT_Int
+  cff_compute_bias( FT_UInt  num_subrs )
   {
     FT_Int  result;
 
@@ -333,11 +333,11 @@
   /*                                                                       */
   /*    slot    :: The current glyph object.                               */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  CFF_Init_Decoder( CFF_Decoder*   decoder,
-                          TT_Face        face,
-                          CFF_Size       size,
-                          CFF_GlyphSlot  slot )
+  FT_LOCAL_DEF void
+  CFF_Init_Decoder( CFF_Decoder*   decoder,
+                    TT_Face        face,
+                    CFF_Size       size,
+                    CFF_GlyphSlot  slot )
   {
     CFF_Font*  cff = (CFF_Font*)face->extra.data;
 
@@ -356,9 +356,9 @@
 
 
   /* this function is used to select the locals subrs array */
-  FT_LOCAL_DEF
-  void  CFF_Prepare_Decoder( CFF_Decoder*  decoder,
-                             FT_UInt       glyph_index )
+  FT_LOCAL_DEF void
+  CFF_Prepare_Decoder( CFF_Decoder*  decoder,
+                       FT_UInt       glyph_index )
   {
     CFF_Font*     cff = (CFF_Font*)decoder->builder.face->extra.data;
     CFF_SubFont*  sub = &cff->top_font;
@@ -383,20 +383,20 @@
 
 
   /* check that there is enough room for `count' more points */
-  static
-  FT_Error  check_points( CFF_Builder*  builder,
-                          FT_Int        count )
+  static FT_Error
+  check_points( CFF_Builder*  builder,
+                FT_Int        count )
   {
     return FT_GlyphLoader_Check_Points( builder->loader, count, 0 );
   }
 
 
   /* add a new point, do not check space */
-  static
-  void  add_point( CFF_Builder*  builder,
-                   FT_Pos        x,
-                   FT_Pos        y,
-                   FT_Byte       flag )
+  static void
+  add_point( CFF_Builder*  builder,
+             FT_Pos        x,
+             FT_Pos        y,
+             FT_Byte       flag )
   {
     FT_Outline*  outline = builder->current;
 
@@ -418,10 +418,10 @@
 
 
   /* check space for a new on-curve point, then add it */
-  static
-  FT_Error  add_point1( CFF_Builder*  builder,
-                        FT_Pos        x,
-                        FT_Pos        y )
+  static FT_Error
+  add_point1( CFF_Builder*  builder,
+              FT_Pos        x,
+              FT_Pos        y )
   {
     FT_Error  error;
 
@@ -435,8 +435,8 @@
 
 
   /* check room for a new contour, then add it */
-  static
-  FT_Error  add_contour( CFF_Builder*  builder )
+  static FT_Error
+  add_contour( CFF_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
     FT_Error     error;
@@ -463,10 +463,10 @@
 
 
   /* if a path was begun, add its first on-curve point */
-  static
-  FT_Error  start_point( CFF_Builder*  builder,
-                         FT_Pos        x,
-                         FT_Pos        y )
+  static FT_Error
+  start_point( CFF_Builder*  builder,
+               FT_Pos        x,
+               FT_Pos        y )
   {
     FT_Error  error = 0;
 
@@ -484,8 +484,8 @@
 
 
   /* close the current contour */
-  static
-  void  close_contour( CFF_Builder*  builder )
+  static void
+  close_contour( CFF_Builder*  builder )
   {
     FT_Outline*  outline = builder->current;
 
@@ -518,9 +518,9 @@
   }
 
 
-  static
-  FT_Int  cff_lookup_glyph_by_stdcharcode( CFF_Font*  cff,
-                                           FT_Int     charcode )
+  static FT_Int
+  cff_lookup_glyph_by_stdcharcode( CFF_Font*  cff,
+                                   FT_Int     charcode )
   {
     FT_UInt    n;
     FT_UShort  glyph_sid;
@@ -544,12 +544,12 @@
   }
 
 
-  static
-  FT_Error  cff_operator_seac( CFF_Decoder*  decoder,
-                               FT_Pos        adx,
-                               FT_Pos        ady,
-                               FT_Int        bchar,
-                               FT_Int        achar )
+  static FT_Error
+  cff_operator_seac( CFF_Decoder*  decoder,
+                     FT_Pos        adx,
+                     FT_Pos        ady,
+                     FT_Int        bchar,
+                     FT_Int        achar )
   {
     FT_Error     error;
     FT_Int       bchar_index, achar_index, n_base_points;
@@ -687,10 +687,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  CFF_Parse_CharStrings( CFF_Decoder*  decoder,
-                                   FT_Byte*      charstring_base,
-                                   FT_Int        charstring_len )
+  FT_LOCAL_DEF FT_Error
+  CFF_Parse_CharStrings( CFF_Decoder*  decoder,
+                         FT_Byte*      charstring_base,
+                         FT_Int        charstring_len )
   {
     FT_Error           error;
     CFF_Decoder_Zone*  zone;
@@ -2047,9 +2047,9 @@
 #if 0 /* unused until we support pure CFF fonts */
 
 
-  FT_LOCAL_DEF
-  FT_Error  CFF_Compute_Max_Advance( TT_Face  face,
-                                     FT_Int*  max_advance )
+  FT_LOCAL_DEF FT_Error
+  CFF_Compute_Max_Advance( TT_Face  face,
+                           FT_Int*  max_advance )
   {
     FT_Error     error = 0;
     CFF_Decoder  decoder;
@@ -2114,11 +2114,11 @@
   /*************************************************************************/
 
 
-  FT_LOCAL_DEF
-  FT_Error  CFF_Load_Glyph( CFF_GlyphSlot  glyph,
-                            CFF_Size       size,
-                            FT_Int         glyph_index,
-                            FT_Int         load_flags )
+  FT_LOCAL_DEF FT_Error
+  CFF_Load_Glyph( CFF_GlyphSlot  glyph,
+                  CFF_Size       size,
+                  FT_Int         glyph_index,
+                  FT_Int         load_flags )
   {
     FT_Error     error;
     CFF_Decoder  decoder;

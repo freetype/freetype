@@ -90,11 +90,11 @@
   /*                                                                       */
   /*    They can be implemented by format-specific interfaces.             */
   /*                                                                       */
-  static
-  FT_Error  Get_Kerning( TT_Face     face,
-                         FT_UInt     left_glyph,
-                         FT_UInt     right_glyph,
-                         FT_Vector*  kerning )
+  static FT_Error
+  Get_Kerning( TT_Face     face,
+               FT_UInt     left_glyph,
+               FT_UInt     right_glyph,
+               FT_Vector*  kerning )
   {
     TT_Kern_0_Pair*  pair;
 
@@ -172,11 +172,11 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  static
-  FT_Error  Load_Glyph( CFF_GlyphSlot  slot,
-                        CFF_Size       size,
-                        FT_UShort      glyph_index,
-                        FT_UInt        load_flags )
+  static FT_Error
+  Load_Glyph( CFF_GlyphSlot  slot,
+              CFF_Size       size,
+              FT_UShort      glyph_index,
+              FT_UInt        load_flags )
   {
     FT_Error  error;
 
@@ -221,11 +221,11 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  static
-  FT_Error  get_cff_glyph_name( CFF_Face    face,
-                                FT_UInt     glyph_index,
-                                FT_Pointer  buffer,
-                                FT_UInt     buffer_max )
+  static FT_Error
+  get_cff_glyph_name( CFF_Face    face,
+                      FT_UInt     glyph_index,
+                      FT_Pointer  buffer,
+                      FT_UInt     buffer_max )
   {
     CFF_Font*           font   = (CFF_Font*)face->extra.data;
     FT_Memory           memory = FT_FACE_MEMORY(face);
@@ -288,9 +288,9 @@
   /* <Return>                                                              */
   /*    Glyph index.  0 means `undefined character code'.                  */
   /*                                                                       */
-  static
-  FT_UInt  cff_get_char_index( TT_CharMap  charmap,
-                               FT_Long     charcode )
+  static FT_UInt
+  cff_get_char_index( TT_CharMap  charmap,
+                      FT_Long     charcode )
   {
     FT_Error       error;
     CFF_Face       face;
@@ -329,9 +329,9 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  static
-  FT_Module_Interface  cff_get_interface( CFF_Driver   driver,
-                                          const char*  interface )
+  static FT_Module_Interface
+  cff_get_interface( CFF_Driver   driver,
+                     const char*  interface )
   {
     FT_Module  sfnt;
 
@@ -413,7 +413,8 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_DEF( const FT_Driver_Class* )  getDriverClass( void )
+  FT_EXPORT_DEF( const FT_Driver_Class* )
+  getDriverClass( void )
   {
     return &cff_driver_class;
   }

@@ -119,9 +119,9 @@
   /*    A glyph index in the font face.  Returns -1 if the corresponding   */
   /*    glyph wasn't found.                                                */
   /*                                                                       */
-  static
-  FT_Int  t1_lookup_glyph_by_stdcharcode( T1_Decoder*  decoder,
-                                          FT_Int       charcode )
+  static FT_Int
+  t1_lookup_glyph_by_stdcharcode( T1_Decoder*  decoder,
+                                  FT_Int       charcode )
   {
     FT_UInt             n;
     const FT_String*    glyph_name;
@@ -172,13 +172,13 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  static
-  FT_Error  t1operator_seac( T1_Decoder*  decoder,
-                             FT_Pos       asb,
-                             FT_Pos       adx,
-                             FT_Pos       ady,
-                             FT_Int       bchar,
-                             FT_Int       achar )
+  static FT_Error
+  t1operator_seac( T1_Decoder*  decoder,
+                   FT_Pos       asb,
+                   FT_Pos       adx,
+                   FT_Pos       ady,
+                   FT_Int       bchar,
+                   FT_Int       achar )
   {
     FT_Error     error;
     FT_Int       bchar_index, achar_index, n_base_points;
@@ -313,10 +313,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  T1_Decoder_Parse_Charstrings( T1_Decoder*  decoder,
-                                          FT_Byte*     charstring_base,
-                                          FT_UInt      charstring_len )
+  FT_LOCAL_DEF FT_Error
+  T1_Decoder_Parse_Charstrings( T1_Decoder*  decoder,
+                                FT_Byte*     charstring_base,
+                                FT_UInt      charstring_len )
   {
     FT_Error          error;
     T1_Decoder_Zone*  zone;
@@ -925,7 +925,7 @@
             {
               /* We are using subroutines from a CID font.  We must adjust */
               /* for the seed bytes.                                       */
-              zone->base  += ( decoder->lenIV >= 0 ? decoder->lenIV : 0 ); 
+              zone->base  += ( decoder->lenIV >= 0 ? decoder->lenIV : 0 );
               zone->limit  = decoder->subrs[index + 1];
             }
 
@@ -1024,22 +1024,22 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  T1_Decoder_Parse_Glyph( T1_Decoder*  decoder,
-                                    FT_UInt      glyph )
+  FT_LOCAL_DEF FT_Error
+  T1_Decoder_Parse_Glyph( T1_Decoder*  decoder,
+                          FT_UInt      glyph )
   {
     return decoder->parse_callback( decoder, glyph );
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  T1_Decoder_Init( T1_Decoder*          decoder,
-                             FT_Face              face,
-                             FT_Size              size,
-                             FT_GlyphSlot         slot,
-                             FT_Byte**            glyph_names,
-                             T1_Blend*            blend,
-                             T1_Decoder_Callback  parse_callback )
+  FT_LOCAL_DEF FT_Error
+  T1_Decoder_Init( T1_Decoder*          decoder,
+                   FT_Face              face,
+                   FT_Size              size,
+                   FT_GlyphSlot         slot,
+                   FT_Byte**            glyph_names,
+                   T1_Blend*            blend,
+                   T1_Decoder_Callback  parse_callback )
   {
     MEM_Set( decoder, 0, sizeof ( *decoder ) );
 
@@ -1072,8 +1072,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  T1_Decoder_Done( T1_Decoder*  decoder )
+  FT_LOCAL_DEF void
+  T1_Decoder_Done( T1_Decoder*  decoder )
   {
     T1_Builder_Done( &decoder->builder );
   }

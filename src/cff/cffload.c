@@ -1055,9 +1055,9 @@
 
 
   /* read a CFF offset from memory */
-  static
-  FT_ULong  cff_get_offset( FT_Byte*  p,
-                            FT_Byte   off_size )
+  static FT_ULong
+  cff_get_offset( FT_Byte*  p,
+                  FT_Byte   off_size )
   {
     FT_ULong  result;
 
@@ -1072,10 +1072,10 @@
   }
 
 
-  static
-  FT_Error  cff_new_index( CFF_Index*  index,
-                           FT_Stream   stream,
-                           FT_Bool     load )
+  static FT_Error
+  cff_new_index( CFF_Index*  index,
+                 FT_Stream   stream,
+                 FT_Bool     load )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -1145,8 +1145,8 @@
   }
 
 
-  static
-  void  cff_done_index( CFF_Index*  index )
+  static void
+  cff_done_index( CFF_Index*  index )
   {
     if ( index->stream )
     {
@@ -1163,9 +1163,9 @@
   }
 
 
-  static
-  FT_Error  cff_explicit_index( CFF_Index*  index,
-                                FT_Byte***  table )
+  static FT_Error
+  cff_explicit_index( CFF_Index*  index,
+                      FT_Byte***  table )
   {
     FT_Error   error  = 0;
     FT_Memory  memory = index->stream->memory;
@@ -1195,11 +1195,11 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  CFF_Access_Element( CFF_Index*  index,
-                                FT_UInt     element,
-                                FT_Byte**   pbytes,
-                                FT_ULong*   pbyte_len )
+  FT_LOCAL_DEF FT_Error
+  CFF_Access_Element( CFF_Index*  index,
+                      FT_UInt     element,
+                      FT_Byte**   pbytes,
+                      FT_ULong*   pbyte_len )
   {
     FT_Error  error = 0;
 
@@ -1260,9 +1260,9 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  CFF_Forget_Element( CFF_Index*  index,
-                            FT_Byte**   pbytes )
+  FT_LOCAL_DEF void
+  CFF_Forget_Element( CFF_Index*  index,
+                      FT_Byte**   pbytes )
   {
     if ( index->bytes == 0 )
     {
@@ -1274,9 +1274,9 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_String*  CFF_Get_Name( CFF_Index*  index,
-                            FT_UInt     element )
+  FT_LOCAL_DEF FT_String*
+  CFF_Get_Name( CFF_Index*  index,
+                FT_UInt     element )
   {
     FT_Memory   memory = index->stream->memory;
     FT_Byte*    bytes;
@@ -1301,10 +1301,10 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_String*  CFF_Get_String( CFF_Index*          index,
-                              FT_UInt             sid,
-                              PSNames_Interface*  interface )
+  FT_LOCAL_DEF FT_String*
+  CFF_Get_String( CFF_Index*          index,
+                  FT_UInt             sid,
+                  PSNames_Interface*  interface )
   {
     /* if it is not a standard string, return it */
     if ( sid > 390 )
@@ -1345,9 +1345,9 @@
   /*************************************************************************/
 
 
-  static
-  void  CFF_Done_FD_Select( CFF_FD_Select*  select,
-                            FT_Stream       stream )
+  static void
+  CFF_Done_FD_Select( CFF_FD_Select*  select,
+                      FT_Stream       stream )
   {
     if ( select->data )
       RELEASE_Frame( select->data );
@@ -1358,11 +1358,11 @@
   }
 
 
-  static
-  FT_Error CFF_Load_FD_Select( CFF_FD_Select*  select,
-                               FT_UInt         num_glyphs,
-                               FT_Stream       stream,
-                               FT_ULong        offset )
+  static FT_Error
+  CFF_Load_FD_Select( CFF_FD_Select*  select,
+                      FT_UInt         num_glyphs,
+                      FT_Stream       stream,
+                      FT_ULong        offset )
   {
     FT_Error  error;
     FT_Byte   format;
@@ -1402,9 +1402,9 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Byte  CFF_Get_FD( CFF_FD_Select*  select,
-                       FT_UInt         glyph_index )
+  FT_LOCAL_DEF FT_Byte
+  CFF_Get_FD( CFF_FD_Select*  select,
+              FT_UInt         glyph_index )
   {
     FT_Byte  fd = 0;
 
@@ -1472,9 +1472,9 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  static
-  void  CFF_Done_Encoding( CFF_Encoding*  encoding,
-                           FT_Stream      stream )
+  static void
+  CFF_Done_Encoding( CFF_Encoding*  encoding,
+                     FT_Stream      stream )
   {
     FT_Memory  memory = stream->memory;
 
@@ -1488,9 +1488,9 @@
   }
 
 
-  static
-  void  CFF_Done_Charset( CFF_Charset*  charset,
-                          FT_Stream     stream )
+  static void
+  CFF_Done_Charset( CFF_Charset*  charset,
+                    FT_Stream     stream )
   {
     FT_Memory  memory = stream->memory;
 
@@ -1502,12 +1502,12 @@
   }
 
 
-  static
-  FT_Error  CFF_Load_Charset( CFF_Charset*  charset,
-                              FT_UInt       num_glyphs,
-                              FT_Stream     stream,
-                              FT_ULong      base_offset,
-                              FT_ULong      offset )
+  static FT_Error
+  CFF_Load_Charset( CFF_Charset*  charset,
+                    FT_UInt       num_glyphs,
+                    FT_Stream     stream,
+                    FT_ULong      base_offset,
+                    FT_ULong      offset )
   {
     FT_Memory  memory     = stream->memory;
     FT_Error   error      = 0;
@@ -1681,13 +1681,13 @@
   }
 
 
-  static
-  FT_Error  CFF_Load_Encoding( CFF_Encoding*  encoding,
-                               CFF_Charset*   charset,
-                               FT_UInt        num_glyphs,
-                               FT_Stream      stream,
-                               FT_ULong       base_offset,
-                               FT_ULong       offset )
+  static FT_Error
+  CFF_Load_Encoding( CFF_Encoding*  encoding,
+                     CFF_Charset*   charset,
+                     FT_UInt        num_glyphs,
+                     FT_Stream      stream,
+                     FT_ULong       base_offset,
+                     FT_ULong       offset )
   {
     FT_Memory   memory = stream->memory;
     FT_Error    error  = 0;
@@ -1945,12 +1945,12 @@
   }
 
 
-  static
-  FT_Error  CFF_Load_SubFont( CFF_SubFont*  font,
-                              CFF_Index*    index,
-                              FT_UInt       font_index,
-                              FT_Stream     stream,
-                              FT_ULong      base_offset )
+  static FT_Error
+  CFF_Load_SubFont( CFF_SubFont*  font,
+                    CFF_Index*    index,
+                    FT_UInt       font_index,
+                    FT_Stream     stream,
+                    FT_ULong      base_offset )
   {
     FT_Error        error;
     CFF_Parser      parser;
@@ -2033,9 +2033,9 @@
   }
 
 
-  static
-  void  CFF_Done_SubFont( FT_Memory     memory,
-                          CFF_SubFont*  subfont )
+  static void
+  CFF_Done_SubFont( FT_Memory     memory,
+                    CFF_SubFont*  subfont )
   {
     if ( subfont )
     {
@@ -2045,10 +2045,10 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  CFF_Load_Font( FT_Stream  stream,
-                           FT_Int     face_index,
-                           CFF_Font*  font )
+  FT_LOCAL_DEF FT_Error
+  CFF_Load_Font( FT_Stream  stream,
+                 FT_Int     face_index,
+                 CFF_Font*  font )
   {
     static const FT_Frame_Field  cff_header_fields[] =
     {
@@ -2228,8 +2228,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  CFF_Done_Font( CFF_Font*  font )
+  FT_LOCAL_DEF void
+  CFF_Done_Font( CFF_Font*  font )
   {
     FT_Memory  memory = font->memory;
     FT_UInt    index;

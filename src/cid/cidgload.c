@@ -36,7 +36,7 @@
 #define FT_COMPONENT  trace_cidgload
 
 
-  FT_CALLBACK_DEF(FT_Error)
+  FT_CALLBACK_DEF( FT_Error )
   cid_load_glyph( T1_Decoder*  decoder,
                   FT_UInt      glyph_index )
   {
@@ -138,9 +138,9 @@
   /*************************************************************************/
 
 
-  FT_LOCAL_DEF
-  FT_Error  CID_Compute_Max_Advance( CID_Face  face,
-                                     FT_Int*   max_advance )
+  FT_LOCAL_DEF FT_Error
+  CID_Compute_Max_Advance( CID_Face  face,
+                           FT_Int*   max_advance )
   {
     FT_Error    error;
     T1_Decoder  decoder;
@@ -200,11 +200,11 @@
   /*************************************************************************/
 
 
-  FT_LOCAL_DEF
-  FT_Error  CID_Load_Glyph( CID_GlyphSlot  glyph,
-                            CID_Size       size,
-                            FT_Int         glyph_index,
-                            FT_Int         load_flags )
+  FT_LOCAL_DEF FT_Error
+  CID_Load_Glyph( CID_GlyphSlot  glyph,
+                  CID_Size       size,
+                  FT_Int         glyph_index,
+                  FT_Int         load_flags )
   {
     FT_Error    error;
     T1_Decoder  decoder;

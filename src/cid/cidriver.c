@@ -38,9 +38,9 @@
 #define FT_COMPONENT  trace_ciddriver
 
 
-  static
-  FT_Module_Interface  CID_Get_Interface( FT_Driver         driver,
-                                          const FT_String*  interface )
+  static FT_Module_Interface
+  CID_Get_Interface( FT_Driver         driver,
+                     const FT_String*  interface )
   {
     FT_UNUSED( driver );
     FT_UNUSED( interface );
@@ -51,11 +51,11 @@
 
 #if 0 /* unimplemented yet */
 
-  static
-  FT_Error  cid_Get_Kerning( T1_Face     face,
-                             FT_UInt     left_glyph,
-                             FT_UInt     right_glyph,
-                             FT_Vector*  kerning )
+  static FT_Error
+  cid_Get_Kerning( T1_Face     face,
+                   FT_UInt     left_glyph,
+                   FT_UInt     right_glyph,
+                   FT_Vector*  kerning )
   {
     CID_AFM*  afm;
 
@@ -90,9 +90,9 @@
   /* <Return>                                                              */
   /*    Glyph index.  0 means `undefined character code'.                  */
   /*                                                                       */
-  static
-  FT_UInt  CID_Get_Char_Index( FT_CharMap  charmap,
-                               FT_Long     charcode )
+  static FT_UInt
+  CID_Get_Char_Index( FT_CharMap  charmap,
+                      FT_Long     charcode )
   {
     T1_Face             face;
     FT_UInt             result = 0;
@@ -240,7 +240,8 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_DEF( const FT_Driver_Class* )  getDriverClass( void )
+  FT_EXPORT_DEF( const FT_Driver_Class* )
+  getDriverClass( void )
   {
     return &t1cid_driver_class;
   }

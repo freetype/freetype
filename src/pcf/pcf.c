@@ -1,9 +1,9 @@
-/*  pcf.c                                                                 
+/*  pcf.c
 
     FreeType font driver for pcf fonts
 
-  Copyright 2000 by            
-  Francesco Zappa Nardelli     
+  Copyright 2000 by
+  Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -41,9 +41,9 @@
 
 
   /* read a single offset */
-  FT_LOCAL_DEF
-  FT_Long  cid_get_offset( FT_Byte**  start,
-                           FT_Byte    offsize )
+  FT_LOCAL_DEF FT_Long
+  cid_get_offset( FT_Byte**  start,
+                  FT_Byte    offsize )
   {
     FT_Long   result;
     FT_Byte*  p = *start;
@@ -60,10 +60,10 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  cid_decrypt( FT_Byte*   buffer,
-                     FT_Offset  length,
-                     FT_UShort  seed )
+  FT_LOCAL_DEF void
+  cid_decrypt( FT_Byte*   buffer,
+               FT_Offset  length,
+               FT_UShort  seed )
   {
     while ( length > 0 )
     {
@@ -87,10 +87,10 @@
   /*************************************************************************/
 
 
-  static
-  FT_Error  cid_load_keyword( CID_Face         face,
-                              CID_Loader*      loader,
-                              const T1_Field*  keyword )
+  static FT_Error
+  cid_load_keyword( CID_Face         face,
+                    CID_Loader*      loader,
+                    const T1_Field*  keyword )
   {
     FT_Error     error;
     CID_Parser*  parser = &loader->parser;
@@ -158,7 +158,7 @@
   }
 
 
-  FT_CALLBACK_DEF(FT_Error)
+  FT_CALLBACK_DEF( FT_Error )
   parse_font_bbox( CID_Face     face,
                    CID_Parser*  parser )
   {
@@ -177,7 +177,7 @@
   }
 
 
-  FT_CALLBACK_DEF(FT_Error)
+  FT_CALLBACK_DEF( FT_Error )
   parse_font_matrix( CID_Face     face,
                      CID_Parser*  parser )
   {
@@ -231,7 +231,7 @@
   }
 
 
-  FT_CALLBACK_DEF(FT_Error)
+  FT_CALLBACK_DEF( FT_Error )
   parse_fd_array( CID_Face     face,
                   CID_Parser*  parser )
   {
@@ -282,8 +282,8 @@
   };
 
 
-  static
-  int  is_alpha( char  c )
+  static int
+  is_alpha( char  c )
   {
     return ( isalnum( (int)c ) ||
              c == '.'          ||
@@ -291,12 +291,11 @@
   }
 
 
-
-  static
-  FT_Error  cid_parse_dict( CID_Face     face,
-                            CID_Loader*  loader,
-                            FT_Byte*     base,
-                            FT_Long      size )
+  static FT_Error
+  cid_parse_dict( CID_Face     face,
+                  CID_Loader*  loader,
+                  FT_Byte*     base,
+                  FT_Long      size )
   {
     CID_Parser*  parser = &loader->parser;
 
@@ -388,8 +387,8 @@
 
 
   /* read the subrmap and the subrs of each font dict */
-  static
-  FT_Error  cid_read_subrs( CID_Face  face )
+  static FT_Error
+  cid_read_subrs( CID_Face  face )
   {
     CID_Info*   cid    = &face->cid;
     FT_Memory   memory = face->root.memory;
@@ -495,9 +494,9 @@
   }
 
 
-  static
-  void t1_init_loader( CID_Loader*  loader,
-                       CID_Face     face )
+  static void
+  t1_init_loader( CID_Loader*  loader,
+                  CID_Face     face )
   {
     FT_UNUSED( face );
 
@@ -505,8 +504,8 @@
   }
 
 
-  static
-  void t1_done_loader( CID_Loader*  loader )
+  static void
+  t1_done_loader( CID_Loader*  loader )
   {
     CID_Parser*  parser = &loader->parser;
 
@@ -516,8 +515,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  CID_Open_Face( CID_Face  face )
+  FT_LOCAL_DEF FT_Error
+  CID_Open_Face( CID_Face  face )
   {
     CID_Loader  loader;
     CID_Parser* parser;
