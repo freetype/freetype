@@ -19,7 +19,7 @@
 #include <ft2build.h>
 #include "sfobjs.h"
 #include "ttload.h"
-#include "ttcmap0.h"
+#include "ttcmap.h"
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H

@@ -34,7 +34,7 @@
 #include "ttpost.h"
 #endif
 
-#include "ttcmap0.h"
+#include "ttcmap.h"
 
 #include FT_SERVICE_GLYPH_DICT_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H

@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ttcmap0.h                                                              */
+/*  ttcmap.h                                                               */
 /*                                                                         */
-/*    TrueType new character mapping table (cmap) support (specification). */
+/*    TrueType character mapping table (cmap) support (specification).     */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2002, 2003, 2004 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTCMAP0_H__
-#define __TTCMAP0_H__
+#ifndef __TTCMAP_H__
+#define __TTCMAP_H__
 
 
 #include <ft2build.h>
@@ -74,7 +74,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TTCMAP0_H__ */
+#endif /* __TTCMAP_H__ */
 
 
 /* END */

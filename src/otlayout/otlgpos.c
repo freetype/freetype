@@ -1057,11 +1057,12 @@
 
   OTL_LOCALDEF( void )
   otl_gpos_subtable_validate( OTL_Bytes      table,
+                              OTL_UInt       lookup_count,
                               OTL_UInt       glyph_count,
                               OTL_Validator  valid )
   {
-    otl_lookup_list_validate( table, 9, otl_gpos_validate_funcs,
-                              glyph_count, valid );
+    otl_lookup_validate( table, 9, otl_gpos_validate_funcs,
+                         lookup_count, glyph_count, valid );
   }
 
 
@@ -1091,7 +1092,8 @@
     features = OTL_NEXT_USHORT( p );
     lookups  = OTL_NEXT_USHORT( p );
 
-    otl_gpos_subtable_validate( table + lookups, glyph_count, valid );
+    otl_lookup_list_validate( table + lookups, 9, otl_gpos_validate_funcs,
+                              glyph_count, valid );
     otl_feature_list_validate( table + features, table + lookups, valid );
     otl_script_list_validate( table + scripts, table + features, valid );
   }

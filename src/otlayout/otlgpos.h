@@ -26,6 +26,7 @@ OTL_BEGIN_HEADER
 
   OTL_LOCAL( void )
   otl_gpos_subtable_validate( OTL_Bytes      table,
+                              OTL_UInt       lookup_count,
                               OTL_UInt       glyph_count,
                               OTL_Validator  valid );
 
