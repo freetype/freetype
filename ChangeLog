@@ -1,3 +1,7 @@
+2003-01-15  James Su  <suzhe@turbolinux.com.cn>
+
+    * src/gzip/ftgzip.c: bugfix: couldn't read certain gzip-ed font files
+
 2003-01-15  Huw D M Davies <h.davies1@physics.ox.ac.uk>
 
     * include/freetype/config/ftheader.h, include/freetype/internal/fnttypes.h,
