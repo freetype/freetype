@@ -371,7 +371,6 @@
       if ( c & 8 )
       {
         cnt = GET_Byte();
-
         while( cnt > 0 )
         {
           flag[j++] = c;
@@ -648,10 +647,10 @@
     element->element_flag = 0;
     element->preserve_pps = FALSE;
 
-    element->transform.xx = 1 << 16;
+    element->transform.xx = 0x10000;
     element->transform.xy = 0;
     element->transform.yx = 0;
-    element->transform.yy = 1 << 16;
+    element->transform.yy = 0x10000;
 
     element->transform.ox = 0;
     element->transform.oy = 0;
@@ -728,6 +727,7 @@
     TT_UShort  index;
     TT_UShort  u;
     TT_Long    count;
+    TT_Long    Top;
 
     TT_Long  glyph_offset, offset;
 
@@ -744,6 +744,7 @@
 
     TPhases   phase;
     TT_Byte*  widths;
+    TT_Int    num_elem_points;
 
     SFNT_Interface*  sfnt;
     
@@ -905,7 +906,6 @@
         }
 
         phase = Load_Header;
-        break;
 
         /************************************************************/
         /*                                                          */
@@ -923,8 +923,8 @@
         count  = 0;
         if (index < face->num_locations-1)
           count = face->glyph_locations[index+1] - offset;
-
-        if ( index < ( face->num_locations - 1 ) && count == 0 )
+          
+        if (count == 0)
         {
           /* as described by Frederic Loyer, these are spaces, and */
           /* not the unknown glyph.                                */
@@ -993,13 +993,14 @@
         }
 
         /* is it a simple glyph ? */
-        if ( num_contours > 0 )
-          phase = Load_Simple;
-        else
+        if ( num_contours < 0 )
+        {
           phase = Load_Composite;
+          break;
+        }
 
-        break;
-
+        phase = Load_Simple;
+        
         /************************************************************/
         /*                                                          */
         /* Load_Simple state                                        */
@@ -1035,7 +1036,6 @@
         num_points = exec->pts.n_points - 2;
 
         phase = Load_End;
-
         break;
 
         /************************************************************/
@@ -1111,10 +1111,10 @@
           subglyph->transform.oy = l;
         }
 
-        xx = 1 << 16;
+        xx = 0x10000;
         xy = 0;
         yx = 0;
-        yy = 1 << 16;
+        yy = 0x10000;
 
         if ( new_flags & WE_HAVE_A_SCALE )
         {
@@ -1147,13 +1147,12 @@
         k = FT_MulFix( xx, yy ) -  FT_MulFix( xy, yx );
 
         /* disable hinting in case of scaling/slanting */
-        if ( ABS( k ) != (1 << 16) )
+        if ( ABS( k ) != 0x10000 )
           subglyph2->is_hinted = FALSE;
 
         subglyph->file_offset = FILE_Pos();
 
         phase = Load_Glyph;
-
         break;
 
         /************************************************************/
@@ -1223,8 +1222,10 @@
 
           /* adjust counts */
 
+          num_elem_points = subglyph->zone.n_points;
+          
           for ( k = 0; k < num_contours; k++ )
-            subglyph2->zone.contours[k] += subglyph->zone.n_points;
+            subglyph2->zone.contours[k] += num_elem_points;
 
           subglyph->zone.n_points   += num_points;
           subglyph->zone.n_contours += num_contours;
@@ -1239,14 +1240,14 @@
             k = subglyph->arg1;
             l = subglyph->arg2;
 
-            if ( k >= subglyph->zone.n_points ||
+            if ( k >= num_elem_points ||
                  l >= num_points )
             {
               error = TT_Err_Invalid_Composite;
               goto Fail;
             }
 
-            l += subglyph->zone.n_points; 
+            l += num_elem_points; 
 	    
             x = subglyph->zone.cur[k].x - subglyph->zone.cur[l].x;
             y = subglyph->zone.cur[k].y - subglyph->zone.cur[l].y;
@@ -1260,14 +1261,14 @@
             {
               x = SCALE_X( x );
               y = SCALE_Y( y );
+              
+              if ( subglyph->element_flag & ROUND_XY_TO_GRID )
+	      {
+	        x = (x + 32) & -64;
+	        y = (y + 32) & -64;
+	      }
             }
           }
-
-          if ( subglyph->element_flag & ROUND_XY_TO_GRID )
-	  {
-	    x = (x + 32) & -64;
-	    y = (y + 32) & -64;
-	  }
 
           translate_array( num_points, subglyph2->zone.cur, x, y );
 
@@ -1313,7 +1314,7 @@
 
     exec->pts = base_pts;
 
-    for ( u = 0; u < num_points; u++ )
+    for ( u = 0; u < num_points + 2; u++ )
     {
       glyph->outline.points[u] = exec->pts.cur[u];
       glyph->outline.flags [u] = exec->pts.touch[u];
@@ -1327,7 +1328,7 @@
     glyph->outline.second_pass = TRUE;
 
     /* translate array so that (0,0) is the glyph's origin */
-    translate_array( num_points, glyph->outline.points,
+    translate_array( num_points + 2, glyph->outline.points,
                      -subglyph->pp1.x, 0 );
 
     FT_Get_Outline_CBox( &glyph->outline, &bbox );
@@ -1423,19 +1424,25 @@
         }
       }
 
+      /* We must adjust the top_bearing value from the bounding box given
+         in the glyph header to te bounding box calculated with
+         TT_Get_Outline_BBox()                                            */
+
       /* scale the metrics */
       if ( !(load_flags & FT_LOAD_NO_SCALE) )
       {
-        top     = SCALE_Y( top_bearing );
+        Top     = SCALE_Y( top_bearing );
+        top     = SCALE_Y( top_bearing + subglyph->bbox.yMax ) - bbox.yMax;
         advance = SCALE_X( advance_height );
       }
       else
       {
-        top     = top_bearing;
+        Top     = top_bearing;
+        top     = top_bearing + subglyph->bbox.yMax - bbox.yMax;
         advance = advance_height;
       }
 
-      glyph->metrics2.vertBearingY = top;
+      glyph->metrics2.vertBearingY = Top;
       glyph->metrics2.vertAdvance  = advance;
 
       /* XXX: for now, we have no better algorithm for the lsb, but it    */

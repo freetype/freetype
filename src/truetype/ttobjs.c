@@ -135,7 +135,6 @@
     TT_Bool      wide_chars = 1;
 
     /* first pass, look for a given name record */
-
     rec = face->name_table.names;
     for ( n = 0; n < face->name_table.numNameRecords; n++, rec++ )
     {
@@ -143,7 +142,6 @@
       {
         /* found the name - now create an ASCII string from it */
         TT_Bool  found = 0;
-
 
         /* Test for Microsoft English language */
         if ( rec->platformID == TT_PLATFORM_MICROSOFT &&
