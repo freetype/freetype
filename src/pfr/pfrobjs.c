@@ -164,9 +164,8 @@
       root->units_per_EM = (FT_UShort)phy_font->outline_resolution;
       root->ascender     = (FT_Short) phy_font->bbox.yMax;
       root->descender    = (FT_Short) phy_font->bbox.yMin;
-      root->height       = (FT_Short)
-                             ( ( ( root->ascender - root->descender ) * 12 )
-                               / 10 );
+      root->height       = (FT_Short)(
+        ( ( root->ascender - root->descender ) * 12 ) / 10 );
 
       if ( phy_font->num_strikes > 0 )
       {

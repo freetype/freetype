@@ -593,7 +593,7 @@
       size->ttmetrics.y_ratio = 0x10000L;
     }
 
-    /* Compute root ascender, descender, test height, and max_advance */
+    /* Compute root ascender, descender, text height, and max_advance */
     metrics->ascender    = ( FT_MulFix( face->root.ascender,
                                         metrics->y_scale ) + 32 ) & -64;
     metrics->descender   = ( FT_MulFix( face->root.descender,
