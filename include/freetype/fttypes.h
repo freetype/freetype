@@ -276,9 +276,9 @@ FT_BEGIN_HEADER
   /*    FT_Offset                                                          */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This is equivalent to the ANSI C "size_t" type, i.e. it's the      */
-  /*    largest _unsigned_ integer type used to express a file size or     */
-  /*    position, or a memory block size.                                  */
+  /*    This is equivalent to the ANSI C `size_t' type, i.e. the largest   */
+  /*    _unsigned_ integer type used to express a file size or position,   */
+  /*    or a memory block size.                                            */
   /*                                                                       */
   typedef size_t  FT_Offset;
 
@@ -289,7 +289,7 @@ FT_BEGIN_HEADER
   /*    FT_PtrDist                                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This is equivalent to the ANSI C "ptrdiff_t" type, i.e. the        */
+  /*    This is equivalent to the ANSI C `ptrdiff_t' type, i.e. the        */
   /*    largest _signed_ integer type used to express the distance         */
   /*    between two pointers.                                              */
   /*                                                                       */

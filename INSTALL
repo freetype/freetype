@@ -60,14 +60,14 @@ I. From the command line
 II. In your own environment (IDE)
 ---------------------------------
 
-  You   need   to   add   the  directories   "freetype2/include" to
-  your include path when compiling the library.
+  You need to add  the directories "freetype2/include" to your include
+  path when compiling the library.
   
-  FreeType 2 is made of several components, each one of them is located
-  in a subdirectory of "freetype2/src". For example, 'freetype2/src/truetype/'
-  contains the TrueType font driver.
+  FreeType  2 is  made  of several  components;  each one  of them  is
+  located   in  a  subdirectory   of  "freetype2/src".   For  example,
+  `freetype2/src/truetype/' contains the TrueType font driver.
   
-  DO NOT COMPILE ALL C FILES !! Rather, compile the following ones:
+  DO NOT COMPILE ALL C FILES!  Rather, compile the following ones:
   
     -- base components (required)
      

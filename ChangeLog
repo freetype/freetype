@@ -1,25 +1,32 @@
-2001-03-20  David Turner    <david.turner@freetype.org>
+2001-03-20  Werner Lemberg  <wl@gnu.org>
+
+	* builds/win32/detekt.mk: Fix .PHONY target for Intel compiler.
+
+2001-03-20  David Turner  <david.turner@freetype.org>
 
 	* include/freetype/config/ftheader.h, include/freetype/ftsnames.h:
-	renamed "ftnames.h" to "ftsnames.h", and FT_NAMES_H to FT_SFNT_NAMES_H
+	Renamed "ftnames.h" to "ftsnames.h", and FT_NAMES_H to
+	FT_SFNT_NAMES_H.
 
-	* docs/docmaker.py: added generation of INDEX link in table of contents
+	* docs/docmaker.py: Added generation of INDEX link in table of
+	contents.
 
-	* INSTALL, docs/BUILD: updated documentation to indicate that the
-	compilation process has changed slightly (no more 'src' required in
+	* INSTALL, docs/BUILD: Updated documentation to indicate that the
+	compilation process has changed slightly (no more `src' required in
 	the include path).
 
-	* builds/*/*-def.mk: changed the objects directory from "obj" to "objs"
+	* builds/*/*-def.mk: Changed the objects directory from "obj" to
+	"objs".
 
-	* include/freetype/config/ftheader.h: removed obsolete macros like
-	FT_SOURCE_FILE, etc.. and added cache-specific macro definitions that
-	were previously defined in <freetype/ftcache.h>. Added comments to be
-	included in a new API Reference section.
+	* include/freetype/config/ftheader.h: Removed obsolete macros like
+	FT_SOURCE_FILE, etc. and added cache-specific macro definitions that
+	were previously defined in <freetype/ftcache.h>.  Added comments to
+	be included in a new API Reference section.
 
-	* src/*/*: removed the use of FT_SOURCE_FILE, etc.. now, each component
-	needs to added its own directory to the include path at compile time.
-	Modified all "rules.mk" and "descrip.mms" accordingly..
-
+	* src/*/*: Removed the use of FT_SOURCE_FILE, etc.  Now, each
+	component needs to add its own directory to the include path at
+	compile time.  Modified all "rules.mk" and "descrip.mms"
+	accordingly.
 
 2001-03-20  Werner Lemberg  <wl@gnu.org>
 
@@ -36,19 +43,19 @@
 	* src/cff/cffparse.c (cff_parse_font_bbox): Assign the units per em
 	value an unsigned short value, first by shifting right 16 bits,
 	then by casting the results to FT_UShort.
-	
+
 2001-03-17  David Turner   <david.turner@freetype.org>
 
-	* src/cid/cidobjs.c, src/cid/cidload.c, src/pcf/pcfread.c,         
-	src/type1/t1load.c, src/type1/t1objs.c: added a few casts to remove
-	compiler warnings in pedantic modes..
+	* src/cid/cidobjs.c, src/cid/cidload.c, src/pcf/pcfread.c,
+	src/type1/t1load.c, src/type1/t1objs.c: Added a few casts to remove
+	compiler warnings in pedantic modes.
 
-	* include/config/ft2build.h, include/config/ftheader.h: the file
+	* include/config/ft2build.h, include/config/ftheader.h: The file
 	"ft2build.h" was renamed to "ftheader.h" to avoid conflicts with the
-	top-level <ft2build.h>
-	
-	* include/config/ftheader.h: added new section describing the #include
-	macros..
+	top-level <ft2build.h>.
+
+	* include/config/ftheader.h: Added new section describing the #include
+	macros.
 
 2001-03-17  Tom Kacvinsky  <tjk@ams.org>
 
@@ -64,7 +71,7 @@
 	* src/cff/cffdrivr.c (get_cff_glyph_name):  New function.  Used in
 	cff_get_interface to facilitate getting a glyph name for glyph index
 	via FT_Get_Glyph_Name().
-	
+
 	(cff_get_interface): Added support for getting a glyph name via the
 	"glyph_name" module interface.  Uses the new function
 	get_cff_glyph_name().
@@ -75,7 +82,7 @@
 	not defined.  This is to add support for getting a glyph name from a
 	glyph index via FT_Get_Glyph_Name().
 	Submitted by Sander van der Wal <svdwal@xs4all.nl>
-	
+
 	* src/cff/cffgload.c (CFF_Parse_CharStrings): Added support for
 	deprecated operator "dotsection".
 	Submitted by Sander van der Wal <svdwal@xs4all.nl>
@@ -150,7 +157,7 @@
 2001-03-05  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/cffgload.c (CFF_Load_Glyph): Set glyph control data to the
-	the Type 2 glyph charstring (used by conversion programs). 
+	the Type 2 glyph charstring (used by conversion programs).
 	Submitted by Ha Shao <hashao@chinese.com>.
 
 2001-03-04  Antoine Leca  <Antoine.Leca@renault.fr>
@@ -304,7 +311,7 @@
 
 2001-01-11  David Turner  <david.turner@freetype.org>
 
-	* docs/docmaker.py: Added cross-references generation as well as  
+	* docs/docmaker.py: Added cross-references generation as well as
 	more robust handling of pathname wildcard matching.
 
 2001-01-10  Werner Lemberg  <wl@gnu.org>
@@ -332,7 +339,7 @@
 2001-01-03  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/rules.mk: Use cffgload.{c,h} instead of t2gload.{c,h}.
-	
+
 	* include/freetype/internal/internal.h: Changed to use cfftypes.h
 	(cfferrs.h) instead of t2types.h (t2errors.h, respectively).
 
@@ -354,7 +361,7 @@
 	* src/cff/t2gload.h: Renamed cffgload.h.
 
 	* src/cff/t2gload.c: Renamed cffgload.c
-	
+
 2000-01-02  Jouk Jansen  <joukj@hrem.stm.tudelft.nl>
 
 	* builds/vms: Support files for VMS architecture added.
@@ -398,7 +405,7 @@
 
 	* src/cff/t2gload.c (t2_lookup_glyph_by_stdcharcode,
 	t2_operator_seac): Added these functions for use in implementing the
-	seac emulation provided by the Type 2 endchar operator. 
+	seac emulation provided by the Type 2 endchar operator.
 	(T2_Parse_CharStrings): Added seac emulation for the endchar
 	operator.
 
@@ -406,13 +413,13 @@
 	CFF_Done_Encoding, CFF_Done_Charset): Extended to load and parse the
 	charset/encoding tables, and free the memory used by them when the
 	CFF driver is finished with them.  Added tables
-	
+
 	    cff_isoadobe_charset
 	    cff_expert_charset
 	    cff_expertsubset_charset
 	    cff_standard_encoding
 	    cff_expert_encoding
-	
+
 	so that the encoding/charset parser can handle predefined encodings and
 	charsets.
 
@@ -433,7 +440,7 @@
 
 2000-12-21  David Turner  <david.turner@freetype.org>
 
-	* src/cid/cidafm.c, src/cid/cidafm.h: removed un-needed files, 
+	* src/cid/cidafm.c, src/cid/cidafm.h: removed un-needed files,
 	we'll work on supporting CID AFM files later I guess :-)
 
 2000-12-21  Tom Kacvinsky  <tjk@ams.org>
@@ -459,7 +466,7 @@
 
 2000-12-14  David Turner  <david.turner@freetype.org>
 
-	Added support for clipped direct rendering in the smooth renderer. 
+	Added support for clipped direct rendering in the smooth renderer.
 	This should not break binary compatibility of existing applications.
 
 	* include/freetype/fttypes.h, include/freetype/ftimage.h: Move
@@ -468,7 +475,7 @@
 	FT_Raster_Flag enumeration.
 	Add `clip_box' element to FT_Raster_Params structure.
 	* src/smooth/ftgrays.c (grays_convert_glyph): Implement it.
-	
+
 	* INSTALL: Updated installation instructions on Win32, listing the
 	new "make setup list" target used to list supported
 	compilers/targets.
@@ -483,7 +490,7 @@
 	to use direct definitions.  This is the only way to do these things
 	in a portable way :-(  The rest of the code should follow shortly
 	though everything compiles now.
-	
+
 	* builds/compiler/intelc.mk, builds/compiler/watcom.mk: New files.
 
 	* builds/win32/detect.mk: Added support for the Intel C/C++
@@ -759,13 +766,13 @@
 
 2000-11-22  Tom Kacvinsky  <tjk@ams.org>
 
-	* src/cff/t2objs.c (T2_Init_Face): For pure CFF fonts, set 
+	* src/cff/t2objs.c (T2_Init_Face): For pure CFF fonts, set
 	`root->num_faces' to `cff->num_faces' and set `units_per_EM'
 	to 1000.
 
 	* src/cff/t2parse.c (parse_t2_real): Fixed real number parsing
 	loop.
-	
+
 	* src/cff/t2load.c (T2_Get_String): Called T2_Get_Name with a
 	sid that was off by one.
 

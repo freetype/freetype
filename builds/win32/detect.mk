@@ -86,12 +86,12 @@ ifeq ($(PLATFORM),win32)
     .PHONY: visualc
   endif
 
-  ifneq ($(findstring intelc,$(MAKECMDGOALS)),)     # Intel C/C++
+  ifneq ($(findstring intelc,$(MAKECMDGOALS)),)      # Intel C/C++
     CONFIG_FILE := w32-intl.mk
     SEP         := $(BACKSLASH)
     CC          := cl
     visualc: setup
-    .PHONY: visualc
+    .PHONY: intelc
   endif
 
   ifneq ($(findstring watcom,$(MAKECMDGOALS)),)      # Watcom C/C++

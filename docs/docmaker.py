@@ -901,12 +901,13 @@ class DocSectionList:
                 # provide a new one.
                 #
                 if abstract:
-                    section.block.print_error( "duplicate section definition for " +
-                                 "'" + name + "'\n" +
-                                 "previous definition in " +
-                                 "'" + section.block.location() + "'\n" +
-                                 "second definition in " +
-                                 "'" + block.location() + "'" )
+                    section.block.print_error(
+                      "duplicate section definition for " +
+                      "'" + name + "'\n" +
+                      "previous definition in " +
+                      "'" + section.block.location() + "'\n" +
+                      "second definition in " +
+                      "'" + block.location() + "'" )
             else:
                 # The old section didn't contain an abstract; we are
                 # now going to replace it.

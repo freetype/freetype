@@ -388,8 +388,8 @@
 
         /* set global bbox, as well as EM size */
         root->bbox         = dict->font_bbox;
-        root->ascender     = (FT_Short)(root->bbox.yMax >> 16);
-        root->descender    = (FT_Short)(root->bbox.yMin >> 16);
+        root->ascender     = (FT_Short)( root->bbox.yMax >> 16 );
+        root->descender    = (FT_Short)( root->bbox.yMin >> 16 );
         root->height       = ( ( root->ascender - root->descender ) * 12 ) / 10;
 
         if ( dict->units_per_em )
