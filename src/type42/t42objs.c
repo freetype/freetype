@@ -554,7 +554,7 @@
     T42_Face  t42face = (T42_Face)face;
 
 
-    FT_Activate_Size(size->ttsize);
+    FT_Activate_Size( size->ttsize );
 
     return FT_Set_Char_Size( t42face->ttf_face,
                              char_width,
@@ -573,7 +573,7 @@
     T42_Face  t42face = (T42_Face)face;
 
 
-    FT_Activate_Size(size->ttsize);
+    FT_Activate_Size( size->ttsize );
 
     return FT_Set_Pixel_Sizes( t42face->ttf_face,
                                pixel_width,

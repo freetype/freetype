@@ -47,7 +47,7 @@
                                             phys->metrics_resolution );
     }
 
-    return FT_Err_Ok;
+    return PFR_Err_Ok;
   }
 
 
@@ -56,7 +56,7 @@
                    FT_UInt    gindex,
                    FT_Pos    *aadvance )
   {
-    FT_Error  error = FT_Err_Bad_Argument;
+    FT_Error  error = PFR_Err_Bad_Argument;
 
 
     *aadvance = 0;

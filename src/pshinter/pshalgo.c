@@ -21,6 +21,8 @@
 #include FT_INTERNAL_DEBUG_H
 #include "pshalgo.h"
 
+#include "pshnterr.h"
+
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pshalgo2
@@ -1900,7 +1902,7 @@
 
     /* something to do? */
     if ( outline->n_points == 0 || outline->n_contours == 0 )
-      return FT_Err_Ok;
+      return PSH_Err_Ok;
 
 #ifdef DEBUG_HINTER
 

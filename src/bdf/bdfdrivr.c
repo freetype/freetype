@@ -65,7 +65,7 @@ THE SOFTWARE.
     cmap->num_encodings = face->bdffont->glyphs_used;
     cmap->encodings     = face->en_table;
 
-    return FT_Err_Ok;
+    return BDF_Err_Ok;
   }
 
 
@@ -305,15 +305,9 @@ THE SOFTWARE.
       if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
         goto Exit;
 
-      prop = bdf_get_font_property( font, "AVERAGE_WIDTH" );
-      if ( ( prop != NULL ) && ( prop->value.int32 >= 10 ) )
-        root->available_sizes->width = (short)( prop->value.int32 / 10 );
-
       prop = bdf_get_font_property( font, "PIXEL_SIZE" );
-      if ( prop != NULL ) {
-        root->available_sizes->height =
-        root->available_sizes->width  = (short) prop->value.int32;
-      }
+      if ( prop != NULL )
+        root->available_sizes->height = (short) prop->value.int32;
       else
       {
         prop = bdf_get_font_property( font, "POINT_SIZE" );
@@ -333,19 +327,17 @@ THE SOFTWARE.
         }
       }
 
-      if ( root->available_sizes->width == 0 )
-      {
-        if ( root->available_sizes->height == 0 )
-        {
-          /* some fonts have broken SIZE declaration (jiskan24.bdf) */
-          FT_ERROR(( "BDF_Face_Init: reading size\n" ));
-          root->available_sizes->width = (FT_Short)font->point_size;
-        }
-        else
-          root->available_sizes->width = root->available_sizes->height;
-      }
       if ( root->available_sizes->height == 0 )
-          root->available_sizes->height = root->available_sizes->width;
+      {
+        /* some fonts have broken SIZE declaration (jiskan24.bdf) */
+        FT_ERROR(( "BDF_Face_Init: reading size\n" ));
+        root->available_sizes->height = (FT_Short)font->point_size;
+      }
+
+      /* `width' is just an enumeration value for different bitmap strikes */
+      /* in a single font.  Since a BDF font has a single strike only,     */
+      /* make this value the same as the height.                           */
+      root->available_sizes->width = root->available_sizes->height;
 
       /* encoding table */
       {
@@ -682,7 +674,7 @@ THE SOFTWARE.
     }
 
   Fail:
-    return FT_Err_Invalid_Argument;
+    return BDF_Err_Invalid_Argument;
   }
 
 

@@ -149,7 +149,7 @@
       FT_Memory         memory = face->root.memory;
       TT_NameEntryRec*  name   = face->name_table.names + found_win;
       FT_UInt           len    = name->stringLength / 2;
-      FT_Error          error  = FT_Err_Ok;
+      FT_Error          error  = SFNT_Err_Ok;
 
       FT_UNUSED( error );
 
@@ -191,7 +191,7 @@
       FT_Memory         memory = face->root.memory;
       TT_NameEntryRec*  name   = face->name_table.names + found_apple;
       FT_UInt           len    = name->stringLength;
-      FT_Error          error  = FT_Err_Ok;
+      FT_Error          error  = SFNT_Err_Ok;
 
       FT_UNUSED( error );
 

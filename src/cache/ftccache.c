@@ -173,7 +173,7 @@
       if ( *pnode == NULL )
       {
         FT_ERROR(( "ftc_node_hash_unlink: unknown node!\n" ));
-        return FT_Err_Ok;
+        return FTC_Err_Ok;
       }
 
       if ( *pnode == node )
@@ -551,7 +551,7 @@
                     FTC_Query   query,
                     FTC_Node   *anode )
   {
-    FT_Error     error = FT_Err_Ok;
+    FT_Error     error = FTC_Err_Ok;
     FTC_Manager  manager;
     FT_LruNode   lru;
     FT_UInt      free_count = 0;
@@ -743,7 +743,7 @@
       }
 
     Fail:
-      if ( error != FT_Err_Out_Of_Memory )
+      if ( error != FTC_Err_Out_Of_Memory )
         goto Exit;
 
      /* There is not enough memory; try to release some unused nodes

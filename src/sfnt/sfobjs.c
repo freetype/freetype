@@ -258,7 +258,7 @@
     {
       if ( rec->string == NULL )
       {
-        FT_Error   error = FT_Err_Ok;
+        FT_Error   error  = SFNT_Err_Ok;
         FT_Stream  stream = face->name_table.stream;
 
         FT_UNUSED( error );

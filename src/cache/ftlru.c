@@ -198,7 +198,7 @@
     * This loop will only exit when:
     *
     *   - a new node was successfully created, or an old node flushed
-    *   - an error other than FT_Err_Out_Of_Memory is detected
+    *   - an error other than FTC_Err_Out_Of_Memory is detected
     *   - the list of nodes is empty, and it isn't possible to create
     *     new nodes
     *
@@ -228,7 +228,7 @@
           if ( node == NULL )
           {
             FT_ASSERT( list->num_nodes == 0 );
-            error = FT_Err_Out_Of_Memory;
+            error = FTC_Err_Out_Of_Memory;
             goto Exit;
           }
 
@@ -298,7 +298,7 @@
         goto Exit;
   
       Fail:
-        if ( error != FT_Err_Out_Of_Memory )
+        if ( error != FTC_Err_Out_Of_Memory )
           goto Exit;
         
         drop_last = 1;

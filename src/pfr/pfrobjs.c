@@ -296,7 +296,7 @@
 
     if ( load_flags & FT_LOAD_SBITS_ONLY )
     {
-      error = FT_Err_Invalid_Argument;
+      error = PFR_Err_Invalid_Argument;
       goto Exit;
     }
 
@@ -417,7 +417,7 @@
                         FT_UInt     glyph2,
                         FT_Vector*  kerning )
   {
-    FT_Error      error = FT_Err_Ok;
+    FT_Error      error    = PFR_Err_Ok;
     PFR_PhyFont   phy_font = &face->phy_font;
     PFR_KernItem  item     = phy_font->kern_items;
     FT_UInt32     idx      = PFR_KERN_INDEX( glyph1, glyph2 );

@@ -1994,6 +1994,7 @@
 
     driver  = face->driver;
     metrics = &face->size->metrics;
+    clazz   = driver->clazz;
 
     if ( !char_width )
       char_width = char_height;
@@ -2007,17 +2008,13 @@
     if ( !vert_resolution )
       vert_resolution = 72;
 
-    driver = face->driver;
-    clazz  = driver->clazz;
-
     /* default processing -- this can be overridden by the driver */
     if ( char_width  < 1 * 64 )
       char_width  = 1 * 64;
     if ( char_height < 1 * 64 )
       char_height = 1 * 64;
 
-    /* Compute pixel sizes in 26.6 units. we use rounding
-     */
+    /* Compute pixel sizes in 26.6 units with rounding */
     dim_x = ( ( char_width  * horz_resolution + (36+32*72) ) / 72 ) & -64;
     dim_y = ( ( char_height * vert_resolution + (36+32*72) ) / 72 ) & -64;
 
@@ -2055,14 +2052,15 @@
     FT_Error          error = FT_Err_Ok;
     FT_Driver         driver;
     FT_Driver_Class   clazz;
-    FT_Size_Metrics*  metrics = &face->size->metrics;
+    FT_Size_Metrics*  metrics;
 
 
     if ( !face || !face->size || !face->driver )
       return FT_Err_Invalid_Face_Handle;
 
-    driver = face->driver;
-    clazz  = driver->clazz;
+    driver  = face->driver;
+    metrics = &face->size->metrics;
+    clazz   = driver->clazz;
 
     /* default processing -- this can be overridden by the driver */
     if ( pixel_width == 0 )

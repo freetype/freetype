@@ -402,7 +402,6 @@
   static FT_CMap_Class  fnt_cmap_class = &fnt_cmap_class_rec;
 
 
-
   static void
   FNT_Face_Done( FNT_Face  face )
   {
@@ -495,6 +494,7 @@
       {
         FT_CharMapRec  charmap;
 
+
         charmap.encoding    = FT_ENCODING_UNICODE;
         charmap.platform_id = 3;
         charmap.encoding_id = 1;
@@ -547,23 +547,39 @@
     FNT_Face  face  = (FNT_Face)FT_SIZE_FACE( size );
     FNT_Font  cur   = face->fonts;
     FNT_Font  limit = cur + face->num_fonts;
+    FNT_Font  hit;
 
 
     size->font = 0;
+    hit        = 0;
+
     for ( ; cur < limit; cur++ )
     {
-      /* we only compare the character height, as fonts used some strange */
-      /* values                                                           */
       if ( cur->header.pixel_height == size->root.metrics.y_ppem )
       {
-        size->font = cur;
-
-        size->root.metrics.ascender  = cur->header.ascent * 64;
-        size->root.metrics.descender = ( cur->header.pixel_height -
-                                           cur->header.ascent ) * 64;
-        size->root.metrics.height    = cur->header.pixel_height * 64;
+        hit = cur;
         break;
       }
+    }
+
+    /* try to find a better hit */
+    for ( ; cur < limit; cur++ )
+    {
+      if ( cur->header.pixel_height == size->root.metrics.y_ppem &&
+           cur->header.pixel_width  == size->root.metrics.x_ppem )
+      {
+        hit = cur;
+        break;
+      }
+    }
+
+    if ( hit ) {
+      size->font                     = hit;
+      size->root.metrics.ascender    = hit->header.ascent * 64;
+      size->root.metrics.descender   = ( hit->header.pixel_height -
+                                           hit->header.ascent ) * 64;
+      size->root.metrics.height      = hit->header.pixel_height * 64;
+      size->root.metrics.max_advance = hit->header.max_width * 64;
     }
 
     return ( size->font ? FNT_Err_Ok : FNT_Err_Invalid_Pixel_Size );
@@ -597,7 +613,8 @@
     if ( glyph_index > 0 )
       glyph_index--;
     else
-      glyph_index = font->header.default_char - font->header.first_char;
+      glyph_index = font->header.default_char;
+    glyph_index -= font->header.first_char;
 
     new_format = FT_BOOL( font->header.version == 0x300 );
     len        = new_format ? 6 : 4;

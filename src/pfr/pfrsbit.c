@@ -508,7 +508,7 @@
 
       default:
         FT_ERROR(( "pfr_read_bitmap_data: invalid image type\n" ));
-        error = FT_Err_Invalid_File_Format;
+        error = PFR_Err_Invalid_File_Format;
       }
     }
 
@@ -560,7 +560,7 @@
       }
 
       /* couldn't find it */
-      return FT_Err_Invalid_Argument;
+      return PFR_Err_Invalid_Argument;
     }
 
   Found_Strike:
@@ -593,7 +593,7 @@
       if ( gps_size == 0 )
       {
         /* Could not find a bitmap program string for this glyph */
-        error = FT_Err_Invalid_Argument;
+        error = PFR_Err_Invalid_Argument;
         goto Exit;
       }
     }

@@ -218,7 +218,12 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    height :: The character height in pixels.                          */
   /*                                                                       */
-  /*    width  :: The character width in pixels.                           */
+  /*    width  :: The character width in pixels.  For drivers which        */
+  /*              contain a single bitmap strike only (BDF, PCF) this      */
+  /*              field is always equal to `height'.  To get the           */
+  /*              (maximum) width of a bitmap strike use                   */
+  /*              `face->size->metrics.max_advance' after a call to        */
+  /*              @FT_Set_Pixel_Sizes.                                     */
   /*                                                                       */
   typedef struct  FT_Bitmap_Size_
   {
@@ -697,8 +702,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    num_fixed_sizes     :: The number of fixed sizes available in this */
   /*                           face.  This should be set to 0 for scalable */
-  /*                           fonts, unless its face includes a complete  */
-  /*                           set of glyphs (called a `strike') for the   */
+  /*                           fonts, unless its face includes a set of    */
+  /*                           glyphs (called a `strike') for the          */
   /*                           specified sizes.                            */
   /*                                                                       */
   /*    available_sizes     :: An array of sizes specifying the available  */
@@ -907,7 +912,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_FACE_FLAG_GLYPH_NAMES ::                                        */
   /*      Indicates that the font contains glyph names that can be         */
-  /*      retrieved through @FT_Get_Glyph_Names.  Note that some TrueType  */
+  /*      retrieved through @FT_Get_Glyph_Name.  Note that some TrueType   */
   /*      fonts contain broken glyph name tables.  Use the function        */
   /*      @FT_Has_PS_Glyph_Name when needed.                               */
   /*                                                                       */
@@ -1056,7 +1061,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* @description:                                                         */
   /*    A macro that returns true whenever a face object contains some     */
-  /*    glyph names that can be accessed through @FT_Get_Glyph_Names.      */
+  /*    glyph names that can be accessed through @FT_Get_Glyph_Name.       */
   /*                                                                       */
 #define FT_HAS_GLYPH_NAMES( face ) \
           ( face->face_flags & FT_FACE_FLAG_GLYPH_NAMES )
@@ -1136,10 +1141,12 @@ FT_BEGIN_HEADER
   /*                    units to fractional (26.6) pixel coordinates.      */
   /*                                                                       */
   /*    ascender     :: The ascender, expressed in 26.6 fixed point        */
-  /*                    pixels.  Always positive.                          */
+  /*                    pixels.  Positive for ascenders above the          */
+  /*                    baseline.                                          */
   /*                                                                       */
   /*    descender    :: The descender, expressed in 26.6 fixed point       */
-  /*                    pixels.  Always negative.                          */
+  /*                    pixels.  Negative for descenders below the         */
+  /*                    baseline.                                          */
   /*                                                                       */
   /*    height       :: The text height, expressed in 26.6 fixed point     */
   /*                    pixels.  Always positive.                          */
@@ -1167,7 +1174,7 @@ FT_BEGIN_HEADER
     FT_UShort  y_ppem;      /* vertical pixels per EM                 */
 
     FT_Fixed   x_scale;     /* two scales used to convert font units  */
-    FT_Fixed   y_scale;     /* to 26.6 frac. pixel coordinates..      */
+    FT_Fixed   y_scale;     /* to 26.6 frac. pixel coordinates        */
 
     FT_Pos     ascender;    /* ascender in 26.6 frac. pixels          */
     FT_Pos     descender;   /* descender in 26.6 frac. pixels         */
@@ -1871,7 +1878,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    When dealing with fixed-size faces (i.e., non-scalable formats),   */
-  /*    use the function @FT_Set_Pixel_Sizes.                              */
+  /*    @FT_Set_Pixel_Sizes provides a more convenient interface.          */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Char_Size( FT_Face     face,
@@ -1920,6 +1927,10 @@ FT_BEGIN_HEADER
   /*    guarantee in any way that you will get glyph bitmaps that all fit  */
   /*    within an 8x8 cell (sometimes even far from it).                   */
   /*                                                                       */
+  /*    For bitmap fonts, `pixel_height' usually is a reliable value for   */
+  /*    the height of the bitmap cell.  Drivers for bitmap font formats    */
+  /*    which contain a single bitmap strike only (BDF, PCF) ignore        */
+  /*    `pixel_width'.                                                     */
   FT_EXPORT( FT_Error )
   FT_Set_Pixel_Sizes( FT_Face  face,
                       FT_UInt  pixel_width,
