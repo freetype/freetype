@@ -206,7 +206,7 @@
       *tsb = face->os2.sTypoAscender;
       *ah  = face->os2.sTypoAscender - face->os2.sTypoDescender;
     }
-    else 
+    else
     {
       *tsb = face->horizontal.Ascender;
       *ah  = face->horizontal.Ascender - face->horizontal.Descender;
@@ -778,9 +778,8 @@
     {
       FT_Vector*  vec     = zone->cur;
       FT_Vector*  limit   = vec + n_points;
-      FT_Fixed    x_scale = load->size->metrics.x_scale;
-      FT_Fixed    y_scale = load->size->metrics.y_scale;
-
+      FT_Fixed    x_scale = ((TT_Size)load->size)->metrics.x_scale;
+      FT_Fixed    y_scale = ((TT_Size)load->size)->metrics.y_scale;
 
       /* first scale the glyph points */
       for ( ; vec < limit; vec++ )
@@ -912,8 +911,8 @@
     y_scale = 0x10000L;
     if ( ( loader->load_flags & FT_LOAD_NO_SCALE ) == 0 )
     {
-      x_scale = loader->size->metrics.x_scale;
-      y_scale = loader->size->metrics.y_scale;
+      x_scale = ((TT_Size)loader->size)->metrics.x_scale;
+      y_scale = ((TT_Size)loader->size)->metrics.y_scale;
     }
 
     /* get metrics, horizontal and vertical */

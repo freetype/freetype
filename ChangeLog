@@ -1,3 +1,10 @@
+2004-06-21  David Turner  <david@freetype.org>
+
+        * src/base/ftobjs.c: documentation fix
+
+        * src/truetype/ttgload.c: fixing a scaling bug that caused incorrect
+        rendering when the bytecode interpreter was enabled.
+
 2004-06-14  Huw D M Davies  <h.davies1@physics.ox.ac.uk>
 
 	* src/winfonts/winfnt.c (FNT_Face_Init): Set x_ppem and y_ppem
@@ -16,7 +23,7 @@
 2004-06-10  David Turner  <david@freetype.org>
 
 	* src/base/ftobject.c, src/base/fthash.c, src/base/ftexcept.c,
-	src/base/ftsysio.c, src/base/ftsysmem.c, src/base/ftlist.c: Removed. 
+	src/base/ftsysio.c, src/base/ftsysmem.c, src/base/ftlist.c: Removed.
 	Obsolete.
 
 	* src/raster/ftraster.c (Alignment, PAlignment): New union to fix
