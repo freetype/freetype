@@ -514,7 +514,7 @@
     while ( renderer )
     {
       error = renderer->raster_render( renderer->raster, params );
-      if ( !error || FT_ERROR_BASE(error) != FT_Err_Cannot_Render_Glyph )
+      if ( !error || FT_ERROR_BASE( error ) != FT_Err_Cannot_Render_Glyph )
         break;
 
       /* FT_Err_Cannot_Render_Glyph is returned if the render mode   */

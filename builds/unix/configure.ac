@@ -9,7 +9,7 @@ AC_CONFIG_SRCDIR([ftconfig.in])
 dnl configuration file -- stay in 8.3 limit
 AC_CONFIG_HEADER(ftconfig.h:ftconfig.in)
 
-version_info='6:1:0'
+version_info='7:0:1'
 AC_SUBST(version_info)
 ft_version=`echo $version_info | tr : .`
 AC_SUBST(ft_version)
