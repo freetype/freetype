@@ -1595,8 +1595,8 @@
   /*    Direct_Move_Orig                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Moves a point by a given distance along the freedom vector.  The   */
-  /*    point will not be `touched'.                                       */
+  /*    Moves the *original* position of a point by a given distance along */
+  /*    the freedom vector.  Obviously, the point will not be `touched'.   */
   /*                                                                       */
   /* <Input>                                                               */
   /*    point    :: The index of the point to move.                        */
