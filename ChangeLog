@@ -1,3 +1,9 @@
+2002-01-31  David Turner  <david@freetype.org>
+
+        * README, README.UNX, docs/CHANGES: updating documentation for the
+        2.0.7 release
+
+
 2002-01-30  David Turner  <david@freetype.org>
 
 	* INSTALL: Moved to ...

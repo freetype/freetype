@@ -1,3 +1,45 @@
+LATEST CHANGES BETWEEN 2.0.7 and 2.0.6
+
+  I. IMPORTANT BUG FIXES
+
+    - Fixed two bugs in the Type 1 font driver. The first one resulted in a
+      memory leak in subtle cases. The other one caused FreeType to crash when
+      trying to load ".gsf" files (Ghostscript so-called Postscript fonts)
+
+      (this made _many_ KDE application crash on certain systems. FreeType
+       _is_ becoming a critical system component on Linux :-)
+
+
+    - Fixed a memory leak in the CFF font driver
+
+    - Fixed a memory leak in the PCF font driver
+
+    - Fixed the Visual C++ project file "builds/win32/visualc/freetype.dsp"
+      since it didn't include the Postscript hinter component, causing
+      errors at build time..
+
+    - Fixed a small rendering bug in the anti-aliased renderer that only
+      occured when tryong to draw thin (less than 1 pixel) strokes..
+  
+    - Fixed "builds/unix/freetype2.a4" which is used to generate
+      a valid "freetype2.m4" for Autoconf use
+
+    - Fixed the OpenVMS Makefiles
+
+
+  II. MISCELLANEOUS
+
+    - added "configure" and "install" scripts to the top-level directory.
+      a GNU-style installation is thus now easily possible with
+      
+          ./configure  <options>
+          make
+          make install
+
+
+
+============================================================================
+
 LATEST CHANGES BETWEEN 2.0.6 and 2.0.5
 
   I. IMPORTANT BUG FIXES

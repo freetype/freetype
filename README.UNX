@@ -7,6 +7,7 @@ SPECIAL NOTE FOR UNIX USERS
   perform a few special steps to ensure that everything goes well.
 
 
+
   I. Enable the TrueType bytecode hinter if you need it
   -----------------------------------------------------
 
@@ -32,6 +33,7 @@ SPECIAL NOTE FOR UNIX USERS
     of course, this must be done _before_ compiling the library
 
 
+
   II. Determine the correct installation path
   -------------------------------------------
   
@@ -52,10 +54,11 @@ SPECIAL NOTE FOR UNIX USERS
     
       ./configure --prefix=<yourprefix>
       make
-      ./install            (as root)
+      make install           (as root)
     
     where "<yourprefix>"  must be replaced  by the prefix  returned by
     the "freetype-config" command.
+
 
 
   III. Take care of XFree86 version 4
