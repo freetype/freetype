@@ -1,3 +1,15 @@
+2002-04-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c: 16bit fixes.
+	(TT_Load_Simple_Glyph): Improve debug messages.
+	(load_truetype_glyph): Remove dead code.
+	* src/truetype/ttinterp.c: 16bit fixes.
+	* src/truetype/ttobjs.c: Ditto.
+
+	* include/freetype/ftsnames.h, include/freetype/internal/sfnt.h,
+	src/cff/cffload.h, src/psaux/psobjs.h, src/truetype/ttinterp.[ch],
+	src/sfnt/ttpost.h: s/index/idx/.
+
 2002-03-31  Yao Zhang  <yaoz@vidar.niaaa.nih.gov>
 
 	* src/truetype/ttobjs.c (TT_Size_Init): Fix typo.
@@ -96,6 +108,15 @@
 
 	* src/sfnt/sfdriver.c, src/sfnt/sfobjs.c, src/sfnt/ttcmap0.c:
 	Fixed a small bug in the FT_CMaps support code.
+
+2002-03-25  David Turner  <david@freetype.org>
+
+	* src/truetype/ttinterp.c (Norm): Replaced with...
+	(TT_VecLen): This.
+	(TT_MulFix14, TT_DotFix14): New functions.
+	(Project, Dual_Project, Free_Project, Compute_Point_Displacement,
+	Ins_SHPIX, Ins_MIAP, Ins_MIRP): Use them.
+	[FT_CONFIG_OPTION_OLD_CALCS]: Removed all code.
 
 2002-03-22  David Turner  <david@freetype.org>
 

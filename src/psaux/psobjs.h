@@ -53,7 +53,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   PS_Table_Add( PS_Table  table,
-                FT_Int    index,
+                FT_Int    idx,
                 void*     object,
                 FT_Int    length );
 

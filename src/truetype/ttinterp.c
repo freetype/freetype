@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType bytecode interpreter (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1168,104 +1168,114 @@
 #define NULL_Vector  (FT_Vector*)&Null_Vector
 
 
- /* compute (a*b)/2^14 with maximal accuracy and rounding */
+  /* compute (a*b)/2^14 with maximal accuracy and rounding */
   static FT_Int32
-  TT_MulFix14( FT_Int32  a, FT_Int  b )
+  TT_MulFix14( FT_Int32  a,
+               FT_Int    b )
   {
     FT_Int32   m, s, hi;
     FT_UInt32  l, lo;
     
+
     /* compute ax*bx as 64-bit value */
-    l  = (FT_UInt32)( (a & 0xFFFF)*b );
-    m  = (a >> 16)*b;
+    l  = (FT_UInt32)( ( a & 0xFFFFU ) * b );
+    m  = ( a >> 16 ) * b;
     
-    lo = l + (FT_UInt32)(m << 16);
-    hi = (m >> 16) + ((FT_Int32)l >> 31) + (lo < l);
+    lo = l + (FT_UInt32)( m << 16 );
+    hi = ( m >> 16 ) + ( (FT_Int32)l >> 31 ) + ( lo < l );
     
     /* divide the result by 2^14 with rounding */
-    s   = (hi >> 31);
+    s   = hi >> 31;
     l   = lo + (FT_UInt32)s;
-    hi += s + (l < lo);
+    hi += s + ( l < lo );
     lo  = l;
 
     l   = lo + 0x2000U;
     hi += (l < lo);
     
-    return ( (hi << 18) | (l >> 14) );
+    return ( hi << 18 ) | ( l >> 14 );
   }
 
 
- /* compute (ax*bx+ay*by)/2^14 with maximal accuracy and rounding */
+  /* compute (ax*bx+ay*by)/2^14 with maximal accuracy and rounding */
   static FT_Int32
-  TT_DotFix14( FT_Int32  ax, FT_Int32  ay, FT_Int  bx, FT_Int  by )
+  TT_DotFix14( FT_Int32  ax,
+               FT_Int32  ay,
+               FT_Int    bx,
+               FT_Int    by )
   {
     FT_Int32   m, s, hi1, hi2, hi;
     FT_UInt32  l, lo1, lo2, lo;
     
+
     /* compute ax*bx as 64-bit value */
-    l = (FT_UInt32)( (ax & 0xFFFF)*bx );
-    m = (ax >> 16)*bx;
+    l = (FT_UInt32)( ( ax & 0xFFFFU ) * bx );
+    m = ( ax >> 16 ) * bx;
     
-    lo1 = l + (FT_UInt32)(m << 16);
-    hi1 = (m >> 16) + ((FT_Int32)l >> 31) + (lo1 < l);
+    lo1 = l + (FT_UInt32)( m << 16 );
+    hi1 = ( m >> 16 ) + ( (FT_Int32)l >> 31 ) + ( lo1 < l );
     
     /* compute ay*by as 64-bit value */
-    l = (FT_UInt32)( (ay & 0xFFFF)*by );
-    m = (ay >> 16)*by;
+    l = (FT_UInt32)( ( ay & 0xFFFFU ) * by );
+    m = ( ay >> 16 ) * by;
     
-    lo2 = l + (FT_UInt32)(m << 16);
-    hi2 = (m >> 16) + ((FT_Int32)l >> 31) + (lo2 < l);
+    lo2 = l + (FT_UInt32)( m << 16 );
+    hi2 = ( m >> 16 ) + ( (FT_Int32)l >> 31 ) + ( lo2 < l );
     
     /* add them */
     lo = lo1 + lo2;
-    hi = hi1 + hi2 + (lo < lo1);
+    hi = hi1 + hi2 + ( lo < lo1 );
     
     /* divide the result by 2^14 with rounding */
-    s   = (hi >> 31);
+    s   = hi >> 31;
     l   = lo + (FT_UInt32)s;
-    hi += s + (l < lo);
+    hi += s + ( l < lo );
     lo  = l;
 
     l   = lo + 0x2000U;
-    hi += (l < lo);
+    hi += ( l < lo );
     
-    return ( (hi << 18) | (l >> 14) );
+    return ( hi << 18 ) | ( l >> 14 );
   }
 
- /* return length of given vector */
+
+  /* return length of given vector */
+
 #if 0
 
   static FT_Int32
-  TT_VecLen( FT_Int32  x, FT_Int32  y )
+  TT_VecLen( FT_Int32  x,
+             FT_Int32  y )
   {
-    FT_Int32  m, hi1, hi2, hi;
-    FT_UInt32 l, lo1, lo2, lo;
+    FT_Int32   m, hi1, hi2, hi;
+    FT_UInt32  l, lo1, lo2, lo;
+
     
     /* compute x*x as 64-bit value */
-    lo = (FT_UInt32)(x & 0xFFFF);
-    hi = (x >> 16);
+    lo = (FT_UInt32)( x & 0xFFFFU );
+    hi = x >> 16;
     
-    l  = lo*lo;
-    m  = hi*lo;
-    hi = hi*hi;
+    l  = lo * lo;
+    m  = hi * lo;
+    hi = hi * hi;
     
-    lo1 = l + (FT_UInt32)(m << 17);
-    hi1 = hi + (m >> 15) + (lo1 < l);
+    lo1 = l + (FT_UInt32)( m << 17 );
+    hi1 = hi + ( m >> 15 ) + ( lo1 < l );
     
     /* compute y*y as 64-bit value */
-    lo = (FT_UInt32)( y & 0xFFFF );
-    hi = (y >> 16);
+    lo = (FT_UInt32)( y & 0xFFFFU );
+    hi = y >> 16;
     
-    l  = lo*lo;
-    m  = hi*lo;
-    hi = hi*hi;
+    l  = lo * lo;
+    m  = hi * lo;
+    hi = hi * hi;
     
-    lo2 = l + (FT_UInt32)(m << 17);
-    hi2 = hi + (m >> 15) + (lo2 < l);
+    lo2 = l + (FT_UInt32)( m << 17 );
+    hi2 = hi + ( m >> 15 ) + ( lo2 < l );
     
     /* add them to get 'x*x+y*y' as 64-bit value */
     lo = lo1 + lo2;
-    hi = hi1 + hi2 + (lo < lo1);
+    hi = hi1 + hi2 + ( lo < lo1 );
     
     /* compute the square root of this value */
     {
@@ -1280,8 +1290,8 @@
         count = 32;
         do
         {
-          rem      = ( rem << 2 ) | ( (FT_UInt32)hi  >> 30 );
-          hi       = (  hi << 2 ) | ( lo >> 30 );
+          rem      = ( rem << 2 ) | ( (FT_UInt32)hi >> 30 );
+          hi       = (  hi << 2 ) | (            lo >> 30 );
           lo     <<= 2;
           root   <<= 1;
           test_div = ( root << 1 ) + 1;
@@ -1297,23 +1307,27 @@
       return (FT_Int32)root;
     }
   }
+
 #else
  
- /* this version uses FT_Vector_Length which computes the same value */
- /* much, much faster..                                              */
- /*                                                                  */
+  /* this version uses FT_Vector_Length which computes the same value */
+  /* much, much faster..                                              */
+  /*                                                                  */
   static FT_F26Dot6
   TT_VecLen( FT_F26Dot6  X,
              FT_F26Dot6  Y )
   {
     FT_Vector  v;
 
+
     v.x = X;
     v.y = Y;
+
     return FT_Vector_Length( &v );
   }
   
 #endif
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1367,48 +1381,48 @@
 
 
   FT_CALLBACK_DEF( FT_F26Dot6 )
-  Read_CVT( EXEC_OP_ FT_ULong  index )
+  Read_CVT( EXEC_OP_ FT_ULong  idx )
   {
-    return CUR.cvt[index];
+    return CUR.cvt[idx];
   }
 
 
   FT_CALLBACK_DEF( FT_F26Dot6 )
-  Read_CVT_Stretched( EXEC_OP_ FT_ULong  index )
+  Read_CVT_Stretched( EXEC_OP_ FT_ULong  idx )
   {
-    return TT_MULFIX( CUR.cvt[index], CURRENT_Ratio() );
+    return TT_MULFIX( CUR.cvt[idx], CURRENT_Ratio() );
   }
 
 
   FT_CALLBACK_DEF( void )
-  Write_CVT( EXEC_OP_ FT_ULong    index,
+  Write_CVT( EXEC_OP_ FT_ULong    idx,
                       FT_F26Dot6  value )
   {
-    CUR.cvt[index] = value;
+    CUR.cvt[idx] = value;
   }
 
 
   FT_CALLBACK_DEF( void )
-  Write_CVT_Stretched( EXEC_OP_ FT_ULong    index,
+  Write_CVT_Stretched( EXEC_OP_ FT_ULong    idx,
                                 FT_F26Dot6  value )
   {
-    CUR.cvt[index] = FT_DivFix( value, CURRENT_Ratio() );
+    CUR.cvt[idx] = FT_DivFix( value, CURRENT_Ratio() );
   }
 
 
   FT_CALLBACK_DEF( void )
-  Move_CVT( EXEC_OP_ FT_ULong    index,
+  Move_CVT( EXEC_OP_ FT_ULong    idx,
                      FT_F26Dot6  value )
   {
-    CUR.cvt[index] += value;
+    CUR.cvt[idx] += value;
   }
 
 
   FT_CALLBACK_DEF( void )
-  Move_CVT_Stretched( EXEC_OP_ FT_ULong    index,
+  Move_CVT_Stretched( EXEC_OP_ FT_ULong    idx,
                                FT_F26Dot6  value )
   {
-    CUR.cvt[index] += FT_DivFix( value, CURRENT_Ratio() );
+    CUR.cvt[idx] += FT_DivFix( value, CURRENT_Ratio() );
   }
 
 
@@ -1511,11 +1525,11 @@
   /*    zone     :: The affected glyph zone.                               */
   /*                                                                       */
   static void
-  Direct_Move( EXEC_OP_ TT_GlyphZone   zone,
-                        FT_UShort      point,
-                        FT_F26Dot6     distance )
+  Direct_Move( EXEC_OP_ TT_GlyphZone  zone,
+                        FT_UShort     point,
+                        FT_F26Dot6    distance )
   {
-    FT_F26Dot6 v;
+    FT_F26Dot6  v;
 
 
     v = CUR.GS.freeVector.x;
@@ -1573,9 +1587,9 @@
 
 
   static void
-  Direct_Move_X( EXEC_OP_ TT_GlyphZone   zone,
-                          FT_UShort      point,
-                          FT_F26Dot6     distance )
+  Direct_Move_X( EXEC_OP_ TT_GlyphZone  zone,
+                          FT_UShort     point,
+                          FT_F26Dot6    distance )
   {
     FT_UNUSED_EXEC;
 
@@ -1585,9 +1599,9 @@
 
 
   static void
-  Direct_Move_Y( EXEC_OP_ TT_GlyphZone   zone,
-                          FT_UShort      point,
-                          FT_F26Dot6     distance )
+  Direct_Move_Y( EXEC_OP_ TT_GlyphZone  zone,
+                          FT_UShort     point,
+                          FT_F26Dot6    distance )
   {
     FT_UNUSED_EXEC;
 
@@ -3942,8 +3956,8 @@
     K = CUR.stack[CUR.args - L];
 
     FT_MEM_MOVE( &CUR.stack[CUR.args - L    ],
-              &CUR.stack[CUR.args - L + 1],
-              ( L - 1 ) * sizeof ( FT_Long ) );
+                 &CUR.stack[CUR.args - L + 1],
+                 ( L - 1 ) * sizeof ( FT_Long ) );
 
     CUR.stack[CUR.args - 1] = K;
   }
@@ -5076,14 +5090,14 @@
 
 
   static FT_Bool
-  Compute_Point_Displacement( EXEC_OP_ FT_F26Dot6*    x,
-                                       FT_F26Dot6*    y,
-                                       TT_GlyphZone   zone,
-                                       FT_UShort*     refp )
+  Compute_Point_Displacement( EXEC_OP_ FT_F26Dot6*   x,
+                                       FT_F26Dot6*   y,
+                                       TT_GlyphZone  zone,
+                                       FT_UShort*    refp )
   {
     TT_GlyphZoneRec  zp;
-    FT_UShort     p;
-    FT_F26Dot6    d;
+    FT_UShort        p;
+    FT_F26Dot6       d;
 
 
     if ( CUR.opcode & 1 )
@@ -5161,11 +5175,11 @@
   Ins_SHP( INS_ARG )
   {
     TT_GlyphZoneRec  zp;
-    FT_UShort     refp;
+    FT_UShort        refp;
 
-    FT_F26Dot6    dx,
-                  dy;
-    FT_UShort     point;
+    FT_F26Dot6       dx,
+                     dy;
+    FT_UShort        point;
 
     FT_UNUSED_ARG;
 
@@ -5214,12 +5228,12 @@
   Ins_SHC( INS_ARG )
   {
     TT_GlyphZoneRec zp;
-    FT_UShort    refp;
-    FT_F26Dot6   dx,
-                 dy;
+    FT_UShort       refp;
+    FT_F26Dot6      dx,
+                    dy;
 
-    FT_Short     contour;
-    FT_UShort    first_point, last_point, i;
+    FT_Short        contour;
+    FT_UShort       first_point, last_point, i;
 
 
     contour = (FT_UShort)args[0];
@@ -5270,11 +5284,11 @@
   Ins_SHZ( INS_ARG )
   {
     TT_GlyphZoneRec zp;
-    FT_UShort    refp;
-    FT_F26Dot6   dx,
-                 dy;
+    FT_UShort       refp;
+    FT_F26Dot6      dx,
+                    dy;
 
-    FT_UShort    last_point, i;
+    FT_UShort       last_point, i;
 
 
     if ( BOUNDS( args[0], 2 ) )

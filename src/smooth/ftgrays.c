@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A new `perfect' anti-aliasing renderer (body).                       */
 /*                                                                         */
-/*  Copyright 2000-2001 by                                                 */
+/*  Copyright 2000-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -17,66 +17,66 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /*  This file can be compiled without the rest of the FreeType engine,   */
-  /*  by defining the _STANDALONE_ macro when compiling it.  You also need */
-  /*  to put the files `ftgrays.h' and `ftimage.h' into the current        */
-  /*  compilation directory.  Typically, you could do something like       */
+  /* This file can be compiled without the rest of the FreeType engine, by */
+  /* defining the _STANDALONE_ macro when compiling it.  You also need to  */
+  /* put the files `ftgrays.h' and `ftimage.h' into the current            */
+  /* compilation directory.  Typically, you could do something like        */
   /*                                                                       */
-  /*  - copy `src/base/ftgrays.c' to your current directory                */
+  /* - copy `src/base/ftgrays.c' to your current directory                 */
   /*                                                                       */
-  /*  - copy `include/freetype/ftimage.h' and                              */
-  /*    `include/freetype/ftgrays.h' to the same directory                 */
+  /* - copy `include/freetype/ftimage.h' and `include/freetype/ftgrays.h'  */
+  /*   to the same directory                                               */
   /*                                                                       */
-  /*  - compile `ftgrays' with the _STANDALONE_ macro defined, as in       */
+  /* - compile `ftgrays' with the _STANDALONE_ macro defined, as in        */
   /*                                                                       */
-  /*      cc -c -D_STANDALONE_ ftgrays.c                                   */
+  /*     cc -c -D_STANDALONE_ ftgrays.c                                    */
   /*                                                                       */
-  /*  The renderer can be initialized with a call to                       */
-  /*  `ft_gray_raster.gray_raster_new'; an anti-aliased bitmap can be      */
-  /*  generated with a call to `ft_gray_raster.gray_raster_render'.        */
+  /* The renderer can be initialized with a call to                        */
+  /* `ft_gray_raster.gray_raster_new'; an anti-aliased bitmap can be       */
+  /* generated with a call to `ft_gray_raster.gray_raster_render'.         */
   /*                                                                       */
-  /*  See the comments and documentation in the file `ftimage.h' for       */
-  /*  more details on how the raster works.                                */
+  /* See the comments and documentation in the file `ftimage.h' for more   */
+  /* details on how the raster works.                                      */
   /*                                                                       */
   /*************************************************************************/
 
   /*************************************************************************/
   /*                                                                       */
-  /*  This is a new anti-aliasing scan-converter for FreeType 2.  The      */
-  /*  algorithm used here is _very_ different from the one in the standard */
-  /*  `ftraster' module.  Actually, `ftgrays' computes the _exact_         */
-  /*  coverage of the outline on each pixel cell.                          */
+  /* This is a new anti-aliasing scan-converter for FreeType 2.  The       */
+  /* algorithm used here is _very_ different from the one in the standard  */
+  /* `ftraster' module.  Actually, `ftgrays' computes the _exact_          */
+  /* coverage of the outline on each pixel cell.                           */
   /*                                                                       */
-  /*  It is based on ideas that I initially found in Raph Levien's         */
-  /*  excellent LibArt graphics library (see http://www.levien.com/libart  */
-  /*  for more information, though the web pages do not tell anything      */
-  /*  about the renderer; you'll have to dive into the source code to      */
-  /*  understand how it works).                                            */
+  /* It is based on ideas that I initially found in Raph Levien's          */
+  /* excellent LibArt graphics library (see http://www.levien.com/libart   */
+  /* for more information, though the web pages do not tell anything       */
+  /* about the renderer; you'll have to dive into the source code to       */
+  /* understand how it works).                                             */
   /*                                                                       */
-  /*  Note, however, that this is a _very_ different implementation        */
-  /*  compared to Raph's.  Coverage information is stored in a very        */
-  /*  different way, and I don't use sorted vector paths.  Also, it        */
-  /*  doesn't use floating point values.                                   */
+  /* Note, however, that this is a _very_ different implementation         */
+  /* compared to Raph's.  Coverage information is stored in a very         */
+  /* different way, and I don't use sorted vector paths.  Also, it doesn't */
+  /* use floating point values.                                            */
   /*                                                                       */
-  /*  This renderer has the following advantages:                          */
+  /* This renderer has the following advantages:                           */
   /*                                                                       */
-  /*  - It doesn't need an intermediate bitmap.  Instead, one can supply   */
-  /*    a callback function that will be called by the renderer to draw    */
-  /*    gray spans on any target surface.  You can thus do direct          */
-  /*    composition on any kind of bitmap, provided that you give the      */
-  /*    renderer the right callback.                                       */
+  /* - It doesn't need an intermediate bitmap.  Instead, one can supply a  */
+  /*   callback function that will be called by the renderer to draw gray  */
+  /*   spans on any target surface.  You can thus do direct composition on */
+  /*   any kind of bitmap, provided that you give the renderer the right   */
+  /*   callback.                                                           */
   /*                                                                       */
-  /*  - A perfect anti-aliaser, i.e., it computes the _exact_ coverage on  */
-  /*    each pixel cell                                                    */
+  /* - A perfect anti-aliaser, i.e., it computes the _exact_ coverage on   */
+  /*   each pixel cell.                                                    */
   /*                                                                       */
-  /*  - It performs a single pass on the outline (the `standard' FT2       */
-  /*    renderer makes two passes).                                        */
+  /* - It performs a single pass on the outline (the `standard' FT2        */
+  /*   renderer makes two passes).                                         */
   /*                                                                       */
-  /*  - It can easily be modified to render to _any_ number of gray levels */
-  /*    cheaply.                                                           */
+  /* - It can easily be modified to render to _any_ number of gray levels  */
+  /*   cheaply.                                                            */
   /*                                                                       */
-  /*  - For small (< 20) pixel sizes, it is faster than the standard       */
-  /*    renderer.                                                          */
+  /* - For small (< 20) pixel sizes, it is faster than the standard        */
+  /*   renderer.                                                           */
   /*                                                                       */
   /*************************************************************************/
 
@@ -146,7 +146,7 @@
 
 
 #ifndef FT_MEM_SET
-#define  FT_MEM_SET( d, s, c )  memset( d, s, c )
+#define FT_MEM_SET( d, s, c )  memset( d, s, c )
 #endif
 
   /* define this to dump debugging information */
@@ -2130,11 +2130,11 @@
   {
     ft_glyph_format_outline,
 
-    (FT_Raster_New_Func)      gray_raster_new,
-    (FT_Raster_Reset_Func)    gray_raster_reset,
-    (FT_Raster_Set_Mode_Func) 0,
-    (FT_Raster_Render_Func)   gray_raster_render,
-    (FT_Raster_Done_Func)     gray_raster_done
+    (FT_Raster_New_Func)     gray_raster_new,
+    (FT_Raster_Reset_Func)   gray_raster_reset,
+    (FT_Raster_Set_Mode_Func)0,
+    (FT_Raster_Render_Func)  gray_raster_render,
+    (FT_Raster_Done_Func)    gray_raster_done
   };
 
 
