@@ -1,8 +1,8 @@
-/*  bdftypes.h
+/*  pcfread.h
 
-  FreeType font driver for bdf fonts
+    FreeType font driver for pcf fonts
 
-  Copyright (C) 2001, 2002 by
+  Copyright 2000-2001 by
   Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,35 +24,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef __BDFTYPES_H__
-#define __BDFTYPES_H__
+
+#ifndef __PCFREAD_H__
+#define __PCFREAD_H__
+
 
 #include <ft2build.h>
-#include FT_FREETYPE_H
-#include FT_BDF_H
-
 
 FT_BEGIN_HEADER
 
-
-  typedef struct  BDF_Public_FaceRec_
-  {
-    FT_FaceRec  root;
-
-    char*       charset_encoding;
-    char*       charset_registry;
-
-  } BDF_Public_FaceRec, *BDF_Public_Face;
-
-
-  typedef FT_Error  (*BDF_GetPropertyFunc)( FT_Face           face,
-                                            const char*       prop_name,
-                                            BDF_PropertyRec  *aproperty );
+  FT_LOCAL( PCF_Property )
+  pcf_find_property( PCF_Face          face,
+                     const FT_String*  prop );
 
 FT_END_HEADER
 
-
-#endif  /* __BDFTYPES_H__ */
+#endif /* __PCFUTIL_H__ */
 
 
 /* END */

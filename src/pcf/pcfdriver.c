@@ -32,10 +32,12 @@ THE SOFTWARE.
 #include FT_INTERNAL_OBJECTS_H
 #include FT_GZIP_H
 #include FT_ERRORS_H
+#include FT_BDF_H
 
 #include "pcf.h"
 #include "pcfdriver.h"
 #include "pcfutil.h"
+#include "pcfread.h"
 
 #include "pcferror.h"
 
@@ -458,6 +460,49 @@ THE SOFTWARE.
   }
 
 
+  static FT_Error
+  pcf_get_bdf_property( PCF_Face          face,
+                        const char*       prop_name,
+                        BDF_PropertyRec  *aproperty )
+  {
+    PCF_Property   prop;
+
+    prop = pcf_find_property( face, prop_name );
+    if ( prop != NULL )
+    {
+      if ( prop->isString )
+      {
+        aproperty->type   = BDF_PROPERTY_TYPE_ATOM;
+        aproperty->u.atom = prop->value.atom;
+      }
+      else
+      {
+       /* apparently, the PCF driver loads all properties as signed integers !
+        * this really doesn't seem to be a problem, because this is
+        * sufficient for any meaningful values
+        */
+        aproperty->type      = BDF_PROPERTY_TYPE_INTEGER;
+        aproperty->u.integer = prop->value.integer;
+      }
+      return 0;
+    }
+    return FT_Err_Invalid_Argument;
+  }
+
+
+  static FT_Module_Interface
+  pcf_driver_requester( FT_Module    module,
+                        const char*  name )
+  {
+    FT_UNUSED( module );
+
+    if ( name && ft_strcmp( name, "get_bdf_property" ) == 0 )
+      return (FT_Module_Interface) pcf_get_bdf_property;
+
+    return NULL;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  pcf_driver_class =
   {
@@ -473,7 +518,7 @@ THE SOFTWARE.
 
       (FT_Module_Constructor)0,
       (FT_Module_Destructor) 0,
-      (FT_Module_Requester)  0
+      (FT_Module_Requester)  pcf_driver_requester
     },
 
     sizeof( PCF_FaceRec ),

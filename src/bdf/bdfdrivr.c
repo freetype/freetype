@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
+#include FT_BDF_H
 
 #include "bdf.h"
 #include "bdfdrivr.h"
@@ -631,6 +632,58 @@ THE SOFTWARE.
   }
 
 
+  static FT_Error
+  bdf_get_bdf_property( BDF_Face          face,
+                        const char*       prop_name,
+                        BDF_PropertyRec  *aproperty )
+  {
+    bdf_property_t*  prop;
+
+    FT_ASSERT( face && face->bdffont );
+
+    prop = bdf_get_font_property( face->bdffont, (char*)prop_name );
+    if ( prop != NULL )
+    {
+      switch ( prop->format )
+      {
+        case BDF_ATOM:
+          aproperty->type   = BDF_PROPERTY_TYPE_ATOM;
+          aproperty->u.atom = prop->value.atom;
+          break;
+
+        case BDF_INTEGER:
+          aproperty->type      = BDF_PROPERTY_TYPE_INTEGER;
+          aproperty->u.integer = prop->value.int32;
+          break;
+
+        case BDF_CARDINAL:
+          aproperty->type       = BDF_PROPERTY_TYPE_CARDINAL;
+          aproperty->u.cardinal = prop->value.card32;
+          break;
+
+        default:
+          goto Fail;
+      }
+      return 0;
+    }
+  Fail:
+    return FT_Err_Invalid_Argument;
+  }
+
+
+  static FT_Module_Interface
+  bdf_driver_requester( FT_Module    module,
+                        const char*  name )
+  {
+    FT_UNUSED( module );
+
+    if ( name && ft_strcmp( name, "get_bdf_property" ) == 0 )
+      return (FT_Module_Interface) bdf_get_bdf_property;
+
+    return NULL;
+  }
+
+
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  bdf_driver_class =
   {
@@ -646,7 +699,7 @@ THE SOFTWARE.
 
       (FT_Module_Constructor)0,
       (FT_Module_Destructor) 0,
-      (FT_Module_Requester)  0
+      (FT_Module_Requester)  bdf_driver_requester
     },
 
     sizeof ( BDF_FaceRec ),
