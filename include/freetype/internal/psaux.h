@@ -70,10 +70,10 @@ FT_BEGIN_HEADER
     (*done)( PS_Table  table );
 
     FT_Error
-    (*add)( PS_Table   table,
-            FT_Int     index,
-            void*      object,
-            FT_Int     length );
+    (*add)( PS_Table    table,
+            FT_Int      index,
+            void*       object,
+            FT_PtrDist  length );
 
     void
     (*release)( PS_Table  table );

@@ -633,7 +633,7 @@
           root->face_flags |= FT_FACE_FLAG_VERTICAL;
         }
 #endif
-        root->num_fixed_sizes = face->num_sbit_strikes;
+        root->num_fixed_sizes = (FT_Int)face->num_sbit_strikes;
 
         if ( FT_NEW_ARRAY( root->available_sizes, face->num_sbit_strikes ) )
           goto Exit;

@@ -1213,12 +1213,12 @@
         FT_MEM_COPY( temp, base, size );
         psaux->t1_decrypt( temp, size, 4330 );
         size -= face->type1.private_dict.lenIV;
-        error = T1_Add_Table( table, idx,
+        error = T1_Add_Table( table, (FT_Int)idx,
                               temp + face->type1.private_dict.lenIV, size );
         FT_FREE( temp );
       }
       else
-        error = T1_Add_Table( table, idx, base, size );
+        error = T1_Add_Table( table, (FT_Int)idx, base, size );
       if ( error )
         goto Fail;
     }

@@ -917,7 +917,7 @@
       /* Take care: miny-y1 can be a very large value; we use     */
       /*            a slow MulDiv function to avoid clipping bugs */
       x1 += SMulDiv( Dx, miny - y1, Dy );
-      e1  = TRUNC( miny );
+      e1  = (Int)TRUNC( miny );
       f1  = 0;
     }
     else

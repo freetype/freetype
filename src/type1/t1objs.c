@@ -424,7 +424,7 @@
       root->max_advance_width =
         (FT_Short)( root->bbox.xMax );
       {
-        FT_Int  max_advance;
+        FT_Pos  max_advance;
 
 
         error = T1_Compute_Max_Advance( face, &max_advance );

@@ -1,3 +1,25 @@
+2003-06-04  Wolfgang Domröse  <porthos.domroese@harz.de>
+
+	* include/freetype/internal/ftdriver.h,
+	include/freetype/internal/ftobjs.h,
+	include/freetype/internal/psaux.h, src/cid/cidgload.c,
+	src/psaux/psobjs.c, src/psaux/t1decode.c, src/psaux/psobjs.h,
+	src/pshinter/pshrec.c, src/pshinter/pshalgo.c,
+	src/psnames/psmodule.c, src/raster/ftraster.c, src/sfnt/sfobjs.c,
+	src/smooth/ftgrays.c, src/smooth/ftsmooth.c, src/truetype/ttobjs.c,
+	src/truetype/ttdriver.c, src/truetype/ttgload.c, src/type1/t1afm.c,
+	src/type1/t1gload.c, src/type1/t1gload.h, src/type1/t1load.c,
+	src/type1/t1objs.c, src/type42/t42parse.c, src/type42/t42parse.h:
+	Many casts and slight argument type changes to make it work with
+	a 16bit compiler.
+
+2003-06-04  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftoption.h: Defining
+	TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING by default is a bad idea
+	since some fonts (e.g. Arial) produce worse results than without
+	hinting.  Reverted.
+
 2003-06-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (load_truetype_glyph)

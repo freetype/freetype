@@ -153,10 +153,10 @@
   /*    reallocation fails.                                                */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  ps_table_add( PS_Table  table,
-                FT_Int    idx,
-                void*     object,
-                FT_Int    length )
+  ps_table_add( PS_Table    table,
+                FT_Int      idx,
+                void*       object,
+                FT_PtrDist  length )
   {
     if ( idx < 0 || idx > table->max_elems )
     {

@@ -886,7 +886,7 @@
       count  = 0;
 
       if ( glyph_index < (FT_UInt)face->num_locations - 1 )
-        count = face->glyph_locations[glyph_index + 1] - offset;
+        count = (FT_UInt)( face->glyph_locations[glyph_index + 1] - offset );
     }
 
     if ( count == 0 )
@@ -1184,16 +1184,16 @@
   /*                                                                       */
   /* This algorithm is a guess and works much better than the above.       */
   /*                                                                       */
-              int  mac_xscale = FT_SqrtFixed(
-                                  FT_MulFix( subglyph->transform.xx,
-                                             subglyph->transform.xx ) +
-                                  FT_MulFix( subglyph->transform.xy,
-                                             subglyph->transform.xy) );
-              int  mac_yscale = FT_SqrtFixed(
-                                  FT_MulFix( subglyph->transform.yy,
-                                             subglyph->transform.yy ) +
-                                  FT_MulFix( subglyph->transform.yx,
-                                             subglyph->transform.yx ) );
+              FT_Fixed  mac_xscale = FT_SqrtFixed(
+                                       FT_MulFix( subglyph->transform.xx,
+                                                  subglyph->transform.xx ) +
+                                       FT_MulFix( subglyph->transform.xy,
+                                                  subglyph->transform.xy) );
+              FT_Fixed  mac_yscale = FT_SqrtFixed(
+                                       FT_MulFix( subglyph->transform.yy,
+                                                  subglyph->transform.yy ) +
+                                       FT_MulFix( subglyph->transform.yx,
+                                                  subglyph->transform.yx ) );
 
 
               x = FT_MulFix( x, mac_xscale );
@@ -1647,9 +1647,9 @@
 
 
       error = sfnt->load_sbit_image( face,
-                                     size->strike_index,
-                                     glyph_index,
-                                     load_flags,
+                                     (FT_ULong)size->strike_index,
+                                     (FT_UInt)glyph_index,
+                                     (FT_Int)load_flags,
                                      stream,
                                      &glyph->bitmap,
                                      &metrics );

@@ -143,7 +143,7 @@
 
   FT_LOCAL_DEF( FT_Error )
   T1_Compute_Max_Advance( T1_Face  face,
-                          FT_Int*  max_advance )
+                          FT_Pos*  max_advance )
   {
     FT_Error       error;
     T1_DecoderRec  decoder;
@@ -185,7 +185,7 @@
       if ( glyph_index == 0 || decoder.builder.advance.x > *max_advance )
         *max_advance = decoder.builder.advance.x;
         
-      /* ignore the error if one occured - skip to next glyph */
+      /* ignore the error if one occurred - skip to next glyph */
     }
 
     return T1_Err_Ok;
