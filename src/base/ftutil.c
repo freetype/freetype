@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType utility file for memory and list management (body).         */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2002, 2004 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -89,7 +89,7 @@
       *P = memory->alloc( memory, size );
       if ( !*P )
       {
-        FT_ERROR(( "FT_Alloc:" ));
+        FT_ERROR(( "FT_QAlloc:" ));
         FT_ERROR(( " Out of memory? (%ld requested)\n",
                    size ));
 
@@ -99,14 +99,14 @@
     else
       *P = NULL;
 
-    FT_TRACE7(( "FT_Alloc:" ));
+    FT_TRACE7(( "FT_QAlloc:" ));
     FT_TRACE7(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
                 size, *P, P ));
 
     return FT_Err_Ok;
   }
 
-  
+
   /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( FT_Error )
@@ -160,9 +160,9 @@
 
     FT_ASSERT( P != 0 );
 
-    /* if the original pointer is NULL, call FT_Alloc() */
+    /* if the original pointer is NULL, call FT_QAlloc() */
     if ( !*P )
-      return FT_Alloc( memory, size, P );
+      return FT_QAlloc( memory, size, P );
 
     /* if the new block if zero-sized, clear the current one */
     if ( size <= 0 )
@@ -179,12 +179,13 @@
     return FT_Err_Ok;
 
   Fail:
-    FT_ERROR(( "FT_Realloc:" ));
+    FT_ERROR(( "FT_QRealloc:" ));
     FT_ERROR(( " Failed (current %ld, requested %ld)\n",
                current, size ));
     return FT_Err_Out_Of_Memory;
   }
-  
+
+
   /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( void )
