@@ -1,3 +1,9 @@
+2002-07-01  Owen Taylor  <owen@redhat.com>
+
+    * src/pshinter/pshalgo2.c (psh2_glyph_find_strong_points): fix a bug
+    where, if a glyph has more than hint mask, the second mask gets applied
+    to points that should have been covered by the first mask.
+
 2002-07-01  Keith Packard  <keithp@keithp.com>
 
     * src/sfnt/ttcmap0.c: fixing the cmap 8 and 12 parsing routines
