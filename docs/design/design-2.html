@@ -1,0 +1,112 @@
+<html>
+<head><title>The Design of FreeType 2 - Basic Design</title>
+<basefont face="Georgia, Arial, Helvetica, Geneva">
+<style content="text/css">
+  P { text-align=justify }
+  H1 { text-align=center }
+  H2 { text-align=center }
+  LI { text-align=justify }
+</style>
+</head>
+<body text=#000000 bgcolor=#ffffff>
+
+<center><table width="500"><tr><td>
+
+<center><h1>The Design of FreeType 2</h1></center>
+
+<table width="100%" cellpadding=5><tr bgcolor="#ccccee"><td>
+<h1>I. Components and APIs</h1>
+</td></tr></table>
+
+<p>It's better to describe FreeType 2 as a collection of
+   <em>components</em>. Each one of them is a more or less abstract
+   part of the library that is in charge of one specific task. We will
+   now explicit the connections and relationships between them.</p>
+
+<p>A first brief description of this system of components could be:</p>
+<ul>
+  <li><p>
+    client applications typically call the FreeType 2 <b>high-level
+    API</b>, whose functions are implemented in a single component
+    called the <em>Base Layer</em>.
+  </p></li>
+
+  <li><p>
+    depending on the context or the task, the base
+    layer then calls one or more <em>module</em> components to
+    perform the work. In most cases, the client application doesn't
+    need to know what module was called.
+  </p></li>
+
+  <li><p>
+    the base layer also contains a set of routines that are
+    used for generic things like memory allocation, list
+    processing, i/o stream parsing, fixed point computation,
+    etc.. these functions can also be called by a module
+    at any time, and they form what is called the <b>low-level
+    base API</b>.
+  </p></li>
+</ul>
+
+<p>This is illustrated by the following graphics (note that component
+   entry points are represented as colored triangles):</p>
+
+<center><img src="basic-design.png" width="394" height="313"></center>
+
+<p>Now, a few additional things must be added to complete this picture:</p>
+
+<ul>
+  <li><p>some parts of the base layer can be replaced for specific builds
+         of the library, and can thus be considered as components themselves.
+         this is the case for the <b>ftsystem</b> component, which is in
+         charge of implementing memory management & input stream access,
+         as well as the <b>ftinit</b>, which is in charge of library
+         initialisation (i.e. implementing <tt>FT_Init_FreeType</tt>).
+  </p></li>
+
+  <li><p>
+     FreeType 2 comes also with a set of <em>optional components</em>,
+     which can be used either as a convenience for client applications
+     (e.g. the <b>ftglyph</b> component, used to provide a simple API
+     to manage glyph images independently of their internal representation),
+     or to access format-specific features (e.g. the <b>ftmm</b> component
+     used to access and manage Multiple Masters data in Type 1 fonts)
+  </p></li>
+
+  <li><p>
+     Finally, a module is capable of calling functions provided by
+     another module. This is very useful to share code and tables
+     between several font driver modules (for example, the <tt>truetype</tt>
+     and <tt>cff</tt> both use the routines provided by the <tt>sfnt</tt>
+     module).
+  </p></li>
+</ul>
+
+<p>Hence, a more complete picture would be:</p>
+
+<center><img src="detailed-design.png" width="390" height="429"></center>
+
+<p>Please take note of the following important points:</p>
+
+<ul>
+  <li><p>
+     an optional component can use either the high-level or base
+     API. This is the case of <b>ftglyph</b> in the above picture.
+  </p></li>
+
+  <li><p>
+     some optional component can use module-specific interfaces
+     ignored by the base layer. In the above example, <b>ftmm</b>
+     directly accesses the Type 1 module to set/query data
+  </p></li>
+
+  <li><p>
+     a replacable component can provide a function of the high-level
+     API. For example, <b>ftinit</b> provides <tt>FT_Init_FreeType</tt>
+     to client applications.
+  </p></li>    
+</ul>
+
+</td></tr></table></center>
+</body>
+</html>
