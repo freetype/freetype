@@ -66,6 +66,7 @@
 #undef  T1CODE
 #define T1CODE        T1_FIELD_LOCATION_FONT_DICT
 
+  T1_FIELD_KEY    ( "FontName", font_name )
   T1_FIELD_NUM_P  ( "PaintType", paint_type )
   T1_FIELD_NUM    ( "FontType", font_type )
   T1_FIELD_FIXED_P( "StrokeWidth", stroke_width )

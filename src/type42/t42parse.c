@@ -34,16 +34,6 @@
 
 
   static void
-  t42_parse_font_name( T42_Face    face,
-                       T42_Loader  loader );
-
-#if 0                       
-  static void
-  t42_parse_font_bbox( T42_Face    face,
-                       T42_Loader  loader );
-#endif
-                       
-  static void
   t42_parse_font_matrix( T42_Face    face,
                          T42_Loader  loader );
   static void
@@ -82,6 +72,7 @@
 #undef  T1CODE
 #define T1CODE        T1_FIELD_LOCATION_FONT_DICT
 
+    T1_FIELD_KEY    ( "FontName",    font_name )
     T1_FIELD_NUM_P  ( "PaintType",   paint_type )
     T1_FIELD_NUM    ( "FontType",    font_type )
     T1_FIELD_FIXED_P( "StrokeWidth", stroke_width )
@@ -93,10 +84,6 @@
 
     T1_FIELD_BBOX("FontBBox", xMin )
 
-    T1_FIELD_CALLBACK( "FontName",    t42_parse_font_name )
-#if 0
-    T1_FIELD_CALLBACK( "FontBBox",    t42_parse_font_bbox )
-#endif
     T1_FIELD_CALLBACK( "FontMatrix",  t42_parse_font_matrix )
     T1_FIELD_CALLBACK( "Encoding",    t42_parse_encoding )
     T1_FIELD_CALLBACK( "CharStrings", t42_parse_charstrings )
@@ -256,66 +243,6 @@
   {
     return ( c == ' ' || c == '\t' || c == '\r' || c == '\n' );
   }
-
-
-  static void
-  t42_parse_font_name( T42_Face    face,
-                       T42_Loader  loader )
-  {
-    T42_Parser  parser = &loader->parser;
-    FT_Error    error;
-    FT_Memory   memory = parser->root.memory;
-    FT_Int      len;
-    FT_Byte*    cur;
-    FT_Byte*    cur2;
-    FT_Byte*    limit;
-
-
-    T1_Skip_Spaces( parser );
-
-    cur   = parser->root.cursor;
-    limit = parser->root.limit;
-
-    if ( cur >= limit - 1              ||
-         ( *cur != '/' && *cur != '(') )
-      return;
-
-    cur++;
-    cur2 = cur;
-    while ( cur2 < limit && t42_is_alpha( *cur2 ) )
-      cur2++;
-
-    len = (FT_Int)( cur2 - cur );
-    if ( len > 0 )
-    {
-      if ( FT_ALLOC( face->type1.font_name, len + 1 ) )
-      {
-        parser->root.error = error;
-        return;
-      }
-
-      FT_MEM_COPY( face->type1.font_name, cur, len );
-      face->type1.font_name[len] = '\0';
-    }
-    parser->root.cursor = cur2;
-  }
-
-
-#if 0
-  static void
-  t42_parse_font_bbox( T42_Face    face,
-                       T42_Loader  loader )
-  {
-    T42_Parser  parser = &loader->parser;
-    FT_BBox*    bbox   = &face->type1.font_bbox;
-
-
-    bbox->xMin = T1_ToInt( parser );
-    bbox->yMin = T1_ToInt( parser );
-    bbox->xMax = T1_ToInt( parser );
-    bbox->yMax = T1_ToInt( parser );
-  }
-#endif
 
 
   static void
