@@ -117,7 +117,7 @@
 
 
   FT_CALLBACK_TABLE_DEF
-  const FT_Module_Class  autohint_module_class =
+  const FT_Module_Class  autofit_module_class =
   {
     FT_MODULE_HINTER,
     sizeof ( FT_AutoHinterRec ),

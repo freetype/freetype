@@ -215,10 +215,15 @@
       do
       {
         if ( compare( node, key ) )
+        {
+          if ( node != first )
+            FTC_MruNode_Up( &list->nodes, node );
+
           return node;
+        }
 
         node = node->next;
-  
+
       } while ( node != first);
     }
 

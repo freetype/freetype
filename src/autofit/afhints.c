@@ -860,7 +860,7 @@
     {
       touch_flag = AF_FLAG_TOUCH_Y;
 
-      for ( point = points; point < point_limit; points++ )
+      for ( point = points; point < point_limit; point++ )
       {
         point->u = point->y;
         point->v = point->oy;

@@ -81,6 +81,9 @@ FT_BEGIN_HEADER
     FT_UInt          blue_count;
     AF_LatinBlueRec  blues[ AF_LATIN_BLUE_MAX ];
 
+    FT_Fixed         org_scale;
+    FT_Pos           org_delta;
+
   } AF_LatinAxisRec, *AF_LatinAxis;
 
 
@@ -89,6 +92,7 @@ FT_BEGIN_HEADER
     AF_ScriptMetricsRec   root;
     FT_UInt               units_per_em;
     AF_LatinAxisRec       axis[ AF_DIMENSION_MAX ];
+    AF_ScalerRec          scaler;
 
   } AF_LatinMetricsRec, *AF_LatinMetrics;
 

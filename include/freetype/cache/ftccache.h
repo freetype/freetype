@@ -197,6 +197,7 @@ FT_BEGIN_HEADER
                           FTC_FaceID  face_id );
 
 
+#ifdef FTC_INLINE
 
 #define FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error )   \
   FT_BEGIN_STMNT                                                           \
@@ -249,6 +250,15 @@ FT_BEGIN_HEADER
     *(FTC_Node*)&(node) = _node;                                           \
   FT_END_STMNT
 
+#else /* !FTC_INLINE */
+
+#define FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error )   \
+  FT_BEGIN_STMNT                                                           \
+    error = FTC_Cache_Lookup( FTC_CACHE(cache), hash, query,               \
+                              (FTC_Node*)&(node) );                        \
+  FT_END_STMNT
+
+#endif /* !FTC_INLINE */
 
  /* */
 
