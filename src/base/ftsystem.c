@@ -1,163 +1,183 @@
-/**************************************************************************
- *
- *  ftsystem.h                                                        1.0
- *
- *    ANSI-specific FreeType low-level system interface
- *
- *    This file contains the definition of interface used by FreeType
- *    to access low-level, i.e. memory management, i/o access as well
- *    as thread synchronisation.
- *
- *
- *  Copyright 1996-1999 by
- *  David Turner, Robert Wilhelm, and Werner Lemberg
- *
- *  This file is part of the FreeType project, and may only be used
- *  modified and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
- *  this file you indicate that you have read the license and
- *  understand and accept it fully.
- *
- **************************************************************************/
+/***************************************************************************/
+/*                                                                         */
+/*  ftsystem.h                                                             */
+/*                                                                         */
+/*    ANSI-specific FreeType low-level system interface (body).            */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used        */
+/*  modified and distributed under the terms of the FreeType project       */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* This file contains the default interface used by FreeType to access   */
+  /* low-level, i.e. memory management, i/o access as well as thread       */
+  /* synchronisation.  It can be replaced by user-specific routines if     */
+  /* necessary.                                                            */
+  /*                                                                       */
+  /*************************************************************************/
+
 
 #include <freetype/config/ftconfig.h>
 #include <freetype/ftsystem.h>
 #include <freetype/fterrors.h>
+#include <freetype/fttypes.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-  /*********************************************************************/
-  /*                                                                   */
-  /*                       MEMORY MANAGEMENT INTERFACE                 */
-  /*                                                                   */
 
-/************************************************************************
- *
- * <FuncType>
- *    FT_Alloc_Func
- *
- * <Description>
- *    The memory allocator function type
- *
- * <Input>
- *    system    :: pointer to the system object
- *    size      :: requested size in bytes
- *
- * <Output>
- *    block     :: address of newly allocated block
- *
- * <Return>
- *    Error code. 0 means success.
- *
- * <Note>
- *    If your allocation routine ALWAYS zeroes the new block, you
- *    should set the flag FT_SYSTEM_FLAG_ALLOC_ZEROES in your system
- *    object 'flags' field.
- *
- *    If you have set the flag FT_SYSTEM_FLAG_REPORT_CURRENT_ALLOC in
- *    your system's "system_flags" field, this function should update
- *    the "current_alloc" field of the system object.
- *
- ************************************************************************/
+  /*************************************************************************/
+  /*                                                                       */
+  /*                       MEMORY MANAGEMENT INTERFACE                     */
+  /*                                                                       */
+  /*************************************************************************/
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* It is not necessary to do any error checking here.  This will be done */
+  /* by the higher level routines like FT_Alloc() or FT_Realloc().         */
+  /*                                                                       */
+  /*************************************************************************/
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ft_alloc                                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The memory allocation function.                                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory :: A pointer to the memory object.                          */
+  /*    size   :: The requested size in bytes.                             */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    block  :: The address of newly allocated block.                    */
+  /*                                                                       */
   static
   void*  ft_alloc( FT_Memory  memory,
                    long       size )
   {
-    UNUSED(memory);
-    return malloc(size);
+    UNUSED( memory );
+
+    return malloc( size );
   }
 
 
-/************************************************************************
- *
- * <FuncType>
- *    FT_Realloc_Func
- *
- * <Description>
- *    The memory reallocator function type
- *
- * <Input>
- *    system   :: pointer to the system object
- *    new_size :: new requested size in bytes
- *
- * <InOut>
- *    block    :: address of block in memory
- *
- * <Return>
- *    Error code. 0 means success.
- *
- * <Note>
- *    This function is _never_ called when the system flag
- *    FT_SYSTEM_FLAG_NO_REALLOC is set. Instead, the engine will emulate
- *    realloc through "alloc" and "free".
- *
- *    Note that this is possible due to the fact that FreeType's
- *    "FT_Realloc" always requests the _current_ size of the reallocated
- *    block as a parameter, thus avoiding memory leaks.
- *
- *    If you have set the flag FT_SYSTEM_FLAG_REPORT_CURRENT_ALLOC in
- *    your system's "system_flags" field, this function should update
- *    the "current_alloc" field of the system object.
- *
- ************************************************************************/
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ft_realloc                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The memory reallocation function.                                  */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory   :: A pointer to the memory object.                        */
+  /*                                                                       */
+  /*    cur_size :: The current size of the allocated memory block.        */
+  /*                                                                       */
+  /*    new_size :: The newly requested size in bytes.                     */
+  /*                                                                       */
+  /*    block    :: The current address of the block in memory.            */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The address of the reallocated memory block.                       */
+  /*                                                                       */
   static
   void*  ft_realloc( FT_Memory  memory,
                      long       cur_size,
                      long       new_size,
                      void*      block )
   {
-    UNUSED(memory);
-    UNUSED(cur_size);
+    UNUSED( memory );
+    UNUSED( cur_size );
 
     return realloc( block, new_size );
   }
 
 
-/************************************************************************
- *
- * <FuncType>
- *    FT_Free_Func
- *
- * <Description>
- *    The memory release function type
- *
- * <Input>
- *    system  :: pointer to the system object
- *    block   :: address of block in memory
- *
- * <Note>
- *    If you have set the flag FT_SYSTEM_FLAG_REPORT_CURRENT_ALLOC in
- *    your system's "system_flags" field, this function should update
- *    the "current_alloc" field of the system object.
- *
- ************************************************************************/
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ft_free                                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The memory release function.                                       */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory  :: A pointer to the memory object.                         */
+  /*                                                                       */
+  /*    block   :: The address of block in memory to be freed.             */
+  /*                                                                       */
   static
   void  ft_free( FT_Memory  memory,
                  void*      block )
   {
-    UNUSED(memory);
+    UNUSED( memory );
+
     free( block );
   }
 
-  /*********************************************************************/
-  /*                                                                   */
-  /*                     RESOURCE MANAGEMENT INTERFACE                 */
-  /*                                                                   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /*                     RESOURCE MANAGEMENT INTERFACE                     */
+  /*                                                                       */
+  /*************************************************************************/
 
 
-#define STREAM_FILE(stream)  ((FILE*)stream->descriptor.pointer)
+#define STREAM_FILE( stream )  ( (FILE*)stream->descriptor.pointer )
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ft_close_stream                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The function to close a stream.                                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    stream :: A pointer to the stream object.                          */
+  /*                                                                       */
   static
   void  ft_close_stream( FT_Stream  stream )
   {
-    fclose( STREAM_FILE(stream) );
+    fclose( STREAM_FILE( stream ) );
   }
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ft_io_stream                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The function to open a stream.                                     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    stream :: A pointer to the stream object.                          */
+  /*                                                                       */
+  /*    offset :: The position in the data stream to start reading.        */
+  /*                                                                       */
+  /*    buffer :: The address of buffer to store the read data.            */
+  /*                                                                       */
+  /*    count  :: The number of bytes to read from the stream.             */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The number of bytes actually read.                                 */
+  /*                                                                       */
   static
   unsigned long  ft_io_stream( FT_Stream      stream,
                                unsigned long  offset,
@@ -166,24 +186,44 @@
   {
     FILE*  file;
 
-    file = STREAM_FILE(stream);
+
+    file = STREAM_FILE( stream );
 
     fseek( file, offset, SEEK_SET );
+
     return (unsigned long)fread( buffer, 1, count, file );
   }
 
 
-  FT_EXPORT_FUNC(int)  FT_New_Stream( const char*  filepathname,
-                                      FT_Stream    stream )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_Stream                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new stream object.                                       */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    filepathname :: The name of the stream (usually a file) to be      */
+  /*                    opened.                                            */
+  /*                                                                       */
+  /*    stream       :: A pointer to the stream object.                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Error )  FT_New_Stream( const char*  filepathname,
+                                             FT_Stream    stream )
   {
     FILE*  file;
 
+
     file = fopen( filepathname, "rb" );
-    if (!file)
+    if ( !file )
       return FT_Err_Cannot_Open_Resource;
 
     fseek( file, 0, SEEK_END );
-    stream->size = ftell(file);
+    stream->size = ftell( file );
     fseek( file, 0, SEEK_SET );
 
     stream->descriptor.pointer = file;
@@ -192,22 +232,37 @@
     stream->read  = ft_io_stream;
     stream->close = ft_close_stream;
 
-    return 0;
+    return FT_Err_Ok;
   }
 
 
-  FT_EXPORT_FUNC(FT_Memory)  FT_New_Memory( void )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_Memory                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new memory object.                                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A pointer to the new memory object.  0 in case of error.           */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Memory )  FT_New_Memory( void )
   {
     FT_Memory  memory;
 
-    memory = (FT_Memory)malloc( sizeof(*memory) );
-    if (memory)
+
+    memory = (FT_Memory)malloc( sizeof ( *memory ) );
+    if ( memory )
     {
       memory->user    = 0;
       memory->alloc   = ft_alloc;
       memory->realloc = ft_realloc;
       memory->free    = ft_free;
     }
+
     return memory;
   }
 
+
+/* END */

@@ -126,13 +126,6 @@
   /*    All callers of FT_Realloc() _must_ provide the current block size  */
   /*    as well as the new one.                                            */
   /*                                                                       */
-  /*    If the memory object's flag FT_SYSTEM_FLAG_NO_REALLOC is set, this */
-  /*    function will try to emulate a reallocation using FT_Alloc() and   */
-  /*    FT_Free().  Otherwise, it will call the system-specific `realloc'  */
-  /*    implementation.                                                    */
-  /*                                                                       */
-  /*    (Some embedded systems do not have a working realloc function).    */
-  /*                                                                       */
   BASE_FUNC( FT_Error )  FT_Realloc( FT_Memory  memory,
                                      FT_Long    current,
                                      FT_Long    size,

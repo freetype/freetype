@@ -17,7 +17,7 @@
 # after the call:
 #
 #    BASE_H:       The list of base layer header files on which the rest
-#                  of the library (i.e., drivers) rely.
+#                  of the library (i.e. drivers) rely.
 #
 #    BASE_OBJ_S:   The single-object base layer.
 #    BASE_OBJ_M:   A list of all objects for a multiple-objects build.
@@ -35,7 +35,6 @@ BASE_SRC := $(BASE_)ftcalc.c    \
             $(BASE_)ftobjs.c    \
             $(BASE_)ftstream.c  \
             $(BASE_)ftoutln.c
-
 
 # Base layer headers
 #
@@ -63,6 +62,10 @@ BASE_EXT_SRC := $(BASE_)ftraster.c \
 #
 BASE_EXT_H := $(BASE_EXT_SRC:%c=%h)
 
+# Default extensions objects
+#
+BASE_EXT_OBJ := $(BASE_EXT_SRC:$(BASE_)%.c=$(OBJ_)%.$O)
+
 
 # Base layer object(s)
 #
@@ -74,12 +77,6 @@ BASE_EXT_H := $(BASE_EXT_SRC:%c=%h)
 #
 BASE_OBJ_M := $(BASE_SRC:$(BASE_)%.c=$(OBJ_)%.$O)
 BASE_OBJ_S := $(OBJ_)ftbase.$O
-
-
-# Default extensions objects
-#
-BASE_EXT_OBJ := $(BASE_EXT_SRC:$(BASE_)%.c=$(OBJ_)%.$O)
-
 
 # Base layer root source file(s)
 #
