@@ -1,3 +1,13 @@
+2003-01-22  David Turner  <david@freetype.org>
+
+    * include/freetype/ftbdf.h, include/freetype/internal/bdftypes.h,
+    src/base/ftbdf.c, src/bdf/bdfdrivr.c, src/pcf/pcfdrivr.c,
+    src/pcf/pcfread.h:
+
+      adding a new API, named FT_Get_BDF_Property to retrieve the BDF
+      properties of a given PCF or BDF font
+
+
 2003-01-18  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ltmain.sh: Regenerated with `libtoolize --force
@@ -145,7 +155,7 @@
 
 2002-12-02  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
 
-	* src/base/ftobjs.c: Modified the logic to get Unicode charmaps. 
+	* src/base/ftobjs.c: Modified the logic to get Unicode charmaps.
 	Now it loads UCS-4 charmaps when there is one.
 	* src/base/ftobjs.c (find_unicode_charmap): New function.
 	* src/base/ftobjs.c (open_face): Refer to the above one.
@@ -200,7 +210,7 @@
 	the use of system-wide zlib.
 
 	Note that this macro, as well as
-	FT_CONFIG_OPTION_BYTECODE_INTERPRETER, is not #undef-ed anymore. 
+	FT_CONFIG_OPTION_BYTECODE_INTERPRETER, is not #undef-ed anymore.
 	This allows the build system to define them depending on the
 	configuration (typically by adding -D flags at compile time).
 
