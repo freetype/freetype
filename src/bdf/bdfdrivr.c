@@ -109,6 +109,8 @@ THE SOFTWARE.
 
       if ( charcode == code )
       {
+        /* increase glyph index by 1 --              */
+        /* we reserve slot 0 for the undefined glyph */
         result = encodings[mid].glyph + 1;
         break;
       }
@@ -147,6 +149,8 @@ THE SOFTWARE.
 
       if ( charcode == code )
       {
+        /* increase glyph index by 1 --              */
+        /* we reserve slot 0 for the undefined glyph */
         result = encodings[mid].glyph + 1;
         goto Exit;
       }
@@ -397,7 +401,9 @@ THE SOFTWARE.
       if ( ( error = bdf_interpret_style( face ) ) != 0 )
         goto Exit;
 
-      bdfface->num_glyphs = font->glyphs_size;     /* unencoded included */
+      /* the number of glyphs (with one slot for the undefined glyph */
+      /* at position 0 and all unencoded glyphs)                     */
+      bdfface->num_glyphs = font->glyphs_size + 1;
 
       bdfface->num_fixed_sizes = 1;
       if ( FT_NEW_ARRAY( bdfface->available_sizes, 1 ) )
@@ -457,11 +463,15 @@ THE SOFTWARE.
         if ( FT_NEW_ARRAY( face->en_table, font->glyphs_size ) )
           goto Exit;
 
+        face->default_glyph = 0;
         for ( n = 0; n < font->glyphs_size; n++ )
         {
           (face->en_table[n]).enc = cur[n].encoding;
           FT_TRACE4(( "idx %d, val 0x%lX\n", n, cur[n].encoding ));
           (face->en_table[n]).glyph = (FT_Short)n;
+  
+          if ( cur[n].encoding == font->default_char )
+            face->default_glyph = n;
         }
       }
 
@@ -556,7 +566,7 @@ THE SOFTWARE.
             bdfface->charmap = bdfface->charmaps[0];
         }
       }
-   }
+    }
 
   Exit:
     return error;
@@ -636,7 +646,10 @@ THE SOFTWARE.
       goto Exit;
     }
 
-    if ( glyph_index > 0 )
+    /* index 0 is the undefined glyph */
+    if ( glyph_index == 0 )
+      glyph_index = face->default_glyph;
+    else
       glyph_index--;
 
     /* slot, bitmap => freetype, glyph => bdflib */
@@ -812,6 +825,7 @@ THE SOFTWARE.
   Fail:
     return BDF_Err_Invalid_Argument;
   }
+
 
   static FT_Error
   bdf_get_charset_id( BDF_Face      face,

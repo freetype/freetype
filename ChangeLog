@@ -7,6 +7,17 @@
 	* src/pcf/pcfdrivr.c (FT_COMPOMENT): Move up.
 	(PCF_Face_Init): Simplify code.
 
+	* src/bdf/bdfdrivr.h (BDF_FaceRec): New element `default_glyph'.
+
+	* src/bdf/bdflib.c (_bdf_add_property, _bdf_parse_start),
+	src/bdf/bdf.h (bdf_font_t): s/default_glyph/default_char/.
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Fix number of glyphs.
+	Set `default_glyph'.
+	(BDF_Glyph_Load): Use `default_glyph' for undefined glyph.
+
+	* docs/CHANGES: Updated.
+
 2004-06-21  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
