@@ -263,11 +263,11 @@
       error = FT_New_Stream( args->pathname, stream );
       stream->pathname.pointer = args->pathname;
     }
-    else if ( args->flags & ft_open_stream && args->stream )
+    else if ( ( args->flags & ft_open_stream ) && args->stream )
     {
-      /* in this case, we do not need to allocate a new stream      */
-      /* object. The caller is responsible for closing it himself!! */
-      FREE(stream);
+      /* in this case, we do not need to allocate a new stream object */
+      /* since the caller is responsible for closing it himself       */
+      FREE( stream );
       stream = args->stream;
     }
     else
@@ -302,7 +302,8 @@
 
 
   static
-  void  ft_done_stream( FT_Stream*  astream, FT_Int  external )
+  void  ft_done_stream( FT_Stream*  astream,
+                        FT_Int      external )
   {
     FT_Stream  stream = *astream;
 
@@ -310,9 +311,11 @@
     if ( stream->close )
       stream->close( stream );
 
-    if (!external)
+    if ( !external )
     {
       FT_Memory  memory = stream->memory;
+
+
       FREE( stream );
     }
     *astream = 0;
@@ -1151,8 +1154,9 @@
       clazz->done_face( face );
 
     /* close the stream for this face if needed */
-    ft_done_stream( &face->stream,
-                    (face->face_flags & FT_FACE_FLAG_EXTERNAL_STREAM) != 0 );
+    ft_done_stream(
+      &face->stream,
+      ( face->face_flags & FT_FACE_FLAG_EXTERNAL_STREAM ) != 0 );
 
     /* get rid of it */
     FREE( face );
@@ -1399,6 +1403,7 @@
     FT_ListNode  node = 0;
     FT_Bool      external_stream;
 
+
     /* test for valid `library' and `args' delayed to */
     /* ft_new_input_stream()                          */
 
@@ -1407,7 +1412,7 @@
 
     *aface = 0;
 
-    external_stream = ( args->flags & ft_open_stream && args->stream );
+    external_stream = ( ( args->flags & ft_open_stream ) && args->stream );
 
     /* create input stream */
     error = ft_new_input_stream( library, args, &stream );
@@ -1662,8 +1667,8 @@
 
     /* close the attached stream */
     ft_done_stream( &stream,
-                    (FT_Bool)(parameters->stream &&
-                             (parameters->flags & ft_open_stream)) );
+                    (FT_Bool)( parameters->stream &&
+                               ( parameters->flags & ft_open_stream ) ) );
 
   Exit:
     return error;

@@ -730,7 +730,7 @@
       driver->context = NULL;
     }
 #else
-    FT_UNUSED(driver);
+    FT_UNUSED( driver );
 #endif
 
   }
