@@ -1367,7 +1367,8 @@
     ah_loader_rewind( hinter->loader );
 
 #if 1
-    load_flags = FT_LOAD_NO_SCALE;
+    load_flags  = FT_LOAD_NO_SCALE
+                | FT_LOAD_IGNORE_TRANSFORM ;
 #else
     load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE;
 #endif
