@@ -199,7 +199,8 @@
       FT_ULong     i;
 
 
-      new_buckets = ft_mem_table_alloc( table,
+      new_buckets = (FT_MemNode *)
+                    ft_mem_table_alloc( table,
                                         new_size * sizeof ( FT_MemNode ) );
       if ( new_buckets == NULL )
         return;
@@ -241,7 +242,7 @@
     FT_MemTable  table;
 
 
-    table = memory->alloc( memory, sizeof ( *table ) );
+    table = (FT_MemTable)memory->alloc( memory, sizeof ( *table ) );
     if ( table == NULL )
       goto Exit;
 
@@ -258,7 +259,8 @@
     table->realloc = memory->realloc;
     table->free    = memory->free;
 
-    table->buckets = memory->alloc( memory,
+    table->buckets = (FT_MemNode *)
+                     memory->alloc( memory,
                                     table->size * sizeof ( FT_MemNode ) );
     if ( table->buckets )
       MEM_Set( table->buckets, 0, sizeof ( FT_MemNode ) * table->size );
@@ -395,7 +397,7 @@
       }
 
       /* we need to create a new node in this table */
-      node = ft_mem_table_alloc( table, sizeof ( *node ) );
+      node = (FT_MemNode)ft_mem_table_alloc( table, sizeof ( *node ) );
       if ( node == NULL )
         ft_mem_debug_panic( "not enough memory to run memory tests" );
 
@@ -469,14 +471,14 @@
   ft_mem_debug_alloc( FT_Memory  memory,
                       FT_Long    size )
   {
-    FT_MemTable  table = memory->user;
+    FT_MemTable  table = (FT_MemTable)memory->user;
     FT_Byte*     block;
 
 
     if ( size <= 0 )
       ft_mem_debug_panic( "negative block size allocation (%ld)", size );
 
-    block = ft_mem_table_alloc( table, size );
+    block = (FT_Byte *)ft_mem_table_alloc( table, size );
     if ( block )
       ft_mem_table_set( table, block, (FT_ULong)size );
 
@@ -491,7 +493,7 @@
   ft_mem_debug_free( FT_Memory   memory,
                      FT_Pointer  block )
   {
-    FT_MemTable  table = memory->user;
+    FT_MemTable  table = (FT_MemTable)memory->user;
 
 
     if ( block == NULL )
@@ -513,7 +515,7 @@
                         FT_Long     new_size,
                         FT_Pointer  block )
   {
-    FT_MemTable  table = memory->user;
+    FT_MemTable  table = (FT_MemTable)memory->user;
     FT_MemNode   node, *pnode;
     FT_Pointer   new_block;
 
@@ -589,7 +591,7 @@
   extern void
   ft_mem_debug_done( FT_Memory  memory )
   {
-    FT_MemTable  table = memory->user;
+    FT_MemTable  table = (FT_MemTable)memory->user;
 
 
     if ( table )
@@ -611,7 +613,7 @@
                   const char*  file_name,
                   FT_Long      line_no )
   {
-    FT_MemTable  table = memory->user;
+    FT_MemTable  table = (FT_MemTable)memory->user;
 
 
     if ( table )
@@ -631,7 +633,7 @@
                     const char*  file_name,
                     FT_Long      line_no )
   {
-    FT_MemTable  table = memory->user;
+    FT_MemTable  table = (FT_MemTable)memory->user;
 
 
     if ( table )
@@ -649,7 +651,7 @@
                  const char*  file_name,
                  FT_Long      line_no )
   {
-    FT_MemTable  table = memory->user;
+    FT_MemTable  table = (FT_MemTable)memory->user;
 
 
     if ( table )
@@ -657,7 +659,7 @@
       table->file_name = file_name;
       table->line_no   = line_no;
     }
-    FT_Free( memory, block );
+    FT_Free( memory, (void **)block );
   }
 
 

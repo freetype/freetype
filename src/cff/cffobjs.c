@@ -59,10 +59,10 @@
   static PSH_Globals_Funcs
   CFF_Size_Get_Globals_Funcs( CFF_Size  size )
   {
-    CFF_Face           face     = (CFF_Face)size->face;
-    CFF_Font*          font     = face->extra.data;
-    PSHinter_Service   pshinter = font->pshinter;
-    FT_Module          module;
+    CFF_Face          face     = (CFF_Face)size->face;
+    CFF_Font*         font     = (CFF_Font *)face->extra.data;
+    PSHinter_Service  pshinter = (PSHinter_Service)font->pshinter;
+    FT_Module         module;
 
 
     module = FT_Get_Module( size->face->driver->root.library,
@@ -101,7 +101,7 @@
     {
       PSH_Globals    globals;
       CFF_Face       face    = (CFF_Face)size->face;
-      CFF_Font*      font    = face->extra.data;
+      CFF_Font*      font    = (CFF_Font *)face->extra.data;
       CFF_SubFont*   subfont = &font->top_font;
 
       CFF_Private   cpriv   = &subfont->private_dict;
@@ -195,9 +195,9 @@
   FT_LOCAL_DEF( FT_Error )
   CFF_GlyphSlot_Init( CFF_GlyphSlot  slot )
   {
-    CFF_Face             face     = (CFF_Face)slot->root.face;
-    CFF_Font*            font     = face->extra.data;
-    PSHinter_Service  pshinter = font->pshinter;
+    CFF_Face          face     = (CFF_Face)slot->root.face;
+    CFF_Font*         font     = (CFF_Font *)face->extra.data;
+    PSHinter_Service  pshinter = (PSHinter_Service)font->pshinter;
 
 
     if ( pshinter )

@@ -1,3 +1,66 @@
+2002-03-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftdbgmem.c (ft_mem_table_resize, ft_mem_table_new,
+	ft_mem_table_set, ft_mem_debug_alloc, ft_mem_debug_free,
+	ft_mem_debug_realloc, ft_mem_debug_done, FT_Alloc_Debug,
+	FT_Realloc_Debug, FT_Free_Debug): Fix compiler warnings.
+	* src/base/ftcalc.c (FT_MulFix): Ditto.
+	* src/cff/cffdrivr.c (cff_get_name_index): Ditto.
+	* src/cff/cffobjs.c (CFF_Size_Get_Global_Funcs, CFF_Size_Init,
+	CFF_GlyphSlot_Init): Ditto.
+	* src/cid/cidobjs.c (CID_GlyphSlot_Init,
+	CID_Size_Get_Globals_Funcs): Ditto.
+	* src/type1/t1objs.c (T1_Size_Get_Globals_Funcs, T1_GlyphSlot_Init):
+	Ditto.
+	* src/pshinter/pshmod.c (pshinter_interface): Use `static const'.
+	* src/winfonts/winfnt.c (FNT_Get_Next_Char): Remove unused
+	variables.
+
+	* include/freetype/internal/psaux.h (T1_Builder_Funcs): Renamed
+	to...
+	(T1_Builder_FuncsRec): This.
+	(T1_Builder_Funcs): New typedef.
+	(PSAux_Interface): Remove compiler warnings.
+	* src/psaux/psauxmod.c (t1_builder_funcs), src/psaux/psobjs.h
+	(t1_builder_funcs): Updated.
+
+	* src/pshinter/pshglob.h (PSH_Blue_Align): Replaced with ...
+	(PSH_BLUE_ALIGN_{NONE,TOP,BOT}): New defines.
+	(PSH_AlignmentRec): Updated.
+
+	* include/freetype/internal/ftstream.h (GET_Char, GET_Byte): Fix
+	typo.
+	* include/freetype/internal/ftgloadr.h (FT_SubGlyph): Ditto.
+	* src/base/ftstream (FT_Get_Char): Rename to...
+	(FT_Stream_Get_Char): This.
+
+	* src/base/ftnames.c (FT_Get_Sfnt_Name): s/index/idx/ -- `index' is
+	a built-in function in gcc, causing warning messages with gcc 3.0.
+	* src/autohint/ahglyph.c (ah_outline_load): Ditto.
+	* src/autohint/ahglobal.c (ah_hinter_compute_blues): Ditto.
+	* src/cache/ftcmanag.c (ftc_family_table_alloc,
+	ftc_family_table_free, FTC_Manager_Done, FTC_Manager_Register_Cache):
+	Ditto.
+	* src/cff/cffload.c (cff_new_index, cff_done_index,
+	cff_explicit_index, CFF_Access_Element, CFF_Forget_Element,
+	CFF_Get_Name, CFF_Get_String, CFF_Load_SubFont, CFF_Load_Font,
+	CFF_Done_Font): Ditto.
+	* src/psaux/psobjs.c (PS_Table_Add, PS_Parser_LoadField): Ditto.
+	* src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings): Ditto.
+	* src/pshinter/pshrec.c (ps_mask_test_bit, ps_mask_clear_bit,
+	ps_mask_set_bit, ps_dimension_add_t1stem, ps_hints_t1stem3,
+	* src/pshinter/pshalgo1.c (psh1_hint_table_record,
+	psh1_hint_table_record_mask, psh1_hint_table_activate_mask): Ditto.
+	* src/pshinter/pshalgo2.c (psh2_hint_table_record,
+	psh2_hint_table_record_mask, psh2_hint_table_activate_mask): Ditto.
+	* src/sfnt/ttpost.c (Load_Format_20, Load_Format_25,
+	TT_Get_PS_Name): Ditto.
+	* src/truetype/ttgload.c (TT_Get_Metrics, Get_HMetrics,
+	load_truetype_glyph): Ditto.
+	* src/type1/t1load.c (parse_subrs, T1_Open_Face): Ditto.
+	* src/type1/t1afm.c (T1_Get_Kerning): Ditto.
+	* include/freetype/cache/ftcmanag.h (ftc_family_table_free): Ditto.
+
 2002-03-06  David Turner    <david@freetype.org>
 
         * src/type1/t1objs.c (T1_Face_Init), src/cid/cidobjs.c (CID_Face_Init):
@@ -10,7 +73,6 @@
         * include/freetype/freetype.h, include/freetype/internal/ftobjs.h,
         src/base/ftobjs.c, src/base/ftinit.c: adding the new FT_Library_Version
         API to return the library's current version in dynamic links.
-
 
 2002-03-06  Werner Lemberg  <wl@gnu.org>
 

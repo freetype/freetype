@@ -40,7 +40,7 @@
 
   FT_EXPORT_DEF( FT_Error )
   FT_Get_Sfnt_Name( FT_Face       face,
-                    FT_UInt       index,
+                    FT_UInt       idx,
                     FT_SfntName  *aname )
   {
     FT_Error  error = FT_Err_Invalid_Argument;
@@ -51,9 +51,9 @@
       TT_Face  ttface = (TT_Face)face;
 
 
-      if ( index < (FT_UInt)ttface->num_names )
+      if ( idx < (FT_UInt)ttface->num_names )
       {
-        TT_NameRec*  name = ttface->name_table.names + index;
+        TT_NameRec*  name = ttface->name_table.names + idx;
 
 
         aname->platform_id = name->platformID;

@@ -204,15 +204,15 @@
 
       for ( n = 0; n < num_glyphs; n++ )
       {
-        FT_Int  index;
+        FT_Int  idx;
 
 
-        index = glyph_indices[n];
-        if ( index >= 258 )
+        idx = glyph_indices[n];
+        if ( idx >= 258 )
         {
-          index -= 257;
-          if ( index > num_names )
-            num_names = (FT_UShort)index;
+          idx -= 257;
+          if ( idx > num_names )
+            num_names = (FT_UShort)idx;
         }
       }
     }
@@ -303,10 +303,10 @@
 
       for ( n = 0; n < num_glyphs; n++ )
       {
-        FT_Long  index = (FT_Long)n + offset_table[n];
+        FT_Long  idx = (FT_Long)n + offset_table[n];
 
 
-        if ( index < 0 || index > num_glyphs )
+        if ( idx < 0 || idx > num_glyphs )
         {
           error = SFNT_Err_Invalid_File_Format;
           goto Fail;
@@ -431,7 +431,7 @@
   /* <Input>                                                               */
   /*    face   :: A handle to the parent face.                             */
   /*                                                                       */
-  /*    index  :: The glyph index.                                         */
+  /*    idx    :: The glyph index.                                         */
   /*                                                                       */
   /*    PSname :: The address of a string pointer.  Will be NULL in case   */
   /*              of error, otherwise it is a pointer to the glyph name.   */
@@ -443,7 +443,7 @@
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   TT_Get_PS_Name( TT_Face      face,
-                  FT_UInt      index,
+                  FT_UInt      idx,
                   FT_String**  PSname )
   {
     FT_Error            error;
@@ -457,7 +457,7 @@
     if ( !face )
       return SFNT_Err_Invalid_Face_Handle;
 
-    if ( index >= (FT_UInt)face->root.num_glyphs )
+    if ( idx >= (FT_UInt)face->root.num_glyphs )
       return SFNT_Err_Invalid_Glyph_Index;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
@@ -474,8 +474,8 @@
     switch ( face->postscript.FormatType )
     {
     case 0x00010000L:
-      if ( index < 258 )                    /* paranoid checking */
-        *PSname = MAC_NAME( index );
+      if ( idx < 258 )                    /* paranoid checking */
+        *PSname = MAC_NAME( idx );
       break;
 
     case 0x00020000L:
@@ -490,9 +490,9 @@
             break;
         }
 
-        if ( index < (FT_UInt)table->num_glyphs )
+        if ( idx < (FT_UInt)table->num_glyphs )
         {
-          FT_UShort  name_index = table->glyph_indices[index];
+          FT_UShort  name_index = table->glyph_indices[idx];
 
 
           if ( name_index < 258 )
@@ -515,10 +515,10 @@
             break;
         }
 
-        if ( index < (FT_UInt)table->num_glyphs )    /* paranoid checking */
+        if ( idx < (FT_UInt)table->num_glyphs )    /* paranoid checking */
         {
-          index  += table->offsets[index];
-          *PSname = MAC_NAME( index );
+          idx    += table->offsets[idx];
+          *PSname = MAC_NAME( idx );
         }
       }
       break;

@@ -265,8 +265,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #define FT_GET_MACRO( func, type )        ( (type)func( stream ) )
 
-#define GET_Char()      FT_GET_MACRO( FT_Get_Char, FT_Char )
-#define GET_Byte()      FT_GET_MACRO( FT_Get_Char, FT_Byte )
+#define GET_Char()      FT_GET_MACRO( FT_Stream_Get_Char, FT_Char )
+#define GET_Byte()      FT_GET_MACRO( FT_Stream_Get_Char, FT_Byte )
 #define GET_Short()     FT_GET_MACRO( FT_Stream_Get_Short, FT_Short )
 #define GET_UShort()    FT_GET_MACRO( FT_Stream_Get_Short, FT_UShort )
 #define GET_Offset()    FT_GET_MACRO( FT_Stream_Get_Offset, FT_Long )

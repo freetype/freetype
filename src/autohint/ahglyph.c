@@ -552,13 +552,13 @@
         AH_Point**  contour       = outline->contours;
         AH_Point**  contour_limit = contour + outline->num_contours;
         short*      end           = source->contours;
-        short       index         = 0;
+        short       idx           = 0;
 
 
         for ( ; contour < contour_limit; contour++, end++ )
         {
-          contour[0] = points + index;
-          index      = (short)( end[0] + 1 );
+          contour[0] = points + idx;
+          idx        = (short)( end[0] + 1 );
         }
       }
 

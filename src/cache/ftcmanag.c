@@ -356,7 +356,7 @@
     if ( table->free == FTC_FAMILY_ENTRY_NONE && table->count >= table->size )
     {
       FT_UInt  old_size = table->size;
-      FT_UInt  new_size, index;
+      FT_UInt  new_size, idx;
 
 
       if ( old_size == 0 )
@@ -379,14 +379,14 @@
       entry       = table->entries + old_size;
       table->free = old_size;
 
-      for ( index = old_size; index + 1 < new_size; index++, entry++ )
+      for ( idx = old_size; idx + 1 < new_size; idx++, entry++ )
       {
-        entry->link  = index + 1;
-        entry->index = index;
+        entry->link  = idx + 1;
+        entry->index = idx;
       }
 
       entry->link  = FTC_FAMILY_ENTRY_NONE;
-      entry->index = index;
+      entry->index = idx;
     }
 
     if ( table->free != FTC_FAMILY_ENTRY_NONE )
@@ -414,12 +414,12 @@
 
   FT_EXPORT_DEF( void )
   ftc_family_table_free( FTC_FamilyTable  table,
-                         FT_UInt          index )
+                         FT_UInt          idx )
   {
     /* simply add it to the linked list of free entries */
-    if ( index < table->count )
+    if ( idx < table->count )
     {
-      FTC_FamilyEntry  entry = table->entries + index;
+      FTC_FamilyEntry  entry = table->entries + idx;
 
 
       if ( entry->link != FTC_FAMILY_ENTRY_NONE )
@@ -521,7 +521,7 @@
   FTC_Manager_Done( FTC_Manager  manager )
   {
     FT_Memory  memory;
-    FT_UInt    index;
+    FT_UInt    idx;
 
 
     if ( !manager || !manager->library )
@@ -530,16 +530,16 @@
     memory = manager->library->memory;
 
     /* now discard all caches */
-    for (index = 0; index < FTC_MAX_CACHES; index++ )
+    for (idx = 0; idx < FTC_MAX_CACHES; idx++ )
     {
-      FTC_Cache  cache = manager->caches[index];
+      FTC_Cache  cache = manager->caches[idx];
 
 
       if ( cache )
       {
         cache->clazz->cache_done( cache );
         FREE( cache );
-        manager->caches[index] = 0;
+        manager->caches[idx] = 0;
       }
     }
 
@@ -697,18 +697,18 @@
     if ( manager && clazz && acache )
     {
       FT_Memory  memory = manager->library->memory;
-      FT_UInt    index  = 0;
+      FT_UInt    idx  = 0;
 
 
       /* check for an empty cache slot in the manager's table */
-      for ( index = 0; index < FTC_MAX_CACHES; index++ )
+      for ( idx = 0; idx < FTC_MAX_CACHES; idx++ )
       {
-        if ( manager->caches[index] == 0 )
+        if ( manager->caches[idx] == 0 )
           break;
       }
 
       /* return an error if there are too many registered caches */
-      if ( index >= FTC_MAX_CACHES )
+      if ( idx >= FTC_MAX_CACHES )
       {
         error = FTC_Err_Too_Many_Caches;
         FT_ERROR(( "FTC_Manager_Register_Cache:" ));
@@ -724,7 +724,7 @@
 
         /* THIS IS VERY IMPORTANT!  IT WILL WRETCH THE MANAGER */
         /* IF IT IS NOT SET CORRECTLY                          */
-        cache->cache_index = index;
+        cache->cache_index = idx;
 
         if ( clazz->cache_init )
         {
@@ -739,7 +739,7 @@
           }
         }
 
-        manager->caches[index] = cache;
+        manager->caches[idx] = cache;
       }
     }
 

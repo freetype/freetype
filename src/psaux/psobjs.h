@@ -37,13 +37,13 @@ FT_BEGIN_HEADER
 
 
   FT_CALLBACK_TABLE
-  const PS_Table_FuncsRec   ps_table_funcs;
+  const PS_Table_FuncsRec    ps_table_funcs;
 
   FT_CALLBACK_TABLE
-  const PS_Parser_FuncsRec  ps_parser_funcs;
+  const PS_Parser_FuncsRec   ps_parser_funcs;
 
   FT_CALLBACK_TABLE
-  const T1_Builder_Funcs    t1_builder_funcs;
+  const T1_Builder_FuncsRec  t1_builder_funcs;
 
 
   FT_LOCAL( FT_Error )

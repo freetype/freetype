@@ -151,11 +151,11 @@
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   PS_Table_Add( PS_Table  table,
-                FT_Int     index,
-                void*      object,
-                FT_Int     length )
+                FT_Int    idx,
+                void*     object,
+                FT_Int    length )
   {
-    if ( index < 0 || index > table->max_elems )
+    if ( idx < 0 || idx > table->max_elems )
     {
       FT_ERROR(( "PS_Table_Add: invalid index\n" ));
       return PSaux_Err_Invalid_Argument;
@@ -185,8 +185,8 @@
     }
 
     /* add the object to the base block and adjust offset */
-    table->elements[index] = table->block + table->cursor;
-    table->lengths [index] = length;
+    table->elements[idx] = table->block + table->cursor;
+    table->lengths [idx] = length;
     MEM_Copy( table->block + table->cursor, object, length );
 
     table->cursor += length;
@@ -794,7 +794,7 @@
     FT_Byte*  cur;
     FT_Byte*  limit;
     FT_UInt   count;
-    FT_UInt   index;
+    FT_UInt   idx;
     FT_Error  error;
 
 
@@ -803,7 +803,7 @@
       goto Fail;
 
     count = 1;
-    index = 0;
+    idx   = 0;
     cur   = token.start;
     limit = token.limit;
 
@@ -814,12 +814,12 @@
         goto Fail;
 
       count = max_objects;
-      index = 1;
+      idx = 1;
     }
 
-    for ( ; count > 0; count--, index++ )
+    for ( ; count > 0; count--, idx++ )
     {
-      FT_Byte*    q = (FT_Byte*)objects[index] + field->offset;
+      FT_Byte*    q = (FT_Byte*)objects[idx] + field->offset;
       FT_Long     val;
       FT_String*  string;
 
