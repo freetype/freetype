@@ -1,9 +1,28 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftccache.c                                                             */
+/*                                                                         */
+/*    The FreeType internal cache interface (body).                        */
+/*                                                                         */
+/*  Copyright 2000-2001 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include <ft2build.h>
 #include FT_CACHE_MANAGER_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 
 #include "ftcerror.h"
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -13,12 +32,13 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  FT_EXPORT_DEF(void)
+  FT_EXPORT_DEF( void )
   ftc_node_done( FTC_Node   node,
                  FTC_Cache  cache )
   {
     FTC_Family       family;
     FTC_FamilyEntry  entry;
+
 
     entry  = cache->manager->families.entries + node->fam_index;
     family = entry->family;
@@ -29,9 +49,7 @@
   }
 
 
-
-
- /* add a new node to the head of the manager's circular MRU list */
+  /* add a new node to the head of the manager's circular MRU list */
   static void
   ftc_node_mru_link( FTC_Node     node,
                      FTC_Manager  manager )
@@ -162,7 +180,7 @@
     /* find node's cache */
     if ( node->fam_index >= manager->families.count )
     {
-      FT_ERROR(( "FreeType.cache.node_destroy: invalid node handle\n" ));
+      FT_ERROR(( "ftc_node_destroy: invalid node handle\n" ));
       return;
     }
 #endif
@@ -173,7 +191,7 @@
 #ifdef FT_DEBUG_ERROR
     if ( cache == NULL )
     {
-      FT_ERROR(( "FreeType.cache.node_destroy: invalid node handle\n" ));
+      FT_ERROR(( "ftc_node_destroy: invalid node handle\n" ));
       return;
     }
 #endif
@@ -196,7 +214,7 @@
 
     /* check, just in case of general corruption :-) */
     if ( manager->num_nodes <= 0 )
-      FT_ERROR(( "FTC_Manager_Compress: Invalid cache node count! = %d\n",
+      FT_ERROR(( "ftc_node_destroy: invalid cache node count! = %d\n",
                   manager->num_nodes ));
   }
 
@@ -210,7 +228,7 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_DEF(FT_Error)
+  FT_EXPORT_DEF( FT_Error )
   ftc_family_init( FTC_Family  family,
                    FTC_Query   query,
                    FTC_Cache   cache )
@@ -220,12 +238,13 @@
     FT_Memory        memory  = manager->library->memory;
     FTC_FamilyEntry  entry;
 
+
     family->cache     = cache;
     family->num_nodes = 0;
 
     /* now add to manager's family table */
     error = ftc_family_table_alloc( &manager->families, memory, &entry );
-    if (!error)
+    if ( !error )
     {
       entry->cache      = cache;
       entry->family     = family;
@@ -233,15 +252,16 @@
 
       query->family = family;   /* save family in query */
     }
+
     return error;
   }
 
 
-
-  FT_EXPORT_DEF(void)
+  FT_EXPORT_DEF( void )
   ftc_family_done( FTC_Family  family )
   {
     FTC_Manager  manager = family->cache->manager;
+
 
     /* remove from manager's family table */
     ftc_family_table_free( &manager->families, family->fam_index );
@@ -318,7 +338,6 @@
             (c)->size*3  < (c)->nodes )
 
 
-
   static void
   ftc_cache_resize( FTC_Cache  cache )
   {
@@ -333,7 +352,8 @@
       FTC_Node*  new_buckets ;
       FT_ULong   i;
 
-      /* no need to report an error, we'll simply keep using the same */
+
+      /* no need to report an error; we'll simply keep using the same */
       /* buckets number / size                                        */
       if ( ALLOC_ARRAY( new_buckets, new_size, FTC_Node ) )
         return;
@@ -386,22 +406,23 @@
     {
       FT_LruList_ClassRec*  lru_class = &cache->family_class;
 
+
       lru_class->list_size = sizeof( FT_LruListRec );
       lru_class->list_init = NULL;
       lru_class->list_done = NULL;
 
       lru_class->node_size    = clazz->family_size;
-      lru_class->node_init    = (FT_LruNode_InitFunc)    clazz->family_init;
-      lru_class->node_done    = (FT_LruNode_DoneFunc)    clazz->family_done;
-      lru_class->node_flush   = (FT_LruNode_FlushFunc)   NULL;
-      lru_class->node_compare = (FT_LruNode_CompareFunc) clazz->family_compare;
+      lru_class->node_init    = (FT_LruNode_InitFunc)   clazz->family_init;
+      lru_class->node_done    = (FT_LruNode_DoneFunc)   clazz->family_done;
+      lru_class->node_flush   = (FT_LruNode_FlushFunc)  NULL;
+      lru_class->node_compare = (FT_LruNode_CompareFunc)clazz->family_compare;
 
       error = FT_LruList_New( (FT_LruList_Class) lru_class,
-                              0,  /* max items == 0 => unbounded list */
+                              0,    /* max items == 0 => unbounded list */
                               cache,
                               memory,
                               &cache->families );
-      if (error)
+      if ( error )
         FREE( cache->buckets );
     }
 
@@ -410,7 +431,7 @@
   }
 
 
-  FT_EXPORT_DEF(void)
+  FT_EXPORT_DEF( void )
   ftc_cache_clear( FTC_Cache  cache )
   {
     if ( cache )
@@ -424,6 +445,7 @@
       for ( i = 0; i < cache->size; i++ )
       {
         FTC_Node  *pnode = cache->buckets + i, next, node = *pnode;
+
 
         while ( node )
         {
@@ -453,12 +475,14 @@
     }
   }
 
+
   FT_EXPORT_DEF( void )
   ftc_cache_done( FTC_Cache  cache )
   {
     if ( cache )
     {
       FT_Memory  memory = cache->memory;
+
 
       ftc_cache_clear( cache );
 
@@ -474,11 +498,10 @@
   }
 
 
-
   /* Look up a node in "top" of its cache's hash table. */
   /* If not found, create a new node.                   */
   /*                                                    */
-  FT_EXPORT_DEF(FT_Error)
+  FT_EXPORT_DEF( FT_Error )
   ftc_cache_lookup( FTC_Cache   cache,
                     FTC_Query   query,
                     FTC_Node   *anode )
@@ -497,35 +520,38 @@
     query->family = NULL;
 
     error = FT_LruList_Lookup( cache->families, query, &lru );
-    if (!error)
+    if ( !error )
     {
       FTC_Family  family = (FTC_Family) lru;
       FT_UFast    hash    = query->hash;
       FTC_Node*   bucket  = cache->buckets + (hash % cache->size);
 
-       if ( query->family     != family                        ||
-            family->fam_index >= cache->manager->families.size )
-       {
-         FT_ERROR(( "%s: invalid query (bad 'family' field)\n",
-                    "FreeType.cache.lookup" ));
-         return FT_Err_Invalid_Argument;
-       }
+
+      if ( query->family     != family                        ||
+           family->fam_index >= cache->manager->families.size )
+      {
+        FT_ERROR((
+          "ftc_cache_lookup: invalid query (bad 'family' field)\n" ));
+        return FT_Err_Invalid_Argument;
+      }
 
       if ( *bucket )
       {
         FTC_Node*             pnode   = bucket;
         FTC_Node_CompareFunc  compare = cache->clazz->node_compare;
 
+
         for ( ;; )
         {
           FTC_Node  node;
+
 
           node = *pnode;
           if ( node == NULL )
             break;
 
           if ( (FT_UInt)node->fam_index == family->fam_index &&
-                compare( node, query, cache ) )
+               compare( node, query, cache ) )
           {
             /* move to head of bucket list */
             if ( pnode != bucket )
@@ -582,8 +608,8 @@
           node->ref_count--;
         }
 
-        /* try to resize the hash table when appropriate */
-        if ( FTC_CACHE_RESIZE_TEST(cache) )
+        /* try to resize the hash table if appropriate */
+        if ( FTC_CACHE_RESIZE_TEST( cache ) )
           ftc_cache_resize( cache );
 
         *anode = node;
@@ -595,3 +621,4 @@
   }
 
 
+/* END */

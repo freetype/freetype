@@ -1,36 +1,44 @@
+2001-12-20  Werner Lemberg  <wl@gnu.org>
+
+	* src/cache/ftccache.c (ftc_node_destroy, ftc_cache_lookup): Fix
+	tracing strings.
+	* src/cache/ftccmap.c (ftc_cmap_family_init): Ditto.
+	* src/cache/ftcmanag.c (ftc_family_table_alloc,
+	ftc_family_table_free, FTC_Manager_Check): Ditto.
+	* src/cache/ftcsbits.c (ftc_sbit_node_load): Ditto.
+
 2001-12-20  David Turner  <david@freetype.org>
 
-        * include/freetype/config/ftoption.h: disabling bytecode interpreter
-        for new release
+	* include/freetype/config/ftoption.h: Disabling bytecode interpreter
+	for new release.
 
-        * docs/CHANGES: updated for 2.0.6 release
+	* docs/CHANGES: Updated for 2.0.6 release.
 
-        * src/cff/cffload.h, src/cff/cffload.c, src/cff/cffgload.c: updated
-        to mode the definition of encoding tables within "cffload.c" instead
-        of making them part of a shared header (causing problems in "multi"
-        builds)
+	* src/cff/cffload.h, src/cff/cffload.c, src/cff/cffgload.c: Updated
+	to mode the definition of encoding tables within "cffload.c" instead
+	of making them part of a shared header (causing problems in "multi"
+	builds).
 
-        * docs/TODO: added "stem3 and counter hints support" to the TODO list
-        for the Postscript hinter
+	* docs/TODO: Added "stem3 and counter hints support" to the TODO list
+	for the Postscript hinter.
 
-        * docs/BUGS: closed the AUTOHINT-NO-SBITS bug.
+	* docs/BUGS: Closed the AUTOHINT-NO-SBITS bug.
 
-        * src/pshinter/pshrec.c (t2_hint_stems), src/cff/cffobjs.h,
-        src/cff/cffobjs.c, src/cff/cffload.c, src/cff/cffload.h,
-        src/cff/cffgload.c, src/cff/cffgload.h, src/cff/cffdriver.c,
-        include/freetype/internal/cfftypes.h: added Postscript hinter support
-        to the CFF driver
+	* src/pshinter/pshrec.c (t2_hint_stems), src/cff/cffobjs.h,
+	src/cff/cffobjs.c, src/cff/cffload.c, src/cff/cffload.h,
+	src/cff/cffgload.c, src/cff/cffgload.h, src/cff/cffdriver.c,
+	include/freetype/internal/cfftypes.h: added Postscript hinter support
+	to the CFF driver.
 
-        * src/base/ftobjs.c (FT_Done_Library): fixed a stupid bug that crashed
-        the library on exit
+	* src/base/ftobjs.c (FT_Done_Library): Fixed a stupid bug that crashed
+	the library on exit.
 
-        * src/type1/t1gload.c (T1_Load_Glyph): enable font matrix transform
-        on hinted glyphs..
+	* src/type1/t1gload.c (T1_Load_Glyph): Enable font matrix transform
+	on hinted glyphs.
 
-        * src/cid/cidgload.c, src/cid/cidobjs.c, src/cid/cidobjs.h,
-        src/cid/cidriver.c, include/freetype/internal/t1types.h: added
-        Postscript hinter support to the CID font driver !!
-
+	* src/cid/cidgload.c, src/cid/cidobjs.c, src/cid/cidobjs.h,
+	src/cid/cidriver.c, include/freetype/internal/t1types.h: Added
+	Postscript hinter support to the CID font driver.
 
 2001-12-19  David Turner  <david@freetype.org>
 

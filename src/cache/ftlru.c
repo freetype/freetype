@@ -46,7 +46,7 @@
       list->clazz      = clazz;
       list->memory     = memory;
       list->max_nodes  = max_nodes;
-      list->data  = user_data;
+      list->data       = user_data;
 
       if ( clazz->list_init )
       {

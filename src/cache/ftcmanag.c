@@ -62,9 +62,9 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  ftc_face_node_init( FTC_FaceNode node,
-                      FTC_FaceID   face_id,
-                      FTC_Manager  manager )
+  ftc_face_node_init( FTC_FaceNode  node,
+                      FTC_FaceID    face_id,
+                      FTC_Manager   manager )
   {
     FT_Error  error;
 
@@ -84,7 +84,7 @@
   }
 
 
-  /* helper function for ftc_manager_done_face() */
+  /* helper function for ftc_face_node_done() */
   FT_CALLBACK_DEF( FT_Bool )
   ftc_size_node_select( FTC_SizeNode  node,
                         FT_Face       face )
@@ -116,8 +116,8 @@
   const FT_LruList_ClassRec  ftc_face_list_class =
   {
     sizeof ( FT_LruListRec ),
-    (FT_LruList_InitFunc)   0,
-    (FT_LruList_DoneFunc)   0,
+    (FT_LruList_InitFunc)0,
+    (FT_LruList_DoneFunc)0,
 
     sizeof ( FTC_FaceNodeRec ),
     (FT_LruNode_InitFunc)   ftc_face_node_init,
@@ -154,7 +154,6 @@
 
     return error;
   }
-
 
 
   /*************************************************************************/
@@ -258,8 +257,8 @@
   const FT_LruList_ClassRec  ftc_size_list_class =
   {
     sizeof ( FT_LruListRec ),
-    (FT_LruList_InitFunc)   0,
-    (FT_LruList_DoneFunc)   0,
+    (FT_LruList_InitFunc)0,
+    (FT_LruList_DoneFunc)0,
 
     sizeof ( FTC_SizeNodeRec ),
     (FT_LruNode_InitFunc)   ftc_size_node_init,
@@ -267,7 +266,6 @@
     (FT_LruNode_FlushFunc)  ftc_size_node_flush,
     (FT_LruNode_CompareFunc)ftc_size_node_compare
   };
-
 
 
   /* documentation is in ftcache.h */
@@ -353,24 +351,27 @@
     FTC_FamilyEntry  entry;
     FT_Error         error = 0;
 
-   /* re-allocate table size when needed */
+
+    /* re-allocate table size when needed */
     if ( table->free == FTC_FAMILY_ENTRY_NONE && table->count >= table->size )
     {
       FT_UInt  old_size = table->size;
       FT_UInt  new_size, index;
 
+
       if ( old_size == 0 )
         new_size = 8;
       else
       {
-        new_size = old_size*2;
+        new_size = old_size * 2;
 
         /* check for (unlikely) overflow */
         if ( new_size < old_size )
           new_size = 65534;
       }
 
-      if ( REALLOC_ARRAY( table->entries, old_size, new_size, FTC_FamilyEntryRec ) )
+      if ( REALLOC_ARRAY( table->entries, old_size, new_size,
+                          FTC_FamilyEntryRec ) )
         return error;
 
       table->size = new_size;
@@ -378,9 +379,9 @@
       entry       = table->entries + old_size;
       table->free = old_size;
 
-      for ( index = old_size; index+1 < new_size; index++, entry++ )
+      for ( index = old_size; index + 1 < new_size; index++, entry++ )
       {
-        entry->link  = index+1;
+        entry->link  = index + 1;
         entry->index = index;
       }
 
@@ -399,7 +400,7 @@
     }
     else
     {
-      FT_ERROR(( "FreeType.cache.alloc_set: internal bug !!" ));
+      FT_ERROR(( "ftc_family_table_alloc: internal bug!" ));
       return FT_Err_Invalid_Argument;
     }
 
@@ -420,8 +421,9 @@
     {
       FTC_FamilyEntry  entry = table->entries + index;
 
+
       if ( entry->link != FTC_FAMILY_ENTRY_NONE )
-        FT_ERROR(( "FreeType.cache.set_free: internal bug !!\n" ));
+        FT_ERROR(( "ftc_family_table_free: internal bug!\n" ));
       else
       {
         entry->link = table->free;
@@ -569,10 +571,9 @@
   }
 
 
-
-
 #ifdef FT_DEBUG_ERROR
-  FT_EXPORT_DEF(void)
+
+  FT_EXPORT_DEF( void )
   FTC_Manager_Check( FTC_Manager  manager )
   {
     FTC_Node  node, first;
@@ -595,7 +596,7 @@
 
         if ( (FT_UInt)node->fam_index >= manager->families.count ||
              entry->link              != FTC_FAMILY_ENTRY_NONE  )
-          FT_ERROR(( "FTC_Manager_Compress: invalid node (family index = %ld\n",
+          FT_ERROR(( "FTC_Manager_Check: invalid node (family index = %ld\n",
                      node->fam_index ));
         else
         {
@@ -604,13 +605,12 @@
         }
 
         node = node->mru_next;
-      }
-      while (node != first);
+
+      } while ( node != first );
 
       if ( weight != manager->cur_weight )
-        FT_ERROR((
-          "FTC_Manager_Compress: invalid weight %ld instead of %ld\n",
-          manager->cur_weight, weight ));
+        FT_ERROR(( "FTC_Manager_Check: invalid weight %ld instead of %ld\n",
+                   manager->cur_weight, weight ));
     }
 
     /* check circular list */
@@ -624,15 +624,16 @@
       {
         count++;
         node = node->mru_next;
-      }
-      while (node != first);
+
+      } while ( node != first );
 
       if ( count != manager->num_nodes )
         FT_ERROR((
-          "FTC_Manager_Compress: invalid cache node count %d instead of %d\n",
+          "FTC_Manager_Check: invalid cache node count %d instead of %d\n",
           manager->num_nodes, count ));
     }
   }
+
 #endif /* FT_DEBUG_ERROR */
 
 
@@ -681,6 +682,8 @@
     } while ( node && manager->cur_weight > manager->max_weight );
   }
 
+
+  /* documentation is in ftcmanag.h */
 
   FT_EXPORT_DEF( FT_Error )
   FTC_Manager_Register_Cache( FTC_Manager      manager,
@@ -746,12 +749,9 @@
   }
 
 
+  /* documentation is in ftcmanag.h */
 
-
-
-
-
-  FT_EXPORT_DEF(void)
+  FT_EXPORT_DEF( void )
   FTC_Node_Unref( FTC_Node     node,
                   FTC_Manager  manager )
   {
