@@ -1,3 +1,82 @@
+2004-04-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/pcf/pcfdrivr.c: Revert change from 2004-04-17.
+	* src/pcf/pcfutil.c: Use FT_LOCAL_DEF.
+	* src/pcf/pcfutil.h: Include FT_CONFIG_CONFIG_H.
+	Use FT_BEGIN_HEADER and FT_END_HEADER.
+	Use FT_LOCAL.
+
+2004-04-24  George Williams  <gww@silcom.com>
+
+	Add support for Apple's distortable font technology (in GX fonts).
+
+	* devel/ftoption.h, include/freetype/config/ftoption.h
+	(TT_CONFIG_OPTION_GX_VAR_SUPPORT): New macro.
+
+	* include/freetype/ftmm.h (FT_Var_Axis, FT_Var_Named_Style,
+	FT_MM_Var): New structures.
+	(FT_Get_MM_Var, FT_Set_Var_Design_Coordinates,
+	FT_Set_Var_Blend_Coordinates): New function declarations.
+
+	* include/freetype/internal/services/svmm.h (FT_Get_MM_Var_Func,
+	FT_Set_Var_Design_Func): New typedefs.
+	Update MultiMasters service.
+
+	* include/freetype/internal/tttypes.h
+	[TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Include FT_MULTIPLE_MASTERS_H.
+	(GX_Blend) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: New typedef.
+	(TT_Face) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: New members `doblend'
+	and `blend'.
+
+	* include/freetype/tttags.h (TTAG_avar, TTAG_cvar, TTAG_gvar): New
+	macros.
+
+	* include/freetype/internal/fttrace.h: Add `ttgxvar'.
+
+	* src/base/ftmm.c (FT_Get_MM_Var, FT_Set_Var_Design_Coordinates,
+	FT_Set_Var_Blend_Coordinates): New functions.
+
+	* src/sfnt/sfobjs.c (sfnt_load_face)
+	[TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Set FT_FACE_FLAG_MULTIPLE_MASTERS
+	flag for GX var fonts.
+
+	* src/truetype/ttgxvar.c, src/truetype/ttgxvar.h: New files.
+
+	* src/truetype/truetype.c [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Include
+	ttgxvar.c.
+
+	* src/truetype/ttdriver.c [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Include
+	FT_MULTIPLE_MASTERS_H, FT_SERVICE_MULTIPLE_MASTERS_H, and ttgxvar.h.
+	(tt_service_gx_multi_masters) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]:
+	New service.
+	(tt_services) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Updated.
+
+	* src/truetype/ttgload.c [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Include
+	ttgxvar.h.
+	(TT_Process_Simple_Glyph, load_truetype_glyph)
+	[TT_CONFIG_OPTION_GX_VAR_SUPPORT] :Support GX var fonts.
+
+	* src/truetype/ttobjs.c [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Include
+	ttgxvar.h.
+	(tt_done_face) [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Call
+	tt_done_blend.
+
+	* src/truetype/ttpload.c [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Include
+	ttgxvar.h.
+	(tt_face_load_cvt)  [TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Call
+	tt_face_vary_cvt.
+
+	* src/truetype/rules.mk (TT_DRV_SRC): Add ttgxvar.c.
+
+	* src/type1/t1driver.c (t1_service_multi_masters): Add T1_Get_MM_Var
+	and T1_Set_Var_Design.
+
+	* src/type1/t1load.c (FT_INT_TO_FIXED, FT_FIXED_TO_INT): New macros.
+	(T1_Get_MM_Var, T1_Set_Var_Design): New functions.
+
+	* src/type1/t1load.h (T1_Get_MM_Var, T1_Set_Var_Design): New
+	function declarations.
+
 2004-04-23  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftcache.h (FT_Get_CharMap_Index): Rename
@@ -69,7 +148,7 @@
 	* src/bdf/bdfdrivr.c (BDF_Face_Init): Use `ft_strlen'.
 
 	* src/pcf/pcfutil.c, src/pcf/pcfutil.h: Decorate functions with
-	`static.'.
+	`static'.
 	Remove unused function `RepadBitmap'.
 	* src/pcf/pcfdrivr.c: Don't include pcfutil.h.
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Objects manager (body).                                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -35,6 +35,10 @@
 
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
 #include FT_TRUETYPE_UNPATENTED_H
+#endif
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include "ttgxvar.h"
 #endif
 
   /*************************************************************************/
@@ -293,6 +297,11 @@
     FT_FRAME_RELEASE( face->cvt_program );
     face->font_program_size = 0;
     face->cvt_program_size  = 0;
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    tt_done_blend( memory, face->blend );
+    face->blend = NULL;
+#endif
   }
 
 

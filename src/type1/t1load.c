@@ -211,6 +211,60 @@
   }
 
 
+#define FT_INT_TO_FIXED( a )  ( (a) << 16 )
+#define FT_FIXED_TO_INT( a )  ( FT_RoundFix( a ) >> 16 )
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Just a wrapper around T1_Get_Multi_Master to support the different    */
+  /*  arguments needed by the GX var distortable fonts.                    */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  T1_Get_MM_Var( T1_Face      face,
+                 FT_MM_Var*  *master )
+  {
+    FT_Memory        memory = face->root.memory;
+    FT_MM_Var       *mmvar;
+    FT_Multi_Master  mmaster;
+    FT_Error         error;
+    FT_UInt          i;
+
+
+    error = T1_Get_Multi_Master( face, &mmaster );
+    if ( error )
+      goto Exit;
+    if ( FT_ALLOC( mmvar,
+                   sizeof ( FT_MM_Var ) +
+                     mmaster.num_axis * sizeof ( FT_Var_Axis ) ) )
+      goto Exit;
+
+    mmvar->num_axis        = mmaster.num_axis;
+    mmvar->num_designs     = mmaster.num_designs;
+    mmvar->num_namedstyles = (FT_UInt)-1;                /* Does not apply */
+    mmvar->axis            = (FT_Var_Axis*)&mmvar[1];
+                                      /* Point to axes after MM_Var struct */
+    mmvar->namedstyle      = NULL;
+
+    for ( i = 0 ; i < mmaster.num_axis; ++i )
+    {
+      mmvar->axis[i].name    = mmaster.axis[i].name;
+      mmvar->axis[i].minimum = FT_INT_TO_FIXED( mmaster.axis[i].minimum);
+      mmvar->axis[i].maximum = FT_INT_TO_FIXED( mmaster.axis[i].maximum);
+      mmvar->axis[i].def     = ( mmvar->axis[i].minimum +
+                                   mmvar->axis[i].maximum ) / 2;
+                            /* Does not apply.  But this value is in range */
+      mmvar->axis[i].tag     = 0xFFFFFFFFLU;   /* Does not apply */
+      mmvar->axis[i].strid   = 0xFFFFFFFFLU;   /* Does not apply */
+    }
+
+    *master = mmvar;
+
+  Exit:
+    return error;
+  }
+
+
   FT_LOCAL_DEF( FT_Error )
   T1_Set_MM_Blend( T1_Face    face,
                    FT_UInt    num_coords,
@@ -326,6 +380,33 @@
     }
 
     return error;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Just a wrapper around T1_Set_MM_Design to support the different       */
+  /* arguments needed by the GX var distortable fonts.                     */
+  /*                                                                       */
+  FT_LOCAL_DEF( FT_Error )
+  T1_Set_Var_Design( T1_Face    face,
+                     FT_UInt    num_coords,
+                     FT_Fixed*  coords )
+  {
+     FT_Long   lcoords[4];          /* maximum axis count is 4 */
+     FT_UInt   i;
+     FT_Error  error;
+
+
+     error = T1_Err_Invalid_Argument;
+     if ( num_coords <= 4 && num_coords > 0 )
+     {
+       for ( i = 0; i < num_coords; ++i )
+         lcoords[i] = FT_FIXED_TO_INT( coords[i] );
+       error = T1_Set_MM_Design( face, num_coords, lcoords );
+     }
+
+     return error;
   }
 
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    SFNT object management (base).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -431,11 +431,11 @@
     /* do we have outlines in there? */
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     has_outline   = FT_BOOL( face->root.internal->incremental_interface != 0 ||
-                             tt_face_lookup_table( face, TTAG_glyf ) != 0         ||
-                             tt_face_lookup_table( face, TTAG_CFF ) != 0          );
+                             tt_face_lookup_table( face, TTAG_glyf )    != 0 ||
+                             tt_face_lookup_table( face, TTAG_CFF )     != 0 );
 #else
     has_outline   = FT_BOOL( tt_face_lookup_table( face, TTAG_glyf ) != 0 ||
-                             tt_face_lookup_table( face, TTAG_CFF ) != 0  );
+                             tt_face_lookup_table( face, TTAG_CFF )  != 0 );
 #endif
 
     is_apple_sbit = 0;
@@ -545,6 +545,15 @@
       /* kerning available ? */
       if ( face->kern_pairs )
         flags |= FT_FACE_FLAG_KERNING;
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+      /* Don't bother to load the tables unless somebody asks for them. */
+      /* No need to do work which will (probably) not be used.          */
+      if ( tt_face_lookup_table( face, TTAG_glyf ) != 0 &&
+           tt_face_lookup_table( face, TTAG_fvar ) != 0 &&
+           tt_face_lookup_table( face, TTAG_gvar ) != 0 )
+        flags |= FT_FACE_FLAG_MULTIPLE_MASTERS;
+#endif
 
       root->face_flags = flags;
 
