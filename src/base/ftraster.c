@@ -4131,7 +4131,7 @@ Scan_DropOuts :
     ras.dropout_mode = 2;
 #endif
     ras.second_pass  = (outline->flags & ft_outline_single_pass) == 0;
-    SET_High_Precision( outline->flags & ft_outline_high_precision );
+    SET_High_Precision( (char)outline->flags & ft_outline_high_precision );
 
     switch ( target_map->pixel_mode )
     {
