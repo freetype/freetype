@@ -1,3 +1,30 @@
+2003-05-18  Yong Sun  <sunyong@njstar.com>
+
+	* src/raster/ftraster.c (Insert_Y_Turn): Fix overflow test.
+
+2003-05-18  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftoption.h [FT_CONFIG_OPTION_MAC_FONTS]:
+	New macro.
+	* src/base/ftobjs.c: Use it to control mac font support on non-mac
+	platforms.
+
+2003-05-17  George Williams  <gww@silcom.com>
+
+	Implement partial support of Mac fonts on non-Mac platforms.
+
+	* src/base/ftobjs.c (memory_stream_close, new_memory_stream,
+	open_face_from_buffer, Mac_Read_POST_Resource,
+	Mac_Read_sfnt_Resource, IsMacResource, IsMacBinary, load_mac_face)
+	[!FT_MACINTOSH]: New functions.
+	(FT_Open_Face) [!FT_MACINTOSH]: Use load_mac_face.
+
+2003-05-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Scale linear advance width only
+	if FT_FACE_FLAG_SCALABLE is set (otherwise we have a division by
+	zero since FNT and friends don't define `face->units_per_EM').
+
 2003-05-15  David Turner  <david@freetype.org>
 
 	* src/base/fttrigon.c (FT_Vector_Rotate): Avoid rounding errors

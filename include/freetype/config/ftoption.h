@@ -219,6 +219,19 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* Support for Mac fonts                                                 */
+  /*                                                                       */
+  /*   Define this macro if you want support for outline fonts in Mac      */
+  /*   format (mac dfont, mac resource, macbinary containing a mac         */
+  /*   resource) on non-Mac platforms.                                     */
+  /*                                                                       */
+  /*   Note that the `FOND' resource isn't checked.                        */
+  /*                                                                       */
+#define FT_CONFIG_OPTION_MAC_FONTS
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* Allow the use of FT_Incremental_Interface to load typefaces that      */
   /* contain no glyph data, but supply it via a callback function.         */
   /* This allows FreeType to be used with the PostScript language, using   */
