@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph rasterizer (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2005 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -2984,6 +2984,9 @@
     Set_High_Precision( RAS_VARS ras.outline.flags &
                         FT_OUTLINE_HIGH_PRECISION );
     ras.scale_shift    = ras.precision_shift;
+    /* Drop-out mode 2 is hard-coded since this is the only mode used */
+    /* on Windows platforms.  Using other modes, as specified by the  */
+    /* font, results in misplaced pixels.                             */
     ras.dropOutControl = 2;
     ras.second_pass    = (FT_Byte)( !( ras.outline.flags &
                                        FT_OUTLINE_SINGLE_PASS ) );
@@ -3048,6 +3051,9 @@
     Set_High_Precision( RAS_VARS ras.outline.flags &
                         FT_OUTLINE_HIGH_PRECISION );
     ras.scale_shift    = ras.precision_shift + 1;
+    /* Drop-out mode 2 is hard-coded since this is the only mode used */
+    /* on Windows platforms.  Using other modes, as specified by the  */
+    /* font, results in misplaced pixels.                             */
     ras.dropOutControl = 2;
     ras.second_pass    = !( ras.outline.flags & FT_OUTLINE_SINGLE_PASS );
 
