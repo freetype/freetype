@@ -6,6 +6,8 @@
 	* src/cff/cffload.c (cff_font_load): Deallocate `sids' array for
 	CID-keyed fonts.
 
+	* devel/ftoption.h: Define FT_DEBUG_MEMORY.
+
 2003-12-18  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ttnameid.h (TT_ADOBE_ID_LATIN_1): New macro.
