@@ -147,7 +147,7 @@
     if ( b < 0 ) { b = -b; s = -s; }
     if ( c < 0 ) { c = -c; s = -s; }
 
-    d = ( c > 0 ? ( (FT_Int64)a * b + ( c >> 1 ) ) / c
+    d = (FT_Long)( c > 0 ? ( (FT_Int64)a * b + ( c >> 1 ) ) / c
                 : 0x7FFFFFFFL );
 
     return ( s > 0 ) ? d : -d;
@@ -188,7 +188,7 @@
       q = 0x7FFFFFFFL;
     else
       /* compute result directly */
-      q = ( ((FT_Int64)a << 16) + (b >> 1)) / b;
+      q = (FT_UInt32)( ( ( (FT_Int64)a << 16 ) + ( b >> 1 ) ) / b );
 
     return ( s < 0 ? -(FT_Long)q : (FT_Long)q );
   }
@@ -232,7 +232,7 @@
 
     } while ( r > s || r * r > l );
 
-    return r;
+    return (FT_Int32)r;
   }
 
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
