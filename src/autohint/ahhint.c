@@ -1051,11 +1051,12 @@
     case ft_glyph_format_outline:
     
       /* translate glyph outline if we need to */
-      if (hinter->transformed)
+      if ( hinter->transformed )
       {
         FT_UInt     n     = slot->outline.n_points;
         FT_Vector*  point = slot->outline.points;
         
+
         for ( ; n > 0; point++, n-- )
         {
           point->x += hinter->trans_delta.x;
@@ -1284,6 +1285,7 @@
     {
       FT_BBox  bbox;
 
+
       /* transform the hinted outline if needed */
       if ( hinter->transformed )
         FT_Outline_Transform( &gloader->base.outline, &hinter->trans_matrix );
@@ -1335,6 +1337,7 @@
     FT_Fixed          y_scale      = size->metrics.y_scale;
     AH_Face_Globals*  face_globals = FACE_GLOBALS( face );
 
+
     /* first of all, we need to check that we're using the correct face and */
     /* global hints to load the glyph                                       */
     if ( hinter->face != face || hinter->globals != face_globals )
@@ -1363,11 +1366,13 @@
     {
       FT_Slot_Internal  internal = slot->internal;
       
+
       hinter->transformed = internal->glyph_transformed;
-      if (hinter->transformed)
+      if ( hinter->transformed )
       {
         FT_Matrix  imatrix;
         
+
         imatrix              = internal->glyph_matrix;
         hinter->trans_delta  = internal->glyph_delta;
         hinter->trans_matrix = imatrix;
