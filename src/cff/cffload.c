@@ -1595,17 +1595,16 @@
       /* In order to use a predefined charset, the following must be  */
       /* true: The charset constructed for the glyphs in the font's   */
       /* charstrings dictionary must match the predefined charset in  */
-      /* the first num_glyphs, and hence must match the predefined    */
-      /* charset *exactly*.                                           */
+      /* the first num_glyphs                                         */
 
       charset->offset = offset;  /* record charset type */
 
       switch ( (FT_UInt)offset )
       {
       case 0:
-        if ( num_glyphs != 229 )
+        if ( num_glyphs > 229 )
         {
-          FT_ERROR(("cff_charset_load: implicit charset not equal to\n"
+          FT_ERROR(("cff_charset_load: implicit charset larger than\n"
                     "predefined charset (Adobe ISO-Latin)!\n" ));
           error = CFF_Err_Invalid_File_Format;
           goto Exit;
@@ -1622,9 +1621,9 @@
         break;
 
       case 1:
-        if ( num_glyphs != 166 )
+        if ( num_glyphs > 166 )
         {
-          FT_ERROR(( "cff_charset_load: implicit charset not equal to\n"
+          FT_ERROR(( "cff_charset_load: implicit charset larger than\n"
                      "predefined charset (Adobe Expert)!\n" ));
           error = CFF_Err_Invalid_File_Format;
           goto Exit;
@@ -1641,9 +1640,9 @@
         break;
 
       case 2:
-        if ( num_glyphs != 87 )
+        if ( num_glyphs > 87 )
         {
-          FT_ERROR(( "cff_charset_load: implicit charset not equal to\n"
+          FT_ERROR(( "cff_charset_load: implicit charset larger than\n"
                      "predefined charset (Adobe Expert Subset)!\n" ));
           error = CFF_Err_Invalid_File_Format;
           goto Exit;

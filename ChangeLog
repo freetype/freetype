@@ -1,3 +1,13 @@
+2002-11-23  David Turner  <david@freetype.org>
+
+        * src/cff/cffload.c (cff_charser_load): modified charset loader to
+        accept pre-defined charsets, even when the font contains fewer glyphs
+
+2002-11-18  David Turner  <david@freetype.org>
+
+        * FreeType 2.1.3 is released
+        ============================
+
 2002-11-07  David Turner  <david@freetype.org>
 
         * src/cache/ftcsbit.c (ftc_sbit_node_load): fixed a small bug that caused
