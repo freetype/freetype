@@ -171,11 +171,16 @@ def sort_order_list( input_list, order_list ):
 # Translate a single line of source to HTML.  This will convert
 # a "<" into "&lt.", ">" into "&gt.", etc.
 #
-def html_format( line ):
-    result = string.replace( line, "<", "&lt." )
-    result = string.replace( line, ">", "&gt." )
-    result = string.replace( line, "&", "&amp." )
+def html_quote( line ):
+    result = string.replace( line,   "&", "&amp;" )
+    result = string.replace( result, "<", "&lt;" )
+    result = string.replace( result, ">", "&gt;" )
     return result
+
+# same as 'html_quote', but ignores left and right brackets
+#
+def html_quote0( line ):
+    return string.replace( line, "&", "&amp;" )
 
 
 # Open the standard output to a given project documentation file.  Use
@@ -355,10 +360,10 @@ class DocCode:
         # The code footer should be directly appended to the last code
         # line to avoid an additional blank line.
         #
-        sys.stdout.write( code_header )
+        print code_header,
         for line in self.lines[0 : l+1]:
-            sys.stdout.write( '\n' + html_format(line) )
-        sys.stdout.write( code_footer )
+            print '\n' + html_quote(line),
+        print code_footer,
 
 
 
@@ -435,7 +440,7 @@ class DocParagraph:
                     word = '?' + word
 
             if cursor + len( word ) + 1 > max_width:
-                print html_format( line )
+                print html_quote0(line)
                 cursor = 0
                 line   = ""
 
@@ -451,7 +456,7 @@ class DocParagraph:
             #
             if extra:
                 if cursor + len( extra ) + 1 > max_width:
-                    print html_format( line )
+                    print html_quote0(line)
                     cursor = 0
                     line   = ""
 
@@ -460,7 +465,7 @@ class DocParagraph:
                 extra  = None
 
         if cursor > 0:
-            print html_format(line)
+            print html_quote0(line)
 
         # print "§" # for debugging only
 
@@ -877,7 +882,7 @@ class DocBlock:
         print source_header
         print ""
         for line in lines[0 : l+1]:
-            print line
+            print html_quote(line)
         print source_footer
 
         in_table = 0
