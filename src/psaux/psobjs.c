@@ -1543,7 +1543,7 @@
                    FT_GlyphSlot  glyph,
                    FT_Bool       hinting )
   {
-    builder->path_begun  = 0;
+    builder->parse_state = T1_Parse_Start;
     builder->load_points = 1;
 
     builder->face   = face;
@@ -1700,17 +1700,21 @@
                           FT_Pos      x,
                           FT_Pos      y )
   {
-    FT_Error  error = 0;
+    FT_Error  error = PSaux_Err_Invalid_File_Format;
 
 
     /* test whether we are building a new contour */
-    if ( !builder->path_begun )
+
+    if ( builder->parse_state == T1_Parse_Have_Path )
+      error = PSaux_Err_Ok;
+    else if ( builder->parse_state == T1_Parse_Have_Moveto )
     {
-      builder->path_begun = 1;
+      builder->parse_state = T1_Parse_Have_Path;
       error = t1_builder_add_contour( builder );
       if ( !error )
         error = t1_builder_add_point1( builder, x, y );
     }
+
     return error;
   }
 
