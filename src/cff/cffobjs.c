@@ -281,7 +281,7 @@
     if ( FT_STREAM_SEEK( 0 ) )
       goto Exit;
 
-    /* check that we have a valid OpenType file */
+    /* check whether we have a valid OpenType file */
     error = sfnt->init_face( stream, face, face_index, num_params, params );
     if ( !error )
     {
@@ -312,7 +312,7 @@
       }
       else
       {
-        /* load the `cmap' table by hand */
+        /* load the `cmap' table explicitly */
         error = sfnt->load_charmaps( face, stream );
         if ( error )
           goto Exit;
@@ -322,7 +322,7 @@
         /* FreeType 2                                                */
       }
 
-      /* now, load the CFF part of the file */
+      /* now load the CFF part of the file */
       error = face->goto_table( face, TTAG_CFF, stream, 0 );
       if ( error )
         goto Exit;

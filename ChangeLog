@@ -1,3 +1,19 @@
+2003-12-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffdrivr.c (cff_get_glyph_name): Improve error message.
+	(cff_get_name_index): Return if no PSNames service is available.
+	(cff_ps_has_glyph_names): Handle CID-keyed fonts correctly.
+	* src/cff/cfftypes.h (CFF_CharsetRec): New field `cids', used for
+	CID-keyed fonts.  This is the inverse mapping of `sids'.
+	* src/cff/cffload.c (cff_charset_load): New argument `invert'.
+	Initialize charset->cids if `invert' is set.
+	(cff_font_load): In call to cff_charset_load, set `invert' to true
+	for CID-keyed fonts.
+	* src/cff/cffgload.c (cff_slot_load): Handle glyph index as CID
+	and map it to the real glyph index.
+
+	* docs/CHANGES: Updated.
+
 2003-12-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffobjs.c (cff_face_init): Don't set

@@ -236,7 +236,7 @@
     if ( !psnames )
     {
       FT_ERROR(( "cff_get_glyph_name:" ));
-      FT_ERROR(( " cannot open CFF & CEF fonts\n" ));
+      FT_ERROR(( " cannot get glyph name from CFF & CEF fonts\n" ));
       FT_ERROR(( "                   " ));
       FT_ERROR(( " without the `PSNames' module\n" ));
       error = CFF_Err_Unknown_File_Format;
@@ -287,6 +287,9 @@
     charset = &cff->charset;
 
     FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
+    if ( !psnames )
+      return 0;
+
     for ( i = 0; i < cff->num_glyphs; i++ )
     {
       sid = charset->sids[i];
@@ -324,8 +327,7 @@
   static FT_Int
   cff_ps_has_glyph_names( FT_Face  face )
   {
-    FT_UNUSED( face );
-    return 1;
+    return face->face_flags & FT_FACE_FLAG_GLYPH_NAMES;
   }
 
 

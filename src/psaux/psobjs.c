@@ -1670,7 +1670,7 @@
   }
 
 
-  /* check room for a new contour, then add it */
+  /* check space for a new contour, then add it */
   FT_LOCAL_DEF( FT_Error )
   t1_builder_add_contour( T1_Builder  builder )
   {
