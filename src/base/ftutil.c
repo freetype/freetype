@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType utility file for memory and list management (body).         */
 /*                                                                         */
-/*  Copyright 2002, 2004 by                                                */
+/*  Copyright 2002, 2004, 2005 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -19,6 +19,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_MEMORY_H
+#include FT_INTERNAL_OBJECTS_H
 #include FT_LIST_H
 
 
@@ -403,12 +404,14 @@
   {
     FT_UInt32  value2;
 
-   /* we simply clear the lowest bit in each iteration. when
-    * we reach 0, we now that the previous value was our result
-    */
+
+    /*
+     *  We simply clear the lowest bit in each iteration.  When
+     *  we reach 0, we know that the previous value was our result.
+     */
     for ( ;; )
     {
-      value2 = value & (value-1);  /* clear lowest bit */
+      value2 = value & (value - 1);  /* clear lowest bit */
       if ( value2 == 0 )
         break;
 

@@ -369,45 +369,57 @@ FT_BEGIN_HEADER
   /*                                                                       */
 
 
-/* GCC 3.3 and beyond will generate tons of _stupid_ warnings if we
- * don't take special measures.
- */
-#if defined(__GNUC__) && ( __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3) )
+  /*
+   *  gcc 3.3 and newer will generate tons of _stupid_ warnings if we
+   *  don't take special measures.
+   */
+#if defined ( __GNUC__ )                                       && \
+    ( __GNUC__ > 3 || ( __GNUC__ == 3 && __GNUC_MINOR__ >= 3 ) )
 
-#define FT_ALLOC( _pointer_, _size_ )                 \
-   ({                                                 \
-     void*  _tmp_ = NULL;                             \
-     error     = FT_MEM_ALLOC( _tmp_, _size_ );       \
-     _pointer_ = _tmp_;                               \
-     error != 0;                                      \
-   })
 
-#define FT_REALLOC( _pointer_, _cursize_, _newsize_ )            \
-   ({                                                            \
-     void*  _tmp_ = _pointer_;                                   \
-     error     = FT_MEM_REALLOC( _tmp_, _cursize_, _newsize_ );  \
-     _pointer_ = _tmp_;                                          \
-     error != 0;                                                 \
-   })
+#define FT_ALLOC( _pointer_, _size_ )                  \
+          ({                                           \
+            void*  _tmp_ = NULL;                       \
+                                                       \
+                                                       \
+            error     = FT_MEM_ALLOC( _tmp_, _size_ ); \
+            _pointer_ = _tmp_;                         \
+            error != 0;                                \
+          })
 
-#define FT_QALLOC( _pointer_, _size_ )                \
-   ({                                                 \
-     void*  _tmp_;                                    \
-     error     = FT_MEM_QALLOC( _tmp_, _size_ );      \
-     _pointer_ = _tmp_;                               \
-     error != 0;                                      \
-   })
+#define FT_REALLOC( _pointer_, _cursize_, _newsize_ )                  \
+          ({                                                           \
+            void*  _tmp_ = _pointer_;                                  \
+                                                                       \
+                                                                       \
+            error     = FT_MEM_REALLOC( _tmp_, _cursize_, _newsize_ ); \
+            _pointer_ = _tmp_;                                         \
+            error != 0;                                                \
+          })
 
-#define FT_QREALLOC( _pointer_, _cursize_, _newsize_ )            \
-   ({                                                             \
-     void*  _tmp_ = _pointer_;                                    \
-     error     = FT_MEM_QREALLOC( _tmp_, _cursize_, _newsize_ );  \
-     _pointer_ = _tmp_;                                           \
-     error != 0;                                                  \
-   })
+#define FT_QALLOC( _pointer_, _size_ )                  \
+          ({                                            \
+            void*  _tmp_;                               \
+                                                        \
+                                                        \
+            error     = FT_MEM_QALLOC( _tmp_, _size_ ); \
+            _pointer_ = _tmp_;                          \
+            error != 0;                                 \
+          })
+
+#define FT_QREALLOC( _pointer_, _cursize_, _newsize_ )                  \
+          ({                                                            \
+            void*  _tmp_ = _pointer_;                                   \
+                                                                        \
+                                                                        \
+            error     = FT_MEM_QREALLOC( _tmp_, _cursize_, _newsize_ ); \
+            _pointer_ = _tmp_;                                          \
+            error != 0;                                                 \
+          })
 
 
 #else /* !GCC || GCC < 3.3 */
+
 
 #define FT_ALLOC( _pointer_, _size_ )                       \
           FT_SET_ERROR( FT_MEM_ALLOC( _pointer_, _size_ ) )
@@ -423,37 +435,38 @@ FT_BEGIN_HEADER
 
 #endif /* !GCC || GCC < 3.3 */
 
+
 #define FT_FREE( _pointer_ )       \
           FT_MEM_FREE( _pointer_ )
 
 
-#define FT_NEW( _pointer_ )  \
-          FT_ALLOC( _pointer_, sizeof(*(_pointer_)) )
+#define FT_NEW( _pointer_ )                              \
+          FT_ALLOC( _pointer_, sizeof ( *(_pointer_) ) )
 
-#define FT_NEW_ARRAY( _pointer_, _count_ )  \
-          FT_ALLOC( _pointer_, sizeof(*(_pointer_))*(_count_) )
+#define FT_NEW_ARRAY( _pointer_, _count_ )                           \
+          FT_ALLOC( _pointer_, sizeof ( *(_pointer_) ) * (_count_) )
 
-#define FT_RENEW_ARRAY( _pointer_, _old_, _new_ )                \
-          FT_REALLOC( _pointer_, sizeof(*(_pointer_))*(_old_),   \
-                                 sizeof(*(_pointer_))*(_new_) )
+#define FT_RENEW_ARRAY( _pointer_, _old_, _new_ )                    \
+          FT_REALLOC( _pointer_, sizeof ( *(_pointer_) ) * (_old_),  \
+                                 sizeof ( *(_pointer_) ) * (_new_) )
 
-#define FT_QNEW( _pointer_ )  \
-          FT_QALLOC( _pointer_, sizeof(*(_pointer_)) )
+#define FT_QNEW( _pointer_ )                              \
+          FT_QALLOC( _pointer_, sizeof ( *(_pointer_) ) )
 
-#define FT_QNEW_ARRAY( _pointer_, _count_ )  \
-          FT_QALLOC( _pointer_, sizeof(*(_pointer_))*(_count_) )
+#define FT_QNEW_ARRAY( _pointer_, _count_ )                           \
+          FT_QALLOC( _pointer_, sizeof ( *(_pointer_) ) * (_count_) )
 
-#define FT_QRENEW_ARRAY( _pointer_, _old_, _new_ )                \
-          FT_QREALLOC( _pointer_, sizeof(*(_pointer_))*(_old_),   \
-                                  sizeof(*(_pointer_))*(_new_) )
+#define FT_QRENEW_ARRAY( _pointer_, _old_, _new_ )                    \
+          FT_QREALLOC( _pointer_, sizeof ( *(_pointer_) ) * (_old_),  \
+                                  sizeof ( *(_pointer_) ) * (_new_) )
 
 
-#define FT_ALLOC_ARRAY( _pointer_, _count_, _type_ )         \
-          FT_ALLOC( _pointer_, (_count_)*sizeof( _type_ ) )
+#define FT_ALLOC_ARRAY( _pointer_, _count_, _type_ )           \
+          FT_ALLOC( _pointer_, (_count_) * sizeof ( _type_ ) )
 
-#define FT_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )  \
-          FT_REALLOC( _pointer, (_old_) * sizeof ( _type_ ), \
-                                (_new_) * sizeof ( _type_ )  )
+#define FT_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )   \
+          FT_REALLOC( _pointer, (_old_) * sizeof ( _type_ ),  \
+                                (_new_) * sizeof ( _type_ ) )
 
  /* */
 

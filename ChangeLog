@@ -1,20 +1,6 @@
-2005-03-04  David Turner  <david@freetype.org>
+2005-03-04  Werner Lemberg  <wl@gnu.org>
 
-	* include/freetype/internal/{ftmemory.h,ftserv.h}: removing
-	compiler warnings with GCC 3.3 and above...
-
-	* include/freetype/internal/ftobjs.h, src/base/ftutil.c (ft_highpow2),
-	src/pfr/pfrload.c, src/pfr/pfrobjs.c, src/pfr/pfrtypes.h: implement
-	FT_OPTIMIZE_MEMORY, the kerning table is not loaded into the heap
-	anymore.
-
-	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_image): Introduce
-	temporary variable to avoid gcc warning.
-	(tt_face_load_sbit_image): Mark unused variables with FT_UNUSED.
-
-	* include/freetype/config/ftmodule.h: moving the order of drivers to
-	speed up font loading. the pcf and bdf loaders are still slow and
-	eat memory like crazy.
+	* src/base/ftutil.c: Include FT_INTERNAL_OBJECTS_H.
 
 2005-03-03  Werner Lemberg  <wl@gnu.org>
 
@@ -48,8 +34,48 @@
 
 	* src/truetype/ttgload.c: Include `ttpload.h'.
 
+2005-03-03  David Turner  <david@freetype.org>
+
+	* include/freetype/internal/ftmemory.h (FT_ALLOC, FT_REALLOC,
+	FT_QALLOC, FT_QREALLOC) [gcc >= 3.3]: Provide macro versions which
+	avoid compiler warnings.
+	(FT_NEW, FT_NEW_ARRAY, FT_RENEW_ARRAY, FT_QNEW, FT_QNEW_ARRAY,
+	FT_QRENEW_ARRAY, FT_ALLOC_ARRAY, FT_REALLOC_ARRAY): Updated.
+
+	* include/freetype/internal/ftserv.h (FT_FACE_FIND_SERVICE,
+	FT_FACE_FIND_GLOBAL_SERVICE, FT_FACE_LOOKUP_SERVICE) [__cpluscplus]:
+	Provide macro versions which avoid compiler warnings.
+
+	* src/base/ftutil.c (ft_highpow2): New utility function.
+
+	* include/freetype/internal/ftobjs.h: Updated.
+
+	* src/pfr/pfrload.c (pfr_get_gindex, pfr_compare_kern_pairs,
+	pfr_sort_kerning_pairs): Don't define if FT_OPTIMIZE_MEMORY is set.
+	(pfr_phy_font_done): Don't handle `kern_pairs' if FT_OPTIMIZE_MEMORY
+	is set.
+	(pfr_phy_font_load): Don't call `pfr_sort_kerning_pairs' if
+	FT_OPTIMIZE_MEMORY is set.
+
+	* src/pfr/pfrobjs.c (pfr_slot_load): Comment out some code which
+	doesn't work with broken fonts.
+	(pfr_face_get_kerning) [FT_OPTIMIZE_MEMORY]: Implement.
+
+	* src/pfr/pfrtypes.h (PFR_KernItemRec): Optimize member types.
+	(PFR_NEXT_KPAIR): New macro.
+	(PFR_PhyFontRec): Don't define `kern_pairs' if FT_OPTIMIZE_MEMORY is
+	set.
+
+	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_image): Introduce
+	temporary variable to avoid gcc warning.
+	(tt_face_load_sbit_image): Mark unused variables with FT_UNUSED.
+
 	* src/truetype/ttpload.c (tt_face_load_loca) [FT_OPTIMIZE_MEMORY]:
 	Remove redundant variable.
+
+	* include/freetype/config/ftmodule.h: Moving the order of drivers to
+	speed up font loading.  The PCF and BDF loaders are still slow and
+	consume far too much memory.
 
 2005-03-03  Werner Lemberg  <wl@gnu.org>
 
