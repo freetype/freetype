@@ -5232,7 +5232,7 @@ if test "${with_old_mac_fonts+set}" = set; then
 
 fi;
 if test x$with_old_mac_fonts = xyes; then
-  CFLAGS="$CFLAGS -DTARGET_API_MAC_CARBON"
+  XX_ANSICFLAGS="-pedantic"
   LDFLAGS="$LDFLAGS -Xlinker -framework -Xlinker CoreServices \
                     -Xlinker -framework -Xlinker ApplicationServices"
 else

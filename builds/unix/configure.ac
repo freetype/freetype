@@ -131,7 +131,7 @@ AC_ARG_WITH([old-mac-fonts],
   AS_HELP_STRING([--with-old-mac-fonts],
                  [allow Mac resource-based fonts to be used]))
 if test x$with_old_mac_fonts = xyes; then
-  CFLAGS="$CFLAGS -DTARGET_API_MAC_CARBON"
+  XX_ANSICFLAGS="-pedantic"
   LDFLAGS="$LDFLAGS -Xlinker -framework -Xlinker CoreServices \
                     -Xlinker -framework -Xlinker ApplicationServices"
 else

@@ -1,3 +1,15 @@
+2004-02-27  Garrick Meeker  <garrick@digitalanarchy.com>
+
+	* builds/unix/configure.ac: Fix compiler flags for
+	`--with-old-mac-fonts'.
+	* builds/unix/configure: Regenerated.
+
+	* src/base/ftmac.c: s/TARGET_API_MAC_CARBON/!TARGET_API_MAC_OS8/.
+	(FT_New_Face_From_Resource): New function.
+	(FT_New_Face): Use FT_New_Face_From_Resource.
+	(FT_New_Face_From_FSSpec): Use FT_New_Face_From_Resource.
+	[__MWERKS__]: Don't include FSp_fopen.h.
+
 2004-02-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshglob.c (psh_globals_new): Fix value of
