@@ -35,6 +35,25 @@
 #include <ftobjs.h>  /* for ABS() */
 
 
+#ifdef FT_CONFIG_OPTION_OLD_CALCS
+
+  static const FT_Long  ft_square_roots[63] =
+  {
+       1,    1,    2,     3,     4,     5,     8,    11,
+      16,   22,   32,    45,    64,    90,   128,   181,
+     256,  362,  512,   724,  1024,  1448,  2048,  2896,
+    4096, 5892, 8192, 11585, 16384, 23170, 32768, 46340,
+
+      65536,   92681,  131072,   185363,   262144,   370727,
+     524288,  741455, 1048576,  1482910,  2097152,  2965820,
+    4194304, 5931641, 8388608, 11863283, 16777216, 23726566,
+
+      33554432,   47453132,   67108864,   94906265,
+     134217728,  189812531,  268435456,  379625062,
+     536870912,  759250125, 1073741824, 1518500250,
+    2147483647
+  };
+#else  
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -50,7 +69,7 @@
   /* <Return>                                                              */
   /*    The result of `sqrt(x)'.                                           */
   /*                                                                       */
-  BASE_FUNC
+  EXPORT_FUNC
   FT_Int32  FT_Sqrt32( FT_Int32 x )
   {
     FT_ULong  val, root, newroot, mask;
@@ -76,7 +95,7 @@
 
     return root;
   }
-
+#endif /* OLD_CALCS */
 
 #ifdef LONG64
 
@@ -209,6 +228,60 @@
 
     return (FT_Int32)( s < 0 ? -q : q );
   }
+
+
+#ifdef FT_CONFIG_OPTION_OLD_CALCS
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Sqrt64                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Computes the square root of a 64-bits value ! Yeah, that sounds    */
+  /*    stupid, but it's needed to obtain maximum accuracy in the          */
+  /*    TrueType bytecode interpreter..                                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    l :: 64-bits integer                                               */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The 32-bit square-root.                                            */
+  /*                                                                       */
+  
+     static
+     int  ft_order64( FT_Int64  z )
+     {
+       int  j = 0;
+   
+       while ( z )
+       {
+         z = (unsigned INT64)z >> 1;
+         j++;
+       }
+       return j - 1;
+     }
+
+
+  EXPORT_FUNC
+  FT_Int32  FT_Sqrt64( FT_Int64  l )
+  {
+    FT_Int64  r, s;
+
+    if ( l <= 0 ) return 0;
+    if ( l == 1 ) return 1;
+
+    r = ft_square_roots[ft_order64( l )];
+
+    do
+    {
+      s = r;
+      r = ( r + l/r ) >> 1;
+    }
+    while ( r > s || r*r > l );
+
+    return r;
+  }
+#endif
 
 
 #else /* LONG64 */
@@ -437,7 +510,7 @@
   /* <Note>                                                                */
   /*    Will be wrapped by the ADD_64() macro.                             */
   /*                                                                       */
-  BASE_FUNC
+  EXPORT_FUNC
   void  FT_Add64( FT_Int64*  x,
                   FT_Int64*  y,
                   FT_Int64*  z )
@@ -470,7 +543,7 @@
   /* <Note>                                                                */
   /*    Will be wrapped by the MUL_64() macro.                             */
   /*                                                                       */
-  BASE_FUNC
+  EXPORT_FUNC
   void  FT_MulTo64( FT_Int32   x,
                     FT_Int32   y,
                     FT_Int64*  z )
@@ -536,7 +609,7 @@
   /* <Note>                                                                */
   /*    Will be wrapped by the DIV_64() macro.                             */
   /*                                                                       */
-  BASE_FUNC
+  EXPORT_FUNC
   FT_Int32  FT_Div64by32( FT_Int64*  x,
                           FT_Int32   y )
   {
@@ -584,6 +657,88 @@
     return ( s < 0 ) ? -(FT_Int32)q : (FT_Int32)q;
   }
 
+
+#ifdef FT_CONFIG_OPTION_OLD_CALCS
+
+  static
+  void  FT_Sub64( FT_Int64*  x, FT_Int64*  y, FT_Int64*  z )
+  {
+    register FT_Word32  lo, hi;
+
+
+    lo = x->lo - y->lo;
+    hi = x->hi - y->hi - ( (FT_Int32)lo < 0 );
+
+    z->lo = lo;
+    z->hi = hi;
+  }
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Sqrt64                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Computes the square root of a 64-bits value ! Yeah, that sounds    */
+  /*    stupid, but it's needed to obtain maximum accuracy in the          */
+  /*    TrueType bytecode interpreter..                                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    z :: pointer to 64-bits integer                                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The 32-bit square-root.                                            */
+  /*                                                                       */
+  
+      static
+      int  ft_order64( FT_Int64*  z )
+      {
+        FT_Word32  i;
+        int        j;
+    
+        i = z->lo;
+        j = 0;
+        if ( z->hi )
+        {
+          i = z->hi;
+          j = 32;
+        }
+    
+        while ( i > 0 )
+        {
+          i >>= 1;
+          j++;
+        }
+        return j-1;
+      }
+
+  EXPORT_FUNC
+  FT_Int32  FT_Sqrt64( FT_Int64*  l )
+  {
+    FT_Int64  l2;
+    FT_Int32  r, s;
+
+
+    if ( (FT_Int32)l->hi < 0          ||
+        (l->hi == 0 && l->lo == 0) )  return 0;
+
+    s = ft_order64( l );
+    if ( s == 0 ) return 1;
+
+    r = ft_square_roots[s];
+    do
+    {
+      s = r;
+      r = ( r + FT_Div64by32(l,r) ) >> 1;
+      FT_MulTo64( r, r,   &l2 );
+      FT_Sub64  ( l, &l2, &l2 );
+    }
+    while ( r > s || (FT_Int32)l2.hi < 0 );
+
+    return r;
+  }
+
+#endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 #endif /* LONG64 */
 

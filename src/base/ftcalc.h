@@ -37,6 +37,15 @@
 
 #define DIV_64( x, y )     ( (x) / (y) )
 
+#ifdef FT_CONFIG_OPTION_OLD_CALCS
+
+#define SQRT_64( z )  FT_Sqrt64( z )
+
+  EXPORT_DEF
+  FT_Int32  FT_Sqrt64( FT_Int64  x );
+  
+#endif /* OLD_CALCS */
+
 #else /* LONG64 */
 
   typedef struct  FT_Int64_
@@ -50,21 +59,34 @@
 #define MUL_64( x, y, z )  FT_MulTo64( x, y, &z )
 #define DIV_64( x, y )     FT_Div64by32( &x, y )
 
-  BASE_DEF
+  EXPORT_DEF
   void      FT_Add64    ( FT_Int64* x, FT_Int64* y, FT_Int64*  z );
-  BASE_DEF
+
+  EXPORT_DEF
   void      FT_MulTo64  ( FT_Int32  x, FT_Int32  y, FT_Int64*  z );
-  BASE_DEF
+
+  EXPORT_DEF
   FT_Int32  FT_Div64by32( FT_Int64* x, FT_Int32  y );
 
+#ifdef FT_CONFIG_OPTION_OLD_CALCS
+
+#define SQRT_64( z )  FT_Sqrt64( &z )
+
+  EXPORT_DEF
+  FT_Int32  FT_Sqrt64( FT_Int64*  x );
+  
+#endif /* OLD_CALC */
 
 #endif /* LONG64 */
 
+
+#ifndef FT_CONFIG_OPTION_OLD_CALCS
 
 #define SQRT_32( x )       FT_Sqrt32( x )
 
   BASE_DEF
   FT_Int32  FT_Sqrt32( FT_Int32  l );
+#endif
 
   /*************************************************************************/
   /*                                                                       */
