@@ -59,7 +59,7 @@
 
   typedef struct FTC_Glyph_QueueRec_*    FTC_Glyph_Queue;
   typedef struct FTC_GlyphNodeRec_*      FTC_GlyphNode;
-  typedef struct FTC_Glyph_CacheRec_*    FTC_Glyph_Cache;  
+  typedef struct FTC_Glyph_CacheRec_*    FTC_Glyph_Cache;
 
   typedef struct  FTC_GlyphNodeRec_
   {
@@ -67,10 +67,10 @@
 
     /* link.data contains a handle to a FT_Glyph object */
     FT_ListNodeRec    link;
-    
+
     FT_UShort         glyph_index;
     FT_UShort         queue_index;
- 
+
   } FTC_GlyphNodeRec;
 
 
@@ -96,9 +96,9 @@
 
   typedef FT_Error  (*FTC_Glyph_Queue_InitFunc)   ( FTC_Glyph_Queue  queue,
                                                     FT_Pointer       type );
-                                                
+
   typedef void      (*FTC_Glyph_Queue_DoneFunc)   ( FTC_Glyph_Queue  queue );
-  
+
   typedef FT_Bool   (*FTC_Glyph_Queue_CompareFunc)( FTC_Glyph_Queue  queue,
                                                     FT_Pointer       type );
 
@@ -108,7 +108,7 @@
 
   typedef void  (*FTC_Glyph_Queue_DestroyNodeFunc)( FTC_GlyphNode    node,
                                                     FTC_Glyph_Queue  queue );
-                
+
 
   typedef FT_ULong (*FTC_Glyph_Queue_SizeNodeFunc)( FTC_GlyphNode    node,
                                                     FTC_Glyph_Queue  queue );
@@ -116,7 +116,7 @@
   typedef struct FTC_Glyph_Queue_Class_
   {
     FT_UInt                          queue_byte_size;
-    
+
     FTC_Glyph_Queue_InitFunc         init;
     FTC_Glyph_Queue_DoneFunc         done;
     FTC_Glyph_Queue_CompareFunc      compare;
@@ -124,7 +124,7 @@
     FTC_Glyph_Queue_NewNodeFunc      new_node;
     FTC_Glyph_Queue_SizeNodeFunc     size_node;
     FTC_Glyph_Queue_DestroyNodeFunc  destroy_node;
-  
+
   } FTC_Glyph_Queue_Class;
 
 
@@ -147,7 +147,7 @@
   {
     FTC_Cache_Class         root;
     FTC_Glyph_Queue_Class*  queue_class;
-    
+
   } FTC_Glyph_Cache_Class;
 
 
@@ -163,7 +163,7 @@
 
   /* these function are exported so that they can be called from */
   /* user-provided cache classes.. otherwise, they're really     */
-  /* pars of the cache sub-system internals..                    */
+  /* part of the cache sub-system internals..                    */
   /*                                                             */
 
   FT_EXPORT_FUNC(void)   FTC_GlyphNode_Init( FTC_GlyphNode    node,
@@ -172,7 +172,7 @@
 
 #define  FTC_GlyphNode_Ref(n)  \
              FTC_CACHENODE_TO_DATA_P(&(n)->root)->ref_count++
-             
+
 #define  FTC_GlyphNode_Unref(n)  \
              FTC_CACHENODE_TO_DATA_P(&(n)->root)->ref_count--
 
@@ -185,7 +185,7 @@
 
   FT_EXPORT_DEF(void)       FTC_Glyph_Cache_Done( FTC_Glyph_Cache  cache );
 
-  FT_EXPORT_DEF(FT_Error)   FTC_Glyph_Queue_New( 
+  FT_EXPORT_DEF(FT_Error)   FTC_Glyph_Queue_New(
                                  FTC_Glyph_Cache         cache,
                                  FT_Pointer              type,
                                  FTC_Glyph_Queue        *aqueue );
