@@ -1,8 +1,8 @@
 2000-11-29  David Turner  <david.turner@freetype.org>
 
-        * src/base/ftbbox.c (BBox_Conic_Check): fixed a really stupid
-	bug in the formula used to compute the conic bezier extrema
-	of non-monotonous arcs..
+	* src/base/ftbbox.c (BBox_Conic_Check): Fixed a really stupid
+	bug in the formula used to compute the conic Bézier extrema
+	of non-monotonous arcs.
 
 2000-11-29  Werner Lemberg  <wl@gnu.org>
 
@@ -72,7 +72,7 @@
 	* src/type1/t1parse.c (T1_Done_Parse): Renamed to...
 	(T1_Finalize_Parser): New function (to avoid name clash with a
 	function in the PSAux module).
-	(T1_Decrypt): Removed since it it duplicated in the PSAux module.
+	(T1_Decrypt): Removed since it is duplicated in the PSAux module.
 	(T1_Get_Private_Dict): Added `psaux' as new parameter; use decrypt
 	function from PSAux module.
 
