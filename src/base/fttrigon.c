@@ -468,8 +468,8 @@
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Angle )
-  FT_Angle_Dif( FT_Angle  angle1,
-                FT_Angle  angle2 )
+  FT_Angle_Diff( FT_Angle  angle1,
+                 FT_Angle  angle2 )
   {
     FT_Angle  delta = angle2 - angle1;
 

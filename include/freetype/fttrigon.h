@@ -189,9 +189,9 @@ FT_BEGIN_HEADER
   /* @return:                                                              */
   /*    contrainted value of 'value2-value1'                               */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Angle )
-  FT_Angle_Dif( FT_Angle  angle1,
-                FT_Angle  angle2 );
+  FT_EXPORT( FT_Angle )
+  FT_Angle_Diff( FT_Angle  angle1,
+                 FT_Angle  angle2 );
 
 
   /*************************************************************************/
