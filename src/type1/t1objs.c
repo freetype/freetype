@@ -275,11 +275,11 @@
                 FT_Int         num_params,
                 FT_Parameter*  params )
   {
-    FT_Error         error;
+    FT_Error            error;
     FT_Service_PsCMaps  psnames;
-    PSAux_Service    psaux;
-    T1_Font          type1 = &face->type1;
-    PS_FontInfo      info = &type1->font_info;
+    PSAux_Service       psaux;
+    T1_Font             type1 = &face->type1;
+    PS_FontInfo         info = &type1->font_info;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );

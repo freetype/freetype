@@ -75,10 +75,11 @@
     return 0;
   }
 
+
   static const FT_Service_PsInfoRec  cid_service_ps_info =
   {
-    (PS_GetFontInfoFunc)    cid_ps_get_font_info,
-    (PS_HasGlyphNamesFunc)  NULL  /* unsupported with CID fonts */
+    (PS_GetFontInfoFunc)  cid_ps_get_font_info,
+    (PS_HasGlyphNamesFunc)NULL          /* unsupported with CID fonts */
   };
 
 

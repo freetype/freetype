@@ -315,6 +315,7 @@
     (FT_GlyphDict_NameIndexFunc)cff_get_name_index,
   };
 
+
  /*
   *  POSTSCRIPT INFO SERVICE
   *
@@ -327,12 +328,12 @@
     return 1;
   }
 
+
   static const FT_Service_PsInfoRec  cff_service_ps_info =
   {
-    (PS_GetFontInfoFunc)    NULL,  /* unsupported with CFF fonts */
-    (PS_HasGlyphNamesFunc)  cff_ps_has_glyph_names
+    (PS_GetFontInfoFunc)  NULL,         /* unsupported with CFF fonts */
+    (PS_HasGlyphNamesFunc)cff_ps_has_glyph_names
   };
-
 
 
   /*************************************************************************/
@@ -362,14 +363,15 @@
   cff_get_interface( CFF_Driver   driver,
                      const char*  module_interface )
   {
-    FT_Module  sfnt;
+    FT_Module            sfnt;
     FT_Module_Interface  result;
+
 
     result = ft_service_list_lookup( cff_services, module_interface );
     if ( result != NULL )
       return  result;
 
-    /* we simply pass our request to the `sfnt' module */
+    /* we pass our request to the `sfnt' module */
     sfnt = FT_Get_Module( driver->root.root.library, "sfnt" );
 
     return sfnt ? sfnt->clazz->get_interface( sfnt, module_interface ) : 0;

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType utility file for PS names support (body).                   */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2002, 2003 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -30,15 +30,18 @@
   {
     FT_Error  error = FT_Err_Invalid_Argument;
 
+
     if ( face )
     {
-      FT_Service_PsInfo   service = NULL;
+      FT_Service_PsInfo  service = NULL;
 
-      FT_FACE_FIND_SERVICE( service, face, POSTSCRIPT_INFO );
+
+      FT_FACE_FIND_SERVICE( face, face, POSTSCRIPT_INFO );
 
       if ( service && service->ps_get_font_info )
         error = service->ps_get_font_info( face, afont_info );
     }
+
     return error;
   }
 
@@ -51,13 +54,15 @@
     FT_Int             result  = 0;
     FT_Service_PsInfo  service = NULL;
 
+
     if ( face )
     {
-      FT_FACE_FIND_SERVICE( service, face, POSTSCRIPT_INFO );
+      FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
 
       if ( service && service->ps_has_glyph_names )
         result = service->ps_has_glyph_names( face );
     }
+
     return result;
   }
 

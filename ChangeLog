@@ -1,27 +1,82 @@
+2003-10-31  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/base/fttype1.c (FT_Get_PS_Font_Info, FT_Has_PS_Glyph_Names):
+	Fix parameter order in calls to FT_FACE_FIND_SERVICE.
+
+2003-10-31  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftserv.h
+	(FT_SERVICE_POSTSCRIPT_NAMES_H): Removed.  Unused.
+
+	* src/type42/t42drivr.c (t42_services): Updated.
+
 2003-10-29  David Turner  <david@freetype.org>
 
-        * include/freetype/internal/bdftypes.h: removed obsolete header
+	* include/freetype/internal/bdftypes.h: Removed.  Obsolete.
+	* src/base/ftbdf.c: Updated.
 
-        * include/freetype/internal/cfftypes.h, src/cff/cfftypes.h,
-        src/cff/cffload.h, src/cff/cffobjs.h, src/cff/cffparse.h,
-        include/freetype/internal/services/svbdf.h: moving "cfftypes.h" from
-        'include/freetype/internal' to 'src/cff' since no other modules needs
-        to known about these types
+	* include/freetype/internal/cfftypes.h: Moved to...
+	* src/cff/cfftypes.h: This place since no other module needs to
+	know about those types.
 
-        * include/freetype/internal/t42types.h,
-        include/freetype/internal/internal.h, src/type42/t42objs.h,
-        src/type42/t42drivr.c, src/type42/t42types.h: moving "t42types.h" from
-        'include/freetype/internal' to 'src/type42' since no other modules needs
-        to known about these types
+	* include/freetype/internal/t42types.h: Moved to...
+	* src/type42/t42types.h: This place since no other module needs to
+	know about those types.
 
-        * src/gzip/infblock.c: removing compiler warning
+	* include/freetype/internal/services/svbdf.h: Include FT_BDF_H.
 
-        * include/freetype/internal/services/svpsinfo.h,
-        include/freetype/internal/ftserv.h, src/cff/cffdrivr.c,
-        src/cid/ciddrivr.c, src/type1/t1driver.c, src/type42/t42drivr.c,
-        src/base/fttype1.c: migrating to FT_SERVICE_ID_POSTSCRIPT_INFO defined
-        in "svpsinfo.h", removing some sad hacks.
+	* include/freetype/internal/services/svpsname.h: Renamed to...
+	* include/freetype/internal/services/svpscmap.h: This.
+	Updated `FT_Service_PsNames' -> `FT_Service_PsCMaps' and
+	`POSTSCRIPT_NAMES' -> `POSTSCRIPT_CMAPS' everywhere.
 
+	* include/freetype/internal/services/svpsinfo.h: New file, providing
+	PostScript info service.
+
+	* include/freetype/internal/ftserv.h (FT_SERVICE_POSTSCRIPT_CMAPS_H,
+	FT_SERVICE_POSTSCRIPT_INFO_H): New macros for svpscmap.h and
+	svpsinfo.h.
+	* include/freetype/internal/internal.h (FT_INTERNAL_TYPE42_TYPES_H,
+	FT_INTERNAL_CFF_TYPES_H, FT_INTERNAL_BDF_TYPES_H): Removed.
+
+	* src/base/fttype1.c: Don't include FT_INTERNAL_TYPE1_TYPES_H and
+	FT_INTERNAL_TYPE42_TYPES_H but FT_INTERNAL_SERVICE_H and
+	FT_SERVICE_POSTSCRIPT_INFO_H.
+	(FT_Get_PS_Font_Info, FT_Has_PS_Glyph_Names): Use new
+	POSTSCRIPT_INFO service.
+
+	* src/cff/cffdrivr.c: Include FT_SERVICE_POSTSCRIPT_INFO_H.
+	(cff_ps_has_glyph_names): New function.
+	(cff_service_ps_info): New service.
+	(cff_services): Updated.
+
+	* src/cff/cffload.h, src/cff/cffobjs.h, src/cff/cffparse.h: Don't
+	include FT_INTERNAL_CFF_TYPES_H but cfftypes.h directly.
+
+	* src/cif/cidriver.c: Include FT_SERVICE_POSTSCRIPT_INFO_H.
+	(cid_ps_get_font_info): New function.
+	(cid_service_ps_info): New service.
+	(cid_services): Updated.
+
+	* src/type1/t1driver.c: Include FT_SERVICE_POSTSCRIPT_INFO_H.
+	(t1_ps_get_font_info, t1_ps_has_glyph_names): New functions.
+	(t1_service_ps_info): New service.
+	(t1_services): Updated.
+
+	* src/type42/t42drivr.c: Include FT_SERVICE_POSTSCRIPT_INFO_H.
+	(t42_ps_get_font_info, t42_ps_has_glyph_names): New functions.
+	(t42_service_ps_info): New service.
+
+	* src/type42/t42objs.h: Don't include FT_INTERNAL_TYPE42_TYPES_H
+	but t42types.h directly.
+
+	* src/psnames/psmodule.c (psnames_interface, psnames_services):
+	Renamed to...
+	(pscmaps_interface, pscmaps_services): This.
+	Updated all users.
+
+
+	* src/gzip/infblock.c (inflate_blocks): Remove compiler warning.
 
 2003-10-22  Werner Lemberg  <wl@gnu.org>
 

@@ -2480,8 +2480,8 @@
   FT_Get_Sfnt_Table( FT_Face      face,
                      FT_Sfnt_Tag  tag )
   {
-    void*                   table = 0;
-    FT_Service_SFNT_Table   service;
+    void*                  table = 0;
+    FT_Service_SFNT_Table  service;
 
 
     if ( face && FT_IS_SFNT( face ) )

@@ -149,6 +149,7 @@
     return 0;
   }
 
+
   static FT_Int
   t1_ps_has_glyph_names( FT_Face  face )
   {
@@ -156,11 +157,13 @@
     return 1;
   }
 
+
   static const FT_Service_PsInfoRec  t1_service_ps_info =
   {
-    (PS_GetFontInfoFunc)    t1_ps_get_font_info,
-    (PS_HasGlyphNamesFunc)  t1_ps_has_glyph_names
+    (PS_GetFontInfoFunc)  t1_ps_get_font_info,
+    (PS_HasGlyphNamesFunc)t1_ps_has_glyph_names
   };
+
 
  /*
   *  SERVICE LIST
