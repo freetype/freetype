@@ -22,72 +22,13 @@
 #include <ttload.h>
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Load_SBit_Strikes                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads the table of embedded bitmap sizes for this face.            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face   :: The target face object.                                  */
-  /*    stream :: The input stream.                                        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error  TT_Load_SBit_Strikes( TT_Face    face,
                                   FT_Stream  stream );
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Free_SBit_Strikes                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Releases the embedded bitmap tables.                               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face :: The target face object.                                    */
-  /*                                                                       */
   LOCAL_DEF
   void  TT_Free_SBit_Strikes( TT_Face  face );
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Load_SBit_Image                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads a given glyph sbit image from the font resource.  This also  */
-  /*    returns its metrics.                                               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face        :: The target face object.                             */
-  /*                                                                       */
-  /*    x_ppem      :: The horizontal resolution in points per EM.         */
-  /*                                                                       */
-  /*    y_ppem      :: The vertical resolution in points per EM.           */
-  /*                                                                       */
-  /*    glyph_index :: The current glyph index.                            */
-  /*                                                                       */
-  /*    stream      :: The input stream.                                   */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    map         :: The target pixmap.                                  */
-  /*    metrics     :: A big sbit metrics structure for the glyph image.   */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.  Returns an error if no     */
-  /*    glyph sbit exists for the index.                                   */
-  /*                                                                       */
-  /*  <Note>                                                               */
-  /*    The `map.buffer' field is always freed before the glyph is loaded. */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error  TT_Load_SBit_Image( TT_Face           face,
                                 TT_Int            x_ppem,

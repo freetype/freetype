@@ -31,18 +31,11 @@ extern "C" {
 #define TT_Err_Invalid_Post_Table_Format  0x0B00
 #define TT_Err_Invalid_Post_Table         0x0B01
 
-#if 0
-  /* the 258 standard Mac glyph names, used for format 1.0 and 2.5 */
-  LOCAL_DEF
-  const TT_String*  TT_Mac_Postscript_Names[];
-#endif
-
 
   LOCAL_DEF
   TT_Error TT_Get_PS_Name( TT_Face      face,
                            TT_UInt      index,
                            TT_String**  PSname );
-
 
   LOCAL_DEF
   void  TT_Free_Post_Names( TT_Face  face );

@@ -58,7 +58,7 @@
     TT_Table*  limit;
 
 
-    FT_TRACE3(( "TT_LookUp_Table: %08p, `%c%c%c%c' )\n",
+    FT_TRACE3(( "TT_LookUp_Table: %08p, `%c%c%c%c'\n",
                   face,
                   (TT_Char)( tag >> 24 ),
                   (TT_Char)( tag >> 16 ),

@@ -77,7 +77,7 @@
     registry->cur_offset     = 0;
     driver->extensions       = registry;
 
-    FT_TRACE2(( "FT_Init_Extensions: success" ));
+    FT_TRACE2(( "FT_Init_Extensions: success\n" ));
 
     return FT_Err_Ok;
   }
@@ -153,7 +153,7 @@
       registry->num_extensions++;
       registry->cur_offset += ( cur->size + FT_ALIGNMENT-1 ) & -FT_ALIGNMENT;
 
-      FT_TRACE1(( "FT_Register_Extension: `%s' successfully registered",
+      FT_TRACE1(( "FT_Register_Extension: `%s' successfully registered\n",
                   cur->id ));
     }
 
@@ -204,7 +204,7 @@
         {
           *extension_interface = cur->interface;
 
-          FT_TRACE1(( "FT_Get_Extension: got `%s'", extension_id ));
+          FT_TRACE1(( "FT_Get_Extension: got `%s'\n", extension_id ));
 
           return (void*)((char*)face->extensions + cur->offset);
         }
@@ -212,7 +212,7 @@
 
     /* could not find the extension id */
 
-    FT_ERROR(( "FT_Get_Extension: couldn't find `%s'", extension_id ));
+    FT_ERROR(( "FT_Get_Extension: couldn't find `%s'\n", extension_id ));
 
     *extension_interface = 0;
 

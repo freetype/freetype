@@ -130,7 +130,7 @@ const FT_DriverInterface*  ft_default_drivers[] =
     if ( !memory )
     {
       FT_ERROR(( "FT_Init_FreeType:" ));
-      FT_ERROR(( " cannot find memory manager" ));
+      FT_ERROR(( " cannot find memory manager\n" ));
       return FT_Err_Unimplemented_Feature;
     }
 

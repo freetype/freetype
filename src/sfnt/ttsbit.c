@@ -170,96 +170,21 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Load_Small_SBit_Metrics                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads a small bitmap metrics record.                               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    stream  :: The input stream.                                       */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    metrics :: A small metrics structure.                              */
-  /*                                                                       */
-  static
-  void  TT_Load_Small_SBit_Metrics( TT_SBit_Small_Metrics*  metrics,
-                                    FT_Stream               stream )
+  const FT_Frame_Field  sbit_metrics_fields[] =
   {
-    metrics->height   = GET_Byte();
-    metrics->width    = GET_Byte();
-    metrics->bearingX = GET_Char();
-    metrics->bearingY = GET_Char();
-    metrics->advance  = GET_Byte();
-  }
+    FT_FRAME_START( 8 ),
+      FT_FRAME_BYTE( TT_SBit_Metrics, height ),
+      FT_FRAME_BYTE( TT_SBit_Metrics, width ),
 
+      FT_FRAME_CHAR( TT_SBit_Metrics, horiBearingX ),
+      FT_FRAME_CHAR( TT_SBit_Metrics, horiBearingY ),
+      FT_FRAME_BYTE( TT_SBit_Metrics, horiAdvance ),
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Load_SBit_Metrics                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads a bitmap metrics record.                                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    stream  :: The input stream.                                       */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    metrics :: A metrics structure.                                    */
-  /*                                                                       */
-  static
-  void  TT_Load_SBit_Metrics( TT_SBit_Metrics*  metrics,
-                              FT_Stream         stream )
-  {
-    metrics->height       = GET_Byte();
-    metrics->width        = GET_Byte();
-
-    metrics->horiBearingX = GET_Char();
-    metrics->horiBearingY = GET_Char();
-    metrics->horiAdvance  = GET_Byte();
-
-    metrics->vertBearingX = GET_Char();
-    metrics->vertBearingY = GET_Char();
-    metrics->vertAdvance  = GET_Byte();
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Load_SBit_Line_Metrics                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads a bitmap line metrics record.                                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    stream  :: The input stream.                                       */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    metrics :: A line metrics structure.                               */
-  /*                                                                       */
-  static
-  void  TT_Load_SBit_Line_Metrics( TT_SBit_Line_Metrics*  metrics,
-                                   FT_Stream              stream )
-  {
-    metrics->ascender  = GET_Char();
-    metrics->descender = GET_Char();
-    metrics->max_width = GET_Byte();
-
-    metrics->caret_slope_numerator   = GET_Char();
-    metrics->caret_slope_denominator = GET_Char();
-    metrics->caret_offset            = GET_Char();
-
-    metrics->min_origin_SB  = GET_Char();
-    metrics->min_advance_SB = GET_Char();
-    metrics->max_before_BL  = GET_Char();
-    metrics->min_after_BL   = GET_Char();
-    metrics->pads[0]        = GET_Char();
-    metrics->pads[1]        = GET_Char();
-  }
+      FT_FRAME_CHAR( TT_SBit_Metrics, vertBearingX ),
+      FT_FRAME_CHAR( TT_SBit_Metrics, vertBearingY ),
+      FT_FRAME_BYTE( TT_SBit_Metrics, vertAdvance ),
+    FT_FRAME_END
+  };
 
 
   /*************************************************************************/
@@ -285,15 +210,10 @@
     TT_Error  error;
 
 
-    if ( !ACCESS_Frame( 12L ) )
-    {
-      range->image_size = GET_ULong();
-      TT_Load_SBit_Metrics( &range->metrics, stream );
+    if ( READ_ULong( range->image_size ) )
+      return error;
 
-      FORGET_Frame();
-    }
-
-    return error;
+    return READ_Fields( sbit_metrics_fields, &range->metrics );
   }
 
 
@@ -400,7 +320,7 @@
         range->num_glyphs = num_glyphs;
         num_glyphs++;                       /* XXX: BEWARE - see spec */
 
-        size_elem  = large ? 4 : 2;
+        size_elem = large ? 4 : 2;
 
         if ( ALLOC_ARRAY( range->glyph_offsets,
                           num_glyphs, TT_ULong )    ||
@@ -409,7 +329,8 @@
 
         for ( n = 0; n < num_glyphs; n++ )
           range->glyph_offsets[n] = (TT_ULong)( range->image_offset +
-                                     large ? GET_ULong() : GET_UShort() );
+                                                  ( large ? GET_ULong()
+                                                          : GET_UShort() ) );
         FORGET_Frame();
       }
       break;
@@ -462,6 +383,26 @@
     TT_ULong   num_strikes;
     TT_ULong   table_base;
 
+    const FT_Frame_Field  sbit_line_metrics_fields[] =
+    {
+      /* no FT_FRAME_START */
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, ascender ),
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, descender ),
+        FT_FRAME_BYTE( TT_SBit_Line_Metrics, max_width ),
+
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, caret_slope_numerator ),
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, caret_slope_denominator ),
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, caret_offset ),
+
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, min_origin_SB ),
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, min_advance_SB ),
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, max_before_BL ),
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, min_after_BL ),
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, pads[0] ),
+        FT_FRAME_CHAR( TT_SBit_Line_Metrics, pads[1] ),
+      FT_FRAME_END
+    };
+
 
     face->num_sbit_strikes = 0;
 
@@ -483,8 +424,8 @@
     FORGET_Frame();
 
     /* check version number and strike count */
-    if ( version     != 0x00020000 ||
-         num_strikes >= 0x10000    )
+    if ( version     != 0x00020000L ||
+         num_strikes >= 0x10000L    )
     {
       FT_ERROR(( "TT_Load_SBit_Strikes: invalid table version!\n" ));
       error = TT_Err_Invalid_File_Format;
@@ -512,21 +453,21 @@
         TT_ULong  indexTablesSize;
 
 
-        strike->ranges_offset    = GET_ULong();
-        indexTablesSize          = GET_ULong();  /* don't save */
+        strike->ranges_offset = GET_ULong();
+        indexTablesSize       = GET_ULong();  /* don't save */
 
-        strike->num_ranges       = GET_ULong();
-        strike->color_ref        = GET_ULong();
+        strike->num_ranges    = GET_ULong();
+        strike->color_ref     = GET_ULong();
 
-        TT_Load_SBit_Line_Metrics( &strike->hori, stream );
-        TT_Load_SBit_Line_Metrics( &strike->vert, stream );
+        (void)READ_Fields( sbit_line_metrics_fields, &strike->hori );
+        (void)READ_Fields( sbit_line_metrics_fields, &strike->vert );
 
-        strike->start_glyph      = GET_UShort();
-        strike->end_glyph        = GET_UShort();
-        strike->x_ppem           = GET_Byte();
-        strike->y_ppem           = GET_Byte();
-        strike->bit_depth        = GET_Byte();
-        strike->flags            = GET_Char();
+        strike->start_glyph   = GET_UShort();
+        strike->end_glyph     = GET_UShort();
+        strike->x_ppem        = GET_Byte();
+        strike->y_ppem        = GET_Byte();
+        strike->bit_depth     = GET_Byte();
+        strike->flags         = GET_Char();
 
         count--;
         strike++;
@@ -799,7 +740,8 @@
         TT_Error  error;
 
 
-        error = Find_SBit_Range( glyph_index, strike, arange, aglyph_offset );
+        error = Find_SBit_Range( glyph_index, strike,
+                                 arange, aglyph_offset );
         if ( error )
           goto Fail;
 
@@ -859,16 +801,25 @@
     case 1:
     case 2:
     case 8:
-        /* variable small metrics */
+      /* variable small metrics */
       {
         TT_SBit_Small_Metrics  smetrics;
 
+        const FT_Frame_Field  sbit_small_metrics_fields[] =
+        {
+          FT_FRAME_START( 5 ),
+            FT_FRAME_BYTE( TT_SBit_Small_Metrics, height ),
+            FT_FRAME_BYTE( TT_SBit_Small_Metrics, width ),
+            FT_FRAME_CHAR( TT_SBit_Small_Metrics, bearingX ),
+            FT_FRAME_CHAR( TT_SBit_Small_Metrics, bearingY ),
+            FT_FRAME_BYTE( TT_SBit_Small_Metrics, advance ),
+          FT_FRAME_END
+        };
+
 
         /* read small metrics */
-        if ( ACCESS_Frame( 5L ) )
+        if ( READ_Fields( sbit_small_metrics_fields, &smetrics ) )
           goto Exit;
-        TT_Load_Small_SBit_Metrics( &smetrics, stream );
-        FORGET_Frame();
 
         /* convert it to a big metrics */
         metrics->height       = smetrics.height;
@@ -889,12 +840,7 @@
     case 7:
     case 9:
       /* variable big metrics */
-      {
-        if ( ACCESS_Frame( 8L ) )
-         goto Exit;
-        TT_Load_SBit_Metrics( metrics, stream );
-        FORGET_Frame();
-      }
+      (void)READ_Fields( sbit_metrics_fields, metrics );
       break;
 
     case 5:
@@ -1167,8 +1113,8 @@
       case 2:
       case 5:
       case 7:
-        line_bits  =  glyph_width * pix_bits;
-        glyph_size = (glyph_height * line_bits + 7) >> 3;
+        line_bits  =   glyph_width  * pix_bits;
+        glyph_size = ( glyph_height * line_bits + 7 ) >> 3;
         break;
 
       default:  /* invalid format */
@@ -1225,8 +1171,8 @@
       TT_Long  size;
 
 
-      map->width    = metrics->width;
-      map->rows     = metrics->height;
+      map->width = metrics->width;
+      map->rows  = metrics->height;
 
       switch ( strike->bit_depth )
       {
@@ -1234,14 +1180,17 @@
         map->pixel_mode = ft_pixel_mode_mono;
         map->pitch      = ( map->width + 7 ) >> 3;
         break;
+
       case 2:
         map->pixel_mode = ft_pixel_mode_pal2;
         map->pitch      = ( map->width + 3 ) >> 2;
         break;
+
       case 4:
         map->pixel_mode = ft_pixel_mode_pal4;
         map->pitch      = ( map->width + 1 ) >> 1;
         break;
+
       case 8:
         map->pixel_mode = ft_pixel_mode_grays;
         map->pitch      = map->width;

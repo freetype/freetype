@@ -85,7 +85,7 @@
     /* We must also be able to accept Mac/GX fonts, as well as OT ones */
     if ( face->format_tag != 0x4f54544f )     /* OpenType/CFF font */
     {
-      FT_TRACE2(( "[not a valid OpenType/CFF font]" ));
+      FT_TRACE2(( "[not a valid OpenType/CFF font]\n" ));
       goto Bad_Format;
     }
 

@@ -868,7 +868,7 @@
 
     if ( strncmp( stream->cursor, "%!PS-Adobe-3.0 Resource-CIDFont", 31 ) )
     {
-      FT_ERROR(( "Not a valid CID-keyed font\n" ));
+      FT_ERROR(( "[not a valid CID-keyed font]\n" ));
       error = FT_Err_Unknown_File_Format;
     }
 

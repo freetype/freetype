@@ -138,7 +138,7 @@
     if ( read_bytes < count )
     {
       FT_ERROR(( "FT_Read_Stream_At:" ));
-      FT_ERROR(( " invalid read; expected %lu bytes, got %lu",
+      FT_ERROR(( " invalid read; expected %lu bytes, got %lu\n",
                  count, read_bytes ));
 
       error = FT_Err_Invalid_Stream_Operation;
@@ -208,7 +208,7 @@
       if ( read_bytes < count )
       {
         FT_ERROR(( "FT_Access_Frame:" ));
-        FT_ERROR(( " invalid read; expected %lu bytes, got %lu",
+        FT_ERROR(( " invalid read; expected %lu bytes, got %lu\n",
                    count, read_bytes ));
 
         FREE( stream->base );
@@ -225,7 +225,7 @@
            stream->pos + count > stream->size )
       {
         FT_ERROR(( "FT_Access_Frame:" ));
-        FT_ERROR(( " invalid i/o; pos = 0x%lx, count = %lu, size = 0x%lx",
+        FT_ERROR(( " invalid i/o; pos = 0x%lx, count = %lu, size = 0x%lx\n",
                    stream->pos, count, stream->size ));
 
         error = FT_Err_Invalid_Stream_Operation;
@@ -364,7 +364,7 @@
   Fail:
     *error = FT_Err_Invalid_Stream_Operation;
     FT_ERROR(( "FT_Read_Char:" ));
-    FT_ERROR(( " invalid i/o; pos = 0x%lx, size = 0x%lx",
+    FT_ERROR(( " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                stream->pos, stream->size ));
 
     return 0;
@@ -410,7 +410,7 @@
   Fail:
     *error = FT_Err_Invalid_Stream_Operation;
     FT_ERROR(( "FT_Read_Short:" ));
-    FT_ERROR(( " invalid i/o; pos = 0x%lx, size = 0x%lx",
+    FT_ERROR(( " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                stream->pos, stream->size ));
 
     return 0;
@@ -456,7 +456,7 @@
   Fail:
     *error = FT_Err_Invalid_Stream_Operation;
     FT_ERROR(( "FT_Read_Offset:" ));
-    FT_ERROR(( " invalid i/o; pos = 0x%lx, size = 0x%lx",
+    FT_ERROR(( " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                stream->pos, stream->size ));
 
     return 0;
@@ -501,7 +501,7 @@
 
   Fail:
     FT_ERROR(( "FT_Read_Long:" ));
-    FT_ERROR(( " invalid i/o; pos = 0x%lx, size = 0x%lx",
+    FT_ERROR(( " invalid i/o; pos = 0x%lx, size = 0x%lx\n",
                stream->pos, stream->size ));
     *error = FT_Err_Invalid_Stream_Operation;
 

@@ -241,7 +241,7 @@
       goto Fail;
     }
 
-    FT_TRACE4(( "Instructions size : %d\n", n_ins ));
+    FT_TRACE5(( "  Instructions size: %d\n", n_ins ));
 
     if ( n_ins > face->max_profile.maxSizeOfInstructions )
     {
@@ -552,13 +552,12 @@
 
     FORGET_Frame();
 
-    FT_TRACE6(( "Glyph %ld\n", index ));
-    FT_TRACE6(( " # of contours : %d\n", num_contours ));
-    FT_TRACE6(( " xMin: %4d  xMax: %4d\n", loader->bbox.xMin,
-                                           loader->bbox.xMax ));
-    FT_TRACE6(( " yMin: %4d  yMax: %4d\n", loader->bbox.yMin,
-                                           loader->bbox.yMax ));
-    FT_TRACE6(( "-" ));
+    FT_TRACE5(( "Glyph %ld\n", index ));
+    FT_TRACE5(( "  # of contours: %d\n", contours_count ));
+    FT_TRACE5(( "  xMin: %4d  xMax: %4d\n", loader->bbox.xMin,
+                                            loader->bbox.xMax ));
+    FT_TRACE5(( "  yMin: %4d  yMax: %4d\n", loader->bbox.yMin,
+                                            loader->bbox.yMax ));
 
     count -= 10;
 
@@ -868,7 +867,7 @@
           /* read size of instructions */
           if ( FILE_Seek( ins_offset ) ||
                READ_UShort(n_ins)      ) goto Fail;
-          FT_TRACE4(( "Instructions size = %d\n", n_ins ));
+          FT_TRACE5(( "  Instructions size = %d\n", n_ins ));
 
           /* check it */
           if ( n_ins > face->max_profile.maxSizeOfInstructions )

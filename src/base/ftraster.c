@@ -565,7 +565,7 @@
       break;
 
     default:
-      FT_ERROR(( "Invalid profile direction in Raster:New_Profile !!\n" ));
+      FT_ERROR(( "New_Profile: invalid profile direction!\n" ));
       ras.error = Raster_Err_Invalid;
       return FAILURE;
     }
@@ -609,7 +609,7 @@
 
     if ( h < 0 )
     {
-      FT_ERROR(( "Negative height encountered in End_Profile!\n" ));
+      FT_ERROR(( "End_Profile: negative height encountered!\n" ));
       ras.error = Raster_Err_Neg_Height;
       return FAILURE;
     }
