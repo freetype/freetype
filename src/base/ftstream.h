@@ -3,6 +3,77 @@
 
 #include <ftobjs.h>
 
+/* format of an 8-bit frame_op value = [ xxxxx | e | s ] */
+/* where s is set to 1 when the value is signed..        */
+/* where e is set to 1 when the value is little-endian   */
+/* xxxxx is a command                                    */
+
+#define FT_FRAME_OP_SHIFT   2
+#define FT_FRAME_OP_SIGNED  1
+#define FT_FRAME_OP_LITTLE  2
+#define FT_FRAME_OP_COMMAND(x) (x >> FT_FRAME_OP_SHIFT)
+
+#define FT_MAKE_FRAME_OP( command, little, sign )  \
+          ((command << FT_FRAME_OP_SHIFT) | (little << 1) | sign)
+
+#define FT_FRAME_OP_END   0
+#define FT_FRAME_OP_START 1  /* start a new frame */
+#define FT_FRAME_OP_BYTE  2  /* read 1-byte value */
+#define FT_FRAME_OP_SHORT 3  /* read 2-byte value */
+#define FT_FRAME_OP_LONG  4  /* read 4-byte value */
+#define FT_FRAME_OP_OFF3  5  /* read 3-byte value */
+
+typedef enum FT_Frame_Op_
+{
+  ft_frame_end       = 0,
+  ft_frame_start     = FT_MAKE_FRAME_OP( FT_FRAME_OP_START, 0, 0 ),
+  
+  ft_frame_byte      = FT_MAKE_FRAME_OP( FT_FRAME_OP_BYTE,  0, 0 ),
+  ft_frame_schar     = FT_MAKE_FRAME_OP( FT_FRAME_OP_BYTE,  0, 1 ),
+  
+  ft_frame_ushort_be = FT_MAKE_FRAME_OP( FT_FRAME_OP_SHORT, 0, 0 ),
+  ft_frame_short_be  = FT_MAKE_FRAME_OP( FT_FRAME_OP_SHORT, 0, 1 ),
+  ft_frame_ushort_le = FT_MAKE_FRAME_OP( FT_FRAME_OP_SHORT, 1, 0 ),
+  ft_frame_short_le  = FT_MAKE_FRAME_OP( FT_FRAME_OP_SHORT, 1, 1 ),
+  
+  ft_frame_ulong_be  = FT_MAKE_FRAME_OP( FT_FRAME_OP_LONG, 0, 0 ),
+  ft_frame_ulong_le  = FT_MAKE_FRAME_OP( FT_FRAME_OP_LONG, 0, 1 ),
+  ft_frame_long_be   = FT_MAKE_FRAME_OP( FT_FRAME_OP_LONG, 1, 0 ),
+  ft_frame_long_le   = FT_MAKE_FRAME_OP( FT_FRAME_OP_LONG, 1, 1 ),
+
+  ft_frame_uoff3_be  = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 0, 0 ),
+  ft_frame_uoff3_le  = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 0, 1 ),
+  ft_frame_off3_be   = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 1, 0 ),
+  ft_frame_off3_le   = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 1, 1 ),
+
+} FT_Frame_Op;
+
+
+typedef struct FT_Frame_Field_
+{
+  FT_Frame_Op   value;
+  char          size;
+  FT_UShort     offset;
+  
+} FT_Frame_Field;
+
+/* make-up a FT_Frame_Field out of a structure type and a field name */
+#define FT_FIELD_REF(s,f)  (((s*)0)->f)
+
+#define FT_FRAME_FIELD( frame_op, struct_type, field )                 \
+          {                                                            \
+            frame_op,                                                  \
+            sizeof(FT_FIELD_REF(struct_type,field)),                   \
+            (FT_UShort)(char*)&FT_FIELD_REF(struct_type,field) }
+
+#define FT_MAKE_EMPTY_FIELD( frame_op )  { frame_op, 0, 0 }
+
+#define FT_FRAME_LONG(s,f)   FT_FRAME_FIELD( ft_frame_long_be, s, f )
+#define FT_FRAME_ULONG(s,f)  FT_FRAME_FIELD( ft_frame_ulong_be, s, f )
+#define FT_FRAME_SHORT(s,f)  FT_FRAME_FIELD( ft_frame_short_be, s, f )
+#define FT_FRAME_USHORT(s,f) FT_FRAME_FIELD( ft_frame_ushort_be, s, f )
+#define FT_FRAME_BYTE(s,f)   FT_FRAME_FIELD( ft_frame_byte, s, f )
+#define FT_FRAME_CHAR(s,f)   FT_FRAME_FIELD( ft_frame_schar, s, f )
 
   /*************************************************************************/
   /*                                                                       */
@@ -134,6 +205,11 @@
   FT_Long  FT_Read_Long( FT_Stream  stream,
                          FT_Error*  error ); 
 
+  BASE_DEF
+  FT_Error FT_Read_Fields( FT_Stream             stream,
+                           const FT_Frame_Field* fields,
+                           void*                 structure );
+
 
 #define USE_Stream( resource, stream )  \
           FT_SET_ERROR( FT_Open_Stream( resource, stream ) )
@@ -173,6 +249,7 @@
                                            (FT_Char*)buffer, \
                                            count ) )
 
-
+#define READ_Fields( fields, object )  \
+          ((error = FT_Read_Fields( stream, fields, object )) != FT_Err_Ok)
 
 #endif /* FTIO_H */

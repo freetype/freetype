@@ -429,3 +429,149 @@
     return 0;
   }
 
+  BASE_FUNC
+  FT_Error FT_Read_Fields( FT_Stream              stream,
+                           const FT_Frame_Field*  fields,
+                           void*                  structure )
+  {
+    FT_Error  error;
+    FT_Bool   frame_accessed = 0;
+    
+    if (!fields || !stream)
+      return FT_Err_Invalid_Argument;
+      
+    error = FT_Err_Ok;
+    do
+    {
+      FT_ULong  value;
+      FT_Int    sign_shift;
+      FT_Byte*  p;
+      
+      switch (fields->value)
+      {
+        case ft_frame_start:  /* access a new frame */
+          {
+            error = FT_Access_Frame( stream, fields->offset );
+            if (error) goto Exit;
+            
+            frame_accessed = 1;
+            fields++;
+            continue;  /* loop ! */
+          }
+          
+        case ft_frame_byte:
+        case ft_frame_schar:  /* read a single byte */
+          {
+            value = GET_Byte();
+            sign_shift = 24;
+            break;
+          }
+          
+        case ft_frame_short_be:
+        case ft_frame_ushort_be:  /* read a 2-byte big-endian short */
+          {
+            value = GET_UShort();
+            sign_shift = 16;
+            break;
+          }
+
+        case ft_frame_short_le:
+        case ft_frame_ushort_le:  /* read a 2-byte little-endian short */
+          {
+            char* p;
+            value = 0;
+            p     = stream->cursor;
+            if (p+1 < stream->limit)
+            {
+              value = (FT_UShort)p[0] | ((FT_UShort)p[1] << 8);
+              stream->cursor += 2;
+            }
+            sign_shift = 16;
+            break;
+          }
+
+        case ft_frame_long_be:
+        case ft_frame_ulong_be:  /* read a 4-byte big-endian long */
+          {
+            value = GET_ULong();
+            sign_shift = 0;
+            break;
+          }
+
+        case ft_frame_long_le:
+        case ft_frame_ulong_le:  /* read a 4-byte little-endian long */
+          {
+            char* p;
+            value = 0;
+            p     = stream->cursor;
+            if (p+3 < stream->limit)
+            {
+              value = (FT_ULong)p[0]        |
+                     ((FT_ULong)p[1] << 8)  |
+                     ((FT_ULong)p[2] << 16) |
+                     ((FT_ULong)p[3] << 24);
+              stream->cursor += 4;
+            }
+            sign_shift = 0;
+            break;
+          }
+
+        case ft_frame_off3_be:
+        case ft_frame_uoff3_be:  /* read a 3-byte big-endian long */
+          {
+            value = GET_UOffset();
+            sign_shift = 8;
+            break;
+          }
+
+        case ft_frame_off3_le:
+        case ft_frame_uoff3_le:  /* read a 3-byte little-endian long */
+          {
+            char* p;
+            value = 0;
+            p     = stream->cursor;
+            if (p+3 < stream->limit)
+            {
+              value = (FT_ULong)p[0]        |
+                     ((FT_ULong)p[1] << 8)  |
+                     ((FT_ULong)p[2] << 16) |
+                     ((FT_ULong)p[3] << 24);
+              stream->cursor += 4;
+            }
+            sign_shift = 8;
+            break;
+          }
+
+        default:
+          /* otherwise, exit the loop */
+          goto Exit;
+      }
+      
+      /* now, compute the signed value is necessary */
+      if (fields->value & FT_FRAME_OP_SIGNED)
+        value   = (FT_ULong)((FT_Long)(value << sign_shift) >> sign_shift);
+      
+      /* finally, store the value in the object */
+      
+      p = (FT_Byte*)structure + fields->offset;
+      switch (fields->size)
+      {
+        case 1: *(FT_Byte*)p   = (FT_Byte)  value; break;
+        case 2: *(FT_UShort*)p = (FT_UShort)value; break;
+        case 4: *(FT_ULong*)p  = (FT_ULong) value; break;
+        default:  ; /* ignore !! */
+      }
+      
+      /* go to next field */
+      fields++;
+    }
+    while (1);
+
+  Exit:
+    /* close the frame if it was opened by this read */
+    if (frame_accessed)
+      FT_Forget_Frame(stream);
+      
+    return error;
+  }
+
