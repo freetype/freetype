@@ -419,10 +419,12 @@
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM
 
-  extern
+  EXPORT_DEF
   FT_Error  FT_New_Stream( const char*  filepathname,
                            FT_Stream    astream );
 
+  EXPORT_DEF
+  void  FT_Done_Stream( FT_Stream  stream );
 
   extern
   FT_Memory  FT_New_Memory( void );
