@@ -104,7 +104,7 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
- 
+
   static
   FT_Error  t1_allocate_blend( T1_Face  face,
                                FT_UInt  num_designs,
@@ -113,17 +113,17 @@
     T1_Blend*  blend;
     FT_Memory  memory = face->root.memory;
     FT_Error   error  = 0;
-    
- 
+
+
     blend = face->blend;
     if ( !blend )
     {
       if ( ALLOC( blend, sizeof ( *blend ) ) )
         goto Exit;
-        
+
       face->blend = blend;
     }
-    
+
     /* allocate design data if needed */
     if ( num_designs > 0 )
     {
@@ -134,9 +134,9 @@
              ALLOC_ARRAY( blend->privates[1], num_designs, T1_Private )     ||
              ALLOC_ARRAY( blend->weight_vector, num_designs * 2, FT_Fixed ) )
           goto Exit;
-   
+
         blend->default_weight_vector = blend->weight_vector + num_designs;
- 
+
         blend->font_infos[0] = &face->type1.font_info;
         blend->privates  [0] = &face->type1.private_dict;
         blend->num_designs   = num_designs;
@@ -144,41 +144,41 @@
       else if ( blend->num_designs != num_designs )
         goto Fail;
     }
-    
+
     /* allocate axis data if needed */
     if ( num_axis > 0 )
     {
       if ( blend->num_axis != 0 && blend->num_axis != num_axis )
         goto Fail;
-        
+
       blend->num_axis = num_axis;
     }
-    
+
     /* allocate the blend design pos table if needed */
     num_designs = blend->num_designs;
     num_axis    = blend->num_axis;
     if ( num_designs && num_axis && blend->design_pos[0] == 0 )
     {
       FT_UInt  n;
-      
- 
+
+
       if ( ALLOC_ARRAY( blend->design_pos[0],
                         num_designs * num_axis, FT_Fixed ) )
         goto Exit;
-        
+
       for ( n = 1; n < num_designs; n++ )
         blend->design_pos[n] = blend->design_pos[0] + num_axis * n;
     }
-    
+
   Exit:
     return error;
- 
+
   Fail:
     error = -1;
     goto Exit;
-  }                                  
- 
- 
+  }
+
+
   LOCAL_FUNC
   FT_Error  Z1_Get_Multi_Master( T1_Face           face,
                                  FT_Multi_Master*  master )
@@ -186,21 +186,21 @@
     T1_Blend*  blend = face->blend;
     FT_UInt    n;
     FT_Error   error;
-    
- 
+
+
     error = T1_Err_Invalid_Argument;
- 
+
     if ( blend )
     {
       master->num_axis    = blend->num_axis;
       master->num_designs = blend->num_designs;
- 
+
       for ( n = 0; n < blend->num_axis; n++ )
       {
         FT_MM_Axis*    axis = master->axis + n;
         T1_DesignMap*  map = blend->design_map + n;
-        
- 
+
+
         axis->name    = blend->axis_names[n];
         axis->minimum = map->design_points[0];
         axis->maximum = map->design_points[map->num_points - 1];
@@ -208,9 +208,9 @@
       error = 0;
     }
     return error;
-  }                                            
- 
- 
+  }
+
+
   LOCAL_FUNC
   FT_Error  Z1_Set_MM_Blend( T1_Face    face,
                              FT_UInt    num_coords,
@@ -219,7 +219,7 @@
     T1_Blend*  blend = face->blend;
     FT_Error   error;
     FT_UInt    n, m;
-    
+
 
     error = T1_Err_Invalid_Argument;
 
@@ -236,16 +236,16 @@
         for ( m = 0; m < blend->num_axis; m++ )
         {
           FT_Fixed  factor;
- 
+
 
           /* get current blend axis position */
           factor = coords[m];
           if ( factor < 0 )        factor = 0;
           if ( factor > 0x10000L ) factor = 0x10000L;
-          
+
           if ( ( n & ( 1 << m ) ) == 0 )
             factor = 0x10000L - factor;
-            
+
           result = FT_MulFix( result, factor );
         }
         blend->weight_vector[n] = result;
@@ -255,8 +255,8 @@
     }
     return error;
   }
-  
- 
+
+
   LOCAL_FUNC
   FT_Error  Z1_Set_MM_Design( T1_Face   face,
                               FT_UInt   num_coords,
@@ -266,13 +266,13 @@
     FT_Error   error;
     FT_UInt    n, p;
 
-    
+
     error = T1_Err_Invalid_Argument;
     if ( blend && blend->num_axis == num_coords )
     {
       /* compute the blend coordinates through the blend design map */
       FT_Fixed  final_blends[T1_MAX_MM_DESIGNS];
-      
+
 
       for ( n = 0; n < blend->num_axis; n++ )
       {
@@ -282,11 +282,11 @@
         FT_Fixed*      designs = map->design_points;
         FT_Fixed*      blends  = map->blend_points;
         FT_Int         before  = -1, after = -1;
-        
+
         for ( p = 0; p < map->num_points; p++ )
         {
           FT_Fixed  p_design = designs[p];
-          
+
 
           /* exact match ? */
           if ( design == p_design )
@@ -294,23 +294,23 @@
             the_blend = blends[p];
             goto Found;
           }
-          
+
           if ( design < p_design )
           {
             after = p;
             break;
           }
-          
+
           before = p;
         }
-        
+
         /* now, interpolate if needed */
         if ( before < 0 )
           the_blend = blends[0];
-          
+
         else if ( after < 0 )
           the_blend = blends[map->num_points - 1];
-          
+
         else
           the_blend = FT_MulDiv( design         - designs[before],
                                  blends [after] - blends [before],
@@ -319,33 +319,33 @@
       Found:
         final_blends[n] = the_blend;
       }
- 
-      error = Z1_Set_MM_Blend( face, num_coords, final_blends );     
+
+      error = Z1_Set_MM_Blend( face, num_coords, final_blends );
     }
 
     return error;
   }
- 
-  
+
+
   LOCAL_FUNC
   void  Z1_Done_Blend( T1_Face  face )
   {
     FT_Memory  memory = face->root.memory;
     T1_Blend*  blend  = face->blend;
-    
+
 
     if ( blend )
     {
       FT_UInt  num_designs = blend->num_designs;
       FT_UInt  num_axis    = blend->num_axis;
       FT_UInt  n;
-           
+
 
       /* release design pos table */
       FREE( blend->design_pos[0] );
       for ( n = 1; n < num_designs; n++ )
         blend->design_pos[n] = 0;
- 
+
       /* release blend `private' and `font info' dictionaries */
       FREE( blend->privates[1] );
       FREE( blend->font_infos[1] );
@@ -355,15 +355,15 @@
         blend->privates  [n] = 0;
         blend->font_infos[n] = 0;
       }
- 
+
       /* release weight vectors */
       FREE( blend->weight_vector );
       blend->default_weight_vector = 0;
- 
+
       /* release axis names */
       for ( n = 0; n < num_axis; n++ )
         FREE( blend->axis_names[n] );
-      
+
       /* release design map */
       for ( n = 0; n < num_axis; n++ )
       {
@@ -373,12 +373,12 @@
         FREE( dmap->design_points );
         dmap->num_points = 0;
       }
-      
+
       FREE( face->blend );
     }
   }
- 
- 
+
+
   static
   void  parse_blend_axis_types( T1_Face     face,
                                 Z1_Loader*  loader )
@@ -388,7 +388,7 @@
     FT_Error      error = 0;
     T1_Blend*     blend;
     FT_Memory     memory;
- 
+
 
     /* take an array of objects */
     Z1_ToTokenArray( &loader->parser, axis_tokens,
@@ -400,46 +400,46 @@
       error = T1_Err_Invalid_File_Format;
       goto Exit;
     }
-    
+
     /* allocate blend if necessary */
     error = t1_allocate_blend( face, 0, (FT_UInt)num_axis );
     if ( error )
       goto Exit;
-    
+
     blend  = face->blend;
     memory = face->root.memory;
-    
+
     /* each token is an immediate containing the name of the axis */
     for ( n = 0; n < num_axis; n++ )
     {
       Z1_Token_Rec*  token = axis_tokens + n;
       FT_Byte*       name;
       FT_Int         len;
-      
+
       /* skip first slash, if any */
       if (token->start[0] == '/')
         token->start++;
-        
+
       len = token->limit - token->start;
       if ( len <= 0 )
       {
         error = T1_Err_Invalid_File_Format;
         goto Exit;
       }
-        
+
       if ( ALLOC( blend->axis_names[n], len + 1 ) )
         goto Exit;
-      
+
       name = (FT_Byte*)blend->axis_names[n];
       MEM_Copy( name, token->start, len );
       name[len] = 0;
     }
- 
-  Exit:   
+
+  Exit:
     loader->parser.error = error;
   }
-  
-  
+
+
   static
   void  parse_blend_design_positions( T1_Face     face,
                                       Z1_Loader*  loader )
@@ -448,12 +448,12 @@
     FT_Int        num_designs;
     FT_Int        num_axis;
     Z1_Parser*    parser = &loader->parser;
-    
+
     FT_Error      error = 0;
     T1_Blend*     blend;
- 
 
-    /* get the array of design tokens - compute number of designs */   
+
+    /* get the array of design tokens - compute number of designs */
     Z1_ToTokenArray( parser, design_tokens, T1_MAX_MM_DESIGNS, &num_designs );
     if ( num_designs <= 0 || num_designs > T1_MAX_MM_DESIGNS )
     {
@@ -463,12 +463,12 @@
       error = T1_Err_Invalid_File_Format;
       goto Exit;
     }
-    
+
     {
       FT_Byte*  old_cursor = parser->cursor;
       FT_Byte*  old_limit  = parser->limit;
       FT_UInt   n;
- 
+
 
       blend    = face->blend;
       num_axis = 0;  /* make compiler happy */
@@ -478,14 +478,14 @@
         Z1_Token_Rec   axis_tokens[ T1_MAX_MM_DESIGNS ];
         Z1_Token_Rec*  token;
         FT_Int         axis, n_axis;
- 
+
 
         /* read axis/coordinates tokens */
         token = design_tokens + n;
         parser->cursor = token->start - 1;
         parser->limit  = token->limit + 1;
         Z1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &n_axis );
-        
+
         if ( n == 0 )
         {
           num_axis = n_axis;
@@ -500,7 +500,7 @@
           error = T1_Err_Invalid_File_Format;
           goto Exit;
         }
-        
+
         /* now, read each axis token into the design position */
         for ( axis = 0; axis < n_axis; axis++ )
         {
@@ -512,15 +512,15 @@
           blend->design_pos[n][axis] = Z1_ToFixed( parser, 0 );
         }
       }
-      
+
       loader->parser.cursor = old_cursor;
       loader->parser.limit  = old_limit;
     }
-    
+
   Exit:
     loader->parser.error = error;
   }
- 
+
 
   static
   void  parse_blend_design_map( T1_Face     face,
@@ -534,7 +534,7 @@
     FT_Byte*      old_cursor;
     FT_Byte*      old_limit;
     FT_Memory     memory = face->root.memory;
-    
+
 
     Z1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &num_axis );
     if ( num_axis <= 0 || num_axis > T1_MAX_MM_AXIS )
@@ -546,29 +546,29 @@
     }
     old_cursor = parser->cursor;
     old_limit  = parser->limit;
- 
+
     error = t1_allocate_blend( face, 0, num_axis );
     if ( error )
       goto Exit;
     blend = face->blend;
- 
+
     /* now, read each axis design map */
     for ( n = 0; n < num_axis; n++ )
     {
       T1_DesignMap*   map = blend->design_map + n;
       Z1_Token_Rec*   token;
       FT_Int          p, num_points;
-      
+
 
       token = axis_tokens + n;
       parser->cursor = token->start;
       parser->limit  = token->limit;
-      
+
       /* count the number of map points */
       {
         FT_Byte*  p     = token->start;
         FT_Byte*  limit = token->limit;
-        
+
 
         num_points = 0;
         for ( ; p < limit; p++ )
@@ -581,27 +581,27 @@
         error = T1_Err_Invalid_File_Format;
         goto Exit;
       }
-      
+
       /* allocate design map data */
       if ( ALLOC_ARRAY( map->design_points, num_points * 2, FT_Fixed ) )
         goto Exit;
       map->blend_points = map->design_points + num_points;
       map->num_points   = (FT_Byte)num_points;
-      
+
       for ( p = 0; p < num_points; p++ )
       {
         map->design_points[p] = Z1_ToInt( parser );
         map->blend_points [p] = Z1_ToFixed( parser, 0 );
       }
-    }   
-    
+    }
+
     parser->cursor = old_cursor;
     parser->limit  = old_limit;
 
   Exit:
     parser->error = error;
   }
- 
+
 
   static
   void  parse_weight_vector( T1_Face     face,
@@ -614,7 +614,7 @@
     FT_UInt       n;
     FT_Byte*      old_cursor;
     FT_Byte*      old_limit;
-    
+
 
     if ( !blend || blend->num_designs == 0 )
     {
@@ -622,7 +622,7 @@
       error = T1_Err_Invalid_File_Format;
       goto Exit;
     }
-    
+
     Z1_ToToken( parser, &master );
     if ( master.type != t1_token_array )
     {
@@ -630,10 +630,10 @@
       error = T1_Err_Invalid_File_Format;
       goto Exit;
     }
-    
+
     old_cursor = parser->cursor;
     old_limit  = parser->limit;
- 
+
     parser->cursor = master.start;
     parser->limit  = master.limit;
 
@@ -642,14 +642,14 @@
       blend->default_weight_vector[n] =
       blend->weight_vector[n]         = Z1_ToFixed( parser, 0 );
     }
-    
+
     parser->cursor = old_cursor;
     parser->limit  = old_limit;
 
   Exit:
     parser->error = error;
   }
- 
+
 
   /* the keyword `/shareddict' appears in some multiple master fonts   */
   /* with a lot of Postscript garbage behind it (that's completely out */
@@ -660,9 +660,9 @@
                            Z1_Loader*  loader )
   {
     Z1_Parser*  parser = &loader->parser;
-    
+
     FT_UNUSED( face );
-    
+
 
     parser->cursor = parser->limit;
     parser->error  = 0;
@@ -670,7 +670,7 @@
 
 #endif /* Z1_CONFIG_OPTION_NO_MM_SUPPORT */
 
- 
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -696,12 +696,12 @@
           static                                    \
           const Z1_Field_Rec  t1_field_ ## _field = \
             Z1_FIELD_BOOL( T1TYPE, _field );
-   
+
 #define Z1_NEW_NUM( _name, _field )                 \
           static                                    \
           const Z1_Field_Rec  t1_field_ ## _field = \
             Z1_FIELD_NUM( T1TYPE, _field );
-   
+
 #define Z1_NEW_FIXED( _name, _field )                 \
           static                                      \
           const Z1_Field_Rec  t1_field_ ## _field =   \
@@ -711,7 +711,7 @@
           static                                                \
           const Z1_Field_Rec  t1_field_ ## _field =             \
             Z1_FIELD_NUM_ARRAY( T1TYPE, _field, _count, _max );
-   
+
 #define Z1_NEW_FIXED_TABLE( _name, _field, _max, _count )         \
           static                                                  \
           const Z1_Field_Rec  t1_field_ ## _field =               \
@@ -721,7 +721,7 @@
           static                                         \
           const Z1_Field_Rec  t1_field_ ## _field =      \
             Z1_FIELD_NUM_ARRAY2( T1TYPE, _field, _max );
-   
+
 #define Z1_NEW_FIXED_TABLE2( _name, _field, _max )         \
           static                                           \
           const Z1_Field_Rec  t1_field_ ## _field =        \
@@ -767,18 +767,18 @@
     t1_keyword_callback = 0,
     t1_keyword_field,
     t1_keyword_field_table
-    
+
   } Z1_KeyWord_Type;
-  
+
 
   typedef enum  Z1_KeyWord_Location_
   {
     t1_keyword_type1 = 0,
     t1_keyword_font_info,
     t1_keyword_private
-  
+
   } Z1_KeyWord_Location;
-  
+
 
   typedef struct  Z1_KeyWord_
   {
@@ -800,7 +800,7 @@
         {                                                              \
           name, t1_keyword_field, t1_keyword_type1, 0, &t1_field_ ## f \
         }
-         
+
 #define Z1_KEYWORD_FONTINFO( name, f )                                     \
         {                                                                  \
           name, t1_keyword_field, t1_keyword_font_info, 0, &t1_field_ ## f \
@@ -855,7 +855,7 @@
     void**     objects;
     FT_UInt    max_objects;
     T1_Blend*  blend = face->blend;
-    
+
 
     /* if the keyword has a dedicated callback, call it */
     if ( keyword->type == t1_keyword_callback )
@@ -864,7 +864,7 @@
       error = loader->parser.error;
       goto Exit;
     }
-    
+
     /* now, the keyword is either a simple field, or a table of fields; */
     /* we are now going to take care of it                              */
     switch ( keyword->location )
@@ -880,7 +880,7 @@
         max_objects = blend->num_designs;
       }
       break;
-        
+
     case t1_keyword_private:
       dummy_object = &face->type1.private_dict;
       objects      = &dummy_object;
@@ -892,23 +892,23 @@
         max_objects = blend->num_designs;
       }
       break;
-      
+
     default:
       dummy_object = &face->type1;
       objects      = &dummy_object;
       max_objects  = 0;
     }
-    
+
     if ( keyword->type == t1_keyword_field_table )
       error = Z1_Load_Field_Table( &loader->parser, keyword->field,
                                    objects, max_objects, 0 );
     else
       error = Z1_Load_Field( &loader->parser, keyword->field,
                              objects, max_objects, 0 );
-    
+
   Exit:
     return error;
-  }                                
+  }
 
 
   static
@@ -1392,7 +1392,7 @@
 #include <type1z/z1tokens.h>
 
 #endif
-    
+
     /* now add the special functions... */
     Z1_KEYWORD_CALLBACK( "FontName", parse_font_name ),
     Z1_KEYWORD_CALLBACK( "FontBBox", parse_font_bbox ),
@@ -1407,7 +1407,7 @@
     Z1_KEYWORD_CALLBACK( "BlendAxisTypes", parse_blend_axis_types ),
     Z1_KEYWORD_CALLBACK( "WeightVector", parse_weight_vector ),
     Z1_KEYWORD_CALLBACK( "shareddict", parse_shared_dict ),
-#endif    
+#endif
 
     Z1_KEYWORD_CALLBACK( 0, 0 )
   };
@@ -1438,27 +1438,27 @@
              strncmp( (char*)cur, "FontDirectory", 13 ) == 0 )
         {
           FT_Byte*  cur2;
-          
+
 
           /* skip the `FontDirectory' keyword */
           cur += 13;
           cur2 = cur;
-          
+
           /* lookup the `known' keyword */
           while ( cur < limit && *cur != 'k'        &&
                   strncmp( (char*)cur, "known", 5 ) )
             cur++;
-          
+
           if ( cur < limit )
           {
             Z1_Token_Rec  token;
-            
+
 
             /* skip the `known' keyword and the token following it */
             cur += 5;
             loader->parser.cursor = cur;
             Z1_ToToken( &loader->parser, &token );
-            
+
             /* if the last token was an array, skip it! */
             if ( token.type == t1_token_array )
               cur2 = parser->cursor;
@@ -1489,17 +1489,17 @@
             {
               /* now, compare the immediate name to the keyword table */
               Z1_KeyWord*  keyword = (Z1_KeyWord*)t1_keywords;
-  
+
 
               for (;;)
               {
                 FT_Byte*  name;
-  
+
 
                 name = (FT_Byte*)keyword->name;
                 if ( !name )
                   break;
-  
+
                 if ( cur[0] == name[0]                          &&
                      len == (FT_Int)strlen( (const char*)name ) )
                 {
@@ -1509,7 +1509,7 @@
                   for ( n = 1; n < len; n++ )
                     if ( cur[n] != name[n] )
                       break;
-  
+
                   if ( n >= len )
                   {
                     /* we found it -- run the parsing callback! */
@@ -1518,7 +1518,7 @@
                     parser->error = t1_load_keyword( face, loader, keyword );
                     if ( parser->error )
                       return parser->error;
-  
+
                     cur = parser->cursor;
                     break;
                   }

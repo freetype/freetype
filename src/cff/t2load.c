@@ -386,9 +386,8 @@
         goto Exit;
       break;
 
-
     default:    /* hmm... that's wrong */
-      error = FT_Err_Invalid_File_Format;
+      error = T2_Err_Invalid_File_Format;
     }
 
   Exit:

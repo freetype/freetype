@@ -856,7 +856,10 @@
   /*              vector.                                                  */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The transformation is only applied to scalable image formats.      */
+  /*    The transformation is only applied to scalable image formats after */
+  /*    the glyph has been loaded.  It means that hinting is unaltered by  */
+  /*    the transformation and is performed on the character size given in */
+  /*    the last call to FT_Set_Char_Sizes() or FT_Set_Pixel_Sizes().      */
   /*                                                                       */
   FT_EXPORT_FUNC( void )  FT_Set_Transform( FT_Face     face,
                                             FT_Matrix*  matrix,
@@ -1730,8 +1733,14 @@
     FT_ListNode       node = 0;
 
 
-    if ( !face || !asize || !face->driver )
-      return FT_Err_Invalid_Handle;
+    if ( !face )
+      return FT_Err_Invalid_Face_Handle;
+
+    if ( !asize )
+      return FT_Err_Invalid_Size_Handle;
+
+    if ( !face->driver )
+      return FT_Err_Invalid_Driver_Handle;
 
     *asize = 0;
 
@@ -2220,6 +2229,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face     :: A handle to the source face object.                    */
+  /*                                                                       */
   /*    charcode :: The character code.                                    */
   /*                                                                       */
   /* <Return>                                                              */
@@ -2621,8 +2631,8 @@
   /*                   convert.                                            */
   /*                                                                       */
   /*    render_mode :: This is the render mode used to render the glyph    */
-  /*                   image into a bitmap.  See FT_Render_Mode() for a    */
-  /*                   list of possible values.                            */
+  /*                   image into a bitmap.  See FT_Render_Mode for a list */
+  /*                   of possible values.                                 */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -2980,7 +2990,7 @@
         }
       }
     }
-    return FT_Err_Invalid_Handle;
+    return FT_Err_Invalid_Driver_Handle;
   }
 
 

@@ -287,13 +287,13 @@
     {
       ft_module_font_driver | ft_module_driver_scalable,
       sizeof( FT_DriverRec ),
-      
+
       "type1",   /* driver name        */
       0x10000L,  /* driver version 1.0 */
       0x20000L,  /* driver requires FreeType 2.0 or above */
-  
+
       0,   /* module specific interface */
-  
+
       (FT_Module_Constructor)0,
       (FT_Module_Destructor) 0,
 #ifdef T1_CONFIG_OPTION_NO_AFM

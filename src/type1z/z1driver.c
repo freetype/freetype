@@ -83,16 +83,16 @@
   {
     FT_UNUSED( driver );
     FT_UNUSED( interface );
-    
+
 #ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
     if ( strcmp( (const char*)interface, "get_mm" ) == 0 )
       return (FT_Module_Interface)Z1_Get_Multi_Master;
-      
+
     if ( strcmp( (const char*)interface, "set_mm_design") == 0 )
-      return (FT_Module_Interface)Z1_Set_MM_Design;      
+      return (FT_Module_Interface)Z1_Set_MM_Design;
 
     if ( strcmp( (const char*)interface, "set_mm_blend") == 0 )
-      return (FT_Module_Interface)Z1_Set_MM_Blend;      
+      return (FT_Module_Interface)Z1_Set_MM_Blend;
 #endif
     return 0;
   }
@@ -259,13 +259,13 @@
     {
       ft_module_font_driver | ft_module_driver_scalable,
       sizeof( FT_DriverRec ),
-      
+
       "type1z",
       0x10000L,
       0x20000L,
-  
+
       0,   /* format interface */
-  
+
       (FT_Module_Constructor)Z1_Init_Driver,
       (FT_Module_Destructor) Z1_Done_Driver,
       (FT_Module_Requester)  Get_Interface,

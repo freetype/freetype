@@ -103,7 +103,7 @@
     if ( !charset_offset )
     {
       FT_ERROR(( "CFF.Build_Unicode_Charmap: charset table is missing\n" ));
-      error = FT_Err_Invalid_File_Format;
+      error = T2_Err_Invalid_File_Format;
       goto Exit;
     }
 
@@ -177,7 +177,7 @@
 
       default:   /* unknown charset format! */
         FT_ERROR(( "CFF: unknown charset format!\n" ));
-        error = FT_Err_Invalid_File_Format;
+        error = T2_Err_Invalid_File_Format;
         goto Fail;
     }
 

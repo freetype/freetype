@@ -84,7 +84,7 @@
     {
       if ( reset_base )
         FT_GlyphLoader_Rewind( builder->loader );
-    
+
       FT_GlyphLoader_Prepare( builder->loader );
     }
   }
@@ -130,7 +130,7 @@
     {
       FT_GlyphLoader*  loader = FT_SLOT( glyph )->loader;
 
-      
+
       builder->loader  = loader;
       builder->base    = &loader->base.outline;
       builder->current = &loader->current.outline;
@@ -311,7 +311,7 @@
       error = FT_GlyphLoader_Check_Subglyphs( loader, 2 );
       if ( error )
         goto Exit;
-      
+
       subg = loader->current.subglyphs;
 
       /* subglyph 0 = base character */
@@ -332,14 +332,14 @@
       glyph->num_subglyphs = 2;
       glyph->subglyphs     = loader->current.subglyphs;
       glyph->format        = ft_glyph_format_composite;
-      
+
       loader->current.num_subglyphs = 2;
       goto Exit;
     }
 
     /* First load `bchar' in builder */
     /* now load the unscaled outline */
-    
+
     if ( decoder->builder.loader )
       FT_GlyphLoader_Prepare( decoder->builder.loader );  /* prepare loader */
 
@@ -384,7 +384,7 @@
     {
       FT_Outline  dummy;
 
-        
+
       dummy.n_points = base->n_points - n_base_points;
       dummy.points   = base->points   + n_base_points;
 
@@ -1266,14 +1266,14 @@
       FT_Int      first = 0;
       FT_Vector*  p1    = cur->points + first;
       FT_Vector*  p2    = cur->points + cur->n_points - 1;
-      
+
 
       if ( cur->n_contours > 1 )
       {
         first = cur->contours[cur->n_contours - 2] + 1;
         p1    = cur->points + first;
       }
-        
+
       if ( p1->x == p2->x && p1->y == p2->y )
         cur->n_points--;
     }
@@ -1546,16 +1546,16 @@
     FT_UInt          old_points, old_contours;
     FT_GlyphLoader*  loader = decoder->builder.loader;
     FT_Error         error;
-    
+
 
     /* Pass 1 -- try to load first glyph, simply recording points */
     old_points   = loader->base.outline.n_points;
     old_contours = loader->base.outline.n_contours;
-    
+
     FT_GlyphLoader_Prepare( decoder->builder.loader );
 
     T1_Reset_Builder( builder, 0 );
-    
+
     builder->no_recurse                = recurse;
     builder->pass                      = 0;
     glyph->hints->hori_stems.num_stems = 0;
@@ -1568,7 +1568,7 @@
                                   type1->subrs,
                                   type1->subrs_len );
     if ( error )
-      goto Exit;                                  
+      goto Exit;
 
     /* check for composite (i.e. `seac' operator) */
     if ( glyph->root.format == ft_glyph_format_composite )
@@ -1603,7 +1603,7 @@
       error = t1_load_hinted_glyph( decoder, subglyph->index, 0 );
       if ( error )
         goto Exit;
-      
+
       /* Finally, move the accent */
       dx = FT_MulFix( subglyph->arg1, size->root.metrics.x_scale );
       dy = FT_MulFix( subglyph->arg2, size->root.metrics.y_scale );
@@ -1612,7 +1612,7 @@
       {
         FT_Outline  dummy;
 
-        
+
         dummy.n_points = loader->base.outline.n_points - n_base_points;
         dummy.points   = loader->base.outline.points   + n_base_points;
 
@@ -1628,17 +1628,17 @@
     {
       /* All right, pass 1 is finished, now grid-fit all stem hints */
       T1_Hint_Stems( &decoder->builder );
-      
+
       /* undo the end-char */
       builder->base->n_points   = old_points;
       builder->base->n_contours = old_contours;
 
       /* Pass 2 -- record and scale/hint the points */
       T1_Reset_Builder( builder, 0 );
-      
+
       builder->pass       = 1;
       builder->no_recurse = 0;
-  
+
       error = T1_Parse_CharStrings( decoder,
                                     type1->charstrings    [glyph_index],
                                     type1->charstrings_len[glyph_index],
@@ -1646,14 +1646,14 @@
                                     type1->subrs,
                                     type1->subrs_len );
     }
-    
+
     /* save new glyph tables */
     if ( recurse )
       T1_Done_Builder( builder );
-    
+
   Exit:
     return error;
-  }                                  
+  }
 
 
 #endif /* !T1_CONFIG_OPTION_DISABLE_HINTER */
@@ -1694,7 +1694,7 @@
       T1_Init_Decoder( &decoder, &t1_hinter_funcs );
       T1_Init_Builder( &decoder.builder, face, size, glyph,
                        &gload_builder_interface );
-                       
+
       error = t1_load_hinted_glyph( &decoder, glyph_index, 1 );
     }
     else

@@ -41,9 +41,6 @@
 #define  T1_Err_Invalid_Glyph_Index      FT_Err_Invalid_Glyph_Index
 
 #define  T1_Err_Unimplemented_Feature    FT_Err_Unimplemented_Feature
-#define  T1_Err_Unavailable_Outline      FT_Err_Unavailable_Outline
-#define  T1_Err_Unavailable_Bitmap       FT_Err_Unavailable_Bitmap
-#define  T1_Err_File_Is_Not_Collection   FT_Err_File_Is_Not_Collection
 
 #define  T1_Err_Invalid_Engine           FT_Err_Invalid_Driver_Handle
 
@@ -54,13 +51,7 @@
 
 /* ------------ general glyph outline errors ------ */
 
-#define  T1_Err_Too_Many_Points          FT_Err_Too_Many_Points
-#define  T1_Err_Too_Many_Contours        FT_Err_Too_Many_Contours
-#define  T1_Err_Too_Many_Hints           FT_Err_Too_Many_Hints
 #define  T1_Err_Invalid_Composite        FT_Err_Invalid_Composite
-#define  T1_Err_Too_Many_Edges           FT_Err_Too_Many_Edges
-#define  T1_Err_Too_Many_Strokes         FT_Err_Too_Many_Strokes
-
 
 #define  T1_Err_Syntax_Error             FT_Err_Invalid_File_Format
 #define  T1_Err_Stack_Underflow          FT_Err_Invalid_File_Format

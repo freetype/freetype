@@ -217,7 +217,7 @@
 
   Exit:
     return error;
-     
+
   Bad_Format:
     error = FT_Err_Unknown_File_Format;
     goto Exit;
@@ -683,7 +683,7 @@
 
     /* set `extra' in glyph loader */
     error = FT_GlyphLoader_Create_Extra( FT_DRIVER( driver )->glyph_loader );
-    
+
     /* init extension registry if needed */
 
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE

@@ -33,10 +33,10 @@
     t1_token_any,
     t1_token_string,
     t1_token_array,
-    
+
     /* do not remove */
     t1_token_max
-    
+
   } Z1_Token_Type;
 
 
@@ -46,8 +46,8 @@
     FT_Byte*       start;   /* first character of token in input stream */
     FT_Byte*       limit;   /* first character after the token          */
     Z1_Token_Type  type;    /* type of token..                          */
-  
-  } Z1_Token_Rec;  
+
+  } Z1_Token_Rec;
 
 
   /* enumeration type used to identify object fields */
@@ -60,10 +60,10 @@
     t1_field_string,
     t1_field_integer_array,
     t1_field_fixed_array,
-    
+
     /* do not remove */
     t1_field_max
-    
+
   } Z1_Field_Type;
 
 
@@ -76,7 +76,7 @@
     FT_UInt        array_max;     /* maximum number of elements for array */
     FT_UInt        count_offset;  /* offset of element count for arrays   */
     FT_Int         flag_bit;      /* bit number for field flag            */
-   
+
   } Z1_Field_Rec;
 
 

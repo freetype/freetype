@@ -27,7 +27,7 @@
     FT_UShort  magic;
     /* skipped content */
     FT_UShort  lfanew;
-  
+
   } WinMZ_Header;
 
 
@@ -37,7 +37,7 @@
     /* skipped content */
     FT_UShort  resource_tab_offset;
     FT_UShort  rname_tab_offset;
-    
+
   } WinNE_Header;
 
 
@@ -49,7 +49,7 @@
     FT_UShort  id;
     FT_UShort  handle;
     FT_UShort  usage;
-    
+
   } WinNameInfo;
 
 
@@ -57,7 +57,7 @@
   {
     FT_UShort  type_id;
     FT_UShort  count;
-  
+
   } WinResourceInfo;
 
 
@@ -103,7 +103,7 @@
     FT_UShort  C_space;
     FT_UShort  color_table_offset;
     FT_Byte    reserved2[4];
-  
+
   } WinFNT_Header;
 
 
@@ -111,12 +111,12 @@
   {
     FT_ULong       offset;
     FT_Int         size_shift;
-    
+
     WinFNT_Header  header;
-    
+
     FT_Byte*       fnt_frame;
     FT_ULong       fnt_size;
-    
+
   } FNT_Font;
 
 
@@ -124,18 +124,18 @@
   {
     FT_SizeRec  root;
     FNT_Font*   font;
-  
+
   } FNT_SizeRec, *FNT_Size;
 
 
   typedef struct  FNT_FaceRec_
   {
     FT_FaceRec     root;
-    
+
     FT_UInt        num_fonts;
     FNT_Font*      fonts;
 
-    FT_CharMap     charmap_handle;    
+    FT_CharMap     charmap_handle;
     FT_CharMapRec  charmap;  /* a single charmap per face */
 
   } FNT_FaceRec, *FNT_Face;

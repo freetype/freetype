@@ -158,6 +158,13 @@
 #define FT_TRACE( x )  do ; while ( 0 )     /* nothing */
 #endif
 
+#define Raster_Err_None          0
+#define Raster_Err_Not_Ini      -1
+#define Raster_Err_Overflow     -2
+#define Raster_Err_Neg_Height   -3
+#define Raster_Err_Invalid      -4
+#define Raster_Err_Unsupported  -5
+
 
 #else /* _STANDALONE_ */
 
@@ -165,17 +172,16 @@
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h> /* for FT_TRACE() and FT_ERROR() */
 
+#define Raster_Err_None         FT_Err_Ok
+#define Raster_Err_Not_Ini      FT_Err_Raster_Uninitialized
+#define Raster_Err_Overflow     FT_Err_Raster_Overflow
+#define Raster_Err_Neg_Height   FT_Err_Raster_Negative_Height
+#define Raster_Err_Invalid      FT_Err_Invalid_Outline
+#define Raster_Err_Unsupported  FT_Err_Unimplemented_Feature
+
 
 #endif /* _STANDALONE_ */
 
-
-#define Raster_Err_None               0
-#define Raster_Err_Not_Ini           -1
-#define Raster_Err_Overflow          -2
-#define Raster_Err_Neg_Height        -3
-#define Raster_Err_Invalid           -4
-#define Raster_Err_Gray_Unsupported  -5
-#define Raster_Err_Unsupported       -6
 
   /* FMulDiv means `Fast MulDiv'; it is used in case where `b' is       */
   /* typically a small value and the result of a*b is known to fit into */

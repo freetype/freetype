@@ -273,16 +273,6 @@
 
 
   /*************************************************************************/
-  /*                                                                       */
-  /*    FT_MAX_GLYPH_FORMATS                                               */
-  /*                                                                       */
-  /*    The maximum number of glyph image formats that might be registered */
-  /*    in a given library instance. 8 seems to be a good choice due to    */
-  /*    the relatively low number of current formats ;-)                   */
-  /*                                                                       */
-#define FT_MAX_GLYPH_FORMATS  8
-
-  /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
   /****        S F N T   D R I V E R    C O N F I G U R A T I O N       ****/

@@ -1309,7 +1309,7 @@
             FT_Int  dx = 0, dy = 0;   /* used in horizontal/vertical        */
                                       /* algorithm below                    */
             FT_Int  horizontal, count;
- 
+
 
             FT_TRACE4(( " flex1" ));
 
@@ -1343,7 +1343,7 @@
 
             /* strange test, but here it is... */
             horizontal = ( dx > dy );
-   
+
             for ( count = 5; count > 0; count-- )
             {
               x += args[0];
@@ -1351,7 +1351,7 @@
               add_point( builder, x, y, (FT_Bool)( count == 3 ) );
               args += 2;
             }
-   
+
             if ( horizontal )
             {
               x += args[0];

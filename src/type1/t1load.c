@@ -890,7 +890,7 @@
 
 
       tokzer->cursor += count;  /* skip */
-      
+
       if ( face->type1.private_dict.lenIV >= 0 )
       {
         t1_decrypt( base, count, 4330 );

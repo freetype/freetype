@@ -946,7 +946,7 @@
             tok->token.kind = ( c >= '0' && c <= '9' ? tok_number : tok_any );
             goto L2;
           }
- 
+
           if ( grow( tok ) )
             goto Exit;
           base  = tok->base;

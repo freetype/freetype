@@ -436,20 +436,20 @@
       ft_module_font_driver     |
       ft_module_driver_scalable |
       ft_module_driver_has_hinter,
-      
+
       sizeof ( TT_DriverRec ),
-    
+
       "truetype",      /* driver name                           */
       0x10000L,        /* driver version == 1.0                 */
       0x20000L,        /* driver requires FreeType 2.0 or above */
-  
+
       (void*)0,        /* driver specific interface */
-  
+
       (FT_Module_Constructor)TT_Init_Driver,
       (FT_Module_Destructor) TT_Done_Driver,
       (FT_Module_Requester)  tt_get_interface,
     },
-    
+
     sizeof ( TT_FaceRec ),
     sizeof ( TT_SizeRec ),
     sizeof ( FT_GlyphSlotRec ),
@@ -466,7 +466,7 @@
     (FTDriver_setPixelSizes)Set_Pixel_Sizes,
     (FTDriver_loadGlyph)    Load_Glyph,
     (FTDriver_getCharIndex) Get_Char_Index,
-    
+
     (FTDriver_getKerning)   Get_Kerning,
     (FTDriver_attachFile)   0,
     (FTDriver_getAdvances)  0

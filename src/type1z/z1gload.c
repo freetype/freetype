@@ -156,7 +156,7 @@
     if ( glyph )
     {
       FT_GlyphLoader*  loader = glyph->root.loader;
-      
+
 
       builder->loader  = loader;
       builder->current = &loader->current.outline;
@@ -303,7 +303,7 @@
     {
       if ( outline->n_contours > 0 )
         outline->contours[outline->n_contours - 1] = outline->n_points - 1;
-        
+
       outline->n_contours++;
     }
 
@@ -346,18 +346,18 @@
       FT_Int      first = 0;
       FT_Vector*  p1    = outline->points + first;
       FT_Vector*  p2    = outline->points + outline->n_points-1;
-      
+
 
       if ( outline->n_contours > 1 )
       {
         first = outline->contours[outline->n_contours - 2] + 1;
         p1    = outline->points + first;
       }
-        
+
       if ( p1->x == p2->x && p1->y == p2->y )
         outline->n_points--;
     }
-    
+
     if ( outline->n_contours > 0 )
       outline->contours[outline->n_contours - 1] = outline->n_points - 1;
   }
@@ -474,7 +474,7 @@
       error = FT_GlyphLoader_Check_Subglyphs( loader, 2 );
       if ( error )
         goto Exit;
-      
+
       subg = loader->current.subglyphs;
 
       /* subglyph 0 = base character */
@@ -495,13 +495,13 @@
       glyph->num_subglyphs = 2;
       glyph->subglyphs     = loader->base.subglyphs;
       glyph->format        = ft_glyph_format_composite;
-      
+
       loader->current.num_subglyphs = 2;
     }
 
     /* First load `bchar' in builder */
     /* now load the unscaled outline */
-    
+
     FT_GlyphLoader_Prepare( decoder->builder.loader );  /* prepare loader */
 
     error = Z1_Parse_CharStrings( decoder,
@@ -546,7 +546,7 @@
     {
       FT_Outline  dummy;
 
-        
+
       dummy.n_points = base->n_points - n_base_points;
       dummy.points   = base->points   + n_base_points;
       FT_Outline_Translate( &dummy, adx - asb, ady );
@@ -889,7 +889,7 @@
           /* counter control hints, clear stack */
           top = decoder->stack;
           break;
-          
+
         case 14:
         case 15:
         case 16:
@@ -901,14 +901,14 @@
             FT_Int*    delta;
             FT_Int*    values;
 
-              
+
             if ( !blend )
             {
               FT_ERROR(( "Z1_Parse_CharStrings:" ));
               FT_ERROR(( " unexpected multiple masters operator!\n" ));
               goto Syntax_Error;
             }
-              
+
             num_points = top[1] - 13 + ( top[1] == 18 );
             if ( top[0] != (FT_Int)( num_points * blend->num_designs ) )
             {
@@ -916,7 +916,7 @@
               FT_ERROR(( " incorrect number of mm arguments\n" ));
               goto Syntax_Error;
             }
-              
+
             top -= blend->num_designs*num_points;
             if ( top < decoder->stack )
               goto Stack_Underflow;
@@ -951,7 +951,7 @@
             /* note that `top' will be incremented later by calls to `pop' */
             break;
           }
-          
+
         default:
         Unexpected_OtherSubr:
           FT_ERROR(( "Z1_Parse_CharStrings: invalid othersubr [%d %d]!\n",

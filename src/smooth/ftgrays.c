@@ -94,12 +94,11 @@
 #define FT_COMPONENT  trace_aaraster
 
 
-  /* XXX: Adapt error code to FreeType conventions */
-#define ErrRaster_Invalid_Outline  -1
-
 #ifdef _STANDALONE_
 
+
 #define ErrRaster_Invalid_Mode     -2
+#define ErrRaster_Invalid_Outline  -1
 
 #include "ftimage.h"
 #include "ftgrays.h"
@@ -140,6 +139,7 @@
 #include <freetype/ftoutln.h>          /* for FT_Outline_Decompose()    */
 
 #define ErrRaster_Invalid_Mode     FT_Err_Cannot_Render_Glyph
+#define ErrRaster_Invalid_Outline  FT_Err_Invalid_Outline
 
 
 #endif /* _STANDALONE_ */

@@ -425,15 +425,15 @@
       while ( parser->cursor < parser->limit )
       {
         Z1_Token_Rec  token;
-        
+
 
         Z1_ToToken( parser, &token );
         if ( !token.type )
           break;
-          
+
         if ( cur < limit )
           *cur = token;
-          
+
         cur++;
       }
 
@@ -867,17 +867,17 @@
         {
           FT_Memory  memory = parser->memory;
           FT_UInt    len    = limit-cur;
-            
+
           if ( ALLOC( string, len + 1 ) )
             goto Exit;
-              
+
           MEM_Copy( string, cur, len );
-          string[len] = 0;              
+          string[len] = 0;
 
           *(FT_String**)q = string;
         }
         break;
-          
+
       default:
         /* an error occured */
         goto Fail;
@@ -915,7 +915,7 @@
     FT_Byte*       old_cursor;
     FT_Byte*       old_limit;
     Z1_Field_Rec   fieldrec = *(Z1_Field_Rec*)field;
-    
+
 
     Z1_ToTokenArray( parser, elements, 32, &num_elements );
     if ( num_elements < 0 )
@@ -942,7 +942,7 @@
 
     if ( pflags )
       *pflags |= 1L << field->flag_bit;
-      
+
     parser->cursor = old_cursor;
     parser->limit  = old_limit;
 

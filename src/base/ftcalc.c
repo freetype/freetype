@@ -26,7 +26,7 @@
   /*                                                                       */
   /* Implementing basic computation routines.                              */
   /*                                                                       */
-  /* FT_MulDiv() and FT_MulFix() are declared in freetype.h.               */
+  /* FT_MulDiv(), FT_MulFix(), and FT_DivFix() are declared in freetype.h. */
   /*                                                                       */
   /*************************************************************************/
 

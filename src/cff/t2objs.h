@@ -94,7 +94,7 @@
   {
     TT_CharMapRec  root;
     PS_Unicodes    unicodes;
-    
+
   } T2_CharMapRec, *T2_CharMap;
 
 

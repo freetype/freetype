@@ -697,7 +697,7 @@
       if ( !error || error != FT_Err_Cannot_Render_Glyph )
         break;
 
-      /* FT_Err_Cannot_Render_Glyph is returned when the render mode */
+      /* FT_Err_Cannot_Render_Glyph is returned if the render mode   */
       /* is unsupported by the current renderer for this glyph image */
       /* format                                                      */
 

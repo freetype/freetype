@@ -199,6 +199,32 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
+#define FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS          1
+#define FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES      2
+#define FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID        4
+#define FT_SUBGLYPH_FLAG_SCALE                   8
+#define FT_SUBGLYPH_FLAG_XY_SCALE             0x40
+#define FT_SUBGLYPH_FLAG_2X2                  0x80
+#define FT_SUBGLYPH_FLAG_USE_MY_METRICS      0x200
+
+
+  enum
+  {
+    ft_glyph_own_bitmap = 1
+  };
+
+
+  struct  FT_SubGlyph_
+  {
+    FT_Int     index;
+    FT_UShort  flags;
+    FT_Int     arg1;
+    FT_Int     arg2;
+    FT_Matrix  transform;
+  };
+
+
   typedef struct FT_GlyphLoad_
   {
     FT_Outline    outline;       /* outline                          */
@@ -209,7 +235,7 @@
   } FT_GlyphLoad;
 
 
-  struct FT_GlyphLoader_
+  struct  FT_GlyphLoader_
   {
     FT_Memory     memory;
     FT_UInt       max_points;
