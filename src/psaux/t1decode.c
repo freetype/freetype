@@ -1014,7 +1014,7 @@
           if ( hinter )
           {
             /* top[0] += builder->left_bearing.y; */
-            hinter->stem( hinter->hints, 0, top );
+            hinter->stem( hinter->hints, 1, top );
           }
 
           break;
@@ -1024,7 +1024,7 @@
 
           /* record horizontal counter-controlled hints */
           if ( hinter )
-            hinter->stem3( hinter->hints, 0, top );
+            hinter->stem3( hinter->hints, 1, top );
                            
           break;
 
@@ -1035,7 +1035,7 @@
           if ( hinter )
           {
             top[0] += orig_x;
-            hinter->stem( hinter->hints, 1, top );
+            hinter->stem( hinter->hints, 0, top );
           }
 
           break;
@@ -1051,7 +1051,7 @@
             top[0] += dx;
             top[2] += dx;
             top[4] += dx;
-            hinter->stem3( hinter->hints, 1, top );
+            hinter->stem3( hinter->hints, 0, top );
           }
           break;
 

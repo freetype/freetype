@@ -1080,7 +1080,7 @@
 
           if ( hinter )
             hinter->stems( hinter->hints,
-                           ( op == cff_op_vstem || op == cff_op_vstemhm ),
+                           ( op == cff_op_hstem || op == cff_op_hstemhm ),
                            num_args / 2,
                            args );
 
@@ -1097,7 +1097,7 @@
           {
             if ( hinter )
               hinter->stems( hinter->hints,
-                             1,
+                             0,
                              num_args / 2,
                              args );
             
