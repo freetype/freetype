@@ -1,3 +1,14 @@
+2002-10-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/smooth/ftgrays.c (SUBPIXELS): Add cast to `TPos'.
+	Update all callers.
+	(TRUNC): Add cast to `TCoord'.
+	Update all callers.
+	(TRaster): Use `TPos' for min_ex, max_ex, min_ey, max_ey, and
+	last_ey.
+	Update all casts.
+	(gray_render_line): Fix casts for `p' and `first'.
+
 2002-10-02  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/bdf/bdflib.c (bdf_load_font): Allocate the _bdf_parse_t
