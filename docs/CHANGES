@@ -1,9 +1,6 @@
 LATEST CHANGES BETWEEN 2.1.5 and 2.1.4
 
 
-ATTENTION!  Version 2.1.5 is not binary compatible with 2.1.4.
-
-
   I. IMPORTANT BUG FIXES
 
     - Parsing the /CIDFontName field now removes the leading slash to
@@ -18,9 +15,7 @@ ATTENTION!  Version 2.1.5 is not binary compatible with 2.1.4.
       partially.
 
     - Numeric font dictionary entries for synthetic fonts are no longer
-      overwritten.  To support this properly the PS_FontInfo structure
-      has been changed: `italic_angle', `is_fixed_pitch',
-      `underline_position', and `underline_thickness' are now pointers.
+      overwritten.
 
     - The test for the charset registry in BDF and PCF fonts is now
       case-insensitive.

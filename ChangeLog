@@ -1,6 +1,16 @@
+2003-07-26  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.ac (version_info): Set to 9:4:3.
+	* builds/unix/configure: Updated.
+	* docs/CHANGES, docs/VERSION.DLL: Updated.
+
+	* include/freetype/freetype.h (FT_GlyphSlot): Change 2003-06-16
+	also breaks binary compatibility.  Reintroduce an unsigned integer
+	at the old position of `flags' called `reserved'.
+
 2003-07-25  Werner Lemberg  <wl@gnu.org>
 
-	Make reference valid HTML 4.01 transitional.
+	Make API reference valid HTML 4.01 transitional.
 
 	* src/tools/docmaker/tohtml.py (html_header_1): Add doctype
 	and charset.
