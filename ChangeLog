@@ -1,5 +1,8 @@
 2002-07-10  David Turner  <david@freetype.org>
 
+    * src/cff/cffobjs.c: small fix to select the Unicode charmap by default
+    when needed
+
     * src/cff/cffobjs.c: small fix to allow OpenType fonts to support Adobe
     charmaps when needed.
 
