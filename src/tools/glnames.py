@@ -4758,6 +4758,77 @@ class StringTable:
     write( line + "\n  };\n\n\n" )
 
 
+#
+# here's an explanation about the way we now store the Adobe Glyph List.
+# First of all, we store the list as a tree. Consider for example that
+# you want to store the following name mapping:
+#
+#  A         => 1
+#  Aacute    => 6
+#  Abalon    => 2
+#  Abstract  => 4
+#
+# it's possible to store them in a tree, as in:
+#
+#  A => 1
+#  |
+#  +-acute => 6
+#  |
+#  +-b
+#    |
+#    +-alone => 2
+#    |
+#    +-stract => 4
+#
+# we see that each node in the tree has:
+#
+# - one or more 'letters'
+# - an optional value
+# - zero or more child nodes
+#
+# you can build such a tree with:
+#
+#   root = StringNode( "",0 )
+#   for word in map.values():
+#     root.add(word,map[word])
+#
+# this will create a large tree where each node has only one letter
+# then call:
+#
+#   root = root.optimize()
+#
+# which will optimize the tree by mergin the letters of successive
+# nodes whenever possible
+#
+# now, each node of the tree is stored as follows in the table:
+#
+#   - first the node's letters, according to the following scheme:
+#
+#
+#         name         bitsize     description
+#         -----------------------------------------
+#         notlast            1     set to 1 if this is not the last letter
+#                                  in the word
+#         ascii              7     the letter's ASCII value
+#
+#   - then, the children count and optional value:
+#
+#         name         bitsize     description
+#         -----------------------------------------
+#         hasvalue           1     set to 1 if a 16-bit Unicode value follows
+#         num_children       7     number of childrens. can be 0 only if
+#                                  'hasvalue' is set to 1
+#         if (hasvalue)
+#           value           16     optional Unicode value
+#
+#   - followed by the list of 16-bit absolute offsets to the children.
+#     Children must be sorted in increasing order of their first letter.
+#
+# All 16-bit quantities are stored in big-endian. If you don't know why,
+# you've never debugged this kind of code ;-)
+#
+# Finally, the root node has first letter = 0, and no value.
+#
 class StringNode:
   def __init__( self, letter, value ):
     self.letter   = letter
