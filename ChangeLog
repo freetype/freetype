@@ -1,3 +1,29 @@
+2004-09-09  Werner Lemberg  <wl@gnu.org>
+
+	Adding OpenType validation module.  The code is based on the
+	(unfinished) `otlayout' module but has been heavily modified to make
+	it much more compact.
+
+	* src/otvalid/*: New module.
+
+	* include/freetype/ftotval.h, src/base/ftotval.c,
+	include/freetype/internal/services/svotval.h: New files.
+
+	* include/freetype/config/ftmodule.h: Add otv_module_class.
+	* include/freetype/config/ftheader.h (FT_OPENTYPE_VALIDATE_H): New
+	macro.
+	* include/freetype/internal/ftserv.h
+	(FT_SERVICE_OPENTYPE_VALIDATE_H): New macro.
+	* include/freetype/internal/fttrace.h (otvmodule, otvcommon,
+	otvbase, otvgdef, otvgpos, otvgsub, otvjstf): New trace components.
+
+	* include/freetype/ftchapters.h: Updated.
+
+	* src/base/Jamfile (Library), src/base/descrip.mms (OBJS),
+	src/base/rules.mk (BASE_EXT_SRC): Updated.
+
+	* docs/CHANGES: Updated.
+
 2004-09-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/tools/docmaker/sources.py (re_source_block_format2) <column>:
@@ -13,7 +39,7 @@
 
 	* include/freetype/internal/ftobjs.h: Don't include
 	FT_CONFIG_STANDARD_LIBRARY_H.
-	(FT_Validator, FT_VAlidationLevel, FT_ValidatorRec, FT_VALIDATOR,
+	(FT_Validator, FT_ValidationLevel, FT_ValidatorRec, FT_VALIDATOR,
 	ft_validator_init, ft_validator_run, ft_validator_error, FT_INVALID,
 	FT_INVALID_TOO_SHORT, FT_INVALID_OFFSET, FT_INVALID_FORMAT,
 	FT_INVALID_GLYPH_ID, FT_INVALID_DATA): Move to...

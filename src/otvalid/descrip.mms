@@ -1,9 +1,9 @@
 #
-# FreeType 2 base layer compilation rules for VMS
+# FreeType 2 OpenType validation module compilation rules for VMS
 #
 
 
-# Copyright 2001, 2003, 2004 by
+# Copyright 2004 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -13,9 +13,9 @@
 # fully.
 
 
-CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.builds.vms],[--.include],[--.src.base])
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.otvalid])
 
-OBJS=ftbase.obj,ftinit.obj,ftglyph.obj,ftdebug.obj,ftbdf.obj,ftmm.obj,fttype1.obj,ftxf86.obj,ftpfr.obj,ftstroke.obj,ftwinfnt.obj,ftbbox.obj,ftotval.obj
+OBJS=otvalid.obj
 
 all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)

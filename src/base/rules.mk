@@ -54,6 +54,7 @@ BASE_EXT_SRC := $(BASE_DIR)/ftbbox.c   \
                 $(BASE_DIR)/ftbdf.c    \
                 $(BASE_DIR)/ftglyph.c  \
                 $(BASE_DIR)/ftmm.c     \
+                $(BASE_DIR)/ftotval.c  \
                 $(BASE_DIR)/ftpfr.c    \
                 $(BASE_DIR)/ftstroke.c \
                 $(BASE_DIR)/fttype1.c  \

@@ -16,4 +16,4 @@ FT_USE_MODULE(ft_smooth_lcdv_renderer_class)
 FT_USE_MODULE(t42_driver_class)
 FT_USE_MODULE(pfr_driver_class)
 FT_USE_MODULE(winfnt_driver_class)
-
+FT_USE_MODULE(otv_module_class)

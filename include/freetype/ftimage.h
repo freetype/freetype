@@ -772,7 +772,7 @@ FT_BEGIN_HEADER
   /*    raster                                                             */
   /*                                                                       */
   /* <Title>                                                               */
-  /*    Scanline converter                                                 */
+  /*    Scanline Converter                                                 */
   /*                                                                       */
   /* <Abstract>                                                            */
   /*    How vectorial outlines are converted into bitmaps and pixmaps.     */

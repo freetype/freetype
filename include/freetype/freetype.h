@@ -2883,7 +2883,7 @@ FT_BEGIN_HEADER
   /*    Computations                                                       */
   /*                                                                       */
   /* <Abstract>                                                            */
-  /*    Crunching fixed numbers and vectors                                */
+  /*    Crunching fixed numbers and vectors.                               */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This section contains various functions used to perform            */
