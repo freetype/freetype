@@ -254,6 +254,7 @@
                             FT_Parameter*  params )
   {
     FT_Error         error;
+    FT_Bool          missing_outline = 0;
     SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
 
     FT_UNUSED( face_index );
@@ -262,33 +263,60 @@
 
 
     /* Load tables */
-    if ( LOAD_( header )        ||
-         LOAD_( max_profile )   ||
 
-         /* load the `hhea' & `hmtx' tables at once */
-         ( error = sfnt->load_metrics( face, stream, 0 ) ) != TT_Err_Ok  ||
+    /* If you load SFNT wrapped sbit font files, it will fail if you */
+    /* want to read the `head', `hhea', and `vhea' tables.           */
+    /*                                                               */
+    if ( LOAD_( header ) )
+    {
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+      missing_outline = 1;
+#else
+      goto Exit;
+#endif
+
+    }
+
+    if ( LOAD_( max_profile ) ||
+         LOAD_( charmaps )    ||
+         LOAD_( names )       ||
+         LOAD_( psnames )     )
+      goto Exit;
+
+    if ( /* load the `hhea' & `hmtx' tables at once */
+         ( ( error = sfnt->load_metrics( face, stream, 0 ) ) != TT_Err_Ok ) ||
          /* try to load the `vhea' & `vmtx' at once if present */
-         ( error = sfnt->load_metrics( face, stream, 1 ) ) != TT_Err_Ok  ||
+         ( ( error = sfnt->load_metrics( face, stream, 1 ) ) != TT_Err_Ok ) ||
+         LOAD_( os2 ) )
+    {
 
-         LOAD_( charmaps )      ||
-         LOAD_( names )         ||
-         LOAD_( os2 )           ||
-         LOAD_( psnames )       )
-     goto Exit;
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+      missing_outline = 1;
+#else
+      goto Exit;
+#endif
+
+    }
 
     /* the optional tables */
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
     /* embedded bitmap support. */
     if ( sfnt->load_sbits && LOAD_( sbits ) )
-      goto Exit;
+    {
+      if ( !( ( error == TT_Err_Table_Missing ) &&      /* missing SBit */
+              ( missing_outline == 0 )        ) )       /* find outline */
+        goto Exit;
+    }
+
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
-    if ( LOAD_( hdmx )          ||
-         LOAD_( gasp )          ||
-         LOAD_( kerning )       ||
-         LOAD_( pclt )          )
+    if ( LOAD_( hdmx )    ||
+         LOAD_( gasp )    ||
+         LOAD_( kerning ) ||
+         LOAD_( pclt )    )
       goto Exit;
 
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
@@ -302,7 +330,7 @@
     /* now set up root fields */
     {
       FT_Face     root = &face->root;
-      FT_Int      flags;
+      FT_Int      flags = 0;
       TT_CharMap  charmap;
       FT_Int      n;
       FT_Memory   memory;
@@ -314,9 +342,11 @@
       /*                                                                   */
       /* Compute face flags.                                               */
       /*                                                                   */
-      flags = FT_FACE_FLAG_SCALABLE  |    /* scalable outlines */
-              FT_FACE_FLAG_SFNT      |    /* SFNT file format  */
-              FT_FACE_FLAG_HORIZONTAL;    /* horizontal data   */
+      if ( missing_outline == 0 )
+        flags = FT_FACE_FLAG_SCALABLE;    /* scalable outlines */
+
+      flags |= FT_FACE_FLAG_SFNT      |   /* SFNT file format  */
+               FT_FACE_FLAG_HORIZONTAL;   /* horizontal data   */
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
       /* might need more polish to detect the presence of a Postscript */
@@ -343,24 +373,26 @@
       /* Compute style flags.                                              */
       /*                                                                   */
       flags = 0;
-
-      if ( face->os2.version != 0xFFFF )
+      if ( missing_outline == 0 )
       {
-        /* we have an OS/2 table; use the `fsSelection' field */
-        if ( face->os2.fsSelection & 1 )
-          flags |= FT_STYLE_FLAG_ITALIC;
+        if ( face->os2.version != 0xFFFF )
+        {
+          /* we have an OS/2 table; use the `fsSelection' field */
+          if ( face->os2.fsSelection & 1 )
+            flags |= FT_STYLE_FLAG_ITALIC;
 
-        if ( face->os2.fsSelection & 32 )
-          flags |= FT_STYLE_FLAG_BOLD;
-      }
-      else
-      {
-        /* this is an old Mac font, use the header field */
-        if ( face->header.Mac_Style & 1 )
-          flags |= FT_STYLE_FLAG_BOLD;
+          if ( face->os2.fsSelection & 32 )
+            flags |= FT_STYLE_FLAG_BOLD;
+        }
+        else
+        {
+          /* this is an old Mac font, use the header field */
+          if ( face->header.Mac_Style & 1 )
+            flags |= FT_STYLE_FLAG_BOLD;
 
-        if ( face->header.Mac_Style & 2 )
-          flags |= FT_STYLE_FLAG_ITALIC;
+          if ( face->header.Mac_Style & 2 )
+            flags |= FT_STYLE_FLAG_ITALIC;
+        }
       }
 
       root->style_flags = flags;
@@ -403,11 +435,20 @@
 
       if ( face->num_sbit_strikes )
       {
-       root->num_fixed_sizes = face->num_sbit_strikes;
-       if ( ALLOC_ARRAY( root->available_sizes,
-                         face->num_sbit_strikes,
-                         FT_Bitmap_Size ) )
-         return error;
+        root->face_flags |= FT_FACE_FLAG_FIXED_SIZES;
+#if 0
+        /* I don't know criteria whether layout is horizontal or vertical */
+        if ( missing_outline )
+        {
+          ...
+          root->face_flags |= FT_FACE_FLAG_VERTICAL;
+        }
+#endif
+        root->num_fixed_sizes = face->num_sbit_strikes;
+        if ( ALLOC_ARRAY( root->available_sizes,
+                          face->num_sbit_strikes,
+                          FT_Bitmap_Size ) )
+          return error;
 
         for ( n = 0 ; n < face->num_sbit_strikes ; n++ )
         {
@@ -419,53 +460,58 @@
       }
       else
 
-#else /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
       {
        root->num_fixed_sizes = 0;
        root->available_sizes = 0;
       }
 
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
       /*********************************************************************/
       /*                                                                   */
       /*  Set up metrics.                                                  */
       /*                                                                   */
-      root->bbox.xMin    = face->header.xMin;
-      root->bbox.yMin    = face->header.yMin;
-      root->bbox.xMax    = face->header.xMax;
-      root->bbox.yMax    = face->header.yMax;
-      root->units_per_EM = face->header.Units_Per_EM;
-
-      /* The ascender/descender/height are computed from the OS/2 table    */
-      /* when found.  Otherwise, they're taken from the horizontal header. */
-      if ( face->os2.version != 0xFFFF )
+      if ( missing_outline == 0 )
       {
-        root->ascender  =  face->os2.sTypoAscender;
-        root->descender = -face->os2.sTypoDescender;
-        root->height    =  root->ascender + root->descender +
-                           face->os2.sTypoLineGap;
+        /* XXX What about if outline header is missing */
+        /*     (e.g. sfnt wrapped outline)?            */
+        root->bbox.xMin    = face->header.xMin;
+        root->bbox.yMin    = face->header.yMin;
+        root->bbox.xMax    = face->header.xMax;
+        root->bbox.yMax    = face->header.yMax;
+        root->units_per_EM = face->header.Units_Per_EM;
+
+        /* The ascender/descender/height are computed from the OS/2 table */
+        /* when found.  Otherwise, they're taken from the horizontal      */
+        /* header.                                                        */
+        /*                                                                */
+        if ( face->os2.version != 0xFFFF )
+        {
+          root->ascender  =  face->os2.sTypoAscender;
+          root->descender = -face->os2.sTypoDescender;
+          root->height    =  root->ascender + root->descender +
+                               face->os2.sTypoLineGap;
+        }
+        else
+        {
+          root->ascender  = face->horizontal.Ascender;
+          root->descender = face->horizontal.Descender;
+          root->height    = root->ascender + root->descender +
+                              face->horizontal.Line_Gap;
+        }
+
+        root->max_advance_width   = face->horizontal.advance_Width_Max;
+
+        root->max_advance_height  = face->vertical_info
+                                      ? face->vertical.advance_Height_Max
+                                      : root->height;
+
+        root->underline_position  = face->postscript.underlinePosition;
+        root->underline_thickness = face->postscript.underlineThickness;
+
+        /* root->max_points     -- already set up */
+        /* root->max_contours   -- already set up */
       }
-      else
-      {
-        root->ascender  = face->horizontal.Ascender;
-        root->descender = face->horizontal.Descender;
-        root->height    = root->ascender + root->descender +
-                          face->horizontal.Line_Gap;
-      }
-
-      root->max_advance_width   = face->horizontal.advance_Width_Max;
-
-      root->max_advance_height  = face->vertical_info
-                                    ? face->vertical.advance_Height_Max
-                                    : root->height;
-
-      root->underline_position  = face->postscript.underlinePosition;
-      root->underline_thickness = face->postscript.underlineThickness;
-
-      /* root->max_points     -- already set up */
-      /* root->max_contours   -- already set up */
     }
 
   Exit:
