@@ -208,28 +208,28 @@
         PS_FontInfo   info = &type1->font_info;
 
 
-        FREE( info->version );
-        FREE( info->notice );
-        FREE( info->full_name );
-        FREE( info->family_name );
-        FREE( info->weight );
+        FT_FREE( info->version );
+        FT_FREE( info->notice );
+        FT_FREE( info->full_name );
+        FT_FREE( info->family_name );
+        FT_FREE( info->weight );
       }
 
       /* release top dictionary */
-      FREE( type1->charstrings_len );
-      FREE( type1->charstrings );
-      FREE( type1->glyph_names );
+      FT_FREE( type1->charstrings_len );
+      FT_FREE( type1->charstrings );
+      FT_FREE( type1->glyph_names );
 
-      FREE( type1->subrs );
-      FREE( type1->subrs_len );
+      FT_FREE( type1->subrs );
+      FT_FREE( type1->subrs_len );
 
-      FREE( type1->subrs_block );
-      FREE( type1->charstrings_block );
-      FREE( type1->glyph_names_block );
+      FT_FREE( type1->subrs_block );
+      FT_FREE( type1->charstrings_block );
+      FT_FREE( type1->glyph_names_block );
 
-      FREE( type1->encoding.char_index );
-      FREE( type1->encoding.char_name );
-      FREE( type1->font_name );
+      FT_FREE( type1->encoding.char_index );
+      FT_FREE( type1->encoding.char_name );
+      FT_FREE( type1->font_name );
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
       /* release afm data if present */
@@ -238,7 +238,7 @@
 #endif
 
       /* release unicode map, if any */
-      FREE( face->unicode_map.maps );
+      FT_FREE( face->unicode_map.maps );
       face->unicode_map.num_maps = 0;
 
       face->root.family_name = 0;

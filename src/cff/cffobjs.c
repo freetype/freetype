@@ -116,7 +116,7 @@
         FT_UInt  n, count;
 
 
-        MEM_Set( &priv, 0, sizeof ( priv ) );
+        FT_MEM_SET( &priv, 0, sizeof ( priv ) );
 
         count = priv.num_blue_values = cpriv->num_blue_values;
         for ( n = 0; n < count; n++ )
@@ -236,9 +236,9 @@
     FT_Int      len = (FT_Int)strlen( source );
 
 
-    if ( !ALLOC( result, len + 1 ) )
+    if ( !FT_ALLOC( result, len + 1 ) )
     {
-      MEM_Copy( result, source, len );
+      FT_MEM_COPY( result, source, len );
       result[len] = 0;
     }
 
@@ -391,7 +391,7 @@
       FT_UInt    flags;
 
 
-      if ( ALLOC( cff, sizeof ( *cff ) ) )
+      if ( FT_NEW( cff ) )
         goto Exit;
 
       face->extra.data = cff;
@@ -517,7 +517,7 @@
           root->num_charmaps = face->num_charmaps;
 
           /* allocate table of pointers */
-          if ( ALLOC_ARRAY( root->charmaps, root->num_charmaps, FT_CharMap ) )
+          if ( FT_NEW_ARRAY( root->charmaps, root->num_charmaps ) )
             goto Exit;
 
           for ( n = 0; n < root->num_charmaps; n++, charmap++ )
@@ -569,7 +569,7 @@
       if ( cff )
       {
         CFF_Done_Font( cff );
-        FREE( face->extra.data );
+        FT_FREE( face->extra.data );
       }
     }
   }

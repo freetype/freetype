@@ -138,7 +138,7 @@
       if ( read_bytes > count )
         read_bytes = count;
 
-      MEM_Copy( buffer, stream->base + pos, read_bytes );
+      FT_MEM_COPY( buffer, stream->base + pos, read_bytes );
     }
 
     stream->pos = pos + read_bytes;
@@ -186,7 +186,7 @@
       FT_Memory  memory = stream->memory;
 
 
-      FREE( *pbytes );
+      FT_FREE( *pbytes );
     }
     *pbytes = 0;
   }
@@ -209,7 +209,7 @@
       FT_Memory  memory = stream->memory;
 
 
-      if ( ALLOC( stream->base, count ) )
+      if ( FT_ALLOC( stream->base, count ) )
         goto Exit;
 
       /* read it */
@@ -221,7 +221,7 @@
         FT_ERROR(( " invalid read; expected %lu bytes, got %lu\n",
                    count, read_bytes ));
 
-        FREE( stream->base );
+        FT_FREE( stream->base );
         error = FT_Err_Invalid_Stream_Operation;
       }
       stream->cursor = stream->base;
@@ -272,7 +272,7 @@
       FT_Memory  memory = stream->memory;
 
 
-      FREE( stream->base );
+      FT_FREE( stream->base );
     }
     stream->cursor = 0;
     stream->limit  = 0;
@@ -704,7 +704,7 @@
           if ( fields->value == ft_frame_bytes )
           {
             p = (FT_Byte*)structure + fields->offset;
-            MEM_Copy( p, cursor, len );
+            FT_MEM_COPY( p, cursor, len );
           }
           cursor += len;
           fields++;

@@ -62,7 +62,7 @@
     FT_Int    buff_len;
 
 
-    MEM_Set( parser, 0, sizeof ( *parser ) );
+    FT_MEM_SET( parser, 0, sizeof ( *parser ) );
     psaux->ps_parser_funcs->init( &parser->root, 0, 0, memory );
 
     parser->stream = stream;
@@ -95,7 +95,7 @@
       /* fill input buffer */
       buff_len -= 256;
       if ( buff_len > 0 )
-        MEM_Move( buffer, limit, buff_len );
+        FT_MEM_MOVE( buffer, limit, buff_len );
 
       p = buffer + buff_len;
 

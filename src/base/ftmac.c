@@ -364,7 +364,7 @@
       last_code = code;
     }
 
-    if ( ALLOC( buffer, (FT_Long)total_size ) )
+    if ( FT_ALLOC( buffer, (FT_Long)total_size ) )
       goto Error;
 
     /* Second pass: append all POST data to the buffer, add PFB fields.
@@ -433,7 +433,7 @@
     FT_Memory  memory = stream->memory;
 
 
-    FREE( stream->base );
+    FT_FREE( stream->base );
 
     stream->size  = 0;
     stream->base  = 0;
@@ -462,7 +462,7 @@
 
       *astream = 0;
       memory = library->memory;
-      if ( ALLOC( stream, sizeof ( *stream ) ) )
+      if ( FT_NEW( stream ) )
         goto Exit;
 
       FT_Stream_OpenMemory( library,
@@ -501,7 +501,7 @@
                                &stream );
     if ( error )
     {
-      FREE( base );
+      FT_FREE( base );
       return error;
     }
 
@@ -519,7 +519,7 @@
     else
     {
       FT_Stream_Close( stream );
-      FREE( stream );
+      FT_FREE( stream );
     }
     return error;
   }
@@ -588,7 +588,7 @@
       return FT_Err_Invalid_Handle;
 
     sfnt_size = (FT_ULong)GetHandleSize( sfnt );
-    if ( ALLOC( sfnt_data, (FT_Long)sfnt_size ) )
+    if ( FT_ALLOC( sfnt_data, (FT_Long)sfnt_size ) )
     {
       ReleaseResource( sfnt );
       return error;

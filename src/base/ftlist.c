@@ -205,7 +205,7 @@
       if ( destroy )
         destroy( memory, data, user );
 
-      FREE( cur );
+      FT_FREE( cur );
       cur = next;
     }
 

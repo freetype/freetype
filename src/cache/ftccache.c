@@ -210,7 +210,7 @@
     if ( clazz->node_done )
       clazz->node_done( node, cache );
 
-    FREE( node );
+    FT_FREE( node );
 
     /* check, just in case of general corruption :-) */
     if ( manager->num_nodes == 0 )
@@ -355,7 +355,7 @@
 
       /* no need to report an error; we'll simply keep using the same */
       /* buckets number / size                                        */
-      if ( ALLOC_ARRAY( new_buckets, new_size, FTC_Node ) )
+      if ( FT_NEW_ARRAY( new_buckets, new_size ) )
         return;
 
       for ( i = 0; i < cache->size; i++ )
@@ -379,7 +379,7 @@
       }
 
       if ( cache->buckets )
-        FREE( cache->buckets );
+        FT_FREE( cache->buckets );
 
       cache->buckets = new_buckets;
       cache->size    = new_size;
@@ -400,7 +400,7 @@
     cache->nodes = 0;
     cache->size  = FTC_PRIMES_MIN;
 
-    if ( ALLOC_ARRAY( cache->buckets, cache->size, FTC_Node ) )
+    if ( FT_NEW_ARRAY( cache->buckets, cache->size ) )
       goto Exit;
 
     /* now, initialize the lru list of families for this cache */
@@ -425,7 +425,7 @@
                               memory,
                               &cache->families );
       if ( error )
-        FREE( cache->buckets );
+        FT_FREE( cache->buckets );
     }
 
   Exit:
@@ -463,7 +463,7 @@
           if ( clazz->node_done )
             clazz->node_done( node, cache );
 
-          FREE( node );
+          FT_FREE( node );
           node = next;
         }
         cache->buckets[i] = NULL;
@@ -488,7 +488,7 @@
 
       ftc_cache_clear( cache );
 
-      FREE( cache->buckets );
+      FT_FREE( cache->buckets );
       cache->size = 0;
 
       if ( cache->families )
@@ -583,7 +583,7 @@
         FTC_Node         node;
 
 
-        if ( ALLOC( node, clazz->node_size ) )
+        if ( FT_ALLOC( node, clazz->node_size ) )
           goto Exit;
 
         node->fam_index = (FT_UShort) family->fam_index;
@@ -593,7 +593,7 @@
         error = clazz->node_init( node, query, cache );
         if ( error )
         {
-          FREE( node );
+          FT_FREE( node );
           goto Exit;
         }
 

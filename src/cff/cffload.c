@@ -1091,7 +1091,7 @@
     FT_UShort  count;
 
 
-    MEM_Set( idx, 0, sizeof ( *idx ) );
+    FT_MEM_SET( idx, 0, sizeof ( *idx ) );
 
     idx->stream = stream;
     if ( !FT_READ_USHORT( count ) &&
@@ -1113,8 +1113,8 @@
       idx->off_size = offsize;
       data_size     = (FT_ULong)( count + 1 ) * offsize;
 
-      if ( ALLOC_ARRAY( idx->offsets, count + 1, FT_ULong ) ||
-           FT_FRAME_ENTER( data_size )                        )
+      if ( FT_NEW_ARRAY( idx->offsets, count + 1 ) ||
+           FT_FRAME_ENTER( data_size )             )
         goto Exit;
 
       poff = idx->offsets;
@@ -1148,7 +1148,7 @@
 
   Exit:
     if ( error )
-      FREE( idx->offsets );
+      FT_FREE( idx->offsets );
 
     return error;
   }
@@ -1166,8 +1166,8 @@
       if ( idx->bytes )
         FT_FRAME_RELEASE( idx->bytes );
 
-      FREE( idx->offsets );
-      MEM_Set( idx, 0, sizeof ( *idx ) );
+      FT_FREE( idx->offsets );
+      FT_MEM_SET( idx, 0, sizeof ( *idx ) );
     }
   }
 
@@ -1184,7 +1184,7 @@
 
     *table = 0;
 
-    if ( idx->count > 0 && !ALLOC_ARRAY( t, idx->count + 1, FT_Byte* ) )
+    if ( idx->count > 0 && !FT_NEW_ARRAY( t, idx->count + 1 ) )
     {
       old_offset = 1;
       for ( n = 0; n <= idx->count; n++ )
@@ -1298,9 +1298,9 @@
     if ( error )
       goto Exit;
 
-    if ( !ALLOC( name, byte_len + 1 ) )
+    if ( !FT_ALLOC( name, byte_len + 1 ) )
     {
-      MEM_Copy( name, bytes, byte_len );
+      FT_MEM_COPY( name, bytes, byte_len );
       name[byte_len] = 0;
     }
     CFF_Forget_Element( idx, &bytes );
@@ -1333,9 +1333,9 @@
 
 
         len = (FT_UInt)strlen( adobe_name );
-        if ( !ALLOC( name, len + 1 ) )
+        if ( !FT_ALLOC( name, len + 1 ) )
         {
-          MEM_Copy( name, adobe_name, len );
+          FT_MEM_COPY( name, adobe_name, len );
           name[len] = 0;
         }
 
@@ -1490,8 +1490,8 @@
     FT_Memory  memory = stream->memory;
 
 
-    FREE( encoding->codes );
-    FREE( encoding->sids  );
+    FT_FREE( encoding->codes );
+    FT_FREE( encoding->sids  );
     encoding->format = 0;
     encoding->offset = 0;
     encoding->codes  = 0;
@@ -1506,7 +1506,7 @@
     FT_Memory  memory = stream->memory;
 
 
-    FREE( charset->sids );
+    FT_FREE( charset->sids );
     charset->format = 0;
     charset->offset = 0;
     charset->sids   = 0;
@@ -1540,7 +1540,7 @@
 
 
       /* Allocate memory for sids. */
-      if ( ALLOC( charset->sids, num_glyphs * sizeof ( FT_UShort ) ) )
+      if ( FT_NEW_ARRAY( charset->sids, num_glyphs ) )
         goto Exit;
 
       /* assign the .notdef glyph */
@@ -1622,11 +1622,11 @@
         }
 
         /* Allocate memory for sids. */
-        if ( ALLOC( charset->sids, num_glyphs * sizeof ( FT_UShort ) ) )
+        if ( FT_NEW_ARRAY( charset->sids, num_glyphs ) )
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory. */
-        MEM_Copy( charset->sids, cff_isoadobe_charset,
+        FT_MEM_COPY( charset->sids, cff_isoadobe_charset,
                   num_glyphs * sizeof ( FT_UShort ) );
 
         break;
@@ -1641,11 +1641,11 @@
         }
 
         /* Allocate memory for sids. */
-        if ( ALLOC( charset->sids, num_glyphs * sizeof ( FT_UShort ) ) )
+        if ( FT_NEW_ARRAY( charset->sids, num_glyphs ) )
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory.     */
-        MEM_Copy( charset->sids, cff_expert_charset,
+        FT_MEM_COPY( charset->sids, cff_expert_charset,
                   num_glyphs * sizeof ( FT_UShort ) );
 
         break;
@@ -1660,11 +1660,11 @@
         }
 
         /* Allocate memory for sids. */
-        if ( ALLOC( charset->sids, num_glyphs * sizeof ( FT_UShort ) ) )
+        if ( FT_NEW_ARRAY( charset->sids, num_glyphs ) )
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory.     */
-        MEM_Copy( charset->sids, cff_expertsubset_charset,
+        FT_MEM_COPY( charset->sids, cff_expertsubset_charset,
                   num_glyphs * sizeof ( FT_UShort ) );
 
         break;
@@ -1682,7 +1682,7 @@
       if ( charset->sids )
       {
         if ( charset->sids )
-          FREE( charset->sids );
+          FT_FREE( charset->sids );
         charset->format = 0;
         charset->offset = 0;
         charset->sids   = 0;
@@ -1717,8 +1717,8 @@
 
     /* Allocate memory for sids/codes -- there are at most 256 sids/codes */
     /* for an encoding.                                                   */
-    if ( ALLOC( encoding->sids,  256 * sizeof ( FT_UShort ) ) ||
-         ALLOC( encoding->codes, 256 * sizeof ( FT_UShort ) ) )
+    if ( FT_NEW_ARRAY( encoding->sids,  256 ) ||
+         FT_NEW_ARRAY( encoding->codes, 256 ) )
       goto Exit;
 
     /* Zero out the code to gid/sid mappings. */
@@ -1866,7 +1866,7 @@
       {
       case 0:
         /* First, copy the code to SID mapping. */
-        MEM_Copy( encoding->sids, cff_standard_encoding,
+        FT_MEM_COPY( encoding->sids, cff_standard_encoding,
                   256 * sizeof ( FT_UShort ) );
 
         /* Construct code to GID mapping from code */
@@ -1897,7 +1897,7 @@
 
       case 1:
         /* First, copy the code to SID mapping. */
-        MEM_Copy( encoding->sids, cff_expert_encoding,
+        FT_MEM_COPY( encoding->sids, cff_expert_encoding,
                   256 * sizeof ( FT_UShort ) );
 
         /* Construct code to GID mapping from code to SID mapping */
@@ -1941,10 +1941,10 @@
       if ( encoding->sids || encoding->codes )
       {
         if ( encoding->sids )
-          FREE( encoding->sids );
+          FT_FREE( encoding->sids );
 
         if ( encoding->codes )
-          FREE( encoding->codes );
+          FT_FREE( encoding->codes );
 
         charset->format = 0;
         charset->offset = 0;
@@ -1974,7 +1974,7 @@
     CFF_Parser_Init( &parser, CFF_CODE_TOPDICT, &font->font_dict );
 
     /* set defaults */
-    MEM_Set( top, 0, sizeof ( *top ) );
+    FT_MEM_SET( top, 0, sizeof ( *top ) );
 
     top->underline_position  = -100;
     top->underline_thickness = 50;
@@ -1999,7 +1999,7 @@
     if ( top->private_offset && top->private_size )
     {
       /* set defaults */
-      MEM_Set( priv, 0, sizeof ( *priv ) );
+      FT_MEM_SET( priv, 0, sizeof ( *priv ) );
 
       priv->blue_shift       = 7;
       priv->blue_fuzz        = 1;
@@ -2051,7 +2051,7 @@
     if ( subfont )
     {
       cff_done_index( &subfont->local_subrs_index );
-      FREE( subfont->local_subrs );
+      FT_FREE( subfont->local_subrs );
     }
   }
 
@@ -2080,7 +2080,7 @@
     CFF_FontRecDict  dict;
 
 
-    MEM_Set( font, 0, sizeof ( *font ) );
+    FT_MEM_SET( font, 0, sizeof ( *font ) );
 
     font->stream = stream;
     font->memory = memory;
@@ -2159,7 +2159,7 @@
 
       /* allocate & read each font dict independently */
       font->num_subfonts = fd_index.count;
-      if ( ALLOC_ARRAY( sub, fd_index.count, CFF_SubFontRec ) )
+      if ( FT_NEW_ARRAY( sub, fd_index.count ) )
         goto Fail_CID;
 
       /* setup pointer table */
@@ -2259,7 +2259,7 @@
       for ( idx = 0; idx < font->num_subfonts; idx++ )
         CFF_Done_SubFont( memory, font->subfonts[idx] );
 
-      FREE( font->subfonts );
+      FT_FREE( font->subfonts );
     }
 
     CFF_Done_Encoding( &font->encoding, font->stream );
@@ -2269,8 +2269,8 @@
 
     CFF_Done_FD_Select( &font->fd_select, font->stream );
 
-    FREE( font->global_subrs );
-    FREE( font->font_name );
+    FT_FREE( font->global_subrs );
+    FT_FREE( font->font_name );
   }
 
 

@@ -913,7 +913,7 @@
       hinter->globals = 0;
       hinter->face    = 0;
 
-      FREE( hinter );
+      FT_FREE( hinter );
     }
   }
 
@@ -931,7 +931,7 @@
     *ahinter = 0;
 
     /* allocate object */
-    if ( ALLOC( hinter, sizeof ( *hinter ) ) )
+    if ( FT_NEW( hinter ) )
       goto Exit;
 
     hinter->memory = memory;
@@ -965,7 +965,7 @@
     AH_Face_Globals*  face_globals;
 
 
-    if ( ALLOC( face_globals, sizeof ( *face_globals ) ) )
+    if ( FT_NEW( face_globals ) )
       goto Exit;
 
     hinter->face    = face;
@@ -994,7 +994,7 @@
     FT_Memory  memory = face->memory;
 
 
-    FREE( globals );
+    FT_FREE( globals );
   }
 
 
@@ -1067,13 +1067,13 @@
       if ( error )
         goto Exit;
 
-      MEM_Copy( gloader->current.extra_points, slot->outline.points,
+      FT_MEM_COPY( gloader->current.extra_points, slot->outline.points,
                 slot->outline.n_points * sizeof ( FT_Vector ) );
 
-      MEM_Copy( gloader->current.outline.contours, slot->outline.contours,
+      FT_MEM_COPY( gloader->current.outline.contours, slot->outline.contours,
                 slot->outline.n_contours * sizeof ( short ) );
 
-      MEM_Copy( gloader->current.outline.tags, slot->outline.tags,
+      FT_MEM_COPY( gloader->current.outline.tags, slot->outline.tags,
                 slot->outline.n_points * sizeof ( char ) );
 
       gloader->current.outline.n_points   = slot->outline.n_points;
@@ -1151,7 +1151,7 @@
         if ( error )
           goto Exit;
 
-        MEM_Copy( gloader->current.subglyphs, slot->subglyphs,
+        FT_MEM_COPY( gloader->current.subglyphs, slot->subglyphs,
                   num_subglyphs * sizeof ( FT_SubGlyph ) );
 
         gloader->current.num_subglyphs = num_subglyphs;
@@ -1393,7 +1393,7 @@
 
 
     /* allocate new master globals */
-    if ( ALLOC( globals, sizeof ( *globals ) ) )
+    if ( FT_NEW( globals ) )
       goto Fail;
 
     /* compute face globals if needed */
@@ -1411,7 +1411,7 @@
     return;
 
   Fail:
-    FREE( globals );
+    FT_FREE( globals );
 
     *global_hints = 0;
     *global_len   = 0;
@@ -1425,7 +1425,7 @@
     FT_Memory  memory = hinter->memory;
 
 
-    FREE( global_hints );
+    FT_FREE( global_hints );
   }
 
 

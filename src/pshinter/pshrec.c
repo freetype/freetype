@@ -46,7 +46,7 @@
   ps_hint_table_done( PS_Hint_Table  table,
                       FT_Memory      memory )
   {
-    FREE( table->hints );
+    FT_FREE( table->hints );
     table->num_hints = 0;
     table->max_hints = 0;
   }
@@ -67,7 +67,7 @@
     {
       /* try to grow the table */
       new_max = ( new_max + 7 ) & -8;
-      if ( !REALLOC_ARRAY( table->hints, old_max, new_max, PS_HintRec ) )
+      if ( !FT_RENEW_ARRAY( table->hints, old_max, new_max ) )
         table->max_hints = new_max;
     }
     return error;
@@ -120,7 +120,7 @@
   ps_mask_done( PS_Mask    mask,
                 FT_Memory  memory )
   {
-    FREE( mask->bytes );
+    FT_FREE( mask->bytes );
     mask->num_bits  = 0;
     mask->max_bits  = 0;
     mask->end_point = 0;
@@ -141,7 +141,7 @@
     if ( new_max > old_max )
     {
       new_max = ( new_max + 7 ) & -8;
-      if ( !REALLOC_ARRAY( mask->bytes, old_max, new_max, FT_Byte ) )
+      if ( !FT_RENEW_ARRAY( mask->bytes, old_max, new_max ) )
         mask->max_bits = new_max * 8;
     }
     return error;
@@ -218,7 +218,7 @@
     for ( ; count > 0; count--, mask++ )
       ps_mask_done( mask, memory );
 
-    FREE( table->masks );
+    FT_FREE( table->masks );
     table->num_masks = 0;
     table->max_masks = 0;
   }
@@ -238,7 +238,7 @@
     if ( new_max > old_max )
     {
       new_max = ( new_max + 7 ) & -8;
-      if ( !REALLOC_ARRAY( table->masks, old_max, new_max, PS_MaskRec ) )
+      if ( !FT_RENEW_ARRAY( table->masks, old_max, new_max ) )
         table->max_masks = new_max;
     }
     return error;

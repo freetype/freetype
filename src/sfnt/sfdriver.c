@@ -103,7 +103,7 @@
       if ( len >= buffer_max )
         len = buffer_max - 1;
 
-      MEM_Copy( buffer, gname, len );
+      FT_MEM_COPY( buffer, gname, len );
       ((FT_Byte*)buffer)[len] = 0;
     }
 
@@ -153,7 +153,7 @@
       FT_UInt      len    = name->stringLength/2;
       FT_Error     error;
       
-      if ( !ALLOC( result, len+1 ) )
+      if ( !FT_ALLOC( result, len+1 ) )
       {
         FT_String*  r = (FT_String*)result;
         FT_Byte*    p = (FT_Byte*) name->string;
@@ -176,9 +176,9 @@
       FT_Error          error;
       FT_String*        result;
       
-      if ( !ALLOC( result, len+1 ) )
+      if ( !FT_ALLOC( result, len+1 ) )
       {
-        MEM_Copy( result, name->string, len );
+        FT_MEM_COPY( result, name->string, len );
         result[len] = '\0';
       }
       goto Exit;

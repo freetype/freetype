@@ -53,12 +53,12 @@
   psh1_hint_table_done( PSH1_Hint_Table  table,
                         FT_Memory        memory )
   {
-    FREE( table->zones );
+    FT_FREE( table->zones );
     table->num_zones = 0;
     table->zone      = 0;
 
-    FREE( table->sort );
-    FREE( table->hints );
+    FT_FREE( table->sort );
+    FT_FREE( table->hints );
     table->num_hints   = 0;
     table->max_hints   = 0;
     table->sort_global = 0;
@@ -176,9 +176,9 @@
 
 
     /* allocate our tables */
-    if ( ALLOC_ARRAY( table->sort,  2 * count,     PSH1_Hint    ) ||
-         ALLOC_ARRAY( table->hints,     count,     PSH1_HintRec ) ||
-         ALLOC_ARRAY( table->zones, 2 * count + 1, PSH1_ZoneRec ) )
+    if ( FT_NEW_ARRAY( table->sort,  2 * count     ) ||
+         FT_NEW_ARRAY( table->hints,     count     ) ||
+         FT_NEW_ARRAY( table->zones, 2 * count + 1 ) )
       goto Exit;
 
     table->max_hints   = count;

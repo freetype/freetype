@@ -144,7 +144,7 @@
       cmap0 = &cmap->c.cmap0;
 
       if ( FT_READ_USHORT( cmap0->language )         ||
-           ALLOC( cmap0->glyphIdArray, 256L )     ||
+           FT_ALLOC( cmap0->glyphIdArray, 256L )     ||
            FT_STREAM_READ( cmap0->glyphIdArray, 256L ) )
         goto Fail;
 
@@ -158,7 +158,7 @@
 
       /* allocate subheader keys */
 
-      if ( ALLOC_ARRAY( cmap2->subHeaderKeys, 256, FT_UShort ) ||
+      if ( FT_NEW_ARRAY( cmap2->subHeaderKeys, 256 ) ||
            FT_FRAME_ENTER( 2L + 512L )                           )
         goto Fail;
 
@@ -180,12 +180,10 @@
       cmap2->numGlyphId = l = (FT_UShort)(
         ( ( cmap->length - 2L * ( 256 + 3 ) - num_SH * 8L ) & 0xFFFF ) / 2 );
 
-      if ( ALLOC_ARRAY( cmap2->subHeaders,
-                        num_SH + 1,
-                        TT_CMap2SubHeaderRec )    ||
-           FT_FRAME_ENTER( ( num_SH + 1 ) * 8L ) )
+      if ( FT_NEW_ARRAY( cmap2->subHeaders, num_SH + 1 )    ||
+           FT_FRAME_ENTER( ( num_SH + 1 ) * 8L )            )
       {
-        FREE( cmap2->subHeaderKeys );
+        FT_FREE( cmap2->subHeaderKeys );
         goto Fail;
       }
 
@@ -207,11 +205,11 @@
 
       /* load glyph IDs */
 
-      if ( ALLOC_ARRAY( cmap2->glyphIdArray, l, FT_UShort ) ||
-           FT_FRAME_ENTER( l * 2L )                           )
+      if ( FT_NEW_ARRAY( cmap2->glyphIdArray, l ) ||
+           FT_FRAME_ENTER( l * 2L )               )
       {
-        FREE( cmap2->subHeaders );
-        FREE( cmap2->subHeaderKeys );
+        FT_FREE( cmap2->subHeaders );
+        FT_FREE( cmap2->subHeaderKeys );
         goto Fail;
       }
 
@@ -244,9 +242,7 @@
 
       /* load segments */
 
-      if ( ALLOC_ARRAY( cmap4->segments,
-                        num_Seg,
-                        TT_CMap4SegmentRec )           ||
+      if ( FT_NEW_ARRAY( cmap4->segments, num_Seg )   ||
            FT_FRAME_ENTER( ( num_Seg * 4 + 1 ) * 2L ) )
         goto Fail;
 
@@ -273,10 +269,10 @@
 
       /* load IDs */
 
-      if ( ALLOC_ARRAY( cmap4->glyphIdArray, l, FT_UShort ) ||
-           FT_FRAME_ENTER( l * 2L )                           )
+      if ( FT_NEW_ARRAY( cmap4->glyphIdArray, l ) ||
+           FT_FRAME_ENTER( l * 2L )               )
       {
-        FREE( cmap4->segments );
+        FT_FREE( cmap4->segments );
         goto Fail;
       }
 
@@ -305,8 +301,8 @@
 
       l = cmap6->entryCount;
 
-      if ( ALLOC_ARRAY( cmap6->glyphIdArray, l, FT_Short ) ||
-           FT_FRAME_ENTER( l * 2L )                          )
+      if ( FT_NEW_ARRAY( cmap6->glyphIdArray, l ) ||
+           FT_FRAME_ENTER( l * 2L )               )
         goto Fail;
 
       for ( i = 0; i < l; i++ )
@@ -338,8 +334,8 @@
 
       n = cmap8_12->nGroups;
 
-      if ( ALLOC_ARRAY( cmap8_12->groups, n, TT_CMapGroupRec ) ||
-           FT_FRAME_ENTER( n * 3 * 4L )                       )
+      if ( FT_NEW_ARRAY( cmap8_12->groups, n ) ||
+           FT_FRAME_ENTER( n * 3 * 4L )        )
         goto Fail;
 
       groups = cmap8_12->groups;
@@ -374,8 +370,8 @@
 
       n = cmap10->numChars;
 
-      if ( ALLOC_ARRAY( cmap10->glyphs, n, FT_Short ) ||
-           FT_FRAME_ENTER( n * 2L )                     )
+      if ( FT_NEW_ARRAY( cmap10->glyphs, n ) ||
+           FT_FRAME_ENTER( n * 2L )          )
         goto Fail;
 
       for ( j = 0; j < n; j++ )
@@ -429,34 +425,34 @@
     switch ( cmap->format )
     {
     case 0:
-      FREE( cmap->c.cmap0.glyphIdArray );
+      FT_FREE( cmap->c.cmap0.glyphIdArray );
       break;
 
     case 2:
-      FREE( cmap->c.cmap2.subHeaderKeys );
-      FREE( cmap->c.cmap2.subHeaders );
-      FREE( cmap->c.cmap2.glyphIdArray );
+      FT_FREE( cmap->c.cmap2.subHeaderKeys );
+      FT_FREE( cmap->c.cmap2.subHeaders );
+      FT_FREE( cmap->c.cmap2.glyphIdArray );
       break;
 
     case 4:
-      FREE( cmap->c.cmap4.segments );
-      FREE( cmap->c.cmap4.glyphIdArray );
+      FT_FREE( cmap->c.cmap4.segments );
+      FT_FREE( cmap->c.cmap4.glyphIdArray );
       cmap->c.cmap4.segCountX2 = 0;
       break;
 
     case 6:
-      FREE( cmap->c.cmap6.glyphIdArray );
+      FT_FREE( cmap->c.cmap6.glyphIdArray );
       cmap->c.cmap6.entryCount = 0;
       break;
 
     case 8:
     case 12:
-      FREE( cmap->c.cmap8_12.groups );
+      FT_FREE( cmap->c.cmap8_12.groups );
       cmap->c.cmap8_12.nGroups = 0;
       break;
 
     case 10:
-      FREE( cmap->c.cmap10.glyphs );
+      FT_FREE( cmap->c.cmap10.glyphs );
       cmap->c.cmap10.numChars = 0;
       break;
 

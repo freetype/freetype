@@ -246,8 +246,8 @@ THE SOFTWARE.
     FT_Memory    memory = FT_FACE_MEMORY( face );
 
 
-    FREE( face->encodings );
-    FREE( face->metrics );
+    FT_FREE( face->encodings );
+    FT_FREE( face->metrics );
 
     /* free properties */
     {
@@ -258,19 +258,19 @@ THE SOFTWARE.
       {
         prop = &face->properties[i];
         
-        FREE( prop->name );
+        FT_FREE( prop->name );
         if ( prop->isString )
-          FREE( prop->value );
+          FT_FREE( prop->value );
       }
       
-      FREE( face->properties );
+      FT_FREE( face->properties );
     }
     
-    FREE( face->toc.tables );
-    FREE( face->root.family_name );
-    FREE( face->root.available_sizes );
-    FREE( face->charset_encoding );
-    FREE( face->charset_registry );
+    FT_FREE( face->toc.tables );
+    FT_FREE( face->root.family_name );
+    FT_FREE( face->root.available_sizes );
+    FT_FREE( face->charset_encoding );
+    FT_FREE( face->charset_registry );
 
     FT_TRACE4(( "DONE_FACE!!!\n" ));
 
@@ -462,7 +462,7 @@ THE SOFTWARE.
     /* XXX: to do: are there cases that need repadding the bitmap? */
     bytes = bitmap->pitch * bitmap->rows;
 
-    if ( ALLOC( bitmap->buffer, bytes ) )
+    if ( FT_ALLOC( bitmap->buffer, bytes ) )
       goto Exit;
 
     if ( FT_STREAM_SEEK( metric->bits )        ||

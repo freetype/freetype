@@ -80,9 +80,7 @@
 
       FT_TRACE2(( "(32bit offsets): %12d ", face->num_locations ));
 
-      if ( ALLOC_ARRAY( face->glyph_locations,
-                        face->num_locations,
-                        FT_Long ) )
+      if ( FT_NEW_ARRAY( face->glyph_locations, face->num_locations ) )
         goto Exit;
 
       if ( FT_FRAME_ENTER( face->num_locations * 4L ) )
@@ -105,9 +103,7 @@
 
       FT_TRACE2(( "(16bit offsets): %12d ", face->num_locations ));
 
-      if ( ALLOC_ARRAY( face->glyph_locations,
-                        face->num_locations,
-                        FT_Long ) )
+      if ( FT_NEW_ARRAY( face->glyph_locations, face->num_locations ) )
         goto Exit;
 
       if ( FT_FRAME_ENTER( face->num_locations * 2L ) )
@@ -172,9 +168,7 @@
 
     face->cvt_size = table_len / 2;
 
-    if ( ALLOC_ARRAY( face->cvt,
-                      face->cvt_size,
-                      FT_Short ) )
+    if ( FT_NEW_ARRAY( face->cvt, face->cvt_size ) )
       goto Exit;
 
     if ( FT_FRAME_ENTER( face->cvt_size * 2L ) )

@@ -39,9 +39,9 @@
   T1_Done_AFM( FT_Memory  memory,
                T1_AFM*    afm )
   {
-    FREE( afm->kern_pairs );
+    FT_FREE( afm->kern_pairs );
     afm->num_pairs = 0;
-    FREE( afm );
+    FT_FREE( afm );
   }
 
 
@@ -83,7 +83,7 @@
 
 
       /* copy glyph name to intermediate array */
-      MEM_Copy( temp, *start, len );
+      FT_MEM_COPY( temp, *start, len );
       temp[len] = 0;
 
       /* lookup glyph name in face array */
@@ -192,8 +192,7 @@
       goto Exit;
 
     /* allocate the pairs */
-    if ( ALLOC( afm, sizeof ( *afm ) )                       ||
-         ALLOC_ARRAY( afm->kern_pairs, count, T1_Kern_Pair ) )
+    if ( FT_NEW( afm ) || FT_NEW_ARRAY( afm->kern_pairs, count ) )
       goto Exit;
 
     /* now, read each kern pair */
@@ -235,7 +234,7 @@
 
   Exit:
     if ( error )
-      FREE( afm );
+      FT_FREE( afm );
 
     FT_FRAME_EXIT();
 

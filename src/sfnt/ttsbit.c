@@ -271,7 +271,7 @@
     /* Allocate glyph offsets table if needed */
     if ( load_offsets )
     {
-      if ( ALLOC_ARRAY( range->glyph_offsets, count, FT_ULong ) )
+      if ( FT_NEW_ARRAY( range->glyph_offsets, count ) )
         goto Exit;
 
       size = count * 4L;
@@ -280,8 +280,8 @@
       size = count * 2L;
 
     /* Allocate glyph codes table and access frame */
-    if ( ALLOC_ARRAY ( range->glyph_codes, count, FT_UShort ) ||
-         FT_FRAME_ENTER( size )                                 )
+    if ( FT_NEW_ARRAY ( range->glyph_codes, count ) ||
+         FT_FRAME_ENTER( size )                     )
       goto Exit;
 
     for ( n = 0; n < count; n++ )
@@ -340,9 +340,8 @@
 
         size_elem = large ? 4 : 2;
 
-        if ( ALLOC_ARRAY( range->glyph_offsets,
-                          num_glyphs, FT_ULong )    ||
-             FT_FRAME_ENTER( num_glyphs * size_elem ) )
+        if ( FT_NEW_ARRAY( range->glyph_offsets, num_glyphs ) ||
+             FT_FRAME_ENTER( num_glyphs * size_elem )         )
           goto Exit;
 
         for ( n = 0; n < num_glyphs; n++ )
@@ -479,7 +478,7 @@
     }
 
     /* allocate the strikes table */
-    if ( ALLOC_ARRAY( face->sbit_strikes, num_strikes, TT_SBit_StrikeRec ) )
+    if ( FT_NEW_ARRAY( face->sbit_strikes, num_strikes ) )
       goto Exit;
 
     face->num_sbit_strikes = num_strikes;
@@ -520,9 +519,7 @@
         FT_ULong        count2 = strike->num_ranges;
 
 
-        if ( ALLOC_ARRAY( strike->sbit_ranges,
-                          strike->num_ranges,
-                          TT_SBit_RangeRec ) )
+        if ( FT_NEW_ARRAY( strike->sbit_ranges, strike->num_ranges ) )
           goto Exit;
 
         /* read each range */
@@ -610,14 +607,14 @@
           {
             /* release the glyph offsets and codes tables */
             /* where appropriate                          */
-            FREE( range->glyph_offsets );
-            FREE( range->glyph_codes );
+            FT_FREE( range->glyph_offsets );
+            FT_FREE( range->glyph_codes );
           }
         }
-        FREE( strike->sbit_ranges );
+        FT_FREE( strike->sbit_ranges );
         strike->num_ranges = 0;
       }
-      FREE( face->sbit_strikes );
+      FT_FREE( face->sbit_strikes );
     }
     face->num_sbit_strikes = 0;
   }
@@ -993,7 +990,7 @@
       {
         line = (FT_Byte*)map->buffer;
 
-        MEM_Move( line, line + count * line_len,
+        FT_MEM_MOVE( line, line + count * line_len,
                   ( rows - count ) * line_len );
 
         metrics->height       = (FT_Byte)( metrics->height - count );
@@ -1270,7 +1267,7 @@
       if ( size == 0 )
         goto Exit;     /* exit successfully! */
 
-      if ( ALLOC( map->buffer, size ) )
+      if ( FT_ALLOC( map->buffer, size ) )
         goto Exit;
     }
 
@@ -1303,8 +1300,8 @@
       FT_UShort           num_components, count;
 
 
-      if ( FT_READ_USHORT( num_components )                                ||
-           ALLOC_ARRAY( components, num_components, TT_SBit_ComponentRec ) )
+      if ( FT_READ_USHORT( num_components )           ||
+           FT_NEW_ARRAY( components, num_components ) )
         goto Exit;
 
       count = num_components;
@@ -1354,7 +1351,7 @@
       }
 
     Fail_Memory:
-      FREE( components );
+      FT_FREE( components );
     }
 
   Exit:
@@ -1430,7 +1427,7 @@
 
     /* clear the bitmap & load the bitmap */
     if ( face->root.glyph->flags & FT_GLYPH_OWN_BITMAP )
-      FREE( map->buffer );
+      FT_FREE( map->buffer );
 
     map->rows = map->pitch = map->width = 0;
 

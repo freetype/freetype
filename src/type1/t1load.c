@@ -109,7 +109,7 @@
     blend = face->blend;
     if ( !blend )
     {
-      if ( ALLOC( blend, sizeof ( *blend ) ) )
+      if ( FT_NEW( blend ) )
         goto Exit;
 
       face->blend = blend;
@@ -124,9 +124,9 @@
 
 
         /* allocate the blend `private' and `font_info' dictionaries */
-        if ( ALLOC_ARRAY( blend->font_infos[1], num_designs, PS_FontInfoRec ) ||
-             ALLOC_ARRAY( blend->privates[1], num_designs, PS_PrivateRec )    ||
-             ALLOC_ARRAY( blend->weight_vector, num_designs * 2, FT_Fixed ) )
+        if ( FT_NEW_ARRAY( blend->font_infos[1], num_designs     ) ||
+             FT_NEW_ARRAY( blend->privates[1], num_designs       ) ||
+             FT_NEW_ARRAY( blend->weight_vector, num_designs * 2 ) )
           goto Exit;
 
         blend->default_weight_vector = blend->weight_vector + num_designs;
@@ -163,8 +163,7 @@
       FT_UInt  n;
 
 
-      if ( ALLOC_ARRAY( blend->design_pos[0],
-                        num_designs * num_axis, FT_Fixed ) )
+      if ( FT_NEW_ARRAY( blend->design_pos[0], num_designs * num_axis ) )
         goto Exit;
 
       for ( n = 1; n < num_designs; n++ )
@@ -343,13 +342,13 @@
 
 
       /* release design pos table */
-      FREE( blend->design_pos[0] );
+      FT_FREE( blend->design_pos[0] );
       for ( n = 1; n < num_designs; n++ )
         blend->design_pos[n] = 0;
 
       /* release blend `private' and `font info' dictionaries */
-      FREE( blend->privates[1] );
-      FREE( blend->font_infos[1] );
+      FT_FREE( blend->privates[1] );
+      FT_FREE( blend->font_infos[1] );
 
       for ( n = 0; n < num_designs; n++ )
       {
@@ -358,12 +357,12 @@
       }
 
       /* release weight vectors */
-      FREE( blend->weight_vector );
+      FT_FREE( blend->weight_vector );
       blend->default_weight_vector = 0;
 
       /* release axis names */
       for ( n = 0; n < num_axis; n++ )
-        FREE( blend->axis_names[n] );
+        FT_FREE( blend->axis_names[n] );
 
       /* release design map */
       for ( n = 0; n < num_axis; n++ )
@@ -371,11 +370,11 @@
         PS_DesignMap  dmap = blend->design_map + n;
 
 
-        FREE( dmap->design_points );
+        FT_FREE( dmap->design_points );
         dmap->num_points = 0;
       }
 
-      FREE( face->blend );
+      FT_FREE( face->blend );
     }
   }
 
@@ -428,11 +427,11 @@
         goto Exit;
       }
 
-      if ( ALLOC( blend->axis_names[n], len + 1 ) )
+      if ( FT_ALLOC( blend->axis_names[n], len + 1 ) )
         goto Exit;
 
       name = (FT_Byte*)blend->axis_names[n];
-      MEM_Copy( name, token->start, len );
+      FT_MEM_COPY( name, token->start, len );
       name[len] = 0;
     }
 
@@ -584,7 +583,7 @@
       }
 
       /* allocate design map data */
-      if ( ALLOC_ARRAY( map->design_points, num_points * 2, FT_Fixed ) )
+      if ( FT_NEW_ARRAY( map->design_points, num_points * 2 ) )
         goto Exit;
       map->blend_points = map->design_points + num_points;
       map->num_points   = (FT_Byte)num_points;
@@ -848,13 +847,13 @@
     len = (FT_Int)( cur2 - cur );
     if ( len > 0 )
     {
-      if ( ALLOC( face->type1.font_name, len + 1 ) )
+      if ( FT_ALLOC( face->type1.font_name, len + 1 ) )
       {
         parser->root.error = error;
         return;
       }
 
-      MEM_Copy( face->type1.font_name, cur, len );
+      FT_MEM_COPY( face->type1.font_name, cur, len );
       face->type1.font_name[len] = '\0';
     }
     parser->root.cursor = cur2;
@@ -972,10 +971,10 @@
 
       /* we use a T1_Table to store our charnames */
       loader->num_chars = encode->num_chars = count;
-      if ( ALLOC_ARRAY( encode->char_index, count, FT_Short   ) ||
-           ALLOC_ARRAY( encode->char_name,  count, FT_String* ) ||
-           ( error = psaux->ps_table_funcs->init(
-                       char_table, count, memory ) ) != 0       )
+      if ( FT_NEW_ARRAY( encode->char_index, count ) ||
+           FT_NEW_ARRAY( encode->char_name,  count ) ||
+           FT_SET_ERROR( psaux->ps_table_funcs->init(
+                       char_table, count, memory ) ) )
       {
         parser->root.error = error;
         return;
@@ -1172,14 +1171,14 @@
 
 
         /* t1_decrypt() shouldn't write to base -- make temporary copy */
-        if ( ALLOC( temp, size ) )
+        if ( FT_ALLOC( temp, size ) )
           goto Fail;
-        MEM_Copy( temp, base, size );
+        FT_MEM_COPY( temp, base, size );
         psaux->t1_decrypt( temp, size, 4330 );
         size -= face->type1.private_dict.lenIV;
         error = T1_Add_Table( table, idx,
                               temp + face->type1.private_dict.lenIV, size );
-        FREE( temp );
+        FT_FREE( temp );
       }
       else
         error = T1_Add_Table( table, idx, base, size );
@@ -1313,14 +1312,14 @@
 
 
           /* t1_decrypt() shouldn't write to base -- make temporary copy */
-          if ( ALLOC( temp, size ) )
+          if ( FT_ALLOC( temp, size ) )
             goto Fail;
-          MEM_Copy( temp, base, size );
+          FT_MEM_COPY( temp, base, size );
           psaux->t1_decrypt( temp, size, 4330 );
           size -= face->type1.private_dict.lenIV;
           error = T1_Add_Table( code_table, n,
                                 temp + face->type1.private_dict.lenIV, size );
-          FREE( temp );
+          FT_FREE( temp );
         }
         else
           error = T1_Add_Table( code_table, n, base, size );
@@ -1605,7 +1604,7 @@
   {
     FT_UNUSED( face );
 
-    MEM_Set( loader, 0, sizeof ( *loader ) );
+    FT_MEM_SET( loader, 0, sizeof ( *loader ) );
     loader->num_glyphs = 0;
     loader->num_chars  = 0;
 

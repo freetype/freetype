@@ -193,7 +193,7 @@
     else
     {
       /* read segment in memory */
-      if ( ALLOC( parser->base_dict, size )     ||
+      if ( FT_ALLOC( parser->base_dict, size )     ||
            FT_STREAM_READ( parser->base_dict, size ) )
         goto Exit;
       parser->base_len = size;
@@ -221,7 +221,7 @@
 
   Exit:
     if ( error && !parser->in_memory )
-      FREE( parser->base_dict );
+      FT_FREE( parser->base_dict );
 
     return error;
   }
@@ -234,11 +234,11 @@
 
 
     /* always free the private dictionary */
-    FREE( parser->private_dict );
+    FT_FREE( parser->private_dict );
 
     /* free the base dictionary only when we have a disk stream */
     if ( !parser->in_memory )
-      FREE( parser->base_dict );
+      FT_FREE( parser->base_dict );
 
     parser->root.funcs.done( &parser->root );
   }
@@ -314,7 +314,7 @@
       }
 
       if ( FT_STREAM_SEEK( start_pos )                             ||
-           ALLOC( parser->private_dict, parser->private_len ) )
+           FT_ALLOC( parser->private_dict, parser->private_len ) )
         goto Fail;
 
       parser->private_len = 0;
@@ -384,7 +384,7 @@
       if ( parser->in_memory )
       {
         /* note that we allocate one more byte to put a terminating `0' */
-        if ( ALLOC( parser->private_dict, size + 1 ) )
+        if ( FT_ALLOC( parser->private_dict, size + 1 ) )
           goto Fail;
         parser->private_len = size;
       }
@@ -408,7 +408,7 @@
              hexa_value( cur[2] ) | hexa_value( cur[3] ) ) < 0 )
 
         /* binary encoding -- `simply' copy the private dict */
-        MEM_Copy( parser->private_dict, cur, size );
+        FT_MEM_COPY( parser->private_dict, cur, size );
 
       else
       {

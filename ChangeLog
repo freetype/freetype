@@ -1,5 +1,28 @@
 2002-03-22  David Turner    <david@freetype.org>
 
+        * include/freetype/internal/ftmemory.h, and a lot of other files !!:
+        
+            changed the names of memory macros. Examples:
+            
+              MEM_Set   => FT_MEM_SET
+              MEM_Copy  => FT_MEM_COPY
+              MEM_Move  => FT_MEM_MOVE
+              
+              ALLOC     => FT_ALLOC
+              FREE      => FT_FREE
+              REALLOC   = >FT_REALLOC
+
+            FT_NEW was introduced to allocate a new object from a _typed_
+            pointer..
+              
+            note that ALLOC_ARRAY and REALLOC_ARRAY have been replaced
+            by FT_NEW_ARRAY and FT_RENEW_ARRAY which take _typed_ pointer
+            arguments.
+            
+            This results in _lots_ of sources being changed, but makes the
+            code more generic and less error-prone..
+            
+
         * include/freetype/internal/ftstream.h,
           src/base/ftstream.c, src/cff/cffload.c, src/pcf/pcfread.c,
           src/sfnt/ttcmap.c, src/sfnt/ttcmap0.c, src/sfnt/ttload.c,

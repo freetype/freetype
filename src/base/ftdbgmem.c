@@ -205,7 +205,7 @@
       if ( new_buckets == NULL )
         return;
 
-      MEM_Set( new_buckets, 0, sizeof ( FT_MemNode ) * new_size );
+      FT_MEM_SET( new_buckets, 0, sizeof ( FT_MemNode ) * new_size );
 
       for ( i = 0; i < table->size; i++ )
       {
@@ -246,7 +246,7 @@
     if ( table == NULL )
       goto Exit;
 
-    MEM_Set( table, 0, sizeof ( *table ) );
+    FT_MEM_SET( table, 0, sizeof ( *table ) );
 
     table->size  = FT_MEM_SIZE_MIN;
     table->nodes = 0;
@@ -263,7 +263,7 @@
                      memory->alloc( memory,
                                     table->size * sizeof ( FT_MemNode ) );
     if ( table->buckets )
-      MEM_Set( table->buckets, 0, sizeof ( FT_MemNode ) * table->size );
+      FT_MEM_SET( table->buckets, 0, sizeof ( FT_MemNode ) * table->size );
     else
     {
       memory->free( memory, table );
@@ -452,7 +452,7 @@
 
         /* we simply invert the node's size to indicate that the node */
         /* was freed.  We also change its contents.                   */
-        MEM_Set( address, 0xF3, node->size );
+        FT_MEM_SET( address, 0xF3, node->size );
 
         table->alloc_current -= node->size;
         node->size            = -node->size;

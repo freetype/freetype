@@ -145,10 +145,10 @@
 
 
 #define cur_to_org( n, zone ) \
-          MEM_Copy( (zone)->org, (zone)->cur, (n) * sizeof ( FT_Vector ) )
+          FT_MEM_COPY( (zone)->org, (zone)->cur, (n) * sizeof ( FT_Vector ) )
 
 #define org_to_cur( n, zone ) \
-          MEM_Copy( (zone)->cur, (zone)->org, (n) * sizeof ( FT_Vector ) )
+          FT_MEM_COPY( (zone)->cur, (zone)->org, (n) * sizeof ( FT_Vector ) )
 
 
   /*************************************************************************/
@@ -339,7 +339,7 @@
       slot->control_len  = n_ins;
       slot->control_data = load->instructions;
 
-      MEM_Copy( load->instructions, stream->cursor, n_ins );
+      FT_MEM_COPY( load->instructions, stream->cursor, n_ins );
     }
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
@@ -1515,7 +1515,7 @@
       goto Exit;
     }
 
-    MEM_Set( &loader, 0, sizeof ( loader ) );
+    FT_MEM_SET( &loader, 0, sizeof ( loader ) );
 
     /* update the glyph zone bounds */
     {

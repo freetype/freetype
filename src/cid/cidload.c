@@ -248,7 +248,7 @@
       FT_Int  n;
 
 
-      if ( ALLOC_ARRAY( cid->font_dicts, num_dicts, CID_FontDict ) )
+      if ( FT_NEW_ARRAY( cid->font_dicts, num_dicts ) )
         goto Exit;
 
       cid->num_dicts = (FT_UInt)num_dicts;
@@ -400,7 +400,7 @@
     FT_ULong*   offsets = 0;
 
 
-    if ( ALLOC_ARRAY( face->subrs, cid->num_dicts, CID_SubrsRec ) )
+    if ( FT_NEW_ARRAY( face->subrs, cid->num_dicts ) )
       goto Exit;
 
     subr = face->subrs;
@@ -419,7 +419,7 @@
         FT_UInt  new_max = ( num_subrs + 1 + 3 ) & -4;
 
 
-        if ( REALLOC_ARRAY( offsets, max_offsets, new_max, FT_ULong ) )
+        if ( FT_RENEW_ARRAY( offsets, max_offsets, new_max ) )
           goto Fail;
 
         max_offsets = new_max;
@@ -440,8 +440,8 @@
       /* allocate, and read them                     */
       data_len = offsets[num_subrs] - offsets[0];
 
-      if ( ALLOC_ARRAY( subr->code, num_subrs + 1, FT_Byte* ) ||
-           ALLOC( subr->code[0], data_len )                   )
+      if ( FT_NEW_ARRAY( subr->code, num_subrs + 1 ) ||
+               FT_ALLOC( subr->code[0], data_len )   )
         goto Fail;
 
       if ( FT_STREAM_SEEK( cid->data_offset + offsets[0] ) ||
@@ -475,7 +475,7 @@
     }
 
   Exit:
-    FREE( offsets );
+    FT_FREE( offsets );
     return error;
 
   Fail:
@@ -484,11 +484,11 @@
       for ( n = 0; n < cid->num_dicts; n++ )
       {
         if ( face->subrs[n].code )
-          FREE( face->subrs[n].code[0] );
+          FT_FREE( face->subrs[n].code[0] );
 
-        FREE( face->subrs[n].code );
+        FT_FREE( face->subrs[n].code );
       }
-      FREE( face->subrs );
+      FT_FREE( face->subrs );
     }
     goto Exit;
   }
@@ -500,7 +500,7 @@
   {
     FT_UNUSED( face );
 
-    MEM_Set( loader, 0, sizeof ( *loader ) );
+    FT_MEM_SET( loader, 0, sizeof ( *loader ) );
   }
 
 
