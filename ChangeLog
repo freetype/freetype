@@ -1,3 +1,10 @@
+2002-01-28  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
+
+	* src/pcf/pcfdriver.c (PCF_Done_Face): Fix incorrect destruction of
+	the face object (face->toc.tables, face->root.family_name,
+	face->root.available_size, face->charset_encoding,
+	face->charset_registry are now freed).  Thanks to Niels Moseley.
+
 2002-01-28  Roberto Alameda  <ojancano@geekmail.de>
 
 	* src/type1/t1load.c (parse_encoding): Set `loader->num_chars'.
