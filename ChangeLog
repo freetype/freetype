@@ -5,6 +5,8 @@
 	=========================
 
 
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 7.
+
 	* builds/unix/ft2unix.h: Fix comments.
 
 	* builds/unix/ftconfig.in: Synchronized with ANSI version.
