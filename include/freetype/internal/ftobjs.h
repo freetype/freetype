@@ -75,6 +75,159 @@ FT_BEGIN_HEADER
 
 
   /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****                    V A L I D A T I O N                          ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
+ /* handle to a validation object */
+  typedef struct FT_ValidatorRec_*   FT_Validator;
+
+ /**************************************************************************
+  *
+  *  there are three distinct validation levels defined here:
+  *
+  *  FT_VALIDATE_DEFAULT ::
+  *    a table that passes this validation level can be used reliably by
+  *    FreeType. It generally means that all offsets have been checked to
+  *    prevent out-of-bound reads, array counts are correct, etc..
+  *
+  *
+  *  FT_VALIDATE_TIGHT ::
+  *    a table that passes this validation level can be used reliably and
+  *    doesn't contain invalid data. For example, a charmap table that
+  *    returns invalid glyph indices will not pass, even though it can 
+  *    be used with FreeType in default mode (the library will simply
+  *    return an error later when trying to load the glyph)
+  *
+  *    it also check that fields that must be a multiple of 2, 4 or 8 don't
+  *    have incorrect values, etc..
+  *
+  *
+  *  FT_VALIDATE_PARANOID ::
+  *    only for font facists. Checks that a table follows the specification
+  *    100%. Very few fonts will be able to pass this level anyway but it
+  *    can be useful for certain tools like font editors/converters..
+  */
+  typedef enum FT_ValidationLevel_
+  {
+    FT_VALIDATE_DEFAULT = 0,
+    FT_VALIDATE_TIGHT,
+    FT_VALIDATE_PARANOID
+  
+  } FT_ValidationLevel;
+
+
+ /* validator structure */
+  typedef struct FT_ValidatorRec_
+  {
+    FT_Byte*            base;   /* address of table in memory           */
+    FT_Byte*            limit;  /* 'base' + sizeof(table) in memory     */
+    FT_ValidationLevel  level;  /* validation level                     */
+    FT_Error            error;  /* error returned. 0 means success      */
+    
+    jmp_buf             jump_buffer;  /* used for exception handling */
+    
+  } FT_ValidatorRec;
+
+
+ /* sets the error field in a validator, then calls 'longjmp' to return */
+ /* to high-level caller. Using 'setjmp/longjmp' avoids many stupid     */
+ /* error checks within the validation routines..                       */
+ /*                                                                     */
+  FT_BASE( void )
+  ft_validate_error( FT_Valid  valid,
+                     FT_Error  error );
+
+ /* calls ft_validate_error. Assumes that the 'valid' local variable holds */
+ /* a pointer to the current validator object..                            */
+ /*                                                                        */
+#define  FT_INVALID(_error)   ft_validate_error( valid, _error )
+
+ /* called when a broken table is detected */
+#define  FT_INVALID_TOO_SHORT   FT_INVALID( FT_Err_Invalid_Format )
+
+ /* called when an invalid offset is detected */
+#define  FT_INVALID_OFFSET      FT_INVALID( FT_Err_Invalid_Offset )
+
+ /* called when an invalid format/value is detected */
+#define  FT_INVALID_FORMAT      FT_INVALID( FT_Err_Invalid_Format )
+
+ /* called when an invalid glyph index is detected */
+#define  FT_INVALID_GLYPH_ID    FT_INVALID( FT_Err_Invalid_Glyph_Id )
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****                       C H A R M A P S                           ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
+ /* handle to internal charmap object */
+  typedef struct FT_CMapRec_*              FT_CMap;
+  
+ /* handle to charmap class structure */
+  typedef const struct FT_CMap_ClassRec_*   FT_CMap_Class;
+
+ /* internal charmap object structure */
+  typedef struct FT_CMapRec_
+  {
+    FT_CharMapRec  charmap;
+    FT_CMap_Class  clazz;
+    FT_Pointer     data;
+    
+  } FT_CMapRec;
+
+ /* typecase any pointer to a charmap handle */
+#define  FT_CMAP(x)               ((FT_CMap)(x))
+
+ /* obvious macros */
+#define  FT_CMAP_PLATFORM_ID(x)   FT_CMAP(x)->charmap.platform_id
+#define  FT_CMAP_ENCODING_ID(x)   FT_CMAP(x)->charmap.encoding_id
+#define  FT_CMAP_ENCODING(x)      FT_CMAP(x)->charmap.encoding
+#define  FT_CMAP_FACE(x)          FT_CMAP(x)->charmap.face
+
+
+ /* class method definitions */
+  typedef FT_Error  (*FT_CMap_InitFunc)( FT_CMap     cmap,
+                                         FT_Pointer  data );
+
+  typedef void      (*FT_CMap_DoneFunc)( FT_CMap     cmap );
+
+  typedef FT_Error  (*FT_CMap_ValidateFunc)( FT_Pointer    cmap_data,
+                                             FT_Validator  valid );
+
+  typedef FT_UInt   (*FT_CMap_CharIndexFunc)( FT_Pointer   cmap_data,
+                                              FT_ULong     char_code );
+
+  typedef FT_UInt   (*FT_CMap_CharNextFunc)( FT_Pointer  cmap_data,
+                                             FT_ULong   *achar_code );
+
+  typedef struct FT_CMap_ClassRec_
+  {
+    FT_UInt                size;
+    FT_CMap_InitFunc       init;
+    FT_CMap_DoneFunc       done;
+    FT_CMap_ValidateFunc   validate;
+    FT_CMap_CharIndexFunc  char_index;
+    FT_CMap_CharNextFunc   char_next;
+  
+  } FT_CMap_ClassRec;
+
+
+  /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
   /*    FT_Face_InternalRec                                                */
@@ -329,109 +482,6 @@ FT_BEGIN_HEADER
   FT_BASE( void )
   FT_Done_GlyphSlot( FT_GlyphSlot  slot );
 
-
-#if 0
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /****                   G L Y P H   L O A D E R                       ****/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-
-
-#define FT_SUBGLYPH_FLAG_ARGS_ARE_WORDS          1
-#define FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES      2
-#define FT_SUBGLYPH_FLAG_ROUND_XY_TO_GRID        4
-#define FT_SUBGLYPH_FLAG_SCALE                   8
-#define FT_SUBGLYPH_FLAG_XY_SCALE             0x40
-#define FT_SUBGLYPH_FLAG_2X2                  0x80
-#define FT_SUBGLYPH_FLAG_USE_MY_METRICS      0x200
-
-
-  enum
-  {
-    FT_GLYPH_OWN_BITMAP = 1
-  };
-
-
-  struct  FT_SubGlyph_
-  {
-    FT_Int     index;
-    FT_UShort  flags;
-    FT_Int     arg1;
-    FT_Int     arg2;
-    FT_Matrix  transform;
-  };
-
-
-  typedef struct  FT_GlyphLoad_
-  {
-    FT_Outline    outline;       /* outline             */
-    FT_UInt       num_subglyphs; /* number of subglyphs */
-    FT_SubGlyph*  subglyphs;     /* subglyphs           */
-    FT_Vector*    extra_points;  /* extra points table  */
-
-  } FT_GlyphLoad;
-
-
-  struct  FT_GlyphLoader_
-  {
-    FT_Memory     memory;
-    FT_UInt       max_points;
-    FT_UInt       max_contours;
-    FT_UInt       max_subglyphs;
-    FT_Bool       use_extra;
-
-    FT_GlyphLoad  base;
-    FT_GlyphLoad  current;
-
-    void*         other;            /* for possible future extension? */
-
-  };
-
-
-  FT_BASE( FT_Error )
-  FT_GlyphLoader_New( FT_Memory         memory,
-                      FT_GlyphLoader*  *aloader );
-
-  FT_BASE( FT_Error )
-  FT_GlyphLoader_Create_Extra( FT_GlyphLoader*  loader );
-
-  FT_BASE( void )
-  FT_GlyphLoader_Done( FT_GlyphLoader*  loader );
-
-  FT_BASE( void )
-  FT_GlyphLoader_Reset( FT_GlyphLoader*  loader );
-
-  FT_BASE( void )
-  FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader );
-
-  FT_BASE( FT_Error )
-  FT_GlyphLoader_Check_Points( FT_GlyphLoader*  loader,
-                               FT_UInt          n_points,
-                               FT_UInt          n_contours );
-
-  FT_BASE( FT_Error )
-  FT_GlyphLoader_Check_Subglyphs( FT_GlyphLoader*  loader,
-                                  FT_UInt          n_subs );
-
-  FT_BASE( void )
-  FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader );
-
-  FT_BASE( void )
-  FT_GlyphLoader_Add( FT_GlyphLoader*  loader );
-
-  FT_BASE( FT_Error )
-  FT_GlyphLoader_Copy_Points( FT_GlyphLoader*  target,
-                              FT_GlyphLoader*  source );
-
-#endif
 
   /*************************************************************************/
   /*************************************************************************/

@@ -34,8 +34,8 @@
 
 
 
-#define  TT_PEEK_Short   FT_PEEK_SHORT
-#define  TT_PEEK_UShort  FT_PEEK16_UBE
+#define  TT_PEEK_SHORT   FT_PEEK_SHORT
+#define  TT_PEEK_USHORT  FT_PEEK16_UBE
 #define  TT_PEEK_Long    FT_PEEK32_BE
 #define  TT_PEEK_ULong   FT_PEEK32_UBE
 
@@ -72,7 +72,7 @@
   tt_cmap0_validate( FT_Byte*      table,
                      FT_Validator  valid )
   {
-    FT_Byte*  p      = table + 2;  /* skip format */
+    FT_Byte*  p      = table + 2;
     FT_UInt   length = TT_NEXT_USHORT(p);
 
     if ( table + length > valid->limit || length < 262 )
@@ -83,6 +83,7 @@
     {
       FT_UInt  n, index;
 
+      p = table + 6;
       for ( n = 0; n < 256; n++ )
       {
         index = *p++;
@@ -183,7 +184,7 @@
   *    keys        6              USHORT[256]     sub-header keys
   *    subs        518            SUBHEAD[NSUBS]  sub-headers array
   *    glyph_ids   518+NSUB*8     USHORT[]        glyph id array
-  *    
+  *
   *   the 'keys' table is used to map charcode high-bytes to sub-headers.
   *   the value of 'NSUBS' is the number of sub-headers defined in the
   *   table and is computed by finding the maximum of the 'keys' table.
@@ -228,7 +229,7 @@
                      FT_Validator  valid )
   {
     FT_Byte*  p      = table + 2;  /* skip format */
-    FT_UInt   length = PEEK_UShort(p);
+    FT_UInt   length = TT_PEEK_USHORT(p);
     FT_UInt   n, max_subs;
     FT_Byte*  keys;        /* keys table */
     FT_Byte*  subs;        /* sub-headers */
@@ -255,6 +256,8 @@
       if ( index > max_subs )
         max_subs = index;
     }
+
+    FT_ASSERT( p == table + 518 );
 
     subs      = p;
     glyph_ids = subs + (max_subs + 1)*8;
@@ -322,8 +325,8 @@
     {
       FT_UInt  char_lo = (FT_UInt)( char_code & 0xFF );
       FT_UInt  char_hi = (FT_UInt)( char_code >> 8 );
-      FT_Byte* p       = table + 6;  /* keys table */
-      FT_Byte* subs    = p + 512;    /* subheaders table */
+      FT_Byte* p       = table + 6;    /* keys table */
+      FT_Byte* subs    = table + 518;  /* subheaders table */
       FT_Byte* sub;
 
 
@@ -339,14 +342,14 @@
         /* Otherwise, return 0                                 */
         /*                                                     */
         p  += char_lo*2;
-        if ( PEEK_UShort(p) != 0 )
+        if ( TT_PEEK_USHORT(p) != 0 )
           goto Exit;
       }
       else
       {
         /* a 16-bit character code */
-        p  += char_hi*2;                   /* jump to key entry */
-        sub = subs + PEEK_UShort(p);       /* jump to sub-header */
+        p  += char_hi*2;                       /* jump to key entry */
+        sub = subs + ( TT_PEEK_USHORT(p) & -8 );  /* jump to sub-header */
 
         /* check that the hi byte isn't a valid one-byte value */
         if ( sub == subs )
@@ -378,74 +381,21 @@
       start  = TT_NEXT_USHORT(p);
       count  = TT_NEXT_USHORT(p);
       delta  = TT_NEXT_SHORT(p);
-      offset = PEEK_UShort(p);
+      offset = TT_PEEK_USHORT(p);
 
       index -= start;
       if ( index < count && offset != 0 )
       {
         p    += offset + 2*index;
-        index = PEEK_UShort(p);
+        index = TT_PEEK_USHORT(p);
 
-        if ( index == 0 )
-          goto Exit;
-
-        result = (FT_UInt)( index + delta ) & 0xFFFFU;
+        if ( index != 0 )
+          result = (FT_UInt)( index + delta ) & 0xFFFFU;
       }
     }
-
-  Exit:
     return result;
   }
 
-
- /* return first valid charcode in a format 2 sub-header */
-  static FT_ULong
-  tt_cmap2_subheader_first( FT_Byte*  subheader,
-                            FT_UInt   char_hi,
-                            FT_UInt  *agindex )
-  {
-    FT_ULong  result    = 0;
-    FT_UInt   n, gindex = 0;
-    FT_Byte*  p         = subheader;
-
-    FT_UInt   start  = TT_NEXT_USHORT(p);
-    FT_UInt   count  = TT_NEXT_USHORT(p);
-
-    if ( count > 0 )
-    {
-      FT_Int    delta  = TT_NEXT_SHORT(p);
-      FT_UInt   offset = TT_NEXT_USHORT(p);
-
-      if ( offset == 0 )
-      {
-        /* simple difference, compute directly */
-        result = char_hi*256 + start;
-        gindex = (FT_UInt)( start + delta ) & 0xFFFFU;
-      }
-      else
-      {
-        FT_UInt  i, index;
-
-        /* parse glyph id table for non-0 indices */
-        p += offset - 2;
-        for (; i < count; i++ )
-        {
-          index = TT_NEXT_USHORT(p);
-          if ( index != 0 )
-          {
-            result = char_hi*256 + start + i;
-            gindex = (FT_UInt)(index + delta) & 0xFFFFU;
-            break;
-          }
-        }
-      }
-    }
-
-    if ( agindex )
-      *agindex = gindex;
-
-    return result;
-  }
 
 
   static FT_UInt
@@ -459,7 +409,7 @@
     FT_Byte*  p;
 
     ++char_code;
-    for (;;)
+    while ( char_code < 0x10000U )
     {
       subheader = tt_cmap2_get_subheader( table, char_code );
       if ( subheader )
@@ -468,7 +418,7 @@
         FT_UInt   start   = TT_NEXT_USHORT(p);
         FT_UInt   count   = TT_NEXT_USHORT(p);
         FT_Int    delta   = TT_NEXT_SHORT(p);
-        FT_UInt   offset  = PEEK_UShort(p);
+        FT_UInt   offset  = TT_PEEK_USHORT(p);
         FT_UInt   char_lo = (FT_UInt)( char_code & 0xFF );
         FT_UInt   pos, index;
 
@@ -505,8 +455,6 @@
       /* jump to next sub-header, i.e. higher byte value */
     Next_SubHeader:
       char_code = (char_code & -256) + 256;
-      if ( char_code >= 0x10000U )
-        break;
     }
 
   Exit:
@@ -534,6 +482,58 @@
  /************************************************************************/
  /************************************************************************/
 
+ /*************************************************************************
+  *
+  *  TABLE OVERVIEW:
+  *  ---------------
+  *
+  *    NAME        OFFSET           TYPE               DESCRIPTION
+  *
+  *    format        0              USHORT             must be 4
+  *    length        2              USHORT             table length in bytes
+  *    language      4              USHORT             Mac language code
+  *
+  *    segCountX2    6              USHORT             2*NUM_SEGS
+  *    searchRange   8              USHORT             2*(1 << LOG_SEGS)
+  *    entrySelector 10             USHORT             LOG_SEGS
+  *    rangeShift    12             USHORT             segCountX2 - searchRange
+  *
+  *    endCount      14             USHORT[NUM_SEGS]   end charcode for each
+  *                                                    segment. last is 0xFFFF
+  *
+  *    pad           14+NUM_SEGS*2  USHORT             padding
+  *
+  *    startCount    16+NUM_SEGS*2  USHORT[NUM_SEGS]   first charcode for each
+  *                                                    segment
+  *
+  *    idDelta       16+NUM_SEGS*4  SHORT[NUM_SEGS]    delta for each segment
+  *
+  *    idOffset      16+NUM_SEGS*6  SHORT[NUM_SEGS]    range offset for each
+  *                                                    segment. can be 0
+  *
+  *    glyphIds      16+NUM_SEGS*8  USHORT[]           array og glyph id ranges
+  *
+  *
+  *  Charcodes are modelled by a series of ordered (increasing) intervals
+  *  called segments. Each segment has start and end codes, provided by
+  *  the 'startCount' and 'endCount' arrays. Segments must not be over-lapping
+  *  and the last segment should always contain the '0xFFFF' endCount.
+  *
+  *  The fields 'searchRange', 'entrySelector' and 'rangeShift' are better
+  *  ignored (they're traces of over-engineering in the TT specification)
+  *
+  *  Each segment also has a signed 'delta', as well as an optional offset
+  *  within the 'glyphIds' table.
+  *
+  *  if a segment's idOffset is 0, then the glyph index corresponding to
+  *  any charcode within the segment is obtained by adding the value of
+  *  'idDelta' directly to the charcode, modulo 65536
+  *
+  *  otherwise, a glyph index is taken from the glyph ids sub-array for the
+  *  segment, and the value of 'idDelta' is added to it..
+  */
+
+
 #ifdef TT_CONFIG_CMAP_FORMAT_4
 
   static void
@@ -542,14 +542,13 @@
   {
     FT_Byte*  p      = table + 2;  /* skip format */
     FT_UInt   length = TT_NEXT_USHORT(p);
-    FT_Byte   *ends, *starts, *offsets, *glyph_ids;
+    FT_Byte   *ends, *starts, *offsets, *deltas, *glyph_ids;
     FT_UInt   n, num_segs;
 
     if ( table + length > valid->limit || length < 16 )
       TOO_SHORT;
 
-    p += 2;  /* skip language */
-
+    p        = table + 6;
     num_segs = TT_NEXT_USHORT(p);   /* read segCountX2 */
 
     if ( valid->level >= FT_VALIDATE_PARANOID )
@@ -584,12 +583,11 @@
            search_range != (1 << entry_selector)  )
         INVALID_DATA;
     }
-    else
-      p += 6;
 
-    ends      = p;
-    starts    = ends + num_segs*2 + 2;
-    offsets   = starts + num_segs*4;
+    ends      = table   + 14;
+    starts    = table   + 16 + num_segs*2;
+    deltas    = starts  + num_segs*2;
+    offsets   = deltas  + num_segs*2;
     glyph_ids = offsets + num_segs*2;
 
     if ( glyph_ids >= table + length )
@@ -599,7 +597,7 @@
     if ( valid->level >= FT_VALIDATE_PARANOID )
     {
       p = ends + (num_segs-1)*2;
-      if ( PEEK_UShort(p) != 0xFFFFU )
+      if ( TT_PEEK_USHORT(p) != 0xFFFFU )
         INVALID_DATA;
     }
 
@@ -607,12 +605,14 @@
     /* check also the offsets..                                              */
     {
       FT_UInt  start, end, last = 0,offset, n;
+      FT_Int   delta;
 
       for ( n = 0; n < num_segs; n++ )
       {
-        p = starts + n*2;  start  = PEEK_UShort(p);
-        p = ends   + n*2;  end    = PEEK_UShort(p);
-        p = offsets + n*2; offset = PEEK_UShort(p);
+        p = starts  + n*2;  start  = TT_PEEK_USHORT(p);
+        p = ends    + n*2;  end    = TT_PEEK_USHORT(p);
+        p = deltas  + n*2;  delta  = TT_PEEK_SHORT(p);
+        p = offsets + n*2;  offset = TT_PEEK_USHORT(p);
 
         if ( end > start )
           INVALID_DATA;
@@ -625,10 +625,26 @@
           p += offset;  /* start of glyph id array */
 
           /* check that we point within the glyph ids table only */
-          if ( p < glyph_ids || p + (end - start + 1) > table + length )
+          if ( p < glyph_ids || p + (end - start + 1)*2 > table + length )
             INVALID_DATA;
 
-          /* XXXX: check glyph ids !! */
+          /* check glyph indices within the segment range */
+          if ( valid->level >= FT_VALIDATE_TIGHT )
+          {
+            FT_UInt   index;
+
+            for ( ; start < end; )
+            {
+              index = NEXT_USHORT(p);
+              if ( index != 0 )
+              {
+                index = (FT_UInt)(index + delta) & 0xFFFFU;
+
+                if ( index >= valid->num_glyphs )
+                  INVALID_GLYPH_ID;
+              }
+            }
+          }
         }
         last = end;
       }
@@ -651,7 +667,7 @@
       FT_UInt   code = (FT_UInt)char_code;
 
       p         = table + 6;
-      num_segs2 = PEEK_UShort(p);
+      num_segs2 = TT_PEEK_USHORT(p) & -2;  /* be paranoid !! */
 
       p = table + 14;               /* ends table   */
       q = table + 16 + num_segs2;   /* starts table */
@@ -668,13 +684,13 @@
         {
           index = (FT_UInt)( char_code - start );
 
-          p  = q + num_segs2 - 2; delta  = PEEK_Short(p);
-          p += num_segs2;         offset = PEEK_UShort(p);
+          p  = q + num_segs2 - 2; delta  = TT_PEEK_SHORT(p);
+          p += num_segs2;         offset = TT_PEEK_USHORT(p);
 
           if ( offset != 0 )
           {
             p    += offset + 2*index;
-            index = PEEK_UShort(p);
+            index = TT_PEEK_USHORT(p);
           }
 
           if ( index != 0 )
@@ -703,7 +719,7 @@
 
     code      = (FT_UInt)char_code;
     p         = table + 6;
-    num_segs2 = PEEK_UShort(p) & -2;  /* ensure even-ness */
+    num_segs2 = TT_PEEK_USHORT(p) & -2;  /* ensure even-ness */
 
     for (;;)
     {
@@ -723,8 +739,8 @@
 
         if ( code <= end )
         {
-          p  = q + num_segs2 - 2; delta  = PEEK_Short(p);
-          p += num_segs2;         offset = PEEK_UShort(p);
+          p  = q + num_segs2 - 2; delta  = TT_PEEK_SHORT(p);
+          p += num_segs2;         offset = TT_PEEK_USHORT(p);
 
           if ( offset != 0 )
           {
@@ -785,20 +801,41 @@
  /************************************************************************/
  /************************************************************************/
 
+ /*************************************************************************
+  *
+  *  TABLE OVERVIEW:
+  *  ---------------
+  *
+  *    NAME        OFFSET           TYPE               DESCRIPTION
+  *
+  *    format        0              USHORT             must be 4
+  *    length        2              USHORT             table length in bytes
+  *    language      4              USHORT             Mac language code
+  *
+  *    first         6              USHORT             first segment code
+  *    count         8              USHORT             segment size in chars
+  *    glyphIds      10             USHORT[count]      glyph ids
+  *
+  *
+  *  A very simplified segment mapping
+  */
+
 #ifdef TT_CONFIG_CMAP_FORMAT_6
 
   static void
   tt_cmap6_validate( FT_Byte*      table,
                      FT_Validator  valid )
   {
-    FT_Byte*  p = table + 2;
+    FT_Byte*  p;
     FT_UInt   length, start, count;
 
     if ( table + 10 > valid->limit )
       INVALID_TOO_SHORT;
 
+    p      = table + 2;
     length = TT_NEXT_USHORT(p);
-    p     += 2;  /* skip language */
+
+    p      = table + 6;  /* skip language */
     start  = TT_NEXT_USHORT(p);
     count  = TT_NEXT_USHORT(p);
 
@@ -833,7 +870,7 @@
     if ( index < count )
     {
       p += 2*index;
-      result = PEEK_UShort(p);
+      result = TT_PEEK_USHORT(p);
     }
     return result;
   }
@@ -924,6 +961,28 @@
  /************************************************************************/
  /************************************************************************/
 
+ /*************************************************************************
+  *
+  *  TABLE OVERVIEW:
+  *  ---------------
+  *
+  *    NAME        OFFSET           TYPE               DESCRIPTION
+  *
+  *    format        0              USHORT             must be 8
+  *    reseved       2              USHORT             reserved
+  *    length        4              ULONG              length in bytes
+  *    language      8              ULONG              Mac language code
+  *    is32          12             BYTE[8192]         32-bitness bitmap
+  *    count         8204           ULONG              number of groups
+  *
+  *  this header is followed by 'count' groups of the following format:
+  *
+  *    start         0              ULONG              first charcode
+  *    end           4              ULONG              last charcode
+  *    startId       8              ULONG              start glyph id for
+  *                                                    the group
+  */
+
 #ifdef TT_CONFIG_CMAP_FORMAT_8
 
   static void
@@ -939,11 +998,11 @@
       INVALID_TOO_SHORT;
 
     length = TT_NEXT_ULONG(p);
-    if ( table + length > valid->limit || length < 16 + 8192 )
+    if ( table + length > valid->limit || length < 8208 )
       INVALID_TOO_SHORT;
 
-    is32       = p + 4;        /* skip language     */
-    p          = is32 + 8192;  /* skip 'is32' array */
+    is32       = table + 12;
+    p          = is32  + 8192;  /* skip 'is32' array */
     num_groups = TT_NEXT_ULONG(p);
 
     if ( p + num_groups*12 > valid->limit )
@@ -983,10 +1042,10 @@
             {
               hi = (FT_UInt)(start >> 16);
               lo = (FT_UInt)(start & 0xFFFFU);
-  
+
               if ( is32[ hi >> 3 ] & (0x80 >> (hi & 7)) == 0 )
                 INVALID_DATA;
-  
+
               if ( is32[ lo >> 3 ] & (0x80 >> (lo & 7)) == 0 )
                 INVALID_DATA;
             }
@@ -995,20 +1054,22 @@
           {
             /* start_hi == 0, check that is32[i] is 0 for each i in */
             /* the range [start..end]                               */
-  
+
             /* end_hi cannot be != 0 !! */
             if ( end & ~0xFFFFU )
               INVALID_DATA;
-  
+
             for ( ; count > 0; count--, start++ )
             {
               lo = (FT_UInt)(start & 0xFFFFU);
-  
+
               if ( is32[ lo >> 3 ] & (0x80 >> (lo & 7)) != 0 )
                 INVALID_DATA;
             }
           }
         }
+
+        last = end;
       }
     }
   }
@@ -1019,19 +1080,19 @@
                        FT_ULong   char_code )
   {
     FT_UInt   result     = 0;
-    FT_Byte*  p          = table + 12 + 8192;
+    FT_Byte*  p          = table + 8204;
     FT_ULong  num_groups = TT_NEXT_ULONG(p);
     FT_ULong  n, start, end, start_id;
-    
+
     for ( ; num_groups > 0; num_groups-- )
     {
       start    = TT_NEXT_ULONG(p);
       end      = TT_NEXT_ULONG(p);
       start_id = TT_NEXT_ULONG(p);
-      
+
       if ( char_code < start )
         break;
-        
+
       if ( char_code <= end )
       {
         result = start_id + char_code - start;
@@ -1049,22 +1110,22 @@
   {
     FT_ULong   result     = 0;
     FT_UInt    gindex     = 0;
-    FT_Byte*   p          = table + 12 + 8192;
-    FT_ULong   num_groups = TT_NEXT_USHORT(p);
+    FT_Byte*   p          = table + 8204;
+    FT_ULong   num_groups = TT_NEXT_ULONG(p);
     FT_ULong   n, start, end, start_id;
-    
+
     ++char_code;
-    p = table + 16 + 8192;
-    
+    p = table + 8208;
+
     for ( n = 0; n < num_groups++; n++ )
     {
       start    = TT_NEXT_ULONG(p);
       end      = TT_NEXT_ULONG(p);
       start_id = TT_NEXT_ULONG(p);
-      
+
       if ( char_code < start )
         char_code = start;
-      
+
       if ( char_code <= end )
       {
         gindex = (FT_UInt)(char_code - start + start_id);
@@ -1075,13 +1136,13 @@
         }
       }
     }
-    
+
   Exit:
     if ( agindex )
       *agindex = gindex;
-    
+
     return result;
-  }                      
+  }
 
 
   static const TT_Cmap_ClassRec  tt_cmap8_class_rec =
@@ -1101,20 +1162,37 @@
  /************************************************************************/
  /************************************************************************/
 
+ /*************************************************************************
+  *
+  *  TABLE OVERVIEW:
+  *  ---------------
+  *
+  *    NAME        OFFSET           TYPE               DESCRIPTION
+  *
+  *    format        0              USHORT             must be 10
+  *    reseved       2              USHORT             reserved
+  *    length        4              ULONG              length in bytes
+  *    language      8              ULONG              Mac language code
+  *
+  *    start        12              ULONG              first char in range
+  *    count        16              ULONG              number of chars in range
+  *    glyphIds     20              USHORT[count]      glyph indices covered
+  */
+
 #ifdef TT_CONFIG_CMAP_FORMAT_10
 
   static void
   tt_cmap10_validate( FT_Byte*      table,
                       FT_Validator  valid )
   {
-    FT_Byte*  p = table + 2;
+    FT_Byte*  p = table + 4;
     FT_ULong  length, start, count;
 
     if ( table + 20 > valid->limit )
       INVALID_TOO_SHORT;
 
-    length = TT_NEXT_USHORT(p);
-    p     += 4;  /* skip language */
+    length = TT_NEXT_ULONG(p);
+    p      = table + 12;
     start  = TT_NEXT_ULONG(p);
     count  = TT_NEXT_ULONG(p);
 
@@ -1148,8 +1226,8 @@
 
     if ( index < count )
     {
-      p += 2*index;
-      result = PEEK_UShort(p);
+      p     += 2*index;
+      result = TT_PEEK_USHORT(p);
     }
     return result;
   }
@@ -1168,9 +1246,6 @@
     FT_ULong  index;
 
     char_code++;
-    if ( char_code >= 0x10000U )
-      goto Exit;
-
     if ( char_code < start )
       char_code = start;
 
@@ -1213,20 +1288,108 @@
  /************************************************************************/
  /************************************************************************/
 
+ /*************************************************************************
+  *
+  *  TABLE OVERVIEW:
+  *  ---------------
+  *
+  *    NAME        OFFSET           TYPE               DESCRIPTION
+  *
+  *    format        0              USHORT             must be 12
+  *    reseved       2              USHORT             reserved
+  *    length        4              ULONG              length in bytes
+  *    language      8              ULONG              Mac language code
+  *    count         12             ULONG              number of groups
+  *                  16
+  *
+  *  this header is followed by 'count' groups of the following format:
+  *
+  *    start         0              ULONG              first charcode
+  *    end           4              ULONG              last charcode
+  *    startId       8              ULONG              start glyph id for
+  *                                                    the group
+  */
+
 #ifdef TT_CONFIG_CMAP_FORMAT_12
 
   static void
   tt_cmap12_validate( FT_Byte*      table,
                       FT_Validator  valid )
   {
-  }                      
+    FT_Byte*   p;
+    FT_ULong   length;
+    FT_ULong   num_groups;
+
+    if ( table + 16 > valid->limit )
+      INVALID_TOO_SHORT;
+
+    p      = table + 4;
+    length = TT_NEXT_ULONG(p);
+
+    p          = table + 12;
+    num_groups =  TT_NEXT_ULONG(p);
+
+    if ( table + length > valid->limit || length < 16 + 12*num_groups )
+      INVALID_TOO_SHORT;
+
+    /* check groups, they must be in increasing order */
+    {
+      FT_ULong  n, start, end, start_id, count, last = 0;
+
+      for ( n = 0; n < num_groups; n++ )
+      {
+        FT_Bytes* q;
+        FT_UInt   hi, lo;
+
+        start    = TT_NEXT_ULONG(p);
+        end      = TT_NEXT_ULONG(p);
+        start_id = TT_NEXT_ULONG(p);
+
+        if ( start > end )
+          INVALID_DATA;
+
+        if ( n > 0 && start <= last )
+          INVALID_DATA;
+
+        if ( valid->level >= FT_VALIDATE_TIGHT )
+        {
+          if ( start_id + end - start >= valid->num_glyphs )
+            INVALID_GLYPH_ID;
+        }
+
+        last = end;
+      }
+    }
+  }
+
 
 
   static FT_UInt
   tt_cmap12_char_index( FT_Byte*   table,
                         FT_ULong   char_code )
   {
-  }                        
+    FT_UInt   result     = 0;
+    FT_Byte*  p          = table + 12;
+    FT_ULong  num_groups = TT_NEXT_ULONG(p);
+    FT_ULong  n, start, end, start_id;
+
+    for ( ; num_groups > 0; num_groups-- )
+    {
+      start    = TT_NEXT_ULONG(p);
+      end      = TT_NEXT_ULONG(p);
+      start_id = TT_NEXT_ULONG(p);
+
+      if ( char_code < start )
+        break;
+
+      if ( char_code <= end )
+      {
+        result = start_id + char_code - start;
+        break;
+      }
+    }
+    return result;
+  }
 
 
   static FT_ULong
@@ -1234,7 +1397,41 @@
                        FT_ULong   char_code,
                        FT_UInt   *agindex )
   {
-  }                       
+    FT_ULong   result     = 0;
+    FT_UInt    gindex     = 0;
+    FT_Byte*   p          = table + 12;
+    FT_ULong   num_groups = TT_NEXT_ULONG(p);
+    FT_ULong   n, start, end, start_id;
+
+    ++char_code;
+    p = table + 8208;
+
+    for ( n = 0; n < num_groups++; n++ )
+    {
+      start    = TT_NEXT_ULONG(p);
+      end      = TT_NEXT_ULONG(p);
+      start_id = TT_NEXT_ULONG(p);
+
+      if ( char_code < start )
+        char_code = start;
+
+      if ( char_code <= end )
+      {
+        gindex = (FT_UInt)(char_code - start + start_id);
+        if ( gindex != 0 )
+        {
+          result = char_code;
+          goto Exit;
+        }
+      }
+    }
+
+  Exit:
+    if ( agindex )
+      *agindex = gindex;
+
+    return result;
+  }
 
 
   static const TT_Cmap_ClassRec  tt_cmap12_class_rec =
@@ -1246,3 +1443,4 @@
 
 #endif /* TT_CONFIG_CMAP_FORMAT_12 */
 
+/* END */
