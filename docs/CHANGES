@@ -1,4 +1,16 @@
 
+LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
+
+  I. IMPORTANT BUG FIXES
+
+    - The function  `FT_Get_CharMap_Index' was only declared,  without
+      any  real  code.   For  consistency,  it  has  been  renamed  to
+      `FT_Get_Charmap_Index'.   (This function is needed  to implement
+      cmap caches.)
+
+
+======================================================================
+
 LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
 
   I. IMPORTANT BUG FIXES

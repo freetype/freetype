@@ -44,7 +44,7 @@
   /*                                                                       */
 #define FREETYPE_MAJOR 2
 #define FREETYPE_MINOR 1
-#define FREETYPE_PATCH 8
+#define FREETYPE_PATCH 9
 
 
 #include <ft2build.h>
@@ -172,6 +172,7 @@ FT_BEGIN_HEADER
   /*    FT_CharMapRec                                                      */
   /*    FT_Select_Charmap                                                  */
   /*    FT_Set_Charmap                                                     */
+  /*    FT_Get_Charmap_Index                                               */
   /*                                                                       */
   /*************************************************************************/
 
@@ -2670,6 +2671,25 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Set_Charmap( FT_Face     face,
                   FT_CharMap  charmap );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @function:                                                            */
+  /*    FT_Get_Charmap_Index                                               */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    Retrieve index of a given charmap.                                 */
+  /*                                                                       */
+  /* @input:                                                               */
+  /*    charmap :: A handle to a charmap.                                  */
+  /*                                                                       */
+  /* @return:                                                              */
+  /*    The index into the array of character maps within the face to      */
+  /*    which `charmap' belongs.                                           */
+  /*                                                                       */
+  FT_EXPORT( FT_Int )
+  FT_Get_Charmap_Index( FT_CharMap  charmap );
 
 
   /*************************************************************************/

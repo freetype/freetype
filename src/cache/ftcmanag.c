@@ -149,6 +149,8 @@
   }
 
 
+  /* documentation is in ftcache.h */
+
   FT_EXPORT_DEF( FT_Error )
   FTC_Manager_LookupSize( FTC_Manager  manager,
                           FTC_Scaler   scaler,
@@ -617,6 +619,8 @@
   }
 
 
+  /* documentation is in ftcache.h */
+
   FT_EXPORT_DEF( void )
   FTC_Manager_RemoveFaceID( FTC_Manager  manager,
                             FTC_FaceID   face_id )
@@ -633,7 +637,7 @@
   }
 
 
-  /* documentation is in ftcmanag.h */
+  /* documentation is in ftcache.h */
 
   FT_EXPORT_DEF( void )
   FTC_Node_Unref( FTC_Node     node,

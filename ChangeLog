@@ -1,9 +1,35 @@
-2004-02-21  Werner Lemberg  <wl@gnu.org>
+2004-04-23  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftcache.h (FT_Get_CharMap_Index): Rename
+	declaration and move to...
+	* include/freetype/freetype.h (FT_Get_Charmap_Index): Here.
+	(FREETYPE_PATCH): Set to 9.
+
+	* src/base/ftobjs.c (FT_Get_Charmap_Index): New function.
+
+	* builds/unix/configure.ac (version_info): Set to 9:7:3.
+	* builds/unix/configure: Updated.
+
+	* builds/win32/visualc/index.html,
+	builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/freetype.vcproj: s/218/219/.
+
+	* builds/freetype.mk (refdoc), README, Jamfile (RefDoc):
+	s/2.1.8/2.1.9/.
+
+	* docs/CHANGES, docs/VERSION.DLL: Updated.
+
+2004-04-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffparse.c (cff_parser_run), src/psaux/psobjs.c
 	(ps_parser_load_field): Use FT_CHAR_BIT.
 
 2004-04-21  David Turner  <david@freetype.org>
+
+
+	* Version 2.1.8 released.
+	=========================
+
 
 	* src/cff/cffobjs.c (cff_face_init): Fix a small memory leak.
 

@@ -2215,6 +2215,24 @@
   }
 
 
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_Int )
+  FT_Get_Charmap_Index( FT_CharMap  charmap )
+  {
+    FT_Int  i;
+
+
+    for ( i = 0; i < charmap->face->num_charmaps; i++ )
+      if ( charmap->face->charmaps[i] == charmap )
+        break;
+
+    FT_ASSERT( i < charmap->face->num_charmaps );
+
+    return i;
+  }
+
+
   FT_BASE_DEF( void )
   FT_CMap_Done( FT_CMap  cmap )
   {
