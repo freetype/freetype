@@ -1,27 +1,32 @@
+2002-01-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1objs.c (T1_Face_Init): Add cast to avoid compiler
+	warning.
+
 2002-01-03  Keith Packard  <keithp@keithp.com>
 
-        * builds/unix/ftsystem.c (FT_New_Stream): added a fix to ensure that
-        all FreeType input streams are closed in child processes of a "fork"
-        on Unix systems. This is important to avoid (potential) access
-        control issues..
-
+	* builds/unix/ftsystem.c (FT_New_Stream): Added a fix to ensure that
+	all FreeType input streams are closed in child processes of a "fork"
+	on Unix systems.  This is important to avoid (potential) access
+	control issues.
 
 2002-01-03  David Turner  <david@freetype.org>
 
-        * src/type1/t1objs.c (T1_Face_Init): fixed a bug that crashed the
-        library when dealing with certain weird fonts (like "Stalingrad",
-        in "sadn.pfb". This font has no full font name entry.. )
+	* src/type1/t1objs.c (T1_Face_Init): Fixed a bug that crashed the
+	library when dealing with certain weird fonts like "Stalingrad", in
+	"sadn.pfb" (this font has no full font name entry).
 
-        * src/base/ftoutln.c, include/freetype/ftoutln.h: added the
-        FT_Outline_Check API to check the consistency of outline data
-        
-        * src/base/ftobjs.c (FT_Load_Glyph): added a call to the new
-        FT_Outline_Check to ensure that loaded glyphs are valid. This
-        allows certain fonts like "tt1095m_.ttf" to be loaded even though
-        it appears they contain really funky glyphs..
-        
-        there still is a bug there though.. !!
+	* src/base/ftoutln.c, include/freetype/ftoutln.h (FT_Outline_Check):
+	New function to check the consistency of outline data.
 
+	* src/base/ftobjs.c (FT_Load_Glyph): Use `FT_Outline_Check' to
+	ensure that loaded glyphs are valid.  This allows certain fonts like
+	"tt1095m_.ttf" to be loaded even though it appears they contain
+	really funky glyphs.
+
+	There still is a bug there, though.
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Fix error condition.
 
 2001-12-30  David Turner  <david@freetype.org>
 

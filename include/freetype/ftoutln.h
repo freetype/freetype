@@ -53,6 +53,7 @@ FT_BEGIN_HEADER
   /*    FT_Outline_Translate                                               */
   /*    FT_Outline_Transform                                               */
   /*    FT_Outline_Reverse                                                 */
+  /*    FT_Outline_Check                                                   */
   /*                                                                       */
   /*    FT_Outline_Get_CBox                                                */
   /*    FT_Outline_Get_BBox                                                */
@@ -184,10 +185,10 @@ FT_BEGIN_HEADER
   /*    FT_Outline_Check                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Check the content of an outline descriptor                         */
+  /*    Check the contents of an outline descriptor.                       */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    outline :: handle to source outline                                */
+  /*    outline :: A handle to a source outline.                           */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
