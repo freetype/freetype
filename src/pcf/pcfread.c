@@ -926,7 +926,8 @@ THE SOFTWARE.
       face->style_name = (char *)"Regular";
     else
     {
-      char  *style, *s; 
+      char          *style, *s; 
+      unsigned int  i;
 
 
       if ( FT_ALLOC( style, len + parts ) )
@@ -937,7 +938,9 @@ THE SOFTWARE.
       if ( astr )
       {
         ft_strcpy( s, astr );
-        s += ft_strlen( astr );
+        for ( i = 0; i < ft_strlen( astr ); i++, s++ )
+          if ( *s == ' ' )
+            *s = '-';                     /* replace spaces with dashes */
         *(s++) = ' ';
       }
       if ( bstr )
@@ -955,7 +958,9 @@ THE SOFTWARE.
       if ( sstr )
       {
         ft_strcpy( s, sstr );
-        s += ft_strlen( sstr );
+        for ( i = 0; i < ft_strlen( sstr ); i++, s++ )
+          if ( *s == ' ' )
+            *s = '-';                     /* replace spaces with dashes */
         *(s++) = ' ';
       }
       *(--s) = '\0';        /* overwrite last ' ', terminate the string */

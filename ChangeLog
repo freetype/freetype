@@ -1,3 +1,9 @@
+2003-11-13  John A. Boyd Jr.  <jaboydjr@netwalk.com>
+
+	* src/bdf/bdfdrivr.c (bdf_interpret_style), src/pcf/pcfread.c
+	(pcf_interpret_style): Replace spaces with dashes in properties
+	SETWIDTH_NAME and ADD_STYLE_NAME to simplify parsing.
+
 2003-11-11  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
