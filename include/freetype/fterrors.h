@@ -85,6 +85,8 @@
 #ifndef __FTERRORS_H__
 #define __FTERRORS_H__
 
+/* include module base error codes */
+#include FT_MODULE_ERRORS_H
 
   /*******************************************************************/
   /*******************************************************************/
@@ -93,37 +95,59 @@
   /*****                                                         *****/
   /*******************************************************************/
   /*******************************************************************/
+  
+#undef   FT_NEED_EXTERN_C
+#define  FT_ERR_XCAT(x,y)    x ## y
+#define  FT_ERR_CAT(x,y)     FT_ERR_XCAT(x,y)
 
-#include FT_MODULE_ERRORS_H
 
-#undef FT_NEED_EXTERN_C
+/* FT_ERR_PREFIX is used as a prefix for error identifiers */
+/* by default, we use "FT_Err_"                            */
+/*                                                         */
+#ifndef   FT_ERR_PREFIX
+#  define FT_ERR_PREFIX  FT_Err_
+#endif
+
+
+
+/* FT_ERR_BASE is used as the base for module-specific errors */
+/*                                                            */
+#ifdef FT_CONFIG_OPTION_USE_MODULE_ERRORS
+#  ifndef   FT_ERR_BASE
+#    define FT_ERR_BASE  FT_Mod_Err_Base
+#  endif
+#else
+#  define   FT_ERR_BASE  0
+#endif
+
+
+
+/*  if FT_ERRORDEF is not defined, we need to define a simple enumeration */
+/*  type..                                                                */
+/*                                                                        */
 #ifndef FT_ERRORDEF
 
 #  define FT_ERRORDEF( e, v, s )  e = v,
+#  define FT_ERROR_START_LIST     enum {
+#  define FT_ERROR_END_LIST       FT_ERR_CAT(FT_ERR_PREFIX,Max) };
 
 #  ifdef __cplusplus
-#  define FT_NEED_EXTERN_C
+#    define FT_NEED_EXTERN_C
       extern "C" {
 #  endif
 
 #endif /* !FT_ERRORDEF */
 
 
-#ifndef FT_ERROR_START_LIST
-#  define FT_ERROR_START_LIST  enum {
-#endif
-
-#ifndef FT_ERROR_END_LIST
-#  define FT_ERROR_END_LIST    FT_Err_Max };
-#endif
+/* this macro is used to define an error */
+#  define FT_ERRORDEF_( e, v, s )   \
+          FT_ERRORDEF( FT_ERR_CAT(FT_ERR_PREFIX,e), v + FT_ERR_BASE, s )
 
 
+/* this is only used for FT_Err_Ok, which must be 0 !! */
+#  define FT_NOERRORDEF_( e, v, s ) \
+          FT_ERRORDEF( FT_ERR_CAT(FT_ERR_PREFIX,e), v, s )
 
-#define FT_ERRORDEF_( e, v, s )   \
-        FT_ERRORDEF( FT_Err_ ## e, v + FT_Mod_Err_Base, s )
-          
-#define FT_NOERRORDEF_( e, v, s ) \
-        FT_ERRORDEF( FT_Err_ ## e, v, s )
 
 
   /*******************************************************************/
@@ -134,8 +158,9 @@
   /*******************************************************************/
   /*******************************************************************/
 
+#ifdef FT_ERROR_START_LIST
   FT_ERROR_START_LIST
-
+#endif
 
   /* generic errors */
 
@@ -313,8 +338,9 @@
                "argument stack underflow" )
 
 
+#ifdef FT_ERROR_END_LIST
   FT_ERROR_END_LIST
-
+#endif
 
   /*******************************************************************/
   /*******************************************************************/
@@ -324,17 +350,22 @@
   /*******************************************************************/
   /*******************************************************************/
 
-#undef FT_ERROR_START_LIST
-#undef FT_ERROR_END_LIST
-#undef FT_ERRORDEF
-#undef FT_ERRORDEF_
-#undef FT_NOERRORDEF_
-
-
 #ifdef FT_NEED_EXTERN_C
   }
 #endif
 
-#endif /* __FT_ERRORS_H__ */
+#undef FT_ERROR_START_LIST
+#undef FT_ERROR_END_LIST
+
+#undef FT_ERRORDEF
+#undef FT_ERRORDEF_
+#undef FT_NOERRORDEF_
+
+#undef FT_NEED_EXTERN_C
+#undef FT_ERR_PREFIX
+#undef FT_ERR_BASE
+#undef FT_ERR_CONCAT
+
+#endif /* __FTERRORS_H__ */
 
 /* END */
