@@ -742,42 +742,42 @@
         FT_UInt  min = 0;
         FT_UInt  max = num_segs2 >> 1;
         FT_UInt  mid, start, end, offset;
-        
+
 
         while ( min < max )
         {
           mid   = ( min + max ) >> 1;
           p     = table + 14 + mid * 2;
-          end   = TT_NEXT_USHORT( p ); 
+          end   = TT_NEXT_USHORT( p );
           p    += num_segs2;
           start = TT_PEEK_USHORT( p);
-          
+
           if ( code < start )
             max = mid;
-          
+
           else if ( code > end )
             min = mid + 1;
-          
+
           else
           {
             /* we found the segment */
             idx = code;
-            
+
             p += num_segs2;
             delta = TT_PEEK_SHORT( p );
-            
+
             p += num_segs2;
             offset = TT_PEEK_USHORT( p );
-            
+
             if ( offset != 0 )
             {
               p  += offset + 2 * ( idx - start );
               idx = TT_PEEK_USHORT( p );
             }
-            
+
             if ( idx != 0 )
               result = (FT_UInt)( idx + delta ) & 0xFFFFU;
-            
+
             goto Exit;
           }
         }
@@ -793,32 +793,32 @@
         p = table + 14;               /* ends table   */
         q = table + 16 + num_segs2;   /* starts table */
 
-        
+
         for ( n = 0; n < num_segs2; n += 2 )
         {
           FT_UInt  end   = TT_NEXT_USHORT( p );
           FT_UInt  start = TT_NEXT_USHORT( q );
           FT_UInt  offset;
-  
-  
+
+
           if ( code < start )
             break;
-  
+
           if ( code <= end )
           {
             idx = code;
-  
+
             p = q + num_segs2 - 2;
             delta = TT_PEEK_SHORT( p );
             p += num_segs2;
             offset = TT_PEEK_USHORT( p );
-  
+
             if ( offset != 0 )
             {
               p  += offset + 2 * ( idx - start );
               idx = TT_PEEK_USHORT( p );
             }
-  
+
             if ( idx != 0 )
               result = (FT_UInt)( idx + delta ) & 0xFFFFU;
           }
@@ -828,7 +828,7 @@
 #endif /* 0 */
 
     }
-    
+
   Exit:
     return result;
   }
@@ -1032,7 +1032,7 @@
     FT_UInt32  result    = 0;
     FT_UInt32  char_code = *pchar_code + 1;
     FT_UInt    gindex    = 0;
-    
+
     FT_Byte*   p         = table + 6;
     FT_UInt    start     = TT_NEXT_USHORT( p );
     FT_UInt    count     = TT_NEXT_USHORT( p );
@@ -1716,14 +1716,14 @@
           if ( clazz->format == format )
           {
             volatile TT_ValidatorRec  valid;
-            
+
 
             ft_validator_init( FT_VALIDATOR( &valid ), cmap, limit,
                                FT_VALIDATE_DEFAULT );
-                               
+
             valid.num_glyphs = face->root.num_glyphs;
 
-            if ( setjmp( FT_VALIDATOR( &valid )->jump_buffer ) == 0 )
+            if ( ft_setjmp( FT_VALIDATOR( &valid )->jump_buffer ) == 0 )
             {
               /* validate this cmap sub-table */
               clazz->validate( cmap, FT_VALIDATOR( &valid ) );

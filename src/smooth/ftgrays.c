@@ -106,6 +106,11 @@
 #include <limits.h>
 #define FT_UINT_MAX  UINT_MAX
 
+#define  ft_setjmp   setjmp
+#define  ft_longjmp  longjmp
+#define  ft_jmp_buf  jmp_buf
+
+
 #define ErrRaster_Invalid_Mode     -2
 #define ErrRaster_Invalid_Outline  -1
 
@@ -391,7 +396,7 @@
     if ( !ras.invalid && ( ras.area | ras.cover ) )
     {
       if ( ras.num_cells >= ras.max_cells )
-        longjmp( ras.jump_buffer, 1 );
+        ft_longjmp( ras.jump_buffer, 1 );
 
       cell        = ras.cells + ras.num_cells++;
       cell->x     = ras.ex - ras.min_ex;
@@ -1355,7 +1360,7 @@
     if ( ras.outline.flags & ft_outline_even_odd_fill )
     {
       coverage &= 511;
-      
+
       if ( coverage > 256 )
         coverage = 512 - coverage;
       else if ( coverage == 256 )
@@ -1791,7 +1796,7 @@
 
     volatile int  error = 0;
 
-    if ( setjmp( ras.jump_buffer ) == 0 )
+    if ( ft_setjmp( ras.jump_buffer ) == 0 )
     {
       error = FT_Outline_Decompose( &ras.outline, &func_interface, &ras );
       gray_record_cell( RAS_VAR );

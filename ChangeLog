@@ -1,3 +1,13 @@
+2002-06-08  Juliusz Chroboczek <jch@pps.jussieu.fr>
+
+    * include/freetype/internal/ftobjs.h, src/autohint/ahglyph.c,
+    src/base/ftobjs.c, src/objs/fttype1.c, src/sfnt/ttcmap0.c,
+    src/smooth/ftgrays.c: changed uses of "setjmp" and "longjmp"
+    to "ft_setjmp" and "ft_lonjmp". Removed direct references to
+    <stdio.h> and <setjmp.h> when appropriate, to eventually replace
+    them with a FT_CONFIG_STANDARD_LIBRARY_H. Useful for the XFree86
+    Font Server backend based on FT2.
+
 2002-06-08  David Turner  <david@freetype.org>
 
     * src/pcf/pcfdriver.c (pcf_cmap_char_next): fixed a bug that caused
