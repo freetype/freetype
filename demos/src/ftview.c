@@ -38,6 +38,10 @@
   char  Header[128];
   char* new_header = 0;
 
+  const unsigned char*  Text =
+"The quick brown fox jumped over the lazy dog 0123456789 \
+גךמûפהכןצüÿאשיטח &#~\"'(-`_^@)=+° ABCDEFGHIJKLMNOPQRSTUVWXYZ $£^¨*µש%!§:/;.,?<>";
+
   FT_Library    library;      /* the FreeType library            */
   FT_Face       face;         /* the font face                   */
   FT_Size       size;         /* the font size                   */
@@ -65,6 +69,8 @@
   unsigned char  autorun;
 
   int  graph_init = 0;
+
+  int  render_mode = 1;
 
 #define DEBUGxxx
 
@@ -188,7 +194,7 @@
       bit3.buffer = glyph->bitmap.buffer;
       bit3.grays  = 0;
     }
-      
+
     /* Then, blit the image to the target surface */
     x_top = x_offset + TRUNC(left);
     y_top = y_offset - TRUNC(top);
@@ -292,6 +298,68 @@
   }
 
 
+  static FT_Error  Render_Text( int  first_glyph, int  ptsize )
+  {
+    FT_F26Dot6  start_x, start_y, step_x, step_y, x, y;
+    int         i;
+
+    FT_Error             error;
+    const unsigned char* p;
+
+    start_x = 4;
+    start_y = 12 + size->metrics.y_ppem;
+
+    step_x = size->metrics.x_ppem + 4;
+    step_y = size->metrics.y_ppem + 10;
+
+    x = start_x;
+    y = start_y;
+
+    i = first_glyph;
+    p = Text;
+    while (i > 0 && *p) { p++; i--; }
+
+    while ( *p )
+    {
+      if ( !(error = LoadChar( FT_Get_Char_Index( face, (unsigned char)*p ), hinted )) )
+      {
+#ifdef DEBUG
+        if (i <= first_glyph+6)
+        {
+          LOG(( "metrics[%02d] = [%x %x]\n",
+                i,
+                glyph->metrics.horiBearingX,
+                glyph->metrics.horiAdvance ));
+
+          if (i == first_glyph+6)
+          LOG(( "-------------------------\n"));
+        }
+        
+#endif
+        Render_Glyph( x, y );
+
+        x += ( glyph->metrics.horiAdvance >> 6 ) + 1;
+
+        if ( x + size->metrics.x_ppem > bit.width )
+        {
+          x  = start_x;
+          y += step_y;
+
+          if ( y >= bit.rows )
+            return FT_Err_Ok;
+        }
+      }
+      else
+        Fail++;
+
+      i++;
+      p++;
+    }
+
+    return FT_Err_Ok;
+  }
+
+
   static void Help( )
   {
     grEvent  dummy_event;
@@ -313,6 +381,7 @@
     grWriteln("  h         : toggle outline hinting" );
     grWriteln("  b         : toggle embedded bitmaps" );
     grWriteln("  l         : toggle low precision rendering" );
+    grWriteln("  space     : toggle rendering mode" );
     grLn();
     grWriteln("  Up        : increase pointsize by 1 unit" );
     grWriteln("  Down      : decrease pointsize by 1 unit" );
@@ -377,6 +446,13 @@
       new_header = ( hinted
                    ? "glyph hinting is now active"
                    : "glyph hinting is now ignored" );
+      break;
+
+    case grKEY(' '):
+      render_mode ^= 1;
+      new_header = ( render_mode
+                   ? "rendering all glyphs in font"
+                   : "rendering test text string" );
       break;
 
     case grKeyF1:
@@ -575,7 +651,15 @@
 
       if ( file_loaded >= 1 )
       {
-        Render_All( Num, ptsize );
+        switch (render_mode)
+        {
+          case 0:
+            Render_Text( Num, ptsize );
+            break;
+            
+          default:
+            Render_All( Num, ptsize );
+        }
 
         sprintf( Header, "%s %s (file %s)",
                          face->family_name,
