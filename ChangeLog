@@ -1,3 +1,13 @@
+2005-03-05  Werner Lemberg  <wl@gnu.org>
+
+	* autogen.sh: New script for bootstrapping.
+
+	* README.CVS: New file which documents bootstrapping.
+
+	* builds/unix/aclocal.m4, builds/unix/config.guess,
+	builds/unix/config.sub, builds/unix/configure,
+	builds/unix/ltmain.sh: Removed.
+
 2005-03-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftutil.c: Include FT_INTERNAL_OBJECTS_H.
