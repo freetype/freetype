@@ -70,7 +70,7 @@ II. From the command line
 
   [Well, this is not  really correct.  Recently, a perl implementation
   of make called `makepp' has appeared which can also build FreeType 2
-  successfully on Unix platforms.  See http://LNC.usc.edu/~holt/makepp
+  successfully on  Unix platforms.   See http://makepp.sourceforge.net
   for more details.]
 
   - Go to the `freetype2' directory.
