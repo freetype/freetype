@@ -479,8 +479,7 @@ FT_BEGIN_HEADER
   /*      }                                                                */
   /*                                                                       */
   /*                                                                       */
-  /*    This function will always fail if the glyph's format isn't         */
-  /*    scalable.                                                          */
+  /*    This function does nothing if the glyph format isn't scalable.     */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Glyph_To_Bitmap( FT_Glyph*       the_glyph,
