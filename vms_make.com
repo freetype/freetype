@@ -28,7 +28,7 @@ $ s_case  = false
 $ libdefs = ""
 $ libincs = ""
 $ liblist = ""
-$ ccopt   = ""
+$ ccopt   = "/name=as_is/float=ieee"
 $ lopts   = ""
 $!
 $! Check for MMK/MMS
@@ -529,7 +529,7 @@ $ search c.tmp "symbol:"/out=d.tmp
 $ def/user sys$output nl:
 $ edito/edt/command=sys$input d.tmp
 sub/symbol: "/symbol_vector=(/whole
-sub/"/=procedure)/whole
+sub/"/=PROCEDURE)/whole
 exit
 $ ! all data
 $ search b.tmp "EGSY$V_DEF 1"/wind=(0,1) /out=e.tmp
@@ -537,7 +537,7 @@ $ search e.tmp "symbol:"/out=f.tmp
 $ def/user sys$output nl:
 $ edito/edt/command=sys$input f.tmp
 sub/symbol: "/symbol_vector=(/whole
-sub/"/=data)/whole
+sub/"/=DATA)/whole
 exit
 $ sort/nodupl d.tmp,f.tmp 'p2'
 $ delete a.tmp;*,b.tmp;*,c.tmp;*,d.tmp;*,e.tmp;*,f.tmp;*
