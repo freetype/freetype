@@ -139,6 +139,7 @@
     FT_UNUSED( lru );
 
     FT_Done_Size( (FT_Size)node->root.data );
+    node->root.data = 0;
   }
 
 
@@ -299,8 +300,11 @@
     }
 
     /* discard faces and sizes */
-    FT_Lru_Done( manager->sizes_lru );
     FT_Lru_Done( manager->faces_lru );
+    manager->faces_lru = 0;
+    
+    FT_Lru_Done( manager->sizes_lru );
+    manager->sizes_lru;
 
     FREE( manager );
   }

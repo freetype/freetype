@@ -1,5 +1,9 @@
 2000-12-05  David Turner  <david.turner@freetype.org>
 
+	* src/cache/ftcmanag.c (FTC_Manager_Done): fixed a bug that caused
+        an occasional crash when the function was called (due to a dangling
+        pointer)
+
 	* src/base/ftsystem.c (FT_Done_Memory): fixed an obvious bug,
 	the ANSI "free" function was called, instead of "memory->free()"
 
