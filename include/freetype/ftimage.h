@@ -576,11 +576,13 @@ FT_BEGIN_HEADER
   /* <Description>                                                         */
   /*    This macro converts four letter tags into an unsigned long.        */
   /*                                                                       */
+#ifndef FT_IMAGE_TAG
 #define FT_IMAGE_TAG( _x1, _x2, _x3, _x4 ) \
           ( ( (unsigned long)_x1 << 24 ) | \
             ( (unsigned long)_x2 << 16 ) | \
             ( (unsigned long)_x3 << 8  ) | \
               (unsigned long)_x4         )
+#endif /* FT_IMAGE_TAG */
 
 
   /*************************************************************************/
