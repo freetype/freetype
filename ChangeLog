@@ -1,5 +1,8 @@
 2001-05-11  David Turner  <david@freetype.org>
 
+    * src/cff/cffparse.c, src/cid/cidload.c, src/type1/t1load.c: fixed
+    the incorrect EM size computation
+
     * include/freetype/fttrigon.h, src/base/fttrigon.c, src/base/ftbase.c,
     src/base/Jamfile, src/base/rules.mk: adding trigonometric functions
     to the core API (using Cordic algorithms).
