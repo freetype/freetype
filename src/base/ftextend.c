@@ -24,6 +24,7 @@
   /*                                                                       */
   /*************************************************************************/
 
+
 #include <freetype/internal/ftextend.h>
 
 /* required by the tracing mode */
@@ -114,8 +115,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC(FT_Error)  FT_Register_Extension( FT_Driver            driver,
-                                                   FT_Extension_Class*  class )
+  FT_EXPORT_FUNC( FT_Error )  FT_Register_Extension(
+                                FT_Driver            driver,
+                                FT_Extension_Class*  class )
   {
     FT_Extension_Registry*  registry;
 
@@ -162,9 +164,10 @@
   /* <Return>                                                              */
   /*    A pointer to the extension block.                                  */
   /*                                                                       */
-  FT_EXPORT_FUNC(void*)  FT_Get_Extension( FT_Face      face,
-                                           const char*  extension_id,
-                                           void*       *extension_interface )
+  FT_EXPORT_FUNC( void* )  FT_Get_Extension(
+                             FT_Face      face,
+                             const char*  extension_id,
+                             void*       *extension_interface )
   {
     FT_Extension_Registry*  registry;
 

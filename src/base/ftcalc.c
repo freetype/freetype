@@ -260,7 +260,7 @@
   /*    bytecode interpreter.                                              */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    l :: 64-bit integer                                                */
+  /*    l :: A 64-bit integer.                                             */
   /*                                                                       */
   /* <Return>                                                              */
   /*    The 32-bit square-root.                                            */
