@@ -284,11 +284,11 @@
   BASE_DEF( FT_Error )  FT_GlyphLoader_Create_Extra(
                           FT_GlyphLoader*  loader );                                        
   
-  BASE_DEF( void )  FT_GlyphLoader_Done( FT_GlyphLoader*  loader );
+  BASE_DEF( void )      FT_GlyphLoader_Done( FT_GlyphLoader*  loader );
   
-  BASE_DEF( void )  FT_GlyphLoader_Reset( FT_GlyphLoader*  loader );
+  BASE_DEF( void )      FT_GlyphLoader_Reset( FT_GlyphLoader*  loader );
   
-  BASE_DEF( void )  FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader );
+  BASE_DEF( void )      FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader );
   
   BASE_DEF( FT_Error )  FT_GlyphLoader_Check_Points(
                           FT_GlyphLoader*  loader,
@@ -299,9 +299,9 @@
                           FT_GlyphLoader*  loader,
                           FT_UInt          n_subs );
 
-  BASE_DEF( void )  FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader );
+  BASE_DEF( void )      FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader );
 
-  BASE_DEF( void )  FT_GlyphLoader_Add( FT_GlyphLoader*  loader );
+  BASE_DEF( void )      FT_GlyphLoader_Add( FT_GlyphLoader*  loader );
 
   BASE_DEF( FT_Error )  FT_GlyphLoader_Copy_Points( FT_GlyphLoader*  target,
                                                     FT_GlyphLoader*  source );
