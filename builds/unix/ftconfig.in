@@ -126,7 +126,6 @@ FT_BEGIN_HEADER
 
 #else
 
-
   /*************************************************************************/
   /*                                                                       */
   /* Many compilers provide the non-ANSI `long long' 64-bit type.  You can */
@@ -240,15 +239,15 @@ FT_BEGIN_HEADER
   /*                                                                 */
 #ifdef __cplusplus
 
-#define FT_CALLBACK_DEF             extern "C"
-#define FT_CALLBACK_TABLE           extern "C"
-#define FT_CALLBACK_TABLE_DEF       extern "C"
+#define FT_CALLBACK_DEF        extern "C"
+#define FT_CALLBACK_TABLE      extern "C"
+#define FT_CALLBACK_TABLE_DEF  extern "C"
 
 #else
 
-#define FT_CALLBACK_DEF             static
-#define FT_CALLBACK_TABLE           extern
-#define FT_CALLBACK_TABLE_DEF
+#define FT_CALLBACK_DEF        static
+#define FT_CALLBACK_TABLE      extern
+#define FT_CALLBACK_TABLE_DEF  /* nothing */
 
 #endif /* __cplusplus */
 

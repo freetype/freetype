@@ -1,14 +1,14 @@
 2000-12-01  David Turner  <david.turner@freetype.org>
 
 	* builds/unix/configure.in, builds/unix/configure,
-	builds/cygwin/configure.in, builds/cygwin/configure: setting 
-	"version_info" to 6:1:0 for the 2.0.1 release
+	builds/cygwin/configure.in, builds/cygwin/configure: Setting
+	"version_info" to 6:1:0 for the 2.0.1 release.
 
-	* CHANGES: added a summary of changes between 2.0.1 and 2.0
+	* CHANGES: Added a summary of changes between 2.0.1 and 2.0.
 
-	* builds/unix/ftconfig.in, builds/cygwin/ftconfig.in: changes
+	* builds/unix/ftconfig.in, builds/cygwin/ftconfig.in: Changes
 	to allow compilation under Unix with the Unix-specific config
-	files..
+	files.
 
 2000-12-01  Werner Lemberg  <wl@gnu.org>
 
