@@ -1,3 +1,16 @@
+2002-07-03  David Turner  <david@freetype.org>
+
+    * src/autohint/ahglobal.c, src/autohint/ahtypes.h, src/autohint/ahhint.c:
+    small improvements to the automatic hinter. un-even stem-widths have now
+    disappeared and everything looks much better, even if there are still
+    issues with serifed fonts.
+
+2002-07-03  Owen Taylor  <owen@redhat.com>
+
+    * src/pshinter/pshalgo3.c, src/pshinter/pshalgo3.h, src/pshinter/pshalgo.h,
+    src/pshinter/pshinter.c: adding new algorithm based on Owen Taylor's recent
+    work
+
 2002-07-01  Owen Taylor  <owen@redhat.com>
 
     * src/pshinter/pshalgo2.c (psh2_glyph_find_strong_points): fix a bug
