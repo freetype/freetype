@@ -140,7 +140,7 @@
 
     if ( autohint )
     {
-      FT_AutoHinter_Interface*  hinting;
+      FT_AutoHinter_Service  hinting;
 
 
       /* try to load embedded bitmaps first if available            */
@@ -159,7 +159,7 @@
       }
 
       /* load auto-hinted outline */
-      hinting = (FT_AutoHinter_Interface*)hinter->clazz->module_interface;
+      hinting = (FT_AutoHinter_Service)hinter->clazz->module_interface;
 
       error   = hinting->load_glyph( (FT_AutoHinter)hinter,
                                      slot, face->size,
