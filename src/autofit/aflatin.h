@@ -4,8 +4,8 @@
 #include "afhints.h"
 
 FT_BEGIN_HEADER
- 
- /* 
+
+ /*
   * the latin-specific script class
   *
   */
@@ -38,7 +38,7 @@ FT_BEGIN_HEADER
     AF_LATIN_BLUE_SMALL_TOP,
     AF_LATIN_BLUE_SMALL_BOTTOM,
     AF_LATIN_BLUE_SMALL_MINOR,
-    
+
     AF_LATIN_BLUE_MAX
   };
 
@@ -53,7 +53,7 @@ FT_BEGIN_HEADER
   {
     AF_LATIN_BLUE_ACTIVE = (1 << 0),
     AF_LATIN_BLUE_TOP    = (1 << 1),
-    
+
     AF_LATIN_BLUE_FLAG_MAX
   };
 
@@ -63,7 +63,7 @@ FT_BEGIN_HEADER
     AF_WidthRec   ref;
     AF_WidthRec   shoot;
     FT_UInt       flags;
-  
+
   } AF_LatinBlueRec, *AF_LatinBlue;
 
 
@@ -71,11 +71,11 @@ FT_BEGIN_HEADER
   {
     FT_Fixed         scale;
     FT_Pos           delta;
-    
+
     FT_UInt          width_count;
     AF_WidthRec      widths[ AF_LATIN_MAX_WIDTHS ];
     FT_Pos           edge_distance_threshold;
-    
+
    /* ignored for horizontal metrics */
     FT_Bool          control_overshoot;
     FT_UInt          blue_count;
@@ -89,7 +89,7 @@ FT_BEGIN_HEADER
     AF_ScriptMetricsRec   root;
     FT_UInt               units_per_em;
     AF_LatinAxisRec       axis[ AF_DIMENSION_MAX ];
-  
+
   } AF_LatinMetricsRec, *AF_LatinMetrics;
 
 
@@ -117,7 +117,7 @@ FT_BEGIN_HEADER
     AF_LATIN_HINTS_HORZ_SNAP   = (1 << 0),  /* enable stem width snapping  */
     AF_LATIN_HINTS_VERT_SNAP   = (1 << 1),  /* enable stem height snapping */
     AF_LATIN_HINTS_STEM_ADJUST = (1 << 2),  /* enable stem width/height adjustment */
-    AF_LATIN_HINTS_MONO        = (1 << 3),  /* indicate monochrome rendering */
+    AF_LATIN_HINTS_MONO        = (1 << 3)   /* indicate monochrome rendering */
   };
 
 #define  AF_LATIN_HINTS_DO_HORZ_SNAP(h) \

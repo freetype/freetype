@@ -303,6 +303,7 @@
     FT_Fixed     y_scale = scaler->y_scale;
     FT_Pos       x_delta = scaler->x_delta;
     FT_Pos       y_delta = scaler->y_delta;
+    FT_Memory    memory  = hints->memory;
 
     hints->scaler_flags = scaler->flags;
     hints->other_flags  = 0;
@@ -505,13 +506,13 @@
           in_x   = point->fx - prev->fx;
           in_y   = point->fy - prev->fy;
 
-          point->in_dir = af_compute_direction( in_x, in_y );
+          point->in_dir = af_direction_compute( in_x, in_y );
 
           next   = point->next;
           out_x  = next->fx - point->fx;
           out_y  = next->fy - point->fy;
 
-          point->out_dir = af_compute_direction( out_x, out_y );
+          point->out_dir = af_direction_compute( out_x, out_y );
 
           if ( point->flags & ( AF_FLAG_CONIC | AF_FLAG_CUBIC ) )
           {
@@ -623,8 +624,6 @@
     AF_Edge       edges       = axis->edges;
     AF_Edge       edge_limit  = edges + axis->num_edges;
     AF_Flags      touch_flag;
-    AF_Point      point;
-    AF_Edge       edge;
 
 
     if ( dim == AF_DIMENSION_HORZ )
