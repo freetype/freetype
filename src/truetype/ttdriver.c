@@ -631,7 +631,7 @@
 
     (FTDriver_initDriver)        TT_Init_Driver,
     (FTDriver_doneDriver)        TT_Done_Driver,
-    (FTDriver_getInterface)      0,     /* now extra interface for now */
+    (FTDriver_getInterface)      0,     /* no extra interface for now */
 
     (FTDriver_initFace)          Init_Face,
     (FTDriver_doneFace)          TT_Done_Face,
