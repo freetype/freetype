@@ -38,4 +38,8 @@ HDRMACRO  [ FT2_SubDir  include freetype internal internal.h ] ;
 SubInclude  FT2_TOP src ;
 
 
+# tests files
+#
+SubInclude FT2_TOP tests ;
+
 # end of top Jamfile
