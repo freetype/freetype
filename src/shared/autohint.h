@@ -22,7 +22,91 @@
 #ifndef AUTOHINT_H
 #define AUTOHINT_H
 
+ /***************************************************************************
+  *
+  *  A small technical note regarding automatic hinting in order to clarify
+  *  this module interface.
+  *
+  *  An automatic hinter might compute two kinds of data for a given face:
+  *
+  *  - global hints:  usually some metrics that describe global properties
+  *                   of the face. It is computed by scanning more or less
+  *                   agressively the glyphs in the face, and thus can be
+  *                   very slow to compute (even if the size of global hints
+  *                   is really small)
+  *
+  *  - glyph hints:   these describe some important features of the glyph
+  *                   outline, as well as how to align them. They are generally
+  *                   much faster to compute than global hints.
+  *
+  *  The current FreeType auto-hinter does a pretty good job while performing
+  *  fast computations for both global and glyph hints. However, we might be
+  *  interested in introducing more complex and powerful algorithms in the
+  *  future, like the one described in the John D. Hobby paper, which
+  *  unfortunately require a lot more horsepower.
+  *
+  *  Because a sufficiently sophisticated font management system would
+  *  typically implement a LRU cache of opened face objects to reduce memory
+  *  usage, it is a good idea to be able to avoid recomputing global hints
+  *  every time the same face is re-opened.
+  *
+  *  We thus provide the ability to cache global hints outside of the face
+  *  object, in order to speed up font re-opening time. Of course, this
+  *  feature is purely optional, so most client programs won't even notice
+  *  it :o)
+  *
+  *  I initially though that it'd be a good idea to cache the glyph hints too,
+  *  however, if my general idea now is that if you really need to cache these
+  *  too, you're simply in need of a new font format, where all this information
+  *  could be stored within the font file and decoded on the fly :-)
+  *
+  */
+
 #include <freetype.h>
+
+  typedef struct FT_AutoHinterRec_  *FT_AutoHinter;
+
+ /***********************************************************************
+  *
+  * <FuncType>
+  *    FT_AutoHinter_Get_Global_Func
+  *
+  * <Description>
+  *    Retrieve the global hints computed for a given face object
+  *    the resulting data is dissociated from the face and will survive
+  *    a call to FT_Done_Face. It must be discarded through the API
+  *    FT_AutoHinter_Done_Global_Func.
+  *
+  * <Input>
+  *    hinter :: handle to source auto-hinter
+  *    face   :: handle to source face object
+  *
+  * <Output>
+  *    global_hints  :: typeless pointer to the global hints
+  *    global_len    :: size in bytes of global hints
+  *
+  */
+  typedef void   (*FT_AutoHinter_Get_Global_Func)( FT_AutoHinter  hinter,
+                                                   FT_Face        face,
+                                                   void*         *global_hints,
+                                                   long          *global_len );
+
+ /***********************************************************************
+  *
+  * <FuncType>
+  *    FT_AutoHinter_Done_Global_Func
+  *
+  * <Description>
+  *    Discards the global hints retrieved through
+  *    FT_AutoHinter_Get_Global_Func. This is the only way these hints
+  *    are freed from memory.
+  *
+  * <Input>
+  *    hinter :: handle to auto-hinter module
+  *    global :: pointer to retrieved global hints to discard
+  */
+  typedef void   (*FT_AutoHinter_Done_Global_Func)( FT_AutoHinter  hinter,
+                                                    void*          global );
 
  /***********************************************************************
   *
@@ -30,23 +114,23 @@
   *    FT_AutoHinter_Init_Func
   *
   * <Description>
-  *    Each face can have its own auto-hinter object. This function
-  *    is used to initialise it. Its role is to perform a few statistics
-  *    on the face's content in order to compute global metrics like
-  *    blue zones and standard width/heights.
+  *    Compute or set the global hints for a given face object.
   *
   * <Input>
-  *    face  :: handle to the face.
+  *    hinter       :: handle to source auto-hinter module
+  *    face         :: handle to target face object.
+  *    global_hints :: typeless pointer to global hints. If 0, the
+  *                    hints are computed for the face
   *
   * <Note>
-  *    this function will call FT_Load_Glyph several times in order to
-  *    compute various statistics on the face's glyphs. This means that
-  *    the face handle must be valid when calling it.
+  *    it is up to client applications to ensure that the global hints
+  *    were retrieved for the same face object. Strange results may occur
+  *    otherwise..
   *
-  *    This function set the "hinter" and "hinter_len" fields of 'face'.
   */
-  typedef  FT_Error    (*FT_AutoHinter_Init_Func)( FT_Face  face );
-
+  typedef FT_Error   (*FT_AutoHinter_Init_Func)( FT_AutoHinter  hinter,
+                                                 FT_Face        face,
+                                                 void*          global_hints );
 
  /***********************************************************************
   *
@@ -54,19 +138,16 @@
   *    FT_AutoHinter_Done_Func
   *
   * <Description>
-  *    Each face can have its own auto-hinter object. This function
-  *    is used to finalise and destroy it.
+  *    Discards the global hints for a given face..
   *
   * <Input>
-  *    face  :: handle to the face.
-  *
-  * <Note>
-  *    This function clears the "hinter" and "hinter_len" fields of
-  *    "face". However, the face object is still valid and can be used
-  *    to load un-hinted glyphs..
+  *    hinter       :: handle to source auto-hinter module
+  *    face         :: handle to target face object.
   *
   */
-  typedef  void        (*FT_AutoHinter_Done_Func)( FT_Face  face );
+  typedef FT_Error   (*FT_AutoHinter_Done_Func)( FT_AutoHinter  hinter,
+                                                 FT_Face        face );
+
 
 
  /***********************************************************************
@@ -93,7 +174,7 @@
   */
   typedef  FT_Error    (*FT_AutoHinter_Load_Func)( FT_Face   face,
                                                    FT_UInt   glyph_index,
-   					           FT_ULong  load_flags );
+   					                               FT_ULong  load_flags );
 
  /***********************************************************************
   *
@@ -109,9 +190,11 @@
     FT_AutoHinter_Init_Func   init_autohinter;
     FT_AutoHinter_Done_Func   done_autohinter;
     FT_AutoHinter_Load_Func   load_glyph;
+    
+    FT_AutoHinter_Get_Global_Func   get_global_hints;
+    FT_AutoHinter_Done_Global_Func  done_global_hints;
 
   } FT_AutoHinter_Interface;					 
 
 #endif /* AUTOHINT_H */
-
 
