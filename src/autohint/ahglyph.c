@@ -1350,10 +1350,20 @@
             else
               edge2 = seg2->edge;
 
+#ifdef FT_CONFIG_CHESTER_SERIF
+            if ( is_serif )
+            {
+              edge->serif   = edge2;
+              edge2->flags |= AH_EDGE_SERIF;
+            }
+            else
+              edge->link  = edge2;
+#else /* !CHESTER_SERIF */
             if ( is_serif )
               edge->serif = edge2;
             else
               edge->link  = edge2;
+#endif
           }
 
           seg = seg->edge_next;
@@ -1477,8 +1487,14 @@
 
       /* compute the initial threshold as a fraction of the EM size */
       best_dist = FT_MulFix( face_globals->face->units_per_EM / 40, y_scale );
+
+#ifdef FT_CONFIG_CHESTER_SMALL_F
+      if ( best_dist > 64 / 2 )
+        best_dist = 64 / 2;
+#else
       if ( best_dist > 64 / 4 )
-        best_dist = 64 / 4;
+         best_dist = 64 / 4;
+#endif
 
       for ( blue = AH_BLUE_CAPITAL_TOP; blue < AH_BLUE_MAX; blue++ )
       {

@@ -1,3 +1,24 @@
+2003-01-11  David Chester  <davidchester@qmx.net>
+
+        * include/freetype/config/ftoption.h, src/autohint/ahglobal.h,
+        src/autohint/ahglobal.c, src/autohint/ahglyph.c,
+        src/autohint/ahtypes.h:
+
+          included David Chester's patches to the auto-hinter in order to
+          slightly improve the output. Note that everything is controlled
+          through the new FT_CONFIG_OPTION_CHESTER_HINTS defined at the
+          end of "ftoption.h", there are also individual FT_CONFIG_CHESTER_XXX
+          macros to control individual "features".
+
+          Note that all improvements are enabled by default, but can be
+          tweaked for optimization and testing purpose. The configuration
+          macros will most likely disappear in the short future.
+
+2003-01-11  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/fnttypes.h: fixed a structure field
+        definition to avoid memory overwrites
+
 2003-01-08  Huw Dawies  <huw@codeweavers.com>
 
         * src/winfonts/winfnt.c: read 16 bytes into "reserved2", not "reserved"

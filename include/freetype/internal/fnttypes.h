@@ -108,7 +108,7 @@ FT_BEGIN_HEADER
     FT_UShort  B_space;
     FT_UShort  C_space;
     FT_UShort  color_table_offset;
-    FT_Byte    reserved2[4];
+    FT_Byte    reserved2[16];
 
   } WinFNT_HeaderRec, *WinFNT_Header;
 
