@@ -893,7 +893,9 @@ FT_BEGIN_HEADER
   /*                   callback.                                           */
   /*                                                                       */
   /*    clip_box    :: an optional clipping box. It is only used in        */
-  /*                   direct rendering mode                               */
+  /*                   direct rendering mode. Note that coordinates        */
+  /*                   here should be expressed in _integer_ pixels        */
+  /*                   (and not 26.6 fixed-point units)                    */
   /*                                                                       */
   /* <Note>                                                                */
   /*    An anti-aliased glyph bitmap is drawn if the ft_raster_flag_aa bit */
