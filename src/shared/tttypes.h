@@ -24,7 +24,7 @@
 #define TTTYPES_H
 
 
-#include <freetype.h>
+#include <tttables.h>
 
 
 #ifdef __cplusplus
@@ -423,6 +423,7 @@
   } TT_Table;
 
 
+#if 0
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -787,7 +788,7 @@
     /* load them by default.  See the ttpost.c file.  */
 
   } TT_Postscript;
-
+#endif
 
   /*************************************************************************/
   /*                                                                       */
