@@ -1,8 +1,8 @@
 2002-02-08  David Turner  <david@freetype.org>
 
-        * include/freetype/freetype.h: adding comments to FT_Get_Next_Char
-        note that this function might temporarily be removed for the 2.0.8
-        release..
+	* include/freetype/freetype.h: Adding comments to FT_Get_Next_Char;
+	note that this function might temporarily be removed for the 2.0.8
+	release.
 
 2002-02-07  David Turner  <david@freetype.org>
 
