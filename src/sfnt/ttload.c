@@ -179,11 +179,8 @@
     /* if 'num_tables' is 0, read the table count from the file */
     if ( num_tables == 0 )
     {
-      FT_ULong  format_tag;
-
-
       if ( FT_STREAM_SEEK( offset )     ||
-           FT_READ_ULONG ( format_tag ) ||
+           FT_STREAM_SKIP( 4 )          ||
            FT_READ_USHORT( num_tables ) ||
            FT_STREAM_SKIP( 6 )          )
         goto Bad_Format;

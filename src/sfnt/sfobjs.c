@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    SFNT object management (base).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -258,8 +258,10 @@
     {
       if ( rec->string == NULL )
       {
-        FT_Error   error;
+        FT_Error   error = FT_Err_Ok;
         FT_Stream  stream = face->name_table.stream;
+
+        FT_UNUSED( error );
 
 
         if ( FT_NEW_ARRAY  ( rec->string, rec->stringLength ) ||

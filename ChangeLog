@@ -1,3 +1,49 @@
+2003-04-23  Werner Lemberg  <wl@gnu.org>
+
+	Fixing bugs reported by Nelson Beebe.
+
+	* src/base/ftstroker.c (FT_Stroker_ParseOutline): Remove unused
+	variable `in_path'.
+
+	* src/base/ftobjs (ft_glyphslot_set_bitmap): Change type of
+	second argument to `FT_Byte*'.
+	* include/freetype/internal/ftobjs.h: Updated.
+
+	* src/bdf/bdflib.c (_bdf_readstream): Remove unused variable `res'.
+	(_bdf_parse_glyphs): Remove unused variable `next'.
+	Mark `call_data' as unused.
+
+	* src/cache/ftlru.c (FT_LruList_Lookup): Remove unused variable
+	`plast'.
+
+	* src/pcf/pcfread.c (pcf_seek_to_table_type): Slight recoding to
+	actually use `error'.
+	(pcf_load_font): Remove unused variable `avgw'.
+
+	* src/pfr/pfrobjs.c (pfr_face_get_kerning): Change return type
+	to `void'.
+	Mark `error' as unused.
+	* src/pfr/pfrobjs.h: Updated.
+	* src/pfr/pfrdrivr.c (pfr_get_kerning): Updated.
+
+	* src/sfnt/ttload.c (sfnt_dir_check): Remove unused variable
+	`format_tag'.
+
+	* src/sfnt/ttcmap0.c (tt_cmap6_validate, tt_cmap10_validate): Remove
+	unused variable `start'.
+	(tt_cmap10_char_next): Remove unused variable `result'
+
+	* src/sfnt/sfobjs.c (tt_face_get_name): Mark `error' as unused.
+
+	* src/sfnt/sfdriver.c (get_sfnt_postscript_name): Mark `error' as
+	unused.
+
+	* src/type1/t1objs.c (T1_Face_Init): Remove unused variable
+	`pshinter'.
+
+	* src/type1/t1gload.c (T1_Load_Glyph): Use `glyph_data_loaded'
+	only for FT_CONFIG_OPTION_INCREMENTAL.
+
 2003-04-23  Akito Hirai  <akito@kde.gr.jp>
 
 	* src/sfnt/ttcmap0.c (tt_cmap4_validate): Provide a weak variant

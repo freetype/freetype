@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 objects manager (body).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -278,7 +278,6 @@
     FT_Error          error;
     PSNames_Service   psnames;
     PSAux_Service     psaux;
-    PSHinter_Service  pshinter;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -298,7 +297,6 @@
 
     face->pshinter = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
                                               "pshinter" );
-    pshinter = (PSHinter_Service)face->pshinter;
 
     /* open the tokenizer, this will also check the font format */
     error = T1_Open_Face( face );

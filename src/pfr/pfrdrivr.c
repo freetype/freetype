@@ -30,29 +30,24 @@
                    FT_UInt     right,
                    FT_Vector  *avector )
   {
-    FT_Error  error;
+    PFR_PhyFont  phys = &face->phy_font;
 
 
-    error = pfr_face_get_kerning( face, left, right, avector );
-    if ( !error )
+    pfr_face_get_kerning( face, left, right, avector );
+
+    /* convert from metrics to outline units when necessary */
+    if ( phys->outline_resolution != phys->metrics_resolution )
     {
-      PFR_PhyFont  phys = &face->phy_font;
+      if ( avector->x != 0 )
+        avector->x = FT_MulDiv( avector->x, phys->outline_resolution,
+                                            phys->metrics_resolution );
 
-
-      /* convert from metrics to outline units when necessary */
-      if ( phys->outline_resolution != phys->metrics_resolution )
-      {
-        if ( avector->x != 0 )
-          avector->x = FT_MulDiv( avector->x, phys->outline_resolution,
-                                              phys->metrics_resolution );
-
-        if ( avector->y != 0 )
-          avector->y = FT_MulDiv( avector->x, phys->outline_resolution,
-                                              phys->metrics_resolution );
-      }
+      if ( avector->y != 0 )
+        avector->y = FT_MulDiv( avector->x, phys->outline_resolution,
+                                            phys->metrics_resolution );
     }
 
-    return error;
+    return FT_Err_Ok;
   }
 
 
