@@ -66,6 +66,11 @@ THE SOFTWARE.
         FREE( tmp->value );
     }
     FREE( face->properties );
+    FREE( face->toc.tables );
+    FREE( face->root.family_name );
+    FREE( face->root.available_sizes );
+    FREE( face->charset_encoding );
+    FREE( face->charset_registry );
 
     FT_TRACE4(( "DONE_FACE!!!\n" ));
 
