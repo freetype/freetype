@@ -207,6 +207,10 @@
         FT_UInt32  magic;
 
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+      head_retry:
+#endif  /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
         has_head = 1;
 
         /* The table length should be 0x36, but certain font tools
@@ -225,6 +229,10 @@
         if ( FT_STREAM_SEEK( offset + 28 + 16*nn ) )
           goto Bad_Format;
       }
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+      else if ( table.Tag == TTAG_bhed )
+        goto head_retry;
+#endif  /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */      
     }
 
     if ( has_head == 0 )
@@ -715,6 +723,8 @@
     if ( FT_STREAM_READ_FIELDS( maxp_fields, maxProfile ) )
       goto Exit;
 
+    face->root.num_glyphs = maxProfile->numGlyphs;
+
     maxProfile->maxPoints             = 0;
     maxProfile->maxContours           = 0;
     maxProfile->maxCompositePoints    = 0;
@@ -742,8 +752,6 @@
 
       if ( maxProfile->maxFunctionDefs == 0 )
         maxProfile->maxFunctionDefs = 64;
-
-      face->root.num_glyphs = maxProfile->numGlyphs;
 
       face->root.internal->max_points =
         (FT_UShort)FT_MAX( maxProfile->maxCompositePoints,
