@@ -24,8 +24,6 @@
 #include "graph.h"
 #include "grfont.h"
 
-#include <freetype/ftgrays.h>
-
 #define  DIM_X   500
 #define  DIM_Y   400
 

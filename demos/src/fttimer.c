@@ -28,7 +28,6 @@
 #include <time.h>    /* for clock() */
 
 #include "graph.h"
-#include <freetype/ftgrays.h>
 
 /* SunOS 4.1.* does not define CLOCKS_PER_SEC, so include <sys/param.h> */
 /* to get the HZ macro which is the equivalent.                         */

@@ -1352,6 +1352,86 @@
   } TT_FaceRec;
 
 
+
+
+ /************************************************************************
+  *
+  *  <Struct>
+  *     TT_GlyphZone
+  *
+  *  <Description>
+  *     A glyph zone is used to load, scale and hint glyph outline
+  *     coordinates.
+  *
+  *  <Fields>
+  *     memory       :: handle to memory manager
+  *     max_points   :: max size in points of zone
+  *     max_contours :: max size in contours of zone
+  *     n_points     :: current number of points in zone
+  *     n_contours   :: current number of contours in zone
+  *     org          :: original glyph coordinates (font units/scaled)
+  *     cur          :: current glyph coordinates  (scaled/hinted)
+  *     tags         :: point control tags
+  *     contours     :: contour end points
+  *
+  ***********************************************************************/
+
+  typedef struct  TT_GlyphZone_
+  {
+    FT_Memory   memory;
+    FT_UShort   max_points;
+    FT_UShort   max_contours;
+    FT_UShort   n_points;   /* number of points in zone    */
+    FT_Short    n_contours; /* number of contours          */
+
+    FT_Vector*  org;        /* original point coordinates  */
+    FT_Vector*  cur;        /* current point coordinates   */
+
+    FT_Byte*    tags;       /* current touch flags         */
+    FT_UShort*  contours;   /* contour end points          */
+
+  } TT_GlyphZone;
+
+
+ /* handle to execution context */
+  typedef struct TT_ExecContextRec_*  TT_ExecContext;
+
+ /* glyph loader structure */
+  typedef struct  TT_Loader_
+  {
+    FT_Face         face;
+    FT_Size         size;
+    FT_GlyphSlot    glyph;
+    FT_GlyphLoader* gloader;
+
+    FT_ULong        load_flags;
+    FT_UInt         glyph_index;
+
+    FT_Stream       stream;
+    FT_Int          byte_len;
+
+    FT_BBox         bbox;
+    FT_Int          left_bearing;
+    FT_Int          advance;
+    FT_Bool         preserve_pps;
+    FT_Vector       pp1;
+    FT_Vector       pp2;
+
+    FT_ULong        glyf_offset;
+
+    /* the zone where we load our glyphs */
+    TT_GlyphZone    base;
+    TT_GlyphZone    zone;
+
+    TT_ExecContext  exec;
+    FT_Byte*        instructions;
+    FT_ULong        ins_pos;
+
+  } TT_Loader;
+
+
+
+
 #ifdef __cplusplus
   }
 #endif
