@@ -1,4 +1,6 @@
 #include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_INTERNAL_OBJECTS_H
 #include "pshglob.h"
 
 /* "simple" ps hinter globals management, inspired from the new auto-hinter */
@@ -11,7 +13,6 @@
  /*************************************************************************/
  /*************************************************************************/
  
-
  /* reset the widths/heights table */
   static void
   psh_globals_reset_widths( PSH_Globals        globals,
@@ -55,8 +56,9 @@
     }
   }
 
- 
 
+
+ /* org_width is is font units, result in device pixels, 26.6 format */
   FT_LOCAL_DEF FT_Pos
   psh_dimension_snap_width( PSH_Dimension  dimension,
                             FT_Int         org_width )
@@ -97,7 +99,7 @@
 
     return width;
   }
-  
+
 
  /*************************************************************************/
  /*************************************************************************/
@@ -106,7 +108,10 @@
  /*****                                                               *****/
  /*************************************************************************/
  /*************************************************************************/
-  
+
+ /* re-read blue zones from the original fonts, and store them into out    */
+ /* private structure. This function re-orders, sanitizes and fuzz-expands */
+ /* the zones as well..                                                    */
   static void
   psh_blues_reset_zones( PSH_Blues         target,
                          PS_Globals_Blues  source,
@@ -282,7 +287,7 @@
   }
 
 
- /* reset the blues table */
+ /* reset the blues table when the device transform changes */
   static void
   psh_blues_scale_zones( PSH_Blues  blues,
                          FT_Fixed   scale,
@@ -350,7 +355,7 @@
         break;
       }
     }
-    
+
     /* lookup stem bottom in bottom zones table */
     table = &blues->normal_bottom;
     count = table->count;
@@ -359,7 +364,7 @@
     {
       if ( stem_bot < zone->org_bottom )
         break;
-        
+
       if ( stem_bot <= zone->org_top )
       {
         alignment->align    |= PSH_BLUE_ALIGN_BOT;
@@ -367,6 +372,7 @@
       }
     }
   }
+
 
  /*************************************************************************/
  /*************************************************************************/
@@ -424,7 +430,7 @@
     globals->dimension[0].scale_delta = 0;
     globals->dimension[1].scale_mult  = 0;
     globals->dimension[1].scale_delta = 0;
-    
+
     return 0;
   }
 
@@ -432,8 +438,8 @@
   static FT_Error
   psh_globals_set_scale( PSH_Globals    globals,
                          FT_Fixed       x_scale,
-                         FT_Fixed       x_delta,
                          FT_Fixed       y_scale,
+                         FT_Fixed       x_delta,
                          FT_Fixed       y_delta )
   {
     PSH_Dimension  dim    = &globals->dimension[0];
@@ -452,10 +458,13 @@
     if ( y_scale != dim->scale_mult  ||
          y_delta != dim->scale_delta )
     {
+      dim->scale_mult  = y_scale;
+      dim->scale_delta = y_delta;
+
       psh_globals_scale_widths( globals, 1 );
       psh_blues_scale_zones( &globals->blues, y_scale, y_delta );
     }
-    
+
     return 0;
   }
 

@@ -30,6 +30,7 @@ SubDirHdr  += $(FT2_INCLUDE) ;
 # record these definitions.
 #
 HDRMACRO  [ FT2_SubDir  include freetype config ftheader.h ] ;
+HDRMACRO  [ FT2_SubDir  include freetype internal internal.h ] ;
 
 # Now include the Jamfile in "freetype2/src", used to drive the compilation
 # of each FreeType 2 component and/or module.

@@ -23,7 +23,6 @@
 #include FT_INTERNAL_TYPE1_TYPES_H
 
 #include "cidload.h"
-
 #include "ciderrs.h"
 
 #include <stdio.h>

@@ -147,7 +147,8 @@ FT_BEGIN_HEADER
   void  T1_Builder_Init( T1_Builder*   builder,
                          FT_Face       face,
                          FT_Size       size,
-                         FT_GlyphSlot  glyph );
+                         FT_GlyphSlot  glyph,
+                         FT_Bool       hinting );
 
   FT_LOCAL
   void  T1_Builder_Done( T1_Builder*  builder );

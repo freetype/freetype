@@ -101,10 +101,18 @@ FT_BEGIN_HEADER
   typedef struct  T1_SizeRec_
   {
     FT_SizeRec  root;
-    void*       size_hints;   /* defined for hinting engines */ 
 
   } T1_SizeRec;
 
+
+  FT_LOCAL
+  void T1_Size_Done( T1_Size   size );
+
+  FT_LOCAL
+  FT_Error  T1_Size_Reset( T1_Size  size );
+
+  FT_LOCAL
+  FT_Error  T1_Size_Init( T1_Size  size );
 
   /*************************************************************************/
   /*                                                                       */
@@ -131,32 +139,32 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL
-  FT_Error  T1_Init_Face( FT_Stream      stream,
+  FT_Error  T1_Face_Init( FT_Stream      stream,
                           T1_Face        face,
                           FT_Int         face_index,
                           FT_Int         num_params,
                           FT_Parameter*  params );
 
   FT_LOCAL
-  void  T1_Done_Face( T1_Face  face );
+  void  T1_Face_Done( T1_Face  face );
 
   FT_LOCAL
-  FT_Error  T1_Init_Size( T1_Size  size );
+  FT_Error  T1_Size_Init( T1_Size  size );
   
   FT_LOCAL
-  void      T1_Done_Size( T1_Size  size );
+  void      T1_Size_Done( T1_Size  size );
 
   FT_LOCAL
-  FT_Error  T1_Init_GlyphSlot( T1_GlyphSlot  slot );
+  FT_Error  T1_GlyphSlot_Init( T1_GlyphSlot  slot );
   
   FT_LOCAL
-  void      T1_Done_GlyphSlot( T1_GlyphSlot  slot );
+  void      T1_GlyphSlot_Done( T1_GlyphSlot  slot );
 
   FT_LOCAL
-  FT_Error  T1_Init_Driver( T1_Driver  driver );
+  FT_Error  T1_Driver_Init( T1_Driver  driver );
 
   FT_LOCAL
-  void  T1_Done_Driver( T1_Driver  driver );
+  void  T1_Driver_Done( T1_Driver  driver );
 
 
 FT_END_HEADER

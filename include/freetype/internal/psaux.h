@@ -406,7 +406,8 @@ FT_BEGIN_HEADER
     void      (*init)( T1_Builder*   builder,
                        FT_Face       face,
                        FT_Size       size,
-                       FT_GlyphSlot  slot );
+                       FT_GlyphSlot  slot,
+                       FT_Bool       hinting );
 
     void      (*done)( T1_Builder*   builder );
 
@@ -506,7 +507,8 @@ FT_BEGIN_HEADER
     FT_Error          error;         /* only used for memory errors */
     FT_Bool           metrics_only;
 
-    T1_Hints_Funcs    hints_funcs;
+    void*             hints_funcs;    /* hinter-specific */
+    void*             hints_globals;  /* hinter-specific */
 
     T1_Builder_Funcs  funcs;      
   };
@@ -565,6 +567,7 @@ FT_BEGIN_HEADER
                         FT_GlyphSlot         slot,
                         FT_Byte**            glyph_names,
                         T1_Blend*            blend,
+                        FT_Bool              hinting,
                         T1_Decoder_Callback  callback );
 
     void      (*done) ( T1_Decoder*  decoder );

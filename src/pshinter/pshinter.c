@@ -23,5 +23,6 @@
 #include "pshglob.c"
 #include "pshfit.c"
 #include "pshmod.c"
+#include "pshoptim.c"
 
 /* END */

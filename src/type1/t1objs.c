@@ -49,51 +49,76 @@
   /*                                                                       */
   /*                            SIZE  FUNCTIONS                            */
   /*                                                                       */
+  /*  note that we store the global hints in the size's "internal" root    */
+  /*  field..                                                              */
+  /*                                                                       */
   /*************************************************************************/
 
-  FT_LOCAL_DEF
-  void T1_Done_Size( T1_Size   size )
+  static PSH_Globals_Funcs
+  T1_Size_Get_Globals( T1_Size  size )
   {
-    if ( size->size_hints )
-    {
-      PSHinter_Interface*  pshinter;
-      PSH_Globals_Funcs    funcs;
-      T1_Face              face;
+    T1_Face              face     = (T1_Face) size->root.face;
+    PSHinter_Interface*  pshinter = face->pshinter;
+    FT_Module            module;
     
-      face     = (T1_Face) size->root.face;
-      pshinter = face->pshinter;
-      funcs = pshinter->get_globals_funcs( (FT_Module) face->root.driver );
-      funcs->destroy( (PSH_Globals) size->size_hints );
-      
-      size->size_hints = 0;
-    }
+    module = FT_Get_Module( size->root.face->driver->root.library, "pshinter" );
+    return ( module && pshinter && pshinter->get_globals_funcs )
+           ? pshinter->get_globals_funcs( module )
+           : 0 ;
   }
 
 
   FT_LOCAL_DEF
-  FT_Error  T1_Init_Size( T1_Size  size )
+  void T1_Size_Done( T1_Size   size )
   {
-    PSHinter_Interface*  pshinter;
-    T1_Face              face;
-    FT_Error             error = 0;
-    
-    face     = (T1_Face) size->root.face;
-    pshinter = face->pshinter;
-    if ( pshinter && pshinter->get_globals_funcs )
+    if ( size->root.internal )
     {
-      PSH_Globals_Funcs  funcs;
-      PSH_Globals        globals;
-      
-      funcs = pshinter->get_globals_funcs( (FT_Module) face->root.driver );
+      PSH_Globals_Funcs    funcs;
+    
+      funcs = T1_Size_Get_Globals(size);
       if (funcs)
-      {
-        error = funcs->create( face->root.memory, &globals );
-        if (!error)
-          size->size_hints = globals;
-      }
+        funcs->destroy( (PSH_Globals) size->root.internal );
+
+      size->root.internal = 0;
     }
+  }
+
+
+
+  FT_LOCAL_DEF
+  FT_Error  T1_Size_Init( T1_Size  size )
+  {
+    FT_Error           error = 0;
+    PSH_Globals_Funcs  funcs = T1_Size_Get_Globals( size );
+    
+    if ( funcs )
+    {
+      PSH_Globals  globals;
+      
+      error = funcs->create( size->root.face->memory, &globals );
+      if (!error)
+        size->root.internal = (FT_Size_Internal)(void*) globals;
+    }
+    
     return error;
   }
+
+
+
+  FT_LOCAL_DEF
+  FT_Error  T1_Size_Reset( T1_Size  size )
+  {
+    PSH_Globals_Funcs  funcs = T1_Size_Get_Globals(size);
+    FT_Error           error = 0;
+    
+    if (funcs)
+      error = funcs->set_scale( (PSH_Globals) size->root.internal,
+                                 size->root.metrics.x_scale,
+                                 size->root.metrics.y_scale,
+                                 0, 0 );
+    return error;                                
+  }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -102,14 +127,14 @@
   /*************************************************************************/
 
   FT_LOCAL_DEF void
-  T1_Done_GlyphSlot( T1_GlyphSlot  slot )
+  T1_GlyphSlot_Done( T1_GlyphSlot  slot )
   {
     slot->root.internal->glyph_hints = 0;
   }
 
 
   FT_LOCAL_DEF FT_Error
-  T1_Init_GlyphSlot( T1_GlyphSlot   slot )
+  T1_GlyphSlot_Init( T1_GlyphSlot   slot )
   {  
     T1_Face              face;
     PSHinter_Interface*  pshinter;
@@ -118,10 +143,16 @@
     pshinter = face->pshinter;
     if (pshinter)
     {
-      T1_Hints_Funcs  funcs;
+      FT_Module  module;
       
-      funcs = pshinter->get_t1_funcs( (FT_Module)face->root.driver );
-      slot->root.internal->glyph_hints = (void*)funcs;
+      module = FT_Get_Module( slot->root.face->driver->root.library, "pshinter" );
+      if (module)
+      {
+        T1_Hints_Funcs  funcs;
+        
+        funcs = pshinter->get_t1_funcs( module );
+        slot->root.internal->glyph_hints = (void*)funcs;
+      }
     }
     return 0;
   }
@@ -137,7 +168,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Done_Face                                                       */
+  /*    T1_Face_Done                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    The face object destructor.                                        */
@@ -146,7 +177,7 @@
   /*    face :: A typeless pointer to the face object to destroy.          */
   /*                                                                       */
   FT_LOCAL_DEF
-  void  T1_Done_Face( T1_Face  face )
+  void  T1_Face_Done( T1_Face  face )
   {
     FT_Memory  memory;
     T1_Font*   type1 = &face->type1;
@@ -210,7 +241,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Init_Face                                                       */
+  /*    T1_Face_Init                                                       */
   /*                                                                       */
   /* <Description>                                                         */
   /*    The face object constructor.                                       */
@@ -231,7 +262,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF
-  FT_Error  T1_Init_Face( FT_Stream      stream,
+  FT_Error  T1_Face_Init( FT_Stream      stream,
                           T1_Face        face,
                           FT_Int         face_index,
                           FT_Int         num_params,
@@ -267,7 +298,7 @@
 
       face->psaux = psaux;
     }
-
+    
     pshinter = (PSHinter_Interface*)face->pshinter;
     if ( !pshinter )
     {
@@ -289,7 +320,7 @@
     /* check the face index */
     if ( face_index != 0 )
     {
-      FT_ERROR(( "T1_Init_Face: invalid face index\n" ));
+      FT_ERROR(( "T1_Face_Init: invalid face index\n" ));
       error = T1_Err_Invalid_Argument;
       goto Exit;
     }
@@ -468,7 +499,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Init_Driver                                                     */
+  /*    T1_Driver_Init                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given Type 1 driver object.                          */
@@ -480,7 +511,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_LOCAL_DEF
-  FT_Error  T1_Init_Driver( T1_Driver  driver )
+  FT_Error  T1_Driver_Init( T1_Driver  driver )
   {
     FT_UNUSED( driver );
 
@@ -491,7 +522,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Done_Driver                                                     */
+  /*    T1_Driver_Done                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finalizes a given Type 1 driver.                                   */
@@ -500,7 +531,7 @@
   /*    driver  :: A handle to the target Type 1 driver.                   */
   /*                                                                       */
   FT_LOCAL_DEF
-  void  T1_Done_Driver( T1_Driver  driver )
+  void  T1_Driver_Done( T1_Driver  driver )
   {
     FT_UNUSED( driver );
   }

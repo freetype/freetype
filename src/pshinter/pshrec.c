@@ -3,6 +3,7 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 #include "pshrec.h"
+#include "pshfit.h"
 
  /***********************************************************************/
  /***********************************************************************/
@@ -157,8 +158,10 @@
 
     if ( (FT_UInt)index >= mask->num_bits )
     {
-      error = ps_mask_ensure( mask, index, memory );
+      error = ps_mask_ensure( mask, index+1, memory );
       if (error) goto Exit;
+      
+      mask->num_bits = index+1;
     }
 
     p    = mask->bytes + (index >> 3);
@@ -219,13 +222,13 @@
     count = table->num_masks;
     count++;
 
-    if ( count >= table->max_masks )
+    if ( count > table->max_masks )
     {
       error = ps_mask_table_ensure( table, count, memory );
       if (error) goto Exit;
     }
 
-    mask             = table->masks + count;
+    mask             = table->masks + count - 1;
     mask->num_bits   = 0;
     mask->end_point  = 0;
     table->num_masks = count;
@@ -755,7 +758,7 @@
   ps_hints_stem( PS_Hints  hints,
                  FT_Int    dimension,
                  FT_UInt   count,
-                 FT_Int*   stems )
+                 FT_Long*  stems )
   {
     if ( !hints->error )
     {
@@ -807,7 +810,7 @@
   static void
   ps_hints_t1stem3( PS_Hints  hints,
                     FT_Int    dimension,
-                    FT_Int*   stems )
+                    FT_Long*  stems )
   {
     FT_Error   error = 0;
     
@@ -1017,7 +1020,7 @@
   static void
   t1_hints_stem( T1_Hints    hints,
                  FT_Int      dimension,
-                 FT_Int*     coords )
+                 FT_Long*    coords )
   {
     ps_hints_stem( (PS_Hints)hints, dimension, 1, coords );
   }                 
@@ -1033,8 +1036,7 @@
     funcs->stem     = (T1_Hints_SetStemFunc)   t1_hints_stem;
     funcs->stem3    = (T1_Hints_SetStem3Func)  ps_hints_t1stem3;
     funcs->reset    = (T1_Hints_ResetFunc)     ps_hints_t1reset;
-    
-    /* funcs->apply = .... */
+    funcs->apply    = (T1_Hints_ApplyFunc)     ps_hints_apply;
   }
   
   
@@ -1059,7 +1061,7 @@
                   FT_Int    count,
                   FT_Fixed* coords )
   {
-    FT_Int     stems[32], n, total = count;
+    FT_Long    stems[32], n, total = count;
     
     while (total > 0)
     {
@@ -1085,13 +1087,12 @@
   {
     memset( funcs, 0, sizeof(*funcs) );
 
-    funcs->open     = (T2_Hints_OpenFunc)  t2_hints_open;
-    funcs->close    = (T2_Hints_CloseFunc) ps_hints_close;
-    funcs->stems    = (T2_Hints_StemsFunc) t2_hints_stems;
-    funcs->hintmask = (T2_Hints_MaskFunc)  ps_hints_t2mask;
-    funcs->counter  = ( T2_Hints_CounterFunc) ps_hints_t2counter;
-    
-    /* funcs->apply = .... */
+    funcs->open     = (T2_Hints_OpenFunc)     t2_hints_open;
+    funcs->close    = (T2_Hints_CloseFunc)    ps_hints_close;
+    funcs->stems    = (T2_Hints_StemsFunc)    t2_hints_stems;
+    funcs->hintmask = (T2_Hints_MaskFunc)     ps_hints_t2mask;
+    funcs->counter  = (T2_Hints_CounterFunc)  ps_hints_t2counter;
+    funcs->apply    = (T2_Hints_ApplyFunc)    ps_hints_apply;
   }
   
   

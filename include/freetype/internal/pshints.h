@@ -21,7 +21,7 @@
 #define __PSHINTS_H__
 
 #include <ft2build.h>
-#include FT_TYPES_H
+#include FT_FREETYPE_H
 #include FT_INTERNAL_POSTSCRIPT_GLOBALS_H
 
 FT_BEGIN_HEADER
@@ -287,7 +287,7 @@ FT_BEGIN_HEADER
   */
   typedef void      (*T1_Hints_SetStemFunc)   ( T1_Hints  hints,
                                                 FT_UInt   dimension,
-                                                FT_Int*   coords );
+                                                FT_Long*  coords );
 
  /************************************************************************
   *
@@ -311,7 +311,7 @@ FT_BEGIN_HEADER
   */
   typedef void      (*T1_Hints_SetStem3Func)  ( T1_Hints  hints,
                                                 FT_UInt   dimension,
-                                                FT_Int*   coords );
+                                                FT_Long*  coords );
 
  /************************************************************************
   *

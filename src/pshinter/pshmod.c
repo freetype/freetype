@@ -19,6 +19,7 @@
 #include FT_INTERNAL_OBJECTS_H
 #include "pshrec.h"
 
+ /* the Postscript Hinter module structure */
   typedef struct
   {
     FT_ModuleRec             root;
@@ -46,20 +47,18 @@
   FT_CALLBACK_DEF FT_Error
   ps_hinter_init( PS_Hinter_Module  module )
   {
-    FT_Memory            memory = module->root.memory;
+    FT_Memory  memory = module->root.memory;
 
     ps_hints_init( &module->ps_hints, memory );
 
     psh_globals_funcs_init( &module->globals_funcs );
-    
+
     t1_hints_funcs_init( &module->t1_funcs );
     module->t1_funcs.hints = (T1_Hints) & module->ps_hints;
-    /* XXX: module->t1_funcs.apply = .... */
-    
+
     t2_hints_funcs_init( &module->t2_funcs );
     module->t2_funcs.hints = (T2_Hints) & module->ps_hints;
-    /* XXX: module->t2_funcs.apply = .... */
-    
+
     return 0;
   }
 
@@ -71,12 +70,14 @@
     return &((PS_Hinter_Module)module)->globals_funcs;
   }
 
+
  /* return Type 1 hints interface */
   FT_CALLBACK_DEF T1_Hints_Funcs
   pshinter_get_t1_funcs( FT_Module  module )
   {
     return &((PS_Hinter_Module)module)->t1_funcs;
   }
+
 
  /* return Type 2 hints interface */
   FT_CALLBACK_DEF T2_Hints_Funcs
@@ -99,7 +100,7 @@
   const FT_Module_Class  pshinter_module_class =
   {
     0,
-    sizeof( FT_ModuleRec ),
+    sizeof( PS_Hinter_ModuleRec ),
     "pshinter",
     0x10000L,
     0x20000L,

@@ -1,8 +1,10 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
+#include FT_INTERNAL_DEBUG_H
 #include "pshfit.h"
+#include "pshoptim.h"
  
- /* return true iff two hints overlap */
+ /* return true iff two stem hints overlap */
   static FT_Int
   psh_hint_overlap( PSH_Hint  hint1,
                     PSH_Hint  hint2 )
@@ -66,7 +68,7 @@
     /* now scan the current active hint set in order to determine */
     /* if we're overlapping with another segment..                */
     {
-      PSH_Hint*  sorted = table->sort;
+      PSH_Hint*  sorted = table->sort_global;
       FT_UInt    count  = table->num_hints;
       PSH_Hint   hint2;
 
@@ -169,6 +171,8 @@
     {
       FT_UInt  count = hint_masks->num_masks;
       PS_Mask  mask  = hint_masks->masks;
+
+      table->hint_masks = hint_masks;
       
       for ( ; count > 0; count--, mask++ )
         psh_hint_table_record_mask( table, mask );
@@ -280,7 +284,29 @@
 #define  PSH_ZONE_MIN  -3200000
 #define  PSH_ZONE_MAX  +3200000
 
+
+#define xxDEBUG_ZONES
+
+#ifdef DEBUG_ZONES
+
+#include <stdio.h>
+
+  static void
+  print_zone( PSH_Zone  zone )
+  {
+    printf( "zone [scale,delta,min,max] = [%.3f,%.3f,%d,%d]\n",
+             zone->scale/65536.0,
+             zone->delta/64.0,
+             zone->min,
+             zone->max );
+  }
+
+#else
+#  define  print_zone(x)   do { } while (0)
+#endif
+
  /* setup interpolation zones once the hints have been grid-fitted */
+ /* by the optimizer..                                             */
   static void
   psh_hint_table_setup_zones( PSH_Hint_Table  table,
                               FT_Fixed        scale,
@@ -312,9 +338,12 @@
     zone->delta = hint->cur_pos - FT_MulFix( hint->org_pos, scale );
     zone->min   = PSH_ZONE_MIN;
     zone->max   = hint->org_pos;
+    
+    print_zone( zone );
+    
     zone++;
     
-    for ( count = table->num_hints; count > 1; count-- )
+    for ( count = table->num_hints; count > 0; count-- )
     {
       FT_Fixed  scale2;
 
@@ -329,21 +358,30 @@
         zone->min   = hint->org_pos;
         zone->max   = hint->org_pos + hint->org_len;
         zone->delta = hint->cur_pos - FT_MulFix( zone->min, scale2 );
+
+        print_zone( zone );
+    
         zone++;
       }
       
+      if ( count == 1 )
+        break;
+        
       sort++;
       hint2 = sort[0];
       
       /* setup zone for inter-stem interpolation */
       /* (x'-x1') = (x-x1)*(x2'-x1')/(x2-x1)     */
       /* x' = x*s3 + x1' - x1*s3                 */
-      scale2 = FT_DivFix( hint2->cur_pos - (hint->cur_pos  + hint->cur_len),
-                          hint2->org_pos - (hint2->org_pos + hint2->org_len) );
+      scale2 = FT_DivFix( hint2->cur_pos - (hint->cur_pos + hint->cur_len),
+                          hint2->org_pos - (hint->org_pos + hint->org_len) );
       zone->scale = scale2;
       zone->min   = hint->org_pos + hint->org_len;
       zone->max   = hint2->org_pos;
       zone->delta = hint->cur_pos + hint->cur_len - FT_MulFix( zone->min, scale2 );
+
+      print_zone( zone );
+    
       zone++;
       
       hint  = hint2;
@@ -353,7 +391,10 @@
     zone->scale = scale;
     zone->min   = hint->org_pos + hint->org_len;
     zone->max   = PSH_ZONE_MAX;
-    zone->delta = hint->cur_pos - FT_MulFix( zone->min, scale );
+    zone->delta = hint->cur_pos + hint->cur_len - FT_MulFix( zone->min, scale );
+
+    print_zone( zone );
+    
     zone++;
     
     table->num_zones = zone - table->zones;
@@ -395,47 +436,120 @@
       table->zone = zone;
     }
         
-    return zone->delta + FT_MulFix( coord, zone->scale );
+    return FT_MulFix( coord, zone->scale ) + zone->delta;
   }
 
 
  /* tune a given outline with current interpolation zones */
+ /* the function only works in a single dimension..       */
   static void
   psh_hint_table_tune_outline( PSH_Hint_Table  table,
                                FT_Outline*     outline,
-                               FT_Fixed        scale,
-                               FT_Fixed        delta,
+                               PSH_Globals     globals,
                                FT_Bool         vertical )
 
   {
     FT_UInt        count, first, last;
-    PS_Mask_Table  hint_masks;
+    PS_Mask_Table  hint_masks = table->hint_masks;
     PS_Mask        mask;
+    PSH_Dimension  dim        = &globals->dimension[vertical];
+    FT_Fixed       scale      = dim->scale_mult;
+    FT_Fixed       delta      = dim->scale_delta;
     
-    first = 0;
-    mask  = hint_masks->masks;
-    count = hint_masks->num_masks;
-    for ( ; count > 0; count--, mask++ )
+    if ( hint_masks && hint_masks->num_masks > 0 )
     {
-      FT_Vector*   vec;
-      FT_Int       count2;
-      
-      psh_hint_table_activate_mask( table, mask );
-      psh_hint_table_setup_zones( table, scale, delta );
-      last = mask->end_point;
-      
-      vec    = outline->points + first;
-      count2 = last - first + 1;
-      for ( ; count2 > 0; count2--, vec++ )
+      first = 0;
+      mask  = hint_masks->masks;
+      count = hint_masks->num_masks;
+      for ( ; count > 0; count--, mask++ )
       {
-        FT_Pos  x, *px;
+        last = mask->end_point;
         
-        px  = vertical ? &vec->y : &vec->y;
-        x   = *px;
-        
-        *px = psh_hint_table_tune_coord( table, (FT_Int)x );
+        if ( last > first )
+        {
+          FT_Vector*   vec;
+          FT_Int       count2;
+          
+          psh_hint_table_activate_mask( table, mask );
+          psh_hint_table_optimize( table, globals, outline, vertical );
+          psh_hint_table_setup_zones( table, scale, delta );
+          last = mask->end_point;
+          
+          vec    = outline->points + first;
+          count2 = last - first;
+          for ( ; count2 > 0; count2--, vec++ )
+          {
+            FT_Pos  x, *px;
+            
+            px  = vertical ? &vec->y : &vec->x;
+            x   = *px;
+            
+            *px = psh_hint_table_tune_coord( table, (FT_Int)x );
+          }
+        }
+          
+        first = last;
       }
-      
-      first = (FT_UInt)(last+1);
     }
-  }                                                   
+    else    /* no hints in this glyph, simply scale the outline */
+    {
+      FT_Vector*  vec;
+      
+      vec   = outline->points;
+      count = outline->n_points;
+      
+      if ( vertical )
+      {
+        for ( ; count > 0; count--, vec++ )
+          vec->y = FT_MulFix( vec->y, scale ) + delta;
+      }
+      else
+      {
+        for ( ; count > 0; count--, vec++ )
+          vec->x = FT_MulFix( vec->x, scale ) + delta;
+      }
+    }
+  }
+  
+  
+  
+
+
+  
+  
+  
+  
+  
+  FT_LOCAL_DEF FT_Error
+  ps_hints_apply( PS_Hints     ps_hints,
+                  FT_Outline*  outline,
+                  PSH_Globals  globals )
+  {
+    PSH_Hint_TableRec  hints;
+    FT_Error           error;
+    FT_Int             dimension;
+    
+    for ( dimension = 1; dimension >= 0; dimension-- )
+    {
+      PS_Dimension  dim = &ps_hints->dimension[dimension];
+      
+      /* initialise hints table */
+      memset( &hints, 0, sizeof(hints) );
+      error = psh_hint_table_init( &hints,
+                                   &dim->hints,
+                                   &dim->masks,
+                                   &dim->counters,
+                                   ps_hints->memory );
+      if (error) goto Exit;
+      
+      psh_hint_table_tune_outline( &hints,
+                                   outline,
+                                   globals,
+                                   dimension );
+                                   
+      psh_hint_table_done( &hints, ps_hints->memory );
+    }
+    
+  Exit:
+    return error;                                   
+  }                   

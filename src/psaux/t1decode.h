@@ -49,6 +49,7 @@ FT_BEGIN_HEADER
                              FT_GlyphSlot         slot,
                              FT_Byte**            glyph_names,
                              T1_Blend*            blend,
+                             FT_Bool              hinting,
                              T1_Decoder_Callback  parse_glyph );
 
   FT_LOCAL

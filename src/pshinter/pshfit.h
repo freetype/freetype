@@ -40,9 +40,9 @@ FT_BEGIN_HEADER
   
   } PSH_Hint_Flags;
 
-#define  psh_hint_is_active(x)  (((x)->flags & PSH_HINT_FLAG_ACTIVE) != 0)
-#define  psh_hint_activate(x)   (x)->flags |= PSH_HINT_FLAG_ACTIVE
-#define  psh_hint_deactivate(x) (x)->flags &= ~PSH_HINT_FLAG_ACTIVE
+#define  psh_hint_is_active(x)  (((x)->flags  & PSH_HINT_FLAG_ACTIVE) != 0)
+#define  psh_hint_activate(x)     (x)->flags |= PSH_HINT_FLAG_ACTIVE
+#define  psh_hint_deactivate(x)   (x)->flags &= ~PSH_HINT_FLAG_ACTIVE
   
   typedef struct PSH_HintRec_
   {
@@ -59,6 +59,9 @@ FT_BEGIN_HEADER
   } PSH_HintRec;
 
 
+ /* this is an interpolation zone used for strong points   */
+ /* weak points are interpolated according to their strong */
+ /* neighbours..                                           */
   typedef struct PSH_ZoneRec_
   {
     FT_Fixed  scale;
@@ -83,6 +86,12 @@ FT_BEGIN_HEADER
     PS_Mask_Table  counter_masks;
     
   } PSH_Hint_TableRec, *PSH_Hint_Table;
+
+
+  FT_LOCAL FT_Error
+  ps_hints_apply( PS_Hints     ps_hints,
+                  FT_Outline*  outline,
+                  PSH_Globals  globals );
 
 
 FT_END_HEADER

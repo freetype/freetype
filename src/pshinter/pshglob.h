@@ -20,6 +20,7 @@
 
 #include FT_FREETYPE_H
 #include FT_INTERNAL_POSTSCRIPT_GLOBALS_H
+#include FT_INTERNAL_POSTSCRIPT_HINTS_H
 
 FT_BEGIN_HEADER
 
@@ -103,7 +104,7 @@ FT_BEGIN_HEADER
     PSH_DimensionRec  dimension[2];
     PSH_BluesRec      blues;
 
-  } PSH_GlobalsRec, *PSH_Globals;
+  } PSH_GlobalsRec;
 
  
   typedef enum
@@ -113,6 +114,7 @@ FT_BEGIN_HEADER
     
   } PSH_Blue_Align;
 
+
   typedef struct
   {
     PSH_Blue_Align   align;
@@ -121,10 +123,13 @@ FT_BEGIN_HEADER
     
   } PSH_Blue_AlignementRec, *PSH_Blue_Alignement;
 
+
   FT_LOCAL void
   psh_globals_funcs_init( PSH_Globals_FuncsRec*  funcs );
 
- /* snap a stem width to fitter coordinates */
+
+ /* snap a stem width to fitter coordinates. org_width is in font units */
+ /* result is in device pixels (26.6 format)..                          */
   FT_LOCAL FT_Pos
   psh_dimension_snap_width( PSH_Dimension  dimension,
                             FT_Int         org_width );

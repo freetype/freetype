@@ -281,7 +281,10 @@
   const FT_Driver_Class  t1_driver_class =
   {
     {
-      ft_module_font_driver | ft_module_driver_scalable,
+      ft_module_font_driver      |
+      ft_module_driver_scalable  | 
+      ft_module_driver_has_hinter,
+      
       sizeof( FT_DriverRec ),
 
       "type1",
@@ -290,8 +293,8 @@
 
       0,   /* format interface */
 
-      (FT_Module_Constructor)T1_Init_Driver,
-      (FT_Module_Destructor) T1_Done_Driver,
+      (FT_Module_Constructor)T1_Driver_Init,
+      (FT_Module_Destructor) T1_Driver_Done,
       (FT_Module_Requester)  Get_Interface,
     },
 
@@ -299,15 +302,15 @@
     sizeof( T1_SizeRec ),
     sizeof( T1_GlyphSlotRec ),
 
-    (FTDriver_initFace)     T1_Init_Face,
-    (FTDriver_doneFace)     T1_Done_Face,
-    (FTDriver_initSize)     T1_Init_Size,
-    (FTDriver_doneSize)     T1_Done_Size,
-    (FTDriver_initGlyphSlot)T1_Init_GlyphSlot,
-    (FTDriver_doneGlyphSlot)T1_Done_GlyphSlot,
+    (FTDriver_initFace)     T1_Face_Init,
+    (FTDriver_doneFace)     T1_Face_Done,
+    (FTDriver_initSize)     T1_Size_Init,
+    (FTDriver_doneSize)     T1_Size_Done,
+    (FTDriver_initGlyphSlot)T1_GlyphSlot_Init,
+    (FTDriver_doneGlyphSlot)T1_GlyphSlot_Done,
 
-    (FTDriver_setCharSizes) 0,
-    (FTDriver_setPixelSizes)0,
+    (FTDriver_setCharSizes) T1_Size_Reset,
+    (FTDriver_setPixelSizes)T1_Size_Reset,
     (FTDriver_loadGlyph)    T1_Load_Glyph,
     (FTDriver_getCharIndex) Get_Char_Index,
 

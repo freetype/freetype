@@ -207,8 +207,8 @@
     if ( ( face->header.Flags & 8 ) == 0 )
     {
       /* Compute pixel sizes in 26.6 units */
-      dim_x = ( char_width  * horz_resolution ) / 72;
-      dim_y = ( char_height * vert_resolution ) / 72;
+      dim_x = ( char_width  * horz_resolution + 36 ) / 72;
+      dim_y = ( char_height * vert_resolution + 36 ) / 72;
 
       metrics->x_scale = FT_DivFix( dim_x, face->root.units_per_EM );
       metrics->y_scale = FT_DivFix( dim_y, face->root.units_per_EM );

@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  pshrec.h                                                               */
 /*                                                                         */
-/*    Postscript (Type 1/Type 2) hints recorder.                           */
+/*    Postscript (Type1/Type2) hints recorder.                             */
 /*                                                                         */
 /*  Copyright 2001 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -14,7 +14,7 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /*                                                                         */
-/*  The functions defined here are called from hte Type 1, CID and CFF     */
+/*  The functions defined here are called from the Type 1, CID and CFF     */
 /*  font drivers to record the hints of a given character/glyph.           */
 /*                                                                         */
 /*  The hints are recorded in a unified format, and are later processed    */
@@ -51,6 +51,7 @@ FT_BEGIN_HEADER
    
  } PS_Hint_Type;
  
+
  /* hint flags */
   typedef enum
   {
@@ -58,6 +59,7 @@ FT_BEGIN_HEADER
     PS_HINT_FLAG_BOTTOM = 2
 
   } PS_Hint_Flags;
+
 
  /* hint descriptor */
   typedef struct PS_HintRec_
@@ -132,16 +134,20 @@ FT_BEGIN_HEADER
 
  /* */
 
-  FT_LOCAL void
-  ps_hints_done( PS_Hints  hints );
-  
+ /* initialise hints recorder */
   FT_LOCAL FT_Error
   ps_hints_init( PS_Hints   hints,
                  FT_Memory  memory );
 
+ /* finalize hints recorder */
+  FT_LOCAL void
+  ps_hints_done( PS_Hints  hints );
+
+ /* initialise Type1 hints recorder interface */  
   FT_LOCAL void
   t1_hints_funcs_init( T1_Hints_FuncsRec*  funcs );
   
+ /* initialise Type2 hints recorder interface */
   FT_LOCAL void
   t2_hints_funcs_init( T2_Hints_FuncsRec*  funcs );
 
