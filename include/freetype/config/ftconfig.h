@@ -62,7 +62,7 @@ FT_BEGIN_HEADER
 #include <limits.h>
 
   /* The number of bytes in an `int' type.  */
-#if   UINT_MAX == 0xFFFFFFFFU
+#if   UINT_MAX == 0xFFFFFFFFUL
 #define FT_SIZEOF_INT  4
 #elif UINT_MAX == 0xFFFFU
 #define FT_SIZEOF_INT  2
@@ -73,7 +73,7 @@ FT_BEGIN_HEADER
 #endif
 
   /* The number of bytes in a `long' type.  */
-#if   ULONG_MAX == 0xFFFFFFFFU
+#if   ULONG_MAX == 0xFFFFFFFFUL
 #define FT_SIZEOF_LONG  4
 #elif ULONG_MAX > 0xFFFFFFFFU && ULONG_MAX == 0xFFFFFFFFFFFFFFFFU
 #define FT_SIZEOF_LONG  8
@@ -127,7 +127,7 @@ FT_BEGIN_HEADER
 #error "no 32bit type found -- please check your configuration files"
 #endif
 
-/* now, lookup for an integer type that is at least 32 bits */
+  /* now, lookup for an integer type that is at least 32 bits */
 #if FT_SIZEOF_INT >= 4
 
   typedef int           FT_Fast;
@@ -135,8 +135,8 @@ FT_BEGIN_HEADER
 
 #elif FT_SIZEOF_LONG >= 4
 
-  typedef long          FT_Fast
-  typedef unsigned long FT_UFast
+  typedef long          FT_Fast;
+  typedef unsigned long FT_UFast;
   
 #endif
 

@@ -1,3 +1,16 @@
+2001-06-20  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftconfig.h: Add two more `L's to
+	constants.
+	Add missing semicolons.
+
+	* builds/toplevel.mk: Do similar change as for
+	builds/unix/detect.mk.
+
+	* include/freetype/freetype.h (FT_ENC_TAG): New version to make it
+	easier to redefine.
+	* include/freetype/ftimage.h (FT_IMAGE_TAG): Ditto.
+
 2001-06-19  David Turner  <david@freetype.org>
 
 	* builds/win32/visualc/freetype.dsp, builds/win32/visualc/index.html:
@@ -20,7 +33,7 @@
 	listed here, but FT2 now compiles without warnings with VC++ and the
 	"/W4" warning level (lint-style).
 
-        * include/freetype/freetype.h (FT_New_Memory_Face): Updated
+	* include/freetype/freetype.h (FT_New_Memory_Face): Updated
 	documentation.
 	* include/freetype/fttypes.h (FT_BOOL): New macro.
 	* include/freetype/internal/ftdebug.h: Add #pragma for Visual C++
@@ -525,7 +538,7 @@
 	value an unsigned short value, first by shifting right 16 bits,
 	then by casting the results to FT_UShort.
 
-2001-03-17  David Turner   <david.turner@freetype.org>
+2001-03-17  David Turner  <david.turner@freetype.org>
 
 	* src/cid/cidobjs.c, src/cid/cidload.c, src/pcf/pcfread.c,
 	src/type1/t1load.c, src/type1/t1objs.c: Added a few casts to remove
