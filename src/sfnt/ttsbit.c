@@ -211,7 +211,7 @@
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Load_SBit_Const_Metrics( TT_SBit_Range*  range,
@@ -243,7 +243,7 @@
   /*    load_offsets :: A flag whether to load the glyph offset table.     */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Load_SBit_Range_Codes( TT_SBit_Range*  range,
@@ -306,7 +306,7 @@
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Load_SBit_Range( TT_SBit_Range*  range,
@@ -381,7 +381,7 @@
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Load_SBit_Strikes( TT_Face    face,
@@ -631,7 +631,7 @@
   /*    aglyph_offset :: The offset of the glyph data in `EBDT' table.     */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means the glyph index was found.           */
+  /*    FreeType error code.  0 means the glyph index was found.           */
   /*                                                                       */
   static
   FT_Error  Find_SBit_Range( FT_UInt          glyph_index,
@@ -735,7 +735,7 @@
   /*    aglyph_offset :: The offset of the glyph data in `EBDT' table.     */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.  Returns                    */
+  /*    FreeType error code.  0 means success.  Returns                    */
   /*    TT_Err_Invalid_Argument if no sbit exists for the requested glyph. */
   /*                                                                       */
   static
@@ -800,7 +800,7 @@
   /*    big_metrics :: A big SBit metrics structure for the glyph.         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The stream cursor must be positioned at the glyph's offset within  */
@@ -1349,7 +1349,7 @@
   /*    metrics     :: A big sbit metrics structure for the glyph image.   */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.  Returns an error if no     */
+  /*    FreeType error code.  0 means success.  Returns an error if no     */
   /*    glyph sbit exists for the index.                                   */
   /*                                                                       */
   /*  <Note>                                                               */

@@ -72,7 +72,7 @@
   /*    size :: A handle to the size object.                               */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  CID_Init_Size( T1_Size  size )
@@ -96,7 +96,7 @@
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  CID_Reset_Size( T1_Size  size )
@@ -201,7 +201,7 @@
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  CID_Init_Face( FT_Stream      stream,
@@ -458,7 +458,7 @@
   /*    slot :: The glyph record to build.                                 */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  CID_Init_GlyphSlot( T1_GlyphSlot  glyph )
@@ -486,7 +486,7 @@
   /*    driver :: A handle to the target driver object.                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  CID_Init_Driver( T1_Driver  driver )

@@ -550,7 +550,7 @@
   /*    charstring_len   :: The length in bytes of the charstring stream.  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  T2_Parse_CharStrings( T2_Decoder*  decoder,

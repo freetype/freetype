@@ -36,9 +36,11 @@
 #define FT_COMPONENT  trace_cidafm
 
 
+#if 0
+
   LOCAL_FUNC
-  void  CID_Done_AFM( FT_Memory memory,
-                      T1_AFM*   afm )
+  void  CID_Done_AFM( FT_Memory  memory,
+                      T1_AFM*    afm )
   {
     FREE( afm->kern_pairs );
     afm->num_pairs = 0;
@@ -178,7 +180,7 @@
     limit = (FT_Byte*)stream->limit;
     p     = start;
 
-    /* we are now going to count the occurences of "KP" or "KPX" in */
+    /* we are now going to count the occurences of `KP' or `KPX' in */
     /* the AFM file.                                                */
     count = 0;
     for ( p = start; p < limit - 3; p++ )
@@ -278,6 +280,8 @@
     kerning->x = 0;
     kerning->y = 0;
   }
+
+#endif /* 0 */
 
 
 /* END */

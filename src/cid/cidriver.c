@@ -75,7 +75,7 @@
   }
 
 
-#ifdef xxxT1_CONFIG_OPTION_NO_AFM
+#ifndef T1_CONFIG_OPTION_NO_AFM
 
 
   /*************************************************************************/
@@ -116,21 +116,29 @@
                          FT_UInt     right_glyph,
                          FT_Vector*  kerning )
   {
+#if 0
+
     T1_AFM*  afm;
+
+#endif
 
 
     kerning->x = 0;
     kerning->y = 0;
 
+#if 0
+
     afm = (T1_AFM*)face->afm_data;
     if ( afm )
       CID_Get_Kerning( afm, left_glyph, right_glyph, kerning );
+
+#endif /* 0 */
 
     return T1_Err_Ok;
   }
 
 
-#endif /* xxxT1_CONFIG_OPTION_NO_AFM */
+#endif /* !T1_CONFIG_OPTION_NO_AFM */
 
 
   /*************************************************************************/
@@ -157,7 +165,7 @@
   /*    size            :: A handle to the target size object.             */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Set_Char_Sizes( T1_Size     size,
@@ -194,7 +202,7 @@
   /*    size         :: A handle to the target size object.                */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  Set_Pixel_Sizes( T1_Size  size,
@@ -329,7 +337,7 @@
     (FTDriver_initFace)     CID_Init_Face,
     (FTDriver_doneFace)     CID_Done_Face,
 
-#ifndef xxxxT1_CONFIG_OPTION_NO_AFM
+#ifdef T1_CONFIG_OPTION_NO_AFM
     (FTDriver_getKerning)   0,
 #else
     (FTDriver_getKerning)   Get_Kerning,

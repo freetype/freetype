@@ -21,6 +21,7 @@
 
 #include <cidobjs.h>
 
+
   typedef struct  T1_Kern_Pair_
   {
     FT_UInt    glyph1;
@@ -39,21 +40,22 @@
 
 #if 0
 
-LOCAL_DEF
-FT_Error  CID_Read_AFM( FT_Face   face,
-                        FT_Stream stream );
+  LOCAL_DEF
+  FT_Error  CID_Read_AFM( FT_Face    t1_face,
+                          FT_Stream  stream );
 
-LOCAL_DEF
-void  CID_Done_AFM( FT_Memory  memory,
-                    T1_AFM*    afm );
+  LOCAL_DEF
+  void  CID_Done_AFM( FT_Memory  memory,
+                      T1_AFM*    afm );
 
-LOCAL_DEF
-void  CID_Get_Kerning( T1_AFM*     afm,
-                       FT_UInt     glyph1,
-                       FT_UInt     glyph2,
-                       FT_Vector*  kerning );
+  LOCAL_DEF
+  void  CID_Get_Kerning( T1_AFM*     afm,
+                         FT_UInt     glyph1,
+                         FT_UInt     glyph2,
+                         FT_Vector*  kerning );
 
-#endif
+#endif /* 0 */
+
 
 #endif /* CIDAFM_H */
 

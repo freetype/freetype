@@ -67,7 +67,7 @@
   /*              reallocations.                                           */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  T1_New_Table( T1_Table*  table,
@@ -157,7 +157,7 @@
   /*    length :: The length in bytes of the source object.                */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.  An error is returned if       */
+  /*    FreeType error code.  0 means success.  An error is returned if    */
   /*    reallocation fails.                                                */
   /*                                                                       */
   LOCAL_FUNC

@@ -473,7 +473,7 @@
   /*    achar    :: The accent character's StandardEncoding charcode.      */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type 1 error code.  0 means success.                               */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   static
   FT_Error  t1operator_seac( CID_Decoder*  decoder,
@@ -626,7 +626,7 @@
   /*    charstring_len   :: The length in bytes of the charstring stream.  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Type1 error code.  0 means success.                                */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  CID_Parse_CharStrings( CID_Decoder*  decoder,

@@ -201,7 +201,7 @@
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  TT_Init_Face( FT_Stream      stream,
@@ -320,7 +320,7 @@
   /*    size :: A handle to the size object.                               */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  TT_Init_Size( TT_Size  size )
@@ -709,7 +709,7 @@
   /*    slot :: The glyph record to build.                                 */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot )
@@ -767,7 +767,7 @@
   /*    driver :: A handle to the target driver object.                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  TT_Init_Driver( TT_Driver  driver )

@@ -115,7 +115,7 @@ const FT_DriverInterface*  ft_default_drivers[] =
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeTyoe error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Init_FreeType( FT_Library*  library )
   {

@@ -1,50 +1,85 @@
-/***************************************************************************
- *
- * t1afm.c  - support for reading Type 1 AFM files
- *
- *
- ***************************************************************************/
+/***************************************************************************/
+/*                                                                         */
+/*  t1afm.c                                                                */
+/*                                                                         */
+/*    AFM support for Type 1 fonts (body).                                 */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
 
+
+#include <t1afm.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/t1types.h>
-#include <stdlib.h>  /* for qsort */
-#include <t1afm.h>
+
+#include <stdlib.h>  /* for qsort()   */
+#include <string.h>  /* for strcmp()  */
+#include <ctype.h>   /* for isalnum() */
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_t1afm
+
 
   LOCAL_FUNC
-  void  T1_Done_AFM( FT_Memory memory, T1_AFM*  afm )
+  void  T1_Done_AFM( FT_Memory  memory,
+                     T1_AFM*    afm )
   {
     FREE( afm->kern_pairs );
     afm->num_pairs = 0;
   }
 
+
 #undef  IS_KERN_PAIR
-#define IS_KERN_PAIR(p)  ( p[0] == 'K'  &&  p[1] == 'P' )
+#define IS_KERN_PAIR( p )  ( p[0] == 'K' && p[1] == 'P' )
 
-#define IS_ALPHANUM(c)  ( (c >= 'A' && c <= 'Z') || \
-                          (c >= 'a' && c <= 'z') || \
-                          (c >= '0' && c <= '9') || \
-                          (c == '_' && c == '.') )
+#define IS_ALPHANUM( c )  ( isalnum( c ) || \
+                            c == '_'     || \
+                            c == '.'     )
 
- /* read a glyph name and return the equivalent glyph index */
+
+  /* read a glyph name and return the equivalent glyph index */
   static
-  FT_UInt  afm_atoindex( FT_Byte*  *start, FT_Byte*  limit, T1_Font*  type1 )
+  FT_UInt  afm_atoindex( FT_Byte**  start,
+                         FT_Byte*   limit,
+                         T1_Font*   type1 )
   {
-    FT_Byte* p = *start;
-    FT_Int   len;
-    FT_UInt  result = 0;
-    char     temp[64];
+    FT_Byte*  p = *start;
+    FT_Int    len;
+    FT_UInt   result = 0;
+    char      temp[64];
+
 
     /* skip whitespace */
-    while ( (*p == ' ' || *p == '\t' || *p == ':' || *p == ';') && p < limit )
+    while ( ( *p == ' ' || *p == '\t' || *p == ':' || *p == ';' ) &&
+            p < limit                                             )
       p++;
     *start = p;
 
     /* now, read glyph name */
-    while ( IS_ALPHANUM(*p) && p < limit ) p++;
+    while ( IS_ALPHANUM( *p ) && p < limit )
+      p++;
+
     len = p - *start;
-    if (len > 0 && len < 64)
+
+    if ( len > 0 && len < 64 )
     {
       FT_Int  n;
+
 
       /* copy glyph name to intermediate array */
       MEM_Copy( temp, *start, len );
@@ -55,7 +90,8 @@
       {
         char*  gname = (char*)type1->glyph_names[n];
 
-        if ( gname && gname[0] == temp[0] && strcmp(gname,temp) == 0 )
+
+        if ( gname && gname[0] == temp[0] && strcmp( gname, temp ) == 0 )
         {
           result = n;
           break;
@@ -67,16 +103,18 @@
   }
 
 
- /* read an integer */
+  /* read an integer */
   static
-  int  afm_atoi( FT_Byte** start, FT_Byte*  limit )
+  int  afm_atoi( FT_Byte**  start,
+                 FT_Byte*   limit )
   {
     FT_Byte*  p    = *start;
     int       sum  = 0;
     int       sign = 1;
 
+
     /* skip everything that is not a number */
-    while ( p < limit && (*p < '0' || *p > '9') )
+    while ( p < limit && !isdigit( *p ) )
     {
       sign = 1;
       if (*p == '-')
@@ -85,38 +123,41 @@
       p++;
     }
 
-    while ( p < limit && (*p >= '0' && *p < '9') )
+    while ( p < limit && isdigit( *p ) )
     {
-      sum = sum*10 + (*p - '0');
+      sum = sum * 10 + ( *p - '0' );
       p++;
     }
     *start = p;
-    return sum*sign;
+
+    return sum * sign;
   }
 
 
 #undef  KERN_INDEX
-#define KERN_INDEX(g1,g2)   (((FT_ULong)g1 << 16) | g2)
+#define KERN_INDEX( g1, g2 ) ( ( (FT_ULong)g1 << 16 ) | g2 )
 
- /* compare two kerning pairs */
+
+  /* compare two kerning pairs */
   static
-  int  compare_kern_pairs( const void* a, const void* b )
+  int  compare_kern_pairs( const void*  a,
+                           const void*  b )
   {
     T1_Kern_Pair*  pair1 = (T1_Kern_Pair*)a;
     T1_Kern_Pair*  pair2 = (T1_Kern_Pair*)b;
 
-    FT_ULong  index1 = KERN_INDEX(pair1->glyph1,pair1->glyph2);
-    FT_ULong  index2 = KERN_INDEX(pair2->glyph1,pair2->glyph2);
+    FT_ULong  index1 = KERN_INDEX( pair1->glyph1, pair1->glyph2 );
+    FT_ULong  index2 = KERN_INDEX( pair2->glyph1, pair2->glyph2 );
 
-    return ( index1 < index2 ? -1 :
-           ( index1 > index2 ?  1 : 0 ));
+
+    return ( index1 - index2 );
   }
 
 
- /* parse an AFM file - for now, only read the kerning pairs */
+  /* parse an AFM file - for now, only read the kerning pairs */
   LOCAL_FUNC
-  FT_Error  T1_Read_AFM( FT_Face   t1_face,
-                         FT_Stream stream )
+  FT_Error  T1_Read_AFM( FT_Face    t1_face,
+                         FT_Stream  stream )
   {
     FT_Error       error;
     FT_Memory      memory = stream->memory;
@@ -128,28 +169,29 @@
     T1_Font*       type1 = &((T1_Face)t1_face)->type1;
     T1_AFM*        afm   = 0;
 
-    if ( ACCESS_Frame(stream->size) )
+
+    if ( ACCESS_Frame( stream->size ) )
       return error;
 
     start = (FT_Byte*)stream->cursor;
     limit = (FT_Byte*)stream->limit;
     p     = start;
 
-    /* we are now going to count the occurences of "KP" or "KPX" in */
-    /* the AFM file..                                               */
+    /* we are now going to count the occurences of `KP' or `KPX' in */
+    /* the AFM file.                                                */
     count = 0;
-    for ( p = start; p < limit-3; p++ )
+    for ( p = start; p < limit - 3; p++ )
     {
-      if ( IS_KERN_PAIR(p) )
+      if ( IS_KERN_PAIR( p ) )
         count++;
     }
 
-   /* Actually, kerning pairs are simply optional !! */
-    if (count == 0)
+    /* Actually, kerning pairs are simply optional! */
+    if ( count == 0 )
       goto Exit;
 
     /* allocate the pairs */
-    if ( ALLOC(       afm, sizeof(*afm ) )                   ||
+    if ( ALLOC( afm, sizeof ( *afm ) )                       ||
          ALLOC_ARRAY( afm->kern_pairs, count, T1_Kern_Pair ) )
       goto Exit;
 
@@ -160,15 +202,17 @@
     /* save in face object */
     ((T1_Face)t1_face)->afm_data = afm;
 
-    for ( p = start; p < limit-3; p++ )
+    for ( p = start; p < limit - 3; p++ )
     {
-      if ( IS_KERN_PAIR(p) )
+      if ( IS_KERN_PAIR( p ) )
       {
         FT_Byte*  q;
 
+
         /* skip keyword (KP or KPX) */
-        q = p+2;
-        if (*q == 'X') q++;
+        q = p + 2;
+        if ( *q == 'X' )
+          q++;
 
         pair->glyph1    = afm_atoindex( &q, limit, type1 );
         pair->glyph2    = afm_atoindex( &q, limit, type1 );
@@ -183,18 +227,20 @@
     }
 
     /* now, sort the kern pairs according to their glyph indices */
-    qsort( afm->kern_pairs, count, sizeof(T1_Kern_Pair), compare_kern_pairs );
+    qsort( afm->kern_pairs, count, sizeof ( T1_Kern_Pair ),
+           compare_kern_pairs );
 
   Exit:
-    if (error)
+    if ( error )
       FREE( afm );
 
     FORGET_Frame();
+
     return error;
   }
 
 
- /* find the kerning for a given glyph pair */
+  /* find the kerning for a given glyph pair */
   LOCAL_FUNC
   void  T1_Get_Kerning( T1_AFM*     afm,
                         FT_UInt     glyph1,
@@ -202,28 +248,35 @@
                         FT_Vector*  kerning )
   {
     T1_Kern_Pair  *min, *mid, *max;
-    FT_ULong       index = KERN_INDEX(glyph1,glyph2);
+    FT_ULong       index = KERN_INDEX( glyph1, glyph2 );
 
+ 
     /* simple binary search */
     min = afm->kern_pairs;
-    max = min + afm->num_pairs-1;
+    max = min + afm->num_pairs - 1;
 
-    while (min <= max)
+    while ( min <= max )
     {
       FT_ULong  midi;
 
-      mid = min + (max-min)/2;
-      midi = KERN_INDEX(mid->glyph1,mid->glyph2);
+
+      mid = min + ( max - min ) / 2;
+      midi = KERN_INDEX( mid->glyph1, mid->glyph2 );
       if ( midi == index )
       {
         *kerning = mid->kerning;
         return;
       }
 
-      if ( midi < index ) min = mid+1;
-                     else max = mid-1;
+      if ( midi < index )
+        min = mid + 1;
+      else
+        max = mid - 1;
     }
+
     kerning->x = 0;
     kerning->y = 0;
   }
 
+
+/* END */

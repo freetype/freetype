@@ -68,7 +68,7 @@
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeTrue error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  T2_Init_Face( FT_Stream      stream,
@@ -205,7 +205,7 @@
   /*    size :: A handle to the size object.                               */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  T2_Init_Size( T2_Size  size )
@@ -247,7 +247,7 @@
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
   FT_Error  T2_Reset_Size( T2_Size  size )
@@ -288,7 +288,7 @@
   /*    slot :: The glyph record to build.                                 */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  T2_Init_GlyphSlot( T2_GlyphSlot  slot )
@@ -342,7 +342,7 @@
   /*    driver :: A handle to the target driver object.                    */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  T2_Init_Driver( T2_Driver  driver )
