@@ -63,6 +63,9 @@
     trace_raster,    /* rasterizer              (ftraster.c) */
     trace_stream,    /* stream manager          (ftstream.c) */
 
+    /* Cache sub-system */
+    trace_cache,
+
     /* SFNT driver components */
     trace_sfobjs,    /* SFNT object handler     (sfobjs.c)   */
     trace_ttcmap,    /* charmap handler         (ttcmap.c)   */
