@@ -1,3 +1,9 @@
+2003-10-05  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftmodule.h: Renamed to...
+	* include/freetype/ftmodapi.h: This to avoid duplicate file names.
+	* include/freetype/config/ftheader.h (FT_MODULE_H): Updated.
+
 2003-10-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftoutln.c (FT_OrientationExtremumRec,
