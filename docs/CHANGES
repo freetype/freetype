@@ -1,3 +1,24 @@
+LATEST CHANGES BETWEEN 2.0.8 and 2.0.7
+
+  I. IMPORTANT BUG FIXES
+  
+    - There was a small but nasty bug in "freetype-config.in" which
+      caused the "freetype-config" script to fail on Unix.
+      
+      this doesn't prevented the installation of the library or even
+      its execution, but caused problems when trying to compile many
+      Unix packages that depend on it.. !!!
+      
+
+    - some TrueType or OpenType fonts embedded in PDF documents do
+      not have a 'cmap', 'post' and 'name' as is required by the
+      specification, FreeType no longer refuses to load such fonts..
+
+    - various fixes to the PCF font driver
+    
+
+============================================================================
+
 LATEST CHANGES BETWEEN 2.0.7 and 2.0.6
 
   I. IMPORTANT BUG FIXES
