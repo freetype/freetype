@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR driver interface (body).                                */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2002, 2003 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -32,10 +32,12 @@
   {
     FT_Error  error;
 
+
     error = pfr_face_get_kerning( face, left, right, avector );
     if ( !error )
     {
       PFR_PhyFont  phys = &face->phy_font;
+
 
       /* convert from metrics to outline units when necessary */
       if ( phys->outline_resolution != phys->metrics_resolution )
@@ -49,6 +51,7 @@
                                               phys->metrics_resolution );
       }
     }
+
     return error;
   }
 
@@ -58,12 +61,14 @@
                    FT_UInt    gindex,
                    FT_Pos    *aadvance )
   {
-    FT_Error     error = FT_Err_Bad_Argument;
+    FT_Error  error = FT_Err_Bad_Argument;
+
 
     *aadvance = 0;
     if ( face )
     {
       PFR_PhyFont  phys  = &face->phy_font;
+
 
       if ( gindex < phys->num_chars )
       {
@@ -86,6 +91,7 @@
     PFR_PhyFont  phys  = &face->phy_font;
     FT_Fixed     x_scale, y_scale;
     FT_Size      size = face->root.size;
+
 
     if ( aoutline_resolution )
       *aoutline_resolution = phys->outline_resolution;
