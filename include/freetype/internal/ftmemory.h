@@ -270,6 +270,13 @@ FT_BEGIN_HEADER
 #define FT_ARRAY_MOVE( dest, source, count )                        \
           FT_MEM_MOVE( dest, source, (count) * sizeof ( *(dest) ) )
 
+/* return the maximum number of adressable elements in an array
+ * we limit ourselves to INT_MAX, rather than UINT_MAX, to avoid
+ * any problems
+ */
+#define FT_ARRAY_MAX( ptr )    (FT_INT_MAX/sizeof( *(ptr) ))
+
+#define FT_ARRAY_CHECK( ptr, count )   ( (count) <= FT_ARRAY_MAX(ptr) )
 
   /*************************************************************************/
   /*                                                                       */
@@ -412,6 +419,7 @@ FT_BEGIN_HEADER
 #define FT_REALLOC_ARRAY( _pointer_, _old_, _new_, _type_ )   \
           FT_REALLOC( _pointer, (_old_) * sizeof ( _type_ ),  \
                                 (_new_) * sizeof ( _type_ ) )
+
 
  /* */
 

@@ -18,9 +18,29 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       highly recommended to upgrade.
 
     - FreeType didn't properly parse empty Type 1 glyphs.
+    
+    - An unbounded dynamic buffer growth was fixed in the PFR loader
+    
+    - Several bugs were fixed in the cache sub-system.
+
+    - Fixed bug #12263: incorrect behaviour when resizing to distinct but
+      very close character pixel sizes through FT_Set_Char_Size
+      
+    - The auto-hinter didn't work when a font didn't have a Unicode charmap.
+      it even refused to load the glyphs !
 
 
   II. IMPORTANT CHANGES
+
+    - a LOT of work has been done in order to drastically reduce the
+      amount of heap memory used by FreeType, especially when using
+      memory-mapped font files (which is the default on Unix systems
+      which support them). This should be good news for any Unix distribution
+      upgrading to this release of the font engine.
+
+    - The auto-hinter has been completely rewritten as a new module,
+      called the 'auto-fitter'. The latter is the new default auto-hinting
+      module. It also consumes a lot less memory than its predecessor.
 
     - George Williams  contributed code to read  kerning data from PFM
       files.
@@ -53,6 +73,19 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
     - A new option `--ftversion' has been  added to freetype-config to
       return the FreeType version.
 
+    - The memory debugger has been updated to dump allocation statistics
+      on all allocation sources in the library. This is useful to spot
+      greedy allocations when loading and processing fonts.
+
+    - we removed a huge array of constant pointers to constant strings
+      in the 'psnames' module. The problem was that when compiled in PIC
+      mode (i.e. when generating a Unix shared object / dll), the array
+      could only be placed in the non-shared writable section of the library*
+      since absolute pointers are not relocatable by nature.
+      
+      This saves about 16Kb per process linked to FreeType. We also store
+      the array in a novel compressed way that saves about 20 Kb of code
+      as well.
 
 LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
 

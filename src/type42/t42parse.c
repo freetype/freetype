@@ -159,7 +159,19 @@
     /*   parser->in_memory is set if we have a memory stream.          */
     /*                                                                 */
 
-    if ( FT_STREAM_SEEK( 0L ) )
+    if ( FT_STREAM_SEEK( 0L ) ||
+         FT_FRAME_ENTER( 17 ) )
+      goto Exit;
+
+    if ( ft_memcmp( stream->cursor, "%!PS-TrueTypeFont", 17 ) != 0 )
+    {
+      FT_TRACE2(( "not a Type42 font\n" ));
+      error = T42_Err_Unknown_File_Format;
+    }
+
+    FT_FRAME_EXIT();
+
+    if ( error || FT_STREAM_SEEK( 0 ) )
       goto Exit;
 
     size = stream->size;
@@ -188,17 +200,9 @@
       parser->base_len = size;
     }
 
-    /* Now check font format; we must see `%!PS-TrueTypeFont' */
-    if ( size <= 17                                    ||
-         ( ft_strncmp( (const char*)parser->base_dict,
-                       "%!PS-TrueTypeFont", 17 ) )     )
-      error = T42_Err_Unknown_File_Format;
-    else
-    {
-      parser->root.base   = parser->base_dict;
-      parser->root.cursor = parser->base_dict;
-      parser->root.limit  = parser->root.cursor + parser->base_len;
-    }
+    parser->root.base   = parser->base_dict;
+    parser->root.cursor = parser->base_dict;
+    parser->root.limit  = parser->root.cursor + parser->base_len;
 
   Exit:
     if ( error && !parser->in_memory )
