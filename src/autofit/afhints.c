@@ -399,14 +399,14 @@
 
     hints->x_scale = x_scale;
     hints->y_scale = y_scale;
+    hints->x_delta = x_delta;
+    hints->y_delta = y_delta;
 
     points = hints->points;
     if ( hints->num_points == 0 )
       goto Exit;
 
     {
-      /* do one thing at a time -- it is easier to understand, and */
-      /* the code is clearer                                       */
       AF_Point  point;
       AF_Point  point_limit = points + hints->num_points;
 

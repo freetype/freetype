@@ -20,9 +20,6 @@
 #define __FTCCACHE_H__
 
 
-/* define to allow cache lookup inlining */
-#define  FTC_CACHE_USE_INLINE
-
 
 FT_BEGIN_HEADER
 
@@ -30,14 +27,7 @@ FT_BEGIN_HEADER
   typedef struct FTC_CacheRec_*  FTC_Cache;
 
   /* handle to cache class */
-  typedef const struct FTC_Cache_ClassRec_*  FTC_Cache_Class;
-
-  /* handle to cache node family */
-  typedef struct FTC_FamilyRec_*  FTC_Family;
-
-  /* handle to cache root query */
-  typedef struct FTC_QueryRec_*  FTC_Query;
-
+  typedef const struct FTC_CacheClassRec_*  FTC_CacheClass;
 
   /*************************************************************************/
   /*************************************************************************/
@@ -66,7 +56,7 @@ FT_BEGIN_HEADER
     FTC_Node   mru_prev;     /* circular mru list pointer           */
     FTC_Node   link;         /* used for hashing                    */
     FT_UInt32  hash;         /* used for hashing too                */
-    FT_UShort  fam_index;    /* index of family the node belongs to */
+    FT_UShort  cache_index;  /* index of cache the node belongs to  */
     FT_Short   ref_count;    /* reference count for this node       */
 
   } FTC_NodeRec;
@@ -83,81 +73,11 @@ FT_BEGIN_HEADER
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  /* can be used as a FTC_Node_DoneFunc */
-  FT_EXPORT( void )
-  ftc_node_done( FTC_Node   node,
-                 FTC_Cache  cache );
-
   /* reserved for manager's use */
   FT_EXPORT( void )
   ftc_node_destroy( FTC_Node     node,
                     FTC_Manager  manager );
 
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*****                                                               *****/
-  /*****                   CACHE QUERY DEFINITIONS                     *****/
-  /*****                                                               *****/
-  /*************************************************************************/
-  /*************************************************************************/
-
-  /* A structure modelling a cache node query.  The following fields must  */
-  /* all be set by the @FTC_Family_CompareFunc method of a cache's family  */
-  /* list.                                                                 */
-  /*                                                                       */
-  typedef struct  FTC_QueryRec_
-  {
-    FTC_Family  family;
-    FT_UFast    hash;
-
-  } FTC_QueryRec;
-
-
-#define FTC_QUERY( x )    ( (FTC_Query)(x) )
-#define FTC_QUERY_P( x )  ( (FTC_Query*)(x) )
-
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*****                                                               *****/
-  /*****                   CACHE FAMILY DEFINITIONS                    *****/
-  /*****                                                               *****/
-  /*************************************************************************/
-  /*************************************************************************/
-
-  typedef struct  FTC_FamilyRec_
-  {
-    FT_LruNodeRec  lru;
-    FTC_Cache      cache;
-    FT_UInt        num_nodes;
-    FT_UInt        fam_index;
-
-  } FTC_FamilyRec;
-
-
-#define FTC_FAMILY( x )    ( (FTC_Family)(x) )
-#define FTC_FAMILY_P( x )  ( (FTC_Family*)(x) )
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* These functions are exported so that they can be called from          */
-  /* user-provided cache classes; otherwise, they are really part of the   */
-  /* cache sub-system internals.                                           */
-  /*                                                                       */
-
-  /* must be called by any FTC_Node_InitFunc routine */
-  FT_EXPORT( FT_Error )
-  ftc_family_init( FTC_Family  family,
-                   FTC_Query   query,
-                   FTC_Cache   cache );
-
-
-  /* can be used as a FTC_Family_DoneFunc; otherwise, must be called */
-  /* by any family finalizer function                                */
-  FT_EXPORT( void )
-  ftc_family_done( FTC_Family  family );
 
 
   /*************************************************************************/
@@ -168,23 +88,57 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
+  /* initialize a new cache node */
+  typedef FT_Error    (*FTC_Node_NewFunc)( FTC_Node    *pnode,
+                                           FT_Pointer   query,
+                                           FTC_Cache    cache );
+
+  typedef FT_ULong    (*FTC_Node_WeightFunc)( FTC_Node   node,
+                                              FTC_Cache  cache );
+
+  /* compare a node to a given key pair */
+  typedef FT_Bool     (*FTC_Node_CompareFunc)( FTC_Node    node,
+                                               FT_Pointer  key,
+                                               FTC_Cache   cache );
+
+
+  typedef void        (*FTC_Node_FreeFunc)( FTC_Node   node,
+                                            FTC_Cache  cache );
+
+  typedef FT_Error    (*FTC_Cache_InitFunc)( FTC_Cache   cache );
+
+  typedef void        (*FTC_Cache_DoneFunc)( FTC_Cache   cache );
+
+
+  typedef struct FTC_CacheClassRec_
+  {
+    FTC_Node_NewFunc        node_new;
+    FTC_Node_WeightFunc     node_weight;
+    FTC_Node_CompareFunc    node_compare;
+    FTC_Node_CompareFunc    node_remove_faceid;
+    FTC_Node_FreeFunc       node_free;
+
+    FT_UInt                 cache_size;
+    FTC_Cache_InitFunc      cache_init;
+    FTC_Cache_DoneFunc      cache_done;
+
+  } FTC_CacheClassRec;
+
   /* each cache really implements a dynamic hash table to manage its nodes */
   typedef struct  FTC_CacheRec_
   {
-    FTC_Manager          manager;
-    FT_Memory            memory;
-    FTC_Cache_Class      clazz;
-
-    FT_UInt              cache_index;  /* in manager's table         */
-    FT_Pointer           cache_data;   /* used by cache node methods */
-
     FT_UFast             p;
     FT_UFast             mask;
     FT_Long              slack;
     FTC_Node*            buckets;
 
-    FT_LruList_ClassRec  family_class;
-    FT_LruList           families;
+    FTC_CacheClassRec    clazz;      /* local copy, for speed */
+
+    FTC_Manager          manager;
+    FT_Memory            memory;
+    FT_UInt              index;  /* in manager's table         */
+
+    FTC_CacheClass       org_class;  /* original class pointer */
 
   } FTC_CacheRec;
 
@@ -193,105 +147,38 @@ FT_BEGIN_HEADER
 #define FTC_CACHE_P( x )  ( (FTC_Cache*)(x) )
 
 
-  /* initialize a given cache */
-  typedef FT_Error
-  (*FTC_Cache_InitFunc)( FTC_Cache  cache );
-
-  /* clear a cache */
-  typedef void
-  (*FTC_Cache_ClearFunc)( FTC_Cache  cache );
-
-  /* finalize a given cache */
-  typedef void
-  (*FTC_Cache_DoneFunc)( FTC_Cache  cache );
-
-
-  typedef FT_Error
-  (*FTC_Family_InitFunc)( FTC_Family  family,
-                          FTC_Query   query,
-                          FTC_Cache   cache );
-
-  typedef FT_Int
-  (*FTC_Family_CompareFunc)( FTC_Family  family,
-                             FTC_Query   query );
-
-  typedef void
-  (*FTC_Family_DoneFunc)( FTC_Family  family,
-                          FTC_Cache   cache );
-
-  /* initialize a new cache node */
-  typedef FT_Error
-  (*FTC_Node_InitFunc)( FTC_Node    node,
-                        FT_Pointer  type,
-                        FTC_Cache   cache );
-
-  /* compute the weight of a given cache node */
-  typedef FT_ULong
-  (*FTC_Node_WeightFunc)( FTC_Node   node,
-                          FTC_Cache  cache );
-
-  /* compare a node to a given key pair */
-  typedef FT_Bool
-  (*FTC_Node_CompareFunc)( FTC_Node    node,
-                           FT_Pointer  key,
-                           FTC_Cache   cache );
-
-  /* finalize a given cache node */
-  typedef void
-  (*FTC_Node_DoneFunc)( FTC_Node   node,
-                        FTC_Cache  cache );
-
-
-  typedef struct  FTC_Cache_ClassRec_
-  {
-    FT_UInt                 cache_size;
-    FTC_Cache_InitFunc      cache_init;
-    FTC_Cache_ClearFunc     cache_clear;
-    FTC_Cache_DoneFunc      cache_done;
-
-    FT_UInt                 family_size;
-    FTC_Family_InitFunc     family_init;
-    FTC_Family_CompareFunc  family_compare;
-    FTC_Family_DoneFunc     family_done;
-
-    FT_UInt                 node_size;
-    FTC_Node_InitFunc       node_init;
-    FTC_Node_WeightFunc     node_weight;
-    FTC_Node_CompareFunc    node_compare;
-    FTC_Node_DoneFunc       node_done;
-
-  } FTC_Cache_ClassRec;
-
-
-  /* */
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* These functions are exported so that they can be called from          */
-  /* user-provided cache classes; otherwise, they are really part of the   */
-  /* cache sub-system internals.                                           */
-  /*                                                                       */
-
-  /* can be used directly as FTC_Cache_DoneFunc(), or called by custom */
-  /* cache finalizers                                                  */
-  FT_EXPORT( void )
-  ftc_cache_done( FTC_Cache  cache );
-
-  /* can be used directly as FTC_Cache_ClearFunc(), or called by custom */
-  /* cache clear routines                                               */
-  FT_EXPORT( void )
-  ftc_cache_clear( FTC_Cache  cache );
-
-  /* initalize the hash table within the cache */
+ /* default cache initialize */
   FT_EXPORT( FT_Error )
-  ftc_cache_init( FTC_Cache  cache );
+  FTC_Cache_Init( FTC_Cache       cache );
 
-  /* can be called when the key's hash value has been computed */
+ /* default cache finalizer */
+  FT_EXPORT( void )
+  FTC_Cache_Done( FTC_Cache  cache );
+
+ /* call this function to lookup the cache. if no corresponding
+  * node is found, a new one is automatically created. This function
+  * is capable of flushing the cache adequately to make room for the
+  * new cache object.
+  */
   FT_EXPORT( FT_Error )
-  ftc_cache_lookup( FTC_Cache  cache,
-                    FTC_Query  query,
-                    FTC_Node  *anode );
+  FTC_Cache_Lookup( FTC_Cache   cache,
+                    FT_UInt32   hash,
+                    FT_Pointer  query,
+                    FTC_Node   *anode );
+
+ /* remove all nodes that relate to a given face_id. This is useful
+  * when un-installing fonts. Note that if a cache node relates to
+  * the face_id, but is locked (i.e. has 'ref_count > 0'), the node
+  * will _not_ be destroyed, but its internal face_id reference will
+  * be modified.
+  *
+  * the end result will be that the node will never come back
+  * in further lookup requests, and will be flushed on demand from
+  * the cache normally when its reference count reaches 0
+  */
+  FT_EXPORT( void )
+  FTC_Cache_RemoveFaceID( FTC_Cache    cache,
+                          FTC_FaceID   face_id );
 
  /* */
 

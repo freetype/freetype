@@ -19,8 +19,29 @@
 #include <ft2build.h>
 #include FT_STROKER_H
 #include FT_TRIGONOMETRY_H
+#include FT_OUTLINE_H
 #include FT_INTERNAL_MEMORY_H
 #include FT_INTERNAL_DEBUG_H
+
+
+  FT_EXPORT_DEF( FT_StrokerBorder )
+  FT_Outline_GetInsideBorder( FT_Outline*  outline )
+  {
+    FT_Orientation  or = FT_Outline_Get_Orientation( outline );
+
+    return ( or == FT_ORIENTATION_TRUETYPE ) ? FT_STROKER_BORDER_RIGHT
+                                             : FT_STROKER_BORDER_LEFT ;
+  }
+
+
+  FT_EXPORT_DEF( FT_StrokerBorder )
+  FT_Outline_GetOutsideBorder( FT_Outline*  outline )
+  {
+    FT_Orientation  or = FT_Outline_Get_Orientation( outline );
+
+    return ( or == FT_ORIENTATION_TRUETYPE ) ? FT_STROKER_BORDER_RIGHT
+                                             : FT_STROKER_BORDER_LEFT ;
+  }
 
 
  /***************************************************************************/
@@ -221,6 +242,7 @@
     FT_Bool     movable;
     FT_Int      start;    /* index of current sub-path start point */
     FT_Memory   memory;
+    FT_Bool     valid;
 
   } FT_StrokeBorderRec, *FT_StrokeBorder;
 
@@ -468,6 +490,7 @@
     border->num_points = 0;
     border->max_points = 0;
     border->start      = -1;
+    border->valid      = 0;
   }
 
 
@@ -476,6 +499,7 @@
   {
     border->num_points = 0;
     border->start      = -1;
+    border->valid      = 0;
   }
 
 
@@ -491,6 +515,7 @@
     border->num_points = 0;
     border->max_points = 0;
     border->start      = -1;
+    border->valid      = 0;
   }
 
 
@@ -520,7 +545,7 @@
       }
       else if ( in_contour == 0 )
         goto Fail;
- 
+
       if ( tags[0] & FT_STROKE_TAG_END )
       {
         if ( in_contour == 0 )
@@ -533,6 +558,8 @@
 
     if ( in_contour != 0 )
       goto Fail;
+
+    border->valid = 1;
 
   Exit:
     *anum_points   = num_points;
@@ -660,8 +687,6 @@
     stroker->line_cap    = line_cap;
     stroker->line_join   = line_join;
     stroker->miter_limit = miter_limit;
-
-    stroker->valid = 0;
 
     ft_stroke_border_reset( &stroker->borders[0] );
     ft_stroke_border_reset( &stroker->borders[1] );
@@ -1424,6 +1449,34 @@
 
 
   FT_EXPORT_DEF( FT_Error )
+  FT_Stroker_GetBorderCounts( FT_Stroker        stroker,
+                              FT_StrokerBorder  border,
+                              FT_UInt          *anum_points,
+                              FT_UInt          *anum_contours )
+  {
+    FT_UInt   num_points = 0, num_contours = 0;
+    FT_Error  error;
+
+    if ( !stroker || border > 1 )
+    {
+      error = FT_Err_Invalid_Argument;
+      goto Exit;
+    }
+
+    error = ft_stroke_border_get_counts( stroker->borders + border,
+                                         &num_points, &num_contours );
+  Exit:
+    if ( anum_points )
+      *anum_points = num_points;
+
+    if ( anum_contours )
+      *anum_contours = num_contours;
+
+    return error;
+  }
+
+
+  FT_EXPORT_DEF( FT_Error )
   FT_Stroker_GetCounts( FT_Stroker  stroker,
                         FT_UInt    *anum_points,
                         FT_UInt    *anum_contours )
@@ -1446,8 +1499,6 @@
     num_points   = count1 + count3;
     num_contours = count2 + count4;
 
-    stroker->valid = 1;
-
   Exit:
     *anum_points   = num_points;
     *anum_contours = num_contours;
@@ -1456,15 +1507,30 @@
 
 
   FT_EXPORT_DEF( void )
+  FT_Stroker_ExportBorder( FT_Stroker        stroker,
+                           FT_StrokerBorder  border,
+                     FT_Outline*  outline )
+  {
+    if ( border == FT_STROKER_BORDER_LEFT  ||
+         border == FT_STROKER_BORDER_RIGHT )
+    {
+      FT_StrokeBorder  sborder = & stroker->borders[border];
+
+      if ( sborder->valid )
+        ft_stroke_border_export( sborder, outline );
+    }
+  }
+
+
+  FT_EXPORT_DEF( void )
   FT_Stroker_Export( FT_Stroker   stroker,
                      FT_Outline*  outline )
   {
-    if ( stroker->valid )
-    {
-      ft_stroke_border_export( stroker->borders + 0, outline );
-      ft_stroke_border_export( stroker->borders + 1, outline );
-    }
+    FT_Stroker_ExportBorder( stroker, FT_STROKER_BORDER_LEFT, outline );
+    FT_Stroker_ExportBorder( stroker, FT_STROKER_BORDER_RIGHT, outline );
   }
+
+
 
 
   /*
