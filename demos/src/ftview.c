@@ -73,7 +73,7 @@
   int  graph_init = 0;
 
   int  render_mode = 1;
-  int  use_grays   = 1;
+  int  use_grays   = 0;
 
   TRaster  raster;
   
@@ -185,7 +185,7 @@
       bit3.buffer = bit_buffer;
       bit3.grays  = 128;
 
-      FT_Translate_Outline( &glyph->outline, -left, -bottom );
+      FT_Outline_Translate( &glyph->outline, -left, -bottom );
       memset( bit_buffer, 0, size );
 
       if (low_prec)
@@ -194,7 +194,7 @@
       if (use_grays & gray_render)
         error = grays_raster_render( &raster, &glyph->outline, &bit2 );
       else
-        error = FT_Get_Outline_Bitmap( library, &glyph->outline, &bit2 );
+        error = FT_Outline_Get_Bitmap( library, &glyph->outline, &bit2 );
     }
     else
     {

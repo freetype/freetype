@@ -978,7 +978,7 @@
                      -loader->pp1.x,
                      0 );
 
-    FT_Get_Outline_CBox( &glyph->outline, &bbox );
+    FT_Outline_Get_CBox( &glyph->outline, &bbox );
 
     if ( IS_HINTED(loader->load_flags) )
     {

@@ -2011,7 +2011,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Decompose_Outline                                               */
+  /*    FT_Outline_Decompose                                               */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Walks over an outline's structure to decompose it into individual  */
@@ -2033,7 +2033,7 @@
   /*    Error code.  0 means sucess.                                       */
   /*                                                                       */
   EXPORT_FUNC
-  int  FT_Decompose_Outline( FT_Outline*        outline,
+  int  FT_Outline_Decompose( FT_Outline*        outline,
                              FT_Outline_Funcs*  interface,
                              void*              user )
   {
@@ -2262,7 +2262,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_New_Outline                                                     */
+  /*    FT_Outline_New                                                     */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Creates a new outline of a given size.                             */
@@ -2294,7 +2294,7 @@
   /*    you want to control where the objects go.                          */
   /*                                                                       */
   BASE_FUNC
-  FT_Error  FT_New_Outline( FT_Library   library,
+  FT_Error  FT_Outline_New( FT_Library   library,
                             FT_UInt      numPoints,
                             FT_Int       numContours,
                             FT_Outline*  outline )
@@ -2322,7 +2322,7 @@
 
   Fail:
     outline->flags |= ft_outline_owner;
-    FT_Done_Outline( library, outline );
+    FT_Outline_Done( library, outline );
 
     return error;
   }
@@ -2331,10 +2331,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Done_Outline                                                    */
+  /*    FT_Outline_Done                                                    */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Destroys an outline created with FT_New_Outline().                 */
+  /*    Destroys an outline created with FT_Outline_New().                 */
   /*                                                                       */
   /* <Input>                                                               */
   /*    library :: A handle of the library object used to allocate the     */
@@ -2358,7 +2358,7 @@
   /*    application if you want something simpler.                         */
   /*                                                                       */
   BASE_FUNC
-  FT_Error  FT_Done_Outline( FT_Library   library,
+  FT_Error  FT_Outline_Done( FT_Library   library,
                              FT_Outline*  outline )
   {
     FT_Memory  memory = library->memory;
@@ -2384,7 +2384,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Get_Outline_CBox                                                */
+  /*    FT_Outline_Get_CBox                                                */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Returns an outline's `control box'.  The control box encloses all  */
@@ -2411,7 +2411,7 @@
   /*    Yes.                                                               */
   /*                                                                       */
   BASE_FUNC
-  FT_Error  FT_Get_Outline_CBox( FT_Outline*  outline,
+  FT_Error  FT_Outline_Get_CBox( FT_Outline*  outline,
                                  FT_BBox*     cbox )
   {
     FT_Pos  xMin, yMin, xMax, yMax;
@@ -2462,7 +2462,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Translate_Outline                                               */
+  /*    FT_Outline_Translate                                               */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Applies a simple translation to the points of an outline.          */
@@ -2476,7 +2476,7 @@
   /*    Yes.                                                               */
   /*                                                                       */
   BASE_FUNC
-  void  FT_Translate_Outline( FT_Outline*  outline,
+  void  FT_Outline_Translate( FT_Outline*  outline,
                               FT_Pos       xOffset,
                               FT_Pos       yOffset )
   {

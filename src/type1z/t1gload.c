@@ -516,7 +516,7 @@
 
     /* Finally, move the accent */
     if (decoder->builder.load_points)
-      FT_Translate_Outline( cur, adx - asb, ady );
+      FT_Outline_Translate( cur, adx - asb, ady );
     
     (void)asb;           /* ignore this parameter */
     return T1_Err_Ok;
@@ -1248,7 +1248,7 @@
       FT_BBox           cbox;
       FT_Glyph_Metrics* metrics = &glyph->root.metrics;
 
-      FT_Get_Outline_CBox( &glyph->root.outline, &cbox );
+      FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
 
       /* grid fit the bounding box if necessary */
       if (hinting)

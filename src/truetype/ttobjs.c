@@ -779,7 +779,7 @@
     FT_TRACE4(( "TT.Init_GlyphSlot: Creating outline maxp = %d, maxc = %d\n",
                 face->max_points, face->max_contours ));
 
-    return FT_New_Outline( library,
+    return FT_Outline_New( library,
                            face->max_points + 2,
                            face->max_contours,
                            &slot->outline );
@@ -803,7 +803,7 @@
     FT_Library  library = slot->face->driver->library;
 
 
-    FT_Done_Outline( library, &slot->outline );
+    FT_Outline_Done( library, &slot->outline );
     return;
   }
 

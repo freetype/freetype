@@ -32,7 +32,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Copy_Outline                                                    */
+  /*    FT_Outline_Copy                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Copies an outline into another one.  Both objects must have the    */
@@ -47,7 +47,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   BASE_FUNC
-  FT_Error  FT_Copy_Outline( FT_Outline*  source,
+  FT_Error  FT_Outline_Copy( FT_Outline*  source,
                              FT_Outline*  target )
   {
     FT_Int  is_owner;
@@ -79,7 +79,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Get_Outline_Bitmap                                              */
+  /*    FT_Outline_Get_Bitmap                                              */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Renders an outline within a bitmap.  The outline's image is simply */
@@ -105,7 +105,7 @@
   /*    It will use the raster correponding to the default glyph format.   */
   /*                                                                       */
   BASE_FUNC
-  FT_Error  FT_Get_Outline_Bitmap( FT_Library   library,
+  FT_Error  FT_Outline_Get_Bitmap( FT_Library   library,
                                    FT_Outline*  outline,
                                    FT_Bitmap*   map )
   {
@@ -128,7 +128,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Transform_Outline                                               */
+  /*    FT_Outline_Transform                                               */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Applies a simple 2x2 matrix to all of an outline's points.  Useful */
@@ -142,11 +142,11 @@
   /*    Yes.                                                               */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    You can use FT_Translate_Outline() if you need to translate the    */
+  /*    You can use FT_Outline_Translate() if you need to translate the    */
   /*    outline's points.                                                  */
   /*                                                                       */
   BASE_FUNC
-  void  FT_Transform_Outline( FT_Outline*  outline,
+  void  FT_Outline_Transform( FT_Outline*  outline,
                               FT_Matrix*   matrix )
   {
     FT_UShort   n;
@@ -175,7 +175,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Transform_Vector                                                */
+  /*    FT_Vector_Transform                                                */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Transforms a single vector through a 2x2 matrix.                   */
@@ -191,7 +191,7 @@
   /*    Yes.                                                               */
   /*                                                                       */
   BASE_FUNC
-  void  FT_Transform_Vector( FT_Pos*     x,
+  void  FT_Vector_Transform( FT_Pos*     x,
                              FT_Pos*     y,
                              FT_Matrix*  matrix )
   {

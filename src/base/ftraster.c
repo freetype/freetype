@@ -2215,7 +2215,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Decompose_Outline                                               */
+  /*    FT_Outline_Decompose                                               */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Walks over an outline's structure to decompose it into individual  */
@@ -2237,7 +2237,7 @@
   /*    Error code.  0 means sucess.                                       */
   /*                                                                       */
   static
-  int  FT_Decompose_Outline( FT_Outline*        outline,
+  int  FT_Outline_Decompose( FT_Outline*        outline,
                              FT_Outline_Funcs*  interface,
                              void*              user )
   {
@@ -2500,7 +2500,7 @@
     ras.num_profs        = 0;
 
     /* Now decompose curve */
-    if ( FT_Decompose_Outline( outline, &interface, &ras ) )
+    if ( FT_Outline_Decompose( outline, &interface, &ras ) )
       return FAILURE;
     /* XXX: the error condition is in ras.error */
 

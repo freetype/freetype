@@ -343,7 +343,7 @@
 #endif
 	/* the bitmaps are created on demand */
 	FREE( glyph->root.bitmap.buffer );
-    FT_Done_Outline( library, &glyph->root.outline );
+    FT_Outline_Done( library, &glyph->root.outline );
     return;
   }
 
@@ -371,13 +371,13 @@
     glyph->max_contours       = 0;
     glyph->root.bitmap.buffer = 0;
 
-    error = FT_New_Outline( library, 0, 0, &glyph->root.outline );
+    error = FT_Outline_New( library, 0, 0, &glyph->root.outline );
     if (error) return error;
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
     error = T1_New_Glyph_Hinter( glyph );
     if (error)
-      FT_Done_Outline( library, &glyph->root.outline );
+      FT_Outline_Done( library, &glyph->root.outline );
 #endif
 
     return error;

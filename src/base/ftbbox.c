@@ -45,7 +45,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    This function is used as a `move_to' and `line_to' emitter during  */
-  /*    FT_Raster_Decompose().  It simply records the destination point in */
+  /*    FT_Outline_Decompose.  It simply records the destination point in  */
   /*    `user->last'.                                                      */
   /*                                                                       */
   /* <Input>                                                               */
@@ -338,7 +338,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Raster_GetBBox                                                  */
+  /*    FT_Outline_Get_BBox                                                */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Computes the exact bounding box of an outline.  This is slower     */
@@ -357,8 +357,8 @@
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
   EXPORT_FUNC
-  FT_Error  FT_Raster_GetBBox( FT_Outline*  outline,
-                               FT_BBox*     abbox )
+  FT_Error  FT_Outline_Get_BBox( FT_Outline*  outline,
+                                 FT_BBox*     abbox )
   {
     FT_BBox    cbox;
     FT_BBox    bbox;
@@ -432,7 +432,7 @@
 
       user.bbox = bbox;
 
-      error = FT_Decompose_Outline( outline, &interface, &user );
+      error = FT_Outline_Decompose( outline, &interface, &user );
       if ( error )
         return error;
 

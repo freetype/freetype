@@ -309,7 +309,7 @@
 
 	/* the bitmaps are created on demand */
 	FREE( glyph->root.bitmap.buffer );
-    FT_Done_Outline( library, &glyph->root.outline );
+    FT_Outline_Done( library, &glyph->root.outline );
     return;
   }
 
@@ -336,7 +336,7 @@
     glyph->max_contours       = 0;
     glyph->root.bitmap.buffer = 0;
 
-    return FT_New_Outline( library, 0, 0, &glyph->root.outline );
+    return FT_Outline_New( library, 0, 0, &glyph->root.outline );
   }
 
 

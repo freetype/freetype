@@ -177,7 +177,7 @@
 #endif
 
     /* create a new outline */
-    FT_New_Outline( library,
+    FT_Outline_New( library,
                     glyph->outline.n_points, 
                     glyph->outline.n_contours, 
                     &outlines[cur_glyph] );
@@ -187,19 +187,19 @@
     if (force_low)
       glyph->outline.flags &= ~ft_outline_high_precision;
 
-    FT_Copy_Outline( &glyph->outline, &outlines[cur_glyph] );
+    FT_Outline_Copy( &glyph->outline, &outlines[cur_glyph] );
 
     /* center outline around 0 */
     {
       FT_BBox  bbox;
       
-      FT_Get_Outline_CBox( &glyph->outline, &bbox );
-      FT_Translate_Outline( &outlines[cur_glyph],
+      FT_Outline_Get_CBox( &glyph->outline, &bbox );
+      FT_Outline_Translate( &outlines[cur_glyph],
                             - ( bbox.xMax - bbox.xMin )/2,
                             - ( bbox.yMax - bbox.yMin )/2 );
     }
     /* translate it */
-    FT_Translate_Outline( &outlines[cur_glyph],
+    FT_Outline_Translate( &outlines[cur_glyph],
                           Bit.width * 32 ,
                           Bit.rows  * 32 );
     cur_glyph++;
@@ -222,7 +222,7 @@
     if (use_grays)
       return grays_raster_render( &raster, &outlines[index], &Bit );
     else
-      return FT_Get_Outline_Bitmap( library, &outlines[index], &Bit );
+      return FT_Outline_Get_Bitmap( library, &outlines[index], &Bit );
   }
 
 
@@ -458,7 +458,7 @@
 
       /* Now free all loaded outlines */
       for ( Num = 0; Num < cur_glyph; Num++ )
-        FT_Done_Outline( library, &outlines[Num] );
+        FT_Outline_Done( library, &outlines[Num] );
     }
 
     tz0 = Get_Time() - tz0;
