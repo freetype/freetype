@@ -859,15 +859,15 @@
                          T1_Loader*  loader )
   {
     T1_ParserRec*  parser = &loader->parser;
-    FT_Short       temp[4];
+    FT_Fixed       temp[4];
     FT_BBox*       bbox   = &face->type1.font_bbox;
 
 
-    (void)T1_ToCoordArray( parser, 4, temp );
-    bbox->xMin = temp[0];
-    bbox->yMin = temp[1];
-    bbox->xMax = temp[2];
-    bbox->yMax = temp[3];
+    (void)T1_ToFixedArray( parser, 4, temp, 0 );
+    bbox->xMin = FT_RoundFix( temp[0] );
+    bbox->yMin = FT_RoundFix( temp[1] );
+    bbox->xMax = FT_RoundFix( temp[2] );
+    bbox->yMax = FT_RoundFix( temp[3] );
   }
 
 
