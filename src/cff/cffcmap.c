@@ -200,7 +200,7 @@
         if ( new_count != count && new_count < count / 2 )
         {
           (void)FT_RENEW_ARRAY( cmap->pairs, count, new_count );
-          error = 0;
+          error = CFF_Err_Ok;
         }
 
         /* sort the pairs table to allow efficient binary searches */

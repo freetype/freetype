@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType objects manager (body).                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -52,16 +52,81 @@
   /*************************************************************************/
 
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
+  static FT_Error
+  sbit_size_reset( CFF_Size  size )
+  {
+    CFF_Face          face;
+    FT_Error          error = CFF_Err_Ok;
+
+    FT_ULong          strike_index;
+    FT_Size_Metrics*  metrics;
+    FT_Size_Metrics*  sbit_metrics;
+    SFNT_Service      sfnt;
+
+
+    metrics = &size->root.metrics;
+
+    face = (CFF_Face)size->root.face;
+    sfnt = (SFNT_Service)face->sfnt;
+
+    sbit_metrics = &size->strike_metrics;
+
+    error = sfnt->set_sbit_strike( face, 
+                                   metrics->x_ppem, metrics->y_ppem,
+                                   &strike_index );
+
+    if ( !error )
+    {
+      TT_SBit_Strike  strike = face->sbit_strikes + strike_index;
+
+
+      sbit_metrics->x_ppem = metrics->x_ppem;
+      sbit_metrics->y_ppem = metrics->y_ppem;
+
+      sbit_metrics->ascender  = strike->hori.ascender << 6;
+      sbit_metrics->descender = strike->hori.descender << 6;
+
+      /* XXX: Is this correct? */
+      sbit_metrics->height = sbit_metrics->ascender -
+                             sbit_metrics->descender;
+
+      /* XXX: Is this correct? */
+      sbit_metrics->max_advance = ( strike->hori.min_origin_SB  +
+                                    strike->hori.max_width      +
+                                    strike->hori.min_advance_SB ) << 6;
+
+      size->strike_index = (FT_UInt)strike_index;
+    }
+    else
+    {   
+      size->strike_index = 0xFFFFU;
+
+      sbit_metrics->x_ppem      = 0;
+      sbit_metrics->y_ppem      = 0;
+      sbit_metrics->ascender    = 0;
+      sbit_metrics->descender   = 0;
+      sbit_metrics->height      = 0;
+      sbit_metrics->max_advance = 0;
+    }
+
+    return error;
+  }
+   
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
+
   static PSH_Globals_Funcs
   cff_size_get_globals_funcs( CFF_Size  size )
   {
-    CFF_Face          face     = (CFF_Face)size->face;
+    CFF_Face          face     = (CFF_Face)size->root.face;
     CFF_Font          font     = (CFF_FontRec *)face->extra.data;
     PSHinter_Service  pshinter = (PSHinter_Service)font->pshinter;
     FT_Module         module;
 
 
-    module = FT_Get_Module( size->face->driver->root.library,
+    module = FT_Get_Module( size->root.face->driver->root.library,
                             "pshinter" );
     return ( module && pshinter && pshinter->get_globals_funcs )
            ? pshinter->get_globals_funcs( module )
@@ -72,16 +137,16 @@
   FT_LOCAL_DEF( void )
   cff_size_done( CFF_Size  size )
   {
-    if ( size->internal )
+    if ( size->root.internal )
     {
       PSH_Globals_Funcs  funcs;
 
 
       funcs = cff_size_get_globals_funcs( size );
       if ( funcs )
-        funcs->destroy( (PSH_Globals)size->internal );
+        funcs->destroy( (PSH_Globals)size->root.internal );
 
-      size->internal = 0;
+      size->root.internal = 0;
     }
   }
 
@@ -89,14 +154,14 @@
   FT_LOCAL_DEF( FT_Error )
   cff_size_init( CFF_Size  size )
   {
-    FT_Error           error = 0;
+    FT_Error           error = CFF_Err_Ok;
     PSH_Globals_Funcs  funcs = cff_size_get_globals_funcs( size );
 
 
     if ( funcs )
     {
       PSH_Globals    globals;
-      CFF_Face       face    = (CFF_Face)size->face;
+      CFF_Face       face    = (CFF_Face)size->root.face;
       CFF_Font       font    = (CFF_FontRec *)face->extra.data;
       CFF_SubFont    subfont = &font->top_font;
 
@@ -150,9 +215,9 @@
         priv.lenIV          = cpriv->lenIV;
       }
 
-      error = funcs->create( size->face->memory, &priv, &globals );
+      error = funcs->create( size->root.face->memory, &priv, &globals );
       if ( !error )
-        size->internal = (FT_Size_Internal)(void*)globals;
+        size->root.internal = (FT_Size_Internal)(void*)globals;
     }
 
     return error;
@@ -163,15 +228,32 @@
   cff_size_reset( CFF_Size  size )
   {
     PSH_Globals_Funcs  funcs = cff_size_get_globals_funcs( size );
-    FT_Error           error = 0;
+    FT_Error           error = CFF_Err_Ok;
+    FT_Face            face  = size->root.face;
 
 
     if ( funcs )
-      error = funcs->set_scale( (PSH_Globals)size->internal,
-                                 size->metrics.x_scale,
-                                 size->metrics.y_scale,
+      error = funcs->set_scale( (PSH_Globals)size->root.internal,
+                                 size->root.metrics.x_scale,
+                                 size->root.metrics.y_scale,
                                  0, 0 );
-    return error;
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+
+    if ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
+    {
+      error = sbit_size_reset( size );
+
+      if ( !error && !( face->face_flags & FT_FACE_FLAG_SCALABLE ) )
+        size->root.metrics = size->strike_metrics;
+    }
+
+#endif
+
+    if ( face->face_flags & FT_FACE_FLAG_SCALABLE )
+      return CFF_Err_Ok;
+    else
+      return error;
   }
 
 

@@ -1177,7 +1177,7 @@
   cff_index_get_pointers( CFF_Index   idx,
                           FT_Byte***  table )
   {
-    FT_Error   error  = 0;
+    FT_Error   error  = CFF_Err_Ok;
     FT_Memory  memory = idx->stream->memory;
     FT_ULong   n, offset, old_offset;
     FT_Byte**  t;
@@ -1516,7 +1516,7 @@
                     FT_Bool      invert )
   {
     FT_Memory  memory = stream->memory;
-    FT_Error   error  = 0;
+    FT_Error   error  = CFF_Err_Ok;
     FT_UShort  glyph_sid;
 
 
@@ -1722,7 +1722,7 @@
                      FT_ULong      base_offset,
                      FT_ULong      offset )
   {
-    FT_Error   error = 0;
+    FT_Error   error = CFF_Err_Ok;
     FT_UInt    count;
     FT_UInt    j;
     FT_UShort  glyph_sid;

@@ -201,7 +201,7 @@
     if ( size )
     {
       /* these two object must have the same parent */
-      if ( size->face != slot->root.face )
+      if ( size->root.face != slot->root.face )
         return CFF_Err_Invalid_Face_Handle;
     }
 
@@ -453,7 +453,7 @@
 
     /* now the specific driver fields */
     sizeof( TT_FaceRec ),
-    sizeof( FT_SizeRec ),
+    sizeof( CFF_SizeRec ),
     sizeof( CFF_GlyphSlotRec ),
 
     (FT_Face_InitFunc)       cff_face_init,
