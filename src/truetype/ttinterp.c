@@ -20,8 +20,10 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
 #include FT_SYSTEM_H
+
 #include "ttinterp.h"
-#include FT_INTERNAL_TRUETYPE_ERRORS_H
+
+#include "tterrors.h"
 
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER

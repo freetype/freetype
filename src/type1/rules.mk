@@ -36,7 +36,8 @@ T1_DRV_SRC := $(T1_DIR_)t1parse.c  \
 # Type1 driver headers
 #
 T1_DRV_H := $(T1_DRV_SRC:%.c=%.h) \
-             $(T1_DIR_)t1tokens.h
+            $(T1_DIR_)t1tokens.h  \
+            $(T1_DIR_)t1errors.h
 
 
 # Type1 driver object(s)

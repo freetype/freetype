@@ -32,7 +32,8 @@ PSAUX_DRV_SRC := $(PSAUX_DIR_)psobjs.c   \
 
 # PSAUX driver headers
 #
-PSAUX_DRV_H := $(PSAUX_DRV_SRC:%c=%h)
+PSAUX_DRV_H := $(PSAUX_DRV_SRC:%c=%h)  \
+               $(PSAUX_DIR_)psauxerr.h
 
 
 # PSAUX driver object(s)

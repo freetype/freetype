@@ -24,6 +24,8 @@
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 
+#include "ciderrs.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -165,7 +167,7 @@
     if ( face_index != 0 )
     {
       FT_ERROR(( "CID_Init_Face: invalid face index\n" ));
-      error = T1_Err_Invalid_Argument;
+      error = CID_Err_Invalid_Argument;
       goto Exit;
     }
 
@@ -356,7 +358,7 @@
   {
     FT_UNUSED( driver );
 
-    return T1_Err_Ok;
+    return CID_Err_Ok;
   }
 
 

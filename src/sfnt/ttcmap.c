@@ -18,9 +18,10 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_TRUETYPE_ERRORS_H
 #include "ttload.h"
 #include "ttcmap.h"
+
+#include "sferrors.h"
 
 
   /*************************************************************************/
@@ -91,7 +92,7 @@
 
 
     if ( cmap->loaded )
-      return TT_Err_Ok;
+      return SFNT_Err_Ok;
 
     memory = stream->memory;
 
@@ -260,11 +261,11 @@
       break;
 
     default:   /* corrupt character mapping table */
-      return TT_Err_Invalid_CharMap_Format;
+      return SFNT_Err_Invalid_CharMap_Format;
 
     }
 
-    return TT_Err_Ok;
+    return SFNT_Err_Ok;
 
   Fail:
     TT_CharMap_Free( face, cmap );
@@ -295,7 +296,7 @@
 
 
     if ( !cmap )
-      return TT_Err_Ok;
+      return SFNT_Err_Ok;
 
     memory = face->root.driver->root.memory;
 
@@ -328,7 +329,7 @@
     }
 
     cmap->loaded = FALSE;
-    return TT_Err_Ok;
+    return SFNT_Err_Ok;
   }
 
 

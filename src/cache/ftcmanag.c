@@ -23,6 +23,8 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_LIST_H
 
+#include "ftcerror.h"
+
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cache
@@ -224,7 +226,7 @@
 
 
     if ( !library )
-      return FT_Err_Invalid_Library_Handle;
+      return FTC_Err_Invalid_Library_Handle;
 
     memory = library->memory;
 
@@ -328,7 +330,7 @@
                                                       FT_Face     *aface )
   {
     if ( !manager )
-      return FT_Err_Invalid_Cache_Handle;
+      return FTC_Err_Invalid_Cache_Handle;
 
     return  FT_Lru_Lookup( manager->faces_lru,
                            (FT_LruKey)face_id,
@@ -436,7 +438,7 @@
                                FTC_Cache_Class*  clazz,
                                FTC_Cache        *acache )
   {
-    FT_Error  error = FT_Err_Invalid_Argument;
+    FT_Error  error = FTC_Err_Invalid_Argument;
 
 
     if ( manager && clazz && acache )
@@ -459,7 +461,7 @@
       /* return an error if there are too many registered caches */
       if ( index >= FTC_MAX_CACHES )
       {
-        error = FT_Err_Too_Many_Caches;
+        error = FTC_Err_Too_Many_Caches;
         FT_ERROR(( "FTC_Manager_Register_Cache:" ));
         FT_ERROR(( " too many registered caches\n" ));
         goto Exit;

@@ -31,7 +31,8 @@ RAS1_DRV_SRC := $(RAS1_DIR_)ftraster.c \
 
 # raster1 driver headers
 #
-RAS1_DRV_H := $(RAS1_DRV_SRC:%.c=%.h)
+RAS1_DRV_H := $(RAS1_DRV_SRC:%.c=%.h) \
+              $(RAS1_DIR_)rasterrs.h
 
 
 # raster1 driver object(s)

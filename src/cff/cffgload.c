@@ -27,7 +27,7 @@
 #include "cffload.h"
 #include "cffgload.h"
 
-#include FT_INTERNAL_CFF_ERRORS_H
+#include "cfferrs.h"
 
 
   /*************************************************************************/

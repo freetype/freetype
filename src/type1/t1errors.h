@@ -1,11 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ttpost.h                                                               */
+/*  t1errors.h                                                             */
 /*                                                                         */
-/*    Postcript name table processing for TrueType and OpenType fonts      */
-/*    (specification).                                                     */
+/*    Type 1 error codes (specification only).                             */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 2001 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -17,30 +16,28 @@
 /***************************************************************************/
 
 
-#ifndef __TTPOST_H__
-#define __TTPOST_H__
+  /*************************************************************************/
+  /*                                                                       */
+  /* This file is used to define the Type 1 error enumeration constants.   */
+  /*                                                                       */
+  /*************************************************************************/
 
+#ifndef __T1ERRORS_H__
+#define __T1ERRORS_H__
 
-#include <ft2build.h>
-#include FT_CONFIG_CONFIG_H
-#include FT_INTERNAL_TRUETYPE_TYPES_H
+#include FT_MODULE_ERRORS_H
 
+#undef __FTERRORS_H__
 
-FT_BEGIN_HEADER
+#define FT_ERRORDEF( e, v, s )    T1_Err_ ## e = v + FT_Mod_Err_Type1,
+#define FT_NOERRORDEF( e, v, s )  T1_Err_ ## e = v,
 
+#define FT_ERROR_START_LIST       enum {
+#define FT_ERROR_END_LIST         T1_Err_Max };
 
-  FT_LOCAL
-  FT_Error TT_Get_PS_Name( TT_Face      face,
-                           FT_UInt      index,
-                           FT_String**  PSname );
+#include FT_ERRORS_H
 
-  FT_LOCAL
-  void  TT_Free_Post_Names( TT_Face  face );
-
-
-FT_END_HEADER
-
-#endif /* __TTPOST_H__ */
+#endif /* __T1ERRORS_H__ */
 
 
 /* END */

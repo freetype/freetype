@@ -32,7 +32,8 @@ PSNAMES_DRV_SRC := $(PSNAMES_DIR_)psmodule.c
 # PSNames driver headers
 #
 PSNAMES_DRV_H := $(PSNAMES_DRV_SRC:%.c=%.h) \
-                 $(PSNAMES_DIR_)pstables.h
+                 $(PSNAMES_DIR_)pstables.h  \
+                 $(PSNAMES_DIR_)psnamerr.h
 
 
 # PSNames driver object(s)

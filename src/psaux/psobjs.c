@@ -18,10 +18,11 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
-#include FT_INTERNAL_TYPE1_ERRORS_H
 #include FT_INTERNAL_DEBUG_H
-#include FT_ERRORS_H
+
 #include "psobjs.h"
+
+#include "psauxerr.h"
 
 
   /*************************************************************************/
@@ -121,7 +122,7 @@
 
     table->capacity = new_size;
 
-    return T1_Err_Ok;
+    return PSaux_Err_Ok;
   }
 
 
@@ -156,7 +157,7 @@
     if ( index < 0 || index > table->max_elems )
     {
       FT_ERROR(( "PS_Table_Add: invalid index\n" ));
-      return T1_Err_Invalid_Argument;
+      return PSaux_Err_Invalid_Argument;
     }
 
     /* grow the base block if needed */
@@ -180,7 +181,7 @@
     MEM_Copy( table->block + table->cursor, object, length );
 
     table->cursor += length;
-    return T1_Err_Ok;
+    return PSaux_Err_Ok;
   }
 
 
@@ -878,13 +879,13 @@
     FT_UNUSED( pflags );
 #endif
 
-    error = T1_Err_Ok;
+    error = PSaux_Err_Ok;
 
   Exit:
     return error;
 
   Fail:
-    error = T1_Err_Invalid_File_Format;
+    error = PSaux_Err_Invalid_File_Format;
     goto Exit;
   }
 
@@ -950,7 +951,7 @@
     return error;
 
   Fail:
-    error = T1_Err_Invalid_File_Format;
+    error = PSaux_Err_Invalid_File_Format;
     goto Exit;
   }
 
@@ -1191,7 +1192,7 @@
     if ( !builder->load_points )
     {
       outline->n_contours++;
-      return T1_Err_Ok;
+      return PSaux_Err_Ok;
     }
 
     error = FT_GlyphLoader_Check_Points( builder->loader, 0, 1 );

@@ -33,7 +33,8 @@ CID_DRV_SRC := $(CID_DIR_)cidparse.c \
 # CID driver headers
 #
 CID_DRV_H := $(CID_DRV_SRC:%.c=%.h) \
-             $(CID_DIR_)cidtokens.h
+             $(CID_DIR_)cidtoken.h  \
+             $(CID_DIR_)ciderrs.h
 
 
 # CID driver object(s)

@@ -21,8 +21,10 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
+
 #include "ttpload.h"
-#include FT_INTERNAL_TRUETYPE_ERRORS_H
+
+#include "tterrors.h"
 
 
   /*************************************************************************/

@@ -1,5 +1,49 @@
 2001-06-06  Werner Lemberg  <wl@gnu.org>
 
+	Complete redesign of error codes.  Please check ftmoderr.h for more
+	details.
+
+	* include/freetype/internal/cfferrs.h,
+	include/freetype/internal/tterrors.h,
+	include/freetype/internal/t1errors.h: Removed.  Replaced with files
+	local to the module.  All extra error codes have been moved to
+	`fterrors.h'.
+
+	* src/sfnt/ttpost.h: Move error codes to `fterrors.h'.
+
+	* src/autohint/aherrors.h, src/cache/ftcerror.h, src/cff/cfferrs.h,
+	src/cid/ciderrs.h, src/pcf/pcferror.h, src/psaux/psauxerr.h,
+	src/psnames/psnamerr.h, src/raster/rasterrs.h, src/sfnt/sferrors.h,
+	src/smooth/ftsmerrs.h, src/truetype/tterrors.h,
+	src/type1/t1errors.h, src/winfonts/fnterrs.h: New files defining the
+	error names for the module it belongs to.
+
+	* include/freetype/ftmoderr.h: New file, defining the module error
+	offsets.  Its structure is similar to `fterrors.h'.
+
+	* include/freetype/fterrors.h (FT_NOERRORDEF): New macro.
+	(FT_ERRORDEF): Redefined to use module error offsets.
+	All internal error codes are now public; unused error codes have
+	been removed, some are new.
+
+	* include/freetype/config/ftheader.h (FT_MODULE_ERRORS_H): New
+	macro.
+	* include/freetype/config/ftoption.h
+	(FT_CONFIG_OPTION_USE_MODULE_ERRORS): New macro.
+
+	All other source files have been updated to use the new error codes;
+	some already existing (internal) error codes local to a module have
+	been renamed to give them the same name as in the base module.
+
+	All make files have been updated to include the local error files.
+
+2001-06-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/cid/cidtokens.h: Replaced with...
+	* src/cid/cidtoken.h: This file for 8+3 consistency.
+
+	* src/raster/ftraster.c: Use macros for header file names.
+
 	* src/include/freetype/tttables.h (TT_HoriHeader_, TT_VertHeader_):
 	Fix length of `Reserved' array.  Note that this isn't the real fix
 	since recent OpenType specs have introduced a `CaretOffset' field

@@ -27,7 +27,8 @@
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include "cffobjs.h"
 #include "cffload.h"
-#include FT_INTERNAL_CFF_ERRORS_H
+
+#include "cfferrs.h"
 
 #include <string.h>         /* for strlen() */
 

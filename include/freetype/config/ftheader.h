@@ -167,6 +167,18 @@
   /*************************************************************************/
   /*                                                                       */
   /* @macro:                                                               */
+  /*    FT_MODULE_ERRORS_H                                                 */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    the list of FreeType 2 module error offsets (and messages).        */
+  /*                                                                       */
+#define FT_MODULE_ERRORS_H  <freetype/ftmoderr.h>
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
   /*    FT_SYSTEM_H                                                        */
   /*                                                                       */
   /* @description:                                                         */

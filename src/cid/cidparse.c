@@ -21,8 +21,10 @@
 #include FT_INTERNAL_CALC_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_TYPE1_ERRORS_H
+
 #include "cidparse.h"
+
+#include "ciderrs.h"
 
 #include <string.h>     /* for strncmp() */
 
@@ -75,7 +77,7 @@
                   "%!PS-Adobe-3.0 Resource-CIDFont", 31 ) )
     {
       FT_TRACE2(( "[not a valid CID-keyed font]\n" ));
-      error = T1_Err_Unknown_File_Format;
+      error = CID_Err_Unknown_File_Format;
     }
 
     FORGET_Frame();

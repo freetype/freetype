@@ -24,6 +24,7 @@
 #include "ahglyph.h"
 #include "ahangles.h"
 #include "ahglobal.h"
+#include "aherrors.h"
 
 #include <stdio.h>
 
@@ -388,7 +389,7 @@
                              FT_Face      face )
   {
     FT_Memory   memory       = outline->memory;
-    FT_Error    error        = FT_Err_Ok;
+    FT_Error    error        = AH_Err_Ok;
     FT_Outline* source       = &face->glyph->outline;
     FT_Int      num_points   = source->n_points;
     FT_Int      num_contours = source->n_contours;
@@ -399,7 +400,7 @@
     if ( !face                                          ||
          !face->size                                    ||
          face->glyph->format != ft_glyph_format_outline )
-      return FT_Err_Invalid_Argument;
+      return AH_Err_Invalid_Argument;
 
     /* first of all, reallocate the contours array if necessary */
     if ( num_contours > outline->max_contours )
@@ -1316,7 +1317,7 @@
     AH_Globals*  globals    = &face_globals->design;
     FT_Fixed     y_scale    = outline->y_scale;
 
-    FT_Bool      blue_active[ ah_blue_max ];
+    FT_Bool      blue_active[ah_blue_max];
 
 
     /* compute which blue zones are active, i.e. have their scaled */
@@ -1325,14 +1326,16 @@
       AH_Blue  blue;
       FT_Bool  check = 0;
 
+
       for ( blue = ah_blue_capital_top; blue < ah_blue_max; blue++ )
       {
         FT_Pos  ref, shoot, dist;
 
+
         ref   = globals->blue_refs[blue];
         shoot = globals->blue_shoots[blue];
         dist  = ref-shoot;
-        if (dist < 0)
+        if ( dist < 0 )
           dist = -dist;
 
         blue_active[blue] = 0;
@@ -1345,7 +1348,7 @@
       }
 
       /* return immediately if no blue zone is active */
-      if (!check)
+      if ( !check )
         return;
     }
 

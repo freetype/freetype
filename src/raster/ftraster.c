@@ -170,15 +170,17 @@
 #else /* _STANDALONE_ */
 
 
-#include <freetype/internal/ftobjs.h>
-#include <freetype/internal/ftdebug.h> /* for FT_TRACE() and FT_ERROR() */
+#include FT_INTERNAL_OBJECTS_H
+#include FT_INTERNAL_DEBUG_H        /* for FT_TRACE() and FT_ERROR() */
 
-#define Raster_Err_None         FT_Err_Ok
-#define Raster_Err_Not_Ini      FT_Err_Raster_Uninitialized
-#define Raster_Err_Overflow     FT_Err_Raster_Overflow
-#define Raster_Err_Neg_Height   FT_Err_Raster_Negative_Height
-#define Raster_Err_Invalid      FT_Err_Invalid_Outline
-#define Raster_Err_Unsupported  FT_Err_Cannot_Render_Glyph
+#include "rasterrs.h"
+
+#define Raster_Err_None         Raster_Err_Ok
+#define Raster_Err_Not_Ini      Raster_Err_Raster_Uninitialized
+#define Raster_Err_Overflow     Raster_Err_Raster_Overflow
+#define Raster_Err_Neg_Height   Raster_Err_Raster_Negative_Height
+#define Raster_Err_Invalid      Raster_Err_Invalid_Outline
+#define Raster_Err_Unsupported  Raster_Err_Cannot_Render_Glyph
 
 
 #endif /* _STANDALONE_ */
@@ -3012,7 +3014,7 @@
         return error;
     }
 
-    return FT_Err_Ok;
+    return Raster_Err_Ok;
   }
 
 
@@ -3085,7 +3087,7 @@
         return error;
     }
 
-    return FT_Err_Ok;
+    return Raster_Err_Ok;
   }
 
 #else /* FT_RASTER_OPTION_ANTI_ALIASING */
@@ -3095,7 +3097,7 @@
   {
     FT_UNUSED_RASTER;
 
-    return FT_Err_Cannot_Render_Glyph;
+    return Raster_Err_Cannot_Render_Glyph;
   }
 
 #endif /* FT_RASTER_OPTION_ANTI_ALIASING */

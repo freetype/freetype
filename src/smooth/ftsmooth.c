@@ -22,6 +22,8 @@
 #include "ftsmooth.h"
 #include "ftgrays.h"
 
+#include "ftsmerrs.h"
+
 
   /* initialize renderer -- init its raster */
   static
@@ -57,12 +59,12 @@
                                  FT_Matrix*    matrix,
                                  FT_Vector*    delta )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error = Smooth_Err_Ok;
 
 
     if ( slot->format != render->glyph_format )
     {
-      error = FT_Err_Invalid_Argument;
+      error = Smooth_Err_Invalid_Argument;
       goto Exit;
     }
 
@@ -110,13 +112,13 @@
     /* check glyph image format */
     if ( slot->format != render->glyph_format )
     {
-      error = FT_Err_Invalid_Argument;
+      error = Smooth_Err_Invalid_Argument;
       goto Exit;
     }
 
     /* check mode */
     if ( mode != ft_render_mode_normal )
-      return FT_Err_Cannot_Render_Glyph;
+      return Smooth_Err_Cannot_Render_Glyph;
 
     outline = &slot->outline;
 

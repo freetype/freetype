@@ -31,7 +31,8 @@ SMOOTH_DRV_SRC := $(SMOOTH_DIR_)ftgrays.c  \
 
 # smooth driver headers
 #
-SMOOTH_DRV_H := $(SMOOTH_DRV_SRC:%c=%h)
+SMOOTH_DRV_H := $(SMOOTH_DRV_SRC:%c=%h)  \
+                $(SMOOTH_DIR_)ftsmerrs.h
 
 
 # smooth driver object(s)

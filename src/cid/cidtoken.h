@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  cidtokens.h                                                            */
+/*  cidtoken.h                                                             */
 /*                                                                         */
 /*    CID token definitions (specification only).                          */
 /*                                                                         */

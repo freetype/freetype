@@ -28,7 +28,8 @@ FNT_DRV_SRC := $(FNT_DIR_)winfnt.c
 
 # Windows driver headers
 #
-FNT_DRV_H := $(FNT_DRV_SRC:%.c=%.h)
+FNT_DRV_H := $(FNT_DRV_SRC:%.c=%.h) \
+             $(FNT_DIR_)fnterrs.h
 
 
 # Windows driver object(s)

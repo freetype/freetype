@@ -34,7 +34,8 @@ TT_DRV_SRC := $(TT_DIR_)ttobjs.c   \
 
 # TrueType driver headers
 #
-TT_DRV_H := $(TT_DRV_SRC:%.c=%.h)
+TT_DRV_H := $(TT_DRV_SRC:%.c=%.h) \
+            $(TT_DIR_)tterrors.h
 
 
 # TrueType driver object(s)

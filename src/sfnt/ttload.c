@@ -19,11 +19,12 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_TRUETYPE_ERRORS_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
 #include "ttload.h"
 #include "ttcmap.h"
+
+#include "sferrors.h"
 
 
   /*************************************************************************/
@@ -122,7 +123,7 @@
        goto Exit;
     }
     else
-      error = TT_Err_Table_Missing;
+      error = SFNT_Err_Table_Missing;
 
   Exit:
     return error;
@@ -233,7 +234,7 @@
       /* check face index */
       if ( face_index >= face->ttc_header.count )
       {
-        error = TT_Err_Bad_Argument;
+        error = SFNT_Err_Bad_Argument;
         goto Exit;
       }
 
@@ -262,7 +263,7 @@
            entry_selector * 2 <= num_tables )
       {
         FT_TRACE2(( "TT_Load_SFNT_Header: file is not SFNT!\n" ));
-        error = TT_Err_Unknown_File_Format;
+        error = SFNT_Err_Unknown_File_Format;
       }
     }
 
@@ -405,7 +406,7 @@
       table = TT_LookUp_Table( face, tag );
       if ( !table )
       {
-        error = TT_Err_Table_Missing;
+        error = SFNT_Err_Table_Missing;
         goto Exit;
       }
 
@@ -420,7 +421,7 @@
     {
       *length = size;
 
-      return TT_Err_Ok;
+      return SFNT_Err_Ok;
     }
 
     if ( length )
@@ -679,7 +680,7 @@
         /* Set number_Of_VMetrics to 0! */
         FT_TRACE2(( "  no vertical header in file.\n" ));
         face->vertical.number_Of_VMetrics = 0;
-        error = TT_Err_Ok;
+        error = SFNT_Err_Ok;
         goto Exit;
       }
 
@@ -693,7 +694,7 @@
       if ( error )
       {
         FT_ERROR(( " no horizontal metrics in file!\n" ));
-        error = TT_Err_Hmtx_Table_Missing;
+        error = SFNT_Err_Hmtx_Table_Missing;
         goto Exit;
       }
 
@@ -713,8 +714,8 @@
                  vertical ? "Vertical"
                           : "Horizontal" ));
 
-      error = vertical ? TT_Err_Invalid_Vert_Metrics
-                       : TT_Err_Invalid_Horiz_Metrics;
+      error = vertical ? SFNT_Err_Invalid_Vert_Metrics
+                       : SFNT_Err_Invalid_Horiz_Metrics;
       goto Exit;
     }
 
@@ -831,7 +832,7 @@
       error = face->goto_table( face, TTAG_vhea, stream, 0 );
       if ( error )
       {
-        error = TT_Err_Ok;
+        error = SFNT_Err_Ok;
         goto Exit;
       }
 
@@ -845,7 +846,7 @@
       error = face->goto_table( face, TTAG_hhea, stream, 0 );
       if ( error )
       {
-        error = TT_Err_Horiz_Header_Missing;
+        error = SFNT_Err_Horiz_Header_Missing;
         goto Exit;
       }
 
@@ -931,7 +932,7 @@
     {
       /* The name table is required so indicate failure. */
       FT_TRACE2(( "is missing!\n" ));
-      error = TT_Err_Name_Table_Missing;
+      error = SFNT_Err_Name_Table_Missing;
       goto Exit;
     }
 
@@ -1123,7 +1124,7 @@
     error = face->goto_table( face, TTAG_cmap, stream, 0 );
     if ( error )
     {
-      error = TT_Err_CMap_Table_Missing;
+      error = SFNT_Err_CMap_Table_Missing;
       goto Exit;
     }
 
@@ -1289,7 +1290,7 @@
     {
       FT_TRACE2(( "is missing!\n" ));
       face->os2.version = 0xFFFF;
-      error = TT_Err_Ok;
+      error = SFNT_Err_Ok;
       goto Exit;
     }
 
@@ -1367,7 +1368,7 @@
 
     error = face->goto_table( face, TTAG_post, stream, 0 );
     if ( error )
-      return TT_Err_Post_Table_Missing;
+      return SFNT_Err_Post_Table_Missing;
 
     if ( READ_Fields( post_fields, post ) )
       return error;
@@ -1376,7 +1377,7 @@
     /* module (ttpost).                                     */
     FT_TRACE2(( "loaded\n" ));
 
-    return TT_Err_Ok;
+    return SFNT_Err_Ok;
   }
 
 
@@ -1434,7 +1435,7 @@
     {
       FT_TRACE2(( "missing (optional)\n" ));
       pclt->Version = 0;
-      return TT_Err_Ok;
+      return SFNT_Err_Ok;
     }
 
     if ( READ_Fields( pclt_fields, pclt ) )
@@ -1478,7 +1479,7 @@
     /* the gasp table is optional */
     error = face->goto_table( face, TTAG_gasp, stream, 0 );
     if ( error )
-      return TT_Err_Ok;
+      return SFNT_Err_Ok;
 
     if ( ACCESS_Frame( 4L ) )
       goto Exit;
@@ -1547,7 +1548,7 @@
     /* the kern table is optional; exit silently if it is missing */
     error = face->goto_table( face, TTAG_kern, stream, 0 );
     if ( error )
-      return TT_Err_Ok;
+      return SFNT_Err_Ok;
 
     if ( ACCESS_Frame( 4L ) )
       goto Exit;
@@ -1658,7 +1659,7 @@
     /* this table is optional */
     error = face->goto_table( face, TTAG_hdmx, stream, 0 );
     if ( error )
-      return TT_Err_Ok;
+      return SFNT_Err_Ok;
 
     if ( ACCESS_Frame( 8L ) )
       goto Exit;

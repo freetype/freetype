@@ -24,6 +24,8 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 
+#include "ftcerror.h"
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -433,7 +435,7 @@
     /* check for valid `desc' delayed to FT_Lru_Lookup() */
 
     if ( !cache || !anode )
-      return FT_Err_Invalid_Argument;
+      return FTC_Err_Invalid_Argument;
 
     *anode = 0;
     gset   = cache->last_gset;

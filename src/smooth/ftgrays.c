@@ -122,14 +122,17 @@
 
 #else /* _STANDALONE_ */
 
+
 #include <ft2build.h>
 #include "ftgrays.h"
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_OUTLINE_H
 
-#define ErrRaster_Invalid_Mode     FT_Err_Cannot_Render_Glyph
-#define ErrRaster_Invalid_Outline  FT_Err_Invalid_Outline
+#include "ftsmerrs.h"
+
+#define ErrRaster_Invalid_Mode     Smooth_Err_Cannot_Render_Glyph
+#define ErrRaster_Invalid_Outline  Smooth_Err_Invalid_Outline
 
 
 #endif /* _STANDALONE_ */

@@ -22,6 +22,8 @@
 #include FT_LIST_H
 #include FT_INTERNAL_OBJECTS_H
 
+#include "ftcerror.h"
+
 
   static
   void  lru_build_free_list( FT_LruNode  nodes,
@@ -50,7 +52,7 @@
 
 
     if ( !anlru )
-      return FT_Err_Invalid_Argument;
+      return FTC_Err_Invalid_Argument;
 
     *anlru = 0;
     if ( !ALLOC( lru, sizeof ( *lru ) ) )
@@ -146,7 +148,7 @@
 
 
     if ( !lru || !key || !anode )
-      return FT_Err_Invalid_Argument;
+      return FTC_Err_Invalid_Argument;
 
     node   = lru->elements.head;
     clazz  = lru->clazz;
@@ -271,7 +273,7 @@
     /* check for valid `lru' and `key' delayed to FT_Lru_Lookup_Node() */
 
     if ( !anobject )
-      return FT_Err_Invalid_Argument;
+      return FTC_Err_Invalid_Argument;
 
     *anobject = 0;
     error = FT_Lru_Lookup_Node( lru, key, &node );

@@ -23,6 +23,8 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 
+#include "ciderrs.h"
+
 #include <string.h>         /* for strcmp() */
 
 
@@ -65,7 +67,7 @@
     if ( afm )
       CID_Get_Kerning( afm, left_glyph, right_glyph, kerning );
 
-    return T1_Err_Ok;
+    return CID_Err_Ok;
   }
 
 

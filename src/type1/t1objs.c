@@ -25,6 +25,8 @@
 #include "t1gload.h"
 #include "t1load.h"
 
+#include "t1errors.h"
+
 #ifndef T1_CONFIG_OPTION_NO_AFM
 #include "t1afm.h"
 #endif

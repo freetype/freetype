@@ -23,6 +23,8 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_ERRORS_H
 
+#include "ftcerror.h"
+
 #include <string.h>         /* memcmp() */
 
 
@@ -144,7 +146,7 @@
       {
         FT_ERROR(( "FTC_SBit_Cache: cannot load scalable glyphs in an"
                    " sbit cache, please check your arguments!\n" ));
-        error = FT_Err_Invalid_Argument;
+        error = FTC_Err_Invalid_Argument;
         goto Exit;
       }
 
@@ -378,7 +380,7 @@
 
     /* argument checks delayed to FTC_Chunk_Cache_Lookup */
     if ( !ansbit )
-      return FT_Err_Invalid_Argument;
+      return FTC_Err_Invalid_Argument;
       
     *ansbit = 0;
     error   = FTC_Chunk_Cache_Lookup( &cache->root, desc, gindex,
