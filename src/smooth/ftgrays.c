@@ -1700,10 +1700,10 @@
       0
     };
 
-    TBand    bands[40], *band;
-    int      n, num_bands;
-    TPos     min, max, max_y;
-    FT_BBox* clip;
+    TBand     bands[40], *band;
+    int       n, num_bands;
+    TPos      min, max, max_y;
+    FT_BBox*  clip;
 
 
     /* Set up state in the raster object */
@@ -1857,7 +1857,7 @@
       return ErrRaster_Invalid_Mode;
 
     /* compute clipping box */
-    if ( (params->flags & ft_raster_flag_direct) == 0 )
+    if ( ( params->flags & ft_raster_flag_direct ) == 0 )
     {
       /* compute clip box from target pixmap */
       ras.clip_box.xMin = 0;

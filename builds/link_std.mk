@@ -15,6 +15,8 @@
 
 ifdef BUILD_PROJECT
 
+  .PHONY: clean_project distclean_project
+
   # Now include the main sub-makefile.  It contains all the rules used to
   # build the library with the previous variables defined.
   #
