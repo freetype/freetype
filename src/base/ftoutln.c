@@ -358,14 +358,11 @@
          source->n_contours != target->n_contours )
       return FT_Err_Invalid_Argument;
 
-    FT_ARRAY_COPY( target->points, source->points,
-                   source->n_points );
+    FT_ARRAY_COPY( target->points, source->points, source->n_points );
 
-    FT_ARRAY_COPY( target->tags, source->tags,
-                   source->n_points );
+    FT_ARRAY_COPY( target->tags, source->tags, source->n_points );
 
-    FT_ARRAY_COPY( target->contours, source->contours,
-                   source->n_contours );
+    FT_ARRAY_COPY( target->contours, source->contours, source->n_contours );
 
     /* copy all flags, except the `FT_OUTLINE_OWNER' one */
     is_owner      = target->flags & FT_OUTLINE_OWNER;
@@ -680,10 +677,12 @@
     first = points + extremum->first;
     last  = points + extremum->last;
 
+    prev = point;
+    next = point;
+
     do
     {
-      prev = ( point == first ) ? last : point - 1;
-
+      prev = ( prev == first ) ? last : prev - 1;
       if ( prev == point )
         return FT_ORIENTATION_TRUETYPE;  /* degenerate case */
 
@@ -691,8 +690,7 @@
 
     do
     {
-      next = ( point == last ) ? first : point + 1;
-
+      next = ( next == last ) ? first : next + 1;
       if ( next == point )
         return FT_ORIENTATION_TRUETYPE;  /* shouldn't happen */
 
