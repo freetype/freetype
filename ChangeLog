@@ -1,3 +1,7 @@
+2004-03-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/pshinter/pshalgo.c (psh_hint_table_init): Simplify code.
+
 2004-03-02  Werner Lemberg  <wl@gnu.org>
 
 	Add embedded bitmap support to CFF driver.

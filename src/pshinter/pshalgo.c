@@ -35,8 +35,11 @@
 #endif
 
 
-#define  COMPUTE_INFLEXS  /* compute inflection points to optimize "S" and others */
-#define  STRONGER         /* slightly increase the contrast of smooth hinting */
+#define  COMPUTE_INFLEXS  /* compute inflection points to optimize `S' */
+                          /* and similar glyphs                        */
+#define  STRONGER         /* slightly increase the contrast of smooth  */
+                          /* hinting                                   */
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -46,13 +49,13 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  /* return true iff two stem hints overlap */
+  /* return true if two stem hints overlap */
   static FT_Int
   psh_hint_overlap( PSH_Hint  hint1,
                     PSH_Hint  hint2 )
   {
-    return ( hint1->org_pos + hint1->org_len >= hint2->org_pos &&
-             hint2->org_pos + hint2->org_len >= hint1->org_pos );
+    return hint1->org_pos + hint1->org_len >= hint2->org_pos &&
+           hint2->org_pos + hint2->org_len >= hint1->org_pos;
   }
 
 
@@ -89,7 +92,7 @@
   }
 
 
-  /* internal function used to record a new hint */
+  /* internal function to record a new hint */
   static void
   psh_hint_table_record( PSH_Hint_Table  table,
                          FT_UInt         idx )
@@ -109,8 +112,8 @@
 
     psh_hint_activate( hint );
 
-    /* now scan the current active hint set in order to determine */
-    /* if we are overlapping with another segment                 */
+    /* now scan the current active hint set to check */
+    /* whether `hint' overlaps with another hint     */
     {
       PSH_Hint*  sorted = table->sort_global;
       FT_UInt    count  = table->num_hints;
@@ -172,11 +175,13 @@
                        PS_Mask_Table   counter_masks,
                        FT_Memory       memory )
   {
-    FT_UInt   count = hints->num_hints;
+    FT_UInt   count;
     FT_Error  error;
 
     FT_UNUSED( counter_masks );
 
+
+    count = hints->num_hints;
 
     /* allocate our tables */
     if ( FT_NEW_ARRAY( table->sort,  2 * count     ) ||
@@ -190,7 +195,7 @@
     table->num_zones   = 0;
     table->zone        = 0;
 
-    /* now, initialize the "hints" array */
+    /* initialize the `table->hints' array */
     {
       PSH_Hint  write = table->hints;
       PS_Hint   read  = hints->hints;
@@ -204,30 +209,31 @@
       }
     }
 
-    /* we now need to determine the initial "parent" stems; first  */
+    /* we now need to determine the initial `parent' stems; first  */
     /* activate the hints that are given by the initial hint masks */
     if ( hint_masks )
     {
-      FT_UInt  Count = hint_masks->num_masks;
-      PS_Mask  Mask  = hint_masks->masks;
+      PS_Mask  mask = hint_masks->masks;
 
 
+      count             = hint_masks->num_masks;
       table->hint_masks = hint_masks;
 
-      for ( ; Count > 0; Count--, Mask++ )
-        psh_hint_table_record_mask( table, Mask );
+      for ( ; count > 0; count--, mask++ )
+        psh_hint_table_record_mask( table, mask );
     }
 
-    /* now, do a linear parse in case some hints were left alone */
+    /* finally, do a linear parse in case some hints were left alone */
     if ( table->num_hints != table->max_hints )
     {
-      FT_UInt  Index, Count;
+      FT_UInt  idx;
 
 
       FT_ERROR(( "psh_hint_table_init: missing/incorrect hint masks!\n" ));
-      Count = table->max_hints;
-      for ( Index = 0; Index < Count; Index++ )
-        psh_hint_table_record( table, Index );
+
+      count = table->max_hints;
+      for ( idx = 0; idx < count; idx++ )
+        psh_hint_table_record( table, idx );
     }
 
   Exit:
