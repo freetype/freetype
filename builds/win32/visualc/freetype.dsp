@@ -174,7 +174,7 @@ SOURCE=.\src\psnames\psmodule.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\raster1\raster1.c
+SOURCE=.\src\raster\raster.c
 # End Source File
 # Begin Source File
 
@@ -194,7 +194,7 @@ SOURCE=.\src\cid\type1cid.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\type1z\type1z.c
+SOURCE=.\src\type1\type1.c
 # End Source File
 # Begin Source File
 
