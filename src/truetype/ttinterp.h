@@ -74,7 +74,7 @@ FT_BEGIN_HEADER
   /* Point displacement along the freedom vector routine */
   typedef void
   (*TT_Move_Func)( EXEC_OP_ TT_GlyphZone*  zone,
-                            FT_UInt        point,
+                            FT_UShort      point,
                             FT_F26Dot6     distance );
 
   /* Distance projection along one of the projection vectors */
