@@ -1,4 +1,4 @@
-# FreeType 2 top Jamfile (c) 2001 David Turner
+# FreeType 2 top Jamfile (c) 2001, 2002 David Turner
 #
 
 # We need to invoke a SubDir rule if the FT2 source directory top is not the
@@ -16,8 +16,8 @@ FT2_SRC     = [ FT2_SubDir src ] ;
 FT2_LIB     = $(LIBPREFIX)freetype ;
 
 
-# We don't support libtool just yet. It seems that this is not
-# so simple with Jam, but I'll study this topic later..
+# We don't support libtool just yet.  It seems that this is not
+# so simple with Jam, but I'll study this topic later.
 #
 
 # used only when trying to debug the hinter(s)

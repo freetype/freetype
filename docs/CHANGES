@@ -1,18 +1,18 @@
-LATESET CHANGES BETWEEN 2.0.9 and 2.0.8
+LATEST CHANGES BETWEEN 2.0.9 and 2.0.8
 
   I. IMPORTANT BUG FIXES
   
-    - Certain fonts, like "foxjump.ttf" contain broken name tables with
+    - Certain fonts like "foxjump.ttf" contain broken name tables with
       invalid entries and wild offsets.  This caused FreeType to crash when
       trying to load them.
       
-      The SFNT 'name' table loader has been fixed to be able to support
+      The SFNT `name' table loader has been fixed to be able to support
       these strange fonts.
 
       Moreover, the code in charge of processing this table has been changed
-      to always favor Windows-formatted entries over other ones.  Hence, a
+      to always favour Windows-formatted entries over other ones.  Hence, a
       font that works on Windows but not on the Mac will load cleanly in
-      FreeType and report accurate values for Family & Postscript names.
+      FreeType and report accurate values for Family & PostScript names.
 
     - The CID font driver has been fixed.  It unfortunately returned a
       Postscript Font name with a leading slash, as in
@@ -20,37 +20,38 @@ LATESET CHANGES BETWEEN 2.0.9 and 2.0.8
 
     - FreeType 2 should now compile fine on AIX 4.3.3 as a shared library.
 
-    - A bug in the Postscript hinter has been found and fixed. You shouldn't
-      be experimenting un-even stem widths at small pixel sizes (like 14-17).
+    - A bug in the Postscript hinter has been found and fixed, removing
+      un-even stem widths at small pixel sizes (like 14-17).
       
-      This improves the quality of a certain number of Postscript fonts :o)
+      This improves the quality of a certain number of Postscript fonts.
 
 
-  II. NEW FEATURES:
+  II. NEW FEATURES
 
-    - A new function named FT_Library_Version has been added to return
-      the current library's major, minor and patch version numbers. This
-      is important since the macros FREETYPE_MAJOR, FREETYPE_MINOR and
+    - A new function named `FT_Library_Version' has been added to return
+      the current library's major, minor, and patch version numbers.  This
+      is important since the macros FREETYPE_MAJOR, FREETYPE_MINOR, and
       FREETYPE_PATCH cannot be used when the library is dynamically linked
-      by a program..
+      by a program.
 
-    - Two new APIs have been added: FT_Get_First_Char and FT_Get_Next_Char.
+    - Two new APIs have been added: `FT_Get_First_Char' and
+      `FT_Get_Next_Char'.
     
       Together, these can be used to iterate efficiently over the currently
       selected charmap of a given face.  Read the API reference for more
       details.
 
 
-  III. MISCELLANEOUS:
+  III. MISCELLANEOUS
   
     - The FreeType sources are under heavy internal re-factoring.  As a
       consequence, we have created a branch named "STABLE" on the CVS to
       hold all future releases/fixes in the 2.0.x family.
       
       The HEAD branch now contains the re-factored sources and shouldn't be
-      used for testing or packaging new releases.  In the cases where you
-      would like to access the 2.0.9 sources from our CVS repository, you
-      should use the tag VER-2-0-9.
+      used for testing or packaging new releases.  In case you would like
+      to access the 2.0.9 sources from our CVS repository, use the tag
+      `VER-2-0-9'.
 
 
 ============================================================================
@@ -62,14 +63,13 @@ LATEST CHANGES BETWEEN 2.0.8 and 2.0.7
     - There was a small but nasty bug in "freetype-config.in" which
       caused the "freetype-config" script to fail on Unix.
       
-      this doesn't prevented the installation of the library or even
+      This didn't prevent the installation of the library or even
       its execution, but caused problems when trying to compile many
-      Unix packages that depend on it.. !!!
+      Unix packages that depend on it.
       
-
-    - some TrueType or OpenType fonts embedded in PDF documents do
+    - Some TrueType or OpenType fonts embedded in PDF documents do
       not have a 'cmap', 'post' and 'name' as is required by the
-      specification, FreeType no longer refuses to load such fonts..
+      specification.  FreeType no longer refuses to load such fonts.
 
     - various fixes to the PCF font driver
     
