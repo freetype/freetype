@@ -1,3 +1,12 @@
+2001-04-10  Tom Kacvinsky  <tjk@ams.org>
+
+	* t1load.c (parse_charstrings): Changed code for placing .notdef
+	glyph into slot 0 so that we no longer have a memory access
+	violation.
+
+	* t1load.h: In structure T1_Loader, added swap_table (of type
+	PS_Table) to facilitate placing the .notdef glyph into slot 0.
+
 2001-04-10  Francesco Zappa Nardelli  <francesco.zappa.nardelli@ens.fr>
 
 	* src/pcf/pcfdriver.c (PCF_Get_Char_Index): Fix return value.
