@@ -830,9 +830,6 @@
   /*    a given size object.                                               */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    pointSize    :: The current point size in 26.6 points, where       */
-  /*                    1 point equals 1/72 inch.                          */
-  /*                                                                       */
   /*    x_ppem       :: The character width, expressed in integer pixels.  */
   /*                    This is the width of the EM square expressed in    */
   /*                    pixels, hence the term `ppem' (pixels per EM).     */

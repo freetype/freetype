@@ -1475,7 +1475,7 @@ def the_adobe_glyph_list():
 
 
 def the_adobe_glyphs():
-  """return the list of glyph names + unicode values"""
+  """return the list of unicode values"""
 
   lines  = string.split( adobe_glyph_list, '\n' )
   glyphs = []
@@ -1531,11 +1531,14 @@ def dump_mac_indices( file ):
 def dump_glyph_list( file, glyph_list, adobe_extra ):
   write = file.write
 
+  name_list = []
+
   write( "  static const char*  standard_glyph_names[] =\n" )
   write( "  {\n" )
 
   for name in glyph_list:
     write( '    "' + name + '",\n' )
+    name_list.append(name)
 
   write( "\n" )
   write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
@@ -1543,6 +1546,7 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
 
   for name in adobe_extra:
     write( '    "' + name + '",\n' )
+    name_list.append(name)
 
   write( "\n" )
   write( "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */\n" )
@@ -1551,35 +1555,45 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
   write( "  };\n" )
   write( "\n" )
   write( "\n" )
+  
+  return name_list
 
 
-def dump_unicode_values( file, glyph_list ):
+def dump_unicode_values( file, base_list, adobe_list ):
   """build the glyph names to unicode values table"""
 
   write = file.write
 
-  adobe_list, uni_values = the_adobe_glyphs()
-  index_list = []
+  adobe_glyphs, uni_values = the_adobe_glyphs()
 
-  write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
   write( "\n" )
   write( "  static const unsigned short  names_to_unicode[" + \
-          repr( len( glyph_list ) + 1 ) + "] =\n" )
+          repr( len( base_list ) + len( adobe_list ) + 1 ) + "] =\n" )
   write( "  {\n" )
              
-  for name in glyph_list:
+  for name in base_list:
     try:
-      index = adobe_list.index( name )
-      index_list.append( uni_values[index] )
+      index = adobe_glyphs.index( name )
       write( "    0x" + uni_values[index] + ",\n" )
     except:
-      index_list.append( 0 )
       write( "    0,\n" )
-            
+
+  write( "\n" )
+  write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
+  write( "\n" )
+
+  for name in adobe_list:
+    try:
+      index = adobe_glyphs.index( name )
+      write( "    0x" + uni_values[index] + ",\n" )
+    except:
+      write( "    0,\n" )
+
+  write( "\n" )
+  write( "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */\n" )
   write( "    0\n" )
   write( "  };\n" )
   write( "\n" )
-  write( "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */\n" )
   write( "\n" )
   write( "\n" )
 
@@ -1617,11 +1631,11 @@ def main():
   mac_list   = count_extra_glyphs( mac_standard_names, t1_standard_strings )
   count_mac  = len( mac_list )  
   t1_bias    = count_mac
-  glyph_list = mac_list + t1_standard_strings
+  base_list  = mac_list + t1_standard_strings
     
   # build adobe unicode index table & supplemental glyph names
   adobe_list  = the_adobe_glyph_list()
-  adobe_list  = count_extra_glyphs( adobe_list, glyph_list )
+  adobe_list  = count_extra_glyphs( adobe_list, base_list )
   count_adobe = len( adobe_list )
 
   write( "/***************************************************************************/\n" )
@@ -1649,7 +1663,7 @@ def main():
   write( "\n" )
 
   # dump glyph list
-  dump_glyph_list( file, glyph_list, adobe_list )
+  name_list = dump_glyph_list( file, base_list, adobe_list )
     
   # dump t1_standard_list
   write( "  static const char**  t1_standard_glyphs = " \
@@ -1661,19 +1675,22 @@ def main():
   write( "\n" )
   write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
   write( "#define NUM_ADOBE_GLYPHS " + \
-          repr( len( glyph_list ) + len( adobe_list ) - t1_bias ) + "\n" )
+          repr( len( base_list ) + len( adobe_list ) - t1_bias ) + "\n" )
   write( "#else\n" )
   write( "#define NUM_ADOBE_GLYPHS " + \
-          repr( len( glyph_list ) - t1_bias )  + "\n" )
+          repr( len( base_list ) - t1_bias )  + "\n" )
   write( "#endif\n" )
   write( "\n" )
   write( "\n" )
 
   # dump mac indices table
   dump_mac_indices( file )    
-    
+
+  # discard mac names from base list
+  base_list = base_list[t1_bias:]
+  
   # dump unicode values table
-  dump_unicode_values( file, glyph_list[t1_bias:] )
+  dump_unicode_values( file, base_list, adobe_list )
 
   dump_encoding( file, "t1_standard_encoding", t1_standard_encoding )
   dump_encoding( file, "t1_expert_encoding", t1_expert_encoding )

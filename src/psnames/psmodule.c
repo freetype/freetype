@@ -137,8 +137,7 @@
     PS_UniMap*  map2 = (PS_UniMap*)b;
 
 
-    return ( map1->unicode < map2->unicode ? -1 :
-             map1->unicode > map2->unicode ?  1 : 0 );
+    return ( map1->unicode - map2->unicode );
   }
 
 
