@@ -1,5 +1,8 @@
 2001-12-20  David Turner  <david@freetype.org>
 
+        * include/freetype/config/ftoption.h: disabling bytecode interpreter
+        for new release
+
         * docs/CHANGES: updated for 2.0.6 release
 
         * src/cff/cffload.h, src/cff/cffload.c, src/cff/cffgload.c: updated
