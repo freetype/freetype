@@ -41,6 +41,9 @@ LATEST CHANGES BETWEEN 2.1.4 and 2.1.3
     - the PFR driver didn't return the list of available embedded bitmaps
       properly.
 
+    - there was a nasty memory leak when using embedded bitmaps in certain
+      font formats.
+
   II. IMPORTANT CHANGES
 
     - David Chester contributed some enhancements to the auto-hinter that

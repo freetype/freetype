@@ -1,3 +1,13 @@
+2003-04-09  Mike Fabian  <mfabian@suse.de>
+
+   * src/bdf/bdfdrivr.h, src/pcf/pcf.h: changed FT_Short to FT_UShort in
+   order to be able to access more than 32768 glyphs in fonts
+
+2003-04-08  David Turner  <david@freetype.org>
+
+   FreeType 2.1.4 Released
+   =======================
+
 2003-04-03  Martin Muskens  <mmuskens@aurelon.com>
 
    * src/type1/t1load.c (T1_Open_Face): fixed the code to make it handle
@@ -47,7 +57,7 @@
 
 2003-03-15  David Turner  <david@freetype.org>
 
-    * src/truetyoe/ttdriver.c (Set_Char_Sizes): fixed a small rounding bug.
+    * src/truetype/ttdriver.c (Set_Char_Sizes): fixed a small rounding bug.
     Actually, it seems that previous versions of FreeType didn't perform
     TrueType rounding exactly as appropriate.
 
