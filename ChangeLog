@@ -1,3 +1,9 @@
+2003-12-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffobjs.c (cff_face_init): Don't set
+	FT_FACE_FLAG_GLYPH_NAMES for CID-keyed fonts.
+	Don't construct a cmap for CID-keyed fonts.
+
 2003-12-10  Werner Lemberg  <wl@gnu.org>
 
 	Use implementation specific SID value 0xFFFF to indicate that
