@@ -494,7 +494,9 @@
       TT_Short   left_bearing;
       TT_UShort  advance_width;
 
-      Get_HMetrics( face, index, TRUE,
+      Get_HMetrics( face, index,
+                    (TT_Bool)!(loader->load_flags &
+                                 FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH),
                     &left_bearing,
                     &advance_width );
 
@@ -980,7 +982,13 @@
       left_bearing = loader->left_bearing;
       advance      = loader->advance;
 
-      if ( face->postscript.isFixedPitch )
+     /* the flag FT_LOAD_NO_ADVANCE_CHECK was introduced to       */
+     /* correctly support DynaLab fonts, who have an incorrect    */
+     /* "advance_Width_Max" field !! It is used, to my knowledge  */
+     /* exclusively in the X-TrueType font server..               */
+     /*                                                           */
+      if ( face->postscript.isFixedPitch                        &&
+           (loader->load_flags & FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH) == 0 )
         advance = face->horizontal.advance_Width_Max;
 
       if ( !(loader->load_flags & FT_LOAD_NO_SCALE) )
