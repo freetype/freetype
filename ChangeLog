@@ -1,5 +1,7 @@
 2001-03-10  Tom Kacvinsky  <tjk@ams.org>
 
+	* TODO: New file.
+	
 	* include/freetype/freetype.h: Added prototypes and notes for
 	three new functions: FT_RoundFix, FT_CeilFix, and FT_FloorFix.
 
