@@ -2,7 +2,8 @@
 
 	* src/type1/t1parse.c (pfb_tag_fields): Removed.
 	(read_pfb_tag): Fix code so that it doesn't fail on end-of-file
-	indicated (0x8003).
+	indicator (0x8003).
+	* docs/CHANGES: Updated.
 
 2003-09-16  Werner Lemberg  <wl@gnu.org>
 
