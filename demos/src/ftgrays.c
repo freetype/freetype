@@ -89,6 +89,7 @@
 #define  ROUND(x)    (((x)+ONE_PIXEL/2) & -ONE_PIXEL)
 
 #define  UPSCALE(x)  (PIXEL_BITS >= 6 ? (x) << (PIXEL_BITS-6) : (x) >> (6-PIXEL_BITS))
+#define  DOWNSCALE(x)  (PIXEL_BITS >= 6 ? (x) >> (PIXEL_BITS-6) : (x) << (6-PIXEL_BITS))
 
 /****************************************************************************/
 /*                                                                          */
@@ -473,12 +474,12 @@ int  render_conic( RAS_ARG_ FT_Vector* control, FT_Vector* to )
   int*        levels;
   FT_Vector*  arc;
   
-  dx = ras.x + to->x - (control->x << 1); if (dx < 0) dx = -dx;
-  dy = ras.y + to->y - (control->y << 1); if (dy < 0) dy = -dy;
+  dx = DOWNSCALE(ras.x) + to->x - (control->x << 1); if (dx < 0) dx = -dx;
+  dy = DOWNSCALE(ras.y) + to->y - (control->y << 1); if (dy < 0) dy = -dy;
   if (dx < dy) dx = dy;
   
   level = 1;
-  dx = dx/64;
+  dx = dx/32;
   while ( dx > 0 )
   {
     dx >>= 1;
@@ -561,13 +562,13 @@ int  render_cubic( RAS_ARG_ FT_Vector* control1,
   int*        levels;
   FT_Vector*  arc;
   
-  dx = ras.x + to->x - (control1->x << 1); if (dx < 0) dx = -dx;
-  dy = ras.y + to->y - (control1->y << 1); if (dy < 0) dy = -dy;
+  dx = DOWNSCALE(ras.x) + to->x - (control1->x << 1); if (dx < 0) dx = -dx;
+  dy = DOWNSCALE(ras.y) + to->y - (control1->y << 1); if (dy < 0) dy = -dy;
   if (dx < dy) dx = dy;
   da = dx;
   
-  dx = ras.x + to->x - 3*(control1->x + control2->x); if (dx < 0) dx = -dx;
-  dy = ras.y + to->y - 3*(control1->x + control2->y); if (dy < 0) dy = -dy;
+  dx = DOWNSCALE(ras.x) + to->x - 3*(control1->x + control2->x); if (dx < 0) dx = -dx;
+  dy = DOWNSCALE(ras.y) + to->y - 3*(control1->x + control2->y); if (dy < 0) dy = -dy;
   if (dx < dy) dx = dy;
   db = dx;
    
@@ -623,10 +624,10 @@ int  render_cubic( RAS_ARG_ FT_Vector* control1,
 
 
 /* a macro comparing two cell pointers. returns true if a <= b */
-#define LESS_THAN(a,b)   ( (a)->y<(b)->y || ((a)->y==(b)->y && (a)->x<=(b)->x) )
+#define LESS_THAN(a,b)   ( (a)->y<(b)->y || ((a)->y==(b)->y && (a)->x < (b)->x) )
 #define SWAP_CELLS(a,b,temp)  { temp = *(a); *(a) = *(b); *(b) = temp; }
 #define DEBUG_SORT
-#define SHELL_SORT
+#define QUICK_SORT
 
 #ifdef SHELL_SORT
 /* A simple shell sort algorithm that works directly on our */
@@ -668,7 +669,7 @@ void shell_sort ( PCell cells,
 /* it should be faster than calling the stdlib qsort(), and we can even    */
 /* tailor our insertion threshold...                                       */
 
-#define QSORT_THRESHOLD  4   /* below this size, a sub-array will be sorted */
+#define QSORT_THRESHOLD  7   /* below this size, a sub-array will be sorted */
                              /* through a normal insertion sort..           */
 
 static
@@ -686,37 +687,39 @@ void  quick_sort( PCell cells,
   for (;;)
   {
     int   len = limit-base;
-    PCell i, j;
+    PCell i, j, pivot;
     
     if ( len > QSORT_THRESHOLD)
     {
       /* we use base+len/2 as the pivot */
-      SWAP_CELLS( base, base+len/2, temp );
-      i = base+1;
-      j = limit-1;
+      pivot = base + len/2;
+      SWAP_CELLS( base, pivot, temp );
+      
+      i     = base + 1;
+      j     = limit-1;
 
       /* now ensure that *i <= *base <= *j */
       if (LESS_THAN(j,i))
-        SWAP( i, j, temp );
+        SWAP_CELLS( i, j, temp );
         
       if (LESS_THAN(base,i))
-        SWAP( base, i, temp );
+        SWAP_CELLS( base, i, temp );
         
       if (LESS_THAN(j,base))
-        SWAP( base, j, temp );
+        SWAP_CELLS( base, j, temp );
         
       for (;;)
       {
-        do i++ while (LESS_THAN(i,base));
-        do j-- while (LESS_THAN(base,j));
+        do i++; while (LESS_THAN(i,base));
+        do j--; while (LESS_THAN(base,j));
         if (i > j)
           break;
           
-        SWAP( i,j );
+        SWAP_CELLS( i,j, temp );
       }
-      /* move pivot to correct place */
-      SWAP( base, j, temp );
-      
+
+      SWAP_CELLS( base, j, temp );
+     
       /* now, push the largest sub-array */
       if ( j - base > limit -i )
       {
@@ -741,11 +744,19 @@ void  quick_sort( PCell cells,
       {
         for ( ; LESS_THAN(j+1,j); j-- )
         {
-          SWAP( j+1, j, temp );
+          SWAP_CELLS( j+1, j, temp );
           if (j == base)
             break;
         }
       }
+      if (top > stack)
+      {
+        top  -= 2;
+        base  = top[0];
+        limit = top[1];
+      }
+      else
+        break;
     }
   }
 }
@@ -1489,8 +1500,12 @@ int  check_sort( PCell  cells, int count )
 
     if (Convert_Glyph( (PRaster)raster, outline ))
       return 1;
-      
+
+#ifdef SHELL_SORT      
     shell_sort( ras.cells, ras.num_cells );
+#else
+    quick_sort( ras.cells, ras.num_cells );
+#endif
     
 #ifdef DEBUG_GRAYS    
     check_sort( ras.cells, ras.num_cells );
