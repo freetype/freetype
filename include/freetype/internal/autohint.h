@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level `autohint' module-specific interface (specification).     */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -101,11 +101,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    global_len    :: The size in bytes of the global hints.            */
   /*                                                                       */
-  typedef void  (*FT_AutoHinter_Get_Global_Func)(
-                  FT_AutoHinter  hinter,
-                  FT_Face        face,
-                  void**         global_hints,
-                  long*          global_len );
+  typedef void
+  (*FT_AutoHinter_Get_Global_Func)( FT_AutoHinter  hinter,
+                                    FT_Face        face,
+                                    void**         global_hints,
+                                    long*          global_len );
 
 
   /*************************************************************************/
@@ -123,8 +123,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    global :: A pointer to retrieved global hints to discard.          */
   /*                                                                       */
-  typedef void  (*FT_AutoHinter_Done_Global_Func)( FT_AutoHinter  hinter,
-                                                   void*          global );
+  typedef void
+  (*FT_AutoHinter_Done_Global_Func)( FT_AutoHinter  hinter,
+                                     void*          global );
 
 
   /*************************************************************************/
@@ -142,8 +143,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    face   :: A handle to the face.                                    */
   /*                                                                       */
-  typedef void  (*FT_AutoHinter_Reset_Func)( FT_AutoHinter  hinter,
-                                             FT_Face        face );
+  typedef void
+  (*FT_AutoHinter_Reset_Func)( FT_AutoHinter  hinter,
+                               FT_Face        face );
 
 
   /*************************************************************************/
@@ -167,11 +169,12 @@ FT_BEGIN_HEADER
   /*    It will call the font driver with FT_Load_Glyph(), with            */
   /*    FT_LOAD_NO_SCALE set.                                              */
   /*                                                                       */
-  typedef FT_Error  (*FT_AutoHinter_Load_Func)( FT_AutoHinter  hinter,
-                                                FT_GlyphSlot   slot,
-                                                FT_Size        size,
-                                                FT_UInt        glyph_index,
-                                                FT_ULong       load_flags );
+  typedef FT_Error
+  (*FT_AutoHinter_Load_Func)( FT_AutoHinter  hinter,
+                              FT_GlyphSlot   slot,
+                              FT_Size        size,
+                              FT_UInt        glyph_index,
+                              FT_ULong       load_flags );
 
 
   /*************************************************************************/

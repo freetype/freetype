@@ -5,7 +5,7 @@
 /*    Auxiliary functions and data structures related to PostScript fonts  */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -60,18 +60,22 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  PS_Table_Funcs_
   {
-    FT_Error  (*init)   ( PS_Table*  table,
-                          FT_Int     count,
-                          FT_Memory  memory );
+    FT_Error
+    (*init)( PS_Table*  table,
+             FT_Int     count,
+             FT_Memory  memory );
 
-    void      (*done)   ( PS_Table*  table );
+    void
+    (*done)( PS_Table*  table );
 
-    FT_Error  (*add)    ( PS_Table*  table,
-                          FT_Int     index,
-                          void*      object,
-                          FT_Int     length );
+    FT_Error
+    (*add)( PS_Table*  table,
+            FT_Int     index,
+            void*      object,
+            FT_Int     length );
 
-    void      (*release)( PS_Table*  table );
+    void
+    (*release)( PS_Table*  table );
 
   } PS_Table_Funcs;
 
@@ -190,8 +194,9 @@ FT_BEGIN_HEADER
   } T1_Field_Location;
 
 
-  typedef void  (*T1_Field_Parser)( FT_Face     face,
-                                    FT_Pointer  parser );
+  typedef void
+  (*T1_Field_Parser)( FT_Face     face,
+                      FT_Pointer  parser );
 
 
   /* structure type used to model object fields */
@@ -291,45 +296,57 @@ FT_BEGIN_HEADER
 
   typedef struct  T1_Parser_Funcs_
   {
-    void      (*init)          ( T1_Parser*  parser,
-                                 FT_Byte*    base,
-                                 FT_Byte*    limit,
-                                 FT_Memory   memory );
+    void
+    (*init)( T1_Parser*  parser,
+             FT_Byte*    base,
+             FT_Byte*    limit,
+             FT_Memory   memory );
 
-    void      (*done)          ( T1_Parser*  parser );
+    void
+    (*done)( T1_Parser*  parser );
 
-    void      (*skip_spaces)   ( T1_Parser*  parser );
-    void      (*skip_alpha)    ( T1_Parser*  parser );
+    void
+    (*skip_spaces)( T1_Parser*  parser );
+    void
+    (*skip_alpha)( T1_Parser*  parser );
 
-    FT_Long   (*to_int)        ( T1_Parser*  parser );
-    FT_Fixed  (*to_fixed)      ( T1_Parser*  parser,
-                                 FT_Int      power_ten );
-    FT_Int    (*to_coord_array)( T1_Parser*  parser,
-                                 FT_Int      max_coords,
-                                 FT_Short*   coords );
-    FT_Int    (*to_fixed_array)( T1_Parser*  parser,
-                                 FT_Int      max_values,
-                                 FT_Fixed*   values,
-                                 FT_Int      power_ten );
+    FT_Long
+    (*to_int)( T1_Parser*  parser );
+    FT_Fixed
+    (*to_fixed)( T1_Parser*  parser,
+                 FT_Int      power_ten );
+    FT_Int
+    (*to_coord_array)( T1_Parser*  parser,
+                       FT_Int      max_coords,
+                       FT_Short*   coords );
+    FT_Int
+    (*to_fixed_array)( T1_Parser*  parser,
+                       FT_Int      max_values,
+                       FT_Fixed*   values,
+                       FT_Int      power_ten );
 
-    void      (*to_token)      ( T1_Parser*  parser,
-                                 T1_Token*   token );
-    void      (*to_token_array)( T1_Parser*  parser,
-                                 T1_Token*   tokens,
-                                 FT_UInt     max_tokens,
-                                 FT_Int*     pnum_tokens );
+    void
+    (*to_token)( T1_Parser*  parser,
+                 T1_Token*   token );
+    void
+    (*to_token_array)( T1_Parser*  parser,
+                       T1_Token*   tokens,
+                       FT_UInt     max_tokens,
+                       FT_Int*     pnum_tokens );
 
-    FT_Error  (*load_field)    ( T1_Parser*       parser,
-                                 const T1_Field*  field,
-                                 void**           objects,
-                                 FT_UInt          max_objects,
-                                 FT_ULong*        pflags );
+    FT_Error
+    (*load_field)( T1_Parser*       parser,
+                   const T1_Field*  field,
+                   void**           objects,
+                   FT_UInt          max_objects,
+                   FT_ULong*        pflags );
 
-    FT_Error  (*load_field_table)( T1_Parser*       parser,
-                                   const T1_Field*  field,
-                                   void**           objects,
-                                   FT_UInt          max_objects,
-                                   FT_ULong*        pflags );
+    FT_Error
+    (*load_field_table)( T1_Parser*       parser,
+                         const T1_Field*  field,
+                         void**           objects,
+                         FT_UInt          max_objects,
+                         FT_ULong*        pflags );
 
   } T1_Parser_Funcs;
 
@@ -380,35 +397,43 @@ FT_BEGIN_HEADER
   typedef struct T1_Builder_  T1_Builder;
 
 
-  typedef FT_Error  (*T1_Builder_Check_Points_Func) ( T1_Builder*  builder,
-                                                     FT_Int       count );
+  typedef FT_Error
+  (*T1_Builder_Check_Points_Func)( T1_Builder*  builder,
+                                  FT_Int       count );
 
-  typedef void      (*T1_Builder_Add_Point_Func)    ( T1_Builder*  builder,
-                                                      FT_Pos       x,
-                                                      FT_Pos       y,
-                                                      FT_Byte      flag );
+  typedef void
+  (*T1_Builder_Add_Point_Func)( T1_Builder*  builder,
+                                FT_Pos       x,
+                                FT_Pos       y,
+                                FT_Byte      flag );
 
-  typedef FT_Error  (*T1_Builder_Add_Point1_Func)   ( T1_Builder*  builder,
-                                                      FT_Pos       x,
-                                                      FT_Pos       y );
+  typedef FT_Error
+  (*T1_Builder_Add_Point1_Func)( T1_Builder*  builder,
+                                 FT_Pos       x,
+                                 FT_Pos       y );
 
-  typedef FT_Error  (*T1_Builder_Add_Contour_Func)  ( T1_Builder*  builder );
+  typedef FT_Error
+  (*T1_Builder_Add_Contour_Func)( T1_Builder*  builder );
 
-  typedef FT_Error  (*T1_Builder_Start_Point_Func)  ( T1_Builder*  builder,
-                                                      FT_Pos       x,
-                                                      FT_Pos       y );
+  typedef FT_Error
+  (*T1_Builder_Start_Point_Func)( T1_Builder*  builder,
+                                  FT_Pos       x,
+                                  FT_Pos       y );
 
-  typedef void      (*T1_Builder_Close_Contour_Func)( T1_Builder*  builder );
+  typedef void
+  (*T1_Builder_Close_Contour_Func)( T1_Builder*  builder );
 
 
   typedef struct  T1_Builder_Funcs_
   {
-    void      (*init)( T1_Builder*   builder,
-                       FT_Face       face,
-                       FT_Size       size,
-                       FT_GlyphSlot  slot );
+    void
+    (*init)( T1_Builder*   builder,
+             FT_Face       face,
+             FT_Size       size,
+             FT_GlyphSlot  slot );
 
-    void      (*done)( T1_Builder*   builder );
+    void
+    (*done)( T1_Builder*   builder );
 
     T1_Builder_Check_Points_Func   check_points;
     T1_Builder_Add_Point_Func      add_point;
@@ -551,25 +576,29 @@ FT_BEGIN_HEADER
   typedef struct T1_Decoder_Funcs_  T1_Decoder_Funcs;
 
 
-  typedef  FT_Error  (*T1_Decoder_Callback)( T1_Decoder*  decoder,
-                                             FT_UInt      glyph_index );
+  typedef FT_Error
+  (*T1_Decoder_Callback)( T1_Decoder*  decoder,
+                          FT_UInt      glyph_index );
 
 
   struct  T1_Decoder_Funcs_
   {
-    FT_Error  (*init) ( T1_Decoder*          decoder,
-                        FT_Face              face,
-                        FT_Size              size,
-                        FT_GlyphSlot         slot,
-                        FT_Byte**            glyph_names,
-                        T1_Blend*            blend,
-                        T1_Decoder_Callback  callback );
+    FT_Error
+    (*init)( T1_Decoder*          decoder,
+             FT_Face              face,
+             FT_Size              size,
+             FT_GlyphSlot         slot,
+             FT_Byte**            glyph_names,
+             T1_Blend*            blend,
+             T1_Decoder_Callback  callback );
 
-    void      (*done) ( T1_Decoder*  decoder );
+    void
+    (*done)( T1_Decoder*  decoder );
 
-    FT_Error  (*parse_charstrings)( T1_Decoder*  decoder,
-                                    FT_Byte*     base,
-                                    FT_UInt      len );
+    FT_Error
+    (*parse_charstrings)( T1_Decoder*  decoder,
+                          FT_Byte*     base,
+                          FT_UInt      len );
   };
 
 
@@ -621,9 +650,11 @@ FT_BEGIN_HEADER
     const T1_Builder_Funcs*  t1_builder_funcs;
     const T1_Decoder_Funcs*  t1_decoder_funcs;
 
-    void                     (*t1_decrypt)( FT_Byte*   buffer,
-                                            FT_Offset  length,
-                                            FT_UShort  seed );
+    void
+    (*t1_decrypt)( FT_Byte*   buffer,
+                   FT_Offset  length,
+                   FT_UShort  seed );
+
   } PSAux_Interface;
 
 

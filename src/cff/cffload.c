@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType and CFF data/program tables loader (body)                   */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1615,7 +1615,7 @@
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory. */
-        MEM_Copy( charset->sids, cff_isoadobe_charset, 
+        MEM_Copy( charset->sids, cff_isoadobe_charset,
                   num_glyphs * sizeof ( FT_UShort ) );
 
         break;
@@ -2210,7 +2210,7 @@
                               base_offset, dict->charset_offset );
     if ( error )
       goto Exit;
-      
+
     error = CFF_Load_Encoding( &font->encoding,
                                &font->charset,
                                font->num_glyphs,
@@ -2219,7 +2219,7 @@
                                dict->encoding_offset );
     if ( error )
       goto Exit;
-      
+
     /* get the font name */
     font->font_name = CFF_Get_Name( &font->name_index, face_index );
 

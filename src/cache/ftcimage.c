@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Image cache (body).                                         */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -265,6 +265,8 @@
   };
 
 
+  /* documentation is in ftcimage.h */
+
   FT_EXPORT_DEF( FT_Error )
   FTC_Image_Cache_New( FTC_Manager       manager,
                        FTC_Image_Cache  *acache )
@@ -276,6 +278,8 @@
   }
 
 
+  /* documentation is in ftcimage.h */
+
   FT_EXPORT_DEF( FT_Error )
   FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
                           FTC_Image_Desc*  desc,
@@ -285,15 +289,16 @@
     FT_Error       error;
     FTC_GlyphNode  node;
 
+
     /* some argument checks are delayed to FTC_Glyph_Cache_Lookup */
 
-    if (!aglyph)
+    if ( !aglyph )
       return FTC_Err_Invalid_Argument;
 
     error = FTC_Glyph_Cache_Lookup( (FTC_Glyph_Cache)cache,
                                     desc, gindex, &node );
-                                    
-    if (!error)
+
+    if ( !error )
       *aglyph = ((FTC_GlyphImage)node)->ft_glyph;
 
     return error;

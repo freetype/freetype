@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Debugging and logging component (specification).                     */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -146,8 +146,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    level     :: The tracing level.                                    */
   /*                                                                       */
-  FT_EXPORT( void )  FT_SetTraceLevel( FT_Trace  component,
-                                       char      level );
+  FT_EXPORT( void )
+  FT_SetTraceLevel( FT_Trace  component,
+                    char      level );
 
 
 #elif defined( FT_DEBUG_LEVEL_ERROR )
@@ -193,10 +194,12 @@ FT_BEGIN_HEADER
           } while ( 0 )
 
   /* print a message */
-  FT_EXPORT( void )  FT_Message( const char*  fmt, ... );
+  FT_EXPORT( void )
+  FT_Message( const char*  fmt, ... );
 
   /* print a message and exit */
-  FT_EXPORT( void )  FT_Panic( const char*  fmt, ... );
+  FT_EXPORT( void )
+  FT_Panic( const char*  fmt, ... );
 
 #define FT_ERROR( varformat )  FT_Message varformat
 

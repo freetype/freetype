@@ -5,7 +5,7 @@
 /*    High-level interface for the `PSNames' module (in charge of          */
 /*    various functions related to Postscript glyph names conversion).     */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -52,7 +52,8 @@ FT_BEGIN_HEADER
   /*    This function will not be compiled if the configuration macro      */
   /*    FT_CONFIG_OPTION_ADOBE_GLYPH_LIST is undefined.                    */
   /*                                                                       */
-  typedef FT_ULong  (*PS_Unicode_Value_Func)( const char*  glyph_name );
+  typedef FT_ULong
+  (*PS_Unicode_Value_Func)( const char*  glyph_name );
 
 
   /*************************************************************************/
@@ -82,9 +83,10 @@ FT_BEGIN_HEADER
   /*    This function will not be compiled if the configuration macro      */
   /*    FT_CONFIG_OPTION_ADOBE_GLYPH_LIST is undefined.                    */
   /*                                                                       */
-  typedef FT_UInt  (*PS_Unicode_Index_Func)( FT_UInt       num_glyphs,
-                                             const char**  glyph_names,
-                                             FT_ULong      unicode );
+  typedef FT_UInt
+  (*PS_Unicode_Index_Func)( FT_UInt       num_glyphs,
+                            const char**  glyph_names,
+                            FT_ULong      unicode );
 
 
   /*************************************************************************/
@@ -106,10 +108,12 @@ FT_BEGIN_HEADER
   /*    This function will not be compiled if the configuration macro      */
   /*    FT_CONFIG_OPTION_POSTSCRIPT_NAMES is undefined.                    */
   /*                                                                       */
-  typedef const char*  (*PS_Macintosh_Name_Func)( FT_UInt  name_index );
+  typedef const char*
+  (*PS_Macintosh_Name_Func)( FT_UInt  name_index );
 
 
-  typedef const char*  (*PS_Adobe_Std_Strings_Func)( FT_UInt  string_index );
+  typedef const char*
+  (*PS_Adobe_Std_Strings_Func)( FT_UInt  string_index );
 
 
   typedef struct  PS_UniMap_
@@ -152,13 +156,15 @@ FT_BEGIN_HEADER
   } PS_Unicodes;
 
 
-  typedef FT_Error  (*PS_Build_Unicodes_Func)( FT_Memory     memory,
-                                               FT_UInt       num_glyphs,
-                                               const char**  glyph_names,
-                                               PS_Unicodes*  unicodes );
+  typedef FT_Error
+  (*PS_Build_Unicodes_Func)( FT_Memory     memory,
+                             FT_UInt       num_glyphs,
+                             const char**  glyph_names,
+                             PS_Unicodes*  unicodes );
 
-  typedef FT_UInt  (*PS_Lookup_Unicode_Func)( PS_Unicodes*  unicodes,
-                                              FT_UInt       unicode );
+  typedef FT_UInt
+  (*PS_Lookup_Unicode_Func)( PS_Unicodes*  unicodes,
+                             FT_UInt       unicode );
 
 
   /*************************************************************************/

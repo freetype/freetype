@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType abstract glyph cache (specification).                       */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -93,24 +93,30 @@ FT_BEGIN_HEADER
   /* Glyph set methods.                                                    */
   /*                                                                       */
 
-  typedef FT_Error  (*FTC_GlyphSet_InitFunc)       ( FTC_GlyphSet    gset,
-                                                     FT_Pointer      type );
+  typedef FT_Error
+  (*FTC_GlyphSet_InitFunc)( FTC_GlyphSet    gset,
+                            FT_Pointer      type );
 
-  typedef void      (*FTC_GlyphSet_DoneFunc)       ( FTC_GlyphSet    gset );
+  typedef void
+  (*FTC_GlyphSet_DoneFunc)( FTC_GlyphSet    gset );
 
-  typedef FT_Bool   (*FTC_GlyphSet_CompareFunc)    ( FTC_GlyphSet    gset,
-                                                     FT_Pointer      type );
+  typedef FT_Bool
+  (*FTC_GlyphSet_CompareFunc)( FTC_GlyphSet    gset,
+                               FT_Pointer      type );
 
 
-  typedef FT_Error  (*FTC_GlyphSet_NewNodeFunc)    ( FTC_GlyphSet    gset,
-                                                     FT_UInt         gindex,
-                                                     FTC_GlyphNode*  anode );
+  typedef FT_Error
+  (*FTC_GlyphSet_NewNodeFunc)( FTC_GlyphSet    gset,
+                               FT_UInt         gindex,
+                               FTC_GlyphNode*  anode );
 
-  typedef void      (*FTC_GlyphSet_DestroyNodeFunc)( FTC_GlyphNode   node,
-                                                     FTC_GlyphSet    gset );
+  typedef void
+  (*FTC_GlyphSet_DestroyNodeFunc)( FTC_GlyphNode   node,
+                                   FTC_GlyphSet    gset );
 
-  typedef FT_ULong  (*FTC_GlyphSet_SizeNodeFunc)   ( FTC_GlyphNode   node,
-                                                     FTC_GlyphSet    gset );
+  typedef FT_ULong
+  (*FTC_GlyphSet_SizeNodeFunc)( FTC_GlyphNode   node,
+                                FTC_GlyphSet    gset );
 
 
   typedef struct  FTC_GlyphSet_Class_
@@ -168,9 +174,10 @@ FT_BEGIN_HEADER
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  FT_EXPORT( void )  FTC_GlyphNode_Init( FTC_GlyphNode  node,
-                                         FTC_GlyphSet   gset,
-                                         FT_UInt        gindex );
+  FT_EXPORT( void )
+  FTC_GlyphNode_Init( FTC_GlyphNode  node,
+                      FTC_GlyphSet   gset,
+                      FT_UInt        gindex );
 
 #define FTC_GlyphNode_Ref( n ) \
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count++
@@ -179,27 +186,32 @@ FT_BEGIN_HEADER
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count--
 
 
-  FT_EXPORT( void )      FTC_GlyphNode_Destroy( FTC_GlyphNode    node,
-                                                FTC_Glyph_Cache  cache );
+  FT_EXPORT( void )
+  FTC_GlyphNode_Destroy( FTC_GlyphNode    node,
+                         FTC_Glyph_Cache  cache );
 
-  FT_EXPORT( FT_Error )  FTC_Glyph_Cache_Init(  FTC_Glyph_Cache  cache );
+  FT_EXPORT( FT_Error )
+  FTC_Glyph_Cache_Init(  FTC_Glyph_Cache  cache );
 
-  FT_EXPORT( void )      FTC_Glyph_Cache_Done(  FTC_Glyph_Cache  cache );
+  FT_EXPORT( void )
+  FTC_Glyph_Cache_Done(  FTC_Glyph_Cache  cache );
 
 
-  FT_EXPORT( FT_Error )  FTC_GlyphSet_New( FTC_Glyph_Cache  cache,
-                                           FT_Pointer       type,
-                                           FTC_GlyphSet    *aset );
+  FT_EXPORT( FT_Error )
+  FTC_GlyphSet_New( FTC_Glyph_Cache  cache,
+                    FT_Pointer       type,
+                    FTC_GlyphSet    *aset );
 
-  FT_EXPORT( FT_Error )  FTC_GlyphSet_Lookup_Node(
-                           FTC_GlyphSet    gset,
-                           FT_UInt         glyph_index,
-                           FTC_GlyphNode  *anode );
+  FT_EXPORT( FT_Error )
+  FTC_GlyphSet_Lookup_Node( FTC_GlyphSet    gset,
+                            FT_UInt         glyph_index,
+                            FTC_GlyphNode  *anode );
 
-  FT_EXPORT( FT_Error )  FTC_Glyph_Cache_Lookup( FTC_Glyph_Cache  cache,
-                                                 FT_Pointer       type,
-                                                 FT_UInt          gindex,
-                                                 FTC_GlyphNode   *anode );
+  FT_EXPORT( FT_Error )
+  FTC_Glyph_Cache_Lookup( FTC_Glyph_Cache  cache,
+                          FT_Pointer       type,
+                          FT_UInt          gindex,
+                          FTC_GlyphNode   *anode );
 
 
 FT_END_HEADER

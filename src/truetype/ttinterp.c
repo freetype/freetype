@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType bytecode interpreter (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -850,11 +850,11 @@
         FT_F26Dot6  Y )
   {
     FT_Vector  v;
-    
+
     v.x = X;
     v.y = Y;
     return FT_Vector_Length( &v );
-  }                            
+  }
 
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
@@ -2293,14 +2293,14 @@
   {
     FT_Vector  v;
     FT_Angle   angle;
-    
+
     angle = FT_Atan2( Vx, Vy );
 
     FT_Vector_Unit( &v, angle );
-    
+
     R->x = v.x >> 2;
     R->y = v.y >> 2;
-    
+
     return SUCCESS;
   }
 

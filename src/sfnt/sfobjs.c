@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    SFNT object management (base).                                       */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -280,7 +280,7 @@
     has_outline   = FT_BOOL( ( TT_LookUp_Table( face, TTAG_glyf ) != 0 ) ||
                              ( TT_LookUp_Table( face, TTAG_CFF  ) != 0 ) );
     is_apple_sbit = 0;
-    
+
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
     /* if this font doesn't contain outlines, we try to load */
@@ -310,12 +310,12 @@
       error = sfnt->load_metrics( face, stream, 0 );
       if ( error )
         goto Exit;
-        
+
       /* try to load the `vhea' and `vmtx' tables at once */
       error = sfnt->load_metrics( face, stream, 1 );
       if ( error )
         goto Exit;
-        
+
       if ( LOAD_( os2 ) )
         goto Exit;
     }

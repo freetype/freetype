@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A small-bitmap cache (specification).                                */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -130,8 +130,9 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FTC_SBit_Cache_New( FTC_Manager      manager,
-                                             FTC_SBit_Cache  *acache );
+  FT_EXPORT( FT_Error )
+  FTC_SBit_Cache_New( FTC_Manager      manager,
+                      FTC_SBit_Cache  *acache );
 
 
   /*************************************************************************/
@@ -162,10 +163,11 @@ FT_BEGIN_HEADER
   /*    The descriptor's `buffer' field is set to 0 to indicate a missing  */
   /*    glyph bitmap.                                                      */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
-                                                FTC_Image_Desc*  desc,
-                                                FT_UInt          gindex,
-                                                FTC_SBit        *sbit );
+  FT_EXPORT( FT_Error )
+  FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
+                         FTC_Image_Desc*  desc,
+                         FT_UInt          gindex,
+                         FTC_SBit        *sbit );
 
 
   /* */

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType chunk cache (specification).                                */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -83,25 +83,32 @@ FT_BEGIN_HEADER
   /*                                                                       */
 
   /* used to set "element_max", "element_count" and "element_size" */
-  typedef FT_Error  (*FTC_ChunkSet_SizesFunc)  ( FTC_ChunkSet  cset,
-                                                 FT_Pointer    type );
+  typedef FT_Error
+  (*FTC_ChunkSet_SizesFunc)( FTC_ChunkSet  cset,
+                             FT_Pointer    type );
 
-  typedef FT_Error  (*FTC_ChunkSet_InitFunc)   ( FTC_ChunkSet  cset,
-                                                 FT_Pointer    type );
+  typedef FT_Error
+  (*FTC_ChunkSet_InitFunc)( FTC_ChunkSet  cset,
+                            FT_Pointer    type );
 
-  typedef void      (*FTC_ChunkSet_DoneFunc)   ( FTC_ChunkSet  cset );
+  typedef void
+  (*FTC_ChunkSet_DoneFunc)( FTC_ChunkSet  cset );
 
-  typedef FT_Bool   (*FTC_ChunkSet_CompareFunc)( FTC_ChunkSet  cset,
-                                                 FT_Pointer    type );
+  typedef FT_Bool
+  (*FTC_ChunkSet_CompareFunc)( FTC_ChunkSet  cset,
+                               FT_Pointer    type );
 
 
-  typedef FT_Error  (*FTC_ChunkSet_NewNodeFunc)    ( FTC_ChunkSet    cset,
-                                                     FT_UInt         index,
-                                                     FTC_ChunkNode*  anode );
+  typedef FT_Error
+  (*FTC_ChunkSet_NewNodeFunc)( FTC_ChunkSet    cset,
+                               FT_UInt         index,
+                               FTC_ChunkNode*  anode );
 
-  typedef void      (*FTC_ChunkSet_DestroyNodeFunc)( FTC_ChunkNode   node );
+  typedef void
+  (*FTC_ChunkSet_DestroyNodeFunc)( FTC_ChunkNode   node );
 
-  typedef FT_ULong  (*FTC_ChunkSet_SizeNodeFunc)   ( FTC_ChunkNode   node );
+  typedef FT_ULong
+  (*FTC_ChunkSet_SizeNodeFunc)( FTC_ChunkNode   node );
 
 
   typedef struct  FTC_ChunkSet_Class_
@@ -165,10 +172,11 @@ FT_BEGIN_HEADER
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  FT_EXPORT( FT_Error )  FTC_ChunkNode_Init( FTC_ChunkNode  node,
-                                             FTC_ChunkSet   cset,
-                                             FT_UInt        index,
-                                             FT_Bool        alloc );
+  FT_EXPORT( FT_Error )
+  FTC_ChunkNode_Init( FTC_ChunkNode  node,
+                      FTC_ChunkSet   cset,
+                      FT_UInt        index,
+                      FT_Bool        alloc );
 
 #define FTC_ChunkNode_Ref( n ) \
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count++
@@ -179,32 +187,37 @@ FT_BEGIN_HEADER
 
   /* chunk set objects */
 
-  FT_EXPORT( void )      FTC_ChunkNode_Destroy( FTC_ChunkNode    node );
+  FT_EXPORT( void )
+  FTC_ChunkNode_Destroy( FTC_ChunkNode    node );
 
 
-  FT_EXPORT( FT_Error )  FTC_ChunkSet_New     ( FTC_Chunk_Cache  cache,
-                                                FT_Pointer       type,
-                                                FTC_ChunkSet    *aset );
+  FT_EXPORT( FT_Error )
+  FTC_ChunkSet_New( FTC_Chunk_Cache  cache,
+                    FT_Pointer       type,
+                    FTC_ChunkSet    *aset );
 
 
-  FT_EXPORT( FT_Error )  FTC_ChunkSet_Lookup_Node(
-                           FTC_ChunkSet    cset,
-                           FT_UInt         glyph_index,
-                           FTC_ChunkNode*  anode,
-                           FT_UInt        *anindex );
+  FT_EXPORT( FT_Error )
+  FTC_ChunkSet_Lookup_Node( FTC_ChunkSet    cset,
+                            FT_UInt         glyph_index,
+                            FTC_ChunkNode*  anode,
+                            FT_UInt        *anindex );
 
 
   /* chunk cache objects */
 
-  FT_EXPORT( FT_Error )  FTC_Chunk_Cache_Init  ( FTC_Chunk_Cache  cache );
+  FT_EXPORT( FT_Error )
+  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache );
 
-  FT_EXPORT( void )      FTC_Chunk_Cache_Done  ( FTC_Chunk_Cache  cache );
+  FT_EXPORT( void )
+  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache );
 
-  FT_EXPORT( FT_Error )  FTC_Chunk_Cache_Lookup( FTC_Chunk_Cache  cache,
-                                                 FT_Pointer       type,
-                                                 FT_UInt          gindex,
-                                                 FTC_ChunkNode   *anode,
-                                                 FT_UInt         *aindex );
+  FT_EXPORT( FT_Error )
+  FTC_Chunk_Cache_Lookup( FTC_Chunk_Cache  cache,
+                          FT_Pointer       type,
+                          FT_UInt          gindex,
+                          FTC_ChunkNode   *anode,
+                          FT_UInt         *aindex );
 
 
 FT_END_HEADER

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A new `perfect' anti-aliasing renderer (body).                       */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1364,7 +1364,7 @@
 
     if ( ras.num_cells == 0 )
       return;
-      
+
     cur   = ras.cells;
     limit = cur + ras.num_cells;
 
@@ -1716,7 +1716,7 @@
 
     /* clip to target bitmap, exit if nothing to do */
     clip = &ras.clip_box;
-    
+
     if ( ras.max_ex <= clip->xMin || ras.min_ex >= clip->xMax ||
          ras.max_ey <= clip->yMin || ras.min_ey >= clip->yMax )
       return 0;

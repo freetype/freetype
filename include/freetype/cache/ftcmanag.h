@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Cache Manager (specification).                              */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -161,7 +161,8 @@ FT_BEGIN_HEADER
   /*    The reason this function is exported is to allow client-specific   */
   /*    cache classes.                                                     */
   /*                                                                       */
-  FT_EXPORT( void )  FTC_Manager_Compress( FTC_Manager  manager );
+  FT_EXPORT( void )
+  FTC_Manager_Compress( FTC_Manager  manager );
 
 
   /*************************************************************************/
@@ -223,8 +224,9 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    The size of a given cache node in bytes.                           */
   /*                                                                       */
-  typedef FT_ULong  (*FTC_CacheNode_SizeFunc)( FTC_CacheNode  node,
-                                               FT_Pointer     cache_data );
+  typedef FT_ULong
+  (*FTC_CacheNode_SizeFunc)( FTC_CacheNode  node,
+                             FT_Pointer     cache_data );
 
 
   /*************************************************************************/
@@ -242,8 +244,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    cache_data :: A generic pointer passed to the destructor.          */
   /*                                                                       */
-  typedef void  (*FTC_CacheNode_DestroyFunc)( FTC_CacheNode  node,
-                                              FT_Pointer     cache_data );
+  typedef void
+  (*FTC_CacheNode_DestroyFunc)( FTC_CacheNode  node,
+                                FT_Pointer     cache_data );
 
 
   /*************************************************************************/
@@ -293,7 +296,8 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    cache :: A handle to the new cache.                                */
   /*                                                                       */
-  typedef FT_Error  (*FTC_Cache_InitFunc)( FTC_Cache  cache );
+  typedef FT_Error
+  (*FTC_Cache_InitFunc)( FTC_Cache  cache );
 
 
   /*************************************************************************/
@@ -307,7 +311,8 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    cache :: A handle to the target cache.                             */
   /*                                                                       */
-  typedef void  (*FTC_Cache_DoneFunc)( FTC_Cache  cache );
+  typedef void
+  (*FTC_Cache_DoneFunc)( FTC_Cache  cache );
 
 
   /*************************************************************************/

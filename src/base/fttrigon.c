@@ -50,7 +50,7 @@
 
     s   = val;
     val = ( val >= 0 ) ? val : -val;
-    
+
     v   = ( val * (FT_Int64)FT_TRIG_SCALE ) + 0x100000000UL;
     val = (FT_Fixed)( v >> 32 );
 
@@ -65,20 +65,20 @@
   {
     FT_Fixed   s;
     FT_UInt32  v1, v2, k1, k2, hi, lo1, lo2, lo3;
-    
+
 
     s   = val;
     val = ( val >= 0 ) ? val : -val;
 
     v1 = (FT_UInt32)val >> 16;
     v2 = (FT_UInt32)val & 0xFFFF;
-    
+
     k1 = FT_TRIG_SCALE >> 16;       /* constant */
     k2 = FT_TRIG_SCALE & 0xFFFF;    /* constant */
 
     hi   = k1 * v1;
     lo1  = k1 * v2 + k2 * v1;       /* can't overflow */
-    
+
     lo2  = ( k2 * v2 ) >> 16;
     lo3  = ( lo1 >= lo2 ) ? lo1 : lo2;
     lo1 += lo2;
@@ -104,10 +104,10 @@
 
     x = vec->x;
     y = vec->y;
-    
+
     z     = ( ( x >= 0 ) ? x : - x ) | ( (y >= 0) ? y : -y );
     shift = 0;
-    
+
     if ( z < ( 1L << 27 ) )
     {
       do
@@ -115,7 +115,7 @@
         shift++;
         z <<= 1;
       } while ( z < ( 1L << 27 ) );
-      
+
       vec->x = x << shift;
       vec->y = y << shift;
     }
@@ -133,7 +133,7 @@
     }
     return shift;
   }
-    
+
 
   static void
   ft_trig_pseudo_rotate( FT_Vector*  vec,
@@ -158,7 +158,7 @@
     while ( theta > FT_ANGLE_PI2 )
     {
       x = -x;
-      y = -y;                   
+      y = -y;
       theta -= FT_ANGLE_PI;
     }
 
@@ -286,12 +286,12 @@
   FT_Cos( FT_Angle  angle )
   {
     FT_Vector  v;
-    
+
 
     v.x = FT_TRIG_COSCALE >> 2;
     v.y = 0;
     ft_trig_pseudo_rotate( &v, angle );
-    
+
     return v.x >> 12;
   }
 
@@ -311,12 +311,12 @@
   FT_Tan( FT_Angle  angle )
   {
     FT_Vector  v;
-    
+
 
     v.x = FT_TRIG_COSCALE >> 2;
     v.y = 0;
     ft_trig_pseudo_rotate( &v, angle );
-    
+
     return FT_DivFix( v.y, v.x );
   }
 
@@ -328,13 +328,13 @@
             FT_Fixed  dy )
   {
     FT_Vector  v;
-    
+
 
     if ( dx == 0 && dy == 0 )
       return 0;
 
     v.x = dx;
-    v.y = dy;      
+    v.y = dy;
     ft_trig_prenorm( &v );
     ft_trig_pseudo_polarize( &v );
 
@@ -364,7 +364,7 @@
   {
     FT_Int     shift;
     FT_Vector  v;
-    
+
 
     v.x   = vec->x;
     v.y   = vec->y;
@@ -375,7 +375,7 @@
       ft_trig_pseudo_rotate( &v, angle );
       v.x = ft_trig_downscale( v.x );
       v.y = ft_trig_downscale( v.y );
-      
+
       if ( shift >= 0 )
       {
         vec->x = v.x >> shift;
@@ -398,11 +398,11 @@
   {
     FT_Int     shift;
     FT_Vector  v;
-    
+
 
     v = *vec;
 
-    /* handle trivial cases */    
+    /* handle trivial cases */
     if ( v.x == 0 )
     {
       return ( v.y >= 0 ) ? v.y : -v.y;
@@ -415,10 +415,10 @@
     /* general case */
     shift = ft_trig_prenorm( &v );
     ft_trig_pseudo_polarize( &v );
-    
+
     v.x = ft_trig_downscale( v.x );
     return ( shift >= 0 ) ? ( v.x >> shift ) : ( v.x << -shift );
-  }  
+  }
 
 
   /* documentation is in fttrigon.h */
@@ -431,20 +431,20 @@
     FT_Int     shift;
     FT_Vector  v;
 
-    
+
     v = *vec;
-    
+
     if ( v.x == 0 && v.y == 0 )
       return;
-      
+
     shift = ft_trig_prenorm( &v );
     ft_trig_pseudo_polarize( &v );
-    
+
     v.x = ft_trig_downscale( v.x );
 
     *length = ( shift >= 0 ) ? ( v.x >> shift ) : ( v.x << -shift );
     *angle  = v.y;
-  }                    
+  }
 
 
 /* END */
