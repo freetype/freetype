@@ -627,6 +627,32 @@
     face->num_sbit_strikes = 0;
   }
 
+  
+  FT_LOCAL_DEF
+  FT_Error  TT_Set_SBit_Strike( TT_Face   face,
+			        FT_Int    x_ppem,
+				FT_Int    y_ppem,
+				FT_ULong* astrike_index )
+  {
+    FT_Int i;
+
+    if ( x_ppem < 0 || x_ppem > 255 ||
+	 y_ppem < 1 || y_ppem > 255 )
+      return TT_Err_Invalid_PPem;
+
+    for ( i = 0; i < face->num_sbit_strikes; i++ )
+    {
+      if ( ( face->sbit_strikes[i].y_ppem  == y_ppem ) &&
+	   ( ( x_ppem == 0 ) ||
+	     ( face->sbit_strikes[i].x_ppem == x_ppem )))
+      {
+	*astrike_index = i;
+	return TT_Err_Ok;
+      }
+    }
+    return TT_Err_Invalid_PPem;
+  }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -736,13 +762,12 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    Checks whether an embedded bitmap (an `sbit') exists for a given   */
-  /*    glyph, at given x and y ppems.                                     */
+  /*    glyph, at a given strike.                                          */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face          :: The target face object.                           */
   /*    glyph_index   :: The glyph index.                                  */
-  /*    x_ppem        :: The horizontal resolution in points per EM.       */
-  /*    y_ppem        :: The vertical resolution in points per EM.         */
+  /*    strike_index  :: The current strike index.                          */
   /*                                                                       */
   /* <Output>                                                              */
   /*    arange        :: The SBit range containing the glyph index.        */
@@ -756,37 +781,27 @@
   static
   FT_Error  Find_SBit_Image( TT_Face           face,
                              FT_UInt           glyph_index,
-                             FT_Int            x_ppem,
-                             FT_Int            y_ppem,
-
+			     FT_ULong          strike_index,
                              TT_SBit_Range**   arange,
                              TT_SBit_Strike**  astrike,
                              FT_ULong*         aglyph_offset )
   {
-    TT_SBit_Strike*  strike       = face->sbit_strikes;
-    TT_SBit_Strike*  strike_limit = strike + face->num_sbit_strikes;
+    FT_Error  error;
+    TT_SBit_Strike*  strike;
 
-
-    if ( !strike )
+    if ( !face->sbit_strikes || ( face->num_sbit_strikes <= (FT_Int)strike_index ) )
       goto Fail;
 
-    for ( ; strike < strike_limit; strike++ )
-    {
-      if ( strike->x_ppem == x_ppem && strike->y_ppem == y_ppem )
-      {
-        FT_Error  error;
+    strike = &face->sbit_strikes[strike_index];
 
+    error = Find_SBit_Range( glyph_index, strike,
+			     arange, aglyph_offset );
+    if ( error )
+      goto Fail;
 
-        error = Find_SBit_Range( glyph_index, strike,
-                                 arange, aglyph_offset );
-        if ( error )
-          goto Fail;
+    *astrike = strike;
 
-        *astrike = strike;
-
-        return TT_Err_Ok;
-      }
-    }
+    return TT_Err_Ok;
 
   Fail:
     /* no embedded bitmap for this glyph in face */
@@ -1353,9 +1368,7 @@
   /* <Input>                                                               */
   /*    face        :: The target face object.                             */
   /*                                                                       */
-  /*    x_ppem      :: The horizontal resolution in points per EM.         */
-  /*                                                                       */
-  /*    y_ppem      :: The vertical resolution in points per EM.           */
+  /*    strike_index :: The current strike index.                          */
   /*                                                                       */
   /*    glyph_index :: The current glyph index.                            */
   /*                                                                       */
@@ -1378,8 +1391,7 @@
   /*                                                                       */
   FT_LOCAL_DEF
   FT_Error  TT_Load_SBit_Image( TT_Face           face,
-                                FT_Int            x_ppem,
-                                FT_Int            y_ppem,
+				FT_ULong          strike_index,
                                 FT_UInt           glyph_index,
                                 FT_UInt           load_flags,
                                 FT_Stream         stream,
@@ -1395,7 +1407,7 @@
 
 
     /* Check whether there is a glyph sbit for the current index */
-    error = Find_SBit_Image( face, glyph_index, x_ppem, y_ppem,
+    error = Find_SBit_Image( face, glyph_index, strike_index,
                              &range, &strike, &glyph_offset );
     if ( error )
       goto Exit;

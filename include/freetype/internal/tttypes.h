@@ -492,7 +492,7 @@
   /* <Description>                                                         */
   /*    A structure used to hold the big metrics of a given glyph bitmap   */
   /*    in a TrueType or OpenType font.  These are usually found in the    */
-  /*    `EBDT' (Microsoft) or `bdat' (Apple) table.                        */
+  /*    `EBDT' (Microsoft) or `bloc' (Apple) table.                        */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    height       :: The glyph height in pixels.                        */
@@ -700,7 +700,11 @@
   /*                                                                       */
   /*   index_ranges     :: An array of glyph index ranges.                 */
   /*                                                                       */
-  /*   color_ref        :: Unused.  A color reference?                     */
+  /*   color_ref        :: Unused.  color_ref is put in for future         */
+  /*                       enhancements, but these fields are already      */
+  /*			   in use by other platforms (e.g. Newton).        */
+  /*                       For details, please see                         */
+  /*                http://fonts.apple.com/TTRefMan/RM06/Chap6bloc.html    */
   /*                                                                       */
   /*   hori             :: The line metrics for horizontal layouts.        */
   /*                                                                       */
@@ -718,6 +722,8 @@
   /*                       and 8.                                          */
   /*                                                                       */
   /*   flags            :: Is this a vertical or horizontal strike?        */
+  /*                       For details, please see                         */
+  /*                http://fonts.apple.com/TTRefMan/RM06/Chap6bloc.html    */
   /*                                                                       */
   typedef struct  TT_SBit_Strike_
   {
@@ -760,7 +766,6 @@
   typedef struct  TT_SBit_Component_
   {
     FT_UShort  glyph_code;
-
     FT_Char    x_offset;
     FT_Char    y_offset;
 

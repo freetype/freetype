@@ -453,7 +453,7 @@
     size->ttmetrics.valid = FALSE;
     return error;
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#if defined(TT_CONFIG_OPTION_BYTECODE_INTERPRETER) || defined(TT_CONFIG_OPTION_EMBEDDED_BITMAPS)
 
   Fail_Exec:
     if ( !size->debug )
@@ -535,8 +535,8 @@
   /* <Input>                                                               */
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
-  FT_LOCAL
-  FT_Error  TT_Reset_Size( TT_Size  size )
+  static
+  FT_Error  Reset_Outline_Size( TT_Size  size )
   {
     TT_Face   face;
     FT_Error  error = TT_Err_Ok;
@@ -575,46 +575,6 @@
     }
 
     /* Compute root ascender, descender, test height, and max_advance */
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-
-    if ( ( !( face->root.face_flags & FT_FACE_FLAG_SCALABLE ) &&
-           ( face->root.face_flags & FT_FACE_FLAG_FIXED_SIZES ) ) )
-    {
-      FT_Int i;
-
-
-      for ( i = 0; i < face->root.num_fixed_sizes; i++ )
-      {
-        if ( ( face->sbit_strikes[i].x_ppem  == metrics->x_ppem ) &&
-             ( face->sbit_strikes[i].y_ppem == metrics->y_ppem ) )
-        {
-          /*
-           * XXX: We now set horizontal metrics,
-           *      but this is not valid if we use vertical layout style
-           */
-          metrics->ascender =
-            face->sbit_strikes[i].hori.ascender * 64;
-          metrics->descender =
-            face->sbit_strikes[i].hori.descender * 64;
-          metrics->height =
-            ( face->sbit_strikes[i].hori.ascender -
-              face->sbit_strikes[i].hori.descender ) * 64;
-          /* XXX: Is this correct? */
-          metrics->max_advance =
-            ( face->sbit_strikes[i].hori.min_origin_SB +
-              face->sbit_strikes[i].hori.max_width +
-              face->sbit_strikes[i].hori.min_advance_SB ) * 64;
-          break;
-        }
-      }
-      if ( i == face->root.num_fixed_sizes )
-        return TT_Err_Invalid_PPem;
-    }
-    else
-
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
     {
       metrics->ascender    = ( FT_MulFix( face->root.ascender,
                                           metrics->y_scale ) + 32 ) & -64;
@@ -627,6 +587,11 @@
     }
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+   /* set to "invalid" by default */
+    size->strike_index = 0xFFFF;
+#endif
 
     {
       TT_ExecContext  exec;
@@ -708,6 +673,126 @@
     return error;
   }
 
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+  static
+  FT_Error  Reset_SBit_Size( TT_Size size )
+  {
+    TT_Face           face;
+    FT_Error          error = TT_Err_Ok;
+
+    FT_ULong          strike_index;
+    FT_Size_Metrics*  metrics;
+    FT_Size_Metrics*  sbit_metrics;
+    SFNT_Interface*   sfnt;
+
+    metrics = &size->root.metrics;
+
+    if (size->strike_index != 0xFFFF)
+      return TT_Err_Ok;
+
+    face = (TT_Face)size->root.face;
+    sfnt = (SFNT_Interface*)face->sfnt;
+
+    sbit_metrics = &size->strike_metrics;
+
+    error = sfnt->set_sbit_strike(face,
+				  metrics->x_ppem, metrics->y_ppem,
+				  &strike_index);
+
+    if (!error)
+    {
+      TT_SBit_Strike*  strike = face->sbit_strikes + strike_index;
+      
+      
+      sbit_metrics->x_ppem = metrics->x_ppem;
+      sbit_metrics->y_ppem = metrics->y_ppem;
+#if 0
+      /*
+       * sbit_metrics->?_scale
+       * are not used now.
+       */
+      sbit_metrics->x_scale = 1 << 16;
+      sbit_metrics->y_scale = 1 << 16;
+#endif
+      
+      sbit_metrics->ascender  = strike->hori.ascender << 6;
+      sbit_metrics->descender = strike->hori.descender << 6;
+      
+      /* XXX: Is this correct? */
+      sbit_metrics->height    = sbit_metrics->ascender -
+                                sbit_metrics->descender;
+      
+      /* XXX: Is this correct? */
+      sbit_metrics->max_advance = ( strike->hori.min_origin_SB +
+                                    strike->hori.max_width     +
+                                    strike->hori.min_advance_SB ) << 6;
+
+      size->strike_index = strike_index;
+    }
+    else
+    {
+      size->strike_index = 0xFFFF;
+      
+      sbit_metrics->x_ppem      = 0;
+      sbit_metrics->y_ppem      = 0;
+      sbit_metrics->ascender    = 0;
+      sbit_metrics->descender   = 0;
+      sbit_metrics->height      = 0;
+      sbit_metrics->max_advance = 0;
+    }
+
+    return error;
+  }
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    TT_Reset_Size                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Resets a TrueType size when resolutions and character dimensions   */
+  /*    have been changed.                                                 */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    size :: A handle to the target size object.                        */
+  /*                                                                       */
+  FT_LOCAL_DEF
+  FT_Error  TT_Reset_Size( TT_Size  size )
+  {
+    FT_Face face;
+    FT_Error  error = TT_Err_Ok;
+
+    face = size->root.face;
+
+    if ( face->face_flags & FT_FACE_FLAG_SCALABLE )
+    {
+      if ( !size->ttmetrics.valid )
+	error = Reset_Outline_Size( size );
+
+      if ( error )
+	 return error;
+    }
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+    if ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
+    {
+      FT_Size_Metrics* sbit_metrics;
+
+      if ( size->strike_index == 0xFFFF )
+        error = Reset_SBit_Size( size );
+
+      sbit_metrics = &size->strike_metrics;
+
+      if ((!error) && !( face->face_flags & FT_FACE_FLAG_SCALABLE ))
+	size->root.metrics = *sbit_metrics;
+    }
+#endif
+    if (face->face_flags & FT_FACE_FLAG_SCALABLE)
+      return TT_Err_Ok;
+    else
+      return error;
+  }
 
   /*************************************************************************/
   /*                                                                       */

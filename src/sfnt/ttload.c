@@ -458,9 +458,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Header( TT_Face    face,
-                            FT_Stream  stream )
+  static
+  FT_Error  TT_Load_Generic_Header( TT_Face    face,
+                                    FT_Stream  stream,
+                                    FT_ULong   tag )
   {
     FT_Error    error;
     TT_Header*  header;
@@ -496,7 +497,7 @@
 
     FT_TRACE2(( "Load_TT_Header: %08p\n", face ));
 
-    error = face->goto_table( face, TTAG_head, stream, 0 );
+    error = face->goto_table( face, tag, stream, 0 );
     if ( error )
     {
       FT_TRACE0(( "Font Header is missing!\n" ));
@@ -516,6 +517,21 @@
     return error;
   }
 
+  FT_LOCAL_DEF
+  FT_Error  TT_Load_Header( TT_Face    face,
+			    FT_Stream  stream )
+  {
+    return TT_Load_Generic_Header( face, stream, TTAG_head );
+  }
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+  FT_LOCAL_DEF
+  FT_Error  TT_Load_Bitmap_Header( TT_Face    face,
+				   FT_Stream  stream )
+  {
+    return TT_Load_Generic_Header( face, stream, TTAG_bhed );
+  }
+#endif
 
   /*************************************************************************/
   /*                                                                       */
