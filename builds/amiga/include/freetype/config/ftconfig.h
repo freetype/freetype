@@ -9,7 +9,11 @@
 
 // TetiSoft: now include original file
 #ifndef __MORPHOS__
+#ifdef __SASC
 #include "FT:include/freetype/config/ftconfig.h"
+#else
+#include "/FT/include/freetype/config/ftconfig.h"
+#endif
 #else
 // We must define that, it seems that
 // lib/gcc-lib/ppc-morphos/2.95.3/include/syslimits.h is missing in 
