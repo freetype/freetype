@@ -1,3 +1,8 @@
+2001-04-02  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/sfnt/ttload.c (TT_Load_Metrics): Fix an improper pointer
+	dereference.  Submitted by Herbert Duerr <duerr@sun.com>
+
 2001-03-26  Tom Kacvinsky <tjk@ams.org>
 
 	* include/freetype/config/ftconfig.h: Changed hexadecimal
