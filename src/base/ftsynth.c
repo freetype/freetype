@@ -18,6 +18,7 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
+#include FT_INTERNAL_CALC_H
 #include FT_OUTLINE_H
 #include FT_SYNTHESIS_H
 
@@ -73,8 +74,6 @@
   /* Compute the norm of a vector */
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
-
-#include <freetype/internal/ftcalc.h>
 
   static FT_Pos
   ft_norm( FT_Vector*  vec )
