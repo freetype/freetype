@@ -206,7 +206,7 @@
   /* <Description>                                                         */
   /*    Creates a new and empty AH_Outline object.                         */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  ah_outline_new( FT_Memory     memory,
                             AH_Outline**  aoutline )
   {
@@ -232,7 +232,7 @@
   /* <Description>                                                         */
   /*    Destroys a given AH_Outline object.                                */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  ah_outline_done( AH_Outline*  outline )
   {
     FT_Memory memory = outline->memory;
@@ -256,7 +256,7 @@
   /*    Saves the content of a given AH_Outline object into a face's glyph */
   /*    slot.                                                              */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  ah_outline_save( AH_Outline*  outline,
                          AH_Loader*   gloader )
   {
@@ -291,7 +291,7 @@
   /*    Loads an unscaled outline from a glyph slot into an AH_Outline     */
   /*    object.                                                            */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  ah_outline_load( AH_Outline*  outline,
                              FT_Face      face )
   {
@@ -545,7 +545,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  ah_setup_uv( AH_Outline*  outline,
                      AH_UV        source )
   {
@@ -599,7 +599,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  ah_outline_compute_segments( AH_Outline*  outline )
   {
     int           dimension;
@@ -842,7 +842,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  ah_outline_link_segments( AH_Outline*  outline )
   {
     AH_Segment*  segments;
@@ -1269,7 +1269,7 @@
   /* <Description>                                                         */
   /*    Performs feature detection on a given AH_Outline object.           */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  ah_outline_detect_features( AH_Outline*  outline )
   {
     ah_outline_compute_segments( outline );
@@ -1287,7 +1287,7 @@
   /*    Computes the `blue edges' in a given outline (i.e. those that must */
   /*    be snapped to a blue zone edge (top or bottom).                    */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  ah_outline_compute_blue_edges( AH_Outline*       outline,
                                        AH_Face_Globals*  face_globals )
   {
@@ -1383,7 +1383,7 @@
   /*    the contents of the detected edges (basically change the `blue     */
   /*    edge' pointer from `design units' to `scaled ones').               */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  ah_outline_scale_blue_edges( AH_Outline*       outline,
                                      AH_Face_Globals*  globals )
   {

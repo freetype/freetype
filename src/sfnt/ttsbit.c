@@ -396,7 +396,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Load_SBit_Strikes( TT_Face    face,
                                   FT_Stream  stream )
   {
@@ -593,7 +593,7 @@
   /* <Input>                                                               */
   /*    face :: The target face object.                                    */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  TT_Free_SBit_Strikes( TT_Face  face )
   {
     FT_Memory        memory       = face->root.memory;
@@ -1376,7 +1376,7 @@
   /*  <Note>                                                               */
   /*    The `map.buffer' field is always freed before the glyph is loaded. */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  TT_Load_SBit_Image( TT_Face           face,
                                 FT_Int            x_ppem,
                                 FT_Int            y_ppem,

@@ -111,21 +111,21 @@
           (p)->root.funcs.load_field_table( &(p)->root, f, o, m, pf )
 
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T1_New_Parser( T1_ParserRec*     parser,
                            FT_Stream         stream,
                            FT_Memory         memory,
                            PSAux_Interface*  psaux );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T1_Get_Private_Dict( T1_ParserRec*  parser );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  T1_Decrypt( FT_Byte*   buffer,
                     FT_Int     length,
                     FT_UShort  seed );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  T1_Done_Parser( T1_ParserRec*  parser );
 
 

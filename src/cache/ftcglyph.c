@@ -33,9 +33,9 @@
 
 
   /* create a new glyph node, setting its cache index and ref count */
-  FT_EXPORT_FUNC( void )  FTC_GlyphNode_Init( FTC_GlyphNode  node,
-                                              FTC_GlyphSet   gset,
-                                              FT_UInt        gindex )
+  FT_EXPORT_DEF( void )  FTC_GlyphNode_Init( FTC_GlyphNode  node,
+                                             FTC_GlyphSet   gset,
+                                             FT_UInt        gindex )
   {
     FTC_Glyph_Cache      cache = gset->cache;
     FTC_CacheNode_Data*  data  = FTC_CACHENODE_TO_DATA_P( &node->root );
@@ -55,8 +55,8 @@
   /* set its `cache_data' field correctly, otherwise bad things   */
   /* will happen!                                                 */
 
-  FT_EXPORT_FUNC( void )  FTC_GlyphNode_Destroy( FTC_GlyphNode    node,
-                                                 FTC_Glyph_Cache  cache )
+  FT_EXPORT_DEF( void )  FTC_GlyphNode_Destroy( FTC_GlyphNode    node,
+                                                FTC_Glyph_Cache  cache )
   {
     FT_LruNode    gset_lru = cache->gsets_lru->nodes + node->gset_index;
     FTC_GlyphSet  gset     = (FTC_GlyphSet)gset_lru->root.data;
@@ -101,8 +101,8 @@
   /* set its `user_data' field correctly, otherwise bad things    */
   /* will happen!                                                 */
 
-  FT_EXPORT_FUNC( FT_ULong )  FTC_GlyphNode_Size( FTC_GlyphNode    node,
-                                                  FTC_Glyph_Cache  cache )
+  FT_EXPORT_DEF( FT_ULong )  FTC_GlyphNode_Size( FTC_GlyphNode    node,
+                                                 FTC_Glyph_Cache  cache )
   {
     FT_LruNode    gset_lru = cache->gsets_lru->nodes + node->gset_index;
     FTC_GlyphSet  gset     = (FTC_GlyphSet)gset_lru->root.data;
@@ -112,7 +112,8 @@
   }
 
 
-  FT_CPLUSPLUS( const FTC_CacheNode_Class )  ftc_glyph_cache_node_class =
+  FT_CALLBACK_TABLE_DEF
+  const FTC_CacheNode_Class  ftc_glyph_cache_node_class =
   {
     (FTC_CacheNode_SizeFunc)   FTC_GlyphNode_Size,
     (FTC_CacheNode_DestroyFunc)FTC_GlyphNode_Destroy
@@ -128,9 +129,9 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_FUNC( FT_Error )  FTC_GlyphSet_New( FTC_Glyph_Cache  cache,
-                                                FT_Pointer       type,
-                                                FTC_GlyphSet*    aset )
+  FT_EXPORT_DEF( FT_Error )  FTC_GlyphSet_New( FTC_Glyph_Cache  cache,
+                                               FT_Pointer       type,
+                                               FTC_GlyphSet*    aset )
   {
     FT_Error                error;
     FT_Memory               memory  = cache->root.memory;
@@ -180,7 +181,7 @@
   }
 
 
-  FT_EXPORT_FUNC( void )  FTC_GlyphSet_Destroy( FTC_GlyphSet  gset )
+  FT_EXPORT_DEF( void )  FTC_GlyphSet_Destroy( FTC_GlyphSet  gset )
   {
     FTC_Glyph_Cache      cache        = gset->cache;
     FTC_Manager          manager      = cache->root.manager;
@@ -224,7 +225,7 @@
   }
 
 
-  FT_EXPORT_FUNC( FT_Error )  FTC_GlyphSet_Lookup_Node(
+  FT_EXPORT_DEF( FT_Error )  FTC_GlyphSet_Lookup_Node(
                                 FTC_GlyphSet    gset,
                                 FT_UInt         glyph_index,
                                 FTC_GlyphNode*  anode )
@@ -311,7 +312,7 @@
           ( (FTC_GlyphSet)(node)->root.data )
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  ftc_glyph_set_lru_init( FT_Lru      lru,
                                     FT_LruNode  node )
   {
@@ -332,7 +333,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  ftc_glyph_set_lru_done( FT_Lru      lru,
                                 FT_LruNode  node )
   {
@@ -345,7 +346,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Bool  ftc_glyph_set_lru_compare( FT_LruNode  node,
                                       FT_LruKey   key )
   {
@@ -356,7 +357,8 @@
   }
 
 
-  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_glyph_set_lru_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_Lru_Class  ftc_glyph_set_lru_class =
   {
     sizeof( FT_LruRec ),
     ftc_glyph_set_lru_init,
@@ -375,7 +377,7 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_FUNC( FT_Error )  FTC_Glyph_Cache_Init( FTC_Glyph_Cache  cache )
+  FT_EXPORT_DEF( FT_Error )  FTC_Glyph_Cache_Init( FTC_Glyph_Cache  cache )
   {
     FT_Memory  memory = cache->root.memory;
     FT_Error   error;
@@ -402,7 +404,7 @@
   }
 
 
-  FT_EXPORT_FUNC( void )  FTC_Glyph_Cache_Done( FTC_Glyph_Cache  cache )
+  FT_EXPORT_DEF( void )  FTC_Glyph_Cache_Done( FTC_Glyph_Cache  cache )
   {
     /* discard glyph sets */
     FT_Lru_Done( cache->gsets_lru );

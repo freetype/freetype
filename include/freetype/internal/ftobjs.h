@@ -165,8 +165,8 @@
   /*    You should better be familiar with FreeType internals to know      */
   /*    which module to look for, and what its interface is :-)            */
   /*                                                                       */
-  BASE_DEF( const void* )  FT_Get_Module_Interface( FT_Library   library,
-                                                    const char*  mod_name );
+  FT_BASE( const void* )  FT_Get_Module_Interface( FT_Library   library,
+                                                   const char*  mod_name );
 
 
   /*************************************************************************/
@@ -201,17 +201,17 @@
   /* this must be kept exported -- tt will be used later in our own */
   /* high-level caching font manager called SemTex (way after the   */
   /* 2.0 release though                                             */
-  FT_EXPORT_DEF( FT_Error )  FT_New_Size( FT_Face   face,
-                                          FT_Size*  size );
+  FT_EXPORT( FT_Error )  FT_New_Size( FT_Face   face,
+                                      FT_Size*  size );
 
-  FT_EXPORT_DEF( FT_Error )  FT_Done_Size( FT_Size  size );
+  FT_EXPORT( FT_Error )  FT_Done_Size( FT_Size  size );
 
 
 
-  BASE_DEF( FT_Error )  FT_New_GlyphSlot( FT_Face        face,
-                                          FT_GlyphSlot*  aslot );
+  FT_BASE( FT_Error )    FT_New_GlyphSlot( FT_Face        face,
+                                           FT_GlyphSlot*  aslot );
 
-  BASE_DEF( void )  FT_Done_GlyphSlot( FT_GlyphSlot  slot );
+  FT_BASE( void )  FT_Done_GlyphSlot( FT_GlyphSlot  slot );
 
 
   /*************************************************************************/
@@ -278,33 +278,33 @@
   };
 
 
-  BASE_DEF( FT_Error )  FT_GlyphLoader_New( FT_Memory         memory,
-                                            FT_GlyphLoader**  aloader );
+  FT_BASE( FT_Error )  FT_GlyphLoader_New( FT_Memory         memory,
+                                           FT_GlyphLoader**  aloader );
 
-  BASE_DEF( FT_Error )  FT_GlyphLoader_Create_Extra(
-                          FT_GlyphLoader*  loader );
+  FT_BASE( FT_Error )  FT_GlyphLoader_Create_Extra(
+                                   FT_GlyphLoader*  loader );
 
-  BASE_DEF( void )      FT_GlyphLoader_Done( FT_GlyphLoader*  loader );
+  FT_BASE( void )      FT_GlyphLoader_Done( FT_GlyphLoader*  loader );
 
-  BASE_DEF( void )      FT_GlyphLoader_Reset( FT_GlyphLoader*  loader );
+  FT_BASE( void )      FT_GlyphLoader_Reset( FT_GlyphLoader*  loader );
 
-  BASE_DEF( void )      FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader );
+  FT_BASE( void )      FT_GlyphLoader_Rewind( FT_GlyphLoader*  loader );
 
-  BASE_DEF( FT_Error )  FT_GlyphLoader_Check_Points(
+  FT_BASE( FT_Error )  FT_GlyphLoader_Check_Points(
                           FT_GlyphLoader*  loader,
                           FT_UInt          n_points,
                           FT_UInt          n_contours );
 
-  BASE_DEF( FT_Error )  FT_GlyphLoader_Check_Subglyphs(
+  FT_BASE( FT_Error )  FT_GlyphLoader_Check_Subglyphs(
                           FT_GlyphLoader*  loader,
                           FT_UInt          n_subs );
 
-  BASE_DEF( void )      FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader );
+  FT_BASE( void )      FT_GlyphLoader_Prepare( FT_GlyphLoader*  loader );
 
-  BASE_DEF( void )      FT_GlyphLoader_Add( FT_GlyphLoader*  loader );
+  FT_BASE( void )      FT_GlyphLoader_Add( FT_GlyphLoader*  loader );
 
-  BASE_DEF( FT_Error )  FT_GlyphLoader_Copy_Points( FT_GlyphLoader*  target,
-                                                    FT_GlyphLoader*  source );
+  FT_BASE( FT_Error )  FT_GlyphLoader_Copy_Points( FT_GlyphLoader*  target,
+                                                   FT_GlyphLoader*  source );
 
 
   /*************************************************************************/
@@ -483,11 +483,11 @@
   } FT_LibraryRec;
 
 
-  BASE_DEF( FT_Renderer )  FT_Lookup_Renderer( FT_Library       library,
+  FT_BASE( FT_Renderer )  FT_Lookup_Renderer( FT_Library       library,
                                                FT_Glyph_Format  format,
                                                FT_ListNode*     node );
 
-  BASE_DEF( FT_Error )  FT_Render_Glyph_Internal( FT_Library    library,
+  FT_BASE( FT_Error )  FT_Render_Glyph_Internal( FT_Library    library,
                                                   FT_GlyphSlot  slot,
                                                   FT_UInt       render_mode );
 
@@ -499,14 +499,14 @@
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM
 
-  FT_EXPORT_DEF( FT_Error )  FT_New_Stream( const char*  filepathname,
-                                            FT_Stream    astream );
+  FT_EXPORT( FT_Error )   FT_New_Stream( const char*  filepathname,
+                                         FT_Stream    astream );
 
-  FT_EXPORT_DEF( void )  FT_Done_Stream( FT_Stream  stream );
+  FT_EXPORT( void )       FT_Done_Stream( FT_Stream  stream );
 
-  FT_EXPORT_DEF( FT_Memory )  FT_New_Memory( void );
+  FT_EXPORT( FT_Memory )  FT_New_Memory( void );
 
-  FT_EXPORT_DEF( void )  FT_Done_Memory( FT_Memory  memory );
+  FT_EXPORT( void )       FT_Done_Memory( FT_Memory  memory );
 
 #endif /* !FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM */
 

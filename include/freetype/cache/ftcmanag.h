@@ -155,7 +155,7 @@
   /*    The reason this function is exported is to allow client-specific   */
   /*    cache classes.                                                     */
   /*                                                                       */
-  FT_EXPORT_DEF( void )  FTC_Manager_Compress( FTC_Manager  manager );
+  FT_EXPORT( void )  FTC_Manager_Compress( FTC_Manager  manager );
 
 
   /*************************************************************************/

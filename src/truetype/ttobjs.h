@@ -109,9 +109,9 @@
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
-  LOCAL_DEF void  TT_Done_GlyphZone( TT_GlyphZone*  zone );
+  FT_LOCAL void  TT_Done_GlyphZone( TT_GlyphZone*  zone );
 
-  LOCAL_DEF FT_Error TT_New_GlyphZone( FT_Memory      memory,
+  FT_LOCAL FT_Error TT_New_GlyphZone( FT_Memory      memory,
                                        FT_UShort      maxPoints,
                                        FT_Short       maxContours,
                                        TT_GlyphZone*  zone );
@@ -371,14 +371,14 @@
   /*                                                                       */
   /* Face functions                                                        */
   /*                                                                       */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Init_Face( FT_Stream      stream,
                           TT_Face        face,
                           FT_Int         face_index,
                           FT_Int         num_params,
                           FT_Parameter*  params );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  TT_Done_Face( TT_Face  face );
 
 
@@ -386,13 +386,13 @@
   /*                                                                       */
   /* Size functions                                                        */
   /*                                                                       */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Init_Size( TT_Size  size );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  TT_Done_Size( TT_Size  size );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Reset_Size( TT_Size  size );
 
 
@@ -400,10 +400,10 @@
   /*                                                                       */
   /* Driver functions                                                      */
   /*                                                                       */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  TT_Init_Driver( TT_Driver  driver );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  TT_Done_Driver( TT_Driver  driver );
 
 

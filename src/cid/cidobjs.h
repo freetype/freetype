@@ -112,21 +112,21 @@
   } CID_GlyphSlotRec;
 
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  CID_Init_Face( FT_Stream      stream,
                            CID_Face       face,
                            FT_Int         face_index,
                            FT_Int         num_params,
                            FT_Parameter*  params );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  CID_Done_Face( CID_Face  face );
 
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  CID_Init_Driver( CID_Driver  driver );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  CID_Done_Driver( CID_Driver  driver );
 
 

@@ -68,38 +68,38 @@
   };
 
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  AH_GlyphLoader_New( FT_Memory         memory,
                                 AH_GlyphLoader**  aloader );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  AH_GlyphLoader_Create_Extra( AH_GlyphLoader*  loader );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  AH_GlyphLoader_Done( AH_GlyphLoader*  loader );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  AH_GlyphLoader_Reset( AH_GlyphLoader*  loader );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  AH_GlyphLoader_Rewind( AH_GlyphLoader*  loader );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  AH_GlyphLoader_Check_Points( AH_GlyphLoader*  loader,
                                          FT_UInt          n_points,
                                          FT_UInt          n_contours );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  AH_GlyphLoader_Check_Subglyphs( AH_GlyphLoader*  loader,
                                             FT_UInt          n_subs );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  AH_GlyphLoader_Prepare( AH_GlyphLoader*  loader );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  AH_GlyphLoader_Add( AH_GlyphLoader*  loader );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  AH_GlyphLoader_Copy_Points( AH_GlyphLoader*  target,
                                         FT_GlyphLoader*  source );
 

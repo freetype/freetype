@@ -159,42 +159,53 @@
 
 #ifdef FT_MAKE_OPTION_SINGLE_OBJECT
 
-#define LOCAL_DEF   static
-#define LOCAL_FUNC  static
+#define FT_LOCAL      static
+#define FT_LOCAL_DEF  static
 
 #else
 
 #ifdef __cplusplus
-#define LOCAL_DEF   extern "C"
-#define LOCAL_FUNC  extern "C"
+#define FT_LOCAL      extern "C"
+#define FT_LOCAL_DEF  extern "C"
 #else
-#define LOCAL_DEF   extern
-#define LOCAL_FUNC  extern
+#define FT_LOCAL      extern
+#define FT_LOCAL_DEF  extern
 #endif
 
 #endif /* FT_MAKE_OPTION_SINGLE_OBJECT */
 
 
-#ifndef BASE_DEF
+#ifndef FT_BASE
 
 #ifdef __cplusplus
-#define BASE_DEF( x )  extern "C"  x
+#define FT_BASE( x )  extern "C"  x
 #else
-#define BASE_DEF( x )  extern  x
+#define FT_BASE( x )  extern  x
 #endif
 
-#endif /* !BASE_DEF */
+#endif /* !FT_BASE */
 
 
-#ifndef BASE_FUNC
+#ifndef FT_BASE_DEF
 
 #ifdef __cplusplus
-#define BASE_FUNC( x )  extern "C"  x
+#define FT_BASE_DEF( x )  extern "C"  x
 #else
-#define BASE_FUNC( x )  extern  x
+#define FT_BASE_DEF( x )  extern  x
 #endif
 
-#endif /* !BASE_FUNC */
+#endif /* !FT_BASE_DEF */
+
+
+#ifndef FT_EXPORT
+
+#ifdef __cplusplus
+#define FT_EXPORT( x )  extern "C"  x
+#else
+#define FT_EXPORT( x )  extern  x
+#endif
+
+#endif /* !FT_EXPORT */
 
 
 #ifndef FT_EXPORT_DEF
@@ -208,17 +219,6 @@
 #endif /* !FT_EXPORT_DEF */
 
 
-#ifndef FT_EXPORT_FUNC
-
-#ifdef __cplusplus
-#define FT_EXPORT_FUNC( x )  extern "C"  x
-#else
-#define FT_EXPORT_FUNC( x )  extern  x
-#endif
-
-#endif /* !FT_EXPORT_FUNC */
-
-
 #ifndef FT_EXPORT_VAR
 
 #ifdef __cplusplus
@@ -229,6 +229,10 @@
 
 #endif /* !FT_EXPORT_VAR */
 
+  /* the following macros are needed to compile the library with a   */
+  /* C++ compiler. Werner insisted on being able to do that even     */
+  /* though we explicitely do not support C++ compilation            */
+  /*                                                                 */
 
   /* This is special.  Within C++, you must specify `extern "C"' for */
   /* functions which are used via function pointers, and you also    */
@@ -236,21 +240,26 @@
   /* assure C linkage -- it's not possible to have (local) anonymous */
   /* functions which are accessed by (global) function pointers.     */
   /*                                                                 */
+  /*                                                                 */
+  /* FT_CALLBACK_DEF is used to _define_ a callback function         */
+  /*                                                                 */
+  /* FT_CALLBACK_TABLE is used to _declare_ a constant variable      */
+  /* that contains pointers to callback functions                    */
+  /*                                                                 */
+  /* FT_CALLBACK_TABLE_DEF is used to _define_ a constant variable   */
+  /* that contains pointers to callback functions                    */
+  /*                                                                 */
 #ifdef __cplusplus
 
-#define LOCAL_VAR  extern "C"
-
-#define LOCAL_FUNC_X  extern "C"
-
-#define FT_CPLUSPLUS( x )  extern "C"  x
+#define FT_CALLBACK_DEF             extern "C"
+#define FT_CALLBACK_TABLE           extern "C"
+#define FT_CALLBACK_TABLE_DEF       extern "C"
 
 #else
 
-#define LOCAL_VAR  extern
-
-#define LOCAL_FUNC_X  static
-
-#define FT_CPLUSPLUS( x )  x
+#define FT_CALLBACK_DEF             static
+#define FT_CALLBACK_TABLE           extern
+#define FT_CALLBACK_TABLE_DEF
 
 #endif /* __cplusplus */
 

@@ -46,7 +46,7 @@
 #define FT_COMPONENT  trace_cidafm
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  CID_Done_AFM( FT_Memory  memory,
                       CID_AFM*   afm )
   {
@@ -166,7 +166,7 @@
 
 
   /* parse an AFM file -- for now, only read the kerning pairs */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  CID_Read_AFM( FT_Face    cid_face,
                           FT_Stream  stream )
   {
@@ -252,7 +252,7 @@
 
 
   /* find the kerning for a given glyph pair */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  CID_Get_Kerning( CID_AFM*    afm,
                          FT_UInt     glyph1,
                          FT_UInt     glyph2,

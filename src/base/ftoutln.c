@@ -65,7 +65,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means sucess.                              */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Decompose(
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Decompose(
                                 FT_Outline*              outline,
                                 const FT_Outline_Funcs*  interface,
                                 void*                    user )
@@ -270,7 +270,7 @@
   }
 
 
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_New_Internal(
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_New_Internal(
                                 FT_Memory    memory,
                                 FT_UInt      numPoints,
                                 FT_Int       numContours,
@@ -335,7 +335,7 @@
   /*    The reason why this function takes a `library' parameter is simply */
   /*    to use the library's memory allocator.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_New( FT_Library   library,
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_New( FT_Library   library,
                                               FT_UInt      numPoints,
                                               FT_Int       numContours,
                                               FT_Outline*  outline )
@@ -367,8 +367,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Copy( FT_Outline*  source,
-                                               FT_Outline*  target )
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Copy( FT_Outline*  source,
+                                              FT_Outline*  target )
   {
     FT_Int  is_owner;
 
@@ -398,8 +398,8 @@
   }
 
 
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Done_Internal( FT_Memory    memory,
-                                                        FT_Outline*  outline )
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Done_Internal( FT_Memory    memory,
+                                                       FT_Outline*  outline )
   {
     if ( outline )
     {
@@ -445,8 +445,8 @@
   /*    The reason why this function takes an `outline' parameter is       */
   /*    simply to use FT_Free().                                           */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Done( FT_Library   library,
-                                               FT_Outline*  outline )
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Done( FT_Library   library,
+                                              FT_Outline*  outline )
   {
     /* check for valid `outline' in FT_Outline_Done_Internal() */
 
@@ -483,8 +483,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Outline_Get_CBox( FT_Outline*  outline,
-                                               FT_BBox*     cbox )
+  FT_EXPORT_DEF( void )  FT_Outline_Get_CBox( FT_Outline*  outline,
+                                              FT_BBox*     cbox )
   {
     FT_Pos  xMin, yMin, xMax, yMax;
 
@@ -548,9 +548,9 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Outline_Translate( FT_Outline*  outline,
-                                                FT_Pos       xOffset,
-                                                FT_Pos       yOffset )
+  FT_EXPORT_DEF( void )  FT_Outline_Translate( FT_Outline*  outline,
+                                               FT_Pos       xOffset,
+                                               FT_Pos       yOffset )
   {
     FT_UShort   n;
     FT_Vector*  vec = outline->points;
@@ -581,7 +581,7 @@
   /*    This functions toggles the bit flag `ft_outline_reverse_fill' in   */
   /*    the outline's `flags' field.                                       */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Outline_Reverse( FT_Outline*  outline )
+  FT_EXPORT_DEF( void )  FT_Outline_Reverse( FT_Outline*  outline )
   {
     FT_UShort  n;
     FT_Int     first, last;
@@ -668,9 +668,9 @@
   /*    converter is called, which means that the value you give to it is  */
   /*    actually ignored.                                                  */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Render( FT_Library         library,
-                                                 FT_Outline*        outline,
-                                                 FT_Raster_Params*  params )
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Render( FT_Library         library,
+                                                FT_Outline*        outline,
+                                                FT_Raster_Params*  params )
   {
     FT_Error     error;
     FT_Bool      update = 0;
@@ -745,9 +745,9 @@
   /*                                                                       */
   /*    It will use the raster correponding to the default glyph format.   */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Get_Bitmap( FT_Library   library,
-                                                     FT_Outline*  outline,
-                                                     FT_Bitmap*   bitmap )
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Get_Bitmap( FT_Library   library,
+                                                    FT_Outline*  outline,
+                                                    FT_Bitmap*   bitmap )
   {
     FT_Raster_Params  params;
 
@@ -787,8 +787,8 @@
   /* <Note>                                                                */
   /*    The result is undefined if either `vector' or `matrix' is invalid. */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Vector_Transform( FT_Vector*  vector,
-                                               FT_Matrix*  matrix )
+  FT_EXPORT_DEF( void )  FT_Vector_Transform( FT_Vector*  vector,
+                                              FT_Matrix*  matrix )
   {
     FT_Pos xz, yz;
 
@@ -828,8 +828,8 @@
   /*    You can use FT_Outline_Translate() if you need to translate the    */
   /*    outline's points.                                                  */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Outline_Transform( FT_Outline*  outline,
-                                                FT_Matrix*   matrix )
+  FT_EXPORT_DEF( void )  FT_Outline_Transform( FT_Outline*  outline,
+                                               FT_Matrix*   matrix )
   {
     FT_Vector*  vec = outline->points;
     FT_Vector*  limit = vec + outline->n_points;

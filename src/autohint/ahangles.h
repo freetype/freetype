@@ -58,7 +58,7 @@
   const AH_Angle  ah_arctan[1L << AH_ATAN_BITS];
 
 
-  LOCAL_DEF
+  FT_LOCAL
   AH_Angle  ah_angle( FT_Vector*  v );
 
 

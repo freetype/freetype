@@ -119,8 +119,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_New( FTC_Manager       manager,
-                                                  FTC_Image_Cache*  acache );
+  FT_EXPORT( FT_Error )  FTC_Image_Cache_New( FTC_Manager       manager,
+                                              FTC_Image_Cache*  acache );
 
 
   /*************************************************************************/
@@ -154,10 +154,10 @@
   /*    taken by the glyphs it holds, the returned glyph might disappear   */
   /*    on a later invocation of this function!  It's a cache after all... */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
-                                                     FTC_Image_Desc*  desc,
-                                                     FT_UInt          gindex,
-                                                     FT_Glyph*        aglyph );
+  FT_EXPORT( FT_Error )  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
+                                                 FTC_Image_Desc*  desc,
+                                                 FT_UInt          gindex,
+                                                 FT_Glyph*        aglyph );
 
 
 #ifdef __cplusplus

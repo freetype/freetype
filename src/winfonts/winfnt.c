@@ -589,7 +589,8 @@
   }
 
 
-  FT_CPLUSPLUS( const FT_Driver_Class )  winfnt_driver_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_Driver_Class  winfnt_driver_class =
   {
     {
       ft_module_font_driver,
@@ -651,7 +652,7 @@
   /*    format-specific interface can then be retrieved through the method */
   /*    interface->get_format_interface.                                   */
   /*                                                                       */
-  FT_EXPORT_FUNC( const FT_Driver_Class* )  getDriverClass( void )
+  FT_EXPORT_DEF( const FT_Driver_Class* )  getDriverClass( void )
   {
     return &winfnt_driver_class;
   }

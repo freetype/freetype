@@ -50,7 +50,7 @@
 
 
   /* read a single offset */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Long  cid_get_offset( FT_Byte**  start,
                            FT_Byte    offsize )
   {
@@ -69,7 +69,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  cid_decrypt( FT_Byte*   buffer,
                      FT_Int     length,
                      FT_UShort  seed )
@@ -167,7 +167,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  parse_font_bbox( CID_Face     face,
                              CID_Parser*  parser )
   {
@@ -186,7 +186,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  parse_font_matrix( CID_Face     face,
                                CID_Parser*  parser )
   {
@@ -230,7 +230,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   FT_Error  parse_fd_array( CID_Face     face,
                             CID_Parser*  parser )
   {
@@ -519,7 +519,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  CID_Open_Face( CID_Face  face )
   {
     CID_Loader  loader;

@@ -269,7 +269,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T2_Init_Face( FT_Stream      stream,
                           T2_Face        face,
                           FT_Int         face_index,
@@ -514,7 +514,7 @@
   /* <Input>                                                               */
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
-  LOCAL_DEF
+  FT_LOCAL
   void  T2_Done_Face( T2_Face  face )
   {
     FT_Memory        memory = face->root.memory;
@@ -551,7 +551,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T2_Init_Driver( T2_Driver  driver )
   {
     /* init extension registry if needed */
@@ -581,7 +581,7 @@
   /* <Input>                                                               */
   /*    driver :: A handle to the target OpenType driver.                  */
   /*                                                                       */
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T2_Done_Driver( T2_Driver  driver )
   {
     /* destroy extensions registry if needed */

@@ -40,7 +40,7 @@
   /* <Return>                                                              */
   /*    The number of strings in the `name' table.                         */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_UInt )  FT_Get_Sfnt_Name_Count( FT_Face  face )
+  FT_EXPORT_DEF( FT_UInt )  FT_Get_Sfnt_Name_Count( FT_Face  face )
   {
     return face && ( FT_IS_SFNT( face ) ? ((TT_Face)face)->num_names : 0 );
   }
@@ -73,9 +73,9 @@
   /*    `name' table entries, then do a loop until you get the right       */
   /*    platform, encoding, and name ID.                                   */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error ) FT_Get_Sfnt_Name( FT_Face       face,
-                                               FT_UInt       index,
-                                               FT_SfntName*  aname )
+  FT_EXPORT_DEF( FT_Error ) FT_Get_Sfnt_Name( FT_Face       face,
+                                              FT_UInt       index,
+                                              FT_SfntName*  aname )
   {
     FT_Error  error = FT_Err_Invalid_Argument;
 

@@ -48,12 +48,12 @@
   } T2_Parser;
 
 
-  LOCAL_DEF
+  FT_LOCAL
   void  T2_Parser_Init( T2_Parser*  parser,
                         FT_UInt     code,
                         void*       object );
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  T2_Parser_Run( T2_Parser*  parser,
                            FT_Byte*    start,
                            FT_Byte*    limit );

@@ -70,13 +70,13 @@
   } CID_Parser;
 
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  CID_New_Parser( CID_Parser*       parser,
                             FT_Stream         stream,
                             FT_Memory         memory,
                             PSAux_Interface*  psaux );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  CID_Done_Parser( CID_Parser*  parser );
 
 

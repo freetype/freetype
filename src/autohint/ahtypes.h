@@ -24,7 +24,7 @@
 #define AHTYPES_H
 
 
-#include <freetype/internal/ftobjs.h>  /* for freetype.h + LOCAL_DEF etc. */
+#include <freetype/internal/ftobjs.h>  /* for freetype.h + FT_LOCAL etc. */
 
 
 #ifdef FT_FLAT_COMPILE

@@ -126,7 +126,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T1_New_Parser( T1_ParserRec*     parser,
                            FT_Stream         stream,
                            FT_Memory         memory,
@@ -235,7 +235,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Done_Parser( T1_ParserRec*  parser )
   {
     FT_Memory   memory = parser->root.memory;
@@ -275,7 +275,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T1_Decrypt( FT_Byte*   buffer,
                     FT_Int     length,
                     FT_UShort  seed )
@@ -293,7 +293,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T1_Get_Private_Dict( T1_ParserRec*  parser )
   {
     FT_Stream  stream = parser->stream;

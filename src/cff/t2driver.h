@@ -26,7 +26,7 @@
 #endif
 
 
-  FT_EXPORT_VAR( const FT_Driver_Class )  cff_driver_class;
+  FT_CALLBACK_TABLE const FT_Driver_Class  cff_driver_class;
 
 
 #ifdef __cplusplus

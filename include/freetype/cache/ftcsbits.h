@@ -53,13 +53,13 @@
   } FTC_SBitRec;
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_SBit_Cache_New( FTC_Manager      manager,
-                                                 FTC_SBit_Cache*  acache );
+  FT_EXPORT( FT_Error )  FTC_SBit_Cache_New( FTC_Manager      manager,
+                                             FTC_SBit_Cache*  acache );
 
-  FT_EXPORT_DEF( FT_Error )  FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
-                                                    FTC_Image_Desc*  desc,
-                                                    FT_UInt          gindex,
-                                                    FTC_SBit        *sbit );
+  FT_EXPORT( FT_Error )  FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
+                                                FTC_Image_Desc*  desc,
+                                                FT_UInt          gindex,
+                                                FTC_SBit        *sbit );
 
 
 #ifdef __cplusplus

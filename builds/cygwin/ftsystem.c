@@ -92,7 +92,7 @@
   /* <Return>                                                              */
   /*    block  :: The address of newly allocated block.                    */
   /*                                                                       */
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void*  ft_alloc( FT_Memory  memory,
                    long       size )
   {
@@ -122,7 +122,7 @@
   /* <Return>                                                              */
   /*    The address of the reallocated memory block.                       */
   /*                                                                       */
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void*  ft_realloc( FT_Memory  memory,
                      long       cur_size,
                      long       new_size,
@@ -148,7 +148,7 @@
   /*                                                                       */
   /*    block   :: The address of block in memory to be freed.             */
   /*                                                                       */
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  ft_free( FT_Memory  memory,
                  void*      block )
   {
@@ -190,7 +190,7 @@
   /* <Input>                                                               */
   /*    stream :: A pointer to the stream object.                          */
   /*                                                                       */
-  LOCAL_FUNC_X
+  FT_CALLBACK_DEF
   void  ft_close_stream( FT_Stream  stream )
   {
     munmap( (MUNMAP_ARG_CAST)stream->descriptor.pointer, stream->size );
@@ -218,7 +218,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_New_Stream( const char*  filepathname,
+  FT_EXPORT_DEF( FT_Error )  FT_New_Stream( const char*  filepathname,
                                              FT_Stream    stream )
   {
     int          file;
@@ -296,7 +296,7 @@
   /* <Return>                                                              */
   /*    A pointer to the new memory object.  0 in case of error.           */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Memory )  FT_New_Memory( void )
+  FT_EXPORT_DEF( FT_Memory )  FT_New_Memory( void )
   {
     FT_Memory  memory;
 
@@ -325,7 +325,7 @@
   /* <Input>                                                               */
   /*    memory :: A handle to the memory manager.                          */
   /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Done_Memory( FT_Memory  memory )
+  FT_EXPORT_DEF( void )  FT_Done_Memory( FT_Memory  memory )
   {
     free( memory );
   }

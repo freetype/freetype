@@ -52,15 +52,15 @@
   } CID_AFM;
 
 
-  LOCAL_DEF
+  FT_LOCAL
   FT_Error  CID_Read_AFM( FT_Face    cid_face,
                           FT_Stream  stream );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  CID_Done_AFM( FT_Memory  memory,
                       CID_AFM*   afm );
 
-  LOCAL_DEF
+  FT_LOCAL
   void  CID_Get_Kerning( CID_AFM*    afm,
                          FT_UInt     glyph1,
                          FT_UInt     glyph2,

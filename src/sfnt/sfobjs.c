@@ -184,7 +184,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  SFNT_Init_Face( FT_Stream      stream,
                             TT_Face        face,
                             FT_Int         face_index,
@@ -247,7 +247,7 @@
                       != TT_Err_Ok )
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  SFNT_Load_Face( FT_Stream      stream,
                             TT_Face        face,
                             FT_Int         face_index,
@@ -566,7 +566,7 @@
 #undef LOAD_
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  SFNT_Done_Face( TT_Face  face )
   {
     FT_Memory        memory = face->root.memory;

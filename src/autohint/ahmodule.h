@@ -29,8 +29,7 @@
   extern "C" {
 #endif
 
-
-  FT_EXPORT_VAR( const FT_Module_Class )  autohint_module_class;
+  FT_CALLBACK_TABLE( const FT_Module_Class )  autohint_module_class;
 
 #ifdef __cplusplus
   }

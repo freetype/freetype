@@ -189,7 +189,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T2_Access_Element( CFF_Index*  index,
                                FT_UInt     element,
                                FT_Byte**   pbytes,
@@ -254,7 +254,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T2_Forget_Element( CFF_Index*  index,
                            FT_Byte**   pbytes )
   {
@@ -268,7 +268,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_String*  T2_Get_Name( CFF_Index*  index,
                            FT_UInt     element )
   {
@@ -295,7 +295,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_String*  T2_Get_String( CFF_Index*          index,
                              FT_UInt             sid,
                              PSNames_Interface*  interface )
@@ -396,7 +396,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Byte  CFF_Get_FD( CFF_FD_Select*  select,
                        FT_UInt         glyph_index )
   {
@@ -565,7 +565,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   FT_Error  T2_Load_CFF_Font( FT_Stream  stream,
                               FT_Int     face_index,
                               CFF_Font*  font )
@@ -733,7 +733,7 @@
   }
 
 
-  LOCAL_FUNC
+  FT_LOCAL_DEF
   void  T2_Done_CFF_Font( CFF_Font*  font )
   {
     FT_Memory  memory = font->memory;

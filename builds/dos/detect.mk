@@ -13,6 +13,30 @@
 # fully.
 
 
+# Test for DJGPP by checking the DJGPP environment variable, which must be
+# set in order to use the system (ie. it will always be present when the
+# `make' utility is run).
+#
+ifeq ($(PLATFORM),ansi)
+
+  ifdef DJGPP
+    # We are definitely using DJGPP
+    PLATFORM    := dos
+    DELETE      := del
+    COPY        := copy
+    CONFIG_FILE := dos-gcc.mk
+    SEP         := /
+    ifndef CC
+      CC := gcc
+    endif # test CC
+
+    setup : dos_setup
+
+  endif # test DJGPP
+endif # test PLATFORM
+
+
+
 # We test for the COMSPEC environment variable, then run the `ver'
 # command-line program to see if its output contains the word `Dos'.
 #
