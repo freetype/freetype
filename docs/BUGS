@@ -31,6 +31,7 @@ AUTOHINT-NO-SBITS       13-09-2001     David                     always
 BAD-TT-RENDERING        12-09-2001     Paul Pedriana             ?
 BAD-THIN-LINES          13-09-2001     David                     ?
 NOT-WINDOWS-METRICS     07-10-2001     David                     always
+ADVANCED-COMPOSITES     25-10-2001     George Williams           always
 
 --------------------END-OF-OPENED-BUGS-TABLE----------------------------------
 
@@ -43,7 +44,8 @@ II. Table of closed bugs
 Identifier                Date         Closed by                Closure date
 ------------------------------------------------------------------------------
 BAD-TTNAMEID.H          12-09-2001     Antoine                   N/A
-
+BAD-T1-CHARMAP          15-06-2001     David                     2.0.5
+BAD-UNIXXX-NAMES        30-07-2001     David                     2.0.5
 
 --------------------END-OF-CLOSED-BUGS-TABLE----------------------------------
 
@@ -106,11 +108,13 @@ BAD-TT-RENDERING
   bytecode-hinted glyphs!  Something seems to be really broken here!
 
 
+
 BAD-THIN-LINES
 
   It seems that the anti-aliased renderer in FreeType has problems rendering
   extremely thin straight lines correctly, at least when using the
   FT_Outline_Render() function.
+
 
 
 NOT-WINDOWS-METRICS
@@ -120,5 +124,72 @@ NOT-WINDOWS-METRICS
   testing on Windows is needed to debug this properly.  It might be due to a
   rounding bug when computing the "x_scale" and "y_scale" values.
 
+
+BAD-T1-CHARMAP
+
+  Type1 driver doesn't read "cacute" and "lslash" characters from iso8859-2
+  charset. Those characters are mapped as MAC-one in glnames.py, so they
+  cannot be shown in Adobe Type1 fonts.
+
+  (this was due to a bug in the "glnames.py" script used to generate the
+   table of glyph names in 'src/psaux/pstables.h')
+
+
+BAD-UNIXXX-NAMES
+
+  Glyph names like uniXXXX are not recognized as they should be. 
+  It seems that code in psmodule.c for uniXXXX glyph names was
+  never tested. The patch is very simple.
+  
+  (a simple bug that was left un-noticed due to the fact that I don't have
+   any Postscript font that use this convention, unfortunately..)
+
+
+ADVANCED-COMPOSITES
+
+  Provided by George Williams <pfaedit@users.sourceforge.net>:
+
+    I notice that truetype/ttgload.c only supports Apple's 
+    definition of offsets for composit glyphs. Apple and 
+    Microsoft behave differently if there is a scale 
+    factor. OpenType defines some bits to disambiguate. 
+    
+    (a problem in both 2.0.4 and 2.0.5) 
+    
+    Apple says 
+    (http://fonts.apple.com/TTRefMan/RM06/Chap6glyf.html) 
+    that if flags&ARGS_ARE_XY is set then the offsets 
+    should be scaled by the scale factors (as you have 
+    done), but they also say something very cryptic about 
+    what happens when the component is rotated at 45° 
+    (which you do not support)-- See the "Important" note 
+    at the bottom. 
+    
+    The old truetype spec from Microsoft did not mention 
+    this. The OpenType spec 
+    (http://www.microsoft.com/typography/otspec/glyf.htm, 
+    http://partners.adobe.com/asn/developer/opentype/glyf.html)
+    efines two new bits to disambiguate: 
+    SCALED_COMPONENT_OFFSET 11 
+    Composite designed to have the component offset scaled 
+    (designed for Apple rasterizer) 
+    UNSCALED_COMPONENT_OFFSET 12 
+    Composite designed not to have the component offset 
+    scaled (designed for the Microsoft TrueType rasterizer) 
+    
+    Perhaps you could add a load_flag to allow the user to 
+    define the default setting?
+
+  David says:
+  
+    Wow, I was not even aware of this, it will probably take a little
+    time to implement since I don't have any font that implement these
+    "features", and also because I believe that we're running out of
+    bits for "load_flag", some other way to set preferences is probably
+    needed..
+
+
+ 
+  
 
 === end of file ===
