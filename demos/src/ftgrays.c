@@ -79,7 +79,7 @@
 
 #endif
 
-#define  PIXEL_BITS  7
+#define  PIXEL_BITS  8
 #define  ONE_PIXEL   (1L << PIXEL_BITS)
 #define  PIXEL_MASK  (-1L << PIXEL_BITS)
 #define  TRUNC(x)    ((x) >> PIXEL_BITS)
@@ -479,7 +479,7 @@ int  render_conic( RAS_ARG_ FT_Vector* control, FT_Vector* to )
   if (dx < dy) dx = dy;
   
   level = 1;
-  dx = dx/32;
+  dx = dx/16;
   while ( dx > 0 )
   {
     dx >>= 1;
@@ -573,6 +573,8 @@ int  render_cubic( RAS_ARG_ FT_Vector* control1,
   db = dx;
    
   level = 1;
+  da    = da/16;
+  db    = db/32;
   while ( da > 0 || db > 0 )
   {
     da >>= 1;
