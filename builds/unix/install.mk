@@ -41,7 +41,7 @@ install: $(PROJECT_LIBRARY)
 
 
 uninstall:
-	-$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/$(PROJECT_LIBRARY)
+	-$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/$(LIBRARY).$A
 	-$(DELETE) $(includedir)/freetype2/freetype/cache/*
 	-$(DELDIR) $(includedir)/freetype2/freetype/cache
 	-$(DELETE) $(includedir)/freetype2/freetype/config/*
