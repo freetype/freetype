@@ -6760,7 +6760,7 @@
             FT_Short AA, BB;
 
 
-            AA = (FT_Short)(( opcode & 1 ) << 14);
+            AA = (FT_Short)( ( opcode & 1 ) << 14 );
             BB = (FT_Short)( AA ^ 0x4000 );
 
             if ( opcode < 4 )

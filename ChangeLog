@@ -1,8 +1,8 @@
 2001-07-07  David Turner  <david@freetype.org>
 
 	* src/truetype/ttgload.c, src/truetype/ttinterp.c, src/pcf/pcfread:
-	removed pedantic compiler warnings when the bytecode interpreter is
-	compiled in
+	Removed pedantic compiler warnings when the bytecode interpreter is
+	compiled in.
 
 2001-07-03  Werner Lemberg  <wl@gnu.org>
 
@@ -16,8 +16,8 @@
 
 2001-06-28  David Turner <david@freetype.org>
 
-	* include/internal/ftstream.h: modified the definitions
-	of the FT_GET_XXXX and NEXT_XXXX macros for 16-bit correctness
+	* include/internal/ftstream.h: Modified the definitions
+	of the FT_GET_XXXX and NEXT_XXXX macros for 16-bit correctness.
 
 2001-06-26  Werner Lemberg  <wl@gnu.org>
 
