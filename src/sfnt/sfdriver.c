@@ -115,6 +115,7 @@
   get_sfnt_postscript_name( TT_Face  face )
   {
     FT_Int  n, found_win, found_apple;
+    const char*  result = NULL;
 
 
     /* shouldn't happen, but just in case to avoid memory leaks */
@@ -151,11 +152,10 @@
       TT_NameEntryRec*  name   = face->name_table.names + found_win;
       FT_UInt      len    = name->stringLength/2;
       FT_Error     error;
-      FT_String*   result;
       
       if ( !ALLOC( result, len+1 ) )
       {
-        FT_String*  r = result;
+        FT_String*  r = (FT_String*)result;
         FT_Byte*    p = (FT_Byte*) name->string;
         
         for ( ; len > 0; len--, p += 2 )
@@ -165,26 +165,28 @@
         }
         *r = '\0';
       }
-      return result;
+      goto Exit;
     }
 
     if ( found_apple )
     {
-      FT_Memory    memory = face->root.memory;
+      FT_Memory         memory = face->root.memory;
       TT_NameEntryRec*  name   = face->name_table.names + found_win;
-      FT_UInt      len    = name->stringLength;
-      FT_Error     error;
-      FT_String*   result;
+      FT_UInt           len    = name->stringLength;
+      FT_Error          error;
+      FT_String*        result;
       
       if ( !ALLOC( result, len+1 ) )
       {
         MEM_Copy( result, name->string, len );
         result[len] = '\0';
       }
-      return result;
+      goto Exit;
     }
 
-    return NULL;
+  Exit:
+    face->root.internal->postscript_name = result;
+    return result;
   }
 
 
