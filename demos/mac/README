@@ -1,0 +1,22 @@
+This folder contains supporting code and CodeWarrior Pro 4 project
+files to build the FreeType demo programs ftlint and ftview for MacOS.
+
+Building
+To build these apps, you'll first need to build the FreeType library
+(see config/mac). The applications get built in the demos/bin folder.
+
+Notes
+Since the Mac doesn't have the notion of argc/argv, we'll emulate
+this: each file dropped onto the application will be translated
+to a command line argument. Both ftlint and ftview take a ppem
+value as their first command line argument: for the Mac version
+this has been hard-coded into the source. Also: the additional
+options for ftview cannot be set.
+
+Have fun with FreeType on the Mac!
+
+Just van Rossum, <just@letterror.com>
+
+DISCLAIMER: this subdirectory is *not* being maintained by the
+FreeType team, but by Just van Rossum. It's being released under
+the same terms as FreeType (see license.txt).
