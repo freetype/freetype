@@ -325,7 +325,7 @@
                       FT_Long  b )
   {
     FT_Long   s;
-
+    FT_ULong  ua, ub;
 
     if ( a == 0 || b == 0x10000L )
       return a;
@@ -333,19 +333,22 @@
     s  = a; a = ABS(a);
     s ^= b; b = ABS(b);
 
-    if ( a <= 2048 && b <= 1048576L )
+    ua = (FT_ULong)a;
+    ub = (FT_ULong)b;
+
+    if ( ua <= 2048 && ub <= 1048576L )
     {
-      a = ( a*b + 0x8000 ) >> 16;
+      ua = ( ua*ub + 0x8000 ) >> 16;
     }
     else
     {
-      FT_Long  al = a & 0xFFFF;
+      FT_ULong  al = ua & 0xFFFF;
 
 
-      a = (a >> 16)*b + al*(b >> 16) + ( al*(b & 0xFFFF) >> 16 );
+      ua = (ua >> 16)*ub + al*(ub >> 16) + ( al*(ub & 0xFFFF) >> 16 );
     }
 
-    return ( s < 0 ? -a : a );
+    return ( s < 0 ? -(FT_Long)ua : ua );
   }
 
 
