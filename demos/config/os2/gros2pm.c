@@ -10,13 +10,26 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
+#define  DEBUGxxx
 
-  static void Panic( const char* message )
+#ifdef DEBUG
+#define LOG(x)  LogMessage##x
+#else
+#define LOG(x)  /* rien */
+#endif
+
+#ifdef DEBUG
+  static void  LogMessage( const char*  fmt, ... )
   {
-    fprintf( stderr, "%s", message );
-    exit(1);
+    va_list  ap;
+
+    va_start( ap, fmt );
+    vfprintf( stderr, fmt, ap );
+    va_end( ap );
   }
+#endif
 
   typedef struct Translator
   {
@@ -58,14 +71,9 @@
 
 #define MAX_PIXEL_MODES  32
 
-  static int           num_pixel_modes = 0;
-  static grPixelMode   pixel_modes[ MAX_PIXEL_MODES ];  
-  static int           pixel_depth[ MAX_PIXEL_MODES ];
-
   static  HAB   gr_anchor;   /* device anchor block */
 
   typedef POINTL  PMBlitPoints[4];
-
 
   typedef struct grPMSurface_
   {
@@ -107,6 +115,12 @@
 
   } grPMSurface;
 
+  /* we use a static variable to pass a pointer to the PM Surface  */
+  /* to the client window. This is a bit ugly, but it makes things */
+  /* a lot more simple..                                           */
+  static  grPMSurface*  the_surface;
+
+  static  int window_created = 0;
 
 
   static
@@ -161,6 +175,8 @@
   static
   void  done_surface( grPMSurface*  surface )
   {
+    LOG(( "Os2PM: done_surface(%08lx)\n", (long)surface ));
+
     if ( surface->frame_window )
       WinDestroyWindow( surface->frame_window );
 
@@ -172,20 +188,6 @@
 
 
 
-
-
-  static
-  void add_pixel_mode( grPixelMode  pixel_mode,
-                       int          depth )
-  {
-    if ( num_pixel_modes >= MAX_PIXEL_MODES )
-      Panic( "X11.Too many pixel modes\n" );
-      
-    pixel_modes[ num_pixel_modes ] = pixel_mode;
-    pixel_depth[ num_pixel_modes ] = depth;
-    
-    num_pixel_modes++;
-  }
 
 
 #define LOCK(x)    DosRequestMutexSem( x, SEM_INDEFINITE_WAIT );
@@ -222,7 +224,7 @@
   *   surfaces :
   *
   *     - hold, for each surface, its own bitmap buffer where the
-  *       rest of MiGS writes directly.
+  *       rest of the graph library writes directly.
   *
   *     - create a PM bitmap object with the same dimensions (and
   *       possibly format).
@@ -265,199 +267,30 @@
 
 
   static
-  void  convert_gray_to_pal8( grPMSurface* surface,
-                              int          x,
-                              int          y,
-                              int          w,
-                              int          h )
-  {
-    grBitmap*  target  = &surface->image;
-    grBitmap*  source  = &surface->root.bitmap;
-    byte*      write   = (byte*)target->buffer + y*target->pitch + x;
-    byte*      read    = (byte*)source->buffer + y*source->pitch + x;
-    long*      palette = surface->shades;
-    
-    while (h > 0)
-    {
-      byte*  _write = write;
-      byte*  _read  = read;
-      byte*  limit  = _write + w;
-      
-      for ( ; _write < limit; _write++, _read++ )
-        *_write = (byte) palette[ *_read ];
-
-      write += target->pitch;
-      read  += source->pitch;
-      h--;
-    }
-  }
-
-
-  static
-  void  convert_gray_to_16( grPMSurface* surface,
-                            int          x,
-                            int          y,
-                            int          w,
-                            int          h )
-  {
-    grBitmap*  target  = &surface->image;
-    grBitmap*  source  = &surface->root.bitmap;
-    byte*      write   = (byte*)target->buffer + y*target->pitch + 2*x;
-    byte*      read    = (byte*)source->buffer + y*source->pitch + x;
-    long*           palette = surface->shades;
-    
-    while (h > 0)
-    {
-      byte*  _write = write;
-      byte*  _read  = read;
-      byte*  limit  = _write + 2*w;
-      
-      for ( ; _write < limit; _write += 2, _read++ )
-        *(short*)_write = (short)palette[ *_read ];
-
-      write += target->pitch;
-      read  += source->pitch;
-      h--;
-    }
-  }
-
-
-  static
-  void  convert_gray_to_24( grPMSurface* surface,
-                            int          x,
-                            int          y,
-                            int          w,
-                            int          h )
-  {
-    grBitmap*  target  = &surface->image;
-    grBitmap*  source  = &surface->root.bitmap;
-    byte*      write   = (byte*)target->buffer + y*target->pitch + 3*x;
-    byte*      read    = (byte*)source->buffer + y*source->pitch + x;
-    
-    while (h > 0)
-    {
-      byte*  _write = write;
-      byte*  _read  = read;
-      byte*  limit  = _write + 3*w;
-      
-      for ( ; _write < limit; _write += 3, _read++ )
-      {
-        byte  color = *_read;
-        
-        _write[0] =
-        _write[1] =
-        _write[2] = color;
-      }
-
-      write += target->pitch;
-      read  += source->pitch;
-      h--;
-    }
-  }
-
-
-  static
-  void  convert_gray_to_32( grPMSurface* surface,
-                            int          x,
-                            int          y,
-                            int          w,
-                            int          h )
-  {
-    grBitmap*  target  = &surface->image;
-    grBitmap*  source  = &surface->root.bitmap;
-    byte*      write   = (byte*)target->buffer + y*target->pitch + 4*x;
-    byte*      read    = (byte*)source->buffer + y*source->pitch + x;
-    
-    while (h > 0)
-    {
-      byte*  _write = write;
-      byte*  _read  = read;
-      byte*  limit  = _write + 4*w;
-      
-      for ( ; _write < limit; _write += 4, _read++ )
-      {
-        byte  color = *_read;
-        
-        _write[0] =
-        _write[1] =
-        _write[2] =
-        _write[3] = color;
-      }
-
-      write += target->pitch;
-      read  += source->pitch;
-      h--;
-    }
-  }
-
-
-  static
-  void  convert_rectangle( grPMSurface* surface,
-                           int          x,
-                           int          y,
-                           int          w,
-                           int          h )
-  {
-    int  z;
-    
-    /* first of all, clip to the surface's area */
-    if ( x   >= surface->image.width ||
-         x+w <= 0                    ||
-         y   >= surface->image.rows  ||
-         y+h <= 0 )
-      return;
- 
-    if ( x < 0 )
-    {
-      w += x;
-      x  = 0;
-    }
- 
-    z = (x + w) - surface->image.width;
-    if (z > 0)
-      w -= z;
-      
-    z = (y + h) - surface->image.rows;
-    if (z > 0)
-      h -= z;
-      
-    /* convert the rectangle to the target depth for gray surfaces */
-    if (surface->root.bitmap.mode == gr_pixel_mode_gray)
-    {
-      switch (surface->image.mode)
-      {
-        case gr_pixel_mode_pal8  :
-          convert_gray_to_pal8( surface, x, y, w, h );
-          break;
-
-        case gr_pixel_mode_rgb555:
-        case gr_pixel_mode_rgb565:
-          convert_gray_to_16  ( surface, x, y, w, h );
-          break;
-
-        case gr_pixel_mode_rgb24:
-          convert_gray_to_24  ( surface, x, y, w, h );
-          break;
-
-        case gr_pixel_mode_rgb32:
-          convert_gray_to_32  ( surface, x, y, w, h );
-          break;
-
-        default:
-          ;
-      }
-    }
-  } 
-
-
-  static
   void  refresh_rectangle( grPMSurface* surface,
                            int          x,
                            int          y,
                            int          w,
                            int          h )
   {
+    LOG(( "Os2PM: refresh_rectangle( %08lx, %d, %d, %d, %d )\n",
+          (long)surface, x, y, w, h ));
+
+    (void)x;
+    (void)y;
+    (void)w;
+    (void)h;
+
+    /*
     convert_rectangle( surface, x, y, w, h );
+    */
+    DosRequestMutexSem( surface->image_lock, SEM_INDEFINITE_WAIT );
+    GpiSetBitmapBits( surface->image_ps,
+                      0,
+                      surface->root.bitmap.rows,
+                      surface->root.bitmap.buffer,
+                      surface->bitmap_header );
+    DosReleaseMutexSem( surface->image_lock );
 
     WinInvalidateRect( surface->client_window, NULL, FALSE );
     WinUpdateWindow( surface->frame_window );
@@ -468,7 +301,20 @@
   void  set_title( grPMSurface* surface,
                    const char*  title )
   {
-    WinSetWindowText( surface->title_window, (PSZ)title );
+    ULONG  rc;
+
+#if 1
+    LOG(( "Os2PM: set_title( %08lx == %08lx, %s )\n",
+             (long)surface, surface->client_window, title ));
+#endif
+    LOG(( "      -- frame         = %08lx\n",
+          (long)surface->frame_window ));
+
+    LOG(( "      -- client parent = %08lx\n",
+          (long)WinQueryWindow( surface->client_window, QW_PARENT ) ));
+
+    rc = WinSetWindowText( surface->client_window, (PSZ)title );
+    LOG(( "      -- returned rc = %ld\n",rc ));
   }
 
 
@@ -500,6 +346,15 @@
     SIZEL         sizl = { 0, 0 };
     LONG          palette[256];
 
+    LOG(( "Os2PM: init_surface( %08lx, %08lx )\n",
+          (long)surface, (long)bitmap ));
+
+    LOG(( "       -- input bitmap =\n" ));
+    LOG(( "       --   mode   = %d\n", bitmap->mode ));
+    LOG(( "       --   grays  = %d\n", bitmap->grays ));
+    LOG(( "       --   width  = %d\n", bitmap->width ));
+    LOG(( "       --   height = %d\n", bitmap->rows ));
+
     /* create the bitmap - under OS/2, we support all modes as PM */
     /* handles all conversions automatically..                    */
     if ( grNewBitmap( bitmap->mode,
@@ -509,6 +364,13 @@
                       bitmap ) )
       return 0;
 
+    LOG(( "       -- output bitmap =\n" ));
+    LOG(( "       --   mode   = %d\n", bitmap->mode ));
+    LOG(( "       --   grays  = %d\n", bitmap->grays ));
+    LOG(( "       --   width  = %d\n", bitmap->width ));
+    LOG(( "       --   height = %d\n", bitmap->rows ));
+
+    bitmap->pitch = -bitmap->pitch;
     surface->root.bitmap = *bitmap;
 
     /* create the image and event lock */
@@ -536,15 +398,41 @@
     bit->cy      = surface->root.bitmap.rows;
     bit->cPlanes = 1;
 
-    bit->argbColor[0].bBlue  = 0;
+    bit->argbColor[0].bBlue  = 255;
     bit->argbColor[0].bGreen = 0;
     bit->argbColor[0].bRed   = 0;
 
-    bit->argbColor[1].bBlue  = 255;
+    bit->argbColor[1].bBlue  = 0;
     bit->argbColor[1].bGreen = 255;
-    bit->argbColor[1].bRed   = 255;
+    bit->argbColor[1].bRed   = 0;
 
-    bit->cBitCount = pixel_mode_bit_count[ surface->root.bitmap.mode ];
+    bit->cBitCount = (bitmap->mode == gr_pixel_mode_gray ? 8 : 1 );
+
+    if (bitmap->mode == gr_pixel_mode_gray)
+    {
+      RGB2*  color = bit->argbColor;
+      int    x, count;
+
+      count = bitmap->grays;
+      for ( x = 0; x < count; x++, color++ )
+      {
+        color->bBlue  =
+        color->bGreen =
+        color->bRed   = (((count-x)*255)/count);
+      }
+    }
+    else
+    {
+      RGB2*  color = bit->argbColor;
+
+      color[0].bBlue  =
+      color[0].bGreen =
+      color[0].bRed   = 0;
+
+      color[1].bBlue  =
+      color[1].bGreen =
+      color[1].bRed   = 255;
+    }
 
     surface->os2_bitmap = GpiCreateBitmap( surface->image_ps,
                                            (PBITMAPINFOHEADER2)bit,
@@ -555,6 +443,7 @@
     bit->cbFix = sizeof( BITMAPINFOHEADER2 );
     GpiQueryBitmapInfoHeader( surface->os2_bitmap,
                               (PBITMAPINFOHEADER2)bit );
+    surface->bitmap_header = bit;
 
     /* for gr_pixel_mode_gray, create a gray-levels logical palette */
     if ( bitmap->mode == gr_pixel_mode_gray )
@@ -584,6 +473,8 @@
     surface->blit_points[1].y = surface->root.bitmap.rows;
     surface->blit_points[3]   = surface->blit_points[1];
 
+    window_created = 0;
+
     /* Finally, create the event handling thread for the surface's window */
     DosCreateThread( &surface->message_thread,
                      (PFNTHREAD) RunPMWindow,
@@ -591,12 +482,15 @@
                      0UL,
                      32920 );
 
+    /* wait for the window creation */
+    for ( ; window_created == 0; )
+
     surface->root.done         = (grDoneSurfaceFunc) done_surface;
     surface->root.refresh_rect = (grRefreshRectFunc) refresh_rectangle;
     surface->root.set_title    = (grSetTitleFunc)    set_title;
     surface->root.listen_event = (grListenEventFunc) listen_event;
-    
-    convert_rectangle( surface, 0, 0, bitmap->width, bitmap->rows );
+
+    /* convert_rectangle( surface, 0, 0, bitmap->width, bitmap->rows ); */
     return surface;
   }
 
@@ -617,6 +511,13 @@
     static   HMQ    queue;
              QMSG   message;
 
+    /* store the current surface pointer in "the_surface". It is a static */
+    /* variable that is only used to retrieve the pointer in the client   */
+    /* window procedure the first time is is called..                     */
+    the_surface = surface;
+
+    LOG(( "Os2PM: RunPMWindow( %08lx )\n", (long)surface ));
+     
     /* create an anchor to allow this thread to use PM */
     surface->anchor = WinInitialize(0);
     if (!surface->anchor)
@@ -648,12 +549,13 @@
     class_flags = FCF_TITLEBAR | FCF_MINBUTTON | FCF_DLGBORDER | 
                   FCF_TASKLIST | FCF_SYSMENU; 
 
+    LOG(( "Os2PM: RunPMWindow: Creating window\n" ));
     surface->frame_window = WinCreateStdWindow(
                                 HWND_DESKTOP,
                                 WS_VISIBLE,
                                 &class_flags,
                                 (PSZ) class_name,
-                                (PSZ) "FreeType PM Graphics",
+                                (PSZ) "FreeType Viewer - press F1 for help",
                                 WS_VISIBLE,
                                 0, 0,
                                 &surface->client_window );
@@ -666,13 +568,17 @@
     /* find the title window handle */
     surface->title_window = WinWindowFromID( surface->frame_window,
                                              FID_TITLEBAR );
+    LOG (( "Os2PM: RunPMWIndow: Creation succeeded\n" ));
+    LOG (( "    -- frame  = %08lx\n", surface->frame_window ));
+    LOG (( "    -- client = %08lx\n", surface->client_window ));
 
     /* set Window size and position */
     WinSetWindowPos( surface->frame_window,
                      0L,
                      (SHORT) 60,
+
                      (SHORT) WinQuerySysValue( HWND_DESKTOP, SV_CYSCREEN ) -
-                             surface->root.bitmap.rows + 100,
+                             (surface->root.bitmap.rows + 100),
 
                      (SHORT) WinQuerySysValue( HWND_DESKTOP, SV_CYDLGFRAME )*2 +
                              surface->root.bitmap.width,
@@ -683,12 +589,18 @@
 
                      SWP_SIZE | SWP_MOVE );
 
+#if 0
     /* save the handle to the current surface within the window words */
-    WinSetWindowPtr( surface->frame_window,QWL_USER, surface );
+    WinSetWindowPtr( surface->client_window,QWL_USER, surface );
+#endif
+
+    window_created = 1;
 
     /* run the message queue till the end */
     while ( WinGetMsg( surface->anchor, &message, (HWND)NULL, 0, 0 ) )
+    {
       WinDispatchMsg( surface->anchor, &message );
+    }
 
     /* clean-up */
     WinDestroyWindow( surface->frame_window );
@@ -720,8 +632,14 @@
 
      grPMSurface*  surface;
 
-    /* get the handle to the window's surface */
+    /* get the handle to the window's surface -- note that this */
+    /* value will be null when the window is created            */
     surface = (grPMSurface*)WinQueryWindowPtr( handle, QWL_USER );
+    if (!surface)
+    {
+      surface = the_surface;
+      WinSetWindowPtr( handle, QWL_USER, surface );
+    }
 
     switch( mess )
     {
@@ -743,9 +661,9 @@
                                &sizl,
                                PU_PELS | GPIT_MICRO |
                                GPIA_ASSOC | GPIF_DEFAULT );
-
       /* take the input focus */
       WinFocusChange( HWND_DESKTOP, handle, 0L );
+      LOG(( "screen_dc and screen_ps have been created\n" ));
       break;
 
     case WM_MINMAXFRAME:
@@ -774,6 +692,10 @@
       WinEndPaint( screen_ps );
       DosReleaseMutexSem( surface->image_lock );   
       break;
+
+    case WM_HELP:  /* this really is a F1 Keypress !! */
+      surface->event.key = grKeyF1;
+      goto Do_Key_Event;
 
     case WM_CHAR:
       if ( CHARMSG( &mess )->fs & KC_KEYUP )
@@ -811,61 +733,6 @@
     return (MRESULT) FALSE;
   }
 
-
-
-
-
-
-
-#if 0
-  static
-  grKey  KeySymTogrKey(   key )
-  {
-    grKey        k;
-    int          count = sizeof(key_translators)/sizeof(key_translators[0]);
-    Translator*  trans = key_translators;
-    Translator*  limit = trans + count;
-
-    k = grKeyNone;
-
-    while ( trans < limit )
-    {
-      if ( trans->xkey == key )
-      {
-        k = trans->grkey;
-        break;
-      }
-      trans++;
-    }
-
-    return k;
-  }
-
-
-
-  static  
-  void  listen_event( grPMSurface* surface,
-                      int          event_mask,
-                      grEvent*     grevent )
-  {
-    grKey           grkey;
-
-    /* XXXX : For now, ignore the event mask, and only exit when */
-    /*        a key is pressed..                                 */
-    (void)event_mask;
-
-
-    /* Now, translate the keypress to a grKey */
-    /* If this wasn't part of the simple translated keys, simply get the charcode */
-    /* from the character buffer                                                  */
-    grkey = grKEY(key_buffer[key_cursor++]);
-      
-  Set_Key:
-    grevent->type = gr_key_down;
-    grevent->key  = grkey;
-  }
-
-#endif
 
 
 
