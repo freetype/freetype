@@ -1227,7 +1227,7 @@
 
       goto Fail;
     }
-    
+    else
     {
       /* check each font driver for an appropriate format */
       FT_Driver*  cur   = library->drivers;
