@@ -21,7 +21,6 @@
 #include "cidgload.h"
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_POSTSCRIPT_NAMES_H
 
 #include "ciderrs.h"
 
@@ -42,7 +41,7 @@
   *  POSTSCRIPT NAME SERVICE
   *
   */
-  
+
   static const char*
   cid_get_postscript_name( CID_Face  face )
   {
@@ -55,8 +54,8 @@
     return result;
   }
 
- 
-  static const FT_Service_PsNameRec  cid_service_ps_name =
+
+  static const FT_Service_PsFontNameRec  cid_service_ps_name =
   {
     (FT_PsName_GetFunc) cid_get_postscript_name
   };
@@ -66,10 +65,10 @@
   *  SERVICE LIST
   *
   */
-  
+
   static const FT_ServiceDescRec  cid_services[] =
   {
-    { FT_SERVICE_ID_POSTSCRIPT_NAME, &cid_service_ps_name },
+    { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &cid_service_ps_name },
     { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_CID },
     { NULL, NULL }
   };

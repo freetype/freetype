@@ -125,9 +125,9 @@
   t1_lookup_glyph_by_stdcharcode( T1_Decoder  decoder,
                                   FT_Int      charcode )
   {
-    FT_UInt           n;
-    const FT_String*  glyph_name;
-    PSNames_Service   psnames = decoder->psnames;
+    FT_UInt             n;
+    const FT_String*    glyph_name;
+    FT_Service_PsNames  psnames = decoder->psnames;
 
 
     /* check range of standard char code */
@@ -1129,11 +1129,10 @@
 
     /* retrieve PSNames interface from list of current modules */
     {
-      PSNames_Service  psnames = 0;
+      FT_Service_PsNames  psnames = 0;
 
 
-      psnames = (PSNames_Service)FT_Get_Module_Interface(
-                  FT_FACE_LIBRARY(face), "psnames" );
+      FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_NAMES );
       if ( !psnames )
       {
         FT_ERROR(( "t1_decoder_init: " ));

@@ -57,18 +57,25 @@ FT_BEGIN_HEADER
    *     A variable that receives the service pointer.  Will be NULL
    *     if not found.
    */
-#define FT_FACE_FIND_SERVICE( ptr, face, id )                               \
+#define FT_FACE_FIND_SERVICE( face, ptr, id )                               \
   FT_BEGIN_STMNT                                                            \
     FT_Module    module = FT_MODULE( FT_FACE(face)->driver );               \
+    FT_Pointer*  Pptr   = (FT_Pointer*) &(ptr);                             \
     /* the strange cast is to allow C++ compilation */                      \
-    FT_Pointer*  Pptr = (FT_Pointer*)&(ptr);                                \
-                                                                            \
-                                                                            \
     *Pptr = NULL;                                                           \
     if ( module->clazz->get_interface )                                     \
       *Pptr = module->clazz->get_interface( module, FT_SERVICE_ID_ ## id ); \
   FT_END_STMNT
 
+
+#define FT_FACE_FIND_GLOBAL_SERVICE( face, ptr, id )                        \
+  FT_BEGIN_STMNT                                                            \
+    FT_Module    module = FT_MODULE( FT_FACE(face)->driver );               \
+    FT_Pointer*  Pptr   = (FT_Pointer*) &(ptr);                             \
+                                                                            \
+    /* the strange cast is to allow C++ compilation */                      \
+    *Pptr = ft_module_get_service( module, FT_SERVICE_ID_ ## id );          \
+  FT_END_STMNT
 
   /*************************************************************************/
   /*************************************************************************/
@@ -129,7 +136,7 @@ FT_BEGIN_HEADER
    */
   typedef struct  FT_ServiceCacheRec_
   {
-    FT_Pointer  service_POSTSCRIPT_NAME;
+    FT_Pointer  service_POSTSCRIPT_FONT_NAME;
     FT_Pointer  service_MULTI_MASTERS;
     FT_Pointer  service_GLYPH_DICT;
     FT_Pointer  service_PFR_METRICS;
@@ -178,7 +185,7 @@ FT_BEGIN_HEADER
       svc = NULL;                                                \
     else if ( svc == NULL )                                      \
     {                                                            \
-      FT_FACE_FIND_SERVICE( svc, face, id );                     \
+      FT_FACE_FIND_SERVICE( face, svc, id );                     \
                                                                  \
       FT_FACE(face)->internal->services. service_ ## id =        \
         (FT_Pointer)( svc != NULL ? svc                          \
@@ -207,6 +214,7 @@ FT_BEGIN_HEADER
 
 #define FT_SERVICE_MULTIPLE_MASTERS_H  <freetype/internal/services/svmm.h>
 #define FT_SERVICE_POSTSCRIPT_NAME_H   <freetype/internal/services/svpostnm.h>
+#define FT_SERVICE_POSTSCRIPT_NAMES_H  <freetype/internal/services/svpsname.h>
 #define FT_SERVICE_GLYPH_DICT_H        <freetype/internal/services/svgldict.h>
 #define FT_SERVICE_BDF_H               <freetype/internal/services/svbdf.h>
 #define FT_SERVICE_XFREE86_NAME_H      <freetype/internal/services/svxf86nm.h>

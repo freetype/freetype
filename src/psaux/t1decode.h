@@ -22,7 +22,6 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
-#include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_TYPE1_TYPES_H
 
 

@@ -21,10 +21,9 @@
 #include "ttload.h"
 #include "ttcmap0.h"
 #include FT_INTERNAL_SFNT_H
-#include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
-
+#include FT_SERVICE_POSTSCRIPT_NAMES_H
 #include "sferrors.h"
 
 
@@ -365,11 +364,7 @@
       face->goto_table = sfnt->goto_table;
     }
 
-    if ( !face->psnames )
-    {
-      face->psnames = (PSNames_Service)
-                        FT_Get_Module_Interface( library, "psnames" );
-    }
+    FT_FACE_FIND_GLOBAL_SERVICE( face, face->psnames, POSTSCRIPT_NAMES );
 
     /* check that we have a valid TrueType file */
     error = sfnt->load_sfnt_header( face, stream, face_index, &sfnt_header );

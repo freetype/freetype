@@ -24,6 +24,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_SERVICE_POSTSCRIPT_NAMES_H
 
 
 FT_BEGIN_HEADER
@@ -648,7 +649,7 @@ FT_BEGIN_HEADER
     T1_Decoder_ZoneRec   zones[T1_MAX_SUBRS_CALLS + 1];
     T1_Decoder_Zone      zone;
 
-    PSNames_Service      psnames;      /* for seac */
+    FT_Service_PsNames   psnames;      /* for seac */
     FT_UInt              num_glyphs;
     FT_Byte**            glyph_names;
 

@@ -28,9 +28,7 @@
 
 
     if ( face )
-      FT_FACE_FIND_SERVICE( result,
-                            face,
-                            XF86_NAME );
+      FT_FACE_FIND_SERVICE( face, result, XF86_NAME );
 
     return result;
   }

@@ -150,7 +150,7 @@
                  FT_Parameter*  params )
   {
     FT_Error         error;
-    PSNames_Service  psnames;
+    FT_Service_PsNames  psnames;
     PSAux_Service    psaux;
     FT_Face          root  = (FT_Face)&face->root;
     T1_Font          type1 = &face->type1;
@@ -165,9 +165,8 @@
     face->ttf_face       = NULL;
     face->root.num_faces = 1;
 
-    face->psnames = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
-                                             "psnames" );
-    psnames = (PSNames_Service)face->psnames;
+    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_NAMES );
+    face->psnames = psnames;
 
     face->psaux = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),
                                            "psaux" );

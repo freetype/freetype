@@ -2458,15 +2458,15 @@
 
     if ( !result )
     {
-      FT_Service_PsName  service;
+      FT_Service_PsFontName  service;
 
 
       FT_FACE_LOOKUP_SERVICE( face,
                               service,
-                              POSTSCRIPT_NAME );
+                              POSTSCRIPT_FONT_NAME );
 
-      if ( service && service->get_ps_name )
-        result = service->get_ps_name( face );
+      if ( service && service->get_ps_font_name )
+        result = service->get_ps_font_name( face );
     }
 
   Exit:
@@ -2486,9 +2486,7 @@
 
     if ( face && FT_IS_SFNT( face ) )
     {
-      FT_FACE_FIND_SERVICE( service,
-                            face,
-                            SFNT_TABLE );
+      FT_FACE_FIND_SERVICE( face, service, SFNT_TABLE );
       if ( service != NULL )
         table = service->get_table( face, tag );
     }
@@ -2512,9 +2510,7 @@
     if ( !face || !FT_IS_SFNT( face ) )
       return FT_Err_Invalid_Face_Handle;
 
-    FT_FACE_FIND_SERVICE( service,
-                          face,
-                          SFNT_TABLE );
+    FT_FACE_FIND_SERVICE( face, service, SFNT_TABLE );
     if ( service == NULL )
       return FT_Err_Unimplemented_Feature;
 
@@ -3065,6 +3061,50 @@
     module = FT_Get_Module( library, mod_name );
 
     return module ? module->clazz->module_interface : 0;
+  }
+
+
+  FT_BASE_DEF( FT_Pointer )
+  ft_module_get_service( FT_Module    module,
+                         const char*  service_id )
+  {
+    FT_Pointer  result = NULL;
+
+    if ( module )
+    {
+      FT_ASSERT( module->clazz && module->clazz->get_interface );
+
+     /* first, look for the service in the module
+      */
+      if ( module->clazz->get_interface )
+        result = module->clazz->get_interface( module, service_id );
+
+      if ( result == NULL )
+      {
+       /* we didn't find it, look in all other modules then
+        */
+        FT_Library  library = module->library;
+        FT_Module*  cur     = library->modules;
+        FT_Module*  limit   = cur + library->num_modules;
+
+        for ( ; cur < limit; cur++ )
+        {
+          if ( cur[0] != module )
+          {
+            FT_ASSERT( cur[0]->clazz );
+
+            if ( cur[0]->clazz->get_interface )
+            {
+              result = cur[0]->clazz->get_interface( cur[0], service_id );
+              if ( result != NULL )
+                break;
+            }
+          }
+        }
+      }
+    }
+
+    return result;
   }
 
 

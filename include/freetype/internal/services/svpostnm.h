@@ -34,16 +34,16 @@ FT_BEGIN_HEADER
    *  The name is owned by the face and will be destroyed with it.
    */
 
-#define FT_SERVICE_ID_POSTSCRIPT_NAME  "postscript-name"
+#define FT_SERVICE_ID_POSTSCRIPT_FONT_NAME  "postscript-font-name"
 
 
   typedef const char*
   (*FT_PsName_GetFunc)( FT_Face  face );
-  
 
-  FT_DEFINE_SERVICE( PsName )
+
+  FT_DEFINE_SERVICE( PsFontName )
   {
-    FT_PsName_GetFunc  get_ps_name;
+    FT_PsName_GetFunc  get_ps_font_name;
   };
 
   /* */

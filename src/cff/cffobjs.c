@@ -24,7 +24,7 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_SFNT_H
-#include FT_INTERNAL_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
 #include "cffobjs.h"
 #include "cffload.h"
@@ -253,24 +253,31 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    FT_Error          error;
-    SFNT_Service      sfnt;
-    PSNames_Service   psnames;
-    PSHinter_Service  pshinter;
-    FT_Bool           pure_cff    = 1;
-    FT_Bool           sfnt_format = 0;
+    FT_Error            error;
+    SFNT_Service        sfnt;
+    FT_Service_PsNames  psnames;
+    PSHinter_Service    pshinter;
+    FT_Bool             pure_cff    = 1;
+    FT_Bool             sfnt_format = 0;
 
+#if 0
+    FT_FACE_FIND_GLOBAL_SERVICE( face, sfnt,     SFNT );
+    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames,  POSTSCRIPT_NAMES );
+    FT_FACE_FIND_GLOBAL_SERVICE( face, pshinter, POSTSCRIPT_HINTER );
 
+    if ( !sfnt )
+      goto Bad_Format;
+#else
     sfnt = (SFNT_Service)FT_Get_Module_Interface(
              face->root.driver->root.library, "sfnt" );
     if ( !sfnt )
       goto Bad_Format;
 
-    psnames = (PSNames_Service)FT_Get_Module_Interface(
-                face->root.driver->root.library, "psnames" );
+    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_NAMES );
 
     pshinter = (PSHinter_Service)FT_Get_Module_Interface(
                  face->root.driver->root.library, "pshinter" );
+#endif
 
     /* create input stream from resource */
     if ( FT_STREAM_SEEK( 0 ) )
@@ -347,7 +354,7 @@
         goto Exit;
 
       cff->pshinter = pshinter;
-      cff->psnames  = psnames;
+      cff->psnames  = (void*)psnames;
 
       /* Complement the root flags with some interesting information. */
       /* Note that this is only necessary for pure CFF and CEF fonts. */

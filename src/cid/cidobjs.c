@@ -23,7 +23,7 @@
 #include "cidgload.h"
 #include "cidload.h"
 
-#include FT_INTERNAL_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
 
@@ -268,10 +268,10 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    FT_Error          error;
-    PSNames_Service   psnames;
-    PSAux_Service     psaux;
-    PSHinter_Service  pshinter;
+    FT_Error            error;
+    FT_Service_PsNames  psnames;
+    PSAux_Service       psaux;
+    PSHinter_Service    pshinter;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -281,14 +281,7 @@
 
     face->root.num_faces = 1;
 
-    psnames = (PSNames_Service)face->psnames;
-    if ( !psnames )
-    {
-      psnames = (PSNames_Service)FT_Get_Module_Interface(
-                  FT_FACE_LIBRARY( face ), "psnames" );
-
-      face->psnames = psnames;
-    }
+    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_NAMES );
 
     psaux = (PSAux_Service)face->psaux;
     if ( !psaux )

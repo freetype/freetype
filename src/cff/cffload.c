@@ -20,7 +20,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_NAMES_H
 #include FT_TRUETYPE_TAGS_H
 
 #include "cffload.h"
@@ -1312,9 +1312,9 @@
 
 
   FT_LOCAL_DEF( FT_String* )
-  cff_index_get_sid_string( CFF_Index        idx,
-                            FT_UInt          sid,
-                            PSNames_Service  psnames_service )
+  cff_index_get_sid_string( CFF_Index           idx,
+                            FT_UInt             sid,
+                            FT_Service_PsNames  psnames )
   {
     /* if it is not a standard string, return it */
     if ( sid > 390 )
@@ -1323,7 +1323,7 @@
     /* that's a standard string, fetch a copy from the PSName module */
     {
       FT_String*   name       = 0;
-      const char*  adobe_name = psnames_service->adobe_std_strings( sid );
+      const char*  adobe_name = psnames->adobe_std_strings( sid );
       FT_UInt      len;
 
 

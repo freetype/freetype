@@ -1,3 +1,25 @@
+2003-09-29  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/services/svpsname.h (added),
+        include/freetype/internal/psnames.h (removed),
+        include/freetype/internal/internal.h (FT_SERVICE_POSTSCRIPT_NAMES):
+
+          added new service to handle glyph name dictionaries, replacing
+          the old internal header named "psnames.h" by "services/svpsname.h"
+          note that this is different from "services/svpostnm.h" which only
+          handles the retrieval of Postscript font name for a given face.
+          (should we merge these two services into a single header ??)
+
+
+        * include/freetype/internal/ftserv.h: adding
+        FT_FACE_FIND_GLOBAL_SERVICE (used to lookup a service globally,
+        instead of only within the current module)
+
+        * include/freetype/internal/ftobjs.h, src/base/ftobjs.c: adding
+        the new base function ft_module_get_service
+
+
+
 2003-09-21  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftserv.h (FT_FACE_FIND_SERVICE):
