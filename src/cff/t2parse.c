@@ -153,7 +153,7 @@
                            FT_Byte*  limit,
                            FT_Int    power_ten )
   {
-    FT_Byte*  p    = ++start;
+    FT_Byte*  p    = start;
     FT_Long   num, divider, result, exp;
     FT_Int    sign = 0, exp_sign = 0;
     FT_Byte   nib;
@@ -166,14 +166,20 @@
 
     /* first of all, read the integer part */
     phase = 4;
-    p--;
 
     for (;;)
     {
-      /* read one nibble at a time */
-      if ( phase && ++p >= limit )
+
+      /* If we entered this iteration with phase == 4, we need to */
+      /* read a new byte.  This also skips past the intial 0x1E.  */
+      if ( phase )
+        p++;
+
+      /* Make sure we don't read past the end. */
+      if ( p >= limit )
         goto Bad;
 
+      /* Get the nibble. */
       nib   = ( p[0] >> phase ) & 0xF;
       phase = 4 - phase;
 
@@ -189,13 +195,19 @@
     if ( nib == 0xa )
       for (;;)
       {
-        /* read one nibble at a time */
-        if ( !phase && ++p >= limit )
+
+        /* If we entered this iteration with phase == 4, we need */
+        /* to read a new byte.                                   */
+        if ( phase )
+          p++;
+
+        /* Make sure we don't read past the end. */
+        if ( p >= limit )
           goto Bad;
 
-        phase = 4 - phase;
+        /* Get the nibble. */
         nib   = ( p[0] >> phase ) & 0xF;
-
+        phase = 4 - phase;
         if ( nib >= 10 )
           break;
 
@@ -219,13 +231,18 @@
 
       for (;;)
       {
-        /* read one nibble at a time */
-        if ( !phase && ++p >= limit )
+        /* If we entered this iteration with phase == 4, we need */
+        /* to read a new byte.                                   */
+        if ( phase )
+          p++;
+
+        /* Make sure we don't read past the end. */
+        if ( p >= limit )
           goto Bad;
 
-        phase = 4 - phase;
+        /* Get the nibble. */
         nib   = ( p[0] >> phase ) & 0xF;
-
+        phase = 4 - phase;
         if ( nib >= 10 )
           break;
 
