@@ -27,10 +27,10 @@
 #endif
 
 
-#ifdef LONG64
+#ifdef FT_LONG64
 
 
-  typedef INT64  FT_Int64;
+  typedef FT_INT64  FT_Int64;
 
 #define ADD_64( x, y, z )  z = (x) + (y)
 #define MUL_64( x, y, z )  z = (FT_Int64)(x) * (y)
