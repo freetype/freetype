@@ -37,7 +37,7 @@ FT_BEGIN_HEADER
   /*    A structure used to model a CFF Index table.                       */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    stream      :: source input stream                                 */
+  /*    stream      :: The source input stream.                            */
   /*                                                                       */
   /*    count       :: The number of elements in the index.                */
   /*                                                                       */
@@ -46,7 +46,7 @@ FT_BEGIN_HEADER
   /*    data_offset :: The position of first data byte in the index's      */
   /*                   bytes.                                              */
   /*                                                                       */
-  /*    offsets     :: table of element offsets in the index               */
+  /*    offsets     :: A table of element offsets in the index.            */
   /*                                                                       */
   /*    bytes       :: If the index is loaded in memory, its bytes.        */
   /*                                                                       */
@@ -63,27 +63,26 @@ FT_BEGIN_HEADER
   } CFF_Index;
 
 
-  /* a compact CFF Charset table */
+  typedef struct  CFF_Encoding_
+  {
+    FT_UInt     format;
+    FT_ULong    offset;
+    
+    FT_UShort*  sids;
+    FT_UShort*  codes;
+  
+  } CFF_Encoding;
+
+
   typedef struct  CFF_Charset_
   {
+    
     FT_UInt     format;
     FT_ULong    offset;
 
     FT_UShort*  sids;
   
   } CFF_Charset;
-
-
-  /* a compact CFF Encoding table */
-  typedef struct  CFF_Encoding_
-  {
-    FT_UInt     format;
-    FT_ULong    offset;
-
-    FT_UShort*  sids;
-    FT_UShort*  codes;
-  
-  } CFF_Encoding;
 
 
   typedef struct  CFF_Font_Dict_
@@ -114,9 +113,6 @@ FT_BEGIN_HEADER
     FT_UInt    embedded_postscript;
     FT_UInt    base_font_name;
     FT_UInt    postscript;
-
-    CFF_Charset   charset;
-    CFF_Encoding  encoding;
 
     /* these should only be used for the top-level font dictionary */
     FT_UInt    cid_registry;
@@ -223,8 +219,9 @@ FT_BEGIN_HEADER
     CFF_Index      string_index;
     CFF_Index      global_subrs_index;
 
-    /* we don't load the Encoding and CharSet tables */
-
+    CFF_Encoding   encoding;
+    CFF_Charset    charset;
+    
     CFF_Index      charstrings_index;
     CFF_Index      font_dict_index;
     CFF_Index      private_index;
