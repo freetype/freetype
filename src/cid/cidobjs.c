@@ -123,7 +123,7 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  CID_Size_Init( CID_Size  size )
+  cid_size_init( CID_Size  size )
   {
     FT_Error           error = 0;
     PSH_Globals_Funcs  funcs = cid_size_get_globals_funcs( size );

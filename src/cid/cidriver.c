@@ -93,7 +93,7 @@
     (FT_Face_InitFunc)       cid_face_init,
     (FT_Face_DoneFunc)       cid_face_done,
 
-    (FT_Size_InitFunc)       CID_Size_Init,
+    (FT_Size_InitFunc)       cid_size_init,
     (FT_Size_DoneFunc)       cid_size_done,
     (FT_Slot_InitFunc)       cid_slot_init,
     (FT_Slot_DoneFunc)       cid_slot_done,

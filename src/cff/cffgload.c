@@ -573,13 +573,17 @@
     /* For incremental fonts get the character data using the */
     /* callback function.                                     */
     if ( face->root.internal->incremental_interface )
-	{
-	  FT_Data data;
-      FT_Error error = face->root.internal->incremental_interface->funcs->get_glyph_data(
-               face->root.internal->incremental_interface->object,
-               glyph_index, &data );
+    {
+      FT_Data   data;
+      FT_Error  error =
+                  face->root.internal->incremental_interface->funcs->get_glyph_data(
+                    face->root.internal->incremental_interface->object,
+                    glyph_index, &data );
+
+
       *pointer = (FT_Byte*)data.pointer;
       *length = data.length;
+
       return error;
     }
     else
@@ -587,6 +591,8 @@
 
     {
       CFF_Font  cff  = (CFF_Font)(face->extra.data);
+
+
       return cff_index_access_element( &cff->charstrings_index, glyph_index,
                                        pointer, length );
     }
@@ -606,10 +612,13 @@
     /* For incremental fonts get the character data using the */
     /* callback function.                                     */
     if ( face->root.internal->incremental_interface )
-	{
+    {
       FT_Data data;
-	  data.pointer = *pointer;
-	  data.length = length;
+
+
+      data.pointer = *pointer;
+      data.length  = length;
+
       face->root.internal->incremental_interface->funcs->free_glyph_data(
         face->root.internal->incremental_interface->object,&data );
     }
@@ -617,7 +626,9 @@
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
     {
-      CFF_Font  cff  = (CFF_Font)(face->extra.data);
+      CFF_Font  cff = (CFF_Font)(face->extra.data);
+
+
       cff_index_forget_element( &cff->charstrings_index, pointer );
     }
   }
@@ -638,11 +649,12 @@
     FT_Byte*     charstring;
     FT_ULong     charstring_len;
 
+
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    /* Incremental fonts don't necessarily have valid charsets.         */
-	/* They use the character code, not the glyph index, in this case.  */
+    /* Incremental fonts don't necessarily have valid charsets.        */
+    /* They use the character code, not the glyph index, in this case. */
     if ( face->root.internal->incremental_interface )
-	{
+    {
       bchar_index = bchar;
       achar_index = achar;
     }
@@ -651,9 +663,10 @@
     {
       CFF_Font cff = (CFF_Font)(face->extra.data);
 
+
       bchar_index = cff_lookup_glyph_by_stdcharcode( cff, bchar );
       achar_index = cff_lookup_glyph_by_stdcharcode( cff, achar );
-	}
+    }
 
     if ( bchar_index < 0 || achar_index < 0 )
     {
@@ -2320,7 +2333,7 @@
 
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-     	/* Control data and length may not be available for incremental   */
+        /* Control data and length may not be available for incremental   */
         /* fonts.                                                         */
         if ( face->root.internal->incremental_interface )
         {
@@ -2334,11 +2347,13 @@
         /* See how charstring loads at cff_index_access_element() in      */
         /* cffload.c.                                                     */
         {
-        CFF_IndexRec csindex = cff->charstrings_index;
-        glyph->root.control_data =
-          csindex.bytes + csindex.offsets[glyph_index] - 1;
-        glyph->root.control_len =
-          charstring_len;
+          CFF_IndexRec csindex = cff->charstrings_index;
+
+
+          glyph->root.control_data =
+            csindex.bytes + csindex.offsets[glyph_index] - 1;
+          glyph->root.control_len =
+            charstring_len;
         }
       }
 

@@ -38,7 +38,7 @@ FT_BEGIN_HEADER
 
   /* create a new empty hinter object */
   FT_LOCAL( FT_Error )
-  ah_hinter_new( FT_Library   library,
+  ah_hinter_new( FT_Library  library,
                  AH_Hinter*  ahinter );
 
   /* Load a hinted glyph in the hinter */
@@ -54,13 +54,13 @@ FT_BEGIN_HEADER
   ah_hinter_done( AH_Hinter  hinter );
 
   FT_LOCAL( void )
-  ah_hinter_done_face_globals( AH_Face_Globals   globals );
+  ah_hinter_done_face_globals( AH_Face_Globals  globals );
 
   FT_LOCAL( void )
-  ah_hinter_get_global_hints( AH_Hinter   hinter,
-                              FT_Face     face,
-                              void**      global_hints,
-                              long*       global_len );
+  ah_hinter_get_global_hints( AH_Hinter  hinter,
+                              FT_Face    face,
+                              void**     global_hints,
+                              long*      global_len );
 
   FT_LOCAL( void )
   ah_hinter_done_global_hints( AH_Hinter  hinter,

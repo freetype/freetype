@@ -559,8 +559,8 @@
   /*                                                                       */
   static FT_Error
   tt_face_load_generic_header( TT_Face    face,
-                          FT_Stream  stream,
-                          FT_ULong   tag )
+                               FT_Stream  stream,
+                               FT_ULong   tag )
   {
     FT_Error    error;
     TT_Header*  header;

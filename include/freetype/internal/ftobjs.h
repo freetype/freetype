@@ -556,14 +556,14 @@ FT_BEGIN_HEADER
 
   typedef struct  FT_RendererRec_
   {
-    FT_ModuleRec           root;
-    FT_Renderer_Class*     clazz;
-    FT_Glyph_Format        glyph_format;
-    FT_Glyph_Class         glyph_class;
+    FT_ModuleRec            root;
+    FT_Renderer_Class*      clazz;
+    FT_Glyph_Format         glyph_format;
+    FT_Glyph_Class          glyph_class;
 
-    FT_Raster              raster;
-    FT_Raster_Render_Func  raster_render;
-    FT_Renderer_RenderFunc render;
+    FT_Raster               raster;
+    FT_Raster_Render_Func   raster_render;
+    FT_Renderer_RenderFunc  render;
 
   } FT_RendererRec;
 

@@ -289,15 +289,15 @@
   ah_hinter_compute_widths( AH_Hinter  hinter )
   {
     /* scan the array of segments in each direction */
-    AH_Outline   outline = hinter->glyph;
-    AH_Segment   segments;
-    AH_Segment   limit;
-    AH_Globals   globals = &hinter->globals->design;
-    FT_Pos*      widths;
-    FT_Int       dimension;
-    FT_Int*      p_num_widths;
-    FT_Error     error = 0;
-    FT_Pos       edge_distance_threshold = 32000;
+    AH_Outline  outline = hinter->glyph;
+    AH_Segment  segments;
+    AH_Segment  limit;
+    AH_Globals  globals = &hinter->globals->design;
+    FT_Pos*     widths;
+    FT_Int      dimension;
+    FT_Int*     p_num_widths;
+    FT_Error    error = 0;
+    FT_Pos      edge_distance_threshold = 32000;
 
 
     globals->num_widths  = 0;
@@ -334,9 +334,9 @@
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Segment   seg = segments;
-      AH_Segment   link;
-      FT_Int       num_widths = 0;
+      AH_Segment  seg = segments;
+      AH_Segment  link;
+      FT_Int      num_widths = 0;
 
 
       for ( ; seg < limit; seg++ )

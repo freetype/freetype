@@ -50,7 +50,7 @@
                      PSH3_Hint  hint2 )
   {
     return ( hint1->org_pos + hint1->org_len >= hint2->org_pos &&
-              hint2->org_pos + hint2->org_len >= hint1->org_pos );
+             hint2->org_pos + hint2->org_len >= hint1->org_pos );
   }
 
 
@@ -503,18 +503,18 @@
               /* the stem is less than one pixel, we will center it */
               /* around the nearest pixel center                    */
               /*                                                    */
-              pos = ( pos + (len >> 1) & -64 );
+              pos = ( pos + ( (len >> 1) & -64 ) );
               len = 64;
             }
             else
             {
-              FT_Pos  delta = len - dim->stdw.widths[0].cur;
+              FT_Pos  Delta = len - dim->stdw.widths[0].cur;
 
 
-              if ( delta < 0 )
-                delta = -delta;
+              if ( Delta < 0 )
+                Delta = -Delta;
 
-              if ( delta < 40 )
+              if ( Delta < 40 )
               {
                 len = dim->stdw.widths[0].cur;
                 if ( len < 32 )
@@ -523,20 +523,20 @@
 
               if ( len < 3 * 64 )
               {
-                delta = ( len & 63 );
+                Delta = ( len & 63 );
                 len &= -64;
 
-                if ( delta < 10 )
-                  len += delta;
+                if ( Delta < 10 )
+                  len += Delta;
 
-                else if ( delta < 32 )
+                else if ( Delta < 32 )
                   len += 10;
 
-                else if ( delta < 54 )
+                else if ( Delta < 54 )
                   len += 54;
 
                 else
-                  len += delta;
+                  len += Delta;
               }
               else
                 len = ( len + 32 ) & -64;

@@ -1,56 +1,198 @@
+2002-09-05  Werner Lemberg  <wl@gnu.org>
+
+	* src/cid/cidobjs.c (CID_Size_Init): Renamed to...
+	(cid_size_init): This.
+	* src/psaux/psobjs.c (T1_Builder_Add_Point1): Renamed to...
+	(t1_builder_add_point1): This.
+
+	Updated all affected code.
+
+	* src/pshinter/pshalgo3.c (psh3_hint_align): Fix compiler warnings.
+	* src/type1/t1gload.c (T1_Compute_Max_Advance): Ditto.
+
 2002-09-04  David Turner  <david@freetype.org>
 
-    * include/freetype/freetype.h: corrected the definition of
-    ft_encoding_symbol to be FT_ENCODING_MS_SYMBOL (instead of
-    the erroneous FT_ENCODING_SYMBOL)
+	* include/freetype/freetype.h: Corrected the definition of
+	ft_encoding_symbol to be FT_ENCODING_MS_SYMBOL (instead of
+	the erroneous FT_ENCODING_SYMBOL).
 
-    * builds/unix/unix-def.in: added "datadir" definition
-    (thanks to Anthony Fok)
-
+	* builds/unix/unix-def.in (datadir): Initialize it (thanks to
+	Anthony Fok).
 
 2002-08-29  David Turner  <david@freetype.org>
 
-    * src/pshinter/pshalgo.c: slight modification to the Postscript hinter
-    to slightly increase the contrast of smooth hinting. This is very similar
-    to what the auto-hinter does when it comes to stem width computations.
-    However, it produces better results with well-hinted fonts..
+	Slight modification to the Postscript hinter to slightly increase
+	the contrast of smooth hinting.  This is very similar to what the
+	auto-hinter does when it comes to stem width computations.  However,
+	it produces better results with well-hinted fonts.
 
-    * README, docs/CHANGES: updating for the 2.1.3 release
+	* include/freetype/internal/psaux.h (T1_Decoder_FuncsRec): Add hint
+	mode to `init' member function.
+	(T1_DecoderRec): Add hint mode.
+	* include/freetype/internal/pshints (T1_Hints_ApplyFunc,
+	T2_Hints_ApplyFunc): Pass `hint_mode', not `hint_flags'.
+	* src/psaux/t1decode.c (t1_decoder_init): Add hint mode argument.
+	* src/pshinter/pshalgo1.c (ps1_hints_apply): Pass hint mode, not
+	hint flags.
+	* src/pshinter/pshalgo2.c (ps2_hints_apply): Ditto.
+	* src/pshinter/pshalgo3.c (ps3_hints_apply): Ditto.
+	(STRONGER): New macro.
+	(psh3_hint_align, psh3_hint_table_align_hints): Pass `glyph' instead
+	of `hint_flags'.
+	Implement announced changes.
+	* src/pshinter/pshalgo3.h (PSH3_GlyphRec): Add flags to control
+	vertical and horizontal hints and snapping.
+
+	* README, docs/CHANGES: Updating for the 2.1.3 release.
 
 2002-08-27  David Turner  <david@freetype.org>
 
-    * massive re-formatting changes to many, many source files. I don't
-    want to list them all here. The operations performed were all logical
-    transformations of the sources:
+	* Massive re-formatting changes to many, many source files.  I don't
+	want to list them all here.  The operations performed were all
+	logical transformations of the sources:
 
-      - trying to convert all enums and constants to CAPITALIZED_STYLE, with
-        #define definitions like
+	- trying to convert all enums and constants to CAPITALIZED_STYLE,
+	  #with define definitions like
 
-          #define  my_old_constants   MY_NEW_CONSTANT
+	    #define my_old_constants   MY_NEW_CONSTANT
 
-      - big, big update of the documentation comments
+	- big, big update of the documentation comments
 
-    * include/freetype/freetype.h, src/base/ftobjs.c, src/smooth/ftsmooth.c,
-    include/freetype/ftimage.h: adding support for LCD-optimized rendering
-    though the new constants/enums:
+	* include/freetype/freetype.h, src/base/ftobjs.c,
+	src/smooth/ftsmooth.c, include/freetype/ftimage.h: Adding support
+	for LCD-optimized rendering though the new constants/enums:
 
-      FT_RENDER_MODE_LCD, FT_RENDER_MODE_LCD_V
-      FT_PIXEL_MODE_LCD,  FT_PIXEL_MODE_LCD_V
+	  FT_RENDER_MODE_LCD, FT_RENDER_MODE_LCD_V
+	  FT_PIXEL_MODE_LCD,  FT_PIXEL_MODE_LCD_V
 
-    this is still work in progress, don't expect everything to work correctly
-    though most of the features have been implemented.
+	This is still work in progress, don't expect everything to work
+	correctly though most of the features have been implemented.
 
-    * adding new FT_LOAD_XXX flags, used to specify both hinting and rendering
-    targets:
+	* Adding new FT_LOAD_XXX flags, used to specify both hinting and
+	rendering targets:
 
-      FT_LOAD_TARGET_NORMAL :: anti-aliased hinting & rendering
-      FT_LOAD_TARGET_MONO   :: monochrome bitmaps
-      FT_LOAD_TARGET_LCD    :: horizontal RGB/BGR decimated hinting & rendering
-      FT_LOAD_TARGET_LCD_V  :: vertical RGB/BGR decimated hinting & rendering
+	  FT_LOAD_TARGET_NORMAL :: anti-aliased hinting & rendering
+	  FT_LOAD_TARGET_MONO   :: monochrome bitmaps
+	  FT_LOAD_TARGET_LCD    :: horizontal RGB/BGR decimated
+	                           hinting & rendering
+	  FT_LOAD_TARGET_LCD_V  :: vertical RGB/BGR decimated
+	                           hinting & rendering
 
-    note that FT_LOAD_TARGET_NORMAL is 0, which means that the default
-    behaviour of the font engine is _unchanged_.
+	Note that FT_LOAD_TARGET_NORMAL is 0, which means that the default
+	behaviour of the font engine is _unchanged_.
 
+	* include/freetype/ftimage.h
+	(FT_Outline_{Move,Line,Conic,Cubic}To_Func): Renamed to...
+	(FT_Outline_{Move,Line,Conic,Cubic}ToFunc): This.
+	(FT_Raster_Span_Func): Renamed to ...
+	(FT_SpanFunc): This.
+	(FT_Raster_{New,Done,Reset,Set_Mode,Render}_Func): Renamed to ...
+	(FT_Raster_{New,Done,Reset,SetMode,Render}Func}: This.
+
+	Updated all affected code.
+
+	* include/freetype/ftrender.h
+	(FT_Glyph_{Init,Done,Transform,BBox,Copy,Prepare}_Func): Renamed
+	to ...
+	(FT_Glyph_{Init,Done,Transform,GetBBox,Copy,Prepare}Func): This.
+	(FTRenderer_{render,transform,getCBox,setMode}): Renamed to ...
+	(FT_Renderer_{RenderFunc,TransformFunc,GetCBoxFunc,SeteModeFunc}):
+	This.
+
+	Updated all affected code.
+
+	* src/autohint/ahtypes.h (AH_Point, AH_Segment, AH_Edge, AH_Globals,
+	AH_Face_Globals, AH_Outline, AH_Hinter): These typedefs are now
+	pointers to the corresponding `*Rec' structures.  All source files
+	have been updated accordingly.
+
+	* src/cff/cffgload.c (cff_decoder_init): Add hint mode as parameter.
+	* src/cff/cffgload.h (CFF_Decoder): Add `hint_mode' element.
+
+	* src/cid/cidgload.c (CID_Compute_Max_Advance): Renamed to...
+	(cid_face_compute_max_advance): This.
+	(CID_Load_Glyph): Renamed to...
+	(cid_slot_load_glyph): This.
+	* src/cid/cidload.c (CID_Open_Face): Renamed to...
+	(cid_face_open): This.
+	* src/cid/cidobjs.c (CID_GlyphSlot_{Done,Init}): Renamed to...
+	(cid_slot_{done,init}): This.
+	(CID_Size_{Get_Globals_Funcs,Done,Reset): Renamed to...
+	(cid_size_{get_globals_funcs,done,reset): This.
+	(CID_Face_{Done,Init}): Renamed to...
+	(cid_face_{done,init}): This.
+	(CID_Driver_{Done,Init}: Renamed to...
+	(cid_driver_{done,init}: This.
+	* src/cid/cidparse.c (CID_{New,Done}_Parser): Renamed to...
+	(cid_parser_{new,done}): This.
+	* src/cid/cidparse.h (CID_Skip_{Spaces,Alpha}): Renamed to...
+	(cid_parser_skip_{spaces,alpha}): This.
+	(CID_To{Int,Fixed,CoordArray,FixedArray,Token,TokenArray}): Renamed
+	to...
+	(cid_parser_to_{int,fixed,coord_array,fixed_array,token,token_array}):
+	This.
+	(CID_Load_{Field,Field_Table): Renamed to...
+	(cid_parser_load_{field,field_table}): This.
+	* src/cid/cidriver.c (CID_Get_Interface): Renamed to...
+	(cid_get_interface): This.
+
+	Updated all affected code.
+
+	* src/psaux/psobjs.c (PS_Table_*): Renamed to...
+	(ps_table_*): This.
+	(T1_Builder_*): Renamed to...
+	(t1_builder_*): This.
+	* src/psaux/t1decode.c (T1_Decoder_*): Renamed to...
+	(t1_decoder_*): This.
+
+	* src/psnames/psmodule.c (PS_*): Renamed to...
+	(ps_*): This.
+
+	Updated all affected code.
+
+	* src/sfnt/sfdriver (SFNT_Get_Interface): Renamed to...
+	(sfnt_get_interface): This.
+	* src/sfnt/sfobjs.c (SFNT_*): Renamed to...
+	(sfnt_*): This.
+	* src/sfnt/ttcmap.c (TT_CharMap_{Load,Free}): Renamed to...
+	(tt_face_{load,free}_charmap): This.
+	* src/sfnt/ttcmap0.c (TT_Build_CMaps): Renamed to...
+	(tt_face_build_cmaps): This.
+	* src/sfnt/ttload.c (TT_*): Renamed to...
+	(tt_face_*): This.
+	* src/sfnt/ttpost.c (TT_Post_Default_Names): Renamed to...
+	(tt_post_default_names): This.
+	(Load_*): Renamed to...
+	(load_*): This.
+	(TT_*): Renamed to...
+	(tt_face_*): This.
+	* src/sfnt/ttsbit.c (TT_*): Renamed to...
+	(tt_face_*): This.
+	({Find,Load,Crop}_*): Renamed to...
+	({find,load,crop}_*): This.
+
+	Updated all affected code.
+
+	* src/smooth/ftsmooth.c (ft_smooth_render): Renamed to...
+	(ft_smooth_render_generic): This.
+	Make function more generic by adding vertical and horizontal scaling
+	factors.
+	(ft_smooth_render, ft_smooth_render_lcd, ft_smooth_render_lcd_v):
+	New functions.
+
+	(ft_smooth_locd_renderer_class, ft_smooth_lcdv_renderer_class): New
+	classes.
+
+	* src/truetype/ttobjs.c (TT_{Done,New}_GlyphZone): Renamed to...
+	(tt_glyphzone_{done,new}): This.
+	(TT_{Face,Size,Driver}_*): Renamed to...
+	(tt_{face,size,driver}_*): This.
+	* src/truetype/ttpload.c (TT_Load_Locations): Renamed to...
+	(tt_face_load_loca): This.
+	(TT_Load_Programs): Renamed to...
+	(tt_face_load_fpgm): This.
+	(TT_*): Renamed to...
+	(tt_face_*): This.
 
 2002-08-27  Werner Lemberg  <wl@gnu.org>
 
@@ -58,28 +200,26 @@
 
 2002-08-23  Graham Asher  <graham.asher@btinternet.com>
 
-    * /src/cff/cffgload.c (cff_operator_seac)
-    [FT_CONFIG_OPTION_INCREMENTAL] incremental fonts (actually
-    not incremental in the case of CFF but just using callbacks
-    to get glyph recipes) pass the character code, not the glyph
-    index, to the get_glyph_data function; they have no
-    valid charset table.
+	* src/cff/cffgload.c (cff_operator_seac)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Incremental fonts (actually not
+	incremental in the case of CFF but just using callbacks to get glyph
+	recipes) pass the character code, not the glyph index, to the
+	get_glyph_data function; they have no valid charset table.
 
-    * /src/cff/cffload.c (cff_font_load) removed special cases
-    for FT_CONFIG_OPTION_INCREMENTAL, which are no longer
-    necessary; CFF fonts provided via the incremental interface
-    now have to conform more closely to the CFF font format.
+	* src/cff/cffload.c (cff_font_load): Removed special cases for
+	FT_CONFIG_OPTION_INCREMENTAL, which are no longer necessary; CFF
+	fonts provided via the incremental interface now have to conform
+	more closely to the CFF font format.
 
-    * /src/cff/cffload.h (cff_font_load declaration)
-    removed argument now unneeded.
+	* src/cff/cffload.h (cff_font_load): Removed argument now unneeded.
 
-    * /src/cff/cffobjs.c (cff_face_init) changed call to
-    cff_font_load to conform with new signature.
+	* src/cff/cffobjs.c (cff_face_init): Changed call to cff_font_load
+	to conform with new signature.
 
 2002-08-22  David Turner  <david@freetype.org>
 
-    * src/base/ftobject.c, src/base/ftsynth.c, src/base/ftstroker.c,
-    src/bdf/bdfdrivr.c: removed compiler warnings
+	* src/base/ftobject.c, src/base/ftsynth.c, src/base/ftstroker.c,
+	src/bdf/bdfdrivr.c: Removed compiler warnings.
 
 2002-08-21  Werner Lemberg  <wl@gnu.org>
 

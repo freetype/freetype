@@ -153,7 +153,7 @@
     pitch = width;
     if ( hmul )
     {
-      width = width*hmul;
+      width = width * hmul;
       pitch = ( width + 3 ) & -4;
     }
 
@@ -184,6 +184,7 @@
       FT_Int      n;
       FT_Vector*  vec;
 
+
       if ( hmul )
         for ( vec = outline->points, n = 0; n < outline->n_points; n++, vec++ )
           vec->x *= hmul;
@@ -201,6 +202,7 @@
       FT_Int      n;
       FT_Vector*  vec;
 
+
       if ( hmul )
         for ( vec = outline->points, n = 0; n < outline->n_points; n++, vec++ )
           vec->x /= hmul;
@@ -209,7 +211,6 @@
         for ( vec = outline->points, n = 0; n < outline->n_points; n++, vec++ )
           vec->y /= vmul;
     }
-
 
     FT_Outline_Translate( outline, cbox.xMin, cbox.yMin );
 
@@ -226,7 +227,6 @@
 
     return error;
   }
-
 
 
   /* convert a slot's glyph image into a bitmap */
@@ -266,7 +266,6 @@
                                      FT_RENDER_MODE_LCD_V,
                                      0, 3 );
   }
-
 
 
   FT_CALLBACK_TABLE_DEF

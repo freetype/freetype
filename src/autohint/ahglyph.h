@@ -46,43 +46,43 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( void )
-  ah_setup_uv( AH_Outline   outline,
-               AH_UV        source );
+  ah_setup_uv( AH_Outline  outline,
+               AH_UV       source );
 
 
   /* AH_OutlineRec functions - they should be typically called in this order */
 
   FT_LOCAL( FT_Error )
-  ah_outline_new( FT_Memory     memory,
-                  AH_Outline *  aoutline );
+  ah_outline_new( FT_Memory    memory,
+                  AH_Outline*  aoutline );
 
   FT_LOCAL( FT_Error )
-  ah_outline_load( AH_Outline   outline,
-                   FT_Face      face );
+  ah_outline_load( AH_Outline  outline,
+                   FT_Face     face );
 
   FT_LOCAL( void )
-  ah_outline_compute_segments( AH_Outline   outline );
+  ah_outline_compute_segments( AH_Outline  outline );
 
   FT_LOCAL( void )
-  ah_outline_link_segments( AH_Outline   outline );
+  ah_outline_link_segments( AH_Outline  outline );
 
   FT_LOCAL( void )
-  ah_outline_detect_features( AH_Outline   outline );
+  ah_outline_detect_features( AH_Outline  outline );
 
   FT_LOCAL( void )
-  ah_outline_compute_blue_edges( AH_Outline        outline,
-                                 AH_Face_Globals   globals );
+  ah_outline_compute_blue_edges( AH_Outline       outline,
+                                 AH_Face_Globals  globals );
 
   FT_LOCAL( void )
-  ah_outline_scale_blue_edges( AH_Outline        outline,
-                               AH_Face_Globals   globals );
+  ah_outline_scale_blue_edges( AH_Outline       outline,
+                               AH_Face_Globals  globals );
 
   FT_LOCAL( void )
-  ah_outline_save( AH_Outline   outline,
-                   AH_Loader    loader );
+  ah_outline_save( AH_Outline  outline,
+                   AH_Loader   loader );
 
   FT_LOCAL( void )
-  ah_outline_done( AH_Outline   outline );
+  ah_outline_done( AH_Outline  outline );
 
 
 FT_END_HEADER

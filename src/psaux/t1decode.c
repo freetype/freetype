@@ -350,7 +350,7 @@
 #define start_point    t1_builder_start_point
 #define check_points   t1_builder_check_points
 #define add_point      t1_builder_add_point
-#define add_point1     T1_Builder_Add_Point1
+#define add_point1     t1_builder_add_point1
 #define add_contour    t1_builder_add_contour
 #define close_contour  t1_builder_close_contour
 

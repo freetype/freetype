@@ -32,12 +32,12 @@
 #include <stdio.h>
 
   void
-  ah_dump_edges( AH_Outline   outline )
+  ah_dump_edges( AH_Outline  outline )
   {
-    AH_Edge      edges;
-    AH_Edge      edge_limit;
-    AH_Segment   segments;
-    FT_Int       dimension;
+    AH_Edge     edges;
+    AH_Edge     edge_limit;
+    AH_Segment  segments;
+    FT_Int      dimension;
 
 
     edges      = outline->horz_edges;
@@ -84,12 +84,12 @@
 
   /* A function used to dump the array of linked segments */
   void
-  ah_dump_segments( AH_Outline   outline )
+  ah_dump_segments( AH_Outline  outline )
   {
-    AH_Segment   segments;
-    AH_Segment   segment_limit;
-    AH_Point     points;
-    FT_Int       dimension;
+    AH_Segment  segments;
+    AH_Segment  segment_limit;
+    AH_Point    points;
+    FT_Int      dimension;
 
 
     points        = outline->points;
@@ -98,7 +98,7 @@
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Segment   seg;
+      AH_Segment  seg;
 
 
       printf ( "Table of %s segments:\n",
@@ -298,11 +298,11 @@
   /*    ah_outline_new                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Creates a new and empty AH_OutlineRec object.                         */
+  /*    Creates a new and empty AH_OutlineRec object.                      */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  ah_outline_new( FT_Memory     memory,
-                  AH_Outline *  aoutline )
+  ah_outline_new( FT_Memory    memory,
+                  AH_Outline*  aoutline )
   {
     FT_Error     error;
     AH_Outline   outline;
@@ -324,10 +324,10 @@
   /*    ah_outline_done                                                    */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Destroys a given AH_OutlineRec object.                                */
+  /*    Destroys a given AH_OutlineRec object.                             */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  ah_outline_done( AH_Outline   outline )
+  ah_outline_done( AH_Outline  outline )
   {
     FT_Memory memory = outline->memory;
 
@@ -347,12 +347,12 @@
   /*    ah_outline_save                                                    */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Saves the content of a given AH_OutlineRec object into a face's glyph */
-  /*    slot.                                                              */
+  /*    Saves the contents of a given AH_OutlineRec object into a face's   */
+  /*    glyph slot.                                                        */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  ah_outline_save( AH_Outline   outline,
-                   AH_Loader    gloader )
+  ah_outline_save( AH_Outline  outline,
+                   AH_Loader   gloader )
   {
     AH_Point    point       = outline->points;
     AH_Point    point_limit = point + outline->num_points;
@@ -382,19 +382,19 @@
   /*    ah_outline_load                                                    */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads an unscaled outline from a glyph slot into an AH_OutlineRec     */
+  /*    Loads an unscaled outline from a glyph slot into an AH_OutlineRec  */
   /*    object.                                                            */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  ah_outline_load( AH_Outline   outline,
-                   FT_Face      face )
+  ah_outline_load( AH_Outline  outline,
+                   FT_Face     face )
   {
-    FT_Memory   memory       = outline->memory;
-    FT_Error    error        = AH_Err_Ok;
-    FT_Outline* source       = &face->glyph->outline;
-    FT_Int      num_points   = source->n_points;
-    FT_Int      num_contours = source->n_contours;
-    AH_Point    points;
+    FT_Memory    memory       = outline->memory;
+    FT_Error     error        = AH_Err_Ok;
+    FT_Outline*  source       = &face->glyph->outline;
+    FT_Int       num_points   = source->n_points;
+    FT_Int       num_contours = source->n_contours;
+    AH_Point     points;
 
 
     /* check arguments */
@@ -469,8 +469,8 @@
     {
       /* do one thing at a time -- it is easier to understand, and */
       /* the code is clearer                                       */
-      AH_Point   point;
-      AH_Point   point_limit = points + outline->num_points;
+      AH_Point  point;
+      AH_Point  point_limit = points + outline->num_points;
 
 
       /* compute coordinates */
@@ -512,10 +512,10 @@
 
       /* compute `next' and `prev' */
       {
-        FT_Int     contour_index;
-        AH_Point   prev;
-        AH_Point   first;
-        AH_Point   end;
+        FT_Int    contour_index;
+        AH_Point  prev;
+        AH_Point  first;
+        AH_Point  end;
 
 
         contour_index = 0;
@@ -548,10 +548,10 @@
 
       /* set-up the contours array */
       {
-        AH_Point *  contour       = outline->contours;
-        AH_Point *  contour_limit = contour + outline->num_contours;
-        short*      end           = source->contours;
-        short       idx           = 0;
+        AH_Point*  contour       = outline->contours;
+        AH_Point*  contour_limit = contour + outline->num_contours;
+        short*     end           = source->contours;
+        short      idx           = 0;
 
 
         for ( ; contour < contour_limit; contour++, end++ )
@@ -622,11 +622,11 @@
 
 
   FT_LOCAL_DEF( void )
-  ah_setup_uv( AH_Outline   outline,
-               AH_UV        source )
+  ah_setup_uv( AH_Outline  outline,
+               AH_UV       source )
   {
-    AH_Point   point       = outline->points;
-    AH_Point   point_limit = point + outline->num_points;
+    AH_Point  point       = outline->points;
+    AH_Point  point_limit = point + outline->num_points;
 
 
     for ( ; point < point_limit; point++ )
@@ -677,10 +677,10 @@
 
   /* compute all inflex points in a given glyph */
   static void
-  ah_outline_compute_inflections( AH_Outline   outline )
+  ah_outline_compute_inflections( AH_Outline  outline )
   {
-    AH_Point *  contour       =  outline->contours;
-    AH_Point *  contour_limit =  contour + outline->num_contours;
+    AH_Point*  contour       =  outline->contours;
+    AH_Point*  contour_limit =  contour + outline->num_contours;
 
 
     /* load original coordinates in (u,v) */
@@ -792,7 +792,7 @@
 
 
   FT_LOCAL_DEF( void )
-  ah_outline_compute_segments( AH_Outline   outline )
+  ah_outline_compute_segments( AH_Outline  outline )
   {
     int           dimension;
     AH_Segment    segments;
@@ -811,28 +811,28 @@
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Point *   contour       =  outline->contours;
-      AH_Point *   contour_limit =  contour + outline->num_contours;
-      AH_Segment   segment       =  segments;
-      FT_Int       num_segments  =  0;
+      AH_Point*   contour       =  outline->contours;
+      AH_Point*   contour_limit =  contour + outline->num_contours;
+      AH_Segment  segment       =  segments;
+      FT_Int      num_segments  =  0;
 
 #ifdef AH_HINT_METRICS
-      AH_Point     min_point     =  0;
-      AH_Point     max_point     =  0;
-      FT_Pos       min_coord     =  32000;
-      FT_Pos       max_coord     = -32000;
+      AH_Point    min_point     =  0;
+      AH_Point    max_point     =  0;
+      FT_Pos      min_coord     =  32000;
+      FT_Pos      max_coord     = -32000;
 #endif
 
 
       /* do each contour separately */
       for ( ; contour < contour_limit; contour++ )
       {
-        AH_Point   point   = contour[0];
-        AH_Point   last    = point->prev;
-        int        on_edge = 0;
-        FT_Pos     min_pos = +32000;  /* minimum segment pos != min_coord */
-        FT_Pos     max_pos = -32000;  /* maximum segment pos != max_coord */
-        FT_Bool    passed;
+        AH_Point  point   = contour[0];
+        AH_Point  last    = point->prev;
+        int       on_edge = 0;
+        FT_Pos    min_pos = +32000;  /* minimum segment pos != min_coord */
+        FT_Pos    max_pos = -32000;  /* maximum segment pos != max_coord */
+        FT_Bool   passed;
 
 
 #ifdef AH_HINT_METRICS
@@ -961,11 +961,11 @@
       /* we do this by inserting fake segments when needed            */
       if ( dimension == 0 )
       {
-        AH_Point   point       =  outline->points;
-        AH_Point   point_limit =  point + outline->num_points;
+        AH_Point  point       =  outline->points;
+        AH_Point  point_limit =  point + outline->num_points;
 
-        FT_Pos     min_pos     =  32000;
-        FT_Pos     max_pos     = -32000;
+        FT_Pos    min_pos     =  32000;
+        FT_Pos    max_pos     = -32000;
 
 
         min_point = 0;
@@ -1034,11 +1034,11 @@
 
 
   FT_LOCAL_DEF( void )
-  ah_outline_link_segments( AH_Outline   outline )
+  ah_outline_link_segments( AH_Outline  outline )
   {
-    AH_Segment   segments;
-    AH_Segment   segment_limit;
-    int          dimension;
+    AH_Segment  segments;
+    AH_Segment  segment_limit;
+    int         dimension;
 
 
     ah_setup_uv( outline, AH_UV_FYX );
@@ -1048,14 +1048,16 @@
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Segment   seg1;
-      AH_Segment   seg2;
+      AH_Segment  seg1;
+      AH_Segment  seg2;
+
 
       /* now compare each segment to the others */
       for ( seg1 = segments; seg1 < segment_limit; seg1++ )
       {
-        FT_Pos       best_score;
-        AH_Segment   best_segment;
+        FT_Pos      best_score;
+        AH_Segment  best_segment;
+
 
         /* the fake segments are introduced to hint the metrics -- */
         /* we must never link them to anything                     */
@@ -1148,7 +1150,7 @@
 
 
   static void
-  ah_outline_compute_edges( AH_Outline   outline )
+  ah_outline_compute_edges( AH_Outline  outline )
   {
     AH_Edge       edges;
     AH_Segment    segments;
@@ -1169,9 +1171,9 @@
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AH_Edge      edge;
-      AH_Edge      edge_limit;  /* really == edge + num_edges */
-      AH_Segment   seg;
+      AH_Edge     edge;
+      AH_Edge     edge_limit;  /* really == edge + num_edges */
+      AH_Segment  seg;
 
 
       /*********************************************************************/
@@ -1198,7 +1200,7 @@
       edge_limit = edges;
       for ( seg = segments; seg < segment_limit; seg++ )
       {
-        AH_Edge   found = 0;
+        AH_Edge  found = 0;
 
 
         /* look for an edge corresponding to the segment */
@@ -1313,8 +1315,8 @@
 
           if ( seg->link || is_serif )
           {
-            AH_Edge      edge2;
-            AH_Segment   seg2;
+            AH_Edge     edge2;
+            AH_Segment  seg2;
 
 
             edge2 = edge->link;
@@ -1398,10 +1400,10 @@
   /*    ah_outline_detect_features                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Performs feature detection on a given AH_OutlineRec object.           */
+  /*    Performs feature detection on a given AH_OutlineRec object.        */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  ah_outline_detect_features( AH_Outline   outline )
+  ah_outline_detect_features( AH_Outline  outline )
   {
     ah_outline_compute_segments   ( outline );
     ah_outline_link_segments      ( outline );
@@ -1420,15 +1422,15 @@
   /*    be snapped to a blue zone edge (top or bottom).                    */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  ah_outline_compute_blue_edges( AH_Outline        outline,
-                                 AH_Face_Globals   face_globals )
+  ah_outline_compute_blue_edges( AH_Outline       outline,
+                                 AH_Face_Globals  face_globals )
   {
-    AH_Edge      edge       = outline->horz_edges;
-    AH_Edge      edge_limit = edge + outline->num_hedges;
-    AH_Globals   globals    = &face_globals->design;
-    FT_Fixed     y_scale    = outline->y_scale;
+    AH_Edge     edge       = outline->horz_edges;
+    AH_Edge     edge_limit = edge + outline->num_hedges;
+    AH_Globals  globals    = &face_globals->design;
+    FT_Fixed    y_scale    = outline->y_scale;
 
-    FT_Bool      blue_active[AH_BLUE_MAX];
+    FT_Bool     blue_active[AH_BLUE_MAX];
 
 
     /* compute which blue zones are active, i.e. have their scaled */
@@ -1554,12 +1556,12 @@
   /*    edge' pointer from `design units' to `scaled ones').               */
   /*                                                                       */
   FT_LOCAL_DEF( void )
-  ah_outline_scale_blue_edges( AH_Outline        outline,
-                               AH_Face_Globals   globals )
+  ah_outline_scale_blue_edges( AH_Outline       outline,
+                               AH_Face_Globals  globals )
   {
-    AH_Edge   edge       = outline->horz_edges;
-    AH_Edge   edge_limit = edge + outline->num_hedges;
-    FT_Int    delta;
+    AH_Edge  edge       = outline->horz_edges;
+    AH_Edge  edge_limit = edge + outline->num_hedges;
+    FT_Int   delta;
 
 
     delta = globals->scaled.blue_refs - globals->design.blue_refs;
