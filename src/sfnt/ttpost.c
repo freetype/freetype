@@ -500,7 +500,7 @@
             break;
         }
 
-        if ( index < table->num_glyphs )
+        if ( index < (FT_UInt)table->num_glyphs )
         {
           FT_UShort  name_index = table->glyph_indices[index];
 
@@ -525,7 +525,7 @@
             break;
         }
 
-        if ( index < table->num_glyphs )    /* paranoid checking */
+        if ( index < (FT_UInt)table->num_glyphs )    /* paranoid checking */
         {
           index  += table->offsets[index];
           *PSname = MAC_NAME( index );

@@ -417,10 +417,10 @@
         sh2      = cmap2->subHeaders + index1;
         char_lo -= sh2->firstCode;
 
-        if ( char_lo < sh2->entryCount )
+        if ( char_lo < (FT_UInt)sh2->entryCount )
         {
           offset = sh2->idRangeOffset / 2 + char_lo;
-          if ( offset < cmap2->numGlyphId )
+          if ( offset < (FT_UInt)cmap2->numGlyphId )
           {
             result = cmap2->glyphIdArray[offset];
             if ( result )
@@ -484,10 +484,10 @@
       /* the ranges are sorted in increasing order.  If we are out of */
       /* the range here, the char code isn't in the charmap, so exit. */
 
-      if ( charCode > seg4->endCount )
+      if ( charCode > (FT_UInt)seg4->endCount )
         continue;
 
-      if ( charCode >= seg4->startCount )
+      if ( charCode >= (FT_UInt)seg4->startCount )
         goto Found;
     }
     return 0;
@@ -508,7 +508,7 @@
                + ( seg4 - cmap4->segments )
                - segCount;
 
-      if ( index1 < cmap4->numGlyphId       &&
+      if ( index1 < (FT_UInt)cmap4->numGlyphId       &&
            cmap4->glyphIdArray[index1] != 0 )
         result = ( cmap4->glyphIdArray[index1] + seg4->idDelta ) & 0xFFFF;
     }
@@ -544,7 +544,7 @@
     result    = 0;
     charCode -= cmap6->firstCode;
 
-    if ( charCode < cmap6->entryCount )
+    if ( charCode < (FT_UInt)cmap6->entryCount )
       result =  cmap6->glyphIdArray[charCode];
 
     return result;

@@ -6430,7 +6430,7 @@
 
     for ( ; def < limit; def++ )
     {
-      if ( def->opc == CUR.opcode && def->active )
+      if ( (FT_Byte)def->opc == CUR.opcode && def->active )
       {
         TT_CallRec*  call;
 
@@ -7414,7 +7414,7 @@
 
             for ( ; def < limit; def++ )
             {
-              if ( def->active && CUR.opcode == def->opc )
+              if ( def->active && CUR.opcode == (FT_Byte)def->opc )
               {
                 TT_CallRec*  callrec;
 

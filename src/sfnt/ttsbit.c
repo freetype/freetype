@@ -689,8 +689,8 @@
 
     /* check whether the glyph index is within this strike's */
     /* glyph range                                           */
-    if ( glyph_index < strike->start_glyph ||
-         glyph_index > strike->end_glyph   )
+    if ( glyph_index < (FT_UInt)strike->start_glyph ||
+         glyph_index > (FT_UInt)strike->end_glyph   )
       goto Fail;
 
     /* scan all ranges in strike */
@@ -701,8 +701,8 @@
 
     for ( ; range < range_limit; range++ )
     {
-      if ( glyph_index >= range->first_glyph &&
-           glyph_index <= range->last_glyph  )
+      if ( glyph_index >= (FT_UInt)range->first_glyph &&
+           glyph_index <= (FT_UInt)range->last_glyph  )
       {
         FT_UShort  delta = glyph_index - range->first_glyph;
 
@@ -727,7 +727,7 @@
 
             for ( n = 0; n < range->num_glyphs; n++ )
             {
-              if ( range->glyph_codes[n] == glyph_index )
+              if ( (FT_UInt)range->glyph_codes[n] == glyph_index )
               {
                 if ( range->index_format == 4 )
                   *aglyph_offset = range->glyph_offsets[n];
