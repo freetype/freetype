@@ -1,5 +1,9 @@
 LATEST CHANGES
 
+  - revamped the build system to make it a lot more generic. This will
+    allow us to re-use nearly un-modified in lots of other projects
+    (including FreeType Layout)
+
   - changed "cid" to use "psaux" too..
 
   - added the cache sub-system. See <freetype/ftcache.h> as well as the

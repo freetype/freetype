@@ -109,7 +109,7 @@ CONFIG_   := $(PUBLIC_)config$(SEP)
 
 # The final name of the library file.
 #
-FT_LIBRARY := $(LIB_)$(LIBRARY).$A
+PROJECT_LIBRARY := $(LIB_)$(LIBRARY).$A
 
 
 # include paths
@@ -237,7 +237,7 @@ endif
 
 objects: $(OBJECTS_LIST)
 
-library: $(FT_LIBRARY)
+library: $(PROJECT_LIBRARY)
 
 .c.$O:
 	$(FT_COMPILE) $T$@ $<
@@ -246,26 +246,26 @@ library: $(FT_LIBRARY)
 # Standard cleaning and distclean rules.  These are not accepted
 # on all systems though.
 #
-clean_freetype_std:
+clean_project_std:
 	-$(DELETE) $(BASE_OBJECTS) $(OBJ_M) $(OBJ_S) $(CLEAN)
 
-distclean_freetype_std: clean_freetype_std
-	-$(DELETE) $(FT_LIBRARY)
+distclean_project_std: clean_project_std
+	-$(DELETE) $(PROJECT_LIBRARY)
 	-$(DELETE) *.orig *~ core *.core $(DISTCLEAN)
 
 # The Dos command shell does not support very long list of arguments, so
 # we are stuck with wildcards.
 #
-clean_freetype_dos:
-	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(OBJ_))*.$O $(CLEAN) 2> nul
+clean_project_dos:
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(OBJ_))*.$O $(CLEAN) $(NO_OUTPUT)
 
-distclean_freetype_dos: clean_freetype_dos
-	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(FT_LIBRARY)) $(DISTCLEAN) 2> nul
+distclean_project_dos: clean_project_dos
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(PROJECT_LIBRARY)) $(DISTCLEAN) $(NO_OUTPUT)
 
 # Remove configuration file (used for distclean).
 #
 remove_config_mk:
-	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(CONFIG_MK))
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(CONFIG_MK)) $(NO_OUTPUT)
 
 
 # The `config.mk' file must define `clean_freetype' and
@@ -273,7 +273,7 @@ remove_config_mk:
 # the `std' or `dos' versions from above, or simply provide their own
 # implementation.
 #
-clean: clean_freetype
-distclean: distclean_freetype remove_config_mk
+clean: clean_project
+distclean: distclean_project remove_config_mk
 
 # EOF
