@@ -276,14 +276,14 @@
 
     memory = (FT_Memory)malloc( sizeof ( *memory ) );
     if ( memory )
-#ifdef FT_DEBUG_MEMORY
-    if ( !ft_mem_debug_init( memory ) )
-#endif    
     {
       memory->user    = 0;
       memory->alloc   = ft_alloc;
       memory->realloc = ft_realloc;
       memory->free    = ft_free;
+#ifdef FT_DEBUG_MEMORY
+      ft_mem_debug_init( memory );
+#endif    
     }
 
     return memory;
