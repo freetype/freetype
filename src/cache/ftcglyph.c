@@ -50,9 +50,9 @@
 
   /* Important: This function is called from the cache manager to */
   /* destroy a given cache node during `cache compression'.  The  */
-  /* second argument is always `cache.user_data'.  Thus be        */
+  /* second argument is always `cache.cache_data'.  Thus be       */
   /* certain that the function FTC_Glyph_Cache_New() does indeed  */
-  /* set its `user_data' field correctly, otherwise bad things    */
+  /* set its `cache_data' field correctly, otherwise bad things   */
   /* will happen!                                                 */
 
   FT_EXPORT_FUNC( void )  FTC_GlyphNode_Destroy( FTC_GlyphNode    node,
@@ -120,7 +120,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****                      GLYPH QUEUES                             *****/
+  /*****                      GLYPH SETS                               *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
@@ -204,6 +204,7 @@
         lrunode = FTC_GLYPHNODE_TO_LRUNODE( node );
 
         manager->num_bytes -= clazz->size_node( node, gset );
+        manager->num_nodes --;
 
         FT_List_Remove( glyphs_lru, lrunode );
 
@@ -273,6 +274,7 @@
     FT_List_Insert( &manager->global_lru, FTC_GLYPHNODE_TO_LRUNODE( node ) );
 
     manager->num_bytes += clazz->size_node( node, gset );
+    manager->num_nodes ++;
 
     if (manager->num_bytes > manager->max_bytes)
     {
@@ -365,7 +367,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****                GLYPH IMAGE CACHE OBJECTS                      *****/
+  /*****                      GLYPH CACHE OBJECTS                      *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
@@ -383,10 +385,10 @@
 
     /* The following is extremely important for ftc_destroy_glyph_image() */
     /* to work properly, as the second parameter that is sent to it       */
-    /* through the cache manager is `user_data' and must be set to        */
+    /* through the cache manager is `cache_data' and must be set to       */
     /* `cache' here.                                                      */
     /*                                                                    */
-    cache->root.cache_user = cache;
+    cache->root.cache_data = cache;
 
     error = FT_Lru_New( &ftc_glyph_set_lru_class,
                         FTC_MAX_GLYPH_SETS,

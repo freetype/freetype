@@ -32,47 +32,22 @@
   typedef struct FTC_SBit_CacheRec_*   FTC_SBit_Cache;
 
 
- /* format of small bitmaps */  
-  typedef enum FTC_SBit_Format_
-  {
-    ftc_sbit_format_mono  = 0,
-    ftc_sbit_format_aa256 = 1,
-
-  } FTC_SBit_Format;
-
-
  /* a compact structure used to hold a single small bitmap */  
   typedef struct FTC_SBitRec_
   {
     FT_Byte   width;
     FT_Byte   height;
-    FT_SChar  left;
-    FT_SChar  top;
+    FT_Char   left;
+    FT_Char   top;
 
     FT_Byte   format;
-    FT_SChar  pitch;
-    FT_SChar  xadvance;
-    FT_SChar  yadvance;
+    FT_Char   pitch;
+    FT_Char   xadvance;
+    FT_Char   yadvance;
 
     FT_Byte*  buffer;
   
   } FTC_SBitRec;
-
-
-  typedef struct FTC_SBitSetRec_
-  {
-    FTC_ChunkSetRec   root;
-    FTC_Image_Desc    desc;
-
-  } FTC_SBitSet;
-
-
-  typedef struct FTC_SBit_CacheRec_
-  {
-    FTC_Chunk_CacheRec    root;
-    
-  } FTC_SBit_CacheRec;
-
 
 
   FT_EXPORT_DEF( FT_Error )
@@ -83,6 +58,7 @@
   FT_EXPORT_DEF( FT_Error )
   FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
                          FTC_Image_Desc*  desc,
+                         FT_UInt          gindex,
                          FTC_SBit        *sbit );
 
 

@@ -72,13 +72,15 @@
   typedef FT_Pointer  FT_LruKey;
 
 
-  /* an lru node -- node.root.data points to the element */
+  /* an lru node -- root.data points to the element */
   typedef struct  FT_LruNodeRec_
   {
     FT_ListNodeRec  root;
     FT_LruKey       key;
   
   } FT_LruNodeRec, *FT_LruNode;
+
+
 
   /* forward declaration */
   typedef struct FT_LruRec_*  FT_Lru;
@@ -94,8 +96,8 @@
                                FT_LruNode  node );
                                
     /* this method is used to finalize a given list element node */
-    void  (*done_element)( FT_Lru      lru,
-                           FT_LruNode  node );
+    void      (*done_element)( FT_Lru      lru,
+                               FT_LruNode  node );
     
     /* If defined, this method is called when the list if full        */
     /* during the lookup process -- it is used to change the contents */
@@ -145,10 +147,11 @@
                                          FT_Memory            memory,
                                          FT_Bool              pre_alloc,
                                          FT_Lru*              alru );
-                                          
-  FT_EXPORT_DEF( void )  FT_Lru_Reset( FT_Lru  lru ); 
-                                       
-  FT_EXPORT_DEF( void )  FT_Lru_Done( FT_Lru  lru ); 
+
+  FT_EXPORT_DEF( void )      FT_Lru_Reset( FT_Lru  lru ); 
+
+  FT_EXPORT_DEF( void )      FT_Lru_Done ( FT_Lru  lru ); 
+
 
   FT_EXPORT_DEF( FT_Error )  FT_Lru_Lookup_Node( FT_Lru        lru,
                                                  FT_LruKey     key,
@@ -157,7 +160,8 @@
   FT_EXPORT_DEF( FT_Error )  FT_Lru_Lookup( FT_Lru       lru,
                                             FT_LruKey    key,
                                             FT_Pointer*  aobject );
- 
+
+
   FT_EXPORT_DEF( void )  FT_Lru_Remove_Node( FT_Lru      lru,
                                              FT_LruNode  node );  
 

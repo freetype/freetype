@@ -16,15 +16,36 @@
 /***************************************************************************/
 
 
-#ifdef FT_FLAT_COMPILE
-#  include "ftcimage.h"
-#else
-#  include <cache/ftcimage.h>
-#endif
+#include <freetype/cache/ftcimage.h>
+#include <freetype/internal/ftmemory.h>
 
 #include <string.h>
 
-#include <freetype/internal/ftmemory.h>
+
+ /* the FT_Glyph image "glyph node" type */
+  typedef struct  FTC_GlyphImageRec_
+  {
+    FTC_GlyphNodeRec   root;
+    FT_Glyph           ft_glyph;
+
+  } FTC_GlyphImageRec, *FTC_GlyphImage;
+
+
+  /* the glyph image queue type */
+  typedef struct  FTC_ImageSetRec_
+  {
+    FTC_GlyphSetRec  root;
+    FTC_Image_Desc   description;
+  
+  } FTC_ImageSetRec, *FTC_ImageSet;
+
+
+  typedef struct  FTC_Image_CacheRec_
+  {
+    FTC_Glyph_CacheRec  root;
+    
+  } FTC_Image_CacheRec;
+
 
 
   /*************************************************************************/
@@ -180,7 +201,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****                    GLYPH IMAGE QUEUES                         *****/
+  /*****                    GLYPH IMAGE SETS                           *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
