@@ -51,6 +51,7 @@ ifeq ($(PLATFORM),ansi)
     #
     ifneq ($(findstring devel,$(MAKECMDGOALS)),)
       CONFIG_FILE := cygwin-dev.mk
+      CC          := gcc
       devel: setup
     else
       # If a CygWin platform is detected, the configure script is called and
