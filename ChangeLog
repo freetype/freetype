@@ -2,6 +2,8 @@
 
 	* docs/design/modules.html: Removed.  Covered by design-*.html.
 
+	* INSTALL: Added info about makepp.
+
 2000-12-14  David Turner <david.turner@freetype.org>
 
 	* include/freetype/ftimage.h, include/freetype/fttypes.h,

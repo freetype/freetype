@@ -1,61 +1,67 @@
 In order to build the library, read the `BUILD' document in the `docs'
-directory.  This is only a quick starter:
+directory.  This is only a quick starter.
 
-I. From the command line:
 
-  You need to have GNU Make installed on your system to compile the
-  library from the command line.  This will _not_ work with other
-  make tools (including BSD make)!
+I. From the command line
+------------------------
+
+  You need  to have GNU Make  installed on your system  to compile the
+  library from the command line.  This will _not_ work with other make
+  tools (including BSD make)!
+
+  [Well, this is not  really correct.  Recently, a perl implementation
+  of make called `makepp' has appeared which can also build FreeType 2
+  successfully on Unix platforms.  See http://LNC.usc.edu/~holt/makepp
+  for more details.]
   
   - Go to the `freetype2' directory.
 
-  - On Unix or (any C compiler should work):
+  - Unix (any C compiler should work):
 
       - make setup (don't worry, this will invoke a configure script)
       - make
       - make install
 
-    Alternatively, you can pass parameters to the configure script
+    Alternatively,  you can  pass parameters  to the  configure script
     within the CFG variable, as in:
 
       - make setup CFG="--prefix=/usr"
       - make
       - make install
 
-  - On Windows:
+  - Windows:
 
-    We provide a version of GNU Make for Win32 on the FreeType site.
+    We provide a  version of GNU Make for Win32  on the FreeType site.
     See http://www.freetype.org/download.html for details.
 
-    - if you're using gcc (Mingw, _not_ CygWin):
+    - gcc (Mingw, _not_ CygWin):
     
-          - make setup
-          - make
+        - make setup
+        - make
 
 
-    - if you're using Visual C++
+    - Visual C++:
     
-          - make setup visualc
-          - make
+        - make setup visualc
+        - make
 
 
-    - if you're using another compiler:
+    - other compilers:
     
           - make setup xxxx
           - make
           
-
       where "xxxx" is a special target corresponding to your compiler.
       To see a list of supported compilers in this release, type:
       
-            make setup list
+          make setup list
       
 
+II. In your own environment (IDE)
+---------------------------------
 
-II. In your own environment (IDE):
-
-  You need to add the directories "freetype2/include" and "freetype2/src"
-  to your include path when compiling the library.
+  You   need   to   add   the  directories   "freetype2/include"   and
+  "freetype2/src" to your include path when compiling the library.
   
   Compile each library component through the following files:
   
@@ -69,20 +75,20 @@ II. In your own environment (IDE):
       src/base/ftbbox.c
       src/base/ftmm.c
      
-      src/base/ftmac.c   -- only on the Macintosh
+      src/base/ftmac.c        -- only on the Macintosh
 
     -- other components are optional
 
-      src/autohint/autohint.c   -- auto hinting module
-      src/cache/ftcache.c       -- cache sub-system (in beta)
-      src/sfnt/sfnt.c           -- SFNT files support (TrueType & OpenType)
-      src/cff/cff.c             -- CFF/OpenType font driver
-      src/psnames/psnames.c     -- Postscript glyph names support
-      src/psaux/psaux.c         -- Postscript Type 1 parsing
-      src/truetype/truetype.c   -- TrueType font driver
-      src/type1/type1.c         -- Type 1 font driver
-      src/cid/type1cid.c        -- Type 1 CID-keyed font driver
-      src/winfonts/winfonts.c   -- Windows FONT / FNT font driver
+      src/autohint/autohint.c -- auto hinting module
+      src/cache/ftcache.c     -- cache sub-system (in beta)
+      src/sfnt/sfnt.c         -- SFNT files support (TrueType & OpenType)
+      src/cff/cff.c           -- CFF/OpenType font driver
+      src/psnames/psnames.c   -- Postscript glyph names support
+      src/psaux/psaux.c       -- Postscript Type 1 parsing
+      src/truetype/truetype.c -- TrueType font driver
+      src/type1/type1.c       -- Type 1 font driver
+      src/cid/type1cid.c      -- Type 1 CID-keyed font driver
+      src/winfonts/winfonts.c -- Windows FONT / FNT font driver
 
     Note:
      
