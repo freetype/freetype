@@ -1,127 +1,130 @@
-#****************************************************************************
-#*                                                                          *
-#*  FreeType host platform detection rules                                  *
-#*                                                                          *
-#*  Copyright 1996-1999 by                                                  *
-#*  David Turner, Robert Wilhelm, and Werner Lemberg.                       *
-#*                                                                          *
-#*  This file is part of the FreeType project, and may only be used         *
-#*  modified and distributed under the terms of the FreeType project        *
-#*  license, LICENSE.TXT.  By continuing to use, modify, or distribute      *
-#*  this file you indicate that you have read the license and               *
-#*  understand and accept it fully.                                         *
-#*                                                                          *
-#*                                                                          *
-#*  This sub-Makefile is in charge of detecting the current platform        *
-#*  It sets some variables accordingly. Namely :                            *
-#*                                                                          *
-#*   PLATFORM     The detected platform. This will default to "ansi" if     *
-#*                auto-detection fails.                                     *
-#*                                                                          *
-#*   BUILD        The configuration and system-specific directory. Usually  *
-#*                'freetype/config/$(PLATFORM)' but can be different when   *
-#*                a specific compiler has been requested on the             *
-#*                command line..                                            *
-#*                                                                          *
-#*   CONFIG_RULES The Makefile to use. This usually depends on the compiler *
-#*                defined in the 'CC' environment variable.                 *
-#*                                                                          *
-#*   DELETE       The shell command used to remove a given file             *
-#*   COPY         The shell command used to copy one file                   *
-#*                                                                          *
-#*  You need to set the following variable(s) before calling it:            *
-#*                                                                          *
-#*    TOP         The top-most directory in the FreeType library source     *
-#*                hierarchy. If not defined, it will default to '.'         *
-#*                                                                          *
-#****************************************************************************
+#
+# FreeType 2 host platform detection rules
+#
 
-# If TOP is not defined, default it to '.'
+
+# Copyright 1996-2000 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used modified
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+# This sub-Makefile is in charge of detecting the current platform.  It sets
+# the following variables:
+#
+#   BUILD        The configuration and system-specific directory.  Usually
+#                `freetype/config/$(PLATFORM)' but can be different if a
+#                specific compiler has been requested on the command line.
+#
+# The following variables must be defined in system specific `detect.mk'
+# files:
+#
+#   PLATFORM     The detected platform.  This will default to `ansi' if
+#                auto-detection fails.
+#   CONFIG_FILE  The Makefile to use.  This usually depends on the compiler
+#                defined in the `CC' environment variable.
+#   DELETE       The shell command used to remove a given file.
+#   COPY         The shell command used to copy one file.
+#   SEP          The platform-specific directory separator.
+#   CC           The compiler to use.
+#
+# You need to set the following variable(s) before calling it:
+#
+#   TOP          The top-most directory in the FreeType library source
+#                hierarchy.  If not defined, it will default to `.'.
+
+# If TOP is not defined, default it to `.'
 #
 ifndef TOP
 TOP := .
 endif
 
+# Set auto-detection default to `ansi'.
+# Note that we delay the evaluation of $(CONFIG_), $(BUILD), and
+# $(CONFIG_RULES).
 #
-# set auto-detection default to ANSI.
-# Note that we delay the valuation of BUILD and RULES
-#
-PLATFORM := ansi
-CONFIG    = $(TOP)$(SEP)config
-DELETE   := $(RM)
-COPY     := cp
-SEP      := /
+PLATFORM    := ansi
+DELETE      := $(RM)
+COPY        := cp
+SEP         := /
 
-BUILD       = $(CONFIG)$(SEP)$(PLATFORM)
-CONFIG_FILE = $(BUILD)/Makefile
+CONFIG_      = $(TOP)$(SEP)config$(SEP)
+BUILD        = $(CONFIG_)$(PLATFORM)
+CONFIG_RULES = $(BUILD)$(SEP)$(CONFIG_FILE)
 
-
-###########################################################################
-#
-# Now, include each detection rules file found in a `config/<system>'
-# directory..
-#
-#
-
-# we define the BACKSLASH variable to hold a single back-slash character
+# We define the BACKSLASH variable to hold a single back-slash character.
 # This is needed because a line like
 #
-# SEP := \
+#   SEP := \
 #
-# does not work with GNU Make (the back-slash is interpreted as a line
-# continuation). While a line like :
+# does not work with GNU Make (the backslash is interpreted as a line
+# continuation).  While a line like
 #
-# SEP := \\
+#   SEP := \\
 #
-# really define $(SEP) as "\" on Unix, and "\\" on Dos and Windows !!
+# really defines $(SEP) as `\' on Unix, and `\\' on Dos and Windows!
 #
 BACKSLASH := $(strip \ )
 
-include $(wildcard $(CONFIG)/*/detect.mk)
+# Now, include all detection rule files found in the `config/<system>'
+# directories.  Note that the calling order of the various `detect.mk' files
+# isn't predictable.
+#
+include $(wildcard $(CONFIG_)*/detect.mk)
 
+# In case no detection rule file was successful, use the default.
+#
+ifndef CONFIG_FILE
+  CONFIG_FILE := ansi.mk
+  setup: std_setup
+endif
 
 # The following targets are equivalent, with the exception that they use
-# slightly different syntaxes for the `echo' command. This is due to
+# slightly different syntaxes for the `echo' command.
 #
-# std_setup: is defined for most platforms
-# dos_setup: is defined for Dos-ish platforms like Dos, Windows & OS/2
+# std_setup: defined for most platforms
+# dos_setup: defined for Dos-ish platforms like Dos, Windows & OS/2
 #
-
-.PHONY: std_setup  dos_setup
+.PHONY: std_setup dos_setup
 
 std_setup:
 	@echo ""
-	@echo "FreeType build system - automatic system detection"
+	@echo "FreeType build system -- automatic system detection"
 	@echo ""
-	@echo "The following settings were detected :"
+	@echo "The following settings are used:"
 	@echo ""
-	@echo "  platform                 :  $(PLATFORM)"
-	@echo "  compiler                 :  $(CC)"
-	@echo "  configuration directory  :  $(BUILD)"
-	@echo "  configuration rules      :  $(CONFIG_RULES)"
+	@echo "  platform                    $(PLATFORM)"
+	@echo "  compiler                    $(CC)"
+	@echo "  configuration directory     $(BUILD)"
+	@echo "  configuration rules         $(CONFIG_RULES)"
 	@echo ""
 	@echo "If this does not correspond to your system or settings please remove the file"
 	@echo "\`$(CONFIG_MK)' from this directory then read the INSTALL file for help."
 	@echo ""
-	@echo "Otherwise, simple type \`make' again to build the library"
+	@echo "Otherwise, simply type \`make' again to build the library."
 	@echo ""
 	@$(COPY) $(CONFIG_RULES) $(CONFIG_MK)
 
 dos_setup:
 	@echo ÿ
-	@echo FreeType build system - automatic system detection
+	@echo FreeType build system -- automatic system detection
 	@echo ÿ
-	@echo The following settings were detected :
+	@echo The following settings are used:
 	@echo ÿ
-	@echo ÿÿplatformÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ:  $(PLATFORM)
-	@echo ÿÿcompilerÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ:  $(CC)
-	@echo ÿÿconfiguration directoryÿÿ:  $(BUILD)
-	@echo ÿÿconfiguration rulesÿÿÿÿÿÿ:  $(CONFIG_RULES)
+	@echo ÿÿplatformÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ$(PLATFORM)
+	@echo ÿÿcompilerÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿ$(CC)
+	@echo ÿÿconfiguration directoryÿÿÿÿÿÿ$(BUILD)
+	@echo ÿÿconfiguration rulesÿÿÿÿÿÿÿÿÿÿ$(CONFIG_RULES)
 	@echo ÿ
 	@echo If this does not correspond to your system or settings please remove the file
 	@echo '$(CONFIG_MK)' from this directory then read the INSTALL file for help.
 	@echo ÿ
-	@echo Otherwise, simple type 'make' again to build the library
+	@echo Otherwise, simply type 'make' again to build the library.
 	@echo ÿ
 	@$(COPY) $(subst /,\,$(CONFIG_RULES) $(CONFIG_MK)) > nul
 
+# EOF

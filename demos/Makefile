@@ -10,11 +10,11 @@ all: exes
 #
 
 ifndef TOP
-TOP  := ..
+  TOP := ..
 endif
 
 ifndef TOP2
-TOP2 := $(TOP)/demos
+  TOP2 := $(TOP)/demos
 endif
 
 ######################################################################
@@ -23,7 +23,7 @@ endif
 # defined by default as $(TOP)/config.mk
 #
 ifndef CONFIG_MK
-CONFIG_MK := $(TOP)/config.mk
+  CONFIG_MK := $(TOP)/config.mk
 endif
 
 ####################################################################
@@ -32,228 +32,223 @@ endif
 # If not, issue a warning message, then stop there..
 #
 ifeq ($(wildcard $(CONFIG_MK)),)
-no_config_mk := 1
+  no_config_mk := 1
 endif
 
 ifdef no_config_mk
-exes:
-	@echo Please compile the library before the demo programs!
-clean distclean:
-	@echo "I need \`$(TOP)/config.mk' to do that!"
+  exes:
+	  @echo Please compile the library before the demo programs!
+  clean distclean:
+	  @echo "I need \`$(TOP)/config.mk' to do that!"
 else
 
-####################################################################
-#
-# Good, now include the `config.mk' in order to know how to build
-# object files from sources, as well as other things (compiler flags)
-#
-include $(CONFIG_MK)
-
-####################################################################
-#
-# Define a few important variables now
-#
-#
-TOP_  := $(TOP)$(SEP)
-TOP2_ := $(TOP2)$(SEP)
-SRC_  := $(TOP)$(SEP)src$(SEP)
-
-BIN_ := bin$(SEP)
-OBJ_ := obj$(SEP)
-
-GRAPH_DIR := graph
-
-ifeq ($(TOP),..)
-SRC_DIR  := src
-else
-SRC_DIR  := $(TOP2_)src
-endif
-
-SRC_DIR_ := $(SRC_DIR)$(SEP)
-
-FT_INCLUDES := $(BUILD) $(TOP_)config $(TOP_)include $(SRC_)base $(SRC_DIR)
-TT_INCLUDES := $(SRC_)shared $(SRC_)truetype
-T1_INCLUDES := $(SRC_)shared $(SRC_)type1
-
-COMPILE    = $(CC) $(CFLAGS) $(INCLUDES:%=$I%)
-LINK      := $(CC)
-FTLIB     := $(TOP_)$(LIB_DIR)$(SEP)$(LIBRARY).$A
-
-# the default commands used to link the executables. These can
-# be re-defined for platform-specific stuff..
-#
-LINK = $(CC) $T$@ $< $(FTLIB) $(EFENCE)
-COMMON_LINK = $(LINK) $(COMMON_OBJ)
-GRAPH_LINK  = $(COMMON_LINK) $(GRAPH_LIB)
+  ####################################################################
+  #
+  # Good, now include the `config.mk' in order to know how to build
+  # object files from sources, as well as other things (compiler flags)
+  #
+  include $(CONFIG_MK)
 
 
-.PHONY: exes clean distclean
+  ####################################################################
+  #
+  # Define a few important variables now
+  #
+  TOP_  := $(TOP)$(SEP)
+  TOP2_ := $(TOP2)$(SEP)
+  SRC_  := $(TOP)$(SEP)src$(SEP)
 
-###################################################################
-#
-# Include the rules needed to compile the graphics sub-system.
-# This will also select which graphics driver to compile to the
-# sub-system..
-#
-include $(GRAPH_DIR)/rules.mk
+  BIN_ := bin$(SEP)
+  OBJ_ := obj$(SEP)
 
-####################################################################
-#
-# Detect DOS-like platforms, currently DOS, Win 3.1, Win32 & OS/2
-#
-#
-ifneq ($(findstring $(PLATFORM),os2 win16 win32 dos),)
-DOSLIKE := 1
-endif
+  GRAPH_DIR := graph
 
+  ifeq ($(TOP),..)
+    SRC_DIR := src
+  else
+    SRC_DIR := $(TOP2_)src
+  endif
 
-###################################################################
-#
-# Clean-up rules. Because the `del' command on DOS-like platforms
-# cannot take a long list of arguments, we simply erase the directory
-# contents..
-#
+  SRC_DIR_ := $(SRC_DIR)$(SEP)
 
-ifdef DOSLIKE
-clean_demo:
-	-del obj\*.$O 2> nul
-	-del $(subst /,\,$(TOP2))\src\*.bak 2> nul
+  FT_INCLUDES := $(BUILD) $(TOP_)config $(TOP_)include $(SRC_)base $(SRC_DIR)
+  TT_INCLUDES := $(SRC_)shared $(SRC_)truetype
+  T1_INCLUDES := $(SRC_)shared $(SRC_)type1
 
-distclean_demo: clean_demo
-	-del obj\*.lib 2> nul
-	-del bin\*.exe 2> nul
-else
+  COMPILE    = $(CC) $(CFLAGS) $(INCLUDES:%=$I%)
+  LINK      := $(CC)
+  FTLIB     := $(TOP_)$(LIB_DIR)$(SEP)$(LIBRARY).$A
 
-clean_demo:
-	-$(DELETE) $(OBJ_)*.$O
-	-$(DELETE) $(SRC_)*.bak graph$(SEP)*.bak
-	-$(DELETE) $(SRC_)*~ graph$(SEP)*~
+  # the default commands used to link the executables. These can
+  # be re-defined for platform-specific stuff..
+  #
+  LINK = $(CC) $T$@ $< $(FTLIB) $(EFENCE)
+  COMMON_LINK = $(LINK) $(COMMON_OBJ)
+  GRAPH_LINK  = $(COMMON_LINK) $(GRAPH_LIB)
 
-distclean_demo: clean_demo
-	-$(DELETE) $(EXES:%=$(BIN_)%$E)
-	-$(DELETE) $(GRAPH_LIB)
-endif
+  .PHONY: exes clean distclean
 
-clean: clean_demo
-distclean: distclean_demo
+  ###################################################################
+  #
+  # Include the rules needed to compile the graphics sub-system.
+  # This will also select which graphics driver to compile to the
+  # sub-system..
+  #
+  include $(GRAPH_DIR)/rules.mk
 
-####################################################################
-#
-# Compute the executable suffix to use, and put it in `E'.
-# It is ".exe" on DOS-ish platforms, and nothing otherwise
-#
-ifdef DOSLIKE
-E := .exe
-else
-E :=
-endif
-
-###################################################################
-#
-# The list of demonstration programs to build.
-#
-EXES := ftlint ftview fttimer
-
-ifneq ($(findstring $(PLATFORM),os2 unix),)
-EXES += ttdebug
-endif
-
-exes: $(EXES:%=$(BIN_)%$E)
+  ####################################################################
+  #
+  # Detect DOS-like platforms, currently DOS, Win 3.1, Win32 & OS/2
+  #
+  ifneq ($(findstring $(PLATFORM),os2 win16 win32 dos),)
+    DOSLIKE := 1
+  endif
 
 
-INCLUDES := $(FT_INCLUDES)
+  ###################################################################
+  #
+  # Clean-up rules.  Because the `del' command on DOS-like platforms
+  # cannot take a long list of arguments, we simply erase the directory
+  # contents.
+  #
+  ifdef DOSLIKE
 
-####################################################################
-#
-# Rules for compiling object files for text-only demos
-#
+    clean_demo:
+	    -del obj\*.$O 2> nul
+	    -del $(subst /,\,$(TOP2))\src\*.bak 2> nul
 
-COMMON_OBJ := $(OBJ_)common.$O
-$(COMMON_OBJ): $(SRC_DIR_)common.c
-ifdef DOSLIKE
-	$(COMPILE) $T$@ $< $DEXPAND_WILDCARDS 
-else
-	$(COMPILE) $T$@ $<
-endif
+    distclean_demo: clean_demo
+	    -del obj\*.lib 2> nul
+	    -del bin\*.exe 2> nul
 
+  else
 
-$(OBJ_)%.$O: $(SRC_DIR_)%.c $(FTLIB)
-	$(COMPILE) $T$@ $<
+    clean_demo:
+	    -$(DELETE) $(OBJ_)*.$O
+	    -$(DELETE) $(SRC_)*.bak graph$(SEP)*.bak
+	    -$(DELETE) $(SRC_)*~ graph$(SEP)*~
 
-$(OBJ_)ftlint.$O: $(SRC_DIR_)ftlint.c
-	$(COMPILE) $T$@ $<
+    distclean_demo: clean_demo
+	    -$(DELETE) $(EXES:%=$(BIN_)%$E)
+	    -$(DELETE) $(GRAPH_LIB)
 
-$(OBJ_)fttry.$O: $(SRC_DIR_)fttry.c
-	$(COMPILE) $T$@ $<
+  endif
 
+  clean: clean_demo
+  distclean: distclean_demo
 
-$(OBJ_)ftview.$O: $(SRC_DIR_)ftview.c $(GRAPH_LIB)
-	$(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
+  ####################################################################
+  #
+  # Compute the executable suffix to use, and put it in `E'.
+  # It is ".exe" on DOS-ish platforms, and nothing otherwise.
+  #
+  ifdef DOSLIKE
+    E := .exe
+  else
+     E :=
+  endif
 
-$(OBJ_)fttimer.$O: $(SRC_DIR_)fttimer.c $(GRAPH_LIB)
-	$(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
+  ###################################################################
+  #
+  # The list of demonstration programs to build.
+  #
+  EXES := ftlint ftview fttimer
 
-#$(OBJ_)ftsbit.$O: $(SRC_DIR)/ftsbit.c $(GRAPH_LIB)
-#	$(COMPILE) $T$@ $<
+  ifneq ($(findstring $(PLATFORM),os2 unix),)
+    EXES += ttdebug
+  endif
 
-
-####################################################################
-#
-# Special rule to compile the `t1dump' program as it includes
-# the Type1 source path
-#
-$(OBJ_)t1dump.$O: $(SRC_DIR)/t1dump.c
-	$(COMPILE) $(T1_INCLUDES:%=$I%) $T$@ $<
-
-
-####################################################################
-#
-# Special rule to compile the `ttdebug' program as it includes
-# the TrueType source path and needs extra flags for correct keyboard
-# handling on Unix
-#
-
-# POSIX TERMIOS: Do not define if you use OLD U*ix like 4.2BSD.
-#
-# detect a Unix system
-ifeq ($(PLATFORM),unix)
-EXTRAFLAGS = $DUNIX $DHAVE_POSIX_TERMIOS
-endif
-
-$(OBJ_)ttdebug.$O: $(SRC_DIR)/ttdebug.c
-	$(COMPILE) $(TT_INCLUDES:%=$I%) $T$@ $< $(EXTRAFLAGS)
+  exes: $(EXES:%=$(BIN_)%$E)
 
 
-####################################################################
-#
-# Rules used to link the executables. Note that they could be
-# over-ridden by system-specific things..
-#
+  INCLUDES := $(FT_INCLUDES)
 
-$(BIN_)ftlint$E: $(OBJ_)ftlint.$O $(FTLIB) $(COMMON_OBJ)
-	$(COMMON_LINK)
-
-
-$(BIN_)fttry$E: $(OBJ_)fttry.$O $(FTLIB)
-	$(LINK)
-
-
-$(BIN_)ftsbit$E: $(OBJ_)ftsbit.$O $(FTLIB)
-	$(LINK)
+  ####################################################################
+  #
+  # Rules for compiling object files for text-only demos
+  #
+  COMMON_OBJ := $(OBJ_)common.$O
+  $(COMMON_OBJ): $(SRC_DIR_)common.c
+  ifdef DOSLIKE
+	  $(COMPILE) $T$@ $< $DEXPAND_WILDCARDS 
+  else
+	  $(COMPILE) $T$@ $<
+  endif
 
 
-$(BIN_)t1dump$E: $(OBJ_)t1dump.$O $(FTLIB)
-	$(LINK)
+  $(OBJ_)%.$O: $(SRC_DIR_)%.c $(FTLIB)
+	  $(COMPILE) $T$@ $<
 
-$(BIN_)ttdebug$E: $(OBJ_)ttdebug.$O $(FTLIB)
-	$(LINK)
+  $(OBJ_)ftlint.$O: $(SRC_DIR_)ftlint.c
+	  $(COMPILE) $T$@ $<
+
+  $(OBJ_)fttry.$O: $(SRC_DIR_)fttry.c
+	  $(COMPILE) $T$@ $<
 
 
-$(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
-	$(GRAPH_LINK) 
+  $(OBJ_)ftview.$O: $(SRC_DIR_)ftview.c $(GRAPH_LIB)
+	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
 
-$(BIN_)fttimer$E: $(OBJ_)fttimer.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
-	$(GRAPH_LINK)
+  $(OBJ_)fttimer.$O: $(SRC_DIR_)fttimer.c $(GRAPH_LIB)
+	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
+
+# $(OBJ_)ftsbit.$O: $(SRC_DIR)/ftsbit.c $(GRAPH_LIB)
+#	 $(COMPILE) $T$@ $<
+
+
+  ####################################################################
+  #
+  # Special rule to compile the `t1dump' program as it includes
+  # the Type1 source path
+  #
+  $(OBJ_)t1dump.$O: $(SRC_DIR)/t1dump.c
+	  $(COMPILE) $(T1_INCLUDES:%=$I%) $T$@ $<
+
+
+  ####################################################################
+  #
+  # Special rule to compile the `ttdebug' program as it includes
+  # the TrueType source path and needs extra flags for correct keyboard
+  # handling on Unix
+
+  # POSIX TERMIOS: Do not define if you use OLD U*ix like 4.2BSD.
+  #
+  # detect a Unix system
+  ifeq ($(PLATFORM),unix)
+    EXTRAFLAGS = $DUNIX $DHAVE_POSIX_TERMIOS
+  endif
+
+  $(OBJ_)ttdebug.$O: $(SRC_DIR)/ttdebug.c
+	    $(COMPILE) $(TT_INCLUDES:%=$I%) $T$@ $< $(EXTRAFLAGS)
+
+
+  ####################################################################
+  #
+  # Rules used to link the executables. Note that they could be
+  # over-ridden by system-specific things..
+  #
+  $(BIN_)ftlint$E: $(OBJ_)ftlint.$O $(FTLIB) $(COMMON_OBJ)
+	  $(COMMON_LINK)
+
+  $(BIN_)fttry$E: $(OBJ_)fttry.$O $(FTLIB)
+	  $(LINK)
+
+  $(BIN_)ftsbit$E: $(OBJ_)ftsbit.$O $(FTLIB)
+	  $(LINK)
+
+  $(BIN_)t1dump$E: $(OBJ_)t1dump.$O $(FTLIB)
+	  $(LINK)
+
+  $(BIN_)ttdebug$E: $(OBJ_)ttdebug.$O $(FTLIB)
+	  $(LINK)
+
+
+  $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
+	  $(GRAPH_LINK) 
+
+  $(BIN_)fttimer$E: $(OBJ_)fttimer.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
+	  $(GRAPH_LINK)
 
 endif
 
+# EOF

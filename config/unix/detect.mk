@@ -1,58 +1,62 @@
 #
-# This file is used to detect which Makefile to use based on the
-# value of the CC environment variable.
+# FreeType 2 configuration file to detect a UNIX host platform.
 #
-# Unix
+
+
+# Copyright 1996-2000 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
 #
-#
-# This will _much_ probably change in the future if we're going to use
-# Automake/Autoconf..
-#
+# This file is part of the FreeType project, and may only be used modified
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+# This will probably change a lost in the future if we are going to use
+# Automake/Autoconf...
+
 
 ifeq ($(PLATFORM),ansi)
-has_inittab := $(strip $(wildcard /etc/inittab))
-ifneq ($(has_inittab),)
+  has_inittab := $(strip $(wildcard /etc/inittab))
 
-PLATFORM := unix
-COPY     := cp
-DELETE   := rm -f
+  ifneq ($(has_inittab),)
 
-# if `devel' is the requested target, use the development Makefile
-#
-ifneq ($(findstring devel,$(MAKECMDGOALS)),)
-CONFIG_RULES := $(BUILD)$(SEP)unix-dev.mk
-devel: setup;
-endif
+    PLATFORM := unix
+    COPY     := cp
+    DELETE   := rm -f
 
-# test wether we're using gcc ? If it is, we selected the
-# 'unix-gcc.mk' configuration file. Otherwise, the standard
-# 'unix.mk' which simply calls "cc -c" with no extra arguments
-#
-# Feel free to add support for other platform specific compilers
-# in this directory (e.g. solaris.mk + changes here to detect the
-# platform)
-#
-ifeq ($(CC),gcc)
-is_gcc := 1
-else
-ifneq ($(findstring gcc,$(shell $(CC) --version)),)
-is_gcc := 1
-endif
-endif
+    # Test whether we're using gcc.  If so, we select the `unix-gcc.mk'
+    # configuration file.  Otherwise, the standard `unix.mk' is used which
+    # simply calls `cc -c' with no extra arguments.
+    #
+    # Feel free to add support for other platform specific compilers in this
+    # directory (e.g. solaris.mk + changes here to detect the platform).
+    #
+    ifeq ($(CC),gcc)
+      is_gcc := 1
+    else
+      ifneq ($(findstring gcc,$(shell $(CC) -v 2>&1)),)
+        is_gcc := 1
+      endif
+    endif
 
-ifdef is_gcc
-CONFIG_RULES := $(BUILD)$(SEP)unix-gcc.mk
-else
-CONFIG_RULES := $(BUILD)$(SEP)unix.mk
-endif
+    ifdef is_gcc
+      CONFIG_FILE := unix-gcc.mk
+    else
+      CONFIG_FILE := unix.mk
+    endif
 
-setup: std_setup
+    # If `devel' is the requested target, use the development Makefile.
+    #
+    ifneq ($(findstring devel,$(MAKECMDGOALS)),)
+      CONFIG_FILE := unix-dev.mk
+      devel: setup
+    endif
 
-endif # test Unix
-endif # test PLATFORM
+    setup: std_setup
 
+  endif # test Unix
+endif   # test PLATFORM
 
-
-
-
-
+# EOF
