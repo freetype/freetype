@@ -541,11 +541,6 @@
     error = FT_Open_Face( library, &args, face_index, aface );
     if ( error == FT_Err_Ok )
       (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
-    else
-    {
-      FT_Stream_CloseFunc( stream );
-      FT_FREE( stream );
-    }
 
     return error;
   }
