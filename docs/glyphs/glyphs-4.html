@@ -1,12 +1,13 @@
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en"
+          "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-   <meta name="Author" content="blob">
-   <meta name="GENERATOR" content="Mozilla/4.5 [fr] (Win98; I) [Netscape]">
-   <title>FreeType Glyph Conventions</title>
+  <meta http-equiv="Content-Type"
+        content="text/html; charset=iso-8859-1">
+  <meta name="Author"
+        content="David Turner">
+  <title>FreeType Glyph Conventions</title>
 </head>
-<body>
 
 <body text="#000000"
       bgcolor="#FFFFFF"
@@ -14,165 +15,217 @@
       vlink="#51188E"
       alink="#FF0000">
 
-<center>
-<h1>
-FreeType Glyph Conventions</h1></center>
+<h1 align=center>
+  FreeType Glyph Conventions
+</h1>
 
-<center>
-<h2>
-version 2.1</h2></center>
-
-<center>
-<h3>
-Copyright 1998-2000 David Turner (<a href="mailto:david@freetype.org">david@freetype.org</a>)<br>
-Copyright 2000 The FreeType Development Team (<a href="devel@freetype.org">devel@freetype.org</a>)</h3></center>
-
-<center><table width=650><tr><td>
-
-<center><table width="100%" border=0 cellpadding=5><tr bgcolor="#CCFFCC" valign=center>
-<td align=center width="30%">
-<a href="glyphs-3.html">Previous</a>
-</td>
-<td align=center width="30%">
-<a href="index.html">Contents</a>
-</td>
-<td align=center width="30%">
-<a href="glyphs-5.html">Next</a>
-</td>
-</tr></table></center>
-
-<table width="100%" cellpadding=5><tr bgcolor="#CCCCFF" valign=center><td>
-<h2>
-IV. Kerning
+<h2 align=center>
+  Version&nbsp;2.1
 </h2>
-</td></tr></table>
 
-<p>The term 'kerning' refers to specific information used to adjust
-the relative positions of coincident glyphs in a string of text. This section
-describes several types of kerning information, as well as the way to process
-them when performing text layout.
-</p>
+<h3 align=center>
+  Copyright&nbsp;1998-2000 David Turner (<a
+  href="mailto:david@freetype.org">david@freetype.org</a>)<br>
+  Copyright&nbsp;2000 The FreeType Development Team (<a
+  href="mailto:devel@freetype.org">devel@freetype.org</a>)
+</h3>
 
-<h3><a name="section-1">
-1. Kerning pairs
-</h3><blockquote>
-
-<p>Kerning consists in modifying the spacing between two successive
-glyphs according to their outlines. For example, a "T" and a "y" can be
-easily moved closer, as the top of the "y" fits nicely under the "T"'s
-upper right bar.
-</p>
-
-<p>When laying out text with only their standard widths, some consecutive
-glyphs sometimes seem a bit too close or too distant. For example, the
-space between the 'A' and the 'V' in the following word seems a little
-wider than needed.
 <center>
-<p><img SRC="bravo_unkerned.png" height=37 width=116></center>
+<table width="65%">
+<tr><td>
 
-<p>Compare this to the same word, when the distance between these two letters
-has been slightly reduced :
-<center>
-<p><img SRC="bravo_kerned.png" height=37 width=107></center>
+  <center>
+  <table width="100%"
+         border=0
+         cellpadding=5>
+  <tr bgcolor="#CCFFCC"
+      valign=center>
+    <td align=center
+        width="30%">
+      <a href="glyphs-3.html">Previous</a>
+    </td>
+    <td align=center
+        width="30%">
+      <a href="index.html">Contents</a>
+    </td>
+    <td align=center
+        width="30%">
+      <a href="glyphs-4.html">Next</a>
+    </td>
+  </tr>
+  </table>
+  </center>
 
-<p>As you can see, this adjustment can make a great difference. Some font
-faces thus include a table containing kerning distances for a set of given
-glyph pairs, used during text layout. Note that :
-<br>&nbsp;
-<blockquote>
-<ul>
-<li>
-The pairs are ordered, i.e. the space for pair (A,V) isn't necessarily
-the space for pair (V,A). They also index glyphs, and not characters.</li>
-</ul>
+  <p><hr></p>
 
-<ul>
-<li>
-Kerning distances can be expressed in horizontal or vertical directions,
-depending on layout and/or script. For example, some horizontal layouts
-like arabic can make use of vertical kerning adjustments between successive
-glyphs. A vertical script can have vertical kerning distances.</li>
-</ul>
+  <table width="100%">
+  <tr bgcolor="#CCCCFF"
+      valign=center><td>
+    <h2>
+      IV. Kerning
+    </h2>
+  </td></tr>
+  </table>
 
-<ul>
-<li>
-Kerning distances are expressed in grid units. They are usually oriented
-in the X axis, which means that a negative value indicates that two glyphs
-must be set closer in a horizontal layout.</li>
-</ul>
-</blockquote>
-</blockquote>
+    <p>The term <em>kerning</em> refers to specific information used to
+    adjust the relative positions of coincident glyphs in a string of text.
+    This section describes several types of kerning information, as well as
+    the way to process them when performing text layout.</p>
 
-<h3><a name="section-2">
-2. Applying kerning</h3>
 
-<blockquote>Applying kerning when rendering text is a rather easy process.
-It merely consists in adding the scaled kern distance to the pen position
-before writing each next glyph. However, the typographically correct renderer
-must take a few more details in consideration.
-<p>The "sliding dot" problem is a good example : many font faces include
-a kerning distance between capital letters like "T" or "F" and a following
-dot ("."), in order to slide the latter glyph just right to their main
-leg. I.e.
-<center>
-<p><img SRC="twlewis1.png" height=38 width=314></center>
+    <a name="section-1">
+    <h3>
+      1. Kerning pairs
+    </h3>
 
-<p>However, this sometimes requires additional adjustments between the
-dot and the letter following it, depending on the shapes of the enclosing
-letters. When applying "standard" kerning adjustments, the previous sentence
-would become :
-<center>
-<p><img SRC="twlewis2.png" height=36 width=115></center>
+    <p>Kerning consists in modifying the spacing between two successive
+    glyphs according to their outlines.  For example, a "T" and a "y" can be
+    easily moved closer, as the top of the "y" fits nicely under the upper
+    right bar of the "T".</p>
 
-<p>Which clearly is too contracted. The solution here, as exhibited in
-the first example is to only slide the dots when possible. Of course, this
-requires a certain knowledge of the text's meaning. The above adjustments
-would not necessarily be welcomed if we were rendering the final dot of
-a given paragraph.
-<p>This is only one example, and there are many others showing that a real
-typographer is needed to layout text properly. If not available, some kind
-of user interaction or tagging of the text could be used to specify some
-adjustments, but in all cases, this requires some support in applications
-and text libraries.
-<p>For more mundane and common uses, however, we can have a very simple
-algorithm, which&nbsp; avoids the sliding dot problem, and others, though
-not producing optimal results. It can be seen as :
-<br>&nbsp;
-<blockquote>
-<ol>
-<li>
-place the first glyph on the baseline</li>
+    <p>When laying out text with only their standard widths, some
+    consecutive glyphs seem a bit too close or too distant.  For example,
+    the space between the "A" and the "V" in the following word seems a
+    little wider than needed.</p>
 
-<li>
-save the location of the pen position/origin in pen1</li>
+    <center><p>
+      <img src="bravo_unkerned.png"
+           height=37 width=116
+           alt="the word 'bravo' unkerned">
+    </p></center>
 
-<li>
-adjust the pen position with the kerning distance between the first and
-second glyph</li>
+    <p>Compare this to the same word, where the distance between these two
+    letters has been slightly reduced:</p>
 
-<li>
-place the second glyph and compute the next pen position/origin in pen2.</li>
+    <center><p>
+      <img src="bravo_kerned.png"
+           height=37 width=107
+           alt="the word 'bravo' with kerning">
+    </p></center>
 
-<li>
-use pen1 as the next pen position if it is beyond pen2, use pen2 otherwise.</li>
-</ol>
-</blockquote>
-</blockquote>
-</blockquote>
+    <p>As you can see, this adjustment can make a great difference.  Some
+    font faces thus include a table containing kerning distances for a set
+    of given glyph pairs for text layout.</p>
 
-<center><table width="100%" border=0 cellpadding=5><tr bgcolor="#CCFFCC" valign=center>
-<td align=center width="30%">
-<a href="glyphs-3.html">Previous</a>
-</td>
-<td align=center width="30%">
-<a href="index.html">Contents</a>
-</td>
-<td align=center width="30%">
-<a href="glyphs-5.html">Next</a>
-</td>
-</tr></table></center>
+    <ul>
+      <li>
+        <p>The pairs are ordered, i.e., the space for pair (A,V) isn't
+        necessarily the space for pair (V,A).  They also index glyphs, and
+        not characters.</p>
+      </li>
+      <li>
+        <p>Kerning distances can be expressed in horizontal or vertical
+        directions, depending on layout and/or script.  For example, some
+        horizontal layouts like Arabic can make use of vertical kerning
+        adjustments between successive glyphs.  A vertical script can have
+        vertical kerning distances.</p>
+      </li>
+      <li>
+        <p>Kerning distances are expressed in grid units.  They are usually
+        oriented in the <i>X</i>&nbsp;axis, which means that a negative
+        value indicates that two glyphs must be set closer in a horizontal
+        layout.</p>
+      </li>
+    </ul>
 
-</td></tr></table></center>
+
+    <a name="section-2">
+    <h3>
+      2. Applying kerning
+    </h3>
+
+    <p>Applying kerning when rendering text is a rather easy process.  It
+    merely consists in adding the scaled kern distance to the pen position
+    before writing each next glyph.  However, the typographically correct
+    renderer must take a few more details in consideration.</p>
+
+    <p>The "sliding dot" problem is a good example: Many font faces include
+    a kerning distance between capital letters like "T" or "F" and a
+    following dot ("."), in order to slide the latter glyph just right to
+    their main leg:</p>
+
+    <center><p>
+      <img src="twlewis1.png"
+           height=38 width=314
+           alt="example for sliding dots">
+    </p></center>
+
+    <p>This sometimes requires additional adjustments between the dot and
+    the letter following it, depending on the shapes of the enclosing
+    letters.  When applying "standard" kerning adjustments, the previous
+    sentence would become:</p>
+
+    <center><p>
+      <img src="twlewis2.png"
+           height=36 width=115
+           alt="example for too much kerning">
+    </p></center>
+
+    <p>This is clearly too contracted.  The solution here, as exhibited in
+    the first example, is to only slide the dots when possible.  Of course,
+    this requires a certain knowledge of the text's meaning.  The above
+    adjustments would not necessarily be welcome if we were rendering the
+    final dot of a given paragraph.</p.
+
+    <p>This is only one example, and there are many others showing that a
+    real typographer is needed to layout text properly.  If not available,
+    some kind of user interaction or tagging of the text could be used to
+    specify some adjustments, but in all cases, this requires some support
+    in applications and text libraries.</p>
+
+    <p>For more mundane and common uses, however, we can have a very simple
+    algorithm, which avoids the sliding dot problem, and others, though not
+    producing optimal results.  It can be seen as</p>
+
+    <ol>
+      <li>
+        Place the first glyph on the baseline.
+      </li>
+      <li>
+        Save the location of the pen position/origin in <tt>pen1</tt>.
+      </li>
+      <li>
+        Adjust the pen position with the kerning distance between the first
+        and second glyph.
+      </li>
+      <li>
+        Place the second glyph and compute the next pen position/origin in
+        <tt>pen2</tt>.
+      </li>
+      <li>
+        Use <tt>pen1</tt> as the next pen position if it is beyond
+        <tt>pen2</tt>, use <tt>pen2</tt> otherwise.
+      </li>
+    </ol>
+
+
+  <p><hr></p>
+
+  <center>
+  <table width="100%"
+         border=0
+         cellpadding=5>
+  <tr bgcolor="#CCFFCC"
+      valign=center>
+    <td align=center
+        width="30%">
+      <a href="glyphs-3.html">Previous</a>
+    </td>
+    <td align=center
+        width="30%">
+      <a href="index.html">Contents</a>
+    </td>
+    <td align=center
+        width="30%">
+      <a href="glyphs-5.html">Next</a>
+    </td>
+  </tr>
+  </table>
+  </center>
+
+</td></tr>
+</table>
+</center>
 
 </body>
 </html>
