@@ -1,3 +1,13 @@
+2003-10-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_font_matrix, parse_charstrings): Remove
+	code specially for synthetic fonts; this is handled elsewhere.
+	(parse_encoding): Remove code specially for synthetic fonts; this is
+	handled elsewhere.
+	Improve boundary checking while parsing.
+	(parse_dict): Improve boundary checking while parsing.
+	Use ft_memcmp to simplify code.
+
 2003-10-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_subrs, parse_dict): Handle synthetic
