@@ -76,7 +76,7 @@
   T1_FIELD_NUM       ( "LanguageGroup", language_group )
   T1_FIELD_NUM       ( "password", password )
 
-  T1_FIELD_FIXED     ( "BlueScale", blue_scale )
+  T1_FIELD_FIXED_1000( "BlueScale", blue_scale )
   T1_FIELD_NUM       ( "BlueShift", blue_shift )
   T1_FIELD_NUM       ( "BlueFuzz",  blue_fuzz )
 
