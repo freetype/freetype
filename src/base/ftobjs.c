@@ -1507,9 +1507,8 @@
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
       FT_CMap  cmap = FT_CMAP( face->charmap );
 
-      result = cmap->clazz->char_next( cmap, charcode, &gindex );
-      if ( gindex == 0 )
-        result = 0;
+      gindex = cmap->clazz->char_next( cmap, &charcode );
+      result = ( gindex == 0 ) ? 0 : charcode;
 #else /* !FT_CONFIG_OPTION_USE_CMAPS */
       driver = face->driver;
       result = driver->clazz->get_next_char( face->charmap, charcode );
