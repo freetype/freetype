@@ -151,6 +151,9 @@
 
             face->root.internal->postscript_name = result;
           }
+
+          FT_UNUSED( error );
+
           return result;
         }
       }

@@ -1328,8 +1328,8 @@
 
       if ( adobe_name )
       {
-        FT_Memory memory = index->stream->memory;
-        FT_Error  error;
+        FT_Memory  memory = index->stream->memory;
+        FT_Error   error;
 
 
         len = (FT_UInt)strlen( adobe_name );
@@ -1338,6 +1338,8 @@
           MEM_Copy( name, adobe_name, len );
           name[len] = 0;
         }
+
+        FT_UNUSED( error );
       }
 
       return name;

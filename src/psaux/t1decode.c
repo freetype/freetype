@@ -183,8 +183,11 @@
                    FT_Int       achar )
   {
     FT_Error     error;
-    FT_Int       bchar_index, achar_index, n_base_points;
+    FT_Int       bchar_index, achar_index;
+#if 0
+    FT_Int       n_base_points;
     FT_Outline*  base = decoder->builder.base;
+#endif
     FT_Vector    left_bearing, advance;
 
 
@@ -258,7 +261,9 @@
     if ( error )
       goto Exit;
 
+#if 0
     n_base_points = base->n_points;
+#endif
 
     /* save the left bearing and width of the base character */
     /* as they will be erased by the next load.              */
@@ -760,6 +765,8 @@
 
           orig_x = builder->last.x = x = builder->pos_x + top[0];
           orig_y = builder->last.y = y = builder->pos_y;
+
+          FT_UNUSED( orig_y );
 
           /* the `metrics_only' indicates that we only want to compute */
           /* the glyph's metrics (lsb + advance width), not load the   */

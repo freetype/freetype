@@ -252,8 +252,8 @@ THE SOFTWARE.
                           FT_ULong  *aformat,
                           FT_ULong  *asize )
   {
-    FT_Error error;
-    FT_Int   i;
+    FT_Error  error;
+    FT_Int    i;
 
 
     for ( i = 0; i < ntables; i++ )
@@ -270,6 +270,8 @@ THE SOFTWARE.
         
         return PCF_Err_Ok;
       }
+
+    FT_UNUSED( error );
 
     return PCF_Err_Invalid_File_Format;
   }
@@ -617,6 +619,8 @@ THE SOFTWARE.
                 nbitmaps,
                 PCF_GLYPH_PAD_INDEX( format ) ));
     FT_TRACE4(( "bitmap size = %d\n", sizebitmaps ));
+
+    FT_UNUSED( sizebitmaps );       /* only used for debugging */
 
     for ( i = 0; i < nbitmaps; i++ )
       face->metrics[i].bits = stream->pos + offsets[i];

@@ -241,6 +241,9 @@
       MEM_Copy( result, source, len );
       result[len] = 0;
     }
+
+    FT_UNUSED( error );
+
     return result;
   }
 

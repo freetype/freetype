@@ -383,6 +383,8 @@
 
       cache->buckets = new_buckets;
       cache->size    = new_size;
+
+      FT_UNUSED( error );
     }
   }
 
