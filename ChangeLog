@@ -1,3 +1,17 @@
+2004-01-20  Masatake YAMATO  <jet@gyve.org>
+
+	* include/freetype/ftcache.h: Delete duplicated definition of
+	FTC_FaceID.
+
+	* src/cff/cffdrivr.c (cff_get_cmap_info): Call sfnt module's TT CMap
+	Info service function if the cmap comes from sfnt.  Return 0 if the
+	cmap is sythesized in cff module.
+
+2004-01-20  David Turner  <david@freetype.org>
+
+	* src/cache/ftcmanag.c (ftc_size_node_compare): Call
+	FT_Activate_Size.
+
 2004-01-20  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1parse.c (T1_Get_Private_Dict): Skip exactly one
@@ -5,36 +19,44 @@
 
 2004-01-18  David Turner  <david@freetype.org>
 
-        * src/sfnt/ttsbit.c: removed compiler warning
+	* src/sfnt/ttsbit.c (tt_face_set_sbit_strike): Remove compiler
+	warning.
 
-        * src/tools/docmaker/*: updating beautifier tool
+	* src/tools/docmaker/*: Updating beautifier tool.
 
 2004-01-15  David Turner  <david@freetype.org>
 
-        * src/base/ftoutln.c (ft_orientation_extremum_compute): fixing
-        infinite loop bug !
+	* src/base/ftoutln.c (ft_orientation_extremum_compute): Fix
+	infinite loop bug.
 
-        * src/base/ftstroke.c, include/freetype/ftstroke.h: fixing bugs and
-        adding FT_Glyph_Stroke and FT_Glyph_StrokerBorder APIs
+	* include/freetype/ftstroke.h: Include FT_GLYPH_H.
+	(FT_Stroker_Rewind, FT_Glyph_Stroke, FT_Glyph_StrokeBorder): New
+	declarations.
 
-        * include/freetype/ftcache.h, include/freetype/cache/ftcmanag.h:
-        adding FTC_Manager_LookupSize and FTC_Scaler to the public API
-        (they were previously hidden)
+	* src/base/ftstroke.c: Include FT_INTERNAL_OBJECTS_H.
+	(FT_Outline_GetOutsideBorder): Inverse result.
+	(FT_Stroker_Rewind, FT_Glyph_Stroke, FT_GlyphStrokeBorder): New
+	functions.
+	(FT_Stroker_EndSubPath): Close path if needed.
+	(FT_Stroker_Set, FT_Stroker_ParseOutline): Use FT_Stroker_Rewind.
 
-        * src/tools/docmaker/*: updating the DocMaker tool, adding a new
-        tool named "docbeauty" to beautify the documentation comments
-        (e.g. convert them to a single block border mode)
+	* include/freetype/cache/ftcmanag.h (FTC_ScalerRec,
+	FTC_Manager_LookupSize): Moved to...
+	* include/freetype/ftcache.h (FTC_ScalerRec,
+	FTC_Manager_LookupSize): Here.
+
+	* src/tools/docmaker/docbeauty.py: New file to beautify the
+	documentation comments (e.g., to convert them to single block border
+	mode).
+	* src/tools/docmaker/docmaker.py (file_exists, make_file_list):
+	Moved to...
+	* src/tools/docmaker/utils.py (file_exists, make_file_list): Here.
 
 2004-01-14  David Turner  <david@freetype.org>
 
-        * include/freetype/internal/ftmemory.h,
-        src/autohint/ahhint.c, src/base/ftgloadr.c,
-        src/base/ftglyph.c, src/base/ftoutln.c,
-        src/base/ftstroke.c, src/cff/cffload.c, src/truetype/ttgload.c,
-        src/truetype/ttinterp.c:
-
-          introducing the new FT_ARRAY_COPY and FT_ARRAY_MOVE macros
-          to make copying arrays easier
+	* include/freetype/internal/ftmemory.h (FT_ARRAY_COPY,
+	FT_ARRAY_MOVE): New macros to make copying arrays easier.
+	Updated all relevant code to use them.
 
 2004-01-14  Werner Lemberg  <wl@gnu.org>
 

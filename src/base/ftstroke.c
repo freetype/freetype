@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType path stroker (body).                                        */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2002, 2003, 2004 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1416,8 +1416,7 @@
       FT_Angle  turn;
       FT_Int    inside_side;
 
-     /* close the path if needed
-      */
+      /* close the path if needed */
       if ( stroker->center.x != stroker->subpath_start.x ||
            stroker->center.y != stroker->subpath_start.y )
       {
@@ -1747,8 +1746,8 @@
   }
 
 
-
   extern const FT_Glyph_Class  ft_outline_glyph_class;
+
 
   FT_EXPORT_DEF( FT_Error )
   FT_Glyph_Stroke( FT_Glyph    *pglyph,
@@ -1757,6 +1756,7 @@
   {
     FT_Error  error = FT_Err_Invalid_Argument;
     FT_Glyph  glyph = NULL;
+
 
     if ( pglyph == NULL )
       goto Exit;
@@ -1767,6 +1767,7 @@
 
     {
       FT_Glyph  copy;
+
 
       error = FT_Glyph_Copy( glyph, &copy );
       if ( error )
@@ -1780,15 +1781,17 @@
       FT_Outline*      outline = &oglyph->outline;
       FT_UInt          num_points, num_contours;
 
+
       error = FT_Stroker_ParseOutline( stroker, outline, 0 );
-      if (error)
+      if ( error )
         goto Fail;
 
       (void)FT_Stroker_GetCounts( stroker, &num_points, &num_contours );
 
       FT_Outline_Done( glyph->library, outline );
 
-      error = FT_Outline_New( glyph->library, num_points, num_contours, outline );
+      error = FT_Outline_New( glyph->library,
+                              num_points, num_contours, outline );
       if ( error )
         goto Fail;
 
@@ -1825,6 +1828,7 @@
     FT_Error  error = FT_Err_Invalid_Argument;
     FT_Glyph  glyph = NULL;
 
+
     if ( pglyph == NULL )
       goto Exit;
 
@@ -1834,6 +1838,7 @@
 
     {
       FT_Glyph  copy;
+
 
       error = FT_Glyph_Copy( glyph, &copy );
       if ( error )
@@ -1848,12 +1853,13 @@
       FT_Outline*       outline = &oglyph->outline;
       FT_UInt           num_points, num_contours;
 
+
       border = FT_Outline_GetOutsideBorder( outline );
       if ( inside )
-        border = 1-border;
+        border = 1 - border;
 
       error = FT_Stroker_ParseOutline( stroker, outline, 0 );
-      if (error)
+      if ( error )
         goto Fail;
 
       (void)FT_Stroker_GetBorderCounts( stroker, border,
@@ -1890,7 +1896,6 @@
   Exit:
     return error;
   }
-
 
 
 /* END */

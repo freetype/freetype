@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 #
-#  DocMaker 0.2 (c) 2002 David Turner <david@freetype.org>
+#  DocMaker (c) 2002, 2004 David Turner <david@freetype.org>
 #
 # This program is a re-write of the original DocMaker took used
 # to generate the API Reference of the FreeType font engine
-# by converting in-source comments into structured HTML
+# by converting in-source comments into structured HTML.
 #
 # This new version is capable of outputting XML data, as well
-# as accepts more liberal formatting options
+# as accepts more liberal formatting options.
 #
 # It also uses regular expression matching and substitution
-# to speed things significantly
+# to speed things significantly.
 #
 
 from sources   import *
@@ -25,7 +25,7 @@ import sys, os, time, string, glob, getopt
 
 
 def usage():
-    print "\nDocMaker 0.2 Usage information\n"
+    print "\nDocMaker Usage information\n"
     print "  docmaker [options] file1 [ file2 ... ]\n"
     print "using the following options:\n"
     print "  -h : print this page"

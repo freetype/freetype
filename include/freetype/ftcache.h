@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Cache subsystem (specification).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -356,40 +356,30 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
-  /* <Type>                                                                */
-  /*    FTC_Scaler                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Handle to a @FTC_ScalerRec structure.                              */
-  /*                                                                       */
-  typedef struct FTC_FaceIDRec_*  FTC_FaceID;
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* <Struct>                                                              */
   /*    FTC_ScalerRec                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A structure used to describe a given character size in either      */
-  /*    pixels or points to the cache manager. See @FTC_Manager_LookupSize */
+  /*    pixels or points to the cache manager.  See                        */
+  /*    @FTC_Manager_LookupSize.                                           */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    face_id :: source face id                                          */
+  /*    face_id :: The source face ID.                                     */
   /*                                                                       */
-  /*    width   :: character width                                         */
+  /*    width   :: The character width.                                    */
   /*                                                                       */
-  /*    height  :: character height                                        */
+  /*    height  :: The character height.                                   */
   /*                                                                       */
-  /*    pixel   :: booelan. If TRUE, the "width" and "height" fields       */
+  /*    pixel   :: A Boolean.  If TRUE, the `width' and `height' fields    */
   /*               are interpreted as integer pixel character sizes.       */
-  /*               If false, they are expressed as 1/64th of points        */
+  /*               Otherwise, they are expressed as 1/64th of points.      */
   /*                                                                       */
-  /*    x_res   :: only used when 'pixel' is FALSE. indicates the          */
-  /*               horizontal resolution in dpis                           */
+  /*    x_res   :: Only used when `pixel' is FALSE to indicate the         */
+  /*               horizontal resolution in dpi.                           */
   /*                                                                       */
-  /*    y_res   :: only used when 'pixel' is FALSE. indicates the          */
-  /*               vertical resolution in dpis                             */
+  /*    y_res   :: Only used when `pixel' is FALSE to indicate the         */
+  /*               vertical resolution in dpi.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    This type is mainly used to retrieve @FT_Size objects through the  */
@@ -407,20 +397,19 @@ FT_BEGIN_HEADER
   } FTC_ScalerRec, *FTC_Scaler;
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
   /*    FTC_Manager_LookupSize                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Retrieves the @FT_Size object that corresponds to a given          */
+  /*    Retrieve the @FT_Size object that corresponds to a given           */
   /*    @FTC_Scaler through a cache manager.                               */
   /*                                                                       */
   /* <Input>                                                               */
   /*    manager :: A handle to the cache manager.                          */
   /*                                                                       */
-  /*    scaler  :: scaler handle.                                          */
+  /*    scaler  :: A scaler handle.                                        */
   /*                                                                       */
   /* <Output>                                                              */
   /*    asize   :: A handle to the size object.                            */
@@ -430,10 +419,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    The returned @FT_Size object is always owned by the manager.  You  */
-  /*    should never try to discard it yourself.                           */
+  /*    should never try to discard it by yourself.                        */
   /*                                                                       */
-  /*    You can access the parent @FT_Face object simply as "size->face"   */
-  /*    if you need it. Note that this object is also owner by the         */
+  /*    You can access the parent @FT_Face object simply as `size->face'   */
+  /*    if you need it.  Note that this object is also owned by the        */
   /*    manager.                                                           */
   /*                                                                       */
   FT_EXPORT( FT_Error )
