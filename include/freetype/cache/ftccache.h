@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType internal cache interface (specification).                   */
 /*                                                                         */
-/*  Copyright 2000-2001 by                                                 */
+/*  Copyright 2000-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -25,6 +25,7 @@
 
 /* define to use linear hash table */
 #define  FTC_CACHE_USE_LINEAR_HASHING
+
 
 FT_BEGIN_HEADER
 

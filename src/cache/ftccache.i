@@ -1,10 +1,29 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftccache.i                                                             */
+/*                                                                         */
+/*    FreeType template for generic cache.                                 */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #ifndef GEN_CACHE_FAMILY_COMPARE
-#error "GEN_CACHE_FAMILY_COMPARE not defined in template instanciation"
+#error "GEN_CACHE_FAMILY_COMPARE not defined in template instantiation"
 #endif
 
 #ifndef GEN_CACHE_NODE_COMPARE
-#error "GEN_CACHE_NODE_COMPARE not defined in template instanciation"
+#error "GEN_CACHE_NODE_COMPARE not defined in template instantiation"
 #endif
+
 
   static FT_Error
   GEN_CACHE_LOOKUP( FTC_Cache   cache,
@@ -17,11 +36,12 @@
     query->hash   = 0;
     query->family = NULL;
 
-    /* XXX: we break encapsulation for the sake of speed !! */
+    /* XXX: we break encapsulation for the sake of speed! */
     {
       /* first of all, find the relevant family */
-      FT_LruList              list  = cache->families;
-      FT_LruNode              fam, *pfam;
+      FT_LruList  list  = cache->families;
+      FT_LruNode  fam, *pfam;
+
 
       pfam = &list->nodes;
       for (;;)
@@ -51,20 +71,21 @@
 
     {
       FTC_Family  family = (FTC_Family) lru;
-      FT_UFast    hash    = query->hash;
+      FT_UFast    hash   = query->hash;
       FTC_Node    node, *pnode, *bucket;
 
 
 #ifdef FTC_CACHE_USE_LINEAR_HASHING
       FT_UInt  index;
 
+
       index = hash & cache->mask;
       if ( index < cache->p )
-        index = hash & (cache->mask*2+1);
+        index = hash & ( cache->mask * 2 + 1 );
 
       bucket  = cache->buckets + index;
 #else
-      bucket  = cache->buckets + (hash % cache->size);
+      bucket  = cache->buckets + ( hash % cache->size );
 #endif
 
 #ifdef FT_DEBUG_LEVEL_ERROR
@@ -119,6 +140,7 @@
         FTC_Node     next = node->mru_next;
         FTC_Node     last;
 
+
         prev->mru_next = next;
         next->mru_prev = prev;
 
@@ -139,3 +161,6 @@
 #undef GEN_CACHE_NODE_COMPARE
 #undef GEN_CACHE_FAMILY_COMPARE
 #undef GEN_CACHE_LOOKUP
+
+
+/* END */

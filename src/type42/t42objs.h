@@ -1,5 +1,22 @@
-#ifndef __TYPE42_OBJS_H__
-#define __TYPE42_OBJS_H__
+/***************************************************************************/
+/*                                                                         */
+/*  t42objs.h                                                              */
+/*                                                                         */
+/*    Type 42 objects manager (specification).                             */
+/*                                                                         */
+/*  Copyright 2002 by Roberto Alameda.                                     */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
+#ifndef __T42OBJS_H__
+#define __T42OBJS_H__
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -10,9 +27,10 @@
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
 
+
 FT_BEGIN_HEADER
 
- /* Type42 face */
+  /* Type42 face */
   typedef struct  T42_FaceRec_
   {
     FT_FaceRec     root;
@@ -32,8 +50,7 @@ FT_BEGIN_HEADER
   } T42_FaceRec, *T42_Face;
 
 
-
- /* Type42 size */
+  /* Type42 size */
   typedef struct  T42_SizeRec_
   {
     FT_SizeRec  root;
@@ -42,7 +59,7 @@ FT_BEGIN_HEADER
   } T42_SizeRec, *T42_Size;
 
 
- /* Type42 slot */
+  /* Type42 slot */
   typedef struct  T42_GlyphSlotRec_
   {
     FT_GlyphSlotRec  root;
@@ -51,7 +68,7 @@ FT_BEGIN_HEADER
   } T42_GlyphSlotRec, *T42_GlyphSlot;
 
 
- /* Type 42 driver */
+  /* Type 42 driver */
   typedef struct  T42_DriverRec_
   {
     FT_DriverRec     root;
@@ -60,7 +77,9 @@ FT_BEGIN_HEADER
 
   } T42_DriverRec, *T42_Driver;
 
- /* */
+
+  /* */
+
 
   FT_LOCAL( FT_Error )
   T42_Face_Init( FT_Stream      stream,
@@ -127,4 +146,8 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __TYPE42_OBJS_H__ */
+
+#endif /* __T42OBJS_H__ */
+
+
+/* END */

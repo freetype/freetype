@@ -1,8 +1,27 @@
+/***************************************************************************/
+/*                                                                         */
+/*  t42parse.c                                                             */
+/*                                                                         */
+/*    Type 42 font parser (body).                                          */
+/*                                                                         */
+/*  Copyright 2002 by Roberto Alameda.                                     */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "t42parse.h"
+#include "t42error.h"
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_LIST_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -12,6 +31,7 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t42
+
 
   static void
   t42_parse_font_name( T42_Face    face,
@@ -118,7 +138,7 @@
                    FT_Memory      memory,
                    PSAux_Service  psaux )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error = T42_Err_Ok;
     FT_Long   size;
 
 
@@ -165,8 +185,8 @@
     else
     {
       /* read segment in memory */
-      if ( FT_ALLOC( parser->base_dict, size )      ||
-          FT_STREAM_READ( parser->base_dict, size ) )
+      if ( FT_ALLOC( parser->base_dict, size )       ||
+           FT_STREAM_READ( parser->base_dict, size ) )
         goto Exit;
 
       parser->base_len = size;
@@ -176,7 +196,7 @@
     if (size <= 17                                    ||
         ( ft_strncmp( (const char*)parser->base_dict,
                       "%!PS-TrueTypeFont", 17) )      )
-      error = FT_Err_Unknown_File_Format;
+      error = T42_Err_Unknown_File_Format;
     else
     {
       parser->root.base   = parser->base_dict;
@@ -346,7 +366,7 @@
       if ( cur >= limit )
       {
         FT_ERROR(( "t42_parse_encoding: out of bounds!\n" ));
-        parser->root.error = FT_Err_Invalid_File_Format;
+        parser->root.error = T42_Err_Invalid_File_Format;
         return;
       }
     }
@@ -485,7 +505,7 @@
 
       else {
         FT_ERROR(( "t42_parse_encoding: invalid token!\n" ));
-        parser->root.error = FT_Err_Invalid_File_Format;
+        parser->root.error = T42_Err_Invalid_File_Format;
       }
     }
   }
@@ -549,7 +569,7 @@
     else
     {
       FT_ERROR(( "t42_parse_sfnts: can't find begin of sfnts vector!\n" ));
-      error = FT_Err_Invalid_File_Format;
+      error = T42_Err_Invalid_File_Format;
       goto Fail;
     }
 
@@ -574,7 +594,7 @@
         if ( !in_string )
         {
           FT_ERROR(( "t42_parse_sfnts: found unpaired `>'!\n" ));
-          error = FT_Err_Invalid_File_Format;
+          error = T42_Err_Invalid_File_Format;
           goto Fail;
         }
 
@@ -597,7 +617,7 @@
         else
         {
           FT_ERROR(( "t42_parse_sfnts: found `%' in string!\n" ));
-          error = FT_Err_Invalid_File_Format;
+          error = T42_Err_Invalid_File_Format;
           goto Fail;
         }
 
@@ -605,7 +625,7 @@
         if ( !ft_xdigit( *cur ) || !ft_xdigit( *(cur + 1) ) )
         {
           FT_ERROR(( "t42_parse_sfnts: found non-hex characters in string" ));
-          error = FT_Err_Invalid_File_Format;
+          error = T42_Err_Invalid_File_Format;
           goto Fail;
         }
 
@@ -670,7 +690,7 @@
     }
 
     /* If control reaches this point, the format was not valid */
-    error = FT_Err_Invalid_File_Format;
+    error = T42_Err_Invalid_File_Format;
 
   Fail:
     parser->root.error = error;
@@ -780,7 +800,7 @@
     if ( ft_strcmp( (char *)name_table->elements[0], ".notdef" ) )
     {
       FT_ERROR(( "t42_parse_charstrings: Index 0 is not `.notdef'!\n" ));
-      error = FT_Err_Invalid_File_Format;
+      error = T42_Err_Invalid_File_Format;
       goto Fail;
     }
 
@@ -970,3 +990,4 @@
   }
 
 
+/* END */

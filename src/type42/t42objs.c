@@ -1,8 +1,27 @@
+/***************************************************************************/
+/*                                                                         */
+/*  t42objs.c                                                              */
+/*                                                                         */
+/*    Type 42 objects manager (body).                                      */
+/*                                                                         */
+/*  Copyright 2002 by Roberto Alameda.                                     */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "t42objs.h"
 #include "t42parse.h"
+#include "t42error.h"
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_LIST_H
+
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t42
@@ -38,7 +57,7 @@
 
     if ( type1->font_type != 42 )
     {
-      error = FT_Err_Unknown_File_Format;
+      error = T42_Err_Unknown_File_Format;
       goto Exit;
     }
 
@@ -48,18 +67,18 @@
 
     if ( !loader.charstrings.init ) {
       FT_ERROR(( "T42_Open_Face: no charstrings array in face!\n" ));
-      error = FT_Err_Invalid_File_Format;
+      error = T42_Err_Invalid_File_Format;
     }
 
-    loader.charstrings.init   = 0;
+    loader.charstrings.init  = 0;
     type1->charstrings_block = loader.charstrings.block;
     type1->charstrings       = loader.charstrings.elements;
     type1->charstrings_len   = loader.charstrings.lengths;
 
     /* we copy the glyph names `block' and `elements' fields; */
     /* the `lengths' field must be released later             */
-    type1->glyph_names_block   = loader.glyph_names.block;
-    type1->glyph_names         = (FT_String**)loader.glyph_names.elements;
+    type1->glyph_names_block    = loader.glyph_names.block;
+    type1->glyph_names          = (FT_String**)loader.glyph_names.elements;
     loader.glyph_names.block    = 0;
     loader.glyph_names.elements = 0;
 
@@ -165,7 +184,7 @@
     if ( face_index != 0 )
     {
       FT_ERROR(( "T42_Face_Init: invalid face index\n" ));
-      error = FT_Err_Invalid_Argument;
+      error = T42_Err_Invalid_Argument;
       goto Exit;
     }
 
@@ -176,7 +195,7 @@
 
     root->num_glyphs   = face->type1.num_glyphs;
     root->num_charmaps = 0;
-    root->face_index  = face_index;
+    root->face_index   = face_index;
 
     root->face_flags  = FT_FACE_FLAG_SCALABLE;
     root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
@@ -242,7 +261,7 @@
     root->descender = face->ttf_face->descender;
     root->height    = face->ttf_face->height;
 
-    root->max_advance_width = face->ttf_face->max_advance_width;
+    root->max_advance_width  = face->ttf_face->max_advance_width;
     root->max_advance_height = face->ttf_face->max_advance_height;
 
     root->underline_position  = face->type1.font_info.underline_position;
@@ -318,9 +337,9 @@
         if ( clazz )
           FT_CMap_New( clazz, NULL, &charmap, NULL );
 
-	/* Select default charmap */
-	if (root->num_charmaps)
-	  root->charmap = root->charmaps[0];
+        /* Select default charmap */
+        if (root->num_charmaps)
+          root->charmap = root->charmaps[0];
       }
     }
 
@@ -328,31 +347,32 @@
 
     /* charmap support -- synthetize unicode charmap if possible */
     {
-      FT_CharMap        charmap = face->charmaprecs;
+      FT_CharMap  charmap = face->charmaprecs;
+
       
       /* synthesize a Unicode charmap if there is support in the `PSNames' */
       /* module                                                            */
       if ( psnames && psnames->unicode_value )
       {
-	error = psnames->build_unicodes( root->memory,
-					 face->type1.num_glyphs,
-					 (const char**)face->type1.glyph_names,
-					 &face->unicode_map );
-	if ( !error )
-	{
-	  root->charmap        = charmap;
-	  charmap->face        = (FT_Face)face;
-	  charmap->encoding    = ft_encoding_unicode;
-	  charmap->platform_id = 3;
-	  charmap->encoding_id = 1;
-	  charmap++;
-	}
-	
-	/* XXX: Is the following code correct?  It is used in t1objs.c */
-	
-	/* simply clear the error in case of failure (which really) */
-	/* means that out of memory or no unicode glyph names       */
-	error = FT_Err_Ok;
+        error = psnames->build_unicodes( root->memory,
+                                         face->type1.num_glyphs,
+                                         (const char**)face->type1.glyph_names,
+                                         &face->unicode_map );
+        if ( !error )
+        {
+          root->charmap        = charmap;
+          charmap->face        = (FT_Face)face;
+          charmap->encoding    = ft_encoding_unicode;
+          charmap->platform_id = 3;
+          charmap->encoding_id = 1;
+          charmap++;
+        }
+        
+        /* XXX: Is the following code correct?  It is used in t1objs.c */
+        
+        /* simply clear the error in case of failure (which really) */
+        /* means that out of memory or no unicode glyph names       */
+        error = T42_Err_Ok;
       }
       
       /* now, support either the standard, expert, or custom encoding */
@@ -362,29 +382,29 @@
       switch ( face->type1.encoding_type )
       {
       case T1_ENCODING_TYPE_STANDARD:
-	charmap->encoding    = ft_encoding_adobe_standard;
-	charmap->encoding_id = 0;
-	break;
-	
+        charmap->encoding    = ft_encoding_adobe_standard;
+        charmap->encoding_id = 0;
+        break;
+        
       case T1_ENCODING_TYPE_EXPERT:
-	charmap->encoding    = ft_encoding_adobe_expert;
-	charmap->encoding_id = 1;
-	break;
-	
+        charmap->encoding    = ft_encoding_adobe_expert;
+        charmap->encoding_id = 1;
+        break;
+        
       case T1_ENCODING_TYPE_ARRAY:
-	charmap->encoding    = ft_encoding_adobe_custom;
-	charmap->encoding_id = 2;
-	break;
-	
+        charmap->encoding    = ft_encoding_adobe_custom;
+        charmap->encoding_id = 2;
+        break;
+        
       case T1_ENCODING_TYPE_ISOLATIN1:
-	charmap->encoding    = ft_encoding_latin_1;
-	charmap->encoding_id = 3;
-	break;
-	
+        charmap->encoding    = ft_encoding_latin_1;
+        charmap->encoding_id = 3;
+        break;
+        
       default:
-	FT_ERROR(( "T42_Face_Init: invalid encoding\n" ));
-	error = FT_Err_Invalid_File_Format;
-	goto Exit;
+        FT_ERROR(( "T42_Face_Init: invalid encoding\n" ));
+        error = T42_Err_Invalid_File_Format;
+        goto Exit;
       }
       
       root->charmaps     = face->charmaps;
@@ -410,7 +430,7 @@
 
     if ( face )
     {
-      type1 = &face->type1;
+      type1  = &face->type1;
       info   = &type1->font_info;
       memory = face->root.memory;
 
@@ -454,6 +474,7 @@
     }
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -477,7 +498,7 @@
     ttmodule = FT_Get_Module( FT_MODULE(driver)->library, "truetype" );
     driver->ttclazz = (FT_Driver_Class)ttmodule->clazz;
 
-    return FT_Err_Ok;
+    return T42_Err_Ok;
   }
 
 
@@ -608,7 +629,7 @@
     FT_Face   face = size->root.face;
     T42_Face  t42face = (T42_Face)face;
     FT_Size   ttsize;
-    FT_Error  error   = FT_Err_Ok;
+    FT_Error  error   = T42_Err_Ok;
 
 
     error = FT_New_Size( t42face->ttf_face, &ttsize );
@@ -641,7 +662,7 @@
     FT_Face       face    = slot->root.face;
     T42_Face      t42face = (T42_Face)face;
     FT_GlyphSlot  ttslot;
-    FT_Error      error   = FT_Err_Ok;
+    FT_Error      error   = T42_Err_Ok;
 
 
     if ( face->glyph == NULL )
@@ -879,3 +900,5 @@
     return 0;
   }
 
+
+/* END */

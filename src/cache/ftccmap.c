@@ -320,20 +320,22 @@
 
 #ifdef FTC_CACHE_USE_INLINE
 
-#  define GEN_CACHE_FAMILY_COMPARE(f,q,c)  \
-             ftc_cmap_family_compare( (FTC_CMapFamily)(f), (FTC_CMapQuery)(q) )
+#define GEN_CACHE_FAMILY_COMPARE( f, q, c ) \
+          ftc_cmap_family_compare( (FTC_CMapFamily)(f), (FTC_CMapQuery)(q) )
 
-#  define GEN_CACHE_NODE_COMPARE(n,q,c)  \
-             ftc_cmap_node_compare( (FTC_CMapNode)(n), (FTC_CMapQuery)(q) )
+#define GEN_CACHE_NODE_COMPARE( n, q, c ) \
+          ftc_cmap_node_compare( (FTC_CMapNode)(n), (FTC_CMapQuery)(q) )
 
-#  define GEN_CACHE_LOOKUP          ftc_cmap_cache_lookup
-#  include "ftccache.i"
+#define GEN_CACHE_LOOKUP  ftc_cmap_cache_lookup
+
+#include "ftccache.i"
 
 #else  /* !FTC_CACHE_USE_INLINE */
 
-#  define ftc_cmap_cache_lookup  ftc_cache_lookup
+#define ftc_cmap_cache_lookup  ftc_cache_lookup
 
 #endif /* !FTC_CACHE_USE_INLINE */
+
 
   /* documentation is in ftccmap.h */
 

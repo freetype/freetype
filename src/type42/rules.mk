@@ -32,7 +32,8 @@ T42_DRV_SRC := $(T42_DIR_)t42objs.c  \
 
 # Type42 driver headers
 #
-T42_DRV_H := $(T42_DRV_SRC:%.c=%.h)
+T42_DRV_H := $(T42_DRV_SRC:%.c=%.h) \
+             $(T42_DIR_)t42error.h
 
 
 # Type42 driver object(s)

@@ -1,27 +1,113 @@
+2002-06-08  Werner Lemberg  <wl@gnu.org>
+
+	* src/cache/ftccache.c (ftc_node_hash_unlink, ftc_node_hash_link)
+	[FTC_CACHE_USE_LINEAR_HASHING]: Fix returned error code.
+	Fix debugging messages.
+
+	* src/type42/t42error.h: New file.
+	* src/type42/t42drivr.c, src/type42/t42objs.c,
+	src/type42/t42parse.c: Use t42 error codes.
+	* src/type42/rules.mk: Updated.
+
+	* src/base/ftnames.c: Include FT_INTERNAL_STREAM_H.
+
+2002-06-08  David Turner  <david@freetype.org>
+
+	* src/cache/ftccmap.c: GEN_CACHE_FAMILY_COMPARE,
+	GEN_CACHE_NODE_COMPARE, GEN_CACHE_LOOKUP) [FTC_CACHE_USE_INLINE]:
+	New macros.
+	(ftc_cmap_cache_lookup) [!FTC_CACHE_USE_INLINE]: Typedef to
+	ftc_cache_lookup.
+	(FTC_CMapCache_Lookup): Updated.
+
 2002-06-07  Graham Asher  <graham.asher@btinternet.com>
 
-        * include/freetype/cache/ftccache.h, src/cache/ftccache.c,
-          src/cache/ftccache.i, src/cache/ftcsbits.c: adding various
-          experimental optimisations to the cache manager
+	Adding various experimental optimizations to the cache manager.
 
-        * src/type42/t42parse.c: removing duplicate function
+	* include/freetype/cache/ftccache.h (FTC_CACHE_USE_INLINE,
+	FTC_CACHE_USE_LINEAR_HASHING): New options.
+	(FTC_CacheRec) [FTC_CACHE_USE_LINEAR_HASHING]: New elements `p',
+	`mask', and `slack'.
 
-        * src/base/ftobjs.c (FT_Render_Glyph_Internal): changed definition
-          from FT_EXPORT_DEF to FT_BASE_DEF
+	* src/cache/ftccache.c (FTC_HASH_MAX_LOAD, FTC_HASH_MIN_LOAD,
+	FTC_HASH_SUB_LOAD) [FTC_CACHE_USE_LINEAR_HASHING,
+	FTC_HASH_INITIAL_SIZE]: New macros.
+	(ftc_node_mru_link, ftc_node_mru_up): Optimized.
+	(ftc_node_hash_unlink, ftc_node_hash_link)
+	[FTC_CACHE_USE_LINEAR_HASHING]: New variants.
+	(FTC_PRIMES_MIN, FTC_PRIMES_MAX, ftc_primes, ftc_prime_closest,
+	FTC_CACHE_RESIZE_TEST, ftc_cache_resize)
+	[!FTC_CACHE_USE_LINEAR_HASHING]: Define it conditionally.
+	(ftc_cache_init, ftc_cache_clear) [FTC_CACHE_USE_LINEAR_HASHING]:
+	Updated.
+	(ftc_cache_lookup) [FTC_CACHE_USE_LINEAR_HASHING]: Implement it.
 
-2002-06-07  David Turner   <david@freetype.org>
+	* src/cache/ftccache.i: New file.
 
-        * src/type42/t42drivr.c, src/type42/t42drivr.h, src/type42/t42parse.c,
-          src/type42/t42parse.h, src/type42/t42objs.h, src/type42/t42objs.c,
-          src/type42/type42.c:
+	* src/cache/ftcsbits.c (GEN_CACHE_FAMILY_COMPARE,
+	GEN_CACHE_NODE_COMPARE, GEN_CACHE_LOOKUP) [FTC_CACHE_USE_INLINE]:
+	New macros.
+	(ftc_sbit_cache_lookup) [!FTC_CACHE_USE_INLINE]: Typedef to
+	ftc_cache_lookup.
+	(FTC_SBitCache_Lookup): Updated.
 
-            updated the Type42 driver by splitting it into several files since
-            it makes the code easier to read and maintain. Also fixed the bug
-            that prevented the correct display of fonts with "ftview"
+	* src/type42/t42parse.c: Removing duplicate function.
+
+	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Changed definition
+	from FT_EXPORT_DEF to FT_BASE_DEF.
+
+2002-06-07  David Turner  <david@freetype.org>
+
+	Fixed the bug that prevented the correct display of fonts with
+	"ftview".
+
+	* src/type42/t42drivr.c: Split into...
+	* src/type42/t42drivr.h, src/type42/t42parse.c,
+	src/type42/t42parse.h, src/type42/t42objs.h, src/type42/t42objs.c,
+	src/type42/type42.c: New files.
+
+	(t42_get_glyph_name, t42_get_ps_name, t42_get_name_index): Use
+	`face->type1'.
+
+	(Get_Interface): Renamed to...
+	(T42_Get_Interface): This.
+	Updated.
+	(T42_Open_Face, T42_Face_Done): Updated.
+	(T42_Face_Init): Add new cmap support.
+	Updated.
+	(T42_Driver_Init, T42_Driver_Done, T42_Size_Init, T42_Size_Done,
+	T42_GlyphSlot_Init, T42_GlyphSlot_Done): Updated.
+	(Get_Char_Index, Get_Next_Char): Renamed to...
+	(T42_CMap_CharIndex, T42_CMap_CharNext): This.
+	Updated.
+	(T42_Char_Size, T42_Pixel_Size): Renamed to...
+	(T42_Size_SetChars, T42_Size_SetPixels): This.
+	(T42_Load_Glyph): Renamed to...
+	(T42_GlyphSlot_Load): This.
+
+	(t42_init_loader, t42_done_loader): Renamed to...
+	(t42_loader_init, t42_loader_done): This.
+	(T42_New_Parser, T42_Finalize_Parser): Renamed to...
+	(t42_parser_init, t42_parser_done): This.
+	(parse_dict): Renamed to...
+	(t42_parse_dict): This.
+	(is_alpha, is_space, hexval): Renamed to...
+	(t42_is_alpha, t42_is_space, t42_hexval): This.
+	(parse_font_name, parse_font_bbox, parse_font_matrix,
+	parse_encoding, parse_sfnts, parse_charstrings, parse_dict):
+	Renamed to...
+	(t42_parse_font_name, t42_parse_font_bbox, t42_parse_font_matrix,
+	t42_parse_encoding, t42_parse_sfnts, t42_parse_charstrings,
+	t42_parse_dict): This.
+	Updated.
+
+	(t42_keywords): Updated.
+
+	* src/type42/Jamfile, src/type42/descrip.mms: Updated.
 
 2002-06-03  Werner Lemberg  <wl@gnu.org>
 
-	Add 8bpp support.
+	Add 8bpp support to BDF driver.
 
 	* src/bdf/bdflib.c (_bdf_parse_start): Handle 8bpp.
 	* src/bdf/bdfdrivr.c (BDF_Glyph_Load): Ditto.
