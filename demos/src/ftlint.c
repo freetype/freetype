@@ -84,7 +84,12 @@
       
       /* try to open the file with no extra extension first */
       error = FT_New_Face( library, fname, 0, &face );
-      if (!error) goto Success;
+      if (!error)
+      {
+        printf( "%s: ", fname );
+        goto Success;
+      }
+
 
       if ( error == FT_Err_Unknown_File_Format )
       {
