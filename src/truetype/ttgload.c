@@ -818,8 +818,6 @@
           goto Exit;
 
         load->exec->is_composite     = FALSE;
-        load->exec->pedantic_hinting = (FT_Bool)( load->load_flags &
-                                                  FT_LOAD_PEDANTIC );
         load->exec->pts              = *zone;
         load->exec->pts.n_points    += 4;
 
@@ -1548,8 +1546,6 @@
           if ( IS_HINTED( loader->load_flags ) && n_ins > 0 )
           {
             exec->is_composite     = TRUE;
-            exec->pedantic_hinting =
-              (FT_Bool)( loader->load_flags & FT_LOAD_PEDANTIC );
             error = TT_Run_Context( exec, ((TT_Size)loader->size)->debug );
             if ( error && exec->pedantic_hinting )
               goto Fail;
@@ -1973,6 +1969,12 @@
       /* load default graphics state - if needed */
       if ( size->GS.instruct_control & 2 )
         loader.exec->GS = tt_default_graphics_state;
+
+      loader.exec->pedantic_hinting =
+         FT_BOOL( load_flags & FT_LOAD_PEDANTIC );
+
+      loader.exec->grayscale =
+         FT_BOOL( FT_LOAD_TARGET_MODE( load_flags ) != FT_LOAD_TARGET_MONO );
     }
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */

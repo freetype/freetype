@@ -6617,8 +6617,6 @@
   /* Opcode range: 0x88                                                    */
   /* Stack:        uint32 --> uint32                                       */
   /*                                                                       */
-  /* XXX: According to Apple specs, bits 1 & 2 of the argument ought to be */
-  /*      consulted before rotated/stretched info is returned.             */
   static void
   Ins_GETINFO( INS_ARG )
   {
@@ -6627,18 +6625,21 @@
 
     K = 0;
 
-    /* We return then Windows 3.1 version number */
-    /* for the font scaler                       */
+    /* We return MS rasterizer version 1.7 for the font scaler. */
     if ( ( args[0] & 1 ) != 0 )
-      K = 3;
+      K = 35;
 
-    /* Has the glyph been rotated ? */
-    if ( CUR.tt_metrics.rotated )
+    /* Has the glyph been rotated? */
+    if ( ( args[0] & 2 ) != 0 && CUR.tt_metrics.rotated )
       K |= 0x80;
 
-    /* Has the glyph been stretched ? */
-    if ( CUR.tt_metrics.stretched )
-      K |= 0x100;
+    /* Has the glyph been stretched? */
+    if ( ( args[0] & 4 ) != 0 && CUR.tt_metrics.stretched )
+      K |= 1 << 8;
+
+    /* Are we hinting for grayscale? */
+    if ( ( args[0] & 32 ) != 0 && CUR.grayscale )
+      K |= (1 << 12);
 
     args[0] = K;
   }
