@@ -34,7 +34,7 @@
 #include FT_INTERNAL_GLYPH_LOADER_H
 #include FT_INTERNAL_DRIVER_H
 #include FT_INTERNAL_AUTOHINT_H
-
+#include FT_INTERNAL_OBJECT_H
 
 FT_BEGIN_HEADER
 
@@ -694,6 +694,8 @@ FT_BEGIN_HEADER
     FT_ULong           raster_pool_size; /* size of render pool in bytes */
 
     FT_DebugHook_Func  debug_hooks[4];
+
+    FT_MetaClassRec    meta_class;
 
   } FT_LibraryRec;
 

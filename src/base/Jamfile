@@ -25,7 +25,7 @@ SubDirHdrs  [ FT2_SubDir  src base ] ;
 #
 Library  $(FT2_LIB) : ftsystem.c ftinit.c   ftglyph.c  ftmm.c     ftbdf.c
                       ftbbox.c   ftdebug.c  ftxf86.c   fttype1.c  ftstroker.c
-                      ftsynth.c  ;
+                      ftsynth.c  ftobject.c fthash.c ;
 
 # Add Macintosh-specific file to the library when necessary.
 #
