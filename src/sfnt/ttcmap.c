@@ -452,11 +452,22 @@
 
     /* check against the last segment */
     seg4 = cmap4->last_segment;
+    
+    /* the following is equivalent to performing two tests, as in :     */
+    /*                                                                  */
+    /*  if ( charCode >= seg4->startCount && charCode <= seg4->endCount */
+    /*                                                                  */
+    /* Yes, that's a bit strange, but it's faster, and the idea behind  */
+    /* the cache is to significantly speed up charcode to glyph index   */
+    /* conversion..                                                     */
+    /*                                                                  */
+    /* Sorry if it isn't clear to your eyes..                           */
+    /*                                                                  */
     if ( (TT_ULong)(charCode       - seg4->startCount) <
          (TT_ULong)(seg4->endCount - seg4->startCount) )
       goto Found;
 
-    for ( seg4 = cmap4->segments; seg4 < limit; seg4++, segCount-- )
+    for ( seg4 = cmap4->segments; seg4 < limit; seg4++ )
     {
       /* the ranges are sorted in increasing order.  If we are out of */
       /* the range here, the char code isn't in the charmap, so exit. */
@@ -481,6 +492,7 @@
       /* otherwise, we must use the glyphIdArray to do it */
       index1 = seg4->idRangeOffset / 2
                + ( charCode - seg4->startCount )
+               + ( seg4 - cmap4->segments )
                - segCount;
 
       if ( index1 < cmap4->numGlyphId       &&
