@@ -245,7 +245,7 @@
 
 /*************************************************************************
  *
- * @macro: FT_TRUETYPE_NAMES_H
+ * @macro: FT_TRUETYPE_IDS_H
  *
  * @description:
  *    a macro used in #include statements to name the file containing
@@ -254,7 +254,7 @@
  *    constant macro definitions, taken from the TrueType and OpenType
  *    specs..
  */
-#define FT_TRUETYPE_NAMES_H    <freetype/ttnameid.h>
+#define FT_TRUETYPE_IDS_H    <freetype/ttnameid.h>
 
 /*************************************************************************
  *
@@ -362,14 +362,14 @@
 
 /*************************************************************************
  *
- * @macro: FT_NAMES_H
+ * @macro: FT_SFNT_NAMES_H
  *
  * @description:
  *    a macro used in #include statements to name the file containing
  *    the optional FreeType 2 API used to access embedded "name" strings
  *    in SFNT-based font formats (i.e. TrueType and OpenType)
  */
-#define FT_NAMES_H              <freetype/ftnames.h>
+#define FT_SFNT_NAMES_H              <freetype/ftnames.h>
 
  /* */
  

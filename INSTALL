@@ -7,7 +7,7 @@ I. From the command line
 
   You need  to have  GNU Make (version  3.78.1 or newer)  installed on
   your system to compile the library from the command line.  This will
-  _not_ work with other make tools (including BSD make)!
+  _NOT_ work with other make tools (including BSD make)!
 
   [Well, this is not  really correct.  Recently, a perl implementation
   of make called `makepp' has appeared which can also build FreeType 2
@@ -60,10 +60,14 @@ I. From the command line
 II. In your own environment (IDE)
 ---------------------------------
 
-  You   need   to   add   the  directories   "freetype2/include"   and
-  "freetype2/src" to your include path when compiling the library.
+  You   need   to   add   the  directories   "freetype2/include" to
+  your include path when compiling the library.
   
-  Compile each library component through the following files:
+  FreeType 2 is made of several components, each one of them is located
+  in a subdirectory of "freetype2/src". For example, 'freetype2/src/truetype/'
+  contains the TrueType font driver.
+  
+  DO NOT COMPILE ALL C FILES !! Rather, compile the following ones:
   
     -- base components (required)
      
