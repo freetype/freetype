@@ -47,7 +47,8 @@ BASE_SRC := $(BASE_)ftcalc.c   \
 # symbols is used by the application.
 #
 BASE_EXT_SRC := $(BASE_)ftglyph.c \
-                $(BASE_)ftmm.c
+                $(BASE_)ftmm.c    \
+		$(BASE_)ftbbox.c
 
 # Default extensions objects
 #
