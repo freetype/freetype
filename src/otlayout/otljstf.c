@@ -66,6 +66,7 @@
 
   static void
   otl_jstf_max_validate( OTL_Bytes      table,
+                         OTL_UInt       lookup_count,
                          OTL_UInt       glyph_count,
                          OTL_Validator  valid )
   {
@@ -80,8 +81,8 @@
     /* scan subtable records */
     for ( ; num_lookups > 0; num_lookups-- )
       /* XXX: check lookup types? */
-      otl_gpos_subtable_validate( table + OTL_NEXT_USHORT( p ), glyph_count,
-                                  valid );
+      otl_gpos_subtable_validate( table + OTL_NEXT_USHORT( p ),
+                                  lookup_count, glyph_count, valid );
   }
 
 
@@ -123,7 +124,8 @@
     /* shrinkage JSTF max */
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_max_validate( table + val, glyph_count, valid );
+      otl_jstf_max_validate( table + val, gpos_lookup_count, glyph_count,
+                             valid );
 
     /* extension GSUB enable/disable */
     val = OTL_NEXT_USHORT( p );
@@ -150,7 +152,8 @@
     /* extension JSTF max */
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_max_validate( table + val, glyph_count, valid );
+      otl_jstf_max_validate( table + val, gpos_lookup_count, glyph_count,
+                             valid );
   }
 
 

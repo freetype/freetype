@@ -1,3 +1,32 @@
+2004-08-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/otlayout/otlgpos.c (otl_gpos_subtable_validate): Add argument
+	to pass number of lookups.
+	Update all callers.
+	Don't call otl_lookup_list_validate but otl_lookup_validate.
+	(otl_gpos_validate): Call otl_lookup_list_validate instead of
+	otl_gpos_subtable_validate.
+
+	* src/otlayout/otlgpos.h: Updated.
+
+	* src/otlayout/otljstf.c (otl_jstf_max_validate): Add argument to
+	pass number of lookups.
+	Update all callers.
+
+
+	* src/cff/cffparse.c (cff_parse_real): s/exp/exponent/ to avoid
+	compiler warning.
+
+
+	* src/sfnt/ttcmap0.c, src/sfnt/ttcmap0.h: Renamed to...
+	* src/sfnt/ttcmap.c, src/sfnt/ttcmap.h: This.
+	* src/sfnt/Jamfile, src/sfnt/rules.mk, src/sfnt/sfdriver.c,
+	src/sfnt/sfnt.c, src/sfnt/sfobjs.c: Updated.
+
+
+	* builds/compiler/gcc-dev.mk (CFLAGS): Don't add `-Wnested-externs'
+	if compiler is g++ (v3.3.3 emits a warning otherwise).
+
 2004-08-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/otlayout/otlgpos.c (otl_value_length): Return number of bytes,
