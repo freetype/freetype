@@ -2,6 +2,9 @@
 
 	* TODO: Updated.
 
+	* src/pcf/pcfread.c: Put READ_Fields() always in a conditional to
+	avoid compiler warnings.
+
 2001-03-10  Tom Kacvinsky  <tjk@ams.org>
 
 	* TODO: New file.
