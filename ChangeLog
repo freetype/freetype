@@ -1,3 +1,7 @@
+2004-07-12  David Turner  <david@freetype.org>
+
+        * src/base/ftstroke.c: last (?) bugfixes to the stroker.
+
 2004-07-11  David Turner  <david@freetype.org>
 
         * src/base/ftstroke.c: fixed a bug that prevented the stroker to
