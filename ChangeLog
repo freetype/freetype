@@ -1,3 +1,4 @@
+
 2004-04-25  George Williams  <gww@silcom.com>
 
 	* src/truetype/ttgxvar.c (ft_var_apply_tuple): Fix typo.
