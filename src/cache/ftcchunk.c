@@ -183,16 +183,19 @@
       FT_ListNode    lrunode;
 
 
-      lrunode = FTC_CHUNKNODE_TO_LRUNODE( node );
+      if (node)
+      {
+        lrunode = FTC_CHUNKNODE_TO_LRUNODE( node );
 
-      manager->num_bytes -= clazz->size_node( node );
-      manager->num_nodes--;
+        manager->num_bytes -= clazz->size_node( node );
+        manager->num_nodes--;
 
-      FT_List_Remove( glyphs_lru, lrunode );
+        FT_List_Remove( glyphs_lru, lrunode );
+   
+        clazz->destroy_node( node );
 
-      clazz->destroy_node( node );
-
-      bucket[0] = 0;
+        bucket[0] = 0;
+      }
    }
 
    if ( clazz->done )
