@@ -1,7 +1,14 @@
-2002-04-17  Michael Jansson <mjan@em2-solutions.com>
+2002-04-17  David Turner  <david@freetype.org>
 
-        * src/type1/t1gload.c (T1_Compute_Max_Advance): fixed a small bug
-          that prevented the function to return the correct value.
+
+	* Version 2.1.0 released.
+	=========================
+
+
+2002-04-17  Michael Jansson  <mjan@em2-solutions.com>
+
+	* src/type1/t1gload.c (T1_Compute_Max_Advance): Fixed a small bug
+	that prevented the function to return the correct value.
 
 2002-04-16  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
 
@@ -17,6 +24,8 @@
 
 	* src/pcf/pcfread.c (pcf_seek_to_table_type): Remove compiler
 	warning.
+
+	* include/freetype/config/ftoption.h (FT_MAX_EXTENSIONS): Removed.
 
 	* docs/CHANGES: Preparing 2.1.0 release.
 
