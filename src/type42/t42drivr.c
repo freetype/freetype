@@ -129,6 +129,7 @@
 
 
  /*
+  *
   *  POSTSCRIPT INFO SERVICE
   *
   */
@@ -141,6 +142,7 @@
     return 0;
   }
 
+
   static FT_Int
   t42_ps_has_glyph_names( FT_Face  face )
   {
@@ -148,10 +150,11 @@
     return 1;
   }
 
+
   static const FT_Service_PsInfoRec  t42_service_ps_info =
   {
-    (PS_GetFontInfoFunc)    t42_ps_get_font_info,
-    (PS_HasGlyphNamesFunc)  t42_ps_has_glyph_names
+    (PS_GetFontInfoFunc)  t42_ps_get_font_info,
+    (PS_HasGlyphNamesFunc)t42_ps_has_glyph_names
   };
 
 
@@ -165,6 +168,7 @@
   {
     { FT_SERVICE_ID_GLYPH_DICT,           &t42_service_glyph_dict },
     { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &t42_service_ps_font_name },
+    { FT_SERVICE_ID_POSTSCRIPT_INFO,      &t42_service_ps_info },
     { FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_TYPE_42 },
     { NULL, NULL }
   };

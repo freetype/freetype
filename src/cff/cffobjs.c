@@ -324,7 +324,7 @@
         /* FreeType 2                                                */
       }
 
-     /* now, load the CFF part of the file */
+      /* now, load the CFF part of the file */
       error = face->goto_table( face, TTAG_CFF, stream, 0 );
       if ( error )
         goto Exit;

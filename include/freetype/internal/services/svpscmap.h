@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  svpscmap.h                                                             */
 /*                                                                         */
-/*    The FreeType PostScript charmap service (specification)              */
+/*    The FreeType PostScript charmap service (specification).             */
 /*                                                                         */
 /*  Copyright 2003 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -33,7 +33,7 @@ FT_BEGIN_HEADER
   (*PS_Unicode_ValueFunc)( const char*  glyph_name );
 
   /*
-   *  Unicode value to Adobe glyph name index. 0xFFFF if not found
+   *  Unicode value to Adobe glyph name index.  0xFFFF if not found.
    */
   typedef FT_UInt
   (*PS_Unicode_Index_Func)( FT_UInt       num_glyphs,
@@ -41,13 +41,13 @@ FT_BEGIN_HEADER
                             FT_ULong      unicode );
 
   /*
-   *  Macintosh name id to glyph name, NULL if invalid index
+   *  Macintosh name id to glyph name.  NULL if invalid index.
    */
   typedef const char*
   (*PS_Macintosh_Name_Func)( FT_UInt  name_index );
 
   /*
-   *  Adobe standard string id to glyph name, NULL if invalid index
+   *  Adobe standard string ID to glyph name.  NULL if invalid index.
    */
   typedef const char*
   (*PS_Adobe_Std_Strings_Func)( FT_UInt  string_index );
@@ -101,10 +101,13 @@ FT_BEGIN_HEADER
     const unsigned short*      adobe_expert_encoding;
   };
 
- /* */
+  /* */
 
 
 FT_END_HEADER
 
 
-#endif /* __SVPSNAME_H__ */
+#endif /* __SVPSCMAP_H__ */
+
+
+/* END */

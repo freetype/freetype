@@ -241,7 +241,7 @@
     return result;
   }
 
-  static const FT_Service_PsFontNameRec   sfnt_service_ps_name =
+  static const FT_Service_PsFontNameRec  sfnt_service_ps_name =
   {
     (FT_PsName_GetFunc)sfnt_get_ps_name
   };
@@ -255,9 +255,9 @@
 
   static const FT_ServiceDescRec  sfnt_services[] =
   {
-    { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, & sfnt_service_ps_name },
+    { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &sfnt_service_ps_name },
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-    { FT_SERVICE_ID_GLYPH_DICT,           & sfnt_service_glyph_dict },
+    { FT_SERVICE_ID_GLYPH_DICT,           &sfnt_service_glyph_dict },
 #endif
 
     { NULL, NULL }
