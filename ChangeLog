@@ -1,28 +1,74 @@
 2001-10-08  David Turner  <david@freetype.org>
 
-	* src/psnames/pstables.h, src/psnames/psmodule.c, src/tools/glnames.py:
-	fixed a bug in 'glnames.py' that prevented it from generating correct
-	glyph names table. This resulted in the unavailability of certain glyphs
-	like "Cacute", "cacute" and "lslash" in Unicode charmaps, even if these
-	were present in the font (causing problems for Polish users).
+	Fixed a bug in `glnames.py' that prevented it from generating
+	correct glyph names tables.  This resulted in the unavailability of
+	certain glyphs like `Cacute', `cacute' and `lslash' in Unicode
+	charmaps, even if these were present in the font (causing problems
+	for Polish users).
 
+	* src/tools/glnames.py (mac_standard_names): Fixed.
+	(t1_standard_strings): Some fixes and renamed to ...
+	(sid_standard_names): This.
+	(t1_expert_encoding): Fixed.
+	(the_adobe_glyph_list): Renamed to ...
+	(adobe_glyph_names): This.
+	(the_adobe_glyphs): Renamed to ...
+	(adobe_glyph_values): This.
+	(dump_mac_indices, dump_glyph_list, dump_unicode_values, main):
+	Updated.
+	* src/psnames/pstables.h: Regenerated.
+	* src/psnames/psmodule.c (PS_Unicode_Value): Fix offset.
+	Fix return value.
+	Use `sid_standard_table' and `ps_names_to_unicode' instead of
+	`t1_standard_glyphs' and `names_to_unicode'.
+	(PS_Macintosh_Name): Use `ps_glyph_names' instead of
+	`standard_glyph_names'.
+	(PS_Standard_Strings): Use `sid_standard_names' instead of
+	`t1_standard_glyphs'.
 
-2001-10-07  Richard Barber <rich@solutionuk.com>
+	* doc/BUGS, doc/TODO: New documents.
 
-	* src/cache/ftlru.c (FT_Lru_Lookup_Node): fixed a bug that prevented
-	correct LRU behaviour
+2001-10-07  Richard Barber  <rich@solutionuk.com>
+
+	* src/cache/ftlru.c (FT_Lru_Lookup_Node): Fixed a bug that prevented
+	correct LRU behaviour.
 
 2001-10-07  David Turner  <david@freetype.org>
 
-	* src/smooth/ftgrays: "setjmp/longjmp" is now used for rollback (i.e.
-	when memory pool overflow occurs), function names are now all prefixed
-	with "gray_", and a new type (TArea) is defined to store area value in
-	each cell (using "int" was too small on 16-bit systems)..
+	setjmp() and longjmp() are now used for rollback (i.e. when memory
+	pool overflow occurs).
 
-	* include/freetype/ftsizes.h, src/base/ftobjs.c, src/cache/ftcmanag.c:
-	added a new header, named "ftsizes.h" (FT_SIZES_H) to provide a public
-	API to manage multiple size objects for a given FT_Face.
+	Function names are now all uniformly prefixed with `gray_'.
 
+	* src/smooth/ftgrays.c: Include <setjmp.h>.
+	(ErrRaster_MemoryOverflow): New macro.
+	(TArea): New type to store area values in each cell (using `int' was
+	too small on 16-bit systems).  <limits.h> is included to properly
+	get the needed data type.
+	(TCell, TRaster): Use it.
+	(TRaster): New element `jump_buffer'.
+	(gray_compute_cbox): Use `RAS_ARG' as the only parameter and get
+	`outline' from it.
+	(gray_record_cell): Use longjmp().
+	(gray_set_cell): Use gray_record_cell() for error handling.
+	(gray_render_line, gray_render_conic, gray_render_cubic): Simplify.
+	(gray_convert_glyph_inner): New function, using setjmp().
+	(gray_convert_glyph): Use it.
+
+2001-10-07  David Turner  <david@freetype.org>
+
+	Provide a public API to manage multiple size objects for a given
+	FT_Face in the new header file `ftsizes.h'.
+
+	* include/freetype/ftsizes.h: New header file, 
+	* include/freetype/internal/ftobjs.h: Use it.
+	Remove declarations of FT_New_Size and FT_Done_Size (moved to
+	ftsizes.h).
+	* include/freetype/config/ftheader.h (FT_SIZES_H): New macro.
+	* src/base/ftobjs.c (FT_Activate_Size): New function.
+	* src/cache/ftcmanag.c: Include ftsizes.h.
+	(ftc_manager_init_size, ftc_manager_flush_size): Use
+	FT_Activate_Size.
 
 2001-09-20  Detlef Würkner  <TetiSoft@apg.lahn.de>
 

@@ -160,7 +160,7 @@
 
     if ( size->face == req->face )
     {
-      FT_Activate_Size(size);
+      FT_Activate_Size( size );
       error = FT_Set_Pixel_Sizes( req->face, req->width, req->height );
       if ( error )
         FT_Done_Size( size );

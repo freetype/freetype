@@ -300,9 +300,6 @@ FT_BEGIN_HEADER
 #define FT_FACE_SIZE( x )     FT_FACE( x )->size
 
 
-  /* this must be kept exported -- it is used by the cache manager */
-  /* even though it shouldn't be considered public for now         */
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */

@@ -1932,10 +1932,11 @@
 
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Activate_Size( FT_Size   size )
+  FT_Activate_Size( FT_Size  size )
   {
     FT_Face  face;
     
+
     if ( size == NULL )
       return FT_Err_Bad_Argument;
       
@@ -1943,8 +1944,8 @@
     if ( face == NULL || face->driver == NULL )
       return FT_Err_Bad_Argument;
     
-    /* we don't need anything more complex than that, all size objects */
-    /* are already listed by the face..                                */
+    /* we don't need anything more complex than that; all size objects */
+    /* are already listed by the face                                  */
     face->size = size;
     
     return FT_Err_Ok;
