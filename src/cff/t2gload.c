@@ -483,10 +483,10 @@
     {
       builder->path_begun = 1;
       error = add_contour( builder );
-      if ( error )
-        return error;
+      if ( !error )
+        error = add_point1( builder, x, y );
     }
-    return add_point1( builder, x, y );
+    return error;
   }
 
 
@@ -625,13 +625,13 @@
         {
           if ( ip >= limit )
             goto Syntax_Error;
-          val = ( v - 247 ) * 256 + *ip++ + 108;
+          val = ( (FT_Long)v - 247 ) * 256 + *ip++ + 108;
         }
         else if ( v < 255 )
         {
           if ( ip >= limit )
             goto Syntax_Error;
-          val = -( v - 251 ) * 256 - *ip++ - 108;
+          val = -( (FT_Long)v - 251 ) * 256 - *ip++ - 108;
         }
         else
         {
@@ -1212,8 +1212,10 @@
             args = stack;
 
             /* adding five more points; 4 control points, 1 on-curve point */
+            /* make sure we have enough space for the start point if it    */
+            /* needs to be added..                                         */
             if ( start_point( builder, x, y ) ||
-                 check_points( builder, 5 )   )
+                 check_points( builder, 6 )   )
               goto Memory_Error;
 
             /* Record the starting point's y postion for later use */
@@ -1245,9 +1247,9 @@
             add_point( builder, x, y, 0 );
 
             /* ending point, with y-value the same as the start   */
-            /* point's y-value -- we don't add this point, though */
             x += args[8];
             y  = start_y;
+            add_point( builder, x, y, 1 );
 
             args = stack;
             break;
@@ -1262,9 +1264,9 @@
 
             args = stack;
 
-            /* adding five more points; 4 control points, 1 on-curve point */
+            /* adding six more points; 4 control points, 2 on-curve point */
             if ( start_point( builder, x, y ) ||
-                 check_points ( builder, 5 )  )
+                 check_points ( builder, 6 )  )
               goto Memory_Error;
 
             /* record the starting point's y-position for later use */
@@ -1297,6 +1299,7 @@
             /* ending point, with y-value the same as the start point's */
             /* y-value -- we don't add this point, though               */
             x += args[6];
+            add_point( builder, x, y, 1 );
 
             args = stack;
             break;
@@ -1315,7 +1318,7 @@
 
             /* adding five more points; 4 control points, 1 on-curve point */
             if ( start_point( builder, x, y ) ||
-                 check_points( builder, 5 )   )
+                 check_points( builder, 6 )   )
                goto Memory_Error;
 
             /* record the starting point's x, y postion for later use */
@@ -1352,6 +1355,7 @@
               args += 2;
             }
 
+            /* is last operand a x or y delta ? */
             if ( horizontal )
             {
               x += args[0];
@@ -1362,6 +1366,8 @@
               x  = start_x;
               y += args[0];
             }
+
+            add_point( builder, x, y, 1 );
 
             args = stack;
             break;
@@ -1375,20 +1381,17 @@
             FT_TRACE4(( " flex" ));
 
             if ( start_point( builder, x, y ) ||
-                 check_points( builder, 5 )   )
+                 check_points( builder, 6 )   )
               goto Memory_Error;
 
             args = stack;
-            for ( count = 5; count > 0; count-- )
+            for ( count = 6; count > 0; count-- )
             {
               x += args[0];
               y += args[1];
-              add_point( builder, x, y, (FT_Bool)( count == 3 ) );
+              add_point( builder, x, y, (FT_Bool)( count == 3 || count == 0) );
               args += 2;
             }
-
-            x += args[0];
-            y += args[1];
 
             args = stack;
           }
