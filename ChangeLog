@@ -1,3 +1,13 @@
+2005-03-01  David Turner  <david@freetype.org>
+
+    * src/autofit/{afhints.h,afhints.c,aflatin.h,aflatin.c,afloader.c}:
+    various bug-fixes and drastic heap usage reduction improvements.
+
+    * include/freetype/config/ftmodule.h: the auto-fitter is now the
+    only supported auto-hinting module
+
+    * include/freetype/config/ftstdlib.h: adding FT_INT_MAX definition
+
 2005-02-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttpload.c (tt_face_load_loca): Fix typo.

@@ -66,6 +66,7 @@
 #include <limits.h>
 
 #define FT_UINT_MAX   UINT_MAX
+#define FT_INT_MAX    INT_MAX
 #define FT_ULONG_MAX  ULONG_MAX
 
 

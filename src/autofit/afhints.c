@@ -1,5 +1,96 @@
 #include "afhints.h"
 
+
+  FT_LOCAL_DEF( FT_Error )
+  af_axis_hints_new_segment( AF_AxisHints  axis,
+                             FT_Memory     memory,
+                             AF_Segment   *asegment )
+  {
+    FT_Error    error   = 0;
+    AF_Segment  segment = NULL;
+
+    if ( axis->num_segments >= axis->max_segments )
+    {
+      FT_Int  old_max = axis->max_segments;
+      FT_Int  new_max = old_max;
+      FT_Int  big_max = FT_INT_MAX / sizeof(*segment);
+
+      if ( old_max >= big_max )
+      {
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
+      }
+
+      new_max += (new_max >> 1) + 4;
+      if ( new_max < old_max || new_max > big_max )
+        new_max = big_max;
+
+      if ( FT_RENEW_ARRAY( axis->segments, old_max, new_max ) )
+        goto Exit;
+
+      axis->max_segments = new_max;
+    }
+
+    segment = axis->segments + axis->num_segments++;
+    FT_ZERO( segment );
+
+  Exit:
+    *asegment = segment;
+    return error;
+  }
+
+  FT_LOCAL( FT_Error)
+  af_axis_hints_new_edge( AF_AxisHints  axis,
+                          FT_Int        fpos,
+                          FT_Memory     memory,
+                          AF_Edge      *aedge )
+  {
+    FT_Error    error = 0;
+    AF_Edge     edge  = NULL;
+    AF_Edge     edges;
+
+    if ( axis->num_edges >= axis->max_edges )
+    {
+      FT_Int  old_max = axis->max_edges;
+      FT_Int  new_max = old_max;
+      FT_Int  big_max = FT_INT_MAX / sizeof(*edge);
+
+      if ( old_max >= big_max )
+      {
+        error = FT_Err_Out_Of_Memory;
+        goto Exit;
+      }
+
+      new_max += (new_max >> 1) + 4;
+      if ( new_max < old_max || new_max > big_max )
+        new_max = big_max;
+
+      if ( FT_RENEW_ARRAY( axis->edges, old_max, new_max ) )
+        goto Exit;
+
+      axis->max_edges = new_max;
+    }
+
+    edges = axis->edges;
+    edge  = edges + axis->num_edges;
+
+    while ( edge > edges && edge[-1].fpos > fpos )
+    {
+      edge[0] = edge[-1];
+      edge--;
+    }
+
+    axis->num_edges++;
+
+    FT_ZERO(edge);
+    edge->fpos = (FT_Short) fpos;
+
+  Exit:
+    *aedge = edge;
+    return error;
+  }
+
+
 #ifdef AF_DEBUG
 
 #include <stdio.h>
@@ -295,9 +386,12 @@
         AF_AxisHints  axis = &hints->axis[ dim ];
 
         axis->num_segments = 0;
+        axis->max_segments = 0;
+        FT_FREE( axis->segments );
+
         axis->num_edges    = 0;
-        axis->segments     = NULL;
-        axis->edges        = NULL;
+        axis->max_edges    = 0;
+        FT_FREE( axis->edges );
       }
 
       FT_FREE( hints->contours );
@@ -359,7 +453,7 @@
       hints->max_contours = new_max;
     }
 
-   /* then, reallocate the points, segments & edges arrays if needed --
+   /* then, reallocate the points arrays if needed --
     * note that we reserved two additional point positions, used to
     * hint metrics appropriately
     */
@@ -367,58 +461,16 @@
     old_max = hints->max_points;
     if ( new_max > old_max )
     {
-      FT_Byte*    items;
-      FT_ULong    off1, off2, off3;
-
-     /* we store in a single buffer the following arrays:
-      *
-      *  - an array of   N  AF_PointRec   items
-      *  - an array of 2*N  AF_SegmentRec items
-      *  - an array of 2*N  AF_EdgeRec    items
-      *
-      */
-
       new_max = ( new_max + 2 + 7 ) & ~7;
 
-#define OFF_PAD2(x,y)   (((x)+(y)-1) & ~((y)-1))
-#define OFF_PADX(x,y)   ((((x)+(y)-1)/(y))*(y))
-#define OFF_PAD(x,y)    ( ((y) & ((y)-1)) ? OFF_PADX(x,y) : OFF_PAD2(x,y) )
-
-#undef  OFF_INCREMENT
-#define OFF_INCREMENT( _off, _type, _count )   \
-     ( OFF_PAD( _off, sizeof(_type) ) + (_count)*sizeof(_type))
-
-      off1 = OFF_INCREMENT( 0, AF_PointRec, new_max );
-      off2 = OFF_INCREMENT( off1, AF_SegmentRec, new_max*2 );
-      off3 = OFF_INCREMENT( off2, AF_EdgeRec, new_max*2 );
-
-      FT_FREE( hints->points );
-
-      if ( FT_ALLOC( items, off3 ) )
-      {
-        hints->max_points       = 0;
-        hints->axis[0].segments = NULL;
-        hints->axis[0].edges    = NULL;
-        hints->axis[1].segments = NULL;
-        hints->axis[1].edges    = NULL;
+      if ( FT_RENEW_ARRAY( hints->points, old_max, new_max ) )
         goto Exit;
-      }
 
-     /* readjust some pointers
-      */
-      hints->max_points       = new_max;
-      hints->points           = (AF_Point) items;
-
-      hints->axis[0].segments = (AF_Segment)( items + off1 );
-      hints->axis[1].segments = hints->axis[0].segments + new_max;
-
-      hints->axis[0].edges    = (AF_Edge)   ( items + off2 );
-      hints->axis[1].edges    = hints->axis[0].edges + new_max;
+      hints->max_points = new_max;
     }
 
     hints->num_points   = outline->n_points;
     hints->num_contours = outline->n_contours;
-
 
     /* We can't rely on the value of `FT_Outline.flags' to know the fill  */
     /* direction used for a glyph, given that some fonts are broken (e.g. */

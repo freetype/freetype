@@ -84,14 +84,14 @@ FT_BEGIN_HEADER
 
   typedef struct  AF_PointRec_
   {
-    AF_Flags      flags;    /* point flags used by hinter */
+    FT_UShort     flags;    /* point flags used by hinter */
+    FT_Char       in_dir;   /* direction of inwards vector  */
+    FT_Char       out_dir;  /* direction of outwards vector */
+
     FT_Pos        ox, oy;   /* original, scaled position  */
     FT_Short      fx, fy;   /* original, unscaled position (font units) */
     FT_Pos        x,  y;    /* current position */
     FT_Pos        u,  v;    /* current (x,y) or (y,x) depending on context */
-
-    FT_Char       in_dir;   /* direction of inwards vector  */
-    FT_Char       out_dir;  /* direction of outwards vector */
 
     AF_Point      next;     /* next point in contour     */
     AF_Point      prev;     /* previous point in contour */
@@ -101,7 +101,7 @@ FT_BEGIN_HEADER
 
   typedef struct  AF_SegmentRec_
   {
-    AF_Edge_Flags  flags;       /* edge/segment flags for this segment */
+    FT_Byte        flags;       /* edge/segment flags for this segment */
     FT_Char        dir;         /* segment direction                   */
     FT_Short       pos;         /* position of segment                 */
     FT_Short       min_coord;   /* minimum coordinate of segment       */
@@ -148,9 +148,11 @@ FT_BEGIN_HEADER
   typedef struct AF_AxisHintsRec_
   {
     FT_Int        num_segments;
+    FT_Int        max_segments;
     AF_Segment    segments;
 
     FT_Int        num_edges;
+    FT_Int        max_edges;
     AF_Edge       edges;
 
     AF_Direction  major_dir;
@@ -204,6 +206,17 @@ FT_BEGIN_HEADER
   af_direction_compute( FT_Pos  dx,
                         FT_Pos  dy );
 
+
+  FT_LOCAL( FT_Error )
+  af_axis_hints_new_segment( AF_AxisHints  axis,
+                             FT_Memory     memory,
+                             AF_Segment   *asegment );
+
+  FT_LOCAL( FT_Error)
+  af_axis_hints_new_edge( AF_AxisHints  axis,
+                          FT_Int        fpos,
+                          FT_Memory     memory,
+                          AF_Edge      *edge );
 
   FT_LOCAL( void )
   af_glyph_hints_init( AF_GlyphHints  hints,
