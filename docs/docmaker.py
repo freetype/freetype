@@ -10,11 +10,11 @@
 
 import fileinput, sys, string, glob
 
-# the Project's title, this can be over-ridden from the command line with
-# an option
+# The Project's title.  This can be overridden from the command line with
+# an option.
 project_title = "Project"
 
-# The following defines the HTML header used by all generated pages
+# The following defines the HTML header used by all generated pages.
 #
 html_header_1 = """\
 <html>
@@ -38,52 +38,54 @@ html_header_2= """ API Reference</title>
 
 html_header_3=""" API Reference</h1></center>
 """
-# this is recomputed later when the project title changes
+
+# This is recomputed later when the project title changes.
+#
 html_header = html_header_1 + project_title + html_header_2 + project_title + html_header_3
 
-# The HTML footer used by all generated pages
+# The HTML footer used by all generated pages.
 #
 html_footer = """\
 </body>
 </html>"""
 
-# The header and footer used for each section
+# The header and footer used for each section.
 #
 section_title_header = "<center><h1>"
 section_title_footer = "</h1></center>"
 
-# The header and footer used for code segments
+# The header and footer used for code segments.
 #
 code_header = "<font color=blue><pre>"
 code_footer = "</pre></font>"
 
-# Paragraph header and footer
+# Paragraph header and footer.
 #
 para_header = "<p>"
 para_footer = "</p>"
 
-# Block header and footer
+# Block header and footer.
 #
 block_header = "<center><table width=75%><tr><td>"
 block_footer = "</td></tr></table><hr width=75%></center>"
 
-# Description header/footer
+# Description header/footer.
 #
 description_header = "<center><table width=87%><tr><td>"
 description_footer = "</td></tr></table></center><br>"
 
-# Marker header/inter/footer combination
+# Marker header/inter/footer combination.
 #
 marker_header = "<center><table width=87% cellpadding=5><tr bgcolor=#EEEEFF><td><em><b>"
 marker_inter  = "</b></em></td></tr><tr><td>"
 marker_footer = "</td></tr></table></center>"
 
-# Source code extracts header/footer
+# Source code extracts header/footer.
 #
 source_header = "<center><table width=87%><tr bgcolor=#D6E8FF width=100%><td><pre>"
 source_footer = "</pre></table></center><br>"
 
-# Chapter header/inter/footer
+# Chapter header/inter/footer.
 #
 chapter_header = "<center><table width=75%><tr><td><h2>"
 chapter_inter  = "</h2><ul>"
@@ -92,8 +94,8 @@ chapter_footer = "</ul></td></tr></table></center>"
 current_section = None
 
 
-# This function is used to sort the index.  It's a simple lexicographical
-# sort, except that it places capital letters before small ones.
+# This function is used to sort the index.  It is a simple lexicographical
+# sort, except that it places capital letters before lowercase ones.
 #
 def index_sort( s1, s2 ):
     if not s1:
@@ -126,7 +128,7 @@ def index_sort( s1, s2 ):
     return 0
 
 
-# sort input_list, placing the elements of order_list in front
+# Sort input_list, placing the elements of order_list in front.
 #
 def sort_order_list( input_list, order_list ):
     new_list = order_list[:]
@@ -136,8 +138,8 @@ def sort_order_list( input_list, order_list ):
     return new_list
 
 
-# translate a single line of source to HTML. This will convert
-# a "<" into "&lt.", ">" into "&gt.", etc..
+# Translate a single line of source to HTML.  This will convert
+# a "<" into "&lt.", ">" into "&gt.", etc.
 #
 def html_format( line )
     result = string.replace( line, "<", "&lt." )
@@ -146,8 +148,8 @@ def html_format( line )
     return result
 
 
-# The FreeType 2 reference is extracted from the source files. These contain
-# various comment blocks that follow one of the following formats:
+# The FreeType 2 reference is extracted from the source files.  These
+# contain various comment blocks that follow one of the following formats:
 #
 #  /**************************
 #   *
@@ -176,7 +178,7 @@ def html_format( line )
 #  /**************************/
 #
 # Each block contains a list of markers; each one can be followed by
-# some arbitrary text or a list of fields. Here's an example:
+# some arbitrary text or a list of fields.  Here an example:
 #
 #    <Struct>
 #       MyStruct
@@ -195,15 +197,15 @@ def html_format( line )
 #
 # Each field is simply of the format:  WORD :: TEXT...
 #
-# Note that typically each comment block is followed by some source
-# code declaration that may need to be kept in the reference.
+# Note that typically each comment block is followed by some source code
+# declaration that may need to be kept in the reference.
 #
-# Note that markers can alternatively be written as "@MARKER:"
-# instead of "<MARKER>". All marker identifiers are converted to
-# lower case during parsing in order to simply sorting.
+# Note that markers can alternatively be written as "@MARKER:" instead of
+# "<MARKER>".  All marker identifiers are converted to lower case during
+# parsing in order to simply sorting.
 #
-# We associate with each block the following source lines that do not
-# begin with a comment. For example, the following:
+# We associate with each block the following source lines that do not begin
+# with a comment.  For example, the following:
 #
 #   /**********************************
 #    *
@@ -211,38 +213,37 @@ def html_format( line )
 #    *
 #    */
 #
-#    bla_bla_bla
-#     bilip_bilip
+#   bla_bla_bla
+#   bilip_bilip
 #
 #   /* - this comment acts as a separator - */
 #
-#     blo_blo_blo
+#   blo_blo_blo
 #
 #
-#  will only keep the first two lines of sources with
-#  the "blabla" block.
+# will only keep the first two lines of sources with
+# the "blabla" block.
 #
-#  However, the comment will be kept, with following source lines
-#  if it contains a starting '#' or '@' as in:
+# However, the comment will be kept, with following source lines if it
+# contains a starting '#' or '@' as in:
 #
-#     /*@.....*/
-#     /*#.....*/
-#     /* @.....*/
-#     /* #.....*/
+#   /*@.....*/
+#   /*#.....*/
+#   /* @.....*/
+#   /* #.....*/
 #
 
 
 
 #############################################################################
 #
-# The DocCode class is used to store source code lines
+# The DocCode class is used to store source code lines.
 #
-#   'self.lines' contains a set of source code lines that will
-#   be dumped as HTML in a <PRE> tag.
+#   'self.lines' contains a set of source code lines that will be dumped as
+#   HTML in a <PRE> tag.
 #
-#   The object is filled line by line by the parser; it strips the
-#   leading "margin" space from each input line before storing it
-#   in 'self.lines'.
+#   The object is filled line by line by the parser; it strips the leading
+#   "margin" space from each input line before storing it in 'self.lines'.
 #
 class DocCode:
 
@@ -278,11 +279,11 @@ class DocCode:
         while l > 0 and string.strip( self.lines[l - 1] ) == "":
             l = l - 1
 
-        # the code footer should be directly appended to the last code
-        # line to avoid an additional blank line
+        # The code footer should be directly appended to the last code
+        # line to avoid an additional blank line.
         #
         sys.stdout.write( code_header )
-        for line in self.lines[0 : l+1]:            
+        for line in self.lines[0 : l+1]:
             sys.stdout.write( '\n' + html_format(line) )
         sys.stdout.write( code_footer )
 
@@ -370,8 +371,9 @@ class DocParagraph:
 
             cursor = cursor + len( word ) + 1
 
-            # handle trailing periods, commas, etc. at the end of
-            # cross references.
+
+            # Handle trailing periods, commas, etc. at the end of cross
+            # references.
             #
             if extra:
                 if cursor + len( extra ) + 1 > max_width:
@@ -410,10 +412,9 @@ class DocParagraph:
 #
 # DocContent is used to store the content of a given marker.
 #
-# The "self.items" list contains (field,elements) records, where
-# "field" corresponds to a given structure fields or function
-# parameter (indicated by a "::"), or NULL for a normal section
-# of text/code.
+# The "self.items" list contains (field,elements) records, where "field"
+# corresponds to a given structure fields or function parameter (indicated
+# by a "::"), or NULL for a normal section of text/code.
 #
 # Hence, the following example:
 #
@@ -436,8 +437,8 @@ class DocParagraph:
 #
 # in 'self.items'.
 #
-# The DocContent object is entirely built at creation time; you must
-# pass a list of input text lines in the "lines_list" parameter.
+# The DocContent object is entirely built at creation time; you must pass a
+# list of input text lines in the "lines_list" parameter.
 #
 class DocContent:
 
@@ -449,7 +450,7 @@ class DocContent:
         paragraph   = None   # represents the current DocParagraph
         code        = None   # represents the current DocCode
 
-        elements    = []     # the list of elements for the current field,
+        elements    = []     # the list of elements for the current field;
                              # contains DocParagraph or DocCode objects
 
         field       = None   # the current field
@@ -633,20 +634,18 @@ class DocContent:
 
 #############################################################################
 #
-#
-# The DocBlock class is used to store a given comment block. It contains
+# The DocBlock class is used to store a given comment block.  It contains
 # a list of markers, as well as a list of contents for each marker.
 #
-#   "self.items" is a list of (marker, contents) elements, where
-#   'marker' is a lowercase marker string, and 'contents' is a DocContent
-#   object.
+#   "self.items" is a list of (marker, contents) elements, where 'marker' is
+#   a lowercase marker string, and 'contents' is a DocContent object.
 #
-#   "self.source" is simply a list of text lines taken from the
-#   uncommented source itself.
+#   "self.source" is simply a list of text lines taken from the uncommented
+#   source itself.
 #
 #   Finally, "self.name" is a simple identifier used to uniquely identify
-#   the block. It is taken from the first word of the first
-#   paragraph of the first marker of a given block, i.e:
+#   the block. It is taken from the first word of the first paragraph of the
+#   first marker of a given block, i.e:
 #
 #      <Type> Goo
 #      <Description> Bla bla bla
@@ -708,6 +707,7 @@ class DocBlock:
 
 
     # This function adds a new element to 'self.items'.
+    #
     #   'marker' is a marker string, or None.
     #   'lines'  is a list of text lines used to compute a list of
     #            DocContent objects.
@@ -726,7 +726,7 @@ class DocBlock:
             l     = len( lines )
 
         # add a new marker only if its marker and its content list
-        # aren't empty
+        # are not empty
         #
         if l > 0 and marker:
             content = DocContent( lines )
@@ -931,14 +931,13 @@ class DocSectionList:
         abstract = block.find_content( "abstract" )
 
         if self.sections.has_key( name ):
-            # There is already a section with this name in our
-            # list. We will try to complete it.
+            # There is already a section with this name in our list.  We
+            # will try to complete it.
             #
             section = self.sections[name]
             if section.abstract:
-                # This section already has an abstract defined;
-                # simply check that the new section doesn't
-                # provide a new one.
+                # This section already has an abstract defined; simply check
+                # that the new section doesn't provide a new one.
                 #
                 if abstract:
                     section.block.print_error(
@@ -949,8 +948,8 @@ class DocSectionList:
                       "second definition in " +
                       "'" + block.location() + "'" )
             else:
-                # The old section didn't contain an abstract; we are
-                # now going to replace it.
+                # The old section didn't contain an abstract; we are now
+                # going to replace it.
                 #
                 section.abstract    = abstract
                 section.description = block.find_content( "description" )
@@ -979,8 +978,8 @@ class DocSectionList:
 
 
     def prepare_files( self, file_prefix = None ):
-        # prepare the section list, by computing section filenames
-        # and the index
+        # prepare the section list, by computing section filenames and the
+        # index
         #
         if file_prefix:
             prefix = file_prefix + "-"
@@ -996,8 +995,8 @@ class DocSectionList:
             else:
                 section.title = "UNKNOWN_SECTION_TITLE!"
 
-        # sort section elements according to the <order> marker if
-        # available
+
+        # sort section elements according to the <order> marker if available
         #
         for section in self.sections.values():
             order = section.block.find_content( "order" )
@@ -1101,7 +1100,7 @@ class DocSectionList:
 
 
 
-# Filter a given list of DocBlocks. Returns a new list of DocBlock objects
+# Filter a given list of DocBlocks.  Returns a new list of DocBlock objects
 # that only contains element whose "type" (i.e. first marker) is in the
 # "types" parameter.
 #
@@ -1152,7 +1151,8 @@ class DocDocument:
         if block.name:
             content = block.find_content( "chapter" )
             if content:
-                # it's a chapter definition -- add it to our list
+                # a chapter definition -- add it to our list
+                #
                 chapter = DocChapter( block )
                 self.chapters.append( chapter )
             else:
@@ -1216,6 +1216,7 @@ class DocDocument:
             print chapter_footer
 
         # list lost sections
+        #
         if self.lost_sections:
             print chapter_header + "OTHER SECTIONS:" + chapter_inter
 
@@ -1234,6 +1235,7 @@ class DocDocument:
             print chapter_footer
 
         # index
+        #
         print chapter_header + '<a href="' + self.section_list.index_filename + '">Index</a>' + chapter_footer
 
         print html_footer
@@ -1265,8 +1267,8 @@ def filter_section_blocks( block ):
     return block.section != None
 
 
-# Perform a lexicographical comparison of two DocBlock
-# objects. Returns -1, 0 or 1.
+# Perform a lexicographical comparison of two DocBlock objects.  Returns -1,
+# 0 or 1.
 #
 def block_lexicographical_compare( b1, b2 ):
     if not b1.name:
@@ -1285,7 +1287,7 @@ def block_lexicographical_compare( b1, b2 ):
         return 1
 
 
-# dump a list block as a single HTML page
+# Dump a list block as a single HTML page.
 #
 def dump_html_1( block_list ):
     print html_header
@@ -1349,7 +1351,7 @@ def make_block_list():
     #  1 - parse comment format 1
     #  2 - parse comment format 2
     #
-    #  4 - wait for beginning of source (or comment ??)
+    #  4 - wait for beginning of source (or comment?)
     #  5 - process source
     #
     comment = []
@@ -1414,15 +1416,15 @@ def make_block_list():
         #
         elif format == 1:
 
-            # If the line doesn't begin with a "*", something went
-            # wrong, and we must exit, and forget the current block.
+            # If the line doesn't begin with a "*", something went wrong,
+            # and we must exit, and forget the current block.
             #
             if l == 0 or line2[0] != '*':
                 block  = []
                 format = 0
 
-            # Otherwise, we test for an end of block, which is an
-            # arbitrary number of '*', followed by '/'.
+            # Otherwise, we test for an end of block, which is an arbitrary
+            # number of '*', followed by '/'.
             #
             else:
                 i = 1
@@ -1449,8 +1451,8 @@ def make_block_list():
         #
         elif format == 2:
 
-            # If the line doesn't begin with '/*' and end with '*/',
-            # this is the end of the format 2 format.
+            # If the line doesn't begin with '/*' and end with '*/', this is
+            # the end of the format 2 format.
             #
             if l < 4 or line2[: 2] != '/*' or line2[-2 :] != '*/':
                 if block != []:
@@ -1538,7 +1540,7 @@ def main( argv ):
 ##    section_list.dump_html_index()
 
 
-# If called from the command line
+# if called from the command line
 #
 if __name__ == '__main__':
     main( sys.argv )

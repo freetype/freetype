@@ -247,7 +247,7 @@
 
     TScan  last_ey;
 
-    FT_Vector   bez_stack[32 * 3+1];
+    FT_Vector   bez_stack[32 * 3 + 1];
     int         lev_stack[32];
 
     FT_Outline  outline;

@@ -239,50 +239,49 @@
               FT_UInt32  y,
               FT_Int64  *z )
   {
-    {
-      FT_UInt32  lo1, hi1, lo2, hi2, lo, hi, i1, i2;
+    FT_UInt32  lo1, hi1, lo2, hi2, lo, hi, i1, i2;
 
 
-      lo1 = x & 0x0000FFFFU;  hi1 = x >> 16;
-      lo2 = y & 0x0000FFFFU;  hi2 = y >> 16;
+    lo1 = x & 0x0000FFFFU;  hi1 = x >> 16;
+    lo2 = y & 0x0000FFFFU;  hi2 = y >> 16;
 
-      lo = lo1 * lo2;
-      i1 = lo1 * hi2;
-      i2 = lo2 * hi1;
-      hi = hi1 * hi2;
+    lo = lo1 * lo2;
+    i1 = lo1 * hi2;
+    i2 = lo2 * hi1;
+    hi = hi1 * hi2;
 
-      /* Check carry overflow of i1 + i2 */
-      i1 += i2;
-	  hi += (FT_UInt32)( i1 < i2 ) << 16;
+    /* Check carry overflow of i1 + i2 */
+    i1 += i2;
+    hi += (FT_UInt32)( i1 < i2 ) << 16;
 
-      hi += i1 >> 16;
-      i1  = i1 << 16;
+    hi += i1 >> 16;
+    i1  = i1 << 16;
 
-      /* Check carry overflow of i1 + lo */
-      lo += i1;
-      hi += ( lo < i1 );
+    /* Check carry overflow of i1 + lo */
+    lo += i1;
+    hi += ( lo < i1 );
 
-      z->lo = lo;
-      z->hi = hi;
-    }
+    z->lo = lo;
+    z->hi = hi;
   }
 
 
   static FT_UInt32
   ft_div64by32( FT_UInt32  hi,
                 FT_UInt32  lo,
-				FT_UInt32  y )
+                FT_UInt32  y )
   {
     FT_UInt  r, q;
-	FT_Int   i;
-	
+    FT_Int   i;
+
+
     q = 0;
-	r = hi;
-	
-	if ( r >= y )
-	  return (FT_UInt32)0x7FFFFFFF;
-	  
-	i = 32;
+    r = hi;
+
+    if ( r >= y )
+      return (FT_UInt32)0x7FFFFFFFL;
+
+    i = 32;
     do
     {
       r <<= 1;
@@ -295,10 +294,9 @@
         q |= 1;
       }
       lo <<= 1;
-    }
-	while (--i);
-	
-	return q;
+    } while ( --i );
+
+    return q;
   }
 
 
@@ -310,6 +308,7 @@
   {
     register FT_UInt32  lo, hi, max;
 
+
     max = x->lo > y->lo ? x->lo : y->lo;
     lo  = x->lo + y->lo;
     hi  = x->hi + y->hi + ( lo < max );
@@ -319,15 +318,13 @@
   }
 
 
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Long )  FT_MulDiv( FT_Long  a,
                                        FT_Long  b,
                                        FT_Long  c )
   {
-    long   s;
+    long  s;
 
 
     if ( a == 0 || b == c )
@@ -347,10 +344,10 @@
 
 
       ft_multo64( a, b, &temp );
-	  
-	  temp2.hi = 0;
-	  temp2.lo = (FT_UInt32)(c >> 1);
-	  FT_Add64( &temp, &temp2, &temp );
+
+      temp2.hi = 0;
+      temp2.lo = (FT_UInt32)(c >> 1);
+      FT_Add64( &temp, &temp2, &temp );
       a = ft_div64by32( temp.hi, temp.lo, b );
     }
     else
@@ -440,13 +437,14 @@
                                      FT_Int32   y,
                                      FT_Int64  *z )
   {
-    FT_Int32   s;
+    FT_Int32  s;
 
 
     s  = x; x = ABS( x );
     s ^= y; y = ABS( y );
 
     ft_multo64( x, y, z );
+
     if ( s < 0 )
     {
       z->lo = (FT_UInt32)-(FT_Int32)z->lo;
@@ -476,7 +474,7 @@
     if ( x->hi == 0 )
     {
       if ( y > 0 )
-        q = (x->lo + (y >> 1)) / y;
+        q = ( x->lo + ( y >> 1 ) ) / y;
       else
         q = 0x7FFFFFFFL;
 
@@ -484,6 +482,7 @@
     }
 
     q = ft_div64by32( x->hi, x->lo, y );
+
     return ( s < 0 ? -(FT_Int32)q : (FT_Int32)q );
   }
 
@@ -563,19 +562,19 @@
   }
 
 
-
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
-
 
 
 #endif /* FT_LONG64 */
 
 
- /* a not-so-fast but working 16.16 fixed point square root function */
+  /* a not-so-fast but working 16.16 fixed point square root function */
+
   FT_EXPORT_DEF( FT_Int32 )  FT_SqrtFixed( FT_Int32  x )
   {
     FT_UInt32  root, rem_hi, rem_lo, test_div;
     FT_Int     count;
+
 
     root = 0;
 
@@ -584,19 +583,19 @@
       rem_hi = 0;
       rem_lo = x;
       count  = 24;
-	  do
+      do
       {
-        rem_hi   = (rem_hi << 2) | (rem_lo >> 30);
+        rem_hi   = ( rem_hi << 2 ) | ( rem_lo >> 30 );
         rem_lo <<= 2;
         root   <<= 1;
-        test_div = (root << 1) + 1;
+        test_div = ( root << 1 ) + 1;
+
         if ( rem_hi >= test_div )
         {
           rem_hi -= test_div;
           root   += 1;
         }
-      }
-	  while (--count);
+      } while ( --count );
     }
 
     return (FT_Int32)root;
