@@ -1,3 +1,7 @@
+2005-02-04  Werner Lemberg  <wl@gnu.org>
+
+	* src/otlayout/*: Removed.  Obsolete.
+
 2004-12-28  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ltmain.sh: Regenerated with `libtoolize --force
