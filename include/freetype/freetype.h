@@ -822,123 +822,141 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #define FT_FACE_FLAG_EXTERNAL_STREAM   0x4000
 
+
   /* */
 
-  /***********************************************************************
-   *
-   * @macro: FT_HAS_HORIZONTAL (face)
-   *
-   * @description:
-   *   a macro that returns true whenever a face object contains horizontal
-   *   metrics. (this is true for all font formats though).
-   *
-   * @also:
-   *   @FT_HAS_VERTICAL can be used to check for vertical metrics.
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro: FT_HAS_HORIZONTAL (face)                                      */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*   A macro that returns true whenever a face object contains           */
+  /*   horizontal metrics (this is true for all font formats though).      */
+  /*                                                                       */
+  /* @also:                                                                */
+  /*   @FT_HAS_VERTICAL can be used to check for vertical metrics.         */
+  /*                                                                       */
 #define FT_HAS_HORIZONTAL( face ) \
           ( face->face_flags & FT_FACE_FLAG_HORIZONTAL )
 
-  /***********************************************************************
-   *
-   * @macro: FT_HAS_VERTICAL (face)
-   *
-   * @description:
-   *   a macro that returns true whenever a face object contains vertical
-   *   metrics.
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro: FT_HAS_VERTICAL (face)                                        */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*   A macro that returns true whenever a face object contains vertical  */
+  /*   metrics.                                                            */
+  /*                                                                       */
 #define FT_HAS_VERTICAL( face ) \
           ( face->face_flags & FT_FACE_FLAG_VERTICAL )
 
-  /***********************************************************************
-   *
-   * @macro: FT_HAS_KERNING (face)
-   *
-   * @description:
-   *   a macro that returns true whenever a face object contains kerning
-   *   data that can be accessed with @FT_Get_Kerning
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro: FT_HAS_KERNING (face)                                         */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*   A macro that returns true whenever a face object contains kerning   */
+  /*   data that can be accessed with @FT_Get_Kerning.                     */
+  /*                                                                       */
 #define FT_HAS_KERNING( face ) \
           ( face->face_flags & FT_FACE_FLAG_KERNING )
 
-  /***********************************************************************
-   *
-   * @macro: FT_IS_SCALABLE (face)
-   *
-   * @description:
-   *   a macro that returns true whenever a face object contains a scalable
-   *   font face. I.e., true for TrueType, Type 1, CID and OpenType/CFF
-   *   font formats.
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro: FT_IS_SCALABLE (face)                                         */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*   A macro that returns true whenever a face object contains a         */
+  /*   scalable font face (true for TrueType, Type 1, CID, and             */
+  /*   OpenType/CFF font formats.                                          */
+  /*                                                                       */
 #define FT_IS_SCALABLE( face ) \
           ( face->face_flags & FT_FACE_FLAG_SCALABLE )
 
 
-  /***********************************************************************
-   *
-   * @macro: FT_IS_SFNT (face)
-   *
-   * @description:
-   *   a macro that returns true whenever a face object contains a font whose
-   *   format is based on the SFNT storage scheme. This usually means:
-   *   TrueType fonts, OpenType fonts, as well as SFNT-based embedded bitmap
-   *   fonts.
-   *
-   *   When this macro is true, all functions defined in @FT_SFNT_NAMES_H
-   *   and @FT_TRUETYPE_TABLES_H are available
-   */
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro: FT_IS_SFNT (face)                                             */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*   A macro that returns true whenever a face object contains a font    */
+  /*   whose format is based on the SFNT storage scheme.  This usually     */
+  /*   means: TrueType fonts, OpenType fonts, as well as SFNT-based        */
+  /*   embedded bitmap fonts.                                              */
+  /*                                                                       */
+  /*   If this macro is true, all functions defined in @FT_SFNT_NAMES_H    */
+  /*   and @FT_TRUETYPE_TABLES_H are available.                            */
+  /*                                                                       */
 #define FT_IS_SFNT( face ) \
           ( face->face_flags & FT_FACE_FLAG_SFNT )
 
-  /***********************************************************************
-   *
-   * @macro: FT_IS_FIXED_WIDTH (face)
-   *
-   * @description:
-   *   a macro that returns true whenever a face object contains a font
-   *   face that contains fixed-width (or "monospace", "fixed-pitch", etc..)
-   *   glyphs.
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro: FT_IS_FIXED_WIDTH (face)                                      */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*   A macro that returns true whenever a face object contains a font    */
+  /*   face that contains fixed-width (or "monospace", "fixed-pitch",      */
+  /*   etc.) glyphs.                                                       */
+  /*                                                                       */
 #define FT_IS_FIXED_WIDTH( face ) \
           ( face->face_flags & FT_FACE_FLAG_FIXED_WIDTH )
 
 
-  /***********************************************************************
-   *
-   * @macro: FT_IS_FIXED_SIZES (face)
-   *
-   * @description:
-   *   a macro that returns true whenever a face object contains some
-   *   embedded bitmaps. See the 'fixed_sizes' field of the @FT_FaceRec
-   *   structure.
-   */
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro: FT_IS_FIXED_SIZES (face)                                      */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*   A macro that returns true whenever a face object contains some      */
+  /*   embedded bitmaps.  See the `fixed_sizes' field of the @FT_FaceRec   */
+  /*   structure.                                                          */
+  /*                                                                       */
 #define FT_HAS_FIXED_SIZES( face ) \
           ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
 
+
    /* */
-   
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro: FT_HAS_FAST_GLYPHS (face)                                     */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*   XXX                                                                 */
+  /*                                                                       */
 #define FT_HAS_FAST_GLYPHS( face ) \
           ( face->face_flags & FT_FACE_FLAG_FAST_GLYPHS )
 
-  /***********************************************************************
-   *
-   * @macro: FT_HAS_GLYPH_NAMES (face)
-   *
-   * @description:
-   *   a macro that returns true whenever a face object contains some
-   *   glyph names that can be accessed through @FT_Get_Glyph_Names
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro: FT_HAS_GLYPH_NAMES (face)                                     */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*   A macro that returns true whenever a face object contains some      */
+  /*   glyph names that can be accessed through @FT_Get_Glyph_Names.       */
+  /*                                                                       */
 #define FT_HAS_GLYPH_NAMES( face ) \
           ( face->face_flags & FT_FACE_FLAG_GLYPH_NAMES )
 
-  /***********************************************************************
-   *
-   * @macro: FT_HAS_MULTIPLE_MASTERS (face)
-   *
-   * @description:
-   *   a macro that returns true whenever a face object contains some
-   *   multiple masters. The functions provided by @FT_MULTIPLE_MASTERS_H
-   *   are then available to choose the exact design you want.
-   */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro: FT_HAS_MULTIPLE_MASTERS (face)                                */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*   A macro that returns true whenever a face object contains some      */
+  /*   multiple masters.  The functions provided by                        */
+  /*   @FT_MULTIPLE_MASTERS_H are then available to choose the exact       */
+  /*   design you want.                                                    */
+  /*                                                                       */
 #define FT_HAS_MULTIPLE_MASTERS( face ) \
           ( face->face_flags & FT_FACE_FLAG_MULTIPLE_MASTERS )
 
