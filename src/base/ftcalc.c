@@ -174,7 +174,7 @@
     if ( c < 0 ) { c = -c; s = -s; }
 
     d = (FT_Long)( c > 0 ? ( (FT_Int64)a * b + ( c >> 1 ) ) / c
-                : 0x7FFFFFFFL );
+                         : 0x7FFFFFFFL );
 
     return ( s > 0 ) ? d : -d;
   }
@@ -386,7 +386,7 @@
       temp2.hi = 0;
       temp2.lo = (FT_UInt32)(c >> 1);
       FT_Add64( &temp, &temp2, &temp );
-      a = ft_div64by32( temp.hi, temp.lo, b );
+      a = ft_div64by32( temp.hi, temp.lo, c );
     }
     else
       a = 0x7FFFFFFFL;

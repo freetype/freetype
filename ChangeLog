@@ -1,3 +1,7 @@
+2001-08-17  Martin Muskens  <mmuskens@aurelon.com>
+
+	* src/base/ftcalc.c (FT_MulDiv): Fixed serious typo.
+
 2001-08-12  Werner Lemberg  <wl@gnu.org>
 
 	Updating to OpenType 1.3.
