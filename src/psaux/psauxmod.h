@@ -1,5 +1,5 @@
-#ifndef PSMODULE_H
-#define PSMODULE_H
+#ifndef PSAUXMOD_H
+#define PSAUXMOD_H
 
 #include <freetype/ftmodule.h>
 
@@ -13,4 +13,4 @@
   }
 #endif
 
-#endif /* PSMODULE_H */
+#endif /* PSAUXMOD_H */
