@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 42 font parser (body).                                          */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004 by Roberto Alameda.                         */
+/*  Copyright 2002, 2003, 2004, 2005 by Roberto Alameda.                   */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -412,14 +412,16 @@
 
             parser->root.cursor = cur;
             T1_Skip_PS_Token( parser );
+            if ( parser->root.error )
+              return;
 
             len = parser->root.cursor - cur;
 
             parser->root.error = T1_Add_Table( char_table, charcode,
                                                cur, len + 1 );
-            char_table->elements[charcode][len] = '\0';
             if ( parser->root.error )
               return;
+            char_table->elements[charcode][len] = '\0';
 
             n++;
           }
@@ -550,6 +552,8 @@
         string_size = T1_ToInt( parser );
 
         T1_Skip_PS_Token( parser );             /* `RD' */
+        if ( parser->root.error )
+          return;
 
         string_buf = parser->root.cursor + 1;   /* one space after `RD' */
 
@@ -691,6 +695,8 @@
 
 
       T1_Skip_PS_Token( parser );
+      if ( parser->root.error )
+        return;
       T1_Skip_Spaces( parser );
       cur = parser->root.cursor;
 
@@ -705,6 +711,8 @@
           break;
         }
         T1_Skip_PS_Token( parser );
+        if ( parser->root.error )
+          return;
         T1_Skip_Spaces( parser );
       }
     }
@@ -767,6 +775,8 @@
         break;
 
       T1_Skip_PS_Token( parser );
+      if ( parser->root.error )
+        return;
 
       if ( *cur == '/' )
       {
@@ -1003,6 +1013,8 @@
             break;
 
           T1_Skip_PS_Token( parser );
+          if ( parser->root.error )
+            goto Exit;
           T1_Skip_Spaces  ( parser );
           cur = parser->root.cursor;
         }
@@ -1033,6 +1045,8 @@
 
         parser->root.cursor = cur;
         T1_Skip_PS_Token( parser );
+        if ( parser->root.error )
+          goto Exit;
 
         len = parser->root.cursor - cur;
 
@@ -1069,11 +1083,16 @@
         }
       }
       else
+      {
         T1_Skip_PS_Token( parser );
+        if ( parser->root.error )
+          goto Exit;
+      }
 
       T1_Skip_Spaces( parser );
     }
 
+  Exit:
     return parser->root.error;
   }
 

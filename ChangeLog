@@ -1,3 +1,23 @@
+2005-02-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (read_binary_data): Return more meaningful
+	value.
+	(parse_encoding, parse_subrs, parse_charstrings, parse_dict): Check
+	parser error value after call to T1_Skip_PS_Token (where necessary).
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Check parser error
+	value after call to T1_Skip_PS_Token.
+
+	* src/cid/cidparse.c (cid_parser_new): Check parser error value
+	after call to cid_parser_skip_PS_token.
+
+	* src/type42/t42parse.c (t42_parse_encoding, t42_parse_sfnts,
+	t42_parse_charstrings, t42_parse_dict): Check parser error value
+	after call to T1_Skip_PS_Token (where necessary).
+
+	* src/psaux/psobjc.c (skip_string, ps_parser_skip_PS_token,
+	ps_tobytes): Add error messages.
+
 2005-02-12  Werner Lemberg  <wl@gnu.org>
 
 	* configure: Output more variables to the created Makefile so that
