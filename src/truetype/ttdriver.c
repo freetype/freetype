@@ -388,7 +388,7 @@
   };
 
 
-  static FT_Module_Interface
+  FT_CALLBACK_DEF( FT_Module_Interface )
   tt_get_interface( FT_Module    driver,    /* TT_Driver */
                     const char*  tt_interface )
   {

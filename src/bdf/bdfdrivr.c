@@ -284,9 +284,10 @@ THE SOFTWARE.
   }
 
 
-  FT_CALLBACK_DEF( FT_Error )
-  BDF_Face_Done( BDF_Face  face )
+  FT_CALLBACK_DEF( void )
+  BDF_Face_Done( FT_Face  bdfface )         /* BDF_Face */
   {
+    BDF_Face   face   = (BDF_Face)bdfface;
     FT_Memory  memory = FT_FACE_MEMORY( face );
 
 
@@ -296,26 +297,25 @@ THE SOFTWARE.
 
     FT_FREE( face->charset_encoding );
     FT_FREE( face->charset_registry );
-    FT_FREE( face->root.family_name );
+    FT_FREE( bdfface->family_name );
 
-    FT_FREE( face->root.available_sizes );
+    FT_FREE( bdfface->available_sizes );
 
     FT_FREE( face->bdffont );
 
     FT_TRACE4(( "BDF_Face_Done: done face\n" ));
-
-    return BDF_Err_Ok;
   }
 
 
   FT_CALLBACK_DEF( FT_Error )
   BDF_Face_Init( FT_Stream      stream,
-                 BDF_Face       face,
+                 FT_Face        bdfface,        /* BDF_Face */
                  FT_Int         face_index,
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
     FT_Error       error  = BDF_Err_Ok;
+    BDF_Face       face   = (BDF_Face)bdfface;
     FT_Memory      memory = FT_FACE_MEMORY( face );
 
     bdf_font_t*    font;
@@ -346,7 +346,6 @@ THE SOFTWARE.
     /* we have a bdf font: let's construct the face object */
     face->bdffont = font;
     {
-      FT_Face          root = FT_FACE( face );
       bdf_property_t*  prop = NULL;
 
 
@@ -357,18 +356,18 @@ THE SOFTWARE.
                   font->unencoded_size,
                   font->unencoded_used ));
 
-      root->num_faces  = 1;
-      root->face_index = 0;
-      root->face_flags = FT_FACE_FLAG_FIXED_SIZES |
-                         FT_FACE_FLAG_HORIZONTAL  |
-                         FT_FACE_FLAG_FAST_GLYPHS;
+      bdfface->num_faces  = 1;
+      bdfface->face_index = 0;
+      bdfface->face_flags = FT_FACE_FLAG_FIXED_SIZES |
+                            FT_FACE_FLAG_HORIZONTAL  |
+                            FT_FACE_FLAG_FAST_GLYPHS;
 
       prop = bdf_get_font_property( font, "SPACING" );
       if ( prop && prop->format == BDF_ATOM                             &&
            prop->value.atom                                             &&
            ( *(prop->value.atom) == 'M' || *(prop->value.atom) == 'm' ||
              *(prop->value.atom) == 'C' || *(prop->value.atom) == 'c' ) )
-        root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
+        bdfface->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
       /* FZ XXX: TO DO: FT_FACE_FLAGS_VERTICAL   */
       /* FZ XXX: I need a font to implement this */
@@ -379,24 +378,24 @@ THE SOFTWARE.
         int  l = ft_strlen( prop->value.atom ) + 1;
 
 
-        if ( FT_NEW_ARRAY( root->family_name, l ) )
+        if ( FT_NEW_ARRAY( bdfface->family_name, l ) )
           goto Exit;
-        ft_strcpy( root->family_name, prop->value.atom );
+        ft_strcpy( bdfface->family_name, prop->value.atom );
       }
       else
-        root->family_name = 0;
+        bdfface->family_name = 0;
 
       if ( ( error = bdf_interpret_style( face ) ) != 0 )
         goto Exit;
 
-      root->num_glyphs = font->glyphs_size;     /* unencoded included */
+      bdfface->num_glyphs = font->glyphs_size;     /* unencoded included */
 
-      root->num_fixed_sizes = 1;
-      if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
+      bdfface->num_fixed_sizes = 1;
+      if ( FT_NEW_ARRAY( bdfface->available_sizes, 1 ) )
         goto Exit;
 
       {
-        FT_Bitmap_Size*  bsize = root->available_sizes;
+        FT_Bitmap_Size*  bsize = bdfface->available_sizes;
         FT_Short         resolution_x = 0, resolution_y = 0;
 
 
@@ -521,8 +520,8 @@ THE SOFTWARE.
 
 #if 0
               /* Select default charmap */
-              if (root->num_charmaps)
-                root->charmap = root->charmaps[0];
+              if ( bdfface->num_charmaps )
+                bdfface->charmap = bdfface->charmaps[0];
 #endif
             }
 
@@ -544,26 +543,31 @@ THE SOFTWARE.
           error = FT_CMap_New( &bdf_cmap_class, NULL, &charmap, NULL );
 
           /* Select default charmap */
-          if (root->num_charmaps)
-            root->charmap = root->charmaps[0];
+          if ( bdfface->num_charmaps )
+            bdfface->charmap = bdfface->charmaps[0];
         }
       }
-    }
+   }
 
   Exit:
     return error;
 
   Fail:
-    BDF_Face_Done( face );
+    BDF_Face_Done( bdfface );
     return BDF_Err_Unknown_File_Format;
   }
 
 
-  static FT_Error
-  BDF_Set_Pixel_Size( FT_Size  size )
+  FT_CALLBACK_DEF( FT_Error )
+  BDF_Set_Pixel_Size( FT_Size  size,
+                      FT_UInt  char_width,
+                      FT_UInt  char_height )
   {
     BDF_Face  face = (BDF_Face)FT_SIZE_FACE( size );
     FT_Face   root = FT_FACE( face );
+
+    FT_UNUSED( char_width );
+    FT_UNUSED( char_height );
 
 
     FT_TRACE4(( "rec %d - pres %d\n",
@@ -584,7 +588,23 @@ THE SOFTWARE.
   }
 
 
-  static FT_Error
+  FT_CALLBACK_DEF( FT_Error )
+  BDF_Set_Point_Size( FT_Size     size,
+                      FT_F26Dot6  char_width,
+                      FT_F26Dot6  char_height,
+                      FT_UInt     horz_resolution,
+                      FT_UInt     vert_resolution )
+  {
+    FT_UNUSED( char_width );
+    FT_UNUSED( char_height );
+    FT_UNUSED( horz_resolution );
+    FT_UNUSED( vert_resolution );
+
+    return BDF_Set_Pixel_Size( size, 0, 0 );
+  }
+
+
+  FT_CALLBACK_DEF( FT_Error )
   BDF_Glyph_Load( FT_GlyphSlot  slot,
                   FT_Size       size,
                   FT_UInt       glyph_index,
@@ -817,7 +837,7 @@ THE SOFTWARE.
   };
 
 
-  static FT_Module_Interface
+  FT_CALLBACK_DEF( FT_Module_Interface )
   bdf_driver_requester( FT_Module    module,
                         const char*  name )
   {
@@ -851,21 +871,21 @@ THE SOFTWARE.
     sizeof ( FT_SizeRec ),
     sizeof ( FT_GlyphSlotRec ),
 
-    (FT_Face_InitFunc)        BDF_Face_Init,
-    (FT_Face_DoneFunc)        BDF_Face_Done,
-    (FT_Size_InitFunc)        0,
-    (FT_Size_DoneFunc)        0,
-    (FT_Slot_InitFunc)        0,
-    (FT_Slot_DoneFunc)        0,
+    BDF_Face_Init,
+    BDF_Face_Done,
+    0,                          /* FT_Size_InitFunc */
+    0,                          /* FT_Size_DoneFunc */
+    0,                          /* FT_Slot_InitFunc */
+    0,                          /* FT_Slot_DoneFunc */
 
-    (FT_Size_ResetPointsFunc) BDF_Set_Pixel_Size,
-    (FT_Size_ResetPixelsFunc) BDF_Set_Pixel_Size,
+    BDF_Set_Point_Size,
+    BDF_Set_Pixel_Size,
 
-    (FT_Slot_LoadFunc)        BDF_Glyph_Load,
+    BDF_Glyph_Load,
 
-    (FT_Face_GetKerningFunc)  0,
-    (FT_Face_AttachFunc)      0,
-    (FT_Face_GetAdvancesFunc) 0
+    0,                          /* FT_Face_GetKerningFunc   */
+    0,                          /* FT_Face_AttachFunc       */
+    0,                          /* FT_Face_GetAdvancesFunc  */
   };
 
 

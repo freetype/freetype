@@ -1,15 +1,75 @@
+2004-05-04  Steve Hartwell  <shspamsink@comcast.net>
+
+	* src/truetype/ttobjs.c (tt_driver_done): Fix typo.
+
+2004-05-04  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdfdrivr.c (BDF_Face_Done, BDF_Face_Init,
+	BDF_Set_Pixel_Size): Don't use BDF_XXX but FT_XXX arguments which
+	are typecast to the proper BDF_XXX types within the function.
+	Update code accordingly.
+	Use FT_CALLBACK_DEF throughout.
+	(BDF_Set_Point_Size): New wrapper function.
+	(bdf_driver_class): Remove casts.
+
+	* src/cff/cffdrivr.c (Get_Kerning, Load_Glyph, cff_get_interface):
+	Don't use CFF_XXX but FT_XXX arguments which are typecast to the
+	proper CFF_XXX types within the function.
+	Update code accordingly.
+	Use FT_CALLBACK_DEF throughout.
+	(cff_driver_class): Remove casts.
+
+	* src/cff/cffobjs.h, src/cff/cffobjs.c (cff_size_done,
+	cff_size_init, cff_size_reset, cff_slot_done, cff_slot_init,
+	cff_face_init, cff_face_done, cff_driver_init, cff_driver_done):
+	Don't use CFF_XXX but FT_XXX arguments which are typecast to the
+	proper CFF_XXX types within the function.
+	Update code accordingly.
+	(cff_point_size_reset): New wrapper function.
+
+	* src/cid/cidobjs.h, src/cid/cidobjs.c (cid_slot_done,
+	cid_slot_init, cid_size_done, cid_size_init, cid_size_reset,
+	cid_face_done, cid_face_init, cid_driver_init, cid_driver_done):
+	Don't use CID_XXX but FT_XXX arguments which are typecast to the
+	proper CID_XXX types within the function.
+	Update code accordingly.
+	(cid_point_size_reset): New wrapper function.
+
+	* src/cid/cidgload.c, src/cid/cidgload.h (cid_slot_load_glyph):
+	Don't use CID_XXX but FT_XXX arguments which are typecast to the
+	proper CID_XXX types within the function.
+	Update code accordingly.
+
+	* src/cid/cidriver.c (cid_get_interface):
+	Don't use CID_XXX but FT_XXX arguments which are typecast to the
+	proper CID_XXX types within the function.
+	Update code accordingly.
+	Use FT_CALLBACK_DEF.
+	(t1cid_driver_class): Remove casts.
+
+	* src/truetype/ttdriver.c (tt_get_interface): Use FT_CALLBACK_DEF.
+	* src/truetype/ttgxvar.c (ft_var_load_avar): Don't free non-local
+	variables (this is done later).
+	(ft_var_load_avar): Fix call to FT_FRAME_ENTER.
+	(TT_Get_MM_Var): Fix size for `fvar_fields'.
+	(TT_Vary_Get_Glyph_Deltas): Handle deallocation of local variables
+	correctly.
+
+	* src/base/ftdbgmem.c (ft_mem_debug_realloc): Don't abort if
+	current size is zero.
+
 2004-05-03  Steve Hartwell  <shspamsink@comcast.net>
 
 	* src/truetype/ttobjs.h, src/truetype/ttobjs.c (tt_face_init,
 	tt_face_done, tt_size_init, tt_size_done, tt_driver_init,
 	tt_driver_done): Don't use TT_XXX but FT_XXX arguments which are
-	typecast to the proper TT_XXX within the function.
+	typecast to the proper TT_XXX types within the function.
 	Update code accordingly.
 
 	* src/truetype/ttdriver.c (Get_Kerning, Set_Char_Sizes,
 	Set_Pixel_Sizes, Load_Glyph, tt_get_interface): Don't use TT_XXX but
-	FT_XXX arguments which are typecast to the proper TT_XXX within the
-	function.
+	FT_XXX arguments which are typecast to the proper TT_XXX types
+	within the function.
 	Update code accordingly.
 	(tt_driver_class): Remove casts.
 
@@ -1402,7 +1462,7 @@
 	(FT_Load_Glyph): Update computation of linearHoriAdvance and
 	linearVertAdvance.
 
-	* src/true/type/ttinterp.c (Update_Max): Use FT_REALLOC.
+	* src/truetype/ttinterp.c (Update_Max): Use FT_REALLOC.
 
 2003-11-22  David Turner  <david@freetype.org>
 
