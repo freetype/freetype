@@ -6,6 +6,9 @@
 
 	* src/cff/t2parse.c (parse_t2_real): Fixed real number parsing
 	loop.
+	
+	* src/cff/t2load.c (T2_Get_String): Called T2_Get_Name with a
+	sid that was off by one.
 
 2000-11-16  David Turner <david@freetype.org>
 
