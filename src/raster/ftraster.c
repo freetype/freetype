@@ -3260,12 +3260,12 @@
     if ( outline->n_points != outline->contours[outline->n_contours - 1] + 1 )
       return Raster_Err_Invalid;
 
-    if ( !target_map || !target_map->buffer )
-      return Raster_Err_Invalid;
-
     /* this version of the raster does not support direct rendering, sorry */
     if ( params->flags & ft_raster_flag_direct )
       return Raster_Err_Unsupported;
+
+    if ( !target_map || !target_map->buffer )
+      return Raster_Err_Invalid;
 
     ras.outline  = *outline;
     ras.target   = *target_map;
