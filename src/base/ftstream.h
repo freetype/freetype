@@ -75,6 +75,11 @@ typedef struct FT_Frame_Field_
 #define FT_FRAME_BYTE(s,f)   FT_FRAME_FIELD( ft_frame_byte, s, f )
 #define FT_FRAME_CHAR(s,f)   FT_FRAME_FIELD( ft_frame_schar, s, f )
 
+#define FT_FRAME_LONG_LE(s,f)   FT_FRAME_FIELD( ft_frame_long_le, s, f )
+#define FT_FRAME_ULONG_LE(s,f)  FT_FRAME_FIELD( ft_frame_ulong_le, s, f )
+#define FT_FRAME_SHORT_LE(s,f)  FT_FRAME_FIELD( ft_frame_short_le, s, f )
+#define FT_FRAME_USHORT_LE(s,f) FT_FRAME_FIELD( ft_frame_ushort_le, s, f )
+
   /*************************************************************************/
   /*                                                                       */
   /* integer extraction macros - the `buffer' parameter must ALWAYS be of  */
@@ -104,6 +109,28 @@ typedef struct FT_Frame_Field_
 
 #define NEXT_ULong(buffer)   ((unsigned long)NEXT_Long(buffer))
 
+
+#define NEXT_ShortLE(buffer)  ( buffer += 2,                              \
+                                ( (short)((signed char)buffer[-1] << 8) | \
+				          (unsigned char)buffer[-2]     ) )
+
+#define NEXT_UShortLE(buffer)  ((unsigned short)NEXT_ShortLE(buffer))
+
+#define NEXT_OffsetLE(buffer)  ( buffer += 3,                                \
+                                 ( ((long)(signed   char)buffer[-1] << 16) | \
+                                   ((long)(unsigned char)buffer[-2] <<  8) | \
+                                    (long)(unsigned char)buffer[-3]        ) )
+
+#define NEXT_UOffsetLE(buffer) ((unsigned long)NEXT_OffsetLE(buffer))
+
+
+#define NEXT_LongLE(buffer)  ( buffer += 4,                                \
+                               ( ((long)(signed   char)buffer[-1] << 24) | \
+                                 ((long)(unsigned char)buffer[-2] << 16) | \
+                                 ((long)(unsigned char)buffer[-3] <<  8) | \
+                                  (long)(unsigned char)buffer[-4]        ) )
+
+#define NEXT_ULongLE(buffer)   ((unsigned long)NEXT_LongLE(buffer))
 
   /*************************************************************************/
   /*                                                                       */
