@@ -22,6 +22,8 @@ LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
     - The BDF driver now uses the DEFAULT_CHAR property (if available)
       to select a glyph shape for the undefined glyph.
 
+    - The stroker failed for closed outlines and single points.
+
 
   II. IMPORTANT CHANGES
 
@@ -36,6 +38,11 @@ LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
       active.  Using those values can improve the inter-letter spacing
       considerably.   See the documentation of  `FT_GlyphSlotRec'  and
       the `ftstring' demo program how to use it.
+
+    - Loading TrueType and Type 1 fonts has been made much faster.
+
+    - The stroker is  no longer experimental (but the  cache subsystem
+      still is).
 
 
   III. MISCELLANEOUS

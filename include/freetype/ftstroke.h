@@ -23,7 +23,9 @@
 #include FT_OUTLINE_H
 #include FT_GLYPH_H
 
+
 FT_BEGIN_HEADER
+
 
  /************************************************************************
   *
@@ -34,18 +36,18 @@ FT_BEGIN_HEADER
   *    Glyph Stroker
   *
   * <Abstract>
-  *    Generating bordered and stroked glyphs
+  *    Generating bordered and stroked glyphs.
   *
   * <Description>
-  *    FreeType now provides a glyph stroker component that is capable
-  *    of generating stroked outlines of a given vectorial glyph. It
-  *    also allows you to retrieve the "outside" and/or "inside" borders
-  *    of the stroke.
+  *    This component generates stroked outlines of a given vectorial
+  *    glyph.  It also allows you to retrieve the `outside' and/or the
+  *    `inside' borders of the stroke.
   *
-  *    This can be useful to generate "bordered" glyph, i.e. glyphs
-  *    displayed with a colored (and anti-aliased) border around their
+  *    This can be useful to generate `bordered' glyph, i.e., glyphs
+  *    displayed with a coloured (and anti-aliased) border around their
   *    shape.
   */
+
 
  /**************************************************************
   *

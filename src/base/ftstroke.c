@@ -1633,14 +1633,13 @@
 
     for ( n = 0; n < outline->n_contours; n++ )
     {
-      FT_Int  last;  /* index of last point in contour */
+      FT_UInt  last;  /* index of last point in contour */
 
 
       last  = outline->contours[n];
       limit = outline->points + last;
 
-     /* skip empty points, we don't stroke these
-      */
+      /* skip empty points; we don't stroke these */
       if ( last <= first )
       {
         first = last + 1;

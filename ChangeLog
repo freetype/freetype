@@ -1,15 +1,21 @@
+2004-07-15  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+	* src/base/ftstroke.c (FT_Stroker_ParseOutline): Fix compiler
+	warning.
+
 2004-07-15  David Turner  <david@freetype.org>
 
-        * src/base/ftstroke (FT_Stroker_ParseOutline): single points
-        are not stroked, preventing a bug with pala.ttf and other
-        fonts.
+	* src/base/ftstroke.c (FT_Stroker_ParseOutline): Single points
+	are not stroked, preventing a bug with pala.ttf and other
+	fonts.
 
-        * include/freetype/ftstroke.h: updating documentation comments.
-        I hereby declare the stroker as OFFICIAL !
+	* include/freetype/ftstroke.h: Updating documentation comments.
 
 2004-07-13  Werner Lemberg  <wl@gnu.org>
 
-	* src/base/ftstroke (ft_stroke_border_reverse): Removed.  Unused.
+	* src/base/ftstroke.c (ft_stroke_border_reverse): Removed.  Unused.
 
 2004-07-12  David Turner  <david@freetype.org>
 
