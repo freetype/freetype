@@ -1,10 +1,10 @@
 2000-11-16  David Turner <david@freetype.org>
 
-	* src/autohint/ahtypes.h (AH_Hinter): added new fields used to
-	control the auto-hinting of synthetic Type 1 fonts.
+	* src/autohint/ahtypes.h (AH_Hinter): Added new fields to control
+	auto-hinting of synthetic Type 1 fonts.
 
 	* src/autohint/ahhint.c (ah_hinter_load ah_hinter_load_glyph):
-	added auto-hinting support of synthetic Type 1 fonts.
+	Added auto-hinting support of synthetic Type 1 fonts.
 
 2000-11-12  Tom Kacvinsky  <tjk@ams.org>
 
