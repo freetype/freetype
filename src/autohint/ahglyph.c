@@ -28,7 +28,109 @@
 #include <stdio.h>
 
 
-#define xxxAH_DEBUG_GLYPH
+
+#ifdef AH_DEBUG
+
+  void  ah_dump_edges( AH_Outline*  outline )
+  {
+    AH_Edge*     edges;
+    AH_Edge*     edge_limit;
+    AH_Segment*  segments;
+    FT_Int       dimension;
+
+
+    edges      = outline->horz_edges;
+    edge_limit = edges + outline->num_hedges;
+    segments   = outline->horz_segments;
+
+    for ( dimension = 1; dimension >= 0; dimension-- )
+    {
+      AH_Edge*  edge;
+
+
+      printf ( "Table of %s edges:\n",
+               !dimension ? "vertical" : "horizontal" );
+      printf ( "  [ index |  pos |  dir  | link |"
+               " serif | blue | opos  |  pos  ]\n" );
+
+      for ( edge = edges; edge < edge_limit; edge++ )
+      {
+        printf ( "  [ %5d | %4d | %5s | %4d | %5d |  %c  | %5.2f | %5.2f ]\n",
+                 edge - edges,
+                 (int)edge->fpos,
+                 edge->dir == ah_dir_up
+                   ? "up"
+                   : ( edge->dir == ah_dir_down
+                         ? "down"
+                         : ( edge->dir == ah_dir_left
+                               ? "left"
+                               : ( edge->dir == ah_dir_right
+                                     ? "right"
+                                     : "none" ) ) ),
+                 edge->link ? ( edge->link - edges ) : -1,
+                 edge->serif ? ( edge->serif - edges ) : -1,
+                 edge->blue_edge ? 'y' : 'n',
+                 edge->opos / 64.0,
+                 edge->pos / 64.0 );
+      }
+
+      edges      = outline->vert_edges;
+      edge_limit = edges + outline->num_vedges;
+      segments   = outline->vert_segments;
+    }
+  }
+
+
+  /* A function used to dump the array of linked segments */
+  void  ah_dump_segments( AH_Outline*  outline )
+  {
+    AH_Segment*  segments;
+    AH_Segment*  segment_limit;
+    AH_Point*    points;
+    FT_Int       dimension;
+
+
+    points        = outline->points;
+    segments      = outline->horz_segments;
+    segment_limit = segments + outline->num_hsegments;
+
+    for ( dimension = 1; dimension >= 0; dimension-- )
+    {
+      AH_Segment*  seg;
+
+
+      printf ( "Table of %s segments:\n",
+               !dimension ? "vertical" : "horizontal" );
+      printf ( "  [ index |  pos |  dir  | link | serif |"
+               " numl | first | start ]\n" );
+
+      for ( seg = segments; seg < segment_limit; seg++ )
+      {
+        printf ( "  [ %5d | %4d | %5s | %4d | %5d | %4d | %5d | %5d ]\n",
+                 seg - segments,
+                 (int)seg->pos,
+                 seg->dir == ah_dir_up
+                   ? "up"
+                   : ( seg->dir == ah_dir_down
+                         ? "down"
+                         : ( seg->dir == ah_dir_left
+                               ? "left"
+                               : ( seg->dir == ah_dir_right
+                                     ? "right"
+                                     : "none" ) ) ),
+                 seg->link ? (seg->link-segments) : -1,
+                 seg->serif ? (seg->serif-segments) : -1,
+                 (int)seg->num_linked,
+                 seg->first - points,
+                 seg->last - points );
+      }
+
+      segments      = outline->vert_segments;
+      segment_limit = segments + outline->num_vsegments;
+    }
+  }
+
+#endif /* AH_DEBUG */
 
 
   /* compute the direction value of a given vector.. */
@@ -344,8 +446,6 @@
     outline->num_hsegments = 0;
     outline->num_vsegments = 0;
 
-#if 1
-
     /* We can't rely on the value of `FT_Outline.flags' to know the fill  */
     /* direction used for a glyph, given that some fonts are broken (e.g. */
     /* the Arphic ones). We thus recompute it each time we need to.       */
@@ -358,23 +458,6 @@
       outline->vert_major_dir = ah_dir_down;
       outline->horz_major_dir = ah_dir_right;
     }
-
-#else  /* !1 */
-
-    /* Compute the vertical and horizontal major directions; this is     */
-    /* currently done by inspecting the `ft_outline_reverse_fill' flag.  */
-    /* However, some fonts have improper glyphs, and it'd be a good idea */
-    /* to be able to re-compute these values on the fly.                 */
-    outline->vert_major_dir = ah_dir_up;
-    outline->horz_major_dir = ah_dir_left;
-
-    if ( source->flags & ft_outline_reverse_fill )
-    {
-      outline->vert_major_dir = ah_dir_down;
-      outline->horz_major_dir = ah_dir_right;
-    }
-
-#endif /* !1 */
 
     outline->x_scale = face->size->metrics.x_scale;
     outline->y_scale = face->size->metrics.y_scale;
@@ -952,59 +1035,6 @@
   }
 
 
-#ifdef AH_DEBUG_GLYPH
-
-  /* A function used to dump the array of linked segments */
-  void  ah_dump_segments( AH_Outline*  outline )
-  {
-    AH_Segment*  segments;
-    AH_Segment*  segment_limit;
-    AH_Point*    points;
-    FT_Int       dimension;
-
-
-    points        = outline->points;
-    segments      = outline->horz_segments;
-    segment_limit = segments + outline->num_hsegments;
-
-    for ( dimension = 1; dimension >= 0; dimension-- )
-    {
-      AH_Segment*  seg;
-
-
-      printf ( "Table of %s segments:\n",
-               !dimension ? "vertical" : "horizontal" );
-      printf ( "  [ index |  pos |  dir  | link | serif |"
-               " numl | first | start ]\n" );
-
-      for ( seg = segments; seg < segment_limit; seg++ )
-      {
-        printf ( "  [ %5d | %4d | %5s | %4d | %5d | %4d | %5d | %5d ]\n",
-                 seg - segments,
-                 (int)seg->pos,
-                 seg->dir == ah_dir_up
-                   ? "up"
-                   : ( seg->dir == ah_dir_down
-                         ? "down"
-                         : ( seg->dir == ah_dir_left
-                               ? "left"
-                               : ( seg->dir == ah_dir_right
-                                     ? "right"
-                                     : "none" ) ) ),
-                 seg->link ? (seg->link-segments) : -1,
-                 seg->serif ? (seg->serif-segments) : -1,
-                 (int)seg->num_linked,
-                 seg->first - points,
-                 seg->last - points );
-      }
-
-      segments      = outline->vert_segments;
-      segment_limit = segments + outline->num_vsegments;
-    }
-  }
-
-#endif /* AH_DEBUG_GLYPH */
-
 
   static
   void  ah_outline_compute_edges( AH_Outline*  outline )
@@ -1218,7 +1248,7 @@
         /* set the round/straight flags */
         edge->flags = ah_edge_normal;
 
-        if ( is_straight == 0 && is_round )
+        if ( is_round > 0 && is_round >= is_straight )
           edge->flags |= ah_edge_round;
 
         /* set the edge's main direction */
@@ -1286,6 +1316,38 @@
     AH_Globals*  globals    = &face_globals->design;
     FT_Fixed     y_scale    = outline->y_scale;
 
+    FT_Bool      blue_active[ ah_blue_max ];
+
+
+    /* compute which blue zones are active, i.e. have their scaled */
+    /* size < 3/4 pixels                                           */
+    {
+      AH_Blue  blue;
+      FT_Bool  check = 0;
+
+      for ( blue = ah_blue_capital_top; blue < ah_blue_max; blue++ )
+      {
+        FT_Pos  ref, shoot, dist;
+
+        ref   = globals->blue_refs[blue];
+        shoot = globals->blue_shoots[blue];
+        dist  = ref-shoot;
+        if (dist < 0)
+          dist = -dist;
+
+        blue_active[blue] = 0;
+
+        if ( FT_MulFix( dist, y_scale ) < 48 )
+        {
+          blue_active[blue] = 1;
+          check = 1;
+        }
+      }
+
+      /* return immediately if no blue zone is active */
+      if (!check)
+        return;
+    }
 
     /* compute for each horizontal edge, which blue zone is closer */
     for ( ; edge < edge_limit; edge++ )
@@ -1309,6 +1371,8 @@
         FT_Bool  is_top_blue  = AH_IS_TOP_BLUE( blue );
         FT_Bool  is_major_dir = edge->dir == outline->horz_major_dir;
 
+        if ( !blue_active[blue] )
+          continue;
 
         /* if it is a top zone, the edge must be against the major    */
         /* direction; if it is a bottom zone, it must be in the major */
@@ -1392,58 +1456,6 @@
   }
 
 
-#ifdef AH_DEBUG_GLYPH
-
-  void  ah_dump_edges( AH_Outline*  outline )
-  {
-    AH_Edge*     edges;
-    AH_Edge*     edge_limit;
-    AH_Segment*  segments;
-    FT_Int       dimension;
-
-
-    edges      = outline->horz_edges;
-    edge_limit = edges + outline->num_hedges;
-    segments   = outline->horz_segments;
-
-    for ( dimension = 1; dimension >= 0; dimension-- )
-    {
-      AH_Edge*  edge;
-
-
-      printf ( "Table of %s edges:\n",
-               !dimension ? "vertical" : "horizontal" );
-      printf ( "  [ index |  pos |  dir  | link |"
-               " serif | blue | opos  |  pos  ]\n" );
-
-      for ( edge = edges; edge < edge_limit; edge++ )
-      {
-        printf ( "  [ %5d | %4d | %5s | %4d | %5d |  %c  | %5.2f | %5.2f ]\n",
-                 edge - edges,
-                 (int)edge->fpos,
-                 edge->dir == ah_dir_up
-                   ? "up"
-                   : ( edge->dir == ah_dir_down
-                         ? "down"
-                         : ( edge->dir == ah_dir_left
-                               ? "left"
-                               : ( edge->dir == ah_dir_right
-                                     ? "right"
-                                     : "none" ) ) ),
-                 edge->link ? ( edge->link - edges ) : -1,
-                 edge->serif ? ( edge->serif - edges ) : -1,
-                 edge->blue_edge ? 'y' : 'n',
-                 edge->opos / 64.0,
-                 edge->pos / 64.0 );
-      }
-
-      edges      = outline->vert_edges;
-      edge_limit = edges + outline->num_vedges;
-      segments   = outline->vert_segments;
-    }
-  }
-
-#endif /* AH_DEBUG_GLYPH */
 
 
 /* END */
