@@ -56,15 +56,91 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Alloc                                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Allocates a new block of memory.  The returned area is always      */
+  /*    zero-filled; this is a strong convention in many FreeType parts.   */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory :: A handle to a given `memory object' which handles        */
+  /*              allocation.                                              */
+  /*                                                                       */
+  /*    size   :: The size in bytes of the block to allocate.              */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    P      :: A pointer to the fresh new block.  It should be set to   */
+  /*              NULL if `size' is 0, or in case of error.                */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   FT_BASE( FT_Error )  FT_Alloc( FT_Memory  memory,
                                  FT_Long    size,
-                                 void**     P );
+                                 void*     *P );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Realloc                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Reallocates a block of memory pointed to by `*P' to `Size' bytes   */
+  /*    from the heap, possibly changing `*P'.                             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory  :: A handle to a given `memory object' which handles       */
+  /*               reallocation.                                           */
+  /*                                                                       */
+  /*    current :: The current block size in bytes.                        */
+  /*                                                                       */
+  /*    size    :: The new block size in bytes.                            */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    P       :: A pointer to the fresh new block.  It should be set to  */
+  /*               NULL if `size' is 0, or in case of error.               */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    All callers of FT_Realloc() _must_ provide the current block size  */
+  /*    as well as the new one.                                            */
+  /*                                                                       */
   FT_BASE( FT_Error )  FT_Realloc( FT_Memory  memory,
                                    FT_Long    current,
                                    FT_Long    size,
                                    void**     P );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Free                                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Releases a given block of memory allocated through FT_Alloc().     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory :: A handle to a given `memory object' which handles        */
+  /*              memory deallocation                                      */
+  /*                                                                       */
+  /*    P      :: This is the _address_ of a _pointer_ which points to the */
+  /*              allocated block.  It is always set to NULL on exit.      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    If P or *P are NULL, this function should return successfully.     */
+  /*    This is a strong convention within all of FreeType and its         */
+  /*    drivers.                                                           */
+  /*                                                                       */
   FT_BASE( void )  FT_Free( FT_Memory  memory,
                             void**     P );
 

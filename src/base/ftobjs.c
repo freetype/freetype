@@ -48,31 +48,11 @@
 #define FT_COMPONENT  trace_memory
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Alloc                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Allocates a new block of memory.  The returned area is always      */
-  /*    zero-filled; this is a strong convention in many FreeType parts.   */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory :: A handle to a given `memory object' which handles        */
-  /*              allocation.                                              */
-  /*                                                                       */
-  /*    size   :: The size in bytes of the block to allocate.              */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    P      :: A pointer to the fresh new block.  It should be set to   */
-  /*              NULL if `size' is 0, or in case of error.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftmemory.h */
+
   FT_BASE_DEF( FT_Error )  FT_Alloc( FT_Memory  memory,
                                      FT_Long    size,
-                                     void**     P )
+                                     void*     *P )
   {
     FT_Assert( P != 0 );
 
@@ -100,34 +80,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Realloc                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Reallocates a block of memory pointed to by `*P' to `Size' bytes   */
-  /*    from the heap, possibly changing `*P'.                             */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory  :: A handle to a given `memory object' which handles       */
-  /*               reallocation.                                           */
-  /*                                                                       */
-  /*    current :: The current block size in bytes.                        */
-  /*                                                                       */
-  /*    size    :: The new block size in bytes.                            */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    P       :: A pointer to the fresh new block.  It should be set to  */
-  /*               NULL if `size' is 0, or in case of error.               */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    All callers of FT_Realloc() _must_ provide the current block size  */
-  /*    as well as the new one.                                            */
-  /*                                                                       */
+  /* documentation is in ftmemory.h */
+
   FT_BASE_DEF( FT_Error )  FT_Realloc( FT_Memory  memory,
                                        FT_Long    current,
                                        FT_Long    size,
@@ -164,29 +118,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Free                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Releases a given block of memory allocated through FT_Alloc().     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory :: A handle to a given `memory object' which handles        */
-  /*              memory deallocation                                      */
-  /*                                                                       */
-  /*    P      :: This is the _address_ of a _pointer_ which points to the */
-  /*              allocated block.  It is always set to NULL on exit.      */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    If P or *P are NULL, this function should return successfully.     */
-  /*    This is a strong convention within all of FreeType and its         */
-  /*    drivers.                                                           */
-  /*                                                                       */
+  /* documentation is in ftmemory.h */
+
   FT_BASE_DEF( void )  FT_Free( FT_Memory  memory,
                                 void**     P )
   {
@@ -362,7 +295,7 @@
 
   /* create a new glyph loader */
   FT_BASE_DEF( FT_Error )  FT_GlyphLoader_New( FT_Memory         memory,
-                                               FT_GlyphLoader**  aloader )
+                                               FT_GlyphLoader*  *aloader )
   {
     FT_GlyphLoader*  loader;
     FT_Error         error;
@@ -447,7 +380,7 @@
 
 
   FT_BASE_DEF( FT_Error )  FT_GlyphLoader_Create_Extra(
-                           FT_GlyphLoader*  loader )
+                             FT_GlyphLoader*  loader )
   {
     FT_Error   error;
     FT_Memory  memory = loader->memory;
@@ -479,10 +412,10 @@
   /* function reallocates its outline tables if necessary.  Note that it   */
   /* DOESN'T change the number of points within the loader!                */
   /*                                                                       */
-  FT_BASE_DEF( FT_Error ) FT_GlyphLoader_Check_Points(
-                            FT_GlyphLoader*  loader,
-                            FT_UInt          n_points,
-                            FT_UInt          n_contours )
+  FT_BASE_DEF( FT_Error )  FT_GlyphLoader_Check_Points(
+                             FT_GlyphLoader*  loader,
+                             FT_UInt          n_points,
+                             FT_UInt          n_contours )
   {
     FT_Memory    memory  = loader->memory;
     FT_Error     error   = FT_Err_Ok;
@@ -745,28 +678,10 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_GlyphSlot                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    It is sometimes useful to have more than one glyph slot for a      */
-  /*    given face object.  This function is used to create additional     */
-  /*    slots.  All of them are automatically discarded when the face is   */
-  /*    destroyed.                                                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face  :: A handle to a parent face object.                         */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    aslot :: A handle to a new glyph slot object.                      */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftobjs.h */
+
   FT_BASE_DEF( FT_Error )  FT_New_GlyphSlot( FT_Face        face,
-                                             FT_GlyphSlot*  aslot )
+                                             FT_GlyphSlot  *aslot )
   {
     FT_Error          error;
     FT_Driver         driver;
@@ -806,19 +721,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_GlyphSlot                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Destroys a given glyph slot.  Remember however that all slots are  */
-  /*    automatically destroyed with its parent.  Using this function is   */
-  /*    not always mandatory.                                              */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    slot :: A handle to a target glyph slot.                           */
-  /*                                                                       */
+  /* documentation is in ftobjs.h */
+
   FT_BASE_DEF( void )  FT_Done_GlyphSlot( FT_GlyphSlot  slot )
   {
     if ( slot )
@@ -2463,27 +2367,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Module_Interface                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Finds a module and returns its specific interface as a typeless    */
-  /*    pointer.                                                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library     :: A handle to the library object.                     */
-  /*                                                                       */
-  /*    module_name :: The module's name (as an ASCII string).             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A module-specific interface if available, 0 otherwise.             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    You should better be familiar with FreeType internals to know      */
-  /*    which module to look for, and what its interface is :-)            */
-  /*                                                                       */
+  /* documentation is in ftobjs.h */
+
   FT_BASE_DEF( const void* )  FT_Get_Module_Interface( FT_Library   library,
                                                        const char*  mod_name )
   {

@@ -636,9 +636,9 @@
   }
 
 
-  FT_BASE_DEF( FT_Error ) FT_Read_Fields( FT_Stream              stream,
-                                          const FT_Frame_Field*  fields,
-                                          void*                  structure )
+  FT_BASE_DEF( FT_Error )  FT_Read_Fields( FT_Stream              stream,
+                                           const FT_Frame_Field*  fields,
+                                           void*                  structure )
   {
     FT_Error  error;
     FT_Bool   frame_accessed = 0;
