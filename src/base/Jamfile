@@ -23,8 +23,8 @@ SubDirHdrs  [ FT2_SubDir  src base ] ;
 
 # Add the optional/replaceable files.
 #
-Library  $(FT2_LIB) : ftsystem.c ftinit.c ftglyph.c ftmm.c
-                      ftbbox.c ftdebug.c ;
+Library  $(FT2_LIB) : ftsystem.c ftinit.c   ftglyph.c  ftmm.c
+                      ftbbox.c   ftdebug.c  ;
 
 # Add Macintosh-specific file to the library when necessary.
 #
