@@ -736,7 +736,7 @@
 
 
   /* there's a Mac-specific extended implementation of FT_New_Face() */
-  /* in src/mac/ftmac.c                                              */
+  /* in src/base/ftmac.c                                             */
 
 #ifndef FT_MACINTOSH
 
