@@ -283,13 +283,13 @@
   }
 
 
-  const FT_Driver_Class  t1z_driver_class =
+  const FT_Driver_Class  t1_driver_class =
   {
     {
       ft_module_font_driver | ft_module_driver_scalable,
       sizeof( FT_DriverRec ),
 
-      "type1z",
+      "type1",
       0x10000L,
       0x20000L,
 

@@ -639,7 +639,9 @@
       load->pp2 = zone->cur[n_points - 1];
     }
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
   Exit:
+#endif  
     return error;
   }
 
@@ -796,7 +798,7 @@
 
 #else
 
-      error = Process_Simple_Glyph( loader, 0 );
+      error = TT_Process_Simple_Glyph( loader, 0 );
 
 #endif
 

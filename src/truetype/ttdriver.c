@@ -435,7 +435,11 @@
     {
       ft_module_font_driver     |
       ft_module_driver_scalable |
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
       ft_module_driver_has_hinter,
+#else
+      0,
+#endif            
 
       sizeof ( TT_DriverRec ),
 
