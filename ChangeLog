@@ -1,3 +1,8 @@
+2003-12-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_dict): Stop parsing if `eexec' keyword
+	is encountered.
+
 2003-12-19  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cfftypes.h (CFF_MAX_CID_FONTS): Increase to 32.  For
