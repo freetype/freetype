@@ -18,7 +18,7 @@
 
 #undef  T2TYPE
 #undef  T2CODE
-#define T2TYPE  CFF_Top_Dict
+#define T2TYPE  CFF_Font_Dict
 #define T2CODE  T2CODE_TOPDICT
 
   T2_FIELD_STRING  ( 0, version )

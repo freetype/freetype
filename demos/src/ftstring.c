@@ -11,7 +11,6 @@
 /****************************************************************************/
 
 #include <freetype/freetype.h>
-#include <freetype/ftrender.h>
 #include <freetype/ftglyph.h>
 #include "common.h"
 
@@ -60,11 +59,6 @@
 
   static int  graph_init  = 0;
   static int  render_mode = 1;
-  static int  use_grays   = 1;
-
-  /* the standard raster's interface */
-  FT_Renderer   std_renderer;
-  FT_Renderer   smooth_renderer;
 
   static FT_Matrix      trans_matrix;
   static int            transform = 0;
@@ -449,7 +443,6 @@
     grWriteln("  a         : toggle anti-aliasing" );
     grWriteln("  h         : toggle outline hinting" );
     grWriteln("  k         : toggle kerning" );
-    grWriteln("  g         : toggle between 'smooth' and 'standard' anti-aliaser" );
     grLn();
     grWriteln("  Up        : increase pointsize by 1 unit" );
     grWriteln("  Down      : decrease pointsize by 1 unit" );
@@ -465,15 +458,6 @@
 
     grRefreshSurface( surface );
     grListenSurface( surface, gr_event_key, &dummy_event );
-  }
-
-
-  static void  reset_raster( void )
-  {
-    if ( antialias && use_grays && smooth_renderer )
-      FT_Set_Renderer( library, smooth_renderer, 0, 0 );
-    else
-      FT_Set_Renderer( library, std_renderer, 0, 0 );
   }
 
 
@@ -499,7 +483,6 @@
       new_header = ( antialias
                    ? "anti-aliasing is now on"
                    : "anti-aliasing is now off" );
-      reset_raster();
       return 1;
 
     case grKEY('b'):
@@ -512,14 +495,6 @@
     case grKEY('n'):
     case grKEY('p'):
       return (int)event->key;
-
-    case grKEY('g'):
-      use_grays = !use_grays;
-      new_header = ( use_grays
-                   ? "now using the smooth anti-aliaser"
-                   : "now using the standard anti-aliaser" );
-      reset_raster();
-      break;
 
     case grKEY('h'):
       hinted = !hinted;
@@ -667,13 +642,6 @@
     /* Initialize engine */
     error = FT_Init_FreeType( &library );
     if (error) PanicZ( "Could not initialise FreeType library" );
-
-    /* retrieve the standard raster's interface */
-    std_renderer = (FT_Renderer)FT_Get_Module( library, "standard renderer" );
-    if (!std_renderer)
-      PanicZ( "Could not retrieve standard renderer" );
-
-    smooth_renderer = (FT_Renderer)FT_Get_Module( library, "smooth renderer" );
 
   NewFile:
     ptsize      = orig_ptsize;

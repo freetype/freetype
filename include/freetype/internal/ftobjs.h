@@ -384,14 +384,14 @@
 
     FT_Generic          generic;
 
-    FT_Int              num_modules;
+    FT_UInt             num_modules;
     FT_Module           modules[ FT_MAX_MODULES ];  /* module objects  */
 
     FT_ListRec          renderers;     /* list of renderers        */
     FT_Renderer         cur_renderer;  /* current outline renderer */
 
     void*               raster_pool;      /* scan-line conversion render pool */
-    long                raster_pool_size; /* size of render pool in bytes     */
+    unsigned long       raster_pool_size; /* size of render pool in bytes     */
 
     FT_DebugHook_Func   debug_hooks[4];
 
@@ -410,6 +410,14 @@
                                               FT_UInt            hook_index,
                                               FT_DebugHook_Func  debug_hook );
 
+
+  BASE_DEF(FT_Renderer)  FT_Lookup_Renderer( FT_Library       library,
+                                             FT_Glyph_Format  format,
+                                             FT_ListNode     *node );
+
+  BASE_DEF(FT_Error)    FT_Render_Glyph_Internal( FT_Library    library,
+                                                  FT_GlyphSlot  slot,
+                                                  FT_UInt       render_mode );
 
 
 

@@ -279,7 +279,7 @@
   static
   FT_Error  parse_font_matrix( T2_Parser*  parser )
   {
-    CFF_Top_Dict*  dict   = (CFF_Top_Dict*)parser->object;
+    CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
     FT_Matrix*     matrix = &dict->font_matrix;
     FT_Byte**      data   = parser->stack;
     FT_Error       error;
@@ -303,7 +303,7 @@
   static
   FT_Error  parse_font_bbox( T2_Parser*  parser )
   {
-    CFF_Top_Dict*  dict   = (CFF_Top_Dict*)parser->object;
+    CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
     FT_BBox*       bbox   = &dict->font_bbox;
     FT_Byte**      data   = parser->stack;
     FT_Error       error;
@@ -327,7 +327,7 @@
   static
   FT_Error  parse_private_dict( T2_Parser*  parser )
   {
-    CFF_Top_Dict*  dict = (CFF_Top_Dict*)parser->object;
+    CFF_Font_Dict*  dict = (CFF_Font_Dict*)parser->object;
     FT_Byte**      data = parser->stack;
     FT_Error       error;
 
@@ -348,7 +348,7 @@
   static
   FT_Error  parse_cid_ros( T2_Parser*  parser )
   {
-    CFF_Top_Dict*  dict   = (CFF_Top_Dict*)parser->object;
+    CFF_Font_Dict*  dict   = (CFF_Font_Dict*)parser->object;
     FT_Byte**      data   = parser->stack;
     FT_Error       error;
 
@@ -395,7 +395,7 @@
             code | T2CODE,                           \
             (FT_UInt)(char*)&T2_REF( T2TYPE, name ), \
             sizeof( T2_REF( T2TYPE, name ) ),        \
-            0                                        \
+            0, 0, 0                               \
           },
 
 #undef  T2_FIELD_DELTA
@@ -478,7 +478,7 @@
         /* and look for it in our current list.                            */
 
         FT_UInt                  code;
-        FT_Int                   num_args = parser->top - parser->stack;
+        FT_UInt                   num_args = (FT_UInt)(parser->top - parser->stack);
         const T2_Field_Handler*  field;
 
 
@@ -498,7 +498,7 @@
 
         for ( field = t2_field_handlers; field->kind; field++ )
         {
-          if ( field->code == code )
+          if ( field->code == (FT_Int)code )
           {
             /* we found our field's handler; read it */
             FT_Long   val;

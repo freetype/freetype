@@ -62,7 +62,7 @@
   } CFF_Index;
 
 
-  typedef struct CFF_Top_Dict_
+  typedef struct CFF_Font_Dict_
   {
     FT_UInt      version;
     FT_UInt      notice;
@@ -90,6 +90,7 @@
     FT_UInt      base_font_name;       
     FT_UInt      postscript;
 
+   /* these should only be used for the top-level font dict */
     FT_UInt      cid_registry;
     FT_UInt      cid_ordering;
     FT_ULong     cid_supplement;
@@ -103,7 +104,9 @@
     FT_ULong     cid_fd_select_offset;
     FT_UInt      cid_font_name;
 
-  } CFF_Top_Dict;
+  } CFF_Font_Dict;
+  
+  
   
   typedef struct CFF_Private_
   {
@@ -138,12 +141,49 @@
     FT_Pos   nominal_width;
   
   } CFF_Private;
+
+
+  typedef struct CFF_FD_Select_
+  {
+    FT_Byte   format;
+    FT_UInt   range_count;
+
+    /* that's the table, taken from the file 'as is' */    
+    FT_Byte*  data;
+    FT_UInt   data_size;
+
+    /* small cache for format 3 only */
+    FT_UInt   cache_first;
+    FT_UInt   cache_count;
+    FT_Byte   cache_fd;
+    
+  } CFF_FD_Select;
+
+
+
+ /* a SubFont packs a font dict and a private dict together. They're */
+ /* needed to support CID-keyde CFF fonts..                          */
+  typedef struct CFF_SubFont_
+  {
+    CFF_Font_Dict  font_dict;
+    CFF_Private    private_dict;
+    
+    CFF_Index      local_subrs_index;
+    FT_UInt        num_local_subrs;
+    FT_Byte**      local_subrs;
+
+  } CFF_SubFont;
+
+
+ /* maximum number of sub-fonts in a CID-keyed file */
+  #define CFF_MAX_CID_FONTS  16
   
   typedef struct CFF_Font_
   {
     FT_Stream  stream;
     FT_Memory  memory;
     FT_UInt    num_faces;
+    FT_UInt    num_glyphs;
     
     FT_Byte    version_major;
     FT_Byte    version_minor;
@@ -164,13 +204,14 @@
     CFF_Index  local_subrs_index;
 
     FT_String*     font_name;
-    CFF_Top_Dict   top_dict;
-    CFF_Private    private_dict;
-
     FT_UInt        num_global_subrs;
-    FT_UInt        num_local_subrs;
     FT_Byte**      global_subrs;
-    FT_Byte**      local_subrs;
+
+    CFF_SubFont    top_font;
+    FT_UInt        num_subfonts;
+    CFF_SubFont*   subfonts[ CFF_MAX_CID_FONTS ];
+
+    CFF_FD_Select  fd_select;
 
   } CFF_Font;
 

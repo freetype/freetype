@@ -1,5 +1,39 @@
 LATEST CHANGES
 
+  - added support for CID-keyed fonts to the CFF driver. There are still
+    some unexplained bugs though... ???
+
+
+  - cleaned up source code in order to avoid two functions with the
+    same name. Also changed the names of the files in "type1z" from
+    "t1XXXX" to "z1XXXX" in order to avoid any conflicts.
+    
+    "make multi" now works well :-)
+    
+    
+
+  - CHANGES TO THE RENDERER MODULES
+  
+    the monochrome and smooth renderers are now in two distinct directories,
+    namely "src/raster1" and "src/smooth". Note that the old "src/renderer"
+    is now gone..
+    
+    I ditched the 5-gray-levels renderers. Basically, it involved a simple
+    #define toggle in 'src/raster1/ftraster.c'
+    
+    FT_Render_Glyph, FT_Outline_Render & FT_Outline_Get_Bitmap now select
+    the best renderer available, depending on render mode. If the current
+    renderer for a given glyph image format isn't capable of supporting
+    the render mode, another one will be found in the library's list.
+    
+    This means that client applications do not need to switch or set the
+    renderers themselves (as in the latest change), they'll get what they
+    want automatically... At last..
+    
+    Changed the demo programs accordingly..
+    
+    
+
   - MAJOR INTERNAL REDESIGN:
   
     A lot of internal modifications have been performed lately on the

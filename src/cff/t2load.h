@@ -56,6 +56,10 @@
   LOCAL_DEF
   void  T2_Done_CFF_Font( CFF_Font*  font );
 
+  LOCAL_DEF
+  FT_Byte  CFF_Get_FD( CFF_FD_Select*  select,
+                       FT_UInt         glyph_index );
+
 
 #ifdef __cplusplus
   }

@@ -345,16 +345,35 @@
     T2_Init_Builder( &decoder->builder, face, size, slot );
 
     /* initialize Type2 decoder */
-    decoder->num_locals   = cff->num_local_subrs;
     decoder->num_globals  = cff->num_global_subrs;
-    decoder->locals       = cff->local_subrs;
     decoder->globals      = cff->global_subrs;
-    decoder->locals_bias  = t2_compute_bias( decoder->num_locals );
     decoder->globals_bias = t2_compute_bias( decoder->num_globals );
-
-    decoder->glyph_width   = cff->private_dict.default_width;
-    decoder->nominal_width = cff->private_dict.nominal_width;
   }
+
+
+ /* this function is used to select the locals subrs array */
+  LOCAL_DEF
+  void   T2_Prepare_Decoder( T2_Decoder*  decoder,
+                             FT_UInt      glyph_index )
+  {
+    CFF_Font*     cff = (CFF_Font*)decoder->builder.face->extra.data;
+    CFF_SubFont*  sub = &cff->top_font;
+    
+    /* manage CID fonts */
+    if (cff->num_subfonts >= 1)
+    {
+      FT_Byte  fd_index = CFF_Get_FD( &cff->fd_select, glyph_index );
+      sub = cff->subfonts[fd_index];
+    }
+    
+    decoder->num_locals  = sub->num_local_subrs;
+    decoder->locals      = sub->local_subrs;
+    decoder->locals_bias = t2_compute_bias( decoder->num_locals );
+
+    decoder->glyph_width   = sub->private_dict.default_width;
+    decoder->nominal_width = sub->private_dict.nominal_width;
+  }                                 
+
 
 
   /* check that there is enough room for `count' more points */
@@ -508,7 +527,6 @@
     FT_Pos              x, y;
     FT_Fixed            seed;
     FT_Fixed*           stack;
-
 
     /* set default width */
     decoder->num_hints  = 0;
@@ -1572,6 +1590,7 @@
                                  &charstring, &charstring_len );
       if ( !error )
       {
+        T2_Prepare_Decoder( &decoder, glyph_index );
         error = T2_Parse_CharStrings( &decoder, charstring, charstring_len );
 
         T2_Forget_Element( &cff->charstrings_index, &charstring );
@@ -1648,6 +1667,7 @@
                                  &charstring, &charstring_len );
       if ( !error )
       {
+        T2_Prepare_Decoder( &decoder, glyph_index );
         error = T2_Parse_CharStrings( &decoder, charstring, charstring_len );
 
         T2_Forget_Element( &cff->charstrings_index, &charstring );

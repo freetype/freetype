@@ -166,6 +166,9 @@
                          T2_Size       size,
                          T2_GlyphSlot  slot );
 
+  LOCAL_DEF
+  void   T2_Prepare_Decoder( T2_Decoder*  decoder,
+                             FT_UInt     glyph_index );
 
 #if 0  /* unused until we support pure CFF fonts */
 

@@ -49,7 +49,8 @@
 
   typedef FT_Error  (*FTRenderer_render)( FT_Renderer   renderer,
                                           FT_GlyphSlot  slot,
-                                          FT_UInt       mode );
+                                          FT_UInt       mode,
+                                          FT_Vector*    origin );
 
   typedef FT_Error  (*FTRenderer_transform)( FT_Renderer   renderer,
                                              FT_GlyphSlot  slot,

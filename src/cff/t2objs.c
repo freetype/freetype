@@ -198,6 +198,7 @@
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
     return TT_Init_Extensions( driver );
 #else
+    UNUSED(driver);
     return T2_Err_Ok;
 #endif
   }
@@ -220,6 +221,8 @@
     /* destroy extensions registry if needed */
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
     TT_Done_Extensions( driver );
+#else
+    UNUSED(driver);    
 #endif
   }
 
