@@ -2,7 +2,7 @@
 
     FreeType font driver for pcf files
 
-    Copyright (C) 2000-2001, 2002 by
+    Copyright (C) 2000, 2001, 2002, 2003 by
     Francesco Zappa Nardelli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -242,7 +242,8 @@ THE SOFTWARE.
     {
       FT_Error  error2;
 
-      /* this didn't work, try gzip support !! */
+
+      /* this didn't work, try gzip support! */
       error2 = FT_Stream_OpenGzip( &face->gzip_stream, stream );
       if ( error2 == FT_Err_Unimplemented_Feature )
         goto Fail;
@@ -464,7 +465,8 @@ THE SOFTWARE.
                         const char*       prop_name,
                         BDF_PropertyRec  *aproperty )
   {
-    PCF_Property   prop;
+    PCF_Property  prop;
+
 
     prop = pcf_find_property( face, prop_name );
     if ( prop != NULL )
@@ -476,15 +478,16 @@ THE SOFTWARE.
       }
       else
       {
-       /* apparently, the PCF driver loads all properties as signed integers !
-        * this really doesn't seem to be a problem, because this is
-        * sufficient for any meaningful values
-        */
+        /* apparently, the PCF driver loads all properties as signed integers!
+         * This really doesn't seem to be a problem, because this is
+         * sufficient for any meaningful values.
+         */
         aproperty->type      = BDF_PROPERTY_TYPE_INTEGER;
         aproperty->u.integer = prop->value.integer;
       }
       return 0;
     }
+
     return FT_Err_Invalid_Argument;
   }
 
