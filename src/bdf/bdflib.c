@@ -415,7 +415,7 @@
   {
     FT_Error  error = 0;
 
-    if ( num_items > list->size )
+    if ( num_items > (int)list->size )
     {
       int  oldsize = list->size;
       int  newsize = oldsize + (oldsize >> 1) + 4;
@@ -637,12 +637,13 @@
     cursor     = 0;
     refill     = 1;
     to_skip    = NO_SKIP;
+    bytes      = 0;  /* make compiler happy */
 
     for (;;)
     {
       if ( refill )
       {
-        bytes = (int) FT_Stream_TryRead( stream, buf + cursor,
+        bytes = (int) FT_Stream_TryRead( stream, (FT_Byte*)buf + cursor,
                                          (FT_ULong)(buf_size - cursor) );
         avail  = cursor + bytes;
         cursor = 0;
