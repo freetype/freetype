@@ -831,10 +831,6 @@
           case op_div:
             if (top[1])
             {
-              /* this code was originally "*top++ = top[1]/top[0]"  */
-              /* however, it didn't run correctly on IRIX 6.5 using */
-              /* the MISPRO 7.2 compiler suite. The following code  */
-              /* should run flawlessly..                            */
               *top = top[0] / top[1];
               ++top;
             }
