@@ -1,3 +1,9 @@
+2003-12-10  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/pcf/pcfdrivr.c (pcf_get_charset_id): New function (a clone
+	of the similar BDF function).
+	(pcf_service_bdf): Use it.
+
 2003-12-09  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): Set FT_FACE_FLAG_GLYPH_NAMES
