@@ -27,7 +27,7 @@
 FT_BEGIN_HEADER
 
 
-#ifndef TT_CONFIG_OPTION_STATIC_INTEPRETER  /* indirect implementation */
+#ifndef TT_CONFIG_OPTION_STATIC_INTERPRETER /* indirect implementation */
 
 #define EXEC_OP_   TT_ExecContext  exc,
 #define EXEC_OP    TT_ExecContext  exc

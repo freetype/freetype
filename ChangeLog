@@ -1,3 +1,7 @@
+2004-11-23  Fernando Papa  <fpapa@netgate.com.uy>
+
+	* src/truetype/ttinterp.h: Fix typo.
+
 2004-11-22  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
 
 	* builds/win32/detect.mk: Corrected logic that detects Windows NT to
