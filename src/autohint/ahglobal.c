@@ -43,7 +43,8 @@
   sort_values( FT_Int   count,
                FT_Pos*  table )
   {
-    FT_Int  i, j, swap;
+    FT_Int  i, j;
+    FT_Pos  swap;
 
 
     for ( i = 1; i < count; i++ )
@@ -345,14 +346,14 @@
         /* we only consider stem segments there! */
         if ( link && link->link == seg && link > seg )
         {
-          FT_Int  dist;
+          FT_Pos  dist;
 
 
           dist = seg->pos - link->pos;
           if ( dist < 0 )
             dist = -dist;
 
-          if ( num_widths < 12 )
+          if ( num_widths < AH_MAX_WIDTHS )
             widths[num_widths++] = dist;
         }
       }

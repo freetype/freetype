@@ -286,7 +286,7 @@ FT_BEGIN_HEADER
     AH_Segment     link;        /* link segment               */
     AH_Segment     serif;       /* primary segment for serifs */
     FT_Pos         num_linked;  /* number of linked segments  */
-    FT_Int         score;
+    FT_Pos         score;
 
   } AH_SegmentRec;
 
