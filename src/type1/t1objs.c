@@ -428,6 +428,67 @@
       root->internal->max_contours = 0;
     }
 
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+
+    {
+      FT_Face          root = &face->root;
+      
+      if ( psnames && psaux )
+      {
+        FT_CharMapRec    charmap;
+        FT_CMap_Classes  cmap_classes = psaux->cmap_classes;
+        FT_CMap_Class    clazz;
+        
+        charmap.face = root;
+        
+        /* first of all, try to synthetize a Unicode charmap */
+        charmap.platform_id = 3;
+        charmap.encoding_id = 1;
+        charmap.encoding    = ft_encoding_unicode;
+        
+        FT_CMap_New( root, cmap_classes->unicode, &charmap, NULL );
+        
+        /* now, generate an Adobe Standard encoding when appropriate */
+        charmap.platform_id = 7;
+        clazz               = NULL;
+        
+        switch ( face->type1.encoding_type )
+        {
+          case T1_ENCODING_TYPE_STANDARD:
+            charmap.encoding    = ft_encoding_adobe_standard;
+            charmap.encoding_id = 0;
+            clazz               = cmap_classes->standard;
+            break;
+          
+          case T1_ENCODING_TYPE_EXPORT:
+            charmap.encoding    = ft_encoding_adobe_expert;
+            charmap.encoding_id = 1;
+            clazz               = cmap_classes->expert;
+            break;
+            
+          case T1_ENCODING_TYPE_ARRAY:
+            charmap.encoding    = ft_encoding_adobe_custom;
+            charmap.encoding_id = 2;
+            clazz               = cmap_classes->custom;
+            break;
+            
+          case T1_ENCODING_TYPE_ISOLATIN1:
+            charmap.encoding    = ft_encoding_adobe_latin_1;
+            charmap.encoding_id = 3;
+            clazz               = cmap_classes->latin_1;
+            break;
+            
+          default:
+            ;
+        }
+        
+        if ( clazz )
+          FT_CMap_New( root, clazz, &charmap, NULL );
+      }
+    }
+
+#else /* !FT_CONFIG_OPTION_USE_CMAPS */
+
     /* charmap support -- synthetize unicode charmap if possible */
     {
       FT_Face     root    = &face->root;
@@ -498,6 +559,8 @@
       face->charmaps[0]  = &face->charmaprecs[0];
       face->charmaps[1]  = &face->charmaprecs[1];
     }
+
+#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
   Exit:
     return error;
