@@ -969,6 +969,13 @@
         return;
       }
 
+      /* We need to `zero' out encoding_table.elements          */
+      for ( n = 0 ; n < count ; n++ )
+      {
+	char *notdef = ".notdef";	
+	Z1_Add_Table( char_table, n, notdef, 8 );
+      }
+
       /* Now, we will need to read a record of the form         */
       /* ... charcode /charname ... for each entry in our table */
       /*                                                        */
@@ -1170,7 +1177,8 @@
     FT_Byte*    cur;
     FT_Byte*    limit = parser->root.limit;
     FT_Int      n;
-
+    FT_UInt     notdef_index = 0;
+    FT_Byte     notdef_found = 0;
 
     if ( loader->num_glyphs )
       /*  with synthetic fonts, it's possible we get here twice  */
@@ -1180,15 +1188,15 @@
     if ( parser->root.error )
       return;
 
-    /* initialize tables */
+    /* initialize tables, adding space for `swap' at table end   */
     error = psaux->ps_table_funcs->init( code_table,
-                                         loader->num_glyphs,
+                                         loader->num_glyphs + 1,
                                          memory );
     if ( error )
       goto Fail;
 
     error = psaux->ps_table_funcs->init( name_table,
-                                         loader->num_glyphs,
+                                         loader->num_glyphs + 1,
                                          memory );
     if ( error )
       goto Fail;
@@ -1198,7 +1206,6 @@
     {
       FT_Int    size;
       FT_Byte*  base;
-
 
       /* the format is simple:                    */
       /*   `/glyphname' + binary data             */
@@ -1243,6 +1250,14 @@
         /* add a trailing zero to the name table */
         name_table->elements[n][len] = '\0';
 
+	/* record index of /.notdef              */
+	if ( strcmp( (const char*)".notdef",
+		     (const char*)(name_table->elements[n]) ) == 0 )
+	{
+	  notdef_index = n;
+	  notdef_found = 1;
+        }
+
         parser->root.cursor = cur2;
         if ( !read_binary_data( parser, &size, &base ) )
           return;
@@ -1263,7 +1278,94 @@
           break;
       }
     }
+
     loader->num_glyphs = n;
+
+    /* if /.notdef is found but does not occupy index 0, do our magic.      */
+    if ( strcmp( (const char*)".notdef",
+		 (const char*)name_table->elements[0] ) &&
+	 notdef_found                                      )
+    {
+
+      /* Swap glyph in index 0 with /.notdef glyph.  First, add index 0     */
+      /* name/code to end of table. Then place notdef_index name/code into  */
+      /* index 0.  Then take end of table name/code and place it into index */
+      /* notdef_index.                                                      */
+
+      error = Z1_Add_Table( name_table, n, 
+			    name_table->elements[0],
+			    name_table->lengths [0] );
+      if ( error )
+	goto Fail;
+      error = Z1_Add_Table( code_table, n,
+			    code_table->elements[0],
+			    code_table->lengths [0] );
+      if ( error )
+	goto Fail;
+
+      error = Z1_Add_Table( name_table, 0,
+			    name_table->elements[notdef_index],
+			    name_table->lengths [notdef_index] );
+      if ( error )
+	goto Fail;
+
+      error = Z1_Add_Table( code_table, 0,
+			    code_table->elements[notdef_index],
+			    code_table->lengths [notdef_index] );
+      if ( error )
+	goto Fail;
+
+      error = Z1_Add_Table( name_table, notdef_index,
+			    name_table->elements[n],
+			    name_table->lengths [n] );
+      if ( error )
+	goto Fail;
+
+      error = Z1_Add_Table( code_table, notdef_index,
+			    code_table->elements[n],
+			    code_table->lengths [n] );
+      if ( error )
+	goto Fail;
+
+    }
+    else if ( !notdef_found )
+    {
+
+      /* notdef_index is already 0, or /.notdef is undefined in  */
+      /* charstrings dictionary. Worry about /.notdef undefined. */
+      /* we take index 0 and add it to the end of the table(s)   */
+      /* and add our own /.notdef glyph to index 0.              */
+      
+      /* 0 333 hsbw endchar                                      */
+      FT_Byte notdef_glyph[] = {0x8B,0xF7,0xE1,0x0D,0x0E};
+      char *notdef_name      = ".notdef";
+
+      error = Z1_Add_Table( name_table, n,
+                            name_table->elements[0],
+                            name_table->lengths [0] );
+      if ( error )
+        goto Fail;
+
+      error = Z1_Add_Table( code_table, n,
+                            code_table->elements[0],
+                            code_table->lengths [0] );
+      if ( error )
+        goto Fail;
+
+      error = Z1_Add_Table( name_table, 0, notdef_name, 8 );
+      if ( error )
+        goto Fail;
+
+      error = Z1_Add_Table( code_table, 0, notdef_glyph, 5 );
+
+      if ( error )
+        goto Fail;
+
+      /* we added a glyph. */
+      loader->num_glyphs = n + 1;
+
+    }
+
     return;
 
   Fail:
@@ -1569,8 +1671,14 @@
               type1->encoding.char_index[charcode] = index;
               type1->encoding.char_name [charcode] = (char*)glyph_name;
 
-              if (charcode < min_char) min_char = charcode;
-              if (charcode > max_char) max_char = charcode;
+	      /* Change min/max encoded char only if glyph name is */
+	      /* not /.notdef                                      */
+	      if ( strcmp( (const char*)".notdef",
+			   (const char*)glyph_name ) != 0 )
+	      {
+		if (charcode < min_char) min_char = charcode;
+		if (charcode > max_char) max_char = charcode;
+	      }
               break;
             }
           }
