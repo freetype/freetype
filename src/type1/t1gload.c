@@ -18,10 +18,10 @@
 
 #ifdef FT_FLAT_COMPILE
 
-#include <type1/t1gload.h>
+#include "t1gload.h"
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-#include <type1/t1hinter.h>
+#include "t1hinter.h"
 #endif
 
 #else /* FT_FLAT_COMPILE */
