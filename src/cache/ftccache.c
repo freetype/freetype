@@ -362,7 +362,7 @@
     if ( manager->num_nodes == 0 )
       FT_ERROR(( "ftc_node_destroy: invalid cache node count! = %d\n",
                   manager->num_nodes ));
-#endif                  
+#endif
   }
 
 
@@ -407,11 +407,14 @@
   FT_EXPORT_DEF( void )
   ftc_family_done( FTC_Family  family )
   {
-    FTC_Manager  manager = family->cache->manager;
+    if ( family && family->cache )
+    {
+      FTC_Manager  manager = family->cache->manager;
 
 
-    /* remove from manager's family table */
-    ftc_family_table_free( &manager->families, family->fam_index );
+      /* remove from manager's family table */
+      ftc_family_table_free( &manager->families, family->fam_index );
+    }
   }
 
 
@@ -592,7 +595,7 @@
         FT_LruList              list    = cache->families;
         FT_LruNode              fam, *pfam;
         FT_LruNode_CompareFunc  compare = list->clazz->node_compare;
-  
+
         pfam = &list->nodes;
         for (;;)
         {
@@ -602,18 +605,18 @@
             error = FT_LruList_Lookup( list, query, &lru );
             if ( error )
               goto Fail;
-  
+
             goto Skip;
           }
-  
+
           if ( compare( fam, query, list->data ) )
             break;
-  
+
           pfam = &fam->next;
         }
-  
+
         FT_ASSERT( fam != NULL );
-  
+
         /* move to top of list when needed */
         if ( fam != list->nodes )
         {
@@ -621,9 +624,9 @@
           fam->next   = list->nodes;
           list->nodes = fam;
         }
-  
+
         lru = fam;
-  
+
       Skip:
         ;
       }
@@ -634,15 +637,15 @@
         FT_UFast     hash    = query->hash;
         FTC_Node*    bucket;
         FT_UInt      idx;
-  
-  
+
+
         idx = hash & cache->mask;
         if ( idx < cache->p )
           idx = hash & ( cache->mask * 2 + 1 );
-  
+
         bucket  = cache->buckets + idx;
-  
-  
+
+
         if ( query->family     != family                 ||
              family->fam_index >= manager->families.size )
         {
@@ -651,22 +654,22 @@
           error = FTC_Err_Invalid_Argument;
           goto Exit;
         }
-  
+
         if ( *bucket )
         {
           FTC_Node*             pnode   = bucket;
           FTC_Node_CompareFunc  compare = cache->clazz->node_compare;
-  
+
 
           for ( ;; )
           {
             FTC_Node  node;
-  
-  
+
+
             node = *pnode;
             if ( node == NULL )
               break;
-  
+
             if ( node->hash == hash                            &&
                  (FT_UInt)node->fam_index == family->fam_index &&
                  compare( node, query, cache ) )
@@ -678,40 +681,40 @@
                 node->link = *bucket;
                 *bucket    = node;
               }
-  
+
               /* move to head of MRU list */
               if ( node != manager->nodes_list )
                 ftc_node_mru_up( node, manager );
-  
+
               *anode = node;
               goto Exit;
             }
-  
+
             pnode = &node->link;
           }
         }
-  
+
         /* didn't find a node, create a new one */
         {
           FTC_Cache_Class  clazz   = cache->clazz;
           FT_Memory        memory  = cache->memory;
           FTC_Node         node;
-  
-  
+
+
           if ( FT_ALLOC( node, clazz->node_size ) )
             goto Fail;
-  
+
           node->fam_index = (FT_UShort) family->fam_index;
           node->hash      = query->hash;
           node->ref_count = 0;
-  
+
           error = clazz->node_init( node, query, cache );
           if ( error )
           {
             FT_FREE( node );
             goto Fail;
           }
-  
+
           error = ftc_node_hash_link( node, cache );
           if ( error )
           {
@@ -719,11 +722,11 @@
             FT_FREE( node );
             goto Fail;
           }
-  
+
           ftc_node_mru_link( node, cache->manager );
-  
+
           cache->manager->cur_weight += clazz->node_weight( node, cache );
-  
+
           /* now try to compress the node pool when necessary */
           if ( manager->cur_weight >= manager->max_weight )
           {
@@ -731,19 +734,19 @@
             FTC_Manager_Compress( manager );
             node->ref_count--;
           }
-  
+
           *anode = node;
         }
-        
+
        /* all is well, exit now
         */
         goto Exit;
       }
-      
+
     Fail:
       if ( error != FT_Err_Out_Of_Memory )
         goto Exit;
-     
+
      /* there is not enough memory, try to release some unused nodes
       * from the cache to make room for a new one.
       */
@@ -757,7 +760,7 @@
           goto Exit;
 
         free_count = new_count;
-        
+
         /* try to remove "new_count" nodes from the list */
         {
           FTC_Node   first = manager->nodes_list;
@@ -781,7 +784,7 @@
               /* if there are no unused nodes in the list, we'd better exit */
               if ( new_count == free_count )
                 goto Exit;
-                
+
               break;
             }
 

@@ -2,6 +2,26 @@
 
     * docs/*: serious rewriting of the documentation
 
+    * include/freetype/internal/ftobjs.h, src/base/ftobjs.c, src/bdf/bdfdrivr.c,
+    src/pcf/pcfdriver.c, src/pfr/pfrsbit.c, src/sfnt/ttsbit.c,
+    src/type42/t42objs.c, src/winfonts/winfnt.c: introduced three new functions
+    to deal with glyph bitmaps within FT_GlyphSlot objects. these are:
+
+      ft_glyphslot_free_bitmap
+      ft_glyphslot_alloc_bitmap
+      ft_glyphslot_set_bitmap
+
+    these are much more convenient to use than managing the FT_GLYPH_OWN_BITMAP
+    flag manually. the font drivers have been modified to use them as well.
+
+    * src/cache/ftlru.c: fixed an invalid assertion check
+
+    * src/autohint/ahglyph.h, src/autohint/ahglyph.c, src/autohint/ahglobal.c,
+    src/autohint/ahhint.c: fixed blue-scale problem
+
+    * src/cache/ftccache.c: fixed small bug that could crash the cache
+    in rare circumstances (mostly with broken fonts)
+
 
 2003-03-15  David Turner  <david@freetype.org>
 
