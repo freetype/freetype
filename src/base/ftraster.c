@@ -2258,7 +2258,7 @@
     FT_Vector  v_start;
 
     FT_Vector* point;
-    PByte   flags;
+    char*      flags;
 
     int    n;         /* index of contour in outline     */
     int    first;     /* index of first point in contour */
@@ -3112,8 +3112,8 @@
 #ifdef FT_RASTER_OPTION_CONTRAST
     if ( x2-x1 < PRECISION )
     {
-	  x1 = ((x1+x2) >> 1) - PRECISION_HALF;
-	  x2 = x1 + PRECISION;
+      x1 = ((x1+x2) >> 1) - PRECISION_HALF;
+      x2 = x1 + PRECISION;
 	}
 #endif
 
@@ -3326,10 +3326,10 @@
 
 #ifdef FT_RASTER_OPTION_CONTRAST
     if (x2-x1 < PRECISION)
-	{
-	  x1 = ((x1+x2) >> 1) - PRECISION_HALF;
-	  x2 = x1 + PRECISION;
-	}
+    {
+      x1 = ((x1+x2) >> 1) - PRECISION_HALF;
+      x2 = x1 + PRECISION;
+    }
 #endif
 
     e1 = TRUNC( x1 );
