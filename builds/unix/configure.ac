@@ -90,10 +90,12 @@ if test x$with_zlib != xno && test -z "$LIBZ"; then
 fi
 if test x$with_zlib != xno && test -n "$LIBZ"; then
   CFLAGS="$CFLAGS -DFT_CONFIG_OPTION_SYSTEM_ZLIB"
+  LDFLAGS="$LDFLAGS $LIBZ"
   SYSTEM_ZLIB=yes
 fi
 AC_SUBST(LIBZ)
 AC_SUBST(CFLAGS)
+AC_SUBST(LDFLAGS)
 AC_SUBST(SYSTEM_ZLIB)
 
 
