@@ -1050,8 +1050,8 @@
         FT_Memory  memory = loader->face->memory;
 
 
-        error = TT_Vary_Get_Glyph_Delts( (TT_Face)(loader->face),
-                                         glyph_index, &deltas, 4 );
+        error = TT_Vary_Get_Glyph_Deltas( (TT_Face)(loader->face),
+                                          glyph_index, &deltas, 4 );
         if ( error )
           goto Exit;
 
