@@ -276,7 +276,7 @@
 
   FT_EXPORT_DEF( void )  FT_Done_Memory( FT_Memory  memory )
   {
-    free( memory );
+    memory->free( memory );
   }
 
 
