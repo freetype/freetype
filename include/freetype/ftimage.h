@@ -452,7 +452,7 @@ FT_BEGIN_HEADER
   /*    This constant is deprecated.  Please use @FT_OUTLINE_EVEN_ODD_FILL */
   /*    instead.                                                           */
   /*                                                                       */
-#define ft_outline_even_off_fill  FT_OUTLINE_EVEN_ODD_FILL
+#define ft_outline_even_odd_fill  FT_OUTLINE_EVEN_ODD_FILL
 
 
   /*************************************************************************/

@@ -6,14 +6,20 @@
 
 2002-09-09  David Turner  <david@freetype.org>
 
+        * src/pshinter/pshalgo2.c, src/pshinter/pshalgo3.c: adding fix to
+        prevent seg fault when hints are provided in an empty glyph !!
+
 	* src/cache/ftccache.i: fixed a bug that prevented compilation in
 	debug mode of template instantiation
+
+        * include/freetype/ftimage.h: removed incorrect "zft_" definitions
+        and updated constants documentation comments
 
 	* src/cff/cffparse.c: fixed the CFF table loader. It didn't accept
 	empty arrays, and this prevented the loading of certain fonts.
 
-	* src/pshinter/pshalgo2.c, src/pshinter/pshalgo3.c: adding fix to
-	prevent seg fault when hints are provided in an empty glyph !!
+        * include/freetype/freetype.h (FT_FaceRec): updating documentation
+        comment. The "descender" value is always *negative*, not positive !
 
 2002-09-09  Owen Taylor  <owen@redhat.com>
 
