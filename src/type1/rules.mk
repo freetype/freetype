@@ -91,7 +91,7 @@ T1_DIR_ := $(T1_DIR)$(SEP)
 # additional include flags used when compiling the driver
 #
 T1_INCLUDE := $(SHARED) $(T1_DIR)
-T1_COMPILE := $(FT_CC) $(T1_INCLUDE:%=$I%)
+T1_COMPILE := $(FT_COMPILE) $(T1_INCLUDE:%=$I%)
 
 
 # Type1 driver sources (i.e., C files)
@@ -101,7 +101,7 @@ T1_DRV_SRC := $(T1_DIR_)t1objs.c    \
               $(T1_DIR_)t1parse.c   \
               $(T1_DIR_)t1tokens.c  \
               $(T1_DIR_)t1driver.c  \
-	      $(T1_DIR_)t1encode.c  \
+	          $(T1_DIR_)t1encode.c  \
               $(T1_DIR_)t1hinter.c  \
               $(T1_DIR_)t1gload.c
 

@@ -99,7 +99,7 @@ SFNT_INCLUDE := $(SHARED) $(SFNT_DIR)
 # compilation flags for the driver
 #
 SFNT_CFLAGS  := $(SFNT_INCLUDE:%=$I%)
-SFNT_COMPILE := $(FT_CC) $(SFNT_CFLAGS) 
+SFNT_COMPILE := $(FT_COMPILE) $(SFNT_CFLAGS) 
 
 
 # TrueType driver sources (i.e., C files)

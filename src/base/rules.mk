@@ -124,13 +124,13 @@ BASE_SRC_S := $(BASE_)ftbase.c
 # Multiple objects build + extensions
 #
 $(OBJ_)ft%.$O: $(BASE_)ft%.c $(PUBLIC_H) $(BASE_H)
-	$(FT_CC) $T$@ $<
+	$(FT_COMPILE) $T$@ $<
 
 
 # Base layer - single object build
 #
 $(BASE_OBJ_S): $(PUBLIC_H) $(BASE_H) $(BASE_SRC_S) $(BASE_SRC)
-	$(FT_CC) $T$@ $(BASE_SRC_S)
+	$(FT_COMPILE) $T$@ $(BASE_SRC_S)
 
 
 # END
