@@ -2690,6 +2690,7 @@
 
 
   /* documentation is in freetype.h */
+  
   FT_EXPORT_DEF( void )
   FT_Library_Version( FT_Library   library,
                       FT_Int      *amajor,
@@ -2699,6 +2700,7 @@
     FT_Int  major = 0;
     FT_Int  minor = 0;
     FT_Int  patch = 0;
+
     
     if ( library )
     {

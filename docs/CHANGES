@@ -20,8 +20,19 @@ LATESET CHANGES BETWEEN 2.0.9 and 2.0.8
 
     - FreeType 2 should now compile fine on AIX 4.3.3 as a shared library.
 
+    - A bug in the Postscript hinter has been found and fixed. You shouldn't
+      be experimenting un-even stem widths at small pixel sizes (like 14-17).
+      
+      This improves the quality of a certain number of Postscript fonts :o)
+
 
   II. NEW FEATURES:
+
+    - A new function named FT_Library_Version has been added to return
+      the current library's major, minor and patch version numbers. This
+      is important since the macros FREETYPE_MAJOR, FREETYPE_MINOR and
+      FREETYPE_PATCH cannot be used when the library is dynamically linked
+      by a program..
 
     - Two new APIs have been added: FT_Get_First_Char and FT_Get_Next_Char.
     

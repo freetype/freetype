@@ -45,13 +45,33 @@
     PSH_Widths     stdw  = &dim->stdw;
     FT_UInt        count = stdw->count;
     PSH_Width      width = stdw->widths;
+    PSH_Width      stand = width;             /* standard width/height */
     FT_Fixed       scale = dim->scale_mult;
 
-
-    for ( ; count > 0; count--, width++ )
+    
+    if ( count > 0 )
     {
       width->cur = FT_MulFix( width->org, scale );
       width->fit = FT_RoundFix( width->cur );
+      
+      width++;
+      count--;
+      
+      for ( ; count > 0; count--, width++ )
+      {
+        FT_Pos  w, dist;
+        
+        w     = FT_MulFix( width->org, scale );
+        dist  = w - stand->cur;
+        if ( dist < 0 )
+          dist = -dist;
+          
+        if ( dist < 128 )
+          w = stand->cur;
+        
+        width->cur = w;
+        width->fit = FT_RoundFix(w);
+      }
     }
   }
 
@@ -61,6 +81,50 @@
   psh_dimension_snap_width( PSH_Dimension  dimension,
                             FT_Int         org_width )
   {
+#if 0
+    FT_UInt  n;
+    FT_Pos   width;
+    FT_Pos   delta, best = 32000;
+    FT_Int   reference   = -1;
+    
+    /* find the standard width nearest 'org_width' in font units */
+    for ( n = 0; n < dimension->stdw.count; n++ )
+    {
+      FT_Pos  w;
+      FT_Pos  dist;
+      
+      w    = dimension->stdw.widths[n].org;
+      dist = org_width - w;
+      if ( dist < 0 )
+        dist = -dist;
+        
+      if ( dist < best )
+      {
+        best      = dist;
+        reference = n;
+      }
+    }
+    
+    /* if the scaled best distance is smaller than 1.5 pixels, we  */
+    /* snap the width to the 'best' one, otherwise we simply round */
+    /* it..                                                        */
+    if ( reference < 0 )
+    {
+    Simple_Round:
+      width = FT_MulFix( org_width, dimension->scale_mult );
+      width = (width + 32) & -64;
+      if ( width == 0 )
+        width = 64;
+        
+      return width;
+    }
+    
+    delta = FT_MulFix( best, dimension->scale_mult );
+    if ( delta >= 128 || delta <= -128 )
+      goto Simple_Round;
+    
+    return dimension->stdw.widths[n].fit;
+#else
     FT_UInt  n;
     FT_Pos   width     = FT_MulFix( org_width, dimension->scale_mult );
     FT_Pos   best      = 64 + 32 + 2;
@@ -96,6 +160,7 @@
       if ( width > reference )
         width = reference;
     }
+#endif
 
     return width;
   }
@@ -600,7 +665,7 @@
         PSH_Width      write = dim->stdw.widths;
 
 
-        write->org = priv->standard_width[1];
+        write->org = priv->standard_width[0];
         write++;
 
         read = priv->snap_widths;
@@ -620,7 +685,7 @@
         PSH_Width      write = dim->stdw.widths;
 
 
-        write->org = priv->standard_height[1];
+        write->org = priv->standard_height[0];
         write++;
 
         read = priv->snap_heights;
