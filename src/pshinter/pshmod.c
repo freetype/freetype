@@ -29,7 +29,7 @@
     PSH_Globals_FuncsRec     globals_funcs;
     T1_Hints_FuncsRec        t1_funcs;
     T2_Hints_FuncsRec        t2_funcs;
-    
+
   } PS_Hinter_ModuleRec, *PS_Hinter_Module;
 
 
@@ -86,8 +86,8 @@
   {
     return &((PS_Hinter_Module)module)->t2_funcs;
   }
-  
-  
+
+
   FT_CALLBACK_DEF(PSHinter_Interface)
   pshinter_interface =
   {
@@ -112,5 +112,3 @@
     (FT_Module_Destructor)  ps_hinter_done,
     (FT_Module_Requester)   0  /* no additional interface for now */
   };
-
-  

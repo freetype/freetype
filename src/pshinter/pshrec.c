@@ -168,7 +168,7 @@
     {
       error = ps_mask_ensure( mask, index+1, memory );
       if (error) goto Exit;
-      
+
       mask->num_bits = index+1;
     }
 
@@ -716,10 +716,10 @@
   ps_hints_done( PS_Hints   hints )
   {
     FT_Memory  memory = hints->memory;
-    
+
     ps_dimension_done( &hints->dimension[0], memory );
     ps_dimension_done( &hints->dimension[1], memory );
-    
+
     hints->error  = 0;
     hints->memory = 0;
   }
@@ -821,7 +821,7 @@
                     FT_Long*  stems )
   {
     FT_Error   error = 0;
-    
+
     if (!hints->error)
     {
       PS_Dimension  dim;
@@ -878,7 +878,7 @@
                     FT_UInt   end_point )
   {
     FT_Error  error = 0;
-    
+
     if ( !hints->error )
     {
       FT_Memory  memory = hints->memory;
@@ -1008,14 +1008,14 @@
         error = ps_dimension_end( &dim[1], end_point, memory );
       }
     }
-    
+
 #ifdef DEBUG_VIEW
     if (!error)
       the_ps_hints = hints;
-#endif    
+#endif
     return error;
   }
-  
+
  /***********************************************************************/
  /***********************************************************************/
  /*****                                                             *****/
@@ -1036,7 +1036,7 @@
                  FT_Long*    coords )
   {
     ps_hints_stem( (PS_Hints)hints, dimension, 1, coords );
-  }                 
+  }
 
 
   FT_LOCAL_DEF void
@@ -1051,8 +1051,8 @@
     funcs->reset    = (T1_Hints_ResetFunc)     ps_hints_t1reset;
     funcs->apply    = (T1_Hints_ApplyFunc)     PS_HINTS_APPLY_FUNC;
   }
-  
-  
+
+
 
  /***********************************************************************/
  /***********************************************************************/
@@ -1075,14 +1075,14 @@
                   FT_Fixed* coords )
   {
     FT_Long    stems[32], n, total = count;
-    
+
     while (total > 0)
     {
       /* determine number of stems to write */
       count = total;
       if ( count > 32 )
         count = 32;
-      
+
       /* compute integer stem position in font units */
       for ( n = 0; n < count*2; n++ )
         stems[n] = (coords[n] + 0x8000) >> 16;
@@ -1107,6 +1107,3 @@
     funcs->counter  = (T2_Hints_CounterFunc)  ps_hints_t2counter;
     funcs->apply    = (T2_Hints_ApplyFunc)    PS_HINTS_APPLY_FUNC;
   }
-  
-
-  
