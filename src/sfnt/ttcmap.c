@@ -123,7 +123,7 @@
 
       for ( i = 0; i < 256; i++ )
       {
-        u = (FT_UShort)(GET_UShort() / 8);
+        u = (FT_UShort)( GET_UShort() / 8 );
         cmap2->subHeaderKeys[i] = u;
 
         if ( num_SH < u )
@@ -151,7 +151,8 @@
         cmap2sub->entryCount    = GET_UShort();
         cmap2sub->idDelta       = GET_Short();
         /* we apply the location offset immediately */
-        cmap2sub->idRangeOffset = (FT_UShort)( GET_UShort() - ( num_SH - i ) * 8 - 2 );
+        cmap2sub->idRangeOffset = (FT_UShort)(
+          GET_UShort() - ( num_SH - i ) * 8 - 2 );
 
         cmap2sub++;
       }
@@ -185,7 +186,7 @@
       cmap4->entrySelector = GET_UShort();
       cmap4->rangeShift    = GET_UShort();
 
-      num_Seg = (FT_UShort)(cmap4->segCountX2 / 2);
+      num_Seg = (FT_UShort)( cmap4->segCountX2 / 2 );
 
       FORGET_Frame();
 

@@ -13,80 +13,87 @@
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
-/*                                                                         */
-/*  This special header file is used to define the FT2 enumeration         */
-/*  constants. It can also be used to generate error message strings       */
-/*  with a small macro trick explained below.                              */
-/*                                                                         */
-/*  I - Error Formats:                                                     */
-/*  ------------------                                                     */
-/*                                                                         */
-/*    Since release 2.1, the error constants have changed. The lower byte  */
-/*    of the error value gives the "generic" error code, while the higher  */
-/*    bytes indicates in which module the error occured.                   */
-/*                                                                         */
-/*    You can use the macro FT_ERROR_BASE(x) macro to extract the          */
-/*    generic error code from a FT_Error                                   */
-/*                                                                         */
-/*    The configuration macro FT_CONFIG_OPTION_USE_MODULE_ERRORS can       */
-/*    be undefined in ftoption.h in order to make the higher byte always   */
-/*    zero, in case you'd need to be compatible with previous versions     */
-/*    of FT2.                                                              */
-/*                                                                         */
-/*                                                                         */
-/*  II - Error Message strings:                                            */
-/*  ---------------------------                                            */
-/*                                                                         */
-/*    The error definitions below are made through special macros that     */
-/*    allow client applications to build a table of error message strings  */
-/*    if they need it. The strings are not included in a normal build of   */
-/*    FT2 to save space (most client apps do not use them)                 */
-/*                                                                         */
-/*    To do so, you'll need to define the following macros before          */
-/*    including this file:                                                 */
-/*                                                                         */
-/*    FT_ERROR_START_LIST ::                                               */
-/*       this macro is called before anything else to define the           */
-/*       start of the error list. It is followed by several                */
-/*       FT_ERROR_DEF calls (see below)                                    */
-/*                                                                         */
-/*    FT_ERROR_DEF( e, v, s ) ::                                           */
-/*        this macro is called to define one single error.                 */
-/*        'e' is the error code identifier (e.g. FT_Err_Invalid_Argument)  */
-/*        'v' is the error numerical value                                 */
-/*        's' is the corresponding error string                            */
-/*                                                                         */
-/*    FT_ERROR_END_LIST ::                                                 */
-/*        this macro is used to end the list.                              */
-/*                                                                         */
-/*    Additionally, you'll need to undefine __FTERRORS_H__ before          */
-/*    #including this file.                                                */
-/*                                                                         */
-/*    Here's a simple example:                                             */
-/*                                                                         */
-/*     {                                                                   */
-/*       #undef __FTERRORS_H__                                             */
-/*       #define FT_ERRORDEF( e, v, s )   { e, s },                        */
-/*       #define FT_ERROR_START_LIST      {                                */
-/*       #define FT_ERROR_END_LIST        { 0, 0 } };                      */
-/*                                                                         */
-/*       const struct                                                      */
-/*       {                                                                 */
-/*         int          err_code;                                          */
-/*         const char*  err_msg                                            */
-/*       } ft_errors[] =                                                   */
-/*                                                                         */
-/*       #include FT_ERRORS_H                                              */
-/*     }                                                                   */
-/*                                                                         */
-/*                                                                         */
 /***************************************************************************/
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* This special header file is used to define the FT2 enumeration        */
+  /* constants.  It can also be used to generate error message strings     */
+  /* with a small macro trick explained below.                             */
+  /*                                                                       */
+  /* I - Error Formats                                                     */
+  /* -----------------                                                     */
+  /*                                                                       */
+  /*   Since release 2.1, the error constants have changed.  The lower     */
+  /*   byte of the error value gives the "generic" error code, while the   */
+  /*   higher byte indicates in which module the error occured.            */
+  /*                                                                       */
+  /*   You can use the macro FT_ERROR_BASE(x) macro to extract the generic */
+  /*   error code from an FT_Error value.                                  */
+  /*                                                                       */
+  /*   The configuration macro FT_CONFIG_OPTION_USE_MODULE_ERRORS can be   */
+  /*   undefined in ftoption.h in order to make the higher byte always     */
+  /*   zero, in case you need to be compatible with previous versions of   */
+  /*   FreeType 2.                                                         */
+  /*                                                                       */
+  /*                                                                       */
+  /* II - Error Message strings                                            */
+  /* --------------------------                                            */
+  /*                                                                       */
+  /*   The error definitions below are made through special macros that    */
+  /*   allow client applications to build a table of error message strings */
+  /*   if they need it.  The strings are not included in a normal build of */
+  /*   FreeType 2 to save space (most client applications do not use       */
+  /*   them).                                                              */
+  /*                                                                       */
+  /*   To do so, you have to define the following macros before including  */
+  /*   this file:                                                          */
+  /*                                                                       */
+  /*   FT_ERROR_START_LIST ::                                              */
+  /*     This macro is called before anything else to define the start of  */
+  /*     the error list.  It is followed by several FT_ERROR_DEF calls     */
+  /*     (see below).                                                      */
+  /*                                                                       */
+  /*   FT_ERROR_DEF( e, v, s ) ::                                          */
+  /*     This macro is called to define one single error.                  */
+  /*     `e' is the error code identifier (e.g. FT_Err_Invalid_Argument).  */
+  /*     `v' is the error numerical value.                                 */
+  /*     `s' is the corresponding error string.                            */
+  /*                                                                       */
+  /*   FT_ERROR_END_LIST ::                                                */
+  /*     This macro ends the list.                                         */
+  /*                                                                       */
+  /*   Additionally, you have to undefine __FTERRORS_H__ before #including */
+  /*   this file.                                                          */
+  /*                                                                       */
+  /*   Here is a simple example:                                           */
+  /*                                                                       */
+  /*     {                                                                 */
+  /*       #undef __FTERRORS_H__                                           */
+  /*       #define FT_ERRORDEF( e, v, s )   { e, s },                      */
+  /*       #define FT_ERROR_START_LIST      {                              */
+  /*       #define FT_ERROR_END_LIST        { 0, 0 } };                    */
+  /*                                                                       */
+  /*       const struct                                                    */
+  /*       {                                                               */
+  /*         int          err_code;                                        */
+  /*         const char*  err_msg                                          */
+  /*       } ft_errors[] =                                                 */
+  /*                                                                       */
+  /*       #include FT_ERRORS_H                                            */
+  /*     }                                                                 */
+  /*                                                                       */
+  /*************************************************************************/
+
 
 #ifndef __FTERRORS_H__
 #define __FTERRORS_H__
 
-/* include module base error codes */
+
+  /* include module base error codes */
 #include FT_MODULE_ERRORS_H
+
 
   /*******************************************************************/
   /*******************************************************************/
@@ -95,72 +102,75 @@
   /*****                                                         *****/
   /*******************************************************************/
   /*******************************************************************/
+
   
-#undef   FT_NEED_EXTERN_C
-#define  FT_ERR_XCAT(x,y)    x ## y
-#define  FT_ERR_CAT(x,y)     FT_ERR_XCAT(x,y)
+#undef  FT_NEED_EXTERN_C
+#define FT_ERR_XCAT( x, y )  x ## y
+#define FT_ERR_CAT( x, y )   FT_ERR_XCAT( x, y )
 
 
-/* FT_ERR_PREFIX is used as a prefix for error identifiers */
-/* by default, we use "FT_Err_"                            */
-/*                                                         */
-#ifndef   FT_ERR_PREFIX
-#  define FT_ERR_PREFIX  FT_Err_
+  /* FT_ERR_PREFIX is used as a prefix for error identifiers. */
+  /* By default, we use `FT_Err_'.                            */
+  /*                                                          */
+#ifndef FT_ERR_PREFIX
+#define FT_ERR_PREFIX  FT_Err_
 #endif
 
 
-
-/* FT_ERR_BASE is used as the base for module-specific errors */
-/*                                                            */
+  /* FT_ERR_BASE is used as the base for module-specific errors. */
+  /*                                                             */
 #ifdef FT_CONFIG_OPTION_USE_MODULE_ERRORS
-#  ifndef   FT_ERR_BASE
-#    define FT_ERR_BASE  FT_Mod_Err_Base
-#  endif
-#else
-#  define   FT_ERR_BASE  0
+
+#ifndef FT_ERR_BASE
+#define FT_ERR_BASE  FT_Mod_Err_Base
 #endif
 
+#else
+
+#define FT_ERR_BASE  0
+
+#endif /* FT_CONFIG_OPTION_USE_MODULE_ERRORS */
 
 
-/*  if FT_ERRORDEF is not defined, we need to define a simple enumeration */
-/*  type..                                                                */
-/*                                                                        */
+  /* If FT_ERRORDEF is not defined, we need to define a simple */
+  /* enumeration type.                                         */
+  /*                                                           */
 #ifndef FT_ERRORDEF
 
-#  define FT_ERRORDEF( e, v, s )  e = v,
-#  define FT_ERROR_START_LIST     enum {
-#  define FT_ERROR_END_LIST       FT_ERR_CAT(FT_ERR_PREFIX,Max) };
+#define FT_ERRORDEF( e, v, s )  e = v,
+#define FT_ERROR_START_LIST     enum {
+#define FT_ERROR_END_LIST       FT_ERR_CAT( FT_ERR_PREFIX, Max ) };
 
-#  ifdef __cplusplus
-#    define FT_NEED_EXTERN_C
-      extern "C" {
-#  endif
+#ifdef __cplusplus
+#define FT_NEED_EXTERN_C
+  extern "C" {
+#endif
 
 #endif /* !FT_ERRORDEF */
 
 
-/* this macro is used to define an error */
-#  define FT_ERRORDEF_( e, v, s )   \
-          FT_ERRORDEF( FT_ERR_CAT(FT_ERR_PREFIX,e), v + FT_ERR_BASE, s )
+  /* this macro is used to define an error */
+#define FT_ERRORDEF_( e, v, s )   \
+          FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v + FT_ERR_BASE, s )
 
-
-/* this is only used for FT_Err_Ok, which must be 0 !! */
-#  define FT_NOERRORDEF_( e, v, s ) \
-          FT_ERRORDEF( FT_ERR_CAT(FT_ERR_PREFIX,e), v, s )
-
+  /* this is only used for FT_Err_Ok, which must be 0! */
+#define FT_NOERRORDEF_( e, v, s ) \
+          FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v, s )
 
 
   /*******************************************************************/
   /*******************************************************************/
   /*****                                                         *****/
-  /*****                   LIST ERROR CODES/MESSAGES             *****/
+  /*****                LIST OF ERROR CODES/MESSAGES             *****/
   /*****                                                         *****/
   /*******************************************************************/
   /*******************************************************************/
+
 
 #ifdef FT_ERROR_START_LIST
   FT_ERROR_START_LIST
 #endif
+
 
   /* generic errors */
 
@@ -342,10 +352,11 @@
   FT_ERROR_END_LIST
 #endif
 
+
   /*******************************************************************/
   /*******************************************************************/
   /*****                                                         *****/
-  /*****                      SIMPLE CLEANUPP                    *****/
+  /*****                      SIMPLE CLEANUP                     *****/
   /*****                                                         *****/
   /*******************************************************************/
   /*******************************************************************/

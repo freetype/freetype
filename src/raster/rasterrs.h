@@ -30,8 +30,8 @@
 
 #undef __FTERRORS_H__
 
-#define FT_ERR_PREFIX     Raster_Err_
-#define FT_ERR_BASE       FT_Mod_Err_Raster
+#define FT_ERR_PREFIX  Raster_Err_
+#define FT_ERR_BASE    FT_Mod_Err_Raster
 
 #include FT_ERRORS_H
 

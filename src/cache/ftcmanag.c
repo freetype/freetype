@@ -74,7 +74,7 @@
   {
     FT_UNUSED( lru );
 
-    return FT_BOOL(((FT_Size)node->root.data)->face == (FT_Face)data);
+    return FT_BOOL( ((FT_Size)node->root.data)->face == (FT_Face)data );
   }
 
 

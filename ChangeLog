@@ -1,20 +1,35 @@
 2001-06-19  David Turner  <david@freetype.org>
 
-        * builds/win32/visualc/freetype.dsp, builds/win32/visualc/index.html:
-        updated the Visual C++ project (for the 2.0.4 release)
+	* builds/win32/visualc/freetype.dsp, builds/win32/visualc/index.html:
+	Updated the Visual C++ project (for the 2.0.4 release).
 
-        * builds/unix/detect.mk: added rule for AIX detection (which uses
-        /usr/sbin/init instead of /sbin/init, go figure..)
+	* builds/unix/detect.mk: Added rule for AIX detection (which uses
+	/usr/sbin/init instead of /sbin/init).
 
-        * include/freetype/fterrors.h: updated some of the error macros to
-        simplify Werner's latest tricks :o)
-        
-        * include/freetype/freetype.h (FT_New_Memory_Face): updated docs
-        
-        Removing _lots_ of compiler warnings when the most pedantic warning
-        levels of Visual C++ and Borland C++ are used. Too many files to be
-        listed here.., but FT2 now compiles without warnings with VC++ and
-        the "/W4" warning level (lint-style)
+	* include/freetype/fterrors.h, src/*/*err*.h: Updated some of the
+	error macros to simplify handling of new error scheme.
+
+2001-06-19  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/fttypes.h (FT_ERROR_MODULE): New macro.
+
+2001-06-19  David Turner  <david@freetype.org>
+
+	Removing _lots_ of compiler warnings when the most pedantic warning
+	levels of Visual C++ and Borland C++ are used.  Too many files to be
+	listed here, but FT2 now compiles without warnings with VC++ and the
+	"/W4" warning level (lint-style).
+
+        * include/freetype/freetype.h (FT_New_Memory_Face): Updated
+	documentation.
+	* include/freetype/fttypes.h (FT_BOOL): New macro.
+	* include/freetype/internal/ftdebug.h: Add #pragma for Visual C++
+	to suppress warning.
+	* include/freetype/internal/ftstream.h (FT_GET_SHORT_{BE,LE},
+	FT_GET_OFF3_{BE,LE}, FT_GET_LONG_{BE,LE}): New macros.
+	(NEXT_*): Use them.
+	* src/autohint/ahglobal.c: Include FT_INTERNAL_DEBUG_H.
+	(FT_New_Memory_Face): Add `const' to function declaration.
 
 2001-06-18  Werner Lemberg  <wl@gnu.org>
 

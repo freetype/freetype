@@ -1833,7 +1833,9 @@
       ras.state    = Unknown;
       ras.gProfile = NULL;
 
-      if ( Decompose_Curve( RAS_VARS (unsigned short)start, ras.outline.contours[i], flipped ) )
+      if ( Decompose_Curve( RAS_VARS (unsigned short)start,
+                            ras.outline.contours[i],
+                            flipped ) )
         return FAILURE;
 
       start = ras.outline.contours[i] + 1;
@@ -2755,7 +2757,7 @@
       Sort( &draw_right );
 
       y_change = (Short)ras.sizeBuff[-ras.numTurns--];
-      y_height = (Short)(y_change - y);
+      y_height = (Short)( y_change - y );
 
       while ( y < y_change )
       {
@@ -2929,7 +2931,7 @@
         i = ras.band_stack[ras.band_top].y_min;
         j = ras.band_stack[ras.band_top].y_max;
 
-        k = (Short)(( i + j ) / 2);
+        k = (Short)( ( i + j ) / 2 );
 
         if ( ras.band_top >= 7 || k < i )
         {
@@ -2942,7 +2944,7 @@
         ras.band_stack[ras.band_top + 1].y_min = k;
         ras.band_stack[ras.band_top + 1].y_max = j;
 
-        ras.band_stack[ras.band_top].y_max = (Short)(k - 1);
+        ras.band_stack[ras.band_top].y_max = (Short)( k - 1 );
 
         ras.band_top++;
       }
@@ -2980,7 +2982,8 @@
                         ft_outline_high_precision );
     ras.scale_shift    = ras.precision_shift;
     ras.dropOutControl = 2;
-    ras.second_pass    = (FT_Byte)(!( ras.outline.flags & ft_outline_single_pass ));
+    ras.second_pass    = (FT_Byte)( !( ras.outline.flags &
+                                       ft_outline_single_pass ) );
 
     /* Vertical Sweep */
     ras.Proc_Sweep_Init = Vertical_Sweep_Init;
@@ -2990,7 +2993,7 @@
 
     ras.band_top            = 0;
     ras.band_stack[0].y_min = 0;
-    ras.band_stack[0].y_max = (short)(ras.target.rows - 1);
+    ras.band_stack[0].y_max = (short)( ras.target.rows - 1 );
 
     ras.bWidth  = (unsigned short)ras.target.width;
     ras.bTarget = (Byte*)ras.target.buffer;
@@ -3008,7 +3011,7 @@
 
       ras.band_top            = 0;
       ras.band_stack[0].y_min = 0;
-      ras.band_stack[0].y_max = (short)(ras.target.width - 1);
+      ras.band_stack[0].y_max = (short)( ras.target.width - 1 );
 
       if ( ( error = Render_Single_Pass( RAS_VARS 1 ) ) != 0 )
         return error;

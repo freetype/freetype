@@ -925,7 +925,8 @@
     old_limit  = parser->limit;
 
     /* we store the elements count */
-    *(FT_Byte*)( (FT_Byte*)objects[0] + field->count_offset ) = (FT_Byte)num_elements;
+    *(FT_Byte*)( (FT_Byte*)objects[0] + field->count_offset ) =
+      (FT_Byte)num_elements;
 
     /* we now load each element, adjusting the field.offset on each one */
     token = elements;
@@ -1156,7 +1157,7 @@
       }
       point->x = x;
       point->y = y;
-      *control = (FT_Byte)(flag ? FT_Curve_Tag_On : FT_Curve_Tag_Cubic);
+      *control = (FT_Byte)( flag ? FT_Curve_Tag_On : FT_Curve_Tag_Cubic );
 
       builder->last = *point;
     }
@@ -1199,7 +1200,8 @@
     if ( !error )
     {
       if ( outline->n_contours > 0 )
-        outline->contours[outline->n_contours - 1] = (short)(outline->n_points - 1);
+        outline->contours[outline->n_contours - 1] =
+          (short)( outline->n_points - 1 );
 
       outline->n_contours++;
     }
@@ -1260,7 +1262,8 @@
     }
 
     if ( outline->n_contours > 0 )
-      outline->contours[outline->n_contours - 1] = (short)(outline->n_points - 1);
+      outline->contours[outline->n_contours - 1] =
+        (short)( outline->n_points - 1 );
   }
 
 
@@ -1282,8 +1285,8 @@
       FT_Byte  plain;
 
 
-      plain     = (FT_Byte)   ( *buffer ^ ( seed >> 8 ) );
-      seed      = (FT_UShort)(( *buffer + seed ) * 52845 + 22719 );
+      plain     = (FT_Byte)( *buffer ^ ( seed >> 8 ) );
+      seed      = (FT_UShort)( ( *buffer + seed ) * 52845 + 22719 );
       *buffer++ = plain;
       length--;
     }

@@ -221,10 +221,11 @@ FT_BEGIN_HEADER
 #define FT_TRACE6( varformat )  FT_TRACE( 6, varformat )
 #define FT_TRACE7( varformat )  FT_TRACE( 7, varformat )
 
+
 #if defined( _MSC_VER )      /* Visual C++ (and Intel C++) */
 
-/* we disable the warnings "conditional expression is constant" here */
-/* in order to compile cleanly with the maximum level of warnings    */
+  /* we disable the warning `conditional expression is constant' here */
+  /* in order to compile cleanly with the maximum level of warnings   */
 #pragma warning( disable : 4127 )
 
 #endif /* _MSC_VER */

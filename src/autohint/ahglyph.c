@@ -558,7 +558,7 @@
         for ( ; contour < contour_limit; contour++, end++ )
         {
           contour[0] = points + index;
-          index      = (short)(end[0] + 1);
+          index      = (short)( end[0] + 1 );
         }
       }
 
@@ -961,7 +961,7 @@
 
             is_dir = (FT_Bool)( seg1->dir == outline->horz_major_dir ||
                                 seg1->dir == outline->vert_major_dir );
-            is_pos = (FT_Bool)(pos1 > pos2);
+            is_pos = (FT_Bool)( pos1 > pos2 );
 
             if ( pos1 == pos2 || !(is_dir ^ is_pos) )
               continue;
@@ -1199,7 +1199,7 @@
 
           /* check for links -- if seg->serif is set, then seg->link must */
           /* be ignored                                                   */
-          is_serif = (FT_Bool)(seg->serif && seg->serif->edge != edge);
+          is_serif = (FT_Bool)( seg->serif && seg->serif->edge != edge );
 
           if ( seg->link || is_serif )
           {
@@ -1371,8 +1371,10 @@
         /* zone, check for left edges                                      */
         /*                                                                 */
         /* of course, that's for TrueType XXX                              */
-        FT_Bool  is_top_blue  = FT_BOOL(AH_IS_TOP_BLUE( blue ));
-        FT_Bool  is_major_dir = FT_BOOL(edge->dir == outline->horz_major_dir);
+        FT_Bool  is_top_blue  =
+                   FT_BOOL( AH_IS_TOP_BLUE( blue ) );
+        FT_Bool  is_major_dir =
+                   FT_BOOL( edge->dir == outline->horz_major_dir );
 
         if ( !blue_active[blue] )
           continue;

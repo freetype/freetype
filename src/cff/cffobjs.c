@@ -385,10 +385,11 @@
           root->num_glyphs = cff->charstrings_index.count;
 
         /* set global bbox, as well as EM size */
-        root->bbox         = dict->font_bbox;
-        root->ascender     = (FT_Short)( root->bbox.yMax >> 16 );
-        root->descender    = (FT_Short)( root->bbox.yMin >> 16 );
-        root->height       = (FT_Short)(( ( root->ascender - root->descender ) * 12 ) / 10);
+        root->bbox      = dict->font_bbox;
+        root->ascender  = (FT_Short)( root->bbox.yMax >> 16 );
+        root->descender = (FT_Short)( root->bbox.yMin >> 16 );
+        root->height    = (FT_Short)(
+          ( ( root->ascender - root->descender ) * 12 ) / 10 );
 
         if ( dict->units_per_em )
           root->units_per_EM = dict->units_per_em;

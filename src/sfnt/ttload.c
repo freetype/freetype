@@ -604,11 +604,13 @@
 
     face->root.num_glyphs = maxProfile->numGlyphs;
 
-    face->root.internal->max_points = (FT_UShort)MAX( maxProfile->maxCompositePoints,
-                                                      maxProfile->maxPoints );
+    face->root.internal->max_points =
+      (FT_UShort)MAX( maxProfile->maxCompositePoints,
+                      maxProfile->maxPoints );
 
-    face->root.internal->max_contours = (FT_Short)MAX( maxProfile->maxCompositeContours,
-                                                       maxProfile->maxContours );
+    face->root.internal->max_contours =
+      (FT_Short)MAX( maxProfile->maxCompositeContours,
+                     maxProfile->maxContours );
 
     face->max_components = (FT_ULong)maxProfile->maxComponentElements +
                            maxProfile->maxComponentDepth;

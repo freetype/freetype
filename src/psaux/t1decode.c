@@ -284,8 +284,8 @@
       FT_Outline  dummy;
 
 
-      dummy.n_points = (short)(base->n_points - n_base_points);
-      dummy.points   = base->points   + n_base_points;
+      dummy.n_points = (short)( base->n_points - n_base_points );
+      dummy.points   = base->points + n_base_points;
 
       FT_Outline_Translate( &dummy, adx - asb, ady );
     }
