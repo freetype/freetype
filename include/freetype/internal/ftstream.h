@@ -144,35 +144,66 @@ FT_BEGIN_HEADER
   /* type `char*' or equivalent (1-byte elements).                         */
   /*                                                                       */
 
-#define FT_GET_SHORT_BE( p )                           \
-          ( (short)( ( (signed char)(p)[0] <<  8 ) |   \
-                                    (p)[1]         ) )
+#define FT_GET_SHORT_BE( p )                                   \
+          ((FT_Int16)( ( (FT_Int16)(FT_Char)(p)[0] <<  8 ) |   \
+                         (FT_Int16)(FT_Byte)(p)[1]         ) )
 
-#define FT_GET_OFF3_BE( p )                            \
-          ( (long) ( ( (signed char)(p)[0] << 16 ) |   \
-                                  ( (p)[1] <<  8 ) |   \
-                                    (p)[2]         ) )
+#define FT_GET_USHORT_BE( p )                                   \
+          ((FT_Int16)( ( (FT_UInt16)(FT_Byte)(p)[0] <<  8 ) |   \
+                         (FT_UInt16)(FT_Byte)(p)[1]         ) )
 
-#define FT_GET_LONG_BE( p )                            \
-          ( (long) ( ( (signed char)(p)[0] << 24 ) |   \
-                                  ( (p)[1] << 16 ) |   \
-                                  ( (p)[2] <<  8 ) |   \
-                                    (p)[3]         ) )
+#define FT_GET_OFF3_BE( p )                                      \
+          ( (FT_Int32) ( ( (FT_Int32)(FT_Char)(p)[0] << 16 ) |   \
+                         ( (FT_Int32)(FT_Byte)(p)[1] <<  8 ) |   \
+                           (FT_Int32)(FT_Byte)(p)[2]         ) )
 
-#define FT_GET_SHORT_LE( p )                           \
-          ( (short)( ( (signed char)(p)[1] <<  8 ) |   \
-                                    (p)[0]         ) )
+#define FT_GET_UOFF3_BE( p )                                      \
+          ( (FT_Int32) ( ( (FT_UInt32)(FT_Byte)(p)[0] << 16 ) |   \
+                         ( (FT_UInt32)(FT_Byte)(p)[1] <<  8 ) |   \
+                           (FT_UInt32)(FT_Byte)(p)[2]         ) )
 
-#define FT_GET_OFF3_LE( p )                            \
-          ( (long) ( ( (signed char)(p)[2] << 16 ) |   \
-                                  ( (p)[1] <<  8 ) |   \
-                                    (p)[0]         ) )
+#define FT_GET_LONG_BE( p )                                      \
+          ( (FT_Int32) ( ( (FT_Int32)(FT_Char)(p)[0] << 24 ) |   \
+                         ( (FT_Int32)(FT_Byte)(p)[1] << 16 ) |   \
+                         ( (FT_Int32)(FT_Byte)(p)[2] <<  8 ) |   \
+                           (FT_Int32)(FT_Byte)(p)[3]         ) )
 
-#define FT_GET_LONG_LE( p )                            \
-          ( (long) ( ( (signed char)(p)[3] << 24 ) |   \
-                                  ( (p)[2] << 16 ) |   \
-                                  ( (p)[1] <<  8 ) |   \
-                                    (p)[0]         ) )
+#define FT_GET_ULONG_BE( p )                                      \
+          ( (FT_Int32) ( ( (FT_UInt32)(FT_Byte)(p)[0] << 24 ) |   \
+                         ( (FT_UInt32)(FT_Byte)(p)[1] << 16 ) |   \
+                         ( (FT_UInt32)(FT_Byte)(p)[2] <<  8 ) |   \
+                           (FT_UInt32)(FT_Byte)(p)[3]         ) )
+
+#define FT_GET_SHORT_LE( p )                                   \
+          ((FT_Int16)( ( (FT_Int16)(FT_Char)(p)[1] <<  8 ) |   \
+                         (FT_Int16)(FT_Byte)(p)[0]         ) )
+
+#define FT_GET_USHORT_LE( p )                                   \
+          ((FT_Int16)( ( (FT_UInt16)(FT_Byte)(p)[1] <<  8 ) |   \
+                         (FT_UInt16)(FT_Byte)(p)[0]         ) )
+
+#define FT_GET_OFF3_LE( p )                                      \
+          ( (FT_Int32) ( ( (FT_Int32)(FT_Char)(p)[2] << 16 ) |   \
+                         ( (FT_Int32)(FT_Byte)(p)[1] <<  8 ) |   \
+                           (FT_Int32)(FT_Byte)(p)[0]         ) )
+
+#define FT_GET_UOFF3_LE( p )                                      \
+          ( (FT_Int32) ( ( (FT_UInt32)(FT_Byte)(p)[2] << 16 ) |   \
+                         ( (FT_UInt32)(FT_Byte)(p)[1] <<  8 ) |   \
+                           (FT_UInt32)(FT_Byte)(p)[0]         ) )
+
+#define FT_GET_LONG_LE( p )                                      \
+          ( (FT_Int32) ( ( (FT_Int32)(FT_Char)(p)[3] << 24 ) |   \
+                         ( (FT_Int32)(FT_Byte)(p)[2] << 16 ) |   \
+                         ( (FT_Int32)(FT_Byte)(p)[1] <<  8 ) |   \
+                           (FT_Int32)(FT_Byte)(p)[0]         ) )
+
+#define FT_GET_ULONG_LE( p )                                      \
+          ( (FT_Int32) ( ( (FT_UInt32)(FT_Byte)(p)[3] << 24 ) |   \
+                         ( (FT_UInt32)(FT_Byte)(p)[2] << 16 ) |   \
+                         ( (FT_UInt32)(FT_Byte)(p)[1] <<  8 ) |   \
+                           (FT_UInt32)(FT_Byte)(p)[0]         ) )
+
 
 #define NEXT_Char( buffer )            \
           ( (signed char)*buffer++ )
@@ -184,39 +215,39 @@ FT_BEGIN_HEADER
           ( (short)( buffer += 2, FT_GET_SHORT_BE( buffer - 2 ) ) )
 
 #define NEXT_UShort( buffer )                                       \
-          ( (unsigned short)NEXT_Short( buffer ) )
+          ( (unsigned short)( buffer += 2, FT_GET_USHORT_BE( buffer - 2 ) ) )
 
 #define NEXT_Offset( buffer )                                     \
           ( (long)( buffer += 3, FT_GET_OFF3_BE( buffer - 3 ) ) )
 
 #define NEXT_UOffset( buffer )                                    \
-          ( (unsigned long)NEXT_Offset( buffer ) )
+          ( (unsigned long)( buffer += 3, FT_GET_UOFF3_BE( buffer - 3 ) ) )
 
 #define NEXT_Long( buffer )                                       \
           ( (long)( buffer += 4, FT_GET_LONG_BE( buffer - 4 ) ) )
 
 #define NEXT_ULong( buffer )                                      \
-          ( (unsigned long)NEXT_Long( buffer ) )
+          ( (unsigned long)( buffer += 4, FT_GET_ULONG_BE( buffer - 4 ) ) )
 
 
 #define NEXT_ShortLE( buffer )                                      \
           ( (short)( buffer += 2, FT_GET_SHORT_LE( buffer - 2 ) ) )
 
 #define NEXT_UShortLE( buffer )                                     \
-          ( (unsigned short)NEXT_ShortLE( buffer ) )
+          ( (unsigned short)( buffer += 2, FT_GET_USHORT_LE( buffer - 2 ) ) )
 
 #define NEXT_OffsetLE( buffer )                                   \
           ( (long)( buffer += 3, FT_GET_OFF3_LE( buffer - 3 ) ) )
 
 #define NEXT_UOffsetLE( buffer )                                  \
-         ( (unsigned long)NEXT_OffsetLE( buffer ) )
+          ( (unsigned long)( buffer += 3, FT_GET_UOFF3_LE( buffer - 3 ) ) )
 
 
 #define NEXT_LongLE( buffer )                                     \
           ( (long)( buffer += 4, FT_GET_LONG_LE( buffer - 4 ) ) )
 
 #define NEXT_ULongLE( buffer )                                    \
-          ( (unsigned long)NEXT_LongLE( buffer ) )
+          ( (unsigned long)( buffer += 4, FT_GET_ULONG_LE( buffer - 4 ) ) )
 
 
   /*************************************************************************/
