@@ -6,7 +6,10 @@
           
             removing the bug that returned global BBox values in
             16.16 fixed format (instead of integer font units).
-        
+
+        * src/cid/cidriver.c (cid_get_postscript_name): fixed a bug that
+        caused the CID driver to return Postscript font names with a leading
+        slash ("/") as in "/MOEKai-Regular"
 
 2002-03-05  Werner Lemberg  <wl@gnu.org>
 
