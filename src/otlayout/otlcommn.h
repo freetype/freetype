@@ -208,6 +208,65 @@ OTL_BEGIN_HEADER
                             OTL_ForeachFunc  func,
                             OTL_Pointer      func_data );
 
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                       LANGUAGE SYSTEM                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  OTL_LOCAL( void )
+  otl_lang_validate( OTL_Bytes      table,
+                     OTL_Validator  valid );
+
+
+  OTL_LOCAL( OTL_UInt )
+  otl_lang_get_req_feature( OTL_Bytes  table );
+
+
+  OTL_LOCAL( OTL_UInt )
+  otl_lang_get_count( OTL_Bytes  table );
+
+
+  OTL_LOCAL( OTL_UInt )
+  otl_lang_get_features( OTL_Bytes  table,
+                         OTL_UInt   start,
+                         OTL_UInt   count,
+                         OTL_UInt  *features );
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                           SCRIPTS                             *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  OTL_LOCAL( void )
+  otl_script_list_validate( OTL_Bytes          list,
+                            OTL_Validator      valid );
+
+  OTL_LOCAL( OTL_Bytes )
+  otl_script_list_get_script( OTL_Bytes  table );
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                         LOOKUP LISTS                          *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  OTL_LOCAL( void )
+  otl_lookup_list_validate( OTL_Bytes          list,
+                            OTL_UInt           type_count,
+                            OTL_ValidateFunc*  type_funcs,
+                            OTL_Validator      valid );
+
  /* */
 
 OTL_END_HEADER
