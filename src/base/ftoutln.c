@@ -628,9 +628,9 @@
       return;
 
     xz = FT_MulFix( vector->x, matrix->xx ) +
-         FT_MulFix( vector->y, matrix->yx );
+         FT_MulFix( vector->y, matrix->xy );
 
-    yz = FT_MulFix( vector->x, matrix->xy ) +
+    yz = FT_MulFix( vector->x, matrix->yx ) +
          FT_MulFix( vector->y, matrix->yy );
 
     vector->x = xz;
