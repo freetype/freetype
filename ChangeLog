@@ -1,3 +1,8 @@
+2001-02-28  David Turner    <david.turner@freetype.org>
+
+	* builds/hurd/detect.mk: added support to detect the GNU Hurd operating
+	system as Unix-like. Fix submitted by Anthony Fok <foka@debian.org>
+
 2001-02-22  David Turner    <david.turner@freetype.org>
 
 	* src/base/ftgrays.c (grays_sweep): the function didn't exit
