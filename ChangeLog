@@ -27,6 +27,14 @@
           src/winfonts/winfnt.c, src/winfonts/winfnt.h:
           updating the type definitions for font font drivers
 
+        * include/freetype/internal/ftobjs.h,
+          src/base/ftapi.c, src/base/ftobjs.c: updated a few face method
+          definitions:
+          
+            FT_PSName_Requester     => FT_Face_GetPostscriptNameFunc
+            FT_Glyph_Name_Requester => FT_Face_GetGlyphNameFunc
+            FT_Name_Index_Requester => FT_Face_GetGlyphNameIndexFunc
+
 2002-03-13  Antoine Leca    <antoine@oriolnet.com>
 
         * include/freetype/config/ftoption.h: changed the automatic detection
