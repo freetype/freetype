@@ -17,9 +17,9 @@
 
 
 #include <freetype/cache/ftcchunk.h>
+#include <freetype/ftlist.h>
 #include <freetype/fterrors.h>
 #include <freetype/internal/ftobjs.h>
-#include <freetype/internal/ftlist.h>
 #include <freetype/fterrors.h>
 
 

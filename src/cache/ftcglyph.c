@@ -18,8 +18,8 @@
 
 #include <freetype/cache/ftcglyph.h>
 #include <freetype/fterrors.h>
+#include <freetype/ftlist.h>
 #include <freetype/internal/ftobjs.h>
-#include <freetype/internal/ftlist.h>
 #include <freetype/internal/ftdebug.h>
 
 

@@ -103,6 +103,22 @@
       <a href="#other">Other questions</a>
       <ul><p>
         <li>
+          <a href="#other-color">How can I set the color of text rendered
+          by FreeType ?</a>
+        </li>
+        <li>
+          <a href="#other-depth">Can I use FreeType to draw text on a pixmap
+          with arbitrary depth ?</a>
+        </li>
+        <li>
+          <a href="#other-size">I set the pixel size to 8x8, but the resulting
+          glyphs are larger than that. Why ?</a>
+        </li>
+        <li>
+          <a href="#other-bbox">How can I compute the bounding box of a text
+          string without loading its glyphs ?</a>
+        </li>
+        <li>
           <a href="#other-antialias">Which anti-aliasing algorithm is
           used in the FreeType&nbsp;2 renderer?</a>
         </li>
@@ -141,6 +157,7 @@
     to broadly communicate about it until we've got a satisfying
     implementation to show.</p>
 
+    <hr>
     <a name="general-long">
     <h3>
       I.2 Why did it take so long to release FreeType&nbsp;2?
@@ -174,6 +191,7 @@
     software library available on the market that supports the new Adobe
     "CEF" font format.</p>
 
+    <hr>
     <a name="general-unix">
     <h3>
       I.3 Is FreeType&nbsp;2 a Unix-only project?
@@ -190,6 +208,7 @@
     code is highly generic and modular to adapt even the most strict
     environments like low-memory embedded systems.</p>
 
+    <hr>
     <a name="general-x11">
     <h3>
       I.4 When will X11/XFree support anti-aliased text?
@@ -222,13 +241,14 @@
     basically impossible to draw anti-aliased glyphs without performing
     <em>huge</em> hacks within the server.</p>
 
-    <p>Note that Keith Packard, from XFree fame, has recently started
+    <p>Note that Keith Packard, from XFree86 fame, has recently started
     working on a new rendering model for X11 in order to support new
     features (mainly transparency and anti-aliased fonts).  This will be
     provided through protocol extensions.  The question of knowing whether
     legacy X applications will be able to display anti-aliased text is still
     very uncertain.</p>
 
+    <hr>
     <a name="general-ft1">
     <h3>
       I.5 Is FreeType&nbsp;2 backwards compatible with FreeType&nbsp;1.x?
@@ -244,6 +264,7 @@
     while being much more powerful.  We thus encourage you to adapt your
     source code to it as this should not involve much work.</p>
 
+    <hr>
     <a name="general-edit">
     <h3>
       I.6 Can I use FreeType&nbsp;2 to edit fonts or create new ones?
@@ -361,6 +382,7 @@
       except that you need to set the include paths, source code paths, etc.
       in dialog boxes before running the compilation.</p>
 
+    <hr>
     <a name="builds-config">
     <h3>
       II.2 How do I configure my build of the library?
@@ -392,6 +414,7 @@
     directory (e.g. the Unix-specific <tt>ftsystem.c</tt> that uses
     memory-mapped file for i/o).</p>
 
+    <hr>
     <a name="builds-modules">
     <h3>
       II.3 How do I select the modules I need in my build?
@@ -435,6 +458,7 @@
     <p>This example only emphasizes the flexibility that is left to
     developers when building the library.</p>
 
+    <hr>
     <a name="builds-flat">
     <h3>
       II.4 How do I compile all FreeType&nbsp;2 files in a single
@@ -482,6 +506,7 @@
     <p>Other than that, you still have the same freedom than with the good
     old FreeType license.  Enjoy!</p>
 
+    <hr>
     <a name="autohint-work">
     <h3>
       III.2 How does the auto-hinter work?
@@ -509,6 +534,7 @@
     constraint system.  That could be used to support native hints in
     Type&nbsp;1/Type&nbsp;2 fonts, for example.</p>
 
+    <hr>
     <a name="autohint-cjk">
     <h3>
       III.3 Why does the auto-hinter doesn't work correctly with CJK
@@ -539,6 +565,111 @@
   </td></tr>
   <tr><td>
 
+    <a name="other-depth">
+    <h3>
+      IV.1 Can I use FreeType to draw text on a pixmap with arbitratry depth ?
+    </h3>
+
+    <p>No directly, as FreeType is a font library, not a general purpose
+    graphics library or text rendering service. However, note that the
+    anti-aliased renderer allows you to convert a vectorial glyph outline
+    into a list of "spans" (i.e. horizontal pixel segments with same coverage)
+    that can be rendered through user-provided callbacks.</p>
+
+     <p>By providing the appropriate span callback, you can render anti-aliased
+     text to any kind of surface. You can also use any color or fill
+     pattern/image if you want to. This process is called
+     <em>direct rendering</em>. For more information, please read the
+     documentation contained in the following files:</p>
+     
+     <ul>
+       <li><p>
+       <b><tt>&lt;freetype/ftimage.h&gt;</tt></b> contains the definition
+       of the <tt>FT_Raster_Params</tt> type used with direct rendering.
+       </p></li>
+          
+       <li><p>
+       <b><tt>&lt;freetype/ftoutln.h&gt;</tt></b> contains the definition
+       of the <tt>FT_Outline_Render</tt> function that can be used to
+       convert vectorial outlines to span lists.
+       </p></li>
+     </ul>
+
+     <p>Here's some code that uses them:</p>
+     <font color="blue"><pre>
+     
+       FT_Raster_Params  params;
+       FT_Outline        outline;
+       
+       .. load vectorial glyph in "outline"
+       
+       params.flags      = ft_raster_flag_aa | ft_raster_flag_direct;
+       params.gray_spans = (FT_Raster_Span_Func)your_own_span_function_here;
+       params.user       = your_own_data_pointer;
+       
+       error = FT_Outline_Render( library, &amp;outline, &amp;params );
+     </pre></font>
+     
+     <p>Note that direct rendering is <em>not</em> available with monochrome
+     output, as the current renderer uses a two-pass algorithm to generate
+     glyphs with correct drop-out control.</p>
+
+    <hr>
+    <a name="other-color">
+    <h3>
+      IV.2 How can I set the color of text rendered by FreeType ?
+    </h3>
+    
+    <p>Basically, you can't do that, because FreeType is simply a font
+    library. In general, you'll need to use your favorite graphics library
+    to draw the FreeType glyphs with the appropriate color.</p>
+
+    <p>Note that for anti-aliased glyphs, you can "set the color" by using
+    <em>direct rendering</em> as described in <a href="#other-depth">this
+    answer</a></p>
+
+
+    <hr>
+    <a name="other-size">
+    <h3>
+      IV.3 I set the pixel size to 8x8, but the resulting glyphs are larger
+           (or smaller) than that. Why ??
+    </h3>
+
+    <p>A lot of people have a hard time understanding this topic, because
+    they think of glyphs as fixed-width/height "cells", like those of
+    fonts used in terminals/consoles. This assumption is simply not valid
+    with most "modern" font formats, even bitmapped-based ones like
+    PCF or BDF.</p>
+
+    <p>Be aware that the <em>character size</em> that is set either through
+    <tt>FT_Set_Char_Size</tt> or <tt>FT_Set_Pixel_Sizes</tt> isn't directly
+    related to the dimension of the glyph bitmaps generated.</p>
+    
+    <p>Rather, the character size is indeed the size of
+    <em>an abstract square</em>, called the <em>EM</em>, used by typographers
+    to design fonts. Scaling two distinct fonts to the same character size, be
+    it expressed in points or pixels, will generally result in bitmaps with
+    <em>distinct dimensions</em> !</p>
+
+    <p>Note that historically, the EM corresponded to the width of a capital
+    "M" in Latin typefaces. However, later improvements in typography led to
+    the designs that greatly detract from this rule. Today, it is not possible
+    to connect the EM size to a specific font "feature" in a reliable way.</p>
+
+    <hr>
+
+    <a name="other-bbox">
+    <h3>
+    IV.4 How can I compute the bounding box of a given string of text without
+         loading its glyphs before ?
+    </h3>
+    
+    <p>A lot of people want to be able to compute the size in pixels of a simple
+    string of text with minimal overhead. For example, that can be useful to
+    draw centered text within a button.</p>
+    
+    
     <a name="other-antialias">
     <h3>
       IV.1 Which anti-aliasing algorithm is used by FreeType&nbsp;2?</h3>
@@ -565,6 +696,7 @@
     <p>We will try to document its design in a later document, though this
     is not a priority for now.</p>
 
+    <hr>
     <a name="other-opentype">
     <h3>
       IV.2 When will FreeType&nbsp;2 support OpenType?
