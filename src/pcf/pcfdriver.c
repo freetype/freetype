@@ -340,6 +340,10 @@ THE SOFTWARE.
         }
 
         error = FT_CMap_New( &pcf_cmap_class, NULL, &charmap, NULL );
+
+        /* Select default charmap */
+        if (face->root.num_charmaps)
+          face->root.charmap = face->root.charmaps[0];
       }
 
 #else  /* !FT_CONFIG_OPTION_USE_CMAPS */
