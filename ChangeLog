@@ -1,7 +1,27 @@
+2002-08-23  Graham Asher  <graham.asher@btinternet.com>
+
+    * /src/cff/cffgload.c (cff_operator_seac)
+    [FT_CONFIG_OPTION_INCREMENTAL] incremental fonts (actually
+    not incremental in the case of CFF but just using callbacks
+    to get glyph recipes) pass the character code, not the glyph
+    index, to the get_glyph_data function; they have no
+    valid charset table.
+
+    * /src/cff/cffload.c (cff_font_load) removed special cases
+    for FT_CONFIG_OPTION_INCREMENTAL, which are no longer
+    necessary; CFF fonts provided via the incremental interface
+    now have to conform more closely to the CFF font format.
+
+    * /src/cff/cffload.h (cff_font_load declaration)
+    removed argument now unneeded.
+
+    * /src/cff/cffobjs.c (cff_face_init) changed call to
+    cff_font_load to conform with new signature.
+
 2002-08-22  David Turner  <david@freetype.org>
 
-        * src/base/ftobject.c, src/base/ftsynth.c, src/base/ftstroker.c,
-        src/bdf/bdfdrivr.c: removed compiler warnings
+    * src/base/ftobject.c, src/base/ftsynth.c, src/base/ftstroker.c,
+    src/bdf/bdfdrivr.c: removed compiler warnings
 
 2002-08-21  Werner Lemberg  <wl@gnu.org>
 
