@@ -30,9 +30,12 @@
 #*     BUILD        Pathname to the platform-specific files used
 #*                  for the build. Usually `$(TOP)/config/<system>'
 #*
-#*     SEP          Directory separator for the current platform.
-#*                  Either / or \ (maybe : on Macs)
-#* 
+#*     SEP          Directory separator used during compilation.
+#*                  (usually "/" or "\"). Note that on Win32, both gcc
+#*                  and Visual C++ use "/" as a directory separator !!
+#*
+#*     HOSTSEP      Directory separator for $(COPY) and $(DELETE)
+#*
 #*     DELETE       The forced remove/delete command to erase one or more
 #*                  files
 #*
@@ -82,12 +85,23 @@ endif
 
 DELETE   := rm -f
 SEP      := /
+HOSTSEP  := $(SEP)
 BUILD    := $(TOP)/config/ansi
 PLATFORM := ansi
 
 # the directory where all object files are placed
 #
-OBJ_DIR := $(TOP)/obj
+# Note that this is not $(TOP)/obj !!
+# This lets you build the library in your own directory
+# with something like :
+#
+#  set TOP=....../path/to/freetype2/top/dir...
+#  mkdir obj
+#  make -f %TOP%/Makefile setup  [options]
+#  make -f %TOP%/Makefile
+#
+#
+OBJ_DIR := obj
 
 
 # the directory where all library files are placed
@@ -155,11 +169,18 @@ ifndef CFLAGS
 CFLAGS := -c
 endif
 
+# ANSIFLAGS : put there the flags used to make your compiler ANSI-compliant
+#             nothing (if it already is by default like LCC).
+#
+ANSIFLAGS :=
+
 # Now include the main sub-makefile. It contains all the rules used
 # to build the library with the previous variables defined
 #
 include $(TOP)/config/freetype.mk
 
+clean_freetype: clean_freetype_std
+distclean_freetype: clean_freetype_library_std
 
 # Librarian to use to build the static library
 #

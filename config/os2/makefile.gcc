@@ -30,9 +30,12 @@
 #*     BUILD        Pathname to the platform-specific files used
 #*                  for the build. Usually `$(TOP)/config/<system>'
 #*
-#*     SEP          Directory separator for the current platform.
-#*                  Either / or \ (maybe : on Macs)
-#* 
+#*     SEP          Directory separator used during compilation.
+#*                  (usually "/" or "\"). Note that on Win32, both gcc
+#*                  and Visual C++ use "/" as a directory separator !!
+#*
+#*     HOSTSEP      Directory separator for $(COPY) and $(DELETE)
+#*
 #*     DELETE       The forced remove/delete command to erase one or more
 #*                  files
 #*
@@ -78,13 +81,24 @@
 
 DELETE   := del
 SEP      := /
+HOSTSEP  := $(strip \ )
 BUILD    := $(TOP)/config/os2
 PLATFORM := os2
 CC       := gcc
 
 # the directory where all object files are placed
 #
-OBJ_DIR := $(TOP)/obj
+# Note that this is not $(TOP)/obj !!
+# This lets you build the library in your own directory
+# with something like :
+#
+#  set TOP=....../path/to/freetype2/top/dir...
+#  mkdir obj
+#  make -f %TOP%/Makefile setup  [options]
+#  make -f %TOP%/Makefile
+#
+#
+OBJ_DIR := obj
 
 
 # the directory where all library files are placed
@@ -151,26 +165,18 @@ ifndef CFLAGS
 CFLAGS := -c -g -O0 -Wall
 endif
 
+# ANSIFLAGS : put there the flags used to make your compiler ANSI-compliant
+#             nothing (if it already is by default like LCC).
+#
+ANSIFLAGS := -ansi -pedantic
 
 ifdef BUILD_FREETYPE
 
 include $(TOP)/config/freetype.mk
 
-# A rule used to clean all objects from OBJ_DIR
-#
-# The OS/2 command shell does not support very long list of arguments
-# so we're stuck with wildcards
-#
+clean_freetype: clean_freetype_dos
+distclean_freetype: distclean_freetype_dos
 
-DIR_OBJ := $(subst $(SEP),\,$(OBJ_DIR))
-
-clean_freetype_objects:
-	-del $(DIR8OBJ)\*.$O
-
-clean_freetype_lib:
-	-del $(FT_LIBRARY)
-
-clean: clean_freetype_objects
 
 # Librarian to use to build the static library
 #

@@ -36,8 +36,8 @@ FT_MODULE_LIST := $(BUILD)$(SEP)ftmodule.h
 # file in order to `clean' the list
 #
 clean_module_list:
-	@$(DELETE) $(FT_MODULE_LIST)
-	@echo Regenerating the font drivers list in '$(FT_MODULE_LIST)'
+	@-$(DELETE) $(FT_MODULE_LIST)
+	@-echo Regenerating the font drivers list in $(FT_MODULE_LIST)
 
 make_module_list: clean_module_list
 	@echo -- done --

@@ -84,7 +84,7 @@ INCLUDE_FLAGS = $(INCLUDES:%=$I%)
 #
 FT_CFLAGS  = $(CFLAGS) $(INCLUDE_FLAGS)
 FT_CC      = $(CC) $(FT_CFLAGS)
-FT_COMPILE = $(FT_CC)
+FT_COMPILE = $(CC) $(ANSI_FLAGS) $(FT_CFLAGS)
 
 
 #
@@ -160,10 +160,10 @@ $(FTINIT_OBJ): $(FTINIT_SRC) $(BASE_H) $(FTINIT_DRIVER_H) $(FT_MODULE_LIST)
 #   ommitted on builds which do not want them.
 #
 OBJ_M = $(BASE_OBJ_M) $(BASE_EXT_OBJ) $(DRV_OBJS_M) \
-        $(FTSYS_OBJ)  $(FTINIT_OBJ) $(FTDEBUG_OBJ)
+        $(FTINIT_OBJ)
 
 OBJ_S = $(BASE_OBJ_S) $(BASE_EXT_OBJ) $(DRV_OBJS_S) \
-        $(FTSYS_OBJ)  $(FTINIT_OBJ) $(FTDEBUG_OBJ)
+        $(FTINIT_OBJ)
 
 ifneq ($(findstring multi,$(MAKECMDGOALS)),)
 OBJECTS_LIST += $(OBJ_M)
@@ -179,17 +179,34 @@ library: $(FT_LIBRARY)
 	$(FT_COMPILE) $T$@ $<
 
 
-clean_freetype:
-	-$(DELETE) $(OBJ_S:/=$(SEP)) $(OBJ_M:/=$(SEP))
+# Standard cleaning and distclean rules. These are not accepted
+# on all systems though..
+#
+clean_freetype_std:
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(OBJ_S) $(OBJ_M))
 
-
-distclean_freetype: clean_freetype
-	-$(DELETE) $(FT_LIBRARY:/=$(SEP))
+distclean_freetype_std: clean_freetype_std
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(FT_LIBRARY))
 	-$(DELETE) *.orig *~ core *.core
 
-remove_config_mk:
-	-$(DELETE) $(CONFIG_MK:/=$(SEP))
+# The Dos command shell does not support very long list of arguments
+# so we're stuck with wildcards
+#
+#SYSOBJ_ := $(subst $(SEP),\,$(OBJ_))
 
+clean_freetype_dos:
+	-del $(subst $(SEP),$(HOSTSEP),$(OBJ_))*.$O 2> nul
+
+distclean_freetype_dos: clean_freetype_dos
+	-del $(subst $(SEP),$(HOSTSEP),$(FT_LIBRARY)) 2> nul
+
+remove_config_mk:
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(CONFIG_MK)) 2> nul
+
+# the "config.mk" must define 'clean_freetype' and 'distclean_freetype'
+# implementations may use to relay these to either the 'std' or 'dos'
+# versions, or simply provide their own implementation..
+#
 clean: clean_freetype
 distclean: distclean_freetype remove_config_mk
 

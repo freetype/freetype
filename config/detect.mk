@@ -123,5 +123,5 @@ dos_setup:
 	@echo ÿ
 	@echo Otherwise, simple type 'make' again to build the library
 	@echo ÿ
-	@$(COPY) $(CONFIG_RULES) $(CONFIG_MK) > nul
+	@$(COPY) $(subst /,\,$(CONFIG_RULES) $(CONFIG_MK)) > nul
 
