@@ -1243,6 +1243,11 @@
     if ( parser->error )
       return;
 
+    /* position the parser right before the "dup" of the first subr */
+    skip_whitespace( parser );
+    skip_blackspace( parser ); /* "array" */
+    skip_whitespace( parser );
+
     /* initialize subrs array */
     error = Z1_New_Table( table, loader->num_subrs, memory );
     if ( error )
@@ -1259,16 +1264,28 @@
       FT_Byte*  base;
 
 
+      /* If the next token isn't "dup", we're also done. This   */
+      /* happens when there are "holes" in the Subrs array.     */
+      if ( strncmp( (char*)parser->cursor, "dup", 3 ) != 0 )
+        break;
+
       index = Z1_ToInt( parser );
       
-      /* make sure we get subr index and loop count in sync --  */
-      /* in some cases, the dictionary count is simply the last */
-      /* subr index + 1, with possible holes in the table       */
-      if ( index > n )
-        n = index;
-        
       if ( !read_binary_data( parser, &size, &base ) )
         return;
+
+      /* The binary string is followed by one token, eg. "NP"   */
+      /* (bound to "noaccess put") or by two separate tokens:   */
+      /* "noaccess" & "put". We position the parser right       */
+      /* before the next dup, if any.                           */
+      skip_whitespace( parser );
+      skip_blackspace( parser ); /* "NP" or "I" or "noaccess"   */
+      skip_whitespace( parser );
+      if ( strncmp( (char*)parser->cursor, "put", 3 ) == 0 )
+      {
+        skip_blackspace( parser ); /* skip "put" */
+        skip_whitespace( parser );
+      }
 
       /* some fonts use a value of -1 for lenIV to indicate that */
       /* the charstrings are unencoded..                         */
