@@ -1,3 +1,16 @@
+2002-07-07  David Turner  <david@freetype.org>
+
+    * docs/DEBUG.TXT: adding debugging support documentation
+
+    * src/base/ftdebug.c (ft_debug_init), builds/win32/ftdebug.c
+    (ft_debug_init), builds/amiga/src/ftdebug.c (ft_debug_init): changed the
+    syntax of the FT2_DEBUG environment variable  used to control debugging
+    output (i.e. logging and error messages). It must now look like:
+
+       any:6 memory:4 io:3   or
+       any:6,memory:4,io:3   or
+       any:6;memory:4;io:3
+
 2002-07-07  Owen Taylor  <owen@redhat.com>
 
     * include/freetype/freetype.h, src/base/ftobjs.h,

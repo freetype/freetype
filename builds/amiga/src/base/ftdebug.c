@@ -100,49 +100,49 @@ extern void __stdargs KVPrintF( const char *formatString, const void *values );
   ft_debug_init( void )
   {
     const char*  ft2_debug = getenv( "FT2_DEBUG" );
-    
+
 
     if ( ft2_debug )
     {
       const char*  p = ft2_debug;
       const char*  q;
-      
+
 
       for ( ; *p; p++ )
       {
         /* skip leading whitespace and separators */
-        if ( *p == ' ' || *p == '\t' || *p == ':' || *p == ';' || *p == '=' )
+        if ( *p == ' ' || *p == '\t' || *p == ',' || *p == ';' || *p == '=' )
           continue;
-          
+
         /* read toggle name, followed by '=' */
         q = p;
-        while ( *p && *p != '=' )
+        while ( *p && *p != ':' )
           p++;
-          
-        if ( *p == '=' && p > q )
+
+        if ( *p == ':' && p > q )
         {
           int  n, i, len = p - q;
           int  level = -1, found = -1;
-          
+
 
           for ( n = 0; n < trace_count; n++ )
           {
             const char*  toggle = ft_trace_toggles[n];
-            
+
 
             for ( i = 0; i < len; i++ )
             {
               if ( toggle[i] != q[i] )
                 break;
             }
-            
+
             if ( i == len && toggle[i] == 0 )
             {
               found = n;
               break;
             }
           }
-          
+
           /* read level */
           p++;
           if ( *p )
@@ -151,7 +151,7 @@ extern void __stdargs KVPrintF( const char *formatString, const void *values );
             if ( level < 0 || level > 6 )
               level = -1;
           }
-          
+
           if ( found >= 0 && level >= 0 )
           {
             if ( found == trace_any )
