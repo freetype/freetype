@@ -1179,7 +1179,7 @@
   {
     FT_Error   error  = 0;
     FT_Memory  memory = idx->stream->memory;
-    FT_UInt    n, offset, old_offset;
+    FT_ULong   n, offset, old_offset;
     FT_Byte**  t;
 
 
@@ -1600,7 +1600,7 @@
 
       charset->offset = offset;  /* record charset type */
 
-      switch ( offset )
+      switch ( (FT_UInt)offset )
       {
       case 0:
         if ( num_glyphs != 229 )
@@ -1869,7 +1869,7 @@
 
       encoding->count = 256;
 
-      switch ( offset )
+      switch ( (FT_UInt)offset )
       {
       case 0:
         /* First, copy the code to SID mapping. */
@@ -2145,7 +2145,7 @@
 
       /* now load the FD Select array */
       error = CFF_Load_FD_Select( &font->fd_select,
-                                  dict->cid_count,
+                                  (FT_UInt)dict->cid_count,
                                   stream,
                                   base_offset + dict->cid_fd_select_offset );
 

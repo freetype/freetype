@@ -36,7 +36,7 @@
   /* we do deal with glyph variants by detecting a non-initial dot in    */
   /* the name, as in `A.swash' or `e.final', etc.                        */
   /*                                                                     */
-  static FT_ULong
+  static FT_UInt32
   ps_unicode_value( const char*  glyph_name )
   {
     FT_Int  n;
@@ -156,7 +156,7 @@
       FT_UInt     n;
       FT_UInt     count;
       PS_UniMap*  map;
-      FT_ULong    uni_char;
+      FT_UInt32   uni_char;
 
 
       map = table->maps;

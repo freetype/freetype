@@ -73,7 +73,7 @@ FT_BEGIN_HEADER
 
   struct  FT_Glyph_Class_
   {
-    FT_UInt                 glyph_size;
+    FT_Long                 glyph_size;
     FT_Glyph_Format         glyph_format;
     FT_Glyph_InitFunc       glyph_init;
     FT_Glyph_DoneFunc       glyph_done;

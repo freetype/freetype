@@ -94,13 +94,13 @@
 
   /* convert a slot's glyph image into a bitmap */
   static FT_Error
-  ft_smooth_render_generic( FT_Renderer   render,
-                            FT_GlyphSlot  slot,
-                            FT_UInt       mode,
-                            FT_Vector*    origin,
-                            FT_UInt       required_mode,
-                            FT_Int        hmul,
-                            FT_Int        vmul )
+  ft_smooth_render_generic( FT_Renderer     render,
+                            FT_GlyphSlot    slot,
+                            FT_Render_Mode  mode,
+                            FT_Vector*      origin,
+                            FT_Render_Mode  required_mode,
+                            FT_Int          hmul,
+                            FT_Int          vmul )
   {
     FT_Error     error;
     FT_Outline*  outline = NULL;
@@ -231,10 +231,10 @@
 
   /* convert a slot's glyph image into a bitmap */
   static FT_Error
-  ft_smooth_render( FT_Renderer   render,
-                    FT_GlyphSlot  slot,
-                    FT_UInt       mode,
-                    FT_Vector*    origin )
+  ft_smooth_render( FT_Renderer     render,
+                    FT_GlyphSlot    slot,
+                    FT_Render_Mode  mode,
+                    FT_Vector*      origin )
   {
     return ft_smooth_render_generic( render, slot, mode, origin,
                                      FT_RENDER_MODE_NORMAL,
@@ -244,10 +244,10 @@
 
   /* convert a slot's glyph image into a horizontal LCD bitmap */
   static FT_Error
-  ft_smooth_render_lcd( FT_Renderer   render,
-                        FT_GlyphSlot  slot,
-                        FT_UInt       mode,
-                        FT_Vector*    origin )
+  ft_smooth_render_lcd( FT_Renderer     render,
+                        FT_GlyphSlot    slot,
+                        FT_Render_Mode  mode,
+                        FT_Vector*      origin )
   {
     FT_Error  error;
 
@@ -263,10 +263,10 @@
 
   /* convert a slot's glyph image into a vertical LCD bitmap */
   static FT_Error
-  ft_smooth_render_lcd_v( FT_Renderer   render,
-                          FT_GlyphSlot  slot,
-                          FT_UInt       mode,
-                          FT_Vector*    origin )
+  ft_smooth_render_lcd_v( FT_Renderer     render,
+                          FT_GlyphSlot    slot,
+                          FT_Render_Mode  mode,
+                          FT_Vector*      origin )
   {
     FT_Error  error;
 

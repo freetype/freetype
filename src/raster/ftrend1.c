@@ -95,10 +95,10 @@
 
   /* convert a slot's glyph image into a bitmap */
   static FT_Error
-  ft_raster1_render( FT_Renderer   render,
-                     FT_GlyphSlot  slot,
-                     FT_UInt       mode,
-                     FT_Vector*    origin )
+  ft_raster1_render( FT_Renderer     render,
+                     FT_GlyphSlot    slot,
+                     FT_Render_Mode  mode,
+                     FT_Vector*      origin )
   {
     FT_Error     error;
     FT_Outline*  outline;
@@ -145,8 +145,8 @@
     cbox.xMax  = ( cbox.xMax + 63 ) & -64;
     cbox.yMax  = ( cbox.yMax + 63 ) & -64;
 
-    width  = ( cbox.xMax - cbox.xMin ) >> 6;
-    height = ( cbox.yMax - cbox.yMin ) >> 6;
+    width  = (FT_UInt)( ( cbox.xMax - cbox.xMin ) >> 6 );
+    height = (FT_UInt)( ( cbox.yMax - cbox.yMin ) >> 6 );
     bitmap = &slot->bitmap;
     memory = render->root.memory;
 
@@ -200,8 +200,8 @@
       goto Exit;
 
     slot->format      = FT_GLYPH_FORMAT_BITMAP;
-    slot->bitmap_left = cbox.xMin >> 6;
-    slot->bitmap_top  = cbox.yMax >> 6;
+    slot->bitmap_left = (FT_UInt)( cbox.xMin >> 6 );
+    slot->bitmap_top  = (FT_UInt)( cbox.yMax >> 6 );
 
   Exit:
     return error;

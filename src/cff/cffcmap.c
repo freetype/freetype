@@ -152,7 +152,7 @@
     cmap->num_pairs = 0;
     cmap->pairs     = NULL;
 
-    count = face->root.num_glyphs;
+    count = (FT_UInt)face->root.num_glyphs;
 
     if ( !FT_NEW_ARRAY( cmap->pairs, count ) )
     {
@@ -166,6 +166,7 @@
       {
         FT_UInt      sid   = charset->sids[n];
         const char*  gname;
+
 
         gname = cff_index_get_sid_string( &cff->string_index, sid, psnames );
          

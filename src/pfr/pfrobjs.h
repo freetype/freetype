@@ -57,9 +57,11 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  pfr_face_init( FT_Stream  stream,
-                 PFR_Face   face,
-                 FT_Int     face_index );
+  pfr_face_init( FT_Stream      stream,
+                 PFR_Face       face,
+                 FT_Int         face_index,
+                 FT_Int         num_params,
+                 FT_Parameter*  params );
 
   FT_LOCAL( void )
   pfr_face_done( PFR_Face  face );
@@ -83,7 +85,7 @@ FT_BEGIN_HEADER
   pfr_slot_load( PFR_Slot  slot,
                  PFR_Size  size,
                  FT_UInt   gindex,
-                 FT_Int    load_flags );
+                 FT_Int32  load_flags );
 
 
 FT_END_HEADER

@@ -136,8 +136,8 @@
           
         if ( *p == ':' && p > q )
         {
-          int  n, i, len = p - q;
-          int  level = -1, found = -1;
+          FT_Int  n, i, len = (FT_Int)(p - q);
+          FT_Int  level = -1, found = -1;
 
 
           for ( n = 0; n < trace_count; n++ )

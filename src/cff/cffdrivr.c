@@ -118,7 +118,7 @@
 
       while ( left <= right )
       {
-        FT_Int    middle = left + ( ( right - left ) >> 1 );
+        FT_Long   middle = left + ( ( right - left ) >> 1 );
         FT_ULong  cur_pair;
 
 
@@ -177,7 +177,7 @@
   Load_Glyph( CFF_GlyphSlot  slot,
               CFF_Size       size,
               FT_UShort      glyph_index,
-              FT_UInt        load_flags )
+              FT_Int32       load_flags )
   {
     FT_Error  error;
 
@@ -257,7 +257,7 @@
 
     if ( buffer_max > 0 )
     {
-      FT_UInt  len = ft_strlen( gname );
+      FT_UInt  len = (FT_UInt)ft_strlen( gname );
 
 
       if ( len >= buffer_max )

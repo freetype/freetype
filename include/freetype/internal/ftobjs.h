@@ -723,9 +723,9 @@ FT_BEGIN_HEADER
                       FT_ListNode*     node );
 
   FT_BASE( FT_Error )
-  FT_Render_Glyph_Internal( FT_Library    library,
-                            FT_GlyphSlot  slot,
-                            FT_UInt       render_mode );
+  FT_Render_Glyph_Internal( FT_Library      library,
+                            FT_GlyphSlot    slot,
+                            FT_Render_Mode  render_mode );
 
   typedef const char*
   (*FT_Face_GetPostscriptNameFunc)( FT_Face  face );

@@ -566,10 +566,10 @@
   /* documentation is in ftglyph.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Glyph_To_Bitmap( FT_Glyph*   the_glyph,
-                      FT_ULong    render_mode,
-                      FT_Vector*  origin,
-                      FT_Bool     destroy )
+  FT_Glyph_To_Bitmap( FT_Glyph*       the_glyph,
+                      FT_Render_Mode  render_mode,
+                      FT_Vector*      origin,
+                      FT_Bool         destroy )
   {
     FT_GlyphSlotRec  dummy;
     FT_Error         error = FT_Err_Ok;
