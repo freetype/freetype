@@ -1,3 +1,9 @@
+2002-04-22  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.ac: Set `version_info' to 9:1:3 (FT2
+	version 2.0.9 has 9:0:3).
+	* builds/unix/configure: Regenerated (using autoconf 2.53).
+
 2002-04-19  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrload.c (pfr_extra_items_farse): Fix debug message.
