@@ -5,6 +5,39 @@
     (this is the default), the TrueType loader crashes in line 852 of src/truetype/ttgload.c
     when it tries to access face->glyph_locations."
 
+2002-07-18  Graham Asher  <graham.asher@btinternet.com>
+
+    * include/freetype/freetype.h:
+    Added types and structures to support incremental typeface loading.
+	The FT_Incremental_Interface structure, defined in freetype.h,
+	is designed to be passed to FT_Open_Face to provide callback
+	functions to obtain glyph recipes and metrics, for fonts like
+	those passed from PostScript that do not necessarily provide
+	all, or any, glyph information, when first opened.
+
+    * include/freetype/config/ftoption.h
+    Added a new configuration macro, FT_CONFIG_OPTION_INCREMENTAL,
+    to enable incremental face loading. By default it is not defined.
+
+    * /src/base/ftobjs.c
+    Added incremental loading capability to FT_Open_Face.
+
+    * /src/truetype/ttgload.c
+    Added the incremental loading system for the TrueType driver.
+
+    * /src/truetype/ttobjs.c
+    Added the incremental loading system for the TrueType driver.
+
+    * /src/cid/cidgload.c
+    Added the incremental loading system for the CID driver.
+
+    * /src/sfnt/sfobjs.c
+    Changes to support incremental Type 42 fonts: assume a font has glyphs if it
+    has an incremental interface object.
+
+    * /src/type1/t1gload.c
+    Added support for incrementally loaded Type 1 faces.
+
 2002-07-17  David Turner  <david@freetype.org>
 
     * include/freetype/cache/ftccache.h, src/cache/ftccache.i,
