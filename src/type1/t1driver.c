@@ -45,7 +45,7 @@
 
 
   static FT_Error
-  get_t1_glyph_name( T1_Face     face,
+  t1_get_glyph_name( T1_Face     face,
                      FT_UInt     glyph_index,
                      FT_Pointer  buffer,
                      FT_UInt     buffer_max )
@@ -68,6 +68,40 @@
     }
 
     return T1_Err_Ok;
+  }
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    t1_get_name_index                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Uses the Type 1 font's `glyph_names' table to find a given glyph   */
+  /*    name's glyph index.                                                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face       :: A handle to the source face object.                  */
+  /*    glyph_name :: The glyph name.                                      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Glyph index.  0 means `undefined character code'.                  */
+  /*                                                                       */
+  static FT_UInt
+  t1_get_name_index( T1_Face     face,
+                     FT_String*  glyph_name )
+  {
+    FT_UInt     i;
+    FT_String*  gname;
+
+    for ( i = 0; i < face->type1.num_glyphs; i++ )
+    {
+      gname = face->type1.glyph_names[i];
+
+      if ( !strcmp( glyph_name, gname ) )
+        return i;
+    }
+
+    return 0;
   }
 
 
@@ -106,7 +140,10 @@
     FT_UNUSED( interface );
 
     if ( strcmp( (const char*)interface, "glyph_name" ) == 0 )
-      return (FT_Module_Interface)get_t1_glyph_name;
+      return (FT_Module_Interface)t1_get_glyph_name;
+
+    if ( strcmp( (const char*)interface, "name_index" ) == 0 )
+      return (FT_Module_Interface)t1_get_name_index;
 
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
     if ( strcmp( (const char*)interface, "get_mm" ) == 0 )
