@@ -137,7 +137,7 @@
     FT_ULong    cid_count;
     
     FT_Int         num_font_dicts;
-    CIF_FontDict*  font_dicts;
+    CID_FontDict*  font_dicts;
   
   } CID_Info;
 
