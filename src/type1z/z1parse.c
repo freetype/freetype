@@ -868,6 +868,10 @@
           FT_Memory  memory = parser->memory;
           FT_UInt    len    = limit-cur;
 
+          if ( *(FT_String**)q )
+            /*  with synthetic fonts, it's possible to find a field twice  */
+            break;
+
           if ( ALLOC( string, len + 1 ) )
             goto Exit;
 
