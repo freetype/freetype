@@ -375,6 +375,7 @@
       {
         CFF_Font_Dict*  dict = &cff->top_font.font_dict;
 
+
         /* we need the `PSNames' module for pure-CFF and CEF formats */
         if ( !psnames )
         {
@@ -396,9 +397,9 @@
 
         /* set global bbox, as well as EM size */
         root->units_per_EM = 1000;
-        root->bbox      = dict->font_bbox;
-        root->ascender  = (FT_Short)root->bbox.yMax;
-        root->descender = (FT_Short)root->bbox.yMin;
+        root->bbox         = dict->font_bbox;
+        root->ascender     = (FT_Short)root->bbox.yMax;
+        root->descender    = (FT_Short)root->bbox.yMin;
 
         /* retrieve font family & style name */
         root->family_name = T2_Get_Name( &cff->name_index, face_index );

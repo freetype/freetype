@@ -1,3 +1,17 @@
+2000-11-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_subrs, parse_charstrings): Use decrypt
+	function from PSAux module.
+
+	* src/type1/t1parse.c (T1_Done_Parse): Renamed to...
+	(T1_Finalize_Parser): New function (to avoid name clash with a
+	function in the PSAux module).
+	(T1_Decrypt): Removed since it it duplicated in the PSAux module.
+	(T1_Get_Private_Dict): Added `psaux' as new parameter; use decrypt
+	function from PSAux module.
+
+	* src/type1/t1parse.h: Adapted.
+
 2000-11-22  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/t2objs.c (T2_Init_Face): For pure CFF fonts, set 
@@ -56,8 +70,10 @@
 	* builds/cygwin/freetype-config.in, builds/unix/freetype-config.in:
 	Move test down for empty --exec-prefix.
 	Fix --version.
+
 	* builds/cygwin/install.mk, builds/unix/install.mk: Use
 	$(INSTALL_SCRIPT) for installation of freetype-config.
+
 	* builds/cygwin/install.mk: Fix clean target names.
 
 2000-11-09  David Turner  <david@freetype.org>
