@@ -1,3 +1,9 @@
+2003-04-22  Werner Lemberg  <wl@gnu.org>
+
+	* src/gzip/ftgzip.c (zcalloc) [!FT_CONFIG_OPTION_SYSTEM_ZLIB]:
+	Convert K&R format to modern C usage.
+	(FT_Stream_OpenGzip): Use long constant.
+
 2003-04-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/cache/ftccache.c (ftc_cache_lookup): Remove shadow declaration
@@ -165,9 +171,10 @@
 
 2003-02-25  David Turner  <david@freetype.org>
 
-	* src/gzip/ftgzip.c: Fixed a bug that caused FreeType to loop
-	endlessly when trying to read certain compressed gzip files.  The
-	following test could be used to reveal the bug:
+	* src/gzip/ftgzip.c (ft_gzip_file_fill_output): Fixed a bug that
+	caused FreeType to loop endlessly when trying to read certain
+	compressed gzip files.  The following test could be used to reveal
+	the bug:
 
 	  touch 0123456789 ; gzip 0123456789 ; ftdump 0123456789.gz
 
@@ -216,7 +223,9 @@
 
 	* src/cff/cffgload.c (cff_slot_load) [FT_CONFIG_OPTION_INCREMENTAL]:
 	Allow metrics to be overridden.
-	* src/cid/cidgload.c, src/truetype/ttgload.c, src/type1/t1gload.c
+	* src/cid/cidgload.c (cid_load_glyph) [FT_CONFIG_OPTION_INCREMENTAL]:
+	Ditto.
+	* src/truetype/ttgload.c, src/type1/t1gload.c
 	[FT_CONFIG_OPTION_INCREMENTAL]:
 	* include/freetype/ftincrem.h: Updated.
 
@@ -311,8 +320,8 @@
 
 2003-01-15  James Su  <suzhe@turbolinux.com.cn>
 
-	* src/gzip/ftgzip.c: Bugfix: couldn't read certain gzip-ed font
-	files.
+	* src/gzip/ftgzip.c (ft_gzip_check_header): Bugfix: couldn't read
+	certain gzip-ed font files (typo: `&&' -> `&').
 
 2003-01-15  Huw D M Davies  <h.davies1@physics.ox.ac.uk>
 
@@ -507,12 +516,12 @@
 	* include/freetype/ftgzip.h: Correct the name of the controlling
 	macro (was __FTXF86_H__ ...).
 
-2002-11-27  Vincent Caron <v.caron@zerodeux.net>
+2002-11-27  Vincent Caron  <v.caron@zerodeux.net>
 
 	* builds/unix/unix-def.in, builds/unix/freetype-config.in,
-	builds/unix/configure.ac, src/gzip/rules.mk, src/gzip/ftgzip.c:
-	Adding support for system zlib installations if available on the
-	target platform (Unix only).
+	builds/unix/configure.ac, src/gzip/rules.mk, src/gzip/ftgzip.c
+	[FT_CONFIG_OPTION_SYSTEM_ZLIB]: Adding support for system zlib
+	installations if available on the target platform (Unix only).
 
 2002-11-23  David Turner  <david@freetype.org>
 
@@ -618,6 +627,9 @@
 
 2002-10-31  David Turner  <david@freetype.org>
 
+	* src/gzip/*: New files, taken from the zlib package (except
+	ftgzip.c).
+
 	* include/freetype/ftgzip.h, src/gzip/ftgzip.c: New files, adding
 	support for gzip compressed streams.
 	* include/freetype/config/ftheader.h (FT_GZIP_H): New macro for
@@ -649,7 +661,7 @@
 	* include/freetype/ftcache.h (FT_POINTER_TO_ULONG): New macro.
 	(FTC_FACE_ID_HASH): Rewritten, using FT_POINTER_TO_ULONG.
 
-2002-10-22  Giuseppe Ghibò <ghibo@mandrakesoft.com>
+2002-10-22  Giuseppe Ghibò  <ghibo@mandrakesoft.com>
 
 	* include/freetype/freetype.h (FT_Encoding): Fix entry for latin-2.
 
@@ -3721,7 +3733,7 @@
 	computation of auto-hinted glyphs.  This noticeably improves the
 	spacing of letters in KDE and Gnome.
 
-2001-12-25  Antoine Leca <Antoine-Freetype@Leca-Marti.org>
+2001-12-25  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
 
 	* builds/dos/detect.mk: Correcting the order for Borland compilers:
 	16-bit bcc was never selected, always overridden by 32-bit bcc32.
@@ -3924,7 +3936,7 @@
 	* src/truetype/ttgload.c (load_truetype_glyph): Fixing crash when
 	dealing with invalid fonts (i.e. glyph size < 10 bytes).
 
-2001-12-14  Sam Latinga <slouken@devolution.com>
+2001-12-14  Sam Latinga  <slouken@devolution.com>
 
 	* builds/mac/freetype.make: A new Makefile to build with MPW on
 	MacOS classic.
@@ -4603,7 +4615,7 @@
 	* src/psaux/psobjs.c (T1_Decrypt): Ditto.
 	* src/type1/t1parse.c (T1_Get_Private_Dict): Ditto.
 
-2001-06-28  David Turner <david@freetype.org>
+2001-06-28  David Turner  <david@freetype.org>
 
 	* include/internal/ftstream.h: Modified the definitions
 	of the FT_GET_XXXX and NEXT_XXXX macros for 16-bit correctness.
@@ -4624,7 +4636,7 @@
 	=========================
 
 
-2001-06-27  David Turner <david@freetype.org>
+2001-06-27  David Turner  <david@freetype.org>
 
 	* builds/unix/ftconfig.in: Changed the definition of the
 	FT_CALLBACK_DEF macro.
@@ -4653,7 +4665,7 @@
 
 	* debian/*: Added Debian package build directory for 2.0.4.
 
-2001-06-22  David Turner <david@freetype.org>
+2001-06-22  David Turner  <david@freetype.org>
 
 	* docs/PATENTS: Added patents disclaimer.  This one was missing!
 
@@ -5137,13 +5149,13 @@
 2001-04-02  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/sfnt/ttload.c (TT_Load_Metrics): Fix an improper pointer
-	dereference.  Submitted by Herbert Duerr <duerr@sun.com>
+	dereference.  Submitted by Herbert Duerr <duerr@sun.com>.
 
 2001-03-26  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* include/freetype/config/ftconfig.h: Changed hexadecimal
 	constants to use suffix U to avoid problems with HP-UX's c89
-	compiler.  Submitted by G.W. Lucas <glucas@sonalysts.com>
+	compiler.  Submitted by G.W. Lucas <glucas@sonalysts.com>.
 
 2001-03-24  David Turner  <david.turner@freetype.org>
 
@@ -5232,17 +5244,17 @@
 	(cff_get_interface): Added support for getting a glyph name via the
 	"glyph_name" module interface.  Uses the new function
 	get_cff_glyph_name().
-	Submitted by Sander van der Wal <svdwal@xs4all.nl>
+	Submitted by Sander van der Wal <svdwal@xs4all.nl>.
 
 	* src/cff/cffobjs.c (CFF_Init_Face): Logical or the face flags with
 	FT_FACE_FLAG_GLYPH_NAMES only if FT_CONFIG_OPTION_NO_GLYPH_NAMES is
 	not defined.  This is to add support for getting a glyph name from a
 	glyph index via FT_Get_Glyph_Name().
-	Submitted by Sander van der Wal <svdwal@xs4all.nl>
+	Submitted by Sander van der Wal <svdwal@xs4all.nl>.
 
 	* src/cff/cffgload.c (CFF_Parse_CharStrings): Added support for
 	deprecated operator "dotsection".
-	Submitted by Sander van der Wal <svdwal@xs4all.nl>
+	Submitted by Sander van der Wal <svdwal@xs4all.nl>.
 
 2001-03-12  Werner Lemberg  <wl@gnu.org>
 
