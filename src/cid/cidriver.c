@@ -38,12 +38,23 @@
 #define FT_COMPONENT  trace_ciddriver
 
 
+
+  static const char*
+  cid_get_postscript_name( CID_Face  face )
+  {
+    return (const char*)face->cid.cid_font_name;
+  }
+
+
   static FT_Module_Interface
   CID_Get_Interface( FT_Driver         driver,
                      const FT_String*  interface )
   {
     FT_UNUSED( driver );
     FT_UNUSED( interface );
+
+    if ( strcmp( (const char*)interface, "postscript_name" ) == 0 )
+      return (FT_Module_Interface)cid_get_postscript_name;
 
     return 0;
   }
@@ -172,6 +183,7 @@
   Exit:
     return result;
   }
+
 
 
   FT_CALLBACK_TABLE_DEF

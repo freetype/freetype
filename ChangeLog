@@ -1,7 +1,11 @@
 2001-10-17  David Turner  >david@freetype.org>
 
-	Tagging files with VER-2-0-5 for upcoming 2.0.5 release
-	Testing new CVS-mail script (thanks Just !)
+	* include/freetype/freetype.h, include/internal/ftobjs.h,
+	src/base/ftobjs.c, src/sfnt/sfdriver.c, type1/t1driver.c,
+	cid/cidriver.c: Adding a new function named 'FT_Get_Postscript_Name' to
+	retrieve the Postscript name of a given font. Should work with all
+	formats except pure CFF/CEF fonts (this will be added soon).
+
 
 2001-10-08  David Turner  <david@freetype.org>
 
