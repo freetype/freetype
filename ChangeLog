@@ -1,3 +1,8 @@
+2004-08-06  Adam Piotrowski  <st_intel@poczta.onet.pl>
+
+	* src/pfr/pfrload.c (pfr_sort_kerning_pairs): Single-byte
+	adjustments are unsigned, not signed.
+
 2004-08-05  David Turner  <david@freetype.org>
 
 	`Activate' gray-scale specifing hinting within the TrueType

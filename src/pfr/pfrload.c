@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR loader (body).                                          */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2002, 2003, 2004 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -721,7 +721,7 @@
         if ( item->flags & PFR_KERN_2BYTE_ADJ )
           kerning = item->base_adj + FT_NEXT_SHORT( p );
         else
-          kerning = item->base_adj + FT_NEXT_CHAR( p );
+          kerning = item->base_adj + FT_NEXT_BYTE( p );
 
         pair->glyph1  = pfr_get_gindex( chars, num_chars, char1 );
         pair->glyph2  = pfr_get_gindex( chars, num_chars, char2 );
