@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (specification).                   */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -80,11 +80,13 @@ FT_BEGIN_HEADER
 #define FT_PIX_CEIL( x )      FT_PIX_FLOOR( (x) + 63 )
 
 
- /* returns the highest power of 2 that is <= value, this correspond to
-  * the highest bit in a given 32-bit value
-  */
+  /*
+   *  Return the highest power of 2 that is <= value; this correspond to
+   *  the highest bit in a given 32-bit value.
+   */
   FT_BASE( FT_UInt32 )
   ft_highpow2( FT_UInt32  value );
+
 
   /*************************************************************************/
   /*************************************************************************/

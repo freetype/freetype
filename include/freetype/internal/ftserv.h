@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType services (specification only).                          */
 /*                                                                         */
-/*  Copyright 2003, 2004 by                                                */
+/*  Copyright 2003, 2004, 2005 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -61,9 +61,10 @@ FT_BEGIN_HEADER
 
 #define FT_FACE_FIND_SERVICE( face, ptr, id )                               \
   FT_BEGIN_STMNT                                                            \
-    FT_Module    module = FT_MODULE( FT_FACE(face)->driver );               \
+    FT_Module    module = FT_MODULE( FT_FACE( face )->driver );             \
     FT_Pointer   _tmp_  = NULL;                                             \
     FT_Pointer*  _pptr_ = (FT_Pointer*)&(ptr);                              \
+                                                                            \
                                                                             \
     if ( module->clazz->get_interface )                                     \
       _tmp_ = module->clazz->get_interface( module, FT_SERVICE_ID_ ## id ); \
@@ -74,8 +75,8 @@ FT_BEGIN_HEADER
 
 #define FT_FACE_FIND_SERVICE( face, ptr, id )                               \
   FT_BEGIN_STMNT                                                            \
-    FT_Module    module = FT_MODULE( FT_FACE(face)->driver );               \
-    FT_Pointer   _tmp_  = NULL;                                             \
+    FT_Module   module = FT_MODULE( FT_FACE( face )->driver );              \
+    FT_Pointer  _tmp_  = NULL;                                              \
                                                                             \
     if ( module->clazz->get_interface )                                     \
       _tmp_ = module->clazz->get_interface( module, FT_SERVICE_ID_ ## id ); \
@@ -110,9 +111,10 @@ FT_BEGIN_HEADER
 
 #define FT_FACE_FIND_GLOBAL_SERVICE( face, ptr, id )               \
   FT_BEGIN_STMNT                                                   \
-    FT_Module    module = FT_MODULE( FT_FACE(face)->driver );      \
+    FT_Module   module = FT_MODULE( FT_FACE( face )->driver );     \
     FT_Pointer  _tmp_;                                             \
     FT_Pointer  _pptr_ = (FT_Pointer*)&(ptr);                      \
+                                                                   \
                                                                    \
     _tmp_ = ft_module_get_service( module, FT_SERVICE_ID_ ## id ); \
     *_pptr_ = _tmp_;                                               \
@@ -122,14 +124,16 @@ FT_BEGIN_HEADER
 
 #define FT_FACE_FIND_GLOBAL_SERVICE( face, ptr, id )               \
   FT_BEGIN_STMNT                                                   \
-    FT_Module    module = FT_MODULE( FT_FACE(face)->driver );      \
+    FT_Module   module = FT_MODULE( FT_FACE( face )->driver );     \
     FT_Pointer  _tmp_;                                             \
+                                                                   \
                                                                    \
     _tmp_ = ft_module_get_service( module, FT_SERVICE_ID_ ## id ); \
     ptr   = _tmp_;                                                 \
   FT_END_STMNT
 
 #endif /* !C++ */
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -229,45 +233,45 @@ FT_BEGIN_HEADER
    */
 #ifdef __cplusplus
 
-#define FT_FACE_LOOKUP_SERVICE( face, ptr, id )               \
-  FT_BEGIN_STMNT                                              \
-    FT_Pointer   svc;                                         \
-    FT_Pointer*  Pptr = (FT_Pointer*)&(ptr);                  \
-                                                              \
-                                                              \
-    svc = FT_FACE(face)->internal->services. service_ ## id;  \
-    if ( svc == FT_SERVICE_UNAVAILABLE )                      \
-      svc = NULL;                                             \
-    else if ( svc == NULL )                                   \
-    {                                                         \
-      FT_FACE_FIND_SERVICE( face, svc, id );                  \
-                                                              \
-      FT_FACE(face)->internal->services. service_ ## id =     \
-        (FT_Pointer)( svc != NULL ? svc                       \
-                                  : FT_SERVICE_UNAVAILABLE ); \
-    }                                                         \
-    *Pptr = svc;                                              \
+#define FT_FACE_LOOKUP_SERVICE( face, ptr, id )                \
+  FT_BEGIN_STMNT                                               \
+    FT_Pointer   svc;                                          \
+    FT_Pointer*  Pptr = (FT_Pointer*)&(ptr);                   \
+                                                               \
+                                                               \
+    svc = FT_FACE( face )->internal->services. service_ ## id; \
+    if ( svc == FT_SERVICE_UNAVAILABLE )                       \
+      svc = NULL;                                              \
+    else if ( svc == NULL )                                    \
+    {                                                          \
+      FT_FACE_FIND_SERVICE( face, svc, id );                   \
+                                                               \
+      FT_FACE( face )->internal->services. service_ ## id =    \
+        (FT_Pointer)( svc != NULL ? svc                        \
+                                  : FT_SERVICE_UNAVAILABLE );  \
+    }                                                          \
+    *Pptr = svc;                                               \
   FT_END_STMNT
 
 #else /* !C++ */
 
-#define FT_FACE_LOOKUP_SERVICE( face, ptr, id )               \
-  FT_BEGIN_STMNT                                              \
-    FT_Pointer   svc;                                         \
-                                                              \
-                                                              \
-    svc = FT_FACE(face)->internal->services. service_ ## id;  \
-    if ( svc == FT_SERVICE_UNAVAILABLE )                      \
-      svc = NULL;                                             \
-    else if ( svc == NULL )                                   \
-    {                                                         \
-      FT_FACE_FIND_SERVICE( face, svc, id );                  \
-                                                              \
-      FT_FACE(face)->internal->services. service_ ## id =     \
-        (FT_Pointer)( svc != NULL ? svc                       \
-                                  : FT_SERVICE_UNAVAILABLE ); \
-    }                                                         \
-    ptr = svc;                                                \
+#define FT_FACE_LOOKUP_SERVICE( face, ptr, id )                \
+  FT_BEGIN_STMNT                                               \
+    FT_Pointer  svc;                                           \
+                                                               \
+                                                               \
+    svc = FT_FACE( face )->internal->services. service_ ## id; \
+    if ( svc == FT_SERVICE_UNAVAILABLE )                       \
+      svc = NULL;                                              \
+    else if ( svc == NULL )                                    \
+    {                                                          \
+      FT_FACE_FIND_SERVICE( face, svc, id );                   \
+                                                               \
+      FT_FACE( face )->internal->services. service_ ## id =    \
+        (FT_Pointer)( svc != NULL ? svc                        \
+                                  : FT_SERVICE_UNAVAILABLE );  \
+    }                                                          \
+    ptr = svc;                                                 \
   FT_END_STMNT
 
 #endif /* !C++ */

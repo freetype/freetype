@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR loader (body).                                          */
 /*                                                                         */
-/*  Copyright 2002, 2003, 2004 by                                          */
+/*  Copyright 2002, 2003, 2004, 2005 by                                    */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -610,11 +610,12 @@
 
 
 #ifndef FT_OPTIMIZE_MEMORY
- /*
-  *  The kerning data embedded in a PFR font are (charcode,charcode)
-  *  pairs; we need to translate them to (gindex,gindex) and sort
-  *  the resulting array.
-  */
+
+  /*
+   *  The kerning data embedded in a PFR font are (charcode,charcode)
+   *  pairs; we need to translate them to (gindex,gindex) and sort
+   *  the resulting array.
+   */
   static FT_UInt
   pfr_get_gindex( PFR_Char  chars,
                   FT_UInt   count,
@@ -671,14 +672,14 @@
     FT_UInt       count;
 
 
-   /* create kerning pairs array
-    */
+    /* create kerning pairs array */
     if ( FT_NEW_ARRAY( phy_font->kern_pairs, phy_font->num_kern_pairs ) )
       goto Exit;
 
-   /* load all kerning items into the array,
-    * converting character codes into glyph indices
-    */
+    /*
+     *  load all kerning items into the array,
+     *  converting character codes into glyph indices
+     */
     pairs = phy_font->kern_pairs;
     item  = phy_font->kern_items;
     count = 0;
@@ -732,8 +733,7 @@
       FT_FRAME_EXIT();
     }
 
-   /* sort the resulting array
-    */
+    /* sort the resulting array */
     ft_qsort( pairs, count,
               sizeof ( PFR_KernPairRec ),
               pfr_compare_kern_pairs );
@@ -748,7 +748,9 @@
 
     return error;
   }
+
 #endif /* !FT_OPTIMIZE_MEMORY */
+
 
   static const PFR_ExtraItemRec  pfr_phy_font_extra_items[] =
   {

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR data structures (specification only).                   */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2002, 2003, 2005 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -206,13 +206,16 @@ FT_BEGIN_HEADER
 
   } PFR_KernItemRec;
 
-#define PFR_KERN_INDEX( g1, g2 ) \
-  ( ( (FT_UInt32)(g1) << 16 ) | (FT_UInt16)(g2) )
 
-#define PFR_KERN_PAIR_INDEX( pair )  \
+#define PFR_KERN_INDEX( g1, g2 )                          \
+          ( ( (FT_UInt32)(g1) << 16 ) | (FT_UInt16)(g2) )
+
+#define PFR_KERN_PAIR_INDEX( pair )                        \
           PFR_KERN_INDEX( (pair)->glyph1, (pair)->glyph2 )
 
-#define PFR_NEXT_KPAIR(p)  ( p+=2, ((FT_UInt32)p[-2] << 16) | p[-1] )
+#define PFR_NEXT_KPAIR( p )  ( p += 2,                              \
+                               ( (FT_UInt32)p[-2] << 16 ) | p[-1] )
+
 
   typedef struct  PFR_KernPairRec_
   {
