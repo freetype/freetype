@@ -1599,7 +1599,7 @@
   /* in the current face                                                */
   /*                                                                    */
   FT_LOCAL_DEF( FT_Error )
-  TT_Build_CMaps( TT_Face   face )
+  TT_Build_CMaps( TT_Face  face )
   {
     FT_Byte*           table = face->cmap_table;
     FT_Byte*           limit = table + face->cmap_size;

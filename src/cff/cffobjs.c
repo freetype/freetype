@@ -380,10 +380,10 @@
           root->num_glyphs = cff->charstrings_index.count;
 
         /* set global bbox, as well as EM size */
-        root->bbox.xMin =  dict->font_bbox.xMin >> 16;
-        root->bbox.yMin =  dict->font_bbox.yMin >> 16;
-        root->bbox.xMax = (dict->font_bbox.xMax + 0xFFFFU) >> 16;
-        root->bbox.yMax = (dict->font_bbox.yMax + 0xFFFFU) >> 16;
+        root->bbox.xMin =   dict->font_bbox.xMin             >> 16;
+        root->bbox.yMin =   dict->font_bbox.yMin             >> 16;
+        root->bbox.xMax = ( dict->font_bbox.xMax + 0xFFFFU ) >> 16;
+        root->bbox.yMax = ( dict->font_bbox.yMax + 0xFFFFU ) >> 16;
 
 
         root->ascender  = (FT_Short)( root->bbox.yMax );

@@ -45,13 +45,35 @@
     PSH_Widths     stdw  = &dim->stdw;
     FT_UInt        count = stdw->count;
     PSH_Width      width = stdw->widths;
+    PSH_Width      stand = width;               /* standard width/height */
     FT_Fixed       scale = dim->scale_mult;
 
 
-    for ( ; count > 0; count--, width++ )
+    if ( count > 0 )
     {
       width->cur = FT_MulFix( width->org, scale );
       width->fit = FT_RoundFix( width->cur );
+
+      width++;
+      count--;
+
+      for ( ; count > 0; count--, width++ )
+      {
+        FT_Pos  w, dist;
+
+
+        w    = FT_MulFix( width->org, scale );
+        dist = w - stand->cur;
+
+        if ( dist < 0 )
+          dist = -dist;
+
+        if ( dist < 128 )
+          w = stand->cur;
+
+        width->cur = w;
+        width->fit = FT_RoundFix( w );
+      }
     }
   }
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType font driver for Windows FNT/FON files                       */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -112,7 +112,7 @@
 
 
   static void
-  fnt_font_done( FNT_Font  font,
+  fnt_font_done( FNT_Font   font,
                  FT_Stream  stream )
   {
     if ( font->fnt_frame )
@@ -124,10 +124,10 @@
 
 
   static FT_Error
-  fnt_font_load( FNT_Font  font,
+  fnt_font_load( FNT_Font   font,
                  FT_Stream  stream )
   {
-    FT_Error        error;
+    FT_Error       error;
     WinFNT_Header  header = &font->header;
 
 
@@ -169,10 +169,10 @@
   static void
   fnt_face_done_fonts( FNT_Face  face )
   {
-    FT_Memory  memory = FT_FACE(face)->memory;
-    FT_Stream  stream = FT_FACE(face)->stream;
-    FNT_Font  cur    = face->fonts;
-    FNT_Font  limit  = cur + face->num_fonts;
+    FT_Memory  memory = FT_FACE( face )->memory;
+    FT_Stream  stream = FT_FACE( face )->stream;
+    FNT_Font   cur    = face->fonts;
+    FNT_Font   limit  = cur + face->num_fonts;
 
 
     for ( ; cur < limit; cur++ )
@@ -186,9 +186,9 @@
   static FT_Error
   fnt_face_get_dll_fonts( FNT_Face  face )
   {
-    FT_Error      error;
-    FT_Stream     stream = FT_FACE(face)->stream;
-    FT_Memory     memory = FT_FACE(face)->memory;
+    FT_Error         error;
+    FT_Stream        stream = FT_FACE( face )->stream;
+    FT_Memory        memory = FT_FACE( face )->memory;
     WinMZ_HeaderRec  mz_header;
 
 
@@ -310,10 +310,10 @@
   }
 
 
-
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
 
-  typedef struct FNT_CMapRec_
+
+  typedef struct  FNT_CMapRec_
   {
     FT_CMapRec  cmap;
     FT_UInt32   first;
@@ -325,11 +325,12 @@
   static FT_Error
   fnt_cmap_init( FNT_CMap  cmap )
   {
-    FNT_Face  face = (FNT_Face) FT_CMAP_FACE(cmap);
+    FNT_Face  face = (FNT_Face)FT_CMAP_FACE( cmap );
     FNT_Font  font = face->fonts;
 
-    cmap->first = (FT_UInt32) font->header.first_char;
-    cmap->count = (FT_UInt32)(font->header.last_char - cmap->first + 1);
+
+    cmap->first = (FT_UInt32)  font->header.first_char;
+    cmap->count = (FT_UInt32)( font->header.last_char - cmap->first + 1 );
 
     return 0;
   }
@@ -341,6 +342,7 @@
   {
     FT_UInt  gindex = 0;
 
+
     char_code -= cmap->first;
     if ( char_code < cmap->count )
       gindex = char_code + 1;
@@ -350,12 +352,13 @@
 
 
   static FT_UInt
-  fnt_cmap_char_next( FNT_CMap   cmap,
-                      FT_UInt32 *pchar_code )
+  fnt_cmap_char_next( FNT_CMap    cmap,
+                      FT_UInt32  *pchar_code )
   {
     FT_UInt    gindex = 0;
     FT_UInt32  result = 0;
     FT_UInt32  char_code = *pchar_code + 1;
+
 
     if ( char_code <= cmap->first )
     {
@@ -376,18 +379,22 @@
     return gindex;
   }
 
+
   static FT_CMap_ClassRec  fnt_cmap_class_rec =
   {
-    sizeof( FNT_CMapRec ),
-    (FT_CMap_InitFunc)        fnt_cmap_init,
-    (FT_CMap_DoneFunc)        NULL,
-    (FT_CMap_CharIndexFunc)   fnt_cmap_char_index,
-    (FT_CMap_CharNextFunc)    fnt_cmap_char_next
+    sizeof ( FNT_CMapRec ),
+
+    (FT_CMap_InitFunc)     fnt_cmap_init,
+    (FT_CMap_DoneFunc)     NULL,
+    (FT_CMap_CharIndexFunc)fnt_cmap_char_index,
+    (FT_CMap_CharNextFunc) fnt_cmap_char_next
   };
 
-  static FT_CMap_Class   fnt_cmap_class = &fnt_cmap_class_rec;
+  static FT_CMap_Class  fnt_cmap_class = &fnt_cmap_class_rec;
+
 
 #else /* !FT_CONFIG_OPTION_USE_CMAPS */
+
 
   static FT_UInt
   FNT_Get_Char_Index( FT_CharMap  charmap,
@@ -399,8 +406,8 @@
     if ( charmap )
     {
       FNT_Font  font  = ((FNT_Face)charmap->face)->fonts;
-      FT_Long    first = font->header.first_char;
-      FT_Long    count = font->header.last_char - first + 1;
+      FT_Long   first = font->header.first_char;
+      FT_Long   count = font->header.last_char - first + 1;
 
 
       char_code -= first;
@@ -422,7 +429,7 @@
     if ( charmap )
     {
       FNT_Font  font  = ((FNT_Face)charmap->face)->fonts;
-      FT_Long    first = font->header.first_char;
+      FT_Long   first = font->header.first_char;
 
 
       if ( char_code < first )
@@ -473,6 +480,7 @@
       /* this didn't work, now try to load a single FNT font */
       FNT_Font  font;
 
+
       if ( FT_NEW( face->fonts ) )
         goto Exit;
 
@@ -490,7 +498,7 @@
     /* all right, one or more fonts were loaded; we now need to */
     /* fill the root FT_Face fields with relevant information   */
     {
-      FT_Face    root  = FT_FACE( face );
+      FT_Face   root  = FT_FACE( face );
       FNT_Font  fonts = face->fonts;
       FNT_Font  limit = fonts + face->num_fonts;
       FNT_Font  cur;
@@ -592,7 +600,7 @@
   FNT_Size_Set_Pixels( FNT_Size  size )
   {
     /* look up a font corresponding to the current pixel size */
-    FNT_Face   face  = (FNT_Face)FT_SIZE_FACE( size );
+    FNT_Face  face  = (FNT_Face)FT_SIZE_FACE( size );
     FNT_Font  cur   = face->fonts;
     FNT_Font  limit = cur + face->num_fonts;
 
@@ -624,7 +632,7 @@
                   FT_UInt       glyph_index,
                   FT_Int        load_flags )
   {
-    FNT_Font   font  = size->font;
+    FNT_Font    font  = size->font;
     FT_Error    error = 0;
     FT_Byte*    p;
     FT_Int      len;
@@ -653,12 +661,12 @@
     /* jump to glyph entry */
     p = font->fnt_frame + 118 + len * glyph_index;
 
-    bitmap->width = FT_NEXT_SHORT_LE(p);
+    bitmap->width = FT_NEXT_SHORT_LE( p );
 
     if ( new_format )
-      offset = FT_NEXT_ULONG_LE(p);
+      offset = FT_NEXT_ULONG_LE( p );
     else
-      offset = FT_NEXT_USHORT_LE(p);
+      offset = FT_NEXT_USHORT_LE( p );
 
     /* jump to glyph data */
     p = font->fnt_frame + /* font->header.bits_offset */ + offset;
@@ -730,32 +738,32 @@
     sizeof( FNT_SizeRec ),
     sizeof( FT_GlyphSlotRec ),
 
-    (FT_Face_InitFunc)     FNT_Face_Init,
-    (FT_Face_DoneFunc)     FNT_Face_Done,
-    (FT_Size_InitFunc)     0,
-    (FT_Size_DoneFunc)     0,
-    (FT_Slot_InitFunc)     0,
-    (FT_Slot_DoneFunc)     0,
+    (FT_Face_InitFunc)        FNT_Face_Init,
+    (FT_Face_DoneFunc)        FNT_Face_Done,
+    (FT_Size_InitFunc)        0,
+    (FT_Size_DoneFunc)        0,
+    (FT_Slot_InitFunc)        0,
+    (FT_Slot_DoneFunc)        0,
 
     (FT_Size_ResetPointsFunc) FNT_Size_Set_Pixels,
-    (FT_Size_ResetPixelsFunc)FNT_Size_Set_Pixels,
-    (FT_Slot_LoadFunc)    FNT_Load_Glyph,
+    (FT_Size_ResetPixelsFunc) FNT_Size_Set_Pixels,
+    (FT_Slot_LoadFunc)        FNT_Load_Glyph,
 
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
-    (FT_CharMap_CharIndexFunc) 0,
+    (FT_CharMap_CharIndexFunc)0,
 #else
-    (FT_CharMap_CharIndexFunc) FNT_Get_Char_Index,
+    (FT_CharMap_CharIndexFunc)FNT_Get_Char_Index,
 #endif
     
 
-    (FT_Face_GetKerningFunc)   0,
-    (FT_Face_AttachFunc)   0,
-    (FT_Face_GetAdvancesFunc)  0,
+    (FT_Face_GetKerningFunc)  0,
+    (FT_Face_AttachFunc)      0,
+    (FT_Face_GetAdvancesFunc) 0,
 
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
-    (FT_CharMap_CharNextFunc)  0
+    (FT_CharMap_CharNextFunc) 0
 #else
-    (FT_CharMap_CharNextFunc)  FNT_Get_Next_Char
+    (FT_CharMap_CharNextFunc) FNT_Get_Next_Char
 #endif    
   };
 

@@ -378,10 +378,10 @@
         root->num_fixed_sizes = 0;
         root->available_sizes = 0;
 
-        root->bbox.xMin =  face->cid.font_bbox.xMin >> 16;
-        root->bbox.yMin =  face->cid.font_bbox.yMin >> 16;
-        root->bbox.xMax = (face->cid.font_bbox.xMax + 0xFFFFU) >> 16;
-        root->bbox.yMax = (face->cid.font_bbox.yMax + 0xFFFFU) >> 16;
+        root->bbox.xMin =   face->cid.font_bbox.xMin             >> 16;
+        root->bbox.yMin =   face->cid.font_bbox.yMin             >> 16;
+        root->bbox.xMax = ( face->cid.font_bbox.xMax + 0xFFFFU ) >> 16;
+        root->bbox.yMax = ( face->cid.font_bbox.yMax + 0xFFFFU ) >> 16;
 
         if ( !root->units_per_EM )
           root->units_per_EM  = 1000;
