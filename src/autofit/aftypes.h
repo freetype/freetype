@@ -40,14 +40,14 @@ FT_BEGIN_HEADER
     FT_Pos  org;  /* original position/width in font units              */
     FT_Pos  cur;  /* current/scaled position/width in device sub-pixels */
     FT_Pos  fit;  /* current/fitted position/width in device sub-pixels */
-  
+
   } AF_WidthRec, *AF_Width;
-  
+
 
   AF_LOCAL( void )
   af_sort_pos( FT_UInt   count,
                FT_Pos*   table );
- 
+
  /**************************************************************************/
  /**************************************************************************/
  /*****                                                                *****/
@@ -55,11 +55,11 @@ FT_BEGIN_HEADER
  /*****                                                                *****/
  /**************************************************************************/
  /**************************************************************************/
- 
+
  /*
   *  Angle type. The auto-fitter doesn't need a very high angular accuracy,
   *  and this allows us to speed up some computations considerably with a
-  *  light Cordic algorithm (see afangle.c)
+  *  light Cordic algorithm (see afangles.c)
   *
   */
 
@@ -111,10 +111,10 @@ FT_BEGIN_HEADER
     FT_Face          face;
     FT_OutlineRec    outline;
     FT_UInt          outline_resolution;
-    
+
     FT_Int           advance;
     FT_UInt          metrics_resolution;
-    
+
     AF_GlyphHints    hints;
 
   } AF_OutlineRec;
@@ -133,7 +133,7 @@ FT_BEGIN_HEADER
   *  auto-hinted glyph image
   *
   */
-  
+
   typedef enum
   {
     AF_SCALER_FLAG_NO_HORIZONTAL = 1,  /* disable horizontal hinting */
@@ -152,7 +152,7 @@ FT_BEGIN_HEADER
     FT_Pos          y_delta;      /* in 1/64th device pixels                 */
     FT_Render_Mode  render_mode;  /* monochrome, anti-aliased, LCD, etc..    */
     FT_UInt32       flags;        /* additionnal control flags, see above    */
-  
+
   } AF_ScalerRec, *AF_Scaler;
 
 
@@ -169,7 +169,7 @@ FT_BEGIN_HEADER
   *  the list of know scripts. Each different script correspond to the
   *  following information:
   *
-  *   - a set of Unicode ranges to test wether the face supports the
+  *   - a set of Unicode ranges to test weither the face supports the
   *     script
   *
   *   - a specific global analyzer that will compute global metrics
@@ -189,9 +189,9 @@ FT_BEGIN_HEADER
   {
     AF_SCRIPT_LATIN = 0,
     /* add new scripts here. don't forget to update the list in "afglobal.c" */
-    
+
     AF_SCRIPT_MAX   /* do not remove */
-  
+
   } AF_Script;
 
 
@@ -207,7 +207,7 @@ FT_BEGIN_HEADER
 
  /* this function parses a FT_Face to compute global metrics for
   * a specific script
-  */ 
+  */
   typedef FT_Error  (*AF_Script_InitMetricsFunc)( AF_ScriptMetrics   metrics,
                                                   FT_Face            face );
 
@@ -230,9 +230,9 @@ FT_BEGIN_HEADER
   {
     FT_UInt32    first;
     FT_UInt32    last;
-  
+
   } AF_Script_UniRangeRec, *AF_Script_UniRange;
- 
+
 
   typedef struct AF_ScriptClassRec_
   {

@@ -20,10 +20,7 @@
     metrics->axis[ AF_DIMENSION_HORZ ].width_count = 0;
     metrics->axis[ AF_DIMENSION_VERT ].width_count = 0;
 
-    /* For now, compute the standard width and height from the `o'       */
-    /* character.  I started computing the stem width of the `i' and the */
-    /* stem height of the "-", but it wasn't too good.  Moreover, we now */
-    /* have a single character that gives us standard width and height.  */
+    /* For now, compute the standard width and height from the `o' */
     {
       FT_UInt       glyph_index;
       AF_Dimension  dim;

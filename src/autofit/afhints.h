@@ -163,7 +163,11 @@ FT_BEGIN_HEADER
     FT_Memory     memory;
 
     FT_Fixed      x_scale;
+    FT_Pos        x_delta;
+
     FT_Fixed      y_scale;
+    FT_Pos        y_delta;
+
     FT_Pos        edge_distance_threshold;
 
     FT_Int        max_points;
