@@ -1,3 +1,21 @@
+/***************************************************************************/
+/*                                                                         */
+/*  aflatin.h                                                              */
+/*                                                                         */
+/*    Auto-fitter hinting routines for latin script (specification).       */
+/*                                                                         */
+/*  Copyright 2003, 2004, 2005 by                                          */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #ifndef __AFLATIN_H__
 #define __AFLATIN_H__
 
@@ -54,10 +72,10 @@ FT_BEGIN_HEADER
 
   enum
   {
-    AF_LATIN_BLUE_ACTIVE     = ( 1 << 0 ),
-    AF_LATIN_BLUE_TOP        = ( 1 << 1 ),
-    AF_LATIN_BLUE_ADJUSTMENT = ( 1 << 2 ),  /* used for scale adjustment */
-                                            /* optimization              */
+    AF_LATIN_BLUE_ACTIVE     = 1 << 0,
+    AF_LATIN_BLUE_TOP        = 1 << 1,
+    AF_LATIN_BLUE_ADJUSTMENT = 1 << 2,  /* used for scale adjustment */
+                                        /* optimization              */
     AF_LATIN_BLUE_FLAG_MAX
   };
 
@@ -120,12 +138,12 @@ FT_BEGIN_HEADER
 
   enum
   {
-    AF_LATIN_HINTS_HORZ_SNAP   = ( 1 << 0 ), /* enable stem width snapping  */
-    AF_LATIN_HINTS_VERT_SNAP   = ( 1 << 1 ), /* enable stem height snapping */
-    AF_LATIN_HINTS_STEM_ADJUST = ( 1 << 2 ), /* enable stem width/height
-                                                adjustment                  */
-    AF_LATIN_HINTS_MONO        = ( 1 << 3 )  /* indicate monochrome
-                                                rendering                   */
+    AF_LATIN_HINTS_HORZ_SNAP   = 1 << 0, /* enable stem width snapping  */
+    AF_LATIN_HINTS_VERT_SNAP   = 1 << 1, /* enable stem height snapping */
+    AF_LATIN_HINTS_STEM_ADJUST = 1 << 2, /* enable stem width/height    */
+                                         /* adjustment                  */
+    AF_LATIN_HINTS_MONO        = 1 << 3  /* indicate monochrome         */
+                                         /* rendering                   */
   };
 
 

@@ -1,3 +1,21 @@
+/***************************************************************************/
+/*                                                                         */
+/*  aflatin.c                                                              */
+/*                                                                         */
+/*    Auto-fitter hinting routines for latin script (body).                */
+/*                                                                         */
+/*  Copyright 2003, 2004, 2005 by                                          */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "aflatin.h"
 
 
@@ -26,7 +44,7 @@
     {
       FT_Error             error;
       FT_UInt              glyph_index;
-      AF_Dimension         dim;
+      int                  dim;
       AF_ScriptMetricsRec  dummy[1];
       AF_Scaler            scaler = &dummy->scaler;
 
@@ -44,7 +62,7 @@
       scaler->x_scale     = scaler->y_scale = 0x10000L;
       scaler->x_delta     = scaler->y_delta = 0;
       scaler->face        = face;
-      scaler->render_mode = 0;
+      scaler->render_mode = FT_RENDER_MODE_NORMAL;
       scaler->flags       = 0;
 
       af_glyph_hints_rescale( hints, dummy );
@@ -63,11 +81,13 @@
         FT_Pos        edge_distance_threshold = 32000;
 
 
-        error = af_latin_hints_compute_segments( hints, dim );
+        error = af_latin_hints_compute_segments( hints,
+                                                 (AF_Dimension)dim );
         if ( error )
           goto Exit;
 
-        af_latin_hints_link_segments( hints, dim );
+        af_latin_hints_link_segments( hints,
+                                      (AF_Dimension)dim );
 
         seg   = axhints->segments;
         limit = seg + axhints->num_segments;
@@ -399,7 +419,7 @@
       delta = scaler->y_delta;
     }
 
-    axis = & metrics->axis[dim];
+    axis = &metrics->axis[dim];
 
     if ( axis->org_scale == scale && axis->org_delta == delta )
       return;
@@ -412,16 +432,15 @@
      * letters to the pixel grid
      */
     {
-      AF_LatinAxis  axis = &metrics->axis[AF_DIMENSION_VERT];
+      AF_LatinAxis  Axis = &metrics->axis[AF_DIMENSION_VERT];
       AF_LatinBlue  blue = NULL;
-      FT_UInt       nn;
 
 
-      for ( nn = 0; nn < axis->blue_count; nn++ )
+      for ( nn = 0; nn < Axis->blue_count; nn++ )
       {
-        if ( axis->blues[nn].flags & AF_LATIN_BLUE_ADJUSTMENT )
+        if ( Axis->blues[nn].flags & AF_LATIN_BLUE_ADJUSTMENT )
         {
-          blue = &axis->blues[nn];
+          blue = &Axis->blues[nn];
           break;
         }
       }
@@ -490,12 +509,12 @@
         dist = FT_MulFix( blue->ref.org - blue->shoot.org, scale );
         if ( dist <= 48 && dist >= -48 )
         {
-          FT_Pos  delta, delta2;
+          FT_Pos  delta1, delta2;
 
 
-          delta  = blue->shoot.org - blue->ref.org;
-          delta2 = delta;
-          if ( delta < 0 )
+          delta1 = blue->shoot.org - blue->ref.org;
+          delta2 = delta1;
+          if ( delta1 < 0 )
             delta2 = -delta2;
 
           delta2 = FT_MulFix( delta2, scale );
@@ -507,7 +526,7 @@
           else
             delta2 = FT_PIX_ROUND( delta2 );
 
-          if ( delta < 0 )
+          if ( delta1 < 0 )
             delta2 = -delta2;
 
           blue->ref.fit   = FT_PIX_ROUND( blue->ref.cur );
@@ -556,7 +575,7 @@
     FT_Pos    max_coord = -32000;
 #endif
 
-    major_dir   = FT_ABS( axis->major_dir );
+    major_dir   = (AF_Direction)FT_ABS( axis->major_dir );
     segment_dir = major_dir;
 
     axis->num_segments = 0;
@@ -690,7 +709,7 @@
         if ( !on_edge && FT_ABS( point->out_dir ) == major_dir )
         {
           /* this is the start of a new segment! */
-          segment_dir = point->out_dir;
+          segment_dir = (AF_Direction)point->out_dir;
 
           /* clear all segment fields */
           error = af_axis_hints_new_segment( axis, memory, &segment );
@@ -1508,11 +1527,10 @@
   {
     FT_Pos  dist = stem_edge->opos - base_edge->opos;
 
-    FT_Pos  fitted_width = af_latin_compute_stem_width( hints,
-                                                        dim,
-                                                        dist,
-                                                        base_edge->flags,
-                                                        stem_edge->flags );
+    FT_Pos  fitted_width = af_latin_compute_stem_width(
+                             hints, dim, dist,
+                             (AF_Edge_Flags)base_edge->flags,
+                             (AF_Edge_Flags)stem_edge->flags );
 
 
     stem_edge->pos = base_edge->pos + fitted_width;
@@ -1635,8 +1653,10 @@
 
 
         org_len = edge2->opos - edge->opos;
-        cur_len = af_latin_compute_stem_width( hints, dim, org_len,
-                                               edge->flags, edge2->flags );
+        cur_len = af_latin_compute_stem_width(
+                    hints, dim, org_len,
+                    (AF_Edge_Flags)edge->flags,
+                    (AF_Edge_Flags)edge2->flags );
         if ( cur_len <= 64 )
           u_off = d_off = 32;
         else
@@ -1687,8 +1707,10 @@
         org_len    = edge2->opos - edge->opos;
         org_center = org_pos + ( org_len >> 1 );
 
-        cur_len = af_latin_compute_stem_width( hints, dim, org_len,
-                                               edge->flags, edge2->flags  );
+        cur_len = af_latin_compute_stem_width(
+                   hints, dim, org_len,
+                   (AF_Edge_Flags)edge->flags,
+                   (AF_Edge_Flags)edge2->flags );
 
         if ( cur_len < 96 )
         {
@@ -1728,7 +1750,9 @@
           org_center = org_pos + ( org_len >> 1 );
 
           cur_len    = af_latin_compute_stem_width(
-                         hints, dim, org_len, edge->flags, edge2->flags );
+                         hints, dim, org_len,
+                         (AF_Edge_Flags)edge->flags,
+                         (AF_Edge_Flags)edge2->flags );
 
           cur_pos1   = FT_PIX_ROUND( org_pos );
           delta1     = cur_pos1 + ( cur_len >> 1 ) - org_center;
@@ -1855,8 +1879,8 @@
                         FT_Outline*      outline,
                         AF_LatinMetrics  metrics )
   {
-    FT_Error      error;
-    AF_Dimension  dim;
+    FT_Error  error;
+    int       dim;
 
 
     error = af_glyph_hints_reload( hints, outline );
@@ -1886,10 +1910,10 @@
       if ( ( dim == AF_DIMENSION_HORZ && AF_HINTS_DO_HORIZONTAL( hints ) ) ||
            ( dim == AF_DIMENSION_VERT && AF_HINTS_DO_VERTICAL( hints ) )   )
       {
-        af_latin_hint_edges( hints, dim );
-        af_glyph_hints_align_edge_points( hints, dim );
-        af_glyph_hints_align_strong_points( hints, dim );
-        af_glyph_hints_align_weak_points( hints, dim );
+        af_latin_hint_edges( hints, (AF_Dimension)dim );
+        af_glyph_hints_align_edge_points( hints, (AF_Dimension)dim );
+        af_glyph_hints_align_strong_points( hints, (AF_Dimension)dim );
+        af_glyph_hints_align_weak_points( hints, (AF_Dimension)dim );
       }
     }
     af_glyph_hints_save( hints, outline );

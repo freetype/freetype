@@ -463,7 +463,7 @@
       pnode = &node->link;
     }
 
-    node = ft_mem_table_alloc( table, sizeof ( *node ) );
+    node = (FT_MemSource)ft_mem_table_alloc( table, sizeof ( *node ) );
     if ( node == NULL )
       ft_mem_debug_panic(
         "not enough memory to perform memory debugging\n" );
@@ -982,7 +982,8 @@
           count++;
       }
 
-      sources = ft_mem_table_alloc( table, sizeof ( *sources ) * count );
+      sources = (FT_MemSource*)ft_mem_table_alloc(
+                                 table, sizeof ( *sources ) * count );
 
       count = 0;
       for ( bucket = table->sources; bucket < limit; bucket++ )

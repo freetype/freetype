@@ -1,3 +1,21 @@
+/***************************************************************************/
+/*                                                                         */
+/*  afhints.c                                                              */
+/*                                                                         */
+/*    Auto-fitter hinting routines (body).                                 */
+/*                                                                         */
+/*  Copyright 2003, 2004, 2005 by                                          */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "afhints.h"
 
 
@@ -6,7 +24,7 @@
                              FT_Memory     memory,
                              AF_Segment   *asegment )
   {
-    FT_Error    error   = 0;
+    FT_Error    error   = FT_Err_Ok;
     AF_Segment  segment = NULL;
 
 
@@ -42,13 +60,13 @@
   }
 
 
-  FT_LOCAL( FT_Error)
+  FT_LOCAL( FT_Error )
   af_axis_hints_new_edge( AF_AxisHints  axis,
                           FT_Int        fpos,
                           FT_Memory     memory,
                           AF_Edge      *aedge )
   {
-    FT_Error  error = 0;
+    FT_Error  error = FT_Err_Ok;
     AF_Edge   edge  = NULL;
     AF_Edge   edges;
 
@@ -286,15 +304,15 @@
     /* do each contour separately */
     for ( ; contour < contour_limit; contour++ )
     {
-      AF_Point   point = contour[0];
-      AF_Point   first = point;
-      AF_Point   start = point;
-      AF_Point   end   = point;
-      AF_Point   before;
-      AF_Point   after;
-      AF_Angle   angle_in, angle_seg, angle_out;
-      AF_Angle   diff_in, diff_out;
-      FT_Int     finished = 0;
+      AF_Point  point = contour[0];
+      AF_Point  first = point;
+      AF_Point  start = point;
+      AF_Point  end   = point;
+      AF_Point  before;
+      AF_Point  after;
+      AF_Angle  angle_in, angle_seg, angle_out;
+      AF_Angle  diff_in, diff_out;
+      FT_Int    finished = 0;
 
 
       /* compute first segment in contour */
@@ -397,15 +415,15 @@
   {
     if ( hints && hints->memory )
     {
-      FT_Memory     memory = hints->memory;
-      AF_Dimension  dim;
+      FT_Memory  memory = hints->memory;
+      int        dim;
 
 
       /*
        *  note that we don't need to free the segment and edge
        *  buffers, since they are really within the hints->points array
        */
-      for ( dim = 0; dim < 2; dim++ )
+      for ( dim = 0; dim < AF_DIMENSION_MAX; dim++ )
       {
         AF_AxisHints  axis = &hints->axis[dim];
 
@@ -455,9 +473,9 @@
     FT_Memory  memory  = hints->memory;
 
 
-    hints->scaler_flags  = scaler->flags;
-    hints->num_points    = 0;
-    hints->num_contours  = 0;
+    hints->scaler_flags = scaler->flags;
+    hints->num_points   = 0;
+    hints->num_contours = 0;
 
     hints->axis[0].num_segments = 0;
     hints->axis[0].num_edges    = 0;
@@ -478,7 +496,7 @@
     }
 
     /*
-     *  then, reallocate the points arrays if needed --
+     *  then reallocate the points arrays if necessary --
      *  note that we reserve two additional point positions, used to
      *  hint metrics appropriately
      */
@@ -547,7 +565,6 @@
             break;
           default:
             point->flags = 0;
-            ;
           }
         }
       }
@@ -861,7 +878,6 @@
         }
 
       Store_Point:
-
         /* save the point position */
         if ( dim == AF_DIMENSION_HORZ )
           point->x = u;
@@ -970,14 +986,14 @@
   af_glyph_hints_align_weak_points( AF_GlyphHints  hints,
                                     AF_Dimension   dim )
   {
-    AF_Point    points        = hints->points;
-    AF_Point    point_limit   = points + hints->num_points;
-    AF_Point*   contour       = hints->contours;
-    AF_Point*   contour_limit = contour + hints->num_contours;
-    AF_Flags    touch_flag;
-    AF_Point    point;
-    AF_Point    end_point;
-    AF_Point    first_point;
+    AF_Point   points        = hints->points;
+    AF_Point   point_limit   = points + hints->num_points;
+    AF_Point*  contour       = hints->contours;
+    AF_Point*  contour_limit = contour + hints->num_contours;
+    AF_Flags   touch_flag;
+    AF_Point   point;
+    AF_Point   end_point;
+    AF_Point   first_point;
 
 
     /* PASS 1: Move segment points to edge positions */

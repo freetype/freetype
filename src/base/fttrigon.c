@@ -274,7 +274,7 @@
     if ( theta >= 0 )
       theta = FT_PAD_ROUND( theta, 32 );
     else
-      theta = - FT_PAD_ROUND( -theta, 32 );
+      theta = -FT_PAD_ROUND( -theta, 32 );
 
     vec->x = x;
     vec->y = theta;

@@ -1,19 +1,55 @@
 2005-03-04  David Turner  <david@freetype.org>
 
-    * include/freetype/internal/{ftmemory.h,ftserv.h}: removing
-    compiler warnings with GCC 3.3 and above...
+	* include/freetype/internal/{ftmemory.h,ftserv.h}: removing
+	compiler warnings with GCC 3.3 and above...
 
-    * include/freetype/internal/ftobjs.h, src/base/ftutil.c (ft_highpow2),
-    src/pfr/pfrload.c, src/pfr/pfrobjs.c, src/pfr/pfrtypes.h: implement
-    FT_OPTIMIZE_MEMORY, the kerning table is not loaded into the heap
-    anymore.
+	* include/freetype/internal/ftobjs.h, src/base/ftutil.c (ft_highpow2),
+	src/pfr/pfrload.c, src/pfr/pfrobjs.c, src/pfr/pfrtypes.h: implement
+	FT_OPTIMIZE_MEMORY, the kerning table is not loaded into the heap
+	anymore.
 
-    * src/sfnt/ttsbit0.c, src/truetype/ttpload.c: removing compiler
-    warnings
+	* src/sfnt/ttsbit0.c (tt_sbit_decoder_load_image): Introduce
+	temporary variable to avoid gcc warning.
+	(tt_face_load_sbit_image): Mark unused variables with FT_UNUSED.
 
-    * include/freetype/config/ftmodule.h: moving the order of drivers to
-    speed up font loading. the pcf and bdf loaders are still slow and
-    eat memory like crazy.
+	* include/freetype/config/ftmodule.h: moving the order of drivers to
+	speed up font loading. the pcf and bdf loaders are still slow and
+	eat memory like crazy.
+
+2005-03-03  Werner Lemberg  <wl@gnu.org>
+
+	Various fixes for C and C++ compiling.
+
+	* src/autofit/*: Add copyright messages.
+
+	* src/autofit/afhints.c (af_glyph_hints_done): Don't use
+	`AF_Dimension' but `int' for loop counter.
+
+	* src/autofit/aflatin.c (af_latin_metrics_init_widths): Don't use
+	`AF_Dimension' but `int' for loop counter.
+	Use proper enumeration value for `render_mode'.
+	(af_latin_metrics_scale_dim): Don't shadow variables.
+	(af_latin_hints_compute_segments): Use proper cast for `major_dir'
+	and `segment_dir'.
+	(af_latin_align_linked_edge, af_latin_hint_edges): Fix arguments of call to
+	`af_latin_compute_stem_width'.
+	(af_latin_hints_apply): Don't use `AF_Dimension' but `int' for loop
+	counter.
+
+	* src/base/ftdbgmem.c (ft_mem_table_get_source, FT_DumpMemory): Use
+	proper cast for memory allocation.
+
+	* src/cff/cffdrivr.c (cff_get_kerning): Use proper cast for
+	initialization of `sfnt'.
+
+	* src/sfnt/sfdriver.c: Include `ttkern.h'.
+
+	* src/sfnt/ttkern.c (tt_face_get_kerning): Don't shadow variables.
+
+	* src/truetype/ttgload.c: Include `ttpload.h'.
+
+	* src/truetype/ttpload.c (tt_face_load_loca) [FT_OPTIMIZE_MEMORY]:
+	Remove redundant variable.
 
 2005-03-03  Werner Lemberg  <wl@gnu.org>
 

@@ -64,8 +64,8 @@
   tt_face_load_loca( TT_Face    face,
                      FT_Stream  stream )
   {
-    FT_Error   error;
-    FT_ULong   table_len;
+    FT_Error  error;
+    FT_ULong  table_len;
 
 
     FT_TRACE2(( "Locations " ));

@@ -1,3 +1,21 @@
+/***************************************************************************/
+/*                                                                         */
+/*  afloader.c                                                             */
+/*                                                                         */
+/*    Auto-fitter glyph loading routines (body).                           */
+/*                                                                         */
+/*  Copyright 2003, 2004, 2005 by                                          */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "afloader.h"
 #include "afhints.h"
 #include "afglobal.h"
@@ -167,7 +185,7 @@
       {
         FT_Pos        old_advance, old_rsb, old_lsb, new_lsb;
         FT_Pos        pp1x_uh, pp2x_uh;
-        AF_AxisHints  axis  = &hints->axis[ AF_DIMENSION_HORZ ];
+        AF_AxisHints  axis  = &hints->axis[AF_DIMENSION_HORZ];
         AF_Edge       edge1 = axis->edges;         /* leftmost edge  */
         AF_Edge       edge2 = edge1 +
                               axis->num_edges - 1; /* rightmost edge */
