@@ -63,14 +63,18 @@ FT_BEGIN_HEADER
   } FT_Module_Flags;
 
 
-  typedef void  (*FT_Module_Interface)( void );
+  typedef void
+  (*FT_Module_Interface)( void );
 
-  typedef FT_Error  (*FT_Module_Constructor)( FT_Module  module );
+  typedef FT_Error
+  (*FT_Module_Constructor)( FT_Module  module );
 
-  typedef void  (*FT_Module_Destructor)( FT_Module  module );
+  typedef void
+  (*FT_Module_Destructor)( FT_Module  module );
 
-  typedef FT_Module_Interface (*FT_Module_Requester)( FT_Module    module,
-                                                      const char*  name );
+  typedef FT_Module_Interface
+  (*FT_Module_Requester)( FT_Module    module,
+                          const char*  name );
 
 
   /*************************************************************************/
@@ -142,8 +146,9 @@ FT_BEGIN_HEADER
   /*    An error will be returned if a module already exists by that name, */
   /*    or if the module requires a version of FreeType that is too great. */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FT_Add_Module( FT_Library              library,
-                                        const FT_Module_Class*  clazz );
+  FT_EXPORT( FT_Error )
+  FT_Add_Module( FT_Library              library,
+                 const FT_Module_Class*  clazz );
 
 
   /*************************************************************************/
@@ -166,8 +171,9 @@ FT_BEGIN_HEADER
   /*    You should better be familiar with FreeType internals to know      */
   /*    which module to look for :-)                                       */
   /*                                                                       */
-  FT_EXPORT( FT_Module )  FT_Get_Module( FT_Library   library,
-                                         const char*  module_name );
+  FT_EXPORT( FT_Module )
+  FT_Get_Module( FT_Library   library,
+                 const char*  module_name );
 
 
   /*************************************************************************/
@@ -190,8 +196,9 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    The module object is destroyed by the function in case of success. */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FT_Remove_Module( FT_Library  library,
-                                           FT_Module   module );
+  FT_EXPORT( FT_Error )
+  FT_Remove_Module( FT_Library  library,
+                    FT_Module   module );
 
 
   /*************************************************************************/
@@ -213,8 +220,9 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FT_New_Library( FT_Memory    memory,
-                                         FT_Library  *alibrary );
+  FT_EXPORT( FT_Error )
+  FT_New_Library( FT_Memory    memory,
+                  FT_Library  *alibrary );
 
 
   /*************************************************************************/
@@ -232,11 +240,13 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FT_Done_Library( FT_Library  library );
+  FT_EXPORT( FT_Error )
+  FT_Done_Library( FT_Library  library );
 
 
 
-  typedef void  (*FT_DebugHook_Func)( void*  arg );
+  typedef void
+  (*FT_DebugHook_Func)( void*  arg );
 
 
   /*************************************************************************/
@@ -262,9 +272,10 @@ FT_BEGIN_HEADER
   /*    Currently, four debug hook slots are available, but only two (for  */
   /*    the TrueType and the Type 1 interpreter) are defined.              */
   /*                                                                       */
-  FT_EXPORT( void )  FT_Set_Debug_Hook( FT_Library         library,
-                                        FT_UInt            hook_index,
-                                        FT_DebugHook_Func  debug_hook );
+  FT_EXPORT( void )
+  FT_Set_Debug_Hook( FT_Library         library,
+                     FT_UInt            hook_index,
+                     FT_DebugHook_Func  debug_hook );
 
 
 
@@ -281,7 +292,8 @@ FT_BEGIN_HEADER
   /* <InOut>                                                               */
   /*    library :: A handle to a new library object.                       */
   /*                                                                       */
-  FT_EXPORT( void )  FT_Add_Default_Modules( FT_Library  library );
+  FT_EXPORT( void )
+  FT_Add_Default_Modules( FT_Library  library );
 
 
   /* */

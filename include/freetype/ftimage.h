@@ -424,8 +424,9 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  typedef int  (*FT_Outline_MoveTo_Func)( FT_Vector*  to,
-                                          void*       user );
+  typedef int
+  (*FT_Outline_MoveTo_Func)( FT_Vector*  to,
+                             void*       user );
 
 
   /*************************************************************************/
@@ -448,8 +449,9 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  typedef int  (*FT_Outline_LineTo_Func)( FT_Vector*  to,
-                                          void*       user );
+  typedef int
+  (*FT_Outline_LineTo_Func)( FT_Vector*  to,
+                             void*       user );
 
 
   /*************************************************************************/
@@ -476,9 +478,10 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  typedef int  (*FT_Outline_ConicTo_Func)( FT_Vector*  control,
-                                           FT_Vector*  to,
-                                           void*       user );
+  typedef int
+  (*FT_Outline_ConicTo_Func)( FT_Vector*  control,
+                              FT_Vector*  to,
+                              void*       user );
 
 
   /*************************************************************************/
@@ -505,10 +508,11 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  typedef int  (*FT_Outline_CubicTo_Func)( FT_Vector*  control1,
-                                           FT_Vector*  control2,
-                                           FT_Vector*  to,
-                                           void*       user );
+  typedef int
+  (*FT_Outline_CubicTo_Func)( FT_Vector*  control1,
+                              FT_Vector*  control2,
+                              FT_Vector*  to,
+                              void*       user );
 
 
   /*************************************************************************/
@@ -750,10 +754,11 @@ FT_BEGIN_HEADER
   /*    Otherwise, the callback is only called once per scan-line, and     */
   /*    only for those scanlines that do have `gray' pixels on them.       */
   /*                                                                       */
-  typedef void  (*FT_Raster_Span_Func)( int       y,
-                                        int       count,
-                                        FT_Span*  spans,
-                                        void*     user );
+  typedef void
+  (*FT_Raster_Span_Func)( int       y,
+                          int       count,
+                          FT_Span*  spans,
+                          void*     user );
 
 
   /*************************************************************************/
@@ -777,9 +782,10 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*   1 if the pixel is `set', 0 otherwise.                               */
   /*                                                                       */
-  typedef int  (*FT_Raster_BitTest_Func)( int    y,
-                                          int    x,
-                                          void*  user );
+  typedef int
+  (*FT_Raster_BitTest_Func)( int    y,
+                             int    x,
+                             void*  user );
 
 
   /*************************************************************************/
@@ -802,9 +808,10 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    1 if the pixel is `set', 0 otherwise.                              */
   /*                                                                       */
-  typedef void  (*FT_Raster_BitSet_Func)( int    y,
-                                          int    x,
-                                          void*  user );
+  typedef void
+  (*FT_Raster_BitSet_Func)( int    y,
+                            int    x,
+                            void*  user );
 
 
   /*************************************************************************/
@@ -944,8 +951,9 @@ FT_BEGIN_HEADER
   /*    FreeType memory allocator.  However, this field can be completely  */
   /*    ignored by a given raster implementation.                          */
   /*                                                                       */
-  typedef int  (*FT_Raster_New_Func)( void*       memory,
-                                      FT_Raster*  raster );
+  typedef int
+  (*FT_Raster_New_Func)( void*       memory,
+                         FT_Raster*  raster );
 
 
   /*************************************************************************/
@@ -959,7 +967,8 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    raster :: A handle to the raster object.                           */
   /*                                                                       */
-  typedef void  (*FT_Raster_Done_Func)( FT_Raster  raster );
+  typedef void
+  (*FT_Raster_Done_Func)( FT_Raster  raster );
 
 
   /*************************************************************************/
@@ -989,9 +998,10 @@ FT_BEGIN_HEADER
   /*    passed to the raster constructor).  However, this is not           */
   /*    recommended for efficiency purposes.                               */
   /*                                                                       */
-  typedef void  (*FT_Raster_Reset_Func)( FT_Raster       raster,
-                                         unsigned char*  pool_base,
-                                         unsigned long   pool_size );
+  typedef void
+  (*FT_Raster_Reset_Func)( FT_Raster       raster,
+                           unsigned char*  pool_base,
+                           unsigned long   pool_size );
 
 
   /*************************************************************************/
@@ -1012,9 +1022,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    args   :: A pointer to the new mode/property to use.               */
   /*                                                                       */
-  typedef int  (*FT_Raster_Set_Mode_Func)( FT_Raster      raster,
-                                           unsigned long  mode,
-                                           void*          args );
+  typedef int
+  (*FT_Raster_Set_Mode_Func)( FT_Raster      raster,
+                              unsigned long  mode,
+                              void*          args );
 
 
   /*************************************************************************/
@@ -1051,8 +1062,9 @@ FT_BEGIN_HEADER
   /*         examples of distinct implementations which support direct     */
   /*         composition).                                                 */
   /*                                                                       */
-  typedef int  (*FT_Raster_Render_Func)( FT_Raster          raster,
-                                         FT_Raster_Params*  params );
+  typedef int
+  (*FT_Raster_Render_Func)( FT_Raster          raster,
+                            FT_Raster_Params*  params );
 
 
   /*************************************************************************/

@@ -48,8 +48,9 @@
 #else
   extern
 #endif
-  int  munmap( char*  addr,
-               int    len );
+  int
+  munmap( char*  addr,
+          int    len );
 
 #define MUNMAP_ARG_CAST  char *
 

@@ -193,7 +193,7 @@ FT_BEGIN_HEADER
     FT_UShort  number_Of_HMetrics;
 
     /* The following fields are not defined by the TrueType specification */
-    /* but they're used to connect the metrics header to the relevant     */
+    /* but they are used to connect the metrics header to the relevant    */
     /* `HMTX' table.                                                      */
 
     void*      long_metrics;
@@ -293,7 +293,7 @@ FT_BEGIN_HEADER
   /*               module is able to read both the horizontal and vertical */
   /*               headers.                                                */
   /*                                                                       */
-  typedef struct TT_VertHeader_
+  typedef struct  TT_VertHeader_
   {
     FT_Fixed   Version;
     FT_Short   Ascender;
@@ -428,7 +428,7 @@ FT_BEGIN_HEADER
   /*    A structure used to model a TrueType PCLT table.  All fields       */
   /*    comply to the TrueType table.                                      */
   /*                                                                       */
-  typedef struct TT_PCLT_
+  typedef struct  TT_PCLT_
   {
     FT_Fixed   Version;
     FT_ULong   FontNumber;
@@ -555,8 +555,9 @@ FT_BEGIN_HEADER
 
 
   /* internal use only */
-  typedef void*  (*FT_Get_Sfnt_Table_Func)( FT_Face      face,
-                                            FT_Sfnt_Tag  tag );
+  typedef void*
+  (*FT_Get_Sfnt_Table_Func)( FT_Face      face,
+                             FT_Sfnt_Tag  tag );
 
 
   /*************************************************************************/
@@ -584,8 +585,9 @@ FT_BEGIN_HEADER
   /*    by the sfnt/truetype/opentype drivers.  See FT_Sfnt_Tag for a      */
   /*    list.                                                              */
   /*                                                                       */
-  FT_EXPORT( void* )  FT_Get_Sfnt_Table( FT_Face      face,
-                                         FT_Sfnt_Tag  tag );
+  FT_EXPORT( void* )
+  FT_Get_Sfnt_Table( FT_Face      face,
+                     FT_Sfnt_Tag  tag );
 
 
   /* */

@@ -96,10 +96,10 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  static
-  FT_Error  t1_allocate_blend( T1_Face  face,
-                               FT_UInt  num_designs,
-                               FT_UInt  num_axis )
+  static FT_Error
+  t1_allocate_blend( T1_Face  face,
+                     FT_UInt  num_designs,
+                     FT_UInt  num_axis )
   {
     T1_Blend*  blend;
     FT_Memory  memory = face->root.memory;
@@ -180,9 +180,9 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  T1_Get_Multi_Master( T1_Face           face,
-                                 FT_Multi_Master*  master )
+  FT_LOCAL_DEF FT_Error
+  T1_Get_Multi_Master( T1_Face           face,
+                       FT_Multi_Master*  master )
   {
     T1_Blend*  blend = face->blend;
     FT_UInt    n;
@@ -212,10 +212,10 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  T1_Set_MM_Blend( T1_Face    face,
-                             FT_UInt    num_coords,
-                             FT_Fixed*  coords )
+  FT_LOCAL_DEF FT_Error
+  T1_Set_MM_Blend( T1_Face    face,
+                   FT_UInt    num_coords,
+                   FT_Fixed*  coords )
   {
     T1_Blend*  blend = face->blend;
     FT_Error   error;
@@ -258,10 +258,10 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  T1_Set_MM_Design( T1_Face   face,
-                              FT_UInt   num_coords,
-                              FT_Long*  coords )
+  FT_LOCAL_DEF FT_Error
+  T1_Set_MM_Design( T1_Face   face,
+                    FT_UInt   num_coords,
+                    FT_Long*  coords )
   {
     T1_Blend*  blend = face->blend;
     FT_Error   error;
@@ -328,8 +328,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  void  T1_Done_Blend( T1_Face  face )
+  FT_LOCAL_DEF void
+  T1_Done_Blend( T1_Face  face )
   {
     FT_Memory  memory = face->root.memory;
     T1_Blend*  blend  = face->blend;
@@ -380,9 +380,9 @@
   }
 
 
-  static
-  void  parse_blend_axis_types( T1_Face     face,
-                                T1_Loader*  loader )
+  static void
+  parse_blend_axis_types( T1_Face     face,
+                          T1_Loader*  loader )
   {
     T1_Token   axis_tokens[ T1_MAX_MM_AXIS ];
     FT_Int     n, num_axis;
@@ -441,9 +441,9 @@
   }
 
 
-  static
-  void  parse_blend_design_positions( T1_Face     face,
-                                      T1_Loader*  loader )
+  static void
+  parse_blend_design_positions( T1_Face     face,
+                                T1_Loader*  loader )
   {
     T1_Token       design_tokens[ T1_MAX_MM_DESIGNS ];
     FT_Int         num_designs;
@@ -523,9 +523,9 @@
   }
 
 
-  static
-  void  parse_blend_design_map( T1_Face     face,
-                                T1_Loader*  loader )
+  static void
+  parse_blend_design_map( T1_Face     face,
+                          T1_Loader*  loader )
   {
     FT_Error       error  = 0;
     T1_ParserRec*  parser = &loader->parser;
@@ -604,9 +604,9 @@
   }
 
 
-  static
-  void  parse_weight_vector( T1_Face     face,
-                             T1_Loader*  loader )
+  static void
+  parse_weight_vector( T1_Face     face,
+                       T1_Loader*  loader )
   {
     FT_Error       error  = 0;
     T1_ParserRec*  parser = &loader->parser;
@@ -656,9 +656,9 @@
   /* with a lot of Postscript garbage behind it (that's completely out */
   /* of spec!); we detect it and terminate the parsing                 */
   /*                                                                   */
-  static
-  void  parse_shared_dict( T1_Face     face,
-                           T1_Loader*  loader )
+  static void
+  parse_shared_dict( T1_Face     face,
+                     T1_Loader*  loader )
   {
     T1_ParserRec*  parser = &loader->parser;
 
@@ -689,10 +689,10 @@
   /*************************************************************************/
 
 
-  static
-  FT_Error  t1_load_keyword( T1_Face     face,
-                             T1_Loader*  loader,
-                             T1_Field*   field )
+  static FT_Error
+  t1_load_keyword( T1_Face     face,
+                   T1_Loader*  loader,
+                   T1_Field*   field )
   {
     FT_Error   error;
     void*      dummy_object;
@@ -756,25 +756,24 @@
   }
 
 
-  static
-  int  is_space( FT_Byte  c )
+  static int
+  is_space( FT_Byte  c )
   {
     return ( c == ' ' || c == '\t' || c == '\r' || c == '\n' );
   }
 
 
-  static
-  int  is_alpha( FT_Byte  c )
+  static int
+  is_alpha( FT_Byte  c )
   {
     return ( isalnum( c ) || c == '.' || c == '_' || c == '-' );
   }
 
 
-
-  static
-  int  read_binary_data( T1_ParserRec*  parser,
-                         FT_Int*        size,
-                         FT_Byte**      base )
+  static int
+  read_binary_data( T1_ParserRec*  parser,
+                    FT_Int*        size,
+                    FT_Byte**      base )
   {
     FT_Byte*  cur;
     FT_Byte*  limit = parser->root.limit;
@@ -813,9 +812,9 @@
   /* the `/Encoding', `/Subrs', and `/CharStrings'  */
   /* dictionaries                                   */
 
-  static
-  void  parse_font_name( T1_Face     face,
-                         T1_Loader*  loader )
+  static void
+  parse_font_name( T1_Face     face,
+                   T1_Loader*  loader )
   {
     T1_ParserRec*  parser = &loader->parser;
     FT_Error       error;
@@ -855,9 +854,9 @@
   }
 
 
-  static
-  void  parse_font_bbox( T1_Face     face,
-                         T1_Loader*  loader )
+  static void
+  parse_font_bbox( T1_Face     face,
+                   T1_Loader*  loader )
   {
     T1_ParserRec*  parser = &loader->parser;
     FT_Fixed       temp[4];
@@ -872,9 +871,9 @@
   }
 
 
-  static
-  void  parse_font_matrix( T1_Face     face,
-                           T1_Loader*  loader )
+  static void
+  parse_font_matrix( T1_Face     face,
+                     T1_Loader*  loader )
   {
     T1_ParserRec*  parser = &loader->parser;
     FT_Matrix*     matrix = &face->type1.font_matrix;
@@ -921,9 +920,9 @@
   }
 
 
-  static
-  void  parse_encoding( T1_Face     face,
-                        T1_Loader*  loader )
+  static void
+  parse_encoding( T1_Face     face,
+                  T1_Loader*  loader )
   {
     T1_ParserRec*  parser = &loader->parser;
     FT_Byte*       cur    = parser->root.cursor;
@@ -1081,9 +1080,9 @@
   }
 
 
-  static
-  void  parse_subrs( T1_Face     face,
-                     T1_Loader*  loader )
+  static void
+  parse_subrs( T1_Face     face,
+               T1_Loader*  loader )
   {
     T1_ParserRec*  parser = &loader->parser;
     PS_Table*      table  = &loader->subrs;
@@ -1166,9 +1165,9 @@
   }
 
 
-  static
-  void  parse_charstrings( T1_Face     face,
-                           T1_Loader*  loader )
+  static void
+  parse_charstrings( T1_Face     face,
+                     T1_Loader*  loader )
   {
     T1_ParserRec*  parser     = &loader->parser;
     PS_Table*      code_table = &loader->charstrings;
@@ -1448,11 +1447,11 @@
   };
 
 
-  static
-  FT_Error  parse_dict( T1_Face     face,
-                        T1_Loader*  loader,
-                        FT_Byte*    base,
-                        FT_Long     size )
+  static FT_Error
+  parse_dict( T1_Face     face,
+              T1_Loader*  loader,
+              FT_Byte*    base,
+              FT_Long     size )
   {
     T1_ParserRec*  parser = &loader->parser;
 
@@ -1565,9 +1564,9 @@
   }
 
 
-  static
-  void  t1_init_loader( T1_Loader*  loader,
-                        T1_Face     face )
+  static void
+  t1_init_loader( T1_Loader*  loader,
+                  T1_Face     face )
   {
     FT_UNUSED( face );
 
@@ -1585,8 +1584,8 @@
   }
 
 
-  static
-  void  t1_done_loader( T1_Loader*  loader )
+  static void
+  t1_done_loader( T1_Loader*  loader )
   {
     T1_ParserRec*  parser = &loader->parser;
 
@@ -1603,8 +1602,8 @@
   }
 
 
-  FT_LOCAL_DEF
-  FT_Error  T1_Open_Face( T1_Face  face )
+  FT_LOCAL_DEF FT_Error
+  T1_Open_Face( T1_Face  face )
   {
     T1_Loader      loader;
     T1_ParserRec*  parser;

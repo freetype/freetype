@@ -85,10 +85,11 @@ FT_BEGIN_HEADER
   /*      error = FT_New_Face_From_FOND( library, fond, 0, &face );        */
   /*    }                                                                  */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FT_New_Face_From_FOND( FT_Library  library,
-                                                Handle      fond,
-                                                FT_Long     face_index,
-                                                FT_Face    *aface );
+  FT_EXPORT( FT_Error )
+  FT_New_Face_From_FOND( FT_Library  library,
+                         Handle      fond,
+                         FT_Long     face_index,
+                         FT_Face    *aface );
 
 
   /* */

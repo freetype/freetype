@@ -80,8 +80,9 @@ FT_BEGIN_HEADER
   /* @return:                                                              */
   /*    Address of new memory block.  0 in case of failure.                */
   /*                                                                       */
-  typedef void*  (*FT_Alloc_Func)( FT_Memory  memory,
-                                   long       size );
+  typedef void*
+  (*FT_Alloc_Func)( FT_Memory  memory,
+                    long       size );
 
 
   /*************************************************************************/
@@ -97,8 +98,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    block  :: The address of the target memory block.                  */
   /*                                                                       */
-  typedef void   (*FT_Free_Func)( FT_Memory  memory,
-                                  void*      block );
+  typedef void
+  (*FT_Free_Func)( FT_Memory  memory,
+                   void*      block );
 
 
   /*************************************************************************/
@@ -124,10 +126,11 @@ FT_BEGIN_HEADER
   /* @note:                                                                */
   /*   In case of error, the old block must still be available.            */
   /*                                                                       */
-  typedef void*  (*FT_Realloc_Func)( FT_Memory  memory,
-                                     long       cur_size,
-                                     long       new_size,
-                                     void*      block );
+  typedef void*
+  (*FT_Realloc_Func)( FT_Memory  memory,
+                      long       cur_size,
+                      long       new_size,
+                      void*      block );
 
 
   /*************************************************************************/
@@ -215,10 +218,11 @@ FT_BEGIN_HEADER
   /*    This function might be called to perform a seek or skip operation  */
   /*    with a `count' of 0.                                               */
   /*                                                                       */
-  typedef unsigned long  (*FT_Stream_IO)( FT_Stream       stream,
-                                          unsigned long   offset,
-                                          unsigned char*  buffer,
-                                          unsigned long   count );
+  typedef unsigned long
+  (*FT_Stream_IO)( FT_Stream       stream,
+                   unsigned long   offset,
+                   unsigned char*  buffer,
+                   unsigned long   count );
 
 
   /*************************************************************************/
@@ -232,7 +236,8 @@ FT_BEGIN_HEADER
   /* @input:                                                               */
   /*   stream :: A handle to the target stream.                            */
   /*                                                                       */
-  typedef void  (*FT_Stream_Close)( FT_Stream  stream );
+  typedef void
+  (*FT_Stream_Close)( FT_Stream  stream );
 
 
   /*************************************************************************/

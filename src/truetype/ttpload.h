@@ -27,17 +27,17 @@
 FT_BEGIN_HEADER
 
 
-  FT_LOCAL
-  FT_Error  TT_Load_Locations( TT_Face    face,
-                               FT_Stream  stream );
+  FT_LOCAL FT_Error
+  TT_Load_Locations( TT_Face    face,
+                     FT_Stream  stream );
 
-  FT_LOCAL
-  FT_Error  TT_Load_CVT( TT_Face    face,
-                         FT_Stream  stream );
+  FT_LOCAL FT_Error
+  TT_Load_CVT( TT_Face    face,
+               FT_Stream  stream );
 
-  FT_LOCAL
-  FT_Error  TT_Load_Programs( TT_Face    face,
-                              FT_Stream  stream );
+  FT_LOCAL FT_Error
+  TT_Load_Programs( TT_Face    face,
+                    FT_Stream  stream );
 
 
 FT_END_HEADER

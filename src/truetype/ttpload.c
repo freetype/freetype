@@ -54,9 +54,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Locations( TT_Face    face,
-                               FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Locations( TT_Face    face,
+                     FT_Stream  stream )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -147,9 +147,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_CVT( TT_Face    face,
-                         FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_CVT( TT_Face    face,
+               FT_Stream  stream )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -214,9 +214,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_Programs( TT_Face    face,
-                              FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_Programs( TT_Face    face,
+                    FT_Stream  stream )
   {
     FT_Error   error;
     FT_ULong   table_len;

@@ -43,19 +43,19 @@ FT_BEGIN_HEADER
   } T1_AFM;
 
 
-  FT_LOCAL
-  FT_Error  T1_Read_AFM( FT_Face    face,
-                         FT_Stream  stream );
+  FT_LOCAL FT_Error
+  T1_Read_AFM( FT_Face    face,
+               FT_Stream  stream );
 
-  FT_LOCAL
-  void  T1_Done_AFM( FT_Memory  memory,
-                     T1_AFM*    afm );
+  FT_LOCAL void
+  T1_Done_AFM( FT_Memory  memory,
+               T1_AFM*    afm );
 
-  FT_LOCAL
-  void  T1_Get_Kerning( T1_AFM*     afm,
-                        FT_UInt     glyph1,
-                        FT_UInt     glyph2,
-                        FT_Vector*  kerning );
+  FT_LOCAL void
+  T1_Get_Kerning( T1_AFM*     afm,
+                  FT_UInt     glyph1,
+                  FT_UInt     glyph2,
+                  FT_Vector*  kerning );
 
 
 FT_END_HEADER
