@@ -133,7 +133,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Load_SFNT_Header_Func                                           */
+  /*    TT_Load_SFNT_HeaderRec_Func                                           */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the header of a SFNT font file.  Supports collections.       */
@@ -162,10 +162,10 @@ FT_BEGIN_HEADER
   /*    values of `search_range', `entry_selector', and `range_shift'.     */
   /*                                                                       */
   typedef FT_Error
-  (*TT_Load_SFNT_Header_Func)( TT_Face       face,
+  (*TT_Load_SFNT_HeaderRec_Func)( TT_Face       face,
                                FT_Stream     stream,
                                FT_Long       face_index,
-                               SFNT_Header*  sfnt );
+                               SFNT_Header   sfnt );
 
 
   /*************************************************************************/
@@ -194,7 +194,7 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*TT_Load_Directory_Func)( TT_Face       face,
                              FT_Stream     stream,
-                             SFNT_Header*  sfnt );
+                             SFNT_Header   sfnt );
 
 
   /*************************************************************************/
@@ -284,7 +284,7 @@ FT_BEGIN_HEADER
                               FT_UInt           load_flags,
                               FT_Stream         stream,
                               FT_Bitmap        *amap,
-                              TT_SBit_Metrics  *ametrics );
+                              TT_SBit_MetricsRec  *ametrics );
 
 
   /*************************************************************************/
@@ -392,7 +392,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef FT_Error
   (*TT_CharMap_Load_Func)( TT_Face        face,
-                           TT_CMapTable*  cmap,
+                           TT_CMapTable   cmap,
                            FT_Stream      input );
 
 
@@ -414,7 +414,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef FT_Error
   (*TT_CharMap_Free_Func)( TT_Face        face,
-                           TT_CMapTable*  cmap );
+                           TT_CMapTable   cmap );
 
 
   /*************************************************************************/
@@ -479,7 +479,7 @@ FT_BEGIN_HEADER
     SFNT_Get_Interface_Func   get_interface;
 
     TT_Load_Any_Func          load_any;
-    TT_Load_SFNT_Header_Func  load_sfnt_header;
+    TT_Load_SFNT_HeaderRec_Func  load_sfnt_header;
     TT_Load_Directory_Func    load_directory;
 
     /* these functions are called by `load_face' but they can also  */

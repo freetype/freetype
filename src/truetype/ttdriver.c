@@ -94,7 +94,7 @@
                FT_UInt     right_glyph,
                FT_Vector*  kerning )
   {
-    TT_Kern_0_Pair*  pair;
+    TT_Kern0_Pair  pair;
 
 
     if ( !face )
@@ -367,7 +367,7 @@
   {
     FT_Error       error;
     TT_Face        face;
-    TT_CMapTable*  cmap;
+    TT_CMapTable   cmap;
 
 
     cmap = &charmap->cmap;
@@ -414,7 +414,7 @@
   {
     FT_Error       error;
     TT_Face        face;
-    TT_CMapTable*  cmap;
+    TT_CMapTable   cmap;
 
 
     cmap = &charmap->cmap;

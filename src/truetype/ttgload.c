@@ -87,20 +87,20 @@
                   FT_Short*       bearing,
                   FT_UShort*      advance )
   {
-    TT_LongMetrics*  longs_m;
+    TT_LongMetrics   longs_m;
     FT_UShort        k = header->number_Of_HMetrics;
 
 
     if ( idx < (FT_UInt)k )
     {
-      longs_m  = (TT_LongMetrics*)header->long_metrics + idx;
+      longs_m  = (TT_LongMetrics )header->long_metrics + idx;
       *bearing = longs_m->bearing;
       *advance = longs_m->advance;
     }
     else
     {
       *bearing = ((TT_ShortMetrics*)header->short_metrics)[idx - k];
-      *advance = ((TT_LongMetrics*)header->long_metrics)[k - 1].advance;
+      *advance = ((TT_LongMetrics )header->long_metrics)[k - 1].advance;
     }
   }
 
@@ -175,7 +175,7 @@
 
 
   static void
-  tt_prepare_zone( TT_GlyphZone*  zone,
+  tt_prepare_zone( TT_GlyphZone   zone,
                    FT_GlyphLoad   load,
                    FT_UInt        start_point,
                    FT_UInt        start_contour )
@@ -202,7 +202,7 @@
   /*************************************************************************/
 
   FT_CALLBACK_DEF( FT_Error )
-  TT_Access_Glyph_Frame( TT_Loader*  loader,
+  TT_Access_Glyph_Frame( TT_Loader   loader,
                          FT_UInt     glyph_index,
                          FT_ULong    offset,
                          FT_UInt     byte_count )
@@ -225,7 +225,7 @@
 
 
   FT_CALLBACK_DEF( void )
-  TT_Forget_Glyph_Frame( TT_Loader*  loader )
+  TT_Forget_Glyph_Frame( TT_Loader   loader )
   {
     FT_Stream  stream = loader->stream;
 
@@ -235,7 +235,7 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  TT_Load_Glyph_Header( TT_Loader*  loader )
+  TT_Load_Glyph_Header( TT_Loader   loader )
   {
     FT_Stream   stream   = loader->stream;
     FT_Int      byte_len = loader->byte_len - 10;
@@ -263,7 +263,7 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  TT_Load_Simple_Glyph( TT_Loader*  load )
+  TT_Load_Simple_Glyph( TT_Loader   load )
   {
     FT_Error         error;
     FT_Stream        stream     = load->stream;
@@ -466,7 +466,7 @@
 
 
   FT_CALLBACK_DEF( FT_Error )
-  TT_Load_Composite_Glyph( TT_Loader*  loader )
+  TT_Load_Composite_Glyph( TT_Loader   loader )
   {
     FT_Error         error;
     FT_Stream        stream  = loader->stream;
@@ -603,7 +603,7 @@
   /*    interpretation.                                                    */
   /*                                                                       */
   static FT_Error
-  TT_Process_Simple_Glyph( TT_Loader*  load,
+  TT_Process_Simple_Glyph( TT_Loader   load,
                            FT_Bool     debug )
   {
     FT_GlyphLoader   gloader  = load->gloader;
@@ -612,7 +612,7 @@
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     FT_UInt          n_ins;
 #endif
-    TT_GlyphZone*    zone     = &load->zone;
+    TT_GlyphZone     zone     = &load->zone;
     FT_Error         error    = TT_Err_Ok;
 
     FT_UNUSED( debug );  /* used by truetype interpreter only */
@@ -737,7 +737,7 @@
   /*    TT_Loader object.                                                  */
   /*                                                                       */
   static FT_Error
-  load_truetype_glyph( TT_Loader*  loader,
+  load_truetype_glyph( TT_Loader   loader,
                        FT_UInt     glyph_index )
   {
 
@@ -1103,7 +1103,7 @@
         {
           FT_UShort       n_ins;
           TT_ExecContext  exec = loader->exec;
-          TT_GlyphZone*   pts;
+          TT_GlyphZone    pts;
           FT_Vector*      pp1;
 
 
@@ -1210,7 +1210,7 @@
 
 
   static void
-  compute_glyph_metrics( TT_Loader*  loader,
+  compute_glyph_metrics( TT_Loader   loader,
                          FT_UInt     glyph_index )
   {
     FT_BBox       bbox;
@@ -1426,7 +1426,7 @@
     TT_Face          face;
     FT_Stream        stream;
     FT_Error         error;
-    TT_Loader        loader;
+    TT_LoaderRec     loader;
 
 
     face   = (TT_Face)glyph->face;
@@ -1457,7 +1457,7 @@
          ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
 
     {
-      TT_SBit_Metrics  metrics;
+      TT_SBit_MetricsRec  metrics;
 
 
       error = sfnt->load_sbit_image( face,

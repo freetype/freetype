@@ -73,7 +73,7 @@ FT_BEGIN_HEADER
 
   /* Point displacement along the freedom vector routine */
   typedef void
-  (*TT_Move_Func)( EXEC_OP_ TT_GlyphZone*  zone,
+  (*TT_Move_Func)( EXEC_OP_ TT_GlyphZone   zone,
                             FT_UShort      point,
                             FT_F26Dot6     distance );
 
@@ -130,7 +130,7 @@ FT_BEGIN_HEADER
     FT_Long         args;
     FT_UInt         new_top;    /* new top after exec.  */
 
-    TT_GlyphZone    zp0,        /* zone records */
+    TT_GlyphZoneRec    zp0,        /* zone records */
                     zp1,
                     zp2,
                     pts,

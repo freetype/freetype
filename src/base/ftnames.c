@@ -53,7 +53,7 @@
 
       if ( idx < (FT_UInt)ttface->num_names )
       {
-        TT_NameRec*  name = ttface->name_table.names + idx;
+        TT_NameEntryRec*  name = ttface->name_table.names + idx;
 
 
         aname->platform_id = name->platformID;

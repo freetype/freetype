@@ -1397,7 +1397,7 @@
   /*    zone     :: The affected glyph zone.                               */
   /*                                                                       */
   static void
-  Direct_Move( EXEC_OP_ TT_GlyphZone*  zone,
+  Direct_Move( EXEC_OP_ TT_GlyphZone   zone,
                         FT_UShort      point,
                         FT_F26Dot6     distance )
   {
@@ -1459,7 +1459,7 @@
 
 
   static void
-  Direct_Move_X( EXEC_OP_ TT_GlyphZone*  zone,
+  Direct_Move_X( EXEC_OP_ TT_GlyphZone   zone,
                           FT_UShort      point,
                           FT_F26Dot6     distance )
   {
@@ -1471,7 +1471,7 @@
 
 
   static void
-  Direct_Move_Y( EXEC_OP_ TT_GlyphZone*  zone,
+  Direct_Move_Y( EXEC_OP_ TT_GlyphZone   zone,
                           FT_UShort      point,
                           FT_F26Dot6     distance )
   {
@@ -4983,10 +4983,10 @@
   static FT_Bool
   Compute_Point_Displacement( EXEC_OP_ FT_F26Dot6*    x,
                                        FT_F26Dot6*    y,
-                                       TT_GlyphZone*  zone,
+                                       TT_GlyphZone   zone,
                                        FT_UShort*     refp )
   {
-    TT_GlyphZone  zp;
+    TT_GlyphZoneRec  zp;
     FT_UShort     p;
     FT_F26Dot6    d;
 
@@ -5065,7 +5065,7 @@
   static void
   Ins_SHP( INS_ARG )
   {
-    TT_GlyphZone  zp;
+    TT_GlyphZoneRec  zp;
     FT_UShort     refp;
 
     FT_F26Dot6    dx,
@@ -5118,7 +5118,7 @@
   static void
   Ins_SHC( INS_ARG )
   {
-    TT_GlyphZone zp;
+    TT_GlyphZoneRec zp;
     FT_UShort    refp;
     FT_F26Dot6   dx,
                  dy;
@@ -5174,7 +5174,7 @@
   static void
   Ins_SHZ( INS_ARG )
   {
-    TT_GlyphZone zp;
+    TT_GlyphZoneRec zp;
     FT_UShort    refp;
     FT_F26Dot6   dx,
                  dy;

@@ -128,7 +128,7 @@
     
     for ( n = 0; n < face->num_names; n++ )
     {
-      TT_NameRec*  name = face->name_table.names + n;
+      TT_NameEntryRec*  name = face->name_table.names + n;
 
 
       if ( name->nameID == 6 && name->string != NULL )
@@ -148,7 +148,7 @@
     if ( found_win )
     {
       FT_Memory    memory = face->root.memory;
-      TT_NameRec*  name   = face->name_table.names + found_win;
+      TT_NameEntryRec*  name   = face->name_table.names + found_win;
       FT_UInt      len    = name->stringLength/2;
       FT_Error     error;
       FT_String*   result;
@@ -171,7 +171,7 @@
     if ( found_apple )
     {
       FT_Memory    memory = face->root.memory;
-      TT_NameRec*  name   = face->name_table.names + found_win;
+      TT_NameEntryRec*  name   = face->name_table.names + found_win;
       FT_UInt      len    = name->stringLength;
       FT_Error     error;
       FT_String*   result;
@@ -223,7 +223,7 @@
     SFNT_Get_Interface,
 
     TT_Load_Any,
-    TT_Load_SFNT_Header,
+    TT_Load_SFNT_HeaderRec,
     TT_Load_Directory,
 
     TT_Load_Header,

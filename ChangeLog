@@ -40,7 +40,17 @@
           src/psaux/psobjs.c, src/psaux/psobjs.h, src/psaux/t1decode.c,
           stc/type1/t1load.c, src/type1/t1tokens.h: updated common Postscript
           type definitions
-          
+
+        * include/freetype/internal/psglobals.h (removed),
+          include/freetype/internal/pshints.h,
+          src/pshinter/pshglob.h: removing obsolete file
+
+        * include/freetype/internal/tttypes.h,
+          include/freetype/internal/sfnt.h,
+          src/base/ftnames.c, src/cff/cffdrivr.c,
+          src/sfnt/*.c, src/truetype/*.c: updated SFNT/TrueType type
+          definitions
+                    
 
 2002-03-13  Antoine Leca    <antoine@oriolnet.com>
 
