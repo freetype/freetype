@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType name ID definitions (specification only).                   */
 /*                                                                         */
-/*  Copyright 1996-2004 by                                                 */
+/*  Copyright 1996-2002, 2003, 2004 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -747,7 +747,8 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_QUECHUA_PERU                      0x0c6b
 #define TT_MS_LANGID_SEPEDI_SOUTH_AFRICA               0x046c
   /* Also spelled by XPsp2 Platform SDK (2004-07-26) */
-#define TT_MS_LANGID_SOTHO_SOUTHERN_SOUTH_AFRICA TT_MS_LANGID_SEPEDI_SOUTH_AFRICA
+#define TT_MS_LANGID_SOTHO_SOUTHERN_SOUTH_AFRICA \
+          TT_MS_LANGID_SEPEDI_SOUTH_AFRICA
   /* language codes 0x046d, 0x046e and 0x046f are (still) unknown. */
 #define TT_MS_LANGID_IGBO_NIGERIA                      0x0470
 #define TT_MS_LANGID_KANURI_NIGERIA                    0x0471
