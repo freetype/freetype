@@ -389,8 +389,8 @@
         if ( !root->units_per_EM )
           root->units_per_EM  = 1000;
 
-        root->ascender  = (FT_Short)( face->cid.font_bbox.yMax );
-        root->descender = (FT_Short)( face->cid.font_bbox.yMin );
+        root->ascender  = (FT_Short)( root->bbox.yMax );
+        root->descender = (FT_Short)( root->bbox.yMin );
         root->height    = (FT_Short)(
           ( ( root->ascender + root->descender ) * 12 ) / 10 );
 

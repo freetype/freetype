@@ -413,14 +413,14 @@
       if ( !root->units_per_EM )
         root->units_per_EM = 1000;
 
-      root->ascender  = (FT_Short)( face->type1.font_bbox.yMax );
-      root->descender = (FT_Short)( face->type1.font_bbox.yMin );
+      root->ascender  = (FT_Short)( root->bbox.yMax );
+      root->descender = (FT_Short)( root->bbox.yMin );
       root->height    = (FT_Short)(
                           ( ( root->ascender - root->descender ) * 12 ) / 10 );
 
       /* now compute the maximum advance width */
       root->max_advance_width =
-        (FT_Short)( face->type1.font_bbox.xMax );
+        (FT_Short)( root->bbox.xMax );
       {
         FT_Int  max_advance;
 
