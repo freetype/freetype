@@ -1031,7 +1031,6 @@
         FORGET_Frame();
 
         cmap->offset = FILE_Pos();
-        charmap++;
       }
     }
 
