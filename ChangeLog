@@ -1,5 +1,15 @@
 2004-08-27  Werner Lemberg  <wl@gnu.org>
 
+	* src/base/ftmac.c: Don't include truetype/ttobjs.h.
+	Don't include type1/t1objs.h.
+	(FT_New_Face_From_FSSpec) [!__MWERKS__]: Remove compiler warnings.
+
+2004-08-27  Mathieu Malaterre  <mathieu@malaterre.com>
+
+	* src/base/ftmac.c: Handle OS_INLINE for xlc compiler also.
+
+2004-08-27  Werner Lemberg  <wl@gnu.org>
+
 	* src/otlayout/otlayout.h: Add copyright.
 	(OTL_INVALID_OFFSET): Removed.
 
