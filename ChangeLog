@@ -10,6 +10,13 @@
         * src/tools/docmaker/docmaker.py, src/tools/docmaker/utils.py,
         src/tools/docmaker/tohtml.py: updating the DocMaker tool
 
+        * include/freetype/freetype.h, src/base/ftobjs.c: changing the type
+        of the "load_flags" parameter of FT_Load_Glyph and FT_Load_Char from
+        "FT_Int" to "FT_Int32", this in order to support more options.
+        
+        this should only break binary and/or source compatibility on
+        16-bit platforms (Atari?)
+
 
 2002-08-20  Werner Lemberg  <wl@gnu.org>
 

@@ -406,7 +406,7 @@
   FT_EXPORT_DEF( FT_Error )
   FT_Load_Glyph( FT_Face  face,
                  FT_UInt  glyph_index,
-                 FT_Int   load_flags )
+                 FT_Int32 load_flags )
   {
     FT_Error      error;
     FT_Driver     driver;
@@ -567,7 +567,7 @@
   FT_EXPORT_DEF( FT_Error )
   FT_Load_Char( FT_Face   face,
                 FT_ULong  char_code,
-                FT_Int    load_flags )
+                FT_Int32  load_flags )
   {
     FT_UInt  glyph_index;
 
