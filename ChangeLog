@@ -1,7 +1,9 @@
 2002-11-23  David Turner  <david@freetype.org>
 
         * src/cff/cffload.c (cff_charser_load): modified charset loader to
-        accept pre-defined charsets, even when the font contains fewer glyphs
+        accept pre-defined charsets, even when the font contains fewer glyphs.
+        also enforced more checks to ensure that we never overflow the
+        character codes array in the encoding.
 
 2002-11-18  David Turner  <david@freetype.org>
 
