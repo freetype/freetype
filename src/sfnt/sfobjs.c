@@ -511,6 +511,8 @@
     (void)LOAD_( gasp );
     (void)LOAD_( kerning );
 
+    error = 0;
+
     face->root.family_name = tt_face_get_name( face,
                                                TT_NAME_ID_PREFERRED_FAMILY );
     if ( !face->root.family_name )
@@ -526,7 +528,7 @@
     /* now set up root fields */
     {
       FT_Face    root = &face->root;
-      FT_Int32   flags = 0;
+      FT_Int32   flags = root->face_flags;
       FT_Memory  memory;
 
 
@@ -537,7 +539,7 @@
       /* Compute face flags.                                               */
       /*                                                                   */
       if ( has_outline == TRUE )
-        flags = FT_FACE_FLAG_SCALABLE;    /* scalable outlines */
+        flags |= FT_FACE_FLAG_SCALABLE;    /* scalable outlines */
 
       flags |= FT_FACE_FLAG_SFNT      |   /* SFNT file format  */
                FT_FACE_FLAG_HORIZONTAL;   /* horizontal data   */
@@ -634,59 +636,6 @@
         }
       }
 
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-
-      if ( face->num_sbit_strikes )
-      {
-        FT_ULong  n;
-
-
-        root->face_flags |= FT_FACE_FLAG_FIXED_SIZES;
-
-#if 0
-        /* XXX: I don't know criteria whether layout is horizontal */
-        /*      or vertical.                                       */
-        if ( has_outline.... )
-        {
-          ...
-          root->face_flags |= FT_FACE_FLAG_VERTICAL;
-        }
-#endif
-        root->num_fixed_sizes = (FT_Int)face->num_sbit_strikes;
-
-        if ( FT_NEW_ARRAY( root->available_sizes, face->num_sbit_strikes ) )
-          goto Exit;
-
-        for ( n = 0 ; n < face->num_sbit_strikes ; n++ )
-        {
-          FT_Bitmap_Size*  bsize  = root->available_sizes + n;
-          TT_SBit_Strike   strike = face->sbit_strikes + n;
-          FT_UShort        fupem  = face->header.Units_Per_EM;
-          FT_Short         height = (FT_Short)( face->horizontal.Ascender -
-                                                face->horizontal.Descender +
-                                                face->horizontal.Line_Gap );
-          FT_Short         avg    = face->os2.xAvgCharWidth;
-
-
-          /* assume 72dpi */
-          bsize->height =
-            (FT_Short)( ( height * strike->y_ppem + fupem/2 ) / fupem );
-          bsize->width  =
-            (FT_Short)( ( avg * strike->y_ppem + fupem/2 ) / fupem );
-          bsize->size   = strike->y_ppem << 6;
-          bsize->x_ppem = strike->x_ppem << 6;
-          bsize->y_ppem = strike->y_ppem << 6;
-        }
-      }
-      else
-
-#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
-      {
-        root->num_fixed_sizes = 0;
-        root->available_sizes = 0;
-      }
 
       /*********************************************************************/
       /*                                                                   */
@@ -830,7 +779,7 @@
 #ifdef FT_OPTIMIZE_MEMORY
     {
       FT_Stream  stream = FT_FACE_STREAM( face );
-      
+
       FT_FRAME_RELEASE( face->horz_metrics );
       FT_FRAME_RELEASE( face->vert_metrics );
       face->horz_metrics_size = 0;

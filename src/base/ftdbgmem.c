@@ -921,6 +921,22 @@
   }
 
 
+  static int
+  ft_mem_source_compare( const void*  p1,
+                         const void*  p2 )
+  {
+    FT_MemSource  s1 = *(FT_MemSource*)p1;
+    FT_MemSource  s2 = *(FT_MemSource*)p2;
+
+    if ( s2->max_size > s1->max_size )
+      return 1;
+    else if ( s2->max_size < s1->max_size )
+      return -1;
+    else
+      return 0;
+  }
+
+
   extern void
   FT_DumpMemory( FT_Memory  memory )
   {
@@ -931,7 +947,31 @@
     {
       FT_MemSource* bucket = table->sources;
       FT_MemSource* limit  = bucket + FT_MEM_SOURCE_BUCKETS;
+      FT_MemSource* sources;
+      FT_UInt       nn, count;
       const char*   fmt;
+
+      count = 0;
+      for ( ; bucket < limit; bucket++ )
+      {
+        FT_MemSource  source = *bucket;
+
+        for ( ; source; source = source->link )
+          count++;
+      }
+
+      sources = ft_mem_table_alloc( table, sizeof(*sources) * count );
+
+      count = 0;
+      for ( bucket = table->sources; bucket < limit; bucket++ )
+      {
+        FT_MemSource  source = *bucket;
+
+        for ( ; source; source = source->link )
+          sources[count++] = source;
+      }
+
+      ft_qsort( sources, count, sizeof(*sources), ft_mem_source_compare );
 
       printf( "FreeType Memory Dump: current=%ld max=%ld total=%ld count=%ld\n",
               table->alloc_current, table->alloc_max, table->alloc_total, table->alloc_count );
@@ -940,20 +980,19 @@
       printf( "-------------------------------------------------\n" );
       fmt = "%6ld %6ld %8ld %8ld %8ld %s:%d\n";
 
-      for ( ; bucket < limit; bucket++ )
+      for ( nn = 0; nn < count; nn++ )
       {
-        FT_MemSource  source = *bucket;
+        FT_MemSource  source = sources[nn];
 
-        for ( ; source; source = source->link )
-        {
-          printf( fmt,
-                  source->cur_blocks, source->max_blocks,
-                  source->cur_size,   source->max_size, source->cur_max,
-                  FT_FILENAME( source->file_name ),
-                  source->line_no );
-        }
+        printf( fmt,
+                source->cur_blocks, source->max_blocks,
+                source->cur_size,   source->max_size, source->cur_max,
+                FT_FILENAME( source->file_name ),
+                source->line_no );
       }
       printf( "------------------------------------------------\n" );
+
+      ft_mem_table_free( table, sources );
     }
   }
 

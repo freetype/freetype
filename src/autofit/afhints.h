@@ -86,12 +86,12 @@ FT_BEGIN_HEADER
   {
     AF_Flags      flags;    /* point flags used by hinter */
     FT_Pos        ox, oy;   /* original, scaled position  */
-    FT_Pos        fx, fy;   /* original, unscaled position (font units) */
+    FT_Short      fx, fy;   /* original, unscaled position (font units) */
     FT_Pos        x,  y;    /* current position */
     FT_Pos        u,  v;    /* current (x,y) or (y,x) depending on context */
 
-    AF_Direction  in_dir;   /* direction of inwards vector  */
-    AF_Direction  out_dir;  /* direction of outwards vector */
+    FT_Char       in_dir;   /* direction of inwards vector  */
+    FT_Char       out_dir;  /* direction of outwards vector */
 
     AF_Point      next;     /* next point in contour     */
     AF_Point      prev;     /* previous point in contour */
@@ -102,10 +102,10 @@ FT_BEGIN_HEADER
   typedef struct  AF_SegmentRec_
   {
     AF_Edge_Flags  flags;       /* edge/segment flags for this segment */
-    AF_Direction   dir;         /* segment direction                   */
-    FT_Pos         pos;         /* position of segment                 */
-    FT_Pos         min_coord;   /* minimum coordinate of segment       */
-    FT_Pos         max_coord;   /* maximum coordinate of segment       */
+    FT_Char        dir;         /* segment direction                   */
+    FT_Short       pos;         /* position of segment                 */
+    FT_Short       min_coord;   /* minimum coordinate of segment       */
+    FT_Short       max_coord;   /* maximum coordinate of segment       */
 
     AF_Edge        edge;        /* the segment's parent edge */
     AF_Segment     edge_next;   /* link to next segment in parent edge */
@@ -124,18 +124,18 @@ FT_BEGIN_HEADER
 
   typedef struct  AF_EdgeRec_
   {
-    FT_Pos         fpos;       /* original, unscaled position (font units) */
+    FT_Short       fpos;       /* original, unscaled position (font units) */
     FT_Pos         opos;       /* original, scaled position                */
     FT_Pos         pos;        /* current position                         */
 
-    AF_Edge_Flags  flags;      /* edge flags */
-    AF_Direction   dir;        /* edge direction */
+    FT_Byte        flags;      /* edge flags */
+    FT_Char        dir;        /* edge direction */
     FT_Fixed       scale;      /* used to speed up interpolation between edges */
     AF_Width       blue_edge;  /* non-NULL if this is a blue edge              */
 
     AF_Edge        link;
     AF_Edge        serif;
-    FT_Int         num_linked;
+    FT_Short       num_linked;
 
     FT_Int         score;
 
@@ -179,7 +179,7 @@ FT_BEGIN_HEADER
     AF_Point*     contours;
 
     AF_AxisHintsRec  axis[ AF_DIMENSION_MAX ];
-    
+
     FT_UInt32         scaler_flags;  /* copy of scaler flags */
     FT_UInt32         other_flags;   /* free for script-specific implementations */
     AF_ScriptMetrics  metrics;
