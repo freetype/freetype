@@ -39,6 +39,7 @@
         * include/freetype/internal/ftobjs.h: adding validation support as
         well as internal charmap object definitions (FT_CMap != FT_CharMap)
 
+
 2002-02-24  David Turner   <david@freetype.org>
 
         * renaming stream functions to the FT_Subject_Action scheme:
