@@ -19,6 +19,8 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 
+#include <string.h>         /* strcmp() */
+
 
 #ifdef FT_FLAT_COMPILE
 
@@ -256,6 +258,17 @@
           root->family_name = face->type1.font_name;
           root->style_name  = (char *)"Regular";
         }
+      }
+
+      /* compute style flags */
+      root->style_flags = 0;
+      if ( face->type1.font_info.italic_angle )
+        root->style_flags |= FT_STYLE_FLAG_ITALIC;
+      if ( face->type1.font_info.weight )
+      {
+        if ( !strcmp( face->type1.font_info.weight, "Bold"  ) ||
+             !strcmp( face->type1.font_info.weight, "Black" ) )
+          root->style_flags |= FT_STYLE_FLAG_BOLD;
       }
 
       /* no embedded bitmap support */

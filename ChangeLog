@@ -1,5 +1,13 @@
 2000-11-26  Werner Lemberg  <wl@gnu.org>
 
+	* builds/ansi/ansi.mk: Fix inclusion order of files.
+
+2000-11-26  Keith Packard  <keithp@keithp.com>
+
+	* src/type1/t1objs.c (T1_Init_Face): Compute style flags.
+
+2000-11-26  Werner Lemberg  <wl@gnu.org>
+
 	* builds/compiler/ansi-cc.mk (CLEAN_LIBRARY): Fix rule and
 	conditional.
 
