@@ -1,3 +1,19 @@
+2002-09-09  David Turner  <david@freetype.org>
+
+        * src/cache/ftccache.i: fixed a bug that prevented compilation in
+        debug mode of template instantiation
+
+        * src/cff/cffparse.c: fixed the CFF table loader. It didn't accept
+        empty arrays, and this prevented the loading of certain fonts.
+
+        * src/pshinter/pshalgo2.c, src/pshinter/pshalgo3.c: adding fix to
+        prevent seg fault when hints are provided in an empty glyph !!
+
+2002-09-09  Owen Taylor  <owen@redhat.com>
+
+        * src/pcf/pcfdriver.c (PCF_Glyph_Load): fixing incorrect computation
+        of bitmap metrics.
+
 2002-09-08  David Turner  <david@freetype.org>
 
         * src/smooth/ftsmooth.c, src/base/ftobjs.c,

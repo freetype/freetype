@@ -746,9 +746,9 @@ FT_BEGIN_HEADER
   /*    descender           :: The face's descender is the vertical        */
   /*                           distance from the baseline to the           */
   /*                           bottommost point of any glyph in the face.  */
-  /*                           This field's value is positive, expressed   */
+  /*                           This field's value is *negative*, expressed */
   /*                           in font units.  Some font designs use a     */
-  /*                           value different from `-bbox.yMin'.  Only    */
+  /*                           value different from `bbox.yMin'.  Only     */
   /*                           relevant for scalable formats.              */
   /*                                                                       */
   /*    height              :: The face's height is the vertical distance  */

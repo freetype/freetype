@@ -1297,7 +1297,7 @@
 
 
       /* process secondary hints to "selected" points */
-      if ( num_masks > 1 )
+      if ( num_masks > 1 && glyph->num_points > 0 )
       {
         first = mask->end_point;
         mask++;
