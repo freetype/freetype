@@ -1,0 +1,5 @@
+We do not provide INSTALLATION instructions for now, as FreeType 2 is
+still in beta.
+
+Note however that you'll find instructions on how to compile the library
+in the "BUILD" top-level document..

@@ -1,4 +1,34 @@
-LATEST CHANGES - 22-feb-2000
+LATEST CHANGES - 12-mar-2000
+
+  - changed the layout of configuration files : now, all ANSI configuration
+    files are located in "freetype2/config". System-specific over-rides
+    can be placed in "freetype2/config/<system>".
+    
+  - moved all configuration macros to "config/ftoption.h"
+  
+  - improvements in the Type 1 driver with AFM support
+  
+  - changed the fields in the FT_Outline structure : the old "flags"
+    array is re-named "tags", while all ancient flags are encoded into
+    a single unsigned int named "flags".
+
+  - introduced new flags in FT_Outline.flags (see ft_outline_.... enums in
+    "ftimage.h").
+
+  - changed outline functions to "FT_Outline_<action>" syntax
+
+  - added a smooth anti-alias renderer to the demonstration programs
+  - added Mac graphics driver (thanks Just)
+  
+  - FT_Open_Face changed in order to received a pointer to a FT_Open_Args
+    descriptor..
+  
+  - various cleanups, a few more API functions implemented (see FT_Attach_File)
+
+  - updated some docs
+
+================================================================================
+OLD CHANGES - 22-feb-2000
 
   - introduced the "psnames" module. It is used to:
 
