@@ -512,7 +512,7 @@
       ras.precision_jitter = 2;
     }
 
-    FT_TRACE7(( "Set_High_Precision(%s)\n", High ? "true" : "false" ));
+    FT_TRACE6(( "Set_High_Precision(%s)\n", High ? "true" : "false" ));
 
     ras.precision       = 1L << ras.precision_bits;
     ras.precision_half  = ras.precision / 2;
@@ -556,12 +556,12 @@
     {
     case Ascending:
       ras.cProfile->flow = Flow_Up;
-      FT_TRACE7(( "New ascending profile = %lx\n", (long)ras.cProfile ));
+      FT_TRACE6(( "New ascending profile = %lx\n", (long)ras.cProfile ));
       break;
 
     case Descending:
       ras.cProfile->flow = Flow_Down;
-      FT_TRACE7(( "New descending profile = %lx\n", (long)ras.cProfile ));
+      FT_TRACE6(( "New descending profile = %lx\n", (long)ras.cProfile ));
       break;
 
     default:
@@ -616,7 +616,7 @@
 
     if ( h > 0 )
     {
-      FT_TRACE1(( "Ending profile %lx, start = %ld, height = %ld\n",
+      FT_TRACE6(( "Ending profile %lx, start = %ld, height = %ld\n",
                   (long)ras.cProfile, ras.cProfile->start, h ));
 
       oldProfile           = ras.cProfile;

@@ -193,6 +193,9 @@ else
   $(OBJ_)compos.$O: $(SRC_DIR_)compos.c
 	  $(COMPILE) $T$@ $<
 
+  $(OBJ_)memtest.$O: $(SRC_DIR_)memtest.c
+	  $(COMPILE) $T$@ $<
+
   $(OBJ_)fttry.$O: $(SRC_DIR_)fttry.c
 	  $(COMPILE) $T$@ $<
 

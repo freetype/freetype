@@ -90,8 +90,8 @@
     else
       *P = NULL;
 
-    FT_TRACE2(( "FT_Alloc:" ));
-    FT_TRACE2(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
+    FT_TRACE7(( "FT_Alloc:" ));
+    FT_TRACE7(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
                 size, *P, P ));
 
     return FT_Err_Ok;
@@ -188,8 +188,8 @@
   BASE_FUNC( void )  FT_Free( FT_Memory  memory,
                               void**     P )
   {
-    FT_TRACE2(( "FT_Free:" ));
-    FT_TRACE2(( " Freeing block 0x%08p, ref 0x%08p\n",
+    FT_TRACE7(( "FT_Free:" ));
+    FT_TRACE7(( " Freeing block 0x%08p, ref 0x%08p\n",
                 P, P ? *P : (void*)0 ));
 
     FT_Assert( P != 0 );

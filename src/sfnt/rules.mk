@@ -1,5 +1,5 @@
 #
-# FreeType 2 DFNT driver configuration rules
+# FreeType 2 SFNT driver configuration rules
 #
 
 
