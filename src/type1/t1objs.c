@@ -285,7 +285,7 @@
       root->units_per_EM = 1000;
       root->ascender     = (FT_Short)face->type1.font_bbox.yMax;
       root->descender    = (FT_Short)face->type1.font_bbox.yMin;
-      root->height       = ( ( root->ascender + root->descender ) * 12 ) / 10;
+      root->height       = ( ( root->ascender - root->descender ) * 12 ) / 10;
 
       /* now compute the maximum advance width */
 
