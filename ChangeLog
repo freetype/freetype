@@ -1,3 +1,10 @@
+2004-02-17  Masatake YAMATO  <jet@gyve.org>
+
+	* include/freetype/ftmac.h (FT_GetFile_From_Mac_Name): Fix a typo
+	(FT_EXPORT_DEF -> FT_EXPORT).
+
+	* include/freetype/ftxf86.h (FT_Get_X11_Font_Format): Ditto.
+
 2004-02-15  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Set_Char_Size): Fix typo.
