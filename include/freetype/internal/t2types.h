@@ -38,7 +38,7 @@ FT_BEGIN_HEADER
   /*    A structure used to model a CFF Index table.                       */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    stream      :: source input stream                                 */
+  /*    stream      :: The source input stream.                            */
   /*                                                                       */
   /*    count       :: The number of elements in the index.                */
   /*                                                                       */
@@ -47,7 +47,7 @@ FT_BEGIN_HEADER
   /*    data_offset :: The position of first data byte in the index's      */
   /*                   bytes.                                              */
   /*                                                                       */
-  /*    offsets     :: table of element offsets in the index               */
+  /*    offsets     :: A table of element offsets in the index.            */
   /*                                                                       */
   /*    bytes       :: If the index is loaded in memory, its bytes.        */
   /*                                                                       */

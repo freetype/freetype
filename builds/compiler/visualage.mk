@@ -15,7 +15,7 @@
 
 # command line compiler name
 #
-CC       := icc
+CC := icc
 
 
 # The object file extension (for standard and static libraries).  This can be
@@ -39,7 +39,7 @@ I := /I
 
 
 # C flag used to define a macro before the compilation of a given source
-# object.  Usually is `-D' like in `-DDEBUG'.
+# object.  Usually it is `-D' like in `-DDEBUG'.
 #
 D := /D
 

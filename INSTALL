@@ -1,90 +1,93 @@
 In order to build the library, read the `BUILD' document in the `docs'
-directory. This is only a quick starter:
+directory.  This is only a quick starter:
 
 I. From the command line:
 
   You need to have GNU Make installed on your system to compile the
-  library from the command line. This will _not_ work with other
-  Make tools (including the BSD ones !!)
+  library from the command line.  This will _not_ work with other
+  make tools (including BSD make)!
   
-  - Go to the 'freetype2' directory
+  - Go to the `freetype2' directory.
 
-  - on Unix (any C compiler should work):
+  - On Unix (any C compiler should work):
 
-     - make setup (don't worry, this will invoke a configure script)
-     - make
-     - make install
+      - make setup (don't worry, this will invoke a configure script)
+      - make
+      - make install
 
-    alternatively, you can pass parameters to the configure script
-    with the CFG variable, as in:
+    Alternatively, you can pass parameters to the configure script
+    within the CFG variable, as in:
 
-     - make setup CFG="--prefix=/usr"
-     - make
-     - make install
+      - make setup CFG="--prefix=/usr"
+      - make
+      - make install
 
   - On Windows:
 
-    we provide a version of GNU Make for Win32 on the FreeType site.
-    See http://www.freetype.org/download.html for details..
+    We provide a version of GNU Make for Win32 on the FreeType site.
+    See http://www.freetype.org/download.html for details.
 
-    o if you're using gcc:
+    If you are using gcc:
 
-       - make setup
-       - make
+      - make setup
+      - make
 
-    o if you're using Visual C++:
+    If you are using Visual C++:
     
-       - make setup visualc
-       - make
+      - make setup visualc
+      - make
        
-    o if you're using Win32-lCC:
+    If you are using Win32-lCC:
     
-       - make setup lcc
-       - make
+      - make setup lcc
+      - make
        
-    o if you're using the Borland C++ Builder compiler:
+    If you are using the Borland C++ Builder compiler:
     
-       - make setup bcc32
-       - make
+      - make setup bcc32
+      - make
 
 
 II. In your own environment (IDE):
 
-  you need to add the directories "freetype2/include" and "freetype2/src"
+  You need to add the directories "freetype2/include" and "freetype2/src"
   to your include path when compiling the library.
   
-  compile each library component through the following files:
+  Compile each library component through the following files:
   
-     -- base components (required)
+    -- base components (required)
      
-     src/base/ftsystem.c
-     src/base/ftinit.c
-     src/base/ftdebug.c
-     src/base/ftbase.c
-     src/base/ftglyph.c
-     src/base/ftbbox.c
-     src/base/ftmm.c
+      src/base/ftsystem.c
+      src/base/ftinit.c
+      src/base/ftdebug.c
+      src/base/ftbase.c
+      src/base/ftglyph.c
+      src/base/ftbbox.c
+      src/base/ftmm.c
      
-     src/base/ftmac.c   -- only on the Macintosh
+      src/base/ftmac.c   -- only on the Macintosh
 
-     -- other components are optional
+    -- other components are optional
 
-     src/autohint/autohint.c   -- auto hinting module
-     src/cache/ftcache.c       -- cache sub-system (in beta)
-     src/sfnt/sfnt.c           -- SFNT files support (TrueType & OpenType)
-     src/cff/cff.c             -- CFF/OpenType font driver
-     src/psnames/psnames.c     -- Postscript glyph names support
-     src/psaux/psaux.c         -- Postscript Type 1 parsing
-     src/truetype/truetype.c   -- TrueType font driver
-     src/type1/type1.c         -- Type 1 font driver
-     src/cid/type1cid.c        -- Type 1 CID-keyed font driver
-     src/winfonts/winfonts.c   -- Windows FONT / FNT font driver
+      src/autohint/autohint.c   -- auto hinting module
+      src/cache/ftcache.c       -- cache sub-system (in beta)
+      src/sfnt/sfnt.c           -- SFNT files support (TrueType & OpenType)
+      src/cff/cff.c             -- CFF/OpenType font driver
+      src/psnames/psnames.c     -- Postscript glyph names support
+      src/psaux/psaux.c         -- Postscript Type 1 parsing
+      src/truetype/truetype.c   -- TrueType font driver
+      src/type1/type1.c         -- Type 1 font driver
+      src/cid/type1cid.c        -- Type 1 CID-keyed font driver
+      src/winfonts/winfonts.c   -- Windows FONT / FNT font driver
 
-     note that:
+    Note:
      
-         'truetype.c' needs  'sfnt.c' and 'psnames.c'
-	 'type1.c'    needs  'psaux.c' and 'psnames.c'
-	 'type1cid.c' needs  'psaux.c' and 'psnames.c'
-	 'cff.c'      needs  'sfnt.c', 'psaux.c' and 'psnames.c'
+       `truetype.c' needs `sfnt.c' and `psnames.c'
+       `type1.c'    needs `psaux.c' and `psnames.c'
+       `type1cid.c' needs `psaux.c' and `psnames.c'
+       `cff.c'      needs `sfnt.c', `psaux.c', and `psnames.c'
 
-  etc.
+       etc.
+
+
+--- end of INSTALL --

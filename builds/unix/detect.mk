@@ -12,6 +12,7 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
+.PHONY: devel lcc setup unix
 
 ifeq ($(PLATFORM),ansi)
 

@@ -24,13 +24,16 @@
   /*************************************************************************/
 
 
-#ifndef FTIMAGE_H
-#define FTIMAGE_H
+#ifndef __FTIMAGE_H__
+#define __FTIMAGE_H__
 
 
-#ifdef __cplusplus
-  extern "C" {
+#ifndef    FT_BUILD_H
+#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
 #endif
+#include   FT_BUILD_H
+
+FT_BEGIN_HEADER
 
 
   /*************************************************************************/
@@ -992,12 +995,10 @@
   } FT_Raster_Funcs;
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
 
-#endif /* FTIMAGE_H */
+#endif /* __FTIMAGE_H__ */
 
 
 /* END */
