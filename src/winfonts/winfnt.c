@@ -37,8 +37,7 @@
 #define FT_COMPONENT  trace_winfnt
 
 
-  static
-  const FT_Frame_Field  winmz_header_fields[] =
+  static const FT_Frame_Field  winmz_header_fields[] =
   {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  WinMZ_HeaderRec
@@ -50,8 +49,7 @@
     FT_FRAME_END
   };
 
-  static
-  const FT_Frame_Field  winne_header_fields[] =
+  static const FT_Frame_Field  winne_header_fields[] =
   {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  WinNE_HeaderRec
@@ -64,8 +62,7 @@
     FT_FRAME_END
   };
 
-  static
-  const FT_Frame_Field  winfnt_header_fields[] =
+  static const FT_Frame_Field  winfnt_header_fields[] =
   {
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  FT_WinFNT_HeaderRec
@@ -372,7 +369,7 @@
   }
 
 
-  static FT_CMap_ClassRec  fnt_cmap_class_rec =
+  static const FT_CMap_ClassRec  fnt_cmap_class_rec =
   {
     sizeof ( FNT_CMapRec ),
 
@@ -382,7 +379,7 @@
     (FT_CMap_CharNextFunc) fnt_cmap_char_next
   };
 
-  static FT_CMap_Class  fnt_cmap_class = &fnt_cmap_class_rec;
+  static const FT_CMap_Class  fnt_cmap_class = &fnt_cmap_class_rec;
 
 
   static void
