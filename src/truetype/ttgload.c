@@ -194,17 +194,63 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Load_Simple_Glyph                                               */
+  /*  The following functions are used by default with TrueType fonts.     */
+  /*  However, they can be replaced by alternatives if we need to support  */
+  /*  TrueType-compressed formats (like MicroType) in the future..         */
   /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads a simple (i.e, non-composite) glyph.  This function is used  */
-  /*    for the `Load_Simple' state of TT_Load_Glyph().  All composite     */
-  /*    glyphs elements will be loaded with this routine.                  */
-  /*                                                                       */
+
+  static
+  FT_Error  TT_Access_Glyph_Frame( TT_Loader*  loader,
+                                   FT_UInt     glyph_index,
+                                   FT_ULong    offset,
+                                   FT_UInt     byte_count )
+  {
+    FT_Error  error;
+    FT_Stream stream = loader->stream;
+    
+    /* the following line sets the 'error' variable through macros !! */
+    (void)( FILE_Seek( offset ) || ACCESS_Frame( byte_count ) );
+    
+    FT_TRACE5(( "Glyph %ld\n", glyph_index ));
+    return error;
+  }                                   
+
+
+
+  static
+  void      TT_Forget_Glyph_Frame( TT_Loader*  loader )
+  {
+    FT_Stream  stream = loader->stream;
+    FORGET_Frame();
+  }                                   
+
+
+
+  static
+  FT_Error  TT_Load_Glyph_Header( TT_Loader*  loader )
+  {
+    FT_Stream   stream = loader->stream;
+    
+    loader->n_contours = GET_Short();
+
+    loader->bbox.xMin = GET_Short();
+    loader->bbox.yMin = GET_Short();
+    loader->bbox.xMax = GET_Short();
+    loader->bbox.yMax = GET_Short();
+
+    FT_TRACE5(( "  # of contours: %d\n", loader->n_contours ));
+    FT_TRACE5(( "  xMin: %4d  xMax: %4d\n", loader->bbox.xMin,
+                                            loader->bbox.xMax ));
+    FT_TRACE5(( "  yMin: %4d  yMax: %4d\n", loader->bbox.yMin,
+                                            loader->bbox.yMax ));
+    
+    return FT_Err_Ok;
+  }                                  
+
+
+
   static
   FT_Error  TT_Load_Simple_Glyph( TT_Loader*  load,
-                                  FT_UInt     byte_count,
                                   FT_Int      n_contours )
   {
     FT_Error         error;
@@ -216,9 +262,6 @@
     FT_UShort        n_ins;
     FT_Int           n, n_points;
 
-
-    if ( ACCESS_Frame( byte_count ) )
-      return error;
 
     /* reading the contours endpoints & number of points */
     {
@@ -357,14 +400,96 @@
 
     outline->n_points   = n_points;
     outline->n_contours = n_contours;
-          
-    return error;
 
-  Fail:
-    FORGET_Frame();
+  Fail:          
     return error;
   }
 
+
+  static
+  FT_Error  TT_Load_Composite_Glyph( TT_Loader*  loader,
+                                     FT_UInt     byte_count )
+  {
+    FT_Error         error;
+    FT_Stream        stream = loader->stream;
+    FT_GlyphLoader*  gloader   = loader->gloader;
+    FT_SubGlyph*     subglyph;
+    FT_UInt          num_subglyphs;
+
+    num_subglyphs = 0;
+    do
+    {
+      FT_Fixed  xx, xy, yy, yx;
+
+      /* check that we can load a new subglyph */
+      error = FT_GlyphLoader_Check_Subglyphs( gloader, num_subglyphs+1 );
+      if (error) goto Fail;
+      
+      subglyph = gloader->current.subglyphs + num_subglyphs;
+
+      subglyph->arg1 = subglyph->arg2 = 0;
+
+      subglyph->flags = GET_UShort();
+      subglyph->index = GET_UShort();
+
+      /* read arguments */
+      if ( subglyph->flags & ARGS_ARE_WORDS )
+      {
+        subglyph->arg1 = GET_Short();
+        subglyph->arg2 = GET_Short();
+      }
+      else
+      {
+        subglyph->arg1 = GET_Char();
+        subglyph->arg2 = GET_Char();
+      }
+
+      /* read transform */
+      xx = yy = 0x10000L;
+      xy = yx = 0;
+
+      if ( subglyph->flags & WE_HAVE_A_SCALE )
+      {
+        xx = (FT_Fixed)GET_Short() << 2;
+        yy = xx;
+      }
+      else if ( subglyph->flags & WE_HAVE_AN_XY_SCALE )
+      {
+        xx = (FT_Fixed)GET_Short() << 2;
+        yy = (FT_Fixed)GET_Short() << 2;
+      }
+      else if ( subglyph->flags & WE_HAVE_A_2X2 )
+      {
+        xx = (FT_Fixed)GET_Short() << 2;
+        xy = (FT_Fixed)GET_Short() << 2;
+        yx = (FT_Fixed)GET_Short() << 2;
+        yy = (FT_Fixed)GET_Short() << 2;
+      }
+
+      subglyph->transform.xx = xx;
+      subglyph->transform.xy = xy;
+      subglyph->transform.yx = yx;
+      subglyph->transform.yy = yy;
+
+      num_subglyphs++;
+    }
+    while (subglyph->flags & MORE_COMPONENTS);
+
+    gloader->current.num_subglyphs = num_subglyphs;
+
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+    {
+      /* we must undo the ACCESS_Frame in order to point to the */
+      /* composite instructions, if we find some.               */
+      /* we will process them later...                          */
+      /*                                                        */
+      loader->ins_pos = FILE_Pos() + stream->cursor - stream->limit;
+    }
+#endif
+
+  Fail:
+    return error;
+  }
 
 
 
@@ -488,104 +613,6 @@
 
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Load_Composite_Glyph                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads a composite glyph.                                           */
-  /*                                                                       */
-  static
-  FT_Error  TT_Load_Composite_Glyph( TT_Loader*  loader,
-                                     FT_UInt     byte_count )
-  {
-    FT_Error         error;
-    FT_Stream        stream = loader->stream;
-    FT_GlyphLoader*  gloader   = loader->gloader;
-    FT_SubGlyph*     subglyph;
-    FT_UInt          num_subglyphs;
-
-    if ( ACCESS_Frame( byte_count ) )
-      goto Fail;
-
-    num_subglyphs = 0;
-    do
-    {
-      FT_Fixed  xx, xy, yy, yx;
-
-      /* check that we can load a new subglyph */
-      error = FT_GlyphLoader_Check_Subglyphs( gloader, num_subglyphs+1 );
-      if (error) goto Fail;
-      
-      subglyph = gloader->current.subglyphs + num_subglyphs;
-
-      subglyph->arg1 = subglyph->arg2 = 0;
-
-      subglyph->flags = GET_UShort();
-      subglyph->index = GET_UShort();
-
-      /* read arguments */
-      if ( subglyph->flags & ARGS_ARE_WORDS )
-      {
-        subglyph->arg1 = GET_Short();
-        subglyph->arg2 = GET_Short();
-      }
-      else
-      {
-        subglyph->arg1 = GET_Char();
-        subglyph->arg2 = GET_Char();
-      }
-
-      /* read transform */
-      xx = yy = 0x10000L;
-      xy = yx = 0;
-
-      if ( subglyph->flags & WE_HAVE_A_SCALE )
-      {
-        xx = (FT_Fixed)GET_Short() << 2;
-        yy = xx;
-      }
-      else if ( subglyph->flags & WE_HAVE_AN_XY_SCALE )
-      {
-        xx = (FT_Fixed)GET_Short() << 2;
-        yy = (FT_Fixed)GET_Short() << 2;
-      }
-      else if ( subglyph->flags & WE_HAVE_A_2X2 )
-      {
-        xx = (FT_Fixed)GET_Short() << 2;
-        xy = (FT_Fixed)GET_Short() << 2;
-        yx = (FT_Fixed)GET_Short() << 2;
-        yy = (FT_Fixed)GET_Short() << 2;
-      }
-
-      subglyph->transform.xx = xx;
-      subglyph->transform.xy = xy;
-      subglyph->transform.yx = yx;
-      subglyph->transform.yy = yy;
-
-      num_subglyphs++;
-    }
-    while (subglyph->flags & MORE_COMPONENTS);
-
-    gloader->current.num_subglyphs = num_subglyphs;
-
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-    {
-      /* we must undo the ACCESS_Frame in order to point to the */
-      /* composite instructions, if we find some.               */
-      /* we will process them later...                          */
-      /*                                                        */
-      loader->ins_pos = FILE_Pos() + stream->cursor - stream->limit;
-    }
-#endif
-
-    FORGET_Frame();
-
-  Fail:
-    return error;
-  }
-
 
 
 
@@ -611,6 +638,7 @@
     FT_Fixed         x_scale, y_scale;
     FT_ULong         ins_offset;
     FT_GlyphLoader*  gloader = loader->gloader;
+    FT_Bool          opened_frame = 0;
 
 
     /* check glyph index */
@@ -618,7 +646,7 @@
     if ( index >= (FT_UInt)face->root.num_glyphs )
     {
       error = TT_Err_Invalid_Glyph_Index;
-      goto Fail;
+      goto Exit;
     }
 
     loader->glyph_index = glyph_index;
@@ -650,7 +678,6 @@
       loader->advance      = advance_width;
     }
 
-    /* load glyph header */
     offset = face->glyph_locations[index];
     count  = 0;
 
@@ -676,30 +703,23 @@
       if ( loader->exec )
         loader->exec->glyphSize = 0;
 #endif
-      goto Load_End;
+      error = FT_Err_Ok;
+      goto Exit;
     }
 
     offset = loader->glyf_offset + offset;
 
+    /* access glyph frame */
+    error = TT_Access_Glyph_Frame( loader, glyph_index, offset, count );
+    if (error) goto Exit;
+
+    opened_frame = 1;
+
     /* read first glyph header */
-    if ( FILE_Seek( offset ) || ACCESS_Frame( 10L ) )
-      goto Fail;
+    error = TT_Load_Glyph_Header( loader );
+    if (error) goto Fail;
 
-    contours_count = GET_Short();
-
-    loader->bbox.xMin = GET_Short();
-    loader->bbox.yMin = GET_Short();
-    loader->bbox.xMax = GET_Short();
-    loader->bbox.yMax = GET_Short();
-
-    FORGET_Frame();
-
-    FT_TRACE5(( "Glyph %ld\n", index ));
-    FT_TRACE5(( "  # of contours: %d\n", contours_count ));
-    FT_TRACE5(( "  xMin: %4d  xMax: %4d\n", loader->bbox.xMin,
-                                            loader->bbox.xMax ));
-    FT_TRACE5(( "  yMin: %4d  yMax: %4d\n", loader->bbox.yMin,
-                                            loader->bbox.yMax ));
+    contours_count = loader->n_contours;
 
     count -= 10;
 
@@ -726,7 +746,7 @@
       error = FT_GlyphLoader_Check_Points( gloader, 0, contours_count );
       if (error) goto Fail;
 
-      error = TT_Load_Simple_Glyph( loader, count, contours_count );
+      error = TT_Load_Simple_Glyph( loader, contours_count );
       if (error) goto Fail;
       
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
@@ -764,6 +784,9 @@
       error = TT_Load_Composite_Glyph( loader, count );
       if (error) goto Fail;
 
+      TT_Forget_Glyph_Frame( loader );
+      opened_frame = 0;
+
       /* if the flag FT_LOAD_NO_RECURSE is set, we return the subglyph */
       /* `as is' in the glyph slot (the client application will be     */
       /* responsible for interpreting this data)...                    */
@@ -777,7 +800,7 @@
         glyph->format         = ft_glyph_format_composite;
         glyph->subglyphs      = gloader->base.subglyphs;
         
-        goto Load_End;
+        goto Exit;
       }
 
 
@@ -1008,10 +1031,11 @@
     /***********************************************************************/
     /***********************************************************************/
 
-  Load_End:
-    error = FT_Err_Ok;
-
   Fail:
+    if (opened_frame)
+      TT_Forget_Glyph_Frame( loader );
+
+  Exit:
     return error;
   }
 

@@ -1410,6 +1410,7 @@
     FT_Stream       stream;
     FT_Int          byte_len;
 
+    FT_Short        n_contours;
     FT_BBox         bbox;
     FT_Int          left_bearing;
     FT_Int          advance;

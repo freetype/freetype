@@ -92,9 +92,10 @@
          the handle <tt>library</tt> to it.</p>
       </li>
       <li>
-        <p>Load each font driver that FreeType knows about in the library. 
+        <p>Load each modules that FreeType knows about in the library. 
         This means that by default, your new <tt>library</tt> object is able
-        to handle TrueType and Type&nbsp;1 fonts gracefully.</p>
+        to handle TrueType, Type 1, CID-keyed & OpenType/CFF fonts
+        gracefully.</p>
       </li>
     </ul>
 
@@ -238,6 +239,8 @@
       font driver when creating the object.  We advise you to refer to the
       FreeType&nbsp;2 reference manual in order to learn how to use it.</p>
 
+      <p>Note that providing a custom stream might also be used to access a
+         TrueType font embedded in a Postscript Type42 wrapper..</p>
       <hr>
 
     <h3>
@@ -435,7 +438,7 @@
 
       <p>Note that this is one of the rare FreeType functions that do not
       return an error code.  However, when a given character code has no
-      glyph image in the face, the value&nbso;0 is returned.  By convention,
+      glyph image in the face, the value&nbsp;0 is returned.  By convention,
       it always correspond to a special glyph image called the <b>missing
       glyph</b>, which usually is represented as a box or a space.</p>
 
@@ -483,15 +486,28 @@
           higher-quality images of the same glyph).</p>
         </li>
         <li>
-          <p>If there is an outline for the corresponding glyph, load it
-          unless <tt>FT_LOAD_NO_OUTLINE</tt> is set.  Otherwise, scale it to
-          the current size, unless the <tt>FT_LOAD_NO_SCALE</tt> flag is
-          set.</p>
+          <p>If there is a glyph image in another format (e.g. a vectorial
+             outline), load it in the glyph slot. Then, scale it to the
+             current size, unless the <tt>FT_LOAD_NO_SCALE</tt> flag is
+             set.</p>
         </li>
         <li>
-          <p>If the outline was loaded and scaled, try to grid-fit it (which
+          <p>If the glyph image was loaded and scaled, try to grid-fit it (which
           dramatically improves its quality) unless the flag
           <tt>FT_LOAD_NO_HINTING</tt> is set.</p>
+        </li>
+        
+        <li>
+          <p>If the glyph image is scalable, transform it through the current
+             transform (that can be set with <tt>FT_Set_Transform</tt>).</p>
+        </li>
+        
+        <li>
+          <p>Finally, if the <tt>FT_LOAD_RENDER</tt> flag is set, convert the
+             glyph image into a bitmap. By default, this means a 1-bit
+             monochrome bitmap, unless <tt>FT_LOAD_ANTI_ALIAS</tt> is set,
+             where an 8-bit 256-gray-levels anti-aliased bitmap is generated.
+             </p>
         </li>
       </ul>
 

@@ -1814,7 +1814,7 @@
   /*    FT_Render_Glyph.                                                   */
   /*                                                                       */
   /*                                                                       */
-#define FT_LOAD_LINEAR_ANTI_ALIAS  4096
+#define FT_LOAD_ANTI_ALIAS  4096
 
 
   /*************************************************************************/

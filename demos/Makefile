@@ -160,7 +160,8 @@ else
   #
   # The list of demonstration programs to build.
   #
-  EXES := ftlint ftview fttimer compos ftstring memtest ftmulti
+#  EXES := ftlint ftview fttimer compos ftstring memtest ftmulti
+  EXES := ftlint ftview
 
   ifneq ($(findstring $(PLATFORM),os2 unix win32),)
     EXES += ttdebug
