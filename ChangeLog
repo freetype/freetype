@@ -1,3 +1,14 @@
+2004-02-24  Malcolm Taylor  <mtaylor@clear.net.nz>
+
+	* src/autohint/ahhint.c (ah_hinter_load) <FT_GLYPH_FORMAT_OUTLINE>:
+	Handle case where outline->num_vedges is zero while computing hinted
+	metrics.
+
+2004-02-24  Gordon Childs  <gchilds@quickcut.com.au>
+
+	* src/cff/cffcmap.c (cff_cmap_unicode_init): Provide correct value
+	for `count'.
+
 2004-02-24  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/t1tables.h (PS_PrivateRec): Add

@@ -1540,6 +1540,7 @@
 
       /* we now need to hint the metrics according to the change in */
       /* width/positioning that occured during the hinting process  */
+      if ( outline->num_vedges > 0 )
       {
         FT_Pos   old_advance, old_rsb, old_lsb, new_lsb;
         AH_Edge  edge1 = outline->vert_edges;     /* leftmost edge  */
@@ -1560,6 +1561,12 @@
         if ( hinter->pp2.x + hinter->pp1.x == edge2->pos && old_rsb > 4 )
           hinter->pp2.x += 64;
 #endif
+      }
+
+      else
+      {
+        hinter->pp1.x = ( hinter->pp1.x + 32 ) & -64;
+        hinter->pp2.x = ( hinter->pp2.x + 32 ) & -64;
       }
 
       /* good, we simply add the glyph to our loader's base */
