@@ -543,8 +543,8 @@
 
 
       size->metrics.ascender    = font->header.ascent * 64;
-      size->metrics.descender   = ( font->header.pixel_height -
-                                      font->header.ascent ) * 64;
+      size->metrics.descender   = -( font->header.pixel_height -
+                                       font->header.ascent ) * 64;
       size->metrics.height      = font->header.pixel_height * 64;
       size->metrics.max_advance = font->header.max_width * 64;
 
