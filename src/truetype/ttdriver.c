@@ -225,6 +225,7 @@
     }
 
     size->ttmetrics.valid = FALSE;
+    size->strike_index    = 0xFFFF;
 
     return TT_Reset_Size( size );
   }
@@ -261,6 +262,7 @@
     /* many things have been pre-computed by the base layer */
 
     size->ttmetrics.valid = FALSE;
+    size->strike_index    = 0xFFFF;
 
     return TT_Reset_Size( size );
   }

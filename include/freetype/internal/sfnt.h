@@ -281,14 +281,18 @@
   /*                                                                       */
   typedef
   FT_Error  (*TT_Load_SBit_Image_Func)( TT_Face           face,
-                                        FT_Int            x_ppem,
-                                        FT_Int            y_ppem,
+					FT_ULong          strike_index,
                                         FT_UInt           glyph_index,
                                         FT_UInt           load_flags,
                                         FT_Stream         stream,
                                         FT_Bitmap*        map,
                                         TT_SBit_Metrics*  metrics );
 
+  typedef
+  FT_Error  (*TT_Set_SBit_Strike_Func)( TT_Face           face,
+					FT_Int            x_ppem,
+					FT_Int            y_ppem,
+					FT_ULong*         astrike_index );
 
   /*************************************************************************/
   /*                                                                       */
@@ -473,8 +477,10 @@
 
     TT_Load_Table_Func        load_kerning;
     TT_Load_Table_Func        load_gasp;
-	TT_Load_Table_Func        load_pclt;
+    TT_Load_Table_Func        load_pclt;
 
+    TT_Load_Table_Func        load_bitmap_header;
+    TT_Set_SBit_Strike_Func   set_sbit_strike;
     /* see `ttsbit.h' */
     TT_Load_Table_Func        load_sbits;
     TT_Load_SBit_Image_Func   load_sbit_image;

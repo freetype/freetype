@@ -877,16 +877,6 @@
   /*                    to scale vertical distances expressed in font      */
   /*                    units to fractional (26.6) pixel coordinates.      */
   /*                                                                       */
-  /*    x_resolution :: The horizontal device resolution for this size     */
-  /*                    object, expressed in integer dots per inches       */
-  /*                    (dpi).  As a convention, fixed font formats set    */
-  /*                    this value to 72.                                  */
-  /*                                                                       */
-  /*    y_resolution :: The vertical device resolution for this size       */
-  /*                    object, expressed in integer dots per inches       */
-  /*                    (dpi).  As a convention, fixed font formats set    */
-  /*                    this value to 72.                                  */
-  /*                                                                       */
   /*    ascender     :: The ascender, expressed in 26.6 fixed point        */
   /*                    pixels.  Always positive.                          */
   /*                                                                       */

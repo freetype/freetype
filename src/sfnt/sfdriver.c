@@ -172,13 +172,19 @@
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
+    /* see `ttload.h` */
+    TT_Load_Bitmap_Header,
+
     /* see `ttsbit.h' */
+    TT_Set_SBit_Strike,
     TT_Load_SBit_Strikes,
     TT_Load_SBit_Image,
     TT_Free_SBit_Strikes,
 
 #else /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
+    0,
+    0,
     0,
     0,
     0,

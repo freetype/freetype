@@ -255,7 +255,9 @@
                             FT_Parameter*  params )
   {
     FT_Error         error;
-    FT_Bool          missing_outline = 0;
+    FT_Bool          has_outline;
+    FT_Bool          is_apple_sbit;
+
     SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
 
     FT_UNUSED( face_index );
@@ -265,39 +267,63 @@
 
     /* Load tables */
 
-    /* If you load SFNT wrapped sbit font files, it will fail if you */
-    /* want to read the `head', `hhea', and `vhea' tables.           */
-    /*                                                               */
-    if ( LOAD_( header ) )
-    {
+    /* we now support two SFNT-based bitmapped font formats.       */
+    /* they are recognized easily as they do not include a "glyf"  */
+    /* table..                                                     */
+    /*                                                             */
+    /* the first format comes from Apple, and uses a table named   */
+    /* "bhed" instead of "head" to store the font header (using    */
+    /* the same format). it also doesn't include horizontal and    */
+    /* vertical metrics tables (i.e. "hhea" and "vhea" tables)     */
+    /*                                                             */
+    /* the other format comes from Microsoft, and is used with     */
+    /* WinCE / PocketPC. It's standard, except that it doesn't     */
+    /* contain outlines..                                          */
+    /*                                                             */
 
+    /* do we have outlines in there ?? */
+    has_outline   = (TT_LookUp_Table( face, TTAG_glyf ) != 0);
+    is_apple_sbit = 0;
+    
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-      missing_outline = 1;
-#else
-      goto Exit;
+
+    /*
+     * if this font doesn't contain outlines, we'll try to load
+     * a "bhed" table in it..
+     */
+    if ( !has_outline )
+      is_apple_sbit = !LOAD_(bitmap_header);
+
 #endif
 
-    }
+    /* load the font header ("head" table) if this isn't an Apple */
+    /* sbit font file..                                           */
+    if ( !is_apple_sbit && LOAD_(header) )
+      goto Exit;
 
+    /* load other tables */
     if ( LOAD_( max_profile ) ||
          LOAD_( charmaps )    ||
          LOAD_( names )       ||
          LOAD_( psnames )     )
       goto Exit;
 
-    if ( /* load the `hhea' & `hmtx' tables at once */
-         ( ( error = sfnt->load_metrics( face, stream, 0 ) ) != TT_Err_Ok ) ||
-         /* try to load the `vhea' & `vmtx' at once if present */
-         ( ( error = sfnt->load_metrics( face, stream, 1 ) ) != TT_Err_Ok ) ||
-         LOAD_( os2 ) )
+    /* do not load the metrics headers and tables if this is an Apple */
+    /* sbit font file..                                               */
+    if ( !is_apple_sbit )
     {
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-      missing_outline = 1;
-#else
-      goto Exit;
-#endif
-
+      /* load the "hhea" and "hmtx" tables at once */
+      error = sfnt->load_metrics( face, stream, 0 );
+      if (error)
+        goto Exit;
+        
+      /* try to load the "vhea" and "vmtx" tables at once */
+      error = sfnt->load_metrics( face, stream, 1 );
+      if (error)
+        goto Exit;
+        
+      if ( LOAD_(os2) )
+        goto Exit;
     }
 
     /* the optional tables */
@@ -307,11 +333,12 @@
     /* embedded bitmap support. */
     if ( sfnt->load_sbits && LOAD_( sbits ) )
     {
-      if ( !( ( error == TT_Err_Table_Missing ) &&      /* missing SBit */
-              ( missing_outline == 0 )        ) )       /* find outline */
+      /* return an error if this font file has no outlines */
+      if ( error == TT_Err_Table_Missing && has_outline )
+        error = 0;
+      else
         goto Exit;
     }
-
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
     if ( LOAD_( hdmx )    ||
@@ -343,7 +370,7 @@
       /*                                                                   */
       /* Compute face flags.                                               */
       /*                                                                   */
-      if ( missing_outline == 0 )
+      if ( has_outline == TRUE )
         flags = FT_FACE_FLAG_SCALABLE;    /* scalable outlines */
 
       flags |= FT_FACE_FLAG_SFNT      |   /* SFNT file format  */
@@ -374,26 +401,23 @@
       /* Compute style flags.                                              */
       /*                                                                   */
       flags = 0;
-      if ( missing_outline == 0 )
+      if ( has_outline == TRUE && face->os2.version != 0xFFFF )
       {
-        if ( face->os2.version != 0xFFFF )
-        {
-          /* we have an OS/2 table; use the `fsSelection' field */
-          if ( face->os2.fsSelection & 1 )
-            flags |= FT_STYLE_FLAG_ITALIC;
+        /* we have an OS/2 table; use the `fsSelection' field */
+        if ( face->os2.fsSelection & 1 )
+          flags |= FT_STYLE_FLAG_ITALIC;
 
-          if ( face->os2.fsSelection & 32 )
-            flags |= FT_STYLE_FLAG_BOLD;
-        }
-        else
-        {
-          /* this is an old Mac font, use the header field */
-          if ( face->header.Mac_Style & 1 )
-            flags |= FT_STYLE_FLAG_BOLD;
+        if ( face->os2.fsSelection & 32 )
+          flags |= FT_STYLE_FLAG_BOLD;
+      }
+      else
+      {
+        /* this is an old Mac font, use the header field */
+        if ( face->header.Mac_Style & 1 )
+          flags |= FT_STYLE_FLAG_BOLD;
 
-          if ( face->header.Mac_Style & 2 )
-            flags |= FT_STYLE_FLAG_ITALIC;
-        }
+        if ( face->header.Mac_Style & 2 )
+          flags |= FT_STYLE_FLAG_ITALIC;
       }
 
       root->style_flags = flags;
@@ -437,24 +461,27 @@
       if ( face->num_sbit_strikes )
       {
         root->face_flags |= FT_FACE_FLAG_FIXED_SIZES;
+
 #if 0
         /* I don't know criteria whether layout is horizontal or vertical */
-        if ( missing_outline )
+        if ( has_outline.... )
         {
           ...
           root->face_flags |= FT_FACE_FLAG_VERTICAL;
         }
 #endif
         root->num_fixed_sizes = face->num_sbit_strikes;
+
         if ( ALLOC_ARRAY( root->available_sizes,
                           face->num_sbit_strikes,
                           FT_Bitmap_Size ) )
-          return error;
+          goto Exit;
 
         for ( n = 0 ; n < face->num_sbit_strikes ; n++ )
         {
           root->available_sizes[n].width =
             face->sbit_strikes[n].x_ppem;
+
           root->available_sizes[n].height =
             face->sbit_strikes[n].y_ppem;
         }
@@ -464,15 +491,15 @@
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
       {
-       root->num_fixed_sizes = 0;
-       root->available_sizes = 0;
+        root->num_fixed_sizes = 0;
+        root->available_sizes = 0;
       }
 
       /*********************************************************************/
       /*                                                                   */
       /*  Set up metrics.                                                  */
       /*                                                                   */
-      if ( missing_outline == 0 )
+      if ( has_outline == TRUE )
       {
         /* XXX What about if outline header is missing */
         /*     (e.g. sfnt wrapped outline)?            */
