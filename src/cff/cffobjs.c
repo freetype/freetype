@@ -484,7 +484,9 @@
 #endif
 
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
-        flags |= FT_FACE_FLAG_GLYPH_NAMES;
+        /* CID-keyed CFF fonts don't have glyph names */
+        if ( dict->cid_registry == 0xFFFFU )
+          flags |= FT_FACE_FLAG_GLYPH_NAMES;
 #endif
 
         root->face_flags = flags;
@@ -541,7 +543,12 @@
             goto Skip_Unicode; /* Standard Unicode (deprecated) */
         }
 
-        /* we didn't find a Unicode charmap, synthetize one */
+        /* since CID-keyed fonts don't contain glyph names, we can't */
+        /* construct a cmap                                          */
+        if ( pure_cff && cff->top_font.font_dict.cid_registry != 0xFFFFU )
+          goto Exit;
+
+        /* we didn't find a Unicode charmap -- synthetize one */
         cmaprec.face        = root;
         cmaprec.platform_id = 3;
         cmaprec.encoding_id = 1;
