@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Anti-aliasing renderer interface (body).                             */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003 by                                     */
+/*  Copyright 2000-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -236,6 +236,9 @@
                     FT_Render_Mode  mode,
                     FT_Vector*      origin )
   {
+    if ( mode == FT_RENDER_MODE_LIGHT )
+      mode = FT_RENDER_MODE_NORMAL;
+
     return ft_smooth_render_generic( render, slot, mode, origin,
                                      FT_RENDER_MODE_NORMAL,
                                      0, 0 );

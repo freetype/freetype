@@ -306,7 +306,7 @@
                                              0, /* glyph names -- XXX */
                                              0, /* blend == 0 */
                                              hinting,
-                                             FT_LOAD_TARGET_MODE(load_flags),
+                                             FT_LOAD_TARGET_MODE( load_flags ),
                                              cid_load_glyph );
 
       /* set up the decoder */

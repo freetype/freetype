@@ -2331,7 +2331,7 @@
         glyph_index = cff->charset.cids[glyph_index];
 
       cff_decoder_init( &decoder, face, size, glyph, hinting,
-                        FT_LOAD_TARGET_MODE(load_flags) );
+                        FT_LOAD_TARGET_MODE( load_flags ) );
 
       decoder.builder.no_recurse =
         (FT_Bool)( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
