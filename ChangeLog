@@ -1,3 +1,25 @@
+2001-03-16  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/cff/cffdrivr.c (get_cff_glyph_name):  New function.  Used in
+	cff_get_interface to facilitate getting a glyph name for glyph index
+	via FT_Get_Glyph_Name().
+	Submitted by Sander van der Wal <svdwal@xs4all.nl>
+	
+	(cff_get_interface): Added support for getting a glyph name via the
+	"glyph_name" module interface.  Uses the new function
+	get_cff_glyph_name().
+	Submitted by Sander van der Wal <svdwal@xs4all.nl>
+
+	* src/cff/cffobjs.c (CFF_Init_Face): Logical or the face flags with
+	FT_FACE_FLAG_GLYPH_NAMES only if FT_CONFIG_OPTION_NO_GLYPH_NAMES is
+	not defined.  This is to add support for getting a glyph name from a
+	glyph index via FT_Get_Glyph_Name().
+	Submitted by Sander van der Wal <svdwal@xs4all.nl>
+	
+	* src/cff/cffgload.c (CFF_Parse_CharStrings): Added support for
+	deprecated operator "dotsection".
+	Submitted by Sander van der Wal <svdwal@xs4all.nl>
+
 2001-03-12  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings): Fix error
