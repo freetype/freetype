@@ -1,3 +1,7 @@
+2005-03-06  David Turner  <david@freetype.org>
+
+  * src/otvalid/{otvgsub.c, otvgpos.c}: making static tables constant
+
 2005-03-05  Werner Lemberg  <wl@gnu.org>
 
 	* autogen.sh: New script for bootstrapping.

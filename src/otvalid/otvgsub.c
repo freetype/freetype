@@ -516,7 +516,7 @@
   }
 
 
-  static OTV_Validate_Func  otv_gsub_validate_funcs[8] =
+  static const OTV_Validate_Func  otv_gsub_validate_funcs[8] =
   {
     otv_SingleSubst_validate,
     otv_MultipleSubst_validate,
@@ -567,7 +567,7 @@
     LookupList  = FT_NEXT_USHORT( p );
 
     valid->type_count  = 8;
-    valid->type_funcs  = otv_gsub_validate_funcs;
+    valid->type_funcs  = (OTV_Validate_Func*) otv_gsub_validate_funcs;
     valid->glyph_count = glyph_count;
 
     otv_LookupList_validate( table + LookupList,
