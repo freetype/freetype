@@ -1,4 +1,47 @@
-2003-10-15:  Graham Asher  <graham.asher@btinternet.com>
+2003-10-16  Werner Lemberg  <wl@gnu.org>
+
+	Completely revised Type 42 parser.  It now handles both fonts
+	produced with ttftot42 (tested version 0.3.1) and
+	TrueTypeToType42.ps (tested version May 2001; it is necessary to
+	fix the broken header comment to be `%!PS-TrueTypeFont...').
+
+	* src/type42/t42objs.c (T42_GlyphSlot_Load): Change fourth
+	parameter to `FT_UInt'.
+	* src/type42/t42objs.h: Updated.
+
+	* src/type42/t42parse.h (T42_ParserRec): Change type of `in_memory'
+	to FT_Bool.
+	(T42_Loader): Change type of `num_chars' and `num_glyphs' to
+	FT_UInt.
+	Add `swap_table' element.
+	* src/type42/t42parse.c (T42_KEYWORD_COUNT, T1_ToFixed,
+	T1_ToCoordArray, T1_ToTokenArray): Removed.
+	(T1_ToBytes): New macro.
+	(t42_is_alpha, t42_hexval): Removed.
+	(t42_is_space): Handle `\0'.
+	(t42_parse_encoding): Updated to use new PostScript parser routines
+	from psaux.
+	Handle `/Encoding [ ... ]' also.
+	(T42_Load_Status): New enumeration.
+	(t42_parse_sfnts): Updated to use new PostScript parser routines
+	from psaux.
+	(t42_parse_charstrings): Updated to use new PostScript parser
+	routines from psaux.
+	Handle `/CharStrings << ... >>' also.
+	Don't expect that /.notdef is the first element in dictionary.  Copy
+	code from type1 module to handle this.
+	(t42_parse_dict): Updated to use new PostScript parser routines
+	from psaux.
+	Remove code for synthetic fonts (which can't occur in Type 42
+	fonts).
+	(t42_loader_done): Release `swap_table'.
+
+	* src/psaux/psobjs.c (skip_string): Increase `cur' properly.
+
+	* src/type1/t1load.c (parse_charstrings): Make test for `.notdef'
+	faster.
+
+2003-10-15  Graham Asher  <graham.asher@btinternet.com>
 
 	* src/autohint/ahglobal.c (blue_chars), src/winfonts/winfnt.c
 	(fnt_cmap_class_rec, fnt_cmap_class), src/bdf/bdflib.c (empty,

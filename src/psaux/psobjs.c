@@ -410,9 +410,7 @@
     FT_Byte*  limit = parser->limit;
 
 
-    cur++;
-
-    while ( cur < limit )
+    while ( ++cur < limit )
     {
       int  d;
 
