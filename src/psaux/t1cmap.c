@@ -416,7 +416,7 @@
   }
 
 
-  FT_CALLBACK_TABLE const FT_CMap_ClassRec
+  FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
   t1_cmap_unicode_class_rec =
   {
     sizeof( T1_CMapUnicodeRec ),
