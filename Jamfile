@@ -82,6 +82,8 @@ FT2_COMPONENTS ?= autofit    # auto-fitter
                   type1      # PostScript Type 1 font driver
                   type42     # PostScript Type 42 (embedded TrueType) driver
                   winfonts   # Windows FON/FNT font driver
+                  otlayout   # OpenType Layout tables support
+                  gxlayout   # AAT/GX Layout tables support
                   ;
 
 
