@@ -437,8 +437,8 @@
       if (!read_binary_data(parser,&size,&base)) return;
       
       T1_Decrypt( base, size, 4330 );      
-      size -= face->type1.lenIV;
-      base += face->type1.lenIV;
+      size -= face->type1.private_dict.lenIV;
+      base += face->type1.private_dict.lenIV;
 
       error = T1_Add_Table( table, index, base, size );
       if (error) goto Fail;
@@ -521,8 +521,8 @@
         if (!read_binary_data(parser,&size,&base)) return;
 
         T1_Decrypt( base, size, 4330 );      
-        size -= face->type1.lenIV;
-        base += face->type1.lenIV;
+        size -= face->type1.private_dict.lenIV;
+        base += face->type1.private_dict.lenIV;
 
         error = T1_Add_Table( code_table, n, base, size );
         if (error) goto Fail;
@@ -688,7 +688,7 @@
     t1_init_loader( &loader, face );
 
     /* default lenIV */
-    type1->lenIV = 4;
+    type1->private_dict.lenIV = 4;
     
     parser = &loader.parser;
     error = T1_New_Parser( parser, face->root.stream, face->root.memory );

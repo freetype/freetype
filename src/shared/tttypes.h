@@ -788,60 +788,6 @@
     /* load them by default.  See the ttpost.c file.  */
 
   } TT_Postscript;
-#endif
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    TT_CMapDir                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This structure describes the directory of the `cmap' table,        */
-  /*    containing the font's character mappings table.                    */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    tableVersionNumber :: The version number.                          */
-  /*    numCMaps           :: The number of charmaps in the font.          */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This structure is only used during font loading.                   */
-  /*                                                                       */
-  typedef struct  TT_CMapDir_
-  {
-    TT_UShort  tableVersionNumber;
-    TT_UShort  numCMaps;
-
-  } TT_CMapDir;
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    TT_CMapDirEntry                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This structure describes a charmap in a TrueType font.             */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    platformID :: An ID used to specify for which platform this        */
-  /*                  charmap is defined (FreeType manages all platforms). */
-  /*                                                                       */
-  /*    encodingID :: A platform-specific ID used to indicate which source */
-  /*                  encoding is used in this charmap.                    */
-  /*                                                                       */
-  /*    offset ::     The offset of the charmap relative to the start of   */
-  /*                  the `cmap' table.                                    */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This structure is only used during font loading.                   */
-  /*                                                                       */
-  typedef struct  TT_CMapDirEntry_
-  {
-    TT_UShort  platformID;
-    TT_UShort  platformEncodingID;
-    TT_Long    offset;
-
-  } TT_CMapDirEntry;
 
 
   /*************************************************************************/
@@ -930,6 +876,62 @@
     TT_UShort  maxComponentDepth;
 
   } TT_MaxProfile;
+
+
+#endif
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    TT_CMapDir                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This structure describes the directory of the `cmap' table,        */
+  /*    containing the font's character mappings table.                    */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    tableVersionNumber :: The version number.                          */
+  /*    numCMaps           :: The number of charmaps in the font.          */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This structure is only used during font loading.                   */
+  /*                                                                       */
+  typedef struct  TT_CMapDir_
+  {
+    TT_UShort  tableVersionNumber;
+    TT_UShort  numCMaps;
+
+  } TT_CMapDir;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    TT_CMapDirEntry                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This structure describes a charmap in a TrueType font.             */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    platformID :: An ID used to specify for which platform this        */
+  /*                  charmap is defined (FreeType manages all platforms). */
+  /*                                                                       */
+  /*    encodingID :: A platform-specific ID used to indicate which source */
+  /*                  encoding is used in this charmap.                    */
+  /*                                                                       */
+  /*    offset ::     The offset of the charmap relative to the start of   */
+  /*                  the `cmap' table.                                    */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This structure is only used during font loading.                   */
+  /*                                                                       */
+  typedef struct  TT_CMapDirEntry_
+  {
+    TT_UShort  platformID;
+    TT_UShort  platformEncodingID;
+    TT_Long    offset;
+
+  } TT_CMapDirEntry;
 
 
   /*************************************************************************/

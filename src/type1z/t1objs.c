@@ -215,17 +215,17 @@
         
         root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
                               
-        if ( face->type1.is_fixed_pitch )
+        if ( face->type1.font_info.is_fixed_pitch )
           root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
         /* XXX : TO DO - add kerning with .afm support */
 
         /* get style name - be careful, some broken fonts only */
         /* have a /FontName dictionary entry .. !!             */
-        root->family_name = face->type1.family_name;
+        root->family_name = face->type1.font_info.family_name;
         if (root->family_name)
         {
-          char*  full   = face->type1.full_name;
+          char*  full   = face->type1.font_info.full_name;
           char*  family = root->family_name;
           
           while ( *family && *full == *family )
@@ -258,10 +258,10 @@
   
         /* now compute the maximum advance width */
 
-        root->max_advance_width = face->type1.standard_width;
+        root->max_advance_width = face->type1.private_dict.standard_width;
 
         /* compute max advance width for proportional fonts */
-        if (!face->type1.is_fixed_pitch)
+        if (!face->type1.font_info.is_fixed_pitch)
         {
           T1_Int  max_advance;
 
@@ -276,8 +276,8 @@
 
         root->max_advance_height = root->height;
         
-        root->underline_position  = face->type1.underline_position;
-        root->underline_thickness = face->type1.underline_thickness;
+        root->underline_position  = face->type1.font_info.underline_position;
+        root->underline_thickness = face->type1.font_info.underline_thickness;
   
         root->max_points   = 0;
         root->max_contours = 0;

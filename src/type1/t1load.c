@@ -44,7 +44,7 @@
     parser->encoding_lengths = 0;
 
     parser->dump_tokens      = 0;
-    face->type1.lenIV        = 4;  /* XXX : is it sure ?? */
+    face->type1.private_dict.lenIV        = 4;  /* XXX : is it sure ?? */
   }
 
 
@@ -309,7 +309,7 @@
         break;
 
       case imm_UniqueID:
-        type1->unique_id = CopyInteger( parser );
+        type1->private_dict.unique_id = CopyInteger( parser );
         break;
 
       case imm_StrokeWidth:
@@ -347,8 +347,8 @@
   static
   T1_Error  Do_Def_FontInfo( T1_Parser*  parser )
   {
-    T1_Token*  top   = parser->top;
-    T1_Font*   info  = &parser->face->type1;
+    T1_Token*    top   = parser->top;
+    T1_FontInfo* info  = &parser->face->type1.font_info;
 
     switch ( top[0].kind2 )
     {
@@ -416,7 +416,7 @@
   T1_Error  Do_Def_Private( T1_Parser*  parser )
   {
     T1_Token*   top   = parser->top;
-    T1_Font*    priv  = &parser->face->type1;
+    T1_Private* priv  = &parser->face->type1.private_dict;
 
     switch ( top[0].kind2 )
     {
@@ -722,8 +722,8 @@
       t1_decrypt( base, count, 4330 );
       tokzer->cursor += count;
 
-      base  += face->type1.lenIV;
-      count -= face->type1.lenIV;
+      base  += face->type1.private_dict.lenIV;
+      count -= face->type1.private_dict.lenIV;
 
       error = T1_Add_Table( &parser->table, index, base, count );
     }
@@ -806,8 +806,8 @@
       t1_decrypt( base, count, 4330 );
       tokzer->cursor += count;  /* skip */
 
-      base  += face->type1.lenIV;
-      count -= face->type1.lenIV;
+      base  += face->type1.private_dict.lenIV;
+      count -= face->type1.private_dict.lenIV;
 
       error = T1_Add_Table( &parser->table, index*2+1, base, count );
     }

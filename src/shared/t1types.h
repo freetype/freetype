@@ -21,7 +21,7 @@
 #ifndef T1TYPES_H
 #define T1TYPES_H
 
-#include <freetype.h>
+#include <t1tables.h>
 #include <psnames.h>
 
 #ifdef __cplusplus
@@ -310,55 +310,12 @@
   {
 
  /* font info dictionary */
+    T1_FontInfo    font_info;
  
-    T1_String*     version;
-    T1_String*     notice;
-    T1_String*     full_name;
-    T1_String*     family_name;
-    T1_String*     weight;
-    T1_Long        italic_angle;
-    T1_Bool        is_fixed_pitch;
-    T1_Short       underline_position;
-    T1_UShort      underline_thickness;
-
  /* private dictionary */
-
-    T1_Int       unique_id;
-    T1_Int       lenIV;
-
-    T1_Byte      num_blues;
-    T1_Byte      num_other_blues;
-    T1_Byte      num_family_blues;
-    T1_Byte      num_family_other_blues;
-
-    T1_Short     blue_values[14];
-    T1_Short     other_blues[10];
-
-    T1_Short     family_blues      [14];
-    T1_Short     family_other_blues[10];
-
-    T1_Fixed     blue_scale;
-    T1_Int       blue_shift;
-    T1_Int       blue_fuzz;
-
-    T1_UShort    standard_width;
-    T1_UShort    standard_height;
-
-    T1_Byte      num_snap_widths;
-    T1_Byte      num_snap_heights;
-    T1_Bool      force_bold;
-    T1_Bool      round_stem_up;
-
-    T1_Short     stem_snap_widths [13];  /* reserve one place for the std */
-    T1_Short     stem_snap_heights[13];  /* reserve one place for the std */
-
-    T1_Long      language_group;
-    T1_Long      password;
-
-    T1_Short     min_feature[2];
+    T1_Private     private_dict;
 
  /* top-level dictionary */
- 
     FT_String*   font_name;
 
     T1_EncodingType  encoding_type;

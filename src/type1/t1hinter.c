@@ -105,7 +105,7 @@
   T1_Error  t1_set_blue_zones( T1_Size  size )
   {
     T1_Face          face = (T1_Face)size->root.face;
-    T1_Font*         priv = &face->type1;
+    T1_Private*      priv = &face->type1.private_dict;
     T1_Int           n;
     T1_Int           blues[24];
     T1_Int           num_bottom;
@@ -286,7 +286,7 @@
     T1_Fixed       scale;
 
     T1_Face         face = (T1_Face)size->root.face;
-    T1_Font*        priv = &face->type1;
+    T1_Private*     priv = &face->type1.private_dict;
     T1_Size_Hints*  hints = size->hints;
 
     /* start with horizontal snap zones */
@@ -1286,7 +1286,7 @@
   void  T1_Hint_Stems( T1_Builder*  builder )
   {
     T1_Glyph_Hints*  hints = builder->glyph->hints;
-    T1_Font*         priv  = &builder->face->type1;
+    T1_Private*      priv  = &builder->face->type1.private_dict;
 
     T1_Size   size    = builder->size;
     T1_Fixed  scale_x = size->root.metrics.x_scale;

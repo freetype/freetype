@@ -17,10 +17,9 @@
  *
  ******************************************************************/
 
-#undef  FACE
-#define FACE  (face->type1)
-
  /* define the font info dictionary parsing callbacks */
+#undef  FACE
+#define FACE  (face->type1.font_info)
 
   PARSE_STRING("version",version)
   PARSE_STRING("Notice",notice)
@@ -35,6 +34,9 @@
 
  /* define the private dict parsing callbacks */ 
  
+#undef  FACE
+#define FACE  (face->type1.private_dict)
+
    PARSE_INT("UniqueID",unique_id)
    PARSE_INT("lenIV",lenIV)
    
@@ -60,6 +62,10 @@
    PARSE_COORDS2( "MinFeature", 2, min_feature )
 
  /* define the top-level dictionary parsing callbacks */
+
+#undef  FACE
+#define FACE  (face->type1)
+
  
 /* PARSE_STRING( "FontName", font_name ) -- handled by special routine */
    PARSE_NUM( "PaintType", paint_type, T1_Byte )
