@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PostScript hinting algorithm 3 (body).                               */
 /*                                                                         */
-/*  Copyright 2001, 2002 by                                                */
+/*  Copyright 2001, 2002, 2003 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -458,9 +458,9 @@
         return;
       }
 
-     /* perform stem snapping when requested - this is necessary
-      * for monochrome and LCD hinting modes only
-      */
+      /* perform stem snapping when requested - this is necessary
+       * for monochrome and LCD hinting modes only
+       */
       do_snapping = ( dimension == 0 && glyph->do_horz_snapping ) ||
                     ( dimension == 1 && glyph->do_vert_snapping );
 
@@ -520,22 +520,22 @@
           hint->cur_pos = pos;
           hint->cur_len = fit_len;
 
-         /* stem adjustment tries to snap stem widths to standard
-          * ones. this is important to prevent unpleasant rounding
-          * artefacts...
-          */
+          /* Stem adjustment tries to snap stem widths to standard
+           * ones.  This is important to prevent unpleasant rounding
+           * artefacts.
+           */
           if ( glyph->do_stem_adjust )
           {
             if ( len <= 64 )
             {
-             /* the stem is less than one pixel, we will center it
-              * around the nearest pixel center
-              */
+              /* the stem is less than one pixel; we will center it
+               * around the nearest pixel center
+               */
 #if 1
-              pos = ( pos + (len >> 1) ) & -64;
+              pos = ( pos + ( len >> 1 ) ) & -64;
 #else
-             /* this seems to be a bug !! */
-              pos = ( pos + ( (len >> 1) & -64 ) );
+             /* this seems to be a bug! */
+              pos = ( pos + ( ( len >> 1 ) & -64 ) );
 #endif
               len = 64;
             }
@@ -626,6 +626,7 @@
 
       PSH_AlignmentRec  align;
 
+
       /* ignore stem alignments when requested through the hint flags */
       if ( ( dimension == 0 && !glyph->do_horz_hints ) ||
            ( dimension == 1 && !glyph->do_vert_hints ) )
@@ -684,53 +685,55 @@
             if ( !psh3_hint_is_fitted( parent ) )
               psh3_hint_align_light( parent, globals, dimension, glyph );
 
-            par_org_center = parent->org_pos + ( parent->org_len / 2);
-            par_cur_center = parent->cur_pos + ( parent->cur_len / 2);
-            cur_org_center = hint->org_pos   + ( hint->org_len   / 2);
+            par_org_center = parent->org_pos + ( parent->org_len / 2 );
+            par_cur_center = parent->cur_pos + ( parent->cur_len / 2 );
+            cur_org_center = hint->org_pos   + ( hint->org_len   / 2 );
 
             cur_delta = FT_MulFix( cur_org_center - par_org_center, scale );
             pos       = par_cur_center + cur_delta - ( len >> 1 );
           }
 
-         /* Stems less than one pixel wide are easy - we want to
-          * make them as dark as possible, so they must fall within
-          * one pixel. If the stem is split between two pixels
-          * then snap the edge that is nearer to the pixel boundary
-          * to the pixel boundary
-          */
-          if (len <= 64)
+          /* Stems less than one pixel wide are easy -- we want to
+           * make them as dark as possible, so they must fall within
+           * one pixel.  If the stem is split between two pixels
+           * then snap the edge that is nearer to the pixel boundary
+           * to the pixel boundary.
+           */
+          if ( len <= 64 )
           {
             if ( ( pos + len + 63 ) / 64  != pos / 64 + 1 )
               pos += psh3_hint_snap_stem_side_delta ( pos, len );
           }
-         /* Position stems other to minimize the amount of mid-grays.
-          * There are, in general, two positions that do this,
-          * illustrated as A) and B) below.
-          *
-          *   +                   +                   +                   +
-          *
-          * A)             |--------------------------------|
-          * B)   |--------------------------------|
-          * C)       |--------------------------------|
-          *
-          * Position A) (split the excess stem equally) should be better
-          * for stems of width N + f where f < 0.5
-          *
-          * Position B) (split the deficiency equally) should be better
-          * for stems of width N + f where f > 0.5
-          *
-          * It turns out though that minimizing the total number of lit
-          * pixels is also important, so position C), with one edge
-          * aligned with a pixel boundary is actually preferable
-          * to A). There are also more possibile positions for C) than
-          * for A) or B), so it involves less distortion of the overall
-          * character shape.
-          */
+
+          /* Position stems other to minimize the amount of mid-grays.
+           * There are, in general, two positions that do this,
+           * illustrated as A) and B) below.
+           *
+           *   +                   +                   +                   +
+           *
+           * A)             |--------------------------------|
+           * B)   |--------------------------------|
+           * C)       |--------------------------------|
+           *
+           * Position A) (split the excess stem equally) should be better
+           * for stems of width N + f where f < 0.5.
+           *
+           * Position B) (split the deficiency equally) should be better
+           * for stems of width N + f where f > 0.5.
+           *
+           * It turns out though that minimizing the total number of lit
+           * pixels is also important, so position C), with one edge
+           * aligned with a pixel boundary is actually preferable
+           * to A).  There are also more possibile positions for C) than
+           * for A) or B), so it involves less distortion of the overall
+           * character shape.
+           */
           else /* len > 64 */
           {
-            FT_Fixed frac_len = len & 63;
-            FT_Fixed center = pos + ( len >> 1 );
-            FT_Fixed delta_a, delta_b;
+            FT_Fixed  frac_len = len & 63;
+            FT_Fixed  center = pos + ( len >> 1 );
+            FT_Fixed  delta_a, delta_b;
+
 
             if ( ( len / 64 ) & 1 )
             {
@@ -743,18 +746,20 @@
               delta_b = ( center & -64 ) + 32 - center;
             }
 
-           /* We choose between B) and C) above based on the amount
-            * of fractinal stem width; for small amounts, choose
-            * C) always, for large amounts, B) always, and inbetween,
-            * pick whichever one involves less stem movement.
-            */
-            if (frac_len < 32)
+            /* We choose between B) and C) above based on the amount
+             * of fractinal stem width; for small amounts, choose
+             * C) always, for large amounts, B) always, and inbetween,
+             * pick whichever one involves less stem movement.
+             */
+            if ( frac_len < 32 )
             {
               pos += psh3_hint_snap_stem_side_delta ( pos, len );
             }
-            else if (frac_len < 48)
+            else if ( frac_len < 48 )
             {
-              FT_Fixed side_delta = psh3_hint_snap_stem_side_delta ( pos, len );
+              FT_Fixed  side_delta = psh3_hint_snap_stem_side_delta ( pos,
+                                                                      len );
+
 
               if ( ABS( side_delta ) < ABS( delta_b ) )
                 pos += side_delta;

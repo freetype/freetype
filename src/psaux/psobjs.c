@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auxiliary functions for PostScript fonts (body).                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -178,8 +178,9 @@
 
       while ( new_size < table->cursor + length )
       {
-        /* increase size by 25% and round up to the nearest multiple of 1024 */
-        new_size += (new_size >> 2) + 1;
+        /* increase size by 25% and round up to the nearest multiple
+           of 1024 */
+        new_size += ( new_size >> 2 ) + 1;
         new_size  = ( new_size + 1023 ) & -1024;
       }
 
