@@ -48,11 +48,11 @@
 #ifdef FT_DEBUG_LEVEL_ERROR
 
 
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
+#  include <stdarg.h>
+#  include <stdlib.h>
+#  include <string.h>
 
-#include <windows.h>
+#  include <windows.h>
 
 
   FT_EXPORT_DEF( void )
@@ -85,22 +85,22 @@
   }
 
 
-#ifdef FT_DEBUG_LEVEL_TRACE
+#  ifdef FT_DEBUG_LEVEL_TRACE
 
 
   /* array of trace levels, initialized to 0 */
   int  ft_trace_levels[trace_count];
 
   /* define array of trace toggle names */
-#define FT_TRACE_DEF( x )  #x ,
+#    define FT_TRACE_DEF( x )  #x ,
 
   static const char*  ft_trace_toggles[trace_count + 1] =
-  { 
-#include FT_INTERNAL_TRACE_H
+  {
+#    include FT_INTERNAL_TRACE_H
     NULL
   };
 
-#undef FT_TRACE_DEF
+#    undef FT_TRACE_DEF
 
 
   /*************************************************************************/
@@ -125,49 +125,49 @@
   ft_debug_init( void )
   {
     const char*  ft2_debug = getenv( "FT2_DEBUG" );
-    
+
 
     if ( ft2_debug )
     {
       const char*  p = ft2_debug;
       const char*  q;
-      
+
 
       for ( ; *p; p++ )
       {
         /* skip leading whitespace and separators */
         if ( *p == ' ' || *p == '\t' || *p == ':' || *p == ';' || *p == '=' )
           continue;
-          
+
         /* read toggle name, followed by '=' */
         q = p;
         while ( *p && *p != '=' )
           p++;
-          
+
         if ( *p == '=' && p > q )
         {
           int  n, i, len = p - q;
           int  level = -1, found = -1;
-          
+
 
           for ( n = 0; n < trace_count; n++ )
           {
             const char*  toggle = ft_trace_toggles[n];
-            
+
 
             for ( i = 0; i < len; i++ )
             {
               if ( toggle[i] != q[i] )
                 break;
             }
-            
+
             if ( i == len && toggle[i] == 0 )
             {
               found = n;
               break;
             }
           }
-          
+
           /* read level */
           p++;
           if ( *p )
@@ -176,7 +176,7 @@
             if ( level < 0 || level > 6 )
               level = -1;
           }
-          
+
           if ( found >= 0 && level >= 0 )
           {
             if ( found == trace_any )
@@ -194,7 +194,7 @@
   }
 
 
-#else  /* !FT_DEBUG_LEVEL_TRACE */
+#  else  /* !FT_DEBUG_LEVEL_TRACE */
 
 
   FT_BASE_DEF( void )
@@ -204,7 +204,8 @@
   }
 
 
-#endif /* !FT_DEBUG_LEVEL_TRACE */
+#  endif /* !FT_DEBUG_LEVEL_TRACE */
 
+#endif /* FT_DEBUG_LEVEL_ERROR */
 
 /* END */

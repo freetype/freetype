@@ -23,7 +23,7 @@ LATEST CHANGES BETWEEN 2.1.1 and 2.1.0
 
     - The TrueType name table loader has been improved to support many
       popular though buggy Asian fonts.  It now ignores empty name entries,
-      invalid pointer offsets and a few other incorrect subtleties. 
+      invalid pointer offsets and a few other incorrect subtleties.
       Moreover, name strings are now loaded on demand, which reduces the
       memory load of many faces (e.g. the ARIAL.TTF font file contains a
       10kByte name table with 70 names).
@@ -41,12 +41,25 @@ LATEST CHANGES BETWEEN 2.1.1 and 2.1.0
         (using a slightly extended BDF format).
 
       * A Type42 font driver, contributed by Roberto Alameda.  It is
-        still experimental but seems to work relatively well.  Currently,
-        charmap support is not fully implemented.
+        still experimental but seems to work relatively well.
 
       * A PFR font driver, contributed by David Turner himself.  It doesn't
         support PFR hinting -- note that BitStream has at least two patents
         on this format!
+
+
+  III. MISCELLANEOUS
+
+    - The cache sub-system has been optimized in important ways. Cache hits are
+      now significantly faster. For example, using the CMap cache is about
+      twice faster than calling FT_Get_Char_Index on most platforms. Similarly,
+      using a SBit cache is about 5x faster than loading the bitmaps from a
+      bitmap file, and 300x to 500x than generating them from a scalable
+      format :-)
+
+      Note that you should recompile your sources if you designed a custom
+      cache class for the FT2 Cache subsystem, since the changes performed
+      are source, but not binary, compatible...
 
 
 ========================================================================

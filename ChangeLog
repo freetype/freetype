@@ -1,11 +1,14 @@
 2002-06-08  David Turner  <david@freetype.org>
 
-	* src/cache/ftccache.i: removing a typo that prevented
-        the source's compilation
+    * src/pcf/pcfdriver.c (pcf_cmap_char_next): fixed a bug that caused
+    the function to return invalid values.
 
-        * src/cache/ftccache.c (ftc_node_hash_unlink): fixed a
+	* src/cache/ftccache.i: removing a typo that prevented
+    the source's compilation
+
+    * src/cache/ftccache.c (ftc_node_hash_unlink): fixed a
 	bug that caused nasty memory overwrites. the hash table's
-        buckets array wasn't correctly resized when shrinked.
+    buckets array wasn't correctly resized when shrinked.
 
 2002-06-08  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
@@ -167,7 +170,7 @@
 
 	* include/freetype/ftxf86.h, src/base/ftxf86.c: New files.
 	They provide a new API (FT_Get_X11_Font_Format) to retrieve an
-	X11-compatible string describing the font format of a given face. 
+	X11-compatible string describing the font format of a given face.
 	This was put in a new optional base source file, corresponding to a
 	new public header (named FT_XFREE86_H since this function should
 	only be used within the XFree86 font server IMO).
