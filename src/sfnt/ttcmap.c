@@ -18,12 +18,14 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_OBJECTS_H
+
+#include "sferrors.h"           /* must come before FT_INTERNAL_VALIDATE_H */
+
+#include FT_INTERNAL_VALIDATE_H
 #include FT_INTERNAL_STREAM_H
 #include "ttload.h"
 #include "ttcmap.h"
 
-#include "sferrors.h"
 
   /*************************************************************************/
   /*                                                                       */
@@ -153,7 +155,7 @@
 
     cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
 
-    return FT_Err_Ok;
+    return SFNT_Err_Ok;
   }
 
 
@@ -161,7 +163,7 @@
   const TT_CMap_ClassRec  tt_cmap0_class_rec =
   {
     {
-      sizeof( TT_CMapRec ),
+      sizeof ( TT_CMapRec ),
 
       (FT_CMap_InitFunc)     tt_cmap_init,
       (FT_CMap_DoneFunc)     NULL,
@@ -523,7 +525,7 @@
 
     cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
 
-    return FT_Err_Ok;
+    return SFNT_Err_Ok;
   }
 
 
@@ -531,7 +533,7 @@
   const TT_CMap_ClassRec  tt_cmap2_class_rec =
   {
     {
-      sizeof( TT_CMapRec ),
+      sizeof ( TT_CMapRec ),
 
       (FT_CMap_InitFunc)     tt_cmap_init,
       (FT_CMap_DoneFunc)     NULL,
@@ -1098,7 +1100,7 @@
 
     cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
 
-    return FT_Err_Ok;
+    return SFNT_Err_Ok;
   }
 
 
@@ -1256,7 +1258,7 @@
 
     cmap_info->language = (FT_ULong)TT_PEEK_USHORT( p );
 
-    return FT_Err_Ok;
+    return SFNT_Err_Ok;
   }
 
 
@@ -1506,7 +1508,8 @@
 
 
     cmap_info->language = (FT_ULong)TT_PEEK_ULONG( p );
-    return FT_Err_Ok;
+
+    return SFNT_Err_Ok;
   }
 
 
@@ -1652,7 +1655,7 @@
 
     cmap_info->language = (FT_ULong)TT_PEEK_ULONG( p );
 
-    return FT_Err_Ok;
+    return SFNT_Err_Ok;
   }
 
 
@@ -1836,7 +1839,7 @@
 
     cmap_info->language = (FT_ULong)TT_PEEK_ULONG( p );
 
-    return FT_Err_Ok;
+    return SFNT_Err_Ok;
   }
 
 

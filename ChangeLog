@@ -1,3 +1,35 @@
+2004-09-04  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/ftobjs.h: Don't include
+	FT_CONFIG_STANDARD_LIBRARY_H.
+	(FT_Validator, FT_VAlidationLevel, FT_ValidatorRec, FT_VALIDATOR,
+	ft_validator_init, ft_validator_run, ft_validator_error, FT_INVALID,
+	FT_INVALID_TOO_SHORT, FT_INVALID_OFFSET, FT_INVALID_FORMAT,
+	FT_INVALID_GLYPH_ID, FT_INVALID_DATA): Move to...
+
+	* include/freetype/internal/ftvalid.h: New file.
+	Make FT_INVALID return module-specific error codes.
+
+	* include/freetype/internal/internal.h (FT_INTERNAL_VALIDATE_H): New
+	macro.
+
+	* include/freetype/fterrors.h: Undefine FT_ERR_PREFIX only if
+	FT_KEEP_ERR_PREFIX isn't defined.
+
+	* src/base/ftobjs.c: Include FT_INTERNAL_VALIDATE_H.
+
+	* src/sfnt/ttcmap.h: Don't include FT_INTERNAL_OBJECTS_H but
+	FT_INTERNAL_VALIDATE_H.
+
+	* src/sfnt/ttcmap.c: Don't include FT_INTERNAL_OBJECTS_H but
+	FT_INTERNAL_VALIDATE_H.
+	Include sferrors.h before FT_INTERNAL_VALIDATE_H.
+	s/FT_Err_Ok/SFNT_Err_Ok/.
+
+	* src/sfnt/sferrors.h: Define FT_KEEP_ERR_PREFIX.
+
+	* src/type1/t1afm.c: Include t1errors.h.
+
 2004-09-03  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftdebug.c (ft_debug_init): Highest debug level is 7,
