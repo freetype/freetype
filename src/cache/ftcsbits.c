@@ -189,6 +189,8 @@
           sbit->format    = (FT_Byte)bitmap->pixel_mode;
           sbit->max_grays = (FT_Byte)(bitmap->num_grays - 1);
 
+#if 0 /* this doesn't work well with embedded bitmaps !! */
+
           /* grab the bitmap when possible - this is a hack! */
           if ( slot->flags & FT_GLYPH_OWN_BITMAP )
           {
@@ -196,6 +198,7 @@
             sbit->buffer = bitmap->buffer;
           }
           else
+#endif
           {
             /* copy the bitmap into a new buffer -- ignore error */
             error = ftc_sbit_copy_bitmap( sbit, bitmap, memory );

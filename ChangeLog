@@ -1,5 +1,8 @@
 2002-11-07  David Turner  <david@freetype.org>
 
+        * src/cache/ftcsbit.c (ftc_sbit_node_load): fixed a small bug that caused
+	problems with embedded bitmaps
+
         * src/otlayout/otlayout.h, src/otlyaout/otlconf.h,
         src/otlayout/otlgsub.c, src/otlayout/otlgsub.h, src/otlayout/otlparse.c,
         src/otlayout/otlparse.h, src/otlayout/otlutils.h:
