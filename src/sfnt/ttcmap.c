@@ -621,6 +621,174 @@
 
 #ifdef TT_CONFIG_CMAP_FORMAT_4
 
+#define  OPT_CMAP4
+
+#ifdef OPT_CMAP4
+
+  typedef struct TT_CMap4Rec_
+  {
+    TT_CMapRec   cmap;
+    FT_UInt32    old_charcode;   /* old charcode */
+    FT_UInt32    cur_charcode;   /* current charcode */
+    FT_UInt      cur_gindex;     /* current glyph index */
+
+    FT_UInt      table_length;
+    FT_UInt      num_ranges;
+    FT_UInt      cur_range;
+    FT_UInt      cur_start;
+    FT_UInt      cur_end;
+    FT_Int       cur_delta;
+    FT_Byte*     cur_values;
+
+  } TT_CMap4Rec, *TT_CMap4;
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  tt_cmap4_init( TT_CMap4  cmap,
+                 FT_Byte*  table )
+  {
+    FT_Byte*   p;
+
+    cmap->cmap.data = table;
+
+    p                  = table + 2;
+    cmap->table_length = FT_PEEK_USHORT(p);
+
+    p                  = table + 6;
+    cmap->num_ranges   = FT_PEEK_USHORT(p) >> 1;
+    cmap->cur_range    = cmap->num_ranges;
+    cmap->old_charcode = 0xFFFFFFFFUL;
+    cmap->cur_charcode = 0;
+    cmap->cur_gindex   = 0;
+
+    return 0;
+  }
+
+
+
+  static FT_Int
+  tt_cmap4_set_range( TT_CMap4  cmap,
+                      FT_UInt   range_index )
+  {
+    FT_Byte*  table = cmap->cmap.data;
+    FT_Byte*  p;
+    FT_UInt   num_ranges = cmap->num_ranges;
+
+    while ( range_index < num_ranges )
+    {
+      FT_UInt  offset;
+
+      p             = table + 14 + range_index*2;
+      cmap->cur_end = FT_PEEK_USHORT(p);
+
+      p              += 2 + num_ranges*2;
+      cmap->cur_start = FT_PEEK_USHORT(p);
+
+      p += num_ranges*2;
+      cmap->cur_delta = FT_PEEK_SHORT(p);
+
+      p += num_ranges*2;
+      offset = FT_PEEK_SHORT(p);
+
+      if ( offset != 0xFFFF )
+      {
+        cmap->cur_values = offset ? p + offset : NULL;
+        cmap->cur_range  = range_index;
+        return 0;
+      }
+
+      /* we skip empty segments */
+      range_index++;
+    }
+
+    cmap->old_charcode = 0xFFFFFFFFUL;
+    cmap->cur_charcode = 0;
+    cmap->cur_gindex   = 0;
+    cmap->cur_range    = num_ranges;
+    return -1;
+  }
+
+
+  static void
+  tt_cmap4_next( TT_CMap4  cmap )
+  {
+    FT_UInt  num_ranges = cmap->num_ranges;
+    FT_UInt  charcode   = cmap->cur_charcode + 1;
+
+    cmap->old_charcode = cmap->cur_charcode;
+
+    for ( ;; )
+    {
+      FT_Byte* values = cmap->cur_values;
+      FT_UInt  end    = cmap->cur_end;
+      FT_Int   delta  = cmap->cur_delta;
+
+      if ( charcode <= end )
+      {
+        if ( values )
+        {
+          FT_Byte*  p = values + 2*(charcode-cmap->cur_start);
+
+          do
+          {
+            FT_UInt  gindex = FT_NEXT_USHORT(p);
+
+            if ( gindex != 0 )
+            {
+              gindex = (FT_UInt)((gindex + delta) & 0xFFFF);
+              if ( gindex != 0 )
+              {
+                cmap->cur_charcode = charcode;
+                cmap->cur_gindex   = gindex;
+                return;
+              }
+            }
+          }
+          while ( ++charcode <= end );
+        }
+        else
+        {
+          do
+          {
+            FT_UInt  gindex = (FT_UInt)((charcode + delta) & 0xFFFFU);
+
+            if ( gindex != 0 )
+            {
+              cmap->cur_charcode = charcode;
+              cmap->cur_gindex   = gindex;
+              return;
+            }
+          }
+          while ( ++charcode <= end );
+        }
+      }
+
+     /* we need to find another range
+      */
+      if ( tt_cmap4_set_range( cmap, cmap->cur_range+1 ) < 0 )
+        break;
+
+      charcode = cmap->cur_start;
+    }
+  }
+
+
+  static void
+  tt_cmap4_reset( TT_CMap4  cmap,
+                  FT_UInt   code,
+                  FT_UInt   range_index )
+  {
+    if ( tt_cmap4_set_range( cmap, range_index ) >= 0 )
+    {
+      cmap->cur_charcode = code;
+      tt_cmap4_next( cmap );
+    }
+  }
+
+#endif /* OPT_CMAP4 */
+
+
+
   FT_CALLBACK_DEF( void )
   tt_cmap4_validate( FT_Byte*      table,
                      FT_Validator  valid )
@@ -798,7 +966,6 @@
       FT_UInt   code = (FT_UInt)char_code;
       FT_Byte*  p;
 
-
       p         = table + 6;
       num_segs2 = FT_PAD_FLOOR( TT_PEEK_USHORT( p ), 2 );  /* be paranoid! */
 
@@ -921,6 +1088,23 @@
     if ( char_code >= 0xFFFFUL )
       goto Exit;
 
+#ifdef OPT_CMAP4
+      {
+        TT_CMap4  cmap4 = (TT_CMap4)cmap;
+
+        if ( char_code == cmap4->old_charcode )
+        {
+          result = cmap4->cur_charcode;
+          gindex = cmap4->cur_gindex;
+          if ( result != 0 )
+          {
+            tt_cmap4_next( cmap4 );
+            goto Exit;
+          }
+        }
+      }
+#endif /* OPT_CMAP4 */
+
     code      = (FT_UInt)char_code + 1;
     p         = table + 6;
     num_segs2 = FT_PAD_FLOOR( TT_PEEK_USHORT(p), 2 );  /* ensure even-ness */
@@ -993,6 +1177,9 @@
             if ( gindex != 0 )
             {
               result = code;
+#ifdef OPT_CMAP4
+              tt_cmap4_reset( (TT_CMap4)cmap, code, hi );
+#endif
               goto Exit;
             }
           }
@@ -1001,7 +1188,7 @@
       }
       else if ( offset == 0xFFFFU )
       {
-        /* an offset of 0xFFFF means an empty glyph in certain fonts! */
+        /* an offset of 0xFFFF means an empty segment in certain fonts! */
         code = end + 1;
       }
       else  /* offset == 0 */
@@ -1010,6 +1197,9 @@
         if ( gindex != 0 )
         {
           result = code;
+#ifdef OPT_CMAP4
+          tt_cmap4_reset( (TT_CMap4)cmap, code, hi );
+#endif
           goto Exit;
         }
         code++;
@@ -1108,9 +1298,13 @@
   const TT_CMap_ClassRec  tt_cmap4_class_rec =
   {
     {
+#ifdef OPT_CMAP4
+      sizeof ( TT_CMap4Rec ),
+      (FT_CMap_InitFunc)     tt_cmap4_init,
+#else
       sizeof ( TT_CMapRec ),
-
       (FT_CMap_InitFunc)     tt_cmap_init,
+#endif
       (FT_CMap_DoneFunc)     NULL,
       (FT_CMap_CharIndexFunc)tt_cmap4_char_index,
       (FT_CMap_CharNextFunc) tt_cmap4_char_next
