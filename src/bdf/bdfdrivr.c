@@ -60,9 +60,12 @@ THE SOFTWARE.
 
 
   FT_CALLBACK_DEF( FT_Error )
-  bdf_cmap_init( BDF_CMap  cmap )
+  bdf_cmap_init( FT_CMap     bdfcmap,
+                 FT_Pointer  init_data )
   {
+    BDF_CMap  cmap = (BDF_CMap)bdfcmap;
     BDF_Face  face = (BDF_Face)FT_CMAP_FACE( cmap );
+    FT_UNUSED( init_data );
 
 
     cmap->num_encodings = face->bdffont->glyphs_used;
@@ -73,20 +76,24 @@ THE SOFTWARE.
 
 
   FT_CALLBACK_DEF( void )
-  bdf_cmap_done( BDF_CMap  cmap )
+  bdf_cmap_done( FT_CMap  bdfcmap )
   {
+    BDF_CMap  cmap = (BDF_CMap)bdfcmap;
+
+
     cmap->encodings     = NULL;
     cmap->num_encodings = 0;
   }
 
 
   FT_CALLBACK_DEF( FT_UInt )
-  bdf_cmap_char_index( BDF_CMap   cmap,
+  bdf_cmap_char_index( FT_CMap    bdfcmap,
                        FT_UInt32  charcode )
   {
+    BDF_CMap          cmap      = (BDF_CMap)bdfcmap;
     BDF_encoding_el*  encodings = cmap->encodings;
     FT_UInt           min, max, mid;
-    FT_UInt           result = 0;
+    FT_UInt           result    = 0;
 
 
     min = 0;
@@ -117,9 +124,10 @@ THE SOFTWARE.
 
 
   FT_CALLBACK_DEF( FT_UInt )
-  bdf_cmap_char_next( BDF_CMap    cmap,
+  bdf_cmap_char_next( FT_CMap     bdfcmap,
                       FT_UInt32  *acharcode )
   {
+    BDF_CMap          cmap      = (BDF_CMap)bdfcmap;
     BDF_encoding_el*  encodings = cmap->encodings;
     FT_UInt           min, max, mid;
     FT_UInt32         charcode = *acharcode + 1;
@@ -162,13 +170,14 @@ THE SOFTWARE.
   }
 
 
-  FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec  bdf_cmap_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_CMap_ClassRec  bdf_cmap_class =
   {
-    sizeof( BDF_CMapRec ),
-    (FT_CMap_InitFunc)     bdf_cmap_init,
-    (FT_CMap_DoneFunc)     bdf_cmap_done,
-    (FT_CMap_CharIndexFunc)bdf_cmap_char_index,
-    (FT_CMap_CharNextFunc) bdf_cmap_char_next
+    sizeof ( BDF_CMapRec ),
+    bdf_cmap_init,
+    bdf_cmap_done,
+    bdf_cmap_char_index,
+    bdf_cmap_char_next
   };
 
 

@@ -45,9 +45,12 @@
 
 
   FT_LOCAL_DEF( void )
-  ftc_inode_free( FTC_INode  inode,
+  ftc_inode_free( FTC_Node   ftcinode,
                   FTC_Cache  cache )
   {
+    FTC_INode  inode = (FTC_INode)ftcinode;
+
+
     FTC_INode_Free( inode, cache );
   }
 
@@ -85,10 +88,14 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  ftc_inode_new( FTC_INode   *pinode,
-                 FTC_GQuery   gquery,
-                 FTC_Cache    cache )
+  ftc_inode_new( FTC_Node   *ftcpinode,
+                 FT_Pointer  ftcgquery,
+                 FTC_Cache   cache )
   {
+    FTC_INode  *pinode = (FTC_INode*)ftcpinode;
+    FTC_GQuery  gquery = (FTC_GQuery)ftcgquery;
+
+
     return FTC_INode_New( pinode, gquery, cache );
   }
 
@@ -136,8 +143,13 @@
 
 
   FT_LOCAL_DEF( FT_ULong )
-  ftc_inode_weight( FTC_INode  inode )
+  ftc_inode_weight( FTC_Node   ftcinode,
+                    FTC_Cache  ftccache )
   {
+    FTC_INode  inode = (FTC_INode)ftcinode;
+    FT_UNUSED( ftccache );
+
+
     return FTC_INode_Weight( inode );
   }
 
