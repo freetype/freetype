@@ -1044,7 +1044,7 @@
         vec[n].y = point->cur_u;
 
       if ( psh2_point_is_strong( point ) )
-        tags[n] |= (dimension == 0) ? 32 : 64;
+        tags[n] |= (char)((dimension == 0) ? 32 : 64);
 
 #ifdef DEBUG_HINTER
       if ( dimension == 0 )

@@ -649,8 +649,8 @@
 
       /* We also increase maxPoints and maxContours in order to support */
       /* some broken fonts.                                             */
-      face->root.internal->max_points   += 8;
-      face->root.internal->max_contours += 4;
+      face->root.internal->max_points   += (FT_UShort) 8;
+      face->root.internal->max_contours += (FT_Short)  4;
     }
 
     FT_TRACE2(( "MAXP loaded.\n" ));
