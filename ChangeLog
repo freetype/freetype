@@ -1,3 +1,13 @@
+2000-12-24  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/cff/t2gload.c (T2_Load_Glyph): Added code	so that the font
+	transform is applied.
+
+	* src/cff/cffparse.c (cff_parse_font_matrix): Added code so that
+	the font matrix numbers	are scaled by 1/(matrix->yy).  Also, the
+	offset vector now contains integer values instead of 16.16 fixed
+	numbers.
+
 2000-12-22  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/autohint/ahhint.c (ah_hinter_load_glyph):
