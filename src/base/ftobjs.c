@@ -1235,8 +1235,9 @@
   }
 
 
-  /* There's a Mac-specific extended implementation of FT_New_Face()
-     in src/mac/ftmac.c   */
+  /* there's a Mac-specific extended implementation of FT_New_Face() */
+  /* in src/mac/ftmac.c                                              */
+
 #ifndef macintosh
 
   /*************************************************************************/

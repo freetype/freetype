@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftmac.c                                                                */
 /*                                                                         */
-/*    Mac FOND support. Written by just@letterror.com.                     */
+/*    Mac FOND support.  Written by just@letterror.com.                    */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  Just van Rossum, David Turner, Robert Wilhelm, and Werner Lemberg.     */
@@ -80,15 +80,15 @@
 
 
 
-  /* Quick 'n' Dirty Pascal string to C string converter.
+  /* Quick'n'dirty Pascal string to C string converter.
      Warning: this call is not thread safe! Use with caution. */
   static
-  char * p2c_str( unsigned char *pstr )
+  char*  p2c_str( unsigned char*  pstr )
   {
-    static char cstr[256];
+    static char  cstr[256];
 
 
-    strncpy( cstr, (char*)pstr+1, pstr[0] );
+    strncpy( cstr, (char*)pstr + 1, pstr[0] );
     cstr[pstr[0]] = '\0';
     return cstr;
   }
@@ -96,7 +96,8 @@
 
   /* Given a pathname, fill in a file spec. */
   static
-  int file_spec_from_path( const char* pathname, FSSpec *spec )
+  int file_spec_from_path( const char*  pathname,
+                           FSSpec*      spec )
   {
     Str255    p_path;
     FT_ULong  path_len;
@@ -107,7 +108,7 @@
     if ( path_len > 255 )
       return -1;
     p_path[0] = (unsigned char)path_len;
-    strncpy( (char*)p_path+1, pathname, path_len );
+    strncpy( (char*)p_path + 1, pathname, path_len );
 
     if ( FSMakeFSSpec( 0, 0, p_path, spec ) != noErr )
       return -1;
@@ -118,20 +119,22 @@
 
   /* Return the file type of the file specified by spec. */
   static
-  OSType get_file_type( FSSpec  *spec )
+  OSType  get_file_type( FSSpec*  spec )
   {
-    FInfo   finfo;
+    FInfo  finfo;
 
 
     if ( FSpGetFInfo( spec, &finfo ) != noErr )
       return 0;  /* file might not exist */
+
     return finfo.fdType;
   }
 
 
   /* Given a PostScript font name, create the Macintosh LWFN file name. */
   static
-  void create_lwfn_name( char* ps_name, Str255 lwfn_file_name )
+  void create_lwfn_name( char*   ps_name,
+                         Str255  lwfn_file_name )
   {
     int       max = 5, count = 0;
     FT_Byte*  p = lwfn_file_name;
@@ -142,13 +145,13 @@
 
     while ( *q )
     {
-      if ( isupper(*q) )
+      if ( isupper( *q ) )
       {
         if ( count )
           max = 3;
         count = 0;
       }
-      if ( count < max && (isalnum(*q) || *q == '_' ) )
+      if ( count < max && ( isalnum( *q ) || *q == '_' ) )
       {
         *++p = *q;
         lwfn_file_name[0]++;
@@ -162,25 +165,25 @@
   /* Given a file reference, answer its location as a vRefNum
      and a dirID. */
   static
-  FT_Error get_file_location( short          ref_num,
-                              short*         v_ref_num,
-                              long*          dir_id,
-                              unsigned char* file_name )
+  FT_Error get_file_location( short           ref_num,
+                              short*          v_ref_num,
+                              long*           dir_id,
+                              unsigned char*  file_name )
   {
     FCBPBRec  pb;
     OSErr     error;
-
 
     pb.ioNamePtr = file_name;
     pb.ioVRefNum = 0;
     pb.ioRefNum  = ref_num;
     pb.ioFCBIndx = 0;
 
+
     error = PBGetFCBInfoSync( &pb );
     if ( error == noErr )
     {
       *v_ref_num = pb.ioFCBVRefNum;
-      *dir_id = pb.ioFCBParID;
+      *dir_id    = pb.ioFCBParID;
     }
     return error;
   }
@@ -200,9 +203,11 @@
 
 
     ref_num = HomeResFile( fond );
+
     error = ResError();
     if ( !error )
-      error = get_file_location( ref_num, &v_ref_num, &dir_id, fond_file_name );
+      error = get_file_location( ref_num, &v_ref_num,
+                                 &dir_id, fond_file_name );
     if ( !error )
       error = FSMakeFSSpec( v_ref_num, dir_id, file_name, spec );
 
@@ -214,8 +219,8 @@
      resource, and answer the name of a possible LWFN Type 1 file. */
   static
   void parse_fond(  char*   fond_data,
-                    short   *have_sfnt,
-                    short   *sfnt_id,
+                    short*  have_sfnt,
+                    short*  sfnt_id,
                     Str255  lwfn_file_name )
   {
     AsscEntry*  assoc;
@@ -227,7 +232,7 @@
     lwfn_file_name[0] = 0;
 
     fond = (FamRec*)fond_data;
-    assoc = (AsscEntry*)(fond_data + sizeof(FamRec) + 2);
+    assoc = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
 
     if ( assoc->fontSize == 0 )
     {
@@ -245,11 +250,12 @@
       unsigned char*  names[64];
       int             i;
 
+
       p += fond->ffStylOff;
       style = (StyleTable*)p;
-      p += sizeof(StyleTable);
+      p += sizeof ( StyleTable );
       string_count = *(unsigned short*)(p);
-      p += sizeof(short);
+      p += sizeof ( short );
 
       for ( i = 0 ; i < string_count && i < 64; i++ )
       {
@@ -257,13 +263,15 @@
         p += names[i][0];
         p++;
       }
-      strcpy(ps_name, p2c_str(names[0]));  /* Family name */
+      strcpy( ps_name, p2c_str( names[0] ) );  /* Family name */
 
       if ( style->indexes[0] > 1 )
       {
-        unsigned char* suffixes = names[style->indexes[0]-1];
+        unsigned char*  suffixes = names[style->indexes[0] - 1];
+
+
         for ( i=1; i<=suffixes[0]; i++ )
-          strcat( ps_name, p2c_str(names[suffixes[i]-1]) );
+          strcat( ps_name, p2c_str( names[suffixes[i] - 1 ] ) );
       }
       create_lwfn_name( ps_name, lwfn_file_name );
     }
@@ -299,6 +307,7 @@
        the output buffer. */
     res_id = 501;
     last_code = -1;
+
     for (;;)
     {
       post_data = Get1Resource( 'POST', res_id++ );
@@ -323,7 +332,7 @@
       goto Error;
 
     /* Second pass: append all POST data to the buffer, add PFB fields.
-       Glue all consequtive chunks of the same type together. */
+       Glue all consecutive chunks of the same type together. */
     p = buffer;
     res_id = 501;
     last_code = -1;
@@ -344,10 +353,10 @@
         if ( last_code != -1 )
         {
           /* we're done adding a chunk, fill in the size field */
-          *size_p++ = (FT_Byte)(pfb_chunk_size & 0xFF);
-          *size_p++ = (FT_Byte)((pfb_chunk_size >> 8) & 0xFF);
-          *size_p++ = (FT_Byte)((pfb_chunk_size >> 16) & 0xFF);
-          *size_p++ = (FT_Byte)((pfb_chunk_size >> 24) & 0xFF);
+          *size_p++ = (FT_Byte)(   pfb_chunk_size         & 0xFF );
+          *size_p++ = (FT_Byte)( ( pfb_chunk_size >> 8  ) & 0xFF );
+          *size_p++ = (FT_Byte)( ( pfb_chunk_size >> 16 ) & 0xFF );
+          *size_p++ = (FT_Byte)( ( pfb_chunk_size >> 24 ) & 0xFF );
           pfb_chunk_size = 0;
         }
 
@@ -375,7 +384,7 @@
     *pfb_data = buffer;
     *size = total_size;
 
-Error:
+  Error:
     CloseResFile( res_ref );
     return error;
   }
@@ -384,15 +393,16 @@ Error:
   /* Finalizer for a memory stream; gets called by FT_Done_Face().
      It frees the memory it uses. */
   static
-  void memory_stream_close( FT_Stream  stream )
+  void  memory_stream_close( FT_Stream  stream )
   {
     FT_Memory  memory = stream->memory;
 
 
     FREE( stream->base );
-    stream->size               = 0;
-    stream->base               = 0;
-    stream->close              = 0;
+
+    stream->size  = 0;
+    stream->base  = 0;
+    stream->close = 0;
   }
 
 
@@ -417,7 +427,7 @@ Error:
 
       *astream = 0;
       memory = library->memory;
-      if ( ALLOC( stream, sizeof(*stream) ) )
+      if ( ALLOC( stream, sizeof ( *stream ) ) )
         goto Exit;
 
       FT_New_Memory_Stream( library,
@@ -467,6 +477,7 @@ Error:
       args.flags = args.flags | ft_open_driver;
       args.driver = FT_Get_Module( library, driver_name );
     }
+
     error = FT_Open_Face( library, &args, face_index, aface );
     if ( error == FT_Err_Ok )
       (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
@@ -481,15 +492,15 @@ Error:
 
   /* Create a new FT_Face from a file spec to an LWFN file. */
   static
-  FT_Error FT_New_Face_From_LWFN( FT_Library  library,
-                                  FSSpec*     spec,
-                                  FT_Long     face_index,
-                                  FT_Face*    aface )
+  FT_Error  FT_New_Face_From_LWFN( FT_Library  library,
+                                   FSSpec*     spec,
+                                   FT_Long     face_index,
+                                   FT_Face*    aface )
   {
-    FT_Byte*      pfb_data;
-    FT_ULong      pfb_size;
-    FT_Error      error;
-    FT_Memory     memory = library->memory;
+    FT_Byte*   pfb_data;
+    FT_ULong   pfb_size;
+    FT_Error   error;
+    FT_Memory  memory = library->memory;
 
 
     error = read_lwfn( library->memory, spec, &pfb_data, &pfb_size );
@@ -498,12 +509,13 @@ Error:
 
 #if 0
     {
-      FILE* f;
-      char * path;
+      FILE*  f;
+      char*  path;
+
 
       path = p2c_str( spec->name );
       strcat( path, ".PFB" );
-      f = fopen(path, "wb");
+      f = fopen( path, "wb" );
       if ( f )
       {
         fwrite( pfb_data, 1, pfb_size, f );
@@ -523,17 +535,17 @@ Error:
 
   /* Create a new FT_Face from an SFNT resource, specified by res ID. */
   static
-  FT_Error FT_New_Face_From_SFNT( FT_Library  library,
-                                  short       sfnt_id,
-                                  FT_Long     face_index,
-                                  FT_Face*    aface )
+  FT_Error  FT_New_Face_From_SFNT( FT_Library  library,
+                                   short       sfnt_id,
+                                   FT_Long     face_index,
+                                   FT_Face*    aface )
   {
-    Handle        sfnt = NULL;
-    FT_Byte*      sfnt_data;
-    size_t        sfnt_size;
-    FT_Stream     stream = NULL;
-    FT_Error      error = 0;
-    FT_Memory     memory = library->memory;
+    Handle     sfnt = NULL;
+    FT_Byte*   sfnt_data;
+    size_t     sfnt_size;
+    FT_Stream  stream = NULL;
+    FT_Error   error = 0;
+    FT_Memory  memory = library->memory;
 
 
     sfnt = GetResource( 'sfnt', sfnt_id );
@@ -548,7 +560,7 @@ Error:
     }
 
     HLock( sfnt );
-    memcpy( sfnt_data, *sfnt, sfnt_size);
+    memcpy( sfnt_data, *sfnt, sfnt_size );
     HUnlock( sfnt );
     ReleaseResource( sfnt );
 
@@ -563,10 +575,10 @@ Error:
 
   /* Create a new FT_Face from a file spec to a suitcase file. */
   static
-  FT_Error FT_New_Face_From_Suitcase( FT_Library  library,
-                                      FSSpec*     spec,
-                                      FT_Long     face_index,
-                                      FT_Face*    aface )
+  FT_Error  FT_New_Face_From_Suitcase( FT_Library  library,
+                                       FSSpec*     spec,
+                                       FT_Long     face_index,
+                                       FT_Face*    aface )
   {
     FT_Error  error = FT_Err_Ok;
     short     res_ref, res_index;
@@ -580,11 +592,11 @@ Error:
 
     /* face_index may be -1, in which case we
        just need to do a sanity check */
-    if ( face_index < 0)
+    if ( face_index < 0 )
       res_index = 1;
     else
     {
-      res_index = (short)(face_index + 1);
+      res_index = (short)( face_index + 1 );
       face_index = 0;
     }
     fond = Get1IndResource( 'FOND', res_index );
@@ -596,7 +608,7 @@ Error:
 
     error = FT_New_Face_From_FOND( library, fond, face_index, aface );
 
-Error:
+  Error:
     CloseResFile( res_ref );
     return error;
   }
@@ -616,8 +628,8 @@ Error:
   /* <Input>                                                               */
   /*    fond       :: An FOND resource.                                    */
   /*                                                                       */
-  /*    face_index :: only supported for the -1 `sanity check'             */
-  /*                  special case.                                        */
+  /*    face_index :: Only supported for the -1 `sanity check' special     */
+  /*                  case.                                                */
   /*                                                                       */
   /* <Output>                                                              */
   /*    aface      :: A handle to a new face object.                       */
@@ -628,14 +640,14 @@ Error:
   /* <Notes>                                                               */
   /*    This function can be used to create FT_Face abjects from fonts     */
   /*    that are installed in the system like so:                          */
+  /*                                                                       */
   /*      fond = GetResource( 'FOND', fontName );                          */
   /*      error = FT_New_Face_From_FOND( library, fond, 0, &face );        */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_New_Face_From_FOND(
-                                FT_Library  library,
-                                Handle      fond,
-                                FT_Long     face_index,
-                                FT_Face*    aface )
+  FT_EXPORT_FUNC( FT_Error )  FT_New_Face_From_FOND( FT_Library  library,
+                                                     Handle      fond,
+                                                     FT_Long     face_index,
+                                                     FT_Face*    aface )
   {
     short     sfnt_id, have_sfnt, have_lwfn = 0;
     Str255    lwfn_file_name;
@@ -684,9 +696,9 @@ Error:
   /*                                                                       */
   /* <Description>                                                         */
   /*    This is the Mac-specific implementation of FT_New_Face.  In        */
-  /*    addition to the standard FT_New_Face functionality, it also        */
+  /*    addition to the standard FT_New_Face() functionality, it also      */
   /*    accepts pathnames to Mac suitcase files.  For further              */
-  /*    documentation see the original FT_New_Face in ftobjs.c.            */
+  /*    documentation see the original FT_New_Face() in ftobjs.c.          */
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_New_Face( FT_Library   library,
                                            const char*  pathname,
@@ -719,3 +731,5 @@ Error:
     }
   }
 
+
+/* END */
