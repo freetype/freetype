@@ -1,3 +1,12 @@
+2004-02-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/pshinter/pshalgo.c (PSH_STRONG_THRESHOLD): Changed to hold
+	the accepted shift for strong points in fractional pixels (which
+	is a heuristic value).
+	(psh_glyph_find_strong_points): Compute threshold for
+	psh_hint_table_find_strong_points.
+	(psh_hint_table_find_strong_point): Add parameter to pass threshold.
+
 2004-02-20  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshrec.c (ps_mask_table_set_bits): Don't call
