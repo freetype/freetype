@@ -1639,6 +1639,14 @@
       last  = outline->contours[n];
       limit = outline->points + last;
 
+     /* skip empty points, we don't stroke these
+      */
+      if ( last <= first )
+      {
+        first = last + 1;
+        continue;
+      }
+
       v_start = outline->points[first];
       v_last  = outline->points[last];
 
