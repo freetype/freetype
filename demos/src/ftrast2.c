@@ -191,6 +191,7 @@
 /* used to access the current raster object, with a '.' instead of a '->' */
 #define  ras       (*raster)
 
+#define  UNUSED_RASTER  (void)raster;
 
 /* For anti-aliasing modes, we use a 2 or 4 lines intermediate bitmap which */
 /* is filtered repeatedly to render each pixmap row. The following macro    */
@@ -1023,54 +1024,55 @@
     b = base[1].y = ( base[0].y + b )/2;
     base[2].y = (a+b)/2;
   }
+#endif
 
+#ifdef FT_RASTER_CUBIC_BEZIERS
 /****************************************************************************/
 /*                                                                          */
-/* <Function>   Push_Conic                                                  */
+/* <Function>   Split_Cubic                                                 */
 /*                                                                          */
-/* <Description> Clears the Bezier stack and pushes a new arc on top of it  */
-/*                                                                          */
-/* <Input>                                                                  */
-/*    p2  :: pointer to second (control) point                              */
-/*    p3  :: pointer to third  (end) point                                  */
+/* <Description>                                                            */
+/*     Subdivides a third-order Bezier arc into two joint sub-arcs in the   */
+/*     Bezier stack.                                                        */
 /*                                                                          */
 /* <Note>                                                                   */
-/*     The first point is taken as "raster->last", so it doesn't appear     */
-/*     in the signature..                                                   */
+/*     This routine is the "beef" of the component. It is one of _the_      */
+/*     inner loops that should be optimized like hell to get the best       */
+/*     performance..                                                        */
 /*                                                                          */
 /****************************************************************************/
 
   static 
-  void  Push_Conic( RAS_ARGS FT_Vector*  p2,
-                             FT_Vector*  p3 )
+  void  Split_Cubic( TPoint*  base )
   {
-#undef  STORE
-#define STORE( _arc, point )                      \
-            {                                     \
-              TPos  x = SCALED(point->x);         \
-              TPos  y = SCALED(point->y);         \
-              if (ras.flipped)                    \
-              {                                   \
-                _arc.x = y;                       \
-                _arc.y = x;                       \
-              }                                   \
-              else                                \
-              {                                   \
-                _arc.x = x;                       \
-                _arc.y = y;                       \
-              }                                   \
-            }
+    TPos   a, b, c, d;
 
-    TPoint*  arc;
-    ras.arc = arc = ras.arcs;
-
-    arc[2] = ras.last;
-    STORE( arc[1], p2 );
-    STORE( arc[0], p3 );
-#undef  STORE
+    base[6].x = base[3].x;
+    c = base[1].x;
+    d = base[2].x;
+    base[1].x = a = ( base[0].x + c )/2;
+    base[5].x = b = ( base[3].x + d )/2;
+    c = (c+d)/2;
+    base[2].x = a = (a+c)/2;
+    base[4].x = b = (b+c)/2;
+    base[3].x = (a+b)/2;
+    
+    base[6].y = base[3].y;
+    c = base[1].y;
+    d = base[2].y;
+    base[1].y = a = ( base[0].y + c )/2;
+    base[5].y = b = ( base[3].y + d )/2;
+    c = (c+d)/2;
+    base[2].y = a = (a+c)/2;
+    base[4].y = b = (b+c)/2;
+    base[3].y = (a+b)/2;
   }
+#endif
 
 
+
+
+#ifdef FT_RASTER_CONIC_BEZIERS
 /****************************************************************************/
 /*                                                                          */
 /* <Function>   Conic_Up                                                    */
@@ -1253,100 +1255,6 @@
 #ifdef FT_RASTER_CUBIC_BEZIERS
 /****************************************************************************/
 /*                                                                          */
-/* <Function>   Split_Cubic                                                 */
-/*                                                                          */
-/* <Description>                                                            */
-/*     Subdivides a third-order Bezier arc into two joint sub-arcs in the   */
-/*     Bezier stack.                                                        */
-/*                                                                          */
-/* <Note>                                                                   */
-/*     This routine is the "beef" of the component. It is one of _the_      */
-/*     inner loops that should be optimized like hell to get the best       */
-/*     performance..                                                        */
-/*                                                                          */
-/****************************************************************************/
-
-  static 
-  void  Split_Cubic( TPoint*  base )
-  {
-    TPos   a, b, c, d;
-
-    base[6].x = base[3].x;
-    c = base[1].x;
-    d = base[2].x;
-    base[1].x = a = ( base[0].x + c )/2;
-    base[5].x = b = ( base[3].x + d )/2;
-    c = (c+d)/2;
-    base[2].x = a = (a+c)/2;
-    base[4].x = b = (b+c)/2;
-    base[3].x = (a+b)/2;
-    
-    base[6].y = base[3].y;
-    c = base[1].y;
-    d = base[2].y;
-    base[1].y = a = ( base[0].y + c )/2;
-    base[5].y = b = ( base[3].y + d )/2;
-    c = (c+d)/2;
-    base[2].y = a = (a+c)/2;
-    base[4].y = b = (b+c)/2;
-    base[3].y = (a+b)/2;
-  }
-
-/****************************************************************************/
-/*                                                                          */
-/* <Function>   Push_Cubic                                                  */
-/*                                                                          */
-/* <Description>                                                            */
-/*     Clears the bezier stack and pushes a new third-order bezier arc      */
-/*     on top of it                                                         */
-/*                                                                          */
-/* <Input>                                                                  */
-/*     p2  :: pointer to second point (control)                             */
-/*     p3  :: pointer to third point  (control)                             */
-/*     p4  :: pointer to last point  (end)                                  */
-/*                                                                          */
-/* <Note>                                                                   */
-/*     The first point is taken as "raster->last", so it doesn't appear     */
-/*     in the signature..                                                   */
-/*                                                                          */
-/****************************************************************************/
-
-  static 
-  void  Push_Cubic( RAS_ARGS FT_Vector*  p2,
-                             FT_Vector*  p3,
-                             FT_Vector*  p4 )
-  {
-#undef  STORE
-#define STORE( _arc, point )                      \
-            {                                     \
-              TPos  x = SCALED(point->x);         \
-              TPos  y = SCALED(point->y);         \
-              if (ras.flipped)                    \
-              {                                   \
-                _arc.x = y;                       \
-                _arc.y = x;                       \
-              }                                   \
-              else                                \
-              {                                   \
-                _arc.x = x;                       \
-                _arc.y = y;                       \
-              }                                   \
-            }
-
-    TPoint*  arc;
-    ras.arc = arc = ras.arcs;
-
-    arc[3] = ras.last;
-    STORE( arc[2], p2 );
-    STORE( arc[1], p3 );
-    STORE( arc[0], p4 );
-
-#undef STORE
-  }
-
-
-/****************************************************************************/
-/*                                                                          */
 /* <Function>   Cubic_Up                                                    */
 /*                                                                          */
 /* <Description>                                                            */
@@ -1519,6 +1427,285 @@
 
 #endif /* FT_RASTER_CUBIC_BEZIERS */
 
+
+
+
+
+ /* A function type describing the functions used to split bezier arcs */
+  typedef  void  (*TSplitter)( TPoint*  base );
+
+#ifdef FT_DYNAMIC_BEZIER_STEPS
+  static
+  TPos  Dynamic_Bezier_Threshold( RAS_ARGS int degree, TPoint*  arc )
+  {
+    TPos    min_x,  max_x,  min_y, max_y, A, B;
+    TPos    wide_x, wide_y, threshold;
+    TPoint* cur   = arc;
+    TPoint* limit = cur + degree;
+
+    /* first of all, set the threshold to the maximum x or y extent */
+    min_x = max_x = arc[0].x;
+    min_y = max_y = arc[0].y;
+    cur++;
+    for ( ; cur < limit; cur++ )
+    {
+      TPos  x = cur->x;
+      TPos  y = cur->y;
+
+      if ( x < min_x ) min_x = x;
+      if ( x > max_x ) max_x = x;
+
+      if ( y < min_y ) min_y = y;
+      if ( y > max_y ) max_y = y;
+    }
+    wide_x = (max_x - min_x) << 4;
+    wide_y = (max_y - min_y) << 4;
+
+    threshold = wide_x;
+    if (threshold < wide_y) threshold = wide_y;
+
+    /* now compute the second and third order error values */
+    
+    wide_x = arc[0].x + arc[1].x - arc[2].x*2;
+    wide_y = arc[0].y + arc[1].y - arc[2].y*2;
+
+    if (wide_x < 0) wide_x = -wide_x;
+    if (wide_y < 0) wide_y = -wide_y;
+
+    A = wide_x; if ( A < wide_y ) A = wide_y;
+
+    if (degree >= 3)
+    {
+      wide_x = arc[3].x - arc[0].x + 3*(arc[2].x - arc[3].x);
+      wide_y = arc[3].y - arc[0].y + 3*(arc[2].y - arc[3].y);
+
+      if (wide_x < 0) wide_x = -wide_x;
+      if (wide_y < 0) wide_y = -wide_y;
+
+      B = wide_x; if ( B < wide_y ) B = wide_y;
+    }
+    else
+      B = 0;
+
+    while ( A > 0 || B > 0 )
+    {
+      threshold >>= 1;
+      A         >>= 2;
+      B         >>= 3;
+    }
+
+    if (threshold < PRECISION_STEP)
+      threshold = PRECISION_STEP;
+
+    return threshold;
+  }
+#endif
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    Bezier_Up                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Computes the scan-line intersections of an ascending second-order  */
+  /*    Bezier arc and stores them in the render pool.  The arc is taken   */
+  /*    from the top of the stack.                                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    miny :: The minimum vertical grid coordinate.                      */
+  /*    maxy :: The maximum vertical grid coordinate.                      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    SUCCESS or FAILURE.                                                */
+  /*                                                                       */
+  static
+  TBool    Bezier_Up( RAS_ARGS int        degree,
+                               TSplitter  splitter,
+                               TPos       miny,
+                               TPos       maxy )
+  {
+    TPos  y1, y2, e, e2, e0, threshold;
+    int   f1;
+
+    TPoint*  arc;
+    TPoint*  start_arc;
+
+    PPos top;
+
+
+    arc = ras.arc;
+    y1  = arc[degree].y;
+    y2  = arc[0].y;
+    top = ras.cursor;
+
+    if ( y2 < miny || y1 > maxy )
+      goto Fin;
+
+    e2 = FLOOR( y2 );  /* integer end y */
+
+    if ( e2 > maxy )
+      e2 = maxy;
+
+    e0 = miny;
+
+    if ( y1 < miny )
+    {
+      e = e0;        /* integer start y == current scanline */
+    }
+    else
+    {
+      e  = CEILING( y1 );   /* integer start y == current scanline */
+      f1 = FRAC( y1 );      /* fractional shift of start y         */
+      e0 = e;               /* first integer scanline to be pushed */
+
+      if ( f1 == 0 )        /* do we start on an integer scanline? */
+      {
+        if ( ras.joint )
+        {
+          top--;
+          ras.joint = FALSE;
+        }
+
+        *top++ = arc[degree].x;  /* write directly start position */
+
+        DEBUG_PSET;
+
+        e += ras.precision; /* go to next scanline */
+      }
+    }
+
+    /* record start position if necessary */
+    if ( ras.fresh )
+    {
+      ras.cur_prof->start = TRUNC( e0 );
+      ras.fresh = FALSE;
+    }
+
+    /* exit if the current scanline is already above the max scanline */
+    if ( e2 < e )
+      goto Fin;
+
+    /* check for overflow */
+    if ( ( top + TRUNC( e2 - e ) + 1 ) >= ras.pool_limit )
+    {
+      ras.cursor = top;
+      ras.error  = ErrRaster_Overflow;
+      return FAILURE;
+    }
+
+    
+#ifdef FT_DYNAMIC_BEZIER_STEPS
+    /* compute dynamic bezier step threshold */
+    threshold = Dynamic_Bezier_Threshold( RAS_VAR_ degree, arc );
+#else
+    threshold = ras.precision_step;
+#endif
+
+    start_arc = arc;
+
+    /* loop while there is still an arc on the bezier stack */
+    /* and the current scan line is below y max == e2       */
+    while ( arc >= start_arc && e <= e2 )
+    {
+      ras.joint = FALSE;
+
+      y2 = arc[0].y;  /* final y of the top-most arc */
+
+      if ( y2 > e )   /* the arc intercepts the current scanline */
+      {
+        y1 = arc[degree].y;  /* start y of top-most arc */
+
+#ifdef OLD
+        if ( y2-y1 >= ras.precision_step )
+#else        
+        if ( y2 >= e + ras.precision || y2 - y1 >= threshold )
+#endif        
+        {
+          /* if the arc's height is too great, split it */
+          splitter( arc );
+          arc += degree;
+        }
+        else
+        {
+          /* otherwise, approximate it as a segment and compute */
+          /* its intersection with the current scanline         */
+          *top++ = arc[degree].x +
+                   FMulDiv( arc[0].x-arc[degree].x,
+                            e  - y1,
+                            y2 - y1 );
+
+          DEBUG_PSET;
+
+          arc -= degree;         /* pop the arc         */
+          e   += ras.precision;  /* go to next scanline */
+        }
+      }
+      else
+      {
+        if ( y2 == e )        /* if the arc falls on the scanline */
+        {                     /* record its _joint_ intersection  */
+          ras.joint  = TRUE;
+          *top++     = arc[0].x;
+
+          DEBUG_PSET;
+
+          e += ras.precision; /* go to next scanline */
+        }
+        arc -= degree;        /* pop the arc */
+      }
+    }
+
+  Fin:
+    ras.cursor = top;
+    ras.arc   -= degree;
+    return SUCCESS;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    Bezier_Down                                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Computes the scan-line intersections of a descending second-order  */
+  /*    Bezier arc and stores them in the render pool.  The arc is taken   */
+  /*    from the top of the stack.                                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    miny :: The minimum vertical grid coordinate.                      */
+  /*    maxy :: The maximum vertical grid coordinate.                      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    SUCCESS or FAILURE.                                                */
+  /*                                                                       */
+  static
+  TBool    Bezier_Down( RAS_ARGS int        degree,
+                                 TSplitter  splitter,
+                                 TPos       miny,
+                                 TPos       maxy )
+  {
+    TPoint*  arc = ras.arc;
+    TBool    result, fresh;
+
+    arc[0].y = -arc[0].y;
+    arc[1].y = -arc[1].y;
+    arc[2].y = -arc[2].y;
+    if (degree > 2)
+      arc[3].y = -arc[3].y;
+
+    fresh = ras.fresh;
+
+    result = Bezier_Up( RAS_VARS degree, splitter, -maxy, -miny );
+
+    if ( fresh && !ras.fresh )
+      ras.cur_prof->start = -ras.cur_prof->start;
+
+    arc[0].y = -arc[0].y;
+    return result;
+  }
+
+
 /****************************************************************************/
 /*                                                                          */
 /* <Function>   Check_Contour                                               */
@@ -1586,13 +1773,13 @@
     /* set the "current last point" */
     if (ras.flipped)
     {
-      ras.last.x = SCALED( to->y );
-      ras.last.y = SCALED( to->x );
+      ras.last.x = to->y;
+      ras.last.y = to->x;
     }
     else
     {
-      ras.last.x = SCALED( to->x );
-      ras.last.y = SCALED( to->y );
+      ras.last.x = to->x;
+      ras.last.y = to->y;
     }
 
     ras.state      = Unknown;
@@ -1626,83 +1813,50 @@
   int  Line_To( FT_Vector*  to,
                 FT_Raster   raster )
   {
-    TPos  x;
-    TPos  y;
+    TPos    x;
+    TPos    y;
+    TDirection  new_state;
     
     if ( ras.flipped )
     {
-      x = SCALED(to->y);
-      y = SCALED(to->x);
+      x = to->y;
+      y = to->x;
     }
     else
     {
-      x = SCALED(to->x);
-      y = SCALED(to->y);
+      x = to->x;
+      y = to->y;
     }
     
     /* First, detect a change of direction */
-
-    switch ( ras.state )
+    if ( y != ras.last.y )
     {
-    case Unknown:
-      if ( y > ras.last.y )
+      new_state = ( y > ras.last.y ? Ascending : Descending );
+      if (new_state != ras.state)
       {
-        if ( New_Profile( RAS_VARS  Ascending ) ) return FAILURE;
+        if (ras.state != Unknown && End_Profile( RAS_VAR ))
+          goto Fail;
+          
+        if ( New_Profile( RAS_VARS  new_state) )
+          goto Fail;
       }
-      else
-      {
-        if ( y < ras.last.y )
-          if ( New_Profile( RAS_VARS  Descending ) ) return FAILURE;
-      }
-      break;
-
-    case Ascending:
-      if ( y < ras.last.y )
-      {
-        if ( End_Profile( RAS_VAR ) ||
-             New_Profile( RAS_VARS  Descending ) ) return FAILURE;
-      }
-      break;
-
-    case Descending:
-      if ( y > ras.last.y )
-      {
-        if ( End_Profile( RAS_VAR ) ||
-             New_Profile( RAS_VARS  Ascending ) ) return FAILURE;
-      }
-      break;
-
-    default:
-      ;
     }
 
     /* Then compute the lines */
-
-    switch ( ras.state )
-    {
-    case Ascending:
-      if ( Line_Up ( RAS_VARS  ras.last.x, ras.last.y,
-                               x, y, ras.minY, ras.maxY ) )
-        return FAILURE;
-      break;
-
-    case Descending:
-      if ( Line_Down( RAS_VARS ras.last.x, ras.last.y,
-                               x, y, ras.minY, ras.maxY ) )
-        return FAILURE;
-      break;
-
-    default:
-      ;
-    }
-
+    if ( (ras.state == Ascending ? Line_Up : Line_Down)
+            ( RAS_VARS  ras.last.x, ras.last.y, x, y, ras.minY, ras.maxY ) )
+      goto Fail;
+      
     ras.last.x = x;
     ras.last.y = y;
 
     return SUCCESS;
+  Fail:
+    return FAILURE;
   }
 
 #ifdef FT_RASTER_CONIC_BEZIERS
+
 /****************************************************************************/
 /*                                                                          */
 /* <Function>   Conic_To                                                    */
@@ -1724,6 +1878,37 @@
 /*     decomposer..                                                         */
 /*                                                                          */
 /****************************************************************************/
+
+    static 
+    void  Push_Conic( RAS_ARGS FT_Vector*  p2,
+                               FT_Vector*  p3 )
+    {
+      #undef  STORE
+      #define STORE( _arc, point )                  \
+              {                                     \
+                TPos  x = point->x;                 \
+                TPos  y = point->y;                 \
+                if (ras.flipped)                    \
+                {                                   \
+                  _arc.x = y;                       \
+                  _arc.y = x;                       \
+                }                                   \
+                else                                \
+                {                                   \
+                  _arc.x = x;                       \
+                  _arc.y = y;                       \
+                }                                   \
+              }
+  
+      TPoint*  arc;
+      ras.arc = arc = ras.arcs;
+  
+      arc[2] = ras.last;
+      STORE( arc[1], p2 );
+      STORE( arc[0], p3 );
+      #undef  STORE
+    }
+
 
   static 
   int  Conic_To( FT_Vector*  control,
@@ -1786,28 +1971,17 @@
 
         if ( ras.state != state_bez )
         {
-          if ( ras.state != Unknown )
-            if ( End_Profile( RAS_VAR ) ) return FAILURE;
+          if ( ras.state != Unknown && End_Profile( RAS_VAR ) )
+            goto Fail;
 
-          if ( New_Profile( RAS_VARS state_bez ) ) return FAILURE;
+          if ( New_Profile( RAS_VARS state_bez ) )
+            goto Fail;
         }
 
         /* compute intersections */
-        switch ( ras.state )
-        {
-        case Ascending:
-          if ( Conic_Up ( RAS_VARS ras.minY, ras.maxY ) )
-            return FAILURE;
-          break;
-
-        case Descending:
-          if ( Conic_Down( RAS_VARS ras.minY, ras.maxY ) )
-            return FAILURE;
-          break;
-
-        default:
-          ;
-        }
+        if ( (ras.state == Ascending ? Bezier_Up : Bezier_Down)
+                ( RAS_VARS 2, Split_Conic, ras.minY, ras.maxY ) )
+          goto Fail;
       }
     } while ( ras.arc >= ras.arcs );
 
@@ -1815,6 +1989,8 @@
     ras.last.y = y3;
 
     return 0;
+  Fail:
+    return FAILURE;
   }
 
 #else
@@ -1855,6 +2031,40 @@
 /*     decomposer..                                                         */
 /*                                                                          */
 /****************************************************************************/
+
+      static 
+      void  Push_Cubic( RAS_ARGS FT_Vector*  p2,
+                                 FT_Vector*  p3,
+                                 FT_Vector*  p4 )
+      {
+        #undef  STORE
+        #define STORE( _arc, point )                  \
+                {                                     \
+                  TPos  x = point->x;                 \
+                  TPos  y = point->y;                 \
+                  if (ras.flipped)                    \
+                  {                                   \
+                    _arc.x = y;                       \
+                    _arc.y = x;                       \
+                  }                                   \
+                  else                                \
+                  {                                   \
+                    _arc.x = x;                       \
+                    _arc.y = y;                       \
+                  }                                   \
+                }
+    
+        TPoint*  arc;
+        ras.arc = arc = ras.arcs;
+    
+        arc[3] = ras.last;
+        STORE( arc[2], p2 );
+        STORE( arc[1], p3 );
+        STORE( arc[0], p4 );
+    
+        #undef STORE
+      }
+
 
   static 
   int  Cubic_To( FT_Vector*  control1,
@@ -1918,29 +2128,17 @@
 
         if ( ras.state != state_bez )
         {
-          if ( ras.state != Unknown )
-            if ( End_Profile( RAS_VAR ) ) return FAILURE;
+          if ( ras.state != Unknown && End_Profile( RAS_VAR ) )
+            goto Fail;
 
-          if ( New_Profile( RAS_VARS state_bez ) ) return FAILURE;
+          if ( New_Profile( RAS_VARS state_bez ) )
+            goto Fail;
         }
 
-        /* compute */
-
-        switch ( ras.state )
-        {
-        case Ascending:
-          if ( Cubic_Up ( RAS_VARS ras.minY, ras.maxY ) )
-            return FAILURE;
-          break;
-
-        case Descending:
-          if ( Cubic_Down( RAS_VARS ras.minY, ras.maxY ) )
-            return FAILURE;
-          break;
-
-        default:
-          ;
-        }
+        /* compute intersections */
+        if ( (ras.state == Ascending ? Bezier_Up : Bezier_Down)
+                ( RAS_VARS  3, Split_Cubic, ras.minY, ras.maxY ) )
+          goto Fail;
       }
     } while ( ras.arc >= ras.arcs );
 
@@ -1948,6 +2146,8 @@
     ras.last.y = y4;
 
     return 0;
+  Fail:
+    return FAILURE;
   }
 
 #else
@@ -1991,7 +2191,9 @@
       (FT_Outline_MoveTo_Func)Move_To,
       (FT_Outline_LineTo_Func)Line_To,
       (FT_Outline_ConicTo_Func)Conic_To,
-      (FT_Outline_CubicTo_Func)Cubic_To
+      (FT_Outline_CubicTo_Func)Cubic_To,
+      0,
+      0
     };
 
     /* Set up state in the raster object */
@@ -2006,6 +2208,9 @@
     ras.cur_prof         = (PProfile)ras.cursor;
     ras.cur_prof->offset = ras.cursor;
     ras.num_profs        = 0;
+
+    interface.shift = ras.scale_shift;
+    interface.delta = ras.precision_half;
 
     /* Now decompose curve */
     if ( FT_Outline_Decompose( outline, &interface, &ras ) ) return FAILURE;
@@ -2202,6 +2407,8 @@
   {
     long  pitch = ras.target.pitch;
     
+    (void)max;
+    
     ras.trace_incr = -pitch;
     ras.trace_bit  = -*min*pitch;
     if (pitch > 0)
@@ -2236,6 +2443,7 @@
     TByte*  target;
 
     /* Drop-out control */
+    (void)y;
 
     e1 = TRUNC( CEILING( x1 ) );
     if ( x2-x1-ras.precision <= ras.precision_jitter )
@@ -2296,7 +2504,7 @@
                                      int    x )
   {
     int c1 = x >> 3;
-
+    (void)y;
     return ( x >= 0 && x < ras.bit_width && 
              ras.bit_buffer[ras.trace_bit + c1] & (0x80 >> (x & 7)) );
   }
@@ -2322,7 +2530,8 @@
                                       int  color )
   {
     (void)color;  /* unused here */
-
+    (void)y;
+    
     if ( x >= 0 && x < ras.bit_width )
     {
       int c1 = x >> 3;
@@ -2378,6 +2587,9 @@
   static void  Horizontal_Sweep_Init( RAS_ARGS int*  min, int*  max )
   {
     /* nothing, really */
+    UNUSED_RASTER
+    (void)min;
+    (void)max;
   }
 
 
@@ -2405,6 +2617,7 @@
     PByte bits;
     TByte  f1;
 
+    (void)y;
 
     /* During the horizontal sweep, we only take care of drop-outs */
     if ( x2-x1 < ras.precision )
@@ -2509,6 +2722,7 @@
   static void Horizontal_Sweep_Step( RAS_ARG )
   {
     /* Nothing, really */
+    UNUSED_RASTER;
   }
 
 
@@ -2650,6 +2864,8 @@
     int f1    = x  & 3;
     int mask  = (0x80 >> f1) >> ((y & 1)*4);
 
+    (void)y;
+    
     return ( x >= 0                    && 
              x < ras.bit_width         && 
              ras.bit_buffer[c1] & mask );
@@ -2662,6 +2878,7 @@
                                             int  color )
   {
     (void)color;  /* unused here */
+    (void)y;
 
     if ( x >= 0 && x < ras.bit_width )
     {
@@ -2769,6 +2986,7 @@
                                                      TPos   x2 )
   {
     /* nothing, really */
+    UNUSED_RASTER
     (void)y;
     (void)x1;
     (void)x2;
@@ -2780,6 +2998,7 @@
                                                int    x )
   {
     /* don't do anything here */
+    UNUSED_RASTER
     (void)x;
     (void)y;
     
@@ -3046,6 +3265,7 @@
                                                       TPos   x2 )
   {
     /* nothing, really */
+    UNUSED_RASTER
     (void)y;
     (void)x1;
     (void)x2;
@@ -3057,6 +3277,7 @@
                                                 int    x )
   {
     /* don't do anything here */
+    UNUSED_RASTER
     (void)x;
     (void)y;
     
@@ -3417,12 +3638,16 @@ Scan_DropOuts :
 
     while ( ras.band_top >= 0 )
     {
+#if 1
+      ras.maxY = (long)ras.band_stack[ras.band_top].y_max * ras.precision;
+      ras.minY = (long)ras.band_stack[ras.band_top].y_min * ras.precision;
+#else    
       ras.maxY = ((long)ras.band_stack[ras.band_top].y_max <<
                     (ras.scale_shift+6))-1;
 
       ras.minY = (long)ras.band_stack[ras.band_top].y_min <<
                     (ras.scale_shift+6);
-
+#endif
       ras.cursor = ras.pool;
       ras.error  = 0;
 
@@ -3516,7 +3741,7 @@ Scan_DropOuts :
     /* Vertical Sweep */
     ras.band_top            = 0;
     ras.band_stack[0].y_min = 0;
-    ras.band_stack[0].y_max = ras.target.rows;
+    ras.band_stack[0].y_max = ras.target.rows - 1;
 
     ras.Proc_Sweep_Init = Vertical_Sweep_Init;
     ras.Proc_Sweep_Span = Vertical_Sweep_Span;
