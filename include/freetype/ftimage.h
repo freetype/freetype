@@ -287,9 +287,9 @@ FT_BEGIN_HEADER
   /*                  elements, giving the outline's point coordinates.    */
   /*                                                                       */
   /*    tags       :: A pointer to an array of `n_points' chars, giving    */
-  /*                  giving each outline point's type.  If bit 0 is       */
-  /*                  unset, the point is 'off' the curve, i.e. a Bezier   */
-  /*                  control point, while it is `on' when set.            */
+  /*                  each outline point's type.  If bit 0 is unset, the   */
+  /*                  point is `off' the curve, i.e. a Bezier control      */
+  /*                  point, while it is `on' when set.                    */
   /*                                                                       */
   /*                  Bit 1 is meaningful for `off' points only.  If set,  */
   /*                  it indicates a third-order Bezier arc control point; */
