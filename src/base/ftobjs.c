@@ -689,9 +689,9 @@
 
     /* discard all sizes for this face */
     FT_List_Finalize( &face->sizes_list,
-                     (FT_List_Destructor)destroy_size,
-                     memory,
-                     driver );
+                      (FT_List_Destructor)destroy_size,
+                      memory,
+                      driver );
     face->size = 0;
 
     /* now discard client data */
@@ -775,7 +775,7 @@
 
 
     /* caller should have already checked that `face' is valid */
-    FT_ASSERT ( face );
+    FT_ASSERT( face );
 
     first = face->charmaps;
 
