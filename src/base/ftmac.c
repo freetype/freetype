@@ -468,9 +468,13 @@ Error:
       args.driver = FT_Get_Module( library, driver_name );
     }
     error = FT_Open_Face( library, &args, face_index, aface );
-    if ( !error )
+    if ( error == FT_Err_Ok )
       (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
-    FREE( stream );  /* FT_Open_Face() made a copy */
+    else
+    {
+      FT_Done_Stream( stream );
+      FREE( stream );
+    }
     return error;
   }
 
