@@ -93,12 +93,12 @@ Legal Terms
   authorize others  to exercise  some or all  of the  rights granted
   herein, subject to the following conditions:
 
-    o Redistribution  of source code  must retain this  license file
-      (`FTL.TXT') unaltered;  any  additions,  deletions or  changes
-      to   the  original   files  must   be  clearly   indicated  in
-      accompanying  documentation.   The  copyright notices  of  the
-      unaltered, original  files must be preserved in  all copies of
-      source files.
+    o Redistribution of  source code  must retain this  license file
+      (`FTL.TXT') unaltered; any  additions, deletions or changes to
+      the original  files must be clearly  indicated in accompanying
+      documentation.   The  copyright   notices  of  the  unaltered,
+      original  files must  be  preserved in  all  copies of  source
+      files.
 
     o Redistribution in binary form must provide a  disclaimer  that
       states  that  the software is based in part of the work of the

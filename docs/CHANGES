@@ -1,16 +1,15 @@
 LATEST CHANGES BETWEEN 2.0.6 and 2.0.5
 
-  - the caching sub-system has been completely re-designed and its API
-    has evolved (the old one is still supported for bacwards compatibility
-    though..)
+  - The caching sub-system has been completely re-designed, and its API has
+    evolved (the old one is still supported for backwards).
 
-  - a new charmap cache is provided too
+  - A new charmap cache is provided too.
 
   - A new Postscript hinter module has been added to support native hints in
     the following formats: Postscript Type 1, Postscript CID and CFF/CEF.
 
-    (For now, only the Type 1 driver uses it; the "cid" and "cff" drivers
-     will be updated shortly.)
+    For now, only the Type 1 driver uses it; the "cid" and "cff" drivers
+    will be updated shortly.
 
   - "glnames.py" still contained a bug that made FreeType return invalid
     names for certain glyphs.
