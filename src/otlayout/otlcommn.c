@@ -38,12 +38,12 @@
     if ( table + 4 > valid->limit )
       OTL_INVALID_TOO_SHORT;
 
-    format = OTL_NEXT_UShort( p );
+    format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
     case 1:
       {
-        OTL_UInt  count = OTL_NEXT_UShort( p );
+        OTL_UInt  count = OTL_NEXT_USHORT( p );
 
 
         if ( p + count * 2 >= valid->limit )
@@ -55,7 +55,7 @@
 
     case 2:
       {
-        OTL_UInt  n, num_ranges = OTL_NEXT_UShort( p );
+        OTL_UInt  n, num_ranges = OTL_NEXT_USHORT( p );
         OTL_UInt  start, end, start_cover, total = 0, last = 0;
 
 
@@ -64,9 +64,9 @@
 
         for ( n = 0; n < num_ranges; n++ )
         {
-          start       = OTL_NEXT_UShort( p );
-          end         = OTL_NEXT_UShort( p );
-          start_cover = OTL_NEXT_UShort( p );
+          start       = OTL_NEXT_USHORT( p );
+          end         = OTL_NEXT_USHORT( p );
+          start_cover = OTL_NEXT_USHORT( p );
 
           if ( start > end || start_cover != total )
             OTL_INVALID_DATA;
@@ -90,8 +90,8 @@
   otl_coverage_get_count( OTL_Bytes  table )
   {
     OTL_Bytes  p      = table;
-    OTL_UInt   format = OTL_NEXT_UShort( p );
-    OTL_UInt   count  = OTL_NEXT_UShort( p );
+    OTL_UInt   format = OTL_NEXT_USHORT( p );
+    OTL_UInt   count  = OTL_NEXT_USHORT( p );
     OTL_UInt   result = 0;
 
 
@@ -107,8 +107,8 @@
 
         for ( ; count > 0; count-- )
         {
-          start = OTL_NEXT_UShort( p );
-          end   = OTL_NEXT_UShort( p );
+          start = OTL_NEXT_USHORT( p );
+          end   = OTL_NEXT_USHORT( p );
           p    += 2;                    /* skip start_index */
 
           result += end - start + 1;
@@ -129,8 +129,8 @@
                           OTL_UInt   glyph_index )
   {
     OTL_Bytes  p      = table;
-    OTL_UInt   format = OTL_NEXT_UShort( p );
-    OTL_UInt   count  = OTL_NEXT_UShort( p );
+    OTL_UInt   format = OTL_NEXT_USHORT( p );
+    OTL_UInt   count  = OTL_NEXT_USHORT( p );
 
 
     switch ( format )
@@ -145,7 +145,7 @@
         {
           mid    = ( min + max ) >> 1;
           p      = table + 2 * mid;
-          gindex = OTL_PEEK_UShort( p );
+          gindex = OTL_PEEK_USHORT( p );
 
           if ( glyph_index == gindex )
             return (OTL_Int)mid;
@@ -169,15 +169,15 @@
         {
           mid    = ( min + max ) >> 1;
           p      = table + 6 * mid;
-          start  = OTL_NEXT_UShort( p );
-          end    = OTL_NEXT_UShort( p );
+          start  = OTL_NEXT_USHORT( p );
+          end    = OTL_NEXT_USHORT( p );
 
           if ( glyph_index < start )
             max = mid;
           else if ( glyph_index > end )
             min = mid + 1;
           else
-            return (OTL_Int)( glyph_index + OTL_NEXT_UShort( p ) - start );
+            return (OTL_Int)( glyph_index + OTL_NEXT_USHORT( p ) - start );
         }
       }
       break;
@@ -209,18 +209,18 @@
     if ( p + 4 > valid->limit )
       OTL_INVALID_TOO_SHORT;
 
-    format = OTL_NEXT_UShort( p );
+    format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
     case 1:
       {
-        OTL_UInt  count, start = OTL_NEXT_UShort( p );
+        OTL_UInt  count, start = OTL_NEXT_USHORT( p );
 
 
         if ( p + 2 > valid->limit )
           OTL_INVALID_TOO_SHORT;
 
-        count = OTL_NEXT_UShort( p );
+        count = OTL_NEXT_USHORT( p );
 
         if ( p + count * 2 > valid->limit )
           OTL_INVALID_TOO_SHORT;
@@ -231,7 +231,7 @@
 
     case 2:
       {
-        OTL_UInt  n, num_ranges = OTL_NEXT_UShort( p );
+        OTL_UInt  n, num_ranges = OTL_NEXT_USHORT( p );
         OTL_UInt  start, end, value, last = 0;
 
 
@@ -240,9 +240,9 @@
 
         for ( n = 0; n < num_ranges; n++ )
         {
-          start = OTL_NEXT_UShort( p );
-          end   = OTL_NEXT_UShort( p );
-          value = OTL_NEXT_UShort( p );  /* ignored */
+          start = OTL_NEXT_USHORT( p );
+          end   = OTL_NEXT_USHORT( p );
+          value = OTL_NEXT_USHORT( p );  /* ignored */
 
           if ( start > end || ( n > 0 && start <= last ) )
             OTL_INVALID_DATA;
@@ -263,29 +263,29 @@
                                   OTL_UInt   glyph_index )
   {
     OTL_Bytes  p      = table;
-    OTL_UInt   format = OTL_NEXT_UShort( p );
+    OTL_UInt   format = OTL_NEXT_USHORT( p );
 
 
     switch ( format )
     {
     case 1:
       {
-        OTL_UInt  start = OTL_NEXT_UShort( p );
-        OTL_UInt  count = OTL_NEXT_UShort( p );
+        OTL_UInt  start = OTL_NEXT_USHORT( p );
+        OTL_UInt  count = OTL_NEXT_USHORT( p );
         OTL_UInt  idx   = (OTL_UInt)( glyph_index - start );
 
 
         if ( idx < count )
         {
           p += 2 * idx;
-          return OTL_PEEK_UShort( p );
+          return OTL_PEEK_USHORT( p );
         }
       }
       break;
 
     case 2:
       {
-        OTL_UInt  count = OTL_NEXT_UShort( p );
+        OTL_UInt  count = OTL_NEXT_USHORT( p );
         OTL_UInt  min = 0, max = count, mid, gindex;
 
 
@@ -294,15 +294,15 @@
         {
           mid   = ( min + max ) >> 1;
           p     = table + 6 * mid;
-          start = OTL_NEXT_UShort( p );
-          end   = OTL_NEXT_UShort( p );
+          start = OTL_NEXT_USHORT( p );
+          end   = OTL_NEXT_USHORT( p );
 
           if ( glyph_index < start )
             max = mid;
           else if ( glyph_index > end )
             min = mid + 1;
           else
-            return OTL_PEEK_UShort( p );
+            return OTL_PEEK_USHORT( p );
         }
       }
       break;
@@ -334,9 +334,9 @@
     if ( p + 8 > valid->limit )
       OTL_INVALID_TOO_SHORT;
 
-    start  = OTL_NEXT_UShort( p );
-    end    = OTL_NEXT_UShort( p );
-    format = OTL_NEXT_UShort( p );
+    start  = OTL_NEXT_USHORT( p );
+    end    = OTL_NEXT_USHORT( p );
+    format = OTL_NEXT_USHORT( p );
 
     if ( format < 1 || format > 3 || end < start )
       OTL_INVALID_DATA;
@@ -354,7 +354,7 @@
     OTL_Bytes  p = table;
 
 
-    return OTL_PEEK_UShort( p );
+    return OTL_PEEK_USHORT( p );
   }
 
 
@@ -364,7 +364,7 @@
     OTL_Bytes  p = table + 2;
 
 
-    return OTL_PEEK_UShort( p );
+    return OTL_PEEK_USHORT( p );
   }
 
 
@@ -377,9 +377,9 @@
     OTL_UInt   start, end, format, idx, value;
 
 
-    start  = OTL_NEXT_UShort( p );
-    end    = OTL_NEXT_UShort( p );
-    format = OTL_NEXT_UShort( p );
+    start  = OTL_NEXT_USHORT( p );
+    end    = OTL_NEXT_USHORT( p );
+    format = OTL_NEXT_USHORT( p );
 
     if ( size >= start && size <= end )
     {
@@ -391,7 +391,7 @@
       case 1:
         idx    = (OTL_UInt)( ( size - start ) * 2 );
         p     += idx / 16;
-        value  = OTL_PEEK_UShort( p );
+        value  = OTL_PEEK_USHORT( p );
         shift  = idx & 15;
         result = (OTL_Short)( value << shift ) >> ( 14 - shift );
 
@@ -400,7 +400,7 @@
       case 2:
         idx    = (OTL_UInt)( ( size - start ) * 4 );
         p     += idx / 16;
-        value  = OTL_PEEK_UShort( p );
+        value  = OTL_PEEK_USHORT( p );
         shift  = idx & 15;
         result = (OTL_Short)( value << shift ) >> ( 12 - shift );
 
@@ -409,7 +409,7 @@
       case 3:
         idx    = (OTL_UInt)( ( size - start ) * 8 );
         p     += idx / 16;
-        value  = OTL_PEEK_UShort( p );
+        value  = OTL_PEEK_USHORT( p );
         shift  = idx & 15;
         result = (OTL_Short)( value << shift ) >> ( 8 - shift );
 
@@ -444,14 +444,14 @@
       OTL_INVALID_TOO_SHORT;
 
     p += 4;
-    num_tables = OTL_NEXT_UShort( p );
+    num_tables = OTL_NEXT_USHORT( p );
 
     if ( p + num_tables * 2 > valid->limit )
       OTL_INVALID_TOO_SHORT;
 
     for ( ; num_tables > 0; num_tables-- )
     {
-      offset = OTL_NEXT_UShort( p );
+      offset = OTL_NEXT_USHORT( p );
 
       if ( table + offset >= valid->limit )
         OTL_INVALID_OFFSET;
@@ -467,7 +467,7 @@
     OTL_Bytes  p = table + 4;
 
 
-    return OTL_PEEK_UShort( p );
+    return OTL_PEEK_USHORT( p );
   }
 
 
@@ -480,11 +480,11 @@
 
 
     p     = table + 4;
-    count = OTL_NEXT_UShort( p );
+    count = OTL_NEXT_USHORT( p );
     if ( idx < count )
     {
       p     += idx * 2;
-      result = table + OTL_PEEK_UShort( p );
+      result = table + OTL_PEEK_USHORT( p );
     }
 
     return result;
@@ -510,14 +510,14 @@
     if ( p + 2 > valid->limit )
       OTL_INVALID_TOO_SHORT;
 
-    num_lookups = OTL_NEXT_UShort( p );
+    num_lookups = OTL_NEXT_USHORT( p );
 
     if ( p + num_lookups * 2 > valid->limit )
       OTL_INVALID_TOO_SHORT;
 
     for ( ; num_lookups > 0; num_lookups-- )
     {
-      offset = OTL_NEXT_UShort( p );
+      offset = OTL_NEXT_USHORT( p );
 
       otl_lookup_validate( table + offset, valid );
     }
@@ -530,7 +530,7 @@
     OTL_Bytes  p = table;
 
 
-    return OTL_PEEK_UShort( p );
+    return OTL_PEEK_USHORT( p );
   }
 
 
@@ -543,11 +543,11 @@
 
 
     p     = table;
-    count = OTL_NEXT_UShort( p );
+    count = OTL_NEXT_USHORT( p );
     if ( idx < count )
     {
       p     += idx * 2;
-      result = table + OTL_PEEK_UShort( p );
+      result = table + OTL_PEEK_USHORT( p );
     }
 
     return result;
@@ -576,7 +576,7 @@
                            OTL_Pointer      func_data )
   {
     OTL_Bytes  p     = table;
-    OTL_UInt   count = OTL_NEXT_UShort( p );
+    OTL_UInt   count = OTL_NEXT_USHORT( p );
 
 
     for ( ; count > 0; count-- )
@@ -603,8 +603,8 @@
     if ( p + 4 > valid->limit )
       OTL_INVALID_TOO_SHORT;
 
-    feat_params = OTL_NEXT_UShort( p );  /* ignored */
-    num_lookups = OTL_NEXT_UShort( p );
+    feat_params = OTL_NEXT_USHORT( p );  /* ignored */
+    num_lookups = OTL_NEXT_USHORT( p );
 
     if ( p + num_lookups * 2 > valid->limit )
       OTL_INVALID_TOO_SHORT;
@@ -619,7 +619,7 @@
     OTL_Bytes  p = table + 4;
 
 
-    return OTL_PEEK_UShort( p );
+    return OTL_PEEK_USHORT( p );
   }
 
 
@@ -634,13 +634,13 @@
 
 
     p            = table + 4;
-    num_features = OTL_NEXT_UShort( p );
+    num_features = OTL_NEXT_USHORT( p );
 
     p += start * 2;
 
     for ( ; count > 0 && start < num_features; count--, start++ )
     {
-      lookups[0] = OTL_NEXT_UShort(p);
+      lookups[0] = OTL_NEXT_USHORT(p);
       lookups++;
       result++;
     }
@@ -668,7 +668,7 @@
     if ( table + 2 > valid->limit )
       OTL_INVALID_TOO_SHORT;
 
-    num_features = OTL_NEXT_UShort( p );
+    num_features = OTL_NEXT_USHORT( p );
 
     if ( p + num_features * 2 > valid->limit )
       OTL_INVALID_TOO_SHORT;
@@ -676,7 +676,7 @@
     for ( ; num_features > 0; num_features-- )
     {
       p     += 4;                       /* skip tag */
-      offset = OTL_NEXT_UShort( p );
+      offset = OTL_NEXT_USHORT( p );
 
       otl_feature_table_validate( table + offset, valid );
     }
@@ -689,7 +689,7 @@
     OTL_Bytes  p = table;
 
 
-    return OTL_PEEK_UShort( p );
+    return OTL_PEEK_USHORT( p );
   }
 
 
@@ -702,12 +702,12 @@
 
 
     p     = table;
-    count = OTL_NEXT_UShort( p );
+    count = OTL_NEXT_USHORT( p );
 
     if ( idx < count )
     {
       p     += idx * 2;
-      result = table + OTL_PEEK_UShort( p );
+      result = table + OTL_PEEK_USHORT( p );
     }
 
     return result;
@@ -724,10 +724,10 @@
 
 
     p = table;
-    count = OTL_NEXT_UShort( p );
+    count = OTL_NEXT_USHORT( p );
 
     for ( ; count > 0; count-- )
-      func( table + OTL_NEXT_UShort( p ), func_data );
+      func( table + OTL_NEXT_USHORT( p ), func_data );
   }
 
 
@@ -753,9 +753,9 @@
     if ( table + 6 >= valid->limit )
       OTL_INVALID_TOO_SHORT;
 
-    lookup_order = OTL_NEXT_UShort( p );
-    req_feature  = OTL_NEXT_UShort( p );
-    num_features = OTL_NEXT_UShort( p );
+    lookup_order = OTL_NEXT_USHORT( p );
+    req_feature  = OTL_NEXT_USHORT( p );
+    num_features = OTL_NEXT_USHORT( p );
 
     /* XXX: check req_feature if not 0xFFFFU */
 
@@ -769,10 +769,19 @@
   OTL_LOCALDEF( OTL_UInt )
   otl_lang_get_count( OTL_Bytes  table )
   {
-    OTL_Bytes  p  = table + 4;
+    OTL_Bytes  p = table + 4;
+
+    return OTL_PEEK_USHORT( p );
+  }
 
 
-    return OTL_PEEK_UShort( p );
+  OTL_LOCALDEF( OTL_UInt )
+  otl_lang_get_req_feature( OTL_Bytes  table )
+  {
+    OTL_Bytes  p = table + 2;
+
+
+    return OTL_PEEK_USHORT( p );
   }
 
 
@@ -783,7 +792,7 @@
                          OTL_UInt  *features )
   {
     OTL_Bytes  p            = table + 4;
-    OTL_UInt   num_features = OTL_NEXT_UShort( p );
+    OTL_UInt   num_features = OTL_NEXT_USHORT( p );
     OTL_UInt   result       = 0;
 
 
@@ -791,7 +800,7 @@
 
     for ( ; count > 0 && start < num_features; start++, count-- )
     {
-      features[0] = OTL_NEXT_UShort( p );
+      features[0] = OTL_NEXT_USHORT( p );
       features++;
       result++;
     }
@@ -800,14 +809,6 @@
   }
 
 
-  OTL_LOCALDEF( OTL_UInt )
-  otl_lang_get_req_feature( OTL_Bytes  table )
-  {
-    OTL_Bytes  p = table + 2;
-
-
-    return OTL_PEEK_UShort( p );
-  }
 
 
   /*************************************************************************/
@@ -820,8 +821,8 @@
 
 
   OTL_LOCALDEF( void )
-  otl_script_table_validate( OTL_Bytes      table,
-                             OTL_Validator  valid )
+  otl_script_validate( OTL_Bytes      table,
+                       OTL_Validator  valid )
   {
     OTL_UInt   default_lang;
     OTL_Bytes  p = table;
@@ -830,8 +831,8 @@
     if ( table + 4 > valid->limit )
       OTL_INVALID_TOO_SHORT;
 
-    default_lang = OTL_NEXT_UShort( p );
-    num_langs    = OTL_NEXT_UShort( p );
+    default_lang = OTL_NEXT_USHORT( p );
+    num_langs    = OTL_NEXT_USHORT( p );
 
     if ( default_lang != 0 )
     {
@@ -848,7 +849,7 @@
 
 
       p     += 4;  /* skip tag */
-      offset = OTL_NEXT_UShort( p );
+      offset = OTL_NEXT_USHORT( p );
 
       otl_lang_validate( table + offset, valid );
     }
@@ -866,7 +867,7 @@
     if ( list + 2 > valid->limit )
       OTL_INVALID_TOO_SHORT;
 
-    num_scripts = OTL_NEXT_UShort( p );
+    num_scripts = OTL_NEXT_USHORT( p );
 
     if ( p + num_scripts * 6 > valid->limit )
       OTL_INVALID_TOO_SHORT;
@@ -877,11 +878,63 @@
 
 
       p     += 4;                       /* skip tag */
-      offset = OTL_NEXT_UShort( p );
+      offset = OTL_NEXT_USHORT( p );
 
       otl_script_table_validate( list + offset, valid );
     }
   }
 
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                         LOOKUP LISTS                          *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  static void
+  otl_lookup_table_validate( OTL_Bytes          table,
+                             OTL_UInt           type_count,
+                             OTL_ValidateFunc*  type_funcs,
+                             OTL_Validator      valid )
+  {
+    OTL_Bytes         p = table;
+    OTL_UInt          lookup_type, lookup_flag, count;
+    OTL_ValidateFunc  validate;
+
+    OTL_CHECK( 6 );
+    lookup_type = OTL_NEXT_USHORT( p );
+    lookup_flag = OTL_NEXT_USHORT( p );
+    count       = OTL_NEXT_USHORT( p );
+
+    if ( lookup_type == 0 || lookup_type >= type_count )
+      OTL_INVALID_DATA;
+
+    validate = type_funcs[ lookup_type - 1 ];
+
+    OTL_CHECK( 2*count );
+    for ( ; count > 0; count-- )
+      validate( table + OTL_NEXT_USHORT( p ), valid );
+  }
+
+
+  OTL_LOCALDEF( void )
+  otl_lookup_list_validate( OTL_Bytes          table,
+                            OTL_UInt           type_count,
+                            OTL_ValidateFunc*  type_funcs,
+                            OTL_Validator      valid )
+  {
+    OTL_Bytes  p = table;
+    OTL_UInt   count;
+
+    OTL_CHECK( 2 );
+    count = OTL_NEXT_USHORT( p );
+
+    OTL_CHECK( 2*count );
+    for ( ; count > 0; count-- )
+      otl_lookup_table_validate( table + OTL_NEXT_USHORT( p ),
+                                 type_count, type_funcs, valid );
+  }
 
 /* END */
