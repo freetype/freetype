@@ -437,17 +437,17 @@
 
   static FT_Module_Interface
   cff_get_interface( CFF_Driver   driver,
-                     const char*  interface )
+                     const char*  module_interface )
   {
     FT_Module  sfnt;
 
 
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
 
-    if ( ft_strcmp( (const char*)interface, "glyph_name" ) == 0 )
+    if ( ft_strcmp( (const char*)module_interface, "glyph_name" ) == 0 )
       return (FT_Module_Interface)cff_get_glyph_name;
 
-    if ( ft_strcmp( (const char*)interface, "name_index" ) == 0 )
+    if ( ft_strcmp( (const char*)module_interface, "name_index" ) == 0 )
       return (FT_Module_Interface)cff_get_name_index;
 
 #endif
@@ -455,7 +455,7 @@
     /* we simply pass our request to the `sfnt' module */
     sfnt = FT_Get_Module( driver->root.root.library, "sfnt" );
 
-    return sfnt ? sfnt->clazz->get_interface( sfnt, interface ) : 0;
+    return sfnt ? sfnt->clazz->get_interface( sfnt, module_interface ) : 0;
   }
 
 

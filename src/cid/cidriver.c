@@ -51,12 +51,12 @@
 
   static FT_Module_Interface
   CID_Get_Interface( FT_Driver         driver,
-                     const FT_String*  interface )
+                     const FT_String*  cid_interface )
   {
     FT_UNUSED( driver );
-    FT_UNUSED( interface );
+    FT_UNUSED( cid_interface );
 
-    if ( ft_strcmp( (const char*)interface, "postscript_name" ) == 0 )
+    if ( ft_strcmp( (const char*)cid_interface, "postscript_name" ) == 0 )
       return (FT_Module_Interface)cid_get_postscript_name;
 
     return 0;

@@ -1,3 +1,20 @@
+2002-04-30  Werner Lemberg  <wl@gnu.org>
+
+	`interface' is reserved on the Mac.
+
+	* include/freetype/ftoutln.h, include/freetype/internal/sfnt.h,
+	src/base/ftoutln.c: s/interface/func_interface/.
+	* src/base/ftbbox.c (FT_Outline_Get_BBox):
+	s/interface/bbox_interface/.
+	* src/cff/cffdrivr.c: s/interface/module_interface/.
+	* src/cff/cffload.c, src/cff/cffload.h:
+	s/interface/psnames_interface/.
+	* src/cid/cidriver.c: s/interface/cid_interface/.
+	* src/sfnt/sfdriver.c: s/interface/module_interface/.
+	* src/smooth/ftgrays.c: s/interface/func_interface/.
+	* src/truetype/ttdriver.c: s/interface/tt_interface/.
+	* src/type1/t1driver.c: s/interface/t1_interface/.
+
 2002-04-29  Jouk Jansen  <joukj@hrem.stm.tudelft.nl>
 
 	* descrip.mms (all): Add pfr driver.

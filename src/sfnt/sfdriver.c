@@ -195,19 +195,19 @@
 
   FT_CALLBACK_DEF( FT_Module_Interface )
   SFNT_Get_Interface( FT_Module    module,
-                      const char*  interface )
+                      const char*  module_interface )
   {
     FT_UNUSED( module );
 
-    if ( ft_strcmp( interface, "get_sfnt" ) == 0 )
+    if ( ft_strcmp( module_interface, "get_sfnt" ) == 0 )
       return (FT_Module_Interface)get_sfnt_table;
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-    if ( ft_strcmp( interface, "glyph_name" ) == 0 )
+    if ( ft_strcmp( module_interface, "glyph_name" ) == 0 )
       return (FT_Module_Interface)get_sfnt_glyph_name;
 #endif
 
-    if ( ft_strcmp( interface, "postscript_name" ) == 0 )
+    if ( ft_strcmp( module_interface, "postscript_name" ) == 0 )
       return (FT_Module_Interface)get_sfnt_postscript_name;
 
     return 0;

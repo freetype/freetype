@@ -455,7 +455,7 @@
 
   static FT_Module_Interface
   tt_get_interface( TT_Driver    driver,
-                    const char*  interface )
+                    const char*  tt_interface )
   {
     FT_Module     sfntd = FT_Get_Module( driver->root.root.library,
                                          "sfnt" );
@@ -467,7 +467,7 @@
     {
       sfnt = (SFNT_Service)( sfntd->clazz->module_interface );
       if ( sfnt )
-        return sfnt->get_interface( FT_MODULE( driver ), interface );
+        return sfnt->get_interface( FT_MODULE( driver ), tt_interface );
     }
 
     return 0;
