@@ -244,8 +244,6 @@
   }
 
 
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_face_init( FT_Stream      stream,
                  CFF_Face       face,
@@ -300,7 +298,7 @@
       sfnt_format = 1;
 
       /* now, the font can be either an OpenType/CFF font, or an SVG CEF */
-      /* font; in the later case it doesn't have a `head' table          */
+      /* font; in the latter case it doesn't have a `head' table         */
       error = face->goto_table( face, TTAG_head, stream, 0 );
       if ( !error )
       {
@@ -365,10 +363,12 @@
       if ( pure_cff )
       {
         CFF_FontRecDict  dict = &cff->top_font.font_dict;
+        char*            style_name;
 
 
         /* we need the `PSNames' module for pure-CFF and CEF formats */
-        if ( !psnames )
+        /* which aren't CID-keyed                                    */
+        if ( dict->cid_registry == 0xFFFFU && !psnames )
         {
           FT_ERROR(( "cff_face_init:" ));
           FT_ERROR(( " cannot open CFF & CEF fonts\n" ));
@@ -381,7 +381,7 @@
         root->num_faces = cff->num_faces;
 
         /* compute number of glyphs */
-        if ( dict->cid_registry )
+        if ( dict->cid_registry != 0xFFFFU )
           root->num_glyphs = dict->cid_count;
         else
           root->num_glyphs = cff->charstrings_index.count;
@@ -391,7 +391,6 @@
         root->bbox.yMin =   dict->font_bbox.yMin             >> 16;
         root->bbox.xMax = ( dict->font_bbox.xMax + 0xFFFFU ) >> 16;
         root->bbox.yMax = ( dict->font_bbox.yMax + 0xFFFFU ) >> 16;
-
 
         root->ascender  = (FT_Short)( root->bbox.yMax );
         root->descender = (FT_Short)( root->bbox.yMin );
@@ -409,13 +408,59 @@
           (FT_Short)( dict->underline_thickness >> 16 );
 
         /* retrieve font family & style name */
-        root->family_name  = cff_index_get_name( &cff->name_index, face_index );
-        if ( dict->cid_registry )
-          root->style_name = cff_strcpy( memory, "Regular" );  /* XXXX */
+        root->family_name = cff_index_get_name( &cff->name_index,
+                                                face_index );
+
+        /* assume "Regular" style if we don't know better */
+        style_name = (char *)"Regular";
+
+        if ( root->family_name )
+        {
+          char*  full   = cff_index_get_sid_string( &cff->string_index,
+                                                    dict->full_name,
+                                                    psnames );
+          char*  family = root->family_name;
+
+
+          if ( full )
+          {
+            while ( *full )
+            {
+              if ( *full == *family )
+              {
+                family++;
+                full++;
+              }
+              else
+              {
+                if ( *full == ' ' || *full == '-' )
+                  full++;
+                else if ( *family == ' ' || *family == '-' )
+                  family++;
+                else
+                {
+                  if ( !*family )
+                    style_name = full;
+                  break;
+                }
+              }
+            }
+          }
+        }
         else
-          root->style_name = cff_index_get_sid_string( &cff->string_index,
-                                                       dict->weight,
-                                                       psnames );
+        {
+          char  *cid_font_name =
+                   cff_index_get_sid_string( &cff->string_index,
+                                             dict->cid_font_name,
+                                             psnames );
+
+
+          /* do we have a `/FontName' for a CID-keyed font? */
+          if ( cid_font_name )
+            root->family_name = cid_font_name;
+        }
+
+        root->style_name = cff_strcpy( memory, style_name );
 
         /*******************************************************************/
         /*                                                                 */
@@ -453,9 +498,17 @@
         if ( dict->italic_angle )
           flags |= FT_STYLE_FLAG_ITALIC;
 
-        /* XXX: may not be correct */
-        if ( cff->top_font.private_dict.force_bold )
-          flags |= FT_STYLE_FLAG_BOLD;
+        {
+          char  *weight = cff_index_get_sid_string( &cff->string_index,
+                                                    dict->weight,
+                                                    psnames );
+
+
+          if ( weight )
+            if ( !ft_strcmp( weight, "Bold"  ) ||
+                 !ft_strcmp( weight, "Black" ) )
+              flags |= FT_STYLE_FLAG_BOLD;
+        }
 
         root->style_flags = flags;
       }

@@ -2362,7 +2362,7 @@
       cff_builder_done( &decoder.builder );
     }
 
- #ifdef FT_CONFIG_OPTION_INCREMENTAL
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
 
     /* Incremental fonts can optionally override the metrics. */
     if ( !error                                                              &&

@@ -1,3 +1,26 @@
+2003-12-10  Werner Lemberg  <wl@gnu.org>
+
+	Use implementation specific SID value 0xFFFF to indicate that
+	a dictionary element is missing.
+
+	* src/cff/cffload.c (cff_subfont_load): Initialize all fields
+	which hold SIDs to 0xFFFF.
+	(cff_index_get_sid_string): Handle SID value 0xFFFF.
+	Handle case where `psnames' is zero.
+	(cff_font_load): Updated.
+	Don't load encoding for CID-keyed CFFs.
+
+	* src/cff/cffobjs.c (cff_face_init): Updated.
+	Don't check for PSNames module if font is CID-keyed.
+	Compute style name properly (using the same algorithm as in the
+	CID driver).
+	Fix computation of style flags.
+
+	* src/cff/cfftoken.h: Comment out handling of base_font_name.
+	Rename `postscript' field to `embedded_postscript'
+	* src/cff/cfftypes.h (CFF_FontRecDictRec): Remove `base_font_name'
+	and `postscript'.
+
 2003-12-10  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/pcf/pcfdrivr.c (pcf_get_charset_id): New function (a clone
