@@ -1,3 +1,12 @@
+2002-05-01  David Turner  <david@freetype.org>
+
+        * src/sfnt/sfobjs.c (tt_face_get_name): fixing a bug that
+          caused FreeType to crash when certain broken fonts (e.g.
+          "hya6gb.ttf") were opened.
+
+        * src/sfnt/ttload.c (TT_Load_Names): applied a small work-around to
+          manage fonts containing a broken name table (e.g. "hya6gb.ttf")
+
 2002-04-30  Wenlin Institute (Tom Bishop) <wenlin@wenlin.com>
 
 	* src/base/ftmac.c (p2c_str): Removed.
