@@ -329,7 +329,7 @@
 
   static const FT_ServiceDescRec  cff_services[] =
   {
-    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_CFF },
+    { FT_SERVICE_ID_XF86_NAME,  FT_XF86_FORMAT_CFF },
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
     { FT_SERVICE_ID_GLYPH_DICT, &cff_service_glyph_dict },
 #endif

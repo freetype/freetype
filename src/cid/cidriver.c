@@ -69,7 +69,7 @@
   static const FT_ServiceDescRec  cid_services[] =
   {
     { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &cid_service_ps_name },
-    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_CID },
+    { FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_CID },
     { NULL, NULL }
   };
 

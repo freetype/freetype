@@ -125,9 +125,9 @@
   FT_CALLBACK_TABLE_DEF
   const FT_Service_PfrMetricsRec  pfr_metrics_service_rec =
   {
-    (FT_PFR_GetMetricsFunc)  pfr_get_metrics,
-    (FT_PFR_GetKerningFunc)  pfr_face_get_kerning,
-    (FT_PFR_GetAdvanceFunc)  pfr_get_advance
+    (FT_PFR_GetMetricsFunc)pfr_get_metrics,
+    (FT_PFR_GetKerningFunc)pfr_face_get_kerning,
+    (FT_PFR_GetAdvanceFunc)pfr_get_advance
   };
 
  /*
@@ -137,8 +137,8 @@
 
   static const FT_ServiceDescRec  pfr_services[] =
   {
-    { FT_SERVICE_ID_PFR_METRICS,  & pfr_metrics_service_rec },
-    { FT_SERVICE_ID_XF86_NAME,    FT_XF86_FORMAT_PFR },
+    { FT_SERVICE_ID_PFR_METRICS, & pfr_metrics_service_rec },
+    { FT_SERVICE_ID_XF86_NAME,   FT_XF86_FORMAT_PFR },
     { NULL, NULL }
   };
 
