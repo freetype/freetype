@@ -76,13 +76,12 @@ else
   T1_INCLUDES := $(SRC_)shared $(SRC_)type1
 
   COMPILE    = $(CC) $(CFLAGS) $(INCLUDES:%=$I%)
-  LINK      := $(CC)
   FTLIB     := $(TOP_)$(LIB_DIR)$(SEP)$(LIBRARY).$A
 
   # the default commands used to link the executables. These can
   # be re-defined for platform-specific stuff..
   #
-  LINK = $(CC) $T$@ $< $(FTLIB) $(EFENCE)
+  LINK = $(CC) $T$@ $< $(FTLIB) $(EFENCE) $(LDFLAGS)
   COMMON_LINK = $(LINK) $(COMMON_OBJ)
   GRAPH_LINK  = $(COMMON_LINK) $(GRAPH_LIB)
 
@@ -145,7 +144,7 @@ else
   ifdef DOSLIKE
     E := .exe
   else
-     E :=
+    E :=
   endif
 
   ###################################################################
