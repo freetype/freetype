@@ -281,7 +281,7 @@
   /*    A macro used in #include statements to name the file containing    */
   /*    the module management API of FreeType 2.                           */
   /*                                                                       */
-#define FT_MODULE_H  <freetype/ftmodule.h>
+#define FT_MODULE_H  <freetype/ftmodapi.h>
 
 
   /*************************************************************************/
