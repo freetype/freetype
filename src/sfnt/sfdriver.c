@@ -124,39 +124,52 @@
     /* either in Macintosh or Windows platform encodings                  */
     found_win   = -1;
     found_apple = -1;
-    
+
     for ( n = 0; n < face->num_names; n++ )
     {
       TT_NameEntryRec*  name = face->name_table.names + n;
 
 
-      if ( name->nameID == 6 && name->string != NULL )
+      if ( name->nameID == 6 && name->stringLength > 0 )
       {
         if ( name->platformID == 3     &&
              name->encodingID == 1     &&
              name->languageID == 0x409 )
           found_win = n;
-          
+
         if ( name->platformID == 1 &&
              name->encodingID == 0 &&
              name->languageID == 0 )
           found_apple = n;
       }
     }
-    
+
     if ( found_win != -1 )
     {
       FT_Memory         memory = face->root.memory;
       TT_NameEntryRec*  name   = face->name_table.names + found_win;
       FT_UInt           len    = name->stringLength / 2;
       FT_Error          error;
-      
 
-      if ( !FT_ALLOC( result, len + 1 ) )
+
+      if ( !FT_ALLOC( result, name->stringLength+1 ) )
       {
+        FT_Stream   stream = face->name_table.stream;
         FT_String*  r = (FT_String*)result;
         FT_Byte*    p = (FT_Byte*)name->string;
-        
+
+
+        if ( FT_STREAM_SEEK( name->stringOffset ) ||
+             FT_FRAME_ENTER( name->stringLength ) )
+        {
+          FT_FREE( result );
+          name->stringLength = 0;
+          name->stringOffset = 0;
+          FT_FREE( name->string );
+          goto Exit;
+        }
+
+        p = (FT_Byte*) stream->cursor;
 
         for ( ; len > 0; len--, p += 2 )
         {
@@ -164,6 +177,8 @@
             *r++ = p[1];
         }
         *r = '\0';
+
+        FT_FRAME_EXIT();
       }
       goto Exit;
     }
@@ -178,10 +193,20 @@
 
       if ( !FT_ALLOC( result, len + 1 ) )
       {
-        FT_MEM_COPY( (char*)result, name->string, len );
+        FT_Stream  stream = face->name_table.stream;
+
+
+        if ( FT_STREAM_SEEK( name->stringOffset ) ||
+             FT_STREAM_READ( result, len )        )
+        {
+          name->stringOffset = 0;
+          name->stringLength = 0;
+          FT_FREE( name->string );
+          FT_FREE( result );
+          goto Exit;
+        }
         ((char*)result)[len] = '\0';
       }
-      goto Exit;
     }
 
   Exit:

@@ -1,3 +1,20 @@
+2002-05-28  David Turner  <david@freetype.org>
+
+    * include/freetype/internal/tttypes.h, src/sfnt/ttload.c,
+      src/sfnt/sfobjs.c, src/sfnt/sfdriver.c, src/base/ftnames.c:
+        fixing the SFNT name table loader to support various buggy fonts.
+        it now ignores empty name entries, entries with invalid pointer
+        offsets and certain fonts containing tables with broken "storageOffset"
+        fields.
+
+        name strings are now loaded on demand, which reduces the memory
+        requirements for a given FT_Face tremendously (for example, the
+        name table of Arial.ttf is about 10Kb and contains 70 names !!)
+
+        finally, this is a _quick_ fix. The whole name table loader and
+        interface will be rewritten in a much more cleanly way shortly,
+        once CSEH have been introduced in the sources.
+
 2002-05-24  Tim Mooney  <enchanter@users.sourceforge.net>
 
 	* builds/unix/ft-munmap.m4: New file, extracted FT_MUNMAP_DECL and
