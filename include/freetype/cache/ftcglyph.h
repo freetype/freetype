@@ -207,5 +207,4 @@
 
 #endif /* FTCIMAGE_H */
 
-
 /* END */
