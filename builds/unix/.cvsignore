@@ -5,3 +5,4 @@ config.cache
 config.log
 libtool
 ftconfig.h
+freetype-config
