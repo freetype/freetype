@@ -1504,7 +1504,7 @@
               FT_Byte*   keyword_flags )
   {
     T1_Parser  parser = &loader->parser;
-    FT_Byte   *limit, *start_binary;
+    FT_Byte   *limit, *start_binary = NULL;
     FT_Bool    have_integer = 0;
 
 

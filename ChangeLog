@@ -1,3 +1,16 @@
+2004-02-14  Masatake YAMATO  <jet@gyve.org>
+
+	* builds/unix/ftsystem.c: Include errno.h.
+	(ft_close_stream): Renamed to...
+	(ft_close_stream_by_munmap): This.
+	(ft_close_stream_by_free): New function.
+	(FT_Stream_Open): Use fallback method if mmap fails.
+	Use proper function for closing the stream.
+
+2004-02-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_dict): Initialize `start_binary'.
+
 2004-02-13  Robert Etheridge  <roberte@stcc.cc.tx.us>
 
 	* src/type42/t42objs.c (T42_Face_Init), src/type1/t1objs.c
