@@ -1,5 +1,17 @@
 2001-12-05  David Turner  <david@freetype.org>
 
+    * src/base/ftglyph.c (FT_Glyph_To_Bitmap): re-ordered code for debugging
+    purposes..
+
+
+    * src/smooth/ftsmooth.c (ft_smooth_render): fixed a nasty hidden bug where
+    outline shifting wasn't correctly undone after bitmap rasterization. this
+    created problems with certain glyphs (like '"' of certain fonts..) and
+    the cache system..
+
+
+2001-12-05  David Turner  <david@freetype.org>
+
     First of all, a big thanks to Werner and Antoine for their latest work !!
     
     * src/pshinter/pshalgo2.c (psh2_hint_table_init),

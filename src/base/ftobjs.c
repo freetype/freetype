@@ -2243,7 +2243,7 @@
         error = FT_Err_Unimplemented_Feature;
         while ( renderer )
         {
-          error = renderer->render( renderer, slot, render_mode, 0 );
+          error = renderer->render( renderer, slot, render_mode, NULL );
           if ( !error ||
                FT_ERROR_BASE( error ) != FT_Err_Cannot_Render_Glyph )
             break;

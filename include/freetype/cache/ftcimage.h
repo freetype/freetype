@@ -56,18 +56,21 @@ FT_BEGIN_HEADER
 #define FTC_IMAGE_FORMAT( x )  ( (x) & 7 )
 
 
-#define ftc_image_format_bitmap      0
-#define ftc_image_format_outline     1
+#define ftc_image_format_bitmap      0x0000
+#define ftc_image_format_outline     0x0001
 
-#define ftc_image_flag_monochrome   16
-#define ftc_image_flag_unhinted     32
-#define ftc_image_flag_autohinted   64
-#define ftc_image_flag_unscaled    128
-#define ftc_image_flag_no_sbits    256
+#define ftc_image_format_mask        0x000F
+
+#define ftc_image_flag_monochrome    0x0010
+#define ftc_image_flag_unhinted      0x0020
+#define ftc_image_flag_autohinted    0x0040
+#define ftc_image_flag_unscaled      0x0080
+#define ftc_image_flag_no_sbits      0x0100
 
   /* monochrome bitmap */
 #define ftc_image_mono             ftc_image_format_bitmap | \
                                    ftc_image_flag_monochrome
+
   /* anti-aliased bitmap */
 #define ftc_image_grays            ftc_image_format_bitmap
 

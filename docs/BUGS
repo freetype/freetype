@@ -46,6 +46,7 @@ Identifier                Date         Closed by                Closure date
 BAD-TTNAMEID.H          12-09-2001     Antoine                   N/A
 BAD-T1-CHARMAP          15-06-2001     David                     2.0.5
 BAD-UNIXXX-NAMES        30-07-2001     David                     2.0.5
+GLYPH_TO_BITMAP-BUG     05-12-2001     David                     05-12-2001
 
 --------------------END-OF-CLOSED-BUGS-TABLE----------------------------------
 
@@ -181,6 +182,20 @@ ADVANCED-COMPOSITES
     to implement since I don't have any font that implement these
     "features", and also because I believe that we're running out of bits
     for "load_flag", some other way to set preferences is probably needed.
+
+
+GLYPH_TO_BITMAP-BUG
+
+  Calling FT_Glyph_To_Bitmap sometimes modifies the original glyph outline,
+  creating weird alignment artefacts.
+  
+  this subtle bug was really in the file src/smooth/ftsmooth.c. Basically,
+  the outline was shifted before rendering it into a new bitmap buffer.
+  However, it wasn't properly un-shifted after that operation..
+
+  this was only noticeable with certain glyphs or certain fonts and crept
+  for a long time here..
+  
 
 
 === end of file ===
