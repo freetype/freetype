@@ -1,3 +1,13 @@
+2002-05-21  David Turner  <david@freetype.org>
+
+        * include/freetype/internal/ftbdf.h, src/base/ftbdf.c,
+          src/base/descrip.mms, src/base/Jamfile, src/base/rules.mk:
+          
+          Adding a new API called "FT_Get_BDF_Charset_ID" to retrieve
+          BDF-specific strings from a face. This is much cleaner
+          than accessing the internal types "BDF_Public_Face" defined in
+          FT_INTERNAL_BDF_TYPES_H
+
 2002-05-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/bdf/README: Mention Microsoft's SBIT tool.
