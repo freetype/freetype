@@ -115,39 +115,38 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Load_Directory                                                  */
+  /* <FuncType>                                                            */
+  /*    TT_Load_Format_Tag                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the table directory into a face object.                      */
+  /*    Loads the first 4 bytes of the font file. This is a tag that       */
+  /*    identifies the font format used.                                   */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face      :: A handle to the target face object.                   */
   /*    stream    :: The input stream.                                     */
   /*    faceIndex :: The index of the TrueType font, if we're opening a    */
   /*                 collection.                                           */
+  /* <Output>                                                              */
+  /*    format_tag :: a 4-byte font format tag                             */
   /*                                                                       */
   /* <Return>                                                              */
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The stream cursor must be at the font file's origin                */
+  /*    This function recognizes fonts embedded in a "TrueType collection" */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Directory( TT_Face    face,
-                               FT_Stream  stream,
-                               TT_Long    faceIndex )
+  TT_Error  TT_Load_Format_Tag( TT_Face    face,
+                                FT_Stream  stream,
+                                TT_Long    faceIndex,
+                                TT_ULong  *format_tag )
   {
     TT_Error   error;
     FT_Memory  memory = stream->memory;
 
-    TT_TableDir  tableDir;
-    TT_ULong     tag;
-
-    TT_Table *entry, *limit;
-
-
-    FT_TRACE2(( "TT_Load_Directory( %08lx, %ld )\n",
+    FT_TRACE2(( "TT_Load_Format_Tag(%08lx, %ld )\n",
               (TT_Long)face, faceIndex ));
 
     face->ttc_header.Tag      = 0;
@@ -157,26 +156,24 @@
     face->num_tables = 0;
 
     /* first of all, read the  first 4 bytes. If it's `ttcf', then the */
-    /* file is a TrueType collection, otherwise it must be a normal    */
-    /* TrueType file..                                                 */
+    /* file is a TrueType collection, otherwise it can be any other    */
+    /* kind of font..                                                  */
+    if ( READ_ULong(*format_tag) ) goto Exit;
 
-    if ( READ_ULong(tag) )
-      goto Exit;
-
-    if ( tag == TTAG_ttcf )
+    if ( *format_tag == TTAG_ttcf )
     {
       TT_Int  n;
     
-      FT_TRACE4(( "TT_Load_Directory: file is a collection\n" ));
+      FT_TRACE4(( "TT_Load_Format_Tag: file is a collection\n" ));
       
       /* it's a TrueType collection, i.e. a file containing several */
       /* font files. Read the font directory now                    */
       /*                                                            */
       if ( ACCESS_Frame( 8 ) ) goto Exit;   
-        
+
       face->ttc_header.version  = GET_Long();
       face->ttc_header.DirCount = GET_Long();
-           
+
       FORGET_Frame();
 
       /* now read the offsets of each font in the file         */
@@ -205,28 +202,54 @@
         
       /* seek to the appropriate TrueType file, then read tag */
       if ( FILE_Skip( face->ttc_header.TableDirectory[faceIndex] - 12 ) ||
-           READ_Long( tableDir.version )                                )
+           READ_Long( *format_tag )                                     )
         goto Exit;
     }
-    else
-    {
-      FT_TRACE6(( "TT_Load_Directory: file is not a collection\n" ));
-      /* the file isn't a collection, exit if we're asking for a */
-      /* collected font..                                        */
-      if (faceIndex > 0)
-      {
-        error = TT_Err_File_Is_Not_Collection;
-        goto Exit;
-      }
-      
-      tableDir.version = tag;
-    }
 
-    if ( ACCESS_Frame( 8L ) )
-      goto Exit;
+  Exit:
+    return error;
+  }
 
-    tableDir.numTables = GET_UShort();
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    TT_Load_Directory                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Loads the table directory into a face object.                      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face      :: A handle to the target face object.                   */
+  /*    stream    :: The input stream.                                     */
+  /*    faceIndex :: The index of the TrueType font, if we're opening a    */
+  /*                 collection.                                           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    TrueType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The stream cursor must be at the font file's origin                */
+  /*                                                                       */
+  LOCAL_FUNC
+  TT_Error  TT_Load_Directory( TT_Face    face,
+                               FT_Stream  stream,
+                               TT_Long    faceIndex )
+  {
+    TT_Error   error;
+    FT_Memory  memory = stream->memory;
+
+    TT_TableDir  tableDir;
+
+    TT_Table *entry, *limit;
+
+
+    FT_TRACE2(( "TT_Load_Directory( %08lx, %ld )\n",
+              (TT_Long)face, faceIndex ));
+
+    if ( ACCESS_Frame( 8L ) ) goto Exit;
+
+    tableDir.numTables     = GET_UShort();
     tableDir.searchRange   = GET_UShort();
     tableDir.entrySelector = GET_UShort();
     tableDir.rangeShift    = GET_UShort();
@@ -235,23 +258,6 @@
 
     FT_TRACE2(( "-- Tables count   : %12u\n",  tableDir.numTables ));
     FT_TRACE2(( "-- Format version : %08lx\n", tableDir.version ));
-
-    /* Check that we have a `sfnt' format there                        */
-    /* We must also be able to accept Mac/GX fonts, as well as OT ones */
-
-    if ( tableDir.version != 0x00010000 &&    /* MS fonts          */
-         tableDir.version != TTAG_true  &&    /* Mac fonts         */
-         tableDir.version != TTAG_OTTO  )    /* OT-Type2 fonts    */
-    {
-      FT_TRACE2(( "[not a valid TTF or OTF font]" ));
-      error = TT_Err_Invalid_File_Format;
-      goto Exit;
-    }
-
-    /* if we're performing a font format check, exit immediately */
-    /* with success                                              */
-    if ( faceIndex < 0 )
-      goto Exit;
 
     face->num_tables = tableDir.numTables;
 
@@ -267,7 +273,7 @@
     limit = entry + face->num_tables;
 
     for ( ; entry < limit; entry++ )
-    {                      /* loop through the tables and get all entries */
+    {                    /* loop through the tables and get all entries */
       entry->Tag      = GET_Tag4();
       entry->CheckSum = GET_ULong();
       entry->Offset   = GET_Long();

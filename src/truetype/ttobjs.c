@@ -222,6 +222,7 @@
                           TT_Face    face )
   {
     TT_Error         error;
+    TT_ULong         format_tag;
     SFNT_Interface*  sfnt;
 
     sfnt = (SFNT_Interface*)face->sfnt;
@@ -246,7 +247,20 @@
     if ( FILE_Seek(0) )
       goto Exit;
 
-    /* Load collection directory if present, then font directory */
+    /* check that we have a valid TrueType file */
+    error = sfnt->load_format_tag( face, stream, face_index, &format_tag );
+    if (error) goto Exit;
+    
+    /* We must also be able to accept Mac/GX fonts, as well as OT ones */
+    if ( format_tag != 0x00010000 &&    /* MS fonts  */
+         format_tag != TTAG_true  )     /* Mac fonts */
+    {
+      FT_TRACE2(( "[not a valid TTF font]" ));
+      error = TT_Err_Invalid_File_Format;
+      goto Exit;
+    }
+
+    /* Load font directory */
     error = sfnt->load_directory( face, stream, face_index );
     if ( error ) goto Exit;
 

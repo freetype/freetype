@@ -29,77 +29,6 @@
 #define FT_COMPONENT  trace_ttdriver
 
 
-  static
-  TT_Bool  string_compare( const TT_String*  s1,
-                           const TT_String*  s2 )
-  {
-    int  tries;
-
-
-    for ( tries = 128; tries > 0; tries-- )
-    {
-      if ( !*s1 )
-        return !*s2;
-
-      if ( *s1 != *s2 )
-        return 0;
-
-      s1++;
-      s2++;
-    }
-
-    return 0;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Get_Interface                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Some drivers can be compiled with extensions, special code used    */
-  /*    only for specific purposes (usually for system-specific uses).     */
-  /*    Each extension is registered through a simple name (e.g. `sfnt',   */
-  /*    `post_names', etc).                                                */
-  /*                                                                       */
-  /*    This function is used to return an extension's interface (i.e.,    */
-  /*    a table of pointers) when it is present in the driver.             */
-  /*                                                                       */
-  /*    If the driver wasn't compiled with the requested extension, it     */
-  /*    should return NULL.                                                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    driver    :: A handle to the driver object.                        */
-  /*                                                                       */
-  /*    interface :: The interface's name string.                          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A typeless pointer to the extension's interface (normally a table  */
-  /*    of function pointers).  Returns NULL when the requested extension  */
-  /*    isn't available (i.e., wasn't compiled in the driver at build      */
-  /*    time).                                                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Note that unlike format-specific methods returned by               */
-  /*    getFormatInterface(), extensions can be format-independent.        */
-  /*                                                                       */
-  static
-  void*  Get_Interface( TT_Driver         driver,
-                        const TT_String*  interface )
-  {
-    /* `sfnt' returns a vtable of functions used to access the tables */
-    /* of a TrueType or OpenType font resource.                       */
-    if ( string_compare( interface, "sfnt" ) )
-      return (void*)NULL;
-
-    /* XXXX : For now, there is no extension support there */
-    UNUSED( driver );
-    UNUSED( interface );
-
-    return NULL;
-  }
-
 
   /*************************************************************************/
   /*************************************************************************/
@@ -500,34 +429,27 @@
     TT_Face           face    = (TT_Face)size->root.face;
     TT_Long           dim_x, dim_y;
 
-
-    if ( char_width  < 1*64 ) char_width = 1*64;
-    if ( char_height < 1*64 ) char_height = 1*64;
-
-    /* Compute pixel sizes in 26.6 units */
-    dim_x = (char_width * horz_resolution) / 72;
-    dim_y = (char_height * vert_resolution) / 72;
-
-    /* Truncate to integer pixels if required by font - nearly all  */
-    /* TrueType fonts have this bit set, as hinting can really work */
-    /* with integer pixel sizes.                                    */
-    if ( face->header.Flags & 8 )
+    /* This bit flag, when set, indicates that the pixel size must be */
+    /* truncated to an integer. Nearly all TrueType fonts have this   */
+    /* bit set, as hinting won't work really well otherwise.          */
+    /*                                                                */
+    /* However, for those rare fonts who do not set it, we override   */
+    /* the default computations performed by the base layer. I really */
+    /* don't know if this is useful, but hey, that's the spec :-)     */
+    /*                                                                */
+    if ( (face->header.Flags & 8) == 0 )
     {
-      dim_x = (dim_x + 32) & -64;
-      dim_y = (dim_y + 32) & -64;
+      /* Compute pixel sizes in 26.6 units */
+      dim_x = (char_width * horz_resolution) / 72;
+      dim_y = (char_height * vert_resolution) / 72;
+
+      metrics->x_scale = FT_DivFix( dim_x, face->root.units_per_EM );
+      metrics->y_scale = FT_DivFix( dim_y, face->root.units_per_EM );
+
+      metrics->x_ppem    = (TT_UShort)(dim_x >> 6);
+      metrics->y_ppem    = (TT_UShort)(dim_y >> 6);
     }
-
-    metrics->x_scale = FT_MulDiv( dim_x,
-                                  0x10000L,
-                                  face->root.units_per_EM );
-
-    metrics->y_scale = FT_MulDiv( dim_y,
-                                  0x10000L,
-                                  face->root.units_per_EM );
-
-    metrics->x_ppem    = (TT_UShort)(dim_x >> 6);
-    metrics->y_ppem    = (TT_UShort)(dim_y >> 6);
-
+    
     size->ttmetrics.valid = FALSE;
 
     return TT_Reset_Size( size );
@@ -559,23 +481,10 @@
                              TT_UInt  pixel_width,
                              TT_UInt  pixel_height )
   {
-    FT_Size_Metrics*  metrics = &size->root.metrics;
-    TT_Face           face    = (TT_Face)size->root.face;
+    (void) pixel_width;
+    (void) pixel_height;
 
-
-    if ( pixel_width  < 1 ) pixel_width  = 1;
-    if ( pixel_height < 1 ) pixel_height = 1;
-
-    metrics->x_ppem = pixel_width;
-    metrics->y_ppem = pixel_height;
-
-    metrics->x_scale = FT_MulDiv( metrics->x_ppem << 6,
-                                  0x10000L,
-                                  face->root.units_per_EM );
-
-    metrics->y_scale = FT_MulDiv( metrics->y_ppem << 6,
-                                  0x10000L,
-                                  face->root.units_per_EM );
+    /* many things were pre-computed by the base layer */
 
     size->ttmetrics.valid = FALSE;
 
@@ -722,15 +631,15 @@
     sizeof ( TT_SizeRec ),
     sizeof ( FT_GlyphSlotRec ),
 
-    "truetype",     /* driver name                         */
-    1,              /* driver version                      */
-    2,              /* driver requires FreeType 2 or above */
+    "truetype",      /* driver name                           */
+    100,             /* driver version == 1.0                 */
+    200,             /* driver requires FreeType 2.0 or above */
 
     (void*)0,
 
     (FTDriver_initDriver)        TT_Init_Driver,
     (FTDriver_doneDriver)        TT_Done_Driver,
-    (FTDriver_getInterface)      Get_Interface,
+    (FTDriver_getInterface)      0,     /* now extra interface for now */
 
     (FTDriver_initFace)          Init_Face,
     (FTDriver_doneFace)          TT_Done_Face,

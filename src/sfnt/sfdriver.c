@@ -11,6 +11,7 @@
     TT_Goto_Table,
     
     TT_Load_Any,
+    TT_Load_Format_Tag,
     TT_Load_Directory,
 
     TT_Load_Header,

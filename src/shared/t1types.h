@@ -270,24 +270,47 @@
 
   /***********************************************************************/
   /*                                                                     */
-  /* <Struct> T1_FontInfo                                                */
+  /* <Struct> T1_Encoding                                                */
   /*                                                                     */
   /* <Description>                                                       */
-  /*    The FontInfo dictionary structure.                               */
+  /*    A structure modeling a custom encoding                           */
   /*                                                                     */
   /* <Fields>                                                            */
-  /*    version             ::                                           */
-  /*    notice              ::                                           */
-  /*    full_name           ::                                           */
-  /*    family_name         ::                                           */
-  /*    weight              ::                                           */
-  /*    italic_angle        ::                                           */
-  /*    is_fixed_pitch      ::                                           */
-  /*    underline_position  ::                                           */
-  /*    underline_thickness ::                                           */
+  /*    num_chars   :: number of char codes in encoding. Usually 256     */
+  /*    code_first  :: lower char code in encoding                       */
+  /*    code_last   :: higher char code in encoding                      */
   /*                                                                     */
-  typedef struct T1_FontInfo_
+  /*    char_code   :: array of character codes                          */
+  /*    char_index  :: array of correpsonding glyph indices              */
+  /*    char_name   :: array of correpsonding glyph names                */
+  /*                                                                     */
+  typedef struct T1_Encoding_
   {
+    T1_Int      num_chars;
+    T1_Int      code_first;
+    T1_Int      code_last;
+
+    T1_Short*   char_index;
+    T1_String** char_name;
+
+  } T1_Encoding;
+
+
+  typedef enum T1_EncodingType_
+  {
+	t1_encoding_none = 0,
+	t1_encoding_array,
+	t1_encoding_standard,
+	t1_encoding_expert
+
+  } T1_EncodingType;
+
+
+  typedef struct T1_Font_
+  {
+
+ /* font info dictionary */
+ 
     T1_String*     version;
     T1_String*     notice;
     T1_String*     full_name;
@@ -298,53 +321,8 @@
     T1_Short       underline_position;
     T1_UShort      underline_thickness;
 
-  } T1_FontInfo;
+ /* private dictionary */
 
-
-  /***********************************************************************/
-  /*                                                                     */
-  /* <Struct> T1_Private                                                 */
-  /*                                                                     */
-  /* <Description>                                                       */
-  /*    The Private dictionary structure.                                */
-  /*                                                                     */
-  /* <Fields>                                                            */
-  /*    unique_id :: the font's unique id                                */
-  /*    lenIV     :: length of decrypt padding                           */
-  /*                                                                     */
-  /*    num_blues              :: number of blue values                  */
-  /*    num_other_blues        :: number of other blue values            */
-  /*    num_family_blues       :: number of family blue values           */
-  /*    num_family_other_blues :: number of family other blue values     */
-  /*                                                                     */
-  /*    blue_values        :: array of blue values                       */
-  /*    other_blues        :: array of other blue values                 */
-  /*    family_blues       :: array of family blue values                */
-  /*    family_other_blues :: array of family other blue values          */
-  /*                                                                     */
-  /*    blue_scale         ::                                            */
-  /*    blue_shift         ::                                            */
-  /*    blue_scale         ::                                            */
-  /*                                                                     */
-  /*    standard_width     ::                                            */
-  /*    standard_height    ::                                            */
-  /*                                                                     */
-  /*    num_snap_widths    ::                                            */
-  /*    num_snap_heights   ::                                            */
-  /*    force_bold         ::                                            */
-  /*    round_stem_up      ::                                            */
-  /*                                                                     */
-  /*    stem_snap_widths   ::                                            */
-  /*    stem_snap_heights  ::                                            */
-  /*                                                                     */
-  /*    language_group     ::                                            */
-  /*    password           ::                                            */
-  /*                                                                     */
-  /*    min_feature        ::                                            */
-  /*                                                                     */
-  /*                                                                     */
-  typedef struct T1_Private_
-  {
     T1_Int       unique_id;
     T1_Int       lenIV;
 
@@ -379,37 +357,36 @@
 
     T1_Short     min_feature[2];
 
-  } T1_Private;
+ /* top-level dictionary */
+ 
+    FT_String*   font_name;
 
+    T1_EncodingType  encoding_type;
+    T1_Encoding      encoding;
 
+    T1_Byte*     subrs_block;
+    T1_Byte*     charstrings_block;
+    T1_Byte*     glyph_names_block;
 
-  /***********************************************************************/
-  /*                                                                     */
-  /* <Struct> T1_Private                                                 */
-  /*                                                                     */
-  /* <Description>                                                       */
-  /*    The Private dictionary structure.                                */
-  /*                                                                     */
-  /* <Fields>                                                            */
-  /*    num_chars   :: number of char codes in encoding. Usually 256     */
-  /*    code_first  :: lower char code in encoding                       */
-  /*    code_last   :: higher char code in encoding                      */
-  /*                                                                     */
-  /*    char_code   :: array of character codes                          */
-  /*    char_index  :: array of correpsonding glyph indices              */
-  /*    char_name   :: array of correpsonding glyph names                */
-  /*                                                                     */
-  typedef struct T1_Encoding_
-  {
-    T1_Int      num_chars;
-    T1_Int      code_first;
-    T1_Int      code_last;
+    T1_Int       num_subrs;
+    T1_Byte**    subrs;
+    T1_Int*      subrs_len;
 
-    T1_Short*   char_index;
-    T1_String** char_name;
+    T1_Int       num_glyphs;
+    T1_String**  glyph_names;       /* array of glyph names       */
+    T1_Byte**    charstrings;       /* array of glyph charstrings */
+    T1_Int*      charstrings_len;
 
-  } T1_Encoding;
+    T1_Byte      paint_type;
+    T1_Byte      font_type;
+    T1_Matrix    font_matrix;
+    T1_BBox      font_bbox;
+    T1_Long      font_id;
 
+    T1_Int       stroke_width;
+  
+  } T1_Font;
+  
 
 
 /*************************************************************************/
@@ -417,7 +394,7 @@
 /*************************************************************************/
 /***                                                                   ***/
 /***                                                                   ***/
-/***                  ORIGINAL TT_FACE CLASS DEFINITION                ***/
+/***                  ORIGINAL T1_FACE CLASS DEFINITION                ***/
 /***                                                                   ***/
 /***                                                                   ***/
 /*************************************************************************/
@@ -451,33 +428,7 @@
   typedef struct T1_FaceRec_
   {
     FT_FaceRec      root;
-
-    T1_FontInfo     font_info;
-    FT_String*      font_name;
-
-    T1_Encoding     encoding;
-
-    T1_Byte*        subrs_block;
-    T1_Byte*        charstrings_block;
-
-    T1_Int          num_subrs;
-    T1_Byte**       subrs;
-    T1_Int*         subrs_len;
-
-    T1_Int          num_glyphs;
-    T1_String**     glyph_names;       /* array of glyph names       */
-    T1_Byte**       charstrings;       /* array of glyph charstrings */
-    T1_Int*         charstrings_len;
-
-    T1_Byte         paint_type;
-    T1_Byte         font_type;
-    T1_Matrix       font_matrix;
-    T1_BBox         font_bbox;
-    T1_Long         unique_id;
-    T1_Long         font_id;
-
-    T1_Int          stroke_width;
-    T1_Private      private_dict;
+    T1_Font         type1;
 
   } T1_FaceRec;
 

@@ -26,6 +26,36 @@
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
+  /*    TT_Load_Format_Tag                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Loads the first 4 bytes of the font file. This is a tag that       */
+  /*    identifies the font format used.                                   */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face      :: A handle to the target face object.                   */
+  /*    stream    :: The input stream.                                     */
+  /*    faceIndex :: The index of the TrueType font, if we're opening a    */
+  /*                 collection.                                           */
+  /* <Output>                                                              */
+  /*    format_tag :: a 4-byte tag                                         */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    TrueType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The stream cursor must be at the font file's origin                */
+  /*    This function recognizes fonts embedded in a "TrueType collection" */
+  /*                                                                       */
+  typedef
+  TT_Error  (*TT_Load_Format_Tag_Func)( TT_Face    face,
+                                        FT_Stream  stream,
+                                        TT_Long    faceIndex,
+                                        TT_ULong  *format_tag );
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
   /*    TT_Load_Directory_Func                                             */
   /*                                                                       */
   /* <Description>                                                         */
@@ -41,7 +71,9 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The stream cursor must be at the font file's origin                */
+  /*    The stream cursor must be on the first byte after the 4-byte       */
+  /*    font format tag. This is the case just after a call to             */
+  /*    TT_Load_Format_Tag                                                 */
   /*                                                                       */
   typedef
   TT_Error  (*TT_Load_Directory_Func)( TT_Face    face,
@@ -306,6 +338,7 @@
     TT_Goto_Table_Func      goto_table;
   
     TT_Load_Any_Func        load_any;
+    TT_Load_Format_Tag_Func load_format_tag;
     TT_Load_Directory_Func  load_directory;
 
     TT_Load_Table_Func      load_header;

@@ -31,6 +31,8 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT      trace_ttinterp
 
+#undef  NO_APPLE_PATENT
+#define APPLE_THRESHOLD  0x4000000
 
   /*************************************************************************/
   /*                                                                       */
@@ -1432,10 +1434,14 @@
 
     if ( v != 0 )
     {
+#ifdef NO_APPLE_PATENT
+      if ( ABS(CUR.F_dot_P) > APPLE_THRESHOLD )
+        zone->cur[point].x += distance;
+#else
       zone->cur[point].x += TT_MULDIV( distance,
                                        v * 0x10000L,
                                        CUR.F_dot_P );
-
+#endif
       zone->touch[point] |= FT_Curve_Tag_Touch_X;
     }
 
@@ -1443,10 +1449,14 @@
 
     if ( v != 0 )
     {
+#ifdef NO_APPLE_PATENT
+      if ( ABS(CUR.F_dot_P) > APPLE_THRESHOLD )
+        zone->cur[point].y += distance;
+#else
       zone->cur[point].y += TT_MULDIV( distance,
                                        v * 0x10000L,
                                        CUR.F_dot_P );
-
+#endif
       zone->touch[point] |= FT_Curve_Tag_Touch_Y;
     }
   }
@@ -4940,13 +4950,17 @@
 
     d = CUR_Func_project( zp.cur + p, zp.org + p );
 
+#ifdef NO_APPLE_PATENT
+    *x = TT_MULDIV( d, CUR.GS.freeVector.x, 0x4000 );
+    *y = TT_MULDIV( d, CUR.GS.freeVector.y, 0x4000 );
+#else
     *x = TT_MULDIV( d,
                     (TT_Long)CUR.GS.freeVector.x * 0x10000L,
                     CUR.F_dot_P );
     *y = TT_MULDIV( d,
                     (TT_Long)CUR.GS.freeVector.y * 0x10000L,
                     CUR.F_dot_P );
-
+#endif
     return SUCCESS;
   }
 

@@ -1340,6 +1340,8 @@
     FT_Driver            driver;
     FT_Memory            memory;
     FT_DriverInterface*  interface;
+    FT_Size_Metrics*     metrics = &face->size->metrics;
+    FT_Long              dim_x, dim_y;
 
     if ( !face || !face->size || !face->driver)
       return FT_Err_Invalid_Face_Handle;
@@ -1359,6 +1361,25 @@
     driver    = face->driver;
     interface = &driver->interface;
     memory    = driver->memory;
+
+    /* default processing - this can be overriden by the driver */
+    if ( char_width  < 1*64 ) char_width  = 1*64;
+    if ( char_height < 1*64 ) char_height = 1*64;
+
+    /* Compute pixel sizes in 26.6 units */
+    dim_x = (((char_width  * horz_resolution) / 72) + 32) & -64;
+    dim_y = (((char_height * vert_resolution) / 72) + 32) & -64;
+
+    metrics->x_ppem    = (FT_UShort)(dim_x >> 6);
+    metrics->y_ppem    = (FT_UShort)(dim_y >> 6);
+
+    metrics->x_scale = 0x10000;
+    metrics->y_scale = 0x10000;
+    if ( face->face_flags & FT_FACE_FLAG_SCALABLE)
+    {
+      metrics->x_scale = FT_DivFix( dim_x, face->units_per_EM );
+      metrics->y_scale = FT_DivFix( dim_y, face->units_per_EM );
+    }
 
     error = interface->set_char_sizes( face->size,
                                        char_width,
@@ -1395,6 +1416,7 @@
     FT_Driver            driver;
     FT_Memory            memory;
     FT_DriverInterface*  interface;
+    FT_Size_Metrics*     metrics = &face->size->metrics;
 
     if ( !face || !face->size || !face->driver )
       return FT_Err_Invalid_Face_Handle;
@@ -1403,8 +1425,25 @@
     interface = &driver->interface;
     memory    = driver->memory;
 
-    error = interface->set_pixel_sizes( face->size, pixel_width, pixel_height );
+    /* default processing - this can be overriden by the driver */
+    if ( pixel_width  < 1 ) pixel_width  = 1;
+    if ( pixel_height < 1 ) pixel_height = 1;
 
+    metrics->x_ppem = pixel_width;
+    metrics->y_ppem = pixel_height;
+
+    if ( face->face_flags & FT_FACE_FLAG_SCALABLE )
+    {
+      metrics->x_scale = FT_DivFix( metrics->x_ppem << 6,
+                                    face->units_per_EM );
+
+      metrics->y_scale = FT_DivFix( metrics->y_ppem << 6,
+                                    face->units_per_EM );
+    }
+
+    error = interface->set_pixel_sizes( face->size, 
+                                        pixel_width,
+                                        pixel_height );
     return error;
   }
 
