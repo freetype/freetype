@@ -588,7 +588,7 @@
   }
 
 
-  const FT_Driver_Class  winfnt_driver_class =
+  FT_EXPORT_VAR( const FT_Driver_Class )  winfnt_driver_class =
   {
     {
       ft_module_font_driver,

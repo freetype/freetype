@@ -53,7 +53,11 @@
 #define FT_COMPONENT  trace_init
 
 #undef  FT_USE_MODULE
+#ifdef __cplusplus
+#define FT_USE_MODULE( x )  extern "C" const FT_Module_Class*  x;
+#else
 #define FT_USE_MODULE( x )  extern const FT_Module_Class*  x;
+#endif
 
 #include <freetype/config/ftmodule.h>
 

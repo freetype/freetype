@@ -296,7 +296,7 @@
 #endif /* !FT_CONFIG_OPTION_NO_POSTSCRIPT_NAMES */
 
 
-  const FT_Module_Class  psnames_module_class =
+  FT_EXPORT_VAR( const FT_Module_Class )  psnames_module_class =
   {
     0,  /* this is not a font driver, nor a renderer */
     sizeof( FT_ModuleRec ),

@@ -182,7 +182,7 @@
   }
 
 
-  const FT_Driver_Class  t1cid_driver_class =
+  FT_EXPORT_VAR( const FT_Driver_Class )  t1cid_driver_class =
   {
     /* first of all, the FT_Module_Class fields */
     {
