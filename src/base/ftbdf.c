@@ -17,7 +17,6 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_BDF_TYPES_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_BDF_H
 

@@ -20,7 +20,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_STREAM_H
-#include FT_SERVICE_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_TRUETYPE_TAGS_H
 
 #include "cffload.h"
@@ -1314,7 +1314,7 @@
   FT_LOCAL_DEF( FT_String* )
   cff_index_get_sid_string( CFF_Index           idx,
                             FT_UInt             sid,
-                            FT_Service_PsNames  psnames )
+                            FT_Service_PsCMaps  psnames )
   {
     /* if it is not a standard string, return it */
     if ( sid > 390 )

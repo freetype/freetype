@@ -21,8 +21,8 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_CFF_TYPES_H
-#include FT_SERVICE_POSTSCRIPT_NAMES_H
+#include "cfftypes.h"
+#include FT_SERVICE_POSTSCRIPT_CMAPS_H
 
 
 FT_BEGIN_HEADER
@@ -38,7 +38,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_String* )
   cff_index_get_sid_string( CFF_Index          idx,
                             FT_UInt            sid,
-                            FT_Service_PsNames psnames );
+                            FT_Service_PsCMaps psnames );
 
 
   FT_LOCAL( FT_Error )

@@ -50,7 +50,7 @@
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
 
-#include FT_SERVICE_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_CMAPS_H
 
 #define MAC_NAME( x )  ( (FT_String*)psnames->macintosh_name( x ) )
 
@@ -441,7 +441,7 @@
     FT_Fixed         format;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-    FT_Service_PsNames  psnames;
+    FT_Service_PsCMaps  psnames;
 #endif
 
 
@@ -452,7 +452,7 @@
       return SFNT_Err_Invalid_Glyph_Index;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-    psnames = (FT_Service_PsNames)face->psnames;
+    psnames = (FT_Service_PsCMaps)face->psnames;
     if ( !psnames )
       return SFNT_Err_Unimplemented_Feature;
 #endif

@@ -146,7 +146,7 @@
     FT_Memory           memory  = FT_FACE_MEMORY( face );
     CFF_Font            cff     = (CFF_Font)face->extra.data;
     CFF_Charset         charset = &cff->charset;
-    FT_Service_PsNames  psnames = (FT_Service_PsNames)cff->psnames;
+    FT_Service_PsCMaps  psnames = (FT_Service_PsCMaps)cff->psnames;
 
 
     cmap->num_pairs = 0;

@@ -26,6 +26,7 @@
 
 #include FT_SERVICE_POSTSCRIPT_NAME_H
 #include FT_SERVICE_XFREE86_NAME_H
+#include FT_SERVICE_POSTSCRIPT_INFO_H
 
   /*************************************************************************/
   /*                                                                       */
@@ -62,6 +63,26 @@
 
 
  /*
+  *  POSTSCRIPT INFO SERVICE
+  *
+  */
+
+  static FT_Error
+  cid_ps_get_font_info( FT_Face          face,
+                        PS_FontInfoRec*  afont_info )
+  {
+    *afont_info = ((CID_Face)face)->cid.font_info;
+    return 0;
+  }
+
+  static const FT_Service_PsInfoRec  cid_service_ps_info =
+  {
+    (PS_GetFontInfoFunc)    cid_ps_get_font_info,
+    (PS_HasGlyphNamesFunc)  NULL  /* unsupported with CID fonts */
+  };
+
+
+ /*
   *  SERVICE LIST
   *
   */
@@ -70,6 +91,7 @@
   {
     { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &cid_service_ps_name },
     { FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_CID },
+    { FT_SERVICE_ID_POSTSCRIPT_INFO,      &cid_service_ps_info },
     { NULL, NULL }
   };
 

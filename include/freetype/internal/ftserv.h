@@ -241,6 +241,8 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_MULTIPLE_MASTERS_H  <freetype/internal/services/svmm.h>
 #define FT_SERVICE_POSTSCRIPT_NAME_H   <freetype/internal/services/svpostnm.h>
 #define FT_SERVICE_POSTSCRIPT_NAMES_H  <freetype/internal/services/svpsname.h>
+#define FT_SERVICE_POSTSCRIPT_CMAPS_H  <freetype/internal/services/svpscmap.h>
+#define FT_SERVICE_POSTSCRIPT_INFO_H   <freetype/internal/services/svpsinfo.h>
 #define FT_SERVICE_GLYPH_DICT_H        <freetype/internal/services/svgldict.h>
 #define FT_SERVICE_BDF_H               <freetype/internal/services/svbdf.h>
 #define FT_SERVICE_XFREE86_NAME_H      <freetype/internal/services/svxf86nm.h>

@@ -34,7 +34,8 @@
 #include FT_SERVICE_GLYPH_DICT_H
 #include FT_SERVICE_XFREE86_NAME_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H
-#include FT_SERVICE_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_CMAPS_H
+#include FT_SERVICE_POSTSCRIPT_INFO_H
 
   /*************************************************************************/
   /*                                                                       */
@@ -136,6 +137,32 @@
 
 
  /*
+  *  POSTSCRIPT INFO SERVICE
+  *
+  */
+
+  static FT_Error
+  t1_ps_get_font_info( FT_Face          face,
+                       PS_FontInfoRec*  afont_info )
+  {
+    *afont_info = ((T1_Face)face)->type1.font_info;
+    return 0;
+  }
+
+  static FT_Int
+  t1_ps_has_glyph_names( FT_Face  face )
+  {
+    FT_UNUSED( face );
+    return 1;
+  }
+
+  static const FT_Service_PsInfoRec  t1_service_ps_info =
+  {
+    (PS_GetFontInfoFunc)    t1_ps_get_font_info,
+    (PS_HasGlyphNamesFunc)  t1_ps_has_glyph_names
+  };
+
+ /*
   *  SERVICE LIST
   *
   */
@@ -145,6 +172,7 @@
     { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &t1_service_ps_name },
     { FT_SERVICE_ID_GLYPH_DICT,           &t1_service_glyph_dict },
     { FT_SERVICE_ID_XF86_NAME,            FT_XF86_FORMAT_TYPE_1 },
+    { FT_SERVICE_ID_POSTSCRIPT_INFO,      &t1_service_ps_info },
 
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
     { FT_SERVICE_ID_MULTI_MASTERS,        &t1_service_multi_masters },

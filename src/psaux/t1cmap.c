@@ -36,7 +36,7 @@
                     FT_Int      is_expert )
   {
     T1_Face             face    = (T1_Face)FT_CMAP_FACE( cmap );
-    FT_Service_PsNames  psnames = (FT_Service_PsNames)face->psnames;
+    FT_Service_PsCMaps  psnames = (FT_Service_PsCMaps)face->psnames;
 
 
     cmap->num_glyphs    = face->type1.num_glyphs;
@@ -282,7 +282,7 @@
     FT_UInt             count;
     T1_Face             face    = (T1_Face)FT_CMAP_FACE( cmap );
     FT_Memory           memory  = FT_FACE_MEMORY( face );
-    FT_Service_PsNames  psnames = (FT_Service_PsNames)face->psnames;
+    FT_Service_PsCMaps  psnames = (FT_Service_PsCMaps)face->psnames;
 
 
     cmap->num_pairs = 0;

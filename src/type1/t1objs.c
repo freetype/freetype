@@ -29,7 +29,7 @@
 #include "t1afm.h"
 #endif
 
-#include FT_SERVICE_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 
 
@@ -276,7 +276,7 @@
                 FT_Parameter*  params )
   {
     FT_Error         error;
-    FT_Service_PsNames  psnames;
+    FT_Service_PsCMaps  psnames;
     PSAux_Service    psaux;
     T1_Font          type1 = &face->type1;
     PS_FontInfo      info = &type1->font_info;
@@ -289,7 +289,7 @@
 
     face->root.num_faces = 1;
 
-    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_NAMES );
+    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
     face->psnames = psnames;
 
     face->psaux = FT_Get_Module_Interface( FT_FACE_LIBRARY( face ),

@@ -24,7 +24,7 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_SFNT_H
-#include FT_SERVICE_POSTSCRIPT_NAMES_H
+#include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
 #include "cffobjs.h"
 #include "cffload.h"
@@ -255,7 +255,7 @@
   {
     FT_Error            error;
     SFNT_Service        sfnt;
-    FT_Service_PsNames  psnames;
+    FT_Service_PsCMaps  psnames;
     PSHinter_Service    pshinter;
     FT_Bool             pure_cff    = 1;
     FT_Bool             sfnt_format = 0;
@@ -273,7 +273,7 @@
     if ( !sfnt )
       goto Bad_Format;
 
-    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_NAMES );
+    FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
 
     pshinter = (PSHinter_Service)FT_Get_Module_Interface(
                  face->root.driver->root.library, "pshinter" );
@@ -324,7 +324,7 @@
         /* FreeType 2                                                */
       }
 
-      /* now, load the CFF part of the file */
+     /* now, load the CFF part of the file */
       error = face->goto_table( face, TTAG_CFF, stream, 0 );
       if ( error )
         goto Exit;
