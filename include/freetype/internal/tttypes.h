@@ -1564,7 +1564,7 @@ FT_BEGIN_HEADER
 
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
     /* Use unpatented hinting only. */
-	FT_Bool               unpatented_hinting;
+    FT_Bool               unpatented_hinting;
 #endif
 
     /***********************************************************************/

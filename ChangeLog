@@ -17,30 +17,64 @@
 
 2003-04-25:  Graham Asher  <graham.asher@btinternet.com>
 
-	Added the optional unpatented hinting system for TrueType. It
+	Added the optional unpatented hinting system for TrueType.  It
 	allows typefaces which need hinting to produce correct glyph forms
 	(e.g., Chinese typefaces from Dynalab) to work acceptably without
-	infringing Apple patents. This system is compiled only if
+	infringing Apple patents.  This system is compiled only if
 	TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING is defined in
 	ftoption.h.
 
-	* include/freetype/ttunpat.h: added header file ttunpat.h defining
+	* include/freetype/ttunpat.h: New file.  Defines
 	FT_PARAM_TAG_UNPATENTED_HINTING.
 
-	* include/freetype/config/ftheader.h: Added macro FT_UNPATENTED_H
-	to use when including new header ttunpat.h.
+	* include/freetype/config/ftheader.h (FT_TRUETYPE_UNPATENTED_H): New
+	macro to use when including ttunpat.h.
 
-	* include/freetype/config/ftoption.h: Added configuration macros
+	* include/freetype/config/ftoption.h
+	(TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING,
+	TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING): New configuration macros
 	(not defined, but in comments) for the unpatented hinting system.
 
-	* include/freetype/internal/tttypes.h: If unpatented hinting is
-	compiled the TrueType face object acquires a new element,
-	"FT_Bool unpatented_hinting".
+	* include/freetype/internal/tttypes.h (TT_FaceRec)
+	[TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]: New element "FT_Bool
+	unpatented_hinting".
 
-	* src/truetype/ttinterp.c, ttobjs.c, ttobjs.h: Added the unpatented
-	hinting system, which is compiled only if
-	TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING is defined in
-	ftoption.h.
+	* src/truetype/ttinterp.c (NO_APPLE_PATENT, APPLE_THRESHOLD):
+	Removed.
+	(GUESS_VECTOR): New macro.
+	(TT_Run_Context) [TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]:
+	Set `both_x_axis'.
+	(tt_default_graphics_state)
+	[TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]: Updated.
+	(Current_Ratio) [TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]:
+	Handle `unpatented_hinting'.
+	(Direct_Move) [NO_APPLE_PATENT]: Removed.
+	[TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]: Insert assertion.
+	(Project, FreeProject)
+	[TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]: Insert assertion.
+	(Compute_Funcs) [TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]:
+	Implement unpatented hinting.
+	(DO_SPVTCA, DO_SFVTCA, DO_SPVTL, DO_SFVTL, DO_SPVFS, DO_SFVFS,
+	Ins_SDPVTL): Call `GUESS_VECTOR'.
+	(DO_GPV, DO_GFV) [TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]:
+	Handle `unpatented_hinting'.
+	(Compute_Point_Displacement) [NO_APPLE_PATENT]: Removed.
+	[TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]: Implement unpatented
+	hinting.
+	(Move_Zp2_Point, Ins_SHPIX, Ins_DELTAP, Ins_DELTAC)
+	[TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]: Implement unpatented
+	hinting.
+	(TT_RunIns): Updated.
+
+	* src/truetype/ttobjs.c
+	[TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]: Include
+	FT_TRUETYPE_UNPATENTED_H.
+	(tt_face_init) [TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING,
+	TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING]: Check
+	FT_PARAM_TAG_UNPATENTED_HINTING.
+
+	* src/truetype/ttobjs.h (TT_GraphicsState)
+	[TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING]: Add `both_x_axis'.
 
 2003-04-25  Werner Lemberg  <wl@gnu.org>
 

@@ -204,46 +204,46 @@
       goto Exit;
 
     if ( face->root.face_flags & FT_FACE_FLAG_SCALABLE )
-      {
+    {
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
 
-        if ( !face->root.internal->incremental_interface )
-          error = tt_face_load_loca( face, stream );
-        if ( !error )
-          error = tt_face_load_cvt      ( face, stream ) ||
-                  tt_face_load_fpgm ( face, stream );
+      if ( !face->root.internal->incremental_interface )
+        error = tt_face_load_loca( face, stream );
+      if ( !error )
+        error = tt_face_load_cvt( face, stream ) ||
+                tt_face_load_fpgm( face, stream );
 
 #else
 
-        if ( !error )
-          error = tt_face_load_loca( face, stream ) ||
-                  tt_face_load_cvt      ( face, stream ) ||
-                  tt_face_load_fpgm ( face, stream );
+      if ( !error )
+        error = tt_face_load_loca( face, stream ) ||
+                tt_face_load_cvt( face, stream )  ||
+                tt_face_load_fpgm( face, stream );
 
 #endif
 
-      }
+    }
 
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
 
-	/* Determine whether unpatented hinting is to be used for this face. */
+    /* Determine whether unpatented hinting is to be used for this face. */
 
 #ifdef TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING
-	face->unpatented_hinting = TRUE;
+    face->unpatented_hinting = TRUE;
 #else
-	face->unpatented_hinting = FALSE;
+    face->unpatented_hinting = FALSE;
     {
-	int i;
+      int i;
 
-    for ( i = 0; i < num_params && !face->unpatented_hinting;
-          i++ )
-      if ( params[i].tag == FT_PARAM_TAG_UNPATENTED_HINTING )
-        face->unpatented_hinting = TRUE;
+
+      for ( i = 0; i < num_params && !face->unpatented_hinting; i++ )
+        if ( params[i].tag == FT_PARAM_TAG_UNPATENTED_HINTING )
+          face->unpatented_hinting = TRUE;
     }
-#endif
+#endif /* TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING */
 
-#endif
+#endif /* TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING */
 
     /* initialize standard glyph loading routines */
     TT_Init_Glyph_Loading( face );
