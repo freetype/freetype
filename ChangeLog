@@ -1,3 +1,8 @@
+2004-05-06  Masatake YAMATO  <jet@gyve.org>
+
+	* src/truetype/ttgxvar.c (ft_var_load_gvar): Use FT_FACE_STREAM.
+	(*): Rename local variable OffsetToData to offsetToData.
+
 2004-05-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffobjs.c (cff_size_done, cff_size_init, cff_size_reset,

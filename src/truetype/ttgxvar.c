@@ -350,14 +350,14 @@
   static FT_Error
   ft_var_load_gvar( TT_Face  face )
   {
-    FT_Stream     stream = face->root.stream;
+    FT_Stream     stream = FT_FACE_STREAM(face);
     FT_Memory     memory = stream->memory;
     GX_Blend      blend  = face->blend;
     FT_Error      error;
     FT_UInt       i, j;
     FT_ULong      table_len;
     FT_ULong      gvar_start;
-    FT_ULong      OffsetToData;
+    FT_ULong      offsetToData;
     GX_GVar_Head  gvar_head;
 
     static const FT_Frame_Field  gvar_fields[] =
@@ -386,7 +386,7 @@
 
     blend->tuplecount  = gvar_head.globalCoordCount;
     blend->gv_glyphcnt = gvar_head.glyphCount;
-    OffsetToData       = gvar_start + gvar_head.offsetToData;
+    offsetToData       = gvar_start + gvar_head.offsetToData;
     
     if ( gvar_head.version != 0x00010000L              ||
          gvar_head.axisCount != blend->mmvar->num_axis )
@@ -405,7 +405,7 @@
         goto Exit;
     
       for ( i = 0; i <= blend->gv_glyphcnt; ++i )
-        blend->glyphoffsets[i] = OffsetToData + FT_GET_LONG();
+        blend->glyphoffsets[i] = offsetToData + FT_GET_LONG();
 
       FT_FRAME_EXIT();
     }
@@ -416,7 +416,7 @@
         goto Exit;
 
       for ( i = 0; i <= blend->gv_glyphcnt; ++i )
-        blend->glyphoffsets[i] = OffsetToData + FT_GET_USHORT() * 2;
+        blend->glyphoffsets[i] = offsetToData + FT_GET_USHORT() * 2;
                                               /* XXX: Undocumented: `*2'! */
 
       FT_FRAME_EXIT();
@@ -1091,7 +1091,7 @@
     FT_ULong    table_start;
     FT_ULong    table_len;
     FT_UInt     tupleCount;
-    FT_ULong    OffsetToData;
+    FT_ULong    offsetToData;
     FT_ULong    here;
     FT_UInt     i, j;
     FT_Fixed*   tuple_coords    = NULL;
@@ -1151,7 +1151,7 @@
       goto FExit;
 
     tupleCount   = FT_GET_USHORT();
-    OffsetToData = table_start + FT_GET_USHORT();
+    offsetToData = table_start + FT_GET_USHORT();
 
     /* The documentation implies there are flags packed into the        */
     /* tuplecount, but John Jenkins says that shared points don't apply */
@@ -1184,7 +1184,7 @@
           for ( j = 0; j < 2 * blend->num_axis; ++j )
             (void)FT_GET_SHORT();
 
-        OffsetToData += tupleDataSize;
+        offsetToData += tupleDataSize;
         continue;
       }
 
@@ -1207,13 +1207,13 @@
            /* if they aren't local, makes no sense */
            !( tupleIndex & GX_TI_PRIVATE_POINT_NUMBERS ) )
       {
-        OffsetToData += tupleDataSize;
+        offsetToData += tupleDataSize;
         continue;
       }
 
       here = FT_Stream_FTell( stream );
 
-      FT_Stream_SeekSet( stream, OffsetToData );
+      FT_Stream_SeekSet( stream, offsetToData );
 
       localpoints = ft_var_readpackedpoints( stream, &point_count );
       deltas      = ft_var_readpackeddeltas( stream,
@@ -1239,7 +1239,7 @@
         FT_FREE( localpoints );
       FT_FREE( deltas );
 
-      OffsetToData += tupleDataSize;
+      offsetToData += tupleDataSize;
 
       FT_Stream_SeekSet( stream, here );
     }
@@ -1292,7 +1292,7 @@
     FT_Error    error;
     FT_ULong    glyph_start;
     FT_UInt     tupleCount;
-    FT_ULong    OffsetToData;
+    FT_ULong    offsetToData;
     FT_ULong    here;
     FT_UInt     i, j;
     FT_Fixed*   tuple_coords    = NULL;
@@ -1334,16 +1334,16 @@
       goto Fail2;
 
     tupleCount   = FT_GET_USHORT();
-    OffsetToData = glyph_start + FT_GET_USHORT();
+    offsetToData = glyph_start + FT_GET_USHORT();
 
     if ( tupleCount & GX_TC_TUPLES_SHARE_POINT_NUMBERS )
     {
       here = FT_Stream_FTell( stream );
 
-      FT_Stream_SeekSet( stream, OffsetToData );
+      FT_Stream_SeekSet( stream, offsetToData );
 
       sharedpoints = ft_var_readpackedpoints( stream, &spoint_count );
-      OffsetToData = FT_Stream_FTell( stream );
+      offsetToData = FT_Stream_FTell( stream );
 
       FT_Stream_SeekSet( stream, here );
     }
@@ -1393,7 +1393,7 @@
 
       if ( apply == 0 )              /* tuple isn't active for our blend */
       {
-        OffsetToData += tupleDataSize;
+        offsetToData += tupleDataSize;
         continue;
       }
 
@@ -1401,7 +1401,7 @@
 
       if ( tupleIndex & GX_TI_PRIVATE_POINT_NUMBERS )
       {
-        FT_Stream_SeekSet( stream, OffsetToData );
+        FT_Stream_SeekSet( stream, offsetToData );
 
         localpoints = ft_var_readpackedpoints( stream, &point_count );
         points      = localpoints;
@@ -1446,7 +1446,7 @@
       FT_FREE( deltas_x );
       FT_FREE( deltas_y );
 
-      OffsetToData += tupleDataSize;
+      offsetToData += tupleDataSize;
 
       FT_Stream_SeekSet( stream, here );
     }
