@@ -253,14 +253,11 @@
       goto Exit;
 
     /* copy it */
-    FT_ARRAY_COPY( target->points, source->points,
-                   source->n_points );
+    FT_ARRAY_COPY( target->points, source->points, source->n_points );
 
-    FT_ARRAY_COPY( target->tags, source->tags,
-                   source->n_points );
+    FT_ARRAY_COPY( target->tags, source->tags, source->n_points );
 
-    FT_ARRAY_COPY( target->contours, source->contours,
-                   source->n_contours );
+    FT_ARRAY_COPY( target->contours, source->contours, source->n_contours );
 
     /* copy all flags, except the `FT_OUTLINE_OWNER' one */
     target->flags = source->flags | FT_OUTLINE_OWNER;
