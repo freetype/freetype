@@ -1,3 +1,14 @@
+2004-07-25  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/pcf/pcfdrivr.c (PCF_Set_Pixel_Size): Compare heights, not
+	ppem values.
+	(PCF_Set_Point_Size): Don't call PCF_Set_Pixel_Size but provide own
+	code to compare ppem values.
+	* src/bdf/bdfdrivr.c (BDF_Set_Pixel_Size): Compare heights, not
+	ppem values.
+	(BDF_Set_Point_Size): Don't call BDF_Set_Pixel_Size but provide own
+	code to compare ppem values.
+
 2004-07-25  Kornfeld Eliyahu Peter  <peter@e-kadmon.net>
 
 	* src/sfnt/sfobjs.c (sfnt_load_face): Handle

@@ -586,13 +586,9 @@ THE SOFTWARE.
     FT_Face   root = FT_FACE( face );
 
     FT_UNUSED( char_width );
-    FT_UNUSED( char_height );
 
 
-    FT_TRACE4(( "rec %d - pres %d\n",
-                size->metrics.y_ppem, root->available_sizes->y_ppem ));
-
-    if ( size->metrics.y_ppem == root->available_sizes->y_ppem >> 6 )
+    if ( char_height == (FT_UInt)root->available_sizes->height )
     {
       size->metrics.ascender    = face->bdffont->font_ascent << 6;
       size->metrics.descender   = -face->bdffont->font_descent << 6;
@@ -614,12 +610,30 @@ THE SOFTWARE.
                       FT_UInt     horz_resolution,
                       FT_UInt     vert_resolution )
   {
+    BDF_Face  face = (BDF_Face)FT_SIZE_FACE( size );
+    FT_Face   root = FT_FACE( face );
+
     FT_UNUSED( char_width );
     FT_UNUSED( char_height );
     FT_UNUSED( horz_resolution );
     FT_UNUSED( vert_resolution );
 
-    return BDF_Set_Pixel_Size( size, 0, 0 );
+
+    FT_TRACE4(( "rec %d - pres %d\n",
+                size->metrics.y_ppem, root->available_sizes->y_ppem ));
+
+    if ( size->metrics.y_ppem == root->available_sizes->y_ppem >> 6 )
+    {
+      size->metrics.ascender    = face->bdffont->font_ascent << 6;
+      size->metrics.descender   = -face->bdffont->font_descent << 6;
+      size->metrics.height      = ( face->bdffont->font_ascent +
+                                    face->bdffont->font_descent ) << 6;
+      size->metrics.max_advance = face->bdffont->bbx.width << 6;
+
+      return BDF_Err_Ok;
+    }
+    else
+      return BDF_Err_Invalid_Pixel_Size;
   }
 
 
@@ -629,13 +643,13 @@ THE SOFTWARE.
                   FT_UInt       glyph_index,
                   FT_Int32      load_flags )
   {
-    BDF_Face        face   = (BDF_Face)FT_SIZE_FACE( size );
-    FT_Error        error  = BDF_Err_Ok;
-    FT_Bitmap*      bitmap = &slot->bitmap;
-    bdf_glyph_t     glyph;
-    int             bpp    = face->bdffont->bpp;
-    int             i, j, count;
-    unsigned char   *p, *pp;
+    BDF_Face       face   = (BDF_Face)FT_SIZE_FACE( size );
+    FT_Error       error  = BDF_Err_Ok;
+    FT_Bitmap*     bitmap = &slot->bitmap;
+    bdf_glyph_t    glyph;
+    int            bpp    = face->bdffont->bpp;
+    int            i, j, count;
+    unsigned char  *p, *pp;
 
     FT_UNUSED( load_flags );
 
