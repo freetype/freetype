@@ -27,6 +27,8 @@
 #
 #   LIB_DIR        The directory in which the library is created.
 #
+#   DOC_DIR        The directory in which the API reference is created.
+#
 #   INCLUDES       A list of directories to be included additionally.
 #                  Usually empty.
 #
@@ -71,7 +73,7 @@
 # The targets `objects' and `library' are defined at the end of this
 # Makefile after all other rules have been included.
 #
-.PHONY: single multi objects library
+.PHONY: single multi objects library refdoc
 
 # default target -- build single objects and library
 #
@@ -98,6 +100,11 @@ INTERNAL_DIR := $(PUBLIC_DIR)/internal
 CONFIG_DIR   := $(PUBLIC_DIR)/config
 CACHE_DIR    := $(PUBLIC_DIR)/cache
 
+# The documentation directory.
+#
+ifndef DOC_DIR
+  DOC_DIR := $(TOP_DIR)/docs/reference
+endif
 
 # The final name of the library file.
 #
@@ -242,6 +249,16 @@ library: $(PROJECT_LIBRARY)
 	$(FT_COMPILE) $T$(subst /,$(COMPILER_SEP),$@ $<)
 
 
+refdoc:
+	python $(SRC_DIR)/tools/docmaker/docmaker.py \
+               --prefix=ft2                          \
+               --title=FreeType-2.x.x                \
+               --output=$(DOC_DIR)                   \
+               $(PUBLIC_DIR)/*.h                     \
+               $(PUBLIC_DIR)/config/*.h              \
+               $(PUBLIC_DIR)/cache/*.h
+
+
 .PHONY: clean_project_std distclean_project_std
 
 # Standard cleaning and distclean rules.  These are not accepted
@@ -287,6 +304,7 @@ remove_config_mk:
 #
 clean: clean_project
 distclean: distclean_project remove_config_mk
+	-$(DELETE) $(subst /,$(SEP),$(DOC_DIR)/*.html $(NO_OUTPUT))
 
 
 # EOF

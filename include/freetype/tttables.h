@@ -541,8 +541,15 @@ FT_BEGIN_HEADER
   } TT_MaxProfile;
 
 
-  /* */
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Enum>                                                                */
+  /*    FT_Sfnt_Tag                                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    An enumeration used to specify the index of an SFNT table.         */
+  /*    Used in the @FT_Get_Sfnt_Table API function.                       */
+  /*                                                                       */
   typedef enum
   {
     ft_sfnt_head = 0,
@@ -553,10 +560,11 @@ FT_BEGIN_HEADER
     ft_sfnt_post = 5,
     ft_sfnt_pclt = 6,
 
-    sfnt_max   /* don't remove */
+    sfnt_max   /* internal end mark */
 
   } FT_Sfnt_Tag;
 
+  /* */
 
   /* internal use only */
   typedef void*
@@ -586,7 +594,7 @@ FT_BEGIN_HEADER
   /*    The table is owned by the face object and disappears with it.      */
   /*                                                                       */
   /*    This function is only useful to access SFNT tables that are loaded */
-  /*    by the sfnt/truetype/opentype drivers.  See FT_Sfnt_Tag for a      */
+  /*    by the sfnt/truetype/opentype drivers.  See @FT_Sfnt_Tag for a     */
   /*    list.                                                              */
   /*                                                                       */
   FT_EXPORT( void* )

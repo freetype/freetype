@@ -358,11 +358,11 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
-  /*   FT_OUTLINE_XXX                                                      */
+  /*   FT_OUTLINE_FLAGS                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A list of bit-field constants use for the flags in an outline's    */
-  /*    `outline_flags' field.                                             */
+  /*    `flags' field.                                                     */
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_OUTLINE_NONE           :: Value 0 is reserved.                  */
@@ -428,11 +428,11 @@ FT_BEGIN_HEADER
  /*************************************************************************
   *
   * @enum:
-  *   ft_outline_xxx
+  *   ft_outline_flags
   *
   * @description:
   *   These constants are deprecated.  Please use the corresponding
-  *   @FT_OUTLINE_XXX values.
+  *   @FT_OUTLINE_FLAGS values.
   *
   * @values:
   *   ft_outline_none            :: See @FT_OUTLINE_NONE.
