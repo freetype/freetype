@@ -1,3 +1,12 @@
+2001-05-12  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/ftbbox.h: FTBBOX_H -> __FTBBOX_H__.
+	* include/freetype/fttrigon.h: __FT_TRIGONOMETRY_H__ ->
+	__FTTRIGON_H__.
+	Include FT_FREETYPE_H.
+	Beautified; added copyright.
+	* src/base/fttrigon.c: Beautified; added copyright.
+
 2001-05-11  David Turner  <david@freetype.org>
 
 	* src/cff/cffparse.c (cff_parse_font_matrix), src/cid/cidload.c
