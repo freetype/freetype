@@ -1,3 +1,7 @@
+2002-04-11  Maxim Shemanarev <mcseemagg@yahoo.com>
+
+        * src/smooth/ftgrays.c (gray_hline): very minor optimization. :-)
+
 2002-04-02  Werner Lemberg  <wl@gnu.org>
 
 	Fixes from the stable branch:
