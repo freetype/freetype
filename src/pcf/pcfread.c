@@ -945,7 +945,12 @@ THE SOFTWARE.
     }
 
     if ( !parts || !len )
-      face->style_name = (char *)"Regular";
+    {
+      if ( FT_ALLOC( face->style_name, 8 ) )
+        return error;
+      ft_strcpy( face->style_name, "Regular" );
+      face->style_name[7] = '\0';
+    }
     else
     {
       char          *style, *s;

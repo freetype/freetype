@@ -1,3 +1,14 @@
+2004-07-26  Søren Sandmann  <sandmann@daimi.au.dk>
+
+	* src/pcf/pcfread.c (pcf_interpret_style): Always allocate memory for
+	face->style_name.
+	* src/pcf/pcfdrivr.c (PCF_Face_Done): Free `style_name'.
+
+2004-07-26  Darren J Longhorn  <darren.longhorn@redcom.co.uk>
+
+	* include/freetype/config/ftconfig.h (FT_SIZEOF_LONG): Recognize
+	five-byte `long' (which is avoided then).
+
 2004-07-25  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/pcf/pcfdrivr.c (PCF_Set_Pixel_Size): Compare heights, not
@@ -17,7 +28,7 @@
 2004-07-24  Derek B. Noonburg  <derekn@foolabs.com>
 
 	* src/cff/cffload.c (cff_font_load): Always create inverse mapping.
-	Even if the charstring count id different from the CID count, it is
+	Even if the charstring count is the same as the CID count, it is
 	still possible that the font uses a different CID -> GID mapping.
 
 2004-07-23  Werner Lemberg  <wl@gnu.org>

@@ -221,6 +221,7 @@ THE SOFTWARE.
 
     FT_FREE( face->toc.tables );
     FT_FREE( pcfface->family_name );
+    FT_FREE( pcfface->style_name );
     FT_FREE( pcfface->available_sizes );
     FT_FREE( face->charset_encoding );
     FT_FREE( face->charset_registry );
