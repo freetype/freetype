@@ -1341,15 +1341,6 @@ FT_BEGIN_HEADER
   /*    cmap_size            :: The size in bytes of the `cmap_table'      */
   /*                            described above.                           */
   /*                                                                       */
-  /*    num_charmaps         :: The number of character mappings in the    */
-  /*                            font.                                      */
-  /*                                                                       */
-  /*    charmaps             :: The array of charmap objects for this font */
-  /*                            file.  Note that this field is a typeless  */
-  /*                            pointer.  The Reason is that the format of */
-  /*                            charmaps varies with the underlying font   */
-  /*                            format and cannot be determined here.      */
-  /*                                                                       */
   /*    goto_table           :: A function called by each TrueType table   */
   /*                            loader to position a stream's cursor to    */
   /*                            the start of a given table according to    */
