@@ -469,7 +469,7 @@ FT_BEGIN_HEADER
   /*    should redefine this macro in case of problems to something like   */
   /*    this:                                                              */
   /*                                                                       */
-  /*      #define FT_ENC_TAG( value, a, b, c, d )  (value)                 */
+  /*      #define FT_ENC_TAG( value, a, b, c, d )  value                   */
   /*                                                                       */
   /*    to get a simple enumeration without assigning special numbers.     */
   /*                                                                       */

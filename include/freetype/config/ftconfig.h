@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    ANSI-specific configuration file (specification only).               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -58,24 +58,32 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /* The number of bytes in an `int' type.  */
+  /* There are systems (like the Texas Instruments 'C54x) where a `char' */
+  /* has 16 bits.  ANSI C says that sizeof(char) is always 1.  Since an  */
+  /* `int' has 16 bits also for this system, sizeof(int) gives 1 which   */
+  /* is probably unexpected.                                             */
+  /*                                                                     */
+  /* `CHAR_BIT' (defined in limits.h) gives the number of bits in a      */
+  /* `char' type.                                                        */
+
+  /* The size of an `int' type.  */
 #if   FT_UINT_MAX == 0xFFFFFFFFUL
-#define FT_SIZEOF_INT  4
+#define FT_SIZEOF_INT  (32 / CHAR_BIT)
 #elif FT_UINT_MAX == 0xFFFFU
-#define FT_SIZEOF_INT  2
+#define FT_SIZEOF_INT  (16 / CHAR_BIT)
 #elif FT_UINT_MAX > 0xFFFFFFFFU && FT_UINT_MAX == 0xFFFFFFFFFFFFFFFFU
-#define FT_SIZEOF_INT  8
+#define FT_SIZEOF_INT  (64 / CHAR_BIT)
 #else
-#error "Unsupported number of bytes in `int' type!"
+#error "Unsupported size of `int' type!"
 #endif
 
-  /* The number of bytes in a `long' type.  */
+  /* The size of a `long' type.  */
 #if   FT_ULONG_MAX == 0xFFFFFFFFUL
-#define FT_SIZEOF_LONG  4
+#define FT_SIZEOF_LONG  (32 / CHAR_BIT)
 #elif FT_ULONG_MAX > 0xFFFFFFFFU && FT_ULONG_MAX == 0xFFFFFFFFFFFFFFFFU
-#define FT_SIZEOF_LONG  8
+#define FT_SIZEOF_LONG  (64 / CHAR_BIT)
 #else
-#error "Unsupported number of bytes in `long' type!"
+#error "Unsupported size of `long' type!"
 #endif
 
 

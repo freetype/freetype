@@ -1,3 +1,24 @@
+2004-04-13  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftconfig.h: Use CHAR_BIT to define
+	size of FT_SIZEOF_xxx.
+
+2004-04-12  Chisato Yamauchi  <cyamauch@a.phys.nagoya-u.ac.jp>
+
+	* include/freetype/internal/sfnt.h (TT_Find_SBit_Image_Func,
+	TT_Load_SBit_Metrics_Func): New typedefs.
+	(SFNT_Interface): Add find_sbit_image and load_sbit_metrics.
+
+	* src/sfnt/sfdriver.c (sfnt_interface): Updated.
+	* src/sfnt/ttsbit.h (tt_find_sbit_image, tt_load_sbit_metrics): New
+	declarations.
+	* src/sfnt/ttsbit.c (find_sbit_image): Renamed to...
+	(tt_find_sbit_image): This.
+	Updated all callers.
+	(load_sbit_metrics): Renamed to...
+	(tt_load_sbit_metrics): This.
+	Updated all callers.
+
 2004-04-12  Werner Lemberg  <wl@gnu.org>
 
 	* configure: Accept makepp also.
