@@ -21,8 +21,10 @@
 #include FT_INTERNAL_DEBUG_H
 #include "pshalgo3.h"
 
+
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pshalgo2
+
 
 #ifdef DEBUG_HINTER
   extern PSH3_Hint_Table  ps3_debug_hint_table = 0;
@@ -31,10 +33,8 @@
 #endif
 
 
-
 #undef  SNAP_STEMS
 #undef  ONLY_ALIGN_Y
-
 
 
   /*************************************************************************/
@@ -76,7 +76,7 @@
   static void
   psh3_hint_table_deactivate( PSH3_Hint_Table  table )
   {
-    FT_UInt   count = table->max_hints;
+    FT_UInt    count = table->max_hints;
     PSH3_Hint  hint  = table->hints;
 
 
@@ -98,7 +98,7 @@
 
     if ( idx >= table->max_hints )
     {
-      FT_ERROR(( "%s.activate: invalid hint index %d\n", idx ));
+      FT_ERROR(( "psh3_hint_table_record: invalid hint index %d\n", idx ));
       return;
     }
 
@@ -132,8 +132,7 @@
     if ( table->num_hints < table->max_hints )
       table->sort_global[table->num_hints++] = hint;
     else
-      FT_ERROR(( "%s.activate: too many sorted hints!  BUG!\n",
-                 "ps.fitter" ));
+      FT_ERROR(( "psh3_hint_table_record: too many sorted hints!  BUG!\n" ));
   }
 
 
@@ -221,10 +220,10 @@
     /* now, do a linear parse in case some hints were left alone */
     if ( table->num_hints != table->max_hints )
     {
-      FT_UInt   Index, Count;
+      FT_UInt  Index, Count;
 
 
-      FT_ERROR(( "%s.init: missing/incorrect hint masks!\n" ));
+      FT_ERROR(( "psh3_hint_table_init: missing/incorrect hint masks!\n" ));
       Count = table->max_hints;
       for ( Index = 0; Index < Count; Index++ )
         psh3_hint_table_record( table, Index );
@@ -270,12 +269,13 @@
           PSH3_Hint*  sort = table->sort;
           PSH3_Hint   hint2;
 
+
           for ( count2 = count; count2 > 0; count2--, sort++ )
           {
             hint2 = sort[0];
             if ( psh3_hint_overlap( hint, hint2 ) )
-              FT_ERROR(( "%s.activate_mask: found overlapping hints\n",
-                         "psf.hint" ));
+              FT_ERROR(( "psh3_hint_table_activate_mask:"
+                         " found overlapping hints\n" ))
           }
 #else
           count2 = 0;
@@ -287,8 +287,8 @@
             if ( count < table->max_hints )
               table->sort[count++] = hint;
             else
-              FT_ERROR(( "%s.activate_mask: too many active hints\n",
-                         "psf.hint" ));
+              FT_ERROR(( "psh3_hint_tableactivate_mask:"
+                         " too many active hints\n" ));
           }
         }
       }
@@ -334,6 +334,7 @@
   /*************************************************************************/
 
 #ifdef DEBUG_HINTER
+
   static void
   ps3_simple_scale( PSH3_Hint_Table  table,
                     FT_Fixed         scale,
@@ -355,23 +356,22 @@
         ps3_debug_hint_func( hint, dimension );
     }
   }
-#endif
+
+#endif /* DEBUG_HINTER */
+
 
   static FT_Fixed
-  psh3_hint_snap_stem_side_delta ( FT_Fixed pos,
-                                   FT_Fixed len )
+  psh3_hint_snap_stem_side_delta( FT_Fixed  pos,
+                                  FT_Fixed  len )
   {
-    FT_Fixed delta1 = ( ( pos + 32 ) & -64 ) - pos;
-    FT_Fixed delta2 = ( ( pos + len + 32 ) & -64  ) - pos - len;
+    FT_Fixed  delta1 = ( ( pos + 32 ) & -64 ) - pos;
+    FT_Fixed  delta2 = ( ( pos + len + 32 ) & -64  ) - pos - len;
+
 
     if ( ABS( delta1 ) <= ABS( delta2 ) )
-    {
       return delta1;
-    }
     else
-    {
       return delta2;
-    }
   }
 
 
@@ -386,7 +386,7 @@
     FT_Fixed       delta = dim->scale_delta;
 
 
-    if ( !psh3_hint_is_fitted(hint) )
+    if ( !psh3_hint_is_fitted( hint ) )
     {
       FT_Pos  pos = FT_MulFix( hint->org_pos, scale ) + delta;
       FT_Pos  len = FT_MulFix( hint->org_len, scale );
@@ -405,7 +405,7 @@
 
         psh3_hint_set_fitted( hint );
         return;
-          }
+      }
 
       /* perform stem snapping when requested */
       if ( ( hint_flags & FT_HINT_NO_INTEGER_STEM ) == 0 )
@@ -469,9 +469,9 @@
             if ( !psh3_hint_is_fitted( parent ) )
               psh3_hint_align( parent, globals, dimension, hint_flags );
 
-            par_org_center = parent->org_pos + ( parent->org_len / 2);
-            par_cur_center = parent->cur_pos + ( parent->cur_len / 2);
-            cur_org_center = hint->org_pos   + ( hint->org_len   / 2);
+            par_org_center = parent->org_pos + ( parent->org_len / 2 );
+            par_cur_center = parent->cur_pos + ( parent->cur_len / 2 );
+            cur_org_center = hint->org_pos   + ( hint->org_len   / 2 );
 
             cur_delta = FT_MulFix( cur_org_center - par_org_center, scale );
             pos       = par_cur_center + cur_delta - ( len >> 1 );
@@ -516,15 +516,15 @@
              * C)       |--------------------------------|
              *
              * Position A) (split the excess stem equally) should be better
-             * for stems of width N + f where f < 0.5
+             * for stems of width N + f where f < 0.5.
              *
              * Position B) (split the deficiency equally) should be better
-             * for stems of width N + f where f > 0.5
+             * for stems of width N + f where f > 0.5.
              *
              * It turns out though that minimizing the total number of touched
              * pixels is also important, so position C), with one edge
              * aligned with a pixel boundary is actually preferable
-             * to A). There are also more possible positions for C) than
+             * to A).  There are also more possible positions for C) than
              * for A) or B), so there will be less distortion of the overall
              * character shape.
              */
@@ -534,6 +534,7 @@
               FT_Fixed center = pos + ( len >> 1 );
 
               FT_Fixed delta_a, delta_b;
+
 
               if ( ( len / 64 ) & 1 )
               {
@@ -551,13 +552,12 @@
                * C) always; for large amounts, B) always; inbetween,
                * pick whichever one involves less stem movement.
                */
-              if (frac_len < 32)
-              {
+              if ( frac_len < 32 )
                 pos += psh3_hint_snap_stem_side_delta ( pos, len );
-              }
-              else if (frac_len < 48)
+              else if ( frac_len < 48 )
               {
-                FT_Fixed side_delta = psh3_hint_snap_stem_side_delta ( pos, len );
+                FT_Fixed  side_delta =
+                            psh3_hint_snap_stem_side_delta( pos, len );
 
                 if ( ABS( side_delta ) < ABS( delta_b ) )
                   pos += side_delta;
@@ -565,9 +565,7 @@
                   pos += delta_b;
               }
               else
-              {
                 pos += delta_b;
-              }
             }
             hint->cur_pos = pos;
           }
@@ -594,6 +592,7 @@
     FT_UInt        count;
 
 #ifdef DEBUG_HINTER
+
     PSH_Dimension  dim   = &globals->dimension[dimension];
     FT_Fixed       scale = dim->scale_mult;
     FT_Fixed       delta = dim->scale_delta;
@@ -610,7 +609,8 @@
       ps3_simple_scale( table, scale, delta, dimension );
       return;
     }
-#endif
+
+#endif /* DEBUG_HINTER*/
 
     hint  = table->hints;
     count = table->max_hints;
@@ -628,8 +628,8 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#define PSH3_ZONE_MIN  -3200000
-#define PSH3_ZONE_MAX  +3200000
+#define PSH3_ZONE_MIN  -3200000L
+#define PSH3_ZONE_MAX  +3200000L
 
 #define xxDEBUG_ZONES
 
@@ -642,17 +642,17 @@
   psh3_print_zone( PSH3_Zone  zone )
   {
     printf( "zone [scale,delta,min,max] = [%.3f,%.3f,%d,%d]\n",
-             zone->scale/65536.0,
-             zone->delta/64.0,
+             zone->scale / 65536.0,
+             zone->delta / 64.0,
              zone->min,
              zone->max );
   }
 
 #else
 
-#define psh3_print_zone( x )   do { } while ( 0 )
+#define psh3_print_zone( x )  do { } while ( 0 )
 
-#endif
+#endif /* DEBUG_ZONES */
 
 
   /*************************************************************************/
@@ -911,6 +911,7 @@
       point->org_x = vec->x;
       point->org_y = vec->y;
 #endif
+
     }
   }
 
@@ -937,6 +938,7 @@
         tags[n] |= (char)( ( dimension == 0 ) ? 32 : 64 );
 
 #ifdef DEBUG_HINTER
+
       if ( dimension == 0 )
       {
         point->cur_x   = point->cur_u;
@@ -947,7 +949,9 @@
         point->cur_y   = point->cur_u;
         point->flags_y = point->flags;
       }
+
 #endif
+
       point++;
     }
   }
@@ -991,6 +995,7 @@
       }
 
 #if 1
+
       if ( point->org_u >= hint->org_pos &&
            point->org_u <= hint->org_pos + hint->org_len &&
            psh3_point_is_extremum( point ) )
@@ -999,7 +1004,9 @@
         point->hint = hint;
         break;
       }
+
 #endif
+
     }
   }
 
@@ -1016,7 +1023,8 @@
       PS_Mask          mask      = table->hint_masks->masks;
       FT_UInt          num_masks = table->hint_masks->num_masks;
       FT_UInt          first     = 0;
-      FT_Int           major_dir = dimension == 0 ? PSH3_DIR_UP : PSH3_DIR_RIGHT;
+      FT_Int           major_dir = dimension == 0 ? PSH3_DIR_UP
+                                                  : PSH3_DIR_RIGHT;
 
 
       /* process secondary hints to "selected" points */
@@ -1081,8 +1089,8 @@
   psh3_glyph_interpolate_strong_points( PSH3_Glyph  glyph,
                                         FT_Int      dimension )
   {
-    PSH_Dimension    dim   = &glyph->globals->dimension[dimension];
-    FT_Fixed         scale = dim->scale_mult;
+    PSH_Dimension  dim   = &glyph->globals->dimension[dimension];
+    FT_Fixed       scale = dim->scale_mult;
 
 
     {
@@ -1126,9 +1134,11 @@
   psh3_glyph_interpolate_normal_points( PSH3_Glyph  glyph,
                                         FT_Int      dimension )
   {
+
 #if 1
-    PSH_Dimension    dim   = &glyph->globals->dimension[dimension];
-    FT_Fixed         scale = dim->scale_mult;
+
+    PSH_Dimension  dim   = &glyph->globals->dimension[dimension];
+    FT_Fixed       scale = dim->scale_mult;
 
 
     /* first technique: a point is strong if it is a local extrema */
@@ -1172,7 +1182,7 @@
           {
             if ( psh3_point_is_strong( cur ) )
             {
-              FT_Pos   diff = cur->org_u - u;;
+              FT_Pos  diff = cur->org_u - u;;
 
 
               if ( diff <= 0 )
@@ -1230,7 +1240,9 @@
         }
       }
     }
-#endif
+
+#endif /* 1 */
+
   }
 
 
@@ -1239,18 +1251,18 @@
   psh3_glyph_interpolate_other_points( PSH3_Glyph  glyph,
                                        FT_Int      dimension )
   {
-    PSH_Dimension dim          = &glyph->globals->dimension[dimension];
-    FT_Fixed      scale        = dim->scale_mult;
-    FT_Fixed      delta        = dim->scale_delta;
-    PSH3_Contour  contour      = glyph->contours;
-    FT_UInt       num_contours = glyph->num_contours;
+    PSH_Dimension  dim          = &glyph->globals->dimension[dimension];
+    FT_Fixed       scale        = dim->scale_mult;
+    FT_Fixed       delta        = dim->scale_delta;
+    PSH3_Contour   contour      = glyph->contours;
+    FT_UInt        num_contours = glyph->num_contours;
 
 
     for ( ; num_contours > 0; num_contours--, contour++ )
     {
-      PSH3_Point   start = contour->start;
-      PSH3_Point   first, next, point;
-      FT_UInt      fit_count;
+      PSH3_Point  start = contour->start;
+      PSH3_Point  first, next, point;
+      FT_UInt     fit_count;
 
 
       /* count the number of strong points in this contour */
@@ -1399,6 +1411,7 @@
 
 
 #ifdef DEBUG_HINTER
+
     memory = globals->memory;
 
     if ( ps3_debug_glyph )
@@ -1411,7 +1424,8 @@
       return error;
 
     ps3_debug_glyph = glyph;
-#endif
+
+#endif /* DEBUG_HINTER */
 
     error = psh3_glyph_init( glyph, outline, ps_hints, globals );
     if ( error )
@@ -1439,9 +1453,11 @@
     }
 
   Exit:
+
 #ifndef DEBUG_HINTER
     psh3_glyph_done( glyph );
 #endif
+
     return error;
   }
 

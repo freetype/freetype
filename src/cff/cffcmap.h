@@ -1,9 +1,28 @@
-#ifndef __CFF_CMAP_H__
-#define __CFF_CMAP_H__
+/***************************************************************************/
+/*                                                                         */
+/*  cffcmap.h                                                              */
+/*                                                                         */
+/*    CFF character mapping table (cmap) support (specification).          */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
+#ifndef __CFFCMAP_H__
+#define __CFFCMAP_H__
 
 #include "cffobjs.h"
 
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -18,9 +37,9 @@ FT_BEGIN_HEADER
 
   typedef struct  CFF_CMapStdRec_
   {
-    FT_CMapRec    cmap;
-    FT_UInt       count;
-    FT_UShort*    gids;   /* up to 256 elements */
+    FT_CMapRec  cmap;
+    FT_UInt     count;
+    FT_UShort*  gids;   /* up to 256 elements */
     
   } CFF_CMapStdRec;
 
@@ -63,4 +82,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* __CFF_CMAP_H__ */
+#endif /* __CFFCMAP_H__ */
+
+
+/* END */

@@ -1,10 +1,29 @@
+/***************************************************************************/
+/*                                                                         */
+/*  cffcmap.c                                                              */
+/*                                                                         */
+/*    CFF character mapping table (cmap) support (body).                   */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "cffcmap.h"
 #include "cffload.h"
+
 
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****           CFF  STANDARD (AND EXPERT) ENCODING CMAPS           *****/
+  /*****           CFF STANDARD (AND EXPERT) ENCODING CMAPS            *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
@@ -38,8 +57,9 @@
   {
     FT_UInt  result = 0;
 
+
     if ( char_code < cmap->count )
-      result = cmap->gids[ char_code ];
+      result = cmap->gids[char_code];
     
     return result;
   }
@@ -47,23 +67,25 @@
 
   FT_CALLBACK_DEF( FT_UInt )
   cff_cmap_encoding_char_next( CFF_CMapStd   cmap,
-                               FT_UInt32   *pchar_code )
+                               FT_UInt32    *pchar_code )
   {
     FT_UInt    result    = 0;
     FT_UInt32  char_code = *pchar_code;
     
+
     *pchar_code = 0;
 
     if ( char_code < cmap->count )
     {
-      FT_UInt  code = (FT_UInt)(char_code+1);
+      FT_UInt  code = (FT_UInt)(char_code + 1);
       
+
       for (;;)
       {
         if ( code >= cmap->count )
           break;
           
-        result = cmap->gids[ code ];
+        result = cmap->gids[code];
         if ( result != 0 )
         {
           *pchar_code = code;
@@ -75,7 +97,6 @@
     }
     return result;
   }
-
 
 
   FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
@@ -198,9 +219,10 @@
   FT_CALLBACK_DEF( void )
   cff_cmap_unicode_done( CFF_CMapUnicode  cmap )
   {
-    FT_Face    face   = FT_CMAP_FACE(cmap);
-    FT_Memory  memory = FT_FACE_MEMORY(face);
+    FT_Face    face   = FT_CMAP_FACE( cmap );
+    FT_Memory  memory = FT_FACE_MEMORY( face );
 
+ 
     FT_FREE( cmap->pairs );
     cmap->num_pairs = 0;
   }
@@ -208,11 +230,11 @@
 
   FT_CALLBACK_DEF( FT_UInt )
   cff_cmap_unicode_char_index( CFF_CMapUnicode  cmap,
-                              FT_UInt32       char_code )
+                               FT_UInt32        char_code )
   {
-    FT_UInt         min = 0;
-    FT_UInt         max = cmap->num_pairs;
-    FT_UInt         mid;
+    FT_UInt          min = 0;
+    FT_UInt          max = cmap->num_pairs;
+    FT_UInt          mid;
     CFF_CMapUniPair  pair;
 
 
@@ -235,7 +257,7 @@
 
   FT_CALLBACK_DEF( FT_UInt )
   cff_cmap_unicode_char_next( CFF_CMapUnicode  cmap,
-                             FT_UInt32      *pchar_code )
+                              FT_UInt32       *pchar_code )
   {
     FT_UInt    result    = 0;
     FT_UInt32  char_code = *pchar_code + 1;
@@ -243,9 +265,9 @@
 
   Restart:
     {
-      FT_UInt         min = 0;
-      FT_UInt         max = cmap->num_pairs;
-      FT_UInt         mid;
+      FT_UInt          min = 0;
+      FT_UInt          max = cmap->num_pairs;
+      FT_UInt          mid;
       CFF_CMapUniPair  pair;
 
 
@@ -299,3 +321,5 @@
     (FT_CMap_CharNextFunc) cff_cmap_unicode_char_next
   };
 
+
+/* END */
