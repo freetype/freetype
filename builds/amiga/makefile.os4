@@ -75,6 +75,9 @@ ftbbox.ppc.o: FT:src/base/ftbbox.c
 ftbdf.ppc.o: FT:src/base/ftbdf.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftbdf.c
 
+ftbitmap.ppc.o: FT:src/base/ftbitmap.c
+	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftbitmap.c
+
 ftdebug.ppc.o: FT:src/base/ftdebug.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftdebug.c
 
@@ -88,6 +91,15 @@ ftglyph.ppc.o: FT:src/base/ftglyph.c
 ftmm.ppc.o: FT:src/base/ftmm.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftmm.c
 
+ftotval.ppc.o: FT:src/base/ftotval.c
+	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftotval.c
+
+ftpfr.ppc.o: FT:src/base/ftpfr.c
+	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftpfr.c
+
+ftstroke.ppc.o: FT:src/base/ftstroke.c
+	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftstroke.c
+
 ftsynth.ppc.o: FT:src/base/ftsynth.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftsynth.c
 
@@ -96,6 +108,9 @@ fttype1.ppc.o: FT:src/base/fttype1.c
 
 ftwinfnt.ppc.o: FT:src/base/ftwinfnt.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftwinfnt.c
+
+ftxf86.ppc.o: FT:src/base/ftxf86.c
+	$(CC) -c $(CFLAGS) -o $@ /FT/src/base/ftxf86.c
 
 #
 # FreeType2 library autofitting module
@@ -217,8 +232,9 @@ winfnt.ppc.o: FT:src/winfonts/winfnt.c
 otvalid.ppc.o: FT:src/otvalid/otvalid.c
 	$(CC) -c $(CFLAGS) -o $@ /FT/src/otvalid/otvalid.c
 
-BASE =  ftbase.ppc.o ftbdf.ppc.o ftglyph.ppc.o ftbbox.ppc.o ftmm.ppc.o\
-	ftsynth.ppc.o fttype1.ppc.o ftwinfnt.ppc.o
+BASE =  ftbase.ppc.o ftbbox.ppc.o ftbdf.ppc.o ftbitmap.ppc.o ftglyph.ppc.o \
+	ftmm.ppc.o ftotval.ppc.o ftpfr.ppc.o ftstroke.ppc.o ftsynth.ppc.o \
+	fttype1.ppc.o ftwinfnt.ppc.o ftxf86.ppc.o
 
 DEBUG = ftdebug.ppc.o ftdebugpure.ppc.o
 
