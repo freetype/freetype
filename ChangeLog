@@ -1,5 +1,12 @@
 2001-10-21  Tom Kacvinsky  <tjk@ams.org>
 
+	* src/cff/cffload.c (CFF_Done_Font): Free subfonts array only if
+	we are working with a CID keyed CFF font.  Otherwise, a variable
+	that was never allocated memory might freed.  This is a correction
+	to the previous patch for freeing subfonts.
+
+2001-10-21  Tom Kacvinsky  <tjk@ams.org>
+
 	* src/cff/cffload.c (CFF_Done_Font): Free the subfonts array to
 	avoid a memory leak.
 
