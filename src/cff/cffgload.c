@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType Glyph Loader (body).                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -644,13 +644,13 @@
                      FT_Int        bchar,
                      FT_Int        achar )
   {
-    FT_Error     error;
-    FT_Int       bchar_index, achar_index, n_base_points;
-    FT_Outline*  base = decoder->builder.base;
-    TT_Face      face = decoder->builder.face;
-    FT_Vector    left_bearing, advance;
-    FT_Byte*     charstring;
-    FT_ULong     charstring_len;
+    FT_Error      error;
+    CFF_Builder*  builder = &decoder->builder;
+    FT_Int        bchar_index, achar_index;
+    TT_Face       face = decoder->builder.face;
+    FT_Vector     left_bearing, advance;
+    FT_Byte*      charstring;
+    FT_ULong      charstring_len;
 
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
@@ -680,9 +680,9 @@
 
     /* If we are trying to load a composite glyph, do not load the */
     /* accent character and return the array of subglyphs.         */
-    if ( decoder->builder.no_recurse )
+    if ( builder->no_recurse )
     {
-      FT_GlyphSlot    glyph  = (FT_GlyphSlot)decoder->builder.glyph;
+      FT_GlyphSlot    glyph  = (FT_GlyphSlot)builder->glyph;
       FT_GlyphLoader  loader = glyph->internal->loader;
       FT_SubGlyph     subg;
 
@@ -705,8 +705,8 @@
       /* subglyph 1 = accent character */
       subg->index = achar_index;
       subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES;
-      subg->arg1  = (FT_Int)adx;
-      subg->arg2  = (FT_Int)ady;
+      subg->arg1  = (FT_Int)( adx >> 16 );
+      subg->arg2  = (FT_Int)( ady >> 16 );
 
       /* set up remaining glyph fields */
       glyph->num_subglyphs = 2;
@@ -715,6 +715,8 @@
 
       loader->current.num_subglyphs = 2;
     }
+
+    FT_GlyphLoader_Prepare( builder->loader );
 
     /* First load `bchar' in builder */
     error = cff_get_glyph_data( face, bchar_index,
@@ -730,16 +732,17 @@
       cff_free_glyph_data( face, &charstring, charstring_len );
     }
 
-    n_base_points = base->n_points;
-
     /* Save the left bearing and width of the base character */
     /* as they will be erased by the next load.              */
 
-    left_bearing = decoder->builder.left_bearing;
-    advance      = decoder->builder.advance;
+    left_bearing = builder->left_bearing;
+    advance      = builder->advance;
 
-    decoder->builder.left_bearing.x = 0;
-    decoder->builder.left_bearing.y = 0;
+    builder->left_bearing.x = 0;
+    builder->left_bearing.y = 0;
+
+    builder->pos_x = adx;
+    builder->pos_y = ady;
 
     /* Now load `achar' on top of the base outline. */
     error = cff_get_glyph_data( face, achar_index,
@@ -757,20 +760,11 @@
 
     /* Restore the left side bearing and advance width */
     /* of the base character.                          */
-    decoder->builder.left_bearing = left_bearing;
-    decoder->builder.advance      = advance;
+    builder->left_bearing = left_bearing;
+    builder->advance      = advance;
 
-    /* Finally, move the accent. */
-    if ( decoder->builder.load_points )
-    {
-      FT_Outline  dummy;
-
-
-      dummy.n_points = (short)( base->n_points - n_base_points );
-      dummy.points   = base->points   + n_base_points;
-
-      FT_Outline_Translate( &dummy, adx, ady );
-    }
+    builder->pos_x = 0;
+    builder->pos_y = 0;
 
   Exit:
     return error;
@@ -1736,7 +1730,7 @@
               x += args[0];
               y += args[1];
               cff_builder_add_point( builder, x, y,
-                                     (FT_Bool)( count == 3 || count == 0 ) );
+                                     (FT_Bool)( count == 4 || count == 1 ) );
               args += 2;
             }
 
@@ -1751,33 +1745,35 @@
           if ( num_args == 4 )
           {
             error = cff_operator_seac( decoder,
-                                       args[0] >> 16,
-                                       args[1] >> 16,
+                                       args[0],
+                                       args[1],
                                        (FT_Int)( args[2] >> 16 ),
                                        (FT_Int)( args[3] >> 16 ) );
             args += 4;
           }
-
-          if ( !error )
-            error = CFF_Err_Ok;
-
-          cff_builder_close_contour( builder );
-
-          /* close hints recording session */
-          if ( hinter )
+          else
           {
-            if (hinter->close( hinter->hints, builder->current->n_points ) )
-              goto Syntax_Error;
+            if ( !error )
+              error = CFF_Err_Ok;
 
-            /* apply hints to the loaded glyph outline now */
-            hinter->apply( hinter->hints,
-                           builder->current,
-                           (PSH_Globals)builder->hints_globals,
-                           decoder->hint_mode );
+            cff_builder_close_contour( builder );
+
+            /* close hints recording session */
+            if ( hinter )
+            {
+              if (hinter->close( hinter->hints, builder->current->n_points ) )
+                goto Syntax_Error;
+
+              /* apply hints to the loaded glyph outline now */
+              hinter->apply( hinter->hints,
+                             builder->current,
+                             (PSH_Globals)builder->hints_globals,
+                             decoder->hint_mode );
+            }
+
+            /* add current outline to the glyph slot */
+            FT_GlyphLoader_Add( builder->loader );
           }
-
-          /* add current outline to the glyph slot */
-          FT_GlyphLoader_Add( builder->loader );
 
           /* return now! */
           FT_TRACE4(( "\n\n" ));

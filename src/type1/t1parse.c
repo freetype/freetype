@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 parser (body).                                                */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -418,7 +418,7 @@
       }
       else
         /* binary encoding -- copy the private dict */
-        FT_MEM_COPY( parser->private_dict, cur, size );
+        FT_MEM_MOVE( parser->private_dict, cur, size );
     }
 
     /* we now decrypt the encoded binary private dictionary */
