@@ -2270,7 +2270,7 @@
       return FT_Err_Invalid_Argument;
 
     face   = charmap->face;
-    memory = FT_FACE_MEMORY(face);
+    memory = FT_FACE_MEMORY( face );
 
     if ( !FT_ALLOC( cmap, clazz->size ) )
     {

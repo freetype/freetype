@@ -1505,8 +1505,8 @@
                     FT_ULong     base_offset,
                     FT_ULong     offset )
   {
-    FT_Memory  memory     = stream->memory;
-    FT_Error   error      = 0;
+    FT_Memory  memory = stream->memory;
+    FT_Error   error  = 0;
     FT_UShort  glyph_sid;
 
 
@@ -1557,7 +1557,6 @@
 
           while ( j < num_glyphs )
           {
-
             /* Read the first glyph sid of the range. */
             if ( FT_READ_USHORT( glyph_sid ) )
               goto Exit;
@@ -1699,11 +1698,11 @@
                      FT_ULong      base_offset,
                      FT_ULong      offset )
   {
-    FT_Error    error  = 0;
-    FT_UInt     count;
-    FT_UInt     j;
-    FT_UShort   glyph_sid;
-    FT_UInt     glyph_code;
+    FT_Error   error = 0;
+    FT_UInt    count;
+    FT_UInt    j;
+    FT_UShort  glyph_sid;
+    FT_UInt    glyph_code;
 
 
     /* Check for charset->sids.  If we do not have this, we fail. */
@@ -1720,8 +1719,8 @@
       encoding->codes[j] = 0;
     }
 
-    /* Note: The encoding table in a CFF font is indexed by glyph index,  */
-    /* where the first encoded glyph index is 1.  Hence, we read the char */
+    /* Note: The encoding table in a CFF font is indexed by glyph index;  */
+    /* the first encoded glyph index is 1.  Hence, we read the character  */
     /* code (`glyph_code') at index j and make the assignment:            */
     /*                                                                    */
     /*    encoding->codes[glyph_code] = j + 1                             */
@@ -1734,7 +1733,6 @@
 
     if ( offset > 1 )
     {
-
       encoding->offset = base_offset + offset;
 
       /* we need to parse the table to determine its size */
@@ -1857,13 +1855,13 @@
           /* Assign code to SID mapping. */
           encoding->sids[glyph_code] = glyph_sid;
 
-          /* First, lookup GID which has been assigned to */
-          /* SID glyph_sid.                               */
+          /* First, look up GID which has been assigned to */
+          /* SID glyph_sid.                                */
           for ( gindex = 0; gindex < num_glyphs; gindex++ )
           {
             if ( charset->sids[gindex] == glyph_sid )
             {
-              encoding->codes[glyph_code] = (FT_UShort) gindex;
+              encoding->codes[glyph_code] = (FT_UShort)gindex;
               break;
             }
           }
@@ -1875,10 +1873,10 @@
       FT_UInt i;
 
 
-      /* We take into account the fact a CFF font can use a predefined  */
-      /* encoding without containing all of the glyphs encoded by this  */
-      /* encoding (see the note at the end of section 12 in the CFF     */
-      /* specification).                                                */
+      /* We take into account the fact a CFF font can use a predefined */
+      /* encoding without containing all of the glyphs encoded by this */
+      /* encoding (see the note at the end of section 12 in the CFF    */
+      /* specification).                                               */
 
       switch ( (FT_UInt)offset )
       {
@@ -1899,7 +1897,6 @@
         /* and charset.                                           */
 
         encoding->count = 0;
-
 
         for ( j = 0; j < 256; j++ )
         {
@@ -2208,7 +2205,7 @@
     if ( font->num_glyphs > 0 )
     {
       error = cff_charset_load( &font->charset, font->num_glyphs, stream,
-                              base_offset, dict->charset_offset );
+                                base_offset, dict->charset_offset );
       if ( error )
         goto Exit;
 

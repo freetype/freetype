@@ -1,3 +1,15 @@
+2003-06-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffobjs.c (cff_face_init): Use symbolic names for
+	Adobe specific encoding IDs (there was a wrong EID value for custom
+	encoding).
+
+	* src/cff/cffcmap.h (CFF_CMapStdRec): Remove `count'.
+	* src/cff/cffcmap.c (cff_cmap_encoding_init,
+	cff_cmap_encoding_done): Updated.
+	(cff_cmap_encoding_char_index, cff_cmap_encoding_char_next): Use
+	256 as limit for character code.
+
 2003-06-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/winfonts/winfnt.c (FNT_Load_Glyph): Revert change from
