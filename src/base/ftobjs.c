@@ -305,6 +305,8 @@
 
     slot->linearHoriAdvance = 0;
     slot->linearVertAdvance = 0;
+    slot->lsb_delta         = 0;
+    slot->rsb_delta         = 0;
   }
 
 

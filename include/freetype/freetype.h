@@ -2581,9 +2581,9 @@ FT_BEGIN_HEADER
   /*                   kerning vector.                                     */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    akerning    :: The kerning vector.  This is in font units for      */
-  /*                   scalable formats, and in pixels for fixed-sizes     */
-  /*                   formats.                                            */
+  /*    akerning    :: The kerning vector.  This is either in font units   */
+  /*                   or in pixels (26.6 format) for scalable formats,    */
+  /*                   and in pixels for fixed-sizes formats.              */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
