@@ -8,4 +8,4 @@
 #   Jamfile
 #   install
 #
-make setup unix CFG="$@"
+CFG="$@" make setup unix
