@@ -4126,9 +4126,9 @@ fi
 rm -f conftest.mmap
 
 if test "$ac_cv_func_mmap_fixed_mapped" != yes; then
-  FTSYS_SRC='$(BASE_)ftsystem.c'
+  FTSYS_SRC='$(BASE_DIR)/ftsystem.c'
 else
-  FTSYS_SRC='$(BUILD)/ftsystem.c'
+  FTSYS_SRC='$(BUILD_DIR)/ftsystem.c'
 
   echo "$as_me:$LINENO: checking whether munmap must be declared" >&5
 echo $ECHO_N "checking whether munmap must be declared... $ECHO_C" >&6

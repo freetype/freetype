@@ -18,7 +18,7 @@
 
 
  /*
-  *  Rhis is a development version of <ft2build.h> that is used
+  *  This is a development version of <ft2build.h> that is used
   *  to build the library in debug mode.  Its only difference with
   *  the reference is that it forces the use of the local "ftoption.h"
   *  which contains different settings for all configuration macros.

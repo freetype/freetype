@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000 by
+# Copyright 1996-2000, 2003 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -46,12 +46,12 @@ endif # test PLATFORM ansi
 
 ifeq ($(PLATFORM),win32)
 
-  DELETE   := del
-  COPY     := copy
+  DELETE := del
+  COPY   := copy
+  SEP    := $(BACKSLASH)
 
   # gcc Makefile by default
   CONFIG_FILE := w32-gcc.mk
-  SEP         := /
   ifeq ($(firstword $(CC)),cc)
     CC        := gcc
   endif
@@ -80,7 +80,6 @@ ifeq ($(PLATFORM),win32)
   #
   ifneq ($(findstring visualc,$(MAKECMDGOALS)),)     # Visual C/C++
     CONFIG_FILE := w32-vcc.mk
-    SEP         := $(BACKSLASH)
     CC          := cl
     visualc: setup
     .PHONY: visualc
@@ -88,7 +87,6 @@ ifeq ($(PLATFORM),win32)
 
   ifneq ($(findstring intelc,$(MAKECMDGOALS)),)      # Intel C/C++
     CONFIG_FILE := w32-intl.mk
-    SEP         := $(BACKSLASH)
     CC          := cl
     visualc: setup
     .PHONY: intelc
@@ -96,7 +94,6 @@ ifeq ($(PLATFORM),win32)
 
   ifneq ($(findstring watcom,$(MAKECMDGOALS)),)      # Watcom C/C++
     CONFIG_FILE := w32-wat.mk
-    SEP         := $(BACKSLASH)
     CC          := wcc386
     watcom: setup
     .PHONY: watcom
@@ -104,7 +101,6 @@ ifeq ($(PLATFORM),win32)
 
   ifneq ($(findstring visualage,$(MAKECMDGOALS)),)   # Visual Age C++
     CONFIG_FILE := w32-icc.mk
-    SEP         := $(BACKSLASH)
     CC          := icc
     visualage: setup
     .PHONY: visualage
@@ -112,7 +108,6 @@ ifeq ($(PLATFORM),win32)
 
   ifneq ($(findstring lcc,$(MAKECMDGOALS)),)         # LCC-Win32
     CONFIG_FILE := w32-lcc.mk
-    SEP         := $(BACKSLASH)
     CC          := lcc
     lcc: setup
     .PHONY: lcc
@@ -120,7 +115,6 @@ ifeq ($(PLATFORM),win32)
 
   ifneq ($(findstring mingw32,$(MAKECMDGOALS)),)     # mingw32
     CONFIG_FILE := w32-mingw32.mk
-    SEP         := $(BACKSLASH)
     CC          := gcc
     mingw32: setup
     .PHONY: mingw32
@@ -128,7 +122,6 @@ ifeq ($(PLATFORM),win32)
 
   ifneq ($(findstring bcc32,$(MAKECMDGOALS)),)       # Borland C++
     CONFIG_FILE := w32-bcc.mk
-    SEP         := $(BACKSLASH)
     CC          := bcc32
     bcc32: setup
     .PHONY: bcc32
@@ -137,7 +130,6 @@ ifeq ($(PLATFORM),win32)
   ifneq ($(findstring devel-bcc,$(MAKECMDGOALS)),)   # development target
     CONFIG_FILE := w32-bccd.mk
     CC          := bcc32
-    SEP         := /
     devel-bcc: setup
     .PHONY: devel-bcc
   endif
@@ -145,11 +137,11 @@ ifeq ($(PLATFORM),win32)
   ifneq ($(findstring devel-gcc,$(MAKECMDGOALS)),)   # development target
     CONFIG_FILE := w32-dev.mk
     CC          := gcc
-    SEP         := /
     devel-gcc: setup
     .PHONY: devel-gcc
   endif
 
 endif   # test PLATFORM win32
+
 
 # EOF
