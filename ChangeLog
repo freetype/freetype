@@ -1,3 +1,10 @@
+2001-10-25  Leonard Rosenthol  <leonardr@lazerware.com>
+
+	* update CodeWarrior project for Mac OS (builds/mac/ftlib.prj)
+	for latest version (7) of CWPro and for recent changes to the
+	FT source tree.
+
+
 2001-10-25  David Turner  <david@freetype.org>
 
 	* include/freetype/config/ftoption.h: updated comment to explain
