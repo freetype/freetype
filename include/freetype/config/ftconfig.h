@@ -175,13 +175,6 @@
 #endif /* FT_MAKE_OPTION_SINGLE_OBJECT */
 
 
-#ifdef __cplusplus
-#define LOCAL_VAR  extern "C"
-#else
-#define LOCAL_VAR  extern
-#endif
-
-
 #ifndef BASE_DEF
 
 #ifdef __cplusplus
@@ -245,11 +238,15 @@
   /*                                                                 */
 #ifdef __cplusplus
 
+#define LOCAL_VAR  extern "C"
+
 #define LOCAL_FUNC_X  extern "C"
 
 #define FT_CPLUSPLUS( x )  extern "C"  x
 
 #else
+
+#define LOCAL_VAR  extern
 
 #define LOCAL_FUNC_X  static
 
