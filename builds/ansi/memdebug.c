@@ -4,11 +4,11 @@
 /*                                                                         */
 /*    Memory debugging functions (body only).                              */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -46,9 +46,7 @@
   {
     /* Now print the remaining blocks */
     if ( num_mem_blocks == 0 )
-    {
       fprintf( stderr, "No memory leaked!\n" );
-    }
     else
     {
       int  i;
@@ -66,6 +64,7 @@
                  (long)mem_blocks[i].base, mem_blocks[i].size );
       }
     }
+
     free( mem_blocks );
   }
 

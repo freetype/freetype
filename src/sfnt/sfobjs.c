@@ -319,8 +319,8 @@
               FT_FACE_FLAG_HORIZONTAL;    /* horizontal data   */
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-      /* might need more polish to detect the presence of a Postscript name */
-      /* table in the font..                                                */
+      /* might need more polish to detect the presence of a Postscript */
+      /* name table in the font                                        */
       flags |= FT_FACE_FLAG_GLYPH_NAMES;
 #endif
 

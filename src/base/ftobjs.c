@@ -1031,7 +1031,7 @@
                                ( load_flags & FT_LOAD_MONOCHROME )
                                   ? ft_render_mode_mono
                                   : ft_render_mode_normal );
-    }	
+    }
 
   Exit:
     return error;
@@ -1119,6 +1119,7 @@
                       FT_Driver  driver )
   {
     FT_Driver_Class*  clazz = driver->clazz;
+
 
     /* discard auto-hinting data */
     if ( face->autohint.finalizer )
@@ -2259,34 +2260,34 @@
   /*    FT_Get_Glyph_Name                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Retrieves the ASCII name of a given glyph in a face. This only     */
-  /*    works for those faces where FT_HAS_GLYPH_NAME(face) returns        */
-  /*    true.                                                              */
+  /*    Retrieves the ASCII name of a given glyph in a face.  This only    */
+  /*    works for those faces where FT_HAS_GLYPH_NAME(face) returns true.  */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face        :: A handle to a source face object.                   */
-  /*    glyph_index :: the glyph index.                                    */
   /*                                                                       */
-  /*    buffer      :: pointer to a target buffer where the name will be   */
-  /*                   copied..                                            */
+  /*    glyph_index :: The glyph index.                                    */
   /*                                                                       */
-  /*    buffer_max  :: the maximal number of bytes available in the buffer */
+  /*    buffer      :: A pointer to a target buffer where the name will be */
+  /*                   copied to.                                          */
+  /*                                                                       */
+  /*    buffer_max  :: The maximal number of bytes available in the        */
+  /*                   buffer.                                             */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    An error is returned when the face doesn't provide glyph names     */
-  /*    or when the glyph index is invalid. In all cases of failure, the   */
-  /*    first byte of "buffer" will be set to 0 to indicate an empty       */
-  /*    name.                                                              */
+  /*    An error is returned if the face doesn't provide glyph names or if */
+  /*    the glyph index is invalid.  In all cases of failure, the first    */
+  /*    byte of `buffer' will be set to 0 to indicate an empty name.       */
   /*                                                                       */
-  /*    The glyph name is truncated to fit within the buffer if it's too   */
-  /*    long. The returned string is always zero-terminated                */
+  /*    The glyph name is truncated to fit within the buffer if it is too  */
+  /*    long.  The returned string is always zero-terminated.              */
   /*                                                                       */
   /*    This function is not compiled within the library if the config     */
   /*    macro FT_CONFIG_OPTION_NO_GLYPH_NAMES is defined in                */
-  /*    <freetype/config/ftoptions.h>                                      */
+  /*    `include/freetype/config/ftoptions.h'                              */
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Get_Glyph_Name( FT_Face     face,
                                                  FT_UInt     glyph_index,
@@ -2295,26 +2296,32 @@
   {
     FT_Error  error = FT_Err_Invalid_Argument;
     
+
     /* clean up buffer */
-    if (buffer && buffer_max > 0)
+    if ( buffer && buffer_max > 0 )
       ((FT_Byte*)buffer)[0] = 0;
       
-    if ( face && glyph_index < (FT_UInt)face->num_glyphs &&  FT_HAS_GLYPH_NAMES(face) )
+    if ( face                                    &&
+         glyph_index < (FT_UInt)face->num_glyphs &&
+         FT_HAS_GLYPH_NAMES( face )              )
     {
       /* now, lookup for glyph name */
       FT_Driver        driver = face->driver;
-      FT_Module_Class* clazz  = FT_MODULE_CLASS(driver);
+      FT_Module_Class* clazz  = FT_MODULE_CLASS( driver );
 
-      if (clazz->get_interface)
+
+      if ( clazz->get_interface )
       {
         FT_Glyph_Name_Requester  requester;
         
-        requester = (FT_Glyph_Name_Requester)
-                        clazz->get_interface( FT_MODULE(driver), "glyph_name" );
-        if (requester)
+
+        requester = (FT_Glyph_Name_Requester)clazz->get_interface(
+                      FT_MODULE( driver ), "glyph_name" );
+        if ( requester )
           error = requester( face, glyph_index, buffer, buffer_max );
       }
     }
+
     return error;
   }                                                 
 

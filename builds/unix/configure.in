@@ -2,29 +2,23 @@ dnl This file is part of the FreeType project.
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl
-dnl This file must be processed from the top FreeType 2 directory. E.g:
-dnl
-dnl   % autoconf config/unix/configure.in > config/unix/configure
-dnl
 
 AC_INIT(ftconfig.in)
 
-cnl Configuration file - stay in 8.3 limit
+dnl Configuration file - stay in 8.3 limit
 AC_CONFIG_HEADER(ftconfig.h:ftconfig.in)
 
-dnl Due to a bug in autoconf we must set $srcdir explicitly to an absolute
-dnl path.
-srcdir=`pwd`
+version_info='0:0:0'
+AC_SUBST(version_info)
 
-dnl Checks for system type.
+dnl checks for system type
 AC_CANONICAL_SYSTEM
 
-dnl Checks for programs.
+dnl checks for programs
 AC_PROG_CC
 AC_PROG_CPP
 
 dnl get Compiler flags right.
-
 if test "x$CC" = xgcc; then
   XX_CFLAGS="-Wall"
   XX_ANSIFLAGS="-pedantic -ansi"
@@ -46,17 +40,12 @@ AC_SUBST(XX_ANSIFLAGS)
 AC_CHECK_PROG(RMF, rm, rm -f)
 AC_CHECK_PROG(RMDIR, rmdir, rmdir)
 AC_PROG_INSTALL
-AC_PROG_LN_S
 
-dnl Checks for libraries.
-sinclude(net.m4)
-AC_LIBRARY_NET
+dnl checks for header files
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h unistd.h)
 
-dnl Checks for header files.
-AC_PATH_XTRA
-AC_CHECK_HEADERS(stdlib.h fcntl.h unistd.h)
-
-dnl Checks for typedefs, structures, and compiler characteristics.
+dnl checks for typedefs, structures, and compiler characteristics
 AC_C_CONST
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(long)
@@ -66,30 +55,20 @@ dnl Checks for library functions.
 dnl Here we check whether we can use our mmap file component.
 AC_FUNC_MMAP
 if test "$ac_cv_func_mmap_fixed_mapped" != yes; then
-  FT_SYSTEM_COMPONENT=ftsystem.c
+  FTSYS_SRC='$(BASE_)ftsystem.c'
 else
-  FT_SYSTEM_COMPONENT=config/unix/ftsystem.c
+  FTSYS_SRC='$(BUILD)/ftsystem.c'
 fi
-AC_SUBST(FT_SYSTEM_COMPONENT)
+AC_SUBST(FTSYS_SRC)
 
 AC_CHECK_FUNCS(memcpy memmove)
 
-# Turn off shared libraries during beta testing, since they
-# make the build process take too long
-#
-# AC_DISABLE_SHARED
-
 AM_PROG_LIBTOOL
 
-
-dnl Another bug: to make --srcdir work correctly we have to create the
-dnl directory hierarchy first since autoconf only uses mkdir.
-dnl $srcdir/config/unix/mkinstalldirs lib/arch/unix test/arch/unix
-
-dnl  Create the Unix-specific sub-Makefile "config/unix/unix.mk" that will be
-dnl  used by the build system..
+dnl create the Unix-specific sub-Makefile `builds/unix/unix.mk' that will be
+dnl used by the build system
 dnl
-AC_OUTPUT( unix.mk:unix.in )
+AC_OUTPUT(unix.mk:unix.in)
 
 
 dnl end of configure.in

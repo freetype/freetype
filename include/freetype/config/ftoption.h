@@ -278,14 +278,15 @@
   /*                                                                       */
   /* Define TT_CONFIG_OPTION_SFNT_NAMES if your applications need to       */
   /* access the internal name table in a SFNT-based format like TrueType   */
-  /* or OpenType. The name table contains various strings used to          */
-  /* describe the font, like family name, copyright, version, etc..        */
-  /* It does not contain any glyph name though..                           */
+  /* or OpenType.  The name table contains various strings used to         */
+  /* describe the font, like family name, copyright, version, etc.  It     */
+  /* does not contain any glyph name though.                               */
   /*                                                                       */
-  /* Accessing sfnt names is done through the functions declared in        */
-  /* <freetype/ftnames.h>                                                  */
+  /* Accessing SFNT names is done through the functions declared in        */
+  /* `freetype/ftnames.h'.                                                 */
   /*                                                                       */
-#define  TT_CONFIG_OPTION_SFNT_NAMES
+#define TT_CONFIG_OPTION_SFNT_NAMES
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -353,11 +354,13 @@
   /*                                                                       */
 #define T1_MAX_SUBRS_CALLS  8
 
+
   /*************************************************************************/
   /*                                                                       */
   /* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity.        */
   /*                                                                       */
 #define T1_MAX_CHARSTRINGS_OPERANDS  32
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -375,6 +378,7 @@
   /* unable to produce kerning distances.                                  */
   /*                                                                       */
 #undef T1_CONFIG_OPTION_NO_AFM
+
 
   /*************************************************************************/
   /*                                                                       */

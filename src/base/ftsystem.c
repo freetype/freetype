@@ -61,6 +61,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    memory :: A pointer to the memory object.                          */
+  /*                                                                       */
   /*    size   :: The requested size in bytes.                             */
   /*                                                                       */
   /* <Return>                                                              */

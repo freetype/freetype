@@ -13,10 +13,6 @@
 # fully.
 
 
-# This will probably change a lot in the future if we are going to use
-# Automake/Autoconf...
-
-
 ifeq ($(PLATFORM),ansi)
 
   has_init := $(strip $(wildcard /sbin/init))
@@ -27,34 +23,46 @@ ifeq ($(PLATFORM),ansi)
     DELETE   := rm -f
 
     # Test whether we are using gcc.  If so, we select the `unix-gcc.mk'
-    # configuration file.  Otherwise, the standard `unix.mk' is used which
-    # simply calls `cc -c' with no extra arguments.
+    # configuration file.  Otherwise, the configure script is called and
+    # `unix.mk' is created.
+    #
+    # The use of the configure script can be forced by saying `make unix'.
     #
     # Feel free to add support for other platform specific compilers in this
     # directory (e.g. solaris.mk + changes here to detect the platform).
     #
-    ifeq ($(firstword $(CC)),gcc)
-      is_gcc := 1
+    ifneq ($(findstring unix,$(MAKECMDGOALS)),)
+      CONFIG_FILE := unix.mk
+      setup: unix.mk
+      unix: setup
     else
-      ifneq ($(findstring gcc,$(shell $(CC) -v 2>&1)),)
+      ifeq ($(firstword $(CC)),gcc)
         is_gcc := 1
+      else
+        ifneq ($(findstring gcc,$(shell $(CC) -v 2>&1)),)
+          is_gcc := 1
+        endif
+      endif
+
+      ifdef is_gcc
+        CONFIG_FILE := unix-gcc.mk
+      else
+        CONFIG_FILE := unix.mk
+        setup: unix.mk
+      endif
+
+      # If `devel' is the requested target, use the development Makefile.
+      #
+      ifneq ($(findstring devel,$(MAKECMDGOALS)),)
+        CONFIG_FILE := unix-dev.mk
+        devel: setup
       endif
     endif
 
-    ifdef is_gcc
-      CONFIG_FILE := unix-gcc.mk
-    else
-      CONFIG_FILE := unix.mk
-    endif
-
-    # If `devel' is the requested target, use the development Makefile.
-    #
-    ifneq ($(findstring devel,$(MAKECMDGOALS)),)
-      CONFIG_FILE := unix-dev.mk
-      devel: setup
-    endif
-
     setup: std_setup
+
+    unix.mk: builds/unix/unix.in
+	    cd builds/unix; ./configure
 
   endif # test Unix
 endif   # test PLATFORM

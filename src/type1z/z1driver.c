@@ -50,28 +50,30 @@
 #define FT_COMPONENT  trace_z1driver
 
 
-
   static
-  FT_Error   get_z1_glyph_name( T1_Face      face,
-                                FT_UInt      glyph_index,
-                                FT_Pointer   buffer,
-                                FT_UInt      buffer_max )
+  FT_Error  get_z1_glyph_name( T1_Face     face,
+                               FT_UInt     glyph_index,
+                               FT_Pointer  buffer,
+                               FT_UInt     buffer_max )
   {
     FT_String*  gname;
     
+
     gname = face->type1.glyph_names[glyph_index];
-    if (buffer_max > 0)
+
+    if ( buffer_max > 0 )
     {
       FT_UInt  len = strlen( gname );
       
+
       if (len >= buffer_max)
-        len = buffer_max-1;
+        len = buffer_max - 1;
         
       MEM_Copy( buffer, gname, len );
       ((FT_Byte*)buffer)[len] = 0;
     }
 
-    return 0;
+    return T1_Err_Ok;
   }                                  
 
 

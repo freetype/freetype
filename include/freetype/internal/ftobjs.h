@@ -372,7 +372,7 @@
   /*    managing and loading font files of a given format.                 */
   /*                                                                       */
   /*  <Fields>                                                             */
-  /*     root         :: contains the fields of the root module class      */
+  /*     root         :: Contains the fields of the root module class.     */
   /*                                                                       */
   /*     clazz        :: A pointer to the font driver's class.  Note that  */
   /*                     this is NOT root.clazz.  `class' wasn't used      */
@@ -454,14 +454,15 @@
   /*                        handle to the current renderer for the         */
   /*                        ft_glyph_format_outline format.                */
   /*                                                                       */
-  /*    raster_pool_size :: size of the render pool in bytes               */
+  /*    auto_hinter      :: XXX                                            */
   /*                                                                       */
   /*    raster_pool      :: The raster object's render pool.  This can     */
   /*                        ideally be changed dynamically at run-time.    */
   /*                                                                       */
+  /*    raster_pool_size :: The size of the render pool in bytes.          */
   /*                                                                       */
+  /*    debug_hooks      :: XXX                                            */
   /*                                                                       */
-
   typedef struct  FT_LibraryRec_
   {
     FT_Memory           memory;           /* library's memory manager */

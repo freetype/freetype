@@ -56,10 +56,10 @@
   /*************************************************************************/
 
 
-/* We use <limits.h> values to know the sizes of the types.  */
+  /* We use <limits.h> values to know the sizes of the types.  */
 #include <limits.h>
 
-/* The number of bytes in an `int' type.  */
+  /* The number of bytes in an `int' type.  */
 #if   UINT_MAX == 0xFFFFFFFF
 #define FT_SIZEOF_INT  4
 #elif UINT_MAX == 0xFFFF
@@ -70,7 +70,7 @@
 #error "Unsupported number of bytes in `int' type!"
 #endif
 
-/* The number of bytes in a `long' type.  */
+  /* The number of bytes in a `long' type.  */
 #if   ULONG_MAX == 0xFFFFFFFF
 #define FT_SIZEOF_LONG  4
 #elif ULONG_MAX > 0xFFFFFFFF && ULONG_MAX == 0xFFFFFFFFFFFFFFFF
@@ -80,12 +80,12 @@
 #endif
 
 
-/* Preferred alignment of data */
+  /* Preferred alignment of data */
 #define FT_ALIGNMENT  8
 
 
-/* UNUSED is a macro used to indicate that a given parameter is not used -- */
-/* this is only used to get rid of unpleasant compiler warnings             */
+  /* UNUSED is a macro used to indicate that a given parameter is not used */
+  /* -- this is only used to get rid of unpleasant compiler warnings       */
 #ifndef FT_UNUSED
 #define FT_UNUSED( arg )  ( (arg) = (arg) )
 #endif

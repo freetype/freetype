@@ -57,6 +57,11 @@
 #                  object builds, respectively).  Set up cumulatively in
 #                  `src/<driver>/rules.mk'.
 #
+#   CLEAN
+#   DISTCLEAN      The sub-makefiles can append additional stuff to these two
+#                  variables which is to be removed for the `clean' resp.
+#                  `distclean' target.
+#
 #   TOP, SEP,
 #   LIBRARY, CC,
 #   A, I, O, T     Check `config.mk' for details.
@@ -242,20 +247,20 @@ library: $(FT_LIBRARY)
 # on all systems though.
 #
 clean_freetype_std:
-	-$(DELETE) $(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)
+	-$(DELETE) $(BASE_OBJECTS) $(OBJ_M) $(OBJ_S) $(CLEAN)
 
 distclean_freetype_std: clean_freetype_std
 	-$(DELETE) $(FT_LIBRARY)
-	-$(DELETE) *.orig *~ core *.core
+	-$(DELETE) *.orig *~ core *.core $(DISTCLEAN)
 
 # The Dos command shell does not support very long list of arguments, so
 # we are stuck with wildcards.
 #
 clean_freetype_dos:
-	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(OBJ_))*.$O 2> nul
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(OBJ_))*.$O $(CLEAN) 2> nul
 
 distclean_freetype_dos: clean_freetype_dos
-	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(FT_LIBRARY)) 2> nul
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(FT_LIBRARY)) $(DISTCLEAN) 2> nul
 
 # Remove configuration file (used for distclean).
 #
