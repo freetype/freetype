@@ -1,3 +1,8 @@
+2002-02-01  David Turner  <david@freetype.org>
+
+        * include/freetype/freetype.h: increasing FREETYPE_PATCH to 7
+        for the new release
+
 2002-01-31  David Turner  <david@freetype.org>
 
 	* README, README.UNX, docs/CHANGES: Updating documentation for the
