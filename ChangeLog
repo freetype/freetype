@@ -1,3 +1,17 @@
+2002-08-20  David Turner   <david@freetype.org>
+
+	* src/pshinter/pshalgo1.c, src/pshinter/pshalog2.c, 
+	src/pshinter/pshglob.c, src/pshinter/pshrec.c,
+	src/autohint/ahmodule.c: removing compiler warnings with
+	DEBUG_HINTER defined (only used in development builds anyway)
+
+	* src/pshinter/pshalgo3.h, src/pshinter/pshalgo3.c: removing
+	compiler warnings, and improving the support of local extrema
+	and stem edge points
+
+	* test/gview.c: small updates to the hinting debugger
+	* Jamfile: small updates
+
 2002-08-18  Arkadiusz Miskiewicz  <misiek@pld.ORG.PL>
 
 	* builds/unix/install.mk (install, uninstall): Add $(DESTDIR) to

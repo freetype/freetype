@@ -27,9 +27,9 @@
 #define FT_COMPONENT  trace_pshrec
 
 #ifdef DEBUG_HINTER
-  extern PS_Hints  ps_debug_hints         = 0;
-  extern int       ps_debug_no_horz_hints = 0;
-  extern int       ps_debug_no_vert_hints = 0;
+  PS_Hints  ps_debug_hints         = 0;
+  int       ps_debug_no_horz_hints = 0;
+  int       ps_debug_no_vert_hints = 0;
 #endif
 
 

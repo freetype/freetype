@@ -25,9 +25,9 @@
 #define FT_COMPONENT  trace_pshalgo2
 
 #ifdef DEBUG_HINTER
-  extern PSH2_Hint_Table  ps2_debug_hint_table = 0;
-  extern PSH2_HintFunc    ps2_debug_hint_func  = 0;
-  extern PSH2_Glyph       ps2_debug_glyph      = 0;
+  PSH2_Hint_Table  ps2_debug_hint_table = 0;
+  PSH2_HintFunc    ps2_debug_hint_func  = 0;
+  PSH2_Glyph       ps2_debug_glyph      = 0;
 #endif
 
 
