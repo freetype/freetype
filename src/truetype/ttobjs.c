@@ -363,11 +363,11 @@
     if (sfnt)
     {
       /* destroy the postscript names table if it is supported */
-      if (sfnt->load_psnames)
+      if (sfnt->free_psnames)
         sfnt->free_psnames( face );
         
       /* destroy the embedded bitmaps table if it is supported */
-      if (sfnt->load_sbits)
+      if (sfnt->free_sbits)
         sfnt->free_sbits( face );
     }
 
