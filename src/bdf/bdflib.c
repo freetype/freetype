@@ -643,8 +643,8 @@
     unsigned long     lineno;
     int               n, res, done, refill, bytes, hold;
     char              *ls, *le, *pp, *pe, *hp;
-    /* XXX: Use a dynamic buffer */
-    char              buf[65536L];
+    char              *buf = 0;
+    FT_Memory         memory = stream->memory;
     FT_Error          error = BDF_Err_Ok;
 
 
@@ -653,6 +653,9 @@
       error = BDF_Err_Invalid_Argument;
       goto Exit;
     }
+
+    if ( FT_NEW_ARRAY( buf, 65536L ) )
+      goto Exit;
 
     cb     = callback;
     lineno = 1;
@@ -732,6 +735,7 @@
     *lno             = lineno;
 
   Exit:
+    FT_FREE( buf );
     return error;
   }
 
@@ -1619,7 +1623,7 @@
           {
             if ( font->unencoded_size == 0 )
             {
-              if ( FT_NEW_ARRAY( font->unencoded, 2 ) )
+              if ( FT_NEW_ARRAY( font->unencoded, 4 ) )
                 goto Exit;
             }
             else
@@ -2290,7 +2294,8 @@
     }
 
     /* Free up the list used during the parsing. */
-    FT_FREE( p.list.field );
+    if ( memory != NULL )
+      FT_FREE( p.list.field );
 
     if ( p.font != 0 )
     {
@@ -2306,6 +2311,8 @@
         p.font->comments[p.font->comments_len] = 0;
       }
     }
+    else if ( error == BDF_Err_Ok )
+      error = BDF_Err_Invalid_File_Format;
 
     *font = p.font;
 

@@ -128,9 +128,10 @@ THE SOFTWARE.
       prop = bdf_get_font_property( font, (char *)"SPACING" );
       if ( prop != NULL )
         if ( prop->format == BDF_ATOM )
-          if ( ( *(prop->value.atom) == 'M' ) ||
-               ( *(prop->value.atom) == 'C' ) )
-            root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
+          if ( prop->value.atom != NULL )
+            if ( ( *(prop->value.atom) == 'M' ) ||
+                 ( *(prop->value.atom) == 'C' ) )
+              root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
       /* FZ XXX: TO DO: FT_FACE_FLAGS_VERTICAL   */
       /* FZ XXX: I need a font to implement this */
@@ -139,18 +140,20 @@ THE SOFTWARE.
       prop = bdf_get_font_property( font, (char *)"SLANT" );
       if ( prop != NULL )
         if ( prop->format == BDF_ATOM )
-          if ( ( *(prop->value.atom) == 'O' ) ||
-               ( *(prop->value.atom) == 'I' ) )
-            root->style_flags |= FT_STYLE_FLAG_ITALIC;
+          if ( prop->value.atom != NULL )
+            if ( ( *(prop->value.atom) == 'O' ) ||
+                 ( *(prop->value.atom) == 'I' ) )
+              root->style_flags |= FT_STYLE_FLAG_ITALIC;
 
       prop = bdf_get_font_property( font, (char *)"WEIGHT_NAME" );
       if ( prop != NULL )
         if ( prop->format == BDF_ATOM )
-          if ( *(prop->value.atom) == 'B' )
-            root->style_flags |= FT_STYLE_FLAG_BOLD;
+          if ( prop->value.atom != NULL )
+            if ( *(prop->value.atom) == 'B' )
+              root->style_flags |= FT_STYLE_FLAG_BOLD;
 
       prop = bdf_get_font_property( font, (char *)"FAMILY_NAME" );
-      if ( prop != NULL )
+      if ( ( prop != NULL ) && ( prop->value.atom != NULL ) )
       {
         int  l = ft_strlen( prop->value.atom ) + 1;
 
@@ -237,7 +240,9 @@ THE SOFTWARE.
         if ( ( charset_registry != NULL ) && ( charset_encoding != NULL ) )
         {
           if ( ( charset_registry->format == BDF_ATOM ) &&
-               ( charset_encoding->format == BDF_ATOM ) )
+               ( charset_encoding->format == BDF_ATOM ) &&
+               ( charset_registry->value.atom != NULL ) &&
+               ( charset_encoding->value.atom != NULL ) )
           {
             if ( FT_NEW_ARRAY( face->charset_encoding,
                                strlen( charset_encoding->value.atom ) + 1 ) )
