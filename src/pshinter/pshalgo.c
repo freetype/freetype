@@ -511,6 +511,9 @@
             if ( !psh_hint_is_fitted( parent ) )
               psh_hint_align( parent, globals, dimension, glyph );
 
+            /* keep original relation between hints, this is, use the */
+            /* scaled distance between the centers of the hints to    */
+            /* compute the new position                               */
             par_org_center = parent->org_pos + ( parent->org_len >> 1 );
             par_cur_center = parent->cur_pos + ( parent->cur_len >> 1 );
             cur_org_center = hint->org_pos   + ( hint->org_len   >> 1 );
@@ -1486,7 +1489,10 @@
 
 
   /* the accepted shift for strong points in fractional pixels */
-#define PSH_STRONG_THRESHOLD  50
+#define PSH_STRONG_THRESHOLD  32
+
+  /* the maximum shift value in font units */
+#define PSH_STRONG_THRESHOLD_MAXIMUM  30
 
 
   /* find strong points in a glyph */
@@ -1494,8 +1500,8 @@
   psh_glyph_find_strong_points( PSH_Glyph  glyph,
                                 FT_Int     dimension )
   {
-    /* a point is strong if it is located on a stem                   */
-    /* edge and has an "in" or "out" tangent to the hint's direction  */
+    /* a point is `strong' if it is located on a stem edge and       */
+    /* has an `in' or `out' tangent parallel to the hint's direction */
 
     PSH_Hint_Table  table     = &glyph->hint_tables[dimension];
     PS_Mask         mask      = table->hint_masks->masks;
@@ -1509,8 +1515,10 @@
 
 
     threshold = (FT_Int)FT_DivFix( PSH_STRONG_THRESHOLD, scale );
+    if ( threshold > PSH_STRONG_THRESHOLD_MAXIMUM )
+      threshold = PSH_STRONG_THRESHOLD_MAXIMUM;
 
-    /* process secondary hints to "selected" points */
+    /* process secondary hints to `selected' points */
     if ( num_masks > 1 && glyph->num_points > 0 )
     {
       first = mask->end_point;
@@ -1564,6 +1572,82 @@
       for ( ; count > 0; count--, point++ )
         if ( point->hint && !psh_point_is_strong( point ) )
           psh_point_set_strong( point );
+    }
+  }
+
+
+  /* find points in a glyph which are in a blue zone and have `in' or */
+  /* `out' tangents parallel to the horizontal axis                   */
+  static void
+  psh_glyph_find_blue_points( PSH_Blues  blues,
+                              PSH_Glyph  glyph )
+  {
+    PSH_Blue_Table  table;
+    PSH_Blue_Zone   zone;
+    FT_UInt         glyph_count = glyph->num_points;
+    FT_UInt         blue_count;
+    PSH_Point       point = glyph->points;
+
+
+    for ( ; glyph_count > 0; glyph_count--, point++ )
+    {
+      FT_Pos  y;
+
+
+      /* check tangents */
+      if ( !PSH_DIR_COMPARE( point->dir_in,  PSH_DIR_HORIZONTAL ) &&
+           !PSH_DIR_COMPARE( point->dir_out, PSH_DIR_HORIZONTAL ) )
+        continue;
+
+      /* skip strong points */
+      if ( psh_point_is_strong( point ) )
+        continue;
+
+      y = point->org_u;
+
+      /* look up top zones */
+      table      = &blues->normal_top;
+      blue_count = table->count;
+      zone       = table->zones;
+
+      for ( ; blue_count > 0; blue_count--, zone++ )
+      {
+        FT_Pos  delta = y - zone->org_bottom;
+
+
+        if ( delta < -blues->blue_fuzz )
+          break;
+
+        if ( y <= zone->org_top + blues->blue_fuzz )
+          if ( blues->no_overshoots || delta <= blues->blue_threshold )
+          {
+            point->cur_u = zone->cur_bottom;
+            psh_point_set_strong( point );
+            psh_point_set_fitted( point );
+          }
+      }
+
+      /* look up bottom zones */
+      table      = &blues->normal_bottom;
+      blue_count = table->count;
+      zone       = table->zones + blue_count - 1;
+
+      for ( ; blue_count > 0; blue_count--, zone-- )
+      {
+        FT_Pos  delta = zone->org_top - y;
+
+
+        if ( delta < -blues->blue_fuzz )
+          break;
+
+        if ( y >= zone->org_bottom - blues->blue_fuzz )
+          if ( blues->no_overshoots || delta < blues->blue_threshold )
+          {
+            point->cur_u = zone->cur_top;
+            psh_point_set_strong( point );
+            psh_point_set_fitted( point );
+          }
+      }
     }
   }
 
@@ -1978,6 +2062,8 @@
 
       /* find strong points, align them, then interpolate others */
       psh_glyph_find_strong_points( glyph, dimension );
+      if ( dimension == 1 )
+        psh_glyph_find_blue_points( &globals->blues, glyph );
       psh_glyph_interpolate_strong_points( glyph, dimension );
       psh_glyph_interpolate_normal_points( glyph, dimension );
       psh_glyph_interpolate_other_points( glyph, dimension );
