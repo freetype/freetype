@@ -1837,6 +1837,37 @@
 
   /* documentation is in freetype.h */
 
+  FT_EXPORT_DEF( FT_UInt )
+  FT_Get_Name_Index( FT_Face     face,
+                     FT_String*  glyph_name )
+  {
+    FT_UInt  result = 0;
+
+
+    if ( face && FT_HAS_GLYPH_NAMES( face ) )
+    {
+      /* now, lookup for glyph name */
+      FT_Driver        driver = face->driver;
+      FT_Module_Class* clazz  = FT_MODULE_CLASS( driver );
+
+
+      if ( clazz->get_interface )
+      {
+        FT_Name_Index_Requester  requester;
+
+
+        requester = (FT_Name_Index_Requester)clazz->get_interface(
+                      FT_MODULE( driver ), "name_index" );
+        if ( requester )
+          result = requester( face, glyph_name );
+      }
+    }
+
+    return result;
+  }
+
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )
   FT_Get_Glyph_Name( FT_Face     face,
                      FT_UInt     glyph_index,
