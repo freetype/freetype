@@ -101,11 +101,14 @@ source_footer = """</pre></table>
 # The first two markers contain arbitrary text, while the last one contains
 # a list of field
 #
-#
 # each field is simple of the format:  WORD :: TEXT....
 #
 # Note that typically, each comment block is followed by some source
 # code declaration that may need to be kept in the reference..
+#
+# Note that markers can alternatively be written as "@MARKER:"
+# instead of "<MAKRER>". All marker identifiers are converted to
+# lower case during parsing, in order to simply sorting..
 #
 
 
@@ -323,8 +326,8 @@ class DocParagraph:
         #
         # but older Python versions don't have the `extend' attribute
         #
-        self.words[len( self.words ) : len( self.words )] = \
-          string.split( line )
+        last = len(self.words)
+        self.words[last:last] = string.split( line )
         
     
     def dump( self ):
@@ -359,6 +362,30 @@ class DocParagraph:
 ###########################################################################
 #
 # DocContent is used to store the content of a given marker.
+#
+# the "self.items" list contains (field,elements) record, where
+# "field" corresponds to a given structure fields or function
+# parameter (indicated by a "::"), or NULL for a normal section
+# of text/code
+#
+# hence, the following example:
+#
+#   <MyMarker>
+#      this is an example of what can be put in a content section,
+#
+#      a second line of example text
+#
+#      x :: a simple test field, with some content
+#      y :: even before, this field has some code content
+#           {
+#             y = x+2;
+#           }
+#
+# should be stored as
+#     [ ( None, [ DocParagraph, DocParagraph] ),
+#       ( "x",  [ DocParagraph ] ),
+#       ( "y",  [ DocParagraph, DocCode ] ) ]
+# 
 #
 class DocContent:
 
