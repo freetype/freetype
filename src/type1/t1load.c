@@ -693,9 +693,9 @@
 
 
   static FT_Error
-  t1_load_keyword( T1_Face    face,
-                   T1_Loader  loader,
-                   T1_Field   field )
+  t1_load_keyword( T1_Face         face,
+                   T1_Loader       loader,
+                   const T1_Field  field )
   {
     FT_Error  error;
     void*     dummy_object;

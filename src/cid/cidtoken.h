@@ -92,5 +92,12 @@
   T1_FIELD_NUM_TABLE ( "StemSnapH", snap_widths, 12 )
   T1_FIELD_NUM_TABLE ( "StemSnapV", snap_heights, 12 )
 
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  FT_BBox
+#undef  T1CODE
+#define T1CODE        T1_FIELD_LOCATION_BBOX
+
+  T1_FIELD_BBOX( "FontBBox", xMin )
+  
 
 /* END */

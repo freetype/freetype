@@ -36,10 +36,12 @@
   static void
   t42_parse_font_name( T42_Face    face,
                        T42_Loader  loader );
-                       
+
+#if 0                       
   static void
   t42_parse_font_bbox( T42_Face    face,
                        T42_Loader  loader );
+#endif
                        
   static void
   t42_parse_font_matrix( T42_Face    face,
@@ -84,8 +86,17 @@
     T1_FIELD_NUM    ( "FontType",    font_type )
     T1_FIELD_FIXED_P( "StrokeWidth", stroke_width )
 
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  FT_BBox
+#undef  T1CODE
+#define T1CODE        T1_FIELD_LOCATION_BBOX
+
+    T1_FIELD_BBOX("FontBBox", xMin )
+
     T1_FIELD_CALLBACK( "FontName",    t42_parse_font_name )
+#if 0
     T1_FIELD_CALLBACK( "FontBBox",    t42_parse_font_bbox )
+#endif
     T1_FIELD_CALLBACK( "FontMatrix",  t42_parse_font_matrix )
     T1_FIELD_CALLBACK( "Encoding",    t42_parse_encoding )
     T1_FIELD_CALLBACK( "CharStrings", t42_parse_charstrings )
@@ -290,18 +301,21 @@
   }
 
 
+#if 0
   static void
-  t42_parse_font_bbox( T42_Face   face,
+  t42_parse_font_bbox( T42_Face    face,
                        T42_Loader  loader )
   {
     T42_Parser  parser = &loader->parser;
     FT_BBox*    bbox   = &face->type1.font_bbox;
+
 
     bbox->xMin = T1_ToInt( parser );
     bbox->yMin = T1_ToInt( parser );
     bbox->xMax = T1_ToInt( parser );
     bbox->yMax = T1_ToInt( parser );
   }
+#endif
 
 
   static void
@@ -837,13 +851,17 @@
     {
     case T1_FIELD_LOCATION_FONT_INFO:
       dummy_object = &face->type1.font_info;
-      objects      = &dummy_object;
+      break;
+
+    case T1_FIELD_LOCATION_BBOX:
+      dummy_object = &face->type1.font_bbox;
       break;
 
     default:
       dummy_object = &face->type1;
-      objects      = &dummy_object;
     }
+
+    objects = &dummy_object;
 
     if ( field->type == T1_FIELD_TYPE_INTEGER_ARRAY ||
          field->type == T1_FIELD_TYPE_FIXED_ARRAY   )

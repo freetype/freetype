@@ -19,8 +19,10 @@
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
+
 #include "cidgload.h"
 #include "cidload.h"
+
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
@@ -331,83 +333,108 @@
       goto Exit;
     }
 
-    /* Now, load the font program into the face object */
+    /* now load the font program into the face object */
+
+    /* initialize the face object fields */
+
+    /* set up root face fields */
     {
-      /* Init the face object fields */
-      /* Now set up root face fields */
+      FT_Face       root = (FT_Face)&face->root;
+      CID_FaceInfo  cid  = &face->cid;
+      PS_FontInfo   info = &cid->font_info;
+
+
+      root->num_glyphs   = cid->cid_count;
+      root->num_charmaps = 0;
+
+      root->face_index = face_index;
+      root->face_flags = FT_FACE_FLAG_SCALABLE;
+
+      root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
+
+      if ( info->is_fixed_pitch && *info->is_fixed_pitch )
+        root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
+
+      /* XXX: TODO: add kerning with .afm support */
+
+      /* get style name -- be careful, some broken fonts only */
+      /* have a /FontName dictionary entry!                   */
+      root->family_name = info->family_name;
+      /* assume "Regular" style if we don't know better */
+      root->style_name = (char *)"Regular";
+      if ( root->family_name )
       {
-        FT_Face       root = (FT_Face)&face->root;
-        CID_FaceInfo  cid  = &face->cid;
-        PS_FontInfo   info = &cid->font_info;
+        char*  full   = info->full_name;
+        char*  family = root->family_name;
 
 
-        root->num_glyphs   = cid->cid_count;
-        root->num_charmaps = 0;
-
-        root->face_index = face_index;
-        root->face_flags = FT_FACE_FLAG_SCALABLE;
-
-        root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
-
-        if ( info->is_fixed_pitch && *info->is_fixed_pitch )
-          root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
-
-        /* XXX: TODO: add kerning with .afm support */
-
-        /* get style name -- be careful, some broken fonts only */
-        /* have a /FontName dictionary entry!                   */
-        root->family_name = info->family_name;
-        if ( root->family_name )
+        if ( full )
         {
-          char*  full   = info->full_name;
-          char*  family = root->family_name;
-
-          while ( *family && *full == *family )
+          while ( *full )
           {
-            family++;
-            full++;
-          }
-
-          if ( *full == ' ' || *full == '-' )
-            root->style_name = full + 1;
-          else
-            root->style_name = (char *)"Regular";
-        }
-        else
-        {
-          /* do we have a `/FontName'? */
-          if ( cid->cid_font_name )
-          {
-            root->family_name = cid->cid_font_name;
-            root->style_name  = (char *)"Regular";
+            if ( *full == *family )
+            {
+              family++;
+              full++;
+            }
+            else
+            {
+              if ( *full == ' ' || *full == '-' )
+                full++;
+              else if ( *family == ' ' || *family == '-' )
+                family++;
+              else
+              {
+                if ( !*family )
+                  root->style_name = full;
+                break;
+              }
+            }
           }
         }
-
-        /* no embedded bitmap support */
-        root->num_fixed_sizes = 0;
-        root->available_sizes = 0;
-
-        root->bbox.xMin =   cid->font_bbox.xMin             >> 16;
-        root->bbox.yMin =   cid->font_bbox.yMin             >> 16;
-        root->bbox.xMax = ( cid->font_bbox.xMax + 0xFFFFU ) >> 16;
-        root->bbox.yMax = ( cid->font_bbox.yMax + 0xFFFFU ) >> 16;
-
-        if ( !root->units_per_EM )
-          root->units_per_EM  = 1000;
-
-        root->ascender  = (FT_Short)( root->bbox.yMax );
-        root->descender = (FT_Short)( root->bbox.yMin );
-        root->height    = (FT_Short)(
-          ( ( root->ascender + root->descender ) * 12 ) / 10 );
-
-        if ( info->underline_position )
-          root->underline_position = *info->underline_position >> 16;
-        if ( info->underline_thickness )
-          root->underline_thickness = *info->underline_thickness >> 16;
-
-        root->internal->max_points   = 0;
-        root->internal->max_contours = 0;
       }
+      else
+      {
+        /* do we have a `/FontName'? */
+        if ( cid->cid_font_name )
+          root->family_name = cid->cid_font_name;
+      }
+
+      /* compute style flags */
+      root->style_flags = 0;
+      if ( info->italic_angle && *info->italic_angle )
+        root->style_flags |= FT_STYLE_FLAG_ITALIC;
+      if ( info->weight )
+      {
+        if ( !ft_strcmp( info->weight, "Bold"  ) ||
+             !ft_strcmp( info->weight, "Black" ) )
+          root->style_flags |= FT_STYLE_FLAG_BOLD;
+      }
+
+      /* no embedded bitmap support */
+      root->num_fixed_sizes = 0;
+      root->available_sizes = 0;
+
+      root->bbox.xMin =   cid->font_bbox.xMin             >> 16;
+      root->bbox.yMin =   cid->font_bbox.yMin             >> 16;
+      root->bbox.xMax = ( cid->font_bbox.xMax + 0xFFFFU ) >> 16;
+      root->bbox.yMax = ( cid->font_bbox.yMax + 0xFFFFU ) >> 16;
+
+      if ( !root->units_per_EM )
+        root->units_per_EM = 1000;
+
+      root->ascender  = (FT_Short)( root->bbox.yMax );
+      root->descender = (FT_Short)( root->bbox.yMin );
+      root->height    = (FT_Short)(
+        ( ( root->ascender - root->descender ) * 12 ) / 10 );
+
+      if ( info->underline_position )
+        root->underline_position = *info->underline_position >> 16;
+      if ( info->underline_thickness )
+        root->underline_thickness = *info->underline_thickness >> 16;
+
+      root->internal->max_points   = 0;
+      root->internal->max_contours = 0;
     }
 
   Exit:
