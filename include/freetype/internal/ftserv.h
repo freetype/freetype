@@ -135,5 +135,6 @@
 #define FT_SERVICE_GLYPH_DICT_H        <freetype/internal/services/glyfdict.h>
 #define FT_SERVICE_BDF_H               <freetype/internal/services/bdf.h>
 #define FT_SERVICE_XFREE86_NAME_H      <freetype/internal/services/xf86name.h>
+#define FT_SERVICE_SFNT_H              <freetype/internal/services/sfnt.h>
 
 #endif /* __FT_SERVICE_H__ */

@@ -1,58 +1,176 @@
+2003-09-11  Werner Lemberg  <wl@gnu.org>
+
+	* builds/toplevel.mk (distclean): Remove `builds/unix/freetype2.pc'.
+
+	* src/cff/cffdrivr.c: Don't load headers twice.
+
+	* include/freetype/internal/ftserv.h (FT_SERVICE_SFNT_H): New macro.
+	* src/base/ftobjs.c: Include FT_SERVICE_SFNT_H.
+
 2003-09-11  David Turner  <david@freetype.org>
 
-        * include/freetype/ftmm.h, include/freetype/ftmodule.h,
-          include/freetype/tttables.h, include/freetype/config/ftconfig.h,
-          include/freetype/internal/ftobjs.h,
-          include/freetype/internal/ftserv.h,
-          include/freetype/internal/internal.h,
-          include/freetype/internal/sfnt.h,
-          include/freetype/internal/tttypes.h,
-          include/freetype/internal/services/bdf.h,
-          include/freetype/internal/services/glyfdict.h,
-          include/freetype/internal/services/multmast.h,
-          include/freetype/internal/services/postname.h,
-          include/freetype/internal/services/sfnt.h,
-          include/freetype/internal/services/xf86name.h,
-          src/base/ftbdf.c, src/base/ftmm.c, src/base/ftobjs.c,
-          src/base/ftxf86.c, src/bdf/bdfdrivr.c, src/cff/cffdrivr.c,
-          src/cid/cidriver.c, src/pcf/pcfdrivr.c, src/sfnt/sfdriver.c,
-          src/truetype/ttdriver.c, src/type1/t1driver.c, src/type42/t42drivr.c:
+	Introducing the concept of `module services'.  This is the first
+	step towards a massive simplification of the engine's internals, in
+	order to get rid of various numbers of hacks.
 
-          heavy internal modifications to introduce the concept of
-          "module services". This is the first step towards a massive
-          simplification of the engine's internals, in order to
-          get rid of various numbers of hacks.
+	Note that this changes will break source & binary compatibility for
+	authors of external font drivers.
 
-          Note that this changes will break source & binary compatibility
-          for authors of external font drivers.
+	* include/freetype/config/ftconfig.h (FT_BEGIN_STMNT, FT_END_STMNT,
+	FT_DUMMY_STMNT): New macros.
 
-          Maybe 2.1.6 will be called 2.2.0 after all :-)
+	* include/freetype/internal/ftserv.h: New file, containing the new
+	structures and macros to provide `services'.
 
-        * README, builds/unix/configure, builds/unix/configure.ac,
-        docs/CHANGES, include/freetype/freetype.h:
+	* include/freetype/internal/internal.h (FT_INTERNAL_EXTENSION_H,
+	FT_INTERNAL_EXTEND_H, FT_INTERNAL_HASH_H, FT_INTERNAL_OBJECT_H):
+	Removed, obsolete.
+	(FT_INTERNAL_SERVICE_H): New macro for `ftserv.h'.
 
-          updating version numbers for 2.1.6, and removing obsolete
-          warnings in the documentation
+	* include/freetype/internal/services/bdf.h,
+	include/freetype/internal/services/glyfdict.h,
+	include/freetype/internal/services/postname.h,
+	include/freetype/internal/services/xf86name.h: New files.
 
-        * include/freetype/internal/ftcore.h,
-        include/freetype/internal/ftexcept.h,
-        include/freetype/internal/fthash.h,
-        include/freetype/internal/ftobject.h:
+	* include/freetype/ftmm.h (FT_Get_MM_Func, FT_Set_MM_Design_Func,
+	FT_Set_MM_Blend_Func): Function pointers moved (in modified form)
+	to...
+	* include/freetype/internal/services/multmast.h: New file.
 
-          removing obsolete files
+	* include/freetype/internal/sfnt.h (SFNT_Interface): `get_interface'
+	is now of type `FT_Module_Requester'.
+	(SFNT_Get_Interface_Func, SFNT_Load_Table_Func): Function pointers
+	moved (in modified form) to...
+	* include/freetype/internal/servies/sfnt.h: New file.
+
+	* include/freetype/tttables.h (FT_Get_Sfnt_Table_Func): Function
+	pointer moved (in modified form) to `services/sfnt.h'.
+
+	* include/freetype/ftmodule.h (FT_Module_Interface): Make it a
+	a typedef to `FT_Pointer'.
+
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Add
+	`postscript_name'.
+	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec): Remove
+	`postscript_name'.
+	Add `services' element.
+	(FT_LibraryRec): Remove `meta_class'.
+
+	* src/base/ftbdf.c: Include FT_SERVICE_BDF_H.
+	(test_font_type): Removed.
+	(FT_Get_BDF_Charset_ID, FT_Get_BDF_Property): Use services
+	provided in `FT_SERVICE_ID_BDF' 
+
+	* src/base/ftmm.c: Include FT_SERVICE_MULTIPLE_MASTERS_H.
+	(ft_face_get_mm_service): New auxiliary function to get services
+	from `FT_SERVICE_ID_MULTI_MASTERS'.
+	(FT_Get_Multi_Master, FT_Set_MM_Design_Coordinates,
+	FT_Set_MM_Blend_Coordinates): Use `ft_face_get_mm_service'.
+
+	* src/base/ftobjs.c: Include FT_SERVICE_POSTSCRIPT_NAME_H and
+	FT_SERVICE_GLYPH_DICT_H.
+	(ft_service_list_lookup): New function to get a specific service.
+	(destroy_face): Updated.
+	(Mac_Read_POST_Resource): Simplify some code.
+	(IsMacResource): Fix warnings.
+	(FT_Get_Name_Index, FT_Get_Glyph_Name): Use services provided in
+	`FT_SERVICE_ID_GLYPH_DICT'.
+	(FT_Get_Postscript_Name): Use service provided in
+	`FT_SERVICE_ID_POSTSCRIPT_NAME'.
+	(FT_Get_Sfnt_Table, FT_Load_Sfnt_Table): Use services provided in
+	`FT_SERVICE_ID_SFNT_TABLE'.
+
+	* src/base/ftxf86.c: Include FT_SERVICE_XFREE86_NAME_H.
+	(FT_Get_X11_Font_Format): Use service provided in
+	`FT_SERVICE_ID_XF86_NAME'.
+
+	* src/bdf/bdfdrivr.c: Include FT_SERVICE_BDF_H and
+	FT_SERVICE_XFREE86_NAME_H.
+	(bdf_get_charset_id): New function.
+	(bdf_service_bdf): New structure providing BDF services.
+	(bdf_services): New services list.
+	(bdf_driver_requester): Use `ft_service_list_lookup'.
+
+	* src/cff/cffdrivr.c: Include FT_SERVICE_XFREE86_NAME_H and
+	FT_SERVICE_GLYPH_DICT_H.
+	(cff_service_glyph_dict): New structure providing CFF services.
+	(cff_services): New services list.
+	(cff_get_interface): Use `ft_service_list_lookup'.
+
+	* src/cid/cidriver.c: Include FT_SERVICE_POSTSCRIPT_NAME_H and
+	FT_SERVICE_XFREE86_NAME_H.
+	(cid_service_ps_name): New structure providing CID services.
+	(cid_services): New services list.
+	(cid_get_interface): Use `ft_service_list_lookup'.
+
+	* src/pcf/pcfdrivr.c: Include FT_SERVICE_BDF_H and
+	FT_SERVICE_XFREE86_NAME_H.
+	(pcf_service_bdf): New structure providing PCF services.
+	(pcf_services): New services list.
+	(pcf_driver_requester): Use `ft_service_list_lookup'.
+
+	* src/sfnt/sfdriver.c: Include FT_SERVICE_GLYPH_DICT_H and
+	FT_SERVICE_POSTSCRIPT_NAME_H.
+	(get_sfnt_glyph_name): Renamed to...
+	(sfnt_get_glyph_name): This.
+	(get_sfnt_postscript_name): Renamed to...
+	(sfnt_get_ps_name): This.
+	Updated.
+	(sfnt_service_glyph_dict, sfnt_service_ps_name): New structures
+	providing services.
+	(sfnt_services): New services list.
+	(sfnt_get_interface): Use `ft_service_list_lookup'.
+
+	* src/truetype/ttdriver.c: Include FT_SERVICE_XFREE86_NAME_H.
+	(tt_services): New services list.
+	(tt_get_interface): Use `ft_service_list_lookup'.
+
+	* src/type1/t1driver.c: Include FT_SERVICE_MULTIPLE_MASTERS_H,
+	FT_SERVICE_GLYPH_DICT_H, FT_SERVICE_XFREE86_NAME_H, and
+	FT_SERVICE_POSTSCRIPT_NAME_H.
+	(t1_service_glyph_dict, t1_service_ps_name,
+	t1_service_multi_masters): New structures providing Type 1 services.
+	(t1_services): New services list.
+	(Get_Interface): Use `ft_service_list_lookup'.
+
+	* src/type42/t42drivr.c: Include FT_SERVICE_XFREE86_NAME_H,
+	FT_SERVICE_GLYPH_DICT_H, and FT_SERVICE_POSTSCRIPT_NAME_H.
+	(t42_service_glyph_dict, t42_service_ps_name): New strucures
+	providing Type 42 services.
+	(t42_services): New services list.
+	(T42_Get_Interface): Use `ft_service_list_lookup'.
 
 
+	* README, builds/unix/configure, builds/unix/configure.ac,
+	docs/CHANGES, include/freetype/freetype.h: Updating version numbers
+	for 2.1.6, and removing obsolete warnings in the documentation.
 
+	* include/freetype/internal/ftcore.h,
+	include/freetype/internal/ftexcept.h,
+	include/freetype/internal/fthash.h,
+	include/freetype/internal/ftobject.h: Removed.  Obsolete.
 
 2003-09-09  David Turner  <david@freetype.org>
 
-        * src/base/ftpfr.c, src/pfr/pfrtypes.h, src/pfr/pfrload.c,
-        src/pfr/pfrobjs.c: fixing PFR kerning support. The tables within
-        the font file contain (charcode,charcode) kerning pairs, we need
-        to convert them to (gindex,gindex) !
+	Fixing PFR kerning support.  The tables within the font file contain
+	(charcode,charcode) kerning pairs, we need to convert them to
+	(gindex,gindex).
 
-        * include/freetype/ftoption.h: commenting out the macro
-        TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+	* src/base/ftpfr.c (ft_pfr_check): Fix serious typo.
+	* src/pfr/prfload.c: Remove dead code.
+	(pfr_get_gindex, pfr_compare_kern_pairs, pfr_sort_kerning_pairs):
+	New functions.
+	(pfr_phy_font_done): Free `kern_pairs'.
+	(pfr_phy_font_load): Call `pfr_sort_kerning_pairs'.
+	* src/pfr/pfrobjs.c (pfr_face_get_kerning): Fix kerning extraction.
+	* src/pfr/pfrtypes.h (PFR_KERN_PAIR_INDEX): New macro.
+	(PFR_KernPairRec): Make `kerning' an FT_Int.
+	(PFR_PhyFontRec): New element `kern_pairs'.
+	(PFR_KernFlags): Values of PFR_KERN_2BYTE_CHAR and
+	PFR_KERN_2BYTE_ADJ were erroneously reversed.
+
+	* include/freetype/ftoption.h: Commenting out the macro
+	TT_CONFIG_OPTION_BYTECODE_INTERPRETER.
 
 2003-08-31  Manish Singh  <yosh@gimp.org>
 
@@ -1957,9 +2075,9 @@
 
 2002-11-01  David Turner  <david@freetype.org>
 
-	Added PFR-specific public API. Fixed the kerning retrievel routine
-        (it returned invalid values when the outline and metrics resolution
-        differ).
+	Added PFR-specific public API.  Fixed the kerning retrievel routine
+	(it returned invalid values when the outline and metrics resolution
+	differ).
 
 	* include/freetype/ftpfr.h, include/freetype/internal/pfr.h: New
 	files.
@@ -6772,7 +6890,7 @@
 	* src/cff/cffparse.c (cff_parse_font_matrix): Added logic to get
 	the units_per_EM from the FontMatrix.
 
-	(cff_parse_fixed_thousand): New function. Gets a real number from
+	(cff_parse_fixed_thousand): New function.  Gets a real number from
 	the CFF font, but multiplies by 1000 (this is to avoid rounding
 	errors when placing this real number into a 16.16 fixed number).
 
