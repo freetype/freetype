@@ -1850,12 +1850,9 @@
 
     hinter->do_stem_adjust   = FT_BOOL( hint_mode != FT_RENDER_MODE_LIGHT );
 
-#if 1
-    load_flags  = FT_LOAD_NO_SCALE
-                | FT_LOAD_IGNORE_TRANSFORM ;
-#else
-    load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE;
-#endif
+
+    load_flags  |= FT_LOAD_NO_SCALE
+                 | FT_LOAD_IGNORE_TRANSFORM ;
 
     error = ah_hinter_load( hinter, glyph_index, load_flags, 0 );
 
