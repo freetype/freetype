@@ -79,12 +79,11 @@
   } FT_LruNodeRec, *FT_LruNode;
 
 
-
   /* forward declaration */
   typedef struct FT_LruRec_*  FT_Lru;
 
 
-  /* LRU clazz */
+  /* LRU class */
   typedef struct  FT_Lru_Class_
   {
     FT_UInt  lru_size;      /* object size in bytes */

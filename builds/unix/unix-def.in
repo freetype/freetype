@@ -33,13 +33,13 @@ INSTALL       := @INSTALL@
 INSTALL_DATA  := @INSTALL_DATA@
 MKINSTALLDIRS := $(BUILD)/mkinstalldirs
 
-DISTCLEAN += $(BUILD)/config.cache     \
-             $(BUILD)/config.log       \
-             $(BUILD)/config.status    \
-             $(BUILD)/unix-def.mk      \
-             $(BUILD)/unix-cc.mk       \
-             $(BUILD)/ftconfig.h       \
-             $(BUILD)/freetype-config  \
+DISTCLEAN += $(BUILD)/config.cache    \
+             $(BUILD)/config.log      \
+             $(BUILD)/config.status   \
+             $(BUILD)/unix-def.mk     \
+             $(BUILD)/unix-cc.mk      \
+             $(BUILD)/ftconfig.h      \
+             $(BUILD)/freetype-config \
              $(LIBTOOL)
 
 

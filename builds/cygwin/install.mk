@@ -19,7 +19,7 @@ install: $(PROJECT_LIBRARY)
                          $(includedir)/freetype2/freetype/config   \
                          $(includedir)/freetype2/freetype/internal \
                          $(includedir)/freetype2/freetype/cache    \
-			 $(bindir)
+                         $(bindir)
 	$(LIBTOOL) --mode=install $(INSTALL) $(PROJECT_LIBRARY) $(libdir)
 	-for P in $(PUBLIC_H) ; do                               \
           $(INSTALL_DATA) $$P $(includedir)/freetype2/freetype ; \
@@ -37,7 +37,7 @@ install: $(PROJECT_LIBRARY)
 
 
 uninstall:
-	-$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/lib$(PROJECT).$A
+	-$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/$(PROJECT_LIBRARY)
 	-$(DELETE) $(includedir)/freetype2/freetype/cache/*
 	-$(DELDIR) $(includedir)/freetype2/freetype/cache
 	-$(DELETE) $(includedir)/freetype2/freetype/config/*
@@ -52,12 +52,12 @@ uninstall:
 
 # Unix cleaning and distclean rules.
 #
-clean_project_unix:
+clean_project_cygwin:
 	-$(DELETE) $(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)
 	-$(DELETE) $(patsubst %.$O,%.$(SO),$(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)) \
                    $(CLEAN)
 
-distclean_project_unix: clean_project_unix
+distclean_project_cygwin: clean_project_cygwin
 	-$(DELETE) $(PROJECT_LIBRARY)
 	-$(DELETE) $(OBJ_DIR)/.libs/*
 	-$(DELDIR) $(OBJ_DIR)/.libs

@@ -143,7 +143,7 @@
   /*    will flush as many old cache nodes as possible (ignoring cache     */
   /*    nodes with a non-zero reference count).                            */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    manager :: A handle to the cache manager.                          */
   /*                                                                       */
   /* <Note>                                                                */
@@ -212,6 +212,9 @@
   /*                                                                       */
   /*    cache_data :: A generic pointer passed to the destructor.          */
   /*                                                                       */
+  /* <Return>                                                              */
+  /*    The size of a given cache node in bytes.                           */
+  /*                                                                       */
   typedef FT_ULong  (*FTC_CacheNode_SizeFunc)( FTC_CacheNode  node,
                                                FT_Pointer     cache_data );
 
@@ -253,7 +256,6 @@
   /*    The cache node class doesn't include a `new_node' function because */
   /*    the cache manager never allocates cache node directly; it          */
   /*    delegates this task to its cache objects.                          */
-  /*                                                                       */
   /*                                                                       */
   typedef struct  FTC_CacheNode_Class_
   {
