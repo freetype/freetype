@@ -1,3 +1,10 @@
+2001-10-07  David Turner  <david@freetype.org>
+
+	* src/smooth/ftgrays: "setjmp/longjmp" is now used for rollback (i.e.
+	when memory pool overflow occurs), function names are now all prefixed
+	with "gray_", and a new type (TArea) is defined to store area value in
+	each cell (using "int" was too small on 16-bit systems)..
+
 2001-09-20  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/*: Added port to Amiga with the SAS/C compiler.
