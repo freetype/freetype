@@ -1,3 +1,9 @@
+2004-02-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/pshinter/pshglob.c (psh_globals_new): Fix value of
+	`dim->stdw.count'.
+	Don't assign default values to blue scale and blue shift.
+
 2004-02-25  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
