@@ -484,8 +484,16 @@ FT_BEGIN_HEADER
                                           TT_MS_LANGID_KIRGHIZ_KIRGHIZSTAN
 
 #define TT_MS_LANGID_TURKMEN_TURKMENISTAN              0x0442
-#define TT_MS_LANGID_MONGOLIAN_MONGOLIA                0x0450
+#define TT_MS_LANGID_MONGOLIAN_MONGOLIA /* Cyrillic */ 0x0450
+
+ /* this seems to be inconsistant...  :-(
+  * here is the current "official" way: */
 #define TT_MS_LANGID_TIBETAN_BHUTAN                    0x0451
+ /* and now here is what is used by Passport SDK */
+#define TT_MS_LANGID_TIBETAN_CHINA                     0x0451
+#define TT_MS_LANGID_DZONGHKA_BHUTAN                   0x0851
+ /* end of inconsistency */
+
 #define TT_MS_LANGID_WELSH_WALES                       0x0452
 #define TT_MS_LANGID_KHMER_CAMBODIA                    0x0453
 #define TT_MS_LANGID_LAO_LAOS                          0x0454
@@ -493,34 +501,71 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_GALICIAN_SPAIN                    0x0456
 #define TT_MS_LANGID_MANIPURI_INDIA                    0x0458
 #define TT_MS_LANGID_SINDHI_INDIA                      0x0459
+ /* the following one is only encountered in Microsoft RTF specification */
 #define TT_MS_LANGID_KASHMIRI_PAKISTAN                 0x0460
+ /* the following one is not in the Passport list, looks like an omission */
 #define TT_MS_LANGID_KASHMIRI_INDIA                    0x0860
 #define TT_MS_LANGID_NEPALI_NEPAL                      0x0461
 #define TT_MS_LANGID_NEPALI_INDIA                      0x0861
 #define TT_MS_LANGID_FRISIAN_NETHERLANDS               0x0462
 
 /* new as of 2001-03-01 (from Office Xp) */
-#define TT_MS_LANGID_SYRIAC_SYRIA                      0x045a
-#define TT_MS_LANGID_SINHALESE_SRI_LANKA               0x045b
-#define TT_MS_LANGID_PASHTO_AFGHANISTAN                0x0463
 #define TT_MS_LANGID_ENGLISH_HONG_KONG                 0x3c09
 #define TT_MS_LANGID_ENGLISH_INDIA                     0x4009
 #define TT_MS_LANGID_ENGLISH_MALAYSIA                  0x4409
 #define TT_MS_LANGID_ENGLISH_SINGAPORE                 0x4809
+#define TT_MS_LANGID_SYRIAC_SYRIA                      0x045a
+#define TT_MS_LANGID_SINHALESE_SRI_LANKA               0x045b
 #define TT_MS_LANGID_CHEROKEE_UNITED_STATES            0x045c
 #define TT_MS_LANGID_INUKTITUT_CANADA                  0x045d
 #define TT_MS_LANGID_AMHARIC_ETHIOPIA                  0x045e
 #define TT_MS_LANGID_TAMAZIGHT_MOROCCO                 0x045f
 #define TT_MS_LANGID_TAMAZIGHT_MOROCCO_LATIN           0x085f
+#define TT_MS_LANGID_PASHTO_AFGHANISTAN                0x0463
 #define TT_MS_LANGID_FILIPINO_PHILIPPINES              0x0464
 #define TT_MS_LANGID_DHIVEHI_MALDIVES                  0x0465
  /* alias declared in Windows 2000 */
 #define TT_MS_LANGID_DIVEHI_MALDIVES      TT_MS_LANGID_DHIVEHI_MALDIVES
- /* language codes from 0x0466 to 0x0471 are unknown. */
+     /* for language codes from 0x0466 to 0x0471, see below */
 #define TT_MS_LANGID_OROMO_ETHIOPIA                    0x0472
 #define TT_MS_LANGID_TIGRIGNA_ETHIOPIA                 0x0473
 #define TT_MS_LANGID_TIGRIGNA_ERYTHREA                 0x0873
+ /* also spelled in the `Passport SDK' list as: */
+#define TT_MS_LANGID_TIGRIGNA_ERYTREA    TT_MS_LANGID_TIGRIGNA_ERYTHREA
 
+ /* New additions from Windows Xp/Passport SDK. AL 2001-11-10. */
+
+ /* don't ask me what this one means... :-(
+  * note it is currently commented out
+#define TT_MS_LANGID_GREEK_GREECE2                       0x2008
+  * end of comment to avoid strange code */
+
+#define TT_MS_LANGID_SPANISH_UNITED_STATES               0x540a
+ /* these following two blatently violate MS specs, by using a sublang>0x1F */
+#define TT_MS_LANGID_SPANISH_LATIN_AMERICA               0xE40a
+#define TT_MS_LANGID_FRENCH_NORTH_AFRICA                 0xE40c
+ 
+#define TT_MS_LANGID_FRENCH_MOROCCO                      0x380c
+#define TT_MS_LANGID_FRENCH_HAITI                        0x3c0c
+#define TT_MS_LANGID_BENGALI_BANGLADESH                  0x0845
+#define TT_MS_LANGID_PUNJABI_ARABIC_PAKISTAN             0x0846
+#define TT_MS_LANGID_MONGOLIAN_MONGOLIA_MONGOLIAN        0x0850
+#define TT_MS_LANGID_EDO_NIGERIA                         0x0466
+#define TT_MS_LANGID_FULFULDE_NIGERIA                    0x0467
+#define TT_MS_LANGID_HAUSA_NIGERIA                       0x0468
+#define TT_MS_LANGID_IBIBIO_NIGERIA                      0x0469
+#define TT_MS_LANGID_YORUBA_NIGERIA                      0x046a
+ /* language codes from 0x046b to 0x046f are (still) unknown. */
+#define TT_MS_LANGID_IGBO_NIGERIA                        0x0470
+#define TT_MS_LANGID_KANURI_NIGERIA                      0x0471
+#define TT_MS_LANGID_GUARANI_PARAGUAY                    0x0474
+#define TT_MS_LANGID_HAWAIIAN_UNITED_STATES              0x0475
+#define TT_MS_LANGID_LATIN                               0x0476
+#define TT_MS_LANGID_SOMALI_SOMALIA                      0x0477
+ /* Note Yi does not have a (proper) ISO639-2 code, since it is mostly not
+  * written (but OTOH the peculiar writing system is worth studying). */
+#define TT_MS_LANGID_YI_CHINA                            0x0478
+#define TT_MS_LANGID_PAPIAMENTU_NETHERLANDS_ANTILLES     0x0479
 
 
   /*************************************************************************/
@@ -697,6 +742,10 @@ FT_BEGIN_HEADER
 #define TT_UCR_SURROGATES                      (1L << 25) /* U+D800-U+DB7F */
                                                           /* U+DB80-U+DBFF */
                                                           /* U+DC00-U+DFFF */
+  /* According to OpenType specs v.1.3+, setting bit 57 implies that there */
+  /* is at least one codepoint beyond the Basic Multilingual Plane that is */
+  /* supported by this font. So really means:             U+10000-U+10FFFD */
+
   /* Bit 58 is reserved for Unicode SubRanges */
 
   /* CJK Ideographs Area */

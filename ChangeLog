@@ -1,3 +1,12 @@
+2001-11-20  Antoine Leca       <antoineleca@multimania.com>
+
+	* include/freetype/ttnameid.h: Added some new Microsoft language
+        codes and LCIDs as found in MSDN (Passport SDK). Also added
+        comments about the meaning of bit 57 of OS/2 (TT_UCR_SURROGATES)
+        which with OpenType v.1.3 now means "there is a character beyond
+        FFFF in this font". Thanks to Detlef Wuerkner <TetiSoft@apg.lahn.de>
+        for noticing this.
+
 2001-11-20  David Turner       <david@freetype.org>
 
         * src/pshinter/{pshalgo2.c, pshalgo1.c}: fixed stupid bug in sorting
