@@ -1,3 +1,12 @@
+2003-05-14  George Williams  <gww@silcom.com>
+
+	* src/base/ftmac.c (FT_New_Face_From_SFNT): Handle CFF files also.
+
+2003-05-14  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h: Fix typo in comment
+	(FT_HAS_FIXED_SIZES).
+
 2003-05-10  Dan Williams  <dan@bigw.org>
 
 	* builds/unix/aclocal.m4: Comment out definition of
