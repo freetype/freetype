@@ -49,7 +49,7 @@
   static void
   pfr_bitwriter_init( PFR_BitWriter  writer,
                       FT_Bitmap*     target,
-                      FT_UInt        decreasing )
+                      FT_Bool        decreasing )
   {
     writer->line   = target->buffer;
     writer->pitch  = target->pitch;
@@ -274,8 +274,8 @@
   static void
   pfr_lookup_bitmap_data( FT_Byte*   base,
                           FT_Byte*   limit,
-                          FT_Int     count,
-                          FT_Byte    flags,
+                          FT_UInt    count,
+                          FT_UInt    flags,
                           FT_UInt    char_code,
                           FT_ULong*  found_offset,
                           FT_ULong*  found_size )
@@ -481,7 +481,7 @@
   pfr_load_bitmap_bits( FT_Byte*    p,
                         FT_Byte*    limit,
                         FT_UInt     format,
-                        FT_UInt     decreasing,
+                        FT_Bool     decreasing,
                         FT_Bitmap*  target )
   {
     FT_Error          error = 0;
@@ -583,7 +583,7 @@
       pfr_lookup_bitmap_data( stream->cursor,
                               stream->limit,
                               strike->num_bitmaps,
-                              (FT_Byte)strike->flags,
+                              strike->flags,
                               character->char_code,
                               &gps_offset,
                               &gps_size );

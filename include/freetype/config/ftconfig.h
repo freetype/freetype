@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    ANSI-specific configuration file (specification only).               */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -178,7 +178,7 @@ FT_BEGIN_HEADER
 
   /* Watcom doesn't provide 64-bit data types */
 
-#elif defined( __MWKS__ )      /* Metrowerks CodeWarrior */
+#elif defined( __MWERKS__ )    /* Metrowerks CodeWarrior */
 
   /* I don't know if it provides 64-bit data types, any suggestion */
   /* is welcome.                                                   */
