@@ -188,7 +188,7 @@
 #endif
 
 #ifndef  EXPORT_VAR
-#define  EXPORT_VAR(x)  extern x
+#define  EXPORT_VAR(x)   extern  x
 #endif
 
 #endif /* FTCONFIG_H */

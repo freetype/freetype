@@ -47,10 +47,7 @@
 /*                                                                           */
 
 #include <freetype/ftgrays.h>
-
-#if 1
 #include <string.h>  /* for memcpy */
-#endif
 
 #define ErrRaster_Invalid_Outline  -1
 
