@@ -1,3 +1,8 @@
+2004-02-19  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftstroke.c (FT_Glyph_StrokeBorder): Fix enum handling.
+	* src/cff/cffdrivr.c (cff_get_cmap_info): Remove compiler warning.
+
 2004-02-18  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h: Document FT_LOAD_TARGET_XXX properly.

@@ -1856,7 +1856,12 @@
 
       border = FT_Outline_GetOutsideBorder( outline );
       if ( inside )
-        border = 1 - border;
+      {
+        if ( border == FT_STROKER_BORDER_LEFT )
+          border = FT_STROKER_BORDER_RIGHT;
+        else
+          border = FT_STROKER_BORDER_LEFT;
+      }
 
       error = FT_Stroker_ParseOutline( stroker, outline, 0 );
       if ( error )
