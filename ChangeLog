@@ -1,3 +1,9 @@
+2002-11-18  David Turner  <david@freetype.org>
+
+
+	* Version 2.1.4 is released.
+	============================
+
 2003-01-22  David Chester  <davidchester@qmx.net>
 
     * src/autohint/ahhint.c: small fix to the stem width optimisation

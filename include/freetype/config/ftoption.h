@@ -258,8 +258,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Don't define any of these macros to compile in `release' mode!      */
   /*                                                                       */
-/* #define  FT_DEBUG_LEVEL_ERROR */
-/* #define  FT_DEBUG_LEVEL_TRACE */
+ #define  FT_DEBUG_LEVEL_ERROR
+ #define  FT_DEBUG_LEVEL_TRACE
 
 
   /*************************************************************************/
@@ -469,7 +469,7 @@ FT_BEGIN_HEADER
 
  /* */
 
-#undef   FT_CONFIG_OPTION_CHESTER_HINTS
+#define  FT_CONFIG_OPTION_CHESTER_HINTS
 
 #ifdef   FT_CONFIG_OPTION_CHESTER_HINTS
 

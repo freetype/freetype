@@ -17,10 +17,15 @@ I. QUICK COMMAND-LINE GUIDE
   WITH OTHER MAKE TOOLS, FOR EXAMPLE "BSD MAKE".
 
   Install GNU Make  (version 3.78.1 or newer), then  try the following
-  on Unix or any system with gcc:
+  on Unix or Cygwin:
 
-      make    // this will setup the build
-      make    // this will build the library
+      ./configure <youroptions>  // this will setup the build
+      make                       // this will build the library
+
+  or even:
+
+      make setup unix
+      make
 
   On Win32 + Visual C++:
 
@@ -31,13 +36,6 @@ I. QUICK COMMAND-LINE GUIDE
 
       make
 
-
-  Note that on Unix, the  first `make' invocation will run a configure
-  script (which is located  in `freetype2/builds/unix/'.  You can also
-  pass parameters to this script with the CFG variable, as in:
-
-      make CFG="--prefix=/usr/local"
-      make
 
 
   If this doesn't work, read the following.
@@ -104,6 +102,7 @@ II. COMMAND-LINE COMPILATION
     skip to step e.  Note that if your platform is completely alien to
     the build system, the detected platform will be `ansi'.
 
+
   c. Configure the build system for a different compiler
 
     If the build system correctly detected your platform, but you want
@@ -117,6 +116,7 @@ II. COMMAND-LINE COMPILATION
 
         to use Visual C++ on Win32, type: "make setup visualc"
         to use LCC-Win32 on Win32, type:  "make setup lcc"
+        to use Cygwin on Win32, type      "make setup unix"
 
     The  <compiler> name to  use is  platform-dependent.  The  list of
     available  compilers for  your  system is  available  in the  file
