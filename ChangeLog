@@ -1,3 +1,13 @@
+2001-10-26  Leonard Rosenthol  <leonardr@lazerware.com>
+
+	* updated Mac OS README (builds/mac/) to reflect my taking over
+	the project and that is now being actively maintained.
+	
+	* Applied patches from Paul Miller (<paulm@profoundeffects.com>)
+	to /src/base/ftmac.c to support loading a face other than the
+	first from a FOND resource.
+
+
 2001-10-25  Leonard Rosenthol  <leonardr@lazerware.com>
 
 	* update CodeWarrior project for Mac OS (builds/mac/ftlib.prj)
