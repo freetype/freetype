@@ -13,6 +13,8 @@
 
 	* builds/unix/configure: Regenerated.
 
+	* docs/CHANGES: Updated.
+
 2002-03-04  David Turner  <david@freetype.org>
 
 	* docs/CHANGES: Small update.

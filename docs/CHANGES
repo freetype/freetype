@@ -3,41 +3,44 @@ LATESET CHANGES BETWEEN 2.0.9 and 2.0.8
   I. IMPORTANT BUG FIXES
   
     - Certain fonts, lilke "foxjump.ttf" contain broken name tables with
-      invalid entries and wild offsets. This caused FreeType to crash when
+      invalid entries and wild offsets.  This caused FreeType to crash when
       trying to load them.
       
-      the SFNT 'name' table loader has been fixed to be able to support these
-      strange fonts..
+      The SFNT 'name' table loader has been fixed to be able to support
+      these strange fonts.
 
       Moreover, the code in charge of processing this table has been changed
-      to always favor Windows-formatted entries over other ones. Hence, a
+      to always favor Windows-formatted entries over other ones.  Hence, a
       font that works on Windows but not on the Mac will load cleanly in
-      FreeType and report accurate values for Family & Postscript names
+      FreeType and report accurate values for Family & Postscript names.
 
-    - the CID font driver has been fixed. It unfortunately returned a
+    - The CID font driver has been fixed.  It unfortunately returned a
       Postscript Font name with a leading slash, as in
-      "/MunhwaGothic-Regular"
+      "/MunhwaGothic-Regular".
+
+    - FreeType 2 should now compile fine on AIX 4.3.3 as a shared library.
 
 
   II. NEW FEATURES:
 
-    - Two new APIs have been added: FT_Get_First_Char and FT_Get_Next_Char..
+    - Two new APIs have been added: FT_Get_First_Char and FT_Get_Next_Char.
     
-      together, these can be used to iterate efficiently over the currently
-      selected charmap of a given face. Read the API reference for more
-      details..
+      Together, these can be used to iterate efficiently over the currently
+      selected charmap of a given face.  Read the API reference for more
+      details.
 
 
   III. MISCELLANEOUS:
   
-    - The FreeType sources are under heavy internal re-factoring. As a
-      consequence, we have created a branch named "STABLE" on the CVS
-      to hold all future releases/fixes in the 2.0.x family..
+    - The FreeType sources are under heavy internal re-factoring.  As a
+      consequence, we have created a branch named "STABLE" on the CVS to
+      hold all future releases/fixes in the 2.0.x family.
       
-      the HEAD branch now contain the re-factored sources and shouldn't
-      be used for testing or packaging new releases.. In the cases where
-      you'd like to access the 2.0.9 sources from our CVS repository, you
-      should use the tag VER-2-0-9..
+      The HEAD branch now contains the re-factored sources and shouldn't be
+      used for testing or packaging new releases.  In the cases where you
+      would like to access the 2.0.9 sources from our CVS repository, you
+      should use the tag VER-2-0-9.
+
 
 ============================================================================
 
