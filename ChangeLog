@@ -1,3 +1,10 @@
+2002-07-11  David Turner  <david@freetype.org>
+
+    * include/freetype/t1tables.h, include/freetype/internal/psaux.h,
+    src/psaux/psobjs.c, src/type1/t1load.c, src/type1/t1tokens.h:
+    fixing a bug in the Type 1 loader that prevented valid font bounding
+    boxes to be loaded from multiple master fonts. 
+
 2002-07-10  David Turner  <david@freetype.org>
 
     * src/cff/cffobjs.c: small fix to select the Unicode charmap by default

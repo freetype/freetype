@@ -178,6 +178,7 @@ FT_BEGIN_HEADER
     T1_FIELD_TYPE_INTEGER,
     T1_FIELD_TYPE_FIXED,
     T1_FIELD_TYPE_STRING,
+    T1_FIELD_TYPE_BBOX,
     T1_FIELD_TYPE_INTEGER_ARRAY,
     T1_FIELD_TYPE_FIXED_ARRAY,
     T1_FIELD_TYPE_CALLBACK,
@@ -194,6 +195,7 @@ FT_BEGIN_HEADER
     T1_FIELD_LOCATION_FONT_DICT,
     T1_FIELD_LOCATION_FONT_INFO,
     T1_FIELD_LOCATION_PRIVATE,
+    T1_FIELD_LOCATION_BBOX,
 
     /* do not remove */
     T1_FIELD_LOCATION_MAX
@@ -270,6 +272,10 @@ FT_BEGIN_HEADER
 
 #define T1_FIELD_STRING( _ident, _fname )                             \
           T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_STRING, _fname )
+
+#define T1_FIELD_BBOX( _ident, _fname )                             \
+          T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_BBOX, _fname )
+
 
 #define T1_FIELD_NUM_TABLE( _ident, _fname, _fmax )                \
           T1_NEW_TABLE_FIELD( _ident, T1_FIELD_TYPE_INTEGER_ARRAY, \
