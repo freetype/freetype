@@ -39,7 +39,7 @@
 
   <p>This is the first section of the FreeType&nbsp;2 tutorial.  It will
   teach you to do the following:</p>
-  
+
   <ul>
     <li>initialize the library</li>
     <li>open a font file by creating a new face object</li>
@@ -48,7 +48,7 @@
     <li>render a very simple string of text</li>
     <li>render a rotated string of text easily</li>
   </ul>
-    
+
   <hr>
 
     <h3>
@@ -343,13 +343,13 @@
     cousins), it <em>automatically</em> creates a new size object for the
     returned face.  This size object is directly accessible as
     <tt>face->size</tt>.</p>
-       
-    <p><em>NOTA BENE: A single face object can deal with one or more size
-    objects at a time; however, this is something that few programmers
-    really need to do.  We have thus have decided to simplify the API for
-    the most common use (i.e. one size per face), while keeping this feature
-    available through additional functions.</em></p>
-    
+
+    <p><em>A single face object can deal with one or more size objects at a
+    time; however, this is something that few programmers really need to do.
+    We have thus have decided to simplify the API for the most common use
+    (i.e. one size per face), while keeping this feature available through
+    additional functions.</em></p>
+
     <p>When a new face object is created, its size object defaults to the
     character size of 10&nbsp;pixels (both horizontally and vertically) for
     scalable formats.  For fixed-sizes formats, the size is more or less
@@ -374,7 +374,7 @@
 
     <ul>
       <li>
-        The character width and heights are specified in 1/64th of points. 
+        The character width and heights are specified in 1/64th of points.
         A point is a <em>physical</em> distance, equaling 1/72th of an inch;
         it's not a pixel.
       </li>
@@ -396,7 +396,7 @@
         means 72&nbsp;dpi, which is the default.
       </li>
       <li>
-        The first argument is a handle to a face object, not a size object. 
+        The first argument is a handle to a face object, not a size object.
         That's normal, and must be seen as a convenience.
       </li>
     </ul>
@@ -414,7 +414,7 @@
               16 );   /* pixel_height                     */</pre>
     </font>
 
-    <p>This example will set the character pixel sizes to 16x16&nbsp;pixels. 
+    <p>This example will set the character pixel sizes to 16x16&nbsp;pixels.
     As previously, a value of&nbsp;0 for one of the dimensions means
     <em>same as the other</em>.</p>
 
@@ -452,7 +452,7 @@
       Unicode character codes if it finds one.  Otherwise, it tries to find
       support for Latin-1, then ASCII.</p>
 
-      <p>We will describe later how to look for specific charmaps in a face. 
+      <p>We will describe later how to look for specific charmaps in a face.
       For now, we will assume that the face contains at least a Unicode
       charmap that was selected during <tt>FT_New_Face()</tt>.  To convert a
       Unicode character code to a font glyph index, we use
@@ -479,13 +479,13 @@
 
       <p>Once you have a glyph index, you can load the corresponding glyph
       image.  The latter can be stored in various formats within the font
-      file.  For fixed-size formats like FNT or PCF, each image is a bitmap. 
+      file.  For fixed-size formats like FNT or PCF, each image is a bitmap.
       Scalable formats like TrueType or Type&nbsp;1 use vectorial shapes,
       named <em>outlines</em> to describe each glyph.  Some formats may have
-      even more exotic ways of representing glyph (e.g. MetaFont). 
+      even more exotic ways of representing glyph (e.g. MetaFont).
       Fortunately, FreeType&nbsp;2 is flexible enough to support any kind of
       glyph format through a simple API.</p>
-       
+
       <p>The glyph image is always stored in a special object called a
       <em>glyph slot</em>.  As its name suggests, a glyph slot is a
       container that is able to hold one glyph image at a time, be it a
@@ -497,7 +497,7 @@
 
       <font color="blue">
       <pre>
-    error = FT_Load_Glyph( 
+    error = FT_Load_Glyph(
               face,          /* handle to face object */
               glyph_index,   /* glyph index           */
               load_flags );  /* load flags, see below */</pre>
@@ -506,10 +506,10 @@
       <p>The <tt>load_flags</tt> value is a set of bit flags used to
       indicate some special operations.  The default value
       <tt>FT_LOAD_DEFAULT</tt> is&nbsp;0.</p>
-      
+
       <p>This function will try to load the corresponding glyph image from
       the face.  Basically, this means that</p>
-     
+
       <ul>
         <li>
           <p>If a bitmap is found for the corresponding glyph and pixel
@@ -524,7 +524,7 @@
           for certain formats like TrueType and Type&nbsp;1.</p>
         </li>
       </ul>
-      
+
       <p>The field <tt>glyph->format</tt> describes the format used to store
       the glyph image in the slot.  If it is not
       <tt>ft_glyph_format_bitmap</tt>, it is possible to immedialy convert
@@ -536,7 +536,7 @@
              face->glyph,      /* glyph slot  */
              render_mode );    /* render mode */</pre>
       </font>
-     
+
       <p>The parameter <tt>render_mode</tt> specifies how to render the
       glyph image.  Set it <tt>ft_render_mode_normal</tt> to render a
       high-quality anti-aliased (256&nbsp;gray levels) bitmap.  You can
@@ -547,11 +547,11 @@
       through <tt>glyph->bitmap</tt> (a simple bitmap descriptor), and
       position it with <tt>glyph->bitmap_left</tt> and
       <tt>glyph->bitmap_top</tt>.</p>
-     
+
       <p>Note that <tt>bitmap_left</tt> is the horizontal distance from the
       current pen position to the left-most border of the glyph bitmap,
       while <tt>bitmap_top</tt> is the vertical distance from the pen
-      position (on the baseline) to the top-most border of the glyph bitmap. 
+      position (on the baseline) to the top-most border of the glyph bitmap.
       <em>It is positive to indicate an upwards distance</em>.</p>
 
       <p>The second part of the tutorial will describe the contents of a
@@ -572,23 +572,23 @@
       <p>There are two ways to select a different charmap with
       FreeType&nbsp;2.  The easiest is if the encoding you need already has
       a corresponding enumeration defined in
-      <tt>&lt;freetype/freetype.h&gt;</tt>, as <tt>ft_encoding_big5</tt>. 
+      <tt>&lt;freetype/freetype.h&gt;</tt>, as <tt>ft_encoding_big5</tt>.
       In this case, you can simply call <tt>FT_Select_CharMap()</tt> as
       in</p>
-     
+
       <font color="blue"><pre>
     error = FT_Select_CharMap(
               face,                 /* target face object */
               ft_encoding_big5 );   /* encoding           */</pre>
       </font>
-      
+
       <p>Another way is to manually parse the list of charmaps for the face,
       this is accessible through the fields <tt>num_charmaps</tt> and
       <tt>charmaps</tt> (notice the final 's') of the face object.  As you
       could expect, the first is the number of charmaps in the face, while
       the second is <em>a table of pointers to the charmaps</em> embedded in
       the face.</p>
-     
+
       <p>Each charmap has a few visible fields used to describe it more
       precisely.  Mainly, one will look at <tt>charmap->platform_id</tt> and
       <tt>charmap->encoding_id</tt> which define a pair of values that can
@@ -605,7 +605,7 @@
       list.  Bear in mind that some encodings correspond to several values
       pairs (yes, it's a real mess, but blame Apple and Microsoft on such
       stupidity).  Here some code to do it:</p>
-         
+
       <font color="blue">
       <pre>
     FT_CharMap  found = 0;
@@ -642,9 +642,9 @@
       <p>It is possible to specify an affine transformation to be applied to
       glyph images when they are loaded.  Of course, this will only work for
       scalable (vectorial) font formats.</p>
-     
+
       <p>To do that, simply call <tt>FT_Set_Transform()</tt>, as in</p>
-      
+
       <font color="blue">
       <pre>
     error = FT_Set_Transform(
@@ -652,22 +652,22 @@
               &amp;matrix,    /* pointer to 2x2 matrix */
               &amp;delta );   /* pointer to 2d vector  */</pre>
       </font>
-     
+
       <p>This function will set the current transformation for a given face
       object.  Its second parameter is a pointer to a <tt>FT_Matrix</tt>
       structure that describes a 2x2 affine matrix.  The third parameter is
       a pointer to a <tt>FT_Vector</tt> structure that describes a simple 2d
       vector that is used to translate the glyph image <em>after</em> the
       2x2 transformation.</p>
-     
+
       <p>Note that the matrix pointer can be set to NULL, in which case the
       identity transformation will be used.  Coefficients of the matrix are
       otherwise in 16.16 fixed float units.</p>
-     
+
       <p>The vector pointer can also be set to NULL in which case a delta
       vector of (0,0) will be used.  The vector coordinates are expressed in
       1/64th of a pixel (also known as 26.6 fixed floats).</p>
-     
+
       <p><em>The transformation is applied to every glyph that is loaded
       through <tt>FT_Load_Glyph()</tt> and is <b>completely independent of
       any hinting process.</b> This means that you won't get the same
@@ -682,7 +682,7 @@
       compute a new character pixel size, then the other one to call
       <tt>FT_Set_Transform()</tt>.  This is explained in details in a later
       section of this tutorial.</p>
-         
+
       <p>Note also that loading a glyph bitmap with a non-identity
       transformation will produce an error.</p>
 
@@ -695,7 +695,7 @@
     <p>We will now present you with a very simple example used to render a
     string of 8-bit Latin-1 text, assuming a face that contains a Unicode
     charmap</p>
-       
+
     <p>The idea is to create a loop that will, on each iteration, load one
     glyph image, convert it to an anti-aliased bitmap, draw it on the target
     surface, then increment the current pen position.</p>
@@ -706,7 +706,7 @@
 
       <p>The following code performs our simple text rendering with the
       functions previously described.</p>
-       
+
       <font color="blue">
       <pre>
     FT_GlyphSlot  slot = face->glyph;  /* a small shortcut */
@@ -716,37 +716,37 @@
     .. initialize library ..
     .. create face object ..
     .. set character size ..
-       
+
     pen_x = 300;
     pen_y = 200;
-       
+
     for ( n = 0; n &lt; num_chars; n++ )
     {
       FT_UInt  glyph_index;
-         
+
 
       /* retrieve glyph index from character code */
       glyph_index = FT_Get_Char_Index( face, text[n] );
-         
+
       /* load glyph image into the slot (erase previous one) */
       error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
       if ( error ) continue;  /* ignore errors */
-         
+
       /* convert to an anti-aliased bitmap */
       error = FT_Render_Glyph( face->glyph, ft_render_mode_normal );
       if ( error ) continue;
-         
+
       /* now, draw to our target surface */
       my_draw_bitmap( &slot->bitmap,
                       pen_x + slot->bitmap_left,
                       pen_y - slot->bitmap_top );
-                         
+
       /* increment pen position */
       pen_x += slot->advance.x >> 6;
       pen_y += slot->advance.y >> 6;   /* not useful for now */
     }</pre>
-      </font>   
-    
+      </font>
+
       <p>This code needs a few explanations:</p>
 
       <ul>
@@ -778,13 +778,13 @@
           to <tt>pen_y</tt> instead of adding it.
         </li>
       </ul>
-    
+
       <h4>b. refined code</h4>
-    
+
       <p>The following code is a refined version of the example above.  It
       uses features and functions of FreeType&nbsp;2 that have not yet been
       introduced, and which will be explained below.</p>
-       
+
       <font color="blue">
       <pre>
     FT_GlyphSlot  slot = face->glyph;  /* a small shortcut */
@@ -795,29 +795,29 @@
     .. initialize library ..
     .. create face object ..
     .. set character size ..
-       
+
     pen_x = 300;
     pen_y = 200;
-       
+
     for ( n = 0; n &lt; num_chars; n++ )
     {
       /* load glyph image into the slot (erase previous one) */
       error = FT_Load_Char( face, text[n], FT_LOAD_RENDER );
       if ( error ) continue;  /* ignore errors */
-         
+
       /* now, draw to our target surface */
       my_draw_bitmap( &amp;slot->bitmap,
                       pen_x + slot->bitmap_left,
                       pen_y - slot->bitmap_top );
-                         
+
       /* increment pen position */
       pen_x += slot->advance.x >> 6;
     }</pre>
-      </font>   
+      </font>
 
       <p>We have reduced the size of our code, but it does exactly the same
       thing.</p>
-       
+
       <ul>
         <li>
           <p>We use the function <tt>FT_Load_Char()</tt> instead of
@@ -828,20 +828,20 @@
         <li>
           <p>We do not use <tt>FT_LOAD_DEFAULT</tt> for the loading mode but
           the bit flag <tt>FT_LOAD_RENDER</tt>.  It indicates that the glyph
-          image must be immediately converted to an anti-aliased bitmap. 
+          image must be immediately converted to an anti-aliased bitmap.
           This is of course a shortcut that avoids calling
           <tt>FT_Render_Glyph()</tt> explicitly but is strictly
           equivalent.</p>
-          
+
           <p>Note that you can also specify that you want a monochrome
           bitmap instead by using the additional <tt>FT_LOAD_MONOCHROME</tt>
           load flag.</p>
         </li>
-      </ul>  
-    
+      </ul>
+
       <h4>c. more advanced rendering</h4>
-    
-      <p>We now render transformed text (for example through a rotation). 
+
+      <p>We now render transformed text (for example through a rotation).
       To do that we use <tt>FT_Set_Transform()</tt>:</p>
 
       <font color="blue">
@@ -862,30 +862,30 @@
     matrix.xy = (FT_Fixed)(-sin( angle ) * 0x10000L );
     matrix.yx = (FT_Fixed)( sin( angle ) * 0x10000L );
     matrix.yy = (FT_Fixed)( cos( angle ) * 0x10000L );
-              
+
     /* the pen position in 26.6 cartesian space coordinates */
     pen.x = 300 * 64;
     pen.y = ( my_target_height - 200 ) * 64;
-       
+
     for ( n = 0; n &lt; num_chars; n++ )
     {
       /* set transformation */
       FT_Set_Transform( face, &amp;matrix, &pen );
-         
+
       /* load glyph image into the slot (erase previous one) */
       error = FT_Load_Char( face, text[n], FT_LOAD_RENDER );
       if ( error ) continue;  /* ignore errors */
-         
+
       /* now, draw to our target surface (convert position) */
       my_draw_bitmap( &amp;slot->bitmap,
                       slot->bitmap_left,
                       my_target_height - slot->bitmap_top );
-                         
+
       /* increment pen position */
       pen.x += slot->advance.x;
       pen.y += slot->advance.y;
     }</pre>
-      </font>   
+      </font>
 
       <p>Notes:</p>
 
@@ -916,7 +916,7 @@
           is <em>not</em> rounded this time.
         </li>
       </ul>
-    
+
       <p>It is important to note that, while this example is a bit more
       complex than the previous one, it is strictly equivalent for the case
       where the transformation is the identity.  Hence it can be used as a
@@ -934,11 +934,11 @@
     <p>In this first section, you have learned the basics of
     FreeType&nbsp;2, as well as sufficient knowledge how to render rotated
     text.</p>
-       
+
     <p>The next part will dive into more details of the API in order to let
     you access glyph metrics and images directly, as well as how to deal
     with scaling, hinting, kerning, etc.</p>
-       
+
     <p>The third part will discuss issues like modules, caching, and a few
     other advanced topics like how to use multiple size objects with a
     single face.</p>
