@@ -191,9 +191,6 @@
 #define CUR_Ppem() \
           Cur_PPEM( EXEC_ARG )
 
-#define CALC_Length() \
-          Calc_Length( EXEC_ARG )
-
 #define INS_SxVTL( a, b, c, d ) \
           Ins_SxVTL( EXEC_ARG_ a, b, c, d )
 
