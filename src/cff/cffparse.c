@@ -310,6 +310,7 @@
     FT_Error        error;
     FT_Fixed        temp;
 
+
     error = T2_Err_Stack_Underflow;
 
     if ( parser->top >= parser->stack + 6 )

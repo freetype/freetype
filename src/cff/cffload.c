@@ -27,6 +27,7 @@
 #include FT_SOURCE_FILE(cff,cffload.h)
 #include FT_SOURCE_FILE(cff,cffparse.h)
 
+
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -36,7 +37,9 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t2load
 
-  static const FT_UShort cff_isoadobe_charset[229] =
+
+  static
+  const FT_UShort  cff_isoadobe_charset[229] =
   {
     0,
     1,
@@ -269,7 +272,8 @@
     228
   };
 
-  static const FT_UShort cff_expert_charset[166] =
+  static
+  const FT_UShort  cff_expert_charset[166] =
   {
     0,
     1,
@@ -439,7 +443,8 @@
     378
   };
 
-  static const FT_UShort cff_expertsubset_charset[87] =
+  static
+  const FT_UShort  cff_expertsubset_charset[87] =
   {
     0,
     1,
@@ -530,7 +535,8 @@
     346
   };
 
-  static const FT_UShort cff_standard_encoding[256] =
+  static
+  const FT_UShort  cff_standard_encoding[256] =
   {
     0,
     0,
@@ -790,8 +796,8 @@
     0
   };
 
-
-  static const FT_UShort cff_expert_encoding[256] =
+  static
+  const FT_UShort  cff_expert_encoding[256] =
   {
     0,
     0,
@@ -1492,11 +1498,13 @@
   {
     FT_Memory  memory = stream->memory;
 
+
     FREE( charset->sids );
     charset->format = 0;
     charset->offset = 0;
     charset->sids   = 0;
   }
+
 
   static
   FT_Error  CFF_Load_Charset( CFF_Charset*  charset,
@@ -1505,9 +1513,10 @@
                               FT_ULong      base_offset,
                               FT_ULong      offset )
   {
-    FT_Memory   memory     = stream->memory;
-    FT_Error    error      = 0;
-    FT_UShort   glyph_sid;
+    FT_Memory  memory     = stream->memory;
+    FT_Error   error      = 0;
+    FT_UShort  glyph_sid;
+
 
     charset->offset = base_offset + offset;
 
@@ -1522,8 +1531,9 @@
     {
       FT_UInt  j;
 
+
       /* Allocate memory for sids. */
-      if ( ALLOC( charset->sids, num_glyphs * sizeof( FT_UShort ) ) )
+      if ( ALLOC( charset->sids, num_glyphs * sizeof ( FT_UShort ) ) )
         goto Exit;
 
       /* assign the .notdef glyph */
@@ -1532,7 +1542,6 @@
       switch ( charset->format )
       {
       case 0:
-
         for ( j = 1; j < num_glyphs; j++ )
         {
           if ( READ_UShort( glyph_sid ) )
@@ -1547,6 +1556,7 @@
         {
           FT_UInt  nleft;
           FT_UInt  i;
+
 
           j = 1;
 
@@ -1572,7 +1582,6 @@
             /* Fill in the range of sids -- `nleft + 1' glyphs. */
             for ( i = 0; i <= nleft; i++, j++, glyph_sid++ )
               charset->sids[j] = glyph_sid;
-
           }
         }
         break;
@@ -1582,85 +1591,80 @@
         error = FT_Err_Invalid_File_Format;
         goto Exit;
       }
-
     }
     else
     {
-
       /* Parse default tables corresponding to offset == 0, 1, or 2.  */
       /* CFF specification intimates the following:                   */
       /*                                                              */
       /* In order to use a predefined charset, the following must be  */
-      /* true: the charset constructed for the glyphs in the font's   */
+      /* true: The charset constructed for the glyphs in the font's   */
       /* charstrings dictionary must match the predefined charset in  */
       /* the first num_glyphs, and hence must match the predefined    */
       /* charset *exactly*.                                           */
 
       switch ( offset )
       {
-
       case 0:
-
         if ( num_glyphs != 229 )
         {
-          FT_ERROR(("CFF_Load_Charset: implicit charset not equal to predefined charset!\n" ));
+          FT_ERROR(("CFF_Load_Charset: implicit charset not equal to\n"
+                    "predefined charset (Adobe ISO-Latin)!\n" ));
           error = FT_Err_Invalid_File_Format;
           goto Exit;
         }
 
         /* Allocate memory for sids. */
-        if ( ALLOC( charset->sids, num_glyphs * sizeof( FT_UShort ) ) )
+        if ( ALLOC( charset->sids, num_glyphs * sizeof ( FT_UShort ) ) )
           goto Exit;
 
-        /* Copy the predefined charset into the allocated memory.     */
+        /* Copy the predefined charset into the allocated memory. */
         MEM_Copy( charset->sids, cff_isoadobe_charset, 
-                   num_glyphs * sizeof( FT_UShort ) );
+                  num_glyphs * sizeof ( FT_UShort ) );
 
         break;
 
       case 1:
-
         if ( num_glyphs != 166 )
         {
-          FT_ERROR(( "CFF_Load_Charset: implicit charset not equal to predefined charset!\n" ));
+          FT_ERROR(( "CFF_Load_Charset: implicit charset not equal to\n"
+                     "predefined charset (Adobe Expert)!\n" ));
           error = FT_Err_Invalid_File_Format;
           goto Exit;
         }
 
         /* Allocate memory for sids. */
-        if ( ALLOC( charset->sids, num_glyphs * sizeof( FT_UShort ) ) )
+        if ( ALLOC( charset->sids, num_glyphs * sizeof ( FT_UShort ) ) )
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory.     */
         MEM_Copy( charset->sids, cff_expert_charset,
-                  num_glyphs * sizeof( FT_UShort ) );
+                  num_glyphs * sizeof ( FT_UShort ) );
 
         break;
 
       case 2:
-
         if ( num_glyphs != 87 )
         {
-          FT_ERROR(( "CFF_Load_Charset: implicit charset not equal to predefined charset!\n" ));
+          FT_ERROR(( "CFF_Load_Charset: implicit charset not equal to\n"
+                     "predefined charset (Adobe Expert Subset)!\n" ));
           error = FT_Err_Invalid_File_Format;
           goto Exit;
         }
 
         /* Allocate memory for sids. */
-        if ( ALLOC( charset->sids, num_glyphs * sizeof( FT_UShort ) ) )
+        if ( ALLOC( charset->sids, num_glyphs * sizeof ( FT_UShort ) ) )
           goto Exit;
 
         /* Copy the predefined charset into the allocated memory.     */
         MEM_Copy( charset->sids, cff_expertsubset_charset,
-                  num_glyphs * sizeof( FT_UShort ) );
+                  num_glyphs * sizeof ( FT_UShort ) );
 
         break;
 
       default:
-
         error = FT_Err_Invalid_File_Format;
         goto Exit;
-
       }
     }
 
@@ -1670,8 +1674,6 @@
     if ( error )
       if ( charset->sids )
       {
-        FT_Memory  memory = stream->memory;
-
         if ( charset->sids )
           FREE( charset->sids );
         charset->format = 0;
@@ -1682,6 +1684,7 @@
     return error;
   }
 
+
   static
   FT_Error  CFF_Load_Encoding( CFF_Encoding*  encoding,
                                CFF_Charset*   charset,
@@ -1690,14 +1693,15 @@
                                FT_ULong       base_offset,
                                FT_ULong       offset )
   {
-    FT_Memory   memory      = stream->memory;
-    FT_Error    error       = 0;
+    FT_Memory   memory = stream->memory;
+    FT_Error    error  = 0;
     FT_UInt     count;
     FT_UInt     j;
     FT_UShort   glyph_sid;
     FT_Byte     glyph_code;
 
-    /* Check for charset->sids.  If we do not have this, we fail.         */
+
+    /* Check for charset->sids.  If we do not have this, we fail. */
     if ( !charset->sids )
     {
       error = FT_Err_Invalid_File_Format;
@@ -1706,18 +1710,18 @@
 
     /* Allocate memory for sids/codes -- there are at most 256 sids/codes */
     /* for an encoding.                                                   */
-    if ( ALLOC( encoding->sids,  256 * sizeof( FT_UShort ) ) ||
-         ALLOC( encoding->codes, 256 * sizeof( FT_UShort ) ) )
+    if ( ALLOC( encoding->sids,  256 * sizeof ( FT_UShort ) ) ||
+         ALLOC( encoding->codes, 256 * sizeof ( FT_UShort ) ) )
       goto Exit;
 
-    /* Zero out the code to gid/sid mappings.                             */
+    /* Zero out the code to gid/sid mappings. */
     for ( j = 0; j < 255; j++ )
     {
       encoding->sids [j] = 0;
       encoding->codes[j] = 0;
     }
 
-    /* Note:  the encoding table in a CFF font is indexed by glyph index, */
+    /* Note: The encoding table in a CFF font is indexed by glyph index,  */
     /* where the first encoded glyph index is 1.  Hence, we read the char */
     /* code (`glyph_code') at index j and make the assignment:            */
     /*                                                                    */
@@ -1743,7 +1747,6 @@
       switch ( encoding->format & 0x7F )
       {
       case 0:
-
         for ( j = 1; j <= count; j++ )
         {
           if ( READ_Byte( glyph_code ) )
@@ -1757,7 +1760,6 @@
           encoding->codes[glyph_code] = j;
 
           /* Assign code to SID mapping. */
-
           encoding->sids[glyph_code] = charset->sids[j];
         }
 
@@ -1769,25 +1771,24 @@
           FT_Byte  i = 1;
           FT_Byte  k;
 
+
           /* Parse the Format1 ranges. */
           for ( j = 0;  j < count; j++, i += nleft )
           {
-
-            /* Read the first glyph code of the range.             */
+            /* Read the first glyph code of the range. */
             if ( READ_Byte( glyph_code ) )
               goto Exit;
 
-            /* Read the number of codes in the range.              */
+            /* Read the number of codes in the range. */
             if ( READ_Byte( nleft ) )
               goto Exit;
 
             /* Increment nleft, so we read `nleft + 1' codes/sids. */
             nleft++;
 
-            /* Fill in the range of codes/sids.                    */
+            /* Fill in the range of codes/sids. */
             for ( k = i; k < nleft + i; k++, glyph_code++ )
             {
-
               /* Make sure k is not too big. */
               if ( k > num_glyphs )
                 goto Exit;
@@ -1797,15 +1798,13 @@
 
               /* Assign code to SID mapping. */
               encoding->sids[glyph_code] = charset->sids[k];
-
             }
           }
         }
-
         break;
 
       default:
-        FT_ERROR(( "CFF.Load_Encoding: invalid table format!\n" ));
+        FT_ERROR(( "CFF_Load_Encoding: invalid table format!\n" ));
         error = FT_Err_Invalid_File_Format;
         goto Exit;
       }
@@ -1815,27 +1814,25 @@
       {
         FT_UInt glyph_id;
 
+
         /* count supplements */
         if ( READ_Byte( count ) )
           goto Exit;
 
         for ( j = 0; j < count; j++ )
         {
-
-          /* Read supplemental glyph code.                */
+          /* Read supplemental glyph code. */
           if ( READ_Byte( glyph_code ) )
             goto Exit;
 
-          /* Read the SID associated with this glyph code */
+          /* Read the SID associated with this glyph code. */
           if ( READ_UShort( glyph_sid ) )
             goto Exit;
 
-          /* Assign code to SID mapping.                  */
+          /* Assign code to SID mapping. */
           encoding->sids[glyph_code] = glyph_sid;
 
-          /* Assign code to GID mapping.                  */
-
-          /* First, lookup GID which has been assigned    */
+          /* First, lookup GID which has been assigned to */
           /* SID glyph_sid.                               */
           for ( glyph_id = 0; glyph_id < num_glyphs; glyph_id++ )
           {
@@ -1843,16 +1840,15 @@
               break;
           }
 
-          /* Now, make the assignment.                    */
+          /* Now, make the assignment. */
           encoding->codes[glyph_code] = glyph_id;
-
         }
       }
-
     }
     else
     {
       FT_UInt i;
+
 
       /* We take into account the fact a CFF font can use a predefined  */
       /* encoding without containing all of the glyphs encoded by this  */
@@ -1861,12 +1857,10 @@
 
       switch ( offset )
       {
-
       case 0:
-
-        /* First, copy the code to SID mapping.    */
+        /* First, copy the code to SID mapping. */
         MEM_Copy( encoding->sids, cff_standard_encoding,
-                  256 * sizeof( FT_UShort ) );
+                  256 * sizeof ( FT_UShort ) );
 
         /* Construct code to GID mapping from code */
         /* to SID mapping and charset.             */
@@ -1875,7 +1869,6 @@
           /* If j is encoded, find the GID for it. */
           if ( encoding->sids[j] )
           {
-
             for ( i = 1; i < num_glyphs; i++ )
               /* We matched, so break. */
               if ( charset->sids[i] == encoding->sids[j] )
@@ -1893,14 +1886,12 @@
               encoding->codes[j] = i;
           }
         }
-
         break;
 
       case 1:
-
         /* First, copy the code to SID mapping. */
         MEM_Copy( encoding->sids, cff_expert_encoding,
-                  256 * sizeof( FT_UShort ) );
+                  256 * sizeof ( FT_UShort ) );
 
         /* Construct code to GID mapping from code to SID mapping */
         /* and charset.                                           */
@@ -1909,7 +1900,6 @@
           /* If j is encoded, find the GID for it. */
           if ( encoding->sids[j] )
           {
-
             for ( i = 1; i < num_glyphs; i++ )
               /* We matched, so break. */
               if ( charset->sids[i] == encoding->sids[j] )
@@ -1927,15 +1917,13 @@
               encoding->codes[j] = i;
           }
         }
-
         break;
 
       default:
-        FT_ERROR(( "CFF.Load_Encoding: invalid table format!\n" ));
+        FT_ERROR(( "CFF_Load_Encoding: invalid table format!\n" ));
         error = FT_Err_Invalid_File_Format;
         goto Exit;
        break;
-
       }
     }
 
@@ -1946,8 +1934,6 @@
     {
       if ( encoding->sids || encoding->codes )
       {
-        FT_Memory  memory = stream->memory;
-
         if ( encoding->sids )
           FREE( encoding->sids );
 
@@ -1961,7 +1947,6 @@
     }
 
     return error;
-
   }
 
 
@@ -2231,8 +2216,12 @@
     if ( error )
       goto Exit;
       
-    error = CFF_Load_Encoding( &font->encoding, &font->charset, font->num_glyphs,
-                               stream, base_offset, dict->encoding_offset );
+    error = CFF_Load_Encoding( &font->encoding,
+                               &font->charset,
+                               font->num_glyphs,
+                               stream,
+                               base_offset,
+                               dict->encoding_offset );
     if ( error )
       goto Exit;
       
