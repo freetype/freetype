@@ -408,7 +408,7 @@ THE SOFTWARE.
     if ( nprops & 3 )
     {
       i = 4 - ( nprops & 3 );
-      FT_Skip_Stream( stream, i );
+      FT_Stream_Skip( stream, i );
     }
 
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )
@@ -423,7 +423,7 @@ THE SOFTWARE.
     if ( ALLOC( strings, string_size * sizeof ( char ) ) )
       goto Bail;
 
-    error = FT_Read_Stream( stream, (FT_Byte*)strings, string_size );
+    error = FT_Stream_Read( stream, (FT_Byte*)strings, string_size );
     if ( error )
       goto Bail;
 
@@ -568,7 +568,7 @@ THE SOFTWARE.
     if ( error )
       return error;
 
-    error = FT_Access_Frame( stream, 8 );
+    error = FT_Stream_Enter_Frame( stream, 8 );
     if ( error )
       return error;
 
@@ -578,7 +578,7 @@ THE SOFTWARE.
     else
       nbitmaps  = GET_ULongLE();
 
-    FT_Forget_Frame( stream );
+    FT_Stream_Exit_Frame( stream );
 
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
       return PCF_Err_Invalid_File_Format;
@@ -660,7 +660,7 @@ THE SOFTWARE.
     if ( error )
       return error;
 
-    error = FT_Access_Frame( stream, 14 );
+    error = FT_Stream_Enter_Frame( stream, 14 );
     if ( error )
       return error;
 
@@ -683,7 +683,7 @@ THE SOFTWARE.
       face->defaultChar = GET_ShortLE();
     }
 
-    FT_Forget_Frame( stream );
+    FT_Stream_Exit_Frame( stream );
 
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
       return PCF_Err_Invalid_File_Format;
@@ -696,7 +696,7 @@ THE SOFTWARE.
     if ( ALLOC( tmpEncoding, nencoding * sizeof ( PCF_EncodingRec ) ) )
       return PCF_Err_Out_Of_Memory;
 
-    error = FT_Access_Frame( stream, 2 * nencoding );
+    error = FT_Stream_Enter_Frame( stream, 2 * nencoding );
     if ( error )
       goto Bail;
 
@@ -721,7 +721,7 @@ THE SOFTWARE.
       FT_TRACE4(( "enc n. %d ; Uni %ld ; Glyph %d\n",
                   i, tmpEncoding[j - 1].enc, encodingOffset ));
     }
-    FT_Forget_Frame( stream );
+    FT_Stream_Exit_Frame( stream );
 
     if ( ALLOC( encoding, (--j) * sizeof ( PCF_EncodingRec ) ) )
       goto Bail;

@@ -197,7 +197,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* @functype:                                                            */
-  /*    FT_Stream_IO                                                       */
+  /*    FT_Stream_IoFunc                                                   */
   /*                                                                       */
   /* @description:                                                         */
   /*    A function used to seek and read data from a given input stream.   */
@@ -219,16 +219,16 @@ FT_BEGIN_HEADER
   /*    with a `count' of 0.                                               */
   /*                                                                       */
   typedef unsigned long
-  (*FT_Stream_IO)( FT_Stream       stream,
-                   unsigned long   offset,
-                   unsigned char*  buffer,
-                   unsigned long   count );
+  (*FT_Stream_IoFunc)( FT_Stream       stream,
+                       unsigned long   offset,
+                       unsigned char*  buffer,
+                       unsigned long   count );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* @functype:                                                            */
-  /*    FT_Stream_Close                                                    */
+  /*    FT_Stream_CloseFunc                                                */
   /*                                                                       */
   /* @description:                                                         */
   /*    A function used to close a given input stream.                     */
@@ -237,7 +237,7 @@ FT_BEGIN_HEADER
   /*   stream :: A handle to the target stream.                            */
   /*                                                                       */
   typedef void
-  (*FT_Stream_Close)( FT_Stream  stream );
+  (*FT_Stream_CloseFunc)( FT_Stream  stream );
 
 
   /*************************************************************************/
@@ -281,18 +281,18 @@ FT_BEGIN_HEADER
   /*                                                                       */
   struct  FT_StreamRec_
   {
-    unsigned char*   base;
-    unsigned long    size;
-    unsigned long    pos;
+    unsigned char*       base;
+    unsigned long        size;
+    unsigned long        pos;
 
-    FT_StreamDesc    descriptor;
-    FT_StreamDesc    pathname;
-    FT_Stream_IO     read;
-    FT_Stream_Close  close;
+    FT_StreamDesc        descriptor;
+    FT_StreamDesc        pathname;
+    FT_Stream_IoFunc     read;
+    FT_Stream_CloseFunc  close;
 
-    FT_Memory        memory;
-    unsigned char*   cursor;
-    unsigned char*   limit;
+    FT_Memory            memory;
+    unsigned char*       cursor;
+    unsigned char*       limit;
   };
 
 

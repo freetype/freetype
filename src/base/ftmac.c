@@ -465,7 +465,7 @@
       if ( ALLOC( stream, sizeof ( *stream ) ) )
         goto Exit;
 
-      FT_New_Memory_Stream( library,
+      FT_Stream_OpenMemory( library,
                             base,
                             size,
                             stream );
@@ -518,7 +518,7 @@
       (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
     else
     {
-      FT_Done_Stream( stream );
+      FT_Stream_Close( stream );
       FREE( stream );
     }
     return error;

@@ -20,14 +20,14 @@
 
 #define  FT_MAKE_OPTION_SINGLE_OBJECT
 
+#include "ftutil.c"
+#include "ftdbgmem.c"
+#include "ftstream.c"
 #include "ftcalc.c"
 #include "fttrigon.c"
+#include "ftoutln.c"
 #include "ftgloadr.c"
 #include "ftobjs.c"
-#include "ftstream.c"
-#include "ftlist.c"
-#include "ftoutln.c"
 #include "ftnames.c"
-#include "ftdbgmem.c"
 
 /* END */
