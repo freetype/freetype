@@ -20,17 +20,17 @@
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_OBJECTS_H
 
-#include FT_SOURCE_FILE( sfnt, sfdriver.h )
-#include FT_SOURCE_FILE( sfnt, ttload.h )
-#include FT_SOURCE_FILE( sfnt, ttcmap.h )
-#include FT_SOURCE_FILE( sfnt, sfobjs.h )
+#include FT_SOURCE_FILE(sfnt,sfdriver.h)
+#include FT_SOURCE_FILE(sfnt,ttload.h)
+#include FT_SOURCE_FILE(sfnt,ttcmap.h)
+#include FT_SOURCE_FILE(sfnt,sfobjs.h)
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-#include FT_SOURCE_FILE( sfnt, ttsbit.h )
+#include FT_SOURCE_FILE(sfnt,ttsbit.h)
 #endif
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-#include FT_SOURCE_FILE( sfnt, ttpost.h )
+#include FT_SOURCE_FILE(sfnt,ttpost.h)
 #endif
 
 #include <string.h>     /* for strcmp() */

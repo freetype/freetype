@@ -23,7 +23,7 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE( raster, ftraster.h )
+#include FT_SOURCE_FILE(raster,ftraster.h)
 #include FT_INTERNAL_CALC_H   /* for FT_MulDiv only */
 
 

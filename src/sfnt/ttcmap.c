@@ -19,8 +19,8 @@
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_TRUETYPE_ERRORS_H
-#include FT_SOURCE_FILE( sfnt, ttload.h )
-#include FT_SOURCE_FILE( sfnt, ttcmap.h )
+#include FT_SOURCE_FILE(sfnt,ttload.h)
+#include FT_SOURCE_FILE(sfnt,ttcmap.h)
 
 
   /*************************************************************************/

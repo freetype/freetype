@@ -22,7 +22,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include FT_SOURCE_FILE( cff, cffobjs.h )
+#include FT_SOURCE_FILE(cff,cffobjs.h)
 
 
 FT_BEGIN_HEADER

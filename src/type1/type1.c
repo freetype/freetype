@@ -19,14 +19,14 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE( type1, t1parse.c )
-#include FT_SOURCE_FILE( type1, t1load.c )
-#include FT_SOURCE_FILE( type1, t1objs.c )
-#include FT_SOURCE_FILE( type1, t1driver.c )
-#include FT_SOURCE_FILE( type1, t1gload.c )
+#include FT_SOURCE_FILE(type1,t1parse.c)
+#include FT_SOURCE_FILE(type1,t1load.c)
+#include FT_SOURCE_FILE(type1,t1objs.c)
+#include FT_SOURCE_FILE(type1,t1driver.c)
+#include FT_SOURCE_FILE(type1,t1gload.c)
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
-#include FT_SOURCE_FILE( type1, t1afm.c )
+#include FT_SOURCE_FILE(type1,t1afm.c)
 #endif
 
 

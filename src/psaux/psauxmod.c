@@ -17,9 +17,9 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE( psaux, psauxmod.h )
-#include FT_SOURCE_FILE( psaux, psobjs.h )
-#include FT_SOURCE_FILE( psaux, t1decode.h )
+#include FT_SOURCE_FILE(psaux,psauxmod.h)
+#include FT_SOURCE_FILE(psaux,psobjs.h)
+#include FT_SOURCE_FILE(psaux,t1decode.h)
 
 
   FT_CALLBACK_TABLE_DEF

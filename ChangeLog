@@ -1,3 +1,17 @@
+2000-12-13  David Turner <david.turner@freetype.org>
+
+	* include/freetype/config/ft2build.h,
+	include/freetype/internal/internal.h: fixed header inclusion macros
+	to use direct definitions. This is the only way to do these things
+	in a portable way :-( The rest of the code should follow shortly
+	though everything compiles now..
+	
+	* builds/compiler/intelc.mk, builds/compiler/watcom.mk,
+	builds/win32/detect.mk: added support for the Intel C/C++ compiler,
+	as well as _preliminary_ (read: doesn't work !!) support for Watcom.
+	Also added a new setup target. Type "make setup list" for a list
+	of supported command-line compilers on Win32..
+
 2000-12-13  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ftsystem.c: Fixed typos.  Fixed inclusion of wrong

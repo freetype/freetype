@@ -107,5 +107,7 @@
 
 #endif /* FT_DEBUG_LEVEL_TRACE || FT_DEBUG_LEVEL_ERROR */
 
+  /* needed by pedantic ANSI compilers */
+  extern const int  ft_debug_dummy;
 
 /* END */

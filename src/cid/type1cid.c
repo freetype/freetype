@@ -19,11 +19,11 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE( cid, cidparse.c )
-#include FT_SOURCE_FILE( cid, cidload.c )
-#include FT_SOURCE_FILE( cid, cidobjs.c )
-#include FT_SOURCE_FILE( cid, cidriver.c )
-#include FT_SOURCE_FILE( cid, cidgload.c )
+#include FT_SOURCE_FILE(cid,cidparse.c)
+#include FT_SOURCE_FILE(cid,cidload.c)
+#include FT_SOURCE_FILE(cid,cidobjs.c)
+#include FT_SOURCE_FILE(cid,cidriver.c)
+#include FT_SOURCE_FILE(cid,cidgload.c)
 
 
 /* END */

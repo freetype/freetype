@@ -24,31 +24,31 @@
   /*************************************************************************/
 
 
-#define FT_INTERNAL_OBJECTS_H           FT2_INTERNAL_FILE( ftobjs.h )
-#define FT_INTERNAL_STREAM_H            FT2_INTERNAL_FILE( ftstream.h )
-#define FT_INTERNAL_MEMORY_H            FT2_INTERNAL_FILE( ftmemory.h )
-#define FT_INTERNAL_EXTENSION_H         FT2_INTERNAL_FILE( ftextend.h )
-#define FT_INTERNAL_DEBUG_H             FT2_INTERNAL_FILE( ftdebug.h )
-#define FT_INTERNAL_CALC_H              FT2_INTERNAL_FILE( ftcalc.h )
-#define FT_INTERNAL_DRIVER_H            FT2_INTERNAL_FILE( ftdriver.h )
-#define FT_INTERNAL_EXTEND_H            FT2_INTERNAL_FILE( ftextend.h )
+#define FT_INTERNAL_OBJECTS_H           <freetype/internal/ftobjs.h>
+#define FT_INTERNAL_STREAM_H            <freetype/internal/ftstream.h>
+#define FT_INTERNAL_MEMORY_H            <freetype/internal/ftmemory.h>
+#define FT_INTERNAL_EXTENSION_H         <freetype/internal/ftextend.h>
+#define FT_INTERNAL_DEBUG_H             <freetype/internal/ftdebug.h>
+#define FT_INTERNAL_CALC_H              <freetype/internal/ftcalc.h>
+#define FT_INTERNAL_DRIVER_H            <freetype/internal/ftdriver.h>
+#define FT_INTERNAL_EXTEND_H            <freetype/internal/ftextend.h>
 
-#define FT_INTERNAL_SFNT_H              FT2_INTERNAL_FILE( sfnt.h )
+#define FT_INTERNAL_SFNT_H              <freetype/internal/sfnt.h>
 
-#define FT_INTERNAL_TRUETYPE_TYPES_H    FT2_INTERNAL_FILE( tttypes.h )
-#define FT_INTERNAL_TRUETYPE_ERRORS_H   FT2_INTERNAL_FILE( tterrors.h )
+#define FT_INTERNAL_TRUETYPE_TYPES_H    <freetype/internal/tttypes.h>
+#define FT_INTERNAL_TRUETYPE_ERRORS_H   <freetype/internal/tterrors.h>
 
-#define FT_INTERNAL_TYPE1_ERRORS_H      FT2_INTERNAL_FILE( t1errors.h )
-#define FT_INTERNAL_TYPE1_TYPES_H       FT2_INTERNAL_FILE( t1types.h )
+#define FT_INTERNAL_TYPE1_ERRORS_H      <freetype/internal/t1errors.h>
+#define FT_INTERNAL_TYPE1_TYPES_H       <freetype/internal/t1types.h>
 
-#define FT_INTERNAL_CFF_ERRORS_H        FT2_INTERNAL_FILE( t2errors.h )
-#define FT_INTERNAL_CFF_TYPES_H         FT2_INTERNAL_FILE( t2types.h )
+#define FT_INTERNAL_CFF_ERRORS_H        <freetype/internal/t2errors.h>
+#define FT_INTERNAL_CFF_TYPES_H         <freetype/internal/t2types.h>
 
-#define FT_INTERNAL_POSTSCRIPT_NAMES_H  FT2_INTERNAL_FILE( psnames.h )
-#define FT_INTERNAL_POSTSCRIPT_AUX_H    FT2_INTERNAL_FILE( psaux.h )
+#define FT_INTERNAL_POSTSCRIPT_NAMES_H  <freetype/internal/psnames.h>
+#define FT_INTERNAL_POSTSCRIPT_AUX_H    <freetype/internal/psaux.h>
 
-#define FT_INTERNAL_AUTOHINT_H          FT2_INTERNAL_FILE( autohint.h )
-#define FT_INTERNAL_FNT_TYPES_H         FT2_INTERNAL_FILE( fnttypes.h )
+#define FT_INTERNAL_AUTOHINT_H          <freetype/internal/autohint.h>
+#define FT_INTERNAL_FNT_TYPES_H         <freetype/internal/fnttypes.h>
 
 
 /* END */
