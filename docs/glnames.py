@@ -1506,7 +1506,7 @@ def count_extra_glyphs( alist, filter ):
   return extras
 
 
-def dump_mac_indices( file ):
+def dump_mac_indices( file, t1_bias ):
   write = file.write
 
   write( "  static const unsigned short  mac_standard_names[" + \
@@ -1684,7 +1684,7 @@ def main():
   write( "\n" )
 
   # dump mac indices table
-  dump_mac_indices( file )
+  dump_mac_indices( file, t1_bias )
 
   # discard mac names from base list
   base_list = base_list[t1_bias:]
