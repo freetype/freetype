@@ -1421,6 +1421,7 @@ FT_BEGIN_HEADER
     FT_Library        library;
     FT_Face           face;
     FT_GlyphSlot      next;
+    FT_UInt           reserved;       /* retained for binary compatibility */
     FT_Generic        generic;
 
     FT_Glyph_Metrics  metrics;
