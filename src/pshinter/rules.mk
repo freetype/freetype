@@ -26,12 +26,10 @@ PSHINTER_COMPILE := $(FT_COMPILE) $I$(PSHINTER_DIR)
 
 # PSHINTER driver sources (i.e., C files)
 #
-PSHINTER_DRV_SRC := $(PSHINTER_DIR_)pshrec.c   \
-                    $(PSHINTER_DIR_)pshglob.c  \
-                    $(PSHINTER_DIR_)pshmod.c   \
-                    $(PSHINTER_DIR_)pshalgo1.c \
-                    $(PSHINTER_DIR_)pshalgo2.c \
-                    $(PSHINTER_DIR_)pshalgo3.c
+PSHINTER_DRV_SRC := $(PSHINTER_DIR_)pshrec.c  \
+                    $(PSHINTER_DIR_)pshglob.c \
+                    $(PSHINTER_DIR_)pshmod.c  \
+                    $(PSHINTER_DIR_)pshalgo.c
 
 
 # PSHINTER driver headers

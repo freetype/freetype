@@ -82,14 +82,14 @@
 
     /* we need to compute the `previous' and `next' point */
     /* for these extrema.                                 */
-    cur   = outline->points + n;
-    prev  = cur - 1;
-    next  = cur + 1;
+    cur  = outline->points + n;
+    prev = cur - 1;
+    next = cur + 1;
 
     first = 0;
     for ( c = 0; c < outline->n_contours; c++ )
     {
-      last  = outline->contours[c];
+      last = outline->contours[c];
 
       if ( n == first )
         prev = outline->points + last;
