@@ -10,7 +10,7 @@ SubDirHdrs  [ FT2_SubDir  src sfnt ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = sfobjs sfdriver ttcmap ttpost ttload ttsbit ;
+    _sources = sfobjs sfdriver ttcmap ttcmap0 ttpost ttload ttsbit ;
   }
   else
   {

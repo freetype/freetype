@@ -28,6 +28,7 @@ SFNT_COMPILE := $(FT_COMPILE) $I$(SFNT_DIR)
 #
 SFNT_DRV_SRC := $(SFNT_DIR_)ttload.c   \
                 $(SFNT_DIR_)ttcmap.c   \
+                $(SFNT_DIR_)ttcmap0.c  \
                 $(SFNT_DIR_)ttsbit.c   \
                 $(SFNT_DIR_)ttpost.c   \
                 $(SFNT_DIR_)sfobjs.c   \

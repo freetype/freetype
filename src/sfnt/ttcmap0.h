@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef __TTCMAP_H__
-#define __TTCMAP_H__
+#ifndef __TTCMAP0_H__
+#define __TTCMAP0_H__
 
 
 #include <ft2build.h>
@@ -30,7 +30,7 @@ FT_BEGIN_HEADER
   typedef struct TT_CMapRec_
   {
     FT_CMapRec  cmap;
-    FT_Byte*    data;
+    FT_Byte*    data;  /* pointer to in-memory cmap table */
 
   } TT_CMapRec, *TT_CMap;
 
@@ -47,14 +47,24 @@ FT_BEGIN_HEADER
 
   } TT_CMap_ClassRec;
 
+  typedef struct TT_ValidatorRec_
+  {
+    FT_Validator   validator;
+    FT_UInt        num_glyphs;
+    
+  } TT_ValidatorRec, *TT_Validator;
+
+#define  TT_VALIDATOR(x)          ((TT_Validator)(x))
+#define  TT_VALID_GLYPH_COUNT(v)  TT_VALIDATOR(v)->num_glyphs
+
 
   FT_LOCAL( FT_Error )
-  TT_Build_CMaps( TT_Face   face )
+  TT_Build_CMaps( TT_Face   face );
 
 
 FT_END_HEADER
 
-#endif /* __TTCMAP_H__ */
+#endif /* __TTCMAP0_H__ */
 
 
 /* END */
