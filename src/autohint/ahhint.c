@@ -428,6 +428,7 @@
     AH_Edge     edge_limit;
     AH_Outline  outline = hinter->glyph;
     FT_Int      dimension;
+    FT_Int      n_edges;
 
 
     edges      = outline->horz_edges;
@@ -684,6 +685,64 @@
 
           if ( edge > edges && edge->pos < edge[-1].pos )
             edge->pos = edge[-1].pos;
+        }
+      }
+
+      /* make sure that lowercase m's maintain their symmetry */
+
+      /* In general, lowercase m's have six vertical edges if they are sans */
+      /* serif, or twelve if they are avec serif.  This implementation is   */
+      /* based on that assumption, and seems to work very well with most    */
+      /* faces.  However, if for a certain face this assumption is not      */
+      /* true, the m is just rendered like before.  In addition, any stem   */
+      /* correction will only be applied to symmetrical glyphs (even if the */
+      /* glyph is not an m), so the potential for unwanted distortion is    */
+      /* relatively low.                                                    */
+
+      n_edges = edge_limit - edges;
+      if ( !dimension && ( n_edges == 6 || n_edges == 12 ) )
+      {
+        AH_EdgeRec  *edge1, *edge2, *edge3;
+        FT_Pos       dist1, dist2, span, delta;
+
+
+        if ( n_edges == 6 )
+        {
+          edge1 = edges;
+          edge2 = edges + 2;
+          edge3 = edges + 4;
+        }
+        else
+        {
+          edge1 = edges + 1;
+          edge2 = edges + 5;
+          edge3 = edges + 9;
+        }
+
+        dist1 = edge2->opos - edge1->opos;
+        dist2 = edge3->opos - edge2->opos;
+
+        span = dist1 - dist2;
+        if ( span < 0 )
+          span = -span;
+
+        if ( span < 8 )
+        {
+          delta = edge3->pos - ( 2 * edge2->pos - edge1->pos );
+          edge3->pos -= delta;
+          if ( edge3->link )
+            edge3->link->pos -= delta;
+
+          /* move the serifs along with the stem */
+          if ( n_edges == 12 )
+          {
+            ( edges + 8 )->pos -= delta;
+            ( edges + 11 )->pos -= delta;
+          }
+
+          edge3->flags |= AH_EDGE_DONE;
+          if ( edge3->link )
+            edge3->link->flags |= AH_EDGE_DONE;
         }
       }
 
