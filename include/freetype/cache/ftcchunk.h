@@ -54,7 +54,7 @@
   extern "C" {
 #endif
 
-/* maximum number of chunk sets in a given chunk cache */
+  /* maximum number of chunk sets in a given chunk cache */
 #define  FTC_MAX_CHUNK_SETS  16
 
 
@@ -62,32 +62,32 @@
   typedef struct FTC_ChunkSetRec_*     FTC_ChunkSet;
   typedef struct FTC_Chunk_CacheRec_*  FTC_Chunk_Cache;
 
-  typedef struct FTC_ChunkNodeRec_
+  typedef struct  FTC_ChunkNodeRec_
   {
-    FTC_CacheNodeRec    root;
-    FTC_ChunkSet        cset;
-    FT_UShort           cset_index;
-    FT_UShort           num_elements;
-    FT_Byte*            elements;
+    FTC_CacheNodeRec  root;
+    FTC_ChunkSet      cset;
+    FT_UShort         cset_index;
+    FT_UShort         num_elements;
+    FT_Byte*          elements;
   
   } FTC_ChunkNodeRec;
 
-#define FTC_CHUNKNODE_TO_LRUNODE(x)  ((FT_ListNode)(x))
-#define FTC_LRUNODE_TO_CHUNKNODE(x)  ((FTC_ChunkNode)(x))
+
+#define FTC_CHUNKNODE_TO_LRUNODE( x )  ((FT_ListNode)( x ))
+#define FTC_LRUNODE_TO_CHUNKNODE( x )  ((FTC_ChunkNode)( x ))
+
 
   /*************************************************************************/
   /*                                                                       */
   /*  chunk set methods                                                    */
   /*                                                                       */
 
- /* used to set "element_max", "element_count" and "element_size" */
-  typedef FT_Error  (*FTC_ChunkSet_SizesFunc)  ( FTC_ChunkSet   cset,
-                                                 FT_Pointer     type );
+  /* used to set "element_max", "element_count" and "element_size" */
+  typedef FT_Error  (*FTC_ChunkSet_SizesFunc)  ( FTC_ChunkSet  cset,
+                                                 FT_Pointer    type );
 
-
-  typedef FT_Error  (*FTC_ChunkSet_InitFunc)  ( FTC_ChunkSet   cset,
-                                                FT_Pointer     type );
-
+  typedef FT_Error  (*FTC_ChunkSet_InitFunc)   ( FTC_ChunkSet  cset,
+                                                 FT_Pointer    type );
 
   typedef void      (*FTC_ChunkSet_DoneFunc)   ( FTC_ChunkSet  cset );
 
@@ -95,14 +95,13 @@
                                                  FT_Pointer    type );
 
 
+  typedef FT_Error  (*FTC_ChunkSet_NewNodeFunc)    ( FTC_ChunkSet    cset,
+                                                     FT_UInt         index,
+                                                     FTC_ChunkNode*  anode );
 
-  typedef FT_Error  (*FTC_ChunkSet_NewNodeFunc)( FTC_ChunkSet     cset,
-                                                 FT_UInt          index,
-                                                 FTC_ChunkNode*   anode );
+  typedef void      (*FTC_ChunkSet_DestroyNodeFunc)( FTC_ChunkNode   node );
 
-  typedef void      (*FTC_ChunkSet_DestroyNodeFunc)( FTC_ChunkNode  node );
-
-  typedef FT_ULong  (*FTC_ChunkSet_SizeNodeFunc)   ( FTC_ChunkNode  node );
+  typedef FT_ULong  (*FTC_ChunkSet_SizeNodeFunc)   ( FTC_ChunkNode   node );
 
 
   typedef struct  FTC_ChunkSet_Class_
@@ -151,24 +150,24 @@
   /* the abstract chunk cache object */
   typedef struct  FTC_Chunk_CacheRec_
   {
-    FTC_CacheRec     root;
-    FT_Lru           csets_lru;  /* static chunk set lru list */
-    FTC_ChunkSet     last_cset;  /* small cache :-)           */
+    FTC_CacheRec  root;
+    FT_Lru        csets_lru;        /* static chunk set lru list */
+    FTC_ChunkSet  last_cset;        /* small cache :-)           */
     
   } FTC_Chunk_CacheRec;
+
 
   /*************************************************************************/
   /*                                                                       */
   /* These functions are exported so that they can be called from          */
-  /* user-provided cache classes; otherwise, they are really parts of the  */
+  /* user-provided cache classes; otherwise, they are really part of the   */
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  FT_EXPORT_FUNC( FT_Error )
-  FTC_ChunkNode_Init( FTC_ChunkNode  node,
-                      FTC_ChunkSet   cset,
-                      FT_UInt        index,
-                      FT_Bool        alloc );
+  FT_EXPORT_FUNC( FT_Error )  FTC_ChunkNode_Init( FTC_ChunkNode  node,
+                                                  FTC_ChunkSet   cset,
+                                                  FT_UInt        index,
+                                                  FT_Bool        alloc );
 
 #define FTC_ChunkNode_Ref( n ) \
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count++
@@ -177,32 +176,23 @@
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count--
 
 
-  FT_EXPORT_DEF( void )
-  FTC_ChunkNode_Destroy( FTC_ChunkNode    node );
+  FT_EXPORT_DEF( void )      FTC_ChunkNode_Destroy( FTC_ChunkNode    node );
+
+  FT_EXPORT_DEF( FT_Error )  FTC_Chunk_Cache_Init(  FTC_Chunk_Cache  cache );
+
+  FT_EXPORT_DEF( void )      FTC_Chunk_Cache_Done(  FTC_Chunk_Cache  cache );
 
 
+  FT_EXPORT_DEF( FT_Error )  FTC_ChunkSet_New( FTC_Chunk_Cache  cache,
+                                               FT_Pointer       type,
+                                               FTC_ChunkSet*    aset );
 
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache );
+  FT_EXPORT_DEF( FT_Error )  FTC_ChunkSet_Lookup_Node(
+                               FTC_ChunkSet    cset,
+                               FT_UInt         glyph_index,
+                               FTC_ChunkNode*  anode,
+                               FT_UInt*        aindex );
 
-
-  FT_EXPORT_DEF( void )
-  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache );
-
-
-
-
-  FT_EXPORT_DEF( FT_Error )
-  FTC_ChunkSet_New( FTC_Chunk_Cache   cache,
-                    FT_Pointer        type,
-                    FTC_ChunkSet     *aset );
-
-
-  FT_EXPORT_DEF( FT_Error )
-  FTC_ChunkSet_Lookup_Node( FTC_ChunkSet     cset,
-                            FT_UInt          glyph_index,
-                            FTC_ChunkNode   *anode,
-                            FT_UInt         *aindex );
 
 #ifdef __cplusplus
   }
@@ -210,5 +200,6 @@
 
 
 #endif /* FTCCHUNK_H */
+
 
 /* END */
