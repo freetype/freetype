@@ -1,3 +1,9 @@
+2004-02-13  Robert Etheridge  <roberte@stcc.cc.tx.us>
+
+	* src/type42/t42objs.c (T42_Face_Init), src/type1/t1objs.c
+	(T1_Face_Init), src/cid/cidobjs.c (cid_face_init): Fix computation
+	of underline_position and underline_thickness.
+
 2004-02-12  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (FT_Set_Char_Size): Return immediately if
