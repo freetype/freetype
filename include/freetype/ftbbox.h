@@ -30,10 +30,7 @@
 #ifndef FTBBOX_H
 #define FTBBOX_H
 
-#ifndef    FT_BUILD_H
-#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
-#endif
-#include   FT_BUILD_H
+#include   <ft2build.h>
 #include   FT_FREETYPE_H
 
 FT_BEGIN_HEADER

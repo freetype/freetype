@@ -22,8 +22,10 @@ TOP := $(shell cd $(TOP); pwd)
 DELETE   := rm -f
 SEP      := /
 HOSTSEP  := $(SEP)
+
 # we use a special devel ftoption.h
-BUILD    := $(TOP)/builds/unix/devel
+BUILD    := $(TOP)/builds/devel
+
 # do not set the platform to `unix', or libtool will trick you
 PLATFORM := unixdev
 

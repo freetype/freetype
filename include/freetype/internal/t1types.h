@@ -20,10 +20,7 @@
 #ifndef __T1TYPES_H__
 #define __T1TYPES_H__
 
-#ifndef    FT_BUILD_H
-#  define  FT_BUILD_H  <freetype/config/ftbuild.h>
-#endif
-#include   FT_BUILD_H
+#include  <ft2build.h>
 #include   FT_TYPE1_TABLES_H
 #include   FT_INTERNAL_POSTSCRIPT_NAMES_H
 

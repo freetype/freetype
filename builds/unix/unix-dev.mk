@@ -17,6 +17,8 @@
 
 
 include $(TOP)/builds/unix/unixddef.mk
+BUILD := $(TOP)/builds/devel
+
 include $(TOP)/builds/compiler/gcc-dev.mk
 include $(TOP)/builds/link_std.mk
 

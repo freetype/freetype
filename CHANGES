@@ -1,3 +1,13 @@
+LATEST CHANGES
+
+    - changed the library header files inclusion scheme. Right now,
+      a client application can do something like this:
+      
+         #include <ft2build.h>   -- include build and setup configuration file
+         #include FT_FREETYPE_H  -- main API file
+         #include FT_GLYPH_H     -- abstract glyph image handling, etc..
+
+=========================================================================
 LATEST CHANGES BETWEEN 2.0.1 and 2.0:
 
   2.0.1 introduces a few changes:

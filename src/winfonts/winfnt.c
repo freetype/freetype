@@ -584,6 +584,7 @@
     slot->metrics.horiBearingY = slot->bitmap_top << 6;
 
     slot->linearHoriAdvance    = (FT_Fixed)bitmap->width << 16;
+    slot->format               = ft_glyph_format_bitmap;
 
   Exit:
     return error;

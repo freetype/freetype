@@ -48,7 +48,7 @@
       TT_Face  ttface = (TT_Face)face;
 
 
-      if ( index < ttface->num_names )
+      if ( index < (FT_UInt)ttface->num_names )
       {
         TT_NameRec*  name = ttface->name_table.names + index;
 

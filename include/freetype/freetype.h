@@ -19,12 +19,6 @@
 #ifndef __FREETYPE_H__
 #define __FREETYPE_H__
 
-/* include potentially build-specific directives and macros */
-#ifndef    FT_BUILD_H
-#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
-#endif
-#include   FT_BUILD_H
-
   /*************************************************************************/
   /*                                                                       */
   /* The `raster' component duplicates some of the declarations in         */
@@ -43,6 +37,7 @@
 #define FREETYPE_MINOR 0
 
 
+#include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include FT_ERRORS_H
 #include FT_TYPES_H

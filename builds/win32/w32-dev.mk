@@ -24,12 +24,15 @@ ifndef TOP
 endif
 
 SEP   := /
-BUILD := $(TOP)/builds/win32/devel
 
 include $(TOP)/builds/win32/win32-def.mk
+BUILD := $(TOP)/builds/devel
+
 include $(TOP)/builds/compiler/gcc-dev.mk
 
 # include linking instructions
 include $(TOP)/builds/link_dos.mk
+
+
 
 # EOF

@@ -19,10 +19,7 @@
 #ifndef __FTMODULE_H__
 #define __FTMODULE_H__
 
-#ifndef    FT_BUILD_H
-#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
-#endif
-#include   FT_BUILD_H
+#include   <ft2build.h>
 #include   FT_FREETYPE_H
 
 FT_BEGIN_HEADER

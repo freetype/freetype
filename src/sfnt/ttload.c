@@ -1024,7 +1024,7 @@
           /* I know that M$ encoded strings are Unicode,            */
           /* but this works reasonable well for debugging purposes. */
           if ( cur->string )
-            for ( j = 0; j < cur->stringLength; j++ )
+            for ( j = 0; j < (FT_UInt)cur->stringLength; j++ )
             {
               FT_Char  c = *( cur->string + j );
 

@@ -28,10 +28,7 @@
 #define __FTIMAGE_H__
 
 
-#ifndef    FT_BUILD_H
-#  define  FT_BUILD_H    <freetype/config/ftbuild.h>
-#endif
-#include   FT_BUILD_H
+#include <ft2build.h>
 
 FT_BEGIN_HEADER
 
