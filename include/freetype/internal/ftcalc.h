@@ -20,7 +20,7 @@
 #define FTCALC_H
 
 #include <freetype/freetype.h>
-#include <freetype/config/ftconfig.h>   /* for LONG64 */
+#include <freetype/config/ftconfig.h>   /* for FT_LONG64 */
 
 #ifdef __cplusplus
   extern "C" {
@@ -47,7 +47,7 @@
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
-#else /* LONG64 */
+#else /* FT_LONG64 */
 
 
   typedef struct  FT_Int64_
@@ -84,7 +84,7 @@
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
-#endif /* LONG64 */
+#endif /* FT_LONG64 */
 
 
 #ifndef FT_CONFIG_OPTION_OLD_CALCS
