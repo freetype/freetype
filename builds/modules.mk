@@ -26,7 +26,7 @@
 # resides.  For now, it is in `include/freetype/config/ftmodule.h'.
 #
 ifndef MODULE_LIST
-  MODULE_LIST := $(TOP)$(SEP)include$(SEP)$(PROJECT)$(SEP)config$(SEP)ftmodule.h
+  MODULE_LIST := $(TOP_DIR)$(SEP)include$(SEP)$(PROJECT)$(SEP)config$(SEP)ftmodule.h
 endif
 
 # To build the modules list, we invoke the `make_module_list' target.
@@ -71,6 +71,6 @@ ECHO_DRIVER_DONE := )"
 # Each `module.mk' in the `src' sub-dirs is used to add one rule to the
 # target `make_module_list'.
 #
-include $(wildcard $(TOP)/src/*/module.mk)
+include $(wildcard $(TOP_DIR)/src/*/module.mk)
 
 # EOF

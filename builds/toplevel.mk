@@ -52,7 +52,7 @@ endif
 # configuration rules file to use.
 #
 # Note that the configuration file is put in the current directory, which is
-# not necessarily $(TOP).
+# not necessarily $(TOP_DIR).
 
 # If `config.mk' is not present, set `check_platform'.
 #
@@ -81,10 +81,10 @@ ifdef check_platform
     #modules: make_module_list setup
   endif
 
-  include $(TOP)/builds/detect.mk
+  include $(TOP_DIR)/builds/detect.mk
 
   ifdef USE_MODULES
-    include $(TOP)/builds/modules.mk
+    include $(TOP_DIR)/builds/modules.mk
 
     ifeq ($(wildcard $(MODULE_LIST)),)
       setup: make_module_list

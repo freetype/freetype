@@ -18,12 +18,12 @@
 SEP := /
 
 # include Win32-specific definitions
-include $(TOP)/builds/win32/win32-def.mk
+include $(TOP_DIR)/builds/win32/win32-def.mk
 
 # include gcc-specific definitions
-include $(TOP)/builds/compiler/gcc.mk
+include $(TOP_DIR)/builds/compiler/gcc.mk
 
 # include linking instructions
-include $(TOP)/builds/link_dos.mk
+include $(TOP_DIR)/builds/link_dos.mk
 
 # EOF

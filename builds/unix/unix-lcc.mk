@@ -16,8 +16,8 @@
 # fully.
 
 
-include $(TOP)/builds/unix/unixddef.mk
-include $(TOP)/builds/compiler/unix-lcc.mk
-include $(TOP)/builds/link_std.mk
+include $(TOP_DIR)/builds/unix/unixddef.mk
+include $(TOP_DIR)/builds/compiler/unix-lcc.mk
+include $(TOP_DIR)/builds/link_std.mk
 
 # EOF

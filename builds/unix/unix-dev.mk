@@ -16,10 +16,10 @@
 # fully.
 
 
-include $(TOP)/builds/unix/unixddef.mk
-BUILD := $(TOP)/builds/devel
+include $(TOP_DIR)/builds/unix/unixddef.mk
+BUILD := $(TOP_DIR)/builds/devel
 
-include $(TOP)/builds/compiler/gcc-dev.mk
-include $(TOP)/builds/link_std.mk
+include $(TOP_DIR)/builds/compiler/gcc-dev.mk
+include $(TOP_DIR)/builds/link_std.mk
 
 # EOF

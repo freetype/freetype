@@ -21,7 +21,7 @@
 # environment, or on the command line) are used:
 #
 #   BUILD          The architecture dependent directory,
-#                  e.g. `$(TOP)/builds/unix'.
+#                  e.g. `$(TOP_DIR)/builds/unix'.
 #
 #   OBJ_DIR        The directory in which object files are created.
 #
@@ -62,7 +62,7 @@
 #                  variables which is to be removed for the `clean' resp.
 #                  `distclean' target.
 #
-#   TOP, SEP,
+#   TOP_DIR, SEP,
 #   LIBRARY, CC,
 #   A, I, O, T     Check `config.mk' for details.
 
@@ -83,7 +83,7 @@ multi: objects library
 
 # The FreeType source directory, usually `./src'.
 #
-SRC := $(TOP)$(SEP)src
+SRC := $(TOP_DIR)$(SEP)src
 
 
 # The directory where the base layer components are placed, usually
@@ -95,7 +95,7 @@ BASE_DIR := $(SRC)$(SEP)base
 # as macro.
 #
 ifndef FT_BUILD_H
-  FT_BUILD_H  := $(TOP)$(SEP)include$(SEP)ft2build.h
+  FT_BUILD_H  := $(TOP_DIR)$(SEP)include$(SEP)ft2build.h
   FTBUILD_CMD :=
 else
   FTBUILD_CMD = $(D)FT_BUILD_H=$(FT_BUILD_H)
@@ -104,14 +104,14 @@ endif
 # A few short-cuts in order to avoid typing $(SEP) all the time for the
 # directory separator.
 #
-# For example: $(SRC_) equals to `./src/' where `.' is $(TOP).
+# For example: $(SRC_) equals to `./src/' where `.' is $(TOP_DIR).
 #
 #
 SRC_      := $(SRC)$(SEP)
 BASE_     := $(BASE_DIR)$(SEP)
 OBJ_      := $(OBJ_DIR)$(SEP)
 LIB_      := $(LIB_DIR)$(SEP)
-PUBLIC_   := $(TOP)$(SEP)include$(SEP)freetype$(SEP)
+PUBLIC_   := $(TOP_DIR)$(SEP)include$(SEP)freetype$(SEP)
 INTERNAL_ := $(PUBLIC_)internal$(SEP)
 CONFIG_   := $(PUBLIC_)config$(SEP)
 CACHE_    := $(PUBLIC_)cache$(SEP)
@@ -130,7 +130,7 @@ PROJECT_LIBRARY := $(LIB_)$(LIBRARY).$A
 #                 in the `freetype/builds/<system>' directory, as these
 #                 files will override the default sources.
 #
-INCLUDES := $(OBJ_DIR) $(BUILD) $(TOP)$(SEP)include
+INCLUDES := $(OBJ_DIR) $(BUILD) $(TOP_DIR)$(SEP)include
 
 INCLUDE_FLAGS = $(INCLUDES:%=$I%)
 
@@ -149,7 +149,7 @@ FT_COMPILE = $(CC) $(ANSIFLAGS) $(FT_CFLAGS)
 
 # Include the `modules' rules file.
 #
-include $(TOP)/builds/modules.mk
+include $(TOP_DIR)/builds/modules.mk
 
 
 # Initialize the list of objects.
@@ -158,7 +158,7 @@ OBJECTS_LIST :=
 
 
 # Define $(PUBLIC_H) as the list of all public header files located in
-# `$(TOP)/include/freetype'.  $(BASE_H), $(CACHE_H), and $(CONFIG_H) are
+# `$(TOP_DIR)/include/freetype'.  $(BASE_H), $(CACHE_H), and $(CONFIG_H) are
 # defined similarly.
 #
 # This is used to simplify the dependency rules -- if one of these files

@@ -30,7 +30,7 @@ ifeq ($(PLATFORM),beos)
   DELETE   := rm -f
   SEP      := /
   HOSTSEP  := $(SEP)
-  BUILD    := $(TOP)/builds/beos
+  BUILD    := $(TOP_DIR)/builds/beos
   CONFIG_FILE := beos.mk
 
   setup: std_setup

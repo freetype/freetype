@@ -13,8 +13,8 @@
 # fully.
 
 
-include $(TOP)/builds/ansi/ansi-def.mk
-include $(TOP)/builds/compiler/ansi-cc.mk
-include $(TOP)/builds/link_std.mk
+include $(TOP_DIR)/builds/ansi/ansi-def.mk
+include $(TOP_DIR)/builds/compiler/ansi-cc.mk
+include $(TOP_DIR)/builds/link_std.mk
 
 # EOF

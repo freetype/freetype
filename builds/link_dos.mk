@@ -20,7 +20,7 @@ ifdef BUILD_PROJECT
   # Now include the main sub-makefile.  It contains all the rules used to
   # build the library with the previous variables defined.
   #
-  include $(TOP)/builds/$(PROJECT).mk
+  include $(TOP_DIR)/builds/$(PROJECT).mk
 
   # The cleanup targets.
   #

@@ -75,10 +75,10 @@ ifeq ($(PLATFORM),unix)
   have_mk := $(strip $(wildcard $(OBJ_DIR)/Makefile))
   ifneq ($(have_mk),)
     # we are building FT2 not in the src tree
-    unix-def.mk: $(TOP)/builds/unix/unix-def.in
-	    $(TOP)/builds/unix/configure $(CFG)
+    unix-def.mk: $(TOP_DIR)/builds/unix/unix-def.in
+	    $(TOP_DIR)/builds/unix/configure $(CFG)
   else
-    unix-def.mk: $(TOP)/builds/unix/unix-def.in
+    unix-def.mk: $(TOP_DIR)/builds/unix/unix-def.in
 	    cd builds/unix; ./configure $(CFG)
   endif
 

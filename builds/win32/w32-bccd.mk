@@ -15,12 +15,12 @@
 
 SEP   := /
 
-include $(TOP)/builds/win32/win32-def.mk
-BUILD := $(TOP)/builds/devel
+include $(TOP_DIR)/builds/win32/win32-def.mk
+BUILD := $(TOP_DIR)/builds/devel
 
-include $(TOP)/builds/compiler/bcc-dev.mk
+include $(TOP_DIR)/builds/compiler/bcc-dev.mk
 
 # include linking instructions
-include $(TOP)/builds/link_dos.mk
+include $(TOP_DIR)/builds/link_dos.mk
 
 # EOF

@@ -1,3 +1,8 @@
+2002-06-14  Werner Lemberg  <wl@gnu.org>
+
+	* Makefile, configure, */*.mk, builds/unix/unix-def.in,
+	docs/CHANGES, docs/INSTALL: s/TOP/TOP_DIR/.
+
 2002-06-12  Werner Lemberg  <wl@gnu.org>
 
 	* src/bdf/bdflib.c: s/FT_Short/short/ for consistency.
