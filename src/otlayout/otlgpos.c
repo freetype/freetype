@@ -477,7 +477,7 @@
         otl_coverage_validate( table + base_coverage, valid );
 
         otl_mark_array_validate( table + mark_array, valid );
-        otl_base_array_validate( table, num_classes, valid );
+        otl_base_array_validate( table + base_array, num_classes, valid );
       }
       break;
 
@@ -514,7 +514,7 @@
     /* scan component records */
     for ( ; num_components > 0; num_components-- )
       /* scan ligature anchor records */
-      for ( count = class_count; class_count > 0; class_count-- )
+      for ( count = class_count; count > 0; count-- )
       {
         OTL_UInt  offset = OTL_NEXT_USHORT( p );
 

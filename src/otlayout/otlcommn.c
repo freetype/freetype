@@ -512,6 +512,7 @@
   }
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_lookup_get_count( OTL_Bytes  table )
   {
@@ -520,6 +521,7 @@
 
     return OTL_PEEK_USHORT( p );
   }
+#endif
 
 
 #if 0
@@ -575,7 +577,6 @@
   }
 
 
-#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_lookup_list_get_count( OTL_Bytes  table )
   {
@@ -584,7 +585,6 @@
 
     return OTL_PEEK_USHORT( p );
   }
-#endif
 
 
 #if 0
@@ -671,6 +671,7 @@
   }
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_feature_get_count( OTL_Bytes  table )
   {
@@ -679,6 +680,7 @@
 
     return OTL_PEEK_USHORT( p );
   }
+#endif
 
 
 #if 0
@@ -730,7 +732,7 @@
     num_features = OTL_NEXT_USHORT( p );
     OTL_CHECK( 2 * num_features );
 
-    lookup_count = otl_lookup_get_count( lookups );
+    lookup_count = otl_lookup_list_get_count( lookups );
 
     /* scan feature records */
     for ( ; num_features > 0; num_features-- )
@@ -743,7 +745,6 @@
   }
 
 
-#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_feature_list_get_count( OTL_Bytes  table )
   {
@@ -752,7 +753,6 @@
 
     return OTL_PEEK_USHORT( p );
   }
-#endif
 
 
 #if 0
@@ -906,10 +906,7 @@
     num_langs    = OTL_NEXT_USHORT( p );
 
     if ( default_lang != 0 )
-    {
-      if ( table + default_lang >= valid->limit )
-        OTL_INVALID_OFFSET;
-    }
+      otl_lang_validate( table + default_lang, feature_count, valid );
 
     OTL_CHECK( num_langs * 6 );
 
@@ -936,7 +933,7 @@
     num_scripts = OTL_NEXT_USHORT( p );
     OTL_CHECK( num_scripts * 6 );
 
-    feature_count = otl_feature_get_count( features );
+    feature_count = otl_feature_list_get_count( features );
 
     /* scan script records */
     for ( ; num_scripts > 0; num_scripts-- )
@@ -963,7 +960,7 @@
     OTL_Bytes  p = table + 8;
 
 
-    return otl_lookup_get_count( table + OTL_PEEK_USHORT( p ) );
+    return otl_lookup_list_get_count( table + OTL_PEEK_USHORT( p ) );
   }
 
 

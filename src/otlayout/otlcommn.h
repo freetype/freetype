@@ -128,9 +128,11 @@ OTL_BEGIN_HEADER
                        OTL_UInt           glyph_count,
                        OTL_Validator      valid );
 
+#if 0
   /* return number of sub-tables in a lookup */
   OTL_LOCAL( OTL_UInt )
   otl_lookup_get_count( OTL_Bytes  table );
+#endif
 
 #if 0
   /* return lookup sub-table */
@@ -156,11 +158,9 @@ OTL_BEGIN_HEADER
                             OTL_UInt           glyph_count,
                             OTL_Validator      valid );
 
-#if 0
   /* return number of lookups in list */
   OTL_LOCAL( OTL_UInt )
   otl_lookup_list_get_count( OTL_Bytes  table );
-#endif
 
 #if 0
   /* return a given lookup from a list */
@@ -200,9 +200,11 @@ OTL_BEGIN_HEADER
                         OTL_UInt       lookup_count,
                         OTL_Validator  valid );
 
+#if 0
   /* return feature's lookup count */
   OTL_LOCAL( OTL_UInt )
   otl_feature_get_count( OTL_Bytes  table );
+#endif
 
 #if 0
   /* get several lookups indices from a feature. returns the number of */
@@ -230,11 +232,9 @@ OTL_BEGIN_HEADER
                              OTL_Bytes      lookups,
                              OTL_Validator  valid );
 
-#if 0
   /* return number of features in list */
   OTL_LOCAL( OTL_UInt )
   otl_feature_list_get_count( OTL_Bytes  table );
-#endif
 
 #if 0
   /* return a given feature from a list */

@@ -1,3 +1,21 @@
+/***************************************************************************/
+/*                                                                         */
+/*  otlayout.h                                                             */
+/*                                                                         */
+/*    OpenType layout support (specification only).                        */
+/*                                                                         */
+/*  Copyright 2002, 2004 by                                                */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #ifndef __OT_LAYOUT_H__
 #define __OT_LAYOUT_H__
 
@@ -200,7 +218,6 @@ OTL_BEGIN_HEADER
 #define  OTL_INVALID(e)  otl_validator_error( valid, e )
 
 #define  OTL_INVALID_TOO_SHORT  OTL_INVALID( OTL_Err_InvalidSize )
-#define  OTL_INVALID_OFFSET     OTL_INVALID( OTL_Err_InvalidOffset )
 #define  OTL_INVALID_DATA       OTL_INVALID( OTL_Err_InvalidData )
 #define  OTL_INVALID_FORMAT     OTL_INVALID( OTL_Err_InvalidFormat )
 
@@ -214,3 +231,6 @@ OTL_BEGIN_HEADER
 OTL_END_HEADER
 
 #endif /* __OT_LAYOUT_H__ */
+
+
+/* END */

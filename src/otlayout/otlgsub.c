@@ -484,7 +484,10 @@
 
 
     OTL_CHECK( 4 );
-    glyph_id       = OTL_NEXT_USHORT( p );
+    glyph_id = OTL_NEXT_USHORT( p );
+    if ( glyph_id >= glyph_count )
+      OTL_INVALID_DATA;
+
     num_components = OTL_NEXT_USHORT( p );
 
     if ( num_components == 0 )
@@ -493,10 +496,6 @@
     num_components--;
 
     OTL_CHECK( num_components * 2 );
-
-    for ( ; num_components > 0; num_components-- )
-      if ( OTL_NEXT_USHORT( p ) >= glyph_count )
-        OTL_INVALID_DATA;
   }
 
 
