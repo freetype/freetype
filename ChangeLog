@@ -1,3 +1,16 @@
+2003-12-16  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttcmap.c, src/sfnt/ttcmap.h: Removed.  Obsolete.
+
+	* include/freetype/internal/sfnt.h (SFNT_Interface): Remove
+	obsolete fields `load_charmap' and `free_charmap'.
+	(TT_CharMap_Load_Func, TT_CharMap_Free_Func): Removed.
+	* src/sfnt/sfnt.c: Don't include ttcmap.c.
+	* src/sfnt/rules.mk (SFNT_DRV_SRC): Don't include ttcmap.c.
+	* src/sfnt/ttload.c: Don't include ttcmap.h.
+	* src/sfnt/sfdriver.c: Don't include ttcmap.h.
+	(sfnt_interface): Updated.
+
 2003-12-15  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.

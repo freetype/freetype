@@ -25,7 +25,8 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
   III. MISCELLANEOUS
 
     - Wolfgang Domröse contributed support files for building FreeType
-      on the Atari using the PureC compiler.
+      on the Atari using the PureC compiler.  Note that the Atari is a
+      16bit platform.
 
 
 ======================================================================
