@@ -1,3 +1,10 @@
+2002-12-26  David Turner  <david@freetype.org>
+
+        * src/gzip/adler32.c, src/gzip/infblock.c, src/gzip/inflate.c,
+        src/gzip/inftrees.c, src/gzip/zconf.h, src/gzip/zlib.h,
+        src/gzip/zutil.h: updates to allow compilation without compiler
+        warnings with LCC-Win32
+
 2002-12-23  Anthony Fok <anthony@thizlinux.com>
 
         * builds/unix/configure.ac, builds/unix/unix-cc.in,
