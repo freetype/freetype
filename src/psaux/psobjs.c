@@ -1255,15 +1255,15 @@
       Store_Integer:
         switch ( field->size )
         {
-        case 1:
+        case (8 / FT_CHAR_BIT):
           *(FT_Byte*)q = (FT_Byte)val;
           break;
 
-        case 2:
+        case (16 / FT_CHAR_BIT):
           *(FT_UShort*)q = (FT_UShort)val;
           break;
 
-        case 4:
+        case (32 / FT_CHAR_BIT):
           *(FT_UInt32*)q = (FT_UInt32)val;
           break;
 
