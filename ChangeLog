@@ -31,7 +31,7 @@
 	modifying this file manually..
 
 
-2001-10-24  Tom Kacvinsky <tjk@ams.org>
+2001-10-24  Tom Kacvinsky <tkacvins@freetype.org>
 
 	* builds/unix/ftsystem.c (FT_New_Memory):  Added a missing `}'.
 
@@ -76,14 +76,14 @@
 	base component to use the debugging memory manager when the macro
 	FT_DEBUG_MEMORY is defined..
 
-2001-10-21  Tom Kacvinsky  <tjk@ams.org>
+2001-10-21  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/cffload.c (CFF_Done_Font): Free subfonts array only if
 	we are working with a CID keyed CFF font.  Otherwise, a variable
 	that was never allocated memory might freed.  This is a correction
 	to the previous patch for freeing subfonts.
 
-2001-10-21  Tom Kacvinsky  <tjk@ams.org>
+2001-10-21  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/cffload.c (CFF_Done_Font): Free the subfonts array to
 	avoid a memory leak.
@@ -95,7 +95,7 @@
 	(in multi-object compilation mode, mainly)
 
 
-2001-10-20  Tom Kacvinsky  <tjk@ams.org>
+2001-10-20  Tom Kacvinsky  <tkacvins@freetype.org>
 	
 	* src/type1/t1load.c (parse_encoding): Add a test to make sure
 	that custom encodings (i.e., neither StandardEncoding nor
@@ -365,7 +365,7 @@
 
 	* src/type1/t1driver.c (t1_get_name_index): Fix compiler warning.
 
-2001-08-09  Tom Kacvinsky  <tjk@ams.org>
+2001-08-09  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/cffdrivr.c (get_cff_glyph_name): Renamed to
 	cff_get_glyph_name for consistency.
@@ -378,7 +378,7 @@
 
 	(get_t1_glyph_name): Renamed to t1_get_glyph_name for consistency.
 
-2001-08-08  Tom Kacvinsky  <tjk@ams.org>
+2001-08-08  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/cffload.c: Removed definitions of cff_isoadobe_charset,
 	cff_expert_charset, cff_expertsubset_charset, cff_standard_encoding,
@@ -900,7 +900,7 @@
 
 	* cffgload.c: Removed a compilation warning.
 
-2001-04-10  Tom Kacvinsky  <tjk@ams.org>
+2001-04-10  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* t1load.c (parse_charstrings): Changed code for placing .notdef
 	glyph into slot 0 so that we no longer have a memory access
@@ -979,12 +979,12 @@
 	* src/pcf/pcfdriver.c (PCF_Done_Face): Ditto.
 	* src/pcf/pcf.h: Use FT_LOCAL for `PCF_Done_Face'.
 
-2001-04-02  Tom Kacvinsky  <tjk@ams.org>
+2001-04-02  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/sfnt/ttload.c (TT_Load_Metrics): Fix an improper pointer
 	dereference.  Submitted by Herbert Duerr <duerr@sun.com>
 
-2001-03-26  Tom Kacvinsky  <tjk@ams.org>
+2001-03-26  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* include/freetype/config/ftconfig.h: Changed hexadecimal
 	constants to use suffix U to avoid problems with HP-UX's c89
@@ -1036,7 +1036,7 @@
 	* builds/unix/freetype-config.in: Use it.
 	* builds/unix/configure: Updated.
 
-2001-03-19  Tom Kacvinsky  <tjk@ams.org>
+2001-03-19  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/type1/t1load.c (parse_font_matrix): Assign the units per em
 	value an unsigned short value, first by shifting right 16 bits,
@@ -1059,7 +1059,7 @@
 	* include/config/ftheader.h: Added new section describing the #include
 	macros.
 
-2001-03-17  Tom Kacvinsky  <tjk@ams.org>
+2001-03-17  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/cffparse.c (cff_parse_font_bbox): Obtain rounded FT_Fixed
 	values for the bounding box numbers.
@@ -1068,7 +1068,7 @@
 	set `root->ascender' (`root->descender') to the integer part of
 	`root->bbox.yMax' (`root->bbox.yMin', respectively).
 
-2001-03-16  Tom Kacvinsky  <tjk@ams.org>
+2001-03-16  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/cffdrivr.c (get_cff_glyph_name):  New function.  Used in
 	cff_get_interface to facilitate getting a glyph name for glyph index
@@ -1096,7 +1096,7 @@
 
 	* INSTALL, docs/BUILD: We need GNU make 3.78.1 or newer.
 
-2001-03-12  Tom Kacvinsky  <tjk@ams.org>
+2001-03-12  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* include/freetype/internal/psaux.h:  Changed the lenIV member of
 	the T1_Decoder_ struct to be an FT_Int instead of an FT_UInt.
@@ -1117,7 +1117,7 @@
 	* src/pcf/pcfread.c: Put READ_Fields() always in a conditional to
 	avoid compiler warnings.
 
-2001-03-10  Tom Kacvinsky  <tjk@ams.org>
+2001-03-10  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* TODO: New file.
 
@@ -1146,7 +1146,7 @@
 
 	* INSTALL, docs/BUILD: We need GNU make 3.78 or newer.
 
-2001-03-07  Tom Kacvinsky  <tjk@ams.org>
+2001-03-07  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/type1/t1objs.c (T1_Init_Face): Minor correction: We must wait
 	until parse_font_bbox is changed before we use logical shift rights
@@ -1156,7 +1156,7 @@
 	(T1_Done_Face): Free `char_name' table to avoid a memory leak.
 	Submitted by Sander van der Wal <svdwal@xs4all.nl>.
 
-2001-03-05  Tom Kacvinsky  <tjk@ams.org>
+2001-03-05  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/cffgload.c (CFF_Load_Glyph): Set glyph control data to the
 	the Type 2 glyph charstring (used by conversion programs).
@@ -1229,12 +1229,12 @@
 	* src/base/ftglyph.c (FT_Glyph_Copy): Advance width and glyph format
 	were not correctly copied.
 
-2001-02-08  Tom Kacvinsky  <tjk@ams.org>
+2001-02-08  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/cffparse.c (cff_parse_font_matrix): Removed an
 	unnecessary fprintf( stderr, ... ).
 
-2001-02-07  Tom Kacvinsky  <tjk@ams.org>
+2001-02-07  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/type1/t1objs.c (T1_Init_Face): Added code to get the
 	units_per_EM from the value assigned in parse_font_matrix, if
@@ -1280,7 +1280,7 @@
 	* include/freetype/ttnameid.h: Latest updates to Microsoft language
 	ID codes.
 
-2001-01-24  Tom Kacvinsky  <tjk@ams.org>
+2001-01-24  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/t1load.c (parse_font_matrix): Added heuristic to get
 	units_per_EM from the font matrix.
@@ -1338,7 +1338,7 @@
 
 	* include/freetype/ttnameid.h: Updated Unicode code range comments.
 
-2001-01-03  Tom Kacvinsky  <tjk@ams.org>
+2001-01-03  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/rules.mk: Use cffgload.{c,h} instead of t2gload.{c,h}.
 
@@ -1398,7 +1398,7 @@
 	(CFF_Load_Charset, CFF_Load_Encoding): Remove unnecessary variable
 	definition.
 
-2000-12-30  Tom Kacvinsky  <tjk@ams.org>
+2000-12-30  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* include/freetype/internal/t2types.h,
 	include/freetype/internal/cfftypes.h: Changed the structures for
@@ -1425,7 +1425,7 @@
 	so that the encoding/charset parser can handle predefined encodings and
 	charsets.
 
-2000-12-24  Tom Kacvinsky  <tjk@ams.org>
+2000-12-24  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/t2gload.c (T2_Load_Glyph): Added code	so that the font
 	transform is applied.
@@ -1435,7 +1435,7 @@
 	offset vector now contains integer values instead of 16.16 fixed
 	numbers.
 
-2000-12-22  Tom Kacvinsky  <tjk@ams.org>
+2000-12-22  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/autohint/ahhint.c (ah_hinter_load_glyph):
 	Removed unnecessary comments and commented-out code.
@@ -1445,7 +1445,7 @@
 	* src/cid/cidafm.c, src/cid/cidafm.h: removed un-needed files,
 	we'll work on supporting CID AFM files later I guess :-)
 
-2000-12-21  Tom Kacvinsky  <tjk@ams.org>
+2000-12-21  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/autohint/ahhint.c (ah_hinter_load, ah_hinter_load_glyph):
 	Changed so that fonts with a non-standard FontMatrix render
@@ -1679,7 +1679,7 @@
 	is compared to FT_UShort (apparently, it promotes `UShort' to `Int'
 	in these cases).
 
-2000-11-30  Tom Kacvinsky  <tjk@ams.org>
+2000-11-30  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* t2objs.c (T2_Init_Face): Added calculation of `face->height' for
 	pure CFF fonts.
@@ -1733,7 +1733,7 @@
 	* src/base/ftnames.c (FT_Get_Sfnt_Name_Count): Fix incorrect
 	parentheses.
 
-2000-11-26  Tom Kacvinsky  <tjk@ams.org>
+2000-11-26  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/t2gload.c (T2_Parse_CharStrings): Added logic to glyph
 	width setting code to take into account even/odd argument counts
@@ -1766,7 +1766,7 @@
 
 	* src/type1/t1parse.h: Adapted.
 
-2000-11-22  Tom Kacvinsky  <tjk@ams.org>
+2000-11-22  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/cff/t2objs.c (T2_Init_Face): For pure CFF fonts, set
 	`root->num_faces' to `cff->num_faces' and set `units_per_EM'
@@ -1786,7 +1786,7 @@
 	* src/autohint/ahhint.c (ah_hinter_load, ah_hinter_load_glyph):
 	Added auto-hinting support of synthetic Type 1 fonts.
 
-2000-11-12  Tom Kacvinsky  <tjk@ams.org>
+2000-11-12  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* src/sfnt/ttload.c (TT_LookUp_Table, TT_Load_Generic_Table): Change
 	tracing output.
@@ -1799,7 +1799,7 @@
 	* builds/win32/visualc/freetype.dsp: Fix raster1->raster and
 	type1z->type1.
 
-2000-11-11  Tom Kacvinsky  <tjk@ams.org>
+2000-11-11  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* builds/unix/freetype-config.in, builds/cygwin/freetype-config.in:
 	Added a --libtool option.  When freetype-config --libtool is
@@ -1810,7 +1810,7 @@
 
 	* builds/cygwin/cygwin-def.in: Same fix as previous.
 
-2000-11-10  Tom Kacvinsky  <tjk@ams.org>
+2000-11-10  Tom Kacvinsky  <tkacvins@freetype.org>
 
 	* builds/unix/unix-def.in: Add
 
