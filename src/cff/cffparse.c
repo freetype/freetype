@@ -377,7 +377,7 @@
       bbox->xMin = FT_Round_Fix( cff_parse_fixed( data++ ) );
       bbox->yMin = FT_Round_Fix( cff_parse_fixed( data++ ) );
       bbox->xMax = FT_Round_Fix( cff_parse_fixed( data++ ) );
-      Bbox->yMax = FT_Round_Fix( cff_parse_fixed( data   ) );
+      bbox->yMax = FT_Round_Fix( cff_parse_fixed( data   ) );
       error = CFF_Err_Ok;
     }
 
