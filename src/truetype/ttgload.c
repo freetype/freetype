@@ -206,9 +206,9 @@
     if ( n_contours > load->left_contours )
     {
       FT_TRACE0(( "ERROR: Glyph index %ld has %d contours > left %d\n",
-                   subg->index,
+                   load->glyph_index,
                    n_contours,
-                   left_contours ));
+                   load->left_contours ));
       return TT_Err_Too_Many_Contours;
     }
 
@@ -236,7 +236,7 @@
 
     if ( n_points > load->left_points )
     {
-      FT_TRACE0(( "ERROR: Too many points in glyph %ld\n", subg->index ));
+      FT_TRACE0(( "ERROR: Too many points in glyph %ld\n", load->glyph_index ));
       error = TT_Err_Too_Many_Points;
       goto Fail;
     }
@@ -478,6 +478,7 @@
       goto Fail;
     }
 
+    loader->glyph_index = glyph_index;
     num_contours = 0;
     num_points   = 0;
     ins_offset   = 0;

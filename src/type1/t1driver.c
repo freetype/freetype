@@ -55,11 +55,11 @@
   /*    time).                                                             */
   /*                                                                       */
   static
-  void*  Get_Interface( FT_Driver         driver,
-                        const FT_String*  interface )
+  FTDriver_Interface  Get_Interface( FT_Driver         driver,
+                                     const FT_String*  interface )
   {
     if ( strcmp( (const char*)interface, "attach_file" ) == 0 )
-      return T1_Read_AFM;
+      return (FTDriver_Interface)T1_Read_AFM;
       
     return 0;
   }

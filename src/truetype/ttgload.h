@@ -36,6 +36,7 @@
     TT_GlyphSlot    glyph;
 
     TT_ULong        load_flags;
+    TT_UInt         glyph_index;
 
     FT_Stream       stream;
     TT_Int          byte_len;

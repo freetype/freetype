@@ -44,7 +44,7 @@
     len = p - *start;
     if (len > 0 && len < 64)
     {
-      FT_UInt  n;
+      FT_Int  n;
       
       /* copy glyph name to intermediate array */
       MEM_Copy( temp, start, len );
@@ -124,8 +124,8 @@
     if ( !ACCESS_Frame(stream->size) )
       return error;
       
-    start = stream->cursor;
-    limit = stream->limit;
+    start = (FT_Byte*)stream->cursor;
+    limit = (FT_Byte*)stream->limit;
     p     = start;
     
     /* we are now going to count the occurences of "KP" or "KPX" in */

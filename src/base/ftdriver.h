@@ -72,6 +72,7 @@
   /*                                                                       */
   typedef FT_Error  (*FTDriver_doneDriver)( FT_Driver  driver );
 
+
   
   /*************************************************************************/
   /*                                                                       */
@@ -100,8 +101,11 @@
   /*    isn't available (i.e., wasn't compiled in the driver at build      */
   /*    time).                                                             */
   /*                                                                       */
-  typedef void*  (*FTDriver_getInterface)( FT_Driver         driver,
-                                           const FT_String*  interface );
+  typedef void  (*FTDriver_Interface)( void );
+
+  typedef FTDriver_Interface  (*FTDriver_getInterface)
+                        ( FT_Driver         driver,
+                          const FT_String*  interface );
 
 
   /*************************************************************************/
