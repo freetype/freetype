@@ -1,5 +1,10 @@
 2003-12-18  Werner Lemberg  <wl@gnu.org>
 
+	* include/freetype/ttnameid.h (TT_ADOBE_ID_LATIN_1): New macro.
+	* src/type1/t1objs.c (T1_Face_Init): Use TT_ADOBE_ID* values.
+
+2003-12-18  Werner Lemberg  <wl@gnu.org>
+
 	* src/cff/cfftypes.h (CFF_FontRecDictRec): Change type of
 	`cid_count' to `FT_ULong'.
 
