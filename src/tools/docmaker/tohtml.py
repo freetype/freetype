@@ -32,6 +32,8 @@ html_header_2= """ API Reference</title>
                  text-align: left;
                  white-space: pre;
                  color: darkblue; }
+
+  pre.colored { color: blue; }
 </style>
 </head>
 <body>
@@ -55,8 +57,8 @@ section_title_footer = "</h1></center>"
 
 # The header and footer used for code segments.
 #
-code_header = "<font color=blue><pre>"
-code_footer = "</pre></font>"
+code_header = '<pre class="colored">'
+code_footer = '</pre>'
 
 # Paragraph header and footer.
 #
