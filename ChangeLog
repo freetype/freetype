@@ -1,3 +1,14 @@
+2002-03-14  David Turner    <david@freetype.org>
+
+        * include/freetype/internal/autohint.h, src/autohint/ahmodule.c,
+        src/base/ftapi.c, src/base/ftobjs.c: updating the type definitions for
+        the auto-hinter module.
+        
+        (i.e. FT_AutoHinter_Interface  => FT_AutoHinter_ServiceRec, 
+              FT_AutoHinter_Interface* => FT_AutoHinter_Service, etc..)
+
+
+
 2002-03-13  Antoine Leca    <antoine@oriolnet.com>
 
         * include/freetype/config/ftoption.h: changed the automatic detection
