@@ -629,7 +629,7 @@
     stems      = stem_table->stems;
     num_stems  = stem_table->num_stems;
 
-    /* Compute minimum and maximum orus for the stem */
+    /* Compute minimum and maximum coord for the stem */
     min = pos + ( vertical
                 ? builder->left_bearing.x
                 : builder->left_bearing.y );
@@ -638,7 +638,7 @@
       max = min + width;
     else
     {
-      /* a negative width indicates a ghost stem */
+      /* a negative width indicates a "ghost" stem */
       if ( width == -21 )
         min += width;
 

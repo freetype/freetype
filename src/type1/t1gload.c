@@ -52,6 +52,39 @@
  *
  *********************************************************************/
 
+  static
+  void  T1_Reset_Builder( T1_Builder*  builder, FT_Bool  reset_base )
+  {
+    builder->pos_x = 0;
+    builder->pos_y = 0;
+
+    builder->left_bearing.x = 0;
+    builder->left_bearing.y = 0;
+    builder->advance.x      = 0;
+    builder->advance.y      = 0;
+
+    builder->pass       = 0;
+    builder->hint_point = 0;
+
+    if (reset_base)
+    {
+      builder->base.n_points   = 0;
+      builder->base.n_contours = 0;
+    }
+    
+    {
+      FT_Outline*  base = &builder->base;
+      FT_Outline*  cur  = &builder->current;
+      
+      cur->n_points   = 0;
+      cur->n_contours = 0;
+      cur->points     = base->points   + base->n_points;
+      cur->tags       = base->tags     + base->n_points;
+      cur->contours   = base->contours + base->n_contours;
+    }
+  }
+
+
   LOCAL_FUNC
   void  T1_Init_Builder( T1_Builder*             builder,
                          T1_Face                 face,
@@ -81,20 +114,7 @@
       builder->scale_y = size->root.metrics.y_scale;
     }
 
-    builder->pos_x = 0;
-    builder->pos_y = 0;
-
-    builder->left_bearing.x = 0;
-    builder->left_bearing.y = 0;
-    builder->advance.x      = 0;
-    builder->advance.y      = 0;
-
-    builder->base.n_points   = 0;
-    builder->base.n_contours = 0;
-    builder->current         = builder->base;
-
-    builder->pass       = 0;
-    builder->hint_point = 0;
+    T1_Reset_Builder( builder, 1 );
   }
 
 
@@ -141,6 +161,7 @@
  *    funcs   :: hinter functions interface
  *
  *********************************************************************/
+
 
   LOCAL_FUNC
   void  T1_Init_Decoder( T1_Decoder*             decoder,
@@ -250,24 +271,6 @@
       return T1_Err_Syntax_Error;
     }
 
-    /* First load "bchar" in builder */
-    /* now load the unscaled outline */
-    cur->n_points   = 0;
-    cur->n_contours = 0;
-    cur->points     = base->points   + base->n_points;
-    cur->tags       = base->tags     + base->n_points;
-    cur->contours   = base->contours + base->n_contours;
-
-    error = T1_Parse_CharStrings( decoder,
-                                  type1->charstrings    [bchar_index],
-                                  type1->charstrings_len[bchar_index],
-                                  type1->num_subrs,
-                                  type1->subrs,
-                                  type1->subrs_len );
-    if (error) return error;
-
-    n_base_points   = cur->n_points;
-
     if ( decoder->builder.no_recurse )
     {
       /* if we're trying to load a composite glyph, do not load the */
@@ -309,6 +312,24 @@
     }
     else
     {
+      /* First load "bchar" in builder */
+      /* now load the unscaled outline */
+      cur->n_points   = 0;
+      cur->n_contours = 0;
+      cur->points     = base->points   + base->n_points;
+      cur->tags       = base->tags     + base->n_points;
+      cur->contours   = base->contours + base->n_contours;
+  
+      error = T1_Parse_CharStrings( decoder,
+                                    type1->charstrings    [bchar_index],
+                                    type1->charstrings_len[bchar_index],
+                                    type1->num_subrs,
+                                    type1->subrs,
+                                    type1->subrs_len );
+      if (error) return error;
+  
+      n_base_points   = cur->n_points;
+
       /* save the left bearing and width of the base character */
       /* as they will be erased by the next load..             */
       left_bearing = decoder->builder.left_bearing;
@@ -1442,6 +1463,136 @@
 
 
 
+  /*****************************************************************/
+  /*                                                               */
+  /*  Hinter overview :                                            */
+  /*                                                               */
+  /*    This is a two-pass hinter. On the first pass, the hints    */
+  /*    are all recorded by the hinter, and no point is loaded     */
+  /*    in the outline.                                            */
+  /*                                                               */
+  /*    When the first pass is finished, all stems hints are       */
+  /*    grid-fitted at once.                                       */
+  /*                                                               */
+  /*    Then, a second pass is performed to load the outline       */
+  /*    points as well as hint/scale them correctly.               */
+  /*                                                               */
+
+#ifndef T1_CONFIG_OPTION_DISABLE_HINTER
+
+  static
+  FT_Error  t1_load_hinted_glyph( T1_Decoder*  decoder,
+                                  FT_UInt      glyph_index,
+                                  FT_Bool      recurse )
+  {
+    T1_Builder*   builder = &decoder->builder;
+    T1_GlyphSlot  glyph   = builder->glyph;
+    T1_Font*      type1   = &builder->face->type1;
+    FT_Outline    old_base;
+    FT_Error      error;
+    
+    /* Pass 1 - try to load first glyph, simply recording points */
+    old_base = builder->base;
+    T1_Reset_Builder( builder, 0 );
+    
+    builder->no_recurse                = recurse;
+    builder->pass                      = 0;
+    glyph->hints->hori_stems.num_stems = 0;
+    glyph->hints->vert_stems.num_stems = 0;
+
+    error = T1_Parse_CharStrings( decoder,
+                                  type1->charstrings    [glyph_index],
+                                  type1->charstrings_len[glyph_index],
+                                  type1->num_subrs,
+                                  type1->subrs,
+                                  type1->subrs_len );
+    if (error) goto Exit;                                  
+
+    /* check for composite (i.e. "seac" operator) */
+    if ( glyph->root.format == ft_glyph_format_composite )
+    {
+      /* this is a composite glyph, we must then load the first one, */
+      /* then load the second one on top of it and translate it by a */
+      /* fixed amount..                                              */
+      FT_Outline*  cur  = &builder->current;
+      FT_UInt      n_base_points;
+      FT_SubGlyph* subglyph = glyph->root.subglyphs;
+      T1_Size      size = builder->size;
+      FT_Pos       dx, dy;
+      FT_Vector    left_bearing, advance;
+
+      /* clean glyph format */
+      glyph->root.format = ft_glyph_format_none;
+
+      /* First load "bchar" in builder */
+      builder->no_recurse = 0;
+      error = t1_load_hinted_glyph( decoder, subglyph->index, 0 );
+      if (error) goto Exit;
+
+      /* save the left bearing and width of the base character */
+      /* as they will be erased by the next load..             */
+      left_bearing = builder->left_bearing;
+      advance      = builder->advance;
+
+      /* Then load "achar" in builder */
+      n_base_points = builder->base.n_points;
+      subglyph++;
+      error = t1_load_hinted_glyph( decoder, subglyph->index, 0 );
+      if (error) goto Exit;
+      
+      /* adjust contours in accented character outline */
+      {
+        T1_Int  n;
+
+        for ( n = 0; n < cur->n_contours; n++ )
+          cur->contours[n] += n_base_points;
+      }
+
+      /* Finally, move the accent */
+      dx = FT_MulFix( subglyph->arg1, size->root.metrics.x_scale );
+      dy = FT_MulFix( subglyph->arg2, size->root.metrics.y_scale );
+      dx = (dx+32) & -64;
+      dy = (dy+32) & -64;
+      FT_Outline_Translate( cur, dx, dy );
+
+      /* restore the left side bearing and   */
+      /* advance width of the base character */
+      builder->left_bearing = left_bearing;
+      builder->advance      = advance;
+    }
+    else
+    {
+      /* All right, pass 1 is finished, now grid-fit all stem hints */
+      T1_Hint_Stems( &decoder->builder );
+      
+      /* undo the end-char */
+      builder->base.n_points   -= builder->current.n_points;
+      builder->base.n_contours -= builder->current.n_contours;
+
+      /* Pass 2 - record and scale/hint the points */
+      T1_Reset_Builder( &decoder->builder, 0 );
+      
+      builder->pass            = 1;
+      builder->no_recurse      = 0;
+  
+      error = T1_Parse_CharStrings( decoder,
+                                    type1->charstrings    [glyph_index],
+                                    type1->charstrings_len[glyph_index],
+                                    type1->num_subrs,
+                                    type1->subrs,
+                                    type1->subrs_len );
+    }
+    
+    /* save new glyph tables */
+    if (recurse)
+      T1_Done_Builder( builder );
+    
+  Exit:
+    return error;
+  }                                  
+#endif
+  
+
 
   LOCAL_FUNC
   T1_Error  T1_Load_Glyph( T1_GlyphSlot  glyph,
@@ -1469,60 +1620,16 @@
     hinting = 0;
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
-    /*****************************************************************/
-    /*                                                               */
-    /*  Hinter overview :                                            */
-    /*                                                               */
-    /*    This is a two-pass hinter. On the first pass, the hints    */
-    /*    are all recorded by the hinter, and no point is loaded     */
-    /*    in the outline.                                            */
-    /*                                                               */
-    /*    When the first pass is finished, all stems hints are       */
-    /*    grid-fitted at once.                                       */
-    /*                                                               */
-    /*    Then, a second pass is performed to load the outline       */
-    /*    points as well as hint/scale them correctly.               */
-    /*                                                               */
 
     hinting = (load_flags & (FT_LOAD_NO_SCALE|FT_LOAD_NO_HINTING)) == 0;
 
     if ( hinting )
     {
-      /* Pass 1 - don't record points, simply stem hints */
-      T1_Init_Decoder( &decoder, &t1_hinter_funcs );
-      T1_Init_Builder( &decoder.builder, face, size, glyph,
-                       &gload_builder_interface_null );
-
-      glyph->hints->hori_stems.num_stems = 0;
-      glyph->hints->vert_stems.num_stems = 0;
-
-      error = T1_Parse_CharStrings( &decoder,
-                                    type1->charstrings    [glyph_index],
-                                    type1->charstrings_len[glyph_index],
-                                    type1->num_subrs,
-                                    type1->subrs,
-                                    type1->subrs_len );
-
-      /* All right, pass 1 is finished, now grid-fit all stem hints */
-      T1_Hint_Stems( &decoder.builder );
-
-      /* Pass 2 - record and scale/hint the points */
       T1_Init_Decoder( &decoder, &t1_hinter_funcs );
       T1_Init_Builder( &decoder.builder, face, size, glyph,
                        &gload_builder_interface );
-
-      decoder.builder.pass = 1;
-      decoder.builder.no_recurse = 0;
-
-      error = T1_Parse_CharStrings( &decoder,
-                                    type1->charstrings    [glyph_index],
-                                    type1->charstrings_len[glyph_index],
-                                    type1->num_subrs,
-                                    type1->subrs,
-                                    type1->subrs_len );
-
-      /* save new glyph tables */
-      T1_Done_Builder( &decoder.builder );
+                       
+      error = t1_load_hinted_glyph( &decoder, glyph_index, 1 );
     }
     else
 #endif
