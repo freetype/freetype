@@ -1078,7 +1078,7 @@
             FT_TRACE4(( " " ));
 
             for ( maskbyte = 0;
-                  maskbyte < ( decoder->num_hints + 7 ) >> 3;
+                  maskbyte < (FT_UInt)(( decoder->num_hints + 7 ) >> 3);
                   maskbyte++, ip++ )
             {
               FT_TRACE4(( "%02X", *ip ));

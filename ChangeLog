@@ -1,3 +1,14 @@
+2001-04-20  David Turner  <david@freetype.org>
+
+	* ftconfig.h, ftoption.h: updated "ftconfig.h" to detect 64-bit int
+	types on platforms where Autoconf is not available). Also removed
+	FTCALC_USE_LONG_LONG and replaced it with FT_CONFIG_OPTION_FORCE_INT64
+	
+	* builds/win32/freetype.dsp: updated the Visual C++ project file. Doesn't
+	create a DLL yet..
+
+	* cffgload.c: removed a compilation warning
+
 2001-04-10  Tom Kacvinsky  <tjk@ams.org>
 
 	* t1load.c (parse_charstrings): Changed code for placing .notdef
