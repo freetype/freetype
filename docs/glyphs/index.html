@@ -1,12 +1,13 @@
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en"
+          "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-   <meta name="Author" content="blob">
-   <meta name="GENERATOR" content="Mozilla/4.5 [fr] (Win98; I) [Netscape]">
-   <title>FreeType Glyph Conventions</title>
+  <meta http-equiv="Content-Type"
+        content="text/html; charset=iso-8859-1">
+  <meta name="Author"
+        content="David Turner">
+  <title>FreeType Glyph Conventions</title>
 </head>
-<body>
 
 <body text="#000000"
       bgcolor="#FFFFFF"
@@ -14,218 +15,186 @@
       vlink="#51188E"
       alink="#FF0000">
 
+<h1 align=center>
+  FreeType Glyph Conventions
+</h1>
+
+<h2 align=center>
+  Version&nbsp;2.1
+</h2>
+
+<h3 align=center>
+  Copyright&nbsp;1998-2000 David Turner (<a
+  href="mailto:david@freetype.org">david@freetype.org</a>)<br>
+  Copyright&nbsp;2000 The FreeType Development Team (<a
+  href="mailto:devel@freetype.org">devel@freetype.org</a>)
+</h3>
+
+
 <center>
-<h1>
-FreeType Glyph Conventions</h1></center>
+<table width="70%">
+<tr><td>
 
-<center>
-<h2>
-version 2.1</h2></center>
+  <p>This document presents the core conventions used within the FreeType
+  library to manage font and glyph data.  It is a <em>must-read</em> for all
+  developers who need to understand digital typography, especially if you
+  want to use the FreeType&nbsp;2 library in your projects.</p>
 
-<center>
-<h3>
-Copyright 1998-2000 David Turner (<a href="mailto:david@freetype.org">david@freetype.org</a>)<br>
-Copyright 2000 The FreeType Development Team (<a href="devel@freetype.org">devel@freetype.org</a>)</h3></center>
+  <table width="100%">
+  <tr valign=center
+      bgcolor="#CCCCFF">
+    <td align=center>
+      <h2>
+        Table of Contents
+      </h2>
+    </td>
+  </tr>
+  </table>
 
-<center><table width=650><tr><td>
+  <center>
+  <table width="80%">
+  <tr><td>
 
-
-<table width="100%"><tr valign=center bgcolor="#CCCCFF"><td align=center><h2>
-Introduction
-</h2></td></tr></table>
-
-<p>This document presents the core conventions used within the FreeType
-   library to manage font and glyph data. It is a <em>must-read</em> for
-   any people that needs to understand digital typography, especially
-   if you want to use the FreeType 2 library in your projects.</p>
-
-<table width="100%"><tr valign=center bgcolor="#CCCCFF"><td align=center><h2>
-Table of Contents
-</h2></td></tr></table>
-
-<center><table width="80%"><tr><td>
-
-
-  <a href="glyphs-1.html">
-  <h2>I. Basic Typographic Concepts:</h2>
-  </a>
-  <ul>
+  <h2>
+    <a href="glyphs-1.html">I. Basic Typographic Concepts</a>
+  </h2>
+    <blockquote>
     <h3>
-    <a href="glyphs-1.html#section-1">
-    1. Font files, format and information
-    </a>
-    <br>
+      <a href="glyphs-1.html#section-1">1. Font files, format and
+      information</a>
+      <br>
 
-    <a href="glyphs-1.html#section-2">
-    2. Character images and mappings
-    </a>
-    <br>
+      <a href="glyphs-1.html#section-2">2. Character images and mappings</a>
+      <br>
 
-    <a href="glyphs-1.html#section-3">
-    3. Character and font metrics
-    </a>
-    <br>
-  </ul>
+      <a href="glyphs-1.html#section-3">3. Character and font metrics</a>
+      <br>
+    </h3>
+    </blockquote>
 
-
-
-  <a href="glyphs-2.html">
-  <h2>II. Glyph Outlines:</h2>
-  </a>
-  <ul>
+  <h2>
+    <a href="glyphs-2.html">II. Glyph outlines</a>
+  </h2>
+    <blockquote>
     <h3>
-    <a href="glyphs-2.html#section-1">
-    1. Pixels, Points and Device Resolutions
-    </a>
-    <br>
+      <a href="glyphs-2.html#section-1">1. Pixels, points and device
+      resolutions</a>
+      <br>
 
-    <a href="glyphs-2.html#section-2">
-    2. Vectorial representation
-    </a>
-    <br>
+      <a href="glyphs-2.html#section-2">2. Vectorial representation</a>
+      <br>
 
-    <a href="glyphs-2.html#section-3">
-    3. Hinting and bitmap rendering
-    </a>
-    <br>
-  </ul>
+      <a href="glyphs-2.html#section-3">3. Hinting and bitmap rendering</a>
+      <br>
+    </h3>
+    </blockquote>
 
-
-
-  <a href="glyphs-3.html">
-  <h2>III. Glyph Metrics:</h2>
-  </a>
-  <ul>
+  <h2>
+    <a href="glyphs-3.html">III. Glyph metrics</a>
+  </h2>
+    <blockquote>
     <h3>
-    <a href="glyphs-3.html#section-1">
-    1. Baseline, Pens and Layouts
-    </a>
-    <br>
+      <a href="glyphs-3.html#section-1">1. Baseline, pens and layouts</a>
+      <br>
 
-    <a href="glyphs-3.html#section-2">
-    2. Typographic metrics
-    </a>
-    <br>
+      <a href="glyphs-3.html#section-2">2. Typographic metrics and
+      bounding boxes</a>
+      <br>
 
-    <a href="glyphs-3.html#section-3">
-    3. Bearings and Advances
-    </a>
-    <br>
+      <a href="glyphs-3.html#section-3">3. Bearings and advances</a>
+      <br>
 
-    <a href="glyphs-3.html#section-4">
-    4. The effects of grid-fitting
-    </a>
-    <br>
+      <a href="glyphs-3.html#section-4">4. The effects of grid-fitting</a>
+      <br>
 
-    <a href="glyphs-3.html#section-5">
-    5. Text widths and bounding box
-    </a>
-    <br>
-  </ul>
+      <a href="glyphs-3.html#section-5">5. Text widths and bounding box</a>
+      <br>
+    </h3>
+    </blockquote>
 
-
-  <a href="glyphs-4.html">
-  <h2>IV. Kerning:</h2>
-  </a>
-  <ul>
+  <h2>
+    <a href="glyphs-4.html">IV. Kerning</a>
+  </h2>
+    <blockquote>
     <h3>
-    <a href="glyphs-4.html#section-1">
-    1. Kerning pairs
-    </a>
-    <br>
+      <a href="glyphs-4.html#section-1">1. Kerning pairs</a>
+      <br>
 
-    <a href="glyphs-4.html#section-2">
-    2. Applying kerning
-    </a>
-    <br>
-  </ul>
+      <a href="glyphs-4.html#section-2">2. Applying kerning</a>
+      <br>
+    </h3>
+    </blockquote>
 
-
-  <a href="glyphs-5.html">
-  <h2>V. Text Processing:</h2>
-  </a>
-  <ul>
+  <h2>
+    <a href="glyphs-5.html">V. Text processing</a>
+  </h2>
+    <blockquote>
     <h3>
-    <a href="glyphs-5.html#section-1">
-    1. Writing simple text strings
-    </a>
-    <br>
+      <a href="glyphs-5.html#section-1">1. Writing simple text strings</a>
+      <br>
 
-    <a href="glyphs-5.html#section-2">
-    2. Sub-pixel positioning
-    </a>
-    <br>
+      <a href="glyphs-5.html#section-2">2. Sub-pixel positioning</a>
+      <br>
 
-    <a href="glyphs-5.html#section-3">
-    3. Simple kerning
-    </a>
-    <br>
+      <a href="glyphs-5.html#section-3">3. Simple kerning</a>
+      <br>
 
-    <a href="glyphs-5.html#section-4">
-    4. Right-to-left layouts
-    </a>
-    <br>
+      <a href="glyphs-5.html#section-4">4. Right-to-left layouts</a>
+      <br>
 
-    <a href="glyphs-5.html#section-5">
-    5. Vertical layouts
-    </a>
-    <br>
+      <a href="glyphs-5.html#section-5">5. Vertical layouts</a>
+      <br>
 
-    <a href="glyphs-5.html#section-6">
-    6. WYSIWYG text layouts
-    </a>
-    <br>
-  </ul>
+      <a href="glyphs-5.html#section-6">6. WYSIWYG text layouts</a>
+      <br>
+    </h3>
+    </blockquote>
 
-
-  <a href="glyphs-6.html">
-  <h2>VI. FreeType Outlins:</h2>
-  </a>
-  <ul>
+  <h2>
+    <a href="glyphs-6.html">VI. FreeType Outlines</a>
+  </h2>
+    <blockquote>
     <h3>
-    <a href="glyphs-6.html#section-1">
-    1. FreeType outline description and structure
-    </a>
-    <br>
+      <a href="glyphs-6.html#section-1">1. FreeType outline description
+      and structure</a>
+      <br>
 
-    <a href="glyphs-6.html#section-2">
-    2. Bounding and control box computations
-    </a>
-    <br>
+      <a href="glyphs-6.html#section-2">2. Bounding and control box
+      computations</a>
+      <br>
 
-    <a href="glyphs-6.html#section-3">
-    3. Coordinates, scaling and grid-fitting
-    </a>
-    <br>
-  </ul>
+      <a href="glyphs-6.html#section-3">3. Coordinates, scaling, and
+      grid-fitting</a>
+      <br>
+    </h3>
+    </blockquote>
 
-
-  <a href="glyphs-7.html">
-  <h2>VII. FreeType Bitmaps:</h2>
-  </a>
-  <ul>
+  <h2>
+    <a href="glyphs-7.html">VII. FreeType bitmaps</a>
+  </h2>
+    <blockquote>
     <h3>
-    <a href="glyphs-7.html#section-1">
-    1. Vectorial versus pixel coordinates
-    </a>
-    <br>
+      <a href="glyphs-7.html#section-1">1. Vectorial versus pixel
+      coordinates</a>
+      <br>
 
-    <a href="glyphs-7.html#section-2">
-    2. FreeType bitmap descriptor
-    </a>
-    <br>
+      <a href="glyphs-7.html#section-2">2. FreeType bitmap and pixmap
+      descriptor</a>
+      <br>
 
-    <a href="glyphs-7.html#section-3">
-    3. Converting outlines into bitmaps
-    </a>
-    <br>
-  </ul>
+      <a href="glyphs-7.html#section-3">3. Converting outlines into
+      bitmaps and pixmaps</a>
+      <br>
+    </h3>
+    </blockquote>
 
-</p>
+  </td></tr>
+  </table>
+  </center>
 
-</td></tr></table></center>
-
-</td></tr></table></center>
+</td></tr>
+</table>
+</center>
 
 </body>
 </html>
