@@ -1,7 +1,10 @@
 2001-03-12  Tom Kacvinsky  <tjk@ams.org>
 
+	* include/freetype/internal/psaux.h:  Changed the lenIV member of
+	the T1_Decoder_ struct to be an FT_Int instead of an FT_UInt.
+
         * src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings):  Adjust
-        for lenIV seed  bytes at the start of a decrypted subroutine.
+        for lenIV seed bytes at the start of a decrypted subroutine.
 
 	* src/cid/cidload.c (cid_read_subrs): Decrypt subroutines only
 	if lenIV >= 0.
