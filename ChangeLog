@@ -1,4 +1,17 @@
+2002-02-28  David Turner  <david@freetype.org>
+
+        * STABLE branch created, the HEAD is used for the major re-factoring
+        needed to get FreeType 2.2 out
+
+        * src/sfnt/ttload.c (TT_Load_Names): simplifying and securing the
+        names table loader. Invalid individual name entries are now handled
+        correctly. This allows the loading of very buggy fonts like
+        "foxjump.ttf" without allocating tons of memory and causing crashes..
+
 2002-02-08  David Turner  <david@freetype.org>
+
+	* Version 2.0.8 released.
+	=========================
 
         * docs/CHANGES: updating for 2.0.8
 
@@ -43,7 +56,7 @@
 	better (delaying format checks out of FT_Access_Frame ..
 	FT_Forget_Frame blocks to avoid leaving the stream in an incorrect
 	state when encountering an invalid PCF font).
-	
+
 	* src/pcf/pcfdriver.c (PCF_Done_Face): Renamed to ...
 	(PCF_Face_Done): This.
 	(PCF_Init_Face): Renamed to ...
@@ -53,13 +66,13 @@
 	(PCF_Get_Next_Char): Renamed to ...
 	(PCF_Char_Get_Next): This.
 	(pcf_driver_class): Updated.
-	
+
 	* src/pcf/pcf.h (PCF_Done_Face): Removed.
 
 2002-02-06  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/pcf/pcfdriver.c (FT_Done_Face): Fixed small memory leak.
-        
+
 	* src/pcf/pcfread.c (pcf_load_font): Now handles the "AVERAGE_WIDTH"
 	property to return correct character pixel (width/height) pairs for
 	embedded bitmaps.
@@ -359,7 +372,7 @@
 
 	* src/cff/cffgload.c (CFF_Parse_CharStrings), src/psaux/t1decode.c
 	(T1_Decoder_Parse_Charstrings), src/pshinter/pshalgo2.c (*), Fixed a
-	bug where the X and Y axis where inversed in the postscript hinter. 
+	bug where the X and Y axis where inversed in the postscript hinter.
 	This caused problem when displaying on non-square surfaces.
 
 	* src/pshinter/pshalgo2.c: s/vertical/dimension/.

@@ -923,7 +923,8 @@
     FT_Memory  memory = stream->memory;
 
     FT_ULong   table_pos, table_len;
-    FT_ULong   storageSize;
+    FT_ULong   storageOffset, storageSize;
+    FT_Byte*   storage;
 
     TT_NameTable*  names;
 
@@ -973,12 +974,25 @@
     if ( READ_Fields( name_table_fields, names ) )
       goto Exit;
 
+    /* check the 'storageOffset' field */
+    storageOffset = names->storageOffset;
+    if ( storageOffset <  (FT_ULong)(6 + 12*names->numNameRecords) ||
+         table_len     <= storageOffset                            )
+    {
+      FT_ERROR(( "TT.load_names: invalid 'name' table\n" ));
+      error = SFNT_Err_Name_Table_Missing;
+      goto Exit;
+    }
+
+    storageSize = (FT_ULong)(table_len - storageOffset);
+
     /* Allocate the array of name records. */
-    if ( ALLOC_ARRAY( names->names,
-                      names->numNameRecords,
-                      TT_NameRec )                   ||
+    if ( ALLOC( names->names,
+                names->numNameRecords*sizeof(TT_NameRec) + storageSize )  ||
          ACCESS_Frame( names->numNameRecords * 12L ) )
       goto Exit;
+
+    storage = (FT_Byte*)(names->names + names->numNameRecords);
 
     /* Load the name records and determine how much storage is needed */
     /* to hold the strings themselves.                                */
@@ -986,8 +1000,6 @@
       TT_NameRec*  cur   = names->names;
       TT_NameRec*  limit = cur + names->numNameRecords;
 
-
-      storageSize = 0;
 
       for ( ; cur < limit; cur ++ )
       {
@@ -997,31 +1009,16 @@
         if ( READ_Fields( name_record_fields, cur ) )
           break;
 
-        upper = (FT_ULong)( cur->stringOffset + cur->stringLength );
-        if ( upper > storageSize )
-          storageSize = upper;
+        /* invalid name entries will have "cur->string" set to NULL !! */
+        if ( (FT_ULong)(cur->stringOffset + cur->stringLength) < storageSize )
+          cur->string = storage + cur->stringOffset;
       }
     }
 
     FORGET_Frame();
 
-    if ( storageSize > 0 )
-    {
-      /* allocate the name storage area in memory, then read it */
-      if ( ALLOC( names->storage, storageSize )               ||
-           FILE_Read_At( table_pos + names->storageOffset,
-                         names->storage, storageSize ) )
-        goto Exit;
-
-      /* Go through and assign the string pointers to the name records. */
-      {
-        TT_NameRec*  cur   = names->names;
-        TT_NameRec*  limit = cur + names->numNameRecords;
-
-
-        for ( ; cur < limit; cur++ )
-          cur->string = names->storage + cur->stringOffset;
-      }
+    if (error)
+      goto Exit;
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
@@ -1036,7 +1033,7 @@
           FT_UInt  j;
 
 
-          FT_TRACE3(( "%d %d %x %d\n  ",
+          FT_TRACE3(( "(%2d %2d %4x %2d)  ",
                        cur->platformID,
                        cur->encodingID,
                        cur->languageID,
@@ -1047,19 +1044,21 @@
           if ( cur->string )
             for ( j = 0; j < (FT_UInt)cur->stringLength; j++ )
             {
-              FT_Char  c = *( cur->string + j );
+              FT_Byte  c = *(FT_Byte*)(cur->string + j);
 
 
-              if ( (FT_Byte)c < 128 )
+              if ( c >= 32 && c < 128 )
                 FT_TRACE3(( "%c", c ));
             }
+          else
+            FT_TRACE3(( "INVALID ENTRY !!\n" ));
+
+          FT_TRACE3(( "\n" ));
         }
       }
-      FT_TRACE3(( "\n" ));
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
 
-    }
     FT_TRACE2(( "loaded\n" ));
 
     /* everything went well, update face->num_names */
