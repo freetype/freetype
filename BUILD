@@ -142,7 +142,18 @@ II. COMMAND-LINE COMPILATION:
      build system should automatically detect which driver to use based on
      the current platform.
 
+     UNIX USERS TAKE NOTE: XXXXXX
      
+     When building the demos, the build system tries to detect your X11 path
+     by looking for the patterns "X11R5/bin", "X11R6/bin" or "X11/bin" in
+     your current path. If no X11 path is found, the demo programs will not
+     be able to display graphics and will fail. Change your current path
+     if you encounter this problem.
+     
+     Note that the release version will use Autoconf to detect everything
+     on UNix, so this will not be necessary !!
+
+
 II. DETAILED COMPILATION PROCEDURE:
 -----------------------------------
 
@@ -186,7 +197,8 @@ II. DETAILED COMPILATION PROCEDURE:
   
   Note that through careful macro definitions, compiling a module as a single
   component avoids the generation of many externals (that really correspond
-  to intra-module dependencies) and provide greater optimisations possibilities.
+  to intra-module dependencies) and provides greater optimisations
+  opportunities.
   
   Similarly, each component has a single "englobing" C file to compile it
   as a stand-alone object, i.e. :
@@ -200,4 +212,6 @@ II. DETAILED COMPILATION PROCEDURE:
   Now, you can decide how to compile each module, and add the corresponding
   object files to your library..
   
+  The directory "freetype2/include" contains all public header files that
+  may be included by client applications..
 

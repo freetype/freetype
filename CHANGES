@@ -1,4 +1,39 @@
-LATEST CHANGES - 12-mar-2000
+LASTEST CHANGES - 14-apr-2000
+
+  - fixed a bug in the TrueType glyph loader that prevented the correct
+    loading of some CJK glyphs in mingli.ttf
+    
+  - improved the standard Type 1 hinter in "src/type1"
+  
+  - fixed two bugs in the experimental Type 1 driver in "src/type1z"
+    to handle the new XFree86 4.0 fonts (and a few other ones..)
+
+  - the smooth renderer is now complete and supports sub-banding
+    to render large glyphs at high speed. However, it is still located
+    in "demos/src/ftgrays.c" and should move to the library itself
+    in the next beta.. NOTE: The smooth renderer doesn't compile in
+    stand-alone mode anymore, but this should be fixed RSN..
+    
+  - introduced convenience functions to more easily deal with glyph
+    images, see "include/ftglyph.h" for more details, as well as the
+    new demo program named "demos/src/ftstring.c" that demonstrates
+    its use
+
+  - implemented FT_LOAD_NO_RECURSE in both the TrueType and Type 1
+    drivers (this is required by the auto-hinter to improve its results).
+
+  - changed the raster interface, in order to allow client applications
+    to provide their own span-drawing callbacks. However, only the
+    smooth renderer supports this. See "FT_Raster_Params" in the
+    file "include/ftimage.h"
+
+  - fixed a small bug in FT_MulFix that caused incorrect transform
+    computation !!
+
+  - Note: The tutorial is out-of-date, grumpf.. :-(
+
+================================================================================
+OLD CHANGES - 12-mar-2000
 
   - changed the layout of configuration files : now, all ANSI configuration
     files are located in "freetype2/config". System-specific over-rides
