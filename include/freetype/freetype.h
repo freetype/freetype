@@ -2775,6 +2775,65 @@ FT_BEGIN_HEADER
                        FT_Matrix*  matrix );
 
 
+
+  /*@***********************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Set_Hint_Flags                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A function used to set a number of flags that are used to control  */
+  /*    the hinting process when glyphs are loaded.                        */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face   :: A handle to the source face object.                      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    flags  :: A set of bit flags that control the hinting process      */
+  /*              see the FT_HINT_XXX constants for details.               */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The interpretation of the flags depends on the hinter module in    */
+  /*    use. Not all modules will support all flags                        */
+  /*                                                                       */
+  FT_EXPORT( void )
+  FT_Set_Hint_Flags( FT_Face     face,
+                     FT_ULong    hint_flags );
+
+
+  /*@***********************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_HINT_NO_INTEGER_STEM                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit-field constant, used with FT_Set_Hint_Flags() to to suppress */
+  /*    snapping of stem widths to integer values                          */
+  /*                                                                       */
+#define FT_HINT_NO_INTEGER_STEM 1
+
+  /*@***********************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_HINT_NO_HSTEM_ALIGN                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit-field constant, used with FT_Set_Hint_Flags() to to suppress */
+  /*    alignment of horizontal stems with the pixel grid.                 */
+  /*                                                                       */
+#define FT_HINT_NO_HSTEM_ALIGN 2
+
+  /*@***********************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_HINT_NO_VSTEM_ALIGN                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit-field constant, used with FT_Set_Hint_Flags() to to suppress */
+  /*    alignment of vertical stems with the pixel grid                    */
+  /*                                                                       */
+#define FT_HINT_NO_VSTEM_ALIGN 4
+
   /* */
 
 FT_END_HEADER

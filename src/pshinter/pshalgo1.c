@@ -744,12 +744,15 @@
   FT_Error
   ps1_hints_apply( PS_Hints     ps_hints,
                    FT_Outline*  outline,
-                   PSH_Globals  globals )
+                   PSH_Globals  globals,
+                   FT_UInt32    hint_flags )
   {
     PSH1_Hint_TableRec  hints;
     FT_Error            error = 0;
     FT_Int              dimension;
 
+
+    FT_UNUSED( hint_flags );
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {

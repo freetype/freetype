@@ -34,7 +34,7 @@
 
 #undef  SNAP_STEMS
 #undef  ONLY_ALIGN_Y
-      
+
 
 
   /*************************************************************************/
@@ -359,11 +359,11 @@
 
   static FT_Fixed
   psh3_hint_snap_stem_side_delta ( FT_Fixed pos,
-				   FT_Fixed len )
+                                   FT_Fixed len )
   {
     FT_Fixed delta1 = ( ( pos + 32 ) & -64 ) - pos;
     FT_Fixed delta2 = ( ( pos + len + 32 ) & -64  ) - pos - len;
-	      
+
     if ( ABS( delta1 ) <= ABS( delta2 ) )
     {
       return delta1;
@@ -378,7 +378,8 @@
   static void
   psh3_hint_align( PSH3_Hint    hint,
                    PSH_Globals  globals,
-                   FT_Int       dimension )
+                   FT_Int       dimension,
+                   FT_UInt32    hint_flags )
   {
     PSH_Dimension  dim   = &globals->dimension[dimension];
     FT_Fixed       scale = dim->scale_mult;
@@ -390,22 +391,38 @@
       FT_Pos  pos = FT_MulFix( hint->org_pos, scale ) + delta;
       FT_Pos  len = FT_MulFix( hint->org_len, scale );
 
-#ifdef SNAP_STEMS
-      FT_Pos  fit_center;
-      FT_Pos  fit_len;
-
+      FT_Pos            fit_center;
+      FT_Pos            fit_len;
       PSH_AlignmentRec  align;
 
-      /* compute fitted width/height */
-      fit_len = 0;
-      if ( hint->org_len )
+
+      /* ignore stem alignments when requested through the hint flags */
+      if ( ( dimension == 0 && ( hint_flags & FT_HINT_NO_VSTEM_ALIGN ) != 0 ) ||
+           ( dimension == 1 && ( hint_flags & FT_HINT_NO_HSTEM_ALIGN ) != 0 ) )
       {
-        fit_len = psh_dimension_snap_width( dim, hint->org_len );
-        if ( fit_len < 64 )
-          fit_len = 64;
-        else
-          fit_len = ( fit_len + 32 ) & -64;
+        hint->cur_pos = pos;
+        hint->cur_len = len;
+
+        psh3_hint_set_fitted( hint );
+        return;
+          }
+
+      /* perform stem snapping when requested */
+      if ( ( hint_flags & FT_HINT_NO_INTEGER_STEM ) == 0 )
+      {
+        /* compute fitted width/height */
+        fit_len = 0;
+        if ( hint->org_len )
+        {
+          fit_len = psh_dimension_snap_width( dim, hint->org_len );
+          if ( fit_len < 64 )
+            fit_len = 64;
+          else
+            fit_len = ( fit_len + 32 ) & -64;
+        }
       }
+      else
+        fit_len = len;
 
       hint->cur_len = fit_len;
 
@@ -450,182 +467,113 @@
 
             /* ensure that parent is already fitted */
             if ( !psh3_hint_is_fitted( parent ) )
-              psh3_hint_align( parent, globals, dimension );
+              psh3_hint_align( parent, globals, dimension, hint_flags );
 
             par_org_center = parent->org_pos + ( parent->org_len / 2);
             par_cur_center = parent->cur_pos + ( parent->cur_len / 2);
             cur_org_center = hint->org_pos   + ( hint->org_len   / 2);
 
             cur_delta = FT_MulFix( cur_org_center - par_org_center, scale );
-#if 0
-            if ( cur_delta >= 0 )
-              cur_delta = ( cur_delta + 16 ) & -64;
-            else
-              cur_delta = -( (-cur_delta + 16 ) & -64 );
-#endif
-            pos = par_cur_center + cur_delta - ( len >> 1 );
+            pos       = par_cur_center + cur_delta - ( len >> 1 );
           }
 
-          /* normal processing */
-          if ( ( fit_len / 64 ) & 1 )
+          if ( ( hint_flags & FT_HINT_NO_INTEGER_STEM ) == 0 )
           {
-            /* odd number of pixels */
-            fit_center = ( ( pos + ( len >> 1 ) ) & -64 ) + 32;
+            /* normal processing */
+            if ( ( fit_len / 64 ) & 1 )
+            {
+              /* odd number of pixels */
+              fit_center = ( ( pos + ( len >> 1 ) ) & -64 ) + 32;
+            }
+            else
+            {
+              /* even number of pixels */
+              fit_center = ( pos + ( len >> 1 ) + 32 ) & -64;
+            }
+            hint->cur_pos = fit_center - ( fit_len >> 1 );
           }
           else
           {
-            /* even number of pixels */
-            fit_center = ( pos + ( len >> 1 ) + 32 ) & -64;
-          }
+            /* Stems less than one pixel wide are easy - we want to
+             * make them as dark as possible, so they must fall within
+             * one pixel. If the stem is split between two pixels
+             * then snap the edge that is nearer to the pixel boundary
+             * to the pixel boundary
+             */
+            if (len <= 64)
+            {
+              if ( ( pos + len + 63 ) / 64  != pos / 64 + 1 )
+                pos += psh3_hint_snap_stem_side_delta ( pos, len );
+            }
+            /* Position stems other to minimize the amount of mid-grays.
+             * There are, in general, two positions that do this,
+             * illustrated as A) and B) below.
+             *
+             *   +                   +                   +                   +
+             *
+             * A)             |--------------------------------|
+             * B)   |--------------------------------|
+             * C)       |--------------------------------|
+             *
+             * Position A) (split the excess stem equally) should be better
+             * for stems of width N + f where f < 0.5
+             *
+             * Position B) (split the deficiency equally) should be better
+             * for stems of width N + f where f > 0.5
+             *
+             * It turns out though that minimizing the total number of touched
+             * pixels is also important, so position C), with one edge
+             * aligned with a pixel boundary is actually preferable
+             * to A). There are also more possible positions for C) than
+             * for A) or B), so there will be less distortion of the overall
+             * character shape.
+             */
+            else
+            {
+              FT_Fixed frac_len = len & 63;
+              FT_Fixed center = pos + ( len >> 1 );
 
-          hint->cur_pos = fit_center - ( fit_len >> 1 );
+              FT_Fixed delta_a, delta_b;
+
+              if ( ( len / 64 ) & 1 )
+              {
+                delta_a = ( center & -64 ) + 32 - center;
+                delta_b = ( ( center + 32 ) & - 64 ) - center;
+              }
+              else
+              {
+                delta_a = ( ( center + 32 ) & - 64 ) - center;
+                delta_b = ( center & -64 ) + 32 - center;
+              }
+
+              /* We choose between B) and C) above based on the amount
+               * of fractional stem width: for small amounts, choose
+               * C) always; for large amounts, B) always; inbetween,
+               * pick whichever one involves less stem movement.
+               */
+              if (frac_len < 32)
+              {
+                pos += psh3_hint_snap_stem_side_delta ( pos, len );
+              }
+              else if (frac_len < 48)
+              {
+                FT_Fixed side_delta = psh3_hint_snap_stem_side_delta ( pos, len );
+
+                if ( ABS( side_delta ) < ABS( delta_b ) )
+                  pos += side_delta;
+                else
+                  pos += delta_b;
+              }
+              else
+              {
+                pos += delta_b;
+              }
+            }
+            hint->cur_pos = pos;
+          }
         }
       }
-#else
-      PSH_AlignmentRec  align;
 
-      hint->cur_len = len;
-
-      /* check blue zones for horizontal stems */
-      align.align = PSH_BLUE_ALIGN_NONE;
-      align.align_bot = align.align_top = 0;
-
-      if ( dimension == 1 )
-        psh_blues_snap_stem( &globals->blues,
-                             hint->org_pos + hint->org_len,
-                             hint->org_pos,
-                             &align );
-#ifdef ONLY_ALIGN_Y
-      else
-      {
-	hint->cur_pos = pos;
-	return;
-      }
-#endif
-      
-      switch ( align.align )
-      {
-      case PSH_BLUE_ALIGN_TOP:
-        /* the top of the stem is aligned against a blue zone */
-        hint->cur_pos = align.align_top - len;
-        break;
-
-      case PSH_BLUE_ALIGN_BOT:
-        /* the bottom of the stem is aligned against a blue zone */
-        hint->cur_pos = align.align_bot;
-        break;
-
-      case PSH_BLUE_ALIGN_TOP | PSH_BLUE_ALIGN_BOT:
-        /* both edges of the stem are aligned against blue zones */
-        hint->cur_pos = align.align_bot;
-        hint->cur_len = align.align_top - align.align_bot;
-        break;
-
-      default:
-        {
-          PSH3_Hint  parent = hint->parent;
-
-          if ( parent )
-          {
-            FT_Pos  par_org_center, par_cur_center;
-            FT_Pos  cur_org_center, cur_delta;
-
-
-            /* ensure that parent is already fitted */
-            if ( !psh3_hint_is_fitted( parent ) )
-              psh3_hint_align( parent, globals, dimension );
-
-            par_org_center = parent->org_pos + ( parent->org_len / 2);
-            par_cur_center = parent->cur_pos + ( parent->cur_len / 2);
-            cur_org_center = hint->org_pos   + ( hint->org_len   / 2);
-
-            cur_delta = FT_MulFix( cur_org_center - par_org_center, scale );
-            pos = par_cur_center + cur_delta - ( len >> 1 );
-          }
-
-          {
-	    /* Stems less than one pixel wide are easy - we want to
-	     * make them as dark as possible, so they must fall within
-	     * one pixel. If the stem is split between two pixels
-	     * then snap the edge that is nearer to the pixel boundary
-	     * to the pixel boundary
-	     */
-	    if (len <= 64)
-	    {
-	      if ( ( pos + len + 63 ) / 64  != pos / 64 + 1 )
-		pos += psh3_hint_snap_stem_side_delta ( pos, len );
-	    }
-	    /* Position stems other to minimize the amount of mid-grays.
-	     * There are, in general, two positions that do this,
-	     * illustrated as A) and B) below.
-	     *
-	     *   +                   +                   +                   +
-	     *
-	     * A)             |--------------------------------|
-	     * B)   |--------------------------------|
-	     * C)       |--------------------------------|
-	     *
-	     * Position A) (split the excess stem equally) should be better
-	     * for stems of width N + f where f < 0.5
-	     *
-	     * Position B) (split the deficiency equally) should be better
-	     * for stems of width N + f where f > 0.5
-	     *
-	     * It turns out though that minimizing the total number of lit
-	     * pixels is also important, so position C), with one edge
-	     * aligned with a pixel boundary is actually preferable
-	     * to A). There are also more possibile positions for C) than
-	     * for A) or B), so it involves less distortion of the overall
-	     * character shape.
-	     */
-	    else
-	    {
-	      FT_Fixed frac_len = len & 63;
-	      FT_Fixed center = pos + ( len >> 1 );
-
-	      FT_Fixed delta_a, delta_b;
-
-	      if ( ( len / 64 ) & 1 )
-	      {
-	        delta_a = ( center & -64 ) + 32 - center;
-	        delta_b = ( ( center + 32 ) & - 64 ) - center;
-	      }
-	      else
-	      {
-	        delta_a = ( ( center + 32 ) & - 64 ) - center;
-	        delta_b = ( center & -64 ) + 32 - center;
-	      }
-
-	      /* We choose between B) and C) above based on the amount
-	       * of fractinal stem width; for small amounts, choose
-	       * C) always, for large amounts, B) always, and inbetween,
-	       * pick whichever one involves less stem movement.
-	       */
-	      if (frac_len < 32)
-	      {
-		pos += psh3_hint_snap_stem_side_delta ( pos, len );
-	      }
-	      else if (frac_len < 48)
-	      {
-		FT_Fixed side_delta = psh3_hint_snap_stem_side_delta ( pos, len );
-		  
-		if ( ABS( side_delta ) < ABS( delta_b ) )
-		  pos += side_delta;
-		else
-		  pos += delta_b;
-	      }
-	      else
-	      {
-		pos += delta_b;
-	      }
-	    }
-	  }
-	 
-	  hint->cur_pos = pos;
-	}
-      }
-#endif
-      
       psh3_hint_set_fitted( hint );
 
 #ifdef DEBUG_HINTER
@@ -639,7 +587,8 @@
   static void
   psh3_hint_table_align_hints( PSH3_Hint_Table  table,
                                PSH_Globals      globals,
-                               FT_Int           dimension )
+                               FT_Int           dimension,
+                               FT_UInt32        hint_flags )
   {
     PSH3_Hint      hint;
     FT_UInt        count;
@@ -667,7 +616,7 @@
     count = table->max_hints;
 
     for ( ; count > 0; count--, hint++ )
-      psh3_hint_align( hint, globals, dimension );
+      psh3_hint_align( hint, globals, dimension, hint_flags );
   }
 
 
@@ -703,230 +652,6 @@
 
 #define psh3_print_zone( x )   do { } while ( 0 )
 
-#endif
-
-#if 0
-  /* setup interpolation zones once the hints have been grid-fitted */
-  /* by the optimizer                                               */
-  static void
-  psh3_hint_table_setup_zones( PSH3_Hint_Table  table,
-                               FT_Fixed         scale,
-                               FT_Fixed         delta )
-  {
-    FT_UInt     count;
-    PSH3_Zone   zone;
-    PSH3_Hint  *sort, hint, hint2;
-
-
-    zone = table->zones;
-
-    /* special case, no hints defined */
-    if ( table->num_hints == 0 )
-    {
-      zone->scale = scale;
-      zone->delta = delta;
-      zone->min   = PSH3_ZONE_MIN;
-      zone->max   = PSH3_ZONE_MAX;
-
-      table->num_zones = 1;
-      table->zone      = zone;
-      return;
-    }
-
-    /* the first zone is before the first hint */
-    /* x' = (x-x0)*s + x0' = x*s + ( x0' - x0*s ) */
-    sort = table->sort;
-    hint = sort[0];
-
-    zone->scale = scale;
-    zone->delta = hint->cur_pos - FT_MulFix( hint->org_pos, scale );
-    zone->min   = PSH3_ZONE_MIN;
-    zone->max   = hint->org_pos;
-
-    psh3_print_zone( zone );
-
-    zone++;
-
-    for ( count = table->num_hints; count > 0; count-- )
-    {
-      FT_Fixed  scale2;
-
-
-      if ( hint->org_len > 0 )
-      {
-        /* setup a zone for inner-stem interpolation */
-        /* (x' - x0') = (x - x0)*(x1'-x0')/(x1-x0)   */
-        /* x' = x*s2 + x0' - x0*s2                   */
-
-        scale2      = FT_DivFix( hint->cur_len, hint->org_len );
-        zone->scale = scale2;
-        zone->min   = hint->org_pos;
-        zone->max   = hint->org_pos + hint->org_len;
-        zone->delta = hint->cur_pos - FT_MulFix( zone->min, scale2 );
-
-        psh3_print_zone( zone );
-
-        zone++;
-      }
-
-      if ( count == 1 )
-        break;
-
-      sort++;
-      hint2 = sort[0];
-
-      /* setup zone for inter-stem interpolation */
-      /* (x'-x1') = (x-x1)*(x2'-x1')/(x2-x1)     */
-      /* x' = x*s3 + x1' - x1*s3                 */
-
-      scale2 = FT_DivFix( hint2->cur_pos - (hint->cur_pos + hint->cur_len),
-                          hint2->org_pos - (hint->org_pos + hint->org_len) );
-      zone->scale = scale2;
-      zone->min   = hint->org_pos + hint->org_len;
-      zone->max   = hint2->org_pos;
-      zone->delta = hint->cur_pos + hint->cur_len -
-                    FT_MulFix( zone->min, scale2 );
-
-      psh3_print_zone( zone );
-
-      zone++;
-
-      hint = hint2;
-    }
-
-    /* the last zone */
-    zone->scale = scale;
-    zone->min   = hint->org_pos + hint->org_len;
-    zone->max   = PSH3_ZONE_MAX;
-    zone->delta = hint->cur_pos + hint->cur_len -
-                  FT_MulFix( zone->min, scale );
-
-    psh3_print_zone( zone );
-
-    zone++;
-
-    table->num_zones = zone - table->zones;
-    table->zone      = table->zones;
-  }
-#endif
-
-#if 0
-  /* tune a single coordinate with the current interpolation zones */
-  static FT_Pos
-  psh3_hint_table_tune_coord( PSH3_Hint_Table  table,
-                              FT_Int           coord )
-  {
-    PSH3_Zone   zone;
-
-
-    zone = table->zone;
-
-    if ( coord < zone->min )
-    {
-      do
-      {
-        if ( zone == table->zones )
-          break;
-
-        zone--;
-
-      } while ( coord < zone->min );
-      table->zone = zone;
-    }
-    else if ( coord > zone->max )
-    {
-      do
-      {
-        if ( zone == table->zones + table->num_zones - 1 )
-          break;
-
-        zone++;
-
-      } while ( coord > zone->max );
-      table->zone = zone;
-    }
-
-    return FT_MulFix( coord, zone->scale ) + zone->delta;
-  }
-#endif
-
-#if 0
- /* tune a given outline with current interpolation zones */
- /* the function only works in a single dimension..       */
-  static void
-  psh3_hint_table_tune_outline( PSH3_Hint_Table  table,
-                                FT_Outline*      outline,
-                                PSH_Globals      globals,
-                                FT_Int           dimension )
-
-  {
-    FT_UInt        count, first, last;
-    PS_Mask_Table  hint_masks = table->hint_masks;
-    PS_Mask        mask;
-    PSH_Dimension  dim        = &globals->dimension[dimension];
-    FT_Fixed       scale      = dim->scale_mult;
-    FT_Fixed       delta      = dim->scale_delta;
-
-
-    if ( hint_masks && hint_masks->num_masks > 0 )
-    {
-      first = 0;
-      mask  = hint_masks->masks;
-      count = hint_masks->num_masks;
-
-      for ( ; count > 0; count--, mask++ )
-      {
-        last = mask->end_point;
-
-        if ( last > first )
-        {
-          FT_Vector*   vec;
-          FT_Int       count2;
-
-
-          psh3_hint_table_activate_mask( table, mask );
-          psh3_hint_table_optimize( table, globals, outline, dimension );
-          psh3_hint_table_setup_zones( table, scale, delta );
-          last = mask->end_point;
-
-          vec    = outline->points + first;
-          count2 = last - first;
-
-          for ( ; count2 > 0; count2--, vec++ )
-          {
-            FT_Pos  x, *px;
-
-
-            px  = dimension ? &vec->y : &vec->x;
-            x   = *px;
-
-            *px = psh3_hint_table_tune_coord( table, (FT_Int)x );
-          }
-        }
-
-        first = last;
-      }
-    }
-    else    /* no hints in this glyph, simply scale the outline */
-    {
-      FT_Vector*  vec;
-
-
-      vec   = outline->points;
-      count = outline->n_points;
-
-      if ( dimension == 0 )
-      {
-        for ( ; count > 0; count--, vec++ )
-          vec->x = FT_MulFix( vec->x, scale ) + delta;
-      }
-      else
-      {
-        for ( ; count > 0; count--, vec++ )
-          vec->y = FT_MulFix( vec->y, scale ) + delta;
-      }
-    }
-  }
 #endif
 
 
@@ -1661,7 +1386,8 @@
   FT_Error
   ps3_hints_apply( PS_Hints     ps_hints,
                    FT_Outline*  outline,
-                   PSH_Globals  globals )
+                   PSH_Globals  globals,
+                   FT_UInt32    hint_flags )
   {
     PSH3_GlyphRec  glyphrec;
     PSH3_Glyph     glyph = &glyphrec;
@@ -1699,7 +1425,8 @@
       /* compute aligned stem/hints positions */
       psh3_hint_table_align_hints( &glyph->hint_tables[dimension],
                                    glyph->globals,
-                                   dimension );
+                                   dimension,
+                                   hint_flags );
 
       /* find strong points, align them, then interpolate others */
       psh3_glyph_find_strong_points( glyph, dimension );

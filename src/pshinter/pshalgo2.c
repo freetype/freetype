@@ -1494,7 +1494,8 @@
   FT_Error
   ps2_hints_apply( PS_Hints     ps_hints,
                    FT_Outline*  outline,
-                   PSH_Globals  globals )
+                   PSH_Globals  globals,
+                   FT_UInt32    hint_flags )
   {
     PSH2_GlyphRec  glyphrec;
     PSH2_Glyph     glyph = &glyphrec;
@@ -1504,6 +1505,7 @@
 #endif
     FT_Int         dimension;
 
+    FT_UNUSED( hint_flags );
 
 #ifdef DEBUG_HINTER
     memory = globals->memory;
