@@ -71,7 +71,7 @@
 
 
       plain     = (FT_Byte)( *buffer ^ ( seed >> 8 ) );
-      seed      = (FT_UShort)( ( *buffer + seed ) * 52845 + 22719 );
+      seed      = (FT_UShort)( ( *buffer + seed ) * 52845U + 22719 );
       *buffer++ = plain;
       length--;
     }

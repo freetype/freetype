@@ -1,3 +1,13 @@
+2001-07-03  Werner Lemberg  <wl@gnu.org>
+
+	* src/autohint/ahhint.c (ah_hinter_align_weak_points): Remove
+	unused variable `edges'.
+	(ah_hinter_load): Remove unused variables `old_width' and
+	`new_width'.
+	* src/cid/cidload.c (cid_decrypt): Use `U' for constant (again).
+	* src/psaux/psobjs.c (T1_Decrypt): Ditto.
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Ditto.
+
 2001-06-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/cid/cidload.c, src/cid/cidload.h (cid_decrypt): Use FT_Offset

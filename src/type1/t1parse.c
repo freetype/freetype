@@ -448,7 +448,7 @@
     }
 
     /* we now decrypt the encoded binary private dictionary */
-    psaux->t1_decrypt( parser->private_dict, parser->private_len, 55665 );
+    psaux->t1_decrypt( parser->private_dict, parser->private_len, 55665U );
     parser->root.base = parser->private_dict;
     parser->root.cursor = parser->private_dict;
     parser->root.limit  = parser->root.cursor + parser->private_len;
