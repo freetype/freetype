@@ -837,10 +837,17 @@
   /*                    fixed point pixels.  Always positive.              */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This structure doesn't return the vertical ascender, descender,    */
-  /*    and height, as well as a few other esoteric properties.  One can   */
-  /*    however compute these through the size's x_scale and y_scale,      */
-  /*    applied to the relevant face properties.                           */
+  /*    The values of "ascender", "descender" and "height" are only the    */
+  /*    scaled versions of "face->ascender", "face->descender" and         */
+  /*    "face->height".                                                    */
+  /*                                                                       */
+  /*    Unfortunately, due to glyph hinting, these values might not be     */
+  /*    exact for certain fonts, they thus must be treated as unreliable   */
+  /*    with an error margin of at least one pixel !!                      */
+  /*                                                                       */
+  /*    Indeed, the only way to get the exact pixel ascender and descender */
+  /*    is to render _all_ glyphs. As this would be a definite performance */
+  /*    hit, it's up to client applications to perform such computations.. */
   /*                                                                       */
   typedef struct  FT_Size_Metrics_
   {
