@@ -20,8 +20,8 @@
 /***************************************************************************/
 
 
-#ifndef AHGLYPH_H
-#define AHGLYPH_H
+#ifndef __AHGLYPH_H__
+#define __AHGLYPH_H__
 
 
 #include <ft2build.h>
@@ -86,7 +86,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* AHGLYPH_H */
+#endif /* __AHGLYPH_H__ */
 
 
 /* END */

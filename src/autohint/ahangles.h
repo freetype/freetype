@@ -23,11 +23,14 @@
 #ifndef __AHANGLES_H__
 #define __AHANGLES_H__
 
+
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SOURCE_FILE(autohint,ahtypes.h)
 
+
 FT_BEGIN_HEADER
+
 
   /* PI expressed in ah_angles -- we don't really need an important */
   /* precision, so 256 should be enough                             */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef TTCMAP_H
-#define TTCMAP_H
+#ifndef __TTCMAP_H__
+#define __TTCMAP_H__
 
 
 #include <ft2build.h>
@@ -39,7 +39,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* TTCMAP_H */
+#endif /* __TTCMAP_H__ */
 
 
 /* END */

@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef PSAUXMOD_H
-#define PSAUXMOD_H
+#ifndef __PSAUXMOD_H__
+#define __PSAUXMOD_H__
 
 
 #include <ft2build.h>
@@ -32,7 +32,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* PSAUXMOD_H */
+#endif /* __PSAUXMOD_H__ */
 
 
 /* END */

@@ -20,9 +20,10 @@
 #define __TTERRORS_H__
 
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
+#include <ft2build.h>
+
+
+FT_BEGIN_HEADER
 
 
   /*************************************************************************/
@@ -120,9 +121,7 @@
 #define TT_Err_Could_Not_Find_Context     0x450
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
 
 #endif /* __TTERRORS_H__ */

@@ -19,10 +19,13 @@
 #ifndef __FTEXTEND_H__
 #define __FTEXTEND_H__
 
-#include   <ft2build.h>
-#include   FT_INTERNAL_OBJECTS_H
+
+#include <ft2build.h>
+#include FT_INTERNAL_OBJECTS_H
+
 
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*                                                                       */

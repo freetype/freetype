@@ -45,9 +45,11 @@
 #ifndef __FTCCHUNK_H__
 #define __FTCCHUNK_H__
 
+
 #include <ft2build.h>
 #include FT_CACHE_H
 #include FT_CACHE_MANAGER_H
+
 
 FT_BEGIN_HEADER
 

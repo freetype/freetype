@@ -19,8 +19,10 @@
 #ifndef __FTDRIVER_H__
 #define __FTDRIVER_H__
 
-#include   <ft2build.h>
-#include   FT_MODULE_H
+
+#include <ft2build.h>
+#include FT_MODULE_H
+
 
 FT_BEGIN_HEADER
 

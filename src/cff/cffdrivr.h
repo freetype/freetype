@@ -16,11 +16,13 @@
 /***************************************************************************/
 
 
-#ifndef CFFDRIVER_H
-#define CFFDRIVER_H
+#ifndef __CFFDRIVER_H__
+#define __CFFDRIVER_H__
+
 
 #include <ft2build.h>
 #include FT_INTERNAL_DRIVER_H
+
 
 FT_BEGIN_HEADER
 
@@ -31,7 +33,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* CFFDRIVER_H */
+#endif /* __CFFDRIVER_H__ */
 
 
 /* END */

@@ -19,10 +19,13 @@
 #ifndef __FTCSBITS_H__
 #define __FTCSBITS_H__
 
-#include   <ft2build.h>
-#include   FT_CACHE_H
-#include   FT_CACHE_INTERNAL_CHUNK_H
-#include   FT_CACHE_IMAGE_H
+
+#include <ft2build.h>
+#include FT_CACHE_H
+#include FT_CACHE_INTERNAL_CHUNK_H
+#include FT_CACHE_IMAGE_H
+
+
 
 FT_BEGIN_HEADER
 
@@ -57,6 +60,7 @@ FT_BEGIN_HEADER
                                                 FTC_Image_Desc*  desc,
                                                 FT_UInt          gindex,
                                                 FTC_SBit        *sbit );
+
 FT_END_HEADER
 
 #endif /* __FTCSBITS_H__ */

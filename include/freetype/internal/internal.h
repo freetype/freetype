@@ -24,7 +24,7 @@
   /*************************************************************************/
 
 
-  /* don't add spaces around the argument of FT_INTERNAL_FILE! */
+  /* don't add spaces around the argument of FT2_INTERNAL_FILE! */
 
 #define FT_INTERNAL_OBJECTS_H           FT2_INTERNAL_FILE(ftobjs.h)
 #define FT_INTERNAL_STREAM_H            FT2_INTERNAL_FILE(ftstream.h)

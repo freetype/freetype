@@ -19,11 +19,14 @@
 #ifndef __FTMEMORY_H__
 #define __FTMEMORY_H__
 
-#include   <ft2build.h>
-#include   FT_CONFIG_CONFIG_H
-#include   FT_TYPES_H
+
+#include <ft2build.h>
+#include FT_CONFIG_CONFIG_H
+#include FT_TYPES_H
+
 
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*                                                                       */

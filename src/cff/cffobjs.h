@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef T2OBJS_H
-#define T2OBJS_H
+#ifndef __CFFOBJS_H__
+#define __CFFOBJS_H__
 
 
 #include <ft2build.h>
@@ -138,7 +138,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* T2OBJS_H */
+#endif /* __CFFOBJS_H__ */
 
 
 /* END */

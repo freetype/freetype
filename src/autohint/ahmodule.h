@@ -19,20 +19,24 @@
 /***************************************************************************/
 
 
-#ifndef AHMODULE_H
-#define AHMODULE_H
+#ifndef __AHMODULE_H__
+#define __AHMODULE_H__
+
 
 #include  <ft2build.h>
 #include  FT_MODULE_H
 
+
 FT_BEGIN_HEADER
+
 
   FT_CALLBACK_TABLE
   const FT_Module_Class  autohint_module_class;
 
+
 FT_END_HEADER
 
-#endif /* AHMODULE_H */
+#endif /* __AHMODULE_H__ */
 
 
 /* END */

@@ -39,10 +39,12 @@
 #ifndef __FTCONFIG_H__
 #define __FTCONFIG_H__
 
-#include  <ft2build.h>
-#include  FT_CONFIG_OPTIONS_H
+#include <ft2build.h>
+#include FT_CONFIG_OPTIONS_H
+
 
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*                                                                       */

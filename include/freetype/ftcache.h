@@ -34,10 +34,13 @@
 #ifndef __FTCACHE_H__
 #define __FTCACHE_H__
 
-#include   <ft2build.h>
-#include   FT_GLYPH_H
+
+#include <ft2build.h>
+#include FT_GLYPH_H
+
 
 FT_BEGIN_HEADER
+
 
 #define  FT_CACHE_MANAGER_H               FT2_PUBLIC_FILE(cache/ftcmanag.h)
 #define  FT_CACHE_IMAGE_H                 FT2_PUBLIC_FILE(cache/ftcimage.h)

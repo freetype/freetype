@@ -19,10 +19,13 @@
 #ifndef __FTDEBUG_H__
 #define __FTDEBUG_H__
 
-#include   <ft2build.h>
-#include   FT_CONFIG_CONFIG_H
+
+#include <ft2build.h>
+#include FT_CONFIG_CONFIG_H
+
 
 FT_BEGIN_HEADER
+
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 

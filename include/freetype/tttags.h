@@ -19,10 +19,13 @@
 #ifndef __TTAGS_H__
 #define __TTAGS_H__
 
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+
 FT_BEGIN_HEADER
+
 
 #define TTAG_cmap  FT_MAKE_TAG( 'c', 'm', 'a', 'p' )
 #define TTAG_cvt   FT_MAKE_TAG( 'c', 'v', 't', ' ' )
@@ -61,6 +64,7 @@ FT_BEGIN_HEADER
 #define TTAG_VDMX  FT_MAKE_TAG( 'V', 'D', 'M', 'X' )
 #define TTAG_vhea  FT_MAKE_TAG( 'v', 'h', 'e', 'a' )
 #define TTAG_vmtx  FT_MAKE_TAG( 'v', 'm', 't', 'x' )
+
 
 FT_END_HEADER
 

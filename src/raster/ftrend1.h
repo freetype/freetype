@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef FTREND1_H
-#define FTREND1_H
+#ifndef __FTREND1_H__
+#define __FTREND1_H__
 
 
 #include <ft2build.h>
@@ -38,7 +38,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* FTREND1_H */
+#endif /* __FTREND1_H__ */
 
 
 /* END */

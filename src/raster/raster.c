@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  raster1.c                                                              */
+/*  raster.c                                                               */
 /*                                                                         */
 /*    FreeType monochrome rasterer module component (body only).           */
 /*                                                                         */

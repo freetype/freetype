@@ -16,13 +16,14 @@
 /***************************************************************************/
 
 
-#ifndef FTSYSTEM_H
-#define FTSYSTEM_H
+#ifndef __FTSYSTEM_H__
+#define __FTSYSTEM_H__
 
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
+#include <ft2build.h>
+
+
+FT_BEGIN_HEADER
 
 
   /*************************************************************************/
@@ -100,12 +101,9 @@
   };
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
-
-#endif /* FTSYSTEM_H */
+#endif /* __FTSYSTEM_H__ */
 
 
 /* END */

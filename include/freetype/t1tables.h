@@ -20,10 +20,13 @@
 #ifndef __T1TABLES_H__
 #define __T1TABLES_H__
 
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+
 FT_BEGIN_HEADER
+
 
   /* Note that we separate font data in T1_FontInfo and T1_Private */
   /* structures in order to support Multiple Master fonts.         */

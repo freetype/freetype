@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef TTINTERP_H
-#define TTINTERP_H
+#ifndef __TTINTERP_H__
+#define __TTINTERP_H__
 
 
 #include <ft2build.h>
@@ -304,7 +304,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* TTINTERP_H */
+#endif /* __TTINTERP_H__ */
 
 
 /* END */

@@ -16,8 +16,9 @@
 /***************************************************************************/
 
 
-#ifndef CIDAFM_H
-#define CIDAFM_H
+#ifndef __CIDAFM_H__
+#define __CIDAFM_H__
+
 
 #include <ft2build.h>
 #include FT_SOURCE_FILE(cid,cidobjs.h)
@@ -60,7 +61,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* CIDAFM_H */
+#endif /* __CIDAFM_H__ */
 
 
 /* END */

@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftlist.c                                                               */
+/*  ftlist.h                                                               */
 /*                                                                         */
 /*    Generic list support for FreeType (specification).                   */
 /*                                                                         */
@@ -27,8 +27,10 @@
 #ifndef __FTLIST_H__
 #define __FTLIST_H__
 
-#include   <ft2build.h>
-#include   FT_FREETYPE_H
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 
 FT_BEGIN_HEADER
 
@@ -215,5 +217,6 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __FTLIST_H__ */
+
 
 /* END */

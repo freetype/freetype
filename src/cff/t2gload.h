@@ -16,14 +16,17 @@
 /***************************************************************************/
 
 
-#ifndef T2GLOAD_H
-#define T2GLOAD_H
+#ifndef __T2GLOAD_H__
+#define __T2GLOAD_H__
+
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_SOURCE_FILE(cff,cffobjs.h)
 
+
 FT_BEGIN_HEADER
+
 
 #define T2_MAX_OPERANDS     48
 #define T2_MAX_SUBRS_CALLS  32
@@ -194,7 +197,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* T2GLOAD_H */
+#endif /* __T2GLOAD_H__ */
 
 
 /* END */

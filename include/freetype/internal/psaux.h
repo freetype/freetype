@@ -20,9 +20,11 @@
 #ifndef __PSAUX_H__
 #define __PSAUX_H__
 
-#include   <ft2build.h>
-#include   FT_INTERNAL_OBJECTS_H
-#include   FT_INTERNAL_TYPE1_TYPES_H
+
+#include <ft2build.h>
+#include FT_INTERNAL_OBJECTS_H
+#include FT_INTERNAL_TYPE1_TYPES_H
+
 
 FT_BEGIN_HEADER
 

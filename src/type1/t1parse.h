@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef T1PARSE_H
-#define T1PARSE_H
+#ifndef __T1PARSE_H__
+#define __T1PARSE_H__
 
 
 #include <ft2build.h>
@@ -128,7 +128,7 @@ FT_BEGIN_HEADER
 
 FT_END_HEADER
 
-#endif /* T1PARSE_H */
+#endif /* __T1PARSE_H__ */
 
 
 /* END */

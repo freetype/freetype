@@ -19,6 +19,7 @@
 #ifndef __FREETYPE_H__
 #define __FREETYPE_H__
 
+
   /*************************************************************************/
   /*                                                                       */
   /* The `raster' component duplicates some of the declarations in         */
@@ -42,7 +43,9 @@
 #include FT_ERRORS_H
 #include FT_TYPES_H
 
+
 FT_BEGIN_HEADER
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -2282,6 +2285,7 @@ FT_BEGIN_HEADER
                                           FT_Matrix*  matrix );
 
   /* */
+
 
 FT_END_HEADER
 

@@ -32,12 +32,15 @@
   /*************************************************************************/
 
 
-#ifndef AHLOADER_H
-#define AHLOADER_H
+#ifndef __AHLOADER_H__
+#define __AHLOADER_H__
+
 
 #include <ft2build.h>
 
+
 FT_BEGIN_HEADER
+
 
 #ifdef _STANDALONE_
 
@@ -121,9 +124,10 @@ FT_BEGIN_HEADER
 
 #endif /* _STANDALONE_ */
 
+
 FT_END_HEADER
 
-#endif /* AHLOADER_H */
+#endif /* __AHLOADER_H__ */
 
 
 /* END */

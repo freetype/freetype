@@ -29,9 +29,10 @@
 #define __FT_MAC_H__
 
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
+#include <ft2build.h>
+
+
+FT_BEGIN_HEADER
 
 
   /*************************************************************************/
@@ -70,9 +71,7 @@
                                                 FT_Face    *aface );
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
 
 #endif /* __FT_MAC_H__ */
