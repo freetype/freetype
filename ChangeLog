@@ -2,7 +2,42 @@
 
 	* CHANGES: Reformatted, minor fixes.
 	* TODO: Updated.
+	* README: Formatting.
 	* include/freetype/freetype.h: Formatting.
+
+	* Jamfile: Fix typo.
+
+	* src/cff/cffparse.c: Move error code #defines to...
+	* include/freetype/internal/cfferrs.h: This file.
+	* src/cff/cffdrivr.c, src/cff/cffobjs.c, src/cff/cffload.c: Replaced
+	`FT_Err_*' with `CFF_Err_*'.
+	* src/cid/cidparse.c: Replaced `FT_Err_*' with `T1_Err_*'.
+	* src/psaux/psobjs.c, src/psaux/t1decode.c: Ditto.
+	* src/sfnt/sfobcs.c, src/sfnt/ttload.c: Replaced `FT_Err_*' with
+	`TT_Err_*'.
+	* src/truetype/ttgload.c, src/truetype/ttobjs.c: Ditto.
+	* src/type1/t1gload.c, src/type1/t1load.c, src/type1/t1objs.c,
+	src/type1/t1parse.c: Replaced `FT_Err_*' with `T1_Err_*'.
+
+	* include/freetype/internal/cfferrs.h: Add
+	`CFF_Err_Unknown_File_Format'.
+	* include/freetype/internal/t1errors.h: Add
+	`T1_Err_Unknown_File_Format'.
+	* include/freetype/internal/tterrors.h: Add
+	`TT_Err_Unknown_File_Format'.
+
+	* src/cff/cffload.h: Add `cff_*_encoding' and `cff_*_charset'
+	references.
+	* src/psaux/psobjs.c: Include `FT_INTERNAL_TYPE1_ERRORS_H'.
+
+	* src/cff/cffobjs.c (CFF_Init_Face, CFF_Done_Face): Use
+	FT_LOCAL_DEF.
+	* src/cid/cidobjs.c (CID_Done_Driver): Ditto.
+	* src/trutype/ttobjs.c (TT_Init_Face, TT_Done_Face, TT_Init_Size):
+	Ditto.
+	* src/type1/t1objs.c (T1_Done_Driver): Ditto.
+	* src/pcf/pcfdriver.c (PCF_Done_Face): Ditto.
+	* src/pcf/pcf.h: Use FT_LOCAL for `PCF_Done_Face'.
 
 2001-04-02  Tom Kacvinsky  <tjk@ams.org>
 

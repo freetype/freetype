@@ -32,10 +32,6 @@
 #define FT_COMPONENT  trace_cffparse
 
 
-#define CFF_Err_Stack_Underflow  FT_Err_Invalid_Argument
-#define CFF_Err_Syntax_Error     FT_Err_Invalid_Argument
-
-
   enum
   {
     cff_kind_none = 0,

@@ -43,6 +43,7 @@ FT_BEGIN_HEADER
 
   /* High level API errors. */
 
+#define CFF_Err_Unknown_File_Format        FT_Err_Unknown_File_Format
 #define CFF_Err_Invalid_File_Format        FT_Err_Invalid_File_Format
 #define CFF_Err_Invalid_Argument           FT_Err_Invalid_Argument
 #define CFF_Err_Invalid_Driver_Handle      FT_Err_Invalid_Driver_Handle
@@ -64,6 +65,11 @@ FT_BEGIN_HEADER
   /* General glyph outline errors. */
 
 #define CFF_Err_Invalid_Composite          FT_Err_Invalid_Composite
+
+  /* CFF parser errors. */
+
+#define CFF_Err_Stack_Underflow            FT_Err_Invalid_Argument
+#define CFF_Err_Syntax_Error               FT_Err_Invalid_Argument
 
   /* Bytecode interpreter error codes. */
 

@@ -23,7 +23,7 @@ SubDirHdr += $(FT2_INCLUDE) ;
 # uncomment the following line if you want to build individual source files
 # for each FreeType 2 module.
 #
-# FT2_MULTI = true;
+# FT2_MULTI = true ;
 
 # the file <freetype/config/ft2build.h> is used to define macros that are
 # later used in #include statements.. it needs to be parsed in order to

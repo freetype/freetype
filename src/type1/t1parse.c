@@ -207,7 +207,7 @@
                       "%!FontType", 10 )              )  )
       {
         FT_TRACE2(( "[not a Type1 font]\n" ));
-        error = FT_Err_Unknown_File_Format;
+        error = T1_Err_Unknown_File_Format;
       }
       else
       {
@@ -321,7 +321,7 @@
         error = read_pfb_tag( stream, &tag, &size );
         if ( error || tag != 0x8002 )
         {
-          error = FT_Err_Ok;
+          error = T1_Err_Ok;
           break;
         }
 

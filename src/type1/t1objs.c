@@ -332,7 +332,7 @@
 
           /* simply clear the error in case of failure (which really) */
           /* means that out of memory or no unicode glyph names       */
-          error = FT_Err_Ok;
+          error = T1_Err_Ok;
         }
       }
 
@@ -403,7 +403,7 @@
   /* <Input>                                                               */
   /*    driver  :: A handle to the target Type 1 driver.                   */
   /*                                                                       */
-  FT_LOCAL
+  FT_LOCAL_DEF
   void  T1_Done_Driver( T1_Driver  driver )
   {
     FT_UNUSED( driver );

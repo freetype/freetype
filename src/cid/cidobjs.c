@@ -371,7 +371,7 @@
   /* <Input>                                                               */
   /*    driver :: A handle to the target CID driver.                       */
   /*                                                                       */
-  FT_LOCAL
+  FT_LOCAL_DEF
   void  CID_Done_Driver( CID_Driver  driver )
   {
     FT_UNUSED( driver );

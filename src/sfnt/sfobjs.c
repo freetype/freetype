@@ -199,7 +199,7 @@
       sfnt = (SFNT_Interface*)FT_Get_Module_Interface( library, "sfnt" );
       if ( !sfnt )
       {
-        error = FT_Err_Invalid_File_Format;
+        error = TT_Err_Invalid_File_Format;
         goto Exit;
       }
 
@@ -328,7 +328,7 @@
     {
       /* return an error if this font file has no outlines */
       if ( error == TT_Err_Table_Missing && has_outline )
-        error = FT_Err_Ok;
+        error = TT_Err_Ok;
       else
         goto Exit;
     }
