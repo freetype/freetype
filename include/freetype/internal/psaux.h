@@ -71,7 +71,7 @@ FT_BEGIN_HEADER
 
     FT_Error
     (*add)( PS_Table    table,
-            FT_Int      index,
+            FT_Int      idx,
             void*       object,
             FT_PtrDist  length );
 

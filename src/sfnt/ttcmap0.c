@@ -1835,7 +1835,7 @@
       if ( offset && table + offset + 2 < limit )
       {
         FT_Byte*                       cmap   = table + offset;
-        FT_UInt                        format = TT_PEEK_USHORT( cmap );
+        volatile FT_UInt               format = TT_PEEK_USHORT( cmap );
         const TT_CMap_Class* volatile  pclazz = tt_cmap_classes;
         TT_CMap_Class                  clazz;
 
