@@ -1,5 +1,12 @@
 2001-12-19  David Turner  <david@freetype.org>
 
+        * src/truetype/ttgload.c (TT_Load_Glyph), src/base/ftobjs.c
+        (FT_Load_Glyph): "fixed" the bug that prevented embedded bitmaps from
+        begin loaded when the auto-hinter is used.. This actually is a hack
+        but will be enough until the internal re-design scheduled for
+        FreeType 2.1
+
+
         * include/freetype/cache/ftcache.h: added comments to indicate that
         some of the exported functions should only be used by applications
         that need to implement custom cache types

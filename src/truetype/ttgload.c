@@ -1411,6 +1411,10 @@
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
+    /* return immediately if we only wanted the embedded bitmaps */
+    if ( load_flags & FT_LOAD_SBITS_ONLY )
+      return FT_Err_Invalid_Argument;
+
     /* seek to the beginning of the glyph table.  For Type 42 fonts      */
     /* the table might be accessed from a Postscript stream or something */
     /* else...                                                           */

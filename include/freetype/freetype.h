@@ -2068,6 +2068,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #define FT_LOAD_LINEAR_DESIGN  8192
 
+  /* temporary hack !! */
+#define FT_LOAD_SBITS_ONLY     16384
+
 
   /*************************************************************************/
   /*                                                                       */
