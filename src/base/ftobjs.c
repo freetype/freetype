@@ -612,6 +612,28 @@
     if ( face->generic.finalizer )
       face->generic.finalizer( face );
 
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+
+    /* discard charmaps */
+    {
+      FT_Int  n;
+      
+      for ( n = 0; n < face->num_charmaps; n++ )
+      {
+        FT_CMap  cmap = FT_CMAP( face->charmaps[n] );
+        
+        FT_CMap_Done( cmap );
+        
+        face->charmaps[n] = NULL;
+      }
+      
+      FT_FREE( face->charmaps );
+      face->num_charmaps = 0;
+    }
+
+#endif /* FT_CONFIG_OPTION_USE_CMAPS */
+
+
     /* finalize format-specific stuff */
     if ( clazz->done_face )
       clazz->done_face( face );

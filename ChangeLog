@@ -1,5 +1,10 @@
 2002-03-22  David Turner    <david@freetype.org>
 
+        * src/base/ftobjs.c, src/sfnt/ttcmap0.c, src/type1/t1objs.c:
+        
+          various fixes to make the FT_CMaps support work correctly
+          (more tests are still needed)
+
         * include/freetype/internal/ftobjs.h,
           src/sfnt/Jamfile, src/sfnt/rules.mk,
           src/sfnt/sfnt.c, src/sfnt/sfobjs.c,

@@ -324,9 +324,7 @@
       FT_Face  root = (FT_Face)&face->root;
 
 
-      root->num_glyphs   = face->type1.num_glyphs;
-      root->num_charmaps = 1;
-
+      root->num_glyphs = face->type1.num_glyphs;
       root->face_index = face_index;
       root->face_flags = FT_FACE_FLAG_SCALABLE;
 
