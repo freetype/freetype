@@ -1,32 +1,35 @@
 2003-08-18  David Turner  <david@freetype.org>
 
-        * include/freetype/config/ftoption.h: disabling TrueType bytecode
-        interpreter, until the UNPATENTED_HINTING works as advertised
+	* include/freetype/config/ftoption.h: Disabling TrueType bytecode
+	interpreter until the UNPATENTED_HINTING works as advertised.
 
-        * src/autohint/ahhint.c (ah_hinter_load_glyph): fixed bug
+	* src/autohint/ahhint.c (ah_hinter_load_glyph): Use `|' for
+	setting `load_flags'.
 
-        * Jamfile: adding the "refdoc" target to the Jamfile in order to
-        build the API Reference in "docs/reference" automatically
+	* Jamfile: Adding the `refdoc' target to the Jamfile in order to
+	build the API Reference in `docs/reference' automatically.
 
-        * include/freetype/t1tables.h, src/cid/cidtoken.h, src/type1/t1tokens.h,
-        src/type42/t42parse.c:
+	* include/freetype/t1tables.h (PS_FontInfoRec), src/cid/cidtoken.h,
+	src/type1/t1tokens.h, src/type42/t42parse.c: Resetting the types of
+	`italic_angle', `underline_position', and `underline_thickness' to
+	their previous values (i.e., long, short, and ushort) in order to
+	avoid breaking binary compatibility.
 
-        re-setting the types of "italic_angle", "underline_position" and
-        "underline_thickness" to their previous values (i.e. long, short and
-        ushort), in order to avoid breaking binary compatibility
+	* include/freetype/ttunpat.h: Fixing documentation comment.
 
-        * include/freetype/ttunpath.h: fixing documentation comment
+	* include/freetype/config/ftoption.h, devel/ftoption.h
+	(TT_CONFIG_OPTION_OPTION_COMPILE_UNPATENTED_HINTING): Replaced
+	with...
+	(TT_CONFIG_OPTION_UNPATENTED_HINTING): This.  Updated all users.
+	(TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING): Removed.
 
-        * include/freetype/config/ftoption.h, devel/ftoption.h,
-        include/freetype/internal/ftobjs.h, include/freetype/internal/tttypes.h,
-        src/truetype/ttinterp.c, src/truetype/ttobjs.c, src/truetype/ttobjs.h:
+	* include/freetype/internal/ftobjs.h (FT_DEBUG_HOOK_TYPE1): Removed.
+	(FT_DEBUG_HOOK_UNPATENTED_HINTING): New macro.  Use this with
+	`FT_Set_Debug_Hook' to get the same effect as the removed
+	TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING.
 
-        changed the name of TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING to
-        the simpler TT_CONFIG_OPTION_UNPATENTED_HINTING
-
-        removed the macro TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING. Instead,
-        the same effect can be used by setting a debug-hook with
-        FT_DEBUG_HOOK_UNPATENTED_HINTING globally with FT_Set_Debug_Hook()
+	* src/truetype/ttobjs.c (tt_face_init): Use
+	`FT_DEBUG_HOOK_UNPATENTED_HINTING'.
 
 2003-08-06  Werner Lemberg  <wl@gnu.org>
 

@@ -232,7 +232,7 @@
        ( library->debug_hooks[ FT_DEBUG_HOOK_UNPATENTED_HINTING ] != NULL );
 
     {
-      int i;
+      int  i;
 
 
       for ( i = 0; i < num_params && !face->unpatented_hinting; i++ )
