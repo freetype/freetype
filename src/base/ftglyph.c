@@ -541,7 +541,8 @@
         clazz->glyph_bbox( glyph, acbox );
 
         /* perform grid fitting if needed */
-        if ( bbox_mode & ft_glyph_bbox_gridfit )
+        if ( bbox_mode == FT_GLYPH_BBOX_GRIDFIT ||
+             bbox_mode == FT_GLYPH_BBOX_PIXELS  )
         {
           acbox->xMin &= -64;
           acbox->yMin &= -64;
@@ -550,7 +551,8 @@
         }
 
         /* convert to integer pixels if needed */
-        if ( bbox_mode & ft_glyph_bbox_truncate )
+        if ( bbox_mode == FT_GLYPH_BBOX_TRUNCATE ||
+             bbox_mode == FT_GLYPH_BBOX_PIXELS   )
         {
           acbox->xMin >>= 6;
           acbox->yMin >>= 6;

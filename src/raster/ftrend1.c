@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph rasterizer interface (body).                      */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -212,7 +212,7 @@
   const FT_Renderer_Class  ft_raster1_renderer_class =
   {
     {
-      ft_module_renderer,
+      FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
       "raster1",
@@ -245,7 +245,7 @@
   const FT_Renderer_Class  ft_raster5_renderer_class =
   {
     {
-      ft_module_renderer,
+      FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
       "raster5",

@@ -382,10 +382,10 @@
   const FT_Driver_ClassRec  tt_driver_class =
   {
     {
-      ft_module_font_driver     |
-      ft_module_driver_scalable |
+      FT_MODULE_FONT_DRIVER        |
+      FT_MODULE_DRIVER_SCALABLE    |
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-      ft_module_driver_has_hinter,
+      FT_MODULE_DRIVER_HAS_HINTER,
 #else
       0,
 #endif

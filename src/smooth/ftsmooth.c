@@ -284,7 +284,7 @@
   const FT_Renderer_Class  ft_smooth_renderer_class =
   {
     {
-      ft_module_renderer,
+      FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
       "smooth",
@@ -313,7 +313,7 @@
   const FT_Renderer_Class  ft_smooth_lcd_renderer_class =
   {
     {
-      ft_module_renderer,
+      FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
       "smooth-lcd",
@@ -343,7 +343,7 @@
   const FT_Renderer_Class  ft_smooth_lcdv_renderer_class =
   {
     {
-      ft_module_renderer,
+      FT_MODULE_RENDERER,
       sizeof( FT_RendererRec ),
 
       "smooth-lcdv",
