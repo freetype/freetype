@@ -1,3 +1,30 @@
+2003-04-25:  Graham Asher  <graham.asher@btinternet.com>
+
+	Added the optional unpatented hinting system for TrueType. It
+    allows typefaces which need hinting to produce correct glyph forms
+	(e.g., Chinese typefaces from Dynalab) to work acceptably without
+	infringing Apple patents. This system is compiled only if
+	TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING is defined in
+	ftoption.h.
+
+    * include/freetype/ttunpat.h: added header file ttunpat.h defining
+    FT_PARAM_TAG_UNPATENTED_HINTING.
+
+	* include/freetype/config/ftheader.h: Added macro FT_UNPATENTED_H
+    to use when including new header ttunpat.h.
+
+	* include/freetype/config/ftoption.h: Added configuration macros
+    (not defined, but in comments) for the unpatented hinting system.
+
+	* include/freetype/internal/tttypes.h: If unpatented hinting is
+    compiled the TrueType face object acquires a new element,
+    "FT_Bool unpatented_hinting".
+
+	* src/truetype/ttinterp.c, ttobjs.c, ttobjs.h: Added the unpatented
+	hinting system, which is compiled only if
+	TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING is defined in
+	ftoption.h.
+
 2003-04-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/bdf/bdflib.c (hash_bucket, hash_lookup): Use `const' for first
