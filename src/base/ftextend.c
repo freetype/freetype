@@ -1,34 +1,38 @@
-/*******************************************************************
- *
- *  ftextend.h                                                   2.0
- *
- *    Extensions Implementation
- *
- *  Copyright 1996-1999 by
- *  David Turner, Robert Wilhelm, and Werner Lemberg.
- *
- *  This file is part of the FreeType project, and may only be used
- *  modified and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
- *  this file you indicate that you have read the license and
- *  understand and accept it fully.
- *
- *  This is an updated version of the extension component, now
- *  located in the main library's source directory.  It allows
- *  the dynamic registration/use of various face object extensions
- *  through a simple API.
- *
- ******************************************************************/
+/***************************************************************************/
+/*                                                                         */
+/*  ftextend.h                                                             */
+/*                                                                         */
+/*  FreeType extensions implementation (body).                             */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used        */
+/*  modified and distributed under the terms of the FreeType project       */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
 
-#include "ftextend.h"
-#include "ftobjs.h"
+  /*************************************************************************/
+  /*                                                                       */
+  /*  This is an updated version of the extension component, now located   */
+  /*  in the main library's source directory.  It allows the dynamic       */
+  /*  registration/use of various face object extensions through a simple  */
+  /*  API.                                                                 */
+  /*                                                                       */
+  /*************************************************************************/
+
+#include <ftextend.h>
+#include <ftobjs.h>
 
 /* required by the tracing mode */
 #undef  FT_COMPONENT
-#define FT_COMPONENT      trace_extend
+#define FT_COMPONENT  trace_extend
 
 
-  typedef struct FT_Extension_Registry_
+  typedef struct  FT_Extension_Registry_
   {
     FT_Int              num_extensions;
     FT_Long             cur_offset;
@@ -37,17 +41,30 @@
   } FT_Extension_Registry;
 
 
-  /* Initialize the extension component */
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Init_Extensions                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Initializes the extension component.                               */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    driver :: A handle to the driver object.                           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   LOCAL_FUNC
   FT_Error  FT_Init_Extensions( FT_Driver  driver )
   {
-  FT_Error                error;
+    FT_Error                error;
     FT_Memory               memory;
     FT_Extension_Registry*  registry;
 
+
     memory = driver->library->memory;
-    if ( ALLOC( registry, sizeof (*registry) ) )
+    if ( ALLOC( registry, sizeof ( *registry ) ) )
       return error;
 
     registry->num_extensions = 0;
@@ -58,36 +75,64 @@
   }
 
 
-  /* Finalize the extension component */
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Done_Extensions                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Finalizes the extension component.                                 */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    driver :: A handle to the driver object.                           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   LOCAL_FUNC
   FT_Error  FT_Done_Extensions( FT_Driver  driver )
   {
     FT_Memory  memory = driver->memory;
+
     
     FREE( driver->extensions );
     return FT_Err_Ok;
   }
 
 
-  /* Register a new extension */
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Register_Extension                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Registers a new extension.                                         */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    driver :: A handle to the driver object.                           */
+  /*    class  :: A pointer to a class describing the extension.           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   EXPORT_FUNC
   FT_Error  FT_Register_Extension( FT_Driver            driver,
-                                   FT_Extension_Class*  clazz )
+                                   FT_Extension_Class*  class )
   {
     FT_Extension_Registry*  registry;
 
+
     registry = (FT_Extension_Registry*)driver->extensions;
-    if (registry)
+    if ( registry )
     {
       FT_Int               n   = registry->num_extensions;
       FT_Extension_Class*  cur = registry->classes + n;
+
       
       if ( n >= FT_MAX_EXTENSIONS )
         return FT_Err_Too_Many_Extensions;
 
-      *cur = *clazz;    
+      *cur = *class;    
 
       cur->offset  = registry->cur_offset;
 
@@ -99,20 +144,40 @@
   }
 
 
-  /* Query an extension block by extension_ID */
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Extension                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Queries an extension block by an extension ID string.              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face                :: A handle to the face object.                */
+  /*    extension_id        :: An ID string identifying the extension.     */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    extension_interface :: A generic pointer, usually pointing to a    */
+  /*                           table of functions implementing the         */
+  /*                           extension interface.                        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A pointer to the extension block.                                  */
+  /*                                                                       */
   EXPORT_FUNC
   void*  FT_Get_Extension( FT_Face      face,
                            const char*  extension_id,
                            void*       *extension_interface ) 
   {
     FT_Extension_Registry*  registry;
+
     
     registry = (FT_Extension_Registry*)face->driver->extensions;
-    if (registry && face->extensions)
+    if ( registry && face->extensions )
     {
       FT_Extension_Class*  cur   = registry->classes;
       FT_Extension_Class*  limit = cur + registry->num_extensions;
+
       
       for ( ; cur < limit; cur++ )
         if ( strcmp( cur->id, extension_id ) == 0 )
@@ -123,55 +188,92 @@
     }
     
     /* could not find the extension id */
+
     *extension_interface = 0;
     return 0;
   }
 
-  /* Destroy all extensions within a face object.  Called by the */
-  /* face object destructor.                                     */
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Destroy_Extensions                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Destroys all extensions within a face object.                      */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face :: A handle to the face object.                               */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Called by the face object destructor.                              */
+  /*                                                                       */
   LOCAL_FUNC
   FT_Error  FT_Destroy_Extensions( FT_Face  face )
   {
     FT_Extension_Registry*  registry;
     FT_Memory               memory;
-    
+
+ 
     registry = (FT_Extension_Registry*)face->driver->extensions;
-    if (registry && face->extensions)
+    if ( registry && face->extensions )
     {
       FT_Extension_Class*  cur   = registry->classes;
       FT_Extension_Class*  limit = cur + registry->num_extensions;
+
       
       for ( ; cur < limit; cur++ )
       {
         char*  ext = (char*)face->extensions + cur->offset;
         
-        if (cur->finalize)
+        if ( cur->finalize )
           cur->finalize( ext, face );
       }
       
       memory = face->driver->memory;
       FREE( face->extensions );
     }
+
     return FT_Err_Ok;
   }
 
 
-  /* Create an extension within a face object.  Called by the */
-  /* face object constructor.                                 */
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Create_Extensions                                               */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates an extension object within a face object for all           */
+  /*    registered extensions.                                             */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    face :: A handle to the face object.                               */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Called by the face object constructor.                             */
+  /*                                                                       */
   LOCAL_FUNC
   FT_Error  FT_Create_Extensions( FT_Face  face )
   {
     FT_Extension_Registry*  registry;
     FT_Memory               memory;
     FT_Error                error;
+
     
     face->extensions = 0;
     
-    /* load extensions registry, exit succesfully if none is there */
+    /* load extensions registry, exit successfully if none is there */
+
     registry = (FT_Extension_Registry*)face->driver->extensions;
-    if (!registry) return FT_Err_Ok;
+    if ( !registry )
+      return FT_Err_Ok;
     
     memory = face->driver->memory;
     if ( ALLOC( face->extensions, registry->cur_offset ) )
@@ -180,18 +282,21 @@
     {
       FT_Extension_Class*  cur   = registry->classes;
       FT_Extension_Class*  limit = cur + registry->num_extensions;
+
       
       for ( ; cur < limit; cur++ )
       {
         char*  ext = (char*)face->extensions + cur->offset;
         
-        if (cur->init)
+        if ( cur->init )
         {
           error = cur->init( ext, face );
-          if (error) break;
+          if ( error )
+            break;
         }
       }
     }
+
     return error;
   }
 

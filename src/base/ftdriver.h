@@ -42,7 +42,7 @@
   /*    A driver method used to create a new driver object for a given     */
   /*    format.                                                            */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    driver :: A handle to the `new' driver object.  The fields         */
   /*              `library', `system', and `lock' are already set when the */
   /*              base layer calls this method.                            */
@@ -64,14 +64,13 @@
   /*    this call, and that this function should NOT destroy the driver    */
   /*    object.                                                            */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    driver :: A handle to target driver object.                        */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   typedef FT_Error  (*FTDriver_doneDriver)( FT_Driver  driver );
-
 
   
   /*************************************************************************/
@@ -88,10 +87,12 @@
   /*    `postscript names' interface which can be used to retrieve the     */
   /*     PostScript name of a given glyph index).                          */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    driver    :: A handle to a driver object.                          */
-  /*    interface :: A string designing the interface.  Examples           */
-  /*                 are `sfnt', `post_names', `charmaps', etc.            */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    interface :: A string designing the interface.  Examples are       */
+  /*                 `sfnt', `post_names', `charmaps', etc.                */
   /*                                                                       */
   /* <Return>                                                              */
   /*    A typeless pointer to the extension's interface (normally a table  */
@@ -140,10 +141,14 @@
   /*    A driver method used to initialize a new face object.  The object  */
   /*    must be created by the caller.                                     */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    stream         :: The input stream.                                */
+  /*                                                                       */
+  /* <Input>                                                               */
   /*    typeface_index :: The face index in the font resource.  Used to    */
   /*                      access individual faces in collections.          */
+  /*                                                                       */
+  /* <Output>                                                              */
   /*    face           :: A handle to the new target face.                 */
   /*                                                                       */
   /* <Return>                                                              */
@@ -174,7 +179,7 @@
   /*    function does NOT destroy the object, that is the responsibility   */
   /*    of the caller.                                                     */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    face :: A handle to the target face object.                        */
   /*                                                                       */
   /* <Return>                                                              */
@@ -242,7 +247,7 @@
   /*    A driver method used to initialize a new size object.  The object  */
   /*    must be created by the caller.                                     */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    size :: A handle to the new size object.                           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -264,8 +269,10 @@
   /*    A driver method used to reset a size's character sizes (horizontal */
   /*    and vertical) expressed in fractional points.                      */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    size            :: A handle to the target size object.             */
+  /*                                                                       */
+  /* <Input>                                                               */
   /*    char_width      :: The character width expressed in 26.6           */
   /*                       fractional points.                              */
   /*    char_height     :: The character height expressed in 26.6          */
@@ -296,8 +303,10 @@
   /*    A driver method used to reset a size's character sizes (horizontal */
   /*    and vertical) expressed in integer pixels.                         */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    size         :: A handle to the target size object.                */
+  /*                                                                       */
+  /* <Input>                                                               */
   /*    pixel_width  :: The character width expressed in 26.6 fractional   */
   /*                    pixels.                                            */
   /*    pixel_height :: The character height expressed in 26.6 fractional  */
@@ -307,7 +316,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This function should work with all kinds of `Size' objects, either */
+  /*    This function should work with all kinds of `size' objects, either */
   /*    fixed or scalable ones.                                            */
   /*                                                                       */
   typedef FT_Error  (*FTDriver_setPixelSizes)( FT_Size  size,
@@ -325,7 +334,7 @@
   /*    does NOT destroy the object; this is the responsibility of the     */
   /*    caller.                                                            */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
   typedef void  (*FTDriver_doneSize)( FT_Size  size );
@@ -356,7 +365,7 @@
   /*    container where a single glyph can be loaded, either in outline or */
   /*    bitmap format.                                                     */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    slot :: A handle to the new glyph slot object.                     */
   /*                                                                       */
   /* <Return>                                                              */
@@ -374,7 +383,7 @@
   /*    A driver method used to finalize a given glyph slot.  The object   */
   /*    is not destroyed by this function.                                 */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    slot :: A handle to the new glyph slot object.                     */
   /*                                                                       */
   typedef void  (*FTDriver_doneGlyphSlot)( FT_GlyphSlot  slot );
@@ -388,11 +397,13 @@
   /* <Description>                                                         */
   /*    A driver method used to load a glyph within a given glyph slot.    */
   /*                                                                       */
-  /* <Input>                                                               */
+  /* <InOut>                                                               */
   /*    slot        :: A handle to target slot object where the glyph will */
   /*                   be loaded.                                          */
   /*    size        :: A handle to the source face size at which the glyph */
   /*                   must be scaled/loaded.                              */
+  /*                                                                       */
+  /* <Input>                                                               */
   /*    glyph_index :: The index of the glyph in the font file.            */
   /*    load_flags  :: A flag indicating what to load for this glyph.  The */
   /*                   FTLOAD_??? constants can be used to control the     */
