@@ -302,6 +302,7 @@
     return memory;
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -311,7 +312,7 @@
   /*    Discards memory manager.                                           */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    memory  :: handle to memory manager                                */
+  /*    memory :: A handle to the memory manager.                          */
   /*                                                                       */
   FT_EXPORT_FUNC( void )  FT_Done_Memory( FT_Memory  memory )
   {

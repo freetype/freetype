@@ -462,22 +462,22 @@
   /*                                                                       */
   typedef struct  FT_LibraryRec_
   {
-    FT_Memory           memory;           /* library's memory manager */
+    FT_Memory          memory;           /* library's memory manager */
 
-    FT_Generic          generic;
+    FT_Generic         generic;
 
-    FT_UInt             num_modules;
-    FT_Module           modules[FT_MAX_MODULES];  /* module objects  */
+    FT_UInt            num_modules;
+    FT_Module          modules[FT_MAX_MODULES];  /* module objects  */
 
-    FT_ListRec          renderers;        /* list of renderers        */
-    FT_Renderer         cur_renderer;     /* current outline renderer */
-    FT_Module           auto_hinter;
+    FT_ListRec         renderers;        /* list of renderers        */
+    FT_Renderer        cur_renderer;     /* current outline renderer */
+    FT_Module          auto_hinter;
 
-    FT_Byte*            raster_pool;      /* scan-line conversion */
+    FT_Byte*           raster_pool;      /* scan-line conversion */
                                           /* render pool          */
-    FT_ULong            raster_pool_size; /* size of render pool in bytes */
+    FT_ULong           raster_pool_size; /* size of render pool in bytes */
 
-    FT_DebugHook_Func   debug_hooks[4];
+    FT_DebugHook_Func  debug_hooks[4];
 
   } FT_LibraryRec;
 
@@ -498,21 +498,20 @@
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM
 
+  FT_EXPORT_DEF( FT_Error )  FT_New_Stream( const char*  filepathname,
+                                            FT_Stream    astream );
 
-  FT_EXPORT_DEF( FT_Error )   FT_New_Stream( const char*  filepathname,
-                                             FT_Stream    astream );
-
-  FT_EXPORT_DEF( void )       FT_Done_Stream( FT_Stream  stream );
+  FT_EXPORT_DEF( void )  FT_Done_Stream( FT_Stream  stream );
 
   FT_EXPORT_DEF( FT_Memory )  FT_New_Memory( void );
 
-  FT_EXPORT_DEF( void )       FT_Done_Memory( FT_Memory  memory );
+  FT_EXPORT_DEF( void )  FT_Done_Memory( FT_Memory  memory );
 
 #endif /* !FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM */
 
 
   /* Define default raster's interface.  The default raster is located in  */
-  /* `src/base/ftraster.c'                                                 */
+  /* `src/base/ftraster.c'.                                                */
   /*                                                                       */
   /* Client applications can register new rasters through the              */
   /* FT_Set_Raster() API.                                                  */

@@ -169,7 +169,7 @@ const FT_Module_Class*  ft_default_modules[] =
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Done_FreeType( FT_Library  library )
   {
-    if (library)
+    if ( library )
     {
       FT_Memory  memory = library->memory;
 
@@ -183,7 +183,6 @@ const FT_Module_Class*  ft_default_modules[] =
 
     return FT_Err_Ok;
   }
-
 
 
 /* END */
