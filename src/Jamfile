@@ -14,6 +14,7 @@ SubDirHdrs  [ FT2_SubDir  src ] ;
 #
 HDRMACRO  [ FT2_SubDir  include internal internal.h ] ;
 
+SubInclude  FT2_TOP src gzip ;
 SubInclude  FT2_TOP src autohint ;
 SubInclude  FT2_TOP src base ;
 SubInclude  FT2_TOP src bdf ;

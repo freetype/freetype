@@ -361,6 +361,17 @@
   /*                                                                       */
 #define FT_BDF_H  <freetype/ftbdf.h>
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
+  /*    FT_GZIP_H                                                          */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    the definitions of an API to support for gzip-compressed files.    */
+  /*                                                                       */
+#define FT_GZIP_H  <freetype/ftgzip.h>
+
 
   /*************************************************************************/
   /*                                                                       */

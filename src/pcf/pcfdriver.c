@@ -30,6 +30,8 @@ THE SOFTWARE.
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
+#include FT_GZIP_H
+#include FT_ERRORS_H
 
 #include "pcf.h"
 #include "pcfdriver.h"
@@ -208,6 +210,13 @@ THE SOFTWARE.
 
     FT_TRACE4(( "PCF_Face_Done: done face\n" ));
 
+    /* close gzip stream if any */
+    if ( face->root.stream == &face->gzip_stream )
+    {
+      FT_Stream_Close( &face->gzip_stream );
+      face->root.stream = face->gzip_source;
+    }
+
     return PCF_Err_Ok;
   }
 
@@ -228,7 +237,27 @@ THE SOFTWARE.
 
     error = pcf_load_font( stream, face );
     if ( error )
-      goto Fail;
+    {
+      FT_Error  error2;
+
+      /* this didn't work, try gzip support !! */
+      error2 = FT_Stream_OpenGzip( &face->gzip_stream, stream );
+      if ( error2 == FT_Err_Unimplemented_Feature )
+        goto Fail;
+
+      error = error2;
+      if ( error )
+        goto Fail;
+
+      face->gzip_source = stream;
+      face->root.stream = &face->gzip_stream;
+
+      stream = face->root.stream;
+
+      error = pcf_load_font( stream, face );
+      if ( error )
+        goto Fail;
+    }
 
     /* set-up charmap */
     {
