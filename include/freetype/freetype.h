@@ -271,10 +271,10 @@ FT_BEGIN_HEADER
   /*    where `size' is in points.                                         */
   /*                                                                       */
   /*    Windows FNT:                                                       */
-  /*      The `size', `x_ppem', and `y_ppem' parameters are not reliable:  */
-  /*      There exist fonts (e.g. app850.fon) which have a wrong size for  */
-  /*      some subfonts; since FNT files don't contain ppem but dpi values */
-  /*      the computed x_ppem and y_ppem numbers are thus wrong also.      */
+  /*      The `size' parameter is not reliable: There exist fonts (e.g.,   */
+  /*      app850.fon) which have a wrong size for some subfonts; x_ppem    */
+  /*      and y_ppem are thus set equal to pixel width and height given in */
+  /*      in the Windows FNT header.                                       */
   /*                                                                       */
   /*    TrueType embedded bitmaps:                                         */
   /*      `size', `width', and `height' values are not contained in the    */

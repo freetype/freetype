@@ -1,3 +1,9 @@
+2004-06-14  Huw D M Davies  <h.davies1@physics.ox.ac.uk>
+
+	* src/winfonts/winfnt.c (FNT_Face_Init): Set x_ppem and y_ppem
+	based on pixel_width and pixel_height.
+	(FNT_Size_Set_Pixels): Updated.
+
 2004-06-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/lzw/zopen.c: Comment out inclusion of signal.h and unistd.h.
@@ -658,8 +664,8 @@
 	Handle broken FNT files which don't have a trailing NULL byte
 	in the face name string.
 
-	* src/winfnt/winfnt.h (FNT_FontRec): New member `family_name'.
-	* src/winfnt/winfnt.c (fnt_font_done): Free font->family_name.
+	* src/winfonts/winfnt.h (FNT_FontRec): New member `family_name'.
+	* src/winfonts/winfnt.c (fnt_font_done): Free font->family_name.
 	(FNT_Face_Init): Append a final zero byte to the font face name.
 
 2004-03-30  Werner Lemberg  <wl@gnu.org>
@@ -7449,7 +7455,7 @@
 	(tt_driver_class): Add it.
 	* src/type1/t1driver.c (Get_Next_Char): New function.
 	(t1_driver_class): Add it.
-	* src/winfnt/winfnt.c (FNT_Get_Next_Char): New function.
+	* src/winfonts/winfnt.c (FNT_Get_Next_Char): New function.
 	(winfnt_driver_class): Add it.
 
 	* src/pcf/pcfread.c (pcf_load_font): For now, report Unicode for

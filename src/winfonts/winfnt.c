@@ -466,12 +466,8 @@
         bsize->height = (FT_Short)(
           font->header.pixel_height + font->header.external_leading );
         bsize->size   = font->header.nominal_point_size << 6;
-        bsize->x_ppem =
-          (FT_Pos)( ( font->header.horizontal_resolution * bsize->size + 36 )
-                    / 72 );
-        bsize->y_ppem =
-          (FT_Pos)( ( font->header.vertical_resolution* bsize->size + 36 )
-                    / 72 );
+        bsize->x_ppem = font->header.pixel_width << 6;
+        bsize->y_ppem = font->header.pixel_height << 6;
       }
 
       {
@@ -553,7 +549,7 @@
     FT_Face   root = FT_FACE( face );
 
 
-    if ( size->metrics.y_ppem == root->available_sizes->height )
+    if ( size->metrics.y_ppem == root->available_sizes->y_ppem >> 6 )
     {
       FNT_Font  font = face->font;
 
