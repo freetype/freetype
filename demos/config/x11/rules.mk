@@ -14,14 +14,16 @@
 #
 ifneq ($(findstring X11R6$(SEP)bin,$(PATH)),)
 xversion := X11R6
-endif
+else
 
 ifneq ($(findstring X11R5$(SEP)bin,$(PATH)),)
 xversion := X11R5
-endif
+else
 
 ifneq ($(findstring X11$(SEP)bin,$(PATH)),)
 xversion := X11
+endif
+endif
 endif
 
 ifdef xversion
@@ -47,9 +49,19 @@ X11_LIB        := $(X11_PATH)$(SEP)lib
 #
 GRAPH_LINK     += -L$(X11_LIB) -lX11
 
+# Solaris needs a -lsocket in GRAPH_LINK ..
+#
+UNAME := $(shell uname)
+ifneq ($(findstring $(UNAME),SunOS Solaris),)
+GRAPH_LINK += -lsocket
+endif
+
+
 # add the X11 driver object file to the graphics library
 #
 GRAPH_OBJS += $(OBJ_)grx11.$O
+
+
 
 GR_X11  := config$(SEP)x11
 GR_X11_ := $(GR_X11)$(SEP)
