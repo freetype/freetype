@@ -34,7 +34,7 @@
 
 FT_Library      library;    /* root library object */
 FT_Memory       memory;     /* system object */
-TT_Driver       driver;     /* truetype driver */
+FT_Driver       driver;     /* truetype driver */
 TT_Face         face;       /* truetype face */
 TT_Size         size;       /* truetype size */
 TT_GlyphSlot    glyph;      /* truetype glyph slot */
@@ -1203,6 +1203,8 @@ int    glyph_size;
     if (error) Panic( "could not initialise FreeType library" );
 
     memory = library->memory;
+    driver = FT_Get_Driver( library, "truetype" );
+    if (!driver) Panic( "could not find the TrueType driver in FreeType 2\n" );
     
     FT_Set_Debug_Hook( library,
                        FT_DEBUG_HOOK_TRUETYPE,
@@ -1212,8 +1214,7 @@ int    glyph_size;
     if (error) Panic( "could not open font resource" );
 
     /* find driver and check format */
-    driver = (TT_Driver)face->root.driver;
-    if (driver->root.interface.init_face != tt_driver_interface.init_face)
+    if ( face->root.driver != driver )
     {
       error = FT_Err_Invalid_File_Format;
       Panic( "This is not a TrueType font" );
