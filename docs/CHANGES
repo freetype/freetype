@@ -1,4 +1,20 @@
 
+LATEST CHANGES BETWEEN 2.1.7 and 2.1.6
+
+  I. IMPORTANT BUG FIXES
+
+    - Updated  to newest  libtool  version, fixing  build problems  on
+      various platforms.
+
+    - On  Unix  platforms,  `make  install' didn't  copy  the  correct
+      `ftconfig.h' file.
+
+  Note that version 2.1.7  contains the same library  C source code as
+  version 2.1.6.
+
+
+======================================================================
+
 LATEST CHANGES BETWEEN 2.1.6 and 2.1.5
 
   I. IMPORTANT BUG FIXES
@@ -18,23 +34,49 @@ LATEST CHANGES BETWEEN 2.1.6 and 2.1.5
     - Some  Windows   (bitmap)  FNT/FON  files   couldn't  be  handled
       correctly.
 
+
   II. IMPORTANT CHANGES
 
     - The internal  module API  has been heavily  changed in  favor of
       massive simplifications within the font engine.  This also means
       that authors of third-party modules must adapt their code to the
-      new scheme. NOTE: THE NEW SCHEME IS NOT FINISHED. PLEASE WAIT
-      UNTIL AT LEAST ANOTHER RELEASE !!
+      new scheme.
+
+      NOTE:  THE NEW SCHEME IS NOT COMPLETED YET.  PLEASE WAIT UNTIL A
+      FINAL ANNOUNCEMENT!
 
     - The PostScript  parser has been enhanced to  handle comments and
       strings   correctly.   Additionally,   more  syntax   forms  are
       recognized.
 
+    - Added the  optional unpatented hinting system  for TrueType.  It
+      allows  typefaces which  need hinting  to produce  correct glyph
+      forms (e.g., Chinese typefaces  from Dynalab) to work acceptably
+      without infringing Apple patents.   This system is compiled only
+      if  TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING  is  defined  in
+      ftoption.h (activated by default).
 
-=====================================================================
+
+  III. MISCELLANEOUS
+
+    - There  is now  a guard  in the  public header  files  to protect
+      against inclusion of freetype.h from FreeType 1.
+
+    - Direct inclusion of freetype.h  and other public header files no
+      longer works.  You have to use the documented scheme
+
+        #include <ft2build.h>
+        #include FT_FREETYPE_H
+
+      to load freetype.h with  a symbolic name.  This protects against
+      renaming  of public  header  files (which  shouldn't happen  but
+      actually  has, avoiding two  public header  files with  the same
+      name).
+
+
+======================================================================
 
 LATEST CHANGES BETWEEN 2.1.5 and 2.1.4
-
 
   I. IMPORTANT BUG FIXES
 
