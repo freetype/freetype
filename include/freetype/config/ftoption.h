@@ -337,14 +337,6 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* T1_MAX_STACK_DEPTH is the maximal depth of the token stack used by    */
-  /* the Type 1 parser (see t1load.c).  A minimum of 16 is required.       */
-  /*                                                                       */
-#define T1_MAX_STACK_DEPTH  16
-
-
-  /*************************************************************************/
-  /*                                                                       */
   /* T1_MAX_DICT_DEPTH is the maximal depth of nest dictionaries and       */
   /* arrays in the Type 1 stream (see t1load.c).  A minimum of 4 is        */
   /* required.                                                             */
@@ -363,9 +355,9 @@
   /*************************************************************************/
   /*                                                                       */
   /* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity.        */
+  /* A minimum of 16 is required..                                         */
   /*                                                                       */
 #define T1_MAX_CHARSTRINGS_OPERANDS  32
-
 
   /*************************************************************************/
   /*                                                                       */

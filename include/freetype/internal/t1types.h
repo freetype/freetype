@@ -165,6 +165,7 @@
     FT_FaceRec     root;
     T1_Font        type1;
     void*          psnames;
+    void*          psaux;
     void*          afm_data;
     FT_CharMapRec  charmaprecs[2];
     FT_CharMap     charmaps[2];

@@ -84,6 +84,10 @@
     trace_t1load,
     trace_t1objs,
 
+    /* Postcript helper module 'psaux' */
+    trace_t1decode,
+    trace_psobjs,
+
     /* experimental Type 1 driver components */
     trace_z1driver,
     trace_z1gload,

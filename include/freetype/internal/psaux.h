@@ -22,7 +22,7 @@
 
 
 #include <freetype/internal/ftobjs.h>
-
+#include <freetype/internal/t1types.h>
 
 #ifdef __cplusplus
   extern "C" {
@@ -419,6 +419,7 @@
     FT_Bool          path_begun;
     FT_Bool          load_points;
     FT_Bool          no_recurse;
+    FT_Bool          shift;
 
     FT_Error         error;         /* only used for memory errors */
     FT_Bool          metrics_only;
@@ -427,14 +428,14 @@
 
 
   typedef FT_Error  (*T1_Builder_Check_Points_Func) ( T1_Builder*  builder,
-                                                      FT_Int       count );
+                                                     FT_Int       count );
                                                       
   typedef void      (*T1_Builder_Add_Point_Func)    ( T1_Builder*  builder,
                                                       FT_Pos       x,
                                                       FT_Pos       y,
                                                       FT_Byte      flag );    
   
-  typedef void      (*T1_Builder_Add_Point1_Func)   ( T1_Builder*  builder,
+  typedef FT_Error  (*T1_Builder_Add_Point1_Func)   ( T1_Builder*  builder,
                                                       FT_Pos       x,
                                                       FT_Pos       y );
                                                     
@@ -465,6 +466,103 @@
   
   } T1_Builder_Funcs;
 
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                         T1 DECODER                            *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+#if 0
+#define T1_MAX_CHARSTRINGS_OPERANDS   64
+#define T1_MAX_SUBRS_CALLS            16
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* T1_MAX_SUBRS_CALLS details the maximum number of nested sub-routine   */
+  /* calls during glyph loading.                                           */
+  /*                                                                       */
+#define T1_MAX_SUBRS_CALLS  8
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity.        */
+  /* A minimum of 16 is required..                                         */
+  /*                                                                       */
+#define T1_MAX_CHARSTRINGS_OPERANDS  32
+#endif
+
+
+
+  typedef struct T1_Decoder_Zone_
+  {
+    FT_Byte*  cursor;
+    FT_Byte*  base;
+    FT_Byte*  limit;
+    
+  } T1_Decoder_Zone;
+
+
+  typedef struct T1_Decoder_        T1_Decoder;
+  typedef struct T1_Decoder_Funcs_  T1_Decoder_Funcs;
+
+  typedef  FT_Error  (*T1_Decoder_Parse_Func)( T1_Decoder*  decoder,
+                                               FT_UInt      glyph_index );
+
+  struct T1_Decoder_
+  {
+    T1_Builder               builder;
+
+    FT_Long                  stack[T1_MAX_CHARSTRINGS_OPERANDS];
+    FT_Long*                 top;
+
+    T1_Decoder_Zone          zones[T1_MAX_SUBRS_CALLS + 1];
+    T1_Decoder_Zone*         zone;
+
+    PSNames_Interface*       psnames;      /* for seac */
+    FT_UInt                  num_glyphs;
+    FT_Byte**                glyph_names;
+
+    FT_UInt                  lenIV;        /* internal for sub routine calls */
+    FT_UInt                  num_subrs;
+    FT_Byte**                subrs;
+    FT_Int*                  subrs_len;    /* array of subrs length (optional) */
+
+    FT_Matrix                font_matrix;
+
+    FT_Int                   flex_state;
+    FT_Int                   num_flex_vectors;
+    FT_Vector                flex_vectors[7];
+
+    T1_Blend*                blend;       /* for multiple master support */
+    
+    const T1_Decoder_Funcs*  funcs;
+    T1_Decoder_Parse_Func    parse_glyph;  
+  };
+
+
+  struct T1_Decoder_Funcs_
+  {
+    FT_Error     (*init)             ( T1_Decoder*            decoder,
+                                       FT_Face                face,
+                                       FT_Size                size,
+                                       FT_GlyphSlot           slot,
+                                       FT_Byte**              glyph_names,
+                                       T1_Blend*              blend,
+                                       T1_Decoder_Parse_Func  parse );
+    
+    void         (*done)             ( T1_Decoder*  decoder );
+    
+    FT_Error     (*parse_charstrings)( T1_Decoder*  decoder,
+                                       FT_Byte*     base,
+                                       FT_UInt      len );
+    
+  
+  };
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -478,6 +576,7 @@
     const PS_Table_Funcs*   t1_table_funcs;
     const T1_Parser_Funcs*  t1_parser_funcs;
     const T1_Builder_Funcs* t1_builder_funcs;
+    const T1_Decoder_Funcs* t1_decoder_funcs;
 
     void                  (*t1_decrypt)( FT_Byte*   buffer,
                                          FT_Int     length,
