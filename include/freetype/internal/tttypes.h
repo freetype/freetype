@@ -1333,11 +1333,11 @@ FT_BEGIN_HEADER
   /*                            not loaded by the driver on face opening.  */
   /*                            See the `ttpost' module for more details.  */
   /*                                                                       */
-  /*    cmap_table           :: Address of the face's 'cmap' SFNT table    */
+  /*    cmap_table           :: Address of the face's `cmap' SFNT table    */
   /*                            in memory (it's an extracted frame).       */
   /*                                                                       */
-  /*    cmap_size            :: The size in bytes of the 'cmap_table'      */
-  /*                            described above..                          */
+  /*    cmap_size            :: The size in bytes of the `cmap_table'      */
+  /*                            described above.                           */
   /*                                                                       */
   /*    num_charmaps         :: The number of character mappings in the    */
   /*                            font.                                      */
@@ -1359,19 +1359,19 @@ FT_BEGIN_HEADER
   /*                            given glyph within the face's font file.   */
   /*                                                                       */
   /*    forget_glyph_frame   :: A function used to forget the frame of a   */
-  /*                            given glyph when all data has been loaded  */
+  /*                            given glyph when all data has been loaded. */
   /*                                                                       */
   /*    read_glyph_header    :: A function used to read a glyph header.    */
-  /*                            It must be called between an 'access' and  */
-  /*                            'forget'                                   */
+  /*                            It must be called between an `access' and  */
+  /*                            `forget'.                                  */
   /*                                                                       */
   /*    read_simple_glyph    :: A function used to read a simple glyph.    */
   /*                            It must be called after the header was     */
-  /*                            read, and before the 'forget'              */
+  /*                            read, and before the `forget'.             */
   /*                                                                       */
   /*    read_composite_glyph :: A function used to read a composite glyph. */
   /*                            It must be called after the header was     */
-  /*                            read, and before the 'forget'              */
+  /*                            read, and before the `forget'.             */
   /*                                                                       */
   /*    sfnt                 :: A pointer to the SFNT `driver' interface.  */
   /*                                                                       */
@@ -1386,7 +1386,7 @@ FT_BEGIN_HEADER
   /*                            table (`gasp').  This table is optional in */
   /*                            TrueType/OpenType fonts.                   */
   /*                                                                       */
-  /*    pclt                 :: The 'pclt' SFNT table                      */
+  /*    pclt                 :: The `pclt' SFNT table.                     */
   /*                                                                       */
   /*    num_sbit_strikes     :: The number of sbit strikes, i.e., bitmap   */
   /*                            sizes, embedded in this font.              */
@@ -1454,7 +1454,7 @@ FT_BEGIN_HEADER
   /*                            interpreters field is also used to hook    */
   /*                            the debugger in `ttdebug'.                 */
   /*                                                                       */
-  /*    extra                :: reserved for third-party font drivers..    */
+  /*    extra                :: Reserved for third-party font drivers.     */
   /*                                                                       */
   typedef struct  TT_FaceRec_
   {

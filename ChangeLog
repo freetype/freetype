@@ -5,7 +5,9 @@
 
 	* src/sfnt/ttcmap0.c (TT_Build_CMaps): Removed compiler warnings.
 
-	* src/sfnt/sfobjs.c (tt_face_get_name): Bug-fix.
+	* src/sfnt/sfobjs.c (tt_name_entry_ascii_from_{utf16,ucs4,other}:
+	New functions.
+	(tt_face_get_name): Use them to properly extract an ascii font name.
 
 2002-03-30  Werner Lemberg  <wl@gnu.org>
 
