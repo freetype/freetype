@@ -1736,10 +1736,10 @@ FT_BEGIN_HEADER
   /*    recognized, or non-zero otherwise.                                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FT_Open_Face( FT_Library     library,
-                FT_Open_Args*  args,
-                FT_Long        face_index,
-                FT_Face       *aface );
+  FT_Open_Face( FT_Library           library,
+                const FT_Open_Args*  args,
+                FT_Long              face_index,
+                FT_Face             *aface );
 
 
   /*************************************************************************/

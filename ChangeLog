@@ -1,3 +1,10 @@
+2002-10-07  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h (FT_Open_Face): Use `const' for `args'
+	(suggested by Graham).
+	* src/base/ftobjs.c (FT_Open_Face): Updated.
+	(ft_input_stream_new): Ditto.
+
 2002-10-05  David Turner  <david@freetype.org>
 
         * src/pfr/pfrsbit.h, src/pfr/pfrsbit.c, src/pfr/pfrload.c,

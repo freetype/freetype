@@ -75,9 +75,9 @@
   /* create a new input stream from a FT_Open_Args structure */
   /*                                                         */
   static FT_Error
-  ft_input_stream_new( FT_Library     library,
-                       FT_Open_Args*  args,
-                       FT_Stream*     astream )
+  ft_input_stream_new( FT_Library           library,
+                       const FT_Open_Args*  args,
+                       FT_Stream*           astream )
   {
     FT_Error   error;
     FT_Memory  memory;
@@ -846,10 +846,10 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Open_Face( FT_Library     library,
-                FT_Open_Args*  args,
-                FT_Long        face_index,
-                FT_Face       *aface )
+  FT_Open_Face( FT_Library           library,
+                const FT_Open_Args*  args,
+                FT_Long              face_index,
+                FT_Face             *aface )
   {
     FT_Error     error;
     FT_Driver    driver;
