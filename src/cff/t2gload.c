@@ -15,29 +15,18 @@
 /*                                                                         */
 /***************************************************************************/
 
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_CALC_H
+#include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_SFNT_H
+#include FT_OUTLINE_H
+#include FT_TRUETYPE_TAGS_H
 
-#include <freetype/internal/ftdebug.h>
-#include <freetype/internal/ftcalc.h>
-#include <freetype/internal/ftstream.h>
-#include <freetype/internal/sfnt.h>
-#include <freetype/ftoutln.h>
-#include <freetype/tttags.h>
+#include FT_SOURCE_FILE(cff,cffload.h)
+#include FT_SOURCE_FILE(cff,t2gload.h)
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "t2load.h"
-#include "t2gload.h"
-
-#else
-
-#include <cff/t2load.h>
-#include <cff/t2gload.h>
-
-#endif
-
-
-#include <freetype/internal/t2errors.h>
+#include FT_INTERNAL_CFF_ERRORS_H
 
 
   /*************************************************************************/
@@ -522,14 +511,6 @@
     if ( outline->n_contours > 0 )
       outline->contours[outline->n_contours - 1] = outline->n_points - 1;
   }
-
-
-#define USE_ARGS( n )  do                            \
-                       {                             \
-                         top -= n;                   \
-                         if ( top < decoder->stack ) \
-                           goto Stack_Underflow;     \
-                       } while ( 0 )
 
 
   /*************************************************************************/
@@ -1979,14 +1960,14 @@
         (FT_Bool)( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
 
       /* now load the unscaled outline */
-      error = T2_Access_Element( &cff->charstrings_index, glyph_index,
-                                 &charstring, &charstring_len );
+      error = CFF_Access_Element( &cff->charstrings_index, glyph_index,
+                                  &charstring, &charstring_len );
       if ( !error )
       {
         T2_Prepare_Decoder( &decoder, glyph_index );
         error = T2_Parse_CharStrings( &decoder, charstring, charstring_len );
 
-        T2_Forget_Element( &cff->charstrings_index, &charstring );
+        CFF_Forget_Element( &cff->charstrings_index, &charstring );
       }
 
       /* save new glyph tables */

@@ -22,12 +22,9 @@
   /*************************************************************************/
 
 
-#ifdef FT_FLAT_COMPILE
-#  include "ftraster.h"
-#else
-#  include <raster/ftraster.h>
-#endif
-#include <freetype/internal/ftcalc.h>      /* for FT_MulDiv() only */
+#include <ft2build.h>
+#include FT_SOURCE_FILE(raster,ftraster.h)
+#include FT_INTERNAL_CALC_H   /* for FT_MulDiv only */
 
 
   /*************************************************************************/

@@ -18,22 +18,11 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ahhint.h"
-#include "ahglyph.h"
-#include "ahangles.h"
-
-#else
-
-#include <autohint/ahhint.h>
-#include <autohint/ahglyph.h>
-#include <autohint/ahangles.h>
-
-#endif
-
-#include <freetype/ftoutln.h>
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(autohint,ahhint.h)
+#include  FT_SOURCE_FILE(autohint,ahglyph.h)
+#include  FT_SOURCE_FILE(autohint,ahangles.h)
+#include  FT_OUTLINE_H
 
 
 #define FACE_GLOBALS( face )  ((AH_Face_Globals*)(face)->autohint.data)

@@ -16,25 +16,13 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/internal/ftdebug.h>
-#include <freetype/internal/tterrors.h>
-#include <freetype/internal/ftstream.h>
-#include <freetype/tttags.h>
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ttload.h"
-#include "ttcmap.h"
-
-#else
-
-#include <sfnt/ttload.h>
-#include <sfnt/ttcmap.h>
-
-#endif
-
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_TRUETYPE_ERRORS_H
+#include FT_INTERNAL_STREAM_H
+#include FT_TRUETYPE_TAGS_H
+#include FT_SOURCE_FILE(sfnt,ttload.h)
+#include FT_SOURCE_FILE(sfnt,ttcmap.h)
 
   /*************************************************************************/
   /*                                                                       */

@@ -15,25 +15,13 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "cidriver.h"
-#include "cidgload.h"
-
-#else
-
-#include <cid/cidriver.h>
-#include <cid/cidgload.h>
-
-#endif
-
-
-#include <freetype/internal/ftdebug.h>
-#include <freetype/internal/ftstream.h>
-#include <freetype/internal/psnames.h>
-
-#include <string.h>         /* for strcmp() */
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(cid,cidriver.h)
+#include  FT_SOURCE_FILE(cid,cidgload.h)
+#include  FT_INTERNAL_DEBUG_H
+#include  FT_INTERNAL_STREAM_H
+#include  FT_INTERNAL_POSTSCRIPT_NAMES_H
+#include  <string.h>         /* for strcmp() */
 
 
   /*************************************************************************/

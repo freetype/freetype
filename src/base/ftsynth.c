@@ -15,10 +15,10 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/internal/ftobjs.h>
-#include <freetype/ftoutln.h>
-#include <freetype/ftsynth.h>
+#include  <ft2build.h>
+#include  FT_INTERNAL_OBJECTS_H
+#include  FT_OUTLINE_H
+#include  FT_SYNTHESIS_H
 
 
 #define FT_BOLD_THRESHOLD  0x0100

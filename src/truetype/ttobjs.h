@@ -19,15 +19,12 @@
 #ifndef TTOBJS_H
 #define TTOBJS_H
 
+#include <ft2build.h>
+#include FT_INTERNAL_OBJECTS_H
+#include FT_INTERNAL_TRUETYPE_TYPES_H
+#include FT_INTERNAL_TRUETYPE_ERRORS_H
 
-#include <freetype/internal/ftobjs.h>
-#include <freetype/internal/tttypes.h>
-#include <freetype/internal/tterrors.h>
-
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
+FT_BEGIN_HEADER
 
 
   /*************************************************************************/
@@ -416,9 +413,7 @@
   void  TT_Done_Driver( TT_Driver  driver );
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
 #endif /* TTOBJS_H */
 

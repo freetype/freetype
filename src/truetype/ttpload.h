@@ -19,13 +19,10 @@
 #ifndef TTPLOAD_H
 #define TTPLOAD_H
 
-#include <freetype/internal/tttypes.h>
+#include <ft2build.h>
+#include FT_INTERNAL_TRUETYPE_TYPES_H
 
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   FT_LOCAL
   FT_Error  TT_Load_Locations( TT_Face    face,
@@ -39,11 +36,7 @@
   FT_Error  TT_Load_Programs( TT_Face    face,
                               FT_Stream  stream );
 
-
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* TTPLOAD_H */
 

@@ -19,22 +19,10 @@
 #ifndef CIDGLOAD_H
 #define CIDGLOAD_H
 
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(cid,cidobjs.h)
 
-#ifdef FT_FLAT_COMPILE
-
-#include "cidobjs.h"
-
-#else
-
-#include <cid/cidobjs.h>
-
-#endif
-
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
 #if 0
 
@@ -51,11 +39,7 @@
                             FT_Int         glyph_index,
                             FT_Int         load_flags );
 
-
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* CIDGLOAD_H */
 

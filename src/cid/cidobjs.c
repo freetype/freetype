@@ -15,26 +15,13 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/internal/ftdebug.h>
-#include <freetype/internal/ftstream.h>
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "cidgload.h"
-#include "cidload.h"
-
-#else
-
-#include <cid/cidgload.h>
-#include <cid/cidload.h>
-
-#endif
-
-
-#include <freetype/internal/psnames.h>
-#include <freetype/internal/psaux.h>
+#include  <ft2build.h>
+#include  FT_INTERNAL_DEBUG_H
+#include  FT_INTERNAL_STREAM_H
+#include  FT_SOURCE_FILE(cid,cidgload.h)
+#include  FT_SOURCE_FILE(cid,cidload.h)
+#include  FT_INTERNAL_POSTSCRIPT_NAMES_H
+#include  FT_INTERNAL_POSTSCRIPT_AUX_H
 
 
   /*************************************************************************/

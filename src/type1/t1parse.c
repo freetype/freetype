@@ -32,25 +32,13 @@
   /*                                                                       */
   /*************************************************************************/
 
-
-#include <freetype/internal/ftdebug.h>
-#include <freetype/internal/ftcalc.h>
-#include <freetype/internal/ftobjs.h>
-#include <freetype/internal/ftstream.h>
-#include <freetype/internal/t1errors.h>
-#include <freetype/internal/psaux.h>
-
-#ifdef FT_FLAT_COMPILE
-
-#include "t1parse.h"
-
-#else
-
-#include <type1/t1parse.h>
-
-#endif
-
-
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_CALC_H
+#include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_TYPE1_ERRORS_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include FT_SOURCE_FILE(type1,t1parse.h)
 #include <string.h>     /* for strncmp() */
 
 

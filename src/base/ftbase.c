@@ -16,27 +16,14 @@
 /***************************************************************************/
 
 
-#ifdef FT_FLAT_COMPILE
-
-#include "ftcalc.c"
-#include "ftobjs.c"
-#include "ftstream.c"
-#include "ftlist.c"
-#include "ftoutln.c"
-#include "ftextend.c"
-#include "ftnames.c"
-
-#else /* FT_FLAT_COMPILE */
-
-#include <base/ftcalc.c>
-#include <base/ftobjs.c>
-#include <base/ftstream.c>
-#include <base/ftlist.c>
-#include <base/ftoutln.c>
-#include <base/ftextend.c>
-#include <base/ftnames.c>
-
-#endif /* FT_FLAT_COMPILE */
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(base,ftcalc.c)
+#include  FT_SOURCE_FILE(base,ftobjs.c)
+#include  FT_SOURCE_FILE(base,ftstream.c)
+#include  FT_SOURCE_FILE(base,ftlist.c)
+#include  FT_SOURCE_FILE(base,ftoutln.c)
+#include  FT_SOURCE_FILE(base,ftextend.c)
+#include  FT_SOURCE_FILE(base,ftnames.c)
 
 
 /* END */

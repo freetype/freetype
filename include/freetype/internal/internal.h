@@ -33,6 +33,7 @@
 #define FT_INTERNAL_DEBUG_H             FT2_INTERNAL_FILE(ftdebug.h)
 #define FT_INTERNAL_CALC_H              FT2_INTERNAL_FILE(ftcalc.h)
 #define FT_INTERNAL_DRIVER_H            FT2_INTERNAL_FILE(ftdriver.h)
+#define FT_INTERNAL_EXTEND_H            FT2_INTERNAL_FILE(ftextend.h)
 
 #define FT_INTERNAL_SFNT_H              FT2_INTERNAL_FILE(sfnt.h)
 

@@ -21,23 +21,11 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#ifdef FT_FLAT_COMPILE
-
-#include "ahangles.c"
-#include "ahglyph.c"
-#include "ahglobal.c"
-#include "ahhint.c"
-#include "ahmodule.c"
-
-#else
-
-#include <autohint/ahangles.c>
-#include <autohint/ahglyph.c>
-#include <autohint/ahglobal.c>
-#include <autohint/ahhint.c>
-#include <autohint/ahmodule.c>
-
-#endif
-
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(autohint,ahangles.c)
+#include  FT_SOURCE_FILE(autohint,ahglyph.c)
+#include  FT_SOURCE_FILE(autohint,ahglobal.c)
+#include  FT_SOURCE_FILE(autohint,ahhint.c)
+#include  FT_SOURCE_FILE(autohint,ahmodule.c)
 
 /* END */

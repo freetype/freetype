@@ -23,10 +23,10 @@
   /*                                                                       */
   /*************************************************************************/
 
-
-#include <freetype/ftbbox.h>
-#include <freetype/ftimage.h>
-#include <freetype/ftoutln.h>
+#include  <ft2build.h>
+#include  FT_BBOX_H
+#include  FT_IMAGE_H
+#include  FT_OUTLINE_H
 
 
   typedef struct  TBBox_Rec_

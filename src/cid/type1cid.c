@@ -18,23 +18,11 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#ifdef FT_FLAT_COMPILE
-
-#include "cidparse.c"
-#include "cidload.c"
-#include "cidobjs.c"
-#include "cidriver.c"
-#include "cidgload.c"
-
-#else
-
-#include <cid/cidparse.c>
-#include <cid/cidload.c>
-#include <cid/cidobjs.c>
-#include <cid/cidriver.c>
-#include <cid/cidgload.c>
-
-#endif
-
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(cid,cidparse.c)
+#include  FT_SOURCE_FILE(cid,cidload.c)
+#include  FT_SOURCE_FILE(cid,cidobjs.c)
+#include  FT_SOURCE_FILE(cid,cidriver.c)
+#include  FT_SOURCE_FILE(cid,cidgload.c)
 
 /* END */

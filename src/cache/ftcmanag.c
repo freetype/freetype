@@ -15,11 +15,12 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/cache/ftcmanag.h>
-#include <freetype/internal/ftobjs.h>
-#include <freetype/internal/ftdebug.h>
-#include <freetype/ftlist.h>
+#include  <ft2build.h>
+#include  FT_CACHE_H
+#include  FT_CACHE_MANAGER_H
+#include  FT_INTERNAL_OBJECTS_H
+#include  FT_INTERNAL_DEBUG_H
+#include  FT_LIST_H
 
 
 #undef  FT_COMPONENT

@@ -18,18 +18,9 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ftraster.c"
-#include "ftrend1.c"
-
-#else
-
-#include <raster/ftraster.c>
-#include <raster/ftrend1.c>
-
-#endif
+#include <ft2build.h>
+#include FT_SOURCE_FILE(raster,ftraster.c)
+#include FT_SOURCE_FILE(raster,ftrend1.c)
 
 
 /* END */

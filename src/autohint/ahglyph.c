@@ -19,23 +19,11 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ahglyph.h"
-#include "ahangles.h"
-#include "ahglobal.h"
-
-#else
-
-#include <autohint/ahglyph.h>
-#include <autohint/ahangles.h>
-#include <autohint/ahglobal.h>
-
-#endif
-
-
-#include <stdio.h>
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(autohint,ahglyph.h)
+#include  FT_SOURCE_FILE(autohint,ahangles.h)
+#include  FT_SOURCE_FILE(autohint,ahglobal.h)
+#include  <stdio.h>
 
 
 #define xxxAH_DEBUG_GLYPH

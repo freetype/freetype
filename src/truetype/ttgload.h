@@ -19,30 +19,14 @@
 #ifndef TTGLOAD_H
 #define TTGLOAD_H
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ttobjs.h"
+#include <ft2build.h>
+#include FT_SOURCE_FILE(truetype,ttobjs.h)
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-#include "ttinterp.h"
+#include FT_SOURCE_FILE(truetype,ttinterp.h)
 #endif
 
-#else /* FT_FLAT_COMPILE */
-
-#include <truetype/ttobjs.h>
-
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-#include <truetype/ttinterp.h>
-#endif
-
-#endif /* FT_FLAT_COMPILE */
-
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   FT_LOCAL
   void  TT_Get_Metrics( TT_HoriHeader*  header,
@@ -59,9 +43,7 @@
                            FT_UShort     glyph_index,
                            FT_UInt       load_flags );
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
 #endif /* TTGLOAD_H */
 

@@ -15,10 +15,11 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/cache/ftlru.h>
-#include <freetype/ftlist.h>
-#include <freetype/internal/ftobjs.h>
+#include  <ft2build.h>
+#include  FT_CACHE_H
+#include  FT_CACHE_INTERNAL_LRU_H
+#include  FT_LIST_H
+#include  FT_INTERNAL_OBJECTS_H
 
 
   static

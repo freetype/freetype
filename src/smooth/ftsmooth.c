@@ -15,23 +15,11 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/internal/ftobjs.h>
-#include <freetype/ftoutln.h>
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ftsmooth.h"
-#include "ftgrays.h"
-
-#else
-
-#include <smooth/ftsmooth.h>
-#include <smooth/ftgrays.h>
-
-#endif
-
+#include <ft2build.h>
+#include FT_INTERNAL_OBJECTS_H
+#include FT_OUTLINE_H
+#include FT_SOURCE_FILE(smooth,ftsmooth.h)
+#include FT_SOURCE_FILE(smooth,ftgrays.h)
 
   /* initialize renderer -- init its raster */
   static

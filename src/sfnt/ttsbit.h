@@ -19,21 +19,10 @@
 #ifndef TTSBIT_H
 #define TTSBIT_H
 
+#include <ft2build.h>
+#include FT_SOURCE_FILE(sfnt,ttload.h)
 
-#ifdef FT_FLAT_COMPILE
-
-#include "ttload.h"
-
-#else
-
-#include <sfnt/ttload.h>
-
-#endif
-
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
+FT_BEGIN_HEADER
 
 
   FT_LOCAL
@@ -60,10 +49,7 @@
                                 TT_SBit_Metrics  *metrics );
 
 
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* TTSBIT_H */
 

@@ -60,26 +60,14 @@
   /*                                                                       */
   /*************************************************************************/
 
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_CONFIG_CONFIG_H
+#include FT_MULTIPLE_MASTERS_H
+#include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_INTERNAL_TYPE1_ERRORS_H
 
-#include <freetype/internal/ftdebug.h>
-#include <freetype/config/ftconfig.h>
-#include <freetype/ftmm.h>
-
-#include <freetype/internal/t1types.h>
-#include <freetype/internal/t1errors.h>
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "t1load.h"
-
-#else
-
-#include <type1/t1load.h>
-
-#endif
-
-
+#include FT_SOURCE_FILE(type1,t1load.h)
 #include <string.h>     /* for strncmp(), strcmp() */
 #include <ctype.h>      /* for isalnum()           */
 
@@ -1382,15 +1370,7 @@
   const T1_Field  t1_keywords[] =
   {
 
-#ifdef FT_FLAT_COMPILE
-
-#include "t1tokens.h"
-
-#else
-
-#include <type1/t1tokens.h>
-
-#endif
+#include FT_SOURCE_FILE(type1,t1tokens.h)
 
     /* now add the special functions... */
     T1_FIELD_CALLBACK( "FontName", parse_font_name )

@@ -19,22 +19,10 @@
 #ifndef T1AFM_H
 #define T1AFM_H
 
+#include <ft2build.h>
+#include FT_SOURCE_FILE(type1,t1objs.h)
 
-#ifdef FT_FLAT_COMPILE
-
-#include "t1objs.h"
-
-#else
-
-#include <type1/t1objs.h>
-
-#endif
-
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   typedef struct  T1_Kern_Pair_
   {
@@ -67,11 +55,7 @@
                         FT_UInt     glyph2,
                         FT_Vector*  kerning );
 
-
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* T1AFM_H */
 

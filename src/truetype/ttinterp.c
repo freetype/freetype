@@ -15,24 +15,12 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/internal/ftdebug.h>
-#include <freetype/internal/ftcalc.h>
-#include <freetype/ftsystem.h>
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ttinterp.h"
-
-#else
-
-#include <truetype/ttinterp.h>
-
-#endif
-
-
-#include <freetype/internal/tterrors.h>
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_CALC_H
+#include FT_SYSTEM_H
+#include FT_SOURCE_FILE(truetype,ttinterp.h)
+#include FT_INTERNAL_TRUETYPE_ERRORS_H
 
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER

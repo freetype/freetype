@@ -19,36 +19,24 @@
 #ifndef TTINTERP_H
 #define TTINTERP_H
 
+#include <ft2build.h>
+#include FT_SOURCE_FILE(truetype,ttobjs.h)
 
-#ifdef FT_FLAT_COMPILE
-
-#include "ttobjs.h"
-
-#else
-
-#include <truetype/ttobjs.h>
-
-#endif
-
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
 #ifndef TT_CONFIG_OPTION_STATIC_INTEPRETER  /* indirect implementation */
 
-#define EXEC_OP_   TT_ExecContext  exc,
-#define EXEC_OP    TT_ExecContext  exc
-#define EXEC_ARG_  exc,
-#define EXEC_ARG   exc
+#  define EXEC_OP_   TT_ExecContext  exc,
+#  define EXEC_OP    TT_ExecContext  exc
+#  define EXEC_ARG_  exc,
+#  define EXEC_ARG   exc
 
 #else                                       /* static implementation */
 
-#define EXEC_OP_   /* void */
-#define EXEC_OP    /* void */
-#define EXEC_ARG_  /* void */
-#define EXEC_ARG   /* void */
+#  define EXEC_OP_   /* void */
+#  define EXEC_OP    /* void */
+#  define EXEC_ARG_  /* void */
+#  define EXEC_ARG   /* void */
 
 #endif /* TT_CONFIG_OPTION_STATIC_INTERPRETER */
 
@@ -311,9 +299,7 @@
   FT_EXPORT( FT_Error )  TT_RunIns( TT_ExecContext  exec );
 
 
-#ifdef __cplusplus
-  }
-#endif
+FT_END_HEADER
 
 #endif /* TTINTERP_H */
 

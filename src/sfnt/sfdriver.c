@@ -15,43 +15,22 @@
 /*                                                                         */
 /***************************************************************************/
 
+#include <ft2build.h>
+#include FT_INTERNAL_SFNT_H
+#include FT_INTERNAL_OBJECTS_H
 
-#include <freetype/internal/sfnt.h>
-#include <freetype/internal/ftobjs.h>
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "sfdriver.h"
-#include "ttload.h"
-#include "ttcmap.h"
-#include "sfobjs.h"
+#include FT_SOURCE_FILE(sfnt,sfdriver.h)
+#include FT_SOURCE_FILE(sfnt,ttload.h)
+#include FT_SOURCE_FILE(sfnt,ttcmap.h)
+#include FT_SOURCE_FILE(sfnt,sfobjs.h)
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-#include "ttsbit.h"
+#include FT_SOURCE_FILE(sfnt,ttsbit.h)
 #endif
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-#include "ttpost.h"
+#include FT_SOURCE_FILE(sfnt,ttpost.h)
 #endif
-
-#else
-
-#include <sfnt/sfdriver.h>
-#include <sfnt/ttload.h>
-#include <sfnt/ttcmap.h>
-#include <sfnt/sfobjs.h>
-
-#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-#include <sfnt/ttsbit.h>
-#endif
-
-#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-#include <sfnt/ttpost.h>
-#endif
-
-#endif
-
 
 #include <string.h>     /* for strcmp() */
 

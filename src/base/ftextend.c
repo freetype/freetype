@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftextend.h                                                             */
+/*  ftextend.c                                                             */
 /*                                                                         */
 /*    FreeType extensions implementation (body).                           */
 /*                                                                         */
@@ -24,9 +24,9 @@
   /*                                                                       */
   /*************************************************************************/
 
-
-#include <freetype/internal/ftextend.h>
-#include <freetype/internal/ftdebug.h>
+#include  <ft2build.h>
+#include  FT_INTERNAL_EXTEND_H
+#include  FT_INTERNAL_DEBUG_H
 
 
   /*************************************************************************/

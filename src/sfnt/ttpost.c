@@ -24,23 +24,12 @@
   /*                                                                       */
   /*************************************************************************/
 
-
-#include <freetype/internal/ftstream.h>
-#include <freetype/internal/tterrors.h>
-#include <freetype/tttags.h>
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ttpost.h"
-#include "ttload.h"
-
-#else
-
-#include <sfnt/ttpost.h>
-#include <sfnt/ttload.h>
-
-#endif
+#include <ft2build.h>
+#include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_TRUETYPE_ERRORS_H
+#include FT_TRUETYPE_TAGS_H
+#include FT_SOURCE_FILE(sfnt,ttpost.h)
+#include FT_SOURCE_FILE(sfnt,ttload.h)
 
 
   /*************************************************************************/

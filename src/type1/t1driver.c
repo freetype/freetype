@@ -15,33 +15,18 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "t1driver.h"
-#include "t1gload.h"
-#include "t1load.h"
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(type1,t1driver.h)
+#include  FT_SOURCE_FILE(type1,t1gload.h)
+#include  FT_SOURCE_FILE(type1,t1load.h)
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
-#include "t1afm.h"
+#include  FT_SOURCE_FILE(type1,t1afm.h)
 #endif
 
-#else
-
-#include <type1/t1driver.h>
-#include <type1/t1gload.h>
-#include <type1/t1load.h>
-
-#ifndef T1_CONFIG_OPTION_NO_AFM
-#include <type1/t1afm.h>
-#endif
-
-#endif
-
-
-#include <freetype/internal/ftdebug.h>
-#include <freetype/internal/ftstream.h>
-#include <freetype/internal/psnames.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_POSTSCRIPT_NAMES_H
 
 #include <string.h>     /* for strcmp() */
 

@@ -23,41 +23,22 @@
 #ifndef AHTYPES_H
 #define AHTYPES_H
 
-
-#include <freetype/internal/ftobjs.h>  /* for freetype.h + FT_LOCAL etc. */
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ahloader.h"
-
-#else
-
-#include <autohint/ahloader.h>
-
-#endif
+#include  <ft2build.h>
+#include  FT_INTERNAL_OBJECTS_H
+#include  FT_SOURCE_FILE(autohint,ahloader.h)
 
 
 #define xxAH_DEBUG
 
 
 #ifdef AH_DEBUG
-
-#include <stdio.h>
-
-#define AH_LOG( x )  printf##x
-
+#  include <stdio.h>
+#  define AH_LOG( x )  printf##x
 #else
-
-#define AH_LOG( x )  do ; while ( 0 ) /* nothing */
-
+#  define AH_LOG( x )  do ; while ( 0 ) /* nothing */
 #endif
 
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*************************************************************************/
@@ -495,10 +476,7 @@
   } AH_Hinter;
 
 
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* AHTYPES_H */
 

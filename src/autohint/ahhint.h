@@ -22,22 +22,10 @@
 #ifndef AHHINT_H
 #define AHHINT_H
 
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(autohint,ahglobal.h)
 
-#ifdef FT_FLAT_COMPILE
-
-#include "ahglobal.h"
-
-#else
-
-#include <autohint/ahglobal.h>
-
-#endif
-
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
 #define AH_HINT_DEFAULT        0
 #define AH_HINT_NO_ALIGNMENT   1
@@ -75,11 +63,7 @@
   void  ah_hinter_done_global_hints( AH_Hinter*  hinter,
                                      void*       global_hints );
 
-
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* AHHINT_H */
 
