@@ -16,9 +16,13 @@
 /***************************************************************************/
 
 
-#include <cache/ftcmanag.h>
+#include <freetype/cache/ftcmanag.h>
 #include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftdebug.h>
+#include <freetype/ftlist.h>
 
+#undef   FT_COMPONENT
+#define  FT_COMPONENT  trace_cache
 
 #define FTC_LRU_GET_MANAGER( lru )  (FTC_Manager)lru->user_data
 
@@ -38,6 +42,7 @@
   {
     FTC_Manager  manager = FTC_LRU_GET_MANAGER( lru );
     FT_Error     error;
+    FT_Face      face;
     
 
     error = manager->request_face( (FTC_FaceID)node->key,
@@ -47,9 +52,7 @@
     if ( !error )
     {
       /* destroy initial size object; it will be re-created later */
-      FT_Face  face = (FT_Face)node->root.data;
-
-
+      face = (FT_Face)node->root.data;
       FT_Done_Size( face->size );
     }
 
@@ -89,23 +92,23 @@
   }
 
 
-  typedef struct  FTC_SizeRequest_
+  typedef struct  FTC_FontRequest_
   {
     FT_Face    face;
     FT_UShort  width;
     FT_UShort  height;
     
-  } FTC_SizeRequest;
+  } FTC_FontRequest;
 
 
   LOCAL_FUNC_X
   FT_Error  ftc_manager_init_size( FT_Lru      lru,
                                    FT_LruNode  node )
   {
-    FTC_SizeRequest*  size_req = (FTC_SizeRequest*)node->key;
+    FTC_FontRequest*  font_req = (FTC_FontRequest*)node->key;
     FT_Size           size;
     FT_Error          error;
-    FT_Face           face = size_req->face;
+    FT_Face           face = font_req->face;
     
     FT_UNUSED( lru );
 
@@ -116,8 +119,8 @@
     {
       face->size = size;
       error = FT_Set_Pixel_Sizes( face,
-                                  size_req->width,
-                                  size_req->height );
+                                  font_req->width,
+                                  font_req->height );
       if ( error )
         FT_Done_Size( size );
       else
@@ -142,7 +145,7 @@
                                     FT_LruNode  node,
                                     FT_LruKey   key )
   {
-    FTC_SizeRequest*  req  = (FTC_SizeRequest*)key;
+    FTC_FontRequest*  req  = (FTC_FontRequest*)key;
     FT_Size           size = (FT_Size)node->root.data;
     FT_Error          error;
     
@@ -168,7 +171,7 @@
   FT_Bool  ftc_manager_compare_size( FT_LruNode  node,
                                      FT_LruKey   key )
   {
-    FTC_SizeRequest*  req  = (FTC_SizeRequest*)key;
+    FTC_FontRequest*  req  = (FTC_FontRequest*)key;
     FT_Size           size = (FT_Size)node->root.data;
     
     FT_UNUSED( node );
@@ -203,6 +206,7 @@
   FT_EXPORT_FUNC( FT_Error )  FTC_Manager_New( FT_Library          library,
                                                FT_UInt             max_faces,
                                                FT_UInt             max_sizes,
+                                               FT_ULong            max_bytes,
                                                FTC_Face_Requester  requester,
                                                FT_Pointer          req_data,
                                                FTC_Manager*        amanager )
@@ -221,10 +225,13 @@
       goto Exit;
     
     if ( max_faces == 0 )
-      max_faces = FTC_MAX_FACES;
+      max_faces = FTC_MAX_FACES_DEFAULT;
       
     if ( max_sizes == 0 )
-      max_sizes = FTC_MAX_SIZES;
+      max_sizes = FTC_MAX_SIZES_DEFAULT;
+      
+    if ( max_bytes == 0 )
+      max_bytes = FTC_MAX_BYTES_DEFAULT;
       
     error = FT_Lru_New( &ftc_face_lru_class,
                         max_faces,
@@ -245,6 +252,7 @@
       goto Exit;
     
     manager->library      = library;
+    manager->max_bytes    = max_bytes;
     manager->request_face = requester;
     manager->request_data = req_data;
     *amanager = manager;
@@ -264,6 +272,7 @@
   FT_EXPORT_DEF( void )  FTC_Manager_Done( FTC_Manager  manager )
   {
     FT_Memory  memory;
+    FT_UInt    index;
     
 
     if ( !manager || !manager->library )
@@ -271,19 +280,35 @@
 
     memory = manager->library->memory;
 
+    /* now discard all caches */
+    for (index = 0; index < FTC_MAX_CACHES; index++ )
+    {
+      FTC_Cache  cache = manager->caches[index];
+      
+      
+      if (cache)
+      {
+        cache->clazz->done_cache( cache );
+        FREE(cache);
+        manager->caches[index] = 0;
+      }
+    }
+    
+    /* discard faces and sizes */
     FT_Lru_Done( manager->sizes_lru );
     FT_Lru_Done( manager->faces_lru );
+    
     FREE( manager );
   }
 
 
   FT_EXPORT_DEF( void )  FTC_Manager_Reset( FTC_Manager  manager )
   {
-    if ( !manager )
-      return;
-
-    FT_Lru_Reset( manager->sizes_lru );
-    FT_Lru_Reset( manager->faces_lru );
+    if (manager )
+    {
+      FT_Lru_Reset( manager->sizes_lru );
+      FT_Lru_Reset( manager->faces_lru );
+    }
   }
 
 
@@ -298,14 +323,14 @@
                            (FT_LruKey)face_id, 
                            (FT_Pointer*)aface );
   }
- 
- 
+
+
   FT_EXPORT_DEF( FT_Error )  FTC_Manager_Lookup_Size( FTC_Manager  manager,
-                                                      FTC_SizeID   size_id,
+                                                      FTC_Font     font,
                                                       FT_Face*     aface,
                                                       FT_Size*     asize )
   {
-    FTC_SizeRequest  req;
+    FTC_FontRequest  req;
     FT_Error         error;
     FT_Face          face;
     
@@ -318,15 +343,15 @@
     if ( asize )
       *asize = 0;
 
-    error = FTC_Manager_Lookup_Face( manager, size_id->face_id, &face ); 
+    error = FTC_Manager_Lookup_Face( manager, font->face_id, &face ); 
     if ( !error )
     {
       FT_Size  size;
       
 
       req.face   = face;
-      req.width  = size_id->pix_width;
-      req.height = size_id->pix_height;
+      req.width  = font->pix_width;
+      req.height = font->pix_height;
       
       error = FT_Lru_Lookup( manager->sizes_lru,
                              (FT_LruKey)&req,
@@ -347,5 +372,99 @@
     return error;
   }
 
+
+  /* "compress" the manager's data, i.e. get rids of old cache nodes */
+  /* that are not referenced anymore in order to limit the total     */
+  /* memory used by the cache..                                      */
+  FT_EXPORT_FUNC(void)  FTC_Manager_Compress( FTC_Manager  manager )
+  {
+    FT_ListNode  node;
+    
+    node = manager->global_lru.tail;
+    while (manager->num_bytes > manager->max_bytes && node)
+    {
+      FTC_CacheNode        cache_node = FTC_LIST_TO_CACHENODE(node);
+      FTC_CacheNode_Data*  data       = FTC_CACHENODE_TO_DATA_P(cache_node);
+      FTC_Cache            cache;
+      FT_ListNode          prev       = node->prev;
+      
+      if (data->ref_count <= 0)
+      {
+        /* ok, we're going to remove this node */
+        FT_List_Remove( &manager->global_lru, node );
+      
+        /* finalize cache node */
+        cache = manager->caches[data->cache_index];
+        if (cache)
+        {
+          FTC_CacheNode_Class*  clazz = cache->node_clazz;
+          
+          manager->num_bytes -= clazz->size_node( cache_node,
+                                                  cache->cache_user );
+                                                  
+          clazz->destroy_node( cache_node, cache->cache_user );
+        }
+        else
+        {
+          /* this should never happen !! */
+          FT_ERROR(( "FTC_Manager_Compress: Cache Manager is corrupted !!\n" ));
+        }
+      }
+      node = prev;
+    }
+  }
+
+
+  FT_EXPORT_DEF( FT_Error )  FTC_Manager_Register_Cache(
+                                   FTC_Manager       manager,
+                                   FTC_Cache_Class*  clazz,
+                                   FTC_Cache        *acache )
+  {
+    FT_Error   error  = FT_Err_Invalid_Argument;
+    
+    
+    if ( manager && clazz && acache )
+    {
+      FT_Memory  memory = manager->library->memory;
+      FTC_Cache  cache;
+      FT_UInt    index = 0;
+
+      /* by default, return 0 */
+      *acache = 0;
+
+      /* check for an empty cache slot in the manager's table */
+      for ( index = 0; index < FTC_MAX_CACHES; index++ )
+      {
+        if ( manager->caches[index] == 0 )
+          break;
+      }
+      
+      /* return an error if there are too many registered caches */
+      if (index >= FTC_MAX_CACHES)
+      {
+        error = FT_Err_Too_Many_Caches;
+        FT_ERROR(( "FTC_Manager_Register_Cache:" ));
+        FT_ERROR(( " too many registered caches..\n" ));
+        goto Exit;
+      }
+      
+      if ( !ALLOC( cache, clazz->cache_byte_size ) )
+      {
+        cache->manager = manager;
+        cache->memory  = memory;
+        cache->clazz   = clazz;
+
+        if (clazz->init_cache)
+          error = clazz->init_cache( cache );
+        
+        if (error)
+          FREE(cache);
+        else
+          manager->caches[index] = *acache = cache;        
+      }
+    }
+  Exit:
+    return error;
+  }
 
 /* END */

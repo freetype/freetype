@@ -1,146 +1,58 @@
-/***************************************************************************/
-/*                                                                         */
-/*  ftcimage.c                                                             */
-/*                                                                         */
-/*    FreeType Image Cache (body).                                         */
-/*                                                                         */
-/*  Copyright 2000 by                                                      */
-/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
-/*                                                                         */
-/*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
-/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
-/*  this file you indicate that you have read the license and              */
-/*  understand and accept it fully.                                        */
-/*                                                                         */
-/***************************************************************************/
+#ifdef FT_FLAT_COMPILE
+#  include "ftcimage.h"
+#else
+#  include <cache/ftcimage.h>
+#endif
 
-
-#include <cache/ftcimage.h>
-#include <freetype/fterrors.h>
-#include <freetype/internal/ftobjs.h>
-#include <freetype/internal/ftlist.h>
-#include <freetype/fterrors.h>
-
-
- /**************************************************************************/
- /**************************************************************************/
- /*****                                                                *****/
- /*****                      IMAGE NODE MANAGEMENT                     *****/
- /*****                                                                *****/
- /*****  For now, we simply ALLOC/FREE the FTC_ImageNode.  However, it *****/
- /*****  certainly is a good idea to use a chunk manager in the future *****/
- /*****  in order to reduce memory waste resp. fragmentation.          *****/
- /*****                                                                *****/
- /**************************************************************************/
- /**************************************************************************/
+ /*************************************************************************/
+ /*************************************************************************/
+ /*****                                                               *****/
+ /*****                    GLYPH IMAGE NODES                          *****/
+ /*****                                                               *****/
+ /*************************************************************************/
+ /*************************************************************************/
  
-
-  static
-  FT_Error  FTC_ImageNode_New( FTC_Image_Cache  cache,
-                               FTC_ImageNode*   anode )
+  /* this is a simple glyph image destructor, which is called exclusively */
+  /* from the CacheQueue object                                           */
+  LOCAL_FUNC_X
+  void  ftc_glyph_image_node_destroy( FTC_GlyphNode    node,
+                                      FTC_Glyph_Queue  queue )
   {
-    FT_Error       error;
-    FT_Memory      memory = cache->memory;
-    FTC_ImageNode  node;
+    FT_Memory  memory = queue->memory;
     
-
-    *anode = 0;
-    if ( !ALLOC( node, sizeof ( *node ) ) )
-      *anode = node;
-      
-    return error;
-  }                                      
-
-
-  static
-  void  FTC_ImageNode_Done( FTC_Image_Cache  cache,
-                            FTC_ImageNode    node )
-  {
-    /* for now, we simply discard the node;  we may later add a chunk */
-    /* manager to the image cache.                                    */
-    FT_Memory  memory = cache->memory;
-
-
+    FT_Done_Glyph( FTC_GLYPHNODE_GET_GLYPH( node ) );
     FREE( node );
-  }                                     
-
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*****                                                               *****/
-  /*****                      GLYPH IMAGE QUEUES                       *****/
-  /*****                                                               *****/
-  /*************************************************************************/
-  /*************************************************************************/
- 
-
-  LOCAL_FUNC_X
-  void  ftc_done_glyph_image( FTC_Image_Queue  queue,
-                              FTC_ImageNode    node )
-  {
-    FT_UNUSED( queue );
-
-    FT_Done_Glyph( FTC_IMAGENODE_GET_GLYPH( node ) );
   }
 
 
   LOCAL_FUNC_X
-  FT_ULong  ftc_size_bitmap_image( FTC_Image_Queue  queue,
-                                   FTC_ImageNode    node )
-  {
-    FT_Long         pitch;
-    FT_BitmapGlyph  glyph;
-    
-    FT_UNUSED( queue );
-
-
-    glyph = (FT_BitmapGlyph)FTC_IMAGENODE_GET_GLYPH(node);
-    pitch = glyph->bitmap.pitch;
-    if ( pitch < 0 )
-      pitch = -pitch;
-      
-    return (FT_ULong)(pitch * glyph->bitmap.rows + sizeof ( *glyph ) );
-  }
-
-
-  LOCAL_FUNC_X
-  FT_ULong  ftc_size_outline_image( FTC_Image_Queue  queue,
-                                    FTC_ImageNode    node )
-  {
-    FT_OutlineGlyph  glyph;
-    FT_Outline*      outline;
-    
-    FT_UNUSED( queue );
-
-
-    glyph   = (FT_OutlineGlyph)FTC_IMAGENODE_GET_GLYPH( node );
-    outline = &glyph->outline;
-    
-    return (FT_ULong)( 
-      outline->n_points *  ( sizeof ( FT_Vector ) + sizeof ( FT_Byte ) ) +
-      outline->n_contours * sizeof ( FT_Short )                          +
-      sizeof( *glyph ) );
-  }
-
-
-  LOCAL_FUNC_X
-  FT_Error  ftc_init_glyph_image( FTC_Image_Queue  queue,
-                                  FTC_ImageNode    node )
+  FT_Error  ftc_glyph_image_node_new( FTC_Glyph_Queue  queue,
+                                      FT_UInt          glyph_index,
+                                      FTC_GlyphNode   *anode )
   {  
-    FT_Face   face;
-    FT_Size   size;
-    FT_Error  error;
+    FT_Memory        memory   = queue->memory;
+    FTC_Image_Queue  imageq = (FTC_Image_Queue)queue;
+    FT_Error         error;
+    FTC_GlyphNode    node = 0;
+    FT_Face          face;
+    FT_Size          size;
 
+    /* allocate node */
+    if ( ALLOC( node, sizeof(*node) ) )
+      goto Exit;
 
+    /* init its inner fields */
+    FTC_GlyphNode_Init( node, queue, glyph_index );
+
+    /* we will now load the glyph image */
     error = FTC_Manager_Lookup_Size( queue->manager,
-                                     &queue->descriptor.size,
+                                     &imageq->description.font,
                                      &face, &size );
     if ( !error )
     {
-      FT_UInt  glyph_index = FTC_IMAGENODE_GET_GINDEX( node );
+      FT_UInt  glyph_index = node->glyph_index;
       FT_UInt  load_flags  = FT_LOAD_DEFAULT;
-      FT_UInt  image_type  = queue->descriptor.image_type;
+      FT_UInt  image_type  = imageq->description.image_type;
       
       if ( FTC_IMAGE_FORMAT( image_type ) == ftc_image_format_bitmap )
       {           
@@ -179,372 +91,133 @@
           
           error = FT_Get_Glyph( face->glyph, &glyph );
           if ( !error )
-            FTC_IMAGENODE_SET_GLYPH( node, glyph );
+            FTC_GLYPHNODE_SET_GLYPH( node, glyph );
         }
         else
           error = FT_Err_Invalid_Argument;
       }
     }
-    return error;
-  }
-
-
-  FT_CPLUSPLUS( const FTC_Image_Class )  ftc_bitmap_image_class =
-  {
-    ftc_init_glyph_image,
-    ftc_done_glyph_image,
-    ftc_size_bitmap_image
-  };
-  
-  FT_CPLUSPLUS( const FTC_Image_Class )  ftc_outline_image_class =
-  {
-    ftc_init_glyph_image,
-    ftc_done_glyph_image,
-    ftc_size_outline_image
-  };
-  
-
-  static
-  FT_Error  FTC_Image_Queue_New( FTC_Image_Cache   cache,
-                                 FTC_Image_Desc*   desc,
-                                 FTC_Image_Queue*  aqueue )
-  {
-    FT_Error         error;
-    FT_Memory        memory  = cache->memory;
-    FTC_Manager      manager = cache->manager;
-    FTC_Image_Queue  queue   = 0;
-    
-    const FTC_Image_Class*  clazz;
-    
-
-    *aqueue = 0;
-    if ( ALLOC( queue, sizeof ( *queue ) ) )
-      goto Exit;
-    
-    queue->cache      = cache;
-    queue->manager    = manager;
-    queue->memory     = memory;
-    queue->descriptor = *desc;
-    queue->hash_size  = 64;
-    
-    if ( ALLOC_ARRAY( queue->buckets, queue->hash_size, FT_ListRec ) )
-      goto Exit;
-
-    switch ( FTC_IMAGE_FORMAT( desc->image_type ) )
-    {
-    case ftc_image_format_bitmap:
-      clazz = &ftc_bitmap_image_class;
-      break;
-        
-    case ftc_image_format_outline:
-      clazz = &ftc_outline_image_class;
-      break;
-        
-    default:
-      /* invalid image type! */
-      error = FT_Err_Invalid_Argument;
-      goto Exit;
-    }
-
-    queue->clazz = (FTC_Image_Class*)clazz;
-    *aqueue = queue;
-
   Exit:
-    if ( error )
-      FREE( queue );
+    if (error && node)
+      FREE(node);
 
-    return error;
-  }                                  
-
-
-  static
-  void  FTC_Image_Queue_Done( FTC_Image_Queue  queue )
-  {
-    FTC_Image_Cache  cache        = queue->cache;
-    FT_List          glyphs_lru   = &cache->glyphs_lru;
-    FT_List          bucket       = queue->buckets;
-    FT_List          bucket_limit = bucket + queue->hash_size;
-    FT_Memory        memory       = cache->memory;
-    
-
-    /* for each bucket, free the list of image nodes */
-    for ( ; bucket < bucket_limit; bucket++ )
-    {
-      FT_ListNode    node = bucket->head;
-      FT_ListNode    next = 0;
-      FT_ListNode    lrunode;
-      FTC_ImageNode  inode;
-      
-
-      for ( ; node; node = next )
-      {
-        next    = node->next;
-        inode   = (FTC_ImageNode)node;
-        lrunode = FTC_IMAGENODE_TO_LISTNODE( inode );
-        
-        cache->num_bytes -= queue->clazz->size_image( queue, inode ) +
-                            sizeof( FTC_ImageNodeRec );
-        
-        queue->clazz->done_image( queue, inode );
-        FT_List_Remove( glyphs_lru, lrunode );
-        
-        FTC_ImageNode_Done( cache, inode );
-      }
-      
-      bucket->head = bucket->tail = 0;
-    }
-
-    FREE( queue->buckets );
-    FREE( queue );
-  }
-
-
-  static
-  FT_Error  FTC_Image_Queue_Lookup_Node( FTC_Image_Queue  queue,
-                                         FT_UInt          glyph_index,
-                                         FTC_ImageNode*   anode )
-  {
-    FTC_Image_Cache  cache      = queue->cache;
-    FT_UInt          hash_index = glyph_index % queue->hash_size;
-    FT_List          bucket     = queue->buckets + hash_index;
-    FT_ListNode      node;
-    FT_Error         error;
-    FTC_ImageNode    inode;
-    
-
-    *anode = 0;
-    for ( node = bucket->head; node; node = node->next )
-    {
-      FT_UInt  gindex;
-      
-      inode  = (FTC_ImageNode)node;
-      gindex = FTC_IMAGENODE_GET_GINDEX( inode );
-      
-      if ( gindex == glyph_index )
-      {
-        /* we found it! -- move glyph to start of the list */
-        FT_List_Up( bucket, node );
-        FT_List_Up( &cache->glyphs_lru, FTC_IMAGENODE_TO_LISTNODE( inode ) );
-        *anode = inode;
-        return 0;
-      }
-    }
-
-    /* we didn't found the glyph image, we will now create a new one */
-    error = FTC_ImageNode_New( queue->cache, &inode );
-    if ( error )
-      goto Exit;
-
-    /* set the glyph and queue indices in the image node */
-    FTC_IMAGENODE_SET_INDICES( inode, glyph_index, queue->index );
-    
-    error = queue->clazz->init_image( queue, inode );
-    if ( error )
-    {
-      FTC_ImageNode_Done( queue->cache, inode );
-      goto Exit;
-    }
-    
-    /* insert the node at the start of our bucket list */
-    FT_List_Insert( bucket, (FT_ListNode)inode );
-    
-    /* insert the node at the start the global LRU glyph list */
-    FT_List_Insert( &cache->glyphs_lru, FTC_IMAGENODE_TO_LISTNODE( inode ) );
-    
-    cache->num_bytes += queue->clazz->size_image( queue, inode ) +
-                        sizeof( FTC_ImageNodeRec );
-
-    *anode = inode;
-
-  Exit:
-    return error;
-  }
-
-  
-  /*************************************************************************/
-  /*************************************************************************/
-  /*****                                                               *****/
-  /*****                    IMAGE CACHE CALLBACKS                      *****/
-  /*****                                                               *****/
-  /*************************************************************************/
-  /*************************************************************************/
- 
-
-#define FTC_QUEUE_LRU_GET_CACHE( lru )   \
-          ( (FTC_Image_Cache)(lru)->user_data )
-#define FTC_QUEUE_LRU_GET_MANAGER( lru ) \
-          FTC_QUEUE_LRU_GET_CACHE( lru )->manager
-#define FTC_LRUNODE_QUEUE( node )        \
-          ( (FTC_Image_Queue)(node)->root.data )
-
-
-  LOCAL_FUNC_X
-  FT_Error  ftc_image_cache_init_queue( FT_Lru      lru,
-                                        FT_LruNode  node )
-  {
-    FTC_Image_Cache  cache = FTC_QUEUE_LRU_GET_CACHE( lru );
-    FTC_Image_Desc*  desc  = (FTC_Image_Desc*)node->key;
-    FT_Error         error;
-    FTC_Image_Queue  queue;
-
-    
-    error = FTC_Image_Queue_New( cache, desc, &queue );
-    if ( !error )
-    {
-      /* good, now set the queue index within the queue object */
-      queue->index    = node - lru->nodes;
-      node->root.data = queue;
-    }
-    
+    *anode = node;
     return error;
   }
 
 
+ /* this function is important, because it is both part of */
+ /* a FTC_Glyph_Queue_Class and a FTC_CacheNode_Class      */
+ /*                                                        */
   LOCAL_FUNC_X
-  void  ftc_image_cache_done_queue( FT_Lru      lru,
-                                    FT_LruNode  node )
+  FT_ULong  ftc_glyph_image_node_size( FTC_GlyphNode    node )
   {
-    FTC_Image_Queue  queue = FTC_LRUNODE_QUEUE( node );
+    FT_ULong        size  = 0;
+    FT_Glyph        glyph = FTC_GLYPHNODE_GET_GLYPH(node);
     
-    FT_UNUSED( lru );
-
-
-    FTC_Image_Queue_Done( queue );
-  }
-
-
-  LOCAL_FUNC_X
-  FT_Bool  ftc_image_cache_compare_queue( FT_LruNode  node,
-                                          FT_LruKey   key )
-  {
-    FTC_Image_Queue  queue = FTC_LRUNODE_QUEUE( node );
-    FTC_Image_Desc*  desc2 = (FTC_Image_Desc*)key;
-    FTC_Image_Desc*  desc1 = &queue->descriptor;
-    
-
-    return ( desc1->size.face_id    == desc2->size.face_id    &&
-             desc1->size.pix_width  == desc2->size.pix_width  &&
-             desc1->size.pix_height == desc2->size.pix_height &&
-             desc1->image_type      == desc2->image_type      );
-  }                                            
-
-
-  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_image_queue_lru_class =
-  {
-    sizeof( FT_LruRec ),
-    ftc_image_cache_init_queue,
-    ftc_image_cache_done_queue,
-    0,  /* no flush */
-    ftc_image_cache_compare_queue
-  };
-
-
-  /* compress image cache if necessary, i.e., discard all old glyph images */
-  /* until `cache.num_bytes' is less than `cache.max_bytes'.  Note that    */
-  /* this function will avoid to remove `new_node'.                        */
-  static
-  void  FTC_Image_Cache_Compress( FTC_Image_Cache  cache,
-                                  FTC_ImageNode    new_node )
-  {
-    while ( cache->num_bytes > cache->max_bytes )
+    switch (glyph->format)
     {
-      FT_ListNode      cur;
-      FTC_Image_Queue  queue;
-      FT_UInt          glyph_index;
-      FT_UInt          hash_index;
-      FT_UInt          queue_index;
-      FT_ULong         size;
-      FTC_ImageNode    inode;
-      
-
-      /* exit our loop if there isn't any glyph image left, or if       */
-      /* we reached the newly created node (which happens always at the */
-      /* start of the list)                                             */
-      
-      cur   = cache->glyphs_lru.tail;
-      inode = FTC_LISTNODE_TO_IMAGENODE( cur );
-      if ( !cur || inode == new_node )
+      case ft_glyph_format_bitmap:
+        {
+          FT_BitmapGlyph  bitg;
+          
+          bitg = (FT_BitmapGlyph)glyph;
+          size = bitg->bitmap.rows * labs(bitg->bitmap.pitch) +
+                 sizeof(*bitg);
+        }
         break;
         
-      glyph_index = FTC_IMAGENODE_GET_GINDEX( inode );
-      queue_index = FTC_IMAGENODE_GET_QINDEX( inode );
-      queue       = (FTC_Image_Queue)cache->queues_lru->
-                      nodes[queue_index].root.data;
-      hash_index  = glyph_index % queue->hash_size;
-      size        = queue->clazz->size_image( queue, inode ) +
-                    sizeof(FTC_ImageNodeRec);
-
-      FT_List_Remove( &cache->glyphs_lru, cur );
-      FT_List_Remove( queue->buckets + hash_index, (FT_ListNode)inode );
-      queue->clazz->done_image( queue, inode );
-      FTC_ImageNode_Done( cache, inode );
-      
-      cache->num_bytes -= size;
+      case ft_glyph_format_outline:
+        {
+          FT_OutlineGlyph  outg;
+          
+          outg = (FT_OutlineGlyph)glyph;
+          size = outg->outline.n_points * 
+                   ( sizeof( FT_Vector ) + sizeof( FT_Byte ) ) +
+                 outg->outline.n_contours *
+                     sizeof( FT_Short ) +
+                 sizeof(*outg);
+        }
+        break;
+        
+      default:
+        ;
     }
+    size += sizeof(*node);
+    return size;
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_New( FTC_Manager       manager,
-                                                  FT_ULong          max_bytes,
-                                                  FTC_Image_Cache*  acache )
+ /*************************************************************************/
+ /*************************************************************************/
+ /*****                                                               *****/
+ /*****                    GLYPH IMAGE QUEUES                         *****/
+ /*****                                                               *****/
+ /*************************************************************************/
+ /*************************************************************************/
+
+
+  LOCAL_FUNC_X
+  FT_Error  ftc_image_queue_init( FTC_Image_Queue  queue,
+                                  FTC_Image_Desc*  type )
   {
-    FT_Error         error;
-    FT_Memory        memory;
-    FTC_Image_Cache  cache;
-    
-    
-    if ( !manager )
-      return FT_Err_Invalid_Cache_Handle;
-
-    if ( !acache || !manager->library )
-      return FT_Err_Invalid_Argument;
-
-    *acache = 0;
-    memory  = manager->library->memory;
-    
-    if ( ALLOC( cache, sizeof ( *cache ) ) )
-      goto Exit;
-    
-    cache->manager   = manager;
-    cache->memory    = manager->library->memory;
-    cache->max_bytes = max_bytes;
-
-    error = FT_Lru_New( &ftc_image_queue_lru_class,
-                        FTC_MAX_IMAGE_QUEUES,
-                        cache,
-                        memory,
-                        1, /* pre_alloc == TRUE */
-                        &cache->queues_lru );
-    if ( error )
-      goto Exit;                        
-    
-    *acache = cache;
-
-  Exit:
-    if ( error )
-      FREE( cache );
-      
-    return error;
-  }                                                  
-
-
-  FT_EXPORT_DEF( void )  FTC_Image_Cache_Done( FTC_Image_Cache  cache )
-  {
-    FT_Memory  memory;
-    
-
-    if ( !cache )
-      return;
-
-    memory = cache->memory;
-    
-    /* discard image queues */
-    FT_Lru_Done( cache->queues_lru );
-    
-    /* discard cache */
-    FREE( cache );
+    queue->description = *type;
+    return 0;
   }
 
+
+  LOCAL_FUNC_X
+  FT_Bool   ftc_image_queue_compare( FTC_Image_Queue   queue,
+                                     FTC_Image_Desc*   type )
+  {
+    return !memcmp( &queue->description, type, sizeof(*type) );
+  }
+                                      
+
+  FT_CPLUSPLUS(const FTC_Glyph_Queue_Class)  ftc_glyph_image_queue_class =
+  {
+    sizeof( FTC_Image_QueueRec ),
+    
+    (FTC_Glyph_Queue_InitFunc)     ftc_image_queue_init,
+    (FTC_Glyph_Queue_DoneFunc)     0,
+    (FTC_Glyph_Queue_CompareFunc)  ftc_image_queue_compare,
+    
+    (FTC_Glyph_Queue_NewNodeFunc)      ftc_glyph_image_node_new,
+    (FTC_Glyph_Queue_SizeNodeFunc)     ftc_glyph_image_node_size,
+    (FTC_Glyph_Queue_DestroyNodeFunc)  ftc_glyph_image_node_destroy
+  };
+
+
+ /*************************************************************************/
+ /*************************************************************************/
+ /*****                                                               *****/
+ /*****                    GLYPH IMAGE CACHE                          *****/
+ /*****                                                               *****/
+ /*************************************************************************/
+ /*************************************************************************/
+
+
+
+  FT_CPLUSPLUS(const FTC_Glyph_Cache_Class)  ftc_glyph_image_cache_class =
+  {
+    {
+      sizeof( FTC_Glyph_CacheRec ),
+      (FTC_Cache_InitFunc)  FTC_Glyph_Cache_Init,
+      (FTC_Cache_DoneFunc)  FTC_Glyph_Cache_Done
+    },
+    (FTC_Glyph_Queue_Class*)  &ftc_glyph_image_queue_class
+  };
+
+
+  FT_EXPORT_FUNC( FT_Error )  FTC_Image_Cache_New( FTC_Manager       manager,
+                                                   FTC_Image_Cache*  acache )
+  {
+    return FTC_Manager_Register_Cache(
+              manager,
+              (FTC_Cache_Class*)&ftc_glyph_image_cache_class,
+              (FTC_Cache*)acache );
+  }
+                                        
 
   FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_Lookup(
                                FTC_Image_Cache  cache,
@@ -553,43 +226,47 @@
                                FT_Glyph*        aglyph )
   {
     FT_Error         error;
-    FTC_Image_Queue  queue;
-    FTC_ImageNode    inode;
+    FTC_Glyph_Queue  queue;
+    FTC_GlyphNode    inode;
+    FTC_Manager      manager;
 
+    FTC_Image_Queue  img_queue;
 
     /* check for valid `desc' delayed to FT_Lru_Lookup() */
 
     if ( !cache || !aglyph )
       return FT_Err_Invalid_Argument;
 
-    *aglyph = 0;    
-    queue   = cache->last_queue;
-    if ( !queue                                                      ||
-          queue->descriptor.size.face_id    != desc->size.face_id    ||
-          queue->descriptor.size.pix_width  != desc->size.pix_width  ||
-          queue->descriptor.size.pix_height != desc->size.pix_height ||
-          queue->descriptor.image_type      != desc->image_type      )
+    *aglyph   = 0;    
+    queue     = cache->root.last_queue;
+    img_queue = (FTC_Image_Queue)queue;
+    if ( !queue || memcmp( &img_queue->description, desc, sizeof(*desc) ) )
     {
-      error = FT_Lru_Lookup( cache->queues_lru,
+      error = FT_Lru_Lookup( cache->root.queues_lru,
                              (FT_LruKey)desc,
                              (FT_Pointer*)&queue );
-      cache->last_queue = queue;
+      cache->root.last_queue = queue;
       if ( error )
         goto Exit;
     }
 
-    error = FTC_Image_Queue_Lookup_Node( queue, gindex, &inode );
+    error = FTC_Glyph_Queue_Lookup_Node( queue, gindex, &inode );
     if ( error )
       goto Exit;
 
-    if (cache->num_bytes > cache->max_bytes)
-      FTC_Image_Cache_Compress( cache, inode );
+    /* now compress the manager's cache pool if needed */
+    manager = cache->root.root.manager;
+    if (manager->num_bytes > manager->max_bytes)
+    {
+      FTC_GlyphNode_Ref(inode);
+      FTC_Manager_Compress( manager );
+      FTC_GlyphNode_Unref(inode);
+    }
 
-    *aglyph = FTC_IMAGENODE_GET_GLYPH( inode );
+    *aglyph = FTC_GLYPHNODE_GET_GLYPH( inode );
 
   Exit:
     return error;
   }
 
 
-/* END */

@@ -22,12 +22,14 @@
 
 #include "ftlru.c"
 #include "ftcmanag.c"
+#include "ftcglyph.c"
 #include "ftcimage.c"
 
 #else
 
 #include <cache/ftlru.c>
 #include <cache/ftcmanag.c>
+#include <cache/ftcglyph.c>
 #include <cache/ftcimage.c>
 
 #endif
