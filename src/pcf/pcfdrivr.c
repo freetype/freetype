@@ -511,9 +511,21 @@ THE SOFTWARE.
   }
 
 
+  static FT_Error
+  pcf_get_charset_id( PCF_Face      face,
+                      const char*  *acharset_encoding,
+                      const char*  *acharset_registry )
+  {
+    *acharset_encoding = face->charset_encoding;
+    *acharset_registry = face->charset_registry;
+
+    return 0;
+  }
+
+
   static FT_Service_BDFRec  pcf_service_bdf =
   {
-    (FT_BDF_GetCharsetIdFunc)NULL,  /* unimplemented ? */
+    (FT_BDF_GetCharsetIdFunc)pcf_get_charset_id,
     (FT_BDF_GetPropertyFunc) pcf_get_bdf_property
   };
 
