@@ -1,5 +1,9 @@
 2002-03-20  David Turner    <david@freetype.org>
 
+        * src/base/ftgloadr.c (FT_GlyphLoader_CheckSubGlyphs): fixed a memory
+        allocation bug that was due to un-careful renaming of the FT_SubGlyph
+        type..
+
         * renaming stream macros. Examples:
         
            FILE_Skip    => FT_STREAM_SKIP
