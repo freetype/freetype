@@ -1,51 +1,65 @@
+2002-03-05  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/aclocal.m4, builds/unix/ltmain.sh: Update to libtool
+	1.4.2.
+	Apply a small patch for AIX to make shared libraries work (this
+	patch is already in the CVS version of libtool).
+
+	* builds/unix/config.sub, builds/unix/config.guess: Updated to
+	recent versions.
+
+	* builds/unix/configure.ac: Fix typo
+	(AC_CONFIG_FILE->AC_CONFIG_FILES).
+
+	* builds/unix/configure: Regenerated.
+
 2002-03-04  David Turner  <david@freetype.org>
 
-        * docs/CHANGES: small update
+	* docs/CHANGES: Small update.
 
-        * src/type1/t1objs.c (SFNT_Face_Init),
-          src/cid/cidobjs.c (CID_Face_Init),
-          src/cff/cffobjs.c (CFF_Face_Init): removed the bug that prevented
-          correct bounding box values from being returned. (previous values
-          were in 16.16 fixed format :-() !!
+	* src/type1/t1objs.c (SFNT_Face_Init), src/cid/cidobjs.c
+	(CID_Face_Init), src/cff/cffobjs.c (CFF_Face_Init): Removed the bug
+	that prevented correct bounding box values from being returned --
+	previous values were in 16.16 fixed format.
 
-        * src/sfnt/ttload.c (TT_Load_Names), src/sfnt/sfobj.c (Get_Name),
-        src/sfnt/sfdriver.c (get_sfnt_postscript_name):
-        fixed the loader so that it accepts broken fonts like "foxjump.ttf",
-        which make FreeType crash when trying to load them..
+	* src/sfnt/ttload.c (TT_Load_Names), src/sfnt/sfobj.c (Get_Name),
+	src/sfnt/sfdriver.c (get_sfnt_postscript_name): Fixed the loader so
+	that it accepts broken fonts like "foxjump.ttf", which made FreeType
+	crash when trying to load them.
 
-        also improved the name table parser to be able to load Windows-encoded
-        entries before Macintosh or Unicode ones, since it seems some fonts
-        don't have reliable values here anyway..
+	Also improved the name table parser to be able to load
+	Windows-encoded entries before Macintosh or Unicode ones, since it
+	seems some fonts don't have reliable values here anyway.
 
-        * src/cid/cidriver.c (cid_get_postscript_name): fixed the routine
-        used to return a CID font's Postscript name, in order to remove the
-        leading "/"
+	* src/cid/cidriver.c (cid_get_postscript_name): Fixed the routine
+	used to return a CID font's Postscript name, in order to remove the
+	leading "/".
 
-        * include/freetype/internal/ftdebug.h: introduced the FT_TRACE_TEST
-        macro to simplify debugging output a bit..
-
-2002-02-28  David Turner  <david@freetype.org>
-
-        * include/freetype/freetype.h: changed patch level to 9
-        - added the declarations of FT_Get_First_Char and FT_Get_Next_Char
-
-        * src/base/ftobjs.c: implemented FT_Get_First_Char and FT_Get_Next_Char
-        to allow charmap enumeration..
+	* include/freetype/internal/ftdebug.h: Introduced the FT_TRACE_TEST
+	macro to simplify debugging output a bit.
 
 2002-02-28  David Turner  <david@freetype.org>
 
-        * STABLE branch created, the HEAD is used for the major re-factoring
-        needed to get FreeType 2.2 out
+	* include/freetype/freetype.h: changed patch level to 9.
+	Added the declarations of FT_Get_First_Char and FT_Get_Next_Char.
+
+	* src/base/ftobjs.c: Implemented FT_Get_First_Char and
+	FT_Get_Next_Char to allow charmap enumeration.
+
+2002-02-28  David Turner  <david@freetype.org>
+
+	* STABLE branch created, the HEAD is used for the major re-factoring
+	needed to get FreeType 2.2 out.
 
 2002-02-08  David Turner  <david@freetype.org>
 
 	* Version 2.0.8 released.
 	=========================
 
-        * docs/CHANGES: updating for 2.0.8
+	* docs/CHANGES: Updating for 2.0.8.
 
-        * include/freetype/freetype.h: setting PATCH_LEVEL to 8 and
-        removing FT_Get_Next_Char from the API (temporarily)
+	* include/freetype/freetype.h: Setting PATCH_LEVEL to 8 and
+	removing FT_Get_Next_Char from the API (temporarily).
 
 	* include/freetype/freetype.h: Adding comments to FT_Get_Next_Char;
 	note that this function might temporarily be removed for the 2.0.8
