@@ -488,7 +488,7 @@
     if ( !slot )
       return FT_Err_Invalid_Slot_Handle;
 
-    if ( !glyph )
+    if ( !aglyph )
       return FT_Err_Invalid_Argument;
 
     /* if it is a bitmap, that's easy :-) */
@@ -561,6 +561,7 @@
   /* <Note>                                                                */
   /*    The 2x2 transformation matrix is also applied to the glyph's       */
   /*    advance vector.                                                    */
+  /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Glyph_Transform( FT_Glyph    glyph,
                                                   FT_Matrix*  matrix,
                                                   FT_Vector*  delta )

@@ -20,6 +20,11 @@
 
 #include <freetype/freetype.h>
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /* module bit flags */
   typedef enum FT_Module_Flags_
   {
@@ -277,6 +282,10 @@
   /*                                                                       */
   FT_EXPORT_DEF(void)  FT_Add_Default_Modules( FT_Library  library );
 
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* FTMODULE_H */

@@ -1348,12 +1348,6 @@
       FT_FRAME_END
     };
 
-    static const FT_Frame_Field  pclt_fields2[] =
-    {
-      FT_FRAME_START( 4 ),
-      FT_FRAME_END
-    };
-
     FT_Error  error;
     TT_PCLT*  pclt = &face->pclt;
 

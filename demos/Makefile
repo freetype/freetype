@@ -87,7 +87,7 @@ else
   # with the program by default on Unix, we thus add it whenever appropriate
   #
   ifeq ($(PLATFORM),unix)
-  LINK += -lm -lefence
+  LINK += -lm
   endif
 
   COMMON_LINK = $(LINK) $(COMMON_OBJ)

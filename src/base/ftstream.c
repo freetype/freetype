@@ -542,17 +542,17 @@
       case ft_frame_bytes:  /* read a byte sequence */
         {
           FT_Int  len = stream->limit - stream->cursor;
-          
-          if (len > fields->size)
+
+
+          if ( len > fields->size )
             len = fields->size;
 
           p = (FT_Byte*)structure + fields->offset;
           MEM_Copy( p, stream->cursor, len );
-          stream->cursor += len;  
+          stream->cursor += len;
           fields++;
           continue;
         }
-        
 
       case ft_frame_byte:
       case ft_frame_schar:  /* read a single byte */
