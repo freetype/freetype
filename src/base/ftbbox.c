@@ -159,8 +159,10 @@
                       FT_Vector*  to,
                       TBBox_Rec*  user )
   {
-    if ( CHECK_X( control, user->bbox ) ||
-         CHECK_X( to,      user->bbox ) )
+    /* we don't need to check `to' since it is always an `on' point, thus */
+    /* within the bbox                                                    */
+
+    if ( CHECK_X( control, user->bbox ) )
 
       BBox_Conic_Check( user->last.x,
                         control->x,
@@ -168,8 +170,7 @@
                         &user->bbox.xMin,
                         &user->bbox.xMax );
 
-    if ( CHECK_Y( control, user->bbox ) ||
-         CHECK_Y( to,      user->bbox ) )
+    if ( CHECK_Y( control, user->bbox ) )
 
       BBox_Conic_Check( user->last.y,
                         control->y,
@@ -305,9 +306,11 @@
                       FT_Vector*  to,
                       TBBox_Rec*  user )
   {
+    /* we don't need to check `to' since it is always an `on' point, thus */
+    /* within the bbox                                                    */
+
     if ( CHECK_X( control1, user->bbox ) ||
-         CHECK_X( control2, user->bbox ) ||
-         CHECK_X( to,       user->bbox ) )
+         CHECK_X( control2, user->bbox ) )
 
         BBox_Cubic_Check( user->last.x,
                           control1->x,
@@ -317,8 +320,7 @@
                           &user->bbox.xMax );
 
     if ( CHECK_Y( control1, user->bbox ) ||
-         CHECK_Y( control2, user->bbox ) ||
-         CHECK_Y( to,       user->bbox ) )
+         CHECK_Y( control2, user->bbox ) )
 
         BBox_Cubic_Check( user->last.y,
                           control1->y,
