@@ -1,3 +1,7 @@
+2004-12-26  Werner Lemberg  <wl@gnu.org>
+
+	* Jamfile (FT2_COMPONENTS): Add `otvalid'.
+
 2004-12-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftbitmap.c (FT_Bitmap_Convert): Fix compiler warning.
