@@ -51,12 +51,19 @@ abs_ft2_dir=`cd "$ft2_dir" && pwd`
 
 if test "$abs_curr_dir" != "$abs_ft2_dir"; then
   mkdir reference
-  echo "TOP_DIR=$abs_ft2_dir"             > Makefile
-  echo "OBJ_DIR=$abs_curr_dir"           >> Makefile
-  echo "OBJ_BUILD=$abs_curr_dir"         >> Makefile
-  echo "DOC_DIR=$abs_curr_dir/reference" >> Makefile
-  echo "LIBTOOL=$abs_curr_dir/libtool"   >> Makefile
-  echo "include $abs_ft2_dir/Makefile"   >> Makefile
+  echo "TOP_DIR   := $abs_ft2_dir"               > Makefile
+  echo "OBJ_DIR   := $abs_curr_dir"             >> Makefile
+  echo "OBJ_BUILD := \$(OBJ_DIR)"               >> Makefile
+  echo "DOC_DIR   := \$(OBJ_DIR)/reference"     >> Makefile
+  echo "LIBTOOL   := \$(OBJ_DIR)/libtool"       >> Makefile
+  echo "ifndef FT2DEMOS"                        >> Makefile
+  echo "  include \$(TOP_DIR)/Makefile"         >> Makefile
+  echo "else"                                   >> Makefile
+  echo "  TOP_DIR_2 := \$(TOP_DIR)/../ft2demos" >> Makefile
+  echo "  PROJECT   := freetype"                >> Makefile
+  echo "  CONFIG_MK := \$(OBJ_DIR)/config.mk"   >> Makefile
+  echo "  include \$(TOP_DIR_2)/Makefile"       >> Makefile
+  echo "endif"                                  >> Makefile
 fi
 
 # call make

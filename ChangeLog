@@ -1,3 +1,9 @@
+2005-02-12  Werner Lemberg  <wl@gnu.org>
+
+	* configure: Output more variables to the created Makefile so that
+	it can be used for ft2demos also (if the FT2DEMOS variable is
+	defined).
+
 2005-02-10  David Turner  <david@freetype.org>
 
 	* src/pfr/pfrgload.c (pfr_glyph_load): Fix an unbounded growing
