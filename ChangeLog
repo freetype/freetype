@@ -1,3 +1,9 @@
+2002-12-23  Anthony Fok <anthony@thizlinux.com>
+
+        * builds/unix/configure.ac, builds/unix/unix-cc.in,
+        builds/unix/unix-def.in: small fix to configure sub-system on Unix
+        to allow other programs to correctly link with zlib when needed
+
 2002-12-17  David Turner  <david@freetype.org>
 
         * src/base/ftobjs.c (find_unicode_charmap): added some comments to
