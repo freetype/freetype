@@ -1045,6 +1045,7 @@
           FT_TRACE4(( " hmoveto" ));
 
           x += top[0];
+          builder->path_begun = 0;
           break;
 
         case op_hvcurveto:
@@ -1082,6 +1083,7 @@
 
           x += top[0];
           y += top[1];
+          builder->path_begun = 0;
           break;
 
         case op_rrcurveto:
@@ -1133,6 +1135,7 @@
           FT_TRACE4(( " vmoveto" ));
 
           y += top[0];
+          builder->path_begun = 0;
           break;
 
         case op_div:
