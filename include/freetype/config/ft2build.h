@@ -80,7 +80,8 @@
   /* Its parameter is the file pathname, relative to the public root of a  */
   /* given header file.                                                    */
   /*                                                                       */
-#define FT2_PUBLIC_FILE( x )  < ## FT2_ROOT ## / ## x ## >
+#define FT2_PUBLIC_FILE_( x, y )  < ## x ## / ## y ## >
+#define FT2_PUBLIC_FILE( x )      FT2_PUBLIC_FILE_(FT2_ROOT,x)
 
 
   /*************************************************************************/
@@ -89,7 +90,8 @@
   /* Its parameter is the file pathname, relative to the configuration     */
   /* root directory of a given header file.                                */
   /*                                                                       */
-#define FT2_CONFIG_FILE( x )  < ## FT2_CONFIG_ROOT ## / ## x ## >
+#define FT2_CONFIG_FILE_( x, y )  < ## x ## / ## y ## >
+#define FT2_CONFIG_FILE( x )      FT2_CONFIG_FILE_(FT2_CONFIG_ROOT,x)
 
 
   /*************************************************************************/
@@ -98,7 +100,8 @@
   /* file.  Its parameter is the file pathname, relative to the            */
   /* configuration root directory of a given header file.                  */
   /*                                                                       */
-#define FT2_INTERNAL_FILE( x )  < ## FT2_ROOT ## / ## internal ## / ## x ## >
+#define FT2_INTERNAL_FILE_( x, y )  < ## x ## / ## internal ## / ## y ## >
+#define FT2_INTERNAL_FILE( x )      FT2_INTERNAL_FILE_(FT2_ROOT,x)
 
 
   /*************************************************************************/
@@ -205,8 +208,7 @@
 
 
   /* now include internal headers definitions from <freetype/internal/...> */
-#define FT_INTERNAL_H  FT2_INTERNAL_FILE(internal.h)
-#include FT_INTERNAL_H
+#include FT2_INTERNAL_FILE(internal.h)
 
 
 #endif /* __FT2_BUILD_H__ */
