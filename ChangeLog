@@ -3,6 +3,8 @@
 	* docs/docmaker.py (DocSection::add_element): Use
 	`self.print_error()'.
 
+	* builds/unix/config.{guess,sub}: Updated (from ftp.gnu.org).
+
 2001-02-13  David Turner  <david.turner@freetype.org>
 
 	* docs/docmaker.py, include/freetype/*.h: Updated the DocMaker script
