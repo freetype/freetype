@@ -672,8 +672,8 @@
 
   static const FT_ServiceDescRec  winfnt_services[] =
   {
-    { FT_SERVICE_ID_XF86_NAME,    FT_XF86_FORMAT_WINFNT },
-    { FT_SERVICE_ID_WINFNT,       & winfnt_service_rec },
+    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_WINFNT },
+    { FT_SERVICE_ID_WINFNT,    &winfnt_service_rec },
     { NULL, NULL }
   };
 
