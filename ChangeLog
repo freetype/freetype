@@ -12,8 +12,8 @@
 	* src/cff/cffparse.c (cff_parse_font_matrix): Added logic to get
 	the units_per_EM from the FontMatrix.
 
-	(cff_parse_fixed_thousand): New function. Gets a real number fromt
-	he CFF font, but multiplies by 1000 (this is to avoid rounding
+	(cff_parse_fixed_thousand): New function. Gets a real number from
+	the CFF font, but multiplies by 1000 (this is to avoid rounding
 	errors when placing this real number into a 16.16 fixed number).
 
 	(cff_parse_real): Added code so that the integer part is moved
