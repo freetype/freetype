@@ -65,7 +65,7 @@
   /* Important: This function is called from the cache manager to */
   /* destroy a given cache node during `cache compression'.  The  */
   /* second argument is always `cache.user_data'.  Thus be        */
-  /* certain that the function FTC_Image_Cache_New() does indeed  */
+  /* certain that the function FTC_Glyph_Cache_New() does indeed  */
   /* set its `user_data' field correctly, otherwise bad things    */
   /* will happen!                                                 */
 
@@ -75,11 +75,31 @@
     FT_LruNode       queue_lru = cache->queues_lru->nodes + node->queue_index;
     FTC_Glyph_Queue  queue     = (FTC_Glyph_Queue)queue_lru->root.data;
     FT_UInt          hash      = node->glyph_index % queue->hash_size;
-    FT_List          bucket    = queue->buckets + hash;
-
-
-    /* remove node from its queue's bucket list */
-    FT_List_Remove( bucket, FTC_GLYPHNODE_TO_LISTNODE( node ) );
+    
+    /* remove the node from its queue's bucket list */
+    {
+      FTC_GlyphNode*  pnode = queue->buckets + hash;
+      FTC_GlyphNode   cur;
+      
+      for (;;)
+      {
+        cur = *pnode;
+        if (!cur)
+        {
+          /* that's very strange, this should not happen !! */
+          FT_ERROR(( "FTC_GlyphNode_Destroy:"
+                     " trying to delete an unlisted node !!!!" ));
+          return;
+        }
+          
+        if (cur == node)
+        {
+          *pnode = cur->queue_next;
+          break;
+        }
+        pnode = &cur->queue_next;
+      }
+    }
 
     /* destroy the node */
     queue->clazz->destroy_node( node, queue );
@@ -89,7 +109,7 @@
   /* Important: This function is called from the cache manager to */
   /* size a given cache node during `cache compression'.  The     */
   /* second argument is always `cache.user_data'.  Thus be        */
-  /* certain that the function FTC_Image_Cache_New() does indeed  */
+  /* certain that the function FTC_Glyph_Cache_New() does indeed  */
   /* set its `user_data' field correctly, otherwise bad things    */
   /* will happen!                                                 */
 
@@ -148,7 +168,7 @@
     queue->clazz     = clazz;
 
     /* allocate buckets table */
-    if ( ALLOC_ARRAY( queue->buckets, queue->hash_size, FT_ListRec ) )
+    if ( ALLOC_ARRAY( queue->buckets, queue->hash_size, FTC_GlyphNode ) )
       goto Exit;
 
     /* initialize queue by type if needed */
@@ -177,8 +197,8 @@
     FTC_Glyph_Cache         cache        = queue->cache;
     FTC_Manager             manager      = cache->root.manager;
     FT_List                 glyphs_lru   = &manager->global_lru;
-    FT_List                 bucket       = queue->buckets;
-    FT_List                 bucket_limit = bucket + queue->hash_size;
+    FTC_GlyphNode*          bucket       = queue->buckets;
+    FTC_GlyphNode*          bucket_limit = bucket + queue->hash_size;
     FT_Memory               memory       = cache->root.memory;
 
     FTC_Glyph_Queue_Class*  clazz = queue->clazz;
@@ -187,26 +207,24 @@
     /* for each bucket, free the list of glyph nodes */
     for ( ; bucket < bucket_limit; bucket++ )
     {
-      FT_ListNode    node = bucket->head;
-      FT_ListNode    next = 0;
-      FT_ListNode    lrunode;
-      FTC_GlyphNode  inode;
+      FTC_GlyphNode   node = bucket[0];
+      FTC_GlyphNode   next = 0;
+      FT_ListNode     lrunode;
 
 
       for ( ; node; node = next )
       {
-        next    = node->next;
-        inode   = FTC_LISTNODE_TO_GLYPHNODE( node );
-        lrunode = FTC_GLYPHNODE_TO_LRUNODE( inode );
+        next    = node->queue_next;
+        lrunode = FTC_GLYPHNODE_TO_LRUNODE( node );
 
-        manager->num_bytes -= clazz->size_node( inode, queue );
+        manager->num_bytes -= clazz->size_node( node, queue );
 
         FT_List_Remove( glyphs_lru, lrunode );
 
-        clazz->destroy_node( inode, queue );
+        clazz->destroy_node( node, queue );
       }
 
-      bucket->head = bucket->tail = 0;
+      bucket[0] = 0;
     }
 
     if ( clazz->done )
@@ -217,58 +235,63 @@
   }
 
 
-  FT_EXPORT_FUNC( FT_Error )  FTC_Glyph_Queue_Lookup_Node(
-                                FTC_Glyph_Queue  queue,
-                                FT_UInt          glyph_index,
-                                FTC_GlyphNode*   anode )
+  FT_EXPORT_FUNC( FT_Error )
+  FTC_Glyph_Queue_Lookup_Node( FTC_Glyph_Queue  queue,
+                               FT_UInt          glyph_index,
+                               FTC_GlyphNode*   anode )
   {
     FTC_Glyph_Cache         cache      = queue->cache;
     FTC_Manager             manager    = cache->root.manager;
     FT_UInt                 hash_index = glyph_index % queue->hash_size;
-    FT_List                 bucket     = queue->buckets + hash_index;
-    FT_ListNode             node;
+    FTC_GlyphNode*          bucket     = queue->buckets + hash_index;
+    FTC_GlyphNode*          pnode      = bucket;
+    FTC_GlyphNode           node;
     FT_Error                error;
-    FTC_GlyphNode           inode;
 
     FTC_Glyph_Queue_Class*  clazz = queue->clazz;
 
 
     *anode = 0;
-    for ( node = bucket->head; node; node = node->next )
+    
+    for ( ;; )
     {
-      FT_UInt  gindex;
-
-
-      inode  = FTC_LISTNODE_TO_GLYPHNODE( node );
-      gindex = inode->glyph_index;
-
-      if ( gindex == glyph_index )
+      node = *pnode;
+      if (!node)
+        break;
+        
+      if ( node->glyph_index == glyph_index )
       {
         /* we found it! -- move glyph to start of the lists */
-        FT_List_Up( bucket, node );
-        FT_List_Up( &manager->global_lru, FTC_GLYPHNODE_TO_LRUNODE( inode ) );
-        *anode = inode;
+        *pnode           = node->queue_next;
+        node->queue_next = bucket[0];
+        bucket[0]        = node;
+        
+        FT_List_Up( &manager->global_lru, FTC_GLYPHNODE_TO_LRUNODE( node ) );
+        *anode = node;
         return 0;
       }
+      /* go to next node in bucket */
+      pnode = &node->queue_next;
     }
 
     /* we didn't found the glyph image, we will now create a new one */
-    error = clazz->new_node( queue, glyph_index, &inode );
+    error = clazz->new_node( queue, glyph_index, &node );
     if ( error )
       goto Exit;
 
     /* insert the node at the start of our bucket list */
-    FT_List_Insert( bucket, FTC_GLYPHNODE_TO_LISTNODE( inode ) );
+    node->queue_next = bucket[0];
+    bucket[0]        = node;
 
     /* insert the node at the start the global LRU glyph list */
-    FT_List_Insert( &manager->global_lru, FTC_GLYPHNODE_TO_LRUNODE( inode ) );
+    FT_List_Insert( &manager->global_lru, FTC_GLYPHNODE_TO_LRUNODE( node ) );
 
-    manager->num_bytes += clazz->size_node( inode, queue );
+    manager->num_bytes += clazz->size_node( node, queue );
 
     if (manager->num_bytes > manager->max_bytes)
       FTC_Manager_Compress( manager );
 
-    *anode = inode;
+    *anode = node;
 
   Exit:
     return error;

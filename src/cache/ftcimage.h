@@ -21,11 +21,20 @@
 
 
 #include <freetype/cache/ftcglyph.h>
+#include <freetype/ftglyph.h>
 
 
 #ifdef __cplusplus
   extern "C" {
 #endif
+
+ /* the FT_Glyph image "glyph node" type */
+  typedef struct  FTC_GlyphImageRec_
+  {
+    FTC_GlyphNodeRec   root;
+    FT_Glyph           ft_glyph;
+
+  } FTC_GlyphImageRec, *FTC_GlyphImage;
 
 
   /* the glyph image queue type */

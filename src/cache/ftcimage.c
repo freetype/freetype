@@ -39,13 +39,13 @@
   /* this is a simple glyph image destructor, which is called exclusively */
   /* from the CacheQueue object                                           */
   LOCAL_FUNC_X
-  void  ftc_glyph_image_node_destroy( FTC_GlyphNode    node,
+  void  ftc_glyph_image_node_destroy( FTC_GlyphImage   node,
                                       FTC_Glyph_Queue  queue )
   {
     FT_Memory  memory = queue->memory;
 
 
-    FT_Done_Glyph( FTC_GLYPHNODE_GET_GLYPH( node ) );
+    FT_Done_Glyph( node->ft_glyph );
     FREE( node );
   }
 
@@ -53,12 +53,12 @@
   LOCAL_FUNC_X
   FT_Error  ftc_glyph_image_node_new( FTC_Glyph_Queue  queue,
                                       FT_UInt          glyph_index,
-                                      FTC_GlyphNode*   anode )
+                                      FTC_GlyphImage  *anode )
   {
     FT_Memory        memory   = queue->memory;
     FTC_Image_Queue  imageq = (FTC_Image_Queue)queue;
     FT_Error         error;
-    FTC_GlyphNode    node = 0;
+    FTC_GlyphImage   node = 0;
     FT_Face          face;
     FT_Size          size;
 
@@ -68,7 +68,7 @@
       goto Exit;
 
     /* init its inner fields */
-    FTC_GlyphNode_Init( node, queue, glyph_index );
+    FTC_GlyphNode_Init( FTC_GLYPHNODE(node), queue, glyph_index );
 
     /* we will now load the glyph image */
     error = FTC_Manager_Lookup_Size( queue->manager,
@@ -76,7 +76,7 @@
                                      &face, &size );
     if ( !error )
     {
-      FT_UInt  glyph_index = node->glyph_index;
+      FT_UInt  glyph_index = node->root.glyph_index;
       FT_UInt  load_flags  = FT_LOAD_DEFAULT;
       FT_UInt  image_type  = imageq->description.image_type;
 
@@ -118,7 +118,7 @@
 
           error = FT_Get_Glyph( face->glyph, &glyph );
           if ( !error )
-            FTC_GLYPHNODE_SET_GLYPH( node, glyph );
+            node->ft_glyph = glyph;
         }
         else
           error = FT_Err_Invalid_Argument;
@@ -138,10 +138,10 @@
   /* a FTC_Glyph_Queue_Class and a FTC_CacheNode_Class     */
   /*                                                       */
   LOCAL_FUNC_X
-  FT_ULong  ftc_glyph_image_node_size( FTC_GlyphNode  node )
+  FT_ULong  ftc_glyph_image_node_size( FTC_GlyphImage  node )
   {
     FT_ULong  size  = 0;
-    FT_Glyph  glyph = FTC_GLYPHNODE_GET_GLYPH( node );
+    FT_Glyph  glyph = node->ft_glyph;
 
 
     switch ( glyph->format )
@@ -249,15 +249,15 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_Lookup(
-                               FTC_Image_Cache  cache,
-                               FTC_Image_Desc*  desc,
-                               FT_UInt          gindex,
-                               FT_Glyph*        aglyph )
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
+                          FTC_Image_Desc*  desc,
+                          FT_UInt          gindex,
+                          FT_Glyph*        aglyph )
   {
     FT_Error         error;
     FTC_Glyph_Queue  queue;
-    FTC_GlyphNode    inode;
+    FTC_GlyphNode    node;
     FTC_Manager      manager;
 
     FTC_Image_Queue  img_queue;
@@ -281,7 +281,7 @@
         goto Exit;
     }
 
-    error = FTC_Glyph_Queue_Lookup_Node( queue, gindex, &inode );
+    error = FTC_Glyph_Queue_Lookup_Node( queue, gindex, &node );
     if ( error )
       goto Exit;
 
@@ -289,12 +289,12 @@
     manager = cache->root.root.manager;
     if ( manager->num_bytes > manager->max_bytes )
     {
-      FTC_GlyphNode_Ref( inode );
+      FTC_GlyphNode_Ref   ( node );
       FTC_Manager_Compress( manager );
-      FTC_GlyphNode_Unref( inode );
+      FTC_GlyphNode_Unref ( node );
     }
 
-    *aglyph = FTC_GLYPHNODE_GET_GLYPH( inode );
+    *aglyph = ((FTC_GlyphImage)node)->ft_glyph;
 
   Exit:
     return error;

@@ -30,21 +30,30 @@ ifeq ($(PLATFORM),ansi)
       CONFIG_FILE := unix-dev.mk
       devel: setup
     else
-      # If a Unix platform is detected, the configure script is called and
-      # `unix-def.mk' together with `unix-cc.mk' is created.
-      #
-      # Arguments to `configure' should be in the CFG variable.  Example:
-      #
-      #   make CFG="--prefix=/usr --disable-static"
-      #
-      # If you need to set CFLAGS or LDFLAGS, do it here also.
-      #
-      # Feel free to add support for other platform specific compilers in this
-      # directory (e.g. solaris.mk + changes here to detect the platform).
-      #
-      CONFIG_FILE := unix.mk
-      setup: unix-def.mk
-      unix: setup
+
+    # If `lccl' is the requested target, we use a special configuration
+    # file named `unix-lcc.mk'.  It disables libtool for LCC
+    #
+      ifneq ($(findstring lcc,$(MAKECMDGOALS)),)
+        CONFIG_FILE := unix-lcc.mk
+        lcc: setup
+      else
+        # If a Unix platform is detected, the configure script is called and
+        # `unix-def.mk' together with `unix-cc.mk' is created.
+        #
+        # Arguments to `configure' should be in the CFG variable.  Example:
+        #
+        #   make CFG="--prefix=/usr --disable-static"
+        #
+        # If you need to set CFLAGS or LDFLAGS, do it here also.
+        #
+        # Feel free to add support for other platform specific compilers in this
+        # directory (e.g. solaris.mk + changes here to detect the platform).
+        #
+        CONFIG_FILE := unix.mk
+        setup: unix-def.mk
+        unix: setup
+      endif
     endif
 
     setup: std_setup
