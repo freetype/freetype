@@ -2,7 +2,7 @@
 
 # serial 1 FT_MUNMAP_DECL
 
-AC_DEFUN(FT_MUNMAP_DECL,
+AC_DEFUN([FT_MUNMAP_DECL],
 [AC_MSG_CHECKING([whether munmap must be declared])
 AC_CACHE_VAL(ft_cv_munmap_decl,
 [AC_TRY_COMPILE([
@@ -19,7 +19,7 @@ if test $ft_cv_munmap_decl = yes; then
   [Define to 1 if munmap() is not defined in <sys/mman.h>])
 fi])
 
-AC_DEFUN(FT_MUNMAP_PARAM,
+AC_DEFUN([FT_MUNMAP_PARAM],
 [AC_MSG_CHECKING([for munmap's first parameter type])
 AC_TRY_COMPILE([
 #include <unistd.h>

@@ -1,3 +1,9 @@
+2003-11-02  Patrick Welche  <prlw1@newn.cam.ac.uk>
+
+	* builds/unix/freetype2.m4, builds/unix/ft-munmap.m4: Protect
+	first argument of AC_DEFUN with brackets to avoid possible
+	expansion.
+
 2003-11-02  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/cache/ftcglyph.h: Don't include stddef.h.
