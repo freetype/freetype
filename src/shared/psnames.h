@@ -150,10 +150,10 @@
                                                FT_UInt       num_glyphs,
                                                const char**  glyph_names,
                                                PS_Unicodes*  unicodes );
-  
+
   typedef FT_UInt   (*PS_Lookup_Unicode_Func)( PS_Unicodes*  unicodes,
                                                FT_UInt       unicode );
-  
+
  /*************************************************************************
   *                                                                       
   * <Struct>                                                              
