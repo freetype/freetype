@@ -1,3 +1,12 @@
+2002-06-08  David Turner  <david@freetype.org>
+
+	* src/cache/ftccache.i: removing a typo that prevented
+        the source's compilation
+
+        * src/cache/ftccache.c (ftc_node_hash_unlink): fixed a
+	bug that caused nasty memory overwrites. the hash table's
+        buckets array wasn't correctly resized when shrinked.
+
 2002-06-08  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/smakefile, builds/amiga/makefile: Updated.
@@ -25,8 +34,6 @@
 	(ftc_cmap_cache_lookup) [!FTC_CACHE_USE_INLINE]: Typedef to
 	ftc_cache_lookup.
 	(FTC_CMapCache_Lookup): Updated.
-
-2002-06-07  Graham Asher  <graham.asher@btinternet.com>
 
 	Adding various experimental optimizations to the cache manager.
 
@@ -58,6 +65,8 @@
 	(FTC_SBitCache_Lookup): Updated.
 
 	* src/type42/t42parse.c: Removing duplicate function.
+
+2002-06-07  Graham Asher  <graham.asher@btinternet.com>
 
 	* src/base/ftobjs.c (FT_Render_Glyph_Internal): Changed definition
 	from FT_EXPORT_DEF to FT_BASE_DEF.
