@@ -19,6 +19,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
+#include FT_TRUETYPE_IDS_H
 
 #include "t1gload.h"
 #include "t1load.h"
@@ -467,25 +468,25 @@
         {
         case T1_ENCODING_TYPE_STANDARD:
           charmap.encoding    = FT_ENCODING_ADOBE_STANDARD;
-          charmap.encoding_id = 0;
+          charmap.encoding_id = TT_ADOBE_ID_STANDARD;
           clazz               = cmap_classes->standard;
           break;
 
         case T1_ENCODING_TYPE_EXPERT:
           charmap.encoding    = FT_ENCODING_ADOBE_EXPERT;
-          charmap.encoding_id = 1;
+          charmap.encoding_id = TT_ADOBE_ID_EXPERT;
           clazz               = cmap_classes->expert;
           break;
 
         case T1_ENCODING_TYPE_ARRAY:
           charmap.encoding    = FT_ENCODING_ADOBE_CUSTOM;
-          charmap.encoding_id = 2;
+          charmap.encoding_id = TT_ADOBE_ID_CUSTOM;
           clazz               = cmap_classes->custom;
           break;
 
         case T1_ENCODING_TYPE_ISOLATIN1:
           charmap.encoding    = FT_ENCODING_ADOBE_LATIN_1;
-          charmap.encoding_id = 3;
+          charmap.encoding_id = TT_ADOBE_ID_LATIN_1;
           clazz               = cmap_classes->unicode;
           break;
 
