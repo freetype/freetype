@@ -104,19 +104,19 @@
       <ul><p>
         <li>
           <a href="#other-color">How can I set the color of text rendered
-          by FreeType ?</a>
+          by FreeType?</a>
         </li>
         <li>
           <a href="#other-depth">Can I use FreeType to draw text on a pixmap
-          with arbitrary depth ?</a>
+          with arbitrary depth?</a>
         </li>
         <li>
-          <a href="#other-size">I set the pixel size to 8x8, but the resulting
-          glyphs are larger than that. Why ?</a>
+          <a href="#other-size">I set the pixel size to 8x8, but the
+          resulting glyphs are larger than that.  Why?</a>
         </li>
         <li>
           <a href="#other-bbox">How can I compute the bounding box of a text
-          string without loading its glyphs ?</a>
+          string without loading its glyphs?</a>
         </li>
         <li>
           <a href="#other-antialias">Which anti-aliasing algorithm is
@@ -567,112 +567,111 @@
 
     <a name="other-depth">
     <h3>
-      IV.1 Can I use FreeType to draw text on a pixmap with arbitratry depth ?
+      IV.1 Can I use FreeType to draw text on a pixmap with arbitratry depth?
     </h3>
 
-    <p>No directly, as FreeType is a font library, not a general purpose
-    graphics library or text rendering service. However, note that the
+    <p>Not directly, as FreeType is a font library, not a general purpose
+    graphics library or text rendering service.  However, note that the
     anti-aliased renderer allows you to convert a vectorial glyph outline
-    into a list of "spans" (i.e. horizontal pixel segments with same coverage)
-    that can be rendered through user-provided callbacks.</p>
+    into a list of "spans" (i.e. horizontal pixel segments with same
+    coverage) that can be rendered through user-provided callbacks.</p>
 
-     <p>By providing the appropriate span callback, you can render anti-aliased
-     text to any kind of surface. You can also use any color or fill
-     pattern/image if you want to. This process is called
-     <em>direct rendering</em>. For more information, please read the
-     documentation contained in the following files:</p>
+    <p>By providing the appropriate span callback, you can render
+    anti-aliased text to any kind of surface.  You can also use any color or
+    fill pattern/image if you want to.  This process is called <em>direct
+    rendering</em>.  For more information, please read the documentation
+    contained in the following files:</p>
      
-     <ul>
-       <li><p>
-       <b><tt>&lt;freetype/ftimage.h&gt;</tt></b> contains the definition
-       of the <tt>FT_Raster_Params</tt> type used with direct rendering.
-       </p></li>
-          
-       <li><p>
-       <b><tt>&lt;freetype/ftoutln.h&gt;</tt></b> contains the definition
-       of the <tt>FT_Outline_Render</tt> function that can be used to
-       convert vectorial outlines to span lists.
-       </p></li>
-     </ul>
+    <ul>
+      <li>
+        <p><tt>&lt;freetype/ftimage.h&gt;</tt> contains the definition of
+        the <tt>FT_Raster_Params</tt> type used with direct rendering.</p>
+      </li>
+      <li>
+        <p><tt>&lt;freetype/ftoutln.h&gt;</tt> contains the definition of
+        the <tt>FT_Outline_Render()</tt> function that can be used to
+        convert vectorial outlines to span lists.</p>
+      </li>
+    </ul>
 
-     <p>Here's some code that uses them:</p>
-     <font color="blue"><pre>
+    <p>Here's some code that uses them:</p>
+
+    <font color="blue"><pre>
+    FT_Raster_Params  params;
+    FT_Outline        outline;
+       
+
+    ... load vectorial glyph in "outline" ...
+       
+    params.flags      = ft_raster_flag_aa | ft_raster_flag_direct;
+    params.gray_spans = (FT_Raster_Span_Func)your_own_span_function_here;
+    params.user       = your_own_data_pointer;
+       
+    error = FT_Outline_Render( library, &amp;outline, &amp;params );</pre>
+    </font>
      
-       FT_Raster_Params  params;
-       FT_Outline        outline;
-       
-       .. load vectorial glyph in "outline"
-       
-       params.flags      = ft_raster_flag_aa | ft_raster_flag_direct;
-       params.gray_spans = (FT_Raster_Span_Func)your_own_span_function_here;
-       params.user       = your_own_data_pointer;
-       
-       error = FT_Outline_Render( library, &amp;outline, &amp;params );
-     </pre></font>
-     
-     <p>Note that direct rendering is <em>not</em> available with monochrome
-     output, as the current renderer uses a two-pass algorithm to generate
-     glyphs with correct drop-out control.</p>
+    <p>Note that direct rendering is <em>not</em> available with monochrome
+    output, as the current renderer uses a two-pass algorithm to generate
+    glyphs with correct drop-out control.</p>
 
     <hr>
     <a name="other-color">
     <h3>
-      IV.2 How can I set the color of text rendered by FreeType ?
+      IV.2 How can I set the color of text rendered by FreeType?
     </h3>
-    
+
     <p>Basically, you can't do that, because FreeType is simply a font
-    library. In general, you'll need to use your favorite graphics library
-    to draw the FreeType glyphs with the appropriate color.</p>
+    library.  In general, you will need to use your favorite graphics
+    library to draw the FreeType glyphs with the appropriate color.</p>
 
     <p>Note that for anti-aliased glyphs, you can "set the color" by using
     <em>direct rendering</em> as described in <a href="#other-depth">this
-    answer</a></p>
-
+    answer</a>.</p>
 
     <hr>
     <a name="other-size">
     <h3>
       IV.3 I set the pixel size to 8x8, but the resulting glyphs are larger
-           (or smaller) than that. Why ??
+      (or smaller) than that.  Why?
     </h3>
 
-    <p>A lot of people have a hard time understanding this topic, because
-    they think of glyphs as fixed-width/height "cells", like those of
-    fonts used in terminals/consoles. This assumption is simply not valid
-    with most "modern" font formats, even bitmapped-based ones like
-    PCF or BDF.</p>
+    <p>A lot of people have difficulties to understand this topic, because
+    they think of glyphs as fixed-width resp. fixed-height "cells", like
+    those of fonts used in terminals/consoles.  This assumption is simply
+    not valid with most "modern" font formats, even bitmapped-based ones
+    like <tt>PCF</tt> or <tt>BDF</tt>.</p>
 
     <p>Be aware that the <em>character size</em> that is set either through
-    <tt>FT_Set_Char_Size</tt> or <tt>FT_Set_Pixel_Sizes</tt> isn't directly
-    related to the dimension of the glyph bitmaps generated.</p>
+    <tt>FT_Set_Char_Size()</tt> or <tt>FT_Set_Pixel_Sizes()</tt> isn't
+    directly related to the dimension of the glyph bitmaps generated.</p>
     
-    <p>Rather, the character size is indeed the size of
-    <em>an abstract square</em>, called the <em>EM</em>, used by typographers
-    to design fonts. Scaling two distinct fonts to the same character size, be
-    it expressed in points or pixels, will generally result in bitmaps with
-    <em>distinct dimensions</em> !</p>
+    <p>Rather, the character size is indeed the size of <em>an abstract
+    square</em>, called the <em>EM</em>, used by typographers to design
+    fonts.  Scaling two distinct fonts to the same character size, be it
+    expressed in points or pixels, will generally result in bitmaps with
+    <em>distinct dimensions</em>!</p>
 
     <p>Note that historically, the EM corresponded to the width of a capital
-    "M" in Latin typefaces. However, later improvements in typography led to
-    the designs that greatly detract from this rule. Today, it is not possible
-    to connect the EM size to a specific font "feature" in a reliable way.</p>
+    "M" in Latin typefaces.  However, later improvements in typography led
+    to designs that greatly detract from this rule.  Today, it is not
+    possible to connect the EM size to a specific font "feature" in a
+    reliable way.</p>
 
     <hr>
-
     <a name="other-bbox">
     <h3>
-    IV.4 How can I compute the bounding box of a given string of text without
-         loading its glyphs before ?
+      IV.4 How can I compute the bounding box of a given string of text
+      without loading its glyphs before?
     </h3>
     
-    <p>A lot of people want to be able to compute the size in pixels of a simple
-    string of text with minimal overhead. For example, that can be useful to
-    draw centered text within a button.</p>
-    
-    
+    <p>A lot of people want to be able to compute the size in pixels of a
+    simple string of text with minimal overhead.  For example, that can be
+    useful to draw centered text within a button. (to be continued...)</p>
+
+    <hr>
     <a name="other-antialias">
     <h3>
-      IV.1 Which anti-aliasing algorithm is used by FreeType&nbsp;2?</h3>
+      IV.5 Which anti-aliasing algorithm is used by FreeType&nbsp;2?</h3>
 
     <p>The algorithm has been specifically designed for FreeType.  It is
     based on ideas that were originally found in the implementation of the
@@ -699,7 +698,7 @@
     <hr>
     <a name="other-opentype">
     <h3>
-      IV.2 When will FreeType&nbsp;2 support OpenType?
+      IV.6 When will FreeType&nbsp;2 support OpenType?
     </h3>
 
     <p>Well, the engine already reads OpenType/CFF files perfectly.  What it
@@ -707,7 +706,7 @@
 
     <p>FreeType&nbsp;1 comes with a set of extensions that are used to load
     and manage OpenType Layout tables.  It even has a demonstration program
-    named "<tt>ftstrtto</tt>" to show its capabilities.</p>
+    named <tt>ftstrtto</tt> to show its capabilities.</p>
 
     <p>For FreeType&nbsp;2, we have decided that the layout operations
     provided through these tables are better placed in a specific
