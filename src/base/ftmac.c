@@ -218,14 +218,20 @@
 
 
   /* Look inside the FOND data, answer whether there should be an SFNT
-     resource, and answer the name of a possible LWFN Type 1 file. */
+     resource, and answer the name of a possible LWFN Type 1 file. 
+     
+     Thanks to Paul Miller (paulm@profoundeffects.com) for the fix 
+     to load a face OTHER than the first one in the FOND!
+  */
   static void
   parse_fond( char*   fond_data,
               short*  have_sfnt,
               short*  sfnt_id,
-              Str255  lwfn_file_name )
+              Str255  lwfn_file_name,
+              short   face_index )
   {
     AsscEntry*  assoc;
+    AsscEntry*  base_assoc;
     FamRec*     fond;
 
 
@@ -235,11 +241,19 @@
 
     fond = (FamRec*)fond_data;
     assoc = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
+    base_assoc = assoc;
+    assoc += face_index;        /* add on the face_index! */
 
+    /* if the face at this index is not scalable, fall back to the first one (old behavior) */
     if ( assoc->fontSize == 0 )
     {
       *have_sfnt = 1;
       *sfnt_id = assoc->fontID;
+    }
+    else if (base_assoc->fontSize == 0)
+    {
+      *have_sfnt = 1;
+      *sfnt_id = base_assoc->fontID;
     }
 
     if ( fond->ffStylOff )
@@ -638,7 +652,7 @@
       return FT_Err_Invalid_File_Format;
 
     HLock( fond );
-    parse_fond( *fond, &have_sfnt, &sfnt_id, lwfn_file_name );
+    parse_fond( *fond, &have_sfnt, &sfnt_id, lwfn_file_name, face_index );
     HUnlock( fond );
 
     if ( lwfn_file_name[0] )
