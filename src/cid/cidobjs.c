@@ -22,7 +22,6 @@
 #include <cidgload.h>
 #include <cidload.h>
 #include <freetype/internal/psnames.h>
-#include <cidafm.h>
 
 
   /*************************************************************************/

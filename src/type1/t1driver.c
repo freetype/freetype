@@ -308,12 +308,12 @@
 
 #ifdef T1_CONFIG_OPTION_NO_AFM
     (FTDriver_getKerning)   0,
-    (FTDriver_getAdvances)  0
+    (FTDriver_getAdvances)  0,
 #else
     (FTDriver_getKerning)   Get_Kerning,
-    (FTDriver_attachFile)   T1_Read_AFM
+    (FTDriver_attachFile)   T1_Read_AFM,
 #endif
-    (FTDriver_getAdvances)          0
+    (FTDriver_getAdvances)  0
   };
 
 

@@ -400,7 +400,7 @@
 
       p = (FT_Byte*)stream->cursor;
       for ( count = 0; count <= num_subrs; count++ )
-        offsets[count] = cid_get_offset( &p, dict->sd_bytes );
+        offsets[count] = cid_get_offset( &p, (FT_Byte)dict->sd_bytes );
 
       FORGET_Frame();
 

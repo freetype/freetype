@@ -1417,7 +1417,7 @@
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     /* clear all outline flags, except the `owner' one */
-    glyph->outline.flags &= ft_outline_owner;
+    glyph->outline.flags = 0;
 
     if ( size && size->root.metrics.y_ppem < 24 )
       glyph->outline.flags |= ft_outline_high_precision;

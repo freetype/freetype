@@ -222,9 +222,9 @@ II. DETAILED COMPILATION PROCEDURE:
      src/base/ftinit.c           - initialisation layer
      src/base/ftdebug.c          - debugging component (empty in release build)
      src/base/ftbase.c           - the "base layer" component
-     src/base/ftraster.c         - the standard raster (scan-converter)
-     src/base/ftgrays.c          - the smooth raster (anti-aliased only)
      src/base/ftglyph.c          - optional convenience functions
+     src/raster1/raster1.c       - the monochrome bitmap renderer
+     src/smooth/smooth.c         - the anti-aliased bitmap renderer
      src/sfnt/sfnt.c             - the "sfnt" module
      src/psnames/psnames.c       - the "psnames" module
      src/truetype/truetype.c     - the TrueType font driver

@@ -2257,7 +2257,7 @@
 
     
     if ( !result || result->glyph_format != slot->format )
-      result = ft_lookup_renderer( library, slot->format, 0 );
+      result = FT_Lookup_Renderer( library, slot->format, 0 );
     
     return result;
   }
@@ -2439,7 +2439,6 @@
   }                                           
 
 
-<<<<<<< ftobjs.c
  /*************************************************************************
   *
   *  <Function>

@@ -363,6 +363,10 @@
     if (cff->num_subfonts >= 1)
     {
       FT_Byte  fd_index = CFF_Get_FD( &cff->fd_select, glyph_index );
+      if (fd_index >= cff->num_subfonts)
+      {
+        FT_ERROR(( "INVALID FD INDEX = %d >= %d\n", fd_index, cff->num_subfonts ));
+      }
       sub = cff->subfonts[fd_index];
     }
     

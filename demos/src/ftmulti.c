@@ -343,6 +343,8 @@
     const unsigned char* p;
 
 
+    ptsize=ptsize;
+
     start_x = 4;
     start_y = 32 + size->metrics.y_ppem;
 
@@ -586,7 +588,7 @@
     return 1;
 
   Do_Axis:
-    if ( axis < multimaster.num_axis )
+    if ( axis < (int)multimaster.num_axis )
     {
       FT_MM_Axis*  a   = multimaster.axis + axis;
       FT_Long      pos = design_pos[axis];
@@ -711,7 +713,7 @@
       int  n;
 
       
-      for ( n = 0; n < multimaster.num_axis; n++ )
+      for ( n = 0; n < (int)multimaster.num_axis; n++ )
         design_pos[n] =
           ( multimaster.axis[n].minimum + multimaster.axis[n].maximum ) / 2;
     }
@@ -790,7 +792,7 @@
           int  n;
 
 
-          for ( n = 0; n < multimaster.num_axis; n++ )
+          for ( n = 0; n < (int)multimaster.num_axis; n++ )
           {
             char  temp[32];
 

@@ -1324,10 +1324,10 @@
       goto Exit;
 
     p = (FT_Byte*)stream->cursor;
-    fd_select = (FT_UInt) cid_get_offset( &p, cid->fd_bytes );
-    off1      = (FT_ULong)cid_get_offset( &p, cid->gd_bytes );
+    fd_select = (FT_UInt) cid_get_offset( &p, (FT_Byte)cid->fd_bytes );
+    off1      = (FT_ULong)cid_get_offset( &p, (FT_Byte)cid->gd_bytes );
     p        += cid->fd_bytes;
-    glyph_len = cid_get_offset( &p, cid->gd_bytes ) - off1;
+    glyph_len = cid_get_offset( &p, (FT_Byte)cid->gd_bytes ) - off1;
 
     FORGET_Frame();
 

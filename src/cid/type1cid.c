@@ -24,7 +24,7 @@
 #include <cidriver.c>
 #include <cidgload.c>
 
-#if 1
+#if 0
 #include <cidafm.c>
 #endif
 

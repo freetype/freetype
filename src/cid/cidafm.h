@@ -32,7 +32,7 @@
 
   typedef struct  CID_AFM_
   {
-    FT_Int         num_pairs;
+    FT_UInt         num_pairs;
     CID_Kern_Pair*  kern_pairs;
 
   } CID_AFM;
@@ -41,15 +41,15 @@
 #if 1
 
   LOCAL_DEF
-  FT_Error  CID_Read_AFM( FT_Face    t1_face,
+  FT_Error  CID_Read_AFM( FT_Face    cid_face,
                           FT_Stream  stream );
 
   LOCAL_DEF
   void  CID_Done_AFM( FT_Memory  memory,
-                      CID_AFM*    afm );
+                      CID_AFM*   afm );
 
   LOCAL_DEF
-  void  CID_Get_Kerning( CID_AFM*     afm,
+  void  CID_Get_Kerning( CID_AFM*    afm,
                          FT_UInt     glyph1,
                          FT_UInt     glyph2,
                          FT_Vector*  kerning );

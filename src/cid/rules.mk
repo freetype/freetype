@@ -35,7 +35,6 @@ CID_DRV_SRC := $(CID_DIR_)cidparse.c  \
                $(CID_DIR_)cidload.c   \
                $(CID_DIR_)cidriver.c  \
                $(CID_DIR_)cidgload.c  \
-               $(CID_DIR_)cidafm.c    \
                $(CID_DIR_)cidobjs.c
 
 # CID driver headers

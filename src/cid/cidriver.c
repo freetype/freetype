@@ -18,7 +18,6 @@
 
 #include <cidriver.h>
 #include <cidgload.h>
-#include <cidafm.h>
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
@@ -48,7 +47,7 @@
   }
 
 
-#ifndef T1_CONFIG_OPTION_NO_AFM
+#if 0 /* unimplemented for now.. */
 
   static
   FT_Error  cid_Get_Kerning( T1_Face     face,
@@ -70,7 +69,7 @@
   }
 
 
-#endif /* !T1_CONFIG_OPTION_NO_AFM */
+#endif /* 0 */
 
 
   /*************************************************************************/
@@ -209,13 +208,8 @@
     (FTDriver_loadGlyph)    CID_Load_Glyph,
     (FTDriver_getCharIndex) CID_Get_Char_Index,
 
-#ifdef T1_CONFIG_OPTION_NO_AFM
     (FTDriver_getKerning)   0,
     (FTDriver_attachFile)   0,
-#else
-    (FTDriver_getKerning)   cid_Get_Kerning,
-    (FTDriver_attachFile)   CID_Read_AFM,
-#endif
 
     (FTDriver_getAdvances)  0
   };

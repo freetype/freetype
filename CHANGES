@@ -10,6 +10,9 @@ LATEST CHANGES
     
     "make multi" now works well :-)
     
+    Also removed the use of "cidafm" for now, even if the source files
+    are still there. This functionality will certainly go into a specific
+    module..
     
 
   - CHANGES TO THE RENDERER MODULES

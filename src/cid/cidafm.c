@@ -159,7 +159,7 @@
 
   /* parse an AFM file - for now, only read the kerning pairs */
   LOCAL_FUNC
-  FT_Error  CID_Read_AFM( FT_Face    t1_face,
+  FT_Error  CID_Read_AFM( FT_Face    cid_face,
                           FT_Stream  stream )
   {
     FT_Error       error;
@@ -168,9 +168,9 @@
     FT_Byte*       limit;
     FT_Byte*       p;
     FT_Int         count = 0;
-    CID_Kern_Pair*  pair;
+    CID_Kern_Pair* pair;
     T1_Font*       type1 = &((T1_Face)t1_face)->type1;
-    CID_AFM*        afm   = 0;
+    CID_AFM*       afm   = 0;
 
 
     if ( ACCESS_Frame( stream->size ) )

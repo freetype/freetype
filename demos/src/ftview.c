@@ -601,7 +601,7 @@
     if ( debug )
     {
 #ifdef FT_DEBUG_LEVEL_TRACE
-      FT_SetTraceLevel( trace_any, trace_level );
+      FT_SetTraceLevel( trace_any, (FT_Byte)trace_level );
 #else
       trace_level = 0;
 #endif

@@ -645,12 +645,27 @@
         *(FT_UShort*)p = (FT_UShort)value;
         break;
 
+     /* A slight note regarding the following:                    */
+     /*                                                           */
+     /*  SIZEOF_INT is defined in <freetype/config/ftconfig.h>    */
+     /*  and gives the size in bytes of the "int" type on the     */
+     /*  current platform..                                       */
+     /*                                                           */
+     /*  Only on 16-bit systems can the value of SIZEOF_INT be    */
+     /*  less than 4. In this case SIZEOF_LONG is always 4        */
+     /*                                                           */
+     /*  On a 64-bit system, SIZEOF_LONG can be 8, which is       */
+     /*  handled by the default case..                            */
+     /*                                                           */
+
+#if SIZEOF_INT == 4
       case 4:
-         *(FT_ULong*)p = (FT_ULong)value;
+         *(FT_UInt*)p = (FT_UInt)value;
          break;
+#endif
 
       default:
-         ;          /* ignore! */
+         *(FT_ULong*)p = (FT_ULong)value;
       }
 
       /* go to next field */

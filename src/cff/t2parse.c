@@ -516,17 +516,28 @@
             case t2_kind_fixed:
               val = t2_parse_fixed( parser->stack );
 
+            /* A slight note regarding the following:                    */
+            /*                                                           */
+            /*  SIZEOF_INT is defined in <freetype/config/ftconfig.h>    */
+            /*  and gives the size in bytes of the "int" type on the     */
+            /*  current platform..                                       */
+            /*                                                           */
+            /*  Only on 16-bit systems can the value of SIZEOF_INT be    */
+            /*  less than 4. In this case SIZEOF_LONG is always 4        */
+            /*                                                           */
+            /*  On a 64-bit system, SIZEOF_LONG can be 8, which is       */
+            /*  handled by the default case..                            */
+            /*                                                           */
+
             Store_Number:
               switch ( field->size )
               {
-              case 1:
-                *(FT_Byte*)q = (FT_Byte)val;
-                break;
-              case 2:
-                *(FT_Short*)q = (FT_Short)val;
-                break;
-              default:
-                *(FT_Long*)q = val;
+                case 1:  *(FT_Byte*)q  = (FT_Byte)val;  break;
+                case 2:  *(FT_Short*)q = (FT_Short)val; break;
+#if SIZEOF_INT == 4
+                case 4:  *(FT_Int*)q   = (FT_Int)val;   break;
+#endif
+                default: *(FT_Long*)q  = val;
               }
               break;
 

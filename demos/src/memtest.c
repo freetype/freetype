@@ -18,6 +18,7 @@
   int  Fail;
   int  Num;
 
+  extern void FT_Add_Default_Modules( FT_Library  library );
 
 
 
@@ -42,11 +43,6 @@ typedef  struct MyBlock
 static  MyBlock my_blocks[ MAX_RECORDED_BLOCKS ];
 static  int     num_my_blocks = 0;
 
-static
-void  rewind_memory( void )
-{
-  num_my_blocks = 0;
-}
 
 /* record a new block in the table, check for duplicates too */
 static
@@ -125,12 +121,14 @@ void*  my_alloc( FT_Memory  memory,
   if (p)
     record_my_block(p,size);
 
+  memory=memory;
   return p;
 }
 
 static
 void   my_free( FT_Memory memory, void*  block )
 {
+  memory=memory;
   forget_my_block(block);
   /* free(block);  WE DO NOT REALLY FREE THE BLOCK */
 }
