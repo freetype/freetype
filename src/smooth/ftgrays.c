@@ -1748,10 +1748,11 @@
   static int
   gray_convert_glyph( RAS_ARG )
   {
-    TBand     bands[40], *band;
-    int       n, num_bands;
-    TPos      min, max, max_y;
-    FT_BBox*  clip;
+    TBand             bands[40];
+    volatile  TBand*  band;
+    volatile  int     n, num_bands;
+    volatile  TPos    min, max, max_y;
+    FT_BBox*          clip;
 
 
     /* Set up state in the raster object */

@@ -236,10 +236,10 @@
         
         if ( !psh2_hint_is_active(hint) )
         {
-          PSH2_Hint*  sort = table->sort;
           FT_UInt     count2;
           
 #if 0
+          PSH2_Hint*  sort = table->sort;
           PSH2_Hint   hint2;
 
           for ( count2 = count; count2 > 0; count2--, sort++ )
@@ -460,10 +460,6 @@
                                PSH_Globals      globals,
                                FT_Bool          vertical )
   {
-    PSH_Dimension  dim   = &globals->dimension[vertical];
-    FT_Fixed       scale = dim->scale_mult;
-    FT_Fixed       delta = dim->scale_delta;
-
     PSH2_Hint      hint;
     FT_UInt        count;
 
@@ -520,6 +516,7 @@
 #  define  print_zone(x)   do { } while (0)
 #endif
 
+#if 0
  /* setup interpolation zones once the hints have been grid-fitted */
  /* by the optimizer..                                             */
   static void
@@ -617,7 +614,7 @@
     table->num_zones = zone - table->zones;
     table->zone      = table->zones;
   }
-
+#endif
 
  /* tune a single coordinate with the current interpolation zones */  
   static FT_Pos
@@ -1074,7 +1071,6 @@
       FT_UInt          num_masks = table->hint_masks->num_masks;
       FT_UInt          first     = 0;
       FT_Int           major_dir = vertical ? PSH2_DIR_UP    : PSH2_DIR_RIGHT;
-      FT_Int           minor_dir = vertical ? PSH2_DIR_RIGHT : PSH2_DIR_UP;
       
       /* process secondary hints to "selected" points */
       if ( num_masks > 1 )
@@ -1136,7 +1132,6 @@
   {
     PSH_Dimension    dim   = &glyph->globals->dimension[vertical];
     FT_Fixed         scale = dim->scale_mult;
-    FT_Fixed         delta = dim->scale_delta;
 
     {
       FT_UInt     count = glyph->num_points;
