@@ -63,7 +63,7 @@
   /*************************************************************************/
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  Z1_Parse_Glyph( T1_Decoder*  decoder,
                             FT_UInt      glyph_index )
   {

@@ -216,6 +216,9 @@
     FT_Error   error;
     FT_Stream  stream = loader->stream;
 
+    /* for non-debug mode */
+    FT_UNUSED( glyph_index );
+
 
     FT_TRACE5(( "Glyph %ld\n", glyph_index ));
 
