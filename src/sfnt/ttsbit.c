@@ -123,7 +123,7 @@
             /* ensure that there are at least 8 bits in the accumulator */
             if ( loaded < 8 )
             {
-              acc    |= (FT_UShort)*source++ << ( 8 - loaded );
+              acc    |= (FT_UShort)((FT_UShort)*source++ << ( 8 - loaded ));
               loaded += 8;
             }
 
@@ -131,8 +131,8 @@
             val = (FT_Byte)( acc >> 8 );
             if ( shift )
             {
-              cur[0] |= val >> shift;
-              cur[1] |= val << space;
+              cur[0] |= (FT_Byte)(val >> shift);
+              cur[1] |= (FT_Byte)(val << space);
             }
             else
               cur[0] |= val;
@@ -158,16 +158,16 @@
         /* ensure that there are at least `count' bits in the accumulator */
         if ( (FT_Int)loaded < count )
         {
-          acc    |= (FT_UShort)*source++ << ( 8 - loaded );
+          acc    |= (FT_UShort)((FT_UShort)*source++ << ( 8 - loaded ));
           loaded += 8;
         }
 
         /* now write remaining bits */
         val     = (FT_Byte)( ( (FT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count ) );
-        cur[0] |= val >> shift;
+        cur[0] |= (FT_Byte)(val >> shift);
 
         if ( count > space )
-          cur[1] |= val << space;
+          cur[1] |= (FT_Byte)(val << space);
 
         acc   <<= count;
         loaded -= count;

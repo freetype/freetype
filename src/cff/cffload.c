@@ -1049,7 +1049,7 @@
   FT_LOCAL_DEF FT_UShort
   CFF_Get_Standard_Encoding( FT_UInt  charcode )
   {
-    return  (charcode < 256 ? cff_standard_encoding[charcode] : 0);
+    return  (FT_UShort)(charcode < 256 ? cff_standard_encoding[charcode] : 0);
   }
 
 

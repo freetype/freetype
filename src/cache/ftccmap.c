@@ -130,6 +130,8 @@
   FT_CALLBACK_DEF( FT_ULong )
   ftc_cmap_node_weight( FTC_CMapNode  cnode )
   {
+    FT_UNUSED(cnode);
+    
     return sizeof ( *cnode );
   }
 
@@ -142,7 +144,7 @@
     FT_UInt32  offset = (FT_UInt32)( cquery->char_code - cnode->first );
 
 
-    return ( offset < FTC_CMAP_INDICES_MAX );
+    return FT_BOOL( offset < FTC_CMAP_INDICES_MAX );
   }
 
 
@@ -373,7 +375,7 @@
 
           /* perform lookup */
           gindex                = FT_Get_Char_Index( face, char_code );
-          node->indices[offset] = gindex;
+          node->indices[offset] = (FT_UInt16) gindex;
 
           /* restore old charmap */
           FT_Set_Charmap( face, old );

@@ -23,6 +23,7 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TABLES_H
+#include FT_OUTLINE_H
 
 #include <string.h>     /* for strcmp() */
 
