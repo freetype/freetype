@@ -30,17 +30,41 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*                 USER-SELECTABLE CONFIGURATION MACROS                  */
   /*                                                                       */
-  /* These macros can be toggled by developers to enable or disable        */
-  /* certain aspects of FreeType.  This is a default file, where all major */
-  /* options are enabled.                                                  */
+  /* this file contains the default configuration macro definitions for    */
+  /* a standard build of the FreeType library. There are three ways to     */
+  /* use this file to build project-specific versions of the library:      */
   /*                                                                       */
-  /* Note that if some modifications are required for your build, we       */
-  /* advise you to put a modified copy of this file in your build          */
-  /* directory, rather than modifying it in-place.                         */
+  /*  - you can modify this file by hand, but this is not recommended      */
+  /*    in cases where you'd like to build several versions of the         */
+  /*    library from a single source directory                             */
   /*                                                                       */
-  /* The build directory is normally `freetype/builds/<system>' and        */
-  /* contains build or system-specific files that are included in          */
-  /* priority when building the library.                                   */
+  /*                                                                       */
+  /*  - you can put a copy of this file in your build directory, more      */
+  /*    precisely in "$BUILD/freetype/config/ftoption.h", where "$BUILD"   */
+  /*    is the name of a directory that is included _before_ the           */
+  /*    FreeType include path during compilation.                          */
+  /*                                                                       */
+  /*    the default FreeType Makefiles and Jamfiles use the build          */
+  /*    directory "builds/<system>" by default, but you can easily change  */
+  /*    that for your own projects                                         */
+  /*                                                                       */
+  /*                                                                       */
+  /*  - copy the file <ft2build.h> to "$BUILD/ft2build.h" and modify       */
+  /*    it slightly to pre-define the macro FT_CONFIG_OPTIONS_H used       */
+  /*    to locate this file during the build. For example:                 */
+  /*                                                                       */
+  /*        #define  FT_CONFIG_OPTIONS_H  <myftoptions.h>                  */
+  /*        #include <freetype/config/ftheader.h>                          */
+  /*                                                                       */
+  /*    will use "$BUILD/myftoptions.h" instead of this file for macro     */
+  /*    definitions.                                                       */
+  /*                                                                       */
+  /*    note also that you can similarly pre-define the macro              */
+  /*    FT_CONFIG_MODULES_H used to locate the file listing the modules    */
+  /*    that are statically linked to the library at compile time.         */
+  /*    by default, this file is <freetype/config/ftmodule.h>              */
+  /*                                                                       */
+  /*  we highly recommend using the third method whenever possible         */
   /*                                                                       */
   /*************************************************************************/
 
@@ -429,7 +453,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #undef T1_CONFIG_OPTION_NO_MM_SUPPORT
 
-
+ /* */
+ 
 FT_END_HEADER
 
 

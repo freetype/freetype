@@ -1,6 +1,14 @@
+2001-10-25  David Turner  <david@freetype.org>
+
+	* include/freetype/config/ftoption.h: updated comment to explain
+	precisely how to use project-specific macro definitions without
+	modifying this file manually..
+
+
 2001-10-24  Tom Kacvinsky <tjk@ams.org>
 
 	* builds/unix/ftsystem.c (FT_New_Memory):  Added a missing `}'.
+
 
 2001-10-23  David Turner  <david@freetype.org>
 
