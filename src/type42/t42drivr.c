@@ -579,17 +579,33 @@
   }
 
 
-  static FT_Byte
+  static FT_UInt
   hexval( FT_Byte  v )
   {
-    if ( v >= 'A' && v <= 'F' )
-      return v - 'A' + 10;
-    if ( v >= 'a' && v <= 'f' )
-      return v - 'a' + 10;
-    if ( v >= '0' && v <= '9' )
-      return v - '0';
-
-    return 0;
+    FT_UInt  d;
+    
+    d = (FT_UInt)( v - 'A' );
+    if ( d < 6 )
+    {
+      d += 10;
+      goto Exit;
+    }
+      
+    d = (FT_UInt)( v - 'A' );
+    if ( d < 6 )
+    {
+      d += 10;
+      goto Exit;
+    }
+      
+    d = (FT_UInt)( v - '0' );
+    if ( d < 10 )
+      goto Exit;
+      
+    d = 0;
+ 
+  Exit:         
+    return d;
   }
 
 
@@ -681,7 +697,7 @@
           goto Fail;
         }
 
-        v = 16 * hexval( *cur++ ) + hexval( *cur++ );
+        v = (FT_Byte)( 16 * hexval( *cur++ ) + hexval( *cur++ ) );
         string_size++;
       }
 
