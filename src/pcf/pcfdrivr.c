@@ -49,6 +49,16 @@ THE SOFTWARE.
 #include FT_SERVICE_XFREE86_NAME_H
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_pcfdriver
+
+
   typedef struct  PCF_CMapRec_
   {
     FT_CMapRec    root;
@@ -170,24 +180,15 @@ THE SOFTWARE.
   }
 
 
-  FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec  pcf_cmap_class =
+  FT_CALLBACK_TABLE_DEF
+  const FT_CMap_ClassRec  pcf_cmap_class =
   {
-    sizeof( PCF_CMapRec ),
+    sizeof ( PCF_CMapRec ),
     pcf_cmap_init,
     pcf_cmap_done,
     pcf_cmap_char_index,
     pcf_cmap_char_next
   };
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
-  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
-  /* messages during execution.                                            */
-  /*                                                                       */
-#undef  FT_COMPONENT
-#define FT_COMPONENT  trace_pcfdriver
 
 
   FT_CALLBACK_DEF( void )
@@ -298,19 +299,16 @@ THE SOFTWARE.
       }
     }
 
-    /* set-up charmap */
+    /* set up charmap */
     {
-      FT_String  *charset_registry, *charset_encoding;
+      FT_String  *charset_registry = face->charset_registry;
+      FT_String  *charset_encoding = face->charset_encoding;
       FT_Bool     unicode_charmap  = 0;
 
 
-      charset_registry = face->charset_registry;
-      charset_encoding = face->charset_encoding;
-
-      if ( ( charset_registry != NULL ) &&
-           ( charset_encoding != NULL ) )
+      if ( charset_registry && charset_encoding )
       {
-        char*  s = face->charset_registry;
+        char*  s = charset_registry;
 
 
         /* Uh, oh, compare first letters manually to avoid dependency

@@ -1,3 +1,12 @@
+2004-06-22  Werner Lemberg  <wl@gnu.org>
+
+	* src/pcf/pcfread.c (pcf_read_TOC, pcf_get_properties,
+	pcf_get_metrics, pcf_get_bitmaps, pcf_get_encodings): Improve
+	debugging messages.
+
+	* src/pcf/pcfdrivr.c (FT_COMPOMENT): Move up.
+	(PCF_Face_Init): Simplify code.
+
 2004-06-21  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
