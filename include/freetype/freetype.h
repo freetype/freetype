@@ -395,6 +395,7 @@ FT_BEGIN_HEADER
 
     FT_ENC_TAG( ft_encoding_symbol,  's', 'y', 'm', 'b' ),
     FT_ENC_TAG( ft_encoding_unicode, 'u', 'n', 'i', 'c' ),
+    FT_ENC_TAG( ft_encoding_latin_1, 'l', 'a', 't', '1' ),
     FT_ENC_TAG( ft_encoding_latin_2, 'l', 'a', 't', '2' ),
     FT_ENC_TAG( ft_encoding_sjis,    's', 'j', 'i', 's' ),
     FT_ENC_TAG( ft_encoding_gb2312,  'g', 'b', ' ', ' ' ),

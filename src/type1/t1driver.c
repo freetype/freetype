@@ -275,6 +275,24 @@
 
         /*******************************************************************/
         /*                                                                 */
+        /* ISOLatin1 encoding support                                      */
+        /*                                                                 */
+      case ft_encoding_latin_1:
+        /* ISOLatin1 is the first page of Unicode */
+        if ( charcode < 256 && psnames->unicode_value )
+        {
+          result = psnames->lookup_unicode( &face->unicode_map,
+                                            (FT_ULong)charcode );
+
+          /* the function returns 0xFFFF if the Unicode charcode has */
+          /* no corresponding glyph                                  */
+          if ( result == 0xFFFF )
+            result = 0;
+        }
+        goto Exit;
+
+        /*******************************************************************/
+        /*                                                                 */
         /* Custom Type 1 encoding                                          */
         /*                                                                 */
       case ft_encoding_adobe_custom:
@@ -367,6 +385,23 @@
 
         /*******************************************************************/
         /*                                                                 */
+        /* ISOLatin1 encoding support                                      */
+        /*                                                                 */
+      case ft_encoding_latin_1:
+        {
+          FT_Long code;
+
+
+          /* use the `PSNames' module to synthetize the Unicode charmap */
+          code = psnames->next_unicode( &face->unicode_map,
+                                        (FT_ULong)charcode );
+          if ( code < 256 )
+            return code;
+          break;
+        }
+
+        /*******************************************************************/
+        /*                                                                 */
         /* Custom Type 1 encoding                                          */
         /*                                                                 */
       case ft_encoding_adobe_custom:
@@ -426,9 +461,9 @@
   {
     {
       ft_module_font_driver      |
-      ft_module_driver_scalable  | 
+      ft_module_driver_scalable  |
       ft_module_driver_has_hinter,
-      
+
       sizeof( FT_DriverRec ),
 
       "type1",
@@ -466,7 +501,7 @@
     (FTDriver_attachFile)   T1_Read_AFM,
 #endif
     (FTDriver_getAdvances)  0,
-    
+
     (FTDriver_getNextChar)  Get_Next_Char
   };
 

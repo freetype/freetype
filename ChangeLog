@@ -1,3 +1,16 @@
+2002-02-10  Roberto Alameda  <ojancano@geekmail.de>
+
+	Add support for ISOLatin1 PS encoding.
+
+	* include/freetype/freetype.h (ft_encoding_latin_1): New tag
+	(`lat1').
+	* include/freetype/internal/t1types.h (T1_Encoding_Type): Add
+	`t1_encoding_isolatin1'.
+	* src/type1/t1driver.c (Get_Char_Index, Get_Next_Char): Handle
+	ft_encoding_latin_1.
+	* src/type1/t1load.c (parse_encoding): Handle `ISOLatin1Encoding'.
+	* src/type1/t1objs.c (T1_Face_Init): Handle `t1_encoding_isolatin1'.
+
 2002-02-09  Werner Lemberg  <wl@gnu.org>
 
 	* README: Fix typo.

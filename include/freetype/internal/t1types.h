@@ -80,6 +80,7 @@ FT_BEGIN_HEADER
     t1_encoding_none = 0,
     t1_encoding_array,
     t1_encoding_standard,
+    t1_encoding_isolatin1,
     t1_encoding_expert
 
   } T1_EncodingType;

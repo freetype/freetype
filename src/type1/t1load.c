@@ -1082,6 +1082,10 @@
                 strncmp( (const char*)cur, "ExpertEncoding", 14 ) == 0 )
         face->type1.encoding_type = t1_encoding_expert;
 
+      else if ( cur + 18 < limit &&
+                strncmp( (const char*)cur, "ISOLatin1Encoding", 17 ) == 0 )
+        face->type1.encoding_type = t1_encoding_isolatin1;
+
       else
       {
         FT_ERROR(( "parse_encoding: invalid token!\n" ));
