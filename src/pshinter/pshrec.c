@@ -23,6 +23,7 @@
 #include "pshrec.h"
 #include "pshalgo.h"
 
+#define FT_COMPONENT   trace_ttgload
 
 #ifdef DEBUG_HINTER
   extern PS_Hints  ps_debug_hints         = 0;
@@ -1003,10 +1004,12 @@
       /* check bit count; must be equal to current total hint count */
       if ( bit_count !=  count1 + count2 )
       {
-        error = FT_Err_Invalid_Argument;
         FT_ERROR(( "%s: called with invalid bitcount %d (instead of %d)\n",
+                   "ps.hinter.type2.hintmask",
                    bit_count, count1 + count2 ));
-        goto Fail;
+        
+        /* simply ignore the operator */
+        return;
       }
 
       /* set-up new horizontal and vertical hint mask now */
@@ -1046,10 +1049,12 @@
       /* check bit count, must be equal to current total hint count */
       if ( bit_count !=  count1 + count2 )
       {
-        error = FT_Err_Invalid_Argument;
         FT_ERROR(( "%s: called with invalid bitcount %d (instead of %d)\n",
+                   "ps.hinter.type2.counter",
                    bit_count, count1 + count2 ));
-        goto Fail;
+                   
+        /* simply ignore the operator */
+        return;
       }
 
       /* set-up new horizontal and vertical hint mask now */

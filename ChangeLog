@@ -1,5 +1,12 @@
 2001-12-21  David Turner  <david@freetype.org>
 
+        * src/cff/cffgload.c: added a comment regarding "cntrmask" operator
+        
+        * src/pshinter/pshrec.c: now ignores invalid "hintmask" and "cntrmask"
+        operators (instead of returning an error). Glyph 2028 of the CFF font
+        "MSung-Light-Acro" couldn't be rendered otherwise (it seems its
+        charstring is buggy, though this requires more analysis)..
+
         * src/cff/cffgload.c, src/psaux/t1decode.c, src/pshinter/pshrec.c,
         src/pshinter/ahalgo2.c, src/pshinter/pshglob.h: fixed a bug where
         the X and Y axis where inversed in the postscript hinter. this

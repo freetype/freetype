@@ -1092,7 +1092,10 @@
         case cff_op_cntrmask:
           FT_TRACE4(( op == cff_op_hintmask ? " hintmask" : " cntrmask" ));
   
-          /* implement vstem when needed */
+          /* implement vstem when needed                           */
+          /* the specification doesn't say it, but this also works */
+          /* with the 'cntrmask' operator !!                       */
+          /*                                                       */
           if ( num_args > 0 )
           {
             if ( hinter )
@@ -1100,7 +1103,7 @@
                              0,
                              num_args / 2,
                              args );
-            
+          
             decoder->num_hints += num_args / 2;
           }
 
