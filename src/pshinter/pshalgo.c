@@ -1368,9 +1368,6 @@
   }
 
 
-#define PSH_STRONG_THRESHOLD  30
-
-
   /* major_dir is the direction for points on the bottom/left of the stem; */
   /* Points on the top/right of the stem will have a direction of          */
   /* -major_dir.                                                           */
@@ -1378,6 +1375,7 @@
   static void
   psh_hint_table_find_strong_point( PSH_Hint_Table  table,
                                     PSH_Point       point,
+                                    FT_Int          threshold,
                                     FT_Int          major_dir )
   {
     PSH_Hint*  sort      = table->sort;
@@ -1407,7 +1405,7 @@
           flag = PSH_POINT_EDGE_MIN;
           d    = point->org_u - hint->org_pos;
 
-          if ( ABS( d ) < PSH_STRONG_THRESHOLD )
+          if ( ABS( d ) < threshold )
           {
           Is_Strong:
             psh_point_set_strong( point );
@@ -1421,7 +1419,7 @@
           flag = PSH_POINT_EDGE_MAX;
           d    = point->org_u - hint->org_pos - hint->org_len;
 
-          if ( ABS( d ) < PSH_STRONG_THRESHOLD )
+          if ( ABS( d ) < threshold )
             goto Is_Strong;
         }
       }
@@ -1457,7 +1455,7 @@
           flag = PSH_POINT_EDGE_MIN;
           d    = point->org_u - hint->org_pos;
 
-          if ( ABS( d ) < PSH_STRONG_THRESHOLD )
+          if ( ABS( d ) < threshold )
           {
           Is_Strong2:
             point->flags2 |= flag;
@@ -1471,7 +1469,7 @@
           flag = PSH_POINT_EDGE_MAX;
           d    = point->org_u - hint->org_pos - hint->org_len;
 
-          if ( ABS( d ) < PSH_STRONG_THRESHOLD )
+          if ( ABS( d ) < threshold )
             goto Is_Strong2;
         }
 
@@ -1487,6 +1485,10 @@
   }
 
 
+  /* the accepted shift for strong points in fractional pixels */
+#define PSH_STRONG_THRESHOLD  50
+
+
   /* find strong points in a glyph */
   static void
   psh_glyph_find_strong_points( PSH_Glyph  glyph,
@@ -1494,68 +1496,74 @@
   {
     /* a point is strong if it is located on a stem                   */
     /* edge and has an "in" or "out" tangent to the hint's direction  */
+
+    PSH_Hint_Table  table     = &glyph->hint_tables[dimension];
+    PS_Mask         mask      = table->hint_masks->masks;
+    FT_UInt         num_masks = table->hint_masks->num_masks;
+    FT_UInt         first     = 0;
+    FT_Int          major_dir = dimension == 0 ? PSH_DIR_VERTICAL
+                                               : PSH_DIR_HORIZONTAL;
+    PSH_Dimension   dim       = &glyph->globals->dimension[dimension];
+    FT_Fixed        scale     = dim->scale_mult;
+    FT_Int          threshold;
+
+
+    threshold = (FT_Int)FT_DivFix( PSH_STRONG_THRESHOLD, scale );
+
+    /* process secondary hints to "selected" points */
+    if ( num_masks > 1 && glyph->num_points > 0 )
     {
-      PSH_Hint_Table  table     = &glyph->hint_tables[dimension];
-      PS_Mask         mask      = table->hint_masks->masks;
-      FT_UInt         num_masks = table->hint_masks->num_masks;
-      FT_UInt         first     = 0;
-      FT_Int          major_dir = dimension == 0 ? PSH_DIR_VERTICAL
-                                                 : PSH_DIR_HORIZONTAL;
-
-
-      /* process secondary hints to "selected" points */
-      if ( num_masks > 1 && glyph->num_points > 0 )
+      first = mask->end_point;
+      mask++;
+      for ( ; num_masks > 1; num_masks--, mask++ )
       {
-        first = mask->end_point;
-        mask++;
-        for ( ; num_masks > 1; num_masks--, mask++ )
+        FT_UInt  next;
+        FT_Int   count;
+
+
+        next  = mask->end_point;
+        count = next - first;
+        if ( count > 0 )
         {
-          FT_UInt  next;
-          FT_Int   count;
+          PSH_Point  point = glyph->points + first;
 
 
-          next  = mask->end_point;
-          count = next - first;
-          if ( count > 0 )
-          {
-            PSH_Point  point = glyph->points + first;
+          psh_hint_table_activate_mask( table, mask );
 
-
-            psh_hint_table_activate_mask( table, mask );
-
-            for ( ; count > 0; count--, point++ )
-              psh_hint_table_find_strong_point( table, point, major_dir );
-          }
-          first = next;
+          for ( ; count > 0; count--, point++ )
+            psh_hint_table_find_strong_point( table, point,
+                                              threshold, major_dir );
         }
+        first = next;
       }
+    }
 
-      /* process primary hints for all points */
-      if ( num_masks == 1 )
+    /* process primary hints for all points */
+    if ( num_masks == 1 )
+    {
+      FT_UInt    count = glyph->num_points;
+      PSH_Point  point = glyph->points;
+
+
+      psh_hint_table_activate_mask( table, table->hint_masks->masks );
+      for ( ; count > 0; count--, point++ )
       {
-        FT_UInt    count = glyph->num_points;
-        PSH_Point  point = glyph->points;
-
-
-        psh_hint_table_activate_mask( table, table->hint_masks->masks );
-        for ( ; count > 0; count--, point++ )
-        {
-          if ( !psh_point_is_strong( point ) )
-            psh_hint_table_find_strong_point( table, point, major_dir );
-        }
+        if ( !psh_point_is_strong( point ) )
+          psh_hint_table_find_strong_point( table, point,
+                                            threshold, major_dir );
       }
+    }
 
-      /* now, certain points may have been attached to hint and */
-      /* not marked as strong; update their flags then          */
-      {
-        FT_UInt    count = glyph->num_points;
-        PSH_Point  point = glyph->points;
+    /* now, certain points may have been attached to hint and */
+    /* not marked as strong; update their flags then          */
+    {
+      FT_UInt    count = glyph->num_points;
+      PSH_Point  point = glyph->points;
 
 
-        for ( ; count > 0; count--, point++ )
-          if ( point->hint && !psh_point_is_strong( point ) )
-            psh_point_set_strong( point );
-      }
+      for ( ; count > 0; count--, point++ )
+        if ( point->hint && !psh_point_is_strong( point ) )
+          psh_point_set_strong( point );
     }
   }
 
@@ -1568,50 +1576,45 @@
     PSH_Dimension  dim   = &glyph->globals->dimension[dimension];
     FT_Fixed       scale = dim->scale_mult;
 
+    FT_UInt        count = glyph->num_points;
+    PSH_Point      point = glyph->points;
 
+
+    for ( ; count > 0; count--, point++ )
     {
-      FT_UInt    count = glyph->num_points;
-      PSH_Point  point = glyph->points;
+      PSH_Hint  hint = point->hint;
 
 
-      for ( ; count > 0; count--, point++ )
+      if ( hint )
       {
-        PSH_Hint  hint = point->hint;
+        FT_Pos  delta;
 
 
-        if ( hint )
+        if ( psh_point_is_edge_min( point ) )
+          point->cur_u = hint->cur_pos;
+
+        else if ( psh_point_is_edge_max( point ) )
+          point->cur_u = hint->cur_pos + hint->cur_len;
+
+        else
         {
-          FT_Pos  delta;
+          delta = point->org_u - hint->org_pos;
 
+          if ( delta <= 0 )
+            point->cur_u = hint->cur_pos + FT_MulFix( delta, scale );
 
-          if ( psh_point_is_edge_min( point ) )
-          {
-            point->cur_u = hint->cur_pos;
-          }
-          else if ( psh_point_is_edge_max( point ) )
-          {
-            point->cur_u = hint->cur_pos + hint->cur_len;
-          }
+          else if ( delta >= hint->org_len )
+            point->cur_u = hint->cur_pos + hint->cur_len +
+                             FT_MulFix( delta - hint->org_len, scale );
+
+          else if ( hint->org_len > 0 )
+            point->cur_u = hint->cur_pos +
+                             FT_MulDiv( delta, hint->cur_len,
+                                        hint->org_len );
           else
-          {
-            delta = point->org_u - hint->org_pos;
-
-            if ( delta <= 0 )
-              point->cur_u = hint->cur_pos + FT_MulFix( delta, scale );
-
-            else if ( delta >= hint->org_len )
-              point->cur_u = hint->cur_pos + hint->cur_len +
-                               FT_MulFix( delta - hint->org_len, scale );
-
-            else if ( hint->org_len > 0 )
-              point->cur_u = hint->cur_pos +
-                               FT_MulDiv( delta, hint->cur_len,
-                                          hint->org_len );
-            else
-              point->cur_u = hint->cur_pos;
-          }
-          psh_point_set_fitted( point );
+            point->cur_u = hint->cur_pos;
         }
+        psh_point_set_fitted( point );
       }
     }
   }
@@ -1623,109 +1626,107 @@
   {
 
 #if 1
+    /* first technique: a point is strong if it is a local extrema */
 
     PSH_Dimension  dim   = &glyph->globals->dimension[dimension];
     FT_Fixed       scale = dim->scale_mult;
 
+    FT_UInt        count = glyph->num_points;
+    PSH_Point      point = glyph->points;
 
-    /* first technique: a point is strong if it is a local extrema */
+
+    for ( ; count > 0; count--, point++ )
     {
-      FT_UInt    count = glyph->num_points;
-      PSH_Point  point = glyph->points;
+      if ( psh_point_is_strong( point ) )
+        continue;
 
-
-      for ( ; count > 0; count--, point++ )
+      /* sometimes, some local extremas are smooth points */
+      if ( psh_point_is_smooth( point ) )
       {
-        if ( psh_point_is_strong( point ) )
+        if ( point->dir_in == PSH_DIR_NONE   ||
+             point->dir_in != point->dir_out )
           continue;
 
-        /* sometimes, some local extremas are smooth points */
-        if ( psh_point_is_smooth( point ) )
+        if ( !psh_point_is_extremum( point ) &&
+             !psh_point_is_inflex( point )   )
+          continue;
+
+        point->flags &= ~PSH_POINT_SMOOTH;
+      }
+
+      /* find best enclosing point coordinates */
+      {
+        PSH_Point  before = 0;
+        PSH_Point  after  = 0;
+
+        FT_Pos     diff_before = -32000;
+        FT_Pos     diff_after  =  32000;
+        FT_Pos     u = point->org_u;
+
+        FT_Int     count2 = glyph->num_points;
+        PSH_Point  cur    = glyph->points;
+
+
+        for ( ; count2 > 0; count2--, cur++ )
         {
-          if ( point->dir_in == PSH_DIR_NONE   ||
-               point->dir_in != point->dir_out )
-            continue;
-
-          if ( !psh_point_is_extremum( point )   &&
-               !psh_point_is_inflex( point ) )
-            continue;
-
-          point->flags &= ~PSH_POINT_SMOOTH;
-        }
-
-        /* find best enclosing point coordinates */
-        {
-          PSH_Point  before = 0;
-          PSH_Point  after  = 0;
-
-          FT_Pos     diff_before = -32000;
-          FT_Pos     diff_after  =  32000;
-          FT_Pos     u = point->org_u;
-
-          FT_Int     count2 = glyph->num_points;
-          PSH_Point  cur    = glyph->points;
-
-
-          for ( ; count2 > 0; count2--, cur++ )
+          if ( psh_point_is_strong( cur ) )
           {
-            if ( psh_point_is_strong( cur ) )
+            FT_Pos  diff = cur->org_u - u;;
+
+
+            if ( diff <= 0 )
             {
-              FT_Pos  diff = cur->org_u - u;;
-
-
-              if ( diff <= 0 )
+              if ( diff > diff_before )
               {
-                if ( diff > diff_before )
-                {
-                  diff_before = diff;
-                  before      = cur;
-                }
+                diff_before = diff;
+                before      = cur;
               }
-              else if ( diff >= 0 )
+            }
+
+            else if ( diff >= 0 )
+            {
+              if ( diff < diff_after )
               {
-                if ( diff < diff_after )
-                {
-                  diff_after = diff;
-                  after      = cur;
-                }
+                diff_after = diff;
+                after      = cur;
               }
             }
           }
+        }
 
-          if ( !before )
-          {
-            if ( !after )
-              continue;
+        if ( !before )
+        {
+          if ( !after )
+            continue;
 
-            /* we are before the first strong point coordinate; */
-            /* simply translate the point                       */
-            point->cur_u = after->cur_u +
+          /* we are before the first strong point coordinate; */
+          /* simply translate the point                       */
+          point->cur_u = after->cur_u +
                            FT_MulFix( point->org_u - after->org_u, scale );
-          }
-          else if ( !after )
-          {
-            /* we are after the last strong point coordinate; */
-            /* simply translate the point                     */
-            point->cur_u = before->cur_u +
+        }
+        else if ( !after )
+        {
+          /* we are after the last strong point coordinate; */
+          /* simply translate the point                     */
+          point->cur_u = before->cur_u +
                            FT_MulFix( point->org_u - before->org_u, scale );
-          }
+        }
+        else
+        {
+          if ( diff_before == 0 )
+            point->cur_u = before->cur_u;
+
+          else if ( diff_after == 0 )
+            point->cur_u = after->cur_u;
+
           else
-          {
-            if ( diff_before == 0 )
-              point->cur_u = before->cur_u;
-
-            else if ( diff_after == 0 )
-              point->cur_u = after->cur_u;
-
-            else
-              point->cur_u = before->cur_u +
+            point->cur_u = before->cur_u +
                              FT_MulDiv( u - before->org_u,
                                         after->cur_u - before->cur_u,
                                         after->org_u - before->org_u );
-          }
-
-          psh_point_set_fitted( point );
         }
+
+        psh_point_set_fitted( point );
       }
     }
 
