@@ -16,25 +16,26 @@
 /***************************************************************************/
 
 
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
- /*********                                                       **********/
- /*********                                                       **********/
- /*********        WARNING, THIS IS ALPHA CODE, THIS API          **********/
- /*********    IS DUE TO CHANGE UNTIL STRICTLY NOTIFIED BY THE    **********/
- /*********            FREETYPE DEVELOPMENT TEAM                  **********/
- /*********                                                       **********/
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*********                                                       *********/
+  /*********        WARNING, THIS IS ALPHA CODE, THIS API          *********/
+  /*********    IS DUE TO CHANGE UNTIL STRICTLY NOTIFIED BY THE    *********/
+  /*********            FREETYPE DEVELOPMENT TEAM                  *********/
+  /*********                                                       *********/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
 
 #ifndef FTCACHE_H
 #define FTCACHE_H
+
 
 #include <freetype/ftglyph.h>
 
@@ -91,7 +92,7 @@
   /*                                                                       */
   typedef FT_Error  (*FTC_Face_Requester)( FTC_FaceID  face_id,
                                            FT_Library  library,
-                                           FT_Pointer  request_data, 
+                                           FT_Pointer  request_data,
                                            FT_Face*    aface );
 
 
@@ -102,8 +103,8 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    A simple structure used to describe a given `font' to the cache    */
-  /*    manager. Note that a "font" is the combination of a given face     */
-  /*    with a given character size..                                      */
+  /*    manager.  Note that a `font' is the combination of a given face    */
+  /*    with a given character size.                                       */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    face_id    :: The ID of the face to use.                           */
@@ -117,7 +118,7 @@
     FTC_FaceID  face_id;
     FT_UShort   pix_width;
     FT_UShort   pix_height;
-    
+
   } FTC_FontRec;
 
 
@@ -130,7 +131,7 @@
   /*    A simple handle to a FTC_FontRec structure.                        */
   /*                                                                       */
   typedef FTC_FontRec*  FTC_Font;
- 
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -196,7 +197,7 @@
                                               FT_Pointer          req_data,
                                               FTC_Manager*        amanager );
 
-                        
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -261,7 +262,7 @@
   FT_EXPORT_DEF( FT_Error )  FTC_Manager_Lookup_Face( FTC_Manager  manager,
                                                       FTC_FaceID   face_id,
                                                       FT_Face*     aface );
- 
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -308,19 +309,18 @@
                                                       FT_Size*     asize );
 
 
-  /* a cache class is used to describe a unique cache type to the */
-  /* manager..                                                    */
+  /* a cache class is used to describe a unique cache type to the manager */
   typedef struct FTC_Cache_Class_  FTC_Cache_Class;
   typedef struct FTC_CacheRec_*    FTC_Cache;
 
 
   /* this must be used internally for the moment */
   FT_EXPORT_DEF( FT_Error )  FTC_Manager_Register_Cache(
-                                   FTC_Manager       manager,
-                                   FTC_Cache_Class*  clazz,
-                                   FTC_Cache        *acache );
+                               FTC_Manager       manager,
+                               FTC_Cache_Class*  clazz,
+                               FTC_Cache*        acache );
 
-  
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -331,6 +331,8 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
+#define  FTC_IMAGE_FORMAT( x )  ( (x) & 7 )
 
   /*************************************************************************/
   /*                                                                       */
@@ -353,30 +355,25 @@
   /* <Note>                                                                */
   /*    Other types may be defined in the future.                          */
   /*                                                                       */
-  
-#define   FTC_IMAGE_FORMAT(x)  ((x) & 7)
-
   typedef enum  FTC_Image_Type_
   {
     ftc_image_format_bitmap   = 0,
     ftc_image_format_outline  = 1,
-    
+
     ftc_image_flag_monochrome = 16,
     ftc_image_flag_unhinted   = 32,
     ftc_image_flag_autohinted = 64,
     ftc_image_flag_unscaled   = 128,
     ftc_image_flag_no_sbits   = 256,
-    
-    ftc_image_mono            = ftc_image_format_bitmap |
-                                ftc_image_flag_monochrome, /* monochrome bitmap   */
-                                
-    ftc_image_grays           = ftc_image_format_bitmap,   /* anti-aliased bitmap */
-                                
-    ftc_image_outline         = ftc_image_format_outline   /* scaled outline */
-  
+
+    ftc_image_mono    = ftc_image_format_bitmap |
+                        ftc_image_flag_monochrome, /* monochrome bitmap   */
+    ftc_image_grays   = ftc_image_format_bitmap,   /* anti-aliased bitmap */
+    ftc_image_outline = ftc_image_format_outline   /* scaled outline */
+
   } FTC_Image_Type;
 
- 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -395,7 +392,7 @@
   {
     FTC_FontRec  font;
     FT_UInt      image_type;
-  
+
   } FTC_Image_Desc;
 
 
@@ -409,7 +406,7 @@
   /*    hold many distinct glyph images, while not exceeding a certain     */
   /*    memory threshold.                                                  */
   /*                                                                       */
-  typedef struct FTC_Image_CacheRec_*  FTC_Image_Cache; 
+  typedef struct FTC_Image_CacheRec_*  FTC_Image_Cache;
 
 
   /*************************************************************************/
@@ -431,7 +428,7 @@
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_New( FTC_Manager       manager,
                                                   FTC_Image_Cache*  acache );
-                                                
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -462,7 +459,7 @@
   /*                                                                       */
   /*    Because the glyph image cache limits the total amount of memory    */
   /*    taken by the glyphs it holds, the returned glyph might disappear   */
-  /*    on a later invocation of this function! It's a cache after all ;-) */
+  /*    on a later invocation of this function!  It's a cache after all... */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_Lookup(
                                FTC_Image_Cache  cache,

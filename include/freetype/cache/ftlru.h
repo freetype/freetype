@@ -13,45 +13,48 @@
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
-/*                                                                         */
-/*  A LRU is a list that cannot hold more than a certain number of         */
-/*  elements ("max_elements"). All elements on the list are sorted         */
-/*  in lest-recently-used order, i.e. the "oldest" element is at           */
-/*  the tail of the list                                                   */
-/*                                                                         */
-/*  When doing a lookup (either through "Lookup" or "Lookup_Node"),        */
-/*  the list is searched for an element with the corresponding key         */
-/*  if it is found, the element is moved to the head of the list           */
-/*  and is returned..                                                      */
-/*                                                                         */
-/*  If no corresponding element is found, the lookup routine will          */
-/*  try to obtain a new element with the relevant key. If the list         */
-/*  is already full, the oldest element from the list is discarded         */
-/*  and replaced by a new one; a new element is added to the list          */
-/*  otherwise..                                                            */
-/*                                                                         */
-/*  Note that it is possible to pre-allocate the element list nodes.       */
-/*  That's handy when "max_elements" is sufficiently small, as it          */
-/*  saves allocations/releases during the lookup process                   */
-/*                                                                         */
 /***************************************************************************/
 
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
- /*********                                                       **********/
- /*********                                                       **********/
- /*********        WARNING, THIS IS ALPHA CODE, THIS API          **********/
- /*********    IS DUE TO CHANGE UNTIL STRICTLY NOTIFIED BY THE    **********/
- /*********            FREETYPE DEVELOPMENT TEAM                  **********/
- /*********                                                       **********/
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
- /**************************************************************************/
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* An LRU is a list that cannot hold more than a certain number of       */
+  /* elements (`max_elements').  All elements on the list are sorted in    */
+  /* lest-recently-used order, i.e., the `oldest' element is at the tail   */
+  /* of the list.                                                          */
+  /*                                                                       */
+  /* When doing a lookup (either through `Lookup()' or `Lookup_Node()'),   */
+  /* the list is searched for an element with the corresponding key.  If   */
+  /* it is found, the element is moved to the head of the list and is      */
+  /* returned.                                                             */
+  /*                                                                       */
+  /* If no corresponding element is found, the lookup routine will try to  */
+  /* obtain a new element with the relevant key.  If the list is already   */
+  /* full, the oldest element from the list is discarded and replaced by a */
+  /* new one; a new element is added to the list otherwise.                */
+  /*                                                                       */
+  /* Note that it is possible to pre-allocate the element list nodes.      */
+  /* This is handy if `max_elements' is sufficiently small, as it saves    */
+  /* allocations/releases during the lookup process.                       */
+  /*                                                                       */
+  /*************************************************************************/
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*********                                                       *********/
+  /*********        WARNING, THIS IS ALPHA CODE, THIS API          *********/
+  /*********    IS DUE TO CHANGE UNTIL STRICTLY NOTIFIED BY THE    *********/
+  /*********            FREETYPE DEVELOPMENT TEAM                  *********/
+  /*********                                                       *********/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
 
 
 #ifndef FTLRU_H
@@ -64,11 +67,12 @@
   extern "C" {
 #endif
 
- /* generic key type */
+
+  /* generic key type */
   typedef FT_Pointer  FT_LruKey;
 
 
- /* a lru node - node.root.data points to the element */
+  /* an lru node -- node.root.data points to the element */
   typedef struct  FT_LruNodeRec_
   {
     FT_ListNodeRec  root;
@@ -76,43 +80,44 @@
   
   } FT_LruNodeRec, *FT_LruNode;
 
- /* forward declaration */
+  /* forward declaration */
   typedef struct FT_LruRec_*  FT_Lru;
 
 
- /* LRU clazz */
+  /* LRU clazz */
   typedef struct  FT_Lru_Class_
   {
-    FT_UInt   lru_size;      /* object size in bytes */
+    FT_UInt  lru_size;      /* object size in bytes */
     
-    /* this method is used to initialise a new list element node */
+    /* this method is used to initialize a new list element node */
     FT_Error  (*init_element)( FT_Lru      lru,
                                FT_LruNode  node );
                                
-    /* this method is used to finalise a given list element node */
-    void      (*done_element)( FT_Lru      lru,
-                               FT_LruNode  node );
+    /* this method is used to finalize a given list element node */
+    void  (*done_element)( FT_Lru      lru,
+                           FT_LruNode  node );
     
-    /* when defined, this method is called when the list if full    */
-    /* during the lookup process.. it is used to change the content */
-    /* of a list element node, instead of calling "done_element"    */
-    /* then "init_element". Put it to 0 for default behaviour       */ 
+    /* If defined, this method is called when the list if full        */
+    /* during the lookup process -- it is used to change the contents */
+    /* of a list element node, instead of calling `done_element()',   */
+    /* then `init_element'.  Set it to 0 for default behaviour.       */ 
     FT_Error  (*flush_element)( FT_Lru      lru,
                                 FT_LruNode  node,
                                 FT_LruKey   new_key );  
 
-    /* when defined, this method is used to compare a list element node */
-    /* with a given key during a lookup. When set to 0, the "key"       */
-    /* fields will be directly compared instead..                       */                                   
-    FT_Bool   (*compare_element)( FT_LruNode  node,
-                                  FT_LruKey   key );
+    /* If defined, this method is used to compare a list element node */
+    /* with a given key during a lookup.  If set to 0, the `key'      */
+    /* fields will be directly compared instead.                      */                                   
+    FT_Bool  (*compare_element)( FT_LruNode  node,
+                                 FT_LruKey   key );
 
   } FT_Lru_Class;
 
-  /* a selector is used to indicate wether a given list element node  */
-  /* is part of a selection for FT_Lru_Remove_Selection. The function */
-  /* must returns true (i.e. non 0) to indicate that the node is part */
-  /* of it..                                                          */
+
+  /* A selector is used to indicate whether a given list element node    */
+  /* is part of a selection for FT_Lru_Remove_Selection().  The function */
+  /* must return true (i.e., non-null) to indicate that the node is part */
+  /* of it.                                                              */
   typedef FT_Bool  (*FT_Lru_Selector)( FT_Lru      lru,
                                        FT_LruNode  node,
                                        FT_Pointer  data );
@@ -120,16 +125,16 @@
 
   typedef struct  FT_LruRec_
   {
-    FT_Lru_Class*   clazz;
-    FT_UInt         max_elements;
-    FT_UInt         num_elements;
-    FT_ListRec      elements;
-    FT_Memory       memory;
-    FT_Pointer      user_data;
+    FT_Lru_Class*  clazz;
+    FT_UInt        max_elements;
+    FT_UInt        num_elements;
+    FT_ListRec     elements;
+    FT_Memory      memory;
+    FT_Pointer     user_data;
     
     /* the following fields are only meaningful for static lru containers */
-    FT_ListRec      free_nodes;
-    FT_LruNode      nodes;
+    FT_ListRec     free_nodes;
+    FT_LruNode     nodes;
     
   } FT_LruRec;
 
@@ -141,9 +146,9 @@
                                          FT_Bool              pre_alloc,
                                          FT_Lru*              alru );
                                           
-  FT_EXPORT_DEF( void )      FT_Lru_Reset( FT_Lru  lru ); 
+  FT_EXPORT_DEF( void )  FT_Lru_Reset( FT_Lru  lru ); 
                                        
-  FT_EXPORT_DEF( void )      FT_Lru_Done( FT_Lru  lru ); 
+  FT_EXPORT_DEF( void )  FT_Lru_Done( FT_Lru  lru ); 
 
   FT_EXPORT_DEF( FT_Error )  FT_Lru_Lookup_Node( FT_Lru        lru,
                                                  FT_LruKey     key,
@@ -153,12 +158,12 @@
                                             FT_LruKey    key,
                                             FT_Pointer*  aobject );
  
-  FT_EXPORT_DEF( void )      FT_Lru_Remove_Node( FT_Lru      lru,
-                                                 FT_LruNode  node );  
+  FT_EXPORT_DEF( void )  FT_Lru_Remove_Node( FT_Lru      lru,
+                                             FT_LruNode  node );  
 
-  FT_EXPORT_DEF( void )      FT_Lru_Remove_Selection( FT_Lru           lru,
-                                                      FT_Lru_Selector  selector,
-                                                      FT_Pointer       data );
+  FT_EXPORT_DEF( void )  FT_Lru_Remove_Selection( FT_Lru           lru,
+                                                  FT_Lru_Selector  selector,
+                                                  FT_Pointer       data );
 
 
 #ifdef __cplusplus
