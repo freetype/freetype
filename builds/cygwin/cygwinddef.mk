@@ -1,6 +1,6 @@
 #
 # FreeType 2 configuration rules templates for
-# development under Unix-like platforms with no configure script (gcc only)
+# development under Unix with no configure script (gcc only)
 #
 
 
@@ -19,13 +19,16 @@ ifndef TOP
 endif
 TOP := $(shell cd $(TOP); pwd)
 
-DELETE        := rm -f
-SEP           := /
-HOSTSEP       := $(SEP)
+DELETE   := rm -f
+SEP      := /
+HOSTSEP  := $(SEP)
+
 # we use a special devel ftoption.h
-BUILD         := $(TOP)/builds/cygwin/devel
-# do not set it to 'cygwin', or libtool will trick you
-PLATFORM      := cygwindev
+BUILD    := $(TOP)/builds/devel
+
+# do not set the platform to `unix', or libtool will trick you
+PLATFORM := unixdev
+
 
 # The directory where all object files are placed.
 #
@@ -33,16 +36,19 @@ ifndef OBJ_DIR
   OBJ_DIR := $(shell cd $(TOP)/obj; pwd)
 endif
 
+
 # library file name
 #
 LIBRARY := lib$(PROJECT)
 
+
 # The directory where all library files are placed.
 #
-# By default, this is the same as $(OBJ_DIR), however, this can be changed
+# By default, this is the same as $(OBJ_DIR); however, this can be changed
 # to suit particular needs.
 #
 LIB_DIR := $(OBJ_DIR)
+
 
 #
 NO_OUTPUT := 2> /dev/null

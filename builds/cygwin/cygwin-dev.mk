@@ -1,8 +1,8 @@
 #
-# FreeType 2 Configuration rules for CygWin + GCC
+# FreeType 2 Configuration rules for Cygwin
 #
 #   Development version without optimizations & libtool
-#   and no installation
+#   and no installation.
 #
 
 
@@ -17,6 +17,8 @@
 
 
 include $(TOP)/builds/cygwin/cygwinddef.mk
+BUILD := $(TOP)/builds/devel
+
 include $(TOP)/builds/compiler/gcc-dev.mk
 include $(TOP)/builds/link_std.mk
 
