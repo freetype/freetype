@@ -1299,7 +1299,7 @@
     T1_FIELD_CALLBACK( "shareddict", parse_shared_dict )
 #endif
 
-    { 0,0,0,0, 0,0,0,0 }
+    { 0, t1_field_cid_info, t1_field_none, 0, 0, 0, 0, 0 }
   };
 
 

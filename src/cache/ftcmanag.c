@@ -23,15 +23,16 @@
 #define FTC_LRU_GET_MANAGER( lru )  (FTC_Manager)lru->user_data
 
 
- /**************************************************************************/
- /**************************************************************************/
- /*****                                                                *****/
- /*****               FACE & SIZE LRU CALLBACKS                        *****/
- /*****                                                                *****/
- /**************************************************************************/
- /**************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****               FACE & SIZE LRU CALLBACKS                       *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
-  static
+
+  LOCAL_FUNC_X  
   FT_Error  ftc_manager_init_face( FT_Lru      lru,
                                    FT_LruNode  node )
   {
@@ -57,7 +58,7 @@
 
 
   /* helper function for ftc_manager_done_face */
-  static
+  LOCAL_FUNC_X
   FT_Bool  ftc_manager_size_selector( FT_Lru      lru,
                                       FT_LruNode  node,
                                       FT_Pointer  data )
@@ -68,7 +69,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   void  ftc_manager_done_face( FT_Lru      lru,
                                FT_LruNode  node )
   {
@@ -97,7 +98,7 @@
   } FTC_SizeRequest;
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  ftc_manager_init_size( FT_Lru      lru,
                                    FT_LruNode  node )
   {
@@ -126,7 +127,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   void  ftc_manager_done_size( FT_Lru      lru,
                                FT_LruNode  node )
   {
@@ -136,7 +137,7 @@
   }                                
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  ftc_manager_flush_size( FT_Lru      lru,
                                     FT_LruNode  node,
                                     FT_LruKey   key )
@@ -163,7 +164,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_Bool  ftc_manager_compare_size( FT_LruNode  node,
                                      FT_LruKey   key )
   {
@@ -179,8 +180,7 @@
   }
 
   
-  static
-  const FT_Lru_Class  ftc_face_lru_class =
+  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_face_lru_class =
   {
     sizeof ( FT_LruRec ),
     ftc_manager_init_face,
@@ -190,8 +190,7 @@
   };
 
   
-  static
-  const FT_Lru_Class  ftc_size_lru_class =
+  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_size_lru_class =
   {
     sizeof ( FT_LruRec ),
     ftc_manager_init_size,

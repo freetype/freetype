@@ -138,7 +138,6 @@
 
 #else
 
-
   /*************************************************************************/
   /*                                                                       */
   /* Many compilers provide the non-ANSI `long long' 64-bit type.  You can */
@@ -174,6 +173,13 @@
 #endif
 
 #endif /* FT_MAKE_OPTION_SINGLE_OBJECT */
+
+
+#ifdef __cplusplus
+#define LOCAL_VAR  extern "C"
+#else
+#define LOCAL_VAR  extern
+#endif
 
 
 #ifndef BASE_DEF

@@ -24,8 +24,14 @@
 #include <freetype/internal/t1types.h>
 
 
-  LOCAL_DEF
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
+  LOCAL_VAR
   const T1_Decoder_Funcs  t1_decoder_funcs;
+
 
   LOCAL_DEF
   FT_Error  T1_Decoder_Parse_Glyph( T1_Decoder*  decoder,
@@ -47,6 +53,11 @@
 
   LOCAL_DEF
   void  T1_Decoder_Done( T1_Decoder*  decoder );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* T1DECODE_H */

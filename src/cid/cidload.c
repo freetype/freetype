@@ -283,7 +283,7 @@
     T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
     T1_FIELD_CALLBACK( "FDArray", parse_fd_array )
     T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix )
-    { 0, 0, 0, 0, 0, 0, 0, 0 }
+    { 0, t1_field_cid_info, t1_field_none, 0, 0, 0, 0, 0 }
   };
 
 
