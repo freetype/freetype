@@ -64,7 +64,7 @@
 
     FT_Int   n;         /* index of contour in outline     */
     FT_UInt  first;     /* index of first point in contour */
-    char     tag;       /* current point's state           */
+    FT_Int   tag;       /* current point's state           */
 
     FT_Int   shift;
     FT_Pos   delta;

@@ -229,8 +229,8 @@
 
         root->ascender     = (FT_Short)( face->cid.font_bbox.yMax >> 16 );
         root->descender    = (FT_Short)( face->cid.font_bbox.yMin >> 16 );
-        root->height       = ( ( root->ascender + root->descender ) * 12 )
-                             / 10;
+        root->height       = (FT_Short)( (( root->ascender + root->descender ) * 12 )
+                             / 10 );
 
 
 #if 0

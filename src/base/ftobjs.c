@@ -187,7 +187,7 @@
     {
       error = 0;
       FT_New_Memory_Stream( library,
-                            args->memory_base,
+                            (FT_Byte*)args->memory_base,
                             args->memory_size,
                             stream );
     }
@@ -529,13 +529,13 @@
     FT_UInt        n;
 
 
-    base->outline.n_points   += current->outline.n_points;
-    base->outline.n_contours += current->outline.n_contours;
+    base->outline.n_points   = (short)( base->outline.n_points   + current->outline.n_points );
+    base->outline.n_contours = (short)( base->outline.n_contours + current->outline.n_contours );
     base->num_subglyphs      += current->num_subglyphs;
 
     /* adjust contours count in newest outline */
     for ( n = 0; n < n_curr_contours; n++ )
-      current->outline.contours[n] += n_base_points;
+      current->outline.contours[n] = (short)( current->outline.contours[n] + n_base_points );
 
     /* prepare for another new glyph image */
     FT_GlyphLoader_Prepare( loader );
@@ -570,8 +570,8 @@
         MEM_Copy( target->base.extra_points, source->base.extra_points,
                   num_points * sizeof ( FT_Vector ) );
 
-      out->n_points   = num_points;
-      out->n_contours = num_contours;
+      out->n_points   = (short)num_points;
+      out->n_contours = (short)num_contours;
 
       FT_GlyphLoader_Adjust_Points( target );
     }
@@ -844,10 +844,10 @@
     /* do we need to load the glyph through the auto-hinter? */
     library  = driver->root.library;
     hinter   = library->auto_hinter;
-    autohint = hinter                                                      &&
+    autohint = FT_BOOL( hinter                                             &&
                !( load_flags & ( FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING ) ) &&
                FT_DRIVER_IS_SCALABLE(driver) &&
-               FT_DRIVER_USES_OUTLINES(driver);
+               FT_DRIVER_USES_OUTLINES(driver) );
     if ( autohint )
     {
       if ( FT_DRIVER_HAS_HINTER( driver ) &&
@@ -1127,11 +1127,11 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )  FT_New_Memory_Face( FT_Library  library,
-                                                 FT_Byte*    file_base,
-                                                 FT_Long     file_size,
-                                                 FT_Long     face_index,
-                                                 FT_Face    *aface )
+  FT_EXPORT_DEF( FT_Error )  FT_New_Memory_Face( FT_Library      library,
+                                                 const FT_Byte*  file_base,
+                                                 FT_Long         file_size,
+                                                 FT_Long         face_index,
+                                                 FT_Face        *aface )
   {
     FT_Open_Args  args;
 
@@ -1172,7 +1172,7 @@
 
     *aface = 0;
 
-    external_stream = ( ( args->flags & ft_open_stream ) && args->stream );
+    external_stream = FT_BOOL(( args->flags & ft_open_stream ) && args->stream);
 
     /* create input stream */
     error = ft_new_input_stream( library, args, &stream );
@@ -1648,8 +1648,8 @@
     if ( pixel_height < 1 )
       pixel_height = 1;
 
-    metrics->x_ppem = pixel_width;
-    metrics->y_ppem = pixel_height;
+    metrics->x_ppem = (FT_UShort)pixel_width;
+    metrics->y_ppem = (FT_UShort)pixel_height;
 
     if ( face->face_flags & FT_FACE_FLAG_SCALABLE )
     {

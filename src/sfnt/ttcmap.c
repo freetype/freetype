@@ -123,7 +123,7 @@
 
       for ( i = 0; i < 256; i++ )
       {
-        u = GET_UShort() / 8;
+        u = (FT_UShort)(GET_UShort() / 8);
         cmap2->subHeaderKeys[i] = u;
 
         if ( num_SH < u )
@@ -134,8 +134,8 @@
 
       /* load subheaders */
 
-      cmap2->numGlyphId = l =
-        ( ( cmap->length - 2L * ( 256 + 3 ) - num_SH * 8L ) & 0xFFFF ) / 2;
+      cmap2->numGlyphId = l = (FT_UShort)(
+        ( ( cmap->length - 2L * ( 256 + 3 ) - num_SH * 8L ) & 0xFFFF ) / 2 );
 
       if ( ALLOC_ARRAY( cmap2->subHeaders,
                         num_SH + 1,
@@ -151,7 +151,7 @@
         cmap2sub->entryCount    = GET_UShort();
         cmap2sub->idDelta       = GET_Short();
         /* we apply the location offset immediately */
-        cmap2sub->idRangeOffset = GET_UShort() - ( num_SH - i ) * 8 - 2;
+        cmap2sub->idRangeOffset = (FT_UShort)( GET_UShort() - ( num_SH - i ) * 8 - 2 );
 
         cmap2sub++;
       }
@@ -185,7 +185,7 @@
       cmap4->entrySelector = GET_UShort();
       cmap4->rangeShift    = GET_UShort();
 
-      num_Seg = cmap4->segCountX2 / 2;
+      num_Seg = (FT_UShort)(cmap4->segCountX2 / 2);
 
       FORGET_Frame();
 
@@ -215,8 +215,8 @@
 
       FORGET_Frame();
 
-      cmap4->numGlyphId = l =
-        ( ( cmap->length - ( 16L + 8L * num_Seg ) ) & 0xFFFF ) / 2;
+      cmap4->numGlyphId = l = (FT_UShort)(
+        ( ( cmap->length - ( 16L + 8L * num_Seg ) ) & 0xFFFF ) / 2 );
 
       /* load IDs */
 

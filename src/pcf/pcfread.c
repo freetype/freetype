@@ -224,11 +224,11 @@ THE SOFTWARE.
     if ( READ_Fields( pcf_compressed_metric_header, &compr_metric ) )
       return error;
 
-    metric->leftSideBearing  = (FT_Short)compr_metric.leftSideBearing - 0x80;
-    metric->rightSideBearing = (FT_Short)compr_metric.rightSideBearing - 0x80;
-    metric->characterWidth   = (FT_Short)compr_metric.characterWidth - 0x80;
-    metric->ascent           = (FT_Short)compr_metric.ascent - 0x80;
-    metric->descent          = (FT_Short)compr_metric.descent - 0x80;
+    metric->leftSideBearing  = (FT_Short)(compr_metric.leftSideBearing - 0x80);
+    metric->rightSideBearing = (FT_Short)(compr_metric.rightSideBearing - 0x80);
+    metric->characterWidth   = (FT_Short)(compr_metric.characterWidth - 0x80);
+    metric->ascent           = (FT_Short)(compr_metric.ascent - 0x80);
+    metric->descent          = (FT_Short)(compr_metric.descent - 0x80);
     metric->attributes       = 0;
   
     return PCF_Err_Ok;
@@ -719,7 +719,7 @@ THE SOFTWARE.
                                ( ( i % ( lastCol - firstCol + 1 ) ) +
                                  firstCol );
 
-        tmpEncoding[j].glyph = encodingOffset;
+        tmpEncoding[j].glyph = (FT_Short)encodingOffset;
         j++;
       }
 

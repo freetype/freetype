@@ -225,8 +225,8 @@
     glyph->root.outline.n_points   = 0;
     glyph->root.outline.n_contours = 0;
 
-    hinting = ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
-              ( load_flags & FT_LOAD_NO_HINTING ) == 0;
+    hinting = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
+                       ( load_flags & FT_LOAD_NO_HINTING ) == 0 );
 
     glyph->root.format = ft_glyph_format_outline;
 
@@ -240,8 +240,8 @@
                                              cid_load_glyph );
 
       /* set up the decoder */
-      decoder.builder.no_recurse =
-        ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
+      decoder.builder.no_recurse = FT_BOOL(
+        ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 ) );
 
       error = cid_load_glyph( &decoder, glyph_index );
 

@@ -76,7 +76,7 @@
     FT_Int     height;
 
     FT_UShort  acc;
-    FT_Byte    loaded;
+    FT_UInt    loaded;
 
 
     /* first of all, compute starting write position */
@@ -104,10 +104,10 @@
 
     for ( height = target->rows; height > 0; height-- )
     {
-      FT_Byte*  cur   = line_buff;    /* current write cursor          */
-      FT_Int    count = line_bits;    /* # of bits to extract per line */
-      FT_Byte   shift = x_offset & 7; /* current write shift           */
-      FT_Byte   space = 8 - shift;
+      FT_Byte*  cur   = line_buff;      /* current write cursor          */
+      FT_UInt   count = line_bits;      /* # of bits to extract per line */
+      FT_Byte   shift = (FT_Byte)(x_offset & 7); /* current write shift  */
+      FT_Byte   space = (FT_Byte)(8 - shift);
 
 
       /* first of all, read individual source bytes */
@@ -163,7 +163,7 @@
         }
 
         /* now write remaining bits */
-        val     = ( (FT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count );
+        val     = (FT_Byte)(( (FT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count ));
         cur[0] |= val >> shift;
 
         if ( count > space )
@@ -175,7 +175,10 @@
 
       /* now, skip to next line */
       if ( byte_padded )
-        acc = loaded = 0;   /* clear accumulator on byte-padded lines */
+      {
+        acc    = 0;
+        loaded = 0;   /* clear accumulator on byte-padded lines */
+      }
 
       line_buff += line_incr;
     }
@@ -328,7 +331,7 @@
       {
         FT_ULong  num_glyphs, n;
         FT_Int    size_elem;
-        FT_Bool   large = ( range->index_format == 1 );
+        FT_Bool   large = FT_BOOL( range->index_format == 1 );
 
 
         num_glyphs        = range->last_glyph - range->first_glyph + 1L;
@@ -696,7 +699,7 @@
       if ( glyph_index >= (FT_UInt)range->first_glyph &&
            glyph_index <= (FT_UInt)range->last_glyph  )
       {
-        FT_UShort  delta = glyph_index - range->first_glyph;
+        FT_UShort  delta = (FT_UShort)(glyph_index - range->first_glyph);
 
 
         switch ( range->index_format )
@@ -992,9 +995,9 @@
         MEM_Move( line, line + count * line_len,
                   ( rows - count ) * line_len );
 
-        metrics->height       -= count;
-        metrics->horiBearingY -= count;
-        metrics->vertBearingY -= count;
+        metrics->height       = (FT_Byte)( metrics->height - count );
+        metrics->horiBearingY = (FT_Char)( metrics->horiBearingY - count );
+        metrics->vertBearingY = (FT_Char)( metrics->vertBearingY - count );
 
         map->rows -= count;
         rows      -= count;
@@ -1025,7 +1028,7 @@
     Found_Bottom:
       if ( count > 0 )
       {
-        metrics->height -= count;
+        metrics->height  = (FT_Byte)( metrics->height - count );
         rows            -= count;
         map->rows       -= count;
       }
@@ -1058,15 +1061,15 @@
         FT_Byte*  cur = line;
 
 
-        old = cur[0] << 1;
+        old = (FT_Byte)(cur[0] << 1);
         for ( n = 8; n < width; n += 8 )
         {
           FT_Byte  val;
 
 
           val    = cur[1];
-          cur[0] = old | ( val >> 7 );
-          old    = val << 1;
+          cur[0] = (FT_Byte)(old | ( val >> 7 ));
+          old    = (FT_Byte)(val << 1);
           cur++;
         }
         cur[0] = old;
@@ -1095,7 +1098,7 @@
 
       line  = (FT_Byte*)map->buffer + ( right >> 3 );
       limit = line + rows * line_len;
-      mask  = 0x80 >> ( right & 7 );
+      mask  = (FT_Byte)(0x80 >> ( right & 7 ));
 
       for ( ; line < limit; line += line_len )
         if ( line[0] & mask )
@@ -1449,9 +1452,9 @@
 
       /* some heuristic values */
 
-      metrics->vertBearingX = -metrics->width / 2;
-      metrics->vertBearingY =  advance / 10;
-      metrics->vertAdvance  =  advance * 12 / 10;
+      metrics->vertBearingX = (FT_Char)(-metrics->width / 2);
+      metrics->vertBearingY = (FT_Char)( advance / 10 );
+      metrics->vertAdvance  = (FT_Char)( advance * 12 / 10 );
     }
 
     /* Crop the bitmap now, unless specified otherwise */

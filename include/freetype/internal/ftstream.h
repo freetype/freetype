@@ -143,63 +143,77 @@ FT_BEGIN_HEADER
   /* integer extraction macros -- the `buffer' parameter must ALWAYS be of */
   /* type `char*' or equivalent (1-byte elements).                         */
   /*                                                                       */
+
+#define FT_GET_SHORT_BE(p)                         \
+          ((short)( ((signed char)(p)[0] <<  8) |  \
+                                  (p)[1]        ))
+
+#define FT_GET_OFF3_BE(p)                          \
+          ((long) ( ((signed char)(p)[0] << 16) |  \
+                                 ((p)[1] <<  8) |  \
+                                  (p)[2]        ))
+
+#define FT_GET_LONG_BE(p)                          \
+          ((long) ( ((signed char)(p)[0] << 24) |  \
+                                 ((p)[1] << 16) |  \
+                                 ((p)[2] <<  8) |  \
+                                  (p)[3]        ))
+
+#define FT_GET_SHORT_LE(p)                         \
+          ((short)( ((signed char)(p)[1] <<  8) |  \
+                                  (p)[0]        ))
+
+#define FT_GET_OFF3_LE(p)                          \
+          ((long) ( ((signed char)(p)[2] << 16) |  \
+                                 ((p)[1] <<  8) |  \
+                                  (p)[0]        ))
+
+#define FT_GET_LONG_LE(p)                          \
+          ((long) ( ((signed char)(p)[3] << 24) |  \
+                                 ((p)[2] << 16) |  \
+                                 ((p)[1] <<  8) |  \
+                                  (p)[0]        ))
+
 #define NEXT_Char( buffer )            \
           ( (signed char)*buffer++ )
+
 #define NEXT_Byte( buffer )            \
           ( (unsigned char)*buffer++ )
 
 #define NEXT_Short( buffer )                              \
-          ( buffer += 2,                                  \
-            ( (short)( (signed   char)buffer[-2] << 8 ) | \
-                       (unsigned char)buffer[-1]        ) )
+          ( (short)( buffer += 2, FT_GET_SHORT_BE(buffer-2) ) )
 
 #define NEXT_UShort( buffer )                      \
           ( (unsigned short)NEXT_Short( buffer ) )
 
-#define NEXT_Offset( buffer )                             \
-          ( buffer += 3,                                  \
-            ( ( (long)(signed   char)buffer[-3] << 16 ) | \
-              ( (long)(unsigned char)buffer[-2] <<  8 ) | \
-                (long)(unsigned char)buffer[-1]         ) )
+#define NEXT_Offset( buffer )                                     \
+          ( (long)( buffer += 3, FT_GET_OFF3_BE(buffer-3) ) )
 
 #define NEXT_UOffset( buffer )                     \
           ( (unsigned long)NEXT_Offset( buffer ) )
 
-#define NEXT_Long( buffer )                               \
-          ( buffer += 4,                                  \
-            ( ( (long)(signed   char)buffer[-4] << 24 ) | \
-              ( (long)(unsigned char)buffer[-3] << 16 ) | \
-              ( (long)(unsigned char)buffer[-2] <<  8 ) | \
-                (long)(unsigned char)buffer[-1]         ) )
+#define NEXT_Long( buffer )                                       \
+          ( (long)( buffer += 4, FT_GET_LONG_BE(buffer-4) ) )
 
 #define NEXT_ULong( buffer )                     \
           ( (unsigned long)NEXT_Long( buffer ) )
 
 
 #define NEXT_ShortLE( buffer )                            \
-          ( buffer += 2,                                  \
-            ( (short)( (signed   char)buffer[-1] << 8 ) | \
-                       (unsigned char)buffer[-2]        ) )
+          ( (short)( buffer += 2, FT_GET_SHORT_LE(buffer-2) ) )
 
 #define NEXT_UShortLE( buffer )                      \
           ( (unsigned short)NEXT_ShortLE( buffer ) )
 
 #define NEXT_OffsetLE( buffer )                           \
-          ( buffer += 3,                                  \
-            ( ( (long)(signed   char)buffer[-1] << 16 ) | \
-              ( (long)(unsigned char)buffer[-2] <<  8 ) | \
-                (long)(unsigned char)buffer[-3]         ) )
+          ( (long)( buffer += 3, FT_GET_OFF3_LE(buffer-3) ) )
 
 #define NEXT_UOffsetLE( buffer )                     \
-          ( (unsigned long)NEXT_OffsetLE( buffer ) )
+         ( (unsigned long)NEXT_OffsetLE( buffer ) )
 
 
 #define NEXT_LongLE( buffer )                             \
-          ( buffer += 4,                                  \
-            ( ( (long)(signed   char)buffer[-1] << 24 ) | \
-              ( (long)(unsigned char)buffer[-2] << 16 ) | \
-              ( (long)(unsigned char)buffer[-3] <<  8 ) | \
-                (long)(unsigned char)buffer[-4]         ) )
+          ( (long)( buffer += 4, FT_GET_LONG_LE(buffer-4) ) )
 
 #define NEXT_ULongLE( buffer )                     \
           ( (unsigned long)NEXT_LongLE( buffer ) )

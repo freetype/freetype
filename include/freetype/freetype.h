@@ -1458,14 +1458,14 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  FT_Open_Args_
   {
-    FT_Open_Flags  flags;
-    FT_Byte*       memory_base;
-    FT_Long        memory_size;
-    FT_String*     pathname;
-    FT_Stream      stream;
-    FT_Module      driver;
-    FT_Int         num_params;
-    FT_Parameter*  params;
+    FT_Open_Flags   flags;
+    const FT_Byte*  memory_base;
+    FT_Long         memory_size;
+    FT_String*      pathname;
+    FT_Stream       stream;
+    FT_Module       driver;
+    FT_Int          num_params;
+    FT_Parameter*   params;
 
   } FT_Open_Args;
 
@@ -1536,6 +1536,11 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
+  /*    the font data bytes are used _directly_ by the @FT_Face object.    */
+  /*    this means that they're not copied, and that the client is         */
+  /*    responsible for releasing/destroying them _after_ the              */
+  /*    corresponding call to @FT_Done_Face                                */
+  /*                                                                       */
   /*    Unlike FreeType 1.x, this function automatically creates a glyph   */
   /*    slot for the face object which can be accessed directly through    */
   /*    `face->glyph'.                                                     */
@@ -1546,11 +1551,11 @@ FT_BEGIN_HEADER
   /*    `aface'.  Its return value should be 0 if the font format is       */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FT_New_Memory_Face( FT_Library  library,
-                                             FT_Byte*    file_base,
-                                             FT_Long     file_size,
-                                             FT_Long     face_index,
-                                             FT_Face    *aface );
+  FT_EXPORT( FT_Error )  FT_New_Memory_Face( FT_Library      library,
+                                             const FT_Byte*  file_base,
+                                             FT_Long         file_size,
+                                             FT_Long         face_index,
+                                             FT_Face        *aface );
 
 
   /*************************************************************************/

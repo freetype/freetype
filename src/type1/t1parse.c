@@ -436,7 +436,7 @@
             break;
 
           /* otherwise, store byte */
-          *write++ = ( hex1 << 4 ) | hexa_value( cur[1] );
+          *write++ = (FT_Byte)(( hex1 << 4 ) | hexa_value( cur[1] ));
           count++;
           cur++;
         }

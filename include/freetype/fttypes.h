@@ -512,6 +512,7 @@ FT_BEGIN_HEADER
   /* return base error code (without module-specific prefix) */
 #define FT_ERROR_BASE( x )     ( (x) & 255 )
 
+#define FT_BOOL(x)             ((FT_Bool)(x))
 
 FT_END_HEADER
 

@@ -180,8 +180,8 @@
                          FT_UInt        start_point,
                          FT_UInt        start_contour )
   {
-    zone->n_points   = load->outline.n_points - start_point;
-    zone->n_contours = load->outline.n_contours - start_contour;
+    zone->n_points   = (FT_UShort)(load->outline.n_points - start_point);
+    zone->n_contours = (FT_Short) (load->outline.n_contours - start_contour);
     zone->org        = load->extra_points + start_point;
     zone->cur        = load->outline.points + start_point;
     zone->tags       = (FT_Byte*)load->outline.tags + start_point;
@@ -408,8 +408,8 @@
     for ( n = 0; n < n_points; n++ )
       outline->tags[n] &= FT_Curve_Tag_On;
 
-    outline->n_points   = n_points;
-    outline->n_contours = n_contours;
+    outline->n_points   = (FT_UShort)n_points;
+    outline->n_contours = (FT_Short) n_contours;
 
   Fail:
     return error;
@@ -1215,14 +1215,14 @@
         /*                                                     */
         if ( face->os2.version != 0xFFFF )
         {
-          top_bearing    = face->os2.sTypoLineGap / 2;
+          top_bearing    = (FT_Short)(face->os2.sTypoLineGap / 2);
           advance_height = (FT_UShort)( face->os2.sTypoAscender -
                                         face->os2.sTypoDescender +
                                         face->os2.sTypoLineGap );
         }
         else
         {
-          top_bearing    = face->horizontal.Line_Gap / 2;
+          top_bearing    = (FT_Short)(face->horizontal.Line_Gap / 2);
           advance_height = (FT_UShort)( face->horizontal.Ascender  +
                                         face->horizontal.Descender +
                                         face->horizontal.Line_Gap );
