@@ -478,7 +478,7 @@ THE SOFTWARE.
       }
       else
       {
-        /* apparently, the PCF driver loads all properties as signed integers!
+        /* Apparently, the PCF driver loads all properties as signed integers!
          * This really doesn't seem to be a problem, because this is
          * sufficient for any meaningful values.
          */

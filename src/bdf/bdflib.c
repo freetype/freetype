@@ -183,10 +183,10 @@
   (*hash_free_func)( hashnode  node );
 
   static hashnode*
-  hash_bucket( char*       key,
-               hashtable*  ht )
+  hash_bucket( const char*  key,
+               hashtable*   ht )
   {
-    char*          kp  = key;
+    const char*    kp  = key;
     unsigned long  res = 0;
     hashnode*      bp  = ht->table, *ndp;
 
@@ -317,7 +317,7 @@
 
 
   static hashnode
-  hash_lookup( char*       key,
+  hash_lookup( const char* key,
                hashtable*  ht )
   {
     hashnode *np = hash_bucket( key, ht );
@@ -1882,7 +1882,7 @@
       /*                                                                  */
       /* This is *always* done regardless of the options, because X11     */
       /* requires these two fields to compile fonts.                      */
-      if ( bdf_get_font_property( p->font, (char *)"FONT_ASCENT" ) == 0 )
+      if ( bdf_get_font_property( p->font, "FONT_ASCENT" ) == 0 )
       {
         p->font->font_ascent = p->font->bbx.ascent;
         ft_sprintf( nbuf, "%hd", p->font->bbx.ascent );
@@ -1894,7 +1894,7 @@
         p->font->modified = 1;
       }
 
-      if ( bdf_get_font_property( p->font, (char *)"FONT_DESCENT" ) == 0 )
+      if ( bdf_get_font_property( p->font, "FONT_DESCENT" ) == 0 )
       {
         p->font->font_descent = p->font->bbx.descent;
         ft_sprintf( nbuf, "%hd", p->font->bbx.descent );
@@ -2418,7 +2418,7 @@
 
   FT_LOCAL_DEF( bdf_property_t * )
   bdf_get_font_property( bdf_font_t*  font,
-                         char*        name )
+                         const char*  name )
   {
     hashnode  hn;
 

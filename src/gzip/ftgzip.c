@@ -48,12 +48,23 @@
 #include "zlib.h"
 
 #undef  SLOW
-#define SLOW  1  /* we can't use asm-optimized sources here !! */
+#define SLOW  1  /* we can't use asm-optimized sources here! */
 
+  /* Urgh.  `inflate_mask' must not be declared twice -- C++ doesn't like
+     this.  We temporarily rename it and load all necessary header files. */
+#define inflate_mask ft_gzip_dummy
+#include "zutil.h"
+#include "inftrees.h"
+#include "infblock.h"
+#include "infcodes.h"
+#include "infutil.h"
+#undef  inflate_mask
+
+  /* infutil.c must be included before infcodes.c */
 #include "zutil.c"
 #include "inftrees.c"
-#include "infcodes.c"
 #include "infutil.c"
+#include "infcodes.c"
 #include "infblock.c"
 #include "inflate.c"
 #include "adler32.c"
@@ -102,14 +113,14 @@
             unsigned  items,
             unsigned  size )
   {
-    return ft_gzip_alloc( opaque, items, size );
+    return ft_gzip_alloc( (FT_Memory)opaque, items, size );
   }
 
   local void
   zcfree( voidpf  opaque,
           voidpf  ptr )
   {
-    ft_gzip_free( opaque, ptr );
+    ft_gzip_free( (FT_Memory)opaque, ptr );
   }
 
 #endif /* !SYSTEM_ZLIB */
@@ -502,7 +513,7 @@
   static void
   ft_gzip_stream_close( FT_Stream  stream )
   {
-    FT_GZipFile  zip    = stream->descriptor.pointer;
+    FT_GZipFile  zip    = (FT_GZipFile)stream->descriptor.pointer;
     FT_Memory    memory = stream->memory;
 
 
@@ -524,7 +535,7 @@
                      FT_Byte*   buffer,
                      FT_ULong   count )
   {
-    FT_GZipFile  zip = stream->descriptor.pointer;
+    FT_GZipFile  zip = (FT_GZipFile)stream->descriptor.pointer;
 
 
     return ft_gzip_file_io( zip, pos, buffer, count );

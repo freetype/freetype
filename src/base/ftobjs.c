@@ -1426,8 +1426,8 @@
     if ( char_height < 1 * 64 )
       char_height = 1 * 64;
 
-   /* Compute pixel sizes in 26.6 units. we use rounding
-    */
+    /* Compute pixel sizes in 26.6 units. we use rounding
+     */
     dim_x = ( ( char_width  * horz_resolution + (36+32*72) ) / 72 ) & -64;
     dim_y = ( ( char_height * vert_resolution + (36+32*72) ) / 72 ) & -64;
 

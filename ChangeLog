@@ -1,9 +1,32 @@
+2003-04-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdflib.c (hash_bucket, hash_lookup): Use `const' for first
+	argument.
+	(bdf_get_font_property): Use `const' for third argument.
+	Updated all callers.
+	* src/bdf/bdfdrivr.c (BDF_Face_Init): Set pixel width and height
+	similar to the PCF driver.
+	* src/bdf/bdf.h (_hashnode): Use `const' for `key'.
+	Updated.
+
+	* src/gzip/ftgzip.c: C++ doesn't like that the array `inflate_mask'
+	is declared twice.  It is perhaps better to modify the zlip source
+	files directly instead of this hack.
+	(zcalloc, zfree, ft_gzip_stream_close, ft_gzip_stream_io): Add casts
+	to make build with g++ successful.
+
+2003-04-24  Manish Singh  <yosh@gimp.org>
+
+	* src/cid/cidobjs.c (cid_face_init), src/type1/t1objs.c
+	(T1_Face_Init), src/type42/t42objs.c (T42_Face_Init): Split on `-'
+	also for searching the style name.
+
 2003-04-24  David Turner  <david@freetype.org>
 
-        * src/pcf/pcfread.c (pcf_load_font): fixed the computation of
-        face->num_glyphs, this required increase the value by 1 to respect
-        the convention that gindex 0 always corresponds to the "missing
-        glyph".
+	* src/pcf/pcfread.c (pcf_load_font): fixed the computation of
+	face->num_glyphs, this required increase the value by 1 to respect
+	the convention that gindex 0 always corresponds to the "missing
+	glyph".
 
 2003-04-24  Werner Lemberg  <wl@gnu.org>
 

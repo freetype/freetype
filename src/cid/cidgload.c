@@ -166,8 +166,8 @@
 
 
       metrics.bearing_x = decoder->builder.left_bearing.x;
-	  metrics.bearing_y = decoder->builder.left_bearing.y;
-	  metrics.advance   = decoder->builder.advance.x;
+      metrics.bearing_y = decoder->builder.left_bearing.y;
+      metrics.advance   = decoder->builder.advance.x;
       error = face->root.internal->incremental_interface->funcs->get_glyph_metrics(
                 face->root.internal->incremental_interface->object,
                 glyph_index, FALSE, &metrics );
