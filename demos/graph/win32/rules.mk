@@ -26,7 +26,7 @@ $(OBJ_)grwin32.$O: $(GR_WIN32_)grwin32.c $(GR_WIN32_)grwin32.h
 
 # Now update COMPILE_GRAPH_LIB according to the compiler used on Win32
 #
-ifeq ($(CC),gcc)   # test for GCC
+ifeq ($(firstword $(CC)),gcc)   # test for GCC
 LINK              = $(CC) $T$@ $< $(FTLIB)
 COMMON_LINK       = $(LINK) $(COMMON_OBJ)
 GRAPH_LINK        = $(COMMON_LINK) $(GRAPH_LIB) -luser32 -lgdi32
