@@ -381,18 +381,32 @@ THE SOFTWARE.
                ( charset_registry->value.atom != NULL ) &&
                ( charset_encoding->value.atom != NULL ) )
           {
+            const char*  s;
+
+
             if ( FT_NEW_ARRAY( face->charset_encoding,
                                strlen( charset_encoding->value.atom ) + 1 ) )
               goto Exit;
             if ( FT_NEW_ARRAY( face->charset_registry,
                                strlen( charset_registry->value.atom ) + 1 ) )
               goto Exit;
+
             ft_strcpy( face->charset_registry, charset_registry->value.atom );
             ft_strcpy( face->charset_encoding, charset_encoding->value.atom );
-            if ( !ft_strcmp( face->charset_registry, "ISO10646" )     ||
-                 ( !ft_strcmp( face->charset_registry, "ISO8859" ) &&
-                   !ft_strcmp( face->charset_encoding, "1" )       )  )
+
+            /* Uh, oh, compare first letters manually to avoid dependency
+               on locales. */
+            s = face->charset_registry;
+            if ( ( s[0] == 'i' || s[0] == 'I' ) &&
+                 ( s[1] == 's' || s[1] == 'S' ) &&
+                 ( s[2] == 'o' || s[2] == 'O' ) )
+            {
+              s += 3;
+              if ( !ft_strcmp( s, "10646" )                      ||
+                   ( !ft_strcmp( s, "8859" ) &&
+                     !ft_strcmp( face->charset_encoding, "1" ) ) )
               unicode_charmap = 1;
+            }
 
             {
               FT_CharMapRec  charmap;

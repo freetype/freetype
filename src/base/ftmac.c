@@ -149,8 +149,8 @@
     int  nameLen = spec->name[0];
 
 
-    return nameLen >= 6                                   &&
-           !memcmp( spec->name + nameLen - 5, ".dfont", 6 );
+    return nameLen >= 6                                      &&
+           !ft_memcmp( spec->name + nameLen - 5, ".dfont", 6 );
   }
 
 #endif
@@ -170,7 +170,7 @@
 
     while ( *q )
     {
-      if ( isupper( *q ) )
+      if ( ft_isupper( *q ) )
       {
         if ( count )
           max = 3;
@@ -309,7 +309,7 @@
 
         if ( ps_name_len != 0 )
         {
-          memcpy(ps_name, names[0] + 1, ps_name_len);
+          ft_memcpy(ps_name, names[0] + 1, ps_name_len);
           ps_name[ps_name_len] = 0;
         }
         if ( style->indexes[0] > 1 )
@@ -330,7 +330,7 @@
 
               if ( s_len != 0 && ps_name_len + s_len < sizeof ( ps_name ) )
               {
-                memcpy( ps_name + ps_name_len, s + 1, s_len );
+                ft_memcpy( ps_name + ps_name_len, s + 1, s_len );
                 ps_name_len += s_len;
                 ps_name[ps_name_len] = 0;
               }
