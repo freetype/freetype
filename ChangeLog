@@ -3,6 +3,8 @@
         * src/pfr/pfrobjs.h, src/pfr/pfrobjs.c, src/pfr/pfrload.c,
         src/pfr/pfrtypes.h: adding Kerning support to the PFR driver
 
+        * README, docs/CHANGES: preparing for the 2.1.2 release
+
 2002-06-19  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/base/fttype1.c: Include FT_INTERNAL_TYPE42_TYPES_H.
