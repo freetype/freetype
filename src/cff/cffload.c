@@ -2049,6 +2049,10 @@
     CFF_FontRecDict  dict;
 
 
+#ifndef FT_CONFIG_OPTION_INCREMENTAL
+    face; /* Prevent compiler warning about unreferenced parameter. */
+#endif
+
     FT_ZERO( font );
 
     font->stream = stream;

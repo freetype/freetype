@@ -595,6 +595,10 @@
                        FT_Byte**  pointer,
                        FT_ULong   length )
   {
+#ifndef FT_CONFIG_OPTION_INCREMENTAL
+    length; /* Prevent compiler warning about unreferenced parameter. */
+#endif
+
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     /* For incremental fonts get the character data using the */
     /* callback function.                                     */
