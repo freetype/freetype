@@ -831,6 +831,20 @@
       error = face->goto_table( face, TTAG_hmtx, stream, &table_len );
       if ( error )
       {
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+      /* If this is an incrementally loaded font and there are    */
+      /* overriding metrics tolerate a missing 'hmtx' table.      */
+        if ( face->root.internal->incremental_interface &&
+             face->root.internal->incremental_interface->funcs->
+                 get_glyph_metrics )
+        {
+          face->horizontal.number_Of_HMetrics = 0;
+          error = SFNT_Err_Ok;
+          goto Exit;
+	    }
+#endif
+
         FT_ERROR(( " no horizontal metrics in file!\n" ));
         error = SFNT_Err_Hmtx_Table_Missing;
         goto Exit;
