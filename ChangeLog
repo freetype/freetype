@@ -1,3 +1,10 @@
+2003-04-24  David Turner  <david@freetype.org>
+
+        * src/pcf/pcfread.c (pcf_load_font): fixed the computation of
+        face->num_glyphs, this required increase the value by 1 to respect
+        the convention that gindex 0 always corresponds to the "missing
+        glyph".
+
 2003-04-24  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/unix-cc.in (CFLAGS): Add @CPPFLAGS@.
