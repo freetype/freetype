@@ -80,6 +80,12 @@ FT_BEGIN_HEADER
 #define FT_PIX_CEIL( x )      FT_PIX_FLOOR( (x) + 63 )
 
 
+ /* returns the highest power of 2 that is <= value, this correspond to
+  * the highest bit in a given 32-bit value
+  */
+  FT_BASE( FT_UInt32 )
+  ft_highpow2( FT_UInt32  value );
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/

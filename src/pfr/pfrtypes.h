@@ -196,10 +196,10 @@ FT_BEGIN_HEADER
   typedef struct  PFR_KernItemRec_
   {
     PFR_KernItem  next;
-    FT_UInt       pair_count;
+    FT_Byte       pair_count;
+    FT_Byte       flags;
+    FT_Short      base_adj;
     FT_UInt       pair_size;
-    FT_Int        base_adj;
-    FT_UInt       flags;
     FT_UInt32     offset;
     FT_UInt32     pair1;
     FT_UInt32     pair2;
@@ -211,6 +211,8 @@ FT_BEGIN_HEADER
 
 #define PFR_KERN_PAIR_INDEX( pair )  \
           PFR_KERN_INDEX( (pair)->glyph1, (pair)->glyph2 )
+
+#define PFR_NEXT_KPAIR(p)  ( p+=2, ((FT_UInt32)p[-2] << 16) | p[-1] )
 
   typedef struct  PFR_KernPairRec_
   {
@@ -261,7 +263,9 @@ FT_BEGIN_HEADER
     FT_UInt            num_kern_pairs;
     PFR_KernItem       kern_items;
     PFR_KernItem*      kern_items_tail;
+#ifndef FT_OPTIMIZE_MEMORY
     PFR_KernPair       kern_pairs;
+#endif
 
     /* not part of the spec, but used during load */
     FT_UInt32          bct_offset;
