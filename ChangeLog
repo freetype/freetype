@@ -1,3 +1,8 @@
+2004-09-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgxvar.c (TT_Vary_Get_Glyph_Deltas): Fix call to
+	FT_NEW_ARRAY.
+
 2004-09-04  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftobjs.h: Don't include
