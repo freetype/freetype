@@ -1261,6 +1261,9 @@
       PSH3_Point  point, before, after;
 
 
+      if ( glyph->contours[n].count == 0 )
+        continue;
+
       point  = first;
       before = point;
       after  = point;

@@ -1,3 +1,13 @@
+2003-05-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/pshinter/pshalgo3.c (psh3_glyph_compute_extrema): Skip
+	contours with only a single point to avoid segfault.
+
+2003-05-24  Werner Lemberg  <wl@gnu.org>
+
+	* src/autohint/ahtypes.h (AH_OPTION_NO_STRONG_INTERPOLATION):
+	Removed since unused.
+
 2003-05-21  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/config/ftstdlib.h (ft_strcat): New wrapper macro

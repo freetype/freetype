@@ -27,6 +27,8 @@
 
 #define MAX_TEST_CHARACTERS  12
 
+  /* cf. AH_BLUE_XXX constants in ahtypes.h */
+
   static
   const char*  blue_chars[AH_BLUE_MAX] =
   {
@@ -93,8 +95,8 @@
       goto Exit;
 
     /* we compute the blues simply by loading each character from the */
-    /* 'blue_chars[blues]' string, then compute its top-most and      */
-    /* bottom-most points                                             */
+    /* 'blue_chars[blues]' string, then compute its top-most or       */
+    /* bottom-most points (depending on `AH_IS_TOP_BLUE')             */
 
     AH_LOG(( "blue zones computation\n" ));
     AH_LOG(( "------------------------------------------------\n" ));
@@ -103,6 +105,7 @@
     {
       const char*  p     = blue_chars[blue];
       const char*  limit = p + MAX_TEST_CHARACTERS;
+
       FT_Pos       *blue_ref, *blue_shoot;
 
 

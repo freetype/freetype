@@ -699,6 +699,10 @@
       /* glyph is not an m), so the potential for unwanted distortion is    */
       /* relatively low.                                                    */
 
+      /* We don't handle horizontal edges since we can't easily assure that */
+      /* the third (lowest) stem aligns with the base line; it might end up */
+      /* one pixel higher or lower.                                         */
+
       n_edges = edge_limit - edges;
       if ( !dimension && ( n_edges == 6 || n_edges == 12 ) )
       {
@@ -1580,7 +1584,7 @@
         FT_SubGlyph  subglyph;
 
 
-        start_point   = gloader->base.outline.n_points;
+        start_point = gloader->base.outline.n_points;
 
         /* first of all, copy the subglyph descriptors in the glyph loader */
         error = ah_loader_check_subglyphs( gloader, num_subglyphs );
@@ -1663,8 +1667,8 @@
             FT_Vector*  p2;
 
 
-            if ( start_point + k >= num_base_points          ||
-                               l >= (FT_UInt)num_new_points  )
+            if ( start_point + k >= num_base_points         ||
+                               l >= (FT_UInt)num_new_points )
             {
               error = AH_Err_Invalid_Composite;
               goto Exit;
@@ -1822,7 +1826,7 @@
          /* adust x_scale
           */
           if ( fitted < scaled )
-            x_scale -= x_scale/50;  /* x_scale*0.98 with integers */
+            x_scale -= x_scale / 50;  /* x_scale*0.98 with integers */
         }
       }
     }
