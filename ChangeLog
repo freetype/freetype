@@ -1,3 +1,10 @@
+2004-04-10  Werner Lemberg  <wl@gnu.org>
+
+	* src/lzw/ftlzw.c: Include zopen.h dependent on
+	FT_CONFIG_OPTION_USE_LZW.
+
+	* src/base/ftdebug.c: s/index/idx/ to avoid compiler warnings.
+
 2004-04-02  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/ltmain.sh: Regenerated with `libtoolize --force
