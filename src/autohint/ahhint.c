@@ -1359,17 +1359,6 @@
       hinter->globals = FACE_GLOBALS( face );
       face_globals    = FACE_GLOBALS( face );
 
-      /* Immediately call ourself.  Fixes weird problem whereby computation */
-      /* of global hints throws off the rendering of the first glyph shown  */
-      /* in a synthetic font.                                               */
-
-      /*
-      error = ah_hinter_load_glyph( hinter, slot, size,
-                                    glyph_index, load_flags );
-      if ( error )
-        goto Exit;
-      */
-
     }
 
     /* now, we must check the current character pixel size to see if we */
