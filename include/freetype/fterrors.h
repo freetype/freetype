@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  fterrors.h                                                             */
 /*                                                                         */
-/*    FreeType error codes (specification).                                */
+/*    FreeType error code handling (specification).                        */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -18,16 +18,16 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* This special header file is used to define the FT2 enumeration        */
-  /* constants.  It can also be used to generate error message strings     */
-  /* with a small macro trick explained below.                             */
+  /* This special header file is used to define the handling of FT2        */
+  /* enumeration constants.  It can also be used to generate error message */
+  /* strings with a small macro trick explained below.                     */
   /*                                                                       */
   /* I - Error Formats                                                     */
   /* -----------------                                                     */
   /*                                                                       */
   /*   Since release 2.1, the error constants have changed.  The lower     */
   /*   byte of the error value gives the "generic" error code, while the   */
-  /*   higher byte indicates in which module the error occured.            */
+  /*   higher byte indicates in which module the error occurred.           */
   /*                                                                       */
   /*   You can use the macro FT_ERROR_BASE(x) macro to extract the generic */
   /*   error code from an FT_Error value.                                  */
@@ -71,9 +71,9 @@
   /*                                                                       */
   /*     {                                                                 */
   /*       #undef __FTERRORS_H__                                           */
-  /*       #define FT_ERRORDEF( e, v, s )   { e, s },                      */
-  /*       #define FT_ERROR_START_LIST      {                              */
-  /*       #define FT_ERROR_END_LIST        { 0, 0 } };                    */
+  /*       #define FT_ERRORDEF( e, v, s )  { e, s },                       */
+  /*       #define FT_ERROR_START_LIST     {                               */
+  /*       #define FT_ERROR_END_LIST       { 0, 0 } };                     */
   /*                                                                       */
   /*       const struct                                                    */
   /*       {                                                               */
@@ -163,20 +163,12 @@
           FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v, s )
 
 
-  /*******************************************************************/
-  /*******************************************************************/
-  /*****                                                         *****/
-  /*****                LIST OF ERROR CODES/MESSAGES             *****/
-  /*****                                                         *****/
-  /*******************************************************************/
-  /*******************************************************************/
-
-
 #ifdef FT_ERROR_START_LIST
   FT_ERROR_START_LIST
 #endif
 
 
+  /* no include the error codes */
 #include FT_ERROR_DEFINITIONS_H
 
 
@@ -210,5 +202,6 @@
 #undef FT_ERR_CONCAT
 
 #endif /* __FTERRORS_H__ */
+
 
 /* END */

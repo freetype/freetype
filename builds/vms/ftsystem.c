@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  ftsystem.c                                                             */
 /*                                                                         */
-/*    Unix-specific FreeType low-level system interface (body).            */
+/*    VMS-specific FreeType low-level system interface (body).             */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -144,9 +144,9 @@
   /*    The memory release function.                                       */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    memory  :: A pointer to the memory object.                         */
+  /*    memory :: A pointer to the memory object.                          */
   /*                                                                       */
-  /*    block   :: The address of block in memory to be freed.             */
+  /*    block  :: The address of block in memory to be freed.              */
   /*                                                                       */
   FT_CALLBACK_DEF( void )
   ft_free( FT_Memory  memory,
