@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 driver interface (body).                                      */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -109,7 +109,7 @@
 
 
   static const char*
-  t1_get_ps_name( T1_Face    face )
+  t1_get_ps_name( T1_Face  face )
   {
     return (const char*) face->type1.font_name;
   }
@@ -239,6 +239,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    charmap  :: A handle to the source charmap object.                 */
+  /*                                                                       */
   /*    charcode :: The character code.                                    */
   /*                                                                       */
   /* <Return>                                                              */
@@ -248,8 +249,8 @@
   Get_Char_Index( FT_CharMap  charmap,
                   FT_Long     charcode )
   {
-    T1_Face             face;
-    FT_UInt             result = 0;
+    T1_Face          face;
+    FT_UInt          result = 0;
     PSNames_Service  psnames;
 
 
@@ -269,7 +270,7 @@
 
         /* the function returns 0xFFFF if the Unicode charcode has */
         /* no corresponding glyph                                  */
-        if ( result == 0xFFFF )
+        if ( result == 0xFFFFU )
           result = 0;
         goto Exit;
 
@@ -286,7 +287,7 @@
 
           /* the function returns 0xFFFF if the Unicode charcode has */
           /* no corresponding glyph                                  */
-          if ( result == 0xFFFF )
+          if ( result == 0xFFFFU )
             result = 0;
         }
         goto Exit;
@@ -355,6 +356,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    charmap  :: A handle to the source charmap object.                 */
+  /*                                                                       */
   /*    charcode :: The character code.                                    */
   /*                                                                       */
   /* <Return>                                                              */
@@ -364,7 +366,7 @@
   Get_Next_Char( FT_CharMap  charmap,
                  FT_Long     charcode )
   {
-    T1_Face             face;
+    T1_Face          face;
     PSNames_Service  psnames;
 
 
@@ -389,7 +391,7 @@
         /*                                                                 */
       case ft_encoding_latin_1:
         {
-          FT_Long code;
+          FT_Long  code;
 
 
           /* use the `PSNames' module to synthetize the Unicode charmap */
@@ -481,28 +483,28 @@
     sizeof( T1_SizeRec ),
     sizeof( T1_GlyphSlotRec ),
 
-    (FT_Face_InitFunc)     T1_Face_Init,
-    (FT_Face_DoneFunc)     T1_Face_Done,
-    (FT_Size_InitFunc)     T1_Size_Init,
-    (FT_Size_DoneFunc)     T1_Size_Done,
-    (FT_Slot_InitFunc)T1_GlyphSlot_Init,
-    (FT_Slot_DoneFunc)T1_GlyphSlot_Done,
+    (FT_Face_InitFunc)        T1_Face_Init,
+    (FT_Face_DoneFunc)        T1_Face_Done,
+    (FT_Size_InitFunc)        T1_Size_Init,
+    (FT_Size_DoneFunc)        T1_Size_Done,
+    (FT_Slot_InitFunc)        T1_GlyphSlot_Init,
+    (FT_Slot_DoneFunc)        T1_GlyphSlot_Done,
 
     (FT_Size_ResetPointsFunc) T1_Size_Reset,
-    (FT_Size_ResetPixelsFunc)T1_Size_Reset,
-    (FT_Slot_LoadFunc)    T1_Load_Glyph,
-    (FT_CharMap_CharIndexFunc) Get_Char_Index,
+    (FT_Size_ResetPixelsFunc) T1_Size_Reset,
+    (FT_Slot_LoadFunc)        T1_Load_Glyph,
+    (FT_CharMap_CharIndexFunc)Get_Char_Index,
 
 #ifdef T1_CONFIG_OPTION_NO_AFM
-    (FT_Face_GetKerningFunc)   0,
-    (FT_Face_AttachFunc)   0,
+    (FT_Face_GetKerningFunc)  0,
+    (FT_Face_AttachFunc)      0,
 #else
-    (FT_Face_GetKerningFunc)   Get_Kerning,
-    (FT_Face_AttachFunc)   T1_Read_AFM,
+    (FT_Face_GetKerningFunc)  Get_Kerning,
+    (FT_Face_AttachFunc)      T1_Read_AFM,
 #endif
-    (FT_Face_GetAdvancesFunc)  0,
+    (FT_Face_GetAdvancesFunc) 0,
 
-    (FT_CharMap_CharNextFunc)  Get_Next_Char
+    (FT_CharMap_CharNextFunc) Get_Next_Char
   };
 
 

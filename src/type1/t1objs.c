@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 objects manager (body).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -141,7 +141,7 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  T1_GlyphSlot_Init( T1_GlyphSlot   slot )
+  T1_GlyphSlot_Init( T1_GlyphSlot  slot )
   {
     T1_Face           face;
     PSHinter_Service  pshinter;
@@ -190,7 +190,7 @@
   T1_Face_Done( T1_Face  face )
   {
     FT_Memory  memory;
-    T1_Font   type1 = &face->type1;
+    T1_Font    type1 = &face->type1;
 
 
     if ( face )
@@ -205,7 +205,7 @@
 
       /* release font info strings */
       {
-        PS_FontInfo   info = &type1->font_info;
+        PS_FontInfo  info = &type1->font_info;
 
 
         FT_FREE( info->version );
@@ -351,6 +351,7 @@
         char*  full   = face->type1.font_info.full_name;
         char*  family = root->family_name;
 
+
         if ( full )
         {
           while ( *family && *full == *family )
@@ -390,10 +391,10 @@
       root->num_fixed_sizes = 0;
       root->available_sizes = 0;
 
-      root->bbox.xMin =  face->type1.font_bbox.xMin >> 16;
-      root->bbox.yMin =  face->type1.font_bbox.yMin >> 16;
-      root->bbox.xMax = (face->type1.font_bbox.xMax + 0xFFFFU) >> 16;
-      root->bbox.yMax = (face->type1.font_bbox.yMax + 0xFFFFU) >> 16;
+      root->bbox.xMin =   face->type1.font_bbox.xMin >> 16;
+      root->bbox.yMin =   face->type1.font_bbox.yMin >> 16;
+      root->bbox.xMax = ( face->type1.font_bbox.xMax + 0xFFFFU ) >> 16;
+      root->bbox.yMax = ( face->type1.font_bbox.yMax + 0xFFFFU ) >> 16;
 
       /* Set units_per_EM if we didn't set it in parse_font_matrix. */
       if ( !root->units_per_EM )
@@ -432,14 +433,16 @@
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
 
     {
-      FT_Face          root = &face->root;
+      FT_Face  root = &face->root;
       
+
       if ( psnames && psaux )
       {
         FT_CharMapRec    charmap;
         T1_CMap_Classes  cmap_classes = psaux->t1_cmap_classes;
         FT_CMap_Class    clazz;
         
+
         charmap.face = root;
         
         /* first of all, try to synthetize a Unicode charmap */
@@ -455,32 +458,32 @@
         
         switch ( face->type1.encoding_type )
         {
-          case T1_ENCODING_TYPE_STANDARD:
-            charmap.encoding    = ft_encoding_adobe_standard;
-            charmap.encoding_id = 0;
-            clazz               = cmap_classes->standard;
-            break;
+        case T1_ENCODING_TYPE_STANDARD:
+          charmap.encoding    = ft_encoding_adobe_standard;
+          charmap.encoding_id = 0;
+          clazz               = cmap_classes->standard;
+          break;
           
-          case T1_ENCODING_TYPE_EXPORT:
-            charmap.encoding    = ft_encoding_adobe_expert;
-            charmap.encoding_id = 1;
-            clazz               = cmap_classes->expert;
-            break;
+        case T1_ENCODING_TYPE_EXPORT:
+          charmap.encoding    = ft_encoding_adobe_expert;
+          charmap.encoding_id = 1;
+          clazz               = cmap_classes->expert;
+          break;
             
-          case T1_ENCODING_TYPE_ARRAY:
-            charmap.encoding    = ft_encoding_adobe_custom;
-            charmap.encoding_id = 2;
-            clazz               = cmap_classes->custom;
-            break;
+        case T1_ENCODING_TYPE_ARRAY:
+          charmap.encoding    = ft_encoding_adobe_custom;
+          charmap.encoding_id = 2;
+          clazz               = cmap_classes->custom;
+          break;
             
-          case T1_ENCODING_TYPE_ISOLATIN1:
-            charmap.encoding    = ft_encoding_latin_1;
-            charmap.encoding_id = 3;
-            clazz               = cmap_classes->unicode;
-            break;
+        case T1_ENCODING_TYPE_ISOLATIN1:
+          charmap.encoding    = ft_encoding_latin_1;
+          charmap.encoding_id = 3;
+          clazz               = cmap_classes->unicode;
+          break;
             
-          default:
-            ;
+        default:
+          ;
         }
         
         if ( clazz )
@@ -600,7 +603,7 @@
   /*    Finalizes a given Type 1 driver.                                   */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    driver  :: A handle to the target Type 1 driver.                   */
+  /*    driver :: A handle to the target Type 1 driver.                    */
   /*                                                                       */
   FT_LOCAL_DEF( void )
   T1_Driver_Done( T1_Driver  driver )
