@@ -11,21 +11,31 @@
 #
 
 from sources   import *
+from content   import *
 from utils     import *
 
 import utils
 
 import sys, os, time, string, getopt
 
+content_processor = ContentProcessor()
+
 
 def beautify_block( block ):
     if block.content:
-        # convert all <XXXXX> tags to @XXXXX:
-        
+        content_processor.reset()
+
+        markups = content_processor.process_content( block.content )
+        text    = []
+        first   = 1
+
+        for markup in markups:
+            text.extend( markup.beautify( first ) )
+            first = 0
         
         # now beautify the documentation "borders" themselves
         lines = [ " /*************************************************************************" ]
-        for l in block.content:
+        for l in text:
             lines.append( "  *" + l )
         lines.append( "  */" )
         
