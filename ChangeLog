@@ -9,6 +9,7 @@
 	* docs/CHANGES: Updated.
 
 2004-02-25  Garrick Meeker  <garrick@digitalanarchy.com>
+	    Steve Hartwell  <shspamsink@comcast.net>
 
 	Improve MacOS fond support.  Provide a new API
 	`FT_New_Face_From_FSSpec' similar to `FT_New_Face'.
