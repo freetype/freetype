@@ -38,7 +38,7 @@
   char  Header[128];
   char* new_header = 0;
 
-  const unsigned char*  Text =
+  const unsigned char*  Text = (unsigned char*)
 "The quick brown fox jumped over the lazy dog 0123456789 \
 גךמûפהכןצüÿאשיטח &#~\"'(-`_^@)=+° ABCDEFGHIJKLMNOPQRSTUVWXYZ $£^¨*µש%!§:/;.,?<>";
 
@@ -61,7 +61,7 @@
   int  low_prec    = 1;       /* force low precision          */
   int  Num;                   /* current first glyph index    */
 
-  int    res = 96;
+  int    res = 72;
 
   static grColor  fore_color = { 127 };
 
@@ -586,13 +586,15 @@
     hinted      = 1;
     file_loaded = 0;
 
+#ifndef macintosh
     i = strlen( argv[file] );
     while ( i > 0 && argv[file][i] != '\\' && argv[file][i] != '/' )
     {
       if ( argv[file][i] == '.' )
         i = 0;
-        i--; 
+      i--; 
     }
+#endif
 
     filename[128] = '\0';
     alt_filename[128] = '\0';
@@ -600,11 +602,13 @@
     strncpy( filename, argv[file], 128 );
     strncpy( alt_filename, argv[file], 128 );
 
+#ifndef macintosh
     if ( i >= 0 )
     {
       strncpy( filename + strlen( filename ), ".ttf", 4 );
       strncpy( alt_filename + strlen( alt_filename ), ".ttc", 4 );
     }
+#endif
 
     /* Load face */
 
