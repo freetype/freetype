@@ -638,7 +638,7 @@
     offsets   = deltas  + num_segs * 2;
     glyph_ids = offsets + num_segs * 2;
 
-    if ( glyph_ids >= table + length )
+    if ( glyph_ids > table + length )
       FT_INVALID_TOO_SHORT;
 
     /* check last segment, its end count must be FFFF */
@@ -670,8 +670,15 @@
         if ( start > end )
           FT_INVALID_DATA;
 
-        if ( n > 0 && start <= last )
-          FT_INVALID_DATA;
+        /* this test should be performed at default validation level   */
+        /* unfortunately, some popular asian fonts present overlapping */
+        /* ranges in their charmaps..                                  */
+        /*                                                             */
+        if ( valid->level >= FT_VALIDATE_TIGHT )
+        {
+          if ( n > 0 && start <= last )
+            FT_INVALID_DATA;
+        }
 
         if ( offset )
         {
@@ -718,49 +725,108 @@
 
     if ( char_code < 0x10000UL )
     {
-      FT_Byte*  p;
-      FT_Byte*  q;
       FT_UInt   idx, num_segs2;
       FT_Int    delta;
-      FT_UInt   n, code = (FT_UInt)char_code;
+      FT_UInt   code = (FT_UInt)char_code;
+      FT_Byte*  p;
 
 
       p         = table + 6;
       num_segs2 = TT_PEEK_USHORT( p ) & -2;  /* be paranoid! */
 
-      p = table + 14;               /* ends table   */
-      q = table + 16 + num_segs2;   /* starts table */
-
-      for ( n = 0; n < num_segs2; n += 2 )
+#if 1
+      /* some fonts have more than 170 segments in their charmaps !! */
+      /* we changed this function to use a more efficient binary     */
+      /* search to boost its performance                             */
       {
-        FT_UInt  end   = TT_NEXT_USHORT( p );
-        FT_UInt  start = TT_NEXT_USHORT( q );
-        FT_UInt  offset;
+        FT_UInt   min = 0;
+        FT_UInt   max = num_segs2 >> 1;
+        FT_UInt   mid, start, end, offset;
+        
 
-
-        if ( code < start )
-          break;
-
-        if ( code <= end )
+        while ( min < max )
         {
-          idx = code;
-
-          p = q + num_segs2 - 2;
-          delta = TT_PEEK_SHORT( p );
-          p += num_segs2;
-          offset = TT_PEEK_USHORT( p );
-
-          if ( offset != 0 )
+          mid   = ( min + max ) >> 1;
+          p     = table + 14 + mid*2;
+          end   = TT_NEXT_USHORT( p ); 
+          p    += num_segs2;
+          start = TT_PEEK_USHORT( p);
+          
+          if ( code < start )
+            max = mid;
+          
+          else if ( code > end )
+            min = mid+1;
+          
+          else
           {
-            p  += offset + 2 * ( idx - start );
-            idx = TT_PEEK_USHORT( p );
+            /* we found the segment */
+            idx = code;
+            
+            p += num_segs2;
+            delta = TT_PEEK_SHORT( p );
+            
+            p += num_segs2;
+            offset = TT_PEEK_USHORT( p );
+            
+            if ( offset != 0 )
+            {
+              p  += offset + 2*( idx - start );
+              idx = TT_PEEK_USHORT( p );
+            }
+            
+            if ( idx != 0 )
+              result = (FT_UInt)( idx + delta ) & 0xFFFU;
+            
+            goto Exit;
           }
-
-          if ( idx != 0 )
-            result = (FT_UInt)( idx + delta ) & 0xFFFFU;
         }
       }
+
+#else /* 0 - old code */
+      {
+        FT_UInt   n;
+        FT_Byte*  q;
+
+
+        p = table + 14;               /* ends table   */
+        q = table + 16 + num_segs2;   /* starts table */
+
+        
+        for ( n = 0; n < num_segs2; n += 2 )
+        {
+          FT_UInt  end   = TT_NEXT_USHORT( p );
+          FT_UInt  start = TT_NEXT_USHORT( q );
+          FT_UInt  offset;
+  
+  
+          if ( code < start )
+            break;
+  
+          if ( code <= end )
+          {
+            idx = code;
+  
+            p = q + num_segs2 - 2;
+            delta = TT_PEEK_SHORT( p );
+            p += num_segs2;
+            offset = TT_PEEK_USHORT( p );
+  
+            if ( offset != 0 )
+            {
+              p  += offset + 2 * ( idx - start );
+              idx = TT_PEEK_USHORT( p );
+            }
+  
+            if ( idx != 0 )
+              result = (FT_UInt)( idx + delta ) & 0xFFFFU;
+          }
+        }
+      }
+#endif /* 0 */
     }
+    
+  Exit:
     return result;
   }
 
