@@ -1,3 +1,17 @@
+2002-03-21  David Turner    <david@freetype.org>
+
+        * src/base/ftobjs.c, src/pcf/pcfdriver.c, src/pcf/pcfread.c: updated
+        to new FT_CMap definitions
+
+        * src/psaux/t1cmap.h, src/psaux/t1cmap.c, src/type1/t1cmap.h,
+        src/type1/t1cmap.c: updating and moving the Type 1 FT_CMap support
+        from "src/type1" to "src/psaux" since it's going to be shared
+        by the Type 1 and CID font drivers..
+
+        * src/psaux/Jamfile, src/psaux/psaux.c, src/psaux/psauxmod.c,
+        src/psaux/rules.mk, include/freetype/internal/psaux.h: added support
+        for Type 1 FT_CMaps.
+
 2002-03-20  David Turner    <david@freetype.org>
 
         * src/base/ftgloadr.c (FT_GlyphLoader_CheckSubGlyphs): fixed a memory

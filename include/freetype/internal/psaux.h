@@ -651,6 +651,25 @@ FT_BEGIN_HEADER
     
   } T1_DecoderRec;
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                     TYPE1 CHARMAPS                            *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  typedef const struct T1_CMap_ClassesRec_*  T1_CMap_Classes;
+
+  typedef struct T1_CMap_ClassesRec_
+  {
+    FT_CMap_Class  standard;
+    FT_CMap_Class  expert;
+    FT_CMap_Class  custom;
+    FT_CMap_Class  unicode;
+  
+  } T1_CMap_ClassesRec;
+  
 
   /*************************************************************************/
   /*************************************************************************/
@@ -660,7 +679,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
-  typedef struct  PSAux_Interface_
+  typedef struct  PSAux_ServiceRec_
   {
     const PS_Table_Funcs    ps_table_funcs;
     const PS_Parser_Funcs   ps_parser_funcs;
@@ -672,9 +691,12 @@ FT_BEGIN_HEADER
                    FT_Offset  length,
                    FT_UShort  seed );
 
-  } PSAux_Interface;
+    T1_CMap_Classes         t1_cmap_classes;
 
-  typedef PSAux_Interface*  PSAux_Service;
+  } PSAux_ServiceRec, *PSAux_Service;
+
+ /* backwards-compatible type definition */
+  typedef PSAux_ServiceRec   PSAux_Interface;
 
 FT_END_HEADER
 

@@ -37,6 +37,198 @@ THE SOFTWARE.
 
 #include "pcferror.h"
 
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_pcfread
+
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+
+  typedef struct PCF_CMapRec_
+  {
+    FT_CMapRec    cmap;
+    FT_UInt       num_encodings;
+    PCF_Encoding  encodings;
+  
+  } PCF_CMapRec, *PCF_CMap;
+
+
+  FT_CALLBACK_DEF( FT_Error )
+  pcf_cmap_init( PCF_CMap   cmap )
+  {
+    PCF_Face   face   = (PCF_Face) FT_CMAP_FACE(cmap);
+    
+    cmap->num_encodings = (FT_UInt) face->nencodings;
+    cmap->encodings     = face->encodings;
+    
+    return FT_Err_Ok;
+  }
+
+  
+  FT_CALLBACK_DEF( void )
+  pcf_cmap_done( PCF_CMap  cmap )
+  {
+    cmap->encodings     = NULL;    
+    cmap->num_encodings = 0;
+  }
+                 
+
+  FT_CALLBACK_DEF( FT_UInt )
+  pcf_cmap_char_index( FT_CMap    cmap,
+                       FT_UInt32  charcode )
+  {
+    PCF_Encoding  encoding = cmap->encodings;
+    FT_UInt       min, max, mid;
+    FT_UInt       result = 0;
+    
+    min = 0;
+    max = cmap->num_encodings;
+    
+    while ( min < max )
+    {
+      FT_UInt32  code;
+      
+      mid  = ( min + max ) >> 1;
+      code = encodings[mid].enc;
+      
+      if ( charcode == code )
+      {
+        result = encodings[mid].glyph;
+        break;
+      }
+      
+      if ( charcode < code )
+        max = mid;
+      else
+        min = mid+1;
+    }
+    
+    return result;
+  }                       
+
+
+  FT_CALLBACK_DEF( FT_UInt )
+  pcf_cmap_char_next( PCF_CMap    cmap,
+                      FT_UInt32  *acharcode )
+  {
+    PCF_Encoding  encodings = cmap->encodings;
+    FT_UInt       min, max, mid;
+    FT_UInt32     charcode = *acharcode + 1;
+    FT_UInt       result   = 0;
+    
+    min = 0;
+    max = cmap->num_encodings;
+    
+    while ( min < max )
+    {
+      FT_UInt32  code;
+      
+      mid  = ( min + max ) >> 1;
+      code = encodings[mid].enc;
+      
+      if ( charcode == code )
+      {
+        result = encodings[mid].glyph;
+        goto Exit;
+      }
+      
+      if ( charcode < code )
+        max = mid;
+      else
+        min = mid+1;
+    }
+    
+    charcode = 0;
+    if ( ++min < cmap->num_encodings )
+    {
+      charcode = encodings[min].enc;
+      glyph    = encodings[min].glyph;
+    }
+    
+  Exit:
+    *acharcode = charcode;
+    return result;
+  }                      
+
+
+  FT_CALLBACK_TABLE const FT_CMap_ClassRec  pcf_cmap_class =
+  {
+    sizeof( PCF_CMapRec ),
+    (FT_CMap_InitFunc)       pcf_cmap_init,
+    (FT_CMap_DoneFunc)       pcf_cmap_done,
+    (FT_CMap_CharIndexFunc)  pcf_cmap_char_index,
+    (FT_CMap_CharNextFunc)   pcf_cmap_char_next
+  };
+
+#else /* !FT_CONFIG_OPTION_USE_CMAPS */
+
+  static FT_UInt
+  PCF_Char_Get_Index( FT_CharMap  charmap,
+                      FT_Long     char_code )
+  {
+    PCF_Face      face     = (PCF_Face)charmap->face;
+    PCF_Encoding  en_table = face->encodings;
+    int           low, high, mid;
+
+
+    FT_TRACE4(( "get_char_index %ld\n", char_code ));
+
+    low = 0;
+    high = face->nencodings - 1;
+    while ( low <= high )
+    {
+      mid = ( low + high ) / 2;
+      if ( char_code < en_table[mid].enc )
+        high = mid - 1;
+      else if ( char_code > en_table[mid].enc )
+        low = mid + 1;
+      else
+        return en_table[mid].glyph;
+    }
+
+    return 0;
+  }
+
+
+  static FT_Long
+  PCF_Char_Get_Next( FT_CharMap  charmap,
+                     FT_Long     char_code )
+  {
+    PCF_Face      face     = (PCF_Face)charmap->face;
+    PCF_Encoding  en_table = face->encodings;
+    int           low, high, mid;
+
+
+    FT_TRACE4(( "get_next_char %ld\n", char_code ));
+    
+    char_code++;
+    low  = 0;
+    high = face->nencodings - 1;
+
+    while ( low <= high )
+    {
+      mid = ( low + high ) / 2;
+      if ( char_code < en_table[mid].enc )
+        high = mid - 1;
+      else if ( char_code > en_table[mid].enc )
+        low = mid + 1;
+      else
+        return char_code;
+    }
+
+    if ( high < 0 )
+      high = 0;
+    
+    while ( high < face->nencodings )
+    {
+      if ( en_table[high].enc >= char_code )
+        return en_table[high].enc;
+      high++;
+    }
+
+    return 0;
+  }
+
+#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -48,7 +240,7 @@ THE SOFTWARE.
 #define FT_COMPONENT  trace_pcfdriver
 
 
-  static FT_Error
+  FT_CALLBACK_DEF( FT_Error )
   PCF_Face_Done( PCF_Face  face )
   {
     FT_Memory    memory = FT_FACE_MEMORY( face );
@@ -86,7 +278,7 @@ THE SOFTWARE.
   }
 
 
-  static FT_Error
+  FT_CALLBACK_DEF( FT_Error )
   PCF_Face_Init( FT_Stream      stream,
                  PCF_Face       face,
                  FT_Int         face_index,
@@ -104,13 +296,75 @@ THE SOFTWARE.
     if ( error )
       goto Fail;
 
-    return PCF_Err_Ok;
+    /* set-up charmap */
+    {
+      FT_String   *charset_registry, *charset_encoding;
+      FT_Face      root = FT_FACE(face);
+      FT_Bool      unicode_charmap  = 0;
+
+
+      charset_registry = face->charset_registry;
+      charset_encoding = face->charset_encoding;
+
+      if ( ( charset_registry != NULL ) &&
+           ( charset_encoding != NULL ) )
+      {
+        if ( !strcmp( face->charset_registry, "ISO10646" ) ||
+           ( !strcmp( face->charset_registry, "ISO8859" ) &&
+             !strcmp( face->charset_encoding, "1" ) ) )
+          unicode_charmap = 1;
+      }
+
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+      {
+        FT_CharMapRec  charmap;
+        
+        charmap.face        = FT_FACE(face);
+        charmap.encoding    = ft_encoding_none;
+        charmap.platform_id = 0;
+        charmap.encoding_id = 0;
+        
+        if ( unicode_charmap )
+        {
+          charmap.encoding    = ft_encoding_unicode;
+          charmap.platform_id = 3;
+          charmap.encoding_id = 1;
+        }
+        
+        error = FT_CMap_New( &pcf_cmap_class, NULL, &charmap, NULL );
+      }
+#else  /* !FT_CONFIG_OPTION_USE_CMAPS */
+
+      /* XXX: charmaps.  For now, report unicode for Unicode and Latin 1 */
+      root->charmaps     = &face->charmap_handle;
+      root->num_charmaps = 1;
+
+      face->charmap.encoding    = ft_encoding_none;
+      face->charmap.platform_id = 0;
+      face->charmap.encoding_id = 0;
+
+      if ( unicode_charmap )
+      {
+        face->charmap.encoding    = ft_encoding_unicode;
+        face->charmap.platform_id = 3;
+        face->charmap.encoding_id = 1;
+      }
+      
+      face->charmap.face   = root;
+      face->charmap_handle = &face->charmap;
+      root->charmap        = face->charmap_handle;
+
+#endif /* !FT_CONFIG_OPTION_USE_CMAPS */        
+        
+    }
+      
+  Exit:
+    return error;
 
   Fail:
     FT_TRACE2(( "[not a valid PCF file]\n" ));
-    PCF_Face_Done( face );
-
-    return PCF_Err_Unknown_File_Format; /* error */
+    error = PCF_Err_Unknown_File_Format;  /* error */
+    goto Exit;
   }
 
 
@@ -256,74 +510,6 @@ THE SOFTWARE.
   }
 
 
-  static FT_UInt
-  PCF_Char_Get_Index( FT_CharMap  charmap,
-                      FT_Long     char_code )
-  {
-    PCF_Face      face     = (PCF_Face)charmap->face;
-    PCF_Encoding  en_table = face->encodings;
-    int           low, high, mid;
-
-
-    FT_TRACE4(( "get_char_index %ld\n", char_code ));
-
-    low = 0;
-    high = face->nencodings - 1;
-    while ( low <= high )
-    {
-      mid = ( low + high ) / 2;
-      if ( char_code < en_table[mid].enc )
-        high = mid - 1;
-      else if ( char_code > en_table[mid].enc )
-        low = mid + 1;
-      else
-        return en_table[mid].glyph;
-    }
-
-    return 0;
-  }
-
-
-  static FT_Long
-  PCF_Char_Get_Next( FT_CharMap  charmap,
-                     FT_Long     char_code )
-  {
-    PCF_Face      face     = (PCF_Face)charmap->face;
-    PCF_Encoding  en_table = face->encodings;
-    int           low, high, mid;
-
-
-    FT_TRACE4(( "get_next_char %ld\n", char_code ));
-    
-    char_code++;
-    low  = 0;
-    high = face->nencodings - 1;
-
-    while ( low <= high )
-    {
-      mid = ( low + high ) / 2;
-      if ( char_code < en_table[mid].enc )
-        high = mid - 1;
-      else if ( char_code > en_table[mid].enc )
-        low = mid + 1;
-      else
-        return char_code;
-    }
-
-    if ( high < 0 )
-      high = 0;
-    
-    while ( high < face->nencodings )
-    {
-      if ( en_table[high].enc >= char_code )
-        return en_table[high].enc;
-      high++;
-    }
-
-    return 0;
-  }
-
-
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  pcf_driver_class =
   {
@@ -353,17 +539,26 @@ THE SOFTWARE.
     (FT_Slot_InitFunc)0,
     (FT_Slot_DoneFunc)0,
 
-    (FT_Size_ResetPointsFunc) PCF_Set_Pixel_Size,
-    (FT_Size_ResetPixelsFunc)PCF_Set_Pixel_Size,
+    (FT_Size_ResetPointsFunc)  PCF_Set_Pixel_Size,
+    (FT_Size_ResetPixelsFunc)  PCF_Set_Pixel_Size,
 
-    (FT_Slot_LoadFunc)    PCF_Glyph_Load,
+    (FT_Slot_LoadFunc)         PCF_Glyph_Load,
+
+#ifndef FT_CONFIG_OPTION_USE_CMAPS    
     (FT_CharMap_CharIndexFunc) PCF_Char_Get_Index,
+#else
+    (FT_CharMap_CharNextFunc)  0,
+#endif
 
     (FT_Face_GetKerningFunc)   0,
-    (FT_Face_AttachFunc)   0,
+    (FT_Face_AttachFunc)       0,
     (FT_Face_GetAdvancesFunc)  0,
 
+#ifndef FT_CONFIG_OPTION_USE_CMAPS
     (FT_CharMap_CharNextFunc)  PCF_Char_Get_Next,
+#else
+    (FT_CharMap_CharNextFunc)  0
+#endif    
   };
 
 

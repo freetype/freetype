@@ -866,11 +866,11 @@ THE SOFTWARE.
 
     error = pcf_read_TOC( stream, face );
     if ( error )
-      return error;
+      goto Exit;
 
     error = pcf_get_properties( stream, face );
     if ( error )
-      return error;;
+      goto Exit;
 
     /* Use the old accelerators if no BDF accelerators are in the file. */
     hasBDFAccelerators = pcf_has_table_type( face->toc.tables,
@@ -880,30 +880,30 @@ THE SOFTWARE.
     {
       error = pcf_get_accel( stream, face, PCF_ACCELERATORS );
       if ( error )
-        goto Bail;
+        goto Exit;
     }
 
     /* metrics */
     error = pcf_get_metrics( stream, face );
     if ( error )
-      goto Bail;
+      goto Exit;
 
     /* bitmaps */
     error = pcf_get_bitmaps( stream, face );
     if ( error )
-      goto Bail;
+      goto Exit;
 
     /* encodings */
     error = pcf_get_encodings( stream, face );
     if ( error )
-      goto Bail;
+      goto Exit;
 
     /* BDF style accelerators (i.e. bounds based on encoded glyphs) */
     if ( hasBDFAccelerators )
     {
       error = pcf_get_accel( stream, face, PCF_BDF_ACCELERATORS );
       if ( error )
-        goto Bail;
+        goto Exit;
     }
 
     /* XXX: TO DO: inkmetrics and glyph_names are missing */
@@ -958,7 +958,7 @@ THE SOFTWARE.
 
 
           if ( ALLOC( root->family_name, l * sizeof ( char ) ) )
-            goto Bail;
+            goto Exit;
           strcpy( root->family_name, prop->value.atom );
         }
       }
@@ -969,7 +969,7 @@ THE SOFTWARE.
 
       root->num_fixed_sizes = 1;
       if ( ALLOC_ARRAY( root->available_sizes, 1, FT_Bitmap_Size ) )
-        goto Bail;
+        goto Exit;
 
       prop = pcf_find_property( face, "PIXEL_SIZE" );
       if ( prop != NULL )
@@ -977,12 +977,6 @@ THE SOFTWARE.
         root->available_sizes->height = 
         root->available_sizes->width  = (FT_Short)( prop->value.integer );
 
-#if 0  /* average width property support removed until maturation */
-        prop = pcf_find_property( face, "AVERAGE_WIDTH" );
-        if ( prop != NULL )
-          root->available_sizes->width = (FT_Short)( prop->value.integer / 10 );
-#endif
-        
         size_set = 1;
       }
       else 
@@ -1003,12 +997,6 @@ THE SOFTWARE.
               (FT_Short)( prop->value.integer *  
                           yres->value.integer / 720 ); 
 
-#if 0  /* average width property support removed until maturation */
-            if ( avgw != NULL )
-              root->available_sizes->width =
-                (FT_Short)( avgw->value.integer / 10 );
-            else
-#endif            
               root->available_sizes->width =
                 (FT_Short)( prop->value.integer *  
                             xres->value.integer / 720 );
@@ -1020,28 +1008,19 @@ THE SOFTWARE.
 
       if (size_set == 0 )
       {
-#if 0
-        printf( "PCF Warning: Pixel Size undefined, assuming 12\n");
-#endif
         root->available_sizes->width  = 12;
         root->available_sizes->height = 12;
       }
 
-      /* XXX: charmaps.  For now, report unicode for Unicode and Latin 1 */
-      root->charmaps     = &face->charmap_handle;
-      root->num_charmaps = 1;
-
-      face->charmap.encoding    = ft_encoding_none;
-      face->charmap.platform_id = 0;
-      face->charmap.encoding_id = 0;
-
+      /* set-up charset */
       {
         PCF_Property  charset_registry = 0, charset_encoding = 0;
-
-
+        FT_Bool       unicode_charmap  = 0;
+  
+  
         charset_registry = pcf_find_property( face, "CHARSET_REGISTRY" );
         charset_encoding = pcf_find_property( face, "CHARSET_ENCODING" );
-
+  
         if ( ( charset_registry != NULL ) &&
              ( charset_encoding != NULL ) )
         {
@@ -1051,34 +1030,29 @@ THE SOFTWARE.
             if ( ALLOC( face->charset_encoding,
                         ( strlen( charset_encoding->value.atom ) + 1 ) *
                           sizeof ( char ) ) )
-              goto Bail;
+              goto Exit;
+              
             if ( ALLOC( face->charset_registry,
                         ( strlen( charset_registry->value.atom ) + 1 ) *
                           sizeof ( char ) ) )
-              goto Bail;
+              goto Exit;
+              
             strcpy( face->charset_registry, charset_registry->value.atom );
             strcpy( face->charset_encoding, charset_encoding->value.atom );
-
-            if ( !strcmp( face->charset_registry, "ISO10646" ) ||
-                 ( !strcmp( face->charset_registry, "ISO8859" ) &&
-                   !strcmp( face->charset_encoding, "1" ) ) )
-            {
-              face->charmap.encoding    = ft_encoding_unicode;
-              face->charmap.platform_id = 3;
-              face->charmap.encoding_id = 1;
-            }
           }
         }
       }
-
-      face->charmap.face   = root;
-      face->charmap_handle = &face->charmap;
-      root->charmap        = face->charmap_handle;
     }
-    return PCF_Err_Ok;
-
-  Bail:
-    return PCF_Err_Invalid_File_Format;
+    
+  Exit:
+    if (error)
+    {
+      /* this is done to respect the behaviour of the original */
+      /* PCF font driver..                                     */
+      error = PCF_Err_Invalid_File_Format;
+    }
+      
+    return error;
   }
 
 
