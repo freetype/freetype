@@ -1,3 +1,16 @@
+2004-06-04  David Turner  <david@freetype.org>
+
+        * src/autofit/*: important fixes to the auto-fitter. The output
+        now seems to be 100% equivalent to the auto-hinter, while being
+        about 2% faster (which proves that script-specific algorithm
+        selection isn't a performance problem).
+
+        to test it, change "autohint" to "autofit" in
+        <freetype/config/ftmodule.h> and recompile.
+
+        a few more testing is needed before making this the official
+        auto-hinting module
+
 2004-06-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (compute_glyph_metrics): Fix compiler
@@ -24,7 +37,7 @@
 
 2004-05-17  Werner Lemberg  <wl@gnu.org>
 
-	* src/base/ftbbox.c (BBox_Conic_Check): Fix boundary cases. 
+	* src/base/ftbbox.c (BBox_Conic_Check): Fix boundary cases.
 	Reported by Mikey Anbary <manbary@vizrt.com>.
 
 2004-05-15  Werner Lemberg  <wl@gnu.org>
@@ -173,7 +186,7 @@
 	consistency.
 	(pcf_cmap_init, pcf_cmap_done, pcf_cmap_char_index,
 	pcf_cmap_char_next): Don't use PCF_XXX but FT_XXX arguments which
-	are typecast to the proper PCF_XXX types within the function. 
+	are typecast to the proper PCF_XXX types within the function.
 	Update code accordingly.
 	(pcf_cmap_class): Remove casts.
 	(PCF_Face_Done, PCF_Face_Init, PCF_Set_Pixel_Size): Don't use
