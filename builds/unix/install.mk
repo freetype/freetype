@@ -24,7 +24,7 @@ install: $(PROJECT_LIBRARY)
         done
 
 uninstall:
-	-$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/$(PROJECT_LIBRARY).$A
+	-$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/lib$(PROJECT).$A
 	-$(DELETE) $(includedir)/freetype/cache/*
 	-$(DELDIR) $(includedir)/freetype/cache
 	-$(DELETE) $(includedir)/freetype/config/*
