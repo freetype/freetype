@@ -311,7 +311,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  LOCAL_FUNC_X
+  LOCAL_FUNC
   FT_Error  T1_Decoder_Parse_Charstrings( T1_Decoder*  decoder,
                                           FT_Byte*     charstring_base,
                                           FT_UInt      charstring_len )
@@ -1012,7 +1012,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  LOCAL_FUNC
   FT_Error  T1_Decoder_Init( T1_Decoder*          decoder,
                              FT_Face              face,
                              FT_Size              size,
@@ -1052,7 +1052,7 @@
   }
 
 
-  LOCAL_FUNC_X
+  LOCAL_FUNC
   void  T1_Decoder_Done( T1_Decoder*  decoder )
   {
     T1_Builder_Done( &decoder->builder );
