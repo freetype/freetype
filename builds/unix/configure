@@ -994,6 +994,7 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --without-zlib          use internal zlib instead of system-wide
   --with-gnu-ld           assume the C compiler uses GNU ld default=no
   --with-pic              try to use only PIC/non-PIC objects default=use both
 
@@ -1359,7 +1360,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 ac_config_headers="$ac_config_headers ftconfig.h:ftconfig.in"
 
 
-version_info='9:2:3'
+version_info='9:3:3'
 
 ft_version=`echo $version_info | tr : .`
 
@@ -4209,110 +4210,8 @@ if test "$ac_cv_func_mmap_fixed_mapped" != yes; then
 else
   FTSYS_SRC='$(BUILD)/ftsystem.c'
 
-  echo "$as_me:$LINENO: checking whether munmap must be declared" >&5
-echo $ECHO_N "checking whether munmap must be declared... $ECHO_C" >&6
-if test "${ft_cv_munmap_decl+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  cat >conftest.$ac_ext <<_ACEOF
-#line $LINENO "configure"
-#include "confdefs.h"
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#include <sys/mman.h>
-#ifdef F77_DUMMY_MAIN
-#  ifdef __cplusplus
-     extern "C"
-#  endif
-   int F77_DUMMY_MAIN() { return 1; }
-#endif
-int
-main ()
-{
-char *(*pfn) = (char *(*))munmap
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext
-if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-         { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  ft_cv_munmap_decl=no
-else
-  echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
-ft_cv_munmap_decl=yes
-fi
-rm -f conftest.$ac_objext conftest.$ac_ext
-fi
-
-echo "$as_me:$LINENO: result: $ft_cv_munmap_decl" >&5
-echo "${ECHO_T}$ft_cv_munmap_decl" >&6
-if test $ft_cv_munmap_decl = yes; then
-	cat >>confdefs.h <<\_ACEOF
-#define NEED_MUNMAP_DECL 1
-_ACEOF
-
-fi
-  echo "$as_me:$LINENO: checking for munmap's first parameter type" >&5
-echo $ECHO_N "checking for munmap's first parameter type... $ECHO_C" >&6
-cat >conftest.$ac_ext <<_ACEOF
-#line $LINENO "configure"
-#include "confdefs.h"
-
-#include <unistd.h>
-#include <sys/mman.h>
-int munmap(void *, size_t);
-#ifdef F77_DUMMY_MAIN
-#  ifdef __cplusplus
-     extern "C"
-#  endif
-   int F77_DUMMY_MAIN() { return 1; }
-#endif
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext
-if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-         { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  echo "$as_me:$LINENO: result: void *" >&5
-echo "${ECHO_T}void *" >&6;cat >>confdefs.h <<\_ACEOF
-#define MUNMAP_USES_VOIDP 1
-_ACEOF
-
-else
-  echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
-echo "$as_me:$LINENO: result: char *" >&5
-echo "${ECHO_T}char *" >&6
-fi
-rm -f conftest.$ac_objext conftest.$ac_ext
-
+  FT_MUNMAP_DECL
+  FT_MUNMAP_PARAM
 fi
 
 
@@ -4392,6 +4291,191 @@ _ACEOF
 
 fi
 done
+
+
+
+
+# Check whether --with-zlib or --without-zlib was given.
+if test "${with_zlib+set}" = set; then
+  withval="$with_zlib"
+
+fi;
+if test x$with_zlib != xno && test -z "$LIBZ"; then
+  echo "$as_me:$LINENO: checking for gzsetparams in -lz" >&5
+echo $ECHO_N "checking for gzsetparams in -lz... $ECHO_C" >&6
+if test "${ac_cv_lib_z_gzsetparams+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lz  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+#include "confdefs.h"
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char gzsetparams ();
+#ifdef F77_DUMMY_MAIN
+#  ifdef __cplusplus
+     extern "C"
+#  endif
+   int F77_DUMMY_MAIN() { return 1; }
+#endif
+int
+main ()
+{
+gzsetparams ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_lib_z_gzsetparams=yes
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+ac_cv_lib_z_gzsetparams=no
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+echo "$as_me:$LINENO: result: $ac_cv_lib_z_gzsetparams" >&5
+echo "${ECHO_T}$ac_cv_lib_z_gzsetparams" >&6
+if test $ac_cv_lib_z_gzsetparams = yes; then
+  if test "${ac_cv_header_zlib_h+set}" = set; then
+  echo "$as_me:$LINENO: checking for zlib.h" >&5
+echo $ECHO_N "checking for zlib.h... $ECHO_C" >&6
+if test "${ac_cv_header_zlib_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+fi
+echo "$as_me:$LINENO: result: $ac_cv_header_zlib_h" >&5
+echo "${ECHO_T}$ac_cv_header_zlib_h" >&6
+else
+  # Is the header compilable?
+echo "$as_me:$LINENO: checking zlib.h usability" >&5
+echo $ECHO_N "checking zlib.h usability... $ECHO_C" >&6
+cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+#include "confdefs.h"
+$ac_includes_default
+#include <zlib.h>
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_header_compiler=yes
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+ac_header_compiler=no
+fi
+rm -f conftest.$ac_objext conftest.$ac_ext
+echo "$as_me:$LINENO: result: $ac_header_compiler" >&5
+echo "${ECHO_T}$ac_header_compiler" >&6
+
+# Is the header present?
+echo "$as_me:$LINENO: checking zlib.h presence" >&5
+echo $ECHO_N "checking zlib.h presence... $ECHO_C" >&6
+cat >conftest.$ac_ext <<_ACEOF
+#line $LINENO "configure"
+#include "confdefs.h"
+#include <zlib.h>
+_ACEOF
+if { (eval echo "$as_me:$LINENO: \"$ac_cpp conftest.$ac_ext\"") >&5
+  (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
+  ac_status=$?
+  egrep -v '^ *\+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null; then
+  if test -s conftest.err; then
+    ac_cpp_err=$ac_c_preproc_warn_flag
+  else
+    ac_cpp_err=
+  fi
+else
+  ac_cpp_err=yes
+fi
+if test -z "$ac_cpp_err"; then
+  ac_header_preproc=yes
+else
+  echo "$as_me: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  ac_header_preproc=no
+fi
+rm -f conftest.err conftest.$ac_ext
+echo "$as_me:$LINENO: result: $ac_header_preproc" >&5
+echo "${ECHO_T}$ac_header_preproc" >&6
+
+# So?  What about this header?
+case $ac_header_compiler:$ac_header_preproc in
+  yes:no )
+    { echo "$as_me:$LINENO: WARNING: zlib.h: accepted by the compiler, rejected by the preprocessor!" >&5
+echo "$as_me: WARNING: zlib.h: accepted by the compiler, rejected by the preprocessor!" >&2;}
+    { echo "$as_me:$LINENO: WARNING: zlib.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: zlib.h: proceeding with the preprocessor's result" >&2;};;
+  no:yes )
+    { echo "$as_me:$LINENO: WARNING: zlib.h: present but cannot be compiled" >&5
+echo "$as_me: WARNING: zlib.h: present but cannot be compiled" >&2;}
+    { echo "$as_me:$LINENO: WARNING: zlib.h: check for missing prerequisite headers?" >&5
+echo "$as_me: WARNING: zlib.h: check for missing prerequisite headers?" >&2;}
+    { echo "$as_me:$LINENO: WARNING: zlib.h: proceeding with the preprocessor's result" >&5
+echo "$as_me: WARNING: zlib.h: proceeding with the preprocessor's result" >&2;};;
+esac
+echo "$as_me:$LINENO: checking for zlib.h" >&5
+echo $ECHO_N "checking for zlib.h... $ECHO_C" >&6
+if test "${ac_cv_header_zlib_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_cv_header_zlib_h=$ac_header_preproc
+fi
+echo "$as_me:$LINENO: result: $ac_cv_header_zlib_h" >&5
+echo "${ECHO_T}$ac_cv_header_zlib_h" >&6
+
+fi
+if test $ac_cv_header_zlib_h = yes; then
+  LIBZ='-lz'
+fi
+
+
+fi
+
+fi
+if test x$with_zlib != xno && test -n "$LIBZ"; then
+  CFLAGS="$CFLAGS -DFT_CONFIG_OPTION_SYSTEM_ZLIB"
+  LDFLAGS="$LDFLAGS $LIBZ"
+  SYSTEM_ZLIB=yes
+fi
+
+
+
+
+
 
 
 # Check whether --enable-shared or --disable-shared was given.
@@ -4735,7 +4819,7 @@ irix5* | irix6*)
 # This must be Linux ELF.
 linux-gnu*)
   case $host_cpu in
-  alpha* | hppa* | i*86 | powerpc* | sparc* | ia64* )
+  alpha* | hppa* | i*86 | powerpc* | sparc* | ia64* | s390* )
     lt_cv_deplibs_check_method=pass_all ;;
   *)
     # glibc up to 2.1.1 does not perform some relocations on ARM
@@ -5450,7 +5534,7 @@ test "x$enable_libtool_lock" != xno && enable_libtool_lock=yes
 case $host in
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5453 "configure"' > conftest.$ac_ext
+  echo '#line 5537 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -5633,8 +5717,6 @@ fi
 set dummy $CC
 compiler="$2"
 
-## FIXME: this should be a separate macro
-##
 echo "$as_me:$LINENO: checking for objdir" >&5
 echo $ECHO_N "checking for objdir... $ECHO_C" >&6
 rm -f .libs 2>/dev/null
@@ -5648,12 +5730,8 @@ fi
 rmdir .libs 2>/dev/null
 echo "$as_me:$LINENO: result: $objdir" >&5
 echo "${ECHO_T}$objdir" >&6
-##
-## END FIXME
 
 
-## FIXME: this should be a separate macro
-##
 
 # Check whether --with-pic or --without-pic was given.
 if test "${with_pic+set}" = set; then
@@ -5896,8 +5974,6 @@ fi
   echo "$as_me:$LINENO: result: $lt_cv_prog_cc_pic_works" >&5
 echo "${ECHO_T}$lt_cv_prog_cc_pic_works" >&6
 fi
-##
-## END FIXME
 
 # Check for any special shared library compilation flags.
 if test -n "$lt_cv_prog_cc_shlib"; then
@@ -5911,8 +5987,6 @@ echo "$as_me: WARNING: add \`$lt_cv_prog_cc_shlib' to the CC or CFLAGS env varia
   fi
 fi
 
-## FIXME: this should be a separate macro
-##
 echo "$as_me:$LINENO: checking if $compiler static flag $lt_cv_prog_cc_static works" >&5
 echo $ECHO_N "checking if $compiler static flag $lt_cv_prog_cc_static works... $ECHO_C" >&6
 if test "${lt_cv_prog_cc_static_works+set}" = set; then
@@ -5973,12 +6047,8 @@ wl="$lt_cv_prog_cc_wl"
 link_static_flag="$lt_cv_prog_cc_static"
 no_builtin_flag="$lt_cv_prog_cc_no_builtin"
 can_build_shared="$lt_cv_prog_cc_can_build_shared"
-##
-## END FIXME
 
 
-## FIXME: this should be a separate macro
-##
 # Check to see if options -o and -c are simultaneously supported by compiler
 echo "$as_me:$LINENO: checking if $compiler supports -c -o file.$ac_objext" >&5
 echo $ECHO_N "checking if $compiler supports -c -o file.$ac_objext... $ECHO_C" >&6
@@ -6000,7 +6070,7 @@ chmod -w .
 save_CFLAGS="$CFLAGS"
 CFLAGS="$CFLAGS -o out/conftest2.$ac_objext"
 compiler_c_o=no
-if { (eval echo configure:6003: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
+if { (eval echo configure:6073: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>out/conftest.err; } && test -s out/conftest2.$ac_objext; then
   # The compiler can only warn and ignore the option if not recognized
   # So say no if there are warnings
   if test -s out/conftest.err; then
@@ -6094,11 +6164,7 @@ echo "${ECHO_T}$compiler_o_lo" >&6
 else
   compiler_o_lo=no
 fi
-##
-## END FIXME
 
-## FIXME: this should be a separate macro
-##
 # Check to see if we can do hard links to lock some files if needed
 hard_links="nottested"
 if test "$compiler_c_o" = no && test "$need_locks" != no; then
@@ -6121,11 +6187,7 @@ echo "$as_me: WARNING: \`$CC' does not support \`-c -o', so \`make -j' may be un
 else
   need_locks=no
 fi
-##
-## END FIXME
 
-## FIXME: this should be a separate macro
-##
 if test "$GCC" = yes; then
   # Check to see if options -fno-rtti -fno-exceptions are supported by compiler
   echo "$as_me:$LINENO: checking if $compiler supports -fno-rtti -fno-exceptions" >&5
@@ -6187,11 +6249,7 @@ echo "${ECHO_T}$compiler_rtti_exceptions" >&6
     no_builtin_flag=' -fno-builtin'
   fi
 fi
-##
-## END FIXME
 
-## FIXME: this should be a separate macro
-##
 # See if the linker supports building shared libraries.
 echo "$as_me:$LINENO: checking whether the linker ($LD) supports shared libraries" >&5
 echo $ECHO_N "checking whether the linker ($LD) supports shared libraries... $ECHO_C" >&6
@@ -6546,7 +6604,7 @@ else
 	allow_undefined_flag='${wl}-berok'
 	# This is a bit strange, but is similar to how AIX traditionally builds
 	# it's shared libraries.
-	archive_expsym_cmds="\$CC $shared_flag"' -o $output_objdir/$soname $libobjs $deplibs $compiler_flags ${allow_undefined_flag} '"\${wl}$no_entry_flag \${wl}$exp_sym_flag:\$export_symbols"' ~$AR -crlo $output_objdir/$libname$release.a $output_objdir/$soname'
+	archive_expsym_cmds="\$CC $shared_flag"' -o $output_objdir/$soname $libobjs $deplibs $compiler_flags ${allow_undefined_flag} '"\${wl}$no_entry_flag \${wl}$exp_sym_flag:\$export_symbols"' ~$AR -crlo $objdir/$libname$release.a $objdir/$soname'
       fi
     fi
     ;;
@@ -6876,11 +6934,7 @@ fi
 echo "$as_me:$LINENO: result: $ld_shlibs" >&5
 echo "${ECHO_T}$ld_shlibs" >&6
 test "$ld_shlibs" = no && can_build_shared=no
-##
-## END FIXME
 
-## FIXME: this should be a separate macro
-##
 # Check hardcoding attributes.
 echo "$as_me:$LINENO: checking how to hardcode library paths into programs" >&5
 echo $ECHO_N "checking how to hardcode library paths into programs... $ECHO_C" >&6
@@ -6908,11 +6962,7 @@ else
 fi
 echo "$as_me:$LINENO: result: $hardcode_action" >&5
 echo "${ECHO_T}$hardcode_action" >&6
-##
-## END FIXME
 
-## FIXME: this should be a separate macro
-##
 striplib=
 old_striplib=
 echo "$as_me:$LINENO: checking whether stripping libraries is possible" >&5
@@ -6926,14 +6976,10 @@ else
   echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
-##
-## END FIXME
 
 reload_cmds='$LD$reload_flag -o $output$reload_objs'
 test -z "$deplibs_check_method" && deplibs_check_method=unknown
 
-## FIXME: this should be a separate macro
-##
 # PORTME Fill in your ld.so characteristics
 echo "$as_me:$LINENO: checking dynamic linker characteristics" >&5
 echo $ECHO_N "checking dynamic linker characteristics... $ECHO_C" >&6
@@ -7331,21 +7377,13 @@ esac
 echo "$as_me:$LINENO: result: $dynamic_linker" >&5
 echo "${ECHO_T}$dynamic_linker" >&6
 test "$dynamic_linker" = no && can_build_shared=no
-##
-## END FIXME
 
-## FIXME: this should be a separate macro
-##
 # Report the final consequences.
 echo "$as_me:$LINENO: checking if libtool supports shared libraries" >&5
 echo $ECHO_N "checking if libtool supports shared libraries... $ECHO_C" >&6
 echo "$as_me:$LINENO: result: $can_build_shared" >&5
 echo "${ECHO_T}$can_build_shared" >&6
-##
-## END FIXME
 
-## FIXME: this should be a separate macro
-##
 echo "$as_me:$LINENO: checking whether to build shared libraries" >&5
 echo $ECHO_N "checking whether to build shared libraries... $ECHO_C" >&6
 test "$can_build_shared" = "no" && enable_shared=no
@@ -7369,19 +7407,13 @@ aix4*)
 esac
 echo "$as_me:$LINENO: result: $enable_shared" >&5
 echo "${ECHO_T}$enable_shared" >&6
-##
-## END FIXME
 
-## FIXME: this should be a separate macro
-##
 echo "$as_me:$LINENO: checking whether to build static libraries" >&5
 echo $ECHO_N "checking whether to build static libraries... $ECHO_C" >&6
 # Make sure either enable_shared or enable_static is yes.
 test "$enable_shared" = yes || enable_static=yes
 echo "$as_me:$LINENO: result: $enable_static" >&5
 echo "${ECHO_T}$enable_static" >&6
-##
-## END FIXME
 
 if test "$hardcode_action" = relink; then
   # Fast installation is not supported
@@ -7831,7 +7863,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7834 "configure"
+#line 7866 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -7929,7 +7961,7 @@ else
     lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 7932 "configure"
+#line 7964 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -8033,8 +8065,6 @@ echo "${ECHO_T}$lt_cv_dlopen_self_static" >&6
 fi
 
 
-## FIXME: this should be a separate macro
-##
 if test "$enable_shared" = yes && test "$GCC" = yes; then
   case $archive_cmds in
   *'~'*)
@@ -8091,11 +8121,7 @@ echo "${ECHO_T}$lt_cv_archive_cmds_need_lc" >&6
   esac
 fi
 need_lc=${lt_cv_archive_cmds_need_lc-yes}
-##
-## END FIXME
 
-## FIXME: this should be a separate macro
-##
 # The second clause should only fire when bootstrapping the
 # libtool distribution, otherwise you forgot to ship ltmain.sh
 # with your package, and you will get complaints that there are
@@ -8645,8 +8671,6 @@ EOF
     (rm -f "$ofile" && cp "${ofile}T" "$ofile" && rm -f "${ofile}T")
   chmod +x "$ofile"
 fi
-##
-## END FIXME
 
 
 
@@ -9252,6 +9276,8 @@ s,@INSTALL_PROGRAM@,$INSTALL_PROGRAM,;t t
 s,@INSTALL_SCRIPT@,$INSTALL_SCRIPT,;t t
 s,@INSTALL_DATA@,$INSTALL_DATA,;t t
 s,@FTSYS_SRC@,$FTSYS_SRC,;t t
+s,@LIBZ@,$LIBZ,;t t
+s,@SYSTEM_ZLIB@,$SYSTEM_ZLIB,;t t
 s,@LN_S@,$LN_S,;t t
 s,@ECHO@,$ECHO,;t t
 s,@RANLIB@,$RANLIB,;t t
