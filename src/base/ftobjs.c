@@ -1916,6 +1916,80 @@
     return error;
   }
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Select_Charmap                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Selects a given charmap by its encoding tag.                       */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face     :: A handle to the source face object.                    */
+  /*    encoding :: handle to the selected charmap                         */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Error code. 0 means success.                                       */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function will return an error if no charmap in the face       */
+  /*    corresponds to the encoding queried here                           */
+  /*                                                                       */
+  EXPORT_FUNC(FT_Error)  FT_Select_Charmap( FT_Face      face,
+                                            FT_Encoding  encoding )
+  {
+    FT_CharMap*  cur   = face->charmaps;
+    FT_CharMap*  limit = cur + face->num_charmaps;
+    
+    for ( ; cur < limit; cur++ )
+    {
+      if ( cur[0]->encoding == encoding )
+      {
+        face->charmap = cur[0];
+        return 0;
+      }
+    }
+    return FT_Err_Invalid_Argument;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Set_Charmap                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Selects a given charmap for character code to glyph index          */
+  /*    decoding.                                                          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face     :: A handle to the source face object.                    */
+  /*    charmap  :: handle to the selected charmap                         */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Error code. 0 means success.                                       */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    this function will return an error when the charmap is not part    */
+  /*    of the face (i.e. if it is not listed in the face->charmaps[]      */
+  /*    table).                                                            */
+  /*                                                                       */
+  EXPORT_FUNC(FT_Error)  FT_Set_Charmap( FT_Face     face,
+                                         FT_CharMap  charmap )
+  {
+    FT_CharMap*  cur   = face->charmaps;
+    FT_CharMap*  limit = cur + face->num_charmaps;
+    
+    for ( ; cur < limit; cur++ )
+    {
+      if ( cur[0] == charmap )
+      {
+        face->charmap = cur[0];
+        return 0;
+      }
+    }
+    return FT_Err_Invalid_Argument;
+  }
 
   /*************************************************************************/
   /*                                                                       */
