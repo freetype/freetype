@@ -884,6 +884,51 @@
             goto Store_Point;
           }
 
+#if 1
+          {
+            FT_UInt  min, max, mid;
+            FT_Pos   fpos;
+
+
+            /* find enclosing edges */
+            min = 0;
+            max = edge_limit - edges;
+
+            while ( min < max )
+            {
+              mid  = ( max + min ) >> 1;
+              edge = edges + mid;
+              fpos = edge->fpos;
+
+              if ( u < fpos )
+                max = mid;
+              else if ( u > fpos )
+                min = mid + 1;
+              else
+              {
+                /* we are on the edge */
+                u = edge->pos;
+                goto Store_Point;
+              }
+            }
+
+            {
+              AH_Edge  before = edges + min - 1;
+              AH_Edge  after  = edges + min + 0;
+
+
+              /* assert( before && after && before != after ) */
+              if ( before->scale == 0 )
+                before->scale = FT_DivFix( after->pos - before->pos,
+                                           after->fpos - before->fpos );
+
+              u = before->pos + FT_MulFix( fu - before->fpos,
+                                           before->scale );
+            }
+          }
+
+#else /* !0 */
+
           /* otherwise, interpolate the point in between */
           {
             AH_Edge  before = 0;
@@ -914,11 +959,15 @@
               after = edge;
             }
 
-            /* assert( before && after && before != after ) */
-            u = before->pos + FT_MulDiv( fu - before->fpos,
-                                         after->pos - before->pos,
-                                         after->fpos - before->fpos );
+            if ( before->scale == 0 )
+              before->scale = FT_DivFix( after->pos - before->pos,
+                                        after->fpos - before->fpos );
+
+            u = before->pos + FT_MulFix( fu - before->fpos,
+                                        before->scale );
           }
+
+#endif /* !0 */
 
         Store_Point:
 

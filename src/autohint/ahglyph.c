@@ -641,48 +641,70 @@
     AH_Point  point_limit = point + outline->num_points;
 
 
-    for ( ; point < point_limit; point++ )
+    switch ( source )
     {
-      FT_Pos  u, v;
-
-
-      switch ( source )
+    case AH_UV_FXY:
+      for ( ; point < point_limit; point++ )
       {
-      case AH_UV_FXY:
-        u = point->fx;
-        v = point->fy;
-        break;
-      case AH_UV_FYX:
-        u = point->fy;
-        v = point->fx;
-        break;
-      case AH_UV_OXY:
-        u = point->ox;
-        v = point->oy;
-        break;
-      case AH_UV_OYX:
-        u = point->oy;
-        v = point->ox;
-        break;
-      case AH_UV_YX:
-        u = point->y;
-        v = point->x;
-        break;
-      case AH_UV_OX:
-        u = point->x;
-        v = point->ox;
-        break;
-      case AH_UV_OY:
-        u = point->y;
-        v = point->oy;
-        break;
-      default:
-        u = point->x;
-        v = point->y;
-        break;
+        point->u = point->fx;
+        point->v = point->fy;
       }
-      point->u = u;
-      point->v = v;
+      break;
+
+    case AH_UV_FYX:
+      for ( ; point < point_limit; point++ )
+      {
+        point->u = point->fy;
+        point->v = point->fx;
+      }
+      break;
+
+    case AH_UV_OXY:
+      for ( ; point < point_limit; point++ )
+      {
+        point->u = point->ox;
+        point->v = point->oy;
+      }
+      break;
+
+    case AH_UV_OYX:
+      for ( ; point < point_limit; point++ )
+      {
+        point->u = point->oy;
+        point->v = point->ox;
+      }
+      break;
+
+    case AH_UV_YX:
+      for ( ; point < point_limit; point++ )
+      {
+        point->u = point->y;
+        point->v = point->x;
+      }
+      break;
+
+    case AH_UV_OX:
+      for ( ; point < point_limit; point++ )
+      {
+        point->u = point->x;
+        point->v = point->ox;
+      }
+      break;
+
+    case AH_UV_OY:
+      for ( ; point < point_limit; point++ )
+      {
+        point->u = point->y;
+        point->v = point->oy;
+      }
+      break;
+
+    default:
+      for ( ; point < point_limit; point++ )
+      {
+        point->u = point->x;
+        point->v = point->y;
+      }
     }
   }
 
@@ -950,6 +972,8 @@
             segment->first    = point;
             segment->last     = point;
             segment->contour  = contour;
+            segment->score    = 32000;
+            segment->link     = NULL;
             on_edge           = 1;
 
 #ifdef AH_HINT_METRICS
@@ -975,8 +999,8 @@
         AH_Point  point       =  outline->points;
         AH_Point  point_limit =  point + outline->num_points;
 
-        FT_Pos    min_pos     =  32000;
-        FT_Pos    max_pos     = -32000;
+        FT_Pos    min_pos =  32000;
+        FT_Pos    max_pos = -32000;
 
 
         min_point = 0;
@@ -1011,6 +1035,8 @@
           segment->first = min_point;
           segment->last  = min_point;
           segment->pos   = min_pos;
+          segment->score = 32000;
+          segment->link  = NULL;
 
           num_segments++;
           segment++;
@@ -1027,6 +1053,8 @@
           segment->first = max_point;
           segment->last  = max_point;
           segment->pos   = max_pos;
+          segment->score = 32000;
+          segment->link  = NULL;
 
           num_segments++;
           segment++;
@@ -1047,22 +1075,22 @@
   FT_LOCAL_DEF( void )
   ah_outline_link_segments( AH_Outline  outline )
   {
-    AH_Segment  segments;
-    AH_Segment  segment_limit;
-    int         dimension;
+    AH_Segment    segments;
+    AH_Segment    segment_limit;
+    AH_Direction  major_dir;
+    int           dimension;
 
-
-    ah_setup_uv( outline, AH_UV_FYX );
 
     segments      = outline->horz_segments;
     segment_limit = segments + outline->num_hsegments;
+    major_dir     = outline->horz_major_dir;
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
       AH_Segment  seg1;
       AH_Segment  seg2;
 
-
+#if 0
       /* now compare each segment to the others */
       for ( seg1 = segments; seg1 < segment_limit; seg1++ )
       {
@@ -1079,7 +1107,7 @@
         if ( best_segment )
           best_score = seg1->score;
         else
-          best_score = 32000;
+          best_score = +32000;
 
         for ( seg2 = segments; seg2 < segment_limit; seg2++ )
           if ( seg1 != seg2 && seg1->dir + seg2->dir == 0 )
@@ -1134,28 +1162,86 @@
         {
           seg1->link  = best_segment;
           seg1->score = best_score;
-
           best_segment->num_linked++;
         }
+      }
+#endif /* 0 */
 
-      } /* edges 1 */
+#if 1
+      /* the following code does the same, but much faster! */
+
+      /* now compare each segment to the others */
+      for ( seg1 = segments; seg1 < segment_limit; seg1++ )
+      {
+        /* the fake segments are introduced to hint the metrics -- */
+        /* we must never link them to anything                     */
+        if ( seg1->first == seg1->last || seg1->dir != major_dir )
+          continue;
+
+        for ( seg2 = segments; seg2 < segment_limit; seg2++ )
+          if ( seg2 != seg1 && seg1->dir + seg2->dir == 0 )
+          {
+            FT_Pos  pos1 = seg1->pos;
+            FT_Pos  pos2 = seg2->pos;
+            FT_Pos  dist = pos2 - pos1;
+
+
+            if ( dist < 0 )
+              continue;
+
+            {
+              FT_Pos  min = seg1->min_coord;
+              FT_Pos  max = seg1->max_coord;
+              FT_Pos  len, score;
+
+
+              if ( min < seg2->min_coord )
+                min = seg2->min_coord;
+
+              if ( max > seg2->max_coord )
+                max = seg2->max_coord;
+
+              len = max - min;
+              if ( len >= 8 )
+              {
+                score = dist + 3000 / len;
+
+                if ( score < seg1->score )
+                {
+                  seg1->score = score;
+                  seg1->link  = seg2;
+                }
+
+                if ( score < seg2->score )
+                {
+                  seg2->score = score;
+                  seg2->link  = seg1;
+                }
+              }
+            }
+          }
+      }
+#endif /* 1 */
 
       /* now, compute the `serif' segments */
       for ( seg1 = segments; seg1 < segment_limit; seg1++ )
       {
         seg2 = seg1->link;
 
-        if ( seg2 && seg2->link != seg1 )
+        if ( seg2 )
         {
-          seg1->link  = 0;
-          seg1->serif = seg2->link;
+          seg2->num_linked++;
+          if ( seg2->link != seg1 )
+          {
+            seg1->link  = 0;
+            seg1->serif = seg2->link;
+          }
         }
       }
 
-      ah_setup_uv( outline, AH_UV_FXY );
-
       segments      = outline->vert_segments;
       segment_limit = segments + outline->num_vsegments;
+      major_dir     = outline->vert_major_dir;
     }
   }
 
@@ -1208,6 +1294,9 @@
       if ( edge_distance_threshold > 64 / 4 )
         edge_distance_threshold = 64 / 4;
 
+      edge_distance_threshold = FT_DivFix( edge_distance_threshold,
+                                           scale );
+
       edge_limit = edges;
       for ( seg = segments; seg < segment_limit; seg++ )
       {
@@ -1224,7 +1313,6 @@
           if ( dist < 0 )
             dist = -dist;
 
-          dist = FT_MulFix( dist, scale );
           if ( dist < edge_distance_threshold )
           {
             found = edge;
@@ -1262,7 +1350,6 @@
           edge->last            = seg;
         }
       }
-
       *p_num_edges = (FT_Int)( edge_limit - edges );
 
 
@@ -1280,6 +1367,12 @@
 
       /* first of all, set the `edge' field in each segment -- this is */
       /* required in order to compute edge links                       */
+
+      /* Note that I've tried to remove this loop, setting
+       * the "edge" field of each segment directly in the
+       * code above.  For some reason, it slows down execution
+       * speed -- on a Sun.
+       */
       for ( edge = edges; edge < edge_limit; edge++ )
       {
         seg = edge->first;

@@ -244,13 +244,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    dir        :: The segment direction.                               */
   /*                                                                       */
-  /*    first      :: The first point in the segment.                      */
-  /*                                                                       */
-  /*    last       :: The last point in the segment.                       */
-  /*                                                                       */
-  /*    contour    :: A pointer to the first point of the segment's        */
-  /*                  contour.                                             */
-  /*                                                                       */
   /*    min_coord  :: The minimum coordinate of the segment.               */
   /*                                                                       */
   /*    max_coord  :: The maximum coordinate of the segment.               */
@@ -267,15 +260,17 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    score      :: Used to score the segment when selecting them.       */
   /*                                                                       */
+  /*    first      :: The first point in the segment.                      */
+  /*                                                                       */
+  /*    last       :: The last point in the segment.                       */
+  /*                                                                       */
+  /*    contour    :: A pointer to the first point of the segment's        */
+  /*                  contour.                                             */
+  /*                                                                       */
   typedef struct  AH_SegmentRec_
   {
     AH_Edge_Flags  flags;
     AH_Direction   dir;
-
-    AH_Point       first;       /* first point in edge segment             */
-    AH_Point       last;        /* last point in edge segment              */
-    AH_Point*      contour;     /* ptr to first point of segment's contour */
-
     FT_Pos         pos;         /* position of segment           */
     FT_Pos         min_coord;   /* minimum coordinate of segment */
     FT_Pos         max_coord;   /* maximum coordinate of segment */
@@ -287,6 +282,10 @@ FT_BEGIN_HEADER
     AH_Segment     serif;       /* primary segment for serifs */
     FT_Pos         num_linked;  /* number of linked segments  */
     FT_Pos         score;
+
+    AH_Point       first;       /* first point in edge segment             */
+    AH_Point       last;        /* last point in edge segment              */
+    AH_Point*      contour;     /* ptr to first point of segment's contour */
 
   } AH_SegmentRec;
 
@@ -302,19 +301,22 @@ FT_BEGIN_HEADER
   /*    located on it.                                                     */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    flags      :: The segment edge flags (straight, rounded, etc.).    */
-  /*                                                                       */
-  /*    dir        :: The main segment direction on this edge.             */
-  /*                                                                       */
-  /*    first      :: The first edge segment.                              */
-  /*                                                                       */
-  /*    last       :: The last edge segment.                               */
-  /*                                                                       */
   /*    fpos       :: The original edge position in font units.            */
   /*                                                                       */
   /*    opos       :: The original scaled edge position.                   */
   /*                                                                       */
   /*    pos        :: The hinted edge position.                            */
+  /*                                                                       */
+  /*    flags      :: The segment edge flags (straight, rounded, etc.).    */
+  /*                                                                       */
+  /*    dir        :: The main segment direction on this edge.             */
+  /*                                                                       */
+  /*    scale      :: Scaling factor between original and hinted edge      */
+  /*                  positions.                                           */
+  /*                                                                       */
+  /*    blue_edge  :: Indicate the blue zone edge this edge is related to. */
+  /*                  Only set for some of the horizontal edges in a latin */
+  /*                  font.                                                */
   /*                                                                       */
   /*    link       :: The linked edge.                                     */
   /*                                                                       */
@@ -324,28 +326,30 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    score      :: Used to score the edge when selecting them.          */
   /*                                                                       */
-  /*    blue_edge  :: Indicate the blue zone edge this edge is related to. */
-  /*                  Only set for some of the horizontal edges in a latin */
-  /*                  font.                                                */
+  /*    first      :: The first edge segment.                              */
+  /*                                                                       */
+  /*    last       :: The last edge segment.                               */
   /*                                                                       */
   typedef struct  AH_EdgeRec_
   {
-    AH_Edge_Flags  flags;
-    AH_Direction   dir;
-
-    AH_Segment     first;
-    AH_Segment     last;
-
     FT_Pos         fpos;
     FT_Pos         opos;
     FT_Pos         pos;
+
+    AH_Edge_Flags  flags;
+    AH_Direction   dir;
+    FT_Fixed       scale;
+    FT_Pos*        blue_edge;
 
     AH_Edge        link;
     AH_Edge        serif;
     FT_Int         num_linked;
 
     FT_Int         score;
-    FT_Pos*        blue_edge;
+
+    AH_Segment     first;
+    AH_Segment     last;
+
 
   } AH_EdgeRec;
 

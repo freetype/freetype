@@ -789,10 +789,8 @@
 
           if ( code < start )
             max = mid;
-
           else if ( code > end )
             min = mid + 1;
-
           else
           {
             /* we found the segment */
@@ -881,24 +879,117 @@
   {
     FT_Byte*   table     = cmap->data;
     FT_UInt32  result    = 0;
-    FT_UInt32  char_code = *pchar_code + 1;
     FT_UInt    gindex    = 0;
+    FT_UInt32  char_code = *pchar_code;
     FT_Byte*   p;
-    FT_Byte*   q;
     FT_UInt    code, num_segs2;
 
 
-    if ( char_code >= 0x10000UL )
+    if ( char_code >= 0xFFFFUL )
       goto Exit;
 
-    code      = (FT_UInt)char_code;
+    code      = (FT_UInt)char_code + 1;
     p         = table + 6;
     num_segs2 = TT_PEEK_USHORT(p) & -2;  /* ensure even-ness */
 
+#if 1
+
     for (;;)
     {
-      FT_UInt  offset, n;
+      /* Some fonts have more than 170 segments in their charmaps! */
+      /* We changed this function to use a more efficient binary   */
+      /* search                                                    */
+      FT_UInt  offset;
       FT_Int   delta;
+      FT_UInt  min = 0;
+      FT_UInt  max = num_segs2 >> 1;
+      FT_UInt  mid, start, end;
+      FT_UInt  hi;
+
+
+      /* we begin by finding the segment which end is
+         closer to our code point */
+      hi = 0;
+      while ( min < max )
+      {
+        mid = ( min + max ) >> 1;
+        p   = table + 14 + mid * 2;
+        end = TT_PEEK_USHORT( p );
+
+        if ( end < code )
+          min = mid + 1;
+        else
+        {
+          hi  = mid;
+          max = mid;
+        }
+      }
+
+      if ( hi > max )
+      {
+        /* the point is behind the last segment;
+           we will exit right now */
+        goto Exit;
+      }
+
+      p   = table + 14 + hi * 2;
+      end = TT_PEEK_USHORT( p );
+
+      p    += 2 + num_segs2;
+      start = TT_PEEK_USHORT( p );
+
+      if ( code < start )
+        code = start;
+
+      p    += num_segs2;
+      delta = TT_PEEK_USHORT( p );
+
+      p     += num_segs2;
+      offset = TT_PEEK_USHORT( p );
+
+      if ( offset != 0 && offset != 0xFFFFU )
+      {
+        /* parse the glyph ids array for non-zero index */
+        p += offset + ( code - start ) * 2;
+        while ( code <= end )
+        {
+          gindex = TT_NEXT_USHORT( p );
+          if ( gindex != 0 )
+          {
+            gindex = (FT_UInt)( gindex + delta ) & 0xFFFFU;
+            if ( gindex != 0 )
+            {
+              result = code;
+              goto Exit;
+            }
+          }
+          code++;
+        }
+      }
+      else if ( offset == 0xFFFFU )
+      {
+        /* an offset of 0xFFFF means an empty glyph in certain fonts! */
+        code = end + 1;
+      }
+      else  /* offset == 0 */
+      {
+        gindex = (FT_UInt)( code + delta ) & 0xFFFFU;
+        if ( gindex != 0 )
+        {
+          result = code;
+          goto Exit;
+        }
+        code++;
+      }
+    }
+
+#else   /* old code -- kept for reference */
+
+    for ( ;; )
+    {
+      FT_UInt   offset, n;
+      FT_Int    delta;
+      FT_Byte*  q;
 
 
       p = table + 14;              /* ends table  */
@@ -952,14 +1043,14 @@
           goto Exit;
         }
       }
-
       /* loop to next trial charcode */
       if ( code >= 0xFFFFU )
         break;
 
       code++;
     }
-    return (FT_UInt)result;
+
+#endif /* !1 */
 
   Exit:
     *pchar_code = result;
