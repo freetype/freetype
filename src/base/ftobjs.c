@@ -975,13 +975,13 @@
     /* when the flag NO_RECURSE is set, we disable hinting and scaling */
     if ( load_flags & FT_LOAD_NO_RECURSE )
     {
-      /* disable scaling, hinting and transform */
-      load_flags |= FT_LOAD_NO_SCALE       |
-                    FT_LOAD_NO_HINTING     |
+      /* disable scaling, hinting, and transformation */
+      load_flags |= FT_LOAD_NO_SCALE         |
+                    FT_LOAD_NO_HINTING       |
                     FT_LOAD_IGNORE_TRANSFORM;
-                    
+
       /* disable bitmap rendering */
-      load_flags &= ~FT_LOAD_RENDER;                    
+      load_flags &= ~FT_LOAD_RENDER;
     }
 
     /* do we need to load the glyph through the auto-hinter? */
@@ -1032,7 +1032,7 @@
     {
       FT_UInt           EM      = face->units_per_EM;
       FT_Size_Metrics*  metrics = &face->size->metrics;
-      
+
       slot->linearHoriAdvance = FT_MulDiv( slot->linearHoriAdvance,
                                            (FT_Long)metrics->x_ppem << 16, EM );
 
@@ -1161,7 +1161,7 @@
     /* discard auto-hinting data */
     if ( face->autohint.finalizer )
       face->autohint.finalizer( face->autohint.data );
-      
+
     /* Discard glyph slots for this face                           */
     /* Beware!  FT_Done_GlyphSlot() changes the field `face->slot' */
     while ( face->glyph )
@@ -2344,12 +2344,12 @@
                                                  FT_UInt     buffer_max )
   {
     FT_Error  error = FT_Err_Invalid_Argument;
-    
+
 
     /* clean up buffer */
     if ( buffer && buffer_max > 0 )
       ((FT_Byte*)buffer)[0] = 0;
-      
+
     if ( face                                    &&
          glyph_index < (FT_UInt)face->num_glyphs &&
          FT_HAS_GLYPH_NAMES( face )              )
@@ -2362,7 +2362,7 @@
       if ( clazz->get_interface )
       {
         FT_Glyph_Name_Requester  requester;
-        
+
 
         requester = (FT_Glyph_Name_Requester)clazz->get_interface(
                       FT_MODULE( driver ), "glyph_name" );
@@ -2372,7 +2372,7 @@
     }
 
     return error;
-  }                                                 
+  }
 
 
   /*************************************************************************/
