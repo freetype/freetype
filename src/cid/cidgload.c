@@ -158,6 +158,7 @@
                                            0, /* glyph slot */
                                            0, /* glyph names! XXX */
                                            0, /* blend == 0 */
+                                           0, /* hinting == FALSE */
                                            cid_load_glyph );
     if ( error )
       return error;
@@ -237,6 +238,7 @@
                                              (FT_GlyphSlot)glyph,
                                              0, /* glyph names -- XXX */
                                              0, /* blend == 0 */
+                                             0, /* hinting == 0 */
                                              cid_load_glyph );
 
       /* set up the decoder */
