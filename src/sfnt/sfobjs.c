@@ -296,8 +296,8 @@
     if ( !is_apple_sbit && LOAD_( header ) )
       goto Exit;
 
-    /* the following tables are often not present in embedded TrueType fonts */
-    /* within PDF documents, so don't check for them..                       */
+    /* the following tables are often not present in embedded TrueType */
+    /* fonts within PDF documents, so don't check for them.            */
     (void)LOAD_( max_profile );
     (void)LOAD_( charmaps );
       

@@ -1,38 +1,55 @@
 2002-02-07  David Turner  <david@freetype.org>
 
-        * src/pcf/pcfread.c (pcf_load_font): removed immature support of
-        the AVERAGE_WIDTH property..
+	* src/pcf/pcfread.c (pcf_load_font): Removed immature support of
+	the AVERAGE_WIDTH property.
 
-2002-02-06  David Turner   <david@freetype.org>
+2002-02-06  David Turner  <david@freetype.org>
 
-        * src/sfnt/sfobjs.c (SFNT_Load_Face): since many fonts embedded in
-        PDF documents do not include 'cmap', 'post' and 'name' tables, the
-        SFNT face loader has been changed to not immediately report an
-        error if these are not present.
+	* src/sfnt/sfobjs.c (SFNT_Load_Face): Since many fonts embedded in
+	PDF documents do not include 'cmap', 'post' and 'name' tables, the
+	SFNT face loader has been changed to not immediately report an
+	error if these are not present.
+
+	Note that the specification _requires_ these tables, but Adobe
+	seems to ignore it completely.
+
+	* src/sfnt/ttcmap.c: Removing compiler warnings.
+
+	* src/pcf/pcfread.c (pcf_read_TOC): Use FT_UInt.
+	(pcf_parse_metric, pcf_parse_compressed_metric): Removed.  Code
+	is now in ...
+	(pcf_get_metric): Here.
+	(pcfSeekToType): Renamed to ...
+	(pcf_seek_to_table_type): This.
+	Use FT_Int.
+	(pcfHasType): Renamed to ...
+	(pcf_has_table_type): This.
+	Use FT_Int.
+	(find_property): Renamed to ...
+	(pcf_find_property): This.
+	Use FT_Int.
+	(pcf_get_bitmaps, pcf_get_encodings): Handle invalid PCF fonts
+	better (delaying format checks out of FT_Access_Frame ..
+	FT_Forget_Frame blocks to avoid leaving the stream in an incorrect
+	state when encountering an invalid PCF font).
+	* src/pcf/pcfdriver.c (PCF_Done_Face): Renamed to ...
+	(PCF_Face_Done): This.
+	(PCF_Init_Face): Renamed to ...
+	(PCF_Face_Init): This.
+	(PCF_Get_Char_Index): Renamed to ...
+	(PCF_Char_Get_Index): This.
+	(PCF_Get_Next_Char): Renamed to ...
+	(PCF_Char_Get_Next): This.
+	(pcf_driver_class): Updated.
+	* src/pcf/pcf.h (PCF_Done_Face): Removed.
+
+2002-02-06  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/pcf/pcfdriver.c (FT_Done_Face): Fixed small memory leak.
         
-        Note that the specification _requires_ these tables, but Adobe
-        seems to ignore it completely..
-
-
-        * src/sfnt/ttcmap.c: removing compiler warnings
-
-        * src/pcf/pcfread.c, src/pcf/pcf.h, src/pcf/pcfdriver.c:
-        removing minor bugs (delaying format checks out of
-        FT_Access_Frame .. FT_Forget_Frame blocks to avoid leaving the
-        stream in an incorrect state when encountering an invalid PCF
-        font)
-        
-        reformatting / renaming a few functions for the sake of consistency
-
-
-2002-02-06  Detlef Würkner
-
-        * src/pcf/pcfdriver.c (FT_Done_Face): fixed small memory leak
-        
-        * src/pcf/pcfread.c (pcf_load_font): now handles the "AVERAGE_WIDTH"
-        property to return correct character pixel (width/height) pairs for
-        embedded bitmaps..
-
+	* src/pcf/pcfread.c (pcf_load_font): Now handles the "AVERAGE_WIDTH"
+	property to return correct character pixel (width/height) pairs for
+	embedded bitmaps.
 
 2002-02-04  Keith Packard  <keithp@keithp.com>
 
