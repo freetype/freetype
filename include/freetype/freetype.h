@@ -1911,11 +1911,11 @@
   /*                 the state during the decomposition.                   */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means sucess.                                       */
+  /*    FreeType error code.  0 means sucess.                              */
   /*                                                                       */
-  FT_EXPORT_DEF(int)  FT_Outline_Decompose( FT_Outline*        outline,
-                                            FT_Outline_Funcs*  funcs,
-                                            void*              user );
+  FT_EXPORT_DEF(FT_Error)  FT_Outline_Decompose( FT_Outline*        outline,
+                                                 FT_Outline_Funcs*  funcs,
+                                                 void*              user );
 
 
   /*************************************************************************/
