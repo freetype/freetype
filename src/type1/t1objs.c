@@ -217,9 +217,10 @@
       /* Init the face object fields */
       /* Now set up root face fields */
       {
-        FT_Face  root = (FT_Face)&face->root;
+        FT_Face  root  = (FT_Face)&face->root;
+        T1_Font* type1 = &face->type1;
         
-        root->num_glyphs   = face->num_glyphs;
+        root->num_glyphs   = type1->num_glyphs;
         root->num_charmaps = 1;
   
         root->face_index = face_index;
@@ -227,17 +228,17 @@
         
         root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
                               
-        if ( face->font_info.is_fixed_pitch )
+        if ( type1->is_fixed_pitch )
           root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
         /* XXX : TO DO - add kerning with .afm support */
 
         /* get style name - be careful, some broken fonts only */
         /* have a /FontName dictionary entry .. !!             */
-        root->family_name = face->font_info.family_name;
+        root->family_name = type1->family_name;
         if (root->family_name)
         {
-          char*  full   = face->font_info.full_name;
+          char*  full   = type1->full_name;
           char*  family = root->family_name;
           
           while ( *family && *full == *family )
@@ -251,9 +252,9 @@
         else
         {
           /* do we have a /FontName ?? */
-          if (face->font_name)
+          if (type1->font_name)
           {
-            root->family_name = face->font_name;
+            root->family_name = type1->font_name;
             root->style_name  = "Regular";
           }
         }
@@ -262,18 +263,18 @@
         root->num_fixed_sizes = 0;
         root->available_sizes = 0;
   
-        root->bbox         = face->font_bbox;
+        root->bbox         = type1->font_bbox;
         root->units_per_EM = 1000;
-        root->ascender     =  (T1_Short)face->font_bbox.yMax;
-        root->descender    = -(T1_Short)face->font_bbox.yMin;
+        root->ascender     =  (T1_Short)type1->font_bbox.yMax;
+        root->descender    = -(T1_Short)type1->font_bbox.yMin;
         root->height       = ((root->ascender + root->descender)*12)/10;
   
         /* now compute the maximum advance width */
 
-        root->max_advance_width = face->private_dict.standard_width;
+        root->max_advance_width = type1->standard_width;
 
         /* compute max advance width for proportional fonts */
-        if (!face->font_info.is_fixed_pitch)
+        if (!type1->is_fixed_pitch)
         {
           T1_Int  max_advance;
 
@@ -288,8 +289,8 @@
 
         root->max_advance_height = root->height;
         
-        root->underline_position  = face->font_info.underline_position;
-        root->underline_thickness = face->font_info.underline_thickness;
+        root->underline_position  = type1->underline_position;
+        root->underline_thickness = type1->underline_thickness;
   
         root->max_points   = 0;
         root->max_contours = 0;

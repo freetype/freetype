@@ -39,13 +39,13 @@
     parser->state_index    = 0;
     parser->state_stack[0] = dict_none;
 
-	parser->encoding_type    = encoding_none;
+	parser->encoding_type    = t1_encoding_none;
     parser->encoding_names   = 0;
     parser->encoding_offsets = 0;
     parser->encoding_lengths = 0;
 
     parser->dump_tokens      = 0;
-    face->private_dict.lenIV = 4;  /* XXX : is it sure ?? */
+    face->type1.lenIV        = 4;  /* XXX : is it sure ?? */
   }
 
 
@@ -191,7 +191,7 @@
   {
 	T1_Token*     token  = parser->top+1;
 	FT_Memory     memory = parser->face->root.memory;
-	T1_Encoding*  encode = &parser->face->encoding;
+	T1_Encoding*  encode = &parser->face->type1.encoding;
 	T1_Error      error  = 0;
 
 	if (token->kind  == tok_keyword &&
@@ -210,8 +210,8 @@
 	  /* Now copy the encoding */
 	  switch (token->kind2)
 	  {
-		  case key_ExpertEncoding : parser->encoding_type = encoding_expert;
-		  default                 : parser->encoding_type = encoding_standard; break;
+		  case key_ExpertEncoding : parser->encoding_type = t1_encoding_expert;
+		  default                 : parser->encoding_type = t1_encoding_standard; break;
 	  }
     }
 	else
@@ -260,6 +260,7 @@
   {
     T1_Token*  top   = parser->top;
     T1_Face    face  = parser->face;
+    T1_Font*   type1 = &face->type1;
 
     switch ( top[0].kind2 )
     {
@@ -273,19 +274,19 @@
           T1_Error   error;
           T1_Int     len = top[1].len;
 
-          if ( ALLOC( face->font_name, len+1 ) )
+          if ( ALLOC( type1->font_name, len+1 ) )
           {
             parser->error = error;
             return error;
           }
 
-          MEM_Copy( face->font_name,
+          MEM_Copy( type1->font_name,
                     parser->tokenizer->base + top[1].start,
                     len );
-          face->font_name[len] = '\0';
+          type1->font_name[len] = '\0';
         }
         else
-          face->font_name = CopyString( parser );
+          type1->font_name = CopyString( parser );
         break;
 
       case imm_Encoding:
@@ -293,31 +294,31 @@
         break;
 
       case imm_PaintType:
-        face->paint_type = (T1_Byte)CopyInteger( parser );
+        type1->paint_type = (T1_Byte)CopyInteger( parser );
         break;
 
       case imm_FontType:
-        face->font_type = (T1_Byte)CopyInteger( parser );
+        type1->font_type = (T1_Byte)CopyInteger( parser );
         break;
 
       case imm_FontMatrix:
-        CopyMatrix( parser, &face->font_matrix );
+        CopyMatrix( parser, &type1->font_matrix );
         break;
 
       case imm_FontBBox:
-        CopyBBox( parser, &face->font_bbox );
+        CopyBBox( parser, &type1->font_bbox );
         break;
 
       case imm_UniqueID:
-        face->unique_id = CopyInteger( parser );
+        type1->unique_id = CopyInteger( parser );
         break;
 
       case imm_StrokeWidth:
-        face->stroke_width = CopyInteger( parser );
+        type1->stroke_width = CopyInteger( parser );
         break;
 
       case imm_FontID:
-        face->font_id = CopyInteger( parser );
+        type1->font_id = CopyInteger( parser );
         break;
 
       default:
@@ -347,8 +348,8 @@
   static
   T1_Error  Do_Def_FontInfo( T1_Parser*  parser )
   {
-    T1_Token*     top   = parser->top;
-    T1_FontInfo*  info  = &parser->face->font_info;
+    T1_Token*  top   = parser->top;
+    T1_Font*   info  = &parser->face->type1;
 
     switch ( top[0].kind2 )
     {
@@ -415,8 +416,8 @@
   static
   T1_Error  Do_Def_Private( T1_Parser*  parser )
   {
-    T1_Token*     top   = parser->top;
-    T1_Private*   priv  = &parser->face->private_dict;
+    T1_Token*   top   = parser->top;
+    T1_Font*    priv  = &parser->face->type1;
 
     switch ( top[0].kind2 )
     {
@@ -605,7 +606,7 @@
     T1_Error      error  = T1_Err_Ok;
     T1_Face       face   = parser->face;
     T1_Token*     top    = parser->top;
-    T1_Encoding*  encode = &face->encoding;
+    T1_Encoding*  encode = &face->type1.encoding;
     T1_Int        index;
 
     /* record and check the character code */
@@ -709,7 +710,7 @@
     count = (T1_Int)CopyInteger( parser );
     error = parser->error; if (error) goto Exit;
 
-    if ( index < 0 || index >= face->num_subrs )
+    if ( index < 0 || index >= face->type1.num_subrs )
     {
       FT_ERROR(( "T1.Parse.put: invalid character code\n" ));
       goto Syntax_Error;
@@ -722,8 +723,8 @@
       t1_decrypt( base, count, 4330 );
       tokzer->cursor += count;
 
-      base  += face->private_dict.lenIV;
-      count -= face->private_dict.lenIV;
+      base  += face->type1.lenIV;
+      count -= face->type1.lenIV;
 
       error = T1_Add_Table( &parser->table, index, base, count );
     }
@@ -806,8 +807,8 @@
       t1_decrypt( base, count, 4330 );
       tokzer->cursor += count;  /* skip */
 
-      base  += face->private_dict.lenIV;
-      count -= face->private_dict.lenIV;
+      base  += face->type1.lenIV;
+      count -= face->type1.lenIV;
 
       error = T1_Add_Table( &parser->table, index*2+1, base, count );
     }
@@ -925,7 +926,7 @@
     {
       case imm_Encoding:
         {
-          T1_Encoding*  encode = &face->encoding;
+          T1_Encoding*  encode = &face->type1.encoding;
 
           new_state = dict_encoding;
 
@@ -941,15 +942,15 @@
           error = T1_New_Table( &parser->table, count, memory );
           if (error) goto Exit;
 
-		  parser->encoding_type = encoding_array;
+		  parser->encoding_type = t1_encoding_array;
         }
         break;
 
 
       case imm_Subrs:
         {
-          new_state       = dict_subrs;
-          face->num_subrs = count;
+          new_state             = dict_subrs;
+          face->type1.num_subrs = count;
 
           error = T1_New_Table( &parser->table, count, memory );
           if (error) goto Exit;
@@ -981,27 +982,28 @@
   T1_Error  Finalise_Parsing( T1_Parser*  parser )
   {
     T1_Face    face       = parser->face;
+    T1_Font*   type1      = &face->type1;
     FT_Memory  memory     = face->root.memory;
     T1_Table*  strings    = &parser->table;
 	T1_Int     num_glyphs;
 	T1_Int     n;
 	T1_Error   error;
 
-    num_glyphs = face->num_glyphs = parser->cur_name;
+    num_glyphs = type1->num_glyphs = parser->cur_name;
 
 	/* allocate glyph names and charstrings arrays */
-	if ( ALLOC_ARRAY( face->glyph_names    , num_glyphs, T1_String* ) ||
-		 ALLOC_ARRAY( face->charstrings    , num_glyphs, T1_Byte* )   ||
-	     ALLOC_ARRAY( face->charstrings_len, num_glyphs, T1_Int*  )   )
+	if ( ALLOC_ARRAY( type1->glyph_names    , num_glyphs, T1_String* ) ||
+		 ALLOC_ARRAY( type1->charstrings    , num_glyphs, T1_Byte* )   ||
+	     ALLOC_ARRAY( type1->charstrings_len, num_glyphs, T1_Int*  )   )
 	  return error;
 
 	/* copy glyph names and charstrings offsets and lengths */
-    face->charstrings_block = strings->block;
+    type1->charstrings_block = strings->block;
 	for ( n = 0; n < num_glyphs; n++ )
 	{
-	  face->glyph_names[n]     = (T1_String*)strings->elements[2*n];
-	  face->charstrings[n]     = strings->elements[2*n+1];
-	  face->charstrings_len[n] = strings->lengths [2*n+1];
+      type1->glyph_names[n]     = (T1_String*)strings->elements[2*n];
+      type1->charstrings[n]     = strings->elements[2*n+1];
+      type1->charstrings_len[n] = strings->lengths [2*n+1];
     }
 
 	/* now free the old tables */
@@ -1009,7 +1011,7 @@
 	FREE( strings->lengths );
 
 	/* Compute encoding if required. */
-	if (parser->encoding_type == encoding_none)
+	if (parser->encoding_type == t1_encoding_none)
     {
 	  FT_ERROR(( "T1.Parse.Finalise : no encoding specified in font file\n" ));
 	  return T1_Err_Syntax_Error;
@@ -1017,7 +1019,7 @@
 
 	{
 	  T1_Int        n;
-	  T1_Encoding*  encode = &face->encoding;
+	  T1_Encoding*  encode = &type1->encoding;
 
 	  encode->code_first = encode->num_chars-1;
 	  encode->code_last  = 0;
@@ -1030,12 +1032,12 @@
 
 		switch (parser->encoding_type)
 		{
-		  case encoding_standard:
+		  case t1_encoding_standard:
 			  index = t1_standard_encoding[n];
 			  names = (T1_String**)t1_standard_strings;
 			  break;
 
-		  case encoding_expert:
+		  case t1_encoding_expert:
 			  index = t1_expert_encoding[n];
 			  names = (T1_String**)t1_standard_strings;
 			  break;
@@ -1056,7 +1058,7 @@
             /* lookup glyph index from name */
             for ( m = 0; m < num_glyphs; m++ )
    		    {
-		  	  if ( strncmp( face->glyph_names[m], name, len ) == 0 )
+		  	  if ( strncmp( type1->glyph_names[m], name, len ) == 0 )
 			  {
 			    encode->char_index[n] = m;
 			    break;
@@ -1069,7 +1071,7 @@
 	    }
 	  }
 
-	  parser->encoding_type = encoding_none;
+	  parser->encoding_type = t1_encoding_none;
 	  FREE( parser->encoding_names );
 	  FREE( parser->encoding_lengths );
 	  FREE( parser->encoding_offsets );
@@ -1086,6 +1088,7 @@
   T1_Error  Parse_T1_FontProgram( T1_Parser*  parser )
   {
     T1_Error  error;
+    T1_Font*  type1 = &parser->face->type1;
 
     for (;;)
     {
@@ -1151,7 +1154,7 @@
                                                    dict_charstrings, &count );
                     if (error) goto Exit;
 
-                    face->num_glyphs = count;
+                    type1->num_glyphs = count;
                     error = T1_New_Table( &parser->table, count*2, face->root.memory );
                     if (error) goto Exit;
 
@@ -1210,14 +1213,12 @@
 
                 case dict_subrs:
                   {
-                    T1_Face  face = parser->face;
-
                     /* copy recorder sub-routines */
                     T1_Done_Table( &parser->table );
 
-                    parser->subrs   = parser->table.block;
-                    face->subrs     = parser->table.elements;
-                    face->subrs_len = parser->table.lengths;
+                    parser->subrs    = parser->table.block;
+                    type1->subrs     = parser->table.elements;
+                    type1->subrs_len = parser->table.lengths;
 
                     parser->state_index--;
                   }

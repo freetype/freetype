@@ -61,14 +61,6 @@
   } T1_DictState;
 
 
-  typedef enum T1_EncodingType_
-  {
-	encoding_none = 0,
-	encoding_array,
-	encoding_standard,
-	encoding_expert
-
-  } T1_EncodingType;
 /*************************************************************************
  *
  * <Struct> T1_Table

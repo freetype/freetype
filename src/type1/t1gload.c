@@ -191,9 +191,9 @@
       
     glyph_name = t1_standard_strings[t1_standard_encoding[charcode]];
     
-    for ( n = 0; n < face->num_glyphs; n++ )
+    for ( n = 0; n < face->type1.num_glyphs; n++ )
     {
-      T1_String*  name = (T1_String*)face->glyph_names[n];
+      T1_String*  name = (T1_String*)face->type1.glyph_names[n];
       
       if ( name && strcmp(name,glyph_name) == 0 )
         return n;
@@ -238,6 +238,7 @@
     FT_Outline*  cur  = &decoder->builder.current;
     FT_Outline*  base = &decoder->builder.base;
     T1_Vector    left_bearing, advance;
+    T1_Font*     type1 = &face->type1;
     
     bchar_index = lookup_glyph_by_stdcharcode( face, bchar );
     achar_index = lookup_glyph_by_stdcharcode( face, achar );
@@ -257,11 +258,11 @@
     cur->contours   = base->contours + base->n_contours;
 
     error = T1_Parse_CharStrings( decoder,
-                                  face->charstrings    [bchar_index],
-                                  face->charstrings_len[bchar_index],
-                                  face->num_subrs,
-                                  face->subrs,
-                                  face->subrs_len );
+                                  type1->charstrings    [bchar_index],
+                                  type1->charstrings_len[bchar_index],
+                                  type1->num_subrs,
+                                  type1->subrs,
+                                  type1->subrs_len );
     if (error) return error;
 
     n_base_points   = cur->n_points;
@@ -284,11 +285,11 @@
     cur->contours   = base->contours + base->n_contours;
 
     error = T1_Parse_CharStrings( decoder,
-                                  face->charstrings    [achar_index],
-                                  face->charstrings_len[achar_index],
-                                  face->num_subrs,
-                                  face->subrs,
-                                  face->subrs_len );
+                                  type1->charstrings    [achar_index],
+                                  type1->charstrings_len[achar_index],
+                                  type1->num_subrs,
+                                  type1->subrs,
+                                  type1->subrs_len );
     if (error) return error;
 
     /* adjust contours in accented character outline */
@@ -1063,6 +1064,7 @@
     T1_Error    error;
     T1_Decoder  decoder;
     T1_Int      glyph_index;
+    T1_Font*    type1 = &face->type1;
 
     *max_advance = 0;
 
@@ -1074,15 +1076,15 @@
 
     /* For each glyph, parse the glyph charstring and extract */
     /* the advance width..                                    */
-    for ( glyph_index = 0; glyph_index < face->num_glyphs; glyph_index++ )
+    for ( glyph_index = 0; glyph_index < type1->num_glyphs; glyph_index++ )
     {
       /* now get load the unscaled outline */
       error = T1_Parse_CharStrings( &decoder,
-                                    face->charstrings    [glyph_index],
-                                    face->charstrings_len[glyph_index],
-                                    face->num_subrs,
-                                    face->subrs,
-                                    face->subrs_len );
+                                    type1->charstrings    [glyph_index],
+                                    type1->charstrings_len[glyph_index],
+                                    type1->num_subrs,
+                                    type1->subrs,
+                                    type1->subrs_len );
       /* ignore the error if one occured - skip to next glyph */
       (void)error;
     }
@@ -1274,9 +1276,9 @@
     /* type is set to 1, this means that we have an "open path",   */
     /* also called a 'stroke'. The FreeType raster doesn't support */
     /* opened path, so we'll close it explicitely there..          */
-    if ( builder->path_begun && builder->face->paint_type == 1 )
+    if ( builder->path_begun && builder->face->type1.paint_type == 1 )
     {
-      if ( builder->face->paint_type == 1 )
+      if ( builder->face->type1.paint_type == 1 )
       {
         error = close_open_path( builder );
         if (error) return error;
@@ -1411,6 +1413,7 @@
     T1_Decoder      decoder;
     T1_Face         face = (T1_Face)glyph->root.face;
     T1_Bool         hinting;
+    T1_Font*        type1 = &face->type1;
 
     glyph->x_scale = size->root.metrics.x_scale;
     glyph->y_scale = size->root.metrics.y_scale;
@@ -1450,11 +1453,11 @@
       glyph->hints->vert_stems.num_stems = 0;
 
       error = T1_Parse_CharStrings( &decoder,
-                                    face->charstrings    [glyph_index],
-                                    face->charstrings_len[glyph_index],
-                                    face->num_subrs,
-                                    face->subrs,
-                                    face->subrs_len );
+                                    type1->charstrings    [glyph_index],
+                                    type1->charstrings_len[glyph_index],
+                                    type1->num_subrs,
+                                    type1->subrs,
+                                    type1->subrs_len );
 
       /* All right, pass 1 is finished, now grid-fit all stem hints */
       T1_Hint_Stems( &decoder.builder );
@@ -1467,11 +1470,11 @@
       decoder.builder.pass = 1;
 
       error = T1_Parse_CharStrings( &decoder,
-                                    face->charstrings    [glyph_index],
-                                    face->charstrings_len[glyph_index],
-                                    face->num_subrs,
-                                    face->subrs,
-                                    face->subrs_len );
+                                    type1->charstrings    [glyph_index],
+                                    type1->charstrings_len[glyph_index],
+                                    type1->num_subrs,
+                                    type1->subrs,
+                                    type1->subrs_len );
 
       /* save new glyph tables */
       T1_Done_Builder( &decoder.builder );
@@ -1486,11 +1489,11 @@
   
       /* now load the unscaled outline */
       error = T1_Parse_CharStrings( &decoder,
-                                    face->charstrings    [glyph_index],
-                                    face->charstrings_len[glyph_index],
-                                    face->num_subrs,
-                                    face->subrs,
-                                    face->subrs_len );
+                                    type1->charstrings    [glyph_index],
+                                    type1->charstrings_len[glyph_index],
+                                    type1->num_subrs,
+                                    type1->subrs,
+                                    type1->subrs_len );
   
       /* save new glyph tables */
       T1_Done_Builder( &decoder.builder );
