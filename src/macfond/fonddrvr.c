@@ -61,12 +61,6 @@
       which is set to the FOND driver upon entering our init_face() --
       gets *reset* to either the TT or the T1 driver. I had to make a minor
       change to ftobjs.c to make this work.
-
-    - Small note about memory: I use malloc() to allocate the buffer
-      for the Type 1 data. Of course it would be better to do this
-      through the library->memory stuff, but I can't access that from
-      my stream->close() method! Maybe it would be better to use the
-      Mac native NewPtr() and DisposePtr() calls.
 */
 
 #include <ttobjs.h>
@@ -256,7 +250,7 @@
   /* Read Type 1 data from the POST resources inside the LWFN file, return a
      PFB buffer -- apparently FT doesn't like a pure binary T1 stream. */
   static
-  char* read_type1_data( FSSpec* lwfn_spec, unsigned long *size )
+  char* read_type1_data( FT_Memory memory, FSSpec* lwfn_spec, unsigned long *size )
   {
     short          res_ref, res_id;
     unsigned char  *buffer, *p;
@@ -281,7 +275,7 @@
         total_size += 2;
     }
 
-    buffer = malloc( total_size );
+    buffer = memory->alloc( memory, total_size );
     if ( !buffer )
       goto error;
 
@@ -347,7 +341,7 @@ error:
   static
   void lwfn_stream_close( FT_Stream  stream )
   {
-    free( stream->base );
+    stream->memory->free( stream->memory, stream->base );
     stream->descriptor.pointer = NULL;
     stream->size               = 0;
     stream->base               = 0;
@@ -427,13 +421,13 @@ error:
 
       CloseResFile( res_ref ); /* XXX still need to read kerning! */
 
-      type1_data = read_type1_data( &lwfn_spec, &size );
+      type1_data = read_type1_data( stream->memory, &lwfn_spec, &size );
       if ( !type1_data )
       {
         return FT_Err_Out_Of_Memory;
       }
 
- #if 1
+ #if 0
       {
         FILE* f;
 
