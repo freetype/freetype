@@ -46,6 +46,7 @@ $ open/write optf 'optfile'
 $!
 $! Pull in external libraries
 $!
+$ create libs.opt
 $ gosub check_create_vmslib
 $!
 $! Create objects
@@ -57,7 +58,6 @@ $ if f$locate("AS_IS",f$edit(ccopt,"UPCASE")) .lt. f$length(ccopt) -
 $ gosub crea_mms
 $!
 $ 'Make' /macro=(comp_flags="''ccopt'")
-$ delete/nolog/noconf temp.mms;*,descrip.fdl;*
 $ purge/nolog [...]descrip.mms
 $!
 $! Add them to options
@@ -70,11 +70,6 @@ $    if f$locate("DEMOS",file) .eqs. f$length(file) then write optf file
 $    goto floop
 $  endif 
 $!
-$! Pull in external libraries
-$!
-$ gosub check_create_vmslib
-$!
-$ if s_case then WRITE optf "case_sensitive=YES"
 $ close optf
 $!
 $!
@@ -82,10 +77,13 @@ $! Alpha gets a shareable image
 $!
 $ If f$getsyi("HW_MODEL") .gt. 1024
 $ Then
-$   LINK_/NODEB/NOSHARE/NOEXE/MAP='mapfile'/full 'optfile'/opt
-$   call anal_map_axp 'mapfile' _link.opt
-$   LINK_/NODEB/SHARE=[.lib]freetype2shr.exe 'optfile'/opt,_link.opt/opt
-$   dele/noconf 'mapfile';*
+$   write sys$output "Creating freetype2shr.exe"
+$   call anal_obj_axp 'optfile' _link.opt
+$   open/append  optf 'optfile'
+$   if s_case then WRITE optf "case_sensitive=YES"
+$   close optf
+$   LINK_/NODEB/SHARE=[.lib]freetype2shr.exe - 
+                            'optfile'/opt,libs.opt/opt,_link.opt/opt
 $ endif
 $!
 $ exit
@@ -97,7 +95,9 @@ $!
 $CREA_MMS:
 $ write sys$output "Creating descrip.mms files ..."
 $ write sys$output "... Main directory"
-$ copy sys$input: descrip.mms
+$ create descrip.mms
+$ open/append out descrip.mms
+$ copy sys$input: out
 $ deck
 #
 # FreeType 2 build system -- top-level Makefile for OpenVMS
@@ -112,7 +112,11 @@ $ deck
 # LICENSE.TXT.  By continuing to use, modify, or distribute this file you
 # indicate that you have read the license and understand and accept it
 # fully.
-
+$ EOD
+$ write out "CFLAGS = ", ccopt
+$ copy sys$input: out
+$ deck
+ 
 
 all :
         define freetype [--.include.freetype] 
@@ -175,14 +179,75 @@ all :
 
 # EOF
 $ eod
-$ anal/rms/fdl descrip.mms
-$ create/fdl=descrip.fdl temp.mms 
-$ open/append mmsf temp.mms 
-$ write mmsf "CFLAGS = ", ccopt
-$ close mmsf
-$ copy temp.mms,descrip.mms;-1 descrip.mms 
+$ close out
+$ write sys$output "... [.builds.vms] directory"
+$ create [.builds.vms]descrip.mms
+$ open/append out [.builds.vms]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 system rules for VMS
+#
+
+
+# Copyright 2001 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([],[--.include],[--.src.base])
+
+OBJS=ftsystem.obj
+
+all : $(OBJS)
+        library/create [--.lib]freetype.olb $(OBJS)
+
+ftsystem.obj : ftsystem.c ftconfig.h
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.autohint] directory"
+$ create [.src.autohint]descrip.mms
+$ open/append out [.src.autohint]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 auto-hinter module compilation rules for VMS
+#
+
+
+# Copyright 2001, 2002 Catharon Productions Inc.
+#
+# This file is part of the Catharon Typography Project and shall only
+# be used, modified, and distributed under the terms of the Catharon
+# Open Source License that should come with this file under the name
+# `CatharonLicense.txt'.  By continuing to use, modify, or distribute
+# this file you indicate that you have read the license and
+# understand and accept it fully.
+#
+# Note that this license is compatible with the FreeType license.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/incl=([--.include],[--.src.autohint])
+
+OBJS=autohint.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
 $ write sys$output "... [.src.gzip] directory"
-$ copy sys$input: [.src.gzip]descrip.mms
+$ create [.src.gzip]descrip.mms
+$ open/append out [.src.gzip]descrip.mms
+$ copy sys$input: out
 $ deck
 #
 # FreeType 2 GZip support compilation rules for VMS
@@ -197,7 +262,10 @@ $ deck
 # LICENSE.TXT.  By continuing to use, modify, or distribute this file you
 # indicate that you have read the license and understand and accept it
 # fully.
-
+$EOD
+$ if libincs .nes. "" then write out "LIBINCS = ", libincs, ","
+$ copy sys$input: out
+$ deck
 
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=($(LIBINCS)[--.include],[--.src.gzip])
 
@@ -208,14 +276,39 @@ all : $(OBJS)
 
 # EOF
 $ eod
-$ create/fdl=descrip.fdl temp.mms
-$ if libincs .nes. ""
-$ then
-$   open/append mmsf temp.mms
-$   write mmsf "LIBINCS = ", libincs, ","
-$   close mmsf
-$   copy temp.mms,[.src.gzip]descrip.mms;-1 [.src.gzip]descrip.mms 
-$ endif
+$ close out
+$ write sys$output "... [.src.type1] directory"
+$ create [.src.type1]descrip.mms
+$ open/append out [.src.type1]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 Type1 driver compilation rules for VMS
+#
+
+
+# Copyright 1996-2000, 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.type1])
+
+OBJS=type1.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+type1.obj : type1.c t1parse.c t1load.c t1objs.c t1driver.c t1gload.c t1afm.c
+
+# EOF
+$ eod
+$ close out
 $ return
 $!------------------------------------------------------------------------------
 $!
@@ -295,6 +388,7 @@ $!
 $! Open data file with location of libraries
 $!
 $ open/read/end=end_lib/err=lib_err libdata VMSLIB.DAT
+$ open/append loptf libs.opt
 $LIB_LOOP:
 $ read/end=end_lib libdata libline
 $ libline = f$edit(libline, "UNCOMMENT,COLLAPSE")
@@ -332,113 +426,89 @@ $ libincs = libincs + "," + libsrc
 $ lqual = "/lib"
 $ libtype = f$parse(libloc,,,"TYPE")
 $ if f$locate("EXE",libtype) .lt. f$length(libtype) then lqual = "/share"
-$ write optf libloc , lqual
-$!
-$! Yet another special treatment for Xpm/X11
-$!
-$ if (libname .eqs. "XPM")
-$ then
-$   my_x11 = f$parse("''libsrc'xpm.h",,,"device") + - 
-             f$parse("''libsrc'xpm.h",,,"directory")
-$   x11_save = f$trnlnm("X11")
-$   define x11 'my_x11',decw$include   
-$ endif 
+$ write loptf libloc , lqual
 $ goto LIB_LOOP
 $END_LIB:
 $ close libdata
+$ close loptf
 $ libincs = libincs - ","
 $ libdefs = libdefs - ","
 $ return
-$!------------------------------------------------------------------------------$$!------------------------------------------------------------------------------
+$!------------------------------------------------------------------------------
 $!
-$! Analyze Map for OpenVMS AXP
+$! Analyze Object files for OpenVMS AXP to extract Procedure and Data 
+$! information to build a symbol vector for a shareable image
+$! All the "brains" of this logic was suggested by Hartmut Becker
+$! (Hartmut.Becker@compaq.com). All the bugs were introduced by me
+$! (zinser@decus.de), so if you do have problem reports please do not
+$! bother Hartmut/HP, but get in touch with me
 $!
-$ ANAL_MAP_AXP: Subroutine   
+$ ANAL_OBJ_AXP: Subroutine   
 $ V = 'F$Verify(0)
-$ SET SYMBOL/GENERAL/SCOPE=(NOLOCAL,NOGLOBAL)
 $ SAY := "WRITE_ SYS$OUTPUT"
 $ 
 $ IF F$SEARCH("''P1'") .EQS. ""
 $ THEN
-$    SAY "  ANAL_MAP_AXP:  Error, no mapfile provided"
+$    SAY "ANAL_OBJ_AXP-E-NOSUCHFILE:  Error, inputfile ''p1' not available"
 $    goto exit_aa
 $ ENDIF
 $ IF "''P2'" .EQS. ""
 $ THEN
-$    SAY "  ANALYZE_MAP_AXP:  Error, no output file provided"
+$    SAY "ANAL_OBJ_AXP:  Error, no output file provided"
 $    goto exit_aa
 $ ENDIF
 $
-$ LINK_TMP  = F$PARSE(P2,,,"DEVICE")+F$PARSE(P2,,,"DIRECTORY")+F$PARSE(P2,,,"NAME")+".TMP"
-$
-$ SAY "  creating PSECT list in ''P2'"
-$ OPEN_/READ IN 'P1'
-$ OPEN_/WRITE OUT 'P2'
-$ WRITE_ OUT "!"
-$ WRITE_ OUT "! ### PSECT list extracted from ''P1'"
-$ WRITE_ OUT "!" 
-$ LOOP_PSECT_SEARCH:
-$    READ_/END=EOF_PSECT IN REC
-$    if F$EXTRACT(0,5,REC) .nes. "$DATA" then goto LOOP_PSECT_SEARCH
-$ LAST = ""
-$ LOOP_PSECT:
-$    READ_/END=EOF_PSECT IN REC
-$    if F$EXTRACT(0,1,REC) .eqs. "$" .and. F$EXTRACT(0,5,REC) .nes. "$DATA" then goto EOF_PSECT
-$    if REC - "NOPIC,OVR,REL,GBL,NOSHR,NOEXE,  WRT,NOVEC" .nes. REC
-$    then 
-$       J = F$LOCATE(" ",REC)
-$       S = F$EXTRACT(0,J,REC)
-$       IF S .EQS. LAST THEN GOTO LOOP_PSECT
-$       WRITE_ OUT "symbol_vector = (" +  S + " = PSECT)"
-$       P$_'S= 1
-$       LAST = S
-$    endif
-$    GOTO LOOP_PSECT
-$
-$ EOF_PSECT:
-$    CLOSE_ IN
-$    CLOSE_ OUT 
+$ open/read in 'p1
+$ create a.tmp
+$ open/append atmp a.tmp
+$ loop:
+$ read/end=end_loop in line
+$ f= f$search(line)
+$ if f .eqs. ""
+$ then
+$	write sys$output "ANAL_OBJ_AXP-w-nosuchfile, ''line'"
+$	goto loop
+$ endif
+$ def/user sys$output nl:
+$ def/user sys$error nl:
+$ anal/obj/gsd 'f /out=x.tmp
+$ open/read xtmp x.tmp
+$ XLOOP:
+$ read/end=end_xloop xtmp xline
+$ xline = f$edit(xline,"compress")
+$ write atmp xline
+$ goto xloop
+$ END_XLOOP:
+$ close xtmp
+$ goto loop
+$ end_loop:
+$ close in
+$ close atmp
+$ if f$search("a.tmp") .eqs. "" -
+	then $ exit
+$ ! all global definitions
+$ search a.tmp "symbol:","EGSY$V_DEF 1","EGSY$V_NORM 1"/out=b.tmp
+$ ! all procedures
+$ search b.tmp "EGSY$V_NORM 1"/wind=(0,1) /out=c.tmp
+$ search c.tmp "symbol:"/out=d.tmp
+$ def/user sys$output nl:
+$ edito/edt/command=sys$input d.tmp
+sub/symbol: "/symbol_vector=(/whole
+sub/"/=procedure)/whole
+exit
+$ ! all data
+$ search b.tmp "EGSY$V_DEF 1"/wind=(0,1) /out=e.tmp
+$ search e.tmp "symbol:"/out=f.tmp
+$ def/user sys$output nl:
+$ edito/edt/command=sys$input f.tmp
+sub/symbol: "/symbol_vector=(/whole
+sub/"/=data)/whole
+exit
+$ sort/nodupl d.tmp,f.tmp 'p2'
+$ delete a.tmp;*,b.tmp;*,c.tmp;*,d.tmp;*,e.tmp;*,f.tmp;*
+$ if f$search("x.tmp") .nes. "" -
+	then $ delete x.tmp;*
 $!
-$ OPEN_/READ IN 'P1'
-$ OPEN_/APPEND OUT 'P2'
-$ WRITE_ OUT "!"
-$ WRITE_ OUT "! ### Global definition list extracted from ''P1'"
-$ WRITE_ OUT "!" 
-$ LOOP_DATA_SEARCH:
-$   READ_/END=EOF_DATA IN REC
-$   if f$locate("NOPIC,OVR,REL,GBL,NOSHR,NOEXE",rec) .eq. f$length(rec) -
-      then goto LOOP_DATA_SEARCH
-$   s = f$element(0," ",rec)      
-$!   write_ out "symbol_vector = (" + s + " = DATA)"
-$   p$_'s' =1
-$   goto loop_data_search 
-$ EOF_DATA:
-$ CLOSE_ IN
-$ CLOSE_ OUT
-$ SAY "  appending list of UNIVERSAL procedures to ''P2'"
-$ SEARCH_/NOHIGH/WINDOW=(0,0) 'P1' " R-"/OUT='LINK_TMP
-$ OPEN_/READ IN 'LINK_TMP
-$ OPEN_/APPEND OUT 'P2'
-$ WRITE_ OUT "!"
-$ WRITE_ OUT "! ### UNIVERSAL procedures and global definitions extracted from ''P1'"
-$ WRITE_ OUT "!" 
-$ LOOP_UNIVERSAL:
-$    READ_/END=EOF_UNIVERSAL IN REC
-$    data = 0
-$    J = F$LOCATE(" R-",REC)
-$    S = F$EXTRACT(J+3,F$length(rec),REC)
-$    IF (F$TYPE(P$_'S').EQS."").and.(data.ne.1) 
-$    THEN
-$       WRITE_ OUT "symbol_vector = ("+S+"      = PROCEDURE)"
-$    ELSE
-$       WRITE_ OUT "symbol_vector = ("+S+"      = DATA)"
-$    ENDIF
-$    GOTO LOOP_UNIVERSAL
-$ EOF_UNIVERSAL:
-$    CLOSE_ IN
-$    CLOSE_ OUT
-$    if f$search("''LINK_TMP'") .nes. "" then DELETE_/NOLOG/NOCONFIRM 'LINK_TMP';*
-$
 $ EXIT_AA:
 $ if V then set verify
 $ endsubroutine 
