@@ -1,209 +1,233 @@
+2003-04-20  Werner Lemberg  <wl@gnu.org>
+
+	* doc/INSTALL.UNX: Cleaned up.
+
 2003-04-09  Torrey Lyons  <torrey@mrcla.com>
 
-   * src/base/ftmac.c (open_face_from_buffer): removed a double-free bug that
-   had nasty consequences when trying to open an "invalid" font on a Mac.
+	* src/base/ftmac.c (open_face_from_buffer): Removed a double-free
+	bug that had nasty consequences when trying to open an "invalid"
+	font on a Mac.
 
 2003-04-09  Mike Fabian  <mfabian@suse.de>
 
-   * src/bdf/bdfdrivr.h, src/pcf/pcf.h: changed FT_Short to FT_UShort in
-   order to be able to access more than 32768 glyphs in fonts
+	* src/bdf/bdfdrivr.h, src/pcf/pcf.h: Changed FT_Short to FT_UShort
+	in order to be able to access more than 32768 glyphs in fonts.
 
 2003-04-08  David Turner  <david@freetype.org>
 
-   FreeType 2.1.4 Released
-   =======================
+
+	* Version 2.1.4 is released.
+	============================
+
 
 2003-04-03  Martin Muskens  <mmuskens@aurelon.com>
 
-   * src/type1/t1load.c (T1_Open_Face): fixed the code to make it handle
-   special cases where a font only contains a ".notdef" glyph (happens in
-   PDF-embedded fonts !!). Otherwise, FT_Panic was called !
+	* src/type1/t1load.c (T1_Open_Face): Fixed the code to make it
+	handle special cases where a font only contains a ".notdef" glyph
+	(happens in PDF-embedded fonts).  Otherwise, FT_Panic was called.
 
 2003-03-27  David Turner  <david@freetype.org>
 
-   * README: udpated
+	* README: Udpated.
 
-   * README.UNX: removed (now replaced by docs/INSTALL.UNX)
+	* README.UNX: Removed (now replaced by docs/INSTALL.UNX).
 
-   * src/pshinter/pshalgo3.c: the hinter now performs as in 2.1.3 and
-   will ignore stem quantization only when FT_LOAD_TARGET_SMOOTH is used
+	* src/pshinter/pshalgo3.c: The hinter now performs as in 2.1.3 and
+	will ignore stem quantization only when FT_LOAD_TARGET_SMOOTH is
+	used.
 
-   * src/base/ftobjs.c: changed the default computations to include rounding
-   in all cases, this is required to provide accurate kerning data when
-   native TrueType hinting is enabled.
+	* src/base/ftobjs.c: Changed the default computations to include
+	rounding in all cases; this is required to provide accurate kerning
+	data when native TrueType hinting is enabled.
 
-   * src/type1/t1load.c: the Type 1 loader now accepts more general names
-   according to the Postscript spec (the previous one was too restrictive)
+	* src/type1/t1load.c: The Type 1 loader now accepts more general
+	names according to the PostScript specification (the previous one
+	was too restrictive).
 
 2003-03-20  David Turner  <david@freetype.org>
 
-    * docs/*: serious rewriting of the documentation
+	Serious rewriting of the documentation.
 
-    * include/freetype/internal/ftobjs.h, src/base/ftobjs.c, src/bdf/bdfdrivr.c,
-    src/pcf/pcfdriver.c, src/pfr/pfrsbit.c, src/sfnt/ttsbit.c,
-    src/type42/t42objs.c, src/winfonts/winfnt.c: introduced three new functions
-    to deal with glyph bitmaps within FT_GlyphSlot objects. these are:
+	* docs/BUGS, docs/BUILD: Removed.
+	* docs/DEBUG.TXT: Renamed to...
+	* docs/DEBUG: This.
+	* docs/CUSTOMIZE, docs/TRUETYPE, docs/UPGRADE.UNX: New files.
+	* docs/INSTALL.ANY, docs/INSTALL.UNX, docs/INSTALL.GNU New files,
+	containing platform specific information previously in INSTALL.
+	* docs/readme.vms: Renamed to...
+	* docs/INSTALL.VMS: This.
 
-      ft_glyphslot_free_bitmap
-      ft_glyphslot_alloc_bitmap
-      ft_glyphslot_set_bitmap
+	* docs/*: Updated.
 
-    these are much more convenient to use than managing the FT_GLYPH_OWN_BITMAP
-    flag manually. the font drivers have been modified to use them as well.
+	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c,
+	src/bdf/bdfdrivr.c, src/pcf/pcfdriver.c, src/pfr/pfrsbit.c,
+	src/sfnt/ttsbit.c, src/type42/t42objs.c, src/winfonts/winfnt.c:
+	Introduced three new functions to deal with glyph bitmaps within
+	FT_GlyphSlot objects:
 
-    * src/cache/ftlru.c: fixed an invalid assertion check
+	  ft_glyphslot_free_bitmap
+	  ft_glyphslot_alloc_bitmap
+	  ft_glyphslot_set_bitmap
 
-    * src/autohint/ahglyph.h, src/autohint/ahglyph.c, src/autohint/ahglobal.c,
-    src/autohint/ahhint.c: fixed blue-scale problem
+	These functions are much more convenient to use than managing the
+	FT_GLYPH_OWN_BITMAP flag manually.  The font drivers have been
+	modified to use them as well.
 
-    * src/cache/ftccache.c: fixed small bug that could crash the cache
-    in rare circumstances (mostly with broken fonts)
+	* src/cache/ftlru.c: Fixed an invalid assertion check.
 
+	* src/autohint/ahglyph.h, src/autohint/ahglyph.c,
+	src/autohint/ahglobal.c, src/autohint/ahhint.c: Fixed blue-scale
+	problem.
+
+	* src/cache/ftccache.c: Fixed small bug that could crash the cache
+	in rare circumstances (mostly with broken fonts).
 
 2003-03-15  David Turner  <david@freetype.org>
 
-    * src/truetype/ttdriver.c (Set_Char_Sizes): fixed a small rounding bug.
-    Actually, it seems that previous versions of FreeType didn't perform
-    TrueType rounding exactly as appropriate.
+	* src/truetype/ttdriver.c (Set_Char_Sizes): Fixed a small rounding
+	bug.  Actually, it seems that previous versions of FreeType didn't
+	perform TrueType rounding exactly as appropriate.
 
 2003-03-14  David Turner  <david@freetype.org>
 
-    * src/truetype/ttdriver.c: fixing the small TrueType native rendering
-    glitches, they came from a small rounding error.
+	* src/truetype/ttdriver.c: Fixing the small TrueType native
+	rendering glitches, they came from a small rounding error.
 
 2003-03-13  David Turner  <david@freetype.org>
 
-    * src/base/ftdbgmem.c, docs/DEBUG.TXT: added new environment variables
-    to control memory debugging with FreeType. See the description of
-    "FT2_DEBUG_MEMORY", "FT2_ALLOC_TOTAL_MAX" and "FT2_ALLOC_COUNT_MAX"
-    in DEBUG.TXT
+	* src/base/ftdbgmem.c, docs/DEBUG.TXT: Added new environment
+	variables to control memory debugging with FreeType.  See the
+	description of "FT2_DEBUG_MEMORY", "FT2_ALLOC_TOTAL_MAX" and
+	"FT2_ALLOC_COUNT_MAX" in DEBUG.TXT.
 
-    * src/cache/ftccache.c, src/cache/ftccmap.c, src/cache/ftcsbits.c,
-    ftlru.c: fixed the cache sub-system to correctly deal with out-of-memory
-    conditions.
+	* src/cache/ftccache.c, src/cache/ftccmap.c, src/cache/ftcsbits.c,
+	src/cache/ftlru.c: Fixed the cache sub-system to correctly deal with
+	out-of-memory conditions.
 
-    * src/pfr/pfrobjs.c, src/pfr/pfrsbits.c: fixing compiler warnings and a
-    small memory leak
+	* src/pfr/pfrobjs.c, src/pfr/pfrsbits.c: Fixing compiler warnings
+	and a small memory leak.
 
-    * src/psaux/psobjs.c (t1_reallocate_table): fixed a bug (memory leak) that
-    only happened when trying to resize an array would end in an OOM.
+	* src/psaux/psobjs.c (t1_reallocate_table): Fixed a bug (memory
+	leak) that only happened when a try to resize an array would end in
+	an out-of-memory condition.
 
-    * src/smooth/ftgrays.c: removed compiler warnings / volatile bug
+	* src/smooth/ftgrays.c: Removed compiler warnings / volatile bug.
 
-    * src/truetype/ttobjs.c: removed segmentation fault that happened in
-    tight memory environments.
+	* src/truetype/ttobjs.c: Removed segmentation fault that happened in
+	tight memory environments.
 
 2003-02-28  Pixel  <pixel@mandrakesoft.com>
 
-    * src/gzip/ftgzip.c (ft_gzip_file_done): fixed memory leak, the ZLib
-    stream was not properly finalized
+	* src/gzip/ftgzip.c (ft_gzip_file_done): Fixed memory leak: The ZLib
+	stream was not properly finalized.
 
 2003-02-25  Anthony Fok  <anthony@thizlinux.com>
 
-    * src/cache/ftccmap.c: the cmap cache now supports UCS-4 charmaps
-    when available in Asian fonts
+	* src/cache/ftccmap.c: The cmap cache now supports UCS-4 charmaps
+	when available in Asian fonts.
 
-    * src/sfnt/ttload.c, src/base/ftobjs.c: changed "asian" to "Asian" in
-    comments
+	* src/sfnt/ttload.c, src/base/ftobjs.c: Changed "asian" to "Asian"
+	in comments.
 
 2003-02-25  David Turner  <david@freetype.org>
 
-    * src/gzip/ftgzip.c: fixed a bug that caused FreeType to loop endlessly
-    when trying to read certain compressed gzip files. The following test
-    could be used to reveal the bug:
+	* src/gzip/ftgzip.c: Fixed a bug that caused FreeType to loop
+	endlessly when trying to read certain compressed gzip files.  The
+	following test could be used to reveal the bug:
 
-       touch 0123456789 ; gzip 0123456789 ; ftdump 0123456789.gz
+	  touch 0123456789 ; gzip 0123456789 ; ftdump 0123456789.gz
 
+	* src/pfr/pfrobjs.c, src/pfr/pfrload.c, src/pfr/pfrtypes.h: Several
+	fixes to the PFR font driver:
 
-    * src/pfr/pfrobjs.c, src/pfr/pfrload.c, src/pfr/pfrtypes.h: several
-    fixes to the PFR font driver:
+	- The list of available embedded bitmaps was not correctly set in
+	  the root FT_FaceRec structure describing the face.
 
-      - the list of available embedded bitmaps was not correctly set
-        in the root FT_FaceRec structure describing the face
+	- The glyph loader always tried to load the outlines when
+	  FT_LOAD_SBITS_ONLY was specified.
 
-      - the glyph loader always tried to load the outlines when
-        FT_LOAD_SBITS_ONLY was specified
+	- The table loaded now scans for *undocumented* elements of a
+	  physical font's auxiliary data record.  This is necessary to
+	  retrieve the "real" family and style names.
 
-      - the table loaded now scans for *undocumented* elements of a
-        physical font's auxiliary data record, this is necessary to
-        retrieve the "real" family and style names.
+	NOTE THAT THESE CHANGES THE FAMILY NAME OF MANY PFR FONTS!
 
-        NOTE THAT THIS CHANGES THE FAMILY NAME OF MANY PFR FONTS !!
+	* src/truetype/ttdriver.c (Set_Char_Sizes): Fixed a rounding bug
+	when computing the scale factors for a given character size in
+	points with resolution.
 
-    * src/truetype/ttdriver.c (Set_Char_Sizes): fixed a rounding bug when
-    computing the scale factors for a given character size in points with
-    resolution.
-
+	* devel/ft2build.h, devel/ftoption.h: New files (in a new directory)
+	which are special development versions of include/ft2build.h and
+	include/freetype/config/ftoption.h, respectively.
 
 2003-02-18  David Turner  <david@freetype.org>
 
-    * src/truetype/ttdriver.c, src/truetype/ttobjs.h, src/truetype/ttobjs.c,
-    src/truetype/ttinterp.c, src/base/ftobjs.c: fixing the slight distortion
-    problem that occured due to the latest auto-hinter changes
+	* src/truetype/ttdriver.c, src/truetype/ttobjs.h,
+	src/truetype/ttobjs.c, src/truetype/ttinterp.c, src/base/ftobjs.c:
+	Fixing the slight distortion problem that ocurred due to the latest
+	auto-hinter changes.
 
-
-    * src/autohint/ahhint.c: disabled the advance width "correction" which
-    seemed to provide more trouble than benefits..
+	* src/autohint/ahhint.c: Disabled the advance width "correction"
+	which seemed to provide more trouble than benefits.
 
 2003-02-13  Graham Asher  <graham.asher@btinternet.com>
 
-    * include/freetype/ftincrem.h, src/cff/cffgload.c, src/cid/cidgload.c,
-    src/truetype/ttgload.c, src/type1/t1gload.c
-    [FT_CONFIG_OPTION_INCREMENTAL]: I have changed the incremental loading
-    interface in a way that makes it simpler and allows glyph metrics to
-    be changed (e.g., by adding a constant, as required by CFF fonts)
-    rather than just overridden. This was required to make the GhsotScript-
-    to-FreeType bridge work.
+	* include/freetype/ftincrem.h, src/cff/cffgload.c,
+	src/cid/cidgload.c, src/truetype/ttgload.c, src/type1/t1gload.c
+	[FT_CONFIG_OPTION_INCREMENTAL]: Changed the incremental loading
+	interface in a way that makes it simpler and allows glyph metrics to
+	be changed (e.g., by adding a constant, as required by CFF fonts)
+	rather than just overridden.  This was required to make the
+	GhsotScript-to-FreeType bridge work.
 
 2003-01-31  David Turner  <david@freetype.org>
 
-    * docs/CHANGES, docs/VERSION.DLL, docs/TODO: updating documentation for
-    the 2.1.4 release
+	* docs/CHANGES, docs/VERSION.DLL, docs/TODO: Updating documentation
+	for the 2.1.4 release.
 
-    * builds/win32/visualc/freetype.dsp, builds/win32/visualc/index.html:
-    updating the project file for 2.1.4
+	* builds/win32/visualc/freetype.dsp,
+	builds/win32/visualc/index.html: Updating the project file for
+	2.1.4.
 
-    * src/gzip/adler32.c, src/gzip/ftgzip.c, src/gzip/infblock.c,
-    src/gzip/infcodes.c, src/gzip/inflate.c, src/gzip/inftrees.c,
-    src/gzip/infutil.c: removed old-style (K&R)function definitions. This
-    avoids warnings with Visual C++ at its most pedantic mode.
+	* src/gzip/adler32.c, src/gzip/ftgzip.c, src/gzip/infblock.c,
+	src/gzip/infcodes.c, src/gzip/inflate.c, src/gzip/inftrees.c,
+	src/gzip/infutil.c: Removed old-style (K&R)function definitions.
+	This avoids warnings with Visual C++ at its most pedantic mode.
 
-    * src/pfr/pfrsbit.c: removed compiler warnings
+	* src/pfr/pfrsbit.c: Removed compiler warnings.
 
-    * src/cache/ftccmap.c: changed a FT_ERROR into a FT_TRACE1 since the
-    it caused "ftview" and others to dump too much junk when trying to
-    display a waterfall with a font without a Unicode charmap (e.g.
-    SYMBOL.TTF)
+	* src/cache/ftccmap.c: Changed an FT_ERROR into an FT_TRACE1 since
+	it caused "ftview" and others to dump too much junk when trying to
+	display a waterfall with a font without a Unicode charmap (e.g. 
+	SYMBOL.TTF).
 
-    * src/autohint/ahtypes.h, src/autohint/ahhint.c, src/base/ftobjs.c,
-    src/truetype/ttobjs.c: implemented FT_CONFIG_CHESTER_BLUE_SCALE,
-    corresponding to the last patch from David Chester, but with a
-    much simpler (and saner) implementation.
+	* src/autohint/ahtypes.h, src/autohint/ahhint.c, src/base/ftobjs.c,
+	src/truetype/ttobjs.c: Implemented FT_CONFIG_CHESTER_BLUE_SCALE,
+	corresponding to the last patch from David Chester, but with a much
+	simpler (and saner) implementation.
 
-    * src/pshinter/pshalgo3.c: improved the Postscript hinter. Getting rid
-    of stem snapping seems to work well here (though the stems are still
-    slightly moved to increase contrast).
+	* src/pshinter/pshalgo3.c: Improved the Postscript hinter.  Getting
+	rid of stem snapping seems to work well here (though the stems are
+	still slightly moved to increase contrast).
 
-    THIS IMPROVES ANTI-ALIASED RENDERING, BUT MONOCHROME AND LCD MODES
-    STILL SUCK... I need to work this a bit
+	THIS IMPROVES ANTI-ALIASED RENDERING, BUT MONOCHROME AND LCD MODES
+	STILL SUCK.
 
 2003-01-22  David Chester  <davidchester@qmx.net>
 
-    * src/autohint/ahhint.c: small fix to the stem width optimisation
+	* src/autohint/ahhint.c: Small fix to the stem width optimization.
 
 2003-01-22  David Turner  <david@freetype.org>
 
-    * include/freetype/ftbdf.h, include/freetype/internal/bdftypes.h,
-    src/base/ftbdf.c, src/bdf/bdfdrivr.c, src/pcf/pcfdrivr.c,
-    src/pcf/pcfread.h:
+	* include/freetype/ftbdf.h, include/freetype/internal/bdftypes.h,
+	src/base/ftbdf.c, src/bdf/bdfdrivr.c, src/pcf/pcfdrivr.c,
+	src/pcf/pcfread.h: Adding a new API `FT_Get_BDF_Property' to
+	retrieve the BDF properties of a given PCF or BDF font.
 
-      adding a new API, named FT_Get_BDF_Property to retrieve the BDF
-      properties of a given PCF or BDF font
-
-    * src/sfnt/ttload.c (sfnt_dir_check): relaxed the "head" table size
-    verification to accept a few broken fonts who pad the size incorrectly
-    (the table should be padded, but its "size" field shouldn't per se
-     the spec)
+	* src/sfnt/ttload.c (sfnt_dir_check): Relaxed the "head" table size
+	verification to accept a few broken fonts who pad the size
+	incorrectly (the table should be padded, but its "size" field
+	shouldn't according to the specification).
 
 2003-01-18  Werner Lemberg  <wl@gnu.org>
 
@@ -325,9 +349,10 @@
 
 2002-12-23  Anthony Fok  <anthony@thizlinux.com>
 
-	* builds/unix/configure.ac, builds/unix/unix-cc.in,
-	builds/unix/unix-def.in: Small fix to configure sub-system on Unix
-	to allow other programs to correctly link with zlib when needed.
+	* builds/unix/configure.ac, builds/unix/unix-cc.in (LINK_LIBRARY),
+	builds/unix/unix-def.in (SYSTEM_ZLIB): Small fix to configure
+	sub-system on Unix to allow other programs to correctly link with
+	zlib when needed.
 
 2002-12-17  David Turner  <david@freetype.org>
 
