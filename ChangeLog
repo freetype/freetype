@@ -1,19 +1,40 @@
+2002-05-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftnames.c (FT_Get_Sfnt_Name): Don't use FT_STREAM_READ_AT
+	but FT_STREAM_READ.
+	Declare `stream' variable.
+
 2002-05-28  David Turner  <david@freetype.org>
 
-    * include/freetype/internal/tttypes.h, src/sfnt/ttload.c,
-      src/sfnt/sfobjs.c, src/sfnt/sfdriver.c, src/base/ftnames.c:
-        fixing the SFNT name table loader to support various buggy fonts.
-        it now ignores empty name entries, entries with invalid pointer
-        offsets and certain fonts containing tables with broken "storageOffset"
-        fields.
+	Fixing the SFNT name table loader to support various buggy fonts. 
+	It now ignores empty name entries, entries with invalid pointer
+	Offsets and certain fonts containing tables with broken
+	"storageOffset" fields.
 
-        name strings are now loaded on demand, which reduces the memory
-        requirements for a given FT_Face tremendously (for example, the
-        name table of Arial.ttf is about 10Kb and contains 70 names !!)
+	Name strings are now loaded on demand, which reduces the memory
+	requirements for a given FT_Face tremendously (for example, the name
+	table of Arial.ttf is about 10Kb and contains 70 names).
 
-        finally, this is a _quick_ fix. The whole name table loader and
-        interface will be rewritten in a much more cleanly way shortly,
-        once CSEH have been introduced in the sources.
+	This is a temporary fix.  The whole name table loader and interface
+	will be rewritten in a much more cleanly way shortly, once CSEH have
+	been introduced in the sources.
+
+	* include/freetype/internal/tttypes.h (TT_NameEntryRec): Change
+	type of `stringOffset' to FT_ULong.
+	(TT_NameTableRec): Change type of `numNameRecords' and
+	`storageOffset' to FT_UInt.
+	Replace `storage' with `stream'.
+	* src/base/ftnames.c (FT_Get_Sfnt_Name): Load name on demand.
+	* src/sfnt/sfdriver.c (get_sfnt_postscript_name): Ditto.
+	Make code more robust.
+	* src/sfnt/sfobjs.c (TT_NameEntry_ConvertFunc): New typedef.
+	(tt_face_get_name): Use it.
+	Make code more robust.
+	* src/sfnt/ttload.c (TT_Load_Names): Use `static' for arrays.
+	Handle invalid `storageOffset' data better.
+	Set length fields to zero for invalid or ignored data.
+	Remove code within FT_DEBUG_LEVEL_TRACE.
+	(TT_Free_Names): Updated.
 
 2002-05-24  Tim Mooney  <enchanter@users.sourceforge.net>
 
