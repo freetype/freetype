@@ -94,7 +94,7 @@
   FT_CALLBACK_DEF
   FT_Error  ftc_sbit_chunk_node_new( FTC_ChunkSet    cset,
                                      FT_UInt         index,
-                                     FTC_ChunkNode*  anode )
+                                     FTC_ChunkNode  *anode )
   {
     FT_Error       error;
     FT_Memory      memory  = cset->memory;
@@ -358,9 +358,9 @@
                                                  FTC_SBit_Cache  *acache )
   {
     return FTC_Manager_Register_Cache(
-              manager,
-              (FTC_Cache_Class*)&ftc_sbit_cache_class,
-              (FTC_Cache*)acache );
+             manager,
+             (FTC_Cache_Class*)&ftc_sbit_cache_class,
+             (FTC_Cache*)acache );
   }
 
 
@@ -373,14 +373,15 @@
     FTC_ChunkNode  node;
     FT_UInt        cindex;
 
+
     /* argument checks delayed to FTC_Chunk_Cache_Lookup */
-    if (!ansbit)
+    if ( !ansbit )
       return FT_Err_Invalid_Argument;
       
     *ansbit = 0;
     error   = FTC_Chunk_Cache_Lookup( &cache->root, desc, gindex,
                                       &node, &cindex );
-    if (!error)
+    if ( !error )
       *ansbit = (FTC_SBit)node->elements + cindex;
     
     return error;

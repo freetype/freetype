@@ -377,19 +377,19 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Glyph_Cache_Init( FTC_Glyph_Cache  cache )
+  FT_EXPORT_DEF( FT_Error )  FTC_Glyph_Cache_Init( FTC_Glyph_Cache  cache )
   {
     FT_Memory  memory = cache->root.memory;
     FT_Error   error;
 
     FTC_Glyph_Cache_Class*  gcache_clazz;
 
+
     /* set up root node_class to be used by manager */
     cache->root.node_clazz =
       (FTC_CacheNode_Class*)&ftc_glyph_cache_node_class;
 
-    /* setup the "compare" shortcut */
+    /* setup the `compare' shortcut */
     gcache_clazz   = (FTC_Glyph_Cache_Class*)cache->root.clazz;
     cache->compare = gcache_clazz->gset_class->compare;
 
@@ -410,32 +410,32 @@
   }
 
 
-  FT_EXPORT_DEF( void )
-  FTC_Glyph_Cache_Done( FTC_Glyph_Cache  cache )
+  FT_EXPORT_DEF( void )  FTC_Glyph_Cache_Done( FTC_Glyph_Cache  cache )
   {
     /* discard glyph sets */
     FT_Lru_Done( cache->gsets_lru );
   }
 
 
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Glyph_Cache_Lookup( FTC_Glyph_Cache  cache,
-                          FT_Pointer       type,
-                          FT_UInt          gindex,
-                          FTC_GlyphNode   *anode )
+  FT_EXPORT_DEF( FT_Error )  FTC_Glyph_Cache_Lookup( FTC_Glyph_Cache  cache,
+                                                     FT_Pointer       type,
+                                                     FT_UInt          gindex,
+                                                     FTC_GlyphNode   *anode )
   {
     FT_Error       error;
     FTC_GlyphSet   gset;
     FTC_GlyphNode  node;
     FTC_Manager    manager;
 
+
     /* check for valid `desc' delayed to FT_Lru_Lookup() */
 
     if ( !cache || !anode )
       return FT_Err_Invalid_Argument;
 
-    *anode  = 0;
-    gset    = cache->last_gset;
+    *anode = 0;
+    gset   = cache->last_gset;
+
     if ( !gset || !cache->compare( gset, type ) )
     {
       error = FT_Lru_Lookup( cache->gsets_lru,
@@ -464,5 +464,6 @@
   Exit:
     return error;
   }
+
 
 /* END */

@@ -73,7 +73,7 @@
   FT_CALLBACK_DEF
   FT_Error  ftc_glyph_image_node_new( FTC_GlyphSet     gset,
                                       FT_UInt          glyph_index,
-                                      FTC_GlyphImage*  anode )
+                                      FTC_GlyphImage  *anode )
   {
     FT_Memory       memory   = gset->memory;
     FTC_ImageSet    imageset = (FTC_ImageSet)gset;

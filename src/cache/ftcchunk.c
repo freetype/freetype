@@ -173,7 +173,7 @@
     FTC_ChunkNode*       bucket_limit = bucket + cset->num_chunks;
     FT_Memory            memory       = cache->root.memory;
 
-    FTC_ChunkSet_Class*  clazz = cset->clazz;
+    FTC_ChunkSet_Class*  clazz        = cset->clazz;
 
 
     /* for each bucket, free the list of glyph nodes */
@@ -183,7 +183,7 @@
       FT_ListNode    lrunode;
 
 
-      if (node)
+      if ( node )
       {
         lrunode = FTC_CHUNKNODE_TO_LRUNODE( node );
 
@@ -191,15 +191,15 @@
         manager->num_nodes--;
 
         FT_List_Remove( glyphs_lru, lrunode );
-   
+
         clazz->destroy_node( node );
 
         bucket[0] = 0;
       }
-   }
+    }
 
-   if ( clazz->done )
-     clazz->done( cset );
+    if ( clazz->done )
+      clazz->done( cset );
 
     FREE( cset->chunks );
     FREE( cset );
@@ -220,6 +220,7 @@
 
 
     *anode = 0;
+
     if ( glyph_index >= cset->element_max )
       error = FT_Err_Invalid_Argument;
     else
@@ -350,19 +351,19 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache )
+  FT_EXPORT_DEF( FT_Error )  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache )
   {
     FT_Memory  memory = cache->root.memory;
     FT_Error   error;
 
     FTC_Chunk_Cache_Class*  ccache_clazz;
 
+
     /* set up root node_class to be used by manager */
     cache->root.node_clazz =
       (FTC_CacheNode_Class*)&ftc_chunk_cache_node_class;
 
-    /* setup "compare" shortcut */
+    /* setup `compare' shortcut */
     ccache_clazz   = (FTC_Chunk_Cache_Class*)cache->root.clazz;
     cache->compare = ccache_clazz->cset_class->compare;
 
@@ -376,19 +377,18 @@
   }
 
 
-  FT_EXPORT_DEF( void )
-  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache )
+  FT_EXPORT_DEF( void )  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache )
   {
     /* discard glyph sets */
     FT_Lru_Done( cache->csets_lru );
   }
 
-  FT_EXPORT_DEF( FT_Error )
-  FTC_Chunk_Cache_Lookup( FTC_Chunk_Cache  cache,
-                          FT_Pointer       type,
-                          FT_UInt          gindex,
-                          FTC_ChunkNode   *anode,
-                          FT_UInt         *aindex )
+
+  FT_EXPORT_DEF( FT_Error )  FTC_Chunk_Cache_Lookup( FTC_Chunk_Cache  cache,
+                                                     FT_Pointer       type,
+                                                     FT_UInt          gindex,
+                                                     FTC_ChunkNode   *anode,
+                                                     FT_UInt         *aindex )
   {
     FT_Error       error;
     FTC_ChunkSet   cset;
@@ -435,5 +435,6 @@
   Exit:
     return error;
   }
+
 
 /* END */

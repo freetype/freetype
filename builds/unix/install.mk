@@ -19,7 +19,7 @@ install: $(PROJECT_LIBRARY)
                          $(includedir)/freetype2/freetype/config   \
                          $(includedir)/freetype2/freetype/internal \
                          $(includedir)/freetype2/freetype/cache    \
-			 $(bindir)
+                         $(bindir)
 	$(LIBTOOL) --mode=install $(INSTALL) $(PROJECT_LIBRARY) $(libdir)
 	-for P in $(PUBLIC_H) ; do                               \
           $(INSTALL_DATA) $$P $(includedir)/freetype2/freetype ; \
@@ -37,7 +37,7 @@ install: $(PROJECT_LIBRARY)
 
 
 uninstall:
-	-$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/lib$(PROJECT).$A
+	-$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/$(PROJECT_LIBRARY)
 	-$(DELETE) $(includedir)/freetype2/freetype/cache/*
 	-$(DELDIR) $(includedir)/freetype2/freetype/cache
 	-$(DELETE) $(includedir)/freetype2/freetype/config/*
