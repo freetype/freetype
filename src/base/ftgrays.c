@@ -947,8 +947,8 @@
 
   /* a macro comparing two cell pointers.  Returns true if a <= b. */
 #if 1
-#define PACK( a )          ( ( (long)(a)->y << 16 ) | (a)->x )
-#define LESS_THAN( a, b )  ( PACK(a) < PACK(b) )
+#define PACK( a )          ( ( (long)(a)->y << 16 ) + (a)->x )
+#define LESS_THAN( a, b )  ( PACK( a ) < PACK( b ) )
 #else /* 1 */
 #define LESS_THAN( a, b )  ( (a)->y < (b)->y || \
                              ( (a)->y == (b)->y && (a)->x < (b)->x ) )
