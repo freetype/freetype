@@ -160,15 +160,15 @@
   FT_Error  parse_font_bbox( CID_Face     face,
                              CID_Parser*  parser )
   {
-    FT_Short  temp[4];
+    FT_Fixed  temp[4];
     FT_BBox*  bbox = &face->cid.font_bbox;
 
 
-    (void)CID_ToCoordArray( parser, 4, temp );
-    bbox->xMin = temp[0];
-    bbox->yMin = temp[1];
-    bbox->xMax = temp[2];
-    bbox->yMax = temp[3];
+    (void)CID_ToFixedArray( parser, 4, temp, 0 );
+    bbox->xMin = FT_RoundFix( temp[0] );
+    bbox->yMin = FT_RoundFix( temp[1] );
+    bbox->xMax = FT_RoundFix( temp[2] );
+    bbox->yMax = FT_RoundFix( temp[3] );
 
     return T1_Err_Ok;       /* this is a callback function; */
                             /* we must return an error code */
@@ -182,8 +182,9 @@
     FT_Matrix*     matrix;
     FT_Vector*     offset;
     CID_FontDict*  dict;
+    FT_Face        root = (FT_Face)&face->root;
     FT_Fixed       temp[6];
-
+    FT_Fixed       temp_scale;
 
     if ( parser->num_dict >= 0 )
     {
@@ -193,14 +194,21 @@
 
       (void)CID_ToFixedArray( parser, 6, temp, 3 );
 
+      temp_scale = ABS( temp[3] );
+
+      /* Set Units per EM based on FontMatrix values. We set the value to */
+      /* 1000 / temp_scale, because temp_scale was already multiplied by  */
+      /* 1000 (in t1_tofixed, from psobjs.c).                             */
+      root->units_per_EM = FT_DivFix( 0x10000L, FT_DivFix( temp_scale, 1000 ) );
+
       /* we need to scale the values by 1.0/temp[3] */
-      if ( temp[3] != 0x10000L )
+      if ( temp_scale != 0x10000L )
       {
-        temp[0] = FT_DivFix( temp[0], temp[3] );
-        temp[1] = FT_DivFix( temp[1], temp[3] );
-        temp[2] = FT_DivFix( temp[2], temp[3] );
-        temp[4] = FT_DivFix( temp[4], temp[3] );
-        temp[5] = FT_DivFix( temp[5], temp[3] );
+        temp[0] = FT_DivFix( temp[0], temp_scale );
+        temp[1] = FT_DivFix( temp[1], temp_scale );
+        temp[2] = FT_DivFix( temp[2], temp_scale );
+        temp[4] = FT_DivFix( temp[4], temp_scale );
+        temp[5] = FT_DivFix( temp[5], temp_scale );
         temp[3] = 0x10000L;
       }
 
