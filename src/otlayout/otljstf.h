@@ -25,8 +25,9 @@
 OTL_BEGIN_HEADER
 
 
-  /* validate JSTF table                            */
-  /* GSUB and GPOS tables must already be validated */
+  /* validate JSTF table                                         */
+  /* GSUB and GPOS tables must already be validated; if table is */
+  /* missing, set value to 0                                     */
   OTL_LOCAL( void )
   otl_jstf_validate( OTL_Bytes      table,
                      OTL_Bytes      gsub,

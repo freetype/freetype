@@ -40,9 +40,9 @@
 
 
   static void
-  otl_jstf_gsub_mods_validate( OTL_Bytes      table,
-                               OTL_UInt       lookup_count,
-                               OTL_Validator  valid )
+  otl_jstf_gsubgpos_mods_validate( OTL_Bytes      table,
+                                   OTL_UInt       lookup_count,
+                                   OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
     OTL_UInt   num_lookups;
@@ -52,28 +52,12 @@
     num_lookups = OTL_NEXT_USHORT( p );
     OTL_CHECK( num_lookups * 2 );
 
-    for ( ; num_lookups > 0; num_lookups-- )
-      if ( OTL_NEXT_USHORT( p ) >= lookup_count )
-        OTL_INVALID_DATA;
-  }
-
-
-  static void
-  otl_jstf_gpos_mods_validate( OTL_Bytes      table,
-                               OTL_UInt       lookup_count,
-                               OTL_Validator  valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   num_lookups;
-
-
-    OTL_CHECK( 2 );
-    num_lookups = OTL_NEXT_USHORT( p );
-    OTL_CHECK( num_lookups * 2 );
-
-    for ( ; num_lookups > 0; num_lookups-- )
-      if ( OTL_NEXT_USHORT( p ) >= lookup_count )
-        OTL_INVALID_DATA;
+    if ( lookup_count )
+    {
+      for ( ; num_lookups > 0; num_lookups-- )
+        if ( OTL_NEXT_USHORT( p ) >= lookup_count )
+          OTL_INVALID_DATA;
+    }
   }
 
 
@@ -111,20 +95,24 @@
     /* shrinkage GSUB enable/disable */
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_gsub_mods_validate( table + val, gsub_lookup_count, valid );
+      otl_jstf_gsubgpos_mods_validate( table + val, gsub_lookup_count,
+                                       valid );
 
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_gsub_mods_validate( table + val, gsub_lookup_count, valid );
+      otl_jstf_gsubgpos_mods_validate( table + val, gsub_lookup_count,
+                                       valid );
 
     /* shrinkage GPOS enable/disable */
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_gpos_mods_validate( table + val, gpos_lookup_count, valid );
+      otl_jstf_gsubgpos_mods_validate( table + val, gpos_lookup_count,
+                                       valid );
 
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_gpos_mods_validate( table + val, gpos_lookup_count, valid );
+      otl_jstf_gsubgpos_mods_validate( table + val, gpos_lookup_count,
+                                       valid );
 
     /* shrinkage JSTF max */
     val = OTL_NEXT_USHORT( p );
@@ -134,20 +122,24 @@
     /* extension GSUB enable/disable */
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_gsub_mods_validate( table + val, gsub_lookup_count, valid );
+      otl_jstf_gsubgpos_mods_validate( table + val, gsub_lookup_count,
+                                       valid );
 
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_gsub_mods_validate( table + val, gsub_lookup_count, valid );
+      otl_jstf_gsubgpos_mods_validate( table + val, gsub_lookup_count,
+                                       valid );
 
     /* extension GPOS enable/disable */
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_gpos_mods_validate( table + val, gpos_lookup_count, valid );
+      otl_jstf_gsubgpos_mods_validate( table + val, gpos_lookup_count,
+                                       valid );
 
     val = OTL_NEXT_USHORT( p );
     if ( val )
-      otl_jstf_gpos_mods_validate( table + val, gpos_lookup_count, valid );
+      otl_jstf_gsubgpos_mods_validate( table + val, gpos_lookup_count,
+                                       valid );
 
     /* extension JSTF max */
     val = OTL_NEXT_USHORT( p );
@@ -231,8 +223,15 @@
     num_scripts = OTL_NEXT_USHORT( p );
     OTL_CHECK( num_scripts * 6 );
 
-    gsub_lookup_count = otl_gsubgpos_get_lookup_count( gsub );
-    gpos_lookup_count = otl_gsubgpos_get_lookup_count( gpos );
+    if ( gsub )
+      gsub_lookup_count = otl_gsubgpos_get_lookup_count( gsub );
+    else
+      gsub_lookup_count = 0;
+
+    if ( gpos )
+      gpos_lookup_count = otl_gsubgpos_get_lookup_count( gpos );
+    else
+      gpos_lookup_count = 0;
 
     /* scan script records */
     for ( ; num_scripts > 0; num_scripts-- )

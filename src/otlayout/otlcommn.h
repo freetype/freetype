@@ -41,11 +41,13 @@ OTL_BEGIN_HEADER
   OTL_LOCAL( OTL_UInt )
   otl_coverage_get_count( OTL_Bytes  table );
 
+#if 0
   /* Return the coverage index corresponding to a glyph glyph index. */
   /* Return -1 if the glyph isn't covered.                           */
   OTL_LOCAL( OTL_Long )
   otl_coverage_get_index( OTL_Bytes  table,
                           OTL_UInt   glyph_index );
+#endif
 
 
   /*************************************************************************/

@@ -1,40 +1,59 @@
+/***************************************************************************/
+/*                                                                         */
+/*  otlgsub.c                                                              */
+/*                                                                         */
+/*    OpenType layout support, GSUB table (body).                          */
+/*                                                                         */
+/*  Copyright 2002, 2004 by                                                */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "otlgsub.h"
 #include "otlcommn.h"
 #include "otlparse.h"
 
- /* forward declaration */
+
+  /* forward declaration */
   static OTL_ValidateFunc  otl_gsub_validate_funcs[];
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GSUB LOOKUP TYPE 1                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                  GSUB LOOKUP TYPE 1                           *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
- /*
-  *  1: Single Substitution - Table format(s)
-  *
-  *  This table is used to substiture individual glyph indices
-  *  with another one. There are only two sub-formats:
-  *
-  *   Name         Offset    Size       Description
-  *   ------------------------------------------
-  *   format       0         2          sub-table format (1)
-  *   offset       2         2          offset to coverage table
-  *   delta        4         2          16-bit delta to apply on all
-  *                                     covered glyph indices
-  *
-  *   Name         Offset    Size       Description
-  *   ------------------------------------------
-  *   format       0         2          sub-table format (2)
-  *   offset       2         2          offset to coverage table
-  *   count        4         2          coverage table count
-  *   substs[]     6         2*count    substituted glyph indices,
-  *
-  */
+  /*
+   * 1: Single Substitution - Table format(s)
+   *
+   * This table is used to substitute individual glyph indices
+   * with another one.  There are only two sub-formats:
+   *
+   *   Name         Offset    Size       Description
+   *   --------------------------------------------------------------
+   *   format       0         2          sub-table format (1)
+   *   offset       2         2          offset to coverage table
+   *   delta        4         2          16-bit delta to apply on all
+   *                                     covered glyph indices
+   *
+   *   Name         Offset    Size       Description
+   *   --------------------------------------------------------------
+   *   format       0         2          sub-table format (2)
+   *   offset       2         2          offset to coverage table
+   *   count        4         2          coverage table count
+   *   substs[]     6         2*count    substituted glyph indices,
+   *
+   */
 
   static void
   otl_gsub_lookup1_validate( OTL_Bytes      table,
@@ -43,45 +62,47 @@
     OTL_Bytes  p = table;
     OTL_UInt   format;
 
+
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
+
     switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  coverage;
+    case 1:
+      OTL_CHECK( 4 );
 
-          OTL_CHECK( 4 );
-          coverage = OTL_NEXT_USHORT( p );
+      otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
 
-          otl_coverage_validate( table + coverage, valid );
-        }
-        break;
+      /* skip delta glyph ID */
 
-      case 2:
-        {
-          OTL_UInt  coverage, count;
+      break;
 
-          OTL_CHECK( 4 );
-          coverage = OTL_NEXT_USHORT( p );
-          count    = OTL_NEXT_USHORT( p );
+    case 2:
+      {
+        OTL_UInt  coverage, num_glyphs;
 
-          otl_coverage_validate( table + coverage, valid );
 
-          OTL_CHECK( 2*count );
+        OTL_CHECK( 4 );
+        coverage   = OTL_NEXT_USHORT( p );
+        num_glyphs = OTL_NEXT_USHORT( p );
 
-          /* NB: we don't check that there are at most 'count'   */
-          /*     elements in the coverage table. This is delayed */
-          /*     to the lookup function...                       */
-        }
-        break;
+        otl_coverage_validate( table + coverage, valid );
 
-      default:
-        OTL_INVALID_DATA;
+        OTL_CHECK( 2 * num_glyphs );
+
+        /* We don't check that there are at most `num_glyphs' */
+        /* elements in the coverage table.  This is delayed   */
+        /* to the lookup function.                            */
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
+#if 0
   static OTL_Bool
   otl_gsub_lookup1_apply( OTL_Bytes   table,
                           OTL_Parser  parser )
@@ -91,6 +112,7 @@
     OTL_UInt   format, gindex, property;
     OTL_Long   index;
     OTL_Bool   subst = 0;
+
 
     if ( parser->context_len != 0xFFFFU && parser->context_len < 1 )
       goto Exit;
@@ -142,51 +164,55 @@
   Exit:
     return subst;
   }
+#endif
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GSUB LOOKUP TYPE 2                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                  GSUB LOOKUP TYPE 2                           *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
- /*
-  *  2: Multiple Substitution - Table format(s)
-  *
-  *  Replaces a single glyph with one or more glyphs.
-  *
-  *   Name         Offset    Size       Description
-  *   -----------------------------------------------------------
-  *   format       0         2          sub-table format (1)
-  *   offset       2         2          offset to coverage table
-  *   count        4         2          coverage table count
-  *   sequencess[] 6         2*count    offsets to sequence items
-  *
-  *   each sequence item has the following format:
-  *
-  *   Name         Offset    Size       Description
-  *   -----------------------------------------------------------
-  *   count        0         2          number of replacement glyphs
-  *   gindices[]   2         2*count    string of glyph indices
-  */
+  /*
+   * 2: Multiple Substitution - Table format(s)
+   *
+   * Replaces a single glyph with one or more glyphs.
+   *
+   *   Name         Offset    Size       Description
+   *   --------------------------------------------------------------
+   *   format       0         2          sub-table format (1)
+   *   offset       2         2          offset to coverage table
+   *   count        4         2          coverage table count
+   *   sequencess[] 6         2*count    offsets to sequence items
+   *
+   * each sequence item has the following format:
+   *
+   *   Name         Offset    Size       Description
+   *   --------------------------------------------------------------
+   *   count        0         2          number of replacement glyphs
+   *   gindices[]   2         2*count    string of glyph indices
+   *
+   */
 
   static void
-  otl_seq_validate( OTL_Bytes      table,
-                    OTL_Validator  valid )
+  otl_sequence_validate( OTL_Bytes      table,
+                         OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count;
+    OTL_UInt   num_glyphs;
+
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    num_glyphs = OTL_NEXT_USHORT( p );
 
-    /* XXX: according to the spec, 'count' should be > 0     */
-    /*      we can deal with these cases pretty well however */
+    /* XXX: according to the spec, `num_glyphs' should be > 0; */
+    /*      we can deal with these cases pretty well, however  */
 
-    OTL_CHECK( 2*count );
-    /* check glyph indices */
+    OTL_CHECK( 2 * num_glyphs );
+
+    /* XXX: check glyph indices */
   }
 
 
@@ -195,34 +221,39 @@
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   format, coverage;
+    OTL_UInt   format;
+
 
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  coverage, seq_count;
+    case 1:
+      {
+        OTL_UInt  coverage, num_sequences;
 
-          OTL_CHECK( 4 );
-          coverage  = OTL_NEXT_USHORT( p );
-          seq_count = OTL_NEXT_USHORT( p );
 
-          otl_coverage_validate( table + coverage, valid );
+        OTL_CHECK( 4 );
+        coverage      = OTL_NEXT_USHORT( p );
+        num_sequences = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( seq_count*2 );
-          for ( ; seq_count > 0; seq_count-- )
-            otl_seq_validate( table + OTL_NEXT_USHORT( p ), valid );
-        }
-        break;
+        otl_coverage_validate( table + coverage, valid );
 
-      default:
-        OTL_INVALID_DATA;
+        OTL_CHECK( num_sequences * 2 );
+
+        /* scan sequence records */
+        for ( ; num_sequences > 0; num_sequences-- )
+          otl_sequence_validate( table + OTL_NEXT_USHORT( p ), valid );
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
+#if 0
   static OTL_Bool
   otl_gsub_lookup2_apply( OTL_Bytes    table,
                           OTL_Parser   parser )
@@ -232,6 +263,7 @@
     OTL_UInt   format, gindex, property, context_len, seq_count, count;
     OTL_Long   index;
     OTL_Bool   subst = 0;
+
 
     if ( parser->context_len != 0xFFFFU && parser->context_len < 1 )
       goto Exit;
@@ -261,37 +293,39 @@
    Exit:
     return subst;
   }
+#endif
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GSUB LOOKUP TYPE 3                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                    GSUB LOOKUP TYPE 3                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
- /*
-  *  3: Alternate Substitution - Table format(s)
-  *
-  *  Replaces a single glyph by another one taken liberally
-  *  in a list of alternatives
-  *
-  *   Name         Offset    Size       Description
-  *   -----------------------------------------------------------
-  *   format       0         2          sub-table format (1)
-  *   offset       2         2          offset to coverage table
-  *   count        4         2          coverage table count
-  *   alternates[] 6         2*count    offsets to alternate items
-  *
-  *   each alternate item has the following format:
-  *
-  *   Name         Offset    Size       Description
-  *   -----------------------------------------------------------
-  *   count        0         2          number of replacement glyphs
-  *   gindices[]   2         2*count    string of glyph indices, each one
-  *                                     is a valid alternative
-  */
+  /*
+   * 3: Alternate Substitution - Table format(s)
+   *
+   * Replaces a single glyph by another one taken liberally
+   * in a list of alternatives.
+   *
+   *   Name         Offset    Size       Description
+   *   ---------------------------------------------------------------
+   *   format       0         2          sub-table format (1)
+   *   offset       2         2          offset to coverage table
+   *   count        4         2          coverage table count
+   *   alternates[] 6         2*count    offsets to alternate items
+   *
+   * each alternate item has the following format:
+   *
+   *   Name         Offset    Size       Description
+   *   ---------------------------------------------------------------
+   *   count        0         2          number of replacement glyphs
+   *   gindices[]   2         2*count    string of glyph indices, each
+   *                                     one is a valid alternative
+   *
+   */
 
   static void
   otl_alternate_set_validate( OTL_Bytes      table,
@@ -300,10 +334,12 @@
     OTL_Bytes  p = table;
     OTL_UInt   count;
 
+
     OTL_CHECK( 2 );
     count = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2*count );
+    OTL_CHECK( 2 * count );
+
     /* XXX: check glyph indices */
   }
 
@@ -313,34 +349,39 @@
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   format, coverage;
+    OTL_UInt   format;
+
 
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  coverage, count;
+    case 1:
+      {
+        OTL_UInt  coverage, num_alternate_sets;
 
-          OTL_CHECK( 4 );
-          coverage = OTL_NEXT_USHORT( p );
-          count    = OTL_NEXT_USHORT( p );
 
-          otl_coverage_validate( table + coverage, valid );
+        OTL_CHECK( 4 );
+        coverage           = OTL_NEXT_USHORT( p );
+        num_alternate_sets = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( 2*count );
-          for ( ; count > 0; count-- )
-            otl_alternate_set_validate( table + OTL_NEXT_USHORT( p ), valid );
-        }
-        break;
+        otl_coverage_validate( table + coverage, valid );
 
-      default:
-        OTL_INVALID_DATA;
+        OTL_CHECK( 2 * num_alternate_sets );
+
+        /* scan alternate set records */
+        for ( ; num_alternate_sets > 0; num_alternate_sets-- )
+          otl_alternate_set_validate( table + OTL_NEXT_USHORT( p ), valid );
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
+#if 0
   static OTL_Bool
   otl_gsub_lookup3_apply( OTL_Bytes    table,
                           OTL_Parser   parser )
@@ -352,6 +393,7 @@
     OTL_Bool   subst = 0;
 
     OTL_GSUB_Alternate  alternate = parser->alternate;
+
 
     if ( parser->context_len != 0xFFFFU && parser->context_len < 1 )
       goto Exit;
@@ -387,30 +429,34 @@
    Exit:
     return subst;
   }
+#endif
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GSUB LOOKUP TYPE 4                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                    GSUB LOOKUP TYPE 4                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_ligature_validate( OTL_Bytes      table,
                          OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   glyph_id, count;
+    OTL_UInt   glyph_id, num_components;
+
 
     OTL_CHECK( 4 );
-    glyph_id = OTL_NEXT_USHORT( p );
-    count    = OTL_NEXT_USHORT( p );
+    glyph_id       = OTL_NEXT_USHORT( p );
+    num_components = OTL_NEXT_USHORT( p );
 
-    if ( count == 0 )
+    if ( num_components == 0 )
       OTL_INVALID_DATA;
 
-    OTL_CHECK( 2*(count-1) );
+    OTL_CHECK( 2 * ( num_components - 1 ) );
+
     /* XXX: check glyph indices */
   }
 
@@ -420,13 +466,16 @@
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count;
+    OTL_UInt   num_ligatures;
+
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    num_ligatures = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2*count );
-    for ( ; count > 0; count-- )
+    OTL_CHECK( 2 * num_ligatures );
+
+    /* scan ligature records */
+    for ( ; num_ligatures > 0; num_ligatures-- )
       otl_ligature_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
@@ -436,58 +485,62 @@
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   format, coverage;
+    OTL_UInt   format;
+
 
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  coverage, count;
+    case 1:
+      {
+        OTL_UInt  coverage, num_ligsets;
 
-          OTL_CHECK( 4 );
-          coverage = OTL_NEXT_USHORT( p );
-          count    = OTL_NEXT_USHORT( p );
 
-          otl_coverage_validate( table + coverage, valid );
+        OTL_CHECK( 4 );
+        coverage    = OTL_NEXT_USHORT( p );
+        num_ligsets = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( 2*count );
-          for ( ; count > 0; count-- )
-            otl_ligature_set_validate( table + OTL_NEXT_USHORT( p ), valid );
-        }
-        break;
+        otl_coverage_validate( table + coverage, valid );
 
-      default:
-        OTL_INVALID_DATA;
+        OTL_CHECK( 2 * num_ligsets );
+
+        /* scan ligature set records */
+        for ( ; num_ligsets > 0; num_ligsets-- )
+          otl_ligature_set_validate( table + OTL_NEXT_USHORT( p ), valid );
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GSUB LOOKUP TYPE 5                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
-
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                  GSUB LOOKUP TYPE 5                           *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_sub_rule_validate( OTL_Bytes      table,
                          OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   glyph_count, subst_count;
+    OTL_UInt   num_glyphs, num_subst;
+
 
     OTL_CHECK( 4 );
-    glyph_count = OTL_NEXT_USHORT( p );
-    subst_count = OTL_NEXT_USHORT( p );
+    num_glyphs = OTL_NEXT_USHORT( p );
+    num_subst  = OTL_NEXT_USHORT( p );
 
-    if ( glyph_count == 0 )
+    if ( num_glyphs == 0 )
       OTL_INVALID_DATA;
 
-    OTL_CHECK( (glyph_count-1)*2 + subst_count*4 );
+    OTL_CHECK( ( num_glyphs - 1 ) * 2 + num_subst * 4 );
 
     /* XXX: check glyph indices and subst lookups */
   }
@@ -498,13 +551,16 @@
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count;
+    OTL_UInt   num_subrules;
+
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    num_subrules = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2*count );
-    for ( ; count > 0; count-- )
+    OTL_CHECK( 2 * num_subrules );
+
+    /* scan sub rule records */
+    for ( ; num_subrules > 0; num_subrules-- )
       otl_sub_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
@@ -514,18 +570,22 @@
                                OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   glyph_count, subst_count;
+    OTL_UInt   num_glyphs, num_subst;
+
 
     OTL_CHECK( 4 );
-    glyph_count = OTL_NEXT_USHORT( p );
-    subst_count = OTL_NEXT_USHORT( p );
+    num_glyphs = OTL_NEXT_USHORT( p );
+    num_subst  = OTL_NEXT_USHORT( p );
 
-    if ( glyph_count == 0 )
+    if ( num_glyphs == 0 )
       OTL_INVALID_DATA;
 
-    OTL_CHECK( (glyph_count-1)*2 + subst_count*4 );
+    OTL_CHECK( ( num_glyphs - 1 ) * 2 + num_subst * 4 );
 
-    /* XXX: check glyph indices and subst lookups */
+    /* XXX: check subst lookups */
+
+    /* no need to check glyph indices used as input for this context    */
+    /* rule since even invalid glyph indices return a meaningful result */
   }
 
 
@@ -534,13 +594,16 @@
                                    OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count;
+    OTL_UInt   num_subrules;
+
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    num_subrules = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2*count );
-    for ( ; count > 0; count-- )
+    OTL_CHECK( 2 * num_subrules );
+
+    /* scan subrule records */
+    for ( ; num_subrules > 0; num_subrules-- )
       otl_sub_class_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
@@ -550,166 +613,139 @@
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   format, coverage;
+    OTL_UInt   format;
+
 
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  coverage, count;
+    case 1:
+      {
+        OTL_UInt  coverage, num_subrulesets;
 
-          OTL_CHECK( 4 );
-          coverage = OTL_NEXT_USHORT( p );
-          count    = OTL_NEXT_USHORT( p );
 
-          otl_coverage_validate( table + coverage, valid );
+        OTL_CHECK( 4 );
+        coverage        = OTL_NEXT_USHORT( p );
+        num_subrulesets = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( 2*count );
-          for ( ; count > 0; count-- )
-            otl_sub_rule_set_validate( table + coverage, valid );
-        }
-        break;
+        otl_coverage_validate( table + coverage, valid );
 
-      case 2:
-        {
-          OTL_UInt  coverage, class_def, count;
+        OTL_CHECK( 2 * num_subrulesets );
 
-          OTL_CHECK( 6 );
-          coverage  = OTL_NEXT_USHORT( p );
-          class_def = OTL_NEXT_USHORT( p );
-          count     = OTL_NEXT_USHORT( p );
+        /* scan subrule set records */
+        for ( ; num_subrulesets > 0; num_subrulesets-- )
+          otl_sub_rule_set_validate( table + OTL_NEXT_USHORT( p ), valid );
+      }
+      break;
 
-          otl_coverage_validate        ( table + coverage, valid );
-          otl_class_definition_validate( table + class_def, valid );
+    case 2:
+      {
+        OTL_UInt  coverage, class_def, num_subclass_sets;
 
-          OTL_CHECK( 2*count );
-          for ( ; count > 0; count-- )
-            otl_sub_class_rule_set_validate( table + coverage, valid );
-        }
-        break;
 
-      case 3:
-        {
-          OTL_UInt  glyph_count, subst_count, count;
+        OTL_CHECK( 6 );
+        coverage          = OTL_NEXT_USHORT( p );
+        class_def         = OTL_NEXT_USHORT( p );
+        num_subclass_sets = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( 4 );
-          glyph_count = OTL_NEXT_USHORT( p );
-          subst_count = OTL_NEXT_USHORT( p );
+        otl_coverage_validate( table + coverage, valid );
+        otl_class_definition_validate( table + class_def, valid );
 
-          OTL_CHECK( 2*glyph_count + 4*subst_count );
-          for ( count = glyph_count; count > 0; count-- )
-            otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
-        }
-        break;
+        OTL_CHECK( 2 * num_subclass_sets );
 
-      default:
-        OTL_INVALID_DATA;
+        /* scan subclass set records */
+        for ( ; num_subclass_sets > 0; num_subclass_sets-- )
+          otl_sub_class_rule_set_validate( table + OTL_NEXT_USHORT( p ),
+                                           valid );
+      }
+      break;
+
+    case 3:
+      {
+        OTL_UInt  num_glyphs, num_subst;
+
+
+        OTL_CHECK( 4 );
+        num_glyphs = OTL_NEXT_USHORT( p );
+        num_subst  = OTL_NEXT_USHORT( p );
+
+        OTL_CHECK( 2 * num_glyphs + 4 * num_subst );
+
+        for ( ; num_glyphs > 0; num_glyphs-- )
+          otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+
+        /* XXX: check subst lookups */
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GSUB LOOKUP TYPE 6                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                    GSUB LOOKUP TYPE 6                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
-
+  /* used for both format 1 and 2 */
   static void
   otl_chain_sub_rule_validate( OTL_Bytes      table,
                                OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   back_count, input_count, ahead_count, subst_count, count;
+    OTL_UInt   num_backtrack_glyphs, num_input_glyphs, num_lookahead_glyphs;
+    OTL_UInt   num_subst;
+
 
     OTL_CHECK( 2 );
-    back_count = OTL_NEXT_USHORT( p );
+    num_backtrack_glyphs = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2*back_count+2 );
-    p += 2*back_count;
+    OTL_CHECK( 2 * num_backtrack_glyphs + 2 );
+    p += 2 * num_backtrack_glyphs;
 
-    input_count = OTL_NEXT_USHORT( p );
-    if ( input_count == 0 )
+    num_input_glyphs = OTL_NEXT_USHORT( p );
+    if ( num_input_glyphs == 0 )
       OTL_INVALID_DATA;
 
-    OTL_CHECK( 2*input_count );
-    p += 2*(input_count-1);
+    OTL_CHECK( 2 * num_input_glyphs );
+    p += 2 * ( num_input_glyphs - 1 );
 
-    ahead_count = OTL_NEXT_USHORT( p );
-    OTL_CHECK( 2*ahead_count + 2 );
-    p += 2*ahead_count;
+    num_lookahead_glyphs = OTL_NEXT_USHORT( p );
+    OTL_CHECK( 2 * num_lookahead_glyphs + 2 );
+    p += 2 * num_lookahead_glyphs;
 
-    count = OTL_NEXT_USHORT( p );
-    OTL_CHECK( 4*count );
+    num_subst = OTL_NEXT_USHORT( p );
+    OTL_CHECK( 4 * num_subst );
 
-    /* XXX: check glyph indices and subst lookups */
+    /* XXX: check subst lookups */
+
+    /* no need to check glyph indices used as input for this context    */
+    /* rule since even invalid glyph indices return a meaningful result */
   }
 
 
+  /* used for both format 1 and 2 */
   static void
   otl_chain_sub_rule_set_validate( OTL_Bytes      table,
                                    OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   count;
+    OTL_UInt   num_chain_subrules;
+
 
     OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
+    num_chain_subrules = OTL_NEXT_USHORT( p );
 
-    OTL_CHECK( 2*count );
-    for ( ; count > 0; count-- )
-      otl_chain_sub_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
-  }
+    OTL_CHECK( 2 * num_chain_subrules );
 
-
-  static void
-  otl_chain_sub_class_rule_validate( OTL_Bytes      table,
-                                     OTL_Validator  valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   back_count, input_count, ahead_count, subst_count, count;
-
-    OTL_CHECK( 2 );
-    back_count = OTL_NEXT_USHORT( p );
-
-    OTL_CHECK( 2*back_count+2 );
-    p += 2*back_count;
-
-    input_count = OTL_NEXT_USHORT( p );
-    if ( input_count == 0 )
-      OTL_INVALID_DATA;
-
-    OTL_CHECK( 2*input_count );
-    p += 2*(input_count-1);
-
-    ahead_count = OTL_NEXT_USHORT( p );
-    OTL_CHECK( 2*ahead_count + 2 );
-    p += 2*ahead_count;
-
-    count = OTL_NEXT_USHORT( p );
-    OTL_CHECK( 4*count );
-
-    /* XXX: check class indices and subst lookups */
-  }
-
-
-
-  static void
-  otl_chain_sub_class_set_validate( OTL_Bytes      table,
-                                    OTL_Validator  valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   count;
-
-    OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
-
-    OTL_CHECK( 2*count );
-    for ( ; count > 0; count-- )
+    /* scan chain subrule records */
+    for ( ; num_chain_subrules > 0; num_chain_subrules-- )
       otl_chain_sub_rule_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
@@ -719,147 +755,219 @@
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   format, coverage;
+    OTL_UInt   format;
+
 
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt  coverage, count;
+    case 1:
+      {
+        OTL_UInt  coverage, num_chain_subrulesets;
 
-          OTL_CHECK( 4 );
-          coverage = OTL_NEXT_USHORT( p );
-          count    = OTL_NEXT_USHORT( p );
 
-          otl_coverage_validate( table + coverage, valid );
+        OTL_CHECK( 4 );
+        coverage              = OTL_NEXT_USHORT( p );
+        num_chain_subrulesets = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( 2*count );
-          for ( ; count > 0; count-- )
-            otl_chain_sub_rule_set_validate( table + coverage, valid );
-        }
-        break;
+        otl_coverage_validate( table + coverage, valid );
 
-      case 2:
-        {
-          OTL_UInt  coverage, back_class, input_class, ahead_class, count;
+        OTL_CHECK( 2 * num_chain_subrulesets );
 
-          OTL_CHECK( 10 );
-          coverage    = OTL_NEXT_USHORT( p );
-          back_class  = OTL_NEXT_USHORT( p );
-          input_class = OTL_NEXT_USHORT( p );
-          ahead_class = OTL_NEXT_USHORT( p );
-          count       = OTL_NEXT_USHORT( p );
+        /* scan chain subrule set records */
+        for ( ; num_chain_subrulesets > 0; num_chain_subrulesets-- )
+          otl_chain_sub_rule_set_validate( table + OTL_NEXT_USHORT( p ),
+                                           valid );
+      }
+      break;
 
-          otl_coverage_validate( table + coverage, valid );
+    case 2:
+      {
+        OTL_UInt  coverage, back_class, input_class, ahead_class;
+        OTL_UInt  num_chain_subclass_sets;
 
-          otl_class_definition_validate( table + back_class,  valid );
-          otl_class_definition_validate( table + input_class, valid );
-          otl_class_definition_validate( table + ahead_class, valid );
 
-          OTL_CHECK( 2*count );
-          for ( ; count > 0; count-- )
-            otl_chain_sub_class_set_validate( table + OTL_NEXT_USHORT( p ),
-                                              valid );
-        }
-        break;
+        OTL_CHECK( 10 );
+        coverage                = OTL_NEXT_USHORT( p );
+        back_class              = OTL_NEXT_USHORT( p );
+        input_class             = OTL_NEXT_USHORT( p );
+        ahead_class             = OTL_NEXT_USHORT( p );
+        num_chain_subclass_sets = OTL_NEXT_USHORT( p );
 
-      case 3:
-        {
-          OTL_UInt  back_count, input_count, ahead_count, subst_count, count;
+        otl_coverage_validate( table + coverage, valid );
 
-          OTL_CHECK( 2 );
-          back_count = OTL_NEXT_USHORT( p );
+        otl_class_definition_validate( table + back_class,  valid );
+        otl_class_definition_validate( table + input_class, valid );
+        otl_class_definition_validate( table + ahead_class, valid );
 
-          OTL_CHECK( 2*back_count+2 );
-          for ( count = back_count; count > 0; count-- )
-            otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+        OTL_CHECK( 2 * num_chain_subclass_sets );
 
-          input_count = OTL_NEXT_USHORT( p );
+        /* scan chain subclass set records */
+        for ( ; num_chain_subclass_sets > 0; num_chain_subclass_sets-- )
+          otl_chain_sub_rule_set_validate( table + OTL_NEXT_USHORT( p ),
+                                           valid );
+      }
+      break;
 
-          OTL_CHECK( 2*input_count+2 );
-          for ( count = input_count; count > 0; count-- )
-            otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+    case 3:
+      {
+        OTL_UInt  num_backtrack_glyphs, num_input_glyphs;
+        OTL_UInt  num_lookahead_glyphs, num_subst;
 
-          ahead_count = OTL_NEXT_USHORT( p );
 
-          OTL_CHECK( 2*ahead_count+2 );
-          for ( count = ahead_count; count > 0; count-- )
-            otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+        OTL_CHECK( 2 );
 
-          subst_count = OTL_NEXT_USHORT( p );
-          OTL_CHECK( subst_count*4 );
-        }
-        break;
+        num_backtrack_glyphs = OTL_NEXT_USHORT( p );
+        OTL_CHECK( 2 * num_backtrack_glyphs + 2 );
 
-      default:
-        OTL_INVALID_DATA;
+        for ( ; num_backtrack_glyphs > 0; num_backtrack_glyphs-- )
+          otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+
+        num_input_glyphs = OTL_NEXT_USHORT( p );
+        OTL_CHECK( 2 * num_input_glyphs + 2 );
+
+        for ( ; num_input_glyphs > 0; num_input_glyphs-- )
+          otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+
+        num_lookahead_glyphs = OTL_NEXT_USHORT( p );
+        OTL_CHECK( 2 * num_lookahead_glyphs + 2 );
+
+        for ( ; num_lookahead_glyphs > 0; num_lookahead_glyphs-- )
+          otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+
+        num_subst = OTL_NEXT_USHORT( p );
+        OTL_CHECK( num_subst * 4 );
+
+        /* XXX: check subst lookups */
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                 GSUB LOOKUP TYPE 7                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                    GSUB LOOKUP TYPE 7                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   static void
   otl_gsub_lookup7_validate( OTL_Bytes      table,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   format, coverage;
+    OTL_UInt   format;
+
 
     OTL_CHECK( 2 );
     format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
-      case 1:
-        {
-          OTL_UInt          lookup_type, lookup_offset;
-          OTL_ValidateFunc  validate;
+    case 1:
+      {
+        OTL_UInt          lookup_type, lookup_offset;
+        OTL_ValidateFunc  validate;
 
-          OTL_CHECK( 6 );
-          lookup_type   = OTL_NEXT_USHORT( p );
-          lookup_offset = OTL_NEXT_ULONG( p );
 
-          if ( lookup_type == 0 || lookup_type >= 7 )
-            OTL_INVALID_DATA;
+        OTL_CHECK( 6 );
+        lookup_type   = OTL_NEXT_USHORT( p );
+        lookup_offset = OTL_NEXT_ULONG( p );
 
-          validate = otl_gsub_validate_funcs[ lookup_type-1 ];
-          validate( table + lookup_offset, valid );
-        }
-        break;
+        if ( lookup_type == 0 || lookup_type == 7 || lookup_type > 8 )
+          OTL_INVALID_DATA;
 
-      default:
-        OTL_INVALID_DATA;
+        validate = otl_gsub_validate_funcs[lookup_type - 1];
+        validate( table + lookup_offset, valid );
+      }
+      break;
+
+    default:
+      OTL_INVALID_DATA;
     }
   }
 
 
-  static OTL_ValidateFunc  otl_gsub_validate_funcs[ 7 ] =
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                    GSUB LOOKUP TYPE 8                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  static void
+  otl_gsub_lookup8_validate( OTL_Bytes      table,
+                             OTL_Validator  valid )
+  {
+    OTL_Bytes  p = table, coverage;
+    OTL_UInt   format;
+    OTL_UInt   num_backtrack_glyphs, num_lookahead_glyphs, num_glyphs;
+
+
+    OTL_CHECK( 2 );
+    format = OTL_NEXT_USHORT( p );
+    switch ( format )
+    {
+    case 1:
+      OTL_CHECK( 4 );
+
+      coverage = table + OTL_NEXT_USHORT( p );
+      num_backtrack_glyphs = OTL_NEXT_USHORT( p );
+
+      otl_coverage_validate( coverage, valid );
+
+      OTL_CHECK( 2 * num_backtrack_glyphs + 2 );
+
+      for ( ; num_backtrack_glyphs > 0; num_backtrack_glyphs-- )
+        otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+
+      num_lookahead_glyphs = OTL_NEXT_USHORT( p );
+      OTL_CHECK( 2 * num_lookahead_glyphs + 2 );
+
+      for ( ; num_lookahead_glyphs > 0; num_lookahead_glyphs-- )
+        otl_coverage_validate( table + OTL_NEXT_USHORT( p ), valid );
+
+      num_glyphs = OTL_NEXT_USHORT( p );
+      if ( num_glyphs != otl_coverage_get_count( coverage ) )
+        OTL_INVALID_DATA;
+
+      OTL_CHECK( 2 * num_glyphs );
+
+      /* XXX: check glyph indices */
+      break;
+
+    default:
+      OTL_INVALID_DATA;
+    }
+  }
+
+
+  static OTL_ValidateFunc  otl_gsub_validate_funcs[8] =
   {
     otl_gsub_lookup1_validate,
     otl_gsub_lookup2_validate,
     otl_gsub_lookup3_validate,
     otl_gsub_lookup4_validate,
     otl_gsub_lookup5_validate,
-    otl_gsub_lookup6_validate
+    otl_gsub_lookup6_validate,
+    otl_gsub_lookup7_validate,
+    otl_gsub_lookup8_validate
   };
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                         GSUB TABLE                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
-
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                          GSUB TABLE                           *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   OTL_LOCALDEF( void )
   otl_gsub_validate( OTL_Bytes      table,
@@ -867,6 +975,7 @@
   {
     OTL_Bytes  p = table;
     OTL_UInt   scripts, features, lookups;
+
 
     OTL_CHECK( 10 );
 
@@ -877,7 +986,7 @@
     features = OTL_NEXT_USHORT( p );
     lookups  = OTL_NEXT_USHORT( p );
 
-    otl_lookup_list_validate( table + lookups, 7, otl_gsub_validate_funcs,
+    otl_lookup_list_validate( table + lookups, 8, otl_gsub_validate_funcs,
                               valid );
     otl_feature_list_validate( table + features, table + lookups, valid );
     otl_script_list_validate( table + scripts, table + features, valid );
