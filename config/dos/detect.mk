@@ -13,11 +13,6 @@
 # fully.
 
 
-# This configuration file to be used depends on the value of the CC
-# environment variable which is set below according to the compiler name
-# given as a parameter to make.
-
-
 # We test for the COMSPEC environment variable, then run the `ver'
 # command-line program to see if its output contains the word `Dos'.
 #

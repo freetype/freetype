@@ -46,6 +46,7 @@ LINK_ROOT         = lcclnk -o $(subst /,\\,$@) $(subst /,\\,$<)
 LINK              = $(LINK_ROOT) $(subst /,\\,$(FTLIB))
 COMMON_LINK       = $(LINK_ROOT) $(subst /,\\,$(COMMON_OBJ)) $(subst /,\\,$(FTLIB))
 GRAPH_LINK        = $(LINK_ROOT) $(subst /,\\,$(COMMON_OBJ)) $(subst /,\\,$(GRAPH_LIB)) $(subst /,\\,$(FTLIB))
+GRAPH_LINK2       = $(GRAPH_LINK) $(subst /,\\,$(EXTRA_GRAPH_OBJS))
 endif
 endif
 

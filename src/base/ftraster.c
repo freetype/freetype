@@ -66,8 +66,8 @@
 #include <freetype/internal/ftdebug.h>
 #endif
 
-#ifndef EXPORT_FUNC
-#define EXPORT_FUNC  /* nothing */
+#ifndef UNUSED
+#define UNUSED( arg )  ( (arg)=(arg) )
 #endif
 
 #undef  FT_COMPONENT
@@ -279,7 +279,7 @@
   /* `->'                                                              */
 #define ras       (*raster)
 
-#define           UNUSED_RASTER   (void)raster;
+#define           UNUSED_RASTER   (raster=raster);
 
   /*************************************************************************/
   /*                                                                       */

@@ -151,7 +151,7 @@ II. COMMAND-LINE COMPILATION:
      if you encounter this problem.
      
      Note that the release version will use Autoconf to detect everything
-     on UNix, so this will not be necessary !!
+     on Unix, so this will not be necessary !!
 
 
 II. DETAILED COMPILATION PROCEDURE:
@@ -160,46 +160,31 @@ II. DETAILED COMPILATION PROCEDURE:
   If you don't want to compile FreeType 2 from the command-line (for example
   from a graphical IDE on a Mac or Windows), you'll need to understand how the
   FreeType files are organized.
-  
-  First of all, all configuration files are located in "freetype2/config",
-  with system-specific overrides in "freetype2/config/<system>". You should
-  always place "config/<system>" and "config" in your compilation include
-  path, **in this order**
-  
-  Also, place the directory "include" in the compilation include path, as
-  well as "src/base" and "src/shared"
-  
-  Now, FreeType 2 is a very modular design, made of several distinct components.
-  Each component can be compiler either as a stand-alone object file, or as a
-  list of independent objects.
-  
-  For example, the "base layer" is made of the following independent source
-  files:
-  
-     freetype2/
-        src/
-           base/
-              ftcalc.c
-              ftdebug.c
-              ftextend.c
-              ftlist.c
-              ftobjs.c
-              ftstream.c
-              ftraster.c
-              ftoutln.c
-              ftsystem.c
 
-  You can compile each of these files separately.
+  FreeType 2 has a very module design, and it is made of several components.
+  Each component must be compiled as a stand-alone object file, even when it
+  is really made of several C source files. For example, the "base layer"
+  component is made of the following C files:
   
-  Another method is to compile the file "src/base/ftbase.c" which performs
-  a simple include on all these individual files. This will compile the whole
-  base layer as a single object file.
+    src/
+      base/
+        ftcalc.c    - computations
+        ftobjs.c    - object management
+        ftstream.c  - stream input
+        ftlist.c    - simple list management
+        ftoutln.c   - simple outline processing
+        ftextend.c  - extensions support
   
-  Note that through careful macro definitions, compiling a module as a single
-  component avoids the generation of many externals (that really correspond
-  to intra-module dependencies) and provides greater optimisations
-  opportunities.
+  However, you can create a single object file by compiling the file
+  "src/base/ftbase.c", whose content is:
   
+        #include <ftcalc.c>
+        #include <ftobjs.c>
+        #include <ftstream.c>
+        #include <ftlist.c>
+        #include <ftoutln.c>
+        #include <ftextend.c>
+
   Similarly, each component has a single "englobing" C file to compile it
   as a stand-alone object, i.e. :
   
@@ -209,9 +194,39 @@ II. DETAILED COMPILATION PROCEDURE:
      src/truetype/truetype.c   - the TrueType font driver
      src/type1/type1.c         - the Type 1 font driver
 
-  Now, you can decide how to compile each module, and add the corresponding
-  object files to your library..
+
+  To compile one component, do the following:
   
-  The directory "freetype2/include" contains all public header files that
-  may be included by client applications..
+   - add the top-level "include" directory to your compilation include path
+   
+   - add the component's path to your compilation include path too. Being
+     in the component's directory isn't enough !!
+
+   - compile the component "source" file (see list below).
+
+  For example, the following line can be used to compile the truetype driver
+  on Unix:
+  
+     cd freetype2/
+     cc -c -Iinclude -Isrc/truetype  src/truetype/truetype.c
+
+  Alternatively:
+  
+     cd freetype2/src/truetype
+     cc -c -I../../include -I. src/truetype/truetype.c
+
+  The complete list of files to compile for a feature-complete build of
+  FreeType 2 is:
+  
+     src/base/ftsystem.c         - system-specific memory and i/o support
+     src/base/ftinit.c           - initialisation layer
+     src/base/ftdebug.c          - debugging component (empty in release build)
+     src/base/ftbase.c           - the "base layer" component
+     src/base/ftraster.c         - the standard raster (scan-converter)
+     src/base/ftgrays.c          - the smooth raster (anti-aliased only)
+     src/base/ftglyph.c          - optional convenience functions
+     src/sfnt/sfnt.c             - the "sfnt" module
+     src/psnames/psnames.c       - the "psnames" module
+     src/truetype/truetype.c     - the TrueType font driver
+     src/type1/type1.c           - the Type 1 font driver
 

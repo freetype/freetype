@@ -170,8 +170,6 @@
 
       FT_TRACE2(( "Growing tokenizer buffer by %d bytes\n", left_bytes ));
 
-      (void)stream;  /* unused in non reentrant mode */
-
       if ( !REALLOC( tokzer->base, tokzer->limit, 
                      tokzer->limit + left_bytes )                 &&
            !FILE_Read( tokzer->base + tokzer->limit, left_bytes ) )

@@ -13,11 +13,6 @@
 # fully.
 
 
-# This configuration file to be used depends on the value of the CC
-# environment variable which is set below according to the compiler name
-# given as a parameter to make.
-
-
 ifeq ($(PLATFORM),ansi)
   ifdef OS2_SHELL
 

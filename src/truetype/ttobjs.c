@@ -165,8 +165,8 @@
     PSNames_Interface* psnames;
 
     /* for now, parameters are unused */
-    (void)num_params;
-    (void)params;
+    UNUSED(num_params);
+    UNUSED(params);
 
     sfnt = (SFNT_Interface*)face->sfnt;
     if (!sfnt)

@@ -1,5 +1,29 @@
 LATEST CHANGES - 
 
+  - light update/cleaning of the build system + changes to the sources in
+    order to get rid of _all_ compiler warnings with three compilers, i.e:
+
+      gcc with "-ansi -pedantic -Wall -W", Visual C++ with "/W3 /WX"
+      and LCC
+
+     IMPORTANT NOTE FOR WIN32-LCC USERS:
+     |
+     |  It seems the C pre-processor that comes with LCC is broken, it
+     |  doesn't recognize the ANSI standard directives # and ## correctly
+     |  when one of the argument is a macro. Also, something like:
+     |  
+     |     #define F(x)  print##x
+     |     
+     |     F(("hello"))
+     |     
+     |  will get incorrectly translated to:
+     |  
+     |     print "hello")
+     |     
+     |  by its pre-processor. For this reason, you simply cannot build
+     |  FreeType 2 in debug mode with this compiler..
+
+
   - yet another massive grunt work. I've changed the definition of the
     EXPORT_DEF, EXPORT_FUNC, BASE_DEF & BASE_FUNC macros. These now take
     an argument, which is the function's return value type.
@@ -27,6 +51,7 @@ LATEST CHANGES -
       a different signature).
 
   - updated the tutorial (not finished though).
+  - updated the top-level BUILD  document
 
   - added the declaration of FT_New_Memory_Face in <freetype/freetype.h>, as
     it was missing from the public header (the implementation was already

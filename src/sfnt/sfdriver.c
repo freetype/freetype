@@ -66,6 +66,10 @@
     1,          /* driver version                      */
     2,          /* driver requires FreeType 2 or above */
 
-    (void*)&sfnt_interface
+    (void*)&sfnt_interface,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0,
   };
 

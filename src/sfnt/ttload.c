@@ -267,6 +267,7 @@
 
     TT_Table *entry, *limit;
 
+    UNUSED(faceIndex);
 
     FT_TRACE2(( "TT_Load_Directory( %08lx, %ld )\n",
               (TT_Long)face, faceIndex ));

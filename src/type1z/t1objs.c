@@ -53,7 +53,7 @@
   LOCAL_FUNC
   void  T1_Done_Size( T1_Size  size )
   {
-    (void)size;
+    UNUSED(size);
   }
 
 
@@ -76,11 +76,7 @@
   LOCAL_DEF
   T1_Error  T1_Init_Size( T1_Size  size )
   {
-    T1_Error    error;
-      
     size->valid = 0;
-    
-    (void)error;
     return T1_Err_Ok;
   }
 
@@ -105,7 +101,7 @@
   LOCAL_FUNC
   T1_Error  T1_Reset_Size( T1_Size  size )
   {
-    (void)size;
+    UNUSED(size);
     return 0;
   }
 
@@ -461,7 +457,7 @@
   LOCAL_FUNC
   T1_Error  T1_Init_Driver( T1_Driver  driver )
   {
-    (void)driver;
+    UNUSED(driver);
     return T1_Err_Ok;
   }
 
@@ -482,7 +478,7 @@
   LOCAL_DEF
   void  T1_Done_Driver( T1_Driver  driver )
   {
-    (void)driver;
+    UNUSED(driver);
   }
 
 

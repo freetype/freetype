@@ -88,8 +88,10 @@ const FT_DriverInterface*  ft_default_drivers[] =
       error = FT_Add_Driver( library, *cur );
       /* notify errors, but don't stop */
       if ( error )
+      {
         FT_ERROR(( "FT.Default_Drivers: Cannot install `%s', error = %x\n",
                    (*cur)->driver_name, error ));
+      }
       cur++;
     }
   }

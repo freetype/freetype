@@ -554,7 +554,7 @@
   static
   T1_Error  Do_Def_Ignore( T1_Parser*  parser )
   {
-    (void)parser;
+    UNUSED(parser);
     return T1_Err_Ok;
   }
 

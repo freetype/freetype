@@ -1217,7 +1217,6 @@
                                     type1->subrs,
                                     type1->subrs_len );
       /* ignore the error if one occured - skip to next glyph */
-      (void)error;
     }
 
     *max_advance = decoder.builder.advance.x;
@@ -1271,7 +1270,7 @@
       T1_Init_Decoder( &decoder );
       T1_Init_Builder( &decoder.builder, face, size, glyph );
   
-      decoder.builder.no_recurse = !!(load_flags & FT_LOAD_NO_RECURSE);
+      decoder.builder.no_recurse = (FT_Bool)!!(load_flags & FT_LOAD_NO_RECURSE);
       
       /* now load the unscaled outline */
       error = T1_Parse_CharStrings( &decoder,

@@ -84,6 +84,7 @@ else
   LINK = $(CC) $T$@ $< $(FTLIB) $(EFENCE) $(LDFLAGS)
   COMMON_LINK = $(LINK) $(COMMON_OBJ)
   GRAPH_LINK  = $(COMMON_LINK) $(GRAPH_LIB)
+  GRAPH_LINK2 = $(GRAPH_LINK) $(EXTRA_GRAPH_OBJS)
 
   .PHONY: exes clean distclean
 
@@ -187,6 +188,8 @@ else
   $(OBJ_)ftgrays2.$O: $(SRC_DIR_)ftgrays2.c
 	  $(COMPILE) $T$@ $<
 
+  EXTRA_GRAPH_OBJS := $(OBJ_)ftrast.$O $(OBJ_)ftrast2.$O
+
   $(OBJ_)ftrast.$O: $(SRC_DIR_)ftrast.c
 	  $(COMPILE) $T$@ $<
 
@@ -268,7 +271,7 @@ else
 
 
   $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftrast2.$O $(OBJ_)ftrast.$O
-	  $(GRAPH_LINK) $(OBJ_)ftrast2.$O $(OBJ_)ftrast.$O
+	  $(GRAPH_LINK2)
 
   $(BIN_)ftstring$E: $(OBJ_)ftstring.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
 	  $(GRAPH_LINK)

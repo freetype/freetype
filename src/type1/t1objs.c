@@ -230,10 +230,10 @@
     T1_Error            error;
     PSNames_Interface*  psnames;
 
-    (void)num_params;
-    (void)params;
-    (void)face_index;
-    (void)face;
+    UNUSED(num_params);
+    UNUSED(params);
+    UNUSED(face_index);
+    UNUSED(face);
 
     face->root.num_faces = 1;
 
@@ -506,7 +506,7 @@
   LOCAL_FUNC
   T1_Error  T1_Init_Driver( T1_Driver  driver )
   {
-    (void)driver;
+    UNUSED(driver);
     return T1_Err_Ok;
   }
 
@@ -527,7 +527,7 @@
   LOCAL_DEF
   void  T1_Done_Driver( T1_Driver  driver )
   {
-    (void)driver;
+    UNUSED(driver);
   }
 
 

@@ -170,7 +170,7 @@
   /*   Don't define any of these macros to compile in `release' mode.      */
   /*                                                                       */
 #undef  FT_DEBUG_LEVEL_ERROR
-#define FT_DEBUG_LEVEL_TRACE
+#undef  FT_DEBUG_LEVEL_TRACE
 
 
   /*************************************************************************/

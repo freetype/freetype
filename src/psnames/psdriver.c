@@ -233,7 +233,11 @@
     100,        /* driver version                      */
     200,        /* driver requires FreeType 2 or above */
 
-    (void*)&psnames_interface
+    (void*)&psnames_interface,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0,
   };
 
 #else

@@ -128,7 +128,7 @@ distclean_freetype: distclean_freetype_dos
 DIR_OBJ := $(subst /,\\,$(OBJ_DIR))
 
 $(FT_LIBRARY): $(OBJECTS_LIST)
-	lcclnk -o $(subst /,\\,$@) $(subst /,\\,$<)
+	lcclnk -o $(subst /,\\,$@) $(subst /,\\,$(OBJECTS_LIST))
 
 endif
 

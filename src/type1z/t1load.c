@@ -83,62 +83,64 @@
   /* each callback is in charge of loading a value and storing it in a  */
   /* given field of the Type 1 face..                                   */
  
-#define PARSE_(x)  static void parse_##x ( T1_Face  face, T1_Loader* loader )
+#define PARSE_(x)  static void FT_XCAT(parse_,x) ( T1_Face  face, T1_Loader* loader )
+
+#define FIELD   FACE.x
 
 #define PARSE_STRING(s,x)   PARSE_(x)                               \
         {                                                           \
-          FACE.##x = T1_ToString(&loader->parser);                  \
-          FT_TRACE2(( "type1.parse_##x##: \"%s\"\n", FACE.##x ));   \
+          FACE.x = T1_ToString(&loader->parser);                  \
+          FT_TRACE2(( "type1.parse_%s: \"%s\"\n", #x, FACE.x ));   \
         }
 
 #define PARSE_NUM(s,x,t)  PARSE_(x)                                 \
         {                                                           \
-          FACE.##x = (t)T1_ToInt(&loader->parser);                  \
-          FT_TRACE2(( "type1.parse_##x##: \"%d\"\n", FACE.##x ));   \
+          FACE.x = (t)T1_ToInt(&loader->parser);                  \
+          FT_TRACE2(( "type1.parse_%s: \"%d\"\n", #x, FACE.x ));   \
         }
         
 #define PARSE_INT(s,x)   PARSE_(x)                                  \
         {                                                           \
-          FACE.##x = T1_ToInt(&loader->parser);                     \
-          FT_TRACE2(( "type1.parse_##x##: \"%d\"\n", FACE.##x ));   \
+          FACE.x = T1_ToInt(&loader->parser);                     \
+          FT_TRACE2(( "type1.parse_%s: \"%d\"\n", #x, FACE.x ));   \
         }
 
 #define PARSE_BOOL(s,x)   PARSE_(x)                                 \
         {                                                           \
-          FACE.##x = T1_ToBool(&loader->parser);                    \
-          FT_TRACE2(( "type1.parse_##x##: \"%s\"\n",                \
-                       FACE.##x ? "true" : "false" ));              \
+          FACE.x = T1_ToBool(&loader->parser);                    \
+          FT_TRACE2(( "type1.parse_%s : \"%s\"\n",                \
+                       #x, FACE.x ? "true" : "false" ));              \
         }
  
 #define PARSE_FIXED(s,x)   PARSE_(x)                                        \
         {                                                                   \
-          FACE.##x = T1_ToFixed(&loader->parser,3);                         \
-          FT_TRACE2(( "type1.parse_##x##: \"%f\"\n", FACE.##x/65536.0 ));   \
+          FACE.x = T1_ToFixed(&loader->parser,3);                         \
+          FT_TRACE2(( "type1.parse_%s: \"%f\"\n", #x, FACE.x/65536.0 ));   \
         }
  
 #define PARSE_COORDS(s,c,m,x)   PARSE_(x)                                         \
         {                                                                         \
-          FACE.##c = T1_ToCoordArray(&loader->parser, m, (T1_Short*)FACE.##x );   \
-          FT_TRACE2(( "type1.parse_##x##\n" ));                                   \
+          FACE.c = T1_ToCoordArray(&loader->parser, m, (T1_Short*)FACE.x );   \
+          FT_TRACE2(( "type1.parse_%s\n", #x ));                                   \
         }
            
 #define PARSE_FIXEDS(s,c,m,x)   PARSE_(x)                                           \
         {                                                                           \
-          FACE.##c = T1_ToFixedArray(&loader->parser, m, (T1_Fixed*)FACE.##x, 3 );  \
-          FT_TRACE2(( "type1.parse_##x##\n" ));                                     \
+          FACE.c = T1_ToFixedArray(&loader->parser, m, (T1_Fixed*)FACE.x, 3 );  \
+          FT_TRACE2(( "type1.parse_%s\n", #x ));                                     \
         }
 
 
 #define PARSE_COORDS2(s,m,x)   PARSE_(x)                                     \
         {                                                                    \
-          (void)T1_ToCoordArray( &loader->parser, m, (T1_Short*)&FACE.##x );  \
-          FT_TRACE2(( "type1.parse_##x##\n" ));                              \
+          (void)T1_ToCoordArray( &loader->parser, m, (T1_Short*)&FACE.x );  \
+          FT_TRACE2(( "type1.parse_%s\n", #x ));                              \
         }
 
 #define PARSE_FIXEDS2(s,m,x)   PARSE_(x)                                           \
         {                                                                           \
-          (void)T1_ToFixedArray(&loader->parser, m, (T1_Fixed*)&FACE.##x, 3 );  \
-          FT_TRACE2(( "type1.parse_##x##\n" ));                                     \
+          (void)T1_ToFixedArray(&loader->parser, m, (T1_Fixed*)&FACE.x, 3 );  \
+          FT_TRACE2(( "type1.parse_%s\n", #x ));                                     \
         }
 
 

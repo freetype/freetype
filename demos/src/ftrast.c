@@ -257,14 +257,6 @@
           (( sizeof(TProfile)+sizeof(long)-1 ) / sizeof(long))
 
 
-  /* Left fill bitmask */
-  static const Byte  LMask[8] =
-    { 0xFF, 0x7F, 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01 };
-
-  /* Right fill bitmask */
-  static const Byte  RMask[8] =
-    { 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE, 0xFF };
-
 
 #ifdef TT_STATIC_RASTER
 
@@ -1815,7 +1807,7 @@
   {
     Long  pitch = ras.target.pitch;
     
-    (void)max;
+    UNUSED(max);
     
     ras.traceIncr = (Short)- pitch;
     ras.traceOfs  = - *min * pitch;
@@ -1838,9 +1830,9 @@
     Byte   f1, f2;
     Byte*  target;
 
-    (void)y;
-    (void)left;
-    (void)right;
+    UNUSED(y);
+    UNUSED(left);
+    UNUSED(right);
 
     /* Drop-out control */
 
@@ -2015,9 +2007,9 @@
   static void  Horizontal_Sweep_Init( RAS_ARGS Short*  min, Short*  max )
   {
     /* nothing, really */
-    (void)raster;
-    (void)min;
-    (void)max;
+    UNUSED(raster);
+    UNUSED(min);
+    UNUSED(max);
   }
 
 
@@ -2031,8 +2023,8 @@
     PByte bits;
     Byte  f1;
 
-    (void)left;
-    (void)right;
+    UNUSED(left);
+    UNUSED(right);
     
     if ( x2-x1 < ras.precision )
     {
@@ -2173,7 +2165,7 @@
   static void Horizontal_Sweep_Step( RAS_ARG )
   {
     /* Nothing, really */
-    (void)raster;
+    UNUSED(raster);
   }
 
 
@@ -2285,12 +2277,12 @@
                                                     PProfile    right )
   {
     /* nothing, really */
-    (void)raster;
-    (void)y;
-    (void)x1;
-    (void)x2;
-    (void)left;
-    (void)right;
+    UNUSED(raster);
+    UNUSED(y);
+    UNUSED(x1);
+    UNUSED(x2);
+    UNUSED(left);
+    UNUSED(right);
   }
 
   static void  Horizontal_Gray_Sweep_Drop( RAS_ARGS Short       y,

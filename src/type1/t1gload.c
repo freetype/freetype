@@ -399,9 +399,9 @@
     }
 
 
-    (void)threshold;
-    (void)end_x;
-    (void)end_y;
+    UNUSED(threshold);
+    UNUSED(end_x);
+    UNUSED(end_y);
 
     flex  = decoder->flex_vectors;
 
@@ -1052,9 +1052,9 @@
     if (wx > decoder->builder.advance.x)
       decoder->builder.advance.x = wx;
 
-    (void)sbx;
-    (void)sby;
-    (void)wy;
+    UNUSED(sbx);
+    UNUSED(sby);
+    UNUSED(wy);
     return -1;    /* return an error code to exit the Type 1 parser */
                   /* immediately.                                   */
   }
@@ -1127,7 +1127,6 @@
                                     type1->subrs,
                                     type1->subrs_len );
       /* ignore the error if one occured - skip to next glyph */
-      (void)error;
     }
 
     *max_advance = decoder.builder.advance.x;

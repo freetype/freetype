@@ -467,6 +467,7 @@
 
     /* this table is optional */
     error = face->goto_table( face, TTAG_EBLC, stream, 0 );
+    if (error)
     {
       error = 0;
       goto Exit;

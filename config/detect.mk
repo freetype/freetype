@@ -17,16 +17,16 @@
 # the following variables:
 #
 #   BUILD        The configuration and system-specific directory.  Usually
-#                `freetype/config/$(PLATFORM)' but can be different if a
-#                specific compiler has been requested on the command line.
+#                `freetype/config/$(PLATFORM)' but can be different for
+#                custom builds of the library.
 #
 # The following variables must be defined in system specific `detect.mk'
 # files:
 #
 #   PLATFORM     The detected platform.  This will default to `ansi' if
 #                auto-detection fails.
-#   CONFIG_FILE  The Makefile to use.  This usually depends on the compiler
-#                defined in the `CC' environment variable.
+#   CONFIG_FILE  The configuration sub-makefile to use.  This usually depends
+#                on the compiler defined in the `CC' environment variable.
 #   DELETE       The shell command used to remove a given file.
 #   COPY         The shell command used to copy one file.
 #   SEP          The platform-specific directory separator.
@@ -44,7 +44,7 @@ TOP := .
 endif
 
 # Set auto-detection default to `ansi'.
-# Note that we delay the evaluation of $(CONFIG_), $(BUILD), and
+# Note that we delay the evaluation of $(BUILD_CONFIG_), $(BUILD), and
 # $(CONFIG_RULES).
 #
 PLATFORM    := ansi
@@ -52,9 +52,9 @@ DELETE      := $(RM)
 COPY        := cp
 SEP         := /
 
-CONFIG_      = $(TOP)$(SEP)config$(SEP)
-BUILD        = $(CONFIG_)$(PLATFORM)
-CONFIG_RULES = $(BUILD)$(SEP)$(CONFIG_FILE)
+BUILD_CONFIG_ = $(TOP)$(SEP)config$(SEP)
+BUILD         = $(BUILD_CONFIG_)$(PLATFORM)
+CONFIG_RULES  = $(BUILD)$(SEP)$(CONFIG_FILE)
 
 # We define the BACKSLASH variable to hold a single back-slash character.
 # This is needed because a line like
@@ -74,7 +74,7 @@ BACKSLASH := $(strip \ )
 # directories.  Note that the calling order of the various `detect.mk' files
 # isn't predictable.
 #
-include $(wildcard $(CONFIG_)*/detect.mk)
+include $(wildcard $(BUILD_CONFIG_)*/detect.mk)
 
 # In case no detection rule file was successful, use the default.
 #
@@ -86,7 +86,7 @@ endif
 # The following targets are equivalent, with the exception that they use
 # slightly different syntaxes for the `echo' command.
 #
-# std_setup: defined for most platforms
+# std_setup: defined for most (i.e. Unix-like) platforms
 # dos_setup: defined for Dos-ish platforms like Dos, Windows & OS/2
 #
 .PHONY: std_setup dos_setup

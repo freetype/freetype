@@ -13,7 +13,7 @@
 # fully.
 
 
-# This will probably change a lost in the future if we are going to use
+# This will probably change a lot in the future if we are going to use
 # Automake/Autoconf...
 
 

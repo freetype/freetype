@@ -117,7 +117,7 @@
   /* This macro is used whenever `exec' is unused in a function, to avoid  */
   /* stupid warnings from pedantic compilers.                              */
   /*                                                                       */
-#define UNUSED_EXEC  (void)CUR
+#define UNUSED_EXEC  UNUSED(CUR)
 
 
   /*************************************************************************/
@@ -125,7 +125,7 @@
   /* This macro is used whenever `args' is unused in a function, to avoid  */
   /* stupid warnings from pedantic compilers.                              */
   /*                                                                       */
-#define UNUSED_ARG  UNUSED_EXEC; (void)args;
+#define UNUSED_ARG  UNUSED_EXEC; UNUSED(args);
 
 
   /*************************************************************************/
@@ -719,7 +719,7 @@
     exec->callTop = 0;
 
 #if 1
-    (void)debug;
+    UNUSED(debug);
     return exec->face->interpreter( exec );
 #else
     if ( !debug )

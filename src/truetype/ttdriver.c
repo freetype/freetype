@@ -475,8 +475,8 @@
                              TT_UInt  pixel_width,
                              TT_UInt  pixel_height )
   {
-    (void) pixel_width;
-    (void) pixel_height;
+    UNUSED(pixel_width);
+    UNUSED(pixel_height);
 
     /* many things were pre-computed by the base layer */
 
@@ -640,7 +640,7 @@
   static
   FTDriver_Interface  tt_get_interface( TT_Driver  driver, const char* interface )
   {
-    (void)driver;
+    UNUSED(driver);
     
     if (strcmp(interface,"get_sfnt")==0)
       return (FTDriver_Interface)tt_get_sfnt_table;

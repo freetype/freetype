@@ -95,6 +95,13 @@
 #define FT_ALIGNMENT  8
 
 
+/* UNUSED is a macro used to indicate that a given parameter is not used */
+/* this is only used to get rid of unpleasant compiler warnings..        */
+#ifndef UNUSED
+#define UNUSED( arg )  ( (arg)=(arg) )
+#endif
+
+
 
   /*************************************************************************/
   /*                                                                       */
