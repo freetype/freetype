@@ -1271,12 +1271,12 @@
     FT_Byte*   table      = cmap->data;
     FT_Byte*   p          = table + 8204;
     FT_UInt32  num_groups = TT_NEXT_ULONG( p );
-    FT_UInt32  n, start, end, start_id;
+    FT_UInt32  start, end, start_id;
 
 
     p = table + 8208;
 
-    for ( n = 0; n < num_groups++; n++ )
+    for ( ; num_groups > 0; num_groups-- )
     {
       start    = TT_NEXT_ULONG( p );
       end      = TT_NEXT_ULONG( p );
@@ -1578,12 +1578,12 @@
     FT_UInt    gindex     = 0;
     FT_Byte*   p          = table + 12;
     FT_UInt32  num_groups = TT_NEXT_ULONG( p );
-    FT_UInt32  n, start, end, start_id;
+    FT_UInt32  start, end, start_id;
 
 
     p = table + 16;
 
-    for ( n = 0; n < num_groups++; n++ )
+    for ( ; num_groups > 0; num_groups-- )
     {
       start    = TT_NEXT_ULONG( p );
       end      = TT_NEXT_ULONG( p );
