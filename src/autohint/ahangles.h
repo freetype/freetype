@@ -20,8 +20,8 @@
 /***************************************************************************/
 
 
-#ifndef AGANGLES_H
-#define AGANGLES_H
+#ifndef AHANGLES_H
+#define AHANGLES_H
 
 
 #ifdef FT_FLAT_COMPILE
@@ -57,7 +57,7 @@
   AH_Angle  ah_angle( FT_Vector*  v );
 
 
-#endif /* AGANGLES_H */
+#endif /* AHANGLES_H */
 
 
 /* END */

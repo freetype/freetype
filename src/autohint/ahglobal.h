@@ -20,8 +20,8 @@
 /***************************************************************************/
 
 
-#ifndef AGGLOBAL_H
-#define AGGLOBAL_H
+#ifndef AHGLOBAL_H
+#define AHGLOBAL_H
 
 #ifdef FT_FLAT_COMPILE
 
@@ -46,7 +46,7 @@
   FT_Error  ah_hinter_compute_globals( AH_Hinter*  hinter );
 
 
-#endif /* AGGLOBAL_H */
+#endif /* AHGLOBAL_H */
 
 
 /* END */

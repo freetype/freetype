@@ -17,26 +17,41 @@ ifndef TOP
   TOP := .
 endif
 
-DELETE    := rm -f
-DELDIR    := rmdir
-SEP       := /
-HOSTSEP   := $(SEP)
-BUILD     := $(TOP)/builds/unix
-PLATFORM  := unix
+DELETE        := rm -f
+DELDIR        := rmdir
+SEP           := /
+HOSTSEP       := $(SEP)
+BUILD         := $(TOP)/builds/unix
+PLATFORM      := unix
+CC            := gcc
 
-FTSYS_SRC := $(BUILD)/ftsystem.c
+INSTALL       := /usr/bin/ginstall -c
+INSTALL_DATA  := ${INSTALL} -m 644
+MKINSTALLDIRS := $(BUILD)/mkinstalldirs
+
+LIBTOOL       := $(BUILD)/libtool
+
+
+# don't use `:=' here since the path stuff will be included after this file
+#
+FTSYS_SRC = $(BUILD)/ftsystem.c
 
 DISTCLEAN += $(BUILD)/config.cache  \
              $(BUILD)/config.log    \
              $(BUILD)/config.status \
              $(BUILD)/unix.mk       \
              $(BUILD)/ftconfig.h    \
-             $(BUILD)/libtool
+             $(LIBTOOL)
 
 
+# Standard installation variables.
+#
 prefix       := /usr/local
 exec_prefix  := ${prefix}
 libdir       := ${exec_prefix}/lib
+bindir       := ${exec_prefix}/bin
+includedir   := ${prefix}/include
+
 version_info := 6:0:0
 
 
@@ -120,9 +135,9 @@ ANSIFLAGS := -pedantic -ansi
 #
 #
 CCraw := $(CC)
-CC    := $(BUILD)/libtool --mode=compile $(CCraw)
+CC    := $(LIBTOOL) --mode=compile $(CCraw)
 
-# linker flags
+# Linker flags.
 #
 LDFLAGS := 
 
@@ -134,17 +149,45 @@ ifdef BUILD_FREETYPE
   #
   include $(TOP)/builds/freetype.mk
 
+
   # The cleanup targets.
   #
   clean_freetype: clean_freetype_unix
   distclean_freetype: distclean_freetype_unix
 
+
+  # Unix installation and deinstallation targets.
+  install: $(FT_LIBRARY)
+	  $(MKINSTALLDIRS) $(libdir)                       \
+                           $(includedir)/freetype/config   \
+                           $(includedir)/freetype/internal
+	  $(LIBTOOL) --mode=install $(INSTALL) $(FT_LIBRARY) $(libdir)
+	  -for P in $(PUBLIC_H) ; do                     \
+            $(INSTALL_DATA) $$P $(includedir)/freetype ; \
+          done
+	  -for P in $(BASE_H) ; do                                \
+            $(INSTALL_DATA) $$P $(includedir)/freetype/internal ; \
+          done
+	  -for P in $(CONFIG_H) ; do                            \
+            $(INSTALL_DATA) $$P $(includedir)/freetype/config ; \
+          done
+
+  uninstall:
+	  -$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/$(LIBRARY).$A
+	  -$(DELETE) $(includedir)/freetype/config/*
+	  -$(DELDIR) $(includedir)/freetype/config
+	  -$(DELETE) $(includedir)/freetype/internal/*
+	  -$(DELDIR) $(includedir)/freetype/internal
+	  -$(DELETE) $(includedir)/freetype/*
+	  -$(DELDIR) $(includedir)/freetype
+
+
   # Unix cleaning and distclean rules.
   #
   clean_freetype_unix:
 	  -$(DELETE) $(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)
-	  -$(DELETE) $(subst $O,$(SO),$(BASE_OBJECTS) $(OBJ_M) $(OBJ_S))
-	  -$(DELETE) $(CLEAN)
+	  -$(DELETE) $(subst $O,$(SO),$(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)) \
+                     $(CLEAN)
 
   distclean_freetype_unix: clean_freetype_unix
 	  -$(DELETE) $(FT_LIBRARY)
@@ -152,9 +195,10 @@ ifdef BUILD_FREETYPE
 	  -$(DELDIR) $(OBJ_DIR)/.libs
 	  -$(DELETE) *.orig *~ core *.core $(DISTCLEAN)
 
+
   # Librarian to use to build the library
   #
-  FT_LIBRARIAN := $(BUILD)/libtool --mode=link $(CCraw)
+  FT_LIBRARIAN := $(LIBTOOL) --mode=link $(CCraw)
 
 
   # This final rule is used to link all object files into a single library.

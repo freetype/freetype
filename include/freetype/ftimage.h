@@ -588,8 +588,8 @@
   /* a a bitmap.  This section contains the public API for rasters.        */
   /*                                                                       */
   /* Note that in FreeType 2, all rasters are now encapsulated within      */
-  /* specific modules called "renderers".  See                             */
-  /* <freetype/internal/ftrender.h> for more details on renderers.         */
+  /* specific modules called `renderers'.  See `freetype/ftrender.h' for   */
+  /* more details on renderers.                                            */
   /*                                                                       */
   /*************************************************************************/
 

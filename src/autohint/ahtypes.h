@@ -137,6 +137,8 @@
     ah_dir_none  =  4,
     ah_dir_right =  1,
     ah_dir_left  = -1,
+    ah_dir_up_and_down = 0,
+    ah_dir_left_and_right = 0,
     ah_dir_up    =  2,
     ah_dir_down  = -2
 
