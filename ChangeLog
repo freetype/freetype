@@ -1,3 +1,8 @@
+2004-02-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffparse.c (cff_parser_run), src/psaux/psobjs.c
+	(ps_parser_load_field): Use FT_CHAR_BIT.
+
 2004-04-21  David Turner  <david@freetype.org>
 
 	* src/cff/cffobjs.c (cff_face_init): Fix a small memory leak.
