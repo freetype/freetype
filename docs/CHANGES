@@ -1,3 +1,30 @@
+LATEST CHANGES BETWEEN 2.0.4 and 2.0.3
+
+  - fixed a rather annoying bug that was introduced in 2.0.3.
+    Namely, the font transform set through FT_Set_Transform was applied
+    twiced to auto-hinted glyphs, resulting in incorrect rotated text
+    output
+    
+  - fixed _many_ compiler warnings. FT2 should now compile cleanly with
+    Visual C++'s most pedantic warning level (/W4). It already compiled
+    fine with GCC and a few other compilers..
+
+  - fixed the Visual C++ project files located in "builds/win32/visualc"
+    (previous versions used older names of the library)
+  
+  - many 32-bit constants have an "L" appended to their value, in order
+    to improve the 16-bitness of the code. Someone is actually trying to
+    use FT2 on an Atari ST machine !!
+
+  - updated the "builds/detect.mk" file in order to automatically build
+    FT2 on AIX systems. AIX does define "/usr/sbin/init" instead of
+    "/sbin/init" and wasn't previously detected as a Unix platform. by
+    the FreeType build system.
+                                                       
+  - updated the Unix-specific portions of the build system (new libtool
+    version, etc..)
+
+============================================================================
 LATEST CHANGES BETWEEN 2.0.3 and 2.0.2
 
   I. CHANGES TO THE MODULES / FONT DRIVERS :
