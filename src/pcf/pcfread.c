@@ -205,9 +205,10 @@ THE SOFTWARE.
     FT_Error  error = FT_Err_Ok;
   
 
-    (void)READ_Fields( header, metric ); 
+    if ( READ_Fields( header, metric ) )
+      return error;
   
-    return error;
+    return FT_Err_Ok;
   }
 
 
@@ -219,7 +220,8 @@ THE SOFTWARE.
     FT_Error                  error = FT_Err_Ok;
   
 
-    (void)READ_Fields( pcf_compressed_metric_header, &compr_metric );
+    if ( READ_Fields( pcf_compressed_metric_header, &compr_metric ) )
+      return error;
 
     metric->leftSideBearing  = (FT_Short)compr_metric.leftSideBearing - 0x80;
     metric->rightSideBearing = (FT_Short)compr_metric.rightSideBearing - 0x80;
@@ -228,7 +230,7 @@ THE SOFTWARE.
     metric->descent          = (FT_Short)compr_metric.descent - 0x80;
     metric->attributes       = 0;
   
-    return error;
+    return FT_Err_Ok;
   }
 
 
@@ -394,11 +396,15 @@ THE SOFTWARE.
     for ( i = 0; i < nprops; i++ )
     {
       if ( PCF_BYTE_ORDER( format ) == MSBFirst )
-        (void)READ_Fields( pcf_property_msb_header, props + i );
+      {
+        if ( READ_Fields( pcf_property_msb_header, props + i ) )
+          goto Bail;
+      }
       else
-        (void)READ_Fields( pcf_property_header, props + i );
-      if ( error )
-        goto Bail;
+      {
+        if ( READ_Fields( pcf_property_header, props + i ) )
+          goto Bail;
+      }
     }
 
     /* pad the property array                                            */
@@ -811,12 +817,16 @@ THE SOFTWARE.
          !PCF_FORMAT_MATCH( format, PCF_ACCEL_W_INKBOUNDS ) )
       goto Bail;
   
-    if ( PCF_BYTE_ORDER( format ) == MSBFirst ) 
-      (void)READ_Fields( pcf_accel_msb_header , accel );
+    if ( PCF_BYTE_ORDER( format ) == MSBFirst )
+    {
+      if ( READ_Fields( pcf_accel_msb_header, accel ) )
+        goto Bail;
+    }
     else
-      (void)READ_Fields( pcf_accel_header, accel );
-    if ( error )
-      goto Bail;
+    {
+      if ( READ_Fields( pcf_accel_header, accel ) )
+        goto Bail;
+    }
 
     error = pcf_get_metric( stream, format, &(accel->minbounds) );
     if ( error ) 
