@@ -132,7 +132,7 @@ std_setup:
 	@$(COPY) $(CONFIG_RULES) $(CONFIG_MK)
 
 
-# special case for Dos, Windows, OS/2, where echo "" doesn't work correctly !!
+# Special case for Dos, Windows, OS/2, where echo "" doesn't work correctly!
 #
 dos_setup:
 	@type builds\newline
