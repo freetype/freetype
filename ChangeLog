@@ -1,5 +1,11 @@
 2001-10-23  David Turner  <david@freetype.org>
 
+	* include/freetype/internal/ftmemory.h, src/base/ftdbgmem.c:
+	improvements to the memory debugger to report more information in
+	case of errors. Also, some allocations that occured through
+	REALLOC couldn't be previously catched correctly..
+	
+
 	* src/autohint/ahglyph.c, src/raster/ftraster.c,
 	src/smooth/ftgrays.c: replaced liberal uses of "memset" by the
 	MEM_Set macro instead..
