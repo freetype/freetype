@@ -159,32 +159,77 @@
 
 
 #ifdef FT_MAKE_OPTION_SINGLE_OBJECT
-#define  LOCAL_DEF   static
-#define  LOCAL_FUNC  static
+
+#define LOCAL_DEF   static
+#define LOCAL_FUNC  static
+
 #else
-#define  LOCAL_DEF   extern
-#define  LOCAL_FUNC  /* nothing */
-#endif
 
-#ifdef FT_MAKE_OPTION_SINGLE_LIBRARY_OBJECT
-#define  BASE_DEF( x )   static  x
-#define  BASE_FUNC( x )  static  x
+#ifdef __cplusplus
+#define LOCAL_DEF   extern "C"
+#define LOCAL_FUNC  extern "C"
 #else
-#define  BASE_DEF( x )   extern  x
-#define  BASE_FUNC( x )  extern  x
+#define LOCAL_DEF   extern
+#define LOCAL_FUNC  extern
 #endif
 
-#ifndef  FT_EXPORT_DEF
-#define  FT_EXPORT_DEF( x )   extern  x
+#endif /* FT_MAKE_OPTION_SINGLE_OBJECT */
+
+
+#ifndef BASE_DEF
+
+#ifdef __cplusplus
+#define BASE_DEF( x )  extern "C"  x
+#else
+#define BASE_DEF( x )  extern  x
 #endif
 
-#ifndef  FT_EXPORT_FUNC
-#define  FT_EXPORT_FUNC( x )  extern  x
+#endif /* !BASE_DEF */
+
+
+#ifndef BASE_FUNC
+
+#ifdef __cplusplus
+#define BASE_FUNC( x )  extern "C"  x
+#else
+#define BASE_FUNC( x )  extern  x
 #endif
 
-#ifndef  FT_EXPORT_VAR
-#define  FT_EXPORT_VAR( x )   extern  x
+#endif /* !BASE_FUNC */
+
+
+#ifndef FT_EXPORT_DEF
+
+#ifdef __cplusplus
+#define FT_EXPORT_DEF( x )  extern "C"  x
+#else
+#define FT_EXPORT_DEF( x )  extern  x
 #endif
+
+#endif /* !FT_EXPORT_DEF */
+
+
+#ifndef FT_EXPORT_FUNC
+
+#ifdef __cplusplus
+#define FT_EXPORT_FUNC( x )  extern "C"  x
+#else
+#define FT_EXPORT_FUNC( x )  extern  x
+#endif
+
+#endif /* !FT_EXPORT_FUNC */
+
+
+#ifndef FT_EXPORT_VAR
+
+#ifdef __cplusplus
+#define FT_EXPORT_VAR( x )  extern "C"  x
+#else
+#define FT_EXPORT_VAR( x )  extern  x
+#endif
+
+#endif /* !FT_EXPORT_VAR */
+
 
 #ifdef __cplusplus
   }

@@ -204,8 +204,7 @@
   };
 
 
-  const
-  FT_Module_Class  sfnt_module_class =
+  FT_EXPORT_VAR( const FT_Module_Class )  sfnt_module_class =
   {
     0,  /* not a font driver or renderer */
     sizeof( FT_ModuleRec ),

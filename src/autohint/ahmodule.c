@@ -107,7 +107,7 @@
   };
 
 
-  const FT_Module_Class  autohint_module_class =
+  FT_EXPORT_VAR( const FT_Module_Class )  autohint_module_class =
   {
     ft_module_hinter,
     sizeof ( FT_AutoHinterRec ),
