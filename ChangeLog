@@ -1,5 +1,10 @@
 2005-03-01  David Turner  <david@freetype.org>
 
+    * src/autofit/{rules.mk,module.mk,afangles.h}: adding missing files
+
+    * src/autofit/afloader.c: fixing small bug that could crash the engine
+    with certain fonts.
+
     * src/autofit/{afhints.h,afhints.c,aflatin.h,aflatin.c,afloader.c}:
     various bug-fixes and drastic heap usage reduction improvements.
 
