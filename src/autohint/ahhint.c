@@ -158,7 +158,7 @@
     FT_Pos  dist;
     FT_Pos  sign = 1;
 
-    UNUSED( hinter );
+    FT_UNUSED( hinter );
 
 
     dist = serif->opos - base->opos;

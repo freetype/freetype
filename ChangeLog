@@ -1,3 +1,18 @@
+2002-02-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/autohint/ahglyph.c (ah_outline_link_segments): Remove unused
+	variables.
+	* src/autohint/ahhint.c (ah_align_serif_edge): Use FT_UNUSED instead
+	of UNUSED.
+	* src/autohint/ahmodule.c (ft_autohinter_reset): Ditto.
+	* src/pshinter/pshrec.c (ps_mask_table_merge): Fix typo in variable
+	swapping code.
+	* src/pshinter/pshglob.h (PSH_Blue_Align): Add PSH_BLUE_ALIGN_NONE.
+	* src/pshinter/pshglob.c (psh_blues_snap_stem): Use it.
+	* src/pshinter/pshalgo1.c (psh1_hint_table_optimize): Ditto.
+	* src/pshinter/pshalgo2.c (psh2_hint_align): Ditto.
+	* include/freetype/internal/ftobjs.h (UNUSED): Removed.
+
 2002-02-10  Roberto Alameda  <ojancano@geekmail.de>
 
 	Add support for ISOLatin1 PS encoding.

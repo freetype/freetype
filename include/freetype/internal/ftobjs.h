@@ -54,10 +54,6 @@ FT_BEGIN_HEADER
 #define NULL  (void*)0
 #endif
 
-#ifndef UNUSED
-#define UNUSED( arg )  ( (arg)=(arg) )
-#endif
-
 
   /*************************************************************************/
   /*                                                                       */

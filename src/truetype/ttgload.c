@@ -1087,7 +1087,7 @@
 
         if ( num_subglyphs > 0               &&
              loader->exec                    &&
-             ins_pos         > 0             &&
+             ins_pos > 0                     &&
              subglyph->flags & WE_HAVE_INSTR )
         {
           FT_UShort       n_ins;

@@ -415,7 +415,7 @@
           hint->cur_len = fit_len;
 
           /* check blue zones for horizontal stems */
-          align.align     = 0;
+          align.align     = PSH_BLUE_ALIGN_NONE;
           align.align_bot = align.align_top = 0;
           if ( !vertical )
           {

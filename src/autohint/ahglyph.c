@@ -976,11 +976,7 @@
               FT_Pos  min = seg1->min_coord;
               FT_Pos  max = seg1->max_coord;
               FT_Pos  len, dist, score;
-              FT_Pos  size1, size2;
 
-
-              size1 = max - min;
-              size2 = seg2->max_coord - seg2->min_coord;
 
               if ( min < seg2->min_coord )
                 min = seg2->min_coord;

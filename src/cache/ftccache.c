@@ -360,8 +360,8 @@
 
       for ( i = 0; i < cache->size; i++ )
       {
-        FTC_Node   node, next, *pnode;
-        FT_UFast   hash;
+        FTC_Node  node, next, *pnode;
+        FT_UFast  hash;
 
 
         node = cache->buckets[i];

@@ -414,7 +414,7 @@
     {
       temp   = index1;
       index1 = index2;
-      index2 = index1;
+      index2 = temp;
     }
 
     if ( index1 < index2 && index1 >= 0 && index2 < (FT_Int)table->num_masks )

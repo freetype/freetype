@@ -143,6 +143,7 @@ FT_BEGIN_HEADER
 
   typedef enum
   {
+    PSH_BLUE_ALIGN_NONE = 0,
     PSH_BLUE_ALIGN_TOP = 1,
     PSH_BLUE_ALIGN_BOT = 2
 
