@@ -60,7 +60,7 @@
   /*   All convenience functions are declared as such in their             */
   /*   documentation.                                                      */
   /*                                                                       */
-#undef FT_CONFIG_OPTION_NO_CONVENIENCE_FUNCS
+#undef  FT_CONFIG_OPTION_NO_CONVENIENCE_FUNCS
 
   /*************************************************************************/
   /*                                                                       */
@@ -202,6 +202,15 @@
 #undef  FT_CONFIG_OPTION_LITTLE_ENDIAN
 #undef  FT_CONFIG_OPTION_BIG_ENDIAN
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Computation Algorithms                                                */
+  /*                                                                       */
+  /*   Used for debugging, this configuration macro should disappear       */
+  /*   soon..                                                              */
+  /*                                                                       */
+#define FT_CONFIG_OPTION_OLD_CALCS
 
   /*************************************************************************/
   /*                                                                       */
