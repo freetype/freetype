@@ -108,9 +108,9 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /*    Returns the horizontal metrics in font units for a given glyph.    */
-  /*    If `check' is true, take care of monospaced fonts by returning the */
-  /*    advance width maximum.                                             */
+  /* Returns the horizontal metrics in font units for a given glyph.  If   */
+  /* `check' is true, take care of monospaced fonts by returning the       */
+  /* advance width maximum.                                                */
   /*                                                                       */
   static
   void Get_HMetrics( TT_Face     face,
@@ -415,8 +415,8 @@
   FT_Error  TT_Load_Composite_Glyph( TT_Loader*  loader )
   {
     FT_Error         error;
-    FT_Stream        stream = loader->stream;
-    FT_GlyphLoader*  gloader   = loader->gloader;
+    FT_Stream        stream  = loader->stream;
+    FT_GlyphLoader*  gloader = loader->gloader;
     FT_SubGlyph*     subglyph;
     FT_UInt          num_subglyphs;
 
@@ -429,7 +429,7 @@
 
 
       /* check that we can load a new subglyph */
-      error = FT_GlyphLoader_Check_Subglyphs( gloader, num_subglyphs+1 );
+      error = FT_GlyphLoader_Check_Subglyphs( gloader, num_subglyphs + 1 );
       if ( error )
         goto Fail;
       
@@ -480,8 +480,7 @@
       subglyph->transform.yy = yy;
 
       num_subglyphs++;
-    }
-    while (subglyph->flags & MORE_COMPONENTS);
+    } while ( subglyph->flags & MORE_COMPONENTS );
 
     gloader->current.num_subglyphs = num_subglyphs;
 
@@ -562,7 +561,7 @@
     /* Note that we return two more points that are not */
     /* part of the glyph outline.                       */
 
-    n_points           += 2;
+    n_points += 2;
 
     /* set up zone for hinting */
     tt_prepare_zone( zone, &gloader->current, 0, 0 );
@@ -691,7 +690,7 @@
 
       Get_HMetrics( face, index,
                     (FT_Bool)!(loader->load_flags &
-                                 FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH),
+                                FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH),
                     &left_bearing,
                     &advance_width );
 
@@ -721,8 +720,10 @@
         loader->pp2.x = FT_MulFix( loader->pp2.x, x_scale );
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
       if ( loader->exec )
         loader->exec->glyphSize = 0;
+
 #endif
       error = FT_Err_Ok;
       goto Exit;
@@ -777,13 +778,20 @@
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
       {
         TT_Size size = (TT_Size)loader->size;
+
+
         error = TT_Process_Simple_Glyph( loader,
                                          (FT_Bool)( size && size->debug ) );
       }
+
 #else
+
       error = Process_Simple_Glyph( loader, 0 );
+
 #endif
-      if ( error ) goto Fail;
+
+      if ( error )
+        goto Fail;
 
       FT_GlyphLoader_Add( gloader );
 
@@ -830,15 +838,14 @@
       }
 
 
-    /***********************************************************************/
-    /***********************************************************************/
-    /***********************************************************************/
-
       /*********************************************************************/
-      /* Now, read each subglyph independently..                           */
+      /*********************************************************************/
+      /*********************************************************************/
+
+      /* Now, read each subglyph independently. */
       {
         FT_Int        n, num_base_points, num_new_points;
-        FT_SubGlyph*  subglyph;
+        FT_SubGlyph*  subglyph = 0;
         
         FT_UInt num_subglyphs  = gloader->current.num_subglyphs;
         FT_UInt num_base_subgs = gloader->base.num_subglyphs;
@@ -850,6 +857,7 @@
         {
           FT_Vector  pp1, pp2;
           FT_Pos     x, y;
+
 
           /* Each time we call load_truetype_glyph in this loop, the   */
           /* value of `gloader.base.subglyphs' can change due to table */
@@ -879,7 +887,7 @@
             loader->pp2 = pp2;
           }
 
-          num_points   = gloader->base.outline.n_points;
+          num_points = gloader->base.outline.n_points;
 
           num_new_points = num_points - num_base_points;
 
@@ -894,6 +902,7 @@
             FT_Vector*  org   = gloader->base.extra_points +
                                   num_base_points;
             FT_Vector*  limit = cur + num_new_points;
+
 
             for ( ; cur < limit; cur++, org++ )
             {
@@ -949,9 +958,9 @@
           cur_to_org( num_new_points, &loader->zone );
         }
 
-    /***********************************************************************/
-    /***********************************************************************/
-    /***********************************************************************/
+        /*******************************************************************/
+        /*******************************************************************/
+        /*******************************************************************/
 
         /* we have finished loading all sub-glyphs, now, look for */
         /* instructions for this composite!                       */
@@ -1036,11 +1045,11 @@
           cur_to_org( n_points, pts );
 
           /* now consider hinting */
-          if ( IS_HINTED(loader->load_flags) && n_ins > 0 )
+          if ( IS_HINTED( loader->load_flags ) && n_ins > 0 )
           {
             exec->is_composite     = TRUE;
             exec->pedantic_hinting =
-                (FT_Bool)(loader->load_flags & FT_LOAD_PEDANTIC);
+              (FT_Bool)( loader->load_flags & FT_LOAD_PEDANTIC );
 
             error = TT_Run_Context( exec, ((TT_Size)loader->size)->debug );
             if ( error && exec->pedantic_hinting )
@@ -1051,12 +1060,13 @@
           loader->pp1 = pp1[0];
           loader->pp2 = pp1[1];
         }
+
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+
       }
       /* end of composite loading */
     }
 
-    /***********************************************************************/
     /***********************************************************************/
     /***********************************************************************/
     /***********************************************************************/
@@ -1079,6 +1089,7 @@
     FT_Fixed      x_scale, y_scale;
     TT_GlyphSlot  glyph = loader->glyph;
     TT_Size       size = (TT_Size)loader->size;
+
 
     x_scale = 0x10000L;
     y_scale = 0x10000L;
@@ -1234,12 +1245,14 @@
       glyph->metrics.vertAdvance  = advance;
     }
 
-    /* Adjust advance width to the value contained in the hdmx table. */
+    /* adjust advance width to the value contained in the hdmx table */
     if ( !face->postscript.isFixedPitch && size &&
          IS_HINTED( loader->load_flags )        )
     {
       FT_Byte* widths = Get_Advance_Widths( face,
                                             size->root.metrics.x_ppem );
+
+
       if ( widths )
         glyph->metrics.horiAdvance = widths[glyph_index] << 6;
     }
@@ -1247,7 +1260,6 @@
     /* set glyph dimensions */
     glyph->metrics.width  = bbox.xMax - bbox.xMin;
     glyph->metrics.height = bbox.yMax - bbox.yMin;
-
   }
 
 
@@ -1367,7 +1379,7 @@
     error = face->goto_table( face, TTAG_glyf, stream, 0 );
     if ( error )
     {
-      FT_ERROR(( "TT_Load_Glyph: Could not access glyph table\n" ));
+      FT_ERROR(( "TT_Load_Glyph: could not access glyph table\n" ));
       goto Exit;
     }
 
@@ -1439,9 +1451,11 @@
       compute_glyph_metrics( &loader, glyph_index );
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     if ( !size || !size->debug )
       TT_Done_Context( loader.exec );
-#endif
+
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
   Exit:
     return error;

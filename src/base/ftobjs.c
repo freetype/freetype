@@ -2360,7 +2360,7 @@
   /*                                                                       */
   /*    To add a new renderer, simply use FT_Add_Module().  To retrieve a  */
   /*    renderer by its name, use FT_Get_Module().                         */
-  /*
+  /*                                                                       */
   FT_EXPORT_FUNC( FT_Renderer )  FT_Get_Renderer( FT_Library       library,
                                                   FT_Glyph_Format  format )
   {
@@ -2587,7 +2587,7 @@
     FT_UInt    nn;
 
 
-#define FREETYPE_VER_FIXED ( ( (FT_Long)FREETYPE_MAJOR << 16 ) |
+#define FREETYPE_VER_FIXED ( ( (FT_Long)FREETYPE_MAJOR << 16 ) | \
                                FREETYPE_MINOR                  )
 
     if ( !library || !clazz )
@@ -2786,7 +2786,7 @@
   /*                                                                       */
   /* <Note>                                                                */
   /*    The module object is destroyed by the function in case of success. */
-  /*
+  /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Remove_Module( FT_Library  library,
                                                 FT_Module   module )
   {

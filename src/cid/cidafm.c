@@ -36,7 +36,7 @@
 #define FT_COMPONENT  trace_cidafm
 
 
-#if 0
+#if 1
 
   LOCAL_FUNC
   void  CID_Done_AFM( FT_Memory  memory,
@@ -281,7 +281,7 @@
     kerning->y = 0;
   }
 
-#endif /* 0 */
+#endif /* 1 */
 
 
 /* END */

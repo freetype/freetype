@@ -38,7 +38,7 @@
   } T1_AFM;
 
 
-#if 0
+#if 1
 
   LOCAL_DEF
   FT_Error  CID_Read_AFM( FT_Face    t1_face,
@@ -54,7 +54,7 @@
                          FT_UInt     glyph2,
                          FT_Vector*  kerning );
 
-#endif /* 0 */
+#endif /* 1 */
 
 
 #endif /* CIDAFM_H */
