@@ -167,6 +167,7 @@
       FT_Offset  new_size  = table->capacity;
       FT_Long    in_offset;
       
+
       in_offset = (FT_Long)((FT_Byte*)object - table->block);
       if ( (FT_ULong)in_offset >= table->capacity )
         in_offset = -1;
