@@ -438,7 +438,7 @@
     seg4     = cmap4->segments;
     limit    = seg4 + segCount;
 
-    for ( ; seg4 < limit; seg4++ )
+    for ( ; seg4 < limit; seg4++, segCount-- )
     {
       if ( charCode <= seg4->endCount )
       {
@@ -455,7 +455,7 @@
         /* otherwise, we must use the glyphIdArray to do it            */
         {
           index1 = seg4->idRangeOffset/2 + (charCode - seg4->startCount)
-                   - (segCount-1);
+                   - segCount;
 
           if ( index1 < cmap4->numGlyphId       &&
                cmap4->glyphIdArray[index1] != 0 )
