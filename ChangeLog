@@ -1,3 +1,8 @@
+2002-04-17  Michael Jansson <mjan@em2-solutions.com>
+
+        * src/type1/t1gload.c (T1_Compute_Max_Advance): fixed a small bug
+          that prevented the function to return the correct value.
+
 2002-04-16  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
 
 	* src/pcf/pcfread (pcf_get_accell): Fix parsing of accelerator
