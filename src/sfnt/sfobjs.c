@@ -286,7 +286,8 @@
     /*                                                             */
 
     /* do we have outlines in there? */
-    has_outline   = ( TT_LookUp_Table( face, TTAG_glyf ) != 0 );
+    has_outline   = ( ( TT_LookUp_Table( face, TTAG_glyf ) != 0 ) ||
+		      ( TT_LookUp_Table( face, TTAG_CFF  ) != 0 ) );
     is_apple_sbit = 0;
     
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
@@ -337,7 +338,7 @@
     {
       /* return an error if this font file has no outlines */
       if ( error == TT_Err_Table_Missing && has_outline )
-        error = 0;
+        error = FT_Err_Ok;
       else
         goto Exit;
     }
