@@ -65,26 +65,22 @@ FT_BEGIN_HEADER
 
   typedef struct  CFF_Encoding_
   {
-    FT_Stream  stream;
+    FT_UInt     format;
+    FT_ULong    offset;
     
-    FT_UInt    format;
-    FT_ULong   offset;
-    FT_UInt    size;
-    
-    FT_Byte*   bytes;
+    FT_UShort*  sids;
+    FT_UShort*  codes;
   
   } CFF_Encoding;
 
 
   typedef struct  CFF_Charset_
   {
-    FT_Stream  stream;
     
-    FT_UInt    format;
-    FT_ULong   offset;
-    FT_UInt    size;
-    
-    FT_Byte*   bytes;
+    FT_UInt     format;
+    FT_ULong    offset;
+
+    FT_UShort*  sids;
   
   } CFF_Charset;
 
