@@ -825,6 +825,22 @@
   }
 
 
+#ifdef FT_CONFIG_OPTION_OLD_CALCS
+
+  static TT_F26Dot6  Norm( TT_F26Dot6  X, TT_F26Dot6  Y )
+  {
+    FT_Int64       T1, T2;
+
+    MUL_64( X, X, T1 );
+    MUL_64( Y, Y, T2 );
+
+    ADD_64( T1, T2, T1 );
+
+    return (TT_F26Dot6)SQRT_64( T1 );
+  }
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* Before an opcode is executed, the interpreter verifies that there are */
@@ -1194,7 +1210,7 @@
     else
     {
       TT_Long  x, y;
-#if 0
+#ifdef FT_CONFIG_OPTION_OLD_CALCS
       x = TT_MULDIV( CUR.GS.projVector.x, CUR.tt_metrics.x_ratio, 0x4000 );
       y = TT_MULDIV( CUR.GS.projVector.y, CUR.tt_metrics.y_ratio, 0x4000 );
       CUR.tt_metrics.ratio = Norm( x, y );
@@ -2126,6 +2142,98 @@
   /*    In case Vx and Vy are both zero, Normalize() returns SUCCESS, and  */
   /*    R is undefined.                                                    */
   /*                                                                       */
+
+#ifdef FT_CONFIG_OPTION_OLD_CALCS
+  static TT_Bool  Normalize( EXEC_OP_ TT_F26Dot6      Vx,
+                                      TT_F26Dot6      Vy,
+                                      TT_UnitVector*  R )
+  {
+    TT_F26Dot6  W;
+    TT_Bool     S1, S2;
+
+    if ( ABS( Vx ) < 0x10000L && ABS( Vy ) < 0x10000L )
+    {
+      Vx *= 0x100;
+      Vy *= 0x100;
+
+      W = Norm( Vx, Vy );
+
+      if ( W == 0 )
+      {
+        /* XXX : UNDOCUMENTED! It seems that it's possible to try  */
+        /*       to normalize the vector (0,0). Return immediately */
+        return SUCCESS;
+      }
+
+      R->x = (TT_F2Dot14)FT_MulDiv( Vx, 0x4000L, W );
+      R->y = (TT_F2Dot14)FT_MulDiv( Vy, 0x4000L, W );
+
+      return SUCCESS;
+    }
+
+    W = Norm( Vx, Vy );
+
+    Vx = FT_MulDiv( Vx, 0x4000L, W );
+    Vy = FT_MulDiv( Vy, 0x4000L, W );
+
+    W = Vx * Vx + Vy * Vy;
+
+    /* Now, we want that Sqrt( W ) = 0x4000 */
+    /* Or 0x1000000 <= W < 0x1004000        */
+
+    if ( Vx < 0 )
+    {
+      Vx = -Vx;
+      S1 = TRUE;
+    }
+    else
+      S1 = FALSE;
+
+    if ( Vy < 0 )
+    {
+      Vy = -Vy;
+      S2 = TRUE;
+    }
+    else
+      S2 = FALSE;
+
+    while ( W < 0x1000000L )
+    {
+      /* We need to increase W, by a minimal amount */
+      if ( Vx < Vy )
+        Vx++;
+      else
+        Vy++;
+
+      W = Vx * Vx + Vy * Vy;
+    }
+
+    while ( W >= 0x1004000L )
+    {
+      /* We need to decrease W, by a minimal amount */
+      if ( Vx < Vy )
+        Vx--;
+      else
+        Vy--;
+
+      W = Vx * Vx + Vy * Vy;
+    }
+
+    /* Note that in various cases, we can only  */
+    /* compute a Sqrt(W) of 0x3FFF, eg. Vx = Vy */
+
+    if ( S1 )
+      Vx = -Vx;
+
+    if ( S2 )
+      Vy = -Vy;
+
+    R->x = (TT_F2Dot14)Vx;   /* Type conversion */
+    R->y = (TT_F2Dot14)Vy;   /* Type conversion */
+
+    return SUCCESS;
+  }
+#else  
   static
   TT_Bool  Normalize( EXEC_OP_ TT_F26Dot6      Vx,
                                TT_F26Dot6      Vy,
@@ -2203,9 +2311,42 @@
       R->y = (TT_F2Dot14)TT_MULDIV( Vy >> shift, 0x4000, d );
     }
 
+    {
+      TT_ULong  x, y, w;
+      TT_Int    sx, sy;
+
+      sx = ( R->x >= 0 ? 1 : -1 );
+      sy = ( R->y >= 0 ? 1 : -1 );
+      x  = (TT_ULong)sx*R->x;
+      y  = (TT_ULong)sy*R->y;
+      
+      w = x*x+y*y;
+
+      /* we now want to adjust (x,y) in order to have sqrt(w) == 0x4000 */
+      /* which means 0x1000000 <= w < 0x1004000                         */
+      while ( w <= 0x10000000L )
+      {
+        /* increment the smallest coordinate */
+        if ( x < y )  x++;
+                 else y++;
+                 
+        w = x*x+y*y;
+      }
+      
+      while ( w >= 0x10040000L )
+      {
+        /* decrement the smallest coordinate */
+        if ( x < y )  x--;
+                 else y--;
+        w = x*x+y*y;
+      }
+
+      R->x = sx*x;
+      R->y = sy*y;
+    }
     return SUCCESS;
   }
-
+#endif
 
   /*************************************************************************/
   /*                                                                       */
