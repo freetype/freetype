@@ -6,7 +6,7 @@
 # Copyright 1996-2000 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
-# This file is part of the FreeType project, and may only be used modified
+# This file is part of the FreeType project, and may only be used, modified,
 # and distributed under the terms of the FreeType project license,
 # LICENSE.TXT.  By continuing to use, modify, or distribute this file you
 # indicate that you have read the license and understand and accept it
@@ -17,27 +17,72 @@
 # OTHER MAKEFILES.
 
 
-# The targets `objects' and `library' are defined at the end of this
-# Makefile when all rules have been included.
+# The following variables (set by other Makefile components, in the
+# environment, or on the command line) are used:
 #
-.PHONY: build_freetype objects library
+#   BUILD          The architecture dependent directory,
+#                  e.g. `$(TOP)/config/unix'.
+#
+#   OBJ_DIR        The directory in which object files are created.
+#
+#   LIB_DIR        The directory in which the library is created.
+#
+#   INCLUDES       A list of directories to be included additionally.
+#                  Usually empty.
+#
+#   CFLAGS         Compilation flags.  This overrides the default settings
+#                  in the platform-specific configuration files.
+#
+#   FTSYS_SRC      If set, its value is used as the name of a replacement
+#                  file for `src/base/ftsystem.c'.
+#
+#   FTDEBUG_SRC    If set, its value is used as the name of a replacement
+#                  file for `src/base/ftdebug.c'.  [For a normal build, this
+#                  file does nothing.]
+#
+#   FT_MODULE_LIST The file which contains the list of modules for the
+#                  current build.  Usually, this is automatically created by
+#                  `modules.mk'.
+#
+#   BASE_OBJ_S
+#   BASE_OBJ_M     A list of base objects (for single object and multiple
+#                  object builds, respectively).  Set up in
+#                  `src/base/rules.mk'.
+#
+#   BASE_EXT_OBJ   A list of base extension objects.  Set up in
+#                  `src/base/rules.mk'.
+#
+#   DRV_OBJ_S
+#   DRV_OBJ_M      A list of driver objects (for single object and multiple
+#                  object builds, respectively).  Set up cumulatively in
+#                  `src/<driver>/rules.mk'.
+#
+#   TOP, SEP,
+#   LIBRARY, CC,
+#   A, I, O, T     Check `config.mk' for details.
 
-# default target -- build objects and library
+
+# The targets `objects' and `library' are defined at the end of this
+# Makefile after all other rules have been included.
 #
-build_freetype: objects library
+.PHONY: single objects library
+
+# default target -- build single objects and library
+#
+single: objects library
 
 # `multi' target -- build multiple objects and library
 #
 multi: objects library
 
 
-# The FreeType source directory.
+# The FreeType source directory, usually `./src'.
 #
 SRC := $(TOP)$(SEP)src
 
 
-# The directory where the base layer components are placed.  By default,
-# this is `freetype/src/base'.
+# The directory where the base layer components are placed, usually
+# `./src/base'.
 #
 BASE_DIR := $(SRC)$(SEP)base
 
@@ -45,7 +90,7 @@ BASE_DIR := $(SRC)$(SEP)base
 # A few short-cuts in order to avoid typing $(SEP) all the time for the
 # directory separator.
 #
-# For example:  SRC_ equals to `./src/' where `.' is $(TOP).
+# For example: $(SRC_) equals to `./src/' where `.' is $(TOP).
 #
 #
 SRC_      := $(SRC)$(SEP)
@@ -57,7 +102,7 @@ INTERNAL_ := $(PUBLIC_)internal$(SEP)
 CONFIG_   := $(PUBLIC_)config$(SEP)
 
 
-# The name of the final library file.
+# The final name of the library file.
 #
 FT_LIBRARY := $(LIB_)$(LIBRARY).$A
 
@@ -76,7 +121,7 @@ INCLUDE_FLAGS = $(INCLUDES:%=$I%)
 
 
 # C flags used for the compilation of an object file.  This must include at
-# least the paths for the `base' and `config/<system>' directories,
+# least the paths for the `base' and `config/<system>' directories;
 # debug/optimization/warning flags + ansi compliance if needed.
 #
 FT_CFLAGS  = $(CFLAGS) $(INCLUDE_FLAGS)
@@ -84,57 +129,56 @@ FT_CC      = $(CC) $(FT_CFLAGS)
 FT_COMPILE = $(CC) $(ANSIFLAGS) $(FT_CFLAGS)
 
 
-# include the `modules' rules file
+# Include the `modules' rules file.
 #
 include $(TOP)/config/modules.mk
 
 
-# Free the lists of driver objects.
+# Initialize the list of objects.
 #
-COMPONENTS_LIST :=
-DRIVERS_LIST    :=
-OBJECTS_LIST    :=
+OBJECTS_LIST :=
+
 
 # Define $(PUBLIC_H) as the list of all public header files located in
-# `$(TOP)/include'.
+# `$(TOP)/include/freetype'.  $(BASE_H) and $(CONFIG_H) are defined
+# similarly.
 #
-PUBLIC_H := $(wildcard $(PUBLIC_)*.h)
-BASE_H   := $(wildcard $(INTERNAL_)*.h)
+# This is used to simplify the dependency rules -- if one of these files
+# changes, the whole library is recompiled.
+#
+PUBLIC_H   := $(wildcard $(PUBLIC_)*.h)
+BASE_H     := $(wildcard $(INTERNAL_)*.h)
+CONFIG_H   := $(wildcard $(CONFIG_)*.h)
 
-# System-specific component -- this must be defined in this Makefile for
-# easy updates.  The default ANSI ftsystem.c is located in
-# `freetype/config/ftsystem.c'.  However, some system-specific configuration
-# might define $(FTSYS_SRC) to fetch it in other places, like
-# `freetype/config/<system>/ftsystem.c'.
-#
-# $(BASE_H) is defined in `src/base/rules.mk' and contains the list of all
-# base layer header files.
+FREETYPE_H := $(PUBLIC_H) $(BASE_H) $(CONFIG_H)
+
+
+# ftsystem component
 #
 ifndef FTSYS_SRC
   FTSYS_SRC = $(BASE_)ftsystem.c
 endif
+
 FTSYS_OBJ = $(OBJ_)ftsystem.$O
 
 OBJECTS_LIST += $(FTSYS_OBJ)
 
-$(FTSYS_OBJ): $(FTSYS_SRC) $(BASE_H)
+$(FTSYS_OBJ): $(FTSYS_SRC) $(FREETYPE_H)
 	$(FT_COMPILE) $T$@ $<
 
 
 # ftdebug component
 #
-# FTDebug contains code used to print traces and errors.  It is normally
-# empty for a release build (see ftoption.h).
-#
-FTDEBUG_SRC = $(BASE_)ftdebug.c
+ifndef FTDEBUG_SRC
+  FTDEBUG_SRC = $(BASE_)ftdebug.c
+endif
+
 FTDEBUG_OBJ = $(OBJ_)ftdebug.$O
 
 OBJECTS_LIST += $(FTDEBUG_OBJ)
 
-$(FTDEBUG_OBJ): $(FTDEBUG_SRC) $(BASE_H)
+$(FTDEBUG_OBJ): $(FTDEBUG_SRC) $(FREETYPE_H)
 	$(FT_COMPILE) $T$@ $<
-
-
 
 
 # Include all rule files from FreeType components.
@@ -142,14 +186,14 @@ $(FTDEBUG_OBJ): $(FTDEBUG_SRC) $(BASE_H)
 include $(wildcard $(SRC)/*/rules.mk)
 
 
-# FTInit file
+# ftinit component
 #
 #   The C source `ftinit.c' contains the FreeType initialization routines.
 #   It is able to automatically register one or more drivers when the API
 #   function FT_Init_FreeType() is called.
 #
 #   The set of initial drivers is determined by the driver Makefiles
-#   includes above.  Each driver Makefile updates the FTINIT_xxxx lists
+#   includes above.  Each driver Makefile updates the FTINIT_xxx lists
 #   which contain additional include paths and macros used to compile the
 #   single `ftinit.c' source.
 #
@@ -158,7 +202,7 @@ FTINIT_OBJ := $(OBJ_)ftinit.$O
 
 OBJECTS_LIST += $(FTINIT_OBJ)
 
-$(FTINIT_OBJ): $(FTINIT_SRC) $(PUBLIC_H) $(FT_MODULE_LIST)
+$(FTINIT_OBJ): $(FTINIT_SRC) $(FREETYPE_H) $(FT_MODULE_LIST)
 	$(FT_COMPILE) $T$@ $<
 
 
@@ -221,11 +265,10 @@ remove_config_mk:
 
 # The `config.mk' file must define `clean_freetype' and
 # `distclean_freetype'.  Implementations may use to relay these to either
-# the `std' or `dos' versions, or simply provide their own implementation.
+# the `std' or `dos' versions from above, or simply provide their own
+# implementation.
 #
 clean: clean_freetype
 distclean: distclean_freetype remove_config_mk
 
 # EOF
-
-

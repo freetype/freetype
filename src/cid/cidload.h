@@ -42,7 +42,7 @@
                      FT_UShort  seed );
 
   LOCAL_DEF
-  FT_Error  T1_Open_Face( CID_Face  face );
+  FT_Error  CID_Open_Face( CID_Face  face );
 
 #ifdef __cplusplus
   }

@@ -17,6 +17,7 @@
 
 #include <t1driver.h>
 #include <t1gload.h>
+#include <t1load.h>
 #include <t1afm.h>
 
 #include <freetype/internal/ftdebug.h>
@@ -435,7 +436,7 @@
 
   EXPORT_FUNC(FT_DriverInterface*)  getDriverInterface( void )
   {
-    return &t1_driver_interface;
+    return &t1z_driver_interface;
   }
 
 #endif /* FT_CONFIG_OPTION_DYNAMIC_DRIVERS */

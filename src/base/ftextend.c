@@ -26,6 +26,7 @@
 
 
 #include <freetype/internal/ftextend.h>
+#include <freetype/internal/ftdebug.h>
 
 
   /*************************************************************************/

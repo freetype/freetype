@@ -25,6 +25,7 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1gload
 
+#include <t2load.h>
 #include <t2gload.h>
 
   typedef enum T2_Operator_

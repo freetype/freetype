@@ -6,7 +6,7 @@
 # Copyright 1996-2000 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
-# This file is part of the FreeType project, and may only be used modified
+# This file is part of the FreeType project, and may only be used, modified,
 # and distributed under the terms of the FreeType project license,
 # LICENSE.TXT.  By continuing to use, modify, or distribute this file you
 # indicate that you have read the license and understand and accept it
@@ -40,17 +40,17 @@
 # If TOP is not defined, default it to `.'
 #
 ifndef TOP
-TOP := .
+  TOP := .
 endif
 
-# Set auto-detection default to `ansi'.
+# Set auto-detection default to `ansi' resp. UNIX-like operating systems.
 # Note that we delay the evaluation of $(BUILD_CONFIG_), $(BUILD), and
 # $(CONFIG_RULES).
 #
-PLATFORM    := ansi
-DELETE      := $(RM)
-COPY        := cp
-SEP         := /
+PLATFORM := ansi
+DELETE   := $(RM)
+COPY     := cp
+SEP      := /
 
 BUILD_CONFIG_ = $(TOP)$(SEP)config$(SEP)
 BUILD         = $(BUILD_CONFIG_)$(PLATFORM)
@@ -84,7 +84,7 @@ ifndef CONFIG_FILE
 endif
 
 # The following targets are equivalent, with the exception that they use
-# slightly different syntaxes for the `echo' command.
+# a slightly different syntax for the `echo' command.
 #
 # std_setup: defined for most (i.e. Unix-like) platforms
 # dos_setup: defined for Dos-ish platforms like Dos, Windows & OS/2

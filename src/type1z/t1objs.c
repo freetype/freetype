@@ -106,7 +106,7 @@
     FT_Size_Metrics*  metrics = &size->root.metrics;
 
     if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
-      return FT_Err_Invalid_Argument;
+      return T1_Err_Invalid_Argument;
 
     /* Compute root ascender, descender, test height, and max_advance */
     metrics->ascender = ( FT_MulFix( face->root.ascender,

@@ -6,7 +6,7 @@
 # Copyright 1996-2000 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
-# This file is part of the FreeType project, and may only be used modified
+# This file is part of the FreeType project, and may only be used, modified,
 # and distributed under the terms of the FreeType project license,
 # LICENSE.TXT.  By continuing to use, modify, or distribute this file you
 # indicate that you have read the license and understand and accept it
@@ -36,7 +36,7 @@ PLATFORM := unix
 OBJ_DIR := obj
 
 
-# The directory where all library files are placed
+# The directory where all library files are placed.
 #
 # By default, this is the same as $(OBJ_DIR), however, this can be changed
 # to suit particular needs.
@@ -117,11 +117,11 @@ ifdef BUILD_FREETYPE
   FT_LIBRARIAN := $(AR) -r
 
 
-  # This final rule is used to link all object files into a single library. 
+  # This final rule is used to link all object files into a single library.
   # It is part of the system-specific sub-Makefile because not all
   # librarians accept a simple syntax like:
   #
-  #    librarian library_file {list of object files}
+  #   librarian library_file {list of object files}
   #
   $(FT_LIBRARY): $(OBJECTS_LIST)
 	  -$(DELETE) $@

@@ -148,14 +148,14 @@
    goto Exit;
  }                                  
 
- LOCAL_FUNC  FT_Error  T1_Get_Multi_Master( T1_Face          face,
+ LOCAL_FUNC  T1_Error  T1_Get_Multi_Master( T1_Face          face,
                                             FT_Multi_Master* master )
  {
    T1_Blend*  blend = face->blend;
    T1_UInt    n;
-   FT_Error   error;
+   T1_Error   error;
    
-   error = FT_Err_Invalid_Argument;
+   error = T1_Err_Invalid_Argument;
    if (blend)
    {
      master->num_axis    = blend->num_axis;
@@ -175,15 +175,15 @@
  }                                            
 
 
- LOCAL_FUNC  FT_Error  T1_Set_MM_Blend( T1_Face    face,
+ LOCAL_FUNC  T1_Error  T1_Set_MM_Blend( T1_Face    face,
                                         T1_UInt    num_coords,
                                         T1_Fixed*  coords )
  {
    T1_Blend*  blend = face->blend;
-   FT_Error   error;
+   T1_Error   error;
    T1_UInt    n, m;
    
-   error = FT_Err_Invalid_Argument;
+   error = T1_Err_Invalid_Argument;
    if (blend && blend->num_axis == num_coords)
    {
      /* recompute the weight vector from the blend coordinates */
@@ -213,15 +213,15 @@
  }
  
 
- LOCAL_FUNC  FT_Error  T1_Set_MM_Design( T1_Face   face,
+ LOCAL_FUNC  T1_Error  T1_Set_MM_Design( T1_Face   face,
                                          T1_UInt   num_coords,
                                          T1_Long*  coords )
  {
    T1_Blend*  blend = face->blend;
-   FT_Error   error;
+   T1_Error   error;
    T1_UInt    n, p;
    
-   error = FT_Err_Invalid_Argument;
+   error = T1_Err_Invalid_Argument;
    if (blend && blend->num_axis == num_coords)
    {
      /* compute the blend coordinates through the blend design map */
@@ -328,7 +328,7 @@
  {
    T1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
    T1_Int        n, num_axis;
-   FT_Error      error = 0;
+   T1_Error      error = 0;
    T1_Blend*     blend;
    FT_Memory     memory;
 
@@ -338,7 +338,7 @@
    {
      FT_ERROR(( "T1.parse_blend_axis_types: incorrect number of axis: %d\n",
                 num_axis ));
-     error = FT_Err_Invalid_File_Format;
+     error = T1_Err_Invalid_File_Format;
      goto Exit;
    }
    
@@ -363,7 +363,7 @@
      len = token->limit - token->start;
      if (len <= 0)
      {
-       error = FT_Err_Invalid_File_Format;
+       error = T1_Err_Invalid_File_Format;
        goto Exit;
      }
        
@@ -387,7 +387,7 @@
    T1_Int        num_axis;
    T1_Parser*    parser = &loader->parser;
    
-   FT_Error      error = 0;
+   T1_Error      error = 0;
    T1_Blend*     blend;
 
    /* get the array of design tokens - compute number of designs */   
@@ -396,7 +396,7 @@
    {
      FT_ERROR(( "T1.design positions: incorrect number of designs: %d\n",
                 num_designs ));
-     error = FT_Err_Invalid_File_Format;
+     error = T1_Err_Invalid_File_Format;
      goto Exit;
    }
    
@@ -428,7 +428,7 @@
        else if (n_axis != num_axis)
        {
          FT_ERROR(( "T1.design_positions: incorrect table\n" ));
-         error = FT_Err_Invalid_File_Format;
+         error = T1_Err_Invalid_File_Format;
          goto Exit;
        }
        
@@ -452,7 +452,7 @@
 
  static void  parse_blend_design_map( T1_Face  face, T1_Loader*  loader )
  {
-   FT_Error      error  = 0;
+   T1_Error      error  = 0;
    T1_Parser*    parser = &loader->parser;
    T1_Blend*     blend;
    T1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
@@ -466,7 +466,7 @@
    {
      FT_ERROR(( "T1.design map: incorrect number of axis: %d\n",
                 num_axis ));
-     error = FT_Err_Invalid_File_Format;
+     error = T1_Err_Invalid_File_Format;
      goto Exit;
    }
    old_cursor = parser->cursor;
@@ -500,7 +500,7 @@
      if (num_points <= 0 || num_points > T1_MAX_MM_MAP_POINTS)
      {
        FT_ERROR(( "T1.design map: incorrect table\n" ));
-       error = FT_Err_Invalid_File_Format;
+       error = T1_Err_Invalid_File_Format;
        goto Exit;
      }
      
@@ -525,7 +525,7 @@
 
  static void parse_weight_vector( T1_Face   face, T1_Loader*  loader )
  {
-   FT_Error      error  = 0;
+   T1_Error      error  = 0;
    T1_Parser*    parser = &loader->parser;
    T1_Blend*     blend  = face->blend;
    T1_Token_Rec  master;
@@ -536,7 +536,7 @@
    if (!blend || blend->num_designs == 0)
    {
      FT_ERROR(( "t1.weight_vector: too early !!\n" ));
-     error = FT_Err_Invalid_File_Format;
+     error = T1_Err_Invalid_File_Format;
      goto Exit;
    }
    
@@ -544,7 +544,7 @@
    if (master.type != t1_token_array)
    {
      FT_ERROR(( "t1.weight_vector: incorrect format !!\n" ));
-     error = FT_Err_Invalid_File_Format;
+     error = T1_Err_Invalid_File_Format;
      goto Exit;
    }
    
@@ -839,7 +839,7 @@
     }
 
     FT_ERROR(( "type1.read_binary_data: invalid size field\n" ));
-    parser->error = FT_Err_Invalid_File_Format;
+    parser->error = T1_Err_Invalid_File_Format;
     return 0;
   }
 
@@ -852,7 +852,7 @@
   void  parse_font_name( T1_Face  face, T1_Loader*  loader )
   {
     T1_Parser*  parser = &loader->parser;
-    FT_Error    error;
+    T1_Error    error;
     FT_Memory   memory = parser->memory;
     T1_Int      len;
     T1_Byte*    cur;
@@ -926,7 +926,7 @@
       if (cur >= limit)
       {
         FT_ERROR(( "type1.parse_encoding: out of bounds !!\n" ));
-        parser->error = FT_Err_Invalid_File_Format;
+        parser->error = T1_Err_Invalid_File_Format;
         return;
       }
     }
@@ -939,7 +939,7 @@
       T1_Int        count, n;
       T1_Table*     char_table = &loader->encoding_table;
       FT_Memory     memory     = parser->memory;
-      FT_Error      error;
+      T1_Error      error;
 
       /* read the number of entries in the encoding, should be 256 */
       count = T1_ToInt( parser );
@@ -1042,7 +1042,7 @@
       else
       {
         FT_ERROR(( "type1.parse_encoding: invalid token !!\n" ));
-        parser->error = FT_Err_Invalid_File_Format;
+        parser->error = T1_Err_Invalid_File_Format;
       }
     }
   }
@@ -1054,7 +1054,7 @@
     T1_Parser*  parser = &loader->parser;
     T1_Table*   table  = &loader->subrs;
     FT_Memory   memory = parser->memory;
-    FT_Error    error;
+    T1_Error    error;
     T1_Int      n;
 
     loader->num_subrs = T1_ToInt( parser );
@@ -1100,7 +1100,7 @@
     T1_Table*   code_table = &loader->charstrings;
     T1_Table*   name_table = &loader->glyph_names;
     FT_Memory   memory     = parser->memory;
-    FT_Error    error;
+    T1_Error    error;
 
     T1_Byte*    cur;
     T1_Byte*    limit = parser->limit;
@@ -1352,7 +1352,7 @@
     T1_Loader  loader;
     T1_Parser* parser;
     T1_Font*   type1 = &face->type1;
-    FT_Error   error;
+    T1_Error   error;
 
     t1_init_loader( &loader, face );
 
@@ -1379,13 +1379,13 @@
     if ( !loader.subrs.init )
     {
       FT_ERROR(( "T1.Open_Face: no subrs array in face !!\n" ));
-      error = FT_Err_Invalid_File_Format;
+      error = T1_Err_Invalid_File_Format;
     }
 
     if ( !loader.charstrings.init )
     {
       FT_ERROR(( "T1.Open_Face: no charstrings array in face !!\n" ));
-      error = FT_Err_Invalid_File_Format;
+      error = T1_Err_Invalid_File_Format;
     }
 
     loader.subrs.init  = 0;

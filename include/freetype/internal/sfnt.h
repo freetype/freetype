@@ -20,6 +20,7 @@
 #define SFNT_H
 
 #include <freetype/freetype.h>
+#include <freetype/internal/ftdriver.h>
 #include <freetype/internal/tttypes.h>
 
 

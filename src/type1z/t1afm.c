@@ -115,10 +115,10 @@
 
  /* parse an AFM file - for now, only read the kerning pairs */
   LOCAL_FUNC
-  FT_Error  T1_Read_AFM( FT_Face   t1_face,
+  T1_Error  T1_Read_AFM( FT_Face   t1_face,
                          FT_Stream stream )
   {
-    FT_Error       error;
+    T1_Error       error;
     FT_Memory      memory = stream->memory;
     FT_Byte*       start;
     FT_Byte*       limit;

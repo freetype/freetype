@@ -16,6 +16,7 @@
 /***************************************************************************/
 
 
+#include <freetype/internal/ftobjs.h>
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/psnames.h>
 #include <freetype/ttnameid.h>

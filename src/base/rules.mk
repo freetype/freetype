@@ -13,39 +13,31 @@
 # fully.
 
 
-# It sets the following variables, which are used by the master Makefile
+# It sets the following variables which are used by the master Makefile
 # after the call:
 #
-#    BASE_H:       The list of base layer header files on which the rest
-#                  of the library (i.e. drivers) rely.
+#   BASE_OBJ_S:   The single-object base layer.
+#   BASE_OBJ_M:   A list of all objects for a multiple-objects build.
+#   BASE_EXT_OBJ: A list of base layer extensions, i.e., components found
+#                 in `freetype/src/base' which are not compiled within the
+#                 base layer proper.
 #
-#    BASE_OBJ_S:   The single-object base layer.
-#    BASE_OBJ_M:   A list of all objects for a multiple-objects build.
-#    BASE_EXT_OBJ: A list of base layer extensions, i.e., components found
-#                  in `freetype/lib/base' which are not compiled within the
-#                  base layer proper.
+# BASE_H is defined in freetype.mk to simplify the dependency rules.
+
 
 BASE_COMPILE := $(FT_COMPILE) $I$(SRC_)base
 
+
 # Base layer sources
 #
-BASE_SRC := $(BASE_)ftcalc.c    \
-            $(BASE_)ftextend.c  \
-            $(BASE_)ftlist.c    \
-            $(BASE_)ftobjs.c    \
-            $(BASE_)ftstream.c  \
-            $(BASE_)ftoutln.c
-
-# Base layer headers
+#   ftsystem, ftinit, and ftdebug are handled by freetype.mk
 #
-BASE_H := $(INTERNAL_)ftcalc.h    \
-          $(INTERNAL_)ftdebug.h   \
-          $(INTERNAL_)ftdriver.h  \
-          $(INTERNAL_)ftextend.h  \
-          $(INTERNAL_)ftlist.h    \
-          $(INTERNAL_)ftobjs.h    \
-          $(INTERNAL_)ftstream.h
-
+BASE_SRC := $(BASE_)ftcalc.c   \
+            $(BASE_)ftextend.c \
+            $(BASE_)ftlist.c   \
+            $(BASE_)ftobjs.c   \
+            $(BASE_)ftstream.c \
+            $(BASE_)ftoutln.c
 
 # Base layer `extensions' sources
 #
@@ -57,10 +49,6 @@ BASE_EXT_SRC := $(BASE_)ftraster.c \
                 $(BASE_)ftglyph.c  \
                 $(BASE_)ftmm.c     \
                 $(BASE_)ftgrays.c
-
-# Base layer extensions headers
-#
-BASE_EXT_H := $(BASE_EXT_SRC:%c=%h)
 
 # Default extensions objects
 #
@@ -78,21 +66,20 @@ BASE_EXT_OBJ := $(BASE_EXT_SRC:$(BASE_)%.c=$(OBJ_)%.$O)
 BASE_OBJ_M := $(BASE_SRC:$(BASE_)%.c=$(OBJ_)%.$O)
 BASE_OBJ_S := $(OBJ_)ftbase.$O
 
-# Base layer root source file(s)
+# Base layer root source file for single build
 #
-BASE_SRC_M := $(BASE_SRC)
 BASE_SRC_S := $(BASE_)ftbase.c
-
-
-# Multiple objects build + extensions
-#
-$(OBJ_)ft%.$O: $(BASE_)ft%.c $(PUBLIC_H) $(BASE_H)
-	$(BASE_COMPILE) $T$@ $<
 
 
 # Base layer - single object build
 #
-$(BASE_OBJ_S): $(PUBLIC_H) $(BASE_H) $(BASE_SRC_S) $(BASE_SRC)
+$(BASE_OBJ_S): $(BASE_SRC_S) $(BASE_SRC) $(FREETYPE_H)
 	$(BASE_COMPILE) $T$@ $(BASE_SRC_S)
+
+
+# Multiple objects build + extensions
+#
+$(OBJ_)%.$O: $(BASE_)%.c $(FREETYPE_H)
+	$(BASE_COMPILE) $T$@ $<
 
 # EOF

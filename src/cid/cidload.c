@@ -477,7 +477,7 @@
   }
 
   LOCAL_FUNC
-  FT_Error  T1_Open_Face( CID_Face  face )
+  FT_Error  CID_Open_Face( CID_Face  face )
   {
     CID_Loader  loader;
     CID_Parser* parser;

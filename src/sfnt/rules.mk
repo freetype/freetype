@@ -13,84 +13,66 @@
 # fully.
 
 
-ifndef SFNT_INCLUDE
-  # SFNT driver directory
-  #
-  SFNT_DIR  := $(SRC_)sfnt
-  SFNT_DIR_ := $(SFNT_DIR)$(SEP)
+# SFNT driver directory
+#
+SFNT_DIR  := $(SRC_)sfnt
+SFNT_DIR_ := $(SFNT_DIR)$(SEP)
 
 
-  # additional include flags used when compiling the driver
-  #
-  SFNT_INCLUDE := $(SHARED) $(SFNT_DIR)
+# additional include flags used when compiling the driver
+#
+SFNT_INCLUDE := $(SFNT_DIR)
 
-  # compilation flags for the driver
-  #
-  SFNT_CFLAGS  := $(SFNT_INCLUDE:%=$I%)
-  SFNT_COMPILE := $(FT_COMPILE) $(SFNT_CFLAGS)
-
-
-  # driver sources (i.e., C files)
-  #
-  SFNT_DRV_SRC := $(SFNT_DIR_)ttload.c   \
-                  $(SFNT_DIR_)ttcmap.c   \
-                  $(SFNT_DIR_)ttsbit.c   \
-                  $(SFNT_DIR_)ttpost.c   \
-                  $(SFNT_DIR_)sfobjs.c   \
-                  $(SFNT_DIR_)sfdriver.c
-
-  # driver headers
-  #
-  SFNT_DRV_H := $(BASE_H)              \
-                $(SFNT_DIR_)sfobjs.h   \
-                $(SFNT_DIR_)ttload.h   \
-                $(SFNT_DIR_)ttsbit.h   \
-                $(SFNT_DIR_)ttcmap.h   \
-                $(SFNT_DIR_)ttpost.h
+# compilation flags for the driver
+#
+SFNT_CFLAGS  := $(SFNT_INCLUDE:%=$I%)
+SFNT_COMPILE := $(FT_COMPILE) $(SFNT_CFLAGS)
 
 
-  # driver object(s)
-  #
-  #   SFNT_DRV_OBJ_M is used during `debug' builds
-  #   SFNT_DRV_OBJ_S is used during `release' builds
-  #
-  SFNT_DRV_OBJ_M := $(SFNT_DRV_SRC:$(SFNT_DIR_)%.c=$(OBJ_)%.$O)
-  SFNT_DRV_OBJ_S := $(OBJ_)sfnt.$O
+# SFNT driver sources (i.e., C files)
+#
+SFNT_DRV_SRC := $(SFNT_DIR_)ttload.c   \
+                $(SFNT_DIR_)ttcmap.c   \
+                $(SFNT_DIR_)ttsbit.c   \
+                $(SFNT_DIR_)ttpost.c   \
+                $(SFNT_DIR_)sfobjs.c   \
+                $(SFNT_DIR_)sfdriver.c
+
+# SFNT driver headers
+#
+SFNT_DRV_H := $(SFNT_DRV_SRC:%c=%h)
 
 
-  # driver source file(s)
-  #
-  SFNT_DRV_SRC_M := $(SFNT_DRV_SRC)
-  SFNT_DRV_SRC_S := $(SFNT_DIR_)sfnt.c
+# SFNT driver object(s)
+#
+#   SFNT_DRV_OBJ_M is used during `multi' builds.
+#   SFNT_DRV_OBJ_S is used during `single' builds.
+#
+SFNT_DRV_OBJ_M := $(SFNT_DRV_SRC:$(SFNT_DIR_)%.c=$(OBJ_)%.$O)
+SFNT_DRV_OBJ_S := $(OBJ_)sfnt.$O
+
+# SFNT driver source file for single build
+#
+SFNT_DRV_SRC_S := $(SFNT_DIR_)sfnt.c
 
 
-  # driver - single object
-  #
-  #  the driver is recompiled if any of the header or source files is
-  #  changed as well as any of the shared source files found in
-  #  `shared'
-  #
-  $(SFNT_DRV_OBJ_S): $(BASE_H) $(SHARED_H) $(SFNT_DRV_H) \
-                     $(SFNT_DRV_SRC) $(SFNT_DRV_SRC_S)
-	  $(SFNT_COMPILE) $T$@ $(SFNT_DRV_SRC_S)
+# SFNT driver - single object
+#
+$(SFNT_DRV_OBJ_S): $(SFNT_DRV_SRC_S) $(SFNT_DRV_SRC) \
+                   $(FREETYPE_H) $(SFNT_DRV_H)
+	$(SFNT_COMPILE) $T$@ $(SFNT_DRV_SRC_S)
 
 
-  # driver - multiple objects
-  #
-  #   All objects are recompiled if any of the header files is changed
-  #
-  $(OBJ_)tt%.$O: $(SFNT_DIR_)tt%.c $(BASE_H) $(SHARED_H) $(SFNT_DRV_H)
-	  $(SFNT_COMPILE) $T$@ $<
-
-  $(OBJ_)sf%.$O: $(SFNT_DIR_)sf%.c $(BASE_H) $(SHARED_H) $(SFNT_DRV_H)
-	  $(SFNT_COMPILE) $T$@ $<
+# SFNT driver - multiple objects
+#
+$(OBJ_)%.$O: $(SFNT_DIR_)%.c $(FREETYPE_H) $(SFNT_DRV_H)
+	$(SFNT_COMPILE) $T$@ $<
 
 
-  # update main driver object lists
-  #
-  DRV_OBJS_S += $(SFNT_DRV_OBJ_S)
-  DRV_OBJS_M += $(SFNT_DRV_OBJ_M)
+# update main driver object lists
+#
+DRV_OBJS_S += $(SFNT_DRV_OBJ_S)
+DRV_OBJS_M += $(SFNT_DRV_OBJ_M)
 
-endif
 
 # EOF

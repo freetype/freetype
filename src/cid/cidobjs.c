@@ -228,7 +228,7 @@
     if ( FILE_Seek(0) )
       goto Exit;
       
-    error = T1_Open_Face( face );
+    error = CID_Open_Face( face );
     if (error) goto Exit;
 
     /* if we just wanted to check the format, leave successfully now */

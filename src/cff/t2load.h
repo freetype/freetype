@@ -46,6 +46,14 @@
   void  T2_Forget_Element( CFF_Index*  index,
                            FT_Byte*   *pbytes );
 
+  LOCAL_FUNC
+  FT_Error  T2_Load_CFF_Font( FT_Stream  stream,
+                              FT_Int     face_index,
+                              CFF_Font*  font );
+
+  LOCAL_FUNC
+  void  T2_Done_CFF_Font( CFF_Font*  font );
+
 
 #ifdef __cplusplus
   }

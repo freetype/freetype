@@ -6,7 +6,7 @@
 # Copyright 1996-2000 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
-# This file is part of the FreeType project, and may only be used modified
+# This file is part of the FreeType project, and may only be used, modified,
 # and distributed under the terms of the FreeType project license,
 # LICENSE.TXT.  By continuing to use, modify, or distribute this file you
 # indicate that you have read the license and understand and accept it
@@ -25,13 +25,13 @@ ifeq ($(PLATFORM),ansi)
     # We test for the COMSPEC environment variable, then run the `ver'
     # command-line program to see if its output contains the word `Windows'.
     #
-    # If this is true, we're running a win32 platform (or an emulation).
+    # If this is true, we are running a win32 platform (or an emulation).
     #
   else
     ifdef COMSPEC
       is_windows := $(findstring Windows,$(strip $(shell ver)))
     endif
-  endif  #test NT
+  endif  # test NT
 
   ifdef is_windows
 
@@ -41,10 +41,12 @@ ifeq ($(PLATFORM),ansi)
 
     CONFIG_FILE := w32-gcc.mk  # gcc Makefile by default
     SEP         := /
-    ifeq ($(CC),cc)
+    ifeq ($(firstword $(CC)),cc)
       CC        := gcc
     endif
 
+    # additionally, we provide hooks for various other compilers
+    #
     ifneq ($(findstring visualc,$(MAKECMDGOALS)),)     # Visual C/C++
       CONFIG_FILE := w32-vcc.mk
       SEP         := $(BACKSLASH)
@@ -73,7 +75,7 @@ ifeq ($(PLATFORM),ansi)
       lcc: setup
     endif
 
-    ifneq ($(findstring devel,$(MAKECMDGOALS)),)
+    ifneq ($(findstring devel,$(MAKECMDGOALS)),)       # development target
       CONFIG_FILE := w32-dev.mk
       CC          := gcc
       SEP         := /

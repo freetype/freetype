@@ -453,16 +453,14 @@
     /* check against the last segment */
     seg4 = cmap4->last_segment;
     
-    /* the following is equivalent to performing two tests, as in :     */
-    /*                                                                  */
-    /*  if ( charCode >= seg4->startCount && charCode <= seg4->endCount */
-    /*                                                                  */
-    /* Yes, that's a bit strange, but it's faster, and the idea behind  */
-    /* the cache is to significantly speed up charcode to glyph index   */
-    /* conversion..                                                     */
-    /*                                                                  */
-    /* Sorry if it isn't clear to your eyes..                           */
-    /*                                                                  */
+    /* the following is equivalent to performing two tests, as in         */
+    /*                                                                    */
+    /*  if ( charCode >= seg4->startCount && charCode <= seg4->endCount ) */
+    /*                                                                    */
+    /* Yes, that's a bit strange, but it's faster, and the idea behind    */
+    /* the cache is to significantly speed up charcode to glyph index     */
+    /* conversion.                                                        */
+
     if ( (TT_ULong)(charCode       - seg4->startCount) <
          (TT_ULong)(seg4->endCount - seg4->startCount) )
       goto Found;
@@ -471,6 +469,7 @@
     {
       /* the ranges are sorted in increasing order.  If we are out of */
       /* the range here, the char code isn't in the charmap, so exit. */
+
       if ( charCode > seg4->endCount )
         continue;
 

@@ -629,7 +629,7 @@
     T1_Int      len = 0;
     T1_Int      count;
     T1_String*  result;
-    FT_Error    error;
+    T1_Error    error;
 
     /* XXX : some stupid fonts have a "Notice" or "Copyright" string     */
     /*       that simply doesn't begin with an opening parenthesis, even */
@@ -913,9 +913,9 @@
 
 
   static
-  FT_Error  read_pfb_tag( FT_Stream  stream, T1_UShort *tag, T1_Long*  size )
+  T1_Error  read_pfb_tag( FT_Stream  stream, T1_UShort *tag, T1_Long*  size )
   {
-    FT_Error  error;
+    T1_Error  error;
 
     if (READ_UShort(*tag)) goto Exit;
     if (*tag == 0x8001 || *tag == 0x8002)
@@ -942,7 +942,7 @@
                            FT_Stream   stream,
                            FT_Memory   memory )
   {
-    FT_Error  error;
+    T1_Error  error;
     T1_UShort tag;
     T1_Long   size;
 
@@ -1095,7 +1095,7 @@
   {
     FT_Stream  stream = parser->stream;
     FT_Memory  memory = parser->memory;
-    FT_Error   error  = 0;
+    T1_Error   error  = 0;
     T1_Long    size;
 
     if (parser->in_pfb)
@@ -1182,7 +1182,7 @@
         if (cur >= limit)
         {
           FT_ERROR(("T1.Open_Private: could not find 'eexec' keyword\n"));
-          error = FT_Err_Invalid_File_Format;
+          error = T1_Err_Invalid_File_Format;
           goto Exit;
         }
       }

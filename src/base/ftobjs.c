@@ -192,9 +192,7 @@
     FT_TRACE7(( " Freeing block 0x%08p, ref 0x%08p\n",
                 P, P ? *P : (void*)0 ));
 
-    FT_Assert( P != 0 );
-
-    if ( *P )
+    if ( P && *P )
     {
       memory->free( memory, *P );
       *P = 0;

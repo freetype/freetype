@@ -300,6 +300,12 @@
   void      T1_ToToken( T1_Parser*    parser,
                         T1_Token_Rec* token );
 
+  LOCAL_FUNC
+  void  T1_ToTokenArray( T1_Parser*     parser,
+                         T1_Token_Rec*  tokens,
+                         T1_UInt        max_tokens,
+                         T1_Int*        pnum_tokens );
+
   LOCAL_DEF
   T1_Error  T1_Load_Field( T1_Parser*           parser,
                            const T1_Field_Rec*  field,

@@ -6,7 +6,7 @@
 # Copyright 1996-2000 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
-# This file is part of the FreeType project, and may only be used modified
+# This file is part of the FreeType project, and may only be used, modified,
 # and distributed under the terms of the FreeType project license,
 # LICENSE.TXT.  By continuing to use, modify, or distribute this file you
 # indicate that you have read the license and understand and accept it
@@ -25,8 +25,7 @@ ifeq ($(PLATFORM),ansi)
     is_dos := $(findstring Dos,$(shell ver))
 
     # We try to recognize a Dos session under OS/2.  The `ver' command
-    # returns `Operating System/2 ...' there, so `is_dos' should be empty
-    # there.
+    # returns `Operating System/2 ...' there, so `is_dos' should be empty.
     #
     # To recognize a Dos session under OS/2, we check COMSPEC for the
     # substring `MDOS\COMMAND'
@@ -49,6 +48,8 @@ ifeq ($(PLATFORM),ansi)
         CC        := gcc
       endif
 
+      # additionally, we provide hooks for various other compilers
+      #
       ifneq ($(findstring turboc,$(MAKECMDGOALS)),)     # Turbo C
         CONFIG_FILE := dos-tcc.mk
         SEP         := $(BACKSLASH)
@@ -63,14 +64,14 @@ ifeq ($(PLATFORM),ansi)
         .PHONY: watcom
       endif
 
-      ifneq ($(findstring borlandc16,$(MAKECMDGOALS)),) # Borland C/C++ 16 bits
+      ifneq ($(findstring borlandc16,$(MAKECMDGOALS)),) # Borland C/C++ 16-bit
         CONFIG_FILE := dos-bcc.mk
         SEP         := $(BACKSLASH)
         CC          := bcc
         .PHONY: borlandc16
       endif
 
-      ifneq ($(findstring borlandc,$(MAKECMDGOALS)),)   # Borland C/C++ 32 bits
+      ifneq ($(findstring borlandc,$(MAKECMDGOALS)),)   # Borland C/C++ 32-bit
         CONFIG_FILE := dos-bcc.mk
         SEP         := $(BACKSLASH)
         CC          := bcc32
