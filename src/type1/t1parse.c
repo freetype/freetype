@@ -356,8 +356,22 @@
       parser->root.limit = parser->base_dict + parser->base_len;
 
       T1_Skip_PS_Token( parser );
-      T1_Skip_Spaces  ( parser );
       cur = parser->root.cursor;
+      if ( *cur == '\r' )
+      {
+        cur++;
+        if ( *cur == '\n' )
+          cur++;
+      }
+      else if ( *cur == '\n' )
+        cur++;
+      else
+      {
+        FT_ERROR(( "T1_Get_Private_Dict:" ));
+        FT_ERROR(( " `eexec' not properly terminated\n" ));
+        error = T1_Err_Invalid_File_Format;
+        goto Exit;
+      }
 
       size = (FT_Long)( parser->base_len - ( cur - parser->base_dict ) );
 

@@ -1,3 +1,8 @@
+2004-01-20  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Skip exactly one
+	CR, LF, or CR/LF after `eexec'.
+
 2004-01-18  David Turner  <david@freetype.org>
 
         * src/sfnt/ttsbit.c: removed compiler warning
@@ -30,7 +35,6 @@
 
           introducing the new FT_ARRAY_COPY and FT_ARRAY_MOVE macros
           to make copying arrays easier
-
 
 2004-01-14  Werner Lemberg  <wl@gnu.org>
 
