@@ -119,7 +119,7 @@ if test "$echo_libs" = "yes" ; then
     eval "rpath=\"$hardcode_libdir_flag_spec\""
   fi
   libs="-lfreetype @LIBZ@"
-  if test "$libdir" != "/usr/lib" ; then
+  if test "$libdir" != "/usr/lib" && test "$libdir" != "/usr/lib64"; then
     echo -L$libdir $rpath $libs
   else
     echo $libs

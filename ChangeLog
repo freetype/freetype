@@ -1,3 +1,9 @@
+2004-11-16  Owen Taylor  <otaylor@redhat.com>
+
+	* builds/unix/freetype-config.in: Supress -L$libdir for
+	/usr/lib64 as well as /usr/lib. (Reported by Dan Winship - 
+	https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=139199)
+
 2004-11-11  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffdrivr.c (cff_service_ps_info): Updated.
