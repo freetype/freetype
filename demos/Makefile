@@ -23,7 +23,7 @@ endif
 ifdef no_config_mk
 
 exes:
-	@echo Please compile the library before the demo programs !!
+	@echo Please compile the library before the demo programs!
 
 else
 
@@ -50,7 +50,7 @@ endif
 # cannot take a long list of arguments, we simply erase the directory
 # contents..
 #
-.PHONY: clean  distclean
+.PHONY: clean distclean
 
 ifdef DOSLIKE
 clean_demo:
@@ -68,7 +68,7 @@ clean_demo:
 
 
 distclean_demo: clean_demo
-	-$(DELETE) $(BIN_)*
+	-$(DELETE) $(EXES:%=$(BIN_)%)
 endif
 
 clean: clean_demo

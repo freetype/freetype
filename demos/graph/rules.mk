@@ -75,7 +75,7 @@ include $(wildcard config/*/rules.mk)
 # Build the "graph" library from its objects. This should be changed
 # in the future in order to support more systems. Probably something
 # like a `config/<system>' hierarchy with a system-specific rules file
-# to indicate how to make a library file, but for know, I'll stick to
+# to indicate how to make a library file, but for now, I'll stick to
 # unix and OS/2-gcc..
 #
 #
@@ -92,8 +92,7 @@ $(OBJ_)%.$O: $(GRAPH_)%.c $(GRAPH_H)
 # a special rule is used for 'grinit.o' as it needs the definition
 # of some macros like "-DDEVICE_X11" or "-DDEVICE_OS2_PM"
 #
-$(OBJ_)grinit.$O: $(GRAPH_)grinit.c
-	$(CC) $(CFLAGS) $(GRAPH_INCLUDES:%=$I%) $I$(DEVICE_INCLUDES:%=$I%) $T$@ $< \
-                        $(DEVICES:%=$DDEVICE_%)
-
-
+$(OBJ_)grinit.$O: $(GRAPH_)grinit.c $(GRAPH_H)
+	$(CC) $(CFLAGS) $(GRAPH_INCLUDES:%=$I%)  \
+                    $(DEVICE_INCLUDES:%=$I%) \
+                    $(DEVICES:%=$DDEVICE_%) $T$@ $<
