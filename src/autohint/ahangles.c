@@ -133,6 +133,7 @@
   {
     AH_Angle  delta;
     
+
     delta = ( angle2 - angle1 );
     if ( delta < 0 )
       delta += AH_2PI;

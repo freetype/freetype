@@ -674,12 +674,14 @@
     }
   }
 
- /* compute all inflex points in a given glyph */
+
+  /* compute all inflex points in a given glyph */
   static void
   ah_outline_compute_inflections( AH_Outline*  outline )
   {
-    AH_Point**   contour       =  outline->contours;
-    AH_Point**   contour_limit =  contour + outline->num_contours;
+    AH_Point**  contour       =  outline->contours;
+    AH_Point**  contour_limit =  contour + outline->num_contours;
+
 
     /* load original coordinates in (u,v) */
     ah_setup_uv( outline, ah_uv_fxy );
@@ -698,8 +700,9 @@
       AH_Angle   diff_in, diff_out;
       FT_Int     finished = 0;
 
+
       /* compute first segment in contour */
-      first  = point;
+      first = point;
 
       start = end = first;
       do
@@ -707,8 +710,8 @@
         end = end->next;
         if ( end == first )
           goto Skip;
-      }
-      while ( end->u == first->u && end->v == first->v );
+
+      } while ( end->u == first->u && end->v == first->v );
 
       vec.x = end->u - start->u;
       vec.y = end->v - start->v;
@@ -724,14 +727,14 @@
           before = before->prev;
           if ( before == first )
             goto Skip;
-        }
-        while ( before->u == start->u && before->v == start->v );
+
+        } while ( before->u == start->u && before->v == start->v );
 
         vec.x    = start->u - before->u;
         vec.y    = start->v - before->v;
         angle_in = ah_angle( &vec );
-      }
-      while ( angle_in == angle_seg );
+
+      } while ( angle_in == angle_seg );
 
       first   = start;
       diff_in = ah_angle_diff( angle_in, angle_seg );
@@ -749,14 +752,14 @@
             after = after->next;
             if ( after == first )
               finished = 1;
-          }
-          while ( end->u == after->u && end->v == after->v );
+
+          } while ( end->u == after->u && end->v == after->v );
 
           vec.x     = after->u - end->u;
           vec.y     = after->v - end->v;
           angle_out = ah_angle( &vec );
-        }
-        while ( angle_out == angle_seg );
+
+        } while ( angle_out == angle_seg );
 
         diff_out = ah_angle_diff( angle_seg, angle_out );
 
@@ -769,8 +772,8 @@
           {
             start->flags |= ah_flag_inflection;
             start = start->next;
-          }
-          while ( start != end );
+
+          } while ( start != end );
 
           start->flags |= ah_flag_inflection;
         }
@@ -779,14 +782,13 @@
         end       = after;
         angle_seg = angle_out;
         diff_in   = diff_out;
-      }
-      while ( !finished );
+
+      } while ( !finished );
 
     Skip:
       ;
     }
   }
-
 
 
   FT_LOCAL_DEF( void )
@@ -1401,9 +1403,9 @@
   FT_LOCAL_DEF( void )
   ah_outline_detect_features( AH_Outline*  outline )
   {
-    ah_outline_compute_segments( outline );
-    ah_outline_link_segments   ( outline );
-    ah_outline_compute_edges   ( outline );
+    ah_outline_compute_segments   ( outline );
+    ah_outline_link_segments      ( outline );
+    ah_outline_compute_edges      ( outline );
     ah_outline_compute_inflections( outline );
   }
 

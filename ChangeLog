@@ -6,26 +6,36 @@
 
 2002-08-21  David Turner  <david@freetype.org>
 
-        * src/pshinter/pshalgo3.c, src/autohint/ahangles.c,
-        src/autohint/ahangles.h, src/autohint/ahglyph.c, src/autohint/ahhint.c,
-        src/autohint/ahtypes.h: the automatic and Postscript hinter now
-        automatically detect inflection points in glyph outlines and treats
-        them specially. This is very useful to prevent nasty effect like the
-        disappearing diagonals of "S" and "s" in many, many fonts..
+	The automatic and Postscript hinter now automatically detect
+	inflection points in glyph outlines and treats them specially.  This
+	is very useful to prevent nasty effect like the disappearing
+	diagonals of "S" and "s" in many, many fonts.
 
-        * src/tools/docmaker/docmaker.py, src/tools/docmaker/utils.py,
-        src/tools/docmaker/tohtml.py: updating the DocMaker tool
+	* src/autohint/ahtypes.h (ah_flag_inflection): New macro.
+	* src/autohint/ahangles.c (ah_angle_diff): New function.
+	* src/autohint/ahangles.h: Updated.
+	* src/autohint/ahglyph.c (ah_outline_compute_inflections): New
+	function.
+	(ah_outline_detect_features): Use it.
+	* src/autohint/ahhint.c (ah_hinter_align_strong_points)
+	[!AH_OPTION_NO_WEAK_INTERPOLATION]: Handle inflection.
 
-        * include/freetype/freetype.h, src/base/ftobjs.c: changing the type
-        of the "load_flags" parameter of FT_Load_Glyph and FT_Load_Char from
-        "FT_Int" to "FT_Int32", this in order to support more options.
-        
-        this should only break binary and/or source compatibility on
-        16-bit platforms (Atari?)
+	* src/tools/docmaker/docmaker.py, src/tools/docmaker/utils.py,
+	src/tools/docmaker/tohtml.py: Updating the DocMaker tool.
 
-        * src/pshinter/pshalgo3.c, src/base/ftobjs.c, src/base/ftobject.c,
-        src/autohint/ahglyph.c, include/freetype/freetype.h: fixing typos
-        and removing compiler warnings
+	* include/freetype/freetype.h: Changing the type of the "load_flags"
+	parameter from "FT_Int" to "FT_Int32", this in order to support more
+	options.  This should only break binary and/or source compatibility
+	on 16-bit platforms (Atari?).
+	(FT_LOAD_NO_AUTOHINT): New macro.
+
+	* src/base/ftobjs.c (FT_Load_Glyph): Updated.
+	Handle FT_LOAD_NO_AUTOHINT.
+	(FT_Load_Char): Updated.
+
+	* src/pshinter/pshalgo3.c, src/base/ftobjs.c, src/base/ftobject.c,
+	src/autohint/ahglyph.c, include/freetype/freetype.h: Fixing typos
+	and removing compiler warnings.
 
 2002-08-20  Werner Lemberg  <wl@gnu.org>
 

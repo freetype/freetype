@@ -1908,9 +1908,9 @@ FT_BEGIN_HEADER
   /*    *not* the values in `face.glyph.metrics'.                          */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FT_Load_Glyph( FT_Face  face,
-                 FT_UInt  glyph_index,
-                 FT_Int32 load_flags );
+  FT_Load_Glyph( FT_Face   face,
+                 FT_UInt   glyph_index,
+                 FT_Int32  load_flags );
 
 
   /*************************************************************************/
@@ -1968,7 +1968,7 @@ FT_BEGIN_HEADER
   /*    the vector outline being loaded should not be scaled to 26.6       */
   /*    fractional pixels, but kept in notional units.                     */
   /*                                                                       */
-#define FT_LOAD_NO_SCALE  1
+#define FT_LOAD_NO_SCALE  0x1
 
 
   /*************************************************************************/
@@ -1983,7 +1983,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    This flag is ignored if FT_LOAD_NO_SCALE is set.                   */
   /*                                                                       */
-#define FT_LOAD_NO_HINTING  2
+#define FT_LOAD_NO_HINTING  0x2
 
 
   /*************************************************************************/
@@ -1999,7 +1999,7 @@ FT_BEGIN_HEADER
   /*    Note that by default, @FT_Load_Glyph loads the glyph image in its  */
   /*    native format.                                                     */
   /*                                                                       */
-#define FT_LOAD_RENDER  4
+#define FT_LOAD_RENDER  0x4
 
 
   /*************************************************************************/
@@ -2014,7 +2014,7 @@ FT_BEGIN_HEADER
   /*    bitmaps of scalable formats, as the native glyph image will be     */
   /*    loaded, and can then be rendered through @FT_Render_Glyph.         */
   /*                                                                       */
-#define FT_LOAD_NO_BITMAP  8
+#define FT_LOAD_NO_BITMAP  0x8
 
 
   /*************************************************************************/
@@ -2030,7 +2030,7 @@ FT_BEGIN_HEADER
   /*    advance width), and that the glyph image will translated to match  */
   /*    the vertical bearings positions.                                   */
   /*                                                                       */
-#define FT_LOAD_VERTICAL_LAYOUT  16
+#define FT_LOAD_VERTICAL_LAYOUT  0x10
 
 
   /*************************************************************************/
@@ -2043,9 +2043,9 @@ FT_BEGIN_HEADER
   /*    the function should try to auto-hint the glyphs, even if a driver  */
   /*    specific hinter is available.                                      */
   /*                                                                       */
-  /*    Note that it is ignored if @FT_LOAD_NO_AUTOHINT is also set        */
+  /*    Note that it is ignored if @FT_LOAD_NO_AUTOHINT is also set.       */
   /*                                                                       */
-#define FT_LOAD_FORCE_AUTOHINT  32
+#define FT_LOAD_FORCE_AUTOHINT  0x20
 
 
   /*************************************************************************/
@@ -2059,7 +2059,7 @@ FT_BEGIN_HEADER
   /*    space around its black bits) when loading it.  For now, this       */
   /*    really only works with embedded bitmaps in TrueType fonts.         */
   /*                                                                       */
-#define FT_LOAD_CROP_BITMAP  64
+#define FT_LOAD_CROP_BITMAP  0x40
 
 
   /*************************************************************************/
@@ -2075,7 +2075,7 @@ FT_BEGIN_HEADER
   /*    error.  Otherwise, errors are ignored by the loader, sometimes     */
   /*    resulting in ugly glyphs.                                          */
   /*                                                                       */
-#define FT_LOAD_PEDANTIC  128
+#define FT_LOAD_PEDANTIC  0x80
 
 
   /*************************************************************************/
@@ -2090,7 +2090,7 @@ FT_BEGIN_HEADER
   /*    X-TrueType font server, in order to deal correctly with the        */
   /*    incorrect metrics contained in DynaLab's TrueType CJK fonts.       */
   /*                                                                       */
-#define FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH  512
+#define FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH  0x200
 
 
   /*************************************************************************/
@@ -2111,7 +2111,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    Note that the flag forces the load of unscaled glyphs.             */
   /*                                                                       */
-#define FT_LOAD_NO_RECURSE  1024
+#define FT_LOAD_NO_RECURSE  0x400
 
 
   /*************************************************************************/
@@ -2124,7 +2124,7 @@ FT_BEGIN_HEADER
   /*    the glyph loader should not try to transform the loaded glyph      */
   /*    image.                                                             */
   /*                                                                       */
-#define FT_LOAD_IGNORE_TRANSFORM  2048
+#define FT_LOAD_IGNORE_TRANSFORM  0x800
 
 
   /*************************************************************************/
@@ -2138,7 +2138,7 @@ FT_BEGIN_HEADER
   /*    glyph loader to use `ft_render_mode_mono' when calling             */
   /*    @FT_Render_Glyph.                                                  */
   /*                                                                       */
-#define FT_LOAD_MONOCHROME  4096
+#define FT_LOAD_MONOCHROME  0x1000
 
 
   /*************************************************************************/
@@ -2151,10 +2151,12 @@ FT_BEGIN_HEADER
   /*    the function should return the linearly scaled metrics expressed   */
   /*    in original font units, instead of the default 16.16 pixel values. */
   /*                                                                       */
-#define FT_LOAD_LINEAR_DESIGN  8192
+#define FT_LOAD_LINEAR_DESIGN  0x2000
+
 
   /* temporary hack! */
-#define FT_LOAD_SBITS_ONLY  16384
+#define FT_LOAD_SBITS_ONLY  0x4000
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2163,20 +2165,21 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A bit field constant, used with @FT_Load_Glyph to indicate that    */
-  /*    the auto-hinter should never be run. This can be important for     */
+  /*    the auto-hinter should never be run.  This can be important for    */
   /*    certain fonts where un-hinted output is better than auto-hinted    */
   /*    one.                                                               */
   /*                                                                       */
   /*    Note that this will _not_ prevent a native hinter to be run        */
   /*    when available (i.e. for Postscript fonts, or for TrueType ones    */
-  /*    when the bytecode interpreter was compiled in)                     */
+  /*    when the bytecode interpreter was compiled in).                    */
   /*                                                                       */
   /*    If you want to completely disable hinting, use @FT_LOAD_NO_HINTING */
   /*    instead.                                                           */
   /*                                                                       */
-  /*    The @FT_LOAD_FORCE_AUTOHINT flag will not work if this flag is set */
+  /*    The @FT_LOAD_FORCE_AUTOHINT flag will not work if this flag is     */
+  /*    set.                                                               */
   /*                                                                       */
-#define FT_LOAD_NO_AUTOHINT  32768
+#define FT_LOAD_NO_AUTOHINT  0x8000U
 
 
   /*************************************************************************/
@@ -2190,7 +2193,7 @@ FT_BEGIN_HEADER
   /*    embedded bitmaps are favored over outlines, vectors are always     */
   /*    scaled and grid-fitted.                                            */
   /*                                                                       */
-#define FT_LOAD_DEFAULT  0
+#define FT_LOAD_DEFAULT  0x0
 
 
   /*************************************************************************/
