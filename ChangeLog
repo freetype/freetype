@@ -6,7 +6,8 @@
         warnings with LCC-Win32
 
         * include/freetype/freetype.h, docs/VERSION.DLL,
-        builds/unix/configure.ac: updates for the upcoming 2.1.4 release
+        builds/unix/configure.ac, builds/unix/configure: updates for the upcoming
+	2.1.4 release
 
 2002-12-23  Anthony Fok <anthony@thizlinux.com>
 
