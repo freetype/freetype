@@ -1361,7 +1361,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    An enumeration used to list the bit flags used within the          */
-  /*    'flags' field of the @FT_Open_Args structure                       */
+  /*    `flags' field of the @FT_Open_Args structure.                      */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    ft_open_memory   :: This is a memory-based stream.                 */
@@ -1375,8 +1375,8 @@ FT_BEGIN_HEADER
   /*    ft_open_params   :: Use the `num_params' & `params' field.         */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    the 'ft_open_memory', 'ft_open_stream' and 'ft_open_pathname'      */
-  /*    flags are mutually exclusive..                                     */
+  /*    The `ft_open_memory', `ft_open_stream', and `ft_open_pathname'     */
+  /*    flags are mutually exclusive.                                      */
   /*                                                                       */
   typedef enum
   {
@@ -1447,23 +1447,24 @@ FT_BEGIN_HEADER
   /*                   opening a new face.                                 */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    the stream type is determined by the content of 'flags', which     */
+  /*    The stream type is determined by the contents of `flags' which     */
   /*    are tested in the following order by @FT_Open_Face:                */
   /*                                                                       */
-  /*    if the 'ft_open_memory' bit is set, assume that this is a          */
-  /*    memory file, located at 'memory_address', of 'memory_size' bytes   */
+  /*    If the `ft_open_memory' bit is set, assume that this is a          */
+  /*    memory file of `memory_size' bytes,located at `memory_address'.    */
   /*                                                                       */
-  /*    otherwise, if the 'ft_open_stream' bit is set, assume that         */
-  /*    a custom input stream is used, a grab it in 'stream'.              */
+  /*    Otherwise, if the `ft_open_stream' bit is set, assume that a       */
+  /*    custom input stream `stream' is used.                              */
   /*                                                                       */
-  /*    otherwise, if the 'ft_open_pathname' bit is set, assume that       */
-  /*    this is a normal file and use the "pathname" to open it.           */
+  /*    Otherwise, if the `ft_open_pathname' bit is set, assume that this  */
+  /*    is a normal file and use `pathname' to open it.                    */
   /*                                                                       */
-  /*    if the 'ft_open_driver' bit is set, @FT_Open_Face will only        */
-  /*    try to open the file with the driver whose handler is in "driver"  */
+  /*    If the `ft_open_driver' bit is set, @FT_Open_Face() will only      */
+  /*    try to open the file with the driver whose handler is in `driver'. */
   /*                                                                       */
-  /*    if the 'ft_open_params' bit is set, the parameters given by        */
-  /*    "num_params" and "params" will be used. They're ignored otherwise  */
+  /*    If the `ft_open_params' bit is set, the parameters given by        */
+  /*    `num_params' and `params' will be used.  They are ignored          */
+  /*    otherwise.                                                         */
   /*                                                                       */
   typedef struct  FT_Open_Args_
   {
