@@ -268,8 +268,8 @@ FT_BEGIN_HEADER
 
 #define GET_ShortLE()   FT_GET_MACRO( FT_Get_ShortLE, FT_Short )
 #define GET_UShortLE()  FT_GET_MACRO( FT_Get_ShortLE, FT_UShort )
-#define GET_LongLE()    FT_GET_MACRO( FT_Get_LongLE, FT_Short )
-#define GET_ULongLE()   FT_GET_MACRO( FT_Get_LongLE, FT_Short )
+#define GET_LongLE()    FT_GET_MACRO( FT_Get_LongLE, FT_Long )
+#define GET_ULongLE()   FT_GET_MACRO( FT_Get_LongLE, FT_ULong )
 
 #define FT_READ_MACRO( func, type, var )        \
           ( var = (type)func( stream, &error ), \
