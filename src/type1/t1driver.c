@@ -313,6 +313,7 @@
     (FTDriver_getKerning)   Get_Kerning,
     (FTDriver_attachFile)   T1_Read_AFM
 #endif
+    (FTDriver_getAdvances)          0
   };
 
 
