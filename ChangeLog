@@ -1,3 +1,15 @@
+2004-11-19  Werner Lemberg  <wl@gnu.org>
+
+	Fix a serious bug in the TT hinter.
+
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph): Don't shift
+	points vertically before hinting.
+
+	* docs/CHANGES: Updated.
+
+	* src/cache/ftcglyph.c (FTC_GNode_UnselectFamily,
+	FTC_GCache_Lookup): A new try to fix comparison with zero.
+
 2004-11-16  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.ac: Add `-fno-strict-aliasing' if gcc is
