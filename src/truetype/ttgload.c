@@ -1034,7 +1034,8 @@
           {
             FT_TRACE0(( "Too many instructions (%d) in composite glyph %ld\n",
                         n_ins, subglyph->index ));
-            return TT_Err_Too_Many_Hints;
+            error = TT_Err_Too_Many_Hints;
+            goto Fail;
           }
 
           /* read the instructions */

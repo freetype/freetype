@@ -906,12 +906,19 @@
                                      glyph_index, load_flags );
     }
     else
+    {
       error = driver->clazz->load_glyph( slot,
                                          face->size,
                                          glyph_index,
                                          load_flags );
-    if ( error )
-      goto Exit;
+      if ( error )
+        goto Exit;
+
+      /* check that the loaded outline is correct !! */      
+      error = FT_Outline_Check( &slot->outline );
+      if ( error )
+        goto Exit;
+    }
 
   Load_Ok:
     /* compute the advance */
