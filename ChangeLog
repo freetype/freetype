@@ -1,3 +1,11 @@
+2000-12-01  David Turner  <david.turner@freetype.org>
+
+	* builds/unix/configure.in, builds/unix/configure,
+	builds/cygwin/configure.in, builds/cygwin/configure: setting 
+	"version_info" to 6:1:0 for the 2.0.1 release
+
+	* CHANGES: added a summary of changes between 2.0.1 and 2.0
+
 2000-12-01  Werner Lemberg  <wl@gnu.org>
 
 	* INSTALL: Revised.
