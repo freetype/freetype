@@ -542,10 +542,11 @@
       </font>
      
       <p>The parameter <tt>render_mode</tt> is a set of bit flags used
-         to specify how to render the glyph image. Set it to 0 to render
-         a monochrome bitmap, or to <tt>ft_render_mode_antialias</tt> to
-         generate a high-quality (256 gray levels) anti-aliased bitmap
-         from the glyph image.</p>
+         to specify how to render the glyph image. Set it to 0, or the
+         equivalent <tt>ft_render_mode_normal</tt> to render a high-quality
+         anti-aliased (256 gray levels) bitmap, as this is the default.
+         You can alternatively use <tt>ft_render_mode_mono</tt> if you
+         want to generate a 1-bit monochrome bitmap.</p>
 
       <p>Once you have a bitmapped glyph image, you can access it directly
          through <tt><b>glyph->bitmap</b></tt> (a simple bitmap descriptor),
@@ -675,10 +676,23 @@
          of (0,0) will be used). The vector coordinates are expressed in
          1/64th of a pixel (also known as 26.6 fixed floats).</p>
      
-      <p><em>NOTA BENE: The transform is applied every glyph that is loaded
-         through <tt>FT_Load_Glyph</tt>. Note that loading a glyph bitmap
-         with a non-trivial transform will produce an error..</em></p>
-     
+      <font color="red">
+      <p>NOTA BENE: The transform is applied to every glyph that is loaded
+         through <tt>FT_Load_Glyph</tt> and is <b>completely independent
+         of any hinting process.</b> This means that you won't get the same
+         results if you load a glyph at the size of 24 pixels, or a glyph at
+         the size at 12 pixels scaled by 2 through a transform, because the
+         hints will have been computed differently (unless, of course you
+         disabled hints).</em></p></font>
+
+      <p>If you ever need to use a non-orthogonal transform with optimal
+         hints, you first need to decompose your transform into a scaling part
+         and a rotation/shearing part. Use the scaling part to compute a new
+         character pixel size, then the other one to call FT_Set_Transform.
+         This is explained in details in a later section of this tutorial.</p>
+         
+      <p>Note also that loading a glyph bitmap with a non-identity transform
+         will produce an error..</p>
       <hr>
 
     <h3>
@@ -721,7 +735,7 @@
          if (error) continue;  // ignore errors
          
          // convert to an anti-aliased bitmap
-         error = FT_Render_Glyph( face->glyph, ft_render_mode_antialias );
+         error = FT_Render_Glyph( face->glyph, ft_render_mode_normal );
          if (error) continue;
          
          // now, draw to our target surface
@@ -790,7 +804,7 @@
        for ( n = 0; n &lt; num_chars; n++ )
        {
          // load glyph image into the slot (erase previous one)
-         error = FT_Load_Char( face, text[n], FT_LOAD_RENDER | FT_LOAD_ANTI_ALIAS );
+         error = FT_Load_Char( face, text[n], FT_LOAD_RENDER );
          if (error) continue;  // ignore errors
          
          // now, draw to our target surface
@@ -815,12 +829,15 @@
       
       <li><p>
           We do not use <tt>FT_LOAD_DEFAULT</tt> for the loading mode, but
-          the two bit flags <tt><b>FT_LOAD_RENDER</b></tt> and
-          <tt><b>FT_LOAD_ANTI_ALIAS</b></tt>. The first flag indicates that
-          the glyph image must be immediately converted to a bitmap, and
-          the second that it should be renderer anti-aliased. Of course, this
-          is also a shortcut that avoids calling <tt>FT_Render_Glyph</tt>
-          explicitely but is strictly equivalent..
+          the bit flag <tt><b>FT_LOAD_RENDER</b></tt>. It indicates that
+          the glyph image must be immediately converted to an anti-aliased
+          bitmap. This is of course a shortcut that avoids calling
+          <tt>FT_Render_Glyph</tt> explicitely but is strictly equivalent.</p>
+          
+          <p>
+          Note that you can also specify that you want a monochrome bitmap
+          instead by using the addition <tt><b>FT_LOAD_MONOCHROME</b></tt>
+          load flag.
       </p></li>
     </ul>  
     
@@ -857,7 +874,7 @@
          FT_Set_Transform( face, &matrix, &pen );
          
          // load glyph image into the slot (erase previous one)
-         error = FT_Load_Char( face, text[n], FT_LOAD_RENDER | FT_LOAD_ANTI_ALIAS );
+         error = FT_Load_Char( face, text[n], FT_LOAD_RENDER );
          if (error) continue;  // ignore errors
          
          // now, draw to our target surface (convert position)
@@ -908,6 +925,9 @@
        complex than the previous one, it is strictly equivalent
        for the case where the transform is the identity.. Hence it can
        be used as a replacement (but a more powerful one).</p>
+
+    <p>It has however a few short comings that we will explain, and solve,
+       in the next part of this tutorial.</p>
 
     <hr>
 
