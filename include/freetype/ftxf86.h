@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Support functions for X11.                                           */
 /*                                                                         */
-/*  Copyright 2002, 2003 by                                                */
+/*  Copyright 2002, 2003, 2004 by                                          */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -50,7 +50,7 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    Font format string.  NULL in case of error.                        */
   /*                                                                       */
-  FT_EXPORT_DEF( const char* )
+  FT_EXPORT( const char* )
   FT_Get_X11_Font_Format( FT_Face  face );
 
  /* */
