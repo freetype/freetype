@@ -82,7 +82,7 @@ FT_BEGIN_HEADER
 
   typedef struct  PSH_DimensionRec_
   {
-    PSH_WidthsRec  std;
+    PSH_WidthsRec  stdw;
     FT_Fixed       scale_mult;
     FT_Fixed       scale_delta;
 
