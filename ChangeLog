@@ -1,6 +1,8 @@
 2001-05-25  David Turner  <david@freetype.org>
 
-    * moved several documents from the top-level to the "docs" directory
+	Moved several documents from the top-level to the "docs" directory.
+
+	* src/base/ftcalc.c (FT_DivFix): Small fix to return value.
 
 2001-05-16  David Turner  <david@freetype.org>
 
