@@ -1648,7 +1648,7 @@
   static FT_Error
   T42_Size_Init( T42_Size  size )
   {
-    FT_Face   face = size->root.face;
+    FT_Face   face    = size->root.face;
     T42_Face  t42face = (T42_Face)face;
     FT_Size   ttsize;
     FT_Error  error   = T42_Err_Ok;
