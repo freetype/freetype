@@ -128,44 +128,43 @@ FT_BEGIN_HEADER
 #endif
 
 
-  /* determine wether we have a 64-bit int type for platforms without */
-  /* Autoconf..                                                       */
-  /*                                                                  */
+  /* determine whether we have a 64-bit int type for platforms without */
+  /* Autoconf                                                          */
 #if FT_SIZEOF_LONG == 8
 
   /* FT_LONG64 must be defined if a 64-bit type is available */
-#  define FT_LONG64
-#  define FT_INT64   long
+#define FT_LONG64
+#define FT_INT64  long
 
-#elif defined(_MSC_VER)      /* Visual C++ (and Intel C++) */
+#elif defined( _MSC_VER )      /* Visual C++ (and Intel C++) */
 
-    /* this compiler provides the __int64 type */
-#    define FT_LONG64
-#    define FT_INT64  __int64
+  /* this compiler provides the __int64 type */
+#define FT_LONG64
+#define FT_INT64  __int64
 
-#  elif defined(__BORLANDC__)  /* Borland C++ */
+#elif defined( __BORLANDC__ )  /* Borland C++ */
 
-	/* XXXX: we should probably check the value of __BORLANDC__ in order */
-	/*       to test the compiler version..                              */
+  /* XXXX: We should probably check the value of __BORLANDC__ in order */
+  /*       to test the compiler version.                               */
 
-    /* this compiler provides the __int64 type */
-#    define FT_LONG64
-#    define FT_INT64  __int64
+  /* this compiler provides the __int64 type */
+#define FT_LONG64
+#define FT_INT64  __int64
 
-#  elif defined(__WATCOMC__)   /* Watcom C++ */
+#elif defined( __WATCOMC__ )   /* Watcom C++ */
 
-    /* Watcom doesn't provide 64-bit data types */
+  /* Watcom doesn't provide 64-bit data types */
 
-#  elif defined(__MWKS__)      /* Metrowerks CodeWarrior */
+#elif defined( __MWKS__ )      /* Metrowerks CodeWarrior */
 
-    /* I don't know if it provides 64-bit data types, any suggestion */
-	/* is welcomed there..                                           */
+  /* I don't know if it provides 64-bit data types, any suggestion */
+  /* is welcome.                                                   */
 
-#  elif defined(__GNUC__)
+#elif defined( __GNUC__ )
 
-    /* GCC provides the "long long" type */
-#    define FT_LONG64
-#    define FT_INT64   long long int
+  /* GCC provides the "long long" type */
+#define FT_LONG64
+#define FT_INT64  long long int
 
 #endif /* !FT_LONG64 */
 
@@ -173,27 +172,21 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* A 64-bit data type will create compilation problems if you compile    */
-  /* in strict ANSI mode. To avoid them, we disable their use if           */
-  /* __STDC__ is defined. You can however ignore this rule by              */
-  /* defining the FT_CONFIG_OPTION_FORCE_INT64 configuration macro..       */
+  /* in strict ANSI mode.  To avoid them, we disable their use if          */
+  /* __STDC__ is defined.  You can however ignore this rule by             */
+  /* defining the FT_CONFIG_OPTION_FORCE_INT64 configuration macro.        */
   /*                                                                       */
-#if defined(FT_LONG64) && !defined(FT_CONFIG_OPTION_FORCE_INT64)
+#if defined( FT_LONG64 ) && !defined( FT_CONFIG_OPTION_FORCE_INT64 )
 
-#  ifdef __STDC__
+#ifdef __STDC__
 
-    /* undefine the 64-bit macros in strict ANSI compilation mode */
-#    undef FT_LONG64
-#    undef FT_INT64
+  /* undefine the 64-bit macros in strict ANSI compilation mode */
+#undef FT_LONG64
+#undef FT_INT64
 
-#  endif /* __STDC__ */
+#endif /* __STDC__ */
 
 #endif /* FT_LONG64 && !FT_CONFIG_OPTION_FORCE_INT64 */
-
-
-
-
-
-
 
 
 #ifdef FT_MAKE_OPTION_SINGLE_OBJECT

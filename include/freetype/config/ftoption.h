@@ -140,19 +140,19 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* Many compilers provide a non-ANSI 64-bit data type that can be used   */
-  /* by FreeType to speed up some computations. However, this will create  */
+  /* by FreeType to speed up some computations.  However, this will create */
   /* some problems when compiling the library in strict ANSI mode.         */
   /*                                                                       */
   /* For this reason, the use of 64-bit ints is normally disabled when     */
-  /* the __STDC__ macro is defined. You can however disable this by        */
-  /* defining here the macro FT_CONFIG_OPTION_FORCE_INT64                  */
+  /* the __STDC__ macro is defined.  You can however disable this by       */
+  /* defining here the macro FT_CONFIG_OPTION_FORCE_INT64.                 */
   /*                                                                       */
   /* For most compilers, this will only create compilation warnings        */
-  /* when building the library..                                           */
+  /* when building the library.                                            */
   /*                                                                       */
-  /* ObNote: the compiler-specific 64-bit integers are detected in the     */
+  /* ObNote: The compiler-specific 64-bit integers are detected in the     */
   /*         file "ftconfig.h" either statically, or through Autoconf      */
-  /*         on platforms that support it..                                */
+  /*         on platforms that support it.                                 */
   /*                                                                       */
 #define FT_CONFIG_OPTION_FORCE_INT64
 
@@ -210,9 +210,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Don't define any of these macros to compile in `release' mode!      */
   /*                                                                       */
-
 /* #define  FT_DEBUG_LEVEL_ERROR */
 /* #define  FT_DEBUG_LEVEL_TRACE */
+
 
   /*************************************************************************/
   /*                                                                       */
