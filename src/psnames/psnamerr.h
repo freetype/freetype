@@ -30,8 +30,10 @@
 
 #undef __FTERRORS_H__
 
-#define FT_ERRORDEF( e, v, s )    PSnames_Err_ ## e = v + FT_Mod_Err_PSnames,
-#define FT_NOERRORDEF( e, v, s )  PSnames_Err_ ## e = v,
+#define FT_ERRORDEF_( e, v, s )   \
+          FT_ERRORDEF( PSnames_Err_ ## e, v + FT_Mod_Err_PSnames, s )
+#define FT_NOERRORDEF_( e, v, s ) \
+          FT_ERRORDEF( PSnames_Err_ ## e, v, s )
 
 #define FT_ERROR_START_LIST       enum {
 #define FT_ERROR_END_LIST         PSnames_Err_Max };

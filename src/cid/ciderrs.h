@@ -29,8 +29,10 @@
 
 #undef __FTERRORS_H__
 
-#define FT_ERRORDEF( e, v, s )    CID_Err_ ## e = v + FT_Mod_Err_CID,
-#define FT_NOERRORDEF( e, v, s )  CID_Err_ ## e = v,
+#define FT_ERRORDEF_( e, v, s )   \
+          FT_ERRORDEF( CID_Err_ ## e, v + FT_Mod_Err_CID, s )
+#define FT_NOERRORDEF_( e, v, s ) \
+          FT_ERRORDEF( CID_Err_ ## e, v, s )
 
 #define FT_ERROR_START_LIST       enum {
 #define FT_ERROR_END_LIST         CID_Err_Max };
