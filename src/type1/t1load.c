@@ -1303,11 +1303,11 @@
                  (const char*)name_table->elements[0] ) &&
          notdef_found                                      )
     {
-
-      /* Swap glyph in index 0 with /.notdef glyph.  First, add index 0 name and   */
-      /* code entires to swap_table. Then place notdef_index name and code entires */
-      /* into swap_table.  Then swap name and code entries at indices notdef_index */
-      /* and 0 using values stored in swap_table.                                  */
+      /* Swap glyph in index 0 with /.notdef glyph.  First, add index 0    */
+      /* name and code entires to swap_table. Then place notdef_index name */
+      /* and code entires into swap_table.  Then swap name and code        */
+      /* entries at indices notdef_index and 0 using values stored in      */
+      /* swap_table.                                                       */
 
       /* Index 0 name */
       error = T1_Add_Table( swap_table, 0,
