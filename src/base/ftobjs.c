@@ -2409,46 +2409,50 @@
   FT_Error  FT_Get_Outline_CBox( FT_Outline*  outline,
                                  FT_BBox*     cbox )
   {
+    FT_Pos  xMin, yMin, xMax, yMax;
+    
     if ( outline && cbox )
     {
       if ( outline->n_points == 0 )
       {
-        cbox->xMin = 0;
-        cbox->yMin = 0;
-        cbox->xMax = 0;
-        cbox->yMax = 0;
+        xMin = 0;
+        yMin = 0;
+        xMax = 0;
+        yMax = 0;
       }
       else
       {
-        FT_UShort   k;
-        FT_Vector*  vec = outline->points;
+        FT_Vector*  vec   = outline->points;
+        FT_Vector*  limit = vec + outline->n_points;
 
-
-        cbox->xMin = cbox->xMax = vec->x;
-        cbox->yMin = cbox->yMax = vec->y;
+        xMin = xMax = vec->x;
+        yMin = yMax = vec->y;
         vec++;
 
-        for ( k = 1; k < outline->n_points; k++ )
+        for ( ; vec < limit; vec++ )
         {
           FT_Pos  x, y;
 
-
           x = vec->x;
-          if ( x < cbox->xMin ) cbox->xMin = x;
-          if ( x > cbox->xMax ) cbox->xMax = x;
+          if ( x < xMin ) xMin = x;
+          if ( x > xMax ) xMax = x;
 
           y = vec->y;
-          if ( y < cbox->yMin ) cbox->yMin = y;
-          if ( y > cbox->yMax ) cbox->yMax = y;
-          vec++;
+          if ( y < yMin ) yMin = y;
+          if ( y > yMax ) yMax = y;
         }
       }
+      cbox->xMin = xMin;
+      cbox->xMax = xMax;
+      cbox->yMin = yMin;
+      cbox->yMax = yMax;
       return FT_Err_Ok;
     }
     else
       return FT_Err_Invalid_Argument;
   }
 
+  
 
   /*************************************************************************/
   /*                                                                       */
@@ -2474,7 +2478,6 @@
     FT_UShort   n;
     FT_Vector*  vec = outline->points;
 
-
     for ( n = 0; n < outline->n_points; n++ )
     {
       vec->x += xOffset;
@@ -2484,6 +2487,130 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Done_GlyphZone                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Deallocates a glyph zone.                                          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    zone  :: pointer to the target glyph zone.                         */
+  /*                                                                       */
+  BASE_FUNC 
+  void  FT_Done_GlyphZone( FT_GlyphZone*  zone )
+  {
+    FT_Memory  memory = zone->memory;
+    
+    FREE( zone->contours );
+    FREE( zone->flags );
+    FREE( zone->cur );
+    FREE( zone->org );
+
+    zone->max_points   = zone->n_points   = 0;
+    zone->max_contours = zone->n_contours = 0;
+  }
+  
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_GlyphZone                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Allocates a new glyph zone.                                        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory      :: A handle to the current memory object.              */
+  /*                                                                       */
+  /*    maxPoints   :: The capacity of glyph zone in points.               */
+  /*                                                                       */
+  /*    maxContours :: The capacity of glyph zone in contours.             */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    zone        :: A pointer to the target glyph zone record.          */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  BASE_FUNC 
+  FT_Error  FT_New_GlyphZone( FT_Memory      memory,
+                              FT_UShort      maxPoints,
+                              FT_Short       maxContours,
+                              FT_GlyphZone*  zone )
+  {
+    FT_Error      error;
+
+    if (maxPoints > 0)
+      maxPoints += 2;
+
+    MEM_Set( zone, 0, sizeof(*zone) );
+    zone->memory = memory;
+    
+    if ( ALLOC_ARRAY( zone->org,      maxPoints*2, FT_F26Dot6 ) ||
+         ALLOC_ARRAY( zone->cur,      maxPoints*2, FT_F26Dot6 ) ||
+         ALLOC_ARRAY( zone->flags,    maxPoints,   FT_Byte    ) ||
+         ALLOC_ARRAY( zone->contours, maxContours, FT_UShort  ) )
+    {
+      FT_Done_GlyphZone(zone);
+    }
+    return error;
+  }
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Update_GlyphZone                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Checks the size of a zone and reallocates it if necessary.         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    newPoints   :: The new capacity for points.  We add two slots for  */
+  /*                   phantom points.                                     */
+  /*                                                                       */
+  /*    newContours :: The new capacity for contours.                      */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    zone        :: The address of the target zone.                     */
+  /*                                                                       */
+  /*    maxPoints   :: The address of the zone's current capacity for      */
+  /*                   points.                                             */
+  /*                                                                       */
+  /*    maxContours :: The address of the zone's current capacity for      */
+  /*                   contours.                                           */
+  /*                                                                       */
+  BASE_FUNC
+  FT_Error  FT_Update_GlyphZone( FT_GlyphZone*  zone,
+                                 FT_UShort      newPoints,
+                                 FT_Short       newContours )
+  {
+    FT_Error      error  = FT_Err_Ok;
+    FT_Memory     memory = zone->memory;
+    
+    newPoints += 2;
+    if ( zone->max_points < newPoints )
+    {
+      /* reallocate the points arrays */
+      if ( REALLOC_ARRAY( zone->org,   zone->max_points*2, newPoints*2, FT_F26Dot6 ) ||
+           REALLOC_ARRAY( zone->cur,   zone->max_points*2, newPoints*2, FT_F26Dot6 ) ||
+           REALLOC_ARRAY( zone->flags, zone->max_points*2, newPoints,   FT_Byte    ) )
+        goto Exit;
+        
+      zone->max_points = newPoints;
+    }
+    
+    if ( zone->max_contours < newContours )
+    {
+      /* reallocate the contours array */
+      if ( REALLOC_ARRAY( zone->contours, zone->max_contours, newContours, FT_UShort ) )
+        goto Exit;
+        
+      zone->max_contours = newContours;
+    }
+  Exit:
+    return error;
+  }
 
 
 
