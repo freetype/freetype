@@ -1,5 +1,9 @@
 2001-06-27  David Turner <david@freetype.org>
 
+	* src/sfnt/ttload.c (TT_Load_Kern): the kern table loader now ensures
+	that the kerning table is correctly sorted (some problem fonts don't
+	have a correct kern table !!)
+
 	* builds/unix/ftconfig.in: changed the definition of the
 	FT_CALLBACK_DEF macro
 
