@@ -8,6 +8,10 @@
 
         * src/sfnt/sfobjs.c: removing compiler warning
 
+        * src/winfonts/winfnt.c: adding missing initialization of the
+        slot->metrics.width and slot->metrics.height when loading a Windows
+        FNT glyph. Thanks to Huw Davies
+
 2004-06-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afloader.c (af_loader_load_g): Set `lsb_delta' and

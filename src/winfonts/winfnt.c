@@ -658,6 +658,8 @@
     slot->format          = FT_GLYPH_FORMAT_BITMAP;
 
     /* now set up metrics */
+    slot->metrics.width        = bitmap->width << 6;
+    slot->metrics.height       = bitmap->rows << 6;
     slot->metrics.horiAdvance  = bitmap->width << 6;
     slot->metrics.horiBearingX = 0;
     slot->metrics.horiBearingY = slot->bitmap_top << 6;
