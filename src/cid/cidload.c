@@ -413,7 +413,8 @@
     subr = face->subrs;
     for ( n = 0; n < cid->num_dicts; n++, subr++ )
     {
-      CID_FontDict*  dict = cid->font_dicts + n;
+      CID_FontDict*  dict  = cid->font_dicts + n;
+      FT_Int         lenIV = dict->private_dict.lenIV;
       FT_UInt        count, num_subrs = dict->num_subrs;
       FT_ULong       data_len;
       FT_Byte*       p;
@@ -464,14 +465,17 @@
         subr->code[count] = subr->code[count - 1] + len;
       }
 
-      /* decrypt subroutines */
-      for ( count = 0; count < num_subrs; count++ )
+      /* decrypt subroutines, but only if lenIV >= 0. */
+      if ( lenIV >= 0 )
       {
-        FT_UInt  len;
+        for ( count = 0; count < num_subrs; count++ )
+        {
+          FT_UInt  len;
 
 
-        len = offsets[count + 1] - offsets[count];
-        cid_decrypt( subr->code[count], len, 4330 );
+          len = offsets[count + 1] - offsets[count];
+          cid_decrypt( subr->code[count], len, 4330 );
+        }
       }
 
       subr->num_subrs = num_subrs;
