@@ -18,6 +18,7 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_POSTSCRIPT_HINTS_H
 #include FT_OUTLINE_H
 
 #include "t1decode.h"
@@ -325,6 +326,7 @@
     T1_Builder*       builder = &decoder->builder;
     FT_Pos            x, y;
 
+    T1_Hints_Funcs    hinter;
 
     /* we don't want to touch the source code -- use macro trick */
 #define start_point    T1_Builder_Start_Point
@@ -341,6 +343,8 @@
 
     builder->path_begun  = 0;
 
+    hinter = builder->hints_funcs;
+
     zone->base           = charstring_base;
     limit = zone->limit  = charstring_base + charstring_len;
     ip    = zone->cursor = zone->base;
@@ -349,6 +353,10 @@
 
     x = builder->pos_x;
     y = builder->pos_y;
+
+    /* begin hints recording session, if any */
+    if ( hinter )
+      hinter->open( hinter->hints );
 
     /* now, execute loop */
     while ( ip < limit )
@@ -613,6 +621,10 @@
             goto Syntax_Error;
           }
           ip += 2;
+          
+          if ( hinter )
+            hinter->reset( hinter->hints, builder->current->n_points );
+            
           break;
 
         case 12:
@@ -707,7 +719,11 @@
           FT_TRACE4(( " endchar" ));
 
           close_contour( builder );
-
+          
+          /* close hints recording session */
+          if ( hinter )
+            hinter->close( hinter->hints, builder->current->n_points );
+          
           /* add current outline to the glyph slot */
           FT_GlyphLoader_Add( builder->loader );
 
@@ -973,22 +989,38 @@
 
         case op_hstem:
           FT_TRACE4(( " hstem" ));
+          
+          /* record horizontal hint */
+          if ( hinter )
+            hinter->stem( hinter->hints, 0, top );
 
           break;
 
         case op_hstem3:
           FT_TRACE4(( " hstem3" ));
 
+          /* record horizontal counter-controlled hints */
+          if ( hinter )
+            hinter->stem3( hinter->hints, 0, top );
+                           
           break;
 
         case op_vstem:
           FT_TRACE4(( " vstem" ));
+
+          /* record vertical  hint */
+          if ( hinter )
+            hinter->stem( hinter->hints, 1, top );
 
           break;
 
         case op_vstem3:
           FT_TRACE4(( " vstem3" ));
 
+          /* record vertical counter-controlled hints */
+          if ( hinter )
+            hinter->stem3( hinter->hints, 1, top );
+                           
           break;
 
         case op_setcurrentpoint:
@@ -1011,6 +1043,7 @@
     } /* while ip < limit */
 
     FT_TRACE4(( "..end..\n\n" ));
+
     return error;
 
   Syntax_Error:

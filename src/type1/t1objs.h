@@ -100,12 +100,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  T1_SizeRec_
   {
-    FT_SizeRec      root;
-    FT_Bool         valid;
-    T1_Size_Hints*  hints;  /* defined in the hinter. This allows */
-                            /* us to experiment with different    */
-                            /* hinting schemes without having to  */
-                            /* change `t1objs' each time.         */
+    FT_SizeRec  root;
+    void*       size_hints;   /* defined for hinting engines */ 
+
   } T1_SizeRec;
 
 
@@ -130,8 +127,6 @@ FT_BEGIN_HEADER
     FT_Fixed         x_scale;
     FT_Fixed         y_scale;
 
-    T1_Glyph_Hints*  hints;  /* defined in the hinter */
-
   } T1_GlyphSlotRec;
 
 
@@ -144,6 +139,18 @@ FT_BEGIN_HEADER
 
   FT_LOCAL
   void  T1_Done_Face( T1_Face  face );
+
+  FT_LOCAL
+  FT_Error  T1_Init_Size( T1_Size  size );
+  
+  FT_LOCAL
+  void      T1_Done_Size( T1_Size  size );
+
+  FT_LOCAL
+  FT_Error  T1_Init_GlyphSlot( T1_GlyphSlot  slot );
+  
+  FT_LOCAL
+  void      T1_Done_GlyphSlot( T1_GlyphSlot  slot );
 
   FT_LOCAL
   FT_Error  T1_Init_Driver( T1_Driver  driver );

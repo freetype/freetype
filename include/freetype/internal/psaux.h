@@ -506,7 +506,9 @@ FT_BEGIN_HEADER
     FT_Error          error;         /* only used for memory errors */
     FT_Bool           metrics_only;
 
-    T1_Builder_Funcs  funcs;
+    T1_Hints_Funcs    hints_funcs;
+
+    T1_Builder_Funcs  funcs;      
   };
 
 

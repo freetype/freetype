@@ -1,5 +1,25 @@
+/***************************************************************************/
+/*                                                                         */
+/*  pshglob.h                                                              */
+/*                                                                         */
+/*    Postscript hinter globals hints management.                          */
+/*                                                                         */
+/*  Copyright 2001 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
 #ifndef __PS_HINTER_GLOBALS_H__
 #define __PS_HINTER_GLOBALS_H__
+
+#include FT_FREETYPE_H
+#include FT_INTERNAL_POSTSCRIPT_GLOBALS_H
 
 FT_BEGIN_HEADER
 
@@ -11,37 +31,6 @@ FT_BEGIN_HEADER
  /**********************************************************************/
  /**********************************************************************/
 
- /* blue zone descriptor */
-  typedef struct PSH_Blue_ZoneRec_
-  {
-    FT_Int    org_ref;
-    FT_Int    org_delta;
-    FT_Pos    cur_ref;
-    FT_Pos    cur_delta;
-    FT_Pos    cur_bottom;
-    FT_Pos    cur_top;
-
-  } PSH_Blue_ZoneRec, *PSH_Blue_Zone;
-
-
- /* blue zones table */
-  typedef struct PSH_BluesRec_
-  {
-    FT_UInt           count;
-    PSH_Blue_ZoneRec  zones[ PS_GLOBALS_MAX_BLUE_ZONES ];
-    
-    FT_UInt           count_family;
-    PSH_Blue_ZoneRec  zones_family[ PS_GLOBALS_MAX_BLUE_ZONES ];
-    
-    FT_Fixed          scale;
-    FT_Int            org_shift;
-    FT_Int            org_fuzz;
-    FT_Pos            cur_shift;
-    FT_Pos            cur_fuzz;
-
-  } PSH_BluesRec, *PSH_Blues;
-
-
  /* standard and snap width */
   typedef struct PSH_WidthRec_
   {
@@ -49,7 +38,7 @@ FT_BEGIN_HEADER
     FT_Pos  cur;
     FT_Pos  fit;
 
-  } PSH_WidthRec;
+  } PSH_WidthRec, *PSH_Width;
 
 
  /* standard and snap widths table */
@@ -69,6 +58,44 @@ FT_BEGIN_HEADER
   
   } PSH_DimensionRec, *PSH_Dimension;
 
+
+
+ /* blue zone descriptor */
+  typedef struct PSH_Blue_ZoneRec_
+  {
+    FT_Int    org_ref;
+    FT_Int    org_delta;
+    FT_Int    org_top;
+    FT_Int    org_bottom;
+    
+    FT_Pos    cur_ref;
+    FT_Pos    cur_delta;
+    FT_Pos    cur_bottom;
+    FT_Pos    cur_top;
+
+  } PSH_Blue_ZoneRec, *PSH_Blue_Zone;
+
+
+  typedef struct PSH_Blue_TableRec_
+  {
+    FT_UInt           count;
+    PSH_Blue_ZoneRec  zones[ PS_GLOBALS_MAX_BLUE_ZONES ];
+  
+  } PSH_Blue_TableRec, *PSH_Blue_Table;
+
+
+ /* blue zones table */
+  typedef struct PSH_BluesRec_
+  {
+    PSH_Blue_TableRec  normal_top;
+    PSH_Blue_TableRec  normal_bottom;
+    PSH_Blue_TableRec  family_top;
+    PSH_Blue_TableRec  family_bottom;
+    FT_Fixed           blue_scale;
+
+  } PSH_BluesRec, *PSH_Blues;
+
+
  /* font globals */
   typedef struct PSH_GlobalsRec_
   {
@@ -78,30 +105,38 @@ FT_BEGIN_HEADER
 
   } PSH_GlobalsRec, *PSH_Globals;
 
+ 
+  typedef enum
+  {
+    PSH_BLUE_ALIGN_TOP = 1,
+    PSH_BLUE_ALIGN_BOT = 2
+    
+  } PSH_Blue_Align;
 
- /* initialise font globals */
+  typedef struct
+  {
+    PSH_Blue_Align   align;
+    FT_Pos           align_top;
+    FT_Pos           align_bot;
+    
+  } PSH_Blue_AlignementRec, *PSH_Blue_Alignement;
+
   FT_LOCAL void
-  psh_globals_init( PSH_Globals  globals,
-                    FT_Memory    memory );
+  psh_globals_funcs_init( PSH_Globals_FuncsRec*  funcs );
 
- /* reset font globals to new values */
-  FT_LOCAL FT_Error
-  psh_globals_reset( PSH_Globals   globals_hinter,
-                     PS_Globals    globals );
+ /* snap a stem width to fitter coordinates */
+  FT_LOCAL FT_Pos
+  psh_dimension_snap_width( PSH_Dimension  dimension,
+                            FT_Int         org_width );
 
- /* change current scale transform */
+ /* snap a stem to one or two blue zones */
   FT_LOCAL void
-  psh_globals_set_scale( PSH_Globals    globals_hinter,
-                         FT_Fixed       x_scale,
-                         FT_Fixed       x_delta,
-                         FT_Fixed       y_scale,
-                         FT_Fixed       y_delta );
-
- /* finalize font globals */
-  FT_LOCAL void
-  psh_globals_done( PSH_Globals  globals );
-
- /* */
+  psh_blues_snap_stem( PSH_Blues            blues,
+                       FT_Int               stem_top,
+                       FT_Int               stem_bot,
+                       PSH_Blue_Alignement  alignment );
+  /* */
+  
 
 FT_END_HEADER
 

@@ -1,27 +1,24 @@
+#include <ft2build.h>
 #include "pshglob.h"
 
 /* "simple" ps hinter globals management, inspired from the new auto-hinter */
 
-  FT_LOCAL void
-  psh_globals_init( PSH_Globals  globals,
-                    FT_Memory    memory )
-  {
-    memset( globals, 0, sizeof(*globals) );
-    globals->memory  = memory;
-    globals->x_scale = 0x10000L;
-    globals->y_scale = 0x10000L;
-  }
-
+ /*************************************************************************/
+ /*************************************************************************/
+ /*****                                                               *****/
+ /*****                       STANDARD WIDTHS                         *****/
+ /*****                                                               *****/
+ /*************************************************************************/
+ /*************************************************************************/
+ 
 
  /* reset the widths/heights table */
-  static FT_Error
+  static void
   psh_globals_reset_widths( PSH_Globals        globals,
                             FT_UInt            direction,
                             PS_Globals_Widths  widths )
   {
-    PSH_Dimension  dim    = &globals->dim[direction];
-    FT_Memory      memory = globals->memory;
-    FT_Error       error  = 0;
+    PSH_Dimension  dim    = &globals->dimension[direction];
     
     /* simple copy of the original widths values - no sorting */
     {
@@ -37,8 +34,6 @@
         read++;
       }
     }
-
-    return error;
   }
 
 
@@ -47,10 +42,11 @@
   psh_globals_scale_widths( PSH_Globals   globals,
                             FT_UInt       direction )
   {
-    PSH_Widths  std   = &globals->std[direction];
-    FT_UInt     count = std->count;
-    PSH_Width   width = std->widths;
-    FT_Fixed    scale = globals->scale[direction];
+    PSH_Dimension  dim   = &globals->dimension[direction];
+    PSH_Widths     std   = &dim->std;
+    FT_UInt        count = std->count;
+    PSH_Width      width = std->widths;
+    FT_Fixed       scale = dim->scale_mult;
 
     for ( ; count > 0; count--, width++ )
     {
@@ -59,219 +55,416 @@
     }
   }
 
+ 
 
- /* reset the blues table */
-  static FT_Error
-  psh_globals_reset_blues( PSH_Globals       globals,
-                           PS_Globals_Blues  blues )
+  FT_LOCAL_DEF FT_Pos
+  psh_dimension_snap_width( PSH_Dimension  dimension,
+                            FT_Int         org_width )
   {
-    FT_Error   error  = 0;
-    FT_Memory  memory = globals->memory;
+    FT_UInt  n;
+    FT_Pos   width     = FT_MulFix( org_width, dimension->scale_mult );
+    FT_Pos   best      = 64 + 32 + 2;
+    FT_Pos   reference = width;
 
-    if ( !FT_REALLOC_ARRAY( globals->blues.zones, globals->blues.count,
-                            blues->count, PSH_Blue_ZoneRec ) )
+    for ( n = 0; n < dimension->std.count; n++ )
     {
-      FT_UInt    count = 0;
-      
-      globals->blyes.count = blues->count;
+      FT_Pos  w;
+      FT_Pos  dist;
 
-      /* first of all, build a sorted table of blue zones */
+      w = dimension->std.widths[n].cur;
+      dist = width - w;
+      if ( dist < 0 )
+        dist = -dist;
+      if ( dist < best )
       {
-        FT_Int16*  read = blue->zones;
-        FT_UInt    n, i, j;
-        FT_Pos     reference, overshoot, delta;
-
-        for ( n = 0; n < blues->count; n++, read++ )
-        {
-          PSH_Blue_Zone  zone;
-
-          /* read new blue zone entry, find top and bottom coordinates */
-          reference = read[0];
-          overshoot = read[1];
-          delta     = overshoot - reference;
-
-          /* now, insert in the blue zone table, sorted by reference position */
-          zone = globals->blues.zones;
-          for ( i = 0; i < count; i++, zone++ )
-          {
-            if ( reference > zone->org_ref )
-              break;
-
-            if ( reference == zone->org_ref )
-            {
-              /* on the same reference coordinate, place bottom zones */
-              /* before top zones..                                   */
-              if ( delta < 0 || zone->org_delta >= 0 )
-                break;
-            }
-
-          for ( j = count - i; j > 0; j-- )
-            zone[j+1] = zone[j];
-
-          zone->org_ref   = reference;
-          zone->org_delta = delta;
-
-          count++;
-        }
+        best      = dist;
+        reference = w;
       }
-
-      /* now, get rid of blue zones located on the same reference position */
-      /* (only keep the largest zone)..                                    */
-      {
-        PSH_Blue_Zone  zone, limit;
-
-        zone  = globals->blues.zones;
-        limit = zone + count;
-        for ( ; zone+1 < limit; zone++ )
-        {
-          if ( zone[0].org_ref == zone[1].org_ref )
-          {
-            FT_Int   delta0 = zone[0].org_delta;
-            FT_Int   delta1 = zone[1].org_delta;
-
-            /* these two zones are located on the same reference coordinate */
-            /* we need to merge them when they're in the same direction..   */
-            if ( ( delta0 < 0 ) ^ ( delta1 < 0 ) ) == 0 )
-            {
-              /* ok, take the biggest one */
-              if ( delta0 < 0 )
-              {
-                if ( delta1 < delta0 )
-                  delta0 = delta1;
-              }
-              else
-              {
-                if ( delta1 > delta0 )
-                  delta0 = delta1;
-              }
-
-              zone[0].org_delta = delta0;
-
-              {
-                PSH_Blue_Zone  cur    = zone+1;
-                FT_UInt        count2 = limit - cur;
-
-                for ( ; count2 > 0; count2--, cur++ )
-                {
-                  cur[0].org_ref   = cur[1].org_ref;
-                  cur[0].org_delta = cur[1].org_delta;
-                }
-              }
-              count--;
-              limit--;
-            }
-          }
-        }
-      }
-
-      globals->blues.count     = count;
-      globals->blues.org_shift = blues->shift;
-      globals->blues.org_fuzz  = blues->fuzz;
     }
 
+    if ( width >= reference )
+    {
+      width -= 0x21;
+      if ( width < reference )
+        width = reference;
+    }
+    else
+    {
+      width += 0x21;
+      if ( width > reference )
+        width = reference;
+    }
+
+    return width;
+  }
+  
+
+ /*************************************************************************/
+ /*************************************************************************/
+ /*****                                                               *****/
+ /*****                       BLUE ZONES                              *****/
+ /*****                                                               *****/
+ /*************************************************************************/
+ /*************************************************************************/
+  
+  static void
+  psh_blues_reset_zones( PSH_Blues         target,
+                         PS_Globals_Blues  source,
+                         FT_Int            family )
+  {
+    PSH_Blue_Table  top_table, bot_table;
+    FT_Int16*       read;
+    FT_Int          read_count, count, count_top, count_bot;
+    
+    if ( family )
+    {
+      top_table  = &target->family_top;
+      bot_table  = &target->family_bottom;
+      read       = source->zones_family;
+      read_count = (FT_Int)source->count_family;
+    }
+    else
+    {
+      top_table  = &target->normal_top;
+      bot_table  = &target->normal_bottom;
+      read       = source->zones;
+      read_count = (FT_Int)source->count;
+    }
+    
+    /* read the input blue zones, and build two sorted tables */
+    /* (one for the top zones, the other for the bottom zones */
+    count_top = 0;
+    count_bot = 0;
+    for ( ; read_count > 0; read_count-- )
+    {
+      FT_Int         reference, delta;
+      PSH_Blue_Zone  zones, zone;
+      
+      /* read blue zone entry, and select target top/bottom zone */
+      reference = read[0];
+      delta     = read[1] - reference;
+      
+      if ( delta >= 0 )
+      {
+        zones = top_table->zones;
+        count = count_top;
+      }
+      else
+      {
+        zones = bot_table->zones;
+        count = count_bot;
+      }
+      
+      /* insert into sorted table */
+      zone = zones;  
+      for ( ; count > 0; count--, zone++ )
+      {
+        if ( reference < zone->org_ref )
+          break;
+          
+        if ( reference == zone->org_ref )
+        {
+          FT_Int  delta0 = zone->org_delta;
+
+          /* we have two zones on the same reference position */
+          /* only keep the largest one..                      */          
+          if ( delta < 0 )
+          {
+            if ( delta < delta0 )
+              zone->org_delta = delta;
+          }
+          else
+          {
+            if ( delta > delta0 )
+              zone->org_delta = delta;
+          }
+          goto Skip;
+        }
+      }
+      
+      for ( ; count > 0; count-- )
+        zone[count] = zone[count-1];
+        
+      zone->org_ref   = reference;
+      zone->org_delta = delta;
+      
+      if ( delta >= 0 )
+        count_top ++;
+      else
+        count_bot ++;
+      
+    Skip:
+      read += 2;
+    }    
+
+    top_table->count = count_top;
+    bot_table->count = count_bot;
+
+    /* sanitize top table */
+    {
+      PSH_Blue_Zone  zone = top_table->zones;
+      
+      for ( count = count_top-1; count > 0; count--, zone++ )
+      {
+        FT_Int  delta;
+      
+        delta = zone[1].org_ref - zone[0].org_ref;
+        if ( zone->org_delta > delta )
+          zone->org_delta = delta;
+          
+        zone->org_bottom = zone->org_ref;
+        zone->org_top    = zone->org_delta + zone->org_ref;
+      }
+    }
+    
+    /* sanitize bottom table */
+    {
+      PSH_Blue_Zone  zone = bot_table->zones;
+
+      for ( count = count_bot-1; count > 0; count--, zone++ )
+      {
+        FT_Int  delta;
+        
+        delta = zone[0].org_ref - zone[1].org_ref;
+        if ( zone->org_delta < delta )
+          zone->org_delta = delta;
+          
+        zone->org_top    = zone->org_ref;
+        zone->org_bottom = zone->org_delta + zone->org_ref;
+      }
+    }
+
+    /* expand top and bottom tables with blue fuzz */
+    {
+      FT_Int         dim, top, bot, delta, fuzz;
+      PSH_Blue_Zone  zone;
+
+      fuzz  = source->fuzz;      
+      zone  = top_table->zones;
+      count = count_top;
+      
+      for ( dim = 1; dim >= 0; dim-- )
+      {
+        if ( count > 0 )
+        {
+          /* expand the bottom of the lowest zone normally */
+          zone->org_bottom -= fuzz;
+          
+          /* expand the top and bottom of intermediate zones     */
+          /* checking that the interval is smaller than the fuzz */
+          top = zone->org_top;
+          
+          for ( count--; count > 0; count--, zone++ )
+          {
+            bot   = zone[1].org_bottom;
+            delta = bot - top;
+            if ( delta < 2*fuzz )
+            {
+              zone[0].org_top = zone[1].org_bottom = top + delta/2;
+            }
+            else
+            {
+              zone[0].org_top    = top + fuzz;
+              zone[1].org_bottom = bot - fuzz;
+            }
+            
+            zone++;
+            top = zone->org_top;
+          }
+          
+          /* expand the top of the highest zone normally */
+          zone->org_top = top + fuzz;
+        }
+        zone  = bot_table->zones;
+        count = count_bot;
+      }
+    }
+  }
+
+
+ /* reset the blues table */
+  static void
+  psh_blues_scale_zones( PSH_Blues  blues,
+                         FT_Fixed   scale,
+                         FT_Pos     delta )
+  {
+    FT_UInt         count;
+    FT_UInt         num;
+    PSH_Blue_Table  table = 0;
+    
+    for ( num = 0; num < 4; num++ )
+    {
+      PSH_Blue_Zone  zone;
+      
+      switch (num)
+      {
+        case 0:  table = &blues->normal_top; break;
+        case 1:  table = &blues->normal_bottom; break;
+        case 2:  table = &blues->family_top; break;
+        default: table = &blues->family_bottom;
+      }
+      
+      zone  = table->zones;
+      count = table->count;
+      for ( ; count > 0; count--, zone++ )
+      {
+        zone->cur_top    = FT_MulFix( zone->org_top, scale    ) + delta;
+        zone->cur_bottom = FT_MulFix( zone->org_bottom, scale ) + delta;
+        zone->cur_ref    = FT_MulFix( zone->org_ref, scale ) + delta;
+        zone->cur_delta  = FT_MulFix( zone->org_delta, scale );
+        
+        /* round scaled reference position */
+        zone->cur_ref = ( zone->cur_ref + 32 ) & -64;
+      }
+    }
+    
+    /* XXX: we should process the family / normal tables here !! */
+  }
+
+
+  FT_LOCAL_DEF void
+  psh_blues_snap_stem( PSH_Blues            blues,
+                       FT_Int               stem_top,
+                       FT_Int               stem_bot,
+                       PSH_Blue_Alignement  alignment )
+  {
+    PSH_Blue_Table  table;
+    FT_UInt         count;
+    PSH_Blue_Zone   zone;
+    
+    alignment->align = 0;
+    
+    /* lookup stem top in top zones table */
+    table = &blues->normal_top;
+    count = table->count;
+    zone  = table->zones;
+    for ( ; count > 0; count-- )
+    {
+      if ( stem_top < zone->org_bottom )
+        break;
+        
+      if ( stem_top <= zone->org_top )
+      {
+        alignment->align    |= PSH_BLUE_ALIGN_TOP;
+        alignment->align_top = zone->cur_ref;
+        break;
+      }
+    }
+    
+    /* lookup stem bottom in bottom zones table */
+    table = &blues->normal_bottom;
+    count = table->count;
+    zone  = table->zones;
+    for ( ; count > 0; count-- )
+    {
+      if ( stem_bot < zone->org_bottom )
+        break;
+        
+      if ( stem_bot <= zone->org_top )
+      {
+        alignment->align    |= PSH_BLUE_ALIGN_BOT;
+        alignment->align_bot = zone->cur_ref;
+      }
+    }
+  }
+
+ /*************************************************************************/
+ /*************************************************************************/
+ /*****                                                               *****/
+ /*****                        GLOBAL HINTS                           *****/
+ /*****                                                               *****/
+ /*************************************************************************/
+ /*************************************************************************/
+
+  static void
+  psh_globals_destroy( PSH_Globals  globals )
+  {
+    if (globals)
+    {
+      FT_Memory  memory;
+      
+      memory = globals->memory;
+      globals->dimension[0].std.count = 0;
+      globals->dimension[1].std.count = 0;   
+      
+      globals->blues.normal_top.count    = 0;
+      globals->blues.normal_bottom.count = 0;
+      globals->blues.family_top.count    = 0;
+      globals->blues.family_bottom.count = 0;
+      
+      FREE( globals );
+    }
+  }
+
+  
+  static FT_Error
+  psh_globals_new( FT_Memory  memory, PSH_Globals  *aglobals )
+  {
+    PSH_Globals  globals;
+    FT_Error     error;
+    
+    if ( !ALLOC( globals, sizeof(*globals) ) )
+      globals->memory = memory;
+    
+    *aglobals = globals;
     return error;
   }
 
 
-  static void
-  psh_globals_scale_blues( PSH_Globals       globals,
-                           PS_Globals_Blues  blues )
+  static FT_Error
+  psh_globals_reset( PSH_Globals  globals,
+                     PS_Globals   ps_globals )
   {
-    FT_Fixed       y_scale = globals->scale[1];
-    FT_Fixed       y_delta = globals->delta[1];
-    FT_Pos         prev_top;
-    PSH_Blue_Zone  zone, prev;
-    FT_UInt        count;
-
-    zone     = globals->blues.zones;
-    prev     = 0;
-    prev_top = 0;
-    for ( count = globals->blues.count; count > 0; count-- )
-    {
-      FT_Pos   ref, delta, top, bottom;
-
-      ref   = FT_MulFix( zone->org_ref,   y_scale ) + y_delta;
-      delta = FT_MulFix( zone->org_delta, y_scale );
-      ref   = (ref+32) & -64;
-
-      if ( delta < 0 )
-      {
-        top    = ref;
-        bottom = ref + delta;
-      }
-      else
-      {
-        bottom = ref;
-        top    = ref + delta;
-      }
-
-      zone->cur_ref    = ref;
-      zone->cur_delta  = delta;
-      zone->cur_top    = top;
-      zone->cur_bottom = bottom;
-
-      if
-      prev = zone;
-      zone++;
-    }
-    /* XXXX: test overshoot supression !! */
-  }
-
-  FT_LOCAL FT_Error
-  psh_globals_reset( PSH_Globals        globals,
-                     T1_Fitter_Globals  public_globals )
-  {
-    psh_globals_reset_widths( globals, 0, &public_globals->horizontal );
-    psh_globals_scale_widths( globals, 0 );
-
-    psh_globals_reset_widths( globals, 1, &public_globals->vertical );
-    psh_globals_scale_widths( globals, 1 );
-
-    psh_globals_reset_blues( globals, public_globals );
-    psh_globals_scale_blues( globals );
+    psh_globals_reset_widths( globals, 0, &ps_globals->horizontal );
+    psh_globals_reset_widths( globals, 1, &ps_globals->vertical );
+    psh_blues_reset_zones( &globals->blues, &ps_globals->blues, 0 );
+    psh_blues_reset_zones( &globals->blues, &ps_globals->blues, 1 );
+    
+    globals->dimension[0].scale_mult  = 0;
+    globals->dimension[0].scale_delta = 0;
+    globals->dimension[1].scale_mult  = 0;
+    globals->dimension[1].scale_delta = 0;
+    
+    return 0;
   }
 
 
-  FT_LOCAL void
+  static FT_Error
   psh_globals_set_scale( PSH_Globals    globals,
                          FT_Fixed       x_scale,
                          FT_Fixed       x_delta,
                          FT_Fixed       y_scale,
                          FT_Fixed       y_delta )
   {
-    FT_Memory  memory = globals->memory;
-
-    if ( x_scale != globals->scale[0] ||
-         y_scale != globals->scale[1] ||
-         x_delta != globals->delta[0] ||
-         y_delta != globals->delta[1] )
+    PSH_Dimension  dim    = &globals->dimension[0];
+    
+    dim = &globals->dimension[0];
+    if ( x_scale != dim->scale_mult  ||
+         x_delta != dim->scale_delta )
     {
-      globals->scale[0] = x_scale;
-      globals->scale[1] = y_scale;
-      globals->delta[0] = x_delta;
-      globals->delta[1] = y_delta;
-
+      dim->scale_mult  = x_scale;
+      dim->scale_delta = x_delta;
+      
       psh_globals_scale_widths( globals, 0 );
-      psh_globals_scale_widths( globals, 1 );
-      psh_globals_scale_blues ( globals );
     }
+
+    dim = &globals->dimension[1];
+    if ( y_scale != dim->scale_mult  ||
+         y_delta != dim->scale_delta )
+    {
+      psh_globals_scale_widths( globals, 1 );
+      psh_blues_scale_zones( &globals->blues, y_scale, y_delta );
+    }
+    
+    return 0;
   }
 
 
-  FT_LOCAL void
-  psh_globals_done( PSH_Globals  globals )
+  FT_LOCAL_DEF void
+  psh_globals_funcs_init( PSH_Globals_FuncsRec*  funcs )
   {
-    if (globals)
-    {
-      FT_Memory  memory = globals->memory;
-
-      FT_FREE( globals->std[0].widths );
-      globals->std[0].count = 0;
-
-      FT_FREE( globals->std[1].widths );
-      globals->std[1].count = 0;
-
-      FT_FREE( globals->blues.zones );
-      globals->blues.count = 0;
-    }
+    funcs->create    = psh_globals_new;
+    funcs->reset     = psh_globals_reset;
+    funcs->set_scale = psh_globals_set_scale;
+    funcs->destroy   = psh_globals_destroy;
   }

@@ -301,10 +301,10 @@
 
     (FTDriver_initFace)     T1_Init_Face,
     (FTDriver_doneFace)     T1_Done_Face,
-    (FTDriver_initSize)     0,
-    (FTDriver_doneSize)     0,
-    (FTDriver_initGlyphSlot)0,
-    (FTDriver_doneGlyphSlot)0,
+    (FTDriver_initSize)     T1_Init_Size,
+    (FTDriver_doneSize)     T1_Done_Size,
+    (FTDriver_initGlyphSlot)T1_Init_GlyphSlot,
+    (FTDriver_doneGlyphSlot)T1_Done_GlyphSlot,
 
     (FTDriver_setCharSizes) 0,
     (FTDriver_setPixelSizes)0,

@@ -1077,10 +1077,12 @@
       FT_GlyphLoader*  loader = glyph->internal->loader;
 
 
-      builder->loader  = loader;
-      builder->base    = &loader->base.outline;
-      builder->current = &loader->current.outline;
+      builder->loader     = loader;
+      builder->base       = &loader->base.outline;
+      builder->current    = &loader->current.outline;
       FT_GlyphLoader_Rewind( loader );
+      
+      builder->hints_func = (T1_Hints_Funcs) glyph->internal->glyph_hints;
     }
 
     if ( size )

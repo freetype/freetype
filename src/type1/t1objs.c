@@ -47,6 +47,88 @@
 
   /*************************************************************************/
   /*                                                                       */
+  /*                            SIZE  FUNCTIONS                            */
+  /*                                                                       */
+  /*************************************************************************/
+
+  FT_LOCAL_DEF
+  void T1_Done_Size( T1_Size   size )
+  {
+    if ( size->size_hints )
+    {
+      PSHinter_Interface*  pshinter;
+      PSH_Globals_Funcs    funcs;
+      T1_Face              face;
+    
+      face     = (T1_Face) size->root.face;
+      pshinter = face->pshinter;
+      funcs = pshinter->get_globals_funcs( (FT_Module) face->root.driver );
+      funcs->destroy( (PSH_Globals) size->size_hints );
+      
+      size->size_hints = 0;
+    }
+  }
+
+
+  FT_LOCAL_DEF
+  FT_Error  T1_Init_Size( T1_Size  size )
+  {
+    PSHinter_Interface*  pshinter;
+    T1_Face              face;
+    FT_Error             error = 0;
+    
+    face     = (T1_Face) size->root.face;
+    pshinter = face->pshinter;
+    if ( pshinter && pshinter->get_globals_funcs )
+    {
+      PSH_Globals_Funcs  funcs;
+      PSH_Globals        globals;
+      
+      funcs = pshinter->get_globals_funcs( (FT_Module) face->root.driver );
+      if (funcs)
+      {
+        error = funcs->create( face->root.memory, &globals );
+        if (!error)
+          size->size_hints = globals;
+      }
+    }
+    return error;
+  }
+
+  /*************************************************************************/
+  /*                                                                       */
+  /*                            SLOT  FUNCTIONS                            */
+  /*                                                                       */
+  /*************************************************************************/
+
+  FT_LOCAL_DEF void
+  T1_Done_GlyphSlot( T1_GlyphSlot  slot )
+  {
+    slot->root.internal->glyph_hints = 0;
+  }
+
+
+  FT_LOCAL_DEF FT_Error
+  T1_Init_GlyphSlot( T1_GlyphSlot   slot )
+  {  
+    T1_Face              face;
+    PSHinter_Interface*  pshinter;
+    
+    face     = (T1_Face) slot->root.face;
+    pshinter = face->pshinter;
+    if (pshinter)
+    {
+      T1_Hints_Funcs  funcs;
+      
+      funcs = pshinter->get_t1_funcs( (FT_Module)face->root.driver );
+      slot->root.internal->glyph_hints = (void*)funcs;
+    }
+    return 0;
+  }
+  
+  
+  /*************************************************************************/
+  /*                                                                       */
   /*                            FACE  FUNCTIONS                            */
   /*                                                                       */
   /*************************************************************************/
@@ -124,6 +206,7 @@
   }
 
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -154,9 +237,10 @@
                           FT_Int         num_params,
                           FT_Parameter*  params )
   {
-    FT_Error            error;
-    PSNames_Interface*  psnames;
-    PSAux_Interface*    psaux;
+    FT_Error             error;
+    PSNames_Interface*   psnames;
+    PSAux_Interface*     psaux;
+    PSHinter_Interface*  pshinter;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -182,6 +266,15 @@
               FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "psaux" );
 
       face->psaux = psaux;
+    }
+
+    pshinter = (PSHinter_Interface*)face->pshinter;
+    if ( !pshinter )
+    {
+      pshinter = (PSHinter_Interface*)
+                 FT_Get_Module_Interface( FT_FACE_LIBRARY( face ), "pshinter" );
+
+      face->pshinter = pshinter;
     }
 
     /* open the tokenizer, this will also check the font format */
