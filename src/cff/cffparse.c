@@ -374,10 +374,10 @@
 
     if ( parser->top >= parser->stack + 4 )
     {
-      bbox->xMin = FT_Round_Fix( cff_parse_fixed( data++ ) );
-      bbox->yMin = FT_Round_Fix( cff_parse_fixed( data++ ) );
-      bbox->xMax = FT_Round_Fix( cff_parse_fixed( data++ ) );
-      bbox->yMax = FT_Round_Fix( cff_parse_fixed( data   ) );
+      bbox->xMin = FT_RoundFix( cff_parse_fixed( data++ ) );
+      bbox->yMin = FT_RoundFix( cff_parse_fixed( data++ ) );
+      bbox->xMax = FT_RoundFix( cff_parse_fixed( data++ ) );
+      bbox->yMax = FT_RoundFix( cff_parse_fixed( data   ) );
       error = CFF_Err_Ok;
     }
 
