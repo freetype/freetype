@@ -82,6 +82,14 @@ else
   # be re-defined for platform-specific stuff..
   #
   LINK = $(CC) $T$@ $< $(FTLIB) $(EFENCE) $(LDFLAGS)
+  
+  # the program "src/ftstring.c" used the math library which isn't linked
+  # with the program by default on Unix, we thus add it whenever appropriate
+  #
+  ifeq ($(PLATFORM),unix)
+  LINK += -lm
+  endif
+
   COMMON_LINK = $(LINK) $(COMMON_OBJ)
   GRAPH_LINK  = $(COMMON_LINK) $(GRAPH_LIB)
   GRAPH_LINK2 = $(GRAPH_LINK) $(EXTRA_GRAPH_OBJS)
