@@ -327,6 +327,33 @@ class DocContent:
 	    
 	    if field: print "</field>	"
 
+    def dump_html(self):
+        n = len(self.fields)
+        for i in range(n):
+            field = self.fields[i]
+            if field==[]:
+                print "<p>"
+                for paras in self.texts[i]:
+                    print "<p>"
+                    paras.dump()
+                    print "</p>"
+            else:
+                if i==1:
+                    print "<table cellpadding=4><tr valign=top><td>"
+                else:
+                    print "</td></tr><tr valign=top><td>"
+                
+                print "<b>"+field+"</b></td><td>"
+                
+                for paras in self.texts[i]:
+                    print "<p>"
+                    paras.dump()
+                    print "</p>"
+                    
+                print "</td></tr>"
+        if n > 1:
+            print "</table>"
+              
 
 ######################################################################################
 #
@@ -439,6 +466,36 @@ def dump_doc_contents( block_list ):
 	    print "</marker>"
 	print "</block>"
 
+def dump_html_1( block_list ):
+    
+    print "<html><body>"
+    types = [ 'Type', 'Struct', 'FuncType', 'Function', 'Constant', 'Enumeration' ]
+    for block in block_list:
+          docblock = DocBlock(block)
+          print "<hr>"
+          for i in range(len(docblock.markers)):
+              marker   = docblock.markers[i]
+              content  = docblock.contents[i]
+              dcontent = DocContent( content )
+              
+              if marker=="Description":
+                  print "<ul><p>"
+                  dcontent.dump()
+                  print "</p></ul>"
+                  
+              elif marker in types:
+                  print "<h3><font color=blue>"+content[0]+"</font></h3>"
+              else:
+                  print "<h4>"+marker+"</h4>"
+                  print "<ul><p>"
+                  dcontent.dump_html()
+                  print "</p></ul>"
+                  
+              print ""
+              
+    print "<hr></body></html>"
+              
+
 def main(argv):
     """main program loop"""
     print "extracting comment blocks from sources .."
@@ -449,8 +506,10 @@ def main(argv):
 #    dump_doc_blocks( list )
 
 #    print "dumping block contents .."
-    dump_doc_contents(list)
+#    dump_doc_contents(list)
 
+    dump_html_1(list)
+     
 #    dump_single_content(list)
 
 # If called from the command line
