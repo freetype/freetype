@@ -36,9 +36,10 @@
 	will ignore stem quantization only when FT_LOAD_TARGET_SMOOTH is
 	used.
 
-	* src/base/ftobjs.c: Changed the default computations to include
-	rounding in all cases; this is required to provide accurate kerning
-	data when native TrueType hinting is enabled.
+	* src/base/ftobjs.c (FT_Set_Char_Size): Changed the default
+	computations to include rounding in all cases; this is required to
+	provide accurate kerning data when native TrueType hinting is
+	enabled.
 
 	* src/type1/t1load.c: The Type 1 loader now accepts more general
 	names according to the PostScript specification (the previous one
@@ -71,9 +72,11 @@
 
 	* include/freetype/internal/ftobjs.h (ft_glyphslot_free_bitmap,
 	ft_glyphslot_alloc_bitmap, ft_glyphslot_set_bitmap): New functions.
-	* src/base/ftobjs.c, src/bdf/bdfdrivr.c, src/pcf/pcfdriver.c,
-	src/pfr/pfrsbit.c, src/sfnt/ttsbit.c, src/type42/t42objs.c,
-	src/winfonts/winfnt.c:
+	* src/base/ftobjs.c: Implement them.
+	(ft_glyphslot_done): Use ft_glyphslot_free_bitmap.
+
+	* src/bdf/bdfdrivr.c, src/pcf/pcfdriver.c, src/pfr/pfrsbit.c,
+	src/sfnt/ttsbit.c, src/type42/t42objs.c, src/winfonts/winfnt.c:
 
 	* src/cache/ftlru.c: Fixed an invalid assertion check.
 
@@ -99,10 +102,16 @@
 
 2003-03-13  David Turner  <david@freetype.org>
 
-	* src/base/ftdbgmem.c, docs/DEBUG.TXT: Added new environment
-	variables to control memory debugging with FreeType.  See the
-	description of "FT2_DEBUG_MEMORY", "FT2_ALLOC_TOTAL_MAX" and
-	"FT2_ALLOC_COUNT_MAX" in DEBUG.TXT.
+	Added new environment variables to control memory debugging with
+	FreeType.  See the description of "FT2_DEBUG_MEMORY",
+	"FT2_ALLOC_TOTAL_MAX" and "FT2_ALLOC_COUNT_MAX" in DEBUG.TXT.
+
+	* src/base/ftdbgmem.c (FT_MemTableRec): Add `alloc_count',
+	`bound_total', `alloc_total_max', `bound_count', `alloc_count_max'.
+	(ft_mem_debug_alloc): Handle new variables.
+	(ft_mem_debug_init): s/FT_DEBUG_MEMORY/FT2_DEBUG_MEMORY/.
+	Handle new environment variables.
+	* docs/DEBUG.TXT: Updated.
 
 	* src/cache/ftccache.c, src/cache/ftccmap.c, src/cache/ftcsbits.c,
 	src/cache/ftlru.c: Fixed the cache sub-system to correctly deal with
@@ -166,10 +175,13 @@
 
 2003-02-18  David Turner  <david@freetype.org>
 
-	* src/truetype/ttdriver.c, src/truetype/ttobjs.h,
-	src/truetype/ttobjs.c, src/truetype/ttinterp.c, src/base/ftobjs.c:
-	Fixing the slight distortion problem that ocurred due to the latest
+	Fixing the slight distortion problem that occurred due to the latest
 	auto-hinter changes.
+
+	* src/base/ftobjs.c (ft_recompute_scaled_metrics): Fix rounding.
+
+	* src/truetype/ttdriver.c, src/truetype/ttobjs.h,
+	src/truetype/ttobjs.c, src/truetype/ttinterp.c:
 
 	* src/autohint/ahhint.c (ah_hinter_load): Disabled the advance width
 	"correction" which seemed to provide more trouble than benefits.
@@ -214,7 +226,9 @@
 	the top of non-capital letters is aligned on a pixel boundary
 	whenever possible.
 
-	* src/base/ftobjs.c, src/truetype/ttobjs.c:
+	* src/base/ftobjs.c (FT_Set_Char_Size)
+	[FT_CONFIG_CHESTER_BLUE_SCALE]: Round differently.
+	* src/truetype/ttobjs.c:
 
 	* src/pshinter/pshalgo3.c: Improved the Postscript hinter.  Getting
 	rid of stem snapping seems to work well here (though the stems are
@@ -238,8 +252,12 @@
 	FT_Get_BDF_Property): New function.
 	* include/freetype/internal/bdftypes.h: Include FT_BDF_H.
 	(BDF_GetPropertyFunc): New function pointer.
-	src/base/ftbdf.c, src/bdf/bdfdrivr.c, src/pcf/pcfdrivr.c,
-	src/pcf/pcfread.h:
+
+	* src/base/ftbdf.c (test_font_type): New helper function.
+	(FT_Get_BDF_Charset_ID): Use `test_font_type'.
+	(FT_Get_BDF_Property): New function.
+
+	* src/bdf/bdfdrivr.c, src/pcf/pcfdrivr.c, src/pcf/pcfread.h:
 
 	* src/sfnt/ttload.c (sfnt_dir_check): Relaxed the "head" table size
 	verification to accept a few broken fonts who pad the size
@@ -279,9 +297,11 @@
 	* include/freetype/internal/fnttypes.h: Move Windows FNT definition
 	to...
 	* include/freetype/ftwinfnt.h: This new file.
-	* include/freetype/internal/fnttypes.h, src/base/winfnt.c,
-	src/winfonts/winfnt.c, src/base/Jamfile, src/base/rules.mk,
-	src/base/descrip.mms:
+	* src/base/ftwinfnt.c: New file, providing `FT_Get_WinFNT_Header'.
+	* src/winfonts/winfnt.c:
+
+	* src/base/Jamfile, src/base/descrip.mms, src/base/rules.mk:
+	Updated.
 
 2003-01-14  Graham Asher  <graham.asher@btinternet.com>
 
@@ -353,6 +373,7 @@
 	returned when the font doesn't contain a Unicode charmap.  This
 	allows FT2 to load "symbol.ttf" and a few others correctly since the
 	last release.
+	(open_face): Fix return value.
 
 2003-01-08  Owen Taylor  <owen@redhat.com>
 
@@ -382,6 +403,11 @@
 
 	* src/base/ftstroker.c: Probably the last bug-fixes to the stroker;
 	the API is likely to change, however.
+	(ft_stroke_border_close): Don't record empty paths.
+	(ft_stroke_border_get_counts): Increase `num_points' also in for loop.
+	(ft_stroke_border_export): Don't increase `write' twice in for loops.
+	(ft_stroker_outside): Handle `phi' together with `theta'.
+	(FT_Stroker_ParseOutline): New function.
 
 	* src/base/fttrigon.c (FT_Angle_Diff): Fixing function: It returned
 	invalid values for large negative angle differences (resulting in
@@ -391,7 +417,7 @@
 	assertion, and changing code to avoid hash table size contraction.
 
 	* src/base/Jamfile, src/base/rules.mk, src/base/descrip.mms: Adding
-	"ftstroker.obj" to default build, as optional component.
+	"ftstroker" to default build, as optional component.
 
 2002-12-26  David Turner  <david@freetype.org>
 
@@ -417,6 +443,7 @@
 	function pointer.
 
 	* include/freetype/tttables.h (FT_Load_Sfnt_Table): New function.
+	* src/base/ftobjs.c: Implement it.
 
 2002-12-17  David Turner  <david@freetype.org>
 
@@ -443,9 +470,9 @@
 
 	* src/base/ftobjs.c: Modified the logic to get Unicode charmaps.
 	Now it loads UCS-4 charmaps when there is one.
-	* src/base/ftobjs.c (find_unicode_charmap): New function.
-	* src/base/ftobjs.c (open_face): Refer to the above one.
-	* src/base/ftobjs.c (FT_Select_Charmap): Idem.
+	(find_unicode_charmap): New function.
+	(open_face): Refer to the above one.
+	(FT_Select_Charmap): Idem.
 
 2002-11-29  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
 
@@ -538,6 +565,29 @@
 	* src/psaux/psobjs.c (ps_table_add): Modified increment loop in
 	order to implement exponential behaviour.
 
+2002-11-01  David Turner  <david@freetype.org>
+
+	Added PFR-specific public API. Fixed the kerning retrievel routine
+        (it returned invalid values when the outline and metrics resolution
+        differ).
+
+	* include/freetype/ftpfr.h, include/freetype/internal/pfr.h: New
+	files.
+
+	* include/freetype/internal/internal.h (FT_INTERNAL_PFR_H): New
+	macro for pfr.h.
+
+	src/base/ftpfr.c: New file.
+
+	* src/base/Jamfile, src/base/descrip.mms: Updated.
+
+	* src/base/ftobjs.c (ft_glyphslot_clear): Small internal fix to
+	better support bitmap-based font formats.
+
+	* src/base/ftsynth.c (FT_GlyphSlot_Embolden): Fix handling of
+	`scale'.
+	Fix arguments to `FT_Vector_From_Polar'.
+
 2002-10-31  David Turner  <david@freetype.org>
 
 	* include/freetype/ftgzip.h, src/gzip/ftgzip.c: New files, adding
@@ -550,9 +600,6 @@
 	* include/freetype/internal/pcftypes.h (PCF_Public_FaceRec): Add
 	`gzip_stream' and `gzip_source'.
 
-	* include/freetype/ftpfr.h, include/freetype/internal/pfr.h: New
-	files.
-
 	* include/freetype/config/ftoption.h (FT_CONFIG_OPTION_USE_ZLIB):
 	New macro.
 	(T1_CONFIG_OPTION_DISABLE_HINTER, FT_CONFIG_OPTION_USE_CMAPS
@@ -564,8 +611,6 @@
 	that platform specific configuration file can override.
 
 	* include/freetype/internal/ftstream.h: Include FT_SYSTEM_H.
-	* include/freetype/internal/internal.h (FT_INTERNAL_PFR_H): New
-	macro for pfr.h.
 
 2002-10-30  David Turner  <david@freetype.org>
 
