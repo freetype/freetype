@@ -70,7 +70,7 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  WinFNT_HeaderRec
 
-    FT_FRAME_START( 134 ),
+    FT_FRAME_START( 146 ),
       FT_FRAME_USHORT_LE( version ),
       FT_FRAME_ULONG_LE ( file_size ),
       FT_FRAME_BYTES    ( copyright, 60 ),
@@ -106,7 +106,7 @@
       FT_FRAME_USHORT_LE( B_space ),
       FT_FRAME_USHORT_LE( C_space ),
       FT_FRAME_USHORT_LE( color_table_offset ),
-      FT_FRAME_BYTES    ( reserved, 4 ),
+      FT_FRAME_BYTES    ( reserved, 16 ),
     FT_FRAME_END
   };
 
@@ -143,6 +143,17 @@
       FT_TRACE2(( "[not a valid FNT file]\n" ));
       error = FNT_Err_Unknown_File_Format;
       goto Exit;
+    }
+
+    /* Version 2 doesn't have these fields */
+    if ( header->version == 0x200 )
+    {
+      header->flags   = 0;
+      header->A_space = 0;
+      header->B_space = 0;
+      header->C_space = 0;
+
+      header->color_table_offset = 0;
     }
 
     if ( header->file_type & 1 )
@@ -592,7 +603,7 @@
     len        = new_format ? 6 : 4;
 
     /* jump to glyph entry */
-    p = font->fnt_frame + 118 + len * glyph_index;
+    p = font->fnt_frame + ( new_format ? 146 : 118 ) + len * glyph_index;
 
     bitmap->width = FT_NEXT_SHORT_LE( p );
 
