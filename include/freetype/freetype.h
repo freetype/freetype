@@ -2407,30 +2407,30 @@ FT_BEGIN_HEADER
   /*    charcode :: The current character code.                            */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    The next character code in the current charmap. 0 means            */
+  /*    The next character code in the current charmap.  0 means           */
   /*    `no encoded values above charcode'.                                */
   /*                                                                       */
   /* <Note>                                                                */
   /*    You can always retrieve the first charcode in a given charmap      */
-  /*    by calling FT_Get_Next_Char(face,0)                                */
+  /*    by calling FT_Get_Next_Char(face,0).                               */
   /*                                                                       */
-  /*    (this assumes that 0 is not a valid character code in any known    */
-  /*     charmap format, which is basically true for TrueType and Type1)   */
+  /*    (This assumes that 0 is not a valid character code in any known    */
+  /*    charmap format, which is basically true for TrueType and Type1.)   */
   /*                                                                       */
-  /*    note that certain charmaps can map character codes to "empty"      */
-  /*    glyphs sometimes. Here are two examples:                           */
+  /*    Note that certain charmaps can map character codes to "empty"      */
+  /*    glyphs sometimes.  Here are two examples:                          */
   /*                                                                       */
-  /*      - the embedded bitmaps were stripped from the font, and certain  */
-  /*        glyphs didn't have a corresponding outline                     */
+  /*      - The embedded bitmaps were stripped from the font, and certain  */
+  /*        glyphs didn't have a corresponding outline.                    */
   /*                                                                       */
-  /*      - the font is a sub-set of another one and was generated with    */
-  /*        a tool that simply changed the glyph tables, but not the       */
-  /*        charmap..                                                      */
+  /*      - The font is a subset of another one and was generated with a   */
+  /*        tool that simply changed the glyph tables, but not the         */
+  /*        charmap.                                                       */
   /*                                                                       */
-  /*    you should thus use this function only to enumerate charmaps. If   */
-  /*    you need to determine the list of "displayable" glyphs, you'll     */
-  /*    need to use FT_Load_Glyph or wait until we provide another API     */
-  /*    to do that..                                                       */
+  /*    You should thus use this function only to enumerate charmaps.  If  */
+  /*    you need to determine the list of "displayable" glyphs, you have   */
+  /*    to use `FT_Load_Glyph' or wait until we provide another API to do  */
+  /*    that.                                                              */
   /*                                                                       */
   FT_EXPORT( FT_ULong )
   FT_Get_Next_Char( FT_Face   face,
