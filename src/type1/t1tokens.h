@@ -17,7 +17,7 @@
 
 
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  T1_FontInfo
+#define FT_STRUCTURE  PS_FontInfoRec
 #undef  T1CODE
 #define T1CODE        t1_field_font_info
 
@@ -34,7 +34,7 @@
 
 
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  T1_Private
+#define FT_STRUCTURE  PS_PrivateRec
 #undef  T1CODE
 #define T1CODE        t1_field_private
 
@@ -61,7 +61,7 @@
 
 
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  T1_Font
+#define FT_STRUCTURE  T1_FontRec
 #undef  T1CODE
 #define T1CODE        t1_field_font_dict
 

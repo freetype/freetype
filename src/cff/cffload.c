@@ -1082,7 +1082,7 @@
 
 
   static FT_Error
-  cff_new_index( CFF_Index*  index,
+  cff_new_index( CFF_Index  index,
                  FT_Stream   stream,
                  FT_Bool     load )
   {
@@ -1155,7 +1155,7 @@
 
 
   static void
-  cff_done_index( CFF_Index*  index )
+  cff_done_index( CFF_Index  index )
   {
     if ( index->stream )
     {
@@ -1173,7 +1173,7 @@
 
 
   static FT_Error
-  cff_explicit_index( CFF_Index*  index,
+  cff_explicit_index( CFF_Index  index,
                       FT_Byte***  table )
   {
     FT_Error   error  = 0;
@@ -1205,7 +1205,7 @@
 
 
   FT_LOCAL_DEF FT_Error
-  CFF_Access_Element( CFF_Index*  index,
+  CFF_Access_Element( CFF_Index  index,
                       FT_UInt     element,
                       FT_Byte**   pbytes,
                       FT_ULong*   pbyte_len )
@@ -1270,7 +1270,7 @@
 
 
   FT_LOCAL_DEF void
-  CFF_Forget_Element( CFF_Index*  index,
+  CFF_Forget_Element( CFF_Index  index,
                       FT_Byte**   pbytes )
   {
     if ( index->bytes == 0 )
@@ -1284,7 +1284,7 @@
 
 
   FT_LOCAL_DEF FT_String*
-  CFF_Get_Name( CFF_Index*  index,
+  CFF_Get_Name( CFF_Index  index,
                 FT_UInt     element )
   {
     FT_Memory   memory = index->stream->memory;
@@ -1311,7 +1311,7 @@
 
 
   FT_LOCAL_DEF FT_String*
-  CFF_Get_String( CFF_Index*          index,
+  CFF_Get_String( CFF_Index          index,
                   FT_UInt             sid,
                   PSNames_Service  interface )
   {
@@ -1484,7 +1484,7 @@
   /*************************************************************************/
 
   static void
-  CFF_Done_Encoding( CFF_Encoding*  encoding,
+  CFF_Done_Encoding( CFF_Encoding  encoding,
                      FT_Stream      stream )
   {
     FT_Memory  memory = stream->memory;
@@ -1693,7 +1693,7 @@
 
 
   static FT_Error
-  CFF_Load_Encoding( CFF_Encoding*  encoding,
+  CFF_Load_Encoding( CFF_Encoding  encoding,
                      CFF_Charset*   charset,
                      FT_UInt        num_glyphs,
                      FT_Stream      stream,
@@ -1958,7 +1958,7 @@
 
   static FT_Error
   CFF_Load_SubFont( CFF_SubFont*  font,
-                    CFF_Index*    index,
+                    CFF_Index    index,
                     FT_UInt       font_index,
                     FT_Stream     stream,
                     FT_ULong      base_offset )
@@ -1968,7 +1968,7 @@
     FT_Byte*        dict;
     FT_ULong        dict_len;
     CFF_Font_Dict*  top  = &font->font_dict;
-    CFF_Private*    priv = &font->private_dict;
+    CFF_Private    priv = &font->private_dict;
 
 
     CFF_Parser_Init( &parser, CFF_CODE_TOPDICT, &font->font_dict );
@@ -2137,7 +2137,7 @@
     /* now, check for a CID font */
     if ( dict->cid_registry )
     {
-      CFF_Index     fd_index;
+      CFF_IndexRec     fd_index;
       CFF_SubFont*  sub;
       FT_UInt       index;
 

@@ -60,7 +60,7 @@
                   FT_UInt      glyph_index )
   {
     T1_Face   face  = (T1_Face)decoder->builder.face;
-    T1_Font*  type1 = &face->type1;
+    T1_Font  type1 = &face->type1;
 
 
     decoder->font_matrix = type1->font_matrix;
@@ -80,7 +80,7 @@
     FT_Error          error;
     T1_DecoderRec        decoder;
     FT_Int            glyph_index;
-    T1_Font*          type1 = &face->type1;
+    T1_Font          type1 = &face->type1;
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
@@ -146,7 +146,7 @@
     T1_DecoderRec           decoder;
     T1_Face                 face = (T1_Face)glyph->root.face;
     FT_Bool                 hinting;
-    T1_Font*                type1         = &face->type1;
+    T1_Font                type1         = &face->type1;
     PSAux_Service           psaux         = (PSAux_Service)face->psaux;
     const T1_Decoder_Funcs  decoder_funcs = psaux->t1_decoder_funcs;
 

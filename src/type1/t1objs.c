@@ -187,7 +187,7 @@
   T1_Face_Done( T1_Face  face )
   {
     FT_Memory  memory;
-    T1_Font*   type1 = &face->type1;
+    T1_Font   type1 = &face->type1;
 
 
     if ( face )
@@ -202,7 +202,7 @@
 
       /* release font info strings */
       {
-        T1_FontInfo*  info = &type1->font_info;
+        PS_FontInfo   info = &type1->font_info;
 
 
         FREE( info->version );
@@ -479,22 +479,22 @@
 
       switch ( face->type1.encoding_type )
       {
-      case t1_encoding_standard:
+      case T1_ENCODING_TYPE_STANDARD:
         charmap->encoding    = ft_encoding_adobe_standard;
         charmap->encoding_id = 0;
         break;
 
-      case t1_encoding_expert:
+      case T1_ENCODING_TYPE_EXPORT:
         charmap->encoding    = ft_encoding_adobe_expert;
         charmap->encoding_id = 1;
         break;
 
-      case t1_encoding_array:
+      case T1_ENCODING_TYPE_ARRAY:
         charmap->encoding    = ft_encoding_adobe_custom;
         charmap->encoding_id = 2;
         break;
 
-      case t1_encoding_isolatin1:
+      case T1_ENCODING_TYPE_ISOLATIN1:
         charmap->encoding    = ft_encoding_latin_1;
         charmap->encoding_id = 3;
         break;

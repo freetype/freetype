@@ -12,7 +12,7 @@
   t1_cmap_std_init( T1_CMapStd   cmap,
                     FT_Int       is_expert )
   {
-    T1_Face             face    = (T1_Face) FT_CMAP_FACE(cmap);
+    T1_Face          face    = (T1_Face) FT_CMAP_FACE(cmap);
     PSNames_Service  psnames = face->psnames;
 
     cmap->num_glyphs  = face->type1.num_glyphs;
@@ -155,7 +155,7 @@
   t1_cmap_custom_init( T1_CMapCustom  cmap )
   {
     T1_Face       face     = (T1_Face) FT_CMAP_FACE(cmap);
-    T1_Encoding*  encoding = face->type1.encoding;
+    T1_Encoding  encoding = face->type1.encoding;
 
     cmap->first   = encoding->code_first;
     cmap->count   = (FT_UInt)(encoding->code_last - cmap->first + 1);
