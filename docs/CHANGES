@@ -10,18 +10,18 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       rounded,  making  them virtually  unusable  if  not loaded  with
       FT_LOAD_LINEAR_DESIGN.
 
-    - Indexing CID-keyed CFF fonts is now working:  The glyph index is
-      correctly  treated as a CID,  similar to  FreeType's CID  driver
+    - Indexing CID-keyed CFF fonts is  now working: The glyph index is
+      correctly  treated as a  CID, similar  to FreeType's  CID driver
       module.  Note that CID CMaps support is still missing.
 
     - The FT_FACE_FLAGS_GLYPH_NAMES is now  set correctly for all font
       formats.
 
-    - Some subsetted Type 1 fonts  weren't parsed correctly.  This bug
+    - Some subsetted Type 1  fonts weren't parsed correctly.  This bug
       has been introduced in 2.1.7.
 
     - The WinFNT driver now correctly reports FT_ENCODING_NONE for all
-      but one encoding.  Use the new FT_WinFNT_ID_XXX  values together
+      but one encoding.  Use  the new FT_WinFNT_ID_XXX values together
       with FT_Get_WinFNT_Header() to get the WinFNT charset ID.
 
 
@@ -34,6 +34,70 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
     - A  new  API   function  `FT_Get_CMap_Language_ID'  (declared  in
       `tttables.h')  is  available  to   get  the  language  ID  of  a
       TrueType/SFNT cmap.
+
+    - The cache sub-system has been rewritten.
+
+      - There is now support for deinstallation of faces.
+
+      - A new  API function `FTC_Manager_RemoveFaceID'  has been added
+        to  delete  all  `idle'  nodes  that  correspond  to  a  given
+        FTC_FaceID.  All `locked' nodes  (i.e., those with a reference
+        count > 0), will be modified to prevent them from appearing in
+        further  lookups (they  will  be cleaned  normally when  their
+        reference count reaches 0).
+
+      - There  is  now  support  for point  scaling  (i.e.,  providing
+        character sizes in points + dpis, instead of pixels).
+
+      - Three abstract cache classes are now available:
+
+          FTC_GCache:  Used to store  one glyph  item per  cache node,
+                      with the ability to group common attributes into
+                      `families'.      This    replaces     the    old
+                      FTC_GlyphCache class.
+
+          FTC_ICache: Used to store one FT_Glyph per cache node.  This
+                      extends  FTC_GCache.  Family  definition, family
+                      comparison, and  glyph loading are  however left
+                      to sub-classes.
+
+          FTC_SCache: Used to  store up to 16 small  bitmaps per cache
+                      node.    This    extends   FTC_GCache.    Family
+                      definition, family  comparison and glyph loading
+                      are however left to sub-classes.
+
+      - The file `src/cache/ftcbasic.c' implements:
+
+          FTC_ImageCache: Extends    FTC_ICache;   implements   family
+                          definitions and glyph loading similar to the
+                          old API.
+
+          FTC_SBitCache: Extends    FTC_SCache,    implements   family
+                         definitions and glyph  loading similar to the
+                         old API
+
+        Client  applications  should  be  able to  extend  FTC_GCache,
+        FTC_ICache, or FTC_SCache much more easily (i.e., less code to
+        write, and  less callbacks).  For example,  one could envision
+        caches  that are  capable of  storing  transformed (obliqued),
+        stroked,   emboldened,   or   colored   glyph   images.    Use
+        `ftcbasic.c' as an example.
+
+      - All public  APIs are now  in `include/freetype/ftcache.h', (to
+        be    accessed   as    `FT_CACHE_H').     The   contents    of
+        `include/freetype/cache/' is only  needed by applications that
+        wish to implement their own caches.
+
+      - There were some major performance improvements through the use
+        of  various programming  tricks.   Cache hits  are  up to  70%
+        faster than in the old code.
+
+      - The  FTC_CMapCache has  been simplied.   Charmaps can  only be
+        accessed by  index right now.  There  is also a  new API named
+        `FT_Charmap_GetIndex' for this purpose.
+
+      - The  demo programs  have been  updated to  the new  code.  The
+        previous versions will not work with the current one.
 
 
   III. MISCELLANEOUS

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType internal cache interface (specification).                   */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 by                                           */
+/*  Copyright 2000-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -29,6 +29,7 @@ FT_BEGIN_HEADER
 
   /* handle to cache class */
   typedef const struct FTC_CacheClassRec_*  FTC_CacheClass;
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -68,6 +69,7 @@ FT_BEGIN_HEADER
 #define FTC_NODE__NEXT(x)  FTC_NODE( (x)->mru.next )
 #define FTC_NODE__PREV(x)  FTC_NODE( (x)->mru.prev )
 
+
   /*************************************************************************/
   /*                                                                       */
   /* These functions are exported so that they can be called from          */
@@ -81,7 +83,6 @@ FT_BEGIN_HEADER
                     FTC_Manager  manager );
 
 
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -91,56 +92,63 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   /* initialize a new cache node */
-  typedef FT_Error    (*FTC_Node_NewFunc)( FTC_Node    *pnode,
-                                           FT_Pointer   query,
-                                           FTC_Cache    cache );
+  typedef FT_Error
+  (*FTC_Node_NewFunc)( FTC_Node    *pnode,
+                       FT_Pointer   query,
+                       FTC_Cache    cache );
 
-  typedef FT_ULong    (*FTC_Node_WeightFunc)( FTC_Node   node,
-                                              FTC_Cache  cache );
+  typedef FT_ULong
+  (*FTC_Node_WeightFunc)( FTC_Node   node,
+                          FTC_Cache  cache );
 
   /* compare a node to a given key pair */
-  typedef FT_Bool     (*FTC_Node_CompareFunc)( FTC_Node    node,
-                                               FT_Pointer  key,
-                                               FTC_Cache   cache );
+  typedef FT_Bool
+  (*FTC_Node_CompareFunc)( FTC_Node    node,
+                           FT_Pointer  key,
+                           FTC_Cache   cache );
 
 
-  typedef void        (*FTC_Node_FreeFunc)( FTC_Node   node,
-                                            FTC_Cache  cache );
+  typedef void
+  (*FTC_Node_FreeFunc)( FTC_Node   node,
+                        FTC_Cache  cache );
 
-  typedef FT_Error    (*FTC_Cache_InitFunc)( FTC_Cache   cache );
+  typedef FT_Error
+  (*FTC_Cache_InitFunc)( FTC_Cache  cache );
 
-  typedef void        (*FTC_Cache_DoneFunc)( FTC_Cache   cache );
+  typedef void
+  (*FTC_Cache_DoneFunc)( FTC_Cache  cache );
 
 
-  typedef struct FTC_CacheClassRec_
+  typedef struct  FTC_CacheClassRec_
   {
-    FTC_Node_NewFunc        node_new;
-    FTC_Node_WeightFunc     node_weight;
-    FTC_Node_CompareFunc    node_compare;
-    FTC_Node_CompareFunc    node_remove_faceid;
-    FTC_Node_FreeFunc       node_free;
+    FTC_Node_NewFunc      node_new;
+    FTC_Node_WeightFunc   node_weight;
+    FTC_Node_CompareFunc  node_compare;
+    FTC_Node_CompareFunc  node_remove_faceid;
+    FTC_Node_FreeFunc     node_free;
 
-    FT_UInt                 cache_size;
-    FTC_Cache_InitFunc      cache_init;
-    FTC_Cache_DoneFunc      cache_done;
+    FT_UInt               cache_size;
+    FTC_Cache_InitFunc    cache_init;
+    FTC_Cache_DoneFunc    cache_done;
 
   } FTC_CacheClassRec;
+
 
   /* each cache really implements a dynamic hash table to manage its nodes */
   typedef struct  FTC_CacheRec_
   {
-    FT_UFast             p;
-    FT_UFast             mask;
-    FT_Long              slack;
-    FTC_Node*            buckets;
+    FT_UFast           p;
+    FT_UFast           mask;
+    FT_Long            slack;
+    FTC_Node*          buckets;
 
-    FTC_CacheClassRec    clazz;      /* local copy, for speed */
+    FTC_CacheClassRec  clazz;       /* local copy, for speed  */
 
-    FTC_Manager          manager;
-    FT_Memory            memory;
-    FT_UInt              index;  /* in manager's table         */
+    FTC_Manager        manager;
+    FT_Memory          memory;
+    FT_UInt            index;       /* in manager's table     */
 
-    FTC_CacheClass       org_class;  /* original class pointer */
+    FTC_CacheClass     org_class;   /* original class pointer */
 
   } FTC_CacheRec;
 
@@ -149,19 +157,19 @@ FT_BEGIN_HEADER
 #define FTC_CACHE_P( x )  ( (FTC_Cache*)(x) )
 
 
- /* default cache initialize */
+  /* default cache initialize */
   FT_EXPORT( FT_Error )
-  FTC_Cache_Init( FTC_Cache       cache );
+  FTC_Cache_Init( FTC_Cache  cache );
 
- /* default cache finalizer */
+  /* default cache finalizer */
   FT_EXPORT( void )
   FTC_Cache_Done( FTC_Cache  cache );
 
- /* call this function to lookup the cache. if no corresponding
-  * node is found, a new one is automatically created. This function
-  * is capable of flushing the cache adequately to make room for the
-  * new cache object.
-  */
+  /* Call this function to lookup the cache.  If no corresponding
+   * node is found, a new one is automatically created.  This function
+   * is capable of flushing the cache adequately to make room for the
+   * new cache object.
+   */
   FT_EXPORT( FT_Error )
   FTC_Cache_Lookup( FTC_Cache   cache,
                     FT_UInt32   hash,
@@ -174,29 +182,30 @@ FT_BEGIN_HEADER
                      FT_Pointer  query,
                      FTC_Node   *anode );
 
- /* remove all nodes that relate to a given face_id. This is useful
-  * when un-installing fonts. Note that if a cache node relates to
-  * the face_id, but is locked (i.e. has 'ref_count > 0'), the node
-  * will _not_ be destroyed, but its internal face_id reference will
-  * be modified.
-  *
-  * the end result will be that the node will never come back
-  * in further lookup requests, and will be flushed on demand from
-  * the cache normally when its reference count reaches 0
-  */
+  /* Remove all nodes that relate to a given face_id.  This is useful
+   * when un-installing fonts.  Note that if a cache node relates to
+   * the face_id, but is locked (i.e., has 'ref_count > 0'), the node
+   * will _not_ be destroyed, but its internal face_id reference will
+   * be modified.
+   *
+   * The final result will be that the node will never come back
+   * in further lookup requests, and will be flushed on demand from
+   * the cache normally when its reference count reaches 0.
+   */
   FT_EXPORT( void )
-  FTC_Cache_RemoveFaceID( FTC_Cache    cache,
-                          FTC_FaceID   face_id );
+  FTC_Cache_RemoveFaceID( FTC_Cache   cache,
+                          FTC_FaceID  face_id );
 
 
 
-#define  FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error )  \
+#define FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error )   \
   FT_BEGIN_STMNT                                                           \
-    FTC_Node  *_bucket, *_pnode, _node;                                    \
-    FTC_Cache  _cache = FTC_CACHE(cache);                                  \
-    FT_UInt32  _hash  = (FT_UInt32)(hash);                                 \
+    FTC_Node             *_bucket, *_pnode, _node;                         \
+    FTC_Cache             _cache   = FTC_CACHE(cache);                     \
+    FT_UInt32             _hash    = (FT_UInt32)(hash);                    \
     FTC_Node_CompareFunc  _nodcomp = (FTC_Node_CompareFunc)(nodecmp);      \
-    FT_UInt    _idx;                                                       \
+    FT_UInt               _idx;                                            \
+                                                                           \
                                                                            \
     error = 0;                                                             \
     _idx  = _hash & _cache->mask;                                          \
@@ -208,7 +217,7 @@ FT_BEGIN_HEADER
     {                                                                      \
       _node = *_pnode;                                                     \
       if ( _node == NULL )                                                 \
-        goto _NewNode;                                                      \
+        goto _NewNode;                                                     \
                                                                            \
       if ( _node->hash == _hash && _nodcomp( _node, query, _cache ) )      \
         break;                                                             \
@@ -225,6 +234,7 @@ FT_BEGIN_HEADER
                                                                            \
     {                                                                      \
       FTC_Manager  _manager = _cache->manager;                             \
+                                                                           \
                                                                            \
       if ( _node != _manager->nodes_list )                                 \
         FTC_MruNode_Up( (FTC_MruNode*)&_manager->nodes_list,               \

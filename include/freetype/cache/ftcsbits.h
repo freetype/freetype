@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A small-bitmap cache (specification).                                */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 by                                           */
+/*  Copyright 2000-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -33,24 +33,26 @@ FT_BEGIN_HEADER
   {
     FTC_GNodeRec  gnode;
     FT_UInt       count;
-    FTC_SBitRec   sbits[ FTC_SBIT_ITEMS_PER_NODE ];
+    FTC_SBitRec   sbits[FTC_SBIT_ITEMS_PER_NODE];
 
   } FTC_SNodeRec, *FTC_SNode;
 
 
-#define FTC_SNODE( x )  ( (FTC_SNode)( x ) )
-#define FTC_SNODE_GINDEX( x )  FTC_GNODE(x)->gindex
-#define FTC_SNODE_FAMILY( x )  FTC_GNODE(x)->family
+#define FTC_SNODE( x )         ( (FTC_SNode)( x ) )
+#define FTC_SNODE_GINDEX( x )  FTC_GNODE( x )->gindex
+#define FTC_SNODE_FAMILY( x )  FTC_GNODE( x )->family
 
-  typedef FT_UInt   (*FTC_SFamily_GetCountFunc)( FTC_Family   family,
-                                                 FTC_Manager  manager );
+  typedef FT_UInt
+  (*FTC_SFamily_GetCountFunc)( FTC_Family   family,
+                               FTC_Manager  manager );
 
-  typedef FT_Error  (*FTC_SFamily_LoadGlyphFunc)( FTC_Family   family,
-                                                  FT_UInt      gindex,
-                                                  FTC_Manager  manager,
-                                                  FT_Face     *aface );
+  typedef FT_Error
+  (*FTC_SFamily_LoadGlyphFunc)( FTC_Family   family,
+                                FT_UInt      gindex,
+                                FTC_Manager  manager,
+                                FT_Face     *aface );
 
-  typedef struct FTC_SFamilyClassRec_
+  typedef struct  FTC_SFamilyClassRec_
   {
     FTC_MruListClassRec        clazz;
     FTC_SFamily_GetCountFunc   family_get_count;
@@ -60,10 +62,11 @@ FT_BEGIN_HEADER
 
   typedef const FTC_SFamilyClassRec*  FTC_SFamilyClass;
 
-#define  FTC_SFAMILY_CLASS(x)  ((FTC_SFamilyClass)(x))
+#define FTC_SFAMILY_CLASS( x )  ((FTC_SFamilyClass)(x))
 
-#define  FTC_CACHE__SFAMILY_CLASS(x)  \
-             FTC_SFAMILY_CLASS( FTC_CACHE__GCACHE_CLASS(x)->family_class )
+#define FTC_CACHE__SFAMILY_CLASS( x )  \
+          FTC_SFAMILY_CLASS( FTC_CACHE__GCACHE_CLASS( x )->family_class )
+
 
   FT_EXPORT( void )
   FTC_SNode_Free( FTC_SNode  snode,

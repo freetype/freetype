@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Build macros of the FreeType 2 library.                              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -433,10 +433,10 @@
   /*    see the API defined in @FT_CACHE_SMALL_BITMAPS_H if you only need  */
   /*    to store small glyph bitmaps, as it will use less memory.          */
   /*                                                                       */
-  /*    this macro is *DEPRECATED*, simply include @FT_CACHE_H and you'll  */
-  /*    have all glyph image-related cache declarations                    */
+  /*    This macro is deprecated.  Simply include @FT_CACHE_H to have all  */
+  /*    glyph image-related cache declarations.                            */
   /*                                                                       */
-#define FT_CACHE_IMAGE_H    FT_CACHE_H
+#define FT_CACHE_IMAGE_H  FT_CACHE_H
 
 
   /*************************************************************************/
@@ -453,8 +453,8 @@
   /*    in @FT_CACHE_IMAGE_H if you want to cache arbitrary glyph images,  */
   /*    including scalable outlines.                                       */
   /*                                                                       */
-  /*    this macro is *DEPRECATED*, simply include @FT_CACHE_H and you'll  */
-  /*    have all small bitmaps-related cache declarations                  */
+  /*    This macro is deprecated.  Simply include @FT_CACHE_H to have all  */
+  /*    small bitmaps-related cache declarations.                          */
   /*                                                                       */
 #define FT_CACHE_SMALL_BITMAPS_H  FT_CACHE_H
 
@@ -468,8 +468,8 @@
   /*    A macro used in #include statements to name the file containing    */
   /*    the `charmap' API of the FreeType 2 cache sub-system.              */
   /*                                                                       */
-  /*    this macro is *DEPRECATED*, simply include @FT_CACHE_H and you'll  */
-  /*    have all charmap-based cache declarations                          */
+  /*    This macro is deprecated.  Simply include @FT_CACHE_H to have all  */
+  /*    charmap-based cache declarations.                                  */
   /*                                                                       */
 #define FT_CACHE_CHARMAP_H     FT_CACHE_H
 
@@ -517,30 +517,30 @@
 
   /* */
 
-#define FT_TRIGONOMETRY_H          <freetype/fttrigon.h>
-#define FT_STROKER_H               <freetype/ftstroke.h>
-#define FT_SYNTHESIS_H             <freetype/ftsynth.h>
-#define FT_ERROR_DEFINITIONS_H     <freetype/fterrdef.h>
+#define FT_TRIGONOMETRY_H       <freetype/fttrigon.h>
+#define FT_STROKER_H            <freetype/ftstroke.h>
+#define FT_SYNTHESIS_H          <freetype/ftsynth.h>
+#define FT_ERROR_DEFINITIONS_H  <freetype/fterrdef.h>
 
-#define FT_CACHE_MANAGER_H         <freetype/cache/ftcmanag.h>
+#define FT_CACHE_MANAGER_H  <freetype/cache/ftcmanag.h>
 
 #define FT_CACHE_INTERNAL_MRU_H      <freetype/cache/ftcmru.h>
 #define FT_CACHE_INTERNAL_MANAGER_H  <freetype/cache/ftcmanag.h>
-#define FT_CACHE_INTERNAL_CACHE_H  <freetype/cache/ftccache.h>
+#define FT_CACHE_INTERNAL_CACHE_H    <freetype/cache/ftccache.h>
 #define FT_CACHE_INTERNAL_GLYPH_H    <freetype/cache/ftcglyph.h>
 #define FT_CACHE_INTERNAL_IMAGE_H    <freetype/cache/ftcimage.h>
 #define FT_CACHE_INTERNAL_SBITS_H    <freetype/cache/ftcsbits.h>
 
 
-#define FT_XFREE86_H               <freetype/ftxf86.h>
+#define FT_XFREE86_H              <freetype/ftxf86.h>
 
-#define FT_INCREMENTAL_H           <freetype/ftincrem.h>
+#define FT_INCREMENTAL_H          <freetype/ftincrem.h>
 
-#define FT_TRUETYPE_UNPATENTED_H   <freetype/ttunpat.h>
+#define FT_TRUETYPE_UNPATENTED_H  <freetype/ttunpat.h>
 
   /* now include internal headers definitions from <freetype/internal/...> */
 
-#define  FT_INTERNAL_INTERNAL_H    <freetype/internal/internal.h>
+#define  FT_INTERNAL_INTERNAL_H  <freetype/internal/internal.h>
 #include FT_INTERNAL_INTERNAL_H
 
 

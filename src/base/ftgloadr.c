@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph loader (body).                                    */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2002, 2003 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -19,6 +19,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_GLYPH_LOADER_H
 #include FT_INTERNAL_MEMORY_H
+#include FT_INTERNAL_OBJECTS_H
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gloader
