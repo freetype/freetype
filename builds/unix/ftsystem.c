@@ -292,6 +292,7 @@
 
     memory = (FT_Memory)malloc( sizeof ( *memory ) );
     if ( memory )
+    {
       memory->user    = 0;
       memory->alloc   = ft_alloc;
       memory->realloc = ft_realloc;
