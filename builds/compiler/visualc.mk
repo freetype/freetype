@@ -3,13 +3,16 @@
 #
 
 # compiler command line name
+#
 CC := cl
+
 
 # The object file extension (for standard and static libraries).  This can be
 # .o, .tco, .obj, etc., depending on the platform.
 #
 O  := obj
 SO := obj
+
 
 # The library file extension (for standard and static libraries).  This can
 # be .a, .lib, etc., depending on the platform.
@@ -25,7 +28,7 @@ I := /I
 
 
 # C flag used to define a macro before the compilation of a given source
-# object.  Usually is `-D' like in `-DDEBUG'.
+# object.  Usually it is `-D' like in `-DDEBUG'.
 #
 D := /D
 

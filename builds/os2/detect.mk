@@ -59,4 +59,4 @@ ifeq ($(PLATFORM),ansi)
   endif # test OS2_SHELL
 endif   # test PLATFORM
 
-#EOF
+# EOF

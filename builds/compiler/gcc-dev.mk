@@ -1,9 +1,10 @@
 # Copyright 2000 David Turner
 #
-#  gcc-specific with NO OPTIMISATIONS + DEBUGGING
+#  gcc-specific with NO OPTIMIZATIONS + DEBUGGING
 #
 
 # Compiler command line name
+#
 CC := gcc
 
 # The object file extension (for standard and static libraries).  This can be
@@ -26,7 +27,7 @@ I := -I
 
 
 # C flag used to define a macro before the compilation of a given source
-# object.  Usually is `-D' like in `-DDEBUG'.
+# object.  Usually it is `-D' like in `-DDEBUG'.
 #
 D := -D
 
@@ -61,8 +62,9 @@ ANSIFLAGS := -ansi -pedantic
 # Library linking
 #
 ifndef CLEAN_LIBRARY
-CLEAN_LIBRARY = $(DELETE) $(subst $(SEP),$(HOSTSEP),$(PROJECT_LIBRARY)) $(NO_OUTPUT)
+  CLEAN_LIBRARY = $(DELETE) $(subst $(SEP),$(HOSTSEP),$(PROJECT_LIBRARY)) \
+                  $(NO_OUTPUT)
 endif
-LINK_LIBRARY  = $(AR) -r $@ $(OBJECTS_LIST)
+LINK_LIBRARY = $(AR) -r $@ $(OBJECTS_LIST)
 
 # EOF

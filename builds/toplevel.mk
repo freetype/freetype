@@ -58,21 +58,21 @@ ifdef check_platform
 
   all: setup
 
-ifdef USE_MODULES  
-  # If the module list $(MODULE_LIST) file is not present, generate it.
-  #
-  #modules: make_module_list setup
-endif
+  ifdef USE_MODULES  
+    # If the module list $(MODULE_LIST) file is not present, generate it.
+    #
+    #modules: make_module_list setup
+  endif
 
   include $(TOP)/builds/detect.mk
 
-ifdef USE_MODULES  
-  include $(TOP)/builds/modules.mk
+  ifdef USE_MODULES  
+    include $(TOP)/builds/modules.mk
 
-  ifeq ($(wildcard $(MODULE_LIST)),)
-    setup: make_module_list
+    ifeq ($(wildcard $(MODULE_LIST)),)
+      setup: make_module_list
+    endif
   endif
-endif
 
   # This rule makes sense for Unix only to remove files created by a run
   # of the configure script which hasn't been successful (so that no
@@ -80,11 +80,11 @@ endif
   # GNU make.
   #
   distclean:
-	$(RM) builds/unix/config.cache
-	$(RM) builds/unix/config.log
-	$(RM) builds/unix/config.status
-	$(RM) builds/unix/unix-def.mk
-	$(RM) builds/unix/unix-cc.mk
+	  $(RM) builds/unix/config.cache
+	  $(RM) builds/unix/config.log
+	  $(RM) builds/unix/config.status
+	  $(RM) builds/unix/unix-def.mk
+	  $(RM) builds/unix/unix-cc.mk
 
   # IMPORTANT:
   #
@@ -97,9 +97,9 @@ else
   #
   all: single
 
-ifdef USE_MODULES
-  modules: make_module_list
-endif
+  ifdef USE_MODULES
+    modules: make_module_list
+  endif
 
   BUILD_PROJECT := yes
   include $(CONFIG_MK)

@@ -1,3 +1,4 @@
+#
 # Copyright 2000 David Turner <david.turner@freetype.org>
 #
 #  OS/2 specific definitions
@@ -10,7 +11,7 @@ PLATFORM := os2
 
 # except for GCC+emx on OS/2
 ifndef SEP
-SEP      := $(HOSTSEP)
+  SEP    := $(HOSTSEP)
 endif
 
 
@@ -30,7 +31,7 @@ endif
 
 # The directory where all library files are placed.
 #
-# By default, this is the same as $(OBJ_DIR), however, this can be changed
+# By default, this is the same as $(OBJ_DIR); however, this can be changed
 # to suit particular needs.
 #
 LIB_DIR := $(OBJ_DIR)
@@ -41,7 +42,7 @@ LIB_DIR := $(OBJ_DIR)
 LIBRARY := $(PROJECT)
 
 
-# the NO_OUTPUT macro is used to ignore the output of commands
+# The NO_OUTPUT macro is used to ignore the output of commands.
 # 
 NO_OUTPUT = 2> nul
 
@@ -70,4 +71,4 @@ ifdef BUILD_LIBRARY
 
 endif
 
-
+# EOF

@@ -12,7 +12,7 @@ PLATFORM := win32
 # but certain compilers accept "/" as well
 #
 ifndef SEP
-SEP      := $(HOSTSEP)
+  SEP    := $(HOSTSEP)
 endif
 
 
@@ -32,10 +32,11 @@ endif
 
 # The directory where all library files are placed.
 #
-# By default, this is the same as $(OBJ_DIR), however, this can be changed
+# By default, this is the same as $(OBJ_DIR); however, this can be changed
 # to suit particular needs.
 #
 LIB_DIR := $(OBJ_DIR)
+
 
 # The name of the final library file.  Note that the DOS-specific Makefile
 # uses a shorter (8.3) name.
@@ -43,9 +44,8 @@ LIB_DIR := $(OBJ_DIR)
 LIBRARY := $(PROJECT)
 
 
-# the NO_OUTPUT macro is used to ignore the output of commands
+# The NO_OUTPUT macro is used to ignore the output of commands.
 # 
 NO_OUTPUT = 2> nul
 
-
-
+# EOF
