@@ -1,6 +1,14 @@
+2002-06-26  David Turner
+
+        * src/truetype/ttgload.c (TT_Load_Composite_Glyph),
+        src/base/ftoutln.c (FT_Vector_Transform): fixed Werner's latest
+        fix. FT_Vector_Transform wasn't buggy, the TrueType composite loader
+        was...
+
 2002-06-24  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 3.
+
 
 2002-06-21  David Turner  <david@freetype.org>
 

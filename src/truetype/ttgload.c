@@ -544,8 +544,8 @@
       else if ( subglyph->flags & WE_HAVE_A_2X2 )
       {
         xx = (FT_Fixed)FT_GET_SHORT() << 2;
-        xy = (FT_Fixed)FT_GET_SHORT() << 2;
         yx = (FT_Fixed)FT_GET_SHORT() << 2;
+        xy = (FT_Fixed)FT_GET_SHORT() << 2;
         yy = (FT_Fixed)FT_GET_SHORT() << 2;
       }
 
