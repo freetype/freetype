@@ -132,13 +132,13 @@
   {
     FT_Int s;
 
-
     s = 1;
     if ( a < 0 ) { a = -a; s = -s; }
     if ( b < 0 ) { b = -b; s = -s; }
     if ( c < 0 ) { c = -c; s = -s; }
 
-    return s * ( ( (FT_Int64)a * b + ( c >> 1 ) ) / c );
+    return s * ( c > 0 ? ( ( (FT_Int64)a * b + ( c >> 1 ) ) / c )
+                       : 0x7FFFFFFF );
   }
 
 
@@ -344,14 +344,13 @@
     s ^= b; b = ABS( b );
     s ^= c; c = ABS( c );
 
-    if ( a <= 46340 && b <= 46340 && c <= 176095L )
+    if ( a <= 46340 && b <= 46340 && c <= 176095L && c > 0)
     {
-      a = ( a*b + (c >> 1) ) / c;
+      a = a*b + (c >> 1) ) / c;
     }
-    else
+    else if (c > 0)
     {
       FT_Int64  temp, temp2;
-
 
       FT_MulTo64( a, b, &temp );
       temp2.hi = (FT_Int32)(c >> 31);
@@ -359,6 +358,8 @@
       FT_Add64( &temp, &temp2, &temp );
       a = FT_Div64by32( &temp, c );
     }
+    else
+      a = 0x7FFFFFFF;
 
     return ( s < 0 ) ? -a : a;
   }
@@ -614,7 +615,6 @@
     FT_Int32   s;
     FT_Word32  q, r, i, lo;
 
-
     s  = x->hi;
     if ( s < 0 )
     {
@@ -626,7 +626,9 @@
     /* Shortcut */
     if ( x->hi == 0 )
     {
-      q = x->lo / y;
+      if (y > 0) q = x->lo / y;
+            else q = 0x7FFFFFFF;
+
       return ( s < 0 ) ? -(FT_Int32)q : (FT_Int32)q;
     }
 

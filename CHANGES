@@ -1,5 +1,14 @@
 LATEST_CHANGES
 
+  - fixed potential "divide by zero" bugs in ftcalc.c.. my god..
+
+  - added source code for the OpenType/CFF driver (still incomplete though..)
+
+  - modified the SFNT driver slightly to perform more robust header
+    checks in TT_Load_SFNT_Header. This prevents certain font files
+    (e.g. some Type 1 Multiple Masters) from being incorrectly "recognized"
+    as TrueType font files..
+
   - moved a lot of stuff from the TrueType driver to the SFNT module,
     this allows greater code re-use between font drivers (e.g. TrueType,
     OpenType, Compact-TrueType, etc..)
