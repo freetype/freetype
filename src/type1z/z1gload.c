@@ -450,6 +450,9 @@
     T1_Font*     type1 = &face->type1;
 
 
+    /* seac weirdness */
+    adx += decoder->builder.left_bearing.x;
+
     bchar_index = lookup_glyph_by_stdcharcode( face, bchar );
     achar_index = lookup_glyph_by_stdcharcode( face, achar );
 
