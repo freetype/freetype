@@ -532,7 +532,8 @@
         loader->pp2.x = FT_MulFix( loader->pp2.x, x_scale );
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-      loader->exec->glyphSize = 0;
+      if (loader->exec)
+        loader->exec->glyphSize = 0;
 #endif
       goto Load_End;
     }
@@ -722,7 +723,12 @@
           num_base_points = loader->base.n_points;
           
           error = load_truetype_glyph( loader, subglyph->index );
-          if ((subglyph->flags & USE_MY_METRICS) == 0)
+          if ( subglyph->flags & USE_MY_METRICS )
+          {
+            pp1 = loader->pp1;
+            pp2 = loader->pp2;
+          }
+          else
           {
             loader->pp1 = pp1;
             loader->pp2 = pp2;
@@ -818,7 +824,7 @@
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
         subglyph--;
-        if (num_subglyphs > 0 && subglyph->flags & WE_HAVE_INSTR)
+        if (num_subglyphs > 0 && loader->exec && subglyph->flags & WE_HAVE_INSTR)
         {
           TT_UShort       n_ins;
           TT_ExecContext  exec = loader->exec;
@@ -839,6 +845,9 @@
             return TT_Err_Too_Many_Ins;
           }
      
+          if (exec)
+          {
+          }
           /* read the instructions */
           if ( FILE_Read( exec->glyphIns, n_ins ) )
             goto Fail;
@@ -1117,7 +1126,8 @@
     }
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-    glyph->outline.dropout_mode = (TT_Char)loader->exec->GS.scan_type;
+    if (loader->exec)
+      glyph->outline.dropout_mode = (TT_Char)loader->exec->GS.scan_type;
 #else
     glyph->outline.dropout_mode = 2;
 #endif
