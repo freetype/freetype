@@ -1,19 +1,17 @@
 2002-01-30  David Turner  <david@freetype.org>
 
-	* INSTALL, docs/INSTALL: moved the INSTALL document from the top
-	level directory to "docs". That's because it conflicts with the
-	"install" script on Windows, where the filesystem doesn't
-	preserve case.
+	* INSTALL: Moved to ...
+	* docs/INSTALL: Here to avoid conflicts with the "install" script on
+	Windows, where the filesystem doesn't preserve case.
 
 2002-01-29  David Turner  <david@freetype.org>
 
-	* configure: fixed the script. it previously didn't accept more
-	than one argument correctly. For example, when typing:
-	
-	  ./configure --disable-shared --disable-nls
-	  
-	the "--disable-nls" was incorrectly sent to the "make" program..
+	* configure: Fixed the script.  It previously didn't accept more
+	than one argument correctly.  For example, when typing:
 
+	  ./configure --disable-shared --disable-nls
+
+	the "--disable-nls" was incorrectly sent to the "make" program.
 
 2002-01-29  Werner Lemberg  <wl@gnu.org>
 
@@ -35,6 +33,7 @@
 
 	* src/type1/t1load.c (parse_subrs, parse_charstrings): Use copy
 	of `base' string for decrypting to not modify the original data.
+	Based on a patch by Jakub Bogusz <qboosh@pld.org.pl>.
 
 2002-01-27  Giuliano Pochini  <pochini@shiny.it>
 
