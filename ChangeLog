@@ -1,9 +1,17 @@
+2001-03-17  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/cff/cffparse.c (cff_parse_font_bbox): Obtain rounded FT_Fixed
+	values for the bounding box numbers.
+
+	* src/cff/cffobjs.c (CFF_Init_Face): When processing a CFF/CEF font,
+	set `root->ascender' (`root->descender') to the integer part of
+	`root->bbox.yMax' (`root->bbox.yMin', respectively).
+
 2001-03-16  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/cffdrivr.c (get_cff_glyph_name):  New function.  Used in
 	cff_get_interface to facilitate getting a glyph name for glyph index
 	via FT_Get_Glyph_Name().
-	Submitted by Sander van der Wal <svdwal@xs4all.nl>
 	
 	(cff_get_interface): Added support for getting a glyph name via the
 	"glyph_name" module interface.  Uses the new function
