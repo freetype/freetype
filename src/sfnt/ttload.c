@@ -967,7 +967,7 @@
     };
 
 
-    table     = &face->name_table;
+    table         = &face->name_table;
     table->stream = stream;
 
     FT_TRACE2(( "Names " ));
@@ -987,14 +987,13 @@
     if ( FT_STREAM_READ_FIELDS( name_table_fields, table ) )
       goto Exit;
 
-    /* some popular asian fonts have an invalid 'storageOffset' value  */
-    /* (it should be at least "6 + 12*num_names"). However, the string */
-    /* offsets, computed as "storageOffset + entry->stringOffset" are  */
-    /* valid pointers within the name table...                         */
-    /*                                                                 */
-    /* we thus can't check "storageOffset" right now                   */
-    /*                                                                 */
-
+    /* Some popular asian fonts have an invalid `storageOffset' value   */
+    /* (it should be at least "6 + 12*num_names").  However, the string */
+    /* offsets, computed as "storageOffset + entry->stringOffset", are  */
+    /* valid pointers within the name table...                          */
+    /*                                                                  */
+    /* We thus can't check `storageOffset' right now.                   */
+    /*                                                                  */
     storage_start = table_pos + 6 + 12*table->numNameRecords;
     storage_limit = table_pos + table_len;
 

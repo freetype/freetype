@@ -132,6 +132,7 @@
   typedef FT_String*  (*TT_NameEntry_ConvertFunc)( TT_NameEntry  entry,
                                                    FT_Memory     memory );
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -161,6 +162,7 @@
     FT_Int            found_unicode = -1;
 
     TT_NameEntry_ConvertFunc  convert;
+
 
     rec = face->name_table.names;
     for ( n = 0; n < face->num_names; n++, rec++ )

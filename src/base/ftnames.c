@@ -60,11 +60,12 @@
         if ( entry->stringLength > 0 && entry->string == NULL )
         {
           FT_Memory  memory = face->memory;
+          FT_Stream  stream = face->stream;
 
 
-          if ( FT_NEW_ARRAY     ( entry->string, entry->stringLength ) ||
-               FT_STREAM_SEEK   ( entry->stringOffset )                ||
-               FT_STREAM_READ_AT( entry->string, entry->stringLength ) )
+          if ( FT_NEW_ARRAY  ( entry->string, entry->stringLength ) ||
+               FT_STREAM_SEEK( entry->stringOffset )                ||
+               FT_STREAM_READ( entry->string, entry->stringLength ) )
           {
             FT_FREE( entry->string );
             entry->stringLength = 0;

@@ -152,11 +152,11 @@
       FT_Error          error;
 
 
-      if ( !FT_ALLOC( result, name->stringLength+1 ) )
+      if ( !FT_ALLOC( result, name->stringLength + 1 ) )
       {
         FT_Stream   stream = face->name_table.stream;
-        FT_String*  r = (FT_String*)result;
-        FT_Byte*    p = (FT_Byte*)name->string;
+        FT_String*  r      = (FT_String*)result;
+        FT_Byte*    p      = (FT_Byte*)name->string;
 
 
         if ( FT_STREAM_SEEK( name->stringOffset ) ||
@@ -166,10 +166,11 @@
           name->stringLength = 0;
           name->stringOffset = 0;
           FT_FREE( name->string );
+
           goto Exit;
         }
 
-        p = (FT_Byte*) stream->cursor;
+        p = (FT_Byte*)stream->cursor;
 
         for ( ; len > 0; len--, p += 2 )
         {
