@@ -35,6 +35,9 @@
 #define TT_PLATFORM_ISO            2 /* deprecated */
 #define TT_PLATFORM_MICROSOFT      3
 
+  /* artificial values defined ad-hoc by FreeType */
+#define TT_PLATFORM_ADOBE          7
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -116,6 +119,19 @@
 #define TT_MS_ID_BIG_5       4
 #define TT_MS_ID_WANSUNG     5
 #define TT_MS_ID_JOHAB       6
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* possible values of the platform specific encoding identifier field in */
+  /* the name records of the TTF `name' table if the `platform' identifier */
+  /* code is TT_PLATFORM_ADOBE.                                            */
+  /*                                                                       */
+  /* These are artificial values defined ad-hoc by FreeType.               */
+  /*                                                                       */
+#define TT_ADOBE_ID_STANDARD  0
+#define TT_ADOBE_ID_EXPERT    1
+#define TT_ADOBE_ID_CUSTOM    2
 
 
   /*************************************************************************/

@@ -2230,8 +2230,8 @@
   /*    decoding.                                                          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face     :: A handle to the source face object.                    */
-  /*    charmap  :: A handle to the selected charmap.                      */
+  /*    face    :: A handle to the source face object.                     */
+  /*    charmap :: A handle to the selected charmap.                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
