@@ -1,5 +1,5 @@
 #
-#  Visual C++ on Win32
+# Visual C++ on Win32
 #
 
 SEP := /

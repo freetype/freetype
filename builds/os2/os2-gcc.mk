@@ -41,7 +41,7 @@ endif
 
 # The directory where all library files are placed.
 #
-# By default, this is the same as $(OBJ_DIR), however, this can be changed
+# By default, this is the same as $(OBJ_DIR); however, this can be changed
 # to suit particular needs.
 #
 LIB_DIR := $(OBJ_DIR)
@@ -52,6 +52,7 @@ LIB_DIR := $(OBJ_DIR)
 #
 O  := o
 SO := o
+
 
 # The library file extension (for standard and static libraries).  This can
 # be .a, .lib, etc., depending on the platform.
@@ -73,7 +74,7 @@ I := -I
 
 
 # C flag used to define a macro before the compilation of a given source
-# object.  Usually is `-D' like in `-DDEBUG'.
+# object.  Usually it is `-D' like in `-DDEBUG'.
 #
 D := -D
 

@@ -69,14 +69,14 @@ endif
 
 # The directory where all library files are placed.
 #
-# By default, this is the same as $(OBJ_DIR), however, this can be changed
+# By default, this is the same as $(OBJ_DIR); however, this can be changed
 # to suit particular needs.
 #
 LIB_DIR := $(OBJ_DIR)
 
 
-# the NO_OUTPUT macro is appended to command lines in order to ignore
-# the output of some programs..
+# The NO_OUTPUT macro is appended to command lines in order to ignore
+# the output of some programs.
 #
 NO_OUTPUT := 2> /dev/null
 

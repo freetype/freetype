@@ -6,17 +6,20 @@
 #
 CC       := icc
 
+
 # The object file extension (for standard and static libraries).  This can be
 # .o, .tco, .obj, etc., depending on the platform.
 #
 O  := obj
 SO := obj
 
+
 # The library file extension (for standard and static libraries).  This can
 # be .a, .lib, etc., depending on the platform.
 #
 A  := lib
 SA := lib
+
 
 # Path inclusion flag.  Some compilers use a different flag than `-I' to
 # specify an additional include path.  Examples are `/i=' or `-J'.

@@ -79,7 +79,7 @@ AC_CHECK_FUNCS(memcpy memmove)
 
 AM_PROG_LIBTOOL
 
-dnl create the Unix-specific sub-Makefile `builds/unix/unix-def.mk' 
+dnl create the Unix-specific sub-Makefiles `builds/unix/unix-def.mk' 
 dnl and 'builds/unix/unix-cc.mk' that will be used by the build system
 dnl
 AC_OUTPUT(unix-cc.mk:unix-cc.in unix-def.mk:unix-def.in)

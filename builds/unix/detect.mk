@@ -24,14 +24,14 @@ ifeq ($(PLATFORM),ansi)
 
 
     # If `devel' is the requested target, we use a special configuration
-    # file named "unix-dev.mk". It disables optimization and libtool..
+    # file named `unix-dev.mk'.  It disables optimization and libtool.
     #
     ifneq ($(findstring devel,$(MAKECMDGOALS)),)
       CONFIG_FILE := unix-dev.mk
       devel: setup
     else
       # If a Unix platform is detected, the configure script is called and
-      # `unix.mk' is created.
+      # `unix-def.mk' together with `unix-cc.mk' is created.
       #
       # Arguments to `configure' should be in the CFG variable.  Example:
       #

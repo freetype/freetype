@@ -105,6 +105,7 @@ LIB_      := $(LIB_DIR)$(SEP)
 PUBLIC_   := $(TOP)$(SEP)include$(SEP)freetype$(SEP)
 INTERNAL_ := $(PUBLIC_)internal$(SEP)
 CONFIG_   := $(PUBLIC_)config$(SEP)
+CACHE_    := $(PUBLIC_)cache$(SEP)
 
 
 # The final name of the library file.
@@ -145,8 +146,8 @@ OBJECTS_LIST :=
 
 
 # Define $(PUBLIC_H) as the list of all public header files located in
-# `$(TOP)/include/freetype'.  $(BASE_H) and $(CONFIG_H) are defined
-# similarly.
+# `$(TOP)/include/freetype'.  $(BASE_H), $(CACHE_H), and $(CONFIG_H) are
+# defined similarly.
 #
 # This is used to simplify the dependency rules -- if one of these files
 # changes, the whole library is recompiled.
@@ -154,8 +155,9 @@ OBJECTS_LIST :=
 PUBLIC_H   := $(wildcard $(PUBLIC_)*.h)
 BASE_H     := $(wildcard $(INTERNAL_)*.h)
 CONFIG_H   := $(wildcard $(CONFIG_)*.h)
+CACHE_H    := $(wildcard $(CACHE_)*.h)
 
-FREETYPE_H := $(PUBLIC_H) $(BASE_H) $(CONFIG_H)
+FREETYPE_H := $(PUBLIC_H) $(BASE_H) $(CONFIG_H) $(CACHE_H)
 
 
 # ftsystem component
@@ -257,10 +259,12 @@ distclean_project_std: clean_project_std
 # we are stuck with wildcards.
 #
 clean_project_dos:
-	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(OBJ_))*.$O $(CLEAN) $(NO_OUTPUT)
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(OBJ_))*.$O \
+                   $(CLEAN) $(NO_OUTPUT)
 
 distclean_project_dos: clean_project_dos
-	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(PROJECT_LIBRARY)) $(DISTCLEAN) $(NO_OUTPUT)
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(PROJECT_LIBRARY)) \
+                   $(DISTCLEAN) $(NO_OUTPUT)
 
 # Remove configuration file (used for distclean).
 #

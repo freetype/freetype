@@ -1,15 +1,17 @@
 # template for Unix-specific compiler definitions
 #
 
-CC            := @CC@
+CC      := @CC@
 
-LIBTOOL       := $(BUILD)/libtool
+LIBTOOL := $(BUILD)/libtool
+
 
 # The object file extension (for standard and static libraries).  This can be
 # .o, .tco, .obj, etc., depending on the platform.
 #
 O  := lo
 SO := o
+
 
 # The library file extension (for standard and static libraries).  This can
 # be .a, .lib, etc., depending on the platform.
@@ -31,7 +33,7 @@ I := -I
 
 
 # C flag used to define a macro before the compilation of a given source
-# object.  Usually is `-D' like in `-DDEBUG'.
+# object.  Usually it is `-D' like in `-DDEBUG'.
 #
 D := -D
 
@@ -76,3 +78,4 @@ LDFLAGS := @LDFLAGS@
 LINK_LIBRARY = $(LIBTOOL) --mode=link $(CCraw) -o $@ $(OBJECTS_LIST) \
                        -rpath $(libdir) -version-info $(version_info)
 
+# EOF

@@ -44,7 +44,7 @@ ifndef TOP
 endif
 
 # Set auto-detection default to `ansi' resp. UNIX-like operating systems.
-# Note that we delay the evaluation of $(BUILD_CONFIG_), $(BUILD), and
+# Note that we delay evaluation of $(BUILD_CONFIG_), $(BUILD), and
 # $(CONFIG_RULES).
 #
 PLATFORM := ansi
