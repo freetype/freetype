@@ -1,3 +1,9 @@
+2003-01-08  Owen Taylor  <owen@redhat.com>
+
+        * src/autohint/ahtypes.h, src/autohint/ahhint.c, src/pshinter/pshalgo3.h,
+        src/pshinter/pshalgo3.c: implemented the FT_RENDER_MODE_LIGHT hinting
+        mode in the auto and postscript hinters
+
 2003-01-08  David Turner  <david@freetype.org>
 
         * src/base/ftobjs.c (find_unicode_charmap): fixed the error code

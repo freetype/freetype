@@ -104,8 +104,12 @@
       sign = 1;
     }
 
-    if ( (  vertical && !hinter->do_vert_snapping ) ||
-         ( !vertical && !hinter->do_horz_snapping ) )
+    if ( !hinter->do_stem_adjust )
+    {
+      /* leave stem widths unchanged */
+    }
+    else if ( (  vertical && !hinter->do_vert_snapping ) ||
+              ( !vertical && !hinter->do_horz_snapping ) )
     {
       /* smooth hinting process, very lightly quantize the stem width */
       /*                                                              */
@@ -1426,6 +1430,8 @@
     /* vertical LCD rendering targets only.  Corresponds to Y snapping. */
     hinter->do_vert_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_MONO   ||
                                         hint_mode == FT_RENDER_MODE_LCD_V  );
+
+    hinter->do_stem_adjust   = FT_BOOL( hint_mode != FT_RENDER_MODE_LIGHT );
 
 #if 1
     load_flags  = FT_LOAD_NO_SCALE
