@@ -1,4 +1,9 @@
-2002-05-29  Werner Lemberg  <wl@gnu.org>
+2005-05-28  David Turner  <david@freetype.org>
+
+    * include/freetype/ftbdf.h: adding documentation comments for the
+    API reference describing the new function FT_Get_BDF_Charset_ID.
+
+2002-05-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftnames.c (FT_Get_Sfnt_Name): Don't use FT_STREAM_READ_AT
 	but FT_STREAM_READ.
@@ -6,7 +11,7 @@
 
 2002-05-28  David Turner  <david@freetype.org>
 
-	Fixing the SFNT name table loader to support various buggy fonts. 
+	Fixing the SFNT name table loader to support various buggy fonts.
 	It now ignores empty name entries, entries with invalid pointer
 	Offsets and certain fonts containing tables with broken
 	"storageOffset" fields.
