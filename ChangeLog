@@ -1,3 +1,39 @@
+2001-08-12  Werner Lemberg  <wl@gnu.org>
+
+	Updating to OpenType 1.3.
+
+	* include/freetype/internal/tttypes.h (TT_CMap0, TT_CMap2, TT_CMap4,
+	TT_CMap6): Adding field `language'.
+	(TT_CMapTable): Removing field `language'.
+	Type of `length' field changed to FT_ULong.
+	Adding fields for cmaps format 8, 10, and 12.
+	(TT_CMapGroup): New auxiliary structure.
+	(TT_CMap8_12, TT_CMap10): New structures.
+	* include/freetype/tttables.h (TT_HoriHeader, TT_VertHeader):
+	Removed last element of `Reserved' array.
+	* include/freetype/ttnameid.h (TT_PLATFORM_CUSTOM, TT_MS_ID_UCS_4,
+	TT_NAME_ID_CID_FINDFONT_NAME): New macros.
+
+	* src/sfnt/ttcmap.c (TT_CharMap_Load): Updated loading of `language'
+	field to the new structures.
+	Fixed freeing of arrays in case of unsuccessful loads.
+	Added support for loading format 8, 10, and 12 cmaps.
+	(TT_CharMap_Free): Added support for freeing format 8, 10, and 12
+	cmaps.
+	(code_to_index4): Small improvement.
+	(code_to_index6): Ditto.
+	(code_to_index8_12, code_to_index10): New functions.
+	* src/sfnt/ttload.c (TT_Load_Metrics_Header): Updated to new
+	structure.
+	(TT_Load_CMap): Ditto.
+
+	* src/sfnt/sfobjs.c (tt_encodings): Add MS UCS4 table (before MS
+	Unicode).
+
+2001-08-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1driver.c (t1_get_name_index): Fix compiler warning.
+
 2001-08-09  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/cffdrivr.c (get_cff_glyph_name): Renamed to

@@ -922,6 +922,8 @@ FT_BEGIN_HEADER
 
   typedef struct  TT_CMap0_
   {
+    FT_ULong  language;       /* for Mac fonts (originally ushort) */
+
     FT_Byte*  glyphIdArray;
 
   } TT_CMap0;
@@ -941,6 +943,8 @@ FT_BEGIN_HEADER
 
   typedef struct  TT_CMap2_
   {
+    FT_ULong            language;     /* for Mac fonts (originally ushort) */
+
     FT_UShort*          subHeaderKeys;
     /* high byte mapping table            */
     /* value = subHeader index * 8        */
@@ -966,14 +970,16 @@ FT_BEGIN_HEADER
 
   typedef struct  TT_CMap4_
   {
-    FT_UShort         segCountX2;     /* number of segments * 2       */
-    FT_UShort         searchRange;    /* these parameters can be used */
-    FT_UShort         entrySelector;  /* for a binary search          */
+    FT_ULong          language;       /* for Mac fonts (originally ushort) */
+
+    FT_UShort         segCountX2;     /* number of segments * 2            */
+    FT_UShort         searchRange;    /* these parameters can be used      */
+    FT_UShort         entrySelector;  /* for a binary search               */
     FT_UShort         rangeShift;
 
     TT_CMap4Segment*  segments;
     FT_UShort*        glyphIdArray;
-    FT_UShort         numGlyphId;   /* control value */
+    FT_UShort         numGlyphId;    /* control value */
 
     TT_CMap4Segment*  last_segment;  /* last used segment; this is a small  */
                                      /* cache to potentially increase speed */
@@ -984,12 +990,56 @@ FT_BEGIN_HEADER
 
   typedef struct  TT_CMap6_
   {
+    FT_ULong    language;       /* for Mac fonts (originally ushort)     */
+
     FT_UShort   firstCode;      /* first character code of subrange      */
     FT_UShort   entryCount;     /* number of character codes in subrange */
 
     FT_UShort*  glyphIdArray;
 
   } TT_CMap6;
+
+
+  /* auxiliary table for format 8 and 12 */
+
+  typedef struct  TT_CMapGroup_
+  {
+    FT_ULong  startCharCode;
+    FT_ULong  endCharCode;
+    FT_ULong  startGlyphID;
+
+  } TT_CMapGroup;
+
+
+  /* FreeType handles format 8 and 12 identically.  It is not necessary to
+     cover mixed 16bit and 32bit codes since FreeType always uses FT_ULong
+     for input character codes -- converting Unicode surrogates to 32bit
+     character codes must be done by the application.                      */
+
+  typedef struct  TT_CMap8_12_
+  {
+    FT_ULong       language;        /* for Mac fonts */
+
+    FT_ULong       nGroups;
+    TT_CMapGroup*  groups;
+
+    TT_CMapGroup*  last_group;      /* last used group; this is a small    */
+                                    /* cache to potentially increase speed */
+  } TT_CMap8_12;
+
+
+  /* format 10 */
+
+  typedef struct  TT_CMap10_
+  {
+    FT_ULong    language;           /* for Mac fonts */
+
+    FT_ULong    startCharCode;      /* first character covered */
+    FT_ULong    numChars;           /* number of characters covered */
+
+    FT_UShort*  glyphs;
+
+  } TT_CMap10;
 
 
   typedef struct TT_CMapTable_  TT_CMapTable;
@@ -1006,18 +1056,19 @@ FT_BEGIN_HEADER
     FT_UShort  platformID;
     FT_UShort  platformEncodingID;
     FT_UShort  format;
-    FT_UShort  length;
-    FT_UShort  version;
+    FT_ULong   length;          /* must be ulong for formats 8, 10, and 12 */
 
     FT_Bool    loaded;
     FT_ULong   offset;
 
     union
     {
-      TT_CMap0  cmap0;
-      TT_CMap2  cmap2;
-      TT_CMap4  cmap4;
-      TT_CMap6  cmap6;
+      TT_CMap0     cmap0;
+      TT_CMap2     cmap2;
+      TT_CMap4     cmap4;
+      TT_CMap6     cmap6;
+      TT_CMap8_12  cmap8_12;
+      TT_CMap10    cmap10;
     } c;
 
     TT_CharMap_Func  get_index;

@@ -50,6 +50,14 @@
   code_to_index6( TT_CMapTable*  charmap,
                   FT_ULong       char_code );
 
+  FT_CALLBACK_DEF( FT_UInt )
+  code_to_index8_12( TT_CMapTable*  charmap,
+                     FT_ULong       char_code );
+
+  FT_CALLBACK_DEF( FT_UInt )
+  code_to_index10( TT_CMapTable*  charmap,
+                   FT_ULong       char_code );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -79,19 +87,23 @@
                    TT_CMapTable*  cmap,
                    FT_Stream      stream )
   {
-    FT_Error   error;
-    FT_Memory  memory;
-    FT_UShort  num_SH, num_Seg, i;
+    FT_Error      error;
+    FT_Memory     memory;
+    FT_UShort     num_SH, num_Seg, i;
+    FT_ULong      j, n;
 
-    FT_UShort  u, l;
+    FT_UShort     u, l;
 
-    TT_CMap0*  cmap0;
-    TT_CMap2*  cmap2;
-    TT_CMap4*  cmap4;
-    TT_CMap6*  cmap6;
+    TT_CMap0*     cmap0;
+    TT_CMap2*     cmap2;
+    TT_CMap4*     cmap4;
+    TT_CMap6*     cmap6;
+    TT_CMap8_12*  cmap8_12;
+    TT_CMap10*    cmap10;
 
     TT_CMap2SubHeader*  cmap2sub;
     TT_CMap4Segment*    segments;
+    TT_CMapGroup*       groups;
 
 
     if ( cmap->loaded )
@@ -107,9 +119,10 @@
     case 0:
       cmap0 = &cmap->c.cmap0;
 
-      if ( ALLOC( cmap0->glyphIdArray, 256L )            ||
+      if ( READ_UShort( cmap0->language )         ||
+           ALLOC( cmap0->glyphIdArray, 256L )     ||
            FILE_Read( cmap0->glyphIdArray, 256L ) )
-         goto Fail;
+        goto Fail;
 
       cmap->get_index = code_to_index0;
       break;
@@ -121,8 +134,10 @@
       /* allocate subheader keys */
 
       if ( ALLOC_ARRAY( cmap2->subHeaderKeys, 256, FT_UShort ) ||
-           ACCESS_Frame( 512L )                                )
+           ACCESS_Frame( 2L + 512L )                           )
         goto Fail;
+
+      cmap2->language = GET_UShort();
 
       for ( i = 0; i < 256; i++ )
       {
@@ -144,7 +159,10 @@
                         num_SH + 1,
                         TT_CMap2SubHeader )    ||
            ACCESS_Frame( ( num_SH + 1 ) * 8L ) )
+      {
+        FREE( cmap2->subHeaderKeys );
         goto Fail;
+      }
 
       cmap2sub = cmap2->subHeaders;
 
@@ -166,7 +184,11 @@
 
       if ( ALLOC_ARRAY( cmap2->glyphIdArray, l, FT_UShort ) ||
            ACCESS_Frame( l * 2L )                           )
+      {
+        FREE( cmap2->subHeaders );
+        FREE( cmap2->subHeaderKeys );
         goto Fail;
+      }
 
       for ( i = 0; i < l; i++ )
         cmap2->glyphIdArray[i] = GET_UShort();
@@ -181,9 +203,10 @@
 
       /* load header */
 
-      if ( ACCESS_Frame( 8L ) )
+      if ( ACCESS_Frame( 10L ) )
         goto Fail;
 
+      cmap4->language      = GET_UShort();
       cmap4->segCountX2    = GET_UShort();
       cmap4->searchRange   = GET_UShort();
       cmap4->entrySelector = GET_UShort();
@@ -226,24 +249,28 @@
 
       if ( ALLOC_ARRAY( cmap4->glyphIdArray, l, FT_UShort ) ||
            ACCESS_Frame( l * 2L )                           )
+      {
+        FREE( cmap4->segments );
         goto Fail;
+      }
 
       for ( i = 0; i < l; i++ )
         cmap4->glyphIdArray[i] = GET_UShort();
 
       FORGET_Frame();
 
-      cmap->get_index = code_to_index4;
-
       cmap4->last_segment = cmap4->segments;
+
+      cmap->get_index = code_to_index4;
       break;
 
     case 6:
       cmap6 = &cmap->c.cmap6;
 
-      if ( ACCESS_Frame( 4L ) )
+      if ( ACCESS_Frame( 6L ) )
         goto Fail;
 
+      cmap6->language   = GET_UShort();
       cmap6->firstCode  = GET_UShort();
       cmap6->entryCount = GET_UShort();
 
@@ -251,10 +278,8 @@
 
       l = cmap6->entryCount;
 
-      if ( ALLOC_ARRAY( cmap6->glyphIdArray,
-                        cmap6->entryCount,
-                        FT_Short )           ||
-           ACCESS_Frame( l * 2L )            )
+      if ( ALLOC_ARRAY( cmap6->glyphIdArray, l, FT_Short ) ||
+           ACCESS_Frame( l * 2L )                          )
         goto Fail;
 
       for ( i = 0; i < l; i++ )
@@ -262,6 +287,73 @@
 
       FORGET_Frame();
       cmap->get_index = code_to_index6;
+      break;
+
+    case 8:
+    case 12:
+      cmap8_12 = &cmap->c.cmap8_12;
+
+      if ( ACCESS_Frame( 8L ) )
+        goto Fail;
+
+      cmap->length       = GET_ULong();
+      cmap8_12->language = GET_ULong();
+
+      FORGET_Frame();
+
+      if ( cmap->format == 8 )
+        if ( FILE_Skip( 8192L ) )
+          goto Fail;
+
+      if ( READ_ULong( cmap8_12->nGroups ) )
+        goto Fail;
+
+      n = cmap8_12->nGroups;
+
+      if ( ALLOC_ARRAY( cmap8_12->groups, n, TT_CMapGroup ) ||
+           ACCESS_Frame( n * 3 * 4L )                       )
+        goto Fail;
+
+      groups = cmap8_12->groups;
+
+      for ( j = 0; j < n; j++ )
+      {
+        groups[j].startCharCode = GET_ULong();
+        groups[j].endCharCode   = GET_ULong();
+        groups[j].startGlyphID  = GET_ULong();
+      }
+
+      FORGET_Frame();
+
+      cmap8_12->last_group = cmap8_12->groups;
+
+      cmap->get_index = code_to_index8_12;
+      break;
+
+    case 10:
+      cmap10 = &cmap->c.cmap10;
+
+      if ( ACCESS_Frame( 16L ) )
+        goto Fail;
+
+      cmap->length          = GET_ULong();
+      cmap10->language      = GET_ULong();
+      cmap10->startCharCode = GET_ULong();
+      cmap10->numChars      = GET_ULong();
+
+      FORGET_Frame();
+
+      n = cmap10->numChars;
+
+      if ( ALLOC_ARRAY( cmap10->glyphs, n, FT_Short ) ||
+           ACCESS_Frame( n * 2L )                     )
+        goto Fail;
+
+      for ( j = 0; j < n; j++ )
+        cmap10->glyphs[j] = GET_UShort();
+
+      FORGET_Frame();
+      cmap->get_index = code_to_index10;
       break;
 
     default:   /* corrupt character mapping table */
@@ -325,6 +417,17 @@
     case 6:
       FREE( cmap->c.cmap6.glyphIdArray );
       cmap->c.cmap6.entryCount = 0;
+      break;
+
+    case 8:
+    case 12:
+      FREE( cmap->c.cmap8_12.groups );
+      cmap->c.cmap8_12.nGroups = 0;
+      break;
+
+    case 10:
+      FREE( cmap->c.cmap10.glyphs );
+      cmap->c.cmap10.numChars = 0;
       break;
 
     default:
@@ -456,23 +559,23 @@
     cmap4    = &cmap->c.cmap4;
     result   = 0;
     segCount = cmap4->segCountX2 / 2;
-    seg4     = cmap4->segments;
-    limit    = seg4 + segCount;
+    limit    = cmap4->segments + segCount;
 
-    /* check against the last segment */
+    /* first, check against the last used segment */
+
     seg4 = cmap4->last_segment;
 
     /* the following is equivalent to performing two tests, as in         */
     /*                                                                    */
     /*  if ( charCode >= seg4->startCount && charCode <= seg4->endCount ) */
     /*                                                                    */
-    /* Yes, that's a bit strange, but it's faster, and the idea behind    */
-    /* the cache is to significantly speed up charcode to glyph index     */
+    /* This is a bit strange, but it is faster, and the idea behind the   */
+    /* cache is to significantly speed up charcode to glyph index         */
     /* conversion.                                                        */
 
-    if ( (FT_ULong)(charCode       - seg4->startCount) <
-         (FT_ULong)(seg4->endCount - seg4->startCount) )
-      goto Found;
+    if ( (FT_ULong)( charCode       - seg4->startCount ) <
+         (FT_ULong)( seg4->endCount - seg4->startCount ) )
+      goto Found1;
 
     for ( seg4 = cmap4->segments; seg4 < limit; seg4++ )
     {
@@ -487,9 +590,10 @@
     }
     return 0;
 
- Found:
+  Found:
     cmap4->last_segment = seg4;
 
+  Found1:
     /* if the idRangeOffset is 0, we can compute the glyph index */
     /* directly                                                  */
 
@@ -503,8 +607,8 @@
                           + ( seg4 - cmap4->segments )
                           - segCount );
 
-      if ( index1 < (FT_UInt)cmap4->numGlyphId       &&
-           cmap4->glyphIdArray[index1] != 0 )
+      if ( index1 < (FT_UInt)cmap4->numGlyphId &&
+           cmap4->glyphIdArray[index1] != 0    )
         result = ( cmap4->glyphIdArray[index1] + seg4->idDelta ) & 0xFFFF;
     }
 
@@ -536,11 +640,113 @@
 
 
     cmap6     = &cmap->c.cmap6;
-    result    = 0;
     charCode -= cmap6->firstCode;
 
     if ( charCode < (FT_UInt)cmap6->entryCount )
-      result =  cmap6->glyphIdArray[charCode];
+      result = cmap6->glyphIdArray[charCode];
+
+    return result;
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    code_to_index8_12                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Converts the (possibly 32bit) character code into a glyph index.   */
+  /*    Uses format 8 or 12.                                               */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charCode :: The wanted character code.                             */
+  /*    cmap8_12 :: A pointer to a cmap table in format 8 or 12.           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
+  /*                                                                       */
+  FT_CALLBACK_DEF( FT_UInt )
+  code_to_index8_12( TT_CMapTable*  cmap,
+                     FT_ULong       charCode )
+  {
+    TT_CMap8_12*  cmap8_12;
+    TT_CMapGroup  *group, *limit;
+
+
+    cmap8_12 = &cmap->c.cmap8_12;
+    limit    = cmap8_12->groups + cmap8_12->nGroups;
+
+    /* first, check against the last used group */
+
+    group = cmap8_12->last_group;
+
+    /* the following is equivalent to performing two tests, as in       */
+    /*                                                                  */
+    /*  if ( charCode >= group->startCharCode &&                        */
+    /*       charCode <= group->endCharCode   )                         */
+    /*                                                                  */
+    /* This is a bit strange, but it is faster, and the idea behind the */
+    /* cache is to significantly speed up charcode to glyph index       */
+    /* conversion.                                                      */
+
+    if ( (FT_ULong)( charCode           - group->startCharCode ) <
+         (FT_ULong)( group->endCharCode - group->startCharCode ) )
+      goto Found1;
+
+    for ( group = cmap8_12->groups; group < limit; group++ )
+    {
+      /* the ranges are sorted in increasing order.  If we are out of */
+      /* the range here, the char code isn't in the charmap, so exit. */
+
+      if ( charCode > group->endCharCode )
+        continue;
+
+      if ( charCode >= group->startCharCode )
+        goto Found;
+    }
+    return 0;
+
+  Found:
+    cmap8_12->last_group = group;
+
+  Found1:
+    return group->startGlyphID + (FT_UInt)( charCode - group->startCharCode );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    code_to_index10                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Converts the (possibly 32bit) character code into a glyph index.   */
+  /*    Uses format 10.                                                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charCode :: The wanted character code.                             */
+  /*    cmap10   :: A pointer to a cmap table in format 10.                */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
+  /*                                                                       */
+  FT_CALLBACK_DEF( FT_UInt )
+  code_to_index10( TT_CMapTable*  cmap,
+                   FT_ULong       charCode )
+  {
+    TT_CMap10*  cmap10;
+    FT_UInt     result = 0;
+
+
+    cmap10    = &cmap->c.cmap10;
+    charCode -= cmap10->startCharCode;
+
+    /* the overflow trick for comparison works here also since the number */
+    /* of glyphs (even if numChars is specified as ULong in the specs) in */
+    /* an OpenType font is limited to 64k                                 */
+
+    if ( charCode < cmap10->numChars )
+      result = cmap10->glyphs[charCode];
 
     return result;
   }

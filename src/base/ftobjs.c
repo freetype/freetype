@@ -1847,8 +1847,8 @@
     if ( face && FT_HAS_GLYPH_NAMES( face ) )
     {
       /* now, lookup for glyph name */
-      FT_Driver        driver = face->driver;
-      FT_Module_Class* clazz  = FT_MODULE_CLASS( driver );
+      FT_Driver         driver = face->driver;
+      FT_Module_Class*  clazz  = FT_MODULE_CLASS( driver );
 
 
       if ( clazz->get_interface )

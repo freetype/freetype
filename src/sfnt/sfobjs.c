@@ -150,6 +150,7 @@
       { TT_PLATFORM_MACINTOSH,     TT_MAC_ID_ROMAN,     ft_encoding_apple_roman },
 
       { TT_PLATFORM_MICROSOFT,     TT_MS_ID_SYMBOL_CS,  ft_encoding_symbol },
+      { TT_PLATFORM_MICROSOFT,     TT_MS_ID_UCS_4,      ft_encoding_unicode },
       { TT_PLATFORM_MICROSOFT,     TT_MS_ID_UNICODE_CS, ft_encoding_unicode },
       { TT_PLATFORM_MICROSOFT,     TT_MS_ID_SJIS,       ft_encoding_sjis },
       { TT_PLATFORM_MICROSOFT,     TT_MS_ID_GB2312,     ft_encoding_gb2312 },

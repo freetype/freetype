@@ -35,6 +35,7 @@ FT_BEGIN_HEADER
 #define TT_PLATFORM_MACINTOSH      1
 #define TT_PLATFORM_ISO            2 /* deprecated */
 #define TT_PLATFORM_MICROSOFT      3
+#define TT_PLATFORM_CUSTOM         4
 
   /* artificial values defined ad-hoc by FreeType */
 #define TT_PLATFORM_ADOBE          7
@@ -46,7 +47,7 @@ FT_BEGIN_HEADER
   /* the name records of the TTF `name' table if the `platform' identifier */
   /* code is TT_PLATFORM_APPLE_UNICODE.                                    */
   /*                                                                       */
-#define TT_APPLE_ID_DEFAULT      0
+#define TT_APPLE_ID_DEFAULT      0 /* Unicode 1.0 */
 #define TT_APPLE_ID_UNICODE_1_1  1 /* specify Hangul at U+34xx */
 #define TT_APPLE_ID_ISO_10646    2 /* deprecated */
 #define TT_APPLE_ID_UNICODE_2_0  3 /* or later */
@@ -113,13 +114,14 @@ FT_BEGIN_HEADER
   /* the name records of the TTF `name' table if the `platform' identifier */
   /* code is TT_PLATFORM_MICROSOFT.                                        */
   /*                                                                       */
-#define TT_MS_ID_SYMBOL_CS   0
-#define TT_MS_ID_UNICODE_CS  1
-#define TT_MS_ID_SJIS        2
-#define TT_MS_ID_GB2312      3
-#define TT_MS_ID_BIG_5       4
-#define TT_MS_ID_WANSUNG     5
-#define TT_MS_ID_JOHAB       6
+#define TT_MS_ID_SYMBOL_CS    0
+#define TT_MS_ID_UNICODE_CS   1
+#define TT_MS_ID_SJIS         2
+#define TT_MS_ID_GB2312       3
+#define TT_MS_ID_BIG_5        4
+#define TT_MS_ID_WANSUNG      5
+#define TT_MS_ID_JOHAB        6
+#define TT_MS_ID_UCS_4       10
 
 
   /*************************************************************************/
@@ -550,6 +552,9 @@ FT_BEGIN_HEADER
 
 /* The following code is new as of 2000-01-21 */
 #define TT_NAME_ID_SAMPLE_TEXT          19
+
+/* This is new in OpenType 1.3 */
+#define TT_NAME_ID_CID_FINDFONT_NAME    20
 
 
   /*************************************************************************/
