@@ -28,6 +28,8 @@
 /***************************************************************************/
 
 
+#define FT_MAKE_OPTION_SINGLE_OBJECT
+
 #include <t1driver.c>
 #include <t1objs.c>
 #include <t1load.c>     /* table loader      */

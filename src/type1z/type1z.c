@@ -27,7 +27,7 @@
 /*                                                                         */
 /***************************************************************************/
 
-
+#define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <t1parse.c>
 #include <t1load.c>
