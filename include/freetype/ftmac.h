@@ -38,7 +38,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
-  /*    Mac_Specific                                                       */
+  /*    mac_specific                                                       */
   /*                                                                       */
   /* <Title>                                                               */
   /*    Mac-Specific Interface                                             */

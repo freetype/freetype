@@ -55,6 +55,9 @@ marker_footer = "</td></tr></table></center>"
 source_header = "<center><table width=87%><tr bgcolor=#D6E8FF width=100%><td><pre>"
 source_footer = "</pre></table></center><br>"
 
+chapter_header = "<center><table width=75%><tr><td><h2>"
+chapter_inter  = "</h2><ul>"
+chapter_footer = "</ul></td></tr></table></center>"
 
 current_section = None
 
@@ -91,6 +94,16 @@ def index_sort( s1, s2 ):
         return -1
     
     return 0    
+
+
+# sort input_list, placing the elements of order_list in front
+#
+def sort_order_list( input_list, order_list ):
+    new_list = order_list[:]
+    for id in input_list:
+        if not id in order_list:
+            new_list.append(id)
+    return new_list
 
 
 # The FreeType 2 reference is extracted from the source files. These contain
@@ -229,7 +242,7 @@ class DocCode:
         # line to avoid an additional blank line
         #
         sys.stdout.write( code_header )
-        for line in self.lines[0 : l]:
+        for line in self.lines[0 : l+1]:
             sys.stdout.write( '\n' + line )
         sys.stdout.write( code_footer )
 
@@ -698,6 +711,13 @@ class DocBlock:
     def location( self ):
         return self.filename + ':' + str( self.lineno )
 
+    def print_warning( self, message ):
+        sys.stderr.write( "WARNING:"+self.location()+": "+message+'\n')
+
+    def print_error( self, message ):
+        sys.stderr.write( "ERROR:"+self.location()+": "+message+'\n')
+        sys.exit()
+
 
     def dump( self ):
         for i in range( len( self.items ) ):
@@ -797,6 +817,7 @@ class DocSection:
         self.elements    = {}
         self.list        = []
         self.filename    = self.name + ".html"
+        self.chapter     = None
 
         # sys.stderr.write( "new section '" + self.name + "'" )
 
@@ -806,14 +827,19 @@ class DocSection:
         # section
         #
         if self.elements.has_key( block.name ):
-            sys.stderr.write( "ERROR - duplicate element definition for " +
-                              "'" + block.name + "' in section '" +
-                              self.name + "'" )
-            sys.exit()
+            print_error( "duplicate element definition for " +
+                         "'" + block.name + "' in section '" + self.name + "'\n" +
+                         "previous definition in '" + self.elements[block.name].location() + "'" )
 
         self.elements[ block.name ] = block
         self.list.append( block )
 
+
+    def print_warning( self, message ):
+        self.block.print_warning( message )
+
+    def print_error( self, message ):
+        self.block.print_error( message )
 
     def dump_html( self, identifiers = None ):
         """make an HTML page from a given DocSection"""
@@ -865,13 +891,12 @@ class DocSectionList:
                 # provide a new one.
                 #
                 if abstract:
-                    stderr.write( "ERROR - duplicate section definition" +
-                                  " for '" + name + "'" )
-                    stderr.write( "previous definition in" +
-                                  " '" + section.location() )
-                    stderr.write( "second definition in" +
-                                  " '" + block.location() )
-                    sys.quit()
+                    print_error( "duplicate section definition" +
+                                  " for '" + name + "'\n" +
+                                  "previous definition in" +
+                                  " '" + section.block.location() + "'\n" +
+                                  "second definition in" +
+                                  " '" + block.location() + "'" )
             else:
                 # The old section didn't contain an abstract; we are
                 # now going to replace it.
@@ -935,42 +960,27 @@ class DocSectionList:
                         try:
                             words = element.get_words()
                         except:
-                            sys.stderr.write(
-                              "WARNING:" +
-                              section.block.location() +
-                              ": invalid content in <order> marker\n" )
+                            section.block.print_warning( "invalid content in <order> marker\n" )
                         if words:
                             for word in words:
                                 block = self.identifiers.get( word )
                                 if block:
                                     if block.section == section:
-                                        order_list.append( word )
+                                        order_list.append( block )
                                     else:
-                                        sys.stderr.write(
-                                          "WARNING:" +
-                                          section.block.location() +
-                                          ": invalid reference to '" +
-                                          word +
-                                          "' defined in other section\n" )
+                                        section.block.print_warning( "invalid reference to '" +
+                                                                      word + "' defined in other section" )
                                 else:
-                                    sys.stderr.write(
-                                      "WARNING:" +
-                                      section.block.location() +
-                                      ": invalid reference to '" +
-                                      word + "'\n" )
+                                    section.block.print_warning( "invalid reference to '" + word + "'" )
                                 
                 # now sort the list of blocks according to the order list
                 #
-                new_list = []
-                old_list = section.list
-                for id in order_list:
-                    new_list.append( section.elements[id] )
+                new_list = order_list[:]
+                for block in section.list:
+                    if not block in order_list:
+                        new_list.append(block)
 
-                for block in old_list:
-                    if not block.name in order_list:
-                        new_list.append( block )
-
-                section.list = new_list
+                section.list = new_list                    
         
         # compute section filenames
         #
@@ -984,34 +994,6 @@ class DocSectionList:
         #
         self.index = self.identifiers.keys()
         self.index.sort( index_sort )
-
-
-    def dump_html_toc( self ):
-        # dump an html table of contents
-        #
-        old_stdout = sys.stdout
-        new_file   = open( self.toc_filename, "w" )
-        sys.stdout = new_file
-
-        print html_header
-
-        print "<center><h1>Table of Contents</h1></center>"
-
-        print "<center><table cellpadding=5>"
-        for section in self.list:
-            if section.abstract:
-                print "<tr valign=top><td>"
-                sys.stdout.write( '<a href="' + section.filename + '">' )
-                sys.stdout.write( section.title )
-                sys.stdout.write( "</a></td><td>" + '\n' )
-                section.abstract.dump_html( self.identifiers )
-                print "</td></tr>"
-
-        print "</table></center>"
-
-        print html_footer
-
-        sys.stdout = old_stdout
 
 
     def dump_html_sections( self ):
@@ -1066,6 +1048,146 @@ class DocSectionList:
 # Filter a given list of DocBlocks. Returns a new list
 # of DocBlock objects that only contains element whose
 # "type" (i.e. first marker) is in the "types" parameter.
+
+class DocChapter:
+    def __init__(self,block):
+        self.sections_names = []    # ordered list of section names
+        self.sections       = []    # ordered list of DocSection objects for this chapter
+        self.block          = block
+
+        # look for chapter title
+        content = block.find_content( "title" )
+        if content:
+            self.title = content.get_title()
+        else:
+            self.title = "UNKNOWN CHAPTER TITLE"
+
+        # look for section list
+        content = block.find_content( "sections" )
+        if not content:
+            block.print_error( "chapter has no <sections> content" )
+
+        # compute list of section names            
+        slist = []
+        for item in content.items:
+            for element in item[1]:
+                try:
+                    words      = element.get_words()
+                    l          = len(slist)
+                    slist[l:l] = words
+                except:
+                    block.print_warning( "invalid content in <sections> marker" )
+                    
+        self.section_names = slist
+
+            
+
+class DocDocument:
+
+    def __init__( self ):
+        self.section_list  = DocSectionList()   # section list object
+        self.chapters      = []                 # list of chapters
+        self.lost_sections = []                 # list of sections with no chapter
+
+    def append_block( self, block ):
+        if block.name:
+            content = block.find_content( "chapter" )
+            if content:
+                # it's a chapter definition - add it to our list
+                chapter = DocChapter( block )
+                self.chapters.append( chapter )
+            else:
+                self.section_list.append_block( block )
+                
+    def prepare_chapters( self ):
+        
+        # check section names
+        #
+        for chapter in self.chapters:
+            slist = []
+            for name in chapter.section_names:
+                 section = self.section_list.sections.get(name)
+                 if not section:
+                     chapter.block.print_warning( "invalid reference to unknown section '"+name+"'" )
+                 else:
+                     section.chapter = chapter
+                     slist.append( section )
+                    
+            chapter.sections = slist
+
+        for section in self.section_list.list:
+            if not section.chapter:
+                section.block.print_warning( "section '"+section.name+"' is not in any chapter" )
+                self.lost_sections.append( section )
+
+    def prepare_files( self, file_prefix = None ):
+        self.section_list.prepare_files( file_prefix )
+        self.prepare_chapters()
+
+
+    def dump_toc_html( self ):
+        # dump an html table of contents
+        #
+        old_stdout = sys.stdout
+        new_file   = open( self.section_list.toc_filename, "w" )
+        sys.stdout = new_file
+
+        print html_header
+
+        print "<center><h1>Table of Contents</h1></center>"
+
+        for chapter in self.chapters:
+            
+            print chapter_header + chapter.title + chapter_inter
+
+            print "<table cellpadding=5>"
+            for section in chapter.sections:
+                if section.abstract:
+                    print "<tr valign=top><td>"
+                    sys.stdout.write( '<a href="' + section.filename + '">' )
+                    sys.stdout.write( section.title )
+                    sys.stdout.write( "</a></td><td>" + '\n' )
+                    section.abstract.dump_html( self.section_list.identifiers )
+                    print "</td></tr>"
+
+            print "</table>"
+
+            print chapter_footer
+
+        # list lost sections
+        if self.lost_sections:
+            print chapter_header + "OTHER SECTIONS:" + chapter_inter
+            
+            print "<table cellpadding=5>"
+            for section in self.lost_sections:
+                if section.abstract:
+                    print "<tr valign=top><td>"
+                    sys.stdout.write( '<a href="' + section.filename + '">' )
+                    sys.stdout.write( section.title )
+                    sys.stdout.write( "</a></td><td>" + '\n' )
+                    section.abstract.dump_html( self.section_list.identifiers )
+                    print "</td></tr>"
+
+            print "</table>"
+
+            print chapter_footer
+            
+        print html_footer
+
+        sys.stdout = old_stdout
+
+
+    def dump_index_html( self ):
+        self.section_list.dump_html_index()
+
+    def dump_sections_html( self ):
+        self.section_list.dump_html_sections()
+
+
+        
+
+        
+
 #
 def filter_blocks_by_type( block_list, types ):
     new_list = []
@@ -1196,8 +1318,8 @@ def make_block_list():
         #    /* #.....
         #
         if format >= 4 and l > 2 and line2[0 : 2] == '/*':
-            if l < 4 or ( line2[3] != '@' and line2[3:4] != ' @' and
-                          line2[3] != '#' and line2[3:4] != ' #'):
+            if l < 4 or ( line2[2] != '@' and line2[2:4] != ' @' and
+                          line2[2] != '#' and line2[2:4] != ' #'):
                 add_new_block( list, fileinput.filename(),
                                lineno, block, source )
                 format = 0
@@ -1333,26 +1455,27 @@ def main( argv ):
 
     # now, sort the blocks into sections
     #
-    section_list = DocSectionList()
+    document = DocDocument()
     for block in list:
-        section_list.append_block( block )
+        document.append_block( block )
 
-    section_list.prepare_files( "ft2" )
+    document.prepare_files( "ft2" )
 
-    # dump the section list TOC and sections
-    #
-    section_list.dump_html_toc()
-    section_list.dump_html_sections()
-    section_list.dump_html_index()
+    document.dump_toc_html()
+    document.dump_sections_html()
+    document.dump_index_html()
+        
+##    section_list = DocSectionList()
+##    for block in list:
+##        section_list.append_block( block )
+##
+##    section_list.prepare_files( "ft2" )
 
-    # list2 = filter_blocks( list, ['type','macro','enum','constant','functype'] )
-    # list2 = list
-    # list2.sort( block_lexicographical_compare )
-
-    # dump_html_1( list2 )
-    # dump_doc_blocks( list )
-    # dump_block_lists( list )
-    # dump_html_1( list )
+##    # dump the section list TOC and sections
+##    #
+##    section_list.dump_html_toc()
+##    section_list.dump_html_sections()
+##    section_list.dump_html_index()
 
 
 # If called from the command line

@@ -44,6 +44,19 @@ FT_BEGIN_HEADER
   /*    glyph images known as `outlines'.  These can also be measured,     */
   /*    transformed, and converted into bitmaps and pixmaps.               */
   /*                                                                       */
+  /* <Order>                                                               */
+  /*    FT_Outline FT_Outline_Flags                                        */
+  /*    FT_Outline_New FT_Outline_Done FT_Outline_Copy                     */
+  /*    FT_Outline_Translate FT_Outline_Transform FT_Outline_Reverse       */
+  /*                                                                       */
+  /*    FT_Outline_Get_CBox FT_Outline_Get_BBox                            */
+  /*                                                                       */
+  /*    FT_Outline_Get_Bitmap FT_Outline_Render                            */
+  /*                                                                       */
+  /*    FT_Outline_Decompose FT_Outline_Funcs FT_Outline_MoveTo_Func       */
+  /*    FT_Outline_LineTo_Func FT_Outline_ConicTo_Func                     */
+  /*    FT_Outline_CubicTo_Func                                            */
+  /*                                                                       */
   /*************************************************************************/
 
 

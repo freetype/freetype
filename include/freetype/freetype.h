@@ -25,7 +25,6 @@
   /* The `raster' component duplicates some of the declarations in         */
   /* freetype.h for stand-alone use if _FREETYPE_ isn't defined.           */
   /*                                                                       */
-#define _FREETYPE_
 
 
   /*************************************************************************/
@@ -56,21 +55,70 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Section>                                                             */
-  /*    base_interface                                                     */
-  /*                                                                       */
-  /* <Title>                                                               */
-  /*    Base Interface                                                     */
-  /*                                                                       */
-  /* <Abstract>                                                            */
-  /*    The FreeType 2 base font interface.                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This section describes the public high-level API of FreeType 2.    */
-  /*                                                                       */
-  /*************************************************************************/
+  /*************************************************************************
+   *
+   * <Section>
+   *    base_interface
+   *
+   * <Title>
+   *    Base Interface
+   *
+   * <Abstract>
+   *    The FreeType 2 base font interface
+   *
+   * <Description>
+   *    This section describes the public high-level API of FreeType 2
+   *
+   * <Order>
+   *    FT_Library  FT_Face  FT_Size  FT_GlyphSlot  FT_CharMap FT_Encoding
+   *
+   *    FT_FaceRec
+   *
+   *    FT_FACE_FLAG_SCALABLE
+   *    FT_FACE_FLAG_FIXED_SIZES
+   *    FT_FACE_FLAG_FIXED_WIDTH
+   *    FT_FACE_FLAG_HORIZONTAL
+   *    FT_FACE_FLAG_VERTICAL
+   *    FT_FACE_FLAG_SFNT
+   *    FT_FACE_FLAG_KERNING
+   *    FT_FACE_FLAG_MULTIPLE_MASTERS
+   *    FT_FACE_FLAG_GLYPH_NAMES
+   *    FT_FACE_FLAG_EXTERNAL_STREAM
+   *    FT_FACE_FLAG_FAST_GLYPHS
+   *
+   *    FT_STYLE_FLAG_BOLD
+   *    FT_STYLE_FLAG_ITALIC
+   *
+   *    FT_SizeRec FT_Size_Metrics
+   *
+   *    FT_GlyphSlotRec FT_Glyph_Metrics FT_SubGlyph
+   *
+   *    FT_Bitmap_Size
+   *
+   *    FT_Init_FreeType FT_Done_FreeType
+   *
+   *    FT_New_Face FT_Done_Face FT_New_Memory_Face
+   *    FT_Open_Face FT_Open_Args FT_Open_Flags FT_Parameter
+   *    FT_Attach_File FT_Attach_Stream
+   *    
+   *    FT_Set_Char_Size FT_Set_Pixel_Sizes FT_Set_Transform
+   *    FT_Load_Glyph FT_Get_Char_Index FT_Load_Char
+   *
+   *    FT_LOAD_DEFAULT        FT_LOAD_RENDER          FT_LOAD_MONOCHROME 
+   *    FT_LOAD_LINEAR_DESIGN  FT_LOAD_NO_SCALE        FT_LOAD_NO_HINTING
+   *    FT_LOAD_NO_BITMAP      FT_LOAD_CROP_BITMAP
+   *
+   *    FT_LOAD_VERTICAL_LAYOUT  FT_LOAD_IGNORE_TRANSFORM
+   *    FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH  FT_LOAD_FORCE_AUTOHINT
+   *    FT_LOAD_NO_RECURSE FT_LOAD_PEDANTIC
+   *
+   *    FT_Render_Glyph FT_Render_Mode
+   *    FT_Get_Kerning  FT_Kerning_Mode FT_Get_Glyph_Name
+   *
+   *    FT_CharMapRec FT_Select_Charmap FT_Set_Charmap    
+   *
+   */
+   
 
 
   /*************************************************************************/
@@ -968,7 +1016,7 @@ FT_BEGIN_HEADER
   /*    generic           :: A typeless pointer which is unused by the     */
   /*                         FreeType library or any of its drivers.  It   */
   /*                         can be used by client applications to link    */
-  /*                         their own data to each size object.           */
+  /*                         their own data to each glyph slot object.     */
   /*                                                                       */
   /*    metrics           :: The metrics of the last loaded glyph in the   */
   /*                         slot.  The returned values depend on the last */
@@ -1051,9 +1099,10 @@ FT_BEGIN_HEADER
   /*                         image format.                                 */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    If FT_Load_Glyph() is called with default flags (FT_LOAD_DEFAULT), */
-  /*    the glyph image is loaded in the glyph slot in its native format   */
-  /*    (e.g. a vectorial outline for TrueType and Type 1 formats).        */
+  /*    If @FT_Load_Glyph() is called with default flags (see              */
+  /*    @FT_LOAD_DEFAULT ) the glyph image is loaded in the glyph slot in  */
+  /*    its native format (e.g. a vectorial outline for TrueType and       */
+  /*    Type 1 formats).                                                   */
   /*                                                                       */
   /*    This image can later be converted into a bitmap by calling         */
   /*    FT_Render_Glyph().  This function finds the current renderer for   */
@@ -1295,14 +1344,10 @@ FT_BEGIN_HEADER
   /*    slot for the face object which can be accessed directly through    */
   /*    `face->glyph'.                                                     */
   /*                                                                       */
-  /*    Note that additional slots can be added to each face with the      */
-  /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
-  /*    list through their `next' field.                                   */
-  /*                                                                       */
   /*    FT_New_Face() can be used to determine and/or check the font       */
   /*    format of a given font resource.  If the `face_index' field is     */
   /*    negative, the function will _not_ return any face handle in        */
-  /*    `aface'.  Its return value should be 0 if the resource is          */
+  /*    `aface'.  Its return value should be 0 if the font format is       */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_New_Face( FT_Library   library,
@@ -1341,14 +1386,10 @@ FT_BEGIN_HEADER
   /*    slot for the face object which can be accessed directly through    */
   /*    `face->glyph'.                                                     */
   /*                                                                       */
-  /*    Note that additional slots can be added to each face with the      */
-  /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
-  /*    list through their `next' field.                                   */
-  /*                                                                       */
   /*    FT_New_Memory_Face() can be used to determine and/or check the     */
   /*    font format of a given font resource.  If the `face_index' field   */
   /*    is negative, the function will _not_ return any face handle in     */
-  /*    `aface'.  Its return value should be 0 if the resource is          */
+  /*    `aface'.  Its return value should be 0 if the font format is       */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_New_Memory_Face( FT_Library  library,
@@ -1388,14 +1429,10 @@ FT_BEGIN_HEADER
   /*    slot for the face object which can be accessed directly through    */
   /*    `face->glyph'.                                                     */
   /*                                                                       */
-  /*    Note that additional slots can be added to each face with the      */
-  /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
-  /*    list through their `next' field.                                   */
-  /*                                                                       */
   /*    FT_Open_Face() can be used to determine and/or check the font      */
   /*    format of a given font resource.  If the `face_index' field is     */
   /*    negative, the function will _not_ return any face handle in        */
-  /*    `*face'.  Its return value should be 0 if the resource is          */
+  /*    `*face'.  Its return value should be 0 if the font format is       */
   /*    recognized, or non-zero if not.                                    */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Open_Face( FT_Library     library,
@@ -2139,6 +2176,27 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_UInt )  FT_Get_Char_Index( FT_Face   face,
                                            FT_ULong  charcode );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Section>                                                             */
+  /*    computations                                                       */
+  /*                                                                       */
+  /* <Title>                                                               */
+  /*    Computations                                                       */
+  /*                                                                       */
+  /* <Abstract>                                                            */
+  /*    Crunching fixed numbers and vectors                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This section contains various functions used to perform            */
+  /*    computations on 16.16 fixed-float numbers or 2d vectors.           */
+  /*                                                                       */
+  /* <Order>                                                               */
+  /*    FT_MulDiv FT_MulFix FT_DivFix FT_Vector_Transform                  */
+  /*    FT_Matrix_Multiply FT_Matrix_Invert                                */
+  /*                                                                       */
+  /*************************************************************************/
 
   /*************************************************************************/
   /*                                                                       */
