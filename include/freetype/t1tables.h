@@ -67,10 +67,10 @@ FT_BEGIN_HEADER
     FT_String*  full_name;
     FT_String*  family_name;
     FT_String*  weight;
-    FT_Fixed    italic_angle;
+    FT_Long     italic_angle;
     FT_Bool     is_fixed_pitch;
-    FT_Fixed    underline_position;
-    FT_Fixed    underline_thickness;
+    FT_Short    underline_position;
+    FT_UShort   underline_thickness;
 
   } PS_FontInfoRec, *PS_FontInfo;
 

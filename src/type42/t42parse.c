@@ -39,11 +39,11 @@
   static void
   t42_parse_encoding( T42_Face    face,
                       T42_Loader  loader );
-                      
+
   static void
   t42_parse_charstrings( T42_Face    face,
                          T42_Loader  loader );
-                         
+
   static void
   t42_parse_sfnts( T42_Face    face,
                    T42_Loader  loader );
@@ -62,10 +62,10 @@
     T1_FIELD_STRING( "FullName",           full_name )
     T1_FIELD_STRING( "FamilyName",         family_name )
     T1_FIELD_STRING( "Weight",             weight )
-    T1_FIELD_FIXED ( "ItalicAngle",        italic_angle )
+    T1_FIELD_NUM   ( "ItalicAngle",        italic_angle )
     T1_FIELD_BOOL  ( "isFixedPitch",       is_fixed_pitch )
-    T1_FIELD_FIXED ( "UnderlinePosition",  underline_position )
-    T1_FIELD_FIXED ( "UnderlineThickness", underline_thickness )
+    T1_FIELD_NUM   ( "UnderlinePosition",  underline_position )
+    T1_FIELD_NUM   ( "UnderlineThickness", underline_thickness )
 
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  T1_FontRec
@@ -460,28 +460,28 @@
   t42_hexval( FT_Byte  v )
   {
     FT_UInt  d;
-    
+
     d = (FT_UInt)( v - 'A' );
     if ( d < 6 )
     {
       d += 10;
       goto Exit;
     }
-      
+
     d = (FT_UInt)( v - 'a' );
     if ( d < 6 )
     {
       d += 10;
       goto Exit;
     }
-      
+
     d = (FT_UInt)( v - '0' );
     if ( d < 10 )
       goto Exit;
-      
+
     d = 0;
- 
-  Exit:         
+
+  Exit:
     return d;
   }
 
@@ -613,7 +613,7 @@
           for ( i = 0; i < num_tables; i++ )
           {
             FT_Byte*  p = face->ttf_data + 12 + 16*i + 12;
-            
+
             len = FT_PEEK_ULONG( p );
 
             /* Pad to a 4-byte boundary length */
@@ -816,14 +816,14 @@
     T42_Parser  parser     = &loader->parser;
     FT_Byte*    cur        = base;
     FT_Byte*    limit      = cur + size;
-    FT_UInt     n_keywords = (FT_UInt)( sizeof ( t42_keywords ) / 
+    FT_UInt     n_keywords = (FT_UInt)( sizeof ( t42_keywords ) /
                                         sizeof ( t42_keywords[0] ) );
-                                        
+
     FT_Byte     keyword_flags[T42_KEYWORD_COUNT];
 
     {
       FT_UInt  n;
-      
+
 
       for ( n = 0; n < T42_KEYWORD_COUNT; n++ )
         keyword_flags[n] = 0;
@@ -900,7 +900,7 @@
               /* we found it -- run the parsing callback! */
               parser->root.cursor = cur2;
               T1_Skip_Spaces( parser );
-             
+
               /* only record the first instance of each field/keyword */
               /* to deal with synthetic fonts correctly               */
               if ( keyword_flags[i] == 0 )
@@ -912,7 +912,7 @@
                   return parser->root.error;
               }
               keyword_flags[i] = 1;
-              
+
               cur = parser->root.cursor;
               break;
             }

@@ -90,6 +90,18 @@ FT2_INCLUDE  = $(FT2_BUILD_INCLUDE)
 
 FT2_SRC      = [ FT2_SubDir $(FT2_SRC_DIR) ] ;
 
+# Location of API Reference Documentation
+#
+if $(DOC_DIR)
+{
+  DOC_DIR = $(DOCDIR:T) ;
+}
+else
+{
+  DOC_DIR = docs/reference ;
+}
+
+
 # Only used by FreeType developers.
 #
 if $(DEBUG_HINTER)
@@ -131,5 +143,13 @@ if $(DEBUG_HINTER)
 {
   SubInclude FT2_TOP tests ;
 }
+
+actions RefDoc
+{
+  python $(FT2_SRC)/tools/docmaker/docmaker.py --prefix=ft2 --title=FreeType-2.1.5 --output=$(DOC_DIR)  $(FT2_INCLUDE)/freetype/*.h  $(FT2_INCLUDE)/freetype/config/*.h  $(FT2_INCLUDE)/freetype/cache/*.h
+}
+
+RefDoc  refdoc ;
+
 
 # end of top Jamfile

@@ -44,10 +44,10 @@
   T1_FIELD_STRING( "FullName", full_name )
   T1_FIELD_STRING( "FamilyName", family_name )
   T1_FIELD_STRING( "Weight", weight )
-  T1_FIELD_FIXED ( "ItalicAngle", italic_angle )
+  T1_FIELD_NUM   ( "ItalicAngle", italic_angle )
   T1_FIELD_BOOL  ( "isFixedPitch", is_fixed_pitch )
-  T1_FIELD_FIXED ( "UnderlinePosition", underline_position )
-  T1_FIELD_FIXED ( "UnderlineThickness", underline_thickness )
+  T1_FIELD_NUM   ( "UnderlinePosition", underline_position )
+  T1_FIELD_NUM   ( "UnderlineThickness", underline_thickness )
 
 
 #undef  FT_STRUCTURE
@@ -98,6 +98,6 @@
 #define T1CODE        T1_FIELD_LOCATION_BBOX
 
   T1_FIELD_BBOX( "FontBBox", xMin )
-  
+
 
 /* END */
