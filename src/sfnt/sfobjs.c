@@ -529,7 +529,8 @@
                FT_FACE_FLAG_HORIZONTAL;   /* horizontal data   */
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-      if ( psnames_error == SFNT_Err_Ok )
+      if ( psnames_error == SFNT_Err_Ok &&
+           face->postscript.FormatType != 0x00030000L )
         flags |= FT_FACE_FLAG_GLYPH_NAMES;
 #endif
 

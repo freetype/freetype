@@ -1,3 +1,11 @@
+2003-12-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (sfnt_init_face): Don't set
+	FT_FACE_FLAG_GLYPH_NAMES if the font contains a version 3.0 `post'
+	table.
+
+	* docs/CHANGES: Updated.
+
 2003-12-17  Masatake YAMATO  <jet@gyve.org>
 
 	Add new function FT_Get_CMap_Language_ID to extract the language ID
