@@ -1,3 +1,7 @@
+2004-12-15  Werner Lemberg  <wl@gnu.org>
+
+	* vms_make.com: Add ftbitmap.obj.
+
 2004-12-14  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftbitmap.c, include/freetype/ftbitmap.h: New files for
