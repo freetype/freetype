@@ -713,7 +713,7 @@
     /* we are now going to take care of it                              */
     switch ( field->location )
     {
-    case t1_field_font_info:
+    case T1_FIELD_LOCATION_FONT_INFO:
       dummy_object = &face->type1.font_info;
       objects      = &dummy_object;
       max_objects  = 0;
@@ -725,7 +725,7 @@
       }
       break;
 
-    case t1_field_private:
+    case T1_FIELD_LOCATION_PRIVATE:
       dummy_object = &face->type1.private_dict;
       objects      = &dummy_object;
       max_objects  = 0;
@@ -1478,7 +1478,7 @@
     T1_FIELD_CALLBACK( "shareddict", parse_shared_dict )
 #endif
 
-    { 0, t1_field_cid_info, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0 }
+    { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0 }
   };
 
 

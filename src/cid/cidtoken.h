@@ -19,7 +19,7 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  CID_FaceInfoRec
 #undef  T1CODE
-#define T1CODE        t1_field_cid_info
+#define T1CODE        T1_FIELD_LOCATION_CID_INFO
 
   T1_FIELD_STRING( "CIDFontName", cid_font_name )
   T1_FIELD_NUM   ( "CIDFontVersion", cid_version )
@@ -37,7 +37,7 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  PS_FontInfoRec
 #undef  T1CODE
-#define T1CODE        t1_field_font_info
+#define T1CODE        T1_FIELD_LOCATION_FONT_INFO
 
   T1_FIELD_STRING( "version", version )
   T1_FIELD_STRING( "Notice", notice )
@@ -53,7 +53,7 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  CID_FaceDictRec
 #undef  T1CODE
-#define T1CODE        t1_field_font_dict
+#define T1CODE        T1_FIELD_LOCATION_FONT_DICT
 
   T1_FIELD_NUM  ( "PaintType", paint_type )
   T1_FIELD_NUM  ( "FontType", font_type )
@@ -69,7 +69,7 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  PS_PrivateRec
 #undef  T1CODE
-#define T1CODE        t1_field_private
+#define T1CODE        T1_FIELD_LOCATION_PRIVATE
 
   T1_FIELD_NUM       ( "UniqueID", unique_id )
   T1_FIELD_NUM       ( "lenIV", lenIV )

@@ -110,11 +110,11 @@
     /* we must now compute the address of our target object */
     switch ( keyword->location )
     {
-    case t1_field_cid_info:
+    case T1_FIELD_LOCATION_CID_INFO:
       object = (FT_Byte*)cid;
       break;
 
-    case t1_field_font_info:
+    case T1_FIELD_LOCATION_FONT_INFO:
       object = (FT_Byte*)&cid->font_info;
       break;
 
@@ -134,7 +134,7 @@
         dict = cid->font_dicts + parser->num_dict;
         switch ( keyword->location )
         {
-        case t1_field_private:
+        case T1_FIELD_LOCATION_PRIVATE:
           object = (FT_Byte*)&dict->private_dict;
           break;
 
@@ -278,7 +278,7 @@
     T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
     T1_FIELD_CALLBACK( "FDArray", parse_fd_array )
     T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix )
-    { 0, t1_field_cid_info, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0 }
+    { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0 }
   };
 
 

@@ -35,6 +35,13 @@
             FT_Glyph_Name_Requester => FT_Face_GetGlyphNameFunc
             FT_Name_Index_Requester => FT_Face_GetGlyphNameIndexFunc
 
+        * include/freetype/internal/psaux.h,
+          src/cid/cidload.c, src/cidtoken.h,
+          src/psaux/psobjs.c, src/psaux/psobjs.h, src/psaux/t1decode.c,
+          stc/type1/t1load.c, src/type1/t1tokens.h: updated common Postscript
+          type definitions
+          
+
 2002-03-13  Antoine Leca    <antoine@oriolnet.com>
 
         * include/freetype/config/ftoption.h: changed the automatic detection

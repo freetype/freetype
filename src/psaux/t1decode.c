@@ -339,7 +339,7 @@
     T1_Decoder_Zone  zone;
     FT_Byte*          ip;
     FT_Byte*          limit;
-    T1_Builder*       builder = &decoder->builder;
+    T1_Builder       builder = &decoder->builder;
     FT_Pos            x, y, orig_x, orig_y;
 
     T1_Hints_Funcs    hinter;

@@ -144,42 +144,42 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   FT_LOCAL( void )
-  T1_Builder_Init( T1_Builder*   builder,
+  T1_Builder_Init( T1_Builder    builder,
                    FT_Face       face,
                    FT_Size       size,
                    FT_GlyphSlot  glyph,
                    FT_Bool       hinting );
 
   FT_LOCAL( void )
-  T1_Builder_Done( T1_Builder*  builder );
+  T1_Builder_Done( T1_Builder  builder );
 
   FT_LOCAL( FT_Error )
-  T1_Builder_Check_Points( T1_Builder*  builder,
+  T1_Builder_Check_Points( T1_Builder  builder,
                            FT_Int       count );
 
   FT_LOCAL( void )
-  T1_Builder_Add_Point( T1_Builder*  builder,
+  T1_Builder_Add_Point( T1_Builder  builder,
                         FT_Pos       x,
                         FT_Pos       y,
                         FT_Byte      flag );
 
   FT_LOCAL( FT_Error )
-  T1_Builder_Add_Point1( T1_Builder*  builder,
+  T1_Builder_Add_Point1( T1_Builder  builder,
                          FT_Pos       x,
                          FT_Pos       y );
 
   FT_LOCAL( FT_Error )
-  T1_Builder_Add_Contour( T1_Builder*  builder );
+  T1_Builder_Add_Contour( T1_Builder  builder );
 
 
   FT_LOCAL( FT_Error )
-  T1_Builder_Start_Point( T1_Builder*  builder,
+  T1_Builder_Start_Point( T1_Builder  builder,
                           FT_Pos       x,
                           FT_Pos       y );
 
 
   FT_LOCAL( void )
-  T1_Builder_Close_Contour( T1_Builder*  builder );
+  T1_Builder_Close_Contour( T1_Builder  builder );
 
 
   /*************************************************************************/
