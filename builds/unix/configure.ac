@@ -146,6 +146,10 @@ AC_SUBST([SYSTEM_ZLIB])
 
 
 AC_PROG_LIBTOOL
+# urgh -- these are internal libtool variables...
+AC_SUBST([enable_shared])
+AC_SUBST([hardcode_libdir_flag_spec])
+AC_SUBST([wl])
 
 
 # configuration file -- stay in 8.3 limit
