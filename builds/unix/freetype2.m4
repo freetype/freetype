@@ -1,23 +1,25 @@
 # Configure paths for FreeType2
 # Marcelo Magallon 2001-10-26, based on gtk.m4 by Owen Taylor
 
-dnl AM_CHECK_FT2([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
+dnl AC_CHECK_FT2([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
 dnl Test for FreeType2, and define FT2_CFLAGS and FT2_LIBS
 dnl
 AC_DEFUN(AC_CHECK_FT2,
 [dnl
 dnl Get the cflags and libraries from the freetype-config script
 dnl
-AC_ARG_WITH(freetype-prefix,
-[  --with-ft-prefix=PFX      Prefix where FreeType is installed (optional)],
+AC_ARG_WITH(ft-prefix,
+[  --with-ft-prefix=PREFIX
+                          Prefix where FreeType is installed (optional)],
             ft_config_prefix="$withval", ft_config_prefix="")
-AC_ARG_WITH(freetype-exec-prefix,
-[  --with-ft-exec-prefix=PFX Exec prefix where FreeType is installed (optional)],
+AC_ARG_WITH(ft-exec-prefix,
+[  --with-ft-exec-prefix=PREFIX
+                          Exec prefix where FreeType is installed (optional)],
             ft_config_exec_prefix="$withval", ft_config_exec_prefix="")
 AC_ARG_ENABLE(freetypetest,
-[  --disable-freetypetest    Do not try to compile and run
-                            a test FreeType program],
-            [], enable_fttest=yes)
+[  --disable-freetypetest  Do not try to compile and run
+                          a test FreeType program],
+              [], enable_fttest=yes)
 
 if test x$ft_config_exec_prefix != x ; then
   ft_config_args="$ft_config_args --exec-prefix=$ft_config_exec_prefix"
@@ -70,7 +72,7 @@ else
         fi
       fi
     fi
-    if test "x$ft_config_is_lt" = "xyes" ; then
+    if test "x$ft_config_is_lt" = "xno" ; then
       ifelse([$3], , :, [$3])
     else
       ac_save_CFLAGS="$CFLAGS"
