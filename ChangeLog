@@ -1,3 +1,11 @@
+2001-02-02  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/psobjs.c (shift_elements): Remove if clause (which is
+	obsolete now).
+
+	(reallocate_t1_table, PS_Table_Done): Replace REALLOC() with ALLOC()
+	+ MEM_Copy() to avoid a memory bug.
+
 2001-02-01  David Turner  <david.turner@freetype.org>
 
 	* docs/docmaker.py: Improved the index sorting routine to place
