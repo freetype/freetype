@@ -25,7 +25,29 @@
 
 FT_BEGIN_HEADER
 
- /*@*************************************************************
+ /************************************************************************
+  *
+  * <Section>
+  *    glyph stroker
+  *
+  * <Title>
+  *    Glyph Stroker
+  *
+  * <Abstract>
+  *    Generating bordered and stroked glyphs
+  *
+  * <Description>
+  *    FreeType now provides a glyph stroker component that is capable
+  *    of generating stroked outlines of a given vectorial glyph. It
+  *    also allows you to retrieve the "outside" and/or "inside" borders
+  *    of the stroke.
+  *
+  *    This can be useful to generate "bordered" glyph, i.e. glyphs
+  *    displayed with a colored (and anti-aliased) border around their
+  *    shape.
+  */
+
+ /**************************************************************
   *
   * @type:
   *   FT_Stroker
@@ -36,7 +58,7 @@ FT_BEGIN_HEADER
   typedef struct FT_StrokerRec_*  FT_Stroker;
 
 
-  /*@*************************************************************
+  /**************************************************************
    *
    * @enum:
    *   FT_Stroker_LineJoin
@@ -69,7 +91,7 @@ FT_BEGIN_HEADER
   } FT_Stroker_LineJoin;
 
 
-  /*@*************************************************************
+  /**************************************************************
    *
    * @enum:
    *   FT_Stroker_LineCap

@@ -4,6 +4,9 @@
         are not stroked, preventing a bug with pala.ttf and other
         fonts.
 
+        * include/freetype/ftstroke.h: updating documentation comments.
+        I hereby declare the stroker as OFFICIAL !
+
 2004-07-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftstroke (ft_stroke_border_reverse): Removed.  Unused.
