@@ -1,3 +1,11 @@
+2001-04-10  Francesco Zappa Nardelli  <francesco.zappa.nardelli@ens.fr>
+
+	* src/pcf/pcfdriver.c (PCF_Get_Char_Index): Fix return value.
+
+2001-04-09  Laurence Withers  <lwithers@lwithers.demon.co.uk>
+
+	* builds/dos/detect.mk: Add support for bash.
+
 2001-04-05  Werner Lemberg  <wl@gnu.org>
 
 	* builds/os2/*.mk: These files have been forgotten to update to
