@@ -56,17 +56,32 @@
 
 FT_BEGIN_HEADER
 
-  typedef struct FTC_MruListRec_*              FTC_MruList;
-
   typedef struct FTC_MruNodeRec_*              FTC_MruNode;
-
-  typedef struct FTC_MruListClassRec_ const *  FTC_MruListClass;
 
   typedef struct FTC_MruNodeRec_
   {
     FTC_MruNode   next;
+    FTC_MruNode   prev;
 
   } FTC_MruNodeRec;
+
+
+  FT_EXPORT( void )
+  FTC_MruNode_Prepend( FTC_MruNode  *plist,
+                       FTC_MruNode   node );
+
+  FT_EXPORT( void )
+  FTC_MruNode_Up( FTC_MruNode  *plist,
+                  FTC_MruNode   node );
+
+  FT_EXPORT( void )
+  FTC_MruNode_Remove( FTC_MruNode  *plist,
+                      FTC_MruNode   node );
+
+
+  typedef struct FTC_MruListRec_*              FTC_MruList;
+
+  typedef struct FTC_MruListClassRec_ const *  FTC_MruListClass;
 
   typedef FT_Int       (*FTC_MruNode_CompareFunc)( FTC_MruNode  node,
                                                    FT_Pointer   key );
@@ -91,6 +106,7 @@ FT_BEGIN_HEADER
     FTC_MruNode_DoneFunc      node_done;
 
   } FTC_MruListClassRec;
+
 
   typedef struct FTC_MruListRec_
   {
@@ -119,14 +135,22 @@ FT_BEGIN_HEADER
   FTC_MruList_Done( FTC_MruList  list );
 
 
-  FT_EXPORT( FT_Error )
+  FT_EXPORT( FTC_MruNode )
   FTC_MruList_Lookup( FTC_MruList   list,
-                      FT_Pointer    key,
-                      FTC_MruNode  *pnode );
+                      FT_Pointer    key );
 
   FT_EXPORT( void )
-  FTC_MruList_Remove( FTC_MruList   list,
-                      FTC_MruNode   node );
+  FTC_MruList_Up( FTC_MruList    list,
+                  FTC_MruNode    node );
+
+  FT_EXPORT( FT_Error )
+  FTC_MruList_New( FTC_MruList    list,
+                   FT_Pointer     key,
+                   FTC_MruNode   *anode );
+
+  FT_EXPORT( void )
+  FTC_MruList_Remove( FTC_MruList  list,
+                      FTC_MruNode  node );
 
   FT_EXPORT( void )
   FTC_MruList_RemoveSelection( FTC_MruList              list,

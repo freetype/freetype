@@ -144,7 +144,7 @@
                           FTC_Scaler     scaler,
                           FT_Size       *asize )
   {
-    FT_Error      error;
+    FT_Error      error = 0;
     FTC_SizeNode  node;
 
 
@@ -156,14 +156,18 @@
     if ( !manager )
       return FTC_Err_Invalid_Cache_Handle;
 
-    error = FTC_MruList_Lookup( &manager->sizes,
-                                scaler,
-                                (FTC_MruNode*) &node );
+    error = FTC_MruList_Get( &manager->sizes, scaler, (FTC_MruNode*) &node );
     if ( !error )
+    {
       *asize = node->size;
+      FT_Activate_Size( node->size );
+    }
 
+  Exit:
     return error;
   }
+
+
 
 
   /*************************************************************************/
@@ -211,9 +215,6 @@
   ftc_face_node_done( FTC_FaceNode  node,
                       FTC_Manager   manager )
   {
-    FT_Memory  memory = manager->memory;
-
-
     /* we must begin by removing all scalers for the target face */
     /* from the manager's list                                   */
     FTC_MruList_RemoveSelection(
@@ -222,11 +223,12 @@
           node->face_id );
 
     /* all right, we can discard the face now */
-    FT_Done_Face( node->face );
-    node->face    = NULL;
+    if ( node->face )
+    {
+      FT_Done_Face( node->face );
+      node->face    = NULL;
+    }
     node->face_id = NULL;
-
-    FT_FREE( node );
   }
 
 
@@ -257,7 +259,7 @@
                           FTC_FaceID   face_id,
                           FT_Face     *aface )
   {
-    FT_Error      error;
+    FT_Error      error = 0;
     FTC_FaceNode  node;
 
 
@@ -269,12 +271,17 @@
     if ( !manager )
       return FTC_Err_Invalid_Cache_Handle;
 
-    error = FTC_MruList_Lookup( &manager->faces,
-                                face_id,
-                                (FTC_MruNode*) &node );
-    if ( !error )
-      *aface = node->face;
+    node = (FTC_FaceNode) FTC_MruList_Lookup( &manager->faces, face_id );
+    if ( node == NULL )
+    {
+      error = FTC_MruList_New( &manager->faces, face_id, (FTC_MruNode*) &node );
+      if (error)
+        goto Exit;
+    }
 
+    *aface = node->face;
+
+  Exit:
     return error;
   }
 
@@ -422,7 +429,7 @@
 
       do
       {
-        FTC_Cache     cache = manager->caches + node->cache_index;
+        FTC_Cache     cache = manager->caches[node->cache_index];
 
         if ( (FT_UInt)node->cache_index >= manager->num_caches )
           FT_ERROR(( "FTC_Manager_Check: invalid node (cache index = %ld\n",
@@ -432,7 +439,7 @@
           weight += cache->clazz.node_weight( node, cache );
         }
 
-        node = node->mru_next;
+        node = FTC_NODE__MRU_NEXT(node);
 
       } while ( node != first );
 
@@ -451,7 +458,7 @@
       do
       {
         count++;
-        node = node->mru_next;
+        node = FTC_NODE__MRU_NEXT(node);
 
       } while ( node != first );
 
@@ -494,20 +501,23 @@
       return;
 
     /* go to last node - it's a circular list */
-    node = first->mru_prev;
+    node = FTC_NODE__MRU_PREV(first);
     do
     {
-      FTC_Node  prev = node->mru_prev;
+      FTC_Node  prev = FTC_NODE__MRU_PREV(node);
 
 
-      prev = ( node == first ) ? NULL : node->mru_prev;
+      prev = FTC_NODE__MRU_PREV(node);
 
       if ( node->ref_count <= 0 )
         ftc_node_destroy( node, manager );
 
+      if ( node == first )
+        break;
+
       node = prev;
 
-    } while ( node && manager->cur_weight > manager->max_weight );
+    } while ( manager->cur_weight > manager->max_weight );
   }
 
 
@@ -576,11 +586,10 @@
       return 0;
 
     /* go to last node - it's a circular list */
-    node = first->mru_prev;
+    node = FTC_NODE__MRU_PREV( first );
     for ( result = 0; result < count; )
     {
-      FTC_Node  prev = node->mru_prev;
-
+      FTC_Node  prev = FTC_NODE__MRU_PREV(node);
 
      /* don't touch locked nodes */
       if ( node->ref_count <= 0 )
@@ -589,7 +598,7 @@
         result++;
       }
 
-      if ( prev == manager->nodes_list )
+      if ( node == first )
         break;
 
       node = prev;

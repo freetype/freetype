@@ -20,7 +20,7 @@ OBJS=ftcache.obj
 all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)
 
-ftcache.obj : ftcache.c ftlru.c ftcmanag.c ftccache.c ftcglyph.c ftcimage.c \
-              ftcsbits.c ftccmap.c 
+ftcache.obj : ftcache.c ftcmru.c ftcmanag.c ftccache.c ftcglyph.c ftcimage.c \
+              ftcsbits.c ftccmap.c  ftcbasic.c
 
 # EOF
