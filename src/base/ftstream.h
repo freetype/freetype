@@ -252,4 +252,4 @@ typedef struct FT_Frame_Field_
 #define READ_Fields( fields, object )  \
           ((error = FT_Read_Fields( stream, fields, object )) != FT_Err_Ok)
 
-#endif /* FTIO_H */
+#endif /* FTSTREAM_H */
