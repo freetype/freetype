@@ -450,7 +450,7 @@
   /*              failure.                                                 */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreType error code.  0 means success.                              */
+  /*    error code, 0 means success                                        */
   /*                                                                       */
   /* <Note>                                                                */
   /*    the returned glyph is owned and manager by the glyph image cache.  */
@@ -461,11 +461,11 @@
   /*    taken by the glyphs it holds, the returned glyph might disappear   */
   /*    on a later invocation of this function!  It's a cache after all... */
   /*                                                                       */
-  FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_Lookup(
-                               FTC_Image_Cache  cache,
-                               FTC_Image_Desc*  desc,
-                               FT_UInt          gindex,
-                               FT_Glyph*        aglyph );
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Image_Cache_Lookup( FTC_Image_Cache  cache,
+                          FTC_Image_Desc*  desc,
+                          FT_UInt          gindex,
+                          FT_Glyph*        aglyph );
 
 
 #ifdef __cplusplus

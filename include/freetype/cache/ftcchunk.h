@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftcglyph.h                                                             */
+/*  ftcchunk.h                                                             */
 /*                                                                         */
-/*    FreeType glyph image (FT_Glyph) cache (specification).               */
+/*    FreeType chunk cache (specification).                                */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -19,10 +19,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* Important: The functions defined in this file are only used to        */
-  /*            implement an abstract glyph cache class.  You need to      */
+  /*            implement an abstract chunk cache class.  You need to      */
   /*            provide additional logic to implement a complete cache.    */
-  /*            For example, see `ftcimage.h' and `ftcimage.c' which       */
-  /*            implement a FT_Glyph cache based on this code.             */
+  /*            For example, see `ftcmetrx.h' and `ftcmetrx.c' which       */
+  /*            implement a glyph metrics cache based on this code.        */
   /*                                                                       */
   /*************************************************************************/
 
@@ -44,113 +44,109 @@
   /*************************************************************************/
 
 
-#ifndef FTCGLYPH_H
-#define FTCGLYPH_H
-
+#ifndef FTCCHUNK_H
+#define FTCCHUNK_H
 
 #include <freetype/cache/ftcmanag.h>
-#include <stddef.h>
 
 
 #ifdef __cplusplus
   extern "C" {
 #endif
 
+/* maximum number of chunk sets in a given chunk cache */
+#define  FTC_MAX_CHUNK_SETS  16
 
-  /* maximum number of glyph sets per glyph cache; must be < 256 */
-#define FTC_MAX_GLYPH_SETS          16
-#define FTC_GSET_HASH_SIZE_DEFAULT  64
 
-  typedef struct FTC_GlyphSetRec_*     FTC_GlyphSet;
-  typedef struct FTC_GlyphNodeRec_*    FTC_GlyphNode;
-  typedef struct FTC_Glyph_CacheRec_*  FTC_Glyph_Cache;
+  typedef struct FTC_ChunkRec_*        FTC_Chunk;
+  typedef struct FTC_ChunkSetRec_*     FTC_ChunkSet;
+  typedef struct FTC_Chunk_CacheRec_*  FTC_Chunk_Cache;
 
-  typedef struct FTC_GlyphNodeRec_
+  typedef struct FTC_ChunkRec_
   {
-    FTC_CacheNodeRec  root;
-    FTC_GlyphNode     gset_next;   /* next in glyph set's bucket list */
-    FT_UShort         glyph_index;
-    FT_UShort         gset_index;
-
-  } FTC_GlyphNodeRec;
-
-
-#define FTC_GLYPHNODE(x)               ( (FTC_GlyphNode)(x) )
-#define FTC_GLYPHNODE_TO_LRUNODE( n )  ( (FT_ListNode)(n) )
-#define FTC_LRUNODE_TO_GLYPHNODE( n )  ( (FTC_GlyphNode)(n) )
+    FTC_CacheNodeRec    root;
+    FTC_ChunkSet        cset;
+    FT_UShort           cset_index;
+    FT_UShort           num_elements;
+    FT_Byte*            elements;
+  
+  } FTC_ChunkRec;
 
 
   /*************************************************************************/
   /*                                                                       */
-  /* Glyph set methods.                                                    */
+  /*  chunk set methods                                                    */
   /*                                                                       */
 
-  typedef FT_Error  (*FTC_GlyphSet_InitFunc)   ( FTC_GlyphSet  gset,
+  typedef FT_Error  (*FTC_ChunkSet_InitFunc)  ( FTC_ChunkSet   cset,
+                                                FT_Pointer     type );
+
+
+  typedef void      (*FTC_ChunkSet_DoneFunc)   ( FTC_ChunkSet  cset );
+
+  typedef FT_Bool   (*FTC_ChunkSet_CompareFunc)( FTC_ChunkSet  cset,
                                                  FT_Pointer    type );
 
-  typedef void      (*FTC_GlyphSet_DoneFunc)   ( FTC_GlyphSet  gset );
-
-  typedef FT_Bool   (*FTC_GlyphSet_CompareFunc)( FTC_GlyphSet  gset,
-                                                 FT_Pointer    type );
 
 
-  typedef FT_Error  (*FTC_GlyphSet_NewNodeFunc)( FTC_GlyphSet    gset,
-                                                 FT_UInt         gindex,
-                                                 FTC_GlyphNode  *anode );
+  typedef FT_Error  (*FTC_ChunkSet_NewNodeFunc)( FTC_ChunkSet     cset,
+                                                 FT_UInt          index,
+                                                 FTC_ChunkNode*   anode );
 
-  typedef void  (*FTC_GlyphSet_DestroyNodeFunc)( FTC_GlyphNode   node,
-                                                 FTC_GlyphSet    gset );
+  typedef void      (*FTC_ChunkSet_DestroyNodeFunc)( FTC_ChunkNode  node );
 
-  typedef FT_ULong (*FTC_GlyphSet_SizeNodeFunc)( FTC_GlyphNode   node,
-                                                 FTC_GlyphSet    gset );
+  typedef FT_ULong  (*FTC_ChunkSet_SizeNodeFunc)   ( FTC_ChunkNode  node );
 
 
-  typedef struct  FTC_GlyphSet_Class_
+  typedef struct  FTC_ChunkSet_Class_
   {
-    FT_UInt                       gset_byte_size;
+    FT_UInt                       cset_size;
 
-    FTC_GlyphSet_InitFunc         init;
-    FTC_GlyphSet_DoneFunc         done;
-    FTC_GlyphSet_CompareFunc      compare;
+    FTC_ChunkSet_InitFunc         init;
+    FTC_ChunkSet_DoneFunc         done;
+    FTC_ChunkSet_CompareFunc      compare;
 
-    FTC_GlyphSet_NewNodeFunc      new_node;
-    FTC_GlyphSet_SizeNodeFunc     size_node;
-    FTC_GlyphSet_DestroyNodeFunc  destroy_node;
+    FTC_ChunkSet_NewNodeFunc      new_node;
+    FTC_ChunkSet_SizeNodeFunc     size_node;
+    FTC_ChunkSet_DestroyNodeFunc  destroy_node;
 
-  } FTC_GlyphSet_Class;
+  } FTC_ChunkSet_Class;
 
 
-  typedef struct  FTC_GlyphSetRec_
+  typedef struct  FTC_ChunkSetRec_
   {
-    FTC_Glyph_Cache      cache;
+    FTC_Chunk_Cache      cache;
     FTC_Manager          manager;
     FT_Memory            memory;
-    FTC_GlyphSet_Class*  clazz;
-    FT_UInt              hash_size;
-    FTC_GlyphNode*       buckets;
-    FT_UInt              gset_index;  /* index in parent cache    */
+    FTC_ChunkSet_Class*  clazz;
+    FT_UInt              cset_index;  /* index in parent cache    */
 
-  } FTC_GlyphSetRec;
+    FT_UInt              element_max;    /* maximum number of elements   */
+    FT_UInt              element_size;   /* element size in bytes        */
+    FT_UInt              element_count;  /* number of elements per chunk */
+    FT_UInt              num_chunks;
+    FTC_ChunkNode*       chunks;
+
+  } FTC_ChunkSetRec;
 
 
-  /* the abstract glyph cache class */
-  typedef struct  FTC_Glyph_Cache_Class_
+  /* the abstract chunk cache class */
+  typedef struct  FTC_Chunk_Cache_Class_
   {
     FTC_Cache_Class      root;
-    FTC_GlyphSet_Class*  gset_class;
+    FTC_ChunkSet_Class*  cset_class;
 
-  } FTC_Glyph_Cache_Class;
+  } FTC_Chunk_Cache_Class;
 
 
-  /* the abstract glyph cache object */
-  typedef struct  FTC_Glyph_CacheRec_
+  /* the abstract chunk cache object */
+  typedef struct  FTC_Chunk_CacheRec_
   {
-    FTC_CacheRec  root;
-    FT_Lru        gsets_lru;  /* static sets lru list */
-    FTC_GlyphSet  last_gset;  /* small cache :-)        */
+    FTC_CacheRec     root;
+    FT_Lru           csets_lru;  /* static chunk set lru list */
+    FTC_ChunkSet     last_cset;  /* small cache :-)           */
 
-  } FTC_Glyph_CacheRec;
-
+  } FTC_Chunk_CacheRec;
 
   /*************************************************************************/
   /*                                                                       */
@@ -159,51 +155,54 @@
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  FT_EXPORT_FUNC( void )
-  FTC_GlyphNode_Init( FTC_GlyphNode  node,
-                      FTC_GlyphSet   gset,
-                      FT_UInt        gindex );
+  FT_EXPORT_FUNC( NV_Error )
+  FTC_ChunkNode_Init( FTC_ChunkNode  node,
+                      FTC_ChunkSet   cset,
+                      FT_UInt        index,
+                      FT_Bool        alloc );
 
-#define FTC_GlyphNode_Ref( n ) \
+#define FTC_ChunkNode_Ref( n ) \
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count++
 
-#define FTC_GlyphNode_Unref( n ) \
+#define FTC_ChunkNode_Unref( n ) \
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count--
 
 
   FT_EXPORT_DEF( void )
-  FTC_GlyphNode_Destroy( FTC_GlyphNode    node,
-                         FTC_Glyph_Cache  cache );
+  FTC_ChunkNode_Destroy( FTC_ChunkNode    node );
 
 
 
   FT_EXPORT_DEF( FT_Error )
-  FTC_Glyph_Cache_Init( FTC_Glyph_Cache  cache );
+  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache );
 
 
   FT_EXPORT_DEF( void )
-  FTC_Glyph_Cache_Done( FTC_Glyph_Cache  cache );
+  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache );
 
 
 
 
   FT_EXPORT_DEF( FT_Error )
-  FTC_GlyphSet_New( FTC_Glyph_Cache   cache,
+  FTC_ChunkSet_New( FTC_Chunk_Cache   cache,
                     FT_Pointer        type,
-                    FTC_GlyphSet     *aset );
+                    FT_UInt           num_elements,
+                    FT_UInt           element_size,
+                    FT_UInt           chunk_size,
+                    FTC_ChunkSet     *aset )
 
 
   FT_EXPORT_DEF( FT_Error )
-  FTC_GlyphSet_Lookup_Node( FTC_GlyphSet     gset,
+  FTC_ChunkSet_Lookup_Node( FTC_ChunkSet     cset,
                             FT_UInt          glyph_index,
-                            FTC_GlyphNode   *anode );
-
+                            FTC_ChunkNode   *anode,
+                            FT_UInt         *aindex );
 
 #ifdef __cplusplus
   }
 #endif
 
 
-#endif /* FTCGLYPH_H */
+#endif /* FTCCHUNK_H */
 
 /* END */
