@@ -46,7 +46,7 @@ FT_BEGIN_HEADER
    *   id ::
    *     A string describing the service as defined in the service's
    *     header files (e.g. FT_SERVICE_ID_MULTI_MASTERS which expands to
-   *     `multi-masters').
+   *     `multi-masters'). It will be prefixed with "FT_SERVICE_ID_" !!
    *
    *   face ::
    *     The source face handle.
@@ -60,16 +60,16 @@ FT_BEGIN_HEADER
    *     A variable that receives the service pointer.  Will be NULL
    *     if not found.
    */
-#define FT_FACE_FIND_SERVICE( ptrtype, ptr, face, id )             \
-  FT_BEGIN_STMNT                                                   \
-    FT_Module  module = FT_MODULE( FT_FACE(face)->driver );        \
-                                                                   \
-                                                                   \
-    (ptr) = NULL;                                                  \
-    if ( module->clazz->get_interface )                            \
-      (ptr) = (ptrtype)module->clazz->get_interface( module, id ); \
+#define FT_FACE_FIND_SERVICE( ptr, face, id )                               \
+  FT_BEGIN_STMNT                                                            \
+    FT_Module    module = FT_MODULE( FT_FACE(face)->driver );               \
+    FT_Pointer*  pptr   = (FT_Pointer*) &(ptr);                             \
+                                                                            \
+    /* the strange cast is to allow C++ compilation */                      \
+    *pptr = NULL;                                                           \
+    if ( module->clazz->get_interface )                                     \
+      *pptr = module->clazz->get_interface( module, FT_SERVICE_ID_ ## id ); \
   FT_END_STMNT
-
 
   /*************************************************************************/
   /*************************************************************************/
@@ -122,13 +122,19 @@ FT_BEGIN_HEADER
    *
    *  All fields should have the type FT_Pointer to relax compilation
    *  dependencies.  We assume the developer isn't completely stupid.
+   *
+   *  Each field must be named service_XXXX where XXX correspond to
+   *  the correct FT_SERVICE_ID_XXXX macro. see the definition of
+   *  FT_FACE_LOOKUP_SERVICE below to see why
+   *
    */
   typedef struct  FT_ServiceCacheRec_
   {
-    FT_Pointer  postscript_name;
-    FT_Pointer  multi_masters;
-    FT_Pointer  glyph_dict;
-    FT_Pointer  pfr_metrics;
+    FT_Pointer  service_POSTSCRIPT_NAME;
+    FT_Pointer  service_MULTI_MASTERS;
+    FT_Pointer  service_GLYPH_DICT;
+    FT_Pointer  service_PFR_METRICS;
+    FT_Pointer  service_WINFNT;
 
   } FT_ServiceCacheRec, *FT_ServiceCache;
 
@@ -165,21 +171,26 @@ FT_BEGIN_HEADER
    *   ptr ::
    *     A variable receiving the service data.  NULL if not available.
    */
-#define FT_FACE_LOOKUP_SERVICE( face, ptrtype, ptr, field, id ) \
-  FT_BEGIN_STMNT                                                \
-    (ptr) = (ptrtype)FT_FACE(face)->internal->services.field ;  \
-    if ( (ptr) == FT_SERVICE_UNAVAILABLE )                      \
-      (ptr) = NULL;                                             \
-    else if ( (ptr) == NULL )                                   \
-    {                                                           \
-      FT_FACE_FIND_SERVICE( ptrtype, ptr, face, id );           \
-                                                                \
-      FT_FACE(face)->internal->services.field =                 \
-        (FT_Pointer)( (ptr) != NULL ? (ptr)                     \
-                                    : FT_SERVICE_UNAVAILABLE ); \
-    }                                                           \
+#define FT_FACE_LOOKUP_SERVICE( face, ptr, id )                  \
+  FT_BEGIN_STMNT                                                 \
+    FT_Pointer*  pptr = (FT_Pointer*)&(ptr);                     \
+    FT_Pointer   svc;                                            \
+                                                                 \
+    /* the strange cast is to allow C++ compilation */           \
+                                                                 \
+    svc = FT_FACE(face)->internal->services. service_ ## id ;    \
+    if ( svc == FT_SERVICE_UNAVAILABLE )                         \
+      svc = NULL;                                                \
+    else if ( svc == NULL )                                      \
+    {                                                            \
+      FT_FACE_FIND_SERVICE( svc, face, id );                     \
+                                                                 \
+      FT_FACE(face)->internal->services. service_ ## id =        \
+        (FT_Pointer)( svc != NULL ? svc                          \
+                                  : FT_SERVICE_UNAVAILABLE );    \
+      *pptr = svc;                                               \
+    }                                                            \
   FT_END_STMNT
-
 
   /*
    *  A macro used to define new service structure types.
@@ -205,7 +216,9 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_XFREE86_NAME_H      <freetype/internal/services/svxf86nm.h>
 #define FT_SERVICE_SFNT_H              <freetype/internal/services/svsfnt.h>
 #define FT_SERVICE_PFR_H               <freetype/internal/services/svpfr.h>
+#define FT_SERVICE_WINFNT_H            <freetype/internal/services/svwinfnt.h>
 
+ /* */
 
 FT_END_HEADER
 

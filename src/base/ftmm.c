@@ -37,21 +37,20 @@
                           FT_Service_MultiMasters  *aservice )
   {
     FT_Error  error;
-    
+
 
     *aservice = NULL;
-    
+
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
-    
+
     error = FT_Err_Invalid_Argument;
-    
+
     if ( FT_HAS_MULTIPLE_MASTERS( face ) )
     {
       FT_FACE_LOOKUP_SERVICE( face,
-                              FT_Service_MultiMasters, *aservice,
-                              multi_masters,
-                              FT_SERVICE_ID_MULTI_MASTERS );
+                              *aservice,
+                              MULTI_MASTERS );
     }
 
     return error;
@@ -75,7 +74,7 @@
       if ( service->get_mm )
         error = service->get_mm( face, amaster );
     }
-      
+
     return error;
   }
 

@@ -19,12 +19,12 @@
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_PFR_H
+#include FT_SERVICE_PFR_H
+#include FT_SERVICE_XFREE86_NAME_H
 #include "pfrdrivr.h"
 #include "pfrobjs.h"
 
 #include "pfrerror.h"
-
 
   static FT_Error
   pfr_get_kerning( PFR_Face    face,
@@ -52,6 +52,10 @@
     return PFR_Err_Ok;
   }
 
+ /*
+  *  PFR METRICS SERVICE
+  *
+  */
 
   static FT_Error
   pfr_get_advance( PFR_Face   face,
@@ -119,12 +123,34 @@
 
 
   FT_CALLBACK_TABLE_DEF
-  const FT_PFR_ServiceRec  pfr_service_rec =
+  const FT_Service_PfrMetricsRec  pfr_metrics_service_rec =
   {
     (FT_PFR_GetMetricsFunc)  pfr_get_metrics,
-    (FT_PFR_GetKerningFunc)  pfr_get_kerning,
+    (FT_PFR_GetKerningFunc)  pfr_face_get_kerning,
     (FT_PFR_GetAdvanceFunc)  pfr_get_advance
   };
+
+ /*
+  *  SERVICE LIST
+  *
+  */
+
+  static const FT_ServiceDescRec  pfr_services[] =
+  {
+    { FT_SERVICE_ID_PFR_METRICS,  & pfr_metrics_service_rec },
+    { FT_SERVICE_ID_XF86_NAME,    FT_XF86_FORMAT_PFR },
+    { NULL, NULL }
+  };
+
+
+  static FT_Module_Interface
+  pfr_get_service( FT_Driver         driver,
+                   const FT_String*  service_id )
+  {
+    FT_UNUSED( driver );
+
+    return ft_service_list_lookup( pfr_services, service_id );
+  }
 
 
   FT_CALLBACK_TABLE_DEF
@@ -140,11 +166,11 @@
       0x10000L,
       0x20000L,
 
-      (FT_PFR_Service)  &pfr_service_rec,   /* format interface */
+      NULL,
 
       (FT_Module_Constructor)NULL,
       (FT_Module_Destructor) NULL,
-      (FT_Module_Requester)  NULL
+      (FT_Module_Requester)  pfr_get_service
     },
 
     sizeof( PFR_FaceRec ),

@@ -21,12 +21,11 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
-#include FT_INTERNAL_FNT_TYPES_H
 
 #include "winfnt.h"
-
 #include "fnterrs.h"
-
+#include FT_SERVICE_WINFNT_H
+#include FT_SERVICE_XFREE86_NAME_H
 
   /*************************************************************************/
   /*                                                                       */
@@ -632,6 +631,47 @@
   }
 
 
+  static FT_Error
+  winfnt_get_header( FT_Face               face,
+                     FT_WinFNT_HeaderRec  *aheader )
+  {
+    FNT_Font  font = ((FNT_Face)face)->font;
+
+    *aheader = font->header;
+
+    return 0;
+  }
+
+  static const FT_Service_WinFntRec  winfnt_service_rec =
+  {
+    winfnt_get_header
+  };
+
+ /*
+  *  SERVICE LIST
+  *
+  */
+
+  static const FT_ServiceDescRec  winfnt_services[] =
+  {
+    { FT_SERVICE_ID_XF86_NAME,    FT_XF86_FORMAT_WINFNT },
+    { FT_SERVICE_ID_WINFNT,       & winfnt_service_rec },
+    { NULL, NULL }
+  };
+
+
+  static FT_Module_Interface
+  winfnt_get_service( FT_Driver         driver,
+                      const FT_String*  service_id )
+  {
+    FT_UNUSED( driver );
+
+    return ft_service_list_lookup( winfnt_services, service_id );
+  }
+
+
+
+
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  winfnt_driver_class =
   {
@@ -648,7 +688,7 @@
 
       (FT_Module_Constructor)0,
       (FT_Module_Destructor) 0,
-      (FT_Module_Requester)  0
+      (FT_Module_Requester)  winfnt_get_service
     },
 
     sizeof( FNT_FaceRec ),
