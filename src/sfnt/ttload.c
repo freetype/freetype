@@ -217,8 +217,8 @@
         goto Exit;
         
       /* seek to the appropriate TrueType file, then read tag */
-      if ( FILE_Skip( face->ttc_header.TableDirectory[faceIndex] - 12 ) ||
-           READ_Long( *format_tag )                                     )
+      if ( FILE_Seek( face->ttc_header.TableDirectory[faceIndex] ) ||
+           READ_Long( *format_tag )                                )
         goto Exit;
     }
 
