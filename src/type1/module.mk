@@ -1,5 +1,5 @@
 #
-# FreeType 2 Type1z module definition
+# FreeType 2 Type1 module definition
 #
 
 

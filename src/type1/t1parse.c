@@ -1,8 +1,8 @@
 /***************************************************************************/
 /*                                                                         */
-/*  z1parse.c                                                              */
+/*  t1parse.c                                                              */
 /*                                                                         */
-/*    Experimental Type 1 parser (body).                                   */
+/*    Type 1 parser (body).                                                */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -21,14 +21,14 @@
   /* The Type 1 parser is in charge of the following:                      */
   /*                                                                       */
   /*  - provide an implementation of a growing sequence of objects called  */
-  /*    a `Z1_Table' (used to build various tables needed by the loader).  */
+  /*    a `T1_Table' (used to build various tables needed by the loader).  */
   /*                                                                       */
   /*  - opening .pfb and .pfa files to extract their top-level and private */
   /*    dictionaries.                                                      */
   /*                                                                       */
   /*  - read numbers, arrays & strings from any dictionary.                */
   /*                                                                       */
-  /* See `z1load.c' to see how data is loaded from the font file.          */
+  /* See `t1load.c' to see how data is loaded from the font file.          */
   /*                                                                       */
   /*************************************************************************/
 
@@ -42,11 +42,11 @@
 
 #ifdef FT_FLAT_COMPILE
 
-#include "z1parse.h"
+#include "t1parse.h"
 
 #else
 
-#include <type1/z1parse.h>
+#include <type1/t1parse.h>
 
 #endif
 
@@ -61,7 +61,7 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_z1parse
+#define FT_COMPONENT  trace_t1parse
 
 
   /*************************************************************************/
@@ -75,10 +75,10 @@
   /*************************************************************************/
 
 
-#define IS_Z1_WHITESPACE( c )  ( (c) == ' '  || (c) == '\t' )
-#define IS_Z1_LINESPACE( c )   ( (c) == '\r' || (c) == '\n' )
+#define IS_T1_WHITESPACE( c )  ( (c) == ' '  || (c) == '\t' )
+#define IS_T1_LINESPACE( c )   ( (c) == '\r' || (c) == '\n' )
 
-#define IS_Z1_SPACE( c )  ( IS_Z1_WHITESPACE( c ) || IS_Z1_LINESPACE( c ) )
+#define IS_T1_SPACE( c )  ( IS_T1_WHITESPACE( c ) || IS_T1_LINESPACE( c ) )
 
 
   typedef struct  PFB_Tag_
@@ -127,7 +127,7 @@
 
 
   LOCAL_FUNC
-  FT_Error  Z1_New_Parser( Z1_Parser*        parser,
+  FT_Error  T1_New_Parser( T1_ParserRec*     parser,
                            FT_Stream         stream,
                            FT_Memory         memory,
                            PSAux_Interface*  psaux )
@@ -236,7 +236,7 @@
 
 
   LOCAL_FUNC
-  void  Z1_Done_Parser( Z1_Parser*  parser )
+  void  T1_Done_Parser( T1_ParserRec*  parser )
   {
     FT_Memory   memory = parser->root.memory;
 
@@ -276,7 +276,7 @@
 
 
   LOCAL_FUNC
-  void  Z1_Decrypt( FT_Byte*   buffer,
+  void  T1_Decrypt( FT_Byte*   buffer,
                     FT_Int     length,
                     FT_UShort  seed )
   {
@@ -294,7 +294,7 @@
 
 
   LOCAL_FUNC
-  FT_Error  Z1_Get_Private_Dict( Z1_Parser*  parser )
+  FT_Error  T1_Get_Private_Dict( T1_ParserRec*  parser )
   {
     FT_Stream  stream = parser->stream;
     FT_Memory  memory = parser->root.memory;
@@ -332,7 +332,7 @@
       /* and allocate private dictionary buffer        */
       if ( parser->private_len == 0 )
       {
-        FT_ERROR(( "Z1_Get_Private_Dict:" ));
+        FT_ERROR(( "T1_Get_Private_Dict:" ));
         FT_ERROR(( " invalid private dictionary section\n" ));
         error = T1_Err_Invalid_File_Format;
         goto Fail;
@@ -393,7 +393,7 @@
         cur++;
         if ( cur >= limit )
         {
-          FT_ERROR(( "Z1_Get_Private_Dict:" ));
+          FT_ERROR(( "T1_Get_Private_Dict:" ));
           FT_ERROR(( " could not find `eexec' keyword\n" ));
           error = T1_Err_Invalid_File_Format;
           goto Exit;
@@ -473,7 +473,7 @@
     }
 
     /* we now decrypt the encoded binary private dictionary */
-    Z1_Decrypt( parser->private_dict, parser->private_len, 55665 );
+    T1_Decrypt( parser->private_dict, parser->private_len, 55665 );
     parser->root.base = parser->private_dict;
     parser->root.cursor = parser->private_dict;
     parser->root.limit  = parser->root.cursor + parser->private_len;

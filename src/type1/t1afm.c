@@ -1,6 +1,6 @@
 /***************************************************************************/
 /*                                                                         */
-/*  z1afm.c                                                                */
+/*  t1afm.c                                                                */
 /*                                                                         */
 /*    AFM support for Type 1 fonts (body).                                 */
 /*                                                                         */
@@ -18,11 +18,11 @@
 
 #ifdef FT_FLAT_COMPILE
 
-#include "z1afm.h"
+#include "t1afm.h"
 
 #else
 
-#include <type1/z1afm.h>
+#include <type1/t1afm.h>
 
 #endif
 
@@ -42,12 +42,12 @@
   /* messages during execution.                                            */
   /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_z1afm
+#define FT_COMPONENT  trace_t1afm
 
 
   LOCAL_FUNC
-  void  Z1_Done_AFM( FT_Memory  memory,
-                     Z1_AFM*    afm )
+  void  T1_Done_AFM( FT_Memory  memory,
+                     T1_AFM*    afm )
   {
     FREE( afm->kern_pairs );
     afm->num_pairs = 0;
@@ -153,8 +153,8 @@
   int  compare_kern_pairs( const void*  a,
                            const void*  b )
   {
-    Z1_Kern_Pair*  pair1 = (Z1_Kern_Pair*)a;
-    Z1_Kern_Pair*  pair2 = (Z1_Kern_Pair*)b;
+    T1_Kern_Pair*  pair1 = (T1_Kern_Pair*)a;
+    T1_Kern_Pair*  pair2 = (T1_Kern_Pair*)b;
 
     FT_ULong  index1 = KERN_INDEX( pair1->glyph1, pair1->glyph2 );
     FT_ULong  index2 = KERN_INDEX( pair2->glyph1, pair2->glyph2 );
@@ -166,7 +166,7 @@
 
   /* parse an AFM file -- for now, only read the kerning pairs */
   LOCAL_FUNC
-  FT_Error  Z1_Read_AFM( FT_Face    t1_face,
+  FT_Error  T1_Read_AFM( FT_Face    t1_face,
                          FT_Stream  stream )
   {
     FT_Error       error;
@@ -175,9 +175,9 @@
     FT_Byte*       limit;
     FT_Byte*       p;
     FT_Int         count = 0;
-    Z1_Kern_Pair*  pair;
+    T1_Kern_Pair*  pair;
     T1_Font*       type1 = &((T1_Face)t1_face)->type1;
-    Z1_AFM*        afm   = 0;
+    T1_AFM*        afm   = 0;
 
 
     if ( ACCESS_Frame( stream->size ) )
@@ -202,7 +202,7 @@
 
     /* allocate the pairs */
     if ( ALLOC( afm, sizeof ( *afm ) )                       ||
-         ALLOC_ARRAY( afm->kern_pairs, count, Z1_Kern_Pair ) )
+         ALLOC_ARRAY( afm->kern_pairs, count, T1_Kern_Pair ) )
       goto Exit;
 
     /* now, read each kern pair */
@@ -237,7 +237,7 @@
     }
 
     /* now, sort the kern pairs according to their glyph indices */
-    qsort( afm->kern_pairs, count, sizeof ( Z1_Kern_Pair ),
+    qsort( afm->kern_pairs, count, sizeof ( T1_Kern_Pair ),
            compare_kern_pairs );
 
   Exit:
@@ -252,12 +252,12 @@
 
   /* find the kerning for a given glyph pair */
   LOCAL_FUNC
-  void  Z1_Get_Kerning( Z1_AFM*     afm,
+  void  T1_Get_Kerning( T1_AFM*     afm,
                         FT_UInt     glyph1,
                         FT_UInt     glyph2,
                         FT_Vector*  kerning )
   {
-    Z1_Kern_Pair  *min, *mid, *max;
+    T1_Kern_Pair  *min, *mid, *max;
     FT_ULong      index = KERN_INDEX( glyph1, glyph2 );
 
 

@@ -1,5 +1,8 @@
 LATEST CHANGES
 
+  - "type1z" renamed back to "type1"; the old "type1" module has been
+    removed
+
   - revamped the build system to make it a lot more generic. This will
     allow us to re-use nearly un-modified in lots of other projects
     (including FreeType Layout)
@@ -13,10 +16,10 @@ LATEST CHANGES
   - updated "docs/docmaker.py", a draft API reference is available at
     http://www.freetype.org/ft2api.html
 
-  - changed "type1z" to use "psaux"
+  - changed "type1" to use "psaux"
 
   - created a new module named "psaux" to hold the Type 1 & Type 2 parsing
-    routines. It should be used by "type1z", "cid" and "cff" in the future
+    routines. It should be used by "type1", "cid" and "cff" in the future
 
   - fixed an important bug in "FT_Glyph_Get_CBox"
 
@@ -354,7 +357,7 @@ OLD CHANGES FOR BETA 7
 
   - changed the default number of gray levels of the smooth renderer to
     256 (instead of the previous 128). Of course, the human eye can't
-	see any difference ;-)
+    see any difference ;-)
 
   - removed TT_MAX_SUBGLYPHS, there is no static limit on the number of
     subglyphs in a TrueType font now..
