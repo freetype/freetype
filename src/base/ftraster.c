@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftraster2.c                                                            */
+/*  ftraster.c                                                             */
 /*                                                                         */
 /*    The FreeType glyph rasterizer (body).                                */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -53,7 +53,7 @@
   /*************************************************************************/
 
 
-#include <ftimage.h>
+#include <ftraster.h>
 #ifndef _STANDALONE_
 #include <ftconfig.h>
 #endif
@@ -2236,13 +2236,12 @@
   /* <Return>                                                              */
   /*    Error code.  0 means sucess.                                       */
   /*                                                                       */
-
-
+  static
   int  FT_Decompose_Outline( FT_Outline*        outline,
                              FT_Outline_Funcs*  interface,
                              void*              user )
   {
-    typedef enum _phases
+    typedef enum  _phases
     {
       phase_point,
       phase_conic,
@@ -2478,7 +2477,8 @@
   static
   TResult  Convert_Glyph( RAS_ARG_ FT_Outline*  outline )
   {
-    static FT_Outline_Funcs  interface =
+    static
+    FT_Outline_Funcs  interface =
     {
       (FT_Outline_MoveTo_Func)Move_To,
       (FT_Outline_LineTo_Func)Line_To,
@@ -2519,8 +2519,8 @@
   /*                                                                       */
   /*    Inits an empty linked list.                                        */
   /*                                                                       */
-  static void
-  Init_Linked( TProfileList*  l )
+  static
+  void  Init_Linked( TProfileList*  l )
   {
     *l = NULL;
   }

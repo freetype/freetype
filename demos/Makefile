@@ -1,4 +1,3 @@
-.PHONY: exes
 all: exes
 
 ####################################################################
@@ -21,10 +20,10 @@ no_config_mk := 1
 endif
 
 ifdef no_config_mk
-
 exes:
 	@echo Please compile the library before the demo programs!
-
+clean distclean:
+	@echo "I need \`../config.mk' to do that!"
 else
 
 ####################################################################
@@ -33,6 +32,33 @@ else
 # object files from sources, as well as other things (compiler flags)
 #
 include ../config.mk
+
+####################################################################
+#
+# Define a few important variables now
+#
+#
+TOP_ := $(TOP)$(SEP)
+SRC_ := $(TOP)$(SEP)src$(SEP)
+
+BIN_ := bin$(SEP)
+OBJ_ := obj$(SEP)
+
+GRAPH_DIR := graph
+
+SRC_DIR  := src
+SRC_DIR_ := $(SRC_DIR)$(SEP)
+
+
+.PHONY: exes clean distclean
+
+###################################################################
+#
+# Include the rules needed to compile the graphics sub-system.
+# This will also select which graphics driver to compile to the
+# sub-system..
+#
+include $(GRAPH_DIR)/rules.mk
 
 ####################################################################
 #
@@ -50,7 +76,6 @@ endif
 # cannot take a long list of arguments, we simply erase the directory
 # contents..
 #
-.PHONY: clean distclean
 
 ifdef DOSLIKE
 clean_demo:
@@ -65,30 +90,13 @@ clean_demo:
 	-$(DELETE) $(OBJ_)*.$O
 	-$(DELETE) $(SRC_)*.bak graph$(SEP)*.bak
 	-$(DELETE) $(SRC_)*~ graph$(SEP)*~
-
-
 distclean_demo: clean_demo
 	-$(DELETE) $(EXES:%=$(BIN_)%)
+	-$(DELETE) $(GRAPH_LIB)
 endif
 
 clean: clean_demo
 distclean: distclean_demo
-
-####################################################################
-#
-# Define a few important variables now
-#
-#
-TOP_ := $(TOP)$(SEP)
-SRC_ := $(TOP)$(SEP)src$(SEP)
-
-BIN_ := bin$(SEP)
-OBJ_ := obj$(SEP)
-
-GRAPH_DIR := graph
-
-SRC_DIR  := src
-SRC_DIR_ := $(SRC_DIR)$(SEP)
 
 
 FT_INCLUDES := $(BUILD) $(TOP_)include $(SRC_)base
@@ -121,14 +129,6 @@ EXES := ftlint t1dump ftview fttimer
 ifneq ($(findstring $(PLATFORM),os2 unix),)
 EXES += ttdebug
 endif
-
-###################################################################
-#
-# Include the rules needed to compile the graphics sub-system.
-# This will also select which graphics driver to compile to the
-# sub-system..
-#
-include $(GRAPH_DIR)/rules.mk
 
 exes: $(EXES:%=$(BIN_)%$E)
 
@@ -223,5 +223,3 @@ $(BIN_)fttimer$E: $(OBJ_)fttimer.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
 	$(LINK) $(LFLAGS) $T$@ $< $(FTLIB) $(GRAPH_LINK) $(EFENCE)
 
 endif
-
-
