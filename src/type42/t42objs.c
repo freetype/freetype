@@ -711,6 +711,7 @@
     FT_Face  tt_face = ((T42_Face)face)->ttf_face;
     FT_Size  tt_size = ((T42_Size)face->size)->ttsize;
     
+
     if ( tt_face->size != tt_size )
       FT_Activate_Size( tt_size );
   }
@@ -744,7 +745,6 @@
   {
     FT_Face   face    = size->root.face;
     T42_Face  t42face = (T42_Face)face;
-
 
 
     t42_check_size_change( t42face->ttf_face );
@@ -798,6 +798,7 @@
     T42_Size         t42size = (T42_Size)size;
     FT_Face          tt_face = ((T42_Face) glyph->face)->ttf_face;
     FT_Driver_Class  ttclazz = ((T42_Driver)glyph->face->driver)->ttclazz;
+
 
     t42_check_size_change( tt_face );
 

@@ -1,11 +1,25 @@
+2002-06-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/bdflib.c: s/FT_Short/short/ for consistency.
+
 2002-06-11  David Turner  <david@freetype.org>
 
-        * builds/win32/ftdebug.c: added a missing #endif
+	* builds/win32/ftdebug.c: Added a missing #endif.
 
-        * src/sfnt/ttload.c, src/bdf/bdflib.c: removing compiler warnings
+	* src/sfnt/ttload.c, src/bdf/bdflib.c: Removing compiler warnings.
 
-        * src/type42/t42objs.c: removed the bug that prevented un-hinted
-        outlines to be loaded
+	Removed the bug in Type 42 driver that prevented un-hinted outlines
+	to be loaded.
+
+	* src/type42/t42objs.c (T42_Face_Init): Call FT_Done_Size.
+	(T42_Size_Init): Call FT_Activate_Size.
+	(t42_check_size_change): New function.
+	(T42_Size_SetChars, T42_Size_SetPixels): Use it.
+	(ft_glyphslot_clear): Replace FT_MEM_SET with FT_ZERO.
+	(T42_GlyphSlot_Load): Use t42_check_size_change.
+	Initialize more fields of `glyph'.
+
+	* builds/win32/visualc/freetype.dsp: Updated.
 
 2002-06-08  Juliusz Chroboczek  <jch@pps.jussieu.fr>
 
