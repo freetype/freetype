@@ -23,10 +23,6 @@
 
 #include "ftcerror.h"
 
-/* define for level-1 optimisations */
-#undef   OPT1
-
-
 
 #ifdef FTC_CACHE_USE_LINEAR_HASHING
 
@@ -75,7 +71,9 @@
     if ( first )
     {
       FTC_Node  last = first->mru_prev;
-      
+
+      FT_ASSERT( last->mru_next == first );
+
       node->mru_prev = last;
       node->mru_next = first;
 
@@ -137,11 +135,12 @@
     {
       FTC_Node  prev = node->mru_prev;
       FTC_Node  next = node->mru_next;
-      FTC_Node  last = first->mru_prev;
+      FTC_Node  last;
 
       prev->mru_next = next;
       next->mru_prev = prev;
 
+      last            = first->mru_prev;
       node->mru_next  = first;
       node->mru_prev  = last;
       first->mru_prev = node;
@@ -741,7 +740,8 @@
     query->hash   = 0;
     query->family = NULL;
 
-#ifdef OPT1
+    /* XXX: we break encapsulation for the sake of speed !! */
+#if 1
     {
       /* first of all, find the relevant family */
       FT_LruList              list  = cache->families;
@@ -827,14 +827,9 @@
           if ( node == NULL )
             break;
 
-#ifdef OPT1
           if ( node->hash == hash                            &&
                (FT_UInt)node->fam_index == family->fam_index &&
                compare( node, query, cache ) )
-#else
-          if ( (FT_UInt)node->fam_index == family->fam_index &&
-               compare( node, query, cache ) )
-#endif
           {
             /* move to head of bucket list */
             if ( pnode != bucket )

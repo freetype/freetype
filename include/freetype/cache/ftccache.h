@@ -21,7 +21,7 @@
 
 
 /* define to allow cache lookup inlining */
-#undef   FTC_CACHE_USE_INLINE
+#define  FTC_CACHE_USE_INLINE
 
 /* define to use linear hash table */
 #define  FTC_CACHE_USE_LINEAR_HASHING
