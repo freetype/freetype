@@ -1049,7 +1049,7 @@
     FT_TRACE2(( "loaded\n" ));
 
     /* everything went well, update face->num_names */
-    face->num_names = table->numNameRecords;
+    face->num_names = (FT_UShort) table->numNameRecords;
 
   Exit:
     return error;
