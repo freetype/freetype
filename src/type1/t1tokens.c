@@ -51,15 +51,15 @@
 
   const  char*  t1_immediates[ imm_max - imm_first_ ] =
   {
-    "-|", ".notdef", "BlueFuzz", "BlueScale", "BlueShift", "BlueValues",
-    "CharStrings", "Encoding", "FamilyBlues", "FamilyName", "FamilyOtherBlues",
-    "FID", "FontBBox", "FontID", "FontInfo", "FontMatrix", "FontName",
-    "FontType", "ForceBold", "FullName", "ItalicAngle", "LanguageGroup",
-    "Metrics", "MinFeature", "ND", "NP", "Notice", "OtherBlues", "OtherSubrs",
-    "PaintType", "Private", "RD", "RndStemUp", "StdHW", "StdVW", "StemSnapH",
-    "StemSnapV", "StrokeWidth", "Subrs", "UnderlinePosition",
-    "UnderlineThickness", "UniqueID", "Weight", "isFixedPitch", "lenIV",
-    "password", "version", "|", "|-"
+    "-|", ".notdef", "BlendAxisTypes", "BlueFuzz", "BlueScale", "BlueShift",
+    "BlueValues", "CharStrings", "Encoding", "FamilyBlues", "FamilyName",
+    "FamilyOtherBlues", "FID", "FontBBox", "FontID", "FontInfo", "FontMatrix",
+    "FontName", "FontType", "ForceBold", "FullName", "ItalicAngle",
+    "LanguageGroup", "Metrics", "MinFeature", "ND", "NP", "Notice",
+    "OtherBlues", "OtherSubrs", "PaintType", "Private", "RD", "RndStemUp",
+    "StdHW", "StdVW", "StemSnapH", "StemSnapV", "StrokeWidth", "Subrs",
+    "UnderlinePosition", "UnderlineThickness", "UniqueID", "Weight",
+    "isFixedPitch", "lenIV", "password", "version", "|", "|-"
   };
 
 

@@ -1435,10 +1435,20 @@
           }
           break;
 
+        /* check for the presence of /BlendAxisTypes, we cannot deal with */
+        /* multiple master fonts, so we must return a correct error code  */
+        /* to allow another driver to load them..                         */
+        case tok_immediate:
+          if (token.kind2 == imm_BlendAxisTypes)
+          {
+            error = FT_Err_Unknown_File_Format;
+            goto Exit;
+          }
+          /* fallthrough */
+
         /* A number was detected */
         case tok_string:
         case tok_program:
-        case tok_immediate:
         case tok_array:
         case tok_hexarray:
         case tok_any:

@@ -87,6 +87,7 @@
 
     imm_RD_alternate = imm_first_,      /* "-|" = alternate form of RD */
     imm_notdef,                         /* "/.notdef" immediate        */
+    imm_BlendAxisTypes,
     imm_BlueFuzz,
     imm_BlueScale,
     imm_BlueShift,
