@@ -163,9 +163,17 @@
   /* don't add spaces around arguments to FT_CONFIG_FILE! */
 
   /* configuration files */
-#define FT_CONFIG_CONFIG_H     FT_CONFIG_FILE(ftconfig.h)
-#define FT_CONFIG_OPTIONS_H    FT_CONFIG_FILE(ftoption.h)
-#define FT_CONFIG_MODULES_H    FT_CONFIG_FILE(ftmodule.h)
+#ifndef   FT_CONFIG_CONFIG_H
+#  define FT_CONFIG_CONFIG_H     FT_CONFIG_FILE(ftconfig.h)
+#endif
+
+#ifndef   FT_CONFIG_OPTIONS_H
+#  define FT_CONFIG_OPTIONS_H    FT_CONFIG_FILE(ftoption.h)
+#endif
+
+#ifndef   FT_CONFIG_MODULES_H
+#  define FT_CONFIG_MODULES_H    FT_CONFIG_FILE(ftmodule.h)
+#endif
 
   /* public headers */
 #define FT_ERRORS_H            FT_PUBLIC_FILE(fterrors.h)

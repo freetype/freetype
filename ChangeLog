@@ -6,6 +6,10 @@
 
 	* CHANGES: added a summary of changes between 2.0.1 and 2.0
 
+	* builds/unix/ftconfig.in, builds/cygwin/ftconfig.in: changes
+	to allow compilation under Unix with the Unix-specific config
+	files..
+
 2000-12-01  Werner Lemberg  <wl@gnu.org>
 
 	* INSTALL: Revised.

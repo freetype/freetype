@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef FTOPTION_H
-#define FTOPTION_H
+#ifndef __FTOPTION_H__
+#define __FTOPTION_H__
 
 
 #ifdef __cplusplus
@@ -394,7 +394,7 @@
 #endif
 
 
-#endif /* FTOPTION_H */
+#endif /* __FTOPTION_H__ */
 
 
 /* END */
