@@ -388,7 +388,7 @@ THE SOFTWARE.
       goto Exit;
 
     if ( PCF_BIT_ORDER( face->bitmapsFormat ) != MSBFirst )
-      BitOrderInvert( bitmap->buffer,bytes );
+      BitOrderInvert( bitmap->buffer, bytes );
 
     if ( ( PCF_BYTE_ORDER( face->bitmapsFormat ) !=
            PCF_BIT_ORDER( face->bitmapsFormat )  ) )
@@ -412,7 +412,7 @@ THE SOFTWARE.
     slot->bitmap_top  = metric->ascent;
 
     slot->metrics.horiAdvance  = metric->characterWidth << 6 ;
-    slot->metrics.horiBearingX = metric->rightSideBearing << 6 ;
+    slot->metrics.horiBearingX = metric->leftSideBearing << 6 ;
     slot->metrics.horiBearingY = metric->ascent << 6 ;
     slot->metrics.width        = metric->characterWidth << 6 ;
     slot->metrics.height       = bitmap->rows << 6;
