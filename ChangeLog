@@ -1,3 +1,23 @@
+2003-07-07  Werner Lemberg  <wl@gnu.org>
+
+	* builds/freetype.mk (DOC_DIR): New variable.
+	(refdoc): Use *_DIR variables.
+	(distclean): Remove documentation files.
+
+	* builds/detect.mk (std_setup, dos_setup): Mention `make refdoc'.
+
+	* configure: Set DOC_DIR variable.
+
+2003-07-07  Patrik Hägglund  <patrik.hagglund@bredband.net>
+
+	* builds/freetype.mk (refdoc): New target to build the
+	documentation.
+	(.PHONY): Updated.
+
+	* include/freetype/freetype.h: Improve documentation of FT_CharMap.
+	* include/freetype/ftimage,h: Fix documentation of FT_OUTLINE_FLAGS.
+	* include/freetype/tttables.h: Document FT_Sfnt_Tag.
+
 2003-07-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/bdf/bdfdrivr.c (BDF_Face_Init), src/pcf/pcfread.c

@@ -433,6 +433,10 @@ FT_BEGIN_HEADER
   /*    @FT_Open_Face), the library looks for a Unicode charmap within     */
   /*    the list and automatically activates it.                           */
   /*                                                                       */
+  /* <Also>                                                                */
+  /*    The @FT_CharMapRec details the publicly accessible fields of a     */
+  /*    given character map.                                               */
+  /*                                                                       */
   typedef struct FT_CharMapRec_*  FT_CharMap;
 
 
