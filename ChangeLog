@@ -1,3 +1,13 @@
+2002-01-29  David Turner  <david@freetype.org>
+
+	* configure: fixed the script. it previously didn't accept more
+	than one argument correctly. For example, when typing:
+	
+	  ./configure --disable-shared --disable-nls
+	  
+	the "--disable-nls" was incorrectly sent to the "make" program..
+
+
 2002-01-29  Werner Lemberg  <wl@gnu.org>
 
 	* README.UNX: Fix typo.
