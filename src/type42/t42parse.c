@@ -964,8 +964,8 @@
   {
     T42_Parser  parser     = &loader->parser;
     FT_Byte*    limit;
-    int         n_keywords = sizeof ( t42_keywords ) /
-                               sizeof ( t42_keywords[0] );
+    FT_Int      n_keywords = (FT_Int)( sizeof ( t42_keywords ) /
+                                         sizeof ( t42_keywords[0] ) );
 
 
     parser->root.cursor = base;

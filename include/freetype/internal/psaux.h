@@ -124,7 +124,7 @@ FT_BEGIN_HEADER
     FT_Int             max_elems;
     FT_Int             num_elems;
     FT_Byte**          elements;       /* addresses of table elements */
-    FT_Int*            lengths;        /* lengths of table elements   */
+    FT_PtrDist*        lengths;        /* lengths of table elements   */
 
     FT_Memory          memory;
     PS_Table_FuncsRec  funcs;
@@ -658,7 +658,7 @@ FT_BEGIN_HEADER
     FT_Int               lenIV;        /* internal for sub routine calls */
     FT_UInt              num_subrs;
     FT_Byte**            subrs;
-    FT_Int*              subrs_len;    /* array of subrs length (optional) */
+    FT_PtrDist*          subrs_len;    /* array of subrs length (optional) */
 
     FT_Matrix            font_matrix;
     FT_Vector            font_offset;

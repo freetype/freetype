@@ -102,12 +102,12 @@ FT_BEGIN_HEADER
 
     FT_Int           num_subrs;
     FT_Byte**        subrs;
-    FT_Int*          subrs_len;
+    FT_PtrDist*      subrs_len;
 
     FT_Int           num_glyphs;
     FT_String**      glyph_names;       /* array of glyph names       */
     FT_Byte**        charstrings;       /* array of glyph charstrings */
-    FT_Int*          charstrings_len;
+    FT_PtrDist*      charstrings_len;
 
     FT_Byte          paint_type;
     FT_Byte          font_type;

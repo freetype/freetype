@@ -1,3 +1,31 @@
+2003-12-08  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/psaux.h (PS_TableRec): Change type
+	of `lengths' to FT_PtrDist.
+	(T1_DecoderRec): Change type of `subrs_len' to FT_PtrDist.
+	* include/freetype/internal/t1types.h (T1_FontRec): Change type
+	of `subrs_len' and `charstrings_len' to FT_PtrDist.
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource): Replace `junk'
+	variable with better solution.
+	(IsMacResource): Remove unused variable `map_len'.
+	Replace `junk' variable with better solution.
+	(FT_Open_Face) [!FT_MACINTOSH]: Add conditional
+	FT_CONFIG_OPTION_MAC_FONTS.
+
+2003-12-08  Wolfgang Domröse  <porthos.domroese@harz.de>
+
+	* src/autohint/ahhint.c (ah_hinter_hint_edges,
+	ah_hinter_align_strong_points): Add some casts.
+
+	* src/base/ftoutln.c (FT_OrientationExtremumRec): Change type
+	of `pos' to FT_Long.
+
+	* src/base/ftobjs.c (Mac_Read_POST_Resource,
+	Mac_Read_sfnt_Resource): Change type of `len' to FT_Long.
+
+	* src/type42/t42parse.c (t42_parse_dict): Add cast for `n_keywords'.
+
 2003-12-07  Werner Lemberg  <wl@gnu.org>
 
 	* docs/raster.txt: New file, taken from FreeType 1 and completely

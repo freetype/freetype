@@ -142,7 +142,7 @@
   /*    table  :: The target table.                                        */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    idx  :: The index of the object in the table.                      */
+  /*    idx    :: The index of the object in the table.                    */
   /*                                                                       */
   /*    object :: The address of the object to copy in memory.             */
   /*                                                                       */
