@@ -29,9 +29,9 @@ ifdef BUILD_PROJECT
   # this is compiler-specific
   #
   $(PROJECT_LIBRARY): $(OBJECTS_LIST)
-ifdef CLEAN_LIBRARY
-	-$(CLEAN_LIBRARY) $(NO_OUTPUT)
-endif
+    ifdef CLEAN_LIBRARY
+	  -$(CLEAN_LIBRARY) $(NO_OUTPUT)
+    endif
 	$(LINK_LIBRARY)
 
 endif
