@@ -1,3 +1,16 @@
+2005-02-28  David Turner  <david@freetype.org>
+
+  * src/base/ftdbgmem.c (FT_DumpMemory): added sorting of memory sources
+  according to decreasing maximum cumulative allocations.
+  
+  * include/freetype/internal/tttypes.h, src/sfnt/ttsbit.c, src/sfnt/ttsbit0.c,
+  src/truetype/ttobjs.c, src/cff/cffobjs.c, src/sfnt/sfobjs.c: implementing new
+  heap-optimized embedded bitmap loader. This one also fixes bug #12107
+  
+  * src/sfnt/sfobjs.c: fixed bug that prevented loading SFNT fonts without
+  a 'kern' table.
+  
+
 2005-02-27  David Turner  <david@freetype.org>
 
   * src/sfnt/ttkern.c (tt_face_load_kern): fixing a small bug which returned
