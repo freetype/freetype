@@ -244,11 +244,7 @@
     else if ( args->pathname )
     {
       error = FT_New_Stream( args->pathname, stream );
-      if ( !error )
-      {
-        if ( !ALLOC( stream->pathname.pointer, strlen(args->pathname)+1 ) )
-          strcpy( stream->pathname.pointer, args->pathname );
-      }
+      stream->pathname.pointer = args->pathname;
     }
 
     /* do we have a custom stream? */
@@ -284,13 +280,10 @@
     FT_Stream  stream = *astream;
     FT_Memory  memory = stream->memory;
 
-    
+
     if ( stream->close )
       stream->close( stream );
-    
-    if ( stream->pathname.pointer )
-      FREE( stream->pathname.pointer );
-    
+
     FREE( stream );
     *astream = 0;
   }
@@ -1262,7 +1255,9 @@
       goto Fail;
 
     node->data = face;
-    FT_List_Add( &driver->faces_list, node );
+    /* don't assume driver is the same as face->driver, so use 
+       face->driver instead. (JvR 3/5/2000) */
+    FT_List_Add( &face->driver->faces_list, node );
 
     /* now allocate a glyph slot object for the face */
     {
