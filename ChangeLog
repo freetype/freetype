@@ -11,6 +11,10 @@
       adding a new API, named FT_Get_BDF_Property to retrieve the BDF
       properties of a given PCF or BDF font
 
+    * src/sfnt/ttload.c (sfnt_dir_check): relaxed the "head" table size
+    verification to accept a few broken fonts who pad the size incorrectly
+    (the table should be padded, but its "size" field shouldn't per se
+     the spec)
 
 2003-01-18  Werner Lemberg  <wl@gnu.org>
 

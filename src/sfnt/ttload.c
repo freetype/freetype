@@ -213,7 +213,14 @@
 
         has_head = 1;
 
-        if ( table.Length != 0x36                ||
+       /* the table length should be 0x36, but certain font tools
+        * make it 0x38, so we will just check that it is greater.
+        *
+        * note that according to the specification,
+        * the table must be padded to 32-bit lengths, but this doesn't
+        * apply to the value of its "Length" field !!
+        */
+        if ( table.Length < 0x36                 ||
              FT_STREAM_SEEK( table.Offset + 12 ) ||
              FT_READ_ULONG( magic )              ||
              magic != 0x5F0F3CF5UL               )
