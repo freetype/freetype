@@ -1,3 +1,14 @@
+2003-12-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfobjs.c (sfnt_load_face): Set FT_FACE_FLAG_GLYPH_NAMES
+	only if a `post' table is present.
+
+2003-12-09  George Williams  <gww@silcom.com>
+
+	* src/base/ftobjs.c (load_mac_face): Recent versions of Linux
+	support Mac's HFS+ file system, thus enable code to read /rsrc on
+	non-Macintosh platforms also.
+
 2003-12-08  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/psaux.h (PS_TableRec): Change type

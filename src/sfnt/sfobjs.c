@@ -400,7 +400,7 @@
                   FT_Int         num_params,
                   FT_Parameter*  params )
   {
-    FT_Error      error;
+    FT_Error      error, psnames_error;
     FT_Bool       has_outline;
     FT_Bool       is_apple_sbit;
 
@@ -462,7 +462,7 @@
     /* the following tables are optional in PCL fonts -- */
     /* don't check for errors                            */
     (void)LOAD_( names );
-    (void)LOAD_( psnames );
+    psnames_error = LOAD_( psnames );
 
     /* do not load the metrics headers and tables if this is an Apple */
     /* sbit font file                                                 */
@@ -529,9 +529,8 @@
                FT_FACE_FLAG_HORIZONTAL;   /* horizontal data   */
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
-      /* might need more polish to detect the presence of a Postscript */
-      /* name table in the font                                        */
-      flags |= FT_FACE_FLAG_GLYPH_NAMES;
+      if ( psnames_error == SFNT_Err_Ok )
+        flags |= FT_FACE_FLAG_GLYPH_NAMES;
 #endif
 
       /* fixed width font? */
