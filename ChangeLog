@@ -1,3 +1,9 @@
+2004-07-15  David Turner  <david@freetype.org>
+
+        * src/base/ftstroke (FT_Stroker_ParseOutline): single points
+        are not stroked, preventing a bug with pala.ttf and other
+        fonts.
+
 2004-07-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftstroke (ft_stroke_border_reverse): Removed.  Unused.
@@ -12,7 +18,7 @@
 
 	* src/cache/ftcsbits.c (ftc_snode_load): Fixing advance computation
 	for transformed glyphs.
-        
+
 2004-07-11  David Turner  <david@freetype.org>
 
 	Fix bugs that prevented the stroker to correctly generate stroked
