@@ -1,3 +1,15 @@
+2002-08-16  George Williams  <gww@silcom.com>
+
+	Add support for Apple composite glyphs.
+
+	* include/freetype/config/ftoption.h
+	(TT_CONFIG_OPTION_COMPONENT_OFFSET_SCALED): New macro.
+
+	* src/truetype/ttgload.c (OVERLAP_COMPOUND, SCALED_COMPONENT_OFFSET,
+	UNSCALED_COMPONENT_OFFSET): New macros for additional OpenType
+	glyph loading flags.
+	(load_truetype_glyph): Implement it.
+
 2002-08-16  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffgload.c (cff_free_glyph_data),
