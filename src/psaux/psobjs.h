@@ -164,7 +164,7 @@ FT_BEGIN_HEADER
                         FT_Byte     flag );
 
   FT_LOCAL( FT_Error )
-  T1_Builder_Add_Point1( T1_Builder  builder,
+  t1_builder_add_point1( T1_Builder  builder,
                          FT_Pos      x,
                          FT_Pos      y );
 

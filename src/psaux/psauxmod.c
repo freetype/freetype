@@ -58,7 +58,7 @@
     t1_builder_done,
     t1_builder_check_points,
     t1_builder_add_point,
-    T1_Builder_Add_Point1,
+    t1_builder_add_point1,
     t1_builder_add_contour,
     t1_builder_start_point,
     t1_builder_close_contour

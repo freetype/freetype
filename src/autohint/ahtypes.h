@@ -183,7 +183,8 @@ FT_BEGIN_HEADER
   /*    AH_PointRec                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A structure used to model an outline point to the AH_OutlineRec type. */
+  /*    A structure used to model an outline point to the AH_OutlineRec    */
+  /*    type.                                                              */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    flags     :: The current point hint flags.                         */
@@ -266,14 +267,14 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    score      :: Used to score the segment when selecting them.       */
   /*                                                                       */
-  typedef struct AH_SegmentRec_
+  typedef struct  AH_SegmentRec_
   {
     AH_Edge_Flags  flags;
     AH_Direction   dir;
 
     AH_Point       first;       /* first point in edge segment             */
     AH_Point       last;        /* last point in edge segment              */
-    AH_Point *     contour;     /* ptr to first point of segment's contour */
+    AH_Point*      contour;     /* ptr to first point of segment's contour */
 
     FT_Pos         pos;         /* position of segment           */
     FT_Pos         min_coord;   /* minimum coordinate of segment */
@@ -327,7 +328,7 @@ FT_BEGIN_HEADER
   /*                  Only set for some of the horizontal edges in a Latin */
   /*                  font.                                                */
   /*                                                                       */
-  typedef struct AH_EdgeRec_
+  typedef struct  AH_EdgeRec_
   {
     AH_Edge_Flags  flags;
     AH_Direction   dir;

@@ -123,7 +123,7 @@ FT_BEGIN_HEADER
 
 
   FT_LOCAL( FT_Error )
-  CID_Size_Init( CID_Size  size );
+  cid_size_init( CID_Size  size );
 
 
   FT_LOCAL( FT_Error )

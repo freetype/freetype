@@ -215,7 +215,7 @@
     (FT_Glyph_DoneFunc)     ft_bitmap_glyph_done,
     (FT_Glyph_CopyFunc)     ft_bitmap_glyph_copy,
     (FT_Glyph_TransformFunc)0,
-    (FT_Glyph_GetBBoxFunc)     ft_bitmap_glyph_bbox,
+    (FT_Glyph_GetBBoxFunc)  ft_bitmap_glyph_bbox,
     (FT_Glyph_PrepareFunc)  0
   };
 
@@ -336,7 +336,7 @@
     (FT_Glyph_DoneFunc)     ft_outline_glyph_done,
     (FT_Glyph_CopyFunc)     ft_outline_glyph_copy,
     (FT_Glyph_TransformFunc)ft_outline_glyph_transform,
-    (FT_Glyph_GetBBoxFunc)     ft_outline_glyph_bbox,
+    (FT_Glyph_GetBBoxFunc)  ft_outline_glyph_bbox,
     (FT_Glyph_PrepareFunc)  ft_outline_glyph_prepare
   };
 

@@ -404,9 +404,9 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Load_Glyph( FT_Face  face,
-                 FT_UInt  glyph_index,
-                 FT_Int32 load_flags )
+  FT_Load_Glyph( FT_Face   face,
+                 FT_UInt   glyph_index,
+                 FT_Int32  load_flags )
   {
     FT_Error      error;
     FT_Driver     driver;

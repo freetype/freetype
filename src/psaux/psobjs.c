@@ -1270,7 +1270,7 @@
 
   /* check space for a new on-curve point, then add it */
   FT_LOCAL_DEF( FT_Error )
-  T1_Builder_Add_Point1( T1_Builder  builder,
+  t1_builder_add_point1( T1_Builder  builder,
                          FT_Pos      x,
                          FT_Pos      y )
   {
@@ -1328,7 +1328,7 @@
       builder->path_begun = 1;
       error = t1_builder_add_contour( builder );
       if ( !error )
-        error = T1_Builder_Add_Point1( builder, x, y );
+        error = t1_builder_add_point1( builder, x, y );
     }
     return error;
   }

@@ -115,39 +115,38 @@ FT_BEGIN_HEADER
   /*    future.                                                            */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*   FT_PIXEL_MODE_MONO  ::                                              */
-  /*     A monochrome bitmap, using 1 bit per pixel. Note that pixels      */
-  /*     are stored in most-significant order (MSB), which means that      */
-  /*     the left-most pixel in a byte has value 128                       */
+  /*    FT_PIXEL_MODE_MONO ::                                              */
+  /*      A monochrome bitmap, using 1 bit per pixel.  Note that pixels    */
+  /*      are stored in most-significant order (MSB), which means that     */
+  /*      the left-most pixel in a byte has value 128.                     */
   /*                                                                       */
-  /*    FT_PIXEL_MODE_GRAY  ::                                             */
-  /*     An 8-bit bitmap, generally used to represent anti-aliased glyph   */
-  /*     images. Each pixel is stored in one byte. Note that the number    */
-  /*     of value "gray" levels is stored in the 'num_bytes' field of      */
-  /*     the @FT_Bitmap structure (it generally is 256)                    */
+  /*    FT_PIXEL_MODE_GRAY ::                                              */
+  /*      An 8-bit bitmap, generally used to represent anti-aliased glyph  */
+  /*      images.  Each pixel is stored in one byte.  Note that the number */
+  /*      of value "gray" levels is stored in the `num_bytes' field of     */
+  /*      the @FT_Bitmap structure (it generally is 256).                  */
   /*                                                                       */
   /*    FT_PIXEL_MODE_GRAY2 ::                                             */
   /*      A 2-bit/pixel bitmap, used to represent embedded anti-aliased    */
   /*      bitmaps in font files according to the OpenType specification.   */
-  /*      We haven't found a single font using this format however         */
+  /*      We haven't found a single font using this format, however.       */
   /*                                                                       */
   /*    FT_PIXEL_MODE_GRAY4 ::                                             */
   /*      A 4-bit/pixel bitmap, used to represent embedded anti-aliased    */
   /*      bitmaps in font files according to the OpenType specification.   */
-  /*      We haven't found a single font using this format however         */
+  /*      We haven't found a single font using this format, however.       */
   /*                                                                       */
-  /*                                                                       */
-  /*    FT_PIXEL_MODE_LCD   ::                                             */
+  /*    FT_PIXEL_MODE_LCD ::                                               */
   /*      An 8-bit bitmap, used to represent RGB or BGR decimated glyph    */
   /*      images used for display on LCD displays; the bitmap's width is   */
-  /*      three times wider than the original glyph image. See also        */
-  /*      @FT_RENDER_MODE_LCD                                              */
+  /*      three times wider than the original glyph image.  See also       */
+  /*      @FT_RENDER_MODE_LCD.                                             */
   /*                                                                       */
   /*    FT_PIXEL_MODE_LCD_V ::                                             */
   /*      An 8-bit bitmap, used to represent RGB or BGR decimated glyph    */
   /*      images used for display on rotated LCD displays; the bitmap's    */
   /*      height is three times taller than the original glyph image.      */
-  /*      See also @FT_RENDER_MODE_LCD_V                                   */
+  /*      See also @FT_RENDER_MODE_LCD_V.                                  */
   /*                                                                       */
   typedef enum  FT_Pixel_Mode_
   {
@@ -170,31 +169,33 @@ FT_BEGIN_HEADER
   /*    ft_pixel_mode_xxx                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    a list of deprecated constants. Use the corresponding              */
-  /*    @FT_Pixel_Mode values instead                                      */
+  /*    A list of deprecated constants.  Use the corresponding             */
+  /*    @FT_Pixel_Mode values instead.                                     */
   /*                                                                       */
   /* <Values>                                                              */
-  /*   ft_pixel_mode_none  :: see @FT_PIXEL_MODE_NONE                      */
-  /*   ft_pixel_mode_mono  :: see @FT_PIXEL_MODE_MONO                      */
-  /*   ft_pixel_mode_grays :: see @FT_PIXEL_MODE_GRAY                      */
-  /*   ft_pixel_mode_pal2  :: see @FT_PIXEL_MODE_GRAY2                     */
-  /*   ft_pixel_mode_pal4  :: see @FT_PIXEL_MODE_GRAY4                     */
+  /*    ft_pixel_mode_none  :: see @FT_PIXEL_MODE_NONE                     */
+  /*    ft_pixel_mode_mono  :: see @FT_PIXEL_MODE_MONO                     */
+  /*    ft_pixel_mode_grays :: see @FT_PIXEL_MODE_GRAY                     */
+  /*    ft_pixel_mode_pal2  :: see @FT_PIXEL_MODE_GRAY2                    */
+  /*    ft_pixel_mode_pal4  :: see @FT_PIXEL_MODE_GRAY4                    */
   /*                                                                       */
-#define  ft_pixel_mode_none   FT_PIXEL_MODE_NONE
-#define  ft_pixel_mode_mono   FT_PIXEL_MODE_MONO
-#define  ft_pixel_mode_grays  FT_PIXEL_MODE_GRAY
-#define  ft_pixel_mode_pal2   FT_PIXEL_MODE_GRAY2
-#define  ft_pixel_mode_pal4   FT_PIXEL_MODE_GRAY4
+#define ft_pixel_mode_none   FT_PIXEL_MODE_NONE
+#define ft_pixel_mode_mono   FT_PIXEL_MODE_MONO
+#define ft_pixel_mode_grays  FT_PIXEL_MODE_GRAY
+#define ft_pixel_mode_pal2   FT_PIXEL_MODE_GRAY2
+#define ft_pixel_mode_pal4   FT_PIXEL_MODE_GRAY4
 
  /* */
+
 #if 0
+
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
   /*    FT_Palette_Mode                                                    */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    THIS TYPE IS DEPRECATED. DO NOT USE IT !!                          */
+  /*    THIS TYPE IS DEPRECATED.  DO NOT USE IT!                           */
   /*                                                                       */
   /*    An enumeration type used to describe the format of a bitmap        */
   /*    palette, used with ft_pixel_mode_pal4 and ft_pixel_mode_pal8.      */
@@ -220,7 +221,9 @@ FT_BEGIN_HEADER
   } FT_Palette_Mode;
 
   /* */
+
 #endif
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -249,7 +252,7 @@ FT_BEGIN_HEADER
   /*                    most cases.                                        */
   /*                                                                       */
   /*    num_grays    :: This field is only used with                       */
-  /*                    `FT_PIXEL_MODE_GRAY'; it gives the number of gray */
+  /*                    `FT_PIXEL_MODE_GRAY'; it gives the number of gray  */
   /*                    levels used in the bitmap.                         */
   /*                                                                       */
   /*    pixel_mode   :: The pixel_mode, i.e., how pixel bits are stored.   */
@@ -415,16 +418,18 @@ FT_BEGIN_HEADER
 
   } FT_Outline_Flags;
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Const>                                                               */
   /*    FT_OUTLINE_NONE                                                    */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    this constant is deprecated. Please use @FT_OUTLINE_NONE           */
+  /*    This constant is deprecated.  Please use @FT_OUTLINE_NONE          */
   /*    instead.                                                           */
   /*                                                                       */
-#define  zft_outline_none             FT_OUTLINE_NONE
+#define zft_outline_none  FT_OUTLINE_NONE
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -432,10 +437,11 @@ FT_BEGIN_HEADER
   /*    FT_OUTLINE_OWNER                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    this constant is deprecated. Please use @FT_OUTLINE_OWNER          */
+  /*    This constant is deprecated.  Please use @FT_OUTLINE_OWNER         */
   /*    instead.                                                           */
   /*                                                                       */
-#define  zft_outline_owner            FT_OUTLINE_OWNER
+#define zft_outline_owner  FT_OUTLINE_OWNER
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -443,10 +449,11 @@ FT_BEGIN_HEADER
   /*    ft_outline_even_odd_fill                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    this constant is deprecated. Please use @FT_OUTLINE_EVEN_ODD_FILL  */
+  /*    This constant is deprecated.  Please use @FT_OUTLINE_EVEN_ODD_FILL */
   /*    instead.                                                           */
   /*                                                                       */
-#define  zft_outline_even_off_fill    FT_OUTLINE_EVEN_ODD_FILL
+#define zft_outline_even_off_fill  FT_OUTLINE_EVEN_ODD_FILL
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -454,10 +461,11 @@ FT_BEGIN_HEADER
   /*    FT_OUTLINE_REVERSE_FILL                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    this constant is deprecated. Please use @FT_OUTLINE_REVERSE_FILL   */
+  /*    This constant is deprecated.  Please use @FT_OUTLINE_REVERSE_FILL  */
   /*    instead.                                                           */
   /*                                                                       */
-#define  zft_outline_reverse_fill     FT_OUTLINE_REVERSE_FILL
+#define zft_outline_reverse_fill  FT_OUTLINE_REVERSE_FILL
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -465,10 +473,11 @@ FT_BEGIN_HEADER
   /*    FT_OUTLINE_IGNORE_DROPOUTS                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*   this constant is deprecated. Please use @FT_OUTLINE_IGNORE_DROPOUTS */
-  /*   instead.                                                            */
+  /*    This constant is deprecated.  Please use                           */
+  /*    @FT_OUTLINE_IGNORE_DROPOUTS instead.                               */
   /*                                                                       */
-#define  zft_outline_ignore_dropouts  FT_OUTLINE_IGNORE_DROPOUTS
+#define zft_outline_ignore_dropouts  FT_OUTLINE_IGNORE_DROPOUTS
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -476,10 +485,11 @@ FT_BEGIN_HEADER
   /*    FT_OUTLINE_HIGH_PRECISION                                          */
   /*                                                                       */
   /* <Description>                                                         */
-  /*   this constant is deprecated. Please use @FT_OUTLINE_HIGH_PRECISION  */
-  /*   instead.                                                            */
+  /*    This constant is deprecated.  Please use                           */
+  /*    @FT_OUTLINE_HIGH_PRECISION instead.                                */
   /*                                                                       */
-#define  zft_outline_high_precision   FT_OUTLINE_HIGH_PRECISION
+#define zft_outline_high_precision  FT_OUTLINE_HIGH_PRECISION
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -487,10 +497,10 @@ FT_BEGIN_HEADER
   /*    FT_OUTLINE_SINGLE_PASS                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*   this constant is deprecated. Please use @FT_OUTLINE_SINGLE_PASS     */
-  /*   instead.                                                            */
+  /*    This constant is deprecated.  Please use @FT_OUTLINE_SINGLE_PASS   */
+  /*    instead.                                                           */
   /*                                                                       */
-#define  zft_outline_single_pass      FT_OUTLINE_SINGLE_PASS
+#define zft_outline_single_pass  FT_OUTLINE_SINGLE_PASS
 
   /* */
 
@@ -724,28 +734,28 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_GLYPH_FORMAT_NONE ::                                            */
-  /*      the value 0 is reserved and does describe a glyph format         */
+  /*      The value 0 is reserved and does describe a glyph format.        */
   /*                                                                       */
   /*    FT_GLYPH_FORMAT_COMPOSITE ::                                       */
-  /*      the glyph image is a composite of several other images. This     */
+  /*      The glyph image is a composite of several other images.  This    */
   /*      format is _only_ used with @FT_LOAD_FLAG_NO_RECURSE, and is      */
-  /*      used to report compound glyphs (like accented characters)        */
+  /*      used to report compound glyphs (like accented characters).       */
   /*                                                                       */
-  /*    FT_GLYPH_FORMAT_BITMAP    ::                                       */
-  /*      the glyph image is a bitmap, and can be described as a           */
-  /*      @FT_Bitmap. You'll generally need to access the 'bitmap' field   */
-  /*      of the @FT_GlyphSlotRec structure to read it.                    */
+  /*    FT_GLYPH_FORMAT_BITMAP ::                                          */
+  /*      The glyph image is a bitmap, and can be described as an          */
+  /*      @FT_Bitmap.  You generally need to access the `bitmap' field of  */
+  /*      the @FT_GlyphSlotRec structure to read it.                       */
   /*                                                                       */
-  /*    FT_GLYPH_FORMAT_OUTLINE   :: The glyph image is a vectorial image  */
-  /*      the glyph image is a vertorial outline made of line segments     */
-  /*      and bezier arcs; it can be described as a @FT_Outline and you'll */
-  /*      generally want to access the 'outline' field of the              */
+  /*    FT_GLYPH_FORMAT_OUTLINE ::                                         */
+  /*      The glyph image is a vertorial outline made of line segments     */
+  /*      and Bezier arcs; it can be described as an @FT_Outline; you      */
+  /*      generally want to access the `outline' field of the              */
   /*      @FT_GlyphSlotRec structure to read it.                           */
   /*                                                                       */
-  /*    FT_GLYPH_FORMAT_PLOTTER   ::                                       */
-  /*      the glyph image is a vectorial path with no inside/outside       */
-  /*      contours. Some Type 1 fonts, like those in the Hershy family,    */
-  /*      contain glyphs in this format. These are described as            */
+  /*    FT_GLYPH_FORMAT_PLOTTER ::                                         */
+  /*      The glyph image is a vectorial path with no inside/outside       */
+  /*      contours.  Some Type 1 fonts, like those in the Hershey family,  */
+  /*      contain glyphs in this format.  These are described as           */
   /*      @FT_Outline, but FreeType isn't currently capable of rendering   */
   /*      them correctly.                                                  */
   /*                                                                       */
@@ -760,13 +770,14 @@ FT_BEGIN_HEADER
 
   } FT_Glyph_Format;
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
   /*    ft_glyph_format_xxx                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A list of decprecated constants. Use the corresponding             */
+  /*    A list of decprecated constants.  Use the corresponding            */
   /*    @FT_Glyph_Format values instead.                                   */
   /*                                                                       */
   /* <Values>                                                              */
@@ -776,11 +787,12 @@ FT_BEGIN_HEADER
   /*    ft_glyph_format_outline   :: see @FT_GLYPH_FORMAT_OUTLINE          */
   /*    ft_glyph_format_plotter   :: see @FT_GLYPH_FORMAT_PLOTTER          */
   /*                                                                       */
-#define  ft_glyph_format_none       FT_GLYPH_FORMAT_NONE
-#define  ft_glyph_format_composite  FT_GLYPH_FORMAT_COMPOSITE
-#define  ft_glyph_format_bitmap     FT_GLYPH_FORMAT_BITMAP
-#define  ft_glyph_format_outline    FT_GLYPH_FORMAT_OUTLINE
-#define  ft_glyph_format_plotter    FT_GLYPH_FORMAT_PLOTTER
+#define ft_glyph_format_none       FT_GLYPH_FORMAT_NONE
+#define ft_glyph_format_composite  FT_GLYPH_FORMAT_COMPOSITE
+#define ft_glyph_format_bitmap     FT_GLYPH_FORMAT_BITMAP
+#define ft_glyph_format_outline    FT_GLYPH_FORMAT_OUTLINE
+#define ft_glyph_format_plotter    FT_GLYPH_FORMAT_PLOTTER
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -854,7 +866,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Note>                                                                */
   /*    This structure is used by the span drawing callback type named     */
-  /*    FT_SpanFunc            which takes the y-coordinate of the span as */
+  /*    FT_SpanFunc which takes the y-coordinate of the span as a          */
   /*    a parameter.                                                       */
   /*                                                                       */
   /*    The coverage value is always between 0 and 255, even if the number */
@@ -911,7 +923,8 @@ FT_BEGIN_HEADER
                   FT_Span*  spans,
                   void*     user );
 
-#define  FT_Raster_Span_Func   FT_SpanFunc
+#define FT_Raster_Span_Func   FT_SpanFunc
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -919,7 +932,7 @@ FT_BEGIN_HEADER
   /*    FT_Raster_BitTest_Func                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    THIS TYPE IS DEPRECATED. DO NOT USE IT                             */
+  /*    THIS TYPE IS DEPRECATED.  DO NOT USE IT.                           */
   /*                                                                       */
   /*    A function used as a call-back by the monochrome scan-converter    */
   /*    to test whether a given target pixel is already set to the drawing */
@@ -948,7 +961,7 @@ FT_BEGIN_HEADER
   /*    FT_Raster_BitSet_Func                                              */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    THIS TYPE IS DEPRECATED. DO NOT USE IT                             */
+  /*    THIS TYPE IS DEPRECATED.  DO NOT USE IT.                           */
   /*                                                                       */
   /*    A function used as a call-back by the monochrome scan-converter    */
   /*    to set an individual target pixel.  This is crucial to implement   */
@@ -968,6 +981,7 @@ FT_BEGIN_HEADER
   (*FT_Raster_BitSet_Func)( int    y,
                             int    x,
                             void*  user );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1018,10 +1032,10 @@ FT_BEGIN_HEADER
 
   } FT_Raster_Flag;
 
-#define  ft_raster_flag_default  FT_RASTER_FLAG_DEFAULT
-#define  ft_raster_flag_aa       FT_RASTER_FLAG_AA
-#define  ft_raster_flag_direct   FT_RASTER_FLAG_DIRECT
-#define  ft_raster_flag_clip     FT_RASTER_FLAG_CLIP
+#define ft_raster_flag_default  FT_RASTER_FLAG_DEFAULT
+#define ft_raster_flag_aa       FT_RASTER_FLAG_AA
+#define ft_raster_flag_direct   FT_RASTER_FLAG_DIRECT
+#define ft_raster_flag_clip     FT_RASTER_FLAG_CLIP
 
 
   /*************************************************************************/
@@ -1045,9 +1059,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    black_spans :: The black span drawing callback.                    */
   /*                                                                       */
-  /*    bit_test    :: The bit test callback. UNIMPLEMENTED !!             */
+  /*    bit_test    :: The bit test callback.  UNIMPLEMENTED!              */
   /*                                                                       */
-  /*    bit_set     :: The bit set callback.  UNIMPLEMENTED !!             */
+  /*    bit_set     :: The bit set callback.  UNIMPLEMENTED!               */
   /*                                                                       */
   /*    user        :: User-supplied data that is passed to each drawing   */
   /*                   callback.                                           */
@@ -1081,8 +1095,8 @@ FT_BEGIN_HEADER
     int                     flags;
     FT_SpanFunc             gray_spans;
     FT_SpanFunc             black_spans;
-    FT_Raster_BitTest_Func  bit_test;     /* doesn't work !! */
-    FT_Raster_BitSet_Func   bit_set;      /* doesn't work !! */
+    FT_Raster_BitTest_Func  bit_test;     /* doesn't work! */
+    FT_Raster_BitSet_Func   bit_set;      /* doesn't work! */
     void*                   user;
     FT_BBox                 clip_box;
 

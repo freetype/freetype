@@ -622,9 +622,9 @@
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_set_sbit_strike( TT_Face    face,
-                      FT_Int     x_ppem,
-                      FT_Int     y_ppem,
-                      FT_ULong  *astrike_index )
+                           FT_Int     x_ppem,
+                           FT_Int     y_ppem,
+                           FT_ULong  *astrike_index )
   {
     FT_Int  i;
 

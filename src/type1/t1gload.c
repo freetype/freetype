@@ -164,7 +164,7 @@
                                            (FT_Byte**)type1->glyph_names,
                                            face->blend,
                                            0,
-                                           0,
+                                           FT_RENDER_MODE_NORMAL,
                                            T1_Parse_Glyph );
     if ( error )
       return error;

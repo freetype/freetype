@@ -308,7 +308,7 @@ THE SOFTWARE.
 
       prop = bdf_get_font_property( font, (char *)"AVERAGE_WIDTH" );
       if ( ( prop != NULL ) && ( prop->value.int32 >= 10 ) )
-        root->available_sizes->width =  (short)( prop->value.int32 / 10 );
+        root->available_sizes->width = (short)( prop->value.int32 / 10 );
 
       prop = bdf_get_font_property( font, (char *)"PIXEL_SIZE" );
       if ( prop != NULL )
