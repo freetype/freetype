@@ -171,8 +171,8 @@
 
       } while ( end->fx == first->fx && end->fy == first->fy );
 
-      angle_seg = af_angle( end->fx - start->fx,
-                            end->fy - start->fy );
+      angle_seg = af_angle_atan( end->fx - start->fx,
+                                 end->fy - start->fy );
 
       /* extend the segment start whenever possible */
       before = start;
@@ -187,8 +187,8 @@
 
         } while ( before->fx == start->fx && before->fy == start->fy );
 
-        angle_in = af_angle( start->fx - before->fx,
-                             start->fy - before->fy );
+        angle_in = af_angle_atan( start->fx - before->fx,
+                                  start->fy - before->fy );
 
       } while ( angle_in == angle_seg );
 
@@ -211,10 +211,8 @@
 
           } while ( end->fx == after->fx && end->fy == after->fy );
 
-          vec.x     = after->fx - end->fx;
-          vec.y     = after->fy - end->fy;
-          angle_out = af_angle( after->fx - end->fx,
-                                after->fy - end->fy );
+          angle_out = af_angle_atan( after->fx - end->fx,
+                                     after->fy - end->fy );
 
         } while ( angle_out == angle_seg );
 
@@ -295,15 +293,19 @@
 
   FT_LOCAL_DEF( FT_Error )
   af_glyph_hints_reset( AF_GlyphHints  hints,
-                        FT_Outline*    outline,
-                        FT_Fixed       x_scale,
-                        FT_Fixed       y_scale,
-                        FT_Pos         x_delta,
-                        FT_Pos         y_delta )
+                        AF_Scaler      scaler,
+                        FT_Outline*    outline )
   {
-    FT_Error     error        = AF_Err_Ok;
-
+    FT_Error     error        = FT_Err_Ok;
+    AF_Point     points;
     FT_UInt      old_max, new_max;
+    FT_Fixed     x_scale = scaler->x_scale;
+    FT_Fixed     y_scale = scaler->y_scale;
+    FT_Pos       x_delta = scaler->x_delta;
+    FT_Pos       y_delta = scaler->y_delta;
+
+    hints->scaler_flags = scaler->flags;
+    hints->other_flags  = 0;
 
     hints->num_points    = 0;
     hints->num_contours  = 0;
@@ -350,7 +352,7 @@
 
 #undef  OFF_INCREMENT
 #define OFF_INCREMENT( _off, _type, _count )   \
-     ((((_off) + sizeof(_type)) & ~(sizeof(_type)) + ((_count)*sizeof(_type)))
+     ( FT_PAD_CEIL( _off, sizeof(_type) ) + (_count)*sizeof(_type))
 
       off1 = OFF_INCREMENT( 0, AF_PointRec, new_max );
       off2 = OFF_INCREMENT( off1, AF_SegmentRec, new_max );
@@ -467,7 +469,7 @@
             contour_index++;
             if ( point + 1 < point_limit )
             {
-              end   = points + source->contours[contour_index];
+              end   = points + outline->contours[contour_index];
               first = point + 1;
               prev  = end;
             }
@@ -524,8 +526,8 @@
             if ( point->out_dir != AF_DIR_NONE )
               goto Is_Weak_Point;
 
-            angle_in  = af_angle( in_x, in_y );
-            angle_out = af_angle( out_x, out_y );
+            angle_in  = af_angle_atan( in_x, in_y );
+            angle_out = af_angle_atan( out_x, out_y );
             delta     = af_angle_diff( angle_in, angle_out );
 
             if ( delta < 2 && delta > -2 )
@@ -616,7 +618,7 @@
                                       AF_Dimension   dim )
   {
     AF_Point      points      = hints->points;
-    AF_Point      point_limit = points + hints->num_points;;
+    AF_Point      point_limit = points + hints->num_points;
     AF_AxisHints  axis        = &hints->axis[dim];
     AF_Edge       edges       = axis->edges;
     AF_Edge       edge_limit  = edges + axis->num_edges;
@@ -650,7 +652,7 @@
              !( point->flags & AF_FLAG_INFLECTION )         )
           continue;
 
-        if ( dimension )
+        if ( dim == AF_DIMENSION_VERT )
         {
           u  = point->fy;
           ou = point->oy;

@@ -9,7 +9,7 @@ FT_BEGIN_HEADER
   * the latin-specific script class
   *
   */
-  FT_LOCAL( const FT_ScriptClassRec )    af_latin_script_class;
+  FT_LOCAL( const AF_ScriptClassRec )    af_latin_script_class;
 
  /***************************************************************************/
  /***************************************************************************/
@@ -54,7 +54,7 @@ FT_BEGIN_HEADER
     AF_LATIN_BLUE_ACTIVE = (1 << 0),
     AF_LATIN_BLUE_TOP    = (1 << 1),
     
-    AF_LATIN_BLUE_MAX
+    AF_LATIN_BLUE_FLAG_MAX
   };
 
 
@@ -79,7 +79,7 @@ FT_BEGIN_HEADER
    /* ignored for horizontal metrics */
     FT_Bool          control_overshoot;
     FT_UInt          blue_count;
-    AF_LatinBlueRec  blues;
+    AF_LatinBlueRec  blues[ AF_LATIN_BLUE_MAX ];
 
   } AF_LatinAxisRec, *AF_LatinAxis;
 
@@ -91,6 +91,7 @@ FT_BEGIN_HEADER
     AF_LatinAxisRec       axis[ AF_DIMENSION_MAX ];
   
   } AF_LatinMetricsRec, *AF_LatinMetrics;
+
 
 
   FT_LOCAL( FT_Error )
@@ -110,6 +111,26 @@ FT_BEGIN_HEADER
  /*****                                                                 *****/
  /***************************************************************************/
  /***************************************************************************/
+
+  enum
+  {
+    AF_LATIN_HINTS_HORZ_SNAP   = (1 << 0),  /* enable stem width snapping  */
+    AF_LATIN_HINTS_VERT_SNAP   = (1 << 1),  /* enable stem height snapping */
+    AF_LATIN_HINTS_STEM_ADJUST = (1 << 2),  /* enable stem width/height adjustment */
+    AF_LATIN_HINTS_MONO        = (1 << 3),  /* indicate monochrome rendering */
+  };
+
+#define  AF_LATIN_HINTS_DO_HORZ_SNAP(h) \
+   AF_HINTS_TEST_OTHER(h,AF_LATIN_HINTS_HORZ_SNAP)
+
+#define  AF_LATIN_HINTS_DO_VERT_SNAP(h) \
+   AF_HINTS_TEST_OTHER(h,AF_LATIN_HINTS_VERT_SNAP)
+
+#define  AF_LATIN_HINTS_DO_STEM_ADJUST(h)  \
+   AF_HINTS_TEST_OTHER(h,AF_LATIN_HINTS_STEM_ADJUST)
+
+#define  AF_LATIN_HINTS_DO_MONO(h)  \
+   AF_HINTS_TEST_OTHER(h,AF_LATIN_HINTS_MONO)
 
 
  /* this shouldn't normally be exported. However, other scripts might

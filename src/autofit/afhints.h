@@ -179,10 +179,25 @@ FT_BEGIN_HEADER
     AF_Point*     contours;
 
     AF_AxisHintsRec  axis[ AF_DIMENSION_MAX ];
+    
+    FT_UInt32         scaler_flags;  /* copy of scaler flags */
+    FT_UInt32         other_flags;   /* free for script-specific implementations */
+    AF_ScriptMetrics  metrics;
 
   } AF_GlyphHintsRec;
 
 
+#define  AF_HINTS_TEST_SCALER(h,f)  ( (h)->scaler_flags & (f) )
+#define  AF_HINTS_TEST_OTHER(h,f)   ( (h)->other_flags  & (f) )
+
+#define  AF_HINTS_DO_HORIZONTAL(h)  \
+            !AF_HINTS_TEST_SCALER(h,AF_SCALER_FLAG_NO_HORIZONTAL)
+
+#define  AF_HINTS_DO_VERTICAL(h)    \
+            !AF_HINTS_TEST_SCALER(h,AF_SCALER_FLAG_NO_VERTICAL)
+
+#define  AF_HINTS_DO_ADVANCE(h)     \
+            !AF_HINTS_TEST_SCALER(h,AF_SCALER_FLAG_NO_ADVANCE)
 
 
   FT_LOCAL( AF_Direction )
@@ -201,11 +216,8 @@ FT_BEGIN_HEADER
   */
   FT_LOCAL( FT_Error )
   af_glyph_hints_reset( AF_GlyphHints  hints,
-                        FT_Outline*    outline,
-                        FT_Fixed       x_scale,
-                        FT_Fixed       y_scale,
-                        FT_Pos         x_delta,
-                        FT_Pos         y_delta );
+                        AF_Scaler      scaler,
+                        FT_Outline*    outline );
 
   FT_LOCAL( void )
   af_glyph_hints_align_edge_points( AF_GlyphHints  hints,
