@@ -31,11 +31,11 @@ FT_BEGIN_HEADER
     PSH2_HINT_GHOST  = PS_HINT_FLAG_GHOST,
     PSH2_HINT_BOTTOM = PS_HINT_FLAG_BOTTOM,
     PSH2_HINT_ACTIVE = 4,
-    PSH2_HINT_FITTED = 8  
+    PSH2_HINT_FITTED = 8
   } PSH2_Hint_Flags;
 
 #define  psh2_hint_is_active(x)  (((x)->flags  & PSH2_HINT_ACTIVE) != 0)
-#define  psh2_hint_is_ghost(x)   (((x)->flags  & PSH2_HINT_GHOST)  != 0)  
+#define  psh2_hint_is_ghost(x)   (((x)->flags  & PSH2_HINT_GHOST)  != 0)
 #define  psh2_hint_is_fitted(x)  (((x)->flags  & PSH2_HINT_FITTED) != 0)
 
 #define  psh2_hint_activate(x)     (x)->flags |=  PSH2_HINT_ACTIVE
@@ -51,7 +51,7 @@ FT_BEGIN_HEADER
     FT_UInt    flags;
     PSH2_Hint  parent;
     FT_Int     order;
-  
+
   } PSH2_HintRec;
 
 
@@ -64,7 +64,7 @@ FT_BEGIN_HEADER
     FT_Fixed  delta;
     FT_Pos    min;
     FT_Pos    max;
-    
+
   } PSH2_ZoneRec, *PSH2_Zone;
 
 
@@ -80,12 +80,13 @@ FT_BEGIN_HEADER
     PSH2_Zone      zone;
     PS_Mask_Table  hint_masks;
     PS_Mask_Table  counter_masks;
-    
+
   } PSH2_Hint_TableRec, *PSH2_Hint_Table;
+
 
   typedef struct PSH2_PointRec_*    PSH2_Point;
   typedef struct PSH2_ContourRec_*  PSH2_Contour;
-  
+
   enum
   {
     PSH2_DIR_NONE   =  4,
@@ -94,7 +95,7 @@ FT_BEGIN_HEADER
     PSH2_DIR_LEFT   = -2,
     PSH2_DIR_RIGHT  =  2
   };
-  
+
   enum
   {
     PSH2_POINT_OFF    = 1,   /* point is off the curve  */
@@ -124,9 +125,10 @@ FT_BEGIN_HEADER
     FT_Pos        cur_y;
     FT_UInt       flags_x;
     FT_UInt       flags_y;
-#endif    
-    
+#endif
+
   } PSH2_PointRec;
+
 
 #define  psh2_point_is_strong(p)   ((p)->flags & PSH2_POINT_STRONG)
 #define  psh2_point_is_fitted(p)   ((p)->flags & PSH2_POINT_FITTED)
@@ -140,37 +142,37 @@ FT_BEGIN_HEADER
   {
     PSH2_Point  start;
     FT_UInt     count;
-   
+
   } PSH2_ContourRec;
 
-  
+
 
   typedef struct PSH2_GlyphRec_
   {
     FT_UInt             num_points;
     FT_UInt             num_contours;
-    
+
     PSH2_Point          points;
     PSH2_Contour        contours;
-               
+
     FT_Memory           memory;
     FT_Outline*         outline;
     PSH_Globals         globals;
     PSH2_Hint_TableRec  hint_tables[2];
-    
+
     FT_Bool             vertical;
     FT_Int              major_dir;
     FT_Int              minor_dir;
-    
+
   } PSH2_GlyphRec, *PSH2_Glyph;
 
 
-#ifdef DEBUG_HINTER  
+#ifdef DEBUG_HINTER
   extern  PSH2_Hint_Table  ps2_debug_hint_table;
 
   typedef void  (*PSH2_HintFunc)( PSH2_Hint  hint, FT_Bool vertical );
   extern  PSH2_HintFunc    ps2_debug_hint_func;
-  
+
   extern  PSH2_Glyph       ps2_debug_glyph;
 #endif
 
