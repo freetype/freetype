@@ -197,7 +197,7 @@
 
     num_buckets = ( table->p + table->mask + 1) ;
 
-    if ( ++ table->slack > num_buckets*FT_HASH_SUB_LOAD )
+    if ( ++ table->slack > (FT_Long)num_buckets*FT_HASH_SUB_LOAD )
     {
       FT_UInt       p         = table->p;
       FT_UInt       mask      = table->mask;

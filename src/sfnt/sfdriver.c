@@ -251,7 +251,7 @@
     SFNT_Get_Interface,
 
     TT_Load_Any,
-    TT_Load_SFNT_HeaderRec,
+    TT_Load_SFNT_Header,
     TT_Load_Directory,
 
     TT_Load_Header,
