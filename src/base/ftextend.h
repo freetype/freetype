@@ -29,7 +29,6 @@
   /* The extensions don't need to be integrated at compile time into */
   /* the engine, only at link time.                                  */
 
-
  /*****************************************************************
   *
   * <FuncType>
