@@ -491,6 +491,11 @@ FT_BEGIN_HEADER
     FT_Vector         trans_delta;
     FT_Matrix         trans_matrix;
 
+    FT_Bool           no_horz_hints;     /* disable X hinting            */
+    FT_Bool           no_vert_hints;     /* disable Y hinting            */
+    FT_Bool           no_horz_snapping;  /* disable X stem size snapping */
+    FT_Bool           no_vert_snapping;  /* disable Y stem size snapping */
+
   } AH_HinterRec, *AH_Hinter;
 
 

@@ -272,7 +272,7 @@
   cid_slot_load_glyph( CID_GlyphSlot  glyph,
                        CID_Size       size,
                        FT_Int         glyph_index,
-                       FT_Int         load_flags )
+                       FT_Int32       load_flags )
   {
     FT_Error       error;
     T1_DecoderRec  decoder;
@@ -306,6 +306,7 @@
                                              0, /* glyph names -- XXX */
                                              0, /* blend == 0 */
                                              hinting,
+                                             FT_LOAD_TARGET_MODE(load_flags),
                                              cid_load_glyph );
 
       /* set up the decoder */

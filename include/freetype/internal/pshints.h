@@ -280,10 +280,10 @@ FT_BEGIN_HEADER
   /*    which must correspond to the same font as the glyph.               */
   /*                                                                       */
   typedef FT_Error
-  (*T1_Hints_ApplyFunc)( T1_Hints     hints,
-                         FT_Outline*  outline,
-                         PSH_Globals  globals,
-                         FT_UInt32    hint_flags );
+  (*T1_Hints_ApplyFunc)( T1_Hints        hints,
+                         FT_Outline*     outline,
+                         PSH_Globals     globals,
+                         FT_Render_Mode  hint_mode );
 
 
   /*************************************************************************/
@@ -561,10 +561,10 @@ FT_BEGIN_HEADER
   /*    which must correspond to the same font than the glyph.             */
   /*                                                                       */
   typedef FT_Error
-  (*T2_Hints_ApplyFunc)( T2_Hints     hints,
-                         FT_Outline*  outline,
-                         PSH_Globals  globals,
-                         FT_UInt32    hint_flags );
+  (*T2_Hints_ApplyFunc)( T2_Hints        hints,
+                         FT_Outline*     outline,
+                         PSH_Globals     globals,
+                         FT_Render_Mode  hint_mode );
 
 
   /*************************************************************************/

@@ -32,8 +32,8 @@ FT_BEGIN_HEADER
 
 #define AH_HINT_DEFAULT        0
 #define AH_HINT_NO_ALIGNMENT   1
-#define AH_HINT_NO_HORZ_EDGES  0x20000L
-#define AH_HINT_NO_VERT_EDGES  0x40000L
+#define AH_HINT_NO_HORZ_EDGES  0x200000L  /* temporary hack */
+#define AH_HINT_NO_VERT_EDGES  0x400000L  /* temporary hack */
 
 
   /* create a new empty hinter object */
@@ -47,7 +47,7 @@ FT_BEGIN_HEADER
                         FT_GlyphSlot  slot,
                         FT_Size       size,
                         FT_UInt       glyph_index,
-                        FT_Int        load_flags );
+                        FT_Int32      load_flags );
 
   /* finalize a hinter object */
   FT_LOCAL( void )

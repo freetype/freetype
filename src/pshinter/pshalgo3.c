@@ -380,7 +380,7 @@
   psh3_hint_align( PSH3_Hint    hint,
                    PSH_Globals  globals,
                    FT_Int       dimension,
-                   FT_UInt32    hint_flags )
+                   PSH3_Glyph   glyph )
   {
     PSH_Dimension  dim   = &globals->dimension[dimension];
     FT_Fixed       scale = dim->scale_mult;
@@ -392,14 +392,15 @@
       FT_Pos  pos = FT_MulFix( hint->org_pos, scale ) + delta;
       FT_Pos  len = FT_MulFix( hint->org_len, scale );
 
+      FT_Int            no_snapping;
       FT_Pos            fit_center;
       FT_Pos            fit_len;
       PSH_AlignmentRec  align;
 
 
       /* ignore stem alignments when requested through the hint flags */
-      if ( ( dimension == 0 && ( hint_flags & FT_HINT_NO_VSTEM_ALIGN ) != 0 ) ||
-           ( dimension == 1 && ( hint_flags & FT_HINT_NO_HSTEM_ALIGN ) != 0 ) )
+      if ( ( dimension == 0 && glyph->no_horz_hints ) ||
+           ( dimension == 1 && glyph->no_vert_hints ) )
       {
         hint->cur_pos = pos;
         hint->cur_len = len;
@@ -409,7 +410,10 @@
       }
 
       /* perform stem snapping when requested */
-      if ( ( hint_flags & FT_HINT_NO_INTEGER_STEM ) == 0 )
+      no_snapping = ( dimension == 0 && !glyph->no_horz_snapping ) ||
+                    ( dimension == 1 && !glyph->no_vert_snapping );
+                    
+      if ( !no_snapping )
       {
         /* compute fitted width/height */
         fit_len = 0;
@@ -468,7 +472,7 @@
 
             /* ensure that parent is already fitted */
             if ( !psh3_hint_is_fitted( parent ) )
-              psh3_hint_align( parent, globals, dimension, hint_flags );
+              psh3_hint_align( parent, globals, dimension, glyph );
 
             par_org_center = parent->org_pos + ( parent->org_len >> 1 );
             par_cur_center = parent->cur_pos + ( parent->cur_len >> 1 );
@@ -478,7 +482,7 @@
             pos       = par_cur_center + cur_delta - ( len >> 1 );
           }
 
-          if ( ( hint_flags & FT_HINT_NO_INTEGER_STEM ) == 0 )
+          if ( !no_snapping )
           {
             /* normal processing */
             if ( fit_len & 64 )
@@ -537,7 +541,7 @@
               FT_Fixed delta_a, delta_b;
 
 
-              if ( ( len / 64 ) & 1 )
+              if ( len & 64 )           
               {
                 delta_a = ( center & -64 ) + 32 - center;
                 delta_b = ( ( center + 32 ) & - 64 ) - center;
@@ -587,7 +591,7 @@
   psh3_hint_table_align_hints( PSH3_Hint_Table  table,
                                PSH_Globals      globals,
                                FT_Int           dimension,
-                               FT_UInt32        hint_flags )
+                               PSH3_Glyph       glyph )
   {
     PSH3_Hint      hint;
     FT_UInt        count;
@@ -617,7 +621,7 @@
     count = table->max_hints;
 
     for ( ; count > 0; count--, hint++ )
-      psh3_hint_align( hint, globals, dimension, hint_flags );
+      psh3_hint_align( hint, globals, dimension, glyph );
   }
 
 
@@ -1675,10 +1679,10 @@
   /*************************************************************************/
 
   FT_Error
-  ps3_hints_apply( PS_Hints     ps_hints,
-                   FT_Outline*  outline,
-                   PSH_Globals  globals,
-                   FT_UInt32    hint_flags )
+  ps3_hints_apply( PS_Hints        ps_hints,
+                   FT_Outline*     outline,
+                   PSH_Globals     globals,
+                   FT_Render_Mode  hint_mode )
   {
     PSH3_GlyphRec  glyphrec;
     PSH3_Glyph     glyph = &glyphrec;
@@ -1706,6 +1710,15 @@
 
 #endif /* DEBUG_HINTER */
 
+    glyph->no_horz_hints = 0;
+    glyph->no_vert_hints = 0;
+    
+    glyph->no_horz_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_NORMAL ||
+                                       hint_mode == FT_RENDER_MODE_LCD_V  );
+
+    glyph->no_vert_snapping = FT_BOOL( hint_mode == FT_RENDER_MODE_NORMAL ||
+                                       hint_mode == FT_RENDER_MODE_LCD    );
+
     error = psh3_glyph_init( glyph, outline, ps_hints, globals );
     if ( error )
       goto Exit;
@@ -1722,7 +1735,7 @@
       psh3_hint_table_align_hints( &glyph->hint_tables[dimension],
                                    glyph->globals,
                                    dimension,
-                                   hint_flags );
+                                   glyph );
 
       /* find strong points, align them, then interpolate others */
       psh3_glyph_find_strong_points( glyph, dimension );

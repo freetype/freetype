@@ -69,7 +69,7 @@
                             FT_GlyphSlot   slot,
                             FT_Size        size,
                             FT_UInt        glyph_index,
-                            FT_ULong       load_flags )
+                            FT_Int32       load_flags )
   {
     return ah_hinter_load_glyph( module->hinter,
                                  slot, size, glyph_index, load_flags );

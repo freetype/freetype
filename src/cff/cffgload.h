@@ -168,15 +168,18 @@ FT_BEGIN_HEADER
     FT_Byte**          glyph_names;   /* for pure CFF fonts only  */
     FT_UInt            num_glyphs;    /* number of glyphs in font */
 
+    FT_Render_Mode     hint_mode;
+
   } CFF_Decoder;
 
 
   FT_LOCAL( void )
-  cff_decoder_init( CFF_Decoder*   decoder,
-                    TT_Face        face,
-                    CFF_Size       size,
-                    CFF_GlyphSlot  slot,
-                    FT_Bool        hinting );
+  cff_decoder_init( CFF_Decoder*    decoder,
+                    TT_Face         face,
+                    CFF_Size        size,
+                    CFF_GlyphSlot   slot,
+                    FT_Bool         hinting,
+                    FT_Render_Mode  hint_mode );
 
   FT_LOCAL( void )
   cff_decoder_prepare( CFF_Decoder*  decoder,
@@ -200,7 +203,7 @@ FT_BEGIN_HEADER
   cff_slot_load( CFF_GlyphSlot  glyph,
                  CFF_Size       size,
                  FT_Int         glyph_index,
-                 FT_Int         load_flags );
+                 FT_Int32       load_flags );
 
 
 FT_END_HEADER

@@ -610,6 +610,7 @@ FT_BEGIN_HEADER
              FT_Byte**            glyph_names,
              PS_Blend             blend,
              FT_Bool              hinting,
+             FT_Render_Mode       hint_mode,
              T1_Decoder_Callback  callback );
 
     void
@@ -652,6 +653,7 @@ FT_BEGIN_HEADER
     PS_Blend             blend;       /* for multiple master support */
 
     FT_UInt32            hint_flags;
+    FT_Render_Mode       hint_mode;
 
     T1_Decoder_Callback  parse_callback;
     T1_Decoder_FuncsRec  funcs;
