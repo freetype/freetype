@@ -294,6 +294,7 @@
       glyph->format        = ft_glyph_format_composite;
       
       loader->current.num_subglyphs = 2;
+      goto Exit;
     }
 
     /* First load `bchar' in builder */
