@@ -20,6 +20,7 @@
 
 
 #include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
 #include "ahglobal.h"
 #include "ahglyph.h"
 
@@ -214,9 +215,9 @@
           } while ( next != index );
 
           /* now, set the `round' flag depending on the segment's kind */
-          round =
+          round = FT_BOOL(
             FT_CURVE_TAG( glyph->outline.tags[prev] ) != FT_Curve_Tag_On ||
-            FT_CURVE_TAG( glyph->outline.tags[next] ) != FT_Curve_Tag_On ;
+            FT_CURVE_TAG( glyph->outline.tags[next] ) != FT_Curve_Tag_On );
 
           AH_LOG(( "%c ", round ? 'r' : 'f' ));
         }
@@ -265,7 +266,7 @@
       {
         FT_Pos   ref      = *blue_ref;
         FT_Pos   shoot    = *blue_shoot;
-        FT_Bool  over_ref = ( shoot > ref );
+        FT_Bool  over_ref = FT_BOOL( shoot > ref );
 
 
         if ( AH_IS_TOP_BLUE( blue ) ^ over_ref )

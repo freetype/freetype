@@ -67,7 +67,7 @@
       for ( count = 4; count > 0; count--, p++ )
       {
         char           c = *p;
-        unsigned char  d;
+        unsigned int   d;
 
 
         d = (unsigned char)c - '0';

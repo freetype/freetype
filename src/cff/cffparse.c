@@ -144,8 +144,8 @@
     FT_Byte*  p    = start;
     FT_Long   num, divider, result, exp;
     FT_Int    sign = 0, exp_sign = 0;
-    FT_Byte   nib;
-    FT_Byte   phase;
+    FT_UInt   nib;
+    FT_UInt   phase;
 
 
     result  = 0;
@@ -495,7 +495,7 @@
 
     while ( p < limit )
     {
-      FT_Byte  v = *p;
+      FT_UInt  v = *p;
 
 
       if ( v >= 27 && v != 31 )

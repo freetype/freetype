@@ -1753,7 +1753,7 @@
             goto Exit;
 
           /* Assign code to GID mapping. */
-          encoding->codes[glyph_code] = j;
+          encoding->codes[glyph_code] = (FT_UShort)j;
 
           /* Assign code to SID mapping. */
           encoding->sids[glyph_code] = charset->sids[j];
@@ -1764,8 +1764,8 @@
       case 1:
         {
           FT_Byte  nleft;
-          FT_Byte  i = 1;
-          FT_Byte  k;
+          FT_UInt  i = 1;
+          FT_UInt  k;
 
 
           /* Parse the Format1 ranges. */
@@ -1786,11 +1786,11 @@
             for ( k = i; k < nleft + i; k++, glyph_code++ )
             {
               /* Make sure k is not too big. */
-              if ( (FT_UInt)k > num_glyphs )
+              if ( k > num_glyphs )
                 goto Exit;
 
               /* Assign code to GID mapping. */
-              encoding->codes[glyph_code] = k;
+              encoding->codes[glyph_code] = (FT_UShort)k;
 
               /* Assign code to SID mapping. */
               encoding->sids[glyph_code] = charset->sids[k];
@@ -1837,7 +1837,7 @@
           }
 
           /* Now, make the assignment. */
-          encoding->codes[glyph_code] = glyph_id;
+          encoding->codes[glyph_code] = (FT_UShort)glyph_id;
         }
       }
     }
@@ -1879,7 +1879,7 @@
               encoding->sids [j] = 0;
             }
             else
-              encoding->codes[j] = i;
+              encoding->codes[j] = (FT_UShort)i;
           }
         }
         break;
@@ -1910,7 +1910,7 @@
               encoding->sids [j] = 0;
             }
             else
-              encoding->codes[j] = i;
+              encoding->codes[j] = (FT_UShort)i;
           }
         }
         break;

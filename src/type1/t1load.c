@@ -1702,7 +1702,7 @@
             if ( strcmp( (const char*)char_name,
                          (const char*)glyph_name ) == 0 )
             {
-              type1->encoding.char_index[charcode] = index;
+              type1->encoding.char_index[charcode] = (FT_UShort)index;
               type1->encoding.char_name [charcode] = (char*)glyph_name;
 
               /* Change min/max encoded char only if glyph name is */

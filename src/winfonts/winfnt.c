@@ -524,7 +524,7 @@
     else
       glyph_index = font->header.default_char - font->header.first_char;
 
-    new_format = font->header.version == 0x300;
+    new_format = FT_BOOL( font->header.version == 0x300 );
     len        = new_format ? 6 : 4;
 
     /* jump to glyph entry */

@@ -282,11 +282,11 @@
     FT_F26Dot6  X;           /* current coordinate during sweep        */
     PProfile    link;        /* link to next profile - various purpose */
     PLong       offset;      /* start of profile's data in render pool */
-    Int         flow;        /* Profile orientation: Asc/Descending    */
-    Long        height;      /* profile's height in scanlines          */
-    Long        start;       /* profile's starting scanline            */
+    int         flow;        /* Profile orientation: Asc/Descending    */
+    long        height;      /* profile's height in scanlines          */
+    long        start;       /* profile's starting scanline            */
 
-    UShort      countL;      /* number of lines to step before this    */
+    unsigned    countL;      /* number of lines to step before this    */
                              /* profile becomes drawable               */
 
     PProfile    next;        /* next profile in same contour, used     */
@@ -947,7 +947,7 @@
         ras.joint = FALSE;
       }
 
-    ras.joint = ( f2 == 0 );
+    ras.joint = (char)( f2 == 0 );
 
     if ( ras.fresh )
     {
@@ -1603,7 +1603,7 @@
     FT_Vector*  limit;
     char*       tags;
 
-    char        tag;       /* current point's state           */
+    unsigned    tag;       /* current point's state           */
 
 
     points = ras.outline.points;
@@ -1808,8 +1808,8 @@
   static
   Bool  Convert_Glyph( RAS_ARGS int  flipped )
   {
-    Short     i;
-    UShort    start;
+    int       i;
+    unsigned  start;
 
     PProfile  lastProfile;
 
@@ -1833,7 +1833,7 @@
       ras.state    = Unknown;
       ras.gProfile = NULL;
 
-      if ( Decompose_Curve( RAS_VARS start, ras.outline.contours[i], flipped ) )
+      if ( Decompose_Curve( RAS_VARS (unsigned short)start, ras.outline.contours[i], flipped ) )
         return FAILURE;
 
       start = ras.outline.contours[i] + 1;
@@ -1859,7 +1859,7 @@
     if ( Finalize_Profile_Table( RAS_VAR ) )
       return FAILURE;
 
-    return ( ras.top < ras.maxBuff ? SUCCESS : FAILURE );
+    return (Bool)( ras.top < ras.maxBuff ? SUCCESS : FAILURE );
   }
 
 
@@ -2058,7 +2058,7 @@
                                       PProfile    right )
   {
     Long   e1, e2;
-    Short  c1, c2;
+    int    c1, c2;
     Byte   f1, f2;
     Byte*  target;
 
@@ -2086,11 +2086,11 @@
       c1 = (Short)( e1 >> 3 );
       c2 = (Short)( e2 >> 3 );
 
-      f1 =    (unsigned char)0xFF >> ( e1 & 7 );
-      f2 = ~( (unsigned char)0x7F >> ( e2 & 7 ) );
+      f1 = (Byte)  ( 0xFF >> ( e1 & 7 ) );
+      f2 = (Byte) ~( 0x7F >> ( e2 & 7 ) );
 
-      if ( ras.gray_min_x > c1 ) ras.gray_min_x = c1;
-      if ( ras.gray_max_x < c2 ) ras.gray_max_x = c2;
+      if ( ras.gray_min_x > c1 ) ras.gray_min_x = (short)c1;
+      if ( ras.gray_max_x < c2 ) ras.gray_max_x = (short)c2;
 
       target = ras.bTarget + ras.traceOfs + c1;
       c2 -= c1;
@@ -2755,7 +2755,7 @@
       Sort( &draw_right );
 
       y_change = (Short)ras.sizeBuff[-ras.numTurns--];
-      y_height = y_change - y;
+      y_height = (Short)(y_change - y);
 
       while ( y < y_change )
       {
@@ -2929,7 +2929,7 @@
         i = ras.band_stack[ras.band_top].y_min;
         j = ras.band_stack[ras.band_top].y_max;
 
-        k = ( i + j ) / 2;
+        k = (Short)(( i + j ) / 2);
 
         if ( ras.band_top >= 7 || k < i )
         {
@@ -2942,7 +2942,7 @@
         ras.band_stack[ras.band_top + 1].y_min = k;
         ras.band_stack[ras.band_top + 1].y_max = j;
 
-        ras.band_stack[ras.band_top].y_max = k - 1;
+        ras.band_stack[ras.band_top].y_max = (Short)(k - 1);
 
         ras.band_top++;
       }
@@ -2980,7 +2980,7 @@
                         ft_outline_high_precision );
     ras.scale_shift    = ras.precision_shift;
     ras.dropOutControl = 2;
-    ras.second_pass    = !( ras.outline.flags & ft_outline_single_pass );
+    ras.second_pass    = (FT_Byte)(!( ras.outline.flags & ft_outline_single_pass ));
 
     /* Vertical Sweep */
     ras.Proc_Sweep_Init = Vertical_Sweep_Init;
@@ -2990,9 +2990,9 @@
 
     ras.band_top            = 0;
     ras.band_stack[0].y_min = 0;
-    ras.band_stack[0].y_max = ras.target.rows - 1;
+    ras.band_stack[0].y_max = (short)(ras.target.rows - 1);
 
-    ras.bWidth  = ras.target.width;
+    ras.bWidth  = (unsigned short)ras.target.width;
     ras.bTarget = (Byte*)ras.target.buffer;
 
     if ( ( error = Render_Single_Pass( RAS_VARS 0 ) ) != 0 )
@@ -3008,7 +3008,7 @@
 
       ras.band_top            = 0;
       ras.band_stack[0].y_min = 0;
-      ras.band_stack[0].y_max = ras.target.width - 1;
+      ras.band_stack[0].y_max = (short)(ras.target.width - 1);
 
       if ( ( error = Render_Single_Pass( RAS_VARS 1 ) ) != 0 )
         return error;

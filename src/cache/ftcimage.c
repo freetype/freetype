@@ -225,7 +225,7 @@
   FT_Bool  ftc_image_set_compare( FTC_ImageSet     iset,
                                   FTC_Image_Desc*  type )
   {
-    return !memcmp( &iset->description, type, sizeof ( *type ) );
+    return FT_BOOL(!memcmp( &iset->description, type, sizeof ( *type ) ));
   }
 
 

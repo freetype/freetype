@@ -388,7 +388,7 @@
         root->bbox         = dict->font_bbox;
         root->ascender     = (FT_Short)( root->bbox.yMax >> 16 );
         root->descender    = (FT_Short)( root->bbox.yMin >> 16 );
-        root->height       = ( ( root->ascender - root->descender ) * 12 ) / 10;
+        root->height       = (FT_Short)(( ( root->ascender - root->descender ) * 12 ) / 10);
 
         if ( dict->units_per_em )
           root->units_per_EM = dict->units_per_em;
@@ -474,8 +474,8 @@
 
 
             charmap->root.face        = (FT_Face)face;
-            charmap->root.platform_id = platform;
-            charmap->root.encoding_id = encoding;
+            charmap->root.platform_id = (FT_UShort)platform;
+            charmap->root.encoding_id = (FT_UShort)encoding;
             charmap->root.encoding    = find_encoding( platform, encoding );
 
             /* now, set root->charmap with a unicode charmap */

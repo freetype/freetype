@@ -1004,10 +1004,10 @@
     FT_Error          error;
     AH_Outline*       outline  = hinter->glyph;
     AH_Loader*        gloader  = hinter->loader;
-    FT_Bool           no_horz_hints =
-                        ( load_flags & AH_HINT_NO_HORZ_EDGES ) != 0;
-    FT_Bool           no_vert_hints =
-                        ( load_flags & AH_HINT_NO_VERT_EDGES ) != 0;
+    FT_Bool           no_horz_hints = FT_BOOL(
+                        ( load_flags & AH_HINT_NO_HORZ_EDGES ) != 0 );
+    FT_Bool           no_vert_hints = FT_BOOL(
+                        ( load_flags & AH_HINT_NO_VERT_EDGES ) != 0 );
 
 
     /* load the glyph */
@@ -1251,7 +1251,7 @@
 
 
             dummy.points  += num_base_points;
-            dummy.n_points = num_new_points;
+            dummy.n_points = (short)num_new_points;
 
             FT_Outline_Translate( &dummy, x, y );
           }

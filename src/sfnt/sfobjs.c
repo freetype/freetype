@@ -277,8 +277,8 @@
     /*                                                             */
 
     /* do we have outlines in there? */
-    has_outline   = ( ( TT_LookUp_Table( face, TTAG_glyf ) != 0 ) ||
-                      ( TT_LookUp_Table( face, TTAG_CFF  ) != 0 ) );
+    has_outline   = FT_BOOL( ( TT_LookUp_Table( face, TTAG_glyf ) != 0 ) ||
+                             ( TT_LookUp_Table( face, TTAG_CFF  ) != 0 ) );
     is_apple_sbit = 0;
     
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
@@ -286,7 +286,7 @@
     /* if this font doesn't contain outlines, we try to load */
     /* a `bhed' table                                        */
     if ( !has_outline )
-      is_apple_sbit = !LOAD_( bitmap_header );
+      is_apple_sbit = FT_BOOL(!LOAD_( bitmap_header ));
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
@@ -437,8 +437,8 @@
 
 
         charmap->root.face        = (FT_Face)face;
-        charmap->root.platform_id = platform;
-        charmap->root.encoding_id = encoding;
+        charmap->root.platform_id = (FT_UShort)platform;
+        charmap->root.encoding_id = (FT_UShort)encoding;
         charmap->root.encoding    = find_encoding( platform, encoding );
 
         /* now, set root->charmap with a unicode charmap */
@@ -538,13 +538,13 @@
         root->ascender  = face->horizontal.Ascender;
         root->descender = face->horizontal.Descender;
 
-        root->height    = root->ascender - root->descender +
-                          face->horizontal.Line_Gap;
+        root->height    = (FT_Short)( root->ascender - root->descender +
+                                      face->horizontal.Line_Gap );
 
         /* if the line_gap is 0, we add an extra 15% to the text height --  */
         /* this computation is based on various versions of Times New Roman */
         if ( face->horizontal.Line_Gap == 0 )
-          root->height = ( root->height * 115 + 50 ) / 100;
+          root->height = (FT_Short)(( root->height * 115 + 50 ) / 100 );
 
 #if 0
 
@@ -567,9 +567,9 @@
 
         root->max_advance_width   = face->horizontal.advance_Width_Max;
 
-        root->max_advance_height  = face->vertical_info
+        root->max_advance_height  = (FT_Short)( face->vertical_info
                                       ? face->vertical.advance_Height_Max
-                                      : root->height;
+                                      : root->height );
 
         root->underline_position  = face->postscript.underlinePosition;
         root->underline_thickness = face->postscript.underlineThickness;

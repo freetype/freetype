@@ -409,7 +409,7 @@
 
       point->x = x >> 16;
       point->y = y >> 16;
-      *control = flag ? FT_Curve_Tag_On : FT_Curve_Tag_Cubic;
+      *control = (FT_Byte)(flag ? FT_Curve_Tag_On : FT_Curve_Tag_Cubic);
 
       builder->last = *point;
     }
@@ -452,7 +452,7 @@
     if ( !error )
     {
       if ( outline->n_contours > 0 )
-        outline->contours[outline->n_contours - 1] = outline->n_points - 1;
+        outline->contours[outline->n_contours - 1] = (short)(outline->n_points - 1);
 
       outline->n_contours++;
     }
@@ -512,7 +512,7 @@
     }
 
     if ( outline->n_contours > 0 )
-      outline->contours[outline->n_contours - 1] = outline->n_points - 1;
+      outline->contours[outline->n_contours - 1] = (short)(outline->n_points - 1);
   }
 
 
@@ -655,7 +655,7 @@
       FT_Outline  dummy;
 
 
-      dummy.n_points = base->n_points - n_base_points;
+      dummy.n_points = (short)(base->n_points - n_base_points);
       dummy.points   = base->points   + n_base_points;
 
       FT_Outline_Translate( &dummy, adx, ady );
@@ -2142,8 +2142,8 @@
     glyph->root.outline.n_points   = 0;
     glyph->root.outline.n_contours = 0;
 
-    hinting = ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
-              ( load_flags & FT_LOAD_NO_HINTING ) == 0;
+    hinting = FT_BOOL( ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
+                       ( load_flags & FT_LOAD_NO_HINTING ) == 0 );
 
     glyph->root.format = ft_glyph_format_outline;  /* by default */
 

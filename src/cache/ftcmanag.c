@@ -74,7 +74,7 @@
   {
     FT_UNUSED( lru );
 
-    return ((FT_Size)node->root.data)->face == (FT_Face)data;
+    return FT_BOOL(((FT_Size)node->root.data)->face == (FT_Face)data);
   }
 
 
@@ -184,9 +184,9 @@
     FT_UNUSED( node );
 
 
-    return ( size->face           == req->face   &&
-             size->metrics.x_ppem == req->width  &&
-             size->metrics.y_ppem == req->height );
+    return FT_BOOL( size->face           == req->face   &&
+                    size->metrics.x_ppem == req->width  &&
+                    size->metrics.y_ppem == req->height );
   }
 
 

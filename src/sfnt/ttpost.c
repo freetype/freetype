@@ -212,7 +212,7 @@
         {
           index -= 257;
           if ( index > num_names )
-            num_names = index;
+            num_names = (FT_UShort)index;
         }
       }
     }
@@ -244,8 +244,8 @@
       TT_Post_20*  table = &face->postscript_names.names.format_20;
 
 
-      table->num_glyphs    = num_glyphs;
-      table->num_names     = num_names;
+      table->num_glyphs    = (FT_UShort)num_glyphs;
+      table->num_names     = (FT_UShort)num_names;
       table->glyph_indices = glyph_indices;
       table->glyph_names   = name_strings;
     }
@@ -319,7 +319,7 @@
       TT_Post_25*  table = &face->postscript_names.names.format_25;
 
 
-      table->num_glyphs = num_glyphs;
+      table->num_glyphs = (FT_UShort)num_glyphs;
       table->offsets    = offset_table;
     }
 

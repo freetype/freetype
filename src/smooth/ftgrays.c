@@ -1308,7 +1308,7 @@
            (int)span->x + span->len == (int)x &&
            span->coverage == coverage )
       {
-        span->len += acount;
+        span->len = (unsigned short)(span->len + acount);
         return;
       }
 
