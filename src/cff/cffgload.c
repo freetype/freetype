@@ -1227,7 +1227,7 @@
             for ( maskbyte = 0;
                   maskbyte < (FT_UInt)(( decoder->num_hints + 7 ) >> 3);
                   maskbyte++, ip++ )
-              FT_TRACE4(( "%02X", *ip ));
+              FT_TRACE4(( "0x%02X", *ip ));
           }
 #else
           ip += ( decoder->num_hints + 7 ) >> 3;

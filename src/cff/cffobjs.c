@@ -376,7 +376,7 @@
 
       if ( pure_cff )
       {
-        char*  style_name;
+        char*  style_name = NULL;
 
 
         /* Set up num_faces. */
@@ -413,36 +413,37 @@
         root->family_name = cff_index_get_name( &cff->name_index,
                                                 face_index );
 
-        /* assume "Regular" style if we don't know better */
-        style_name = (char *)"Regular";
-
         if ( root->family_name )
         {
           char*  full   = cff_index_get_sid_string( &cff->string_index,
                                                     dict->full_name,
                                                     psnames );
+          char*  fullp  = full;
           char*  family = root->family_name;
 
 
           if ( full )
           {
-            while ( *full )
+            while ( *fullp )
             {
-              if ( *full == *family )
+              if ( *fullp == *family )
               {
                 family++;
-                full++;
+                fullp++;
               }
               else
               {
-                if ( *full == ' ' || *full == '-' )
-                  full++;
+                if ( *fullp == ' ' || *fullp == '-' )
+                  fullp++;
                 else if ( *family == ' ' || *family == '-' )
                   family++;
                 else
                 {
                   if ( !*family )
-                    style_name = full;
+                  {
+                    style_name = cff_strcpy( memory, fullp );
+                    FT_FREE( full );
+                  }
                   break;
                 }
               }
@@ -462,7 +463,11 @@
             root->family_name = cid_font_name;
         }
 
-        root->style_name = cff_strcpy( memory, style_name );
+        if ( style_name )
+          root->style_name = style_name;
+        else
+          /* assume "Regular" style if we don't know better */
+          root->style_name = cff_strcpy( memory, (char *)"Regular" );
 
         /*******************************************************************/
         /*                                                                 */
@@ -506,6 +511,7 @@
             if ( !ft_strcmp( weight, "Bold"  ) ||
                  !ft_strcmp( weight, "Black" ) )
               flags |= FT_STYLE_FLAG_BOLD;
+          FT_FREE( weight );
         }
 
         root->style_flags = flags;
