@@ -468,12 +468,21 @@
   *    their own format.
   *
   * <Fields>
+  *    ft_glyph_format_composite :: the glyph image is a composite of several
+  *                                 other images. This glyph format is _only_
+  *                                 used with the FT_LOAD_FLAG_NO_RECURSE flag
+  *                                 (XXX: Which is currently iunimplemented)
+  *
   *    ft_glyph_format_bitmap  :: the glyph image is a bitmap, and can
   *                               be described as a FT_Bitmap
   *
   *    ft_glyph_format_outline :: the glyph image is a vectorial image
   *                               made of bezier control points, and can
   *                               be described as a FT_Outline
+  *
+  *    ft_glyph_format_plotter :: the glyph image is a vectorial image
+  *                               made of plotter lines (some T1 fonts like
+  *                               Hershey contain glyph in this format).
   *
   ***********************************************************************/
   
@@ -482,7 +491,8 @@
     ft_glyph_format_none      = 0,
     ft_glyph_format_composite = FT_IMAGE_TAG('c','o','m','p'),
     ft_glyph_format_bitmap    = FT_IMAGE_TAG('b','i','t','s'),
-    ft_glyph_format_outline   = FT_IMAGE_TAG('o','u','t','l')
+    ft_glyph_format_outline   = FT_IMAGE_TAG('o','u','t','l'),
+    ft_glyph_format_plotter   = FT_IMAGE_TAG('p','l','o','t')
   
   } FT_Glyph_Tag;
 
