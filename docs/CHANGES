@@ -64,6 +64,15 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       an FT_Bitmap structure in 1bpp, 2bpp, 4bpp, or 8bpp format  into
       another 8bpp FT_Bitmap, probably using a different pitch.
 
+    - The method  how BDF and PCF  bitmap fonts  are accessed has been
+      refined.   Formerly,   FT_Set_Pixel_Sizes  and  FT_Set_Char_Size
+      were  synonyms in  FreeType's  BDF and PCF interface.  This  has
+      changed now.  FT_Set_Pixel_Sizes  should be  used to  select the
+      actual  font dimensions  (the `strike',  which is the sum of the
+      `FONT_ASCENT'    and    `FONT_DESCENT'    properties),     while
+      FT_Set_Char_Size  selects  the  `nominal' size  (the `PIXELSIZE'
+      property).  In both functions, the width parameter is ignored.
+
 
   III. MISCELLANEOUS
 
