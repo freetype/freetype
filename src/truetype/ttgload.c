@@ -296,7 +296,6 @@
 
     FT_Byte         *flag, *flag_limit;
     FT_Byte         c, count;
-    FT_Int          n_xlimit;
     FT_Vector       *vec, *vec_limit;
     FT_Pos          x;
     FT_Short        *cont, *cont_limit;
@@ -369,36 +368,10 @@
     stream->cursor += (FT_Int)n_ins;
 
     /* reading the point tags */
-
-    /*********************************************************************/
-    /*                                                                   */
-    /* NOTE:                                                             */
-    /*                                                                   */
-    /* Microsoft documentation says:                                     */
-    /*                                                                   */
-    /* BYTE  flags[n]   Array of flags for each coordinate in outline;   */
-    /*                  `n' is the number of flags.                      */
-    /*                  (But it doesn't say where the `n' comes from.)   */
-    /*                                                                   */
-    /* Apple documentation says:                                         */
-    /*                                                                   */
-    /* uint8  flags[variable]   Array of flags.                          */
-    /*                          (Again it doesn't say where the          */
-    /*                          `variable' comes from)                   */
-    /*                                                                   */
-    /* Most of the time, `n' = `variable' = n_points.  But if a          */
-    /* `repeated flags set' is found (`c & 8' below) the number of       */
-    /* flags sets is smaller than n_points.  So we must carefully read   */
-    /* the flags, avoiding to read beyond the limit of actually stored   */
-    /* bytes.                                                            */
-
     flag       = (FT_Byte*)outline->tags;
     flag_limit = flag + n_points;
 
-    /* scan and expand the flags to reach the first xCoordinate */
-    n_xlimit   = n_points;          /* this is a safety limit for reading */
-
-    for ( ; n_xlimit > 0; n_xlimit-- )
+    while ( flag < flag_limit )
     {
       if ( --byte_len < 0 )
         goto Invalid_Outline;
@@ -413,18 +386,10 @@
         if ( flag + (FT_Int)count > flag_limit )
           goto Invalid_Outline;
 
-        /* adjust n_xlimit by removing the repeated sets */
-        /* from the safety limit                         */
-        n_xlimit -= count;
-
         for ( ; count > 0; count-- )
           *flag++ = c;
       }
     }
-
-    /* check that each point has an associated flags set */
-    if ( flag != flag_limit )
-      goto Invalid_Outline;
 
     /* check that there is enough room to load the coordinates */
     for ( flag = (FT_Byte*)outline->tags; flag < flag_limit; flag++ )

@@ -1,3 +1,8 @@
+2003-12-31  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Revert previous
+	change.  It's not necessary.
+
 2003-12-29  Smith Charles  <smith.charles@free.fr>
 
 	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Handle `repeated
