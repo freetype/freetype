@@ -1,9 +1,15 @@
+2002-06-22  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+    * src/pfr/pfrgload.c (pfr_glyph_load_compound): fixing a small composite
+    glyph loader bug that caused accents to be misplaced in a number of
+    glyphs..
+
 2002-06-21  Sven Neuman   <sven@convergence.de>
 
-        * src/pfr/pfrobjs.h, src/pfr/pfrobjs.c, src/pfr/pfrload.c,
-        src/pfr/pfrtypes.h: adding Kerning support to the PFR driver
+    * src/pfr/pfrobjs.h, src/pfr/pfrobjs.c, src/pfr/pfrload.c,
+    src/pfr/pfrtypes.h: adding Kerning support to the PFR driver
 
-        * README, docs/CHANGES: preparing for the 2.1.2 release
+    * README, docs/CHANGES: preparing for the 2.1.2 release
 
 2002-06-19  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
