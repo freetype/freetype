@@ -110,7 +110,8 @@
                                      &face, &size );
     if ( !error )
     {
-      FT_UInt  gindex     = FTC_GLYPH_NODE_GINDEX( inode );
+      FT_UInt  gindex = FTC_GLYPH_NODE_GINDEX( inode );
+
 
       error = FT_Load_Glyph( face, gindex, ifam->type.flags );
       if ( !error )

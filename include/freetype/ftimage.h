@@ -5,7 +5,7 @@
 /*    FreeType glyph image formats and default raster interface            */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -429,20 +429,21 @@ FT_BEGIN_HEADER
 
  /*************************************************************************
   *
-  * @enum: ft_outline_xxx
+  * @enum:
+  *   ft_outline_xxx
   *
   * @description:
-  *   these constants are deprecated. Please use the corresponding
-  *   @FT_OUTLINE_XXX values
+  *   These constants are deprecated.  Please use the corresponding
+  *   @FT_OUTLINE_XXX values.
   *
   * @values:
-  *   ft_outline_none            :: see @FT_OUTLINE_NONE
-  *   ft_outline_owner           :: see @FT_OUTLINE_OWNER
-  *   ft_outline_even_odd_fill   :: see @FT_OUTLINE_EVEN_ODD_FILL
-  *   ft_outline_reverse_fill    :: see @FT_OUTLINE_REVERSE_FILL
-  *   ft_outline_ignore_dropouts :: see @FT_OUTLINE_IGNORE_DROPOUTS
-  *   ft_outline_high_precision  :: see @FT_OUTLINE_HIGH_PRECISION
-  *   ft_outline_single_pass     :: see @FT_OUTLINE_SINGLE_PASS
+  *   ft_outline_none            :: See @FT_OUTLINE_NONE.
+  *   ft_outline_owner           :: See @FT_OUTLINE_OWNER.
+  *   ft_outline_even_odd_fill   :: See @FT_OUTLINE_EVEN_ODD_FILL.
+  *   ft_outline_reverse_fill    :: See @FT_OUTLINE_REVERSE_FILL.
+  *   ft_outline_ignore_dropouts :: See @FT_OUTLINE_IGNORE_DROPOUTS.
+  *   ft_outline_high_precision  :: See @FT_OUTLINE_HIGH_PRECISION.
+  *   ft_outline_single_pass     :: See @FT_OUTLINE_SINGLE_PASS.
   */
 #define ft_outline_none             FT_OUTLINE_NONE
 #define ft_outline_owner            FT_OUTLINE_OWNER
