@@ -1,5 +1,23 @@
-#ifndef __FT_XFREE86_H__
-#define __FT_XFREE86_H__
+/***************************************************************************/
+/*                                                                         */
+/*  ftxf86.h                                                               */
+/*                                                                         */
+/*    Support functions for X11.                                           */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
+#ifndef __FTXF86_H__
+#define __FTXF86_H__
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -15,21 +33,21 @@ FT_BEGIN_HEADER
   /*    FT_Get_X11_Font_Format                                             */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Returns a string describing the format of a given face as a X11    */
-  /*    FONT_PROPERTY. It should only be used by FreeType 2 font backend   */
-  /*    of the XFree86 font server.                                        */
+  /*    Return a string describing the format of a given face as an X11    */
+  /*    FONT_PROPERTY.  It should only be used by the FreeType 2 font      */
+  /*    backend of the XFree86 font server.                                */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face :: input face handle.                                         */
+  /*    face :: Input face handle.                                         */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    font format string. NULL in case of error.                         */
+  /*    Font format string.  NULL in case of error.                        */
   /*                                                                       */
   FT_EXPORT_DEF( const char* )
-  FT_Get_X11_Font_Format( FT_Face    face );
+  FT_Get_X11_Font_Format( FT_Face  face );
 
  /* */
 
 FT_END_HEADER
 
-#endif /* __FT_XFREE86_H__ */
+#endif /* __FTXF86_H__ */

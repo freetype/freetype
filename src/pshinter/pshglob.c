@@ -488,14 +488,14 @@
 
         for ( ; count2 > 0; count2--, zone2++ )
         {
-          FT_Pos   delta;
+          FT_Pos  Delta;
 
 
-          delta = zone1->org_ref - zone2->org_ref;
-          if ( delta < 0 )
-            delta = -delta;
+          Delta = zone1->org_ref - zone2->org_ref;
+          if ( Delta < 0 )
+            Delta = -Delta;
 
-          if ( FT_MulFix( delta, scale ) < 64 )
+          if ( FT_MulFix( Delta, scale ) < 64 )
           {
             zone1->cur_top    = zone2->cur_top;
             zone1->cur_bottom = zone2->cur_bottom;

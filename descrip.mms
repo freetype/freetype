@@ -36,6 +36,8 @@ all :
         $(MMS)$(MMSQUALIFIERS)
         set default [-.base]
         $(MMS)$(MMSQUALIFIERS)
+        set default [-.bdf]
+        $(MMS)$(MMSQUALIFIERS)
         set default [-.cache]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.cff]
@@ -61,6 +63,8 @@ all :
         set default [-.truetype]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.type1]
+        $(MMS)$(MMSQUALIFIERS)
+        set default [-.type42]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.winfonts]
         $(MMS)$(MMSQUALIFIERS)

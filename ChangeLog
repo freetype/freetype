@@ -1,3 +1,12 @@
+2002-05-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/bdf/descrip.mms, src/type42/descrip.mms: New files.
+	* descrip.mms (all): Updated.
+
+	* src/bdf/bdflib.c (_bdf_parse_glyphs): Fix typo which prevented
+	compilation.
+	* src/pshglob.c (psh_blues_scale_zones): Fix compiler warning.
+
 2002-05-28  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/makefile, builds/amiga/smakefile,
@@ -8,16 +17,16 @@
 
 2005-05-28  David Turner  <david@freetype.org>
 
-    * docs/CHANGES: updating file for upcoming release (2.1.1)
+	* docs/CHANGES: Updating file for next release (2.1.1).
 
-    * src/bdf/bdflib.c: removing compiler warnings
+	* src/bdf/bdflib.c: Removing compiler warnings.
 
 	* include/freetype/ftxf86.h, src/base/ftxf86.c: New files.
-	They provad a new API (FT_Get_X11_Font_Format) an X11-compatible
-	string describing the font format of a given face.  This was put in
-	a new optional base source file, corresponding to a new public
-	header (named FT_XFREE86_H since this function should only be used
-	within the XFree86 font server IMO).
+	They provide a new API (FT_Get_X11_Font_Format) to retrieve an
+	X11-compatible string describing the font format of a given face. 
+	This was put in a new optional base source file, corresponding to a
+	new public header (named FT_XFREE86_H since this function should
+	only be used within the XFree86 font server IMO).
 
 	* include/freetype/config/ftheader.h (FT_XFREE86_H): New macro (not
 	documented yet).
