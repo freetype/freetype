@@ -135,7 +135,7 @@
 
 
   FT_BASE_DEF( FT_Error )
-  FT_GlyphLoader_Create_Extra( FT_GlyphLoader   loader )
+  FT_GlyphLoader_CreateExtra( FT_GlyphLoader   loader )
   {
     FT_Error   error;
     FT_Memory  memory = loader->memory;
@@ -168,7 +168,7 @@
   /* DOESN'T change the number of points within the loader!                */
   /*                                                                       */
   FT_BASE_DEF( FT_Error )
-  FT_GlyphLoader_Check_Points( FT_GlyphLoader   loader,
+  FT_GlyphLoader_CheckPoints( FT_GlyphLoader   loader,
                                FT_UInt          n_points,
                                FT_UInt          n_contours )
   {
@@ -229,7 +229,7 @@
   /* NOT change the number of subglyphs within the loader!            */
   /*                                                                  */
   FT_BASE_DEF( FT_Error )
-  FT_GlyphLoader_Check_Subglyphs( FT_GlyphLoader   loader,
+  FT_GlyphLoader_CheckSubGlyphs( FT_GlyphLoader   loader,
                                   FT_UInt          n_subs )
   {
     FT_Memory  memory = loader->memory;
@@ -304,7 +304,7 @@
 
 
   FT_BASE_DEF( FT_Error )
-  FT_GlyphLoader_Copy_Points( FT_GlyphLoader   target,
+  FT_GlyphLoader_CopyPoints( FT_GlyphLoader   target,
                               FT_GlyphLoader   source )
   {
     FT_Error  error;
@@ -312,7 +312,7 @@
     FT_UInt   num_contours = source->base.outline.n_contours;
 
 
-    error = FT_GlyphLoader_Check_Points( target, num_points, num_contours );
+    error = FT_GlyphLoader_CheckPoints( target, num_points, num_contours );
     if ( !error )
     {
       FT_Outline*  out = &target->base.outline;

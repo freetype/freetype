@@ -815,7 +815,7 @@
 
 
     /* set `extra' in glyph loader */
-    error = FT_GlyphLoader_Create_Extra( FT_DRIVER( driver )->glyph_loader );
+    error = FT_GlyphLoader_CreateExtra( FT_DRIVER( driver )->glyph_loader );
 
     /* init extension registry if needed */
 

@@ -50,12 +50,12 @@ FT_BEGIN_HEADER
   #define ah_loader_done             FT_GlyphLoader_Done
   #define ah_loader_reset            FT_GlyphLoader_Reset
   #define ah_loader_rewind           FT_GlyphLoader_Rewind
-  #define ah_loader_create_extra     FT_GlyphLoader_Create_Extra
-  #define ah_loader_check_points     FT_GlyphLoader_Check_Points
-  #define ah_loader_check_subglyphs  FT_GlyphLoader_Check_Subglyphs
+  #define ah_loader_create_extra     FT_GlyphLoader_CreateExtra
+  #define ah_loader_check_points     FT_GlyphLoader_CheckPoints
+  #define ah_loader_check_subglyphs  FT_GlyphLoader_CheckSubGlyphs
   #define ah_loader_prepare          FT_GlyphLoader_Prepare
   #define ah_loader_add              FT_GlyphLoader_Add
-  #define ah_loader_copy_points      FT_GlyphLoader_Copy_Points
+  #define ah_loader_copy_points      FT_GlyphLoader_CopyPoints
 
 
 FT_END_HEADER

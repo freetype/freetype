@@ -50,6 +50,9 @@
           src/base/ftnames.c, src/cff/cffdrivr.c,
           src/sfnt/*.c, src/truetype/*.c: updated SFNT/TrueType type
           definitions
+
+        * include/freetype/freetype.h, include/freetype/internal/ftgloadr.h:
+          updating type defintiions for the glyph loader
                     
 
 2002-03-13  Antoine Leca    <antoine@oriolnet.com>
