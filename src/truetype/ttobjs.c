@@ -201,10 +201,15 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
         if ( !face->root.incremental_interface )
           error = TT_Load_Locations( face, stream );
-		if ( !error )
-#endif
+        if ( !error )
           error = TT_Load_CVT      ( face, stream ) ||
                   TT_Load_Programs ( face, stream );
+#else
+        if ( !error )
+          error = TT_Load_Locations( face, stream ) ||
+                  TT_Load_CVT      ( face, stream ) ||
+                  TT_Load_Programs ( face, stream );
+#endif
       }
 
     /* initialize standard glyph loading routines */
