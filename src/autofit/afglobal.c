@@ -19,6 +19,7 @@
 #include "afglobal.h"
 #include "afdummy.h"
 #include "aflatin.h"
+#include "aferrors.h"
 
 
   /* populate this list when you add new scripts */
@@ -57,7 +58,7 @@
   static FT_Error
   af_face_globals_compute_script_coverage( AF_FaceGlobals  globals )
   {
-    FT_Error    error       = FT_Err_Ok;
+    FT_Error    error       = AF_Err_Ok;
     FT_Face     face        = globals->face;
     FT_CharMap  old_charmap = face->charmap;
     FT_Byte*    gscripts    = globals->glyph_scripts;
@@ -76,7 +77,7 @@
       *  Ignore this error; we simply use Latin as the standard
       *  script.  XXX: Shouldn't we rather disable hinting?
       */
-      error = FT_Err_Ok;
+      error = AF_Err_Ok;
       goto Exit;
     }
 
@@ -219,12 +220,12 @@
     AF_ScriptMetrics  metrics = NULL;
     FT_UInt           index;
     AF_ScriptClass    clazz;
-    FT_Error          error = 0;
+    FT_Error          error = AF_Err_Ok;
 
 
     if ( gindex >= globals->glyph_count )
     {
-      error = FT_Err_Invalid_Argument;
+      error = AF_Err_Invalid_Argument;
       goto Exit;
     }
 

@@ -35,8 +35,9 @@ AUTOF_DRV_SRC := $(AUTOF_DIR)/afangles.c \
 
 # AUTOF driver headers
 #
-AUTOF_DRV_H := $(AUTOF_DRV_SRC:%c=%h) \
-               $(AUTOF_DIR)/aftypes.h
+AUTOF_DRV_H := $(AUTOF_DRV_SRC:%c=%h)  \
+               $(AUTOF_DIR)/aftypes.h  \
+               $(AUTOF_DIR)/aferrors.h
 
 
 # AUTOF driver object(s)
