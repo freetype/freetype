@@ -140,6 +140,9 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       - The  demo programs  have been  updated to  the new  code.  The
         previous versions will not work with the current one.
 
+      - Using  an invalid face  index in FT_Open_Face and friends  now
+        causes an error even if the font contains a single face only.
+
 
   III. MISCELLANEOUS
 

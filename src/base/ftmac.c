@@ -611,6 +611,14 @@
       args.driver = FT_Get_Module( library, driver_name );
     }
 
+    /* At this point, face_index has served its purpose;      */
+    /* whoever calls this function has already used it to     */
+    /* locate the correct font data.  We should not propagate */
+    /* this index to FT_Open_Face() (unless it is negative).  */
+
+    if ( face_index > 0 )
+      face_index = 0;
+
     error = FT_Open_Face( library, &args, face_index, aface );
     if ( error == FT_Err_Ok )
       (*aface)->face_flags &= ~FT_FACE_FLAG_EXTERNAL_STREAM;
