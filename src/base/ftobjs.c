@@ -25,7 +25,6 @@
 #include FT_TRUETYPE_TABLES_H
 #include FT_OUTLINE_H
 
-
   FT_BASE_DEF( void )
   ft_validator_init( FT_Validator        valid,
                      const FT_Byte*      base,
@@ -700,11 +699,6 @@
              FT_Long        face_index,
              FT_Int         num_params,
              FT_Parameter*  params,
-
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-             FT_Incremental_Interface*  incremental_interface,
-#endif
-
              FT_Face*       aface )
   {
     FT_Memory         memory;
@@ -712,7 +706,6 @@
     FT_Face           face = 0;
     FT_Error          error;
     FT_Face_Internal  internal;
-
 
     clazz  = driver->clazz;
     memory = driver->root.memory;
@@ -729,8 +722,15 @@
     face->driver   = driver;
     face->memory   = memory;
     face->stream   = stream;
+
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    face->incremental_interface = incremental_interface;
+	{
+    int i;
+    face->internal->incremental_interface = 0;
+    for (i = 0; i < num_params && !face->internal->incremental_interface; i++)
+      if (params[i].tag == FT_PARAM_TAG_INCREMENTAL)
+        face->internal->incremental_interface = params[i].data;
+	}
 #endif
 
     error = clazz->init_face( stream,
@@ -874,14 +874,8 @@
       /* not all modules are drivers, so check... */
       if ( FT_MODULE_IS_DRIVER( driver ) )
       {
-        FT_Int         num_params = 0;
-        FT_Parameter*  params     = 0;
-
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-        FT_Incremental_Interface*  incremental_interface =
-          ( args->flags & ft_open_incremental ) ? args->incremental_interface
-                                                : 0;
-#endif
+        FT_Int                        num_params = 0;
+        FT_Parameter*                 params     = 0;
 
         if ( args->flags & ft_open_params )
         {
@@ -889,14 +883,8 @@
           params     = args->params;
         }
 
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-        error = open_face( driver, stream, face_index,
-                           num_params, params, incremental_interface, &face );
-#else
         error = open_face( driver, stream, face_index,
                            num_params, params, &face );
-#endif
-
         if ( !error )
           goto Success;
       }
@@ -921,12 +909,6 @@
           FT_Int         num_params = 0;
           FT_Parameter*  params     = 0;
 
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-          FT_Incremental_Interface* incremental_interface =
-            ( args->flags & ft_open_incremental ) ? args->incremental_interface
-                                                  : 0;
-#endif
-
           driver = FT_DRIVER( cur[0] );
 
           if ( args->flags & ft_open_params )
@@ -935,14 +917,8 @@
             params     = args->params;
           }
 
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-          error = open_face( driver, stream, face_index,
-                            num_params, params, incremental_interface, &face );
-#else
           error = open_face( driver, stream, face_index,
                             num_params, params, &face );
-#endif
-
           if ( !error )
             goto Success;
 

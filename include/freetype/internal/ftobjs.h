@@ -36,6 +36,10 @@
 #include FT_INTERNAL_AUTOHINT_H
 #include FT_INTERNAL_OBJECT_H
 
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+#include FT_INCREMENTAL_H
+#endif
+
 FT_BEGIN_HEADER
 
 
@@ -296,6 +300,13 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    postscript_name  :: Postscript font name for this face.            */
   /*                                                                       */
+  /*    incremental_interface :: If non-null, the interface through        */
+  /*                        which glyph data and metrics are loaded        */
+  /*                        incrementally for faces that do not provide    */
+  /*                        all of this data when first opened.            */
+  /*                        This field exists only if					   */
+  /*                        @FT_CONFIG_OPTION_INCREMENTAL is defined.      */
+  /*                                                                       */
   typedef struct  FT_Face_InternalRec_
   {
     FT_UShort    max_points;
@@ -308,6 +319,10 @@ FT_BEGIN_HEADER
     FT_UInt32    hint_flags;
 
     const char*  postscript_name;
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    FT_Incremental_InterfaceRec*  incremental_interface;
+#endif
 
   } FT_Face_InternalRec;
 

@@ -499,6 +499,8 @@
 
 #define FT_XFREE86_H               <freetype/ftxf86.h>
 
+#define FT_INCREMENTAL_H           <freetype/ftincrem.h>
+
   /* now include internal headers definitions from <freetype/internal/...> */
 
 #define  FT_INTERNAL_INTERNAL_H    <freetype/internal/internal.h>
