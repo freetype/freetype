@@ -665,7 +665,7 @@
         }
 
         /* convert to integer pixels if needed */
-        if ( !( bbox_mode & ft_glyph_bbox_subpixels ) )
+        if ( bbox_mode & ft_glyph_bbox_truncate )
         {
           cbox->xMin >>= 6;
           cbox->yMin >>= 6;
@@ -792,8 +792,9 @@
       goto Exit;
 
     /* prepare dummy slot for rendering */
-    error = clazz->glyph_prepare( glyph, &dummy ) ||
-            FT_Render_Glyph_Internal( glyph->library, &dummy, render_mode );
+    error = clazz->glyph_prepare( glyph, &dummy );
+    if (!error)
+      error = FT_Render_Glyph_Internal( glyph->library, &dummy, render_mode );
 
     if ( !destroy && origin )
     {
@@ -1067,11 +1068,21 @@
     }
 
     /* test orientation of the xmin */
-    return ft_test_extrema( outline, indices.xMin ) ||
-           ft_test_extrema( outline, indices.yMin ) ||
-           ft_test_extrema( outline, indices.xMax ) ||
-           ft_test_extrema( outline, indices.yMax ) ||
-           1;  /* this is an empty glyph? */
+    n = ft_test_extrema( outline, indices.xMin );
+    if (n) goto Exit;
+    
+    n = ft_test_extrema( outline, indices.yMin );
+    if (n) goto Exit;
+    
+    n = ft_test_extrema( outline, indices.xMax );
+    if (n) goto Exit;
+    
+    n = ft_test_extrema( outline, indices.yMax );
+    if (!n)
+      n = 1;
+
+  Exit:
+    return n;
   }
 
 
