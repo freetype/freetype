@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 Glyph Loader (body).                                 */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -40,20 +40,20 @@
   cid_load_glyph( T1_Decoder  decoder,
                   FT_UInt     glyph_index )
   {
-    CID_Face   face = (CID_Face)decoder->builder.face;
+    CID_Face      face = (CID_Face)decoder->builder.face;
     CID_FaceInfo  cid  = &face->cid;
-    FT_Byte*   p;
-    FT_UInt    entry_len = cid->fd_bytes + cid->gd_bytes;
-    FT_UInt    fd_select;
-    FT_ULong   off1, glyph_len;
-    FT_Stream  stream = face->root.stream;
-    FT_Error   error  = 0;
+    FT_Byte*      p;
+    FT_UInt       entry_len = cid->fd_bytes + cid->gd_bytes;
+    FT_UInt       fd_select;
+    FT_ULong      off1, glyph_len;
+    FT_Stream     stream = face->root.stream;
+    FT_Error      error  = 0;
 
 
     /* read the CID font dict index and charstring offset from the CIDMap */
     if ( FT_STREAM_SEEK( cid->data_offset + cid->cidmap_offset +
-                    glyph_index * entry_len )               ||
-         FT_FRAME_ENTER( 2 * entry_len )                      )
+                         glyph_index * entry_len )               ||
+         FT_FRAME_ENTER( 2 * entry_len )                         )
       goto Exit;
 
     p = (FT_Byte*)stream->cursor;
@@ -68,10 +68,10 @@
     /* the charstrings                                                   */
     if ( glyph_len > 0 )
     {
-      CID_FaceDict   dict;
-      CID_Subrs      cid_subrs = face->subrs + fd_select;
-      FT_Byte*       charstring;
-      FT_Memory      memory = face->root.memory;
+      CID_FaceDict  dict;
+      CID_Subrs     cid_subrs = face->subrs + fd_select;
+      FT_Byte*      charstring;
+      FT_Memory     memory = face->root.memory;
 
 
       /* setup subrs */
@@ -92,9 +92,10 @@
       if ( FT_ALLOC( charstring, glyph_len ) )
         goto Exit;
 
-      if ( !FT_STREAM_READ_AT( cid->data_offset + off1, charstring, glyph_len ) )
+      if ( !FT_STREAM_READ_AT( cid->data_offset + off1,
+                               charstring, glyph_len ) )
       {
-        FT_Int cs_offset;
+        FT_Int  cs_offset;
 
 
         /* Adjustment for seed bytes. */
@@ -142,9 +143,9 @@
   CID_Compute_Max_Advance( CID_Face  face,
                            FT_Int*   max_advance )
   {
-    FT_Error    error;
+    FT_Error       error;
     T1_DecoderRec  decoder;
-    FT_Int      glyph_index;
+    FT_Int         glyph_index;
 
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
@@ -207,10 +208,10 @@
                   FT_Int         glyph_index,
                   FT_Int         load_flags )
   {
-    FT_Error    error;
+    FT_Error       error;
     T1_DecoderRec  decoder;
-    CID_Face    face = (CID_Face)glyph->root.face;
-    FT_Bool     hinting;
+    CID_Face       face = (CID_Face)glyph->root.face;
+    FT_Bool        hinting;
 
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
     FT_Matrix      font_matrix;

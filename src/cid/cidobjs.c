@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID objects manager (body).                                          */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -131,10 +131,10 @@
 
     if ( funcs )
     {
-      PSH_Globals    globals;
-      CID_Face       face = (CID_Face)size->root.face;
+      PSH_Globals   globals;
+      CID_Face      face = (CID_Face)size->root.face;
       CID_FaceDict  dict = face->cid.font_dicts + face->root.face_index;
-      PS_Private     priv = &dict->private_dict;
+      PS_Private    priv = &dict->private_dict;
 
 
       error = funcs->create( size->root.face->memory, priv, &globals );
@@ -162,14 +162,11 @@
   }
 
 
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                           FACE  FUNCTIONS                             */
   /*                                                                       */
   /*************************************************************************/
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -199,7 +196,7 @@
       /* release subrs */
       if ( face->subrs )
       {
-        FT_Int      n;
+        FT_Int  n;
         
 
         for ( n = 0; n < cid->num_dicts; n++ )
@@ -269,7 +266,7 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    FT_Error             error;
+    FT_Error          error;
     PSNames_Service   psnames;
     PSAux_Service     psaux;
     PSHinter_Service  pshinter;
@@ -386,7 +383,6 @@
         root->bbox.xMax = (face->cid.font_bbox.xMax + 0xFFFFU) >> 16;
         root->bbox.yMax = (face->cid.font_bbox.yMax + 0xFFFFU) >> 16;
 
-
         if ( !root->units_per_EM )
           root->units_per_EM  = 1000;
 
@@ -394,7 +390,6 @@
         root->descender = (FT_Short)( root->bbox.yMin );
         root->height    = (FT_Short)(
           ( ( root->ascender + root->descender ) * 12 ) / 10 );
-
 
         root->underline_position  = face->cid.font_info.underline_position;
         root->underline_thickness = face->cid.font_info.underline_thickness;

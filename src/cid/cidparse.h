@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 parser (specification).                              */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -39,7 +39,7 @@ FT_BEGIN_HEADER
   /*    quickly.                                                           */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    root           :: the root PS_ParserRec fields                        */
+  /*    root           :: The root PS_ParserRec fields.                    */
   /*                                                                       */
   /*    stream         :: The current input stream.                        */
   /*                                                                       */
@@ -65,16 +65,16 @@ FT_BEGIN_HEADER
 
     FT_ULong      data_offset;
 
-    CID_FaceInfo     cid;
+    CID_FaceInfo  cid;
     FT_Int        num_dict;
 
   } CID_Parser;
 
 
   FT_LOCAL( FT_Error )
-  CID_New_Parser( CID_Parser*       parser,
-                  FT_Stream         stream,
-                  FT_Memory         memory,
+  CID_New_Parser( CID_Parser*    parser,
+                  FT_Stream      stream,
+                  FT_Memory      memory,
                   PSAux_Service  psaux );
 
   FT_LOCAL( void )
@@ -90,21 +90,21 @@ FT_BEGIN_HEADER
 #define CID_Skip_Spaces( p )  (p)->root.funcs.skip_spaces( &(p)->root )
 #define CID_Skip_Alpha( p )   (p)->root.funcs.skip_alpha ( &(p)->root )
 
-#define CID_ToInt( p )       (p)->root.funcs.to_int( &(p)->root )
-#define CID_ToFixed( p, t )  (p)->root.funcs.to_fixed( &(p)->root, t )
+#define CID_ToInt( p )        (p)->root.funcs.to_int( &(p)->root )
+#define CID_ToFixed( p, t )   (p)->root.funcs.to_fixed( &(p)->root, t )
 
-#define CID_ToCoordArray( p, m, c )    \
+#define CID_ToCoordArray( p, m, c )                          \
           (p)->root.funcs.to_coord_array( &(p)->root, m, c )
-#define CID_ToFixedArray( p, m, f, t ) \
+#define CID_ToFixedArray( p, m, f, t )                          \
           (p)->root.funcs.to_fixed_array( &(p)->root, m, f, t )
-#define CID_ToToken( p, t )            \
+#define CID_ToToken( p, t )                         \
           (p)->root.funcs.to_token( &(p)->root, t )
-#define CID_ToTokenArray( p, t, m, c ) \
+#define CID_ToTokenArray( p, t, m, c )                          \
           (p)->root.funcs.to_token_array( &(p)->root, t, m, c )
 
-#define CID_Load_Field( p, f, o )       \
+#define CID_Load_Field( p, f, o )                              \
           (p)->root.funcs.load_field( &(p)->root, f, o, 0, 0 )
-#define CID_Load_Field_Table( p, f, o ) \
+#define CID_Load_Field_Table( p, f, o )                              \
           (p)->root.funcs.load_field_table( &(p)->root, f, o, 0, 0 )
 
 
