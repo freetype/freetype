@@ -6,6 +6,9 @@ LATEST CHANGES BETWEEN 2.1.6 and 2.1.5
     - The PFR  font driver didn't  load kerning tables  correctly, and
       the functions in FT_PFR_H didn't work at all.
 
+    - Type 1 font  files in  binary format  (PFB) with  an end-of-file
+      indicator weren't accepted by the FreeType engine.
+
   II. IMPORTANT CHANGES
 
     - The internal  module API  has been heavily  changed in  favor of
