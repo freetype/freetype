@@ -218,13 +218,13 @@ FT_BEGIN_HEADER
   /*                                                                 */
 #ifdef __cplusplus
 
-#define FT_CALLBACK_DEF             extern "C"
+#define FT_CALLBACK_DEF( x )        extern "C" x
 #define FT_CALLBACK_TABLE           extern "C"
 #define FT_CALLBACK_TABLE_DEF       extern "C"
 
 #else
 
-#define FT_CALLBACK_DEF             static
+#define FT_CALLBACK_DEF( x )        static x
 #define FT_CALLBACK_TABLE           extern
 #define FT_CALLBACK_TABLE_DEF
 
