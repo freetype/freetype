@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000 by
+# Copyright 2000 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -26,7 +26,7 @@ Cache_COMPILE := $(FT_COMPILE)
 
 # Cache driver sources (i.e., C files)
 #
-Cache_DRV_SRC := $(Cache_DIR_)ftlru.c   \
+Cache_DRV_SRC := $(Cache_DIR_)ftlru.c    \
                  $(Cache_DIR_)ftcmanag.c \
                  $(Cache_DIR_)ftcimage.c
 

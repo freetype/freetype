@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftcimage.h                                                             */
 /*                                                                         */
-/*    FreeType Image Cache                                                 */
+/*    FreeType Image Cache (specification).                                */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -42,7 +42,7 @@
     
   typedef struct  FTC_ImageNodeRec_
   {
-    /* root1.data contains a FT_Glyph handle           */
+    /* root1.data contains an FT_Glyph handle          */
     FT_ListNodeRec  root1;
 
     /* root2.data contains a glyph index + queue index */
@@ -54,8 +54,12 @@
   /* macros to read/set the glyph & queue index in a FTC_ImageNode */
 #define FTC_IMAGENODE_GET_GINDEX( n )  FTC_PTR_TO_GINDEX( (n)->root2.data )
 #define FTC_IMAGENODE_GET_QINDEX( n )  FTC_PTR_TO_QINDEX( (n)->root2.data )
-#define FTC_IMAGENODE_GET_GLYPH(n)     ((FT_Glyph)(n)->root1.data)
-#define FTC_IMAGENODE_SET_GLYPH(n,g)   do { (n)->root1.data = g; } while (0)
+#define FTC_IMAGENODE_GET_GLYPH( n )   ( (FT_Glyph)(n)->root1.data )
+#define FTC_IMAGENODE_SET_GLYPH( n, g ) \
+          do                            \
+          {                             \
+            (n)->root1.data = g;        \
+          } while ( 0 )
 #define FTC_IMAGENODE_SET_INDICES( n, g, q )              \
           do                                              \
           {                                               \
@@ -64,26 +68,27 @@
 
 
   /* this macro is used to extract a handle to the global LRU list node */
-  /* corresponding to a given image node..                              */
-#define FTC_IMAGENODE_TO_LISTNODE(n)  \
-             ((FT_ListNode)&(n)->root2)
+  /* corresponding to a given image node                                */
+#define FTC_IMAGENODE_TO_LISTNODE( n ) \
+          ( (FT_ListNode)&(n)->root2 )
 
   /* this macro is used to extract a handle to a given image node from */
   /* the corresponding LRU glyph list node. That's a bit hackish..     */
-#define FTC_LISTNODE_TO_IMAGENODE(p)  \
-             ((FTC_ImageNode)((char*)(p) - offsetof(FTC_ImageNodeRec,root2)))
+#define FTC_LISTNODE_TO_IMAGENODE( p )                              \
+          ( (FTC_ImageNode)( (char*)(p) -                           \
+                             offsetof( FTC_ImageNodeRec,root2 ) ) )
 
 
   typedef struct  FTC_Image_CacheRec_
   {
-    FTC_Manager  manager;
-    FT_Memory    memory;
+    FTC_Manager      manager;
+    FT_Memory        memory;
     
-    FT_ULong     max_bytes;   /* maximum size of cache in bytes */
-    FT_ULong     num_bytes;   /* current size of cache in bytes */
+    FT_ULong         max_bytes;   /* maximum size of cache in bytes */
+    FT_ULong         num_bytes;   /* current size of cache in bytes */
     
-    FT_Lru       queues_lru;   /* static queues lru list          */
-    FT_ListRec   glyphs_lru;   /* global lru list of glyph images */
+    FT_Lru           queues_lru;  /* static queues lru list          */
+    FT_ListRec       glyphs_lru;  /* global lru list of glyph images */
     
     FTC_Image_Queue  last_queue;  /* small cache */
 

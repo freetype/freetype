@@ -28,7 +28,6 @@
 #endif
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -87,20 +86,25 @@
   /*                                                                       */
   /*************************************************************************/
 
-#define CID_Skip_Spaces(p)   (p)->root.funcs.skip_spaces( &(p)->root )
-#define CID_Skip_Alpha(p)    (p)->root.funcs.skip_alpha ( &(p)->root )
+#define CID_Skip_Spaces( p )  (p)->root.funcs.skip_spaces( &(p)->root )
+#define CID_Skip_Alpha( p )   (p)->root.funcs.skip_alpha ( &(p)->root )
 
-#define CID_ToInt(p)        (p)->root.funcs.to_int( &(p)->root )
-#define CID_ToFixed(p,t)    (p)->root.funcs.to_fixed( &(p)->root, t )
+#define CID_ToInt( p )       (p)->root.funcs.to_int( &(p)->root )
+#define CID_ToFixed( p, t )  (p)->root.funcs.to_fixed( &(p)->root, t )
 
-#define CID_ToCoordArray(p,m,c)     (p)->root.funcs.to_coord_array( &(p)->root, m, c )
-#define CID_ToFixedArray(p,m,f,t)   (p)->root.funcs.to_fixed_array( &(p)->root, m, f, t )
-#define CID_ToToken(p,t)            (p)->root.funcs.to_token( &(p)->root, t )
-#define CID_ToTokenArray(p,t,m,c)   (p)->root.funcs.to_token_array( &(p)->root, t, m, c )
+#define CID_ToCoordArray( p, m, c )    \
+          (p)->root.funcs.to_coord_array( &(p)->root, m, c )
+#define CID_ToFixedArray( p, m, f, t ) \
+          (p)->root.funcs.to_fixed_array( &(p)->root, m, f, t )
+#define CID_ToToken( p, t )            \
+          (p)->root.funcs.to_token( &(p)->root, t )
+#define CID_ToTokenArray( p, t, m, c ) \
+          (p)->root.funcs.to_token_array( &(p)->root, t, m, c )
 
-#define CID_Load_Field(p,f,o)       (p)->root.funcs.load_field( &(p)->root, f, o, 0, 0 )
-#define CID_Load_Field_Table(p,f,o) (p)->root.funcs.load_field_table( &(p)->root, f, o, 0, 0 )
-
+#define CID_Load_Field( p, f, o )       \
+          (p)->root.funcs.load_field( &(p)->root, f, o, 0, 0 )
+#define CID_Load_Field_Table( p, f, o ) \
+          (p)->root.funcs.load_field_table( &(p)->root, f, o, 0, 0 )
 
 
 #ifdef __cplusplus

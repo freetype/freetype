@@ -47,7 +47,6 @@
 #define FT_COMPONENT  trace_cidparse
 
 
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -69,6 +68,7 @@
     FT_ULong  base_offset, offset, ps_len;
     FT_Byte   buffer[256 + 10];
     FT_Int    buff_len;
+
 
     MEM_Set( parser, 0, sizeof ( *parser ) );
     psaux->t1_parser_funcs->init( &parser->root, 0, 0, memory );
@@ -97,6 +97,7 @@
     for (;;)
     {
       FT_Byte  *p, *limit = buffer + 256;
+
 
       /* fill input buffer */
       buff_len -= 256;

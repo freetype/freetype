@@ -69,4 +69,5 @@
   T1_FIELD_NUM( "FontType", font_type )
   T1_FIELD_NUM( "StrokeWidth", stroke_width )
 
+
 /* END */

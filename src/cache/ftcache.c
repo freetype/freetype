@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  ftcache.c                                                              */
 /*                                                                         */
-/*    The FreeType Caching sub-system                                      */
+/*    The FreeType Caching sub-system (body only).                         */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */

@@ -372,7 +372,9 @@
                   /* we found it - run the parsing callback */
                   parser->root.cursor = cur2;
                   CID_Skip_Spaces( parser );
-                  parser->root.error = cid_load_keyword( face, loader, keyword );
+                  parser->root.error = cid_load_keyword( face,
+                                                         loader,
+                                                         keyword );
                   if ( parser->root.error )
                     return parser->root.error;
 

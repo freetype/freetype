@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftcmanag.h                                                             */
 /*                                                                         */
-/*    FreeType Cache Manager                                               */
+/*    FreeType Cache Manager (specification).                              */
 /*                                                                         */
 /*  Copyright 2000 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */

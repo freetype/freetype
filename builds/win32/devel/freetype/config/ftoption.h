@@ -349,7 +349,7 @@
   /* T1_MAX_SUBRS_CALLS details the maximum number of nested sub-routine   */
   /* calls during glyph loading.                                           */
   /*                                                                       */
-#define T1_MAX_SUBRS_CALLS  8
+#define T1_MAX_SUBRS_CALLS  16
 
 
   /*************************************************************************/
@@ -357,7 +357,7 @@
   /* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity.  A     */
   /* minimum of 16 is required.                                            */
   /*                                                                       */
-#define T1_MAX_CHARSTRINGS_OPERANDS  32
+#define T1_MAX_CHARSTRINGS_OPERANDS  64
 
 
   /*************************************************************************/
