@@ -22,7 +22,6 @@
 
 #include "sfdriver.h"
 #include "ttload.h"
-#include "ttcmap.h"
 #include "sfobjs.h"
 
 #include "sferrors.h"
@@ -360,9 +359,6 @@
 
 #endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
-    /* see `ttcmap.h' */
-    tt_face_load_charmap,
-    tt_face_free_charmap,
   };
 
 

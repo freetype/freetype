@@ -364,57 +364,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_CharMap_Load_Func                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads a given TrueType character map into memory.                  */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face   :: A handle to the parent face object.                      */
-  /*                                                                       */
-  /*    stream :: A handle to the current stream object.                   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    cmap   :: A pointer to a cmap object.                              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The function assumes that the stream is already in use (i.e.,      */
-  /*    opened).  In case of error, all partially allocated tables are     */
-  /*    released.                                                          */
-  /*                                                                       */
-  typedef FT_Error
-  (*TT_CharMap_Load_Func)( TT_Face       face,
-                           TT_CMapTable  cmap,
-                           FT_Stream     input );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <FuncType>                                                            */
-  /*    TT_CharMap_Free_Func                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Destroys a character mapping table.                                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face :: A handle to the parent face object.                        */
-  /*                                                                       */
-  /*    cmap :: A handle to a cmap object.                                 */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  typedef FT_Error
-  (*TT_CharMap_Free_Func)( TT_Face       face,
-                           TT_CMapTable  cmap );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <FuncType>                                                            */
   /*    TT_Load_Table_Func                                                 */
   /*                                                                       */
   /* <Description>                                                         */
@@ -509,10 +458,6 @@ FT_BEGIN_HEADER
     /* see `ttpost.h' */
     TT_Get_PS_Name_Func          get_psname;
     TT_Free_Table_Func           free_psnames;
-
-    /* see `ttcmap.h' */
-    TT_CharMap_Load_Func         load_charmap;
-    TT_CharMap_Free_Func         free_charmap;
 
   } SFNT_Interface;
 
