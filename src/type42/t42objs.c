@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 42 objects manager (body).                                      */
 /*                                                                         */
-/*  Copyright 2002, 2003 by Roberto Alameda.                               */
+/*  Copyright 2002, 2003, 2004 by Roberto Alameda.                         */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */
@@ -281,8 +281,8 @@
     root->max_advance_width  = face->ttf_face->max_advance_width;
     root->max_advance_height = face->ttf_face->max_advance_height;
 
-    root->underline_position  = (FT_Short)( info->underline_position >> 16 );
-    root->underline_thickness = (FT_Short)( info->underline_thickness >> 16 );
+    root->underline_position  = (FT_Short)info->underline_position;
+    root->underline_thickness = (FT_Short)info->underline_thickness;
 
     root->internal->max_points   = 0;
     root->internal->max_contours = 0;

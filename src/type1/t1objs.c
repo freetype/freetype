@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 objects manager (body).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -431,10 +431,8 @@
 
       root->max_advance_height = root->height;
 
-      root->underline_position =
-        (FT_Short)( info->underline_position >> 16 );
-      root->underline_thickness =
-        (FT_Short)( info->underline_thickness >> 16 );
+      root->underline_position  = (FT_Short)info->underline_position;
+      root->underline_thickness = (FT_Short)info->underline_thickness;
 
       root->internal->max_points   = 0;
       root->internal->max_contours = 0;
