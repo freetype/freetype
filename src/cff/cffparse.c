@@ -338,7 +338,6 @@
       temp = ABS( matrix->yy );
 
       *upm = (FT_UShort)FT_DivFix( 0x10000L, FT_DivFix( temp, 1000 ) );
-      fprintf (stderr, "cff_parse_font_matrix: matrix->xx = %08lX, upm = %d\n", matrix->xx, *upm) ;
 
       if ( temp != 0x10000L )
       {
