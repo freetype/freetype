@@ -38,12 +38,12 @@
 
 
   /* the glyph image queue type */
-  typedef struct  FTC_Image_QueueRec_
+  typedef struct  FTC_ImageSetRec_
   {
-    FTC_Glyph_QueueRec  root;
-    FTC_Image_Desc      description;
+    FTC_GlyphSetRec  root;
+    FTC_Image_Desc   description;
   
-  } FTC_Image_QueueRec, *FTC_Image_Queue;
+  } FTC_ImageSetRec, *FTC_ImageSet;
 
 
   typedef struct  FTC_Image_CacheRec_

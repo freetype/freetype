@@ -16,16 +16,6 @@
 /***************************************************************************/
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /*  Note: The implementation of glyph queues is rather generic in this   */
-  /*        code.  This will allow other glyph node/cache types to be      */
-  /*        easily included in the future.  For now, we only cache glyph   */
-  /*        images.                                                        */
-  /*                                                                       */
-  /*************************************************************************/
-
-
 #include <freetype/cache/ftcglyph.h>
 #include <freetype/fterrors.h>
 #include <freetype/internal/ftobjs.h>
@@ -42,22 +32,18 @@
   /*************************************************************************/
 
 
-  /* In the future, we might provide a better scheme for managing glyph  */
-  /* node elements.  For the moment, we simply use FT_Alloc()/FT_Free(). */
-
-
   /* create a new glyph node, setting its cache index and ref count */
-  FT_EXPORT_FUNC( void )  FTC_GlyphNode_Init( FTC_GlyphNode    node,
-                                              FTC_Glyph_Queue  queue,
-                                              FT_UInt          gindex )
+  FT_EXPORT_FUNC( void )  FTC_GlyphNode_Init( FTC_GlyphNode  node,
+                                              FTC_GlyphSet   gset,
+                                              FT_UInt        gindex )
   {
-    FTC_Glyph_Cache      cache = queue->cache;
+    FTC_Glyph_Cache      cache = gset->cache;
     FTC_CacheNode_Data*  data  = FTC_CACHENODE_TO_DATA_P( &node->root );
 
 
     data->cache_index = (FT_UShort)cache->root.cache_index;
     data->ref_count   = (FT_Short) 0;
-    node->queue_index = (FT_UShort)queue->queue_index;
+    node->gset_index  = (FT_UShort)gset->gset_index;
     node->glyph_index = (FT_UShort)gindex;
   }
 
@@ -72,13 +58,13 @@
   FT_EXPORT_FUNC( void )  FTC_GlyphNode_Destroy( FTC_GlyphNode    node,
                                                  FTC_Glyph_Cache  cache )
   {
-    FT_LruNode       queue_lru = cache->queues_lru->nodes + node->queue_index;
-    FTC_Glyph_Queue  queue     = (FTC_Glyph_Queue)queue_lru->root.data;
-    FT_UInt          hash      = node->glyph_index % queue->hash_size;
+    FT_LruNode    gset_lru = cache->gsets_lru->nodes + node->gset_index;
+    FTC_GlyphSet  gset     = (FTC_GlyphSet)gset_lru->root.data;
+    FT_UInt       hash     = node->glyph_index % gset->hash_size;
     
-    /* remove the node from its queue's bucket list */
+    /* remove the node from its gset's bucket list */
     {
-      FTC_GlyphNode*  pnode = queue->buckets + hash;
+      FTC_GlyphNode*  pnode = gset->buckets + hash;
       FTC_GlyphNode   cur;
       
       for (;;)
@@ -94,15 +80,15 @@
           
         if (cur == node)
         {
-          *pnode = cur->queue_next;
+          *pnode = cur->gset_next;
           break;
         }
-        pnode = &cur->queue_next;
+        pnode = &cur->gset_next;
       }
     }
 
     /* destroy the node */
-    queue->clazz->destroy_node( node, queue );
+    gset->clazz->destroy_node( node, gset );
   }
 
 
@@ -116,18 +102,18 @@
   FT_EXPORT_FUNC( FT_ULong )  FTC_GlyphNode_Size( FTC_GlyphNode    node,
                                                   FTC_Glyph_Cache  cache )
   {
-    FT_LruNode       queue_lru = cache->queues_lru->nodes + node->queue_index;
-    FTC_Glyph_Queue  queue     = (FTC_Glyph_Queue)queue_lru->root.data;
+    FT_LruNode    gset_lru = cache->gsets_lru->nodes + node->gset_index;
+    FTC_GlyphSet  gset     = (FTC_GlyphSet)gset_lru->root.data;
 
 
-    return queue->clazz->size_node( node, queue );
+    return gset->clazz->size_node( node, gset );
   }
 
 
   FT_CPLUSPLUS( const FTC_CacheNode_Class )  ftc_glyph_cache_node_class =
   {
-    (FTC_CacheNode_SizeFunc)   FTC_GlyphNode_Size,
-    (FTC_CacheNode_DestroyFunc)FTC_GlyphNode_Destroy
+    (FTC_CacheNode_SizeFunc)    FTC_GlyphNode_Size,
+    (FTC_CacheNode_DestroyFunc) FTC_GlyphNode_Destroy
   };
 
 
@@ -140,68 +126,68 @@
   /*************************************************************************/
 
 
-  FT_EXPORT_FUNC( FT_Error )  FTC_Glyph_Queue_New( FTC_Glyph_Cache   cache,
-                                                   FT_Pointer        type,
-                                                   FTC_Glyph_Queue*  aqueue )
+  FT_EXPORT_FUNC( FT_Error )  FTC_GlyphSet_New( FTC_Glyph_Cache  cache,
+                                                FT_Pointer       type,
+                                                FTC_GlyphSet    *aset )
   {
-    FT_Error         error;
-    FT_Memory        memory  = cache->root.memory;
-    FTC_Manager      manager = cache->root.manager;
-    FTC_Glyph_Queue  queue   = 0;
+    FT_Error        error;
+    FT_Memory       memory  = cache->root.memory;
+    FTC_Manager     manager = cache->root.manager;
+    FTC_GlyphSet    gset   = 0;
 
     FTC_Glyph_Cache_Class*  gcache_class;
-    FTC_Glyph_Queue_Class*  clazz;
+    FTC_GlyphSet_Class*     clazz;
 
 
     gcache_class = (FTC_Glyph_Cache_Class*)cache->root.clazz;
-    clazz        = gcache_class->queue_class;
+    clazz        = gcache_class->gset_class;
 
-    *aqueue = 0;
+    *aset = 0;
 
-    if ( ALLOC( queue, clazz->queue_byte_size ) )
+    if ( ALLOC( gset, clazz->gset_byte_size ) )
       goto Exit;
 
-    queue->cache     = cache;
-    queue->manager   = manager;
-    queue->memory    = memory;
-    queue->hash_size = FTC_QUEUE_HASH_SIZE_DEFAULT;
-    queue->clazz     = clazz;
+    gset->cache     = cache;
+    gset->manager   = manager;
+    gset->memory    = memory;
+    gset->hash_size = FTC_GSET_HASH_SIZE_DEFAULT;
+    gset->clazz     = clazz;
 
     /* allocate buckets table */
-    if ( ALLOC_ARRAY( queue->buckets, queue->hash_size, FTC_GlyphNode ) )
+    if ( ALLOC_ARRAY( gset->buckets, gset->hash_size, FTC_GlyphNode ) )
       goto Exit;
 
-    /* initialize queue by type if needed */
+    /* initialize gset by type if needed */
     if ( clazz->init )
     {
-      error = clazz->init( queue, type );
+      error = clazz->init( gset, type );
       if ( error )
         goto Exit;
     }
 
-    *aqueue = queue;
+    *aset = gset;
 
   Exit:
-    if ( error && queue )
+    if ( error && gset )
     {
-      FREE( queue->buckets );
-      FREE( queue );
+      FREE( gset->buckets );
+      FREE( gset );
     }
 
     return error;
   }
 
 
-  FT_EXPORT_FUNC( void )  FTC_Glyph_Queue_Done( FTC_Glyph_Queue  queue )
+  FT_EXPORT_FUNC( void )  FTC_GlyphSet_Destroy( FTC_GlyphSet  gset )
   {
-    FTC_Glyph_Cache         cache        = queue->cache;
+    FTC_Glyph_Cache         cache        = gset->cache;
     FTC_Manager             manager      = cache->root.manager;
     FT_List                 glyphs_lru   = &manager->global_lru;
-    FTC_GlyphNode*          bucket       = queue->buckets;
-    FTC_GlyphNode*          bucket_limit = bucket + queue->hash_size;
+    FTC_GlyphNode*          bucket       = gset->buckets;
+    FTC_GlyphNode*          bucket_limit = bucket + gset->hash_size;
     FT_Memory               memory       = cache->root.memory;
 
-    FTC_Glyph_Queue_Class*  clazz = queue->clazz;
+    FTC_GlyphSet_Class*  clazz = gset->clazz;
 
 
     /* for each bucket, free the list of glyph nodes */
@@ -214,41 +200,41 @@
 
       for ( ; node; node = next )
       {
-        next    = node->queue_next;
+        next    = node->gset_next;
         lrunode = FTC_GLYPHNODE_TO_LRUNODE( node );
 
-        manager->num_bytes -= clazz->size_node( node, queue );
+        manager->num_bytes -= clazz->size_node( node, gset );
 
         FT_List_Remove( glyphs_lru, lrunode );
 
-        clazz->destroy_node( node, queue );
+        clazz->destroy_node( node, gset );
       }
 
       bucket[0] = 0;
     }
 
     if ( clazz->done )
-      clazz->done( queue );
+      clazz->done( gset );
 
-    FREE( queue->buckets );
-    FREE( queue );
+    FREE( gset->buckets );
+    FREE( gset );
   }
 
 
   FT_EXPORT_FUNC( FT_Error )
-  FTC_Glyph_Queue_Lookup_Node( FTC_Glyph_Queue  queue,
-                               FT_UInt          glyph_index,
-                               FTC_GlyphNode*   anode )
+  FTC_GlyphSet_Lookup_Node( FTC_GlyphSet    gset,
+                            FT_UInt         glyph_index,
+                            FTC_GlyphNode  *anode )
   {
-    FTC_Glyph_Cache         cache      = queue->cache;
+    FTC_Glyph_Cache         cache      = gset->cache;
     FTC_Manager             manager    = cache->root.manager;
-    FT_UInt                 hash_index = glyph_index % queue->hash_size;
-    FTC_GlyphNode*          bucket     = queue->buckets + hash_index;
+    FT_UInt                 hash_index = glyph_index % gset->hash_size;
+    FTC_GlyphNode*          bucket     = gset->buckets + hash_index;
     FTC_GlyphNode*          pnode      = bucket;
     FTC_GlyphNode           node;
     FT_Error                error;
 
-    FTC_Glyph_Queue_Class*  clazz = queue->clazz;
+    FTC_GlyphSet_Class*  clazz = gset->clazz;
 
 
     *anode = 0;
@@ -262,34 +248,38 @@
       if ( node->glyph_index == glyph_index )
       {
         /* we found it! -- move glyph to start of the lists */
-        *pnode           = node->queue_next;
-        node->queue_next = bucket[0];
-        bucket[0]        = node;
+        *pnode          = node->gset_next;
+        node->gset_next = bucket[0];
+        bucket[0]       = node;
         
         FT_List_Up( &manager->global_lru, FTC_GLYPHNODE_TO_LRUNODE( node ) );
         *anode = node;
         return 0;
       }
       /* go to next node in bucket */
-      pnode = &node->queue_next;
+      pnode = &node->gset_next;
     }
 
     /* we didn't found the glyph image, we will now create a new one */
-    error = clazz->new_node( queue, glyph_index, &node );
+    error = clazz->new_node( gset, glyph_index, &node );
     if ( error )
       goto Exit;
 
     /* insert the node at the start of our bucket list */
-    node->queue_next = bucket[0];
-    bucket[0]        = node;
+    node->gset_next = bucket[0];
+    bucket[0]       = node;
 
     /* insert the node at the start the global LRU glyph list */
     FT_List_Insert( &manager->global_lru, FTC_GLYPHNODE_TO_LRUNODE( node ) );
 
-    manager->num_bytes += clazz->size_node( node, queue );
+    manager->num_bytes += clazz->size_node( node, gset );
 
     if (manager->num_bytes > manager->max_bytes)
+    {
+      FTC_GlyphNode_Ref   ( node );
       FTC_Manager_Compress( manager );
+      FTC_GlyphNode_Unref ( node );
+    }
 
     *anode = node;
 
@@ -301,39 +291,37 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****                   GLYPH QUEUES LRU CALLBACKS                  *****/
+  /*****                   GLYPH SETS LRU CALLBACKS                    *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
 
 
-#define FTC_QUEUE_LRU_GET_CACHE( lru )   \
+#define FTC_GSET_LRU_GET_CACHE( lru )   \
           ( (FTC_Glyph_Cache)(lru)->user_data )
 
-#define FTC_QUEUE_LRU_GET_MANAGER( lru ) \
-          FTC_QUEUE_LRU_GET_CACHE( lru )->manager
+#define FTC_GSET_LRU_GET_MANAGER( lru ) \
+          FTC_GSET_LRU_GET_CACHE( lru )->manager
 
-#define FTC_LRUNODE_QUEUE( node )        \
-          ( (FTC_Glyph_Queue)(node)->root.data )
+#define FTC_LRUNODE_GSET( node )        \
+          ( (FTC_GlyphSet)(node)->root.data )
 
 
   LOCAL_FUNC_X
-  FT_Error  ftc_glyph_queue_lru_init( FT_Lru      lru,
-                                      FT_LruNode  node )
+  FT_Error  ftc_glyph_set_lru_init( FT_Lru      lru,
+                                    FT_LruNode  node )
   {
-    FTC_Glyph_Cache  cache = FTC_QUEUE_LRU_GET_CACHE( lru );
+    FTC_Glyph_Cache  cache = FTC_GSET_LRU_GET_CACHE( lru );
     FT_Error         error;
-    FTC_Glyph_Queue  queue;
+    FTC_GlyphSet     gset;
 
 
-    error = FTC_Glyph_Queue_New( cache,
-                                 (FT_Pointer)node->key,
-                                 &queue );
+    error = FTC_GlyphSet_New( cache, (FT_Pointer)node->key, &gset );
     if ( !error )
     {
-      /* good, now set the queue index within the queue object */
-      queue->queue_index = node - lru->nodes;
-      node->root.data    = queue;
+      /* good, now set the gset index within the gset object */
+      gset->gset_index = node - lru->nodes;
+      node->root.data  = gset;
     }
 
     return error;
@@ -341,36 +329,36 @@
 
 
   LOCAL_FUNC_X
-  void  ftc_glyph_queue_lru_done( FT_Lru      lru,
-                                  FT_LruNode  node )
+  void  ftc_glyph_set_lru_done( FT_Lru      lru,
+                                FT_LruNode  node )
   {
-    FTC_Glyph_Queue  queue = FTC_LRUNODE_QUEUE( node );
+    FTC_GlyphSet  gset = FTC_LRUNODE_GSET( node );
 
     FT_UNUSED( lru );
 
 
-    FTC_Glyph_Queue_Done( queue );
+    FTC_GlyphSet_Destroy( gset );
   }
 
 
   LOCAL_FUNC_X
-  FT_Bool  ftc_glyph_queue_lru_compare( FT_LruNode  node,
-                                        FT_LruKey   key )
+  FT_Bool  ftc_glyph_set_lru_compare( FT_LruNode  node,
+                                      FT_LruKey   key )
   {
-    FTC_Glyph_Queue  queue = FTC_LRUNODE_QUEUE( node );
+    FTC_GlyphSet  gset = FTC_LRUNODE_GSET( node );
 
 
-    return queue->clazz->compare( queue, (FT_Pointer)key );
+    return gset->clazz->compare( gset, (FT_Pointer)key );
   }
 
 
-  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_glyph_queue_lru_class =
+  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_glyph_set_lru_class =
   {
     sizeof( FT_LruRec ),
-    ftc_glyph_queue_lru_init,
-    ftc_glyph_queue_lru_done,
+    ftc_glyph_set_lru_init,
+    ftc_glyph_set_lru_done,
     0,  /* no flush */
-    ftc_glyph_queue_lru_compare
+    ftc_glyph_set_lru_compare
   };
 
 
@@ -400,20 +388,20 @@
     /*                                                                    */
     cache->root.cache_user = cache;
 
-    error = FT_Lru_New( &ftc_glyph_queue_lru_class,
-                        FTC_MAX_GLYPH_QUEUES,
+    error = FT_Lru_New( &ftc_glyph_set_lru_class,
+                        FTC_MAX_GLYPH_SETS,
                         cache,
                         memory,
                         1, /* pre_alloc == TRUE */
-                        &cache->queues_lru );
+                        &cache->gsets_lru );
     return error;
   }
 
 
   FT_EXPORT_FUNC( void )  FTC_Glyph_Cache_Done( FTC_Glyph_Cache  cache )
   {
-    /* discard glyph queues */
-    FT_Lru_Done( cache->queues_lru );
+    /* discard glyph sets */
+    FT_Lru_Done( cache->gsets_lru );
   }
 
 

@@ -1,0 +1,373 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftcchunk.c                                                             */
+/*                                                                         */
+/*    FreeType chunk cache cache (body).                                   */
+/*                                                                         */
+/*  Copyright 2000 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
+#include <freetype/cache/ftcglyph.h>
+#include <freetype/fterrors.h>
+#include <freetype/internal/ftobjs.h>
+#include <freetype/internal/ftlist.h>
+#include <freetype/fterrors.h>
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                      GLYPH NODES                              *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+
+
+  /* create a new chunk node, setting its cache index and ref count */
+  FT_EXPORT_FUNC( NV_Error )
+  FTC_ChunkNode_Init( FTC_ChunkNode  node,
+                      FTC_ChunkSet   cset,
+                      FT_UInt        index,
+                      FT_Bool        alloc )
+  {
+    FTC_Chunk_Cache      cache = cset->cache;
+    FTC_CacheNode_Data*  data  = FTC_CACHENODE_TO_DATA_P( &node->root );
+    NV_Error             error = 0;
+
+
+    data->cache_index = (FT_UShort) cache->root.cache_index;
+    data->ref_count   = (FT_Short)  0;
+    node->cset_index  = (FT_UShort) index;
+
+    node->num_elements = (index+1 < cset->chunk_count)
+                       ? cset->chunk_size
+                       : cset->element_max - cset->chunk_count*index;
+    if (alloc)
+    {
+      /* allocate elements array */
+      memory = cache->root.memory;
+      error  = MEM_ALLOC( cache->elements, cset->element_size *
+                                           cset->element_count );
+    }
+    return error;
+  }
+
+
+  FT_EXPORT_FUNC( void )  FTC_ChunkNode_Destroy( FTC_ChunkNode    node )
+  {
+    FTC_ChunkSet  cset     = node->cset;
+
+    /* remove from parent set table */
+    cset->chunks[ node->cset_index ] = 0;
+        
+    /* destroy the node */
+    cset->clazz->destroy_node( node );
+  }
+
+
+  FT_EXPORT_FUNC( FT_ULong )  FTC_ChunkNode_Size( FTC_ChunkNode    node )
+  {
+    FTC_ChunkSet  cset     = node->cset;
+
+
+    return cset->clazz->size_node( node, cset );
+  }
+
+
+  FT_CPLUSPLUS( const FTC_CacheNode_Class )  ftc_chunk_cache_node_class =
+  {
+    (FTC_CacheNode_SizeFunc)    FTC_ChunkNode_Size,
+    (FTC_CacheNode_DestroyFunc) FTC_ChunkNode_Destroy
+  };
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                      CHUNK SETS                               *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+
+  FT_EXPORT_FUNC( FT_Error )
+  FTC_ChunkSet_New( FTC_Chunk_Cache   cache,
+                    FT_Pointer        type,
+                    FT_UInt           num_elements,
+                    FT_UInt           element_size,
+                    FT_UInt           chunk_size,
+                    FTC_ChunkSet     *aset )
+  {
+    FT_Error      error;
+    FT_Memory     memory  = cache->root.memory;
+    FTC_Manager   manager = cache->root.manager;
+    FTC_ChunkSet  cset    = 0;
+
+    FTC_Chunk_Cache_Class*  ccache_class;
+    FTC_ChunkSet_Class*     clazz;
+
+
+    ccache_class = (FTC_Chunk_Cache_Class*)cache->root.clazz;
+    clazz        = ccache_class->cset_class;
+
+    *aset = 0;
+
+    if ( ALLOC( set, clazz->cset_byte_size ) )
+      goto Exit;
+
+    cset->cache         = cache;
+    cset->manager       = manager;
+    cset->memory        = memory;
+    cset->element_max   = num_elements;
+    cset->element_size  = element_size;
+    cset->element_count = chunk_size;
+    cset->clazz         = clazz;
+
+    /* compute maximum number of nodes */
+    cset->num_chunks = (num_elements + (chunk_size-1))/chunk_size;
+
+    /* allocate chunk pointers table */
+    if ( ALLOC_ARRAY( cset->chunks, cset->num_chunks, FTC_ChunkNode ) )
+      goto Exit;
+
+    /* initialize set by type if needed */
+    if ( clazz->init )
+    {
+      error = clazz->init( cset, type );
+      if ( error )
+        goto Exit;
+    }
+
+    *aset = cset;
+
+  Exit:
+    if ( error && cset )
+    {
+      FREE( cset->chunks );
+      FREE( cset );
+    }
+
+    return error;
+  }
+
+
+  FT_EXPORT_FUNC( void )  FTC_ChunkSet_Destroy( FTC_ChunkSet  cset )
+  {
+    FTC_Chunk_Cache         cache        = cset->cache;
+    FTC_Manager             manager      = cache->root.manager;
+    FT_List                 glyphs_lru   = &manager->global_lru;
+    FTC_ChunkNode*          bucket       = cset->chunk;
+    FTC_ChunkNode*          bucket_limit = bucket + cset->num_chunks;
+    FT_Memory               memory       = cache->root.memory;
+
+    FTC_ChunkSet_Class*     clazz = cset->clazz;
+
+
+    /* for each bucket, free the list of glyph nodes */
+    for ( ; bucket < bucket_limit; bucket++ )
+    {
+      FTC_ChunkNode   node = bucket[0];
+      FT_ListNode     lrunode;
+
+      lrunode = FTC_CHUNKNODE_TO_LRUNODE( node );
+
+      manager->num_bytes -= clazz->size_node( node );
+
+      FT_List_Remove( glyphs_lru, lrunode );
+
+      clazz->destroy_node( node );
+
+      bucket[0] = 0;
+   }
+
+   if ( clazz->done )
+     clazz->done( cset );
+
+    FREE( cset->chunks );
+    FREE( cset );
+  }
+
+
+  FT_EXPORT_FUNC( FT_Error )
+  FTC_ChunkSet_Lookup_Node( FTC_ChunkSet    cset,
+                            FT_UInt         glyph_index,
+                            FTC_ChunkNode  *anode,
+                            FTC_UInt       *index )
+  {
+    FTC_Glyph_Cache  cache   = cset->cache;
+    FTC_Manager      manager = cache->root.manager;
+    FT_Error         error   = 0;
+
+    FTC_GlyphSet_Class*  clazz = cset->clazz;
+
+
+    *anode = 0;
+    if (glyph_index >= cset->elements_max)
+      error = FT_Err_Invalid_Argument;
+    else
+    {
+      FT_UInt         chunk_size  = cset->chunk_size;
+      FT_UInt         chunk_index = glyph_index/chunk_size;
+      FTC_ChunkNode*  pnode       = cset->chunks + chunk_index;
+      FTC_ChunkNode   node        = *pnode;
+      
+      if (!node)
+      {
+        /* we didn't found the glyph image, we will now create a new one */
+        error = clazz->new_node( cset, glyph_index, &node );
+        if ( error )
+          goto Exit;
+
+        /* store the new chunk in the cset's table */
+        *pnode = node;
+
+        /* insert the node at the start the global LRU glyph list */
+        FT_List_Insert( &manager->global_lru, FTC_CHUNKNODE_TO_LRUNODE( node ) );
+
+        manager->num_bytes += clazz->size_node( node, gset );
+
+        if (manager->num_bytes > manager->max_bytes)
+        {
+          FTC_ChunkNode_Ref   ( node );
+          FTC_Manager_Compress( manager );
+          FTC_ChunkNode_Unref ( node );
+        }
+      }
+
+      *anode  = node;
+      *aindex = glyph_index - chunk_index*chunk_size;
+    }
+
+  Exit:
+    return error;
+  }
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                   CHUNK SETS LRU CALLBACKS                    *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+
+#define FTC_CSET_LRU_GET_CACHE( lru )   \
+          ( (FTC_Chunk_Cache)(lru)->user_data )
+
+#define FTC_CSET_LRU_GET_MANAGER( lru ) \
+          FTC_CSET_LRU_GET_CACHE( lru )->manager
+
+#define FTC_LRUNODE_CSET( node )        \
+          ( (FTC_ChunkSet)(node)->root.data )
+
+
+  LOCAL_FUNC_X
+  FT_Error  ftc_chunk_set_lru_init( FT_Lru      lru,
+                                    FT_LruNode  node )
+  {
+    FTC_Chunk_Cache  cache = FTC_CSET_LRU_GET_CACHE( lru );
+    FT_Error         error;
+    FTC_ChunkSet     cset;
+
+
+    error = FTC_ChunkSet_New( cache,
+                              (FT_Pointer)node->key,
+                              &cset );
+    if ( !error )
+    {
+      /* good, now set the set index within the set object */
+      cset->cset_index = node - lru->nodes;
+      node->root.data  = set;
+    }
+
+    return error;
+  }
+
+
+  LOCAL_FUNC_X
+  void  ftc_chunk_set_lru_done( FT_Lru      lru,
+                                FT_LruNode  node )
+  {
+    FTC_ChunkSet  cset = FTC_LRUNODE_CSET( node );
+
+    FT_UNUSED( lru );
+
+
+    FTC_ChunkSet_Destroy( cset );
+  }
+
+
+  LOCAL_FUNC_X
+  FT_Bool  ftc_chunk_set_lru_compare( FT_LruNode  node,
+                                      FT_LruKey   key )
+  {
+    FTC_ChunkSet  cset = FTC_LRUNODE_CSET( node );
+
+
+    return cset->clazz->compare( cset, (FT_Pointer)key );
+  }
+
+
+  FT_CPLUSPLUS( const FT_Lru_Class )  ftc_chunk_set_lru_class =
+  {
+    sizeof( FT_LruRec ),
+    ftc_chunk_set_lru_init,
+    ftc_chunk_set_lru_done,
+    0,  /* no flush */
+    ftc_chunk_set_lru_compare
+  };
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                   CHUNK CACHE OBJECTS                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+
+  FT_EXPORT_FUNC( FT_Error )  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache )
+  {
+    FT_Memory  memory = cache->root.memory;
+    FT_Error   error;
+
+
+    /* set up root node_class to be used by manager */
+    cache->root.node_clazz =
+      (FTC_CacheNode_Class*)&ftc_chunk_cache_node_class;
+
+    /* The following is extremely important for ftc_destroy_glyph_image() */
+    /* to work properly, as the second parameter that is sent to it       */
+    /* through the cache manager is `user_data' and must be set to        */
+    /* `cache' here.                                                      */
+    /*                                                                    */
+    cache->root.cache_user = cache;
+
+    error = FT_Lru_New( &ftc_chunk_set_lru_class,
+                        FTC_MAX_GLYPH_CSETS,
+                        cache,
+                        memory,
+                        1, /* pre_alloc == TRUE */
+                        &cache->csets_lru );
+    return error;
+  }
+
+
+  FT_EXPORT_FUNC( void )  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache )
+  {
+    /* discard glyph sets */
+    FT_Lru_Done( cache->csets_lru );
+  }
+
+
