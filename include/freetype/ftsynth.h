@@ -48,13 +48,13 @@
   /* This code is completely experimental -- use with care! */
   /* It will probably be completely rewritten in the future */
   /* or even integrated into the library.                   */
-  FT_EXPORT_DEF( FT_Error )  FT_Embolden_Outline( FT_Face      original,
-                                                  FT_Outline*  outline,
-                                                  FT_Pos*      advance );
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Embolden( FT_GlyphSlot  original,
+                                                  FT_Outline*   outline,
+                                                  FT_Pos*       advance );
 
-  FT_EXPORT_DEF( FT_Error )  FT_Oblique_Outline( FT_Face      original,
-                                                 FT_Outline*  outline,
-                                                 FT_Pos*      advance );
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Oblique( FT_GlyphSlot  original,
+                                                 FT_Outline*   outline,
+                                                 FT_Pos*       advance );
 
 
 #ifdef __cplusplus
