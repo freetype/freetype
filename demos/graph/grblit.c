@@ -32,7 +32,7 @@
     case gr_pixel_mode_pal4:
       width = (width + 1) & -2;
       break;
-      
+
     default:
       ;
     }
@@ -82,7 +82,7 @@
     case gr_pixel_mode_pal4:
       target_width = (target_width + 1) & -2;
       break;
-      
+
     default:
       ;
     }
@@ -104,7 +104,7 @@
 
     blit->read_line  = blit->source.pitch;
     blit->write_line = blit->target.pitch;
-    
+
     if ( blit->read_line < 0 )
       blit->read -= (blit->source.rows-1) * blit->read_line;
 
@@ -247,7 +247,7 @@
       {
         if ( mask == 0x80 )
           val = *_read++;
-          
+
         if ( val & mask )
           *_write = (unsigned char)color.value;
 
@@ -344,7 +344,7 @@
     unsigned int     left_mask;
     unsigned char*   read;
     unsigned char*   write;
-    
+
     read  = blit->read + (blit->xread >> 3);
     write = blit->write + blit->xwrite*2;
 
@@ -396,7 +396,7 @@
     unsigned int    left_mask;
     unsigned char*  read;
     unsigned char*  write;
-    
+
     read  = blit->read  + (blit->xread >> 3);
     write = blit->write + blit->xwrite*3;
 
@@ -452,7 +452,7 @@
     unsigned int    left_mask;
     unsigned char*  read;
     unsigned char*  write;
-     
+
     read  = blit->read  + (blit->xread >> 3);
     write = blit->write + blit->xwrite*4;
 
@@ -523,19 +523,19 @@
   {
     int          count;
     const byte*  table;
-  
+
   } grSaturation;
-  
-  
+
+
   static
   const byte  gr_saturation_5[8] = { 0, 1, 2, 3, 4, 4, 4, 4 };
-  
+
 
   static
   const byte  gr_saturation_17[32] =
   {
      0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
-    16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 
+    16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
   };
 
 
@@ -565,7 +565,7 @@
       grError = gr_err_bad_argument;
       return 0;
     }
-     
+
     for ( ; sat < limit; sat++ )
     {
       if ( sat->count == num_grays )
@@ -574,25 +574,25 @@
         return sat->table;
       }
     }
-    
+
     /* not found, simply create a new entry if there is room */
     if (gr_num_saturations < GR_MAX_SATURATIONS)
     {
       int          i;
       const byte*  table;
-      
+
       table = (const byte*)grAlloc( (3*num_grays-1)*sizeof(byte) );
       if (!table) return 0;
-        
+
       sat->count = num_grays;
       sat->table = table;
-      
+
       for ( i = 0; i < num_grays; i++, table++ )
-        *(unsigned char*)table = (unsigned char)i;  
-      
+        *(unsigned char*)table = (unsigned char)i;
+
       for ( i = 2*num_grays-1; i > 0; i--, table++ )
-        *(unsigned char*)table = (unsigned char)(num_grays-1);   
-        
+        *(unsigned char*)table = (unsigned char)(num_grays-1);
+
       gr_num_saturations++;
       gr_last_saturation = sat;
       return sat->table;
@@ -614,11 +614,11 @@
     int          target_grays;
     int          source_grays;
     const byte*  table;
-  
+
   } grConversion;
-  
-  
-  
+
+
+
   static
   const byte  gr_gray5_to_gray17[5] = { 0, 4, 8, 12, 16 };
 
@@ -654,13 +654,13 @@
   {
     grConversion*  conv  = gr_conversions;
     grConversion*  limit = conv + gr_num_conversions;
-   
+
     if ( target_grays < 2 || source_grays < 2 )
     {
       grError = gr_err_bad_argument;
       return 0;
     }
-    
+
     /* otherwise, scan table */
     for ( ; conv < limit; conv++ )
     {
@@ -671,7 +671,7 @@
         return conv->table;
       }
     }
-    
+
     /* not found, add a new conversion to the table */
     if (gr_num_conversions < GR_MAX_CONVERSIONS)
     {
@@ -681,15 +681,15 @@
       table = (const byte*)grAlloc( source_grays*sizeof(byte) );
       if (!table)
         return 0;
-        
+
       conv->target_grays = target_grays;
       conv->source_grays = source_grays;
       conv->table        = table;
 
       for ( n = 0; n < source_grays; n++ )
-        ((unsigned char*)table)[n] = (unsigned char)(n*(target_grays-1)) / 
+        ((unsigned char*)table)[n] = (unsigned char)(n*(target_grays-1)) /
                                          (source_grays-1);
-            
+
       gr_num_conversions++;
       gr_last_conversion = conv;
       return table;
@@ -720,7 +720,7 @@
 
     max1  = (unsigned char)(blit->source.grays-1);
     max2  = (unsigned char)(blit->target.grays-1);
-    
+
     read  = (unsigned char*)blit->read  + blit->xread;
     write = (unsigned char*)blit->write + blit->xwrite;
 
@@ -735,7 +735,7 @@
       {
 #ifdef GR_CONFIG_GRAY_SKIP_WHITE
         unsigned char val = *_read;
-        
+
         if (val)
         {
           if (val == max)
@@ -750,7 +750,7 @@
         _read++;
         x--;
       }
-      
+
       read  += blit->read_line;
       write += blit->write_line;
       y--;
@@ -775,7 +775,7 @@
     unsigned char   max;
 
     max   = (unsigned char)(blit->source.grays-1);
-    
+
     read  = (unsigned char*)blit->read  + blit->xread;
     write = (unsigned char*)blit->write + blit->xwrite;
 
@@ -790,7 +790,7 @@
       {
 #ifdef GR_CONFIG_GRAY_SKIP_WHITE
         unsigned char val = *_read;
-        
+
         if (val)
         {
           if (val == max)
@@ -805,7 +805,7 @@
         _read++;
         x--;
       }
-      
+
       read  += blit->read_line;
       write += blit->write_line;
       y--;
@@ -834,7 +834,7 @@
    color.chroma[0] = (pixel >> 10) & 0x1F;  \
    color.chroma[1] = (pixel >>  5) & 0x1F;  \
    color.chroma[2] = (pixel      ) & 0x1F;
-   
+
 
 #define  extract565( pixel, color )           \
    color.chroma[0] = (pixel >> 11) & 0x1F;  \
@@ -846,13 +846,13 @@
    ( ( (unsigned short)color.chroma[0] << 10 ) |    \
      ( (unsigned short)color.chroma[1] <<  5 ) |    \
        color.chroma[2]                         )
-      
+
 
 #define  inject565( color )         \
    ( ( (unsigned short)color.chroma[0] << 11 ) |    \
      ( (unsigned short)color.chroma[1] <<  5 ) |    \
        color.chroma[2]                         )
-      
+
 
 /**************************************************************************/
 /*                                                                        */
@@ -872,7 +872,7 @@
 
     read   = blit->read  + blit->xread;
     write  = blit->write + 2*blit->xwrite;
-    
+
     /* convert color to R:G:B triplet */
     color2 = color.value;
     extract555( color2, color );
@@ -887,12 +887,12 @@
       while (x > 0)
       {
         unsigned char   val;
-        
+
         val = *_read;
         if (val)
         {
           unsigned short* pixel = (unsigned short*)_write;
-          
+
           if (val == max)
           {
             pixel[0] = (short)color2;
@@ -902,18 +902,18 @@
             /* compose gray value */
             unsigned short  pix16 = *pixel;
             grColor         pix;
-            
+
             extract555( pix16, pix );
 
             compose_pixel( pix, color, val, max );
             *pixel = inject555(pix);
-          }  
+          }
         }
         _write += 2;
         _read  ++;
         x--;
       }
-      
+
       read  += blit->read_line;
       write += blit->write_line;
       y--;
@@ -940,7 +940,7 @@
 
     read   = blit->read  + blit->xread;
     write  = blit->write + 2*blit->xwrite;
-    
+
     color2 = color.value;
     extract565( color2, color );
 
@@ -954,12 +954,12 @@
       while (x > 0)
       {
         unsigned char    val;
-        
+
         val = *_read;
         if (val)
         {
           unsigned short* pixel = (unsigned short*)_write;
-          
+
           if (val == max)
           {
             pixel[0] = (short)color2;
@@ -970,17 +970,17 @@
             unsigned short  pix16 = *pixel;
             grColor         pix;
 
-            extract565( pix16, pix );            
+            extract565( pix16, pix );
 
             compose_pixel( pix, color, val, max );
             *pixel = inject565( pix );
-          }  
+          }
         }
         _write +=2;
         _read  ++;
         x--;
       }
-      
+
       read  += blit->read_line;
       write += blit->write_line;
       y--;
@@ -1006,7 +1006,7 @@
 
     read   = blit->read  + blit->xread;
     write  = blit->write + 3*blit->xwrite;
-    
+
     y = blit->height;
     do
     {
@@ -1017,7 +1017,7 @@
       while (x > 0)
       {
         unsigned char    val;
-        
+
         val = *_read;
         if (val)
         {
@@ -1031,23 +1031,23 @@
           {
             /* compose gray value */
             grColor pix;
-            
+
             pix.chroma[0] = _write[0];
             pix.chroma[1] = _write[1];
             pix.chroma[2] = _write[2];
 
             compose_pixel( pix, color, val, max );
-            
+
             _write[0] = pix.chroma[0];
             _write[1] = pix.chroma[1];
             _write[2] = pix.chroma[2];
-          }  
+          }
         }
         _write += 3;
         _read  ++;
         x--;
       }
-      
+
       read  += blit->read_line;
       write += blit->write_line;
       y--;
@@ -1073,7 +1073,7 @@
 
     read   = blit->read  + blit->xread;
     write  = blit->write + 4*blit->xwrite;
-    
+
     y = blit->height;
     do
     {
@@ -1084,7 +1084,7 @@
       while (x > 0)
       {
         unsigned char  val;
-        
+
         val = *_read;
         if (val)
         {
@@ -1099,23 +1099,23 @@
           {
             /* compose gray value */
             grColor pix;
-            
+
             pix.chroma[0] = _write[0];
             pix.chroma[1] = _write[1];
             pix.chroma[2] = _write[2];
 
             compose_pixel( pix, color, val, max );
-            
+
             _write[0] = pix.chroma[0];
             _write[1] = pix.chroma[1];
             _write[2] = pix.chroma[2];
-          }  
+          }
         }
         _write += 4;
         _read  ++;
         x--;
       }
-      
+
       read  += blit->read_line;
       write += blit->write_line;
       y--;
@@ -1142,7 +1142,7 @@
   *   Error code. 0 means success
   *
   **********************************************************************/
-    
+
   typedef  void (*grColorGlyphBlitter)( grBlitter*  blit,
                                         grColor     color,
                                         int         max_gray );
@@ -1158,9 +1158,9 @@
     blit_gray_to_565,
     blit_gray_to_24,
     blit_gray_to_32
-  };  
+  };
 
-   
+
   extern int  grBlitGlyphToBitmap( grBitmap*  target,
                                    grBitmap*  glyph,
                                    grPos      x,
@@ -1169,14 +1169,14 @@
   {
     grBlitter    blit;
     grPixelMode  mode;
-  
+
     /* check arguments */
     if (!target || !glyph)
     {
       grError = gr_err_bad_argument;
       return -1;
     }
-    
+
 
     /* set up blitter and compute clipping. Return immediately if needed */
     blit.source = *glyph;
@@ -1185,7 +1185,7 @@
 
     if ( compute_clips( &blit, x, y ) )
       return 0;
-    
+
 
     /* handle monochrome bitmap blitting */
     if (glyph->mode == gr_pixel_mode_mono)
@@ -1195,11 +1195,11 @@
         grError = gr_err_bad_source_depth;
         return -1;
       }
-      
+
       gr_mono_blitters[mode]( &blit, color );
-      goto End;     
+      goto End;
     }
-    
+
     /* handle gray bitmap composition */
     if (glyph->mode == gr_pixel_mode_gray &&
         glyph->grays > 1                  )
@@ -1207,7 +1207,7 @@
       int          target_grays = target->grays;
       int          source_grays = glyph->grays;
       const byte*  saturation;
-      
+
       if ( mode == gr_pixel_mode_gray && target_grays > 1 )
       {
         /* rendering into a gray target - use special composition */
@@ -1235,7 +1235,7 @@
             conversion = grGetConversion( target_grays, source_grays );
             if (!conversion) return -3;
           };
-              
+
           blit_gray_to_gray( &blit, saturation, conversion );
         }
       }
@@ -1248,18 +1248,18 @@
           grError = gr_err_bad_target_depth;
           return -1;
         }
-        
+
         gr_color_blitters[mode]( &blit, color, source_grays-1 );
       }
-      goto End;      
+      goto End;
     }
-    
+
     /* we don't support the blitting of bitmaps of the following  */
     /* types : pal4, pal8, rgb555, rgb565, rgb24, rgb32           */
     /*                                                            */
     grError = gr_err_bad_source_depth;
     return -2;
-    
+
   End:
     return 0;
   }

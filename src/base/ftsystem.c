@@ -6,20 +6,20 @@
  *
  *    This file contains the definition of interface used by FreeType
  *    to access low-level, i.e. memory management, i/o access as well
- *    as thread synchronisation.              
+ *    as thread synchronisation.
  *
  *
- *  Copyright 1996-1999 by                                                   
- *  David Turner, Robert Wilhelm, and Werner Lemberg                         
- *                                                                           
- *  This file is part of the FreeType project, and may only be used          
- *  modified and distributed under the terms of the FreeType project         
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute       
- *  this file you indicate that you have read the license and                 
- *  understand and accept it fully.                                          
- *                                                                           
+ *  Copyright 1996-1999 by
+ *  David Turner, Robert Wilhelm, and Werner Lemberg
+ *
+ *  This file is part of the FreeType project, and may only be used
+ *  modified and distributed under the terms of the FreeType project
+ *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ *  this file you indicate that you have read the license and
+ *  understand and accept it fully.
+ *
  **************************************************************************/
- 
+
 #include <freetype/config/ftconfig.h>
 #include <freetype/ftsystem.h>
 #include <freetype/fterrors.h>
@@ -48,7 +48,7 @@
  * <Output>
  *    block     :: address of newly allocated block
  *
- * <Return>  
+ * <Return>
  *    Error code. 0 means success.
  *
  * <Note>
@@ -90,7 +90,7 @@
  *    Error code. 0 means success.
  *
  * <Note>
- *    This function is _never_ called when the system flag 
+ *    This function is _never_ called when the system flag
  *    FT_SYSTEM_FLAG_NO_REALLOC is set. Instead, the engine will emulate
  *    realloc through "alloc" and "free".
  *
@@ -165,10 +165,10 @@
                                unsigned long  count )
   {
     FILE*  file;
-    
+
     file = STREAM_FILE(stream);
 
-    fseek( file, offset, SEEK_SET );    
+    fseek( file, offset, SEEK_SET );
     return (unsigned long)fread( buffer, 1, count, file );
   }
 
@@ -177,18 +177,18 @@
                                    FT_Stream    stream )
   {
     FILE*  file;
-    
+
     file = fopen( filepathname, "rb" );
     if (!file)
       return FT_Err_Cannot_Open_Resource;
-      
+
     fseek( file, 0, SEEK_END );
     stream->size = ftell(file);
     fseek( file, 0, SEEK_SET );
-    
+
     stream->descriptor.pointer = file;
     stream->pos                = 0;
-    
+
     stream->read  = ft_io_stream;
     stream->close = ft_close_stream;
 
@@ -199,7 +199,7 @@
   EXPORT_FUNC(FT_Memory)  FT_New_Memory( void )
   {
     FT_Memory  memory;
-    
+
     memory = (FT_Memory)malloc( sizeof(*memory) );
     if (memory)
     {

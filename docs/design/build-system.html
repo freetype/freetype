@@ -56,7 +56,7 @@
     <li><a href="#overview-1-b">b. Selecting another build configuration</a>
   </ul>
   </p>
-  
+
   <li><a href="#overview-2">2. Library compilation</a>
 </ul>
 <p><font size="+1"><a href="#setup">III. Build setup details</a></font></p>
@@ -274,17 +274,17 @@
     <font color="purple">C:\FreeType> make</font>
 
     FreeType build system -- automatic system detection
-     
+
     The following settings are used:
-     
+
       platform                     win32
       compiler                     gcc
       configuration directory      ./config/win32
-      configuration rules          ./config/win32/w32-gcc.mk  
-     
+      configuration rules          ./config/win32/w32-gcc.mk
+
     If this does not correspond to your system or settings please remove the file
     'config.mk' from this directory then read the INSTALL file for help.
-     
+
     Otherwise, simply type 'make' again to build the library.
 
     <font color="purple">C:\FreeType></font>
@@ -353,20 +353,20 @@
 
   <ul>
     <li><p><b>Compiling the <tt>ftsystem</tt> component</b><br><ul>
-        It encapsulates all low-level operations (memory management + 
+        It encapsulates all low-level operations (memory management +
         i/o access) for the library. Its default version, located in
         <tt>./src/base/ftsystem.c</tt> uses the ANSI C library but
         system-specific implementations are also available to
         improve performance (e.g. memory-mapped files on Unix).
         </ul></p>
-        
+
     <li><p><b>Compiling the <em>base layer</em> and optional components</b><br><ul>
         They provide the library's high-level API as well as various useful
         routines for client applications. Many features of the base layer can
         be activated or not depending on a configuration file named
         <tt>ftoption.h</tt>
         </ul></p>
-        
+
     <li><p><b>Compiling the <em>modules</em></b><br><ul>
         Each module is used to support a specific font format (it is then
         called a <em>font driver</em>), or to provide helper services to
@@ -374,7 +374,7 @@
         sub-directories of <tt>./src</tt>, like <tt>./src/truetype</tt>,
         <tt>./src/type1</tt>.
         </ul></p>
-        
+
     <li><p><b>Compiling the <tt>ftinit</tt> component</b><br><ul>
         This one is in charge of implementing <tt>FT_Init_FreeType</tt>,
         the library initialisation routine. It also selects what modules
@@ -414,16 +414,16 @@
     <p><center>
         <img src="platform-detection.png" border=0>
     </center></p>
-    
+
  <p>Each system-specific <b><tt>detect.mk</tt></b> works as follows:</p>
  <ul>
    <li><p>It checks that the value of <tt>PLATFORM</tt> is currently set
           to <b>ansi</b>, which indicates that no platform was detected
           for now. If this isn't true, it doesn't do anything</p>
-          
+
    <li><p>Otherwise, it runs a series of test to see wether it is on a
           system it knows about. Here are a few examples of tests:</p>
-    
+
        <p><center><table width="80%" cellpadding=5><tr valign=top><td>
        <em><b>Unix</b></em>
        </td><td>
@@ -446,10 +446,10 @@
        we're on a Win32 system.</p>
        </td></tr></table></center>
        </p>
-    
+
    <li><p>It sets the value of <tt>PLATFORM</tt> to a new value corresponding
           to its platform.</p>
-    
+
    <li><p>It then tries to select a configuration
           sub-makefile, depending on the current platform and any optional
           make target (like "visualc" or "devel", etc..). Note that it can
@@ -465,17 +465,17 @@
  <ul>
     <li>A new subdirectory, in <tt>./config</tt>, with a file named
         <tt>detect.mk</tt> in it, containing relevant checks for the system.
-        
+
     <li>One or more configuration sub-makefiles that will get copied to
         <tt>config.mk</tt> at build setup time. You can use the one in
         <tt>./config/ansi/config.mk</tt> as a template.
- </ul> 
+ </ul>
 
  <p>Similary, supporting a new compiler on an existing system simply means:</p>
  <ul>
     <li>Writing a new config sub-makefile that contains definitions used to
         specify the compiler and flags for the build.
-        
+
     <li>Change your <tt>./config/<em>system</em>/detect.mk</tt> to recognize
         a new optional build target that will copy your new config sub-makefile
         instead of the default one.
@@ -496,14 +496,14 @@
          the host environment, like the compiler, compilation flags,
          object file suffix, the directory where all object files are
          placed, etc..</p>
-         
+
   <li><p>If <tt>BUILD_FREETYPE</tt> is defined, it includes the file
          <tt><b>./config/freetype.mk</b></tt>, which is in charge of
          defining all the rules used to build the library object files.
          (The test is useful to use the <tt>config.mk</tt> file to
           compile other projects that rely on FreeType 2, like its
           demonstration programs).</p>
-         
+
   <li><p>Finally, it defines the rule(s) used to link FreeType 2 object files
          into a library file (e.g. <tt>libfreetype.a</tt>, <tt>freetype.lib</tt>,
          <tt>freetype.dll</tt>, ...). Unfortunately, the command line interface of link tools is
@@ -525,7 +525,7 @@
 <pre><font color="blue">
     #include &lt;freetype/freetype.h&gt;
     #include &lt;freetype/ftglyph.h&gt;
-</font></pre>    
+</font></pre>
 
  <p>to include one the FreeType 2 public header files. <tt>freetype.mk</tt>
     uses a variable named <tt><b>INCLUDES</b></tt> to hold the inclusion
@@ -535,17 +535,17 @@
  <p><tt>freetype.mk</tt> uses a variable named <tt><b>INCLUDES</b></tt>
     to hold directory inclusion-path to be used when compiling the library.
     It always add <tt>./include</tt> to this variable, which means
-     
+
 </ul>
 
 <h4>b. Configuration header files:</h4>
-<ul>  
+<ul>
   <p>Three header files used to configure the compilation of the
      FreeType 2 library. Their default versions are all located in the
      directory <tt><b>./include/freetype/config/</b></tt>, even though
      project specific versions can be provided on a given build, as
      described later:</p>
-     
+
   <ul>
     <p><b><tt>#include &lt;freetype/config/ftoption.h&gt;</tt></b><br><ul>
         This file contains a set of configuration macro definitions that
@@ -557,7 +557,7 @@
         You might need to provide an alternative version of <tt>ftoption.h</tt>
         for one of your own projects.
         </ul></p>
-        
+
     <p><b><tt>#include &lt;freetype/config/ftconfig.h&gt;</tt></b><br><ul>
         This file includes <tt>ftoption.h</tt> but also contains some automatic
         macro definitions used to indicate some important system-specific
@@ -566,7 +566,7 @@
         You shouldn't normally need to change or provide an alternative
         version of this file.
         </ul></p>
-        
+
 
     <p><b><tt>#include &lt;freetype/config/ftmodule.h&gt;</tt></b><br><ul>
         This file is very special, as it is normally machine-generated, and
@@ -583,13 +583,13 @@
         <tt>./src</tt>.
         </ul></p>
   </ul>
-  
+
   <p>Note that we strongly advise you to avoid modifying the config files
      within the FreeType 2 source directory hierarchy. Rather, it's possible
      to specify alternative versions through the help of a build-specific
      include path that is include before <tt>./include</tt> in the inclusion
      path.</p>
-     
+
   <p>For example, imagine that your platform, named <em>foo</em>, needs a
      specific version of <tt>ftoption.h</tt>
 </ul>
@@ -600,14 +600,14 @@
      and i/o access) within a single component called <tt><b>ftsystem</b></tt>.
      Its default implementation uses the <em>ANSI C Library</em> and is located
      in <tt>./src/base/ftsystem.c</tt>.</p>
-     
+
   <p>However, some alternate, system-specific, implementations of
      <tt>ftsystem</tt> are provided with the library in order to support more
      efficient and advanced features. As an example, the file
      <tt>./config/unix/ftsystem.c</tt> is an implementation that
      uses memory-mapped files rather than the slow ANSI <tt>fopen</tt>,
      <tt>fread</tt> and <tt>fseek</tt>, boosting performance significantly.</p>
-     
+
   <p>The build system is thus capable of managing alternate implementations
      of <tt>ftsystem</tt></p>
 </ul>
@@ -638,7 +638,7 @@
      code located in a sub-directory of <tt>./src</tt> that contains a file
      named <tt><b>rules.</b></tt>, for example:
      <tt>src/sfnt</tt>, <tt>src/truetype</tt>, <tt>src/type1</tt>, ...</p>
-     
+
   <p>The <tt><b>rules.</b></tt> file simply contains directives used by the
      build system to compile the corresponding module into a single object
      file.</p>

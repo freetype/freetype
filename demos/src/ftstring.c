@@ -37,7 +37,7 @@
   static char* new_header = 0;
 
   static char*  Text = "The quick brown fox jumps over the lazy dog";
-  
+
   static FT_Library    library;      /* the FreeType library            */
   static FT_Face       face;         /* the font face                   */
   static FT_Error      error;        /* error returned by FreeType ?    */
@@ -49,7 +49,7 @@
   static int  Num;
   static int  Rotation = 0;
   static int  Fail;
-  
+
   static int  hinted    = 1;       /* is glyph hinting active ?    */
   static int  antialias = 1;       /* is anti-aliasing active ?    */
   static int  use_sbits = 1;       /* do we use embedded bitmaps ? */
@@ -68,7 +68,7 @@
 
   static FT_Matrix      trans_matrix;
   static int            transform = 0;
-  
+
   static FT_Vector      string_center;
 
   typedef struct TGlyph_
@@ -76,7 +76,7 @@
     FT_UInt    glyph_index;    /* glyph index in face      */
     FT_Vector  pos;            /* position of glyph origin */
     FT_Glyph   image;          /* glyph image              */
-  
+
   } TGlyph, *PGlyph;
 
 #define FLOOR(x)  ((x) & -64)
@@ -176,7 +176,7 @@
   static void  clear_display( void )
   {
     long  size = (long)bit.pitch * bit.rows;
-    
+
     if (size < 0) size = -size;
     memset( bit.buffer, 0, size );
   }
@@ -192,7 +192,7 @@
                                     res );
     return FT_Err_Ok;
   }
-  
+
 
  /**************************************************************
   *
@@ -204,17 +204,17 @@
     PGlyph  glyph = glyphs;
     FT_BBox bbox;
     int     n;
-    
+
     bbox.xMin = 32000; bbox.xMax = -32000;
     bbox.yMin = 32000; bbox.yMax = -32000;
-    
+
     for ( n = 0; n < num_glyphs; n++, glyph++ )
     {
       FT_BBox  cbox;
       FT_Pos   x, y;
-      
+
       if (!glyph->image) continue;
-      
+
       x = glyph->pos.x >> 6;
       y = glyph->pos.y >> 6;
 
@@ -224,7 +224,7 @@
       cbox.yMin += y;
       cbox.xMax += x;
       cbox.yMax += y;
-      
+
       if (cbox.xMin < bbox.xMin) bbox.xMin = cbox.xMin;
       if (cbox.xMax > bbox.xMax) bbox.xMax = cbox.xMax;
       if (cbox.yMin < bbox.yMin) bbox.yMin = cbox.yMin;
@@ -253,11 +253,11 @@
     load_flags = FT_LOAD_DEFAULT;
     if( !hinted )
       load_flags |= FT_LOAD_NO_HINTING;
-      
+
     num_grays = 128;
     if (!antialias)
       num_grays = 0;
-    
+
     for ( n = 0; n < num_glyphs; n++, glyph++ )
     {
       /* compute glyph origin */
@@ -266,11 +266,11 @@
         if (prev_index)
         {
           FT_Vector  kern;
-          
+
           FT_Get_Kerning( face, prev_index, glyph->glyph_index, &kern );
           kern.x = FT_MulFix( kern.x, face->size->metrics.x_scale );
           if (hinted) kern.x = (kern.x+32) & -64;
-          
+
           origin_x += kern.x;
         }
         prev_index = glyph->glyph_index;
@@ -285,7 +285,7 @@
       /* clear existing image if there is one */
       if (glyph->image)
         FT_Done_Glyph(glyph->image);
-    
+
       /* load the glyph image                       */
       /* for now, we take a monochrome glyph bitmap */
       error = FT_Get_Glyph_Bitmap( face, glyph->glyph_index,
@@ -294,9 +294,9 @@
                                    &origin,
                                    (FT_BitmapGlyph*)&glyph->image );
       if (error) continue;
-      
+
       glyph->pos = origin;
-      
+
       origin_x  += glyph->image->advance;
     }
     string_center.x = origin_x / 2;
@@ -315,12 +315,12 @@
     PGlyph    glyph = glyphs;
     grBitmap  bit3;
     int       n;
-    
+
     for ( n = 0; n < num_glyphs; n++, glyph++ )
     {
       if (!glyph->image)
         continue;
-        
+
       switch (glyph->image->glyph_type)
       {
         case ft_glyph_type_bitmap:
@@ -329,42 +329,42 @@
             FT_BitmapGlyph  bitm   = (FT_BitmapGlyph)glyph->image;
             FT_Bitmap*      source = &bitm->bitmap;
             FT_Pos          x_top, y_top;
-            
+
             bit3.rows   = source->rows;
             bit3.width  = source->width;
             bit3.pitch  = source->pitch;
             bit3.buffer = source->buffer;
-            
+
             switch (source->pixel_mode)
             {
               case ft_pixel_mode_mono:
                 bit3.mode  = gr_pixel_mode_mono;
                 break;
-                
+
               case ft_pixel_mode_grays:
                 bit3.mode  = gr_pixel_mode_gray;
                 bit3.grays = source->num_grays;
                 break;
-              
+
               default:
                 continue;
             }
-            
+
             /* now render the bitmap into the display surface */
             x_top = x + (glyph->pos.x >> 6) + bitm->left;
             y_top = y - (glyph->pos.y >> 6) - bitm->top;
             grBlitGlyphToBitmap( &bit, &bit3, x_top, y_top, fore_color );
           }
           break;
-#if 0        
+#if 0
         case ft_glyph_type_outline:
           {
             /* in the case of outlines, we directly render it into the */
             /* target surface with the smooth renderer..               */
             FT_OutlineGlyph  out = (FT_OutlineGlyph)glyph->image;
-            
+
             FT_Outline_Translate( (x+pen_pos[n]) << 6, (y+
-            error = FT_Outline_Render( 
+            error = FT_Outline_Render(
           }
           break;
 #endif
@@ -387,7 +387,7 @@
     const unsigned char*  p     = (const unsigned char*)string;
     PGlyph                glyph = glyphs;
     FT_UInt               glyph_index;
-    
+
     num_glyphs = 0;
     while (*p)
     {
@@ -399,7 +399,7 @@
         break;
       p++;
     }
-  }  
+  }
 
 
   static void  reset_transform( void )
@@ -407,13 +407,13 @@
     double    angle   = Rotation*3.14159/64.0;
     FT_Fixed  cosinus = (FT_Fixed)(cos(angle)*65536.0);
     FT_Fixed  sinus   = (FT_Fixed)(sin(angle)*65536.0);
-    
+
     transform       = (angle != 0);
     trans_matrix.xx = cosinus;
     trans_matrix.xy = -sinus;
     trans_matrix.yx = sinus;
     trans_matrix.yy = cosinus;
-    
+
     FT_Set_Transform(face,&trans_matrix, 0);
   }
 
@@ -437,7 +437,7 @@
     grGotoxy( 0, 0 );
     grSetMargin( 2, 1 );
     grGotobitmap( &bit );
-    
+
     grWriteln("FreeType String Viewer - part of the FreeType test suite" );
     grLn();
     grWriteln("This program is used to display a string of text using" );
@@ -462,7 +462,7 @@
     grWriteln("  F8        : big rotate clockwise");
     grLn();
     grWriteln("press any key to exit this help screen");
-        
+
     grRefreshSurface( surface );
     grListenSurface( surface, gr_event_key, &dummy_event );
   }
@@ -471,11 +471,11 @@
   static void  reset_raster( void )
   {
     FT_Error  error;
-    
+
     error = 1;
     if ( use_grays && antialias )
       error = FT_Set_Raster( library, &ft_grays_raster );
-      
+
     if (error)
       (void)FT_Set_Raster( library, &std_raster );
   }
@@ -484,7 +484,7 @@
   static int  Process_Event( grEvent*  event )
   {
     int  i;
-    
+
     switch ( event->key )
     {
     case grKeyEsc:            /* ESC or q */
@@ -497,7 +497,7 @@
                    ? "kerning is now active"
                    : "kerning is now ignored" );
       return 1;
-      
+
     case grKEY('a'):
       antialias = !antialias;
       new_header = ( antialias
@@ -512,7 +512,7 @@
                    ? "embedded bitmaps are now used when available"
                    : "embedded bitmaps are now ignored" );
       return 1;
-      
+
     case grKEY('n'):
     case grKEY('p'):
       return (int)event->key;
@@ -524,7 +524,7 @@
                    : "now using the standard anti-aliaser" );
       reset_raster();
       break;
-                   
+
     case grKEY('h'):
       hinted = !hinted;
       new_header = ( hinted
@@ -575,13 +575,13 @@
     if (ptsize > MAXPTSIZE) ptsize = MAXPTSIZE;
     return 1;
 
-#if 0    
+#if 0
   Do_Glyph:
     Num += i;
     if (Num < 0)           Num = 0;
     if (Num >= num_glyphs) Num = num_glyphs-1;
     return 1;
-#endif    
+#endif
   }
 
 
@@ -614,7 +614,7 @@
   }
 
 
-  int  main( int  argc, char**  argv ) 
+  int  main( int  argc, char**  argv )
   {
     int    i, old_ptsize, orig_ptsize, file;
     int    first_glyph = 0;
@@ -627,7 +627,7 @@
 
     FT_Error  error;
     grEvent   event;
- 
+
     execname = ft_basename( argv[0] );
 
     while ( 1 )
@@ -650,7 +650,7 @@
           usage( execname );
         Text = optarg;
         break;
-        
+
       default:
         usage( execname );
         break;
@@ -686,7 +686,7 @@
     {
       if ( argv[file][i] == '.' )
         i = 0;
-      i--; 
+      i--;
     }
 #endif
 
@@ -713,10 +713,10 @@
     prepare_text( (unsigned char*)Text );
 
     file_loaded++;
-    
+
     error = reset_scale( ptsize );
     if (error) goto Display_Font;
-        
+
   Display_Font:
     /* initialise graphics if needed */
     if ( !XisSetup )
@@ -724,7 +724,7 @@
       XisSetup = 1;
       init_display();
     }
-  
+
     grSetTitle( surface, "FreeType String Viewer - press F1 for help" );
     old_ptsize = ptsize;
 
@@ -732,10 +732,10 @@
     {
       Fail = 0;
       Num  = first_glyph;
-    
+
       if ( Num >= num_glyphs )
         Num = num_glyphs-1;
-      
+
       if ( Num < 0 )
         Num = 0;
     }
@@ -751,7 +751,7 @@
         /* layout & render string */
         {
           FT_BBox  bbox;
-          
+
           reset_transform();
           layout_glyphs();
           compute_bbox( &bbox );
@@ -766,7 +766,7 @@
 
         if (!new_header)
           new_header = Header;
-              
+
         grWriteCellString( &bit, 0, 0, new_header, fore_color );
         new_header = 0;
 
@@ -782,7 +782,7 @@
 
       grWriteCellString( &bit, 0, 8, Header, fore_color );
       grRefreshSurface( surface );
-      
+
       grListenSurface( surface, 0, &event );
       if ( !( key = Process_Event( &event ) ) )
         goto Fin;
@@ -791,7 +791,7 @@
       {
         if (file_loaded >= 1)
           FT_Done_Face( face );
-          
+
         if ( file < argc - 1 )
           file++;
 
@@ -802,7 +802,7 @@
       {
         if (file_loaded >= 1)
           FT_Done_Face( face );
-          
+
         if ( file > 1 )
           file--;
 

@@ -209,7 +209,7 @@
     current = name;
 
     c = *current;
-  
+
     while ( c )
     {
 #ifndef macintosh

@@ -11,6 +11,6 @@
 
   extern void grWrite  ( const char*  string );
   extern void grWriteln( const char* string );
-  extern void grLn(); 
+  extern void grLn();
 
 #endif /* GRFONT_H */

@@ -25,7 +25,7 @@
   *    max_features  :: total number of features in table
   *    feature_tags  :: tags of all features for current script/language
   *    features      :: selection flags for all features in current script/lang
-  *    
+  *
   *    max_lookups   :: total number of lookups in table
   *    lookups       :: selection flags for all lookups for current
   *                     feature list.
@@ -40,17 +40,17 @@
     otl_type_gpos,
     otl_type_gsub,
     otl_type_jstf
-  
+
   } OTL_Type;
-  
-  
+
+
   typedef struct OTL_Table_
   {
     FT_Memory memory;
 
     TT_Int    num_scripts;
     TT_Tag*   script_tags;
-    
+
     TT_Int    max_languages;
     TT_Int    num_languages;
     TT_Tag*   language_tags;
@@ -61,19 +61,19 @@
 
     TT_Int    max_lookups;
     TT_Bool*  lookups;
-    
+
     TT_Byte*  scripts_table;
     TT_Long   scripts_len;
-    
+
     TT_Byte*  features_table;
     TT_Long*  features_len;
-    
+
     TT_Byte*  lookups_table;
     TT_Byte*  lookups_len;
 
     TT_Byte*  cur_script;   /* current script   */
     TT_Byte*  cur_language; /* current language */
-    
+
     TT_Byte*  cur_base_values;
     TT_Byte*  cur_min_max;
 
@@ -89,7 +89,7 @@
     TT_UShort  ref_glyph;
     TT_UShort  ref_point;
     TT_Byte*   device;
-  
+
   } OTL_BaseCoord;
 
 
@@ -102,7 +102,7 @@
     TT_Byte*   device_pla_y;
     TT_Byte*   device_adv_x;
     TT_Byte*   device_adv_y;
-  
+
   } OTL_ValueRecord;
 
 
@@ -113,7 +113,7 @@
     TT_UInt    anchor_point;
     TT_Byte*   device_x;
     TT_Byte*   device_y;
-  
+
   } OTL_Anchor;
 
   LOCAL_DEF
@@ -153,7 +153,7 @@
  *      table->num_scripts is the number of scripts
  *
  */
- 
+
 /********************************************************
  *
  *  - after calling OTL_Table_Set_Features:
@@ -169,7 +169,7 @@
  *      it is empty (zero-filled) by default.
  *
  */
- 
+
 /*******************************************************************
  *
  *  - after calling OTL_Get_Languages_List(script_tag):
@@ -217,7 +217,7 @@
   LOCAL_DEF
   void OTL_Get_Justification( OTL_Table*  table,
                               TT_ULong    language_tag );
- 
+
 /*******************************************************************
  *
  *  - after calling OTL_Get_Lookups_List():

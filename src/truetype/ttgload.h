@@ -49,13 +49,13 @@
     TT_Bool         preserve_pps;
     TT_Vector       pp1;
     TT_Vector       pp2;
-        
+
     TT_ULong        glyf_offset;
-        
+
     /* the zone where we load our glyphs */
     FT_GlyphZone    base;
     FT_GlyphZone    zone;
-    
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     TT_ExecContext  exec;
     TT_Byte*        instructions;

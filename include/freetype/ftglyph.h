@@ -29,11 +29,11 @@
 #include <freetype/freetype.h>
 
   typedef enum {
-  
+
     ft_glyph_type_none    = 0,
     ft_glyph_type_bitmap  = 1,
     ft_glyph_type_outline = 2
-  
+
   } FT_GlyphType;
 
  /***********************************************************************
@@ -68,7 +68,7 @@
   *    float sub-pixels (i.e. 1/64th of pixels).
   *
   *    the vertical bearing has a positive value when the glyph top is
-  *    above the baseline, and negative when it is under.. 
+  *    above the baseline, and negative when it is under..
   *
   ***********************************************************************/
 
@@ -81,7 +81,7 @@
     FT_Int        bearingX;
     FT_Int        bearingY;
     FT_Int        advance;
-    
+
   } FT_GlyphRec, *FT_Glyph;
 
 
@@ -91,7 +91,7 @@
   *    FT_BitmapGlyphRec
   *
   * <Description>
-  *    A structure used to describe a bitmap glyph image..              
+  *    A structure used to describe a bitmap glyph image..
   *    Note that the FT_BitmapGlyph type is a pointer to FT_BitmapGlyphRec
   *
   * <Field>
@@ -111,14 +111,14 @@
   *    and is thus creatde and destroyed with it..
   *
   ***********************************************************************/
-  
+
   typedef struct FT_BitmapGlyphRec_
   {
     FT_GlyphRec  metrics;
     FT_Int       left;
     FT_Int       top;
     FT_Bitmap    bitmap;
-  
+
   } FT_BitmapGlyphRec_, *FT_BitmapGlyph;
 
 
@@ -128,7 +128,7 @@
   *    FT_OutlineGlyphRec
   *
   * <Description>
-  *    A structure used to describe a vectorial outline glyph image..              
+  *    A structure used to describe a vectorial outline glyph image..
   *    Note that the FT_OutlineGlyph type is a pointer to FT_OutlineGlyphRec
   *
   * <Field>
@@ -147,12 +147,12 @@
   *    function FT_OutlineGlyph_Render()
   *
   ***********************************************************************/
-  
+
   typedef struct FT_OutlineGlyphRec_
   {
     FT_GlyphRec  metrics;
     FT_Outline   outline;
-    
+
   } FT_OutlineGlyphRec_, *FT_OutlineGlyph;
 
 
@@ -221,7 +221,7 @@
   *    face        :: handle to source face object
   *    glyph_index :: glyph index in face
   *    load_flags  :: load flags, see FT_LOAD_FLAG_XXXX constants..
-  * 
+  *
   * <Output>
   *    vecglyph :: pointer to the new outline glyph
   *
@@ -236,7 +236,7 @@
   *    FT_LOAD_NO_RECURSE are set..
   *
   ***********************************************************************/
-  
+
   EXPORT_DEF(FT_Error)  FT_Get_Glyph_Outline( FT_Face           face,
                                               FT_UInt           glyph_index,
                                               FT_UInt           load_flags,
@@ -250,7 +250,7 @@
   *
   * <Description>
   *    A function used to set the transform that is applied to glyph images
-  *    just after they're loaded in the face's glyph slot, and before they're 
+  *    just after they're loaded in the face's glyph slot, and before they're
   *    returned by either FT_Get_Glyph_Bitmap or FT_Get_Glyph_Outline
   *
   * <Input>
@@ -263,7 +263,7 @@
   *    in a font face. It is unable to transform embedded glyph bitmaps
   *
   ***********************************************************************/
-  
+
   EXPORT_DEF(void)  FT_Set_Transform( FT_Face     face,
                                       FT_Matrix*  matrix,
                                       FT_Vector*  delta );
@@ -278,10 +278,10 @@
   *    Destroys a given glyph..
   *
   * <Input>
-  *    glyph  :: handle to target glyph object 
+  *    glyph  :: handle to target glyph object
   *
   ***********************************************************************/
-  
+
   EXPORT_DEF(void)  FT_Done_Glyph( FT_Glyph  glyph );
 
 
@@ -294,7 +294,7 @@
   *    Returns the glyph image's bounding box in pixels.
   *
   * <Input>
-  *    glyph :: handle to target glyph object 
+  *    glyph :: handle to target glyph object
   *
   * <Output>
   *    box   :: the glyph bounding box. Coordinates are expressed in
@@ -308,7 +308,7 @@
   *    The height is box.yMax - box.yMin
   *
   ***********************************************************************/
-  
+
   EXPORT_DEF(void)  FT_Glyph_Get_Box( FT_Glyph  glyph,
                                       FT_BBox  *box );
 

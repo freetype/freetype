@@ -189,14 +189,14 @@
   /**                                                            **/
   /****************************************************************/
   /****************************************************************/
-  
+
   typedef int            Int;
   typedef unsigned int   UInt;
   typedef short          Short;
   typedef unsigned short UShort, *PUShort;
   typedef long           Long, *PLong;
   typedef unsigned long  ULong;
-  
+
   typedef unsigned char  Byte, *PByte;
   typedef char           Bool;
 
@@ -204,7 +204,7 @@
   {
     Long  x;
     Long  y;
-    
+
   } TPoint;
 
 
@@ -213,7 +213,7 @@
     Flow_None = 0,
     Flow_Up   = 1,
     Flow_Down = -1
-  
+
   } TFlow;
 
 
@@ -224,7 +224,7 @@
     Ascending,
     Descending,
     Flat
-    
+
   } TStates;
 
 
@@ -257,7 +257,7 @@
   {
     Short  y_min;   /* band's minimum */
     Short  y_max;   /* band's maximum */
-    
+
   } TBand;
 
 
@@ -410,7 +410,7 @@
                         /* in bytes of at least 'gray_width*2'              */
 
 #endif /* FT_RASTER_ANTI_ALIASING */
-    
+
 #if 0
     PByte     flags;                /* current flags table    */
     PUShort   outs;                 /* current outlines table */
@@ -428,7 +428,7 @@
 
   static TRaster_Instance  cur_ras;
   #define ras  cur_ras
-  
+
 #else
 
   #define ras  (*raster)
@@ -442,7 +442,7 @@
   /**                                                            **/
   /****************************************************************/
   /****************************************************************/
-  
+
 
 /************************************************************************/
 /*                                                                      */
@@ -1415,7 +1415,7 @@
       SWAP_(v_start.x,v_start.y);
       SWAP_(v_last.x,v_last.y);
     }
-    
+
     v_control = v_start;
 
     point = points + first;
@@ -1457,14 +1457,14 @@
     {
       point++;
       tags++;
-  
+
       tag = FT_CURVE_TAG( tags[0] );
       switch (tag)
       {
         case FT_Curve_Tag_On:  /* emit a single line_to */
           {
             Long  x, y;
-            
+
             x = SCALED(point->x);
             y = SCALED(point->y);
             if (flipped) SWAP_(x,y);
@@ -1473,64 +1473,64 @@
             continue;
           }
 
-          
+
         case FT_Curve_Tag_Conic:  /* consume conic arcs */
           {
             v_control.x = SCALED(point[0].x);
             v_control.y = SCALED(point[0].y);
             if (flipped) SWAP_(v_control.x,v_control.y);
-              
+
           Do_Conic:
             if (point < limit)
             {
               FT_Vector  v_middle;
               Long       x, y;
-              
+
               point++;
               tags++;
               tag = FT_CURVE_TAG( tags[0] );
-              
+
               x = SCALED(point[0].x);
               y = SCALED(point[0].y);
               if (flipped) SWAP_(x,y);
-                
+
               if (tag == FT_Curve_Tag_On)
               {
                 if (Conic_To( RAS_VARS v_control.x, v_control.y, x, y ))
                   goto Fail;
                 continue;
               }
-                
+
               if (tag != FT_Curve_Tag_Conic)
                 goto Invalid_Outline;
 
               v_middle.x = (v_control.x + x)/2;
               v_middle.y = (v_control.y + y)/2;
 
-              if (Conic_To( RAS_VARS v_control.x, v_control.y, 
+              if (Conic_To( RAS_VARS v_control.x, v_control.y,
                                      v_middle.x,  v_middle.y )) goto Fail;
-                
+
               v_control.x = x;
               v_control.y = y;
               goto Do_Conic;
             }
-          
+
             if (Conic_To( RAS_VARS v_control.x, v_control.y,
                                    v_start.x,   v_start.y )) goto Fail;
             goto Close;
           }
-          
+
         default:  /* FT_Curve_Tag_Cubic */
           {
             Long  x1, y1, x2, y2, x3, y3;
-            
+
             if ( point+1 > limit         ||
                  FT_CURVE_TAG( tags[1] ) != FT_Curve_Tag_Cubic )
               goto Invalid_Outline;
-                
+
             point += 2;
             tags  += 2;
-            
+
             x1 = SCALED(point[-2].x);
             y1 = SCALED(point[-2].y);
             x2 = SCALED(point[-1].x);
@@ -1549,7 +1549,7 @@
                 goto Fail;
               continue;
             }
-            
+
             if (Cubic_To( RAS_VARS x1, y1, x2, y2, v_start.x, v_start.y ))
               goto Fail;
             goto Close;
@@ -1563,14 +1563,14 @@
 
   Close:
     return SUCCESS;
-    
+
   Invalid_Outline:
     ras.error = Raster_Err_Invalid;
-  
+
   Fail:
     return FAILURE;
   }
-  
+
 /****************************************************************************/
 /*                                                                          */
 /* Function:    Convert_Glyph                                               */
@@ -1650,7 +1650,7 @@
   /**                                                            **/
   /****************************************************************/
   /****************************************************************/
-  
+
 
 /************************************************/
 /*                                              */
@@ -1820,14 +1820,14 @@
   static void  Vertical_Sweep_Init( RAS_ARGS Short*  min, Short*  max )
   {
     Long  pitch = ras.target.pitch;
-    
+
     UNUSED(max);
-    
+
     ras.traceIncr = (Short)- pitch;
     ras.traceOfs  = - *min * pitch;
     if (pitch > 0)
       ras.traceOfs += (ras.target.rows-1)*pitch;
-  
+
     ras.gray_min_x = 0;
     ras.gray_max_x = 0;
   }
@@ -2039,7 +2039,7 @@
 
     UNUSED(left);
     UNUSED(right);
-    
+
     if ( x2-x1 < ras.precision )
     {
       e1 = CEILING( x1 );
@@ -2059,7 +2059,7 @@
           p = bits - e1*ras.target.pitch;
           if (ras.target.pitch > 0)
             p += (ras.target.rows-1)*ras.target.pitch;
-         
+
           p[0] |= f1;
         }
       }
@@ -2191,7 +2191,7 @@
   static void  Vertical_Gray_Sweep_Init( RAS_ARGS Short*  min, Short*  max )
   {
     Long  pitch, byte_len;
-    
+
     *min = *min & -2;
     *max = ( *max + 3 ) & -2;
 
@@ -2232,7 +2232,7 @@
         Int    last_cell  = last_pixel >> 2;
         Int    last_bit   = last_pixel & 3;
         Bool   over       = 0;
-      
+
         if (ras.gray_max_x >= last_cell && last_bit != 3)
         {
           ras.gray_max_x = last_cell-1;
@@ -2267,7 +2267,7 @@
           pix += 4;
           c1  --;
         }
-        
+
         if (over)
         {
           c2 = count[*bit] + count[*bit2];
@@ -2800,7 +2800,7 @@ Scan_DropOuts :
 
     ras.bWidth  = ras.gray_width;
     pixel_width = 2*((ras.target.width + 3) >> 2);
-      
+
     if ( ras.bWidth > pixel_width )
       ras.bWidth = pixel_width;
 
@@ -2850,7 +2850,7 @@ Scan_DropOuts :
   {
     FT_UInt  n;
     FT_ULong c;
-    
+
     /* setup count table */
     for ( n = 0; n < 256; n++ )
     {
@@ -2860,14 +2860,14 @@ Scan_DropOuts :
           ((c << 4) & 0x0300) |
           ((c << 2) & 0x0030) |
                 (c  & 0x0003);
-                 
+
       raster->count_table[n] = c;
     }
-    
+
     /* set default 5-levels gray palette */
     for ( n = 0; n < 5; n++ )
       raster->grays[n] = (n*127/4);
-      
+
     raster->gray_width = RASTER_GRAY_LINES/2;
   }
 
@@ -2879,7 +2879,7 @@ Scan_DropOuts :
   int  ft_black_new( void*  memory, FT_Raster *araster )
   {
      static FT_RasterRec_  the_raster;
-     *araster = &the_raster;  
+     *araster = &the_raster;
      memset( &the_raster, sizeof(the_raster), 0 );
      ft_black_init( &the_raster );
      return 0;
@@ -2901,7 +2901,7 @@ Scan_DropOuts :
   {
     FT_Error           error;
     TRaster_Instance*  raster;
-    
+
     *araster = 0;
     if ( !ALLOC( raster, sizeof(*raster) ))
     {
@@ -2910,17 +2910,17 @@ Scan_DropOuts :
 
       *araster = raster;
     }
-      
+
     return error;
   }
-  
+
   static
   void ft_black_done( TRaster_Instance*  raster )
   {
     FT_Memory  memory = (FT_Memory)raster->memory;
     FREE( raster );
   }
-  
+
 #endif
 
 
@@ -2949,8 +2949,8 @@ Scan_DropOuts :
       raster->grays[3] = palette[3];
       raster->grays[4] = palette[4];
     }
-  }                                 
-  
+  }
+
 
   static
   int  ft_black_render( TRaster_Instance*  raster,
@@ -2958,7 +2958,7 @@ Scan_DropOuts :
   {
     FT_Outline*  outline    = (FT_Outline*)params->source;
     FT_Bitmap*   target_map = params->target;
-    
+
     if ( !raster || !raster->buff || !raster->sizeBuff )
       return Raster_Err_Not_Ini;
 
@@ -2981,8 +2981,8 @@ Scan_DropOuts :
 
     ras.outline  = *outline;
     ras.target   = *target_map;
-    
-    return ( params->flags & ft_raster_flag_aa 
+
+    return ( params->flags & ft_raster_flag_aa
            ? Render_Gray_Glyph( raster )
            : Render_Glyph( raster ) );
   }

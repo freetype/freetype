@@ -37,7 +37,7 @@ const grKeyName  key_names[] =
   { grKeyEsc,  "Esc" },
   { grKeyHome, "Home" },
   { grKeyEnd,  "End"  },
-    
+
   { grKeyPageUp,   "Page_Up" },
   { grKeyPageDown, "Page_Down" },
   { grKeyLeft,     "Left" },
@@ -52,7 +52,7 @@ int  main( void )
 {
   grSurface*  surface;
   int         n;
-  
+
   grInit();
   surface = grNewScreenSurface( 0, gr_pixel_mode_gray, 320, 400, 128 );
   if (!surface)
@@ -63,10 +63,10 @@ int  main( void )
     grEvent      event;
     const char*  string;
     int          x;
-    
+
     grSetSurfaceRefresh( surface, 1 );
     grSetTitle(surface,"X11 driver demonstration" );
-    
+
     for ( x = -10; x < 10; x++ )
     {
       for ( n = 0; n < 128; n++ )
@@ -80,15 +80,15 @@ int  main( void )
     }
     color.value = 64;
     grWriteCellString( surface, 0, 0, "just an example", color );
-    
+
     do
     {
       grListenSurface( surface, 0, &event);
-    
+
       /* return if ESC was pressed */
       if ( event.key == grKeyEsc )
         return 0;
-      
+
       /* otherwise, display key string */
       color.value = (color.value + 8) & 127;
       {
@@ -97,7 +97,7 @@ int  main( void )
         grKeyName*  limit = name + count;
         const char* kname  = 0;
         char        kname_temp[16];
-      
+
         while (name < limit)
         {
           if ( name->key == event.key )
@@ -107,13 +107,13 @@ int  main( void )
           }
           name++;
         }
-      
+
         if (!kname)
         {
           sprintf( kname_temp, "char '%c'", (char)event.key );
           kname = kname_temp;
         }
-        
+
         grWriteCellString( surface, 30, 30, kname, color );
         grRefreshSurface(surface);
       }

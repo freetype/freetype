@@ -120,7 +120,7 @@ typedef long  TPos;    /* sub-pixel coordinate              */
 #define FT_MAX_GRAY_SPANS  32
 
 
-#ifdef GRAYS_COMPACT  
+#ifdef GRAYS_COMPACT
 typedef struct TCell_
 {
   short  x     : 14;
@@ -599,12 +599,12 @@ int  render_conic( RAS_ARG_ FT_Vector* control, FT_Vector* to )
     /* we compute the mid-point directly in order to avoid */
     /* calling split_conic()..                             */
     TPos   to_x, to_y, mid_x, mid_y;
-    
+
     to_x  = UPSCALE(to->x);
     to_y  = UPSCALE(to->y);
     mid_x = (ras.x + to_x + 2*UPSCALE(control->x))/4;
     mid_y = (ras.y + to_y + 2*UPSCALE(control->y))/4;
-    
+
     return render_line( RAS_VAR_ mid_x, mid_y ) ||
            render_line( RAS_VAR_ to_x, to_y );
   }
@@ -613,7 +613,7 @@ int  render_conic( RAS_ARG_ FT_Vector* control, FT_Vector* to )
   levels    = ras.lev_stack;
   top       = 0;
   levels[0] = level;
-  
+
   arc[0].x = UPSCALE(to->x);
   arc[0].y = UPSCALE(to->y);
   arc[1].x = UPSCALE(control->x);
@@ -647,12 +647,12 @@ int  render_conic( RAS_ARG_ FT_Vector* control, FT_Vector* to )
   Draw:
     {
       TPos   to_x, to_y, mid_x, mid_y;
-      
+
       to_x  = arc[0].x;
       to_y  = arc[0].y;
       mid_x = (ras.x + to_x + 2*arc[1].x)/4;
       mid_y = (ras.y + to_y + 2*arc[1].y)/4;
-      
+
       if ( render_line( RAS_VAR_ mid_x, mid_y ) ||
            render_line( RAS_VAR_ to_x, to_y )   ) return 1;
       top--;
@@ -723,12 +723,12 @@ int  render_cubic( RAS_ARG_ FT_Vector* control1,
   if (level <= 1)
   {
     TPos   to_x, to_y, mid_x, mid_y;
-    
+
     to_x  = UPSCALE(to->x);
     to_y  = UPSCALE(to->y);
     mid_x = (ras.x + to_x + 3*UPSCALE(control1->x+control2->x))/8;
     mid_y = (ras.y + to_y + 3*UPSCALE(control1->y+control2->y))/8;
-    
+
     return render_line( RAS_VAR_ mid_x, mid_y ) ||
            render_line( RAS_VAR_ to_x, to_y );
   }
@@ -775,12 +775,12 @@ int  render_cubic( RAS_ARG_ FT_Vector* control1,
   Draw:
     {
       TPos   to_x, to_y, mid_x, mid_y;
-      
+
       to_x  = arc[0].x;
       to_y  = arc[0].y;
       mid_x = (ras.x + to_x + 3*(arc[1].x+arc[2].x))/8;
       mid_y = (ras.y + to_y + 3*(arc[1].y+arc[2].y))/8;
-      
+
       if ( render_line( RAS_VAR_ mid_x, mid_y ) ||
            render_line( RAS_VAR_ to_x, to_y )   ) return 1;
       top --;
@@ -1015,9 +1015,9 @@ int  check_sort( PCell  cells, int count )
     for ( ; count > 0; count--, spans++ )
     {
       if (spans->coverage)
-#if 1      
+#if 1
         memset( p + spans->x, (spans->coverage+1) >> 1, spans->len );
-#else        
+#else
       {
         q     = p + spans->x;
         limit = q + spans->len;
@@ -1172,7 +1172,7 @@ int  check_sort( PCell  cells, int count )
         ++cur;
         if (cur >= limit || cur->y != start->y || cur->x != start->x)
           break;
-          
+
         area  += cur->area;
         cover += cur->cover;
       }
@@ -1226,7 +1226,7 @@ int  check_sort( PCell  cells, int count )
   typedef struct TBand_
   {
     FT_Pos  min, max;
-    
+
   } TBand;
 
   static
@@ -1254,7 +1254,7 @@ int  check_sort( PCell  cells, int count )
     if ( ras.max_ex <= 0 || ras.min_ex >= ras.target.width ||
          ras.max_ey <= 0 || ras.min_ey >= ras.target.rows  )
       return 0;
-        
+
     if (ras.min_ex < 0) ras.min_ex = 0;
     if (ras.min_ey < 0) ras.min_ey = 0;
 
@@ -1271,7 +1271,7 @@ int  check_sort( PCell  cells, int count )
         level++;
       if (ras.max_ex > 120 || ras.max_ey > 120)
         level+=2;
-        
+
       ras.conic_level <<= level;
       ras.cubic_level <<= level;
     }
@@ -1280,7 +1280,7 @@ int  check_sort( PCell  cells, int count )
     num_bands = (ras.max_ey - ras.min_ey)/ras.band_size;
     if (num_bands == 0)  num_bands = 1;
     if (num_bands >= 39) num_bands = 39;
-      
+
     ras.band_shoot = 0;
 
     min   = ras.min_ey;
@@ -1290,24 +1290,24 @@ int  check_sort( PCell  cells, int count )
       max = min + ras.band_size;
       if (n == num_bands-1 || max > max_y)
         max = max_y;
-        
+
       bands[0].min = min;
       bands[0].max = max;
       band         = bands;
-            
+
       while (band >= bands)
       {
         FT_Pos  bottom, top, middle;
         int     error;
-  
+
         ras.num_cells = 0;
         ras.invalid   = 1;
         ras.min_ey    = band->min;
         ras.max_ey    = band->max;
-  
+
         error = FT_Outline_Decompose( outline, &interface, &ras ) ||
                 record_cell( RAS_VAR );
-  
+
         if (!error)
         {
           #ifdef SHELL_SORT
@@ -1315,22 +1315,22 @@ int  check_sort( PCell  cells, int count )
           #else
           quick_sort( ras.cells, ras.num_cells );
           #endif
-      
+
           #ifdef DEBUG_GRAYS
           check_sort( ras.cells, ras.num_cells );
           dump_cells( RAS_VAR );
           #endif
-  
+
           grays_sweep( RAS_VAR_  &ras.target );
           band--;
           continue;
         }
-  
+
         /* render pool overflow, we will reduce the render band by half */
         bottom = band->min;
         top    = band->max;
         middle = bottom + ((top-bottom) >> 1);
-  
+
         /* waoow !! this is too complex for a single scanline, something */
         /* must be really rotten here !!                                 */
         if (middle == bottom)
@@ -1340,10 +1340,10 @@ int  check_sort( PCell  cells, int count )
           #endif
           return 1;
         }
-  
+
         if (bottom-top >= ras.band_size)
           ras.band_shoot++;
-  
+
         band[1].min = bottom;
         band[1].max = middle;
         band[0].min = middle;
@@ -1461,10 +1461,10 @@ int  check_sort( PCell  cells, int count )
                            long         pool_size )
   {
     PRaster  rast = (PRaster)raster;
-    
+
     if (raster && pool_base && pool_size >= 4096)
       init_cells( rast, (char*)pool_base, pool_size );
-      
+
     rast->band_size  = (pool_size / sizeof(TCell))/8;
   }
 

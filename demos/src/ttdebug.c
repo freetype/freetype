@@ -617,20 +617,20 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
 #ifdef UNIX
 
  struct termios  old_termio;
- 
+
  static
  void Init_Keyboard( void )
  {
    struct termios  termio;
 
 #ifndef HAVE_TCGETATTR
-   ioctl( 0, TCGETS, &old_termio ); 
+   ioctl( 0, TCGETS, &old_termio );
 #else
    tcgetattr( 0, &old_termio );
 #endif
 
    termio = old_termio;
-   
+
 /*   termio.c_lflag &= ~(ICANON+ECHO+ECHOE+ECHOK+ECHONL+ECHOKE); */
    termio.c_lflag &= ~(ICANON+ECHO+ECHOE+ECHOK+ECHONL);
 
@@ -838,7 +838,7 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
     exc->pts.n_contours = exc->zp0.n_contours;
 
     pts = exc->pts;
-    
+
 
     save.n_points   = pts.n_points;
     save.n_contours = pts.n_contours;
@@ -1205,7 +1205,7 @@ int    glyph_size;
     memory = library->memory;
     driver = FT_Get_Driver( library, "truetype" );
     if (!driver) Panic( "could not find the TrueType driver in FreeType 2\n" );
-    
+
     FT_Set_Debug_Hook( library,
                        FT_DEBUG_HOOK_TRUETYPE,
                        (FT_DebugHook_Func)RunIns );
@@ -1219,7 +1219,7 @@ int    glyph_size;
       error = FT_Err_Invalid_File_Format;
       Panic( "This is not a TrueType font" );
     }
-  
+
     size = (TT_Size)face->root.size;
 
     if (glyph_index < 0)

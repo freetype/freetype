@@ -857,7 +857,7 @@
   *
   * <Input>
   *    raster    :: handle to new raster object
-  *    mode      :: a 4-byte tag used to name the mode or property           
+  *    mode      :: a 4-byte tag used to name the mode or property
   *    args      :: a pointer to the new mode/property to use
   *
   **************************************************************************/

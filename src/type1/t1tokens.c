@@ -170,7 +170,7 @@
 
       FT_TRACE2(( "Growing tokenizer buffer by %d bytes\n", left_bytes ));
 
-      if ( !REALLOC( tokzer->base, tokzer->limit, 
+      if ( !REALLOC( tokzer->base, tokzer->limit,
                      tokzer->limit + left_bytes )                 &&
            !FILE_Read( tokzer->base + tokzer->limit, left_bytes ) )
         tokzer->limit += left_bytes;
@@ -309,13 +309,13 @@
    tokzer->cursor = 0;
 
    *tokenizer = tokzer;
-   
+
    /* Now check font format, we must see a '%!PS-AdobeFont-1' */
    /* or a '%!FontType'                                       */
    {
      if ( 16 > tokzer->limit )
        grow( tokzer );
-       
+
      if ( tokzer->limit <= 16 ||
           ( strncmp( (const char*)tokzer->base, "%!PS-AdobeFont-1", 16 ) &&
             strncmp( (const char*)tokzer->base, "%!FontType", 10 )       ) )
@@ -817,7 +817,7 @@
              case '(':
              case '<':
              case '/':
-               goto Any_Token;           
+               goto Any_Token;
 
              case  ' ':
              case '\r':
@@ -842,7 +842,7 @@
      case '+':
        if (token_started)
          goto Next;
-         
+
        token_started    = 1;
        tok->token.start = cur-1;
        for (;;)

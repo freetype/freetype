@@ -2,7 +2,7 @@
  *
  *  t1objs.c                                                     1.0
  *
- *    Type1 Objects manager.        
+ *    Type1 Objects manager.
  *
  *  Copyright 1996-1998 by
  *  David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -97,7 +97,7 @@
  *     Error code.
  *
  ******************************************************************/
- 
+
   LOCAL_FUNC
   T1_Error  T1_Reset_Size( T1_Size  size )
   {
@@ -124,7 +124,7 @@
  *     face  :: typeless pointer to the face object to destroy
  *
  *  <Return>
- *     Error code.                       
+ *     Error code.
  *
  ******************************************************************/
 
@@ -138,10 +138,10 @@
     {
       memory = face->root.memory;
 
-      /* release font info strings */      
+      /* release font info strings */
       {
         T1_FontInfo*  info = &type1->font_info;
-        
+
         FREE( info->version );
         FREE( info->notice );
         FREE( info->full_name );
@@ -149,21 +149,21 @@
         FREE( info->weight );
       }
 
-      /* release top dictionary */      
+      /* release top dictionary */
       FREE( type1->charstrings_len );
       FREE( type1->charstrings );
       FREE( type1->glyph_names );
 
       FREE( type1->subrs );
       FREE( type1->subrs_len );
-      
+
       FREE( type1->subrs_block );
       FREE( type1->charstrings_block );
       FREE( type1->glyph_names_block );
 
       FREE( type1->encoding.char_index );
       FREE( type1->font_name );
-      
+
 #ifndef T1_CONFIG_OPTION_NO_AFM
       /* release afm data if present */
       if ( face->afm_data)
@@ -217,7 +217,7 @@
     {
       /* look-up the PSNames driver */
       FT_Driver  psnames_driver;
-      
+
       psnames_driver = FT_Get_Driver( face->root.driver->library, "psnames" );
       if (psnames_driver)
         face->psnames = (PSNames_Interface*)
@@ -246,15 +246,15 @@
       /* Now set up root face fields */
       {
         FT_Face  root = (FT_Face)&face->root;
-        
+
         root->num_glyphs   = face->type1.num_glyphs;
         root->num_charmaps = 1;
-  
+
         root->face_index = face_index;
         root->face_flags = FT_FACE_FLAG_SCALABLE;
-        
+
         root->face_flags |= FT_FACE_FLAG_HORIZONTAL;
-                              
+
         if ( face->type1.font_info.is_fixed_pitch )
           root->face_flags |= FT_FACE_FLAG_FIXED_WIDTH;
 
@@ -267,13 +267,13 @@
         {
           char*  full   = face->type1.font_info.full_name;
           char*  family = root->family_name;
-          
+
           while ( *family && *full == *family )
           {
             family++;
             full++;
           }
-          
+
           root->style_name = ( *full == ' ' ? full+1 : "Regular" );
         }
         else
@@ -285,17 +285,17 @@
             root->style_name  = "Regular";
           }
         }
-  
+
         /* no embedded bitmap support */
         root->num_fixed_sizes = 0;
         root->available_sizes = 0;
-  
+
         root->bbox         = face->type1.font_bbox;
         root->units_per_EM = 1000;
         root->ascender     =  (T1_Short)face->type1.font_bbox.yMax;
         root->descender    = -(T1_Short)face->type1.font_bbox.yMin;
         root->height       = ((root->ascender + root->descender)*12)/10;
-  
+
         /* now compute the maximum advance width */
 
         root->max_advance_width = face->type1.private_dict.standard_width;
@@ -315,10 +315,10 @@
         }
 
         root->max_advance_height = root->height;
-        
+
         root->underline_position  = face->type1.font_info.underline_position;
         root->underline_thickness = face->type1.font_info.underline_thickness;
-  
+
         root->max_points   = 0;
         root->max_contours = 0;
       }
@@ -349,7 +349,7 @@
             charmap->encoding_id = 1;
             charmap++;
           }
-          
+
           /* simply clear the error in case of failure (which really) */
           /* means that out of memory or no unicode glyph names       */
           error = 0;
@@ -359,25 +359,25 @@
       /* now, support either the standard, expert, or custom encodings */
       charmap->face        = (FT_Face)face;
       charmap->platform_id = 7;  /* a new platform id for Adobe fonts ?? */
-      
+
       switch (face->type1.encoding_type)
       {
         case t1_encoding_standard:
           charmap->encoding    = ft_encoding_adobe_standard;
           charmap->encoding_id = 0;
           break;
-        
+
         case t1_encoding_expert:
           charmap->encoding    = ft_encoding_adobe_expert;
           charmap->encoding_id = 1;
           break;
-        
+
         default:
           charmap->encoding    = ft_encoding_adobe_custom;
           charmap->encoding_id = 2;
           break;
       }
-      
+
       root->charmaps = face->charmaps;
       root->num_charmaps = charmap - face->charmaprecs + 1;
       face->charmaps[0] = &face->charmaprecs[0];
@@ -396,7 +396,7 @@
  *
  *  Input  :  _glyph  typeless pointer to the glyph record to destroy
  *
- *  Output :  Error code.                       
+ *  Output :  Error code.
  *
  ******************************************************************/
 
@@ -420,7 +420,7 @@
  *  Description :  The glyph object constructor.
  *
  *  Input  :  glyph   glyph record to build.
- *            face    the glyph's parent face.              
+ *            face    the glyph's parent face.
  *
  *  Output :  Error code.
  *

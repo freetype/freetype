@@ -23,7 +23,7 @@
   typedef unsigned short ushort;
   typedef unsigned int   uint;
 #endif
-  
+
   typedef struct grDimension_
   {
     int  x;

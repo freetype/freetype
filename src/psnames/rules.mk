@@ -29,7 +29,7 @@ ifndef PSNAMES_INCLUDE
   # compilation flags for the driver
   #
   PSNAMES_CFLAGS  := $(PSNAMES_INCLUDE:%=$I%)
-  PSNAMES_COMPILE := $(FT_COMPILE) $(PSNAMES_CFLAGS) 
+  PSNAMES_COMPILE := $(FT_COMPILE) $(PSNAMES_CFLAGS)
 
 
   # driver sources (i.e., C files)

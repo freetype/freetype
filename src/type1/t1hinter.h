@@ -2,7 +2,7 @@
  *
  *  t1hinter.h                                                 1.2
  *
- *    Type1 hinter.         
+ *    Type1 hinter.
  *
  *  Copyright 1996-1999 by
  *  David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -56,10 +56,10 @@
   typedef struct T1_Snap_Zone_
   {
     T1_Pos  orus;
-    T1_Pos  pix; 
-    T1_Pos  min; 
-    T1_Pos  max;  
-  
+    T1_Pos  pix;
+    T1_Pos  min;
+    T1_Pos  max;
+
   } T1_Snap_Zone;
 
 
@@ -80,8 +80,8 @@
   typedef struct T1_Edge_
   {
     T1_Pos  orus;
-    T1_Pos  pix;  
-  
+    T1_Pos  pix;
+
   } T1_Edge;
 
 
@@ -209,7 +209,7 @@
  *
  * <Description>
  *   A structure used to model the stem hints of a given glyph outline
- *   during glyph loading. 
+ *   during glyph loading.
  *
  * <Fields>
  *   hori_stems  :: horizontal stem hints table
@@ -344,7 +344,7 @@
  *
  * <Description>
  *   this function grid-fits several points in a given Type 1 builder
- *   at once. 
+ *   at once.
  *
  * <Input>
  *   builder  :: handle to target Type 1 builder

@@ -9,7 +9,7 @@
  *
  *  This file is part of the FreeType project, and may only be used,
  *  modified, and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute 
+ *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
  *  this file you indicate that you have read the license and
  *  understand and accept it fully.
  *
@@ -59,10 +59,10 @@
                                      const FT_String*  interface )
   {
     UNUSED(driver);
-    
+
     if ( strcmp( (const char*)interface, "attach_file" ) == 0 )
       return (FTDriver_Interface)T1_Read_AFM;
-      
+
     return 0;
   }
 
@@ -107,7 +107,7 @@
                          T1_Vector*  kerning )
   {
     T1_AFM*  afm;
-    
+
     kerning->x = 0;
     kerning->y = 0;
 
@@ -185,7 +185,7 @@
     UNUSED(pixel_width);
     UNUSED(pixel_height);
 
-    size->valid = FALSE; 
+    size->valid = FALSE;
     return T1_Reset_Size(size);
   }
 
@@ -214,7 +214,7 @@
 
     face = (T1_Face)charmap->face;
     psnames = (PSNames_Interface*)face->psnames;
-    if (psnames)    
+    if (psnames)
       switch (charmap->encoding)
       {
        /********************************************************************/
@@ -233,7 +233,7 @@
               result = 0;
             goto Exit;
           }
-  
+
        /********************************************************************/
        /*                                                                  */
        /* Custom Type 1 encoding                                           */
@@ -248,7 +248,7 @@
             }
             goto Exit;
           }
-          
+
        /********************************************************************/
        /*                                                                  */
        /* Adobe Standard & Expert encoding support                         */
@@ -259,18 +259,18 @@
            FT_UInt      code;
            FT_Int       n;
            const char*  glyph_name;
-           
+
            code = psnames->adobe_std_encoding[charcode];
            if (charmap->encoding == ft_encoding_adobe_expert)
              code = psnames->adobe_expert_encoding[charcode];
-           
+
            glyph_name = psnames->adobe_std_strings(code);
            if (!glyph_name) break;
-           
+
            for ( n = 0; n < face->type1.num_glyphs; n++ )
            {
              const char*  gname = face->type1.glyph_names[n];
-             
+
              if ( gname && gname[0] == glyph_name[0] &&
                   strcmp( gname, glyph_name ) == 0 )
              {
@@ -280,7 +280,7 @@
            }
          }
       }
-  Exit:      
+  Exit:
     return result;
   }
 
@@ -366,7 +366,7 @@
     sizeof( T1_FaceRec ),
     sizeof( T1_SizeRec ),
     sizeof( T1_GlyphSlotRec ),
-    
+
     "type1",
     100,
     200,
@@ -385,7 +385,7 @@
     (FTDriver_initFace)             T1_Init_Face,
     (FTDriver_doneFace)             T1_Done_Face,
 
-#ifdef T1_CONFIG_OPTION_NO_AFM    
+#ifdef T1_CONFIG_OPTION_NO_AFM
     (FTDriver_getKerning)           0,
 #else
     (FTDriver_getKerning)           Get_Kerning,
@@ -425,12 +425,12 @@
   /*                                                                */
 
 #ifdef FT_CONFIG_OPTION_DYNAMIC_DRIVERS
-  
+
   EXPORT_FUNC(FT_DriverInterface*)  getDriverInterface( void )
   {
     return &t1_driver_interface;
   }
-  
+
 #endif /* FT_CONFIG_OPTION_DYNAMIC_DRIVERS */
 
 

@@ -2,7 +2,7 @@
  *
  *  t1load.h                                                    2.0
  *
- *    Type1 Loader.                          
+ *    Type1 Loader.
  *
  *  Copyright 1996-2000 by
  *  David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -32,7 +32,7 @@
  *
  *      ..... /Field <data> ....
  *
- *  where <data> can be a number, a boolean, a string, or an 
+ *  where <data> can be a number, a boolean, a string, or an
  *  array of numbers. There are a few exceptions, namely the
  *  encoding, font name, charstrings and subrs and they are
  *  handled with a special pattern-matching routine.
@@ -72,17 +72,17 @@
 
   typedef  void  (*T1_Parse_Func)( T1_Face   face, T1_Loader*  loader );
 
-  typedef  struct T1_KeyWord_  
+  typedef  struct T1_KeyWord_
   {
     const char*    name;
     T1_Parse_Func  parsing;
-  
+
   } T1_KeyWord;
 
   /* some handy macros used to easily define parsing callback functions */
   /* each callback is in charge of loading a value and storing it in a  */
   /* given field of the Type 1 face..                                   */
- 
+
 #define PARSE_(x)  static void FT_XCAT(parse_,x) ( T1_Face  face, T1_Loader* loader )
 
 #define FIELD   FACE.x
@@ -98,7 +98,7 @@
           FACE.x = (t)T1_ToInt(&loader->parser);                  \
           FT_TRACE2(( "type1.parse_%s: \"%d\"\n", #x, FACE.x ));   \
         }
-        
+
 #define PARSE_INT(s,x)   PARSE_(x)                                  \
         {                                                           \
           FACE.x = T1_ToInt(&loader->parser);                     \
@@ -111,19 +111,19 @@
           FT_TRACE2(( "type1.parse_%s : \"%s\"\n",                \
                        #x, FACE.x ? "true" : "false" ));              \
         }
- 
+
 #define PARSE_FIXED(s,x)   PARSE_(x)                                        \
         {                                                                   \
           FACE.x = T1_ToFixed(&loader->parser,3);                         \
           FT_TRACE2(( "type1.parse_%s: \"%f\"\n", #x, FACE.x/65536.0 ));   \
         }
- 
+
 #define PARSE_COORDS(s,c,m,x)   PARSE_(x)                                         \
         {                                                                         \
           FACE.c = T1_ToCoordArray(&loader->parser, m, (T1_Short*)FACE.x );   \
           FT_TRACE2(( "type1.parse_%s\n", #x ));                                   \
         }
-           
+
 #define PARSE_FIXEDS(s,c,m,x)   PARSE_(x)                                           \
         {                                                                           \
           FACE.c = T1_ToFixedArray(&loader->parser, m, (T1_Fixed*)FACE.x, 3 );  \
@@ -168,49 +168,49 @@
   void  skip_whitespace( T1_Parser* parser )
   {
     T1_Byte*  cur = parser->cursor;
-    
+
     while ( cur < parser->limit && is_space(*cur) )
       cur++;
-      
+
     parser->cursor = cur;
   }
-  
+
   static
   void skip_blackspace( T1_Parser* parser )
   {
     T1_Byte*  cur = parser->cursor;
-    
+
     while ( cur < parser->limit && !is_space(*cur) )
       cur++;
-      
+
     parser->cursor = cur;
   }
-  
+
   static
   int   read_binary_data( T1_Parser*  parser, T1_Int *size, T1_Byte* *base )
   {
     T1_Byte*  cur;
     T1_Byte*  limit = parser->limit;
-    
+
     /* the binary data has the following format */
     /*                                          */
     /* "size" [white*] RD white ....... ND      */
     /*                                          */
-    
+
     skip_whitespace(parser);
     cur = parser->cursor;
-    
+
     if ( cur < limit && (T1_Byte)(*cur-'0') < 10 )
     {
       *size = T1_ToInt(parser);
-      
+
       skip_whitespace(parser);
       skip_blackspace(parser);  /* "RD" or "-|" or something else */
-      
+
       /* there is only one whitespace char after the */
       /* "RD" or "-|" token                          */
       *base = parser->cursor + 1;
-      
+
       parser->cursor += *size+1;
       return 1;
     }
@@ -235,12 +235,12 @@
     T1_Byte*    cur;
     T1_Byte*    cur2;
     T1_Byte*    limit;
-    
+
     skip_whitespace(parser);
     cur   = parser->cursor;
     limit = parser->limit;
     if ( cur >= limit-1 || *cur != '/' ) return;
-    
+
     cur++;
     cur2 = cur;
     while (cur2 < limit && is_alpha(*cur2)) cur2++;
@@ -252,7 +252,7 @@
         parser->error = error;
         return;
       }
-      
+
       MEM_Copy( face->type1.font_name, cur, len );
       face->type1.font_name[len] = '\0';
     }
@@ -265,7 +265,7 @@
     T1_Parser*  parser = &loader->parser;
     T1_Short    temp[4];
     T1_BBox*    bbox = &face->type1.font_bbox;
-    
+
     (void)T1_ToCoordArray( parser, 4, temp );
     bbox->xMin = temp[0];
     bbox->yMin = temp[1];
@@ -279,7 +279,7 @@
     T1_Parser*  parser = &loader->parser;
     T1_Byte*    cur   = parser->cursor;
     T1_Byte*    limit = parser->limit;
-    
+
     /* skip whitespace */
     while (is_space(*cur))
     {
@@ -291,7 +291,7 @@
         return;
       }
     }
-    
+
     /* if we have a number, then the encoding is an array, */
     /* and we must load it now                             */
     if ((T1_Byte)(*cur - '0') < 10)
@@ -301,7 +301,7 @@
       T1_Table*     char_table = &loader->encoding_table;
       FT_Memory     memory     = parser->memory;
       FT_Error      error;
-      
+
       /* read the number of entries in the encoding, should be 256 */
       count = T1_ToInt( parser );
       if (parser->error) return;
@@ -315,7 +315,7 @@
         parser->error = error;
         return;
       }
-      
+
       /* now, we will need to read a record of the form         */
       /* ... charcode /charname ... for each entry in our table */
       /*                                                        */
@@ -337,9 +337,9 @@
       for ( ; cur < limit; )
       {
         T1_Byte  c;
-        
+
         c = *cur;
-        
+
         /* we stop when we encounter a 'def' */
         if ( c == 'd' && cur+3 < limit )
         {
@@ -352,39 +352,39 @@
               break;
           }
         }
-        
+
         /* otherwise, we must find a number before anything else */
         if ( (T1_Byte)(c-'0') < 10 )
         {
           T1_Int  charcode;
-          
+
           parser->cursor = cur;
           charcode = T1_ToInt(parser);
           cur = parser->cursor;
-          
+
           /* skip whitespace */
           while (cur < limit && is_space(*cur)) cur++;
-          
+
           if (cur < limit && *cur == '/')
           {
             /* bingo, we have an immediate name - it must be a */
             /* character name                                  */
             FT_Byte*  cur2 = cur+1;
             T1_Int    len;
-            
+
             while (cur2 < limit && is_alpha(*cur2)) cur2++;
             len = cur2-cur-1;
             parser->error = T1_Add_Table( char_table, charcode, cur+1, len+1 );
             char_table->elements[charcode][len] = '\0';
             if (parser->error) return;
-            
+
             cur = cur2;
           }
         }
         else
           cur++;
       }
-      
+
       face->type1.encoding_type = t1_encoding_array;
       parser->cursor            = cur;
     }
@@ -395,7 +395,7 @@
       if ( cur+17 < limit &&
            strncmp( (const char*)cur, "StandardEncoding", 16 ) == 0 )
         face->type1.encoding_type = t1_encoding_standard;
-        
+
       else if ( cur+15 < limit &&
                 strncmp( (const char*)cur, "ExpertEncoding", 14 ) == 0 )
         face->type1.encoding_type = t1_encoding_expert;
@@ -404,7 +404,7 @@
       {
         FT_ERROR(( "type1.parse_encoding: invalid token !!\n" ));
         parser->error = FT_Err_Invalid_File_Format;
-      }      
+      }
     }
   }
 
@@ -417,10 +417,10 @@
     FT_Memory   memory = parser->memory;
     FT_Error    error;
     T1_Int      n;
-    
-    loader->num_subrs = T1_ToInt( parser );    
+
+    loader->num_subrs = T1_ToInt( parser );
     if (parser->error) return;
-    
+
     /* initialise subrs array */
     error = T1_New_Table( table, loader->num_subrs, memory );
     if (error) goto Fail;
@@ -429,16 +429,16 @@
     /*                                                       */
     /*   "index" + binary data                               */
     /*                                                       */
-    
+
     for ( n = 0; n < loader->num_subrs; n++ )
     {
       T1_Int    index, size;
       T1_Byte*  base;
-      
+
       index = T1_ToInt(parser);
       if (!read_binary_data(parser,&size,&base)) return;
-      
-      T1_Decrypt( base, size, 4330 );      
+
+      T1_Decrypt( base, size, 4330 );
       size -= face->type1.private_dict.lenIV;
       base += face->type1.private_dict.lenIV;
 
@@ -466,21 +466,21 @@
     T1_Byte*    cur;
     T1_Byte*    limit = parser->limit;
     T1_Int      n;
-    
-    loader->num_glyphs = T1_ToInt( parser );    
+
+    loader->num_glyphs = T1_ToInt( parser );
     if (parser->error) return;
-    
+
     /* initialise tables */
     error = T1_New_Table( code_table, loader->num_glyphs, memory ) ||
             T1_New_Table( name_table, loader->num_glyphs, memory );
     if (error) goto Fail;
-    
+
     n = 0;
     for ( ;; )
     {
       T1_Int    size;
       T1_Byte*  base;
-      
+
       /* the format is simple :                   */
       /*   "/glyphname" + binary data             */
       /*                                          */
@@ -491,7 +491,7 @@
       if (cur >= limit) break;
 
       /* we stop when we find a "def" or "end" keyword */
-      if (*cur    == 'd' && 
+      if (*cur    == 'd' &&
            cur+3 < limit &&
            cur[1] == 'e' &&
            cur[2] == 'f' )
@@ -509,26 +509,26 @@
       {
         T1_Byte*  cur2 = cur+1;
         T1_Int    len;
-        
+
         while (cur2 < limit && is_alpha(*cur2)) cur2++;
         len = cur2-cur-1;
-        
+
         error = T1_Add_Table( name_table, n, cur+1, len+1 );
         if (error) goto Fail;
-       
+
         /* add a trailing zero to the name table */
         name_table->elements[n][len] = '\0';
-       
-        parser->cursor = cur2; 
+
+        parser->cursor = cur2;
         if (!read_binary_data(parser,&size,&base)) return;
 
-        T1_Decrypt( base, size, 4330 );      
+        T1_Decrypt( base, size, 4330 );
         size -= face->type1.private_dict.lenIV;
         base += face->type1.private_dict.lenIV;
 
         error = T1_Add_Table( code_table, n, base, size );
         if (error) goto Fail;
-        
+
         n++;
         if (n >= loader->num_glyphs)
           break;
@@ -536,7 +536,7 @@
     }
     loader->num_glyphs = n;
     return;
-    
+
   Fail:
     parser->error = error;
   }
@@ -586,15 +586,15 @@
                         T1_Long     size )
   {
     T1_Parser*  parser = &loader->parser;
-    
+
     parser->cursor = base;
     parser->limit  = base + size;
     parser->error  = 0;
-    
+
     {
       T1_Byte*  cur     = base;
       T1_Byte*  limit   = cur + size;
-      
+
       for ( ;cur < limit; cur++ )
       {
         /* look for immediates */
@@ -602,21 +602,21 @@
         {
           T1_Byte* cur2;
           T1_Int   len;
-          
+
           cur  ++;
           cur2 = cur;
           while (cur2 < limit && is_alpha(*cur2)) cur2++;
           len  = cur2-cur;
-          
+
           if (len > 0 && len < 20)
           {
             /* now, compare the immediate name to the keyword table */
             T1_KeyWord*  keyword = (T1_KeyWord*)t1_keywords;
-            
+
             for (;;)
             {
               T1_Byte*  name;
-              
+
               name = (T1_Byte*)keyword->name;
               if (!name) break;
 
@@ -627,7 +627,7 @@
                 for ( n = 1; n < len; n++ )
                   if (cur[n] != name[n])
                     break;
-                    
+
                 if (n >= len)
                 {
                   /* we found it - run the parsing callback !! */
@@ -654,29 +654,29 @@
   void t1_init_loader( T1_Loader* loader, T1_Face  face )
   {
     UNUSED(face);
-    
+
     MEM_Set( loader, 0, sizeof(*loader) );
     loader->num_glyphs = 0;
     loader->num_chars  = 0;
 
-    /* initialize the tables - simply set their 'init' field to 0 */    
+    /* initialize the tables - simply set their 'init' field to 0 */
     loader->encoding_table.init = 0;
     loader->charstrings.init    = 0;
     loader->glyph_names.init    = 0;
     loader->subrs.init          = 0;
   }
-  
+
   static
   void t1_done_loader( T1_Loader* loader )
   {
     T1_Parser*  parser = &loader->parser;
-    
+
     /* finalize tables */
     T1_Release_Table( &loader->encoding_table );
     T1_Release_Table( &loader->charstrings );
     T1_Release_Table( &loader->glyph_names );
     T1_Release_Table( &loader->subrs );
-    
+
     /* finalize parser */
     T1_Done_Parser( parser );
   }
@@ -693,47 +693,47 @@
 
     /* default lenIV */
     type1->private_dict.lenIV = 4;
-    
+
     parser = &loader.parser;
     error = T1_New_Parser( parser, face->root.stream, face->root.memory );
     if (error) goto Exit;
 
     error = parse_dict( face, &loader, parser->base_dict, parser->base_len );
     if (error) goto Exit;
-    
+
     error = T1_Get_Private_Dict( parser );
     if (error) goto Exit;
-    
+
     error = parse_dict( face, &loader, parser->private_dict, parser->private_len );
-    if (error) goto Exit;    
+    if (error) goto Exit;
 
     /* now, propagate the subrs, charstrings and glyphnames tables */
     /* to the Type1 data                                           */
     type1->num_glyphs = loader.num_glyphs;
-    
+
     if ( !loader.subrs.init )
     {
       FT_ERROR(( "T1.Open_Face: no subrs array in face !!\n" ));
       error = FT_Err_Invalid_File_Format;
     }
-    
+
     if ( !loader.charstrings.init )
     {
       FT_ERROR(( "T1.Open_Face: no charstrings array in face !!\n" ));
       error = FT_Err_Invalid_File_Format;
     }
-    
+
     loader.subrs.init  = 0;
     type1->num_subrs   = loader.num_subrs;
     type1->subrs_block = loader.subrs.block;
     type1->subrs       = loader.subrs.elements;
     type1->subrs_len   = loader.subrs.lengths;
-    
+
     loader.charstrings.init  = 0;
     type1->charstrings_block = loader.charstrings.block;
     type1->charstrings       = loader.charstrings.elements;
     type1->charstrings_len   = loader.charstrings.lengths;
-    
+
     /* we copy the glyph names "block" and "elements" fields */
     /* but the "lengths" field must be released later..      */
     type1->glyph_names_block    = loader.glyph_names.block;
@@ -753,16 +753,16 @@
       /* table, lookup the index of the glyph having the same name  */
       /* the index is then stored in type1.encoding.char_index, and */
       /* a the name to type1.encoding.char_name                     */
-      
+
       min_char = +32000;
       max_char = -32000;
-      
+
       charcode = 0;
       for ( ; charcode < loader.encoding_table.num_elems; charcode++ )
       {
         type1->encoding.char_index[charcode] = 0;
         type1->encoding.char_name [charcode] = ".notdef";
-        
+
         char_name = loader.encoding_table.elements[charcode];
         if (char_name)
           for ( index = 0; index < type1->num_glyphs; index++ )
@@ -773,7 +773,7 @@
             {
               type1->encoding.char_index[charcode] = index;
               type1->encoding.char_name [charcode] = (char*)glyph_name;
-              
+
               if (charcode < min_char) min_char = charcode;
               if (charcode > max_char) max_char = charcode;
               break;
@@ -784,8 +784,8 @@
       type1->encoding.code_last  = max_char;
       type1->encoding.num_chars  = loader.num_chars;
    }
-    
+
   Exit:
     t1_done_loader( &loader );
     return error;
-  } 
+  }

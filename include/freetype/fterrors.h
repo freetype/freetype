@@ -47,15 +47,15 @@ FT_ERROR_START_LIST
   FT_ERRORDEF( FT_Err_Cannot_Open_Resource,    0x0001, "can't open stream"   )
   FT_ERRORDEF( FT_Err_Unknown_File_Format,     0x0002, "unknown file format" )
   FT_ERRORDEF( FT_Err_Invalid_File_Format,     0x0003, "broken file" )
-  
+
   FT_ERRORDEF( FT_Err_Invalid_Argument,        0x0010, "invalid argument" )
   FT_ERRORDEF( FT_Err_Invalid_Handle,          0x0011, "invalid object handle" )
   FT_ERRORDEF( FT_Err_Invalid_Glyph_Index,     0x0012, "invalid glyph index" )
   FT_ERRORDEF( FT_Err_Invalid_Character_Code,  0x0013, "invalid character code" )
-  
+
   FT_ERRORDEF( FT_Err_Unimplemented_Feature,   0x0020, "unimplemented feature" )
   FT_ERRORDEF( FT_Err_Invalid_Glyph_Format,    0x0021, "invalid glyph image format" )
-  
+
   FT_ERRORDEF( FT_Err_Invalid_Library_Handle,  0x0030, "invalid library handle" )
   FT_ERRORDEF( FT_Err_Invalid_Driver_Handle,   0x0031, "invalid module handle" )
   FT_ERRORDEF( FT_Err_Invalid_Face_Handle,     0x0032, "invalid face handle" )
@@ -64,7 +64,7 @@ FT_ERROR_START_LIST
   FT_ERRORDEF( FT_Err_Invalid_CharMap_Handle,  0x0035, "invalid charmap handle" )
   FT_ERRORDEF( FT_Err_Invalid_Outline,         0x0036, "invalid outline" )
   FT_ERRORDEF( FT_Err_Invalid_Dimensions,      0x0037, "invalid dimensions" )
-  
+
   FT_ERRORDEF( FT_Err_Unavailable_Outline,     0x0040, "unavailable outline" )
   FT_ERRORDEF( FT_Err_Unavailable_Bitmap,      0x0041, "unavailable bitmap" )
   FT_ERRORDEF( FT_Err_File_Is_Not_Collection,  0x0042, "file is not a font collection" )
@@ -84,7 +84,7 @@ FT_ERROR_START_LIST
   FT_ERRORDEF( FT_Err_Invalid_Frame_Operation, 0x0066, "invalid frame operation" )
   FT_ERRORDEF( FT_Err_Nested_Frame_Access,     0x0067, "nested frame access" )
   FT_ERRORDEF( FT_Err_Invalid_Frame_Read,      0x0068, "invalid frame read" )
-  
+
   FT_ERRORDEF( FT_Err_Too_Many_Points,         0x0070, "too many points in glyph" )
   FT_ERRORDEF( FT_Err_Too_Many_Contours,       0x0071, "too many contours in glyph" )
   FT_ERRORDEF( FT_Err_Invalid_Composite,       0x0072, "invalid composite glyph" )
@@ -97,7 +97,7 @@ FT_ERROR_START_LIST
 /* range 0x500 - 0x5FF is reserved for TrueDoc  specific stuff */
 
 /* range 0x600 - 0x6FF is reserved for Type1    specific stuff */
-  
+
   FT_ERRORDEF( FT_Err_Raster_Uninitialized,   0x0080, "raster uninitialized" )
   FT_ERRORDEF( FT_Err_Raster_Corrupted,       0x0081, "raster corrupted !!" )
   FT_ERRORDEF( FT_Err_Raster_Overflow,        0x0082, "raster overflow !!" )

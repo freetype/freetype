@@ -55,7 +55,7 @@
 
   } T1_Operator;
 
-  static const T1_Int  t1_args_count[ op_max ] = 
+  static const T1_Int  t1_args_count[ op_max ] =
   {
     0, /* none */
     0, /* endchar */
@@ -223,7 +223,7 @@
       return T1_Err_Ok;
 
     count += base->n_points + outline->n_points;
-        
+
     /* realloc points table if necessary */
     if ( count >= builder->max_points )
     {
@@ -237,14 +237,14 @@
 
       if ( REALLOC_ARRAY( base->points, current,
                           builder->max_points, T1_Vector )  ||
-  
+
            REALLOC_ARRAY( base->tags, current,
                           builder->max_points, T1_Byte )    )
       {
         builder->error = error;
         return error;
       }
-    
+
       outline->points = base->points + increment;
       outline->tags  = base->tags  + increment;
     }
@@ -265,17 +265,17 @@
     {
       FT_Vector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
-      
+
       point->x = x;
       point->y = y;
       *control = ( flag ? FT_Curve_Tag_On : FT_Curve_Tag_Cubic );
-      
+
       builder->last = *point;
     }
-    
+
     outline->n_points++;
   }
-    
+
 
   /* check room for a new on-curve point, then add it */
   static
@@ -284,7 +284,7 @@
                         FT_Pos       y )
   {
     T1_Error  error;
-    
+
     error = check_points(builder,1);
     if (!error)
       add_point( builder, x, y, 1 );
@@ -305,7 +305,7 @@
       outline->n_contours++;
       return T1_Err_Ok;
     }
-    
+
     /* realloc contours array if necessary */
     if ( base->n_contours + outline->n_contours >= builder->max_contours &&
          builder->load_points )
@@ -323,7 +323,7 @@
         builder->error = error;
         return error;
       }
-  
+
       outline->contours = base->contours + increment;
     }
 
@@ -344,7 +344,7 @@
     if (!builder->path_begun)
     {
       T1_Error  error;
-    
+
       builder->path_begun = 1;
       error = add_contour( builder );
       if (error) return error;
@@ -374,7 +374,7 @@
  *    to implement the SEAC Type 1 operator.
  *
  * <Input>
- *    face     :: current face object         
+ *    face     :: current face object
  *    charcode :: charcode to look for
  *
  * <Return>
@@ -390,18 +390,18 @@
     T1_Int              n;
     const T1_String*    glyph_name;
     PSNames_Interface*  psnames = (PSNames_Interface*)face->psnames;
-    
+
     /* check range of standard char code */
     if (charcode < 0 || charcode > 255)
       return -1;
-      
+
     glyph_name = psnames->adobe_std_strings(
                     psnames->adobe_std_encoding[charcode]);
-    
+
     for ( n = 0; n < face->type1.num_glyphs; n++ )
     {
       T1_String*  name = (T1_String*)face->type1.glyph_names[n];
-      
+
       if ( name && strcmp(name,glyph_name) == 0 )
         return n;
     }
@@ -428,7 +428,7 @@
  *    achar    :: accent character's StandardEncoding charcode
  *
  * <Return>
- *    Error code. 0 means success.                               
+ *    Error code. 0 means success.
  *
  *********************************************************************/
 
@@ -447,10 +447,10 @@
     FT_Outline*  base = &decoder->builder.base;
     T1_Vector    left_bearing, advance;
     T1_Font*     type1 = &face->type1;
-    
+
     bchar_index = lookup_glyph_by_stdcharcode( face, bchar );
     achar_index = lookup_glyph_by_stdcharcode( face, achar );
-    
+
     if (bchar_index < 0 || achar_index < 0)
     {
       FT_ERROR(( "T1.Parse_Seac : invalid seac character code arguments\n" ));
@@ -482,20 +482,20 @@
       FT_GlyphSlot  glyph = (FT_GlyphSlot)decoder->builder.glyph;
       FT_SubGlyph*  subg;
 
-      /* reallocate subglyph array if necessary */        
+      /* reallocate subglyph array if necessary */
       if (glyph->max_subglyphs < 2)
       {
         FT_Memory  memory = decoder->builder.face->root.memory;
-        
+
         if ( REALLOC_ARRAY( glyph->subglyphs, glyph->max_subglyphs,
                             2, FT_SubGlyph ) )
           return error;
-          
+
         glyph->max_subglyphs = 2;
       }
 
       subg = glyph->subglyphs;
-      
+
       /* subglyph 0 = base character */
       subg->index = bchar_index;
       subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES |
@@ -503,7 +503,7 @@
       subg->arg1  = 0;
       subg->arg2  = 0;
       subg++;
-      
+
       /* subglyph 1 = accent character */
       subg->index = achar_index;
       subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES;
@@ -520,19 +520,19 @@
       /* as they will be erase by the next load..              */
       left_bearing = decoder->builder.left_bearing;
       advance      = decoder->builder.advance;
-  
+
       decoder->builder.left_bearing.x = 0;
-      decoder->builder.left_bearing.y = 0;    
-  
+      decoder->builder.left_bearing.y = 0;
+
       /* Now load "achar" on top of */
       /* the base outline           */
-      /*                            */ 
+      /*                            */
       cur->n_points   = 0;
       cur->n_contours = 0;
       cur->points     = base->points   + base->n_points;
       cur->tags      = base->tags    + base->n_points;
       cur->contours   = base->contours + base->n_contours;
-  
+
       error = T1_Parse_CharStrings( decoder,
                                     type1->charstrings    [achar_index],
                                     type1->charstrings_len[achar_index],
@@ -540,21 +540,21 @@
                                     type1->subrs,
                                     type1->subrs_len );
       if (error) return error;
-  
+
       /* adjust contours in accented character outline */
       if (decoder->builder.load_points)
       {
         T1_Int  n;
-  
+
         for ( n = 0; n < cur->n_contours; n++ )
           cur->contours[n] += n_base_points;
       }
-  
+
       /* restore the left side bearing and   */
       /* advance width of the base character */
       decoder->builder.left_bearing = left_bearing;
       decoder->builder.advance      = advance;
-  
+
       /* Finally, move the accent */
       if (decoder->builder.load_points)
         FT_Outline_Translate( cur, adx - asb, ady );
@@ -580,7 +580,7 @@
  *    subrs_len        :: array of sub-routines lengths
  *
  * <Return>
- *    Error code. 0 means success.                               
+ *    Error code. 0 means success.
  *
  *********************************************************************/
 
@@ -615,7 +615,7 @@
 
     error   = T1_Err_Ok;
     outline = &builder->current;
-    
+
     x = builder->pos_x;
     y = builder->pos_y;
 
@@ -749,27 +749,27 @@
         FT_TRACE4(( " callothersubr" ));
         if ( top - decoder->stack < 2 )
           goto Stack_Underflow;
-          
+
         top -= 2;
         switch ( top[1] )
         {
           case 1: /* start flex feature ---------------------- */
             {
               if ( top[0] != 0 ) goto Unexpected_OtherSubr;
-              
+
               decoder->flex_state        = 1;
               decoder->num_flex_vectors  = 0;
               if ( start_point(builder, x, y) ||
                    check_points(builder,6) ) goto Memory_Error;
             }
             break;
-  
+
           case 2: /* add flex vectors ------------------------ */
             {
               T1_Int      index;
-              
+
               if ( top[0] != 0 ) goto Unexpected_OtherSubr;
-              
+
               /* note that we should not add a point for index 0 */
               /* this will move our current position to the flex */
               /* point without adding any point to the outline   */
@@ -781,18 +781,18 @@
                            (T1_Byte)( index==3 || index==6 ) );
             }
             break;
-            
+
           case 0: /* end flex feature ------------------------- */
             {
               if ( top[0] != 3 ) goto Unexpected_OtherSubr;
-              
+
               if ( decoder->flex_state       == 0 ||
                    decoder->num_flex_vectors != 7 )
               {
                 FT_ERROR(( "T1.Parse_CharStrings: unexpected flex end\n" ));
                 goto Syntax_Error;
               }
-              
+
               /* now consume the remaining "pop pop setcurpoint" */
               if ( ip+6 > limit ||
                    ip[0] != 12  || ip[1] != 17 || /* pop */
@@ -802,16 +802,16 @@
                 FT_ERROR(( "T1.Parse_CharStrings: invalid flex charstring\n" ));
                 goto Syntax_Error;
               }
-              
+
               ip += 6;
               decoder->flex_state = 0;
               break;
             }
-            
+
           case 3:  /* change hints ---------------------------- */
             {
               if ( top[0] != 1 ) goto Unexpected_OtherSubr;
-              
+
               /* eat the following "pop" */
               if (ip+2 > limit)
               {
@@ -819,7 +819,7 @@
                          ip[-1] ));
                 goto Syntax_Error;
               }
-  
+
               if (ip[0] != 12 || ip[1] != 17)
               {
                 FT_ERROR(( "T1.Parse_CharStrings: 'pop' expected, found (%d %d)\n",
@@ -829,7 +829,7 @@
               ip += 2;
               break;;
             }
-            
+
           default:
           Unexpected_OtherSubr:
             FT_ERROR(( "T1.Parse_CharStrings: invalid othersubr [%d %d]!!\n",
@@ -852,12 +852,12 @@
           case op_endchar: /*************************************************/
           {
             FT_TRACE4(( " endchar" ));
-            close_contour( builder );  
+            close_contour( builder );
 
             /* add current outline to the glyph slot */
             builder->base.n_points   += builder->current.n_points;
             builder->base.n_contours += builder->current.n_contours;
-            
+
             /* return now !! */
             FT_TRACE4(( "\n\n" ));
             return T1_Err_Ok;
@@ -870,16 +870,16 @@
             builder->left_bearing.x += top[0];
             builder->advance.x       = top[1];
             builder->advance.y       = 0;
-        
+
             builder->last.x = x = top[0];
             builder->last.y = y = 0;
-            
+
             /* the "metrics_only" indicates that we only want to compute */
             /* the glyph's metrics (lsb + advance width), not load the   */
             /* rest of it.. so exit immediately                          */
             if (builder->metrics_only)
               return T1_Err_Ok;
-              
+
             break;
           }
 
@@ -896,16 +896,16 @@
             builder->left_bearing.y += top[1];
             builder->advance.x       = top[2];
             builder->advance.y       = top[3];
-        
+
             builder->last.x = x = top[0];
             builder->last.y = y = top[1];
-            
+
             /* the "metrics_only" indicates that we only want to compute */
             /* the glyph's metrics (lsb + advance width), not load the   */
             /* rest of it.. so exit immediately                          */
             if (builder->metrics_only)
               return T1_Err_Ok;
-        
+
             break;
           }
 
@@ -942,7 +942,7 @@
             FT_TRACE4(( " hvcurveto" ));
             if ( start_point( builder, x, y ) ||
                  check_points( builder, 3 )   ) goto Memory_Error;
-                 
+
             x += top[0];
             add_point( builder, x, y, 0 );
             x += top[1];
@@ -958,7 +958,7 @@
           {
             FT_TRACE4(( " rlineto" ));
             if ( start_point( builder, x, y ) ) goto Memory_Error;
-              
+
             x += top[0];
             y += top[1];
    Add_Line:
@@ -980,11 +980,11 @@
             FT_TRACE4(( " rcurveto" ));
             if ( start_point( builder, x, y ) ||
                  check_points( builder, 3 )   ) goto Memory_Error;
-              
+
             x += top[0];
             y += top[1];
             add_point( builder, x, y, 0 );
-            
+
             x += top[2];
             y += top[3];
             add_point( builder, x, y, 0 );
@@ -993,7 +993,7 @@
             y += top[5];
             add_point( builder, x, y, 1 );
             break;
-          }    
+          }
 
 
           case op_vhcurveto:  /**********************************************/
@@ -1001,7 +1001,7 @@
             FT_TRACE4(( " vhcurveto" ));
             if ( start_point( builder, x, y ) ||
                  check_points( builder, 3 )   ) goto Memory_Error;
-                 
+
             y += top[0];
             add_point( builder, x, y, 0 );
             x += top[1];
@@ -1017,7 +1017,7 @@
             {
               FT_TRACE4(( " vlineto" ));
               if ( start_point( builder, x, y ) ) goto Memory_Error;
-                
+
               y += top[0];
               goto Add_Line;
             }
@@ -1150,10 +1150,10 @@
         }
 
         decoder->top = top;
-      
+
       } /* general operator processing */
 
-      
+
     } /* while ip < limit */
     FT_TRACE4(( "..end..\n\n" ));
     return error;
@@ -1163,7 +1163,7 @@
 
   Stack_Underflow:
     return T1_Err_Stack_Underflow;
-    
+
   Memory_Error:
     return builder->error;
   }
@@ -1269,9 +1269,9 @@
     {
       T1_Init_Decoder( &decoder );
       T1_Init_Builder( &decoder.builder, face, size, glyph );
-  
+
       decoder.builder.no_recurse = (FT_Bool)!!(load_flags & FT_LOAD_NO_RECURSE);
-      
+
       /* now load the unscaled outline */
       error = T1_Parse_CharStrings( &decoder,
                                     type1->charstrings    [glyph_index],
@@ -1279,7 +1279,7 @@
                                     type1->num_subrs,
                                     type1->subrs,
                                     type1->subrs_len );
-  
+
       /* save new glyph tables */
       T1_Done_Builder( &decoder.builder );
     }
@@ -1300,29 +1300,29 @@
       {
         FT_BBox           cbox;
         FT_Glyph_Metrics* metrics = &glyph->root.metrics;
-  
+
         /* copy the _unscaled_ advance width */
         metrics->horiAdvance  = decoder.builder.advance.x;
-  
+
         /* make up vertical metrics */
         metrics->vertBearingX = 0;
         metrics->vertBearingY = 0;
         metrics->vertAdvance  = 0;
-  
+
         glyph->root.format = ft_glyph_format_outline;
-  
+
         glyph->root.outline.flags &= ft_outline_owner;
         if ( size && size->root.metrics.y_ppem < 24 )
           glyph->root.outline.flags |= ft_outline_high_precision;
 
         glyph->root.outline.flags |= ft_outline_reverse_fill;
-                
+
         /*
         glyph->root.outline.second_pass    = TRUE;
         glyph->root.outline.high_precision = ( size->root.metrics.y_ppem < 24 );
         glyph->root.outline.dropout_mode   = 2;
         */
-  
+
         if ( (load_flags & FT_LOAD_NO_SCALE) == 0 )
         {
           /* scale the outline and the metrics */
@@ -1331,7 +1331,7 @@
           T1_Vector*   vec = cur->points;
           T1_Fixed     x_scale = glyph->x_scale;
           T1_Fixed     y_scale = glyph->y_scale;
-  
+
           /* First of all, scale the points */
           for ( n = cur->n_points; n > 0; n--, vec++ )
           {
@@ -1340,10 +1340,10 @@
           }
 
           FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
-    
+
           /* Then scale the metrics */
           metrics->horiAdvance  = FT_MulFix( metrics->horiAdvance,  x_scale );
-  
+
           metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
           metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
           metrics->vertAdvance  = FT_MulFix( metrics->vertAdvance,  x_scale );
@@ -1351,7 +1351,7 @@
 
         /* compute the other metrics */
         FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
-        
+
         /* grid fit the bounding box if necessary */
         if (hinting)
         {

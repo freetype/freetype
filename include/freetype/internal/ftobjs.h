@@ -181,11 +181,11 @@
   *     n_contours   :: current number of contours in zone
   *     org          :: original glyph coordinates (font units/scaled)
   *     cur          :: current glyph coordinates  (scaled/hinted)
-  *     tags         :: point control tags 
+  *     tags         :: point control tags
   *     contours     :: contour end points
   *
   ***********************************************************************/
-  
+
   typedef struct  FT_GlyphZone_
   {
     FT_Memory   memory;
@@ -209,7 +209,7 @@
                                         FT_GlyphZone*  zone );
 
   BASE_DEF(void)      FT_Done_GlyphZone( FT_GlyphZone*  zone );
-  
+
   BASE_DEF(FT_Error)  FT_Update_GlyphZone( FT_GlyphZone*  zone,
                                            FT_UShort      num_points,
                                            FT_Short       num_contours );
@@ -260,7 +260,7 @@
   /*                      ideally be changed dynamically at run-time.      */
   /*                                                                       */
   typedef  void  (*FT_DebugHook_Func)( void* arg );
-  
+
   typedef struct  FT_LibraryRec_
   {
     FT_Memory           memory;         /* library's memory object          */

@@ -24,9 +24,9 @@
   {
     KeySym  xkey;
     grKey   grkey;
-    
+
   } Translator;
-  
+
   static
   Translator  key_translators[] =
   {
@@ -59,9 +59,9 @@
 
 
 #ifdef TEST
-  
+
 #define grAlloc  malloc
-  
+
 #endif
 
 
@@ -76,7 +76,7 @@
   typedef XPixmapFormatValues  XDepth;
 
   static int           num_pixel_modes = 0;
-  static grPixelMode   pixel_modes[ MAX_PIXEL_MODES ];  
+  static grPixelMode   pixel_modes[ MAX_PIXEL_MODES ];
   static XDepth        pixel_depth[ MAX_PIXEL_MODES ];
 
   typedef struct grXSurface_
@@ -90,9 +90,9 @@
     int            depth;
     XDepth*        xdepth;
     Bool           gray;
-    
+
     GC             gc;
-    
+
     XColor         color[256];   /* gray levels palette for 8-bit modes */
     XImage*        ximage;
 
@@ -100,10 +100,10 @@
     int            win_org_y;
     int            win_width;
     int            win_height;
-    
+
     int            image_width;
     int            image_height;
-    
+
   } grXSurface;
 
 
@@ -133,10 +133,10 @@
   {
     if ( num_pixel_modes >= MAX_PIXEL_MODES )
       Panic( "X11.Too many pixel modes\n" );
-      
+
     pixel_modes[ num_pixel_modes ] = pixel_mode;
     pixel_depth[ num_pixel_modes ] = *depth;
-    
+
     num_pixel_modes++;
   }
 
@@ -146,21 +146,21 @@
   int  init_device( void )
   {
     XDepth  dummy;
-  
+
     XrmInitialize();
-    
+
     display = XOpenDisplay( displayname );
     if (!display)
     {
       return -1;
      /* Panic( "Gr:error: cannot open X11 display\n" ); */
     }
-      
+
     idle = XCreateFontCursor( display, XC_left_ptr );
     busy = XCreateFontCursor( display, XC_watch );
-    
+
     num_pixel_modes = 0;
-    
+
     /* always enable the 8-bit gray levels pixel mode                */
     /* even if its display is emulated through a constrained palette */
     /* or another color mode                                         */
@@ -177,45 +177,45 @@
 
       formats = XListPixmapFormats( display, &count );
       format  = formats;
-       
+
 #ifdef TEST
       printf( "available pixmap formats\n" );
       printf( "depth  pixbits  scanpad\n" );
 #endif
-       
+
       while ( count-- > 0 )
       {
-#ifdef TEST 
+#ifdef TEST
         printf( " %3d     %3d      %3d\n",
                 format->depth,
                 format->bits_per_pixel,
                 format->scanline_pad );
 #endif
-      
+
         if ( format->depth == 1 )
           /* usually, this should be the first format */
           add_pixel_mode( gr_pixel_mode_mono, format );
-          
+
         else if ( format->depth == 8 )
           add_pixel_mode( gr_pixel_mode_pal8, format );
 
-        /* note, the 32-bit modes return a depth of 24, and 32 bits per pixel */          
+        /* note, the 32-bit modes return a depth of 24, and 32 bits per pixel */
         else if ( format->depth == 24 )
         {
-#ifdef TEST 
+#ifdef TEST
           {
             int           count2;
             XVisualInfo*  visuals;
             XVisualInfo*  visual;
             const char*  string = "unknown";
-    
+
             template.depth = format->depth;
             visuals        = XGetVisualInfo( display,
                                              VisualDepthMask,
                                              &template,
                                              &count2 );
             visual = visuals;
-            
+
             switch (visual->class)
             {
               case TrueColor:   string = "TrueColor";    break;
@@ -234,15 +234,15 @@
                     visual->bits_per_rgb,
                     string );
             visual++;
-          }        
+          }
 #endif
           if ( format->bits_per_pixel == 24 )
             add_pixel_mode( gr_pixel_mode_rgb24, format );
-            
+
           else if ( format->bits_per_pixel == 32 )
             add_pixel_mode( gr_pixel_mode_rgb32, format );
         }
-          
+
         else if ( format->depth == 16 )
         {
           int           count2;
@@ -255,12 +255,12 @@
                                            &template,
                                            &count2 );
           visual = visuals;
-          
+
           while ( count2-- > 0 )
           {
-#ifdef TEST 
+#ifdef TEST
             const char*  string = "unknown";
-            
+
             switch (visual->class)
             {
               case TrueColor:   string = "TrueColor";    break;
@@ -278,34 +278,34 @@
                     visual->colormap_size,
                     visual->bits_per_rgb,
                     string );
-                    
+
 #endif
             if ( visual->red_mask   == 0xf800 &&
                  visual->green_mask == 0x07e0 &&
                  visual->blue_mask  == 0x001f )
               add_pixel_mode( gr_pixel_mode_rgb565, format );
-              
+
             else if ( visual->red_mask   == 0x7c00 &&
                       visual->green_mask == 0x03e0 &&
                       visual->blue_mask  == 0x001f )
               add_pixel_mode( gr_pixel_mode_rgb555, format );
-              
-            /* other 16-bit modes are ignored */  
+
+            /* other 16-bit modes are ignored */
             visual++;
           }
-          
+
           XFree( visuals );
         }
-        
+
         format++;
       }
-      
+
       XFree( formats );
     }
-    
+
     gr_x11_device.num_pixel_modes = num_pixel_modes;
     gr_x11_device.pixel_modes     = pixel_modes;
-    
+
     return 0;
   }
 
@@ -327,13 +327,13 @@
     byte*      write   = (byte*)target->buffer + y*target->pitch + x;
     byte*      read    = (byte*)source->buffer + y*source->pitch + x;
     XColor*    palette = surface->color;
-    
+
     while (h > 0)
     {
       byte*  _write = write;
       byte*  _read  = read;
       byte*  limit  = _write + w;
-      
+
       for ( ; _write < limit; _write++, _read++ )
         *_write = (byte) palette[ *_read ].pixel;
 
@@ -356,13 +356,13 @@
     byte*      write   = (byte*)target->buffer + y*target->pitch + 2*x;
     byte*      read    = (byte*)source->buffer + y*source->pitch + x;
     XColor*    palette = surface->color;
-    
+
     while (h > 0)
     {
       byte*  _write = write;
       byte*  _read  = read;
       byte*  limit  = _write + 2*w;
-      
+
       for ( ; _write < limit; _write += 2, _read++ )
         *(short*)_write = (short)palette[ *_read ].pixel;
 
@@ -384,17 +384,17 @@
     grBitmap*  source  = &surface->root.bitmap;
     byte*      write   = (byte*)target->buffer + y*target->pitch + 3*x;
     byte*      read    = (byte*)source->buffer + y*source->pitch + x;
-    
+
     while (h > 0)
     {
       byte*  _write = write;
       byte*  _read  = read;
       byte*  limit  = _write + 3*w;
-      
+
       for ( ; _write < limit; _write += 3, _read++ )
       {
         XColor*   color = surface->color + *_read;
-       
+
         _write[0] = color->red;
         _write[1] = color->green;
         _write[2] = color->blue;
@@ -418,13 +418,13 @@
     grBitmap*  source  = &surface->root.bitmap;
     byte*      write   = (byte*)target->buffer + y*target->pitch + 4*x;
     byte*      read    = (byte*)source->buffer + y*source->pitch + x;
-    
+
     while (h > 0)
     {
       byte*  _write = write;
       byte*  _read  = read;
       byte*  limit  = _write + 4*w;
-      
+
       for ( ; _write < limit; _write += 4, _read++ )
       {
         byte  color = *_read;
@@ -447,28 +447,28 @@
                            int          h )
   {
     int  z;
-    
+
     /* first of all, clip to the surface's area */
     if ( x   >= surface->image.width ||
          x+w <= 0                    ||
          y   >= surface->image.rows  ||
          y+h <= 0 )
       return;
- 
+
     if ( x < 0 )
     {
       w += x;
       x  = 0;
     }
- 
+
     z = (x + w) - surface->image.width;
     if (z > 0)
       w -= z;
-      
+
     z = (y + h) - surface->image.rows;
     if (z > 0)
       h -= z;
-      
+
     /* convert the rectangle to the target depth for gray surfaces */
     if (surface->gray)
     {
@@ -480,7 +480,7 @@
         case 32: convert_gray_to_32  ( surface, x, y, w, h ); break;
       }
     }
-  } 
+  }
 
 
   static
@@ -492,7 +492,7 @@
   {
     if (surface->gray)
       convert_rectangle( surface, x, y, w, h );
-    
+
     XPutImage( display,
                surface->win,
                surface->gc,
@@ -500,7 +500,7 @@
                x, y, x, y, w, h );
   }
 
-  
+
   static
   void  set_title( grXSurface*  surface,
                    const char*  title )
@@ -535,7 +535,7 @@
 
 
 
-  static  
+  static
   void  listen_event( grXSurface*  surface,
                       int          event_mask,
                       grEvent*     grevent )
@@ -565,7 +565,7 @@
 
       switch ( x_event.type )
       {
-      case KeyPress: 
+      case KeyPress:
         key_number = XLookupString( &x_event.xkey,
                                     key_buffer,
                                     sizeof ( key_buffer ),
@@ -579,7 +579,7 @@
           /* this may be a special key like F1, F2, etc.. */
           grkey = KeySymTogrKey(key);
           if (grkey != grKeyNone)
-            goto Set_Key;  
+            goto Set_Key;
         }
         else
           bool_exit = 1;
@@ -588,7 +588,7 @@
       case MappingNotify:
         XRefreshKeyboardMapping( &x_event.xmapping );
         break;
-      
+
       case Expose:
         refresh_rectangle( surface,
                            x_event.xexpose.x,
@@ -608,7 +608,7 @@
     /* If this wasn't part of the simple translated keys, simply get the charcode */
     /* from the character buffer                                                  */
     grkey = grKEY(key_buffer[key_cursor++]);
-      
+
   Set_Key:
     grevent->type = gr_key_down;
     grevent->key  = grkey;
@@ -625,12 +625,12 @@
     char       grays;
     XDepth*    format;
     int        image_depth;
-    
+
     screen = DefaultScreen( display );
-    
+
     surface->colormap = DefaultColormap( display, screen );
     surface->depth    = DefaultDepth( display, screen );
-    surface->visual   = DefaultVisual( display, screen ); 
+    surface->visual   = DefaultVisual( display, screen );
 
     image  = &surface->image;
 
@@ -644,7 +644,7 @@
               bitmap->grays >= 2 );
 
     surface->gray = grays;
- 
+
     /* copy dimensions */
     image->width  = bitmap->width;
     image->rows   = bitmap->rows;
@@ -656,7 +656,7 @@
     /* find the supported format corresponding to the request */
     format = 0;
 
-    if (grays)    
+    if (grays)
     {
       /* choose the default depth in case of grays rendering */
       int  i;
@@ -672,7 +672,7 @@
     {
       /* otherwise, select the format depending on the pixel mode */
       int  i;
-      
+
       format = 0;
       for ( i = 0; i < num_pixel_modes; i++ )
         if ( pixel_modes[i] == bitmap->mode )
@@ -682,7 +682,7 @@
           break;
         }
     }
-    
+
     if (!format)
     {
       grError = gr_err_bad_argument;
@@ -695,17 +695,17 @@
     if ( format->depth          == 24 &&
          format->bits_per_pixel == 32 )
       image_depth = 32;
-     
+
     /* allocate surface image */
     {
       int  bits, over;
 
       bits = image->width * format->bits_per_pixel;
       over = bits % format->scanline_pad;
-          
+
       if (over)
         bits += format->scanline_pad - over;
-      
+
       if (!grays)
       {
         image->width  = bits;
@@ -733,9 +733,9 @@
     }
 
     surface->root.bitmap = *bitmap;
- 
+
     /* Now create the surface X11 image */
-    surface->ximage = XCreateImage( display, 
+    surface->ximage = XCreateImage( display,
                                     surface->visual,
                                     format->depth,
                                     format->depth == 1 ? XYBitmap : ZPixmap,
@@ -747,20 +747,20 @@
                                     0 );
     if ( !surface->ximage )
       Panic( "grX11: cannot create surface X11 image\n" );
- 
+
 
     /* allocate gray levels in the case of gray surface */
     if ( grays )
     {
       XColor*  color = surface->color;
       int      i;
-      
+
       for ( i = 0; i < bitmap->grays; i++, color++ )
       {
         color->red   =
         color->green =
         color->blue  = 65535 - ( i * 65535 ) / bitmap->grays;
-  
+
         if ( !XAllocColor( display, surface->colormap, color ) )
           Panic( "ERROR: cannot allocate Color\n" );
       }
@@ -775,13 +775,13 @@
         XTextProperty         xtp;
         XSizeHints            xsh;
         XSetWindowAttributes  xswa;
-    
+
         xswa.border_pixel     = BlackPixel( display, screen );
         xswa.background_pixel = WhitePixel( display, screen );
         xswa.cursor           = busy;
-    
+
         xswa.event_mask = KeyPressMask | ExposureMask;
-    
+
         surface->win = XCreateWindow( display,
                                       RootWindow( display, screen ),
                                       0,
@@ -790,45 +790,45 @@
                                       image->rows,
                                       10,
                                       surface->depth,
-                                      InputOutput, 
+                                      InputOutput,
                                       surface->visual,
                                       CWBackPixel | CWBorderPixel |
                                         CWEventMask | CWCursor,
                                       &xswa );
-    
+
         XMapWindow( display, surface->win );
- 
+
         surface->gc = XCreateGC( display, RootWindow( display, screen ), 0L, NULL );
         XSetForeground( display, surface->gc, xswa.border_pixel     );
         XSetBackground( display, surface->gc, xswa.background_pixel );
-    
-    
+
+
         /* make window manager happy :-) */
         xtp.value    = (unsigned char*)"FreeType";
         xtp.encoding = 31;
         xtp.format   = 8;
         xtp.nitems   = strlen( (char*)xtp.value );
-    
+
         xsh.x = 0;
         xsh.y = 0;
-    
+
         xsh.width  = image->width;
         xsh.height = image->rows;
         xsh.flags  = (PPosition | PSize);
         xsh.flags  = 0;
-    
+
         XSetWMProperties( display, surface->win, &xtp, &xtp, NULL, 0, &xsh, NULL, NULL );
     }
-    
+
     surface->root.done         = (grDoneSurfaceFunc) done_surface;
     surface->root.refresh_rect = (grRefreshRectFunc) refresh_rectangle;
     surface->root.set_title    = (grSetTitleFunc)    set_title;
     surface->root.listen_event = (grListenEventFunc) listen_event;
-    
+
     convert_rectangle( surface, 0, 0, bitmap->width, bitmap->rows );
     return surface;
   }
-  
+
 
 
 
@@ -836,15 +836,15 @@
   {
     sizeof( grXSurface ),
     "x11",
-    
+
     init_device,
     done_device,
-    
+
     (grDeviceInitSurfaceFunc) init_surface,
-    
+
     0,
     0
-    
+
   };
 
 #ifdef TEST
@@ -875,7 +875,7 @@ const grKeyName  key_names[] =
   { grKeyEsc,  "Esc" },
   { grKeyHome, "Home" },
   { grKeyEnd,  "End"  },
-    
+
   { grKeyPageUp,   "Page_Up" },
   { grKeyPageDown, "Page_Down" },
   { grKeyLeft,     "Left" },
@@ -891,7 +891,7 @@ int  main( void )
 {
   grSurface*  surface;
   int         n;
-  
+
   grInit();
   surface = grNewScreenSurface( 0, gr_pixel_mode_gray, 320, 400, 128 );
   if (!surface)
@@ -902,10 +902,10 @@ int  main( void )
     grEvent      event;
     const char*  string;
     int          x;
-    
+
     grSetSurfaceRefresh( surface, 1 );
     grSetTitle(surface,"X11 driver demonstration" );
-    
+
     for ( x = -10; x < 10; x++ )
     {
       for ( n = 0; n < 128; n++ )
@@ -919,15 +919,15 @@ int  main( void )
     }
     color.value = 64;
     grWriteCellString( surface, 0, 0, "just an example", color );
-    
+
     do
     {
       listen_event((grXSurface*)surface, 0, &event);
-    
+
       /* return if ESC was pressed */
       if ( event.key == grKeyEsc )
         return 0;
-      
+
       /* otherwise, display key string */
       color.value = (color.value + 8) & 127;
       {
@@ -936,7 +936,7 @@ int  main( void )
         grKeyName*  limit = name + count;
         const char* kname  = 0;
         char        kname_temp[16];
-      
+
         while (name < limit)
         {
           if ( name->key == event.key )
@@ -946,23 +946,23 @@ int  main( void )
           }
           name++;
         }
-      
+
         if (!kname)
         {
           sprintf( kname_temp, "char '%c'", (char)event.key );
           kname = kname_temp;
         }
-        
+
         grWriteCellString( surface, 30, 30, kname, color );
         grRefreshSurface(surface);
         paint_rectangle( surface, 0, 0, surface->bitmap.width, surface->bitmap.rows );
       }
     } while (1);
   }
-    
+
   return 0;
-  
-  
+
+
 }
 #endif /* O */
 #endif /* TEST */

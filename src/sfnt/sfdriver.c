@@ -8,7 +8,7 @@
   static const SFNT_Interface  sfnt_interface =
   {
     TT_Goto_Table,
-    
+
     TT_Load_Any,
     TT_Load_Format_Tag,
     TT_Load_Directory,
@@ -38,22 +38,22 @@
     0,
     0,
     0,
-#endif  
-    
+#endif
+
     /* see `ttpost.h' */
-#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES 
+#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
     TT_Get_PS_Name,
-    TT_Free_Post_Names,    
+    TT_Free_Post_Names,
 #else
     0,
     0,
-#endif 
+#endif
 
     /* see `ttcmap.h' */
     TT_CharMap_Load,
     TT_CharMap_Free,
   };
-  
+
 
   const FT_DriverInterface  sfnt_driver_interface =
   {

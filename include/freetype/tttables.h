@@ -360,7 +360,7 @@
     FT_UShort  usDefaultChar;
     FT_UShort  usBreakChar;
     FT_UShort  usMaxContext;
-    
+
   } TT_OS2;
 
 
@@ -493,7 +493,7 @@
     ft_sfnt_post = 5,
 
     sfnt_max   /* don't remove */
-  
+
   } FT_Sfnt_Tag;
 
   /* internal use only */
@@ -524,7 +524,7 @@
   *    You can load any table with a different function.. XXX
   *
   ***************************************************************************/
-  
+
   EXPORT_DEF(void*)  FT_Get_Sfnt_Table( FT_Face      face,
                                         FT_Sfnt_Tag  tag );
 

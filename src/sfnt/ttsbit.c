@@ -75,7 +75,7 @@
     /* first of all, compute starting write position */
     line_incr = target->pitch;
     line_buff = target->buffer;
-    
+
     if (line_incr < 0)
       line_buff -= line_incr*(target->rows-1);
 
@@ -354,7 +354,7 @@
       range->glyph_codes[n] = GET_UShort();
 
       if (load_offsets)
-        range->glyph_offsets[n] = (TT_ULong)range->image_offset + 
+        range->glyph_offsets[n] = (TT_ULong)range->image_offset +
                                   GET_UShort();
     }
 
@@ -1226,19 +1226,19 @@
       switch ( strike->bit_depth )
       {
       case 1:
-        map->pixel_mode = ft_pixel_mode_mono; 
+        map->pixel_mode = ft_pixel_mode_mono;
         map->pitch      = (map->width+7) >> 3;
         break;
       case 2:
-        map->pixel_mode = ft_pixel_mode_pal2; 
+        map->pixel_mode = ft_pixel_mode_pal2;
         map->pitch      = (map->width+3) >> 2;
         break;
       case 4:
-        map->pixel_mode = ft_pixel_mode_pal4; 
+        map->pixel_mode = ft_pixel_mode_pal4;
         map->pitch      = (map->width+1) >> 1;
         break;
       case 8:
-        map->pixel_mode = ft_pixel_mode_grays; 
+        map->pixel_mode = ft_pixel_mode_grays;
         map->pitch      = map->width;
         break;
 
@@ -1399,13 +1399,13 @@
     /* the font file                                 */
     error = face->goto_table( face, TTAG_EBDT, stream, 0 );
     if (error) goto Exit;
-    
+
     ebdt_pos = FILE_Pos();
 
     /* clear the bitmap & load the bitmap */
     if (face->root.glyph->flags & ft_glyph_own_bitmap)
       FREE( map->buffer );
-      
+
     map->rows = map->pitch = map->width = 0;
 
     error = Load_SBit_Image( strike, range, ebdt_pos, glyph_offset,
@@ -1415,7 +1415,7 @@
 
     /* the glyph slot owns this bitmap buffer */
     face->root.glyph->flags |= ft_glyph_own_bitmap;
-    
+
     /* setup vertical metrics if needed */
     if ( strike->flags & 1 )
     {

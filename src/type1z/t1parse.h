@@ -116,13 +116,13 @@
   {
     FT_Stream  stream;
     FT_Memory  memory;
-    
+
     T1_Byte*   base_dict;
     T1_Int     base_len;
-    
+
     T1_Byte*   private_dict;
     T1_Int     private_len;
-    
+
     T1_Byte    in_pfb;
     T1_Byte    in_memory;
     T1_Byte    single_block;
@@ -130,7 +130,7 @@
     T1_Byte*   cursor;
     T1_Byte*   limit;
     T1_Error   error;
-    
+
   } T1_Parser;
 
 

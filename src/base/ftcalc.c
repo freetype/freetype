@@ -53,7 +53,7 @@
      536870912,  759250125, 1073741824, 1518500250,
     2147483647
   };
-#else  
+#else
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -243,12 +243,12 @@
   /* <Return>                                                              */
   /*    The 32-bit square-root.                                            */
   /*                                                                       */
-  
+
      static
      int  ft_order64( FT_Int64  z )
      {
        int  j = 0;
-   
+
        while ( z )
        {
          z = (unsigned INT64)z >> 1;
@@ -678,13 +678,13 @@
   /* <Return>                                                              */
   /*    The 32-bit square-root.                                            */
   /*                                                                       */
-  
+
       static
       int  ft_order64( FT_Int64*  z )
       {
         FT_Word32  i;
         int        j;
-    
+
         i = z->lo;
         j = 0;
         if ( z->hi )
@@ -692,7 +692,7 @@
           i = z->hi;
           j = 32;
         }
-    
+
         while ( i > 0 )
         {
           i >>= 1;

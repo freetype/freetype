@@ -428,29 +428,29 @@
   {
     FT_Error  error;
     FT_Bool   frame_accessed = 0;
-    
+
     if (!fields || !stream)
       return FT_Err_Invalid_Argument;
-      
+
     error = FT_Err_Ok;
     do
     {
       FT_ULong  value;
       FT_Int    sign_shift;
       FT_Byte*  p;
-      
+
       switch (fields->value)
       {
         case ft_frame_start:  /* access a new frame */
           {
             error = FT_Access_Frame( stream, fields->offset );
             if (error) goto Exit;
-            
+
             frame_accessed = 1;
             fields++;
             continue;  /* loop ! */
           }
-          
+
         case ft_frame_byte:
         case ft_frame_schar:  /* read a single byte */
           {
@@ -458,7 +458,7 @@
             sign_shift = 24;
             break;
           }
-          
+
         case ft_frame_short_be:
         case ft_frame_ushort_be:  /* read a 2-byte big-endian short */
           {
@@ -538,13 +538,13 @@
           /* otherwise, exit the loop */
           goto Exit;
       }
-      
+
       /* now, compute the signed value is necessary */
       if (fields->value & FT_FRAME_OP_SIGNED)
         value   = (FT_ULong)((FT_Long)(value << sign_shift) >> sign_shift);
-      
+
       /* finally, store the value in the object */
-      
+
       p = (FT_Byte*)structure + fields->offset;
       switch (fields->size)
       {
@@ -553,7 +553,7 @@
         case 4: *(FT_ULong*)p  = (FT_ULong) value; break;
         default:  ; /* ignore !! */
       }
-      
+
       /* go to next field */
       fields++;
     }
@@ -563,7 +563,7 @@
     /* close the frame if it was opened by this read */
     if (frame_accessed)
       FT_Forget_Frame(stream);
-      
+
     return error;
   }
 

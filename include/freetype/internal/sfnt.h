@@ -161,7 +161,7 @@
   /*  <Note>                                                               */
   /*    The `map.buffer' field is always freed before the glyph is loaded. */
   /*                                                                       */
-  typedef  
+  typedef
   TT_Error  (*TT_Load_SBit_Image_Func)( TT_Face           face,
                                         TT_Int            x_ppem,
                                         TT_Int            y_ppem,
@@ -336,7 +336,7 @@
   typedef struct  SFNT_Interface_
   {
     TT_Goto_Table_Func      goto_table;
-  
+
     TT_Load_Any_Func        load_any;
     TT_Load_Format_Tag_Func load_format_tag;
     TT_Load_Directory_Func  load_directory;
@@ -363,7 +363,7 @@
     TT_Load_Table_Func      load_sbits;
     TT_Load_SBit_Image_Func load_sbit_image;
     TT_Free_Table_Func      free_sbits;
-    
+
     /* see `ttpost.h' */
     TT_Get_PS_Name_Func     get_psname;
     TT_Free_Table_Func      free_psnames;
@@ -371,7 +371,7 @@
     /* see `ttcmap.h' */
     TT_CharMap_Load_Func    load_charmap;
     TT_CharMap_Free_Func    free_charmap;
-    
+
   } SFNT_Interface;
 
 #endif /* SFNT_H */

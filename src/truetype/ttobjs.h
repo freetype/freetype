@@ -365,7 +365,7 @@
 
 
  /*************************************************************************/
- /*  Face Funcs                                                           */ 
+ /*  Face Funcs                                                           */
 
   LOCAL_DEF TT_Error  TT_Init_Face( FT_Stream      stream,
                                     TT_Face        face,
@@ -377,7 +377,7 @@
 
 
  /*************************************************************************/
- /*  Size funcs                                                           */ 
+ /*  Size funcs                                                           */
 
   LOCAL_DEF TT_Error  TT_Init_Size ( TT_Size  size );
   LOCAL_DEF void      TT_Done_Size ( TT_Size  size );
@@ -385,14 +385,14 @@
 
 
  /*************************************************************************/
- /*  GlyphSlot funcs                                                      */ 
+ /*  GlyphSlot funcs                                                      */
 
   LOCAL_DEF TT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot );
   LOCAL_DEF void      TT_Done_GlyphSlot( TT_GlyphSlot  slot );
 
 
  /*************************************************************************/
- /*  Driver funcs                                                         */ 
+ /*  Driver funcs                                                         */
 
   LOCAL_DEF  TT_Error  TT_Init_Driver( TT_Driver  driver );
   LOCAL_DEF  void      TT_Done_Driver( TT_Driver  driver );

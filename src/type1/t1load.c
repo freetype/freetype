@@ -1131,7 +1131,7 @@
                    error = Expect_Dict_Arguments( parser, 1, tok_error,
                                                   dict_font, 0 );
                    if (error) goto Exit;
-                   
+
                    /* clear stack from all the previous content. This   */
                    /* could be some stupid Postscript code ...          */
                    parser->top = parser->stack;
@@ -1384,7 +1384,7 @@
                   /* syntax, we never escape from the private dictionary     */
                   if (dict_state != dict_private)
                     parser->state_index--;
-               
+
                   /* many fonts use a NP instead of def or put, so */
                   /* we simply ignore the nest token..             */
 #if 0

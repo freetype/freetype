@@ -63,7 +63,7 @@
   int             cur_glyph;
   int             cur_point;
   unsigned short  cur_contour;
-  
+
   int             pixel_size   = CHARSIZE;
   int             repeat_count = 1;
   int             use_grays    = 0;
@@ -80,7 +80,7 @@
   short  antialias; /* smooth fonts with gray levels  */
   short  force_low;
 
-  
+
 #define RASTER_BUFF_SIZE   128000
   char     raster_buff[ RASTER_BUFF_SIZE ];
 
@@ -176,8 +176,8 @@
 
     /* create a new outline */
     FT_Outline_New( library,
-                    glyph->outline.n_points, 
-                    glyph->outline.n_contours, 
+                    glyph->outline.n_points,
+                    glyph->outline.n_contours,
                     &outlines[cur_glyph] );
 
     /* copy the glyph outline into it */
@@ -190,7 +190,7 @@
     /* center outline around 0 */
     {
       FT_BBox  bbox;
-      
+
       FT_Outline_Get_CBox( &glyph->outline, &bbox );
       FT_Outline_Translate( &outlines[cur_glyph],
                             - ( bbox.xMax - bbox.xMin )/2,
@@ -265,7 +265,7 @@
       case 'a':
         use_grays = 1;
         break;
-        
+
       case 'l':
         force_low = 1;
         break;
@@ -334,7 +334,7 @@
       error = FT_Set_Raster( library, &ft_grays_raster );
       if (error) Panic( "Could not initialize smooth anti-aliasing renderer" );
     }
-    
+
     /* Load face */
 
     error = FT_New_Face( library, filename, 0, &face );
@@ -347,7 +347,7 @@
 
     num_glyphs = face->num_glyphs;
     glyph      = face->glyph;
-        
+
     tab_glyphs = MAX_GLYPHS;
     if ( tab_glyphs > num_glyphs )
       tab_glyphs = num_glyphs;
@@ -361,12 +361,12 @@
     bit.width = 640;
     bit.rows  = 480;
     bit.grays = 128;
- 
+
     if ( visual )
     {
       if ( !grInitDevices() )
         Panic( "Could not initialize graphics.\n" );
-        
+
       surface = grNewSurface( 0, &bit );
       if (!surface)
         Panic( "Could not open graphics window/screen.\n" );
@@ -398,12 +398,12 @@
     while ( total > 0 )
     {
       int  repeat;
-      
+
       /* First, preload 'tab_glyphs' in memory */
       cur_glyph   = 0;
       cur_point   = 0;
       cur_contour = 0;
-  
+
       printf( "loading %d glyphs", tab_glyphs );
 
       for ( Num = 0; Num < tab_glyphs; Num++ )
@@ -417,7 +417,7 @@
 
       base += tab_glyphs;
 
-      if ( tab_glyphs > total ) 
+      if ( tab_glyphs > total )
         tab_glyphs = total;
 
       printf( ", rendering... " );
@@ -432,7 +432,7 @@
         {
           if ( (error = ConvertRaster( Num )) )
             Fail++;
-            
+
           else
   	  {
             rendered_glyphs ++;
@@ -468,7 +468,7 @@
     printf( "rendered glyphs  = %d\n", rendered_glyphs );
     printf( "render time      = %f s\n", (double)t0 / 10000 );
     printf( "fails            = %d\n", Fail );
-    printf( "average glyphs/s = %f\n", 
+    printf( "average glyphs/s = %f\n",
              (double)rendered_glyphs / t0 * 10000 );
 
     printf( "total timing     = %f s\n", (double)tz0 / 10000 );

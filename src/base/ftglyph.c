@@ -32,11 +32,11 @@
                          FT_Bool   vertical )
 {
     FT_Glyph_Metrics*  metrics = &face->glyph->metrics;
-    
+
     glyph->memory   = face->memory;
     glyph->width    = metrics->width;
     glyph->height   = metrics->height;
-    
+
     if (vertical)
     {
       glyph->bearingX = metrics->vertBearingX;
@@ -110,13 +110,13 @@
     FT_Pos           origin_y = 0;
 
     *abitglyph = 0;
-    
+
     if (origin)
     {
       origin_x = origin->x & 63;
       origin_y = origin->y & 63;
     }
-    
+
     /* check arguments if the face's format is not scalable */
     if ( !(face->face_flags & FT_FACE_FLAG_SCALABLE) && face->transform_flags )
     {
@@ -135,10 +135,10 @@
     /* disable embedded bitmaps for transformed images */
     if ( face->face_flags & FT_FACE_FLAG_SCALABLE && face->transform_flags )
       load_flags |= FT_LOAD_NO_BITMAP;
-      
+
     error = FT_Load_Glyph( face, glyph_index, load_flags );
     if (error) goto Exit;
-    
+
     /* now, handle bitmap and outline glyph images */
     memory = face->memory;
     switch ( face->glyph->format )
@@ -147,22 +147,22 @@
         {
           FT_Long     size;
           FT_Bitmap*  source;
-          
+
           if ( ALLOC( bitglyph, sizeof(*bitglyph) ) )
             goto Exit;
-            
+
           glyph             = (FT_Glyph)bitglyph;
           glyph->glyph_type = ft_glyph_type_bitmap;
           ft_prepare_glyph( glyph, face, 0 );
-          
+
           source = &face->glyph->bitmap;
           size   = source->rows * source->pitch;
           if (size < 0) size = -size;
-          
+
           bitglyph->bitmap = *source;
           if ( ALLOC( bitglyph->bitmap.buffer, size ) )
             goto Fail;
-            
+
           /* copy the content of the source glyph */
           MEM_Copy( bitglyph->bitmap.buffer, source->buffer, size );
         }
@@ -173,49 +173,49 @@
           FT_BBox  cbox;
           FT_Int   width, height, pitch;
           FT_Long  size;
-          
+
           /* transform the outline - note that the original metrics are NOT */
           /* transformed by this.. only the outline points themselves..     */
           FT_Outline_Transform( &face->glyph->outline, &face->transform_matrix );
           FT_Outline_Translate( &face->glyph->outline,
                                 face->transform_delta.x + origin_x,
                                 face->transform_delta.y + origin_y );
-                                
+
           /* compute the size in pixels of the outline */
           FT_Outline_Get_CBox( &face->glyph->outline, &cbox );
           cbox.xMin &= -64;
           cbox.yMin &= -64;
           cbox.xMax  = (cbox.xMax+63) & -64;
           cbox.yMax  = (cbox.yMax+63) & -64;
-          
+
           width  = (cbox.xMax - cbox.xMin) >> 6;
           height = (cbox.yMax - cbox.yMin) >> 6;
 
           /* allocate the pixel buffer for the glyph bitmap */
           if (grays) pitch = (width+3) & -4;  /* some raster implementation need this */
                 else pitch = (width+7) >> 3;
-            
+
           size  = pitch * height;
           if ( ALLOC( bitglyph, sizeof(*bitglyph) ) )
             goto Exit;
-            
+
           glyph             = (FT_Glyph)bitglyph;
           glyph->glyph_type = ft_glyph_type_bitmap;
           ft_prepare_glyph( glyph, face, 0 );
-          
+
           if ( ALLOC( bitglyph->bitmap.buffer, size ) )
             goto Fail;
-          
+
           bitglyph->bitmap.width      = width;
           bitglyph->bitmap.rows       = height;
           bitglyph->bitmap.pitch      = pitch;
           bitglyph->bitmap.pixel_mode = grays ? ft_pixel_mode_grays
                                               : ft_pixel_mode_mono;
           bitglyph->bitmap.num_grays  = (short)grays;
-          
+
           bitglyph->left = (cbox.xMin >> 6);
           bitglyph->top  = (cbox.yMax >> 6);
-          
+
           /* render the monochrome outline into the target buffer */
           FT_Outline_Translate( &face->glyph->outline, -cbox.xMin, -cbox.yMin );
           error = FT_Outline_Get_Bitmap( face->driver->library,
@@ -228,22 +228,22 @@
           }
         }
         break;
-      
+
       default:
         error = FT_Err_Invalid_Glyph_Index;
         goto Exit;
     }
-    
+
     *abitglyph = bitglyph;
   Exit:
     return error;
-    
+
   Fail:
     FREE( glyph );
     goto Exit;
   }
 
-  
+
  /***********************************************************************
   *
   * <Function>
@@ -257,7 +257,7 @@
   *    face        :: handle to source face object
   *    glyph_index :: glyph index in face
   *    load_flags  :: load flags, see FT_LOAD_FLAG_XXXX constants..
-  * 
+  *
   * <Output>
   *    vecglyph :: pointer to the new outline glyph
   *
@@ -269,7 +269,7 @@
   *    FT_LOAD_NO_RECURSE are set..
   *
   ***********************************************************************/
-  
+
   EXPORT_FUNC(FT_Error)  FT_Get_Glyph_Outline( FT_Face           face,
                                                FT_UInt           glyph_index,
                                                FT_UInt           load_flags,
@@ -280,27 +280,27 @@
     FT_OutlineGlyph  glyph;
 
     *vecglyph = 0;
-        
+
     /* check that NO_OUTLINE and NO_RECURSE are not set */
     if (load_flags & (FT_LOAD_NO_OUTLINE|FT_LOAD_NO_RECURSE))
     {
       error = FT_Err_Invalid_Argument;
       goto Exit;
     }
-    
+
     /* disable the loading of embedded bitmaps */
     load_flags |= FT_LOAD_NO_BITMAP;
-    
+
     error = FT_Load_Glyph( face, glyph_index, load_flags );
     if (error) goto Exit;
-    
+
     /* check that we really loaded an outline */
     if ( face->glyph->format != ft_glyph_format_outline )
     {
       error = FT_Err_Invalid_Glyph_Index;
       goto Exit;
     }
-    
+
     /* transform the outline - note that the original metrics are NOT */
     /* transformed by this.. only the outline points themselves..     */
     if ( face->transform_flags )
@@ -310,7 +310,7 @@
                             face->transform_delta.x,
                             face->transform_delta.y );
     }
-    
+
     /* now, create a new outline glyph and copy everything there */
     memory = face->memory;
     if ( ALLOC( glyph, sizeof(*glyph) ) )
@@ -318,20 +318,20 @@
 
     ft_prepare_glyph( (FT_Glyph)glyph, face, 0 );
     glyph->metrics.glyph_type = ft_glyph_type_outline;
-    
+
     error = FT_Outline_New( face->driver->library,
                             face->glyph->outline.n_points,
                             face->glyph->outline.n_contours,
                             &glyph->outline );
     if (!error)
       error = FT_Outline_Copy( &face->glyph->outline, &glyph->outline );
-      
+
     if (error) goto Fail;
-    
+
     *vecglyph = glyph;
   Exit:
     return error;
-    
+
   Fail:
     FREE( glyph );
     goto Exit;
@@ -344,7 +344,7 @@
   *
   * <Description>
   *    A function used to set the transform that is applied to glyph images
-  *    just after they're loaded in the face's glyph slot, and before they're 
+  *    just after they're loaded in the face's glyph slot, and before they're
   *    returned by either FT_Get_Glyph_Bitmap or FT_Get_Glyph_Outline
   *
   * <Input>
@@ -357,13 +357,13 @@
   *    in a font face. It is unable to transform embedded glyph bitmaps
   *
   ***********************************************************************/
-  
+
   EXPORT_FUNC(void) FT_Set_Transform( FT_Face     face,
                                       FT_Matrix*  matrix,
                                       FT_Vector*  delta )
   {
     face->transform_flags = 0;
-    
+
     if (!matrix)
     {
       face->transform_matrix.xx = 0x10000L;
@@ -374,7 +374,7 @@
     }
     else
       face->transform_matrix = *matrix;
-    
+
     /* set transform_flags bit flag 0 if delta isn't the null vector */
     if ( (matrix->xy | matrix->yx) ||
          matrix->xx != 0x10000L    ||
@@ -389,7 +389,7 @@
     }
     else
       face->transform_delta = *delta;
-      
+
     /* set transform_flags bit flag 1 if delta isn't the null vector */
     if ( delta->x | delta->y )
       face->transform_flags |= 2;
@@ -404,16 +404,16 @@
   *    Destroys a given glyph..
   *
   * <Input>
-  *    glyph  :: handle to target glyph object 
+  *    glyph  :: handle to target glyph object
   *
   ***********************************************************************/
-  
+
   EXPORT_FUNC(void)  FT_Done_Glyph( FT_Glyph  glyph )
   {
     if (glyph)
     {
       FT_Memory  memory = glyph->memory;
-      
+
       if ( glyph->glyph_type == ft_glyph_type_bitmap )
       {
         FT_BitmapGlyph  bit = (FT_BitmapGlyph)glyph;
@@ -429,7 +429,7 @@
           FREE( out->outline.tags );
         }
       }
-      
+
       FREE( glyph );
     }
   }
@@ -444,7 +444,7 @@
   *    Returns the glyph image's bounding box in pixels.
   *
   * <Input>
-  *    glyph :: handle to target glyph object 
+  *    glyph :: handle to target glyph object
   *
   * <Output>
   *    box   :: the glyph bounding box. Coordinates are expressed in
@@ -458,13 +458,13 @@
   *    The height is box.yMax - box.yMin
   *
   ***********************************************************************/
-  
+
   EXPORT_FUNC(void)  FT_Glyph_Get_Box( FT_Glyph  glyph,
                                        FT_BBox  *box )
   {
     box->xMin = box->xMax = 0;
     box->yMin = box->yMax = 0;
-    
+
     if (glyph) switch (glyph->glyph_type)
     {
       case ft_glyph_type_bitmap:
@@ -476,11 +476,11 @@
           box->yMin = box->yMax - bit->bitmap.rows;
         }
         break;
-        
+
       case ft_glyph_type_outline:
         {
           FT_OutlineGlyph  out = (FT_OutlineGlyph)glyph;
-          
+
           FT_Outline_Get_CBox( &out->outline, box );
           box->xMin >>= 6;
           box->yMin >>= 6;
@@ -488,7 +488,7 @@
           box->yMax  = (box->yMax+63) >> 6;
         }
         break;
-        
+
       default:
         ;
     }
@@ -502,7 +502,7 @@
  /****                                                                   ****/
  /***************************************************************************/
  /***************************************************************************/
- 
+
 #if 0
 
 /* Compute the norm of a vector */
@@ -542,21 +542,21 @@
     hi  = (FT_ULong)u >> 16;
     lo  = (FT_ULong)u & 0xFFFF;
     med = hi*lo;
-    
+
     H     = hi*hi + (med >> 15);
     med <<= 17;
     L     = lo*lo + med;
     if (L < med) H++;
-    
+
     hi  = (FT_ULong)v >> 16;
     lo  = (FT_ULong)v & 0xFFFF;
     med = hi*lo;
-    
+
     H    += hi*hi + (med >> 15);
     med <<= 17;
     L2    = lo*lo + med;
     if (L2 < med) H++;
-    
+
     L += L2;
     if (L < L2) H++;
 
@@ -598,17 +598,17 @@
     prev  = cur - 1;
     next  = cur + 1;
 
-    first = 0;    
+    first = 0;
     for ( c = 0; c < outline->n_contours; c++ )
     {
       last  = outline->contours[c];
 
       if ( n == first )
         prev = outline->points + last;
-        
+
       if ( n == last )
         next = outline->points + first;
-        
+
       first = last + 1;
     }
 
@@ -721,7 +721,7 @@
 	for ( c = 0; c < outline->n_contours; c++ )
 	{
 	  int  last = outline->contours[c];
-	  
+
 	  prev = points[last];
 
 	  for ( n = first; n <= last; n++ )
@@ -777,7 +777,7 @@
 
 		  x = distance + cur.x + FT_MulFix( d, u.x + v.x )/2;
 		  y = distance + cur.y + FT_MulFix( d, u.y + v.y )/2;
-		  
+
 		  outline->points[n].x = x;
 		  outline->points[n].y = y;
 		}
@@ -794,4 +794,4 @@
 	return 0;
   }
 
-#endif /* 0 - EXPERIMENTAL STUFF !! */  
+#endif /* 0 - EXPERIMENTAL STUFF !! */

@@ -62,7 +62,7 @@
       device = chain->device;
       if ( device->init() == 0             &&
            gr_num_devices < GR_MAX_DEVICES )
-          
+
       {
         /* successful device initialisation - add it to our chain */
         cur->next   = 0;

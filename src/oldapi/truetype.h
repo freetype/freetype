@@ -19,13 +19,13 @@
  *
  *  This file is part of the FreeType project and may only be used,
  *  modified, and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute 
+ *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
  *  this file you indicate that you have read the license and
  *  understand and accept it fully.
  *
  *  Note:
  *
- *    This is the only file that should be included by client            
+ *    This is the only file that should be included by client
  *    application sources.  All other types and functions defined
  *    in the "tt*.h" files are library internals and should not be
  *    included.
@@ -115,7 +115,7 @@
 
 
   struct  TT_UnitVector_      /* guess what...  */
-  { 
+  {
     TT_F2Dot14  x;
     TT_F2Dot14  y;
   };
@@ -215,7 +215,7 @@
 
   typedef struct TT_Outline_  TT_Outline;
 
- 
+
   /* A structure used to return glyph metrics.                          */
   /*                                                                    */
   /* The "bearingX" isn't called "left-side bearing" anymore because    */
@@ -427,7 +427,7 @@
 
     TT_Short   metric_Data_Format;
     TT_UShort  number_Of_HMetrics;
-    
+
     /* The following fields are not defined by the TrueType specification */
     /* but they're used to connect the metrics header to the relevant     */
     /* "HMTX" or "VMTX" table.                                            */
@@ -463,7 +463,7 @@
 
     TT_Short   metric_Data_Format;
     TT_UShort  number_Of_VMetrics;
-    
+
     /* The following fields are not defined by the TrueType specification */
     /* but they're used to connect the metrics header to the relevant     */
     /* "HMTX" or "VMTX" table.                                            */
@@ -979,7 +979,7 @@
 
 
 
-  
+
   /*************************************************************/
   /*                                                           */
   /* <Struct> TT_SBit_Component                                */
@@ -1225,7 +1225,7 @@
   EXPORT_DEF
   TT_Error  TT_Set_Raster_Gray_Palette( TT_Engine       engine,
                                         const TT_Byte*  palette );
-  
+
 
   /* ----------------------- face management ----------------------- */
 
@@ -1450,7 +1450,7 @@
   /* Return glyph outline pointers in 'outline'.  Note that the returned */
   /* pointers are owned by the glyph object, and will be destroyed with  */
   /* it.  The client application should _not_ change the pointers.       */
-  
+
   EXPORT_DEF
   TT_Error  TT_Get_Glyph_Outline( TT_Glyph     glyph,
                                   TT_Outline*  outline );
@@ -1580,7 +1580,7 @@
   EXPORT_DEF
   void      TT_Matrix_Multiply( TT_Matrix*  a,
                                 TT_Matrix*  b );
-                 
+
 
   /* Invert a transformation matrix. */
 
@@ -1593,7 +1593,7 @@
   EXPORT_DEF
   TT_Long   TT_MulDiv( TT_Long A, TT_Long B, TT_Long C );
 
-  
+
   /* Compute A*B/0x10000 with 64 bits intermediate precision. */
   /* Useful to multiply by a 16.16 fixed float value.         */
 
@@ -1697,7 +1697,7 @@
                                 TT_UShort*   length );  /* string length
                                                            address */
 
- 
+
 
 #ifdef __cplusplus
   }

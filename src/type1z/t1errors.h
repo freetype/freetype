@@ -32,7 +32,7 @@
 #define  T1_Err_Ok                       FT_Err_Ok
 
 /* ----------- high level API errors -------- */
-  
+
 #define  T1_Err_Invalid_File_Format      FT_Err_Invalid_File_Format
 #define  T1_Err_Invalid_Argument         FT_Err_Invalid_Argument
 #define  T1_Err_Invalid_Driver_Handle    FT_Err_Invalid_Driver_Handle
@@ -51,7 +51,7 @@
 #define  T1_Err_Invalid_Engine           FT_Err_Invalid_Driver_Handle
 
 /* ------------- internal errors ------------ */
-  
+
 #define  T1_Err_Out_Of_Memory            FT_Err_Out_Of_Memory
 #define  T1_Err_Unlisted_Object          FT_Err_Unlisted_Object
 

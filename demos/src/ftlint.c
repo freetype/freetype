@@ -56,7 +56,7 @@
   }
 
 
-  int  main( int  argc, char**  argv ) 
+  int  main( int  argc, char**  argv )
   {
     int           i, file_index;
     unsigned int  id;
@@ -115,7 +115,7 @@
           fname = filename + i + 1;
           i = -1;
         }
-        else 
+        else
           i--;
 
       printf( "%s: ", fname );

@@ -10,20 +10,20 @@
   grDevice*  find_device( const char*  device_name )
   {
     int  index = 0;
-    
+
     if (device_name)
     {
       for ( index = gr_num_devices-1; index > 0; index-- )
         if ( strcmp( device_name, gr_device_chain[index].name ) == 0 )
           break;
     }
-    
+
     if ( index < 0 || gr_num_devices <= 0 || !gr_device_chain[index].device )
     {
       grError = gr_err_invalid_device;
       return 0;
     }
-    
+
     return gr_device_chain[index].device;
   }
 
@@ -62,18 +62,18 @@
   *                           2 and 256.
   *
   *    the pixel modes do not provide the number of grays in the case
-  *    of "gray" devices. You should try to create a surface with the 
+  *    of "gray" devices. You should try to create a surface with the
   *    maximal number (256, that is) and see the value returned in
   *    the bitmap descriptor.
   *
   **********************************************************************/
- 
+
   extern void grGetDeviceModes( const char*    device_name,
                                 int           *num_modes,
                                 grPixelMode*  *pixel_modes )
   {
     grDevice*  device;
-    
+
     *num_modes   = 0;
     *pixel_modes = 0;
 
@@ -132,7 +132,7 @@
   *    you can thus discard the 'bitmap' parameter after the call.
   *
   **********************************************************************/
-    
+
   extern grSurface*  grNewSurface( const char*  device_name,
                                    grBitmap*    bitmap )
   {
@@ -145,7 +145,7 @@
 
     surface = (grSurface*)grAlloc( device->surface_objsize );
     if (!surface) return 0;
-    
+
     if ( !device->init_surface( surface, bitmap ) )
     {
       grFree( surface );
@@ -173,7 +173,7 @@
   *    height  :: rectangle height in pixels
   *
   **********************************************************************/
-    
+
   extern void  grRefreshRectangle( grSurface*  surface,
                                    grPos       x,
                                    grPos       y,
@@ -185,7 +185,7 @@
   }
 
 
- 
+
  /**********************************************************************
   *
   * <Function>
@@ -209,7 +209,7 @@
   *    color    :: color to be used to draw the character
   *
   **********************************************************************/
-  
+
   extern
   void  grWriteSurfaceChar( grSurface* target,
                             int        x,
@@ -239,14 +239,14 @@
   *    This function writes a string with the internal font
   *
   * <Input>
-  *    target       :: handle to target bitmap  
+  *    target       :: handle to target bitmap
   *    x            :: x pixel position of string's top left corner
   *    y            :: y pixel position of string's top left corner
   *    string       :: Latin-1 text string
   *    color        :: color to be used to draw the character
   *
   **********************************************************************/
-  
+
   extern
   void  grWriteSurfaceString( grSurface*  target,
                               int         x,
@@ -270,7 +270,7 @@
   *
   * <Description>
   *    a variation of grRefreshRectangle which repaints the whole surface
-  *    to the screen.                                                    
+  *    to the screen.
   *
   * <Input>
   *    surface :: handle to target surface
@@ -330,7 +330,7 @@
   *    XXX : For now, only keypresses are supported.
   *
   **********************************************************************/
-  
+
   extern
   int   grListenSurface( grSurface*  surface,
                          int         event_mask,
@@ -348,12 +348,12 @@
     {
       /* first of all, call the device-specific destructor */
       surface->done(surface);
-      
+
       /* then remove the bitmap if we're owner */
       if (surface->owner)
         grFree( surface->bitmap.buffer );
-        
-      surface->owner         = 0;  
+
+      surface->owner         = 0;
       surface->bitmap.buffer = 0;
       grFree( surface );
     }

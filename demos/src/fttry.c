@@ -53,7 +53,7 @@
     exit(1);
   }
 
-  int  main( int  argc, char**  argv ) 
+  int  main( int  argc, char**  argv )
   {
     int           i, file_index, glyph_index;
     char          filename[128 + 4];
@@ -119,7 +119,7 @@
           fname = filename + i + 1;
           i = -1;
         }
-        else 
+        else
           i--;
 
       printf( "%s: ", fname );
@@ -132,7 +132,7 @@
 
       error = FT_Set_Char_Size( face, ptsize << 6, 0, 0, 0 );
       if (error) Panic( "Could not set character size" );
-      
+
       error = FT_Load_Glyph( face,
                              glyph_index,
                              load_unscaled ? FT_LOAD_NO_SCALE

@@ -19,13 +19,13 @@
 #define gr_event_mouse 0x3C
 #define gr_event_key   0xC0
 
-#define gr_event_type  (gr_event_mouse | gr_event_key)  
+#define gr_event_type  (gr_event_mouse | gr_event_key)
 
 
   typedef enum grKey_
   {
     grKeyNone = 0,
-    
+
     grKeyF1,
     grKeyF2,
     grKeyF3,
@@ -38,12 +38,12 @@
     grKeyF10,
     grKeyF11,
     grKeyF12,
-    
+
     grKeyLeft,
     grKeyRight,
     grKeyUp,
     grKeyDown,
-    
+
     grKeyIns,
     grKeyDel,
     grKeyHome,
@@ -51,7 +51,7 @@
     grKeyPageUp,
     grKeyPageDown,
 
-    grKeyEsc,    
+    grKeyEsc,
     grKeyTab,
     grKeyBackSpace,
     grKeyReturn,
@@ -59,7 +59,7 @@
     grKeyMax,
     grKeyForceShort = 0x7FFF  /* this forces the grKey to be stored */
                               /* on at least one short !            */
-    
+
   } grKey;
 
 #define  grKEY(c)    ((grKey)(c))
@@ -102,7 +102,7 @@
 #define  grKeyAt          grKEY('@')
 #define  grKeyUnder       grKEY('_')
 
-  
+
   typedef struct grEvent_
   {
     int    type;

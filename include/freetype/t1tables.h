@@ -35,7 +35,7 @@
   *    FontInfo.
   *
   */
-  
+
   typedef struct T1_FontInfo
   {
     FT_String*     version;
@@ -47,7 +47,7 @@
     FT_Bool        is_fixed_pitch;
     FT_Short       underline_position;
     FT_UShort      underline_thickness;
-  
+
   } T1_FontInfo;
 
 
@@ -62,7 +62,7 @@
   *    Private dict.
   *
   */
-  
+
   typedef struct T1_Private
   {
 
@@ -99,18 +99,18 @@
     FT_Long      password;
 
     FT_Short     min_feature[2];
-    
+
   } T1_Private;
 
 
  /*************************************************************************
   *
-  * <Enum>  
+  * <Enum>
   *    T1_Blend_Flags
   *
   * <Description>
   *    A set of flags used to indicate which fields are present in a
-  *    given blen dictionary (font info or private). Used to support  
+  *    given blen dictionary (font info or private). Used to support
   *    multiple masters..
   *
   */
@@ -122,8 +122,8 @@
     t1_blend_underline_position,
     t1_blend_underline_thickness,
     t1_blend_italic_angle,
-    
-    /* required fields in a Private blend dictionary */    
+
+    /* required fields in a Private blend dictionary */
     t1_blend_blue_values,
     t1_blend_other_blues,
     t1_blend_standard_width,
@@ -138,7 +138,7 @@
 
     /* never remove */
     t1_blend_max
-    
+
   } T1_Flags;
 
 
@@ -146,7 +146,7 @@
   {
     FT_Fixed  min;
     FT_Fixed  max;
-    
+
   } T1_Blend_Pos;
 
  /*************************************************************************
@@ -163,14 +163,14 @@
   {
     FT_Int       num_axis;
     FT_String*   axis_types[4];
-    
-    /* XXXX : add /BlendDesignMap entries */   
-    
+
+    /* XXXX : add /BlendDesignMap entries */
+
     FT_Int       num_blends;
     T1_Flags*    flags    [17];
     T1_Private*  privates [17];
     T1_FontInfo* fontinfos[17];
-  
+
   } T1_Blend;
 
 
@@ -183,16 +183,16 @@
     FT_UInt       num_subrs;
     FT_ULong      subrmap_offset;
     FT_Int        sd_bytes;
-  
+
   } CID_FontDict;
 
-  
+
   typedef struct CID_Info_
   {
     FT_String*  cid_font_name;
     FT_Fixed    cid_version;
     FT_Int      cid_font_type;
-  
+
     FT_String*  registry;
     FT_String*  ordering;
     FT_Int      supplement;
@@ -201,16 +201,16 @@
 
     FT_Int      num_xuid;
     FT_ULong    xuid[16];
-    
-    
+
+
     FT_ULong    cidmap_offset;
     FT_Int      fd_bytes;
     FT_Int      gd_bytes;
     FT_ULong    cid_count;
-    
+
     FT_Int         num_font_dicts;
     CID_FontDict*  font_dicts;
-  
+
   } CID_Info;
 
 

@@ -117,7 +117,7 @@ Legal Terms
   Neither the  FreeType authors and  contributors nor you  shall use
   the name of the  other for commercial, advertising, or promotional
   purposes without specific prior written permission.
-  
+
   We suggest,  but do not require, that  you use one or  more of the
   following phrases to refer  to this software in your documentation
   or advertising  materials: `FreeType Project',  `FreeType Engine',

@@ -1,6 +1,6 @@
 /*******************************************************************
  *
- *  ttapi.c    
+ *  ttapi.c
  *
  *    High-level interface implementation
  *
@@ -9,7 +9,7 @@
  *
  *  This file is part of the FreeType project, and may only be used,
  *  modified, and distributed under the terms of the FreeType project
- *  license, LICENSE.TXT.  By continuing to use, modify, or distribute 
+ *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
  *  this file you indicate that you have read the license and
  *  understand and accept it fully.
  *
@@ -17,7 +17,7 @@
  *
  *    This file is used to implement most of the functions that are
  *    defined in the file "freetype.h". However, two functions are
- *    implemented elsewhere :                                
+ *    implemented elsewhere :
  *
  ******************************************************************/
 
@@ -47,7 +47,7 @@
 
   static
   const FT_DriverInterface*  tt_interface = &tt_driver_interface;
-  
+
   static
   const TT_DriverInterface*  tt_extension = &tt_format_interface;
 
@@ -84,7 +84,7 @@
 
     error = FT_New_System( &system );
     if (error) return error;
-    
+
     error = FT_New_Library( system, &library );
     if (!error)
       /* Now create a new TrueType driver object */
@@ -163,12 +163,12 @@
   EXPORT_FUNC
   TT_Error  TT_Set_Raster_Gray_Palette( TT_Engine       engine,
                                         const TT_Byte*  palette )
-  {  
+  {
     FT_Library  library;
-    
+
     if (!engine)
       return TT_Err_Invalid_Engine;
-    
+
     library = (FT_Library)engine;
     return FT_Set_Raster_Palette( library, 5, (unsigned char*)palette );
   }
@@ -216,13 +216,13 @@
         {
           TT_Error    error;
           FT_Resource resource;
-      
+
           *aface = 0;
-      
+
           error = FT_New_Resource( library, pathname, &resource );
           if (error) return error;
 
-#if 0      
+#if 0
           error = FT_Add_Resource( library, resource );
           if (error) goto Fail_Install;
 #endif
@@ -231,10 +231,10 @@
           /* Destroy glyph slot to comply with the 1.x API */
           if (!error)
             FT_Done_GlyphSlot( (*aface)->root.slot );
-      
+
           if (error)
             FT_Done_Resource(resource);
-      
+
           return error;
         }
 
@@ -249,7 +249,7 @@
 
     return  open_face( (FT_Library)engine, pathname, 0, aface );
   }
-  
+
 
   /***********************************************************************/
   /*                                                                     */
@@ -318,7 +318,7 @@
   TT_Error  TT_Close_Face( TT_Face  face )
   {
     FT_Resource  resource;
-    
+
     if (!face)
       return TT_Err_Invalid_Face_Handle;
 
@@ -377,7 +377,7 @@
     props->num_Names    = face->num_names;
     props->header       = &face->header;
     props->horizontal   = &face->horizontal;
-      
+
       /* The driver supports old Mac fonts where there are no OS/2  */
       /* tables present in the file. However, this is not true of   */
       /* FreeType 1.1. For the sake of backwards compatibility, we  */
@@ -390,7 +390,7 @@
       /*                                                            */
 
     props->os2          = &face->os2;
-      
+
     props->postscript    = &face->postscript;
     props->hdmx          = &face->hdmx;
     props->vertical      = ( face->vertical_info ? &face->vertical : 0 );
@@ -508,7 +508,7 @@
         /* This function will much probably move to another     */
         /* component in the short future, but I haven't decided */
         /* which yet...                                         */
-    
+
           static
           void  get_metrics( TT_HoriHeader*  header,
                              TT_Int          index,
@@ -516,10 +516,10 @@
                              TT_UShort*      advance )
           {
             TT_LongMetrics*  longs_m;
-    
+
             TT_UShort  k = header->number_Of_HMetrics;
-    
-    
+
+
             if ( index < k )
             {
               longs_m = (TT_LongMetrics*)header->long_metrics + index;
@@ -532,7 +532,7 @@
               *advance = ((TT_LongMetrics*)header->long_metrics)[k - 1].advance;
             }
           }
-    
+
 
 
   EXPORT_FUNC
@@ -769,7 +769,7 @@
   {
     /* The point size is now ignored by the driver */
     (void)pointSize;
-    
+
     return FT_Set_Pixel_Sizes( (FT_Size)ins, pixelWidth, pixelHeight );
   }
 
@@ -814,7 +814,7 @@
     metrics->x_ppem       = size->root.metrics.x_ppem;
     metrics->y_ppem       = size->root.metrics.y_ppem;
 
-    metrics->pointSize    = size->root.metrics.pointSize;    
+    metrics->pointSize    = size->root.metrics.pointSize;
     return TT_Err_Ok;
   }
 
@@ -936,7 +936,7 @@
     (void)instance;   /* the parameters are unused, the (void) prevents */
     (void)rotated;    /* warnings from pedantic compilers..             */
     (void)stretched;
-    
+
     return TT_Err_Ok;
   }
 
@@ -1130,7 +1130,7 @@
     metrics->bearingX  = slot->metrics.horiBearingX;
     metrics->bearingY  = slot->metrics.horiBearingY;
     metrics->advance   = slot->metrics.horiAdvance;
-    
+
     return TT_Err_Ok;
   }
 
@@ -1182,7 +1182,7 @@
 
     metrics->linearVertAdvance  = met2->vertAdvance;
     metrics->linearVertBearingY = met2->vertBearingY;
-   
+
     return TT_Err_Ok;
   }
 
@@ -1441,7 +1441,7 @@
 
 #include <stdlib.h>  /* for malloc and free */
 
-  static  TT_Outline  null_api_outline = { 0, 0, NULL, NULL, NULL, 
+  static  TT_Outline  null_api_outline = { 0, 0, NULL, NULL, NULL,
                                            0, 0, 0, 0 };
 
   EXPORT_FUNC
@@ -1459,7 +1459,7 @@
       outline->points   = (TT_Vector*)malloc( numPoints * sizeof(TT_Vector) );
       outline->flags    = (TT_Byte*)  malloc( numPoints * sizeof(TT_Char)   );
       outline->contours = (TT_UShort*)malloc( numPoints * sizeof(TT_UShort) );
-    
+
       if ( !outline->points || !outline->flags || !outline->contours )
         goto Fail;
 
@@ -1573,7 +1573,7 @@
                               TT_Matrix*   matrix )
   {
     FT_Transform_Outline( (FT_Outline*)outline, (FT_Matrix*)matrix );
-  }  
+  }
 
 /*******************************************************************
  *
@@ -1679,7 +1679,7 @@
     return FT_MulDiv( A, B, C );
   }
 
-  
+
   /***********************************************************************/
   /*                                                                     */
   /* <Function>                                                          */
@@ -1910,12 +1910,12 @@
 
     if (!face)
       return TT_Err_Invalid_Face_Handle;
-      
+
     if ( nameIndex >= face->num_names )
       return TT_Err_Bad_Argument;
 
     name = face->name_table.names + nameIndex;
-        
+
     *platformID = name->platformID;
     *encodingID = name->encodingID;
     *languageID = name->languageID;
@@ -1953,18 +1953,18 @@
                                 TT_UShort*   length )
   {
     TT_NameRec* name;
-    
+
     if (!face)
       return TT_Err_Invalid_Face_Handle;
-      
+
     if ( nameIndex >= face->num_names )
       return TT_Err_Bad_Argument;
 
     name = face->name_table.names + nameIndex;
 
     *stringPtr = (TT_String*)name->string;
-    *length    = name->stringLength;        
-    
+    *length    = name->stringLength;
+
     return TT_Err_Ok;
   }
 

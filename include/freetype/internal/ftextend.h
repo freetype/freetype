@@ -55,7 +55,7 @@
   /*    data, as the finalizer will get called later by the function's     */
   /*    caller.                                                            */
   /*                                                                       */
-  typedef FT_Error (*FT_Extension_Initializer)( void*    ext, 
+  typedef FT_Error (*FT_Extension_Initializer)( void*    ext,
                                                 FT_Face  face );
 
 
@@ -114,11 +114,11 @@
     FT_Extension_Initializer  init;
     FT_Extension_Finalizer    finalize;
     void*                     interface;
-    
+
     FT_ULong                  offset;
-    
+
   } FT_Extension_Class;
-  
+
 
   EXPORT_DEF(FT_Error)  FT_Register_Extension( FT_Driver            driver,
                                                FT_Extension_Class*  clazz );

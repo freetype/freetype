@@ -298,7 +298,7 @@ grSurface*  init_surface( grSurface*  surface,
   case gr_pixel_mode_gray:
     thePixMap.cmpSize = 8;
     thePixMap.pixelSize = 8;
-    thePixMap.pmTable = GetCTable(256); /* color palette matching FT's idea 
+    thePixMap.pmTable = GetCTable(256); /* color palette matching FT's idea
                                            of grayscale. See ftview.rsrc */
     break;
 

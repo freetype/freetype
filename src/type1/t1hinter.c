@@ -2,7 +2,7 @@
  *
  *  t1hinter.c                                                 1.2
  *
- *    Type1 hinter.         
+ *    Type1 hinter.
  *
  *  Copyright 1996-1999 by
  *  David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -66,7 +66,7 @@
  *      1. It extracts the bottom and top blue zones from the
  *         face object.
  *
- *      2. Each zone is then grown by  BlueFuzz, overlapping 
+ *      2. Each zone is then grown by  BlueFuzz, overlapping
  *         is eliminated by adjusting the zone edges appropriately
  *
  *      3. For each zone, we keep its original font units position, its
@@ -83,7 +83,7 @@
       {
         T1_Int  i, swap;
         T1_Int* cur;
-    
+
         for ( i = 2; i < count; i += 2 )
         {
           cur = blues + i;
@@ -91,7 +91,7 @@
           {
             if ( cur[-1] < cur[0] )
               break;
-    
+
             swap = cur[-2]; cur[-2] = cur[0]; cur[0] = swap;
             swap = cur[-1]; cur[-1] = cur[1]; cur[1] = swap;
             cur -= 2;
@@ -210,27 +210,27 @@
       }
     }
 
-    
+
     /* Compare the current pixel size with the BlueScale value */
     /* to know wether to supress overshoots..                  */
-    
-    hints->supress_overshoots = 
+
+    hints->supress_overshoots =
       ( size->root.metrics.y_ppem < FT_MulFix(1000,priv->blue_scale) );
 
     /* Now print the new blue values in tracing mode */
 #ifdef FT_DEBUG_LEVEL_TRACE
-    
+
     FT_TRACE2(( "Blue Zones for size object at $%08lx :\n", (long)size ));
     FT_TRACE2(( "   orus    pix    min   max\n" ));
     FT_TRACE2(( "-------------------------------\n" ));
-    
+
     zone = hints->blue_zones;
     for ( n = 0; n < hints->num_blue_zones; n++ )
     {
       FT_TRACE2(( "    %3d   %.2f   %.2f  %.2f\n",
-                zone->orus, 
+                zone->orus,
                 zone->pix/64.0,
-                zone->min/64.0, 
+                zone->min/64.0,
                 zone->max/64.0 ));
       zone++;
     }
@@ -238,7 +238,7 @@
               hints->supress_overshoots ? "supressed" : "active" ));
 
 #endif /* DEBUG_LEVEL_TRACE */
-                               
+
     return T1_Err_Ok;
   }
 
@@ -262,7 +262,7 @@
  *    This function performs the following :
  *
  *      1. It reads and scales the stem snap widths from the parent face
- *     
+ *
  *      2. A "snap zone" is computed for each snap width, by "growing"
  *         it with a threshold of a 1/2 pixel. Overlapping is avoided
  *         through proper edge adjustment.
@@ -296,7 +296,7 @@
     base_zone      = hints->snap_widths;
     orgs           = priv->stem_snap_widths;
     scale          = size->root.metrics.x_scale;
-    
+
     while (direction < 2)
     {
       /*****************************************************************/
@@ -305,7 +305,7 @@
       /*  font record.                                                 */
       /*                                                               */
       T1_Pos  prev, orus, pix, min, max, threshold;
-      
+
       threshold = ONE_PIXEL/4;
       zone      = base_zone;
 
@@ -347,14 +347,14 @@
 
       /* print the scaled stem snap values in tracing modes */
 #ifdef FT_DEBUG_LEVEL_TRACE
-      
-      FT_TRACE2(( "Set_Snap_Zones : first %s pass\n", 
+
+      FT_TRACE2(( "Set_Snap_Zones : first %s pass\n",
                 direction ? "vertical" : "horizontal" ));
-                
+
       FT_TRACE2(( "Scaled original stem snap zones :\n" ));
       FT_TRACE2(( "   orus   pix   min   max\n" ));
       FT_TRACE2(( "-----------------------------\n" ));
-      
+
       zone = base_zone;
       for ( n = 0; n < n_zones; n++, zone++ )
         FT_TRACE2(( "  %3d  %.2f  %.2f  %.2f\n",
@@ -363,7 +363,7 @@
                   zone->min/64.0,
                   zone->max/64.0 ));
       FT_TRACE2(( "\n" ));
-      
+
       FT_TRACE2(( "Standard width = %d\n", standard_width ));
 #endif
 
@@ -378,7 +378,7 @@
         T1_Snap_Zone*  parent;
         T1_Pos         std_pix, std_min, std_max;
 
-        std_pix = SCALE( standard_width );        
+        std_pix = SCALE( standard_width );
 
         std_min = std_pix-threshold;
         std_max = std_pix+threshold;
@@ -402,29 +402,29 @@
           }
           zone++;
         }
-        
+
         /**********************************************/
         /*  Now, insert the standard width zone       */
-        
+
         zone = base_zone+num_zones;
         while ( zone > base_zone && zone[-1].pix > std_max )
         {
           zone[0] = zone[-1];
           zone --;
         }
-        
+
         /* check border zones */
         if ( zone > base_zone && zone[-1].max > std_min )
           zone[-1].max = std_min;
-          
+
         if ( zone < base_zone+num_zones && zone[1].min < std_max )
           zone[1].min = std_max;
-        
+
         zone->orus = standard_width;
         zone->pix  = std_pix;
         zone->min  = std_min;
         zone->max  = std_max;
-        
+
         num_zones++;
       }
       else
@@ -436,14 +436,14 @@
 
       /* print the scaled stem snap values in tracing modes */
 #ifdef FT_DEBUG_LEVEL_TRACE
-      
-      FT_TRACE2(( "Set_Snap_Zones : second %s pass\n", 
+
+      FT_TRACE2(( "Set_Snap_Zones : second %s pass\n",
                 direction ? "vertical" : "horizontal" ));
-                
+
       FT_TRACE2(( "Scaled clipped stem snap zones :\n" ));
       FT_TRACE2(( "   orus   pix   min   max\n" ));
       FT_TRACE2(( "-----------------------------\n" ));
-      
+
       zone = base_zone;
       for ( n = 0; n < num_zones; n++, zone++ )
         FT_TRACE2(( "  %3d  %.2f  %.2f  %.2f\n",
@@ -452,10 +452,10 @@
                   zone->min/64.0,
                   zone->max/64.0 ));
       FT_TRACE2(( "\n" ));
-      
+
       FT_TRACE2(( "Standard width = %d\n", standard_width ));
 #endif
-     
+
       /* continue with vertical snap zone */
       direction++;
       standard_width = priv->standard_height;
@@ -467,7 +467,7 @@
 
     return T1_Err_Ok;
   }
-  
+
 
 /************************************************************************
  *
@@ -489,7 +489,7 @@
   T1_Error  T1_New_Size_Hinter( T1_Size  size )
   {
     FT_Memory  memory = size->root.face->memory;
-    
+
     return MEM_Alloc( size->hints, sizeof(*size->hints) );
   }
 
@@ -562,7 +562,7 @@
   T1_Error  T1_New_Glyph_Hinter( T1_GlyphSlot  glyph )
   {
     FT_Memory  memory = glyph->root.face->memory;
-    
+
     return MEM_Alloc( glyph->hints, sizeof(*glyph->hints) );
   }
 
@@ -846,7 +846,7 @@
  *    table     :: the horizontal stem hints table
  *    hints     :: the current size's hint structure
  *    blueShift :: the value of the /BlueShift as taken from the
- *                 face object.                               
+ *                 face object.
  *    scale     :: the 16.16 scale used to convert outline
  *                 units to 26.6 pixels
  *
@@ -895,7 +895,7 @@
         for ( ; zone < zone_limit; zone++ )
         {
           T1_Pos  dist;
-          
+
           dist = width_pix - zone->min; if (dist < 0) dist = -dist;
           if (dist < best_dist)
           {
@@ -903,7 +903,7 @@
             best_dist = dist;
           }
         }
-        
+
         if (best_zone)
         {
           if (width_pix > best_zone->pix)
@@ -948,7 +948,7 @@
             if (!hints->supress_overshoots)
             {
               T1_Pos  delta = blue->pix - bottom_pix;
-              
+
               delta   = ( delta < blueShift ? 0 : ROUND( delta ) );
               bottom -= delta;
             }
@@ -960,7 +960,7 @@
       /******************************************************************/
       /* Check for top blue zones alignement */
       {
-        T1_Int         num_blues  = hints->num_blue_zones - 
+        T1_Int         num_blues  = hints->num_blue_zones -
                                     hints->num_bottom_zones;
 
         T1_Snap_Zone*  blue       = hints->blue_zones +
@@ -982,7 +982,7 @@
             if (!hints->supress_overshoots)
             {
               T1_Pos  delta = top - blue->pix;
-              
+
               delta  = ( delta < blueShift ? 0 : ROUND( delta ) );
               top   += delta;
             }
@@ -999,27 +999,27 @@
           bottom_pix = bottom;
           top_pix    = bottom + width_pix;
           break;
-          
+
         case T1_ALIGN_TOP:  /* top zone alignement */
           top_pix    = top;
           bottom_pix = top - width_pix;
-          
+
           break;
-          
+
         case T1_ALIGN_BOTH:  /* bottom+top zone alignement */
           bottom_pix = bottom;
           top_pix    = top;
           break;
-          
+
         default:  /* no alignement */
 
-          /* XXXX : TODO : Add management of controlled stems */        
+          /* XXXX : TODO : Add management of controlled stems */
           bottom = ( SCALE(bottom_orus+top_orus) - width_pix )/2;
-        
+
           bottom_pix = ROUND(bottom);
           top_pix    = bottom_pix + width_pix;
       }
-      
+
       stem->min_edge.pix = bottom_pix;
       stem->max_edge.pix = top_pix;
     }
@@ -1079,7 +1079,7 @@
         for ( ; zone < zone_limit; zone++ )
         {
           T1_Pos  dist;
-          
+
           dist = width_pix - zone->min; if (dist < 0) dist = -dist;
           if (dist < best_dist)
           {
@@ -1087,7 +1087,7 @@
             best_dist = dist;
           }
         }
-        
+
         if (best_zone)
         {
           if (width_pix > best_zone->pix)
@@ -1104,7 +1104,7 @@
           }
         }
       }
-   
+
       /* round width - minimum 1 pixel if this isn't a ghost stem */
       if ( width_pix > 0 )
         width_pix = ( width_pix < ONE_PIXEL ? ONE_PIXEL :
@@ -1227,7 +1227,7 @@
  *
  * <Description>
  *   this function grid-fits several points in a given Type 1 builder
- *   at once. 
+ *   at once.
  *
  * <Input>
  *   builder  :: handle to target Type 1 builder

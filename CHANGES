@@ -1,4 +1,4 @@
-LATEST CHANGES - 
+LATEST CHANGES -
 
   - tagged "BETA-6" in the CVS tree. This one is a serious release candidate
     even though it doesn't incorporate the auto-hinter yet..
@@ -9,7 +9,7 @@ LATEST CHANGES -
     + re-enable support for 5-gray levels anti-aliasing (suck, suck..)
 
   - created new header files, and modified sources accordingly:
-  
+
        <freetype/fttypes.h>           - simple FreeType types, without the API
        <freetype/internal/ftmemory.h> - definition of memory-management macros
 
@@ -26,15 +26,15 @@ LATEST CHANGES -
      |  It seems the C pre-processor that comes with LCC is broken, it
      |  doesn't recognize the ANSI standard directives # and ## correctly
      |  when one of the argument is a macro. Also, something like:
-     |  
+     |
      |     #define F(x)  print##x
-     |     
+     |
      |     F(("hello"))
-     |     
+     |
      |  will get incorrectly translated to:
-     |  
+     |
      |     print "hello")
-     |     
+     |
      |  by its pre-processor. For this reason, you simply cannot build
      |  FreeType 2 in debug mode with this compiler..
 
@@ -42,12 +42,12 @@ LATEST CHANGES -
   - yet another massive grunt work. I've changed the definition of the
     EXPORT_DEF, EXPORT_FUNC, BASE_DEF & BASE_FUNC macros. These now take
     an argument, which is the function's return value type.
-    
+
     This is necessary to compile FreeType as a DLL on Windows and OS/2.
     Depending on the compiler used, a compiler-specific keyword like __export
     or __system must be placed before (VisualC++) or after (BorlandC++)
     the type..
-    
+
     Of course, this needed a lot of changes throughout the source code
     to make it compile again... All cleaned up now, apparently..
 
@@ -80,7 +80,7 @@ LATEST CHANGES -
     within it for more information.
 
   - major directory hierarchy re-organisation. This was done for two things:
-  
+
       * first, to ease the "manual" compilation of the library by requiring
         at lot less include paths :-)
 
@@ -90,19 +90,19 @@ LATEST CHANGES -
 
     Basically, you should now use the 'freetype/' prefix for header inclusion,
     as in:
-    
+
         #include <freetype/freetype.h>
         #include <freetype/ftglyph.h>
 
     Some new include sub-directories are available:
-    
+
      a. the "freetype/config" directory, contains two files used to
         configure the build of the library. Client applications should
         not need to look at these normally, but they can if they want.
-        
+
         #include <freetype/config/ftoption.h>
         #include <freetype/config/ftconfig.h>
-     
+
      b. the "freetype/internal" directory, contains header files that
         describes library internals. These are the header files that were
         previously found in the "src/base" and "src/shared" directories.
@@ -110,9 +110,9 @@ LATEST CHANGES -
 
     As usual, the build system and the demos have been updated to reflect
     the change..
-    
+
     Here's a layout of the new directory hierarchy:
-    
+
     TOP
       include/
          freetype/
@@ -122,17 +122,17 @@ LATEST CHANGES -
               ftoption.h
               ftconfig.h
               ftmodule.h
-              
+
             internal/
               ftobjs.h
               ftstream.h
               ftcalc.h
               ...
-            
+
       src/
          base/
             ...
-            
+
          sfnt/
          psnames/
          truetype/
@@ -142,7 +142,7 @@ LATEST CHANGES -
 
     Compiling a module is now much easier, for example, the following should
     work when in the TOP directory on an ANSI build:
-    
+
        gcc -c -I./include -I./src/base src/base/ftbase.c
        gcc -c -I./include -I./src/sfnt src/sfnt/sfnt.c
        etc..
@@ -178,9 +178,9 @@ OLD CHANGES - 14-apr-2000
 
   - fixed a bug in the TrueType glyph loader that prevented the correct
     loading of some CJK glyphs in mingli.ttf
-    
+
   - improved the standard Type 1 hinter in "src/type1"
-  
+
   - fixed two bugs in the experimental Type 1 driver in "src/type1z"
     to handle the new XFree86 4.0 fonts (and a few other ones..)
 
@@ -189,7 +189,7 @@ OLD CHANGES - 14-apr-2000
     in "demos/src/ftgrays.c" and should move to the library itself
     in the next beta.. NOTE: The smooth renderer doesn't compile in
     stand-alone mode anymore, but this should be fixed RSN..
-    
+
   - introduced convenience functions to more easily deal with glyph
     images, see "include/ftglyph.h" for more details, as well as the
     new demo program named "demos/src/ftstring.c" that demonstrates
@@ -214,11 +214,11 @@ OLD CHANGES - 12-mar-2000
   - changed the layout of configuration files : now, all ANSI configuration
     files are located in "freetype2/config". System-specific over-rides
     can be placed in "freetype2/config/<system>".
-    
+
   - moved all configuration macros to "config/ftoption.h"
-  
+
   - improvements in the Type 1 driver with AFM support
-  
+
   - changed the fields in the FT_Outline structure : the old "flags"
     array is re-named "tags", while all ancient flags are encoded into
     a single unsigned int named "flags".
@@ -230,10 +230,10 @@ OLD CHANGES - 12-mar-2000
 
   - added a smooth anti-alias renderer to the demonstration programs
   - added Mac graphics driver (thanks Just)
-  
+
   - FT_Open_Face changed in order to received a pointer to a FT_Open_Args
     descriptor..
-  
+
   - various cleanups, a few more API functions implemented (see FT_Attach_File)
 
   - updated some docs
@@ -314,11 +314,11 @@ OLDER CHANGES - 27-jan-2000
 
   - updated the "sfnt" module interface to allow several SFNT-based
     drivers to co-exist peacefully
-    
+
   - updated the "T1_Face" type to better separate Postscript font content
     from the rest of the FT_Face structure. Might be used later by the
     CFF/Type2 driver..
-    
+
   - added an experimental replacement Type 1 driver featuring advanced
     (and speedy) pattern matching to retrieve the data from postscript
     fonts.
@@ -351,27 +351,27 @@ High-Level Interface :
     - resource objects have disappeared. this means that face objects can
       now be created with a single function call (see FT_New_Face and
       FT_Open_Face)
-    
+
     - when calling either FT_New_Face & FT_Open_Face, a size object and a
       glyph slot object are automatically created for the face, and can be
       accessed through "face->glyph" and "face->size" if one really needs to.
       In most cases, there's no need to call FT_New_Size or FT_New_Glyph.
-    
+
     - similarly, FT_Load_Glyph now only takes a "face" argument (instead of
       a glyph slot and a size). Also, it's "result" parameter is gone, as
       the glyph image type is returned in the field "face->glyph.format"
-    
+
     - the list of available charmaps is directly accessible through
       "face->charmaps", counting "face->num_charmaps" elements. Each
       charmap has an 'encoding' field which specifies which known encoding
       it deals with. Valid values are, for example :
-    
+
           ft_encoding_unicode      (for ASCII, Latin-1 and Unicode)
           ft_encoding_apple_roman
           ft_encoding_sjis
           ft_encoding_adobe_standard
           ft_encoding_adobe_expert
-    
+
       other values may be added in the future. Each charmap still holds its
       "platform_id" and "encoding_id" values in case the encoding is too
       exotic for the current library
@@ -510,7 +510,7 @@ Portability :
 
 -----------------------------------------------------------------------------------------
 Font Drivers :
-  
+
 
   The Font Driver interface has been modified in order to support
   extensions & versioning.
@@ -561,10 +561,10 @@ Extensions support :
      driver = FT_Get_Driver( library, "truetype" );
      if (!driver) return FT_Err_Unimplemented_Feature;
 
-     return FT_Register_Extension( driver, &extension_class );   
+     return FT_Register_Extension( driver, &extension_class );
    }
 
-   
+
    // Implementing the extensions
    //
    FT_Error  FT_Proceed_Extension_XXX( FT_Face  face )

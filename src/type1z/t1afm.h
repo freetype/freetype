@@ -18,7 +18,7 @@ typedef struct T1_Kern_Pair_
   FT_UInt   glyph1;
   FT_UInt   glyph2;
   FT_Vector kerning;
-  
+
 } T1_Kern_Pair;
 
 

@@ -311,7 +311,7 @@
 
  /* font info dictionary */
     T1_FontInfo    font_info;
- 
+
  /* private dictionary */
     T1_Private     private_dict;
 
@@ -341,9 +341,9 @@
     T1_Long      font_id;
 
     T1_Int       stroke_width;
-  
+
   } T1_Font;
-  
+
 
 
 /*************************************************************************/

@@ -51,10 +51,10 @@ FreeType 2.0 I/O Frames</h1></center>
      <font color="blue"><pre>
      error = read_short(stream, &str.value1);
      if (error) goto ...
-           
+
      error = read_ulong(stream, &str.value2);
      if (error) goto ...
-     
+
      error = read_ulong(stream, &str.value3);
      if (error) goto ...
      </pre></font>
@@ -63,11 +63,11 @@ FreeType 2.0 I/O Frames</h1></center>
      <font color="blue"><pre>
      error = FT_Access_Frame(stream, 2+4+4);
      if (error) goto ...
-     
+
      str.value1 = FT_Get_Short(stream);
      str.value2 = FT_Get_ULong(stream);
      str.value3 = FT_Get_ULong(stream);
-     
+
      FT_Forget_Frame(stream);
      </pre></font>
   <p>
@@ -126,63 +126,63 @@ FreeType 2.0 I/O Frames</h1></center>
 		<table>
 			<tr>
                 <td><b>Macro name</b>    <td>Translation  <td>Description
-                
+
             <tr><td><font color="purple"><tt><b>
                 GET_Byte()
                 </b></tt></font><td><font color="blue"><tt>
                 (FT_Get_Byte(stream))
                 </tt></font><td>
                 reads an 8-bit unsigned byte
-                
+
             <tr><td><font color="purple"><tt><b>
                 GET_Char()
                 </b></tt></font><td><font color="blue"><tt>
                 ((FT_Char)FT_Get_Byte(stream))
                 </tt></font><td>
                 reads an 8-bit <em>signed</em> byte
-                
+
             <tr><td><font color="purple"><tt><b>
                 GET_Short()
                 </b></tt></font><td><font color="blue"><tt>
                 (FT_Get_Short(stream))
                 </tt></font><td>
                 reads a 16-bit signed big-endian integer
-                
+
             <tr><td><font color="purple"><tt><b>
                 GET_UShort()
                 </b></tt></font><td><font color="blue"><tt>
                 ((FT_UShort)FT_Get_Short(stream))
                 </tt></font><td>
                 reads a 16-bit unsigned big-endian integer
-                
+
             <tr><td><font color="purple"><tt><b>
                 GET_Offset()
                 </b></tt></font><td><font color="blue"><tt>
                 (FT_Get_Offset(stream))
                 </tt></font><td>
                 reads a 24-bit signed big-endian integer
-                
+
             <tr><td><font color="purple"><tt><b>
                 GET_UOffset()
                 </b></tt></font><td><font color="blue"><tt>
                 ((FT_UOffset)FT_Get_Offset(stream))
                 </tt></font><td>
                 reads a 24-bit unsigned big-endian integer
-                
+
             <tr><td><font color="purple"><tt><b>
                 GET_Long()
                 </b></tt></font><td><font color="blue"><tt>
                 (FT_Get_Long(stream))
                 </tt></font><td>
                 reads a 32-bit signed big-endian integer
-                
+
             <tr><td><font color="purple"><tt><b>
                 GET_ULong()
                 </b></tt></font><td><font color="blue"><tt>
                 ((FT_ULong)FT_Get_Long(stream))
                 </tt></font><td>
                 reads a 32-bit unsigned big-endian integer
-                
+
 		</table>
 	</ul>
 	<p>
@@ -192,22 +192,22 @@ FreeType 2.0 I/O Frames</h1></center>
 	<font color="blue"><pre>
       error = FT_Access_Frame(stream, 2+4+4);
       if (error) goto ...
-      
+
       str.value1 = FT_Get_Short(stream);
       str.value2 = FT_Get_ULong(stream);
       str.value3 = FT_Get_ULong(stream);
-      
+
       FT_Forget_Frame(stream);<br>
 	</pre></font>
 	<p>
 	Can be replaced with macros by:<p>
 	<font color="blue"><pre>
       if ( ACCESS_Frame( 2+4+4 ) ) goto ...
-      
+
       str.value1 = GET_Short();
       str.value2 = GET_ULong();
       str.value3 = GET_ULong();
-      
+
       FORGET_Frame();
 	</pre></font>
 	<p>

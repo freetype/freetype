@@ -943,12 +943,12 @@
   /*                returned by FT_Load_Glyph().                           */
   /*                                                                       */
   /*                                                                       */
-  
+
   enum
   {
     ft_glyph_own_bitmap = 1
   };
-  
+
   typedef struct  FT_GlyphSlotRec_
   {
     FT_Face           face;

@@ -190,11 +190,11 @@
     FT_AutoHinter_Init_Func   init_autohinter;
     FT_AutoHinter_Done_Func   done_autohinter;
     FT_AutoHinter_Load_Func   load_glyph;
-    
+
     FT_AutoHinter_Get_Global_Func   get_global_hints;
     FT_AutoHinter_Done_Global_Func  done_global_hints;
 
-  } FT_AutoHinter_Interface;					 
+  } FT_AutoHinter_Interface;
 
 #endif /* AUTOHINT_H */
 

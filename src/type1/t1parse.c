@@ -157,16 +157,16 @@
     old_base = table->block;
     if (!old_base)
       return;
-    
+
     (void)REALLOC( table->block, table->capacity, table->cursor );
     table->capacity = table->cursor;
-    
+
     if (old_base != table->block)
     {
       T1_Long   delta   = table->block - old_base;
       T1_Byte** element = table->elements;
       T1_Byte** limit   = element + table->max_elems;
-      
+
       for ( ; element < limit; element++ )
         if (element[0])
           element[0] += delta;

@@ -38,7 +38,7 @@ TT_INCLUDE := $(SFNT_INCLUDE) $(TT_DIR) $(TT_EXT_DIR)
 # compilation flags for the driver
 #
 TT_CFLAGS  := $(TT_INCLUDE:%=$I%)
-TT_COMPILE := $(FT_COMPILE) $(TT_CFLAGS) 
+TT_COMPILE := $(FT_COMPILE) $(TT_CFLAGS)
 
 
 # driver sources (i.e., C files)

@@ -30,7 +30,7 @@
   static TT_UInt  code_to_index0( TT_CMapTable*  charmap, TT_ULong  char_code );
   static TT_UInt  code_to_index2( TT_CMapTable*  charmap, TT_ULong  char_code );
   static TT_UInt  code_to_index4( TT_CMapTable*  charmap, TT_ULong  char_code );
-  static TT_UInt  code_to_index6( TT_CMapTable*  charmap, TT_ULong  char_code );      
+  static TT_UInt  code_to_index6( TT_CMapTable*  charmap, TT_ULong  char_code );
 
   /*************************************************************************/
   /*                                                                       */
@@ -152,7 +152,7 @@
         cmap2->glyphIdArray[i] = GET_UShort();
 
       FORGET_Frame();
-      
+
       cmap->get_index = code_to_index2;
       break;
 
@@ -212,7 +212,7 @@
         cmap4->glyphIdArray[i] = GET_UShort();
 
       FORGET_Frame();
-      
+
       cmap->get_index = code_to_index4;
       break;
 
@@ -338,7 +338,7 @@
                           TT_ULong       charCode )
   {
     TT_CMap0*  cmap0 = &cmap->c.cmap0;
-    
+
     return ( charCode <= 0xFF ? cmap0->glyphIdArray[charCode] : 0 );
   }
 

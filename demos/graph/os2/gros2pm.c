@@ -35,9 +35,9 @@
   {
     ULONG   os2key;
     grKey   grkey;
-    
+
   } Translator;
-  
+
 
   static
   Translator  key_translators[] =
@@ -296,7 +296,7 @@
     WinUpdateWindow( surface->frame_window );
   }
 
-  
+
   static
   void  set_title( grPMSurface* surface,
                    const char*  title )
@@ -319,7 +319,7 @@
 
 
 
-  static  
+  static
   void  listen_event( grPMSurface* surface,
                       int          event_mask,
                       grEvent*     grevent )
@@ -517,7 +517,7 @@
     the_surface = surface;
 
     LOG(( "Os2PM: RunPMWindow( %08lx )\n", (long)surface ));
-     
+
     /* create an anchor to allow this thread to use PM */
     surface->anchor = WinInitialize(0);
     if (!surface->anchor)
@@ -546,8 +546,8 @@
     }
 
     /* create the PM window */
-    class_flags = FCF_TITLEBAR | FCF_MINBUTTON | FCF_DLGBORDER | 
-                  FCF_TASKLIST | FCF_SYSMENU; 
+    class_flags = FCF_TITLEBAR | FCF_MINBUTTON | FCF_DLGBORDER |
+                  FCF_TASKLIST | FCF_SYSMENU;
 
     LOG(( "Os2PM: RunPMWindow: Creating window\n" ));
     surface->frame_window = WinCreateStdWindow(
@@ -669,7 +669,7 @@
     case WM_MINMAXFRAME:
       /* to update minimized if changed */
       swp = *((PSWP) parm1);
-      if ( swp.fl & SWP_MINIMIZE ) 
+      if ( swp.fl & SWP_MINIMIZE )
         minimized = TRUE;
       if ( swp.fl & SWP_RESTORE )
         minimized = FALSE;
@@ -677,11 +677,11 @@
       break;
 
     case WM_ERASEBACKGROUND:
-    case WM_PAINT:  
+    case WM_PAINT:
       /* copy the memory image of the screen out to the real screen */
       DosRequestMutexSem( surface->image_lock, SEM_INDEFINITE_WAIT );
       WinBeginPaint( handle, screen_ps, NULL );
-      
+
       /* main image and magnified picture */
       GpiBitBlt( screen_ps,
                  surface->image_ps,
@@ -690,7 +690,7 @@
                  ROP_SRCCOPY, BBO_AND );
 
       WinEndPaint( screen_ps );
-      DosReleaseMutexSem( surface->image_lock );   
+      DosReleaseMutexSem( surface->image_lock );
       break;
 
     case WM_HELP:  /* this really is a F1 Keypress !! */
@@ -740,15 +740,15 @@
   {
     sizeof( grPMSurface ),
     "os2pm",
-    
+
     init_device,
     done_device,
-    
+
     (grDeviceInitSurfaceFunc) init_surface,
-    
+
     0,
     0
-    
+
   };
 
 

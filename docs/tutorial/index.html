@@ -56,14 +56,14 @@ FreeType 2.0 Tutorial</h1></center>
 <ul>
   Simply create a variable of type <tt>FT_Library</tt> named, for example,
   <tt>library</tt>, and call the function <tt>FT_Init_FreeType</tt> as in:
-  
+
   <font color="blue"><pre>
        #include &lt;freetype/freetype.h&gt;
-       
+
        FT_Library  library;
-       
+
        ....
-       
+
        {
          ..
          error = FT_Init_FreeType( &library );
@@ -76,7 +76,7 @@ FreeType 2.0 Tutorial</h1></center>
       <li>Creating a new instance of the FreeType 2 library, and set
           the handle <tt>library</tt> to it.
           <p>
-          
+
       <li>Load each font driver that FreeType knows about in the library.
           This means that by default, your new <tt>library</tt> object is
           able to handle TrueType and Type 1 fonts gracefully.
@@ -101,13 +101,13 @@ FreeType 2.0 Tutorial</h1></center>
     two different faces.
     <p>
     <font color="blue"><pre>
-    
+
       FT_Library   library;   /* handle to library     */
       FT_Face      face;      /* handle to face object */
 
       error = FT_Init_FreeType( &library );
       if (error) { ..... }
-      
+
       error = FT_New_Face( library,
                            "/usr/share/fonts/truetype/arial.ttf",
                            0,
@@ -131,17 +131,17 @@ FreeType 2.0 Tutorial</h1></center>
     <tr valign="top"><td><tt><b>library</b></tt>
         <td>handle to the FreeType library instance where the face object is
             created
-                                               
+
     <tr valign="top"><td><tt><b>filepathname</b></tt>
         <td>the font file pathname (standard C string).
-        
+
     <tr valign="top"><td><tt><b>face_index</b></tt>
         <td>Certain font formats allow several font faces to be embedded in
             a single file.<br>
             This index tells which face you want to load. An
             error will be returned if its value is too large.<br>
             Index 0 always work though.
-        
+
     <tr><td><tt><b>face</b></tt>
         <td>A <em>pointer</em> to the handle that will be set to
             describe the new face object.<br>
@@ -155,7 +155,7 @@ FreeType 2.0 Tutorial</h1></center>
     the font file.
   </ul>
   <p>
-  
+
   <h4>b. From memory:</h4>
   <ul>
     In the case where you have already loaded the font file in memory, you
@@ -163,13 +163,13 @@ FreeType 2.0 Tutorial</h1></center>
     <tt>FT_New_Memory_Face</tt> as in:
     <p>
     <font color="blue"><pre>
-    
+
       FT_Library   library;   /* handle to library     */
       FT_Face      face;      /* handle to face object */
 
       error = FT_Init_FreeType( &library );
       if (error) { ..... }
-      
+
       error = FT_New_Memory_Face( library,
                                   buffer,    /* first byte in memory */
                                   size,      /* size in bytes        */
@@ -184,7 +184,7 @@ FreeType 2.0 Tutorial</h1></center>
     <tt>FT_New_Face</tt>.
   </ul>
   <p>
-  
+
   <h4>c. From other sources: (compressed files, network, etc..)</h4>
   <ul>
     There are cases where using a filepathname or preloading the file in
@@ -215,7 +215,7 @@ FreeType 2.0 Tutorial</h1></center>
      <td>gives the number of <em>glyphs</em> available in the font face. A glyph
          is simply a character image. It doesn't necessarily correspond to
          a <em>character code</em> though.
-         
+
   <tr valign="top">
      <td><tt><b>face&minus;>flags</b></tt>
      <td>a 32-bit integer containing bit flags used to describe some face
@@ -224,13 +224,13 @@ FreeType 2.0 Tutorial</h1></center>
          glyph images can be rendered for all character pixel sizes. For more
          information on face flags, please read the <a href="#">FreeType API
          Reference</a>
-     
+
   <tr valign="top">
      <td><tt><b>face&minus;>units_per_EM</b></tt>
      <td>This field is only valid for scalable formats (it is set to 0
          otherwise). It indicates the number of font units covered by the
          EM.
-         
+
   <tr valign="top">
      <td><tt><b>face&minus;>num_fixed_sizes</b></tt>
      <td>this field gives the number of embedded bitmap <em>strikes</em> in
@@ -280,16 +280,16 @@ FreeType 2.0 Tutorial</h1></center>
   You'll notice that:<p>
   <ul>
      <li>The character width and heights are specified in 1/64th of points.<p>
-     
+
      <li>The horizontal and vertical device resolutions are expressed in
          <em>dots-per-inch</em>, or <em>dpi</em>. You can use 72 or 96 dpi
          for display devices like the screen.<p>
-         
+
      <li>A value of 0 for the character width means "<em>same as character
          height</em>", a value of 0 for the character height means
          "<em>same as character width</em>". Otherwise, it is possible to
          specify different char width and height.<p>
-         
+
      <li>Using a value of 0 for the horizontal or vertical resolution means
          72 dpi, which is the default.
 	 <p>
@@ -362,7 +362,7 @@ FreeType 2.0 Tutorial</h1></center>
      <p>
   </ul>
   <p>
-  
+
   <h4>b. Loading a glyph from the face:</h4>
   <ul>
      Once you have a glyph index, you can load the corresponding glyph image.
@@ -397,13 +397,13 @@ FreeType 2.0 Tutorial</h1></center>
              bitmaps are favored over outlines as they usually correspond to
              higher-quality images of the same glyph).
              <p>
-             
+
          <li>if there is an outline for the corresponding glyph, load it
              unless <tt>FT_LOAD_NO_OUTLINE</tt> is set. Otherwise, scale it
              to the current size, unless the <tt>FT_LOAD_NO_SCALE</tt> flag
              is set.
              <p>
-             
+
          <li>if the outline was loaded and scaled, try to grid-fit it (which
              dramatically improves its quality) unless the flag
              <tt>FT_LOAD_NO_HINTING</tt> is set.
@@ -413,7 +413,7 @@ FreeType 2.0 Tutorial</h1></center>
      details see the <a href="#">FreeType 2 API Reference</a>.
   </ul>
   <p>
-  
+
   <h4>c. Using other charmaps:</h4>
   <ul>
     As said before, when a new face object is created, it will look for
@@ -445,7 +445,7 @@ FreeType 2.0 Tutorial</h1></center>
         FT_CharMap  found = 0;
         FT_CharMap  charmap;
         int         n;
-        
+
         for ( n = 0; n &lt; face-&gt;num_charmaps; n++ )
         {
           charmap = face&gt;charmaps[n];
@@ -457,7 +457,7 @@ FreeType 2.0 Tutorial</h1></center>
         }
 
         if (!found) { ... }
-                 
+
         /* now, select the charmap for the face object */
         error = FT_Set_CharMap( face, found );
         if (error) { .... }
@@ -465,7 +465,7 @@ FreeType 2.0 Tutorial</h1></center>
     <p>
     One might now call <tt>FT_Get_Char_Index</tt> with Big5 character codes
     to retrieve glyph indices.
-    <p>     
+    <p>
   </ul>
   <p>
 </ul>
@@ -506,7 +506,7 @@ FreeType 2.0 Tutorial</h1></center>
        <td>Indicates the type of the loaded glyph image. Can be either
            <tt>ft_glyph_format_bitmap</tt>, <tt>ft_glyph_format_outline</tt>
            or other values.
-       
+
     <tr valign="top">
        <td><tt><b>glyph&minus;&gt;metrics</b></tt>
        <td>A simple structure used to hold the glyph image's metrics. Note
@@ -526,7 +526,7 @@ FreeType 2.0 Tutorial</h1></center>
            describes it. See the definition of the <tt>FT_Outline</tt>
            structure.
   </table>
-  <p> 
+  <p>
 </ul>
 
 <h3>8. Rendering glyph outlines into bitmaps:</h3>
@@ -542,9 +542,9 @@ FreeType 2.0 Tutorial</h1></center>
   or something else, the library provides a means to convert such glyph
   images to bitmaps through what are called <b>rasters</b>.
   <p>
-  
-  
-  
+
+
+
   On the other hand, when the image is a scalable outline, or something else,
   FreeType provides a function to convert the glyph image into a
   pre-existing bitmap that you'll handle to it, named
@@ -556,26 +556,26 @@ FreeType 2.0 Tutorial</h1></center>
        FT_GlyphSlot  glyph;
 
        .... load glyph ...
-       
+
        glyph = face-&gt;glyph;   /* shortcut to glyph data */
        if (glyph->format == ft_glyph_format_outline )
        {
          FT_Bitmap  bit;
-         
+
          /* set-up a bitmap descriptor for our target bitmap */
          bit.rows       = bitmap_height;
          bit.width      = bitmap_width;
          bit.pitch      = bitmap_row_bytes;
          bit.pixel_mode = ft_pixel_mode_mono;  /* render into a mono bitmap */
          bit.buffer     = bitmap_buffer;
-         
+
          /* render the outline directly into the bitmap */
          error = FT_Get_Glyph_Bitmap( face, &bit );
          if (error) { ... }
-       }       
+       }
      }
   </pre></font>
-  <p>  
+  <p>
   You should note that <b><em><tt>FT_Get_Glyph_Bitmap</tt> doesn't create the
   bitmap.</em></b> It only needs a descriptor, of type <tt>FT_Bitmap</tt>,
   and writes directly into it.
@@ -590,12 +590,12 @@ FreeType 2.0 Tutorial</h1></center>
        FT_GlyphSlot  glyph;
 
        .... load glyph ...
-       
+
        glyph = face-&gt;glyph;   /* shortcut to glyph data */
        if (glyph->format == ft_glyph_format_outline )
        {
          FT_Bitmap  bit;
-         
+
          /* set-up a bitmap descriptor for our target bitmap */
          bit.rows       = bitmap_height;
          bit.width      = bitmap_width;
@@ -606,11 +606,11 @@ FreeType 2.0 Tutorial</h1></center>
 
          /* clean the bitmap - IMPORTANT */
          memset( bit.buffer, 0, bit.rows*bit.pitch );
-         
+
          /* render the outline directly into the bitmap */
          error = FT_Get_Glyph_Bitmap( face, &bit );
          if (error) { ... }
-       }       
+       }
      }
   </pre></font>
   <p>
@@ -618,17 +618,17 @@ FreeType 2.0 Tutorial</h1></center>
   <ul>
      <li>As previously, <tt>FT_Get_Glyph_Bitmap</tt> doesn't generate the
          bitmap, it simply renders to it.<p>
-         
+
      <li>The target bitmap must be cleaned before calling the function. This
          is a limitation of our current anti-aliasing algorithm and is
          EXTREMELY important.<p>
-         
+
      <li>The anti-aliaser uses 128 levels of grays exclusively for now (this
          will probably change in a near future). This means that you <b>must</b>
          set <tt>bit.grays</tt> to 128. The generated image uses values from
          0 (back color) to 127 (foreground color).
-         <p>                           
-         
+         <p>
+
      <li>It is <b>not</b> possible to render directly an anti-aliased outline into
          a pre-existing gray-level bitmap, or even any colored-format one
          (like RGB16 or paletted 8-bits). We will not discuss this issue in
@@ -640,6 +640,6 @@ FreeType 2.0 Tutorial</h1></center>
 </ul>
 
 </td></tr></table>
-</center>  
+</center>
 <p><hr>
 

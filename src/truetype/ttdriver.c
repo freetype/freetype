@@ -49,7 +49,7 @@
   *    find_encoding
   *
   * <Description>
-  *    return the FT_Encoding corresponding to a given 
+  *    return the FT_Encoding corresponding to a given
   *    (platform_id,encoding_id) pair, as found in TrueType charmaps
   *
   * <Input>
@@ -60,7 +60,7 @@
   *   the corresponding FT_Encoding tag. ft_encoding_none by default
   *
   *****************************************************************/
-  
+
   static
   FT_Encoding   find_encoding( int  platform_id,
                                int  encoding_id )
@@ -70,28 +70,28 @@
       int          platform_id;
       int          encoding_id;
       FT_Encoding  encoding;
-  
+
     } TEncoding;
 
     static
     const TEncoding   tt_encodings[] =
     {
       { TT_PLATFORM_ISO,                         -1, ft_encoding_unicode },
-        
+
       { TT_PLATFORM_APPLE_UNICODE,               -1, ft_encoding_unicode },
-      
+
       { TT_PLATFORM_MACINTOSH,      TT_MAC_ID_ROMAN, ft_encoding_apple_roman },
-      
+
       { TT_PLATFORM_MICROSOFT,  TT_MS_ID_UNICODE_CS, ft_encoding_unicode },
       { TT_PLATFORM_MICROSOFT,  TT_MS_ID_SJIS,       ft_encoding_sjis },
       { TT_PLATFORM_MICROSOFT,  TT_MS_ID_BIG_5,      ft_encoding_big5 }
     };
-    
+
     const TEncoding  *cur, *limit;
-   
+
     cur   = tt_encodings;
     limit = cur + sizeof(tt_encodings)/sizeof(tt_encodings[0]);
-    
+
     for ( ; cur < limit; cur++ )
     {
       if (cur->platform_id == platform_id)
@@ -235,7 +235,7 @@
         /* now, set root->charmap with a unicode charmap wherever available */
         if (!root->charmap && charmap->root.encoding == ft_encoding_unicode)
           root->charmap = (FT_CharMap)charmap;
-        
+
         root->charmaps[n] = (FT_CharMap)charmap;
       }
 
@@ -443,7 +443,7 @@
       metrics->x_ppem    = (TT_UShort)(dim_x >> 6);
       metrics->y_ppem    = (TT_UShort)(dim_y >> 6);
     }
-    
+
     size->ttmetrics.valid = FALSE;
 
     return TT_Reset_Size( size );
@@ -593,7 +593,7 @@
     TT_Error       error;
     TT_Face        face;
     TT_CMapTable*  cmap;
-    
+
     cmap = &charmap->cmap;
     face = (TT_Face)charmap->root.face;
 
@@ -601,7 +601,7 @@
     if ( !cmap->loaded )
     {
       SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
-      
+
       error = sfnt->load_charmap( face, cmap, face->root.stream );
       if (error)
         return error;
@@ -620,7 +620,7 @@
   void*  tt_get_sfnt_table( TT_Face  face, FT_Sfnt_Tag  tag )
   {
     void*  table;
-    
+
     switch (tag)
     {
       case ft_sfnt_head: table = &face->header; break;
@@ -629,7 +629,7 @@
       case ft_sfnt_os2:  table = (face->os2.version == 0xFFFF ? 0 : &face->os2 ); break;
       case ft_sfnt_post: table = &face->postscript; break;
       case ft_sfnt_maxp: table = &face->max_profile; break;
-      
+
       default:
         table = 0;
     }
@@ -641,10 +641,10 @@
   FTDriver_Interface  tt_get_interface( TT_Driver  driver, const char* interface )
   {
     UNUSED(driver);
-    
+
     if (strcmp(interface,"get_sfnt")==0)
       return (FTDriver_Interface)tt_get_sfnt_table;
-      
+
     return 0;
   }
 

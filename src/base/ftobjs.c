@@ -227,9 +227,9 @@
     memory   = library->memory;
     if ( ALLOC( stream, sizeof ( *stream ) ) )
       goto Exit;
-      
+
     stream->memory = memory;
-    
+
     /* now, look at the stream flags */
     if ( args->flags & ft_open_memory )
     {
@@ -253,10 +253,10 @@
     {
       error = FT_Err_Invalid_Argument;
     }
-    
+
     if ( error )
       FREE( stream );
-      
+
     *astream = stream;
   Exit:
     return error;
@@ -341,7 +341,7 @@
       face->generic.finalizer( face );
 
     /* close the stream for this face */
-    ft_done_stream( &face->stream );    
+    ft_done_stream( &face->stream );
 
     /* get rid of it */
     FREE( face );
@@ -394,8 +394,8 @@
   *   FT_Get_Raster
   *
   * <Description>
-  *   Return a pointer to the raster corresponding to a given glyph   
-  *   format tag.      
+  *   Return a pointer to the raster corresponding to a given glyph
+  *   format tag.
   *
   * <Input>
   *   library      :: handle to source library object
@@ -408,13 +408,13 @@
   *   a pointer to the corresponding raster object.
   *
   *************************************************************************/
-  
+
   EXPORT_FUNC(FT_Raster)  FT_Get_Raster( FT_Library        library,
                                          FT_Glyph_Format   glyph_format,
                                          FT_Raster_Funcs  *raster_funcs )
   {
     FT_Int  n;
-    
+
     for ( n = 0; n < FT_MAX_GLYPH_FORMATS; n++ )
     {
       FT_Raster_Funcs*  funcs = &library->raster_funcs[n];
@@ -462,18 +462,18 @@
     FT_Raster        raster;
     FT_Error         error;
     FT_Int           n, index;
- 
+
     if ( glyph_format == ft_glyph_format_none)
       return FT_Err_Invalid_Argument;
-    
+
     /* create a new raster object */
     error = raster_funcs->raster_new( library->memory, &raster );
     if (error) goto Exit;
-    
+
     raster_funcs->raster_reset( raster,
                                 library->raster_pool,
                                 library->raster_pool_size );
-    
+
     index = -1;
     for (n = 0; n < FT_MAX_GLYPH_FORMATS; n++)
     {
@@ -482,7 +482,7 @@
       /* record the first vacant entry in "index" */
       if (index < 0 && funcs->glyph_format == ft_glyph_format_none)
         index = n;
-      
+
       /* compare this entry's glyph format with the one we need */
       if (funcs->glyph_format == glyph_format)
       {
@@ -511,7 +511,7 @@
   Fail:
     raster_funcs->raster_done( raster );
     goto Exit;
-  }                           
+  }
 
   /*************************************************************************/
   /*                                                                       */
@@ -534,8 +534,8 @@
     FT_Glyph_Format  glyph_format = raster_funcs->glyph_format;
     FT_Error         error;
     FT_Int           n;
- 
-    error = FT_Err_Invalid_Argument;    
+
+    error = FT_Err_Invalid_Argument;
     if ( glyph_format == ft_glyph_format_none)
       goto Exit;
 
@@ -581,7 +581,7 @@
   {
     FT_Raster_Funcs  funcs;
     FT_Raster        raster;
-    
+
     raster = FT_Get_Raster( library, format, &funcs );
     if (raster && funcs.raster_set_mode )
       return funcs.raster_set_mode( raster, mode, args );
@@ -657,7 +657,7 @@
     /* now register the default raster for the `outline' glyph image format */
     /* for now, ignore the error...                                         */
     error = FT_Set_Raster( library, &ft_default_raster );
-    
+
 
     /* That's ok now */
     *alibrary = library;
@@ -1133,13 +1133,13 @@
       {
         FT_Int         num_params = 0;
         FT_Parameter*  params     = 0;
-        
+
         if ( args->flags & ft_open_params )
         {
           num_params = args->num_params;
           params     = args->params;
         }
-        
+
         error = open_face( driver, stream, face_index,
                            num_params, params, &face );
         if ( !error )
@@ -1164,13 +1164,13 @@
         {
           FT_Int         num_params = 0;
           FT_Parameter*  params     = 0;
-          
+
           if ( args->flags & ft_open_params )
           {
             num_params = args->num_params;
             params     = args->params;
           }
-          
+
           error = open_face( driver, stream, face_index,
                              num_params, params, &face );
           if ( !error )
@@ -1194,7 +1194,7 @@
       goto Fail;
 
     node->data = face;
-    /* don't assume driver is the same as face->driver, so use 
+    /* don't assume driver is the same as face->driver, so use
        face->driver instead. (JvR 3/5/2000) */
     FT_List_Add( &face->driver->faces_list, node );
 
@@ -1283,7 +1283,7 @@
     return FT_Attach_Stream( face, &open );
   }
 
-                            
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1315,33 +1315,33 @@
     FT_Stream  stream;
     FT_Error   error;
     FT_Driver  driver;
-    
+
     FTDriver_getInterface  get_interface;
-    
+
     if ( !face || !face->driver )
       return FT_Err_Invalid_Handle;
-      
+
     driver = face->driver;
     error = ft_new_input_stream( driver->library, parameters, &stream );
     if (error) goto Exit;
-    
+
     /* we implement FT_Attach_Stream in each driver through the */
     /* "attach_file" interface..                                */
     error = FT_Err_Unimplemented_Feature;
 
     get_interface = driver->interface.get_interface;
-    if (get_interface)    
+    if (get_interface)
     {
       FT_Attach_Reader  reader;
-      
+
       reader = (FT_Attach_Reader)(get_interface( driver, "attach_file" ));
       if (reader)
         error = reader( face, stream );
     }
-    
+
     /* close the attached stream */
     ft_done_stream( &stream );
-    
+
   Exit:
     return error;
   }
@@ -1653,7 +1653,7 @@
                                     face->units_per_EM );
     }
 
-    error = interface->set_pixel_sizes( face->size, 
+    error = interface->set_pixel_sizes( face->size,
                                         pixel_width,
                                         pixel_height );
     return error;
@@ -1814,7 +1814,7 @@
       return FT_Err_Invalid_Face_Handle;
 
     driver = face->driver;
-    
+
     /* when the flag NO_RECURSE is set, we disable hinting and scaling */
     if (load_flags & FT_LOAD_NO_RECURSE)
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
@@ -1940,7 +1940,7 @@
   {
     FT_CharMap*  cur   = face->charmaps;
     FT_CharMap*  limit = cur + face->num_charmaps;
-    
+
     for ( ; cur < limit; cur++ )
     {
       if ( cur[0]->encoding == encoding )
@@ -1979,7 +1979,7 @@
   {
     FT_CharMap*  cur   = face->charmaps;
     FT_CharMap*  limit = cur + face->num_charmaps;
-    
+
     for ( ; cur < limit; cur++ )
     {
       if ( cur[0] == charmap )
@@ -2048,26 +2048,26 @@
   *    You can load any table with a different function.. XXX
   *
   ***************************************************************************/
-  
-  
+
+
   EXPORT_FUNC(void*)  FT_Get_Sfnt_Table( FT_Face      face,
                                          FT_Sfnt_Tag  tag )
   {
     void*                   table = 0;
     FT_Get_Sfnt_Table_Func  func;
     FT_Driver               driver;
-    
+
     if (!face || !FT_IS_SFNT(face))
       goto Exit;
-    
+
     driver = face->driver;
     func = (FT_Get_Sfnt_Table_Func)driver->interface.get_interface( driver, "get_sfnt" );
     if (func)
       table = func(face,tag);
-    
+
   Exit:
     return table;
-  }			    
+  }
 
 
 

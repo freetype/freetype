@@ -1574,7 +1574,7 @@
   /*                                                                       */
   /* <Fields>                                                              */
   /*    loaded    :: A flag to indicate whether the PS names are loaded.   */
-  /*                                                                       */ 
+  /*                                                                       */
   /*    format_20 :: The sub-table used for format 2.0.                    */
   /*                                                                       */
   /*    format_25 :: The sub-table used for format 2.5.                    */
@@ -1717,7 +1717,7 @@
   {
     FT_CharMapRec   root;
     TT_CMapTable    cmap;
-    
+
   } TT_CharMapRec;
 
 
@@ -1997,7 +1997,7 @@
     /* TT_Goto_Table defined in `ttload.h', but some font drivers      */
     /* might need something different, e.g. Type 42 fonts              */
     TT_Goto_Table_Func       goto_table;
-    
+
     /* a typeless pointer to the SFNT_Interface table used to load     */
     /* the basic TrueType tables in the face object                    */
     void*              sfnt;

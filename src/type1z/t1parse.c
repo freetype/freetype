@@ -27,7 +27,7 @@
  *  See "t1load.c" to see how data is loaded from the font file
  *
  ******************************************************************/
- 
+
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftobjs.h>
@@ -75,7 +75,7 @@
 
   Exit:
     if (error) FREE(table->elements);
-      
+
 	return error;
   }
 
@@ -105,7 +105,7 @@
         T1_Long    delta  = table->block - old_base;
         T1_Byte**  offset = table->elements;
         T1_Byte**  limit  = offset + table->max_elems;
-    
+
         if (delta)
           for ( ; offset < limit; offset++ )
           {
@@ -113,7 +113,7 @@
               offset[0] += delta;
           }
       }
-  
+
       static
       T1_Error  reallocate_t1_table( T1_Table*  table,
                                      T1_Int     new_size )
@@ -121,17 +121,17 @@
         FT_Memory  memory   = table->memory;
         T1_Byte*   old_base = table->block;
         T1_Error   error;
-  
+
         /* realloc the base block */
         if ( REALLOC( table->block, table->capacity, new_size ) )
           return error;
-  
+
         table->capacity = new_size;
-  
+
         /* shift all offsets when needed */
         if (old_base)
           shift_elements( table, old_base );
-  
+
         return T1_Err_Ok;
       }
 
@@ -198,10 +198,10 @@
     old_base = table->block;
     if (!old_base)
       return;
-    
+
     (void)REALLOC( table->block, table->capacity, table->cursor );
     table->capacity = table->cursor;
-    
+
     if (old_base != table->block)
       shift_elements( table, old_base );
   }
@@ -211,7 +211,7 @@
   void  T1_Release_Table( T1_Table*  table )
   {
     FT_Memory  memory = table->memory;
-    
+
     if (table->init == (FT_Long)0xdeadbeef)
     {
       FREE( table->block );
@@ -228,20 +228,20 @@
     T1_Long  result = 0;
     T1_Byte* cur    = *cursor;
     T1_Byte  c, d;
-    
+
     for (; cur < limit; cur++)
     {
       c = *cur;
       d = (T1_Byte)(c - '0');
       if (d < 10) break;
-      
+
       if ( c=='-' )
       {
         cur++;
         break;
       }
     }
-    
+
     if (cur < limit)
     {
       do
@@ -249,16 +249,16 @@
         d = (T1_Byte)(cur[0] - '0');
         if (d >= 10)
           break;
-          
+
         result = result*10 + d;
         cur++;
-        
+
       } while (cur < limit);
-      
+
       if (c == '-')
         result = -result;
     }
-    
+
     *cursor = cur;
     return result;
   }
@@ -273,26 +273,26 @@
     T1_Long  num, divider, result;
     T1_Int   sign   = 0;
     T1_Byte  d;
-    
+
     if (cur >= limit) return 0;
-    
+
     /* first of all, read the integer part */
     result  = t1_toint( &cur, limit ) << 16;
     num     = 0;
     divider = 1;
-    
+
     if (result < 0)
     {
       sign   = 1;
       result = -result;
     }
     if (cur >= limit) goto Exit;
-    
+
     /* read decimal part, if any */
     if (*cur == '.' && cur+1 < limit)
     {
       cur++;
-      
+
       for (;;)
       {
         d = (T1_Byte)(*cur - '0');
@@ -307,14 +307,14 @@
         if (cur >= limit) break;
       }
     }
-    
+
     /* read exponent, if any */
     if ( cur+1 < limit && (*cur == 'e' || *cur == 'E'))
     {
       cur++;
       power_ten += t1_toint( &cur, limit );
     }
-    
+
   Exit:
     /* raise to power of ten if needed */
     while (power_ten > 0)
@@ -323,7 +323,7 @@
       num    = num*10;
       power_ten--;
     }
-    
+
     while (power_ten < 0)
     {
       result  = result/10;
@@ -336,7 +336,7 @@
 
     if (sign)
       result = -result;
-      
+
     *cursor = cur;
     return result;
   }
@@ -351,19 +351,19 @@
     T1_Byte*  cur   = *cursor;
     T1_Int    count = 0;
     T1_Byte   c, ender;
-    
+
     if (cur >= limit) goto Exit;
-    
+
     /* check for the beginning of an array. If not, only one number will be read */
     c     = *cur;
     ender = 0;
-    
+
     if (c == '[')
       ender = ']';
-      
+
     if (c == '{')
       ender = '}';
-      
+
     if (ender)
       cur++;
 
@@ -375,21 +375,21 @@
       {
         c = *cur;
         if ( c != ' ' && c != '\t' ) break;
-        
+
         cur++;
         if (cur >= limit) goto Exit;
       }
-      
+
       if (count >= max_coords || c == ender)
         break;
-      
+
       coords[count] = (T1_Short)(t1_tofixed(&cur,limit,0) >> 16);
       count++;
-      
+
       if (!ender)
         break;
     }
-    
+
   Exit:
     *cursor = cur;
     return count;
@@ -399,7 +399,7 @@
 
   static
   T1_Int  t1_tofixedarray( T1_Byte*  *cursor,
-                           T1_Byte*   limit, 
+                           T1_Byte*   limit,
                            T1_Int     max_values,
                            T1_Fixed*  values,
                            T1_Int     power_ten )
@@ -407,19 +407,19 @@
     T1_Byte*  cur   = *cursor;
     T1_Int    count = 0;
     T1_Byte   c, ender;
-    
+
     if (cur >= limit) goto Exit;
-    
+
     /* check for the beginning of an array. If not, only one number will be read */
     c     = *cur;
     ender = 0;
-    
+
     if (c == '[')
       ender = ']';
-      
+
     if (c == '{')
       ender = '}';
-      
+
     if (ender)
       cur++;
 
@@ -431,21 +431,21 @@
       {
         c = *cur;
         if ( c != ' ' && c != '\t' ) break;
-        
+
         cur++;
         if (cur >= limit) goto Exit;
       }
 
       if (count >= max_values || c == ender)
         break;
-      
+
       values[count] = t1_tofixed(&cur,limit,power_ten);
       count++;
-      
+
       if (!ender)
         break;
     }
-    
+
   Exit:
     *cursor = cur;
     return count;
@@ -472,18 +472,18 @@
 
     while ( cur < limit && (*cur == ' ' || *cur == '\t')) cur++;
     if (cur+1 >= limit) return 0;
-    
+
     if (*cur == '(') cur++;  /* skip the opening parenthesis, if there is one */
-    
+
     *cursor = cur;
     count   = 0;
-    
+
     /* then, count its length */
     for ( ; cur < limit; cur++ )
     {
       if (*cur == '(')
         count++;
-        
+
       else if (*cur == ')')
       {
         count--;
@@ -492,14 +492,14 @@
       }
     }
 
-    len = cur - *cursor;    
+    len = cur - *cursor;
     if (cur >= limit || ALLOC(result,len+1)) return 0;
-    
+
     /* now copy the string */
     MEM_Copy( result, *cursor, len );
     result[len] = '\0';
     *cursor = cur;
-    return result;    
+    return result;
   }
 
   static
@@ -507,7 +507,7 @@
   {
     T1_Byte*  cur    = *cursor;
     T1_Bool   result = 0;
-    
+
     /* return 1 if we find a "true", 0 otherwise */
     if ( cur+3 < limit &&
          cur[0] == 't' &&
@@ -583,21 +583,21 @@
   FT_Error  read_pfb_tag( FT_Stream  stream, T1_UShort *tag, T1_Long*  size )
   {
     FT_Error  error;
-    
+
     if (READ_UShort(*tag)) goto Exit;
     if (*tag == 0x8001 || *tag == 0x8002)
     {
       FT_Long  asize;
-      
+
       if (READ_ULong(asize)) goto Exit;
-      
+
       /* swap between big and little endianness */
       *size  = ((asize & 0xFF000000) >> 24) |
                ((asize & 0x00FF0000) >> 8 ) |
                ((asize & 0x0000FF00) << 8 ) |
                ((asize & 0x000000FF) << 24);
     }
-    
+
   Exit:
     return error;
   }
@@ -612,7 +612,7 @@
     FT_Error  error;
     T1_UShort tag;
     T1_Long   size;
-  
+
     parser->stream       = stream;
     parser->memory       = memory;
     parser->base_len     = 0;
@@ -622,10 +622,10 @@
     parser->in_pfb       = 0;
     parser->in_memory    = 0;
     parser->single_block = 0;
-    
+
     parser->cursor       = 0;
     parser->limit        = 0;
-    
+
     /******************************************************************/
     /*                                                                */
     /* Here's a short summary of what is going on :                   */
@@ -641,12 +641,12 @@
     /*   parser->in_pfb is set when we are in a binary (".pfb") font  */
     /*   parser->in_memory is set when we have a memory stream.       */
     /*                                                                */
-    
+
     /* try to compute the size of the base dictionary    */
     /* look for a Postscript binary file tag, i.e 0x8001 */
     if ( FILE_Seek(0L) )
       goto Exit;
-      
+
     error = read_pfb_tag( stream, &tag, &size );
     if (error) goto Exit;
 
@@ -662,14 +662,14 @@
 
     /* now, try to load the "size" bytes of the "base" dictionary we */
     /* found previously                                              */
- 
+
     /* if it's a memory-based resource, set up pointers */
     if ( !stream->read )
     {
       parser->base_dict = (T1_Byte*)stream->base + stream->pos;
       parser->base_len  = size;
       parser->in_memory = 1;
- 
+
       /* check that the "size" field is valid */
       if ( FILE_Skip(size) ) goto Exit;
     }
@@ -681,7 +681,7 @@
         goto Exit;
       parser->base_len = size;
     }
- 
+
     /* Now check font format, we must see a '%!PS-AdobeFont-1' */
     /* or a '%!FontType'                                       */
     {
@@ -764,7 +764,7 @@
     FT_Memory  memory = parser->memory;
     FT_Error   error  = 0;
     T1_Long    size;
-    
+
     if (parser->in_pfb)
     {
       /* in the case of the PFB format, the private dictionary can be  */
@@ -775,15 +775,15 @@
       T1_UShort  tag;
       T1_Long    size;
 
-      parser->private_len = 0;      
+      parser->private_len = 0;
       for (;;)
       {
         error = read_pfb_tag(stream, &tag, &size);
         if (error) goto Fail;
-        
+
         if (tag != 0x8002)
           break;
-          
+
         parser->private_len += size;
 
         if ( FILE_Skip(size) )
@@ -824,9 +824,9 @@
 
       /* first of all, look at the "eexec" keyword */
       FT_Byte*  cur   = parser->base_dict;
-      FT_Byte*  limit = cur + parser->base_len;      
+      FT_Byte*  limit = cur + parser->base_len;
       FT_Byte   c;
-      
+
       for (;;)
       {
         c = cur[0];
@@ -836,12 +836,12 @@
                cur[3] == 'e' && cur[4] == 'c' )
           {
             cur += 6; /* we skip the newling after the "eexec" */
-            
+
             /* XXX: Some fonts use DOS-linefeeds, i.e. \r\n, we need to skip */
             /*      the extra \n when we find it..                           */
             if (cur[0] == '\n')
               cur++;
-              
+
             break;
           }
         }
@@ -853,13 +853,13 @@
           goto Exit;
         }
       }
-      
+
       /* now determine wether where to write the _encrypted_ binary private    */
       /* dictionary. We overwrite the base dictionary for disk-based resources */
       /* and allocate a new block otherwise                                    */
-      
-      size = parser->base_len - (cur-parser->base_dict); 
-      
+
+      size = parser->base_len - (cur-parser->base_dict);
+
       if ( parser->in_memory )
       {
         /* note that we allocate one more byte to put a terminating '0' */
@@ -868,13 +868,13 @@
       }
       else
       {
-        parser->single_block = 1;        
+        parser->single_block = 1;
         parser->private_dict = parser->base_dict;
         parser->private_len  = size;
         parser->base_dict    = 0;
         parser->base_len     = 0;
       }
-      
+
       /* now determine wether the private dictionary is encoded in binary */
       /* or hexadecimal ASCII format..                                    */
       /* and decode it accordingly                                        */
@@ -890,40 +890,40 @@
        MEM_Copy( parser->private_dict, cur, size );
       }
       else
-      {      
+      {
         /* ASCII hexadecimal encoding.. This blows goats !!.. */
-       
+
         T1_Byte*  write;
         T1_Int    count;
 
         write = parser->private_dict;
         count = 0;
-       
+
         for ( ;cur < limit; cur++)
         {
           int  hex1;
-         
+
           /* check for newline */
           if (cur[0] == '\r' || cur[0] == '\n')
             continue;
-           
+
           /* exit if we have a non-hexadecimal digit that isn't a newline */
           hex1 = hexa_value(cur[0]);
           if (hex1 < 0 || cur+1 >= limit)
             break;
-         
+
           /* otherwise, store byte */
           *write++ = (hex1 << 4) | hexa_value(cur[1]);
           count++;
           cur++;
         }
-       
+
         /* put a safeguard */
         parser->private_len = write - parser->private_dict;
         *write++ = 0;
       }
     }
-   
+
     /* we now decrypt the encoded binary private dictionary */
     T1_Decrypt( parser->private_dict, parser->private_len, 55665 );
     parser->cursor = parser->private_dict;
@@ -933,4 +933,4 @@
   Exit:
     return error;
   }
-  
+

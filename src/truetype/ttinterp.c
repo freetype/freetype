@@ -1561,7 +1561,7 @@
   {
     TT_F26Dot6  val;
 
- 
+
    UNUSED_EXEC;
 
     if ( distance >= 0 )
@@ -2040,7 +2040,7 @@
                                   TT_Vector*  v2 )
   {
     UNUSED_EXEC;
- 
+
    return (v1->y - v2->y);
   }
 
@@ -2153,7 +2153,7 @@
     TT_Bool     S1, S2;
 
     UNUSED_EXEC;
-    
+
     if ( ABS( Vx ) < 0x10000L && ABS( Vy ) < 0x10000L )
     {
       Vx *= 0x100;
@@ -2236,7 +2236,7 @@
 
     return SUCCESS;
   }
-#else  
+#else
   static
   TT_Bool  Normalize( EXEC_OP_ TT_F26Dot6      Vx,
                                TT_F26Dot6      Vy,
@@ -2258,7 +2258,7 @@
 
     R->x = 0;
     R->y = 0;
-    
+
     /* check that we're not trying to normalise zero !! */
     if (u==0) return SUCCESS;
 
@@ -2266,21 +2266,21 @@
     hi  = (TT_ULong)u >> 16;
     lo  = (TT_ULong)u & 0xFFFF;
     med = hi*lo;
-    
+
     H     = hi*hi + (med >> 15);
     med <<= 17;
     L     = lo*lo + med;
     if (L < med) H++;
-    
+
     hi  = (TT_ULong)v >> 16;
     lo  = (TT_ULong)v & 0xFFFF;
     med = hi*lo;
-    
+
     H    += hi*hi + (med >> 15);
     med <<= 17;
     L2    = lo*lo + med;
     if (L2 < med) H++;
-    
+
     L += L2;
     if (L < L2) H++;
 
@@ -2293,7 +2293,7 @@
         L <<= 2;
         shift++;
       }
-      
+
       d = FT_Sqrt32(L);
       R->x = (TT_F2Dot14)TT_MULDIV( Vx << shift, 0x4000, d );
       R->y = (TT_F2Dot14)TT_MULDIV( Vy << shift, 0x4000, d );
@@ -2308,7 +2308,7 @@
         H >>= 2;
         shift++;
       }
-      
+
       d = FT_Sqrt32(L);
       R->x = (TT_F2Dot14)TT_MULDIV( Vx >> shift, 0x4000, d );
       R->y = (TT_F2Dot14)TT_MULDIV( Vy >> shift, 0x4000, d );
@@ -2322,7 +2322,7 @@
       sy = ( R->y >= 0 ? 1 : -1 );
       x  = (TT_ULong)sx*R->x;
       y  = (TT_ULong)sy*R->y;
-      
+
       w = x*x+y*y;
 
       /* we now want to adjust (x,y) in order to have sqrt(w) == 0x4000 */
@@ -2332,10 +2332,10 @@
         /* increment the smallest coordinate */
         if ( x < y )  x++;
                  else y++;
-                 
+
         w = x*x+y*y;
       }
-      
+
       while ( w >= 0x10040000L )
       {
         /* decrement the smallest coordinate */
@@ -4055,13 +4055,13 @@
     rec   = CUR.FDefs;
     limit = rec + CUR.numFDefs;
     n     = args[0];
-    
+
     for ( ; rec < limit; rec++ )
     {
       if (rec->opc == n)
         break;
     }
-    
+
     if ( rec == limit )
     {
       /* check that there is enough room for new functions */
@@ -4072,15 +4072,15 @@
       }
       CUR.numFDefs++;
     }
-    
+
     rec->range  = CUR.curRange;
     rec->opc    = n;
     rec->start  = CUR.IP+1;
     rec->active = TRUE;
-    
+
     if ( n > CUR.maxFunc )
       CUR.maxFunc = n;
-    
+
     /* Now skip the whole function definition. */
     /* We don't allow nested IDEFS & FDEFs.    */
 
@@ -4164,7 +4164,7 @@
     /* first of all, check the index */
     F = args[0];
     if ( BOUNDS( F, CUR.maxFunc+1 ) ) goto Fail;
-    
+
     /* Except for some old Apple fonts, all functions in a TrueType */
     /* font are defined in increasing order, starting from 0. This  */
     /* means that we normally have                                  */
@@ -4179,20 +4179,20 @@
     {
       /* look up the FDefs table */
       TT_DefRecord*  limit;
-      
+
       def   = CUR.FDefs;
       limit = def + CUR.numFDefs;
-      
+
       while (def < limit && def->opc != F)
         def++;
-        
+
       if (def == limit) goto Fail;
     }
-    
+
     /* check that the function is active */
     if (!def->active)
       goto Fail;
-      
+
     /* check the call stack */
     if ( CUR.callTop >= CUR.callSize )
     {
@@ -4211,10 +4211,10 @@
 
     INS_Goto_CodeRange( def->range,
                         def->start );
-                        
+
     CUR.step_ins = FALSE;
     return;
-    
+
   Fail:
     CUR.error = TT_Err_Invalid_Reference;
   }
@@ -4236,7 +4236,7 @@
     /* first of all, check the index */
     F = args[1];
     if ( BOUNDS( F, CUR.maxFunc+1 ) ) goto Fail;
-    
+
     /* Except for some old Apple fonts, all functions in a TrueType */
     /* font are defined in increasing order, starting from 0. This  */
     /* means that we normally have                                  */
@@ -4251,21 +4251,21 @@
     {
       /* look up the FDefs table */
       TT_DefRecord*  limit;
-      
+
       def   = CUR.FDefs;
       limit = def + CUR.numFDefs;
-      
+
       while (def < limit && def->opc != F)
         def++;
-        
+
       if (def == limit) goto Fail;
     }
-    
+
     /* check that the function is active */
     if (!def->active)
       goto Fail;
 
-    /* check stack */      
+    /* check stack */
     if ( CUR.callTop >= CUR.callSize )
     {
       CUR.error = TT_Err_Stack_Overflow;
@@ -4312,7 +4312,7 @@
     for ( ; def < limit; def++ )
       if (def->opc == (TT_ULong)args[0] )
         break;
-        
+
     if ( def == limit )
     {
       /* check that there is enough room for a new instruction */
@@ -4323,15 +4323,15 @@
       }
       CUR.numIDefs++;
     }
-    
+
     def->opc    = args[0];
     def->start  = CUR.IP+1;
     def->range  = CUR.curRange;
     def->active = TRUE;
-    
+
     if ( (TT_ULong)args[0] > CUR.maxIns )
       CUR.maxIns = args[0];
-    
+
     /* Now skip the whole function definition. */
     /* We don't allow nested IDEFs & FDEFs.    */
 
@@ -6320,30 +6320,30 @@
   {
     TT_DefRecord*  def   = CUR.IDefs;
     TT_DefRecord*  limit = def + CUR.numIDefs;
-    
+
     UNUSED_ARG;
- 
+
     for ( ; def < limit; def++ )
     {
       if (def->opc == CUR.opcode && def->active )
       {
         TT_CallRec*  call;
-        
+
         if ( CUR.callTop >= CUR.callSize )
         {
           CUR.error = TT_Err_Stack_Overflow;
           return;
         }
-        
+
         call = CUR.callStack + CUR.callTop++;
 
         call->Caller_Range = CUR.curRange;
         call->Caller_IP    = CUR.IP+1;
         call->Cur_Count    = 1;
         call->Cur_Restart  = def->start;
-        
+
         INS_Goto_CodeRange( def->range, def->start );
-        
+
         CUR.step_ins = FALSE;
         return;
       }
@@ -7292,29 +7292,29 @@
           {
             TT_DefRecord*  def   = CUR.IDefs;
             TT_DefRecord*  limit = def + CUR.numIDefs;
-            
+
             for ( ; def < limit; def++ )
             {
               if ( def->active && CUR.opcode == def->opc )
               {
                 TT_CallRec*  callrec;
-    
+
                 if ( CUR.callTop >= CUR.callSize )
                 {
                   CUR.error = TT_Err_Invalid_Reference;
                   goto LErrorLabel_;
                 }
-    
+
                 callrec = &CUR.callStack[CUR.callTop];
-    
+
                 callrec->Caller_Range = CUR.curRange;
                 callrec->Caller_IP    = CUR.IP + 1;
                 callrec->Cur_Count    = 1;
                 callrec->Cur_Restart  = def->start;
-    
+
                 if ( INS_Goto_CodeRange( def->range, def->start ) == FAILURE )
                   goto LErrorLabel_;
-    
+
                 goto LSuiteLabel_;
               }
             }

@@ -283,12 +283,12 @@
   {
     if (charcode < 0 || charcode > 255)
       return;
-      
+
     gr_charcell.buffer = (char*)font_8x8 + 8*charcode;
     grBlitGlyphToBitmap( target, &gr_charcell, x, y, color );
   }
-  
-  
+
+
   void  grWriteCellString( grBitmap*   target,
                            int         x,
                            int         y,
@@ -302,7 +302,7 @@
       x += 8;
     }
   }
-  
+
   static int        gr_cursor_x     = 0;
   static int        gr_cursor_y     = 0;
   static grBitmap*  gr_text_bitmap  = 0;
@@ -313,19 +313,19 @@
   {
     gr_text_bitmap = bitmap;
   }
-  
+
   extern void grSetMargin( int right, int top )
   {
     gr_margin_top   = top << 3;
     gr_margin_right = right << 3;
   }
- 
+
   extern void grGotoxy ( int x, int y )
   {
     gr_cursor_x = x;
     gr_cursor_y = y;
   }
- 
+
   extern void grWrite  ( const char*  string )
   {
     if (string)
@@ -338,11 +338,11 @@
                          gr_margin_top   + (gr_cursor_y << 3),
                          string,
                          color );
- 
+
       gr_cursor_x += strlen(string);
     }
   }
-  
+
   extern void grLn()
   {
     gr_cursor_y ++;
@@ -355,4 +355,4 @@
     grLn();
   }
 
-  
+

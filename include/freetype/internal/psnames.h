@@ -65,8 +65,8 @@
   *     uncode      :: unicode value.
   *
   *  <Return>
-  *     The glyph index. 0xFFFF is no glyph correspond to this Unicode   
-  *     value..    
+  *     The glyph index. 0xFFFF is no glyph correspond to this Unicode
+  *     value..
   *
   *  <Note>
   *     This function is able to recognize several glyph names per
@@ -87,14 +87,14 @@
   *     PS_Macintosh_Name_Func
   *
   *  <Description>
-  *     A function used to return the glyph name corresponding to one   
+  *     A function used to return the glyph name corresponding to one
   *     Apple glyph name index.
   *
   *  <Input>
   *     name_index :: index of the Mac name
   *
   *  <Return>
-  *     The glyph name, or 0 if the index is incorrect.             
+  *     The glyph name, or 0 if the index is incorrect.
   *
   *  <Note>
   *     This function will not be compiled if the configuration macro
@@ -104,8 +104,8 @@
 
   typedef const char*  (*PS_Macintosh_Name_Func)( FT_UInt  name_index );
 
-  
-  
+
+
   typedef const char*  (*PS_Adobe_Std_Strings_Func)( FT_UInt  string_index );
 
  /***************************************************************************
@@ -130,19 +130,19 @@
   *    corresponding to a given Unicode character code.
   *
   ***************************************************************************/
-  
+
   typedef struct PS_UniMap_
   {
     FT_UInt  unicode;
     FT_UInt  glyph_index;
-    
+
   } PS_UniMap;
-  
+
   typedef struct PS_Unicodes_
   {
     FT_UInt    num_maps;
     PS_UniMap* maps;
-  
+
   } PS_Unicodes;
 
 
@@ -155,14 +155,14 @@
                                                FT_UInt       unicode );
 
  /*************************************************************************
-  *                                                                       
-  * <Struct>                                                              
-  *    PSNames_Interface                                                  
-  *                                                                       
-  * <Description>                                                         
-  *    this structure holds pointers to the functions used to load and    
-  *    free the basic tables that are required in a `sfnt' font file.     
-  *                                                                       
+  *
+  * <Struct>
+  *    PSNames_Interface
+  *
+  * <Description>
+  *    this structure holds pointers to the functions used to load and
+  *    free the basic tables that are required in a `sfnt' font file.
+  *
   * <Field>
   *    unicode_value   :: a function used to convert a glyph name into
   *                       a Unicode character code
@@ -200,11 +200,11 @@
     PS_Build_Unicodes_Func     build_unicodes;
     PS_Lookup_Unicode_Func     lookup_unicode;
     PS_Macintosh_Name_Func     macintosh_name;
-    
+
     PS_Adobe_Std_Strings_Func  adobe_std_strings;
     const unsigned short*      adobe_std_encoding;
     const unsigned short*      adobe_expert_encoding;
-  
+
   } PSNames_Interface;
 
 #endif /* PSNAMES_H */

@@ -33,7 +33,7 @@
 
   /* initialisation */
   extern int  grInit( void );
-  
+
   /* finalisation */
   extern void grDone( void );
 
@@ -52,13 +52,13 @@
     gr_pixel_mode_rgb32,       /* 32-bits mode - 16 million colors */
 
     gr_pixel_mode_max          /* don't remove */
-  
+
   } grPixelMode;
 
 
   /* forward declaration of the surface class */
   typedef struct grSurface_     grSurface;
-  
+
 
  /*********************************************************************
   *
@@ -106,7 +106,7 @@
   {
     grPos  x;
     grPos  y;
-    
+
   } grVector;
 
 
@@ -114,7 +114,7 @@
   {
     long           value;
     unsigned char  chroma[4];
-    
+
   } grColor;
 
 
@@ -125,7 +125,7 @@
   *    grNewBitmap
   *
   * <Description>
-  *    creates a new bitmap    
+  *    creates a new bitmap
   *
   * <Input>
   *    pixel_mode   :: the target surface's pixel_mode
@@ -163,7 +163,7 @@
   *    writes a given glyph bitmap to a target surface.
   *
   * <Input>
-  *    target  :: handle to target bitmap 
+  *    target  :: handle to target bitmap
   *    glyph   :: handle to source glyph bitmap
   *    x       :: position of left-most pixel of glyph image in target surface
   *    y       :: position of top-most pixel of glyph image in target surface
@@ -185,7 +185,7 @@
   *   This function performs clipping
   *
   **********************************************************************/
-    
+
   extern int   grBlitGlyphToBitmap( grBitmap*  target,
                                     grBitmap*  glyph,
                                     grPos      x,
@@ -199,7 +199,7 @@
   *    grFillRectangle
   *
   * <Description>
-  *    this function is used to fill a given rectangle on a surface   
+  *    this function is used to fill a given rectangle on a surface
   *
   * <Input>
   *    surface :: handle to target surface
@@ -210,7 +210,7 @@
   *    color   :: fill color
   *
   **********************************************************************/
-    
+
   extern void  grFillRectangle( grBitmap*  surface,
                                 grPos      x,
                                 grPos      y,
@@ -240,7 +240,7 @@
   *    color    :: color to be used to draw the character
   *
   **********************************************************************/
-  
+
   extern
   void  grWriteCellChar( grBitmap*  target,
                          int        x,
@@ -262,14 +262,14 @@
   *    This function writes a string with the internal font
   *
   * <Input>
-  *    target       :: handle to target bitmap  
+  *    target       :: handle to target bitmap
   *    x            :: x pixel position of string's top left corner
   *    y            :: y pixel position of string's top left corner
   *    string       :: Latin-1 text string
   *    color        :: color to be used to draw the character
   *
   **********************************************************************/
-  
+
   extern
   void  grWriteCellString( grBitmap*   target,
                            int         x,
@@ -283,7 +283,7 @@
   *    grDoneBitmap
   *
   * <Description>
-  *    destroys a bitmap    
+  *    destroys a bitmap
   *
   * <Input>
   *    bitmap :: handle to bitmap descriptor
@@ -336,7 +336,7 @@
   *    client applications..
   *
   **********************************************************************/
-    
+
   typedef struct grDeviceChain_  grDeviceChain;
 
   struct grDeviceChain_
@@ -372,7 +372,7 @@
   *    If no driver could be initialised, this function returns NULL.
   *
   **********************************************************************/
-    
+
   extern
   grDeviceChain*  grInitDevices( void );
 
@@ -411,12 +411,12 @@
   *                           2 and 256.
   *
   *    the pixel modes do not provide the number of grays in the case
-  *    of "gray" devices. You should try to create a surface with the 
+  *    of "gray" devices. You should try to create a surface with the
   *    maximal number (256, that is) and see the value returned in
   *    the bitmap descriptor.
   *
   **********************************************************************/
- 
+
   extern void  grGetDeviceModes( const char*    device_name,
                                  int           *num_modes,
                                  grPixelMode*  *pixel_modes );
@@ -469,7 +469,7 @@
   *    you can thus discard the 'bitmap' parameter after the call.
   *
   **********************************************************************/
-    
+
   extern grSurface*  grNewSurface( const char*  device,
                                    grBitmap*    bitmap );
 
@@ -493,7 +493,7 @@
   *    height  :: rectangle height in pixels
   *
   **********************************************************************/
-    
+
   extern void  grRefreshRectangle( grSurface*  surface,
                                    grPos       x,
                                    grPos       y,
@@ -508,7 +508,7 @@
   *
   * <Description>
   *    a variation of grRefreshRectangle which repaints the whole surface
-  *    to the screen.                                                    
+  *    to the screen.
   *
   * <Input>
   *    surface :: handle to target surface
@@ -542,7 +542,7 @@
   *    color    :: color to be used to draw the character
   *
   **********************************************************************/
-  
+
   extern
   void  grWriteSurfaceChar( grSurface* target,
                             int        x,
@@ -567,14 +567,14 @@
   *    This function writes a string with the internal font
   *
   * <Input>
-  *    target       :: handle to target bitmap  
+  *    target       :: handle to target bitmap
   *    x            :: x pixel position of string's top left corner
   *    y            :: y pixel position of string's top left corner
   *    string       :: Latin-1 text string
   *    color        :: color to be used to draw the character
   *
   **********************************************************************/
-  
+
   extern
   void  grWriteSurfaceString( grSurface*  target,
                               int         x,
@@ -622,7 +622,7 @@
   *    XXX : For now, only keypresses are supported.
   *
   **********************************************************************/
-  
+
   extern
   int   grListenSurface( grSurface*  surface,
                          int         event_mask,

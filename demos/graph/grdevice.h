@@ -108,14 +108,14 @@
   {
     int          surface_objsize;
     const char*  device_name;  /* name of device                 */
-  
+
     grDeviceInitFunc        init;
     grDeviceDoneFunc        done;
 
     grDeviceInitSurfaceFunc init_surface;
 
     int                     num_pixel_modes;
-    grPixelMode*            pixel_modes; 
+    grPixelMode*            pixel_modes;
   };
 
 

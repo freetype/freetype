@@ -2,7 +2,7 @@
  *
  *  t1load.h                                                    1.0
  *
- *    Type1 Loader.                          
+ *    Type1 Loader.
  *
  *  Copyright 1996-1998 by
  *  David Turner, Robert Wilhelm, and Werner Lemberg.

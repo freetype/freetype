@@ -29,7 +29,7 @@ ifndef SFNT_INCLUDE
   # compilation flags for the driver
   #
   SFNT_CFLAGS  := $(SFNT_INCLUDE:%=$I%)
-  SFNT_COMPILE := $(FT_COMPILE) $(SFNT_CFLAGS) 
+  SFNT_COMPILE := $(FT_COMPILE) $(SFNT_CFLAGS)
 
 
   # driver sources (i.e., C files)

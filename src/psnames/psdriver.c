@@ -20,7 +20,7 @@
     FT_Int  n;
     char    first = glyph_name[0];
     char    temp[64];
-    
+
     /* if the name begins with "uni", then the glyph name may be a */
     /* hard-coded unicode character code..                         */
     if ( glyph_name[0] == 'u' &&
@@ -36,7 +36,7 @@
       {
         char           c = *p;
         unsigned char  d;
-        
+
         d = (unsigned char)c-'0';
         if (d >= 10)
         {
@@ -49,7 +49,7 @@
         /* exit if one non-uppercase-hexadecimal character was found */
         if (d >= 16)
           break;
-          
+
         value = (value << 4) + d;
         if (count == 0)
           return value;
@@ -61,11 +61,11 @@
     {
       const char*  p;
       int          len;
-      
+
       p = glyph_name;
       while ( *p && *p != '.' ) p++;
       len = p-glyph_name;
-      
+
       if ( *p && len < 64 )
       {
         strncpy( temp, glyph_name, len );
@@ -73,12 +73,12 @@
         glyph_name = temp;
       }
     }
-        
+
     /* now, lookup the glyph in the Adobe Glyph List */
     for ( n = 0; n < NUM_ADOBE_GLYPHS; n++ )
     {
       const char*  name = t1_standard_glyphs[n];
-      
+
       if ( first == name[0] && strcmp( glyph_name, name ) == 0 )
         return names_to_unicode[n];
     }
@@ -86,14 +86,14 @@
     return 0;
   }
 
-  
+
  /* qsort callback to sort the unicode map */
   static
   int  compare_uni_maps( const void* a, const void* b )
   {
     PS_UniMap*  map1 = (PS_UniMap*)a;
     PS_UniMap*  map2 = (PS_UniMap*)b;
-    
+
     return ( map1->unicode < map2->unicode ? -1 :
              map1->unicode > map2->unicode ?  1 : 0 );
   }
@@ -107,18 +107,18 @@
                                     PS_Unicodes  *table )
   {
     FT_Error  error;
-    
+
     /* we first allocate the table */
     table->num_maps = 0;
     table->maps     = 0;
-    
+
     if ( !ALLOC_ARRAY( table->maps, num_glyphs, PS_UniMap ) )
     {
       FT_UInt     n;
       FT_UInt     count;
       PS_UniMap*  map;
       FT_ULong    uni_char;
-      
+
       map = table->maps;
       for ( n = 0; n < num_glyphs; n++ )
       {
@@ -143,7 +143,7 @@
       {
         count = 0;
       }
-      
+
       if (count == 0)
       {
         FREE( table->maps );
@@ -167,23 +167,23 @@
     /* perform a binary search on the table */
     min = table->maps;
     max = min + table->num_maps - 1;
-    
+
     while (min <= max)
     {
       mid = min + (max-min)/2;
       if ( mid->unicode == unicode )
         return mid->glyph_index;
-        
+
       if (min == max)
         break;
-        
+
       if ( mid->unicode < unicode ) min = mid+1;
                                else max = mid-1;
     }
 
     return 0xFFFF;
   }
-  
+
 #endif
 
   static
@@ -191,17 +191,17 @@
   {
     if (name_index >= 258)
       name_index = 0;
-      
+
     return standard_glyph_names[ mac_standard_names[name_index] ];
   }
 
-  
+
   static
   const char*  PS_Standard_Strings( FT_UInt  sid )
   {
     return (sid < NUM_STD_GLYPHS ? t1_standard_glyphs[sid] : 0);
   }
-  
+
   static const  PSNames_Interface  psnames_interface =
   {
 #ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
@@ -216,11 +216,11 @@
 
     (PS_Macintosh_Name_Func)    PS_Macintosh_Name,
     (PS_Adobe_Std_Strings_Func) PS_Standard_Strings,
-    
+
     t1_standard_encoding,
     t1_expert_encoding
   };
-  
+
 
   const FT_DriverInterface  psnames_driver_interface =
   {

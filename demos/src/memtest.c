@@ -51,11 +51,11 @@ void  record_my_block( void*  base, long  size )
     fprintf( stderr, "adding a block with non-positive length - should not happen \n" );
     exit(1);
   }
-  
+
   if ( num_my_blocks < MAX_RECORDED_BLOCKS )
   {
     MyBlock*  block;
-    
+
 #ifdef CHECK_DUPLICATES
     MyBlock*  limit;
     block = my_blocks;
@@ -86,7 +86,7 @@ static
 void  forget_my_block( void*  base )
 {
   MyBlock*  block = my_blocks + num_my_blocks-1;
-  
+
   /* we scan in reverse, because transient blocks are always located */
   /* at the end of the table.. (it supposedly faster then..)         */
   for ( ; block >= my_blocks; block-- )
@@ -118,7 +118,7 @@ void*  my_alloc( FT_Memory  memory,
   void*  p = malloc(size);
   if (p)
     record_my_block(p,size);
-    
+
   return p;
 }
 
@@ -161,7 +161,7 @@ static void  dump_mem( void )
   int       bad   = 0;
 
   printf( "total allocated blocks = %d\n", num_my_blocks );
-  
+
   /* we scan in reverse, because transient blocks are always located */
   /* at the end of the table.. (it supposedly faster then..)         */
   for ( ; block >= my_blocks; block-- )
@@ -221,7 +221,7 @@ int  main( int argc, char** argv )
     /* Create a new library with our own memory manager */
     error = FT_New_Library( &my_memory, &library );
     if (error) Panic( "Could not create library object" );
-    
+
     /* the new library has no drivers in it, add the default ones */
     /* (implemented in ftinit.c)..                                */
     FT_Default_Drivers(library);
@@ -265,7 +265,7 @@ int  main( int argc, char** argv )
           fname = filename + i + 1;
           i = -1;
         }
-        else 
+        else
           i--;
 
       printf( "%s: ", fname );

@@ -72,7 +72,7 @@
   /*                                                                       */
   typedef FT_Error  (*FTDriver_doneDriver)( FT_Driver  driver );
 
-  
+
   typedef void  (*FTDriver_Interface)( void );
 
   /*************************************************************************/

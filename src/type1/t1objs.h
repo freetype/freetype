@@ -2,7 +2,7 @@
  *
  *  t1objs.h                                                    1.0
  *
- *    Type1 objects definition.         
+ *    Type1 objects definition.
  *
  *  Copyright 1996-1999 by
  *  David Turner, Robert Wilhelm, and Werner Lemberg.
@@ -83,7 +83,7 @@
  /*    NOW BEGINS THE TYPE1 SPECIFIC STUFF ..............................  */
  /*                                                                        */
  /**************************************************************************/
- 
+
 
   /***************************************************/
   /*                                                 */
@@ -91,7 +91,7 @@
   /*                                                 */
   /*    Type 1 size record..                         */
   /*                                                 */
-  
+
   typedef struct T1_SizeRec_
   {
     FT_SizeRec      root;
@@ -110,14 +110,14 @@
   /*                                                 */
   /*    TrueDoc glyph record..                       */
   /*                                                 */
-  
+
   typedef struct T1_GlyphSlotRec_
   {
     FT_GlyphSlotRec  root;
 
     T1_Bool          hint;
     T1_Bool          scaled;
-    
+
     T1_Int           max_points;
     T1_Int           max_contours;
 
@@ -251,7 +251,7 @@
  *
  *  <Input>  glyph  :: handle to glyph slot object
  *
- *  <Output>  Error code.                       
+ *  <Output>  Error code.
  *
  ******************************************************************/
 

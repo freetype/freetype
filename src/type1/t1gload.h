@@ -181,7 +181,7 @@
 /*     a structure used to store the address of various functions        */
 /*     used by a Type 1 hinter to perform outline hinting.               */
 /*                                                                       */
- 
+
   typedef T1_Error  (*T1_Hinter_ChangeHints)( T1_Builder*  builder );
 
   typedef T1_Error  (*T1_Hinter_DotSection)( T1_Builder*  builder );

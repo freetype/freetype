@@ -88,7 +88,7 @@
 
       v_start = outline->points[first];
       v_last  = outline->points[last];
-      
+
       v_start.x = SCALED(v_start.x);  v_start.y = SCALED(v_start.y);
       v_last.x  = SCALED(v_last.x);   v_last.y  = SCALED(v_last.y);
 
@@ -133,91 +133,91 @@
       {
         point++;
         tags++;
-  
+
         tag = FT_CURVE_TAG( tags[0] );
         switch (tag)
         {
           case FT_Curve_Tag_On:  /* emit a single line_to */
             {
               FT_Vector  vec;
-              
+
               vec.x = SCALED(point->x);
               vec.y = SCALED(point->y);
-              
+
               error = interface->line_to( &vec, user );
               if (error) goto Exit;
               continue;
             }
 
-          
+
           case FT_Curve_Tag_Conic:  /* consume conic arcs */
             {
               v_control.x = SCALED(point->x);
               v_control.y = SCALED(point->y);
-              
+
             Do_Conic:
               if (point < limit)
               {
                 FT_Vector  vec;
                 FT_Vector  v_middle;
-                
+
                 point++;
                 tags++;
                 tag = FT_CURVE_TAG( tags[0] );
-                
+
                 vec.x = SCALED(point->x);
                 vec.y = SCALED(point->y);
-                
+
                 if (tag == FT_Curve_Tag_On)
                 {
                   error = interface->conic_to( &v_control, &vec, user );
                   if (error) goto Exit;
                   continue;
                 }
-                
+
                 if (tag != FT_Curve_Tag_Conic)
                   goto Invalid_Outline;
-  
+
                 v_middle.x = (v_control.x + vec.x)/2;
                 v_middle.y = (v_control.y + vec.y)/2;
-  
+
                 error = interface->conic_to( &v_control, &v_middle, user );
                 if (error) goto Exit;
-                
+
                 v_control = vec;
                 goto Do_Conic;
               }
-              
+
               error = interface->conic_to( &v_control, &v_start, user );
               goto Close;
             }
-          
+
           default:  /* FT_Curve_Tag_Cubic */
             {
               FT_Vector  vec1, vec2;
-              
+
               if ( point+1 > limit         ||
                    FT_CURVE_TAG( tags[1] ) != FT_Curve_Tag_Cubic )
                 goto Invalid_Outline;
-                
+
               point += 2;
               tags  += 2;
-              
+
               vec1.x = SCALED(point[-2].x);  vec1.y = SCALED(point[-2].y);
               vec2.x = SCALED(point[-1].x);  vec2.y = SCALED(point[-1].y);
 
               if (point <= limit)
               {
                 FT_Vector  vec;
-                
+
                 vec.x = SCALED(point->x);
                 vec.y = SCALED(point->y);
-                
+
                 error = interface->cubic_to( &vec1, &vec2, &vec, user );
                 if (error) goto Exit;
                 continue;
               }
-              
+
               error = interface->cubic_to( &vec1, &vec2, &v_start, user );
               goto Close;
             }
@@ -226,7 +226,7 @@
 
       /* close the contour with a line segment */
       error = interface->line_to( &v_start, user );
-      
+
    Close:
       if (error) goto Exit;
       first = last+1;
@@ -235,7 +235,7 @@
     return 0;
   Exit:
     return error;
-    
+
   Invalid_Outline:
     return -1;
   }
@@ -389,7 +389,7 @@
                                         FT_BBox*     cbox )
   {
     FT_Pos  xMin, yMin, xMax, yMax;
-    
+
     if ( outline && cbox )
     {
       if ( outline->n_points == 0 )
@@ -428,7 +428,7 @@
     }
   }
 
-  
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -481,18 +481,18 @@
   {
     FT_UShort  n;
     FT_Int     first, last;
-    
+
     first = 0;
     for ( n = 0; n < outline->n_contours; n++ )
     {
       last  = outline->contours[n];
-      
+
       /* reverse point table */
       {
         FT_Vector*  p = outline->points + first;
         FT_Vector*  q = outline->points + last;
         FT_Vector   swap;
-        
+
         while (p < q)
         {
           swap = *p;
@@ -502,13 +502,13 @@
           q--;
         }
       }
-      
+
       /* reverse tags table */
       {
         char*  p = outline->tags + first;
         char*  q = outline->tags + last;
         char   swap;
-        
+
         while (p < q)
         {
           swap = *p;
@@ -518,7 +518,7 @@
           q--;
         }
       }
-      
+
       first = last+1;
     }
     outline->flags ^= ft_outline_reverse_fill;
@@ -538,7 +538,7 @@
   BASE_FUNC(void)  FT_Done_GlyphZone( FT_GlyphZone*  zone )
   {
     FT_Memory  memory = zone->memory;
-    
+
     FREE( zone->contours );
     FREE( zone->tags );
     FREE( zone->cur );
@@ -547,7 +547,7 @@
     zone->max_points   = zone->n_points   = 0;
     zone->max_contours = zone->n_contours = 0;
   }
-  
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -581,7 +581,7 @@
 
     MEM_Set( zone, 0, sizeof(*zone) );
     zone->memory = memory;
-    
+
     if ( ALLOC_ARRAY( zone->org,      maxPoints*2, FT_F26Dot6 ) ||
          ALLOC_ARRAY( zone->cur,      maxPoints*2, FT_F26Dot6 ) ||
          ALLOC_ARRAY( zone->tags,    maxPoints,   FT_Byte    ) ||
@@ -621,7 +621,7 @@
   {
     FT_Error      error  = FT_Err_Ok;
     FT_Memory     memory = zone->memory;
-    
+
     newPoints += 2;
     if ( zone->max_points < newPoints )
     {
@@ -630,16 +630,16 @@
            REALLOC_ARRAY( zone->cur,   zone->max_points*2, newPoints*2, FT_F26Dot6 ) ||
            REALLOC_ARRAY( zone->tags, zone->max_points*2, newPoints,   FT_Byte    ) )
         goto Exit;
-        
+
       zone->max_points = newPoints;
     }
-    
+
     if ( zone->max_contours < newContours )
     {
       /* reallocate the contours array */
       if ( REALLOC_ARRAY( zone->contours, zone->max_contours, newContours, FT_UShort ) )
         goto Exit;
-        
+
       zone->max_contours = newContours;
     }
   Exit:
@@ -692,7 +692,7 @@
     params.flags  = 0;
     if (map->pixel_mode == ft_pixel_mode_grays)
       params.flags |= ft_raster_flag_aa;
-    
+
     error = funcs.raster_render( raster, &params );
   Exit:
     return error;
@@ -732,7 +732,7 @@
   EXPORT_FUNC(FT_Error)  FT_Outline_Render( FT_Library        library,
                                             FT_Outline*       outline,
                                             FT_Raster_Params* params )
-  {                               
+  {
     FT_Error         error;
     FT_Raster        raster;
     FT_Raster_Funcs  funcs;
@@ -788,7 +788,7 @@
                                         FT_Outline*  target )
   {
     FT_Int  is_owner;
-    
+
     if ( !source            || !target            ||
          source->n_points   != target->n_points   ||
          source->n_contours != target->n_contours )
@@ -806,7 +806,7 @@
     /* copy all flags, except the "ft_outline_owner" one */
     is_owner = target->flags & ft_outline_owner;
     target->flags = source->flags;
-    
+
     target->flags &= ~ft_outline_owner;
     target->flags |= is_owner;
     return FT_Err_Ok;

@@ -64,9 +64,9 @@
   {
     ULONG   winkey;
 	grKey   grkey;
-	
+
   } Translator;
-  
+
   static
   Translator  key_translators[] =
   {
@@ -105,7 +105,7 @@
   /* This is a minimalist driver, it is only able to display */
   /* a _single_ window. Moreover, only monochrome and gray   */
   /* bitmaps are supported..                                 */
-  
+
   /* handle of the window. */
   static HWND   hwndGraphic;
 
@@ -170,7 +170,7 @@ void done_surface( grSurface*  surface )
 
     row_bytes = surface->bitmap.pitch;
     if (row_bytes < 0) row_bytes = -row_bytes;
-    
+
     if ( row_bytes*8 != pbmi->bmiHeader.biWidth * pbmi->bmiHeader.biBitCount )
       pbmi->bmiHeader.biWidth  = row_bytes * 8 / pbmi->bmiHeader.biBitCount;
 
@@ -181,7 +181,7 @@ void done_surface( grSurface*  surface )
                 surface->bitmap.buffer,
                 pbmi,
                 DIB_RGB_COLORS );
-                
+
     ReleaseDC ( hwndGraphic, hDC );
 
     ShowWindow( hwndGraphic, SW_SHOW );
@@ -193,7 +193,7 @@ void done_surface( grSurface*  surface )
   void set_title( grSurface* surface, const char* title )
   {
     (void)surface;
-    
+
     /* the title will be set on the next listen_event, just */
     /* record it there..                                    */
     the_title = title;
@@ -206,17 +206,17 @@ void done_surface( grSurface*  surface )
                      grEvent*    grevent )
   {
     MSG  msg;
-    
+
     (void)surface;
     (void)event_mask;
-    
+
     if ( hwndGraphic && !title_set )
     {
       SetWindowText( hwndGraphic, the_title );
       title_set = 1;
     }
 
-    eventToProcess = 0;    
+    eventToProcess = 0;
     while (GetMessage( &msg, 0, 0, 0 ))
     {
       TranslateMessage( &msg );
@@ -224,7 +224,7 @@ void done_surface( grSurface*  surface )
       if (eventToProcess)
         break;
     }
-    
+
     *grevent = ourevent;
   }
 
@@ -243,7 +243,7 @@ grSurface*  init_surface( grSurface*  surface,
 {
   static RGBQUAD  black = {    0,    0,    0, 0 };
   static RGBQUAD  white = { 0xFF, 0xFF, 0xFF, 0 };
-  
+
   if( ! RegisterTheClass() ) return 0;  /* if already running, fails. */
 
   /* find some memory for the bitmap header */
@@ -298,7 +298,7 @@ grSurface*  init_surface( grSurface*  surface,
       int   count = bitmap->grays;
       int   x;
       RGBQUAD*  color = pbmi->bmiColors;
-      
+
       for ( x = 0; x < count; x++, color++ )
       {
         color->rgbRed   =
@@ -324,7 +324,7 @@ grSurface*  init_surface( grSurface*  surface,
     free ( pbmi );
     return 0;
   }
-  
+
   surface->done         = (grDoneSurfaceFunc) done_surface;
   surface->refresh_rect = (grRefreshRectFunc) refresh_rectangle;
   surface->set_title    = (grSetTitleFunc)    set_title;
@@ -452,7 +452,7 @@ LRESULT CALLBACK Message_Process( HWND handle, UINT mess,
         return DefWindowProc( handle, mess, wParam, lParam );
       }
 
-      
+
     case WM_KEYDOWN:
       switch ( wParam )
       {
@@ -476,7 +476,7 @@ LRESULT CALLBACK Message_Process( HWND handle, UINT mess,
               goto Do_Key_Event;
             }
         }
-        
+
         /* the key isn't found, default processing               */
         /* return DefWindowProc( handle, mess, wParam, lParam ); */
         return DefWindowProc( handle, mess, wParam, lParam );
@@ -485,7 +485,7 @@ LRESULT CALLBACK Message_Process( HWND handle, UINT mess,
     case WM_CHAR:
       {
         ourevent.key = wParam;
-        
+
     Do_Key_Event:
         ourevent.type  = gr_event_key;
         eventToProcess = 1;
@@ -511,12 +511,12 @@ LRESULT CALLBACK Message_Process( HWND handle, UINT mess,
   {
     sizeof( grSurface ),
     "win32",
-    
+
     init_device,
     done_device,
-    
+
     (grDeviceInitSurfaceFunc) init_surface,
-    
+
     0,
     0
   };

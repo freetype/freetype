@@ -56,7 +56,7 @@
   {
     TT_Table*  entry;
     TT_Table*  limit;
-    
+
     FT_TRACE4(( "TT_LookUp_Table( %08lx, %c%c%c%c )\n",
                   (TT_Long)face,
                   (TT_Char)(tag >> 24),
@@ -70,7 +70,7 @@
     {
       if ( entry->Tag == tag )
         return entry;
-    }    
+    }
     FT_TRACE4(( "    Could not find table!\n" ));
     return 0;
   }
@@ -99,18 +99,18 @@
   {
     TT_Table*  table;
     TT_Error   error;
-    
+
     table = TT_LookUp_Table( face, tag );
     if (table)
     {
       if (length)
         *length = table->Length;
-        
+
       (void)FILE_Seek( table->Offset );
     }
     else
       error = TT_Err_Table_Missing;
-      
+
     return error;
   }
 
@@ -147,7 +147,7 @@
   {
     TT_Error   error;
     FT_Memory  memory = stream->memory;
-    
+
 #ifdef READ_FIELDS
     const FT_Frame_Field  ttc_header_fields[] = {
            FT_FRAME_START(8),  /* frame of 8 bytes */
@@ -173,9 +173,9 @@
     if ( *format_tag == TTAG_ttcf )
     {
       TT_Int  n;
-    
+
       FT_TRACE4(( "TT_Load_Format_Tag: file is a collection\n" ));
-      
+
       /* it's a TrueType collection, i.e. a file containing several */
       /* font files. Read the font directory now                    */
       /*                                                            */
@@ -183,7 +183,7 @@
       if ( READ_Fields( ttc_header_fields, &face->ttc_header ) )
         goto Exit;
     #else
-      if ( ACCESS_Frame( 8 ) ) goto Exit;   
+      if ( ACCESS_Frame( 8 ) ) goto Exit;
 
       face->ttc_header.version  = GET_Long();
       face->ttc_header.DirCount = GET_Long();
@@ -209,12 +209,12 @@
       {
         error = TT_Err_Bad_Argument;
         goto Exit;
-      }      
-      
+      }
+
       /* if we're checking the font format, exit immediately */
       if (faceIndex < 0)
         goto Exit;
-        
+
       /* seek to the appropriate TrueType file, then read tag */
       if ( FILE_Seek( face->ttc_header.TableDirectory[faceIndex] ) ||
            READ_Long( *format_tag )                                )
@@ -544,7 +544,7 @@
                 FT_FRAME_USHORT( TT_MaxProfile, numGlyphs ),
                 FT_FRAME_USHORT( TT_MaxProfile, maxPoints ),
                 FT_FRAME_USHORT( TT_MaxProfile, maxContours ),
-                FT_FRAME_USHORT( TT_MaxProfile, maxCompositePoints ),  
+                FT_FRAME_USHORT( TT_MaxProfile, maxCompositePoints ),
                 FT_FRAME_USHORT( TT_MaxProfile, maxCompositeContours ),
                 FT_FRAME_USHORT( TT_MaxProfile, maxZones ),
                 FT_FRAME_USHORT( TT_MaxProfile, maxTwilightPoints ),
@@ -998,17 +998,17 @@
            FILE_Read_At( table_pos + names->storageOffset,
                          (void*)names->storage, storageSize ) )
         goto Exit;
-  
+
       /* Go through and assign the string pointers to the name records. */
       {
         TT_NameRec*  cur   = names->names;
         TT_NameRec*  limit = cur + names->numNameRecords;
-  
+
         for ( ; cur < limit; cur++ )
           cur->string = names->storage + cur->stringOffset;
       }
 
-#ifdef FT_DEBUG_LEVEL_TRACE  
+#ifdef FT_DEBUG_LEVEL_TRACE
       /* Print Name Record Table in case of debugging */
       {
         TT_NameRec*  cur   = names->names;
@@ -1017,20 +1017,20 @@
         for ( ; cur < limit; cur++ )
         {
           TT_UInt  j;
-    
+
           FT_TRACE2(( "%d %d %x %d ",
                        cur->platformID,
                        cur->encodingID,
                        cur->languageID,
                        cur->nameID ));
-    
+
           /* I know that M$ encoded strings are Unicode,            */
           /* but this works reasonable well for debugging purposes. */
           if ( cur->string )
             for ( j = 0; j < cur->stringLength; j++ )
             {
               TT_Char  c = *(cur->string + j);
-    
+
               if ( (TT_Byte)c < 128 )
                 FT_TRACE2(( "%c", c ));
             }
@@ -1165,12 +1165,12 @@
         cmap->offset             = (TT_ULong)GET_Long();
       }
       FORGET_Frame();
-      
+
       /* now read the rest of each table */
       for ( charmap = face->charmaps; charmap < limit; charmap++ )
       {
         TT_CMapTable* cmap = &charmap->cmap;
-        
+
 #ifdef READ_FIELDS
         if ( FILE_Seek( table_start + (TT_Long)cmap->offset ) ||
              READ_Fields( cmap_rec_fields, cmap )             )
@@ -1179,11 +1179,11 @@
         if ( FILE_Seek( table_start + (TT_Long)cmap->offset ) ||
              ACCESS_Frame(6L) )
           goto Exit;
-        
+
         cmap->format  = GET_UShort();
         cmap->length  = GET_UShort();
         cmap->version = GET_UShort();
-        
+
         FORGET_Frame();
 #endif
         cmap->offset = FILE_Pos();
@@ -1264,7 +1264,7 @@
                 FT_FRAME_USHORT( TT_OS2, usWinAscent ),
                 FT_FRAME_USHORT( TT_OS2, usWinDescent ),
               FT_FRAME_END };
-              
+
     const FT_Frame_Field  os2_fields_extra[] = {
               FT_FRAME_START(8),
                 FT_FRAME_ULONG( TT_OS2, ulCodePageRange1 ),
@@ -1579,7 +1579,7 @@
       coverage = GET_UShort();
 
       FORGET_Frame();
-      
+
       if ( coverage == 0x0001 )
       {
         TT_UInt          num_pairs;
@@ -1615,7 +1615,7 @@
         face->kern_table_index = n;
         goto Exit;
       }
-      
+
       if ( FILE_Skip( length ) )
         goto Exit;
     }
@@ -1646,7 +1646,7 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  TT_Error  TT_Load_Hdmx( TT_Face    face, 
+  TT_Error  TT_Load_Hdmx( TT_Face    face,
                           FT_Stream  stream )
   {
     TT_Error  error;
@@ -1692,11 +1692,11 @@
         if ( READ_Byte( cur->ppem      ) ||
              READ_Byte( cur->max_width ) )
           goto Exit;
-  
+
         if ( ALLOC( cur->widths, num_glyphs )  ||
              FILE_Read( cur->widths, num_glyphs ) )
           goto Exit;
-  
+
         /* skip padding bytes */
         if ( record_size > 0 && FILE_Skip(record_size) )
             goto Exit;
