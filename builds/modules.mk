@@ -20,7 +20,7 @@
 # This file is in charge of handling the generation of the modules list
 # file.
 
-.PHONY: make_module_list clean_module_list remake_module_list
+.PHONY: make_module_list clean_module_list
 
 # MODULE_LIST, as its name suggests, indicates where the modules list
 # resides.  For now, it is in `include/freetype/config/ftmodule.h'.

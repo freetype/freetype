@@ -108,6 +108,8 @@ ANSIFLAGS := -ansi -pedantic
 
 ifdef BUILD_FREETYPE
 
+  .PHONY: clean_freetype distclean_freetype
+
   # Now include the main sub-makefile.  It contains all the rules used to
   # build the library with the previous variables defined.
   #

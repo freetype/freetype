@@ -13,6 +13,8 @@
 # fully.
 
 
+.PHONY: install uninstall
+
 # Unix installation and deinstallation targets.
 install: $(PROJECT_LIBRARY)
 	$(MKINSTALLDIRS) $(libdir)                                 \
@@ -51,6 +53,8 @@ uninstall:
 	-$(DELDIR) $(includedir)/freetype2
 	-$(DELETE) $(bindir)/freetype-config
 
+
+.PHONY: clean_project_unix distclean_project_unix
 
 # Unix cleaning and distclean rules.
 #

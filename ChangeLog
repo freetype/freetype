@@ -1,3 +1,11 @@
+2000-12-17  Werner Lemberg  <wl@gnu.org>
+
+	* *.mk: Added lots of `.PHONY' targets.
+
+2000-12-17  Karsten Fleischer  <kfleisc1@ford.com>
+
+	* *.mk: Implemented `platform' target to disable auto-detection.
+
 2000-12-14  Werner Lemberg  <wl@gnu.org>
 
 	* docs/design/modules.html: Removed.  Covered by design-*.html.
@@ -6,14 +14,22 @@
 
 2000-12-14  David Turner <david.turner@freetype.org>
 
-	* include/freetype/ftimage.h, include/freetype/fttypes.h,
-	src/smooth/ftgrays.c: Added support for clipped direct rendering in
-	the smooth renderer.  This should not break binary compatibility of
-	existing applications.
+	Added support for clipped direct rendering in the smooth renderer. 
+	This should not break binary compatibility of existing applications.
+
+	* include/freetype/fttypes.h, include/freetype/ftimage.h: Move
+	definition of the FT_BBox structure from the former to the latter.
+	* include/freetype/ftimage.h: Add `ft_raster_flag_clip' value to
+	FT_Raster_Flag enumeration.
+	Add `clip_box' element to FT_Raster_Params structure.
+	* src/smooth/ftgrays.c (grays_convert_glyph): Implement it.
 	
 	* INSTALL: Updated installation instructions on Win32, listing the
 	new "make setup list" target used to list supported
 	compilers/targets.
+
+	* src/raster/ftraster.c (ft_black_render): Test for unsupported
+	direct rendering before testing arguments.
 
 2000-12-13  David Turner <david.turner@freetype.org>
 
