@@ -262,7 +262,7 @@
     
     /* lookup the FT_Face to obtain the number of glyphs */
     error = FTC_Manager_Lookup_Face( cset->manager,
-                                     &desc->font, &face );
+                                     desc->font.face_id, &face );
     if (!error)
       cset->element_max = face->num_glyphs;
       
@@ -290,7 +290,7 @@
 
   FT_CPLUSPLUS( const FTC_ChunkSet_Class )  ftc_sbit_chunk_set_class =
   {
-    sizeof( FTC_ImageSetRec ),
+    sizeof( FTC_SBitSetRec ),
 
     (FTC_ChunkSet_InitFunc)        ftc_sbit_chunk_set_init,
     (FTC_ChunkSet_DoneFunc)        0,
@@ -381,13 +381,7 @@
       FTC_ChunkNode_Unref ( node );
     }
 
-    sbit = ((FTC_SBit)((FTC_ChunkNode)node)->elements) + cindex;
-    if (sbit->buffer == 0)
-    {
-      /* the glyph was missing, we return a NULL pointer !! */
-      sbit = 0;
-    }
-    
+    sbit   = ((FTC_SBit)((FTC_ChunkNode)node)->elements) + cindex;
     *asbit = sbit;
 
   Exit:
