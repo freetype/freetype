@@ -157,8 +157,8 @@ class DocCode:
 
     def __init__( self, margin = 0 ):
         self.lines  = []
-        self.margin = margin 
-        
+        self.margin = margin
+
     def add( self, line ):
         # remove margin whitespace
         if string.strip( line[: self.margin] ) == "":
@@ -176,7 +176,7 @@ class DocCode:
         return "UNKNOWN_CODE_IDENTIFIER!!"
 
     def dump_html( self ):
-    
+
         # clean the last empty lines
         l = len( self.lines ) - 1
         while l > 0 and string.strip( self.lines[l - 1] ) == "":
@@ -199,7 +199,7 @@ class DocParagraph:
 
     def __init__( self ):
         self.words = []
-        
+
     def add( self, line ):
         # get rid of unwanted spaces in the paragraph
         #
@@ -220,24 +220,24 @@ class DocParagraph:
 
         # should never happen
         return "UNKNOWN_PARA_IDENTIFIER!!"
-          
-    
+
+
     def dump( self ):
 
         max_width = 50
         cursor    = 0
         line      = ""
-        
+
         for word in self.words:
-    
+
             if cursor + len( word ) + 1 > max_width:
                 print line
                 cursor = 0
                 line = ""
-    
+
             line   = line + word + " "
             cursor = cursor + len( word ) + 1
-            
+
         if cursor > 0:
             print line
 
@@ -245,7 +245,7 @@ class DocParagraph:
 
 
     def dump_html( self ):
-    
+
         print para_header
         self.dump()
         print para_footer
@@ -277,7 +277,7 @@ class DocParagraph:
 #     [ ( None, [ DocParagraph, DocParagraph] ),
 #       ( "x",  [ DocParagraph ] ),
 #       ( "y",  [ DocParagraph, DocCode ] ) ]
-# 
+#
 # in self.items
 #
 # the DocContent object is entirely built at creation time, you must
@@ -293,14 +293,14 @@ class DocContent:
         text        = []
         paragraph   = None   # represents the current DocParagraph
         code        = None   # represents the current DocCode
-        
+
         elements    = []     # the list of elements for the current field,
                              # contains DocParagraph or DocCode objects
-                             
+
         field       = None   # the current field
 
         for aline in lines_list:
-        
+
             if code_mode == 0:
                 line   = string.lstrip( aline )
                 l      = len( line )
@@ -309,26 +309,26 @@ class DocContent:
                 # if the line is empty, this is the end of the current
                 # paragraph
                 if l == 0 or line == '{':
-                
+
                     if paragraph:
                         elements.append( paragraph )
                         paragraph = None
-                    
+
                     if line == "":
                         continue
-                        
+
                     code_mode   = 1
                     code_margin = margin
                     code        = None
                     continue
-            
+
                 words = string.split( line )
-                
+
                 # test for a field delimiter on the start of the line, i.e.
                 # the token `::'
                 #
                 if len( words ) >= 2 and words[1] == "::":
-                    
+
                     # start a new field - complete current paragraph if any
                     if paragraph:
                         elements.append( paragraph )
@@ -336,47 +336,47 @@ class DocContent:
 
                     # append previous "field" to self.items
                     self.items.append( ( field, elements ) )
-                
+
                     # start new field and elements list
                     field    = words[0]
                     elements = []
                     words    = words[2 :]
-                    
+
                 # append remaining words to current paragraph
                 if len( words ) > 0:
                     line = string.join( words )
                     if not paragraph:
                         paragraph = DocParagraph()
                     paragraph.add( line )
-            
+
             else:
                 # we're in code mode..
                 line = aline
-                
+
                 # the code block ends with a line that has a single '}' on it
                 # that is located at the same column that the opening
                 # accolade..
                 if line == " " * code_margin + '}':
-                
+
                     if code:
                         elements.append( code )
                         code = None
-                        
+
                     code_mode   = 0
                     code_margin = 0
-                
+
                 # otherwise, add the line to the current paragraph
                 else:
                     if not code:
                         code = DocCode()
                     code.add( line )
-        
+
         if paragraph:
             elements.append( paragraph )
 
         if code:
             elements.append( code )
-            
+
         self.items.append( ( field, elements ) )
 
 
@@ -388,7 +388,7 @@ class DocContent:
 
         # should never happen
         return "UNKNOWN_CONTENT_IDENTIFIER!!"
-         
+
 
     def dump( self ):
         for item in self.items:
@@ -398,25 +398,25 @@ class DocContent:
 
             for element in item[1]:
                 element.dump()
-            
+
             if field:
                 print "</field>        "
 
     def dump_html( self ):
-        
+
         n        = len( self.items )
         in_table = 0
-        
+
         for i in range( n ):
             item  = self.items[i]
             field = item[0]
-            
+
             if not field:
-            
+
                 if in_table:
                     print "</td></tr></table>"
                     in_table = 0
-                  
+
                 for element in item[1]:
                     element.dump_html()
             else:
@@ -425,9 +425,9 @@ class DocContent:
                     in_table = 1
                 else:
                     print "</td></tr><tr valign=top><td>"
-                
+
                 print "<b>" + field + "</b></td><td>"
-                
+
                 for element in item[1]:
                     element.dump_html()
 
@@ -459,19 +459,19 @@ class DocBlock:
         marker      = None               # current marker
         content     = []                 # current content lines list
         alphanum    = string.letters + string.digits + "_"
-    
+
         for line in block_line_list:
             line2  = string.lstrip( line )
             l      = len( line2 )
             margin = len( line ) - l
-            
+
             if l > 3:
                 ender = None
                 if line2[0] == '<':
                     ender = '>'
                 elif line2[0] == '@':
                     ender = ':'
-                    
+
                 if ender:
                     i = 1
                     while i < l and line2[i] in alphanum:
@@ -484,12 +484,12 @@ class DocBlock:
                         line2   = string.lstrip( line2[i + 1 :] )
                         l       = len( line2 )
                         line    = " " * margin + line2
-        
+
             content.append( line )
-        
+
         if marker and content:
             self.add( marker, content )
-        
+
         self.source = []
         if self.items:
             self.source = source_line_list
@@ -512,14 +512,14 @@ class DocBlock:
                 i = i + 1
             lines = lines[i : l]
             l     = len( lines )
-            
+
         # add a new marker only if its marker and its content list aren't empty
         if l > 0 and marker:
             content = DocContent(lines)
             self.items.append( ( string.lower(marker), content ) )
             if not self.identifier:
                 self.identifier = content.get_identifier()
-            
+
 
 
     def dump( self ):
@@ -529,22 +529,22 @@ class DocBlock:
             content.dump()
 
     def dump_html( self ):
-        
+
 	types = [ 'type', 'struct', 'functype', 'function', 'constant',
                   'enum', 'macro' ]
 
         if not self.items:
               return
-              
+
         # start of a block
         print block_header
-        
+
         print "<h2>" + self.identifier + "</h2>"
 
         # print source code
         if not self.source:
             return
-            
+
         lines = self.source
         l     = len( lines ) - 1
         while l >= 0 and string.strip( lines[l] ) == "":
@@ -556,7 +556,7 @@ class DocBlock:
 
         # dump each (marker,content) element
         for element in self.items:
-            
+
             marker  = element[0]
             content = element[1]
 
@@ -564,13 +564,13 @@ class DocBlock:
                 print "<ul>"
                 content.dump_html()
                 print "</ul>"
-                  
+
             elif not (marker in types):
                 print "<h4>" + marker + "</h4>"
                 print "<ul>"
                 content.dump_html()
                 print "</ul>"
-                    
+
             print ""
 
         print block_footer
@@ -581,7 +581,7 @@ class DocBlock:
 # "type" (i.e. first marker) is in the "types" parameter
 #
 def filter_blocks( block_list, types ):
-    
+
     new_list = []
     for block in block_list:
         if block.items:
@@ -601,7 +601,7 @@ def block_lexicographical_compare( b1, b2 ):
         return -1
     if not b2.identifier:
         return 1
-        
+
     id1 = string.lower(b1.identifier)
     id2 = string.lower(b2.identifier)
     if id1 < id2:
@@ -610,7 +610,7 @@ def block_lexicographical_compare( b1, b2 ):
         return 0
     else:
         return 1
-    
+
 
 def block_make_list( source_block_list ):
     list = []
@@ -627,10 +627,10 @@ def block_make_list( source_block_list ):
 def dump_html_1( block_list ):
 
     print html_header
-    
+
     for block in block_list:
         block.dump_html()
-    
+
     print html_footer
 
 
@@ -642,7 +642,7 @@ def make_block_list():
     list   = []
     block  = []
     format = 0
- 
+
     # we use "format" to store the state of our parser:
     #
     #  0 - wait for beginning of comment
@@ -652,7 +652,7 @@ def make_block_list():
     #  4 - wait for beginning of source (or comment ??)
     #  5 - process source
     #
-    
+
     comment     = []
     source      = []
     state       = 0
@@ -666,7 +666,7 @@ def make_block_list():
         # stripped version of the line
         line2 = string.strip( line )
         l     = len( line2 )
-        
+
         # if this line begins with a comment and we are processing some
         # source, exit to state 0
         #
@@ -718,7 +718,7 @@ def make_block_list():
             if l == 0 or line2[0] != '*':
                 block  = []
                 format = 0
-                
+
             # otherwise, we test for an end of block, which is an
             # arbitrary number of '*', followed by '/'
             else:
@@ -765,7 +765,7 @@ def make_block_list():
                 else:
                     # otherwise, add the line to the current block
                     block.append( line2 )
-                    
+
                 continue
 
 
@@ -774,18 +774,18 @@ def make_block_list():
 
             if l > 0:
                 format = 5
-                
+
             if format == 5:
                 source.append( line )
 
 
     if format >= 4:
         list.append( [block, source] )
-        
+
     return list
 
 
-    
+
 # This function is only used for debugging
 #
 def dump_block_list( list ):
@@ -806,11 +806,11 @@ def main( argv ):
     sys.stderr.write( "extracting comment blocks from sources...\n" )
     list = make_block_list()
     list = block_make_list(list)
-    
+
     list2 = filter_blocks( list, ['type','macro','enum','constant', 'functype'] )
     #list2 = list
     list2.sort( block_lexicographical_compare )
-                               
+
     dump_html_1( list2 )
     #dump_doc_blocks( list )
     #dump_block_lists( list )

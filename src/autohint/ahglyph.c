@@ -180,21 +180,21 @@
     n = ah_test_extrema( outline, indices.xMin );
     if ( n )
       goto Exit;
-    
+
     n = ah_test_extrema( outline, indices.yMin );
     if ( n )
       goto Exit;
-    
+
     n = ah_test_extrema( outline, indices.xMax );
     if ( n )
       goto Exit;
-    
+
     n = ah_test_extrema( outline, indices.yMax );
     if ( !n )
       n = 1;
 
   Exit:
-    return n;    
+    return n;
   }
 
 
@@ -367,7 +367,7 @@
     {
       outline->vert_major_dir = ah_dir_down;
       outline->horz_major_dir = ah_dir_right;
-    }    
+    }
 
 #else
 

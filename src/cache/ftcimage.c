@@ -36,14 +36,14 @@
   {
     FTC_GlyphSetRec  root;
     FTC_Image_Desc   description;
-  
+
   } FTC_ImageSetRec, *FTC_ImageSet;
 
 
   typedef struct  FTC_Image_CacheRec_
   {
     FTC_Glyph_CacheRec  root;
-    
+
   } FTC_Image_CacheRec;
 
 

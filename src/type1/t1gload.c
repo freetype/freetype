@@ -104,7 +104,7 @@
                                            T1_Parse_Glyph );
     if ( error )
       return error;
-      
+
     decoder.builder.metrics_only = 1;
     decoder.builder.load_points  = 0;
 
@@ -168,7 +168,7 @@
 
     glyph->root.outline.n_points   = 0;
     glyph->root.outline.n_contours = 0;
-    
+
     hinting = ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
               ( load_flags & FT_LOAD_NO_HINTING ) == 0;
 
@@ -183,13 +183,13 @@
                                  T1_Parse_Glyph );
     if ( error )
       goto Exit;
-                      
+
     decoder.builder.no_recurse = ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
 
     decoder.num_subrs = type1->num_subrs;
     decoder.subrs     = type1->subrs;
     decoder.subrs_len = type1->subrs_len;
-   
+
 
     /* now load the unscaled outline */
     error = T1_Parse_Glyph( &decoder, glyph_index );
@@ -209,7 +209,7 @@
     {
       glyph->root.outline.flags &= ft_outline_owner;
       glyph->root.outline.flags |= ft_outline_reverse_fill;
-      
+
       /* for composite glyphs, return only left side bearing and */
       /* advance width                                           */
       if ( load_flags & FT_LOAD_NO_RECURSE )

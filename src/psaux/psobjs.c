@@ -879,7 +879,7 @@
     if ( pflags )
       *pflags |= 1L << field->flag_bit;
 #else
-    FT_UNUSED( pflags );      
+    FT_UNUSED( pflags );
 #endif
 
     error = FT_Err_Ok;
@@ -944,7 +944,7 @@
     if ( pflags )
       *pflags |= 1L << field->flag_bit;
 #else
-    FT_UNUSED( pflags );      
+    FT_UNUSED( pflags );
 #endif
 
     parser->cursor = old_cursor;
@@ -1025,7 +1025,7 @@
     parser->cursor = base;
     parser->memory = memory;
     parser->funcs  = t1_parser_funcs;
-  }                            
+  }
 
 
   LOCAL_FUNC
@@ -1098,7 +1098,7 @@
     builder->left_bearing.y = 0;
     builder->advance.x      = 0;
     builder->advance.y      = 0;
-    
+
     builder->funcs = t1_builder_funcs;
   }
 

@@ -462,7 +462,7 @@
       if ( cur->header.pixel_height == size->root.metrics.y_ppem )
       {
         size->font = cur;
-        
+
         size->root.metrics.ascender  = cur->header.ascent * 64;
         size->root.metrics.descender = ( cur->header.pixel_height -
                                            cur->header.ascent ) * 64;
@@ -528,7 +528,7 @@
       glyph_index--;
     else
       glyph_index = font->header.default_char - font->header.first_char;
-      
+
     new_format = font->header.version == 0x300;
     len        = new_format ? 6 : 4;
 

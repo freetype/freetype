@@ -22,18 +22,18 @@ ag_pi = 256
 
 def print_arctan( atan_bits ):
     atan_base = 1 << atan_bits
-    
+
     print "  static AH_Angle  ag_arctan[1L << AG_ATAN_BITS] ="
     print "  {"
-    
+
     count = 0
     line  = "   "
-    
+
     for n in range( atan_base ):
         comma = ","
         if ( n == atan_base - 1 ):
             comma = ""
-            
+
         angle = math.atan( n * 1.0 / atan_base ) / math.pi * ag_pi
         line  = line + " " + repr( int( angle + 0.5 ) ) + comma
         count = count + 1;
@@ -41,7 +41,7 @@ def print_arctan( atan_bits ):
             count = 0
             print line
             line = "   "
-            
+
     if ( count > 0 ):
         print line
     print "  };"
@@ -55,7 +55,7 @@ def print_sines():
 
     count = 0
     line  = "   "
-    
+
     for n in range( ag_pi / 2 ):
         sinus = math.sin( n * math.pi / ag_pi )
         line  = line + " " + repr( int( 65536.0 * sinus ) ) + ","
@@ -64,7 +64,7 @@ def print_sines():
             count = 0
             print line
             line = "   "
-        
+
     if ( count > 0 ):
         print line
     print "   65536"

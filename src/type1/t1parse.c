@@ -85,7 +85,7 @@
   {
     FT_UShort  tag;
     FT_Long    size;
-    
+
   } PFB_Tag;
 
 
@@ -247,7 +247,7 @@
     /* free the base dictionary only when we have a disk stream */
     if ( !parser->in_memory )
       FREE( parser->base_dict );
-      
+
     parser->root.funcs.done( &parser->root );
   }
 

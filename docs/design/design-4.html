@@ -92,19 +92,19 @@
     <p>The function <tt>FT_New_Face()</tt> will always automatically create
     a new stream object from the C&nbsp;pathname given as its second
     argument.  This is achieved by calling the function
-    <tt>FT_New_Stream()</tt> provided by the <tt>ftsystem</tt> component. 
+    <tt>FT_New_Stream()</tt> provided by the <tt>ftsystem</tt> component.
     As the latter is replaceable, the implementation of streams may vary
     greatly between platforms.</p>
 
     <p>As an example, the default implementation of streams is located in
     the file <tt>src/base/ftsystem.c</tt> and uses the ANSI
-    <tt>fopen()</tt>, <tt>fseek()</tt>, and <tt>fread()</tt> calls. 
+    <tt>fopen()</tt>, <tt>fseek()</tt>, and <tt>fread()</tt> calls.
     However, the Unix build of FreeType&nbsp;2 provides an alternative
     implementation that uses memory-mapped files, when available on the host
     platform, resulting in a significant access speed-up.</p>
 
-    <p>FreeType distinguishes between memory-based and disk-based streams. 
-    In the first case, all data is directly accessed in memory (e.g. 
+    <p>FreeType distinguishes between memory-based and disk-based streams.
+    In the first case, all data is directly accessed in memory (e.g.
     ROM-based, write-only static data and memory-mapped files), while in the
     second, portions of the font files are read in chunks called
     <em>frames</em>, and temporarily buffered similarly through typical
@@ -222,7 +222,7 @@
     </ul>
 
     <p>Note that every <tt>FT_Face</tt> object is <em>owned</em> by the
-    corresponding font driver, depending on the original font file's format. 
+    corresponding font driver, depending on the original font file's format.
     This means that all face objects are destroyed when a module is
     removed/unregistered from a library instance (typically by calling the
     <tt>FT_Remove_Module()</tt> function).</p>

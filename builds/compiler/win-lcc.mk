@@ -75,7 +75,7 @@ ANSIFLAGS :=
 
 # library linking
 #
-#CLEAN_LIBRARY := 
+#CLEAN_LIBRARY :=
 LINK_LIBRARY = lcclib /out:$(subst $(SEP),\\,$@) $(subst $(SEP),\\,$(OBJECTS_LIST))
-                    
+
 # EOF

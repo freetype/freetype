@@ -20,7 +20,7 @@ ifeq ($(PLATFORM),ansi)
   # work...
   #
   ifeq ($(OS),Windows_NT)
-    
+
     # Check if we are running on a CygWin system by checking the OSTYPE
     # variable.
     ifneq ($(OSTYPE),cygwin)

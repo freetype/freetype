@@ -411,7 +411,7 @@
           /* this should never happen! */
           FT_ERROR(( "FTC_Manager_Compress: Cache Manager is corrupted!\n" ));
         }
-        
+
         /* check, just in case of general corruption :-) */
         if (manager->num_nodes <= 0)
         {
@@ -464,7 +464,7 @@
         cache->manager = manager;
         cache->memory  = memory;
         cache->clazz   = clazz;
-        
+
         /* THIS IS VERY IMPORTANT, THIS WILL WRECH THE MANAGER */
         /* IF IT IS NOT SET CORRECTLY..                        */
         cache->cache_index = index;

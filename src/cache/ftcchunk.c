@@ -56,7 +56,7 @@
       /* allocate elements array */
       FT_Memory   memory;
 
-      
+
       memory = cache->root.memory;
       error  = MEM_Alloc( node->elements, cset->element_size *
                                           cset->element_count );
@@ -71,7 +71,7 @@
 
     /* remove from parent set table */
     cset->chunks[ node->cset_index ] = 0;
-        
+
     /* destroy the node */
     cset->clazz->destroy_node( node );
   }
@@ -135,7 +135,7 @@
       goto Exit;
 
     /* compute maximum number of nodes */
-    cset->num_chunks = (cset->element_max   + 
+    cset->num_chunks = (cset->element_max   +
                         cset->element_count - 1) / cset->element_count;
 
     /* allocate chunk pointers table */
@@ -223,7 +223,7 @@
       FT_UInt         chunk_index = glyph_index/chunk_size;
       FTC_ChunkNode*  pnode       = cset->chunks + chunk_index;
       FTC_ChunkNode   node        = *pnode;
-      
+
       if (!node)
       {
         /* we didn't found the glyph image, we will now create a new one */

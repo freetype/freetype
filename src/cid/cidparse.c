@@ -72,7 +72,7 @@
 
     MEM_Set( parser, 0, sizeof ( *parser ) );
     psaux->t1_parser_funcs->init( &parser->root, 0, 0, memory );
-    
+
     parser->stream = stream;
 
     base_offset = FILE_Pos();

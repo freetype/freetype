@@ -1,5 +1,5 @@
 #
-# FreeType 2 CFF module definition 
+# FreeType 2 CFF module definition
 #
 
 

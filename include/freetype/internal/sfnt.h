@@ -450,7 +450,7 @@
     TT_Load_Face_Func         load_face;
     TT_Done_Face_Func         done_face;
     SFNT_Get_Interface_Func   get_interface;
-    
+
     TT_Load_Any_Func          load_any;
     TT_Load_SFNT_Header_Func  load_sfnt_header;
     TT_Load_Directory_Func    load_directory;

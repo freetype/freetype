@@ -128,7 +128,7 @@
   {
     FT_UInt    num_subrs;
     FT_Byte**  code;
-    
+
   } CID_Subrs;
 
 
@@ -185,7 +185,7 @@
     CID_Info    cid;
     void*       afm_data;
     CID_Subrs*  subrs;
-  
+
   } CID_FaceRec;
 
 

@@ -70,7 +70,7 @@ endif
 #
 #  LCC is pure ANSI anyway!
 #
-#  the "-A" flag simply increments verbosity about non ANSI code 
+#  the "-A" flag simply increments verbosity about non ANSI code
 #
 ANSIFLAGS := -A
 
@@ -82,5 +82,5 @@ ifndef CLEAN_LIBRARY
                   $(NO_OUTPUT)
 endif
 LINK_LIBRARY = $(AR) -r $@ $(OBJECTS_LIST)
-                    
+
 # EOF

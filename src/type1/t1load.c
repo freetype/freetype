@@ -130,7 +130,7 @@
       if ( blend->num_designs == 0 )
       {
         FT_UInt  nn;
-        
+
 
         /* allocate the blend `private' and `font_info' dictionaries */
         if ( ALLOC_ARRAY( blend->font_infos[1], num_designs, T1_FontInfo )  ||
@@ -142,13 +142,13 @@
 
         blend->font_infos[0] = &face->type1.font_info;
         blend->privates  [0] = &face->type1.private_dict;
-        
+
         for ( nn = 2; nn <= num_designs; nn++ )
         {
           blend->privates[nn]   = blend->privates  [nn - 1] + 1;
           blend->font_infos[nn] = blend->font_infos[nn - 1] + 1;
         }
-        
+
         blend->num_designs   = num_designs;
       }
       else if ( blend->num_designs != num_designs )
@@ -912,7 +912,7 @@
     matrix->yx = temp[1];
     matrix->xy = temp[2];
     matrix->yy = temp[3];
-    
+
     /* note that the offsets must be expressed in integer font units */
     offset->x  = temp[4] >> 16;
     offset->y  = temp[5] >> 16;
@@ -926,7 +926,7 @@
     T1_ParserRec*  parser = &loader->parser;
     FT_Byte*       cur    = parser->root.cursor;
     FT_Byte*       limit  = parser->root.limit;
-    
+
     PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
 
 
@@ -972,7 +972,7 @@
       /* We need to `zero' out encoding_table.elements          */
       for ( n = 0; n < count; n++ )
       {
-        char*  notdef = ".notdef";       
+        char*  notdef = ".notdef";
 
 
         T1_Add_Table( char_table, n, notdef, 8 );
@@ -1091,7 +1091,7 @@
 
     PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
 
-    
+
     loader->num_subrs = T1_ToInt( parser );
     if ( parser->root.error )
       return;
@@ -1123,7 +1123,7 @@
         break;
 
       index = T1_ToInt( parser );
-      
+
       if ( !read_binary_data( parser, &size, &base ) )
         return;
 
@@ -1296,7 +1296,7 @@
       /* index 0.  Then take end of table name/code and place it into index */
       /* notdef_index.                                                      */
 
-      error = T1_Add_Table( name_table, n, 
+      error = T1_Add_Table( name_table, n,
                             name_table->elements[0],
                             name_table->lengths [0] );
       if ( error )
@@ -1339,7 +1339,7 @@
       /* charstrings dictionary. Worry about /.notdef undefined. */
       /* we take index 0 and add it to the end of the table(s)   */
       /* and add our own /.notdef glyph to index 0.              */
-      
+
       /* 0 333 hsbw endchar                                      */
       FT_Byte  notdef_glyph[] = {0x8B, 0xF7, 0xE1, 0x0D, 0x0E};
       char*    notdef_name    = ".notdef";
@@ -1578,7 +1578,7 @@
     T1_ParserRec*  parser;
     T1_Font*       type1 = &face->type1;
     FT_Error       error;
-    
+
     PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
 
 

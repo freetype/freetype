@@ -61,12 +61,12 @@
     FT_LruNode    gset_lru = cache->gsets_lru->nodes + node->gset_index;
     FTC_GlyphSet  gset     = (FTC_GlyphSet)gset_lru->root.data;
     FT_UInt       hash     = node->glyph_index % gset->hash_size;
-    
+
     /* remove the node from its gset's bucket list */
     {
       FTC_GlyphNode*  pnode = gset->buckets + hash;
       FTC_GlyphNode   cur;
-      
+
       for (;;)
       {
         cur = *pnode;
@@ -77,7 +77,7 @@
                      " trying to delete an unlisted node !!!!" ));
           return;
         }
-          
+
         if (cur == node)
         {
           *pnode = cur->gset_next;
@@ -239,20 +239,20 @@
 
 
     *anode = 0;
-    
+
     for ( ;; )
     {
       node = *pnode;
       if (!node)
         break;
-        
+
       if ( node->glyph_index == glyph_index )
       {
         /* we found it! -- move glyph to start of the lists */
         *pnode          = node->gset_next;
         node->gset_next = bucket[0];
         bucket[0]       = node;
-        
+
         FT_List_Up( &manager->global_lru, FTC_GLYPHNODE_TO_LRUNODE( node ) );
         *anode = node;
         return 0;

@@ -145,7 +145,7 @@
     FT_Error    error;
     T1_Decoder  decoder;
     FT_Int      glyph_index;
-    
+
     PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
 
 
@@ -161,7 +161,7 @@
                                            cid_load_glyph );
     if ( error )
       return error;
-    
+
     decoder.builder.metrics_only = 1;
     decoder.builder.load_points  = 0;
 
@@ -259,7 +259,7 @@
     {
       glyph->root.outline.flags &= ft_outline_owner;
       glyph->root.outline.flags |= ft_outline_reverse_fill;
-      
+
       /* for composite glyphs, return only left side bearing and */
       /* advance width                                           */
       if ( load_flags & FT_LOAD_NO_RECURSE )

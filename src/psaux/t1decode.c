@@ -206,7 +206,7 @@
       FT_ERROR(( " glyph names table not available in this font!\n" ));
       return T1_Err_Syntax_Error;
     }
-    
+
     bchar_index = t1_lookup_glyph_by_stdcharcode( decoder, bchar );
     achar_index = t1_lookup_glyph_by_stdcharcode( decoder, achar );
 
@@ -919,12 +919,12 @@
 
             zone++;
             zone->base   = decoder->subrs[index] + decoder->lenIV;
-            
+
             if (decoder->subrs_len)
               zone->limit  = zone->base + decoder->subrs_len[index];
             else
               zone->limit  = decoder->subrs[index+1];
-              
+
             zone->cursor = zone->base;
 
             if ( !zone->base )
@@ -1036,11 +1036,11 @@
                              T1_Decoder_Callback  parse_callback )
   {
     MEM_Set( decoder, 0, sizeof ( *decoder ) );
-    
+
     /* retrieve PSNames interface from list of current modules */
     {
       PSNames_Interface*  psnames = 0;
-      
+
 
       psnames = (PSNames_Interface*)FT_Get_Module_Interface(
                    FT_FACE_LIBRARY(face), "psnames" );
@@ -1050,16 +1050,16 @@
         FT_ERROR(( "the `psnames' module is not available\n" ));
         return FT_Err_Unimplemented_Feature;
       }
-      
+
       decoder->psnames = psnames;
     }
     T1_Builder_Init( &decoder->builder, face, size, slot );
-    
+
     decoder->num_glyphs     = face->num_glyphs;
     decoder->glyph_names    = glyph_names;
     decoder->blend          = blend;
     decoder->parse_callback = parse_callback;
-    
+
     decoder->funcs       = t1_decoder_funcs;
 
     return 0;

@@ -312,7 +312,7 @@
                                                       FTC_Font     font,
                                                       FT_Face*     aface,
                                                       FT_Size*     asize );
-  
+
 
   /* a cache class is used to describe a unique cache type to the manager */
   typedef struct FTC_Cache_Class_  FTC_Cache_Class;

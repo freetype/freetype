@@ -77,7 +77,7 @@
   {
     FT_ListNodeRec  root;
     FT_LruKey       key;
-  
+
   } FT_LruNodeRec, *FT_LruNode;
 
 
@@ -90,26 +90,26 @@
   typedef struct  FT_Lru_Class_
   {
     FT_UInt  lru_size;      /* object size in bytes */
-    
+
     /* this method is used to initialize a new list element node */
     FT_Error  (*init_element)( FT_Lru      lru,
                                FT_LruNode  node );
-                               
+
     /* this method is used to finalize a given list element node */
     void      (*done_element)( FT_Lru      lru,
                                FT_LruNode  node );
-    
+
     /* If defined, this method is called when the list if full        */
     /* during the lookup process -- it is used to change the contents */
     /* of a list element node, instead of calling `done_element()',   */
-    /* then `init_element'.  Set it to 0 for default behaviour.       */ 
+    /* then `init_element'.  Set it to 0 for default behaviour.       */
     FT_Error  (*flush_element)( FT_Lru      lru,
                                 FT_LruNode  node,
-                                FT_LruKey   new_key );  
+                                FT_LruKey   new_key );
 
     /* If defined, this method is used to compare a list element node */
     /* with a given key during a lookup.  If set to 0, the `key'      */
-    /* fields will be directly compared instead.                      */                                   
+    /* fields will be directly compared instead.                      */
     FT_Bool  (*compare_element)( FT_LruNode  node,
                                  FT_LruKey   key );
 
@@ -133,11 +133,11 @@
     FT_ListRec     elements;
     FT_Memory      memory;
     FT_Pointer     user_data;
-    
+
     /* the following fields are only meaningful for static lru containers */
     FT_ListRec     free_nodes;
     FT_LruNode     nodes;
-    
+
   } FT_LruRec;
 
 
@@ -148,9 +148,9 @@
                                          FT_Bool              pre_alloc,
                                          FT_Lru*              alru );
 
-  FT_EXPORT_DEF( void )      FT_Lru_Reset( FT_Lru  lru ); 
+  FT_EXPORT_DEF( void )      FT_Lru_Reset( FT_Lru  lru );
 
-  FT_EXPORT_DEF( void )      FT_Lru_Done ( FT_Lru  lru ); 
+  FT_EXPORT_DEF( void )      FT_Lru_Done ( FT_Lru  lru );
 
 
   FT_EXPORT_DEF( FT_Error )  FT_Lru_Lookup_Node( FT_Lru        lru,
@@ -163,7 +163,7 @@
 
 
   FT_EXPORT_DEF( void )  FT_Lru_Remove_Node( FT_Lru      lru,
-                                             FT_LruNode  node );  
+                                             FT_LruNode  node );
 
   FT_EXPORT_DEF( void )  FT_Lru_Remove_Selection( FT_Lru           lru,
                                                   FT_Lru_Selector  selector,

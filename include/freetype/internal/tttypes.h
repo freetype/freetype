@@ -99,7 +99,7 @@
     FT_UShort  search_range;
     FT_UShort  entry_selector;
     FT_UShort  range_shift;
-  
+
   } SFNT_Header;
 
 
@@ -965,7 +965,7 @@
     TT_CMap4Segment*  segments;
     FT_UShort*        glyphIdArray;
     FT_UShort         numGlyphId;   /* control value */
-    
+
     TT_CMap4Segment*  last_segment;  /* last used segment; this is a small  */
                                      /* cache to potentially increase speed */
   } TT_CMap4;
@@ -1162,7 +1162,7 @@
                                            FT_ULong    offset,
                                            FT_UInt     byte_count );
 
-  
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -1180,7 +1180,7 @@
   /*                                                                       */
   typedef
   FT_Error  (*TT_Load_Glyph_Element_Func)( TT_Loader*  loader );
-  
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1574,7 +1574,7 @@
     TT_ExecContext   exec;
     FT_Byte*         instructions;
     FT_ULong         ins_pos;
-    
+
     /* for possible extensibility in other formats */
     void*            other;
 

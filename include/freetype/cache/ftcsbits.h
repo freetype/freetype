@@ -20,7 +20,7 @@
 #define FTCSBITS_H
 
 
-#include <freetype/cache/ftcchunk.h> 
+#include <freetype/cache/ftcchunk.h>
 
 
 #ifdef __cplusplus
@@ -34,7 +34,7 @@
   /* handle to small bitmap cache */
   typedef struct FTC_SBit_CacheRec_*  FTC_SBit_Cache;
 
-  /* a compact structure used to hold a single small bitmap */  
+  /* a compact structure used to hold a single small bitmap */
   typedef struct  FTC_SBitRec_
   {
     FT_Byte   width;
@@ -48,7 +48,7 @@
     FT_Char   yadvance;
 
     FT_Byte*  buffer;
-  
+
   } FTC_SBitRec;
 
 

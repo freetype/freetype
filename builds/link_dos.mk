@@ -25,13 +25,13 @@ ifdef BUILD_PROJECT
   clean_project: clean_project_dos
   distclean_project: distclean_project_dos
 
-  # This final rule is used to link all object files into a single library. 
+  # This final rule is used to link all object files into a single library.
   # this is compiler-specific
   #
   $(PROJECT_LIBRARY): $(OBJECTS_LIST)
-ifdef CLEAN_LIBRARY  
+ifdef CLEAN_LIBRARY
 	-$(CLEAN_LIBRARY) $(NO_OUTPUT)
-endif          
+endif
 	$(LINK_LIBRARY)
 
 endif

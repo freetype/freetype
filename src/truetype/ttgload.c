@@ -545,7 +545,7 @@
 
     FT_UNUSED( debug );  /* used by truetype interpreter only */
 
-    
+
     n_ins = load->glyph->control_len;
 
     /* add shadow points */
@@ -648,7 +648,7 @@
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
   Exit:
-#endif  
+#endif
     return error;
   }
 

@@ -15,7 +15,7 @@
   typedef struct FTC_SBit_CacheRec_
   {
     FTC_Chunk_CacheRec    root;
-    
+
   } FTC_SBit_CacheRec;
 
 
@@ -36,7 +36,7 @@
     FT_Memory      memory = cset->memory;
     FT_UInt        count  = node->num_elements;
     FTC_SBit       sbit   = (FTC_SBit)node->elements;
-    
+
     for ( ; count > 0; sbit++, count-- )
       FREE( sbit->buffer );
 
@@ -124,7 +124,7 @@
 
         /* always render glyphs to bitmaps */
         load_flags |= FT_LOAD_RENDER;
-        
+
         if ( image_type & ftc_image_flag_unhinted )
           load_flags |= FT_LOAD_NO_HINTING;
 
@@ -138,7 +138,7 @@
       {
         /* by default, indicates a "missing" glyph */
         sbit->buffer = 0;
-        
+
         error = FT_Load_Glyph( face, glyph_index, load_flags );
         if (!error)
         {
@@ -150,7 +150,7 @@
           /* check that our values fit in 8-bit containers !!       */
           /* if this is not the case, our bitmap is too large       */
           /* and we will leave it as "missing" with sbit.buffer = 0 */
- 
+
 #define  CHECK_CHAR(d)   ( temp = (FT_Char)d, temp == d )
 #define  CHECK_BYTE(d)   ( temp = (FT_Byte)d, temp == d )
 
@@ -159,7 +159,7 @@
           /* horizontal advance in pixels              */
           xadvance = (slot->metrics.horiAdvance+32) >> 6;
           yadvance = (slot->metrics.vertAdvance+32) >> 6;
-          
+
           if ( CHECK_BYTE ( bitmap->rows  )     &&
                CHECK_BYTE ( bitmap->width )     &&
                CHECK_CHAR ( bitmap->pitch )     &&
@@ -231,7 +231,7 @@
         pitch = sbit->pitch;
         if (pitch < 0)
           pitch = -pitch;
-          
+
         /* add the size of a given glyph image */
         size += pitch * sbit->height;
       }
@@ -256,19 +256,19 @@
   {
     FT_Error  error;
     FT_Face   face;
-    
+
     cset->element_count = FTC_SBITSET_ELEMENT_COUNT;
     cset->element_size  = sizeof(FTC_SBitRec);
-    
+
     /* lookup the FT_Face to obtain the number of glyphs */
     error = FTC_Manager_Lookup_Face( cset->manager,
                                      desc->font.face_id, &face );
     if (!error)
       cset->element_max = face->num_glyphs;
-      
+
     return error;
   }
-  
+
 
 
   LOCAL_FUNC_X

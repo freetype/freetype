@@ -44,8 +44,8 @@
   {
     return face && ( FT_IS_SFNT( face ) ? ((TT_Face)face)->num_names : 0 );
   }
-  
-  
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -78,17 +78,17 @@
                                                FT_SfntName*  aname )
   {
     FT_Error  error = FT_Err_Invalid_Argument;
-    
+
 
     if ( aname && face && FT_IS_SFNT( face ) )
     {
       TT_Face  ttface = (TT_Face)face;
-      
+
 
       if ( index < ttface->num_names )
       {
         TT_NameRec*  name = ttface->name_table.names + index;
-        
+
 
         aname->platform_id = name->platformID;
         aname->encoding_id = name->encodingID;
@@ -96,13 +96,13 @@
         aname->name_id     = name->nameID;
         aname->string      = (FT_Byte*)name->string;
         aname->string_len  = name->stringLength;
-        
+
         error = FT_Err_Ok;
       }
     }
-    
+
     return error;
-  }                                             
+  }
 
 
 #endif /* TT_CONFIG_OPTION_SFNT_NAMES */

@@ -102,7 +102,7 @@ points:
       `numberOfPoints' or `number_Of_Points'
 
       `IncredibleFunction' or `Incredible_Function'
-       
+
     And finally,  always put a  capital letter after  an underscore,
     except in variable labels that are all lowercase:
 
@@ -191,7 +191,7 @@ points:
       PProfile    next;   /* next profile in same contour, used     */
                           /* during drop-out control                */
     };
- 
+
   instead of
 
     struct  TProfile_
@@ -207,7 +207,7 @@ points:
       PProfile next; /* next profile in same contour, used     */
                      /* during drop-out control                */
     };
- 
+
   This comes from the fact that you are more interested in the field
   and its function than in its type.
 
@@ -272,7 +272,7 @@ points:
   same column.  It makes it easier to separate a block from the rest
   of the source,  and it helps your _brain_  associate the accolades
   easily (ask any Lisp programmer on the topic!).
-  
+
   Use two spaces for the next indentation level.
 
   Never  use tabs in  FreeType 2  code; their  widths may  vary with
@@ -427,11 +427,11 @@ II. Design Conventions
   have thus decided to stick to the following restrictions:
 
   - The C version is written  entirely in ANSI C.
-  
+
   - The library,  if compiled with gcc, doesn't  produce any warning
     with the  `-ansi -pedantic' flags.  Other  compilers with better
     checks  may produce  ANSI warnings -- please report.
-     
+
     (NOTE: It can of course  be compiled by an `average' C compiler,
            and even by a C++ one.)
 
@@ -510,7 +510,7 @@ III. Usage conventions
       goto Fail;
 
   with
-      
+
     #define PERFORM_Action_1( parms_1 ) \
               ( error = Perform_Action_1( parms_1 ) )
     #define PERFORM_Action_2( parms_1 ) \
@@ -525,7 +525,7 @@ III. Usage conventions
   actual error  handling performed.   Another advantage is  that the
   structure  of source files  remain very  similar, even  though the
   error handling may be different.
-    
+
   This  convention  is  very  close  to the  use  of  exceptions  in
   languages  like  C++,  Pascal,  Java, etc.   where  the  developer
   focuses on the  actions to perform, and not  on every little error
@@ -546,7 +546,7 @@ III. Usage conventions
     and  independence of  a complete  C library,  it is  possible to
     re-implement the component for  a specific system or OS, letting
     it use system calls.
-    
+
   b. Frames
 
     TrueType is  tied to the  big-endian format, which  implies that
@@ -686,4 +686,4 @@ III. Usage conventions
   access to it yourself with a simple mutex.
 
 
---- end of convntns.txt --- 
+--- end of convntns.txt ---

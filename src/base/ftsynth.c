@@ -37,24 +37,24 @@
                                                  FT_Pos*       advance )
   {
     FT_Matrix  transform;
-    
+
     FT_UNUSED( original );
     /* we don't touch the advance width */
     FT_UNUSED( advance );
 
-    
+
 
     /* For italic, simply apply a shear transform, with an angle */
     /* of about 12 degrees.                                      */
-    
+
     transform.xx = 0x10000L;
     transform.yx = 0x00000L;
-    
+
     transform.xy = 0x06000L;
     transform.yy = 0x10000L;
-    
+
     FT_Outline_Transform( outline, &transform );
-    
+
     return 0;
   }
 
@@ -272,15 +272,15 @@
     n = ft_test_extrema( outline, indices.xMin );
     if ( n )
       goto Exit;
-    
+
     n = ft_test_extrema( outline, indices.yMin );
     if ( n )
       goto Exit;
-    
+
     n = ft_test_extrema( outline, indices.xMax );
     if ( n )
       goto Exit;
-    
+
     n = ft_test_extrema( outline, indices.yMax );
     if ( !n )
       n = 1;

@@ -66,7 +66,7 @@ ifdef check_platform
 
   all: setup
 
-  ifdef USE_MODULES  
+  ifdef USE_MODULES
     # If the module list $(MODULE_LIST) file is not present, generate it.
     #
     #modules: make_module_list setup
@@ -74,7 +74,7 @@ ifdef check_platform
 
   include $(TOP)/builds/detect.mk
 
-  ifdef USE_MODULES  
+  ifdef USE_MODULES
     include $(TOP)/builds/modules.mk
 
     ifeq ($(wildcard $(MODULE_LIST)),)

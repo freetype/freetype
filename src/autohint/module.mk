@@ -1,5 +1,5 @@
 #
-# FreeType 2 auto-hinter module definition 
+# FreeType 2 auto-hinter module definition
 #
 
 
