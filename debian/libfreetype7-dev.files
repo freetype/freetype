@@ -1,0 +1,5 @@
+usr/bin/freetype-config
+usr/include/
+usr/lib/*.so
+usr/lib/*.la
+usr/lib/*.a

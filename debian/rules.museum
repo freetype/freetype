@@ -1,0 +1,84 @@
+# These are some bits and pieces from freetype1 debian/rules.
+# They are moved here to get rid of the clutter in the current debian/rules.
+# Who knows?  Perhaps we will need the following some day.
+
+# dependency = '$(libpkg) (>= 1.3.1)'
+
+# TTF2PKINPUTS = usr/share/texmf/ttf2pk
+# TTF2TFMINPUTS = usr/share/texmf/ttf2tfm
+
+build:
+#	( cd contrib/ttf2bdf && ./configure --prefix=/usr --mandir='$${prefix}/share/man' )
+#	$(MAKE) -C contrib/ttf2bdf
+#	( cd contrib/ttf2pk && ./configure --prefix=/usr \
+#		--mandir='$${prefix}/share/man' --with-kpathsea-dir=/usr )
+#	$(MAKE) -C contrib/ttf2pk
+#	( cd contrib/ttf2pfb && ./configure --prefix=/usr --mandir='$${prefix}/share/man' )
+#	$(MAKE) -C contrib/ttf2pfb
+#	( cd contrib/ttfbanner && ./configure --prefix=/usr --mandir='$${prefix}/share/man' )
+#	$(MAKE) -C contrib/ttfbanner
+
+clean:
+#	-for i in ttf2bdf ttf2pfb ttf2pk ttfbanner; do \
+#		$(MAKE) -C contrib/$$i distclean; \
+#	done
+
+# The following target is not used for FreeType 2:
+$(binpkg): DH_OPTIONS=-p$(binpkg)
+$(binpkg): build install
+	dh_testdir
+	dh_testroot
+
+	dh_installdirs $(docdir)/$(libpkg)/ttf2pk \
+		$(TTF2PKINPUTS) $(TTF2TFMINPUTS) etc/ttf2pk \
+		$(docdir)/$(libpkg)/ttf2bdf \
+		$(docdir)/$(libpkg)/ttf2pfb \
+		$(docdir)/$(libpkg)/ttfbanner
+	ln -s $(libpkg) debian/$(binpkg)/$(docdir)/$(binpkg)
+
+	for i in ttf2bdf ttf2pfb ttf2pk ttfbanner; do \
+	  $(MAKE) -C contrib/$$i prefix=`pwd`/debian/$(binpkg)/usr install; \
+	done
+
+	# Temporary measure.  Remove the following in the future after
+	# both versions (from t1utils and freetype) are merged.
+	( cd debian/$(binpkg)/usr/bin && \
+		mv t1asm t1asm-freetype && \
+		mv getafm getafm-freetype )
+
+	# ttf2tfm and ttf2pk both need the *.sfd, *.enc and *.rpl
+        # in their own directory.  (?)  Hmm...
+	cp -av contrib/ttf2pk/data/*.{sfd,enc,rpl} debian/$(binpkg)/$(TTF2PKINPUTS)
+	ln debian/$(binpkg)/$(TTF2PKINPUTS)/*.{sfd,enc,rpl} debian/$(binpkg)/$(TTF2TFMINPUTS)
+
+	cp -av contrib/ttf2pk/data/ttfonts.map debian/$(binpkg)/etc/ttf2pk
+	ln -s /etc/ttf2pk/ttfonts.map debian/$(binpkg)/$(TTF2PKINPUTS)
+
+	dh_installdocs
+
+	cp -av contrib/ttf2bdf/README \
+		debian/$(binpkg)/$(docdir)/$(binpkg)/ttf2bdf/
+	cp -av contrib/ttf2pfb/TODO \
+		debian/$(binpkg)/$(docdir)/$(binpkg)/ttf2pfb/
+	( cd contrib/ttf2pk && cp -av *.doc README TODO BUGS \
+		../../debian/$(binpkg)/$(docdir)/$(binpkg)/ttf2pk/ )
+	cp -av contrib/ttfbanner/README \
+		debian/$(binpkg)/$(docdir)/$(binpkg)/ttfbanner/
+
+#	dh_installexamples tools/ttf2bdf/iso8859.2 tools/ttf2pk/
+#	dh_installmenu
+#	dh_installmanpages
+#	dh_undocumented ftview.1 fttimer.1 ftlint.1 ftdump.1 \
+#		ftzoom.1 ftstring.1 ftstrpnm.1 fterror.1 \
+#		ttf2pfb.1 ttfbanner.1
+#	dh_installchangelogs
+	dh_strip
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps --dpkg-shlibdeps-params=-Ldebian/$(libpkg)/DEBIAN/shlibs
+	dh_gencontrol
+#	dh_makeshlibs
+	dh_md5sums
+	dh_builddeb

@@ -1,0 +1,474 @@
+freetype (2.0.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * Renamed /usr/bin/memtest to /usr/bin/ftmemtest to avoid
+    namespace conflict with /usr/sbin/memtest of the sysutils package.
+
+ -- Anthony Fok <foka@debian.org>  Thu, 31 May 2001 22:11:05 -0600
+
+freetype (2.0.2.20010514-1) unstable; urgency=low
+
+  * New upstream snapshot, post-2.0.2 freetype2-current as of 2001-05-14.
+  * Silly me!  I fixed the `missing "xlibs-dev" in Build-Depends'
+    in 2.0.2.20010422-2, but closed the wrong bug report!?
+    Thanks to Martin Schmitz for the bug report.  (Closes: Bug#95328)
+  * libtool-1.4 is not 100% compatible with the libtool-1.3.5 included
+    in the upstream source.  Also, it seems to be unnecessary to
+    Build-Depends on libtool, therefore removed.
+    Thanks to Laurent Bonnaud for the bug report.  (Closes: Bug#97552)
+  * [ftoption.h]: #define TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
+ -- Anthony Fok <foka@debian.org>  Tue, 15 May 2001 16:49:26 -0600
+
+freetype (2.0.2.20010422-2) unstable; urgency=medium
+
+  * Hehe, silly me, I forgot to add "xlibs-dev" to Build-Depends
+    when I merged in freetype2-demos.  Thanks to Martin Michlmayr
+    for the notice.  Closes: Bug#94569.
+
+ -- Anthony Fok <foka@debian.org>  Thu, 26 Apr 2001 21:20:17 -0600
+
+freetype (2.0.2.20010422-1) unstable; urgency=low
+
+  * Updated to post-2.0.2 freetype2-current as of 2001-04-22.
+  * On i386, freetype2-demos is rebuilt with xlibs_4.0.2-13 instead of the
+    pre-release xlibs_4.0.3.  My apologies.
+  * Replaced "tetex-dev" with "libkpathsea-dev" in Build-Depends.
+    Thanks to Michael Schmitz for the bug report.  Closes: Bug#91897.
+  * Updated README.Debian to reflect the FreeType 1.x package name
+    change from freetype2{,-dev} [sic] to libttf{2,-dev}.
+
+ -- Anthony Fok <foka@debian.org>  Mon, 23 Apr 2001 23:08:51 -0600
+
+freetype (2.0.2.20010412-1) unstable; urgency=low
+
+  * New upstream release, post-2.0.2 freetype2-current as of 2001-04-12.
+  * Arnd Bergmann, Tom Kacvinsky et al. pinpointed and fixed a bug
+    in FreeType-2.0.2 which caused KDE and "xterm -fa" to segfault.
+    Thanks guys!  :-)  Closes: Bug#89326.
+  * New binary package: freetype2-demos.
+  * The source package reorganized to include three upstream tarballs
+    (freetype, ftdocs, ft2demos) in one *.orig.tar.gz.
+
+ -- Anthony Fok <foka@debian.org>  Fri, 13 Apr 2001 02:02:42 -0600
+
+freetype (2.0.1.20010317-1) unstable; urgency=low
+
+  * Updated to freetype2-current as of 2001-03-17.
+  * [builds/unix/install.mk]:
+     - IMHO, the current upstream source caters too much to broken
+       compilers that the Unix build suffers somewhat.
+     - Use sed to replace all instances of
+       <freetype/{,config/,internal/}*.h>
+       with FT2_{PUBLIC,CONFIG,INTERNAL}_FILE(*.h), which currently
+       expands to <freetype2/freetype/{,config/,internal/}*.h>
+       in freetype/config/ftheader.h and freetype/internal/internal.h.
+     - This fix, without sacrificing compatibility on some brain-dead
+       compilers on other platforms, may mean that
+       "-I/usr/include/freetype2" is no longer needed on Unix/Linux/Hurd
+       platforms.
+     - But it would be very foolish to remove "-I/usr/include/freetype2".
+       Thou shalt always use $(shell freetype-config --cflags).
+     - Thanks to Gordon Sadler for the suggestion.  :-)
+       Closes: Bug#79951.
+  * [builds/unix/ft2unix.h]:
+     - Removed the FT2_{PUBLIC,CONFIG,INTERNAL}_FILE macros because
+       they are already defined in freetype/config/ftheader.h.
+     - Use FT2_ROOT instead.  Afterall, cpp on Unix is not broken.  ;-)
+     - Thanks to Takuo Kitame for reporting the conflicting #define's.
+       Closes: Bug#89363.
+  * [debian/rules]: Moved out some old cruft to rules.museum.
+
+ -- Anthony Fok <foka@debian.org>  Mon, 19 Mar 2001 03:27:14 -0700
+
+freetype (2.0.1.20010312-1) unstable; urgency=low
+
+  * Updated to freetype2-current as of 2001-03-12.
+  * [debian/control]:
+     - Build-Depends: debhelper (>= 3.0.0), ...
+     - Standards-Version: 3.5.2
+
+ -- Anthony Fok <foka@debian.org>  Fri, 16 Mar 2001 02:21:31 -0700
+
+freetype (2.0.1.20010308-1) unstable; urgency=low
+
+  * Updated to freetype2-current as of 2001-03-08.
+  * Corrected platform detection on Hurd.  Thanks to Jeff Bailey,
+    Werner and David for the fix.  Closes: Bug#87691.
+
+ -- Anthony Fok <foka@debian.org>  Fri,  9 Mar 2001 00:50:12 -0700
+
+freetype (2.0.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Anthony Fok <foka@debian.org>  Fri,  1 Dec 2000 17:58:32 -0700
+
+freetype (2.0-1) unstable; urgency=low
+
+  * New upstream FreeType 2 official release.
+     - Source package: freetype
+     - Binary packages: libfreetype6 and libfreetype6-dev.
+    The source package of FreeType 1.3.1 has been renamed to freetype1.
+  * [README.Debian]: Documents the source and binary package names,
+      and recommends users to migrate to FreeType 2.
+
+ -- Anthony Fok <foka@debian.org>  Mon, 20 Nov 2000 05:16:13 -0700
+
+freetype (1.3.1-1) unstable; urgency=low
+
+  * New official upstream release.
+  * [contrib/ttf2pfb/ttf2pfb.c]: Applied patch by fellow Debian developer
+      Daniel Jacobowitz to fix a va_arg problem that prevents it from
+      building on powerpc.  Thanks a million!  :-)  (closes: Bug#54539)
+
+ -- Anthony Fok <foka@debian.org>  Mon, 10 Jan 2000 06:12:51 -0700
+
+freetype (1.3.1-0) unstable; urgency=low
+
+  * New upstream release candidate (1999-12-08).
+  * [debian/rules]: Uses "dh_makeshlibs -V 'freetype2 (>= 1.3.1)'"
+      because 1.3 have some new APIs not in 1.2.  Thanks to suggestion
+      by ISHIKAWA Mutsumi <ishikawa@linux.or.jp> (closes: Bug#52319).
+  * Added new entries for Arphic PL fonts in /etc/ttf2pk/ttfonts.map
+  * Modified UBig5.sfd to suit the Big5 Arphic PL fonts.
+
+ -- Anthony Fok <foka@debian.org>  Sun, 12 Dec 1999 11:13:20 -0700
+
+freetype (1.3-2) unstable; urgency=low
+
+  * Corrected the symlink
+    /usr/share/doc/freetype2/changelog.gz -> docs/changes.txt
+    to -> docs/changes.txt.gz.  (Hehe, major oversight.  :-)
+    Thanks to Michael Osamu Shiobara for the bug report.
+    (closes: Bug#50428)
+
+ -- Anthony Fok <foka@debian.org>  Wed, 17 Nov 1999 04:10:41 -0700
+
+freetype (1.3-1) unstable; urgency=low
+
+  * New upstream release (libttf.so.2.2.0) with patches as of 1999-10-21.
+  * Standards-Version: 3.1.0
+  * Removed debian/freetype2-dev.compress because debhelper-2.0.69
+    no longer compresses *.png.
+  * Backed out the patch applied by Anthony Wong <ypwong@debian.org> to
+    contrib/ttf2pfb/configure in freetype_1.2-6.1 because upstream fixed
+    ttf2pfb.c to #include "extend/ftxpost.h" rather than "ftxpost.h".
+    Nonetheless, thanks for the NMU!  :-)
+  * [debian/rules]: FHS-compliancy and general clean-up
+      - s/pre-binary/install/g; and removed install-stamp.
+      - s!usr/doc!usr/share/doc!g;
+      - Referred to the latest /usr/doc/debhelper/examples/rules*
+        and used DH_OPTIONS to reduce clutter.
+      - Oops!  I used bashism but set "SHELL = /bin/sh".  Changed to
+        "SHELL = /bin/bash".  :-)
+      - Install upstream docs/changes.txt as changelog.gz in the
+        freetype2 (shared library) package.
+
+ -- Anthony Fok <foka@debian.org>  Sun, 14 Nov 1999 01:15:21 -0700
+
+freetype (1.2-6.1) unstable; urgency=low
+
+  * Non-maintainer upload (see bug #38813)
+  * Added 'CPPFLAGS= ... -I$srcdir/../../lib/extend' to
+    contrib/ttf2pfb/configure, otherwise compile will fail for
+    ftxpost.h cannot be found.
+  * license.txt.gz is not shipped (lintian complains)
+
+ -- Anthony Wong <ypwong@debian.org>  Thu,  3 Jun 1999 02:04:44 +0800
+
+freetype (1.2-6) unstable; urgency=low
+
+  * Copied debian/postinst to debian/freetype-tools.postinst
+    so mktexlsr is (only) run for the freetype-tools package.
+    Thanks to Andrew for reporting this bug. (closes: Bug#36502)
+  * Added some more font entries to /etc/ttf2pk/ttfonts.map.
+
+ -- Anthony Fok <foka@debian.org>  Thu, 22 Apr 1999 17:54:53 -0600
+
+freetype (1.2-5) unstable; urgency=low
+
+  * Applied upstream freetype-1.2-current.diff.gz as of 1999-04-09.
+  * [contrib/ttf2pfb/t1asm.c]: Incorporated patch for glibc 2.1
+      donated by Hartmut Koptein <koptein@et-inf.fho-emden.de>.
+      (Taken from the t1utils package.  :-)  (closes: Bug#35742)
+  * [contrib/ttf2pk/filesrch.c]: Changed "DllImport" to "KPSEDLL"
+      (changes between kpathsea 3.2 and 3.3).  Thanks Werner!  :-)
+  * [debian/rules]:
+      - Replaced the for loop with a more verbose alternative to ensure
+        make stops when it encounters an error when building one of the
+        contrib programs.
+      - Renamed t1asm to t1asm-freetype, and getafm to getafm-freetype,
+        until they are merged with the ones in t1utils and psutils.
+  * freetype-tools now also Suggests: psutils (>= 1.17-7)
+
+ -- Anthony Fok <foka@debian.org>  Mon, 12 Apr 1999 01:08:23 -0600
+
+freetype (1.2-4) unstable; urgency=low
+
+  * Rebuilt with glibc-2.1 and tetex-lib (shared kpathsea library).
+  * [debian/rules]: Changed usr/share/texmf to usr/lib/texmf
+      for the new FHS-compliant directory layout in teTeX.
+  * [debian/control]: freetype-tools now Suggests: tetex-bin
+      (>= 0.9.990310-1), t1utils (>= 1.2-2)
+
+ -- Anthony Fok <foka@debian.org>  Mon,  5 Apr 1999 16:39:08 -0600
+
+freetype (1.2-3) frozen unstable; urgency=low
+
+  * Applied the upstream freetype-1.2-current.diff.gz as of 1999-01-18
+    which fixes a nasty Raster bug occurs only when clipping very large
+    outlines to a small target bitmap or pixmap.
+
+ -- Anthony Fok <foka@debian.org>  Tue, 19 Jan 1999 22:04:32 -0700
+
+freetype (1.2-2) frozen unstable; urgency=low
+
+  * Applied the upstream freetype-1.2-current.diff.gz as of 1998-12-27
+    Mostly bug fixes.
+  * Added configure.in and Makefile.in for contrib/{ttf2pfb,ttfbanner},
+    so these tools are now included in the freetype-tools package.
+  * [debian/control]:
+      - Removed the "<" and ">", and added a suggestion
+        to Debian-JP's X server with X-TT support in freetype2's
+        package description.
+      - Now freetype-tools also Suggests: t1utils, which contains
+        /usr/bin/t1asm that helps ttf2pfb create real .pfa and .pfb
+        files.  (Also added a note in README.Debian.)
+  * Updated the upstream authors' e-mail addresses in "control" and
+    "copyright."
+  * [debian/changelog]: Add the changelog of the freetype (1.1-0.1)
+      non-maintainer release done by Marcelo E. Magallon
+      <mmagallo@debian.org> in June 1998.  I forgot to do so back
+      then.  Sorry!  :-)
+  * Renamed debian/compress to debian/freetype2-dev.compress, so *.png
+    are no longer compressed to *.png.gz.
+
+ -- Anthony Fok <foka@debian.org>  Tue, 29 Dec 1998 02:16:07 -0700
+
+freetype (1.2-1) frozen unstable; urgency=low
+
+  * New upstream release.
+  * Recompiled with libc6 (2.0.7u-7).
+  * [debian/control]: Updated to standards version 2.5.0.0 (no changes).
+  * [contrib/ttf2pk/configure.in]: Modified the order of the header
+      include paths to ensure that "-I./../../lib" is placed before
+      "-I/usr/include".  Thanks to Roman.Hodek@informatik.uni-erlangen.de
+      for the bug report (forwarded upstream).  (Fixes: #27920)
+
+ -- Anthony Fok <foka@debian.org>  Sat,  5 Dec 1998 15:13:48 -0700
+
+freetype (1.1-1998-09-12-2) unstable; urgency=low
+
+  * [debian/postinst]: Oops, the command "ldconfig" somehow disappeared
+      in the last upload.  Fixed.  :-)
+
+ -- Anthony Fok <foka@debian.org>  Sun, 11 Oct 1998 19:58:32 -0600
+
+freetype (1.1-1998-09-12-1) unstable; urgency=low
+
+  * New upstream development snapshot.
+  * Added "--with-kpathsea-dir=/usr" to ttf2pk's configure.
+  * [debian/rules]:
+      - TTF2PKINPUTS = usr/lib/texmf/ttf2pk
+      - TTF2TFMINPUTS = usr/lib/texmf/ttf2tfm
+      - *.sfd are now installed in $(TTF2PKINPUTS) and $(TTF2TFMINPUTS).
+      - $(TTF2PKINPUTS)/ttfonts.map is a symlink to /etc/ttf2pk/ttfonts.map.
+  * [debian/freetype-tools.conffiles]: Added /etc/ttf2pk/ttfonts.map.
+  * [debian/postinst]: Added #DEBHELPER#.
+  * [debian/freetype-tools.postinst]: Runs /usr/bin/mktexlsr if it exists.
+  * [debian/control]: freetype-tools now Suggests: tetex-bin (>= 0.9-1).
+
+ -- Anthony Fok <foka@debian.org>  Sat, 12 Sep 1998 19:55:17 -0600
+
+freetype (1.1-1998-08-29-1) unstable; urgency=low
+
+  * New upstream development snapshot.
+  * Now installs ttf2bdf and ttf2pk's documentation.
+    ttf2pk/ttf2tfm's *.sfd files are now placed in /usr/lib/ttf2tfm.
+  * changelog.gz now points to the re-added commitlog.gz.
+  * Changed "numGlymphId" to "cmap4->numGlyphId" in lib/extend/ftxcmap.c.
+
+ -- Anthony Fok <foka@debian.org>  Mon, 31 Aug 1998 04:37:57 -0600
+
+freetype (1.1-1) unstable; urgency=low
+
+  * New upstream release.  The old freetype-1.0 source package has been
+    renamed to "freetype1" and is now obsolete.
+  * Upgraded to standards version 2.4.1.0 (no changes).
+  * The package soname has been upgraded from 1 to 2. (libttf.2)
+  * Updated the package descriptions according to freetype.spec.
+  * Since teTeX 0.9 and the new <kpathsea/kpathsea.h> is in Debian,
+    ttf2pk is now compiled and included in freetype-tools.
+  * Added postinst to run ldconfig as per Debian Policy.  (Lintian)
+  * [debian/control]: Added some package relationships w.r.t. freetype1:
+      - freetype2 -- Replaces: freetype1
+      - freetype2-dev -- Conflicts: freetype1-dev
+  * [debian/rules]:
+     - /usr/lib/libttf.la is now installed in the freetype2-dev package.
+     - Moved the developer's documentation into the freetype2-dev package.
+       Thanks to "Marcelo E. Magallon" <mmagallo@debian.org> for suggestion.
+     - Added "--dpkg-shlibdeps-params=-Ldebian/tmp/DEBIAN/shlibs" to
+       dh_shlibdeps when packaging freetype-tools.
+     - Added patch from /usr/doc/lintian/libtool-workarounds.txt
+       to solve the -rpath problem.  Debian's libtool-1.2 handles the -lc
+       problem quite nicely already, so that part of the patch is not used.
+     - Added a GNU GPL copyright statement at the top.  :-)
+  * Ran libtoolize from the Debian libtool-1.2 package.  This solves the
+    -lc problem.  :-)  config.guess and config.sub are taken from the ones
+    in /usr/share/automake/ though because they are newer.  (Thanks to
+    the libtool bug report filed by Jim Pick <jim@jimpick.com> for hints.)
+  * Removed debian/README.Debian.
+
+ -- Anthony Fok <foka@debian.org>  Fri, 28 Aug 1998 03:49:21 -0600
+
+freetype (1.1-0.1) unstable; urgency=low
+
+  * New upstream version. Non-maintainer upload (I need this in order to
+    build new upstream version of gltt!)
+  * Applied patches from previous version.
+  * Applied libtool rpath fix patch and removed rpath from compilation
+    parameters. Changed ltconfig to provide inter-library dependencies.
+  * Upgraded to Standards 2.4.1
+  * Changed package name to freetype2 and other control fields accordingly
+    (this could be a problem... what about packages that depend on
+    freetype1?)
+  * Added "Conflitcs: freetype1 (<= 1.0.0.1998-03-22-1)" to freetype-tools
+    because of the mo files freetype1 contains and that are now in
+    freetype-tools, alogn-side the programs that use the files.
+
+ -- Marcelo E. Magallon <mmagallo@debian.org>  Sat, 27 Jun 1998 15:59:36 -0600
+
+freetype (1.0.0.1998-03-22-1) frozen unstable; urgency=low
+
+  * New upstream snapshot bugfix release as of 1998-03-22.
+     - ttobjs.c: The storage area is now freed in Instance_Destroy,
+       because it's the place it should have been from the very start.
+       A very sick bug spotted by Ram. Thanks again !!     - DavidT
+     - fixed a nasty allocation bug in ttf2tfm.c
+     - corrected a spelling error (strcpy->strcmp) in ttf2pk.c
+     - new email address for Werner Lemberg (wl@gnu.org)
+     - (again) a stupid error fixed in ttf2pk.c
+     - Some fixes to make the package compile smoothless with the make
+       program of Solaris.
+     - too much fixed in po/Makefile.in.in :-)
+  * /usr/doc/freetype/README.gz and /usr/lib/libttf.la are now installed.
+
+ -- Anthony Fok <foka@debian.org>  Wed, 25 Mar 1998 16:18:50 -0700
+
+freetype (1.0.0.1998-03-13-1) unstable; urgency=low
+
+  * New upstream snapshot including upstream patch as of 1998-03-13.
+
+ -- Anthony Fok <foka@debian.org>  Sun, 15 Mar 1998 15:04:10 -0700
+
+freetype (1.0-1) unstable; urgency=low
+
+  * New upstream release (including upstream patch as of 1998-02-17).
+  * Updated copyright and README.Debian.
+  * Upgraded to standards version 2.4.0.0 (no changes).
+  * Enabled gettext support.
+  * Added .PHONY targets in Makefile.in's.
+  * Added -lc for linking libttf.so* (Reported by Lintian).
+  * Various FreeType test programs now have man pages linked to
+    /usr/man/man7/undocumented.7.gz (Reported by Lintian).
+  * debian/control: Revised package description.
+  * debian/rules: Commented out dh_du.
+  * Moved /usr/include/freetype/freetype.h to /usr/include/freetype.h.
+
+ -- Anthony Fok <foka@debian.org>  Wed, 18 Feb 1998 01:12:03 -0700
+
+freetype (0.beta.1998.01.06-1) unstable; urgency=low
+
+  * New upstream snapshot release.
+  * Thanks to the libtool patch posted by Hirotsugu Kakugawa
+    <h.kakugawa@computer.org> on the freetype-devel mailing list
+    (and some local tweaking), the Debian freetype package finally
+    provides the library and header files!  Hurray!  (Fixes Bug#16365)
+  * Splitted the package into freetype0, freetype0-dev and freetype-tools.
+  * Added debian/compress to ensure that /usr/doc/freetype0/image/*.png
+    are not compressed.
+  * Revised README.Debian.
+
+ -- Anthony Fok <foka@debian.org>  Thu,  8 Jan 1998 20:46:14 -0700
+
+freetype (0.beta.1997.12.25-1) unstable; urgency=low
+
+  * New upstream snapshot release.
+  * Modified /usr/doc/freetype/copyright to include the new license.txt.
+    (Yes, FreeType's license has changed.)
+  * Have a blessed Merry Christmas!
+
+ -- Anthony Fok <foka@debian.org>  Fri, 26 Dec 1997 11:26:25 -0700
+
+freetype (0.beta.1997.12.16-1) unstable; urgency=low
+
+  * New upstream release.
+  * /usr/bin/ttf_{lint,timer,view,zoom} no longer exists.  The upstream
+    authors have renamed them as /usr/bin/{ftlint,fttimer,ftview,ftzoom}
+    and have also added other nifty test programs!  :)
+  * debian/rules: Switched to debhelper.
+  * debian/control: Upgraded Standards-Version to 2.3.0.1 and increased
+    Priority to optional.  :)
+  * Revised /usr/doc/freetype/copyright.  FreeType is now truly DFSG-free!
+    (Fixes Bug#16030)
+  * Revised README.Debian.
+  * Changed my maintainer e-mail address to <foka@debian.org>.  :)
+  * Sorry, the library and header files are not yet included.
+    I have yet to learn how.  :)
+
+ -- Anthony Fok <foka@debian.org>  Wed, 17 Dec 1997 03:02:49 -0700
+
+freetype (0.4-4) unstable; urgency=low
+
+  * Corrected the freetype mailing-list server's address from
+    "@lists.tu-muenchen.de" to "@lists.lrz-muenchen.de" in the files
+    /usr/doc/freetype/readme.1st and license.txt.
+  * Improved the package description and added a URL link to the
+    FreeType Project Home Page
+  * Removed "Keywords", "Primary-site" and "Original-site" from the package's
+    description, but kept "Authors" and "Maintained-by" (Closed bug #12510).
+
+ -- Anthony Fok <foka@gpu.srv.ualberta.ca>  Sun, 21 Sep 1997 18:24:42 -0600
+
+freetype (0.4-3) unstable; urgency=low
+
+  * Rebuilt with both libc6 and xlib6g (Fixes bug #12784).
+  * Updated to Standards-Version: 2.3.0.0.
+
+ -- Anthony Fok <foka@gpu.srv.ualberta.ca>  Wed, 10 Sep 1997 21:57:20 -0600
+
+freetype (0.4-2) unstable; urgency=low
+
+  * Renamed /usr/bin/{lint,timer,view,zoom} to
+    /usr/bin/ttf_{lint,timer,view,zoom} to avoid name conflicts with other
+    programs (Fixes bugs #12096, #12136).
+  * Closed bug #11193 (freetype AR4 available).
+
+ -- Anthony Fok <foka@gpu.srv.ualberta.ca>  Tue, 19 Aug 1997 17:53:32 -0600
+
+freetype (0.4-1) unstable; urgency=low
+
+  * New maintainer.
+  * New upstream release.
+  * Updated to Standards-Version: 2.2.0.0.
+
+ -- Anthony Fok <foka@gpu.srv.ualberta.ca>  Mon, 11 Aug 1997 08:26:17 -0600
+
+freetype (0.3-1) unstable; urgency=low
+
+  * Upstream update. Sadly the envisioned Christmas target of an X truetype
+    rasterizer has been abandoned.
+
+ -- Christoph Lameter <clameter@waterf.org>  Tue, 24 Dec 1996 12:52:24 -0800
+
+freetype (0.1-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Christoph Lameter <clameter@waterf.org>  Thu, 7 Nov 1996 11:51:45 -0800
+
+Local variables:
+mode: debian-changelog
+add-log-mailing-address: "foka@debian.org"
+End:
