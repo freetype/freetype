@@ -320,6 +320,7 @@
         goto Bad;
 
       end0 = -1;
+      end  = end0;
       for ( n = 0; n < n_contours; n++ )
       {
         end = outline->contours[n];

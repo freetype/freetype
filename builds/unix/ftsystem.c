@@ -230,9 +230,9 @@
     /*                                                     */
 #ifdef F_SETFD
 #ifdef FD_CLOEXEC
-    ret = fcntl( file, F_SETFD, FD_CLOEXEC );
+    (void) fcntl( file, F_SETFD, FD_CLOEXEC );
 #else
-    ret = fcntl( file, F_SETFD, 1 );
+    (void) fcntl( file, F_SETFD, 1 );
 #endif /* FD_CLOEXEC */
 #endif /* F_SETFD */
 
