@@ -1,5 +1,14 @@
 2002-02-06  David Turner   <david@freetype.org>
 
+        * src/sfnt/sfobjs.c (SFNT_Load_Face): since many fonts embedded in
+        PDF documents do not include 'cmap', 'post' and 'name' tables, the
+        SFNT face loader has been changed to not immediately report an
+        error if these are not present.
+        
+        Note that the specification _requires_ these tables, but Adobe
+        seems to ignore it completely..
+
+
         * src/sfnt/ttcmap.c: removing compiler warnings
 
         * src/pcf/pcfread.c, src/pcf/pcf.h, src/pcf/pcfdriver.c:

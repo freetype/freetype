@@ -296,10 +296,10 @@
     if ( !is_apple_sbit && LOAD_( header ) )
       goto Exit;
 
-    /* load other tables */
-    if ( LOAD_( max_profile ) ||
-         LOAD_( charmaps )    )
-      goto Exit;
+    /* the following tables are often not present in embedded TrueType fonts */
+    /* within PDF documents, so don't check for them..                       */
+    (void)LOAD_( max_profile );
+    (void)LOAD_( charmaps );
       
     /* the following tables are optional in PCL fonts -- */
     /* don't check for errors                            */
