@@ -184,7 +184,7 @@
       lrunode = FTC_CHUNKNODE_TO_LRUNODE( node );
 
       manager->num_bytes -= clazz->size_node( node );
-      manaher->num_nodes --;
+      manager->num_nodes --;
 
       FT_List_Remove( glyphs_lru, lrunode );
 
