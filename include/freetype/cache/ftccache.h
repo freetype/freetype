@@ -199,63 +199,64 @@ FT_BEGIN_HEADER
 
 #ifdef FTC_INLINE
 
-#define FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error )   \
-  FT_BEGIN_STMNT                                                           \
-    FTC_Node             *_bucket, *_pnode, _node;                         \
-    FTC_Cache             _cache   = FTC_CACHE(cache);                     \
-    FT_UInt32             _hash    = (FT_UInt32)(hash);                    \
-    FTC_Node_CompareFunc  _nodcomp = (FTC_Node_CompareFunc)(nodecmp);      \
-    FT_UInt               _idx;                                            \
-                                                                           \
-                                                                           \
-    error = 0;                                                             \
-    _idx  = _hash & _cache->mask;                                          \
-    if ( _idx < _cache->p )                                                \
-      _idx = _hash & (_cache->mask*2 + 1);                                 \
-                                                                           \
-    _bucket = _pnode = _cache->buckets + _idx;                             \
-    for (;;)                                                               \
-    {                                                                      \
-      _node = *_pnode;                                                     \
-      if ( _node == NULL )                                                 \
-        goto _NewNode;                                                     \
-                                                                           \
-      if ( _node->hash == _hash && _nodcomp( _node, query, _cache ) )      \
-        break;                                                             \
-                                                                           \
-      _pnode = &_node->link;                                               \
-    }                                                                      \
-                                                                           \
-    if ( _node != *_bucket )                                               \
-    {                                                                      \
-      *_pnode     = _node->link;                                           \
-      _node->link = *_bucket;                                              \
-      *_bucket    = _node;                                                 \
-    }                                                                      \
-                                                                           \
-    {                                                                      \
-      FTC_Manager  _manager = _cache->manager;                             \
-                                                                           \
-                                                                           \
-      if ( _node != _manager->nodes_list )                                 \
-        FTC_MruNode_Up( (FTC_MruNode*)&_manager->nodes_list,               \
-                        (FTC_MruNode)_node );                              \
-    }                                                                      \
-    goto _Ok;                                                              \
-                                                                           \
-  _NewNode:                                                                \
-    error = FTC_Cache_NewNode( _cache, _hash, query, &_node );             \
-                                                                           \
-  _Ok:                                                                     \
-    *(FTC_Node*)&(node) = _node;                                           \
+#define FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error ) \
+  FT_BEGIN_STMNT                                                         \
+    FTC_Node             *_bucket, *_pnode, _node;                       \
+    FTC_Cache             _cache   = FTC_CACHE(cache);                   \
+    FT_UInt32             _hash    = (FT_UInt32)(hash);                  \
+    FTC_Node_CompareFunc  _nodcomp = (FTC_Node_CompareFunc)(nodecmp);    \
+    FT_UInt               _idx;                                          \
+                                                                         \
+                                                                         \
+    error = 0;                                                           \
+    node  = NULL;                                                        \
+    _idx  = _hash & _cache->mask;                                        \
+    if ( _idx < _cache->p )                                              \
+      _idx = _hash & ( _cache->mask*2 + 1 );                             \
+                                                                         \
+    _bucket = _pnode = _cache->buckets + _idx;                           \
+    for (;;)                                                             \
+    {                                                                    \
+      _node = *_pnode;                                                   \
+      if ( _node == NULL )                                               \
+        goto _NewNode;                                                   \
+                                                                         \
+      if ( _node->hash == _hash && _nodcomp( _node, query, _cache ) )    \
+        break;                                                           \
+                                                                         \
+      _pnode = &_node->link;                                             \
+    }                                                                    \
+                                                                         \
+    if ( _node != *_bucket )                                             \
+    {                                                                    \
+      *_pnode     = _node->link;                                         \
+      _node->link = *_bucket;                                            \
+      *_bucket    = _node;                                               \
+    }                                                                    \
+                                                                         \
+    {                                                                    \
+      FTC_Manager  _manager = _cache->manager;                           \
+                                                                         \
+                                                                         \
+      if ( _node != _manager->nodes_list )                               \
+        FTC_MruNode_Up( (FTC_MruNode*)&_manager->nodes_list,             \
+                        (FTC_MruNode)_node );                            \
+    }                                                                    \
+    goto _Ok;                                                            \
+                                                                         \
+  _NewNode:                                                              \
+    error = FTC_Cache_NewNode( _cache, _hash, query, &_node );           \
+                                                                         \
+  _Ok:                                                                   \
+    *(FTC_Node*)&(node) = _node;                                         \
   FT_END_STMNT
 
 #else /* !FTC_INLINE */
 
-#define FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error )   \
-  FT_BEGIN_STMNT                                                           \
-    error = FTC_Cache_Lookup( FTC_CACHE(cache), hash, query,               \
-                              (FTC_Node*)&(node) );                        \
+#define FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error ) \
+  FT_BEGIN_STMNT                                                         \
+    error = FTC_Cache_Lookup( FTC_CACHE( cache ), hash, query,           \
+                              (FTC_Node*)&(node) );                      \
   FT_END_STMNT
 
 #endif /* !FTC_INLINE */

@@ -270,19 +270,17 @@ FT_BEGIN_HEADER
     FTC_MRULIST_LOOKUP_CMP( &_gcache->families, _gquery, _fcompare,         \
                             _gquery->family, error );                       \
     if ( !error )                                                           \
-    {                                                                       \
       FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error );     \
-    }                                                                       \
   FT_END_STMNT
   /* */
 
 #else /* !FTC_INLINE */
 
-#define FTC_GCACHE_LOOKUP_CMP( cache, famcmp, nodecmp, hash,                \
-                               gindex, query, node, error )                 \
-   FT_BEGIN_STMNT                                                           \
-     error = FTC_GCache_Lookup( FTC_GCACHE(cache), hash, gindex, FTC_GQUERY(query),     \
-                                (FTC_Node*) &(node) );                      \
+#define FTC_GCACHE_LOOKUP_CMP( cache, famcmp, nodecmp, hash,               \
+                               gindex, query, node, error )                \
+   FT_BEGIN_STMNT                                                          \
+     error = FTC_GCache_Lookup( FTC_GCACHE( cache ), hash, gindex,         \
+                                FTC_GQUERY( query ), (FTC_Node*)&(node) ); \
    FT_END_STMNT
 
 #endif /* !FTC_INLINE */
