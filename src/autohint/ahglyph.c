@@ -69,7 +69,7 @@
 
 
   /* this function is used by ah_get_orientation (see below) to test */
-  /* the fill direction of a given bbox extrema..                    */
+  /* the fill direction of a given bbox extrema                      */
   static
   int  ah_test_extrema( FT_Outline*  outline,
                         int          n )
@@ -80,10 +80,10 @@
 
 
     /* we need to compute the `previous' and `next' point */
-    /* for these extrema.                                 */
-    cur   = outline->points + n;
-    prev  = cur - 1;
-    next  = cur + 1;
+    /* for these extrema                                  */
+    cur  = outline->points + n;
+    prev = cur - 1;
+    next = cur + 1;
 
     first = 0;
     for ( c = 0; c < outline->n_contours; c++ )
@@ -137,10 +137,10 @@
     indices.xMax = -1;
     indices.yMax = -1;
 
-    box.xMin = box.yMin = 32767;
+    box.xMin = box.yMin =  32767;
     box.xMax = box.yMax = -32768;
 
-    /* is it empty ? */
+    /* is it empty? */
     if ( outline->n_contours < 1 )
       return 1;
 
@@ -178,22 +178,24 @@
 
     /* test orientation of the xmin */
     n = ah_test_extrema( outline, indices.xMin );
-    if (n) goto Exit;
+    if ( n )
+      goto Exit;
     
     n = ah_test_extrema( outline, indices.yMin );
-    if (n) goto Exit;
+    if ( n )
+      goto Exit;
     
     n = ah_test_extrema( outline, indices.xMax );
-    if (n) goto Exit;
+    if ( n )
+      goto Exit;
     
     n = ah_test_extrema( outline, indices.yMax );
-    if (!n)
+    if ( !n )
       n = 1;
 
   Exit:
     return n;    
   }
-
 
 
   /*************************************************************************/
@@ -347,10 +349,11 @@
     outline->num_vsegments = 0;
 
 #if 1
-    /* we can't rely on the value of FT_Outline.flags to know the */
-    /* fill direction used for a glyph, given that some fonts are */
-    /* broken (e.g. the Arphic ones..). We thus recompute it each */
-    /* time we need to..                                          */
+
+    /* We can't rely on the value of `FT_Outline.flags' to know the fill  */
+    /* direction used for a glyph, given that some fonts are broken (e.g. */
+    /* the Arphic ones). We thus recompute it each time we need to.       */
+    /*                                                                    */
     outline->vert_major_dir = ah_dir_up;
     outline->horz_major_dir = ah_dir_left;
 
@@ -359,7 +362,9 @@
       outline->vert_major_dir = ah_dir_down;
       outline->horz_major_dir = ah_dir_right;
     }    
+
 #else
+
     /* Compute the vertical and horizontal major directions; this is     */
     /* currently done by inspecting the `ft_outline_reverse_fill' flag.  */
     /* However, some fonts have improper glyphs, and it'd be a good idea */
@@ -372,12 +377,14 @@
       outline->vert_major_dir = ah_dir_down;
       outline->horz_major_dir = ah_dir_right;
     }
-#endif
+
+#endif /* 1 */
+
     outline->x_scale = face->size->metrics.x_scale;
     outline->y_scale = face->size->metrics.y_scale;
 
     points = outline->points;
-    if (outline->num_points == 0)
+    if ( outline->num_points == 0 )
       goto Exit;
 
     {
