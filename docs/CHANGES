@@ -13,6 +13,8 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       NPUSHW instruction wasn't skipped correctly in IF clauses.  Some
       fonts like `Helvetica 75 Bold' failed.
 
+    - Another bug in handling TrueType hints caused many distortions.
+
 
   II. IMPORTANT CHANGES
 

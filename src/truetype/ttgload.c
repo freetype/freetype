@@ -797,12 +797,10 @@
     if ( IS_HINTED( load->load_flags ) )
     {
       FT_Pos  x = zone->org[n_points-4].x;
-      FT_Pos  y = zone->org[n_points-2].y;
 
 
       x = FT_PIX_ROUND( x ) - x;
-      y = FT_PIX_ROUND( y ) - y;
-      translate_array( n_points, zone->org, x, y );
+      translate_array( n_points, zone->org, x, 0 );
 
       org_to_cur( n_points, zone );
 
