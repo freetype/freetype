@@ -1,6 +1,9 @@
 LATEST CHANGES
 
-  - renamed the directory "freetype2/config" to "freetype2/build" and
+  - found some bugs in the composite loader (seac) of the Type1-based
+    font drivers..
+
+  - renamed the directory "freetype2/config" to "freetype2/builds" and
     updated all relevant files..
 
   - found a memory leak in the "type1" driver

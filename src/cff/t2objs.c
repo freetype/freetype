@@ -392,11 +392,11 @@
           root->num_glyphs = cff->charstrings_index.count;
 
         /* set global bbox, as well as EM size */
-        root->units_per_EM = FT_DivFix( 1000L << 16,
-                                        dict->font_matrix.yy ) >> 16;
+        root->units_per_EM = (FT_UInt)FT_DivFix( 1000L << 16,
+                                                 dict->font_matrix.yy ) >> 16;
         root->bbox      = dict->font_bbox;
-        root->ascender  = root->bbox.yMax;
-        root->descender = root->bbox.yMin;
+        root->ascender  = (FT_Short)root->bbox.yMax;
+        root->descender = (FT_Short)root->bbox.yMin;
 
         /* retrieve font family & style name */
         root->family_name = T2_Get_Name( &cff->name_index, face_index );

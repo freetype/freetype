@@ -985,6 +985,9 @@
     }
     FT_TRACE2(( "loaded\n" ));
 
+    /* everything went well, update face->num_names */
+    face->num_names = names->numNameRecords;
+
   Exit:
     return error;
   }
