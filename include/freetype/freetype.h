@@ -210,25 +210,61 @@ FT_BEGIN_HEADER
   /*    FT_Bitmap_Size                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    An extremely simple structure used to model the size of a bitmap   */
-  /*    strike (i.e., a bitmap instance of the font for a given            */
-  /*    resolution) in a fixed-size font face.  This is used for the       */
-  /*    `available_sizes' field of the @FT_FaceRec structure.              */
+  /*    This structure models the size of a bitmap strike (i.e., a bitmap  */
+  /*    instance of the font for a given resolution) in a fixed-size font  */
+  /*    face.  It is used for the `available_sizes' field of the           */
+  /*    @FT_FaceRec structure.                                             */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    height :: The character height in pixels.                          */
+  /*    height :: The (vertical) baseline-to-baseline distance in pixels.  */
+  /*              It makes most sense to define the height of a bitmap     */
+  /*              font in this way.                                        */
   /*                                                                       */
-  /*    width  :: The character width in pixels.  For drivers which        */
-  /*              contain a single bitmap strike only (BDF, PCF) this      */
-  /*              field is always equal to `height'.  To get the           */
-  /*              (maximum) width of a bitmap strike use                   */
-  /*              `face->size->metrics.max_advance' after a call to        */
-  /*              @FT_Set_Pixel_Sizes.                                     */
+  /*    width  :: The average width of the font (in pixels).  Since the    */
+  /*              algorithms to compute this value are different for the   */
+  /*              various bitmap formats, it can only give an additional   */
+  /*              hint if the `height' value isn't sufficient to select    */
+  /*              the proper font.  For monospaced fonts the average width */
+  /*              is the same as the maximum width.                        */
+  /*                                                                       */
+  /*    size   :: The point size in 26.6 fractional format this font shall */
+  /*              represent (for a given vertical resolution).             */
+  /*                                                                       */
+  /*    x_ppem :: The horizontal ppem value (in 26.6 fractional format).   */
+  /*                                                                       */
+  /*    y_ppem :: The vertical ppem value (in 26.6 fractional format).     */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The values in this structure are taken from the bitmap font.  If   */
+  /*    the font doesn't provide a parameter it is set to zero to indicate */
+  /*    that the information is not available.                             */
+  /*                                                                       */
+  /*    The following formula converts from dpi to ppem:                   */
+  /*                                                                       */
+  /*      ppem = size * dpi / 72                                           */
+  /*                                                                       */
+  /*    where `size' is in points.                                         */
+  /*                                                                       */
+  /*    Windows FNT:                                                       */
+  /*      The `size', `x_ppem', and `y_ppem' parameters are not reliable:  */
+  /*      There exist fonts (e.g. app850.fon) which have a wrong size for  */
+  /*      some subfonts; since FNT files don't contain ppem but dpi values */
+  /*      the computed x_ppem and y_ppem numbers are thus wrong also.      */
+  /*                                                                       */
+  /*    TrueType embedded bitmaps:                                         */
+  /*      `size', `width', and `height' values are not contained in the    */
+  /*      bitmap strike itself.  They are computed from the global font    */
+  /*      parameters.                                                      */
   /*                                                                       */
   typedef struct  FT_Bitmap_Size_
   {
     FT_Short  height;
     FT_Short  width;
+
+    FT_Pos    size;
+
+    FT_Pos    x_ppem;
+    FT_Pos    y_ppem;
 
   } FT_Bitmap_Size;
 
@@ -1911,7 +1947,6 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  /*                                                                       */
   /* <Note>                                                                */
   /*    The values of `pixel_width' and `pixel_height' correspond to the   */
   /*    pixel values of the _typographic_ character size, which are NOT    */
@@ -1929,8 +1964,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    For bitmap fonts, `pixel_height' usually is a reliable value for   */
   /*    the height of the bitmap cell.  Drivers for bitmap font formats    */
-  /*    which contain a single bitmap strike only (BDF, PCF) ignore        */
+  /*    which contain a single bitmap strike only (BDF, PCF, FNT) ignore   */
   /*    `pixel_width'.                                                     */
+  /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Set_Pixel_Sizes( FT_Face  face,
                       FT_UInt  pixel_width,
@@ -2216,6 +2252,10 @@ FT_BEGIN_HEADER
   /*    FreeType 2.  Each mode corresponds to a specific type of scanline  */
   /*    conversion performed on the outline, as well as specific           */
   /*    hinting optimizations.                                             */
+  /*                                                                       */
+  /*    For bitmap fonts the `bitmap->pixel_mode' field in the             */
+  /*    @FT_GlyphSlotRec structure gives the format of the returned        */
+  /*    bitmap.                                                            */
   /*                                                                       */
   /* <Values>                                                              */
   /*    FT_RENDER_MODE_NORMAL ::                                           */

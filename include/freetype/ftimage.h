@@ -261,7 +261,8 @@ FT_BEGIN_HEADER
   /*                    `FT_PIXEL_MODE_GRAY'; it gives the number of gray  */
   /*                    levels used in the bitmap.                         */
   /*                                                                       */
-  /*    pixel_mode   :: The pixel_mode, i.e., how pixel bits are stored.   */
+  /*    pixel_mode   :: The pixel mode, i.e., how pixel bits are stored.   */
+  /*                    See @FT_Pixel_Mode for possible values.            */
   /*                                                                       */
   /*    palette_mode :: This field is only used with paletted pixel modes; */
   /*                    it indicates how the palette is stored.            */
