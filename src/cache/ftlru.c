@@ -126,6 +126,8 @@
     memory = lru->memory;
 
     FT_Lru_Reset( lru );
+
+    FREE( lru->nodes );
     FREE( lru );
   }
 
