@@ -31,9 +31,9 @@ ifeq ($(PLATFORM),ansi)
       devel: setup
     else
 
-    # If `lccl' is the requested target, we use a special configuration
-    # file named `unix-lcc.mk'.  It disables libtool for LCC
-    #
+      # If `lccl' is the requested target, we use a special configuration
+      # file named `unix-lcc.mk'.  It disables libtool for LCC
+      #
       ifneq ($(findstring lcc,$(MAKECMDGOALS)),)
         CONFIG_FILE := unix-lcc.mk
         lcc: setup
