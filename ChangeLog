@@ -1,3 +1,12 @@
+2002-04-28  Werner Lemberg  <wl@gnu.org>
+
+	* src/cache/ftccache.c (ftc_cache_lookup),
+	src/cache/ftccmap.c (ftc_cmap_family_init),
+	src/cache/ftcmanag.c (ftc_family_table_alloc),
+	src/cache/ftcsbits.c (FTC_SBit_Cache_Lookup): Use FTC_Err_*.
+	src/cache/ftcimage.c (FTC_Image_Cache_Lookup): Use FTC_Err_*.
+	(FTC_ImageCache_Lookup): Fix handling of invalid arguments.
+
 2002-04-22  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.ac: Set `version_info' to 9:1:3 (FT2

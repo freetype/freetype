@@ -516,7 +516,7 @@
     
 
     if ( !desc )
-      return FT_Err_Invalid_Argument;
+      return FTC_Err_Invalid_Argument;
       
     desc0.font = desc->font;
     desc0.type = (FT_UInt32)desc->image_type;
