@@ -47,7 +47,7 @@
 
 
     gnode->family = NULL;
-    if ( family && --family->num_nodes <= 0 )
+    if ( family && --(FT_Long)(family->num_nodes) <= 0 )
       FTC_FAMILY_FREE( family, cache );
   }
 
@@ -189,7 +189,7 @@
 
       error = FTC_Cache_Lookup( FTC_CACHE( cache ), hash, query, anode );
 
-      if ( --family->num_nodes <= 0 )
+      if ( --(FT_Long)(family->num_nodes) <= 0 )
         FTC_FAMILY_FREE( family, cache );
     }
     return error;

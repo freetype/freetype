@@ -1,3 +1,23 @@
+2004-11-16  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/configure.ac: Add `-fno-strict-aliasing' if gcc is
+	used.
+	* builds/unix/configure: Regenerated.
+	* builds/unix/config.guess, builds/unix/config.sub: Updated from
+	`config' CVS module at subversions.gnu.org.
+
+2004-11-16  Dr. Martin P.J. Zinser  <zinser@decus.de>
+
+	* src/cache/ftcglyph.c (FTC_GNode_UnselectFamily,
+	FTC_GCache_Lookup): Fix comparison with zero.
+
+	* docs/INSTALL.VMS: Updated.
+
+	* vms_make.com: Updated.  All `descrip.mms' files are now created
+	automatically.
+
+	* src/*/descrip.mms: Removed.
+
 2004-11-16  Owen Taylor  <otaylor@redhat.com>
 
 	* builds/unix/freetype-config.in: Supress -L$libdir for
@@ -1510,7 +1530,7 @@
 	automake 1.8a.
 	* builds/unix/configure: Regenerated with autoconf 2.59a.
 	* builds/unix/config.guess, builds/unix/config.sub: Updated from
-	`config' CVS module at subversions.gnu.org
+	`config' CVS module at subversions.gnu.org.
 	* builds/unix/install-sh, builds/unix/mkinstalldirs: Updated from
 	`texinfo' CVS module at subversions.gnu.org.
 	* builds/freetype.mk (refdoc): Updated.

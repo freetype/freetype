@@ -1,8 +1,8 @@
-$!---------------vms_make.com for Freetype2------------------------------------
 $! make Freetype2 under OpenVMS
 $!
-$! In case of problems with the build you might want to contact me at
-$! zinser@decus.de (preferred) or zinser@sysdev.deutsche-boerse.com (Work)
+$! External libraries (like Freetype, XPM, etc.) are supported via the
+$! config file VMSLIB.DAT. Please check the sample file, which is part of this
+$! distribution, for the information you need to provide
 $!
 $! This procedure currently does support the following commandline options
 $! in arbitrary order 
@@ -11,25 +11,46 @@ $! * DEBUG - Compile modules with /noopt/debug and link shareable image
 $!           with /debug
 $! * LOPTS - Options to be passed to the link command
 $! * CCOPT - Options to be passed to the C compiler
-$!------------------------------------------------------------------------------
-$! 
-$! Just some general constants
 $!
-$ true   = 1
-$ false  = 0
-$ Make   = ""
+$! In case of problems with the install you might contact me at
+$! zinser@zinser.no-ip.info(preferred) or 
+$! zinser@sysdev.deutsche-boerse.com (work)
+$!
+$! Make procedure history for Freetype2
+$! 
+$!------------------------------------------------------------------------------
+$! Version history
+$! 0.01 20040401 First version to receive a number
+$! 0.02 20041030 Add error handling, Freetype 2.1.9
+$! 
+$ on error then goto err_exit
+$ true  = 1
+$ false = 0
+$ tmpnam = "temp_" + f$getjpi("","pid")
+$ tt = tmpnam + ".txt"
+$ tc = tmpnam + ".c"
+$ th = tmpnam + ".h"
+$ its_decc = false
+$ its_vaxc = false
+$ its_gnuc = false
 $!
 $! Setup variables holding "config" information
 $!
+$ Make    = ""
+$ ccopt   = ""
+$ lopts   = ""
+$ dnsrl   = ""
+$ aconf_in_file = "config.hin"
 $ name    = "Freetype2"
 $ mapfile =  name + ".map"
 $ optfile =  name + ".opt"
 $ s_case  = false
-$ libdefs = ""
-$ libincs = ""
 $ liblist = ""
-$ ccopt   = "/name=as_is/float=ieee"
-$ lopts   = ""
+$!
+$ whoami = f$parse(f$enviornment("Procedure"),,,,"NO_CONCEAL")
+$ mydef  = F$parse(whoami,,,"DEVICE")
+$ mydir  = f$parse(whoami,,,"DIRECTORY") - "]["
+$ myproc = f$parse(whoami,,,"Name") + f$parse(whoami,,,"type")
 $!
 $! Check for MMK/MMS
 $!
@@ -51,7 +72,10 @@ $ gosub check_create_vmslib
 $!
 $! Create objects
 $!
-$ if libdefs .nes. "" then ccopt = ccopt + "/define=(" + libdefs + ")"
+$ if libdefs .nes. "" 
+$ then 
+$   ccopt = ccopt + "/define=(" + f$extract(0,f$length(libdefs)-1,libdefs) + ")"
+$ endif
 $!
 $ if f$locate("AS_IS",f$edit(ccopt,"UPCASE")) .lt. f$length(ccopt) - 
     then s_case = true
@@ -88,6 +112,24 @@ $ endif
 $!
 $ exit
 $!
+$
+$ERR_LIB:
+$ write sys$output "Error reading config file vmslib.dat"
+$ goto err_exit
+$FT2_ERR:
+$ write sys$output "Could not locate Freetype 2 include files"
+$ goto err_exit
+$ERR_EXIT:
+$ set message/facil/ident/sever/text
+$ close/nolog optf
+$ close/nolog out
+$ close/nolog libdata
+$ close/nolog in
+$ close/nolog atmp
+$ close/nolog xtmp
+$ write sys$output "Exiting..."
+$ exit 2
+$!
 $!------------------------------------------------------------------------------
 $!
 $! If MMS/MMK are available dump out the descrip.mms if required 
@@ -121,6 +163,7 @@ $ deck
 all :
         define freetype [--.include.freetype] 
         define psaux [-.psaux] 
+        define autofit [-.autofit] 
         define autohint [-.autohint] 
         define base [-.base] 
         define cache [-.cache] 
@@ -137,6 +180,8 @@ all :
         if f$search("lib.dir") .eqs. "" then create/directory [.lib]
         set default [.builds.vms]
         $(MMS)$(MMSQUALIFIERS)
+#        set default [--.src.autofit]
+#        $(MMS)$(MMSQUALIFIERS)
         set default [--.src.autohint]
         $(MMS)$(MMSQUALIFIERS)
         set default [-.base]
@@ -214,6 +259,35 @@ ftsystem.obj : ftsystem.c ftconfig.h
 # EOF
 $ eod
 $ close out
+$ write sys$output "... [.src.autofit] directory"
+$ create [.src.autofit]descrip.mms
+$ open/append out [.src.autofit]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 auto-fit module compilation rules for VMS
+#
+
+
+# Copyright 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.autofit])
+
+OBJS=afangles.obj,afhints.obj,aflatin.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
 $ write sys$output "... [.src.autohint] directory"
 $ create [.src.autohint]descrip.mms
 $ open/append out [.src.autohint]descrip.mms
@@ -246,6 +320,160 @@ all : $(OBJS)
 # EOF
 $ eod
 $ close out
+$ write sys$output "... [.src.base] directory"
+$ create [.src.base]descrip.mms
+$ open/append out [.src.base]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 base layer compilation rules for VMS
+#
+
+
+# Copyright 2001, 2003 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.builds.vms],[--.include],[--.src.base])
+
+OBJS=ftbase.obj,ftinit.obj,ftglyph.obj,ftdebug.obj,ftbdf.obj,ftmm.obj,\
+     fttype1.obj,ftxf86.obj,ftpfr.obj,ftstroke.obj,ftwinfnt.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.bdf] directory"
+$ create [.src.bdf]descrip.mms
+$ open/append out [.src.bdf]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 BDF driver compilation rules for VMS
+#
+
+
+# Copyright 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.bdf])
+
+OBJS=bdf.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.cache] directory"
+$ create [.src.cache]descrip.mms
+$ open/append out [.src.cache]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 Cache compilation rules for VMS
+#
+
+
+# Copyright 2001, 2002, 2003, 2004 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.cache])
+
+OBJS=ftcache.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+ftcache.obj : ftcache.c ftcbasic.c ftccache.c ftccmap.c ftcglyph.c ftcimage.c \
+              ftcmanag.c ftcmru.c ftcsbits.c 
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.cff] directory"
+$ create [.src.cff]descrip.mms
+$ open/append out [.src.cff]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 OpenType/CFF driver compilation rules for VMS
+#
+
+
+# Copyright 2001, 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.cff])
+
+OBJS=cff.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.cid] directory"
+$ create [.src.cid]descrip.mms
+$ open/append out [.src.cid]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 CID driver compilation rules for VMS
+#
+
+
+# Copyright 2001 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.cid])
+
+OBJS=type1cid.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
 $ write sys$output "... [.src.gzip] directory"
 $ create [.src.gzip]descrip.mms
 $ open/append out [.src.gzip]descrip.mms
@@ -265,7 +493,8 @@ $ deck
 # indicate that you have read the license and understand and accept it
 # fully.
 $EOD
-$ if libincs .nes. "" then write out "LIBINCS = ", libincs, ","
+$ if libincs .nes. "" then write out "LIBINCS = ", libincs - ",", ","
+$ write out "COMP_FLAGS = ", ccopt
 $ copy sys$input: out
 $ deck
 
@@ -298,13 +527,328 @@ $ deck
 # indicate that you have read the license and understand and accept it
 # fully.
 $EOD
-$ if libincs .nes. "" then write out "LIBINCS = ", libincs, ","
+$ if libincs .nes. "" then write out "LIBINCS = ", libincs - ",", ","
+$ write out "COMP_FLAGS = ", ccopt
 $ copy sys$input: out
 $ deck
 
 CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=($(LIBINCS)[--.include],[--.src.lzw])
 
 OBJS=ftlzw.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.otlayout] directory"
+$ create [.src.otlayout]descrip.mms
+$ open/append out [.src.otlayout]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 OT layout compilation rules for VMS
+#
+
+
+# Copyright 2004 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.otlayout])
+
+OBJS=otlbase.obj,otlcommn.obj,otlgdef.obj,otlgpos.obj,otlgsub.obj,\
+     otljstf.obj,otlparse.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.pcf] directory"
+$ create [.src.pcf]descrip.mms
+$ open/append out [.src.pcf]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 pcf driver compilation rules for VMS
+#
+
+
+# Copyright (C) 2001, 2002 by
+# Francesco Zappa Nardelli
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.pcf])
+
+OBJS=pcf.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.pfr] directory"
+$ create [.src.pfr]descrip.mms
+$ open/append out [.src.pfr]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 PFR driver compilation rules for VMS
+#
+
+
+# Copyright 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.pfr])
+
+OBJS=pfr.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.psaux] directory"
+$ create [.src.psaux]descrip.mms
+$ open/append out [.src.psaux]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 PSaux driver compilation rules for VMS
+#
+
+
+# Copyright 2001, 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.psaux])
+
+OBJS=psaux.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.pshinter] directory"
+$ create [.src.pshinter]descrip.mms
+$ open/append out [.src.pshinter]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 PSHinter driver compilation rules for OpenVMS
+#
+
+
+# Copyright 2001, 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.psnames])
+
+OBJS=pshinter.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.psnames] directory"
+$ create [.src.psnames]descrip.mms
+$ open/append out [.src.psnames]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 PSNames driver compilation rules for VMS
+#
+
+
+# Copyright 2001, 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.psnames])
+
+OBJS=psnames.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.raster] directory"
+$ create [.src.raster]descrip.mms
+$ open/append out [.src.raster]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 renderer module compilation rules for VMS
+#
+
+
+# Copyright 2001 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.raster])
+
+OBJS=raster.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.sfnt] directory"
+$ create [.src.sfnt]descrip.mms
+$ open/append out [.src.sfnt]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 SFNT driver compilation rules for VMS
+#
+
+
+# Copyright 2001, 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.sfnt])
+
+OBJS=sfnt.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.smooth] directory"
+$ create [.src.smooth]descrip.mms
+$ open/append out [.src.smooth]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 smooth renderer module compilation rules for VMS
+#
+
+
+# Copyright 2001 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.smooth])
+
+OBJS=smooth.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.truetype] directory"
+$ create [.src.truetype]descrip.mms
+$ open/append out [.src.truetype]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 TrueType driver compilation rules for VMS
+#
+
+
+# Copyright 2001, 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.truetype])
+
+OBJS=truetype.obj
 
 all : $(OBJS)
         library [--.lib]freetype.olb $(OBJS)
@@ -344,6 +888,66 @@ type1.obj : type1.c t1parse.c t1load.c t1objs.c t1driver.c t1gload.c t1afm.c
 # EOF
 $ eod
 $ close out
+$ write sys$output "... [.src.type42] directory"
+$ create [.src.type42]descrip.mms
+$ open/append out [.src.type42]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 Type 42 driver compilation rules for VMS
+#
+
+
+# Copyright 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.type42])
+
+OBJS=type42.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
+$ write sys$output "... [.src.winfonts] directory"
+$ create [.src.winfonts]descrip.mms
+$ open/append out [.src.winfonts]descrip.mms
+$ copy sys$input: out
+$ deck
+#
+# FreeType 2 Windows FNT/FON driver compilation rules for VMS
+#
+
+
+# Copyright 2001, 2002 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.winfonts])
+
+OBJS=winfnt.obj
+
+all : $(OBJS)
+        library [--.lib]freetype.olb $(OBJS)
+
+# EOF
+$ eod
+$ close out
 $ return
 $!------------------------------------------------------------------------------
 $!
@@ -360,18 +964,48 @@ $   then
 $     ccopt = ccopt + "/noopt/deb"
 $     lopts = lopts + "/deb"
 $   endif
-$!   if cparm .eqs. "LINK" then linkonly = true
-$   if f$locate("LOPTS",cparm) .lt. f$length(cparm)
+$   if f$locate("CCOPT=",cparm) .lt. f$length(cparm)
+$   then
+$     start = f$locate("=",cparm) + 1
+$     len   = f$length(cparm) - start
+$     ccopt = ccopt + f$extract(start,len,cparm)
+$   endif
+$   if cparm .eqs. "LINK" then linkonly = true
+$   if f$locate("LOPTS=",cparm) .lt. f$length(cparm) 
 $   then
 $     start = f$locate("=",cparm) + 1
 $     len   = f$length(cparm) - start
 $     lopts = lopts + f$extract(start,len,cparm)
 $   endif
-$   if f$locate("CCOPT",cparm) .lt. f$length(cparm)
+$   if f$locate("CC=",cparm) .lt. f$length(cparm) 
 $   then
-$     start = f$locate("=",cparm) + 1
-$     len   = f$length(cparm) - start
-$     ccopt = ccopt + f$extract(start,len,cparm)
+$     start  = f$locate("=",cparm) + 1
+$     len    = f$length(cparm) - start
+$     cc_com = f$extract(start,len,cparm)
+      if (cc_com .nes. "DECC") .and. - 
+         (cc_com .nes. "VAXC") .and. - 
+	 (cc_com .nes. "GNUC")
+$     then
+$       write sys$output "Unsupported compiler choice ''cc_com' ignored"
+$       write sys$output "Use DECC, VAXC, or GNUC instead"
+$     else 
+$     	if cc_com .eqs. "DECC" then its_decc = true   
+$     	if cc_com .eqs. "VAXC" then its_vaxc = true   
+$     	if cc_com .eqs. "GNUC" then its_gnuc = true   
+$     endif 
+$   endif
+$   if f$locate("MAKE=",cparm) .lt. f$length(cparm) 
+$   then
+$     start  = f$locate("=",cparm) + 1
+$     len    = f$length(cparm) - start
+$     mmks = f$extract(start,len,cparm)
+$     if (mmks .eqs. "MMK") .or. (mmks .eqs. "MMS") 
+$     then
+$       make = mmks
+$     else 
+$       write sys$output "Unsupported make choice ''mmks' ignored"
+$       write sys$output "Use MMK or MMS instead"
+$     endif 
 $   endif
 $   i = i + 1
 $   goto opt_loop
@@ -381,13 +1015,17 @@ $!------------------------------------------------------------------------------
 $!
 $! Take care of driver file with information about external libraries
 $!
+$! Version history
+$! 0.01 20040220 First version to receive a number
+$! 0.02 20040229 Echo current procedure name; use general error exit handler
+$!               Remove xpm hack -> Replaced by more general dnsrl handling 
 $CHECK_CREATE_VMSLIB:
 $!
 $ if f$search("VMSLIB.DAT") .eqs. ""
 $ then
 $   type/out=vmslib.dat sys$input
 !
-! This is a simple driver file with information used by make.com to
+! This is a simple driver file with information used by vms_make.com to
 ! check if external libraries (like t1lib and freetype) are available on
 ! the system.
 !
@@ -396,40 +1034,42 @@ $   type/out=vmslib.dat sys$input
 !    - Lines starting with ! are treated as comments
 !    - Elements in a data line are separated by # signs
 !    - The elements need to be listed in the following order
-!      1.) Name of the Library 
+!      1.) Name of the Library (only used for informative messages 
+!                               from vms_make.com)
 !      2.) Location where the object library can be found
 !      3.) Location where the include files for the library can be found
 !      4.) Include file used to verify library location
-!      5.) CPP define to pass to the build to indicate availability of
+!      5.) CPP define to pass to the build to indicate availability of 
 !          the library
 !
-! Example: The following  lines show how definitions
-!          might look like. They are site specific and the locations of the
+! Example: The following  lines show how definitions  
+!          might look like. They are site specific and the locations of the 
 !          library and include files need almost certainly to be changed.
-!
+! 
 ! Location: All of the libaries can be found at the following addresses
 !
-!   ZLIB:     http://www.decus.de:8080/www/vms/sw/zlib.htmlx
+!   ZLIB:     http://zinser.no-ip.info/vms/sw/zlib.htmlx
 !
-!ZLIB # pubbin:libz.olb # public$Root:[util.libs.zlib] # zlib.h # FT_CONFIG_OPTION_SYSTEM_ZLIB
+!ZLIB # pubbin:libzshr.exe # public$root:[util.libs.zlib] # zlib.h # FT_CONFIG_OPTION_SYSTEM_ZLIB
 $   write sys$output "New driver file vmslib.dat created."
 $   write sys$output "Please customize libary locations for your site"
-$   write sys$output "and afterwards re-execute vms_make.com"
-$   write sys$output "Exiting..."
-$   close/nolog optf
-$   exit
+$   write sys$output "and afterwards re-execute ''myproc'"
+$   goto err_exit
 $ endif
+$!
+$! Init symbols used to hold CPP definitons and include path
+$!
+$ libdefs = ""
+$ libincs = ""
 $!
 $! Open data file with location of libraries
 $!
-$ open/read/end=end_lib/err=lib_err libdata VMSLIB.DAT
-$ open/append loptf libs.opt
+$ open/read/end=end_lib/err=err_lib libdata VMSLIB.DAT
 $LIB_LOOP:
 $ read/end=end_lib libdata libline
 $ libline = f$edit(libline, "UNCOMMENT,COLLAPSE")
 $ if libline .eqs. "" then goto LIB_LOOP ! Comment line
 $ libname = f$edit(f$element(0,"#",libline),"UPCASE")
-$ liblist = liblist + "#" + libname
 $ write sys$output "Processing ''libname' setup ..."
 $ libloc  = f$element(1,"#",libline)
 $ libsrc  = f$element(2,"#",libline)
@@ -456,18 +1096,56 @@ $ then
 $   write sys$output "Can not find includes at ''libsrc' - Skipping ''libname'"
 $   goto LIB_LOOP
 $ endif
-$ if cppdef .nes. "" then libdefs = libdefs +  "," + cppdef
+$ if (cppdef .nes. "") then libdefs = libdefs +  cppdef + ","
 $ libincs = libincs + "," + libsrc
 $ lqual = "/lib"
-$ libtype = f$parse(libloc,,,"TYPE")
+$ libtype = f$edit(f$parse(libloc,,,"TYPE"),"UPCASE")
 $ if f$locate("EXE",libtype) .lt. f$length(libtype) then lqual = "/share"
-$ write loptf libloc , lqual
+$ write optf libloc , lqual
+$ if (f$trnlnm("topt") .nes. "") then write topt libloc , lqual
+$!
+$! Nasty hack to get the freetype includes to work
+$!
+$ ft2def = false
+$ if ((libname .eqs. "FREETYPE") .and. -
+      (f$locate("FREETYPE2",cppdef) .lt. f$length(cppdef)))
+$ then
+$   if ((f$search("freetype:freetype.h") .nes. "") .and. -
+        (f$search("freetype:[internal]ftobjs.h") .nes. ""))
+$   then
+$     write sys$output "Will use local definition of freetype logical"
+$   else
+$     ft2elem = 0 
+$FT2_LOOP:
+$     ft2srcdir = f$element(ft2elem,",",libsrc)
+$     if f$search("''ft2srcdir'''testinc'") .nes. ""
+$     then
+$        if f$search("''ft2srcdir'internal.dir") .nes. ""
+$        then
+$          ft2dev  = f$parse("''ft2srcdir'",,,"device","no_conceal")
+$          ft2dir  = f$parse("''ft2srcdir'",,,"directory","no_conceal")
+$          ft2conc = f$locate("][",ft2dir)
+$          ft2len  = f$length(ft2dir)
+$          if ft2conc .lt. ft2len
+$          then
+$             ft2dir = f$extract(0,ft2conc,ft2dir) + -
+                       f$extract(ft2conc+2,ft2len-2,ft2dir)
+$          endif
+$          ft2dir = ft2dir - "]" + ".]"
+$          define freetype 'ft2dev''ft2dir','ft2srcdir'
+$          ft2def = true
+$        else
+$          goto ft2_err
+$        endif
+$     else
+$       ft2elem = ft2elem + 1
+$       goto ft2_loop
+$     endif
+$   endif	 
+$ endif
 $ goto LIB_LOOP
 $END_LIB:
 $ close libdata
-$ close loptf
-$ libincs = libincs - ","
-$ libdefs = libdefs - ","
 $ return
 $!------------------------------------------------------------------------------
 $!
@@ -477,6 +1155,9 @@ $! All the "brains" of this logic was suggested by Hartmut Becker
 $! (Hartmut.Becker@compaq.com). All the bugs were introduced by me
 $! (zinser@decus.de), so if you do have problem reports please do not
 $! bother Hartmut/HP, but get in touch with me
+$!
+$! Version history
+$! 0.01 20040006 Skip over shareable images in option file
 $!
 $ ANAL_OBJ_AXP: Subroutine   
 $ V = 'F$Verify(0)
@@ -498,6 +1179,11 @@ $ create a.tmp
 $ open/append atmp a.tmp
 $ loop:
 $ read/end=end_loop in line
+$ if f$locate("/SHARE",f$edit(line,"upcase")) .lt. f$length(line)
+$ then
+$   write sys$output "ANAL_SKP_SHR-i-skipshare, ''line'"
+$   goto loop
+$ endif
 $ f= f$search(line)
 $ if f .eqs. ""
 $ then
@@ -529,7 +1215,7 @@ $ search c.tmp "symbol:"/out=d.tmp
 $ def/user sys$output nl:
 $ edito/edt/command=sys$input d.tmp
 sub/symbol: "/symbol_vector=(/whole
-sub/"/=PROCEDURE)/whole
+sub/"/=procedure)/whole
 exit
 $ ! all data
 $ search b.tmp "EGSY$V_DEF 1"/wind=(0,1) /out=e.tmp
@@ -537,7 +1223,7 @@ $ search e.tmp "symbol:"/out=f.tmp
 $ def/user sys$output nl:
 $ edito/edt/command=sys$input f.tmp
 sub/symbol: "/symbol_vector=(/whole
-sub/"/=DATA)/whole
+sub/"/=data)/whole
 exit
 $ sort/nodupl d.tmp,f.tmp 'p2'
 $ delete a.tmp;*,b.tmp;*,c.tmp;*,d.tmp;*,e.tmp;*,f.tmp;*
