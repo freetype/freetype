@@ -242,7 +242,14 @@
 
     /* do we have an 8-bit pathname? */
     else if ( args->pathname )
+    {
       error = FT_New_Stream( args->pathname, stream );
+      if ( !error )
+      {
+        if ( !ALLOC( stream->pathname.pointer, strlen(args->pathname)+1 ) )
+          strcpy( stream->pathname.pointer, args->pathname );
+      }
+    }
 
     /* do we have a custom stream? */
     else if ( args->stream )
@@ -280,7 +287,10 @@
     
     if ( stream->close )
       stream->close( stream );
-      
+    
+    if ( stream->pathname.pointer )
+      FREE( stream->pathname.pointer );
+    
     FREE( stream );
     *astream = 0;
   }
