@@ -32,6 +32,7 @@
 
 #include <ft2build.h>
 
+#include FT_FREETYPE_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
@@ -1437,7 +1438,6 @@
     char*              s;
     unsigned char*     bp;
     unsigned long      i, slen, nibbles;
-    double             ps, rx, dw, sw;
 
     _bdf_line_func_t*  next;
     _bdf_parse_t*      p;
@@ -1740,11 +1740,10 @@
         /* the scalable width from the device width.                      */
         FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG9, lineno ));
 
-        ps = (double)font->point_size;
-        rx = (double)font->resolution_x;
-        dw = (double)glyph->dwidth;
-
-        glyph->swidth = (unsigned short)( ( dw * 72000.0 ) / ( ps * rx ) );
+        glyph->swidth = (unsigned short)FT_MulDiv(
+                          glyph->dwidth, 72000L,
+                          (FT_Long)( font->point_size *
+                                     font->resolution_x ) );
       }
 
       p->flags |= _BDF_DWIDTH;
@@ -1791,11 +1790,11 @@
       if ( p->opts->correct_metrics != 0 )
       {
         /* Determine the point size of the glyph. */
-        ps = (double)font->point_size;
-        rx = (double)font->resolution_x;
-        dw = (double)glyph->dwidth;
+        unsigned short  sw = (unsigned short)FT_MulDiv(
+                               glyph->dwidth, 72000L,
+                               (FT_Long)( font->point_size *
+                                          font->resolution_x ) );
 
-        sw = (unsigned short)( ( dw * 72000.0 ) / ( ps * rx ) );
 
         if ( sw != glyph->swidth )
         {

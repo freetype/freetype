@@ -323,50 +323,55 @@ FT_BEGIN_HEADER
 
  /************************************************************************
   *
-  * @function: FT_Has_PS_Glyph_Names
+  * @function:
+  *    FT_Has_PS_Glyph_Names
   *
   * @description:
-  *   returns true when a given face provides reliable Postscript glyph
-  *   names. This is similar to using the @FT_HAS_GLYPH_NAMES macro, except
-  *   that certain fonts (mostly TrueType) contain incorrect glyph name
-  *   tables.
+  *    Return true if a given face provides reliable Postscript glyph
+  *    names.  This is similar to using the @FT_HAS_GLYPH_NAMES macro,
+  *    except that certain fonts (mostly TrueType) contain incorrect
+  *    glyph name tables.
   *
-  *   when this function returns true, the caller is sure that the glyph
-  *   names returned by @FT_Get_Glyph_Name are reliable.
+  *    When this function returns true, the caller is sure that the glyph
+  *    names returned by @FT_Get_Glyph_Name are reliable.
   *
   * @input:
-  *   face  :: face handle
+  *    face ::
+  *       face handle
   *
   * @return:
-  *   boolean. true if glyph names are reliable
+  *    Boolean.  True if glyph names are reliable.
   */
   FT_EXPORT( FT_Int )
-  FT_Has_PS_Glyph_Names( FT_Face    face );
+  FT_Has_PS_Glyph_Names( FT_Face  face );
 
 
  /************************************************************************
   *
-  * @function: FT_Get_PS_Font_Info
+  * @function:
+  *    FT_Get_PS_Font_Info
   *
   * @description:
-  *   retrieve the @PS_FontInfoRec structure corresponding to a given
-  *   Postscript font.
+  *    Retrieve the @PS_FontInfoRec structure corresponding to a given
+  *    Postscript font.
   *
   * @input:
-  *   face  :: postscript face handle
+  *    face ::
+  *       Postscript face handle.
   *
   * @output:
-  *   afont_info :: output font info structure pointer
+  *    afont_info ::
+  *       Output font info structure pointer.
   *
   * @return:
-  *   error code. 0 means success
+  *    FreeType error code.  0 means success.
   *
   * @note:
-  *   the string pointers within the font info structure are owned by
-  *   the face and don't need to be freed by the caller.
+  *    The string pointers within the font info structure are owned by
+  *    the face and don't need to be freed by the caller.
   *
-  *   if the font's format is not Postscript-based, this function will
-  *   return the @FT_Err_Invalid_Argument error code.
+  *    If the font's format is not Postscript-based, this function will
+  *    return the @FT_Err_Invalid_Argument error code.
   */
   FT_EXPORT( FT_Error )
   FT_Get_PS_Font_Info( FT_Face          face,
