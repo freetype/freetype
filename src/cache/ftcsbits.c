@@ -355,7 +355,7 @@
 
 
   FT_EXPORT_DEF( FT_Error )  FTC_SBit_Cache_New( FTC_Manager      manager,
-                                                 FTC_SBit_Cache*  acache )
+                                                 FTC_SBit_Cache  *acache )
   {
     return FTC_Manager_Register_Cache(
               manager,
@@ -367,21 +367,21 @@
   FT_EXPORT( FT_Error )  FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
                                                 FTC_Image_Desc*  desc,
                                                 FT_UInt          gindex,
-                                                FTC_SBit*        asbit )
+                                                FTC_SBit        *ansbit )
   {
     FT_Error       error;
     FTC_ChunkNode  node;
     FT_UInt        cindex;
 
     /* argument checks delayed to FTC_Chunk_Cache_Lookup */
-    if (!asbit)
+    if (!ansbit)
       return FT_Err_Invalid_Argument;
       
-    *asbit = 0;
-    error  = FTC_Chunk_Cache_Lookup( &cache->root, desc, gindex,
-                                     &node, &cindex );
+    *ansbit = 0;
+    error   = FTC_Chunk_Cache_Lookup( &cache->root, desc, gindex,
+                                      &node, &cindex );
     if (!error)
-      *asbit = (FTC_SBit)node->elements + cindex;
+      *ansbit = (FTC_SBit)node->elements + cindex;
     
     return error;
   }

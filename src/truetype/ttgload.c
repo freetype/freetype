@@ -1345,15 +1345,13 @@
     glyph->num_subglyphs = 0;
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
-    /*
-     * try to load embedded bitmap if any
-     * 
-     * XXX: The convention should be emphasized in
-     *      the documents.  Because some application
-     *      developpers confuse.
-     */
+
+    /* try to load embedded bitmap if any              */
+    /*                                                 */
+    /* XXX: The convention should be emphasized in     */
+    /*      the documents because it can be confusing. */
     if ( size                                    &&
-	 size->strike_index != 0xFFFF            &&
+         size->strike_index != 0xFFFF            &&
          sfnt->load_sbits                        &&
          ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
 

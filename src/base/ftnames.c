@@ -75,7 +75,7 @@
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error ) FT_Get_Sfnt_Name( FT_Face       face,
                                               FT_UInt       index,
-                                              FT_SfntName*  aname )
+                                              FT_SfntName  *aname )
   {
     FT_Error  error = FT_Err_Invalid_Argument;
 

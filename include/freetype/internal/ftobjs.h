@@ -297,8 +297,8 @@
 #define FT_FACE_SIZE( x )     FT_FACE( x )->size
 
 
-  /* this must be kept exported -- it is used by the cache manager  */
-  /* even though it shouldn't be considered public for now..        */
+  /* this must be kept exported -- it is used by the cache manager */
+  /* even though it shouldn't be considered public for now         */
   FT_EXPORT( FT_Error )  FT_New_Size( FT_Face   face,
                                       FT_Size*  size );
 

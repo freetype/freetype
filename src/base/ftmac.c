@@ -638,7 +638,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Notes>                                                               */
-  /*    This function can be used to create FT_Face abjects from fonts     */
+  /*    This function can be used to create FT_Face objects from fonts     */
   /*    that are installed in the system like so:                          */
   /*                                                                       */
   /*      fond = GetResource( 'FOND', fontName );                          */
@@ -647,7 +647,7 @@
   FT_EXPORT_DEF( FT_Error )  FT_New_Face_From_FOND( FT_Library  library,
                                                     Handle      fond,
                                                     FT_Long     face_index,
-                                                    FT_Face*    aface )
+                                                    FT_Face    *aface )
   {
     short     sfnt_id, have_sfnt, have_lwfn = 0;
     Str255    lwfn_file_name;
@@ -703,7 +703,7 @@
   FT_EXPORT_DEF( FT_Error )  FT_New_Face( FT_Library   library,
                                           const char*  pathname,
                                           FT_Long      face_index,
-                                          FT_Face*     aface )
+                                          FT_Face     *aface )
   {
     FT_Open_Args  args;
     FSSpec        spec;

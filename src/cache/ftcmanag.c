@@ -213,7 +213,7 @@
                                               FT_ULong            max_bytes,
                                               FTC_Face_Requester  requester,
                                               FT_Pointer          req_data,
-                                              FTC_Manager*        amanager )
+                                              FTC_Manager        *amanager )
   {
     FT_Error     error;
     FT_Memory    memory;
@@ -319,7 +319,7 @@
 
   FT_EXPORT( FT_Error )  FTC_Manager_Lookup_Face( FTC_Manager  manager,
                                                   FTC_FaceID   face_id,
-                                                  FT_Face*     aface )
+                                                  FT_Face     *aface )
   {
     if ( !manager )
       return FT_Err_Invalid_Cache_Handle;
@@ -332,8 +332,8 @@
 
   FT_EXPORT( FT_Error )  FTC_Manager_Lookup_Size( FTC_Manager  manager,
                                                   FTC_Font     font,
-                                                  FT_Face*     aface,
-                                                  FT_Size*     asize )
+                                                  FT_Face     *aface,
+                                                  FT_Size     *asize )
   {
     FTC_FontRequest  req;
     FT_Error         error;
@@ -428,7 +428,7 @@
   FT_EXPORT( FT_Error )  FTC_Manager_Register_Cache(
                            FTC_Manager       manager,
                            FTC_Cache_Class*  clazz,
-                           FTC_Cache*        acache )
+                           FTC_Cache        *acache )
   {
     FT_Error  error = FT_Err_Invalid_Argument;
 

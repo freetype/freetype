@@ -106,7 +106,7 @@
 
   FT_EXPORT_DEF( FT_Error )  FTC_ChunkSet_New( FTC_Chunk_Cache  cache,
                                                FT_Pointer       type,
-                                               FTC_ChunkSet*    aset )
+                                               FTC_ChunkSet    *aset )
   {
     FT_Error      error;
     FT_Memory     memory  = cache->root.memory;
@@ -206,8 +206,8 @@
   FT_EXPORT_DEF( FT_Error )  FTC_ChunkSet_Lookup_Node(
                                FTC_ChunkSet    cset,
                                FT_UInt         glyph_index,
-                               FTC_ChunkNode*  anode,
-                               FT_UInt*        aindex )
+                               FTC_ChunkNode  *anode,
+                               FT_UInt        *anindex )
   {
     FTC_Chunk_Cache      cache   = cset->cache;
     FTC_Manager          manager = cache->root.manager;
@@ -252,8 +252,8 @@
         }
       }
 
-      *anode  = node;
-      *aindex = glyph_index - chunk_index * chunk_size;
+      *anode   = node;
+      *anindex = glyph_index - chunk_index * chunk_size;
     }
 
   Exit:

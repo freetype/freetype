@@ -424,7 +424,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Glyph_Copy( FT_Glyph   source,
-                                            FT_Glyph*  target )
+                                            FT_Glyph  *target )
   {
     FT_Glyph               copy;
     FT_Error               error;
@@ -476,7 +476,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Get_Glyph( FT_GlyphSlot  slot,
-                                           FT_Glyph*     aglyph )
+                                           FT_Glyph     *aglyph )
   {
     FT_Library  library = slot->library;
     FT_Error    error;
@@ -646,13 +646,13 @@
   /*                                                                       */
   FT_EXPORT_DEF( void )  FT_Glyph_Get_CBox( FT_Glyph  glyph,
                                             FT_UInt   bbox_mode,
-                                            FT_BBox*  cbox )
+                                            FT_BBox  *acbox )
   {
     const FT_Glyph_Class*  clazz;
     FT_Error               error = FT_Err_Ok;
 
 
-    if ( !cbox || !glyph || !glyph->clazz )
+    if ( !acbox || !glyph || !glyph->clazz )
       error = FT_Err_Invalid_Argument;
     else
     {
@@ -662,24 +662,24 @@
       else
       {
         /* retrieve bbox in 26.6 coordinates */
-        clazz->glyph_bbox( glyph, cbox );
+        clazz->glyph_bbox( glyph, acbox );
 
         /* perform grid fitting if needed */
         if ( bbox_mode & ft_glyph_bbox_gridfit )
         {
-          cbox->xMin &= -64;
-          cbox->yMin &= -64;
-          cbox->xMax  = ( cbox->xMax + 63 ) & -64;
-          cbox->yMax  = ( cbox->yMax + 63 ) & -64;
+          acbox->xMin &= -64;
+          acbox->yMin &= -64;
+          acbox->xMax  = ( acbox->xMax + 63 ) & -64;
+          acbox->yMax  = ( acbox->yMax + 63 ) & -64;
         }
 
         /* convert to integer pixels if needed */
         if ( bbox_mode & ft_glyph_bbox_truncate )
         {
-          cbox->xMin >>= 6;
-          cbox->yMin >>= 6;
-          cbox->xMax >>= 6;
-          cbox->yMax >>= 6;
+          acbox->xMin >>= 6;
+          acbox->yMin >>= 6;
+          acbox->xMax >>= 6;
+          acbox->yMax >>= 6;
         }
       }
     }

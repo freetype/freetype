@@ -48,7 +48,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Get_Multi_Master( FT_Face           face,
-                                                  FT_Multi_Master*  master )
+                                                  FT_Multi_Master  *amaster )
   {
     FT_Error  error;
 
@@ -67,7 +67,7 @@
       func = (FT_Get_MM_Func)driver->root.clazz->get_interface(
                                FT_MODULE( driver ), "get_mm" );
       if ( func )
-        error = func( face, master );
+        error = func( face, amaster );
     }
 
     return error;

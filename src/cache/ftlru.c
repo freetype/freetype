@@ -41,16 +41,16 @@
                                          FT_Pointer           user_data,
                                          FT_Memory            memory,
                                          FT_Bool              pre_alloc,
-                                         FT_Lru*              alru )
+                                         FT_Lru              *anlru )
   {
     FT_Error  error;
     FT_Lru    lru;
 
 
-    if ( !alru )
+    if ( !anlru )
       return FT_Err_Invalid_Argument;
 
-    *alru = 0;
+    *anlru = 0;
     if ( !ALLOC( lru, sizeof ( *lru ) ) )
     {
       if ( pre_alloc )
@@ -72,7 +72,7 @@
       lru->memory       = memory;
       lru->user_data    = user_data;
 
-      *alru = lru;
+      *anlru = lru;
     }
 
   Exit:
@@ -132,7 +132,7 @@
 
   FT_EXPORT_DEF( FT_Error )  FT_Lru_Lookup_Node( FT_Lru       lru,
                                                  FT_LruKey    key,
-                                                 FT_LruNode*  anode )
+                                                 FT_LruNode  *anode )
   {
     FT_Error       error = 0;
     FT_ListNode    node;
@@ -258,7 +258,7 @@
 
   FT_EXPORT_DEF( FT_Error )  FT_Lru_Lookup( FT_Lru       lru,
                                             FT_LruKey    key,
-                                            FT_Pointer*  aobject )
+                                            FT_Pointer  *anobject )
   {
     FT_Error    error;
     FT_LruNode  node;
@@ -266,13 +266,13 @@
 
     /* check for valid `lru' and `key' delayed to FT_Lru_Lookup_Node() */
 
-    if ( !aobject )
+    if ( !anobject )
       return FT_Err_Invalid_Argument;
 
-    *aobject = 0;
+    *anobject = 0;
     error = FT_Lru_Lookup_Node( lru, key, &node );
     if ( !error )
-      *aobject = node->root.data;
+      *anobject = node->root.data;
 
     return error;
   }

@@ -172,7 +172,7 @@
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
-    /* see `ttload.h` */
+    /* see `ttload.h' */
     TT_Load_Bitmap_Header,
 
     /* see `ttsbit.h' */

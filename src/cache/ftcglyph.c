@@ -131,7 +131,7 @@
 
   FT_EXPORT_DEF( FT_Error )  FTC_GlyphSet_New( FTC_Glyph_Cache  cache,
                                                FT_Pointer       type,
-                                               FTC_GlyphSet*    aset )
+                                               FTC_GlyphSet    *aset )
   {
     FT_Error                error;
     FT_Memory               memory  = cache->root.memory;
@@ -228,7 +228,7 @@
   FT_EXPORT_DEF( FT_Error )  FTC_GlyphSet_Lookup_Node(
                                FTC_GlyphSet    gset,
                                FT_UInt         glyph_index,
-                               FTC_GlyphNode*  anode )
+                               FTC_GlyphNode  *anode )
   {
     FTC_Glyph_Cache      cache      = gset->cache;
     FTC_Manager          manager    = cache->root.manager;

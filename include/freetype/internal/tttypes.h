@@ -700,11 +700,13 @@
   /*                                                                       */
   /*   index_ranges     :: An array of glyph index ranges.                 */
   /*                                                                       */
-  /*   color_ref        :: Unused.  color_ref is put in for future         */
+  /*   color_ref        :: Unused.  `color_ref' is put in for future       */
   /*                       enhancements, but these fields are already      */
-  /*			   in use by other platforms (e.g. Newton).        */
+  /*                       in use by other platforms (e.g. Newton).        */
   /*                       For details, please see                         */
-  /*                http://fonts.apple.com/TTRefMan/RM06/Chap6bloc.html    */
+  /*                                                                       */
+  /*                         http://fonts.apple.com/                       */
+  /*                                TTRefMan/RM06/Chap6bloc.html           */
   /*                                                                       */
   /*   hori             :: The line metrics for horizontal layouts.        */
   /*                                                                       */
@@ -721,9 +723,11 @@
   /*   bit_depth        :: The bit depth.  Valid values are 1, 2, 4,       */
   /*                       and 8.                                          */
   /*                                                                       */
-  /*   flags            :: Is this a vertical or horizontal strike?        */
-  /*                       For details, please see                         */
-  /*                http://fonts.apple.com/TTRefMan/RM06/Chap6bloc.html    */
+  /*   flags            :: Is this a vertical or horizontal strike?  For   */
+  /*                       details, please see                             */
+  /*                                                                       */
+  /*                         http://fonts.apple.com/                       */
+  /*                                TTRefMan/RM06/Chap6bloc.html           */
   /*                                                                       */
   typedef struct  TT_SBit_Strike_
   {

@@ -274,30 +274,30 @@
                                FT_Memory    memory,
                                FT_UInt      numPoints,
                                FT_Int       numContours,
-                               FT_Outline*  outline )
+                               FT_Outline  *anoutline )
   {
     FT_Error  error;
 
 
-    if ( !outline || !memory )
+    if ( !anoutline || !memory )
       return FT_Err_Invalid_Argument;
 
-    *outline = null_outline;
+    *anoutline = null_outline;
 
-    if ( ALLOC_ARRAY( outline->points,   numPoints * 2L, FT_Pos    ) ||
-         ALLOC_ARRAY( outline->tags,     numPoints,      FT_Byte   ) ||
-         ALLOC_ARRAY( outline->contours, numContours,    FT_UShort ) )
+    if ( ALLOC_ARRAY( anoutline->points,   numPoints * 2L, FT_Pos    ) ||
+         ALLOC_ARRAY( anoutline->tags,     numPoints,      FT_Byte   ) ||
+         ALLOC_ARRAY( anoutline->contours, numContours,    FT_UShort ) )
       goto Fail;
 
-    outline->n_points    = (FT_UShort)numPoints;
-    outline->n_contours  = (FT_Short)numContours;
-    outline->flags      |= ft_outline_owner;
+    anoutline->n_points    = (FT_UShort)numPoints;
+    anoutline->n_contours  = (FT_Short)numContours;
+    anoutline->flags      |= ft_outline_owner;
 
     return FT_Err_Ok;
 
   Fail:
-    outline->flags |= ft_outline_owner;
-    FT_Outline_Done_Internal( memory, outline );
+    anoutline->flags |= ft_outline_owner;
+    FT_Outline_Done_Internal( memory, anoutline );
 
     return error;
   }
@@ -338,13 +338,13 @@
   FT_EXPORT_DEF( FT_Error )  FT_Outline_New( FT_Library   library,
                                              FT_UInt      numPoints,
                                              FT_Int       numContours,
-                                             FT_Outline*  outline )
+                                             FT_Outline  *anoutline )
   {
     if ( !library )
       return FT_Err_Invalid_Library_Handle;
 
     return FT_Outline_New_Internal( library->memory, numPoints,
-                                    numContours, outline );
+                                    numContours, anoutline );
   }
 
 
@@ -368,7 +368,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Outline_Copy( FT_Outline*  source,
-                                              FT_Outline*  target )
+                                              FT_Outline  *target )
   {
     FT_Int  is_owner;
 
@@ -484,12 +484,12 @@
   /*    Yes.                                                               */
   /*                                                                       */
   FT_EXPORT_DEF( void )  FT_Outline_Get_CBox( FT_Outline*  outline,
-                                              FT_BBox*     cbox )
+                                              FT_BBox     *acbox )
   {
     FT_Pos  xMin, yMin, xMax, yMax;
 
 
-    if ( outline && cbox )
+    if ( outline && acbox )
     {
       if ( outline->n_points == 0 )
       {
@@ -522,10 +522,10 @@
           if ( y > yMax ) yMax = y;
         }
       }
-      cbox->xMin = xMin;
-      cbox->xMax = xMax;
-      cbox->yMin = yMin;
-      cbox->yMax = yMax;
+      acbox->xMin = xMin;
+      acbox->xMax = xMax;
+      acbox->yMin = yMin;
+      acbox->yMax = yMax;
     }
   }
 
@@ -747,20 +747,20 @@
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_Outline_Get_Bitmap( FT_Library   library,
                                                     FT_Outline*  outline,
-                                                    FT_Bitmap*   bitmap )
+                                                    FT_Bitmap   *abitmap )
   {
     FT_Raster_Params  params;
 
 
-    if ( !bitmap )
+    if ( !abitmap )
       return FT_Err_Invalid_Argument;
 
     /* other checks are delayed to FT_Outline_Render() */
 
-    params.target = bitmap;
+    params.target = abitmap;
     params.flags  = 0;
 
-    if ( bitmap->pixel_mode == ft_pixel_mode_grays )
+    if ( abitmap->pixel_mode == ft_pixel_mode_grays )
       params.flags |= ft_raster_flag_aa;
 
     return FT_Outline_Render( library, outline, &params );
