@@ -485,7 +485,7 @@ error:
       stream->pos = 0; /* just in case */
 
       /* delegate the work to the Type 1 module */
-      t1_driver = (FT_Driver)FT_Get_Module( face->driver->root.library, "type1" );
+      t1_driver = (FT_Driver)FT_Get_Module( face->driver->root.library, "type1z" );
       if ( t1_driver )
       {
         face->driver = t1_driver;
