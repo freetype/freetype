@@ -447,12 +447,12 @@
 
         root->style_flags = flags;
       }
-        
+
       /*******************************************************************/
       /*                                                                 */
       /* Compute char maps.                                              */
       /*                                                                 */
-      
+
       /* try to synthetize a Unicode charmap if there is none available */
       /* already. If an OpenType font contains a Unicode "cmap", we     */
       /* will use it, wathever be in the CFF part of the file..         */
@@ -461,30 +461,28 @@
         FT_CharMap     cmap;
         FT_UInt        nn;
         CFF_Encoding   encoding = &cff->encoding;
-        
+
         for ( nn = 0; nn < (FT_UInt) root->num_charmaps; nn++ )
         {
           cmap = root->charmaps[nn];
-          
+
           /* Windows Unicode (3,1) ? */
           if ( cmap->platform_id == 3 && cmap->encoding_id == 1 )
             goto Skip_Unicode;
-            
+
           /* Deprecated Unicode platform id  ?? */
           if ( cmap->platform_id == 0 )
             goto Skip_Unicode; /* Standard Unicode (deprecated) */
         }
-        
-        /* we didn't find a Unicode charmap, synthetize one */
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
 
+        /* we didn't find a Unicode charmap, synthetize one */
         cmaprec.face        = root;
         cmaprec.platform_id = 3;
         cmaprec.encoding_id = 1;
         cmaprec.encoding    = ft_encoding_unicode;
 
         nn = (FT_UInt) root->num_charmaps;
-        
+
         FT_CMap_New( &cff_cmap_unicode_class_rec, NULL, &cmaprec, NULL );
 
         /* if no Unicode charmap was previously selected, select this one */
@@ -495,7 +493,7 @@
         if ( encoding->count > 0 )
         {
           FT_CMap_Class  clazz;
-          
+
           cmaprec.face        = root;
           cmaprec.platform_id = 7;  /* Adobe platform id */
 
@@ -506,28 +504,22 @@
               cmaprec.encoding    = ft_encoding_adobe_standard;
               clazz               = &cff_cmap_encoding_class_rec;
               break;
-            
+
             case 1:
               cmaprec.encoding_id = 1;
               cmaprec.encoding    = ft_encoding_adobe_expert;
               clazz               = &cff_cmap_encoding_class_rec;
               break;
-            
+
             default:
               cmaprec.encoding_id = 3;
               cmaprec.encoding    = ft_encoding_adobe_custom;
               clazz               = &cff_cmap_encoding_class_rec;
           }
-          
+
           FT_CMap_New( clazz, NULL, &cmaprec, NULL );
-
-#else  /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-          /* unimplemented !! */
-          
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
         }
-        
+
       }
     }
 

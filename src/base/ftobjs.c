@@ -631,8 +631,6 @@
     if ( face->generic.finalizer )
       face->generic.finalizer( face );
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
     /* discard charmaps */
     {
       FT_Int  n;
@@ -651,8 +649,6 @@
       FT_FREE( face->charmaps );
       face->num_charmaps = 0;
     }
-
-#endif /* FT_CONFIG_OPTION_USE_CMAPS */
 
 
     /* finalize format-specific stuff */
@@ -1520,8 +1516,6 @@
 
   /* documentation is in freetype.h */
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
   FT_EXPORT_DEF( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
                      FT_ULong  charcode )
@@ -1539,25 +1533,6 @@
     return  result;
   }
 
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-  FT_EXPORT_DEF( FT_UInt )
-  FT_Get_Char_Index( FT_Face   face,
-                     FT_ULong  charcode )
-  {
-    FT_UInt    result = 0;
-    FT_Driver  driver;
-
-
-    if ( face && face->charmap )
-    {
-      driver = face->driver;
-      result = driver->clazz->get_char_index( face->charmap, charcode );
-    }
-    return result;
-  }
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
 
   /* documentation is in freetype.h */
@@ -1586,8 +1561,6 @@
   /* documentation is in freetype.h */
 
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
   FT_EXPORT_DEF( FT_ULong )
   FT_Get_Next_Char( FT_Face   face,
                     FT_ULong  charcode,
@@ -1613,37 +1586,6 @@
     return result;
   }
 
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-  FT_EXPORT_DEF( FT_ULong )
-  FT_Get_Next_Char( FT_Face   face,
-                    FT_ULong  charcode,
-                    FT_UInt  *agindex )
-  {
-    FT_ULong   result = 0;
-    FT_UInt    gindex = 0;
-    FT_Driver  driver;
-
-
-    if ( face && face->charmap )
-    {
-      driver = face->driver;
-      result = driver->clazz->get_next_char( face->charmap, charcode );
-      if ( result != 0 )
-      {
-        gindex = driver->clazz->get_char_index( face->charmap, result );
-        if ( gindex == 0 )
-          result = 0;
-      }
-    }
-
-    if ( agindex )
-      *agindex = gindex;
-
-    return result;
-  }
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
 
   /* documentation is in freetype.h */

@@ -682,14 +682,9 @@
     (FT_Size_ResetPixelsFunc) FNT_Size_Set_Pixels,
     (FT_Slot_LoadFunc)        FNT_Load_Glyph,
 
-    (FT_CharMap_CharIndexFunc)0,
-
-
     (FT_Face_GetKerningFunc)  0,
     (FT_Face_AttachFunc)      0,
-    (FT_Face_GetAdvancesFunc) 0,
-
-    (FT_CharMap_CharNextFunc) 0
+    (FT_Face_GetAdvancesFunc) 0
   };
 
 

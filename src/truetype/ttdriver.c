@@ -516,13 +516,10 @@
     (FT_Size_ResetPointsFunc) Set_Char_Sizes,
     (FT_Size_ResetPixelsFunc) Set_Pixel_Sizes,
     (FT_Slot_LoadFunc)        Load_Glyph,
-    (FT_CharMap_CharIndexFunc)Get_Char_Index,
 
     (FT_Face_GetKerningFunc)  Get_Kerning,
     (FT_Face_AttachFunc)      0,
-    (FT_Face_GetAdvancesFunc) 0,
-    
-    (FT_CharMap_CharNextFunc) Get_Next_Char
+    (FT_Face_GetAdvancesFunc) 0
   };
 
 

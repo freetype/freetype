@@ -578,7 +578,6 @@
       /*   Try to set the charmap encoding according to the platform &     */
       /*   encoding ID of each charmap.                                    */
       /*                                                                   */
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
 
       TT_Build_CMaps( face );  /* ignore errors */
 
@@ -605,41 +604,6 @@
         }
       }
 
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-      {
-        TT_CharMap  charmap = face->charmaps;
-
-
-        charmap            = face->charmaps;
-        root->num_charmaps = face->num_charmaps;
-
-        /* allocate table of pointers */
-        if ( FT_NEW_ARRAY( root->charmaps, root->num_charmaps ) )
-          goto Exit;
-
-        for ( n = 0; n < root->num_charmaps; n++, charmap++ )
-        {
-          FT_Int  platform = charmap->cmap.platformID;
-          FT_Int  encoding = charmap->cmap.platformEncodingID;
-
-
-          charmap->root.face        = (FT_Face)face;
-          charmap->root.platform_id = (FT_UShort)platform;
-          charmap->root.encoding_id = (FT_UShort)encoding;
-          charmap->root.encoding    = sfnt_find_encoding( platform, encoding );
-
-          /* now, set root->charmap with a unicode charmap */
-          /* wherever available                            */
-          if ( !root->charmap                                &&
-               charmap->root.encoding == ft_encoding_unicode )
-            root->charmap = (FT_CharMap)charmap;
-
-          root->charmaps[n] = (FT_CharMap)charmap;
-        }
-      }
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
@@ -808,8 +772,6 @@
     FT_FREE( face->dir_tables );
     face->num_tables = 0;
 
-#ifdef FT_CONFIG_OPTION_USE_CMAPS
-
     {
       FT_Stream  stream = FT_FACE_STREAM( face );
 
@@ -818,27 +780,6 @@
       FT_FRAME_RELEASE( face->cmap_table );
       face->cmap_size = 0;
     }
-
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-    /* freeing the character mapping tables */
-    if ( sfnt && sfnt->load_charmaps )
-    {
-      FT_UShort  n;
-
-
-      for ( n = 0; n < face->num_charmaps; n++ )
-        sfnt->free_charmap( face, &face->charmaps[n].cmap );
-    }
-
-    FT_FREE( face->charmaps );
-    face->num_charmaps = 0;
-
-    FT_FREE( face->root.charmaps );
-    face->root.num_charmaps = 0;
-    face->root.charmap      = 0;
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
     /* freeing the horizontal metrics */
     FT_FREE( face->horizontal.long_metrics );
