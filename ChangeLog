@@ -1,3 +1,18 @@
+2002-03-05  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/aclocal.m4, builds/unix/ltmain.sh: Update to libtool
+	1.4.2.
+	Apply a small patch for AIX to make shared libraries work (this
+	patch is already in the CVS version of libtool).
+
+	* builds/unix/config.sub, builds/unix/config.guess: Updated to
+	recent versions.
+
+	* builds/unix/configure.ac: Fix typo
+	(AC_CONFIG_FILE->AC_CONFIG_FILES).
+
+	* builds/unix/configure: Regenerated.
+
 2002-02-28  David Turner   <david@freetype.org>
 
         * include/freetype/ftconfig.h: changed FT_LOCAL xxxx to FT_LOCAL( xxxx )
