@@ -16,7 +16,8 @@
 
 ifeq ($(PLATFORM),ansi)
 
-  # note: this test is duplicated in "builds/toplevel.mk"
+  # Note: this test is duplicated in "builds/toplevel.mk".
+  #
   is_unix := $(strip $(wildcard /sbin/init) $(wildcard /hurd/auth))
   ifneq ($(is_unix),)
 

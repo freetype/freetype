@@ -1,38 +1,50 @@
 2001-05-11  David Turner  <david@freetype.org>
 
-    * src/cff/cffparse.c, src/cid/cidload.c, src/type1/t1load.c: fixed
-    the incorrect EM size computation
+	* src/cff/cffparse.c (cff_parse_font_matrix), src/cid/cidload.c
+	(parse_font_matrix), src/type1/t1load.c (parse_font_matrix): Fixed
+	the incorrect EM size computation.
 
-    * include/freetype/fttrigon.h, src/base/fttrigon.c, src/base/ftbase.c,
-    src/base/Jamfile, src/base/rules.mk: adding trigonometric functions
-    to the core API (using Cordic algorithms).
+	* include/freetype/fttrigon.h, src/base/fttrigon.c: New files,
+	adding trigonometric functions to the core API (using Cordic
+	algorithms).
+	* src/base/ftbase.c, src/base/Jamfile, src/base/rules.mk: Use them.
 
-    * builds/top_level.mk, builds/newline, builds/detect.mk: fixed problems
-    with Make on Windows 2000, as well as problems when "make distclean" is
-    invoked on a non-Unix platform when there is no "config.mk" in the
-    current directory..
+	* builds/newline: New file.
+	* builds/top_level.mk, builds/detect.mk: Use it.  This fixes
+	problems with Make on Windows 2000, as well as problems when "make
+	distclean" is invoked on a non-Unix platform when there is no
+	"config.mk" in the current directory.
 
-    * builds/freetype.mk: fixed a problem with object deletions under
-    Dos/Windows/OS/2 systems
+	* builds/freetype.mk: Fixed a problem with object deletions under
+	Dos/Windows/OS/2 systems.
 
-    * src/tools: added new directory to hold tools and test programs
-    moved docmaker.py, glnames.py to it..
+	Added new directory to hold tools and test programs.
 
-    * src/tools/docmaker.py: improved the script to add the current date
-    at the footer of each web page (useful to distinguish between versions)
+	* docs/docmaker.py, docs/glnames.py: Moved to...
+	* src/tools/docmaker.py, src/tools/glnames.py: This place.
+	* src/tools/cordic.py: New file used to compute arctangent table
+	needed by fttrigon.c.
+	* src/tools/test_bbox.c, src/tools/test_trig.c: New test files.
 
-    * Jamfile: fixed incorrect HDRMACRO argument.
+	* src/tools/docmaker.py: Improved the script to add the current date
+	at the footer of each web page (useful to distinguish between
+	versions).
 
-    * TODO: removed the cubic arc bbox computation note, since it has been
-    fixed recently..
+	* Jamfile: Fixed incorrect HDRMACRO argument.
 
-    * include/freetype/t1tables.h, include/freetype/config/ftoption.h:
-    formatting
+	* TODO: Removed the cubic arc bbox computation note, since it has been
+	fixed recently.
+	* src/base/ftbbox.c (test_cubic_zero): Renamed to...
+	(test_cubic_extrema): This function.  Use `UL' for unsigned long
+	constants.
+
+	* include/freetype/t1tables.h, include/freetype/config/ftoption.h:
+	Formatting.
 
 2001-05-10  David Turner  <david@freetype.org>
 
-        * src/base/ftobjs.c (FT_Open_Face): fixed a small memory leaked
-        which happened when trying to open 0-size font files !!
+	* src/base/ftobjs.c (FT_Open_Face): Fixed a small memory leak
+	which happened when trying to open 0-size font files!
 
 2001-05-09  Werner Lemberg  <wl@gnu.org>
 
