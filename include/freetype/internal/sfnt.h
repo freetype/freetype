@@ -358,7 +358,7 @@
 
     TT_Load_Table_Func      load_kerning;
     TT_Load_Table_Func      load_gasp;
-
+	TT_Load_Table_Func      load_pclt;
 
     /* see `ttsbit.h' */
     TT_Load_Table_Func      load_sbits;

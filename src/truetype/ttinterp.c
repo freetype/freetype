@@ -435,8 +435,8 @@
     TT_Error  error;
 
 
-    FT_TRACE1(( "TT.Create_Create: new object at 0x%08lx, parent = 0x%08lx\n",
-              (long)exec, (long)face ));
+    FT_TRACE1(( "TT.Create_Create: new object at 0x%08p, parent = 0x%08p\n",
+                exec, face ));
 
     /* XXX: We don't reserve arrays anymore, this is done automatically */
     /*      during a call to Context_Load().                            */

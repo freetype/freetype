@@ -204,8 +204,8 @@
   /*    32 bits, then the division is computed directly.  Otherwise, we    */
   /*    use a specialized version of the old FT_MulDiv64().                */
   /*                                                                       */
-  EXPORT_FUNC(FT_Int32)  FT_DivFix( FT_Long  a,
-                                    FT_Long  b )
+  EXPORT_FUNC(FT_Long)  FT_DivFix( FT_Long  a,
+                                   FT_Long  b )
   {
     FT_Int32   s;
     FT_Word32  q;

@@ -651,6 +651,7 @@
       case ft_sfnt_os2:  table = (face->os2.version == 0xFFFF ? 0 : &face->os2 ); break;
       case ft_sfnt_post: table = &face->postscript; break;
       case ft_sfnt_maxp: table = &face->max_profile; break;
+	  case ft_sfnt_pclt: table = face->pclt.Version ? &face->pclt : 0 ; break;
 
       default:
         table = 0;

@@ -28,6 +28,7 @@
 
     TT_Load_Kern,
     TT_Load_Gasp,
+	TT_Load_PCLT,
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     /* see `ttsbit.h' */

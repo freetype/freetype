@@ -89,8 +89,8 @@
       *P = NULL;
 
     FT_TRACE2(( "FT_Alloc:" ));
-    FT_TRACE2(( " size = %ld, block = 0x%08lx, ref = 0x%08lx\n",
-                size, (long)*P, (long)P ));
+    FT_TRACE2(( " size = %ld, block = 0x%08p, ref = 0x%08p\n",
+                size, *P, P ));
 
     return FT_Err_Ok;
   }
@@ -193,8 +193,8 @@
                             void**     P )
   {
     FT_TRACE2(( "FT_Free:" ));
-    FT_TRACE2(( " Freeing block 0x%08lx, ref 0x%08lx\n",
-                (long)P, (P ? (long)*P : -1) ));
+    FT_TRACE2(( " Freeing block 0x%08p, ref 0x%08p\n",
+                P, (P ? *P : (void*)0) ));
 
     FT_Assert( P != 0 );
 

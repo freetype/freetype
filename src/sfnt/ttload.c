@@ -57,8 +57,8 @@
     TT_Table*  entry;
     TT_Table*  limit;
 
-    FT_TRACE4(( "TT_LookUp_Table( %08lx, %c%c%c%c )\n",
-                  (TT_Long)face,
+    FT_TRACE4(( "TT_LookUp_Table( %08p, %c%c%c%c )\n",
+                  face,
                   (TT_Char)(tag >> 24),
                   (TT_Char)(tag >> 16),
                   (TT_Char)(tag >> 8),
@@ -156,8 +156,8 @@
            FT_FRAME_END };
 #endif
 
-    FT_TRACE2(( "TT_Load_Format_Tag(%08lx, %ld )\n",
-              (TT_Long)face, faceIndex ));
+    FT_TRACE2(( "TT_Load_Format_Tag(%08p, %ld )\n",
+                face, faceIndex ));
 
     face->ttc_header.Tag      = 0;
     face->ttc_header.version  = 0;
@@ -269,8 +269,8 @@
 
     UNUSED(faceIndex);
 
-    FT_TRACE2(( "TT_Load_Directory( %08lx, %ld )\n",
-              (TT_Long)face, faceIndex ));
+    FT_TRACE2(( "TT_Load_Directory( %08p, %ld )\n",
+                face, faceIndex ));
 
 #ifdef READ_FIELDS
     if ( READ_Fields( table_dir_fields, &tableDir ) )
@@ -462,7 +462,7 @@
             FT_FRAME_END };
 #endif
 
-    FT_TRACE2(( "Load_TT_Header( %08lx )\n", (TT_Long)face ));
+    FT_TRACE2(( "Load_TT_Header( %08p )\n", face ));
 
     error = face->goto_table( face, TTAG_head, stream, 0 );
     if ( error )
@@ -558,7 +558,7 @@
               FT_FRAME_END };
 #endif
 
-    FT_TRACE2(( "Load_TT_MaxProfile( %08lx )\n", (TT_Long)face ));
+    FT_TRACE2(( "Load_TT_MaxProfile( %08p )\n", face ));
 
     error = face->goto_table( face, TTAG_maxp, stream, 0 );
     if (error) goto Exit;
@@ -658,8 +658,8 @@
     TT_LongMetrics**   longs;
     TT_ShortMetrics**  shorts;
 
-    FT_TRACE2(( "TT_Load_%s_Metrics( %08lx )\n",
-              vertical ? "Vertical" : "Horizontal", (TT_Long)face ));
+    FT_TRACE2(( "TT_Load_%s_Metrics( %08p )\n",
+              vertical ? "Vertical" : "Horizontal", face ));
 
     if ( vertical )
     {
@@ -1413,7 +1413,7 @@
     TT_Error        error;
     TT_Postscript*  post = &face->postscript;
 #ifdef READ_FIELDS
-    const FT_Frame_Field  post_fields[] = {
+    static const FT_Frame_Field  post_fields[] = {
               FT_FRAME_START(32),
                 FT_FRAME_ULONG( TT_Postscript, FormatType ),
                 FT_FRAME_ULONG( TT_Postscript, italicAngle ),
@@ -1464,6 +1464,70 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    TT_Load_PCLT                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Loads the PCL 5 Table.                                             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face   :: A handle to the target face object.                      */
+  /*    stream :: A handle to the input stream.                            */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    TrueType error code.  0 means success.                             */
+  /*                                                                       */
+  LOCAL_FUNC
+  TT_Error  TT_Load_PCLT( TT_Face    face,
+                          FT_Stream  stream )
+  {
+    static const FT_Frame_Field  pclt_fields[] = {
+	               FT_FRAME_START( 20 ),
+				      FT_FRAME_ULONG ( TT_PCLT, Version ),
+					  FT_FRAME_ULONG ( TT_PCLT, FontNumber ),
+					  FT_FRAME_USHORT( TT_PCLT, Pitch ),
+					  FT_FRAME_USHORT( TT_PCLT, xHeight ),
+					  FT_FRAME_USHORT( TT_PCLT, Style ),
+					  FT_FRAME_USHORT( TT_PCLT, TypeFamily ),
+					  FT_FRAME_USHORT( TT_PCLT, CapHeight ),
+				   FT_FRAME_END };
+  
+    static const FT_Frame_Field  pclt_fields2[] = {
+	               FT_FRAME_START( 4 ),
+				     FT_FRAME_CHAR( TT_PCLT, StrokeWeight ),
+					 FT_FRAME_CHAR( TT_PCLT, WidthType ),
+					 FT_FRAME_BYTE( TT_PCLT, SerifStyle ),
+					 FT_FRAME_BYTE( TT_PCLT, Reserved ),
+	               FT_FRAME_END };
+  
+    TT_Error    error;
+	TT_PCLT*    pclt = &face->pclt;
+	
+    FT_TRACE2(( "PCLT " ));
+
+	/* optional table */
+	error = face->goto_table( face, TTAG_PCLT, stream, 0 );
+	if (error)
+	{
+	  FT_TRACE2(( "missing (optional)\n" ));
+	  pclt->Version = 0;
+	  return 0;
+	}
+	
+	if ( READ_Fields( pclt_fields, pclt )            ||
+	     FILE_Read  ( pclt->TypeFace, 16 )           ||
+		 FILE_Read  ( pclt->CharacterComplement, 8 ) ||
+		 FILE_Read  ( pclt->FileName, 6 )            ||
+		 READ_Fields( pclt_fields2, pclt )           )
+      goto Exit;
+	
+	FT_TRACE2(( "loaded\n" ));
+  Exit:	
+	return error;
+  }						  
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    TT_Load_Gasp                                                       */
   /*                                                                       */
   /* <Description>                                                         */
@@ -1487,7 +1551,7 @@
     TT_GaspRange*  gaspranges;
 
 
-    FT_TRACE2(( "TT_Load_Gasp( %08lx )\n", (TT_Long)face ));
+    FT_TRACE2(( "TT_Load_Gasp( %08p )\n", face ));
 
     /* the gasp table is optional */
     error = face->goto_table( face, TTAG_gasp, stream, 0 );

@@ -103,6 +103,9 @@
   TT_Error  TT_Load_Hdmx( TT_Face    face,
                           FT_Stream  stream );
 
+  LOCAL_DEF
+  TT_Error  TT_Load_PCLT( TT_Face    face,
+                          FT_Stream  stream );
 
   LOCAL_DEF
   void  TT_Free_Names( TT_Face  face );

@@ -1971,6 +1971,7 @@
 
     TTC_Header         ttc_header;
 
+    FT_ULong           format_tag;
     TT_UShort          num_tables;
     TT_Table*          dir_tables;
 
@@ -2017,6 +2018,9 @@
 
     /* grid-fitting and scaling table */
     TT_Gasp            gasp;                 /* the `gasp' table */
+
+    /* PCL 5 table */
+	TT_PCLT            pclt;
 
     /* embedded bitmaps support */
     TT_Int             num_sbit_strikes;

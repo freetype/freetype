@@ -1,5 +1,8 @@
 LATEST_CHANGES
 
+  - some fixes for 64-bit systems (mainly changing some FT_TRACE calls
+    to use %p instead of %lx).. Thanks to Karl Robillard
+
   - fixed some bugs in the sbit loader (src/base/sfnt/ttsbit.c) + added
     a new flag, FT_LOAD_CROP_BITMAP to query that bitmaps be cropped when
     loaded from a file (maybe I should move the bitmap cropper to the

@@ -215,6 +215,9 @@
       goto Exit;
     }
 
+    /* store format tag */
+    face->format_tag = format_tag;
+	
     /* Load font directory */
     error = sfnt->load_directory( face, stream, face_index );
     if ( error ) goto Exit;
@@ -254,6 +257,7 @@
     if ( LOAD_( hdmx )          ||
          LOAD_( gasp )          ||
          LOAD_( kerning )       ||
+		 LOAD_( pclt )          ||
 
          (error = TT_Load_Locations( face, stream )) != TT_Err_Ok ||
          (error = TT_Load_CVT      ( face, stream )) != TT_Err_Ok ||
