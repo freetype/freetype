@@ -1867,6 +1867,25 @@
     return result;
   }
 
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_ULong )
+  FT_Get_Next_Char( FT_Face   face,
+                    FT_ULong  charcode )
+  {
+    FT_ULong   result;
+    FT_Driver  driver;
+
+
+    result = 0;
+    if ( face && face->charmap )
+    {
+      driver = face->driver;
+      result = driver->clazz->get_next_char( face->charmap, charcode );
+    }
+    return result;
+  }
+
 
   /* documentation is in freetype.h */
 

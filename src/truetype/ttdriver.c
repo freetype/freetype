@@ -394,6 +394,53 @@
 
 
   /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    Get_Next_Char                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Uses a charmap to return the next encoded char.                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charmap  :: A handle to the source charmap object.                 */
+  /*    charcode :: The character code.                                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Next char code.  0 means `no more encoded characters'.             */
+  /*                                                                       */
+  static FT_UInt
+  Get_Next_Char( TT_CharMap  charmap,
+                 FT_Long     charcode )
+  {
+    FT_Error       error;
+    TT_Face        face;
+    TT_CMapTable*  cmap;
+
+
+    cmap = &charmap->cmap;
+    face = (TT_Face)charmap->root.face;
+
+    /* Load table if needed */
+    if ( !cmap->loaded )
+    {
+      SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
+
+
+      error = sfnt->load_charmap( face, cmap, face->root.stream );
+      if ( error )
+        return 0;
+
+      cmap->loaded = TRUE;
+    }
+
+    if ( cmap->get_next_char )
+      return cmap->get_next_char ( cmap, charcode );
+    else
+      return 0;
+  }
+
+
+  /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
@@ -473,7 +520,9 @@
 
     (FTDriver_getKerning)   Get_Kerning,
     (FTDriver_attachFile)   0,
-    (FTDriver_getAdvances)  0
+    (FTDriver_getAdvances)  0,
+    
+    (FTDriver_getNextChar)  Get_Next_Char
   };
 
 

@@ -75,6 +75,10 @@ FT_BEGIN_HEADER
   (*FTDriver_getCharIndex)( FT_CharMap  charmap,
                             FT_Long     charcode );
 
+  typedef FT_Long
+  (*FTDriver_getNextChar)( FT_CharMap   charmap,
+                           FT_Long      charcode );
+
   typedef FT_Error
   (*FTDriver_getKerning)( FT_Face      face,
                           FT_UInt      left_glyph,
@@ -189,6 +193,7 @@ FT_BEGIN_HEADER
 
     FTDriver_getAdvances    get_advances;
 
+    FTDriver_getNextChar    get_next_char;
   } FT_Driver_Class;
 
 

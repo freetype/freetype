@@ -320,6 +320,50 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    cff_get_next_char                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Uses a charmap to return the next encoded charcode.                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charmap  :: A handle to the source charmap object.                 */
+  /*    charcode :: The character code.                                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Char code.  0 means `no encoded chars above the given one'.        */
+  /*                                                                       */
+  static FT_Long
+  cff_get_next_char( TT_CharMap  charmap,
+                     FT_Long     charcode )
+  {
+    FT_Error       error;
+    CFF_Face       face;
+    TT_CMapTable*  cmap;
+
+
+    cmap = &charmap->cmap;
+    face = (CFF_Face)charmap->root.face;
+
+    /* Load table if needed */
+    if ( !cmap->loaded )
+    {
+      SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
+
+
+      error = sfnt->load_charmap( face, cmap, face->root.stream );
+      if ( error )
+        return 0;
+
+      cmap->loaded = TRUE;
+    }
+
+    return ( cmap->get_next_char ? cmap->get_next_char( cmap, charcode ) : 0 );
+  }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    cff_get_name_index                                                 */
   /*                                                                       */
   /* <Description>                                                         */
@@ -454,7 +498,9 @@
 
     (FTDriver_getKerning)   Get_Kerning,
     (FTDriver_attachFile)   0,
-    (FTDriver_getAdvances)  0
+    (FTDriver_getAdvances)  0,
+    
+    (FTDriver_getNextChar)  cff_get_next_char
   };
 
 

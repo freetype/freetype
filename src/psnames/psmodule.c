@@ -238,6 +238,48 @@
   }
 
 
+  static FT_ULong
+  PS_Next_Unicode( PS_Unicodes*  table,
+                   FT_ULong      unicode )
+  {
+    PS_UniMap  *min, *max, *mid;
+
+
+    unicode++;
+    /* perform a binary search on the table */
+
+    min = table->maps;
+    max = min + table->num_maps - 1;
+
+    while ( min <= max )
+    {
+      mid = min + ( max - min ) / 2;
+      if ( mid->unicode == unicode )
+        return unicode;
+
+      if ( min == max )
+        break;
+
+      if ( mid->unicode < unicode )
+        min = mid + 1;
+      else
+        max = mid - 1;
+    }
+
+    if ( max < table->maps )
+      max = table->maps;
+    
+    while ( max < table->maps + table->num_maps )
+    {
+      if ( unicode < max->unicode )
+        return max->unicode;
+      max++;
+    }
+
+    return 0;
+  }
+
+
 #endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
 
 
@@ -272,6 +314,7 @@
     0,
     0,
     0,
+    0,
 
 #endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
 
@@ -279,7 +322,14 @@
     (PS_Adobe_Std_Strings_Func)PS_Standard_Strings,
 
     t1_standard_encoding,
-    t1_expert_encoding
+    t1_expert_encoding,
+
+#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST
+    (PS_Next_Unicode_Func)     PS_Next_Unicode
+#else
+    0
+#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */
+
   };
 
 

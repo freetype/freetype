@@ -494,6 +494,27 @@
     return result;
   }
 
+  static FT_Long
+  FNT_Get_Next_Char( FT_CharMap  charmap,
+                     FT_Long     char_code )
+  {
+    char_code++;
+    if ( charmap )
+    {
+      FNT_Font*  font  = ((FNT_Face)charmap->face)->fonts;
+      FT_Long    first = font->header.first_char;
+
+
+      if ( char_code < first )
+        char_code = first;
+      if ( char_code <= font->header.last_char )
+        return char_code;
+    }
+    else
+      return char_code;
+    return 0;
+  }
+
 
   static FT_Error
   FNT_Load_Glyph( FT_GlyphSlot  slot,
@@ -622,7 +643,9 @@
 
     (FTDriver_getKerning)   0,
     (FTDriver_attachFile)   0,
-    (FTDriver_getAdvances)  0
+    (FTDriver_getAdvances)  0,
+
+    (FTDriver_getNextChar)  FNT_Get_Next_Char
   };
 
 
