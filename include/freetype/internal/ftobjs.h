@@ -676,6 +676,10 @@ FT_BEGIN_HEADER
                               FT_Pointer  buffer,
                               FT_UInt     buffer_max );
 
+  typedef FT_UInt
+  (*FT_Name_Index_Requester)( FT_Face     face,
+                              FT_String*  glyph_name );
+
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM
 
