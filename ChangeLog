@@ -1,3 +1,10 @@
+2001-06-16  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h (FT_ENC_TAG): New macro.
+	(FT_Encoding_): Use it.
+	* include/freetype/ftimage.h (FT_IMAGE_TAG): Define it
+	conditionally.
+
 2001-06-14  David Turner  <david@freetype.org>
 
 	Modified the TrueType interpreter to let it use the new

@@ -356,6 +356,23 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* <Macro>                                                               */
+  /*    FT_ENC_TAG                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This macro converts four letter tags into an unsigned long.        */
+  /*                                                                       */
+#ifndef FT_ENC_TAG
+#define FT_ENC_TAG( _x1, _x2, _x3, _x4 ) \
+        ( ( (unsigned long)_x1 << 24 ) | \
+          ( (unsigned long)_x2 << 16 ) | \
+          ( (unsigned long)_x3 << 8  ) | \
+            (unsigned long)_x4         )
+#endif /* FT_ENC_TAG */
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* <Enum>                                                                */
   /*    FT_Encoding                                                        */
   /*                                                                       */
@@ -372,20 +389,20 @@ FT_BEGIN_HEADER
   typedef enum  FT_Encoding_
   {
     ft_encoding_none    = 0,
-    ft_encoding_symbol  = FT_MAKE_TAG( 's', 'y', 'm', 'b' ),
-    ft_encoding_unicode = FT_MAKE_TAG( 'u', 'n', 'i', 'c' ),
-    ft_encoding_latin_2 = FT_MAKE_TAG( 'l', 'a', 't', '2' ),
-    ft_encoding_sjis    = FT_MAKE_TAG( 's', 'j', 'i', 's' ),
-    ft_encoding_gb2312  = FT_MAKE_TAG( 'g', 'b', ' ', ' ' ),
-    ft_encoding_big5    = FT_MAKE_TAG( 'b', 'i', 'g', '5' ),
-    ft_encoding_wansung = FT_MAKE_TAG( 'w', 'a', 'n', 's' ),
-    ft_encoding_johab   = FT_MAKE_TAG( 'j', 'o', 'h', 'a' ),
+    ft_encoding_symbol  = FT_ENC_TAG( 's', 'y', 'm', 'b' ),
+    ft_encoding_unicode = FT_ENC_TAG( 'u', 'n', 'i', 'c' ),
+    ft_encoding_latin_2 = FT_ENC_TAG( 'l', 'a', 't', '2' ),
+    ft_encoding_sjis    = FT_ENC_TAG( 's', 'j', 'i', 's' ),
+    ft_encoding_gb2312  = FT_ENC_TAG( 'g', 'b', ' ', ' ' ),
+    ft_encoding_big5    = FT_ENC_TAG( 'b', 'i', 'g', '5' ),
+    ft_encoding_wansung = FT_ENC_TAG( 'w', 'a', 'n', 's' ),
+    ft_encoding_johab   = FT_ENC_TAG( 'j', 'o', 'h', 'a' ),
 
-    ft_encoding_adobe_standard = FT_MAKE_TAG( 'A', 'D', 'O', 'B' ),
-    ft_encoding_adobe_expert   = FT_MAKE_TAG( 'A', 'D', 'B', 'E' ),
-    ft_encoding_adobe_custom   = FT_MAKE_TAG( 'A', 'D', 'B', 'C' ),
+    ft_encoding_adobe_standard = FT_ENC_TAG( 'A', 'D', 'O', 'B' ),
+    ft_encoding_adobe_expert   = FT_ENC_TAG( 'A', 'D', 'B', 'E' ),
+    ft_encoding_adobe_custom   = FT_ENC_TAG( 'A', 'D', 'B', 'C' ),
 
-    ft_encoding_apple_roman    = FT_MAKE_TAG( 'a', 'r', 'm', 'n' )
+    ft_encoding_apple_roman    = FT_ENC_TAG( 'a', 'r', 'm', 'n' )
 
   } FT_Encoding;
 
