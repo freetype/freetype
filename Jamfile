@@ -29,7 +29,7 @@ SubDirHdr  += $(FT2_INCLUDE) ;
 # later used in #include statements.  It needs to be parsed in order to
 # record these definitions.
 #
-HDRMACRO  [ FT2_SubDir  include freetype config ft2build.h ] ;
+HDRMACRO  [ FT2_SubDir  include freetype config ftheader.h ] ;
 
 # Now include the Jamfile in "freetype2/src", used to drive the compilation
 # of each FreeType 2 component and/or module.
