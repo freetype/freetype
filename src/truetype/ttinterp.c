@@ -7390,7 +7390,7 @@
 
 #endif /* TT_CONFIG_OPTION_INTERPRETER_SWITCH */
 
-      if ( CUR.error != FT_Err_Ok )
+      if ( CUR.error != TT_Err_Ok )
       {
         switch ( CUR.error )
         {
