@@ -1,3 +1,29 @@
+2004-08-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/otlayout/otlayout.h: Add copyright.
+	(OTL_INVALID_OFFSET): Removed.
+
+	* src/otlayout/otlgdef.h: Include otlayout.h.
+	Comment out inclusion of otltable.h.
+
+	* src/otlayout/otlgpos.c (otl_gpos_lookup4_validate): Fix call
+	to otl_base_array_validate.
+	(otl_liga_mark2_validate): Fix `for' loop.
+
+	* src/otlayout/otlgsub.c (otl_ligature_validate): Check `glyph_id',
+	not components array.
+
+	* src/otlcommn.c (otl_lookup_get_count, otl_feature_get_count):
+	Comment out.
+	(otl_lookup_list_get_count, otl_feature_list_get_count): Activate.
+	(otl_feature_list_validate, otl_gsubgpos_get_lookup_count):
+	s/otl_lookup_get_count/otl_lookup_list_get_count/.
+	(otl_script_list_validate):
+	s/otl_feature_get_count/otl_feature_list_get_count/.
+	(otl_script_validate): Call otl_lang_validate for default language.
+
+	* src/otlayout/otlcommn.h: Updated.
+
 2004-08-16  Werner Lemberg  <wl@gnu.org>
 
 	* src/otlayout/otlgpos.c (otl_gpos_lookup1_validate,

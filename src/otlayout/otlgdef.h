@@ -19,7 +19,11 @@
 #ifndef __OTLGDEF_H__
 #define __OTLGDEF_H__
 
+#include "otlayout.h"
+
+#if 0
 #include "otltable.h"
+#endif
 
 OTL_BEGIN_HEADER
 
