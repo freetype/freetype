@@ -238,7 +238,7 @@
                                              (FT_GlyphSlot)glyph,
                                              0, /* glyph names -- XXX */
                                              0, /* blend == 0 */
-                                             0, /* hinting == 0 */
+                                             hinting,
                                              cid_load_glyph );
 
       /* set up the decoder */
@@ -316,11 +316,12 @@
 
 
           /* First of all, scale the points */
-          for ( n = cur->n_points; n > 0; n--, vec++ )
-          {
-            vec->x = FT_MulFix( vec->x, x_scale );
-            vec->y = FT_MulFix( vec->y, y_scale );
-          }
+          if ( !hinting )
+            for ( n = cur->n_points; n > 0; n--, vec++ )
+            {
+              vec->x = FT_MulFix( vec->x, x_scale );
+              vec->y = FT_MulFix( vec->y, y_scale );
+            }
 
           FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
 

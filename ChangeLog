@@ -1,3 +1,13 @@
+2001-12-20  David Turner  <david@freetype.org>
+
+        * src/type1/t1gload.c (T1_Load_Glyph): enable font matrix transform
+        on hinted glyphs..
+
+        * src/cid/cidgload.c, src/cid/cidobjs.c, src/cid/cidobjs.h,
+        src/cid/cidriver.c, include/freetype/internal/t1types.h: added
+        Postscript hinter support to the CID font driver !!
+
+
 2001-12-19  David Turner  <david@freetype.org>
 
 	* include/freetype/cache/ftcache.h: Added comments to indicate that

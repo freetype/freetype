@@ -241,8 +241,7 @@
         if ( size && size->root.metrics.y_ppem < 24 )
           glyph->root.outline.flags |= ft_outline_high_precision;
 
-  /* XXX: the following needs serious work to work properly with hinting! */
-#if 0
+#if 1
         /* apply the font matrix, if any */
         FT_Outline_Transform( &glyph->root.outline, &font_matrix );
 

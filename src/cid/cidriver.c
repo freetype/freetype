@@ -190,7 +190,10 @@
   {
     /* first of all, the FT_Module_Class fields */
     {
-      ft_module_font_driver | ft_module_driver_scalable,
+      ft_module_font_driver       |
+      ft_module_driver_scalable   |
+      ft_module_driver_has_hinter ,
+      
       sizeof( FT_DriverRec ),
       "t1cid",   /* module name           */
       0x10000L,  /* version 1.0 of driver */
@@ -198,8 +201,8 @@
 
       0,
 
-      (FT_Module_Constructor)CID_Init_Driver,
-      (FT_Module_Destructor) CID_Done_Driver,
+      (FT_Module_Constructor)CID_Driver_Init,
+      (FT_Module_Destructor) CID_Driver_Done,
       (FT_Module_Requester)  CID_Get_Interface
     },
 
@@ -208,16 +211,16 @@
     sizeof( CID_SizeRec ),
     sizeof( CID_GlyphSlotRec ),
 
-    (FTDriver_initFace)     CID_Init_Face,
-    (FTDriver_doneFace)     CID_Done_Face,
+    (FTDriver_initFace)     CID_Face_Init,
+    (FTDriver_doneFace)     CID_Face_Done,
 
-    (FTDriver_initSize)     0,
-    (FTDriver_doneSize)     0,
-    (FTDriver_initGlyphSlot)0,
-    (FTDriver_doneGlyphSlot)0,
+    (FTDriver_initSize)     CID_Size_Init,
+    (FTDriver_doneSize)     CID_Size_Done,
+    (FTDriver_initGlyphSlot)CID_GlyphSlot_Init,
+    (FTDriver_doneGlyphSlot)CID_GlyphSlot_Done,
 
-    (FTDriver_setCharSizes) 0,
-    (FTDriver_setPixelSizes)0,
+    (FTDriver_setCharSizes) CID_Size_Reset,
+    (FTDriver_setPixelSizes)CID_Size_Reset,
 
     (FTDriver_loadGlyph)    CID_Load_Glyph,
     (FTDriver_getCharIndex) CID_Get_Char_Index,
