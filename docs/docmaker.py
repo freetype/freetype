@@ -35,6 +35,15 @@ html_footer = """
 </html>
 """
 
+section_title_header = """
+<center><h1>
+"""
+
+section_title_footer = """
+</h1></center>
+"""
+
+
 code_header = """
 <font color=blue><pre>
 """
@@ -54,6 +63,10 @@ source_header = """<center><table width="550"><tr bgcolor="#D6E8FF" width="100%"
 source_footer = """</pre></table></center>
 <br><br>
 """
+
+
+current_section = None
+
 
 # The FreeType 2 reference is extracted from the source files. These contain
 # various comment blocks that follow one of the following formats:
@@ -244,6 +257,16 @@ class DocParagraph:
         #print "§" #for debugging only
 
 
+    def dump_string( self ):
+        s     = ""
+        space = ""
+        for word in self.words:
+            s     = s + space + word
+            space = " "
+
+        return s
+
+
     def dump_html( self ):
 
         print para_header
@@ -390,6 +413,16 @@ class DocContent:
         return "UNKNOWN_CONTENT_IDENTIFIER!!"
 
 
+    def get_title( self ):
+        if self.items:
+            item = self.items[0]
+            for element in item[1]:
+                return element.dump_string()
+
+        # should never happen
+        return "UNKNOWN_CONTENT_TITLE"
+
+
     def dump( self ):
         for item in self.items:
             field = item[0]
@@ -459,6 +492,7 @@ class DocBlock:
         marker      = None               # current marker
         content     = []                 # current content lines list
         alphanum    = string.letters + string.digits + "_"
+        self.name   = None
 
         for line in block_line_list:
             line2  = string.lstrip( line )
@@ -494,6 +528,11 @@ class DocBlock:
         if self.items:
             self.source = source_line_list
 
+        # now retrieve block name when possible
+        if self.items:
+            first     = self.items[0]
+            self.name = first[1].get_identifier()
+
 
     # this function is used to add a new element to self.items
     #  'marker' is a marker string, or None
@@ -519,6 +558,13 @@ class DocBlock:
             self.items.append( ( string.lower(marker), content ) )
             if not self.identifier:
                 self.identifier = content.get_identifier()
+
+    
+    def find_content( self, marker ):
+        for item in self.items:
+            if ( item[0] == marker ):
+                return item[1]
+        return None
 
 
 
@@ -574,6 +620,163 @@ class DocBlock:
             print ""
 
         print block_footer
+
+
+######################################################################################
+#
+#
+# The DocSection class is used to store a given documentation section
+#
+# Each section is made of an identifier, an abstract and a description
+#
+# For example, look at:
+#
+#   <Section> Basic_Data_Types
+#
+#   <Abstract>
+#      Definitions of basic FreeType data types
+#
+#   <Description>
+#      FreeType defines several basic data types for all its
+#      operations....
+#
+class DocSection:
+
+    def __init__( self, block ):
+        self.block       = block
+        self.name        = string.lower(block.name)
+        self.abstract    = block.find_content("abstract")
+        self.description = block.find_content("description")
+        title_content    = block.find_content("title")
+        if title_content:
+            self.title = title_content.get_title()
+        else:
+            self.title = "UNKNOWN SECTION TITLE !!"
+        self.elements    = {}
+        self.list        = []
+        self.filename    = self.name + ".html"
+
+        #sys.stderr.write( "new section '"+self.name+"'" )
+
+    def add_element( self, block ):
+        # check that we don't have a duplicate element in this
+        # section..
+        if self.elements.has_key( block.name ):
+            sys.stderr.write( "ERROR - duplicate element definition for " + 
+                              "'" + block.name + "' in section '" +
+                              section.name + "'" )
+            sys.quit()
+
+        self.elements[ block.name ] = block
+        self.list.append( block )
+
+
+    def dump_html( self ):
+        """make an HTML page from a given DocSection"""
+
+        # print HTML header
+        print html_header
+
+        # print title
+        print section_title_header
+        print self.title
+        print section_title_footer
+
+        # print description
+        print block_header
+        self.description.dump_html()
+        print block_footer
+
+        # print elements
+        for element in self.list:
+            element.dump_html()
+
+        print html_footer
+
+
+
+
+
+class DocSectionList:
+
+    def  __init__( self ):
+        self.sections        = {}
+        self.list            = []
+        self.current_section = None
+
+
+    def  append_section( self, block ):
+        name       = block.name
+        abstract   = block.find_content( "abstract" )
+
+        if self.sections.has_key(name):
+            # there is already a section with this name in our
+            # list. We'll try to complete it.
+
+            section = self.sections[name]
+            if section.abstract:
+                # this section already has an abstract defined,
+                # simply check that the new section doesn't
+                # provide a new one.
+                if abstract:
+                    stderr.write( "ERROR - duplicate section definition" +
+                                  " for '" + name + "'" )
+                    sys.quit()
+            else:
+                # the old section didn't contain an abstract, we're
+                # now going to replace it
+                section.abstract    = abstract
+                section.description = block.find_content( "description" )
+        else:
+            # a new section
+            section = DocSection( block )
+            self.sections[name] = section
+            self.list.append( section )
+
+        self.current_section = section
+
+
+    def append_block( self, block ):
+        if block.name:
+            section = block.find_content( "section" )
+            if section:
+                self.append_section( block )
+
+            elif self.current_section:
+                #sys.stderr.write( "  new block" )
+                self.current_section.add_element( block )
+
+
+    def dump_html_toc( self ):
+        # dump an html table of contents
+        print html_header
+
+        print "<center><h1>Table of Contents</h1></center>"
+
+        print "<center><table cellpadding=5>"
+        for section in self.list:
+            print "<tr valign=top><td>"
+            print '<a href="'+section.filename+'">'
+            print section.title
+            print "</a></td><td>"
+            section.abstract.dump_html()
+            print "</td></tr>"
+
+        print "</table></center>"
+
+        print html_footer
+
+
+    def dump_html_sections( self ):
+        old_stdout = sys.stdout
+        for section in self.sections.values():
+            new_file   = open( section.filename, "w" )
+            sys.stdout = new_file
+            section.dump_html()
+            new_file.close()
+
+        sys.stdout = old_stdout
+
 
 
 # filter a given list of DocBlocks. Returns a new list
@@ -807,11 +1010,18 @@ def main( argv ):
     list = make_block_list()
     list = block_make_list(list)
 
-    list2 = filter_blocks( list, ['type','macro','enum','constant', 'functype'] )
-    #list2 = list
-    list2.sort( block_lexicographical_compare )
+    section_list = DocSectionList()
+    for block in list:
+        section_list.append_block( block )
 
-    dump_html_1( list2 )
+    section_list.dump_html_toc()
+    section_list.dump_html_sections()
+
+    #list2 = filter_blocks( list, ['type','macro','enum','constant', 'functype'] )
+    #list2 = list
+    #list2.sort( block_lexicographical_compare )
+
+    #dump_html_1( list2 )
     #dump_doc_blocks( list )
     #dump_block_lists( list )
     #dump_html_1( list )
