@@ -365,6 +365,9 @@ int r;
       r = Z_STREAM_ERROR;
       LEAVE
   }
+#ifdef NEED_DUMMY_RETURN
+  return 0;
+#endif
 }
 
 

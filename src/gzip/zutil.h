@@ -203,7 +203,7 @@ typedef unsigned long  ulg;
 #endif
 
 
-typedef uLong (ZEXPORT *check_func) OF((uLong check, const Bytef *buf,
+typedef uLong (*check_func) OF((uLong check, const Bytef *buf,
 				       uInt len));
 local voidpf zcalloc OF((voidpf opaque, unsigned items, unsigned size));
 local void   zcfree  OF((voidpf opaque, voidpf ptr));

@@ -35,7 +35,7 @@
   /*                                                                       */
 #define FREETYPE_MAJOR 2
 #define FREETYPE_MINOR 1
-#define FREETYPE_PATCH 3
+#define FREETYPE_PATCH 4
 
 
 #include <ft2build.h>

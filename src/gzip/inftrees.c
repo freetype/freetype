@@ -10,8 +10,11 @@
 #  define BUILDFIXED   /* non ANSI compilers may not accept inffixed.h */
 #endif
 
+
+#if 0
 local const char inflate_copyright[] =
    " inflate 1.1.4 Copyright 1995-2002 Mark Adler ";
+#endif
 /*
   If you use the zlib library in a product, an acknowledgment is welcome
   in the documentation of your product. If for some reason you cannot
