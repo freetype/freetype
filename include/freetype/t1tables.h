@@ -61,7 +61,7 @@
   /*    A structure used to model a Type1/Type2 FontInfo dictionary.  Note */
   /*    that for Multiple Master fonts, each instance has its own Private  */
   /*    dict.                                                              */
-  /*
+  /*                                                                       */
   typedef struct  T1_Private
   {
     FT_Int     unique_id;
