@@ -145,10 +145,10 @@
 
 
 #define cur_to_org( n, zone ) \
-          MEM_Copy( (zone)->org, (zone)->cur, n * sizeof ( FT_Vector ) )
+          MEM_Copy( (zone)->org, (zone)->cur, (n) * sizeof ( FT_Vector ) )
 
 #define org_to_cur( n, zone ) \
-          MEM_Copy( (zone)->cur, (zone)->org, n * sizeof ( FT_Vector ) )
+          MEM_Copy( (zone)->cur, (zone)->org, (n) * sizeof ( FT_Vector ) )
 
 
   /*************************************************************************/

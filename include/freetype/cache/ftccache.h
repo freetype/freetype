@@ -54,6 +54,13 @@ FT_BEGIN_HEADER
 #define  FTC_NODE(x)    ((FTC_Node)(x))
 #define  FTC_NODE_P(x)  ((FTC_Node*)(x))
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* These functions are exported so that they can be called from          */
+  /* user-provided cache classes; otherwise, they are really part of the   */
+  /* cache sub-system internals.                                           */
+  /*                                                                       */
+
   /* can be used as a FTC_Node_DoneFunc */
   FT_EXPORT( void )
   ftc_node_done( FTC_Node   node,
@@ -112,6 +119,13 @@ FT_BEGIN_HEADER
 #define  FTC_FAMILY(x)    ((FTC_Family)(x))
 #define  FTC_FAMILY_P(x)  ((FTC_Family*)(x))
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* These functions are exported so that they can be called from          */
+  /* user-provided cache classes; otherwise, they are really part of the   */
+  /* cache sub-system internals.                                           */
+  /*                                                                       */
 
  /* must be called by any FTC_Node_InitFunc routine */
   FT_EXPORT(FT_Error)
@@ -218,6 +232,13 @@ FT_BEGIN_HEADER
   } FTC_Cache_ClassRec;
 
   /* */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* These functions are exported so that they can be called from          */
+  /* user-provided cache classes; otherwise, they are really part of the   */
+  /* cache sub-system internals.                                           */
+  /*                                                                       */
 
   /* can be used directly as FTC_Cache_DoneFunc(), or called by custom */
   /* cache finalizers                                                  */
