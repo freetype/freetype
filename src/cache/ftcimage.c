@@ -20,6 +20,7 @@
 #include <freetype/internal/ftmemory.h>
 
 #include <string.h>     /* memcmp() */
+#include <stdlib.h>     /* labs()   */
 
 
   /* the FT_Glyph image `glyph node' type */
