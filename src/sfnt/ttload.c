@@ -1141,7 +1141,7 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  TT_CMapTable
 
-      FT_FRAME_START( 6 ),
+      FT_FRAME_START( 4 ),
         FT_FRAME_USHORT( format ),
         FT_FRAME_USHORT( length ),
       FT_FRAME_END

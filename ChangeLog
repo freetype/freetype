@@ -1,3 +1,11 @@
+2001-08-25  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttload.c (TT_Load_CMap): Fix frame length of
+	`cmap_rec_fields'.
+
+	* include/freetype/fterrors.h [!FT_CONFIG_OPTION_USE_MODULE_ERRORS]:
+	Undefine FT_ERR_BASE before defining again.
+
 2001-08-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttinterp.h: Fix prototype of TT_Move_Func.

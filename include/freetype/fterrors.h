@@ -127,6 +127,7 @@
 
 #else
 
+#undef FT_ERR_BASE
 #define FT_ERR_BASE  0
 
 #endif /* FT_CONFIG_OPTION_USE_MODULE_ERRORS */

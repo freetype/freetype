@@ -539,12 +539,12 @@ FT_BEGIN_HEADER
   /*    num_charmaps        :: The total number of character maps in the   */
   /*                           face.                                       */
   /*                                                                       */
-  /*    charmaps            :: A table of pointers to the face's charmaps  */
+  /*    charmaps            :: A table of pointers to the face's charmaps. */
   /*                           Used to scan the list of available charmaps */
-  /*                           this table might change after a call to     */
-  /*                           FT_Attach_File/Stream (e.g. when it used    */
-  /*                           to hook and additional encoding/CMap to     */
-  /*                           the face object).                           */
+  /*                           -- this table might change after a call to  */
+  /*                           FT_Attach_File/Stream (e.g. when used to    */
+  /*                           hook an additional encoding/CMap to the     */
+  /*                           face object).                               */
   /*                                                                       */
   /*    generic             :: A field reserved for client uses.  See the  */
   /*                           FT_Generic type description.                */
@@ -1512,7 +1512,7 @@ FT_BEGIN_HEADER
   /*    format of a given font resource.  If the `face_index' field is     */
   /*    negative, the function will _not_ return any face handle in        */
   /*    `aface'.  Its return value should be 0 if the font format is       */
-  /*    recognized, or non-zero if not.                                    */
+  /*    recognized, or non-zero otherwise.                                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_New_Face( FT_Library   library,
@@ -1560,7 +1560,7 @@ FT_BEGIN_HEADER
   /*    font format of a given font resource.  If the `face_index' field   */
   /*    is negative, the function will _not_ return any face handle in     */
   /*    `aface'.  Its return value should be 0 if the font format is       */
-  /*    recognized, or non-zero if not.                                    */
+  /*    recognized, or non-zero otherwise.                                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_New_Memory_Face( FT_Library      library,
@@ -1604,7 +1604,7 @@ FT_BEGIN_HEADER
   /*    format of a given font resource.  If the `face_index' field is     */
   /*    negative, the function will _not_ return any face handle in        */
   /*    `*face'.  Its return value should be 0 if the font format is       */
-  /*    recognized, or non-zero if not.                                    */
+  /*    recognized, or non-zero otherwise.                                 */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Open_Face( FT_Library     library,
