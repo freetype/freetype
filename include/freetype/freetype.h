@@ -599,13 +599,12 @@
     FT_Int           num_fixed_sizes;
     FT_Bitmap_Size*  available_sizes;
 
-    /* the face's table of available charmaps */
     FT_Int           num_charmaps;
     FT_CharMap*      charmaps;
 
     FT_Generic       generic;
 
-    /* the following are only relevant for scalable outlines */
+    /*# the following are only relevant for scalable outlines */
     FT_BBox          bbox;
 
     FT_UShort        units_per_EM;
@@ -622,9 +621,7 @@
     FT_GlyphSlot     glyph;
     FT_Size          size;
 
-    /************************************************************/
-    /* The following fields should be considered private and    */
-    /* rarely, if ever, used directly by client applications.   */
+    /*@private begin */
 
     FT_Driver        driver;
     FT_Memory        memory;
@@ -642,6 +639,8 @@
     FT_Matrix        transform_matrix;
     FT_Vector        transform_delta;
     FT_Int           transform_flags;
+
+    /*@private end */
 
   } FT_FaceRec;
 
@@ -792,23 +791,32 @@
   /*                                                                       */
 #define FT_FACE_FLAG_EXTERNAL_STREAM   0x4000
 
+  /* */
 
 #define FT_HAS_HORIZONTAL( face ) \
           ( face->face_flags & FT_FACE_FLAG_HORIZONTAL )
+
 #define FT_HAS_VERTICAL( face ) \
           ( face->face_flags & FT_FACE_FLAG_VERTICAL )
+
 #define FT_HAS_KERNING( face ) \
           ( face->face_flags & FT_FACE_FLAG_KERNING )
+
 #define FT_IS_SCALABLE( face ) \
           ( face->face_flags & FT_FACE_FLAG_SCALABLE )
+
 #define FT_IS_SFNT( face ) \
           ( face->face_flags & FT_FACE_FLAG_SFNT )
+
 #define FT_IS_FIXED_WIDTH( face ) \
           ( face->face_flags & FT_FACE_FLAG_FIXED_WIDTH )
+
 #define FT_HAS_FIXED_SIZES( face ) \
           ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
+
 #define FT_HAS_FAST_GLYPHS( face ) \
           ( face->face_flags & FT_FACE_FLAG_FAST_GLYPHS )
+
 #define FT_HAS_GLYPH_NAMES( face ) \
           ( face->face_flags & FT_FACE_FLAG_GLYPH_NAMES )
 
@@ -1141,8 +1149,9 @@
 
     void*             other;
 
-    /* private fields */
+    /*@private begin*/
     FT_GlyphLoader*   loader;
+    /*@private end*/
 
   } FT_GlyphSlotRec;
 
@@ -2272,7 +2281,7 @@
   FT_EXPORT_DEF( void )  FT_Vector_Transform( FT_Vector*  vec,
                                               FT_Matrix*  matrix );
 
-
+  /* */
 
 #ifdef __cplusplus
   }
