@@ -28,6 +28,20 @@
 
           Maybe 2.1.6 will be called 2.2.0 after all :-)
 
+        * README, builds/unix/configure, builds/unix/configure.ac,
+        docs/CHANGES, include/freetype/freetype.h:
+
+          updating version numbers for 2.1.6, and removing obsolete
+          warnings in the documentation
+
+        * include/freetype/internal/ftcore.h,
+        include/freetype/internal/ftexcept.h,
+        include/freetype/internal/fthash.h,
+        include/freetype/internal/ftobject.h:
+
+          removing obsolete files
+
+
 
 
 2003-09-09  David Turner  <david@freetype.org>
