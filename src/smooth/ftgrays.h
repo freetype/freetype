@@ -25,7 +25,8 @@
 #ifdef _STANDALONE_
 #include "ftimage.h"
 #else
-#include <freetype/ftimage.h>
+#include <ft2build.h>
+#include FT_IMAGE_H
 #endif
 
   /*************************************************************************/

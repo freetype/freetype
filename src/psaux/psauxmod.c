@@ -15,21 +15,10 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "psauxmod.h"
-#include "psobjs.h"
-#include "t1decode.h"
-
-#else
-
-#include <psaux/psauxmod.h>
-#include <psaux/psobjs.h>
-#include <psaux/t1decode.h>
-
-#endif
-
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(psaux,psauxmod.h)
+#include  FT_SOURCE_FILE(psaux,psobjs.h)
+#include  FT_SOURCE_FILE(psaux,t1decode.h)
 
   FT_CALLBACK_TABLE_DEF
   const PS_Table_Funcs  ps_table_funcs =

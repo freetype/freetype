@@ -19,15 +19,12 @@
 #ifndef T1DECODE_H
 #define T1DECODE_H
 
-#include <freetype/internal/psaux.h>
-#include <freetype/internal/psnames.h>
-#include <freetype/internal/t1types.h>
+#include <ft2build.h>
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
+#include FT_INTERNAL_POSTSCRIPT_NAMES_H
+#include FT_INTERNAL_TYPE1_TYPES_H
 
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   FT_CALLBACK_TABLE
   const T1_Decoder_Funcs  t1_decoder_funcs;
@@ -55,10 +52,7 @@
   void  T1_Decoder_Done( T1_Decoder*  decoder );
 
 
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* T1DECODE_H */
 

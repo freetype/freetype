@@ -61,6 +61,32 @@ FT_BEGIN_HEADER
   } CFF_Index;
 
 
+  typedef struct CFF_Encoding_
+  {
+    FT_Stream   stream;
+    
+    FT_UInt     format;
+    FT_ULong    offset;
+    FT_UInt     size;
+    
+    FT_Byte*    bytes;
+  
+  } CFF_Encoding;
+
+
+  typedef struct CFF_Charset_
+  {
+    FT_Stream   stream;
+    
+    FT_UInt     format;
+    FT_ULong    offset;
+    FT_UInt     size;
+    
+    FT_Byte*    bytes;
+  
+  } CFF_Charset;
+
+
   typedef struct  CFF_Font_Dict_
   {
     FT_UInt    version;
@@ -195,8 +221,9 @@ FT_BEGIN_HEADER
     CFF_Index      string_index;
     CFF_Index      global_subrs_index;
 
-    /* we don't load the Encoding and CharSet tables */
-
+    CFF_Encoding   encoding;
+    CFF_Charset    charset;
+    
     CFF_Index      charstrings_index;
     CFF_Index      font_dict_index;
     CFF_Index      private_index;

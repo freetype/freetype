@@ -15,24 +15,11 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/internal/psnames.h>
-#include <freetype/internal/ftobjs.h>
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "psmodule.h"
-#include "pstables.h"
-
-#else
-
-#include <psnames/psmodule.h>
-#include <psnames/pstables.h>
-
-#endif
-
-
+#include <ft2build.h>
+#include FT_INTERNAL_POSTSCRIPT_NAMES_H
+#include FT_INTERNAL_OBJECTS_H
+#include FT_SOURCE_FILE(psnames,psmodule.h)
+#include FT_SOURCE_FILE(psnames,pstables.h)
 #include <stdlib.h>     /* for qsort()             */
 #include <string.h>     /* for strcmp(), strncpy() */
 

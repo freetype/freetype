@@ -23,21 +23,10 @@
 #ifndef AHGLYPH_H
 #define AHGLYPH_H
 
-#ifdef FT_FLAT_COMPILE
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(autohint,ahtypes.h)
 
-#include "ahtypes.h"
-
-#else
-
-#include <autohint/ahtypes.h>
-
-#endif
-
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   typedef enum  AH_UV_
   {
@@ -91,11 +80,7 @@
   FT_LOCAL
   void  ah_outline_done( AH_Outline*  outline );
 
-
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* AHGLYPH_H */
 

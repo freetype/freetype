@@ -15,21 +15,10 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "t1afm.h"
-
-#else
-
-#include <type1/t1afm.h>
-
-#endif
-
-
-#include <freetype/internal/ftstream.h>
-#include <freetype/internal/t1types.h>
-
+#include <ft2build.h>
+#include FT_SOURCE_FILE(type1,t1afm.h)
+#include FT_INTERNAL_STREAM_H
+#include FT_INTERNAL_TYPE1_TYPES_H
 #include <stdlib.h>  /* for qsort()   */
 #include <string.h>  /* for strcmp()  */
 #include <ctype.h>   /* for isalnum() */

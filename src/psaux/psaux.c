@@ -18,19 +18,9 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#ifdef FT_FLAT_COMPILE
-
-#include "psobjs.c"
-#include "psauxmod.c"
-#include "t1decode.c"
-
-#else
-
-#include <psaux/psobjs.c>
-#include <psaux/psauxmod.c>
-#include <psaux/t1decode.c>
-
-#endif
-
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(psaux,psobjs.c)
+#include  FT_SOURCE_FILE(psaux,psauxmod.c)
+#include  FT_SOURCE_FILE(psaux,t1decode.c)
 
 /* END */

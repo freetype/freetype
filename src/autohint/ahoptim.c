@@ -30,20 +30,9 @@
   /*                                                                       */
   /*************************************************************************/
 
-
-#include <freetype/internal/ftobjs.h>  /* for ALLOC_ARRAY() and FREE() */
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ahoptim.h"
-
-#else
-
-#include <autohint/ahoptim.h>
-
-#endif
-
+#include  <ft2build.h>
+#include  FT_INTERNAL_OBJECTS_H        /* for ALLOC_ARRAY() and FREE() */
+#include  FT_SOURCE_FILE(autohint,ahoptim.h)
 
   /* define this macro to use brute force optimisation -- this is slow,  */
   /* but a good way to perfect the distortion function `by hand' through */

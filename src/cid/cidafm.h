@@ -19,22 +19,10 @@
 #ifndef CIDAFM_H
 #define CIDAFM_H
 
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(cid,cidobjs.h)
 
-#ifdef FT_FLAT_COMPILE
-
-#include "cidobjs.h"
-
-#else
-
-#include <cid/cidobjs.h>
-
-#endif
-
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   typedef struct  CID_Kern_Pair_
   {
@@ -44,6 +32,7 @@
 
   } CID_Kern_Pair;
 
+
   typedef struct  CID_AFM_
   {
     FT_UInt         num_pairs;
@@ -52,25 +41,21 @@
   } CID_AFM;
 
 
-  FT_LOCAL
-  FT_Error  CID_Read_AFM( FT_Face    cid_face,
-                          FT_Stream  stream );
+  FT_LOCAL FT_Error
+  CID_Read_AFM( FT_Face    cid_face,
+                FT_Stream  stream );
 
-  FT_LOCAL
-  void  CID_Done_AFM( FT_Memory  memory,
-                      CID_AFM*   afm );
+  FT_LOCAL void
+  CID_Done_AFM( FT_Memory  memory,
+                CID_AFM*   afm );
 
-  FT_LOCAL
-  void  CID_Get_Kerning( CID_AFM*    afm,
-                         FT_UInt     glyph1,
-                         FT_UInt     glyph2,
-                         FT_Vector*  kerning );
+  FT_LOCAL void
+  CID_Get_Kerning( CID_AFM*    afm,
+                   FT_UInt     glyph1,
+                   FT_UInt     glyph2,
+                   FT_Vector*  kerning );
 
-
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* CIDAFM_H */
 

@@ -19,14 +19,12 @@
 #ifndef CIDPARSE_H
 #define CIDPARSE_H
 
-#include <freetype/internal/t1types.h>
-#include <freetype/internal/ftstream.h>
-#include <freetype/internal/psaux.h>
+#include  <ft2build.h>
+#include  FT_INTERNAL_TYPE1_TYPES_H
+#include  FT_INTERNAL_STREAM_H
+#include  FT_INTERNAL_POSTSCRIPT_AUX_H
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
@@ -70,14 +68,14 @@
   } CID_Parser;
 
 
-  FT_LOCAL
-  FT_Error  CID_New_Parser( CID_Parser*       parser,
-                            FT_Stream         stream,
-                            FT_Memory         memory,
-                            PSAux_Interface*  psaux );
+  FT_LOCAL FT_Error
+  CID_New_Parser( CID_Parser*       parser,
+                  FT_Stream         stream,
+                  FT_Memory         memory,
+                  PSAux_Interface*  psaux );
 
-  FT_LOCAL
-  void  CID_Done_Parser( CID_Parser*  parser );
+  FT_LOCAL void
+  CID_Done_Parser( CID_Parser*  parser );
 
 
   /*************************************************************************/
@@ -107,10 +105,7 @@
           (p)->root.funcs.load_field_table( &(p)->root, f, o, 0, 0 )
 
 
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* CIDPARSE_H */
 

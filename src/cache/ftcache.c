@@ -18,25 +18,13 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#ifdef FT_FLAT_COMPILE
-
-#include "ftlru.c"
-#include "ftcmanag.c"
-#include "ftcglyph.c"
-#include "ftcchunk.c"
-#include "ftcimage.c"
-#include "ftcsbits.c"
-
-#else
-
-#include <cache/ftlru.c>
-#include <cache/ftcmanag.c>
-#include <cache/ftcglyph.c>
-#include <cache/ftcchunk.c>
-#include <cache/ftcimage.c>
-#include <cache/ftcsbits.c>
-
-#endif
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(cache,ftlru.c)
+#include  FT_SOURCE_FILE(cache,ftcmanag.c)
+#include  FT_SOURCE_FILE(cache,ftcglyph.c)
+#include  FT_SOURCE_FILE(cache,ftcchunk.c)
+#include  FT_SOURCE_FILE(cache,ftcimage.c)
+#include  FT_SOURCE_FILE(cache,ftcsbits.c)
 
 
 /* END */

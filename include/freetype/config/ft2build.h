@@ -101,7 +101,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* The macro FT2_SOURCE_FILE is used to include a given FreeType 2       */
+  /* The macro FT_SOURCE_FILE is used to include a given FreeType 2        */
   /* component source file (be it a header, a C source file, or an         */
   /* included file).                                                       */
   /*                                                                       */
@@ -114,9 +114,9 @@
   /* FT_FLAT_COMPILATION.                                                  */
   /*                                                                       */
 #ifdef  FT_FLAT_COMPILATION
-#define FT_SOURCE_FILE( d, x )  <d/x>
+#  define FT_SOURCE_FILE( d, x )  #x
 #else
-#define FT_SOURCE_FILE( d, x )  #x
+#  define FT_SOURCE_FILE( d, x )  <d/x>
 #endif
 
 

@@ -15,36 +15,20 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/internal/ftdebug.h>
-#include <freetype/internal/ftstream.h>
-
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_STREAM_H
 #include <string.h>         /* strcmp() */
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "t1gload.h"
-#include "t1load.h"
+#include FT_SOURCE_FILE(type1,t1gload.h)
+#include FT_SOURCE_FILE(type1,t1load.h)
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
-#include "t1afm.h"
+#include FT_SOURCE_FILE(type1,t1afm.h)
 #endif
 
-#else
-
-#include <type1/t1gload.h>
-#include <type1/t1load.h>
-
-#ifndef T1_CONFIG_OPTION_NO_AFM
-#include <type1/t1afm.h>
-#endif
-
-#endif
-
-
-#include <freetype/internal/psnames.h>
-#include <freetype/internal/psaux.h>
+#include FT_INTERNAL_POSTSCRIPT_NAMES_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
 
 
   /*************************************************************************/

@@ -19,20 +19,15 @@
 #ifndef CIDRIVER_H
 #define CIDRIVER_H
 
-#include <freetype/internal/ftdriver.h>
+#include  <ft2build.h>
+#include  FT_INTERNAL_DRIVER_H
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   FT_CALLBACK_TABLE
   const  FT_Driver_Class  t1cid_driver_class;
 
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* CIDRIVER_H */
 

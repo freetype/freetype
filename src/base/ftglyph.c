@@ -27,10 +27,10 @@
   /*                                                                       */
   /*************************************************************************/
 
-
-#include <freetype/ftglyph.h>
-#include <freetype/ftoutln.h>
-#include <freetype/internal/ftobjs.h>
+#include  <ft2build.h>
+#include  FT_GLYPH_H
+#include  FT_OUTLINE_H
+#include  FT_INTERNAL_OBJECTS_H
 
 
   /*************************************************************************/

@@ -18,14 +18,8 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "psmodule.c"
-
-#else
-
-#include <psnames/psmodule.c>
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(psnames,psmodule.c)
 
 #endif
 

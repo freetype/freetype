@@ -19,14 +19,11 @@
 #ifndef SFOBJS_H
 #define SFOBJS_H
 
-#include <freetype/internal/sfnt.h>
-#include <freetype/internal/ftobjs.h>
+#include <ft2build.h>
+#include FT_INTERNAL_SFNT_H
+#include FT_INTERNAL_OBJECTS_H
 
-
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   FT_LOCAL
   FT_Error  SFNT_Init_Face( FT_Stream      stream,
@@ -46,10 +43,7 @@
   void  SFNT_Done_Face( TT_Face  face );
 
 
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* SFDRIVER_H */
 

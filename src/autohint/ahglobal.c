@@ -18,18 +18,9 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ahglobal.h"
-#include "ahglyph.h"
-
-#else
-
-#include <autohint/ahglobal.h>
-#include <autohint/ahglyph.h>
-
-#endif
+#include <ft2build.h>
+#include FT_SOURCE_FILE(autohint,ahglobal.h)
+#include FT_SOURCE_FILE(autohint,ahglyph.h)
 
 
 #define MAX_TEST_CHARACTERS  12

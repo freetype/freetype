@@ -15,25 +15,12 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/internal/ftdebug.h> /* for FT_ERROR() */
-#include <freetype/internal/t1errors.h>
-#include <freetype/ftoutln.h>
-#include <freetype/internal/ftdebug.h>
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "t1decode.h"
-#include "psobjs.h"
-
-#else
-
-#include <psaux/t1decode.h>
-#include <psaux/psobjs.h>
-
-#endif
-
+#include <ft2build.h>
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_TYPE1_ERRORS_H
+#include FT_OUTLINE_H
+#include FT_SOURCE_FILE(psaux,t1decode.h)
+#include FT_SOURCE_FILE(psaux,psobjs.h)
 
   /*************************************************************************/
   /*                                                                       */

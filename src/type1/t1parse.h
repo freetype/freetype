@@ -19,13 +19,11 @@
 #ifndef T1PARSE_H
 #define T1PARSE_H
 
-#include <freetype/internal/t1types.h>
-#include <freetype/internal/ftstream.h>
+#include <ft2build.h>
+#include FT_INTERNAL_TYPE1_TYPES_H
+#include FT_INTERNAL_STREAM_H
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
@@ -125,10 +123,7 @@
   void  T1_Finalize_Parser( T1_ParserRec*  parser );
 
 
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* T1PARSE_H */
 

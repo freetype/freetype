@@ -35,11 +35,9 @@
 #ifndef AHLOADER_H
 #define AHLOADER_H
 
+#include <ft2build.h>
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
 #ifdef _STANDALONE_
 
@@ -105,7 +103,7 @@
 
 #else /* _STANDALONE */
 
-#include <freetype/internal/ftobjs.h>
+#include FT_INTERNAL_OBJECTS_H
 
   #define AH_Load    FT_GlyphLoad
   #define AH_Loader  FT_GlyphLoader
@@ -123,11 +121,7 @@
 
 #endif /* _STANDALONE_ */
 
-
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* AHLOADER_H */
 

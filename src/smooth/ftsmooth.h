@@ -19,13 +19,11 @@
 #ifndef FTSMOOTH_H
 #define FTSMOOTH_H
 
-#include <freetype/ftrender.h>
+#include <ft2build.h>
+#include FT_RENDER_H
 
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
+FT_BEGIN_HEADER
 
 #ifndef FT_CONFIG_OPTION_NO_STD_RASTER
   FT_EXPORT_VAR( const FT_Renderer_Class )  ft_std_renderer_class;
@@ -35,10 +33,7 @@
   FT_EXPORT_VAR( const FT_Renderer_Class )  ft_smooth_renderer_class;
 #endif
 
-#ifdef __cplusplus
-  }
-#endif
-
+FT_END_HEADER
 
 #endif /* FTSMOOTH_H */
 

@@ -18,19 +18,9 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/ftmodule.h>
-
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ahhint.h"
-
-#else
-
-#include <autohint/ahhint.h>
-
-#endif
+#include  <ft2build.h>
+#include  FT_MODULE_H
+#include  FT_SOURCE_FILE(autohint,ahhint.h)
 
 
   typedef struct  FT_AutoHinterRec_

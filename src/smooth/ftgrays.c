@@ -122,21 +122,11 @@
 
 #else /* _STANDALONE_ */
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ftgrays.h"
-
-#else
-
-#include <smooth/ftgrays.h>
-
-#endif
-
-
-#include <freetype/internal/ftobjs.h>  /* for FT_UNUSED()               */
-#include <freetype/internal/ftdebug.h> /* for FT_TRACE() and FT_ERROR() */
-#include <freetype/ftoutln.h>          /* for FT_Outline_Decompose()    */
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(smooth,ftgrays.h)
+#include  FT_INTERNAL_OBJECTS_H
+#include  FT_INTERNAL_DEBUG_H
+#include  FT_OUTLINE_H
 
 #define ErrRaster_Invalid_Mode     FT_Err_Cannot_Render_Glyph
 #define ErrRaster_Invalid_Outline  FT_Err_Invalid_Outline

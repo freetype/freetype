@@ -15,12 +15,12 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#include <freetype/cache/ftcchunk.h>
-#include <freetype/ftlist.h>
-#include <freetype/fterrors.h>
-#include <freetype/internal/ftobjs.h>
-#include <freetype/fterrors.h>
+#include  <ft2build.h>
+#include  FT_CACHE_H
+#include  FT_CACHE_INTERNAL_CHUNK_H
+#include  FT_LIST_H
+#include  FT_ERRORS_H
+#include  FT_INTERNAL_OBJECTS_H
 
 
   /*************************************************************************/

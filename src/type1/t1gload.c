@@ -15,24 +15,12 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "t1gload.h"
-
-#else
-
-#include <type1/t1gload.h>
-
-#endif
-
-
-#include <freetype/internal/ftdebug.h>
-#include <freetype/internal/ftstream.h>
-#include <freetype/ftoutln.h>
-#include <freetype/internal/psaux.h>
-
-
+#include <ft2build.h>
+#include FT_SOURCE_FILE(type1,t1gload.h)
+#include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_STREAM_H
+#include FT_OUTLINE_H
+#include FT_INTERNAL_POSTSCRIPT_AUX_H
 #include <string.h>     /* for strcmp() */
 
 
