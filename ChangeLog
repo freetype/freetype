@@ -1,3 +1,8 @@
+2000-12-05  David Turner  <david.turner@freetype.org>
+
+	* src/base/ftsystem.c (FT_Done_Memory): fixed an obvious bug,
+	the ANSI "free" function was called, instead of "memory->free()"
+
 2000-12-04  David Turner  <david.turner@freetype.org>
 
 	* builds/unix/install.mk, builds/unix/ft2unix.h: the file "ft2unix.h"
