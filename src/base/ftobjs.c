@@ -20,7 +20,7 @@
 #include <ftdebug.h>
 #include <ftstream.h>
 
-
+#include <tttables.h>
 
   /*************************************************************************/
   /*************************************************************************/
@@ -1962,6 +1962,54 @@
     }
     return result;
   }
+
+
+ /***************************************************************************
+  *
+  * <Function>
+  *    FT_Get_Sfnt_Table
+  *
+  * <Description>
+  *    Returns a pointer to a given SFNT table within a face.
+  *
+  * <Input>
+  *    face  :: handle to source
+  *    tag   :: index if SFNT table
+  *
+  * <Return>
+  *    type-less pointer to the table. This will be 0 in case of error, or
+  *    when the corresponding table was not found *OR* loaded from the file.
+  *
+  * <Note>
+  *    The table is owned by the face object, and disappears with it.
+  *
+  *    This function is only useful to access Sfnt tables that are loaded
+  *    by the sfnt/truetype/opentype drivers. See FT_Sfnt_tag for a list.
+  *
+  *    You can load any table with a different function.. XXX
+  *
+  ***************************************************************************/
+  
+  
+  EXPORT_FUNC
+  void*  FT_Get_Sfnt_Table( FT_Face      face,
+                            FT_Sfnt_Tag  tag )
+  {
+    void*                   table = 0;
+    FT_Get_Sfnt_Table_Func  func;
+    FT_Driver               driver;
+    
+    if (!face || !FT_IS_SFNT(face))
+      goto Exit;
+    
+    driver = face->driver;
+    func = (FT_Get_Sfnt_Table_Func)driver->interface.get_interface( driver, "get_sfnt" );
+    if (func)
+      table = func(face,tag);
+    
+  Exit:
+    return table;
+  }			    
 
 
 
