@@ -1,3 +1,9 @@
+2003-04-23  Akito Hirai  <akito@kde.gr.jp>
+
+	* src/sfnt/ttcmap0.c (tt_cmap4_validate): Provide a weak variant
+	of the glyph ID bounding check if FT_VALIDATE_TIGHT is not active.
+	Without this change, many CJK fonts from Dynalab are rejected.
+
 2003-04-23  Joe Marcus Clarke  <marcus@FreeBSD.org>
 
 	* src/base/ftbdf.c (FT_Get_BDF_Property): Check for valid
