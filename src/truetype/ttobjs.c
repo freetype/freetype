@@ -4,11 +4,11 @@
 /*                                                                         */
 /*    Objects manager (body).                                              */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -33,7 +33,13 @@
 #include <ttinterp.h>
 #endif
 
-/* required by tracing mode */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
 #undef   FT_COMPONENT
 #define  FT_COMPONENT  trace_ttobjs
 
@@ -45,8 +51,6 @@
   /*************************************************************************/
 
 
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -56,8 +60,15 @@
   /*    Initializes a given TrueType face object.                          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    resource   :: The source font resource.                            */
+  /*    stream     :: The source font stream.                              */
+  /*                                                                       */
   /*    face_index :: The index of the font face in the resource.          */
+  /*                                                                       */
+  /*    num_params :: Number of additional generic parameters.  Ignored.   */
+  /*                                                                       */
+  /*    params     :: Additional generic parameters.  Ignored.             */
+  /*                                                                       */
+  /* <InOut>                                                               */
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
@@ -70,43 +81,49 @@
                           TT_Int         num_params,
                           FT_Parameter*  params )
   {
-    TT_Error           error;
-    FT_Driver          sfnt_driver;
-    SFNT_Interface*    sfnt;
+    TT_Error         error;
+    FT_Driver        sfnt_driver;
+    SFNT_Interface*  sfnt;
+
 
     sfnt_driver = FT_Get_Driver( face->root.driver->library, "sfnt" );
-    if (!sfnt_driver) goto Bad_Format;
+    if ( !sfnt_driver )
+      goto Bad_Format;
 
     sfnt = (SFNT_Interface*)(sfnt_driver->interface.format_interface);
-    if (!sfnt) goto Bad_Format;
+    if ( !sfnt )
+      goto Bad_Format;
 
     /* create input stream from resource */
-    if ( FILE_Seek(0) )
+    if ( FILE_Seek( 0 ) )
       goto Exit;
 
     /* check that we have a valid TrueType file */
     error = sfnt->init_face( stream, face, face_index, num_params, params );
-    if (error) goto Exit;
+    if ( error )
+      goto Exit;
 
     /* We must also be able to accept Mac/GX fonts, as well as OT ones */
-    if ( face->format_tag != 0x00010000 &&    /* MS fonts  */
-         face->format_tag != TTAG_true  )     /* Mac fonts */
+    if ( face->format_tag != 0x00010000L &&    /* MS fonts  */
+         face->format_tag != TTAG_true   )     /* Mac fonts */
     {
-      FT_TRACE2(( "[not a valid TTF font]" ));
+      FT_TRACE2(( "[not a valid TTF font]\n" ));
       goto Bad_Format;
     }
 
-    /* If we're performing a simple font format check, exit immediately */
+    /* If we are performing a simple font format check, exit immediately */
     if ( face_index < 0 )
       return TT_Err_Ok;
 
     /* Load font directory */
     error = sfnt->load_face( stream, face, face_index, num_params, params );
-    if ( error ) goto Exit;
+    if ( error )
+      goto Exit;
 
     error = TT_Load_Locations( face, stream ) ||
             TT_Load_CVT      ( face, stream ) ||
             TT_Load_Programs ( face, stream );
+
   Exit:
     return error;
      
@@ -136,8 +153,9 @@
 
     SFNT_Interface*  sfnt = face->sfnt;
 
-    if (sfnt)
-      sfnt->done_face(face);
+
+    if ( sfnt )
+      sfnt->done_face( face );
 
     /* freeing the locations table */
     FREE( face->glyph_locations );
@@ -182,6 +200,7 @@
     TT_Error   error = 0;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     TT_Face    face   = (TT_Face)size->root.face;
     FT_Memory  memory = face->root.memory;
     TT_Int     i;
@@ -189,6 +208,7 @@
     TT_ExecContext  exec;
     TT_UShort       n_twilight;
     TT_MaxProfile*  maxp = &face->max_profile;
+
 
     size->ttmetrics.valid = FALSE;
 
@@ -209,6 +229,7 @@
       FT_Size_Metrics*  metrics  = &size->root.metrics;
       TT_Size_Metrics*  metrics2 = &size->ttmetrics;
 
+
       metrics->x_ppem = 0;
       metrics->y_ppem = 0;
 
@@ -220,7 +241,7 @@
         metrics2->compensations[i] = 0;
     }
 
-    /* allocate function defs, instruction defs, cvt and storage area */
+    /* allocate function defs, instruction defs, cvt, and storage area */
     if ( ALLOC_ARRAY( size->function_defs,
                       size->max_function_defs,
                       TT_DefRecord )                ||
@@ -249,17 +270,18 @@
     {
       FT_Library  library = face->root.driver->library;
 
+
       face->interpreter = (TT_Interpreter)
-                            library->debug_hooks[ FT_DEBUG_HOOK_TRUETYPE ];
-      if (!face->interpreter)
+                            library->debug_hooks[FT_DEBUG_HOOK_TRUETYPE];
+      if ( !face->interpreter )
         face->interpreter = (TT_Interpreter)TT_RunIns;
     }
 
     /* Fine, now execute the font program! */
     exec = size->context;
-    if (!size->debug)
-      exec = TT_New_Context( face );
     /* size objects used during debugging have their own context */
+    if ( !size->debug )
+      exec = TT_New_Context( face );
 
     if ( !exec )
     {
@@ -282,14 +304,14 @@
       TT_Size_Metrics*  tt_metrics = &exec->tt_metrics;
 
 
-      metrics->x_ppem    = 0;
-      metrics->y_ppem    = 0;
-      metrics->x_scale   = 0;
-      metrics->y_scale   = 0;
+      metrics->x_ppem   = 0;
+      metrics->y_ppem   = 0;
+      metrics->x_scale  = 0;
+      metrics->y_scale  = 0;
 
-      tt_metrics->ppem   = 0;
-      tt_metrics->scale  = 0;
-      tt_metrics->ratio  = 0x10000;
+      tt_metrics->ppem  = 0;
+      tt_metrics->scale = 0;
+      tt_metrics->ratio = 0x10000L;
     }
 
     exec->instruction_trap = FALSE;
@@ -332,11 +354,13 @@
     return error;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
   Fail_Exec:
     if ( !size->debug )
       TT_Done_Context( exec );
 
   Fail_Memory:
+
 #endif
 
     TT_Done_Size( size );
@@ -358,8 +382,11 @@
   LOCAL_FUNC
   void  TT_Done_Size( TT_Size  size )
   {
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     FT_Memory  memory = size->root.face->memory;
+
 
     if ( size->debug )
     {
@@ -380,6 +407,7 @@
 
     FREE( size->function_defs );
     FREE( size->instruction_defs );
+
     size->num_function_defs    = 0;
     size->max_function_defs    = 0;
     size->num_instruction_defs = 0;
@@ -387,6 +415,7 @@
 
     size->max_func = 0;
     size->max_ins  = 0;
+
 #endif
 
     size->ttmetrics.valid = FALSE;
@@ -413,6 +442,7 @@
 
     FT_Size_Metrics*  metrics;
 
+
     if ( size->ttmetrics.valid )
       return TT_Err_Ok;
 
@@ -428,7 +458,7 @@
     {
       size->ttmetrics.scale   = metrics->x_scale;
       size->ttmetrics.ppem    = metrics->x_ppem;
-      size->ttmetrics.x_ratio = 0x10000;
+      size->ttmetrics.x_ratio = 0x10000L;
       size->ttmetrics.y_ratio = FT_MulDiv( metrics->y_ppem,
                                            0x10000L,
                                            metrics->x_ppem );
@@ -440,7 +470,7 @@
       size->ttmetrics.x_ratio = FT_MulDiv( metrics->x_ppem,
                                            0x10000L,
                                            metrics->y_ppem );
-      size->ttmetrics.y_ratio = 0x10000;
+      size->ttmetrics.y_ratio = 0x10000L;
     }
 
     /* Compute root ascender, descender, test height, and max_advance */
@@ -457,13 +487,14 @@
                                         metrics->x_scale ) + 32 ) & -64;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     {
       TT_ExecContext    exec;
       TT_UInt  i, j;
 
+
       /* Scale the cvt values to the new ppem.          */
       /* We use by default the y ppem to scale the CVT. */
-
       for ( i = 0; i < size->cvt_size; i++ )
         size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
 
@@ -528,6 +559,7 @@
         TT_Done_Context( exec );
       /* debugging instances keep their context */
     }
+
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     if ( !error )
@@ -559,7 +591,7 @@
     FT_Library  library = face->driver->library;
 
 
-    FT_TRACE4(( "TT.Init_GlyphSlot: Creating outline maxp = %d, maxc = %d\n",
+    FT_TRACE4(( "TT_Init_GlyphSlot: Creating outline maxp = %d, maxc = %d\n",
                 face->max_points, face->max_contours ));
 
     return FT_Outline_New( library,
@@ -586,7 +618,8 @@
     FT_Library  library = slot->face->driver->library;
     FT_Memory   memory  = library->memory;
 
-    if (slot->flags & ft_glyph_own_bitmap)
+
+    if ( slot->flags & ft_glyph_own_bitmap )
       FREE( slot->bitmap.buffer );
 
     FT_Outline_Done( library, &slot->outline );
@@ -614,10 +647,13 @@
     FT_Memory  memory = driver->root.memory;
     FT_Error   error;
 
+
     error = FT_New_GlyphZone( memory, 0, 0, &driver->zone );
-    if (error) return error;
+    if ( error )
+      return error;
 
     /* init extension registry if needed */
+
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
     return TT_Init_Extensions( driver );
 #else
@@ -641,6 +677,7 @@
   void  TT_Done_Driver( TT_Driver  driver )
   {
     /* destroy extensions registry if needed */
+
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
     TT_Done_Extensions( driver );
 #endif
@@ -649,12 +686,14 @@
     FT_Done_GlyphZone( &driver->zone );
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     /* destroy the execution context */
     if ( driver->context )
     {
       TT_Destroy_Context( driver->context, driver->root.memory );
       driver->context = NULL;
     }
+
 #endif
   }
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level TrueType driver interface (specification).                */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -25,7 +25,7 @@
 #include <freetype/internal/tterrors.h>
 
 
-  FT_EXPORT_VAR(const FT_DriverInterface)  tt_driver_interface;
+  FT_EXPORT_VAR( const FT_DriverInterface )  tt_driver_interface;
 
 
 #endif /* TTDRIVER_H */

@@ -108,7 +108,7 @@
     return root;
   }
 
-#endif /* OLD_CALCS */
+#endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
 #ifdef LONG64

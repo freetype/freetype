@@ -2,13 +2,13 @@
 /*                                                                         */
 /*  ttinterp.h                                                             */
 /*                                                                         */
-/*    TrueType bytecode intepreter (specification).                        */
+/*    TrueType bytecode interpreter (specification).                       */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -27,21 +27,21 @@
 #endif
 
 
-#ifndef TT_STATIC_INTEPRETER  /* indirect implementation */
+#ifndef TT_CONFIG_OPTION_STATIC_INTEPRETER  /* indirect implementation */
 
 #define EXEC_OP_   TT_ExecContext  exc,
 #define EXEC_OP    TT_ExecContext  exc
 #define EXEC_ARG_  exc,
 #define EXEC_ARG   exc
 
-#else                          /* static implementation */
+#else                                       /* static implementation */
 
 #define EXEC_OP_   /* void */
 #define EXEC_OP    /* void */
 #define EXEC_ARG_  /* void */
 #define EXEC_ARG   /* void */
 
-#endif /* TT_STATIC_INTERPRETER */
+#endif /* TT_CONFIG_OPTION_STATIC_INTERPRETER */
 
 
   /*************************************************************************/
@@ -215,253 +215,48 @@
   } TT_ExecContextRec;
 
 
-
   LOCAL_DEF
   const TT_GraphicsState  tt_default_graphics_state;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Goto_CodeRange                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Switches to a new code range (updates the code related elements in */
-  /*    `exec', and `IP').                                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    range :: The new execution code range.                             */
-  /*    IP    :: The  new IP in the new code range.                        */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    exec  :: The target execution context.                             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*   TrueType error code.  0 means success.                              */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error  TT_Goto_CodeRange( TT_ExecContext  exec,
                                TT_Int          range,
                                TT_Long         IP );
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Set_CodeRange                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Sets a code range.                                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    range  :: The code range index.                                    */
-  /*    base   :: The new code base.                                       */
-  /*    length :: The range size in bytes.                                 */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    exec   :: The target execution context.                            */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*   TrueType error code.  0 means success.                              */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error  TT_Set_CodeRange( TT_ExecContext  exec,
                               TT_Int          range,
                               void*           base,
                               TT_Long         length );
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Clear_CodeRange                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Clears a code range.                                               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    range :: The code range index.                                     */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    exec  :: The target execution context.                             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*   TrueType error code.  0 means success.                              */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Does not set the Error variable.                                   */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error  TT_Clear_CodeRange( TT_ExecContext  exec,
                                 TT_Int          range );
 
+  FT_EXPORT_DEF( TT_ExecContext )  TT_New_Context( TT_Face  face );
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_New_Context                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Queries the face context for a given font.  Note that there is     */
-  /*    now a _single_ execution context in the TrueType driver which is   */
-  /*    shared among faces.                                                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face :: A handle to the source face object.                        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A handle to the execution context.  Initialized for `face'.        */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Only the glyph loader and debugger should call this function.      */
-  /*                                                                       */
-  /*    This function is publicly exported because it is directly          */
-  /*    invoked by the TrueType debugger..                                 */
-  /*                                                                       */
-  FT_EXPORT_DEF(TT_ExecContext)  TT_New_Context( TT_Face  face );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Done_Context                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Discards an execution context.                                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    exec :: A handle to the target execution context.                  */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Only the glyph loader and debugger should call this function.      */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error  TT_Done_Context( TT_ExecContext  exec );
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Destroy_Context                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Destroys a given context.                                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    exec   :: A handle to the target execution context.                */
-  /*    memory :: A handle to the parent memory object.                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Only the glyph loader and debugger should call this function.      */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error  TT_Destroy_Context( TT_ExecContext  exec,
                                 FT_Memory       memory );
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Load_Context                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Prepare an execution context for glyph hinting.                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    exec :: A handle to the target execution context.                  */
-  /*    face :: A handle to the source face object.                        */
-  /*    size :: A handle to the source size object.                        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Only the glyph loader and debugger should call this function.      */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error  TT_Load_Context( TT_ExecContext  exec,
                              TT_Face         face,
                              TT_Size         size );
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Save_Context                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Saves the code ranges in a `size' object.                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    exec :: A handle to the source execution context.                  */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    ins  :: A handle to the target size object.                        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Only the glyph loader and debugger should call this function.      */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error  TT_Save_Context( TT_ExecContext  exec,
                              TT_Size         ins );
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Run_Context                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Executes one or more instructions in the execution context.        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    exec  :: A handle to the target execution context.                 */
-  /*                                                                       */
-  /*    debug :: A Boolean flag.  If set, the function sets some internal  */
-  /*             variables and returns immediately, otherwise TT_RunIns()  */
-  /*             is called.                                                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueTyoe error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Only the glyph loader and debugger should call this function.      */
-  /*                                                                       */
   LOCAL_DEF
   TT_Error  TT_Run_Context( TT_ExecContext  exec,
                             TT_Bool         debug );
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_RunIns                                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Executes one or more instruction in the execution context.  This   */
-  /*    is the main function of the TrueType opcode interpreter.           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    exec :: A handle to the target execution context.                  */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Only object manager and debugger should call this function.        */
-  /*                                                                       */
-  /*    This function is publicly exported because it is directly          */
-  /*    invoked by the TrueType debugger..                                 */
-  /*                                                                       */
-  FT_EXPORT_DEF(TT_Error)  TT_RunIns( TT_ExecContext  exec );
+  FT_EXPORT_DEF( TT_Error )  TT_RunIns( TT_ExecContext  exec );
 
 
 #ifdef __cplusplus

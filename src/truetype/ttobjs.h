@@ -4,11 +4,11 @@
 /*                                                                         */
 /*    Objects manager (specification).                                     */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -209,7 +209,7 @@
   /*                                                                       */
   /* A note regarding non-squared pixels:                                  */
   /*                                                                       */
-  /* (This text will probably go into some docs at some time, for now, it  */
+  /* (This text will probably go into some docs at some time; for now, it  */
   /*  is kept here to explain some definitions in the TIns_Metrics         */
   /*  record).                                                             */
   /*                                                                       */
@@ -312,6 +312,7 @@
     TT_Size_Metrics    ttmetrics;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
     TT_UInt            num_function_defs; /* number of function definitions */
     TT_UInt            max_function_defs;
     TT_DefArray        function_defs;     /* table of function definitions  */
@@ -364,44 +365,59 @@
   } TT_DriverRec;
 
 
- /*************************************************************************/
- /*  Face Funcs                                                           */
+  /*************************************************************************/
+  /*                                                                       */
+  /* Face functions                                                        */
+  /*                                                                       */
+  LOCAL_DEF
+  TT_Error  TT_Init_Face( FT_Stream      stream,
+                          TT_Face        face,
+                          TT_Int         face_index,
+                          TT_Int         num_params,
+                          FT_Parameter*  params );
 
-  LOCAL_DEF TT_Error  TT_Init_Face( FT_Stream      stream,
-                                    TT_Face        face,
-                                    TT_Int         face_index,
-                                    TT_Int         num_params,
-                                    FT_Parameter*  params );
-
-  LOCAL_DEF void      TT_Done_Face( TT_Face  face );
-
-
- /*************************************************************************/
- /*  Size funcs                                                           */
-
-  LOCAL_DEF TT_Error  TT_Init_Size ( TT_Size  size );
-  LOCAL_DEF void      TT_Done_Size ( TT_Size  size );
-  LOCAL_DEF TT_Error  TT_Reset_Size( TT_Size  size );
+  LOCAL_DEF
+  void  TT_Done_Face( TT_Face  face );
 
 
- /*************************************************************************/
- /*  GlyphSlot funcs                                                      */
+  /*************************************************************************/
+  /*                                                                       */
+  /* Size functions                                                        */
+  /*                                                                       */
+  LOCAL_DEF
+  TT_Error  TT_Init_Size( TT_Size  size );
 
-  LOCAL_DEF TT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot );
-  LOCAL_DEF void      TT_Done_GlyphSlot( TT_GlyphSlot  slot );
+  LOCAL_DEF
+  void  TT_Done_Size( TT_Size  size );
+
+  LOCAL_DEF
+  TT_Error  TT_Reset_Size( TT_Size  size );
 
 
- /*************************************************************************/
- /*  Driver funcs                                                         */
+  /*************************************************************************/
+  /*                                                                       */
+  /* GlyphSlot functions                                                   */
+  /*                                                                       */
+  LOCAL_DEF
+  TT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot );
 
-  LOCAL_DEF  TT_Error  TT_Init_Driver( TT_Driver  driver );
-  LOCAL_DEF  void      TT_Done_Driver( TT_Driver  driver );
+  LOCAL_DEF
+  void  TT_Done_GlyphSlot( TT_GlyphSlot  slot );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Driver functions                                                      */
+  /*                                                                       */
+  LOCAL_DEF
+  TT_Error  TT_Init_Driver( TT_Driver  driver );
+
+  LOCAL_DEF
+  void  TT_Done_Driver( TT_Driver  driver );
 
 #ifdef __cplusplus
   }
 #endif
-
 
 #endif /* TTOBJS_H */
 

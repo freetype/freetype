@@ -48,36 +48,48 @@
     /* the first level must always be `trace_any' */
     trace_any = 0,
 
-    /* we start with an enum for each base component */
-    trace_aaraster,  /* anti-aliasing raster (ftgrays.c)  */
-    trace_calc,      /* calculations         (ftcalc.c)   */
-    trace_extend,    /* extension manager    (ftextend.c) */
-    trace_glyph,     /* glyph manager        (ftglyph.c)  */
-    trace_io,        /* i/o monitoring       (ftsystem.c) */
-    trace_init,      /* initialization       (ftinit.c)   */
-    trace_list,      /* list manager         (ftlist.c)   */
-    trace_memory,    /* memory manager       (ftobjs.c)   */
-    trace_mm,        /* MM interface         (ftmm.c)     */
-    trace_objs,      /* base objects         (ftobjs.c)   */
-    trace_outline,   /* outline management   (ftoutln.c)  */
-    trace_raster,    /* raster               (ftraster.c) */
-    trace_stream,    /* stream manager       (ftstream.c) */
+    /* base components */
+    trace_aaraster,  /* anti-aliasing raster    (ftgrays.c)  */
+    trace_calc,      /* calculations            (ftcalc.c)   */
+    trace_extend,    /* extension manager       (ftextend.c) */
+    trace_glyph,     /* glyph manager           (ftglyph.c)  */
+    trace_io,        /* i/o monitoring          (ftsystem.c) */
+    trace_init,      /* initialization          (ftinit.c)   */
+    trace_list,      /* list manager            (ftlist.c)   */
+    trace_memory,    /* memory manager          (ftobjs.c)   */
+    trace_mm,        /* MM interface            (ftmm.c)     */
+    trace_objs,      /* base objects            (ftobjs.c)   */
+    trace_outline,   /* outline management      (ftoutln.c)  */
+    trace_raster,    /* rasterizer              (ftraster.c) */
+    trace_stream,    /* stream manager          (ftstream.c) */
 
-    /* then define an enum for each TrueType driver component */
-    trace_ttobjs,
-    trace_ttload,
-    trace_ttgload,
-    trace_ttinterp,
-    trace_ttcmap,
-    trace_ttextend,
-    trace_ttdriver,
+    /* SFNT driver components */
+    trace_sfobjs,    /* SFNT object handler     (sfobjs.c)   */
+    trace_ttcmap,    /* charmap handler         (ttcmap.c)   */
+    trace_ttload,    /* basic TrueType tables   (ttload.c)   */
+    trace_ttpost,    /* PS table processing     (ttpost.c)   */
+    trace_ttsbit,    /* TrueType sbit handling  (ttsbit.c)   */
 
-    /* define an enum for each Type 1 driver component */
+    /* TrueType driver components */
+    trace_ttdriver,  /* TT font driver          (ttdriver.c) */
+    trace_ttgload,   /* TT glyph loader         (ttgload.c)  */
+    trace_ttinterp,  /* bytecode interpreter    (ttinterp.c) */
+    trace_ttobjs,    /* TT objects manager      (ttobjs.c)   */
+    trace_ttpload,   /* TT data/program loader  (ttpload.c)  */
+
+    /* Type 1 driver components */
     trace_t1objs,
     trace_t1load,
     trace_t1gload,
     trace_t1hint,
     trace_t1driver,
+
+    /* Type 2 driver components */
+    trace_t2driver,
+    trace_t2gload,
+    trace_t2load,
+    trace_t2objs,
+    trace_t2parse,
 
     /* other trace levels */
 

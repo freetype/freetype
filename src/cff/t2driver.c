@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType font driver implementation (body).                          */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -25,9 +25,14 @@
 #include <t2gload.h>
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
+  /*                                                                       */
 #undef  FT_COMPONENT
-#define FT_COMPONENT  trace_ttdriver
-
+#define FT_COMPONENT  trace_t2driver
 
 
   /*************************************************************************/
@@ -43,7 +48,9 @@
   /*************************************************************************/
 
 #undef  PAIR_TAG
-#define PAIR_TAG( left, right )  ( ((TT_ULong)left << 16) | (TT_ULong)right )
+#define PAIR_TAG( left, right )  ( ( (TT_ULong)left << 16 ) | \
+                                     (TT_ULong)right        )
+
 
   /*************************************************************************/
   /*                                                                       */

@@ -2,13 +2,13 @@
 /*                                                                         */
 /*  ttinterp.c                                                             */
 /*                                                                         */
-/*    TrueType bytecode intepreter (body).                                 */
+/*    TrueType bytecode interpreter (body).                                */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -24,6 +24,7 @@
 #include <freetype/internal/tterrors.h>
 #include <ttinterp.h>
 
+
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
 
@@ -32,27 +33,33 @@
 
 #define TT_INT64    FT_Int64
 
-/* required by the tracing mode */
-#undef  FT_COMPONENT
-#define FT_COMPONENT      trace_ttinterp
-
-#undef  NO_APPLE_PATENT
-#define APPLE_THRESHOLD  0x4000000
 
   /*************************************************************************/
   /*                                                                       */
-  /* In order to detect infinite loops in the code, we set-up a counter    */
-  /* within the run loop. a single stroke of interpretation is now limited */
-  /* to a maximum number of opcodes defined below.                         */
+  /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
+  /* parameter of the FT_TRACE() and FT_ERROR() macros, used to print/log  */
+  /* messages during execution.                                            */
   /*                                                                       */
-#define MAX_RUNNABLE_OPCODES  1000000
+#undef  FT_COMPONENT
+#define FT_COMPONENT  trace_ttinterp
+
+#undef  NO_APPLE_PATENT
+#define APPLE_THRESHOLD  0x4000000L
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* In order to detect infinite loops in the code, we set up a counter    */
+  /* within the run loop.  A single stroke of interpretation is now        */
+  /* limitet to a maximal number of opcodes defined below.                 */
+  /*                                                                       */
+#define MAX_RUNNABLE_OPCODES  1000000L
 
 
   /*************************************************************************/
   /*                                                                       */
   /* There are two kinds of implementations:                               */
   /*                                                                       */
-  /* a. static implementation:                                             */
+  /* a. static implementation                                              */
   /*                                                                       */
   /*    The current execution context is a static variable, which fields   */
   /*    are accessed directly by the interpreter during execution.  The    */
@@ -60,7 +67,7 @@
   /*                                                                       */
   /*    This version is non-reentrant, of course.                          */
   /*                                                                       */
-  /* b. indirect implementation:                                           */
+  /* b. indirect implementation                                            */
   /*                                                                       */
   /*    The current execution context is passed to _each_ function as its  */
   /*    first argument, and each field is thus accessed indirectly.        */
@@ -85,13 +92,13 @@
   /*************************************************************************/
 
 
-#ifndef TT_CONFIG_OPTION_STATIC_INTERPRETER      /* indirect implementation */
+#ifndef TT_CONFIG_OPTION_STATIC_INTERPRETER     /* indirect implementation */
 
-#define CUR (*exc)                 /* see ttobjs.h */
+#define CUR  (*exc)                             /* see ttobjs.h */
 
-#else                              /* static implementation */
+#else                                           /* static implementation */
 
-#define CUR cur
+#define CUR  cur
 
   static
   TT_ExecContextRec  cur;   /* static exec. context variable */
@@ -105,11 +112,9 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* Most of FreeType builds don't use engine compensations.  We thus      */
-  /* introduce a macro, FT_CONFIG_OPTION_INTERPRETER_QUICK, which controls */
-  /* the use of these values.                                              */
+  /* The instruction argument stack.                                       */
   /*                                                                       */
-#define INS_ARG  EXEC_OP_ TT_Long*  args  /* see ttobjs.h for EXEC_OP_ */
+#define INS_ARG  EXEC_OP_ TT_Long*  args    /* see ttobjs.h for EXEC_OP_ */
 
 
   /*************************************************************************/
@@ -117,7 +122,7 @@
   /* This macro is used whenever `exec' is unused in a function, to avoid  */
   /* stupid warnings from pedantic compilers.                              */
   /*                                                                       */
-#define UNUSED_EXEC  UNUSED(CUR)
+#define UNUSED_EXEC  UNUSED( CUR )
 
 
   /*************************************************************************/
@@ -125,13 +130,13 @@
   /* This macro is used whenever `args' is unused in a function, to avoid  */
   /* stupid warnings from pedantic compilers.                              */
   /*                                                                       */
-#define UNUSED_ARG  UNUSED_EXEC; UNUSED(args);
+#define UNUSED_ARG  UNUSED_EXEC; UNUSED( args )
 
 
   /*************************************************************************/
   /*                                                                       */
   /* The following macros hide the use of EXEC_ARG and EXEC_ARG_ to        */
-  /* increase readabiltyof the code.                                       */
+  /* increase readabilty of the code.                                      */
   /*                                                                       */
   /*************************************************************************/
 
@@ -206,7 +211,6 @@
           Move_Zp2_Point( EXEC_ARG_ a, b, c, t )
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* Instruction dispatch function, as used by the interpreter.            */
@@ -218,14 +222,14 @@
   /*                                                                       */
   /* A simple bounds-checking macro.                                       */
   /*                                                                       */
-#define BOUNDS( x, n )  ((TT_UInt)(x) >= (TT_UInt)(n))
+#define BOUNDS( x, n )  ( (TT_UInt)(x) >= (TT_UInt)(n) )
 
 
-#undef   SUCCESS
-#define  SUCCESS   0
+#undef  SUCCESS
+#define SUCCESS  0
 
-#undef    FAILURE
-#define   FAILURE 1
+#undef  FAILURE
+#define FAILURE  1
 
 
   /*************************************************************************/
@@ -246,7 +250,8 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    range :: The new execution code range.                             */
-  /*    IP    :: The  new IP in the new code range.                        */
+  /*                                                                       */
+  /*    IP    :: The new IP in the new code range.                         */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    exec  :: The target execution context.                             */
@@ -270,7 +275,7 @@
 
     /* NOTE: Because the last instruction of a program may be a CALL */
     /*       which will return to the first byte *after* the code    */
-    /*       range, we test for IP <= Size, instead of IP < Size.    */
+    /*       range, we test for IP <= Size instead of IP < Size.     */
     /*                                                               */
     FT_Assert( (TT_ULong)IP <= coderange->size );
 
@@ -293,7 +298,9 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    range  :: The code range index.                                    */
+  /*                                                                       */
   /*    base   :: The new code base.                                       */
+  /*                                                                       */
   /*    length :: The range size in bytes.                                 */
   /*                                                                       */
   /* <InOut>                                                               */
@@ -367,7 +374,8 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    exec   :: A handle to the target execution context.                */
-  /*    system :: A handle to the parent system object.                    */
+  /*                                                                       */
+  /*    memory :: A handle to the parent memory object.                    */
   /*                                                                       */
   /* <Return>                                                              */
   /*    TrueType error code.  0 means success.                             */
@@ -467,7 +475,7 @@
 
   Fail_Memory:
     FT_ERROR(( "TT.Context_Create: not enough memory for 0x%08lx\n",
-             (long)exec ));
+               (long)exec ));
     TT_Destroy_Context( exec, memory );
 
     return error;
@@ -483,6 +491,8 @@
   /*    Checks the size of a buffer and reallocates it if necessary.       */
   /*                                                                       */
   /* <Input>                                                               */
+  /*    memory     :: A handle to the parent memory object.                */
+  /*                                                                       */
   /*    multiplier :: The size in bytes of each element in the buffer.     */
   /*                                                                       */
   /*    new_max    :: The new capacity (size) of the buffer.               */
@@ -529,6 +539,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face :: A handle to the source face object.                        */
+  /*                                                                       */
   /*    size :: A handle to the source size object.                        */
   /*                                                                       */
   /* <InOut>                                                               */
@@ -549,6 +560,7 @@
     TT_ULong        tmp;
     TT_MaxProfile*  maxp;
     TT_Error        error;
+
 
     exec->face = face;
     maxp       = &face->max_profile;
@@ -633,8 +645,8 @@
   /* <Input>                                                               */
   /*    exec :: A handle to the source execution context.                  */
   /*                                                                       */
-  /* <Output>                                                              */
-  /*    ins  :: A handle to the target size object.                        */
+  /* <InOut>                                                               */
+  /*    size :: A handle to the target size object.                        */
   /*                                                                       */
   /* <Return>                                                              */
   /*    TrueType error code.  0 means success.                             */
@@ -647,6 +659,7 @@
                              TT_Size         size )
   {
     TT_Int  i;
+
 
     /* XXXX: Will probably disappear soon with all the code range */
     /*       management, which is now rather obsolete.            */
@@ -677,6 +690,8 @@
   /*             variables and returns immediately, otherwise TT_RunIns()  */
   /*             is called.                                                */
   /*                                                                       */
+  /*             This is commented out currently.                          */
+  /*                                                                       */
   /* <Input>                                                               */
   /*    exec  :: A handle to the target execution context.                 */
   /*                                                                       */
@@ -692,7 +707,8 @@
   {
     TT_Error  error;
 
-    if ( (error = TT_Goto_CodeRange( exec, tt_coderange_glyph, 0 ))
+
+    if ( ( error = TT_Goto_CodeRange( exec, tt_coderange_glyph, 0  ) )
            != TT_Err_Ok )
       return error;
 
@@ -719,7 +735,8 @@
     exec->callTop = 0;
 
 #if 1
-    UNUSED(debug);
+    UNUSED( debug );
+
     return exec->face->interpreter( exec );
 #else
     if ( !debug )
@@ -762,14 +779,20 @@
   /* <Note>                                                                */
   /*    Only the glyph loader and debugger should call this function.      */
   /*                                                                       */
-  FT_EXPORT_FUNC(TT_ExecContext)  TT_New_Context( TT_Face  face )
+  FT_EXPORT_FUNC( TT_ExecContext )  TT_New_Context( TT_Face  face )
   {
-    TT_Driver       driver = (TT_Driver)face->root.driver;
+    TT_Driver       driver;
     TT_ExecContext  exec;
-    FT_Memory       memory = driver->root.memory;
+    FT_Memory       memory;
 
 
-    exec = driver->context;
+    if ( !face )
+      return 0;
+
+    driver = (TT_Driver)face->root.driver;
+
+    memory = driver->root.memory;
+    exec   = driver->context;
 
     if ( !driver->context )
     {
@@ -828,9 +851,11 @@
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
 
-  static TT_F26Dot6  Norm( TT_F26Dot6  X, TT_F26Dot6  Y )
+  static TT_F26Dot6  Norm( TT_F26Dot6  X,
+                           TT_F26Dot6  Y )
   {
-    FT_Int64       T1, T2;
+    FT_Int64  T1, T2;
+
 
     MUL_64( X, X, T1 );
     MUL_64( Y, Y, T2 );
@@ -839,7 +864,8 @@
 
     return (TT_F26Dot6)SQRT_64( T1 );
   }
-#endif
+
+#endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
   /*************************************************************************/
@@ -866,7 +892,7 @@
 
 
 #undef  PACK
-#define PACK( x, y )  ((x << 4) | y)
+#define PACK( x, y )  ( ( x << 4 ) | y )
 
 
   static
@@ -1181,7 +1207,7 @@
 
 
 #undef  NULL_Vector
-#define NULL_Vector (TT_Vector*)&Null_Vector
+#define NULL_Vector  (TT_Vector*)&Null_Vector
 
 
   /*************************************************************************/
@@ -1218,8 +1244,8 @@
 #else
       x = TT_MULDIV( CUR.GS.projVector.x, CUR.tt_metrics.x_ratio, 0x8000 );
       y = TT_MULDIV( CUR.GS.projVector.y, CUR.tt_metrics.y_ratio, 0x8000 );
-      CUR.tt_metrics.ratio = FT_Sqrt32( x*x+y*y ) << 1;
-#endif
+      CUR.tt_metrics.ratio = FT_Sqrt32( x * x + y * y ) << 1;
+#endif /* FT_CONFIG_OPTION_OLD_CALCS */
     }
 
     return CUR.tt_metrics.ratio;
@@ -1304,7 +1330,8 @@
   {
     /* Reading a byte stream so there is no endianess (DaveP) */
     CUR.IP += 2;
-    return (TT_Short)((CUR.code[CUR.IP - 2] << 8) + CUR.code[CUR.IP - 1]);
+    return (TT_Short)( ( CUR.code[CUR.IP - 2] << 8 ) +
+                         CUR.code[CUR.IP - 1]      );
   }
 
 
@@ -1375,6 +1402,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    point    :: The index of the point to move.                        */
+  /*                                                                       */
   /*    distance :: The distance to apply.                                 */
   /*                                                                       */
   /* <InOut>                                                               */
@@ -1393,7 +1421,7 @@
     if ( v != 0 )
     {
 #ifdef NO_APPLE_PATENT
-      if ( ABS(CUR.F_dot_P) > APPLE_THRESHOLD )
+      if ( ABS( CUR.F_dot_P ) > APPLE_THRESHOLD )
         zone->cur[point].x += distance;
 #else
       zone->cur[point].x += TT_MULDIV( distance,
@@ -1408,7 +1436,7 @@
     if ( v != 0 )
     {
 #ifdef NO_APPLE_PATENT
-      if ( ABS(CUR.F_dot_P) > APPLE_THRESHOLD )
+      if ( ABS( CUR.F_dot_P ) > APPLE_THRESHOLD )
         zone->cur[point].y += distance;
 #else
       zone->cur[point].y += TT_MULDIV( distance,
@@ -1425,7 +1453,7 @@
   /* Special versions of Direct_Move()                                     */
   /*                                                                       */
   /*   The following versions are used whenever both vectors are both      */
-  /*   along one of the coordinate unit vectors, i.e. in 90% cases.        */
+  /*   along one of the coordinate unit vectors, i.e. in 90% of the cases. */
   /*                                                                       */
   /*************************************************************************/
 
@@ -1463,6 +1491,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    distance     :: The distance (not) to round.                       */
+  /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1480,8 +1509,8 @@
   {
     TT_F26Dot6  val;
 
-
     UNUSED_EXEC;
+
 
     if ( distance >= 0 )
     {
@@ -1508,6 +1537,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    distance     :: The distance to round.                             */
+  /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1519,8 +1549,8 @@
   {
     TT_F26Dot6  val;
 
-
     UNUSED_EXEC;
+
 
     if ( distance >= 0 )
     {
@@ -1532,10 +1562,11 @@
     }
     else
     {
-      val = -( (compensation - distance + 32) & (-64) );
+      val = -( ( compensation - distance + 32 ) & -64 );
       if ( val > 0 )
         val = 0;
     }
+
     return  val;
   }
 
@@ -1550,6 +1581,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    distance     :: The distance to round.                             */
+  /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1561,21 +1593,22 @@
   {
     TT_F26Dot6  val;
 
+    UNUSED_EXEC;
 
-   UNUSED_EXEC;
 
     if ( distance >= 0 )
     {
-      val = ((distance + compensation) & (-64)) + 32;
+      val = ( ( distance + compensation ) & -64 ) + 32;
       if ( val < 0 )
         val = 0;
     }
     else
     {
-      val = -( ((compensation - distance) & (-64)) + 32 );
+      val = -( ( (compensation - distance) & -64 ) + 32 );
       if ( val > 0 )
         val = 0;
     }
+
     return val;
   }
 
@@ -1590,6 +1623,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    distance     :: The distance to round.                             */
+  /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1601,8 +1635,8 @@
   {
     TT_F26Dot6  val;
 
-
     UNUSED_EXEC;
+
 
     if ( distance >= 0 )
     {
@@ -1614,10 +1648,11 @@
     }
     else
     {
-      val = -( (compensation - distance) & (-64) );
+      val = -( ( compensation - distance ) & -64 );
       if ( val > 0 )
         val = 0;
     }
+
     return val;
   }
 
@@ -1632,6 +1667,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    distance     :: The distance to round.                             */
+  /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1656,10 +1692,11 @@
     }
     else
     {
-      val = -( (compensation - distance + 63) & (-64) );
+      val = -( ( compensation - distance + 63 ) & -64 );
       if ( val > 0 )
         val = 0;
     }
+
     return val;
   }
 
@@ -1674,6 +1711,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    distance     :: The distance to round.                             */
+  /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1687,6 +1725,7 @@
 
     UNUSED_EXEC;
 
+
     if ( distance >= 0 )
     {
       val = distance + compensation + 16;
@@ -1697,10 +1736,11 @@
     }
     else
     {
-      val = -( (compensation - distance + 16) & (-32) );
+      val = -( ( compensation - distance + 16 ) & -32 );
       if ( val > 0 )
         val = 0;
     }
+
     return val;
   }
 
@@ -1715,6 +1755,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    distance     :: The distance to round.                             */
+  /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1735,20 +1776,21 @@
 
     if ( distance >= 0 )
     {
-      val = (distance - CUR.phase + CUR.threshold + compensation) &
-              (-CUR.period);
+      val = ( distance - CUR.phase + CUR.threshold + compensation ) &
+              -CUR.period;
       if ( val < 0 )
         val = 0;
       val += CUR.phase;
     }
     else
     {
-      val = -( (CUR.threshold - CUR.phase - distance + compensation) &
-               (-CUR.period) );
+      val = -( ( CUR.threshold - CUR.phase - distance + compensation ) &
+               -CUR.period );
       if ( val > 0 )
         val = 0;
       val -= CUR.phase;
     }
+
     return val;
   }
 
@@ -1763,6 +1805,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    distance     :: The distance to round.                             */
+  /*                                                                       */
   /*    compensation :: The engine compensation.                           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1781,7 +1824,7 @@
 
     if ( distance >= 0 )
     {
-      val = ( (distance - CUR.phase + CUR.threshold + compensation) /
+      val = ( ( distance - CUR.phase + CUR.threshold + compensation ) /
                 CUR.period ) * CUR.period;
       if ( val < 0 )
         val = 0;
@@ -1789,7 +1832,7 @@
     }
     else
     {
-      val = -( ( (CUR.threshold - CUR.phase - distance + compensation) /
+      val = -( ( ( CUR.threshold - CUR.phase - distance + compensation ) /
                    CUR.period ) * CUR.period );
       if ( val > 0 )
         val = 0;
@@ -1867,7 +1910,7 @@
   void  SetSuperRound( EXEC_OP_ TT_F26Dot6  GridPeriod,
                                 TT_Long     selector )
   {
-    switch ( (TT_Int)(selector & 0xC0) )
+    switch ( (TT_Int)( selector & 0xC0 ) )
     {
       case 0:
         CUR.period = GridPeriod / 2;
@@ -1888,7 +1931,7 @@
         break;
     }
 
-    switch ( (TT_Int)(selector & 0x30) )
+    switch ( (TT_Int)( selector & 0x30 ) )
     {
     case 0:
       CUR.phase = 0;
@@ -1910,7 +1953,7 @@
     if ( (selector & 0x0F) == 0 )
       CUR.threshold = CUR.period - 1;
     else
-      CUR.threshold = ( (TT_Int)(selector & 0x0F) - 4 ) * CUR.period / 8;
+      CUR.threshold = ( (TT_Int)( selector & 0x0F ) - 4 ) * CUR.period / 8;
 
     CUR.period    /= 256;
     CUR.phase     /= 256;
@@ -2015,7 +2058,7 @@
   {
     UNUSED_EXEC;
 
-    return (v1->x - v2->x);
+    return ( v1->x - v2->x );
   }
 
 
@@ -2041,7 +2084,7 @@
   {
     UNUSED_EXEC;
 
-   return (v1->y - v2->y);
+   return ( v1->y - v2->y );
   }
 
 
@@ -2145,14 +2188,17 @@
   /*                                                                       */
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
-  static TT_Bool  Normalize( EXEC_OP_ TT_F26Dot6      Vx,
-                                      TT_F26Dot6      Vy,
-                                      TT_UnitVector*  R )
+
+  static
+  TT_Bool  Normalize( EXEC_OP_ TT_F26Dot6      Vx,
+                               TT_F26Dot6      Vy,
+                               TT_UnitVector*  R )
   {
     TT_F26Dot6  W;
     TT_Bool     S1, S2;
 
     UNUSED_EXEC;
+
 
     if ( ABS( Vx ) < 0x10000L && ABS( Vy ) < 0x10000L )
     {
@@ -2163,8 +2209,8 @@
 
       if ( W == 0 )
       {
-        /* XXX : UNDOCUMENTED! It seems that it's possible to try  */
-        /*       to normalize the vector (0,0). Return immediately */
+        /* XXX: UNDOCUMENTED! It seems that it's possible to try    */
+        /*      to normalize the vector (0,0).  Return immediately. */
         return SUCCESS;
       }
 
@@ -2202,7 +2248,7 @@
 
     while ( W < 0x1000000L )
     {
-      /* We need to increase W, by a minimal amount */
+      /* We need to increase W by a minimal amount */
       if ( Vx < Vy )
         Vx++;
       else
@@ -2213,7 +2259,7 @@
 
     while ( W >= 0x1004000L )
     {
-      /* We need to decrease W, by a minimal amount */
+      /* We need to decrease W by a minimal amount */
       if ( Vx < Vy )
         Vx--;
       else
@@ -2236,7 +2282,9 @@
 
     return SUCCESS;
   }
+
 #else
+
   static
   TT_Bool  Normalize( EXEC_OP_ TT_F26Dot6      Vx,
                                TT_F26Dot6      Vy,
@@ -2246,10 +2294,11 @@
     TT_Int      shift;
     TT_ULong    H, L, L2, hi, lo, med;
 
-    u = ABS(Vx);
-    v = ABS(Vy);
 
-    if (u < v)
+    u = ABS( Vx );
+    v = ABS( Vy );
+
+    if ( u < v )
     {
       d = u;
       u = v;
@@ -2259,42 +2308,46 @@
     R->x = 0;
     R->y = 0;
 
-    /* check that we're not trying to normalise zero !! */
-    if (u==0) return SUCCESS;
+    /* check that we are not trying to normalise zero! */
+    if ( u == 0 )
+      return SUCCESS;
 
-    /* compute (u*u+v*v) on 64 bits with two 32-bit registers [H:L] */
+    /* compute (u*u + v*v) on 64 bits with two 32-bit registers [H:L] */
     hi  = (TT_ULong)u >> 16;
     lo  = (TT_ULong)u & 0xFFFF;
-    med = hi*lo;
+    med = hi * lo;
 
-    H     = hi*hi + (med >> 15);
+    H     = hi * hi + ( med >> 15 );
     med <<= 17;
-    L     = lo*lo + med;
-    if (L < med) H++;
+    L     = lo * lo + med;
+    if ( L < med )
+      H++;
 
     hi  = (TT_ULong)v >> 16;
     lo  = (TT_ULong)v & 0xFFFF;
-    med = hi*lo;
+    med = hi * lo;
 
-    H    += hi*hi + (med >> 15);
+    H    += hi * hi + ( med >> 15 );
     med <<= 17;
-    L2    = lo*lo + med;
-    if (L2 < med) H++;
+    L2    = lo * lo + med;
+    if ( L2 < med )
+      H++;
 
     L += L2;
-    if (L < L2) H++;
+    if ( L < L2 )
+      H++;
 
     /* if the value is smaller than 32-bits */
-    if (H == 0)
+    if ( H == 0 )
     {
       shift = 0;
-      while ((L & 0xC0000000) == 0)
+      while ( ( L & 0xC0000000L ) == 0 )
       {
         L <<= 2;
         shift++;
       }
 
-      d = FT_Sqrt32(L);
+      d = FT_Sqrt32( L );
       R->x = (TT_F2Dot14)TT_MULDIV( Vx << shift, 0x4000, d );
       R->y = (TT_F2Dot14)TT_MULDIV( Vy << shift, 0x4000, d );
     }
@@ -2302,14 +2355,14 @@
     else
     {
       shift = 0;
-      while (H)
+      while ( H )
       {
-        L   = (L >> 2) | (H << 30);
+        L   = ( L >> 2 ) | ( H << 30 );
         H >>= 2;
         shift++;
       }
 
-      d = FT_Sqrt32(L);
+      d = FT_Sqrt32( L );
       R->x = (TT_F2Dot14)TT_MULDIV( Vx >> shift, 0x4000, d );
       R->y = (TT_F2Dot14)TT_MULDIV( Vy >> shift, 0x4000, d );
     }
@@ -2318,38 +2371,47 @@
       TT_ULong  x, y, w;
       TT_Int    sx, sy;
 
-      sx = ( R->x >= 0 ? 1 : -1 );
-      sy = ( R->y >= 0 ? 1 : -1 );
-      x  = (TT_ULong)sx*R->x;
-      y  = (TT_ULong)sy*R->y;
 
-      w = x*x+y*y;
+      sx = R->x >= 0 ? 1 : -1;
+      sy = R->y >= 0 ? 1 : -1;
+      x  = (TT_ULong)sx * R->x;
+      y  = (TT_ULong)sy * R->y;
+
+      w = x * x + y * y;
 
       /* we now want to adjust (x,y) in order to have sqrt(w) == 0x4000 */
       /* which means 0x1000000 <= w < 0x1004000                         */
       while ( w <= 0x10000000L )
       {
         /* increment the smallest coordinate */
-        if ( x < y )  x++;
-                 else y++;
+        if ( x < y )
+          x++;
+        else
+          y++;
 
-        w = x*x+y*y;
+        w = x * x + y * y;
       }
 
       while ( w >= 0x10040000L )
       {
         /* decrement the smallest coordinate */
-        if ( x < y )  x--;
-                 else y--;
-        w = x*x+y*y;
+        if ( x < y )
+          x--;
+        else
+          y--;
+
+        w = x * x + y * y;
       }
 
-      R->x = sx*x;
-      R->y = sy*y;
+      R->x = sx * x;
+      R->y = sy * y;
     }
+
     return SUCCESS;
   }
-#endif
+
+#endif /* FT_CONFIG_OPTION_OLD_CALCS */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2383,9 +2445,9 @@
     A = p1->x - p2->x;
     B = p1->y - p2->y;
 
-    if ( (aOpc & 1) != 0 )
+    if ( ( aOpc & 1 ) != 0 )
     {
-      C =  B;   /* CounterClockwise rotation */
+      C =  B;   /* counter clockwise rotation */
       B =  A;
       A = -C;
     }
@@ -2400,77 +2462,77 @@
   /* call table defined later below in this source.  Each opcode must */
   /* thus have a corresponding function, even trivial ones.           */
   /*                                                                  */
-  /* They're all defined there.                                       */
+  /* They are all defined there.                                      */
 
-#define DO_SVTCA                          \
-  {                                       \
-    TT_Short  A, B;                       \
-                                          \
-                                          \
-    A = (TT_Short)(CUR.opcode & 1) << 14; \
-    B = A ^ (TT_Short)0x4000;             \
-                                          \
-    CUR.GS.freeVector.x = A;              \
-    CUR.GS.projVector.x = A;              \
-    CUR.GS.dualVector.x = A;              \
-                                          \
-    CUR.GS.freeVector.y = B;              \
-    CUR.GS.projVector.y = B;              \
-    CUR.GS.dualVector.y = B;              \
-                                          \
-    COMPUTE_Funcs();                      \
+#define DO_SVTCA                            \
+  {                                         \
+    TT_Short  A, B;                         \
+                                            \
+                                            \
+    A = (TT_Short)( CUR.opcode & 1 ) << 14; \
+    B = A ^ (TT_Short)0x4000;               \
+                                            \
+    CUR.GS.freeVector.x = A;                \
+    CUR.GS.projVector.x = A;                \
+    CUR.GS.dualVector.x = A;                \
+                                            \
+    CUR.GS.freeVector.y = B;                \
+    CUR.GS.projVector.y = B;                \
+    CUR.GS.dualVector.y = B;                \
+                                            \
+    COMPUTE_Funcs();                        \
   }
 
 
-#define DO_SPVTCA                         \
-  {                                       \
-    TT_Short  A, B;                       \
-                                          \
-                                          \
-    A = (TT_Short)(CUR.opcode & 1) << 14; \
-    B = A ^ (TT_Short)0x4000;             \
-                                          \
-    CUR.GS.projVector.x = A;              \
-    CUR.GS.dualVector.x = A;              \
-                                          \
-    CUR.GS.projVector.y = B;              \
-    CUR.GS.dualVector.y = B;              \
-                                          \
-    COMPUTE_Funcs();                      \
+#define DO_SPVTCA                           \
+  {                                         \
+    TT_Short  A, B;                         \
+                                            \
+                                            \
+    A = (TT_Short)( CUR.opcode & 1 ) << 14; \
+    B = A ^ (TT_Short)0x4000;               \
+                                            \
+    CUR.GS.projVector.x = A;                \
+    CUR.GS.dualVector.x = A;                \
+                                            \
+    CUR.GS.projVector.y = B;                \
+    CUR.GS.dualVector.y = B;                \
+                                            \
+    COMPUTE_Funcs();                        \
   }
 
 
-#define DO_SFVTCA                         \
-  {                                       \
-    TT_Short  A, B;                       \
-                                          \
-                                          \
-    A = (TT_Short)(CUR.opcode & 1) << 14; \
-    B = A ^ (TT_Short)0x4000;             \
-                                          \
-    CUR.GS.freeVector.x = A;              \
-    CUR.GS.freeVector.y = B;              \
-                                          \
-    COMPUTE_Funcs();                      \
+#define DO_SFVTCA                           \
+  {                                         \
+    TT_Short  A, B;                         \
+                                            \
+                                            \
+    A = (TT_Short)( CUR.opcode & 1 ) << 14; \
+    B = A ^ (TT_Short)0x4000;               \
+                                            \
+    CUR.GS.freeVector.x = A;                \
+    CUR.GS.freeVector.y = B;                \
+                                            \
+    COMPUTE_Funcs();                        \
   }
 
 
-#define DO_SPVTL                                     \
-    if ( INS_SxVTL( (TT_UShort)args[1],              \
-                    (TT_UShort)args[0],              \
-                    CUR.opcode,                      \
-                    &CUR.GS.projVector) == SUCCESS ) \
-    {                                                \
-      CUR.GS.dualVector = CUR.GS.projVector;         \
-      COMPUTE_Funcs();                               \
+#define DO_SPVTL                                      \
+    if ( INS_SxVTL( (TT_UShort)args[1],               \
+                    (TT_UShort)args[0],               \
+                    CUR.opcode,                       \
+                    &CUR.GS.projVector ) == SUCCESS ) \
+    {                                                 \
+      CUR.GS.dualVector = CUR.GS.projVector;          \
+      COMPUTE_Funcs();                                \
     }
 
 
-#define DO_SFVTL                                     \
-    if ( INS_SxVTL( (TT_UShort)(args[1]),            \
-                    (TT_UShort)(args[0]),            \
-                    CUR.opcode,                      \
-                    &CUR.GS.freeVector) == SUCCESS ) \
+#define DO_SFVTL                                      \
+    if ( INS_SxVTL( (TT_UShort)args[1],               \
+                    (TT_UShort)args[0],               \
+                    CUR.opcode,                       \
+                    &CUR.GS.freeVector ) == SUCCESS ) \
       COMPUTE_Funcs();
 
 
@@ -2525,16 +2587,16 @@
     args[1] = CUR.GS.freeVector.y;
 
 
-#define DO_SRP0                        \
-    CUR.GS.rp0 = (TT_UShort)(args[0]);
+#define DO_SRP0                      \
+    CUR.GS.rp0 = (TT_UShort)args[0];
 
 
-#define DO_SRP1                        \
-    CUR.GS.rp1 = (TT_UShort)(args[0]);
+#define DO_SRP1                      \
+    CUR.GS.rp1 = (TT_UShort)args[0];
 
 
-#define DO_SRP2                        \
-    CUR.GS.rp2 = (TT_UShort)(args[0]);
+#define DO_SRP2                      \
+    CUR.GS.rp2 = (TT_UShort)args[0];
 
 
 #define DO_RTHG                                         \
@@ -2602,10 +2664,10 @@
     /*                                                  */
     /* It seems that the value that is read here is     */
     /* expressed in 16.16 format rather than in font    */
-    /* units..    .                                     */
+    /* units..                                          */
     /*                                                  */
-#define DO_SSW                                               \
-    CUR.GS.single_width_value = (TT_F26Dot6)(args[0] >> 10);
+#define DO_SSW                                                 \
+    CUR.GS.single_width_value = (TT_F26Dot6)( args[0] >> 10 );
 
 
 #define DO_FLIPON            \
@@ -2631,15 +2693,20 @@
     args[0] = CURRENT_Ppem();
 
 
-/* Note: the pointSize should be irrelevant in a given font program */
-/*       we thus decide to return only the ppem                     */
+  /* Note: The pointSize should be irrelevant in a given font program; */
+  /*       we thus decide to return only the ppem.                     */
 #if 0
+
 #define DO_MPS                       \
     args[0] = CUR.metrics.pointSize;
+
 #else
-#define DO_MPS                       \
+
+#define DO_MPS                \
     args[0] = CURRENT_Ppem();
-#endif
+
+#endif /* 0 */
+
 
 #define DO_DUP         \
     args[1] = args[0];
@@ -2652,6 +2719,7 @@
 #define DO_SWAP        \
   {                    \
     TT_Long  L;        \
+                       \
                        \
     L       = args[0]; \
     args[0] = args[1]; \
@@ -2698,36 +2766,36 @@
     }
 
 
-#define DO_LT                      \
-    args[0] = (args[0] < args[1]);
+#define DO_LT                        \
+    args[0] = ( args[0] < args[1] );
 
 
-#define DO_LTEQ                     \
-    args[0] = (args[0] <= args[1]);
+#define DO_LTEQ                       \
+    args[0] = ( args[0] <= args[1] );
 
 
-#define DO_GT                      \
-    args[0] = (args[0] > args[1]);
+#define DO_GT                        \
+    args[0] = ( args[0] > args[1] );
 
 
-#define DO_GTEQ                     \
-    args[0] = (args[0] >= args[1]);
+#define DO_GTEQ                       \
+    args[0] = ( args[0] >= args[1] );
 
 
-#define DO_EQ                       \
-    args[0] = (args[0] == args[1]);
+#define DO_EQ                         \
+    args[0] = ( args[0] == args[1] );
 
 
-#define DO_NEQ                      \
-    args[0] = (args[0] != args[1]);
+#define DO_NEQ                        \
+    args[0] = ( args[0] != args[1] );
 
 
-#define DO_ODD                                                \
-    args[0] = ( (CUR_Func_round( args[0], 0 ) & 127) == 64 );
+#define DO_ODD                                                  \
+    args[0] = ( ( CUR_Func_round( args[0], 0 ) & 127 ) == 64 );
 
 
-#define DO_EVEN                                              \
-    args[0] = ( (CUR_Func_round( args[0], 0 ) & 127) == 0 );
+#define DO_EVEN                                                \
+    args[0] = ( ( CUR_Func_round( args[0], 0 ) & 127 ) == 0 );
 
 
 #define DO_AND                        \
@@ -2774,7 +2842,7 @@
 
 
 #define DO_CEILING                    \
-    args[0] = (args[0] + 63) & (-64);
+    args[0] = ( args[0] + 63 ) & -64;
 
 
 #define DO_RS                          \
@@ -2813,22 +2881,22 @@
    }
 
 
-#define DO_RCVT                        \
-   {                                   \
-     TT_ULong  I = (TT_ULong)args[0];  \
-                                       \
-                                       \
-     if ( BOUNDS( I, CUR.cvtSize ) )   \
-     {                                 \
-       if ( CUR.pedantic_hinting )     \
-       {                               \
-         ARRAY_BOUND_ERROR;            \
-       }                               \
-       else                            \
-         args[0] = 0;                  \
-     }                                 \
-     else                              \
-       args[0] = CUR_Func_read_cvt(I); \
+#define DO_RCVT                          \
+   {                                     \
+     TT_ULong  I = (TT_ULong)args[0];    \
+                                         \
+                                         \
+     if ( BOUNDS( I, CUR.cvtSize ) )     \
+     {                                   \
+       if ( CUR.pedantic_hinting )       \
+       {                                 \
+         ARRAY_BOUND_ERROR;              \
+       }                                 \
+       else                              \
+         args[0] = 0;                    \
+     }                                   \
+     else                                \
+       args[0] = CUR_Func_read_cvt( I ); \
    }
 
 
@@ -2895,11 +2963,11 @@
 
 
 #undef  ARRAY_BOUND_ERROR
-#define ARRAY_BOUND_ERROR                    \
-     {                                       \
-       CUR.error = TT_Err_Invalid_Reference; \
-       return;                               \
-     }
+#define ARRAY_BOUND_ERROR                   \
+    {                                       \
+      CUR.error = TT_Err_Invalid_Reference; \
+      return;                               \
+    }
 
 
   /*************************************************************************/
@@ -3330,7 +3398,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* DUP[]:        DUPlicate top stack element                             */
+  /* DUP[]:        DUPlicate the top stack's element                       */
   /* Opcode range: 0x20                                                    */
   /* Stack:        StkElt --> StkElt StkElt                                */
   /*                                                                       */
@@ -3343,7 +3411,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* POP[]:        POP the stack's top elt                                 */
+  /* POP[]:        POP the stack's top element                             */
   /* Opcode range: 0x21                                                    */
   /* Stack:        StkElt -->                                              */
   /*                                                                       */
@@ -3369,7 +3437,7 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* SWAP[]:       SWAP the top two elements                               */
+  /* SWAP[]:       SWAP the stack's top two elements                       */
   /* Opcode range: 0x23                                                    */
   /* Stack:        2 * StkElt --> 2 * StkElt                               */
   /*                                                                       */
@@ -3785,11 +3853,11 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* DEBUG[]:      DEBUG.  Unsupported                                     */
+  /* DEBUG[]:      DEBUG.  Unsupported.                                    */
   /* Opcode range: 0x4F                                                    */
   /* Stack:        uint32 -->                                              */
   /*                                                                       */
-  /* Note: The original instruction pops a value from the stack            */
+  /* Note: The original instruction pops a value from the stack.           */
   /*                                                                       */
   static
   void  Ins_DEBUG( INS_ARG )
@@ -3882,9 +3950,9 @@
 
     K = CUR.stack[CUR.args - L];
 
-    MEM_Move( (&CUR.stack[CUR.args - L    ]),
-              (&CUR.stack[CUR.args - L + 1]),
-              (L - 1) * sizeof ( TT_Long ) );
+    MEM_Move( &CUR.stack[CUR.args - L    ],
+              &CUR.stack[CUR.args - L + 1],
+              ( L - 1 ) * sizeof ( TT_Long ) );
 
     CUR.stack[CUR.args - 1] = K;
   }
@@ -3901,8 +3969,8 @@
   {
     TT_Long  A, B, C;
 
-
     UNUSED_EXEC;
+
 
     A = args[2];
     B = args[1];
@@ -3918,7 +3986,7 @@
   /*                                                                       */
   /* MANAGING THE FLOW OF CONTROL                                          */
   /*                                                                       */
-  /*  Instructions appear in the specs' order.                             */
+  /*  Instructions appear in the specification's order.                    */
   /*                                                                       */
   /*************************************************************************/
 
@@ -3981,12 +4049,12 @@
         break;
 
       case 0x1B:      /* ELSE */
-        Out = (nIfs == 1);
+        Out = ( nIfs == 1 );
         break;
 
       case 0x59:      /* EIF */
         nIfs--;
-        Out = (nIfs == 0);
+        Out = ( nIfs == 0 );
         break;
       }
     } while ( Out == 0 );
@@ -4004,8 +4072,8 @@
   {
     TT_Int  nIfs;
 
-
     UNUSED_ARG;
+
 
     nIfs = 1;
 
@@ -4032,7 +4100,7 @@
   /*                                                                       */
   /* DEFINING AND USING FUNCTIONS AND INSTRUCTIONS                         */
   /*                                                                       */
-  /*  Instructions appear in the specs' order.                             */
+  /*  Instructions appear in the specification's order.                    */
   /*                                                                       */
   /*************************************************************************/
 
@@ -4050,15 +4118,17 @@
     TT_DefRecord*  rec;
     TT_DefRecord*  limit;
 
+
     /* some font programs are broken enough to redefine functions! */
-    /* We will then parse the current table..                      */
+    /* We will then parse the current table.                       */
+
     rec   = CUR.FDefs;
     limit = rec + CUR.numFDefs;
     n     = args[0];
 
     for ( ; rec < limit; rec++ )
     {
-      if (rec->opc == n)
+      if ( rec->opc == n )
         break;
     }
 
@@ -4075,7 +4145,7 @@
 
     rec->range  = CUR.curRange;
     rec->opc    = n;
-    rec->start  = CUR.IP+1;
+    rec->start  = CUR.IP + 1;
     rec->active = TRUE;
 
     if ( n > CUR.maxFunc )
@@ -4111,8 +4181,8 @@
   {
     TT_CallRec*  pRec;
 
-
     UNUSED_ARG;
+
 
     if ( CUR.callTop <= 0 )     /* We encountered an ENDF without a call */
     {
@@ -4138,13 +4208,13 @@
       INS_Goto_CodeRange( pRec->Caller_Range,
                           pRec->Caller_IP );
 
-    /* Exit the current call frame.                       */
+    /* Exit the current call frame.                      */
 
-    /* NOTE: When the last intruction of a program        */
-    /*       is a CALL or LOOPCALL, the return address    */
-    /*       is always out of the code range.  This is    */
-    /*       a valid address, and it's why we do not test */
-    /*       the result of Ins_Goto_CodeRange() here!     */
+    /* NOTE: If the last intruction of a program is a    */
+    /*       CALL or LOOPCALL, the return address is     */
+    /*       always out of the code range.  This is a    */
+    /*       valid address, and it is why we do not test */
+    /*       the result of Ins_Goto_CodeRange() here!    */
   }
 
 
@@ -4161,12 +4231,15 @@
     TT_CallRec*    pCrec;
     TT_DefRecord*  def;
 
+
     /* first of all, check the index */
+
     F = args[0];
-    if ( BOUNDS( F, CUR.maxFunc+1 ) ) goto Fail;
+    if ( BOUNDS( F, CUR.maxFunc + 1 ) )
+      goto Fail;
 
     /* Except for some old Apple fonts, all functions in a TrueType */
-    /* font are defined in increasing order, starting from 0. This  */
+    /* font are defined in increasing order, starting from 0.  This */
     /* means that we normally have                                  */
     /*                                                              */
     /*    CUR.maxFunc+1 == CUR.numFDefs                             */
@@ -4175,22 +4248,24 @@
     /* If this isn't true, we need to look up the function table.   */
 
     def = CUR.FDefs + F;
-    if ( CUR.maxFunc+1 != CUR.numFDefs  || def->opc != F )
+    if ( CUR.maxFunc + 1 != CUR.numFDefs || def->opc != F )
     {
       /* look up the FDefs table */
       TT_DefRecord*  limit;
 
+
       def   = CUR.FDefs;
       limit = def + CUR.numFDefs;
 
-      while (def < limit && def->opc != F)
+      while ( def < limit && def->opc != F )
         def++;
 
-      if (def == limit) goto Fail;
+      if ( def == limit )
+        goto Fail;
     }
 
     /* check that the function is active */
-    if (!def->active)
+    if ( !def->active )
       goto Fail;
 
     /* check the call stack */
@@ -4233,12 +4308,14 @@
     TT_CallRec*    pCrec;
     TT_DefRecord*  def;
 
+
     /* first of all, check the index */
     F = args[1];
-    if ( BOUNDS( F, CUR.maxFunc+1 ) ) goto Fail;
+    if ( BOUNDS( F, CUR.maxFunc + 1 ) )
+      goto Fail;
 
     /* Except for some old Apple fonts, all functions in a TrueType */
-    /* font are defined in increasing order, starting from 0. This  */
+    /* font are defined in increasing order, starting from 0.  This */
     /* means that we normally have                                  */
     /*                                                              */
     /*    CUR.maxFunc+1 == CUR.numFDefs                             */
@@ -4247,22 +4324,24 @@
     /* If this isn't true, we need to look up the function table.   */
 
     def = CUR.FDefs + F;
-    if ( CUR.maxFunc+1 != CUR.numFDefs  || def->opc != F )
+    if ( CUR.maxFunc + 1 != CUR.numFDefs || def->opc != F )
     {
       /* look up the FDefs table */
       TT_DefRecord*  limit;
 
+
       def   = CUR.FDefs;
       limit = def + CUR.numFDefs;
 
-      while (def < limit && def->opc != F)
+      while ( def < limit && def->opc != F )
         def++;
 
-      if (def == limit) goto Fail;
+      if ( def == limit )
+        goto Fail;
     }
 
     /* check that the function is active */
-    if (!def->active)
+    if ( !def->active )
       goto Fail;
 
     /* check stack */
@@ -4278,7 +4357,7 @@
 
       pCrec->Caller_Range = CUR.curRange;
       pCrec->Caller_IP    = CUR.IP + 1;
-      pCrec->Cur_Count    = (TT_Int)(args[0]);
+      pCrec->Cur_Count    = (TT_Int)args[0];
       pCrec->Cur_Restart  = def->start;
 
       CUR.callTop++;
@@ -4306,11 +4385,14 @@
     TT_DefRecord*  def;
     TT_DefRecord*  limit;
 
+
     /*  First of all, look for the same function in our table */
+
     def   = CUR.IDefs;
     limit = def + CUR.numIDefs;
+
     for ( ; def < limit; def++ )
-      if (def->opc == (TT_ULong)args[0] )
+      if ( def->opc == (TT_ULong)args[0] )
         break;
 
     if ( def == limit )
@@ -4354,7 +4436,7 @@
   /*                                                                       */
   /* PUSHING DATA ONTO THE INTERPRETER STACK                               */
   /*                                                                       */
-  /*  Instructions appear in the specs' order.                             */
+  /*  Instructions appear in the specification's order.                    */
   /*                                                                       */
   /*************************************************************************/
 
@@ -4635,9 +4717,9 @@
       B = v1->y - v2->y;
     }
 
-    if ( (CUR.opcode & 1) != 0 )
+    if ( ( CUR.opcode & 1 ) != 0 )
     {
-      C =  B;   /* CounterClockwise rotation */
+      C =  B;   /* counter clockwise rotation */
       B =  A;
       A = -C;
     }
@@ -4653,9 +4735,9 @@
       B = v1->y - v2->y;
     }
 
-    if ( (CUR.opcode & 1) != 0 )
+    if ( ( CUR.opcode & 1 ) != 0 )
     {
-      C =  B;   /* CounterClockwise rotation */
+      C =  B;   /* counter clockwise rotation */
       B =  A;
       A = -C;
     }
@@ -4691,7 +4773,7 @@
       return;
     }
 
-    CUR.GS.gep0 = (TT_UShort)(args[0]);
+    CUR.GS.gep0 = (TT_UShort)args[0];
   }
 
 
@@ -4720,7 +4802,7 @@
       return;
     }
 
-    CUR.GS.gep1 = (TT_UShort)(args[0]);
+    CUR.GS.gep1 = (TT_UShort)args[0];
   }
 
 
@@ -4749,7 +4831,7 @@
       return;
     }
 
-    CUR.GS.gep2 = (TT_UShort)(args[0]);
+    CUR.GS.gep2 = (TT_UShort)args[0];
   }
 
 
@@ -4781,9 +4863,9 @@
     CUR.zp1 = CUR.zp0;
     CUR.zp2 = CUR.zp0;
 
-    CUR.GS.gep0 = (TT_UShort)(args[0]);
-    CUR.GS.gep1 = (TT_UShort)(args[0]);
-    CUR.GS.gep2 = (TT_UShort)(args[0]);
+    CUR.GS.gep0 = (TT_UShort)args[0];
+    CUR.GS.gep1 = (TT_UShort)args[0];
+    CUR.GS.gep2 = (TT_UShort)args[0];
   }
 
 
@@ -4830,7 +4912,7 @@
 
 
     /* Get Threshold */
-    A = (TT_Int)(args[0] & 0xFF);
+    A = (TT_Int)( args[0] & 0xFF );
 
     if ( A == 0xFF )
     {
@@ -4845,10 +4927,10 @@
 
     A *= 64;
 
-    /*
+#if 0
     if ( (args[0] & 0x100) != 0 && CUR.metrics.pointSize <= A )
       CUR.GS.scan_control = TRUE;
-    */
+#endif
 
     if ( (args[0] & 0x200) != 0 && CUR.tt_metrics.rotated )
       CUR.GS.scan_control = TRUE;
@@ -4856,10 +4938,10 @@
     if ( (args[0] & 0x400) != 0 && CUR.tt_metrics.stretched )
       CUR.GS.scan_control = TRUE;
 
-    /*
+#if 0
     if ( (args[0] & 0x800) != 0 && CUR.metrics.pointSize > A )
       CUR.GS.scan_control = FALSE;
-    */
+#endif
 
     if ( (args[0] & 0x1000) != 0 && CUR.tt_metrics.rotated )
       CUR.GS.scan_control = FALSE;
@@ -4895,7 +4977,7 @@
   /*                                                                       */
   /* MANAGING OUTLINES                                                     */
   /*                                                                       */
-  /*  Instructions appear in the specs' order.                             */
+  /*  Instructions appear in the specification's order.                    */
   /*                                                                       */
   /*************************************************************************/
 
@@ -5036,16 +5118,21 @@
     d = CUR_Func_project( zp.cur + p, zp.org + p );
 
 #ifdef NO_APPLE_PATENT
+
     *x = TT_MULDIV( d, CUR.GS.freeVector.x, 0x4000 );
     *y = TT_MULDIV( d, CUR.GS.freeVector.y, 0x4000 );
+
 #else
+
     *x = TT_MULDIV( d,
                     (TT_Long)CUR.GS.freeVector.x * 0x10000L,
                     CUR.F_dot_P );
     *y = TT_MULDIV( d,
                     (TT_Long)CUR.GS.freeVector.y * 0x10000L,
                     CUR.F_dot_P );
-#endif
+
+#endif /* NO_APPLE_PATENT */
+
     return SUCCESS;
   }
 
@@ -5088,8 +5175,8 @@
                   dy;
     TT_UShort     point;
 
-
     UNUSED_ARG;
+
 
     if ( CUR.top < CUR.GS.loop )
     {
@@ -5282,7 +5369,7 @@
   static
   void  Ins_MSIRP( INS_ARG )
   {
-    TT_UShort      point;
+    TT_UShort   point;
     TT_F26Dot6  distance;
 
 
@@ -5341,7 +5428,7 @@
 
     /* XXX: Is there some undocumented feature while in the */
     /*      twilight zone? ?                                */
-    if ( (CUR.opcode & 1) != 0 )
+    if ( ( CUR.opcode & 1 ) != 0 )
     {
       cur_dist = CUR_Func_project( CUR.zp0.cur + point, NULL_Vector );
       distance = CUR_Func_round( cur_dist,
@@ -5399,7 +5486,7 @@
     /* some key font heights.  It allows the use of the  */
     /* IP instruction in the twilight zone, which        */
     /* otherwise would be `illegal' according to the     */
-    /* specs :)                                          */
+    /* specification.                                    */
     /*                                                   */
     /* We implement it with a special sequence for the   */
     /* twilight zone.  This is a bad hack, but it seems  */
@@ -5418,7 +5505,7 @@
 
     org_dist = CUR_Func_project( CUR.zp0.cur + point, NULL_Vector );
 
-    if ( (CUR.opcode & 1) != 0 )   /* rounding and control cutin flag */
+    if ( ( CUR.opcode & 1 ) != 0 )   /* rounding and control cutin flag */
     {
       if ( ABS( distance - org_dist ) > CUR.GS.control_value_cutin )
         distance = org_dist;
@@ -5474,16 +5561,18 @@
 
     /* round flag */
 
-    if ( (CUR.opcode & 4) != 0 )
-      distance = CUR_Func_round( org_dist,
-                                 CUR.tt_metrics.compensations[CUR.opcode & 3] );
+    if ( ( CUR.opcode & 4 ) != 0 )
+      distance = CUR_Func_round(
+                   org_dist,
+                   CUR.tt_metrics.compensations[CUR.opcode & 3] );
     else
-      distance = ROUND_None( org_dist,
-                             CUR.tt_metrics.compensations[CUR.opcode & 3]  );
+      distance = ROUND_None(
+                   org_dist,
+                   CUR.tt_metrics.compensations[CUR.opcode & 3] );
 
     /* minimum distance flag */
 
-    if ( (CUR.opcode & 8) != 0 )
+    if ( ( CUR.opcode & 8 ) != 0 )
     {
       if ( org_dist >= 0 )
       {
@@ -5507,7 +5596,7 @@
     CUR.GS.rp1 = CUR.GS.rp0;
     CUR.GS.rp2 = point;
 
-    if ( (CUR.opcode & 16) != 0 )
+    if ( ( CUR.opcode & 16 ) != 0 )
       CUR.GS.rp0 = point;
   }
 
@@ -5531,7 +5620,7 @@
 
 
     point    = (TT_UShort)args[0];
-    cvtEntry = (TT_ULong)(args[1] + 1);
+    cvtEntry = (TT_ULong)( args[1] + 1 );
 
     /* XXX: UNDOCUMENTED! cvt[-1] = 0 always */
 
@@ -5586,13 +5675,13 @@
 
     if ( CUR.GS.auto_flip )
     {
-      if ( (org_dist ^ cvt_dist) < 0 )
+      if ( ( org_dist ^ cvt_dist ) < 0 )
         cvt_dist = -cvt_dist;
     }
 
     /* control value cutin and round */
 
-    if ( (CUR.opcode & 4) != 0 )
+    if ( ( CUR.opcode & 4 ) != 0 )
     {
       /* XXX: UNDOCUMENTED!  Only perform cut-in test when both points */
       /*      refer to the same zone.                                  */
@@ -5601,16 +5690,18 @@
         if ( ABS( cvt_dist - org_dist ) >= CUR.GS.control_value_cutin )
           cvt_dist = org_dist;
 
-      distance = CUR_Func_round( cvt_dist,
-                                 CUR.tt_metrics.compensations[CUR.opcode & 3] );
+      distance = CUR_Func_round(
+                   cvt_dist,
+                   CUR.tt_metrics.compensations[CUR.opcode & 3] );
     }
     else
-      distance = ROUND_None( cvt_dist,
-                             CUR.tt_metrics.compensations[CUR.opcode & 3] );
+      distance = ROUND_None(
+                   cvt_dist,
+                   CUR.tt_metrics.compensations[CUR.opcode & 3] );
 
     /* minimum distance test */
 
-    if ( (CUR.opcode & 8) != 0 )
+    if ( ( CUR.opcode & 8 ) != 0 )
     {
       if ( org_dist >= 0 )
       {
@@ -5628,7 +5719,7 @@
 
     CUR.GS.rp1 = CUR.GS.rp0;
 
-    if ( (CUR.opcode & 16) != 0 )
+    if ( ( CUR.opcode & 16 ) != 0 )
       CUR.GS.rp0 = point;
 
     /* XXX: UNDOCUMENTED! */
@@ -5649,8 +5740,8 @@
     TT_UShort   point;
     TT_F26Dot6  distance;
 
-
     UNUSED_ARG;
+
 
     if ( CUR.top < CUR.GS.loop ||
          BOUNDS( CUR.GS.rp0, CUR.zp0.n_points ) )
@@ -5818,8 +5909,8 @@
                 distance;
     TT_UShort   point;
 
-
     UNUSED_ARG;
+
 
     if ( CUR.top < CUR.GS.loop )
     {
@@ -5936,13 +6027,15 @@
   };
 
 
-  static void  Shift( TT_UInt              p1,
-                      TT_UInt              p2,
-                      TT_UInt              p,
-                      struct LOC_Ins_IUP*  LINK )
+  static
+  void  Shift( TT_UInt              p1,
+               TT_UInt              p2,
+               TT_UInt              p,
+               struct LOC_Ins_IUP*  LINK )
   {
     TT_UInt     i;
     TT_F26Dot6  x;
+
 
     x = LINK->curs[p].x - LINK->orgs[p].x;
 
@@ -5954,14 +6047,16 @@
   }
 
 
-  static void  Interp( TT_UInt              p1,
-                       TT_UInt              p2,
-                       TT_UInt              ref1,
-                       TT_UInt              ref2,
-                       struct LOC_Ins_IUP*  LINK )
+  static
+  void  Interp( TT_UInt              p1,
+                TT_UInt              p2,
+                TT_UInt              ref1,
+                TT_UInt              ref2,
+                struct LOC_Ins_IUP*  LINK )
   {
     TT_UInt     i;
     TT_F26Dot6  x, x1, x2, d1, d2;
+
 
     if ( p1 > p2 )
       return;
@@ -6053,8 +6148,8 @@
     TT_UInt   point;         /* current point   */
     TT_Short  contour;       /* current contour */
 
-
     UNUSED_ARG;
+
 
     if ( CUR.opcode & 1 )
     {
@@ -6065,8 +6160,8 @@
     else
     {
       mask   = FT_Curve_Tag_Touch_Y;
-      V.orgs = (TT_Vector*)( ((TT_F26Dot6*)CUR.pts.org) + 1 );
-      V.curs = (TT_Vector*)( ((TT_F26Dot6*)CUR.pts.cur) + 1 );
+      V.orgs = (TT_Vector*)( (TT_F26Dot6*)CUR.pts.org + 1 );
+      V.curs = (TT_Vector*)( (TT_F26Dot6*)CUR.pts.cur + 1 );
     }
 
     contour = 0;
@@ -6089,7 +6184,7 @@
 
         while ( point <= end_point )
         {
-          if ( (CUR.pts.tags[point] & mask) != 0 )
+          if ( ( CUR.pts.tags[point] & mask ) != 0 )
           {
             if ( point > 0 )
               Interp( cur_touched + 1,
@@ -6107,7 +6202,7 @@
           Shift( first_point, end_point, cur_touched, &V );
         else
         {
-          Interp( (TT_UShort)(cur_touched + 1),
+          Interp( (TT_UShort)( cur_touched + 1 ),
                   end_point,
                   cur_touched,
                   first_touched,
@@ -6157,15 +6252,15 @@
       A = (TT_UShort)CUR.stack[CUR.args + 1];
       B = CUR.stack[CUR.args];
 
-      /* XXX : because some popular fonts contain some invalid DeltaP */
-      /*       instructions, we simply ignore them when the stacked   */
-      /*       point reference is off limit, rather than returning an */
-      /*       error. As a delta instruction doesn't change a glyph   */
-      /*       in great ways, this shouldn't be a problem..           */
+      /* XXX: Because some popular fonts contain some invalid DeltaP */
+      /*      instructions, we simply ignore them when the stacked   */
+      /*      point reference is off limit, rather than returning an */
+      /*      error.  As a delta instruction doesn't change a glyph  */
+      /*      in great ways, this shouldn't be a problem.            */
 
       if ( !BOUNDS( A, CUR.zp0.n_points ) )
       {
-        C = ((TT_ULong)B & 0xF0) >> 4;
+        C = ( (TT_ULong)B & 0xF0 ) >> 4;
 
         switch ( CUR.opcode )
         {
@@ -6185,10 +6280,10 @@
 
         if ( CURRENT_Ppem() == (TT_Long)C )
         {
-          B = ((TT_ULong)B & 0xF) - 8;
+          B = ( (TT_ULong)B & 0xF ) - 8;
           if ( B >= 0 )
             B++;
-          B = B * 64 / (1L << CUR.GS.delta_shift);
+          B = B * 64 / ( 1L << CUR.GS.delta_shift );
 
           CUR_Func_move( &CUR.zp0, A, B );
         }
@@ -6233,7 +6328,7 @@
 
       if ( BOUNDS( A, CUR.cvtSize ) )
       {
-        if (CUR.pedantic_hinting)
+        if ( CUR.pedantic_hinting )
         {
           CUR.error = TT_Err_Invalid_Reference;
           return;
@@ -6241,7 +6336,7 @@
       }
       else
       {
-        C = ((TT_ULong)B & 0xF0) >> 4;
+        C = ( (TT_ULong)B & 0xF0 ) >> 4;
 
         switch ( CUR.opcode )
         {
@@ -6261,10 +6356,10 @@
 
         if ( CURRENT_Ppem() == (TT_Long)C )
         {
-          B = ((TT_ULong)B & 0xF) - 8;
+          B = ( (TT_ULong)B & 0xF ) - 8;
           if ( B >= 0 )
             B++;
-          B = B * 64 / (1L << CUR.GS.delta_shift);
+          B = B * 64 / ( 1L << CUR.GS.delta_shift );
 
           CUR_Func_move_cvt( A, B );
         }
@@ -6300,7 +6395,7 @@
 
     /* We return then Windows 3.1 version number */
     /* for the font scaler                       */
-    if ( (args[0] & 1) != 0 )
+    if ( ( args[0] & 1 ) != 0 )
       K = 3;
 
     /* Has the glyph been rotated ? */
@@ -6323,11 +6418,13 @@
 
     UNUSED_ARG;
 
+
     for ( ; def < limit; def++ )
     {
-      if (def->opc == CUR.opcode && def->active )
+      if ( def->opc == CUR.opcode && def->active )
       {
         TT_CallRec*  call;
+
 
         if ( CUR.callTop >= CUR.callSize )
         {
@@ -6354,6 +6451,8 @@
 
 
 #ifndef TT_CONFIG_OPTION_INTERPRETER_SWITCH
+
+
   static
   TInstruction_Function  Instruct_Dispatch[256] =
   {
@@ -6632,6 +6731,8 @@
     /*  MIRP[30]  */  Ins_MIRP,
     /*  MIRP[31]  */  Ins_MIRP
   };
+
+
 #endif /* !TT_CONFIG_OPTION_INTERPRETER_SWITCH */
 
 
@@ -6656,24 +6757,46 @@
   /*                                                                       */
   /*                                                                       */
   /*  Note: The documented DEBUG opcode pops a value from the stack.  This */
-  /*        behaviour is unsupported, here a DEBUG opcode is always an     */
+  /*        behaviour is unsupported; here a DEBUG opcode is always an     */
   /*        error.                                                         */
   /*                                                                       */
   /*                                                                       */
   /* THIS IS THE INTERPRETER'S MAIN LOOP.                                  */
   /*                                                                       */
-  /*  Instructions appear in the specs' order.                             */
+  /*  Instructions appear in the specification's order.                    */
   /*                                                                       */
   /*************************************************************************/
 
 
-  FT_EXPORT_FUNC(TT_Error)  TT_RunIns( TT_ExecContext  exc )
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    TT_RunIns                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Executes one or more instruction in the execution context.  This   */
+  /*    is the main function of the TrueType opcode interpreter.           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    exec :: A handle to the target execution context.                  */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    TrueType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Only the object manager and debugger should call this function.    */
+  /*                                                                       */
+  /*    This function is publicly exported because it is directly          */
+  /*    invoked by the TrueType debugger.                                  */
+  /*                                                                       */
+  FT_EXPORT_FUNC( TT_Error )  TT_RunIns( TT_ExecContext  exc )
   {
-    TT_Long    ins_counter = 0;  /* executed instructions counter */
+    TT_Long  ins_counter = 0;  /* executed instructions counter */
 
-    #ifdef TT_CONFIG_OPTION_STATIC_RASTER
+
+#ifdef TT_CONFIG_OPTION_STATIC_RASTER
     cur = *exc;
-    #endif
+#endif
 
     /* set CVT functions */
     CUR.tt_metrics.ratio = 0;
@@ -6711,7 +6834,7 @@
         goto LErrorCodeOverflow_;
 
       /* First, let's check for empty stack and overflow */
-      CUR.args = CUR.top - (Pop_Push_Count[CUR.opcode] >> 4);
+      CUR.args = CUR.top - ( Pop_Push_Count[CUR.opcode] >> 4 );
 
       /* `args' is the top of the stack once arguments have been popped. */
       /* One can also interpret it as the index of the last argument.    */
@@ -6721,7 +6844,7 @@
         goto LErrorLabel_;
       }
 
-      CUR.new_top = CUR.args + (Pop_Push_Count[CUR.opcode] & 15);
+      CUR.new_top = CUR.args + ( Pop_Push_Count[CUR.opcode] & 15 );
 
       /* `new_top' is the new top of the stack, after the instruction's */
       /* execution.  `top' will be set to `new_top' after the `switch'  */
@@ -6736,13 +6859,14 @@
       CUR.error    = TT_Err_Ok;
 
 #ifdef TT_CONFIG_OPTION_INTERPRETER_SWITCH
+
       {
         TT_Long*  args   = CUR.stack + CUR.args;
         TT_Byte   opcode = CUR.opcode;
 
 
 #undef   ARRAY_BOUND_ERROR
-#define  ARRAY_BOUND_ERROR   goto Set_Invalid_Ref
+#define  ARRAY_BOUND_ERROR  goto Set_Invalid_Ref
 
 
         switch ( opcode )
@@ -6757,7 +6881,7 @@
             TT_Short AA, BB;
 
 
-            AA = (TT_Short)(opcode & 1) << 14;
+            AA = (TT_Short)( opcode & 1 ) << 14;
             BB = AA ^ (TT_Short)0x4000;
 
             if ( opcode < 4 )
@@ -6769,7 +6893,7 @@
               CUR.GS.dualVector.y = BB;
             }
 
-            if ( (opcode & 2) == 0 )
+            if ( ( opcode & 2 ) == 0 )
             {
               CUR.GS.freeVector.x = AA;
               CUR.GS.freeVector.y = BB;
@@ -6810,7 +6934,7 @@
           break;
 
         case 0x0F:  /* ISECT  */
-          Ins_ISECT( EXEC_ARG_  args );
+          Ins_ISECT( EXEC_ARG_ args );
           break;
 
         case 0x10:  /* SRP0 */
@@ -6826,19 +6950,19 @@
           break;
 
         case 0x13:  /* SZP0 */
-          Ins_SZP0( EXEC_ARG_  args );
+          Ins_SZP0( EXEC_ARG_ args );
           break;
 
         case 0x14:  /* SZP1 */
-          Ins_SZP1( EXEC_ARG_  args );
+          Ins_SZP1( EXEC_ARG_ args );
           break;
 
         case 0x15:  /* SZP2 */
-          Ins_SZP2( EXEC_ARG_  args );
+          Ins_SZP2( EXEC_ARG_ args );
           break;
 
         case 0x16:  /* SZPS */
-          Ins_SZPS( EXEC_ARG_  args );
+          Ins_SZPS( EXEC_ARG_ args );
           break;
 
         case 0x17:  /* SLOOP */
@@ -6858,7 +6982,7 @@
           break;
 
         case 0x1B:  /* ELSE */
-          Ins_ELSE( EXEC_ARG_  args );
+          Ins_ELSE( EXEC_ARG_ args );
           break;
 
         case 0x1C:  /* JMPR */
@@ -6882,7 +7006,7 @@
           break;
 
         case 0x21:  /* POP */
-          /* nothing :-) ! */
+          /* nothing :-) */
           break;
 
         case 0x22:  /* CLEAR */
@@ -6902,78 +7026,78 @@
           break;
 
         case 0x26:  /* MINDEX */
-          Ins_MINDEX( EXEC_ARG_  args );
+          Ins_MINDEX( EXEC_ARG_ args );
           break;
 
         case 0x27:  /* ALIGNPTS */
-          Ins_ALIGNPTS( EXEC_ARG_  args );
+          Ins_ALIGNPTS( EXEC_ARG_ args );
           break;
 
         case 0x28:  /* ???? */
-          Ins_UNKNOWN( EXEC_ARG_  args );
+          Ins_UNKNOWN( EXEC_ARG_ args );
           break;
 
         case 0x29:  /* UTP */
-          Ins_UTP( EXEC_ARG_  args );
+          Ins_UTP( EXEC_ARG_ args );
           break;
 
         case 0x2A:  /* LOOPCALL */
-          Ins_LOOPCALL( EXEC_ARG_  args );
+          Ins_LOOPCALL( EXEC_ARG_ args );
           break;
 
         case 0x2B:  /* CALL */
-          Ins_CALL( EXEC_ARG_  args );
+          Ins_CALL( EXEC_ARG_ args );
           break;
 
         case 0x2C:  /* FDEF */
-          Ins_FDEF( EXEC_ARG_  args );
+          Ins_FDEF( EXEC_ARG_ args );
           break;
 
         case 0x2D:  /* ENDF */
-          Ins_ENDF( EXEC_ARG_  args );
+          Ins_ENDF( EXEC_ARG_ args );
           break;
 
         case 0x2E:  /* MDAP */
         case 0x2F:  /* MDAP */
-          Ins_MDAP( EXEC_ARG_  args );
+          Ins_MDAP( EXEC_ARG_ args );
           break;
 
 
         case 0x30:  /* IUP */
         case 0x31:  /* IUP */
-          Ins_IUP( EXEC_ARG_  args );
+          Ins_IUP( EXEC_ARG_ args );
           break;
 
         case 0x32:  /* SHP */
         case 0x33:  /* SHP */
-          Ins_SHP( EXEC_ARG_  args );
+          Ins_SHP( EXEC_ARG_ args );
           break;
 
         case 0x34:  /* SHC */
         case 0x35:  /* SHC */
-          Ins_SHC( EXEC_ARG_  args );
+          Ins_SHC( EXEC_ARG_ args );
           break;
 
         case 0x36:  /* SHZ */
         case 0x37:  /* SHZ */
-          Ins_SHZ( EXEC_ARG_  args );
+          Ins_SHZ( EXEC_ARG_ args );
           break;
 
         case 0x38:  /* SHPIX */
-          Ins_SHPIX( EXEC_ARG_  args );
+          Ins_SHPIX( EXEC_ARG_ args );
           break;
 
         case 0x39:  /* IP    */
-          Ins_IP( EXEC_ARG_  args );
+          Ins_IP( EXEC_ARG_ args );
           break;
 
         case 0x3A:  /* MSIRP */
         case 0x3B:  /* MSIRP */
-          Ins_MSIRP( EXEC_ARG_  args );
+          Ins_MSIRP( EXEC_ARG_ args );
           break;
 
         case 0x3C:  /* AlignRP */
-          Ins_ALIGNRP( EXEC_ARG_  args );
+          Ins_ALIGNRP( EXEC_ARG_ args );
           break;
 
         case 0x3D:  /* RTDG */
@@ -6982,22 +7106,22 @@
 
         case 0x3E:  /* MIAP */
         case 0x3F:  /* MIAP */
-          Ins_MIAP( EXEC_ARG_  args );
+          Ins_MIAP( EXEC_ARG_ args );
           break;
 
         case 0x40:  /* NPUSHB */
-          Ins_NPUSHB( EXEC_ARG_  args );
+          Ins_NPUSHB( EXEC_ARG_ args );
           break;
 
         case 0x41:  /* NPUSHW */
-          Ins_NPUSHW( EXEC_ARG_  args );
+          Ins_NPUSHW( EXEC_ARG_ args );
           break;
 
         case 0x42:  /* WS */
           DO_WS
           break;
 
-    Set_Invalid_Ref:
+      Set_Invalid_Ref:
             CUR.error = TT_Err_Invalid_Reference;
           break;
 
@@ -7015,16 +7139,16 @@
 
         case 0x46:  /* GC */
         case 0x47:  /* GC */
-          Ins_GC( EXEC_ARG_  args );
+          Ins_GC( EXEC_ARG_ args );
           break;
 
         case 0x48:  /* SCFS */
-          Ins_SCFS( EXEC_ARG_  args );
+          Ins_SCFS( EXEC_ARG_ args );
           break;
 
         case 0x49:  /* MD */
         case 0x4A:  /* MD */
-          Ins_MD( EXEC_ARG_  args );
+          Ins_MD( EXEC_ARG_ args );
           break;
 
         case 0x4B:  /* MPPEM */
@@ -7080,7 +7204,7 @@
           break;
 
         case 0x58:  /* IF */
-          Ins_IF( EXEC_ARG_  args );
+          Ins_IF( EXEC_ARG_ args );
           break;
 
         case 0x59:  /* EIF */
@@ -7100,7 +7224,7 @@
           break;
 
         case 0x5D:  /* DELTAP1 */
-          Ins_DELTAP( EXEC_ARG_  args );
+          Ins_DELTAP( EXEC_ARG_ args );
           break;
 
         case 0x5E:  /* SDB */
@@ -7163,13 +7287,13 @@
 
         case 0x71:  /* DELTAP2 */
         case 0x72:  /* DELTAP3 */
-          Ins_DELTAP( EXEC_ARG_  args );
+          Ins_DELTAP( EXEC_ARG_ args );
           break;
 
         case 0x73:  /* DELTAC0 */
         case 0x74:  /* DELTAC1 */
         case 0x75:  /* DELTAC2 */
-          Ins_DELTAC( EXEC_ARG_  args );
+          Ins_DELTAC( EXEC_ARG_ args );
           break;
 
         case 0x76:  /* SROUND */
@@ -7193,7 +7317,7 @@
           break;
 
         case 0x7B:  /* ???? */
-          Ins_UNKNOWN( EXEC_ARG_  args );
+          Ins_UNKNOWN( EXEC_ARG_ args );
           break;
 
         case 0x7C:  /* RUTG */
@@ -7210,41 +7334,41 @@
           break;
 
         case 0x80:  /* FLIPPT */
-          Ins_FLIPPT( EXEC_ARG_  args );
+          Ins_FLIPPT( EXEC_ARG_ args );
           break;
 
         case 0x81:  /* FLIPRGON */
-          Ins_FLIPRGON( EXEC_ARG_  args );
+          Ins_FLIPRGON( EXEC_ARG_ args );
           break;
 
         case 0x82:  /* FLIPRGOFF */
-          Ins_FLIPRGOFF( EXEC_ARG_  args );
+          Ins_FLIPRGOFF( EXEC_ARG_ args );
           break;
 
         case 0x83:  /* UNKNOWN */
         case 0x84:  /* UNKNOWN */
-          Ins_UNKNOWN( EXEC_ARG_  args );
+          Ins_UNKNOWN( EXEC_ARG_ args );
           break;
 
         case 0x85:  /* SCANCTRL */
-          Ins_SCANCTRL( EXEC_ARG_  args );
+          Ins_SCANCTRL( EXEC_ARG_ args );
           break;
 
         case 0x86:  /* SDPVTL */
         case 0x87:  /* SDPVTL */
-          Ins_SDPVTL( EXEC_ARG_  args );
+          Ins_SDPVTL( EXEC_ARG_ args );
           break;
 
         case 0x88:  /* GETINFO */
-          Ins_GETINFO( EXEC_ARG_  args );
+          Ins_GETINFO( EXEC_ARG_ args );
           break;
 
         case 0x89:  /* IDEF */
-          Ins_IDEF( EXEC_ARG_  args );
+          Ins_IDEF( EXEC_ARG_ args );
           break;
 
         case 0x8A:  /* ROLL */
-          Ins_ROLL( EXEC_ARG_  args );
+          Ins_ROLL( EXEC_ARG_ args );
           break;
 
         case 0x8B:  /* MAX */
@@ -7256,34 +7380,38 @@
           break;
 
         case 0x8D:  /* SCANTYPE */
-          Ins_SCANTYPE( EXEC_ARG_  args );
+          Ins_SCANTYPE( EXEC_ARG_ args );
           break;
 
         case 0x8E:  /* INSTCTRL */
-          Ins_INSTCTRL( EXEC_ARG_  args );
+          Ins_INSTCTRL( EXEC_ARG_ args );
           break;
 
         case 0x8F:
-          Ins_UNKNOWN( EXEC_ARG_  args );
+          Ins_UNKNOWN( EXEC_ARG_ args );
           break;
 
         default:
           if ( opcode >= 0xE0 )
-            Ins_MIRP( EXEC_ARG_  args );
+            Ins_MIRP( EXEC_ARG_ args );
           else if ( opcode >= 0xC0 )
-            Ins_MDRP( EXEC_ARG_  args );
+            Ins_MDRP( EXEC_ARG_ args );
           else if ( opcode >= 0xB8 )
-            Ins_PUSHW( EXEC_ARG_  args );
+            Ins_PUSHW( EXEC_ARG_ args );
           else if ( opcode >= 0xB0 )
-            Ins_PUSHB( EXEC_ARG_  args );
+            Ins_PUSHB( EXEC_ARG_ args );
           else
-            Ins_UNKNOWN( EXEC_ARG_  args );
+            Ins_UNKNOWN( EXEC_ARG_ args );
         }
 
       }
+
 #else
+
       Instruct_Dispatch[CUR.opcode]( EXEC_ARG_ &CUR.stack[CUR.args] );
-#endif
+
+#endif /* TT_CONFIG_OPTION_INTERPRETER_SWITCH */
+
       if ( CUR.error != TT_Err_Ok )
       {
         switch ( CUR.error )
@@ -7293,11 +7421,13 @@
             TT_DefRecord*  def   = CUR.IDefs;
             TT_DefRecord*  limit = def + CUR.numIDefs;
 
+
             for ( ; def < limit; def++ )
             {
               if ( def->active && CUR.opcode == def->opc )
               {
                 TT_CallRec*  callrec;
+
 
                 if ( CUR.callTop >= CUR.callSize )
                 {
@@ -7322,12 +7452,19 @@
 
           CUR.error = TT_Err_Invalid_Opcode;
           goto LErrorLabel_;
-/*        break;   Unreachable code warning suppress.  Leave in case a later
-                   change to remind the editor to consider break; */
+
+#if 0
+          break;   /* Unreachable code warning suppression.             */
+                   /* Leave to remind in case a later change the editor */
+                   /* to consider break;                                */
+#endif
 
         default:
           goto LErrorLabel_;
-/*        break; */
+
+#if 0
+        break;
+#endif
         }
       }
 
@@ -7336,12 +7473,12 @@
       if ( CUR.step_ins )
         CUR.IP += CUR.length;
 
-      /* increment instruction counter and check if we didn't   */
-      /* run this program for too long ?? (e.g. infinite loops) */
+      /* increment instruction counter and check if we didn't */
+      /* run this program for too long (e.g. infinite loops). */
       if ( ++ins_counter > MAX_RUNNABLE_OPCODES )
         return TT_Err_Execution_Too_Long;
 
-  LSuiteLabel_:
+    LSuiteLabel_:
       if ( CUR.IP >= CUR.codeSize )
       {
         if ( CUR.callTop > 0 )
@@ -7355,22 +7492,27 @@
     } while ( !CUR.instruction_trap );
 
   LNo_Error_:
-    #ifdef TT_CONFIG_OPTION_STATIC_RASTER
+
+#ifdef TT_CONFIG_OPTION_STATIC_RASTER
     *exc = cur;
-    #endif
+#endif
+
     return TT_Err_Ok;
 
   LErrorCodeOverflow_:
     CUR.error = TT_Err_Code_Overflow;
 
   LErrorLabel_:
-    #ifdef TT_CONFIG_OPTION_STATIC_RASTER
+
+#ifdef TT_CONFIG_OPTION_STATIC_RASTER
     *exc = cur;
-    #endif
+#endif
+
     return CUR.error;
   }
 
 
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+
 
 /* END */

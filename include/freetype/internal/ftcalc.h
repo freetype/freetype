@@ -43,7 +43,7 @@
 
   FT_EXPORT_DEF( FT_Int32 )  FT_Sqrt64( FT_Int64  l );
 
-#endif /* OLD_CALCS */
+#endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 #else /* LONG64 */
 
