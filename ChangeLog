@@ -1,3 +1,10 @@
+2004-04-28  Masatake YAMATO  <jet@gyve.org>
+
+	* include/freetype/internal/tttypes.h (GX_BlendRec_)
+	[TT_CONFIG_OPTION_GX_VAR_SUPPORT]: Fix a typo.
+
+	* src/truetype/ttgxvar.h (GX_BlendRec_): Fix a typo.
+
 2004-04-27  Masatake YAMATO  <jet@gyve.org>
 
 	* src/truetype/ttgxvar.h: Use FT_LOCAL instead of FT_LOCAL_DEF
