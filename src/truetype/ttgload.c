@@ -240,6 +240,7 @@
     FT_Stream   stream   = loader->stream;
     FT_Int      byte_len = loader->byte_len - 10;
 
+
     if ( byte_len < 0 )
       return TT_Err_Invalid_Outline;
 
@@ -281,8 +282,9 @@
       short*  cur   = gloader->current.outline.contours;
       short*  limit = cur + n_contours;
 
-      /* check room for contours array + instructions count */
-      byte_len -= 2*(n_contours+1);
+
+      /* check space for contours array + instructions count */
+      byte_len -= 2 * ( n_contours + 1 );
       if ( byte_len < 0 )
         goto Invalid_Outline;
 
@@ -376,19 +378,18 @@
       {
         if ( *flag & 2 )
           byte_len -= 1;
-        else if ( (*flag & 16) == 0 )
+        else if ( ( *flag & 16 ) == 0 )
           byte_len -= 2;
 
         if ( *flag & 4 )
           byte_len -= 1;
-        else if ( (*flag & 32) == 0 )
+        else if ( ( *flag & 32 ) == 0 )
           byte_len -= 2;
       }
 
       if ( byte_len < 0 )
         goto Invalid_Outline;
     }
-
 
     /* reading the X coordinates */
 
@@ -487,7 +488,7 @@
       if ( error )
         goto Fail;
 
-      /* check room */
+      /* check space */
       byte_len -= 4;
       if ( byte_len < 0 )
         goto Invalid_Composite;
@@ -499,7 +500,7 @@
       subglyph->flags = GET_UShort();
       subglyph->index = GET_UShort();
 
-      /* check room */
+      /* check space */
       byte_len -= 2;
       if ( subglyph->flags & ARGS_ARE_WORDS )
         byte_len -= 2;
@@ -823,7 +824,7 @@
       goto Exit;
     }
 
-    loader->byte_len = (FT_Int) count;
+    loader->byte_len = (FT_Int)count;
 
 #if 0
     /* temporary hack */

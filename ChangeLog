@@ -1,23 +1,25 @@
 2002-01-05  David Turner  <david@freetype.org>
 
-	* src/autohint/ahhint.c: modified computation of auto-hinted stem
-	widths, this avoids color fringes in "ClearType-like" rendering
-	
-	* src/truetype/ttgload.c: modified the TrueType loader to make it
-	more paranoid, this avoids nasty buffer overflows in the case of
-	invalid glyph data (as encountered in the output of some buggy
-	font converters..)
+	* src/autohint/ahhint.c (ah_align_linked_edge): Modified computation
+	of auto-hinted stem widths; this avoids color fringes in
+	"ClearType-like" rendering.
+
+	* src/truetype/ttgload.c (TT_Load_Glyph_Header,
+	TT_Load_Simple_Glyph, TT_Load_Composite_Glyph, load_truetype_glyph):
+	Modified the TrueType loader to make it more paranoid; this avoids
+	nasty buffer overflows in the case of invalid glyph data (as
+	encountered in the output of some buggy font converters).
 
 2002-01-04  David Turner  <david@freetype.org>
 
-	* README.UNX: added special README file for Unix users
+	* README.UNX: Added special README file for Unix users.
 
-	* builds/unix/ftsystem.c (FT_New_Stream): fixed typo
-	
-	* src/base/ftobjs.c: added #include FT_OUTLINE_H to get rid
-	of compiler warnings
-	
-	* src/base/ftoutln.c (FT_Outline_Check): remove compiler warning
+	* builds/unix/ftsystem.c (FT_New_Stream): Fixed typo.
+
+	* src/base/ftobjs.c: Added #include FT_OUTLINE_H to get rid
+	of compiler warnings.
+
+	* src/base/ftoutln.c (FT_Outline_Check): Remove compiler warning.
 
 2002-01-03  Werner Lemberg  <wl@gnu.org>
 
