@@ -587,7 +587,7 @@ FT_BEGIN_HEADER
     FT_UInt              num_glyphs;
     FT_Byte**            glyph_names;
 
-    FT_UInt              lenIV;        /* internal for sub routine calls */
+    FT_Int               lenIV;        /* internal for sub routine calls */
     FT_UInt              num_subrs;
     FT_Byte**            subrs;
     FT_Int*              subrs_len;    /* array of subrs length (optional) */
