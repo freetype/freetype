@@ -1,9 +1,15 @@
+2000-11-22  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/cff/t2objs.c (T2_Init_Face): Set `root->num_faces' when loading
+	a pure CFF font.  Set `units_per_EM' to a default of 1000 (for pure CFF
+	fonts), instead of setting it based on the FontMatrix.
+
 2000-11-16  David Turner <david@freetype.org>
 
 	* src/autohint/ahtypes.h (AH_Hinter): Added new fields to control
 	auto-hinting of synthetic Type 1 fonts.
 
-	* src/autohint/ahhint.c (ah_hinter_load ah_hinter_load_glyph):
+	* src/autohint/ahhint.c (ah_hinter_load, ah_hinter_load_glyph):
 	Added auto-hinting support of synthetic Type 1 fonts.
 
 2000-11-12  Tom Kacvinsky  <tjk@ams.org>
