@@ -302,5 +302,21 @@
     return memory;
   }
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Done_Memory                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Discards memory manager.                                           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory  :: handle to memory manager                                */
+  /*                                                                       */
+  FT_EXPORT_FUNC( void )  FT_Done_Memory( FT_Memory  memory )
+  {
+    free( memory );
+  }
+
 
 /* END */

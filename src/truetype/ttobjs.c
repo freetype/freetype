@@ -143,7 +143,6 @@
 
     return error;
   }
-
 #endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
 
@@ -730,7 +729,8 @@
       TT_Destroy_Context( driver->context, driver->root.root.memory );
       driver->context = NULL;
     }
-
+#else
+    FT_UNUSED(driver);
 #endif
 
   }

@@ -1,5 +1,20 @@
 LATEST CHANGES
 
+  - fixed two memory leaks:
+       - the memory manager (16 bytes) isn't released in FT_Done_FreeType !!
+       
+       - using custom input streams, the copy of the original stream
+         was never released
+
+  - fixed the auto-hinter by performing automatic computation of the
+    "filling direction" of each glyph. This is done through a simple and
+    fast approximation, and seems to work (problems spotted by Werner
+    though). The Arphic fonts are a lot nicer though there are still a
+    lot of things to do to handle Asian fonts correctly..
+
+===========================================================================
+BETA-8 (RELEASE CANDIDATE) CHANGES
+
   - deactivated the trueType bytecode interpreter by default
   
   - deactivated the "src/type1" font driver. Now "src/type1z" is

@@ -18,7 +18,7 @@
 
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include <psmodule.c>
+#include <psnames/psmodule.c>
 
 
 /* END */

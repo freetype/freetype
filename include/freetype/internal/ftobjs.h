@@ -506,6 +506,7 @@
 
   FT_EXPORT_DEF( FT_Memory )  FT_New_Memory( void );
 
+  FT_EXPORT_DEF( void )       FT_Done_Memory( FT_Memory  memory );
 
 #endif /* !FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM */
 

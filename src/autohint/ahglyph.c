@@ -322,10 +322,13 @@
       outline->max_contours = new_contours;
     }
 
-    /* then, realloc the points, segments & edges arrays if needed */
-    if ( num_points > outline->max_points )
+    /* then, realloc the points, segments & edges arrays if needed   */
+    /* note that we reserved two additional point positions, used to */
+    /* hint metrics appropriately..                                  */
+    /*                                                               */
+    if ( num_points+2 > outline->max_points )
     {
-      FT_Int  news = ( num_points + 7 ) & -8;
+      FT_Int  news = ( num_points+2 + 7 ) & -8;
       FT_Int  max  = outline->max_points;
 
 

@@ -22,30 +22,29 @@ ifeq ($(PLATFORM),ansi)
     COPY     := cp
     DELETE   := rm -f
 
-    # If a Unix platform is detected, the configure script is called and
-    # `unix.mk' is created.
-    #
-    # Arguments to `configure' should be in the CFG variable.  Example:
-    #
-    #   make CFG="--prefix=/usr --disable-static"
-    #
-    # If you need to set CFLAGS or LDFLAGS, do it here also.
-    #
-    # Feel free to add support for other platform specific compilers in this
-    # directory (e.g. solaris.mk + changes here to detect the platform).
-    #
-    CONFIG_FILE := unix.mk
-    setup: unix.mk
-    unix: setup
 
-    # If `devel' is the requested target, use `-g -O0' as the default value
-    # for CFLAGS if CFLAGS isn't set.
+    # If `devel' is the requested target, we use a special configuration
+    # file named "unix-dev.mk". It disables optimization and libtool..
     #
     ifneq ($(findstring devel,$(MAKECMDGOALS)),)
-      ifndef CFLAGS
-        USE_CFLAGS := CFLAGS="-g -O0"
-      endif
+      CONFIG_FILE := unix-dev.mk
       devel: setup
+    else
+      # If a Unix platform is detected, the configure script is called and
+      # `unix.mk' is created.
+      #
+      # Arguments to `configure' should be in the CFG variable.  Example:
+      #
+      #   make CFG="--prefix=/usr --disable-static"
+      #
+      # If you need to set CFLAGS or LDFLAGS, do it here also.
+      #
+      # Feel free to add support for other platform specific compilers in this
+      # directory (e.g. solaris.mk + changes here to detect the platform).
+      #
+      CONFIG_FILE := unix.mk
+      setup: unix.mk
+      unix: setup
     endif
 
     setup: std_setup
