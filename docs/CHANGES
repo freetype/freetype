@@ -14,12 +14,19 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       correctly  treated as a CID,  similar to  FreeType's CID  driver
       module.  Note that CID CMaps support is still missing.
 
+    - SFNT  based fonts  no longer  set  the FT_FACE_FLAGS_GLYPH_NAMES
+      flag if a version 3.0 `post' table is present.
+
 
   II. IMPORTANT CHANGES
 
     - Both  PCF  and BDF  drivers  now  handle  the SETWIDTH_NAME  and
       ADD_STYLE_NAME    properties.     Values    are   appended    to
       face->style_name; example: `Bold SemiCondensed'.
+
+    - A  new  API   function  `FT_Get_CMap_Language_ID'  (declared  in
+      `tttables.h')  is  available  to   get  the  language  ID  of  a
+      TrueType/SFNT cmap.
 
 
   III. MISCELLANEOUS
@@ -164,7 +171,7 @@ LATEST CHANGES BETWEEN 2.1.5 and 2.1.4
 
     - The algorithm for guessing the font style has been improved.
 
-    - For fonts in sfnt format, root->height is no longer increased if
+    - For fonts in SFNT format, root->height is no longer increased if
       the line gap  is zero.  There exist fonts  (containing e.g. form
       drawing  characters) which  intentionally have  a zero  line gap
       value.
