@@ -236,7 +236,7 @@
 
 
   FT_LOCAL_DEF
-  void  T1_Done_Parser( T1_ParserRec*  parser )
+  void  T1_Finalize_Parser( T1_ParserRec*  parser )
   {
     FT_Memory   memory = parser->root.memory;
 
@@ -276,25 +276,8 @@
 
 
   FT_LOCAL_DEF
-  void  T1_Decrypt( FT_Byte*   buffer,
-                    FT_Int     length,
-                    FT_UShort  seed )
-  {
-    while ( length > 0 )
-    {
-      FT_Byte  plain;
-
-
-      plain     = ( *buffer ^ ( seed >> 8 ) );
-      seed      = ( *buffer + seed ) * 52845 + 22719;
-      *buffer++ = plain;
-      length--;
-    }
-  }
-
-
-  FT_LOCAL_DEF
-  FT_Error  T1_Get_Private_Dict( T1_ParserRec*  parser )
+  FT_Error  T1_Get_Private_Dict( T1_ParserRec*     parser,
+                                 PSAux_Interface*  psaux )
   {
     FT_Stream  stream = parser->stream;
     FT_Memory  memory = parser->root.memory;
@@ -473,7 +456,7 @@
     }
 
     /* we now decrypt the encoded binary private dictionary */
-    T1_Decrypt( parser->private_dict, parser->private_len, 55665 );
+    psaux->t1_decrypt( parser->private_dict, parser->private_len, 55665 );
     parser->root.base = parser->private_dict;
     parser->root.cursor = parser->private_dict;
     parser->root.limit  = parser->root.cursor + parser->private_len;

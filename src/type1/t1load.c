@@ -1148,7 +1148,7 @@
       /*                                                         */
       if ( face->type1.private_dict.lenIV >= 0 )
       {
-        T1_Decrypt( base, size, 4330 );
+        psaux->t1_decrypt( base, size, 4330 );
         size -= face->type1.private_dict.lenIV;
         base += face->type1.private_dict.lenIV;
       }
@@ -1268,7 +1268,7 @@
 
         if ( face->type1.private_dict.lenIV >= 0 )
         {
-          T1_Decrypt( base, size, 4330 );
+          psaux->t1_decrypt( base, size, 4330 );
           size -= face->type1.private_dict.lenIV;
           base += face->type1.private_dict.lenIV;
         }
@@ -1567,7 +1567,7 @@
     T1_Release_Table( &loader->subrs );
 
     /* finalize parser */
-    T1_Done_Parser( parser );
+    T1_Finalize_Parser( parser );
   }
 
 
@@ -1599,7 +1599,7 @@
     if ( error )
       goto Exit;
 
-    error = T1_Get_Private_Dict( parser );
+    error = T1_Get_Private_Dict( parser, psaux );
     if ( error )
       goto Exit;
 
