@@ -10,6 +10,7 @@ FT_USE_MODULE(sfnt_module_class)
 FT_USE_MODULE(ft_smooth_renderer_class)
 FT_USE_MODULE(tt_driver_class)
 FT_USE_MODULE(t1_driver_class)
+FT_USE_MODULE(t42_driver_class)
 FT_USE_MODULE(pfr_driver_class)
 FT_USE_MODULE(winfnt_driver_class)
 
