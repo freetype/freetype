@@ -42,6 +42,12 @@ typedef  struct MyBlock
 static  MyBlock my_blocks[ MAX_RECORDED_BLOCKS ];
 static  int     num_my_blocks = 0;
 
+static
+void  rewind_memory( void )
+{
+  num_my_blocks = 0;
+}
+
 /* record a new block in the table, check for duplicates too */
 static
 void  record_my_block( void*  base, long  size )
@@ -100,13 +106,13 @@ void  forget_my_block( void*  base )
       }
       else
       {
-        fprintf( stderr, "Block at %08lx released twice \n", (long)base );
+        fprintf( stderr, "Block at %p released twice \n", base );
         exit(1);
       }
     }
   }
-  fprintf( stderr, "Trying to release an unallocated block at %08lx\n",
-                   (long)base );
+  fprintf( stderr, "Trying to release an unallocated block at %p\n",
+                   base );
   exit(1);
 }
 
@@ -126,7 +132,7 @@ static
 void   my_free( FT_Memory memory, void*  block )
 {
   forget_my_block(block);
-  free(block);
+  /* free(block);  WE DO NOT REALLY FREE THE BLOCK */
 }
 
 static
@@ -140,9 +146,16 @@ void*  my_realloc( FT_Memory memory,
   p = my_alloc( memory, new_size );
   if (p)
   {
+    long  size;
+    
+    size = cur_size;
+    if (new_size < size)
+      size = new_size;
+      
+    memcpy( p, block, size );
     my_free( memory, block );
-    record_my_block( p, new_size );
   }
+
   return p;
 }
 
@@ -168,7 +181,7 @@ static void  dump_mem( void )
   {
     if (block->size > 0)
     {
-      fprintf( stderr, "%08lx (%6ld bytes) leaked !!\n", (long)block->base, (long)block->size );
+      fprintf( stderr, "%p (%6ld bytes) leaked !!\n", block->base, (long)block->size );
       bad = 1;
     }
   }

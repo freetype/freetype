@@ -467,6 +467,11 @@
      }
      while (1);
 
+     /* we must free the field "tokzer.base" if we're in a disk-based */
+     /* PFB file..                                                    */
+     if (stream->read)
+       FREE( tokzer->base );
+
      tokzer->base   = private;
      tokzer->cursor = 0;
      tokzer->limit  = private_size;

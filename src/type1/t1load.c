@@ -1245,9 +1245,10 @@
                     /* copy recorder sub-routines */
                     T1_Done_Table( &parser->table );
 
-                    parser->subrs    = parser->table.block;
-                    type1->subrs     = parser->table.elements;
-                    type1->subrs_len = parser->table.lengths;
+                    parser->subrs      = parser->table.block;
+                    type1->subrs       = parser->table.elements;
+                    type1->subrs_len   = parser->table.lengths;
+                    type1->subrs_block = parser->table.block;
 
                     parser->state_index--;
                   }

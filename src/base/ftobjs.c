@@ -1337,6 +1337,7 @@
       else
         error = FT_Err_Invalid_Handle;
 
+      ft_done_stream( &stream );
       goto Fail;
     }
     else
@@ -1370,6 +1371,8 @@
             goto Fail;
         }
       }
+
+      ft_done_stream( &stream );
 
       /* no driver is able to handle this format */
       error = FT_Err_Unknown_File_Format;

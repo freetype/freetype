@@ -392,8 +392,6 @@
       }
     }
 
-    FORGET_Frame();
-
     /* clear the touch tags */
     for ( n = 0; n < n_points; n++ )
       outline->tags[n] &= FT_Curve_Tag_On;
