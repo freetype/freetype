@@ -1,3 +1,8 @@
+2003-05-19  David Chester  <davidchester@qmx.net>
+
+	* src/autohint/ahhint.c (ah_hinter_load_glyph): Don't scale
+	y_scale locally but face->size->metrics.y_scale.
+
 2003-05-19  David Turner  <david@freetype.org>
 
 	* src/sfnt/ttcmap0.c (tt_cmap4_char_next): Select proper start
