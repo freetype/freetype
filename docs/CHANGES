@@ -27,6 +27,10 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
     - The descender metrics (face->size->metrics.descender) for WinFNT
       bitmap fonts had the wrong sign.
 
+    - The (emulated) seac support for CFF fonts was broken.
+
+    - The flex operator didn't work for CFF fonts.
+
 
   II. IMPORTANT CHANGES
 

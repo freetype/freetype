@@ -1,7 +1,34 @@
+2004-01-31  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffgload.c (cff_operator_seac): Fix magnitude of
+	accent offset.
+	Update code similarly to the seac support for Type 1 fonts.
+	(cff_decoder_parse_charstrings) <cff_op_endchar>: Fix magnitude
+	of accent offset.
+	Don't hint glyphs twice if seac is emulated.
+	<cff_op_flex>: Assign correct point tags.
+	* docs/CHANGES: Updated.
+
+2004-01-30  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Use FT_MEM_MOVE, not
+	FT_MEM_COPY, for copying the private dict.
+
+	* src/type1/t1load.c (parse_subrs): Assign number of subrs only
+	in first run.
+	(parse_charstrings): Parse /CharStrings in second run without
+	assigning values.
+	(parse_dict): Skip all /CharStrings arrays but the first.  We need
+	this for non-standard fonts like `Optima' which have different
+	outlines depending on the resolution.  Note that there is no
+	guarantee that we get fitting /Subrs and /CharStrings arrays; this
+	can only be done by a real PS interpreter.
+
 2004-01-29  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
 
-    * builds/win32/visualc/index.html: detailled explanations
-    about forcing CR+LF line endings for the VC++ project files.
+	* builds/win32/visualc/index.html: New file, giving detailed
+	explanations about forcing CR+LF line endings for the VC++ project
+	files.
 
 2004-01-22  Garrick Meeker  <garrick@digitalanarchy.com>
 

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PostScript Type 1 decoding routines (body).                          */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002, 2003 by                                     */
+/*  Copyright 2000-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -262,10 +262,6 @@
     if ( error )
       goto Exit;
 
-#if 0
-    n_base_points = base->n_points;
-#endif
-
     /* save the left bearing and width of the base character */
     /* as they will be erased by the next load.              */
 
@@ -290,23 +286,8 @@
     decoder->builder.left_bearing = left_bearing;
     decoder->builder.advance      = advance;
 
-    /* XXX: old code doesn't work with PostScript hinter */
-#if 0
-    /* Finally, move the accent */
-    if ( decoder->builder.load_points )
-    {
-      FT_Outline  dummy;
-
-
-      dummy.n_points = (short)( base->n_points - n_base_points );
-      dummy.points   = base->points + n_base_points;
-
-      FT_Outline_Translate( &dummy, adx - asb, ady );
-    }
-#else
     decoder->builder.pos_x = 0;
     decoder->builder.pos_y = 0;
-#endif
 
   Exit:
     return error;

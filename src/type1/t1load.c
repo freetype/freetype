@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Type 1 font loader (body).                                           */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1155,7 +1155,8 @@
         goto Fail;
     }
 
-    loader->num_subrs = num_subrs;
+    if ( !loader->num_subrs )
+      loader->num_subrs = num_subrs;
 
     return;
 
@@ -1182,12 +1183,12 @@
 
     FT_Byte*       cur;
     FT_Byte*       limit        = parser->root.limit;
-    FT_Int         n;
+    FT_Int         n, num_glyphs;
     FT_UInt        notdef_index = 0;
     FT_Byte        notdef_found = 0;
 
 
-    loader->num_glyphs = (FT_Int)T1_ToInt( parser );
+    num_glyphs = (FT_Int)T1_ToInt( parser );
     if ( parser->root.error )
       return;
 
@@ -1195,22 +1196,28 @@
     /* if necessary, and a few other glyphs to handle buggy      */
     /* fonts which have more glyphs than specified.              */
 
-    error = psaux->ps_table_funcs->init(
-              code_table, loader->num_glyphs + 1 + TABLE_EXTEND, memory );
-    if ( error )
-      goto Fail;
+    /* for some non-standard fonts like `Optima' which provides  */
+    /* different outlines depending on the resolution it is      */
+    /* possible to get here twice                                */
+    if ( !loader->num_glyphs )
+    {
+      error = psaux->ps_table_funcs->init(
+                code_table, num_glyphs + 1 + TABLE_EXTEND, memory );
+      if ( error )
+        goto Fail;
 
-    error = psaux->ps_table_funcs->init(
-              name_table, loader->num_glyphs + 1 + TABLE_EXTEND, memory );
-    if ( error )
-      goto Fail;
+      error = psaux->ps_table_funcs->init(
+                name_table, num_glyphs + 1 + TABLE_EXTEND, memory );
+      if ( error )
+        goto Fail;
 
-    /* Initialize table for swapping index notdef_index and */
-    /* index 0 names and codes (if necessary).              */
+      /* Initialize table for swapping index notdef_index and */
+      /* index 0 names and codes (if necessary).              */
 
-    error = psaux->ps_table_funcs->init( swap_table, 4, memory );
-    if ( error )
-      goto Fail;
+      error = psaux->ps_table_funcs->init( swap_table, 4, memory );
+      if ( error )
+        goto Fail;
+    }
 
     n = 0;
 
@@ -1259,6 +1266,15 @@
         cur++;                              /* skip `/' */
         len = parser->root.cursor - cur;
 
+        if ( !read_binary_data( parser, &size, &base ) )
+          return;
+
+        /* for some non-standard fonts like `Optima' which provides */
+        /* different outlines depending on the resolution it is     */
+        /* possible to get here twice                               */
+        if ( loader->num_glyphs )
+          continue;
+
         error = T1_Add_Table( name_table, n, cur, len + 1 );
         if ( error )
           goto Fail;
@@ -1275,11 +1291,8 @@
           notdef_found = 1;
         }
 
-        if ( !read_binary_data( parser, &size, &base ) )
-          return;
-
         if ( face->type1.private_dict.lenIV >= 0   &&
-             n < loader->num_glyphs + TABLE_EXTEND )
+             n < num_glyphs + TABLE_EXTEND )
         {
           FT_Byte*  temp;
 
@@ -1303,7 +1316,10 @@
       }
     }
 
-    loader->num_glyphs = n;
+    if ( loader->num_glyphs )
+      return;
+    else
+      loader->num_glyphs = n;
 
     /* if /.notdef is found but does not occupy index 0, do our magic. */
     if ( ft_strcmp( (const char*)".notdef",
@@ -1576,9 +1592,11 @@
               /* We found it -- run the parsing callback! */
               /* We only record the first instance of any */
               /* field to deal adequately with synthetic  */
-              /* fonts; /Subrs is handled specially.      */
-              if ( keyword_flag[0] == 0                         ||
-                   ft_strcmp( (const char*)name, "Subrs" ) == 0 )
+              /* fonts; /Subrs and /CharStrings are       */
+              /* handled specially.                       */
+              if ( keyword_flag[0] == 0                              ||
+                   ft_strcmp( (const char*)name, "Subrs" ) == 0      ||
+                   ft_strcmp( (const char*)name, "CharStrings") == 0 )
               {
                 parser->root.error = t1_load_keyword( face,
                                                       loader,
