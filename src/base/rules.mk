@@ -34,7 +34,6 @@ BASE_COMPILE := $(FT_COMPILE) $I$(SRC_)base
 #
 BASE_SRC := $(BASE_)ftcalc.c   \
             $(BASE_)fttrigon.c \
-            $(BASE_)ftextend.c \
             $(BASE_)ftlist.c   \
             $(BASE_)ftobjs.c   \
             $(BASE_)ftstream.c \

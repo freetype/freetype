@@ -105,6 +105,10 @@
 
 
 #undef  FT_NEED_EXTERN_C
+
+#undef  FT_ERR_XCAT
+#undef  FT_ERR_CAT
+
 #define FT_ERR_XCAT( x, y )  x ## y
 #define FT_ERR_CAT( x, y )   FT_ERR_XCAT( x, y )
 
@@ -192,6 +196,11 @@
                "invalid argument" )
   FT_ERRORDEF_( Unimplemented_Feature,                       0x07, \
                "unimplemented feature" )
+  FT_ERRORDEF_( Invalid_Table,                               0x08, \
+                "broken table" )
+  FT_ERRORDEF_( Invalid_Offset,                              0x09, \
+                "broken offset within table" )
+
 
   /* glyph/character errors */
 

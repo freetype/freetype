@@ -32,6 +32,7 @@
 #define FT_INTERNAL_CALC_H                <freetype/internal/ftcalc.h>
 #define FT_INTERNAL_DRIVER_H              <freetype/internal/ftdriver.h>
 #define FT_INTERNAL_EXTEND_H              <freetype/internal/ftextend.h>
+#define FT_INTERNAL_TRACE_H               <freetype/internal/fttrace.h>
 
 #define FT_INTERNAL_SFNT_H                <freetype/internal/sfnt.h>
 
