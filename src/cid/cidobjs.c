@@ -223,14 +223,14 @@
         root->num_fixed_sizes = 0;
         root->available_sizes = 0;
 
-        root->bbox         = face->cid.font_bbox;
+        root->bbox = face->cid.font_bbox;
         if ( !root->units_per_EM )
           root->units_per_EM  = 1000;
 
-        root->ascender     = (FT_Short)( face->cid.font_bbox.yMax >> 16 );
-        root->descender    = (FT_Short)( face->cid.font_bbox.yMin >> 16 );
-        root->height       = (FT_Short)( (( root->ascender + root->descender ) * 12 )
-                             / 10 );
+        root->ascender  = (FT_Short)( face->cid.font_bbox.yMax >> 16 );
+        root->descender = (FT_Short)( face->cid.font_bbox.yMin >> 16 );
+        root->height    = (FT_Short)(
+          ( ( root->ascender + root->descender ) * 12 ) / 10 );
 
 
 #if 0

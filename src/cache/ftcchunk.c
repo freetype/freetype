@@ -50,9 +50,10 @@
     data->ref_count    = (FT_Short) 0;
     node->cset         = cset;
     node->cset_index   = (FT_UShort)index;
-    node->num_elements = (unsigned short)(( index + 1 < cset->num_chunks )
-                         ? cset->element_count
-                         : cset->element_max - cset->element_count*index );
+    node->num_elements = (unsigned short)(
+                          ( index + 1 < cset->num_chunks )
+                            ? cset->element_count
+                            : cset->element_max - cset->element_count*index );
     if ( alloc )
     {
       /* allocate elements array */

@@ -66,24 +66,27 @@
   /*******************************************************************/
   /*******************************************************************/
 
+
 #undef  FT_NEED_EXTERN_C
+
 #ifndef FT_MODERRDEF
 
-#  ifdef FT_CONFIG_OPTION_USE_MODULE_ERRORS
-#    define FT_MODERRDEF( e, v, s )  FT_Mod_Err_ ## e = v,
-#  else
-#    define FT_MODERRDEF( e, v, s )  FT_Mod_Err_ ## e = 0,
-#  endif
+#ifdef FT_CONFIG_OPTION_USE_MODULE_ERRORS
+#define FT_MODERRDEF( e, v, s )  FT_Mod_Err_ ## e = v,
+#else
+#define FT_MODERRDEF( e, v, s )  FT_Mod_Err_ ## e = 0,
+#endif
 
-#  define FT_MODERR_START_LIST     enum {
-#  define FT_MODERR_END_LIST       FT_Mod_Err_Max };
+#define FT_MODERR_START_LIST  enum {
+#define FT_MODERR_END_LIST    FT_Mod_Err_Max };
 
-#  ifdef __cplusplus
-#    define FT_NEED_EXTERN_C
+#ifdef __cplusplus
+#define FT_NEED_EXTERN_C
   extern "C" {
-#  endif
+#endif
 
 #endif /* !FT_MODERRDEF */
+
 
   /*******************************************************************/
   /*******************************************************************/
@@ -92,6 +95,7 @@
   /*****                                                         *****/
   /*******************************************************************/
   /*******************************************************************/
+
 
 #ifdef FT_MODERR_START_LIST
   FT_MODERR_START_LIST
@@ -118,6 +122,7 @@
   FT_MODERR_END_LIST
 #endif
 
+
   /*******************************************************************/
   /*******************************************************************/
   /*****                                                         *****/
@@ -125,6 +130,7 @@
   /*****                                                         *****/
   /*******************************************************************/
   /*******************************************************************/
+
 
 #ifdef FT_NEED_EXTERN_C
   }

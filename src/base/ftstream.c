@@ -31,10 +31,10 @@
 #define FT_COMPONENT  trace_stream
 
 
-  FT_BASE_DEF( void )  FT_New_Memory_Stream( FT_Library      library,
-                                             FT_Byte*  base,
-                                             FT_ULong        size,
-                                             FT_Stream       stream )
+  FT_BASE_DEF( void )  FT_New_Memory_Stream( FT_Library  library,
+                                             FT_Byte*    base,
+                                             FT_ULong    size,
+                                             FT_Stream   stream )
   {
     stream->memory = library->memory;
     stream->base   = base;

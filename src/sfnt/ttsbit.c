@@ -104,10 +104,10 @@
 
     for ( height = target->rows; height > 0; height-- )
     {
-      FT_Byte*  cur   = line_buff;      /* current write cursor          */
-      FT_Int    count = line_bits;      /* # of bits to extract per line */
-      FT_Byte   shift = (FT_Byte)(x_offset & 7); /* current write shift  */
-      FT_Byte   space = (FT_Byte)(8 - shift);
+      FT_Byte*  cur   = line_buff;        /* current write cursor          */
+      FT_Int    count = line_bits;        /* # of bits to extract per line */
+      FT_Byte   shift = (FT_Byte)( x_offset & 7 ); /* current write shift  */
+      FT_Byte   space = (FT_Byte)( 8 - shift );
 
 
       /* first of all, read individual source bytes */
@@ -163,7 +163,7 @@
         }
 
         /* now write remaining bits */
-        val     = (FT_Byte)(( (FT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count ));
+        val     = (FT_Byte)( ( (FT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count ) );
         cur[0] |= val >> shift;
 
         if ( count > space )
@@ -699,7 +699,7 @@
       if ( glyph_index >= (FT_UInt)range->first_glyph &&
            glyph_index <= (FT_UInt)range->last_glyph  )
       {
-        FT_UShort  delta = (FT_UShort)(glyph_index - range->first_glyph);
+        FT_UShort  delta = (FT_UShort)( glyph_index - range->first_glyph );
 
 
         switch ( range->index_format )
@@ -1068,8 +1068,8 @@
 
 
           val    = cur[1];
-          cur[0] = (FT_Byte)(old | ( val >> 7 ));
-          old    = (FT_Byte)(val << 1);
+          cur[0] = (FT_Byte)( old | ( val >> 7 ) );
+          old    = (FT_Byte)( val << 1 );
           cur++;
         }
         cur[0] = old;
@@ -1098,7 +1098,7 @@
 
       line  = (FT_Byte*)map->buffer + ( right >> 3 );
       limit = line + rows * line_len;
-      mask  = (FT_Byte)(0x80 >> ( right & 7 ));
+      mask  = (FT_Byte)( 0x80 >> ( right & 7 ) );
 
       for ( ; line < limit; line += line_len )
         if ( line[0] & mask )
@@ -1452,7 +1452,7 @@
 
       /* some heuristic values */
 
-      metrics->vertBearingX = (FT_Char)(-metrics->width / 2);
+      metrics->vertBearingX = (FT_Char)(-metrics->width / 2 );
       metrics->vertBearingY = (FT_Char)( advance / 10 );
       metrics->vertAdvance  = (FT_Char)( advance * 12 / 10 );
     }

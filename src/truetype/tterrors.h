@@ -30,8 +30,8 @@
 
 #undef __FTERRORS_H__
 
-#define FT_ERR_PREFIX     TT_Err_
-#define FT_ERR_BASE       FT_Mod_Err_TrueType
+#define FT_ERR_PREFIX  TT_Err_
+#define FT_ERR_BASE    FT_Mod_Err_TrueType
 
 #include FT_ERRORS_H
 

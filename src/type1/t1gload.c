@@ -176,7 +176,8 @@
     if ( error )
       goto Exit;
 
-    decoder.builder.no_recurse = FT_BOOL( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
+    decoder.builder.no_recurse = FT_BOOL(
+                                   ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
 
     decoder.num_subrs = type1->num_subrs;
     decoder.subrs     = type1->subrs;

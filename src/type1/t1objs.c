@@ -278,7 +278,8 @@
 
       root->ascender  = (FT_Short)( face->type1.font_bbox.yMax >> 16 );
       root->descender = (FT_Short)( face->type1.font_bbox.yMin >> 16 );
-      root->height    = (FT_Short)(( ( root->ascender - root->descender ) * 12 ) / 10 );
+      root->height    = (FT_Short)(
+                          ( ( root->ascender - root->descender ) * 12 ) / 10 );
 
       /* now compute the maximum advance width */
       root->max_advance_width =

@@ -317,7 +317,7 @@
   FT_Bool  ftc_sbit_chunk_set_compare( FTC_SBitSet      sset,
                                        FTC_Image_Desc*  type )
   {
-    return FT_BOOL(!memcmp( &sset->desc, type, sizeof ( *type ) ));
+    return FT_BOOL( !memcmp( &sset->desc, type, sizeof ( *type ) ) );
   }
 
 

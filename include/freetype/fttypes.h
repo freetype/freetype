@@ -510,9 +510,12 @@ FT_BEGIN_HEADER
 #define FT_IS_EMPTY( list )  ( (list).head == 0 )
 
   /* return base error code (without module-specific prefix) */
-#define FT_ERROR_BASE( x )     ( (x) & 255 )
+#define FT_ERROR_BASE( x )    ( (x) & 0xFF )
 
-#define FT_BOOL(x)             ((FT_Bool)(x))
+  /* return module error code */
+#define FT_ERROR_MODULE( x )  ( (x) & 0xFF00U )
+
+#define FT_BOOL( x )  ( (FT_Bool)( x ) )
 
 FT_END_HEADER
 

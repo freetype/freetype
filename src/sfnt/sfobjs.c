@@ -286,7 +286,7 @@
     /* if this font doesn't contain outlines, we try to load */
     /* a `bhed' table                                        */
     if ( !has_outline )
-      is_apple_sbit = FT_BOOL(!LOAD_( bitmap_header ));
+      is_apple_sbit = FT_BOOL( !LOAD_( bitmap_header ) );
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
@@ -544,7 +544,7 @@
         /* if the line_gap is 0, we add an extra 15% to the text height --  */
         /* this computation is based on various versions of Times New Roman */
         if ( face->horizontal.Line_Gap == 0 )
-          root->height = (FT_Short)(( root->height * 115 + 50 ) / 100 );
+          root->height = (FT_Short)( ( root->height * 115 + 50 ) / 100 );
 
 #if 0
 
