@@ -34,6 +34,8 @@ html_header_2= """ API Reference</title>
                  color: darkblue; }
 
   pre.colored { color: blue; }
+
+  ul.empty { list-style-type: none; }
 </style>
 </head>
 <body>
@@ -89,8 +91,8 @@ source_footer = "\n</pre></table><br>"
 # Chapter header/inter/footer.
 #
 chapter_header = '<br><table align=center width="75%"><tr><td><h2>'
-chapter_inter  = "</h2><ul>"
-chapter_footer = "</ul></td></tr></table>"
+chapter_inter  = '</h2><ul class="empty"><li>'
+chapter_footer = '</li></ul></td></tr></table>'
 
 
 # source language keyword coloration/styling
@@ -152,9 +154,9 @@ class HtmlFormatter(Formatter):
         self.html_header   = html_header_1 + project_title + html_header_2 + \
                              project_title + html_header_3
 
-        self.html_footer = "<p><center><font size=""-2"">generated on " +   \
+        self.html_footer = "<center><font size=""-2"">generated on " +   \
                             time.asctime( time.localtime( time.time() ) ) + \
-                           "</font></p></center>" + html_footer
+                           "</font></center>" + html_footer
 
         self.columns = 3
 
@@ -387,7 +389,6 @@ class HtmlFormatter(Formatter):
         print chapter_header + '<a href="' + index_filename + '">Global Index</a>' + chapter_inter + chapter_footer
 
     def  toc_exit( self ):
-        print "</table>"
         print self.html_footer
 
     def  toc_dump( self, toc_filename = None, index_filename = None ):
