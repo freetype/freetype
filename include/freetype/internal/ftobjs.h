@@ -125,9 +125,6 @@
 #define FT_MODULE_IS_DRIVER( x )  ( FT_MODULE_CLASS( x )->module_flags & \
                                     ft_module_font_driver )
 
-#define FT_MODULE_IS_DRIVER( x )  ( FT_MODULE_CLASS( x )->module_flags & \
-                                    ft_module_font_driver )
-
 #define FT_MODULE_IS_RENDERER( x )  ( FT_MODULE_CLASS( x )->module_flags & \
                                       ft_module_renderer )
 
