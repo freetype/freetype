@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftcache.h                                                              */
 /*                                                                         */
-/*    FreeType Cache subsystem.                                            */
+/*    FreeType Cache subsystem (specification).                            */
 /*                                                                         */
 /*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -122,7 +122,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    A callback function provided by client applications.  It is used   */
-  /*    to translate a given FTC_FaceID into a new valid FT_Face object.   */
+  /*    to translate a given @FTC_FaceID into a new valid @FT_Face object. */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face_id :: The face ID to resolve.                                 */
@@ -132,15 +132,15 @@ FT_BEGIN_HEADER
   /*    data    :: Application-provided request data.                      */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    aface   :: A new FT_Face handle.                                   */
+  /*    aface   :: A new @FT_Face handle.                                  */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The face requester should not perform funny things on the returned */
-  /*    face object, like creating a new FT_Size for it, or setting a      */
-  /*    transformation through FT_Set_Transform()!                         */
+  /*    face object, like creating a new @FT_Size for it, or setting a     */
+  /*    transformation through @FT_Set_Transform!                          */
   /*                                                                       */
   typedef FT_Error
   (*FTC_Face_Requester)( FTC_FaceID  face_id,
@@ -175,7 +175,8 @@ FT_BEGIN_HEADER
   } FTC_FontRec;
 
 
- /* */
+  /* */
+
 
 #define FTC_FONT_COMPARE( f1, f2 )                  \
           ( (f1)->face_id    == (f2)->face_id    && \
@@ -189,13 +190,14 @@ FT_BEGIN_HEADER
                        ((f)->pix_width << 8)          ^ \
                        ((f)->pix_height)              )
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
   /*    FTC_Font                                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A simple handle to a FTC_FontRec structure.                        */
+  /*    A simple handle to an @FTC_FontRec structure.                      */
   /*                                                                       */
   typedef FTC_FontRec*  FTC_Font;
 
@@ -217,8 +219,8 @@ FT_BEGIN_HEADER
   /*    FTC_Manager                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This object is used to cache one or more FT_Face objects, along    */
-  /*    with corresponding FT_Size objects.                                */
+  /*    This object is used to cache one or more @FT_Face objects, along   */
+  /*    with corresponding @FT_Size objects.                               */
   /*                                                                       */
   typedef struct FTC_ManagerRec_*  FTC_Manager;
 
@@ -229,18 +231,18 @@ FT_BEGIN_HEADER
   /*    FTC_Node                                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    an opaque handle to a cache node object. Each cache node is        */
-  /*    reference-counted. A node with a count of 0 might be flushed       */
-  /*    out of a full cache whenever a lookup request is performed         */
+  /*    An opaque handle to a cache node object.  Each cache node is       */
+  /*    reference-counted.  A node with a count of 0 might be flushed      */
+  /*    out of a full cache whenever a lookup request is performed.        */
   /*                                                                       */
-  /*    when you lookup nodes, you have the ability to "acquire" them,     */
-  /*    i.e. increment their reference count. This will prevent the node   */
-  /*    from being flushed out of the cache until you explicitely          */
-  /*    "release" it (see @FTC_Node_Release)                               */
+  /*    If you lookup nodes, you have the ability to "acquire" them, i.e., */
+  /*    to increment their reference count.  This will prevent the node    */
+  /*    from being flushed out of the cache until you explicitly "release" */
+  /*    it (see @FTC_Node_Release).                                        */
   /*                                                                       */
-  /*    see @FTC_BitsetCache_Lookup and @FTC_ImageCache_Lookup             */
+  /*    See also @FTC_BitsetCache_Lookup and @FTC_ImageCache_Lookup.       */
   /*                                                                       */
-  typedef struct FTC_NodeRec_*     FTC_Node;
+  typedef struct FTC_NodeRec_*  FTC_Node;
 
 
   /*************************************************************************/
@@ -264,10 +266,10 @@ FT_BEGIN_HEADER
   /*                 Use 0 for defaults.                                   */
   /*                                                                       */
   /*    requester :: An application-provided callback used to translate    */
-  /*                 face IDs into real FT_Face objects.                   */
+  /*                 face IDs into real @FT_Face objects.                  */
   /*                                                                       */
   /*    req_data  :: A generic pointer that is passed to the requester     */
-  /*                 each time it is called (see FTC_Face_Requester)       */
+  /*                 each time it is called (see @FTC_Face_Requester).     */
   /*                                                                       */
   /* <Output>                                                              */
   /*    amanager  :: A handle to a new manager object.  0 in case of       */
@@ -293,7 +295,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Description>                                                         */
   /*    Empties a given cache manager.  This simply gets rid of all the    */
-  /*    currently cached FT_Face & FT_Size objects within the manager.     */
+  /*    currently cached @FT_Face and @FT_Size objects within the manager. */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    manager :: A handle to the manager.                                */
@@ -323,7 +325,7 @@ FT_BEGIN_HEADER
   /*    FTC_Manager_Lookup_Face                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Retrieves the FT_Face object that corresponds to a given face ID   */
+  /*    Retrieves the @FT_Face object that corresponds to a given face ID  */
   /*    through a cache manager.                                           */
   /*                                                                       */
   /* <Input>                                                               */
@@ -338,15 +340,15 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The returned FT_Face object is always owned by the manager.  You   */
+  /*    The returned @FT_Face object is always owned by the manager.  You  */
   /*    should never try to discard it yourself.                           */
   /*                                                                       */
-  /*    The FT_Face object doesn't necessarily have a current size object  */
+  /*    The @FT_Face object doesn't necessarily have a current size object */
   /*    (i.e., face->size can be 0).  If you need a specific `font size',  */
-  /*    use FTC_Manager_Lookup_Size() instead.                             */
+  /*    use @FTC_Manager_Lookup_Size instead.                              */
   /*                                                                       */
   /*    Never change the face's transformation matrix (i.e., never call    */
-  /*    the FT_Set_Transform() function) on a returned face!  If you need  */
+  /*    the @FT_Set_Transform function) on a returned face!  If you need   */
   /*    to transform glyphs, do it yourself after glyph loading.           */
   /*                                                                       */
   FT_EXPORT( FT_Error )
@@ -361,8 +363,8 @@ FT_BEGIN_HEADER
   /*    FTC_Manager_Lookup_Size                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Retrieves the FT_Face & FT_Size objects that correspond to a given */
-  /*    FTC_SizeID.                                                        */
+  /*    Retrieves the @FT_Face and @FT_Size objects that correspond to a   */
+  /*    given @FTC_SizeID.                                                 */
   /*                                                                       */
   /* <Input>                                                               */
   /*    manager :: A handle to the cache manager.                          */
@@ -380,19 +382,19 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The returned FT_Face object is always owned by the manager.  You   */
+  /*    The returned @FT_Face object is always owned by the manager.  You  */
   /*    should never try to discard it yourself.                           */
   /*                                                                       */
   /*    Never change the face's transformation matrix (i.e., never call    */
-  /*    the FT_Set_Transform() function) on a returned face!  If you need  */
+  /*    the @FT_Set_Transform function) on a returned face!  If you need   */
   /*    to transform glyphs, do it yourself after glyph loading.           */
   /*                                                                       */
-  /*    Similarly, the returned FT_Size object is always owned by the      */
+  /*    Similarly, the returned @FT_Size object is always owned by the     */
   /*    manager.  You should never try to discard it, and never change its */
-  /*    settings with FT_Set_Pixel_Sizes() or FT_Set_Char_Size()!          */
+  /*    settings with @FT_Set_Pixel_Sizes or @FT_Set_Char_Size!            */
   /*                                                                       */
   /*    The returned size object is the face's current size, which means   */
-  /*    that you can call FT_Load_Glyph() with the face if you need to.    */
+  /*    that you can call @FT_Load_Glyph with the face if you need to.     */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_Manager_Lookup_Size( FTC_Manager  manager,

@@ -23,7 +23,7 @@
   /*  - Maintain a mapping between generic FTC_FaceIDs and live FT_Face    */
   /*    objects.  The mapping itself is performed through a user-provided  */
   /*    callback.  However, the manager maintains a small cache of FT_Face */
-  /*    & FT_Size objects in order to speed up things considerably.        */
+  /*    and FT_Size objects in order to speed up things considerably.      */
   /*                                                                       */
   /*  - Manage one or more cache objects.  Each cache is in charge of      */
   /*    holding a varying number of `cache nodes'.  Each cache node        */
@@ -68,6 +68,7 @@
 #include FT_CACHE_INTERNAL_LRU_H
 #include FT_CACHE_INTERNAL_CACHE_H
 
+
 FT_BEGIN_HEADER
 
 
@@ -81,24 +82,26 @@ FT_BEGIN_HEADER
 
 #define FTC_MAX_FACES_DEFAULT  2
 #define FTC_MAX_SIZES_DEFAULT  4
-#define FTC_MAX_BYTES_DEFAULT  200000L  /* ~200 KB bytes by default */
+#define FTC_MAX_BYTES_DEFAULT  200000L  /* ~200kByte by default */
 
   /* maximum number of caches registered in a single manager */
 #define FTC_MAX_CACHES         16
 
 
-  typedef struct FTC_FamilyEntryRec_
+  typedef struct  FTC_FamilyEntryRec_
   {
-    FTC_Family       family;
-    FTC_Cache        cache;
-    FT_UInt          index;
-    FT_UInt          link;
+    FTC_Family  family;
+    FTC_Cache   cache;
+    FT_UInt     index;
+    FT_UInt     link;
 
   } FTC_FamilyEntryRec, *FTC_FamilyEntry;
 
-#define  FTC_FAMILY_ENTRY_NONE  ((FT_UInt)-1)
 
-  typedef struct FTC_FamilyTableRec_
+#define FTC_FAMILY_ENTRY_NONE  ( (FT_UInt)-1 )
+
+
+  typedef struct  FTC_FamilyTableRec_
   {
     FT_UInt          count;
     FT_UInt          size;
@@ -112,7 +115,6 @@ FT_BEGIN_HEADER
   ftc_family_table_alloc( FTC_FamilyTable   table,
                           FT_Memory         memory,
                           FTC_FamilyEntry  *aentry );
-
 
   FT_EXPORT( void )
   ftc_family_table_free( FTC_FamilyTable  table,
@@ -130,9 +132,9 @@ FT_BEGIN_HEADER
   /* <Fields>                                                              */
   /*    library      :: A handle to a FreeType library instance.           */
   /*                                                                       */
-  /*    faces_list   :: The lru list of FT_Face objects in the cache.      */
+  /*    faces_list   :: The lru list of @FT_Face objects in the cache.     */
   /*                                                                       */
-  /*    sizes_list   :: The lru list of FT_Size objects in the cache.      */
+  /*    sizes_list   :: The lru list of @FT_Size objects in the cache.     */
   /*                                                                       */
   /*    max_weight   :: The maximum cache pool weight.                     */
   /*                                                                       */
@@ -147,8 +149,10 @@ FT_BEGIN_HEADER
   /*    request_data :: User-provided data passed to the requester.        */
   /*                                                                       */
   /*    request_face :: User-provided function used to implement a mapping */
-  /*                    between abstract FTC_FaceIDs and real FT_Face      */
-  /*                    objects.                                           */
+  /*                    between abstract @FTC_FaceID values and real       */
+  /*                    @FT_Face objects.                                  */
+  /*                                                                       */
+  /*    families     :: XXX                                                */
   /*                                                                       */
   typedef struct  FTC_ManagerRec_
   {
@@ -167,7 +171,7 @@ FT_BEGIN_HEADER
     FT_Pointer          request_data;
     FTC_Face_Requester  request_face;
 
-    FTC_FamilyTableRec   families;
+    FTC_FamilyTableRec  families;
 
   } FTC_ManagerRec;
 
@@ -204,8 +208,8 @@ FT_BEGIN_HEADER
                               FTC_Cache       *acache );
 
 
- /* can be called to increment a node's reference count */
-  FT_EXPORT(void)
+  /* can be called to increment a node's reference count */
+  FT_EXPORT( void )
   FTC_Node_Ref( FTC_Node     node,
                 FTC_Manager  manager );
 
@@ -232,6 +236,7 @@ FT_BEGIN_HEADER
  /* */
 
 FT_END_HEADER
+
 
 #endif /* __FTCMANAG_H__ */
 

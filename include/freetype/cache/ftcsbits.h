@@ -42,7 +42,7 @@ FT_BEGIN_HEADER
   /*    FTC_SBit                                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A handle to a small bitmap descriptor.  See the FTC_SBitRec        */
+  /*    A handle to a small bitmap descriptor.  See the @FTC_SBitRec       */
   /*    structure for details.                                             */
   /*                                                                       */
   typedef struct FTC_SBitRec_*  FTC_SBit;
@@ -98,31 +98,29 @@ FT_BEGIN_HEADER
   } FTC_SBitRec;
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    FTC_SBit_Cache                                                     */
+  /*    FTC_SBitCache                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A handle to a small bitmap cache.  These are special cache objects */
   /*    used to store small glyph bitmaps (and anti-aliased pixmaps) in a  */
   /*    much more efficient way than the traditional glyph image cache     */
-  /*    implemented by FTC_Image_Cache.                                    */
+  /*    implemented by @FTC_ImageCache.                                    */
   /*                                                                       */
-  typedef struct FTC_SBitCacheRec_*   FTC_SBitCache;
+  typedef struct FTC_SBitCacheRec_*  FTC_SBitCache;
   
+
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
   /*    FTC_SBit_Cache                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    deprecated. please use @FTC_SBitCache instead                      */
+  /*    DEPRECATED.  Use @FTC_SBitCache instead.                           */
   /*                                                                       */
-  typedef FTC_SBitCache   FTC_SBit_Cache;
-
-
+  typedef FTC_SBitCache  FTC_SBit_Cache;
 
 
   /*************************************************************************/
@@ -158,16 +156,18 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Input>                                                               */
   /*    cache  :: A handle to the source sbit cache.                       */
+  /*                                                                       */
   /*    desc   :: A pointer to the glyph image descriptor.                 */
+  /*                                                                       */
   /*    gindex :: The glyph index.                                         */
   /*                                                                       */
   /* <Output>                                                              */
   /*    sbit   :: A handle to a small bitmap descriptor.                   */
   /*                                                                       */
-  /*    anode  :: an opaque cache node pointer that will be used           */
+  /*    anode  :: An opaque cache node pointer that will be used           */
   /*              to release the sbit once it becomes unuseful.            */
-  /*              can be NULL, in which case this function will            */
-  /*              have the same effect than @FTC_SBit_Cache_Lookup         */
+  /*              Can be NULL, in which case this function will            */
+  /*              have the same effect as @FTC_SBitCache_Lookup. XXX       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -198,6 +198,8 @@ FT_BEGIN_HEADER
   /*    FTC_SBit_Cache_New                                                 */
   /*                                                                       */
   /* <Description>                                                         */
+  /*    DEPRECATED.  Use @FTC_SBitCache_New instead.                       */
+  /*                                                                       */
   /*    Creates a new cache to store small glyph bitmaps.                  */
   /*                                                                       */
   /* <Input>                                                               */
@@ -220,11 +222,15 @@ FT_BEGIN_HEADER
   /*    FTC_SBit_Cache_Lookup                                              */
   /*                                                                       */
   /* <Description>                                                         */
+  /*    DEPRECATED.  Use @FTC_SBitCache_Lookup instead.                    */
+  /*                                                                       */
   /*    Looks up a given small glyph bitmap in a given sbit cache.         */
   /*                                                                       */
   /* <Input>                                                               */
   /*    cache  :: A handle to the source sbit cache.                       */
+  /*                                                                       */
   /*    desc   :: A pointer to the glyph image descriptor.                 */
+  /*                                                                       */
   /*    gindex :: The glyph index.                                         */
   /*                                                                       */
   /* <Output>                                                              */
