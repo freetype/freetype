@@ -159,11 +159,6 @@ FT_BEGIN_HEADER
   } PCF_FaceRec, *PCF_Face;
 
 
-  /* XXX hack */
-  FT_LOCAL FT_Error
-  PCF_Done_Face( PCF_Face  face );
-
-
   /* macros for pcf font format */
 
 #define LSBFirst  0
