@@ -127,11 +127,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*************************************************************************/
 
+#define FT_TRACE_TEST(level)    ( ft_trace_levels[FT_COMPONENT] >= level )
 
 #define FT_TRACE( level, varformat )                      \
           do                                              \
           {                                               \
-            if ( ft_trace_levels[FT_COMPONENT] >= level ) \
+            if ( FT_TRACE_TEST(level) )                   \
               FT_Message varformat;                       \
           } while ( 0 )
 
@@ -158,6 +159,7 @@ FT_BEGIN_HEADER
 
 #elif defined( FT_DEBUG_LEVEL_ERROR )
 
+#define FT_TRACE_TEST(level)     0
 
 #define FT_TRACE( level, varformat )  do ; while ( 0 )      /* nothing */
 
@@ -167,6 +169,7 @@ FT_BEGIN_HEADER
 
 #define FT_Assert( condition )        do ; while ( 0 )      /* nothing */
 
+#define FT_TRACE_TEST(level)          0
 #define FT_TRACE( level, varformat )  do ; while ( 0 )      /* nothing */
 #define FT_ERROR( varformat )         do ; while ( 0 )      /* nothing */
 

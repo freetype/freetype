@@ -114,7 +114,7 @@
   static const char*
   get_sfnt_postscript_name( TT_Face  face )
   {
-    FT_Int  n;
+    FT_Int  n, found_win, found_apple;
 
 
     /* shouldn't happen, but just in case to avoid memory leaks */
@@ -123,37 +123,65 @@
 
     /* scan the name table to see whether we have a Postscript name here, */
     /* either in Macintosh or Windows platform encodings                  */
+    found_win     = -1;
+    found_apple   = -1;
+    
     for ( n = 0; n < face->num_names; n++ )
     {
       TT_NameRec*  name = face->name_table.names + n;
 
 
-      if ( name->nameID == 6 )
+      if ( name->nameID == 6 && name->string != NULL )
       {
-        if ( ( name->platformID == 3 &&
-               name->encodingID == 1 &&
-               name->languageID == 0x409 ) ||
-
-             ( name->platformID == 1 &&
-               name->encodingID == 0 &&
-               name->languageID == 0     ) )
-        {
-          FT_UInt     len = name->stringLength;
-          FT_Error    error;
-          FT_Memory   memory = face->root.memory;
-          FT_String*  result;
-
-
-          if ( !ALLOC( result, len + 1 ) )
-          {
-            memcpy( result, name->string, len );
-            result[len] = '\0';
-
-            face->root.internal->postscript_name = result;
-          }
-          return result;
-        }
+        if ( name->platformID == 3     &&
+             name->encodingID == 1     &&
+             name->languageID == 0x409 )
+          found_win = n;
+          
+        if ( name->platformID == 1 &&
+             name->encodingID == 0 &&
+             name->languageID == 0 )
+          found_apple = n;
       }
+    }
+    
+    if ( found_win )
+    {
+      FT_Memory    memory = face->root.memory;
+      TT_NameRec*  name   = face->name_table.names + found_win;
+      FT_UInt      len    = name->stringLength/2;
+      FT_Error     error;
+      FT_String*   result;
+      
+      if ( !ALLOC( result, len+1 ) )
+      {
+        FT_String*  r = result;
+        FT_Byte*    p = (FT_Byte*) name->string;
+        
+        for ( ; len > 0; len--, p += 2 )
+        {
+          if ( p[0] == 0 && p[1] >= 32 && p[1] < 128 )
+            *r++ = p[1];
+        }
+        *r = '\0';
+      }
+      return result;
+    }
+
+    if ( found_apple )
+    {
+      FT_Memory    memory = face->root.memory;
+      TT_NameRec*  name   = face->name_table.names + found_win;
+      FT_UInt      len    = name->stringLength;
+      FT_Error     error;
+      FT_String*   result;
+      
+      if ( !ALLOC( result, len+1 ) )
+      {
+        MEM_Copy( result, name->string, len );
+        result[len] = '\0';
+      }
+      return result;
     }
 
     return NULL;

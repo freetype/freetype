@@ -27,6 +27,7 @@
 #include "sferrors.h"
 
 #include <stdlib.h>  /* for qsort */
+#include <stdio.h>   /* for printf */
 
   /*************************************************************************/
   /*                                                                       */
@@ -923,10 +924,12 @@
     FT_Memory  memory = stream->memory;
 
     FT_ULong   table_pos, table_len;
-    FT_ULong   storageOffset, storageSize;
+    FT_ULong   storageSize, storageOffset;
     FT_Byte*   storage;
 
-    TT_NameTable*  names;
+    TT_NameTable*  table;
+    TT_NameRec*    names;
+    FT_UInt        num_names;
 
     const FT_Frame_Field  name_table_fields[] =
     {
@@ -969,100 +972,247 @@
 
     table_pos = FILE_Pos();
 
-    names = &face->name_table;
+    table = &face->name_table;
 
-    if ( READ_Fields( name_table_fields, names ) )
+    if ( READ_Fields( name_table_fields, table ) )
       goto Exit;
 
-    /* check the 'storageOffset' field */
-    storageOffset = names->storageOffset;
-    if ( storageOffset <  (FT_ULong)(6 + 12*names->numNameRecords) ||
-         table_len     <= storageOffset                            )
+    num_names     = (FT_UInt) table->numNameRecords;
+    storageOffset = table->storageOffset;
+    storageSize   = (FT_ULong)( table_len - storageOffset );
+    
+    /* check the storage offset field */
+    if ( storageOffset < 6 + 12*num_names ||
+         table_len     < storageOffset    )
     {
-      FT_ERROR(( "TT.load_names: invalid 'name' table\n" ));
+      FT_TRACE2(( "table is broken.. Ignoring !!\n" ));
+      
+      table->numNameRecords = 0;
+      table->storageOffset  = 0;
+      
       error = SFNT_Err_Name_Table_Missing;
       goto Exit;
     }
-
-    storageSize = (FT_ULong)(table_len - storageOffset);
-
+    
     /* Allocate the array of name records. */
-    if ( ALLOC( names->names,
-                names->numNameRecords*sizeof(TT_NameRec) + storageSize )  ||
-         ACCESS_Frame( names->numNameRecords * 12L ) )
+    if ( ALLOC( table->names,
+                num_names*sizeof(table->names[0]) + storageSize ) ||
+         ACCESS_Frame( num_names*12L ) )
       goto Exit;
 
-    storage = (FT_Byte*)(names->names + names->numNameRecords);
+    names   = table->names;
+    storage = (FT_Byte*)(names + num_names);
 
     /* Load the name records and determine how much storage is needed */
     /* to hold the strings themselves.                                */
     {
-      TT_NameRec*  cur   = names->names;
-      TT_NameRec*  limit = cur + names->numNameRecords;
-
+      TT_NameRec*  cur   = names;
+      TT_NameRec*  limit = cur + num_names;
 
       for ( ; cur < limit; cur ++ )
       {
-        FT_ULong  upper;
-
-
         if ( READ_Fields( name_record_fields, cur ) )
           break;
 
-        /* invalid name entries will have "cur->string" set to NULL !! */
-        if ( (FT_ULong)(cur->stringOffset + cur->stringLength) < storageSize )
+        /* check the fields */
+        if ( cur->stringOffset + cur->stringLength <= (FT_Long)storageSize )
           cur->string = storage + cur->stringOffset;
+        else
+        {
+          /* that's an invalid entry !! */
+          cur->stringOffset = 0;
+          cur->string       = NULL;
+        }
       }
     }
 
     FORGET_Frame();
-
-    if (error)
+    
+    if ( error )
       goto Exit;
 
-#ifdef FT_DEBUG_LEVEL_TRACE
+    storageOffset -= 6 + 12*num_names;
+    if ( FILE_Skip( storageOffset )        ||
+         FILE_Read( storage, storageSize ) )
+      goto Exit;
 
-      /* Print Name Record Table in case of debugging */
+
+    /* Print Name Record Table in case of debugging */
+    if ( FT_TRACE_TEST(3) )
+    {
+      TT_NameRec*  cur   = table->names;
+      TT_NameRec*  limit = cur + num_names;
+
+
+      for ( ; cur < limit; cur++ )
       {
-        TT_NameRec*  cur   = names->names;
-        TT_NameRec*  limit = cur + names->numNameRecords;
+        FT_UInt  j;
 
 
-        for ( ; cur < limit; cur++ )
-        {
-          FT_UInt  j;
+        printf( "%2d %2d %4x %2d:",
+                 cur->platformID,
+                 cur->encodingID,
+                 cur->languageID,
+                 cur->nameID );
 
-
-          FT_TRACE3(( "(%2d %2d %4x %2d)  ",
-                       cur->platformID,
-                       cur->encodingID,
-                       cur->languageID,
-                       cur->nameID ));
-
-          /* I know that M$ encoded strings are Unicode,            */
-          /* but this works reasonable well for debugging purposes. */
-          if ( cur->string )
-            for ( j = 0; j < (FT_UInt)cur->stringLength; j++ )
-            {
-              FT_Byte  c = *(FT_Byte*)(cur->string + j);
-
-
-              if ( c >= 32 && c < 128 )
-                FT_TRACE3(( "%c", c ));
-            }
-          else
-            FT_TRACE3(( "INVALID ENTRY !!\n" ));
-
-          FT_TRACE3(( "\n" ));
+        /* printf name id */
+        switch ( cur->nameID )
+        {          
+          case 0:  printf( " copyright" ); break;
+          case 1:  printf( " font_family" ); break;
+          case 2:  printf( " style" ); break;
+          case 3:  printf( " unique_id" ); break;
+          case 4:  printf( " full_name" ); break;
+          case 5:  printf( " version" ); break;
+          case 6:  printf( " postscript" ); break;
+          case 7:  printf( " trademark" ); break;
+          case 8:  printf( " manufacturer" ); break;
+          case 9:  printf( " designer" ); break;
+          case 10: printf( " description" ); break;
+          case 11: printf( " url_vendor" ); break;
+          case 12: printf( " url_designer" ); break;
+          case 13: printf( " license" ); break;
+          case 14: printf( " url_license" ); break;
+          case 15: printf( " reserved (15)" ); break;
+          case 16: printf( " prefered_family" ); break;
+          case 17: printf( " prefered_style" ); break;
+          case 18: printf( " mac_full_name" ); break;
+          case 19: printf( " sample_text" ); break;
+          case 20: printf( " cid_name" ); break;
+          default: printf( " unknown_type(%d)", cur->nameID );
         }
-      }
 
-#endif /* FT_DEBUG_LEVEL_TRACE */
+        /* printf platform/encoding id */
+        j = 0;
+        switch ( cur->platformID )
+        {
+          case 0:  /* Unicode encodings */
+            {
+              switch ( cur->encodingID )
+              {
+                case 0: printf( " unicode_1.0" ); break;
+                case 1: printf( " unicode_1.1" ); break;
+                case 2: printf( " ISO_10646" ); break;
+                case 3: printf( " unicode_2.0" ); break;
+                default:
+                  j = 1;
+              }
+              break;
+            }
+          
+          case 1:  /* Apple encodings */
+            {
+              switch ( cur->encodingID )
+              {
+                case 0: printf( " mac_Roman" ); break;
+                case 1: printf( " mac_Japanese" ); break;
+                case 2: printf( " mac_Chinese_traditional" ); break;
+                case 3: printf( " mac_Korean" ); break;
+                case 4: printf( " mac_Arabic" ); break;
+                case 5: printf( " mac_Hebrew" ); break;
+                case 6: printf( " mac_Greek" ); break;
+                case 7: printf( " mac_Russian" ); break;
+                case 8: printf( " mac_RSymbol" ); break;
+                case 9: printf( " mac_Devanagari" ); break;
+                case 10: printf( " mac_Gurmukhi" ); break;
+                case 11: printf( " mac_Gujarati" ); break;
+                case 12: printf( " mac_Oriya" ); break;
+                case 13: printf( " mac_Bengali" ); break;
+                case 14: printf( " mac_Tamil" ); break;
+                case 15: printf( " mac_Telugu" ); break;
+                case 16: printf( " mac_Kannada" ); break;
+                case 17: printf( " mac_Malayalam" ); break;
+                case 18: printf( " mac_Sinhalese" ); break;
+                case 19: printf( " mac_Burmese" ); break;
+                case 20: printf( " mac_Khmer" ); break;
+                case 21: printf( " mac_Thai" ); break;
+                case 22: printf( " mac_Laotian" ); break;
+                case 23: printf( " mac_Goergian" ); break;
+                case 24: printf( " mac_Armenian" ); break;
+                case 25: printf( " mac_Chinese_simplified" ); break;
+                case 26: printf( " mac_Tibetan" ); break;
+                case 27: printf( " mac_Mongolian" ); break;
+                case 28: printf( " mac_Geez" ); break;
+                case 29: printf( " mac_Slavic" ); break;
+                case 30: printf( " mac_Vietnamese" ); break;
+                case 31: printf( " mac_Sindhi" ); break;
+                case 32: printf( " mac_Uninterpreted" ); break;
+                default:
+                  j = 1;
+              }
+              break;
+            }
+        
+          case 2:  /* deprecated IDO encoding */
+            {
+              switch ( cur->encodingID )
+              {
+                case 0: printf( " iso_ASCII" ); break;
+                case 1: printf( " iso_10646" ); break;
+                case 2: printf( " iso_8859-1" ); break;
+                default:
+                  j = 1;
+              }
+              break;
+            }
+          
+          case 3:  /* Windows encodings */
+            {
+              switch ( cur->encodingID )
+              {
+                case 0:  printf( " win_symbol" ); break;
+                case 1:  printf( " win_unicode" ); break;
+                case 2:  printf( " win_shiftJIS" ); break;
+                case 3:  printf( " win_PRC" ); break;
+                case 4:  printf( " win_Big5" ); break;
+                case 5:  printf( " win_Wansung" ); break;
+                case 6:  printf( " win_Johab" ); break;
+                case 10: printf( " win_UCS4" ); break;
+                default:
+                  j = 1;
+              }
+              break;
+            }
+          
+          default:
+            j = 1;
+        }
+
+        if ( j == 1 )
+          printf( " unknown_encoding" );
+
+        printf( "\n    " );
+
+        /* printf language - XXXX for later ....*/
+
+        /* I know that M$ encoded strings are Unicode,            */
+        /* but this works reasonable well for debugging purposes. */
+        if ( cur->string )
+        {
+          for ( j = 0; j < (FT_UInt)cur->stringLength; j++ )
+          {
+            FT_Byte  c = (FT_Byte)*( cur->string + j );
+
+
+            if ( c < 32 || c > 127 )
+              c = '.';
+              
+            printf( "%c", c );
+          }
+        }
+        else
+          printf( "INVALID_ENTRY!!" );
+          
+        printf( "\n" );
+      }
+      printf( "\n" );
+    }
+
 
     FT_TRACE2(( "loaded\n" ));
 
     /* everything went well, update face->num_names */
-    face->num_names = names->numNameRecords;
+    face->num_names = (FT_UShort)num_names;
 
   Exit:
     return error;

@@ -42,7 +42,12 @@
   static const char*
   cid_get_postscript_name( CID_Face  face )
   {
-    return (const char*)face->cid.cid_font_name;
+    const char*  result = face->cid.cid_font_name;
+    
+    if ( result && result[0] == '/' )
+      result++;
+      
+    return result;
   }
 
 

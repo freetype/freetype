@@ -60,68 +60,94 @@
     FT_Memory    memory = face->root.memory;
     FT_UShort    n;
     TT_NameRec*  rec;
-    FT_Bool      wide_chars = 1;
+    FT_Bool      wide_chars    = 1;
+    FT_Int       found_apple   = -1;
+    FT_Int       found_win     = -1;
+    FT_Int       found_unicode = -1;
+    FT_Int       found;
 
 
     rec = face->name_table.names;
     for ( n = 0; n < face->name_table.numNameRecords; n++, rec++ )
     {
-      if ( rec->nameID == nameid )
+      if ( rec->nameID == nameid && rec->string )
       {
-        /* found the name -- now create an ASCII string from it */
-        FT_Bool  found = 0;
-
-
-        /* test for Microsoft English language */
-        if ( rec->platformID == TT_PLATFORM_MICROSOFT &&
-             rec->encodingID <= TT_MS_ID_UNICODE_CS   &&
-             ( rec->languageID & 0x3FF ) == 0x009     )
-          found = 1;
-
-        /* test for Apple Unicode encoding */
-        else if ( rec->platformID == TT_PLATFORM_APPLE_UNICODE )
-          found = 1;
-
-        /* test for Apple Roman */
-        else if ( rec->platformID == TT_PLATFORM_MACINTOSH &&
-                  rec->languageID == TT_MAC_ID_ROMAN       )
+        switch ( rec->platformID )
         {
-          found      = 1;
-          wide_chars = 0;
-        }
-
-        /* found a Unicode name */
-        if ( found )
-        {
-          FT_String*  string;
-          FT_UInt     len;
-
-
-          if ( wide_chars )
-          {
-            FT_UInt   m;
-
-
-            len = (FT_UInt)rec->stringLength / 2;
-            if ( MEM_Alloc( string, len + 1 ) )
-              return NULL;
-
-            for ( m = 0; m < len; m ++ )
-              string[m] = rec->string[2 * m + 1];
-          }
-          else
-          {
-            len = rec->stringLength;
-            if ( MEM_Alloc( string, len + 1 ) )
-              return NULL;
-
-            MEM_Copy( string, rec->string, len );
-          }
-
-          string[len] = '\0';
-          return string;
+          case TT_PLATFORM_APPLE_UNICODE:
+            {
+              found_unicode = n;
+              break;
+            }
+            
+          case TT_PLATFORM_MACINTOSH:
+            {
+              if ( rec->languageID == TT_MAC_ID_ROMAN )
+                found_apple = n;
+              
+              break;
+            }
+            
+          case TT_PLATFORM_MICROSOFT:
+            {
+              if (  rec->encodingID <= TT_MS_ID_UNICODE_CS &&
+                   (rec->languageID & 0x3FF) == 0x009      )
+              {
+                found_win = n;
+              }
+              break;
+            }
+          
+          default:
+            ;
         }
       }
+    }
+
+    /* some fonts contain invalid Unicode or Macintosh formatted entries */
+    /* we will thus favor name encoded in Windows formats when they're   */
+    /* available..                                                       */
+    /*                                                                   */
+    found = found_win;
+    if ( found < 0 )
+    {
+      found = found_apple;
+      if ( found_apple < 0 )
+        found = found_unicode;
+      else
+        wide_chars = 0;
+    }
+
+    /* found a Unicode name */
+    if ( found >= 0 )
+    {
+      FT_String*  string;
+      FT_UInt     len;
+
+      rec = face->name_table.names + found;
+      if ( wide_chars )
+      {
+        FT_UInt   m;
+
+
+        len = (FT_UInt)rec->stringLength / 2;
+        if ( MEM_Alloc( string, len + 1 ) )
+          return NULL;
+
+        for ( m = 0; m < len; m ++ )
+          string[m] = rec->string[2 * m + 1];
+      }
+      else
+      {
+        len = rec->stringLength;
+        if ( MEM_Alloc( string, len + 1 ) )
+          return NULL;
+
+        MEM_Copy( string, rec->string, len );
+      }
+
+      string[len] = '\0';
+      return string;
     }
 
     return NULL;

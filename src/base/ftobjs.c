@@ -1867,22 +1867,56 @@
     return result;
   }
 
+
+  /* documentation is in freetype.h */
+
+  FT_EXPORT_DEF( FT_ULong )
+  FT_Get_First_Char( FT_Face   face,
+                     FT_UInt  *agindex )
+  {
+    FT_ULong   result = 0;
+    FT_UInt    gindex = 0;
+    
+    if ( face && face->charmap )
+    {
+      gindex = FT_Get_Char_Index( face, 0 );
+      if ( gindex == 0 )
+        result = FT_Get_Next_Char( face, 0, &gindex );
+    }
+    
+    if ( agindex  )
+      *agindex = gindex;
+      
+    return result;
+  }
+
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_ULong )
   FT_Get_Next_Char( FT_Face   face,
-                    FT_ULong  charcode )
+                    FT_ULong  charcode,
+                    FT_UInt  *agindex )
   {
-    FT_ULong   result;
+    FT_ULong   result = 0;
+    FT_UInt    gindex = 0;
     FT_Driver  driver;
 
 
-    result = 0;
     if ( face && face->charmap )
     {
       driver = face->driver;
       result = driver->clazz->get_next_char( face->charmap, charcode );
+      if ( result != 0 )
+      {
+        gindex = driver->clazz->get_char_index( face->charmap, result );
+        if ( gindex == 0 )
+          result = 0;
+      }
     }
+    
+    if ( agindex )
+      *agindex = gindex;
+      
     return result;
   }
 
