@@ -12,11 +12,11 @@
  /***************************************************************************/
 
   static void
-  t1_cmap_std_init( T1_CMapStd   cmap,
-                    FT_Int       is_expert )
+  t1_cmap_std_init( T1_CMapStd  cmap,
+                    FT_Int      is_expert )
   {
-    T1_Face          face    = (T1_Face) FT_CMAP_FACE(cmap);
-    PSNames_Service  psnames = face->psnames;
+    T1_Face          face    = (T1_Face)FT_CMAP_FACE( cmap );
+    PSNames_Service  psnames = (PSNames_Service)face->psnames;
 
     cmap->num_glyphs    = face->type1.num_glyphs;
     cmap->glyph_names   = (const char* const*)face->type1.glyph_names;
@@ -101,7 +101,7 @@
   }
 
 
-  FT_LOCAL_DEF( const FT_CMap_ClassRec )
+  FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
   t1_cmap_standard_class_rec =
   {
     sizeof( T1_CMapStdRec ),
@@ -122,7 +122,7 @@
     return 0;
   }
 
-  FT_LOCAL_DEF( const FT_CMap_ClassRec )
+  FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
   t1_cmap_expert_class_rec =
   {
     sizeof( T1_CMapStdRec ),
@@ -215,7 +215,7 @@
   }
 
 
-  FT_LOCAL_DEF( const FT_CMap_ClassRec )
+  FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
   t1_cmap_custom_class_rec =
   {
     sizeof( T1_CMapCustomRec ),
@@ -259,9 +259,10 @@
   {
     FT_Error         error;
     FT_UInt          count;
-    T1_Face          face    = (T1_Face) FT_CMAP_FACE(cmap);
-    FT_Memory        memory  = FT_FACE_MEMORY(face);
-    PSNames_Service  psnames = face->psnames;
+    T1_Face          face    = (T1_Face)FT_CMAP_FACE( cmap );
+    FT_Memory        memory  = FT_FACE_MEMORY( face );
+    PSNames_Service  psnames = (PSNames_Service)face->psnames;
+
 
     cmap->num_pairs = 0;
     cmap->pairs     = NULL;
@@ -416,7 +417,7 @@
   }
 
 
-  FT_LOCAL_DEF( const FT_CMap_ClassRec )
+  FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
   t1_cmap_unicode_class_rec =
   {
     sizeof( T1_CMapUnicodeRec ),

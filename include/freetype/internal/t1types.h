@@ -165,18 +165,18 @@ FT_BEGIN_HEADER
   {
     FT_FaceRec     root;
     T1_FontRec     type1;
-    void*          psnames;
-    void*          psaux;
-    void*          afm_data;
+    const void*    psnames;
+    const void*    psaux;
+    const void*    afm_data;
     FT_CharMapRec  charmaprecs[2];
     FT_CharMap     charmaps[2];
     PS_Unicodes    unicode_map;
 
     /* support for Multiple Masters fonts */
-    PS_Blend      blend;
+    PS_Blend       blend;
     
     /* since FT 2.1 - interface to PostScript hinter */
-    void*          pshinter;
+    const void*    pshinter;
 
   } T1_FaceRec;
 

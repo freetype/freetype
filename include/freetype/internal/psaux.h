@@ -681,10 +681,11 @@ FT_BEGIN_HEADER
 
   typedef struct  PSAux_ServiceRec_
   {
-    const PS_Table_Funcs    ps_table_funcs;
-    const PS_Parser_Funcs   ps_parser_funcs;
-    const T1_Builder_Funcs  t1_builder_funcs;
-    const T1_Decoder_Funcs  t1_decoder_funcs;
+    /* don't use `PS_Table_Funcs' and friends to avoid compiler warnings */
+    const PS_Table_FuncsRec*    ps_table_funcs;
+    const PS_Parser_FuncsRec*   ps_parser_funcs;
+    const T1_Builder_FuncsRec*  t1_builder_funcs;
+    const T1_Decoder_FuncsRec*  t1_decoder_funcs;
 
     void
     (*t1_decrypt)( FT_Byte*   buffer,
