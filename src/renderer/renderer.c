@@ -154,7 +154,7 @@
 
 #ifndef  FT_CONFIG_OPTION_NO_STD_RASTER
 
-#include <freetype/ftraster.h>
+#include <ftraster.h>
 
   const FT_Renderer_Class   ft_standard_renderer_class =
   {
@@ -187,7 +187,7 @@
 
 #ifndef FT_CONFIG_OPTION_NO_SMOOTH_RASTER
 
-#include <freetype/ftgrays.h>
+#include <ftgrays.h>
 
   const FT_Renderer_Class  ft_smooth_renderer_class =
   {
