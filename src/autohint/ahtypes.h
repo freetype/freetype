@@ -147,6 +147,7 @@ FT_BEGIN_HEADER
 
   /* weak interpolation */
 #define ah_flag_weak_interpolation  256
+#define ah_flag_inflection          512
 
   typedef FT_Int AH_Flags;
 

@@ -674,6 +674,120 @@
     }
   }
 
+ /* compute all inflex points in a given glyph */
+  static void
+  ah_outline_compute_inflections( AH_Outline*  outline )
+  {
+    AH_Point**   contour       =  outline->contours;
+    AH_Point**   contour_limit =  contour + outline->num_contours;
+
+    /* load original coordinates in (u,v) */
+    ah_setup_uv( outline, ah_uv_fxy );
+
+    /* do each contour separately */
+    for ( ; contour < contour_limit; contour++ )
+    {
+      FT_Vector  vec;
+      AH_Point*  point   = contour[0];
+      AH_Point*  first   = point;
+      AH_Point*  start   = point;
+      AH_Point*  end     = point;
+      AH_Point*  before;
+      AH_Point*  after;
+      AH_Angle   angle_in, angle_seg, angle_out;
+      AH_Angle   diff_in, diff_out;
+      FT_Int     finished = 0;
+
+      /* compute first segment in contour */
+      first  = point;
+
+      start = end = first;
+      do
+      {
+        end = end->next;
+        if ( end == first )
+          goto Skip;
+      }
+      while ( end->u == first->u && end->v == first->v );
+
+      vec.x = end->u - start->u;
+      vec.y = end->v - start->v;
+      angle_seg = ah_angle( &vec );
+
+      /* extend the segment start whenever possible */
+      before = start;
+      do
+      {
+        do
+        {
+          start  = before;
+          before = before->prev;
+          if ( before == first )
+            goto Skip;
+        }
+        while ( before->u == start->u && before->v == start->v );
+
+        vec.x    = start->u - before->u;
+        vec.y    = start->v - before->v;
+        angle_in = ah_angle( &vec );
+      }
+      while ( angle_in == angle_seg );
+
+      first   = start;
+      diff_in = ah_angle_diff( angle_in, angle_seg );
+
+      /* now, process all segments in the contour */
+      do
+      {
+        /* first, extend current segment's end whenever possible */
+        after = end;
+        do
+        {
+          do
+          {
+            end   = after;
+            after = after->next;
+            if ( after == first )
+              finished = 1;
+          }
+          while ( end->u == after->u && end->v == after->v );
+
+          vec.x     = after->u - end->u;
+          vec.y     = after->v - end->v;
+          angle_out = ah_angle( &vec );
+        }
+        while ( angle_out == angle_seg );
+
+        diff_out = ah_angle_diff( angle_seg, angle_out );
+
+        if ( diff_in ^ diff_out < 0 )
+        {
+          /* diff_in and diff_out have different signs, we have */
+          /* inflection points here...                          */
+
+          do
+          {
+            start->flags |= ah_flag_inflection;
+            start = start->next;
+          }
+          while ( start != end );
+
+          start->flags |= ah_flag_inflection;
+        }
+
+        start     = end;
+        end       = after;
+        angle_seg = angle_out;
+        diff_in   = diff_out;
+      }
+      while ( !finished );
+
+    Skip:
+      ;
+    }
+  }
+
+
 
   FT_LOCAL_DEF( void )
   ah_outline_compute_segments( AH_Outline*  outline )
@@ -1290,6 +1404,7 @@
     ah_outline_compute_segments( outline );
     ah_outline_link_segments   ( outline );
     ah_outline_compute_edges   ( outline );
+    ah_outline_compute_inflections( outline );
   }
 
 
