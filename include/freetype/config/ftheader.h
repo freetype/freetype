@@ -369,7 +369,7 @@
  *    the optional FreeType 2 API used to access embedded "name" strings
  *    in SFNT-based font formats (i.e. TrueType and OpenType)
  */
-#define FT_SFNT_NAMES_H              <freetype/ftnames.h>
+#define FT_SFNT_NAMES_H              <freetype/ftsnames.h>
 
  /* */
  
