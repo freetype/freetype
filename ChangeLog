@@ -1,3 +1,8 @@
+2004-11-20  Werner Lemberg  <wl@gnu.org>
+
+	* builds/detect.mk (dos_setup): Use `cmd.exe' for copying
+	$(CONFIG_MK) to force lowercase file name under Windows.
+
 2004-11-19  Werner Lemberg  <wl@gnu.org>
 
 	Fix a serious bug in the TT hinter.
