@@ -984,19 +984,19 @@
                 max = seg2->max_coord;
 
               len   = max - min;
-              dist  = seg2->pos - seg1->pos;
-              if ( dist < 0 )
-                dist = -dist;
-
-              if ( len < 8 )
-                score = 300*8 + dist - len*3;
-              else
-                score = dist + 300/len;
-
-              if ( score < best_score )
+              if ( len >= 8 )
               {
-                best_score   = score;
-                best_segment = seg2;
+                dist  = seg2->pos - seg1->pos;
+                if ( dist < 0 )
+                  dist = -dist;
+  
+                score = dist + 3000/len;
+  
+                if ( score < best_score )
+                {
+                  best_score   = score;
+                  best_segment = seg2;
+                }
               }
             }
           }

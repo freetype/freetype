@@ -277,9 +277,9 @@
         advance = FT_MulDiv( advance, em_outline, em_metrics );
 
       if ( face->phy_font.flags & PFR_PHY_VERTICAL )
-        metrics->vertAdvance = gchar->advance;
+        metrics->vertAdvance = advance;
       else
-        metrics->horiAdvance = gchar->advance;
+        metrics->horiAdvance = advance;
 
       slot->root.linearHoriAdvance = metrics->horiAdvance;
       slot->root.linearVertAdvance = metrics->vertAdvance;
