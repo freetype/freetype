@@ -1,3 +1,8 @@
+2003-10-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_subrs, parse_dict): Handle synthetic
+	fonts properly.
+
 2003-10-06  Werner Lemberg  <wl@gnu.org>
 
 	Heavy modification of the PS parser to handle comments and strings
