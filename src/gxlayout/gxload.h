@@ -99,11 +99,6 @@ FT_BEGIN_HEADER
 		     FT_Stream stream,
 		     GX_Just   just );
 
-  FT_LOCAL ( FT_Error )
-  gx_face_load_fvar ( GX_Face face,
-		      FT_Stream stream,
-		      GX_Fvar fvar );
-
 FT_END_HEADER
 
 #endif /* Not def: __GXLOAD_H__ */

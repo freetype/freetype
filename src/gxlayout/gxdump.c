@@ -221,7 +221,6 @@ void gx_face_dump_fdsc(GX_Face face, GX_Fdsc fdsc);
 void gx_face_dump_morx(GX_Face face, GX_Morx morx);
 void gx_face_dump_just(GX_Face face, GX_Just just);
 void gx_face_dump_kern(GX_Face face, GX_Kern kern);
-void gx_face_dump_fvar(GX_Face face, GX_Fvar fvar);
 
 static FT_Error generic_dump_lookup_table_generic ( GX_LookupTable_Format format,
 							  GX_LookupValue value,
@@ -305,7 +304,6 @@ gx_face_dump( FT_Face face, FT_ULong tables, const char * fname )
   COUNT(bsln);
   COUNT(fmtx);
   COUNT(fdsc);
-  COUNT(fvar);
   POPEN2(t,gxdump,name,fname,%s,count,count,%d);
   DUMP(mort);
   DUMP(morx);
@@ -319,7 +317,6 @@ gx_face_dump( FT_Face face, FT_ULong tables, const char * fname )
   DUMP(bsln);
   DUMP(fmtx);
   DUMP(fdsc);
-  DUMP(fvar);
   PCLOSE(t,gxdump);
   return FT_Err_Ok;
 }
@@ -2202,143 +2199,6 @@ gx_face_dump_kern(GX_Face face, GX_Kern kern)
   for ( i = 0; i < kern->nTables; i++ )
     gx_face_dump_kern_sutable(face, &kern->subtables[i], t);
   PCLOSE(t, subtables);
-}
-
-/******************************FVAR************************************/
-
-static void
-gx_face_dump_fvar_sfnt_variation_axis( GX_Face face,
-				       GX_FontVariationsSFNTVariationAxis axis,
-				       int t);
-static void
-gx_face_dump_fvar_sfnt_instance( GX_Face face,
-				 FT_UShort axis_count,
-				 GX_FontVariationsSFNTInstance instance,
-				 int t);
-
-void
-gx_face_dump_fvar(GX_Face face, GX_Fvar fvar)
-{
-  int i, t = 2;
-  
-  PFIELD(t, fvar, version, 0x%08lx);
-  PFIELD(t, fvar, offsetToData, %u);
-  PFIELD(t, fvar, countSizePairs, %u);
-  PFIELD(t, fvar, axisCount, %u);
-  PFIELD(t, fvar, axisSize, %u);
-  PFIELD(t, fvar, instanceCount, %u);
-  PFIELD(t, fvar, instanceSize, %u);
-  for ( i = 0; i < fvar->axisCount; i++ )
-    {
-      POPEN1(t, axis, index, i, %d);
-      gx_face_dump_fvar_sfnt_variation_axis(face, 
-					    &fvar->axis[i],
-					    t);
-      PCLOSE(t, axis);
-    }
-
-  for ( i = 0; i < fvar->instanceCount; i++ )
-    {
-      POPEN1(t, instance, index, i, %d);
-      gx_face_dump_fvar_sfnt_instance(face,
-				      fvar->axisCount,
-				      &fvar->instance[i],
-				      t);
-      PCLOSE(t, instance);
-    }
-}
-
-static void
-gx_face_dump_fvar_sfnt_variation_axis( GX_Face face,
-				       GX_FontVariationsSFNTVariationAxis axis,
-				       int t)
-{
-  FT_Error error;
-  FT_Memory memory = face->root.driver->root.memory;
-  FT_SfntName sfnt_name;
-  FT_String * string;
-  int j;  
-
-  PTAG(t, axisTag, axis->axisTag);
-  PFIELD(t, axis, minValue, %ld);
-  PFIELD(t, axis, defaultValue, %ld);
-  PFIELD(t, axis, maxValue, %ld); 
-  PFIELD(t, axis, flags, %u); 
-  
-  if (( error = gx_get_name_from_id((FT_Face)face, 
-				    axis->nameID, 
-				    0, 0, 0,
-				    &sfnt_name) ))
-    PFIELD(t, axis, nameID, %u); 
-  else
-    {
-      if ( FT_NEW_ARRAY(string, sfnt_name.string_len + 1) )
-	goto NameFailure;
-      string[sfnt_name.string_len] = '\0';
-      for ( j = 0; j < sfnt_name.string_len; j++)
-	{
-	  /* Don't use '&' in pseudo XML file.
-	     Here I replace '&' with '|'. */
-	  if ( sfnt_name.string[j] == '&' )
-	    string[j] = '|' ;
-	  else
-	    string[j] = sfnt_name.string[j];
-	}
-      PFIELD1(t,axis,nameID,%u,name,string,%s);
-      FT_FREE(string);
-    }
-  return;
- NameFailure:
-  exit(1);
-}
-
-static void
-gx_face_dump_fvar_sfnt_instance( GX_Face face,
-				 FT_UShort axis_count,
-				 GX_FontVariationsSFNTInstance instance,
-				 int t)
-{
-  FT_Error error;
-  int i;
-  FT_Memory memory = face->root.driver->root.memory;
-  FT_SfntName sfnt_name;
-  FT_String * string;
-  int j;  
-
-  if (( error = gx_get_name_from_id((FT_Face)face, 
-				    instance->nameID, 
-				    0, 0, 0, &sfnt_name) ))
-    PFIELD(t, instance, nameID, %u); 
-  else
-    {
-      if ( FT_NEW_ARRAY(string, sfnt_name.string_len + 1) )
-	goto NameFailure;
-      string[sfnt_name.string_len] = '\0';
-      for ( j = 0; j < sfnt_name.string_len; j++)
-	{
-	  /* Don't use '&' in pseudo XML file.
-	     Here I replace '&' with '|'. */
-	  if ( sfnt_name.string[j] == '&' )
-	    string[j] = '|' ;
-	  else
-	    string[j] = sfnt_name.string[j];
-	}
-      PFIELD1(t,instance,nameID,%u,name,string,%s);
-      FT_FREE(string);
-    }
-  
-  PFIELD(t, instance, flags, %u);
-  POPEN (t, coord);
-  for ( i = 0; i < axis_count; i++ )
-    {
-      NEWLINE10(t, i);
-      fprintf(stdout, "%ld[%d] ", instance->coord[i], i);
-    }
-  NEWLINE();
-  PCLOSE(t, coord);
-  return ;
- NameFailure:
-  exit(error);  
 }
 
 

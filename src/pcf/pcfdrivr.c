@@ -225,6 +225,22 @@ THE SOFTWARE.
     return PCF_Err_Ok;
   }
 
+  /* FTLAYOUT ONLY: This stub is used only for building FTLAYOUT.
+     FTLAYOUT branch of FreeType CVS doesn't include lzw directory
+     (because of probable mistake?). 
+     Undefine FT_CONFIG_OPTION_USE_LZW is not enough to avoid this 
+     issue.
+     Remove this stub when FTLAYOUT is merged to the main trunk.
+     -- Masatake */
+  static FT_Error
+  FT_Stream_OpenLZW( FT_Stream  stream,
+                     FT_Stream  source )
+  {
+    FT_UNUSED( stream );
+    FT_UNUSED( source );
+
+    return FT_Err_Unimplemented_Feature;
+  }
 
   FT_CALLBACK_DEF( FT_Error )
   PCF_Face_Init( FT_Stream      stream,

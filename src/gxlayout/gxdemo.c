@@ -89,7 +89,7 @@ void render_glyph ( GtkWidget * button, gpointer request );
 
 void set_trace_level( GtkAdjustment * adj, gpointer trace );
 
-#define DUMP_DESC "Supported tables are mort,morx,feat,prop,trak,kern,just,lcar,opbd,bsln,fmtx,fdsc,fvar"
+#define DUMP_DESC "Supported tables are mort,morx,feat,prop,trak,kern,just,lcar,opbd,bsln,fmtx,fdsc"
 static const GDebugKey dump_keys[] = {
   {"mort", GX_DUMP_mort},
   {"morx", GX_DUMP_morx},
@@ -103,7 +103,6 @@ static const GDebugKey dump_keys[] = {
   {"bsln", GX_DUMP_bsln},
   {"fmtx", GX_DUMP_fmtx},
   {"fdsc", GX_DUMP_fdsc},
-  {"fvar", GX_DUMP_fvar}
 };
 
 int
@@ -645,7 +644,6 @@ create_dump_area( GX_Face face,
   MAKE_CHECK_BUTTON(bsln);
   MAKE_CHECK_BUTTON(fmtx);
   MAKE_CHECK_BUTTON(fdsc);
-  MAKE_CHECK_BUTTON(fvar);
 
   button = gtk_button_new_with_label("Dump Font Tables");
   g_signal_connect (G_OBJECT (button), "clicked",
@@ -1206,9 +1204,9 @@ render_glyph ( GtkWidget * button, gpointer request )
 void
 set_trace_level( GtkAdjustment * adj, gpointer trace )
 {
+#ifdef FT_DEBUG_LEVEL_TRACE  
   gint index 	       	 = GPOINTER_TO_INT(trace);
   gint level 		 = (gint)gtk_adjustment_get_value(adj);
-#ifdef FT_DEBUG_LEVEL_TRACE  
   ft_trace_levels[index] = level;
 #endif  /* FT_DEBUG_LEVEL_TRACE */
 }

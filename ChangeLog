@@ -1,3 +1,15 @@
+2004-05-03  Masatake YAMATO  <jet@gyve.org>
+
+	* src/gxlayout/gxdemo.c (set_trace_level): Move loca variation
+	defs inside FT_DEBUG_LEVEL_TRACE ifdef block.
+
+	* src/pcf/pcfdrivr.c (FT_Stream_OpenLZW): Add dummy 
+	implementation. This should be removed when FTLAYOUT is
+	merged to the main trunk.
+
+	* src/gxlayout/*.[ch]: Remove all [gcaf]var realted codes.
+	gx variation are supported in the main trunk now.
+
 2004-03-04  Werner Lemberg  <wl@gnu.org>
 
 	* Jamfile, vms_make.com, builds/win32/visualc/freetype.dsp,

@@ -42,7 +42,6 @@ FT_BEGIN_HEADER
     GX_DUMP_bsln = 1 << 9,
     GX_DUMP_fmtx = 1 << 10,
     GX_DUMP_fdsc = 1 << 11,
-    GX_DUMP_fvar = 1 << 12,
     GX_DUMP_ALL  = 0x7FFFFFFFUL	/* gcc warns if I set this to 0xFFFFFFFFUL. */
   } GXDumpFlag;
 

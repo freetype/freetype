@@ -1149,65 +1149,6 @@ typedef struct GX_LigCaretSegmentRec_                 *GX_LigCaretSegment;
   } GX_KernRec, *GX_Kern;
 
 /***************************************************************************/
-/* CVAR                                                                    */
-/***************************************************************************/
-  typedef struct GX_GvarRec_
-  {
-    GX_TableRec root;
-    FT_Fixed  version;
-    FT_UShort axisCount;
-    FT_UShort globalCoordCount;
-    FT_ULong  offsetToCoord;
-    FT_UShort glyphCount;
-    FT_UShort flags;
-    FT_ULong  offsetToData;
-    union {
-      FT_UShort * u16;
-      FT_ULong  * u32;
-    } offset;
-    /* TODO */
-  } GX_GvarRec, *GX_Gvar;
-
-/***************************************************************************/
-/* GVAR                                                                    */
-/***************************************************************************/
-/* TODO */
-
-/***************************************************************************/
-/* FVAR                                                                    */
-/***************************************************************************/
-  typedef struct GX_FontVariationsSFNTVariationAxisRec_
-  {
-    FT_ULong  axisTag;
-    FT_Fixed  minValue;
-    FT_Fixed  defaultValue;
-    FT_Fixed  maxValue;
-    FT_UShort flags;
-    FT_UShort nameID;
-  } GX_FontVariationsSFNTVariationAxisRec, * GX_FontVariationsSFNTVariationAxis;
-
-  typedef struct GX_FontVariationsSFNTInstanceRec_
-  {
-    FT_UShort nameID;
-    FT_UShort  flags;
-    FT_Fixed * coord;		/* GX_FvarRec::axisCount */
-  } GX_FontVariationsSFNTInstanceRec, *GX_FontVariationsSFNTInstance;
-
-  typedef struct GX_FvarRec_
-  {
-    GX_TableRec root;
-    FT_Fixed  version;
-    FT_UShort offsetToData;
-    FT_UShort countSizePairs;
-    FT_UShort axisCount     ;
-    FT_UShort axisSize      ;
-    FT_UShort instanceCount ;
-    FT_UShort instanceSize  ;
-    GX_FontVariationsSFNTVariationAxis axis; /* axisCount */
-    GX_FontVariationsSFNTInstance instance;  /* instanceCount */
-  } GX_FvarRec, *GX_Fvar;
-
-/***************************************************************************/
 /* Generic                                                                 */
 /***************************************************************************/
    typedef struct GXL_FontRec_
@@ -1226,7 +1167,6 @@ typedef struct GX_LigCaretSegmentRec_                 *GX_LigCaretSegment;
      GX_Fmtx fmtx;
      GX_Fdsc fdsc;
      GX_Just just;
-     GX_Fvar fvar;
 
    } GXL_FontRec; /* *GX_Font; */
 

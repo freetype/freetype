@@ -215,8 +215,6 @@
     NEW_TABLE(fdsc);
     NEW_TABLE(just);
 
-    NEW_TABLE(fvar);
-
     error = FT_Err_Unknown_File_Format;
     
     if (((  font->mort ) || ( font->morx ))
@@ -277,8 +275,7 @@
     DONE_TABLE(fmtx);
     DONE_TABLE(fdsc);
     DONE_TABLE(just);
-    DONE_TABLE(fvar);
-    
+
     FTL_Font_Finalize((FTL_Font)font);
     FT_FREE(object);
   }
