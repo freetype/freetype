@@ -25,7 +25,6 @@
 #include <freetype/tttags.h>
 #include <t2load.h>
 #include <t2parse.h>
-#include <t2errors.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttload
