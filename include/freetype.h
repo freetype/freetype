@@ -664,7 +664,8 @@
     ft_encoding_big5    = FT_MAKE_TAG('b','i','g','5'),
 
     ft_encoding_adobe_standard = FT_MAKE_TAG('a','d','o','b'),
-    ft_encoding_adobe_expert   = FT_MAKE_TAG('a','d','b','e'),    
+    ft_encoding_adobe_expert   = FT_MAKE_TAG('a','d','b','e'),
+    ft_encoding_adobe_custom   = FT_MAKE_TAG('a','d','b','c'),
 
     ft_encoding_apple_roman    = FT_MAKE_TAG('a','r','m','n')
 
@@ -1346,21 +1347,69 @@
   FT_Error  FT_Done_FreeType( FT_Library  library );
 
 
+ /*************************************************************************
+  *
+  * <Struct>
+  *    FT_Open_Args
+  *
+  * <Description>
+  *    A structure used to indicate how to open a new font file/stream.
+  *    A pointer to such a structure can be used as a parameter for the
+  *    function FT_Open_Face & FT_Attach_Stream.
+  *
+  * <Fields>
+  *    memory_base  :: first byte of file in memory
+  *    memory_size  :: size in bytes of file in memory
+  *
+  *    pathname     :: a pointer to an 8-bit file pathname
+  *
+  *    stream       :: handle to a source stream object
+  *
+  * <Note>
+  *    Here's how a new input stream is built from a FT_Open_Args
+  *    structure:
+  *
+  *    a/ if 'memory_base' and 'memory_size' are non-null, create a
+  *       memory-based stream from the indicated address and length.
+  *
+  *    b/ Otherwise, if 'pathname' is non NULL, use it to build a
+  *       new system-specific stream (by calling FT_New_Stream)
+  *
+  *    c/ Otherwise, if 'stream' is non NULL, use it to access the
+  *       font file (note that a new FT_Stream object will be created
+  *       where the contents of 'stream' will be copied).
+  *
+  *************************************************************************/
+  
+  typedef struct FT_Open_Args_
+  {
+    FT_Byte*     memory_base;
+    FT_Long      memory_size;
+    
+    FT_String*   pathname;
+    
+    FT_Stream    stream;
+    
+    FT_Long      face_index;
+    
+  } FT_Open_Args;
 
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Open_Face                                                       */
+  /*    FT_New_Face                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Creates a new face object from a given resource and typeface       */
+  /*    Creates a new face object from a given font file and typeface      */
   /*    index.                                                             */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    resource   :: A handle to a source resource.                       */
+  /*    library      :: handle to the root FreeType library instance       */
   /*                                                                       */
-  /*    face_index :: The index of the face within the resource.  The      */
-  /*                  first face has index 0.                              */
+  /*    filepathname :: an 8-bit pathname naming the font file             */
+  /*                                                                       */
+  /*    face_index   :: the index of the face within the font file.        */
+  /*                    The first face has index 0.                        */
   /* <Output>                                                              */
   /*    face       :: A handle to a new face object.                       */
   /*                                                                       */
@@ -1368,19 +1417,18 @@
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
   /* <Note>                                                                */
+  /*    If your font file is in memory, or if you want to provide your     */
+  /*    own input stream object, see FT_Open_Face below.                   */
+  /*                                                                       */
+  /*    FT_New_Face creates a new stream object. The stream will be        */
+  /*    closed with the face (when calling FT_Done_Face or even            */
+  /*    FT_Done_FreeType).                                                 */
+  /*                                                                       */
   /*    Unlike FreeType 1.1, this function automatically creates a glyph   */
   /*    slot for the face object which can be accessed directly through    */
-  /*    `face->slot'.                                                      */
-  /*                                                                       */
-  /*    Note that additional slots can be added to each face through the   */
-  /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
-  /*    list through their `next' field.                                   */
-  /*                                                                       */
-  /*    FT_New_Face() can be used to determine and/or check the font       */
-  /*    format of a given font resource.  If the `face_index' field is     */
-  /*    negative, the function will _not_ return any face handle in        */
-  /*    `*face'.  Its return value should be 0 if the resource is          */
-  /*    recognized, or non-zero if not.                                    */
+  /*    `face->slot'. Note that additional slots can be added to each face */
+  /*    through the FT_New_GlyphSlot() API function.  Slots are linked in  */
+  /*    a single list through their `next' field.                          */
   /*                                                                       */
   EXPORT_DEF
   FT_Error  FT_New_Face( FT_Library   library,
@@ -1389,18 +1437,112 @@
                          FT_Face*     face );
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Open_Face                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new face object from a given input stream & typeface     */
+  /*    index. This function is very similar to FT_New_Face, except that   */
+  /*    it can accept any form of input stream..                           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library      :: handle to the root FreeType library instance       */
+  /*                                                                       */
+  /*    args         :: an FT_Open_Args structure used to describe the     */
+  /*                    input stream to FreeType.                          */
+  /*                                                                       */
+  /*    face_index   :: the index of the face within the font file.        */
+  /*                    The first face has index 0.                        */
+  /* <Output>                                                              */
+  /*    face       :: A handle to a new face object.                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Error code.  0 means success.                                      */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Note that if the stream is in-memory or specified through an       */
+  /*    8-bit pathname, a new stream is created by this function. It       */
+  /*    is only closed when the face is destroyed (FT_Done_Face).          */
+  /*                                                                       */
+  /*    Note that when specifying directly an existing FT_Stream, this     */
+  /*    function creates a new FT_Stream object and copies the contents    */
+  /*    of the original stream within it. The stream will be closed        */
+  /*    when the face is destroyed. This means calling the stream's        */
+  /*    "close" function.                                                  */
+  /*                                                                       */
   EXPORT_DEF
-  FT_Error  FT_Open_Face( FT_Library  library,
-                          FT_Stream   stream,
-                          FT_Long     face_index,
-                          FT_Face*    face );
+  FT_Error  FT_Open_Face( FT_Library    library,
+                          FT_Open_Args* args,
+                          FT_Long       face_index,
+                          FT_Face*      face );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Attach_File                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    "Attach" a given font file to an existing face. This is usually    */
+  /*    to read additionnal information for a single face object. For      */
+  /*    example, it is used to read the AFM files that come with Type 1    */
+  /*    fonts in order to add kerning data and other metrics..             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face         :: target face object                                 */
+  /*                                                                       */
+  /*    filepathname :: an 8-bit pathname naming the 'metrics' file.       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Error code.  0 means success.                                      */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    If your font file is in memory, or if you want to provide your     */
+  /*    own input stream object, see FT_Attach_Stream.                     */
+  /*                                                                       */
+  /*    The meaning of the "attach" (i.e. what really happens when the     */
+  /*    new file is read) is not fixed by FreeType itself. It really       */
+  /*    depends on the font format (and thus the font driver).             */
+  /*                                                                       */
+  /*    Client applications are expected to know what they're doing        */
+  /*    when invoking this function. Most drivers simply do not implement  */
+  /*    file attachments..                                                 */
+  /*                                                                       */
   EXPORT_DEF
-  FT_Error  FT_New_Memory_Face( FT_Library  library,
-                                void*       file_base,
-                                FT_Long     file_size,
-                                FT_Long     face_index,
-                                FT_Face    *face );
+  FT_Error  FT_Attach_File( FT_Face      face,
+                            const char*  filepathname );
+                            
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Attach_Stream                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This function is similar to FT_Attach_File with the exception      */
+  /*    that it reads the attachment from an arbitrary stream.             */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: target face object                                         */
+  /*                                                                       */
+  /*    args :: a pointer to an FT_Open_Args structure used to describe    */
+  /*            the input stream to FreeType                               */
+  /* <Return>                                                              */
+  /*    Error code.  0 means success.                                      */
+  /*                                                                       */
+  /*    The meaning of the "attach" (i.e. what really happens when the     */
+  /*    new file is read) is not fixed by FreeType itself. It really       */
+  /*    depends on the font format (and thus the font driver).             */
+  /*                                                                       */
+  /*    Client applications are expected to know what they're doing        */
+  /*    when invoking this function. Most drivers simply do not implement  */
+  /*    file attachments..                                                 */
+  /*                                                                       */
+  EXPORT_DEF
+  FT_Error  FT_Attach_Stream( FT_Face       face,
+                              FT_Open_Args* parameters );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1708,6 +1850,20 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Constant>                                                            */
+  /*    FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit-field constant, used with FT_Load_Glyph() to indicate that   */
+  /*    the glyph loader should ignore the global advance width defined    */
+  /*    in the font. As far as we know, this is only used by the           */
+  /*    X-TrueType font server, in order to deal correctly with the        */
+  /*    incorrect metrics contained in DynaLab's TrueType CJK fonts..      */
+  /*                                                                       */
+#define FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH 512
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
   /*    FT_LOAD_NO_RECURSE                                                 */
   /*                                                                       */
   /* <Description>                                                         */
@@ -1719,8 +1875,7 @@
   /*                                                                       */
   /*    XXXXX : IMPORTANT NOTE, THIS FLAG IS NOT YET IMPLEMENTED !!        */
   /*                                                                       */
-#define FT_LOAD_NO_RECURSE 256
-
+#define FT_LOAD_NO_RECURSE 1024
 
   /*************************************************************************/
   /*                                                                       */
