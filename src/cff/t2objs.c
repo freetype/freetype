@@ -309,21 +309,26 @@
           goto Bad_Format;
         }
         
+        /* compute number of glyphs */
+        if (dict->cid_registry)
+          root->num_glyphs = dict->cid_count;
+        else
+          root->num_glyphs = cff->charstrings_index.count;
+        
+        /* set global bbox, as well as EM size */
+        root->units_per_EM = FT_DivFix( 1000L << 16, dict->font_matrix.yy ) >> 16;
+        root->bbox         = dict->font_bbox;
+        root->ascender     = root->bbox.yMax;
+        root->descender    = root->bbox.yMin;
+        
         /* retrieve font family & style name */
+        root->family_name = T2_Get_Name( &cff->name_index, face_index );
         if (dict->cid_registry)
         {
-          root->family_name = T2_Get_String( &cff->string_index,
-                                             dict->cid_font_name,
-                                             psnames );
-
           root->style_name  = T2_StrCopy( memory, "Regular" );  /* XXXX */
         }
         else
         {
-          root->family_name = T2_Get_String( &cff->string_index,
-                                             dict->base_font_name,
-                                             psnames );
-                                             
           root->style_name  = T2_Get_String( &cff->string_index,
                                              dict->weight,
                                              psnames );

@@ -613,7 +613,7 @@
           ip += 2;
         }
         else if ( v < 247 )
-          val = v - 139;
+          val = (FT_Long)v - 139;
         else if ( v < 251 )
         {
           if ( ip >= limit )
