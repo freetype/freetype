@@ -1,4 +1,9 @@
-import string, sys
+import string, sys, os
+
+# current output directory
+#
+output_dir = None
+
 
 # This function is used to sort the index.  It is a simple lexicographical
 # sort, except that it places capital letters before lowercase ones.
@@ -42,10 +47,6 @@ def sort_order_list( input_list, order_list ):
             new_list.append( id )
     return new_list
 
-
-# current output directory
-#
-output_dir = None
 
 
 # Open the standard output to a given project documentation file.  Use

@@ -1,3 +1,16 @@
+2002-08-21  David Turner  <david@freetype.org>
+
+        * src/pshinter/pshalgo3.c, src/autohint/ahangles.c,
+        src/autohint/ahangles.h, src/autohint/ahglyph.c, src/autohint/ahhint.c,
+        src/autohint/ahtypes.h: the automatic and Postscript hinter now
+        automatically detect inflection points in glyph outlines and treats
+        them specially. This is very useful to prevent nasty effect like the
+        disappearing diagonals of "S" and "s" in many, many fonts..
+
+        * src/tools/docmaker/docmaker.py, src/tools/docmaker/utils.py,
+        src/tools/docmaker/tohtml.py: updating the DocMaker tool
+
+
 2002-08-20  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (TT_Get_Metrics): Add guard for k = 0.
