@@ -1,3 +1,16 @@
+LATEST CHANGES BETWEEN 2.0.6 and 2.0.5
+
+  - a new Postscript hinter module has been added to support native hints
+    in the following formats: Postscript Type 1, Postscript CID and CFF/CEF
+
+    (for now, only the Type 1 driver uses it, the "cid" and "cff" drivers
+     will be updated shortly)
+
+  - "glnames.py" still contained a bug !! that made FreeType return invalid
+    names for certain glyphs..
+
+============================================================================
+
 LATEST CHANGES BETWEEN 2.0.5 and 2.0.4
 
   NOTE THAT 2.0.5 DOES NOT CONTAIN THE POSTSCRIPT HINTER.  THIS MODULE WILL
