@@ -1,0 +1,267 @@
+               The FreeType 2 cache sub-system explained
+                        (c) 2000 David Turner
+
+            -----------------------------------------------
+
+Introduction :
+--------------
+
+  this document describes the caching sub-system that comes
+  with the FreeType library, version 2.0. Note that unlike
+  the rest of the library, this code is still in beta stage
+  and might still suffer slight changes in the future.
+
+  Its basic design shouldn't evolve though and is explained
+  in this paper.
+
+
+I. Requirements and Design Goals:
+---------------------------------
+
+  The FT2 cache sub-system was designed to implement caching
+  of glyph images. However, it is extremely flexible and can
+  be easily extended to cache other kind of data like metrics,
+  character maps, coverage tables, etc..
+
+
+II. Base Concepts:
+------------------
+
+ 1. The cache manager object:
+
+   at the heart of the caching sub-system is a single object
+   called the "cache manager". It is used to deal with FT_Face
+   and FT_Size objects, as well as to manager a LRU list of
+   abstract "cache nodes".
+
+   a. caching FT_Face and FT_Size objects:
+
+     each FT_Face object created by FreeType 2 can take from
+     a few hundred bytes to several tens of kilobytes, depending
+     on the original font's file format as well as its content.
+
+     there is no easy way to compute the size of a given FT_Face
+     object, so it's always a good idea to assume that it is
+     large and to want to limit the number of live face objects
+     as much as possible.
+
+     similarly, each FT_Face can have one or more FT_Size childs,
+     whose byte size depends heavily on the font format.
+
+     the first purpose of the cache manager is to provide a
+     small cache for FT_Face and FT_Size objects. Basically,
+     an application can use it as follows:
+
+       - each font face is described to the cache manager
+         through a typeless pointer, called a FTC_FaceID.
+
+         the cache manager itself doesn't interpret or use
+         the value of FTC_FaceIDs directly. Rather, it passes
+         them to a user-provided function called a
+         "face requester". see the defintion of the
+         FTC_Face_Requester type in <freetype/ftcache.h>
+         for details..
+
+         the face requester is in charge of translating a given
+         face into into a real new FT_Face object that is
+         returned to the cache manager. The latter will keep
+         the face object alive as long as it needs to.
+
+         the face requester is unique and must be passed
+         to the function named FTC_Manager_New used to
+         create/initialise a new cache manager.
+
+
+       - to lookup a given FT_Face, call the function
+         FTC_Manager_Lookup_Face as in the following code:
+
+              FTC_Manager_Lookup_Face( manager,
+                                       face_id,
+                                       &face );
+
+         if the corresponding FT_Face object is kept in
+         the cache manager's list, it will be returned
+         directly. Otherwise, this function will call
+         the user-provided face requester to create
+         a new FT_Face object, add it to the manager's
+         list to finally return it.
+
+         FT_Face objects are always destroyed by the cache
+         manager. An application that uses the cache
+         sub-system should never call FT_Done_Face !!
+
+       - to lookup a given FT_Size and FT_Face, call the
+         function FTC_Manager_Lookup_Size, as in:
+
+              FTC_Manager_Lookup_Size( manager,
+                                       ftc_font,
+                                       &face,
+                                       &size );
+
+         where "ftc_font" is a pointer to a FTC_Font descriptor
+         (a structure containing a FTC_FaceIDs and character
+          dimensions corresponding to the desired FT_Size).
+
+         note that the function returns both a FT_Face and
+         a FT_Size object. You don't need to call
+         FTC_Manager_Lookup_Face before it !!
+
+         also note that returned FT_Size objects are always
+         destroyed by the cache manager. A client application
+         that uses it should never call FT_Done_Size !!
+
+
+     the big advantage of using FTC_FaceIDs is that is
+     makes the caching sub-system completely independent
+     of the way font files are installed / listed / managed
+     in your application. In most implementations, a FTC_FaceID
+     is really a pointer to an application-specific structure
+     that describe the source font file + face index.
+
+
+    b - manage a MRU list of abstract "cache nodes":
+
+     the second role of the cache manager is to hold and manager
+     a list of abstract "cache nodes". The list is always sorted
+     in most-recently-used order. The manager always ensure that
+     the total size of nodes in memory doesn't over-reach a
+     certain threshold, by eliminating "old" nodes when
+     necessary.
+
+     the cache manager doesn't know much about the cache nodes:
+
+       - it knows how to move them in its list
+       - it knows how to destroy them when they're too old
+       - it knows how to "size" them (i.e. compute their byte
+         size in memory)
+
+
+ 2. Cache objects:
+
+   the cache manager doesn't create new cache nodes however, this
+   is the charge of what are called "cache objects".
+
+   Basically, each cache object is in charge of managing cache
+   nodes of a certain type. Its role is to:
+
+     - provide a simple description of its cache nodes to the
+       manager (i.e. through a FTC_CacheNode_Class structure)
+
+     - provide a high-level API that can be called by client
+       applications to lookup cache nodes of the corresponding
+       type.
+
+       this function usually creates new nodes when they're not
+       available yet.
+
+     - also, and even though this is completely transparent to
+       the applications and the cache manager, each cache object
+       manages "node sets", where each set contains cache nodes
+       usually correspond to the same font face + font size.
+
+
+   For example, the cache sub-system currently comes with two
+   distinct cache classes:
+
+     - a FTC_Image_Cache, which is used to cache FT_Glyph images
+       (with one FT_Glyph per cache node).
+
+
+     - a FTC_SBit_Cache, which is used to cache small glyph bitmaps
+       ("sbit" means "embedded bitmaps" in digital typography).
+
+
+   the small bitmaps glyph is useful because storing one glyph
+   image per cache node isn't memory efficient when the data
+   associated to each node is very small. Indeed, each cache
+   node has a minimal size of 20 bytes, which is huge when
+   your data is an 8x8 monochrome bitmap :-)
+
+   Hence, a FTC_SBit_Cache is capable of storing several
+   contiguous sbits in a single cache node, resulting in much
+   higher cached glyphs / total cache size.
+
+   an application can lookup a FT_Glyph image with a FTC_Image_Cache
+   by calling:
+
+        error = FTC_Image_Cache_Lookup( image_cache,
+                                        ftc_font,
+                                        glyph_index,
+                                        &ft_glyph );
+
+   or a FTC_SBit (small bitmap descriptor) by calling:
+
+       error = FTC_SBit_Cache_Lookup( sbit_cache,
+                                      ftc_font,
+                                      glyph_index,
+                                      &ftc_sbit );
+
+III. Extending the cache sub-system:
+
+ It is possible to extend the current cache sub-system by
+ providing your own cache class and register it in the cache
+ manager. That might be useful to cache other kind of data
+ in the sub-system, like glyph metrics (without images),
+   
+ To do it, you'll need to read the cache sub-system public
+ header files rather heavily :-) Fortunately, they're pretty
+ well commented and should guide you to your goal.
+
+ Note that the cache sub-system already provides two "abstract
+ cache" classes that can be re-used by your own implementation:
+
+
+ 1. The abstract "FTC_GlyphCache" class:
+
+   this code is used to implement an abstract "glyph cache",
+   i.e. one that simply maps one glyph data per cache node.
+
+   it is sub-classed by FTC_Image_Cache, whose implementation
+   only consists in simple code to store a FT_Glyph in each
+   cache node.
+
+   you could sub-class it in your application to store glyph
+   images in a different format, for example.
+
+   see the files <freetype/cache/ftcglyph.h> and
+   "src/cache/ftcglyph.h" for details.
+
+
+ 2. The abstract "FTC_ChunkCache" class:
+
+   this code is used to implement an abstract "glyph chunk cache".
+   it's very similar to a FTC_GlyphCache, except that it is capable
+   of storing several glyph-specific elements per cache node.
+
+   it is sub-classed by FTC_SBit_Cache, whose implementation
+   only consists in code to store a FTC_SBitRec record in each
+   node element.
+
+   you could sub-class it in your application to store small
+   glyph data, like metrics, glyph names, wathever.
+
+   see the files <freetype/cache/ftcchunk.h> and
+   "src/cache/ftcchunk.h" for details..
+
+
+  Note that the two abstract caches are rather complex because
+  they use "glyph sets". Each glyph set corresponds to a single
+  font face + font size combination. both caches are also
+  glyph-specific, though it is perfectly possible to use
+  broader selection criterion, here are a few examples:
+
+    - caching language coverage maps corresponding to
+      a given font face + language combination
+
+    - caching charmaps, layout tables, and other global
+      data..
+
+    - caching (font_face + font_size) specific "latin1"
+      ascender + descender
+
+
+  as you can see, a lot is possible with this design :-)
+
+
+
+
