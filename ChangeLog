@@ -10,6 +10,8 @@
   * src/psnames/psmodule.c: rewrote some parts to comply with recent
     changes in 'pstables.h'
 
+  * src/base/ftobjs.c (FT_Set_Char_Sizes): fix for bug #12263
+
 2005-03-06  David Turner  <david@freetype.org>
 
 	* src/otvalid/otvgsub.c, src/otvalid/otvgpos.c: Make static tables
