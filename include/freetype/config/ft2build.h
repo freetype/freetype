@@ -162,19 +162,19 @@
   /*                                                                       */
   /*************************************************************************/
 
-  /* don't add spaces around arguments to FT_CONFIG_FILE! */
+  /* don't add spaces around arguments to FT2_CONFIG_FILE! */
 
   /* configuration files */
-#ifndef   FT_CONFIG_CONFIG_H
-#  define FT_CONFIG_CONFIG_H     FT2_CONFIG_FILE(ftconfig.h)
+#ifndef FT_CONFIG_CONFIG_H
+#define FT_CONFIG_CONFIG_H     FT2_CONFIG_FILE(ftconfig.h)
 #endif
 
-#ifndef   FT_CONFIG_OPTIONS_H
-#  define FT_CONFIG_OPTIONS_H    FT2_CONFIG_FILE(ftoption.h)
+#ifndef FT_CONFIG_OPTIONS_H
+#define FT_CONFIG_OPTIONS_H    FT2_CONFIG_FILE(ftoption.h)
 #endif
 
-#ifndef   FT_CONFIG_MODULES_H
-#  define FT_CONFIG_MODULES_H    FT2_CONFIG_FILE(ftmodule.h)
+#ifndef FT_CONFIG_MODULES_H
+#define FT_CONFIG_MODULES_H    FT2_CONFIG_FILE(ftmodule.h)
 #endif
 
   /* public headers */

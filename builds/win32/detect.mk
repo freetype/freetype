@@ -46,7 +46,8 @@ ifeq ($(PLATFORM),ansi)
     DELETE   := del
     COPY     := copy
 
-    CONFIG_FILE := w32-gcc.mk  # gcc Makefile by default
+    # gcc Makefile by default
+    CONFIG_FILE := w32-gcc.mk
     SEP         := /
     ifeq ($(firstword $(CC)),cc)
       CC        := gcc

@@ -23,11 +23,15 @@
 
 
 #ifdef FT_FLAT_COMPILE
-#  include "t1decode.h"
-#  include "psobjs.h"
+
+#include "t1decode.h"
+#include "psobjs.h"
+
 #else
-#  include <psaux/t1decode.h>
-#  include <psaux/psobjs.h>
+
+#include <psaux/t1decode.h>
+#include <psaux/psobjs.h>
+
 #endif
 
 

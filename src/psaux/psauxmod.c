@@ -17,13 +17,17 @@
 
 
 #ifdef FT_FLAT_COMPILE
-#  include "psauxmod.h"
-#  include "psobjs.h"
-#  include "t1decode.h"
+
+#include "psauxmod.h"
+#include "psobjs.h"
+#include "t1decode.h"
+
 #else
-#  include <psaux/psauxmod.h>
-#  include <psaux/psobjs.h>
-#  include <psaux/t1decode.h>
+
+#include <psaux/psauxmod.h>
+#include <psaux/psobjs.h>
+#include <psaux/t1decode.h>
+
 #endif
 
 

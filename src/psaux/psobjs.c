@@ -21,9 +21,13 @@
 #include <freetype/internal/ftdebug.h>
 
 #ifdef FT_FLAT_COMPILE
-#  include "psobjs.h"
+
+#include "psobjs.h"
+
 #else
-#  include <psaux/psobjs.h>
+
+#include <psaux/psobjs.h>
+
 #endif
 
 
