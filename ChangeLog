@@ -1,3 +1,11 @@
+2001-12-14  David Turner  <david@freetype.org>
+
+    * src/truetype/ttgload.c (TT_Load_Glyph), src/type1/t1gload.c
+    (T1_Load_Glyph), src/cid/cidgload.c (CID_Load_Glyph), src/cff/cffgload.c
+    (CFF_Load_Glyph): fixed an important bug common to all font drivers (the
+    advance width was never hinted when it should)
+
+
 2001-12-12  David Turner  <david@freetype.org>
 
     * src/pshint/pshglob.c: adding correct BlueScale/BlueShift support,
@@ -24,7 +32,7 @@
 
 	* docs/FTL.TXT: Simple fix (change "LICENSE.TXT" to "FTL.TXT").
 
-	* builds/unix/freetype2.m4: New file for checking configure paths. 
+	* builds/unix/freetype2.m4: New file for checking configure paths.
 	We need to install it in $(prefix)/share/aclocal/freetype2.m4 but I
 	didn't modify builds/unix/install.mk yet.
 

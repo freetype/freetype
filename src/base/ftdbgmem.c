@@ -163,7 +163,7 @@
   {
     FT_Memory   memory = table->memory;
     FT_Pointer  block;
-    
+
 
     memory->user = table->memory_user;
     block = table->alloc( memory, size );
@@ -178,7 +178,7 @@
                      FT_Pointer   block )
   {
     FT_Memory  memory = table->memory;
-    
+
 
     memory->user = table->memory_user;
     table->free( memory, block );
@@ -297,7 +297,7 @@
 
           if ( node->size > 0 )
           {
-            printf( 
+            printf(
               "leaked memory block at address %p, size %8ld in (%s:%ld)\n",
               node->address, node->size,
               FT_FILENAME( node->alloc_file_name ),
@@ -485,7 +485,7 @@
 
     return (FT_Pointer) block;
   }
-  
+
 
   extern void
   ft_mem_debug_free( FT_Memory   memory,
@@ -505,7 +505,7 @@
     table->file_name = NULL;
     table->line_no   = 0;
   }
-  
+
 
   extern FT_Pointer
   ft_mem_debug_realloc( FT_Memory   memory,
@@ -520,7 +520,7 @@
     const char*  file_name = FT_FILENAME( table->file_name );
     FT_Long      line_no   = table->line_no;
 
- 
+
     if ( block == NULL || cur_size == 0 )
       ft_mem_debug_panic( "trying to reallocate NULL in (%s:%ld)",
                            file_name, line_no );
@@ -620,7 +620,7 @@
       table->line_no   = line_no;
     }
     return FT_Alloc( memory, size, P );
-  }            
+  }
 
 
   FT_BASE_DEF( FT_Error )
@@ -640,7 +640,7 @@
       table->line_no   = line_no;
     }
     return FT_Realloc( memory, current, size, P );
-  }                    
+  }
 
 
   FT_BASE_DEF( void )
@@ -662,9 +662,9 @@
 
 
 #else  /* !FT_DEBUG_MEMORY */
- 
+
   /* ANSI C doesn't like empty source files */
-  extern const FT_Byte  _debug_mem_dummy = 0;
+  const FT_Byte  _debug_mem_dummy = 0;
 
 #endif /* !FT_DEBUG_MEMORY */
 
