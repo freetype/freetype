@@ -159,18 +159,18 @@ FT_BEGIN_HEADER
   } PSH_AlignmentRec, *PSH_Alignment;
 
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   psh_globals_funcs_init( PSH_Globals_FuncsRec*  funcs );
 
 
   /* snap a stem width to fitter coordinates.  `org_width' is in font */
   /* units.  The result is in device pixels (26.6 format).            */
-  FT_LOCAL FT_Pos
+  FT_LOCAL( FT_Pos )
   psh_dimension_snap_width( PSH_Dimension  dimension,
                             FT_Int         org_width );
 
   /* snap a stem to one or two blue zones */
-  FT_LOCAL void
+  FT_LOCAL( void )
   psh_blues_snap_stem( PSH_Blues      blues,
                        FT_Int         stem_top,
                        FT_Int         stem_bot,

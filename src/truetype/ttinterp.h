@@ -224,18 +224,18 @@ FT_BEGIN_HEADER
   extern const TT_GraphicsState  tt_default_graphics_state;
 
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Goto_CodeRange( TT_ExecContext  exec,
                      FT_Int          range,
                      FT_Long         IP );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Set_CodeRange( TT_ExecContext  exec,
                     FT_Int          range,
                     void*           base,
                     FT_Long         length );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Clear_CodeRange( TT_ExecContext  exec,
                       FT_Int          range );
 
@@ -263,23 +263,23 @@ FT_BEGIN_HEADER
   TT_New_Context( TT_Face  face );
 
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Done_Context( TT_ExecContext  exec );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Destroy_Context( TT_ExecContext  exec,
                       FT_Memory       memory );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Load_Context( TT_ExecContext  exec,
                    TT_Face         face,
                    TT_Size         size );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Save_Context( TT_ExecContext  exec,
                    TT_Size         ins );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Run_Context( TT_ExecContext  exec,
                   FT_Bool         debug );
 

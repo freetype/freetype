@@ -33,16 +33,16 @@ FT_BEGIN_HEADER
   const T1_Decoder_FuncsRec  t1_decoder_funcs;
 
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   T1_Decoder_Parse_Glyph( T1_Decoder  decoder,
                           FT_UInt      glyph_index );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   T1_Decoder_Parse_Charstrings( T1_Decoder  decoder,
                                 FT_Byte*     base,
                                 FT_UInt      len );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   T1_Decoder_Init( T1_Decoder          decoder,
                    FT_Face              face,
                    FT_Size              size,
@@ -52,7 +52,7 @@ FT_BEGIN_HEADER
                    FT_Bool              hinting,
                    T1_Decoder_Callback  parse_glyph );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   T1_Decoder_Done( T1_Decoder  decoder );
 
 

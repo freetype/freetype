@@ -205,17 +205,17 @@ FT_BEGIN_HEADER
 
 #ifdef FT_MAKE_OPTION_SINGLE_OBJECT
 
-#define FT_LOCAL      static
-#define FT_LOCAL_DEF  static
+#define FT_LOCAL(x)      static  x
+#define FT_LOCAL_DEF(x)  static  x
 
 #else
 
 #ifdef __cplusplus
-#define FT_LOCAL      extern "C"
-#define FT_LOCAL_DEF  extern "C"
+#define FT_LOCAL(x)      extern "C" x
+#define FT_LOCAL_DEF(x)  extern "C" x
 #else
-#define FT_LOCAL      extern
-#define FT_LOCAL_DEF  extern
+#define FT_LOCAL(x)      extern x
+#define FT_LOCAL_DEF(x)  extern x
 #endif
 
 #endif /* FT_MAKE_OPTION_SINGLE_OBJECT */

@@ -378,7 +378,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   ah_hinter_hint_edges( AH_Hinter*  hinter,
                         FT_Bool     no_horz_edges,
                         FT_Bool     no_vert_edges )
@@ -807,7 +807,7 @@
 #endif /* !AH_OPTION_NO_WEAK_INTERPOLATION */
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   ah_hinter_align_points( AH_Hinter*  hinter )
   {
     ah_hinter_align_edge_points( hinter );
@@ -896,7 +896,7 @@
 
 
   /* finalize a hinter object */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   ah_hinter_done( AH_Hinter*  hinter )
   {
     if ( hinter )
@@ -919,7 +919,7 @@
 
 
   /* create a new empty hinter object */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   ah_hinter_new( FT_Library   library,
                  AH_Hinter**  ahinter )
   {
@@ -955,7 +955,7 @@
 
 
   /* create a face's autohint globals */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   ah_hinter_new_face_globals( AH_Hinter*   hinter,
                               FT_Face      face,
                               AH_Globals*  globals )
@@ -987,7 +987,7 @@
 
 
   /* discard a face's autohint globals */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   ah_hinter_done_face_globals( AH_Face_Globals*  globals )
   {
     FT_Face    face   = globals->face;
@@ -1327,7 +1327,7 @@
 
 
   /* load and hint a given glyph */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   ah_hinter_load_glyph( AH_Hinter*    hinter,
                         FT_GlyphSlot  slot,
                         FT_Size       size,
@@ -1381,7 +1381,7 @@
 
 
   /* retrieve a face's autohint globals for client applications */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   ah_hinter_get_global_hints( AH_Hinter*  hinter,
                               FT_Face     face,
                               void**      global_hints,
@@ -1418,7 +1418,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   ah_hinter_done_global_hints( AH_Hinter*  hinter,
                                void*       global_hints )
   {

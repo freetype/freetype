@@ -112,7 +112,7 @@
   };
 
 
-  FT_LOCAL_DEF T1_CMap_Class
+  FT_LOCAL_DEF( T1_CMap_Class )
   t1_cmap_standard_class = &t1_cmap_standard_class_rec;
 
 
@@ -138,7 +138,7 @@
   };
 
 
-  FT_LOCAL_DEF T1_CMap_Class
+  FT_LOCAL_DEF( T1_CMap_Class )
   t1_cmap_expert_class = &t1_cmap_expert_class_rec;
 
 
@@ -232,7 +232,7 @@
   };
 
 
-  FT_LOCAL_DEF FT_CMap_Class
+  FT_LOCAL_DEF( FT_CMap_Class )
   t1_cmap_custom_class = &t1_cmap_custom_class_rec;
 
 
@@ -301,7 +301,7 @@
                  new_count,
                  sizeof(T1_CMapUniPairRec),
                  t1_cmap_uni_pair_compare );
-          
+
           cmap->num_pairs = new_count;
         }
       }
@@ -316,7 +316,7 @@
   {
     FT_Face    face = FT_CMAP_FACE(cmap);
     FT_Memory  memory = FT_FACE_MEMORY(face);
-    
+
     FREE( cmap->pairs );
     cmap->num_pairs = 0;
   }
@@ -330,15 +330,15 @@
     FT_UInt         max = cmap->num_pairs;
     FT_UInt         mid;
     T1_CMapUniPair  pair;
-    
+
     while ( min < max )
     {
       mid  = min + (max - min)/2;
       pair = cmap->pairs + mid;
-      
+
       if ( pair->unicode == char_code )
         return pair->gindex;
-        
+
       if ( pair->unicode < char_code )
         min = mid+1;
       else
@@ -365,26 +365,26 @@
       {
         mid  = min + (max - min)/2;
         pair = cmap->pairs + mid;
-        
+
         if ( pair->unicode == char_code )
         {
           result = pair->gindex;
           if ( result != 0 )
             goto Exit;
-          
+
           char_code++;
           goto Restart;
         }
-        
+
         if ( pair->unicode < char_code )
           min = mid+1;
         else
           max = mid;
       }
-    
+
       /* we didn't find it, but we have a pair just above it */
       char_code = 0;
-      
+
       if ( min < cmap->num_pairs )
       {
         pair   = cmap->num_pairs + min;

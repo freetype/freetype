@@ -180,7 +180,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Get_Multi_Master( T1_Face           face,
                        FT_Multi_Master*  master )
   {
@@ -212,7 +212,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Set_MM_Blend( T1_Face    face,
                    FT_UInt    num_coords,
                    FT_Fixed*  coords )
@@ -258,7 +258,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Set_MM_Design( T1_Face   face,
                     FT_UInt   num_coords,
                     FT_Long*  coords )
@@ -328,7 +328,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   T1_Done_Blend( T1_Face  face )
   {
     FT_Memory  memory = face->root.memory;
@@ -1637,7 +1637,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Open_Face( T1_Face  face )
   {
     T1_Loader  loader;

@@ -27,14 +27,29 @@
 
 FT_BEGIN_HEADER
 
-  FT_LOCAL FT_Error
-  TT_CharMap_Load( TT_Face        face,
-                   TT_CMapTable*  cmap,
-                   FT_Stream      input );
+  typedef struct TT_CMapRec_
+  {
+    FT_CMapRec  cmap;
+    FT_Byte*    data;
 
-  FT_LOCAL FT_Error
-  TT_CharMap_Free( TT_Face        face,
-                   TT_CMapTable*  cmap );
+  } TT_CMapRec, *TT_CMap;
+
+  typedef const struct TT_CMap_ClassRec_*   TT_CMap_Class;
+
+  typedef FT_Error  (*TT_CMap_ValidateFunc)( FT_Byte*      data,
+                                             FT_Validator  valid );
+
+  typedef struct TT_CMap_ClassRec_
+  {
+    FT_CMap_ClassRec      clazz;
+    FT_UInt               format;
+    TT_CMap_ValidateFunc  validate;
+
+  } TT_CMap_ClassRec;
+
+
+  FT_LOCAL( FT_Error )
+  TT_Build_CMaps( TT_Face   face )
 
 
 FT_END_HEADER

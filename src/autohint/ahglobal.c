@@ -384,7 +384,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   ah_hinter_compute_globals( AH_Hinter*  hinter )
   {
     return ah_hinter_compute_widths( hinter ) ||

@@ -71,13 +71,13 @@ FT_BEGIN_HEADER
   } CID_Parser;
 
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   CID_New_Parser( CID_Parser*       parser,
                   FT_Stream         stream,
                   FT_Memory         memory,
                   PSAux_Service  psaux );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   CID_Done_Parser( CID_Parser*  parser );
 
 

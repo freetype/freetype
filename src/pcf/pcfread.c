@@ -855,7 +855,7 @@ THE SOFTWARE.
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   pcf_load_font( FT_Stream  stream,
                  PCF_Face   face )
   {

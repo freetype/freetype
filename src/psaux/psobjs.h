@@ -46,22 +46,22 @@ FT_BEGIN_HEADER
   const T1_Builder_Funcs    t1_builder_funcs;
 
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   PS_Table_New( PS_Table  table,
                 FT_Int     count,
                 FT_Memory  memory );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   PS_Table_Add( PS_Table  table,
                 FT_Int     index,
                 void*      object,
                 FT_Int     length );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   PS_Table_Done( PS_Table  table );
 
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   PS_Table_Release( PS_Table  table );
 
 
@@ -74,64 +74,64 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   PS_Parser_SkipSpaces( PS_Parser  parser );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   PS_Parser_SkipAlpha( PS_Parser  parser );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   PS_Parser_ToToken( PS_Parser  parser,
               T1_Token   token );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   PS_Parser_ToTokenArray( PS_Parser  parser,
                    T1_Token   tokens,
                    FT_UInt     max_tokens,
                    FT_Int*     pnum_tokens );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   PS_Parser_LoadField( PS_Parser       parser,
                  const T1_Field  field,
                  void**           objects,
                  FT_UInt          max_objects,
                  FT_ULong*        pflags );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   PS_Parser_LoadFieldTable( PS_Parser       parser,
                        const T1_Field  field,
                        void**           objects,
                        FT_UInt          max_objects,
                        FT_ULong*        pflags );
 
-  FT_LOCAL FT_Long
+  FT_LOCAL( FT_Long )
   PS_Parser_ToInt( PS_Parser  parser );
 
 
-  FT_LOCAL FT_Fixed
+  FT_LOCAL( FT_Fixed )
   PS_Parser_ToFixed( PS_Parser  parser,
               FT_Int      power_ten );
 
 
-  FT_LOCAL FT_Int
+  FT_LOCAL( FT_Int )
   PS_Parser_ToCoordArray( PS_Parser  parser,
                    FT_Int      max_coords,
                    FT_Short*   coords );
 
-  FT_LOCAL FT_Int
+  FT_LOCAL( FT_Int )
   PS_Parser_ToFixedArray( PS_Parser  parser,
                    FT_Int      max_values,
                    FT_Fixed*   values,
                    FT_Int      power_ten );
 
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   PS_Parser_Init( PS_Parser  parser,
                   FT_Byte*    base,
                   FT_Byte*    limit,
                   FT_Memory   memory );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   PS_Parser_Done( PS_Parser  parser );
 
 
@@ -143,42 +143,42 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   T1_Builder_Init( T1_Builder*   builder,
                    FT_Face       face,
                    FT_Size       size,
                    FT_GlyphSlot  glyph,
                    FT_Bool       hinting );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   T1_Builder_Done( T1_Builder*  builder );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   T1_Builder_Check_Points( T1_Builder*  builder,
                            FT_Int       count );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   T1_Builder_Add_Point( T1_Builder*  builder,
                         FT_Pos       x,
                         FT_Pos       y,
                         FT_Byte      flag );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   T1_Builder_Add_Point1( T1_Builder*  builder,
                          FT_Pos       x,
                          FT_Pos       y );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   T1_Builder_Add_Contour( T1_Builder*  builder );
 
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   T1_Builder_Start_Point( T1_Builder*  builder,
                           FT_Pos       x,
                           FT_Pos       y );
 
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   T1_Builder_Close_Contour( T1_Builder*  builder );
 
 
@@ -190,7 +190,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   T1_Decrypt( FT_Byte*   buffer,
               FT_Offset  length,
               FT_UShort  seed );

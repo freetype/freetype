@@ -218,15 +218,21 @@ FT_BEGIN_HEADER
 
 #define MEM_Free( _pointer_ )                                               \
           FT_Free_Debug( memory, (void**)&(_pointer_), __FILE__, __LINE__ )
-  
+
 #else  /* !FT_DEBUG_MEMORY */
 
 #define MEM_Alloc( _pointer_, _size_ )                     \
           FT_Alloc( memory, _size_, (void**)&(_pointer_) )
 
+#define MEM_New( _pointer_ )   MEM_Alloc( _pointer_, sizeof(*(_pointer_)) )
+
+
 #define MEM_Alloc_Array( _pointer_, _count_, _type_ )    \
           FT_Alloc( memory, (_count_)*sizeof ( _type_ ), \
                     (void**)&(_pointer_) )
+
+#define MEM_New_Array( _pointer_, _count_ )     \
+          MEM_Alloc_Array( _pointer_, _count_, sizeof(*(_pointer_)) )
 
 #define MEM_Realloc( _pointer_, _current_, _size_ )                     \
           FT_Realloc( memory, _current_, _size_, (void**)&(_pointer_) )
@@ -234,6 +240,9 @@ FT_BEGIN_HEADER
 #define MEM_Realloc_Array( _pointer_, _current_, _new_, _type_ )        \
           FT_Realloc( memory, (_current_)*sizeof ( _type_ ),            \
                       (_new_)*sizeof ( _type_ ), (void**)&(_pointer_) )
+
+#define MEM_Renew_Array( _pointer_, _current_, _new_ )  \
+          MEM_Realloc_Array( _pointer_, _current_, _new_, *(_pointer_) )
 
 #define MEM_Free( _pointer_ )                     \
           FT_Free( memory, (void**)&(_pointer_) )
@@ -244,6 +253,9 @@ FT_BEGIN_HEADER
 #define ALLOC( _pointer_, _size_ )                       \
           FT_SET_ERROR( MEM_Alloc( _pointer_, _size_ ) )
 
+#define NEW( _pointer_ )  \
+          FT_SET_ERROR( MEM_New( _pointer_ ) )
+
 #define REALLOC( _pointer_, _current_, _size_ )                       \
           FT_SET_ERROR( MEM_Realloc( _pointer_, _current_, _size_ ) )
 
@@ -251,10 +263,16 @@ FT_BEGIN_HEADER
           FT_SET_ERROR( MEM_Alloc( _pointer_,                      \
                                    (_count_)*sizeof ( _type_ ) ) )
 
+#define NEW_ARRAY( _pointer_, _count_ )  \
+          FT_SET_ERROR( MEM_New_Array( _pointer_, _count_ ) )
+
 #define REALLOC_ARRAY( _pointer_, _current_, _count_, _type_ )       \
           FT_SET_ERROR( MEM_Realloc( _pointer_,                      \
                                      (_current_)*sizeof ( _type_ ),  \
                                      (_count_)*sizeof ( _type_ ) ) )
+
+#define RENEW_ARRAY( _pointer_, _current_, _new_ )   \
+          FT_SET_ERROR( MEM_Renew_Array( _pointer_, _current_, _new_ ) )
 
 #define FREE( _pointer_ )       \
           MEM_Free( _pointer_ )

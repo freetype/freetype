@@ -65,7 +65,7 @@
   /* <Input>                                                               */
   /*    zone :: A pointer to the target glyph zone.                        */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   TT_Done_GlyphZone( TT_GlyphZone*  zone )
   {
     FT_Memory  memory = zone->memory;
@@ -102,7 +102,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   TT_New_GlyphZone( FT_Memory      memory,
                     FT_UShort      maxPoints,
                     FT_Short       maxContours,
@@ -153,7 +153,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   TT_Init_Face( FT_Stream      stream,
                 TT_Face        face,
                 FT_Int         face_index,
@@ -224,7 +224,7 @@
   /* <Input>                                                               */
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   TT_Done_Face( TT_Face  face )
   {
     FT_Memory  memory = face->root.memory;
@@ -277,7 +277,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   TT_Init_Size( TT_Size  size )
   {
     FT_Error  error = TT_Err_Ok;
@@ -464,7 +464,7 @@
   /* <Input>                                                               */
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   TT_Done_Size( TT_Size  size )
   {
 
@@ -756,7 +756,7 @@
   /* <Input>                                                               */
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   TT_Reset_Size( TT_Size  size )
   {
     FT_Face   face;
@@ -808,7 +808,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   TT_Init_Driver( TT_Driver  driver )
   {
     FT_Error  error;
@@ -839,7 +839,7 @@
   /* <Input>                                                               */
   /*    driver :: A handle to the target TrueType driver.                  */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   TT_Done_Driver( TT_Driver  driver )
   {
     /* destroy extensions registry if needed */

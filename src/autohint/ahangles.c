@@ -64,7 +64,7 @@
   };
 
 
-  FT_LOCAL_DEF AH_Angle
+  FT_LOCAL_DEF( AH_Angle )
   ah_angle( FT_Vector*  v )
   {
     FT_Pos    dx, dy;

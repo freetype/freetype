@@ -102,7 +102,7 @@ FT_BEGIN_HEADER
   *  FT_VALIDATE_TIGHT ::
   *    a table that passes this validation level can be used reliably and
   *    doesn't contain invalid data. For example, a charmap table that
-  *    returns invalid glyph indices will not pass, even though it can 
+  *    returns invalid glyph indices will not pass, even though it can
   *    be used with FreeType in default mode (the library will simply
   *    return an error later when trying to load the glyph)
   *
@@ -120,7 +120,7 @@ FT_BEGIN_HEADER
     FT_VALIDATE_DEFAULT = 0,
     FT_VALIDATE_TIGHT,
     FT_VALIDATE_PARANOID
-  
+
   } FT_ValidationLevel;
 
 
@@ -131,9 +131,9 @@ FT_BEGIN_HEADER
     FT_Byte*            limit;  /* 'base' + sizeof(table) in memory     */
     FT_ValidationLevel  level;  /* validation level                     */
     FT_Error            error;  /* error returned. 0 means success      */
-    
+
     jmp_buf             jump_buffer;  /* used for exception handling */
-    
+
   } FT_ValidatorRec;
 
 
@@ -183,7 +183,7 @@ FT_BEGIN_HEADER
 
  /* handle to internal charmap object */
   typedef struct FT_CMapRec_*              FT_CMap;
-  
+
  /* handle to charmap class structure */
   typedef const struct FT_CMap_ClassRec_*   FT_CMap_Class;
 
@@ -192,8 +192,7 @@ FT_BEGIN_HEADER
   {
     FT_CharMapRec  charmap;
     FT_CMap_Class  clazz;
-    FT_Pointer     data;
-    
+
   } FT_CMapRec;
 
  /* typecase any pointer to a charmap handle */
@@ -208,15 +207,16 @@ FT_BEGIN_HEADER
 
  /* class method definitions */
   typedef FT_Error  (*FT_CMap_InitFunc)( FT_CMap     cmap,
-                                         FT_Pointer  data );
+                                         FT_Pointer  init_data );
 
   typedef void      (*FT_CMap_DoneFunc)( FT_CMap     cmap );
 
-  typedef FT_UInt   (*FT_CMap_CharIndexFunc)( FT_Pointer   cmap_data,
-                                              FT_ULong     char_code );
+  typedef FT_UInt   (*FT_CMap_CharIndexFunc)( FT_CMap      cmap,
+                                              FT_UInt32    char_code );
 
-  typedef FT_UInt   (*FT_CMap_CharNextFunc)( FT_Pointer  cmap_data,
-                                             FT_ULong   *achar_code );
+  typedef FT_UInt32 (*FT_CMap_CharNextFunc)( FT_CMap     cmap,
+                                             FT_UInt32   char_code,
+                                             FT_UInt    *agindex );
 
   typedef struct FT_CMap_ClassRec_
   {
@@ -225,14 +225,14 @@ FT_BEGIN_HEADER
     FT_CMap_DoneFunc       done;
     FT_CMap_CharIndexFunc  char_index;
     FT_CMap_CharNextFunc   char_next;
-  
+
   } FT_CMap_ClassRec;
 
 
  /* create a new charmap and add it to charmap->face */
   FT_BASE( FT_Error )
   FT_CMap_New( FT_CMap_Class  clazz,
-               FT_Pointer     data,
+               FT_Pointer     init_data,
                FT_CharMap     charmap,
                FT_CMap       *acmap );
 

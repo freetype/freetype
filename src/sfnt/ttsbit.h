@@ -27,21 +27,21 @@
 FT_BEGIN_HEADER
 
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Load_SBit_Strikes( TT_Face    face,
                         FT_Stream  stream );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   TT_Free_SBit_Strikes( TT_Face  face );
 
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Set_SBit_Strike( TT_Face    face,
                       FT_Int     x_ppem,
                       FT_Int     y_ppem,
                       FT_ULong  *astrike_index );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Load_SBit_Image( TT_Face           face,
                       FT_ULong          strike_index,
                       FT_UInt           glyph_index,

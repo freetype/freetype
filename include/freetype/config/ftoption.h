@@ -76,6 +76,15 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
+#undef  FT_CONFIG_OPTION_USE_CMAPS
+#define TT_CONFIG_CMAP_FORMAT_0
+#define TT_CONFIG_CMAP_FORMAT_2
+#define TT_CONFIG_CMAP_FORMAT_4
+#define TT_CONFIG_CMAP_FORMAT_6
+#define TT_CONFIG_CMAP_FORMAT_8
+#define TT_CONFIG_CMAP_FORMAT_10
+#define TT_CONFIG_CMAP_FORMAT_12
+
   /*************************************************************************/
   /*                                                                       */
   /* Convenience functions support                                         */

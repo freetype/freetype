@@ -29,12 +29,12 @@
 FT_BEGIN_HEADER
 
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   TT_Get_PS_Name( TT_Face      face,
                   FT_UInt      index,
                   FT_String**  PSname );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   TT_Free_Post_Names( TT_Face  face );
 
 
