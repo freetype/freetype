@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    OpenType layout support, common tables (specification).              */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2002, 2004 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -34,17 +34,17 @@ OTL_BEGIN_HEADER
 
   /* validate coverage table */
   OTL_LOCAL( void )
-  otl_coverage_validate( OTL_Bytes      base,
+  otl_coverage_validate( OTL_Bytes      table,
                          OTL_Validator  valid );
 
   /* return number of covered glyphs */
   OTL_LOCAL( OTL_UInt )
-  otl_coverage_get_count( OTL_Bytes  base );
+  otl_coverage_get_count( OTL_Bytes  table );
 
   /* Return the coverage index corresponding to a glyph glyph index. */
   /* Return -1 if the glyph isn't covered.                           */
   OTL_LOCAL( OTL_Long )
-  otl_coverage_get_index( OTL_Bytes  base,
+  otl_coverage_get_index( OTL_Bytes  table,
                           OTL_UInt   glyph_index );
 
 
@@ -138,7 +138,7 @@ OTL_BEGIN_HEADER
 
   /* validate lookup list */
   OTL_LOCAL( void )
-  otl_lookup_list_validate( OTL_Bytes          list,
+  otl_lookup_list_validate( OTL_Bytes          table,
                             OTL_UInt           type_count,
                             OTL_ValidateFunc*  type_funcs,
                             OTL_Validator      valid );
@@ -287,10 +287,21 @@ OTL_BEGIN_HEADER
   /* validate a script list             */
   /* features must already be validated */
   OTL_LOCAL( void )
-  otl_script_list_validate( OTL_Bytes          list,
-                            OTL_Bytes          features,
-                            OTL_Validator      valid );
+  otl_script_list_validate( OTL_Bytes      table,
+                            OTL_Bytes      features,
+                            OTL_Validator  valid );
 
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                      UTILITY FUNCTIONS                        *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  OTL_LOCAL( OTL_UInt )
+  otl_gsubgpos_get_lookup_count( OTL_Bytes  table );
 
  /* */
 

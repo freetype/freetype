@@ -1,5 +1,47 @@
 2004-08-13  Werner Lemberg  <wl@gnu.org>
 
+	* src/otlayout/otlcommn.c (otl_gsubgpos_get_lookup_count): New
+	function.
+	* src/otlayout/otlcommn.h: Updated.
+
+	* src/otlayout/otlbase.c: Rename counting variables to be more
+	meaningful.
+	Add copyright message.
+	* src/otlayout/otlbase.h: Add copyright message.
+
+	* src/otlayout/otlgdef.c: Rename counting variables to be more
+	meaningful.
+	Add copyright message.
+	Use OTL_CHECK everywhere.
+	(otl_caret_value_validate): Remove unused variable.
+	(otl_gdef_validate): All tables are optional.
+	* src/otlayout/otlgdef.h: Add copyright message.
+
+	* src/otlayout/otljstf.c: Rename counting variables to be more
+	meaningful.
+	Add copyright message.
+	(otl_jstf_gsub_mods_validate, otl_jstf_gpos_mods_validate): Add
+	parameter to pass lookup count.
+	Update all callers.
+	Check lookup array.
+	(otl_jstf_max_validate):
+	s/otl_gpos_subtable_check/otl_gpos_subtable_validate/.
+	(otl_jstf_priority_validate, otl_jstf_lang_validate,
+	otl_jstf_script_validate): Add two parameters to pass lookup counts.
+	Update all callers.
+	(otl_jstf_validate): Add two parameters to pass GPOS and GSUB
+	table offsets; use otl_gsubgpos_get_lookup_count to convert extract
+	lookup counts.
+	Fix typo.
+	* src/otlayout/otljstf.h: Updated.
+	Add copyright message.
+
+	* src/otlayout/otlgpos.c (otl_gpos_subtable_validate): New function.
+	(otl_gpos_validate): Use it.
+	* src/otlayout/otlgpos.h: Updated.
+
+2004-08-13  Werner Lemberg  <wl@gnu.org>
+
 	* src/otlayout/otcommn.c: Use OTL_CHECK everywhere.
 	(otl_coverage_validate): Initialize `p',
 	s/count/num_glyphs/.
