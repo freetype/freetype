@@ -265,8 +265,8 @@
   Exit:
     if ( error && manager )
     {
-      FT_Lru_Done( manager->sizes_lru );
       FT_Lru_Done( manager->faces_lru );
+      FT_Lru_Done( manager->sizes_lru );
       FREE( manager );
     }
 
@@ -304,7 +304,7 @@
     manager->faces_lru = 0;
     
     FT_Lru_Done( manager->sizes_lru );
-    manager->sizes_lru;
+    manager->sizes_lru = 0;
 
     FREE( manager );
   }

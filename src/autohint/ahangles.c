@@ -19,16 +19,8 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#ifdef FT_FLAT_COMPILE
-
-#include "ahangles.h"
-
-#else
-
-#include <autohint/ahangles.h>
-
-#endif
+#include  <ft2build.h>
+#include  FT_SOURCE_FILE(autohint,ahangles.h)
 
 
   /* the following table has been automatically generated with */
