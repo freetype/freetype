@@ -683,7 +683,7 @@
   EXPORT_FUNC
   FT_DriverInterface*  getDriverInterface( void )
   {
-    return &truetype_driver_interface;
+    return &tt_driver_interface;
   }
 
 #endif /* CONFIG_OPTION_DYNAMIC_DRIVERS */

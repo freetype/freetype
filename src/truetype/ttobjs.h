@@ -330,6 +330,7 @@
 
     TT_Size_Metrics    ttmetrics;
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     TT_UInt            num_function_defs; /* number of function definitions */
     TT_UInt            max_function_defs;
     TT_DefArray        function_defs;     /* table of function definitions  */
@@ -361,6 +362,8 @@
 
     TT_Bool            debug;
     TT_ExecContext     context;
+
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
   } TT_SizeRec;
 

@@ -44,7 +44,9 @@
 #include <ttdriver.c>    /* driver interface     */
 #include <ttpload.c>     /* tables loader        */
 #include <ttgload.c>     /* glyph loader         */
-#include <ttinterp.c>    /* bytecode interpreter */
 #include <ttobjs.c>      /* object manager       */
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#include <ttinterp.c>    /* bytecode interpreter */
+#endif
 /* END */

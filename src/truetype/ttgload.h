@@ -21,9 +21,46 @@
 
 #include <ttobjs.h>
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#include <ttinterp.h>
+#endif
+
 #ifdef __cplusplus
   extern "C" {
 #endif
+
+  typedef struct TT_Loader_
+  {
+    TT_Face         face;
+    TT_Size         size;
+    TT_GlyphSlot    glyph;
+
+    TT_ULong        load_flags;
+
+    FT_Stream       stream;
+    TT_Int          byte_len;
+    TT_Int          left_points;
+    TT_Int          left_contours;
+
+    TT_BBox         bbox;
+    TT_Int          left_bearing;
+    TT_Int          advance;
+    TT_Bool         preserve_pps;
+    TT_Vector       pp1;
+    TT_Vector       pp2;
+        
+    TT_ULong        glyf_offset;
+        
+    /* the zone where we load our glyphs */
+    TT_GlyphZone    base;
+    TT_GlyphZone    zone;
+    
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+    TT_ExecContext  exec;
+    TT_Byte*        instructions;
+#endif
+
+  } TT_Loader;
 
 
   /*************************************************************************/
@@ -53,7 +90,7 @@
   /*                                                                       */
   LOCAL_DEF
   void  TT_Get_Metrics( TT_HoriHeader*  header,
-                        TT_UShort       index,
+                        TT_UInt         index,
                         TT_Short*       bearing,
                         TT_UShort*      advance );
 

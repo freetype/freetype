@@ -30,6 +30,17 @@
 
   /*************************************************************************/
   /*                                                                       */
+  /* Define TT_CONFIG_OPTION_BYTECODE_INTERPRETER if you want to compile   */
+  /* a bytecode interpreter in the TrueType driver. Note that there are    */
+  /* important patent issues related to the use of the interpreter.        */
+  /*                                                                       */
+  /* By undefining this, you'll only compile the code necessary to load    */
+  /* TrueType glyphs without hinting..                                     */
+  /*                                                                       */
+#undef  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
+  /*************************************************************************/
+  /*                                                                       */
   /* Define TT_CONFIG_OPTION_INTERPRETER_SWITCH to compile the TrueType    */
   /* bytecode interpreter with a huge switch statement, rather than a      */
   /* call table.  This results in smaller and faster code for a number of  */
@@ -46,7 +57,7 @@
   /* Define TT_CONFIG_OPTION_EMBEDDED_BITMAPS if you want to support       */
   /* embedded bitmaps in the TrueType/OpenType driver.                     */
   /*                                                                       */
-#define TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+#undef  TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
 
   /*************************************************************************/
@@ -55,8 +66,10 @@
   /* load and enumerate the glyph Postscript names in a TrueType or        */
   /* OpenType file.                                                        */
   /*                                                                       */
-#define TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+#undef  TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
+  /* The maximum number of sub-glyphs in a TrueType composite glyph */
+#define TT_MAX_SUBGLYPHS  32
 
 #define  TT_USE_FIXED
 

@@ -21,12 +21,17 @@
 #include <ftcalc.h>
 #include <ftstream.h>
 #include <ttnameid.h>
+#include <tttags.h>
 
 #include <sfnt.h>
+#include <ttobjs.h>
 
 #include <ttpload.h>
-#include <ttinterp.h>
 #include <tterrors.h>
+
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#include <ttinterp.h>
+#endif
 
 /* required by tracing mode */
 #undef   FT_COMPONENT
@@ -442,14 +447,16 @@
   LOCAL_DEF
   TT_Error  TT_Init_Size( TT_Size  size )
   {
+    TT_Error   error = 0;
+    
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     TT_Face    face   = (TT_Face)size->root.face;
     FT_Memory  memory = face->root.memory;
-    TT_Error   error;
     TT_Int     i;
-    TT_UShort  n_twilight;
 
-    TT_MaxProfile*  maxp = &face->max_profile;
     TT_ExecContext  exec;
+    TT_UShort       n_twilight;
+    TT_MaxProfile*  maxp = &face->max_profile;
 
     size->ttmetrics.valid = FALSE;
 
@@ -587,14 +594,19 @@
     if ( !size->debug )
       TT_Done_Context( exec );
 
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+
     size->ttmetrics.valid = FALSE;
     return error;
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
   Fail_Exec:
     if ( !size->debug )
       TT_Done_Context( exec );
 
   Fail_Memory:
+#endif
+
     TT_Done_Size( size );
     return error;
   }
@@ -614,8 +626,8 @@
   LOCAL_FUNC
   void  TT_Done_Size( TT_Size  size )
   {
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     FT_Memory  memory = size->root.face->memory;
-
 
     if ( size->debug )
     {
@@ -643,6 +655,7 @@
 
     size->max_func = 0;
     size->max_ins  = 0;
+#endif
 
     size->ttmetrics.valid = FALSE;
   }
@@ -663,10 +676,8 @@
   LOCAL_DEF
   TT_Error  TT_Reset_Size( TT_Size  size )
   {
-    TT_ExecContext    exec;
-    TT_Error          error;
-    TT_UShort         i, j;
-    TT_Face           face;
+    TT_Face   face;
+    TT_Error  error = TT_Err_Ok;
 
     FT_Size_Metrics*  metrics;
 
@@ -713,72 +724,79 @@
     metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
                                         metrics->x_scale ) + 32 ) & -64;
 
-    /* Scale the cvt values to the new ppem.          */
-    /* We use by default the y ppem to scale the CVT. */
-
-    for ( i = 0; i < size->cvt_size; i++ )
-      size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
-
-    /* All twilight points are originally zero */
-    for ( j = 0; j < size->twilight.n_points; j++ )
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     {
-      size->twilight.org[j].x = 0;
-      size->twilight.org[j].y = 0;
-      size->twilight.cur[j].x = 0;
-      size->twilight.cur[j].y = 0;
-    }
-
-    /* clear storage area */
-    for ( i = 0; i < size->storage_size; i++ )
-      size->storage[i] = 0;
-
-    size->GS = tt_default_graphics_state;
-
-    /* get execution context and run prep program */
-    if ( size->debug )
-      exec = size->context;
-    else
-      exec = TT_New_Context( face );
-    /* debugging instances have their own context */
-
-    if ( !exec )
-      return TT_Err_Could_Not_Find_Context;
-
-    TT_Load_Context( exec, face, size );
-
-    TT_Set_CodeRange( exec,
-                      tt_coderange_cvt,
-                      face->cvt_program,
-                      face->cvt_program_size );
-
-    TT_Clear_CodeRange( exec, tt_coderange_glyph );
-
-    exec->instruction_trap = FALSE;
-
-    exec->top     = 0;
-    exec->callTop = 0;
-
-    if ( face->cvt_program_size > 0 )
-    {
-      error = TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
-      if ( error )
-        goto Fin;
-
+      TT_ExecContext    exec;
+      TT_UInt  i, j;
+      
+      /* Scale the cvt values to the new ppem.          */
+      /* We use by default the y ppem to scale the CVT. */
+  
+      for ( i = 0; i < size->cvt_size; i++ )
+        size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
+  
+      /* All twilight points are originally zero */
+      for ( j = 0; j < size->twilight.n_points; j++ )
+      {
+        size->twilight.org[j].x = 0;
+        size->twilight.org[j].y = 0;
+        size->twilight.cur[j].x = 0;
+        size->twilight.cur[j].y = 0;
+      }
+  
+      /* clear storage area */
+      for ( i = 0; i < size->storage_size; i++ )
+        size->storage[i] = 0;
+  
+      size->GS = tt_default_graphics_state;
+  
+      /* get execution context and run prep program */
+      if ( size->debug )
+        exec = size->context;
+      else
+        exec = TT_New_Context( face );
+      /* debugging instances have their own context */
+  
+      if ( !exec )
+        return TT_Err_Could_Not_Find_Context;
+  
+      TT_Load_Context( exec, face, size );
+  
+      TT_Set_CodeRange( exec,
+                        tt_coderange_cvt,
+                        face->cvt_program,
+                        face->cvt_program_size );
+  
+      TT_Clear_CodeRange( exec, tt_coderange_glyph );
+  
+      exec->instruction_trap = FALSE;
+  
+      exec->top     = 0;
+      exec->callTop = 0;
+  
+      if ( face->cvt_program_size > 0 )
+      {
+        error = TT_Goto_CodeRange( exec, tt_coderange_cvt, 0 );
+        if ( error )
+          goto Fin;
+  
+        if ( !size->debug )
+          error = face->interpreter( exec );
+      }
+      else
+        error = TT_Err_Ok;
+  
+      size->GS = exec->GS;
+      /* save default graphics state */
+  
+    Fin:
+      TT_Save_Context( exec, size );
+  
       if ( !size->debug )
-        error = face->interpreter( exec );
+        TT_Done_Context( exec );
+      /* debugging instances keep their context */
     }
-    else
-      error = TT_Err_Ok;
-
-    size->GS = exec->GS;
-    /* save default graphics state */
-
-  Fin:
-    TT_Save_Context( exec, size );
-
-    if ( !size->debug )
-      TT_Done_Context( exec );
-    /* debugging instances keep their context */
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
     if ( !error )
       size->ttmetrics.valid = TRUE;
@@ -888,12 +906,14 @@
     TT_Done_Extensions( driver );
 #endif
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     /* destroy the execution context */
     if ( driver->context )
     {
       TT_Destroy_Context( driver->context, driver->root.memory );
       driver->context = NULL;
     }
+#endif
   }
 
 
