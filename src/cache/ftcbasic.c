@@ -248,11 +248,21 @@
     query.attrs.load_flags     = type->flags;
 
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) + gindex;
-
+    
+#if 1  /* inlining is about 50% faster !! */ 
+    FTC_GCACHE_LOOKUP_CMP( cache,
+                           ftc_basic_family_compare,
+                           FTC_GNode_Compare,
+                           hash, gindex,
+                           &query,
+                           node,
+                           error );
+#else
     error = FTC_GCache_Lookup( FTC_GCACHE( cache ),
                                hash, gindex,
                                FTC_GQUERY( &query ),
                                (FTC_Node*) &node );
+#endif
     if ( !error )
     {
       *aglyph = FTC_INODE(node)->glyph;
@@ -351,11 +361,21 @@
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) +
            (gindex/FTC_SBIT_ITEMS_PER_NODE);
 
+#if 1  /* inlining is about 50% faster !! */ 
+    FTC_GCACHE_LOOKUP_CMP( cache,
+                           ftc_basic_family_compare,
+                           FTC_SNode_Compare,
+                           hash, gindex,
+                           &query,
+                           node,
+                           error );
+#else
     error = FTC_GCache_Lookup( FTC_GCACHE( cache ),
                                hash,
                                gindex,
                                FTC_GQUERY( &query ),
                                (FTC_Node*) &node );
+#endif                               
     if ( error )
       goto Exit;
 

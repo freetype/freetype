@@ -255,6 +255,35 @@ FT_BEGIN_HEADER
                      FTC_GQuery   query,
                      FTC_Node    *anode );
 
+
+#define  FTC_GCACHE_LOOKUP_CMP( cache, famcmp, nodecmp, hash, gindex, query, node, error )  \
+  FT_BEGIN_STMNT                                                                   \
+    FTC_GCache               _gcache   = FTC_GCACHE( cache );                      \
+    FTC_Family               _family;                                              \
+    FTC_GQuery               _gquery   = (FTC_GQuery)( query );                    \
+    FTC_MruNode_CompareFunc  _fcompare = (FTC_MruNode_CompareFunc)(famcmp);        \
+                                                                                   \
+    _gquery->gindex = (gindex);                                                    \
+                                                                                   \
+    FTC_MRULIST_LOOP( &_gcache->families, _family )                                \
+    {                                                                      \
+      if ( _fcompare( (FTC_MruNode)_family, _gquery ) )                    \
+      {                                                                    \
+        _gquery->family = _family;                                         \
+        goto _FamilyFound;                                                 \
+      }                                                                    \
+    }                                                                      \
+    FTC_MRULIST_LOOP_END();                                                \
+                                                                           \
+    error = FTC_MruList_New( &_gcache->families,                           \
+                             _gquery,                                      \
+                             (FTC_MruNode*)&_gquery->family );             \
+    if ( !error )                                                          \
+    {                                                                      \
+    _FamilyFound:                                                          \
+      FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error );    \
+    }                                                                      \
+  FT_END_STMNT
   /* */
 
 FT_END_HEADER

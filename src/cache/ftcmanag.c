@@ -156,9 +156,21 @@
     if ( !manager )
       return FTC_Err_Invalid_Cache_Handle;
 
-    error = FTC_MruList_Lookup( &manager->sizes,
-                                scaler,
-                                (FTC_MruNode*) &node );
+    /* we break encapsulation for the sake of speed */
+    
+    error = 0;
+    FTC_MRULIST_LOOP( &manager->sizes, node )
+    {
+      FTC_Scaler  scaler0 = &node->scaler;
+      
+      if ( FTC_SCALER_COMPARE( scaler0, scaler ) )
+        goto Found;
+    }
+    FTC_MRULIST_LOOP_END();
+    
+    error = FTC_MruList_New( &manager->sizes, scaler, (FTC_MruNode*)&node );
+    
+  Found:
     if ( !error )
       *asize = node->size;
 
@@ -264,11 +276,21 @@
     if ( !manager )
       return FTC_Err_Invalid_Cache_Handle;
 
-    error = FTC_MruList_Lookup( &manager->faces,
-                                face_id,
-                                (FTC_MruNode*) &node );
+    /* we break encapsulation for the sake of speed */
+
+    error = 0;
+    FTC_MRULIST_LOOP( &manager->faces, node )
+    {
+      if ( node->face_id == face_id )
+        goto Found;
+    }
+    FTC_MRULIST_LOOP_END();
+    
+    error = FTC_MruList_New( &manager->faces, face_id, (FTC_MruNode*)&node );
+    
+  Found:
     if ( !error )
-    *aface = node->face;
+      *aface = node->face;
 
     return error;
   }

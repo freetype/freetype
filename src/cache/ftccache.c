@@ -295,7 +295,7 @@
   /*************************************************************************/
 
 
-  FT_EXPORT( FT_Error )
+  FT_EXPORT_DEF( FT_Error )
   FTC_Cache_Init( FTC_Cache       cache )
   {
     FT_Memory  memory = cache->memory;
@@ -346,7 +346,7 @@
   }
 
 
-  FT_EXPORT( void )
+  FT_EXPORT_DEF( void )
   FTC_Cache_Done( FTC_Cache  cache )
   {
     if ( cache->memory )
@@ -393,59 +393,14 @@
   }
 
 
-  FT_EXPORT( FT_Error )
-  FTC_Cache_Lookup( FTC_Cache   cache,
-                    FT_UInt32   hash,
-                    FT_Pointer  query,
-                    FTC_Node   *anode )
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Cache_NewNode( FTC_Cache   cache,
+                     FT_UInt32   hash,
+                     FT_Pointer  query,
+                     FTC_Node   *anode )
   {
-    FT_UFast   idx;
-    FTC_Node*  bucket;
-    FTC_Node*  pnode;
-    FTC_Node   node;
-    FT_Error   error = 0;
-
-    FTC_Node_CompareFunc  compare = cache->clazz.node_compare;
-
-
-    if ( cache == NULL || anode == NULL )
-      return FT_Err_Invalid_Argument;
-
-    idx = hash & cache->mask;
-    if ( idx < cache->p )
-      idx = hash & ( cache->mask * 2 + 1 );
-
-    bucket = cache->buckets + idx;
-    pnode  = bucket;
-    for (;;)
-    {
-      node = *pnode;
-      if ( node == NULL )
-        goto NewNode;
-
-      if ( node->hash == hash && compare( node, query, cache ) )
-        break;
-
-      pnode = &node->link;
-    }
-
-    if ( node != *bucket )
-    {
-      *pnode     = node->link;
-      node->link = *bucket;
-      *bucket    = node;
-    }
-
-    /* move to head of MRU list */
-    {
-      FTC_Manager  manager = cache->manager;
-
-      if ( node != manager->nodes_list )
-        ftc_node_mru_up( node, manager );
-    }
-    goto Exit;
-
-  NewNode:
+    FT_Error  error;
+    FTC_Node  node;
 
    /*
     *  try to allocate a new cache node. Note that in case of
@@ -505,12 +460,70 @@
       }
     }
     goto AddNode;
+  }                     
+
+
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Cache_Lookup( FTC_Cache   cache,
+                    FT_UInt32   hash,
+                    FT_Pointer  query,
+                    FTC_Node   *anode )
+  {
+    FT_UFast   idx;
+    FTC_Node*  bucket;
+    FTC_Node*  pnode;
+    FTC_Node   node;
+    FT_Error   error = 0;
+
+    FTC_Node_CompareFunc  compare = cache->clazz.node_compare;
+
+
+    if ( cache == NULL || anode == NULL )
+      return FT_Err_Invalid_Argument;
+
+    idx = hash & cache->mask;
+    if ( idx < cache->p )
+      idx = hash & ( cache->mask * 2 + 1 );
+
+    bucket = cache->buckets + idx;
+    pnode  = bucket;
+    for (;;)
+    {
+      node = *pnode;
+      if ( node == NULL )
+        goto NewNode;
+
+      if ( node->hash == hash && compare( node, query, cache ) )
+        break;
+
+      pnode = &node->link;
+    }
+
+    if ( node != *bucket )
+    {
+      *pnode     = node->link;
+      node->link = *bucket;
+      *bucket    = node;
+    }
+
+    /* move to head of MRU list */
+    {
+      FTC_Manager  manager = cache->manager;
+
+      if ( node != manager->nodes_list )
+        ftc_node_mru_up( node, manager );
+    }
+    *anode = node;
+    return error;
+
+  NewNode:
+    return FTC_Cache_NewNode( cache, hash, query, anode );
   }
 
 
 
 
-  FT_EXPORT( void )
+  FT_EXPORT_DEF( void )
   FTC_Cache_RemoveFaceID( FTC_Cache    cache,
                            FTC_FaceID   face_id )
   {
