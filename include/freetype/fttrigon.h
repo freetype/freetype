@@ -176,6 +176,27 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* @function:                                                            */
+  /*    FT_Angle_Diff                                                      */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    Returns the difference between two angles. The result is always    */
+  /*    constrained to the ]-PI..PI] interval                              */
+  /*                                                                       */
+  /* @input:                                                               */
+  /*    angle1 :: first angle                                              */
+  /*    angle2 :: second angle                                             */
+  /*                                                                       */
+  /* @return:                                                              */
+  /*    contrainted value of 'value2-value1'                               */
+  /*                                                                       */
+  FT_EXPORT_DEF( FT_Angle )
+  FT_Angle_Dif( FT_Angle  angle1,
+                FT_Angle  angle2 );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @function:                                                            */
   /*    FT_Vector_Unit                                                     */
   /*                                                                       */
   /* @description:                                                         */
