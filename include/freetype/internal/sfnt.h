@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level `sfnt' driver interface (specification).                  */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -243,6 +243,76 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
+  /*    TT_Find_SBit_Image_Func                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Checks whether an embedded bitmap (an `sbit') exists for a given   */
+  /*    glyph, at a given strike.                                          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face          :: The target face object.                           */
+  /*                                                                       */
+  /*    glyph_index   :: The glyph index.                                  */
+  /*                                                                       */
+  /*    strike_index  :: The current strike index.                         */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    arange        :: The SBit range containing the glyph index.        */
+  /*                                                                       */
+  /*    astrike       :: The SBit strike containing the glyph index.       */
+  /*                                                                       */
+  /*    aglyph_offset :: The offset of the glyph data in `EBDT' table.     */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.  Returns                    */
+  /*    SFNT_Err_Invalid_Argument if no sbit exists for the requested      */
+  /*    glyph.                                                             */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_Find_SBit_Image_Func)( TT_Face          face,
+                              FT_UInt          glyph_index,
+                              FT_ULong         strike_index,
+                              TT_SBit_Range   *arange,
+                              TT_SBit_Strike  *astrike,
+                              FT_ULong        *aglyph_offset );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    TT_Load_SBit_Metrics_Func                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Gets the big metrics for a given embedded bitmap.                  */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    stream      :: The input stream.                                   */
+  /*                                                                       */
+  /*    range       :: The SBit range containing the glyph.                */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    big_metrics :: A big SBit metrics structure for the glyph.         */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The stream cursor must be positioned at the glyph's offset within  */
+  /*    the `EBDT' table before the call.                                  */
+  /*                                                                       */
+  /*    If the image format uses variable metrics, the stream cursor is    */
+  /*    positioned just after the metrics header in the `EBDT' table on    */
+  /*    function exit.                                                     */
+  /*                                                                       */
+  typedef FT_Error
+  (*TT_Load_SBit_Metrics_Func)( FT_Stream        stream,
+                                TT_SBit_Range    range,
+                                TT_SBit_Metrics  metrics );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
   /*    TT_Load_SBit_Image_Func                                            */
   /*                                                                       */
   /* <Description>                                                         */
@@ -459,6 +529,8 @@ FT_BEGIN_HEADER
     /* see `ttsbit.h' */
     TT_Set_SBit_Strike_Func      set_sbit_strike;
     TT_Load_Table_Func           load_sbits;
+    TT_Find_SBit_Image_Func      find_sbit_image;
+    TT_Load_SBit_Metrics_Func    load_sbit_metrics;
     TT_Load_SBit_Image_Func      load_sbit_image;
     TT_Free_Table_Func           free_sbits;
 

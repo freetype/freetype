@@ -5,7 +5,7 @@
 /*    FreeType glyph image formats and default raster interface            */
 /*    (specification).                                                     */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003 by                                     */
+/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -657,7 +657,7 @@ FT_BEGIN_HEADER
   /*    should redefine this macro in case of problems to something like   */
   /*    this:                                                              */
   /*                                                                       */
-  /*      #define FT_IMAGE_TAG( value, _x1, _x2, _x3, _x4 )  (value)       */
+  /*      #define FT_IMAGE_TAG( value, _x1, _x2, _x3, _x4 )  value         */
   /*                                                                       */
   /*    to get a simple enumeration without assigning special numbers.     */
   /*                                                                       */
