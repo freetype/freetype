@@ -445,8 +445,8 @@
             const char*  gname = face->type1.glyph_names[n];
 
 
-            if ( gname && gname[0] == glyph_name[0] &&
-                 ft_strcmp( gname, glyph_name ) == 0   )
+            if ( gname && gname[0] == glyph_name[0]  &&
+                 ft_strcmp( gname, glyph_name ) == 0 )
               return charcode;
           }
         }

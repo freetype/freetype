@@ -73,7 +73,9 @@
 
     for ( ; entry < limit; entry++ )
     {
-      if ( entry->Tag == tag )
+      /* For compatibility with Windows, we consider 0-length */
+      /* tables the same as missing tables.                   */
+      if ( entry->Tag == tag && entry->Length != 0 )
       {
         FT_TRACE3(( "found table.\n" ));
         return entry;

@@ -1,3 +1,23 @@
+2002-05-12  Owen Taylor  <otaylor@redhat.com>
+
+	* src/sfnt/ttload.c (TT_LookUp_Table): Protect against tables
+	with a zero length value.
+
+2002-05-12  Michael Pfeiffer  <michael.pfeiffer@utanet.at>
+
+	* builds/beos/beos.mk: Include `link-std.mk'.
+
+2002-05-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.h (T1_Loader): Renamed to...
+	(T1_LoaderRec): This.
+	(T1_Loader): Now pointer to T1_LoaderRec.
+	* src/type1/t1load.c: Updated.
+
+	* include/freetype/internal/t1types.h, src/type1/t1load.c,
+	src/type1/t1objs.c:
+	s/T1_ENCODING_TYPE_EXPORT/T1_ENCODING_TYPE_EXPERT/.
+
 2002-05-06  Werner Lemberg  <wl@gnu.org>
 
 	* README: Add a note regarding libttf vs. libfreetype.
