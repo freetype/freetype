@@ -529,7 +529,7 @@ FT_BEGIN_HEADER
     FT_ENC_TAG( FT_ENCODING_ADOBE_CUSTOM,   'A', 'D', 'B', 'C' ),
     FT_ENC_TAG( FT_ENCODING_ADOBE_LATIN_1,  'l', 'a', 't', '1' ),
 
-    FT_ENC_TAG( FT_ENCODING_LATIN_2, 'l', 'a', 't', '2' ),
+    FT_ENC_TAG( FT_ENCODING_OLD_LATIN_2, 'l', 'a', 't', '2' ),
 
     FT_ENC_TAG( FT_ENCODING_APPLE_ROMAN, 'a', 'r', 'm', 'n' )
 
