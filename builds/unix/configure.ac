@@ -70,9 +70,9 @@ dnl checks for library functions
 dnl Here we check whether we can use our mmap file component.
 AC_FUNC_MMAP
 if test "$ac_cv_func_mmap_fixed_mapped" != yes; then
-  FTSYS_SRC='$(BASE_)ftsystem.c'
+  FTSYS_SRC='$(BASE_DIR)/ftsystem.c'
 else
-  FTSYS_SRC='$(BUILD)/ftsystem.c'
+  FTSYS_SRC='$(BUILD_DIR)/ftsystem.c'
 
   FT_MUNMAP_DECL
   FT_MUNMAP_PARAM

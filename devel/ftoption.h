@@ -219,6 +219,19 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* Support for Mac fonts                                                 */
+  /*                                                                       */
+  /*   Define this macro if you want support for outline fonts in Mac      */
+  /*   format (mac dfont, mac resource, macbinary containing a mac         */
+  /*   resource) on non-Mac platforms.                                     */
+  /*                                                                       */
+  /*   Note that the `FOND' resource isn't checked.                        */
+  /*                                                                       */
+#define FT_CONFIG_OPTION_MAC_FONTS
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* Allow the use of FT_Incremental_Interface to load typefaces that      */
   /* contain no glyph data, but supply it via a callback function.         */
   /* This allows FreeType to be used with the PostScript language, using   */
@@ -278,12 +291,12 @@ FT_BEGIN_HEADER
   /*   should define FT_DEBUG_MEMORY here.                                 */
   /*                                                                       */
   /*   Note that the memory debugger is only activated at runtime when     */
-  /*   when the _environment_ variable "FT_DEBUG_MEMORY" is also defined!  */
+  /*   when the _environment_ variable "FT2_DEBUG_MEMORY" is defined also! */
   /*                                                                       */
   /*   Do not #undef this macro here since the build system might define   */
   /*   it for certain configurations only.                                 */
   /*                                                                       */
-#define FT_DEBUG_MEMORY
+/* #define FT_DEBUG_MEMORY */
 
 
   /*************************************************************************/
@@ -386,7 +399,32 @@ FT_BEGIN_HEADER
   /*   Do not #undef this macro here, since the build system might         */
   /*   define it for certain configurations only.                          */
   /*                                                                       */
-#define  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#define TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING (in addition to    */
+  /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER) to compile the unpatented      */
+  /* work-around hinting system.  You must define this if you want either  */
+  /* to force the use of the unpatented hinting system by also defining    */
+  /* TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING, or if you want to select   */
+  /* it at run time using the FT_PARAM_TAG_UNPATENTED_HINTING tag.         */
+  /*                                                                       */
+#define TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING to restrict the      */
+  /* TrueType bytecode interpreter to actions not protected by patents.    */
+  /* This enables some fonts, for example mingliu.ttc from Dynalab, to     */
+  /* work properly.  They use hinting to make large changes to the glyph   */
+  /* shape, without which the glyph is unrecognisable.                     */
+  /* For this to work you must also define                                 */
+  /* TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING.                          */
+  /*                                                                       */
+#undef  TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING
 
 
   /*************************************************************************/

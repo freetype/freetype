@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000 by
+# Copyright 1996-2000, 2003 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -57,7 +57,6 @@ ifeq ($(PLATFORM),dos)
   # Use DJGPP (i.e. gcc) by default.
   #
   CONFIG_FILE := dos-gcc.mk
-  SEP         := /
   ifndef CC
     CC        := gcc
   endif
@@ -66,7 +65,6 @@ ifeq ($(PLATFORM),dos)
   #
   ifneq ($(findstring turboc,$(MAKECMDGOALS)),)     # Turbo C
     CONFIG_FILE := dos-tcc.mk
-    SEP         := $(BACKSLASH)
     CC          := tcc
     turboc: setup
     .PHONY: turboc
@@ -74,7 +72,6 @@ ifeq ($(PLATFORM),dos)
 
   ifneq ($(findstring watcom,$(MAKECMDGOALS)),)     # Watcom C/C++
     CONFIG_FILE := dos-wat.mk
-    SEP         := $(BACKSLASH)
     CC          := wcc386
     watcom: setup
     .PHONY: watcom
@@ -82,7 +79,6 @@ ifeq ($(PLATFORM),dos)
 
   ifneq ($(findstring borlandc,$(MAKECMDGOALS)),)   # Borland C/C++ 32-bit
     CONFIG_FILE := dos-bcc.mk
-    SEP         := $(BACKSLASH)
     CC          := bcc32
     borlandc: setup
     .PHONY: borlandc
@@ -90,22 +86,24 @@ ifeq ($(PLATFORM),dos)
 
   ifneq ($(findstring borlandc16,$(MAKECMDGOALS)),) # Borland C/C++ 16-bit
     CONFIG_FILE := dos-bcc.mk
-    SEP         := $(BACKSLASH)
     CC          := bcc
     borlandc16: setup
     .PHONY: borlandc16
   endif
 
   ifneq ($(findstring bash,$(SHELL)),)              # check for bash
+    SEP    := /
     DELETE := rm
     COPY   := cp
     setup: std_setup
   else
+    SEP    := $(BACKSLASH)
     DELETE := del
     COPY   := copy
     setup: dos_setup
   endif
 
 endif     # test PLATFORM dos
+
 
 # EOF

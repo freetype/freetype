@@ -1,7 +1,43 @@
+2003-06-08  Werner Lemberg  <wl@gnu.org>
+
+	Completely revised FreeType's make management.
+
+	. In all makefiles `/' is used as the path separator.  The
+	  conversion to the real path separators is done as late as
+	  possible using $(subst ...).
+
+	. $(HOSTSEP) no longer exists.  Now, $(SEP) gives the path separator
+	  for the operating system, and the new $(COMPILER_SEP) the path
+	  separator for the compiler tools.
+
+	. $(BUILD) has been renamed to $(BUILD_DIR).  In general, all
+	  directory variables end with `_DIR'.  The variants ending in `_'
+	  (like `BASE_' have been removed).
+
+	The following ChangeLog entries only describe changes which are
+	not related to the redesign.
+
+	* builds/beos/beos-def.mk (BUILD_DIR): Fix typo.
+	* builds/compiler/watcom.mk (LINK_LIBRARY): Fix linker call to avoid
+	overlong arguments as suggested by J. Ali Harlow
+	<ali@avrc.city.ac.uk>.
+	* builds/dos/dos-wat.mk: New file.
+	* builds/freetype.mk (FREETYPE_H): Include header files from the
+	`devel' subdirectory.
+
+	* builds/os2/os2-dev.mk, builds/unix/unixddef.mk,
+	builds/unix/unixddef.mk, builds/win32/w32-bccd.mk,
+	builds/win32/w32-dev.mk (BUILD_DIR): Fix path.
+
+	* builds/unix/configure.ac, builds/unic/configure: Updated.
+	* builds/unix/unix-def.in (DISTCLEAN): Add `freetype2.pc'.
+
 2003-06-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftmac.c (FT_New_Face_From_SFNT): s/rlen/sfnt_size/ to
 	make it compile.
+
+	* devel/ftoption.h: Updated.
 
 2002-06-07  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
