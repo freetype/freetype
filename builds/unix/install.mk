@@ -51,6 +51,7 @@ uninstall:
 	-$(DELETE) $(includedir)/freetype2/freetype/*
 	-$(DELDIR) $(includedir)/freetype2/freetype
 	-$(DELDIR) $(includedir)/freetype2
+	-$(DELETE) $(includedir)/ft2build.h
 	-$(DELETE) $(bindir)/freetype-config
 
 
