@@ -1,3 +1,29 @@
+2000-12-30  Tom Kacvinsky  <tjk@ams.org>
+
+	* include/freetype/internal/t2types.h,
+	include/freetype/internal/cfftypes.h: Changed the structures for
+	CFF_Encoding and CFF_Encoding for the new implementations of the
+	charset and encoding parsers in the CFF driver.
+
+	* src/cff/t2gload.c (t2_lookup_glyph_by_stdcharcode, t2_operator_seac):
+	Added these functions for use in implementing the seac emulation
+	provided by the Type 2 endchar operator.
+	(T2_Parse_CharStrings):  Added seac emulation for the endchar operator.
+
+	* src/cff/cffload.c (CFF_Load_Encoding, CFF_Load_Charset,
+	CFF_Done_Encoding, CFF_Done_Charset):  Extended to load and parse the
+	charset/encoding tables, and free the memory used by them when the CFF
+	driver is finished with them.  Added tables
+	
+	    cff_isoadobe_charset
+	    cff_expert_charset
+	    cff_expertsubset_charset
+	    cff_standard_encoding
+	    cff_expert_encoding
+	
+	so that the encoding/charset parser can handle predefined encodings and
+	charsets.
+
 2000-12-24  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/t2gload.c (T2_Load_Glyph): Added code	so that the font
