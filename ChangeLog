@@ -1,3 +1,10 @@
+2004-02-23  David Turner  <david@freetype.org>
+
+        * src/autofit/afhints.c, src/autofit/afhints.h, src/autofit/aflatin.c,
+        src/autofit/afloader.c, src/types.h: grave bugs were fixed. The
+        auto-fitter works, doesn't crashes, but still produces unexpected
+        results !!
+
 2004-02-21  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshalgo.c (PSH_STRONG_THRESHOLD): Changed to hold

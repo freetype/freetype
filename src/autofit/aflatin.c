@@ -389,13 +389,13 @@
 
     if ( dim == AF_DIMENSION_HORZ )
     {
-      metrics->scaler.x_scale = scale;
-      metrics->scaler.x_delta = delta;
+      metrics->root.scaler.x_scale = scale;
+      metrics->root.scaler.x_delta = delta;
     }
     else
     {
-      metrics->scaler.y_scale = scale;
-      metrics->scaler.y_delta = delta;
+      metrics->root.scaler.y_scale = scale;
+      metrics->root.scaler.y_delta = delta;
     }
 
    /* scale the standard widths
@@ -437,8 +437,6 @@
   af_latin_metrics_scale( AF_LatinMetrics  metrics,
                           AF_Scaler        scaler )
   {
-    metrics->scaler = scaler[0];
-
     af_latin_metrics_scale_dim( metrics, scaler, AF_DIMENSION_HORZ );
     af_latin_metrics_scale_dim( metrics, scaler, AF_DIMENSION_VERT );
   }
@@ -1146,7 +1144,7 @@
     FT_Error        error;
     FT_Render_Mode  mode;
 
-    error = af_glyph_hints_reset( hints, &metrics->scaler,
+    error = af_glyph_hints_reset( hints, &metrics->root.scaler,
                                   (AF_ScriptMetrics) metrics,
                                   outline );
     if (error)
@@ -1156,7 +1154,7 @@
    /* compute flags depending on render mode, etc...
     */
 
-    mode = metrics->scaler.render_mode;
+    mode = metrics->root.scaler.render_mode;
 
    /* we snap the width of vertical stems for the monochrome and
     * horizontal LCD rendering targets only.

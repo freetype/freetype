@@ -1,10 +1,12 @@
 #include "afglobal.h"
+#include "afdummy.h"
 #include "aflatin.h"
 
  /* populate this list when you add new scripts
   */
   static AF_ScriptClass const   af_script_classes[] =
   {
+    & af_dummy_script_class,
     & af_latin_script_class,
 
     NULL  /* do not remove */
@@ -65,6 +67,9 @@
     {
       AF_ScriptClass      clazz = af_script_classes[ss];
       AF_Script_UniRange  range;
+
+      if ( clazz->script_uni_ranges == NULL )
+        continue;
 
      /* scan all unicode points in the range, and set the corresponding
       * glyph script index
