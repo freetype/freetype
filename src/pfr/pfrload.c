@@ -714,13 +714,13 @@
     FT_Error    error = 0;
     FT_String*  result = NULL;
     FT_UInt     n, ok;
-    
+
     if ( len > 0 && p[len-1] == 0 )
       len--;
 
    /* check that each character is ASCII, that's to be sure
     * to not load garbage..
-    */    
+    */
     ok = (len > 0);
     for ( n = 0; n < len; n++ )
       if ( p[n] < 32 || p[n] > 127 )
@@ -728,19 +728,19 @@
         ok = 0;
         break;
       }
-      
+
     if ( ok )
     {
       if ( FT_ALLOC( result, len+1 ) )
         goto Exit;
-      
+
       FT_MEM_COPY( result, p, len );
       result[len] = 0;
     }
   Exit:
     *astring = result;
     return error;
-  }                     
+  }
 
 
   FT_LOCAL_DEF( void )
@@ -852,21 +852,21 @@
     {
       FT_Byte*  q = p;
       FT_Byte*  q2;
-      
+
       PFR_CHECK( num_aux );
       p += num_aux;
-      
-      while ( num_aux >= 0 )
+
+      while ( num_aux > 0 )
       {
         FT_UInt  length, type;
-        
+
         if ( q + 4 > p )
           break;
-        
+
         length = PFR_NEXT_USHORT(q);
         if ( length < 4 || length > num_aux )
           break;
-        
+
         q2   = q + length - 2;
         type = PFR_NEXT_USHORT(q);
 
@@ -880,10 +880,10 @@
               error = pfr_aux_name_load( q, length-4U, memory,
                                          &phy_font->family_name );
               if ( error )
-                goto Exit;                                         
+                goto Exit;
             }
             break;
-          
+
           case 2:
             {
               if ( q + 32 > q2 )
@@ -896,21 +896,21 @@
               q += 16;
             }
             break;
-          
+
           case 3:
             {
               FT_UInt   n, len, ok;
-              
+
              /* this seems to correspond to the font's style name,
               * padded to 16-bits with one zero when necessary
               */
               error = pfr_aux_name_load( q, length-4U, memory,
                                          &phy_font->style_name );
               if ( error )
-                goto Exit;                                         
+                goto Exit;
             }
             break;
-          
+
           default:
             ;
         }
