@@ -1,6 +1,11 @@
+2001-01-17  Francesco Zappa Nardelli  <francesco.zappa.nardelli@ens.fr>
+
+	* src/pcfread.c (pcf_get_properties, pcf_get_metrics,
+	pcf_get_bitmaps): Fix compiler errors.
+
 2001-01-11  David Turner  <david.turner@freetype.org>
 
-	* src/pcd/pcfread.c: Removed some compilation warnings related
+	* src/pcf/pcfread.c: Removed some compilation warnings related
 	to comparison of signed vs. unsigned integers.
 
 	* include/freetype/internal/ftdebug.h: Changed the debug trace
