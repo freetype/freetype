@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  ftbbox.h                                                               */
 /*                                                                         */
-/*    FreeType bbox computation (specification).                           */
+/*    FreeType exact bbox computation (specification).                     */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -40,7 +40,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Raster_GetBBox                                                  */
+  /*    FT_Outline_Get_BBox                                                */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Computes the exact bounding box of an outline.  This is slower     */
@@ -58,8 +58,8 @@
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
   /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Raster_GetBBox( FT_Outline*  outline,
-                                              FT_BBox*     abbox );
+  FT_EXPORT_DEF(FT_Error)  FT_Outline_Get_BBox( FT_Outline*  outline,
+                                                FT_BBox     *abbox );
 
 
 #ifdef __cplusplus
