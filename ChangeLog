@@ -1,3 +1,7 @@
+2002-03-28  KUSANO Takayuki  <AE5T-KSN@asahi-net.or.jp>
+
+	* src/sfnt/sfdriver.c (get_sfnt_postscript_name): Fix serious typos.
+
 2002-03-28  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/psaux.h (PSAux_ServiceRec): Fix
