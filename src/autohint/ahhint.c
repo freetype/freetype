@@ -612,8 +612,8 @@
 #ifndef AH_OPTION_NO_WEAK_INTERPOLATION
           /* if this point is candidate to weak interpolation, we will  */
           /* interpolate it after all strong points have been processed */
-          if (  (point->flags & ah_flag_weak_interpolation) &&
-               !(point->flags & ah_flag_inflection)         )
+          if (  ( point->flags & ah_flag_weak_interpolation ) &&
+               !( point->flags & ah_flag_inflection )         )
             continue;
 #endif
 
