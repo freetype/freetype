@@ -827,6 +827,9 @@
     FT_Byte*       cur2;
     FT_Byte*       limit;
 
+    if ( face->type1.font_name )
+      /*  with synthetic fonts, it's possible we get here twice  */
+      return;
 
     T1_Skip_Spaces( parser );
 
@@ -1095,6 +1098,9 @@
 
     PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
 
+    if ( loader->num_subrs )
+      /*  with synthetic fonts, it's possible we get here twice  */
+      return;
 
     loader->num_subrs = T1_ToInt( parser );
     if ( parser->root.error )
