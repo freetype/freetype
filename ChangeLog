@@ -1,3 +1,9 @@
+2000-11-29  David Turner  <david.turner@freetype.org>
+
+        * src/base/ftbbox.c (BBox_Conic_Check): fixed a really stupid
+	bug in the formula used to compute the conic bezier extrema
+	of non-monotonous arcs..
+
 2000-11-29  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftcalc.c (FT_SqrtFixed), src/base/ftobjs.c
