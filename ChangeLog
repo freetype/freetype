@@ -1,3 +1,9 @@
+2003-11-02  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/cache/ftcglyph.h: Don't include stddef.h.
+
+	* include/freetype/freetype.h: Fix check for ft2build.h.
+
 2003-11-01  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h: Check that ft2build.h has been

@@ -16,7 +16,7 @@
 /***************************************************************************/
 
 
-#ifndef __FT2_BUILD_GENERIC_H__
+#ifndef FT_FREETYPE_H
 #error "`ft2build.h' hasn't been included yet!"
 #error "Please always use macros to include FreeType header files."
 #error "Example:"
