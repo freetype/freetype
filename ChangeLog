@@ -1,3 +1,17 @@
+2003-05-28  Martin Zinser  <zinser@decus.de>
+
+	* vms_make.com: Reworked support for shareable images on VMS.  The
+	first version was kind of a hack; the current implementation of the
+	procedure to extract the required symbols is much cleaner.
+
+	Reworked creation of MMS files, avoiding a number of temporary files
+	which were created in the previous version.
+
+	Further work on creating descrip.mms files on the fly.
+
+	* builds/vms/descrip.mms, src/autohint/descrip.mms,
+	src/type1/descrip.mms: Removed.
+
 2003-05-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshalgo3.c (psh3_glyph_compute_extrema): Skip
