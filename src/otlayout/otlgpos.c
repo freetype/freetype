@@ -975,9 +975,8 @@
     features = OTL_NEXT_USHORT( p );
     lookups  = OTL_NEXT_USHORT( p );
 
-    otl_script_list_validate ( table + scripts, valid );
-    otl_feature_list_validate( table + features, valid );
-
     otl_lookup_list_validate( table + lookups, 9, otl_gpos_validate_funcs,
                               valid );
+    otl_feature_list_validate( table + features, table + lookups, valid );
+    otl_script_list_validate( table + scripts, table + features, valid );
   }
