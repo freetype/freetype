@@ -186,7 +186,7 @@ ifdef BUILD_FREETYPE
   #
   clean_freetype_unix:
 	  -$(DELETE) $(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)
-	  -$(DELETE) $(subst $O,$(SO),$(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)) \
+	  -$(DELETE) $(patsubst %.$O,%.$(SO),$(BASE_OBJECTS) $(OBJ_M) $(OBJ_S)) \
                      $(CLEAN)
 
   distclean_freetype_unix: clean_freetype_unix
