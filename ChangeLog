@@ -1,3 +1,8 @@
+2002-04-16  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
+
+	* src/pcf/pcfread (pcf_get_accell): Fix parsing of accelerator
+	tables.
+
 2002-04-15  David Turner  <david@freetype.org>
 
 	* docs/FTL.txt: Formatting.
