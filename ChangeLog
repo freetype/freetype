@@ -1,3 +1,11 @@
+2004-04-20  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/psobjs.c (T1Radix): Renamed to...
+	(ps_radix): This.
+	Update current cursor position.
+
+	* docs/CHANGES: Updated.
+
 2004-04-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c, src/truetype/ttgload.h (TT_Load_Glyph),

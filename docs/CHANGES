@@ -16,12 +16,14 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       correctly  treated as a  CID, similar  to FreeType's  CID driver
       module.  Note that CID CMap support is still missing.
 
-    - The FT_FACE_FLAGS_GLYPH_NAMES is now  set correctly for all font
-      formats.
+    - The FT_FACE_FLAGS_GLYPH_NAMES flag is now  set correctly for all
+      font formats.
 
     - Some subsetted Type 1  fonts weren't parsed correctly.  This bug
       has been introduced in 2.1.7.  In summary, the Type 1 parser has
       become more robust.
+
+    - Non-decimal numbers weren't parsed correctly in PS fonts.
 
     - The WinFNT driver now correctly reports FT_ENCODING_NONE for all
       but one encoding.  Use  the new FT_WinFNT_ID_XXX values together
@@ -30,9 +32,9 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
     - The descender metrics (face->size->metrics.descender) for WinFNT
       bitmap fonts had the wrong sign.
 
-    - The (emulated) seac support for CFF fonts was broken.
+    - The (emulated) `seac' support for CFF fonts was broken.
 
-    - The flex operator didn't work for CFF fonts.
+    - The `flex' operator didn't work for CFF fonts.
 
     - PS glyphs  which  use  the   `hintmask'  operator  haven't  been
       rendered correctly in some cases.
