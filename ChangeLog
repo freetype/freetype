@@ -1,26 +1,15 @@
 2002-04-18  David Turner  <david@freetype.org>
 
-        * src/base/ftobjs.c, builds/win32/ftdebug.c,
-          builds/amiga/src/base/ftdebug.c : 
-          
-            2.1.0 couldn't be linked against applications in Win32 and
-            Amiga builds due to changes to "src/base/ftdebug.c" that
-            were not properly propagated to "builds/win32" and
-            "builds/amiga"..
-            
-            this has been fixed. We'll probably make 2.1.1 real
-            soon now..
+	* src/base/ftobjs.c, builds/win32/ftdebug.c,
+        builds/amiga/src/base/ftdebug.c: Version 2.1.0 couldn't be linked
+        against applications in Win32 and Amiga builds due to changes to
+        "src/base/ftdebug.c" that were not properly propagated to
+        "builds/win32" and "builds/amiga".  This has been fixed.
 
-
-        * include/freetype/internal/ftobject.h,
-          include/freetype/internal/ftexcept.h,
-          include/freetype/ftsysmem.h,
-          include/freetype/ftsysio.h,
-          src/base/ftsysmem.c,
-          src/base/ftsysio.c:
-          
-            adding new experimental files for 2.1.1 (or 2.1.2)
-
+	* include/freetype/internal/ftobject.h,
+	include/freetype/internal/ftexcept.h, include/freetype/ftsysmem.h,
+	include/freetype/ftsysio.h, src/base/ftsysmem.c, src/base/ftsysio.c:
+	New experimental files for.
 
 2002-04-17  David Turner  <david@freetype.org>
 

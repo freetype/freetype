@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Debugging and logging component for Win32 (body).                    */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -85,16 +85,14 @@
   }
 
 
-
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
+
 
   /* array of trace levels, initialized to 0 */
   int  ft_trace_levels[trace_count];
 
   /* define array of trace toggle names */
-#define FT_TRACE_DEF(x)  #x ,
+#define FT_TRACE_DEF( x )  #x ,
 
   static const char*  ft_trace_toggles[trace_count + 1] =
   { 
@@ -128,6 +126,7 @@
   {
     const char*  ft2_debug = getenv( "FT2_DEBUG" );
     
+
     if ( ft2_debug )
     {
       const char*  p = ft2_debug;
@@ -194,13 +193,16 @@
     }
   }
 
+
 #else  /* !FT_DEBUG_LEVEL_TRACE */
+
 
   FT_BASE_DEF( void )
   ft_debug_init( void )
   {
     /* nothing */
   }
+
 
 #endif /* !FT_DEBUG_LEVEL_TRACE */
 
