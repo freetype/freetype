@@ -28,7 +28,9 @@
 
 .PHONY: setup
 
+ifndef CONFIG_MK
 CONFIG_MK := config.mk
+endif
 
 # If no configuration sub-makefile is present, or if `setup' is the target
 # to be built, run the auto-detection rules to figure out which
