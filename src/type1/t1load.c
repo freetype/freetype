@@ -772,9 +772,9 @@
   static int
   is_space( FT_Byte  c )
   {
-    return ( c == ' '  || c == '\t' ||
+    return ( c == ' '  || c == '\t'              ||
              c == '\r' || c == '\n' || c == '\f' ||
-             c == '\0' );
+             c == '\0'                           );
   }
 
 
@@ -831,10 +831,6 @@
     FT_Fixed    temp_scale;
 
 
-    if ( matrix->xx || matrix->yx )
-      /* with synthetic fonts it is possible we get here twice */
-      return;
-
     (void)T1_ToFixedArray( parser, 6, temp, 3 );
 
     temp_scale = ABS( temp[3] );
@@ -863,8 +859,8 @@
     matrix->yy = temp[3];
 
     /* note that the offsets must be expressed in integer font units */
-    offset->x  = temp[4] >> 16;
-    offset->y  = temp[5] >> 16;
+    offset->x = temp[4] >> 16;
+    offset->y = temp[5] >> 16;
   }
 
 
@@ -898,10 +894,6 @@
       FT_Memory    memory     = parser->root.memory;
       FT_Error     error;
 
-
-      if ( encode->char_index )
-        /* with synthetic fonts it is possible we get here twice */
-        return;
 
       /* read the number of entries in the encoding; should be 256 */
       count = (FT_Int)T1_ToInt( parser );
@@ -941,10 +933,10 @@
       /* used to clean the encoding array before anything else. */
 
       n = 0;
+      T1_Skip_Spaces( parser );
 
       while ( parser->root.cursor < limit )
       {
-        T1_Skip_Spaces( parser );
         cur = parser->root.cursor;
 
         /* we stop when we encounter a `def' */
@@ -991,6 +983,8 @@
         }
         else
           T1_Skip_PS_Token( parser );
+
+        T1_Skip_Spaces( parser );
       }
 
       face->type1.encoding_type = T1_ENCODING_TYPE_ARRAY;
@@ -1044,7 +1038,7 @@
       T1_Skip_PS_Token( parser );
       T1_Skip_Spaces  ( parser );
       if ( parser->root.cursor >= parser->root.limit ||
-           *parser->root.cursor != ']'              )
+           *parser->root.cursor != ']'               )
         parser->root.error = T1_Err_Invalid_File_Format;
       return;
     }
@@ -1161,10 +1155,6 @@
     FT_Byte        notdef_found = 0;
 
 
-    if ( loader->num_glyphs )
-      /* with synthetic fonts it is possible we get here twice */
-      return;
-
     loader->num_glyphs = (FT_Int)T1_ToInt( parser );
     if ( parser->root.error )
       return;
@@ -1187,7 +1177,6 @@
     /* index 0 names and codes (if necessary).              */
 
     error = psaux->ps_table_funcs->init( swap_table, 4, memory );
-
     if ( error )
       goto Fail;
 
@@ -1458,15 +1447,16 @@
 
     limit = parser->root.limit;
 
+    T1_Skip_Spaces( parser );
+
     while ( parser->root.cursor < limit )
     {
       FT_Byte*  cur;
 
 
-      T1_Skip_Spaces( parser );
       cur = parser->root.cursor;
 
-      /* look for `FontDirectory', which causes problems for some fonts */
+      /* look for `FontDirectory' which causes problems for some fonts */
       if ( *cur == 'F' && cur + 25 < limit                    &&
            ft_strncmp( (char*)cur, "FontDirectory", 13 ) == 0 )
       {
@@ -1524,7 +1514,7 @@
 
         len = parser->root.cursor - cur;
 
-        if ( len > 0 && len < 22 )
+        if ( len > 0 && len < 22 && parser->root.cursor < limit )
         {
           /* now compare the immediate name to the keyword table */
           T1_Field  keyword      = (T1_Field)t1_keywords;
@@ -1543,35 +1533,27 @@
               break;
             }
 
-            if ( cur[0] == name[0]                     &&
-                 len == ft_strlen( (const char*)name ) )
+            if ( cur[0] == name[0]                      &&
+                 len == ft_strlen( (const char *)name ) &&
+                 ft_memcmp( cur, name, len ) == 0       )
             {
-              FT_PtrDist  n;
-
-
-              for ( n = 1; n < len; n++ )
-                if ( cur[n] != name[n] )
-                  break;
-
-              if ( n >= len )
+              /* We found it -- run the parsing callback! */
+              /* We only record the first instance of any */
+              /* field to deal adequately with synthetic  */
+              /* fonts; /Subrs is handled specially.      */
+              if ( keyword_flag[0] == 0                         ||
+                   ft_strcmp( (const char*)name, "Subrs" ) == 0 )
               {
-                /* We found it -- run the parsing callback! */
-                /* We only record the first instance of any */
-                /* field to deal adequately with synthetic  */
-                /* fonts; /Subrs is handled specially.      */
-                if ( keyword_flag[0] == 0            ||
-                     ft_strcmp( (const char*)name, "Subrs" ) == 0 )
-                {
-                  parser->root.error = t1_load_keyword( face,
-                                                        loader,
-                                                        keyword );
-                  if ( parser->root.error )
-                    return parser->root.error;
-                }
-                keyword_flag[0] = 1;
-                break;
+                parser->root.error = t1_load_keyword( face,
+                                                      loader,
+                                                      keyword );
+                if ( parser->root.error )
+                  return parser->root.error;
               }
+              keyword_flag[0] = 1;
+              break;
             }
+
             keyword++;
             keyword_flag++;
           }
@@ -1579,7 +1561,10 @@
       }
       else
         T1_Skip_PS_Token( parser );
+
+      T1_Skip_Spaces( parser );
     }
+
     return parser->root.error;
   }
 
