@@ -10,6 +10,11 @@
 	with "gray_", and a new type (TArea) is defined to store area value in
 	each cell (using "int" was too small on 16-bit systems)..
 
+	* include/freetype/ftsizes.h, src/base/ftobjs.c, src/cache/ftcmanag.c:
+	added a new header, named "ftsizes.h" (FT_SIZES_H) to provide a public
+	API to manage multiple size objects for a given FT_Face.
+
+
 2001-09-20  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* builds/amiga/*: Added port to Amiga with the SAS/C compiler.

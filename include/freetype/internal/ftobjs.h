@@ -29,6 +29,7 @@
 
 #include <ft2build.h>
 #include FT_RENDER_H
+#include FT_SIZES_H
 #include FT_INTERNAL_MEMORY_H
 #include FT_INTERNAL_DRIVER_H
 #include FT_INTERNAL_AUTOHINT_H
@@ -301,46 +302,6 @@ FT_BEGIN_HEADER
 
   /* this must be kept exported -- it is used by the cache manager */
   /* even though it shouldn't be considered public for now         */
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_Size                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Creates a new size object from a given face object.                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face :: A handle to a parent face object.                          */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    asize :: A handle to a new size object.                            */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_EXPORT( FT_Error )
-  FT_New_Size( FT_Face   face,
-               FT_Size*  size );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_Size                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Discards a given size object.                                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to a target size object.                          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_EXPORT( FT_Error )
-  FT_Done_Size( FT_Size  size );
-
 
   /*************************************************************************/
   /*                                                                       */

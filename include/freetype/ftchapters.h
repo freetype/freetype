@@ -15,6 +15,7 @@
 /*    truetype_tables                                                      */
 /*    type1_tables                                                         */
 /*    sfnt_names                                                           */
+/*    sizes_management                                                     */
 /*    module_management                                                    */
 /*    system_interface                                                     */
 /*    header_file_macros                                                   */
