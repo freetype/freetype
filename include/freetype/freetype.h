@@ -121,6 +121,7 @@ FT_BEGIN_HEADER
   /*    FT_Set_Transform                                                   */
   /*    FT_Load_Glyph                                                      */
   /*    FT_Get_Char_Index                                                  */
+  /*    FT_Get_Name_Index                                                  */
   /*    FT_Load_Char                                                       */
   /*                                                                       */
   /*    FT_LOAD_DEFAULT                                                    */
@@ -2354,6 +2355,29 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
                      FT_ULong  charcode );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Name_Index                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Returns the glyph index of a given glyph name.  This function uses */
+  /*    driver specific objects to do the translation.                     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face       :: A handle to the source face object.                  */
+  /*                                                                       */
+  /*    glyph_name :: The glyph name.                                      */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The glyph index.  0 means `undefined character code'.              */
+  /*                                                                       */
+  FT_EXPORT( FT_UInt )
+  FT_Get_Name_Index( FT_Face     face,
+                     FT_String*  glyph_name);
+
 
 
   /*************************************************************************/
