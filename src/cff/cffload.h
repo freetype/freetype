@@ -55,8 +55,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   cff_font_load( FT_Stream  stream,
                  FT_Int     face_index,
-                 CFF_Font   font,
-                 CFF_Face   face );
+                 CFF_Font   font );
 
   FT_LOCAL( void )
   cff_font_done( CFF_Font  font );

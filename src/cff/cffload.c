@@ -2027,8 +2027,7 @@
   FT_LOCAL_DEF( FT_Error )
   cff_font_load( FT_Stream  stream,
                  FT_Int     face_index,
-                 CFF_Font   font,
-                 CFF_Face   face )
+                 CFF_Font   font )
   {
     static const FT_Frame_Field  cff_header_fields[] =
     {
@@ -2047,11 +2046,6 @@
     FT_Memory        memory = stream->memory;
     FT_ULong         base_offset;
     CFF_FontRecDict  dict;
-
-#ifndef FT_CONFIG_OPTION_INCREMENTAL
-    FT_UNUSED( face );
-#endif
-
 
     FT_ZERO( font );
 
@@ -2164,26 +2158,20 @@
     else
       font->num_subfonts = 0;
 
-#ifdef FT_CONFIG_OPTION_INCREMENTAL
-    /* Incremental fonts don't need character recipes. */
-    if ( !face->root.internal->incremental_interface )
-#endif
+    /* read the charstrings index now */
+    if ( dict->charstrings_offset == 0 )
     {
-      /* read the charstrings index now */
-      if ( dict->charstrings_offset == 0 )
-      {
-        FT_ERROR(( "cff_font_load: no charstrings offset!\n" ));
-        error = CFF_Err_Unknown_File_Format;
-        goto Exit;
-      }
-
-      if ( FT_STREAM_SEEK( base_offset + dict->charstrings_offset ) )
-        goto Exit;
-
-      error = cff_new_index( &font->charstrings_index, stream, 0 );
-      if ( error )
-        goto Exit;
+      FT_ERROR(( "cff_font_load: no charstrings offset!\n" ));
+      error = CFF_Err_Unknown_File_Format;
+      goto Exit;
     }
+
+    if ( FT_STREAM_SEEK( base_offset + dict->charstrings_offset ) )
+      goto Exit;
+
+    error = cff_new_index( &font->charstrings_index, stream, 0 );
+    if ( error )
+      goto Exit;
 
     /* explicit the global subrs */
     font->num_global_subrs = font->global_subrs_index.count;
@@ -2199,7 +2187,7 @@
     if ( font->num_glyphs > 0 )
     {
       error = cff_charset_load( &font->charset, font->num_glyphs, stream,
-                                base_offset, dict->charset_offset );
+                              base_offset, dict->charset_offset );
       if ( error )
         goto Exit;
 
