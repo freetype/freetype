@@ -264,7 +264,7 @@ THE SOFTWARE.
         return en_table[mid].glyph;
     }
   
-    return face->defaultChar;
+    return 0;
   }
 
 
