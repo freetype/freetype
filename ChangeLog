@@ -1,4 +1,9 @@
 2001-10-20  Tom Kacvinsky  <tjk@ams.org>
+	
+	* src/type1/t1load.c (parse_encoding): Add a test to make sure
+	that custom encodings (i.e., neither StandardEncoding nor
+	ExpertEncoding) are not loaded twice when the Type 1 font is
+	synthetic.
 
 	* src/type1/t1load.c (parse_font_name, parse_subrs): Added a test
 	for when loading synthetic fonts to make sure that the font name
