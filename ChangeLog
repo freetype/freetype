@@ -1,16 +1,62 @@
-2003-11-07  David Turner  <david@freetype.org>
+2003-11-07  Werner Lemberg  <wl@gnu.org>
 
 
-	* Version 2.1.5 released.
+	* Version 2.1.7 released.
 	=========================
 
 
-        * updating README and docs/VERSION.DLL, re-tagging VER-2-1-6
+	* builds/unix/ft2unix.h: Fix comments.
 
-2003-11-06  David Turner  <david@freetype.org>
+	* builds/unix/ftconfig.in: Synchronized with ANSI version.
+	Use `#undef' in templates as recommended in the autoconf
+	documentation.
+	Since real `#undef' lines don't survive during configuration, use
+	`/undef' instead; the postprocessing facility of the
+	AC_CONFIG_HEADERS autoconf macro converts them to `#undef'.
 
-        * install: removed obsolete file
-        * tagging VER-2-1-6 !!
+	* builds/unix/install.mk (install): Install Unix version of
+	`ftconfig.h'.
+
+	* builds/unix/unix-cc.in (CFLAGS): Set FT_CONFIG_CONFIG_H macro
+	to include the correct `ftconfig.h' file.
+
+	* builds/unix/ft-munmap.m4 (FT_MUNMAP_DECL): Removed.
+	(FT_MUNMAP_PARAM): Updated syntax to autoconf 2.59.
+
+	* builds/unix/freetype2.m4: Updated syntax to autoconf 2.59.
+
+	* builds/unix/configure.ac: Use AC_CONFIG_HEADERS instead of
+	AC_CONFIG_HEADER to create ftconfig.h, and use second argument
+	to replace `/undef' with `#undef'.
+	Don't use FT_MUNMAP_DECL but AC_CHECK_DECLS to check for munmap.
+	Use AS_HELP_STRING in AC_ARG_WITH.
+	Update syntax to autoconf 2.59.
+
+	* builds/unix/ltmain.sh: Regenerated with `libtoolize --force
+	--copy' from libtool 1.5.
+	* builds/unix/aclocal.m4: Regenerated with `aclocal -I .' from
+	automake 1.7.8.
+	* builds/unix/configure: Regenerated with autoconf 2.59.
+	* builds/unix/config.guess, builds/unix/config.sub: Updated from
+	`config' CVS module at subversions.gnu.org
+	* builds/unix/install-sh, builds/unix/mkinstalldirs: Updated from
+	`texinfo' CVS module at subversions.gnu.org.
+
+	* builds/vms/ftconfig.h: Synchronized with ANSI version.
+
+	* docs/CUSTOMIZE: Fix documentation error.
+	* docs/CHANGES, docs/VERSION.DLL, docs/release: Updated.
+
+	* builds/freetype.mk (refdoc): Updated --title.
+
+2003-11-07  David Turner  <david@freetype.org>
+
+
+	* Version 2.1.6 released.
+	=========================
+
+
+	* install: Removed.  Obsolete.
 
 2003-11-04  Werner Lemberg  <wl@gnu.org>
 
@@ -755,9 +801,11 @@
 	(T42_Get_Interface): Use `ft_service_list_lookup'.
 
 
-	* README, builds/unix/configure, builds/unix/configure.ac,
-	docs/CHANGES, include/freetype/freetype.h: Updating version numbers
-	for 2.1.6, and removing obsolete warnings in the documentation.
+	* README, docs/CHANGES: Updating version numbers for 2.1.6, and
+	removing obsolete warnings in the documentation.
+	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 6.
+	* builds/unix/configure.ac (version_info): Set to 9:5:3.
+	* builds/unix/configure: Regenerated.
 
 	* include/freetype/internal/ftcore.h,
 	include/freetype/internal/ftexcept.h,
