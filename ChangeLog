@@ -1,8 +1,7 @@
-2001-06-22  David Turner <david@freetype.org>
+2001-06-22  David Turner  <david@freetype.org>
 
-    * docs/PATENTS: added patents disclaimer. This one was missing !!
-    
-    * docs/CHANGES, docs/todo: updated for the upcoming 2.0.4 release
+	* docs/PATENTS: Added patents disclaimer.  This one was missing!
+	* docs/CHANGES, docs/todo: Updated for the upcoming 2.0.4 release.
 
 2001-06-20  Werner Lemberg  <wl@gnu.org>
 
@@ -16,6 +15,8 @@
 	* include/freetype/freetype.h (FT_ENC_TAG): New version to make it
 	easier to redefine.
 	* include/freetype/ftimage.h (FT_IMAGE_TAG): Ditto.
+
+	* src/pcf/pcfread.c (pcf_get_encodings): Add cast.
 
 2001-06-19  David Turner  <david@freetype.org>
 
