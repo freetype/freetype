@@ -391,6 +391,30 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* Define TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING to compile the     */
+  /* unpatented work-around hinting system. You must define this if you    */
+  /* want either to force the use of the unpatented hinting system by also */
+  /* defining TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING, or if you want to */
+  /* select it at run time using the FT_PARAM_TAG_UNPATENTED_HINTING tag.  */
+  /*                                                                       */
+/* #define TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING */
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* Define TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING to restrict the      */
+  /* TrueType bytecode interpreter to actions not protected by patents.    */
+  /* This enables some fonts, for example mingliu.ttc from Dynalab, to     */
+  /* work properly. They use hinting to make large changes to the glyph    */
+  /* shape, without which the glyph is unrecognisable.                     */
+  /* For this to work you must also define                                 */
+  /* TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING.                          */
+  /*                                                                       */
+/* #define TT_CONFIG_OPTION_FORCE_UNPATENTED_HINTING */
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* Define TT_CONFIG_OPTION_INTERPRETER_SWITCH to compile the TrueType    */
   /* bytecode interpreter with a huge switch statement, rather than a call */
   /* table.  This results in smaller and faster code for a number of       */
