@@ -1977,7 +1977,7 @@
   /*    An enumeration used to specify which kerning values to return in   */
   /*    FT_Get_Kerning().                                                  */
   /*                                                                       */
-  /* <Field>                                                               */
+  /* <Fields>                                                              */
   /*    ft_kerning_default  :: Return scaled and grid-fitted kerning       */
   /*                           distances (value is 0).                     */
   /*                                                                       */

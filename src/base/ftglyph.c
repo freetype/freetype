@@ -633,6 +633,8 @@
   /*      bbox.xMax = CEILING(bbox.xMax);                                  */
   /*      bbox.yMax = CEILING(bbox.yMax);                                  */
   /*                                                                       */
+  /*    The default value (0) for `bbox_mode' is `ft_glyph_bbox_pixels'.   */
+  /*                                                                       */
   FT_EXPORT_FUNC( void )  FT_Glyph_Get_CBox( FT_Glyph  glyph,
                                              FT_UInt   bbox_mode,
                                              FT_BBox*  cbox )

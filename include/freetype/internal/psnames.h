@@ -163,7 +163,7 @@
   *    this structure holds pointers to the functions used to load and
   *    free the basic tables that are required in a `sfnt' font file.
   *
-  * <Field>
+  * <Fields>
   *    unicode_value   :: a function used to convert a glyph name into
   *                       a Unicode character code
   *
