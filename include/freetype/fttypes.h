@@ -359,6 +359,26 @@ FT_BEGIN_HEADER
 
   /*************************************************************************/
   /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_Data													           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Read-only binary data represented as a pointer and a length.       */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    pointer :: The data.                                               */
+  /*                                                                       */
+  /*    length :: The length of the data in bytes.                         */
+  /*                                                                       */
+  typedef struct FT_Data_
+  {
+    const FT_Byte* pointer;
+	FT_Int length;
+  } FT_Data;
+
+
+  /*************************************************************************/
+  /*                                                                       */
   /* <FuncType>                                                            */
   /*    FT_Generic_Finalizer                                               */
   /*                                                                       */
