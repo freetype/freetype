@@ -1,3 +1,7 @@
+2003-04-24  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/unix-cc.in (CFLAGS): Add @CPPFLAGS@.
+
 2003-04-24  Dieter Baron  <dillo@netbsd.org>
 
 	* builds/unix/freetype-config.in (cflags): Emit FreeType 2's include
