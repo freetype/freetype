@@ -121,6 +121,7 @@
 
     if ( font->fnt_frame )
       FT_FRAME_RELEASE( font->fnt_frame );
+    FT_FREE( font->family_name );
 
     FT_FREE( font );
     face->font = 0;
@@ -434,8 +435,9 @@
     /* we now need to fill the root FT_Face fields */
     /* with relevant information                   */
     {
-      FT_Face   root = FT_FACE( face );
-      FNT_Font  font = face->font;
+      FT_Face     root = FT_FACE( face );
+      FNT_Font    font = face->font;
+      FT_PtrDist  family_size;
 
 
       root->face_flags = FT_FACE_FLAG_FIXED_SIZES |
@@ -506,8 +508,22 @@
       root->num_glyphs = font->header.last_char -
                            font->header.first_char + 1 + 1;
 
-      root->family_name = (FT_String*)font->fnt_frame +
-                            font->header.face_name_offset;
+      /* Some broken fonts don't delimit the face name with a final */
+      /* NULL byte -- the frame is erroneously one byte too small.  */
+      /* We thus allocate one more byte, setting it explicitly to   */
+      /* zero.                                                      */
+      family_size = font->header.file_size - font->header.face_name_offset;
+      if ( FT_ALLOC( font->family_name, family_size + 1 ) )
+        goto Fail;
+      FT_MEM_COPY( font->family_name,
+                   font->fnt_frame + font->header.face_name_offset,
+                   family_size );
+      font->family_name[family_size] = '\0';
+      if ( FT_REALLOC( font->family_name,
+                       family_size,
+                       ft_strlen( font->family_name ) + 1 ) )
+        goto Fail;
+      root->family_name = font->family_name;
       root->style_name  = (char *)"Regular";
 
       if ( root->style_flags & FT_STYLE_FLAG_BOLD )
@@ -520,10 +536,10 @@
       else if ( root->style_flags & FT_STYLE_FLAG_ITALIC )
         root->style_name = (char *)"Italic";
     }
+    goto Exit;
 
   Fail:
-    if ( error )
-      FNT_Face_Done( face );
+    FNT_Face_Done( face );
 
   Exit:
     return error;
