@@ -105,8 +105,13 @@
 #define  CEILING(x)  (((x)+ONE_PIXEL-1) & -ONE_PIXEL)
 #define  ROUND(x)    (((x)+ONE_PIXEL/2) & -ONE_PIXEL)
 
-#define  UPSCALE(x)  (PIXEL_BITS >= 6 ? (x) << (PIXEL_BITS-6) : (x) >> (6-PIXEL_BITS))
-#define  DOWNSCALE(x)  (PIXEL_BITS >= 6 ? (x) >> (PIXEL_BITS-6) : (x) << (6-PIXEL_BITS))
+#if PIXEL_BITS >= 6
+#define  UPSCALE(x)  ((x) << (PIXEL_BITS-6))
+#define  DOWNSCALE(x)  ((x) >> (PIXEL_BITS-6))
+#else
+#define  UPSCALE(x)  ((x) >> (6-PIXEL_BITS))
+#define  DOWNSCALE(x)  ((x) << (6-PIXEL_BITS))
+#endif
 
 /* define if you want to use more compact storage, this increases the number */
 /* of cells available in the render pool but slows down the rendering a bit  */
