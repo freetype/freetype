@@ -1212,17 +1212,10 @@
   struct FT_SubGlyph_
   {
     FT_Int        index;
-    
-    FT_Byte*      control_data;
-    FT_Int        control_len;
-    
     FT_UShort     flags;
-    
     FT_Int        arg1;
     FT_Int        arg2;
-    
     FT_Matrix     transform;
-    FT_SubGlyph*  parent;
   };
 
 
