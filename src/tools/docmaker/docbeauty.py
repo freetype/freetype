@@ -5,10 +5,6 @@
 # This program is used to beautify the documentation comments used
 # in the FreeType 2 public headers.
 #
-# For now, it basically converts all document blocks to a single
-# format. It should be able to re-justify all text later in the
-# future..
-#
 
 from sources   import *
 from content   import *
