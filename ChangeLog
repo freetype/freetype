@@ -1,3 +1,8 @@
+2005-04-06  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (tt_face_get_metrics) [FT_OPTIMIZE_MEMORY]:
+	Fix typo which sometimes causes wrong metrics for the last glyph.
+
 2005-04-04  David Turner  <david@freetype.org>
 
 	* devel/ftoption.h, include/freetype/config/ftoption.h
