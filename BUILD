@@ -10,7 +10,7 @@ platform.
   *** UNIX USERS : Even though the FT2 build system doesn't
   ************** : use the Autoconf/Automake tools, these will
   ************** : be introduced in the Unix-specific parts of
-  ************** : the build inour final release..
+  ************** : the build in our final release..
 
 
 I. QUICK COMMAND-LINE GUIDE:
