@@ -200,7 +200,7 @@ class SourceBlock:
         self.processor = processor
         self.filename  = filename
         self.lineno    = lineno
-        self.lines     = lines
+        self.lines     = lines[:]
         self.format    = processor.format
         self.content   = []
 
