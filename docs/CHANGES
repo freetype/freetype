@@ -2,7 +2,7 @@ LATESET CHANGES BETWEEN 2.0.9 and 2.0.8
 
   I. IMPORTANT BUG FIXES
   
-    - Certain fonts, lilke "foxjump.ttf" contain broken name tables with
+    - Certain fonts, like "foxjump.ttf" contain broken name tables with
       invalid entries and wild offsets.  This caused FreeType to crash when
       trying to load them.
       

@@ -1,5 +1,7 @@
 2002-03-06  David Turner  <david@freetype.org>
 
+        * src/README: updating for 2.0.9 release
+
         * src/pshinter/pshalgo2.c: changed 'print_zone' to 'psh2_print_zone'
         * src/pshinter/pshalgo1.c: changed 'print_zone' to 'psh1_print_zone'
 
