@@ -20,6 +20,8 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 
+#include "pfrerror.h"
+
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pfr
 
@@ -89,7 +91,7 @@
     
   Too_Short:
     FT_ERROR(( "pfr_extra_items_parse: invalid extra items table\n" ));
-    error = FT_Err_Invalid_Table;
+    error = PFR_Err_Invalid_Table;
     goto Exit;
   }
 
@@ -234,7 +236,7 @@
       goto Exit;
 
     if ( index >= num_log_fonts )
-      return FT_Err_Invalid_Argument;
+      return PFR_Err_Invalid_Argument;
 
     if ( FT_STREAM_SKIP( index * 5 ) ||
          FT_READ_USHORT( size )      ||
@@ -327,7 +329,7 @@
   
   Too_Short:
     FT_ERROR(( "pfr_log_font_load: invalid logical font table\n" ));
-    error = FT_Err_Invalid_Table;
+    error = PFR_Err_Invalid_Table;
     goto Fail;
   }
 
@@ -424,8 +426,8 @@
     return error;
     
   Too_Short:
-    error = FT_Err_Invalid_Table;
-    FT_ERROR(( "pfr.extra_item_load: invalid bitmap info table\n" ));
+    error = PFR_Err_Invalid_Table;
+    FT_ERROR(( "pfr_extra_item_load_bitmap_info: invalid bitmap info table\n" ));
     goto Exit;
   }                                  
 
@@ -493,8 +495,8 @@
     return error;
   
   Too_Short:
-    error = FT_Err_Invalid_Table;
-    FT_ERROR(( "pfr.exta_item_load: invalid stem snaps table\n" ));
+    error = PFR_Err_Invalid_Table;
+    FT_ERROR(( "pfr_exta_item_load_stem_snaps: invalid stem snaps table\n" ));
     goto Exit;
   }                                 
 
@@ -678,7 +680,7 @@
     return error;
   
   Too_Short:
-    error = FT_Err_Invalid_Table;
+    error = PFR_Err_Invalid_Table;
     FT_ERROR(( "pfr_phy_font_load: invalid physical font table\n" ));
     goto Fail;
   }
