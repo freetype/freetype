@@ -1489,7 +1489,7 @@
 
       /* copy the outline points in the loader's current               */
       /* extra points which is used to keep original glyph coordinates */
-      error = ah_loader_check_points( gloader, slot->outline.n_points + 2,
+      error = ah_loader_check_points( gloader, slot->outline.n_points + 4,
                                       slot->outline.n_contours );
       if ( error )
         goto Exit;
@@ -1506,7 +1506,7 @@
       gloader->current.outline.n_points   = slot->outline.n_points;
       gloader->current.outline.n_contours = slot->outline.n_contours;
 
-      /* compute original phantom points */
+      /* compute original horizontal phantom points, ignoring vertical ones */
       hinter->pp1.x = 0;
       hinter->pp1.y = 0;
       hinter->pp2.x = FT_MulFix( slot->metrics.horiAdvance, x_scale );

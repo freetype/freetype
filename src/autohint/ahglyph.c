@@ -435,7 +435,7 @@
     /*                                                                   */
     if ( num_points + 2 > outline->max_points )
     {
-      FT_Int  news = FT_PAD_CEIL( num_points, 8 );
+      FT_Int  news = FT_PAD_CEIL( num_points + 2, 8 );
       FT_Int  max  = outline->max_points;
 
 
