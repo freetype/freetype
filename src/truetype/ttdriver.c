@@ -23,8 +23,17 @@
 #include FT_TRUETYPE_IDS_H
 #include FT_SERVICE_XFREE86_NAME_H
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include FT_MULTIPLE_MASTERS_H
+#include FT_SERVICE_MULTIPLE_MASTERS_H
+#endif
+
 #include "ttdriver.h"
 #include "ttgload.h"
+
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+#include "ttgxvar.h"
+#endif
 
 #include "tterrors.h"
 
@@ -345,11 +354,27 @@
   /*************************************************************************/
   /*************************************************************************/
 
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+  static const FT_Service_MultiMastersRec  tt_service_gx_multi_masters =
+  {
+    (FT_Get_MM_Func)        NULL,
+    (FT_Set_MM_Design_Func) NULL,
+    (FT_Set_MM_Blend_Func)  TT_Set_MM_Blend,
+    (FT_Get_MM_Var_Func)    TT_Get_MM_Var,
+    (FT_Set_Var_Design_Func)TT_Set_Var_Design
+  };
+#endif
+
+
   static const FT_ServiceDescRec  tt_services[] =
   {
-    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_TRUETYPE },
+    { FT_SERVICE_ID_XF86_NAME,     FT_XF86_FORMAT_TRUETYPE },
+#ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
+    { FT_SERVICE_ID_MULTI_MASTERS, &tt_service_gx_multi_masters },
+#endif
     { NULL, NULL }
   };
+
 
   static FT_Module_Interface
   tt_get_interface( TT_Driver    driver,
