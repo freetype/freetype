@@ -273,29 +273,10 @@ class HtmlFormatter(Formatter):
 
     def print_html_field_list( self, fields ):
         print "<table valign=top cellpadding=3>"
-
-        # compute the maximum length of each field name
-        # if it is
-        #
-        max = 0
         for field in fields:
-            l = len( field.name )
-            if l > max:
-              max = l
-
-        head  = "<tr valign=top><td><b>"
-        inter = "</b></td><td>"
-        foot  = "</td></tr>"
-        if max > 18:
-            head  = "<tr><td colspan=2><b>"
-            inter = "</b></td></tr><tr><td width=5%></td><td>"
-            foot  = "<p></td></tr>"
-
-        for field in fields:
-            print head + field.name + inter
+            print "<tr valign=top><td><b>" + field.name + "</b></td><td>"
             self.print_html_items( field.items )
-            print foot
-
+            print "</td></tr>"
         print "</table>"
 
 
@@ -338,7 +319,7 @@ class HtmlFormatter(Formatter):
         count = len( self.block_index )
         rows  = (count + self.columns - 1)/self.columns
 
-        print "<center><table border=0 cellpadding=0 cellspacing=2>"
+        print "<center><table border=0 cellpadding=0 cellspacing=0>"
         for r in range(rows):
             line = "<tr>"
             for c in range(self.columns):
@@ -416,9 +397,9 @@ class HtmlFormatter(Formatter):
 
         # print section synopsys
         print section_synopsis_header
-        print "<center><table cellspacing=5 cellpadding=2 border=0>"
+        print "<center><table cellspacing=5 cellpadding=0 border=0>"
 
-        maxwidth = 1
+        maxwidth = 0
         for b in section.blocks.values():
             if len(b.name) > maxwidth:
                 maxwidth = len(b.name)

@@ -10,7 +10,7 @@
 #     "<Function>", "<Type>", etc..
 #
 # the routines used to process the content of documentation blocks
-# are not contained here, but in "doccontent.py"
+# are not contained here, but in "content.py"
 #
 # the classes and methods found here only deal with text parsing
 # and basic documentation block extraction
@@ -76,11 +76,11 @@ re_source_block_format1 = SourceBlockFormat( 1, start, column, start )
 #
 # format 2 documentation comment blocks look like the following:
 #
-#    /************************************
+#    /************************************ (at least 2 asterisks)
 #     *
-#     *                                                                    
-#     *                                                                    
-#     *                                                                    
+#     *
+#     *
+#     *
 #     **/       (1 or more asterisks at the end)
 #
 # we define a few regular expressions here to detect them
@@ -94,12 +94,12 @@ start = r'''
 column = r'''
   \s*         # any number of whitespace
   \*{1}       # followed by precisely one asterisk
-  (.*)        # followed by anything (group1)
+  (.*)        # then anything (group1)
 '''
 
 end = r'''
   \s*     # any number of whitespace
-  \*+/    # followed by at least on asterisk, then '/'
+  \*+/    # followed by at least one asterisk, then '/'
 '''
 
 re_source_block_format2 = SourceBlockFormat( 2, start, column, end )
@@ -151,7 +151,7 @@ re_source_crossref = re.compile( r'(\W*)(\w*)' )
 #
 # a list of reserved source keywords
 #
-re_source_keywords = re.compile( '''( typedef | 
+re_source_keywords = re.compile( '''( typedef |
                                        struct |
                                        enum   |
                                        union  |
@@ -232,18 +232,18 @@ class SourceBlock:
 
     # debugging only - not used in normal operations
     def dump( self ):
-        
+
         if self.content:
             print "{{{content start---"
             for l in self.content:
                 print l
             print "---content end}}}"
             return
-            
+
         fmt = ""
         if self.format:
             fmt = repr(self.format.id) + " "
-        
+
         for line in self.lines:
             print line
 
@@ -281,22 +281,22 @@ class SourceProcessor:
 
     def  parse_file( self, filename ):
         """parse a C source file, and adds its blocks to the processor's list"""
-        
+
         self.reset()
-        
+
         self.filename = filename
-        
+
         fileinput.close()
         self.format    = None
         self.lineno    = 0
         self.lines     = []
 
         for line in fileinput.input( filename ):
-            
+
             # strip trailing newlines, important on Windows machines !!
             if  line[-1] == '\012':
                 line = line[0:-1]
-    
+
             if self.format == None:
                 self.process_normal_line( line )
 
@@ -304,25 +304,25 @@ class SourceProcessor:
                 if self.format.end.match( line ):
                     # that's a normal block end, add it to lines and
                     # create a new block
-                    self.lines.append( line )
+                    # self.lines.append( line )
                     self.add_block_lines()
-                    
+
                 elif self.format.column.match( line ):
                     # that's a normal column line, add it to 'lines'
                     self.lines.append( line )
-                        
+
                 else:
                     # humm.. this is an unexcepted block end,
                     # create a new block, but don't process the line
                     self.add_block_lines()
-                    
+
                     # we need to process the line again
                     self.process_normal_line( line )
-                                
+
         # record the last lines
         self.add_block_lines()
 
-        
+
 
     def process_normal_line( self, line ):
         """process a normal line and check if it's the start of a new block"""
@@ -334,18 +334,18 @@ class SourceProcessor:
 
         self.lines.append( line )
 
-    
+
 
     def add_block_lines( self ):
         """add the current accumulated lines, and create a new block"""
         if self.lines != []:
             block = SourceBlock( self, self.filename, self.lineno, self.lines )
-            
+
             self.blocks.append( block )
             self.format = None
             self.lines  = []
 
-    
+
     # debugging only, not used in normal operations
     def dump( self ):
         """print all blocks in a processor"""

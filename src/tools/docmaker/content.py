@@ -132,7 +132,7 @@ class DocField:
                 m = re_code_end.match( l )
                 if m and len(m.group(1)) <= margin:
                     # that's it, we finised the code sequence
-                    code = DocCode( margin, cur_lines )
+                    code = DocCode( 0, cur_lines )
                     self.items.append( code )
                     margin    = -1
                     cur_lines = []
@@ -289,9 +289,9 @@ class DocSection:
                 self.description = block.get_markup_items( "description" )
                 self.order       = block.get_markup_words( "order" )
                 return
-                
+
     def reorder( self ):
-        
+
         self.block_names = sort_order_list( self.block_names, self.order )
 
 
@@ -300,7 +300,7 @@ class ContentProcessor:
     def __init__( self ):
         """initialize a block content processor"""
         self.reset()
-        
+
         self.sections = {}    # dictionary of documentation sections
         self.section  = None  # current documentation section
 
@@ -379,7 +379,7 @@ class ContentProcessor:
         blocks = source_processor.blocks
         count  = len(blocks)
         for n in range(count):
-            
+
             source = blocks[n]
             if source.content:
                 # this is a documentation comment, we need to catch
@@ -392,8 +392,8 @@ class ContentProcessor:
                     m = m+1
 
                 doc_block = DocBlock( source, follow, self )
-    
-    
+
+
     def  finish( self ):
 
         # process all sections to extract their abstract, description
@@ -430,13 +430,13 @@ class ContentProcessor:
             chap = DocChapter( None )
             chap.sections = others
             self.chapters.append( chap )
-            
+
 
 
 class DocBlock:
 
     def __init__( self, source, follow, processor ):
-        
+
         processor.reset()
 
         self.source    = source
@@ -451,8 +451,8 @@ class DocBlock:
             self.type = self.markups[0].tag
         except:
             pass
-        
-            
+
+
         # compute block name from first markup paragraph
         try:
             markup = self.markups[0]
@@ -492,7 +492,7 @@ class DocBlock:
         # now strip the leading and trailing empty lines from the sources
         start = 0
         end   = len( source )-1
-        
+
         while start < end and not string.strip( source[start] ):
             start = start + 1
 

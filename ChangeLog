@@ -1,3 +1,19 @@
+2002-10-05  David Turner  <david@freetype.org>
+
+        * src/pfr/pfrsbit.h, src/pfr/pfrsbit.c, src/pfr/pfrload.c,
+        src/pfr/pfrgload.c, src/pfr/pfrobjs.c, src/pfr/pfrtypes.h,
+        Jamfile, src/base/ftobjs.c: adding support for embedded bitmaps to
+        the PFR driver, and rewriting its kerning loader / handler to use all
+        kerning pairs in a physical font (and not just the first item).
+
+        * src/tools/docmaker/content.py, src/tools/docmaker/sources.py,
+        src/tools/docmaker/tohtml.py: fixing a few nasty bugs
+
+        * src/sfnt/ttcmap0.c: the validator for format 4 sub-tables is
+        now capable of dealing with invalid "length" fields at the start
+        of the sub-table. This allows fonts like "mg______.ttf" (i.e.
+        Marriage) to return accurate charmaps.
+
 2002-10-05  Werner Lemberg  <wl@gnu.org>
 
 	* src/smooth/ftgrays.c (SUBPIXELS): Add cast to `TPos'.

@@ -597,9 +597,18 @@
     FT_Byte   *ends, *starts, *offsets, *deltas, *glyph_ids;
     FT_UInt   num_segs;
 
-
-    if ( table + length > valid->limit || length < 16 )
+    /* in certain fonts, the 'length' field is invalid and goes */
+    /* out of bound. We try to correct this here...             */
+    if ( length < 16 )
       FT_INVALID_TOO_SHORT;
+
+    if ( table + length > valid->limit )
+    {
+      if ( valid->level >= FT_VALIDATE_TIGHT )
+        FT_INVALID_TOO_SHORT;
+
+      length = (FT_UInt)( valid->limit - table );
+    }
 
     p        = table + 6;
     num_segs = TT_NEXT_USHORT( p );   /* read segCountX2 */
