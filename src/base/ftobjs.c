@@ -664,7 +664,8 @@
     FT_Memory         memory = driver->root.memory;
     FT_Error          error  = FT_Err_Ok;
 
-
+    slot->library = driver->root.library;
+    
     if ( FT_DRIVER_USES_OUTLINES( driver ) )
       error = FT_GlyphLoader_New( memory, &slot->loader );
 
@@ -1023,10 +1024,10 @@
          load_flags & FT_LOAD_RENDER )
     {
       error = FT_Render_Glyph( slot,
-                               ( load_flags & FT_LOAD_ANTI_ALIAS )
-                                  ? ft_render_mode_antialias
-                                  : 0 );
-    } 
+                               ( load_flags & FT_LOAD_MONOCHROME )
+                                  ? ft_render_mode_mono
+                                  : ft_render_mode_normal );
+    }	 
 
   Exit:
     return error;
@@ -2039,6 +2040,9 @@
   /*                                                                       */
   /*    right_glyph :: The index of the right glyph in the kern pair.      */
   /*                                                                       */
+  /*    kern_mode   :: see FT_Kerning_Mode for more info. Determines the   */
+  /*                   scale/dimension of the returned kerning vector      */
+  /*                                                                       */
   /* <Output>                                                              */
   /*    kerning     :: The kerning vector.  This is in font units for      */
   /*                   scalable formats, and in pixels for fixed-sizes     */
@@ -2053,15 +2057,15 @@
   /*    kernings, are out of the scope of this API function -- they can be */
   /*    implemented through format-specific interfaces.                    */
   /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Get_Kerning( FT_Face     face,
-                                              FT_UInt     left_glyph,
-                                              FT_UInt     right_glyph,
-                                              FT_Vector*  kerning )
+  FT_EXPORT_FUNC(FT_Error)  FT_Get_Kerning( FT_Face     face,
+                                            FT_UInt     left_glyph,
+                                            FT_UInt     right_glyph,
+                                            FT_UInt     kern_mode,
+                                            FT_Vector*  kerning )
   {
     FT_Error   error = FT_Err_Ok;
     FT_Driver  driver;
     FT_Memory  memory;
-
 
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
@@ -2078,6 +2082,20 @@
                                           left_glyph,
                                           right_glyph,
                                           kerning );
+    }
+    if (!error)
+    {
+      if (kern_mode != ft_kerning_unscaled)
+      {
+        kerning->x = FT_MulFix( kerning->x, face->size->metrics.x_scale );
+        kerning->y = FT_MulFix( kerning->y, face->size->metrics.y_scale );
+        
+        if (kern_mode != ft_kerning_unfitted)
+        {
+          kerning->x = (kerning->x+32) & -64;
+          kerning->y = (kerning->y+32) & -64;
+        }
+      }
     }
     else
     {
@@ -2599,23 +2617,12 @@
   /*    slot        :: A handle to the glyph slot containing the image to  */
   /*                   convert.                                            */
   /*                                                                       */
-  /*    render_mode :: A set of bit flags indicating which kind of bitmap  */
-  /*                   to render.  For now, only                           */
-  /*                   `ft_render_mode_anti_alias' is supported by the     */
-  /*                   available renderers, but others could appear later  */
-  /*                   (e.g. optimized for TV or LCD).                     */
+  /*    render_mode :: this is the render mode used to render the glyph    */
+  /*                   image into a bitmap. See FT_Render_Mode for a list  */
+  /*                   of possible values.                                 */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    In case of success, the renderer will be used to convert glyph     */
-  /*    images in the renderer's known format into bitmaps.                */
-  /*                                                                       */
-  /*    This doesn't change the current renderer for other formats.        */
-  /*                                                                       */
-  /*    The slot's native image should be considered lost after the        */
-  /*    conversion.                                                        */
   /*                                                                       */
   FT_EXPORT_FUNC( FT_Error )  FT_Render_Glyph( FT_GlyphSlot  slot,
                                                FT_UInt       render_mode )

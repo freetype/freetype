@@ -209,10 +209,12 @@
 
       if (!glyph->image) continue;
 
-      x = glyph->pos.x >> 6;
-      y = glyph->pos.y >> 6;
+      x = glyph->pos.x;
+      y = glyph->pos.y;
 
-      FT_Glyph_Get_Box( glyph->image, &cbox );
+      FT_Glyph_Get_CBox( glyph->image,
+                         ft_glyph_bbox_gridfit,
+                         &cbox );
 
       cbox.xMin += x;
       cbox.yMin += y;
@@ -230,7 +232,7 @@
 
  /**************************************************************
   *
-  *  Layout a string of glyphs
+  *  Layout a string of glyphs, the glyphs are untransformed..
   *
   */
   static void  layout_glyphs( void )
@@ -261,9 +263,9 @@
         {
           FT_Vector  kern;
 
-          FT_Get_Kerning( face, prev_index, glyph->glyph_index, &kern );
-          kern.x = FT_MulFix( kern.x, face->size->metrics.x_scale );
-          if (hinted) kern.x = (kern.x+32) & -64;
+          FT_Get_Kerning( face, prev_index, glyph->glyph_index,
+                          hinted ? ft_kerning_default : ft_kerning_unfitted,
+                          &kern );
 
           origin_x += kern.x;
         }
@@ -273,28 +275,24 @@
       origin.x = origin_x;
       origin.y = 0;
 
-      if (transform)
-        FT_Vector_Transform( &origin, &trans_matrix );
-
       /* clear existing image if there is one */
       if (glyph->image)
         FT_Done_Glyph(glyph->image);
 
-      /* load the glyph image                       */
-      /* for now, we take a monochrome glyph bitmap */
-      error = FT_Get_Glyph_Bitmap( face, glyph->glyph_index,
-                                   load_flags,
-                                   num_grays,
-                                   &origin,
-                                   (FT_BitmapGlyph*)&glyph->image );
+      /* load the glyph image (in its native format) */
+      /* for now, we take a monochrome glyph bitmap  */
+      error = FT_Load_Glyph( face, glyph->glyph_index,
+                             hinted ? FT_LOAD_DEFAULT : FT_LOAD_NO_HINTING ) ||
+              FT_Get_Glyph ( face->glyph, &glyph->image );
       if (error) continue;
 
       glyph->pos = origin;
 
-      origin_x  += glyph->image->advance;
+      origin_x  += face->glyph->advance.x;
     }
     string_center.x = origin_x / 2;
     string_center.y = 0;
+    
     if (transform)
       FT_Vector_Transform( &string_center, &trans_matrix );
   }
@@ -309,62 +307,81 @@
     PGlyph    glyph = glyphs;
     grBitmap  bit3;
     int       n;
+    FT_Vector delta;
+
+    /* first of all, we must compute the general delta for the glyph */
+    /* set..                                                         */
+    delta.x = (x << 6) - string_center.x;
+    delta.y = ((bit.rows-y) << 6) - string_center.y;
 
     for ( n = 0; n < num_glyphs; n++, glyph++ )
     {
+      FT_Glyph   image;
+      FT_Vector  vec;
+      
       if (!glyph->image)
         continue;
 
-      switch (glyph->image->glyph_type)
+     /* copy image */
+      error = FT_Glyph_Copy( glyph->image, &image );
+      if (error) continue;
+      
+     /* transform it */
+      vec = glyph->pos;
+      FT_Vector_Transform( &vec, &trans_matrix );
+      vec.x += delta.x;
+      vec.y += delta.y;
+      error = FT_Glyph_Transform( image, &trans_matrix, &vec );
+      if (!error)
       {
-        case ft_glyph_type_bitmap:
+        FT_BBox  bbox;
+        
+        /* check bounding box, if it's not within the display surface, we */
+        /* don't need to render it..                                      */
+        
+        FT_Glyph_Get_CBox( image, ft_glyph_bbox_pixels, &bbox );
+        
+        if ( bbox.xMax > 0         && bbox.yMax > 0        &&
+             bbox.xMin < bit.width && bbox.yMin < bit.rows )
+        {             
+          /* convert to a bitmap - destroy native image */
+          error = FT_Glyph_To_Bitmap( &image,
+                                      ft_render_mode_normal,
+                                      0, 1 );
+          if (!error)
           {
-            /* this is a bitmap, we simply blit it to our target surface */
-            FT_BitmapGlyph  bitm   = (FT_BitmapGlyph)glyph->image;
-            FT_Bitmap*      source = &bitm->bitmap;
+            FT_BitmapGlyph  bitmap = (FT_BitmapGlyph)image;
+            FT_Bitmap*      source = &bitmap->bitmap;
             FT_Pos          x_top, y_top;
-
+    
             bit3.rows   = source->rows;
             bit3.width  = source->width;
             bit3.pitch  = source->pitch;
             bit3.buffer = source->buffer;
-
+    
             switch (source->pixel_mode)
             {
               case ft_pixel_mode_mono:
                 bit3.mode  = gr_pixel_mode_mono;
                 break;
-
+    
               case ft_pixel_mode_grays:
                 bit3.mode  = gr_pixel_mode_gray;
                 bit3.grays = source->num_grays;
                 break;
-
+    
               default:
                 continue;
             }
-
+    
             /* now render the bitmap into the display surface */
-            x_top = x + (glyph->pos.x >> 6) + bitm->left;
-            y_top = y - (glyph->pos.y >> 6) - bitm->top;
+            x_top = bitmap->left;
+            y_top = bit.rows - bitmap->top;
             grBlitGlyphToBitmap( &bit, &bit3, x_top, y_top, fore_color );
           }
-          break;
-#if 0
-        case ft_glyph_type_outline:
-          {
-            /* in the case of outlines, we directly render it into the */
-            /* target surface with the smooth renderer..               */
-            FT_OutlineGlyph  out = (FT_OutlineGlyph)glyph->image;
-
-            FT_Outline_Translate( (x+pen_pos[n]) << 6, (y+
-            error = FT_Outline_Render(
-          }
-          break;
-#endif
-        default:
-          ;
+        }
       }
+      FT_Done_Glyph( image );
     }
   }
 
@@ -407,8 +424,6 @@
     trans_matrix.xy = -sinus;
     trans_matrix.yx = sinus;
     trans_matrix.yy = cosinus;
-
-    FT_Set_Transform(face,&trans_matrix, 0);
   }
 
 /****************************************************************************/
@@ -723,8 +738,7 @@
           reset_transform();
           layout_glyphs();
           compute_bbox( &bbox );
-          render_string( (bit.width-(string_center.x >> 5))/2,
-                         (bit.rows +(string_center.y >> 5))/2 );
+          render_string( bit.width/2, bit.rows/2 );
         }
 
         sprintf( Header, "%s %s (file %s)",

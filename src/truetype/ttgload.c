@@ -21,6 +21,7 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/sfnt.h>
 #include <freetype/tttags.h>
+#include <freetype/ftoutln.h>
 
 
 #include <ttgload.h>

@@ -1,4 +1,5 @@
 #include <freetype/internal/ftobjs.h>
+#include <freetype/ftoutln.h>
 #include <raster1.h>
 #include <ftraster.h>
 
@@ -84,7 +85,7 @@
     }
 
     /* check rendering mode */
-    if ( mode & ft_render_mode_antialias )
+    if ( mode != ft_render_mode_mono )
     {
       /* raster1 is only capable of producing monochrome bitmaps */
       if (render->clazz == &ft_raster1_renderer_class)
@@ -124,7 +125,7 @@
     }
       
     /* allocate new one, depends on pixel format */
-    if ( mode & ft_render_mode_antialias )
+    if (!(mode & ft_render_mode_mono))
     {
       /* we pad to 32 bits, only for backwards compatibility with FT 1.x */
       pitch = (width+3) & -4;

@@ -20,7 +20,7 @@
 #include <cidgload.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
-
+#include <freetype/ftoutln.h>
 
   /*************************************************************************/
   /*                                                                       */
@@ -459,7 +459,7 @@
 
     if ( bchar_index < 0 || achar_index < 0 )
     {
-      FT_ERROR(( "t1operator_seac: ));
+      FT_ERROR(( "t1operator_seac:" ));
       FT_ERROR(( " invalid seac character code arguments\n" ));
       return T1_Err_Syntax_Error;
     }
@@ -862,7 +862,7 @@
           if ( ip[0] != 12 || ip[1] != 17 )
           {
             FT_ERROR(( "CID_Parse_CharStrings:" ));
-            FT_ERROR(( " `pop' expected, found (%d %d)\n",
+            FT_ERROR(( " 'pop' expected, found (%d %d)\n",
                        ip[0], ip[1] ));
             goto Syntax_Error;
           }

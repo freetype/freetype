@@ -152,81 +152,49 @@
   char  bit_buffer[MAX_BUFFER];
 
 
-  /* Render a single glyph with the "grays" component */
+  /* Render a single glyph with the `grays' component */
   static
   FT_Error  Render_Glyph( int  x_offset,
                           int  y_offset )
   {
-    FT_Bitmap  bit2;
-    grBitmap   bit3;
-    int        width, height, pitch, size;
-    int        left, right, top, bottom;
-    int        x_top, y_top;
-
-    /* first, render the glyph into an intermediate buffer */
-
-    left  = FLOOR( glyph->metrics.horiBearingX );
-    right = CEIL( glyph->metrics.horiBearingX + glyph->metrics.width );
-    width = TRUNC( right - left );
-
-    top    = CEIL( glyph->metrics.horiBearingY );
-    bottom = FLOOR( glyph->metrics.horiBearingY - glyph->metrics.height );
-    height = TRUNC( top - bottom );
-
-    if ( glyph->format == ft_glyph_format_outline )
+    grBitmap  bit3;
+    FT_Pos    x_top, y_top;
+    
+    /* first, render the glyph image into a bitmap */
+    if (glyph->format != ft_glyph_format_bitmap)
     {
-      pitch = antialias ? ( width + 3 ) & -4
-                        : ( width + 7 ) >> 3;
-      size  = pitch * height;
-
-      if ( size > MAX_BUFFER )
-        return FT_Err_Out_Of_Memory;
-
-      bit2.width      = width;
-      bit2.rows       = height;
-      bit2.pitch      = pitch;
-      bit2.pixel_mode = antialias ? ft_pixel_mode_grays : ft_pixel_mode_mono;
-      bit2.buffer     = bit_buffer;
-
-      bit3.rows   = bit2.rows;
-      bit3.width  = bit2.width;
-      bit3.pitch  = bit2.pitch;
-      bit3.mode   = antialias ? bit.mode : gr_pixel_mode_mono;
-      bit3.buffer = bit_buffer;
-      bit3.grays  = 256;
-
-      FT_Outline_Translate( &glyph->outline, -left, -bottom );
-      memset( bit_buffer, 0, size );
-
-      if ( low_prec )
-        glyph->outline.flags &= ~ft_outline_high_precision;
-
-      error = FT_Outline_Get_Bitmap( library, &glyph->outline, &bit2 );
+      error = FT_Render_Glyph( glyph, antialias ? ft_render_mode_normal : ft_render_mode_mono );
+      if (error) return error;                               
+                               
     }
-    else
+    
+    /* now blit it to our display screen */
+    bit3.rows   = glyph->bitmap.rows;
+    bit3.width  = glyph->bitmap.width;
+    bit3.pitch  = glyph->bitmap.pitch;
+    bit3.buffer = glyph->bitmap.buffer;
+
+    switch (glyph->bitmap.pixel_mode)
     {
-      bit3.rows   = glyph->bitmap.rows;
-      bit3.width  = glyph->bitmap.width;
-      bit3.pitch  = glyph->bitmap.pitch;
-      bit3.mode   = gr_pixel_mode_mono;
-      bit3.buffer = glyph->bitmap.buffer;
-      bit3.grays  = 0;
+      case ft_pixel_mode_mono:
+         bit3.mode   = gr_pixel_mode_mono;
+         bit3.grays  = 0;
+         break;
+         
+      case ft_pixel_mode_grays:
+         bit3.mode   = gr_pixel_mode_gray;
+         bit3.grays  = glyph->bitmap.num_grays;
     }
 
-    /* then, blit the image to the target surface */
-
-    x_top = x_offset + TRUNC( left );
-    y_top = y_offset - TRUNC( top );
-
-#if 0
-    if ( bit.pitch < 0 )
-      y_top = bit.rows - y_top;
-#endif
+    /* Then, blit the image to the target surface */
+    x_top = x_offset + glyph->bitmap_left;
+    y_top = y_offset - glyph->bitmap_top;
 
     grBlitGlyphToBitmap( &bit, &bit3, x_top, y_top, fore_color );
 
-    return FT_Err_Ok;
+    return 0;
   }
+
 
 
   static
@@ -239,11 +207,6 @@
                                     pointSize << 6,
                                     res,
                                     res );
-    if ( error )
-    {
-      /* to be written */
-    }
-
     return FT_Err_Ok;
   }
 

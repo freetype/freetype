@@ -192,6 +192,93 @@
                                              FT_Module   module );
 
 
+ /*************************************************************************
+  *
+  *  <Function>
+  *     FT_New_Library
+  *
+  *  <Description>
+  *     Creates a new "virgin" library that uses a custom memory manager.
+  *     The library has no registered driver, those can be added with a
+  *     call to FT_Add_Default_Modules
+  *
+  *  <Input>
+  *     memory   :: handle to custom memory manager
+  *
+  *  <Output>
+  *     library  :: handle to fresh new library object
+  *
+  *  <Return>
+  *     Error code (module not listed)
+  *
+  *************************************************************************/
+  
+  FT_EXPORT_DEF(FT_Error)  FT_New_Library( FT_Memory    memory,
+                                           FT_Library*  library );
+
+
+ /*************************************************************************
+  *
+  *  <Function>
+  *     FT_Done_Library
+  *
+  *  <Description>
+  *     Destroys a given library, and all child objects, except the
+  *     memory manager.
+  *
+  *  <Input>
+  *     library  :: handle to target library object
+  *
+  *  <Return>
+  *     Error code (module not listed)
+  *
+  *************************************************************************/
+  
+  FT_EXPORT_DEF(FT_Error)  FT_Done_Library( FT_Library  library );
+
+
+
+ /*************************************************************************
+  *
+  *  <Function>
+  *     FT_Set_Debug_Hook
+  *
+  *  <Description>
+  *     Used only by the TrueType debugger. This function is private and
+  *     should never be called by normal applications..
+  *
+  *  <Input>
+  *     library    :: handle to target library object
+  *     hook_index :: hook index
+  *     debug_hook :: debug hook functions
+  *
+  *************************************************************************/
+  
+  typedef  void  (*FT_DebugHook_Func)( void* arg );
+  
+  FT_EXPORT_DEF(void)      FT_Set_Debug_Hook( FT_Library         library,
+                                              FT_UInt            hook_index,
+                                              FT_DebugHook_Func  debug_hook );
+
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Add_Default_Modules                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Adds the set of default modules to a given library object.         */
+  /*    This is only useful when you create a library object with          */
+  /*    FT_New_Library (usually to plug a custom memory manager)           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library :: A handle to a new library object.                       */
+  /*                                                                       */
+  FT_EXPORT_DEF(void)  FT_Add_Default_Modules( FT_Library  library );
+
+
+
 #endif /* FTMODULE_H */
 
 

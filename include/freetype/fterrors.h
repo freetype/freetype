@@ -54,7 +54,7 @@ FT_ERROR_START_LIST
   FT_ERRORDEF( FT_Err_Invalid_Character_Code,  0x0013, "invalid character code" )
 
   FT_ERRORDEF( FT_Err_Unimplemented_Feature,   0x0020, "unimplemented feature" )
-  FT_ERRORDEF( FT_Err_Invalid_Glyph_Format,    0x0021, "invalid glyph image format" )
+  FT_ERRORDEF( FT_Err_Invalid_Glyph_Format,    0x0021, "unsupported glyph image format" )
   FT_ERRORDEF( FT_Err_Cannot_Render_Glyph,     0x0022, "cannot render this glyph format" )
 
   FT_ERRORDEF( FT_Err_Invalid_Library_Handle,  0x0030, "invalid library handle" )

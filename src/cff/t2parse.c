@@ -583,7 +583,6 @@
                     *(FT_Int*)q = (FT_Int)val;
                     break;
 #endif
-
                   default:
                     *(FT_Long*)q = val;
                   }

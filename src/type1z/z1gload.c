@@ -18,6 +18,7 @@
 #include <z1gload.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
+#include <freetype/ftoutln.h>
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1gload

@@ -20,6 +20,7 @@
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/sfnt.h>
+#include <freetype/ftoutln.h>
 #include <freetype/tttags.h>
 
 #include <t2load.h>

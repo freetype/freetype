@@ -257,13 +257,17 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#define FT_RENDERER(x)  ((FT_Renderer)(x))
+#define FT_RENDERER(x)      ((FT_Renderer)(x))
+#define FT_GLYPH(x)         ((FT_Glyph)(x))
+#define FT_BITMAP_GLYPH(x)  ((FT_BitmapGlyph)(x))
+#define FT_OUTLINE_GLYPH(x) ((FT_OutlineGlyph)(x))
 
   typedef struct FT_RendererRec_
   {
     FT_ModuleRec           root;
     FT_Renderer_Class*     clazz;
     FT_Glyph_Format        glyph_format;
+    const FT_Glyph_Class   glyph_class;
 
     FT_Raster              raster;
     FT_Raster_Render_Func  raster_render;
@@ -384,7 +388,6 @@
   /*                                                                       */
   /*                                                                       */
   /*                                                                       */
-  typedef  void  (*FT_DebugHook_Func)( void* arg );
 
 
   typedef struct  FT_LibraryRec_
@@ -408,19 +411,6 @@
   } FT_LibraryRec;
 
 
-  FT_EXPORT_DEF(FT_Error)  FT_New_Library( FT_Memory    memory,
-                                           FT_Library*  library );
-
-
-  FT_EXPORT_DEF(FT_Error)  FT_Done_Library( FT_Library  library );
-
-
-
-  FT_EXPORT_DEF(void)      FT_Set_Debug_Hook( FT_Library         library,
-                                              FT_UInt            hook_index,
-                                              FT_DebugHook_Func  debug_hook );
-
-
   BASE_DEF(FT_Renderer)  FT_Lookup_Renderer( FT_Library       library,
                                              FT_Glyph_Format  format,
                                              FT_ListNode     *node );
@@ -428,7 +418,6 @@
   BASE_DEF(FT_Error)    FT_Render_Glyph_Internal( FT_Library    library,
                                                   FT_GlyphSlot  slot,
                                                   FT_UInt       render_mode );
-
 
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM

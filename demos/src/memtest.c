@@ -1,16 +1,15 @@
 /* memtest.c */
 
 #include <freetype/freetype.h>
-#include <freetype/internal/ftobjs.h>
+#include <freetype/ftmodule.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
   FT_Error      error;
 
   FT_Library    library;
   FT_Face       face;
-  FT_Size       size;
-  FT_GlyphSlot  slot;
 
   unsigned int  num_glyphs;
   int           ptsize;
@@ -18,7 +17,6 @@
   int  Fail;
   int  Num;
 
-  extern void FT_Add_Default_Modules( FT_Library  library );
 
 
 

@@ -20,14 +20,12 @@
 /****************************************************************************/
 
 #include <freetype/freetype.h>
-#include <freetype/ftrender.h>
+#include <freetype/ftglyph.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>    /* for clock() */
-
-#include "graph.h"
 
 /* SunOS 4.1.* does not define CLOCKS_PER_SEC, so include <sys/param.h> */
 /* to get the HZ macro which is the equivalent.                         */
@@ -45,51 +43,28 @@
   FT_Library    library;
 
   FT_Face       face;
-  FT_Size       size;
-  FT_GlyphSlot  glyph;
-
-  FT_Outline    outline;
-
-  FT_Pos*   cur_x;
-  FT_Pos*   cur_y;
-
-  unsigned short*  cur_endContour;
-  unsigned char*   cur_touch;
-
-  FT_Outline  outlines[MAX_GLYPHS];
 
   int             num_glyphs;
+  FT_Glyph        glyphs[MAX_GLYPHS];
+  
   int             tab_glyphs;
   int             cur_glyph;
-  int             cur_point;
-  unsigned short  cur_contour;
 
   int             pixel_size   = CHARSIZE;
   int             repeat_count = 1;
-  int             use_grays    = 0;
-
-  FT_Bitmap      Bit;
-  grBitmap       bit;
 
   int  Fail;
   int  Num;
 
-  int  vio_Height, vio_Width;
-
-  short  visual;      /* display glyphs while rendering */
-  short  antialias; /* smooth fonts with gray levels  */
+  short  antialias = 1; /* smooth fonts with gray levels  */
   short  force_low;
 
 
-#define RASTER_BUFF_SIZE   128000
-  char     raster_buff[ RASTER_BUFF_SIZE ];
-
-
-  static void Clear_Buffer();
-
-  static void Panic( const char* message )
+  static
+  void  Panic( const char*  message )
   {
-    fprintf( stderr, "%s\n  error code = 0x%04x\n", message, error );
+    fprintf( stderr, "%s\n", message );
+    exit(1);
   }
 
 /*******************************************************************/
@@ -106,45 +81,10 @@
   }
 
 
-/*******************************************************************/
-/*                                                                 */
-/*  Init_Engine:                                                   */
-/*                                                                 */
-/*    Allocates bitmap, render pool and other structs...           */
-/*                                                                 */
-/*******************************************************************/
-
-  void  Init_Engine( void )
-  {
-    Bit.rows       = bit.rows;
-    Bit.width      = bit.width;
-    Bit.pitch      = bit.pitch;
-    Bit.buffer     = bit.buffer;
-    Bit.pixel_mode = antialias ? ft_pixel_mode_grays : ft_pixel_mode_mono;
-    Bit.num_grays  = bit.grays;
-    Clear_Buffer();
-  }
-
 
 /*******************************************************************/
 /*                                                                 */
-/*  Clear_Buffer:                                                  */
-/*                                                                 */
-/*    Clears current bitmap.                                       */
-/*                                                                 */
-/*******************************************************************/
-
-  static void  Clear_Buffer( void )
-  {
-    long size = Bit.rows * Bit.pitch;
-
-    memset( Bit.buffer, 0, size );
-  }
-
-
-/*******************************************************************/
-/*                                                                 */
-/*  LoadTrueTypeChar:                                              */
+/*  LoadChar:                                                      */
 /*                                                                 */
 /*    Loads a glyph into memory.                                   */
 /*                                                                 */
@@ -152,58 +92,18 @@
 
   FT_Error  LoadChar( int  idx )
   {
-    error = FT_Load_Glyph( face, idx, FT_LOAD_DEFAULT );
-    if ( error )
-      return error;
-
-    glyph->outline.flags |= ft_outline_single_pass |
-                                    ft_outline_ignore_dropouts;
-
-    if (force_low)
-      glyph->outline.flags &= ~ft_outline_high_precision;
-
-    /* debugging */
-#if 0
-    if ( idx == 0 && !visual )
+    FT_Glyph  glyph;
+    
+    /* loads the glyph in the glyph slot */
+    error = FT_Load_Glyph( face, idx, FT_LOAD_DEFAULT ) ||
+            FT_Get_Glyph ( face->glyph, &glyph );
+    if ( !error )
     {
-      printf( "points = %d\n", outline.points );
-      for ( j = 0; j < outline.points; j++ )
-        printf( "%02x  (%01hx,%01hx)\n",
-                 j, outline.xCoord[j], outline.yCoord[j] );
-      printf( "\n" );
+      glyphs[cur_glyph++] = glyph;
     }
-#endif
-
-    /* create a new outline */
-    FT_Outline_New( library,
-                    glyph->outline.n_points,
-                    glyph->outline.n_contours,
-                    &outlines[cur_glyph] );
-
-    /* copy the glyph outline into it */
-    glyph->outline.flags |= ft_outline_single_pass;
-    if (force_low)
-      glyph->outline.flags &= ~ft_outline_high_precision;
-
-    FT_Outline_Copy( &glyph->outline, &outlines[cur_glyph] );
-
-    /* center outline around 0 */
-    {
-      FT_BBox  bbox;
-
-      FT_Outline_Get_CBox( &glyph->outline, &bbox );
-      FT_Outline_Translate( &outlines[cur_glyph],
-                            - ( bbox.xMax - bbox.xMin )/2,
-                            - ( bbox.yMax - bbox.yMin )/2 );
-    }
-    /* translate it */
-    FT_Outline_Translate( &outlines[cur_glyph],
-                          Bit.width * 32 ,
-                          Bit.rows  * 32 );
-    cur_glyph++;
-
-    return FT_Err_Ok;
+    return error;
   }
+
 
 
 /*******************************************************************/
@@ -216,8 +116,19 @@
 
   FT_Error  ConvertRaster( int  index )
   {
-    outlines[index].flags |= ~ft_outline_single_pass;
-    return FT_Outline_Get_Bitmap( library, &outlines[index], &Bit );
+    FT_Glyph  bitmap;
+    FT_Error  error;
+    
+    bitmap = glyphs[index];
+    error = FT_Glyph_To_Bitmap( &bitmap,
+                                antialias ? ft_render_mode_normal
+                                          : ft_render_mode_mono,
+                                0,
+                                0 );
+    if (!error)
+      FT_Done_Glyph( bitmap );
+      
+    return error;
   }
 
 
@@ -229,8 +140,7 @@
       fprintf( stderr, "options:\n");
       fprintf( stderr, "   -r : repeat count to be used (default is 1)\n" );
       fprintf( stderr, "   -s : character pixel size (default is 600)\n" );
-      fprintf( stderr, "   -v : display results..\n" );
-      fprintf( stderr, "   -g : render anti-aliased glyphs\n" );
+      fprintf( stderr, "   -m : render monochrome glyphs (default is anti-aliased)\n" );
       fprintf( stderr, "   -a : use smooth anti-aliaser\n" );
       fprintf( stderr, "   -l : force low quality even at small sizes\n" );
       exit(1);
@@ -243,35 +153,25 @@
     char   filename[128 + 4];
     char   alt_filename[128 + 4];
     char*  execname;
-    grSurface*  surface = 0;
 
     long   t, t0, tz0;
 
 
     execname    = argv[0];
 
-    antialias = 0;
-    visual      = 0;
-    force_low   = 0;
+    antialias = 1;
+    force_low = 0;
 
     while ( argc > 1 && argv[1][0] == '-' )
     {
       switch ( argv[1][1] )
       {
-      case 'g':
-        antialias = 1;
-        break;
-
-      case 'a':
-        use_grays = 1;
+      case 'm':
+        antialias = 0;
         break;
 
       case 'l':
         force_low = 1;
-        break;
-
-      case 'v':
-        visual = 1;
         break;
 
       case 's':
@@ -328,17 +228,6 @@
     if ( (error = FT_Init_FreeType( &library )) )
       Panic( "Error while initializing engine" );
 
-    /* set-up smooth anti-aliaser */
-    if (use_grays)
-    {
-      FT_Renderer  smooth;
-      
-      smooth = (FT_Renderer)FT_Get_Module( library, "smooth renderer" );
-      if (!smooth) Panic( "Could not initialize smooth anti-aliasing renderer" );
-      
-      FT_Set_Renderer( library, smooth, 0, 0 );
-    }
-
     /* Load face */
 
     error = FT_New_Face( library, filename, 0, &face );
@@ -350,7 +239,6 @@
     /* get face properties and allocate preload arrays */
 
     num_glyphs = face->num_glyphs;
-    glyph      = face->glyph;
 
     tab_glyphs = MAX_GLYPHS;
     if ( tab_glyphs > num_glyphs )
@@ -360,32 +248,6 @@
 
     error = FT_Set_Pixel_Sizes( face, pixel_size, pixel_size );
     if ( error ) Panic( "Could not reset instance" );
-
-    bit.mode  = antialias ? gr_pixel_mode_gray : gr_pixel_mode_mono;
-    bit.width = 640;
-    bit.rows  = 480;
-    bit.grays = 128;
-
-    if ( visual )
-    {
-      if ( !grInitDevices() )
-        Panic( "Could not initialize graphics.\n" );
-
-      surface = grNewSurface( 0, &bit );
-      if (!surface)
-        Panic( "Could not open graphics window/screen.\n" );
-    }
-    else
-    {
-      if ( grNewBitmap( bit.mode,
-                        bit.grays,
-                        bit.width,
-                        bit.rows,
-                       &bit ) )
-        Panic( "Could not create rendering buffer.\n" );
-    }
-
-    Init_Engine();
 
     Num  = 0;
     Fail = 0;
@@ -405,8 +267,6 @@
 
       /* First, preload 'tab_glyphs' in memory */
       cur_glyph   = 0;
-      cur_point   = 0;
-      cur_contour = 0;
 
       printf( "loading %d glyphs", tab_glyphs );
 
@@ -440,14 +300,6 @@
           else
   	  {
             rendered_glyphs ++;
-
-            if ( Num == 0 && visual )
-            {
-              sprintf( Header, "Glyph: %5d", Num );
-              grSetTitle( surface, Header );
-              grRefreshSurface( surface );
-              Clear_Buffer();
-            }
 	  }
         }
       }
@@ -461,7 +313,7 @@
 
       /* Now free all loaded outlines */
       for ( Num = 0; Num < cur_glyph; Num++ )
-        FT_Outline_Done( library, &outlines[Num] );
+        FT_Done_Glyph( glyphs[Num] );
     }
 
     tz0 = Get_Time() - tz0;

@@ -39,18 +39,7 @@
 #define FREETYPE_MINOR 0
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* To make freetype.h independent from configuration files we check      */
-  /* whether FT_EXPORT_DEF has been defined already.                          */
-  /*                                                                       */
-  /* On some systems and compilers (Win32 mostly), an extra keyword is     */
-  /* necessary to compile the library as a DLL.                            */
-  /*                                                                       */
-#ifndef FT_EXPORT_DEF
-#define FT_EXPORT_DEF(x)  extern  x
-#endif
-
+#include <freetype/config/ftconfig.h>   /* read configuration information */
 #include <freetype/fterrors.h>
 #include <freetype/fttypes.h>
 
@@ -335,7 +324,7 @@
   typedef enum  FT_Encoding_
   {
     ft_encoding_none    = 0,
-    ft_encoding_symbol  = 0,
+    ft_encoding_symbol  = FT_MAKE_TAG('s','y','m','b'),
     ft_encoding_unicode = FT_MAKE_TAG('u','n','i','c'),
     ft_encoding_latin_2 = FT_MAKE_TAG('l','a','t','2'),
     ft_encoding_sjis    = FT_MAKE_TAG('s','j','i','s'),
@@ -344,9 +333,9 @@
     ft_encoding_wansung = FT_MAKE_TAG('w','a','n','s'),
     ft_encoding_johab   = FT_MAKE_TAG('j','o','h','a'),
 
-    ft_encoding_adobe_standard = FT_MAKE_TAG('a','d','o','b'),
-    ft_encoding_adobe_expert   = FT_MAKE_TAG('a','d','b','e'),
-    ft_encoding_adobe_custom   = FT_MAKE_TAG('a','d','b','c'),
+    ft_encoding_adobe_standard = FT_MAKE_TAG('A','D','O','B'),
+    ft_encoding_adobe_expert   = FT_MAKE_TAG('A','D','B','E'),
+    ft_encoding_adobe_custom   = FT_MAKE_TAG('A','D','B','C'),
 
     ft_encoding_apple_roman    = FT_MAKE_TAG('a','r','m','n')
 
@@ -995,6 +984,9 @@
   /*    vectorial or bitmap/graymaps..                                     */
   /*                                                                       */
   /* <Fields>                                                              */
+  /*    library  :: a handle to the FreeType library instance this slot    */
+  /*                belongs to.                                            */
+  /*                                                                       */
   /*    face     :: A handle to the parent face object.                    */
   /*                                                                       */
   /*    next     :: In some cases (like some font tools), several glyph    */
@@ -1111,6 +1103,7 @@
 
   typedef struct  FT_GlyphSlotRec_
   {
+    FT_Library        library;
     FT_Face           face;
     FT_GlyphSlot      next;
     FT_UInt           flags;
@@ -1813,8 +1806,23 @@
   /*    glyph loader to use 'ft_render_mode_antialias' when calling        */
   /*    FT_Render_Glyph.                                                   */
   /*                                                                       */
+  /*    THIS IS NOW 0, AS ANTI-ALIASED RENDERING IS NOW THE DEFAULT..      */
   /*                                                                       */
-#define FT_LOAD_ANTI_ALIAS  4096
+#define FT_LOAD_ANTI_ALIAS  0  /* this is the default */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_LOAD_MONOCHROME                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Only used with FT_LOAD_RENDER set, indicates that the returned     */
+  /*    glyph image should be 1-bit monochrome. This really tells the      */
+  /*    glyph loader to use 'ft_render_mode_mono' when calling             */
+  /*    FT_Render_Glyph.                                                   */
+  /*                                                                       */
+  /*                                                                       */
+#define FT_LOAD_MONOCHROME  0  /* this is the default */
 
 
   /*************************************************************************/
@@ -1867,10 +1875,55 @@
   /* <Note>                                                                */
   /*    The transformation is only applied to scalable image formats.      */
   /*                                                                       */
+  /*    The transformation is simply applied to the glyph after it is      */
+  /*    loaded. It means that hinting is unaltered by the transform and    */
+  /*    is performed on the character size given in the last call to       */
+  /*    FT_Set_Char_Sizes or FT_Set_Pixel_Sizes                            */
+  /*                                                                       */
   FT_EXPORT_DEF( void )  FT_Set_Transform( FT_Face     face,
                                            FT_Matrix*  matrix,
                                            FT_Vector*  delta );
 
+
+ /*************************************************************************
+  *
+  *  <Enum>
+  *     FT_Render_Mode
+  *
+  *  <Description>
+  *     An enumeration type that lists the render modes supported by the  
+  *     FreeType 2 renderer(s). A renderer is in charge of converting a
+  *     glyph image into a bitmap..
+  *
+  *  <Fields>
+  *     ft_render_mode_normal   :: this is the default render mode,
+  *                                it corresponds to 8-bit anti-aliased
+  *                                bitmaps, using 256 levels of gray.
+  *
+  *     ft_render_mode_mono     :: this render mode is used to produce
+  *                                1-bit monochrome bitmaps
+  *
+  *  <Note>
+  *     There is no render mode to produce 8-bit "monochrome" bitmaps,
+  *     you'll have to make the conversion yourself if you need such
+  *     things (besides, FreeType is not a graphics library..)
+  *
+  *     More modes might appear later for specific display modes (e.g.
+  *     TV, LCDs, etc..). They will be supported through the simple
+  *     addition of a renderer module, with no changes to the rest of
+  *     the engine..
+  *
+  *
+  *************************************************************************/
+  
+  typedef enum FT_Render_Mode_
+  {
+    ft_render_mode_normal = 0,
+    ft_render_mode_mono   = 1
+    
+  } FT_Render_Mode;
+
+  
 
  /*************************************************************************
   *
@@ -1885,29 +1938,46 @@
   *     slot        :: handle to the glyph slot containing the image to
   *                    convert
   *
-  *     render_mode :: a set of bit flags indicating which kind of bitmap
-  *                    to render. For now, only 'ft_render_mode_anti_alias'
-  *                    is supported by the available renderers, but others
-  *                    could appear later (e.g. LCD or TV optimised)
+  *     render_mode :: this is the render mode used to render the glyph image
+  *                    into a bitmap. See FT_Render_Mode for possible values.
   *
   *  <Return>
   *     Error code. 0 means success.
-  *
-  *  <Note>
-  *     in case of success, the renderer will be used to convert glyph
-  *     images in the renderer's known format into bitmaps.
-  *
-  *     This doesn't change the current renderer for other formats..
-  *
-  *     The slot's native image should be considered lost after the
-  *     conversion..
   *
   *************************************************************************/
   
   FT_EXPORT_DEF(FT_Error)  FT_Render_Glyph( FT_GlyphSlot  slot,
                                             FT_UInt       render_mode );
 
-                                            
+
+ /**************************************************************************
+  *
+  *  <Enum>
+  *     FT_Kerning_Mode
+  *
+  *  <Description>
+  *     A list of enumerations used to specify which kerning values to
+  *     return in FT_Get_Kerning
+  *
+  *  <Field>
+  *     ft_kerning_default  :: used to returned scaled and grid-fitted kerning
+  *                            distances. (value is 0)
+  *
+  *     ft_kerning_unfitted :: used to returned scaled by un-grid-fitted
+  *                            kerning distances.
+  *
+  *     ft_kerning_unscaled :: used to return the kerning vector in original
+  *                            font units..
+  *
+  **************************************************************************/
+  typedef enum FT_Kerning_Mode_
+  {
+    ft_kerning_default  = 0,
+    ft_kerning_unfitted,
+    ft_kerning_unscaled
+    
+  } FT_Kerning_Mode;
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1922,6 +1992,9 @@
   /*    left_glyph  :: The index of the left glyph in the kern pair.       */
   /*                                                                       */
   /*    right_glyph :: The index of the right glyph in the kern pair.      */
+  /*                                                                       */
+  /*    kern_mode   :: see FT_Kerning_Mode for more info. Determines the   */
+  /*                   scale/dimension of the returned kerning vector      */
   /*                                                                       */
   /* <Output>                                                              */
   /*    kerning     :: The kerning vector.  This is in font units for      */
@@ -1940,6 +2013,7 @@
   FT_EXPORT_DEF(FT_Error)  FT_Get_Kerning( FT_Face     face,
                                            FT_UInt     left_glyph,
                                            FT_UInt     right_glyph,
+                                           FT_UInt     kern_mode,
                                            FT_Vector*  kerning );
 
 
@@ -2120,468 +2194,6 @@
                                             FT_Matrix*  matrix );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Get_Bitmap                                              */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Renders an outline within a bitmap.  The outline's image is simply */
-  /*    or-ed to the target bitmap.                                        */
-  /*                                                                       */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to a FreeType library object.                  */
-  /*    outline :: A pointer to the source outline descriptor.             */
-  /*    map     :: A pointer to the target bitmap descriptor.              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    YES.  Rendering is synchronized, so that concurrent calls to the   */
-  /*    scan-line converter will be serialized.                            */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function does NOT CREATE the bitmap, it only renders an       */
-  /*    outline image within the one you pass to it!                       */
-  /*                                                                       */
-  /*    It will use the raster correponding to the default glyph format.   */
-  /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Get_Bitmap( FT_Library   library,
-                                                  FT_Outline*  outline,
-                                                  FT_Bitmap*   bitmap );
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Render                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Renders an outline within a bitmap using the current scan-convert  */
-  /*    This functions uses a FT_Raster_Params as argument, allowing       */
-  /*    advanced features like direct composition/translucency, etc..      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to a FreeType library object.                  */
-  /*    outline :: A pointer to the source outline descriptor.             */
-  /*    params  :: A pointer to a FT_Raster_Params used to describe        */
-  /*               the rendering operation                                 */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    YES.  Rendering is synchronized, so that concurrent calls to the   */
-  /*    scan-line converter will be serialized.                            */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    You should know what you're doing and the role of FT_Raster_Params */
-  /*    to use this function.                                              */
-  /*                                                                       */
-  /*    the field "params.source" will be set to "outline" before the      */
-  /*    scan converter is called, which means that the value you give it   */
-  /*    is actually ignored..                                              */
-  /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Render( FT_Library        library,
-                                              FT_Outline*       outline,
-                                              FT_Raster_Params* params );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Decompose                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Walks over an outline's structure to decompose it into individual  */
-  /*    segments and Bezier arcs.  This function is also able to emit      */
-  /*    `move to' and `close to' operations to indicate the start and end  */
-  /*    of new contours in the outline.                                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    outline   :: A pointer to the source target.                       */
-  /*                                                                       */
-  /*    funcs     :: A table of `emitters', i.e,. function pointers called */
-  /*                 during decomposition to indicate path operations.     */
-  /*                                                                       */
-  /*    user      :: A typeless pointer which is passed to each emitter    */
-  /*                 during the decomposition.  It can be used to store    */
-  /*                 the state during the decomposition.                   */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means sucess.                              */
-  /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Decompose( FT_Outline*        outline,
-                                                 FT_Outline_Funcs*  funcs,
-                                                 void*              user );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_New                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Creates a new outline of a given size.                             */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library     :: A handle to the library object from where the       */
-  /*                   outline is allocated.  Note however that the new    */
-  /*                   outline will NOT necessarily be FREED when          */
-  /*                   destroying the library, by FT_Done_FreeType().      */
-  /*                                                                       */
-  /*    numPoints   :: The maximal number of points within the outline.    */
-  /*                                                                       */
-  /*    numContours :: The maximal number of contours within the outline.  */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    outline     :: A handle to the new outline.  NULL in case of       */
-  /*                   error.                                              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    No.                                                                */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The reason why this function takes a `library' parameter is simply */
-  /*    to use the library's memory allocator.  You can copy the source    */
-  /*    code of this function, replacing allocations with `malloc()' if    */
-  /*    you want to control where the objects go.                          */
-  /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_New( FT_Library   library,
-                                           FT_UInt      numPoints,
-                                           FT_Int       numContours,
-                                           FT_Outline*  outline );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Done                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Destroys an outline created with FT_Outline_New().                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle of the library object used to allocate the     */
-  /*               outline.                                                */
-  /*                                                                       */
-  /*    outline :: A pointer to the outline object to be discarded.        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    No.                                                                */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    If the outline's `owner' field is not set, only the outline        */
-  /*    descriptor will be released.                                       */
-  /*                                                                       */
-  /*    The reason why this function takes an `outline' parameter is       */
-  /*    simply to use FT_Alloc()/FT_Free().  You can copy the source code  */
-  /*    of this function, replacing allocations with `malloc()' in your    */
-  /*    application if you want something simpler.                         */
-  /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Done( FT_Library   library,
-                                            FT_Outline*  outline );
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Get_CBox                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns an outline's `control box'.  The control box encloses all  */
-  /*    the outline's points, including Bezier control points.  Though it  */
-  /*    coincides with the exact bounding box for most glyphs, it can be   */
-  /*    slightly larger in some situations (like when rotating an outline  */
-  /*    which contains Bezier outside arcs).                               */
-  /*                                                                       */
-  /*    Computing the control box is very fast, while getting the bounding */
-  /*    box can take much more time as it needs to walk over all segments  */
-  /*    and arcs in the outline.  To get the latter, you can use the       */
-  /*    `ftbbox' component which is dedicated to this single task.         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    outline :: A pointer to the source outline descriptor.             */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    cbox    :: The outline's control box.                              */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Outline_Get_CBox( FT_Outline*  outline,
-                                            FT_BBox*     cbox );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Translate                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Applies a simple translation to the points of an outline.          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    outline :: A pointer to the target outline descriptor.             */
-  /*    xOffset :: The horizontal offset.                                  */
-  /*    yOffset :: The vertical offset.                                    */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Outline_Translate( FT_Outline*  outline,
-                                             FT_Pos       xOffset,
-                                             FT_Pos       yOffset );
-
-
-#if 0
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Raster                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Register a given raster to the library.                            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library      :: A handle to a target library object.               */
-  /*    raster_funcs :: pointer to the raster's interface                  */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function will do the following:                               */
-  /*                                                                       */
-  /*    - a new raster object is created through raster_func.raster_new    */
-  /*      if this fails, then the function returns                         */
-  /*                                                                       */
-  /*    - if a raster is already registered for the glyph format           */
-  /*      specified in raster_funcs, it will be destroyed                  */
-  /*                                                                       */
-  /*    - the new raster is registered for the glyph format                */
-  /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Set_Raster( FT_Library        library,
-                                          FT_Raster_Funcs*  raster_funcs );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Unset_Raster                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Removes a given raster from the library.                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library      :: A handle to a target library object.               */
-  /*    raster_funcs :: pointer to the raster's interface                  */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function should never be used by a normal client application  */
-  /*    as FT_Set_Raster unregisters the previous raster for a given       */
-  /*    glyph format..                                                     */
-  /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Unset_Raster( FT_Library        library,
-                                            FT_Raster_Funcs*  raster_funcs );
-
-
- /*************************************************************************
-  *
-  * <Function>
-  *   FT_Get_Raster
-  *
-  * <Description>
-  *   Return a pointer to the raster corresponding to a given glyph
-  *   format tag.
-  *
-  * <Input>
-  *   library      :: handle to source library object
-  *   glyph_format :: glyph format tag
-  *
-  * <Output>
-  *   raster_funcs :: if this field is not 0, returns a pointer to the
-  *                   raster's interface/descriptor..
-  *
-  * <Return>
-  *   a pointer to the corresponding raster object.
-  *
-  *************************************************************************/
-
-  FT_EXPORT_DEF(FT_Raster)  FT_Get_Raster( FT_Library        library,
-                                           FT_Glyph_Format   glyph_format,
-                                           FT_Raster_Funcs  *raster_funcs );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Raster_Mode                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Set a raster-specific mode.                                        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to a target library object.                    */
-  /*    format  :: the glyph format used to select the raster              */
-  /*    mode    :: the raster-specific mode descriptor                     */
-  /*    args    :: the mode arguments                                      */
-  /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
-  /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Set_Raster_Mode( FT_Library      library,
-                                               FT_Glyph_Format format,
-                                               unsigned long   mode,
-                                               void*           args );
-#endif
-
- /***************************************************************************/
- /***************************************************************************/
- /***************************************************************************/
- /*****                                                                 *****/
- /*****       C O N V E N I E N C E   F U N C T I O N S                 *****/
- /*****                                                                 *****/
- /*****                                                                 *****/
- /*****    The following functions are provided as a convenience        *****/
- /*****    to client applications. However, their compilation might     *****/
- /*****    be discarded if FT_CONFIG_OPTION_NO_CONVENIENCE_FUNCS        *****/
- /*****    is defined in "config/ftoption.h".                           *****/
- /*****                                                                 *****/
- /***************************************************************************/
- /***************************************************************************/
- /***************************************************************************/
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Copy                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Copies an outline into another one.  Both objects must have the    */
-  /*    same sizes (number of points & number of contours) when this       */
-  /*    function is called.                                                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    source :: A handle to the source outline.                          */
-  /*    target :: A handle to the target outline.                          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)  FT_Outline_Copy( FT_Outline*  source,
-                                            FT_Outline*  target );
-
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Transform                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Applies a simple 2x2 matrix to all of an outline's points.  Useful */
-  /*    for applying rotations, slanting, flipping, etc.                   */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    outline :: A pointer to the target outline descriptor.             */
-  /*    matrix  :: A pointer to the transformation matrix.                 */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    You can use FT_Outline_Translate() if you need to translate the    */
-  /*    outline's points.                                                  */
-  /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Outline_Transform( FT_Outline*  outline,
-                                             FT_Matrix*   matrix );
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Reverse                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Reverse the drawing direction of an outline. This is used to       */
-  /*    ensure consistent fill conventions for mirrored glyphs..           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    outline :: A pointer to the target outline descriptor.             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This functions toggles the bit flag ft_outline_reverse_fill in     */
-  /*    the outline's "flags" field..                                      */
-  /*                                                                       */
-  /*    It shouldn't be used by a normal client application, unless it     */
-  /*    knows what it's doing..                                            */
-  /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Outline_Reverse( FT_Outline*  outline );
-
-
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Matrix_Multiply                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Performs the matrix operation `b = a*b'.                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    a :: A pointer to matrix `a'.                                      */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    b :: A pointer to matrix `b'.                                      */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Matrix_Multiply( FT_Matrix*  a,
-                                           FT_Matrix*  b );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Matrix_Invert                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Inverts a 2x2 matrix.  Returns an error if it can't be inverted.   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    matrix :: A pointer to the target matrix.  Remains untouched in    */
-  /*              case of error.                                           */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  FT_EXPORT_DEF(FT_Error)   FT_Matrix_Invert( FT_Matrix*  matrix );
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Default_Drivers                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Adds the set of default drivers to a given library object.         */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    library :: A handle to a new library object.                       */
-  /*                                                                       */
-  FT_EXPORT_DEF(void)  FT_Default_Drivers( FT_Library  library );
 
 #ifdef __cplusplus
   }

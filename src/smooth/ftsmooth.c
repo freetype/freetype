@@ -1,4 +1,5 @@
 #include <freetype/internal/ftobjs.h>
+#include <freetype/ftoutln.h>
 #include <ftsmooth.h>
 #include <ftgrays.h>
 
@@ -51,8 +52,8 @@
 
  /* return the glyph's control box */
   static  void  ft_smooth_get_cbox( FT_Renderer   render,
-                                      FT_GlyphSlot  slot,
-                                      FT_BBox      *cbox )
+                                    FT_GlyphSlot  slot,
+                                    FT_BBox      *cbox )
   {
     MEM_Set( cbox, 0, sizeof(*cbox) );
 
@@ -84,7 +85,7 @@
     }
     
     /* check mode */
-    if ( mode != ft_render_mode_antialias )
+    if ( mode != ft_render_mode_normal )
       return FT_Err_Cannot_Render_Glyph;
       
     outline = &slot->outline;
@@ -104,7 +105,7 @@
     width  = (cbox.xMax - cbox.xMin) >> 6;
     height = (cbox.yMax - cbox.yMin) >> 6;
     bitmap = &slot->bitmap;
-    memory = slot->face->memory;
+    memory = render->root.memory;
     
     /* release old bitmap buffer */
     if ((slot->flags & ft_glyph_own_bitmap))

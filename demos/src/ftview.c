@@ -158,7 +158,7 @@
     /* first, render the glyph image into a bitmap */
     if (glyph->format != ft_glyph_format_bitmap)
     {
-      error = FT_Render_Glyph( glyph, antialias ? 1 : 0 );
+      error = FT_Render_Glyph( glyph, antialias ? ft_render_mode_normal : ft_render_mode_mono );
       if (error) return error;                               
                                
     }

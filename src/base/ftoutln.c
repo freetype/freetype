@@ -23,8 +23,7 @@
   /*************************************************************************/
 
 
-#include <freetype/freetype.h>
-#include <freetype/config/ftconfig.h>
+#include <freetype/ftoutln.h>
 #include <freetype/internal/ftobjs.h>
 
 
@@ -335,6 +334,57 @@
 
     return error;
   }
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Outline_Copy                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Copies an outline into another one.  Both objects must have the    */
+  /*    same sizes (number of points & number of contours) when this       */
+  /*    function is called.                                                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    source :: A handle to the source outline.                          */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    target :: A handle to the target outline.                          */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Copy( FT_Outline*  source,
+                                               FT_Outline*  target )
+  {
+    FT_Int  is_owner;
+
+
+    if ( !source            || !target            ||
+         source->n_points   != target->n_points   ||
+         source->n_contours != target->n_contours )
+      return FT_Err_Invalid_Argument;
+
+    MEM_Copy( target->points, source->points,
+              source->n_points * sizeof ( FT_Vector ) );
+
+    MEM_Copy( target->tags, source->tags,
+              source->n_points * sizeof ( FT_Byte ) );
+
+    MEM_Copy( target->contours, source->contours,
+              source->n_contours * sizeof ( FT_Short ) );
+
+    /* copy all flags, except the `ft_outline_owner' one */
+    is_owner      = target->flags & ft_outline_owner;
+    target->flags = source->flags;
+
+    target->flags &= ~ft_outline_owner;
+    target->flags |= is_owner;
+
+    return FT_Err_Ok;
+  }
+
 
 
   /*************************************************************************/
@@ -759,163 +809,14 @@
   /*    You can use FT_Outline_Translate() if you need to translate the    */
   /*    outline's points.                                                  */
   /*                                                                       */
-  BASE_FUNC( void )  FT_Outline_Transform( FT_Outline*  outline,
-                                           FT_Matrix*   matrix )
+  FT_EXPORT_FUNC( void )  FT_Outline_Transform( FT_Outline*  outline,
+                                                FT_Matrix*   matrix )
   {
     FT_Vector*  vec = outline->points;
     FT_Vector*  limit = vec + outline->n_points;
 
-
     for ( ; vec < limit; vec++ )
       FT_Vector_Transform( vec, matrix );
   }
-
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /****                                                                 ****/
-  /****    The following functions are not used by the font drivers     ****/
-  /****    but they are provided as a convenience for client            ****/
-  /****    applications.                                                ****/
-  /****                                                                 ****/
-  /****    Note that they will not be compiled if the configuration     ****/
-  /****    macro FT_CONFIG_OPTION_NO_CONVENIENCE_FUNCS is defined.      ****/
-  /****                                                                 ****/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-
-
-#ifndef FT_CONFIG_OPTION_NO_CONVENIENCE_FUNCS
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Copy                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Copies an outline into another one.  Both objects must have the    */
-  /*    same sizes (number of points & number of contours) when this       */
-  /*    function is called.                                                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    source :: A handle to the source outline.                          */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    target :: A handle to the target outline.                          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Copy( FT_Outline*  source,
-                                               FT_Outline*  target )
-  {
-    FT_Int  is_owner;
-
-
-    if ( !source            || !target            ||
-         source->n_points   != target->n_points   ||
-         source->n_contours != target->n_contours )
-      return FT_Err_Invalid_Argument;
-
-    MEM_Copy( target->points, source->points,
-              source->n_points * 2 * sizeof ( FT_Pos ) );
-
-    MEM_Copy( target->tags, source->tags,
-              source->n_points * sizeof ( FT_Byte ) );
-
-    MEM_Copy( target->contours, source->contours,
-              source->n_contours * sizeof ( FT_Short ) );
-
-    /* copy all flags, except the `ft_outline_owner' one */
-    is_owner      = target->flags & ft_outline_owner;
-    target->flags = source->flags;
-
-    target->flags &= ~ft_outline_owner;
-    target->flags |= is_owner;
-
-    return FT_Err_Ok;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Matrix_Multiply                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Performs the matrix operation `b = a*b'.                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    a :: A pointer to matrix `a'.                                      */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    b :: A pointer to matrix `b'.                                      */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  FT_EXPORT_FUNC( void )  FT_Matrix_Multiply( FT_Matrix*  a,
-                                              FT_Matrix*  b )
-  {
-    FT_Fixed  xx, xy, yx, yy;
-
-
-    xx = FT_MulFix( a->xx, b->xx ) + FT_MulFix( a->xy, b->yx );
-    xy = FT_MulFix( a->xx, b->xy ) + FT_MulFix( a->xy, b->yy );
-    yx = FT_MulFix( a->yx, b->xx ) + FT_MulFix( a->yy, b->yx );
-    yy = FT_MulFix( a->yx, b->xy ) + FT_MulFix( a->yy, b->yy );
-
-    b->xx = xx;  b->xy = xy;
-    b->yx = yx;  b->yy = yy;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Matrix_Invert                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Inverts a 2x2 matrix.  Returns an error if it can't be inverted.   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    matrix :: A pointer to the target matrix.  Remains untouched in    */
-  /*              case of error.                                           */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  FT_EXPORT_FUNC( FT_Error )  FT_Matrix_Invert( FT_Matrix*  matrix )
-  {
-    FT_Pos  delta, xx, yy;
-
-
-    /* compute discriminant */
-    delta = FT_MulFix( matrix->xx, matrix->yy ) -
-            FT_MulFix( matrix->xy, matrix->yx );
-
-    if ( !delta )
-      return FT_Err_Invalid_Argument;  /* matrix can't be inverted */
-
-    matrix->xy = - FT_DivFix( matrix->xy, delta );
-    matrix->yx = - FT_DivFix( matrix->yx, delta );
-
-    xx = matrix->xx;
-    yy = matrix->yy;
-
-    matrix->xx = FT_DivFix( yy, delta );
-    matrix->yy = FT_DivFix( xx, delta );
-
-    return FT_Err_Ok;
-  }
-
-#endif /* FT_CONFIG_OPTION_NO_CONVENIENCE_FUNCS */
-
 
 /* END */

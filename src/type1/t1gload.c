@@ -19,6 +19,7 @@
 #include <t1gload.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
+#include <freetype/ftoutln.h>
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
 #include <t1hinter.h>

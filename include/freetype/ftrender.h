@@ -19,6 +19,41 @@
 #define FTRENDER_H
 
 #include <freetype/ftmodule.h>
+#include <freetype/ftglyph.h>
+
+ /* create a new glyph object */
+  typedef  FT_Error  (*FT_Glyph_Init_Func)( FT_Glyph      glyph,
+                                            FT_GlyphSlot  slot );
+
+ /* destroys a given glyph object */
+  typedef  void      (*FT_Glyph_Done_Func)( FT_Glyph   glyph );
+
+  typedef  void      (*FT_Glyph_Transform_Func)( FT_Glyph    glyph,
+                                                 FT_Matrix*  matrix,
+                                                 FT_Vector*  delta );
+                                                 
+  typedef  void      (*FT_Glyph_BBox_Func)( FT_Glyph    glyph,
+                                            FT_BBox    *abbox );
+
+  typedef  FT_Error  (*FT_Glyph_Copy_Func)( FT_Glyph   source,
+                                            FT_Glyph   target );
+                                       
+  typedef  FT_Error  (*FT_Glyph_Prepare_Func)( FT_Glyph      glyph,
+                                               FT_GlyphSlot  slot );
+
+  struct FT_Glyph_Class_
+  {
+    FT_UInt                  glyph_size;
+    FT_Glyph_Format          glyph_format;
+    FT_Glyph_Init_Func       glyph_init;
+    FT_Glyph_Done_Func       glyph_done;
+    FT_Glyph_Copy_Func       glyph_copy;
+    FT_Glyph_Transform_Func  glyph_transform;
+    FT_Glyph_BBox_Func       glyph_bbox;
+    FT_Glyph_Prepare_Func    glyph_prepare;
+
+  };
+
 
  /*************************************************************************
   *
@@ -80,11 +115,6 @@
 
   } FT_Renderer_Class;
 
-
-  enum
-  {
-    ft_render_mode_antialias = 1
-  };
 
  /*************************************************************************
   *
