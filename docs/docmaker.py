@@ -247,15 +247,16 @@ class DocParagraph:
         alphanum  = string.lowercase + string.uppercase + string.digits + '_'
 
         for word in self.words:
-
-            # process cross references when needed
+            # process cross references if needed
+            #
             if identifiers and word and word[0] == '@':
-                word  = word[1:]
+                word = word[1:]
 
-                # we need to find non alpha numeric charaters
-                i = len(word)
-                while i > 0 and not word[i-1] in alphanum:
-                    i = i-1
+                # we need to find non-alphanumeric characters
+                #
+                i = len( word )
+                while i > 0 and not word[i - 1] in alphanum:
+                    i = i - 1
                     
                 if i > 0:
                     extra = word[i:]
@@ -263,27 +264,29 @@ class DocParagraph:
 
                 block = identifiers.get( word )
                 if block:
-                    word = '<a href="'+block.html_address()+'">' + word + '</a>'
+                    word = '<a href="' + block.html_address() + '">' + word + '</a>'
                 else:
-                    word = '?'+word
+                    word = '?' + word
 
             if cursor + len( word ) + 1 > max_width:
                 print line
                 cursor = 0
                 line = ""
 
-            line   = line + word
+            line = line + word
             if not extra:
                 line = line + " "
+
             cursor = cursor + len( word ) + 1
 
-            # handle trailing periods, commas, etc.. at the end of
-            # cross references..
+            # handle trailing periods, commas, etc. at the end of
+            # cross references.
+            #
             if extra:
                 if cursor + len( extra ) + 1 > max_width:
                     print line
                     cursor = 0
-                    line = ""
+                    line   = ""
 
                 line   = line + extra + " "
                 cursor = cursor + len( extra ) + 1
@@ -562,15 +565,15 @@ class DocContent:
 class DocBlock:
 
     def __init__( self, block_line_list = [], source_line_list = [] ):
-        self.items    = []                # current ( marker, contents ) list
-        self.section  = None              # section this block belongs to
-        self.filename = "unknown"         # filename defining this block
-        self.lineno   = 0                 # line number in filename
+        self.items    = []               # current ( marker, contents ) list
+        self.section  = None             # section this block belongs to
+        self.filename = "unknown"        # filename defining this block
+        self.lineno   = 0                # line number in filename
 
-        marker       = None              # current marker
-        content      = []                # current content lines list
-        alphanum     = string.letters + string.digits + "_"
-        self.name    = None
+        marker        = None             # current marker
+        content       = []               # current content lines list
+        alphanum      = string.letters + string.digits + "_"
+        self.name     = None
 
         for line in block_line_list:
             line2  = string.lstrip( line )
@@ -645,16 +648,17 @@ class DocBlock:
                 return item[1]
         return None
 
+
     def html_address( self ):
         section = self.section
         if section and section.filename:
-            return section.filename+'#'+self.name
+            return section.filename + '#' + self.name
 
-        return ""  # this block is not in a section ??
+        return ""  # this block is not in a section?
 
 
     def location( self ):
-        return self.filename + ':' + str(self.lineno)
+        return self.filename + ':' + str( self.lineno )
 
 
     def dump( self ):
@@ -959,7 +963,8 @@ class DocSectionList:
                 else:
                     line = line + 1
             else:
-                sys.stderr.write( "identifier '"+ident+"' has no definition" + '\n' )
+                sys.stderr.write( "identifier '" + ident + 
+                                  "' has no definition" + '\n' )
 
         print "</tr></table></center>"
         print html_footer
@@ -1031,7 +1036,7 @@ def file_exists( pathname ):
 
 def add_new_block( list, filename, lineno, block_lines, source_lines ):
     """add a new block to the list"""
-    block = DocBlock( block_lines, source_lines )
+    block          = DocBlock( block_lines, source_lines )
     block.filename = filename
     block.lineno   = lineno
     list.append( block )
@@ -1046,9 +1051,10 @@ def make_block_list():
     for pathname in sys.argv[1:]:
         if string.find( pathname, '*' ) >= 0:
             newpath = glob.glob( pathname )
-            newpath.sort()  # sort files, this is important because the order of files
+            newpath.sort()  # sort files -- this is important because
+                            # of the order of files
         else:
-            newpath = [ pathname ]
+            newpath = [pathname]
 
         last = len( file_list )
         file_list[last:last] = newpath
@@ -1101,7 +1107,8 @@ def make_block_list():
         if format >= 4 and l > 2 and line2[0 : 2] == '/*':
             if l < 4 or ( line2[3] != '@' and line2[3:4] != ' @' and
                           line2[3] != '#' and line2[3:4] != ' #'):
-                add_new_block( list, fileinput.filename(), lineno, block, source )
+                add_new_block( list, fileinput.filename(),
+                               lineno, block, source )
                 format = 0
 
         if format == 0:  #### wait for beginning of comment ####
