@@ -1,5 +1,19 @@
 2001-12-20  David Turner  <david@freetype.org>
 
+        * docs/TODO: added "stem3 and counter hints support" to the TODO list
+        for the Postscript hinter
+
+        * docs/BUGS: closed the AUTOHINT-NO-SBITS bug.
+
+        * src/pshinter/pshrec.c (t2_hint_stems), src/cff/cffobjs.h,
+        src/cff/cffobjs.c, src/cff/cffload.c, src/cff/cffload.h,
+        src/cff/cffgload.c, src/cff/cffgload.h, src/cff/cffdriver.c,
+        include/freetype/internal/cfftypes.h: added Postscript hinter support
+        to the CFF driver
+
+        * src/base/ftobjs.c (FT_Done_Library): fixed a stupid bug that crashed
+        the library on exit
+
         * src/type1/t1gload.c (T1_Load_Glyph): enable font matrix transform
         on hinted glyphs..
 

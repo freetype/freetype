@@ -28,6 +28,7 @@
 FT_BEGIN_HEADER
 
 
+#if 0
   const FT_UShort  cff_isoadobe_charset[229] =
   {
     0,
@@ -1041,6 +1042,10 @@ FT_BEGIN_HEADER
     377,
     378
   };
+#endif
+
+  FT_LOCAL FT_UShort
+  CFF_Get_Standard_Encoding( FT_UInt  charcode );
 
 
   FT_LOCAL FT_String*

@@ -411,7 +411,10 @@
   {
     /* begin with the FT_Module_Class fields */
     {
-      ft_module_font_driver | ft_module_driver_scalable,
+      ft_module_font_driver       |
+      ft_module_driver_scalable   |
+      ft_module_driver_has_hinter,
+      
       sizeof( CFF_DriverRec ),
       "cff",
       0x10000L,
@@ -419,8 +422,8 @@
 
       0,   /* module-specific interface */
 
-      (FT_Module_Constructor)CFF_Init_Driver,
-      (FT_Module_Destructor) CFF_Done_Driver,
+      (FT_Module_Constructor)CFF_Driver_Init,
+      (FT_Module_Destructor) CFF_Driver_Done,
       (FT_Module_Requester)  cff_get_interface,
     },
 
@@ -429,15 +432,15 @@
     sizeof( FT_SizeRec ),
     sizeof( CFF_GlyphSlotRec ),
 
-    (FTDriver_initFace)     CFF_Init_Face,
-    (FTDriver_doneFace)     CFF_Done_Face,
-    (FTDriver_initSize)     0,
-    (FTDriver_doneSize)     0,
-    (FTDriver_initGlyphSlot)0,
-    (FTDriver_doneGlyphSlot)0,
+    (FTDriver_initFace)     CFF_Face_Init,
+    (FTDriver_doneFace)     CFF_Face_Done,
+    (FTDriver_initSize)     CFF_Size_Init,
+    (FTDriver_doneSize)     CFF_Size_Done,
+    (FTDriver_initGlyphSlot)CFF_GlyphSlot_Init,
+    (FTDriver_doneGlyphSlot)CFF_GlyphSlot_Done,
 
-    (FTDriver_setCharSizes) 0,
-    (FTDriver_setPixelSizes)0,
+    (FTDriver_setCharSizes) CFF_Size_Reset,
+    (FTDriver_setPixelSizes)CFF_Size_Reset,
 
     (FTDriver_loadGlyph)    Load_Glyph,
     (FTDriver_getCharIndex) cff_get_char_index,
