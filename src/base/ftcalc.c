@@ -422,14 +422,17 @@
   /*    FT_Add64                                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Add two Int64 values.  Will be wrapped by the ADD_64() macro.      */
+  /*    Add two Int64 values.                                              */
   /*                                                                       */
   /* <Input>                                                               */
   /*    x :: A pointer to the first value to be added.                     */
   /*    y :: A pointer to the second value to be added.                    */
   /*                                                                       */
-  /* <InOut>                                                               */
+  /* <Output>                                                              */
   /*    z :: A pointer to the result of `x + y'.                           */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Will be wrapped by the ADD_64() macro.                             */
   /*                                                                       */
   BASE_FUNC
   void  FT_Add64( FT_Int64*  x,
@@ -452,15 +455,17 @@
   /*    FT_MulTo64                                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Multiplies two Int32 integers.  Returns a Int64 integer.  Will be  */
-  /*    wrapped by the MUL_64() macro.                                     */
+  /*    Multiplies two Int32 integers.  Returns a Int64 integer.           */
   /*                                                                       */
   /* <Input>                                                               */
   /*    x :: The first multiplier.                                         */
   /*    y :: The second multiplier.                                        */
   /*                                                                       */
-  /* <InOut>                                                               */
+  /* <Output>                                                              */
   /*    z :: A pointer to the result of `x * y'.                           */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Will be wrapped by the MUL_64() macro.                             */
   /*                                                                       */
   BASE_FUNC
   void  FT_MulTo64( FT_Int32   x,
@@ -516,7 +521,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    Divides an Int64 value by an Int32 value.  Returns an Int32        */
-  /*    integer.  Will be wrapped by the DIV_64() macro.                   */
+  /*    integer.                                                           */
   /*                                                                       */
   /* <Input>                                                               */
   /*    x :: A pointer to the dividend.                                    */
@@ -524,6 +529,9 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    The result of `x / y'.                                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Will be wrapped by the DIV_64() macro.                             */
   /*                                                                       */
   BASE_FUNC
   FT_Int32  FT_Div64by32( FT_Int64*  x,

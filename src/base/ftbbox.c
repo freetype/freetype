@@ -47,11 +47,13 @@
   /* <Description>                                                         */
   /*    This function is used as a `move_to' and `line_to' emitter during  */
   /*    FT_Raster_Decompose().  It simply records the destination point in */
-  /*    user->last.                                                        */
+  /*    `user->last'.                                                      */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    to   :: The destination vector.                                    */
-  /*    user :: The current walk context.                                  */
+  /*    to   :: A pointer to the destination vector.                       */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    user :: A pointer to the current walk context.                     */
   /*                                                                       */
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
@@ -88,7 +90,7 @@
   /*    y2  :: The coordinate of the control point.                        */
   /*    y3  :: The end coordinate.                                         */
   /*                                                                       */
-  /* <Output>                                                              */
+  /* <InOut>                                                               */
   /*    min :: The address of the current minimum.                         */
   /*    max :: The address of the current maximum.                         */
   /*                                                                       */
@@ -143,11 +145,11 @@
   /*    update it.                                                         */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    control :: A control point.                                        */
-  /*    to      :: The destination vector.                                 */
+  /*    control :: A pointer to a control point.                           */
+  /*    to      :: A pointer to the destination vector.                    */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    user    :: The current walk context.                               */
+  /*    user    :: The address of the current walk context.                */
   /*                                                                       */
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
@@ -288,12 +290,12 @@
   /*    update it.                                                         */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    control1 :: The first control point.                               */
-  /*    control2 :: The second control point.                              */
-  /*    to       :: The destination vector.                                */
+  /*    control1 :: A pointer to the first control point.                  */
+  /*    control2 :: A pointer to the second control point.                 */
+  /*    to       :: A pointer to the destination vector.                   */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    user     :: The current walk context.                              */
+  /*    user     :: The address of the current walk context.               */
   /*                                                                       */
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
@@ -350,7 +352,7 @@
   /*    outline :: A pointer to the source outline.                        */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    bbox    :: The outline's exact bounding box.                       */
+  /*    abbox   :: A pointer to the outline's exact bounding box.          */
   /*                                                                       */
   /* <Return>                                                              */
   /*    Error code.  0 means success.                                      */
@@ -376,8 +378,8 @@
       return 0;
     }
 
-    /* We compute the control box, as well as the bounding box    */
-    /* of all `on' points in the outline.  Then, if the two boxes */
+    /* We compute the control box as well as the bounding box of  */
+    /* all `on' points in the outline.  Then, if the two boxes    */
     /* coincide, we exit immediately.                             */
 
     vec = outline->points;

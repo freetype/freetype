@@ -41,13 +41,13 @@ endif
 #
 ifneq ($(X11_PATH),)
 
-X11_INCLUDE    := $(X11_PATH)$(SEP)include
-X11_LIB        := $(X11_PATH)$(SEP)lib
+X11_INCLUDE    := $(X11_PATH:%=%$(SEP)include)
+X11_LIB        := $(X11_PATH:%=%$(SEP)lib)
 
 # the GRAPH_LINK variable is expanded each time an executable is linked against
 # the graphics library..
 #
-GRAPH_LINK     += -L$(X11_LIB) -lX11
+GRAPH_LINK     += $(X11_LIB:%=-L%) -lX11
 
 # Solaris needs a -lsocket in GRAPH_LINK ..
 #

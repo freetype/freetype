@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Debugging and logging component (body).                              */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -29,14 +29,6 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* The Print() function is defined in ftconfig.h.  It defaults to        */
-  /* vprintf() on systems which have it.                                   */
-  /*                                                                       */
-  /*************************************************************************/
 
 
   void  FT_Message( const char*  fmt, ... )
@@ -65,6 +57,21 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_SetTraceLevel                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Sets the trace level for debugging.                                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    component :: The component which should be traced.  See ftdebug.h  */
+  /*                 for a complete list.  If set to `trace_any', all      */
+  /*                 components will be traced.                            */
+  /*    level     :: The tracing level.                                    */
+  /*                                                                       */
   EXPORT_FUNC
   void  FT_SetTraceLevel( FT_Trace  component,
                           char      level )

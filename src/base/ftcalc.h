@@ -50,9 +50,12 @@
 #define MUL_64( x, y, z )  FT_MulTo64( x, y, &z )
 #define DIV_64( x, y )     FT_Div64by32( &x, y )
 
-  BASE_DEF void      FT_Add64    ( FT_Int64* x, FT_Int64* y, FT_Int64*  z );
-  BASE_DEF void      FT_MulTo64  ( FT_Int32  x, FT_Int32  y, FT_Int64*  z );
-  BASE_DEF FT_Int32  FT_Div64by32( FT_Int64* x, FT_Int32  y );
+  BASE_DEF
+  void      FT_Add64    ( FT_Int64* x, FT_Int64* y, FT_Int64*  z );
+  BASE_DEF
+  void      FT_MulTo64  ( FT_Int32  x, FT_Int32  y, FT_Int64*  z );
+  BASE_DEF
+  FT_Int32  FT_Div64by32( FT_Int64* x, FT_Int32  y );
 
 
 #endif /* LONG64 */
@@ -60,7 +63,8 @@
 
 #define SQRT_32( x )       FT_Sqrt32( x )
 
-  BASE_DEF FT_Int32  FT_Sqrt32( FT_Int32  l );
+  BASE_DEF
+  FT_Int32  FT_Sqrt32( FT_Int32  l );
 
   /*************************************************************************/
   /*                                                                       */

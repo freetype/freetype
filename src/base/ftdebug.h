@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Debugging and logging component (specification).                     */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -35,7 +35,7 @@
   /*                                                                       */
   /* - release mode:                                                       */
   /*                                                                       */
-  /*   No error message is sent nor generated.  The code is free from any  */
+  /*   No error message is sent or generated.  The code is free from any   */
   /*   debugging parts.                                                    */
   /*                                                                       */
   /*************************************************************************/
@@ -57,6 +57,7 @@
 
   typedef enum  FT_Trace_
   {
+    /* the first level must always be `trace_any' */
     trace_any = 0,
 
     /* first, define an enum for each common component */
@@ -78,12 +79,14 @@
     trace_ttextend,
     trace_ttdriver,
 
+#if 0
     /* define an enum for each TrueDoc driver component */
     trace_tdobjs,
     trace_tdload,
     trace_tdgload,
     trace_tdhint,
     trace_tddriver,
+#endif
 
     /* define an enum for each Type1 driver component */
     trace_t1objs,
@@ -93,13 +96,14 @@
     trace_t1driver,
 
     /* other trace levels */
-	trace_init,
+    trace_init,
 
     /* the last level must always be `trace_max' */
     trace_max
 
   } FT_Trace;
 
+  /* declared in ftdebug.c */
   extern char  ft_trace_levels[trace_max];
 
 
@@ -113,9 +117,12 @@
   /*************************************************************************/
 
 
-#define FT_TRACE( level, varformat )                       \
-          if ( ft_trace_levels[FT_COMPONENT] >= level )  \
-            FT_Message##varformat
+#define FT_TRACE( level, varformat )                        \
+          do                                                \
+          {                                                 \
+            if ( ft_trace_levels[FT_COMPONENT] >= level )   \
+              FT_Message##varformat;                        \
+          } while ( 0 )
 
 
   EXPORT_DEF
@@ -126,16 +133,16 @@
 #elif defined( FT_DEBUG_LEVEL_ERROR )
 
 
-#define FT_TRACE( level, varformat )  /* nothing */
+#define FT_TRACE( level, varformat )    while ( 0 ) { }     /* nothing */
 
 
 #else  /* release mode */
 
 
-#define FT_Assert( condition )  /* nothing */
+#define FT_Assert( condition )          while ( 0 ) { }     /* nothing */
 
-#define FT_TRACE( level, varformat )      /* nothing */
-#define FT_ERROR( varformat )             /* nothing */
+#define FT_TRACE( level, varformat )    while ( 0 ) { }     /* nothing */
+#define FT_ERROR( varformat )           while ( 0 ) { }     /* nothing */
 
 
 #endif /* FT_DEBUG_LEVEL_TRACE, FT_DEBUG_LEVEL_ERROR */
@@ -146,7 +153,7 @@
   /* Define macros and functions that are common to the debug and trace    */
   /* modes.                                                                */
   /*                                                                       */
-  /* You need vprintf() to be able to compile ttdebug.c.                   */
+  /* You need vprintf() to be able to compile ftdebug.c.                   */
   /*                                                                       */
   /*************************************************************************/
 
@@ -155,10 +162,15 @@
 
 #include "stdio.h"  /* for vprintf() */
 
-#define FT_Assert( condition )  \
-       if ( !(condition) )      \
-         FT_Panic( "assertion failed on line %d of file %s\n", __LINE__, __FILE__ );
+#define FT_Assert( condition )                                      \
+          do                                                        \
+          {                                                         \
+            if ( !( condition ) )                                   \
+              FT_Panic( "assertion failed on line %d of file %s\n", \
+                        __LINE__, __FILE__ );                       \
+          } while ( 0 )
 
+  /* print a message */
   extern void  FT_Message( const char*  fmt, ... );
 
   /* print a message and exit */
@@ -169,6 +181,9 @@
 
 #endif /* FT_DEBUG_LEVEL_TRACE || FT_DEBUG_LEVEL_ERROR */
 
+
+/* you need two opening resp. closing parentheses!
+   Example: FT_TRACE0(( "Value is %i", foo ))      */
 
 #define FT_TRACE0( varformat )  FT_TRACE( 0, varformat )
 #define FT_TRACE1( varformat )  FT_TRACE( 1, varformat )

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*  FreeType driver interface (specification).                             */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used        */
@@ -56,7 +56,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    FTDriver_doneEngine                                                */
+  /*    FTDriver_doneDriver                                                */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A driver method used to finalize a given driver object.  Note that */
@@ -95,7 +95,7 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    A typeless pointer to the extension's interface (normally a table  */
-  /*    of function pointers).  Returns NULL when the requested extension  */
+  /*    of function pointers).  Returns NULL if the requested extension    */
   /*    isn't available (i.e., wasn't compiled in the driver at build      */
   /*    time).                                                             */
   /*                                                                       */
@@ -106,15 +106,16 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
-  /*    FTDriver_formatInterface                                           */
+  /*    FT_FormatInterface                                                 */
   /*                                                                       */
   /* <Description>                                                         */
   /*    A driver interface field whose value is a driver-specific          */
-  /*    interface method tables.  This table contains entry points to      */
+  /*    interface method table.  This table contains entry points to       */
   /*    various functions that are strictly related to the driver's        */
   /*    format.                                                            */
   /*                                                                       */
   typedef void*  FT_FormatInterface;
+
 
 
   /*************************************************************************/
@@ -140,28 +141,27 @@
   /*    must be created by the caller.                                     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    driver         :: A handle to the source driver object.            */
-  /*    resource       :: A handle to the source resource.                 */
-  /*    typeface_index :: The index of face in the font resource.  Used to */
+  /*    stream         :: The input stream.                                */
+  /*    typeface_index :: The face index in the font resource.  Used to    */
   /*                      access individual faces in collections.          */
-  /*                                                                       */
   /*    face           :: A handle to the new target face.                 */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The `typeface_index' parameter field will be set to -1 when the    */
+  /*    The `typeface_index' parameter field will be set to -1 if the      */
   /*    engine only wants to test the format of the resource.  This means  */
   /*    that font drivers should simply check the font format, then return */
   /*    immediately with an error code of 0 (meaning success).  The field  */
   /*    `num_faces' should be set.                                         */
   /*                                                                       */
-  /*    done_face() will be called subsequently, whatever the result was.  */
+  /*    FTDriver_doneFace() will be called subsequently, whatever the      */
+  /*    result was.                                                        */
   /*                                                                       */
-  typedef FT_Error  (*FTDriver_initFace)( FT_Stream    stream,
-                                          FT_Long      typeface_index,
-                                          FT_Face      face );
+  typedef FT_Error  (*FTDriver_initFace)( FT_Stream  stream,
+                                          FT_Long    typeface_index,
+                                          FT_Face    face );
 
 
   /*************************************************************************/
@@ -194,15 +194,13 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face        :: A handle to the source face object.                 */
-  /*                                                                       */
   /*    left_glyph  :: The index of the left glyph in the kern pair.       */
-  /*                                                                       */
   /*    right_glyph :: The index of the right glyph in the kern pair.      */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    kerning     :: The kerning vector.  This is in font units for      */
-  /*                   scalable formats, and in pixels for fixed-sizes     */
-  /*                   formats.                                            */
+  /*    kerning     :: A pointer to the kerning vector.  This is in font   */
+  /*                   units for scalable formats, and in pixels for       */
+  /*                   fixed-sizes formats.                                */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -213,12 +211,13 @@
   /*    kernings are out of the scope of this method (the basic driver     */
   /*    interface is meant to be simple).                                  */
   /*                                                                       */
-  /*    They can be implemented through format-specific interfaces.        */
+  /*    They can be implemented by format-specific interfaces.             */
   /*                                                                       */
   typedef FT_Error  (*FTDriver_getKerning)( FT_Face      face,
                                             FT_UInt      left_glyph,
                                             FT_UInt      right_glyph,
                                             FT_Vector*   kerning );
+
 
 
   /*************************************************************************/
@@ -244,7 +243,6 @@
   /*    must be created by the caller.                                     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face :: A handle to the parent face object.                        */
   /*    size :: A handle to the new size object.                           */
   /*                                                                       */
   /* <Return>                                                              */
@@ -267,11 +265,13 @@
   /*    and vertical) expressed in fractional points.                      */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    size        :: A handle to the target size object.                 */
-  /*    char_width  :: The character width expressed in 26.6 fractional    */
-  /*                   points.                                             */
-  /*    char_height :: The character height expressed in 26.6 fractional   */
-  /*                   points.                                             */
+  /*    size            :: A handle to the target size object.             */
+  /*    char_width      :: The character width expressed in 26.6           */
+  /*                       fractional points.                              */
+  /*    char_height     :: The character height expressed in 26.6          */
+  /*                       fractional points.                              */
+  /*    horz_resolution :: The horizontal resolution.                      */
+  /*    vert_resolution :: The vertical resolution.                        */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -298,26 +298,17 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    size         :: A handle to the target size object.                */
-  /*                                                                       */
   /*    pixel_width  :: The character width expressed in 26.6 fractional   */
   /*                    pixels.                                            */
-  /*                                                                       */
   /*    pixel_height :: The character height expressed in 26.6 fractional  */
   /*                    pixels.                                            */
   /*                                                                       */
-  /*    point_size   :: The corresponding character size in points.  This  */
-  /*                    value is only sent to the TrueType bytecode        */
-  /*                    interpreter, even though 99% of glyph programs     */
-  /*                    will simply ignore it.  A safe value there is the  */
-  /*                    maximum of the pixel width and height (multiplied  */
-  /*                    by 64 to make it a 26.6 fixed float).              */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    This function should work with all kinds of `Size' objects, either */
-  /*    fixed or scalable ones.  The `point_size' parameter will simply be */
-  /*    ignored in case of fixed formats.                                  */
+  /*    fixed or scalable ones.                                            */
   /*                                                                       */
   typedef FT_Error  (*FTDriver_setPixelSizes)( FT_Size  size,
                                                FT_UInt  pixel_width,
@@ -337,10 +328,8 @@
   /* <Input>                                                               */
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
   typedef void  (*FTDriver_doneSize)( FT_Size  size );
+
 
 
   /*************************************************************************/
@@ -368,7 +357,6 @@
   /*    bitmap format.                                                     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face :: A handle to the parent face object.                        */
   /*    slot :: A handle to the new glyph slot object.                     */
   /*                                                                       */
   /* <Return>                                                              */
@@ -387,11 +375,7 @@
   /*    is not destroyed by this function.                                 */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face :: A handle to the parent face object.                        */
   /*    slot :: A handle to the new glyph slot object.                     */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   typedef void  (*FTDriver_doneGlyphSlot)( FT_GlyphSlot  slot );
 
@@ -407,21 +391,14 @@
   /* <Input>                                                               */
   /*    slot        :: A handle to target slot object where the glyph will */
   /*                   be loaded.                                          */
-  /*                                                                       */
   /*    size        :: A handle to the source face size at which the glyph */
   /*                   must be scaled/loaded.                              */
-  /*                                                                       */
   /*    glyph_index :: The index of the glyph in the font file.            */
-  /*                                                                       */
   /*    load_flags  :: A flag indicating what to load for this glyph.  The */
   /*                   FTLOAD_??? constants can be used to control the     */
   /*                   glyph loading process (e.g., whether the outline    */
   /*                   should be scaled, whether to load bitmaps or not,   */
   /*                   whether to hint the outline, etc).                  */
-  /* <Output>                                                              */
-  /*    result      :: A set of bit flags indicating the type of data that */
-  /*                   was loaded in the glyph slot (outline, bitmap,      */
-  /*                   pixmap, etc).                                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -430,6 +407,7 @@
                                            FT_Size       size,
                                            FT_UInt       glyph_index,
                                            FT_Int        load_flags );
+
 
 
   /*************************************************************************/
@@ -463,6 +441,19 @@
                                              FT_Long     charcode );
 
 
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****                       I N T E R F A C E                         ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -482,62 +473,51 @@
   /* <Fields>                                                              */
   /*    driver_object_size   :: The size in bytes of a single driver       */
   /*                            object.                                    */
-  /*                                                                       */
   /*    face_object_size     :: The size in bytes of a single face object. */
-  /*                                                                       */
   /*    size_object_size     :: The size in bytes of a single size object. */
-  /*                                                                       */
   /*    slot_object_size     :: The size in bytes of a single glyph slot   */
   /*                            object.                                    */
   /*                                                                       */
-  /*    driver_name          :: a string to describe the driver to the     */
-  /*                            system. It doesn't necessarily describe    */
+  /*    driver_name          :: A string to describe the driver to the     */
+  /*                            system.  It doesn't necessarily describe   */
   /*                            in detail all the font formats the driver  */
   /*                            may support.                               */
-  /*                                                                       */
-  /*    driver_version       :: driver version number. starts at 1         */
-  /*                                                                       */
-  /*    driver_requires      :: the FreeType major version this driver is  */
-  /*                            written for. This number should be equal   */
-  /*                            to or greater than 2 !                     */
+  /*    driver_version       :: The driver version number.  Starts at 1.   */
+  /*    driver_requires      :: The FreeType major version this driver is  */
+  /*                            written for.  This number should be equal  */
+  /*                            to or greater than 2!                      */
   /*                                                                       */
   /*    format_interface     :: A pointer to the driver's format-specific  */
   /*                            interface.                                 */
   /*                                                                       */
   /*    init_driver          :: Used to initialize a given driver object.  */
-  /*                                                                       */
   /*    done_driver          :: Used to finalize and destroy a given       */
   /*                            driver object.                             */
-  /*                                                                       */
-  /*    get_extension        :: Returns an interface for a given driver    */
+  /*    get_interface        :: Returns an interface for a given driver    */
   /*                            extension.                                 */
   /*                                                                       */
   /*    init_face            :: Initializes a given face object.           */
-  /*                                                                       */
   /*    done_face            :: Discards a face object, as well as all     */
   /*                            child objects (sizes, charmaps, glyph      */
   /*                            slots).                                    */
-  /*                                                                       */
   /*    get_kerning          :: Returns the kerning vector corresponding   */
   /*                            to a pair of glyphs, expressed in unscaled */
   /*                            font units.                                */
   /*                                                                       */
   /*    init_size            :: Initializes a given size object.           */
-  /*                                                                       */
   /*    done_size            :: Finalizes a given size object.             */
-  /*                                                                       */
   /*    set_size_char_sizes  :: Resets a scalable size object's character  */
   /*                            size.                                      */
-  /*                                                                       */
   /*    set_pixel_sizes      :: Resets a face size object's pixel          */
   /*                            dimensions.  Applies to both scalable and  */
   /*                            fixed faces.                               */
   /*                                                                       */
   /*    init_glyph_slot      :: Initializes a given glyph slot object.     */
-  /*                                                                       */
   /*    done_glyph_slot      :: Finalizes a given glyph slot.              */
-  /*                                                                       */
   /*    load_glyph           :: Loads a given glyph into a given slot.     */
+  /*                                                                       */
+  /*    get_char_index       :: Returns the glyph index for a given        */
+  /*                            charmap.                                   */
   /*                                                                       */
   typedef struct  FT_DriverInterface_
   {
@@ -572,6 +552,7 @@
     FTDriver_getCharIndex        get_char_index;
 
   } FT_DriverInterface;
+
 
 #endif /* FTDRIVER_H */
 
