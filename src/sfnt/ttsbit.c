@@ -334,6 +334,13 @@
         FT_Bool   large = FT_BOOL( range->index_format == 1 );
 
 
+
+        if ( range->last_glyph < range->first_glyph )
+        {
+          error = SFNT_Err_Invalid_File_Format;
+          goto Exit;
+        }
+
         num_glyphs        = range->last_glyph - range->first_glyph + 1L;
         range->num_glyphs = num_glyphs;
         num_glyphs++;                       /* XXX: BEWARE - see spec */
@@ -519,12 +526,12 @@
         FT_ULong       count2 = strike->num_ranges;
 
 
-        if ( FT_NEW_ARRAY( strike->sbit_ranges, strike->num_ranges ) )
-          goto Exit;
-
         /* read each range */
         if ( FT_STREAM_SEEK( table_base + strike->ranges_offset ) ||
              FT_FRAME_ENTER( strike->num_ranges * 8L )            )
+          goto Exit;
+
+        if ( FT_NEW_ARRAY( strike->sbit_ranges, strike->num_ranges ) )
           goto Exit;
 
         range = strike->sbit_ranges;

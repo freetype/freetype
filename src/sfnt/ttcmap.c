@@ -1935,7 +1935,9 @@
       charmap.encoding    = FT_ENCODING_NONE;  /* will be filled later */
       offset              = TT_NEXT_ULONG( p );
 
-      if ( offset && table + offset + 2 < limit )
+      if ( offset                     &&
+           table + offset + 2 < limit &&
+           table + offset >= table    )
       {
         FT_Byte*                       cmap   = table + offset;
         volatile FT_UInt               format = TT_PEEK_USHORT( cmap );

@@ -1,3 +1,19 @@
+2004-10-11  Joshua Neal  <jneal@csdaily.com>
+
+	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Check for pointer
+	overflow.
+
+	* src/sfnt/ttload.c (tt_face_load_hdmx): Protect against bad input.
+	Don't use FT_QNEW_ARRAY but FT_NEW_ARRAY to make deallocation work
+	in case of failure.
+
+	* src/sfnt/ttsbit.c (Load_SBit_Range): Check range intervals.
+	(tt_face_load_sbit_strikes): Allocate `strike_sbit_ranges' after
+	frame test.
+
+	* src/truetype/ttgload.c (TTLoad_Simple_Glyph): Add assertion for
+	`flag'.
+
 2004-10-09  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.

@@ -426,6 +426,8 @@
     flag       = (FT_Byte*)outline->tags;
     flag_limit = flag + n_points;
 
+    FT_ASSERT( flag != NULL );
+
     while ( flag < flag_limit )
     {
       if ( --byte_len < 0 )
