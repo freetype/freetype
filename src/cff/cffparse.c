@@ -308,7 +308,7 @@
     FT_Vector*      offset = &dict->font_offset;
     FT_Byte**       data   = parser->stack;
     FT_Error        error;
-
+    FT_Fixed        temp;
 
     error = T2_Err_Stack_Underflow;
 
@@ -320,6 +320,23 @@
       matrix->yy = cff_parse_fixed( data++ );
       offset->x  = cff_parse_fixed( data++ );
       offset->y  = cff_parse_fixed( data   );
+
+      temp = ABS( matrix->yy );
+
+      if ( temp != 0x10000L )
+      {
+        matrix->xx = FT_DivFix( matrix->xx, temp );
+        matrix->yx = FT_DivFix( matrix->yx, temp );
+        matrix->xy = FT_DivFix( matrix->xy, temp );
+        matrix->yy = FT_DivFix( matrix->yy, temp );
+        offset->x  = FT_DivFix( offset->x,  temp );
+        offset->y  = FT_DivFix( offset->y,  temp );
+      }
+
+      /* note that the offsets must be expressed in integer font units */
+      offset->x >>= 16;
+      offset->y >>= 16;
+
       error = T2_Err_Ok;
     }
 
