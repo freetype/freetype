@@ -68,7 +68,7 @@
                    FT_UInt     code,
                    void*       object )
   {
-    FT_MEM_SET( parser, 0, sizeof ( *parser ) );
+    FT_MEM_ZERO( parser, sizeof ( *parser ) );
 
     parser->top         = parser->stack;
     parser->object_code = code;

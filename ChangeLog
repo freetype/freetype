@@ -1,3 +1,8 @@
+2002-07-28  Werner Lemberg  <wl@gnu.org>
+
+	s/ft_memset/FT_MEM_SET/.
+	s/FT_MEM_SET/FT_MEM_ZERO/ where appropriate.
+
 2002-07-27  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttload.c (sfnt_dir_check): Make it work with TTCs.

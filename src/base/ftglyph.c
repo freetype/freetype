@@ -599,7 +599,7 @@
     if ( !clazz || !clazz->glyph_prepare )
       goto Bad;
 
-    FT_MEM_SET( &dummy, 0, sizeof ( dummy ) );
+    FT_MEM_ZERO( &dummy, sizeof ( dummy ) );
     dummy.library = glyph->library;
     dummy.format  = clazz->glyph_format;
 

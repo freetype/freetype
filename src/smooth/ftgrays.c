@@ -2062,7 +2062,7 @@
 
 
     *araster = (FT_Raster)&the_raster;
-    FT_MEM_SET( &the_raster, 0, sizeof ( the_raster ) );
+    FT_MEM_ZERO( &the_raster, sizeof ( the_raster ) );
 
 #ifdef GRAYS_USE_GAMMA
     grays_init_gamma( (PRaster)*araster );

@@ -814,7 +814,7 @@
     FT_Error  error;
 
 
-    FT_MEM_SET( optimizer, 0, sizeof ( *optimizer ) );
+    FT_MEM_ZERO( optimizer, sizeof ( *optimizer ) );
     optimizer->outline = outline;
     optimizer->memory  = memory;
 

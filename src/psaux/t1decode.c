@@ -1124,7 +1124,7 @@
                    FT_Bool              hinting,
                    T1_Decoder_Callback  parse_callback )
   {
-    FT_MEM_SET( decoder, 0, sizeof ( *decoder ) );
+    FT_MEM_ZERO( decoder, sizeof ( *decoder ) );
 
     /* retrieve PSNames interface from list of current modules */
     {

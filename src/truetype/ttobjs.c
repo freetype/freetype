@@ -114,7 +114,7 @@
     if ( maxPoints > 0 )
       maxPoints += 2;
 
-    FT_MEM_SET( zone, 0, sizeof ( *zone ) );
+    FT_MEM_ZERO( zone, sizeof ( *zone ) );
     zone->memory = memory;
 
     if ( FT_NEW_ARRAY( zone->org,      maxPoints * 2 ) ||
