@@ -1,4 +1,12 @@
 2002-08-01  Graham Asher  <graham.asher@btinternet.com>
+        * src/type1/t1load.c:
+        T1_Open_Face now tolerates a face with no charstrings if there
+        is an incremental loading interface. Type 1 faces supplied by
+        PostScript interpreters like GhostScript will typically not
+        provide any charstrings at load time, so this is essential
+        if they are to work.
+
+2002-08-01  Graham Asher  <graham.asher@btinternet.com>
         * include/freetype/config/ftheader.h,
         include/freetype/freetype.h,
         include/freetype/ftincrem.h,
