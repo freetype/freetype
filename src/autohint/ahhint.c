@@ -1000,6 +1000,7 @@
 
 
   /* discard a face's autohint globals */
+  LOCAL_FUNC
   void  ah_hinter_done_face_globals( AH_Face_Globals*  globals )
   {
     FT_Face    face   = globals->face;

@@ -18,13 +18,13 @@
                                            FT_UInt     len );
 
   LOCAL_DEF
-  FT_Error  T1_Decoder_Init( T1_Decoder*            decoder,
-                             FT_Face                face,
-                             FT_Size                size,
-                             FT_GlyphSlot           slot,
-                             FT_Byte**              glyph_names,
-                             T1_Blend*              blend,
-                             T1_Decoder_Parse_Func  parse_glyph );
+  FT_Error  T1_Decoder_Init( T1_Decoder*          decoder,
+                             FT_Face              face,
+                             FT_Size              size,
+                             FT_GlyphSlot         slot,
+                             FT_Byte**            glyph_names,
+                             T1_Blend*            blend,
+                             T1_Decoder_Callback  parse_glyph );
 
   LOCAL_DEF
   void  T1_Decoder_Done( T1_Decoder*  decoder );

@@ -977,18 +977,18 @@
   FT_Error  T1_Decoder_Parse_Glyph( T1_Decoder*  decoder,
                                     FT_UInt      glyph )
   {
-    return decoder->parse_glyph( decoder, glyph );
+    return decoder->parse_callback( decoder, glyph );
   }
 
 
   LOCAL_FUNC
-  FT_Error  T1_Decoder_Init( T1_Decoder*             decoder,
-                             FT_Face                 face,
-                             FT_Size                 size,
-                             FT_GlyphSlot            slot,
-                             FT_Byte**               glyph_names,
-                             T1_Blend*               blend,
-                             T1_Decoder_Parse_Func   parse_glyph )
+  FT_Error  T1_Decoder_Init( T1_Decoder*          decoder,
+                             FT_Face              face,
+                             FT_Size              size,
+                             FT_GlyphSlot         slot,
+                             FT_Byte**            glyph_names,
+                             T1_Blend*            blend,
+                             T1_Decoder_Callback  parse_callback )
   {
     MEM_Set( decoder, 0, sizeof(*decoder) );
     
@@ -1008,12 +1008,12 @@
     }
     T1_Builder_Init( &decoder->builder, face, size, slot );
     
-    decoder->num_glyphs  = face->num_glyphs;
-    decoder->glyph_names = glyph_names;
-    decoder->blend       = blend;
-    decoder->parse_glyph = parse_glyph;
+    decoder->num_glyphs     = face->num_glyphs;
+    decoder->glyph_names    = glyph_names;
+    decoder->blend          = blend;
+    decoder->parse_callback = parse_callback;
     
-    decoder->funcs       = &t1_decoder_funcs;
+    decoder->funcs       = t1_decoder_funcs;
     return 0;
   }
 

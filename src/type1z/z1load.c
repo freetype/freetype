@@ -393,7 +393,7 @@
   void  parse_blend_axis_types( T1_Face     face,
                                 Z1_Loader*  loader )
   {
-    Z1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
+    T1_Token  axis_tokens[ T1_MAX_MM_AXIS ];
     FT_Int        n, num_axis;
     FT_Error      error = 0;
     T1_Blend*     blend;
@@ -422,7 +422,7 @@
     /* each token is an immediate containing the name of the axis */
     for ( n = 0; n < num_axis; n++ )
     {
-      Z1_Token_Rec*  token = axis_tokens + n;
+      T1_Token*  token = axis_tokens + n;
       FT_Byte*       name;
       FT_Int         len;
 
@@ -446,7 +446,7 @@
     }
 
   Exit:
-    loader->parser.error = error;
+    loader->parser.root.error = error;
   }
 
 
@@ -454,7 +454,7 @@
   void  parse_blend_design_positions( T1_Face     face,
                                       Z1_Loader*  loader )
   {
-    Z1_Token_Rec  design_tokens[ T1_MAX_MM_DESIGNS ];
+    T1_Token  design_tokens[ T1_MAX_MM_DESIGNS ];
     FT_Int        num_designs;
     FT_Int        num_axis;
     Z1_Parser*    parser = &loader->parser;
@@ -475,8 +475,8 @@
     }
 
     {
-      FT_Byte*  old_cursor = parser->cursor;
-      FT_Byte*  old_limit  = parser->limit;
+      FT_Byte*  old_cursor = parser->root.cursor;
+      FT_Byte*  old_limit  = parser->root.limit;
       FT_UInt   n;
 
 
@@ -485,15 +485,15 @@
 
       for ( n = 0; n < (FT_UInt)num_designs; n++ )
       {
-        Z1_Token_Rec   axis_tokens[ T1_MAX_MM_DESIGNS ];
-        Z1_Token_Rec*  token;
-        FT_Int         axis, n_axis;
+        T1_Token   axis_tokens[ T1_MAX_MM_DESIGNS ];
+        T1_Token*  token;
+        FT_Int     axis, n_axis;
 
 
         /* read axis/coordinates tokens */
         token = design_tokens + n;
-        parser->cursor = token->start - 1;
-        parser->limit  = token->limit + 1;
+        parser->root.cursor = token->start - 1;
+        parser->root.limit  = token->limit + 1;
         Z1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &n_axis );
 
         if ( n == 0 )
@@ -514,21 +514,21 @@
         /* now, read each axis token into the design position */
         for ( axis = 0; axis < n_axis; axis++ )
         {
-          Z1_Token_Rec*  token2 = axis_tokens + axis;
+          T1_Token*  token2 = axis_tokens + axis;
 
 
-          parser->cursor = token2->start;
-          parser->limit  = token2->limit;
+          parser->root.cursor = token2->start;
+          parser->root.limit  = token2->limit;
           blend->design_pos[n][axis] = Z1_ToFixed( parser, 0 );
         }
       }
 
-      loader->parser.cursor = old_cursor;
-      loader->parser.limit  = old_limit;
+      loader->parser.root.cursor = old_cursor;
+      loader->parser.root.limit  = old_limit;
     }
 
   Exit:
-    loader->parser.error = error;
+    loader->parser.root.error = error;
   }
 
 
@@ -539,7 +539,7 @@
     FT_Error      error  = 0;
     Z1_Parser*    parser = &loader->parser;
     T1_Blend*     blend;
-    Z1_Token_Rec  axis_tokens[ T1_MAX_MM_AXIS ];
+    T1_Token  axis_tokens[ T1_MAX_MM_AXIS ];
     FT_Int        n, num_axis;
     FT_Byte*      old_cursor;
     FT_Byte*      old_limit;
@@ -554,8 +554,8 @@
       error = T1_Err_Invalid_File_Format;
       goto Exit;
     }
-    old_cursor = parser->cursor;
-    old_limit  = parser->limit;
+    old_cursor = parser->root.cursor;
+    old_limit  = parser->root.limit;
 
     error = t1_allocate_blend( face, 0, num_axis );
     if ( error )
@@ -566,13 +566,13 @@
     for ( n = 0; n < num_axis; n++ )
     {
       T1_DesignMap*   map = blend->design_map + n;
-      Z1_Token_Rec*   token;
+      T1_Token*   token;
       FT_Int          p, num_points;
 
 
       token = axis_tokens + n;
-      parser->cursor = token->start;
-      parser->limit  = token->limit;
+      parser->root.cursor = token->start;
+      parser->root.limit  = token->limit;
 
       /* count the number of map points */
       {
@@ -605,11 +605,11 @@
       }
     }
 
-    parser->cursor = old_cursor;
-    parser->limit  = old_limit;
+    parser->root.cursor = old_cursor;
+    parser->root.limit  = old_limit;
 
   Exit:
-    parser->error = error;
+    parser->root.error = error;
   }
 
 
@@ -620,7 +620,7 @@
     FT_Error      error  = 0;
     Z1_Parser*    parser = &loader->parser;
     T1_Blend*     blend  = face->blend;
-    Z1_Token_Rec  master;
+    T1_Token  master;
     FT_UInt       n;
     FT_Byte*      old_cursor;
     FT_Byte*      old_limit;
@@ -634,18 +634,18 @@
     }
 
     Z1_ToToken( parser, &master );
-    if ( master.type != z1_token_array )
+    if ( master.type != t1_token_array )
     {
       FT_ERROR(( "parse_weight_vector: incorrect format!\n" ));
       error = T1_Err_Invalid_File_Format;
       goto Exit;
     }
 
-    old_cursor = parser->cursor;
-    old_limit  = parser->limit;
+    old_cursor = parser->root.cursor;
+    old_limit  = parser->root.limit;
 
-    parser->cursor = master.start;
-    parser->limit  = master.limit;
+    parser->root.cursor = master.start;
+    parser->root.limit  = master.limit;
 
     for ( n = 0; n < blend->num_designs; n++ )
     {
@@ -653,11 +653,11 @@
       blend->weight_vector[n]         = Z1_ToFixed( parser, 0 );
     }
 
-    parser->cursor = old_cursor;
-    parser->limit  = old_limit;
+    parser->root.cursor = old_cursor;
+    parser->root.limit  = old_limit;
 
   Exit:
-    parser->error = error;
+    parser->root.error = error;
   }
 
 
@@ -674,8 +674,8 @@
     FT_UNUSED( face );
 
 
-    parser->cursor = parser->limit;
-    parser->error  = 0;
+    parser->root.cursor = parser->root.limit;
+    parser->root.error  = 0;
   }
 
 #endif /* Z1_CONFIG_OPTION_NO_MM_SUPPORT */
@@ -693,49 +693,49 @@
   /*************************************************************************/
   /*                                                                       */
   /* First of all, define the token field static variables.  This is a set */
-  /* of Z1_Field_Rec variables used later.                                 */
+  /* of T1_Field variables used later.                                 */
   /*                                                                       */
   /*************************************************************************/
 
 #define Z1_NEW_STRING( _name, _field )              \
           static                                    \
-          const Z1_Field_Rec  z1_field_ ## _field = \
-            Z1_FIELD_STRING( _field );
+          const T1_Field  z1_field_ ## _field = \
+            T1_FIELD_STRING( _field );
 
 #define Z1_NEW_BOOL( _name, _field )                \
           static                                    \
-          const Z1_Field_Rec  z1_field_ ## _field = \
-            Z1_FIELD_BOOL( _field );
+          const T1_Field  z1_field_ ## _field = \
+            T1_FIELD_BOOL( _field );
 
 #define Z1_NEW_NUM( _name, _field )                 \
           static                                    \
-          const Z1_Field_Rec  z1_field_ ## _field = \
-            Z1_FIELD_NUM( _field );
+          const T1_Field  z1_field_ ## _field = \
+            T1_FIELD_NUM( _field );
 
 #define Z1_NEW_FIXED( _name, _field )                 \
           static                                      \
-          const Z1_Field_Rec  z1_field_ ## _field =   \
-            Z1_FIELD_FIXED( _field, _power );
+          const T1_Field  z1_field_ ## _field =   \
+            T1_FIELD_FIXED( _field, _power );
 
 #define Z1_NEW_NUM_TABLE( _name, _field, _max, _count )         \
           static                                                \
-          const Z1_Field_Rec  z1_field_ ## _field =             \
-            Z1_FIELD_NUM_ARRAY( _field, _count, _max );
+          const T1_Field  z1_field_ ## _field =             \
+            T1_FIELD_NUM_ARRAY( _field, _count, _max );
 
 #define Z1_NEW_FIXED_TABLE( _name, _field, _max, _count )         \
           static                                                  \
-          const Z1_Field_Rec  z1_field_ ## _field =               \
-            Z1_FIELD_FIXED_ARRAY( _field, _count, _max );
+          const T1_Field  z1_field_ ## _field =               \
+            T1_FIELD_FIXED_ARRAY( _field, _count, _max );
 
 #define Z1_NEW_NUM_TABLE2( _name, _field, _max )         \
           static                                         \
-          const Z1_Field_Rec  z1_field_ ## _field =      \
-            Z1_FIELD_NUM_ARRAY2( _field, _max );
+          const T1_Field  z1_field_ ## _field =      \
+            T1_FIELD_NUM_ARRAY2( _field, _max );
 
 #define Z1_NEW_FIXED_TABLE2( _name, _field, _max )         \
           static                                           \
-          const Z1_Field_Rec  z1_field_ ## _field =        \
-            Z1_FIELD_FIXED_ARRAY2( _field, _max );
+          const T1_Field  z1_field_ ## _field =        \
+            T1_FIELD_FIXED_ARRAY2( _field, _max );
 
 
 #define Z1_FONTINFO_STRING( n, f )          Z1_NEW_STRING( n, f )
@@ -796,7 +796,7 @@
     Z1_KeyWord_Type      type;
     Z1_KeyWord_Location  location;
     Z1_Parse_Func        parsing;
-    const Z1_Field_Rec*  field;
+    const T1_Field*  field;
 
   } Z1_KeyWord;
 
@@ -871,7 +871,7 @@
     if ( keyword->type == t1_keyword_callback )
     {
       keyword->parsing( face, loader );
-      error = loader->parser.error;
+      error = loader->parser.root.error;
       goto Exit;
     }
 
@@ -922,44 +922,18 @@
 
 
   static
-  int  is_space( char  c )
+  int  is_space( FT_Byte  c )
   {
-    return ( c == ' ' || c == '\t' || c == '\r' || c == '\n' );
+    return (c == ' ' || c == '\t' || c == '\r' || c == '\n' );
   }
 
 
   static
-  int  is_alpha( char c )
+  int  is_alpha( FT_Byte  c )
   {
-    return ( isalnum( (int)c ) ||
-             ( c == '.' )      ||
-             ( c == '_' )      );
+    return (isalnum(c) || c == '.' || c == '_' );
   }
 
-
-  static
-  void  skip_whitespace( Z1_Parser*  parser )
-  {
-    FT_Byte*  cur = parser->cursor;
-
-
-    while ( cur < parser->limit && is_space( *cur ) )
-      cur++;
-
-    parser->cursor = cur;
-  }
-
-
-  static
-  void skip_blackspace( Z1_Parser*  parser )
-  {
-    FT_Byte*  cur = parser->cursor;
-
-    while ( cur < parser->limit && !is_space( *cur ) )
-      cur++;
-
-    parser->cursor = cur;
-  }
 
 
   static
@@ -968,7 +942,7 @@
                          FT_Byte**   base )
   {
     FT_Byte*  cur;
-    FT_Byte*  limit = parser->limit;
+    FT_Byte*  limit = parser->root.limit;
 
 
     /* the binary data has the following format */
@@ -976,26 +950,26 @@
     /* `size' [white*] RD white ....... ND      */
     /*                                          */
 
-    skip_whitespace( parser );
-    cur = parser->cursor;
+    Z1_Skip_Spaces( parser );
+    cur = parser->root.cursor;
 
     if ( cur < limit && (FT_Byte)( *cur - '0' ) < 10 )
     {
       *size = Z1_ToInt( parser );
 
-      skip_whitespace( parser );
-      skip_blackspace( parser );  /* `RD' or `-|' or something else */
+      Z1_Skip_Spaces( parser );
+      Z1_Skip_Alpha ( parser );  /* `RD' or `-|' or something else */
 
       /* there is only one whitespace char after the */
       /* `RD' or `-|' token                          */
-      *base = parser->cursor + 1;
+      *base = parser->root.cursor + 1;
 
-      parser->cursor += *size+1;
+      parser->root.cursor += *size+1;
       return 1;
     }
 
     FT_ERROR(( "read_binary_data: invalid size field\n" ));
-    parser->error = T1_Err_Invalid_File_Format;
+    parser->root.error = T1_Err_Invalid_File_Format;
     return 0;
   }
 
@@ -1010,17 +984,17 @@
   {
     Z1_Parser*  parser = &loader->parser;
     FT_Error    error;
-    FT_Memory   memory = parser->memory;
+    FT_Memory   memory = parser->root.memory;
     FT_Int      len;
     FT_Byte*    cur;
     FT_Byte*    cur2;
     FT_Byte*    limit;
 
 
-    skip_whitespace( parser );
+    Z1_Skip_Spaces( parser );
 
-    cur   = parser->cursor;
-    limit = parser->limit;
+    cur   = parser->root.cursor;
+    limit = parser->root.limit;
 
     if ( cur >= limit - 1 || *cur != '/' )
       return;
@@ -1035,14 +1009,14 @@
     {
       if ( ALLOC( face->type1.font_name, len + 1 ) )
       {
-        parser->error = error;
+        parser->root.error = error;
         return;
       }
 
       MEM_Copy( face->type1.font_name, cur, len );
       face->type1.font_name[len] = '\0';
     }
-    parser->cursor = cur2;
+    parser->root.cursor = cur2;
   }
 
 
@@ -1104,8 +1078,10 @@
                         Z1_Loader*  loader )
   {
     Z1_Parser*  parser = &loader->parser;
-    FT_Byte*    cur   = parser->cursor;
-    FT_Byte*    limit = parser->limit;
+    FT_Byte*    cur   = parser->root.cursor;
+    FT_Byte*    limit = parser->root.limit;
+    
+    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
 
 
     /* skip whitespace */
@@ -1115,7 +1091,7 @@
       if ( cur >= limit )
       {
         FT_ERROR(( "parse_encoding: out of bounds!\n" ));
-        parser->error = T1_Err_Invalid_File_Format;
+        parser->root.error = T1_Err_Invalid_File_Format;
         return;
       }
     }
@@ -1126,23 +1102,23 @@
     {
       T1_Encoding*  encode     = &face->type1.encoding;
       FT_Int        count, n;
-      Z1_Table*     char_table = &loader->encoding_table;
-      FT_Memory     memory     = parser->memory;
+      PS_Table*     char_table = &loader->encoding_table;
+      FT_Memory     memory     = parser->root.memory;
       FT_Error      error;
 
 
       /* read the number of entries in the encoding, should be 256 */
       count = Z1_ToInt( parser );
-      if ( parser->error )
+      if ( parser->root.error )
         return;
 
       /* we use a Z1_Table to store our charnames */
       encode->num_chars = count;
       if ( ALLOC_ARRAY( encode->char_index, count, FT_Short   )       ||
            ALLOC_ARRAY( encode->char_name,  count, FT_String* )       ||
-           ( error = Z1_New_Table( char_table, count, memory ) ) != 0 )
+           ( error = psaux->ps_table_funcs->init( char_table, count, memory ) ) != 0 )
       {
-        parser->error = error;
+        parser->root.error = error;
         return;
       }
 
@@ -1159,8 +1135,8 @@
       /*                                                        */
       /* We stop when we encounter a `def'.                     */
 
-      cur   = parser->cursor;
-      limit = parser->limit;
+      cur   = parser->root.cursor;
+      limit = parser->root.limit;
       n     = 0;
 
       for ( ; cur < limit; )
@@ -1189,9 +1165,9 @@
           FT_Int  charcode;
 
 
-          parser->cursor = cur;
+          parser->root.cursor = cur;
           charcode = Z1_ToInt( parser );
-          cur = parser->cursor;
+          cur = parser->root.cursor;
 
           /* skip whitespace */
           while ( cur < limit && is_space( *cur ) )
@@ -1210,10 +1186,10 @@
 
             len = cur2 - cur - 1;
 
-            parser->error = Z1_Add_Table( char_table, charcode,
+            parser->root.error = Z1_Add_Table( char_table, charcode,
                                           cur + 1, len + 1 );
             char_table->elements[charcode][len] = '\0';
-            if ( parser->error )
+            if ( parser->root.error )
               return;
 
             cur = cur2;
@@ -1224,7 +1200,7 @@
       }
 
       face->type1.encoding_type = t1_encoding_array;
-      parser->cursor            = cur;
+      parser->root.cursor            = cur;
     }
     /* Otherwise, we should have either `StandardEncoding' or */
     /* `ExpertEncoding'                                       */
@@ -1241,7 +1217,7 @@
       else
       {
         FT_ERROR(( "parse_encoding: invalid token!\n" ));
-        parser->error = T1_Err_Invalid_File_Format;
+        parser->root.error = T1_Err_Invalid_File_Format;
       }
     }
   }
@@ -1252,23 +1228,24 @@
                      Z1_Loader*  loader )
   {
     Z1_Parser*  parser = &loader->parser;
-    Z1_Table*   table  = &loader->subrs;
-    FT_Memory   memory = parser->memory;
+    PS_Table*   table  = &loader->subrs;
+    FT_Memory   memory = parser->root.memory;
     FT_Error    error;
     FT_Int      n;
 
-
+    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
+    
     loader->num_subrs = Z1_ToInt( parser );
-    if ( parser->error )
+    if ( parser->root.error )
       return;
 
     /* position the parser right before the `dup' of the first subr */
-    skip_whitespace( parser );
-    skip_blackspace( parser );      /* `array' */
-    skip_whitespace( parser );
+    Z1_Skip_Spaces( parser );
+    Z1_Skip_Alpha( parser );      /* `array' */
+    Z1_Skip_Spaces( parser );
 
     /* initialize subrs array */
-    error = Z1_New_Table( table, loader->num_subrs, memory );
+    error = psaux->ps_table_funcs->init( table, loader->num_subrs, memory );
     if ( error )
       goto Fail;
 
@@ -1285,7 +1262,7 @@
 
       /* If the next token isn't `dup', we are also done.  This */
       /* happens when there are `holes' in the Subrs array.     */
-      if ( strncmp( (char*)parser->cursor, "dup", 3 ) != 0 )
+      if ( strncmp( (char*)parser->root.cursor, "dup", 3 ) != 0 )
         break;
 
       index = Z1_ToInt( parser );
@@ -1297,14 +1274,14 @@
       /* (bound to `noaccess put') or by two separate tokens:  */
       /* `noaccess' & `put'.  We position the parser right     */
       /* before the next `dup', if any.                        */
-      skip_whitespace( parser );
-      skip_blackspace( parser );    /* `NP' or `I' or `noaccess' */
-      skip_whitespace( parser );
+      Z1_Skip_Spaces( parser );
+      Z1_Skip_Alpha( parser );    /* `NP' or `I' or `noaccess' */
+      Z1_Skip_Spaces( parser );
 
-      if ( strncmp( (char*)parser->cursor, "put", 3 ) == 0 )
+      if ( strncmp( (char*)parser->root.cursor, "put", 3 ) == 0 )
       {
-        skip_blackspace( parser );  /* skip `put' */
-        skip_whitespace( parser );
+        Z1_Skip_Alpha( parser );  /* skip `put' */
+        Z1_Skip_Spaces( parser );
       }
 
       /* some fonts use a value of -1 for lenIV to indicate that */
@@ -1326,7 +1303,7 @@
     return;
 
   Fail:
-    parser->error = error;
+    parser->root.error = error;
   }
 
 
@@ -1335,13 +1312,15 @@
                            Z1_Loader*  loader )
   {
     Z1_Parser*  parser     = &loader->parser;
-    Z1_Table*   code_table = &loader->charstrings;
-    Z1_Table*   name_table = &loader->glyph_names;
-    FT_Memory   memory     = parser->memory;
+    PS_Table*   code_table = &loader->charstrings;
+    PS_Table*   name_table = &loader->glyph_names;
+    FT_Memory   memory     = parser->root.memory;
     FT_Error    error;
 
+    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
+
     FT_Byte*    cur;
-    FT_Byte*    limit = parser->limit;
+    FT_Byte*    limit = parser->root.limit;
     FT_Int      n;
 
 
@@ -1350,12 +1329,15 @@
       return;
 
     loader->num_glyphs = Z1_ToInt( parser );
-    if ( parser->error )
+    if ( parser->root.error )
       return;
 
     /* initialize tables */
-    error = Z1_New_Table( code_table, loader->num_glyphs, memory ) ||
-            Z1_New_Table( name_table, loader->num_glyphs, memory );
+    error = psaux->ps_table_funcs->init( code_table, loader->num_glyphs, memory );
+    if (error)
+      goto Fail;
+
+    error = psaux->ps_table_funcs->init( name_table, loader->num_glyphs, memory );
     if ( error )
       goto Fail;
 
@@ -1371,9 +1353,9 @@
       /*                                          */
       /* note that we stop when we find a `def'   */
       /*                                          */
-      skip_whitespace( parser );
+      Z1_Skip_Spaces( parser );
 
-      cur = parser->cursor;
+      cur = parser->root.cursor;
       if ( cur >= limit )
         break;
 
@@ -1391,7 +1373,7 @@
         break;
 
       if ( *cur != '/' )
-        skip_blackspace( parser );
+        Z1_Skip_Alpha( parser );
       else
       {
         FT_Byte*  cur2 = cur + 1;
@@ -1409,7 +1391,7 @@
         /* add a trailing zero to the name table */
         name_table->elements[n][len] = '\0';
 
-        parser->cursor = cur2;
+        parser->root.cursor = cur2;
         if ( !read_binary_data( parser, &size, &base ) )
           return;
 
@@ -1433,7 +1415,7 @@
     return;
 
   Fail:
-    parser->error = error;
+    parser->root.error = error;
   }
 
 
@@ -1480,9 +1462,9 @@
     Z1_Parser*  parser = &loader->parser;
 
 
-    parser->cursor = base;
-    parser->limit  = base + size;
-    parser->error  = 0;
+    parser->root.cursor = base;
+    parser->root.limit  = base + size;
+    parser->root.error  = 0;
 
     {
       FT_Byte*  cur   = base;
@@ -1509,17 +1491,17 @@
 
           if ( cur < limit )
           {
-            Z1_Token_Rec  token;
+            T1_Token  token;
 
 
             /* skip the `known' keyword and the token following it */
             cur += 5;
-            loader->parser.cursor = cur;
+            loader->parser.root.cursor = cur;
             Z1_ToToken( &loader->parser, &token );
 
             /* if the last token was an array, skip it! */
-            if ( token.type == z1_token_array )
-              cur2 = parser->cursor;
+            if ( token.type == t1_token_array )
+              cur2 = parser->root.cursor;
           }
           cur = cur2;
         }
@@ -1571,13 +1553,13 @@
                   if ( n >= len )
                   {
                     /* we found it -- run the parsing callback! */
-                    parser->cursor = cur2;
-                    skip_whitespace( parser );
-                    parser->error = t1_load_keyword( face, loader, keyword );
-                    if ( parser->error )
-                      return parser->error;
+                    parser->root.cursor = cur2;
+                    Z1_Skip_Spaces( parser );
+                    parser->root.error = t1_load_keyword( face, loader, keyword );
+                    if ( parser->root.error )
+                      return parser->root.error;
 
-                    cur = parser->cursor;
+                    cur = parser->root.cursor;
                     break;
                   }
                 }
@@ -1588,7 +1570,7 @@
         }
       }
     }
-    return parser->error;
+    return parser->root.error;
   }
 
 
@@ -1635,7 +1617,8 @@
     Z1_Parser*  parser;
     T1_Font*    type1 = &face->type1;
     FT_Error    error;
-
+    
+    PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
 
     t1_init_loader( &loader, face );
 
@@ -1643,7 +1626,7 @@
     type1->private_dict.lenIV = 4;
 
     parser = &loader.parser;
-    error = Z1_New_Parser( parser, face->root.stream, face->root.memory );
+    error = Z1_New_Parser( parser, face->root.stream, face->root.memory, psaux );
     if ( error )
       goto Exit;
 

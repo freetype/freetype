@@ -2,7 +2,7 @@
 #include <psaux/psobjs.h>
 #include <psaux/t1decode.h>
 
-  static
+  LOCAL_FUNC
   const PS_Table_Funcs    ps_table_funcs =
   {
     PS_Table_New,
@@ -12,7 +12,7 @@
   };
 
 
-  static
+  LOCAL_FUNC
   const T1_Parser_Funcs   t1_parser_funcs =
   {
     T1_Init_Parser,
@@ -30,7 +30,7 @@
   };
 
 
-  static
+  LOCAL_FUNC
   const T1_Builder_Funcs  t1_builder_funcs =
   {
     T1_Builder_Init,
@@ -44,7 +44,7 @@
   };
 
 
-  static
+  LOCAL_FUNC
   const T1_Decoder_Funcs  t1_decoder_funcs =
   {
     T1_Decoder_Init,
@@ -53,7 +53,7 @@
   };
 
 
-  static
+  LOCAL_FUNC
   const PSAux_Interface   psaux_interface =
   {
     &ps_table_funcs,

@@ -78,6 +78,7 @@
     table->block     = 0;
     table->capacity  = 0;
     table->cursor    = 0;
+    table->funcs     = ps_table_funcs;
 
   Exit:
     if ( error )
@@ -1009,6 +1010,7 @@
     parser->limit  = limit;
     parser->cursor = base;
     parser->memory = memory;
+    parser->funcs  = t1_parser_funcs;
   }                            
 
 
@@ -1082,6 +1084,8 @@
     builder->left_bearing.y = 0;
     builder->advance.x      = 0;
     builder->advance.y      = 0;
+    
+    builder->funcs = t1_builder_funcs;
   }
 
 
