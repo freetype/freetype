@@ -71,7 +71,7 @@ endif
 
 SRC_DIR_ := $(SRC_DIR)$(SEP)
 
-FT_INCLUDES := $(BUILD) $(TOP_)include $(SRC_)base $(SRC_DIR)
+FT_INCLUDES := $(BUILD) $(TOP_)config $(TOP_)include $(SRC_)base $(SRC_DIR)
 TT_INCLUDES := $(SRC_)shared $(SRC_)truetype
 T1_INCLUDES := $(SRC_)shared $(SRC_)type1
 
