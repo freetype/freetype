@@ -1,8 +1,8 @@
+#include <ftconfig.h>
 #include <ftdebug.h>
 
 #include <t1types.h>
 #include <t1tokens.h>
-#include <t1config.h>
 #include <t1parse.h>
 
 #include <stdio.h>

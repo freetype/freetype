@@ -59,11 +59,11 @@
  *
  ******************************************************************/
 
- #include <ftdebug.h>
+#include <ftdebug.h>
+#include <ftconfig.h>
 
 #include <t1types.h>
 #include <t1errors.h>
-#include <t1config.h>
 #include <t1load.h>
 #include <stdio.h>
 

@@ -19,7 +19,7 @@
 #define T1OBJS_H
 
 #include <ftobjs.h>
-#include <t1config.h>
+#include <ftconfig.h>
 #include <t1errors.h>
 #include <t1types.h>
 

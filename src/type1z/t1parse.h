@@ -146,9 +146,10 @@
                           void*      object,
                           T1_Int     length );
 
-
+#if 0
   LOCAL_DEF
   void  T1_Done_Table( T1_Table*  table );
+#endif
 
   LOCAL_DEF
   void  T1_Release_Table( T1_Table*  table );

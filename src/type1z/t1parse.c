@@ -186,6 +186,7 @@
 /*    This function does NOT release the heap's memory block. It is up   */
 /*    to the caller to clean it, or reference it in its own structures.  */
 /*                                                                       */
+#if 0
   LOCAL_FUNC
   void  T1_Done_Table( T1_Table*  table )
   {
@@ -204,7 +205,7 @@
     if (old_base != table->block)
       shift_elements( table, old_base );
   }
-
+#endif
 
   LOCAL_FUNC
   void  T1_Release_Table( T1_Table*  table )

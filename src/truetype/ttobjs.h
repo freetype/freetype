@@ -22,7 +22,6 @@
 
 #include <ftobjs.h>
 #include <tttypes.h>
-#include <ttconfig.h>
 #include <tterrors.h>
 
 

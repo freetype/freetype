@@ -52,7 +52,6 @@ TT_DRV_SRC := $(TT_DIR_)ttobjs.c   \
 # driver headers
 #
 TT_DRV_H := $(SFNT_H)             \
-            $(TT_DIR_)ttconfig.h  \
             $(TT_DRV_SRC:%.c=%.h)
 
 

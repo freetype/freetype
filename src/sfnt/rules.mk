@@ -46,7 +46,6 @@ ifndef SFNT_INCLUDE
   # driver headers
   #
   SFNT_DRV_H := $(SHARED_H)            \
-                $(SFNT_DIR_)sfconfig.h \
                 $(SFNT_DIR_)ttload.h   \
                 $(SFNT_DIR_)ttsbit.h   \
                 $(SFNT_DIR_)ttcmap.h   \

@@ -3,7 +3,6 @@
 #include <ttsbit.h>
 #include <ttpost.h>
 #include <ttcmap.h>
-#include <sfconfig.h>
 #include <sfnt.h>
 
   static const SFNT_Interface  sfnt_interface =

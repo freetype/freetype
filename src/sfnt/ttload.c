@@ -22,6 +22,7 @@
 
 
 #include <ftdebug.h>
+#include <ftconfig.h>
 
 #include <ttload.h>
 #include <tttags.h>

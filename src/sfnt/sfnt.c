@@ -1,6 +1,5 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
-#include <sfconfig.h>
 #include <ttload.c>
 #include <ttcmap.c>
 

@@ -18,7 +18,6 @@
 #ifndef FTEXTEND_H
 #define FTEXTEND_H
 
-#include <ftconfig.h>
 #include <ftobjs.h>
 
 

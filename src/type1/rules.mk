@@ -109,7 +109,6 @@ T1_DRV_SRC := $(T1_DIR_)t1objs.c    \
 # Type1 driver headers
 #
 T1_DRV_H := $(T1_DIR_)t1errors.h    \
-            $(T1_DIR_)t1config.h    \
             $(T1SHARED_H)           \
             $(T1_DRV_SRC:%.c=%.h)
 

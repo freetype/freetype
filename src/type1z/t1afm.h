@@ -34,9 +34,11 @@ LOCAL_DEF
 FT_Error  T1_Read_AFM( FT_Face   face,
                        FT_Stream stream );
 
+#if 0
 LOCAL_DEF
 void      T1_Done_AFM( FT_Memory  memory,
                        T1_AFM*    afm );
+#endif
 
 LOCAL_DEF
 void  T1_Get_Kerning( T1_AFM*     afm,

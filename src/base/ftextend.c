@@ -25,7 +25,6 @@
   /*************************************************************************/
 
 #include <ftextend.h>
-#include <ftobjs.h>
 
 /* required by the tracing mode */
 #undef  FT_COMPONENT

@@ -24,9 +24,9 @@
   /*                                                                       */
   /*************************************************************************/
 
+#include <ftstream.h>
 
 #include <ttpost.h>
-#include <ftstream.h>
 #include <tterrors.h>
 #include <ttload.h>
 #include <tttags.h>
