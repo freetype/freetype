@@ -815,7 +815,7 @@
       FT_Glyph_Transform( glyph, 0, &v );
     }
 
-    /* in case of succes, copy the bitmap to the glyph bitmap */
+    /* in case of success, copy the bitmap to the glyph bitmap */
     if ( !error )
     {
       error = ft_bitmap_glyph_init( bitmap, &dummy );
@@ -826,11 +826,11 @@
         goto Exit;
       }
 
+      /* copy advance */
+      bitmap->root.advance = glyph->advance;
+
       if ( destroy )
         FT_Done_Glyph( glyph );
-
-      /* copy advance - thanks Karsten ;-) */
-      bitmap->root.advance = glyph->advance;
 
       *the_glyph = FT_GLYPH( bitmap );
     }
