@@ -1,5 +1,11 @@
 2001-06-19  David Turner  <david@freetype.org>
 
+        * builds/win32/visualc/freetype.dsp, builds/win32/visualc/index.html:
+        updated the Visual C++ project (for the 2.0.4 release)
+
+        * builds/unix/detect.mk: added rule for AIX detection (which uses
+        /usr/sbin/init instead of /sbin/init, go figure..)
+
         * include/freetype/fterrors.h: updated some of the error macros to
         simplify Werner's latest tricks :o)
         

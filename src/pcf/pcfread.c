@@ -563,7 +563,7 @@ THE SOFTWARE.
     FT_Long*   offsets;
     FT_Long    bitmapSizes[GLYPHPADOPTIONS];
     FT_ULong   format, size;
-    int        nbitmaps, i, sizebitmaps;
+    int        nbitmaps, i, sizebitmaps = 0;
     char*      bitmaps;
 
 
