@@ -483,7 +483,13 @@
         cmaprec.encoding_id = 1;
         cmaprec.encoding    = ft_encoding_unicode;
 
+        nn = (FT_UInt) root->num_charmaps;
+        
         FT_CMap_New( &cff_cmap_unicode_class_rec, NULL, &cmaprec, NULL );
+
+        /* if no Unicode charmap was previously selected, select this one */
+        if ( root->charmap == NULL && nn != (FT_UInt) root->num_charmaps )
+          root->charmap = root->charmaps[nn];
 
       Skip_Unicode:
         if ( encoding->count > 0 )
