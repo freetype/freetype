@@ -123,6 +123,7 @@
         /* allocate the blend `private' and `font_info' dictionaries */
         if ( FT_NEW_ARRAY( blend->font_infos[1], num_designs     ) ||
              FT_NEW_ARRAY( blend->privates[1], num_designs       ) ||
+             FT_NEW_ARRAY( blend->bboxes[1], num_designs         ) ||
              FT_NEW_ARRAY( blend->weight_vector, num_designs * 2 ) )
           goto Exit;
 
@@ -130,11 +131,13 @@
 
         blend->font_infos[0] = &face->type1.font_info;
         blend->privates  [0] = &face->type1.private_dict;
+        blend->bboxes    [0] = &face->type1.font_bbox;
 
         for ( nn = 2; nn <= num_designs; nn++ )
         {
           blend->privates[nn]   = blend->privates  [nn - 1] + 1;
           blend->font_infos[nn] = blend->font_infos[nn - 1] + 1;
+          blend->bboxes[nn]     = blend->bboxes    [nn - 1] + 1;
         }
 
         blend->num_designs   = num_designs;
@@ -347,11 +350,13 @@
       /* release blend `private' and `font info' dictionaries */
       FT_FREE( blend->privates[1] );
       FT_FREE( blend->font_infos[1] );
+      FT_FREE( blend->bboxes[1] );
 
       for ( n = 0; n < num_designs; n++ )
       {
         blend->privates  [n] = 0;
         blend->font_infos[n] = 0;
+        blend->bboxes    [n] = 0;
       }
 
       /* release weight vectors */
@@ -735,6 +740,18 @@
       }
       break;
 
+    case T1_FIELD_LOCATION_BBOX:
+      dummy_object = &face->type1.font_bbox;
+      objects      = &dummy_object;
+      max_objects  = 0;
+
+      if ( blend )
+      {
+        objects     = (void**)blend->bboxes;
+        max_objects = blend->num_designs;
+      }
+      break;
+
     default:
       dummy_object = &face->type1;
       objects      = &dummy_object;
@@ -863,6 +880,7 @@
   }
 
 
+#if 0
   static void
   parse_font_bbox( T1_Face    face,
                    T1_Loader  loader )
@@ -878,6 +896,7 @@
     bbox->xMax = FT_RoundFix( temp[2] );
     bbox->yMax = FT_RoundFix( temp[3] );
   }
+#endif
 
 
   static void
@@ -1464,7 +1483,9 @@
 
     /* now add the special functions... */
     T1_FIELD_CALLBACK( "FontName", parse_font_name )
+#if 0    
     T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
+#endif    
     T1_FIELD_CALLBACK( "FontMatrix", parse_font_matrix )
     T1_FIELD_CALLBACK( "Encoding", parse_encoding )
     T1_FIELD_CALLBACK( "Subrs", parse_subrs )

@@ -852,8 +852,26 @@
     cur   = token.start;
     limit = token.limit;
 
-    if ( token.type == T1_TOKEN_TYPE_ARRAY )
+    /* we must detect arrays */
+    if ( field->type == T1_FIELD_TYPE_BBOX )
     {
+      T1_TokenRec  token2;
+      FT_Byte*     old_cur   = parser->cursor;
+      FT_Byte*     old_limit = parser->limit;
+      
+      parser->cursor = token.start;
+      parser->limit  = token.limit;
+      
+      PS_Parser_ToToken( parser, &token2 );
+      parser->cursor = old_cur;
+      parser->limit  = old_limit;
+      
+      if ( token2.type == T1_TOKEN_TYPE_ARRAY )
+        goto FieldArray;
+    }
+    else if ( token.type == T1_TOKEN_TYPE_ARRAY )
+    {
+    FieldArray:
       /* if this is an array, and we have no blend, an error occurs */
       if ( max_objects == 0 )
         goto Fail;
@@ -919,6 +937,23 @@
           string[len] = 0;
 
           *(FT_String**)q = string;
+        }
+        break;
+
+      case T1_FIELD_TYPE_BBOX:
+        {
+          FT_Fixed  temp[4];
+          FT_BBox*  bbox = (FT_BBox*)q;
+          
+          /* we need the '[' and ']' delimiters */
+          token.start--;
+          token.limit++;
+          (void) t1_tofixedarray( &token.start, token.limit, 4, temp, 0 );
+
+          bbox->xMin = FT_RoundFix( temp[0] );
+          bbox->yMin = FT_RoundFix( temp[1] );
+          bbox->xMax = FT_RoundFix( temp[2] );
+          bbox->yMax = FT_RoundFix( temp[3] );
         }
         break;
 
