@@ -232,6 +232,7 @@
 
       v_first = points[first];
       v_prev  = points[last];
+      v_cur   = v_first;
 
       for ( n = first; n <= last; n++ )
       {

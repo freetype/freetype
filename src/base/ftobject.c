@@ -30,7 +30,31 @@
  /*******************************************************************/
 
  /* forward declaration */
-  static const FT_TypeRec  ft_meta_class_type;
+  FT_BASE_DEF( FT_Error )
+  ft_metaclass_init( FT_MetaClass  meta,
+                     FT_Library    library );
+
+  /* forward declaration */
+  FT_BASE_DEF( void )
+  ft_metaclass_done( FT_MetaClass  meta );
+
+
+  /* class type for the meta-class itself */
+  static const FT_TypeRec  ft_meta_class_type =
+  {
+    "FT2.MetaClass",
+    NULL,
+
+    sizeof( FT_MetaClassRec ),
+    (FT_Object_InitFunc)  ft_metaclass_init,
+    (FT_Object_DoneFunc)  ft_metaclass_done,
+
+    sizeof( FT_ClassRec ),
+    (FT_Object_InitFunc)  NULL,
+    (FT_Object_DoneFunc)  NULL
+  };
+
+
 
 
  /* destroy a given class */
@@ -260,21 +284,6 @@
   Exit:
     return  (FT_Class) clazz;
   }
-
-
-  static const FT_TypeRec  ft_meta_class_type =
-  {
-    "FT2.MetaClass",
-    NULL,
-
-    sizeof( FT_MetaClassRec ),
-    (FT_Object_InitFunc)  ft_metaclass_init,
-    (FT_Object_DoneFunc)  ft_metaclass_done,
-
-    sizeof( FT_ClassRec ),
-    (FT_Object_InitFunc)  NULL,
-    (FT_Object_DoneFunc)  NULL
-  };
 
 
 
