@@ -13,6 +13,7 @@ Options:
  [--exec-prefix[=DIR]]
  [--version]
  [--libs]
+ [--libtool]
  [--cflags]
 EOF
   exit $1
@@ -53,6 +54,9 @@ while test $# -gt 0; do
   --libs)
     echo_libs=yes
     ;;
+  --libtool)
+    echo_libtool=yes
+    ;;
   *)
     usage 1 1>&2
     ;;
@@ -77,6 +81,10 @@ fi
 if test "$echo_libs" = "yes"; then
  libs="-lfreetype"
  echo -L@libdir@ $libs
+fi
+if test "$echo_libtool" = "yes"; then
+ convlib="libfreetype.la"
+ echo @libdir@/$convlib
 fi
 
 # EOF
