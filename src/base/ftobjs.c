@@ -1638,6 +1638,12 @@
     memory    = driver->memory;
 
     /* default processing - this can be overriden by the driver */
+    if (pixel_width == 0)
+      pixel_width = pixel_height;
+      
+    else if (pixel_height == 0)
+      pixel_height = pixel_width;
+      
     if ( pixel_width  < 1 ) pixel_width  = 1;
     if ( pixel_height < 1 ) pixel_height = 1;
 

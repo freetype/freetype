@@ -61,6 +61,7 @@
 
 #include <freetype/internal/ftdebug.h>
 #include <freetype/config/ftconfig.h>
+#include <freetype/ftmm.h>
 
 #include <freetype/internal/t1types.h>
 #include <t1errors.h>
@@ -70,6 +71,7 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1load
 
+#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
  /***************************************************************************/
  /***************************************************************************/
  /*****                                                                 *****/
@@ -146,7 +148,135 @@
    goto Exit;
  }                                  
 
+ LOCAL_FUNC  FT_Error  T1_Get_Multi_Master( T1_Face          face,
+                                            FT_Multi_Master* master )
+ {
+   T1_Blend*  blend = face->blend;
+   T1_UInt    n;
+   FT_Error   error;
+   
+   error = FT_Err_Invalid_Argument;
+   if (blend)
+   {
+     master->num_axis    = blend->num_axis;
+     master->num_designs = blend->num_designs;
+     for ( n = 0; n < blend->num_axis; n++ )
+     {
+       FT_MM_Axis*    axis = master->axis + n;
+       T1_DesignMap*  map = blend->design_map + n;
+       
+       axis->name    = blend->axis_names[n];
+       axis->minimum = map->design_points[0];
+       axis->maximum = map->design_points[map->num_points-1];
+     }
+     error = 0;
+   }
+   return error;
+ }                                            
 
+
+ LOCAL_FUNC  FT_Error  T1_Set_MM_Blend( T1_Face    face,
+                                        T1_UInt    num_coords,
+                                        T1_Fixed*  coords )
+ {
+   T1_Blend*  blend = face->blend;
+   FT_Error   error;
+   T1_UInt    n, m;
+   
+   error = FT_Err_Invalid_Argument;
+   if (blend && blend->num_axis == num_coords)
+   {
+     /* recompute the weight vector from the blend coordinates */
+     error = 0;
+     for ( n = 0; n < blend->num_designs; n++ )
+     {
+       FT_Fixed  result = 0x10000L;  /* 1.0 fixed */
+       for ( m = 0; m < blend->num_axis; m++ )
+       {
+         FT_Fixed  factor;
+
+         /* get current blend axis position */
+         factor = coords[m];
+         if (factor < 0) factor = 0;
+         if (factor > 0x10000L) factor = 0x10000L;
+         
+         if ((n & (1 << m)) == 0)
+           factor = 0x10000L - factor;
+           
+         result = FT_MulFix( result, factor );
+       }
+       blend->weight_vector[n] = result;
+     }
+     error = 0;
+   }
+   return error;
+ }
+ 
+
+ LOCAL_FUNC  FT_Error  T1_Set_MM_Design( T1_Face   face,
+                                         T1_UInt   num_coords,
+                                         T1_Long*  coords )
+ {
+   T1_Blend*  blend = face->blend;
+   FT_Error   error;
+   T1_UInt    n, p;
+   
+   error = FT_Err_Invalid_Argument;
+   if (blend && blend->num_axis == num_coords)
+   {
+     /* compute the blend coordinates through the blend design map */
+     T1_Fixed  final_blends[ T1_MAX_MM_DESIGNS ];
+     
+     for ( n = 0; n < blend->num_axis; n++ )
+     {
+       T1_Long        design = coords[n];
+       T1_Fixed       the_blend;
+       T1_DesignMap*  map     = blend->design_map + n;
+       T1_Fixed*      designs = map->design_points;
+       T1_Fixed*      blends  = map->blend_points;
+       T1_Int         before = -1, after = -1;
+       
+       for ( p = 0; p < map->num_points; p++ )
+       {
+         T1_Fixed  p_design = designs[p];
+         
+         /* exact match ? */
+         if (design == p_design)
+         {
+           the_blend = blends[p];
+           goto Found;
+         }
+         
+         if (design < p_design)
+         {
+           after = p;
+           break;
+         }
+         
+         before = p;
+       }
+       
+       /* now, interpolate if needed */
+       if (before < 0)
+         the_blend = blends[0];
+         
+       else if (after < 0)
+         the_blend = blends[map->num_points-1];
+         
+       else
+         the_blend = FT_MulDiv( design         - designs[before],
+                                blends [after] - blends [before],
+                                designs[after] - designs[before] );
+     Found:
+       final_blends[n] = the_blend;
+     }
+
+     error = T1_Set_MM_Blend( face, num_coords, final_blends );     
+   }
+   return error;
+ }
+
+ 
  LOCAL_FUNC  void T1_Done_Blend( T1_Face  face )
  {
    FT_Memory  memory = face->root.memory;
@@ -191,6 +321,7 @@
      FREE( face->blend );
    }
  }
+
 
 
  static  void  parse_blend_axis_types( T1_Face  face, T1_Loader*  loader )
@@ -446,6 +577,7 @@
    parser->cursor = parser->limit;
    parser->error  = 0;
  }
+#endif
  
  /***************************************************************************/
  /***************************************************************************/

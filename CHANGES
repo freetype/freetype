@@ -1,5 +1,14 @@
 LATEST_CHANGES
 
+  - added support for Multiple Master fonts in "type1z". There is also
+    a new file named <freetype/ftmm.h> which defines functions to
+    manage them from client applications.
+    
+    The new file "src/base/ftmm.c" is also optional to the engine..
+
+  - various formatting changes (e.g. EXPORT_DEF -> FT_EXPORT_DEF) +
+    small bug fixes in FT_Load_Glyph, the "type1" driver, etc..
+
   - a minor fix to the Type 1 driver to let them apply the font matrix
     correctly (used for many oblique fonts..)
 

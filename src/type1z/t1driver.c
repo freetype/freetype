@@ -26,7 +26,6 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1driver
 
-#ifndef T1_CONFIG_OPTION_NO_AFM
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -59,15 +58,28 @@
                                      const FT_String*  interface )
   {
     UNUSED(driver);
-
+    UNUSED(interface);
+    
+#ifndef T1_CONFIG_OPTION_NO_AFM
     if ( strcmp( (const char*)interface, "attach_file" ) == 0 )
       return (FTDriver_Interface)T1_Read_AFM;
+#endif
 
+#ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
+    if ( strcmp( (const char*)interface, "get_mm" ) == 0 )
+      return (FTDriver_Interface)T1_Get_Multi_Master;
+      
+    if ( strcmp( (const char*)interface, "set_mm_design") == 0 )
+      return (FTDriver_Interface)T1_Set_MM_Design;      
+
+    if ( strcmp( (const char*)interface, "set_mm_blend") == 0 )
+      return (FTDriver_Interface)T1_Set_MM_Blend;      
+#endif
     return 0;
   }
 
 
-
+#ifndef T1_CONFIG_OPTION_NO_AFM
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -375,11 +387,7 @@
     (FTDriver_initDriver)           T1_Init_Driver,
     (FTDriver_doneDriver)           T1_Done_Driver,
 
-#ifdef T1_CONFIG_OPTION_NO_AFM
-    (FTDriver_getInterface)         0,
-#else
     (FTDriver_getInterface)         Get_Interface,
-#endif
 
     (FTDriver_initFace)             T1_Init_Face,
     (FTDriver_doneFace)             T1_Done_Face,

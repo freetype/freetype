@@ -1,4 +1,5 @@
 #include <freetype/internal/sfnt.h>
+#include <freetype/internal/ftobjs.h>
 #include <sfdriver.h>
 #include <ttload.h>
 #include <ttsbit.h>

@@ -733,6 +733,17 @@
   /*                                                                       */
 #define FT_FACE_FLAG_FAST_GLYPHS  0x80
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
+  /*    FT_FACE_FLAG_MULTIPLE_MASTERS                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit-field constant, used to indicate that the font contains      */
+  /*    multiple masters and is capable of interpolating between them..    */
+  /*                                                                       */
+#define FT_FACE_FLAG_MULTIPLE_MASTERS  0x100
+
 
 #define FT_HAS_HORIZONTAL(face)  (face->face_flags & FT_FACE_FLAG_HORIZONTAL)
 #define FT_HAS_VERTICAL(face)    (face->face_flags & FT_FACE_FLAG_VERTICAL)
@@ -743,6 +754,8 @@
 #define FT_HAS_FIXED_SIZES(face) (face->face_flags & FT_FACE_FLAG_FIXED_SIZES)
 #define FT_HAS_FAST_GLYPHS(face) (face->face_flags & FT_FACE_FLAG_FAST_GLYPHS)
 
+#define FT_HAS_MULTIPLE_MASTERS(face) \
+          (face->face_flags & FT_FACE_FLAG_MULTIPLE_MASTERS)
 
   /*************************************************************************/
   /*                                                                       */
@@ -1964,7 +1977,7 @@
   /*    application if you want something simpler.                         */
   /*                                                                       */
   FT_EXPORT_DEF(FT_Error)  FT_Outline_Done( FT_Library   library,
-                                         FT_Outline*  outline );
+                                            FT_Outline*  outline );
 
   /*************************************************************************/
   /*                                                                       */

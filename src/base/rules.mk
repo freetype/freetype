@@ -56,6 +56,7 @@ BASE_H := $(INTERNAL_)ftcalc.h    \
 #
 BASE_EXT_SRC := $(BASE_)ftraster.c \
                 $(BASE_)ftglyph.c  \
+                $(BASE_)ftmm.c     \
                 $(BASE_)ftgrays.c
 
 # Base layer extensions headers

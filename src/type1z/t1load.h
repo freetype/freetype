@@ -48,6 +48,18 @@
 
 #ifndef T1_CONFIG_OPTION_NO_MM_SUPPORT
   LOCAL_DEF
+  FT_Error  T1_Get_Multi_Master( T1_Face          face,
+                                 FT_Multi_Master* master );
+
+  LOCAL_DEF  FT_Error  T1_Set_MM_Blend( T1_Face    face,
+                                        T1_UInt    num_coords,
+                                        T1_Fixed*  coords );
+
+  LOCAL_DEF  FT_Error  T1_Set_MM_Design( T1_Face   face,
+                                         T1_UInt   num_coords,
+                                         T1_Long*  coords );
+
+  LOCAL_DEF
   void T1_Done_Blend( T1_Face  face );
 #endif
 
