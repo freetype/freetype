@@ -2048,7 +2048,7 @@
 
 
       if ( x_ppem == metrics->x_ppem && y_ppem == metrics->y_ppem )
-        return
+        return FT_Err_Ok;
 
       metrics->x_ppem = x_ppem;
       metrics->y_ppem = y_ppem;
