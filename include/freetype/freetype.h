@@ -461,7 +461,6 @@ FT_BEGIN_HEADER
   /*     Corresponds to the encoding system for Simplified Chinese, as     */
   /*     used in China.  Only found in some TrueType fonts.                */
   /*                                                                       */
-  /*                                                                       */
   /*   FT_ENCODING_MS_BIG5 ::                                              */
   /*     Corresponds to the encoding system for Traditional Chinese, as    */
   /*     used in Taiwan and Hong Kong.  Only found in some TrueType fonts. */
