@@ -1,5 +1,24 @@
 LATEST CHANGES
 
+  - changed the default installation path for public headers from
+    "include/freetype" to "include/freetype2".
+
+    Also added a new "freetype-config" that is automatically
+    generated and installed on Unix and Cygwin systems. The
+    script itself is used to retrieve the current install path,
+    C compilation flags as well as linker flags..
+
+  - fixed several small bugs:
+
+      - incorrect max advance width for fixed-pitch Type 1 fonts
+
+      - incorrect glyph names for certain TrueType fonts
+
+      - the glyph advance was not copied when FT_Glyph_To_Bitmap was called
+
+      - the linearHoriAdvance and linerVertAdvance fields were not
+        correctly returned for glyphs processed by the auto-hinter
+
   - "type1z" renamed back to "type1"; the old "type1" module has been
     removed
 
