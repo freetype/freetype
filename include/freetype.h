@@ -1365,6 +1365,11 @@
   *
   *    stream       :: handle to a source stream object
   *
+  *    driver       :: this field is exclusively used by FT_Open_Face,
+  *                    it simply specifies the font driver to use to open
+  *                    the face. If set to 0, FreeType will try to load
+  *                    the face with each one of the drivers in its list.
+  *
   * <Note>
   *    Here's how a new input stream is built from a FT_Open_Args
   *    structure:
@@ -1385,13 +1390,10 @@
   {
     FT_Byte*     memory_base;
     FT_Long      memory_size;
-    
     FT_String*   pathname;
-    
     FT_Stream    stream;
-    
-    FT_Long      face_index;
-    
+    FT_Driver    driver;
+
   } FT_Open_Args;
 
   /*************************************************************************/
