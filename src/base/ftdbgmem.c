@@ -39,6 +39,7 @@
 
     FT_ULong     alloc_total;
     FT_ULong     alloc_current;
+    FT_ULong     alloc_max;
   
     const char*  file_name;
     FT_Long      line_no;
@@ -167,7 +168,6 @@
   }
 
 
-
   static FT_MemTable
   ft_mem_table_new( void )
   {
@@ -242,11 +242,14 @@
       table->size   = 0;
       table->nodes  = 0;
       free( table );
+
+      printf( "FreeType: total memory allocations  = %ld\n", table->alloc_total );
+      printf( "FreeType: maximum memory footprint  = %ld\n", table->alloc_max );
       
       if ( leak_count > 0 )
-        ft_mem_debug_panic( "%ld bytes of memory leaked in %ld blocks\n",
+        ft_mem_debug_panic( "FreeType: %ld bytes of memory leaked in %ld blocks\n",
                             leaks, leak_count );
-      printf( "no FreeType memory leaks detected !!\n" );
+      printf( "FreeType: no memory leaks detected !!\n" );
     }
   }
 
@@ -325,6 +328,8 @@
 
       table->alloc_total   += size;
       table->alloc_current += size;
+      if ( table->alloc_current > table->alloc_max )
+        table->alloc_max = table->alloc_current;
 
       if ( table->nodes*3 < table->size  ||
            table->size *3 < table->nodes )
@@ -446,15 +451,18 @@
   {
     FT_MemTable  table;
     FT_Int       result = 0;
-    
-    table = ft_mem_table_new();
-    if ( table )
-    {
-      memory->user    = table;
-      memory->alloc   = ft_mem_debug_alloc;
-      memory->realloc = ft_mem_debug_realloc;
-      memory->free    = ft_mem_debug_free;
-      result = 1;
+
+    if ( getenv( "FT_DEBUG_MEMORY") )
+    {    
+      table = ft_mem_table_new();
+      if ( table )
+      {
+        memory->user    = table;
+        memory->alloc   = ft_mem_debug_alloc;
+        memory->realloc = ft_mem_debug_realloc;
+        memory->free    = ft_mem_debug_free;
+        result = 1;
+      }
     }
     return result;
   }  
