@@ -932,7 +932,7 @@
   }
 
 
-  static OTV_Validate_Func  otv_gpos_validate_funcs[9] =
+  static const OTV_Validate_Func  otv_gpos_validate_funcs[9] =
   {
     otv_SinglePos_validate,
     otv_PairPos_validate,
@@ -954,7 +954,7 @@
                               OTV_Validator  valid )
   {
     valid->type_count = 9;
-    valid->type_funcs = otv_gpos_validate_funcs;
+    valid->type_funcs = (OTV_Validate_Func*) otv_gpos_validate_funcs;
 
     otv_Lookup_validate( table, valid );
   }
@@ -996,7 +996,7 @@
     LookupList  = FT_NEXT_USHORT( p );
 
     valid->type_count  = 9;
-    valid->type_funcs  = otv_gpos_validate_funcs;
+    valid->type_funcs  = (OTV_Validate_Func*) otv_gpos_validate_funcs;
     valid->glyph_count = glyph_count;
 
     otv_LookupList_validate( table + LookupList,
