@@ -17,12 +17,13 @@
 
 
 #include <ft2build.h>
-#include FT_CONFIG_CONFIG_H
+/* we use our special ftconfig.h file, not the standard one */
+#include <ftconfig.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_SYSTEM_H
 #include FT_ERRORS_H
-#include FT_TYPES_h
-#include FT_INTERNAL_FTOBJS_H
+#include FT_TYPES_H
+#include FT_INTERNAL_OBJECTS_H
 
   /* memory-mapping includes and definitions */
 #ifdef HAVE_UNISTD_H
@@ -55,6 +56,7 @@
 #endif /* NEED_DECLARATION_MUNMAP */
 
 
+#include <sys/types.h>
 #include <sys/stat.h>
 
 #ifdef HAVE_FCNTL_H
