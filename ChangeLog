@@ -1,3 +1,8 @@
+2003-01-14  Graham Asher  <graham.asher@btinternet.com>
+    * /include/freetype/ftglyph.h, /src/base/ftglyph.c
+    Added 'const' to the type of the first argument to FT_Matrix_Multiply,
+    which isn't changed - this adds documentation and convenience.
+
 2003-01-13  Graham Asher  <graham.asher@btinternet.com>
 
     * src/sfnt/ttload.c (tt_face_load_metrics)
