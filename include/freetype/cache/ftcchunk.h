@@ -60,109 +60,57 @@ FT_BEGIN_HEADER
 
   typedef struct FTC_ChunkNodeRec_*    FTC_ChunkNode;
   typedef struct FTC_ChunkSetRec_*     FTC_ChunkSet;
-  typedef struct FTC_Chunk_CacheRec_*  FTC_Chunk_Cache;
+  typedef struct FTC_ChunkCacheRec_*   FTC_ChunkCache;
 
   typedef struct  FTC_ChunkNodeRec_
   {
-    FTC_CacheNodeRec  root;
-    FTC_ChunkSet      cset;
-    FT_UShort         cset_index;
-    FT_UShort         num_elements;
-    FT_Byte*          elements;
+    FTC_NodeRec   node;
+    FTC_ChunkSet  cset;
+    FT_UShort     item_count;
+    FT_UShort     item_start;
+    FT_Byte*      items;
 
   } FTC_ChunkNodeRec;
 
+#define FTC_CHUNK_NODE(x)  ((FTC_ChunkNode)(x))
 
-#define FTC_CHUNKNODE_TO_LRUNODE( x )  ((FT_ListNode)( x ))
-#define FTC_LRUNODE_TO_CHUNKNODE( x )  ((FTC_ChunkNode)( x ))
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /*  chunk set methods                                                    */
-  /*                                                                       */
-
-  /* used to set "element_max", "element_count" and "element_size" */
-  typedef FT_Error
-  (*FTC_ChunkSet_SizesFunc)( FTC_ChunkSet  cset,
-                             FT_Pointer    type );
-
-  typedef FT_Error
-  (*FTC_ChunkSet_InitFunc)( FTC_ChunkSet  cset,
-                            FT_Pointer    type );
-
-  typedef void
-  (*FTC_ChunkSet_DoneFunc)( FTC_ChunkSet  cset );
-
-  typedef FT_Bool
-  (*FTC_ChunkSet_CompareFunc)( FTC_ChunkSet  cset,
-                               FT_Pointer    type );
-
-
-  typedef FT_Error
-  (*FTC_ChunkSet_NewNodeFunc)( FTC_ChunkSet    cset,
-                               FT_UInt         index,
-                               FTC_ChunkNode*  anode );
-
-  typedef void
-  (*FTC_ChunkSet_DestroyNodeFunc)( FTC_ChunkNode   node );
-
-  typedef FT_ULong
-  (*FTC_ChunkSet_SizeNodeFunc)( FTC_ChunkNode   node );
-
-
-  typedef struct  FTC_ChunkSet_Class_
+ /* a chunk set is used to categorize chunks of a given type */
+  typedef struct FTC_ChunkSetRec_
   {
-    FT_UInt                       cset_byte_size;
-
-    FTC_ChunkSet_InitFunc         init;
-    FTC_ChunkSet_DoneFunc         done;
-    FTC_ChunkSet_CompareFunc      compare;
-    FTC_ChunkSet_SizesFunc        sizes;
-
-    FTC_ChunkSet_NewNodeFunc      new_node;
-    FTC_ChunkSet_SizeNodeFunc     size_node;
-    FTC_ChunkSet_DestroyNodeFunc  destroy_node;
-
-  } FTC_ChunkSet_Class;
-
-
-  typedef struct  FTC_ChunkSetRec_
-  {
-    FTC_Chunk_Cache      cache;
-    FTC_Manager          manager;
-    FT_Memory            memory;
-    FTC_ChunkSet_Class*  clazz;
-    FT_UInt              cset_index;     /* index in parent cache    */
-
-    FT_UInt              element_max;    /* maximum number of elements   */
-    FT_UInt              element_size;   /* element size in bytes        */
-    FT_UInt              element_count;  /* number of elements per chunk */
-
-    FT_UInt              num_chunks;
-    FTC_ChunkNode*       chunks;
-
+    FT_LruNodeRec    lru;
+    FT_UFast         hash;
+    FTC_ChunkCache   ccache;
+    FT_Fast          num_chunks;
+    FT_UInt          item_total;   /* total number of glyphs in set   */
+    FT_UInt          item_size;    /* size of each glyph item in set  */
+    FT_UInt          item_count;   /* number of glyph items per chunk */
+  
   } FTC_ChunkSetRec;
 
+#define  FTC_CHUNK_SET(x)  ((FTC_ChunkSet)(x))
 
-  /* the abstract chunk cache class */
-  typedef struct  FTC_Chunk_Cache_Class_
+#define  FTC_CHUNK_SET_MEMORY(x)  ((x)->ccache->cache.memory)
+
+ /* the abstract chunk cache class */
+  typedef struct FTC_ChunkCacheRec_
   {
-    FTC_Cache_Class      root;
-    FTC_ChunkSet_Class*  cset_class;
+    FTC_CacheRec   cache;
+    FT_LruList     cset_lru;  /* LRU list of chunk sets */
+  
+  } FTC_ChunkCacheRec;
 
-  } FTC_Chunk_Cache_Class;
+#define  FTC_CHUNK_CACHE(x)  ((FTC_ChunkCache)(x))
 
 
-  /* the abstract chunk cache object */
-  typedef struct  FTC_Chunk_CacheRec_
+  typedef struct FTC_ChunkQueryRec_
   {
-    FTC_CacheRec              root;
-    FT_Lru                    csets_lru;   /* static chunk set lru list */
-    FTC_ChunkSet              last_cset;   /* small cache :-)           */
-    FTC_ChunkSet_CompareFunc  compare;     /* useful shortcut           */
+   /* input */
+    FT_UInt       gindex;      /* glyph index */
 
-  } FTC_Chunk_CacheRec;
+   /* output */
+    FTC_ChunkSet  cset;
+  
+  } FTC_ChunkQueryRec, *FTC_ChunkQuery;
 
 
   /*************************************************************************/
@@ -173,52 +121,44 @@ FT_BEGIN_HEADER
   /*                                                                       */
 
   FT_EXPORT( FT_Error )
-  FTC_ChunkNode_Init( FTC_ChunkNode  node,
-                      FTC_ChunkSet   cset,
-                      FT_UInt        index,
-                      FT_Bool        alloc );
-
-#define FTC_ChunkNode_Ref( n ) \
-          FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count++
-
-#define FTC_ChunkNode_Unref( n ) \
-          FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count--
-
+  ftc_chunk_node_init( FTC_ChunkNode  node,
+                       FTC_ChunkSet   cset,
+                       FT_UInt        index,
+                       FT_Bool        alloc );
 
   /* chunk set objects */
 
   FT_EXPORT( void )
-  FTC_ChunkNode_Destroy( FTC_ChunkNode    node );
+  ftc_chunk_node_done( FTC_ChunkNode  node );
 
 
   FT_EXPORT( FT_Error )
-  FTC_ChunkSet_New( FTC_Chunk_Cache  cache,
-                    FT_Pointer       type,
-                    FTC_ChunkSet    *aset );
+  ftc_chunk_set_init( FTC_ChunkSet    cset,
+                      FT_UInt         item_size,
+                      FT_UInt         item_count,
+                      FT_UInt         item_total,
+                      FTC_ChunkCache  cache );
 
-
-  FT_EXPORT( FT_Error )
-  FTC_ChunkSet_Lookup_Node( FTC_ChunkSet    cset,
-                            FT_UInt         glyph_index,
-                            FTC_ChunkNode*  anode,
-                            FT_UInt        *anindex );
+  FT_EXPORT( void )
+  ftc_chunk_set_done( FTC_ChunkSet  cset );
 
 
   /* chunk cache objects */
 
   FT_EXPORT( FT_Error )
-  FTC_Chunk_Cache_Init( FTC_Chunk_Cache  cache );
+  ftc_chunk_cache_init( FTC_ChunkCache    cache,
+                        FT_LruList_Class  cset_class );
 
   FT_EXPORT( void )
-  FTC_Chunk_Cache_Done( FTC_Chunk_Cache  cache );
+  ftc_chunk_cache_done( FTC_ChunkCache  cache );
+
 
   FT_EXPORT( FT_Error )
-  FTC_Chunk_Cache_Lookup( FTC_Chunk_Cache  cache,
-                          FT_Pointer       type,
-                          FT_UInt          gindex,
-                          FTC_ChunkNode   *anode,
-                          FT_UInt         *aindex );
+  ftc_chunk_cache_lookup( FTC_ChunkCache  cache,
+                          FTC_ChunkQuery  query,
+                          FTC_ChunkNode  *anode );
 
+ /* */
 
 FT_END_HEADER
 

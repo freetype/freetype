@@ -81,10 +81,21 @@ FT_BEGIN_HEADER
 
 #define FTC_MAX_FACES_DEFAULT  2
 #define FTC_MAX_SIZES_DEFAULT  4
-#define FTC_MAX_BYTES_DEFAULT  200000L  /* 200kByte by default! */
+#define FTC_MAX_BYTES_DEFAULT  100000L  /* 200kByte by default! */
 
   /* maximum number of caches registered in a single manager */
 #define FTC_MAX_CACHES         16
+
+
+ /* handle to cache object */
+  typedef struct FTC_CacheRec_*  FTC_Cache;
+
+ /* handle to cache class */
+  typedef const struct FTC_Cache_ClassRec_*  FTC_Cache_Class;
+  
+ /* handle to cache node */
+  typedef struct FTC_NodeRec_*   FTC_Node;
+
 
 
   /*************************************************************************/
@@ -125,13 +136,15 @@ FT_BEGIN_HEADER
   typedef struct  FTC_ManagerRec_
   {
     FT_Library          library;
-    FT_Lru              faces_lru;
-    FT_Lru              sizes_lru;
+    FT_LruList          faces_list;
+    FT_LruList          sizes_list;
 
-    FT_ULong            max_bytes;
-    FT_ULong            num_bytes;
+    FT_ULong            max_weight;
+    FT_ULong            cur_weight;
+    
     FT_UInt             num_nodes;
-    FT_ListRec          global_lru;
+    FTC_Node            nodes_list;
+    
     FTC_Cache           caches[FTC_MAX_CACHES];
 
     FT_Pointer          request_data;
@@ -185,197 +198,135 @@ FT_BEGIN_HEADER
   /* glyphs for a given size, some metrics, etc.                           */
   /*                                                                       */
 
-  typedef FT_ListNodeRec     FTC_CacheNodeRec;
-  typedef FTC_CacheNodeRec*  FTC_CacheNode;
 
-
-  /* the field `cachenode.data' is typecast to this type */
-  typedef struct  FTC_CacheNode_Data_
+ /* structure size should be 20 bytes on 32-bits machines */  
+  typedef struct FTC_NodeRec_
   {
-    FT_UShort  cache_index;
-    FT_Short   ref_count;
+    FTC_Node   mru_next;     /* circular mru list pointer           */
+    FTC_Node   mru_prev;     /* circular mru list pointer           */
+    FTC_Node   link;         /* used for hashing..                  */
+    FT_UInt32  hash;         /* used for hashing too..              */
+    FT_UShort  cache_index;  /* index of cache this node belongs to */
+    FT_Short   ref_count;    /* reference count for this node..     */
+  
+  } FTC_NodeRec;
 
-  } FTC_CacheNode_Data;
-
-
-  /* return a pointer to FTC_CacheNode_Data contained in a */
-  /* CacheNode's `data' field                              */
-#define FTC_CACHENODE_TO_DATA_P( n ) \
-          ( (FTC_CacheNode_Data*)&(n)->data )
-
-#define FTC_LIST_TO_CACHENODE( n )  ( (FTC_CacheNode)(n) )
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <FuncType>                                                            */
-  /*    FTC_CacheNode_SizeFunc                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to compute the total size in bytes of a given      */
-  /*    cache node.  It is used by the cache manager to compute the number */
-  /*    of old nodes to flush when the cache is full.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    node       :: A handle to the target cache node.                   */
-  /*                                                                       */
-  /*    cache_data :: A generic pointer passed to the destructor.          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    The size of a given cache node in bytes.                           */
-  /*                                                                       */
-  typedef FT_ULong
-  (*FTC_CacheNode_SizeFunc)( FTC_CacheNode  node,
-                             FT_Pointer     cache_data );
+#define  FTC_NODE(x)    ((FTC_Node)(x))
+#define  FTC_NODE_P(x)  ((FTC_Node*)(x))
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <FuncType>                                                            */
-  /*    FTC_CacheNode_DestroyFunc                                          */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to destroy a given cache node.  It is called by    */
-  /*    the manager when the cache is full and old nodes need to be        */
-  /*    flushed out.                                                       */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    node       :: A handle to the target cache node.                   */
-  /*                                                                       */
-  /*    cache_data :: A generic pointer passed to the destructor.          */
-  /*                                                                       */
-  typedef void
-  (*FTC_CacheNode_DestroyFunc)( FTC_CacheNode  node,
-                                FT_Pointer     cache_data );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FTC_CacheNode_Class                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A very simple structure used to describe a cache node's class to   */
-  /*    the cache manager.                                                 */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    size_node    :: A function used to size the node.                  */
-  /*                                                                       */
-  /*    destroy_node :: A function used to destroy the node.               */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The cache node class doesn't include a `new_node' function because */
-  /*    the cache manager never allocates cache node directly; it          */
-  /*    delegates this task to its cache objects.                          */
-  /*                                                                       */
-  typedef struct  FTC_CacheNode_Class_
-  {
-    FTC_CacheNode_SizeFunc     size_node;
-    FTC_CacheNode_DestroyFunc  destroy_node;
-
-  } FTC_CacheNode_Class;
-
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*****                                                               *****/
-  /*****                       CACHE DEFINITIONS                       *****/
-  /*****                                                               *****/
-  /*************************************************************************/
-  /*************************************************************************/
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <FuncType>                                                            */
-  /*    FTC_Cache_InitFunc                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to initialize a given cache object.                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    cache :: A handle to the new cache.                                */
-  /*                                                                       */
-  typedef FT_Error
-  (*FTC_Cache_InitFunc)( FTC_Cache  cache );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <FuncType>                                                            */
-  /*    FTC_Cache_DoneFunc                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function to finalize a given cache object.                       */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    cache :: A handle to the target cache.                             */
-  /*                                                                       */
-  typedef void
-  (*FTC_Cache_DoneFunc)( FTC_Cache  cache );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FTC_Cache_Class                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A structure used to describe a given cache object class to the     */
-  /*    cache manager.                                                     */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    cache_byte_size :: The size of the cache object in bytes.          */
-  /*                                                                       */
-  /*    init_cache      :: The cache object initializer.                   */
-  /*                                                                       */
-  /*    done_cache      :: The cache object finalizer.                     */
-  /*                                                                       */
-  struct  FTC_Cache_Class_
-  {
-    FT_UInt             cache_byte_size;
-    FTC_Cache_InitFunc  init_cache;
-    FTC_Cache_DoneFunc  done_cache;
-  };
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Struct>                                                              */
-  /*    FTC_CacheRec                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A structure used to describe an abstract cache object.             */
-  /*                                                                       */
-  /* <Fields>                                                              */
-  /*    manager     :: A handle to the parent cache manager.               */
-  /*                                                                       */
-  /*    memory      :: A handle to the memory manager.                     */
-  /*                                                                       */
-  /*    clazz       :: A pointer to the cache class.                       */
-  /*                                                                       */
-  /*    node_clazz  :: A pointer to the cache's node class.                */
-  /*                                                                       */
-  /*    cache_index :: An index of the cache in the manager's table.       */
-  /*                                                                       */
-  /*    cache_data  :: Data passed to the cache node                       */
-  /*                   constructor/finalizer.                              */
-  /*                                                                       */
+ /* each cache really implements a dynamic hash table to manage its nodes */
   typedef struct  FTC_CacheRec_
   {
-    FTC_Manager           manager;
-    FT_Memory             memory;
-    FTC_Cache_Class*      clazz;
-    FTC_CacheNode_Class*  node_clazz;
+    FTC_Manager      manager;
+    FT_Memory        memory;
+    FTC_Cache_Class  clazz;
 
-    FT_UInt               cache_index;  /* in manager's table           */
-    FT_Pointer            cache_data;   /* passed to cache node methods */
+    FT_UInt          cache_index;  /* in manager's table         */
+    FT_Pointer       cache_data;   /* used by cache node methods */
+
+    FT_UFast         nodes;
+    FT_UFast         size;
+    FTC_Node*        buckets;
 
   } FTC_CacheRec;
 
 
+#define  FTC_CACHE(x)    ((FTC_Cache)(x))
+#define  FTC_CACHE_P(x)  ((FTC_Cache*)(x))
+
+
+ /* initialize a given cache */
+  typedef FT_Error
+  (*FTC_Cache_InitFunc)( FTC_Cache   cache );
+  
+ /* finalize a given cache */
+  typedef void
+  (*FTC_Cache_DoneFunc)( FTC_Cache   cache );
+
+ /* initialize a new cache node */
+  typedef FT_Error
+  (*FTC_Node_InitFunc)( FTC_Node    node,
+                        FT_Pointer  type,
+                        FTC_Cache   cache );
+
+ /* compute the weight of a given cache node */
+  typedef FT_ULong
+  (*FTC_Node_WeightFunc)( FTC_Node    node,
+                          FTC_Cache   cache );
+
+ /* compare a node to a given key pair */
+  typedef FT_Bool
+  (*FTC_Node_CompareFunc)( FTC_Node   node,
+                           FT_Pointer key,
+                           FTC_Cache  cache );
+
+ /* finalize a given cache node */
+  typedef void
+  (*FTC_Node_DoneFunc)( FTC_Node    node,
+                        FTC_Cache   cache );
+
+  typedef struct FTC_Cache_ClassRec_
+  {
+    FT_UInt               cache_size;
+    FTC_Cache_InitFunc    cache_init;
+    FTC_Cache_DoneFunc    cache_done;
+    
+    FT_UInt               node_size;
+    FTC_Node_InitFunc     node_init;
+    FTC_Node_WeightFunc   node_weight;
+    FTC_Node_CompareFunc  node_compare;
+    FTC_Node_DoneFunc     node_done;
+  
+  } FTC_Cache_ClassRec;
+
   /* */
 
+#define  FTC_CACHE_RESIZE_TEST(c)            \
+            ( (c)->nodes*3 < (c)->size  ||   \
+              (c)->size*3  < (c)->nodes )      
+
+
+  /* this must be used internally for the moment */
+  FT_EXPORT( FT_Error )
+  FTC_Manager_Register_Cache( FTC_Manager      manager,
+                              FTC_Cache_Class  clazz,
+                              FTC_Cache       *acache );
+
+
+ /* can be used directory as FTC_Cache_DoneFunc, or called by custom */
+ /* cache finalizers..                                               */
+  FT_EXPORT( void )
+  ftc_cache_done( FTC_Cache  cache );
+
+ /* initalize the hash table within the cache */
+  FT_EXPORT( FT_Error )
+  ftc_cache_init( FTC_Cache  cache );
+
+ /* can be used when FTC_CACHE_RESIZE_TEST returns TRUE after a node */
+ /* insertion..                                                      */
+  FT_EXPORT(void)
+  ftc_cache_resize( FTC_Cache  cache );
+
+
+ /* can be called when the key's hash value has been computed */
+  FT_EXPORT(FT_Error)
+  ftc_cache_lookup_node( FTC_Cache    cache,
+                         FT_UFast     key_hash,
+                         FT_Pointer   key,
+                         FTC_Node    *anode );
+
+ /* can be called to increment a node's reference count */
+  FT_EXPORT(void)
+  ftc_node_ref( FTC_Node   node,
+                FTC_Cache  cache );
+
+ /* can be called to decrement a node's reference count */
+  FT_EXPORT(void)
+  ftc_node_unref( FTC_Node   node,
+                  FTC_Cache  cache );
+
+ /* */
 
 FT_END_HEADER
 
