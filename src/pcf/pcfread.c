@@ -249,7 +249,7 @@ THE SOFTWARE.
                           FT_ULong  *aformat,
                           FT_ULong  *asize )
   {
-    FT_Error  error;
+    FT_Error  error = 0;
     FT_Int    i;
 
 
@@ -267,8 +267,6 @@ THE SOFTWARE.
 
         return PCF_Err_Ok;
       }
-
-    FT_UNUSED( error );
 
     return PCF_Err_Invalid_File_Format;
   }
