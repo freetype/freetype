@@ -1,6 +1,6 @@
 2000-11-10  Tom Kacvinsky  <tjk@ams.org>
 
-	* builds/unix/unix-defs.in
+	* builds/unix/unix-def.in
 	Add
 		INSTALL_PROGRAM := @INSTALL_PROGRAM@
 		INSTALL_SCRIPT  := @INSTALL_SCRIPT@
