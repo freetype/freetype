@@ -1,3 +1,8 @@
+2003-04-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/pfr/pfrload.c (pfr_extra_item_load_font_id): Use FT_PtrDist
+	instead of FT_Uint for `len'.
+
 2003-04-22  Werner Lemberg  <wl@gnu.org>
 
 	* src/gzip/ftgzip.c (zcalloc) [!FT_CONFIG_OPTION_SYSTEM_ZLIB]:
@@ -92,7 +97,10 @@
 	Use `ft_glyphslot_*' functions.
 	Don't set `FT_GLYPH_OWN_BITMAP'.
 
-	* src/pfr/pfrsbit.c, src/sfnt/ttsbit.c, src/type42/t42objs.c,
+	* src/pfr/pfrsbit.c (pfr_slot_load_bitmap): Use
+	`ft_glyphslot_alloc_bitmap'.
+
+	* src/sfnt/ttsbit.c, src/type42/t42objs.c,
 	src/winfonts/winfnt.c:
 
 	* src/cache/ftlru.c (FT_LruList_Lookup): Fixed an invalid assertion
@@ -143,8 +151,8 @@
 	* src/cache/ftlru.c: Include FT_INTERNAL_DEBUG_H.
 	(FT_LruList_Lookup): Implement loop.
 
-	* src/pfr/pfrobjs.c, src/pfr/pfrsbits.c: Fixing compiler warnings
-	and a small memory leak.
+	* src/pfr/pfrobjs.c (pfr_face_done): Fix memory leak.
+	(pfr_face_init): Fixing compiler warnings.
 
 	* src/psaux/psobjs.c (t1_reallocate_table): Fixed a bug (memory
 	leak) that only happened when a try to resize an array would end in
@@ -178,8 +186,7 @@
 
 	  touch 0123456789 ; gzip 0123456789 ; ftdump 0123456789.gz
 
-	* src/pfr/pfrobjs.c, src/pfr/pfrload.c, src/pfr/pfrtypes.h: Several
-	fixes to the PFR font driver:
+	Several fixes to the PFR font driver:
 
 	- The list of available embedded bitmaps was not correctly set in
 	  the root FT_FaceRec structure describing the face.
@@ -192,6 +199,20 @@
 	  retrieve the "real" family and style names.
 
 	NOTE THAT THESE CHANGES THE FAMILY NAME OF MANY PFR FONTS!
+
+	* src/pfr/pfrload.c (pfr_aux_name_load): New function.
+	(pfr_phy_font_done): Free `family_name' and `style_name' also.
+	Remove unused variables.
+	(pfr_phy_font_load): Extract useful information from the auxiliary
+	bytes.
+
+	* src/pfr/pfrobjs.c (pfr_face_done): Set pointers to NULL.
+	(pfr_face_init): Provide fallback values for `family_name' and
+	`style_name'.
+	Handle strikes.
+	(pfr_slot_load): Handle FT_LOAD_SBITS_ONLY.
+	* src/pfr/pfrtypes.h (PFR_PhyFontRec): Add fields `ascent',
+	`descent', `leading', `family_name', and `style_name'.
 
 	* src/truetype/ttdriver.c (Set_Char_Sizes): Fixed a rounding bug
 	when computing the scale factors for a given character size in
@@ -587,7 +608,7 @@
 	* src/sfnt/ttcmap0.c (tt_face_build_cmaps): Removed compiler
 	warnings in optimized mode relative to the "volatile" local
 	variables.  This was not a compiler bug after all, but the fact that
-	a pointer to a volatile variable is not the same than a volatile
+	a pointer to a volatile variable is not the same as a volatile
 	pointer to a variable :-)
 
 	The fix was to change
@@ -595,8 +616,9 @@
 	into
 	  `FT_Byte* volatile p'.
 
-	* src/pfr/pfrload.c, src/pfr/pfrdrivr.c, src/gzip/inftrees.c:
-	Removed compiler warnings in optimized modes.
+	* src/pfr/pfrload.c (pfr_phy_font_load), src/pfr/pfrdrivr.c
+	(pfr_get_metrics), src/gzip/inftrees.c: Removed compiler warnings in
+	optimized modes.
 
 	* src/gzip/*.[hc]: Modified our zlib copy in order to prevent
 	exporting any zlib function names outside of the component.  This
@@ -620,9 +642,15 @@
 	* include/freetype/internal/internal.h (FT_INTERNAL_PFR_H): New
 	macro for pfr.h.
 
-	src/base/ftpfr.c: New file.
-
+	* src/base/ftpfr.c: New file.
 	* src/base/Jamfile, src/base/descrip.mms: Updated.
+
+	* src/pfr/pfrdrivr.c: Include FT_INTERNAL_PFR_H.
+	(pfr_get_kerning, pfr_get_advance, pfr_get_metrics): New functions.
+	(pfr_service_rec): New format interface.
+	(pfr_driver_class): Use `pfr_service_rec'.
+	Replace `pfr_face_get_kerning' with `pfr_get_kerning'.
+	* src/pfr/pfrobjs.c: Remove dead code.
 
 	* src/base/ftobjs.c (ft_glyphslot_clear): Small internal fix to
 	better support bitmap-based font formats.

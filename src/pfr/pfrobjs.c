@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR object methods (body).                                  */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2002, 2003 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -41,7 +41,8 @@
   FT_LOCAL_DEF( void )
   pfr_face_done( PFR_Face  face )
   {
-    FT_Memory   memory = face->root.driver->root.memory;
+    FT_Memory  memory = face->root.driver->root.memory;
+
 
     /* we don't want dangling pointers */
     face->root.family_name = NULL;
@@ -143,18 +144,18 @@
        if ( phy_font->num_kern_pairs > 0 )
          root->face_flags |= FT_FACE_FLAG_KERNING;
 
-      /* if no family name was found in the "undocumented" auxiliary
-       * data, use the font ID instead. This sucks but is better than
-       * nothing
-       */
+       /* If no family name was found in the "undocumented" auxiliary
+        * data, use the font ID instead.  This sucks but is better than
+        * nothing.
+        */
        root->family_name = phy_font->family_name;
        if ( root->family_name == NULL )
          root->family_name = phy_font->font_id;
 
-      /* note that the style name can be NULL in certain PFR fonts,
-       * probably meaning "Regular"
-       */
-       root->style_name  = phy_font->style_name;
+       /* note that the style name can be NULL in certain PFR fonts,
+        * probably meaning "Regular"
+        */
+       root->style_name = phy_font->style_name;
 
        root->num_fixed_sizes = 0;
        root->available_sizes = 0;
@@ -182,8 +183,8 @@
          strike = phy_font->strikes;
          for ( n = 0; n < count; n++, size++, strike++ )
          {
-           size->height = (FT_UShort) strike->y_ppm;
-           size->width  = (FT_UShort) strike->x_ppm;
+           size->height = (FT_UShort)strike->y_ppm;
+           size->width  = (FT_UShort)strike->x_ppm;
          }
          root->num_fixed_sizes = count;
        }
@@ -279,7 +280,8 @@
     FT_Outline*  outline = &slot->root.outline;
     FT_ULong     gps_offset;
 
-    if (gindex > 0)
+
+    if ( gindex > 0 )
       gindex--;
 
     /* check that the glyph index is correct */

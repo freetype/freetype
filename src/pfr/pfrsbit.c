@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR bitmap loader (body).                                   */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2002, 2003 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -115,7 +115,7 @@
     }
 
     if ( mask != 0x80 )
-      cur[0] = (FT_Byte) c;
+      cur[0] = (FT_Byte)c;
   }
 
 
@@ -185,7 +185,7 @@
       }
       else if ( mask == 0 )
       {
-        cur[0] = (FT_Byte) c;
+        cur[0] = (FT_Byte)c;
         mask   = 0x80;
         c      = 0;
         cur ++;
@@ -249,7 +249,7 @@
       }
       else if ( mask == 0 )
       {
-        cur[0] = (FT_Byte) c;
+        cur[0] = (FT_Byte)c;
         c      = 0;
         mask   = 0x80;
         cur ++;
@@ -583,7 +583,7 @@
       pfr_lookup_bitmap_data( stream->cursor,
                               stream->limit,
                               strike->num_bitmaps,
-                              (FT_Byte) strike->flags,
+                              (FT_Byte)strike->flags,
                               character->char_code,
                               &gps_offset,
                               &gps_size );
@@ -645,7 +645,8 @@
 
         /* Allocate and read bitmap data */
         {
-          FT_ULong    len    = glyph->root.bitmap.pitch * ysize;
+          FT_ULong  len = glyph->root.bitmap.pitch * ysize;
+
 
           error = ft_glyphslot_alloc_bitmap( &glyph->root, len );
           if ( !error )
