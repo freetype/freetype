@@ -727,7 +727,6 @@
     TT_UShort  index;
     TT_UShort  u;
     TT_Long    count;
-    TT_Long    Top;
 
     TT_Long  glyph_offset, offset;
 
@@ -895,7 +894,6 @@
         {
           TT_Short   left_bearing;
           TT_UShort  advance_width;
-
 
           Get_HMetrics( face, index, TRUE,
                         &left_bearing,
@@ -1263,10 +1261,10 @@
               y = SCALE_Y( y );
               
               if ( subglyph->element_flag & ROUND_XY_TO_GRID )
-	      {
-	        x = (x + 32) & -64;
-	        y = (y + 32) & -64;
-	      }
+	          {
+	            x = (x + 32) & -64;
+	            y = (y + 32) & -64;
+	          }
             }
           }
 
@@ -1328,8 +1326,10 @@
     glyph->outline.second_pass = TRUE;
 
     /* translate array so that (0,0) is the glyph's origin */
-    translate_array( num_points + 2, glyph->outline.points,
-                     -subglyph->pp1.x, 0 );
+    translate_array( (TT_UShort)(num_points + 2),
+                     glyph->outline.points,
+                     -subglyph->pp1.x,
+                     0 );
 
     FT_Get_Outline_CBox( &glyph->outline, &bbox );
 
@@ -1377,9 +1377,10 @@
       TT_Short   top_bearing;    /* vertical top side bearing (EM units) */
       TT_UShort  advance_height; /* vertical advance height   (EM units) */
 
-      TT_Pos  left;     /* scaled vertical left side bearing  */
-      TT_Pos  top;      /* scaled vertical top side bearing   */
-      TT_Pos  advance;  /* scaled vertical advance height     */
+      TT_Pos  left;     /* scaled vertical left side bearing         */
+      TT_Pos  Top;      /* scaled original vertical top side bearing */
+      TT_Pos  top;      /* scaled vertical top side bearing          */
+      TT_Pos  advance;  /* scaled vertical advance height            */
 
 
       /* Get the unscaled `tsb' and `ah' */
@@ -1433,7 +1434,7 @@
       {
         Top     = SCALE_Y( top_bearing );
         top     = SCALE_Y( top_bearing + subglyph->bbox.yMax ) - bbox.yMax;
-        advance = SCALE_X( advance_height );
+        advance = SCALE_Y( advance_height );
       }
       else
       {
