@@ -217,7 +217,7 @@
     FT_TRACE5(( "Glyph %ld\n", glyph_index ));
 
     /* the following line sets the `error' variable through macros! */
-    if ( FILE_Seek( offset ) || ACCESS_Frame( byte_count ) )
+    if ( FT_STREAM_SEEK( offset ) || FT_FRAME_ENTER( byte_count ) )
       return error;
 
     return TT_Err_Ok;
@@ -230,7 +230,7 @@
     FT_Stream  stream = loader->stream;
 
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
   }
 
 
@@ -561,11 +561,11 @@
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     {
-      /* we must undo the ACCESS_Frame in order to point to the */
+      /* we must undo the FT_FRAME_ENTER in order to point to the */
       /* composite instructions, if we find some.               */
       /* we will process them later...                          */
       /*                                                        */
-      loader->ins_pos = (FT_ULong)( FILE_Pos() +
+      loader->ins_pos = (FT_ULong)( FT_STREAM_POS() +
                                     stream->cursor - stream->limit );
     }
 #endif
@@ -1108,7 +1108,7 @@
 
 
           /* read size of instructions */
-          if ( FILE_Seek( ins_pos ) ||
+          if ( FT_STREAM_SEEK( ins_pos ) ||
                READ_UShort( n_ins ) )
             goto Fail;
           FT_TRACE5(( "  Instructions size = %d\n", n_ins ));
@@ -1127,7 +1127,7 @@
           }
 
           /* read the instructions */
-          if ( FILE_Read( exec->glyphIns, n_ins ) )
+          if ( FT_STREAM_READ( exec->glyphIns, n_ins ) )
             goto Fail;
 
           glyph->control_data = exec->glyphIns;
@@ -1564,7 +1564,7 @@
     loader.glyph  = (FT_GlyphSlot)glyph;
     loader.stream = stream;
 
-    loader.glyf_offset  = FILE_Pos();
+    loader.glyf_offset  = FT_STREAM_POS();
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 

@@ -1,5 +1,15 @@
 2002-03-20  David Turner    <david@freetype.org>
 
+        * renaming stream macros. Examples:
+        
+           FILE_Skip    => FT_STREAM_SKIP
+           FILE_Read    => FT_STREAM_READ
+           ACCESS_Frame => FT_FRAME_ENTER
+           FORGET_Frame => FT_FRAME_EXIT
+           etc...
+           
+        * src/sfnt/sfdriver.c (get_sfnt_postscript_name): fixed memory leak
+
         * include/freetype/internal/ftobjs.h: changing the definition of
         FT_CMap_CharNextFunc slightly
 

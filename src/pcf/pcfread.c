@@ -98,8 +98,8 @@ THE SOFTWARE.
     FT_UInt    n;
 
 
-    if ( FILE_Seek ( 0 )                   ||
-         READ_Fields ( pcf_toc_header, toc ) )
+    if ( FT_STREAM_SEEK ( 0 )                   ||
+         FT_STREAM_READ_FIELDS ( pcf_toc_header, toc ) )
       return PCF_Err_Cannot_Open_Resource;
 
     if ( toc->version != PCF_FILE_VERSION )
@@ -111,7 +111,7 @@ THE SOFTWARE.
     tables = face->toc.tables;
     for ( n = 0; n < toc->count; n++ )
     {
-      if ( READ_Fields( pcf_table_header, tables ) )
+      if ( FT_STREAM_READ_FIELDS( pcf_table_header, tables ) )
         goto Exit;
       tables++;
     }
@@ -220,7 +220,7 @@ THE SOFTWARE.
              : pcf_metric_header;
 
       /* the following sets 'error' but doesn't return in case of failure */             
-      (void) READ_Fields( fields, metric );
+      (void) FT_STREAM_READ_FIELDS( fields, metric );
     }
     else
     {
@@ -228,7 +228,7 @@ THE SOFTWARE.
 
 
       /* parsing compressed metrics */
-      if ( READ_Fields( pcf_compressed_metric_header, &compr ) )
+      if ( FT_STREAM_READ_FIELDS( pcf_compressed_metric_header, &compr ) )
         goto Exit;
 
       metric->leftSideBearing  = (FT_Short)( compr.leftSideBearing  - 0x80 );
@@ -262,7 +262,7 @@ THE SOFTWARE.
         if ( stream->pos > tables[i].offset )
           return PCF_Err_Invalid_Stream_Skip;
 
-        if ( FILE_Skip( tables[i].offset - stream->pos ) )
+        if ( FT_STREAM_SKIP( tables[i].offset - stream->pos ) )
           return PCF_Err_Invalid_Stream_Skip;
 
         *asize   = tables[i].size;  /* unused - to be removed */
@@ -390,12 +390,12 @@ THE SOFTWARE.
     {
       if ( PCF_BYTE_ORDER( format ) == MSBFirst )
       {
-        if ( READ_Fields( pcf_property_msb_header, props + i ) )
+        if ( FT_STREAM_READ_FIELDS( pcf_property_msb_header, props + i ) )
           goto Bail;
       }
       else
       {
-        if ( READ_Fields( pcf_property_header, props + i ) )
+        if ( FT_STREAM_READ_FIELDS( pcf_property_header, props + i ) )
           goto Bail;
       }
     }
@@ -568,7 +568,7 @@ THE SOFTWARE.
     if ( error )
       return error;
 
-    error = FT_Stream_Enter_Frame( stream, 8 );
+    error = FT_Stream_EnterFrame( stream, 8 );
     if ( error )
       return error;
 
@@ -578,7 +578,7 @@ THE SOFTWARE.
     else
       nbitmaps  = GET_ULongLE();
 
-    FT_Stream_Exit_Frame( stream );
+    FT_Stream_ExitFrame( stream );
 
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
       return PCF_Err_Invalid_File_Format;
@@ -660,7 +660,7 @@ THE SOFTWARE.
     if ( error )
       return error;
 
-    error = FT_Stream_Enter_Frame( stream, 14 );
+    error = FT_Stream_EnterFrame( stream, 14 );
     if ( error )
       return error;
 
@@ -683,7 +683,7 @@ THE SOFTWARE.
       face->defaultChar = GET_ShortLE();
     }
 
-    FT_Stream_Exit_Frame( stream );
+    FT_Stream_ExitFrame( stream );
 
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
       return PCF_Err_Invalid_File_Format;
@@ -696,7 +696,7 @@ THE SOFTWARE.
     if ( ALLOC( tmpEncoding, nencoding * sizeof ( PCF_EncodingRec ) ) )
       return PCF_Err_Out_Of_Memory;
 
-    error = FT_Stream_Enter_Frame( stream, 2 * nencoding );
+    error = FT_Stream_EnterFrame( stream, 2 * nencoding );
     if ( error )
       goto Bail;
 
@@ -721,7 +721,7 @@ THE SOFTWARE.
       FT_TRACE4(( "enc n. %d ; Uni %ld ; Glyph %d\n",
                   i, tmpEncoding[j - 1].enc, encodingOffset ));
     }
-    FT_Stream_Exit_Frame( stream );
+    FT_Stream_ExitFrame( stream );
 
     if ( ALLOC( encoding, (--j) * sizeof ( PCF_EncodingRec ) ) )
       goto Bail;
@@ -816,12 +816,12 @@ THE SOFTWARE.
 
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )
     {
-      if ( READ_Fields( pcf_accel_msb_header, accel ) )
+      if ( FT_STREAM_READ_FIELDS( pcf_accel_msb_header, accel ) )
         goto Bail;
     }
     else
     {
-      if ( READ_Fields( pcf_accel_header, accel ) )
+      if ( FT_STREAM_READ_FIELDS( pcf_accel_header, accel ) )
         goto Bail;
     }
 

@@ -120,7 +120,7 @@
       if ( length )
         *length = table->Length;
 
-      if ( FILE_Seek( table->Offset ) )
+      if ( FT_STREAM_SEEK( table->Offset ) )
        goto Exit;
     }
     else
@@ -217,20 +217,20 @@
 
       /* it's a TrueType collection, i.e. a file containing several */
       /* font files.  Read the font directory now                   */
-      if ( READ_Fields( ttc_header_fields, &face->ttc_header ) )
+      if ( FT_STREAM_READ_FIELDS( ttc_header_fields, &face->ttc_header ) )
         goto Exit;
 
       /* now read the offsets of each font in the file */
       if ( ALLOC_ARRAY( face->ttc_header.offsets,
                         face->ttc_header.count,
                         FT_ULong )                     ||
-           ACCESS_Frame( face->ttc_header.count * 4L ) )
+           FT_FRAME_ENTER( face->ttc_header.count * 4L ) )
         goto Exit;
 
       for ( n = 0; n < face->ttc_header.count; n++ )
         face->ttc_header.offsets[n] = GET_ULong();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       /* check face index */
       if ( face_index >= face->ttc_header.count )
@@ -240,14 +240,14 @@
       }
 
       /* seek to the appropriate TrueType file, then read tag */
-      if ( FILE_Seek( face->ttc_header.offsets[face_index] ) ||
+      if ( FT_STREAM_SEEK( face->ttc_header.offsets[face_index] ) ||
            READ_Long( format_tag )                           )
         goto Exit;
     }
 
     /* the format tag was read, now check the rest of the header */
     sfnt->format_tag = format_tag;
-    if ( READ_Fields( sfnt_header_fields, sfnt ) )
+    if ( FT_STREAM_READ_FIELDS( sfnt_header_fields, sfnt ) )
       goto Exit;
 
     /* now, check the values of `num_tables', `seach_range', etc. */
@@ -317,7 +317,7 @@
                       TT_TableRec ) )
       goto Exit;
 
-    if ( ACCESS_Frame( face->num_tables * 16L ) )
+    if ( FT_FRAME_ENTER( face->num_tables * 16L ) )
       goto Exit;
 
     entry = face->dir_tables;
@@ -339,7 +339,7 @@
                   entry->Length ));
     }
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
 
     FT_TRACE2(( "Directory loaded\n\n" ));
 
@@ -430,7 +430,7 @@
 
     stream = face->root.stream;
     /* the `if' is syntactic sugar for picky compilers */
-    if ( FILE_Read_At( offset, buffer, size ) )
+    if ( FT_STREAM_READ_AT( offset, buffer, size ) )
       goto Exit;
 
   Exit:
@@ -507,7 +507,7 @@
 
     header = &face->header;
 
-    if ( READ_Fields( header_fields, header ) )
+    if ( FT_STREAM_READ_FIELDS( header_fields, header ) )
       goto Exit;
 
     FT_TRACE2(( "    Units per EM: %8u\n", header->Units_Per_EM ));
@@ -598,7 +598,7 @@
     if ( error )
       goto Exit;
 
-    if ( READ_Fields( maxp_fields, maxProfile ) )
+    if ( FT_STREAM_READ_FIELDS( maxp_fields, maxProfile ) )
       goto Exit;
 
     maxProfile->maxPoints             = 0;
@@ -617,7 +617,7 @@
 
     if ( maxProfile->version >= 0x10000L )
     {
-      if ( READ_Fields( maxp_fields_extra, maxProfile ) )
+      if ( FT_STREAM_READ_FIELDS( maxp_fields_extra, maxProfile ) )
         goto Exit;
 
       /* XXX: an adjustment that is necessary to load certain */
@@ -753,7 +753,7 @@
          ALLOC_ARRAY( *shorts, num_shorts, TT_ShortMetrics ) )
       goto Exit;
 
-    if ( ACCESS_Frame( table_len ) )
+    if ( FT_FRAME_ENTER( table_len ) )
       goto Exit;
 
     {
@@ -791,7 +791,7 @@
       }
     }
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
 
     FT_TRACE2(( "loaded\n" ));
 
@@ -883,7 +883,7 @@
       header = &face->horizontal;
     }
 
-    if ( READ_Fields( metrics_header_fields, header ) )
+    if ( FT_STREAM_READ_FIELDS( metrics_header_fields, header ) )
       goto Exit;
 
     header->long_metrics  = NULL;
@@ -967,11 +967,11 @@
       goto Exit;
     }
 
-    table_pos = FILE_Pos();
+    table_pos = FT_STREAM_POS();
 
     names = &face->name_table;
 
-    if ( READ_Fields( name_table_fields, names ) )
+    if ( FT_STREAM_READ_FIELDS( name_table_fields, names ) )
       goto Exit;
 
     /* check the 'storageOffset' field */
@@ -989,7 +989,7 @@
     /* Allocate the array of name records. */
     if ( ALLOC( names->names,
                 names->numNameRecords*sizeof(TT_NameEntryRec) + storageSize )  ||
-         ACCESS_Frame( names->numNameRecords * 12L ) )
+         FT_FRAME_ENTER( names->numNameRecords * 12L ) )
       goto Exit;
 
     storage = (FT_Byte*)(names->names + names->numNameRecords);
@@ -1003,7 +1003,7 @@
 
       for ( ; cur < limit; cur ++ )
       {
-        if ( READ_Fields( name_record_fields, cur ) )
+        if ( FT_STREAM_READ_FIELDS( name_record_fields, cur ) )
           break;
 
         /* invalid name entries will have "cur->string" set to NULL !! */
@@ -1018,14 +1018,14 @@
       }
     }
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
 
     if (error)
       goto Exit;
 
     storageOffset -= 6 + 12*names->numNameRecords;
-    if ( FILE_Skip( storageOffset )        ||
-         FILE_Read( storage, storageSize ) )
+    if ( FT_STREAM_SKIP( storageOffset )        ||
+         FT_STREAM_READ( storage, storageSize ) )
       goto Exit;
 
 
@@ -1165,9 +1165,9 @@
       goto Exit;
     }
 
-    table_start = FILE_Pos();
+    table_start = FT_STREAM_POS();
 
-    if ( READ_Fields( cmap_fields, &cmap_dir ) )
+    if ( FT_STREAM_READ_FIELDS( cmap_fields, &cmap_dir ) )
       goto Exit;
 
     /* reserve space in face table for cmap tables */
@@ -1183,7 +1183,7 @@
 
 
       /* read the header of each charmap first */
-      if ( ACCESS_Frame( face->num_charmaps * 8L ) )
+      if ( FT_FRAME_ENTER( face->num_charmaps * 8L ) )
         goto Exit;
 
       for ( ; charmap < limit; charmap++ )
@@ -1200,7 +1200,7 @@
         cmap->offset             = (FT_ULong)GET_Long();
       }
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       /* now read the rest of each table */
       for ( charmap = face->charmaps; charmap < limit; charmap++ )
@@ -1208,11 +1208,11 @@
         TT_CMapTable  cmap = &charmap->cmap;
 
 
-        if ( FILE_Seek( table_start + (FT_Long)cmap->offset ) ||
-             READ_Fields( cmap_rec_fields, cmap )             )
+        if ( FT_STREAM_SEEK( table_start + (FT_Long)cmap->offset ) ||
+             FT_STREAM_READ_FIELDS( cmap_rec_fields, cmap )             )
           goto Exit;
 
-        cmap->offset = FILE_Pos();
+        cmap->offset = FT_STREAM_POS();
       }
     }
 
@@ -1333,7 +1333,7 @@
 
     os2 = &face->os2;
 
-    if ( READ_Fields( os2_fields, os2 ) )
+    if ( FT_STREAM_READ_FIELDS( os2_fields, os2 ) )
       goto Exit;
 
     os2->ulCodePageRange1 = 0;
@@ -1347,13 +1347,13 @@
     if ( os2->version >= 0x0001 )
     {
       /* only version 1 tables */
-      if ( READ_Fields( os2_fields_extra, os2 ) )
+      if ( FT_STREAM_READ_FIELDS( os2_fields_extra, os2 ) )
         goto Exit;
 
       if ( os2->version >= 0x0002 )
       {
         /* only version 2 tables */
-        if ( READ_Fields( os2_fields_extra2, os2 ) )
+        if ( FT_STREAM_READ_FIELDS( os2_fields_extra2, os2 ) )
           goto Exit;
       }
     }
@@ -1412,7 +1412,7 @@
     if ( error )
       return SFNT_Err_Post_Table_Missing;
 
-    if ( READ_Fields( post_fields, post ) )
+    if ( FT_STREAM_READ_FIELDS( post_fields, post ) )
       return error;
 
     /* we don't load the glyph names, we do that in another */
@@ -1480,7 +1480,7 @@
       return SFNT_Err_Ok;
     }
 
-    if ( READ_Fields( pclt_fields, pclt ) )
+    if ( FT_STREAM_READ_FIELDS( pclt_fields, pclt ) )
       goto Exit;
 
     FT_TRACE2(( "loaded\n" ));
@@ -1523,19 +1523,19 @@
     if ( error )
       return SFNT_Err_Ok;
 
-    if ( ACCESS_Frame( 4L ) )
+    if ( FT_FRAME_ENTER( 4L ) )
       goto Exit;
 
     face->gasp.version   = GET_UShort();
     face->gasp.numRanges = GET_UShort();
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
 
     num_ranges = face->gasp.numRanges;
     FT_TRACE3(( "number of ranges = %d\n", num_ranges ));
 
     if ( ALLOC_ARRAY( gaspranges, num_ranges, TT_GaspRangeRec ) ||
-         ACCESS_Frame( num_ranges * 4L )                     )
+         FT_FRAME_ENTER( num_ranges * 4L )                     )
       goto Exit;
 
     face->gasp.gaspRanges = gaspranges;
@@ -1551,7 +1551,7 @@
     }
     FT_TRACE3(( "\n" ));
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
     FT_TRACE2(( "GASP loaded\n" ));
 
   Exit:
@@ -1597,13 +1597,13 @@
     if ( error )
       return SFNT_Err_Ok;
 
-    if ( ACCESS_Frame( 4L ) )
+    if ( FT_FRAME_ENTER( 4L ) )
       goto Exit;
 
     (void)GET_UShort();         /* version */
     num_tables = GET_UShort();
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
 
     for ( n = 0; n < num_tables; n++ )
     {
@@ -1611,14 +1611,14 @@
       FT_UInt  length;
 
 
-      if ( ACCESS_Frame( 6L ) )
+      if ( FT_FRAME_ENTER( 6L ) )
         goto Exit;
 
       (void)GET_UShort();           /* version                 */
       length   = GET_UShort() - 6;  /* substract header length */
       coverage = GET_UShort();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       if ( coverage == 0x0001 )
       {
@@ -1628,18 +1628,18 @@
 
 
         /* found a horizontal format 0 kerning table! */
-        if ( ACCESS_Frame( 8L ) )
+        if ( FT_FRAME_ENTER( 8L ) )
           goto Exit;
 
         num_pairs = GET_UShort();
 
         /* skip the rest */
 
-        FORGET_Frame();
+        FT_FRAME_EXIT();
 
         /* allocate array of kerning pairs */
         if ( ALLOC_ARRAY( face->kern_pairs, num_pairs, TT_Kern0_PairRec ) ||
-             ACCESS_Frame( 6L * num_pairs )                             )
+             FT_FRAME_ENTER( 6L * num_pairs )                             )
           goto Exit;
 
         pair  = face->kern_pairs;
@@ -1651,7 +1651,7 @@
           pair->value = GET_UShort();
         }
 
-        FORGET_Frame();
+        FT_FRAME_EXIT();
 
         face->num_kern_pairs   = num_pairs;
         face->kern_table_index = n;
@@ -1679,7 +1679,7 @@
         goto Exit;
       }
 
-      if ( FILE_Skip( length ) )
+      if ( FT_STREAM_SKIP( length ) )
         goto Exit;
     }
 
@@ -1750,14 +1750,14 @@
     if ( error )
       return SFNT_Err_Ok;
 
-    if ( ACCESS_Frame( 8L ) )
+    if ( FT_FRAME_ENTER( 8L ) )
       goto Exit;
 
     hdmx->version     = GET_UShort();
     hdmx->num_records = GET_Short();
     record_size       = GET_Long();
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
 
     /* Only recognize format 0 */
     if ( hdmx->version != 0 )
@@ -1782,11 +1782,11 @@
           goto Exit;
 
         if ( ALLOC( cur->widths, num_glyphs )     ||
-             FILE_Read( cur->widths, num_glyphs ) )
+             FT_STREAM_READ( cur->widths, num_glyphs ) )
           goto Exit;
 
         /* skip padding bytes */
-        if ( record_size > 0 && FILE_Skip( record_size ) )
+        if ( record_size > 0 && FT_STREAM_SKIP( record_size ) )
             goto Exit;
       }
     }

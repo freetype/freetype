@@ -171,7 +171,7 @@
     T1_AFM*        afm   = 0;
 
 
-    if ( ACCESS_Frame( stream->size ) )
+    if ( FT_FRAME_ENTER( stream->size ) )
       return error;
 
     start = (FT_Byte*)stream->cursor;
@@ -237,7 +237,7 @@
     if ( error )
       FREE( afm );
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
 
     return error;
   }

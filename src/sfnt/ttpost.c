@@ -186,13 +186,13 @@
 
 
       if ( ALLOC_ARRAY ( glyph_indices, num_glyphs, FT_UShort ) ||
-           ACCESS_Frame( num_glyphs * 2L )                      )
+           FT_FRAME_ENTER( num_glyphs * 2L )                      )
         goto Fail;
 
       for ( n = 0; n < num_glyphs; n++ )
         glyph_indices[n] = GET_UShort();
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
     }
 
     /* compute number of names stored in table */
@@ -232,7 +232,7 @@
 
         if ( READ_Byte  ( len )                               ||
              ALLOC_ARRAY( name_strings[n], len + 1, FT_Char ) ||
-             FILE_Read  ( name_strings[n], len )              )
+             FT_STREAM_READ  ( name_strings[n], len )              )
           goto Fail1;
 
         name_strings[n][len] = '\0';
@@ -293,7 +293,7 @@
     }
 
     if ( ALLOC    ( offset_table, num_glyphs ) ||
-         FILE_Read( offset_table, num_glyphs ) )
+         FT_STREAM_READ( offset_table, num_glyphs ) )
       goto Fail;
 
     /* now check the offset table */
@@ -352,7 +352,7 @@
     format = face->postscript.FormatType;
 
     /* go to beginning of subtable */
-    if ( FILE_Skip( 32 ) )
+    if ( FT_STREAM_SKIP( 32 ) )
       goto Exit;
 
     /* now read postscript table */

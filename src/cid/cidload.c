@@ -426,15 +426,15 @@
       }
 
       /* read the subrmap's offsets */
-      if ( FILE_Seek( cid->data_offset + dict->subrmap_offset ) ||
-           ACCESS_Frame( ( num_subrs + 1 ) * dict->sd_bytes )   )
+      if ( FT_STREAM_SEEK( cid->data_offset + dict->subrmap_offset ) ||
+           FT_FRAME_ENTER( ( num_subrs + 1 ) * dict->sd_bytes )   )
         goto Fail;
 
       p = (FT_Byte*)stream->cursor;
       for ( count = 0; count <= num_subrs; count++ )
         offsets[count] = cid_get_offset( &p, (FT_Byte)dict->sd_bytes );
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       /* now, compute the size of subrs charstrings, */
       /* allocate, and read them                     */
@@ -444,8 +444,8 @@
            ALLOC( subr->code[0], data_len )                   )
         goto Fail;
 
-      if ( FILE_Seek( cid->data_offset + offsets[0] ) ||
-           FILE_Read( subr->code[0], data_len )  )
+      if ( FT_STREAM_SEEK( cid->data_offset + offsets[0] ) ||
+           FT_STREAM_READ( subr->code[0], data_len )  )
         goto Fail;
 
       /* set up pointers */

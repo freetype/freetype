@@ -106,7 +106,7 @@
 
     *tag  = 0;
     *size = 0;
-    if ( !READ_Fields( pfb_tag_fields, &head ) )
+    if ( !FT_STREAM_READ_FIELDS( pfb_tag_fields, &head ) )
     {
       if ( head.tag == 0x8001 || head.tag == 0x8002 )
       {
@@ -158,7 +158,7 @@
 
     /* try to compute the size of the base dictionary;   */
     /* look for a Postscript binary file tag, i.e 0x8001 */
-    if ( FILE_Seek( 0L ) )
+    if ( FT_STREAM_SEEK( 0L ) )
       goto Exit;
 
     error = read_pfb_tag( stream, &tag, &size );
@@ -169,7 +169,7 @@
     {
       /* assume that this is a PFA file for now; an error will */
       /* be produced later when more things are checked        */
-      if ( FILE_Seek( 0L ) )
+      if ( FT_STREAM_SEEK( 0L ) )
         goto Exit;
       size = stream->size;
     }
@@ -187,14 +187,14 @@
       parser->in_memory = 1;
 
       /* check that the `size' field is valid */
-      if ( FILE_Skip( size ) )
+      if ( FT_STREAM_SKIP( size ) )
         goto Exit;
     }
     else
     {
       /* read segment in memory */
       if ( ALLOC( parser->base_dict, size )     ||
-           FILE_Read( parser->base_dict, size ) )
+           FT_STREAM_READ( parser->base_dict, size ) )
         goto Exit;
       parser->base_len = size;
     }
@@ -283,7 +283,7 @@
       /* made of several segments.  We thus first read the number of   */
       /* segments to compute the total size of the private dictionary  */
       /* then re-read them into memory.                                */
-      FT_Long    start_pos = FILE_Pos();
+      FT_Long    start_pos = FT_STREAM_POS();
       FT_UShort  tag;
 
 
@@ -299,7 +299,7 @@
 
         parser->private_len += size;
 
-        if ( FILE_Skip( size ) )
+        if ( FT_STREAM_SKIP( size ) )
           goto Fail;
       }
 
@@ -313,7 +313,7 @@
         goto Fail;
       }
 
-      if ( FILE_Seek( start_pos )                             ||
+      if ( FT_STREAM_SEEK( start_pos )                             ||
            ALLOC( parser->private_dict, parser->private_len ) )
         goto Fail;
 
@@ -327,7 +327,7 @@
           break;
         }
 
-        if ( FILE_Read( parser->private_dict + parser->private_len, size ) )
+        if ( FT_STREAM_READ( parser->private_dict + parser->private_len, size ) )
           goto Fail;
 
         parser->private_len += size;

@@ -231,7 +231,7 @@
     if ( READ_ULong( range->image_size ) )
       return error;
 
-    return READ_Fields( sbit_metrics_fields, &range->metrics );
+    return FT_STREAM_READ_FIELDS( sbit_metrics_fields, &range->metrics );
   }
 
 
@@ -281,7 +281,7 @@
 
     /* Allocate glyph codes table and access frame */
     if ( ALLOC_ARRAY ( range->glyph_codes, count, FT_UShort ) ||
-         ACCESS_Frame( size )                                 )
+         FT_FRAME_ENTER( size )                                 )
       goto Exit;
 
     for ( n = 0; n < count; n++ )
@@ -293,7 +293,7 @@
                                   GET_UShort();
     }
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
 
   Exit:
     return error;
@@ -342,14 +342,14 @@
 
         if ( ALLOC_ARRAY( range->glyph_offsets,
                           num_glyphs, FT_ULong )    ||
-             ACCESS_Frame( num_glyphs * size_elem ) )
+             FT_FRAME_ENTER( num_glyphs * size_elem ) )
           goto Exit;
 
         for ( n = 0; n < num_glyphs; n++ )
           range->glyph_offsets[n] = (FT_ULong)( range->image_offset +
                                                   ( large ? GET_ULong()
                                                           : GET_UShort() ) );
-        FORGET_Frame();
+        FT_FRAME_EXIT();
       }
       break;
 
@@ -459,14 +459,14 @@
     if ( error )
       goto Exit;
 
-    table_base = FILE_Pos();
-    if ( ACCESS_Frame( 8L ) )
+    table_base = FT_STREAM_POS();
+    if ( FT_FRAME_ENTER( 8L ) )
       goto Exit;
 
     version     = GET_Long();
     num_strikes = GET_ULong();
 
-    FORGET_Frame();
+    FT_FRAME_EXIT();
 
     /* check version number and strike count */
     if ( version     != 0x00020000L ||
@@ -490,22 +490,22 @@
       FT_ULong         count  = num_strikes;
 
 
-      if ( ACCESS_Frame( 48L * num_strikes ) )
+      if ( FT_FRAME_ENTER( 48L * num_strikes ) )
         goto Exit;
 
       while ( count > 0 )
       {
-        if ( READ_Fields( strike_start_fields, strike )             ||
-             READ_Fields( sbit_line_metrics_fields, &strike->hori ) ||
-             READ_Fields( sbit_line_metrics_fields, &strike->vert ) ||
-             READ_Fields( strike_end_fields, strike )               )
+        if ( FT_STREAM_READ_FIELDS( strike_start_fields, strike )             ||
+             FT_STREAM_READ_FIELDS( sbit_line_metrics_fields, &strike->hori ) ||
+             FT_STREAM_READ_FIELDS( sbit_line_metrics_fields, &strike->vert ) ||
+             FT_STREAM_READ_FIELDS( strike_end_fields, strike )               )
           break;
 
         count--;
         strike++;
       }
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
     }
 
     /* allocate the index ranges for each strike table */
@@ -526,8 +526,8 @@
           goto Exit;
 
         /* read each range */
-        if ( FILE_Seek( table_base + strike->ranges_offset ) ||
-             ACCESS_Frame( strike->num_ranges * 8L )         )
+        if ( FT_STREAM_SEEK( table_base + strike->ranges_offset ) ||
+             FT_FRAME_ENTER( strike->num_ranges * 8L )         )
           goto Exit;
 
         range = strike->sbit_ranges;
@@ -541,7 +541,7 @@
           range++;
         }
 
-        FORGET_Frame();
+        FT_FRAME_EXIT();
 
         /* Now, read each index table */
         count2 = strike->num_ranges;
@@ -549,15 +549,15 @@
         while ( count2 > 0 )
         {
           /* Read the header */
-          if ( FILE_Seek( range->table_offset ) ||
-               ACCESS_Frame( 8L )               )
+          if ( FT_STREAM_SEEK( range->table_offset ) ||
+               FT_FRAME_ENTER( 8L )               )
             goto Exit;
 
           range->index_format = GET_UShort();
           range->image_format = GET_UShort();
           range->image_offset = GET_ULong();
 
-          FORGET_Frame();
+          FT_FRAME_EXIT();
 
           error = Load_SBit_Range( range, stream );
           if ( error )
@@ -879,7 +879,7 @@
 
 
         /* read small metrics */
-        if ( READ_Fields( sbit_small_metrics_fields, &smetrics ) )
+        if ( FT_STREAM_READ_FIELDS( sbit_small_metrics_fields, &smetrics ) )
           goto Exit;
 
         /* convert it to a big metrics */
@@ -901,7 +901,7 @@
     case 7:
     case 9:
       /* variable big metrics */
-      if ( READ_Fields( sbit_metrics_fields, metrics ) )
+      if ( FT_STREAM_READ_FIELDS( sbit_metrics_fields, metrics ) )
         goto Exit;
       break;
 
@@ -1186,7 +1186,7 @@
       }
 
       /* Now read data and draw glyph into target pixmap       */
-      if ( ACCESS_Frame( glyph_size ) )
+      if ( FT_FRAME_ENTER( glyph_size ) )
         goto Exit;
 
       /* don't forget to multiply `x_offset' by `map->pix_bits' as */
@@ -1195,7 +1195,7 @@
       blit_sbit( map, (FT_Byte*)stream->cursor, line_bits, pad_bytes,
                  x_offset * pix_bits, y_offset );
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
     }
 
   Exit:
@@ -1219,7 +1219,7 @@
 
 
     /* place stream at beginning of glyph data and read metrics */
-    if ( FILE_Seek( ebdt_pos + glyph_offset ) )
+    if ( FT_STREAM_SEEK( ebdt_pos + glyph_offset ) )
       goto Exit;
 
     error = Load_SBit_Metrics( stream, range, metrics );
@@ -1309,7 +1309,7 @@
 
       count = num_components;
 
-      if ( ACCESS_Frame( 4L * num_components ) )
+      if ( FT_FRAME_ENTER( 4L * num_components ) )
         goto Fail_Memory;
 
       for ( comp = components; count > 0; count--, comp++ )
@@ -1319,7 +1319,7 @@
         comp->y_offset   = GET_Char();
       }
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
       /* Now recursively load each element glyph */
       count = num_components;
@@ -1426,7 +1426,7 @@
     if (error)
       goto Exit;
 
-    ebdt_pos = FILE_Pos();
+    ebdt_pos = FT_STREAM_POS();
 
     /* clear the bitmap & load the bitmap */
     if ( face->root.glyph->flags & FT_GLYPH_OWN_BITMAP )

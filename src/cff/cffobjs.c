@@ -326,7 +326,7 @@
                  face->root.driver->root.library, "pshinter" );
 
     /* create input stream from resource */
-    if ( FILE_Seek( 0 ) )
+    if ( FT_STREAM_SEEK( 0 ) )
       goto Exit;
 
     /* check that we have a valid OpenType file */
@@ -378,7 +378,7 @@
     else
     {
       /* rewind to start of file; we are going to load a pure-CFF font */
-      if ( FILE_Seek( 0 ) )
+      if ( FT_STREAM_SEEK( 0 ) )
         goto Exit;
       error = CFF_Err_Ok;
     }

@@ -69,9 +69,9 @@
     if ( args->flags & ft_open_memory )
     {
       /* create a memory-based stream */
-      FT_Stream_Open_Memory( stream,
-                            (FT_Byte*)args->memory_base,
-                            args->memory_size );
+      FT_Stream_OpenMemory( stream,
+                           (const FT_Byte*)args->memory_base,
+                           args->memory_size );
     }
     else if ( args->flags & ft_open_pathname )
     {

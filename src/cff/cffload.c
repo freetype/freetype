@@ -1114,7 +1114,7 @@
       data_size     = (FT_ULong)( count + 1 ) * offsize;
 
       if ( ALLOC_ARRAY( idx->offsets, count + 1, FT_ULong ) ||
-           ACCESS_Frame( data_size )                        )
+           FT_FRAME_ENTER( data_size )                        )
         goto Exit;
 
       poff = idx->offsets;
@@ -1127,21 +1127,21 @@
         p += offsize;
       }
 
-      FORGET_Frame();
+      FT_FRAME_EXIT();
 
-      idx->data_offset = FILE_Pos();
+      idx->data_offset = FT_STREAM_POS();
       data_size        = poff[-1] - 1;
 
       if ( load )
       {
         /* load the data */
-        if ( EXTRACT_Frame( data_size, idx->bytes ) )
+        if ( FT_FRAME_EXTRACT( data_size, idx->bytes ) )
           goto Exit;
       }
       else
       {
         /* skip the data */
-        if ( FILE_Skip( data_size ) )
+        if ( FT_STREAM_SKIP( data_size ) )
           goto Exit;
       }
     }
@@ -1164,7 +1164,7 @@
 
 
       if ( idx->bytes )
-        RELEASE_Frame( idx->bytes );
+        FT_FRAME_RELEASE( idx->bytes );
 
       FREE( idx->offsets );
       MEM_Set( idx, 0, sizeof ( *idx ) );
@@ -1249,8 +1249,8 @@
           FT_Stream  stream = idx->stream;
 
 
-          if ( FILE_Seek( idx->data_offset + off1 - 1 ) ||
-               EXTRACT_Frame( off2 - off1, *pbytes )      )
+          if ( FT_STREAM_SEEK( idx->data_offset + off1 - 1 ) ||
+               FT_FRAME_EXTRACT( off2 - off1, *pbytes )      )
             goto Exit;
         }
       }
@@ -1278,7 +1278,7 @@
       FT_Stream  stream = idx->stream;
 
 
-      RELEASE_Frame( *pbytes );
+      FT_FRAME_RELEASE( *pbytes );
     }
   }
 
@@ -1361,7 +1361,7 @@
                       FT_Stream       stream )
   {
     if ( select->data )
-      RELEASE_Frame( select->data );
+      FT_FRAME_RELEASE( select->data );
 
     select->data_size   = 0;
     select->format      = 0;
@@ -1381,7 +1381,7 @@
 
 
     /* read format */
-    if ( FILE_Seek( offset ) || READ_Byte( format ) )
+    if ( FT_STREAM_SEEK( offset ) || READ_Byte( format ) )
       goto Exit;
 
     select->format      = format;
@@ -1400,7 +1400,7 @@
       select->data_size = num_ranges * 3 + 2;
 
     Load_Data:
-      if ( EXTRACT_Frame( select->data_size, select->data ) )
+      if ( FT_FRAME_EXTRACT( select->data_size, select->data ) )
         goto Exit;
       break;
 
@@ -1528,7 +1528,7 @@
     charset->offset = base_offset + offset;
 
     /* Get the format of the table. */
-    if ( FILE_Seek( charset->offset ) ||
+    if ( FT_STREAM_SEEK( charset->offset ) ||
          READ_Byte( charset->format ) )
       goto Exit;
 
@@ -1746,7 +1746,7 @@
       encoding->offset = base_offset + offset;
 
       /* we need to parse the table to determine its size */
-      if ( FILE_Seek( encoding->offset ) ||
+      if ( FT_STREAM_SEEK( encoding->offset ) ||
            READ_Byte( encoding->format ) ||
            READ_Byte( count )            )
         goto Exit;
@@ -2009,14 +2009,14 @@
 
       CFF_Parser_Init( &parser, CFF_CODE_PRIVATE, priv );
 
-      if ( FILE_Seek( base_offset + font->font_dict.private_offset ) ||
-           ACCESS_Frame( font->font_dict.private_size )              )
+      if ( FT_STREAM_SEEK( base_offset + font->font_dict.private_offset ) ||
+           FT_FRAME_ENTER( font->font_dict.private_size )              )
         goto Exit;
 
       error = CFF_Parser_Run( &parser,
                              (FT_Byte*)stream->cursor,
                              (FT_Byte*)stream->limit );
-      FORGET_Frame();
+      FT_FRAME_EXIT();
       if ( error )
         goto Exit;
     }
@@ -2024,7 +2024,7 @@
     /* read the local subrs, if any */
     if ( priv->local_subrs_offset )
     {
-      if ( FILE_Seek( base_offset + top->private_offset +
+      if ( FT_STREAM_SEEK( base_offset + top->private_offset +
                       priv->local_subrs_offset ) )
         goto Exit;
 
@@ -2085,10 +2085,10 @@
     font->stream = stream;
     font->memory = memory;
     dict         = &font->top_font.font_dict;
-    base_offset  = FILE_Pos();
+    base_offset  = FT_STREAM_POS();
 
     /* read CFF font header */
-    if ( READ_Fields( cff_header_fields, font ) )
+    if ( FT_STREAM_READ_FIELDS( cff_header_fields, font ) )
       goto Exit;
 
     /* check format */
@@ -2102,7 +2102,7 @@
     }
 
     /* skip the rest of the header */
-    if ( FILE_Skip( font->header_size - 4 ) )
+    if ( FT_STREAM_SKIP( font->header_size - 4 ) )
       goto Exit;
 
     /* read the name, top dict, string and global subrs index */
@@ -2144,7 +2144,7 @@
 
       /* this is a CID-keyed font, we must now allocate a table of */
       /* sub-fonts, then load each of them separately              */
-      if ( FILE_Seek( base_offset + dict->cid_fd_array_offset ) )
+      if ( FT_STREAM_SEEK( base_offset + dict->cid_fd_array_offset ) )
         goto Exit;
 
       error = cff_new_index( &fd_index, stream, 0 );
@@ -2199,7 +2199,7 @@
       goto Exit;
     }
 
-    if ( FILE_Seek( base_offset + dict->charstrings_offset ) )
+    if ( FT_STREAM_SEEK( base_offset + dict->charstrings_offset ) )
       goto Exit;
 
     error = cff_new_index( &font->charstrings_index, stream, 0 );

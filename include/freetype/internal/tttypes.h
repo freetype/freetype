@@ -1220,8 +1220,8 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This function is normally equivalent to FILE_Seek(offset)          */
-  /*    followed by ACCESS_Frame(byte_count) with the loader's stream, but */
+  /*    This function is normally equivalent to FT_STREAM_SEEK(offset)          */
+  /*    followed by FT_FRAME_ENTER(byte_count) with the loader's stream, but */
   /*    alternative formats (e.g. compressed ones) might use something     */
   /*    different.                                                         */
   /*                                                                       */

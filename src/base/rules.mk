@@ -39,6 +39,7 @@ BASE_SRC := $(BASE_)ftcalc.c   \
             $(BASE_)ftgloadr.c \
             $(BASE_)ftoutln.c  \
             $(BASE_)ftobjs.c   \
+            $(BASE_)ftapi.c    \
             $(BASE_)ftnames.c  \
             $(BASE_)ftdbgmem.c
 
