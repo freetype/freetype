@@ -48,19 +48,19 @@ RAS1_DRV_H := $(RAS1_DRV_SRC:%.c=%.h)
 RAS1_DRV_OBJ_M := $(RAS1_DRV_SRC:$(RAS1_DIR_)%.c=$(OBJ_)%.$O)
 RAS1_DRV_OBJ_S := $(OBJ_)raster1.$O
 
-# RASTER1 driver source file for single build
+# raster1 driver source file for single build
 #
 RAS1_DRV_SRC_S := $(RAS1_DIR_)raster1.c
 
 
-# RASTER1 driver - single object
+# raster1 driver - single object
 #
 $(RAS1_DRV_OBJ_S): $(RAS1_DRV_SRC_S) $(RAS1_DRV_SRC) \
                    $(FREETYPE_H) $(RAS1_DRV_H)
 	$(RAS1_COMPILE) $T$@ $(RAS1_DRV_SRC_S)
 
 
-# RASTER1 driver - multiple objects
+# raster1 driver - multiple objects
 #
 $(OBJ_)%.$O: $(RAS1_DIR_)%.c $(FREETYPE_H) $(RAS1_DRV_H)
 	$(RAS1_COMPILE) $T$@ $<

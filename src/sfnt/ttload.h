@@ -3,7 +3,7 @@
 /*  ttload.h                                                               */
 /*                                                                         */
 /*    Load the basic TrueType tables, i.e., tables that can be either in   */
-/*    TTF or OTF font (specification).                                     */
+/*    TTF or OTF fonts (specification).                                    */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -24,9 +24,6 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/tttypes.h>
 
-#if 0
-#include <ttobjs.h>
-#endif
 
 #ifdef __cplusplus
   extern "C" {

@@ -43,18 +43,21 @@
 #define FT_COMPONENT  trace_ttpost
 
 
-  /* If this configuration macro is defined, we rely on the `psnames' */
+  /* If this configuration macro is defined, we rely on the `PSNames' */
   /* module to grab the glyph names.                                  */
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
+
 
 #include <freetype/internal/psnames.h>
 
 #define MAC_NAME( x )  ( (FT_String*)psnames->macintosh_name( x ) )
 
+
 #else /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
-   /* Otherwise, we ignore the `psnames' module, and provide our own  */
+
+   /* Otherwise, we ignore the `PSNames' module, and provide our own  */
    /* table of Mac names.  Thus, it is possible to build a version of */
    /* FreeType without the Type 1 driver & PSNames module.            */
 
@@ -144,6 +147,7 @@
     "Ccaron", "ccaron", "dmacron",
   };
 
+
 #endif /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
 
@@ -226,9 +230,9 @@
         FT_UInt  len;
 
 
-        if ( READ_Byte  ( len )                             ||
-             ALLOC_ARRAY( name_strings[n], len+1, FT_Char ) ||
-             FILE_Read  ( name_strings[n], len )            )
+        if ( READ_Byte  ( len )                               ||
+             ALLOC_ARRAY( name_strings[n], len + 1, FT_Char ) ||
+             FILE_Read  ( name_strings[n], len )              )
           goto Fail1;
 
         name_strings[n][len] = '\0';

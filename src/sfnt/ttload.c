@@ -63,7 +63,7 @@
                   (FT_Char)( tag >> 24 ),
                   (FT_Char)( tag >> 16 ),
                   (FT_Char)( tag >> 8  ),
-                  (FT_Char)( tag )     ));
+                  (FT_Char)( tag       ) ));
 
     entry = face->dir_tables;
     limit = entry + face->num_tables;
@@ -188,9 +188,9 @@
 
     face->num_tables = 0;
 
-    /* first of all, read the first 4 bytes.  If it's `ttcf', then the */
-    /* file is a TrueType collection, otherwise it can be any other    */
-    /* kind of font.                                                   */
+    /* first of all, read the first 4 bytes.  If it is `ttcf', then the */
+    /* file is a TrueType collection, otherwise it can be any other     */
+    /* kind of font.                                                    */
     if ( READ_ULong( format_tag ) )
       goto Exit;
 
@@ -238,8 +238,8 @@
 
     /* now, check the values of `num_tables', `seach_range', etc. */
     {
-      FT_UInt  num_tables     = sfnt->num_tables;
-      FT_ULong entry_selector = 1L << sfnt->entry_selector;
+      FT_UInt   num_tables     = sfnt->num_tables;
+      FT_ULong  entry_selector = 1L << sfnt->entry_selector;
 
 
       /* IMPORTANT: Many fonts have an incorrect `search_range' value, so */
@@ -547,7 +547,7 @@
       goto Exit;
 
     /* XXX: an adjustment that is necessary to load certain */
-    /*       broken fonts like `Keystrokes MT' :-(          */
+    /*      broken fonts like `Keystrokes MT' :-(           */
     /*                                                      */
     /*   We allocate 64 function entries by default when    */
     /*   the maxFunctionDefs field is null.                 */
@@ -613,8 +613,10 @@
     TT_LongMetrics**   longs;
     TT_ShortMetrics**  shorts;
 
-    FT_TRACE2(( "TT_Load_%s_Metrics: %08p\n",
-                  vertical ? "Vertical" : "Horizontal", face ));
+
+    FT_TRACE2(( "TT_Load_%s_Metrics: %08p\n", vertical ? "Vertical"
+                                                       : "Horizontal",
+                                              face ));
 
     if ( vertical )
     {
@@ -661,7 +663,9 @@
 
     if ( num_shorts < 0 )
     {
-      FT_ERROR(( "!! more metrics than glyphs!\n" ));
+      FT_ERROR(( "TT_Load_%s_Metrics: more metrics than glyphs!\n",
+                 vertical ? "Vertical"
+                          : "Horizontal" ));
 
       error = vertical ? TT_Err_Invalid_Vert_Metrics
                        : TT_Err_Invalid_Horiz_Metrics;
@@ -787,7 +791,7 @@
     }
     else
     {
-      /* The horizontal header is mandatory, return an error if we */
+      /* The horizontal header is mandatory; return an error if we */
       /* don't find it.                                            */
       error = face->goto_table( face, TTAG_hhea, stream, 0 );
       if ( error )
@@ -956,7 +960,7 @@
           if ( cur->string )
             for ( j = 0; j < cur->stringLength; j++ )
             {
-              FT_Char  c = *(cur->string + j);
+              FT_Char  c = *( cur->string + j );
 
 
               if ( (FT_Byte)c < 128 )
@@ -1063,7 +1067,7 @@
     if ( READ_Fields( cmap_fields, &cmap_dir ) )
       goto Exit;
 
-    /* save space in face table for cmap tables */
+    /* reserve space in face table for cmap tables */
     if ( ALLOC_ARRAY( face->charmaps,
                       cmap_dir.numCMaps,
                       TT_CharMapRec ) )
@@ -1215,7 +1219,7 @@
     error = face->goto_table( face, TTAG_OS2, stream, 0 );
     if ( error )
     {
-      FT_TRACE2(( "is missing\n!" ));
+      FT_TRACE2(( "is missing!\n" ));
       face->os2.version = 0xFFFF;
       error = TT_Err_Ok;
       goto Exit;
@@ -1382,7 +1386,7 @@
   /*    TT_Load_Gasp                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the `GASP' table into a face object.                         */
+  /*    Loads the `gasp' table into a face object.                         */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
@@ -1473,7 +1477,7 @@
     FT_UInt    n, num_tables, version;
 
 
-    /* the kern table is optional. exit silently if it is missing */
+    /* the kern table is optional; exit silently if it is missing */
     error = face->goto_table( face, TTAG_kern, stream, 0 );
     if ( error )
       return TT_Err_Ok;

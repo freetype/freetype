@@ -156,17 +156,17 @@
   {
     0,  /* not a font driver or renderer */
     sizeof( FT_ModuleRec ),
-    
+
     "sfnt",     /* driver name                            */
     0x10000L,   /* driver version 1.0                     */
     0x20000L,   /* driver requires FreeType 2.0 or higher */
-    
+
     (const void*)&sfnt_interface,  /* module specific interface */
-    
+
     (FT_Module_Constructor)0,
     (FT_Module_Destructor) 0,
     (FT_Module_Requester)  SFNT_Get_Interface
   };
-  
+
 
 /* END */

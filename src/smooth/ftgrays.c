@@ -54,9 +54,9 @@
   /*  understand how it works).                                            */
   /*                                                                       */
   /*  Note, however, that this is a _very_ different implementation        */
-  /*  compared Raph's.  Coverage information is stored in a very different */
-  /*  way, and I don't use sorted vector paths.  Also, it doesn't use      */
-  /*  floating point values.                                               */
+  /*  compared to Raph's.  Coverage information is stored in a very        */
+  /*  different way, and I don't use sorted vector paths.  Also, it        */
+  /*  doesn't use floating point values.                                   */
   /*                                                                       */
   /*  This renderer has the following advantages:                          */
   /*                                                                       */
@@ -94,6 +94,7 @@
 #define FT_COMPONENT  trace_aaraster
 
 
+  /* XXX: Adapt error code to FreeType conventions */
 #define ErrRaster_Invalid_Outline  -1
 
 #ifdef _STANDALONE_
@@ -227,7 +228,7 @@
 #endif /* GRAYS_COMPACT */
 
 
-  typedef struct TRaster_
+  typedef struct  TRaster_
   {
     PCell  cells;
     int    max_cells;
@@ -370,7 +371,7 @@
     /* flag to indicate that the cell isn't part of those we're interested */
     /* in during the render phase.  This means that:                       */
     /*                                                                     */
-    /* . the new vertical position must be within min_ey..max_ey - 1.      */
+    /* . the new vertical position must be within min_ey..max_ey-1.        */
     /* . the new horizontal position must be strictly less than max_ex     */
     /*                                                                     */
     /* Note that if a cell is to the left of the clipping region, it is    */
@@ -567,8 +568,8 @@
     dx = to_x - ras.x;
     dy = to_y - ras.y;
 
-    /* we should do something about the trivial case where dx == 0, */
-    /* as it happens very often!       XXXXX                        */
+    /* XXX: we should do something about the trivial case where dx == 0, */
+    /*      as it happens very often!                                    */
 
     /* perform vertical clipping */
     {
@@ -594,7 +595,7 @@
       goto End;
     }
 
-    /* ok, we'll have to render several scanlines */
+    /* ok, we have to render several scanlines */
     p     = ( ONE_PIXEL - fy1 ) * dx;
     first = ONE_PIXEL;
     incr  = 1;
@@ -928,7 +929,7 @@
 
     Draw:
       {
-        TPos   to_x, to_y, mid_x, mid_y;
+        TPos  to_x, to_y, mid_x, mid_y;
 
 
         to_x  = arc[0].x;
@@ -949,11 +950,15 @@
 
   /* a macro comparing two cell pointers.  Returns true if a <= b. */
 #if 1
+
 #define PACK( a )          ( ( (long)(a)->y << 16 ) + (a)->x )
 #define LESS_THAN( a, b )  ( PACK( a ) < PACK( b ) )
+
 #else /* 1 */
+
 #define LESS_THAN( a, b )  ( (a)->y < (b)->y || \
                              ( (a)->y == (b)->y && (a)->x < (b)->x ) )
+
 #endif /* 1 */
 
 #define SWAP_CELLS( a, b, temp )  do             \
@@ -967,8 +972,8 @@
 
 #ifdef SHELL_SORT
 
-  /* A simple shell sort algorithm that works directly on our */
-  /* cells table..                                            */
+  /* a simple shell sort algorithm that works directly on our */
+  /* cells table                                              */
   static
   void  shell_sort ( PCell  cells,
                      int    count )
@@ -1013,7 +1018,7 @@
   /* can even tailor our insertion threshold...                            */
 
 #define QSORT_THRESHOLD  9  /* below this size, a sub-array will be sorted */
-                            /* through a normal insertion sort..           */
+                            /* through a normal insertion sort             */
 
   static
   void  quick_sort( PCell  cells,
@@ -1686,8 +1691,8 @@
     static
     FT_Outline_Funcs  interface =
     {
-      (FT_Outline_MoveTo_Func)Move_To,
-      (FT_Outline_LineTo_Func)Line_To,
+      (FT_Outline_MoveTo_Func) Move_To,
+      (FT_Outline_LineTo_Func) Line_To,
       (FT_Outline_ConicTo_Func)Conic_To,
       (FT_Outline_CubicTo_Func)Cubic_To,
       0,
@@ -1713,8 +1718,8 @@
     if ( ras.max_ex > ras.target.width ) ras.max_ex = ras.target.width;
     if ( ras.max_ey > ras.target.rows )  ras.max_ey = ras.target.rows;
 
-    /* simple heuristic used to speed-up the bezier decomposition     */
-    /* see the code in render_conic and render_cubic for more details */
+    /* simple heuristic used to speed-up the bezier decomposition -- see */
+    /* the code in render_conic() and render_cubic() for more details    */
     ras.conic_level = 32;
     ras.cubic_level = 16;
 
@@ -1841,7 +1846,7 @@
     if ( !target_map || !target_map->buffer )
       return -1;
 
-    /* XXXX: this version does not support monochrome rendering yet! */
+    /* XXX: this version does not support monochrome rendering yet! */
     if ( !(params->flags & ft_raster_flag_aa) )
       return ErrRaster_Invalid_Mode;
 

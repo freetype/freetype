@@ -1538,7 +1538,7 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
 
   for name in glyph_list:
     write( '    "' + name + '",\n' )
-    name_list.append(name)
+    name_list.append( name )
 
   write( "\n" )
   write( "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST\n" )
@@ -1546,7 +1546,7 @@ def dump_glyph_list( file, glyph_list, adobe_extra ):
 
   for name in adobe_extra:
     write( '    "' + name + '",\n' )
-    name_list.append(name)
+    name_list.append( name )
 
   write( "\n" )
   write( "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */\n" )

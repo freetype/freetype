@@ -346,8 +346,8 @@
   /*    Glyph index into the glyphs array.  0 if the glyph does not exist. */
   /*                                                                       */
   static
-  FT_UInt code_to_index0( TT_CMapTable*  cmap,
-                          FT_ULong       charCode )
+  FT_UInt  code_to_index0( TT_CMapTable*  cmap,
+                           FT_ULong       charCode )
   {
     TT_CMap0*  cmap0 = &cmap->c.cmap0;
 
@@ -389,8 +389,8 @@
 
     if ( char_hi == 0 )
     {
-      /* an 8-bit character code - we use the subHeader 0 in this case */
-      /* to test whether the character code is in the charmap          */
+      /* an 8-bit character code -- we use the subHeader 0 in this case */
+      /* to test whether the character code is in the charmap           */
       if ( cmap2->subHeaderKeys[char_lo] == 0 )
         result = cmap2->glyphIdArray[char_lo];
     }
@@ -452,7 +452,7 @@
 
     /* check against the last segment */
     seg4 = cmap4->last_segment;
-    
+
     /* the following is equivalent to performing two tests, as in         */
     /*                                                                    */
     /*  if ( charCode >= seg4->startCount && charCode <= seg4->endCount ) */

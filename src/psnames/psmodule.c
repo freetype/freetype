@@ -300,7 +300,7 @@
 #else
     (void*)&psnames_interface,   /* module specific interface */
 #endif
-    
+
     (FT_Module_Constructor)0,
     (FT_Module_Destructor) 0,
     (FT_Module_Requester)  0

@@ -516,9 +516,9 @@ error:
       "fond",          /* driver name                           */
       0x10000L,        /* driver version == 1.0                 */
       0x20000L,        /* driver requires FreeType 2.0 or above */
-  
+
       (void*)0,
-  
+
       (FT_Module_Constructor)     init_driver,
       (FT_Module_Destructor)      done_driver,
       (FT_Module_Requester)       0

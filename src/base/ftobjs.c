@@ -666,7 +666,7 @@
 
 
     slot->library = driver->root.library;
-    
+
     if ( FT_DRIVER_USES_OUTLINES( driver ) )
       error = FT_GlyphLoader_New( memory, &slot->loader );
 
@@ -689,7 +689,7 @@
       FREE( slot->bitmap.buffer );
       slot->flags &= ~ft_glyph_own_bitmap;
     }
-  
+
     /* clear all public fields in the glyph slot */
     MEM_Set( &slot->metrics, 0, sizeof ( slot->metrics ) );
     MEM_Set( &slot->outline, 0, sizeof ( slot->outline ) );
@@ -973,11 +973,11 @@
            !( load_flags & FT_LOAD_FORCE_AUTOHINT ) )
         autohint = 0;
     }
-    
+
     if ( autohint )
     {
       FT_AutoHinter_Interface*  hinting;
-      
+
 
       hinting = (FT_AutoHinter_Interface*)hinter->clazz->module_interface;
       error = hinting->load_glyph( (FT_AutoHinter)hinter, slot, face->size,
@@ -1028,7 +1028,7 @@
                                ( load_flags & FT_LOAD_MONOCHROME )
                                   ? ft_render_mode_mono
                                   : ft_render_mode_normal );
-    }	 
+    }	
 
   Exit:
     return error;
@@ -2092,7 +2092,7 @@
       {
         kerning->x = FT_MulFix( kerning->x, face->size->metrics.x_scale );
         kerning->y = FT_MulFix( kerning->y, face->size->metrics.y_scale );
-        
+
         if ( kern_mode != ft_kerning_unfitted )
         {
           kerning->x = ( kerning->x + 32 ) & -64;
@@ -2354,7 +2354,7 @@
 
     if ( !result || result->glyph_format != slot->format )
       result = FT_Lookup_Renderer( library, slot->format, 0 );
-    
+
     return result;
   }
 
@@ -2791,7 +2791,7 @@
     /* is the module a auto-hinter? */
     if ( FT_MODULE_IS_HINTER( module ) )
       library->auto_hinter = module;
-      
+
     /* if the module is a font driver */
     if ( FT_MODULE_IS_DRIVER( module ) )
     {

@@ -3133,7 +3133,7 @@
 
     raster->gray_width = RASTER_GRAY_LINES / 2;
 
-#endif    
+#endif
   }
 
 
@@ -3221,7 +3221,7 @@
                           unsigned long     mode,
                           const char*       palette )
   {
-#ifdef FT_RASTER_OPTION_ANTI_ALIASING  
+#ifdef FT_RASTER_OPTION_ANTI_ALIASING
 
     if ( mode == FT_MAKE_TAG( 'p', 'a', 'l', '5' ) )
     {
@@ -3237,9 +3237,9 @@
 
     UNUSED( raster );
     UNUSED( mode );
-    UNUSED( palette );    
+    UNUSED( palette );
 
-#endif    
+#endif
   }
 
 

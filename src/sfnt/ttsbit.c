@@ -139,8 +139,8 @@
             acc   <<= 8;  /* remove bits from accumulator */
             loaded -= 8;
             count  -= 8;
-          }
-          while ( count >= 0 );
+
+          } while ( count >= 0 );
         }
 
         /* restore `count' to correct value */
@@ -748,7 +748,7 @@
                              TT_SBit_Strike**  astrike,
                              FT_ULong*         aglyph_offset )
   {
-    TT_SBit_Strike*  strike = face->sbit_strikes;
+    TT_SBit_Strike*  strike       = face->sbit_strikes;
     TT_SBit_Strike*  strike_limit = strike + face->num_sbit_strikes;
 
 
@@ -878,7 +878,6 @@
   }
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -921,7 +920,7 @@
 
     /***********************************************************************/
     /*                                                                     */
-    /* first of all, checks the top-most lines of the bitmap, and removes  */
+    /* first of all, check the top-most lines of the bitmap, and remove    */
     /* them if they're empty.                                              */
     /*                                                                     */
     {
@@ -954,7 +953,8 @@
       {
         line = (FT_Byte*)map->buffer;
 
-        MEM_Move( line, line + count * line_len, (rows - count) * line_len );
+        MEM_Move( line, line + count * line_len,
+                  ( rows - count ) * line_len );
 
         metrics->height       -= count;
         metrics->horiBearingY -= count;
@@ -970,7 +970,7 @@
     /* second, crop the lower lines                                        */
     /*                                                                     */
     {
-      line = (FT_Byte*)map->buffer + (rows - 1) * line_len;
+      line = (FT_Byte*)map->buffer + ( rows - 1 ) * line_len;
 
       for ( count = 0; count < rows; count++ )
       {
@@ -1040,6 +1040,7 @@
       metrics->horiBearingX++;
       metrics->vertBearingX++;
       metrics->width--;
+
     } while ( map->width > 0 );
 
   Found_Left:
@@ -1067,6 +1068,7 @@
       /* crop the whole glyph to the right */
       map->width--;
       metrics->width--;
+
     } while ( map->width > 0 );
 
   Found_Right:
@@ -1253,8 +1255,8 @@
       return TT_Err_Invalid_File_Format;
     }
 
-    /* All right, we're in a compound format.  First of all, read */
-    /* the array of elements                                      */
+    /* All right, we have a compound format.  First of all, read */
+    /* the array of elements.                                    */
     {
       TT_SBit_Component*  components;
       TT_SBit_Component*  comp;
@@ -1413,6 +1415,8 @@
 
       advance = strike->hori.ascender - strike->hori.descender;
       top     = advance / 10;
+
+      /* some heuristic values */
 
       metrics->vertBearingX = -metrics->width / 2;
       metrics->vertBearingY =  advance / 10;

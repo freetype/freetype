@@ -493,13 +493,13 @@
       FT_Int      first = 0;
       FT_Vector*  p1    = outline->points + first;
       FT_Vector*  p2    = outline->points + outline->n_points - 1;
-      
+
       if ( outline->n_contours > 1 )
       {
         first = outline->contours[outline->n_contours - 2] + 1;
         p1    = outline->points + first;
       }
-        
+
       if ( p1->x == p2->x && p1->y == p2->y )
         outline->n_points--;
     }
@@ -1118,16 +1118,16 @@
 
 
             FT_TRACE4(( " rlinecurve" ));
-            
+
             if ( num_args < 8 || ( num_args - 6 ) & 1 )
               goto Stack_Underflow;
-              
+
             if ( start_point( builder, x, y )           ||
                  check_points( builder, num_lines + 3 ) )
               goto Memory_Error;
-              
+
             args = stack;
-            
+
             /* first, add the line segments */
             while ( num_lines > 0 )
             {
@@ -1137,7 +1137,7 @@
               args += 2;
               num_lines--;
             }
-            
+
             /* then the curve */
             x += args[0];
             y += args[1];
@@ -1148,10 +1148,10 @@
             x += args[4];
             y += args[5];
             add_point( builder, x, y, 1 );
-            args = stack;     
+            args = stack;
           }
           break;
-          
+
         case t2_op_rcurveline:
           {
             FT_Int  num_curves = ( num_args - 2 ) / 6;

@@ -13,15 +13,15 @@
 # fully.
 
 
-# renderer driver directory
+# smooth driver directory
 #
 SMOOTH_DIR  := $(SRC_)smooth
 SMOOTH_DIR_ := $(SMOOTH_DIR)$(SEP)
 
-
 # additional include flags used when compiling the driver
 #
 SMOOTH_INCLUDE := $(SMOOTH_DIR)
+
 
 # compilation flags for the driver
 #
@@ -29,17 +29,18 @@ SMOOTH_CFLAGS  := $(SMOOTH_INCLUDE:%=$I%)
 SMOOTH_COMPILE := $(FT_COMPILE) $(SMOOTH_CFLAGS)
 
 
-# SMOOTH driver sources (i.e., C files)
+# smooth driver sources (i.e., C files)
 #
-SMOOTH_DRV_SRC := $(SMOOTH_DIR_)ftgrays.c   \
+SMOOTH_DRV_SRC := $(SMOOTH_DIR_)ftgrays.c  \
                   $(SMOOTH_DIR_)ftsmooth.c
 
-# SMOOTH driver headers
+
+# smooth driver headers
 #
 SMOOTH_DRV_H := $(SMOOTH_DRV_SRC:%c=%h)
 
 
-# SMOOTH driver object(s)
+# smooth driver object(s)
 #
 #   SMOOTH_DRV_OBJ_M is used during `multi' builds.
 #   SMOOTH_DRV_OBJ_S is used during `single' builds.
@@ -47,19 +48,19 @@ SMOOTH_DRV_H := $(SMOOTH_DRV_SRC:%c=%h)
 SMOOTH_DRV_OBJ_M := $(SMOOTH_DRV_SRC:$(SMOOTH_DIR_)%.c=$(OBJ_)%.$O)
 SMOOTH_DRV_OBJ_S := $(OBJ_)smooth.$O
 
-# SMOOTH driver source file for single build
+# smooth driver source file for single build
 #
 SMOOTH_DRV_SRC_S := $(SMOOTH_DIR_)smooth.c
 
 
-# SMOOTH driver - single object
+# smooth driver - single object
 #
 $(SMOOTH_DRV_OBJ_S): $(SMOOTH_DRV_SRC_S) $(SMOOTH_DRV_SRC) \
                    $(FREETYPE_H) $(SMOOTH_DRV_H)
 	$(SMOOTH_COMPILE) $T$@ $(SMOOTH_DRV_SRC_S)
 
 
-# SMOOTH driver - multiple objects
+# smooth driver - multiple objects
 #
 $(OBJ_)%.$O: $(SMOOTH_DIR_)%.c $(FREETYPE_H) $(SMOOTH_DRV_H)
 	$(SMOOTH_COMPILE) $T$@ $<
