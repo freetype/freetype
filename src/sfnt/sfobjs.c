@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    SFNT object management (base).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -39,91 +39,94 @@
 
 
 
- /* convert a UTF-16 name entry to ASCII */
+  /* convert a UTF-16 name entry to ASCII */
   static FT_String*
-  tt_name_entry_ascii_from_utf16( TT_NameEntry   entry,
-                                  FT_Memory      memory )
+  tt_name_entry_ascii_from_utf16( TT_NameEntry  entry,
+                                  FT_Memory     memory )
   {
     FT_String*  string;
     FT_UInt     len, code, n;
-    FT_Byte*    read = (FT_Byte*) entry->string;
-    
-    len = (FT_UInt) entry->stringLength/2;
-    
-    if ( FT_MEM_NEW_ARRAY( string, len+1 ) )
+    FT_Byte*    read = (FT_Byte*)entry->string;
+
+
+    len = (FT_UInt)entry->stringLength / 2;
+
+    if ( FT_MEM_NEW_ARRAY( string, len + 1 ) )
       return NULL;
-    
+
     for ( n = 0; n < len; n++ )
     {
-      code = FT_NEXT_USHORT(read);
+      code = FT_NEXT_USHORT( read );
       if ( code < 32 || code > 127 )
         code = '?';
-        
+
       string[n] = (char)code;
     }
 
     string[len] = 0;
-    
+
     return string;
-  }                                   
+  }
 
 
- /* convert a UCS-4 name entry to ASCII */
+  /* convert a UCS-4 name entry to ASCII */
   static FT_String*
   tt_name_entry_ascii_from_ucs4( TT_NameEntry  entry,
                                  FT_Memory     memory )
   {
     FT_String*  string;
     FT_UInt     len, code, n;
-    FT_Byte*    read = (FT_Byte*) entry->string;
-    
-    len = (FT_UInt) entry->stringLength/4;
-    
-    if ( FT_MEM_NEW_ARRAY( string, len+1 ) )
+    FT_Byte*    read = (FT_Byte*)entry->string;
+
+
+    len = (FT_UInt)entry->stringLength / 4;
+
+    if ( FT_MEM_NEW_ARRAY( string, len + 1 ) )
       return NULL;
-    
+
     for ( n = 0; n < len; n++ )
     {
-      code = FT_NEXT_ULONG(read);
+      code = FT_NEXT_ULONG( read );
       if ( code < 32 || code > 127 )
         code = '?';
-        
+
       string[n] = (char)code;
     }
 
     string[len] = 0;
-    
+
     return string;
-  }                                 
+  }
 
 
- /* convert an Apple Roman or symbol name entry to ASCII */
+  /* convert an Apple Roman or symbol name entry to ASCII */
   static FT_String*
   tt_name_entry_ascii_from_other( TT_NameEntry  entry,
                                   FT_Memory     memory )
   {
     FT_String*  string;
     FT_UInt     len, code, n;
-    FT_Byte*    read = (FT_Byte*) entry->string;
-    
-    len = (FT_UInt) entry->stringLength;
-    
-    if ( FT_MEM_NEW_ARRAY( string, len+1 ) )
+    FT_Byte*    read = (FT_Byte*)entry->string;
+
+
+    len = (FT_UInt)entry->stringLength;
+
+    if ( FT_MEM_NEW_ARRAY( string, len + 1 ) )
       return NULL;
-    
+
     for ( n = 0; n < len; n++ )
     {
       code = *read++;
       if ( code < 32 || code > 127 )
         code = '?';
-        
+
       string[n] = (char)code;
     }
 
     string[len] = 0;
-    
+
     return string;
-  }                                  
+  }
 
 
   /*************************************************************************/
@@ -158,91 +161,79 @@
     rec = face->name_table.names;
     for ( n = 0; n < face->name_table.numNameRecords; n++, rec++ )
     {
-      /* according to the OpenType 1.3 specification, only Microsoft of */
-      /* Apple platform ids might be used in the 'name' table. The      */
-      /* 'Unicode' platform is reserved for the 'cmap' table, and       */
-      /* the 'Iso' one is deprecated                                    */
-
-      /* however the Apple TrueType specification doesn't says the same  */
-      /* thing and goes to suggest that all Unicode 'name' table entries */
-      /* should be coded in UTF-16 (in big-endian format I suppose)      */
+      /* According to the OpenType 1.3 specification, only Microsoft or  */
+      /* Apple platform IDs might be used in the `name' table.  The      */
+      /* `Unicode' platform is reserved for the `cmap' table, and the    */
+      /* `Iso' one is deprecated.                                        */
+      /*                                                                 */
+      /* However, the Apple TrueType specification doesn't say the same  */
+      /* thing and goes to suggest that all Unicode `name' table entries */
+      /* should be coded in UTF-16 (in big-endian format I suppose).     */
       /*                                                                 */
       if ( rec->nameID == nameid && rec->string )
       {
         switch ( rec->platformID )
         {
+        case TT_PLATFORM_APPLE_UNICODE:
+        case TT_PLATFORM_ISO:
+          /* there is `languageID' to check there.  We should use this */
+          /* field only as a last solution when nothing else is        */
+          /* available.                                                */
+          /*                                                           */
+          found_unicode = n;
+          break;
 
-          case TT_PLATFORM_APPLE_UNICODE:
-          case TT_PLATFORM_ISO:
+        case TT_PLATFORM_MACINTOSH:
+          if ( rec->languageID == TT_MAC_LANGID_ENGLISH )
+            found_apple = n;
+
+          break;
+
+        case TT_PLATFORM_MICROSOFT:
+          /* we only take a non-English name when there is nothing */
+          /* else available in the font                            */
+          /*                                                       */
+          if ( found_win == -1 || ( rec->languageID & 0x3FF ) == 0x009 )
+          {
+            switch ( rec->encodingID )
             {
-              /* there is 'languageID' to check there. We should use this */
-              /* field only as a last solution when nothing else is       */
-              /* available..                                              */
-              /*                                                          */
-              found_unicode = n;
+            case TT_MS_ID_SYMBOL_CS:
+            case TT_MS_ID_UNICODE_CS:
+            case TT_MS_ID_UCS_4:
+              found_win = n;
               break;
+
+            default:
+              ;
             }
-          
-          case TT_PLATFORM_MACINTOSH:
-            {
-              if ( rec->languageID == TT_MAC_LANGID_ENGLISH )
-                found_apple = n;
-              
-              break;
-            }
-            
-          case TT_PLATFORM_MICROSOFT:
-            {
-              /* we only take a non-English name when there is nothing */
-              /* else available in the font..                          */
-              /*                                                       */
-              if ( found_win == -1 || (rec->languageID & 0x3FF) == 0x009 )
-              {
-                switch ( rec->encodingID )
-                {
-                  case TT_MS_ID_SYMBOL_CS:
-                  case TT_MS_ID_UNICODE_CS:
-                  case TT_MS_ID_UCS_4:
-                    found_win = n;
-                    break;
-                    
-                  default:
-                    ;
-                }
-              }
-              break;
-            }
-          
-          default:
-            ;
+          }
+          break;
+
+        default:
+          ;
         }
       }
     }
 
-    /* some fonts contain invalid Unicode or Macintosh formatted entries */
-    /* we will thus favor name encoded in Windows formats when they're   */
-    /* available..                                                       */
-    /*                                                                   */
+    /* some fonts contain invalid Unicode or Macintosh formatted entries; */
+    /* we will thus favor names encoded in Windows formats if available   */
+    /*                                                                    */
     if ( found_win >= 0 )
     {
       rec = face->name_table.names + found_win;
       switch ( rec->encodingID )
       {
-        case TT_MS_ID_UNICODE_CS:
-        case TT_MS_ID_SYMBOL_CS:
-          {
-            result = tt_name_entry_ascii_from_utf16( rec, memory );
-            break;
-          }
-          
-        case TT_MS_ID_UCS_4:
-          {
-            result = tt_name_entry_ascii_from_ucs4( rec, memory );
-            break;
-          }
-        
-        default:
-          ;
+      case TT_MS_ID_UNICODE_CS:
+      case TT_MS_ID_SYMBOL_CS:
+        result = tt_name_entry_ascii_from_utf16( rec, memory );
+        break;
+
+      case TT_MS_ID_UCS_4:
+        result = tt_name_entry_ascii_from_ucs4( rec, memory );
+        break;
+
+      default:
+        ;
       }
     }
     else if ( found_apple >= 0 )
@@ -255,7 +246,7 @@
       rec    = face->name_table.names + found_unicode;
       result = tt_name_entry_ascii_from_utf16( rec, memory );
     }
-    
+
     return result;
   }
 
@@ -321,11 +312,12 @@
     FT_Error         error;
     FT_Library       library = face->root.driver->root.library;
     SFNT_Service     sfnt;
-    SFNT_HeaderRec      sfnt_header;
+    SFNT_HeaderRec   sfnt_header;
 
     /* for now, parameters are unused */
     FT_UNUSED( num_params );
     FT_UNUSED( params );
+
 
     sfnt = (SFNT_Service)face->sfnt;
     if ( !sfnt )
@@ -344,7 +336,7 @@
     if ( !face->psnames )
     {
       face->psnames = (PSNames_Service)
-                       FT_Get_Module_Interface( library, "psnames" );
+                        FT_Get_Module_Interface( library, "psnames" );
     }
 
     /* check that we have a valid TrueType file */
@@ -381,9 +373,9 @@
                   FT_Int         num_params,
                   FT_Parameter*  params )
   {
-    FT_Error         error;
-    FT_Bool          has_outline;
-    FT_Bool          is_apple_sbit;
+    FT_Error      error;
+    FT_Bool       has_outline;
+    FT_Bool       is_apple_sbit;
 
     SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
@@ -433,7 +425,6 @@
     (void)LOAD_( max_profile );
     (void)LOAD_( charmaps );
 
-      
     /* the following tables are optional in PCL fonts -- */
     /* don't check for errors                            */
     (void)LOAD_( names );
@@ -470,6 +461,7 @@
       else
         goto Exit;
     }
+
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
     if ( LOAD_( hdmx )    ||
@@ -478,15 +470,17 @@
          LOAD_( pclt )    )
       goto Exit;
 
-    face->root.family_name = tt_face_get_name( face, TT_NAME_ID_FONT_FAMILY );
-    face->root.style_name  = tt_face_get_name( face, TT_NAME_ID_FONT_SUBFAMILY );
+    face->root.family_name = tt_face_get_name( face,
+                                               TT_NAME_ID_FONT_FAMILY );
+    face->root.style_name  = tt_face_get_name( face,
+                                               TT_NAME_ID_FONT_SUBFAMILY );
 
     /* now set up root fields */
     {
-      FT_Face     root = &face->root;
-      FT_Int      flags = 0;
-      FT_Int      n;
-      FT_Memory   memory;
+      FT_Face    root = &face->root;
+      FT_Int     flags = 0;
+      FT_Int     n;
+      FT_Memory  memory;
 
 
       memory = root->memory;
@@ -557,19 +551,21 @@
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
 
       TT_Build_CMaps( face );  /* ignore errors */
-      
-      
+
+
       /* set the encoding fields */
       {
         FT_Int  m;
-        
+
+
         for ( m = 0; m < root->num_charmaps; m++ )
         {
           FT_CharMap  charmap = root->charmaps[m];
-          
+
+
           charmap->encoding = sfnt_find_encoding( charmap->platform_id,
                                                   charmap->encoding_id );
-                                             
+
           if ( root->charmap     == NULL &&
                charmap->encoding == ft_encoding_unicode )
           {
@@ -580,34 +576,35 @@
       }
 
 #else /* !FT_CONFIG_OPTION_USE_CMAPS */
-      
+
       {
         TT_CharMap  charmap = face->charmaps;
-        
+
+
         charmap            = face->charmaps;
         root->num_charmaps = face->num_charmaps;
-  
+
         /* allocate table of pointers */
         if ( FT_NEW_ARRAY( root->charmaps, root->num_charmaps ) )
           goto Exit;
-  
+
         for ( n = 0; n < root->num_charmaps; n++, charmap++ )
         {
           FT_Int  platform = charmap->cmap.platformID;
           FT_Int  encoding = charmap->cmap.platformEncodingID;
-  
-  
+
+
           charmap->root.face        = (FT_Face)face;
           charmap->root.platform_id = (FT_UShort)platform;
           charmap->root.encoding_id = (FT_UShort)encoding;
           charmap->root.encoding    = sfnt_find_encoding( platform, encoding );
-  
+
           /* now, set root->charmap with a unicode charmap */
           /* wherever available                            */
           if ( !root->charmap                                &&
                charmap->root.encoding == ft_encoding_unicode )
             root->charmap = (FT_CharMap)charmap;
-  
+
           root->charmaps[n] = (FT_CharMap)charmap;
         }
       }
@@ -622,7 +619,8 @@
         root->face_flags |= FT_FACE_FLAG_FIXED_SIZES;
 
 #if 0
-        /* I don't know criteria whether layout is horizontal or vertical */
+        /* XXX: I don't know criteria whether layout is horizontal */
+        /*      or vertical.                                       */
         if ( has_outline.... )
         {
           ...
@@ -753,7 +751,7 @@
   FT_LOCAL_DEF( void )
   SFNT_Done_Face( TT_Face  face )
   {
-    FT_Memory        memory = face->root.memory;
+    FT_Memory     memory = face->root.memory;
     SFNT_Service  sfnt   = (SFNT_Service)face->sfnt;
 
 
@@ -783,8 +781,9 @@
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
 
     {
-      FT_Stream  stream = FT_FACE_STREAM(face);
-      
+      FT_Stream  stream = FT_FACE_STREAM( face );
+
+
       /* simply release the 'cmap' table frame */
       FT_FRAME_RELEASE( face->cmap_table );
       face->cmap_size = 0;

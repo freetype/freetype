@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level SFNT driver interface (body).                             */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -58,7 +58,7 @@
       break;
 
     case ft_sfnt_os2:
-      table = face->os2.version == 0xFFFF ? 0 : &face->os2;
+      table = face->os2.version == 0xFFFFU ? 0 : &face->os2;
       break;
 
     case ft_sfnt_post:
@@ -114,7 +114,7 @@
   static const char*
   get_sfnt_postscript_name( TT_Face  face )
   {
-    FT_Int  n, found_win, found_apple;
+    FT_Int       n, found_win, found_apple;
     const char*  result = NULL;
 
 
@@ -124,8 +124,8 @@
 
     /* scan the name table to see whether we have a Postscript name here, */
     /* either in Macintosh or Windows platform encodings                  */
-    found_win     = -1;
-    found_apple   = -1;
+    found_win   = -1;
+    found_apple = -1;
     
     for ( n = 0; n < face->num_names; n++ )
     {
@@ -148,16 +148,18 @@
     
     if ( found_win != -1 )
     {
-      FT_Memory    memory = face->root.memory;
+      FT_Memory         memory = face->root.memory;
       TT_NameEntryRec*  name   = face->name_table.names + found_win;
-      FT_UInt      len    = name->stringLength/2;
-      FT_Error     error;
+      FT_UInt           len    = name->stringLength / 2;
+      FT_Error          error;
       
-      if ( !FT_ALLOC( result, len+1 ) )
+
+      if ( !FT_ALLOC( result, len + 1 ) )
       {
         FT_String*  r = (FT_String*)result;
-        FT_Byte*    p = (FT_Byte*) name->string;
+        FT_Byte*    p = (FT_Byte*)name->string;
         
+
         for ( ; len > 0; len--, p += 2 )
         {
           if ( p[0] == 0 && p[1] >= 32 && p[1] < 128 )
@@ -175,7 +177,8 @@
       FT_UInt           len    = name->stringLength;
       FT_Error          error;
 
-      if ( !FT_ALLOC( result, len+1 ) )
+
+      if ( !FT_ALLOC( result, len + 1 ) )
       {
         FT_MEM_COPY( (char*)result, name->string, len );
         ((char*)result)[len] = '\0';
