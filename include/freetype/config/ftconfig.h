@@ -192,6 +192,10 @@ FT_BEGIN_HEADER
 #endif /* FT_SIZEOF_LONG == 8 */
 
 
+#define FT_BEGIN_STMNT  do {
+#define FT_END_STMNT    } while (0)
+#define FT_DUMMY_STMNT  FT_BEGIN_STMNT FT_END_STMNT
+
   /*************************************************************************/
   /*                                                                       */
   /* A 64-bit data type will create compilation problems if you compile    */

@@ -21,6 +21,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_IDS_H
+#include FT_SERVICE_XFREE86_NAME_H
 
 #include "ttdriver.h"
 #include "ttgload.h"
@@ -344,17 +345,26 @@
   /*************************************************************************/
   /*************************************************************************/
 
+  static const FT_ServiceDescRec  tt_services[] =
+  {
+    { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_TRUETYPE },
+    { NULL, NULL }
+  };
 
   static FT_Module_Interface
   tt_get_interface( TT_Driver    driver,
                     const char*  tt_interface )
   {
-    FT_Module     sfntd = FT_Get_Module( driver->root.root.library,
-                                         "sfnt" );
-    SFNT_Service  sfnt;
+    FT_Module_Interface  result;
+    FT_Module            sfntd;
+    SFNT_Service         sfnt;
 
+    result = ft_service_list_lookup( tt_services, tt_interface );
+    if ( result != NULL )
+      return result;
 
     /* only return the default interface from the SFNT module */
+    sfntd = FT_Get_Module( driver->root.root.library,  "sfnt" );
     if ( sfntd )
     {
       sfnt = (SFNT_Service)( sfntd->clazz->module_interface );

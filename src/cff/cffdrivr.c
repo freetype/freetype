@@ -30,6 +30,8 @@
 
 #include "cfferrs.h"
 
+#include FT_SERVICE_XFREE86_NAME_H
+#include FT_SERVICE_GLYPH_DICT_H
 
   /*************************************************************************/
   /*                                                                       */
@@ -210,17 +212,12 @@
   }
 
 
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /****             C H A R A C T E R   M A P P I N G S                 ****/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
+ /*
+  *  GLYPH DICT SERVICE
+  *
+  */
+
+#include FT_SERVICE_GLYPH_DICT_H
 
   static FT_Error
   cff_get_glyph_name( CFF_Face    face,
@@ -275,23 +272,6 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    cff_get_name_index                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Uses the psnames module and the CFF font's charset to to return a  */
-  /*    a given glyph name's glyph index.                                  */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face       :: A handle to the source face object.                  */
-  /*                                                                       */
-  /*    glyph_name :: The glyph name.                                      */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Glyph index.  0 means `undefined character code'.                  */
-  /*                                                                       */
   static FT_UInt
   cff_get_name_index( CFF_Face    face,
                       FT_String*  glyph_name )
@@ -334,6 +314,13 @@
   }
 
 
+  static const FT_Service_GlyphDictRec   cff_service_glyph_dict =
+  {
+    (FT_GlyphDict_GetNameFunc)    cff_get_glyph_name,
+    (FT_GlyphDict_NameIndexFunc)  cff_get_name_index,
+  };
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -346,22 +333,25 @@
   /*************************************************************************/
   /*************************************************************************/
 
+  static const FT_ServiceDescRec  cff_services[] =
+  {
+    { FT_SERVICE_ID_XF86_NAME,  FT_XF86_FORMAT_CFF },
+#ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
+    { FT_SERVICE_ID_GLYPH_DICT, & cff_service_glyph_dict },
+#endif
+    { NULL, NULL }
+  };
+
   static FT_Module_Interface
   cff_get_interface( CFF_Driver   driver,
                      const char*  module_interface )
   {
     FT_Module  sfnt;
+    FT_Module_Interface  result;
 
-
-#ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
-
-    if ( ft_strcmp( (const char*)module_interface, "glyph_name" ) == 0 )
-      return (FT_Module_Interface)cff_get_glyph_name;
-
-    if ( ft_strcmp( (const char*)module_interface, "name_index" ) == 0 )
-      return (FT_Module_Interface)cff_get_name_index;
-
-#endif
+    result = ft_service_list_lookup( cff_services, module_interface );
+    if ( result != NULL )
+      return  result;
 
     /* we simply pass our request to the `sfnt' module */
     sfnt = FT_Get_Module( driver->root.root.library, "sfnt" );

@@ -125,10 +125,6 @@ FT_BEGIN_HEADER
   (*TT_Done_Face_Func)( TT_Face  face );
 
 
-  typedef FT_Module_Interface
-  (*SFNT_Get_Interface_Func)( FT_Module    module,
-                              const char*  func_interface );
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -457,21 +453,6 @@ FT_BEGIN_HEADER
   (*TT_Free_Table_Func)( TT_Face  face );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <FuncType>                                                            */
-  /*    SFNT_Load_Table_Func                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Loads a given SFNT table into memory.                              */
-  /*                                                                       */
-  typedef FT_Error
-  (*SFNT_Load_Table_Func)( FT_Face    face,
-                           FT_ULong   tag,
-                           FT_Long    offset,
-                           FT_Byte*   buffer,
-                           FT_ULong*  length );
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -492,7 +473,7 @@ FT_BEGIN_HEADER
     TT_Init_Face_Func            init_face;
     TT_Load_Face_Func            load_face;
     TT_Done_Face_Func            done_face;
-    SFNT_Get_Interface_Func      get_interface;
+    FT_Module_Requester          get_interface;
 
     TT_Load_Any_Func             load_any;
     TT_Load_SFNT_HeaderRec_Func  load_sfnt_header;

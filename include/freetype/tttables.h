@@ -566,11 +566,6 @@ FT_BEGIN_HEADER
 
   /* */
 
-  /* internal use only */
-  typedef void*
-  (*FT_Get_Sfnt_Table_Func)( FT_Face      face,
-                             FT_Sfnt_Tag  tag );
-
 
   /*************************************************************************/
   /*                                                                       */

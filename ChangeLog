@@ -1,3 +1,35 @@
+2003-09-11  David Turner  <david@freetype.org>
+
+        * include/freetype/ftmm.h, include/freetype/ftmodule.h,
+          include/freetype/tttables.h, include/freetype/config/ftconfig.h,
+          include/freetype/internal/ftobjs.h,
+          include/freetype/internal/ftserv.h,
+          include/freetype/internal/internal.h,
+          include/freetype/internal/sfnt.h,
+          include/freetype/internal/tttypes.h,
+          include/freetype/internal/services/bdf.h,
+          include/freetype/internal/services/glyfdict.h,
+          include/freetype/internal/services/multmast.h,
+          include/freetype/internal/services/postname.h,
+          include/freetype/internal/services/sfnt.h,
+          include/freetype/internal/services/xf86name.h,
+          src/base/ftbdf.c, src/base/ftmm.c, src/base/ftobjs.c,
+          src/base/ftxf86.c, src/bdf/bdfdrivr.c, src/cff/cffdrivr.c,
+          src/cid/cidriver.c, src/pcf/pcfdrivr.c, src/sfnt/sfdriver.c,
+          src/truetype/ttdriver.c, src/type1/t1driver.c, src/type42/t42drivr.c:
+
+          heavy internal modifications to introduce the concept of
+          "module services". This is the first step towards a massive
+          simplification of the engine's internals, in order to
+          get rid of various numbers of hacks.
+
+          Note that this changes will break source & binary compatibility
+          for authors of external font drivers.
+
+          Maybe 2.1.6 will be called 2.2.0 after all :-)
+
+
+
 2003-09-09  David Turner  <david@freetype.org>
 
         * src/base/ftpfr.c, src/pfr/pfrtypes.h, src/pfr/pfrload.c,

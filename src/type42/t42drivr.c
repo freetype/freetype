@@ -41,11 +41,20 @@
 #include "t42error.h"
 #include FT_INTERNAL_DEBUG_H
 
+#include FT_SERVICE_XFREE86_NAME_H
+#include FT_SERVICE_GLYPH_DICT_H
+#include FT_SERVICE_POSTSCRIPT_NAME_H
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t42
 
 
+ /*
+  *
+  *  GLYPH DICT SERVICE
+  *
+  */
+  
   static FT_Error
   t42_get_glyph_name( T42_Face    face,
                       FT_UInt     glyph_index,
@@ -73,13 +82,6 @@
   }
 
 
-  static const char*
-  t42_get_ps_name( T42_Face  face )
-  {
-    return (const char*)face->type1.font_name;
-  }
-
-
   static FT_UInt
   t42_get_name_index( T42_Face    face,
                       FT_String*  glyph_name )
@@ -100,23 +102,53 @@
   }
 
 
+  static FT_Service_GlyphDictRec  t42_service_glyph_dict =
+  {
+    (FT_GlyphDict_GetNameFunc)    t42_get_glyph_name,
+    (FT_GlyphDict_NameIndexFunc)  t42_get_name_index
+  };
+
+
+ /*
+  *
+  *  POSTSCRIPT NAME SERVICE
+  *
+  */
+
+  static const char*
+  t42_get_ps_name( T42_Face  face )
+  {
+    return (const char*)face->type1.font_name;
+  }
+
+
+  static FT_Service_PsNameRec  t42_service_ps_name =
+  {
+    (FT_PsName_GetFunc)  t42_get_ps_name
+  };
+
+
+ /*
+  *
+  *  SERVICE LIST
+  *
+  */
+
+  static const FT_ServiceDescRec  t42_services[] =
+  {
+    { FT_SERVICE_ID_GLYPH_DICT,      & t42_service_glyph_dict },
+    { FT_SERVICE_ID_POSTSCRIPT_NAME, & t42_service_ps_name    },
+    { FT_SERVICE_ID_XF86_NAME,       FT_XF86_FORMAT_TYPE_42   },
+    { NULL, NULL }
+  };
+
   static FT_Module_Interface
   T42_Get_Interface( FT_Driver         driver,
                      const FT_String*  t42_interface )
   {
     FT_UNUSED( driver );
 
-    /* Any additional interface are defined here */
-    if (ft_strcmp( (const char*)t42_interface, "glyph_name" ) == 0 )
-      return (FT_Module_Interface)t42_get_glyph_name;
-
-    if ( ft_strcmp( (const char*)t42_interface, "name_index" ) == 0 )
-      return (FT_Module_Interface)t42_get_name_index;
-
-    if ( ft_strcmp( (const char*)t42_interface, "postscript_name" ) == 0 )
-      return (FT_Module_Interface)t42_get_ps_name;
-
-    return 0;
+    return ft_service_list_lookup( t42_services, t42_interface );
   }
 
 
