@@ -1,3 +1,16 @@
+2001-08-09  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/cff/cffdrivr.c (get_cff_glyph_name): Renamed to
+	cff_get_glyph_name for consistency.
+
+	(cff_get_glyph_index): Minor documentation change.
+
+	* src/type1/t1driver.c (t1_get_name_index): New function used in
+	Get_Interface as the function returned when the "name_index"
+	function is requested.
+
+	(get_t1_glyph_name): Renamed to t1_get_glyph_name for consistency.
+
 2001-08-08  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/cffload.c: Removed definitions of cff_isoadobe_charset,
