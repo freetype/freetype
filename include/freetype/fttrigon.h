@@ -130,7 +130,7 @@ FT_BEGIN_HEADER
   /*    function @FT_Vector_Unit.                                          */
   /*                                                                       */
   FT_EXPORT( FT_Fixed )
-  FT_Cos( FT_Angle  angle );  
+  FT_Cos( FT_Angle  angle );
 
 
   /*************************************************************************/
@@ -272,7 +272,7 @@ FT_BEGIN_HEADER
                       FT_Angle   *angle );
   /* */
 
-  
+
 FT_END_HEADER
 
 #endif /* __FTTRIGON_H__ */

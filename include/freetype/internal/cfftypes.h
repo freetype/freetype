@@ -5,7 +5,7 @@
 /*    Basic OpenType/CFF type definitions and interface (specification     */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -67,21 +67,21 @@ FT_BEGIN_HEADER
   {
     FT_UInt     format;
     FT_ULong    offset;
-    
+
     FT_UShort*  sids;
     FT_UShort*  codes;
-  
+
   } CFF_Encoding;
 
 
   typedef struct  CFF_Charset_
   {
-    
+
     FT_UInt     format;
     FT_ULong    offset;
 
     FT_UShort*  sids;
-  
+
   } CFF_Charset;
 
 
@@ -222,7 +222,7 @@ FT_BEGIN_HEADER
 
     CFF_Encoding   encoding;
     CFF_Charset    charset;
-    
+
     CFF_Index      charstrings_index;
     CFF_Index      font_dict_index;
     CFF_Index      private_index;

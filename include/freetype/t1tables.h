@@ -5,7 +5,7 @@
 /*    Basic Type 1/Type 2 tables definitions and interface (specification  */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -44,7 +44,7 @@ FT_BEGIN_HEADER
   /*    including structures related to other PostScript font formats.     */
   /*                                                                       */
   /*************************************************************************/
-   
+
 
   /* Note that we separate font data in T1_FontInfo and T1_Private */
   /* structures in order to support Multiple Master fonts.         */

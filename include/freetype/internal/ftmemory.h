@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType memory management macros (specification).               */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -78,9 +78,10 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_BASE( FT_Error )  FT_Alloc( FT_Memory  memory,
-                                 FT_Long    size,
-                                 void*     *P );
+  FT_BASE( FT_Error )
+  FT_Alloc( FT_Memory  memory,
+            FT_Long    size,
+            void*     *P );
 
 
   /*************************************************************************/
@@ -111,10 +112,11 @@ FT_BEGIN_HEADER
   /*    All callers of FT_Realloc() _must_ provide the current block size  */
   /*    as well as the new one.                                            */
   /*                                                                       */
-  FT_BASE( FT_Error )  FT_Realloc( FT_Memory  memory,
-                                   FT_Long    current,
-                                   FT_Long    size,
-                                   void**     P );
+  FT_BASE( FT_Error )
+  FT_Realloc( FT_Memory  memory,
+              FT_Long    current,
+              FT_Long    size,
+              void**     P );
 
 
   /*************************************************************************/
@@ -140,8 +142,9 @@ FT_BEGIN_HEADER
   /*    This is a strong convention within all of FreeType and its         */
   /*    drivers.                                                           */
   /*                                                                       */
-  FT_BASE( void )  FT_Free( FT_Memory  memory,
-                            void**     P );
+  FT_BASE( void )
+  FT_Free( FT_Memory  memory,
+           void**     P );
 
 
 

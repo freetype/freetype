@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType sbits manager (body).                                       */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -252,7 +252,7 @@
 
     /* the node itself */
     size  = sizeof ( *node );
-    
+
     /* the sbit records */
     size += cset->element_count * sizeof ( FTC_SBitRec );
 
@@ -358,6 +358,8 @@
   };
 
 
+  /* documentation is in ftcsbits.h */
+
   FT_EXPORT_DEF( FT_Error )
   FTC_SBit_Cache_New( FTC_Manager      manager,
                       FTC_SBit_Cache  *acache )
@@ -368,6 +370,8 @@
              (FTC_Cache*)acache );
   }
 
+
+  /* documentation is in ftcsbits.h */
 
   FT_EXPORT_DEF( FT_Error )
   FTC_SBit_Cache_Lookup( FTC_SBit_Cache   cache,
@@ -383,15 +387,15 @@
     /* argument checks delayed to FTC_Chunk_Cache_Lookup */
     if ( !ansbit )
       return FTC_Err_Invalid_Argument;
-      
+
     *ansbit = 0;
     error   = FTC_Chunk_Cache_Lookup( &cache->root, desc, gindex,
                                       &node, &cindex );
     if ( !error )
       *ansbit = (FTC_SBit)node->elements + cindex;
-    
+
     return error;
   }
-                                    
+
 
 /* END */

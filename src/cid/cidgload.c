@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 Glyph Loader (body).                                 */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -265,8 +265,8 @@
       if ( load_flags & FT_LOAD_NO_RECURSE )
       {
         FT_Slot_Internal  internal = glyph->root.internal;
-        
-        
+
+
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
         glyph->root.metrics.horiAdvance  = decoder.builder.advance.x;
 

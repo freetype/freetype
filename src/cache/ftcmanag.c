@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType Cache Manager (body).                                       */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -212,6 +212,8 @@
   };
 
 
+  /* documentation is in ftcache.h */
+
   FT_EXPORT_DEF( FT_Error )
   FTC_Manager_New( FT_Library          library,
                    FT_UInt             max_faces,
@@ -279,6 +281,8 @@
   }
 
 
+  /* documentation is in ftcache.h */
+
   FT_EXPORT_DEF( void )
   FTC_Manager_Done( FTC_Manager  manager )
   {
@@ -308,13 +312,15 @@
     /* discard faces and sizes */
     FT_Lru_Done( manager->faces_lru );
     manager->faces_lru = 0;
-    
+
     FT_Lru_Done( manager->sizes_lru );
     manager->sizes_lru = 0;
 
     FREE( manager );
   }
 
+
+  /* documentation is in ftcache.h */
 
   FT_EXPORT_DEF( void )
   FTC_Manager_Reset( FTC_Manager  manager )
@@ -327,6 +333,8 @@
     /* XXX: FIXME: flush the caches? */
   }
 
+
+  /* documentation is in ftcache.h */
 
   FT_EXPORT_DEF( FT_Error )
   FTC_Manager_Lookup_Face( FTC_Manager  manager,
@@ -341,6 +349,8 @@
                            (FT_Pointer*)aface );
   }
 
+
+  /* documentation is in ftcache.h */
 
   FT_EXPORT_DEF( FT_Error )
   FTC_Manager_Lookup_Size( FTC_Manager  manager,
@@ -390,6 +400,9 @@
   /* `Compress' the manager's data, i.e., get rid of old cache nodes */
   /* that are not referenced anymore in order to limit the total     */
   /* memory used by the cache.                                       */
+
+  /* documentation is in ftcmanag.h */
+
   FT_EXPORT_DEF( void )
   FTC_Manager_Compress( FTC_Manager  manager )
   {

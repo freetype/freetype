@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType extensions implementation (specification).                  */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -59,8 +59,9 @@ FT_BEGIN_HEADER
   /*    data, as the finalizer will get called later by the function's     */
   /*    caller.                                                            */
   /*                                                                       */
-  typedef FT_Error  (*FT_Extension_Initializer)( void*    ext,
-                                                 FT_Face  face );
+  typedef FT_Error
+  (*FT_Extension_Initializer)( void*    ext,
+                               FT_Face  face );
 
 
   /*************************************************************************/
@@ -80,8 +81,9 @@ FT_BEGIN_HEADER
   /*    face :: A handle to the source face object the extension is        */
   /*            associated with.                                           */
   /*                                                                       */
-  typedef void  (*FT_Extension_Finalizer)( void*    ext,
-                                           FT_Face  face );
+  typedef void
+  (*FT_Extension_Finalizer)( void*    ext,
+                             FT_Face  face );
 
 
   /*************************************************************************/
@@ -145,30 +147,31 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_EXPORT( FT_Error )  FT_Register_Extension( FT_Driver            driver,
-                                                FT_Extension_Class*  clazz );
+  FT_EXPORT( FT_Error )
+  FT_Register_Extension( FT_Driver            driver,
+                         FT_Extension_Class*  clazz );
 
 
 #ifdef FT_CONFIG_OPTION_EXTEND_ENGINE
 
 
   /* Initialize the extension component */
-  FT_LOCAL
-  FT_Error  FT_Init_Extensions( FT_Library  library );
+  FT_LOCAL FT_Error
+  FT_Init_Extensions( FT_Library  library );
 
   /* Finalize the extension component */
-  FT_LOCAL
-  FT_Error  FT_Done_Extensions( FT_Library  library );
+  FT_LOCAL FT_Error
+  FT_Done_Extensions( FT_Library  library );
 
   /* Create an extension within a face object.  Called by the */
   /* face object constructor.                                 */
-  FT_LOCAL
-  FT_Error  FT_Create_Extensions( FT_Face  face );
+  FT_LOCAL FT_Error
+  FT_Create_Extensions( FT_Face  face );
 
   /* Destroy all extensions within a face object.  Called by the */
   /* face object destructor.                                     */
-  FT_LOCAL
-  FT_Error  FT_Destroy_Extensions( FT_Face  face );
+  FT_LOCAL FT_Error
+  FT_Destroy_Extensions( FT_Face  face );
 
 
 #endif
@@ -194,9 +197,10 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    A generic pointer to the extension block.                          */
   /*                                                                       */
-  FT_EXPORT( void* )  FT_Get_Extension( FT_Face      face,
-                                        const char*  extension_id,
-                                        void**       extension_interface );
+  FT_EXPORT( void* )
+  FT_Get_Extension( FT_Face      face,
+                    const char*  extension_id,
+                    void**       extension_interface );
 
 
 FT_END_HEADER

@@ -5,7 +5,7 @@
 /*    Basic SFNT/TrueType type definitions and interface (specification    */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -92,7 +92,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    range_shift    :: Must be num_tables*16 - search_range.            */
   /*                                                                       */
-  typedef struct SFNT_Header_
+  typedef struct  SFNT_Header_
   {
     FT_ULong   format_tag;
     FT_UShort  num_tables;
@@ -995,9 +995,9 @@ FT_BEGIN_HEADER
   typedef struct TT_CMapTable_  TT_CMapTable;
 
 
-  typedef
-  FT_UInt  (*TT_CharMap_Func)( TT_CMapTable*  charmap,
-                               FT_ULong       char_code );
+  typedef FT_UInt
+  (*TT_CharMap_Func)( TT_CMapTable*  charmap,
+                      FT_ULong       char_code );
 
 
   /* charmap table */
@@ -1099,7 +1099,8 @@ FT_BEGIN_HEADER
 
 
   /* a function type used for the truetype bytecode interpreter hooks */
-  typedef FT_Error  (*TT_Interpreter)( void*  exec_context );
+  typedef FT_Error
+  (*TT_Interpreter)( void*  exec_context );
 
   /* forward declaration */
   typedef struct TT_Loader_  TT_Loader;
@@ -1130,11 +1131,11 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    The stream cursor must be at the font file's origin.               */
   /*                                                                       */
-  typedef
-  FT_Error  (*TT_Goto_Table_Func)( TT_Face    face,
-                                   FT_ULong   tag,
-                                   FT_Stream  stream,
-                                   FT_ULong*  length );
+  typedef FT_Error
+  (*TT_Goto_Table_Func)( TT_Face    face,
+                         FT_ULong   tag,
+                         FT_Stream  stream,
+                         FT_ULong*  length );
 
 
   /*************************************************************************/
@@ -1165,11 +1166,11 @@ FT_BEGIN_HEADER
   /*    alternative formats (e.g. compressed ones) might use something     */
   /*    different.                                                         */
   /*                                                                       */
-  typedef
-  FT_Error  (*TT_Access_Glyph_Frame_Func)( TT_Loader*  loader,
-                                           FT_UInt     glyph_index,
-                                           FT_ULong    offset,
-                                           FT_UInt     byte_count );
+  typedef FT_Error
+  (*TT_Access_Glyph_Frame_Func)( TT_Loader*  loader,
+                                 FT_UInt     glyph_index,
+                                 FT_ULong    offset,
+                                 FT_UInt     byte_count );
 
 
   /*************************************************************************/
@@ -1187,8 +1188,8 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  typedef
-  FT_Error  (*TT_Load_Glyph_Element_Func)( TT_Loader*  loader );
+  typedef FT_Error
+  (*TT_Load_Glyph_Element_Func)( TT_Loader*  loader );
 
 
   /*************************************************************************/
@@ -1202,8 +1203,8 @@ FT_BEGIN_HEADER
   /* <Input>                                                               */
   /*    loader :: The current TrueType glyph loader object.                */
   /*                                                                       */
-  typedef
-  void  (*TT_Forget_Glyph_Frame_Func)( TT_Loader*  loader );
+  typedef void
+  (*TT_Forget_Glyph_Frame_Func)( TT_Loader*  loader );
 
 
 

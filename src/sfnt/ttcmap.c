@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    TrueType character mapping table (cmap) support (body).              */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -37,7 +37,7 @@
   FT_CALLBACK_DEF( FT_UInt )
   code_to_index0( TT_CMapTable*  charmap,
                   FT_ULong       char_code );
-                                             
+
   FT_CALLBACK_DEF( FT_UInt )
   code_to_index2( TT_CMapTable*  charmap,
                   FT_ULong       char_code );

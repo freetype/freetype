@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType error codes (specification).                                */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -103,7 +103,7 @@
   /*******************************************************************/
   /*******************************************************************/
 
-  
+
 #undef  FT_NEED_EXTERN_C
 #define FT_ERR_XCAT( x, y )  x ## y
 #define FT_ERR_CAT( x, y )   FT_ERR_XCAT( x, y )

@@ -5,7 +5,7 @@
 /*    Load the basic TrueType tables, i.e., tables that can be either in   */
 /*    TTF or OTF fonts (body).                                             */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -1616,13 +1616,13 @@
 
         face->num_kern_pairs   = num_pairs;
         face->kern_table_index = n;
-        
+
         /* ensure that the kerning pair table is sorted (yes, some */
         /* fonts have unsorted tables!)                            */
         {
           FT_UInt          i;
           TT_Kern_0_Pair*  pair0;
-          
+
 
           pair0 = face->kern_pairs;
 
@@ -1636,7 +1636,7 @@
             }
           }
         }
-        
+
         goto Exit;
       }
 

@@ -21,7 +21,7 @@
     FT_Fixed  f1, f2;
     double    d1, d2;
     int       i;
-    
+
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       f1 = FT_Cos(i);
@@ -46,7 +46,7 @@
     FT_Fixed  f1, f2;
     double    d1, d2;
     int       i;
-    
+
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       f1 = FT_Sin(i);
@@ -70,7 +70,7 @@
     FT_Fixed  f1, f2;
     double    d1, d2;
     int       i;
-    
+
     for ( i = 0; i < FT_ANGLE_PI2-0x2000000; i += 0x10000 )
     {
       f1 = FT_Tan(i);
@@ -94,22 +94,22 @@
     FT_Fixed  c2, s2;
     double    l, a, c1, s1;
     int       i, j;
-    
+
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       l  = 5.0;
       a  = i*SPI;
-      
+
       c1 = l * cos(a);
       s1 = l * sin(a);
-      
+
       c2 = (FT_Fixed)(c1*65536.0);
       s2 = (FT_Fixed)(s1*65536.0);
-      
+
       j  = FT_Atan2( c2, s2 );
       if ( j < 0 )
         j += FT_ANGLE_2PI;
-      
+
       if ( abs( i - j ) > 1 )
       {
         printf( "FT_Atan2( %.7f, %.7f ) = %.5f, atan = %.5f\n",
@@ -117,7 +117,7 @@
       }
     }
   }
-  
+
   static void
   test_unit( void )
   {
@@ -125,7 +125,7 @@
     double     a, c1, s1;
     FT_Fixed   c2, s2;
     int        i;
-    
+
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       FT_Vector_Unit( &v, i );
@@ -134,7 +134,7 @@
       s1 = sin(a);
       c2 = (FT_Fixed)(c1*65536.0);
       s2 = (FT_Fixed)(s1*65536.0);
-      
+
       if ( abs( v.x-c2 ) > THRESHOLD ||
            abs( v.y-s2 ) > THRESHOLD )
       {
@@ -146,7 +146,7 @@
       }
     }
   }
-  
+
 
   static void
   test_length( void )
@@ -154,14 +154,14 @@
     FT_Vector  v;
     FT_Fixed   l, l2;
     int        i;
-    
+
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       l   = (FT_Fixed)(500.0*65536.0);
       v.x = (FT_Fixed)( l * cos( i*SPI ) );
       v.y = (FT_Fixed)( l * sin( i*SPI ) );
       l2  = FT_Vector_Length( &v );
-      
+
       if ( abs( l2-l ) > THRESHOLD )
       {
         error = 1;
@@ -179,32 +179,32 @@
     FT_Vector v;
     double    l, ra, a, c1, s1, cra, sra, c3, s3;
     int       i, j, rotate;
-    
+
     for ( rotate = 0; rotate < FT_ANGLE_2PI; rotate += 0x10000 )
     {
       ra  = rotate*SPI;
       cra = cos( ra );
       sra = sin( ra );
-      
+
       for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
       {
         l  = 500.0;
         a  = i*SPI;
-        
+
         c1 = l * cos(a);
         s1 = l * sin(a);
-        
+
         v.x = c2 = (FT_Fixed)(c1*65536.0);
         v.y = s2 = (FT_Fixed)(s1*65536.0);
-        
+
         FT_Vector_Rotate( &v, rotate );
-        
+
         c3 = c1 * cra - s1 * sra;
         s3 = c1 * sra + s1 * cra;
-        
+
         c4 = (FT_Fixed)(c3*65536.0);
         s4 = (FT_Fixed)(s3*65536.0);
-        
+
         if ( abs( c4 - v.x ) > THRESHOLD ||
              abs( s4 - v.y ) > THRESHOLD )
         {
@@ -218,7 +218,7 @@
     }
   }
 
-  
+
   int main( void )
   {
     test_cos();
@@ -228,9 +228,9 @@
     test_unit();
     test_length();
     test_rotate();
-        
+
     if (!error)
       printf( "trigonometry test ok !\n" );
-      
+
     return !error;
   }

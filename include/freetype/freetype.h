@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType high-level API and common types (specification only).       */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -147,10 +147,10 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_CharMapRec                                                      */
   /*    FT_Select_Charmap                                                  */
-  /*    FT_Set_Charmap                                                     */ 
+  /*    FT_Set_Charmap                                                     */
   /*                                                                       */
   /*************************************************************************/
-   
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -1014,7 +1014,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct FT_Size_InternalRec_*  FT_Size_Internal;
 
-  
+
   /*************************************************************************/
   /*                                                                       */
   /*                    FreeType base size metrics                         */
@@ -1112,7 +1112,7 @@ FT_BEGIN_HEADER
     FT_Generic        generic;   /* generic pointer for client uses */
     FT_Size_Metrics   metrics;   /* size metrics                    */
     FT_Size_Internal  internal;
-    
+
   } FT_SizeRec;
 
 
@@ -2377,7 +2377,7 @@ FT_BEGIN_HEADER
   /*    FT_DivFix                                                          */
   /*    FT_RoundFix                                                        */
   /*    FT_CeilFix                                                         */
-  /*    FT_FloorFix                                                        */  
+  /*    FT_FloorFix                                                        */
   /*    FT_Vector_Transform                                                */
   /*    FT_Matrix_Multiply                                                 */
   /*    FT_Matrix_Invert                                                   */

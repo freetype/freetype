@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    I/O stream support (body).                                           */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */

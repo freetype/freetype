@@ -22,12 +22,12 @@
 
 
   /* test bbox computations */
-  
+
 #define  XSCALE    65536
 #define  XX(x)     ((FT_Pos)(x*XSCALE))
 #define  XVEC(x,y)  { XX(x), XX(y) }
 #define  XVAL(x)   ((x)/(1.0*XSCALE))
-  
+
   /* dummy outline #1 */
   static FT_Vector  dummy_vec_1[4] =
   {
@@ -36,14 +36,14 @@
     XVEC( 455.8887, 634.396  ),
     XVEC( -37.8765, 786.2207 ),
     XVEC( 164.6074, 535.3164 )
-#else    
+#else
     { (FT_Int32)0x0198E93DL , (FT_Int32)0x021750FFL },  /* 408.9111, 535.3164 */
     { (FT_Int32)0x01C7E312L , (FT_Int32)0x027A6560L },  /* 455.8887, 634.3960 */
     { (FT_Int32)0xFFDA1F9EL , (FT_Int32)0x0312387FL },  /* -37.8765, 786.2207 */
     { (FT_Int32)0x00A49B7EL , (FT_Int32)0x021750FFL }   /* 164.6074, 535.3164 */
-#endif    
+#endif
    };
-  
+
   static char  dummy_tag_1[4] =
   {
     FT_Curve_Tag_On,
@@ -56,7 +56,7 @@
   {
     3
   };
-  
+
   static FT_Outline  dummy_outline_1 =
   {
     1,
@@ -76,7 +76,7 @@
     XVEC( 200.0, 200.0 ),
     XVEC( 200.0, 133.0 )
   };
-  
+
   static FT_Outline  dummy_outline_2 =
   {
     1,
@@ -92,7 +92,7 @@
   dump_outline( FT_Outline*  outline )
   {
     FT_BBox  bbox;
-    
+
     /* compute and display cbox */
     FT_Outline_Get_CBox( outline, &bbox );
     printf( "cbox = [%.2f %.2f %.2f %.2f]\n",
@@ -119,12 +119,12 @@
     FT_BBox  bbox;
     long     count;
     long     time0;
-    
+
     time0 = get_time();
     for ( count = repeat; count > 0; count-- )
       FT_Outline_Get_CBox( outline, &bbox );
-      
-    time0 = get_time() - time0;      
+
+    time0 = get_time() - time0;
     printf( "time = %5.2f cbox = [%.2f %.2f %.2f %.2f]\n",
              ((double)time0/10000.0),
              XVAL( bbox.xMin ),
@@ -136,7 +136,7 @@
     time0 = get_time();
     for ( count = repeat; count > 0; count-- )
       FT_Outline_Get_BBox( outline, &bbox );
-    
+
     time0 = get_time() - time0;
     printf( "time = %5.2f bbox = [%.2f %.2f %.2f %.2f]\n",
              ((double)time0/10000.0),

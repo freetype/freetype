@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Stream handling(specification).                                      */
 /*                                                                         */
-/*  Copyright 1996-2000 by                                                 */
+/*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -92,10 +92,10 @@ FT_BEGIN_HEADER
   /* calling the FT_FRAME_START() macro.                                   */
 #define FT_FIELD_SIZE( f ) \
           (FT_Byte)sizeof ( ((FT_STRUCTURE*)0)->f )
-          
+
 #define FT_FIELD_SIZE_DELTA( f ) \
           (FT_Byte)sizeof ( ((FT_STRUCTURE*)0)->f[0] )
-          
+
 #define FT_FIELD_OFFSET( f ) \
           (FT_UShort)( offsetof( FT_STRUCTURE, f ) )
 
@@ -259,75 +259,98 @@ FT_BEGIN_HEADER
 #define READ_ULongLE( var )   FT_READ_MACRO( FT_Read_LongLE, FT_ULong, var )
 
 
-  FT_BASE( void )      FT_New_Memory_Stream( FT_Library  library,
-                                             FT_Byte*    base,
-                                             FT_ULong    size,
-                                             FT_Stream   stream );
+  FT_BASE( void )
+  FT_New_Memory_Stream( FT_Library  library,
+                        FT_Byte*    base,
+                        FT_ULong    size,
+                        FT_Stream   stream );
 
-  FT_BASE( FT_Error )  FT_Seek_Stream( FT_Stream  stream,
-                                       FT_ULong   pos );
+  FT_BASE( FT_Error )
+  FT_Seek_Stream( FT_Stream  stream,
+                  FT_ULong   pos );
 
-  FT_BASE( FT_Error )  FT_Skip_Stream( FT_Stream  stream,
-                                       FT_Long    distance );
+  FT_BASE( FT_Error )
+  FT_Skip_Stream( FT_Stream  stream,
+                  FT_Long    distance );
 
-  FT_BASE( FT_Long )   FT_Stream_Pos( FT_Stream  stream );
-
-
-  FT_BASE( FT_Error )  FT_Read_Stream( FT_Stream  stream,
-                                        FT_Byte*   buffer,
-                                        FT_ULong   count );
-
-  FT_BASE( FT_Error )  FT_Read_Stream_At( FT_Stream  stream,
-                                          FT_ULong   pos,
-                                          FT_Byte*   buffer,
-                                          FT_ULong   count );
-
-  FT_BASE( FT_Error )  FT_Access_Frame( FT_Stream  stream,
-                                        FT_ULong   count );
-
-  FT_BASE( void )      FT_Forget_Frame( FT_Stream  stream );
-
-  FT_BASE( FT_Error )  FT_Extract_Frame( FT_Stream  stream,
-                                         FT_ULong   count,
-                                         FT_Byte**  pbytes );
-
-  FT_BASE( void )      FT_Release_Frame( FT_Stream  stream,
-                                         FT_Byte**  pbytes );
-
-  FT_BASE( FT_Char )   FT_Get_Char( FT_Stream  stream );
-
-  FT_BASE( FT_Short )  FT_Get_Short( FT_Stream  stream );
-
-  FT_BASE( FT_Long )   FT_Get_Offset( FT_Stream  stream );
-
-  FT_BASE( FT_Long )   FT_Get_Long( FT_Stream  stream );
-
-  FT_BASE( FT_Short )  FT_Get_ShortLE( FT_Stream  stream );
-
-  FT_BASE( FT_Long )   FT_Get_LongLE( FT_Stream  stream );
+  FT_BASE( FT_Long )
+  FT_Stream_Pos( FT_Stream  stream );
 
 
-  FT_BASE( FT_Char )   FT_Read_Char( FT_Stream  stream,
-                                     FT_Error*  error );
+  FT_BASE( FT_Error )
+  FT_Read_Stream( FT_Stream  stream,
+                  FT_Byte*   buffer,
+                  FT_ULong   count );
 
-  FT_BASE( FT_Short )  FT_Read_Short( FT_Stream  stream,
-                                      FT_Error*  error );
+  FT_BASE( FT_Error )
+  FT_Read_Stream_At( FT_Stream  stream,
+                     FT_ULong   pos,
+                     FT_Byte*   buffer,
+                     FT_ULong   count );
 
-  FT_BASE( FT_Long )   FT_Read_Offset( FT_Stream  stream,
-                                       FT_Error*  error );
+  FT_BASE( FT_Error )
+  FT_Access_Frame( FT_Stream  stream,
+                   FT_ULong   count );
 
-  FT_BASE( FT_Long )   FT_Read_Long( FT_Stream  stream,
-                                     FT_Error*  error );
+  FT_BASE( void )
+  FT_Forget_Frame( FT_Stream  stream );
 
-  FT_BASE( FT_Short )  FT_Read_ShortLE( FT_Stream  stream,
-                                        FT_Error*  error );
+  FT_BASE( FT_Error )
+  FT_Extract_Frame( FT_Stream  stream,
+                    FT_ULong   count,
+                    FT_Byte**  pbytes );
 
-  FT_BASE( FT_Long )   FT_Read_LongLE( FT_Stream  stream,
-                                       FT_Error*  error );
+  FT_BASE( void )
+  FT_Release_Frame( FT_Stream  stream,
+                    FT_Byte**  pbytes );
 
-  FT_BASE( FT_Error )  FT_Read_Fields( FT_Stream              stream,
-                                       const FT_Frame_Field*  fields,
-                                       void*                  structure );
+  FT_BASE( FT_Char )
+  FT_Get_Char( FT_Stream  stream );
+
+  FT_BASE( FT_Short )
+  FT_Get_Short( FT_Stream  stream );
+
+  FT_BASE( FT_Long )
+  FT_Get_Offset( FT_Stream  stream );
+
+  FT_BASE( FT_Long )
+  FT_Get_Long( FT_Stream  stream );
+
+  FT_BASE( FT_Short )
+  FT_Get_ShortLE( FT_Stream  stream );
+
+  FT_BASE( FT_Long )
+  FT_Get_LongLE( FT_Stream  stream );
+
+
+  FT_BASE( FT_Char )
+  FT_Read_Char( FT_Stream  stream,
+                FT_Error*  error );
+
+  FT_BASE( FT_Short )
+  FT_Read_Short( FT_Stream  stream,
+                 FT_Error*  error );
+
+  FT_BASE( FT_Long )
+  FT_Read_Offset( FT_Stream  stream,
+                  FT_Error*  error );
+
+  FT_BASE( FT_Long )
+  FT_Read_Long( FT_Stream  stream,
+                FT_Error*  error );
+
+  FT_BASE( FT_Short )
+  FT_Read_ShortLE( FT_Stream  stream,
+                   FT_Error*  error );
+
+  FT_BASE( FT_Long )
+  FT_Read_LongLE( FT_Stream  stream,
+                  FT_Error*  error );
+
+  FT_BASE( FT_Error )
+  FT_Read_Fields( FT_Stream              stream,
+                  const FT_Frame_Field*  fields,
+                  void*                  structure );
 
 
 #define USE_Stream( resource, stream )                       \

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Simple LRU list-cache (specification).                               */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -89,26 +89,30 @@ FT_BEGIN_HEADER
     FT_UInt  lru_size;      /* object size in bytes */
 
     /* this method is used to initialize a new list element node */
-    FT_Error  (*init_element)( FT_Lru      lru,
-                               FT_LruNode  node );
+    FT_Error
+    (*init_element)( FT_Lru      lru,
+                     FT_LruNode  node );
 
     /* this method is used to finalize a given list element node */
-    void      (*done_element)( FT_Lru      lru,
-                               FT_LruNode  node );
+    void
+    (*done_element)( FT_Lru      lru,
+                     FT_LruNode  node );
 
     /* If defined, this method is called when the list if full        */
     /* during the lookup process -- it is used to change the contents */
     /* of a list element node, instead of calling `done_element()',   */
     /* then `init_element'.  Set it to 0 for default behaviour.       */
-    FT_Error  (*flush_element)( FT_Lru      lru,
-                                FT_LruNode  node,
-                                FT_LruKey   new_key );
+    FT_Error
+    (*flush_element)( FT_Lru      lru,
+                      FT_LruNode  node,
+                      FT_LruKey   new_key );
 
     /* If defined, this method is used to compare a list element node */
     /* with a given key during a lookup.  If set to 0, the `key'      */
     /* fields will be directly compared instead.                      */
-    FT_Bool  (*compare_element)( FT_LruNode  node,
-                                 FT_LruKey   key );
+    FT_Bool
+    (*compare_element)( FT_LruNode  node,
+                        FT_LruKey   key );
 
   } FT_Lru_Class;
 
@@ -117,9 +121,10 @@ FT_BEGIN_HEADER
   /* is part of a selection for FT_Lru_Remove_Selection().  The function */
   /* must return true (i.e., non-null) to indicate that the node is part */
   /* of it.                                                              */
-  typedef FT_Bool  (*FT_Lru_Selector)( FT_Lru      lru,
-                                       FT_LruNode  node,
-                                       FT_Pointer  data );
+  typedef FT_Bool
+  (*FT_Lru_Selector)( FT_Lru      lru,
+                      FT_LruNode  node,
+                      FT_Pointer  data );
 
 
   typedef struct  FT_LruRec_
@@ -138,31 +143,38 @@ FT_BEGIN_HEADER
   } FT_LruRec;
 
 
-  FT_EXPORT( FT_Error )  FT_Lru_New( const FT_Lru_Class*  clazz,
-                                     FT_UInt              max_elements,
-                                     FT_Pointer           user_data,
-                                     FT_Memory            memory,
-                                     FT_Bool              pre_alloc,
-                                     FT_Lru              *anlru );
+  FT_EXPORT( FT_Error )
+  FT_Lru_New( const FT_Lru_Class*  clazz,
+              FT_UInt              max_elements,
+              FT_Pointer           user_data,
+              FT_Memory            memory,
+              FT_Bool              pre_alloc,
+              FT_Lru              *anlru );
 
-  FT_EXPORT( void )      FT_Lru_Reset( FT_Lru  lru );
+  FT_EXPORT( void )
+  FT_Lru_Reset( FT_Lru  lru );
 
-  FT_EXPORT( void )      FT_Lru_Done ( FT_Lru  lru );
+  FT_EXPORT( void )
+  FT_Lru_Done ( FT_Lru  lru );
 
-  FT_EXPORT( FT_Error )  FT_Lru_Lookup_Node( FT_Lru        lru,
-                                             FT_LruKey     key,
-                                             FT_LruNode   *anode );
+  FT_EXPORT( FT_Error )
+  FT_Lru_Lookup_Node( FT_Lru        lru,
+                      FT_LruKey     key,
+                      FT_LruNode   *anode );
 
-  FT_EXPORT( FT_Error )  FT_Lru_Lookup( FT_Lru       lru,
-                                        FT_LruKey    key,
-                                        FT_Pointer  *anobject );
+  FT_EXPORT( FT_Error )
+  FT_Lru_Lookup( FT_Lru       lru,
+                 FT_LruKey    key,
+                 FT_Pointer  *anobject );
 
-  FT_EXPORT( void )      FT_Lru_Remove_Node( FT_Lru      lru,
-                                             FT_LruNode  node );
-		      
-  FT_EXPORT( void )      FT_Lru_Remove_Selection( FT_Lru           lru,
-                                                  FT_Lru_Selector  selector,
-                                                  FT_Pointer       data );
+  FT_EXPORT( void )
+  FT_Lru_Remove_Node( FT_Lru      lru,
+                      FT_LruNode  node );
+
+  FT_EXPORT( void )
+  FT_Lru_Remove_Selection( FT_Lru           lru,
+                           FT_Lru_Selector  selector,
+                           FT_Pointer       data );
 
 
 FT_END_HEADER
