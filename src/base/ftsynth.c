@@ -16,6 +16,8 @@
 /***************************************************************************/
 
 
+#include <freetype/internal/ftobjs.h>
+#include <freetype/ftoutln.h>
 #include <freetype/ftsynth.h>
 
 
@@ -30,7 +32,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  FT_EXPORT_DEF( FT_Error )  FT_Oblique_Outline( FT_GlyphSlot  original,
+  FT_EXPORT_DEF( FT_Error )  FT_Outline_Oblique( FT_GlyphSlot  original,
                                                  FT_Outline*   outline,
                                                  FT_Pos*       advance )
   {
@@ -38,20 +40,20 @@
     
     FT_UNUSED( original );
     /* we don't touch the advance width */
-    FT_UNUSED(advance);
+    FT_UNUSED( advance );
 
     
 
     /* For italic, simply apply a shear transform, with an angle */
     /* of about 12 degrees.                                      */
     
-    transform.xx = 0x10000;
-    transform.yx = 0x00000;
+    transform.xx = 0x10000L;
+    transform.yx = 0x00000L;
     
-    transform.xy = 0x06000;
-    transform.yy = 0x10000;
+    transform.xy = 0x06000L;
+    transform.yy = 0x10000L;
     
-    FT_Transform_Outline( outline, &transform );
+    FT_Outline_Transform( outline, &transform );
     
     return 0;
   }
@@ -288,7 +290,7 @@
   }
 
 
-  FT_EXPORT_FUNC(FT_Error)  FT_Embolden_Outline( FT_GlyphSlot original,
+  FT_EXPORT_FUNC(FT_Error)  FT_Outline_Embolden( FT_GlyphSlot original,
                                                  FT_Outline*  outline,
                                                  FT_Pos*      advance )
   {
