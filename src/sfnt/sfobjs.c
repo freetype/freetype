@@ -16,10 +16,11 @@
 /***************************************************************************/
 
 
-#include <freetype/internal/ftobjs.h>
+#include <sfobjs.h>
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/psnames.h>
 #include <freetype/ttnameid.h>
+#include <freetype/internal/tterrors.h>
 
 
   /*************************************************************************/
@@ -49,13 +50,13 @@
   /*    Character string.  NULL if no name is present.                     */
   /*                                                                       */
   static
-  FT_String*  Get_Name( TT_Face    face,
-                        FT_UShort  nameid )
+  TT_String*  Get_Name( TT_Face    face,
+                        TT_UShort  nameid )
   {
     FT_Memory    memory = face->root.memory;
-    FT_UShort    n;
+    TT_UShort    n;
     TT_NameRec*  rec;
-    FT_Bool      wide_chars = 1;
+    TT_Bool      wide_chars = 1;
 
 
     rec = face->name_table.names;
@@ -64,7 +65,7 @@
       if ( rec->nameID == nameid )
       {
         /* found the name - now create an ASCII string from it */
-        FT_Bool  found = 0;
+        TT_Bool  found = 0;
 
 
         /* test for Microsoft English language */
@@ -88,8 +89,8 @@
         /* found a Unicode name */
         if ( found )
         {
-          FT_String*  string;
-          FT_UInt     len;
+          TT_String*  string;
+          TT_UInt     len;
 
 
           if ( wide_chars )
@@ -172,13 +173,13 @@
 
 
   LOCAL_FUNC
-  FT_Error  SFNT_Init_Face( FT_Stream      stream,
+  TT_Error  SFNT_Init_Face( FT_Stream      stream,
                             TT_Face        face,
                             TT_Int         face_index,
                             TT_Int         num_params,
                             FT_Parameter*  params )
   {
-    FT_Error            error;
+    TT_Error            error;
     SFNT_Interface*     sfnt;
     PSNames_Interface*  psnames;
     SFNT_Header         sfnt_header;
@@ -249,7 +250,7 @@
 
 
 #undef  LOAD_
-#define LOAD_( x )  ( (error = sfnt->load_##x( face, stream )) != FT_Err_Ok )
+#define LOAD_( x )  ( (error = sfnt->load_##x( face, stream )) != TT_Err_Ok )
 
 
   LOCAL_FUNC
@@ -259,7 +260,7 @@
                             TT_Int         num_params,
                             FT_Parameter*  params )
   {
-    FT_Error         error;
+    TT_Error         error;
     SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
 
 
@@ -268,10 +269,10 @@
          LOAD_( max_profile )   ||
 
          /* load the `hhea' & `hmtx' tables at once */
-         ( error = sfnt->load_metrics( face, stream, 0 ) ) != FT_Err_Ok  ||
+         ( error = sfnt->load_metrics( face, stream, 0 ) ) != TT_Err_Ok  ||
 
          /* try to load the `vhea' & `vmtx' at once if present */
-         ( error = sfnt->load_metrics( face, stream, 1 ) ) != FT_Err_Ok  ||
+         ( error = sfnt->load_metrics( face, stream, 1 ) ) != TT_Err_Ok  ||
 
          LOAD_( charmaps )      ||
          LOAD_( names )         ||
@@ -294,7 +295,7 @@
       goto Exit;
 
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
-    if ( ( error = TT_Extension_Create( face ) ) != FT_Err_Ok )
+    if ( ( error = TT_Extension_Create( face ) ) != TT_Err_Ok )
       goto Exit;
 #endif
 
@@ -304,7 +305,7 @@
     /* now set up root fields */
     {
       FT_Face     root = &face->root;
-      FT_Int      flags;
+      TT_Int      flags;
       TT_CharMap  charmap;
       TT_Int      n;
       FT_Memory   memory;
@@ -377,8 +378,8 @@
 
       for ( n = 0; n < root->num_charmaps; n++, charmap++ )
       {
-        FT_Int  platform = charmap->cmap.platformID;
-        FT_Int  encoding = charmap->cmap.platformEncodingID;
+        TT_Int  platform = charmap->cmap.platformID;
+        TT_Int  encoding = charmap->cmap.platformEncodingID;
 
 
         charmap->root.face        = (FT_Face)face;
@@ -501,7 +502,7 @@
     /* freeing the character mapping tables */
     if (sfnt && sfnt->load_charmaps )
     {
-      FT_UShort  n;
+      TT_UShort  n;
 
 
       for ( n = 0; n < face->num_charmaps; n++ )

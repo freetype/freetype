@@ -1,3 +1,20 @@
+/***************************************************************************/
+/*                                                                         */
+/*  t2tokens.h                                                             */
+/*                                                                         */
+/*    OpenType token definitions (specification only).                     */
+/*                                                                         */
+/*  Copyright 1996-2000 by                                                 */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
 
 #undef  T2TYPE
 #undef  T2CODE
@@ -28,7 +45,7 @@
   T2_FIELD_STRING  ( 0x115, postscript )
   T2_FIELD_STRING  ( 0x116, base_font_name )
 
-#if 0  
+#if 0
   T2_FIELD_DELTA   ( 0x117, base_font_blend, 16 )
   T2_FIELD_CALLBACK( 0x118, multiple_master )
   T2_FIELD_CALLBACK( 0x119, blend_axit_types )
@@ -48,8 +65,9 @@
   T2_FIELD_NUM     ( 0x127, chameleon )
 #endif
 
-#undef T2TYPE
-#undef T2CODE
+
+#undef  T2TYPE
+#undef  T2CODE
 #define T2TYPE  CFF_Private
 #define T2CODE  T2CODE_PRIVATE
 
@@ -74,3 +92,5 @@
   T2_FIELD_NUM  ( 20, default_width )
   T2_FIELD_NUM  ( 21, nominal_width )
 
+
+/* END */

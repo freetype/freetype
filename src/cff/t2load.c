@@ -21,7 +21,7 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/psnames.h>
 
-#include <freetype/fterrors.h>
+#include <freetype/internal/t2errors.h>
 #include <freetype/tttags.h>
 #include <t2load.h>
 #include <t2parse.h>
@@ -39,37 +39,42 @@
 
  /* read a CFF offset from memory */
   static
-  FT_ULong  t2_get_offset( FT_Byte*  p,
-                           FT_Byte   off_size )
+  TT_ULong  t2_get_offset( TT_Byte*  p,
+                           TT_Byte   off_size )
   {
-    FT_ULong  result;
+    TT_ULong  result;
+
+
     for ( result = 0; off_size > 0; off_size-- )
-      result = (result <<= 8) | *p++;
+      result = ( result <<= 8 ) | *p++;
+
     return result;
   }
 
 
-
   static
-  FT_Error  t2_new_cff_index( CFF_Index*  index,
+  TT_Error  t2_new_cff_index( CFF_Index*  index,
                               FT_Stream   stream,
-                              FT_Bool     load )
+                              TT_Bool     load )
   {
-    FT_Error  error;
+    TT_Error  error;
     FT_Memory memory = stream->memory;
-    FT_UShort count;
+    TT_UShort count;
 
-    MEM_Set( index, 0, sizeof(*index) );
+
+    MEM_Set( index, 0, sizeof ( *index ) );
+
     index->stream = stream;
     if ( !READ_UShort( count ) &&
           count > 0            )
     {
-      FT_Byte*  p;
-      FT_Byte   offsize;
-      FT_ULong  data_size;
-      FT_ULong* poff;
+      TT_Byte*   p;
+      TT_Byte    offsize;
+      TT_ULong   data_size;
+      TT_ULong*  poff;
 
-      /* there is at least one element, read the offset size            */
+
+      /* there is at least one element; read the offset size            */
       /* then access the offset table to compute the index's total size */
       if ( READ_Byte( offsize ) )
         goto Exit;
@@ -77,15 +82,16 @@
       index->stream   = stream;
       index->count    = count;
       index->off_size = offsize;
-      data_size       = (FT_ULong)(count+1) * offsize;
+      data_size       = (TT_ULong)( count + 1 ) * offsize;
 
-      if ( ALLOC_ARRAY( index->offsets, count+1, FT_ULong ) ||
-           ACCESS_Frame( data_size ))
+      if ( ALLOC_ARRAY( index->offsets, count + 1, FT_ULong ) ||
+           ACCESS_Frame( data_size )                          )
         goto Exit;
 
       poff = index->offsets;
-      p    = (FT_Byte*)stream->cursor;
-      for ( ; (FT_Short)count >= 0; count-- )
+      p    = (TT_Byte*)stream->cursor;
+
+      for ( ; (TT_Short)count >= 0; count-- )
       {
         poff[0] = t2_get_offset( p, offsize );
         poff++;
@@ -95,9 +101,9 @@
       FORGET_Frame();
 
       index->data_offset = FILE_Pos();
-      data_size          = poff[-1]-1;
+      data_size          = poff[-1] - 1;
 
-      if (load)
+      if ( load )
       {
         /* load the data */
         if ( EXTRACT_Frame( data_size, index->bytes ) )
@@ -109,8 +115,9 @@
         (void)FILE_Skip( data_size );
       }
     }
+
   Exit:
-    if (error)
+    if ( error )
       FREE( index->offsets );
 
     return error;
@@ -124,88 +131,96 @@
     {
       FT_Stream  stream = index->stream;
       FT_Memory  memory = stream->memory;
-    
-      if (index->bytes)
+
+
+      if ( index->bytes )
         RELEASE_Frame( index->bytes );
 
       FREE( index->offsets );
-      MEM_Set( index, 0, sizeof(*index) );
+      MEM_Set( index, 0, sizeof ( *index ) );
     }
   }
 
 
   static
-  FT_Error  t2_explicit_cff_index( CFF_Index*  index,
-                                   FT_Byte**  *table )
+  TT_Error  t2_explicit_cff_index( CFF_Index*  index,
+                                   TT_Byte***  table )
   {
-    FT_Error  error  = 0;
-    FT_Memory memory = index->stream->memory;
-    FT_UInt   n, offset, old_offset;
-    FT_Byte** t;
+    TT_Error   error  = 0;
+    FT_Memory  memory = index->stream->memory;
+    TT_UInt    n, offset, old_offset;
+    TT_Byte**  t;
 
-    *table  = 0;
-    if ( index->count > 0 && !ALLOC_ARRAY( t, index->count+1, FT_Byte* ) )
+
+    *table = 0;
+
+    if ( index->count > 0 && !ALLOC_ARRAY( t, index->count + 1, TT_Byte* ) )
     {
       old_offset = 1;
       for ( n = 0; n <= index->count; n++ )
       {
         offset = index->offsets[n];
-        if (!offset)
+        if ( !offset )
           offset = old_offset;
-        
+
         t[n] = index->bytes + offset - 1;
-        
+
         old_offset = offset;
       }
       *table = t;
     }
-    return error;    
+
+    return error;
   }
 
 
   LOCAL_FUNC
-  FT_Error  T2_Access_Element( CFF_Index*   index,
-                               FT_UInt      element,
-                               FT_Byte*    *pbytes,
-                               FT_ULong    *pbyte_len )
+  TT_Error  T2_Access_Element( CFF_Index*  index,
+                               TT_UInt     element,
+                               TT_Byte**   pbytes,
+                               TT_ULong*   pbyte_len )
   {
-    FT_Error  error = 0;
+    TT_Error  error = 0;
+
 
     if ( index && index->count > element )
     {
       /* compute start and end offsets */
-      FT_ULong  off1, off2;
-      
+      TT_ULong  off1, off2;
+
+
       off1 = index->offsets[element];
-      if (off1)
+      if ( off1 )
       {
         do
         {
           element++;
           off2 = index->offsets[element];
         }
-        while (off2 == 0 && element < index->count);
-        if (!off2)
+        while ( off2 == 0 && element < index->count );
+
+        if ( !off2 )
           off1 = 0;
       }
-    
+
       /* access element */
-      if (off1)
+      if ( off1 )
       {
         *pbyte_len = off2 - off1;
-        
-        if (index->bytes)
+
+        if ( index->bytes )
         {
           /* this index was completely loaded in memory, that's easy */
-          *pbytes   = index->bytes + off1 - 1;
+          *pbytes = index->bytes + off1 - 1;
         }
         else
         {
           /* this index is still on disk/file, access it through a frame */
           FT_Stream  stream = index->stream;
-          
+
+
           if ( FILE_Seek( index->data_offset + off1 - 1 ) ||
-               EXTRACT_Frame( off2-off1, *pbytes )        )
+               EXTRACT_Frame( off2 - off1, *pbytes )      )
             goto Exit;
         }
       }
@@ -217,8 +232,8 @@
       }
     }
     else
-      error = FT_Err_Invalid_Argument;
-      
+      error = T2_Err_Invalid_Argument;
+
   Exit:
     return error;
   }
@@ -226,30 +241,34 @@
 
   LOCAL_FUNC
   void  T2_Forget_Element( CFF_Index*  index,
-                           FT_Byte*   *pbytes )
+                           TT_Byte**   pbytes )
   {
-    if (index->bytes == 0)
+    if ( index->bytes == 0 )
     {
       FT_Stream  stream = index->stream;
+
+
       RELEASE_Frame( *pbytes );
     }
-  }                           
+  }
 
 
   LOCAL_FUNC
-  FT_String*  T2_Get_Name( CFF_Index*  index,
-                           FT_UInt     element )
+  TT_String*  T2_Get_Name( CFF_Index*  index,
+                           TT_UInt     element )
   {
-    FT_Memory  memory = index->stream->memory;
-    FT_Byte*   bytes;
-    FT_ULong   byte_len;
-    FT_Error   error;
-    FT_String* name = 0;
-    
+    FT_Memory   memory = index->stream->memory;
+    TT_Byte*    bytes;
+    TT_ULong    byte_len;
+    TT_Error    error;
+    TT_String*  name = 0;
+
+
     error = T2_Access_Element( index, element, &bytes, &byte_len );
-    if (error) goto Exit;
-    
-    if ( !ALLOC( name, byte_len+1 ) )
+    if ( error )
+      goto Exit;
+
+    if ( !ALLOC( name, byte_len + 1 ) )
     {
       MEM_Copy( name, bytes, byte_len );
       name[byte_len] = 0;
@@ -258,60 +277,69 @@
 
   Exit:
     return name;
-  }                           
+  }
 
 
 #if 0 /* unused until we fully support pure-CFF fonts */
+
   LOCAL_FUNC
-  FT_String*  T2_Get_String( CFF_Index*          index,
-                             FT_UInt             sid,
+  TT_String*  T2_Get_String( CFF_Index*          index,
+                             TT_UInt             sid,
                              PSNames_Interface*  interface )
   {
-    /* if it's not a standard string, return it */
+    /* if it is not a standard string, return it */
     if ( sid > 390 )
       return T2_Get_Name( index, sid - 390 );
-      
-    /* that's a standard string, fetch a copy from the psnamed module */
+
+    /* that's a standard string, fetch a copy from the PSName module */
     {
-      FT_String*   name       = 0;
+      TT_String*   name       = 0;
       const char*  adobe_name = interface->adobe_std_strings( sid );
-      FT_UInt      len;
-      
-      if (adobe_name)
+      TT_UInt      len;
+
+
+      if ( adobe_name )
       {
         FT_Memory memory = index->stream->memory;
-        FT_Error  error;
-        
-        len = (FT_UInt)strlen(adobe_name);
-        if ( !ALLOC( name, len+1 ) )
+        TT_Error  error;
+
+
+        len = (TT_UInt)strlen( adobe_name );
+        if ( !ALLOC( name, len + 1 ) )
         {
           MEM_Copy( name, adobe_name, len );
           name[len] = 0;
         }
       }
+
       return name;
     }
-  }                             
-#endif
+  }
+
+#endif /* 0 */
+
 
   LOCAL_FUNC
-  FT_Error  T2_Load_CFF_Font( FT_Stream   stream,
-                              FT_Int      face_index,
-                              CFF_Font*   font )
+  FT_Error  T2_Load_CFF_Font( FT_Stream  stream,
+                              TT_Int     face_index,
+                              CFF_Font*  font )
   {
-    static const FT_Frame_Field  cff_header_fields[] = {
-                     FT_FRAME_START(4),
-                       FT_FRAME_BYTE( CFF_Font,  version_major ),
-                       FT_FRAME_BYTE( CFF_Font,  version_minor ),
-                       FT_FRAME_BYTE( CFF_Font,  header_size   ),
-                       FT_FRAME_BYTE( CFF_Font,  absolute_offsize ),
-                     FT_FRAME_END };
+    static const FT_Frame_Field  cff_header_fields[] =
+    {
+      FT_FRAME_START( 4 ),
+        FT_FRAME_BYTE( CFF_Font, version_major ),
+        FT_FRAME_BYTE( CFF_Font, version_minor ),
+        FT_FRAME_BYTE( CFF_Font, header_size ),
+        FT_FRAME_BYTE( CFF_Font, absolute_offsize ),
+      FT_FRAME_END
+    };
 
-    FT_Error  error;
-    FT_Memory memory = stream->memory;
-    FT_ULong  base_offset;
+    FT_Error   error;
+    FT_Memory  memory = stream->memory;
+    FT_ULong   base_offset;
 
-    MEM_Set( font, 0, sizeof(*font) );
+
+    MEM_Set( font, 0, sizeof ( *font ) );
     font->stream = stream;
     font->memory = memory;
     base_offset  = FILE_Pos();
@@ -325,7 +353,7 @@
          font->header_size      < 4 ||
          font->absolute_offsize > 4 )
     {
-      FT_ERROR(( "incorrect CFF font header !!\n" ));
+      FT_ERROR(( "incorrect CFF font header!\n" ));
       error = FT_Err_Unknown_File_Format;
       goto Exit;
     }
@@ -338,126 +366,138 @@
             t2_new_cff_index( &font->top_dict_index, stream, 0 )   ||
             t2_new_cff_index( &font->string_index, stream, 0 )     ||
             t2_new_cff_index( &font->global_subrs_index, stream, 1 );
-    if (error) goto Exit;
+    if ( error )
+      goto Exit;
 
-    /* well, we don't really forget the "disabled" fonts.. */
+    /* well, we don't really forget the `disabled' fonts... */
     font->num_faces = font->name_index.count;
-    if (face_index >= font->num_faces)
+    if ( face_index >= font->num_faces )
     {
-      FT_ERROR(( "T2.Load_Font: incorrect face index = %d\n", face_index ));
-      error = FT_Err_Invalid_Argument;
+      FT_ERROR(( "T2_Load_CFF_Font: incorrect face index = %d\n",
+                 face_index ));
+      error = T2_Err_Invalid_Argument;
     }
 
     /* in case of a font format check, simply exit now */
-    if (face_index >= 0)
+    if ( face_index >= 0 )
     {
-      T2_Parser  parser;
-      FT_Byte*   dict;
-      FT_ULong   dict_len;
-      CFF_Index* index = &font->top_dict_index;
-      CFF_Top_Dict*  top = &font->top_dict;
+      T2_Parser      parser;
+      TT_Byte*       dict;
+      TT_ULong       dict_len;
+      CFF_Index*     index = &font->top_dict_index;
+      CFF_Top_Dict*  top   = &font->top_dict;
 
-      /* parse the top-level font dictionary */      
+
+      /* parse the top-level font dictionary */
       T2_Parser_Init( &parser, T2CODE_TOPDICT, &font->top_dict );
 
       /* set defaults */
-      memset( top, 0, sizeof(*top) );
+      memset( top, 0, sizeof ( *top ) );
+
       top->underline_position  = -100;
       top->underline_thickness = 50;
       top->charstring_type     = 2;
-      top->font_matrix.xx      = 0x10000;
-      top->font_matrix.yy      = 0x10000;
+      top->font_matrix.xx      = 0x10000L;
+      top->font_matrix.yy      = 0x10000L;
       top->cid_count           = 8720;
-      
+
       error = T2_Access_Element( index, face_index, &dict, &dict_len ) ||
               T2_Parser_Run( &parser, dict, dict + dict_len );
 
       T2_Forget_Element( &font->top_dict_index, &dict );
-      if (error) goto Exit;
-      
+
+      if ( error )
+        goto Exit;
+
       /* parse the private dictionary, if any */
       if (font->top_dict.private_offset && font->top_dict.private_size)
       {
         CFF_Private*  priv = &font->private_dict;
-        
+
+
         /* set defaults */
         priv->blue_shift       = 7;
         priv->blue_fuzz        = 1;
         priv->lenIV            = -1;
-        priv->expansion_factor = (FT_Fixed)0.06*0x10000;
-        priv->blue_scale       = (FT_Fixed)0.039625*0x10000;
+        priv->expansion_factor = (TT_Fixed)0.06 * 0x10000L;
+        priv->blue_scale       = (TT_Fixed)0.039625 * 0x10000L;
 
         T2_Parser_Init( &parser, T2CODE_PRIVATE, priv );
-        
+
         if ( FILE_Seek( base_offset + font->top_dict.private_offset ) ||
              ACCESS_Frame( font->top_dict.private_size )               )
           goto Exit;
 
         error = T2_Parser_Run( &parser,
-                               (FT_Byte*)stream->cursor,
-                               (FT_Byte*)stream->limit );        
-        FORGET_Frame();             
-        if (error) goto Exit;
+                               (TT_Byte*)stream->cursor,
+                               (TT_Byte*)stream->limit );
+        FORGET_Frame();
+        if ( error )
+          goto Exit;
       }
-      
+
       /* read the charstrings index now */
       if ( font->top_dict.charstrings_offset == 0 )
       {
-        FT_ERROR(( "T2.New_CFF_Font: no charstrings offset !!\n" ));
+        FT_ERROR(( "T2_Load_CFF_Font: no charstrings offset!\n" ));
         error = FT_Err_Unknown_File_Format;
         goto Exit;
       }
-      
+
       if ( FILE_Seek( base_offset + font->top_dict.charstrings_offset ) )
         goto Exit;
-        
+
       error = t2_new_cff_index( &font->charstrings_index, stream, 0 );
-      if (error) goto Exit;
+      if ( error )
+        goto Exit;
 
       /* read the local subrs, if any */
 
-      if (font->private_dict.local_subrs_offset) {
+      if ( font->private_dict.local_subrs_offset )
+      {
+        if ( FILE_Seek( base_offset + font->top_dict.private_offset +
+                        font->private_dict.local_subrs_offset ) )
+          goto Exit;
 
-	if ( FILE_Seek( base_offset + font->top_dict.private_offset +
-			font->private_dict.local_subrs_offset ) )
-	  goto Exit;
-        
-	error = t2_new_cff_index( &font->local_subrs_index, stream, 1 );
-	if (error) goto Exit;
+        error = t2_new_cff_index( &font->local_subrs_index, stream, 1 );
+        if ( error )
+          goto Exit;
       }
-      
+
       /* explicit the global and local subrs */
 
-      if (font->private_dict.local_subrs_offset) {
-	font->num_local_subrs  = font->local_subrs_index.count;
-      } else {
-	font->num_local_subrs = 0;
-      }
+      if ( font->private_dict.local_subrs_offset )
+        font->num_local_subrs = font->local_subrs_index.count;
+      else
+        font->num_local_subrs = 0;
 
       font->num_global_subrs = font->global_subrs_index.count;
-      
 
-      error = t2_explicit_cff_index( &font->global_subrs_index, &font->global_subrs ) ;
+      error = t2_explicit_cff_index( &font->global_subrs_index,
+                                     &font->global_subrs ) ;
 
-      if (font->private_dict.local_subrs_offset) {
-	error |= t2_explicit_cff_index( &font->local_subrs_index, &font->local_subrs ) ;
-      }
+      if ( font->private_dict.local_subrs_offset )
+        error |= t2_explicit_cff_index( &font->local_subrs_index,
+                                        &font->local_subrs ) ;
 
-      if (error) goto Exit;
+      if ( error )
+        goto Exit;
     }
 
-    /* get the font name */      
+    /* get the font name */
     font->font_name = T2_Get_Name( &font->name_index, face_index );
 
   Exit:
     return error;
   }
 
+
   LOCAL_FUNC
   void  T2_Done_CFF_Font( CFF_Font*  font )
   {
     FT_Memory  memory = font->memory;
-    
+
+
     t2_done_cff_index( &font->global_subrs_index );
     t2_done_cff_index( &font->string_index );
     t2_done_cff_index( &font->top_dict_index );
@@ -465,20 +505,9 @@
     t2_done_cff_index( &font->charstrings_index );
 
     FREE( font->local_subrs );
-    FREE( font->global_subrs );    
+    FREE( font->global_subrs );
     FREE( font->font_name );
   }
 
-
-
- /***********************************************************************/
- /***********************************************************************/
- /***********************************************************************/
- /*****                                                             *****/
- /*****      TYPE 2 TABLES DECODING..                               *****/
- /*****                                                             *****/
- /***********************************************************************/
- /***********************************************************************/
- /***********************************************************************/
 
 /* END */

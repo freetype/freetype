@@ -62,7 +62,7 @@
 
   /* the 258 default Mac PS glyph names */
 
-  FT_String*  TT_Post_Default_Names[258] =
+  TT_String*  TT_Post_Default_Names[258] =
   {
     /*   0 */
     ".notdef", ".null", "CR", "space", "exclam",

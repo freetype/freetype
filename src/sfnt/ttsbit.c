@@ -63,18 +63,18 @@
   /*                                                                       */
   static
   void  blit_sbit( FT_Bitmap*  target,
-                   FT_Byte*    source,
-                   FT_Int      line_bits,
-                   FT_Bool     byte_padded,
-                   FT_Int      x_offset,
-                   FT_Int      y_offset )
+                   TT_Byte*    source,
+                   TT_Int      line_bits,
+                   TT_Bool     byte_padded,
+                   TT_Int      x_offset,
+                   TT_Int      y_offset )
   {
-    FT_Byte*   line_buff;
-    FT_Int     line_incr;
-    FT_Int     height;
+    TT_Byte*   line_buff;
+    TT_Int     line_incr;
+    TT_Int     height;
 
-    FT_UShort  acc;
-    FT_Byte    loaded;
+    TT_UShort  acc;
+    TT_Byte    loaded;
 
 
     /* first of all, compute starting write position */
@@ -102,10 +102,10 @@
 
     for ( height = target->rows; height > 0; height-- )
     {
-      FT_Byte*  cur   = line_buff;    /* current write cursor          */
-      FT_Int    count = line_bits;    /* # of bits to extract per line */
-      FT_Byte   shift = x_offset & 7; /* current write shift           */
-      FT_Byte   space = 8 - shift;
+      TT_Byte*  cur   = line_buff;    /* current write cursor          */
+      TT_Int    count = line_bits;    /* # of bits to extract per line */
+      TT_Byte   shift = x_offset & 7; /* current write shift           */
+      TT_Byte   space = 8 - shift;
 
 
       /* first of all, read individual source bytes */
@@ -115,18 +115,18 @@
         {
           do
           {
-            FT_Byte  val;
+            TT_Byte  val;
 
 
             /* ensure that there are at least 8 bits in the accumulator */
             if ( loaded < 8 )
             {
-              acc    |= (FT_UShort)*source++ << ( 8 - loaded );
+              acc    |= (TT_UShort)*source++ << ( 8 - loaded );
               loaded += 8;
             }
 
             /* now write one byte */
-            val = (FT_Byte)( acc >> 8 );
+            val = (TT_Byte)( acc >> 8 );
             if ( shift )
             {
               cur[0] |= val >> shift;
@@ -150,18 +150,18 @@
       /* now write remaining bits (count < 8) */
       if ( count > 0 )
       {
-        FT_Byte  val;
+        TT_Byte  val;
 
 
         /* ensure that there are at least `count' bits in the accumulator */
         if ( loaded < count )
         {
-          acc    |= (FT_UShort)*source++ << ( 8 - loaded );
+          acc    |= (TT_UShort)*source++ << ( 8 - loaded );
           loaded += 8;
         }
 
         /* now write remaining bits */
-        val     = ( (FT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count );
+        val     = ( (TT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count );
         cur[0] |= val >> shift;
 
         if ( count > space )
@@ -1148,7 +1148,7 @@
       /* don't forget to multiply `x_offset' by `map->pix_bits' as */
       /* the sbit blitter doesn't make a difference between pixmap */
       /* depths.                                                   */
-      blit_sbit( map, (FT_Byte*)stream->cursor, line_bits, pad_bytes,
+      blit_sbit( map, (TT_Byte*)stream->cursor, line_bits, pad_bytes,
                  x_offset * pix_bits, y_offset );
 
       FORGET_Frame();
@@ -1403,8 +1403,8 @@
     if ( strike->flags & 1 )
     {
       /* in case of a horizontal strike only */
-      FT_Int  advance;
-      FT_Int  top;
+      TT_Int  advance;
+      TT_Int  top;
 
 
       advance = strike->hori.ascender - strike->hori.descender;

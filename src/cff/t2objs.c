@@ -53,11 +53,18 @@
   /*    T2_Init_Face                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initializes a given TrueType face object.                          */
+  /*    Initializes a given OpenType face object.                          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    resource   :: The source font resource.                            */
+  /*    stream     :: The source font stream.                              */
+  /*                                                                       */
   /*    face_index :: The index of the font face in the resource.          */
+  /*                                                                       */
+  /*    num_params :: Number of additional generic parameters.  Ignored.   */
+  /*                                                                       */
+  /*    params     :: Additional generic parameters.  Ignored.             */
+  /*                                                                       */
+  /* <InOut>                                                               */
   /*    face       :: The newly built face object.                         */
   /*                                                                       */
   /* <Return>                                                              */
@@ -70,68 +77,75 @@
                           FT_Int         num_params,
                           FT_Parameter*  params )
   {
-    TT_Error           error;
-    FT_Driver          sfnt_driver;
-    SFNT_Interface*    sfnt;
+    TT_Error         error;
+    FT_Driver        sfnt_driver;
+    SFNT_Interface*  sfnt;
+
 
     sfnt_driver = FT_Get_Driver( face->root.driver->library, "sfnt" );
-    if (!sfnt_driver) goto Bad_Format;
+    if ( !sfnt_driver )
+      goto Bad_Format;
 
     sfnt = (SFNT_Interface*)(sfnt_driver->interface.format_interface);
-    if (!sfnt) goto Bad_Format;
+    if ( !sfnt )
+      goto Bad_Format;
 
     /* create input stream from resource */
-    if ( FILE_Seek(0) )
+    if ( FILE_Seek( 0 ) )
       goto Exit;
 
-    /* check that we have a valid TrueType file */
+    /* check that we have a valid OpenType file */
     error = sfnt->init_face( stream, face, face_index, num_params, params );
-    if (error) goto Exit;
+    if ( error )
+      goto Exit;
 
-    /* We must also be able to accept Mac/GX fonts, as well as OT ones */
-    if ( face->format_tag != 0x4f54544f )     /* OpenType/CFF font */
+    if ( face->format_tag != 0x4f54544fL )     /* OpenType/CFF font */
     {
       FT_TRACE2(( "[not a valid OpenType/CFF font]\n" ));
       goto Bad_Format;
     }
 
-    /* If we're performing a simple font format check, exit immediately */
+    /* If we are performing a simple font format check, exit immediately */
     if ( face_index < 0 )
-      return FT_Err_Ok;
+      return T2_Err_Ok;
 
     /* Load font directory */
     error = sfnt->load_face( stream, face, face_index, num_params, params );
-    if ( error ) goto Exit;
+    if ( error )
+      goto Exit;
 
     /* now, load the CFF part of the file.. */
     error = face->goto_table( face, TTAG_CFF, stream, 0 );
-    if (error) goto Exit;
+    if ( error )
+      goto Exit;
 
     {
       CFF_Font*  cff;
       FT_Memory  memory = face->root.memory;
       FT_Face    root;
-      
-      if ( ALLOC( cff, sizeof(*cff) ) )
+
+
+      if ( ALLOC( cff, sizeof ( *cff ) ) )
         goto Exit;
-        
+
       face->other = cff;
       error = T2_Load_CFF_Font( stream, face_index, cff );
-      if (error) goto Exit;
+      if ( error )
+        goto Exit;
 
-      /* complement the root flags with some interesting information  */
+      /* Complement the root flags with some interesting information. */
       /* note that for OpenType/CFF, there is no need to do this, but */
-      /* this will be necessary for pure CFF fonts through..          */
+      /* this will be necessary for pure CFF fonts through.           */
       root = &face->root;
     }
 
   Exit:
     return error;
-  Bad_Format:    
+
+  Bad_Format:
     error = FT_Err_Unknown_File_Format;
     goto Exit;
   }
-
 
 
   /*************************************************************************/
@@ -149,23 +163,26 @@
   void  T2_Done_Face( T2_Face  face )
   {
     FT_Memory  memory = face->root.memory;
-#if 0  
+#if 0
     FT_Stream  stream = face->root.stream;
 #endif
 
     SFNT_Interface*  sfnt = face->sfnt;
 
-    if (sfnt)
-      sfnt->done_face(face);
+
+    if ( sfnt )
+      sfnt->done_face( face );
 
     {
       CFF_Font*  cff = (CFF_Font*)face->other;
-      if (cff)
+
+
+      if ( cff )
       {
-        T2_Done_CFF_Font(cff);
-        FREE(face->other);
+        T2_Done_CFF_Font( cff );
+        FREE( face->other );
       }
-    }    
+    }
   }
 
 
@@ -193,7 +210,8 @@
   LOCAL_DEF
   FT_Error  T2_Init_Size( T2_Size  size )
   {
-    UNUSED(size);
+    UNUSED( size );
+
     return 0;
   }
 
@@ -212,7 +230,7 @@
   LOCAL_FUNC
   void  T2_Done_Size( T2_Size  size )
   {
-    UNUSED(size);
+    UNUSED( size );
   }
 
 
@@ -229,14 +247,15 @@
   /*    size :: A handle to the target size object.                        */
   /*                                                                       */
   LOCAL_DEF
-  FT_Error  T2_Reset_Size( T2_Size  size )
+  TT_Error  T2_Reset_Size( T2_Size  size )
   {
     T2_Face           face    = (T2_Face)size->face;
     FT_Size_Metrics*  metrics = &size->metrics;
-    FT_Error          error   = FT_Err_Ok;
+    TT_Error          error   = T2_Err_Ok;
+
 
     if ( metrics->x_ppem < 1 || metrics->y_ppem < 1 )
-      return FT_Err_Invalid_Argument;
+      return T2_Err_Invalid_PPem;
 
     /* Compute root ascender, descender, test height, and max_advance */
     metrics->ascender = ( FT_MulFix( face->root.ascender,
@@ -250,6 +269,7 @@
 
     metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
                                         metrics->x_scale ) + 32 ) & -64;
+
     return error;
   }
 
@@ -269,9 +289,10 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  FT_Error  T2_Init_GlyphSlot( T2_GlyphSlot  slot )
+  TT_Error  T2_Init_GlyphSlot( T2_GlyphSlot  slot )
   {
     FT_Library  library = slot->root.face->driver->library;
+
 
     slot->max_points         = 0;
     slot->max_contours       = 0;
@@ -284,7 +305,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Done_GlyphSlot                                                  */
+  /*    T2_Done_GlyphSlot                                                  */
   /*                                                                       */
   /* <Description>                                                         */
   /*    The OpenType glyph slot finalizer.                                 */
@@ -298,7 +319,8 @@
     FT_Library  library = slot->root.face->driver->library;
     FT_Memory   memory  = library->memory;
 
-    if (slot->root.flags & ft_glyph_own_bitmap)
+
+    if ( slot->root.flags & ft_glyph_own_bitmap )
       FREE( slot->root.bitmap.buffer );
 
     FT_Outline_Done( library, &slot->root.outline );
@@ -321,19 +343,22 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  FT_Error  T2_Init_Driver( T2_Driver  driver )
+  TT_Error  T2_Init_Driver( T2_Driver  driver )
   {
     FT_Memory  memory = driver->root.memory;
     FT_Error   error;
 
+
     error = FT_New_GlyphZone( memory, 0, 0, &driver->zone );
-    if (error) return error;
+    if ( error )
+      return error;
 
     /* init extension registry if needed */
-#ifdef T2_CONFIG_OPTION_EXTEND_ENGINE
+
+#ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
     return TT_Init_Extensions( driver );
 #else
-    return FT_Err_Ok;
+    return T2_Err_Ok;
 #endif
   }
 
@@ -341,19 +366,20 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Done_Driver                                                     */
+  /*    T2_Done_Driver                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Finalizes a given TrueType driver.                                 */
+  /*    Finalizes a given OpenType driver.                                 */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    driver :: A handle to the target TrueType driver.                  */
+  /*    driver :: A handle to the target OpenType driver.                  */
   /*                                                                       */
   LOCAL_FUNC
   void  T2_Done_Driver( T2_Driver  driver )
   {
     /* destroy extensions registry if needed */
-#ifdef T2_CONFIG_OPTION_EXTEND_ENGINE
+
+#ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
     TT_Done_Extensions( driver );
 #endif
 

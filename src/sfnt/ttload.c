@@ -157,9 +157,9 @@
                                  TT_Long       face_index,
                                  SFNT_Header*  sfnt )
   {
-    TT_Error  error;
-    TT_ULong  format_tag;
-    FT_Memory memory = stream->memory;
+    TT_Error   error;
+    TT_ULong   format_tag;
+    FT_Memory  memory = stream->memory;
 
     const FT_Frame_Field  sfnt_header_fields[] =
     {

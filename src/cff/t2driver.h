@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    High-level OpenType driver interface (specification).                */
 /*                                                                         */
-/*  Copyright 1996-1999 by                                                 */
+/*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -19,13 +19,12 @@
 #ifndef T2DRIVER_H
 #define T2DRIVER_H
 
+#include <freetype/freetype.h>
 #include <freetype/internal/ftdriver.h>
-#include <freetype/ttnameid.h>
 #include <t2objs.h>
-#include <freetype/internal/t2errors.h>
 
 
-  FT_EXPORT_VAR(const FT_DriverInterface)  cff_driver_interface;
+  FT_EXPORT_VAR( const FT_DriverInterface )  cff_driver_interface;
 
 
 #endif /* T2DRIVER_H */

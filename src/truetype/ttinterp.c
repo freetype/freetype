@@ -854,7 +854,7 @@
   static TT_F26Dot6  Norm( TT_F26Dot6  X,
                            TT_F26Dot6  Y )
   {
-    FT_Int64  T1, T2;
+    TT_INT64  T1, T2;
 
 
     MUL_64( X, X, T1 );

@@ -133,7 +133,6 @@
   }
 
 
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -645,7 +644,7 @@
   TT_Error  TT_Init_Driver( TT_Driver  driver )
   {
     FT_Memory  memory = driver->root.memory;
-    FT_Error   error;
+    TT_Error   error;
 
 
     error = FT_New_GlyphZone( memory, 0, 0, &driver->zone );

@@ -681,7 +681,7 @@
       do
       {
         TT_Fixed  xx, xy, yy, yx;
-        FT_UInt   total_subglyphs;
+        TT_UInt   total_subglyphs;
 
 
         /* grow the `glyph->subglyphs' table if necessary */
@@ -689,7 +689,7 @@
 
         if ( total_subglyphs >= glyph->max_subglyphs )
         {
-          FT_UInt    new_max = glyph->max_subglyphs;
+          TT_UInt    new_max = glyph->max_subglyphs;
           FT_Memory  memory = loader->face->root.memory;
 
 
@@ -1113,8 +1113,9 @@
       if ( !( loader->load_flags & FT_LOAD_NO_SCALE ) &&
               loader->load_flags & FT_LOAD_LINEAR     )
       {
-        FT_Pos  em_size    = face->root.units_per_EM;
-        FT_Pos  pixel_size = (FT_Pos)face->root.size->metrics.x_ppem << 16;
+        TT_Pos  em_size    = face->root.units_per_EM;
+        TT_Pos  pixel_size = (TT_Pos)face->root.size->metrics.x_ppem << 16;
+
 
         lsb2 = FT_MulDiv( lsb2, pixel_size, em_size );
         adv2 = FT_MulDiv( adv2, pixel_size, em_size );
