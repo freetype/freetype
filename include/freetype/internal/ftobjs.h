@@ -214,9 +214,8 @@ FT_BEGIN_HEADER
   typedef FT_UInt   (*FT_CMap_CharIndexFunc)( FT_CMap      cmap,
                                               FT_UInt32    char_code );
 
-  typedef FT_UInt32 (*FT_CMap_CharNextFunc)( FT_CMap     cmap,
-                                             FT_UInt32   char_code,
-                                             FT_UInt    *agindex );
+  typedef FT_UInt   (*FT_CMap_CharNextFunc)( FT_CMap     cmap,
+                                             FT_UInt32  *achar_code );
 
   typedef struct FT_CMap_ClassRec_
   {

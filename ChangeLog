@@ -1,3 +1,10 @@
+2002-03-20  David Turner    <david@freetype.org>
+
+        * include/freetype/internal/ftobjs.h: changing the definition of
+        FT_CMap_CharNextFunc slightly
+
+        * src/cff/*.c: updating CFF type definitions.
+
 2002-03-14  David Turner    <david@freetype.org>
 
         * include/freetype/internal/autohint.h, src/autohint/ahmodule.c,

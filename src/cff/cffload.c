@@ -1515,10 +1515,10 @@
 
   static FT_Error
   CFF_Load_Charset( CFF_Charset  charset,
-                    FT_UInt       num_glyphs,
-                    FT_Stream     stream,
-                    FT_ULong      base_offset,
-                    FT_ULong      offset )
+                    FT_UInt      num_glyphs,
+                    FT_Stream    stream,
+                    FT_ULong     base_offset,
+                    FT_ULong     offset )
   {
     FT_Memory  memory     = stream->memory;
     FT_Error   error      = 0;
@@ -1964,7 +1964,7 @@
                     FT_ULong      base_offset )
   {
     FT_Error        error;
-    CFF_Parser      parser;
+    CFF_ParserRec      parser;
     FT_Byte*        dict;
     FT_ULong        dict_len;
     CFF_FontRecDict  top  = &font->font_dict;

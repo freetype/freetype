@@ -48,7 +48,7 @@
 
 
   /* now generate handlers for the most simple fields */
-  typedef FT_Error  (*CFF_Field_Reader)( CFF_Parser*  parser );
+  typedef FT_Error  (*CFF_Field_Reader)( CFF_Parser   parser );
 
   typedef struct  CFF_Field_Handler_
   {
@@ -64,7 +64,7 @@
 
 
   FT_LOCAL_DEF( void )
-  CFF_Parser_Init( CFF_Parser*  parser,
+  CFF_Parser_Init( CFF_Parser   parser,
                    FT_UInt      code,
                    void*        object )
   {
@@ -311,7 +311,7 @@
   }
 
   static FT_Error
-  cff_parse_font_matrix( CFF_Parser*  parser )
+  cff_parse_font_matrix( CFF_Parser   parser )
   {
     CFF_FontRecDict  dict   = (CFF_FontRecDict)parser->object;
     FT_Matrix*      matrix = &dict->font_matrix;
@@ -359,7 +359,7 @@
 
 
   static FT_Error
-  cff_parse_font_bbox( CFF_Parser*  parser )
+  cff_parse_font_bbox( CFF_Parser   parser )
   {
     CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
     FT_BBox*        bbox = &dict->font_bbox;
@@ -383,7 +383,7 @@
 
 
   static FT_Error
-  cff_parse_private_dict( CFF_Parser*  parser )
+  cff_parse_private_dict( CFF_Parser   parser )
   {
     CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
     FT_Byte**       data = parser->stack;
@@ -404,7 +404,7 @@
 
 
   static FT_Error
-  cff_parse_cid_ros( CFF_Parser*  parser )
+  cff_parse_cid_ros( CFF_Parser   parser )
   {
     CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
     FT_Byte**       data = parser->stack;
@@ -480,7 +480,7 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  CFF_Parser_Run( CFF_Parser*  parser,
+  CFF_Parser_Run( CFF_Parser   parser,
                   FT_Byte*     start,
                   FT_Byte*     limit )
   {

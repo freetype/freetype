@@ -34,7 +34,7 @@ FT_BEGIN_HEADER
 #define CFF_CODE_PRIVATE  0x2000
 
 
-  typedef struct  CFF_Parser_
+  typedef struct  CFF_ParserRec_
   {
     FT_Byte*   start;
     FT_Byte*   limit;
@@ -46,16 +46,16 @@ FT_BEGIN_HEADER
     FT_UInt    object_code;
     void*      object;
 
-  } CFF_Parser;
+  } CFF_ParserRec, *CFF_Parser;
 
 
   FT_LOCAL( void )
-  CFF_Parser_Init( CFF_Parser*  parser,
+  CFF_Parser_Init( CFF_Parser   parser,
                    FT_UInt      code,
                    void*        object );
 
   FT_LOCAL( FT_Error )
-  CFF_Parser_Run( CFF_Parser*  parser,
+  CFF_Parser_Run( CFF_Parser   parser,
                   FT_Byte*     start,
                   FT_Byte*     limit );
 

@@ -248,125 +248,6 @@
   }
 
 
-#if 0
-
-  /* this function is used to build a Unicode charmap from the glyph names */
-  /* in a file                                                             */
-  static FT_Error
-  CFF_Build_Unicode_Charmap( CFF_Face            face,
-                             FT_ULong            base_offset,
-                             PSNames_Service  psnames )
-  {
-    CFF_Font       font = (CFF_Font)face->extra.data;
-    FT_Memory       memory = FT_FACE_MEMORY(face);
-    FT_UInt         n, num_glyphs = face->root.num_glyphs;
-    const char**    glyph_names;
-    FT_Error        error;
-    CFF_FontRecDict  dict = &font->top_font.font_dict;
-    FT_ULong        charset_offset;
-    FT_Byte         format;
-    FT_Stream       stream = face->root.stream;
-
-
-    charset_offset = dict->charset_offset;
-    if ( !charset_offset )
-    {
-      FT_ERROR(( "CFF_Build_Unicode_Charmap: charset table is missing\n" ));
-      error = CFF_Err_Invalid_File_Format;
-      goto Exit;
-    }
-
-    /* allocate the charmap */
-    if ( ALLOC( face->charmap, ...
-
-    /* seek to charset table and allocate glyph names table */
-    if ( FILE_Seek( base_offset + charset_offset )           ||
-         ALLOC_ARRAY( glyph_names, num_glyphs, const char* ) )
-      goto Exit;
-
-    /* now, read each glyph name and store it in the glyph name table */
-    if ( READ_Byte( format ) )
-      goto Fail;
-
-    switch ( format )
-    {
-    case 0:  /* format 0 - one SID per glyph */
-      {
-        const char**  gname = glyph_names;
-        const char**  limit = gname + num_glyphs;
-
-
-        if ( ACCESS_Frame( num_glyphs * 2 ) )
-          goto Fail;
-
-        for ( ; gname < limit; gname++ )
-          gname[0] = CFF_Get_String( &font->string_index,
-                                     GET_UShort(),
-                                     psnames );
-        FORGET_Frame();
-        break;
-      }
-
-    case 1:  /* format 1 - sequential ranges                    */
-    case 2:  /* format 2 - sequential ranges with 16-bit counts */
-      {
-        const char**  gname = glyph_names;
-        const char**  limit = gname + num_glyphs;
-        FT_UInt       len = 3;
-
-
-        if ( format == 2 )
-          len++;
-
-        while ( gname < limit )
-        {
-          FT_UInt  first;
-          FT_UInt  count;
-
-
-          if ( ACCESS_Frame( len ) )
-            goto Fail;
-
-          first = GET_UShort();
-          if ( format == 3 )
-            count = GET_UShort();
-          else
-            count = GET_Byte();
-
-          FORGET_Frame();
-
-          for ( ; count > 0; count-- )
-          {
-            gname[0] = CFF_Get_String( &font->string_index,
-                                       first,
-                                       psnames );
-            gname++;
-            first++;
-          }
-        }
-        break;
-      }
-
-    default:   /* unknown charset format! */
-      FT_ERROR(( "CFF_Build_Unicode_Charmap: unknown charset format!\n" ));
-      error = CFF_Err_Invalid_File_Format;
-      goto Fail;
-    }
-
-    /* all right, the glyph names were loaded; we now need to create */
-    /* the corresponding unicode charmap                             */
-
-  Fail:
-    for ( n = 0; n < num_glyphs; n++ )
-      FREE( glyph_names[n] );
-
-    FREE( glyph_names );
-
-  Exit:
-    return error;
-  }
-
-#endif /* 0 */
 
 
   static FT_Encoding
@@ -418,29 +299,6 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    CFF_Face_Init                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a given OpenType face object.                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    stream     :: The source font stream.                              */
-  /*                                                                       */
-  /*    face_index :: The index of the font face in the resource.          */
-  /*                                                                       */
-  /*    num_params :: Number of additional generic parameters.  Ignored.   */
-  /*                                                                       */
-  /*    params     :: Additional generic parameters.  Ignored.             */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    face       :: The newly built face object.                         */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   CFF_Face_Init( FT_Stream      stream,
                  CFF_Face       face,
@@ -694,17 +552,6 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    CFF_Face_Done                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Finalizes a given face object.                                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face :: A pointer to the face object to destroy.                   */
-  /*                                                                       */
   FT_LOCAL_DEF( void )
   CFF_Face_Done( CFF_Face  face )
   {
@@ -728,20 +575,6 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    CFF_Driver_Init                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a given OpenType driver object.                        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    driver :: A handle to the target driver object.                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   CFF_Driver_Init( CFF_Driver  driver )
   {
@@ -761,17 +594,6 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    CFF_Driver_Done                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Finalizes a given OpenType driver.                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    driver :: A handle to the target OpenType driver.                  */
-  /*                                                                       */
   FT_LOCAL_DEF( void )
   CFF_Driver_Done( CFF_Driver  driver )
   {
