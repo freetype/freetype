@@ -328,6 +328,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face       :: A handle to the source face object.                  */
+  /*                                                                       */
   /*    glyph_name :: The glyph name.                                      */
   /*                                                                       */
   /* <Return>                                                              */
@@ -337,14 +338,15 @@
   cff_get_name_index( CFF_Face    face,
                       FT_String*  glyph_name )
   {
-    CFF_Font*          cff;
-    CFF_Charset*       charset;
-    PSNames_Interface* psnames;
-    FT_String*         name;
-    FT_UShort          sid;
-    FT_UInt            i;
+    CFF_Font*           cff;
+    CFF_Charset*        charset;
+    PSNames_Interface*  psnames;
+    FT_String*          name;
+    FT_UShort           sid;
+    FT_UInt             i;
 
-    cff = face->extra.data;
+
+    cff     = face->extra.data;
     charset = &cff->charset;
 
     psnames = (PSNames_Interface*)FT_Get_Module_Interface(
@@ -354,7 +356,7 @@
     {
       sid = charset->sids[i];
 
-      if (sid > 390)
+      if ( sid > 390 )
         name = CFF_Get_Name( &cff->string_index, sid - 391 );
       else
         name = (FT_String *)psnames->adobe_std_strings( sid );
@@ -365,6 +367,7 @@
 
     return 0;
   }
+
 
   /*************************************************************************/
   /*************************************************************************/

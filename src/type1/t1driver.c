@@ -70,6 +70,7 @@
     return T1_Err_Ok;
   }
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -81,6 +82,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face       :: A handle to the source face object.                  */
+  /*                                                                       */
   /*    glyph_name :: The glyph name.                                      */
   /*                                                                       */
   /* <Return>                                                              */
@@ -90,15 +92,16 @@
   t1_get_name_index( T1_Face     face,
                      FT_String*  glyph_name )
   {
-    FT_UInt     i;
+    FT_Int      i;
     FT_String*  gname;
+
 
     for ( i = 0; i < face->type1.num_glyphs; i++ )
     {
       gname = face->type1.glyph_names[i];
 
       if ( !strcmp( glyph_name, gname ) )
-        return i;
+        return (FT_UInt)i;
     }
 
     return 0;

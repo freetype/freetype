@@ -840,11 +840,11 @@
         FT_FRAME_SHORT ( xMax_Extent ),
         FT_FRAME_SHORT ( caret_Slope_Rise ),
         FT_FRAME_SHORT ( caret_Slope_Run ),
+        FT_FRAME_SHORT ( caret_Offset ),
         FT_FRAME_SHORT ( Reserved[0] ),
         FT_FRAME_SHORT ( Reserved[1] ),
         FT_FRAME_SHORT ( Reserved[2] ),
         FT_FRAME_SHORT ( Reserved[3] ),
-        FT_FRAME_SHORT ( Reserved[4] ),
         FT_FRAME_SHORT ( metric_Data_Format ),
         FT_FRAME_USHORT( number_Of_HMetrics ),
       FT_FRAME_END
@@ -1144,7 +1144,6 @@
       FT_FRAME_START( 6 ),
         FT_FRAME_USHORT( format ),
         FT_FRAME_USHORT( length ),
-        FT_FRAME_USHORT( version ),
       FT_FRAME_END
     };
 

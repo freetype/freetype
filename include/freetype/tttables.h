@@ -187,7 +187,7 @@ FT_BEGIN_HEADER
     FT_Short   caret_Slope_Run;
     FT_Short   caret_Offset;
 
-    FT_Short   Reserved[5];
+    FT_Short   Reserved[4];
 
     FT_Short   metric_Data_Format;
     FT_UShort  number_Of_HMetrics;
@@ -271,7 +271,11 @@ FT_BEGIN_HEADER
   /*    caret_Slope_Run         :: The run coefficient of the cursor's     */
   /*                               slope.                                  */
   /*                                                                       */
-  /*    Reserved                :: 10 reserved bytes.                      */
+  /*    caret_Offset            :: The cursor's offset for slanted fonts.  */
+  /*                               This value is `reserved' in vmtx        */
+  /*                               version 1.0.                            */
+  /*                                                                       */
+  /*    Reserved                :: 8 reserved bytes.                       */
   /*                                                                       */
   /*    metric_Data_Format      :: Always 0.                               */
   /*                                                                       */
@@ -309,7 +313,7 @@ FT_BEGIN_HEADER
     FT_Short   caret_Slope_Run;
     FT_Short   caret_Offset;
 
-    FT_Short   Reserved[5];
+    FT_Short   Reserved[4];
 
     FT_Short   metric_Data_Format;
     FT_UShort  number_Of_VMetrics;

@@ -2376,7 +2376,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_UInt )
   FT_Get_Name_Index( FT_Face     face,
-                     FT_String*  glyph_name);
+                     FT_String*  glyph_name );
 
 
 
