@@ -155,9 +155,7 @@ FT_BEGIN_HEADER
   /*    FTC_ImageCache_Lookup                                              */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Retrieves a given glyph image from a glyph image cache and         */
-  /*    `acquires' it.  This prevents the glyph image from being flushed   */
-  /*    out of the cache, until @FTC_Image_Cache_Release is called.        */
+  /*    Retrieves a given glyph image from a glyph image cache.            */
   /*                                                                       */
   /* <Input>                                                               */
   /*    cache  :: A handle to the source glyph image cache.                */
@@ -170,10 +168,8 @@ FT_BEGIN_HEADER
   /*    aglyph :: The corresponding @FT_Glyph object.  0 in case of        */
   /*              failure.                                                 */
   /*                                                                       */
-  /*    anode  :: An opaque cache node pointer that will be used to        */
-  /*              release the glyph once it becomes unuseful.  Can be      */
-  /*              NULL, in which case this function will have the same     */
-  /*              effect as @FTC_Image_Cache_Release.   XXX                */
+  /*    anode  :: used to return the address of of the corresponding       */
+  /*              cache node after incrementing its reference count        */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -183,10 +179,16 @@ FT_BEGIN_HEADER
   /*    Never try to transform or discard it manually!  You can however    */
   /*    create a copy with @FT_Glyph_Copy and modify the new one.          */
   /*                                                                       */
-  /*    Because the glyph image cache limits the total amount of memory    */
-  /*    taken by the glyphs it holds, the returned glyph might disappear   */
-  /*    on a later invocation of this function!  It is a cache after       */
-  /*    all...                                                             */
+  /*    If "anode" is _not_ NULL, it receives the address of the cache     */
+  /*    node containing the glyph image, after increasing its reference    */
+  /*    count. This ensures that the node (as well as the FT_Glyph) will   */
+  /*    always be kept in the cache until you call @FTC_Node_Unref to      */
+  /*    "release" it.                                                      */
+  /*                                                                       */
+  /*    If "anode" is NULL, the cache node is left unchanged, which means  */
+  /*    that the FT_Glyph could be flushed out of the cache on the next    */
+  /*    call to one of the caching sub-system APIs. Just don't assume      */
+  /*    that it's persistent..                                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FTC_ImageCache_Lookup( FTC_ImageCache  cache,

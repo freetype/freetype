@@ -7,6 +7,9 @@
 
 2001-12-20  Werner Lemberg  <wl@gnu.org>
 
+        * src/cid/cidobjs.c (CID_Face_Done): fixed a memory leak, the subrs
+        routines were never released when CID faces were destroyed
+
 	* src/cache/ftccache.c (ftc_node_destroy, ftc_cache_lookup): Fix
 	tracing strings.
 	* src/cache/ftccmap.c (ftc_cmap_family_init): Ditto.
