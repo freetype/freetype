@@ -1,7 +1,6 @@
 #include <ftdebug.h>
 
 #include <t1types.h>
-#include <t1encode.h>
 #include <t1tokens.h>
 #include <t1config.h>
 #include <t1parse.h>
@@ -985,6 +984,7 @@
     T1_Font*   type1      = &face->type1;
     FT_Memory  memory     = face->root.memory;
     T1_Table*  strings    = &parser->table;
+    PSNames_Interface*  psnames    = (PSNames_Interface*)face->psnames;
 	T1_Int     num_glyphs;
 	T1_Int     n;
 	T1_Error   error;
@@ -1010,6 +1010,12 @@
 	FREE( strings->elements );
 	FREE( strings->lengths );
 
+    if (!psnames)
+    {
+      FT_ERROR(( "T1.Parse.Finalise : PSNames module missing !!\n" ));
+      return T1_Err_Unimplemented_Feature;
+    }
+
 	/* Compute encoding if required. */
 	if (parser->encoding_type == t1_encoding_none)
     {
@@ -1033,13 +1039,13 @@
 		switch (parser->encoding_type)
 		{
 		  case t1_encoding_standard:
-			  index = t1_standard_encoding[n];
-			  names = (T1_String**)t1_standard_strings;
+			  index = psnames->adobe_std_encoding[n];
+			  names = 0;
 			  break;
 
 		  case t1_encoding_expert:
-			  index = t1_expert_encoding[n];
-			  names = (T1_String**)t1_standard_strings;
+			  index = psnames->adobe_expert_encoding[n];
+			  names = 0;
 			  break;
 
 		  default:
@@ -1049,7 +1055,12 @@
 		encode->char_index[n] = 0;
 		if (index)
 		{
-		  T1_String*  name = names[index];
+		  T1_String*  name;
+
+          if (names)
+            name = names[index];
+          else
+            name = (T1_String*)psnames->adobe_std_strings(index);
 
 		  if ( name )
 		  {

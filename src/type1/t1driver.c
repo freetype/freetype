@@ -435,8 +435,8 @@
     sizeof( T1_GlyphSlotRec ),
     
     "type1",
-    1,
-    2,
+    100,
+    200,
 
     0,   /* format interface */
 

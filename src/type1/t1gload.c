@@ -17,7 +17,6 @@
 
 #include <t1gload.h>
 #include <ftdebug.h>
-#include <t1encode.h>
 #include <ftstream.h>
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
@@ -182,14 +181,16 @@
   T1_Int    lookup_glyph_by_stdcharcode( T1_Face  face,
                                          T1_Int   charcode )
   {
-    T1_Int            n;
-    const T1_String*  glyph_name;
+    T1_Int              n;
+    const T1_String*    glyph_name;
+    PSNames_Interface*  psnames = (PSNames_Interface*)face->psnames;
     
     /* check range of standard char code */
     if (charcode < 0 || charcode > 255)
       return -1;
       
-    glyph_name = t1_standard_strings[t1_standard_encoding[charcode]];
+    glyph_name = psnames->adobe_std_strings(
+                    psnames->adobe_std_encoding[charcode]);
     
     for ( n = 0; n < face->type1.num_glyphs; n++ )
     {
