@@ -50,7 +50,7 @@
 
   static
   FT_String*  CFF_StrCopy( FT_Memory         memory,
-                          const FT_String*  source )
+                           const FT_String*  source )
   {
     FT_Error    error;
     FT_String*  result = 0;
@@ -71,7 +71,7 @@
   /* this function is used to build a Unicode charmap from the glyph names */
   /* in a file                                                             */
   static
-  FT_Error  CFF_Build_Unicode_Charmap( CFF_Face             face,
+  FT_Error  CFF_Build_Unicode_Charmap( CFF_Face            face,
                                        FT_ULong            base_offset,
                                        PSNames_Interface*  psnames )
   {
@@ -119,8 +119,8 @@
 
         for ( ; gname < limit; gname++ )
           gname[0] = CFF_Get_String( &font->string_index,
-                                    GET_UShort(),
-                                    psnames );
+                                     GET_UShort(),
+                                     psnames );
         FORGET_Frame();
         break;
       }
@@ -156,8 +156,8 @@
           for ( ; count > 0; count-- )
           {
             gname[0] = CFF_Get_String( &font->string_index,
-                                      first,
-                                      psnames );
+                                       first,
+                                       psnames );
             gname++;
             first++;
           }
@@ -239,7 +239,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    CFF_Init_Face                                                       */
+  /*    CFF_Init_Face                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given OpenType face object.                          */
@@ -261,10 +261,10 @@
   /*                                                                       */
   FT_LOCAL
   FT_Error  CFF_Init_Face( FT_Stream      stream,
-                          CFF_Face        face,
-                          FT_Int         face_index,
-                          FT_Int         num_params,
-                          FT_Parameter*  params )
+                           CFF_Face       face,
+                           FT_Int         face_index,
+                           FT_Int         num_params,
+                           FT_Parameter*  params )
   {
     FT_Error            error;
     SFNT_Interface*     sfnt;
@@ -496,7 +496,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    CFF_Done_Face                                                       */
+  /*    CFF_Done_Face                                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finalizes a given face object.                                     */
@@ -530,7 +530,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    CFF_Init_Driver                                                     */
+  /*    CFF_Init_Driver                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given OpenType driver object.                        */

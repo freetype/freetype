@@ -35,7 +35,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Structure>                                                           */
-  /*    CFF_Builder                                                         */
+  /*    CFF_Builder                                                        */
   /*                                                                       */
   /* <Description>                                                         */
   /*     A structure used during glyph loading to store its outline.       */
@@ -86,31 +86,31 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef struct  CFF_Builder_
   {
-    FT_Memory        memory;
-    TT_Face          face;
+    FT_Memory         memory;
+    TT_Face           face;
     CFF_GlyphSlot     glyph;
-    FT_GlyphLoader*  loader;
-    FT_Outline*      base;
-    FT_Outline*      current;
+    FT_GlyphLoader*   loader;
+    FT_Outline*       base;
+    FT_Outline*       current;
 
-    FT_Vector        last;
+    FT_Vector         last;
 
-    FT_Fixed         scale_x;
-    FT_Fixed         scale_y;
+    FT_Fixed          scale_x;
+    FT_Fixed          scale_y;
 
-    FT_Pos           pos_x;
-    FT_Pos           pos_y;
+    FT_Pos            pos_x;
+    FT_Pos            pos_y;
 
-    FT_Vector        left_bearing;
-    FT_Vector        advance;
+    FT_Vector         left_bearing;
+    FT_Vector         advance;
 
-    FT_BBox          bbox;          /* bounding box */
-    FT_Bool          path_begun;
-    FT_Bool          load_points;
-    FT_Bool          no_recurse;
+    FT_BBox           bbox;          /* bounding box */
+    FT_Bool           path_begun;
+    FT_Bool           load_points;
+    FT_Bool           no_recurse;
 
-    FT_Error         error;         /* only used for memory errors */
-    FT_Bool          metrics_only;
+    FT_Error          error;         /* only used for memory errors */
+    FT_Bool           metrics_only;
 
   } CFF_Builder;
 
@@ -129,70 +129,70 @@ FT_BEGIN_HEADER
   typedef struct  CFF_Decoder_
   {
     CFF_Builder        builder;
-    CFF_Font*         cff;
+    CFF_Font*          cff;
 
-    FT_Fixed          stack[CFF_MAX_OPERANDS + 1];
-    FT_Fixed*         top;
+    FT_Fixed           stack[CFF_MAX_OPERANDS + 1];
+    FT_Fixed*          top;
 
     CFF_Decoder_Zone   zones[CFF_MAX_SUBRS_CALLS + 1];
     CFF_Decoder_Zone*  zone;
 
-    FT_Int            flex_state;
-    FT_Int            num_flex_vectors;
-    FT_Vector         flex_vectors[7];
+    FT_Int             flex_state;
+    FT_Int             num_flex_vectors;
+    FT_Vector          flex_vectors[7];
 
-    FT_Pos            glyph_width;
-    FT_Pos            nominal_width;
+    FT_Pos             glyph_width;
+    FT_Pos             nominal_width;
 
-    FT_Bool           read_width;
-    FT_Int            num_hints;
-    FT_Fixed*         buildchar;
-    FT_Int            len_buildchar;
+    FT_Bool            read_width;
+    FT_Int             num_hints;
+    FT_Fixed*          buildchar;
+    FT_Int             len_buildchar;
 
-    FT_UInt           num_locals;
-    FT_UInt           num_globals;
+    FT_UInt            num_locals;
+    FT_UInt            num_globals;
 
-    FT_Int            locals_bias;
-    FT_Int            globals_bias;
+    FT_Int             locals_bias;
+    FT_Int             globals_bias;
 
-    FT_Byte**         locals;
-    FT_Byte**         globals;
+    FT_Byte**          locals;
+    FT_Byte**          globals;
 
-    FT_Byte**         glyph_names;   /* for pure CFF fonts only  */
-    FT_UInt           num_glyphs;    /* number of glyphs in font */
+    FT_Byte**          glyph_names;   /* for pure CFF fonts only  */
+    FT_UInt            num_glyphs;    /* number of glyphs in font */
 
   } CFF_Decoder;
 
 
   FT_LOCAL
   void  CFF_Init_Decoder( CFF_Decoder*   decoder,
-                         TT_Face       face,
-                         CFF_Size       size,
-                         CFF_GlyphSlot  slot );
+                          TT_Face        face,
+                          CFF_Size       size,
+                          CFF_GlyphSlot  slot );
 
   FT_LOCAL
   void  CFF_Prepare_Decoder( CFF_Decoder*  decoder,
-                            FT_UInt      glyph_index );
+                             FT_UInt       glyph_index );
 
 #if 0  /* unused until we support pure CFF fonts */
 
   /* Compute the maximum advance width of a font through quick parsing */
   FT_LOCAL
   FT_Error  CFF_Compute_Max_Advance( TT_Face  face,
-                                    FT_Int*  max_advance );
+                                     FT_Int*  max_advance );
 
 #endif /* 0 */
 
   FT_LOCAL
   FT_Error  CFF_Parse_CharStrings( CFF_Decoder*  decoder,
-                                  FT_Byte*     charstring_base,
-                                  FT_Int       charstring_len );
+                                   FT_Byte*      charstring_base,
+                                   FT_Int        charstring_len );
 
   FT_LOCAL
   FT_Error  CFF_Load_Glyph( CFF_GlyphSlot  glyph,
-                           CFF_Size       size,
-                           FT_Int        glyph_index,
-                           FT_Int        load_flags );
+                            CFF_Size       size,
+                            FT_Int         glyph_index,
+                            FT_Int         load_flags );
 
 
 FT_END_HEADER

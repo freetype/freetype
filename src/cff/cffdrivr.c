@@ -173,8 +173,8 @@
   static
   FT_Error  Load_Glyph( CFF_GlyphSlot  slot,
                         CFF_Size       size,
-                        FT_UShort     glyph_index,
-                        FT_UInt       load_flags )
+                        FT_UShort      glyph_index,
+                        FT_UInt        load_flags )
   {
     FT_Error  error;
 
@@ -236,10 +236,10 @@
   /*                                                                       */
   static
   FT_UInt  cff_get_char_index( TT_CharMap  charmap,
-                              FT_Long     charcode )
+                               FT_Long     charcode )
   {
     FT_Error       error;
-    CFF_Face        face;
+    CFF_Face       face;
     TT_CMapTable*  cmap;
 
 
@@ -277,8 +277,8 @@
 
 
   static
-  FT_Module_Interface  cff_get_interface( CFF_Driver    driver,
-                                         const char*  interface )
+  FT_Module_Interface  cff_get_interface( CFF_Driver   driver,
+                                          const char*  interface )
   {
     FT_Module  sfnt;
 
