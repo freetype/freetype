@@ -4758,76 +4758,80 @@ class StringTable:
     write( line + "\n  };\n\n\n" )
 
 
+# We now store the Adobe Glyph List in compressed form.  The list is put
+# into a data structure called `trie' (because it has a tree-like
+# appearance).  Consider, for example, that you want to store the
+# following name mapping:
 #
-# here's an explanation about the way we now store the Adobe Glyph List.
-# First of all, we store the list as a tree. Consider for example that
-# you want to store the following name mapping:
+#   A        => 1
+#   Aacute   => 6
+#   Abalon   => 2
+#   Abstract => 4
 #
-#  A         => 1
-#  Aacute    => 6
-#  Abalon    => 2
-#  Abstract  => 4
+# It is possible to store the entries as follows.
 #
-# it's possible to store them in a tree, as in:
+#   A => 1
+#   |
+#   +-acute => 6
+#   |
+#   +-b
+#     |
+#     +-alon => 2
+#     |
+#     +-stract => 4
 #
-#  A => 1
-#  |
-#  +-acute => 6
-#  |
-#  +-b
-#    |
-#    +-alone => 2
-#    |
-#    +-stract => 4
+# We see that each node in the trie has:
 #
-# we see that each node in the tree has:
-#
-# - one or more 'letters'
+# - one or more `letters'
 # - an optional value
 # - zero or more child nodes
 #
-# you can build such a tree with:
+# The first step is to call
 #
-#   root = StringNode( "",0 )
+#   root = StringNode( "", 0 )
 #   for word in map.values():
-#     root.add(word,map[word])
+#     root.add( word, map[word] )
 #
-# this will create a large tree where each node has only one letter
-# then call:
+# which creates a large trie where each node has only one children.
+#
+# Executing
 #
 #   root = root.optimize()
 #
-# which will optimize the tree by mergin the letters of successive
-# nodes whenever possible
+# optimizes the trie by merging the letters of successive nodes whenever
+# possible.
 #
-# now, each node of the tree is stored as follows in the table:
+# Each node of the trie is stored as follows.
 #
-#   - first the node's letters, according to the following scheme:
+# - First the node's letter, according to the following scheme.  We
+#   use the fact that in the AGL no name contains character codes > 127.
 #
+#     name         bitsize     description
+#     ----------------------------------------------------------------
+#     notlast            1     Set to 1 if this is not the last letter
+#                              in the word.
+#     ascii              7     The letter's ASCII value.
 #
-#         name         bitsize     description
-#         -----------------------------------------
-#         notlast            1     set to 1 if this is not the last letter
-#                                  in the word
-#         ascii              7     the letter's ASCII value
+# - The letter is followed by a children count and the value of the
+#   current key (if any).  Again we can do some optimization because all
+#   AGL entries are from the BMP; this means that 16 bits are sufficient
+#   to store its Unicode values.  Additionally, no node has more than
+#   127 children.
 #
-#   - then, the children count and optional value:
+#     name         bitsize     description
+#     -----------------------------------------
+#     hasvalue           1     Set to 1 if a 16-bit Unicode value follows.
+#     num_children       7     Number of childrens.  Can be 0 only if
+#                              `hasvalue' is set to 1.
+#     value             16     Optional Unicode value.
 #
-#         name         bitsize     description
-#         -----------------------------------------
-#         hasvalue           1     set to 1 if a 16-bit Unicode value follows
-#         num_children       7     number of childrens. can be 0 only if
-#                                  'hasvalue' is set to 1
-#         if (hasvalue)
-#           value           16     optional Unicode value
+# - A node is finished by a list of 16bit absolute offsets to the
+#   children, which must be sorted in increasing order of their first
+#   letter.
 #
-#   - followed by the list of 16-bit absolute offsets to the children.
-#     Children must be sorted in increasing order of their first letter.
+# For simplicity, all 16bit quantities are stored in big-endian order.
 #
-# All 16-bit quantities are stored in big-endian. If you don't know why,
-# you've never debugged this kind of code ;-)
-#
-# Finally, the root node has first letter = 0, and no value.
+# The root node has first letter = 0, and no value.
 #
 class StringNode:
   def __init__( self, letter, value ):
