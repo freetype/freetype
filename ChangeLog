@@ -1,12 +1,14 @@
 2002-04-15  David Turner  <david@freetype.org>
 
-        * docs/FTL.txt: formatting
+	* docs/FTL.txt: Formatting.
 
-        * include/freetype/config/ftoption.h: changing the size of the
-          render pool to 16Kb (instead of 32Kb).
-        
-        * docs/CHANGES: preparing the 2.1.0 release
+	* include/freetype/config/ftoption.h: Reduce the size of the
+	render pool from 32kByte to 16kByte.
 
+	* src/pcf/pcfread.c (pcf_seek_to_table_type): Remove compiler
+	warning.
+
+	* docs/CHANGES: Preparing 2.1.0 release.
 
 2002-04-13  Werner LEMBERG  <wl@gnu.org>
 
