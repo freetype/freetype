@@ -919,7 +919,7 @@
           }
           else if ( offset == 0xFFFFU )
           {
-            /* an offset of 0xFFFF means an empty glyph in certain fonts !! */
+            /* an offset of 0xFFFF means an empty glyph in certain fonts! */
             code = end;
             break;
           }
