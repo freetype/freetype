@@ -24,6 +24,7 @@
   *
   *    max_features  :: total number of features in table
   *    feature_tags  :: tags of all features for current script/language
+  *    features      :: selection flags for all features in current script/lang
   *    
   *    max_lookups   :: total number of lookups in table
   *    lookups       :: selection flags for all lookups for current
@@ -80,6 +81,40 @@
 
   } OTL_Table;
 
+
+  typedef struct OTL_BaseCoord_
+  {
+    TT_UShort  format;
+    TT_Short   coordinate;
+    TT_UShort  ref_glyph;
+    TT_UShort  ref_point;
+    TT_Byte*   device;
+  
+  } OTL_BaseCoord;
+
+
+  typedef struct OTL_ValueRecord_
+  {
+    TT_Vector  placement;
+    TT_Vector  advance;
+
+    TT_Byte*   device_pla_x;
+    TT_Byte*   device_pla_y;
+    TT_Byte*   device_adv_x;
+    TT_Byte*   device_adv_y;
+  
+  } OTL_ValueRecord;
+
+
+  typedef struct OTL_Anchor_
+  {
+    TT_UInt    format;
+    TT_Vector  coord;
+    TT_UInt    anchor_point;
+    TT_Byte*   device_x;
+    TT_Byte*   device_y;
+  
+  } OTL_Anchor;
 
   LOCAL_DEF
   TT_Error  OTL_Table_Init( OTL_Table*  table,
@@ -222,9 +257,46 @@
 
 
 
+
   LOCAL_DEF
   TT_Long  OTL_Get_Coverage_Index( TT_Byte*  coverage,
                                    TT_UInt   glyph_id );
+
+  LOCAL_DEF
+  TT_UInt  OTL_Get_Glyph_Class( TT_Byte*  class_def,
+                                TT_UInt   glyph_id );
+
+  LOCAL_DEF
+  TT_Int  OTL_Get_Device_Adjustment( TT_Byte* device,
+                                     TT_UInt  size );
+
+  LOCAL_DEF
+  void    OTL_Get_Base_Coordinate( TT_Byte*        base_coord,
+                                   OTL_BaseCoord*  coord );
+
+
+  LOCAL_DEF
+  TT_Int  OTL_ValueRecord_Size( TT_UShort  value_format );
+
+
+  LOCAL_DEF
+  void  OTL_Get_ValueRecord( TT_Byte*          value_record,
+                             TT_UShort         value_format,
+			     TT_Byte*          pos_table,
+			     OTL_ValueRecord*  record );
+
+
+  LOCAL_DEF
+  void  OTL_Get_Anchor( TT_Byte*     anchor_table,
+                        OTL_Anchor*  anchor );
+
+
+  LOCAL_DEF
+  void  OTL_Get_Mark( TT_Byte*     mark_array,
+                      TT_UInt      index,
+		      TT_UShort*   clazz,
+		      OTL_Anchor*  anchor );
+
 
 
 #define OTL_Byte(p)   (p++, p[-1])

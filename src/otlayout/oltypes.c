@@ -477,20 +477,138 @@
     return result;
   }
   
- /* compute a BaseCoord value */
+ /* extract a BaseCoord value */
   LOCAL_FUNC
-  TT_Int  OTL_Get_Base_Coordinate( TT_Byte*   base_coord,
-                                   TT_UShort *format
-                                   TT_UShort *ref_glyph_id,
-                                   TT_Byte*  *device )
+  void    OTL_Get_Base_Coordinate( TT_Byte*          base_coord,
+                                   OTL_ValueRecord*  coord )
   {
-    TT_Byte*  p =base_coord;
+    TT_Byte*  p = base_coord;
     TT_Int    result = 0;
     
-    *format = OTL_UShort(p);
-    
-    switch (*format)
+    coord->format     = OTL_UShort(p);
+    coord->coordinate = OTL_Short(p);
+    coord->device     = 0;
+
+    switch (coord->format)
     {
-      case
+      case 2: /* format 2 */
+        coord->ref_glyph = OTL_UShort(p);
+        coord->ref_point = OTL_UShort(p);
+        break;
+        
+      case 3: /* format 3 */
+        coord->device = p - 4 + OTL_UShort(p);
+        break;
+
+      default:
+        ;     
     }
   }
+
+
+ /* compute size of ValueRecord */
+ LOCAL_FUNC
+ TT_Int  OTL_ValueRecord_Size( TT_UShort  format )
+ {
+   TT_Int  count;
+
+   /* each bit in the value format corresponds to a single ushort */
+   /* we thus count the bits, and multiply the result by 2        */
+   
+   count = (TT_Int)(format & 0xFF);
+   count = ((count & 0xAA) >> 1) + (count & 0x55);
+   count = ((count & 0xCC) >> 2) + (count & 0x33);
+   count = ((count & 0xF0) >> 4) + (count & 0x0F);
+
+   return count*2;    
+ }
+
+
+
+ /* extract ValueRecord */
+ LOCAL_FUNC
+ void  OTL_Get_ValueRecord( TT_Byte*          value_record,
+                            TT_UShort         value_format,
+			    TT_Byte*          pos_table,
+			    OTL_ValueRecord*  record )
+ {
+   TT_Byte*  p = value_record;
+   
+   /* clear vectors */
+   record->placement.x = 0;
+   record->placement.y = 0;
+   record->advance.x   = 0;
+   record->advance.y   = 0;
+   
+   record->device_pla_x = 0;
+   record->device_pla_y = 0;
+   record->device_adv_x = 0;
+   record->device_adv_y = 0;
+   
+   if (value_format & 1) record->placement.x = NEXT_Short(p);
+   if (value_format & 2) record->placement.y = NEXT_Short(p);
+   if (value_format & 4) record->advance.x   = NEXT_Short(p);
+   if (value_format & 8) record->advance.y   = NEXT_Short(p);
+   
+   if (value_format & 16)  record->device_pla_x = pos_table + NEXT_UShort(p);
+   if (value_format & 32)  record->device_pla_y = pos_table + NEXT_UShort(p);
+   if (value_format & 64)  record->device_adv_x = pos_table + NEXT_UShort(p);
+   if (value_format & 128) record->device_adv_y = pos_table + NEXT_UShort(p);
+ }			    
+
+
+
+ /* extract Anchor */
+ LOCAL_FUNC
+ void  OTL_Get_Anchor( TT_Byte*     anchor_table,
+                       OTL_Anchor*  anchor )
+ {
+   TT_Byte*  p = anchor_table;
+   
+   anchor->format   = NEXT_UShort(p);
+   anchor->coord.x  = NEXT_Short(p);
+   anchor->coord.y  = NEXT_Short(p);
+   anchor->point    = 0;
+   anchor->device_x = 0;
+   anchor->device_y = 0;
+   
+   switch (anchor->format)
+   {
+     case 2:
+       anchor->point = NEXT_UShort(p);
+       break;
+       
+     case 3:
+       anchor->device_x = anchor_table + NEXT_UShort(p);
+       anchor->device_y = anchor_table + NEXT_UShort(p);
+       break;
+       
+     default:
+       ;
+   }
+ }
+
+
+ 
+ /* extract Mark from MarkArray */
+ LOCAL_FUNC
+ void  OTL_Get_Mark( TT_Byte*     mark_array,
+                     TT_UInt      index,
+		     TT_UShort*   clazz,
+		     OTL_Anchor*  anchor )
+ {
+   TT_Byte* p = mark_array;
+   TT_UInt  count;
+   
+   *clazz = 0;
+   MEM_Set( anchor, 0, sizeof(*anchor) );
+   
+   count = NEXT_UShort(p);
+   if (index < count)
+   {
+     p += 4*index;
+     *clazz = NEXT_UShort(p);
+     OTL_Get_Anchor( mark_array + NEXT_UShort(p), anchor );
+   }
+ }
+
