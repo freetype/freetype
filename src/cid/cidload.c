@@ -39,7 +39,7 @@
 
   /* read a single offset */
   FT_LOCAL_DEF( FT_Long )
-  cid_get_offset( FT_Byte**  start,
+  cid_get_offset( FT_Byte*  *start,
                   FT_Byte    offsize )
   {
     FT_Long   result;
@@ -164,9 +164,9 @@
 
       temp_scale = ABS( temp[3] );
 
-      /* Set Units per EM based on FontMatrix values.  We set the value to */
+      /* Set units per EM based on FontMatrix values.  We set the value to */
       /* `1000/temp_scale', because temp_scale was already multiplied by   */
-      /* 1000 (in t1_tofixed(), from psobjs.c).                            */
+      /* 1000 (in `t1_tofixed', from psobjs.c).                            */
       root->units_per_EM = (FT_UShort)( FT_DivFix( 0x10000L,
                                         FT_DivFix( temp_scale, 1000 ) ) );
 
@@ -258,38 +258,57 @@
 
     parser->root.cursor = base;
     parser->root.limit  = base + size;
-    parser->root.error  = 0;
+    parser->root.error  = CID_Err_Ok;
 
     {
       FT_Byte*  cur   = base;
       FT_Byte*  limit = cur + size;
 
 
-      for ( ; cur < limit; cur++ )
+      for (;;)
       {
-        /* look for `%ADOBeginFontDict' */
-        if ( *cur == '%' && cur + 20 < limit &&
-             ft_strncmp( (char*)cur, "%ADOBeginFontDict", 17 ) == 0 )
-        {
-          cur += 17;
+        FT_Byte*  newlimit;
 
-          /* if /FDArray was found, then cid->num_dicts is > 0, and */
-          /* we can start increasing parser->num_dict               */
-          if ( face->cid.num_dicts > 0 )
-            parser->num_dict++;
+
+        parser->root.cursor = cur;
+        cid_parser_skip_spaces( parser );
+
+        if ( parser->root.cursor >= limit )
+          newlimit = limit - 1 - 17;
+        else
+          newlimit = parser->root.cursor - 17;
+
+        /* look for `%ADOBeginFontDict' */
+        for ( ; cur < newlimit; cur++ )
+        {
+          if ( *cur == '%'                                            &&
+               ft_strncmp( (char*)cur, "%ADOBeginFontDict", 17 ) == 0 )
+          {
+            /* if /FDArray was found, then cid->num_dicts is > 0, and */
+            /* we can start increasing parser->num_dict               */
+            if ( face->cid.num_dicts > 0 )
+              parser->num_dict++;
+          }
         }
+
+        cur = parser->root.cursor;
+        /* no error can occur in cid_parser_skip_spaces */
+        if ( cur >= limit )
+          break;
+
+        cid_parser_skip_PS_token( parser );
+        if ( parser->root.cursor >= limit || parser->root.error )
+          break;
+
         /* look for immediates */
-        else if ( *cur == '/' && cur + 2 < limit )
+        if ( *cur == '/' && cur + 2 < limit )
         {
           FT_PtrDist  len;
 
 
           cur++;
-
-          parser->root.cursor = cur;
-          cid_parser_skip_alpha( parser );
-
           len = parser->root.cursor - cur;
+
           if ( len > 0 && len < 22 )
           {
             /* now compare the immediate name to the keyword table */
@@ -303,10 +322,7 @@
 
               name = (FT_Byte*)keyword->ident;
               if ( !name )
-              {
-                cid_parser_skip_alpha( parser );
                 break;
-              }
 
               if ( cur[0] == name[0]                     &&
                    len == ft_strlen( (const char*)name ) )
@@ -321,14 +337,11 @@
                 if ( n >= len )
                 {
                   /* we found it - run the parsing callback */
-                  cid_parser_skip_spaces( parser );
                   parser->root.error = cid_load_keyword( face,
                                                          loader,
                                                          keyword );
                   if ( parser->root.error )
                     return parser->root.error;
-
-                  cur = parser->root.cursor;
                   break;
                 }
               }
@@ -336,6 +349,8 @@
             }
           }
         }
+
+        cur = parser->root.cursor;
       }
     }
     return parser->root.error;

@@ -41,11 +41,10 @@
   /*                                                                       */
   /* All other common cases are handled very simply.  The matching rules   */
   /* are defined in the file `t1tokens.h' through the use of several       */
-  /* macros calls PARSE_XXX.                                               */
-  /*                                                                       */
-  /* This file is included twice here; the first time to generate parsing  */
-  /* callback functions, the second to generate a table of keywords (with  */
-  /* pointers to the associated callback).                                 */
+  /* macros calls PARSE_XXX.  This file is included twice here; the first  */
+  /* time to generate parsing callback functions, the second time to       */
+  /* generate a table of keywords (with pointers to the associated         */
+  /* callback functions).                                                  */
   /*                                                                       */
   /* The function `parse_dict' simply scans *linearly* a given dictionary  */
   /* (either the top-level or private one) and calls the appropriate       */
@@ -69,7 +68,6 @@
 
 #include "t1load.h"
 #include "t1errors.h"
-
 
 
   /*************************************************************************/
@@ -100,7 +98,7 @@
   {
     PS_Blend   blend;
     FT_Memory  memory = face->root.memory;
-    FT_Error   error  = 0;
+    FT_Error   error  = T1_Err_Ok;
 
 
     blend = face->blend;
@@ -174,7 +172,7 @@
     return error;
 
   Fail:
-    error = -1;
+    error = T1_Err_Invalid_File_Format;
     goto Exit;
   }
 
@@ -205,8 +203,10 @@
         axis->minimum = map->design_points[0];
         axis->maximum = map->design_points[map->num_points - 1];
       }
-      error = 0;
+
+      error = T1_Err_Ok;
     }
+
     return error;
   }
 
@@ -253,6 +253,7 @@
 
       error = T1_Err_Ok;
     }
+
     return error;
   }
 
@@ -289,7 +290,7 @@
           FT_Fixed  p_design = designs[p];
 
 
-          /* exact match ? */
+          /* exact match? */
           if ( design == p_design )
           {
             the_blend = blends[p];
@@ -305,7 +306,7 @@
           before = p;
         }
 
-        /* now, interpolate if needed */
+        /* now interpolate if necessary */
         if ( before < 0 )
           the_blend = blends[0];
 
@@ -386,9 +387,9 @@
   parse_blend_axis_types( T1_Face    face,
                           T1_Loader  loader )
   {
-    T1_TokenRec  axis_tokens[ T1_MAX_MM_AXIS ];
+    T1_TokenRec  axis_tokens[T1_MAX_MM_AXIS];
     FT_Int       n, num_axis;
-    FT_Error     error = 0;
+    FT_Error     error = T1_Err_Ok;
     PS_Blend     blend;
     FT_Memory    memory;
 
@@ -448,16 +449,16 @@
   parse_blend_design_positions( T1_Face    face,
                                 T1_Loader  loader )
   {
-    T1_TokenRec  design_tokens[ T1_MAX_MM_DESIGNS ];
+    T1_TokenRec  design_tokens[T1_MAX_MM_DESIGNS];
     FT_Int       num_designs;
     FT_Int       num_axis;
     T1_Parser    parser = &loader->parser;
 
-    FT_Error     error = 0;
+    FT_Error     error = T1_Err_Ok;
     PS_Blend     blend;
 
 
-    /* get the array of design tokens - compute number of designs */
+    /* get the array of design tokens -- compute number of designs */
     T1_ToTokenArray( parser, design_tokens, T1_MAX_MM_DESIGNS, &num_designs );
     if ( num_designs <= 0 || num_designs > T1_MAX_MM_DESIGNS )
     {
@@ -479,15 +480,15 @@
 
       for ( n = 0; n < (FT_UInt)num_designs; n++ )
       {
-        T1_TokenRec  axis_tokens[ T1_MAX_MM_DESIGNS ];
+        T1_TokenRec  axis_tokens[T1_MAX_MM_DESIGNS];
         T1_Token     token;
         FT_Int       axis, n_axis;
 
 
         /* read axis/coordinates tokens */
         token = design_tokens + n;
-        parser->root.cursor = token->start - 1;
-        parser->root.limit  = token->limit + 1;
+        parser->root.cursor = token->start;
+        parser->root.limit  = token->limit;
         T1_ToTokenArray( parser, axis_tokens, T1_MAX_MM_AXIS, &n_axis );
 
         if ( n == 0 )
@@ -505,7 +506,7 @@
           goto Exit;
         }
 
-        /* now, read each axis token into the design position */
+        /* now read each axis token into the design position */
         for ( axis = 0; axis < n_axis; axis++ )
         {
           T1_Token  token2 = axis_tokens + axis;
@@ -530,7 +531,7 @@
   parse_blend_design_map( T1_Face    face,
                           T1_Loader  loader )
   {
-    FT_Error     error  = 0;
+    FT_Error     error  = T1_Err_Ok;
     T1_Parser    parser = &loader->parser;
     PS_Blend     blend;
     T1_TokenRec  axis_tokens[T1_MAX_MM_AXIS];
@@ -548,6 +549,7 @@
       error = T1_Err_Invalid_File_Format;
       goto Exit;
     }
+
     old_cursor = parser->root.cursor;
     old_limit  = parser->root.limit;
 
@@ -556,29 +558,22 @@
       goto Exit;
     blend = face->blend;
 
-    /* now, read each axis design map */
+    /* now read each axis design map */
     for ( n = 0; n < num_axis; n++ )
     {
       PS_DesignMap  map = blend->design_map + n;
-      T1_Token      token;
+      T1_Token      axis_token;
+      T1_TokenRec   point_tokens[T1_MAX_MM_MAP_POINTS];
       FT_Int        p, num_points;
 
 
-      token = axis_tokens + n;
-      parser->root.cursor = token->start;
-      parser->root.limit  = token->limit;
+      axis_token = axis_tokens + n;
 
-      /* count the number of map points */
-      {
-        FT_Byte*  ptr   = token->start;
-        FT_Byte*  limit = token->limit;
+      parser->root.cursor = axis_token->start;
+      parser->root.limit  = axis_token->limit;
+      T1_ToTokenArray( parser, point_tokens,
+                       T1_MAX_MM_MAP_POINTS, &num_points );
 
-
-        num_points = 0;
-        for ( ; ptr < limit; ptr++ )
-          if ( ptr[0] == '[' )
-            num_points++;
-      }
       if ( num_points <= 0 || num_points > T1_MAX_MM_MAP_POINTS )
       {
         FT_ERROR(( "parse_blend_design_map: incorrect table\n" ));
@@ -594,6 +589,15 @@
 
       for ( p = 0; p < num_points; p++ )
       {
+        T1_Token  point_token;
+
+
+        point_token = point_tokens + p;
+
+        /* don't include delimiting brackets */
+        parser->root.cursor = point_token->start + 1;
+        parser->root.limit  = point_token->limit - 1;
+
         map->design_points[p] = T1_ToInt( parser );
         map->blend_points [p] = T1_ToFixed( parser, 0 );
       }
@@ -611,7 +615,7 @@
   parse_weight_vector( T1_Face    face,
                        T1_Loader  loader )
   {
-    FT_Error     error  = 0;
+    FT_Error     error  = T1_Err_Ok;
     T1_Parser    parser = &loader->parser;
     PS_Blend     blend  = face->blend;
     T1_TokenRec  master;
@@ -638,8 +642,9 @@
     old_cursor = parser->root.cursor;
     old_limit  = parser->root.limit;
 
-    parser->root.cursor = master.start;
-    parser->root.limit  = master.limit;
+    /* don't include the delimiting brackets */
+    parser->root.cursor = master.start + 1;
+    parser->root.limit  = master.limit - 1;
 
     for ( n = 0; n < blend->num_designs; n++ )
     {
@@ -675,6 +680,8 @@
 #endif /* T1_CONFIG_OPTION_NO_MM_SUPPORT */
 
 
+
+
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -682,15 +689,6 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* First of all, define the token field static variables.  This is a set */
-  /* of T1_FieldRec variables used later.                                  */
-  /*                                                                       */
-  /*************************************************************************/
-
 
   static FT_Error
   t1_load_keyword( T1_Face         face,
@@ -774,30 +772,10 @@
   static int
   is_space( FT_Byte  c )
   {
-    return ( c == ' ' || c == '\t' || c == '\r' || c == '\n' );
+    return ( c == ' '  || c == '\t' ||
+             c == '\r' || c == '\n' || c == '\f' ||
+             c == '\0' );
   }
-
-
-  static int
-  is_name_char( FT_Byte  c )
-  {
-    /* Note: PostScript allows any non-delimiting, non-whitespace      */
-    /*       in a name (PS Ref Manual, 3rd Ed, p31)                    */
-    /*       PostScript delimiters include (,),<,>,[,],{,},/ and %     */
-
-    return ( c != '(' &&
-             c != ')' &&
-             c != '<' &&
-             c != '>' &&
-             c != '[' &&
-             c != ']' &&
-             c != '{' &&
-             c != '}' &&
-             c != '/' &&
-             c != '%' &&
-             ! is_space( c )
-             );
- }
 
 
   static int
@@ -815,14 +793,14 @@
     /*                                          */
 
     T1_Skip_Spaces( parser );
+
     cur = parser->root.cursor;
 
-    if ( cur < limit && (FT_Byte)( *cur - '0' ) < 10 )
+    if ( cur < limit && ft_isdigit( *cur ) )
     {
       *size = T1_ToInt( parser );
 
-      T1_Skip_Spaces( parser );
-      T1_Skip_Alpha ( parser );  /* `RD' or `-|' or something else */
+      T1_Skip_PS_Token( parser );   /* `RD' or `-|' or something else */
 
       /* there is only one whitespace char after the */
       /* `RD' or `-|' token                          */
@@ -838,9 +816,8 @@
   }
 
 
-  /* we will now define the routines used to handle */
-  /* the `/Encoding', `/Subrs', and `/CharStrings'  */
-  /* dictionaries                                   */
+  /* We now define the routines to handle the `/Encoding', `/Subrs', */
+  /* and `/CharStrings' dictionaries.                                */
 
   static void
   parse_font_matrix( T1_Face    face,
@@ -855,7 +832,7 @@
 
 
     if ( matrix->xx || matrix->yx )
-      /* with synthetic fonts, it's possible we get here twice  */
+      /* with synthetic fonts it is possible we get here twice */
       return;
 
     (void)T1_ToFixedArray( parser, 6, temp, 3 );
@@ -895,28 +872,25 @@
   parse_encoding( T1_Face    face,
                   T1_Loader  loader )
   {
-    T1_Parser      parser = &loader->parser;
-    FT_Byte*       cur    = parser->root.cursor;
-    FT_Byte*       limit  = parser->root.limit;
+    T1_Parser  parser = &loader->parser;
+    FT_Byte*   cur;
+    FT_Byte*   limit  = parser->root.limit;
 
-    PSAux_Service  psaux  = (PSAux_Service)face->psaux;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
-    /* skip whitespace */
-    while ( is_space( *cur ) )
+    T1_Skip_Spaces( parser );
+    cur = parser->root.cursor;
+    if ( cur >= limit )
     {
-      cur++;
-      if ( cur >= limit )
-      {
-        FT_ERROR(( "parse_encoding: out of bounds!\n" ));
-        parser->root.error = T1_Err_Invalid_File_Format;
-        return;
-      }
+      FT_ERROR(( "parse_encoding: out of bounds!\n" ));
+      parser->root.error = T1_Err_Invalid_File_Format;
+      return;
     }
 
     /* if we have a number, then the encoding is an array, */
     /* and we must load it now                             */
-    if ( (FT_Byte)( *cur - '0' ) < 10 )
+    if ( ft_isdigit( *cur ) )
     {
       T1_Encoding  encode     = &face->type1.encoding;
       FT_Int       count, n;
@@ -926,18 +900,19 @@
 
 
       if ( encode->char_index )
-        /*  with synthetic fonts, it's possible we get here twice  */
+        /* with synthetic fonts it is possible we get here twice */
         return;
 
-      /* read the number of entries in the encoding, should be 256 */
+      /* read the number of entries in the encoding; should be 256 */
       count = (FT_Int)T1_ToInt( parser );
-      if ( parser->root.error )
+      T1_Skip_Spaces( parser );
+      if ( parser->root.cursor >= limit )
         return;
 
       /* we use a T1_Table to store our charnames */
       loader->num_chars = encode->num_chars = count;
-      if ( FT_NEW_ARRAY( encode->char_index, count ) ||
-           FT_NEW_ARRAY( encode->char_name,  count ) ||
+      if ( FT_NEW_ARRAY( encode->char_index, count )     ||
+           FT_NEW_ARRAY( encode->char_name,  count )     ||
            FT_SET_ERROR( psaux->ps_table_funcs->init(
                            char_table, count, memory ) ) )
       {
@@ -954,86 +929,74 @@
         T1_Add_Table( char_table, n, notdef, 8 );
       }
 
-      /* Now, we will need to read a record of the form         */
+      /* Now we need to read a record of the form               */
       /* ... charcode /charname ... for each entry in our table */
       /*                                                        */
       /* We simply look for a number followed by an immediate   */
       /* name.  Note that this ignores correctly the sequence   */
-      /* that is often seen in type1 fonts:                     */
+      /* that is often seen in Type 1 fonts:                    */
       /*                                                        */
       /*   0 1 255 { 1 index exch /.notdef put } for dup        */
       /*                                                        */
       /* used to clean the encoding array before anything else. */
-      /*                                                        */
-      /* We stop when we encounter a `def'.                     */
 
-      cur   = parser->root.cursor;
-      limit = parser->root.limit;
-      n     = 0;
+      n = 0;
 
-      for ( ; cur < limit; )
+      while ( parser->root.cursor < limit )
       {
-        FT_Byte  c;
-
-
-        c = *cur;
+        T1_Skip_Spaces( parser );
+        cur = parser->root.cursor;
 
         /* we stop when we encounter a `def' */
-        if ( c == 'd' && cur + 3 < limit )
+        if ( *cur == 'd' && cur + 3 < limit )
         {
-          if ( cur[1] == 'e'       &&
-               cur[2] == 'f'       &&
-               is_space( cur[-1] ) &&
-               is_space( cur[3] )  )
+          if ( cur[1] == 'e'      &&
+               cur[2] == 'f'      &&
+               is_space( cur[3] ) )
           {
             FT_TRACE6(( "encoding end\n" ));
+            cur += 3;
             break;
           }
         }
 
         /* otherwise, we must find a number before anything else */
-        if ( (FT_Byte)( c - '0' ) < 10 )
+        if ( ft_isdigit( *cur ) )
         {
           FT_Int  charcode;
 
 
-          parser->root.cursor = cur;
           charcode = (FT_Int)T1_ToInt( parser );
-          cur      = parser->root.cursor;
+          T1_Skip_Spaces( parser );
+          cur = parser->root.cursor;
 
-          /* skip whitespace */
-          while ( cur < limit && is_space( *cur ) )
-            cur++;
-
-          if ( cur < limit && *cur == '/' )
+          if ( *cur == '/' && cur + 2 < limit )
           {
-            /* bingo, we have an immediate name -- it must be a */
-            /* character name                                   */
-            FT_Byte*    cur2 = cur + 1;
             FT_PtrDist  len;
 
 
-            while ( cur2 < limit && is_name_char( *cur2 ) )
-              cur2++;
+            cur++;
 
-            len = cur2 - cur - 1;
+            parser->root.cursor = cur;
+            T1_Skip_PS_Token( parser );
+
+            len = parser->root.cursor - cur;
 
             parser->root.error = T1_Add_Table( char_table, charcode,
-                                               cur + 1, len + 1 );
+                                               cur, len + 1 );
             char_table->elements[charcode][len] = '\0';
             if ( parser->root.error )
               return;
-
-            cur = cur2;
           }
         }
         else
-          cur++;
+          T1_Skip_PS_Token( parser );
       }
 
       face->type1.encoding_type = T1_ENCODING_TYPE_ARRAY;
       parser->root.cursor       = cur;
     }
+
     /* Otherwise, we should have either `StandardEncoding', */
     /* `ExpertEncoding', or `ISOLatin1Encoding'             */
     else
@@ -1063,35 +1026,38 @@
   parse_subrs( T1_Face    face,
                T1_Loader  loader )
   {
-    T1_Parser      parser = &loader->parser;
-    PS_Table       table  = &loader->subrs;
-    FT_Memory      memory = parser->root.memory;
-    FT_Error       error;
-    FT_Int         n;
+    T1_Parser  parser = &loader->parser;
+    PS_Table   table  = &loader->subrs;
+    FT_Memory  memory = parser->root.memory;
+    FT_Error   error;
+    FT_Int     n;
 
     PSAux_Service  psaux  = (PSAux_Service)face->psaux;
 
 
     if ( loader->num_subrs )
-      /*  with synthetic fonts, it's possible we get here twice  */
+      /* with synthetic fonts it is possible we get here twice */
       return;
 
-    if ( parser->root.cursor + 2 > parser->root.limit &&
-         parser->root.cursor[0] == '['                &&
-         parser->root.cursor[1] == ']'                )
+    T1_Skip_Spaces( parser );
+
+    /* test for empty array */
+    if ( parser->root.cursor < parser->root.limit &&
+         *parser->root.cursor == '['              )
     {
-      /* empty array */
+      T1_Skip_PS_Token( parser );
+      T1_Skip_Spaces  ( parser );
+      if ( parser->root.cursor >= parser->root.limit ||
+           *parser->root.cursor != ']'              )
+        parser->root.error = T1_Err_Invalid_File_Format;
       return;
     }
 
     loader->num_subrs = (FT_Int)T1_ToInt( parser );
-    if ( parser->root.error )
-      return;
 
     /* position the parser right before the `dup' of the first subr */
-    T1_Skip_Spaces( parser );
-    T1_Skip_Alpha( parser );      /* `array' */
-    T1_Skip_Spaces( parser );
+    T1_Skip_PS_Token( parser );         /* `array' */
+    T1_Skip_Spaces  ( parser );
 
     /* initialize subrs array */
     error = psaux->ps_table_funcs->init( table, loader->num_subrs, memory );
@@ -1113,6 +1079,8 @@
       if ( ft_strncmp( (char*)parser->root.cursor, "dup", 3 ) != 0 )
         break;
 
+      T1_Skip_PS_Token( parser );       /* `dup' */
+
       idx = T1_ToInt( parser );
 
       if ( !read_binary_data( parser, &size, &base ) )
@@ -1122,14 +1090,13 @@
       /* (bound to `noaccess put') or by two separate tokens:  */
       /* `noaccess' & `put'.  We position the parser right     */
       /* before the next `dup', if any.                        */
-      T1_Skip_Spaces( parser );
-      T1_Skip_Alpha( parser );    /* `NP' or `I' or `noaccess' */
-      T1_Skip_Spaces( parser );
+      T1_Skip_PS_Token( parser );   /* `NP' or `I' or `noaccess' */
+      T1_Skip_Spaces  ( parser );
 
       if ( ft_strncmp( (char*)parser->root.cursor, "put", 3 ) == 0 )
       {
-        T1_Skip_Alpha( parser );  /* skip `put' */
-        T1_Skip_Spaces( parser );
+        T1_Skip_PS_Token( parser ); /* skip `put' */
+        T1_Skip_Spaces  ( parser );
       }
 
       /* some fonts use a value of -1 for lenIV to indicate that */
@@ -1164,6 +1131,9 @@
   }
 
 
+#define TABLE_EXTEND  5
+
+
   static void
   parse_charstrings( T1_Face    face,
                      T1_Loader  loader )
@@ -1185,25 +1155,24 @@
 
 
     if ( loader->num_glyphs )
-      /*  with synthetic fonts, it's possible we get here twice  */
+      /* with synthetic fonts it is possible we get here twice */
       return;
 
     loader->num_glyphs = (FT_Int)T1_ToInt( parser );
     if ( parser->root.error )
       return;
 
-    /* initialize tables (leaving room for addition of .notdef, */
-    /* if necessary).                                           */
+    /* initialize tables, leaving room for addition of .notdef, */
+    /* if necessary, and a few other glyphs to handle buggy     */
+    /* fonts which have more glyphs than specified.             */
 
-    error = psaux->ps_table_funcs->init( code_table,
-                                         loader->num_glyphs + 1,
-                                         memory );
+    error = psaux->ps_table_funcs->init(
+              code_table, loader->num_glyphs + 1 + TABLE_EXTEND, memory );
     if ( error )
       goto Fail;
 
-    error = psaux->ps_table_funcs->init( name_table,
-                                         loader->num_glyphs + 1,
-                                         memory );
+    error = psaux->ps_table_funcs->init(
+              name_table, loader->num_glyphs + 1 + TABLE_EXTEND, memory );
     if ( error )
       goto Fail;
 
@@ -1235,29 +1204,34 @@
         break;
 
       /* we stop when we find a `def' or `end' keyword */
-      if ( *cur   == 'd'   &&
-           cur + 3 < limit &&
-           cur[1] == 'e'   &&
-           cur[2] == 'f'   )
-        break;
+      if ( cur + 3 < limit && is_space( cur[3] ) )
+      {
+        if ( cur[0] == 'd' &&
+             cur[1] == 'e' &&
+             cur[2] == 'f' )
+          break;
 
-      if ( *cur   == 'e'   &&
-           cur + 3 < limit &&
-           cur[1] == 'n'   &&
-           cur[2] == 'd'   )
-        break;
+        if ( cur[0] == 'e' &&
+             cur[1] == 'n' &&
+             cur[2] == 'd' )
+          break;
+      }
 
       if ( *cur != '/' )
-        T1_Skip_Alpha( parser );
+        T1_Skip_PS_Token( parser );
       else
       {
-        FT_Byte*    cur2 = cur + 1;
         FT_PtrDist  len;
 
 
-        while ( cur2 < limit && is_name_char( *cur2 ) )
-          cur2++;
-        len = cur2 - cur - 1;
+        T1_Skip_PS_Token( parser );
+        if ( cur >= limit )
+        {
+          error = T1_Err_Invalid_File_Format;
+          goto Fail;
+        }
+
+        len = parser->root.cursor - cur;
 
         error = T1_Add_Table( name_table, n, cur + 1, len + 1 );
         if ( error )
@@ -1274,11 +1248,11 @@
           notdef_found = 1;
         }
 
-        parser->root.cursor = cur2;
         if ( !read_binary_data( parser, &size, &base ) )
           return;
 
-        if ( face->type1.private_dict.lenIV >= 0 )
+        if ( face->type1.private_dict.lenIV >= 0   &&
+             n < loader->num_glyphs + TABLE_EXTEND )
         {
           FT_Byte*  temp;
 
@@ -1299,8 +1273,6 @@
           goto Fail;
 
         n++;
-        if ( n >= loader->num_glyphs )
-          break;
       }
     }
 
@@ -1311,11 +1283,11 @@
                     (const char*)name_table->elements[0] ) &&
          notdef_found                                      )
     {
-      /* Swap glyph in index 0 with /.notdef glyph.  First, add index 0    */
-      /* name and code entries to swap_table. Then place notdef_index name */
-      /* and code entries into swap_table.  Then swap name and code        */
-      /* entries at indices notdef_index and 0 using values stored in      */
-      /* swap_table.                                                       */
+      /* Swap glyph in index 0 with /.notdef glyph.  First, add index 0  */
+      /* name and code entries to swap_table.  Then place notdef_index   */
+      /* name and code entries into swap_table.  Then swap name and code */
+      /* entries at indices notdef_index and 0 using values stored in    */
+      /* swap_table.                                                     */
 
       /* Index 0 name */
       error = T1_Add_Table( swap_table, 0,
@@ -1426,6 +1398,14 @@
   }
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* Define the token field static variables.  This is a set of            */
+  /* T1_FieldRec variables.                                                */
+  /*                                                                       */
+  /*************************************************************************/
+
+
   static
   const T1_FieldRec  t1_keywords[] =
   {
@@ -1462,120 +1442,134 @@
               FT_Byte*   keyword_flags )
   {
     T1_Parser  parser = &loader->parser;
+    FT_Byte*   limit;
 
 
     parser->root.cursor = base;
     parser->root.limit  = base + size;
-    parser->root.error  = 0;
+    parser->root.error  = T1_Err_Ok;
 
+    limit = parser->root.limit;
+
+    while ( parser->root.cursor < limit )
     {
-      FT_Byte*  cur   = base;
-      FT_Byte*  limit = cur + size;
+      FT_Byte*  cur;
 
 
-      for ( ; cur < limit; cur++ )
+      T1_Skip_Spaces( parser );
+      cur = parser->root.cursor;
+
+      /* look for `FontDirectory', which causes problems for some fonts */
+      if ( *cur == 'F' && cur + 25 < limit                    &&
+           ft_strncmp( (char*)cur, "FontDirectory", 13 ) == 0 )
       {
-        /* look for `FontDirectory', which causes problems on some fonts */
-        if ( *cur == 'F' && cur + 25 < limit                    &&
-             ft_strncmp( (char*)cur, "FontDirectory", 13 ) == 0 )
+        FT_Byte*  cur2;
+
+
+        /* skip the `FontDirectory' keyword */
+        T1_Skip_PS_Token( parser );
+        T1_Skip_Spaces  ( parser );
+        cur = cur2 = parser->root.cursor;
+
+        /* look up the `known' keyword */
+        while ( cur < limit )
         {
-          FT_Byte*  cur2;
+          if ( *cur == 'k' && cur + 5 < limit       &&
+               ft_strncmp( (char*)cur, "known", 5 ) )
+            break;
 
-
-          /* skip the `FontDirectory' keyword */
-          cur += 13;
-          cur2 = cur;
-
-          /* lookup the `known' keyword */
-          while ( cur < limit && *cur != 'k'           &&
-                  ft_strncmp( (char*)cur, "known", 5 ) )
-            cur++;
-
-          if ( cur < limit )
-          {
-            T1_TokenRec  token;
-
-
-            /* skip the `known' keyword and the token following it */
-            cur += 5;
-            loader->parser.root.cursor = cur;
-            T1_ToToken( &loader->parser, &token );
-
-            /* if the last token was an array, skip it! */
-            if ( token.type == T1_TOKEN_TYPE_ARRAY )
-              cur2 = parser->root.cursor;
-          }
-          cur = cur2;
+          T1_Skip_PS_Token( parser );
+          T1_Skip_Spaces  ( parser );
+          cur = parser->root.cursor;
         }
-        /* look for immediates */
-        else if ( *cur == '/' && cur + 2 < limit )
+
+        if ( cur < limit )
         {
-          FT_Byte*    cur2;
-          FT_PtrDist  len;
+          T1_TokenRec  token;
 
 
-          cur++;
-          cur2 = cur;
-          while ( cur2 < limit && is_name_char( *cur2 ) )
-            cur2++;
+          /* skip the `known' keyword and the token following it */
+          T1_Skip_PS_Token( parser );
+          T1_ToToken( parser, &token );
 
-          len = cur2 - cur;
-          if ( len > 0 && len < 22 )
+          /* if the last token was an array, skip it! */
+          if ( token.type == T1_TOKEN_TYPE_ARRAY )
+            cur2 = parser->root.cursor;
+        }
+        parser->root.cursor = cur2;
+      }
+
+      /* look for `closefile' which ends the eexec section */
+      else if ( *cur == 'c' && cur + 9 < limit &&
+                ft_strncmp( (char*)cur, "closefile", 9 ) == 0 )
+        break;
+
+      /* look for immediates */
+      else if ( *cur == '/' && cur + 2 < limit )
+      {
+        FT_PtrDist  len;
+
+
+        cur++;
+
+        parser->root.cursor = cur;
+        T1_Skip_PS_Token( parser );
+
+        len = parser->root.cursor - cur;
+
+        if ( len > 0 && len < 22 )
+        {
+          /* now compare the immediate name to the keyword table */
+          T1_Field  keyword      = (T1_Field)t1_keywords;
+          FT_Byte*  keyword_flag = keyword_flags;
+
+
+          for (;;)
           {
+            FT_Byte*  name;
+
+
+            name = (FT_Byte*)keyword->ident;
+            if ( !name )
             {
-              /* now, compare the immediate name to the keyword table */
-              T1_Field  keyword      = (T1_Field)t1_keywords;
-              FT_Byte*  keyword_flag = keyword_flags;
+              T1_Skip_PS_Token( parser );
+              break;
+            }
+
+            if ( cur[0] == name[0]                     &&
+                 len == ft_strlen( (const char*)name ) )
+            {
+              FT_PtrDist  n;
 
 
-              for (;;)
-              {
-                FT_Byte*  name;
-
-
-                name = (FT_Byte*)keyword->ident;
-                if ( !name )
+              for ( n = 1; n < len; n++ )
+                if ( cur[n] != name[n] )
                   break;
 
-                if ( cur[0] == name[0]                     &&
-                     len == ft_strlen( (const char*)name ) )
+              if ( n >= len )
+              {
+                /* We found it -- run the parsing callback!      */
+                /* We only record the first instance of any      */
+                /* field to deal adequately with synthetic fonts */
+                if ( keyword_flag[0] == 0 )
                 {
-                  FT_PtrDist  n;
-
-
-                  for ( n = 1; n < len; n++ )
-                    if ( cur[n] != name[n] )
-                      break;
-
-                  if ( n >= len )
-                  {
-                    /* we found it -- run the parsing callback! */
-                    parser->root.cursor = cur2;
-                    T1_Skip_Spaces( parser );
-                    
-                    /* we only record the first instance of any      */
-                    /* field to deal adequately with synthetic fonts */
-                    if ( keyword_flag[0] == 0 )
-                    {
-                      parser->root.error = t1_load_keyword( face,
-                                                            loader,
-                                                            keyword );
-                      if ( parser->root.error )
-                        return parser->root.error;
-                    }
-                    keyword_flag[0] = 1;
-
-                    cur = parser->root.cursor;
-                    break;
-                  }
+                  parser->root.error = t1_load_keyword( face,
+                                                        loader,
+                                                        keyword );
+                  if ( parser->root.error )
+                    return parser->root.error;
                 }
-                keyword++;
-                keyword_flag++;
+                keyword_flag[0] = 1;
+                break;
               }
             }
+            keyword++;
+            keyword_flag++;
           }
         }
       }
+      else
+        T1_Skip_PS_Token( parser );
     }
     return parser->root.error;
   }
@@ -1742,16 +1736,21 @@
               if ( ft_strcmp( (const char*)".notdef",
                               (const char*)glyph_name ) != 0 )
               {
-                if ( charcode < min_char ) min_char = charcode;
-                if ( charcode > max_char ) max_char = charcode;
+                if ( charcode < min_char )
+                  min_char = charcode;
+                if ( charcode > max_char )
+                  max_char = charcode;
               }
               break;
             }
           }
       }
-      /* Yes, this happens: Certain PDF-embedded fonts have only a ".notdef"
-       * glyph defined!
+
+      /*
+       *  Yes, this happens: Certain PDF-embedded fonts have only a
+       *  `.notdef' glyph defined!
        */
+
       if ( min_char > max_char )
       {
         min_char = 0;

@@ -111,8 +111,8 @@
               (p)->funcs.release( p ); \
           } while ( 0 )
 
-#define T1_Skip_Spaces( p )  (p)->root.funcs.skip_spaces( &(p)->root )
-#define T1_Skip_Alpha( p )   (p)->root.funcs.skip_alpha ( &(p)->root )
+#define T1_Skip_Spaces( p )    (p)->root.funcs.skip_spaces( &(p)->root )
+#define T1_Skip_PS_Token( p )  (p)->root.funcs.skip_PS_token( &(p)->root )
 
 #define T1_ToInt( p )       (p)->root.funcs.to_int( &(p)->root )
 #define T1_ToFixed( p, t )  (p)->root.funcs.to_fixed( &(p)->root, t )
@@ -318,7 +318,7 @@
 
     /* if we have a number, then the encoding is an array, */
     /* and we must load it now                             */
-    if ( (FT_Byte)( *cur - '0' ) < 10 )
+    if ( ft_isdigit( *cur ) )
     {
       T1_Encoding  encode     = &face->type1.encoding;
       FT_Int       count, n;
@@ -394,7 +394,7 @@
         }
 
         /* otherwise, we must find a number before anything else */
-        if ( (FT_Byte)( c - '0' ) < 10 )
+        if ( ft_isdigit( c ) )
         {
           FT_Int  charcode;
 
@@ -571,7 +571,7 @@
         }
 
       default:
-        if ( !ft_xdigit( *cur ) || !ft_xdigit( *(cur + 1) ) )
+        if ( !ft_isxdigit( *cur ) || !ft_isxdigit( *(cur + 1) ) )
         {
           FT_ERROR(( "t42_parse_sfnts: found non-hex characters in string" ));
           error = T42_Err_Invalid_File_Format;
@@ -705,7 +705,7 @@
         break;
 
       if ( *cur != '/' )
-        T1_Skip_Alpha( parser );
+        T1_Skip_PS_Token( parser );
       else
       {
         FT_Byte*  cur2 = cur + 1;

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    CID-keyed Type1 parser (body).                                       */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -58,6 +58,7 @@
     FT_ULong  base_offset, offset, ps_len;
     FT_Byte   buffer[256 + 10];
     FT_Int    buff_len;
+    FT_Byte   *cur, *limit;
 
 
     FT_MEM_ZERO( parser, sizeof ( *parser ) );
@@ -67,7 +68,7 @@
 
     base_offset = FT_STREAM_POS();
 
-    /* first of all, check the font format in the  header */
+    /* first of all, check the font format in the header */
     if ( FT_FRAME_ENTER( 31 ) )
       goto Exit;
 
@@ -82,15 +83,17 @@
     if ( error )
       goto Exit;
 
-    /* now, read the rest of the file, until we find a `StartData' */
+  Again:
+    /* now, read the rest of the file until we find a `StartData' */
     buff_len = 256;
     for (;;)
     {
-      FT_Byte   *p, *limit = buffer + 256;
+      FT_Byte*  p;
       FT_ULong  top_position;
 
 
       /* fill input buffer */
+      limit     = buffer + 256;
       buff_len -= 256;
       if ( buff_len > 0 )
         FT_MEM_MOVE( buffer, limit, buff_len );
@@ -101,7 +104,7 @@
         goto Exit;
 
       top_position = FT_STREAM_POS() - buff_len;
-      buff_len = 256 + 10;
+      buff_len     = 256 + 10;
 
       /* look for `StartData' */
       for ( p = buffer; p < limit; p++ )
@@ -116,12 +119,12 @@
     }
 
   Found:
-    /* we have found the start of the binary data.  We will now        */
-    /* rewind and extract the frame of corresponding to the Postscript */
-    /* section                                                         */
+    /* we have found the start of the binary data.  We will now     */
+    /* rewind and extract the frame corresponding to the PostScript */
+    /* section                                                      */
 
     ps_len = offset - base_offset;
-    if ( FT_STREAM_SEEK( base_offset )                    ||
+    if ( FT_STREAM_SEEK( base_offset )                  ||
          FT_FRAME_EXTRACT( ps_len, parser->postscript ) )
       goto Exit;
 
@@ -131,6 +134,32 @@
     parser->root.cursor    = parser->postscript;
     parser->root.limit     = parser->root.cursor + ps_len;
     parser->num_dict       = -1;
+
+    /* finally we check whether `StartData' was real -- it could be */
+    /* in a comment or string                                       */
+
+    limit = parser->root.limit;
+    cur   = parser->root.cursor;
+
+    while ( cur < limit )
+    {
+      if ( *cur == 'S' && ft_strncmp( (char*)cur, "StartData", 9 ) == 0 )
+      {
+        limit = parser->root.limit;
+        cur   = parser->root.cursor;
+        goto Exit;
+      }
+
+      cid_parser_skip_PS_token( parser );
+      cid_parser_skip_spaces  ( parser );
+      cur = parser->root.cursor;
+    }
+
+    /* we haven't found the correct `StartData'; go back and continue */
+    /* searching                                                      */
+    FT_FRAME_RELEASE( parser->postscript );
+    if ( !FT_STREAM_SEEK( offset ) )
+      goto Again;
 
   Exit:
     return error;

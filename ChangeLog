@@ -1,3 +1,97 @@
+2003-10-06  Werner Lemberg  <wl@gnu.org>
+
+	Heavy modification of the PS parser to handle comments and strings
+	correctly.  This doesn't slow down the loading of PS fonts
+	significantly since charstrings aren't affected.
+
+	* include/freetype/config/ftstdlib.h (ft_xdigit): Renamed to...
+	(ft_isxdigit): This.  Updated all callers.
+	(ft_isdigit): New alias to `isdigit'.
+
+	* include/freetype/internal/psaux.h (PS_Parser_FuncsRec): Renamed
+	`skip_alpha' to `skip_PS_token'.
+	Add parameter to `to_bytes' and change some argument types.
+
+	* src/psaux/psauxmod.c (ps_parser_funcs): Updated.
+	* src/psaux/psobjs.c (ft_char_table): New array to map character
+	codes (ASCII and EBCDIC) of digits to numbers.
+	(OP): New auxiliary macro holding either `>=' or `<' depending on
+	the character encoding.
+	(skip_comment): New function.
+	(skip_spaces): Use it.
+	(skip_alpha): Removed.
+	(skip_literal_string, skip_string): New functions.
+	(ps_parser_skip_PS_token): New function.  This is a better
+	replacement of...
+	(ps_parser_skip_alpha): Removed.
+	(ps_parser_to_token, ps+parser_to_token_array): Updated.
+	(T1Radix): Rewritten, using `ft_char_table'.
+	(t1_toint): Renamed to...
+	(ps_toint): This.  Update all callers.
+	Use `ft_char_table'.
+	(ps_tobytes): Add parameter to handle delimiters and change some
+	argument types.
+	Use `ft_char_table'.
+	(t1_tofixed): Renamed to...
+	(ps_tofixed): This.  Update all callers.
+	Use `ft_char_table'.
+	(t1_tocoordarray): Renamed and updated to...
+	(ps_tocoordarray): This.  Update all callers.
+	(t1_tofixedarray): Renamed and updated to...
+	(ps_tofixedarray): This.  Update all callers.
+	(t1_tobool): Renamed to...
+	(ps_tobool): This.  Update all callers.
+	(ps_parser_load_field): Updated.
+	(ps_parser_load_field_table): Use `T1_MAX_TABLE_ELEMENTS'
+	everywhere.
+	(ps_parser_to_int, ps_parser_to_fixed, ps_parser_to_coord_array,
+	ps_parser_to_fixed_array): Skip spaces.  Updated.
+	(ps_parser_to_bytes): Add parameter to handle delimiters and change
+	some argument types.  Updated.
+	* src/psaux/psobjs.h: Updated.
+
+	* src/cid/cidload.c (cid_parse_dict): Updated.
+	* src/cid/cidparse.c (cid_parser_new): Check whether the `StartData'
+	token was really found.
+	* src/cid/cidparse.h (cid_parser_skip_alpha): Updated and renamed
+	to...
+	(cid_parser_skip_PS_token): This.
+
+	* src/type1/t1parse.h (T1_ParserRec): Use `FT_Bool' for boolean
+	fields.
+	(T1_Skip_Alpha): Replaced with...
+	(T1_Skip_PS_Token): This new macro.
+	* src/type1/t1parse.c (hexa_value): Removed.
+	(T1_Get_Private_Dict): Use `ft_isxdigit' and
+	`psaux->ps_parser_funcs_to_bytes' for handling ASCII hexadecimal
+	encoding.
+	After decrypting, replace the four random bytes at the beginning
+	with whitespace.
+	* src/type1/t1load.c (t1_allocate_blend): Use proper error values.
+	(parser_blend_design_positions, parse_blend_design_map,
+	parse_weight_vector): Updated.
+	(is_space): Handle `\f' also.
+	(is_name_char): Removed.
+	(read_binary_data): Updated.
+	(parse_encoding): Use `ft_isdigit'.
+	Updated.
+	(parse_subrs): Updated.
+	(TABLE_EXTEND): New macro.
+	(parse_charstrings): Updated.
+	Provide a workaround for buggy fonts which have more entries in the
+	/CharStrings dictionary then expected; the function now adds some
+	slots and skips entries which still exceed the new limit.
+	(parse_dict): Updated.
+	Terminate on the token `closefile'.
+
+	* src/type42/t42parse.c (T1_Skip_Alpha): Replaced with...
+	(T1_Skip_PS_Token): This new macro.  Updated all callers.
+	(t42_parse_encoding): Use `ft_isdigit'.
+
+
+	* src/base/ftmm.c (ft_face_get_mm_service): Return FT_Err_OK if
+	success.
+
 2003-10-05  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftmodule.h: Renamed to...

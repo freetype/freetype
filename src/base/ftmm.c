@@ -51,6 +51,9 @@
       FT_FACE_LOOKUP_SERVICE( face,
                               *aservice,
                               MULTI_MASTERS );
+
+      if ( aservice )
+        error = FT_Err_Ok;
     }
 
     return error;
