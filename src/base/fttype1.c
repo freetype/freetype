@@ -66,8 +66,8 @@
 
     if ( face && face->driver && face->driver->root.clazz )
     {
-      /* Currently, only the type1, type42 and cff drivers provide reliable */
-      /* glyph names...                                                     */
+      /* Currently, only the type1, type42, and cff drivers provide */
+      /* reliable glyph names...                                    */
 
       /* We could probably hack the TrueType driver to recognize    */
       /* certain cases where the glyph names are most certainly     */

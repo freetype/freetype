@@ -583,8 +583,8 @@
       FT_UInt  format;
 
 
-      x_pos    = 0;
-      y_pos    = 0;
+      x_pos = 0;
+      y_pos = 0;
 
       PFR_CHECK( 1 );
       format = PFR_NEXT_BYTE( p );

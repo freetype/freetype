@@ -29,6 +29,7 @@
 
 FT_BEGIN_HEADER
 
+
   typedef struct  T42_FaceRec_
   {
     FT_FaceRec     root;
