@@ -86,6 +86,11 @@ dnl create the Unix-specific sub-Makefiles `builds/unix/unix-def.mk'
 dnl and 'builds/unix/unix-cc.mk' that will be used by the build system
 dnl
 AC_CONFIG_FILES([unix-cc.mk:unix-cc.in unix-def.mk:unix-def.in freetype-config])
+
+dnl re-generate the Jamfile to use libtool now
+dnl
+AC_CONFIG_FILE([../../Jamfile:../../Jamfile.in])
+
 AC_OUTPUT
 
 dnl end of configure.ac

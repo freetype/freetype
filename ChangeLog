@@ -1,4 +1,18 @@
+2002-01-08  David Turner  <david@freetype.org>
+
+	* configure, install: added some wrapper scripts to make
+	the installation more Unix-friendly..
+
+	* INSTALL, README.UNX: updated installation documentation
+	to use the new 'configure' and 'install' scripts..
+
+        Oh my.., why didn't we do that before the 2.0.6 release :-)
+
+
 2002-01-07  David Turner  <david@freetype.org>
+
+	* Version 2.0.6 released.
+	=========================
 
         * docs/BUGS, docs/CHANGES: updating documentation for 2.0.6 release
 

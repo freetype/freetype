@@ -2,11 +2,31 @@ In order to build the library, read the `BUILD' document in the `docs'
 directory.  This is only a quick starter.
 
 
-I. From the command line
+I. UNIX SYSTEMS:
+----------------
+  
+    Simply type:
+    
+      ./configure
+      make
+      ./install
+      
+    on the command line to configure, build and install FreeType
+    on your system. Note that the default installation path is
+    "/usr/local".
+    
+    Please read the file README.UNX, it contains _critical_
+    information regarding the installation of FreeType on
+    many Unix systems.
+    
+
+    
+
+II. From the command line
 ------------------------
 
-  There  are two ways  to quickly  build FreeType  2 from  the command
-  line.
+  If you're not on Unix, there  are two ways  to quickly 
+  build FreeType  2 from  the command line.
 
   The first, and favorite one, is to use the "Jam" build tool.  Jam is
   a highly  portable replacement for  Make whose control files  do not
@@ -40,7 +60,7 @@ I. From the command line
        jam
 
     In  later releases  of  FT2, building  shared  libraries with  Jam
-    should become automatic.
+    should become automatic on Unix systems..
 
 
   2. Building FT2 with "GNU Make"
