@@ -296,7 +296,7 @@
     if ( n_contours > left_contours )
     {
       FT_TRACE0(( "ERROR: Glyph index %ld has %d contours > left %d\n",
-                   subglyph.index,
+                   subg->index,
                    n_contours,
                    left_contours ));
       return TT_Err_Too_Many_Contours;

@@ -145,7 +145,7 @@
 
         /* Test for Microsoft English language */
         if ( rec->platformID == TT_PLATFORM_MICROSOFT &&
-             rec->encodingID <  TT_MS_ID_UNICODE_CS   &&
+             rec->encodingID <= TT_MS_ID_UNICODE_CS   &&
              (rec->languageID & 0x3FF) == 0x009 )
           found = 1;
 
