@@ -1,5 +1,9 @@
 2002-07-07  David Turner  <david@freetype.org>
 
+    * src/base/ftglyph.c (FT_Glyph_To_Bitmap): added code to return succesfully
+    when the function is called with a bitmap glyph (the previous code simply
+    returned with an error)
+
     * docs/DEBUG.TXT: adding debugging support documentation
 
     * src/base/ftdebug.c (ft_debug_init), builds/win32/ftdebug.c
