@@ -632,7 +632,6 @@
       }
 
       {
-        FTC_Manager  manager = cache->manager;
         FTC_Family   family  = (FTC_Family) lru;
         FT_UFast     hash    = query->hash;
         FTC_Node*    bucket;
