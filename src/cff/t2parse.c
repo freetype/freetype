@@ -352,7 +352,7 @@
                            FT_Byte*    start,
                            FT_Byte*    limit )
   {
-    FT_Byte*  p;
+    FT_Byte*  p     = start;
     FT_Error  error = 0;
     
     parser->top    = parser->stack;
