@@ -1390,6 +1390,9 @@
     /* bearing the yMax                                    */
     if ( !error )
     {
+      glyph->root.outline.flags &= ft_outline_owner;
+      glyph->root.outline.flags |= ft_outline_reverse_fill;
+      
       /* for composite glyphs, return only left side bearing and */
       /* advance width                                           */
       if ( load_flags & FT_LOAD_NO_RECURSE )
@@ -1413,11 +1416,8 @@
 
         glyph->root.format = ft_glyph_format_outline;
 
-        glyph->root.outline.flags &= ft_outline_owner;
         if ( size && size->root.metrics.y_ppem < 24 )
           glyph->root.outline.flags |= ft_outline_high_precision;
-
-        glyph->root.outline.flags |= ft_outline_reverse_fill;
 
 #if 0
         glyph->root.outline.second_pass    = TRUE;

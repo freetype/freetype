@@ -836,6 +836,8 @@
       scaled->blue_refs  [n] = (FT_MulFix(design->blue_refs[n],y_scale)+32) & -64;
       scaled->blue_shoots[n] = scaled->blue_refs[n] + delta2;
     }
+    globals->x_scale = x_scale;
+    globals->y_scale = y_scale;
   }
 
 
@@ -1022,8 +1024,8 @@
            FT_Pos  old_width, new_width;
            FT_Pos  old_advance, new_advance;
            FT_Pos  old_lsb, new_lsb;
-           AH_Edge*  edge1   = hinter->glyph->horz_edges;            /* left-most edge  */
-           AH_Edge*  edge2   = edge1 + hinter->glyph->num_hedges-1;  /* right-mode edge */
+           AH_Edge*  edge1   = outline->vert_edges;            /* left-most edge  */
+           AH_Edge*  edge2   = edge1 + outline->num_vedges-1;  /* right-mode edge */
 
            old_width = edge2->opos - edge1->opos;
            new_width = edge2->pos  - edge1->pos;

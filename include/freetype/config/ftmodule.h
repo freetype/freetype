@@ -1,3 +1,4 @@
+FT_USE_MODULE(autohint_module_class)
 FT_USE_MODULE(cff_driver_class)
 FT_USE_MODULE(t1cid_driver_class)
 FT_USE_MODULE(psnames_module_class)

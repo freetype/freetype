@@ -1120,7 +1120,10 @@
   {
     FT_Driver_Class*  clazz = driver->clazz;
 
-
+    /* discard auto-hinting data */
+    if ( face->autohint.finalizer )
+      face->autohint.finalizer( face->autohint.data );
+      
     /* Discard glyph slots for this face                           */
     /* Beware!  FT_Done_GlyphSlot() changes the field `face->slot' */
     while ( face->glyph )
