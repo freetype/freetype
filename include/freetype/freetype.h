@@ -1378,24 +1378,51 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Stream_Type                                                     */
+  /*    FT_Open_Flags                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    An enumeration used to list the possible ways to open a new        */
-  /*    input stream. It is used by the FT_Open_Args structure..           */
+  /*    An enumeration used to list the bit flags used within FT_Open_Args */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    ft_stream_memory   :: this is a memory-based stream                */
-  /*    ft_stream_copy     :: copy the stream from the "stream" field      */
-  /*    ft_stream_pathname :: create a new input stream from a C pathname  */
+  /*    ft_open_memory     :: this is a memory-based stream                */
+  /*    ft_open_stream     :: copy the stream from the "stream" field      */
+  /*    ft_open_pathname   :: create a new input stream from a C pathname  */
+  /*    ft_open_driver     :: use the "driver" field                       */
+  /*    ft_open_params     :: use the "num_params" & "params" field        */
   /*                                                                       */
   typedef enum {
 
-    ft_stream_memory   = 1,
-    ft_stream_copy     = 2,
-    ft_stream_pathname = 3
+    ft_open_memory     = 1,
+    ft_open_stream     = 2,
+    ft_open_pathname   = 4,
+    ft_open_driver     = 8,
+    ft_open_params     = 16
 
-  } FT_Stream_Type;
+  } FT_Open_Flags;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Parameter                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A simple structure used to pass more or less generic parameters    */
+  /*    to FT_Open_Face..                                                  */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    tag    :: 4-byte identification tag                                */
+  /*    data   :: pointer to parameter data                                */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    the id and role of parameters is driver-specific                   */
+  /*                                                                       */
+  typedef struct FT_Parameter_
+  {
+    FT_ULong   tag;
+    FT_Pointer data;
+
+  } FT_Parameter;
 
  /*************************************************************************
   *
@@ -1408,7 +1435,7 @@
   *    function FT_Open_Face & FT_Attach_Stream.
   *
   * <Fields>
-  *    stream_type  :: type of input stream
+  *    flags        :: set of bit flags indicating how to use the structure
   *
   *    memory_base  :: first byte of file in memory
   *    memory_size  :: size in bytes of file in memory
@@ -1421,6 +1448,10 @@
   *                    it simply specifies the font driver to use to open
   *                    the face. If set to 0, FreeType will try to load
   *                    the face with each one of the drivers in its list.
+  *
+  *    num_params   :: number of parameters
+  *    params       :: extra parameters passed to the font driver when
+  *                    opening a new face
   *
   * <Note>
   *    The stream_type determines which fields are used to create a new
@@ -1441,12 +1472,14 @@
 
   typedef struct FT_Open_Args_
   {
-    FT_Stream_Type  stream_type;
-    FT_Byte*        memory_base;
-    FT_Long         memory_size;
-    FT_String*      pathname;
-    FT_Stream       stream;
-    FT_Driver       driver;
+    FT_Open_Flags  flags;
+    FT_Byte*       memory_base;
+    FT_Long        memory_size;
+    FT_String*     pathname;
+    FT_Stream      stream;
+    FT_Driver      driver;
+    FT_Int         num_params;
+    FT_Parameter*  params;
 
   } FT_Open_Args;
 
@@ -1491,6 +1524,52 @@
                          const char*  filepathname,
                          FT_Long      face_index,
                          FT_Face*     face );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_Memory_Face                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new face object from a given resource and typeface index */
+  /*    using a font file already loaded into memory.                      */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    library    :: A handle to the library resource.                    */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    file_base  :: A pointer to the beginning of the font data.         */
+  /*    file_size  :: The size of the memory chunk used by the font data.  */
+  /*    face_index :: The index of the face within the resource.  The      */
+  /*                  first face has index 0.                              */
+  /* <Output>                                                              */
+  /*    face       :: A handle to a new face object.                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Unlike FreeType 1.x, this function automatically creates a glyph   */
+  /*    slot for the face object which can be accessed directly through    */
+  /*    `face->glyph'.                                                     */
+  /*                                                                       */
+  /*    Note that additional slots can be added to each face with the      */
+  /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
+  /*    list through their `next' field.                                   */
+  /*                                                                       */
+  /*    FT_New_Memory_Face() can be used to determine and/or check the     */
+  /*    font format of a given font resource.  If the `face_index' field   */
+  /*    is negative, the function will _not_ return any face handle in     */
+  /*    `*face'.  Its return value should be 0 if the resource is          */
+  /*    recognized, or non-zero if not.                                    */
+  /*                                                                       */
+  EXPORT_DEF
+  FT_Error  FT_New_Memory_Face( FT_Library   library,
+                                void*        file_base,
+                                FT_Long      file_size,
+                                FT_Long      face_index,
+                                FT_Face*     face );
 
 
   /*************************************************************************/

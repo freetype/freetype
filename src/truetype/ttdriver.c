@@ -137,14 +137,16 @@
   /*    Done_Face() will be called subsequently, whatever the result was.  */
   /*                                                                       */
   static
-  TT_Error  Init_Face( FT_Stream  stream,
-                       TT_Long    typeface_index,
-                       TT_Face    face )
+  TT_Error  Init_Face( FT_Stream      stream,
+                       TT_Face        face,
+                       FT_Int         typeface_index,
+                       FT_Int         num_params,
+                       FT_Parameter*  params )
   {
     TT_Error     error;
 
     /* initialize the TrueType face object */
-    error = TT_Init_Face( stream, typeface_index, face );
+    error = TT_Init_Face( stream, face, typeface_index, num_params, params );
 
     /* now set up root fields */
     if ( !error && typeface_index >= 0 )

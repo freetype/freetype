@@ -164,18 +164,18 @@ FreeType 2.0 Tutorial</h1></center>
     <p>
     <font color="blue"><pre>
     
-          FT_Library   library;   /* handle to library     */
-          FT_Face      face;      /* handle to face object */
-    
-          error = FT_Init_FreeType( &library );
-          if (error) { ..... }
-          
-          error = FT_New_Memory_Face( library,
-                                      buffer,    /* first byte in memory */
-                                      size,      /* size in bytes        */
-                                      0,         /* face_index           */
-                                      &face );
-          if (error) { ... }
+      FT_Library   library;   /* handle to library     */
+      FT_Face      face;      /* handle to face object */
+
+      error = FT_Init_FreeType( &library );
+      if (error) { ..... }
+      
+      error = FT_New_Memory_Face( library,
+                                  buffer,    /* first byte in memory */
+                                  size,      /* size in bytes        */
+                                  0,         /* face_index           */
+                                  &face );
+      if (error) { ... }
     </pre></font>
     <p>
     As you can see, <tt>FT_New_Memory_Face</tt> simply takes a pointer to
@@ -185,38 +185,17 @@ FreeType 2.0 Tutorial</h1></center>
   </ul>
   <p>
   
-  <h4>c. From other sources:</h4>
+  <h4>c. From other sources: (compressed files, network, etc..)</h4>
   <ul>
     There are cases where using a filepathname or preloading the file in
     memory is simply not enough. With FreeType 2, it is possible to provide
-    your own implementation of i/o routines through the <tt>FT_Stream</tt>
-    type.
+    your own implementation of i/o routines.
     <p>
-    Basically, one has to set up a <tt>FT_Stream</tt> object, according to
-    the rules defined in the document named
-    <a href="#">FreeType 2 System Interface</a>, then pass it to the function
-    <tt>FT_Open_Face</tt> as in:
-    <p>
-    <font color="blue"><pre>
-    
-          FT_Library   library;   /* handle to library     */
-          FT_Face      face;      /* handle to face object */
-    
-          error = FT_Init_FreeType( &library );
-          if (error) { ..... }
-
-          ... set up stream object, with handle "stream" ...
-          
-          error = FT_Open_Face( library,
-                                stream,    /* handle to stream objects */
-                                0,         /* face_index               */
-                                &face );
-          if (error) { ... }
-    </pre></font>
-    <p>
-    custom implementations of <tt>FT_Stream</tt> are great to provide advanced
-    features like automatic support of compressed files, network transparency,
-    using UTF-16 file pathnames, etc..
+    This is done through the <tt>FT_Open_Face</tt> function, which can be
+    used to open a new font face with a custom input stream, select a specific
+    driver for opening, or even pass extra parameters to the font driver
+    when creating the object. We advise you to refer to the FreeType 2
+    Reference in order to learn how to use it.
     <p>
   </ul>
   <p>
@@ -396,7 +375,7 @@ FreeType 2.0 Tutorial</h1></center>
      The glyph image is always stored in a special object called a
      <em>glyph slot</em>. As it names suggests, a glyph slot is simply a
      container that is able to hold one glyph image at a time, be it a bitmap,
-     an outline, or something else. Each face object has a single glyph
+     an outline, or something else. Each face object has a single glyph slot
      object that can be accessed as <b><tt>face&minus;&gt;glyph</tt></b>.
      <p>
      Loading a glyph image into the slot is performed by calling
@@ -440,14 +419,16 @@ FreeType 2.0 Tutorial</h1></center>
     As said before, when a new face object is created, it will look for
     a Unicode, Latin-1 or ASCII charmap and select it. The currently
     selected charmap is accessed via <b><tt>face&minus;&gt;charmap</tt></b>. This
-    field is NULL when no charmap is selected.
+    field is NULL when no charmap is selected, which typically happen when you
+    create a new <tt>FT_Face</tt> object from a font file that doesn't contain
+    an ASCII, Latin-1 or Unicode charmap (rare stuff).
     <p>
-    The field <b><tt>face&minus;&gt;num_charmaps</tt></b> and
+    The fields <b><tt>face&minus;&gt;num_charmaps</tt></b> and
     <b><tt>face&minus;&gt;charmaps</tt></b> (notice the 's') can be used by
     client applications to look at what charmaps are available in a given
     face.
     <p>
-    <b><tt>face&minus;charmaps</tt></b> is an array of <em>pointers</em>
+    <b><tt>face&minus;&gt;charmaps</tt></b> is an array of <em>pointers</em>
     to the <tt><b>face&minus;&gt;num_charmaps</b></tt> charmaps contained in the
     font face.
     <p>
@@ -493,23 +474,31 @@ FreeType 2.0 Tutorial</h1></center>
 
 <h3>7. Accessing glyph image data:</h3>
 <ul>
-  Glyph image data is accessible through <tt><b>face&minus;glyph</b></tt>.
-  See the definition of the <tt>FT_GlyphSlot</tt> type on more details. You
-  can perfectly create a shortcut to the glyph slot as in:
+  Glyph image data is accessible through <tt><b>face&minus;&gt;glyph</b></tt>.
+  See the definition of the <tt>FT_GlyphSlot</tt> type for more details. As
+  stated previously, each face has a single glyph slot, where <em>one</em> glyph
+  image <em>at a time</em> can be loaded. Each time you call
+  <tt>FT_Load_Glyph</tt>, you erase the content of the glyph slot with a new
+  glyph image.
+  <p>
+  Note however that the glyph slot object itself doesn't change, only its
+  content, which means that you can perfectly create a "shortcut" to access
+  it as in:
   <p>
   <font color="blue"><pre>
      {
-       FT_GlyphSlot  glyph;
+       FT_GlyphSlot  glyph = face->glyph;  /* shortcut to glyph slot */
 
-       .... load glyph ...
-       
-       glyph = face-&gt;glyph;   /* shortcut to glyph data */
-       
-       .... access glyph data as glyph-&gt;xxxx
+       for ( n = 0; n &lt; face->num_glyphs; n++ )
+       {
+         .... load glyph n...
+         .... access glyph data as glyph-&gt;xxxx
+       }
      }
   </pre></font>
-  <p>  
-  For example, one can access the following fields:
+  <p>
+  The <tt>glyph</tt> variable will be valid until its parent <tt>face</tt>
+  is destroyed. Here are a few important fields of the glyph slot:
   <p>
   <table cellpadding=10>
     <tr valign="top">
@@ -521,30 +510,41 @@ FreeType 2.0 Tutorial</h1></center>
     <tr valign="top">
        <td><tt><b>glyph&minus;&gt;metrics</b></tt>
        <td>A simple structure used to hold the glyph image's metrics. Note
-           that <em>all distances are expressed in 1/64th of pixels !</em>
+           that <em>most distances are expressed in 1/64th of pixels !</em>
            See the API reference or User Guide for a description of the
            <tt>FT_Glyph_Metrics</tt> structure.
-       
+
     <tr valign="top">
        <td><tt><b>glyph&minus;&gt;bitmap</b></tt>
        <td>When the glyph slot contains a bitmap, a simple <tt>FT_Bitmap</tt>
            that describes it. See the API reference or user guide for a
            description of the <tt>FT_Bitmap</tt> structure.
-       
+
     <tr valign="top">
        <td><tt><b>glyph&minus;&gt;outline</b></tt>
        <td>When the glyph slot contains a scalable outline, this structure
            describes it. See the definition of the <tt>FT_Outline</tt>
            structure.
-  </table>       
+  </table>
   <p> 
 </ul>
 
 <h3>8. Rendering glyph outlines into bitmaps:</h3>
 <ul>
-  When the glyph image loaded in a glyph slot is a bitmap, you can use
-  your favorite graphics library to blit it to your own surfaces.
+  You can easily test the format of the glyph image by inspecting the
+  <tt>face->glyph->format</tt> variable. If its value is
+  <tt>ft_glyph_format_bitmap</tt>, the glyph image that was loaded is
+  a bitmap that can be directly blit to your own surfaces through your
+  favorite graphics library (FreeType 2 doesn't provide bitmap blitting
+  routines, as you may imagine :-)
   <p>
+  On the other hand, when the format if <tt>ft_glyph_format_outline</tt>
+  or something else, the library provides a means to convert such glyph
+  images to bitmaps through what are called <b>rasters</b>.
+  <p>
+  
+  
+  
   On the other hand, when the image is a scalable outline, or something else,
   FreeType provides a function to convert the glyph image into a
   pre-existing bitmap that you'll handle to it, named

@@ -690,7 +690,7 @@
              strncmp( (const char*)parser->base_dict, "%!FontType", 10 )       ) )
       {
         FT_TRACE2(( "Not a Type1 font\n" ));
-        error = T1_Err_Invalid_File_Format;
+        error = FT_Err_Unknown_File_Format;
       }
       else
       {

@@ -233,38 +233,28 @@
       
     stream->memory = memory;
     
-    /* now, look at the stream type */
-    switch ( args->stream_type )
+    /* now, look at the stream flags */
+    if ( args->flags & ft_open_memory )
     {
-      /***** is it a memory-based stream ? *****************************/
-      case ft_stream_memory:
-      {
-        FT_New_Memory_Stream( library,
-                              args->memory_base,
-                              args->memory_size,
-                              stream );
-        break;
-      }
-      
-      /***** is is a pathname stream ? ********************************/
-      case ft_stream_pathname:
-      {
-        error = FT_New_Stream( args->pathname, stream );
-        stream->pathname.pointer = args->pathname;
-        break;
-      }
-      
-      case ft_stream_copy:
-      {
-        if ( args->stream)
-        {
-          *stream        = *(args->stream);
-          stream->memory = memory;
-          break;
-        }
-      }
-      default:
-        error = FT_Err_Invalid_Argument;
+      error = 0;
+      FT_New_Memory_Stream( library,
+                            args->memory_base,
+                            args->memory_size,
+                            stream );
+    }
+    else if (args->flags & ft_open_pathname)
+    {
+      error = FT_New_Stream( args->pathname, stream );
+      stream->pathname.pointer = args->pathname;
+    }
+    else if (args->flags & ft_open_stream && args->stream)
+    {
+      *stream        = *(args->stream);
+      stream->memory = memory;
+    }
+    else
+    {
+      error = FT_Err_Invalid_Argument;
     }
     
     if ( error )
@@ -938,10 +928,12 @@
   /*    This function does some work for FT_Open_Face().                   */
   /*                                                                       */
   static
-  FT_Error  open_face( FT_Driver  driver,
-                       FT_Stream  stream,
-                       FT_Long    face_index,
-                       FT_Face*   aface )
+  FT_Error  open_face( FT_Driver      driver,
+                       FT_Stream      stream,
+                       FT_Long        face_index,
+                       FT_Int         num_params,
+                       FT_Parameter*  params,
+                       FT_Face*       aface )
   {
     FT_Memory            memory;
     FT_DriverInterface*  interface;
@@ -960,7 +952,7 @@
     face->memory = memory;
     face->stream = stream;
 
-    error = interface->init_face( stream, face_index, face );
+    error = interface->init_face( stream, face, face_index, num_params, params );
     if ( error )
       goto Fail;
 
@@ -1024,9 +1016,8 @@
   {
     FT_Open_Args  args;
 
-    args.stream_type = ft_stream_pathname;    
-    args.driver      = 0;
-    args.pathname    = (char*)pathname;
+    args.flags    = ft_open_pathname;
+    args.pathname = (char*)pathname;
     return FT_Open_Face( library, &args, face_index, aface );
   }
 
@@ -1078,10 +1069,9 @@
   {
     FT_Open_Args  args;
 
-    args.stream_type = ft_stream_memory;
+    args.flags       = ft_open_memory;
     args.memory_base = file_base;
     args.memory_size = file_size;
-    args.driver      = 0;
     return FT_Open_Face( library, &args, face_index, face );
   }
 
@@ -1152,13 +1142,23 @@
 
     /* if the font driver is specified in the `args' structure, use */
     /* it.  Otherwise, we'll scan the list of registered drivers.   */
-    if ( args->driver )
+    if ( args->flags & ft_open_driver && args->driver )
     {
       driver = args->driver;
       /* not all drivers directly support face objects, so check... */
       if ( driver->interface.face_object_size )
       {
-        error = open_face( driver, stream, face_index, &face );
+        FT_Int         num_params = 0;
+        FT_Parameter*  params     = 0;
+        
+        if ( args->flags & ft_open_params )
+        {
+          num_params = args->num_params;
+          params     = args->params;
+        }
+        
+        error = open_face( driver, stream, face_index,
+                           num_params, params, &face );
         if ( !error )
           goto Success;
       }
@@ -1173,14 +1173,23 @@
       FT_Driver*  cur   = library->drivers;
       FT_Driver*  limit = cur + library->num_drivers;
 
-
       for ( ; cur < limit; cur++ )
       {
         driver = *cur;
         /* not all drivers directly support face objects, so check... */
         if ( driver->interface.face_object_size )
         {
-          error = open_face( driver, stream, face_index, &face );
+          FT_Int         num_params = 0;
+          FT_Parameter*  params     = 0;
+          
+          if ( args->flags & ft_open_params )
+          {
+            num_params = args->num_params;
+            params     = args->params;
+          }
+          
+          error = open_face( driver, stream, face_index,
+                             num_params, params, &face );
           if ( !error )
             goto Success;
 
@@ -1287,8 +1296,8 @@
   {
     FT_Open_Args  open;
 
-    open.stream_type = ft_stream_pathname;
-    open.pathname    = (char*)filepathname;
+    open.flags    = ft_open_pathname;
+    open.pathname = (char*)filepathname;
     return FT_Attach_Stream( face, &open );
   }
 

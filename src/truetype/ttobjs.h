@@ -367,9 +367,11 @@
  /*************************************************************************/
  /*  Face Funcs                                                           */ 
 
-  LOCAL_DEF TT_Error  TT_Init_Face( FT_Stream  stream,
-                                    TT_Long    face_index,
-                                    TT_Face    face );
+  LOCAL_DEF TT_Error  TT_Init_Face( FT_Stream      stream,
+                                    TT_Face        face,
+                                    TT_Int         face_index,
+                                    TT_Int         num_params,
+                                    FT_Parameter*  params );
 
   LOCAL_DEF void      TT_Done_Face( TT_Face  face );
 

@@ -160,13 +160,14 @@
   /*                                                                       */
   /* <InOut>                                                               */
   /*    stream         :: The input stream.                                */
+  /*    face           :: A handle to the new target face.                 */
   /*                                                                       */
   /* <Input>                                                               */
   /*    typeface_index :: The face index in the font resource.  Used to    */
   /*                      access individual faces in collections.          */
   /*                                                                       */
-  /* <Output>                                                              */
-  /*    face           :: A handle to the new target face.                 */
+  /*    num_params     :: number of optional generic parameters            */
+  /*    parameters     :: table of generic parameters                      */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -178,12 +179,18 @@
   /*    immediately with an error code of 0 (meaning success).  The field  */
   /*    `num_faces' should be set.                                         */
   /*                                                                       */
+  /*    The generic parameters are a way to pass additional data to a      */
+  /*    given font driver when creating a new face object. In most cases   */
+  /*    they will be simply ignored..                                      */
+  /*                                                                       */
   /*    FTDriver_doneFace() will be called subsequently, whatever the      */
   /*    result was.                                                        */
   /*                                                                       */
-  typedef FT_Error  (*FTDriver_initFace)( FT_Stream  stream,
-                                          FT_Long    typeface_index,
-                                          FT_Face    face );
+  typedef FT_Error  (*FTDriver_initFace)( FT_Stream      stream,
+                                          FT_Face        face,
+                                          FT_Int         typeface_index,
+                                          FT_Int         num_params,
+                                          FT_Parameter*  parameters );
 
 
   /*************************************************************************/

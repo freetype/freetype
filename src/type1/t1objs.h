@@ -147,9 +147,11 @@
  ******************************************************************/
 
   LOCAL_DEF
-  T1_Error  T1_Init_Face( FT_Stream    stream,
-                          FT_Int       face_index,
-                          T1_Face      face );
+  T1_Error  T1_Init_Face( FT_Stream     stream,
+                          T1_Face       face,
+                          FT_Int        face_index,
+                          FT_Int        num_params,
+                          FT_Parameter* params );
 
 
 

@@ -153,14 +153,20 @@
   /*    TrueType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_DEF
-  TT_Error  TT_Init_Face( FT_Stream  stream,
-                          TT_Long    face_index,
-                          TT_Face    face )
+  TT_Error  TT_Init_Face( FT_Stream      stream,
+                          TT_Face        face,
+                          TT_Int         face_index,
+                          TT_Int         num_params,
+                          FT_Parameter*  params )
   {
     TT_Error           error;
     TT_ULong           format_tag;
     SFNT_Interface*    sfnt;
     PSNames_Interface* psnames;
+
+    /* for now, parameters are unused */
+    (void)num_params;
+    (void)params;
 
     sfnt = (SFNT_Interface*)face->sfnt;
     if (!sfnt)
@@ -205,7 +211,7 @@
          format_tag != TTAG_true  )     /* Mac fonts */
     {
       FT_TRACE2(( "[not a valid TTF font]" ));
-      error = TT_Err_Invalid_File_Format;
+      error = FT_Err_Unknown_File_Format;
       goto Exit;
     }
 
