@@ -21,7 +21,7 @@
 #include FT_INTERNAL_TRUETYPE_ERRORS_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
-#include FT_SOURCE_FILE(sfnt,ttsbit.h)
+#include FT_SOURCE_FILE( sfnt, ttsbit.h )
 
 
   /*************************************************************************/

@@ -68,7 +68,7 @@
   /* <Return>                                                              */
   /*    The address of newly allocated block.                              */
   /*                                                                       */
-  static
+  FT_CALLBACK_DEF
   void*  ft_alloc( FT_Memory  memory,
                    long       size )
   {
@@ -98,7 +98,7 @@
   /* <Return>                                                              */
   /*    The address of the reallocated memory block.                       */
   /*                                                                       */
-  static
+  FT_CALLBACK_DEF
   void*  ft_realloc( FT_Memory  memory,
                      long       cur_size,
                      long       new_size,
@@ -124,7 +124,7 @@
   /*                                                                       */
   /*    block   :: The address of block in memory to be freed.             */
   /*                                                                       */
-  static
+  FT_CALLBACK_DEF
   void  ft_free( FT_Memory  memory,
                  void*      block )
   {
@@ -166,7 +166,7 @@
   /* <Input>                                                               */
   /*    stream :: A pointer to the stream object.                          */
   /*                                                                       */
-  static
+  FT_CALLBACK_DEF
   void  ft_close_stream( FT_Stream  stream )
   {
     fclose( STREAM_FILE( stream ) );
@@ -197,7 +197,7 @@
   /* <Return>                                                              */
   /*    The number of bytes actually read.                                 */
   /*                                                                       */
-  static
+  FT_CALLBACK_DEF
   unsigned long  ft_io_stream( FT_Stream       stream,
                                unsigned long   offset,
                                unsigned char*  buffer,

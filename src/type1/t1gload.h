@@ -21,7 +21,7 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(type1,t1objs.h)
+#include FT_SOURCE_FILE( type1, t1objs.h )
 
 
 FT_BEGIN_HEADER

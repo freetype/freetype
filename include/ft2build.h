@@ -14,24 +14,18 @@
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
-/*                                                                         */
-/*  This file corresponds to the default "ft2build.h" file for             */
-/*  FreeType 2.  It uses the "freetype" include root.                      */
-/*                                                                         */
-/*  Note that specific platforms might use a different configurations.     */
-/*  For example, on Unix, the "freetype2" include root is used, with       */
-/*  a specific "ft2build.h" used to take care of this. The latter          */
-/*  looks like the following:                                              */
-/*                                                                         */
-/*     #ifndef __FT_BUILD_UNIX_H__                                         */
-/*     #define __FT_BUILD_UNIX_H__                                         */
-/*                                                                         */
-/*     #define  FT_ROOT  freetype2                                         */
-/*     #include <FT_ROOT/config/ft2build.h>                                */
-/*                                                                         */
-/*     #endif // __FT_BUILD_UNIX_H__                                       */
-/*                                                                         */
 /***************************************************************************/
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* This file corresponds to the default "ft2build.h" file for            */
+  /* FreeType 2.  It uses the "freetype" include root.                     */
+  /*                                                                       */
+  /* Note that specific platforms might use a different configuration.     */
+  /* See builds/unix/ft2unix.h for an example.                             */
+  /*                                                                       */
+  /*************************************************************************/
 
 
 #ifndef __FT2_BUILD_GENERIC_H__
@@ -40,5 +34,6 @@
 #include <freetype/config/ft2build.h>
 
 #endif /* __FT2_BUILD_GENERIC_H__ */
+
 
 /* END */

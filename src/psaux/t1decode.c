@@ -20,8 +20,8 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_TYPE1_ERRORS_H
 #include FT_OUTLINE_H
-#include FT_SOURCE_FILE(psaux,t1decode.h)
-#include FT_SOURCE_FILE(psaux,psobjs.h)
+#include FT_SOURCE_FILE( psaux, t1decode.h )
+#include FT_SOURCE_FILE( psaux, psobjs.h )
 
 
   /*************************************************************************/

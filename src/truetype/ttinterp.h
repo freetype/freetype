@@ -21,7 +21,7 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(truetype,ttobjs.h)
+#include FT_SOURCE_FILE( truetype, ttobjs.h )
 
 
 FT_BEGIN_HEADER
