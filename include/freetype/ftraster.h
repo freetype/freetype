@@ -23,6 +23,7 @@
   extern "C" {
 #endif
 
+#include <freetype/ftimage.h>
 
   /*************************************************************************/
   /*                                                                       */
@@ -31,13 +32,11 @@
   /*                                                                       */
 /* #define _STANDALONE_ */
 
-#include <freetype/freetype.h>
-
 #ifndef EXPORT_VAR
-#define EXPORT_VAR(x)  x
+#define EXPORT_VAR(x)  extern x
 #endif
 
-  EXPORT_VAR(FT_Raster_Funcs)  ft_raster_funcs;
+  EXPORT_VAR(FT_Raster_Funcs)  ft_standard_raster;
 
 #ifdef __cplusplus
   }
