@@ -45,6 +45,23 @@ FT_BEGIN_HEADER
   /*    This section contains the basic data types defined by FreeType 2,  */
   /*    ranging from simple scalar types to font specific ones.            */
   /*                                                                       */
+  /* <Order>                                                               */
+  /*    FT_Byte FT_Char FT_Int FT_UInt FT_Short FT_UShort FT_Long          */
+  /*    FT_ULong FT_Fixed FT_Pointer FT_Vector FT_Matrix FT_BBox           */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*                                                                       */
   /*************************************************************************/
 
 
