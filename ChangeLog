@@ -1,3 +1,8 @@
+2004-05-09  George Williams  <gww@silcom.com>
+
+	* src/truetype/ttxgvar.c (ft_var_load_avar, ft_var_load_gvar): Fix
+	error handling.
+
 2004-05-07  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrobjs.c, src/pfr/pfrobjs.h (pfr_face_init,

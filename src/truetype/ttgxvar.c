@@ -294,7 +294,7 @@
 
     if ( version != 0x00010000L                       ||
          axisCount != (FT_Long)blend->mmvar->num_axis )
-      return;
+      goto Exit;
 
     if ( FT_NEW_ARRAY( blend->avar_segment, axisCount ) )
       goto Exit;
@@ -1451,9 +1451,6 @@
       FT_Stream_SeekSet( stream, here );
     }
 
-    FT_FRAME_EXIT();
-    goto Exit;
-
   Fail3:
     FT_FREE( tuple_coords );
     FT_FREE( im_start_coords );
@@ -1463,8 +1460,11 @@
     FT_FRAME_EXIT();
 
   Fail1:
-    FT_FREE( delta_xy );
-    *deltas = NULL;
+    if ( error )
+    {
+      FT_FREE( delta_xy );
+      *deltas = NULL;
+    }
 
   Exit:
     return error;
