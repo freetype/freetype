@@ -58,8 +58,8 @@
   FT_Module_Interface  Get_Interface( FT_Driver         driver,
                                       const FT_String*  interface )
   {
-    UNUSED(driver);
-    UNUSED(interface);
+    FT_UNUSED(driver);
+    FT_UNUSED(interface);
     
 #ifndef Z1_CONFIG_OPTION_NO_MM_SUPPORT
     if ( strcmp( (const char*)interface, "get_mm" ) == 0 )

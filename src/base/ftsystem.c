@@ -70,7 +70,7 @@
   void*  ft_alloc( FT_Memory  memory,
                    long       size )
   {
-    UNUSED( memory );
+    FT_UNUSED( memory );
 
     return malloc( size );
   }
@@ -102,8 +102,8 @@
                      long       new_size,
                      void*      block )
   {
-    UNUSED( memory );
-    UNUSED( cur_size );
+    FT_UNUSED( memory );
+    FT_UNUSED( cur_size );
 
     return realloc( block, new_size );
   }
@@ -126,7 +126,7 @@
   void  ft_free( FT_Memory  memory,
                  void*      block )
   {
-    UNUSED( memory );
+    FT_UNUSED( memory );
 
     free( block );
   }

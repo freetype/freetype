@@ -573,7 +573,7 @@
  {
    Z1_Parser*  parser = &loader->parser;
    
-   UNUSED(face);
+   FT_UNUSED(face);
    
    parser->cursor = parser->limit;
    parser->error  = 0;
@@ -1334,7 +1334,7 @@
   static
   void t1_init_loader( Z1_Loader* loader, T1_Face  face )
   {
-    UNUSED(face);
+    FT_UNUSED(face);
 
     MEM_Set( loader, 0, sizeof(*loader) );
     loader->num_glyphs = 0;

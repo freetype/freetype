@@ -47,7 +47,8 @@ typedef enum FT_Frame_Op_
   ft_frame_off3_be   = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 1, 0 ),
   ft_frame_off3_le   = FT_MAKE_FRAME_OP( FT_FRAME_OP_OFF3, 1, 1 ),
   
-  ft_frame_bytes     = FT_MAKE_FRAME_OP( FT_FRAME_OP_BYTES, 0, 0 )
+  ft_frame_bytes     = FT_MAKE_FRAME_OP( FT_FRAME_OP_BYTES, 0, 0 ),
+  ft_frame_skip      = FT_MAKE_FRAME_OP( FT_FRAME_OP_BYTES, 0, 1 )
 
 } FT_Frame_Op;
 
@@ -96,6 +97,8 @@ typedef struct FT_Frame_Field_
             count,                                                \
             (FT_UShort)(char*)&FT_FIELD_REF(struct_type,field) }
 
+#define FT_FRAME_SKIP_BYTES( count ) { ft_frame_skip, count, 0 }
+            
 
 
   /*************************************************************************/

@@ -31,7 +31,7 @@
 #define TT_MULFIX   FT_MulFix
 #define TT_MULDIV   FT_MulDiv
 
-#define TT_INT64    FT_Int64
+#define TT_FT_INT64    FT_Int64
 
 
   /*************************************************************************/
@@ -122,7 +122,7 @@
   /* This macro is used whenever `exec' is unused in a function, to avoid  */
   /* stupid warnings from pedantic compilers.                              */
   /*                                                                       */
-#define UNUSED_EXEC  UNUSED( CUR )
+#define FT_UNUSED_EXEC  FT_UNUSED( CUR )
 
 
   /*************************************************************************/
@@ -130,7 +130,7 @@
   /* This macro is used whenever `args' is unused in a function, to avoid  */
   /* stupid warnings from pedantic compilers.                              */
   /*                                                                       */
-#define UNUSED_ARG  UNUSED_EXEC; UNUSED( args )
+#define FT_UNUSED_ARG  FT_UNUSED_EXEC; FT_UNUSED( args )
 
 
   /*************************************************************************/
@@ -731,7 +731,7 @@
     exec->callTop = 0;
 
 #if 1
-    UNUSED( debug );
+    FT_UNUSED( debug );
 
     return exec->face->interpreter( exec );
 #else
@@ -839,7 +839,7 @@
   FT_Error  TT_Done_Context( TT_ExecContext  exec )
   {
     /* Nothing at all for now */
-    UNUSED( exec );
+    FT_UNUSED( exec );
 
     return TT_Err_Ok;
   }
@@ -850,7 +850,7 @@
   static FT_F26Dot6  Norm( FT_F26Dot6  X,
                            FT_F26Dot6  Y )
   {
-    TT_INT64  T1, T2;
+    TT_FT_INT64  T1, T2;
 
 
     MUL_64( X, X, T1 );
@@ -1479,7 +1479,7 @@
                                 FT_UShort      point,
                                 FT_F26Dot6     distance )
   {
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
     zone->cur[point].x += distance;
     zone->tags[point]  |= FT_Curve_Tag_Touch_X;
@@ -1491,7 +1491,7 @@
                                 FT_UShort      point,
                                 FT_F26Dot6     distance )
   {
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
     zone->cur[point].y += distance;
     zone->tags[point]  |= FT_Curve_Tag_Touch_Y;
@@ -1526,7 +1526,7 @@
   {
     FT_F26Dot6  val;
 
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
 
     if ( distance >= 0 )
@@ -1566,7 +1566,7 @@
   {
     FT_F26Dot6  val;
 
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
 
     if ( distance >= 0 )
@@ -1610,7 +1610,7 @@
   {
     FT_F26Dot6  val;
 
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
 
     if ( distance >= 0 )
@@ -1652,7 +1652,7 @@
   {
     FT_F26Dot6  val;
 
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
 
     if ( distance >= 0 )
@@ -1697,7 +1697,7 @@
     FT_F26Dot6  val;
 
 
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
     if ( distance >= 0 )
     {
@@ -1740,7 +1740,7 @@
   {
     FT_F26Dot6 val;
 
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
 
     if ( distance >= 0 )
@@ -2073,7 +2073,7 @@
   FT_F26Dot6  Project_x( EXEC_OP_ FT_Vector*  v1,
                                   FT_Vector*  v2 )
   {
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
     return ( v1->x - v2->x );
   }
@@ -2099,7 +2099,7 @@
   FT_F26Dot6  Project_y( EXEC_OP_ FT_Vector*  v1,
                                   FT_Vector*  v2 )
   {
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
    return ( v1->y - v2->y );
   }
@@ -2214,7 +2214,7 @@
     FT_F26Dot6  W;
     FT_Bool     S1, S2;
 
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
 
     if ( ABS( Vx ) < 0x10000L && ABS( Vy ) < 0x10000L )
@@ -3986,7 +3986,7 @@
   {
     FT_Long  A, B, C;
 
-    UNUSED_EXEC;
+    FT_UNUSED_EXEC;
 
 
     A = args[2];
@@ -4089,7 +4089,7 @@
   {
     FT_Int  nIfs;
 
-    UNUSED_ARG;
+    FT_UNUSED_ARG;
 
 
     nIfs = 1;
@@ -4198,7 +4198,7 @@
   {
     TT_CallRec*  pRec;
 
-    UNUSED_ARG;
+    FT_UNUSED_ARG;
 
 
     if ( CUR.callTop <= 0 )     /* We encountered an ENDF without a call */
@@ -5010,7 +5010,7 @@
   {
     FT_UShort  point;
 
-    UNUSED_ARG;
+    FT_UNUSED_ARG;
 
 
     if ( CUR.top < CUR.GS.loop )
@@ -5192,7 +5192,7 @@
                   dy;
     FT_UShort     point;
 
-    UNUSED_ARG;
+    FT_UNUSED_ARG;
 
 
     if ( CUR.top < CUR.GS.loop )
@@ -5757,7 +5757,7 @@
     FT_UShort   point;
     FT_F26Dot6  distance;
 
-    UNUSED_ARG;
+    FT_UNUSED_ARG;
 
 
     if ( CUR.top < CUR.GS.loop ||
@@ -5926,7 +5926,7 @@
                 distance;
     FT_UShort   point;
 
-    UNUSED_ARG;
+    FT_UNUSED_ARG;
 
 
     if ( CUR.top < CUR.GS.loop )
@@ -6165,7 +6165,7 @@
     FT_UInt   point;         /* current point   */
     FT_Short  contour;       /* current contour */
 
-    UNUSED_ARG;
+    FT_UNUSED_ARG;
 
 
     if ( CUR.opcode & 1 )
@@ -6433,7 +6433,7 @@
     TT_DefRecord*  def   = CUR.IDefs;
     TT_DefRecord*  limit = def + CUR.numIDefs;
 
-    UNUSED_ARG;
+    FT_UNUSED_ARG;
 
 
     for ( ; def < limit; def++ )

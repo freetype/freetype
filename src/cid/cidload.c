@@ -466,7 +466,7 @@
   void t1_init_loader( CID_Loader*  loader,
                        CID_Face     face )
   {
-    UNUSED( face );
+    FT_UNUSED( face );
 
     MEM_Set( loader, 0, sizeof ( *loader ) );
   }

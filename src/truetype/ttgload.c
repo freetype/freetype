@@ -813,7 +813,7 @@
     {
       TT_GlyphSlot  glyph = (TT_GlyphSlot)loader->glyph;
       FT_UInt       start_point, start_contour;
-      
+      FT_ULong      ins_pos;  /* position of composite instructions, if any */
 
       /* for each subglyph, read composite header */
       start_point   = gloader->base.outline.n_points;
@@ -823,6 +823,7 @@
       if ( error )
         goto Fail;
 
+      ins_pos = loader->ins_pos;
       face->forget_glyph_frame( loader );
       opened_frame = 0;
 
@@ -973,7 +974,7 @@
 
         if ( num_subglyphs > 0               &&
              loader->exec                    &&
-             loader->ins_pos > 0             &&
+             ins_pos         > 0             &&
              subglyph->flags & WE_HAVE_INSTR )
         {
           FT_UShort       n_ins;
@@ -984,8 +985,8 @@
 
 
           /* read size of instructions */
-          if ( FILE_Seek( loader->ins_pos ) ||
-               READ_UShort( n_ins )         )
+          if ( FILE_Seek( ins_pos ) ||
+               READ_UShort( n_ins ) )
             goto Fail;
           FT_TRACE5(( "  Instructions size = %d\n", n_ins ));
 

@@ -128,10 +128,10 @@
                             FT_UInt     horz_resolution,
                             FT_UInt     vert_resolution )
   {
-    UNUSED( char_width );
-    UNUSED( char_height );
-    UNUSED( horz_resolution );
-    UNUSED( vert_resolution );
+    FT_UNUSED( char_width );
+    FT_UNUSED( char_height );
+    FT_UNUSED( horz_resolution );
+    FT_UNUSED( vert_resolution );
 
     size->valid = FALSE;
 
@@ -164,8 +164,8 @@
                              FT_Int   pixel_width,
                              FT_Int   pixel_height )
   {
-    UNUSED( pixel_width );
-    UNUSED( pixel_height );
+    FT_UNUSED( pixel_width );
+    FT_UNUSED( pixel_height );
 
     size->valid = FALSE;
 

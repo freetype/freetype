@@ -108,7 +108,7 @@
   /* Its purpose is simply to reduce compiler warnings.  Note also that  */
   /* simply defining it as `(void)x' doesn't avoid warnings with certain */
   /* ANSI compilers (e.g. LCC).                                          */
-#define UNUSED( x )  (x) = (x)
+#define FT_UNUSED( x )  (x) = (x)
 
   /* Disable the tracing mechanism for simplicity -- developers can      */
   /* activate it easily by redefining these two macros.                  */
@@ -125,7 +125,7 @@
 
 
 #include "ftgrays.h"
-#include <freetype/internal/ftobjs.h>  /* for UNUSED()                  */
+#include <freetype/internal/ftobjs.h>  /* for FT_UNUSED()                  */
 #include <freetype/internal/ftdebug.h> /* for FT_TRACE() and FT_ERROR() */
 #include <freetype/ftoutln.h>          /* for FT_Outline_Decompose()    */
 
@@ -1356,7 +1356,7 @@
     TScan  x, y, cover, area;
     PCell  start, cur, limit;
 
-    UNUSED( target );
+    FT_UNUSED( target );
 
 
     cur   = ras.cells;
@@ -1879,7 +1879,7 @@
   {
     static TRaster  the_raster;
 
-    UNUSED( memory );
+    FT_UNUSED( memory );
 
 
     *araster = (FT_Raster)&the_raster;
@@ -1893,7 +1893,7 @@
   void  grays_raster_done( FT_Raster  raster )
   {
     /* nothing */
-    UNUSED( raster );
+    FT_UNUSED( raster );
   }
 
 #else /* _STANDALONE_ */

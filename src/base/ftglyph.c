@@ -1084,7 +1084,7 @@
     FT_Pos     distance;
     int        c, n, first, orientation;
 
-    UNUSED( advance );
+    FT_UNUSED( advance );
 
 
     /* compute control distance */

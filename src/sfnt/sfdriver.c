@@ -77,7 +77,7 @@
   FT_Module_Interface  SFNT_Get_Interface( FT_Module    module,
                                            const char*  interface )
   {
-    UNUSED( module );
+    FT_UNUSED( module );
 
     if ( strcmp( interface, "get_sfnt" ) == 0 )
       return (FT_Module_Interface)get_sfnt_table;

@@ -111,7 +111,7 @@
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
-#ifdef LONG64
+#ifdef FT_LONG64
 
   /*************************************************************************/
   /*                                                                       */
@@ -252,7 +252,7 @@
 
     while ( z )
     {
-      z = (unsigned INT64)z >> 1;
+      z = (unsigned FT_INT64)z >> 1;
       j++;
     }
     return j - 1;
@@ -298,7 +298,7 @@
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
-#else /* LONG64 */
+#else /* FT_LONG64 */
 
 
   /*************************************************************************/
@@ -767,7 +767,7 @@
 
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
-#endif /* LONG64 */
+#endif /* FT_LONG64 */
 
 
 /* END */

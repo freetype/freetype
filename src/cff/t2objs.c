@@ -203,7 +203,7 @@
 
 #else
 
-    UNUSED( driver );
+    FT_UNUSED( driver );
 
     return T2_Err_Ok;
 
@@ -233,7 +233,7 @@
 
 #else
 
-    UNUSED( driver );
+    FT_UNUSED( driver );
 
 #endif
   }

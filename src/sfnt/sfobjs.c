@@ -186,8 +186,8 @@
     SFNT_Header         sfnt_header;
 
     /* for now, parameters are unused */
-    UNUSED( num_params );
-    UNUSED( params );
+    FT_UNUSED( num_params );
+    FT_UNUSED( params );
 
     sfnt = (SFNT_Interface*)face->sfnt;
     if ( !sfnt )
@@ -246,9 +246,9 @@
     FT_Error         error;
     SFNT_Interface*  sfnt = (SFNT_Interface*)face->sfnt;
 
-    UNUSED( face_index );
-    UNUSED( num_params );
-    UNUSED( params );
+    FT_UNUSED( face_index );
+    FT_UNUSED( num_params );
+    FT_UNUSED( params );
 
 
     /* Load tables */

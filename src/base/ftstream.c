@@ -540,19 +540,27 @@
         continue;  /* loop! */
 
       case ft_frame_bytes:  /* read a byte sequence */
+      case ft_frame_skip:   /* skip some bytes      */
         {
-          FT_Int  len = stream->limit - stream->cursor;
-
-
-          if ( len > fields->size )
-            len = fields->size;
-
-          p = (FT_Byte*)structure + fields->offset;
-          MEM_Copy( p, stream->cursor, len );
-          stream->cursor += len;
+          FT_Int  len = fields->size;
+          
+          if (stream->cursor + len > stream->limit)
+          {
+            error = FT_Err_Invalid_Stream_Operation;
+            goto Exit;
+          }
+          
+          if (fields->value == ft_frame_bytes)
+          {
+            p = (FT_Byte*)structure + fields->offset;
+            MEM_Copy( p, stream->cursor, len );
+          }
+          stream->cursor += len;  
           fields++;
           continue;
         }
+
+        
 
       case ft_frame_byte:
       case ft_frame_schar:  /* read a single byte */
@@ -644,7 +652,7 @@
 
       /* now, compute the signed value is necessary */
       if ( fields->value & FT_FRAME_OP_SIGNED )
-        value = (FT_ULong)( (FT_Long)( value << sign_shift ) >> sign_shift );
+        value = (FT_ULong)( (FT_Int32)( value << sign_shift ) >> sign_shift );
 
       /* finally, store the value in the object */
 
@@ -659,23 +667,11 @@
         *(FT_UShort*)p = (FT_UShort)value;
         break;
 
-        /* SIZEOF_INT is defined in <freetype/config/ftconfig.h> */
-        /* and gives the size in bytes of the `int' type on the  */
-        /* current platform.                                     */
-        /*                                                       */
-        /* Only on 16-bit systems the value of SIZEOF_INT can be */
-        /* less than 4.  In this case SIZEOF_LONG is always 4.   */
-        /*                                                       */
-        /* On a 64-bit system, SIZEOF_LONG can be 8, which is    */
-        /* handled by the default case.                          */
-        /*                                                       */
-#if SIZEOF_INT == 4
       case 4:
-        *(FT_UInt*)p = (FT_UInt)value;
+        *(FT_UInt32*)p = (FT_UInt32)value;
         break;
-#endif
 
-      default:
+      default:  /* for 64-bits systems */
         *(FT_ULong*)p = (FT_ULong)value;
       }
 

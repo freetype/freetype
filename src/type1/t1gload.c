@@ -408,9 +408,9 @@
     FT_Vector*   flex  = decoder->flex_vectors;
     FT_Int       n;
 
-    UNUSED( threshold );
-    UNUSED( end_x );
-    UNUSED( end_y );
+    FT_UNUSED( threshold );
+    FT_UNUSED( end_x );
+    FT_UNUSED( end_y );
 
 
     /* we don't even try to test the threshold in the non-hinting   */
@@ -1080,9 +1080,9 @@
                         FT_Pos       wx,
                         FT_Pos       wy )
   {
-    UNUSED( sbx );
-    UNUSED( sby );
-    UNUSED( wy );
+    FT_UNUSED( sbx );
+    FT_UNUSED( sby );
+    FT_UNUSED( wy );
 
     if ( wx > decoder->builder.advance.x )
       decoder->builder.advance.x = wx;

@@ -103,7 +103,7 @@
     return error;
 #else
 
-    UNUSED( error );
+    FT_UNUSED( error );
 
     return T1_Err_Ok;
 
@@ -262,10 +262,10 @@
     FT_Error            error;
     PSNames_Interface*  psnames;
 
-    UNUSED( num_params );
-    UNUSED( params );
-    UNUSED( face_index );
-    UNUSED( face );
+    FT_UNUSED( num_params );
+    FT_UNUSED( params );
+    FT_UNUSED( face_index );
+    FT_UNUSED( face );
 
 
     face->root.num_faces = 1;
@@ -486,7 +486,7 @@
 
 #else
 
-    UNUSED( glyph );
+    FT_UNUSED( glyph );
 
 #endif
   }
@@ -515,7 +515,7 @@
 
 #else
 
-    UNUSED( glyph );
+    FT_UNUSED( glyph );
 
 #endif
 

@@ -627,10 +627,10 @@
         {
           if ( ip + 3 >= limit )
             goto Syntax_Error;
-          val = ( (FT_Long)ip[0] << 24 ) |
-                ( (FT_Long)ip[1] << 16 ) |
-                ( (FT_Long)ip[2] <<  8 ) |
-                           ip[3];
+          val = ( (FT_Int32)ip[0] << 24 ) |
+                ( (FT_Int32)ip[1] << 16 ) |
+                ( (FT_Int32)ip[2] <<  8 ) |
+                            ip[3];
           ip    += 4;
           shift  = 0;
         }

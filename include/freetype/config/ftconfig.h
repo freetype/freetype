@@ -63,20 +63,20 @@
 
 /* The number of bytes in an `int' type.  */
 #if   UINT_MAX == 0xFFFFFFFF
-#define SIZEOF_INT  4
+#define FT_SIZEOF_INT  4
 #elif UINT_MAX == 0xFFFF
-#define SIZEOF_INT  2
+#define FT_SIZEOF_INT  2
 #elif UINT_MAX > 0xFFFFFFFF && UINT_MAX == 0xFFFFFFFFFFFFFFFF
-#define SIZEOF_INT  8
+#define FT_SIZEOF_INT  8
 #else
 #error "Unsupported number of bytes in `int' type!"
 #endif
 
 /* The number of bytes in a `long' type.  */
 #if   ULONG_MAX == 0xFFFFFFFF
-#define SIZEOF_LONG  4
+#define FT_SIZEOF_LONG  4
 #elif ULONG_MAX > 0xFFFFFFFF && ULONG_MAX == 0xFFFFFFFFFFFFFFFF
-#define SIZEOF_LONG  8
+#define FT_SIZEOF_LONG  8
 #else
 #error "Unsupported number of bytes in `long' type!"
 #endif
@@ -97,8 +97,8 @@
 
 /* UNUSED is a macro used to indicate that a given parameter is not used */
 /* this is only used to get rid of unpleasant compiler warnings..        */
-#ifndef UNUSED
-#define UNUSED( arg )  ( (arg)=(arg) )
+#ifndef FT_UNUSED
+#define FT_UNUSED( arg )  ( (arg)=(arg) )
 #endif
 
 
@@ -123,12 +123,12 @@
   typedef signed short    FT_Int16;
   typedef unsigned short  FT_Word16;
 
-#if SIZEOF_INT == 4
+#if FT_SIZEOF_INT == 4
 
   typedef signed int      FT_Int32;
   typedef unsigned int    FT_Word32;
 
-#elif SIZEOF_LONG == 4
+#elif FT_SIZEOF_LONG == 4
 
   typedef signed long     FT_Int32;
   typedef unsigned long   FT_Word32;
@@ -137,11 +137,11 @@
 #error "no 32bit type found - please check your configuration files"
 #endif
 
-#if SIZEOF_LONG == 8
+#if FT_SIZEOF_LONG == 8
 
-  /* LONG64 must be defined when a 64-bit type is available */
-#define LONG64
-#define INT64   long
+  /* FT_LONG64 must be defined when a 64-bit type is available */
+#define FT_LONG64
+#define FT_INT64   long
 
 #else
 
@@ -156,8 +156,8 @@
   /*                                                                       */
 #ifdef FTCALC_USE_LONG_LONG
 
-#define LONG64
-#define INT64   long long
+#define FT_LONG64
+#define FT_INT64   long long
 
 #endif /* FTCALC_USE_LONG_LONG */
 #endif

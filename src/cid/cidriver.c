@@ -40,8 +40,8 @@
   FT_Module_Interface  CID_Get_Interface( FT_Driver         driver,
                                           const FT_String*  interface )
   {
-    UNUSED( driver );
-    UNUSED( interface );
+    FT_UNUSED( driver );
+    FT_UNUSED( interface );
 
     return 0;
   }

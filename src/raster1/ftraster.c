@@ -146,7 +146,7 @@
   /* Its purpose is simply to reduce compiler warnings.  Note also that  */
   /* simply defining it as `(void)x' doesn't avoid warnings with certain */
   /* ANSI compilers (e.g. LCC).                                          */
-#define UNUSED( x )  (x) = (x)
+#define FT_UNUSED( x )  (x) = (x)
 
   /* Disable the tracing mechanism for simplicity -- developers can      */
   /* activate it easily by redefining these two macros.                  */
@@ -311,7 +311,7 @@
 #define RAS_VARS       /* void */
 #define RAS_VAR        /* void */
 
-#define UNUSED_RASTER  do ; while ( 0 )
+#define FT_UNUSED_RASTER  do ; while ( 0 )
 
 
 #else /* TT_STATIC_RASTER */
@@ -323,7 +323,7 @@
 #define RAS_VARS       raster,
 #define RAS_VAR        raster
 
-#define UNUSED_RASTER  UNUSED( raster )
+#define FT_UNUSED_RASTER  FT_UNUSED( raster )
 
 
 #endif /* TT_STATIC_RASTER */
@@ -2028,7 +2028,7 @@
   {
     Long  pitch = ras.target.pitch;
 
-    UNUSED( max );
+    FT_UNUSED( max );
 
 
     ras.traceIncr = (Short)-pitch;
@@ -2053,9 +2053,9 @@
     Byte   f1, f2;
     Byte*  target;
 
-    UNUSED( y );
-    UNUSED( left );
-    UNUSED( right );
+    FT_UNUSED( y );
+    FT_UNUSED( left );
+    FT_UNUSED( right );
 
 
     /* Drop-out control */
@@ -2239,9 +2239,9 @@
                                         Short*  max )
   {
     /* nothing, really */
-    UNUSED( raster );
-    UNUSED( min );
-    UNUSED( max );
+    FT_UNUSED( raster );
+    FT_UNUSED( min );
+    FT_UNUSED( max );
   }
 
 
@@ -2256,8 +2256,8 @@
     PByte  bits;
     Byte   f1;
 
-    UNUSED( left );
-    UNUSED( right );
+    FT_UNUSED( left );
+    FT_UNUSED( right );
 
 
     if ( x2 - x1 < ras.precision )
@@ -2388,7 +2388,7 @@
   void Horizontal_Sweep_Step( RAS_ARG )
   {
     /* Nothing, really */
-    UNUSED( raster );
+    FT_UNUSED( raster );
   }
 
 
@@ -2535,12 +2535,12 @@
                                              PProfile    right )
   {
     /* nothing, really */
-    UNUSED( raster );
-    UNUSED( y );
-    UNUSED( x1 );
-    UNUSED( x2 );
-    UNUSED( left );
-    UNUSED( right );
+    FT_UNUSED( raster );
+    FT_UNUSED( y );
+    FT_UNUSED( x1 );
+    FT_UNUSED( x2 );
+    FT_UNUSED( left );
+    FT_UNUSED( right );
   }
 
 
@@ -3097,7 +3097,7 @@
   LOCAL_FUNC
   FT_Error  Render_Gray_Glyph( RAS_ARG )
   {
-    UNUSED_RASTER;
+    FT_UNUSED_RASTER;
 
     return FT_Err_Cannot_Render_Glyph;
   }
@@ -3235,9 +3235,9 @@
 
 #else
 
-    UNUSED( raster );
-    UNUSED( mode );
-    UNUSED( palette );
+    FT_UNUSED( raster );
+    FT_UNUSED( mode );
+    FT_UNUSED( palette );
 
 #endif
   }

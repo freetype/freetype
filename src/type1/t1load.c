@@ -592,7 +592,7 @@
   static
   FT_Error  Do_Def_Ignore( T1_Parser*  parser )
   {
-    UNUSED( parser );
+    FT_UNUSED( parser );
     return T1_Err_Ok;
   }
 

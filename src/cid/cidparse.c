@@ -761,13 +761,11 @@
             *(FT_UShort*)q = (FT_UShort)val;
             break;
 
-#if SIZEOF_INT == 4
           case 4:
-            *(FT_Int*)q = (FT_Int)val;
+            *(FT_Int32*)q = (FT_Int)val;
             break;
-#endif
 
-          default:
+          default:  /* for 64-bit systems */
             *(FT_Long*)q = val;
         }
         break;

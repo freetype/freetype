@@ -245,8 +245,8 @@
                              FT_UInt  pixel_width,
                              FT_UInt  pixel_height )
   {
-    UNUSED( pixel_width );
-    UNUSED( pixel_height );
+    FT_UNUSED( pixel_width );
+    FT_UNUSED( pixel_height );
 
     /* many things have been pre-computed by the base layer */
 

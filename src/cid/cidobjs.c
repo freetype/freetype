@@ -121,10 +121,10 @@
     FT_Error            error;
     PSNames_Interface*  psnames;
 
-    UNUSED( num_params );
-    UNUSED( params );
-    UNUSED( face_index );
-    UNUSED( stream );
+    FT_UNUSED( num_params );
+    FT_UNUSED( params );
+    FT_UNUSED( face_index );
+    FT_UNUSED( stream );
 
 
     face->root.num_faces = 1;
@@ -341,7 +341,7 @@
   LOCAL_FUNC
   FT_Error  CID_Init_Driver( CID_Driver  driver )
   {
-    UNUSED( driver );
+    FT_UNUSED( driver );
 
     return T1_Err_Ok;
   }
@@ -361,7 +361,7 @@
   LOCAL_DEF
   void  CID_Done_Driver( CID_Driver  driver )
   {
-    UNUSED( driver );
+    FT_UNUSED( driver );
   }
 
 
