@@ -334,7 +334,7 @@
       if ( end != n_points - 1 )
         goto Bad;
 
-      /* XXX: check the that array */
+      /* XXX: check the tags array */
       return 0;
     }
 
