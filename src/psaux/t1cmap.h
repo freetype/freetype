@@ -32,9 +32,9 @@ FT_BEGIN_HEADER
   } T1_CMapStdRec;
 
 
-  FT_LOCAL( const FT_CMap_ClassRec )   t1_cmap_standard_class_rec;
+  FT_LOCAL( const FT_CMap_ClassRec )  t1_cmap_standard_class_rec;
   
-  FT_LOCAL( const FT_CMap_ClassRec )   t1_cmap_expert_class_rec;
+  FT_LOCAL( const FT_CMap_ClassRec )  t1_cmap_expert_class_rec;
   
  /***************************************************************************/
  /***************************************************************************/

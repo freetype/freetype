@@ -299,7 +299,6 @@ THE SOFTWARE.
     /* set-up charmap */
     {
       FT_String   *charset_registry, *charset_encoding;
-      FT_Face      root = FT_FACE(face);
       FT_Bool      unicode_charmap  = 0;
 
 
@@ -547,7 +546,7 @@ THE SOFTWARE.
 #ifndef FT_CONFIG_OPTION_USE_CMAPS    
     (FT_CharMap_CharIndexFunc) PCF_Char_Get_Index,
 #else
-    (FT_CharMap_CharNextFunc)  0,
+    (FT_CharMap_CharIndexFunc)  0,
 #endif
 
     (FT_Face_GetKerningFunc)   0,

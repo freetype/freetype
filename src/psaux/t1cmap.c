@@ -19,7 +19,7 @@
     PSNames_Service  psnames = face->psnames;
 
     cmap->num_glyphs    = face->type1.num_glyphs;
-    cmap->glyph_names   = face->type1.glyph_names;
+    cmap->glyph_names   = (const char* const*)face->type1.glyph_names;
     cmap->sid_to_string = psnames->adobe_std_strings;
     cmap->code_to_sid   = is_expert ? psnames->adobe_expert_encoding
                                     : psnames->adobe_std_encoding;
@@ -416,7 +416,7 @@
   }
 
 
-  FT_CALLBACK_TABLE_DEF const FT_CMap_ClassRec
+  FT_LOCAL_DEF( const FT_CMap_ClassRec )
   t1_cmap_unicode_class_rec =
   {
     sizeof( T1_CMapUnicodeRec ),
@@ -427,7 +427,4 @@
   };
 
 
-
-  FT_LOCAL_DEF( const FT_CMap_Class )
-  t1_cmap_unicode_class = &t1_cmap_unicode_class_rec;
 

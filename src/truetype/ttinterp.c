@@ -825,39 +825,6 @@
   }
 
 
- /* return length of given vector */
-#ifdef FT_CONFIG_OPTION_OLD_CALCS
-
-  static FT_F26Dot6
-  Norm( FT_F26Dot6  X,
-        FT_F26Dot6  Y )
-  {
-    TT_INT64  T1, T2;
-
-
-    MUL_64( X, X, T1 );
-    MUL_64( Y, Y, T2 );
-
-    ADD_64( T1, T2, T1 );
-
-    return (FT_F26Dot6)SQRT_64( T1 );
-  }
-
-#else  /* !FT_CONFIG_OPTION_OLD_CALCS */
-
-  static FT_F26Dot6
-  Norm( FT_F26Dot6  X,
-        FT_F26Dot6  Y )
-  {
-    FT_Vector  v;
-
-    v.x = X;
-    v.y = Y;
-    return FT_Vector_Length( &v );
-  }
-
-#endif /* FT_CONFIG_OPTION_OLD_CALCS */
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -1201,6 +1168,153 @@
 #define NULL_Vector  (FT_Vector*)&Null_Vector
 
 
+ /* compute (a*b)/2^14 with maximal accuracy and rounding */
+  static FT_Int32
+  TT_MulFix14( FT_Int32  a, FT_Int  b )
+  {
+    FT_Int32   m, s, hi;
+    FT_UInt32  l, lo;
+    
+    /* compute ax*bx as 64-bit value */
+    l  = (FT_UInt32)( (a & 0xFFFF)*b );
+    m  = (a >> 16)*b;
+    
+    lo = l + (FT_UInt32)(m << 16);
+    hi = (m >> 16) + ((FT_Int32)l >> 31) + (lo < l);
+    
+    /* divide the result by 2^14 with rounding */
+    s   = (hi >> 31);
+    l   = lo + (FT_UInt32)s;
+    hi += s + (l < lo);
+    lo  = l;
+
+    l   = lo + 0x2000U;
+    hi += (l < lo);
+    
+    return ( (hi << 18) | (l >> 14) );
+  }
+
+
+ /* compute (ax*bx+ay*by)/2^14 with maximal accuracy and rounding */
+  static FT_Int32
+  TT_DotFix14( FT_Int32  ax, FT_Int32  ay, FT_Int  bx, FT_Int  by )
+  {
+    FT_Int32   m, s, hi1, hi2, hi;
+    FT_UInt32  l, lo1, lo2, lo;
+    
+    /* compute ax*bx as 64-bit value */
+    l = (FT_UInt32)( (ax & 0xFFFF)*bx );
+    m = (ax >> 16)*bx;
+    
+    lo1 = l + (FT_UInt32)(m << 16);
+    hi1 = (m >> 16) + ((FT_Int32)l >> 31) + (lo1 < l);
+    
+    /* compute ay*by as 64-bit value */
+    l = (FT_UInt32)( (ay & 0xFFFF)*by );
+    m = (ay >> 16)*by;
+    
+    lo2 = l + (FT_UInt32)(m << 16);
+    hi2 = (m >> 16) + ((FT_Int32)l >> 31) + (lo2 < l);
+    
+    /* add them */
+    lo = lo1 + lo2;
+    hi = hi1 + hi2 + (lo < lo1);
+    
+    /* divide the result by 2^14 with rounding */
+    s   = (hi >> 31);
+    l   = lo + (FT_UInt32)s;
+    hi += s + (l < lo);
+    lo  = l;
+
+    l   = lo + 0x2000U;
+    hi += (l < lo);
+    
+    return ( (hi << 18) | (l >> 14) );
+  }
+
+ /* return length of given vector */
+#if 0
+
+  static FT_Int32
+  TT_VecLen( FT_Int32  x, FT_Int32  y )
+  {
+    FT_Int32  m, hi1, hi2, hi;
+    FT_UInt32 l, lo1, lo2, lo;
+    
+    /* compute x*x as 64-bit value */
+    lo = (FT_UInt32)(x & 0xFFFF);
+    hi = (x >> 16);
+    
+    l  = lo*lo;
+    m  = hi*lo;
+    hi = hi*hi;
+    
+    lo1 = l + (FT_UInt32)(m << 17);
+    hi1 = hi + (m >> 15) + (lo1 < l);
+    
+    /* compute y*y as 64-bit value */
+    lo = (FT_UInt32)( y & 0xFFFF );
+    hi = (y >> 16);
+    
+    l  = lo*lo;
+    m  = hi*lo;
+    hi = hi*hi;
+    
+    lo2 = l + (FT_UInt32)(m << 17);
+    hi2 = hi + (m >> 15) + (lo2 < l);
+    
+    /* add them to get 'x*x+y*y' as 64-bit value */
+    lo = lo1 + lo2;
+    hi = hi1 + hi2 + (lo < lo1);
+    
+    /* compute the square root of this value */
+    {
+      FT_UInt32  root, rem, test_div;
+      FT_Int     count;
+
+
+      root = 0;
+
+      {
+        rem   = 0;
+        count = 32;
+        do
+        {
+          rem      = ( rem << 2 ) | ( (FT_UInt32)hi  >> 30 );
+          hi       = (  hi << 2 ) | ( lo >> 30 );
+          lo     <<= 2;
+          root   <<= 1;
+          test_div = ( root << 1 ) + 1;
+
+          if ( rem >= test_div )
+          {
+            rem  -= test_div;
+            root += 1;
+          }
+        } while ( --count );
+      }
+      
+      return (FT_Int32)root;
+    }
+  }
+#else
+ 
+ /* this version uses FT_Vector_Length which computes the same value */
+ /* much, much faster..                                              */
+ /*                                                                  */
+  static FT_F26Dot6
+  TT_VecLen( FT_F26Dot6  X,
+             FT_F26Dot6  Y )
+  {
+    FT_Vector  v;
+
+    v.x = X;
+    v.y = Y;
+    return FT_Vector_Length( &v );
+  }
+  
+#endif
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1231,7 +1345,7 @@
 
       x = TT_MULDIV( CUR.GS.projVector.x, CUR.tt_metrics.x_ratio, 0x4000 );
       y = TT_MULDIV( CUR.GS.projVector.y, CUR.tt_metrics.y_ratio, 0x4000 );
-      CUR.tt_metrics.ratio = Norm( x, y );
+      CUR.tt_metrics.ratio = TT_VecLen( x, y );
     }
 
     return CUR.tt_metrics.ratio;
@@ -1982,8 +2096,10 @@
   Project( EXEC_OP_ FT_Vector*  v1,
                     FT_Vector*  v2 )
   {
-    return TT_MULDIV( v1->x - v2->x, CUR.GS.projVector.x, 0x4000 ) +
-           TT_MULDIV( v1->y - v2->y, CUR.GS.projVector.y, 0x4000 );
+    return TT_DotFix14( v1->x - v2->x,
+                        v1->y - v2->y,
+                        CUR.GS.projVector.x,
+                        CUR.GS.projVector.y );
   }
 
 
@@ -2007,8 +2123,10 @@
   Dual_Project( EXEC_OP_ FT_Vector*  v1,
                          FT_Vector*  v2 )
   {
-    return TT_MULDIV( v1->x - v2->x, CUR.GS.dualVector.x, 0x4000 ) +
-           TT_MULDIV( v1->y - v2->y, CUR.GS.dualVector.y, 0x4000 );
+    return TT_DotFix14( v1->x - v2->x,
+                        v1->y - v2->y,
+                        CUR.GS.dualVector.x,
+                        CUR.GS.dualVector.y );
   }
 
 
@@ -2032,8 +2150,10 @@
   Free_Project( EXEC_OP_ FT_Vector*  v1,
                          FT_Vector*  v2 )
   {
-    return TT_MULDIV( v1->x - v2->x, CUR.GS.freeVector.x, 0x4000 ) +
-           TT_MULDIV( v1->y - v2->y, CUR.GS.freeVector.y, 0x4000 );
+    return TT_DotFix14( v1->x - v2->x,
+                        v1->y - v2->y,
+                        CUR.GS.freeVector.x,
+                        CUR.GS.freeVector.y );
   }
 
 
@@ -2188,7 +2308,6 @@
   /*    R is undefined.                                                    */
   /*                                                                       */
 
-#ifdef FT_CONFIG_OPTION_OLD_CALCS
 
   static FT_Bool
   Normalize( EXEC_OP_ FT_F26Dot6      Vx,
@@ -2206,7 +2325,7 @@
       Vx *= 0x100;
       Vy *= 0x100;
 
-      W = Norm( Vx, Vy );
+      W = TT_VecLen( Vx, Vy );
 
       if ( W == 0 )
       {
@@ -2221,7 +2340,7 @@
       return SUCCESS;
     }
 
-    W = Norm( Vx, Vy );
+    W = TT_VecLen( Vx, Vy );
 
     Vx = FT_MulDiv( Vx, 0x4000L, W );
     Vy = FT_MulDiv( Vy, 0x4000L, W );
@@ -2283,30 +2402,6 @@
 
     return SUCCESS;
   }
-
-#else
-
-  static FT_Bool
-  Normalize( EXEC_OP_ FT_F26Dot6      Vx,
-                      FT_F26Dot6      Vy,
-                      FT_UnitVector*  R )
-  {
-    FT_Vector  v;
-    FT_Angle   angle;
-
-    FT_UNUSED_EXEC;
-
-    angle = FT_Atan2( Vx, Vy );
-
-    FT_Vector_Unit( &v, angle );
-
-    R->x = (short)(v.x >> 2);
-    R->y = (short)(v.y >> 2);
-
-    return SUCCESS;
-  }
-
-#endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
   /*************************************************************************/
@@ -5016,8 +5111,8 @@
 
 #ifdef NO_APPLE_PATENT
 
-    *x = TT_MULDIV( d, CUR.GS.freeVector.x, 0x4000 );
-    *y = TT_MULDIV( d, CUR.GS.freeVector.y, 0x4000 );
+    *x = TT_MulFix14( d, CUR.GS.freeVector.x );
+    *y = TT_MulFix14( d, CUR.GS.freeVector.y );
 
 #else
 
@@ -5225,12 +5320,8 @@
       return;
     }
 
-    dx = TT_MULDIV( args[0],
-                    (FT_Long)CUR.GS.freeVector.x,
-                    0x4000 );
-    dy = TT_MULDIV( args[0],
-                    (FT_Long)CUR.GS.freeVector.y,
-                    0x4000 );
+    dx = TT_MulFix14( args[0], CUR.GS.freeVector.x );
+    dy = TT_MulFix14( args[0], CUR.GS.freeVector.y );
 
     while ( CUR.GS.loop > 0 )
     {
@@ -5393,11 +5484,9 @@
 
     if ( CUR.GS.gep0 == 0 )   /* If in twilight zone */
     {
-      CUR.zp0.org[point].x = TT_MULDIV( CUR.GS.freeVector.x,
-                                        distance, 0x4000 );
-      CUR.zp0.org[point].y = TT_MULDIV( CUR.GS.freeVector.y,
-                                        distance, 0x4000 );
-      CUR.zp0.cur[point] = CUR.zp0.org[point];
+      CUR.zp0.org[point].x = TT_MulFix14( distance, CUR.GS.freeVector.x );
+      CUR.zp0.org[point].y = TT_MulFix14( distance, CUR.GS.freeVector.y ),
+      CUR.zp0.cur[point]   = CUR.zp0.org[point];
     }
 
     org_dist = CUR_Func_project( CUR.zp0.cur + point, NULL_Vector );
@@ -5550,14 +5639,10 @@
     if ( CUR.GS.gep1 == 0 )
     {
       CUR.zp1.org[point].x = CUR.zp0.org[CUR.GS.rp0].x +
-                             TT_MULDIV( cvt_dist,
-                                        CUR.GS.freeVector.x,
-                                        0x4000 );
+                             TT_MulFix14( cvt_dist, CUR.GS.freeVector.x );
 
       CUR.zp1.org[point].y = CUR.zp0.org[CUR.GS.rp0].y +
-                             TT_MULDIV( cvt_dist,
-                                        CUR.GS.freeVector.y,
-                                        0x4000 );
+                             TT_MulFix14( cvt_dist, CUR.GS.freeVector.y );
 
       CUR.zp1.cur[point] = CUR.zp1.org[point];
     }
