@@ -1,3 +1,26 @@
+2001-02-07  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/type1/t1objs.c (T1_Init_Face): Added code to get the
+	units_per_EM from the value assigned in parse_font_matrix, if
+	available.  Default to 1000 if not available.
+
+	* src/cff/cffparse.c (cff_parse_font_matrix): Added logic to get
+	the units_per_EM from the FontMatrix.
+
+	(cff_parse_fixed_thousand): New function. Gets a real number fromt
+	he CFF font, but multiplies by 1000 (this is to avoid rounding
+	errors when placing this real number into a 16.16 fixed number).
+
+	(cff_parse_real): Added code so that the integer part is moved
+	into the high sixteen bits of the 16.16 fixed number.
+
+	* src/cff/cffobjs.c (CFF_Init_Face): Added logic to get the units
+	per EM from the CFF dictionary, if available.
+
+	* include/freetype/internal/cfftypes.h: In struct CFF_Font_Dict_,
+	added a units_per_em member to facilitate passing of units_per_em
+	from function cff_parse_font_matrix.
+
 2001-02-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/psobjs.c (shift_elements): Remove if clause (which is
