@@ -1,3 +1,25 @@
+2004-11-11  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffdrivr.c (cff_service_ps_info): Updated.
+	* src/cid/cidriver.c (cid_service_ps_info): Updated.
+	* src/type42/t42drivr.c (t42_ps_get_font_private): New function.
+	(t42_service_ps_info): Updated.
+
+	* src/type42/t42parse.c (t42_parse_dict): Remove compiler warning.
+
+2004-11-11  David Bevan  <dbevan@emtex.com>
+
+	Add new function FT_Get_PS_Font_Private().
+
+	* include/freetype/internal/services/svpsinfo.h
+	(PS_GetFontPrivateFunc): New service function.
+
+	* include/freetype/t1tables.h, src/base/fttype1.c
+	(FT_Get_PS_Font_Private): New function.
+
+	* src/type1/t1driver.c (t1_ps_get_font_private): New function.
+	(t1_service_ps_info): Updated.
+
 2004-10-13  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/config/ftstdlib.h: Include `stddef.h'.
