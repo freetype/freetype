@@ -1,8 +1,10 @@
-SubDir FT2_TOP src winfonts ;
+# FreeType 2 src/winfonts Jamfile (c) 2001 David Turner
+#
 
-SubDirHdrs [ FT2_SubDir src winfonts ] ;
+SubDir  FT2_TOP src winfonts ;
 
-Library $(FT2_LIB) : winfnt.c ;
+SubDirHdrs  [ FT2_SubDir  src winfonts ] ;
 
+Library  $(FT2_LIB) : winfnt.c ;
 
-
+# end of src/winfonts Jamfile

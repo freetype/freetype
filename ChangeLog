@@ -1,3 +1,8 @@
+2001-04-03  Werner Lemberg  <wl@gnu.org>
+
+	* Jamfile, src/Jamfile, src/*/Jamfile: Formatted.  Slight changes
+	to give files identical structure.
+
 2001-04-02  Werner Lemberg  <wl@gnu.org>
 
 	* CHANGES: Reformatted, minor fixes.

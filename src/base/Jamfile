@@ -1,31 +1,36 @@
-SubDir FT2_TOP src base ;
-
-SubDirHdrs [ FT2_SubDir src base ] ;
-
-
-# First of all, which files form the core / base of FT2
+# FreeType 2 src/base Jamfile (c) 2001 David Turner
 #
-ft2_base_sources = ftcalc.c ftextend.c ftlist.c ftobjs.c ftstream.c
-                   ftoutln.c ftnames.c ;
 
-if $(FT2_MULTI)
+SubDir  FT2_TOP src base ;
+
+SubDirHdrs  [ FT2_SubDir  src base ] ;
+
 {
-  Library  $(FT2_LIB) : $(ft2_base_sources) ;
-}
-else
-{
-  Library  $(FT2_LIB) : ftbase.c ;
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = ftcalc.c ftextend.c ftlist.c ftobjs.c ftstream.c
+               ftoutln.c ftnames.c ;
+  }
+  else
+  {
+    _sources = ftbase.c ;
+  }
+
+  Library  $(FT2_LIB) : $(_sources) ;
 }
 
-# Add the optional/replaceable files
+# Add the optional/replaceable files.
 #
-Library $(FT2_LIB) : ftsystem.c ftinit.c ftglyph.c ftmm.c ftbbox.c ftdebug.c ;
+Library  $(FT2_LIB) : ftsystem.c ftinit.c ftglyph.c ftmm.c
+                      ftbbox.c ftdebug.c ;
 
-# Add Macintosh-specific file to the library when necessary
+# Add Macintosh-specific file to the library when necessary.
 #
 if $(MAC)
 {
-  Library $(FT2_LIB) : ftmac.c ;
+  Library  $(FT2_LIB) : ftmac.c ;
 }
 
-
+# end of src/base Jamfile
