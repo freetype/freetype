@@ -20,6 +20,7 @@
 #include "psauxmod.h"
 #include "psobjs.h"
 #include "t1decode.h"
+#include "t1cmap.h"
 
 
   FT_CALLBACK_TABLE_DEF
@@ -73,6 +74,16 @@
   };
 
 
+  FT_CALLBACK_TABLE_DEF
+  const T1_CMap_ClassesRec  t1_cmap_classes =
+  {
+    &t1_cmap_standard_class_rec,
+    &t1_cmap_expert_class_rec,
+    &t1_cmap_custom_class_rec,
+    &t1_cmap_unicode_class_rec
+  };
+
+
   static
   const PSAux_Interface  psaux_interface =
   {
@@ -81,7 +92,9 @@
     &t1_builder_funcs,
     &t1_decoder_funcs,
 
-    T1_Decrypt
+    T1_Decrypt,
+    
+    (const T1_CMap_ClassesRec*) &t1_cmap_classes,
   };
 
 
