@@ -142,17 +142,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* This structure/class is defined here because it is common to the      */
-  /* following formats: TTF, OpenType-TT, and OpenType-CFF.                */
-  /*                                                                       */
-  /* Note, however, that the classes TT_Size, TT_GlyphSlot, and TT_CharMap */
-  /* are not shared between font drivers, and are thus defined normally in */
-  /* `ttobjs.h'.                                                           */
-  /*                                                                       */
-  /*************************************************************************/
-
   typedef struct T1_FaceRec_*   T1_Face;
   typedef struct CID_FaceRec_*  CID_Face;
 

@@ -11,6 +11,14 @@
 	* src/sfnt/sfdriver.c: Don't include ttcmap.h.
 	(sfnt_interface): Updated.
 
+	* include/freetype/internal/tttypes.h (TT_TableDirRec,
+	TT_CMapDirRec, TT_CMapDirEntryRec, TT_CMap0, TT_CMap2SubHeaderRec,
+	TT_CMap2Rec, TT_CMap4Segment, TT_CMap4Rec, TT_CMap6,
+	TT_CMapGroupRec, TT_CMap8_12Rec, TT_CMap10Rec, TT_CharMap_Func,
+	TT_CharNext_Func, TT_CMapTableRec, TT_CharMapRec): Removed. 
+	Obsolete.
+	* src/cff/cffobjs.h (CFF_CharMapRec): Removed.  Obsolete.
+
 2003-12-15  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
