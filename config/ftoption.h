@@ -46,6 +46,24 @@
 
   /*************************************************************************/
   /*                                                                       */
+  /* Convenience functions support                                         */
+  /*                                                                       */
+  /*   Some functions of the FreeType 2 API are provided as a convenience  */
+  /*   for client applications and developers. However, they are not       */
+  /*   required to build and run the library itself.                       */
+  /*                                                                       */
+  /*   By defining this configuration macro, you'll disable the            */
+  /*   compilation of these functions at build time. This can be useful    */
+  /*   to reduce the library's code size when you don't need any of        */
+  /*   these functions..                                                   */
+  /*                                                                       */
+  /*   All convenience functions are declared as such in their             */
+  /*   documentation.                                                      */
+  /*                                                                       */
+#undef FT_CONFIG_OPTION_NO_CONVENIENCE_FUNCS
+
+  /*************************************************************************/
+  /*                                                                       */
   /* Alternate Glyph Image Format support                                  */
   /*                                                                       */
   /*   By default, the glyph images returned by the FreeType glyph loader  */

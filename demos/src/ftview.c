@@ -59,7 +59,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   int  ptsize;                /* current point size */
   
   int  hinted      = 1;       /* is glyph hinting active ?    */
-  int  gray_render = 1;       /* is anti-aliasing active ?    */
+  int  antialias = 1;       /* is anti-aliasing active ?    */
   int  use_sbits   = 1;       /* do we use embedded bitmaps ? */
   int  low_prec    = 1;       /* force low precision          */
   int  Num;                   /* current first glyph index    */
@@ -76,8 +76,9 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   int  render_mode = 1;
   int  use_grays   = 0;
 
-  TRaster  raster;
-  
+  /* the standard raster's interface */
+  FT_Raster_Funcs  std_raster;
+
 #define RASTER_BUFF_SIZE   32768
   char     raster_buff[ RASTER_BUFF_SIZE ];
 
@@ -167,7 +168,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
     if ( glyph->format == ft_glyph_format_outline )
     {    
-      pitch  = ( gray_render ? (width+3) & -4 : (width+7) >> 3 );
+      pitch  = ( antialias ? (width+3) & -4 : (width+7) >> 3 );
       size   = pitch*height; 
 
       if (size > MAX_BUFFER)
@@ -176,13 +177,13 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       bit2.width      = width;
       bit2.rows       = height;
       bit2.pitch      = pitch;
-      bit2.pixel_mode = gray_render ? ft_pixel_mode_grays : ft_pixel_mode_mono;
+      bit2.pixel_mode = antialias ? ft_pixel_mode_grays : ft_pixel_mode_mono;
       bit2.buffer     = bit_buffer;
 
       bit3.rows   = bit2.rows;
       bit3.width  = bit2.width;
       bit3.pitch  = bit2.pitch;
-      bit3.mode   = gray_render ? bit.mode : gr_pixel_mode_mono;
+      bit3.mode   = antialias ? bit.mode : gr_pixel_mode_mono;
       bit3.buffer = bit_buffer;
       bit3.grays  = 128;
 
@@ -192,10 +193,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       if (low_prec)
         glyph->outline.flags &= ~ft_outline_high_precision;
       
-      if (use_grays & gray_render)
-        error = grays_raster_render( &raster, &glyph->outline, &bit2 );
-      else
-        error = FT_Outline_Get_Bitmap( library, &glyph->outline, &bit2 );
+      error = FT_Outline_Get_Bitmap( library, &glyph->outline, &bit2 );
     }
     else
     {
@@ -416,6 +414,17 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     grListenSurface( surface, gr_event_key, &dummy_event );
   }
 
+  static void  reset_raster( void )
+  {
+    FT_Error  error;
+    
+    error = 1;
+    if ( use_grays && antialias )
+      error = FT_Set_Raster( library, &ft_grays_raster );
+      
+    if (error)
+      (void)FT_Set_Raster( library, &std_raster );
+  }
 
 
   static int  Process_Event( grEvent*  event )
@@ -429,10 +438,11 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       return 0;
 
     case grKEY('a'):
-      gray_render = !gray_render;
-      new_header = ( gray_render
+      antialias = !antialias;
+      new_header = ( antialias
                    ? "anti-aliasing is now on"
                    : "anti-aliasing is now off" );
+      reset_raster();
       return 1;
 
     case grKEY('b'):
@@ -451,6 +461,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       new_header = ( use_grays
                    ? "now using the smooth anti-aliaser"
                    : "now using the standard anti-aliaser" );
+      reset_raster();
       break;
                    
     case grKEY('l'):
@@ -598,10 +609,9 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     error = FT_Init_FreeType( &library );
     if (error) PanicZ( "Could not initialise FreeType library" );
 
-    error = grays_raster_init( (FT_Raster)&raster, (const char*)raster_buff, RASTER_BUFF_SIZE );
-    if (error) PanicZ( "Could not initialize anti-aliasing renderer" );
+    /* retrieve the standard raster's interface */
+    (void)FT_Get_Raster( library, ft_glyph_format_outline, &std_raster );
 
-/*    FT_Set_Raster_Palette( library, 17, palette_17 ); */
 
   NewFile:
     ptsize      = orig_ptsize;

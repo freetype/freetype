@@ -470,8 +470,6 @@
   } FT_Outline_Funcs;
 
 
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -491,7 +489,7 @@
  /***********************************************************************
   *
   * <Enum>
-  *    FT_Glyph_Tag
+  *    FT_Glyph_Format
   *
   * <Description>
   *    An enumeration type used to describethe format of a given glyph
@@ -518,7 +516,7 @@
   *
   ***********************************************************************/
   
-  typedef enum FT_Glyph_Tag_
+  typedef enum FT_Glyph_Format_
   {
     ft_glyph_format_none      = 0,
     ft_glyph_format_composite = FT_IMAGE_TAG('c','o','m','p'),
@@ -526,8 +524,28 @@
     ft_glyph_format_outline   = FT_IMAGE_TAG('o','u','t','l'),
     ft_glyph_format_plotter   = FT_IMAGE_TAG('p','l','o','t')
   
-  } FT_Glyph_Tag;
+  } FT_Glyph_Format;
 
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****            R A S T E R   D E F I N I T I O N S                *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+
+ /**************************************************************************
+  *
+  *
+  *
+  *
+  *
+  *
+  *
+  *
+  **************************************************************************/
 
   /*************************************************************************/
   /*                                                                       */
@@ -543,126 +561,374 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* <FuncType>                                                            */
-  /*    FT_Raster_Init_Proc                                                */
+  /* <Struct>                                                              */
+  /*    FT_Span                                                            */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initializes a fresh raster object which should have been allocated */
-  /*    by client applications.  This function is also used to set the     */
-  /*    object's render pool.  It can be used repeatedly on a single       */
-  /*    object if one wants to change the pool's address or size.          */
+  /*    A structure used to model a single span of gray (or black) pixels  */
+  /*    when rendering a monocrhome or anti-aliased bitmap.                */
   /*                                                                       */
-  /*    Note that the render pool has no state and is only used during a   */
-  /*    call to FT_Raster_Render().  It is thus theorically possible to    */
-  /*    share it between several non-concurrent components of your         */
-  /*    applications when memory is a scarce resource.                     */
+  /* <Fields>                                                              */
+  /*    x        :: the span's horizontal start position                   */
+  /*    len      :: the span's length in pixels                            */
+  /*    coverage :: the span color/coverage, ranging from 0 (background)   */
+  /*                to 255 (foreground). Only used for anti-aliased        */
+  /*                rendering..                                            */
   /*                                                                       */
-  /* <Input>                                                               */
-  /*    raster    :: a handle to the target raster object.                 */
-  /*    pool_base :: the render pool's base address in memory              */
-  /*    pool_size :: the render pool's size in bytes.  this must be at     */
-  /*                 least 4 kByte.                                        */
-  /* <Return>                                                              */
-  /*    An error condition, used as a FT_Error in the FreeType library.    */
-  /*    0 means success.                                                   */
+  /* <Note>                                                                */
+  /*    This structure is used by the span drawing callback type           */
+  /*    named FT_Raster_Span_Func, which takes the y coordinate of the     */
+  /*    span as a paremeter..                                              */
   /*                                                                       */
-  typedef int (*FT_Raster_Init_Proc)( FT_Raster    raster,
-                                      const char*  pool_base,
-                                      long         pool_size );
+  /*    The coverage value is always between 0 and 255, even if the        */
+  /*    number of gray levels have been set through FT_Set_Gray_Levels()   */
+  /*                                                                       */
+  typedef struct FT_Span_
+  {
+    short          x;
+    short          len;
+    unsigned char  coverage;
+  
+  } FT_Span;
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    FT_Raster_Set_Mode_Proc                                            */
+  /*    FT_Raster_Span_Func                                                */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Some raster implementations may have several modes of operation.   */
-  /*    This function is used to select one of them, as well as pass some  */
-  /*    arguments.                                                         */
+  /*    A function used as a call-back by the anti-aliased renderer in     */
+  /*    order to let client applications draw themselves the gray pixel    */
+  /*    spans on each scan line.                                           */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    raster  :: The target raster object.                               */
+  /*   y     :: the scanline's y coordinate                                */
+  /*   count :: the number of spans to draw on this scanline               */
+  /*   spans :: a table of 'count' spans to draw on the scanline           */
+  /*   user  :: user-supplied data that is passed to the callback          */
   /*                                                                       */
-  /*    mode    :: A pointer used to describe the mode to set. This is     */
-  /*               completely raster-specific, and could be, for example,  */
-  /*               a text string.                                          */
+  /* <Note>                                                                */
+  /*   This callback allows client applications to directly render the     */
+  /*   gray spans of the anti-aliased bitmap to any kind of surfaces.      */
   /*                                                                       */
-  /*    args    :: An argument to the set_mode command. This is completely */
-  /*               specific to the raster and the mode used.               */
+  /*   This can be used to write anti-aliased outlines directly to a       */
+  /*   given background bitmap, and even perform translucency..            */
+  /*                                                                       */
+  /*   Note that the "count" field cannot be greater than a fixed value    */
+  /*   defined by the FT_MAX_GRAY_SPANS configuration macro in ftoption.h  */
+  /*                                                                       */
+  /*   By default, this value is set to 32, which means that if there are  */
+  /*   more than 32 spans on a given scanline, the callback will be called */
+  /*   several times with the same "y" parameter in order to draw all      */
+  /*   callbacks..                                                         */
+  /*                                                                       */
+  /*   Otherwise, the callback is only called once per scan-line, and      */
+  /*   only for those scanlines that do have "gray" pixels on them..       */
+  /*                                                                       */
+  typedef void (*FT_Raster_Span_Func)( int       y,
+                                       int       count,
+                                       FT_Span*  spans,
+                                       void*     user );
+                                      
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    FT_Raster_BitTest_Func                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A function used as a call-back by the monochrome scan-converter    */
+  /*    to test wether a given target pixel is already set to the drawing  */
+  /*    "color". These tests are crucial to implement drop-out control     */
+  /*    per-se the TrueType spec..                                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*   y     :: the pixel's y coordinate                                   */
+  /*   x     :: the pixel's x coordinate                                   */
+  /*   user  :: user-supplied data that is passed to the callback          */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    An error code, used as a FT_Error by the FreeType library.         */
-  /*    0 means success.                                                   */
+  /*   1 if the pixel is "set", 0 otherwise                                */
   /*                                                                       */
-  typedef int (*FT_Raster_Set_Mode_Proc)( FT_Raster    raster,
+  typedef int (*FT_Raster_BitTest_Func)( int    y,
+                                         int    x,
+                                         void*  user );
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <FuncType>                                                            */
+  /*    FT_Raster_BitSet_Func                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A function used as a call-back by the monochrome scan-converter    */
+  /*    used to set an individual target pixel. This is crucial to         */
+  /*    implement drop-out control per-se the TrueType spec..              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*   y     :: the pixel's y coordinate                                   */
+  /*   x     :: the pixel's x coordinate                                   */
+  /*   user  :: user-supplied data that is passed to the callback          */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*   1 if the pixel is "set", 0 otherwise                                */
+  /*                                                                       */
+  typedef void (*FT_Raster_BitSet_Func)( int    y,
+                                         int    x,
+                                         void*  user );
+
+
+ /**************************************************************************
+  *
+  * <Enum>
+  *    FT_Raster_Flag
+  *
+  * <Description>
+  *    An enumeration used to list the bit flags used in the "flags"   
+  *    field of a FT_Raster_Params function.
+  *
+  * <Fields>
+  *    ft_raster_flag_default  :: this value is 0
+  *
+  *    ft_raster_flag_aa       :: resquests the rendering of an anti-aliased
+  *                               glyph bitmap. If unset, a monchrome bitmap
+  *                               will be rendered.
+  *
+  *    ft_raster_flag_direct   :: requests direct rendering over the target
+  *                               bitmap. Direct rendering uses user-provided
+  *                               callbacks in order to perform direct
+  *                               drawing or composition over an existing
+  *                               bitmap. If this bit is unset, the content
+  *                               of the target bitmap **must be zeroed** !
+  *
+  **************************************************************************/
+  typedef enum {
+  
+    ft_raster_flag_default = 0,
+    ft_raster_flag_aa      = 1,
+    ft_raster_flag_direct  = 2
+  
+  } FT_Raster_Flag;
+
+ /**************************************************************************
+  *
+  * <Struct>
+  *    FT_Raster_Params
+  *
+  * <Description>
+  *    A structure used to hold the arguments used by a raster's render
+  *    function.
+  *
+  * <Fields>
+  *    target      ::  the target bitmap
+  *    source      ::  pointer to the source glyph image (e.g. a FT_Outline)
+  *    flags       ::  rendering flags
+  *    gray_spans  ::  gray span drawing callback
+  *    black_spans ::  black span drawing callback
+  *    bit_test    ::  bit test callback
+  *    bit_set     ::  bit set callback
+  *    user        ::  user-supplied data that is passed to each drawing
+  *                    callback..
+  *
+  * <Note>
+  *    An anti-aliased glyph bitmap is drawn if the ft_raster_flag_aa bit
+  *    flag is set in the "flags" field, otherwise a monochrome bitmap will
+  *    be generated.
+  *
+  *    When the ft_raster_flag_direct bit flag is set in "flags", the raster
+  *    will call the "gray_spans" callback to drawn gray pixel spans, in the
+  *    case of an aa glyph bitmap, or "black_spans", "bit_test" and "bit_set"
+  *    in the case of a monochrome bitmap.
+  *
+  *    This allows direct composition over a pre-existing bitmap through
+  *    user-provided callbacks to perform the span drawing/composition.
+  *
+  *    Note that the "bit_test" and "bit_set" callbacks are required when
+  *    rendering a monochrome bitmap, as they are crucial to implement correct
+  *    drop-out control per-se the TrueType specification..
+  *
+  **************************************************************************/
+  
+  typedef struct FT_Raster_Params_
+  {
+    FT_Bitmap*              target;
+    void*                   source;
+    int                     flags;
+    FT_Raster_Span_Func     gray_spans;
+    FT_Raster_Span_Func     black_spans;
+    FT_Raster_BitTest_Func  bit_test;
+    FT_Raster_BitSet_Func   bit_set;
+    void*                   user;
+  
+  } FT_Raster_Params;
+
+
+
+ /**************************************************************************
+  * <FuncType>
+  *    FT_Raster_New_Func
+  *
+  * <Description>
+  *    A function used to create a new raster object.
+  *
+  * <Input>
+  *    memory   :: handle to memory allocator.
+  *
+  * <Output>
+  *    raster   :: handle to new raster object
+  *
+  * <Return>
+  *    Error code. 0 means success
+  *
+  * <Note>
+  *    the "memory" parameter is a typeless pointer in order to avoid
+  *    un-wanted dependencies on the rest of the FreeType code.
+  *
+  *    in practice, it is a FT_Memory, i.e. a handle to the standard
+  *    FreeType memory allocator. However, this field can be completely
+  *    ignored by a given raster implementation..
+  *
+  **************************************************************************/
+
+  typedef int (*FT_Raster_New_Func)( void*      memory,
+                                     FT_Raster *raster );
+  
+
+ /**************************************************************************
+  * <FuncType>
+  *    FT_Raster_Done_Func
+  *
+  * <Description>
+  *    A function used to destroy a given raster object.
+  *
+  * <Input>
+  *    raster   :: handle to new raster object
+  *
+  **************************************************************************/
+
+  typedef void (*FT_Raster_Done_Func)( FT_Raster  raster );
+  
+  
+
+ /**************************************************************************
+  *
+  * <FuncType>
+  *    FT_Raster_Reset_Func
+  *
+  * <Description>
+  *    FreeType provides an area of memory called the "render pool",
+  *    available to all registered rasters. This pool can be freely
+  *    used during a given scan-conversion but is shared by all rasters.
+  *    Its content is thus transient.
+  *
+  *    This function is called each time the render pool changes, or
+  *    just after a new raster object is created.
+  *
+  * <Input>
+  *    raster    :: handle to new raster object
+  *    pool_base :: address in memory of render pool
+  *    pool_size :: size in bytes of render pool
+  *
+  * <Note>
+  *    Rasters can ignore the render pool and rely on dynamic memory
+  *    allocation if they want to (a handle to the memory allocator is
+  *    passed to the raster constructor). However, this is not recommended
+  *    for efficiency purposes..
+  *
+  **************************************************************************/
+
+  typedef void (*FT_Raster_Reset_Func)( FT_Raster    raster,
+                                        const char*  pool_base,
+                                        long         pool_size );
+
+
+ /**************************************************************************
+  *
+  * <FuncType>
+  *    FT_Raster_Set_Mode_Func
+  *
+  * <Description>
+  *    This function is a generic facility to change modes or attributes
+  *    in a given raster. This can be used for debugging purposes, or
+  *    simply to allow implementation-specific "features" in a given
+  *    raster module.
+  *
+  * <Input>
+  *    raster    :: handle to new raster object
+  *    mode      :: an C string naming the mode or property to change
+  *    args      :: a pointer to the new mode/property to use
+  *
+  **************************************************************************/
+
+  typedef int (*FT_Raster_Set_Mode_Func)( FT_Raster    raster,
                                           const char*  mode,
-                                          const char*  args );
-                        
-                                          
-  /*************************************************************************
-   *                                                                       
-   * <FuncType>                                                            
-   *    FT_Raster_Render_Proc                                              
-   *                                                                       
-   * <Description>                                                         
-   *    Renders an outline into a target bitmap/pixmap.                    
-   *                                                                       
-   * <Input>                                                               
-   *    raster        :: A handle to a raster object used during rendering.
-   *
-   *    source_image  :: a typeless pointer to the source glyph image.
-   *                     (usually a FT_Outline*).
-   *
-   *    target_bitmap :: descriptor to the target bitmap.
-   *
-   * <Return>                                                              
-   *    Error code, interpreted as a FT_Error by FreeType library.         
-   *    0 means success.                                                   
-   *                                                                       
-   *************************************************************************/
-   
-  typedef int  (*FT_Raster_Render_Proc)( FT_Raster       raster,
-                                         void*           source_image,
-                                         FT_Bitmap*      target_bitmap );
+                                          void*        args );
+
+ /**************************************************************************
+  *
+  * <FuncType>
+  *    FT_Raster_Render_Func
+  *
+  * <Description>
+  *   Invokes a given raster to scan-convert a given glyph image into
+  *   a target bitmap.
+  *
+  * <Input>
+  *    raster :: handle to raster object
+  *    params :: pointer to a FT_Raster_Params structure used to store
+  *              the rendering parameters.
+  *
+  * <Return>
+  *    Error code. 0 means success
+  *
+  * <Note>
+  *    The exact format of the source image depends on the raster's
+  *    glyph format defined in its FT_Raster_Funcs structure. It can be
+  *    an FT_Outline or anything else in order to support a large array
+  *    of glyph formats.
+  *
+  *    Note also that the render function can fail and return a
+  *    FT_Err_Unimplemented_Feature error code when the raster used does
+  *    not support direct composition.
+  *
+  *    XXX: For now, the standard raster doesn't support direct composition
+  *         but this should change for the final release (see the files
+  *         demos/src/ftgrays.c and demos/src/ftgrays2.c for examples of
+  *         distinct implementations which support direct composition).
+  *
+  **************************************************************************/
+
+  typedef int  (*FT_Raster_Render_Func)( FT_Raster          raster,
+                                         FT_Raster_Params*  params );
 
 
  /**************************************************************************
   *
   * <Struct>
-  *    FT_Raster_Interface
+  *    FT_Raster_Funcs
   *
   * <Description>
-  *    A structure used to model the default raster interface. A raster
-  *    is a module in charge of converting a glyph image into a bitmap.
-  * 
+  *   A structure used to describe a given raster class to the library.
+  *
   * <Fields>
-  *    size      :: the size in bytes of the given raster object. This
-  *                 is used to allocate a new raster when calling
-  *                 `FT_Set_Raster'.
-  *
-  *    format    :: the source glyph image format this raster is able to
-  *                 handle.
-  *
-  *    init      :: the raster's initialisation routine
-  *
-  *    set_mode  :: the raster's mode set routine
-  *
-  *    render    :: the raster's rendering routine
+  *    glyph_format     :: the supported glyph format for this raster
+  *    raster_new       :: the raster constructor
+  *    raster_reset     :: used to reset the render pool within the raster
+  *    raster_render    :: renders a glyph into a given bitmap
+  *    raster_done      :: the raster destructor
   *
   **************************************************************************/
-  
-  typedef struct FT_Raster_Interface_
-  {
-    long                     size;
-    FT_Glyph_Tag             format_tag;
-    FT_Raster_Init_Proc      init;
-    FT_Raster_Set_Mode_Proc  set_mode;
-    FT_Raster_Render_Proc    render;
-    
-  
-  } FT_Raster_Interface;
 
+
+  typedef struct FT_Raster_Funcs_
+  {
+    FT_Glyph_Format          glyph_format;
+    FT_Raster_New_Func       raster_new;
+    FT_Raster_Reset_Func     raster_reset;
+    FT_Raster_Set_Mode_Func  raster_set_mode;
+    FT_Raster_Render_Func    raster_render;
+    FT_Raster_Done_Func      raster_done;
+  
+  } FT_Raster_Funcs;
  
 #endif /* FTIMAGE_H */
 

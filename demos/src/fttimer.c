@@ -78,10 +78,9 @@
   int  vio_Height, vio_Width;
 
   short  visual;      /* display glyphs while rendering */
-  short  gray_render; /* smooth fonts with gray levels  */
+  short  antialias; /* smooth fonts with gray levels  */
   short  force_low;
 
-  TRaster  raster;
   
 #define RASTER_BUFF_SIZE   128000
   char     raster_buff[ RASTER_BUFF_SIZE ];
@@ -122,7 +121,7 @@
     Bit.width      = bit.width;
     Bit.pitch      = bit.pitch;
     Bit.buffer     = bit.buffer;
-    Bit.pixel_mode = gray_render ? ft_pixel_mode_grays : ft_pixel_mode_mono;
+    Bit.pixel_mode = antialias ? ft_pixel_mode_grays : ft_pixel_mode_mono;
     Bit.num_grays  = bit.grays;
     Clear_Buffer();
   }
@@ -219,10 +218,7 @@
   FT_Error  ConvertRaster( int  index )
   {
     outlines[index].flags |= ~ft_outline_single_pass;
-    if (use_grays)
-      return grays_raster_render( &raster, &outlines[index], &Bit );
-    else
-      return FT_Outline_Get_Bitmap( library, &outlines[index], &Bit );
+    return FT_Outline_Get_Bitmap( library, &outlines[index], &Bit );
   }
 
 
@@ -255,7 +251,7 @@
 
     execname    = argv[0];
 
-    gray_render = 0;
+    antialias = 0;
     visual      = 0;
     force_low   = 0;
 
@@ -264,7 +260,7 @@
       switch ( argv[1][1] )
       {
       case 'g':
-        gray_render = 1;
+        antialias = 1;
         break;
 
       case 'a':
@@ -333,8 +329,12 @@
     if ( (error = FT_Init_FreeType( &library )) )
       Panic( "Error while initializing engine" );
 
-    error = grays_raster_init( (FT_Raster)&raster, (const char*)raster_buff, RASTER_BUFF_SIZE );
-    if (error) Panic( "Could not initialize smooth anti-aliasing renderer" );
+    /* set-up smooth anti-aliaser */
+    if (use_grays)
+    {
+      error = FT_Set_Raster( library, &ft_grays_raster );
+      if (error) Panic( "Could not initialize smooth anti-aliasing renderer" );
+    }
     
     /* Load face */
 
@@ -358,7 +358,7 @@
     error = FT_Set_Pixel_Sizes( face, pixel_size, pixel_size );
     if ( error ) Panic( "Could not reset instance" );
 
-    bit.mode  = gray_render ? gr_pixel_mode_gray : gr_pixel_mode_mono;
+    bit.mode  = antialias ? gr_pixel_mode_gray : gr_pixel_mode_mono;
     bit.width = 640;
     bit.rows  = 480;
     bit.grays = 128;

@@ -152,7 +152,7 @@ else
   #
   # The list of demonstration programs to build.
   #
-  EXES := ftlint ftview fttimer
+  EXES := ftlint ftview fttimer compos ftstring
 
   ifneq ($(findstring $(PLATFORM),os2 unix),)
     EXES += ttdebug
@@ -182,7 +182,13 @@ else
   $(OBJ_)ftlint.$O: $(SRC_DIR_)ftlint.c
 	  $(COMPILE) $T$@ $<
 
+  $(OBJ_)compos.$O: $(SRC_DIR_)compos.c
+	  $(COMPILE) $T$@ $<
+
   $(OBJ_)ftgrays.$O: $(SRC_DIR_)ftgrays.c
+	  $(COMPILE) $T$@ $<
+
+  $(OBJ_)ftgrays2.$O: $(SRC_DIR_)ftgrays2.c
 	  $(COMPILE) $T$@ $<
 
   $(OBJ_)fttry.$O: $(SRC_DIR_)fttry.c
@@ -192,8 +198,18 @@ else
   $(OBJ_)ftview.$O: $(SRC_DIR_)ftview.c $(GRAPH_LIB)
 	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
 
+  $(OBJ_)ftstring.$O: $(SRC_DIR_)ftstring.c $(GRAPH_LIB)
+	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
+
+  $(OBJ_)try.$O: $(SRC_DIR_)try.c $(GRAPH_LIB)
+	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
+
   $(OBJ_)fttimer.$O: $(SRC_DIR_)fttimer.c $(GRAPH_LIB)
 	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
+
+  $(OBJ_)fttimer2.$O: $(SRC_DIR_)fttimer2.c $(GRAPH_LIB)
+	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
+
 
 # $(OBJ_)ftsbit.$O: $(SRC_DIR)/ftsbit.c $(GRAPH_LIB)
 #	 $(COMPILE) $T$@ $<
@@ -233,6 +249,9 @@ else
   $(BIN_)ftlint$E: $(OBJ_)ftlint.$O $(FTLIB) $(COMMON_OBJ)
 	  $(COMMON_LINK)
 
+  $(BIN_)compos$E: $(OBJ_)compos.$O $(FTLIB) $(COMMON_OBJ)
+	  $(COMMON_LINK)
+
   $(BIN_)fttry$E: $(OBJ_)fttry.$O $(FTLIB)
 	  $(LINK)
 
@@ -249,8 +268,19 @@ else
   $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays.$O
 	  $(GRAPH_LINK) $(OBJ_)ftgrays.$O
 
+  $(BIN_)ftstring$E: $(OBJ_)ftstring.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays.$O
+	  $(GRAPH_LINK) $(OBJ_)ftgrays.$O
+
+
+  $(BIN_)try$E: $(OBJ_)try.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays2.$O
+	  $(GRAPH_LINK) $(OBJ_)ftgrays2.$O
+
   $(BIN_)fttimer$E: $(OBJ_)fttimer.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays.$O
 	  $(GRAPH_LINK) $(OBJ_)ftgrays.$O
+
+  $(BIN_)fttimer2$E: $(OBJ_)fttimer2.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays2.$O
+	  $(GRAPH_LINK) $(OBJ_)ftgrays2.$O
+
 
 endif
 

@@ -95,95 +95,17 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Alloc                                                           */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Allocates a new block of memory.  The returned area is always      */
-  /*    zero-filled, this is a strong convention in many FreeType parts.   */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory :: A handle to a given `memory object' where allocation     */
-  /*              occurs.                                                  */
-  /*                                                                       */
-  /*    size   :: The size in bytes of the block to allocate.              */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    P      :: A pointer to the fresh new block.  It should be set to   */
-  /*              NULL if `size' is 0, or in case of error.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
   BASE_DEF
   FT_Error  FT_Alloc( FT_Memory  memory,
                       FT_Long    size,
                       void**     P );
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Realloc                                                         */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Reallocates a block of memory pointed to by `*P' to `Size' bytes   */
-  /*    from the heap, possibly changing `*P'.                             */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory :: A handle to a given `memory object' where allocation     */
-  /*              occurs.                                                  */
-  /*                                                                       */
-  /*    current :: current block size in bytes                             */
-  /*    size    :: the new block size in bytes                              */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    P      :: A pointer to the fresh new block.  It should be set to   */
-  /*              NULL if `size' is 0, or in case of error.                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    All callers of FT_Realloc _must_ provide the current block size    */
-  /*    as well as the new one.                                            */
-  /*                                                                       */
-  /*    When the memory object's flag FT_memory_FLAG_NO_REALLOC is         */
-  /*    set, this function will try to emulate a realloc through uses      */
-  /*    of FT_Alloc and FT_Free. Otherwise, it will call the memory-       */
-  /*    specific "realloc" implementation.                                 */
-  /*                                                                       */
-  /*    (Some embedded memorys do not have a working realloc).             */
-  /*                                                                       */
   BASE_DEF
   FT_Error  FT_Realloc( FT_Memory  memory,
                         FT_Long    current,
                         FT_Long    size,
                         void**     P );
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Free                                                            */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Releases a given block of memory allocated through FT_Alloc().     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory :: A handle to a given `memory object' where allocation     */
-  /*              occured.                                                 */
-  /*                                                                       */
-  /*    P      :: This is the _address_ of a _pointer_ which points to the */
-  /*              allocated block.  It is always set to NULL on exit.      */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    If P or *P are NULL, this function should return successfully.     */
-  /*    This is a strong convention within all of FreeType and its         */
-  /*    drivers.                                                           */
-  /*                                                                       */
   BASE_DEF
   void  FT_Free( FT_Memory  memory,
                  void**     P );
@@ -243,6 +165,23 @@
                          (_count_)*sizeof(_type_) ) )
 
 #define FREE( _pointer_ )  FT_Free( memory, (void**)&(_pointer_) )
+
+
+
+  EXPORT_DEF
+  FT_Error  FT_New_Size( FT_Face   face,
+                         FT_Size*  size );
+
+  EXPORT_DEF
+  FT_Error  FT_Done_Size( FT_Size  size );
+
+  EXPORT_DEF
+  FT_Error  FT_New_GlyphSlot( FT_Face        face,
+                              FT_GlyphSlot*  aslot );
+
+  EXPORT_DEF
+  void  FT_Done_GlyphSlot( FT_GlyphSlot  slot );
+
 
 
 
@@ -317,7 +256,17 @@
   } FT_DriverRec;
 
 
-#ifdef FT_CONFIG_OPTION_ALTERNATE_GLYPH_FORMATS
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /****                      G L Y P H   Z O N E S                      ****/
+  /****                                                                 ****/
+  /****                                                                 ****/
+  /*************************************************************************/
+  /*************************************************************************/
+  /*************************************************************************/
 
  /************************************************************************
   *
@@ -357,6 +306,7 @@
 
   } FT_GlyphZone;
 
+
   BASE_DEF
   FT_Error  FT_New_GlyphZone( FT_Memory      memory,
                               FT_UShort      maxPoints,
@@ -371,132 +321,6 @@
                                  FT_UShort      num_points,
                                  FT_Short       num_contours );
 
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /****                     G L Y P H   F O R M A T S                   ****/
-  /****                                                                 ****/
-  /****                                                                 ****/
-  /*************************************************************************/
-  /*************************************************************************/
-  /*************************************************************************/
-
- /*************************************************************************
-  *
-  * <Struct>
-  *   FT_Glyph_Format
-  *
-  * <Description>
-  *   A structure used to model various properties of a non-standard   
-  *   glyph image format.
-  *
-  * <Fields>
-  *   format_tag        :: the glyph format tag
-  *
-  *   raster_interface  :: the default rasters interface for this glyph
-  *                        format.
-  *
-  *   raster            :: the default raster object for this glyph format
-  *                        if set to nil, a new object will be allocated
-  *                        automatically through the raster interface.
-  *
-  *   raster_owned      :: a boolean used internally by the library. If
-  *                        set, if indicates that the current raster object
-  *                        was allocated by the library.
-  *
-  *************************************************************************/
-  
-  typedef struct FT_Glyph_Format_
-  {
-    FT_Glyph_Tag           format_tag;
-    FT_Raster_Interface*   raster_interface;
-    FT_Raster              raster;
-    FT_Bool                raster_allocated;
-  
-  } FT_Glyph_Format;
-
-
- /*************************************************************************
-  *
-  * <Function>
-  *   FT_Add_Glyph_Format
-  *
-  * <Description>
-  *   Register a new glyph format into the library
-  *
-  * <Input>
-  *   library   :: handle to target library object
-  *   interface :: pointer to glyph format interface
-  *
-  * <Return>
-  *   Error code. 0 means success
-  *
-  * <Note>
-  *   This function should normally be called by those font drivers which
-  *   need to use their own glyph image format.
-  *
-  *************************************************************************/
-  
-  EXPORT_DEF
-  FT_Error  FT_Add_Glyph_Format( FT_Library        library,
-                                 FT_Glyph_Format*  format );
-
-
- /*************************************************************************
-  *
-  * <Function>
-  *   FT_Remove_Glyph_Format
-  *
-  * <Description>
-  *   Un-Register a given glyph format from the library
-  *
-  * <Input>
-  *   library      :: handle to target library object
-  *   glyph_format :: glyph format tag
-  *
-  * <Return>
-  *   Error code. 0 means success
-  *
-  * <Note>
-  *   This function should normally be called by those font drivers which
-  *   need to use their own glyph image format.
-  *
-  *************************************************************************/
-  
-  EXPORT_DEF
-  FT_Error  FT_Remove_Glyph_Format( FT_Library     library,
-                                    FT_Glyph_Tag   glyph_format );
-
- /*************************************************************************
-  *
-  * <Function>
-  *   FT_Get_Glyph_Format
-  *
-  * <Description>
-  *   Return a pointer to the glyph format descriptor corresponding to
-  *   a given format tag.
-  *
-  * <Input>
-  *   library    :: handle to source library object
-  *
-  *   format_tag :: glyph format tag
-  *
-  * <Return>
-  *   a pointer to the corresponding glyph format descriptor, if it was
-  *   registered in the library. 0 otherwise.
-  *
-  *************************************************************************/
-  
-  BASE_DEF
-  FT_Glyph_Format*  FT_Get_Glyph_Format( FT_Library    library,
-                                         FT_Glyph_Tag  format_tag );
-
-
-
-#endif /* FT_CONFIG_OPTION_ALTERNATE_GLYPH_FORMATS */
 
   /*************************************************************************/
   /*************************************************************************/
@@ -539,10 +363,6 @@
   /*                      registered font drivers.  Note that each driver  */
   /*                      contains a list of its opened faces.             */
   /*                                                                       */
-  /*    glyph_formats  :: A table used to store glyph format descriptors   */
-  /*                      for new image formats that may have been         */
-  /*                      registered within the library                    */
-  /*                                                                       */
   /*    raster_pool    :: The raster object's render pool.  This can       */
   /*                      ideally be changed dynamically at run-time.      */
   /*                                                                       */
@@ -557,59 +377,22 @@
     FT_Int              num_drivers;
     FT_Driver           drivers[ FT_MAX_DRIVERS ];  /* driver objects  */
 
-    FT_Glyph_Format     glyph_formats[FT_MAX_GLYPH_FORMATS];
+    FT_Raster_Funcs     raster_funcs[ FT_MAX_GLYPH_FORMATS ];
+    FT_Raster           rasters     [ FT_MAX_GLYPH_FORMATS ];
 
-    void*               raster_pool;    /* scan-line conversion render pool */
+    void*               raster_pool;      /* scan-line conversion render pool */
+    long                raster_pool_size; /* size of render pool in bytes     */
 
     FT_DebugHook_Func   debug_hooks[4];
 
   } FT_LibraryRec;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_Library                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This function is used to create a new FreeType library instance    */
-  /*    from a given memory object.  It is thus possible to use libraries  */
-  /*    with distinct memory allocators within the same program.           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory  :: A handle to the original memory object.                 */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    library :: A handle to a new library object.                       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function is normally not called by client applications,       */
-  /*    unless they want to create a specific instance of FreeType which   */
-  /*    uses a specific memory allocator.                                  */
-  /*                                                                       */
   EXPORT_DEF
   FT_Error  FT_New_Library( FT_Memory    memory,
                             FT_Library*  library );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_Library                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Discards a given library object.  This closes all drivers and      */
-  /*    discards all face objects.                                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to the target library.                         */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
-  /*                                                                       */
   EXPORT_DEF
   FT_Error  FT_Done_Library( FT_Library  library );
 
@@ -621,127 +404,26 @@
                            FT_DebugHook_Func  debug_hook );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Add_Driver                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Registers a new driver in a given library object.  This function   */
-  /*    takes only a pointer to a driver interface.  It uses it to create  */
-  /*    the new driver, then sets up some important fields.                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library          :: A handle to the target library object.         */
-  /*                                                                       */
-  /*    driver_interface :: A pointer to a driver interface table.         */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function doesn't check whether the driver is already          */
-  /*    installed!                                                         */
-  /*                                                                       */
   EXPORT_DEF
   FT_Error  FT_Add_Driver( FT_Library                 library,
                            const FT_DriverInterface*  driver_interface );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Remove_Driver                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Unregister a given driver.  This closes the driver, which in turn  */
-  /*    destroys all faces, sizes, slots, etc. associated with it.         */
-  /*                                                                       */
-  /*    This function also DESTROYS the driver object.                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    driver :: A handle to target driver object.                        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
-  /*                                                                       */
   EXPORT_DEF
   FT_Error  FT_Remove_Driver( FT_Driver  driver );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Driver                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    returns the handle of the driver responsible for a given format    */
-  /*    (or service) according to its `name'.                              */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library     :: handle to library object.                           */
-  /*    driver_name :: name of driver to look-up.                          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    handle to driver object. 0 otherwise                               */
-  /*                                                                       */
   EXPORT_DEF
   FT_Driver  FT_Get_Driver( FT_Library  library,
                             char*       driver_name );
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM
 
- /**************************************************************************
-  *
-  * <Function>
-  *   FT_New_Stream
-  *
-  * <Description>
-  *   Open a new stream from a given standard ASCII file path name
-  *
-  * <Input>
-  *   filepathname  :: an ASCII string naming the file to be opened
-  * 
-  * <Output>
-  *   astream :: the opened stream descriptor to be used by the library
-  *
-  * <Return>
-  *   Error code. 0 means success
-  *
-  * <Note>
-  *   This function must be implemented by the system-specific part
-  *   of the engine, i.e. `ftsystem.c'.
-  *
-  *   This function should only fill the stream descriptor. Note that
-  *   the stream's `memory' field should be left to the caller.
-  *
-  **************************************************************************/
-  
   extern
   FT_Error  FT_New_Stream( const char*  filepathname,
                            FT_Stream    astream );
 
 
- /**************************************************************************
-  *
-  * <Function>
-  *   FT_New_Memory
-  *
-  * <Description>
-  *   Returns a handle to a new memory object
-  *
-  * <Return>
-  *   Handle to the memory object. 0 means failure
-  *
-  * <Note>
-  *   This function must be implemented by the system-specific part
-  *   of the engine, i.e. `ftsystem.c'.
-  *
-  *   It is only used by `ftinit' in order to implement the function
-  *   FT_Init_FreeType.
-  *
-  **************************************************************************/
-  
   extern
   FT_Memory  FT_New_Memory( void );
 
@@ -753,7 +435,7 @@
 /*                                                                                           */
 #ifndef FT_NO_DEFAULT_RASTER
   extern
-  FT_Raster_Interface  ft_default_raster;
+  FT_Raster_Funcs  ft_default_raster;
 #endif
 
 

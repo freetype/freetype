@@ -33,7 +33,9 @@ BASE_SRC := $(BASE_)ftcalc.c    \
             $(BASE_)ftextend.c  \
             $(BASE_)ftlist.c    \
             $(BASE_)ftobjs.c    \
-            $(BASE_)ftstream.c
+            $(BASE_)ftstream.c  \
+            $(BASE_)ftoutln.c
+
 
 # Base layer headers
 #
@@ -53,7 +55,7 @@ BASE_H := $(BASE_)ftcalc.h    \
 # symbols is used by the application.
 #
 BASE_EXT_SRC := $(BASE_)ftraster.c \
-                $(BASE_)ftoutln.c
+                $(BASE_)ftglyph.c
 
 # Base layer extensions headers
 #

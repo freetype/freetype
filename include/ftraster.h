@@ -38,25 +38,7 @@
 #endif
 
   EXPORT_DEF
-  int  FT_Raster_Init( FT_Raster    raster,
-                       const char*  pool_base,
-                       long         pool_size );
-
-  EXPORT_DEF
-  int  FT_Raster_Render( FT_Raster    raster,
-                         FT_Outline*  outline,
-                         FT_Bitmap*   target_map );
-
-  EXPORT_DEF
-  long  FT_Raster_ObjSize( void );
-
-  /* FT_Raster_SetPalette() is currently unused by FreeType 2 */
-
-  EXPORT_DEF
-  int  FT_Raster_SetPalette( FT_Raster    raster,
-                             int          count,
-                             const char*  palette );
-
+  FT_Raster_Funcs  ft_raster_funcs;
 
 #ifdef __cplusplus
   }

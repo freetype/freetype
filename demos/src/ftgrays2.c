@@ -8,7 +8,7 @@
 /*                                                                           */
 /*  After writing a "perfect" anti-aliaser (see ftgrays.c), it is clear      */
 /*  that the standard FreeType renderer is better at generating glyph images */
-/*  because it uses an approximation that simply produced more contrasted    */
+/*  because it uses an approximation that simply produces more contrasted    */
 /*  edges, making its output more legible..                                  */
 /*                                                                           */
 /*  This code is an attempt to rewrite the standard renderer in order to     */
@@ -19,14 +19,22 @@
 /*     of span in successive scan-lines (the standard code is forced to use  */
 /*     an intermediate buffer, and this is just _bad_ :-)                    */
 /*                                                                           */
+/*                                                                           */
+/*  This thing works, but it's slower than the original ftraster.c,          */
+/*  probably because the bezier intersection code is different..             */
+/*                                                                           */
+/*  Note that Type 1 fonts, using a reverse fill algorithm are not           */
+/*  supported for now (this should come soon though..)                       */
+/*                                                                           */
 
 #include <ftimage.h>
 
 #define _STANDALONE_
 
-#define xxxDEBUG_GRAYS
-#define SPECIAL
-#define HORZ
+#define DEBUG_GRAYS
+#define DIRECT_BEZIER
+#define PRECISION_STEP  ONE_HALF
+#define xxxDYNAMIC_BEZIER_STEPS
 
 #define ErrRaster_Invalid_Outline  -1
 #define ErrRaster_Overflow         -2
@@ -41,6 +49,99 @@
 #ifdef DEBUG_GRAYS
 #include <stdio.h>
 #endif
+
+typedef int   TScan;
+typedef long  TPos;
+typedef float TDist;
+
+#define FT_MAX_GRAY_SPANS  32
+
+typedef struct FT_GraySpan_
+{
+  short          x;
+  short          len;
+  unsigned char  coverage;
+
+} FT_GraySpan;
+
+typedef int (*FT_GraySpan_Func)( int           y,
+                                 int           count,
+                                 FT_GraySpan*  spans,
+                                 void*         user );
+                                        
+typedef enum {
+
+  dir_up    = 0,
+  dir_down  = 1,
+  dir_right = 2,
+  dir_left  = 3,
+
+  dir_horizontal = 2,
+  dir_reverse    = 1,
+  dir_silent     = 4,
+  
+  dir_unknown = 8
+  
+} TDir;
+
+
+typedef struct TCell_
+{
+  unsigned short  x;
+  unsigned short  y;
+  unsigned short  pos;
+  TDir            dir;
+
+} TCell, *PCell;
+
+
+
+typedef struct TRaster_
+{
+  PCell   cells;
+  PCell   cursor;
+  PCell   cell_limit;
+  int     max_cells;
+  int     num_cells;
+
+  TScan   min_ex, max_ex;
+  TScan   min_ey, max_ey;
+  TPos    min_x,  min_y;
+  TPos    max_x,  max_y;
+
+  TScan   ex, ey;
+  TScan   cx, cy;
+  TPos    x,  y;
+
+  PCell   contour_cell;  /* first contour cell */
+
+  char    joint;
+  char    horizontal;
+  TDir    dir;
+  PCell   last;
+  
+  FT_Vector  starter;
+  FT_Vector* start;
+
+  int     error;
+
+  FT_Vector*  arc;
+  FT_Vector   bez_stack[32*3];
+  int         lev_stack[32];
+
+  FT_Outline  outline;
+  FT_Bitmap   target;
+
+  FT_GraySpan gray_spans[ FT_MAX_GRAY_SPANS ];
+  int         num_gray_spans;
+
+  FT_GraySpan_Func  render_span;
+  void*             render_span_closure;
+  int               span_y;
+
+} TRaster, *PRaster;
+
+
 
 #ifndef FT_STATIC_RASTER
 
@@ -122,8 +223,8 @@ int  write_cell( RAS_ARG_  PCell  cell, TPos  u,  TPos  v, TDir  dir )
     /* get rid of horizontal cells with pos == 0, they're irrelevant */
     if ( FRAC(u) == 0 ) goto Nope;
     
-    cell->y = TRUNC( u - ras.min_y );
-    cell->x = TRUNC( v - ras.min_x );
+    cell->y = (unsigned short)TRUNC( u - ras.min_y );
+    cell->x = (unsigned short)TRUNC( v - ras.min_x );
   }
   else
   {
@@ -137,8 +238,8 @@ int  write_cell( RAS_ARG_  PCell  cell, TPos  u,  TPos  v, TDir  dir )
     /* all cells that are on the left of the clipping box are located */
     /* on the same virtual "border" cell..                            */
     if (u < 0) u = -1;
-    cell->x = TRUNC( u );
-    cell->y = TRUNC( v );
+    cell->x = (unsigned short)TRUNC( u );
+    cell->y = (unsigned short)TRUNC( v );
   }
   cell->dir = dir;
   cell->pos = FRAC(u);
@@ -256,6 +357,10 @@ Exit:
 
     du = u2 - u1;
     dv = v2 - v1;
+
+    /* set the silent flag */
+    if (du > dv)
+      dir |= dir_silent;
 
     /* compute the first scanline in "e1" */
     e1 = CEILING(v1);
@@ -424,6 +529,35 @@ void  split_conic( FT_Vector*  base )
 
 
 static
+void  split_cubic( FT_Vector*  base )
+{
+  TPos   a, b, c, d;
+
+  base[6].x = base[3].x;
+  c = base[1].x;
+  d = base[2].x;
+  base[1].x = a = ( base[0].x + c ) / 2;
+  base[5].x = b = ( base[3].x + d ) / 2;
+  c = ( c + d ) / 2;
+  base[2].x = a = ( a + c ) / 2;
+  base[4].x = b = ( b + c ) / 2;
+  base[3].x = ( a + b ) / 2;
+
+  base[6].y = base[3].y;
+  c = base[1].y;
+  d = base[2].y;
+  base[1].y = a = ( base[0].y + c ) / 2;
+  base[5].y = b = ( base[3].y + d ) / 2;
+  c = ( c + d ) / 2;
+  base[2].y = a = ( a + c ) / 2;
+  base[4].y = b = ( b + c ) / 2;
+  base[3].y = ( a + b ) / 2;
+}
+
+
+
+#ifndef DIRECT_BEZIER
+static
 int  render_conic( RAS_ARG_  TPos  x1, TPos y1, TPos x2, TPos y2 )
 {
   TPos        x0, y0;
@@ -482,32 +616,6 @@ int  render_conic( RAS_ARG_  TPos  x1, TPos y1, TPos x2, TPos y2 )
   }
 }
 
-
-static
-void  split_cubic( FT_Vector*  base )
-{
-  TPos   a, b, c, d;
-
-  base[6].x = base[3].x;
-  c = base[1].x;
-  d = base[2].x;
-  base[1].x = a = ( base[0].x + c ) / 2;
-  base[5].x = b = ( base[3].x + d ) / 2;
-  c = ( c + d ) / 2;
-  base[2].x = a = ( a + c ) / 2;
-  base[4].x = b = ( b + c ) / 2;
-  base[3].x = ( a + b ) / 2;
-
-  base[6].y = base[3].y;
-  c = base[1].y;
-  d = base[2].y;
-  base[1].y = a = ( base[0].y + c ) / 2;
-  base[5].y = b = ( base[3].y + d ) / 2;
-  c = ( c + d ) / 2;
-  base[2].y = a = ( a + c ) / 2;
-  base[4].y = b = ( b + c ) / 2;
-  base[3].y = ( a + b ) / 2;
-}
 
 static
 int  render_cubic( RAS_ARG_ TPos  x1, TPos  y1,
@@ -581,6 +689,390 @@ int  render_cubic( RAS_ARG_ TPos  x1, TPos  y1,
     }
   }
 }
+#else /* !DIRECT_BEZIER */
+ /* A function type describing the functions used to split bezier arcs */
+  typedef  void  (*TSplitter)( FT_Vector*  base );
+
+#ifdef DYNAMIC_BEZIER_STEPS
+  static
+  TPos  Dynamic_Bezier_Threshold( RAS_ARG_ int degree, FT_Vector*  arc )
+  {
+    TPos    min_x,  max_x,  min_y, max_y, A, B;
+    TPos    wide_x, wide_y, threshold;
+    
+    FT_Vector* cur   = arc;
+    FT_Vector* limit = cur + degree;
+
+    /* first of all, set the threshold to the maximum x or y extent */
+    min_x = max_x = arc[0].x;
+    min_y = max_y = arc[0].y;
+    cur++;
+    for ( ; cur < limit; cur++ )
+    {
+      TPos  x = cur->x;
+      TPos  y = cur->y;
+
+      if ( x < min_x ) min_x = x;
+      if ( x > max_x ) max_x = x;
+
+      if ( y < min_y ) min_y = y;
+      if ( y > max_y ) max_y = y;
+    }
+    wide_x = (max_x - min_x) << 4;
+    wide_y = (max_y - min_y) << 4;
+
+    threshold = wide_x;
+    if (threshold < wide_y) threshold = wide_y;
+
+    /* now compute the second and third order error values */
+    
+    wide_x = arc[0].x + arc[1].x - arc[2].x*2;
+    wide_y = arc[0].y + arc[1].y - arc[2].y*2;
+
+    if (wide_x < 0) wide_x = -wide_x;
+    if (wide_y < 0) wide_y = -wide_y;
+
+    A = wide_x; if ( A < wide_y ) A = wide_y;
+
+    if (degree >= 3)
+    {
+      wide_x = arc[3].x - arc[0].x + 3*(arc[2].x - arc[3].x);
+      wide_y = arc[3].y - arc[0].y + 3*(arc[2].y - arc[3].y);
+
+      if (wide_x < 0) wide_x = -wide_x;
+      if (wide_y < 0) wide_y = -wide_y;
+
+      B = wide_x; if ( B < wide_y ) B = wide_y;
+    }
+    else
+      B = 0;
+
+    while ( A > 0 || B > 0 )
+    {
+      threshold >>= 1;
+      A         >>= 2;
+      B         >>= 3;
+    }
+
+    if (threshold < PRECISION_STEP)
+      threshold = PRECISION_STEP;
+
+    return threshold;
+  }
+#endif /* DYNAMIC_BEZIER_STEPS */
+
+  static
+  int   render_bezier( RAS_ARG_ int        degree,
+                                TSplitter  splitter,
+                                TPos       minv,
+                                TPos       maxv,
+                                TDir       dir )
+  {
+    TPos  v1, v2, u, v, e1, e2, threshold;
+    int   reverse;
+
+    FT_Vector*  arc;
+    FT_Vector   init;
+
+    PCell  top;
+
+    arc  = ras.arc;
+    init = arc[0];
+
+    arc[0].y -= ONE_HALF;
+    arc[1].y -= ONE_HALF;
+    arc[2].y -= ONE_HALF;
+    maxv     -= ONE_PIXEL;
+
+    top = ras.cursor;
+    
+    /* ensure that our segment is ascending */    
+    v1 = arc[degree].y;
+    v2 = arc[0].y;
+    reverse = 0;
+    if ( v2 < v1 )
+    {
+      TPos tmp;
+      v1 = -v1;
+      v2 = -v2;
+      arc[0].y = v2;
+      arc[1].y = -arc[1].y;
+      arc[degree].y = v1;
+      if (degree > 2)
+        arc[2].y = -arc[2].y;
+        
+      tmp = minv; minv = -maxv; maxv = -tmp;
+      reverse = 1;
+    }
+
+    if ( v2 < minv || v1 > maxv )
+      goto Fin;
+
+    /* compute the first scanline in "e1" */
+    e1 = CEILING(v1);
+    if (e1 == v1 && ras.joint)
+      e1 += ONE_PIXEL;
+
+    /* compute the last scanline in "e2" */
+    if (v2 <= maxv)
+    {
+      e2        = FLOOR(v2);
+      ras.joint = (v2 == e2);
+    }
+    else
+    {
+      e2        = maxv;
+      ras.joint = 0;
+    }
+
+    /* exit if the current scanline is already above the max scanline */
+    if ( e2 < e1 )
+      goto Fin;
+
+    /* check for overflow */
+    if ( ( top + TRUNC(e2-e1)+1 ) >= ras.cell_limit )
+    {
+      ras.cursor = top;
+      ras.error  = ErrRaster_Overflow;
+      return 1;
+    }
+
+#ifdef DYNAMIC_BEZIER_STEPS
+    /* compute dynamic bezier step threshold */
+    threshold = Dynamic_Bezier_Threshold( RAS_VAR_ degree, arc );
+#else
+    threshold = PRECISION_STEP;
+#endif
+
+    /* loop while there is still an arc on the bezier stack */
+    /* and the current scan line is below y max == e2       */
+    while ( arc >= ras.arc && e1 <= e2 )
+    {
+      ras.joint = 0;
+
+      v2 = arc[0].y;      /* final y of the top-most arc */
+      
+      if ( v2 > e1 )   /* the arc intercepts the current scanline */
+      {
+        v1 = arc[degree].y;  /* start y of top-most arc */
+
+        if ( v2 >= e1 + ONE_PIXEL || v2 - v1 >= threshold )
+        {
+          /* if the arc's height is too great, split it */
+          splitter( arc );
+          arc += degree;
+        }
+        else
+        {
+          /* otherwise, approximate it as a segment and compute */
+          /* its intersection with the current scanline         */
+          u = arc[degree].x +
+              FMulDiv( arc[0].x-arc[degree].x,
+                       e1 - v1,
+                       v2 - v1 );
+                       
+          v = e1; if (reverse) v = -e1;
+          v += ONE_HALF;
+          if (WRITE_CELL( top, u, v, dir ))
+            top++;
+
+          arc -= degree;     /* pop the arc         */
+          e1  += ONE_PIXEL;  /* go to next scanline */
+        }
+      }
+      else
+      {
+        if ( v2 == e1 )       /* if the arc falls on the scanline */
+        {                     /* record its _joint_ intersection  */
+          ras.joint  = 1;
+          u          = arc[degree].x;
+          v = e1; if (reverse) v = -e1;
+          v += ONE_HALF;
+          if (WRITE_CELL( top, u, v, dir ))
+            top++;
+          
+          e1 += ONE_PIXEL; /* go to next scanline */
+        }
+        arc -= degree;        /* pop the arc */
+      }
+    }
+
+  Fin:
+    ras.arc[0] = init;
+    ras.cursor = top;
+    return 0;
+  }
+
+  
+static
+int  render_conic( RAS_ARG_  TPos  x1, TPos y1, TPos x2, TPos y2 )
+{
+  TPos        x0,   y0;
+  TPos        minv, maxv;
+  FT_Vector*  arc;
+
+  x0 = ras.x;
+  y0 = ras.y;
+
+  minv = ras.min_y;
+  maxv = ras.max_y;
+  if (ras.horizontal)
+  {
+    minv = ras.min_x;
+    maxv = ras.max_x;
+  }
+
+  arc = ras.bez_stack;
+  arc[2].x = ras.x; arc[2].y = ras.y;
+  arc[1].x = x1;    arc[1].y = y1;
+  arc[0].x = x2;    arc[0].y = y2;
+
+  do
+  {
+    TDir  dir;
+    TPos  ymin, ymax;
+    
+    y0 = arc[2].y;
+    y1 = arc[1].y;
+    y2 = arc[0].y;
+    x2 = arc[0].x;
+
+    /* first, categorize the Bezier arc */
+    ymin = y0;
+    ymax = y2;
+    if (ymin > ymax)
+    {
+      ymin = y2;
+      ymax = y0;
+    }
+
+    if (y1 < ymin || y1 > ymax)
+    {
+      /* this arc isn't y-monotonous, split it */
+      split_conic( arc );
+      arc += 2;
+    }
+    else if ( y0 == y2 )
+    {
+      /* this arc is flat, ignore it */
+      arc -= 2;
+    }
+    else
+    {
+      /* the arc is y-monotonous, either ascending or descending */
+      /* detect a change of direction                            */
+      dir = ( y0 < y2 ) ? dir_up : dir_down;
+      if (ras.horizontal) dir |= dir_horizontal;
+      if (dir != ras.dir)
+      {
+        ras.joint = 0;
+        ras.dir   = dir;
+      }
+
+      ras.arc = arc;    
+      if (render_bezier( RAS_VAR_ 2, split_conic, minv, maxv, dir ))
+        goto Fail;
+      arc -= 2;
+    }
+  } while ( arc >= ras.bez_stack );
+
+  ras.x = x2;
+  ras.y = y2;
+  return 0;
+Fail:
+  return 1;
+}   
+
+static
+int  render_cubic( RAS_ARG_  TPos  x1, TPos y1, TPos x2, TPos y2, TPos x3, TPos y3 )
+{
+  TPos        x0, y0;
+  TPos        minv, maxv;
+  FT_Vector*  arc;
+
+  x0 = ras.x;
+  y0 = ras.y;
+
+  minv = ras.min_y;
+  maxv = ras.max_y;
+  if (ras.horizontal)
+  {
+    minv = ras.min_x;
+    maxv = ras.max_x;
+  }
+
+  arc = ras.bez_stack;
+  arc[0].x = ras.x; arc[0].y = ras.y;
+  arc[1].x = x1;    arc[1].y = y1;
+  arc[2].x = x2;    arc[2].y = y2;
+  arc[3].x = x3;    arc[3].y = y3;
+
+  do
+  {
+    TDir  dir;
+    TPos  ymin1, ymax1, ymin2, ymax2;
+    
+    y0 = arc[3].y;
+    y1 = arc[2].y;
+    y2 = arc[1].y;
+    y3 = arc[0].y;
+    x3 = arc[0].x;
+
+    /* first, categorize the Bezier arc */
+    ymin1 = y0;
+    ymax1 = y3;
+    if (ymin1 > ymax1)
+    {
+      ymin1 = y3;
+      ymax1 = y0;
+    }
+
+    ymin2 = y1;
+    ymax2 = y2;
+    if (ymin2 > ymax2)
+    {
+      ymin2 = y2;
+      ymax2 = y1;
+    }
+
+    if ( ymin2 < ymin1 || ymax2 > ymax1)
+    {
+      /* this arc isn't y-monotonous, split it */
+      split_cubic( arc );
+      arc += 3;
+    }
+    else if ( y0 == y3 )
+    {
+      /* this arc is flat, ignore it */
+      arc -= 3;
+    }
+    else
+    {
+      /* the arc is y-monotonous, either ascending or descending */
+      /* detect a change of direction                            */
+      dir = ( y0 < y3 ) ? dir_up : dir_down;
+      if (ras.horizontal) dir |= dir_horizontal;
+      if (dir != ras.dir)
+      {
+        ras.joint = 0;
+        ras.dir   = dir;
+      }
+
+      ras.arc = arc;      
+      if (render_bezier( RAS_VAR_ 3, split_cubic, minv, maxv, dir ))
+        goto Fail;
+      arc -= 3;
+    }
+  } while ( arc >= ras.bez_stack );
+
+  ras.x = x2;
+  ras.y = y2;
+  return 0;
+Fail:
+  return 1;
+}   
+  
+#endif /* !DIRECT_BEZIER */
 
 
 static
@@ -592,8 +1084,8 @@ int  is_less_than( PCell  a, PCell b )
     if (a->x < b->x) goto Yes;
     if (a->x == b->x)
     {
-      TDir  ad = a->dir & dir_horizontal;
-      TDir  bd = b->dir & dir_horizontal;
+      TDir  ad = a->dir & (dir_horizontal|dir_silent);
+      TDir  bd = b->dir & (dir_horizontal|dir_silent);
       if ( ad < bd ) goto Yes;
       if ( ad == bd && a->pos < b->pos) goto Yes;
     }
@@ -1308,7 +1800,7 @@ int  check_sort( PCell  cells, int count )
         q     = p + spans->x;
         limit = q + spans->len;
         for ( ; q < limit; q++ )
-          q[0] = (spans->coverage+1) >> 1;
+          q[0] = spans->coverage >> 1;
       }
     }
   }
@@ -1364,6 +1856,8 @@ int  check_sort( PCell  cells, int count )
     
     if (coverage)
     {
+      x += ras.min_ex;
+    
       /* see if we can add this span to the current list */
       count = ras.num_gray_spans;
       span  = ras.gray_spans + count-1;
@@ -1377,7 +1871,7 @@ int  check_sort( PCell  cells, int count )
       if ( ras.span_y != y || count >= FT_MAX_GRAY_SPANS)
       {
         if (ras.render_span)
-          ras.render_span( ras.span_y, count, ras.gray_spans, ras.render_span_closure );
+          ras.render_span( ras.min_ey + ras.span_y, count, ras.gray_spans, ras.render_span_closure );
         /* ras.render_span( span->y, ras.gray_spans, count ); */
       
 #ifdef DEBUG_GRAYS      
@@ -1452,32 +1946,41 @@ int  check_sort( PCell  cells, int count )
       /* accumulate all start cells */
       for (;;)
       {
-        /* XXX : for now, only deal with vertical intersections */
-        switch ((cur->dir)&3)
+#if 0
+        /* we ignore silent cells for now XXXX */
+        if (!(cur->dir & dir_silent))
+#endif        
         {
-          case dir_up:
-              varea += ONE_PIXEL - cur->pos;
-              if (cur->pos <= 32)
-                hpos = ONE_PIXEL;
-              cover++;
-              numv++;
-              break;
-            
-          case dir_down:
-              varea -= ONE_PIXEL - cur->pos;
-              if (cur->pos <= 32)
-                hpos = 0;
-              cover--;
-              numv++;
-              break;
+          switch ((cur->dir)&3)
+          {
+            case dir_up:
+                varea += ONE_PIXEL - cur->pos;
+                if (cur->pos <= 32)
+                  hpos = ONE_PIXEL;
+                cover++;
+                numv++;
+                break;
               
-          case dir_left:
-              harea += ONE_PIXEL - cur->pos;
-              break;
-              
-          default:
-              harea -= ONE_PIXEL - cur->pos;
-              break;
+            case dir_down:
+                varea -= ONE_PIXEL - cur->pos;
+                if (cur->pos <= 32)
+                  hpos = 0;
+                cover--;
+                numv++;
+                break;
+#if 0                
+            case dir_left:
+                harea += ONE_PIXEL - cur->pos;
+                break;
+                
+            default:
+                harea -= ONE_PIXEL - cur->pos;
+                break;
+#else
+            default:
+               ;
+#endif                
+          }
         }
 
         ++cur;
@@ -1489,15 +1992,14 @@ int  check_sort( PCell  cells, int count )
       if (varea < 0) varea += ONE_PIXEL;
       if (harea < 0) harea += ONE_PIXEL;
       
-      if (harea)
-        area = varea + harea;
-      else
+      if (varea == 0)
+        area = 2*harea;
+        
+      else if (harea == 0)
         area = 2*varea;
-
-#if 1
-      if ( varea < ONE_PIXEL && harea == 0 && (icover|cover) == 0 && area < ONE_PIXEL)
-        area += ONE_HALF;
-#endif
+        
+      else
+        area = (varea+harea+ONE_PIXEL) >> 1;
 
       is_black = ( area >= 2*ONE_PIXEL );
 
@@ -1604,19 +2106,27 @@ int  check_sort( PCell  cells, int count )
     /* compute vertical intersections */
     if (FT_Outline_Decompose( outline, &interface, &ras ))
       return 1;
-#if 1
+#if 0
     /* compute horizontal intersections */
     ras.horizontal   = 1;
     return FT_Outline_Decompose( outline, &interface, &ras );      
+#else
+    return 0;    
 #endif    
   }
 
 
+
+
+
+
   extern
-  int  grays2_raster_render( TRaster*     raster,
-                             FT_Outline*  outline,
-                             FT_Bitmap*   target_map )
+  int  grays2_raster_render( PRaster            raster,
+                             FT_Raster_Params*  params )
   {
+    FT_Outline*  outline = (FT_Outline*)params->source;
+    FT_Bitmap*   target_map = params->target;
+    
     if ( !raster || !raster->cells || !raster->max_cells )
       return -1;
 
@@ -1665,41 +2175,76 @@ int  check_sort( PCell  cells, int count )
   }
 
 
+  /**** RASTER OBJECT CREATION : in standalone mode, we simply use *****/
+  /****                          a static object ..                *****/
+#ifdef _STANDALONE_
+
+  static
+  int  grays2_raster_new( void*  memory, FT_Raster *araster )
+  {
+     static TRaster  the_raster;
+     *araster = (FT_Raster)&the_raster;
+     memset( &the_raster, sizeof(the_raster), 0 );
+     return 0;
+  }
+
+  static
+  void  grays2_raster_done( FT_Raster  raster )
+  {
+    /* nothing */
+    (void)raster;
+  }
+
+#else
+
+#include "ftobjs.h"
+
+  static
+  int  grays2_raster_new( FT_Memory  memory, FT_Raster*  araster )
+  {
+    FT_Error  error;
+    PRaster   raster;
+    
+    *araster = 0;
+    if ( !ALLOC( raster, sizeof(TRaster) ))
+    {
+      raster->memory = memory;
+      *araster = (FT_Raster)raster;
+    }
+      
+    return error;
+  }
+  
+  static
+  void grays2_raster_done( FT_Raster  raster )
+  {
+    FT_Memory  memory = (FT_Memory)((PRaster)raster)->memory;
+    FREE( raster );
+  }
+  
+#endif
 
 
 
 
-  extern
-  int  grays2_raster_init( FT_Raster    raster,
+  static
+  void  grays2_raster_reset( FT_Raster    raster,
                            const char*  pool_base,
                            long         pool_size )
   {
-/*    static const char  default_palette[5] = { 0, 1, 2, 3, 4 }; */
-
-    /* check the object address */
-    if ( !raster )
-      return -1;
-
-    /* check the render pool - we won't go under 4 Kb */
-    if ( !pool_base || pool_size < 4096 )
-      return -1;
-
-    /* save the pool */
-    init_cells( (PRaster)raster, (char*)pool_base, pool_size );
-
-    return 0;
+    if (raster && pool_base && pool_size >= 4096)
+      init_cells( (PRaster)raster, (char*)pool_base, pool_size );
   }
 
 
-
-  FT_Raster_Interface  ft_grays2_raster =
+  FT_Raster_Funcs  ft_grays2_raster =
   {
-    sizeof( TRaster ),
     ft_glyph_format_outline,
-
-    (FT_Raster_Init_Proc)     grays2_raster_init,
-    (FT_Raster_Set_Mode_Proc) 0,
-    (FT_Raster_Render_Proc)   grays2_raster_render
+    
+    (FT_Raster_New_Func)       grays2_raster_new,
+    (FT_Raster_Reset_Func)     grays2_raster_reset,
+    (FT_Raster_Set_Mode_Func)  0,
+    (FT_Raster_Render_Func)    grays2_raster_render,
+    (FT_Raster_Done_Func)      grays2_raster_done
   };
-
 

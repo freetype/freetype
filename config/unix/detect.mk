@@ -18,9 +18,13 @@
 
 
 ifeq ($(PLATFORM),ansi)
-  has_inittab := $(strip $(wildcard /etc/inittab))
 
-  ifneq ($(has_inittab),)
+# Some Unix systems like *BSD do not have a /etc/inittab so we commented
+# the line.. (thanks to Yamano-uchi, Hidetoshi for pointing this out)..
+#
+# has_inittab := $(strip $(wildcard /etc/inittab))
+  has_init := $(strip $(wildcard /sbin/init))
+  ifneq ($(has_init),)
 
     PLATFORM := unix
     COPY     := cp

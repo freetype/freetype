@@ -55,6 +55,11 @@
 #define ErrRaster_Invalid_Outline  -1
 
 #include "ftgrays.h"
+#ifdef _STANDALONE_
+#error "implementation of FT_Outline_Decompose missing !!!"
+#else
+#include <freetype.h>  /* to link to FT_Outline_Decompose */
+#endif
 
 #define xxxDEBUG_GRAYS
 
@@ -90,6 +95,70 @@
 
 #define  UPSCALE(x)  (PIXEL_BITS >= 6 ? (x) << (PIXEL_BITS-6) : (x) >> (6-PIXEL_BITS))
 #define  DOWNSCALE(x)  (PIXEL_BITS >= 6 ? (x) >> (PIXEL_BITS-6) : (x) << (6-PIXEL_BITS))
+
+
+
+
+/****************************************************************************/
+/*                                                                          */
+/*   TYPE DEFINITIONS                                                       */
+/*                                                                          */
+
+typedef int   TScan;
+typedef long  TPos;
+typedef float TDist;
+
+#define FT_MAX_GRAY_SPANS  32
+
+
+typedef struct TCell_
+{
+  TScan  x;
+  TScan  y;
+  int    area;
+  int    cover;
+
+} TCell, *PCell;
+
+
+typedef struct TRaster_
+{
+  PCell   cells;
+  int     max_cells;
+  int     num_cells;
+
+  TScan   min_ex, max_ex;
+  TScan   min_ey, max_ey;
+
+  int     area;
+  int     cover;
+  int     invalid;
+
+  TScan   ex, ey;
+  TScan   cx, cy;
+  TPos    x,  y;
+
+  TScan   last_ey;
+
+  FT_Vector   bez_stack[32*3];
+  int         lev_stack[32];
+
+  FT_Outline  outline;
+  FT_Bitmap   target;
+
+  FT_Span     gray_spans[ FT_MAX_GRAY_SPANS ];
+  int         num_gray_spans;
+
+  FT_Raster_Span_Func  render_span;
+  void*                render_span_data;
+  int                  span_y;
+  
+  void*       memory;
+
+} TRaster, *PRaster;
+
+
+
 
 /****************************************************************************/
 /*                                                                          */
@@ -783,399 +852,6 @@ int  check_sort( PCell  cells, int count )
 #endif
 #endif
 
-#if 0
-  static
-  int  FT_Decompose_Outline( FT_Outline*        outline,
-                             FT_Outline_Funcs*  interface,
-                             void*              user )
-  {
-    typedef enum  _phases
-    {
-      phase_point,
-      phase_conic,
-      phase_cubic,
-      phase_cubic2
-
-    } TPhase;
-
-    FT_Vector  v_first;
-    FT_Vector  v_last;
-    FT_Vector  v_control;
-    FT_Vector  v_start;
-
-    FT_Vector* point;
-    FT_Vector* limit;
-    char*      tags;
-
-    int    n;         /* index of contour in outline     */
-    int    first;     /* index of first point in contour */
-    int    error;
-    char   tag;       /* current point's state           */
-
-
-    first = 0;
-
-    for ( n = 0; n < outline->n_contours; n++ )
-    {
-      int  last;  /* index of last point in contour */
-
-      last  = outline->contours[n];
-      limit = outline->points + last;
-
-      v_first = outline->points[first];
-      v_last  = outline->points[last];
-
-      v_start = v_control = v_first;
-
-      point = outline->points + first;
-      tags  = outline->tags  + first;
-      tag   = FT_CURVE_TAG( tags[0] );
-
-      /* A contour cannot start with a cubic control point! */
-      if ( tag == FT_Curve_Tag_Cubic )
-        goto Invalid_Outline;
-
-      /* check first point to determine origin */
-      if ( tag == FT_Curve_Tag_Conic )
-      {
-        /* first point is conic control.  Yes, this happens. */
-        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_Curve_Tag_On )
-        {
-          /* start at last point if it is on the curve */
-          v_start = v_last;
-          limit--;
-        }
-        else
-        {
-          /* if both first and last points are conic,         */
-          /* start at their middle and record its position    */
-          /* for closure                                      */
-          v_start.x = ( v_start.x + v_last.x ) / 2;
-          v_start.y = ( v_start.y + v_last.y ) / 2;
-
-          v_last = v_start;
-        }
-        point--;
-        tags--;
-      }
-
-      error = interface->move_to( &v_start, user );
-      if (error) goto Exit;
-
-      while (point < limit)
-      {
-        point++;
-        tags++;
-  
-        tag = FT_CURVE_TAG( tags[0] );
-        switch (tag)
-        {
-          case FT_Curve_Tag_On:  /* emit a single line_to */
-            {
-              error = interface->line_to( point, user );
-              if (error) goto Exit;
-              continue;
-            }
-
-          
-          case FT_Curve_Tag_Conic:  /* consume conic arcs */
-            {
-              v_control = point[0];
-              
-            Do_Conic:
-              if (point < limit)
-              {
-                FT_Vector  v_middle;
-                
-                point++;
-                tags++;
-                tag = FT_CURVE_TAG( tags[0] );
-                
-                if (tag == FT_Curve_Tag_On)
-                {
-                  error = interface->conic_to( &v_control, point, user );
-                  if (error) goto Exit;
-                  continue;
-                }
-                
-                if (tag != FT_Curve_Tag_Conic)
-                  goto Invalid_Outline;
-  
-                v_middle.x = (v_control.x + point->x)/2;
-                v_middle.y = (v_control.y + point->y)/2;
-  
-                error = interface->conic_to( &v_control, &v_middle, user );
-                if (error) goto Exit;
-                
-                v_control = point[0];
-                goto Do_Conic;
-              }
-              
-              error = interface->conic_to( &v_control, &v_start, user );
-              goto Close;
-            }
-          
-          default:  /* FT_Curve_Tag_Cubic */
-            {
-              if ( point+1 > limit         ||
-                   FT_CURVE_TAG( tags[1] ) != FT_Curve_Tag_Cubic )
-                goto Invalid_Outline;
-                
-              point += 2;
-              tags  += 2;
-              
-              if (point <= limit)
-              {
-                error = interface->cubic_to( point-2, point-1, point, user );
-                if (error) goto Exit;
-                continue;
-              }
-              
-              error = interface->cubic_to( point-2, point-1, &v_start, user );
-              goto Close;
-            }
-        }
-      }
-
-      /* close the contour with a line segment */
-      error = interface->line_to( &v_start, user );
-      
-   Close:
-      if (error) goto Exit;
-      first = last+1;
-    }
-
-    return 0;
-  Exit:
-    return error;
-    
-  Invalid_Outline:
-    return -1;
-  }
-#else
-  static
-  int  FT_Decompose_Outline( FT_Outline*        outline,
-                             FT_Outline_Funcs*  interface,
-                             void*              user )
-  {
-    typedef enum  _phases
-    {
-      phase_point,
-      phase_conic,
-      phase_cubic,
-      phase_cubic2
-
-    } TPhase;
-
-    FT_Vector  v_first;
-    FT_Vector  v_last;
-    FT_Vector  v_control;
-    FT_Vector  v_control2;
-    FT_Vector  v_start;
-
-    FT_Vector* point;
-    char*      tags;
-
-    int    n;         /* index of contour in outline     */
-    int    first;     /* index of first point in contour */
-    int    index;     /* current point's index           */
-
-    int    error;
-
-    char   tag;       /* current point's state           */
-    TPhase phase;
-
-
-    first = 0;
-
-    for ( n = 0; n < outline->n_contours; n++ )
-    {
-      int  last;  /* index of last point in contour */
-
-
-      last = outline->contours[n];
-
-      v_first = outline->points[first];
-      v_last  = outline->points[last];
-
-      v_start = v_control = v_first;
-
-      tag   = FT_CURVE_TAG( outline->tags[first] );
-      index = first;
-
-      /* A contour cannot start with a cubic control point! */
-
-      if ( tag == FT_Curve_Tag_Cubic )
-        return ErrRaster_Invalid_Outline;
-
-
-      /* check first point to determine origin */
-
-      if ( tag == FT_Curve_Tag_Conic )
-      {
-        /* first point is conic control.  Yes, this happens. */
-        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_Curve_Tag_On )
-        {
-          /* start at last point if it is on the curve */
-          v_start = v_last;
-        }
-        else
-        {
-          /* if both first and last points are conic,         */
-          /* start at their middle and record its position    */
-          /* for closure                                      */
-          v_start.x = ( v_start.x + v_last.x ) / 2;
-          v_start.y = ( v_start.y + v_last.y ) / 2;
-
-          v_last = v_start;
-        }
-        phase = phase_conic;
-      }
-      else
-        phase = phase_point;
-
-
-      /* Begin a new contour with MOVE_TO */
-
-      error = interface->move_to( &v_start, user );
-      if ( error )
-        return error;
-
-      point = outline->points + first;
-      tags = outline->tags  + first;
-
-      /* now process each contour point individually */
-
-      while ( index < last )
-      {
-        index++;
-        point++;
-        tags++;
-
-        tag = FT_CURVE_TAG( tags[0] );
-
-        switch ( phase )
-        {
-        case phase_point:     /* the previous point was on the curve */
-
-          switch ( tag )
-          {
-            /* two succesive on points -> emit segment */
-          case FT_Curve_Tag_On:
-            error = interface->line_to( point, user );
-            break;
-
-            /* on point + conic control -> remember control point */
-          case FT_Curve_Tag_Conic:
-            v_control = point[0];
-            phase     = phase_conic;
-            break;
-
-            /* on point + cubic control -> remember first control */
-          default:
-            v_control = point[0];
-            phase     = phase_cubic;
-            break;
-          }
-          break;
-
-        case phase_conic:   /* the previous point was a conic control */
-
-          switch ( tag )
-          {
-            /* conic control + on point -> emit conic arc */
-          case  FT_Curve_Tag_On:
-            error = interface->conic_to( &v_control, point, user );
-            phase = phase_point;
-            break;
-
-            /* two successive conics -> emit conic arc `in between' */
-          case FT_Curve_Tag_Conic:
-            {
-              FT_Vector  v_middle;
-
-
-              v_middle.x = (v_control.x + point->x)/2;
-              v_middle.y = (v_control.y + point->y)/2;
-
-              error = interface->conic_to( &v_control,
-                                           &v_middle, user );
-              v_control = point[0];
-            }
-             break;
-
-          default:
-            error = ErrRaster_Invalid_Outline;
-          }
-          break;
-
-        case phase_cubic:  /* the previous point was a cubic control */
-
-          /* this point _must_ be a cubic control too */
-          if ( tag != FT_Curve_Tag_Cubic )
-            return ErrRaster_Invalid_Outline;
-
-          v_control2 = point[0];
-          phase      = phase_cubic2;
-          break;
-
-
-        case phase_cubic2:  /* the two previous points were cubics */
-
-          /* this point _must_ be an on point */
-          if ( tag != FT_Curve_Tag_On )
-            error = ErrRaster_Invalid_Outline;
-          else
-            error = interface->cubic_to( &v_control, &v_control2,
-                                         point, user );
-          phase = phase_point;
-          break;
-        }
-
-        /* lazy error testing */
-        if ( error )
-          return error;
-      }
-
-      /* end of contour, close curve cleanly */
-      error = 0;
-
-      tag = FT_CURVE_TAG( outline->tags[first] );
-
-      switch ( phase )
-      {
-      case phase_point:
-        if ( tag == FT_Curve_Tag_On )
-          error = interface->line_to( &v_first, user );
-        break;
-
-      case phase_conic:
-        error = interface->conic_to( &v_control, &v_start, user );
-        break;
-
-      case phase_cubic2:
-        if ( tag == FT_Curve_Tag_On )
-          error = interface->cubic_to( &v_control, &v_control2,
-                                       &v_first,   user );
-        else
-          error = ErrRaster_Invalid_Outline;
-        break;
-
-      default:
-        error = ErrRaster_Invalid_Outline;
-        break;
-      }
-
-      if ( error )
-        return error;
-
-      first = last + 1;
-    }
-
-    return 0;
-  }
-
-#endif
 
   static
   int  Move_To( FT_Vector*  to,
@@ -1224,7 +900,7 @@ int  check_sort( PCell  cells, int count )
 
 
   static
-  void grays_render_span( int y, int count, FT_GraySpan*  spans, PRaster  raster )
+  void grays_render_span( int y, int count, FT_Span*  spans, PRaster  raster )
   {
     unsigned char *p, *q, *limit;
     FT_Bitmap*    map = &raster->target;
@@ -1270,21 +946,12 @@ int  check_sort( PCell  cells, int count )
   }
 #endif
   
-#if 0
-  static
-  void  grays_hline( RAS_ARG_  TScan  x, TScan y, TPos  area, int  count )
-  {
-    if (area)
-      fprintf( stderr, "hline( %3d, %3d, %2d, %5.2f )\n",
-               y, x, count, (float)area/(2.0*ONE_PIXEL*ONE_PIXEL) );
-  }
-#else
   static
   void  grays_hline( RAS_ARG_  TScan  x, TScan y, TPos  area, int acount )
   {
-    FT_GraySpan*   span;
-    int            count;
-    int            coverage;
+    FT_Span*   span;
+    int        count;
+    int        coverage;
     
     /* compute the coverage line's coverage, depending on the    */
     /* outline fill rule..                                       */
@@ -1331,7 +998,8 @@ int  check_sort( PCell  cells, int count )
       if ( ras.span_y != y || count >= FT_MAX_GRAY_SPANS)
       {
         if (ras.render_span)
-          ras.render_span( ras.span_y, count, ras.gray_spans, ras.render_span_closure );
+          ras.render_span( ras.span_y, count, ras.gray_spans,
+                           ras.render_span_data );
         /* ras.render_span( span->y, ras.gray_spans, count ); */
       
 #ifdef DEBUG_GRAYS      
@@ -1341,7 +1009,8 @@ int  check_sort( PCell  cells, int count )
         fprintf( stderr, "y=%3d ", ras.span_y );
         span = ras.gray_spans;
         for (n = 0; n < count; n++, span++)
-          fprintf( stderr, "[%d..%d]:%02x ", span->x, span->x + span->len-1, span->coverage );
+          fprintf( stderr, "[%d..%d]:%02x ",
+                   span->x, span->x + span->len-1, span->coverage );
         fprintf( stderr, "\n" );
         }
 #endif
@@ -1362,7 +1031,7 @@ int  check_sort( PCell  cells, int count )
       ras.num_gray_spans++;
     }
   }
-#endif
+
 
   static
   void  grays_sweep( RAS_ARG_  FT_Bitmap*  target )
@@ -1427,7 +1096,7 @@ int  check_sort( PCell  cells, int count )
 
     if (ras.render_span && ras.num_gray_spans > 0)
       ras.render_span( ras.span_y, ras.num_gray_spans,
-                       ras.gray_spans, ras.render_span_closure );
+                       ras.gray_spans, ras.render_span_data );
 #ifdef DEBUG_GRAYS
     {
       int  n;
@@ -1465,7 +1134,7 @@ int  check_sort( PCell  cells, int count )
     ras.num_cells = 0;
 
     /* Now decompose curve */
-    if ( FT_Decompose_Outline( outline, &interface, &ras ) )
+    if ( FT_Outline_Decompose( outline, &interface, &ras ) )
       return 1;
     /* XXX: the error condition is in ras.error */
 
@@ -1475,10 +1144,12 @@ int  check_sort( PCell  cells, int count )
 
 
   extern
-  int  grays_raster_render( TRaster*     raster,
-                            FT_Outline*  outline,
-                            FT_Bitmap*   target_map )
+  int  grays_raster_render( PRaster            raster,
+                            FT_Raster_Params*  params )
   {
+    FT_Outline*  outline = (FT_Outline*)params->source;
+    FT_Bitmap*   target_map = params->target;
+    
     if ( !raster || !raster->cells || !raster->max_cells )
       return -1;
 
@@ -1493,6 +1164,10 @@ int  check_sort( PCell  cells, int count )
       return -1;
 
     if ( !target_map || !target_map->buffer )
+      return -1;
+
+    /* XXXX: this version does not support monochrome rendering yet ! */
+    if ( !(params->flags & ft_raster_flag_aa) )
       return -1;
 
     ras.outline   = *outline;
@@ -1513,49 +1188,90 @@ int  check_sort( PCell  cells, int count )
     check_sort( ras.cells, ras.num_cells );
     dump_cells( RAS_VAR );
 #endif
-    ras.render_span         = (FT_GraySpan_Func)grays_render_span;
-    ras.render_span_closure = &ras;
+
+    ras.render_span      = (FT_Raster_Span_Func)grays_render_span;
+    ras.render_span_data = &ras;
+    if ( params->flags & ft_raster_flag_direct )
+    {
+      ras.render_span      = (FT_Raster_Span_Func)params->gray_spans;
+      ras.render_span_data = params->user;
+    }
     
     grays_sweep( (PRaster)raster, target_map );    
     return 0;
   }
 
 
+  /**** RASTER OBJECT CREATION : in standalone mode, we simply use *****/
+  /****                          a static object ..                *****/
+#ifdef _STANDALONE_
 
-
-
-
-  extern
-  int  grays_raster_init( FT_Raster    raster,
-                          const char*  pool_base,
-                          long         pool_size )
+  static
+  int  grays_raster_new( void*  memory, FT_Raster *araster )
   {
-/*    static const char  default_palette[5] = { 0, 1, 2, 3, 4 }; */
+     static FT_RasterRec_  the_raster;
+     *araster = &the_raster;  
+     memset( &the_raster, sizeof(the_raster), 0 );
+     return 0;
+  }
 
-    /* check the object address */
-    if ( !raster )
-      return -1;
+  static
+  void  grays_raster_done( FT_Raster  raster )
+  {
+    /* nothing */
+    (void)raster;
+  }
 
-    /* check the render pool - we won't go under 4 Kb */
-    if ( !pool_base || pool_size < 4096 )
-      return -1;
+#else
 
-    /* save the pool */
-    init_cells( (PRaster)raster, (char*)pool_base, pool_size );
+#include "ftobjs.h"
 
-    return 0;
+  static
+  int  grays_raster_new( FT_Memory  memory, FT_Raster*  araster )
+  {
+    FT_Error  error;
+    PRaster   raster;
+    
+    *araster = 0;
+    if ( !ALLOC( raster, sizeof(TRaster) ))
+    {
+      raster->memory = memory;
+      *araster = (FT_Raster)raster;
+    }
+      
+    return error;
+  }
+  
+  static
+  void grays_raster_done( FT_Raster  raster )
+  {
+    FT_Memory  memory = (FT_Memory)((PRaster)raster)->memory;
+    FREE( raster );
+  }
+  
+#endif
+
+
+
+
+  static
+  void  grays_raster_reset( FT_Raster    raster,
+                           const char*  pool_base,
+                           long         pool_size )
+  {
+    if (raster && pool_base && pool_size >= 4096)
+      init_cells( (PRaster)raster, (char*)pool_base, pool_size );
   }
 
 
-
-  FT_Raster_Interface  ft_grays_raster =
+  FT_Raster_Funcs  ft_grays_raster =
   {
-    sizeof( TRaster ),
     ft_glyph_format_outline,
-
-    (FT_Raster_Init_Proc)     grays_raster_init,
-    (FT_Raster_Set_Mode_Proc) 0,
-    (FT_Raster_Render_Proc)   grays_raster_render
+    
+    (FT_Raster_New_Func)       grays_raster_new,
+    (FT_Raster_Reset_Func)     grays_raster_reset,
+    (FT_Raster_Set_Mode_Func)  0,
+    (FT_Raster_Render_Func)    grays_raster_render,
+    (FT_Raster_Done_Func)      grays_raster_done
   };
-
 

@@ -92,7 +92,7 @@
   /*   Define this configuration macro if you want to support              */
   /*   anti-aliasing.                                                      */
   /*                                                                       */
-#define FT_RASTER_OPTION_ANTI_ALIAS
+#undef  FT_RASTER_OPTION_ANTI_ALIAS
 
 
   /*************************************************************************/
@@ -643,6 +643,7 @@
     TDirection  state;              /* rendering state */
 
     FT_Bitmap target;          /* description of target bit/pixmap */
+    void*     memory;
 
     int       trace_bit;            /* current offset in target bitmap    */
     int       trace_pix;            /* current offset in target pixmap    */
@@ -2204,260 +2205,6 @@
 #endif /* FT_RASTER_CUBIC_BEZIERS */
 
 
-/********************************************************************/
-/*                                                                  */
-/* The following function is compiled in the raster only when it is */
-/* compile as a stand-alone module..                                */
-
-/* It can, otherwise, be found in the FreeType base layer           */
-
-#ifdef _STANDALONE_
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Decompose                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Walks over an outline's structure to decompose it into individual  */
-  /*    segments and Bezier arcs.  This function is also able to emit      */
-  /*    `move to' and `close to' operations to indicate the start and end  */
-  /*    of new contours in the outline.                                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    outline   :: A pointer to the source target.                       */
-  /*                                                                       */
-  /*    interface :: A table of `emitters', i.e,. function pointers called */
-  /*                 during decomposition to indicate path operations.     */
-  /*                                                                       */
-  /*    user      :: A typeless pointer which is passed to each emitter    */
-  /*                 during the decomposition.  It can be used to store    */
-  /*                 the state during the decomposition.                   */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Error code.  0 means sucess.                                       */
-  /*                                                                       */
-  static
-  int  FT_Outline_Decompose( FT_Outline*        outline,
-                             FT_Outline_Funcs*  interface,
-                             void*              user )
-  {
-    typedef enum  _phases
-    {
-      phase_point,
-      phase_conic,
-      phase_cubic,
-      phase_cubic2
-
-    } TPhase;
-
-    FT_Vector  v_first;
-    FT_Vector  v_last;
-    FT_Vector  v_control;
-    FT_Vector  v_control2;
-    FT_Vector  v_start;
-
-    FT_Vector* point;
-    char*      flags;
-
-    int    n;         /* index of contour in outline     */
-    int    first;     /* index of first point in contour */
-    int    index;     /* current point's index           */
-
-    int    error;
-
-    char   tag;       /* current point's state           */
-    TPhase phase;
-
-
-    first = 0;
-
-    for ( n = 0; n < outline->n_contours; n++ )
-    {
-      int  last;  /* index of last point in contour */
-
-
-      last = outline->contours[n];
-
-      v_first = outline->points[first];
-      v_last  = outline->points[last];
-
-      v_start = v_control = v_first;
-
-      tag   = FT_CURVE_TAG( outline->flags[first] );
-      index = first;
-
-      /* A contour cannot start with a cubic control point! */
-
-      if ( tag == FT_Curve_Tag_Cubic )
-        return ErrRaster_Invalid_Outline;
-
-
-      /* check first point to determine origin */
-
-      if ( tag == FT_Curve_Tag_Conic )
-      {
-        /* first point is conic control.  Yes, this happens. */
-        if ( FT_CURVE_TAG( outline->flags[last] ) == FT_Curve_Tag_On )
-        {
-          /* start at last point if it is on the curve */
-          v_start = v_last;
-        }
-        else
-        {
-          /* if both first and last points are conic,         */
-          /* start at their middle and record its position    */
-          /* for closure                                      */
-          v_start.x = ( v_start.x + v_last.x ) / 2;
-          v_start.y = ( v_start.y + v_last.y ) / 2;
-
-          v_last = v_start;
-        }
-        phase = phase_conic;
-      }
-      else
-        phase = phase_point;
-
-
-      /* Begin a new contour with MOVE_TO */
-
-      error = interface->move_to( &v_start, user );
-      if ( error )
-        return error;
-
-      point = outline->points + first;
-      flags = outline->flags  + first;
-
-      /* now process each contour point individually */
-
-      while ( index < last )
-      {
-        index++;
-        point++;
-        flags++;
-
-        tag = FT_CURVE_TAG( flags[0] );
-
-        switch ( phase )
-        {
-        case phase_point:     /* the previous point was on the curve */
-
-          switch ( tag )
-          {
-            /* two succesive on points -> emit segment */
-          case FT_Curve_Tag_On:
-            error = interface->line_to( point, user );
-            break;
-
-            /* on point + conic control -> remember control point */
-          case FT_Curve_Tag_Conic:
-            v_control = point[0];
-            phase     = phase_conic;
-            break;
-
-            /* on point + cubic control -> remember first control */
-          default:
-            v_control = point[0];
-            phase     = phase_cubic;
-            break;
-          }
-          break;
-
-        case phase_conic:   /* the previous point was a conic control */
-
-          switch ( tag )
-          {
-            /* conic control + on point -> emit conic arc */
-          case  FT_Curve_Tag_On:
-            error = interface->conic_to( &v_control, point, user );
-            phase = phase_point;
-            break;
-
-            /* two successive conics -> emit conic arc `in between' */
-          case FT_Curve_Tag_Conic:
-            {
-              FT_Vector  v_middle;
-
-
-              v_middle.x = (v_control.x + point->x)/2;
-              v_middle.y = (v_control.y + point->y)/2;
-
-              error = interface->conic_to( &v_control,
-                                           &v_middle, user );
-              v_control = point[0];
-            }
-             break;
-
-          default:
-            error = ErrRaster_Invalid_Outline;
-          }
-          break;
-
-        case phase_cubic:  /* the previous point was a cubic control */
-
-          /* this point _must_ be a cubic control too */
-          if ( tag != FT_Curve_Tag_Cubic )
-            return ErrRaster_Invalid_Outline;
-
-          v_control2 = point[0];
-          phase      = phase_cubic2;
-          break;
-
-
-        case phase_cubic2:  /* the two previous points were cubics */
-
-          /* this point _must_ be an on point */
-          if ( tag != FT_Curve_Tag_On )
-            error = ErrRaster_Invalid_Outline;
-          else
-            error = interface->cubic_to( &v_control, &v_control2,
-                                         point, user );
-          phase = phase_point;
-          break;
-        }
-
-        /* lazy error testing */
-        if ( error )
-          return error;
-      }
-
-      /* end of contour, close curve cleanly */
-      error = 0;
-
-      tag = FT_CURVE_TAG( outline->flags[first] );
-
-      switch ( phase )
-      {
-      case phase_point:
-        if ( tag == FT_Curve_Tag_On )
-          error = interface->line_to( &v_first, user );
-        break;
-
-      case phase_conic:
-        error = interface->conic_to( &v_control, &v_start, user );
-        break;
-
-      case phase_cubic2:
-        if ( tag == FT_Curve_Tag_On )
-          error = interface->cubic_to( &v_control, &v_control2,
-                                       &v_first,   user );
-        else
-          error = ErrRaster_Invalid_Outline;
-        break;
-
-      default:
-        error = ErrRaster_Invalid_Outline;
-        break;
-      }
-
-      if ( error )
-        return error;
-
-      first = last + 1;
-    }
-
-    return SUCCESS;
-  }
-#endif
 
   /*************************************************************************/
   /*                                                                       */
@@ -3109,14 +2856,6 @@
     x1 += PRECISION_HALF;
     x2 += PRECISION_HALF;
 
-#ifdef FT_RASTER_OPTION_CONTRAST
-    if ( x2-x1 < PRECISION )
-    {
-      x1 = ((x1+x2) >> 1) - PRECISION_HALF;
-      x2 = x1 + PRECISION;
-	}
-#endif
-
     e1 = TRUNC( x1 );
     e2 = TRUNC( x2 );
 
@@ -3323,14 +3062,6 @@
 
     x1 += PRECISION_HALF;
     x2 += PRECISION_HALF;
-
-#ifdef FT_RASTER_OPTION_CONTRAST
-    if (x2-x1 < PRECISION)
-    {
-      x1 = ((x1+x2) >> 1) - PRECISION_HALF;
-      x2 = x1 + PRECISION;
-    }
-#endif
 
     e1 = TRUNC( x1 );
     e2 = TRUNC( x2 );
@@ -4081,37 +3812,86 @@ Scan_DropOuts :
 #endif /* FT_RASTER_OPTION_ANTI_ALIAS */
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Raster_Render                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Renders an outline into a target bitmap.                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    raster  :: A handle to the raster object used during rendering.    */
-  /*    outline :: A pointer to the source outline record/object.          */
-  /*    bitmap  :: A pointer to the target bitmap descriptor.              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Error code, interpreted as a FT_Error by FreeType.  0 means        */
-  /*    success.                                                           */
-  /*                                                                       */
-  EXPORT_FUNC
-  int  FT_Raster_Render( FT_Raster    raster,
-                         FT_Outline*  outline,
-                         FT_Bitmap*   target_map )
+
+  /**** RASTER OBJECT CREATION : in standalone mode, we simply use *****/
+  /****                          a static object ..                *****/
+#ifdef _STANDALONE_
+
+  static
+  int  ft_raster_new( void*  memory, FT_Raster *araster )
   {
+     static FT_RasterRec_  the_raster;
+     *araster = &the_raster;  
+     memset( &the_raster, sizeof(the_raster), 0 );
+     return 0;
+  }
+
+  static
+  void  ft_raster_done( FT_Raster  raster )
+  {
+    /* nothing */
+    raster->init = 0;
+  }
+
+#else
+
+#include "ftobjs.h"
+
+  static
+  int  ft_raster_new( FT_Memory  memory, FT_Raster*  araster )
+  {
+    FT_Error  error;
+    FT_Raster raster;
+    
+    *araster = 0;
+    if ( !ALLOC( raster, sizeof(*raster) ))
+    {
+      raster->memory = memory;
+      *araster = raster;
+    }
+      
+    return error;
+  }
+  
+  static
+  void ft_raster_done( FT_Raster  raster )
+  {
+    FT_Memory  memory = (FT_Memory)raster->memory;
+    FREE( raster );
+  }
+  
+#endif
+
+
+  static void ft_raster_reset( FT_Raster   raster,
+                               const char* pool_base,
+                               long        pool_size )
+  {
+    if ( raster && pool_base && pool_size >= 4096 )
+    {
+      /* save the pool */
+      raster->pool      = (PPos)pool_base;
+      raster->pool_size = raster->pool + pool_size / sizeof ( TPos );
+    }
+  }
+
+
+  static
+  int  ft_raster_render( FT_Raster          raster,
+                         FT_Raster_Params*  params )
+  {
+    FT_Outline*  outline    = (FT_Outline*)params->source;
+    FT_Bitmap*   target_map = params->target;
+    
     if ( !raster || !raster->pool || !raster->pool_size )
       return ErrRaster_Uninitialized_Object;
+
+    if ( !outline || !outline->contours || !outline->points )
+      return ErrRaster_Invalid_Outline;
 
     /* return immediately if the outline is empty */
     if ( outline->n_points == 0 || outline->n_contours <= 0 )
       return ErrRaster_Ok;
-
-    if ( !outline || !outline->contours || !outline->points )
-      return ErrRaster_Invalid_Outline;
 
     if ( outline->n_points != outline->contours[outline->n_contours - 1] + 1 )
       return ErrRaster_Invalid_Outline;
@@ -4125,107 +3905,29 @@ Scan_DropOuts :
     /* Note that we always use drop-out mode 2, because it seems that */
     /* it's the only way to do to get results consistent with Windows */
     /* rendering..                                                    */
-#if 0
-    ras.dropout_mode = outline->dropout_mode;
-#else
     ras.dropout_mode = 2;
-#endif
+
     ras.second_pass  = (outline->flags & ft_outline_single_pass) == 0;
     SET_High_Precision( (char)((outline->flags & ft_outline_high_precision)!= 0) );
 
-    switch ( target_map->pixel_mode )
-    {
-    case ft_pixel_mode_mono:   return Raster_Render1( raster );
-    case ft_pixel_mode_grays:  return Raster_Render8( raster );
-    default:                   return ErrRaster_Unimplemented;
-    }
+    /* this version of the raster does not support direct rendering, sorry */
+    if ( params->flags & ft_raster_flag_direct )
+      return ErrRaster_Unimplemented;
+
+    return ( params->flags & ft_raster_flag_aa
+           ? Raster_Render8( raster )
+           : Raster_Render1( raster ) );
   }
 
 
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Raster_ObjSize                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This function returns the size of a raster object in bytes.        */
-  /*    Client applications are thus able to allocate objects in their own */
-  /*    heap/memory space, without revealing the internal structures of    */
-  /*    the scan-line converter.                                           */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    The size in bytes of a single raster object.                       */
-  /*                                                                       */
-  EXPORT_FUNC
-  long  FT_Raster_ObjSize( void )
+  FT_Raster_Funcs      ft_default_raster =
   {
-    return (long)sizeof( struct FT_RasterRec_ );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Raster_Init                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a fresh raster object which should have been allocated */
-  /*    by client applications.  This function is also used to set the     */
-  /*    object's render pool.  It can be used repeatedly on a single       */
-  /*    object if one wants to change the pool's address or size.          */
-  /*                                                                       */
-  /*    Note that the render pool has no state and is only used during a   */
-  /*    call to FT_Raster_Render().  It is thus theorically possible to    */
-  /*    share it between several non-concurrent components of your         */
-  /*    applications when memory is a scarce resource.                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    pool_size :: The render pool's size in bytes.  This must be at     */
-  /*                 least 4 kByte.                                        */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    raster    :: A handle to the target raster object.                 */
-  /*                                                                       */
-  /*    pool_base :: The render pool's base address in memory.             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    An error condition, used as a FT_Error in the FreeType library.    */
-  /*    0 means success.                                                   */
-  /*                                                                       */
-  EXPORT_FUNC
-  int  FT_Raster_Init( FT_Raster    raster,
-                       const char*  pool_base,
-                       long         pool_size )
-  {
-/*    static const char  default_palette[5] = { 0, 1, 2, 3, 4 }; */
-
-    /* check the object address */
-    if ( !raster )
-      return ErrRaster_Uninitialized_Object;
-
-    /* check the render pool - we won't go under 4 Kb */
-    if ( !pool_base || pool_size < 4096 )
-      return ErrRaster_Invalid_Pool;
-
-    /* save the pool */
-    raster->pool      = (PPos)pool_base;
-    raster->pool_size = raster->pool + pool_size / sizeof ( TPos );
-
-    return ErrRaster_Ok;
-  }
-
-
-
-  FT_Raster_Interface  ft_default_raster =
-  {
-    sizeof( struct FT_RasterRec_ ),
     ft_glyph_format_outline,
-
-    (FT_Raster_Init_Proc)     FT_Raster_Init,
-    (FT_Raster_Set_Mode_Proc) 0,
-    (FT_Raster_Render_Proc)   FT_Raster_Render
+    (FT_Raster_New_Func)       ft_raster_new,
+    (FT_Raster_Reset_Func)     ft_raster_reset,
+    (FT_Raster_Set_Mode_Func)  0,
+    (FT_Raster_Render_Func)    ft_raster_render,
+    (FT_Raster_Done_Func)      ft_raster_done
   };
 
 

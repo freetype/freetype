@@ -220,48 +220,58 @@
   static
   FT_Error  ft_new_input_stream( FT_Library     library,
                                  FT_Open_Args*  args,
-                                 FT_Stream*     astream )
+                                 FT_Stream     *astream )
   {
     FT_Error   error;
     FT_Memory  memory;
     FT_Stream  stream;
 
-    
-    memory = library->memory;
+    *astream = 0;
+    memory   = library->memory;
     if ( ALLOC( stream, sizeof ( *stream ) ) )
-      return error;
+      goto Exit;
       
     stream->memory = memory;
     
-    /* is it a memory stream? */
-    if ( args->memory_base && args->memory_size )
-      FT_New_Memory_Stream( library,
-                            args->memory_base,
-                            args->memory_size,
-                            stream );
-
-    /* do we have an 8-bit pathname? */
-    else if ( args->pathname )
+    /* now, look at the stream type */
+    switch ( args->stream_type )
     {
-      error = FT_New_Stream( args->pathname, stream );
-      stream->pathname.pointer = args->pathname;
-    }
-
-    /* do we have a custom stream? */
-    else if ( args->stream )
-    {
-      /* copy the contents of the argument stream */
-      /* into the new stream object               */
-      *stream = *(args->stream);
-      stream->memory = memory;
-    }
-    else
-      error = FT_Err_Invalid_Argument;
+      /***** is it a memory-based stream ? *****************************/
+      case ft_stream_memory:
+      {
+        FT_New_Memory_Stream( library,
+                              args->memory_base,
+                              args->memory_size,
+                              stream );
+        break;
+      }
       
+      /***** is is a pathname stream ? ********************************/
+      case ft_stream_pathname:
+      {
+        error = FT_New_Stream( args->pathname, stream );
+        stream->pathname.pointer = args->pathname;
+        break;
+      }
+      
+      case ft_stream_copy:
+      {
+        if ( args->stream)
+        {
+          *stream        = *(args->stream);
+          stream->memory = memory;
+          break;
+        }
+      }
+      default:
+        error = FT_Err_Invalid_Argument;
+    }
+    
     if ( error )
       FREE( stream );
       
     *astream = stream;
+  Exit:
     return error;
   }
 
@@ -279,7 +289,6 @@
   {
     FT_Stream  stream = *astream;
     FT_Memory  memory = stream->memory;
-
 
     if ( stream->close )
       stream->close( stream );
@@ -387,38 +396,46 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Glyph_Format                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Gets the glyph format for a given format tag.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library    :: A handle to the library object.                      */
-  /*    format_tag :: A tag identifying the glyph format.                  */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A pointer to a glyph format.  0 if `format_tag' isn't defined.     */
-  /*                                                                       */
-  BASE_FUNC
-  FT_Glyph_Format*  FT_Get_Glyph_Format( FT_Library    library,
-                                         FT_Glyph_Tag  format_tag )
+ /*************************************************************************
+  *
+  * <Function>
+  *   FT_Get_Raster
+  *
+  * <Description>
+  *   Return a pointer to the raster corresponding to a given glyph   
+  *   format tag.      
+  *
+  * <Input>
+  *   library      :: handle to source library object
+  *   glyph_format :: glyph format tag
+  *
+  * <Output>
+  *   raster_funcs :: if this field is not 0, returns the raster's interface
+  *
+  * <Return>
+  *   a pointer to the corresponding raster object.
+  *
+  *************************************************************************/
+  
+  EXPORT_FUNC
+  FT_Raster  FT_Get_Raster( FT_Library        library,
+                            FT_Glyph_Format   glyph_format,
+                            FT_Raster_Funcs  *raster_funcs )
   {
-    FT_Glyph_Format*  cur   = library->glyph_formats;
-    FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
-
-
-    for ( ; cur < limit; cur ++ )
+    FT_Int  n;
+    
+    for ( n = 0; n < FT_MAX_GLYPH_FORMATS; n++ )
     {
-      if ( cur->format_tag == format_tag )
-        return cur;
+      FT_Raster_Funcs*  funcs = &library->raster_funcs[n];
+      if (funcs->glyph_format == glyph_format)
+      {
+        if (raster_funcs)
+          *raster_funcs = *funcs;
+        return library->rasters[n];
+      }
     }
-
     return 0;
   }
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -426,71 +443,124 @@
   /*    FT_Set_Raster                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    This function changes the raster module used to convert from a     */
-  /*    given memory object.  It is thus possible to use libraries with    */
-  /*    distinct memory allocators within the same program.                */
+  /*    Register a given raster to the library.                            */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    library   :: A handle to the library object.                       */
-  /*    interface :: A pointer to the interface of the new raster module.  */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    raster    :: A handle to the raster object.                        */
+  /*    library      :: A handle to a target library object.               */
+  /*    raster_funcs :: pointer to the raster's interface                  */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
+  /*    Error code.  0 means success.                                      */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This function will do the following:                               */
+  /*                                                                       */
+  /*    - a new raster object is created through raster_func.raster_new    */
+  /*      if this fails, then the function returns                         */
+  /*                                                                       */
+  /*    - if a raster is already registered for the glyph format           */
+  /*      specified in raster_funcs, it will be destroyed                  */
+  /*                                                                       */
+  /*    - the new raster is registered for the glyph format                */
   /*                                                                       */
   EXPORT_FUNC
-  FT_Error  FT_Set_Raster( FT_Library            library,
-                           FT_Raster_Interface*  interface,
-                           FT_Raster             raster )
+  FT_Error  FT_Set_Raster( FT_Library        library,
+                           FT_Raster_Funcs*  raster_funcs )
   {
-    FT_Memory         memory = library->memory;
-    FT_Error          error  = FT_Err_Ok;
-    FT_Glyph_Format*  format;
-
-
-    /* allocate the render pool if necessary */
-    if ( !library->raster_pool &&
-         ALLOC( library->raster_pool, FT_RENDER_POOL_SIZE ) )
-      goto Exit;
-
-    /* find the glyph formatter for the raster's format */
-    format = FT_Get_Glyph_Format( library, interface->format_tag );
-    if ( !format )
+    FT_Glyph_Format  glyph_format = raster_funcs->glyph_format;
+    FT_Raster_Funcs* funcs;
+    FT_Raster        raster;
+    FT_Error         error;
+    FT_Int           n, index;
+ 
+    if ( glyph_format == ft_glyph_format_none)
+      return FT_Err_Invalid_Argument;
+    
+    /* create a new raster object */
+    error = raster_funcs->raster_new( library->memory, &raster );
+    if (error) goto Exit;
+    
+    raster_funcs->raster_reset( raster,
+                                library->raster_pool,
+                                library->raster_pool_size );
+    
+    index = -1;
+    for (n = 0; n < FT_MAX_GLYPH_FORMATS; n++)
     {
-      error = FT_Err_Invalid_Argument;
-      goto Exit;
-    }
+      FT_Raster_Funcs*  funcs = library->raster_funcs + n;
 
-    /* free previous raster object if necessary */
-    if ( format->raster_allocated )
-    {
-      FREE( format->raster );
-      format->raster_allocated = 0;
-    }
-
-    /* allocate new raster object is necessary */
-    if ( !raster )
-    {
-      if ( ALLOC( raster, interface->size ) )
-        goto Exit;
-
-      format->raster_allocated = 1;
-    }
-    format->raster           = raster;
-    format->raster_interface = interface;
-
-    /* initialize the raster object */
-    error = interface->init( raster,
-                             (char*)library->raster_pool,
-                             FT_RENDER_POOL_SIZE );
-    if ( error )
-    {
-      if ( format->raster_allocated )
+      /* record the first vacant entry in "index" */
+      if (index < 0 && funcs->glyph_format == ft_glyph_format_none)
+        index = n;
+      
+      /* compare this entry's glyph format with the one we need */
+      if (funcs->glyph_format == glyph_format)
       {
-        FREE( format->raster );
-        format->raster_allocated = 0;
+        /* a raster already exists for this glyph format, we will */
+        /* destroy it before updating its entry in the table      */
+        funcs->raster_done( library->rasters[n] );
+        index = n;
+        break;
+      }
+    }
+
+    if (index < 0)
+    {
+      /* the table is full and has no vacant entries */
+      error = FT_Err_Too_Many_Glyph_Formats;
+      goto Fail;
+    }
+
+    funcs  = library->raster_funcs + index;
+    *funcs = *raster_funcs;
+    library->rasters[index] = raster;
+
+  Exit:
+    return error;
+
+  Fail:
+    raster_funcs->raster_done( raster );
+    goto Exit;
+  }                           
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Unset_Raster                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Removes a given raster from the library.                           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library      :: A handle to a target library object.               */
+  /*    raster_funcs :: pointer to the raster's interface                  */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    Error code.  0 means success.                                      */
+  /*                                                                       */
+  EXPORT_DEF
+  FT_Error  FT_Unset_Raster( FT_Library        library,
+                             FT_Raster_Funcs*  raster_funcs )
+  {
+    FT_Glyph_Format  glyph_format = raster_funcs->glyph_format;
+    FT_Error         error;
+    FT_Int           n;
+ 
+    error = FT_Err_Invalid_Argument;    
+    if ( glyph_format == ft_glyph_format_none)
+      goto Exit;
+
+    for (n = 0; n < FT_MAX_GLYPH_FORMATS; n++)
+    {
+      FT_Raster_Funcs*  funcs = library->raster_funcs + n;
+
+      if (funcs->glyph_format == glyph_format)
+      {
+        funcs->raster_done( library->rasters[n] );
+        library->rasters[n]                   = 0;
+        library->raster_funcs[n].glyph_format = ft_glyph_format_none;
+        error = FT_Err_Ok;
+        break;
       }
     }
 
@@ -498,6 +568,38 @@
     return error;
   }
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Set_Raster_Mode                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Set a raster-specific mode.                                        */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library :: A handle to a target library object.                    */
+  /*    format  :: the glyph format used to select the raster              */
+  /*    mode    :: the raster-specific mode descriptor                     */
+  /*    args    :: the mode arguments                                      */
+  /* <Return>                                                              */
+  /*    Error code.  0 means success.                                      */
+  /*                                                                       */
+  EXPORT_FUNC
+  FT_Error  FT_Set_Raster_Mode( FT_Library      library,
+                                FT_Glyph_Format format,
+                                const char*     mode,
+                                void*           args )
+  {
+    FT_Raster_Funcs  funcs;
+    FT_Raster        raster;
+    
+    raster = FT_Get_Raster( library, format, &funcs );
+    if (raster && funcs.raster_set_mode )
+      return funcs.raster_set_mode( raster, mode, args );
+    else
+      return FT_Err_Invalid_Argument;
+  }
 
   /*************************************************************************/
   /*                                                                       */
@@ -532,105 +634,6 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Add_Glyph_Format                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Adds a glyph format to the library.                                */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    library :: A handle to the library object.                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    format  :: A pointer to the new glyph format.                      */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Add_Glyph_Format( FT_Library        library,
-                                 FT_Glyph_Format*  format )
-  {
-    FT_Glyph_Format*  new = 0;
-
-
-    {
-      FT_Glyph_Format*  cur   = library->glyph_formats;
-      FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
-
-
-      for ( ; cur < limit; cur++ )
-      {
-        /* return an error if the format is already registered */
-        if ( cur->format_tag == format->format_tag )
-          return FT_Err_Invalid_Glyph_Format;
-
-        if ( cur->format_tag == 0 && new == 0 )
-          new = cur;
-      }
-    }
-
-    /* if there is no place to hold the new format, return an error */
-    if ( !new )
-      return FT_Err_Too_Many_Glyph_Formats;
-
-    *new = *format;
-
-    /* now, create a raster object if we need to */
-    return FT_Set_Raster( library,
-                          format->raster_interface,
-                          format->raster );
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Remove_Glyph_Format                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Removes a glyph format from the library.                           */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    library    :: A handle to the library object.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    format_tag :: A tag identifying the format to be removed.          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Remove_Glyph_Format( FT_Library    library,
-                                    FT_Glyph_Tag  format_tag )
-  {
-    FT_Memory         memory;
-    FT_Glyph_Format*  cur   = library->glyph_formats;
-    FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
-
-
-    memory = library->memory;
-
-    for ( ; cur < limit; cur++ )
-    {
-      if ( cur->format_tag == format_tag )
-      {
-        if ( cur->raster_allocated )
-        {
-          FREE( cur->raster );
-          cur->raster_allocated = 0;
-        }
-        cur->format_tag = 0;
-        return FT_Err_Ok;
-      }
-    }
-
-    return FT_Err_Invalid_Argument;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
   /*    FT_New_Library                                                     */
   /*                                                                       */
   /* <Description>                                                         */
@@ -654,31 +657,29 @@
     FT_Library library = 0;
     FT_Error   error;
 
-
     /* first of all, allocate the library object */
     if ( ALLOC( library, sizeof ( *library ) ) )
       return error;
 
     library->memory = memory;
 
+    /* allocate the render pool */
+    library->raster_pool_size = FT_RENDER_POOL_SIZE;
+    if ( ALLOC( library->raster_pool, FT_RENDER_POOL_SIZE ) )
+      goto Fail;
+
     /* now register the default raster for the `outline' glyph image format */
-    {
-      FT_Glyph_Format  outline_format =
-      {
-        ft_glyph_format_outline,
-        &ft_default_raster,
-        0,
-        0
-      };
-
-
-      error = FT_Add_Glyph_Format( library, &outline_format );
-    }
+    /* for now, ignore the error...                                         */
+    error = FT_Set_Raster( library, &ft_default_raster );
+    
 
     /* That's ok now */
     *alibrary = library;
 
     return FT_Err_Ok;
+  Fail:
+    FREE( library );
+    return error;
   }
 
 
@@ -726,20 +727,22 @@
       }
     }
 
-    /* Destroy raster object */
+    /* Destroy raster objects */
     FREE( library->raster_pool );
+    library->raster_pool_size = 0;
 
     {
-      FT_Glyph_Format*  cur   = library->glyph_formats;
-      FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
+      FT_Raster_Funcs*  cur   = library->raster_funcs;
+      FT_Raster_Funcs*  limit = cur + FT_MAX_GLYPH_FORMATS;
+      FT_Raster*        raster = library->rasters;
 
-
-      for ( ; cur < limit; cur++ )
+      for ( ; cur < limit; cur++, raster++ )
       {
-        if ( cur->raster_allocated )
+        if ( cur->glyph_format != ft_glyph_format_none )
         {
-          FREE( cur->raster );
-          cur->raster_allocated = 0;
+          cur->raster_done( *raster );
+          *raster = 0;
+          cur->glyph_format = ft_glyph_format_none;
         }
       }
     }
@@ -747,65 +750,6 @@
     FREE( library );
 
     return FT_Err_Ok;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Raster_Mode                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Sets a raster-specific mode.                                       */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    library :: A handle to a target library object.                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    format  :: The glyph format used to select the raster.             */
-  /*    mode    :: The raster-specific mode descriptor.                    */
-  /*    args    :: The mode arguments.                                     */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  EXPORT_FUNC
-  FT_Error  FT_Set_Raster_Mode( FT_Library    library,
-                                FT_Glyph_Tag  format_tag,
-                                const char*   mode,
-                                const char*   args )
-  {
-    FT_Memory         memory;
-    FT_Error          error;
-    FT_Glyph_Format*  format = 0;
-
-
-    {
-      FT_Glyph_Format*  cur   = library->glyph_formats;
-      FT_Glyph_Format*  limit = cur + FT_MAX_GLYPH_FORMATS;
-
-
-      for ( ; cur < limit; cur++ )
-      {
-        if ( cur->format_tag == format_tag )
-        {
-          format = cur;
-          break;
-        }
-      }
-    }
-
-    if ( !format )
-      return FT_Err_Invalid_Argument;
-
-    memory = library->memory;
-
-    error = FT_Err_Ok;
-    if ( format->raster )
-      error = format->raster_interface->set_mode( format->raster,
-                                                  mode, args );
-
-    return error;
   }
 
 
@@ -1028,10 +972,6 @@
   }
 
 
-  static
-  const FT_Open_Args  ft_default_open_args = 
-    { 0, 0, 0, 0, 0 };
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -1076,10 +1016,11 @@
                          FT_Long      face_index,
                          FT_Face*     aface )
   {
-    FT_Open_Args  args = ft_default_open_args;
+    FT_Open_Args  args;
 
-    
-    args.pathname = (char*)pathname;
+    args.stream_type = ft_stream_pathname;    
+    args.driver      = 0;
+    args.pathname    = (char*)pathname;
     return FT_Open_Face( library, &args, face_index, aface );
   }
 
@@ -1129,11 +1070,12 @@
                                 FT_Long      face_index,
                                 FT_Face*     face )
   {
-    FT_Open_Args  args = ft_default_open_args;
+    FT_Open_Args  args;
 
-
+    args.stream_type = ft_stream_memory;
     args.memory_base = file_base;
     args.memory_size = file_size;
+    args.driver      = 0;
     return FT_Open_Face( library, &args, face_index, face );
   }
 
@@ -1198,8 +1140,7 @@
 
     /* create input stream */
     error = ft_new_input_stream( library, args, &stream );
-    if ( error )
-      goto Exit;
+    if ( error ) goto Exit;
 
     memory = library->memory;
 
@@ -1281,6 +1222,15 @@
         goto Fail;
     }
 
+    /* initialize transform for convenience functions */
+    face->transform_matrix.xx = 0x10000L;
+    face->transform_matrix.xy = 0;
+    face->transform_matrix.yx = 0;
+    face->transform_matrix.yy = 0x10000L;
+
+    face->transform_delta.x = 0;
+    face->transform_delta.y = 0;
+
     *aface = face;
     goto Exit;
 
@@ -1329,9 +1279,10 @@
   FT_Error  FT_Attach_File( FT_Face      face,
                             const char*  filepathname )
   {
-    FT_Open_Args  open = ft_default_open_args;
+    FT_Open_Args  open;
 
-    open.pathname = (char*)filepathname;
+    open.stream_type = ft_stream_pathname;
+    open.pathname    = (char*)filepathname;
     return FT_Attach_Stream( face, &open );
   }
 
@@ -1875,6 +1826,10 @@
       return FT_Err_Invalid_Face_Handle;
 
     driver = face->driver;
+    
+    /* when the flag NO_RECURSE is set, we disable hinting and scaling */
+    if (load_flags & FT_LOAD_NO_RECURSE)
+      load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
     error = driver->interface.load_glyph( face->glyph,
                                           face->size,
@@ -2006,615 +1961,6 @@
       result = driver->interface.get_char_index( face->charmap, charcode );
     }
     return result;
-  }
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Decompose                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Walks over an outline's structure to decompose it into individual  */
-  /*    segments and Bezier arcs.  This function is also able to emit      */
-  /*    `move to' and `close to' operations to indicate the start and end  */
-  /*    of new contours in the outline.                                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    outline   :: A pointer to the source target.                       */
-  /*                                                                       */
-  /*    interface :: A table of `emitters', i.e,. function pointers called */
-  /*                 during decomposition to indicate path operations.     */
-  /*                                                                       */
-  /*    user      :: A typeless pointer which is passed to each emitter    */
-  /*                 during the decomposition.  It can be used to store    */
-  /*                 the state during the decomposition.                   */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    Error code.  0 means sucess.                                       */
-  /*                                                                       */
-  EXPORT_FUNC
-  int  FT_Outline_Decompose( FT_Outline*        outline,
-                             FT_Outline_Funcs*  interface,
-                             void*              user )
-  {
-    typedef enum _phases
-    {
-      phase_point,
-      phase_conic,
-      phase_cubic,
-      phase_cubic2
-
-    } TPhase;
-
-    FT_Vector  v_first;
-    FT_Vector  v_last;
-    FT_Vector  v_control;
-    FT_Vector  v_control2;
-    FT_Vector  v_start;
-
-    FT_Vector* point;
-    char*      tags;
-
-    int    n;         /* index of contour in outline     */
-    int    first;     /* index of first point in contour */
-    int    index;     /* current point's index           */
-
-    int    error;
-
-    char   tag;       /* current point's state           */
-    TPhase phase;
-
-
-    first = 0;
-
-    for ( n = 0; n < outline->n_contours; n++ )
-    {
-      int  last;  /* index of last point in contour */
-
-
-      last = outline->contours[n];
-
-      v_first = outline->points[first];
-      v_last  = outline->points[last];
-
-      v_start = v_control = v_first;
-
-      tag   = FT_CURVE_TAG( outline->tags[first] );
-      index = first;
-
-      /* A contour cannot start with a cubic control point! */
-
-      if ( tag == FT_Curve_Tag_Cubic )
-        return FT_Err_Invalid_Outline;
-
-
-      /* check first point to determine origin */
-
-      if ( tag == FT_Curve_Tag_Conic )
-      {
-        /* first point is conic control.  Yes, this happens. */
-        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_Curve_Tag_On )
-        {
-          /* start at last point if it is on the curve */
-          v_start = v_last;
-        }
-        else
-        {
-          /* if both first and last points are conic,         */
-          /* start at their middle and record its position    */
-          /* for closure                                      */
-          v_start.x = ( v_start.x + v_last.x ) / 2;
-          v_start.y = ( v_start.y + v_last.y ) / 2;
-
-          v_last = v_start;
-        }
-        phase = phase_conic;
-      }
-      else
-        phase = phase_point;
-
-
-      /* Begin a new contour with MOVE_TO */
-
-      error = interface->move_to( &v_start, user );
-      if ( error )
-        return error;
-
-      point = outline->points + first;
-      tags  = outline->tags  + first;
-
-      /* now process each contour point individually */
-
-      while ( index < last )
-      {
-        index++;
-        point++;
-        tags++;
-
-        tag = FT_CURVE_TAG( tags[0] );
-
-        switch ( phase )
-        {
-        case phase_point:     /* the previous point was on the curve */
-
-          switch ( tag )
-          {
-            /* two succesive on points -> emit segment */
-          case FT_Curve_Tag_On:
-            error = interface->line_to( point, user );
-            break;
-
-            /* on point + conic control -> remember control point */
-          case FT_Curve_Tag_Conic:
-            v_control = point[0];
-            phase     = phase_conic;
-            break;
-
-            /* on point + cubic control -> remember first control */
-          default:
-            v_control = point[0];
-            phase     = phase_cubic;
-            break;
-          }
-          break;
-
-        case phase_conic:   /* the previous point was a conic control */
-
-          switch ( tag )
-          {
-            /* conic control + on point -> emit conic arc */
-          case  FT_Curve_Tag_On:
-            error = interface->conic_to( &v_control, point, user );
-            phase = phase_point;
-            break;
-
-            /* two successive conics -> emit conic arc `in between' */
-          case FT_Curve_Tag_Conic:
-            {
-              FT_Vector  v_middle;
-
-
-              v_middle.x = (v_control.x + point->x)/2;
-              v_middle.y = (v_control.y + point->y)/2;
-
-              error = interface->conic_to( &v_control,
-                                           &v_middle, user );
-              v_control = point[0];
-            }
-             break;
-
-          default:
-            error = FT_Err_Invalid_Outline;
-          }
-          break;
-
-        case phase_cubic:  /* the previous point was a cubic control */
-
-          /* this point _must_ be a cubic control too */
-          if ( tag != FT_Curve_Tag_Cubic )
-            return FT_Err_Invalid_Outline;
-
-          v_control2 = point[0];
-          phase      = phase_cubic2;
-          break;
-
-
-        case phase_cubic2:  /* the two previous points were cubics */
-
-          /* this point _must_ be an on point */
-          if ( tag != FT_Curve_Tag_On )
-            error = FT_Err_Invalid_Outline;
-          else
-            error = interface->cubic_to( &v_control, &v_control2,
-                                         point, user );
-          phase = phase_point;
-          break;
-        }
-
-        /* lazy error testing */
-        if ( error )
-          return error;
-      }
-
-      /* end of contour, close curve cleanly */
-      error = 0;
-
-      tag = FT_CURVE_TAG( outline->tags[first] );
-
-      switch ( phase )
-      {
-      case phase_point:
-        if ( tag == FT_Curve_Tag_On )
-          error = interface->line_to( &v_first, user );
-        break;
-
-      case phase_conic:
-        error = interface->conic_to( &v_control, &v_start, user );
-        break;
-
-      case phase_cubic2:
-        if ( tag == FT_Curve_Tag_On )
-          error = interface->cubic_to( &v_control, &v_control2,
-                                       &v_first,   user );
-        else
-          error = FT_Err_Invalid_Outline;
-        break;
-
-      default:
-        error = FT_Err_Invalid_Outline;
-        break;
-      }
-
-      if ( error )
-        return error;
-
-      first = last + 1;
-    }
-
-    return 0;
-  }
-
-
-  static
-  const FT_Outline  null_outline = { 0, 0, 0, 0, 0, 0 };
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_New                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Creates a new outline of a given size.                             */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library     :: A handle to the library object from where the       */
-  /*                   outline is allocated.  Note however that the new    */
-  /*                   outline will NOT necessarily be FREED when          */
-  /*                   destroying the library, by FT_Done_FreeType().      */
-  /*                                                                       */
-  /*    numPoints   :: The maximum number of points within the outline.    */
-  /*                                                                       */
-  /*    numContours :: The maximum number of contours within the outline.  */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    outline     :: A handle to the new outline.  NULL in case of       */
-  /*                   error.                                              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    No.                                                                */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The reason why this function takes a `library' parameter is simply */
-  /*    to use the library's memory allocator.  You can copy the source    */
-  /*    code of this function, replacing allocations with `malloc()' if    */
-  /*    you want to control where the objects go.                          */
-  /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Outline_New( FT_Library   library,
-                            FT_UInt      numPoints,
-                            FT_Int       numContours,
-                            FT_Outline*  outline )
-  {
-    FT_Error   error;
-    FT_Memory  memory;
-
-
-    if ( !outline )
-      return FT_Err_Invalid_Argument;
-
-    *outline = null_outline;
-    memory   = library->memory;
-
-    if ( ALLOC_ARRAY( outline->points,   numPoints * 2L, FT_Pos    ) ||
-         ALLOC_ARRAY( outline->tags,    numPoints,      FT_Byte   ) ||
-         ALLOC_ARRAY( outline->contours, numContours,    FT_UShort ) )
-      goto Fail;
-
-    outline->n_points       = (FT_UShort)numPoints;
-    outline->n_contours     = (FT_Short)numContours;
-    outline->flags |= ft_outline_owner;
-
-    return FT_Err_Ok;
-
-  Fail:
-    outline->flags |= ft_outline_owner;
-    FT_Outline_Done( library, outline );
-
-    return error;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Done                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Destroys an outline created with FT_Outline_New().                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle of the library object used to allocate the     */
-  /*               outline.                                                */
-  /*                                                                       */
-  /*    outline :: A pointer to the outline object to be discarded.        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    No.                                                                */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    If the outline's `owner' field is not set, only the outline        */
-  /*    descriptor will be released.                                       */
-  /*                                                                       */
-  /*    The reason why this function takes an `outline' parameter is       */
-  /*    simply to use FT_Alloc()/FT_Free().  You can copy the source code  */
-  /*    of this function, replacing allocations with `malloc()' in your    */
-  /*    application if you want something simpler.                         */
-  /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Outline_Done( FT_Library   library,
-                             FT_Outline*  outline )
-  {
-    FT_Memory  memory = library->memory;
-
-
-    if ( outline )
-    {
-      if ( outline->flags & ft_outline_owner )
-      {
-        FREE( outline->points   );
-        FREE( outline->tags    );
-        FREE( outline->contours );
-      }
-      *outline = null_outline;
-
-      return FT_Err_Ok;
-    }
-    else
-      return FT_Err_Invalid_Argument;
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Get_CBox                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns an outline's `control box'.  The control box encloses all  */
-  /*    the outline's points, including Bezier control points.  Though it  */
-  /*    coincides with the exact bounding box for most glyphs, it can be   */
-  /*    slightly larger in some situations (like when rotating an outline  */
-  /*    which contains Bezier outside arcs).                               */
-  /*                                                                       */
-  /*    Computing the control box is very fast, while getting the bounding */
-  /*    box can take much more time as it needs to walk over all segments  */
-  /*    and arcs in the outline.  To get the latter, you can use the       */
-  /*    `ftbbox' component which is dedicated to this single task.         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    outline :: A pointer to the source outline descriptor.             */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    cbox    :: The outline's control box.                              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Outline_Get_CBox( FT_Outline*  outline,
-                                 FT_BBox*     cbox )
-  {
-    FT_Pos  xMin, yMin, xMax, yMax;
-    
-    if ( outline && cbox )
-    {
-      if ( outline->n_points == 0 )
-      {
-        xMin = 0;
-        yMin = 0;
-        xMax = 0;
-        yMax = 0;
-      }
-      else
-      {
-        FT_Vector*  vec   = outline->points;
-        FT_Vector*  limit = vec + outline->n_points;
-
-        xMin = xMax = vec->x;
-        yMin = yMax = vec->y;
-        vec++;
-
-        for ( ; vec < limit; vec++ )
-        {
-          FT_Pos  x, y;
-
-          x = vec->x;
-          if ( x < xMin ) xMin = x;
-          if ( x > xMax ) xMax = x;
-
-          y = vec->y;
-          if ( y < yMin ) yMin = y;
-          if ( y > yMax ) yMax = y;
-        }
-      }
-      cbox->xMin = xMin;
-      cbox->xMax = xMax;
-      cbox->yMin = yMin;
-      cbox->yMax = yMax;
-      return FT_Err_Ok;
-    }
-    else
-      return FT_Err_Invalid_Argument;
-  }
-
-  
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Outline_Translate                                               */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Applies a simple translation to the points of an outline.          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    outline :: A pointer to the target outline descriptor.             */
-  /*    xOffset :: The horizontal offset.                                  */
-  /*    yOffset :: The vertical offset.                                    */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  BASE_FUNC
-  void  FT_Outline_Translate( FT_Outline*  outline,
-                              FT_Pos       xOffset,
-                              FT_Pos       yOffset )
-  {
-    FT_UShort   n;
-    FT_Vector*  vec = outline->points;
-
-    for ( n = 0; n < outline->n_points; n++ )
-    {
-      vec->x += xOffset;
-      vec->y += yOffset;
-      vec++;
-    }
-  }
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_GlyphZone                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Deallocates a glyph zone.                                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    zone  :: pointer to the target glyph zone.                         */
-  /*                                                                       */
-  BASE_FUNC 
-  void  FT_Done_GlyphZone( FT_GlyphZone*  zone )
-  {
-    FT_Memory  memory = zone->memory;
-    
-    FREE( zone->contours );
-    FREE( zone->tags );
-    FREE( zone->cur );
-    FREE( zone->org );
-
-    zone->max_points   = zone->n_points   = 0;
-    zone->max_contours = zone->n_contours = 0;
-  }
-  
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_GlyphZone                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Allocates a new glyph zone.                                        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory      :: A handle to the current memory object.              */
-  /*                                                                       */
-  /*    maxPoints   :: The capacity of glyph zone in points.               */
-  /*                                                                       */
-  /*    maxContours :: The capacity of glyph zone in contours.             */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    zone        :: A pointer to the target glyph zone record.          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  BASE_FUNC 
-  FT_Error  FT_New_GlyphZone( FT_Memory      memory,
-                              FT_UShort      maxPoints,
-                              FT_Short       maxContours,
-                              FT_GlyphZone*  zone )
-  {
-    FT_Error      error;
-
-    if (maxPoints > 0)
-      maxPoints += 2;
-
-    MEM_Set( zone, 0, sizeof(*zone) );
-    zone->memory = memory;
-    
-    if ( ALLOC_ARRAY( zone->org,      maxPoints*2, FT_F26Dot6 ) ||
-         ALLOC_ARRAY( zone->cur,      maxPoints*2, FT_F26Dot6 ) ||
-         ALLOC_ARRAY( zone->tags,    maxPoints,   FT_Byte    ) ||
-         ALLOC_ARRAY( zone->contours, maxContours, FT_UShort  ) )
-    {
-      FT_Done_GlyphZone(zone);
-    }
-    return error;
-  }
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Update_GlyphZone                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Checks the size of a zone and reallocates it if necessary.         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    newPoints   :: The new capacity for points.  We add two slots for  */
-  /*                   phantom points.                                     */
-  /*                                                                       */
-  /*    newContours :: The new capacity for contours.                      */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    zone        :: The address of the target zone.                     */
-  /*                                                                       */
-  /*    maxPoints   :: The address of the zone's current capacity for      */
-  /*                   points.                                             */
-  /*                                                                       */
-  /*    maxContours :: The address of the zone's current capacity for      */
-  /*                   contours.                                           */
-  /*                                                                       */
-  BASE_FUNC
-  FT_Error  FT_Update_GlyphZone( FT_GlyphZone*  zone,
-                                 FT_UShort      newPoints,
-                                 FT_Short       newContours )
-  {
-    FT_Error      error  = FT_Err_Ok;
-    FT_Memory     memory = zone->memory;
-    
-    newPoints += 2;
-    if ( zone->max_points < newPoints )
-    {
-      /* reallocate the points arrays */
-      if ( REALLOC_ARRAY( zone->org,   zone->max_points*2, newPoints*2, FT_F26Dot6 ) ||
-           REALLOC_ARRAY( zone->cur,   zone->max_points*2, newPoints*2, FT_F26Dot6 ) ||
-           REALLOC_ARRAY( zone->tags, zone->max_points*2, newPoints,   FT_Byte    ) )
-        goto Exit;
-        
-      zone->max_points = newPoints;
-    }
-    
-    if ( zone->max_contours < newContours )
-    {
-      /* reallocate the contours array */
-      if ( REALLOC_ARRAY( zone->contours, zone->max_contours, newContours, FT_UShort ) )
-        goto Exit;
-        
-      zone->max_contours = newContours;
-    }
-  Exit:
-    return error;
   }
 
 
