@@ -107,13 +107,13 @@
   /* documentation is in ftdebug.h */
 
   FT_EXPORT_DEF( const char * )
-  FT_Trace_Get_Name( FT_Int  index )
+  FT_Trace_Get_Name( FT_Int  idx )
   {
     int  max = FT_Trace_Get_Count();
 
 
-    if ( index < max )
-      return ft_trace_toggles[index];
+    if ( idx < max )
+      return ft_trace_toggles[idx];
     else
       return NULL;
   }
@@ -228,7 +228,7 @@
 
 
   FT_EXPORT_DEF( const char * )
-  FT_Trace_Get_Name( FT_Int  index ) 
+  FT_Trace_Get_Name( FT_Int  idx ) 
   { 
     return NULL; 
   }

@@ -28,7 +28,6 @@
 #include FT_INTERNAL_DEBUG_H
 #include <string.h>
 #include <stdio.h>
-#include "zopen.h"
 
 
 #include FT_MODULE_ERRORS_H
@@ -42,6 +41,8 @@
 
 
 #ifdef FT_CONFIG_OPTION_USE_LZW
+
+#include "zopen.h"
 
 
 /***************************************************************************/
@@ -447,7 +448,7 @@
 
   FT_EXPORT_DEF( FT_Error )
   FT_Stream_OpenLZW( FT_Stream  stream,
-                      FT_Stream  source )
+                     FT_Stream  source )
   {
     FT_UNUSED( stream );
     FT_UNUSED( source );
