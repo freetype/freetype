@@ -1544,21 +1544,23 @@
   /*    of new contours in the outline.                                    */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    outline   :: A pointer to the source target.                       */
+  /*    outline        :: A pointer to the source target.                  */
   /*                                                                       */
-  /*    interface :: A table of `emitters', i.e,. function pointers called */
-  /*                 during decomposition to indicate path operations.     */
+  /*    func_interface :: A table of `emitters', i.e,. function pointers   */
+  /*                      called during decomposition to indicate path     */
+  /*                      operations.                                      */
   /*                                                                       */
-  /*    user      :: A typeless pointer which is passed to each emitter    */
-  /*                 during the decomposition.  It can be used to store    */
-  /*                 the state during the decomposition.                   */
+  /*    user           :: A typeless pointer which is passed to each       */
+  /*                      emitter during the decomposition.  It can be     */
+  /*                      used to store the state during the               */
+  /*                      decomposition.                                   */
   /*                                                                       */
   /* <Return>                                                              */
   /*    Error code.  0 means sucess.                                       */
   /*                                                                       */
   static
   int  FT_Outline_Decompose( FT_Outline*              outline,
-                             const FT_Outline_Funcs*  interface,
+                             const FT_Outline_Funcs*  func_interface,
                              void*                    user )
   {
 #undef SCALED
@@ -1582,8 +1584,8 @@
     char    tag;       /* current point's state           */
 
 #if 0
-    int     shift = interface->shift;
-    FT_Pos  delta = interface->delta;
+    int     shift = func_interface->shift;
+    FT_Pos  delta = func_interface->delta;
 #endif
 
 
@@ -1637,7 +1639,7 @@
         tags--;
       }
 
-      error = interface->move_to( &v_start, user );
+      error = func_interface->move_to( &v_start, user );
       if ( error )
         goto Exit;
 
@@ -1657,7 +1659,7 @@
             vec.x = SCALED( point->x );
             vec.y = SCALED( point->y );
 
-            error = interface->line_to( &vec, user );
+            error = func_interface->line_to( &vec, user );
             if ( error )
               goto Exit;
             continue;
@@ -1684,7 +1686,7 @@
 
               if ( tag == FT_Curve_Tag_On )
               {
-                error = interface->conic_to( &v_control, &vec, user );
+                error = func_interface->conic_to( &v_control, &vec, user );
                 if ( error )
                   goto Exit;
                 continue;
@@ -1696,7 +1698,7 @@
               v_middle.x = ( v_control.x + vec.x ) / 2;
               v_middle.y = ( v_control.y + vec.y ) / 2;
 
-              error = interface->conic_to( &v_control, &v_middle, user );
+              error = func_interface->conic_to( &v_control, &v_middle, user );
               if ( error )
                 goto Exit;
 
@@ -1704,7 +1706,7 @@
               goto Do_Conic;
             }
 
-            error = interface->conic_to( &v_control, &v_start, user );
+            error = func_interface->conic_to( &v_control, &v_start, user );
             goto Close;
           }
 
@@ -1731,20 +1733,20 @@
               vec.x = SCALED( point->x );
               vec.y = SCALED( point->y );
 
-              error = interface->cubic_to( &vec1, &vec2, &vec, user );
+              error = func_interface->cubic_to( &vec1, &vec2, &vec, user );
               if ( error )
                 goto Exit;
               continue;
             }
 
-            error = interface->cubic_to( &vec1, &vec2, &v_start, user );
+            error = func_interface->cubic_to( &vec1, &vec2, &v_start, user );
             goto Close;
           }
         }
       }
 
       /* close the contour with a line segment */
-      error = interface->line_to( &v_start, user );
+      error = func_interface->line_to( &v_start, user );
 
    Close:
       if ( error )
@@ -1776,7 +1778,7 @@
   gray_convert_glyph_inner( RAS_ARG )
   {
     static
-    const FT_Outline_Funcs  interface =
+    const FT_Outline_Funcs  func_interface =
     {
       (FT_Outline_MoveTo_Func) gray_move_to,
       (FT_Outline_LineTo_Func) gray_line_to,
@@ -1790,7 +1792,7 @@
 
     if ( setjmp( ras.jump_buffer ) == 0 )
     {
-      error = FT_Outline_Decompose( &ras.outline, &interface, &ras );
+      error = FT_Outline_Decompose( &ras.outline, &func_interface, &ras );
       gray_record_cell( RAS_VAR );
     }
     else
@@ -1881,7 +1883,7 @@
 #if 1
         error = gray_convert_glyph_inner( RAS_VAR );
 #else
-        error = FT_Outline_Decompose( outline, &interface, &ras ) ||
+        error = FT_Outline_Decompose( outline, &func_interface, &ras ) ||
                 gray_record_cell( RAS_VAR );
 #endif
 
