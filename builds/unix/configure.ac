@@ -92,6 +92,18 @@ if test x$with_zlib != xno && test -n "$LIBZ"; then
   LDFLAGS="$LDFLAGS $LIBZ"
   SYSTEM_ZLIB=yes
 fi
+
+dnl Whether to use Mac OS resource-based fonts or not
+AC_ARG_WITH(old-mac-fonts,
+  [  --with-old-mac-fonts    allow Mac resource-based fonts to be used])
+if test x$with_old_mac_fonts = xyes; then
+  CFLAGS="$CFLAGS -DTARGET_API_MAC_CARBON"
+  LDFLAGS="$LDFLAGS -Xlinker -framework -Xlinker CoreServices \
+                    -Xlinker -framework -Xlinker ApplicationServices"
+else
+  CFLAGS="$CFLAGS -DDARWIN_NO_CARBON"
+fi
+
 AC_SUBST(LIBZ)
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)

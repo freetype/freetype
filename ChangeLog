@@ -1,4 +1,17 @@
-2003-15-07  YAMANO-UCHI Hidetoshi  <mer@din.or.jp>
+2003-05-10  Dan Williams  <dan@bigw.org>
+
+	* builds/unix/aclocal.m4: Comment out definition of
+	`allow_undefined_flag' for Darwin 1.3.
+	* builds/unix/configure.ac: Add option --with-old-mac-fonts.
+	* builds/unix/ltmain.sh: Fix version numbering for Darwin 1.3.
+	* builds/unix/configure: Regenerated.
+
+	* include/freetype/config/ftconfig.h: Fix conditions for defining
+	`FT_MACINTOSH'.
+	* src/base/ftbase.c: Include `ftmac.c' conditionally.
+	* src/base/ftmac.c: Handle __GNUC__.
+
+2003-05-07  YAMANO-UCHI Hidetoshi  <mer@din.or.jp>
 
 	* src/cid/cidload.c (is_alpha): Removed.
 	(cid_parse_dict): Use `cid_parser_skip_alpha' instead of `is_alpha'.
