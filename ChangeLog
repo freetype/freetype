@@ -7,6 +7,9 @@
 	* src/pcf/pcfutil.c (BitOrderInvert): Add `const'.
 	* docs/glnames.py: Updated to latest pstables.h changes.
 
+	* builds/unix/detect.mk: Add test for Hurd.
+	* builds/hurd/detect.mk: Removed.
+
 2001-03-04  Sander van der Wal  <svdwal@xs4all.nl>
 
 	* src/psnames/pstables.h: Add more `const'.

@@ -16,12 +16,12 @@
 
 ifeq ($(PLATFORM),ansi)
 
-  has_init := $(strip $(wildcard /sbin/init))
-  ifneq ($(has_init),)
+  is_unix := $(strip $(wildcard /sbin/init) $(wildcard /hurd/auth))
+  ifneq ($(is_unix),)
 
     PLATFORM := unix
 
-  endif # test has_init
+  endif # test is_unix
 endif # test PLATFORM ansi
 
 ifeq ($(PLATFORM),unix)
