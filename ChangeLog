@@ -1,3 +1,25 @@
+2003-05-07  David Turner  <david@freetype.org>
+
+	* src/autohint/ahglyph.c (ah_setup_uv): Exchange `for' loop and
+	`switch' statement to make it run faster.
+	(ah_outline_compute_segments): Reset `segment->score' and
+	`segment->link'.
+	(ah_outline_link_segments): Provide alternative code which does
+	the same but runs much faster.
+	Handle major direction also.
+	(ah_outline_compute_edges): Scale `edge_distance_threshold' down
+	after rounding instead of scaling comparison value in loop.
+
+	* src/autohint/ahhint.c (ah_hinter_align_stong_points): Provide
+	alternative code which runs faster.
+	Handle `before->scale == 0'.
+
+	* src/autohint/ahtypes.h (AH_SegmentRec): Move some fields down.
+	(AH_EdgeRec): Move some fields in structure.
+	New field `scale'.
+
+	* src/sfnt/ttcmap0.c (tt_cmap4_char_next): Use binary search.
+
 2003-05-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/autohint/ahoptim.c (LOG): Renamed to...
