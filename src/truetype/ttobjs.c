@@ -453,8 +453,7 @@
     size->ttmetrics.valid = FALSE;
     return error;
 
-#if defined( TT_CONFIG_OPTION_BYTECODE_INTERPRETER ) || \
-    defined( TT_CONFIG_OPTION_EMBEDDED_BITMAPS )
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
   Fail_Exec:
     if ( !size->debug )
@@ -585,12 +584,12 @@
     metrics->max_advance = ( FT_MulFix( face->root.max_advance_width,
                                         metrics->x_scale ) + 32 ) & -64;
 
-#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
     /* set to `invalid' by default */
     size->strike_index = 0xFFFF;
 #endif
+
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
     {
       TT_ExecContext  exec;
@@ -795,16 +794,11 @@
 
     if ( face->face_flags & FT_FACE_FLAG_FIXED_SIZES )
     {
-      FT_Size_Metrics* sbit_metrics;
-
-
       if ( size->strike_index == 0xFFFF )
         error = Reset_SBit_Size( size );
 
-      sbit_metrics = &size->strike_metrics;
-
       if ( !error && !( face->face_flags & FT_FACE_FLAG_SCALABLE ) )
-        size->root.metrics = *sbit_metrics;
+        size->root.metrics = size->strike_metrics;
     }
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
