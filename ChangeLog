@@ -1,3 +1,11 @@
+2002-01-03  Keith Packard  <keithp@keithp.com>
+
+        * builds/unix/ftsystem.c (FT_New_Stream): added a fix to ensure that
+        all FreeType input streams are closed in child processes of a "fork"
+        on Unix systems. This is important to avoid (potential) access
+        control issues..
+
+
 2002-01-03  David Turner  <david@freetype.org>
 
         * src/type1/t1objs.c (T1_Face_Init): fixed a bug that crashed the
