@@ -33,7 +33,8 @@ Cache_DRV_SRC := $(CACHE_DIR_)ftlru.c    \
                  $(CACHE_DIR_)ftccache.c \
                  $(CACHE_DIR_)ftcglyph.c \
                  $(CACHE_DIR_)ftcsbits.c \
-                 $(CACHE_DIR_)ftcimage.c
+                 $(CACHE_DIR_)ftcimage.c \
+                 $(CACHE_DIR_)ftccmap.c
 
 # Cache driver headers
 #

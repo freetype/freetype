@@ -261,7 +261,6 @@
     FT_Bool  result;
 
 
-    /* we must set iquery.glyph.gfam for faster glyph node comparisons */
     result = FT_BOOL( FTC_IMAGE_DESC_COMPARE( &ifam->desc, &iquery->desc ) );
     if ( result )
       FTC_GLYPH_FAMILY_FOUND(ifam,iquery);
