@@ -48,7 +48,7 @@
 #undef LOG
 #ifdef AH_DEBUG_OPTIM
 
-#define LOG( x )  optim_log##x
+#define LOG( x )  optim_log ## x
 
 #else
 
