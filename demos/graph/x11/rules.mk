@@ -37,7 +37,7 @@ endif
 # Update some variables to compile the X11 graphics module. Note that
 # X11 is available on Unix, or on OS/2. However, it only compiles with
 # gcc on the latter platform, which is why it is safe to use the flags
-# `-L' and `-l'
+# `-L' and `-l' in GRAPH_LINK
 #
 ifneq ($(X11_PATH),)
 
@@ -47,7 +47,7 @@ X11_LIB        := $(X11_PATH:%=%$(SEP)lib)
 # the GRAPH_LINK variable is expanded each time an executable is linked against
 # the graphics library..
 #
-GRAPH_LINK     += $(X11_LIB:%=-L%) -lX11
+GRAPH_LINK     += -L$(X11_LIB) -lX11
 
 # Solaris needs a -lsocket in GRAPH_LINK ..
 #

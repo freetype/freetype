@@ -81,7 +81,7 @@ include $(wildcard $(TOP2)/graph/*/rules.mk)
 # in the future in order to support more systems. Probably something
 # like a `config/<system>' hierarchy with a system-specific rules file
 # to indicate how to make a library file, but for now, I'll stick to
-# unix and OS/2-gcc..
+# unix, Win32 and OS/2-gcc..
 #
 #
 $(GRAPH_LIB): $(GRAPH_OBJS)
@@ -101,3 +101,4 @@ $(OBJ_)grinit.$O: $(GRAPH_)grinit.c $(GRAPH_H)
 	$(CC) $(CFLAGS) $(GRAPH_INCLUDES:%=$I%)  \
                     $(DEVICE_INCLUDES:%=$I%) \
                     $(DEVICES:%=$DDEVICE_%) $T$@ $<
+

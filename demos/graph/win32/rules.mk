@@ -7,6 +7,8 @@
 
 ifeq ($(PLATFORM),win32)
 
+# directory of the Win32 graphics driver
+#
 GR_WIN32  := $(GRAPH_)win32
 GR_WIN32_ := $(GR_WIN32)$(SEP)
 
