@@ -19,6 +19,7 @@
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
+#include FT_TRIGONOMETRY_H
 #include FT_SYSTEM_H
 
 #include "ttinterp.h"
@@ -31,9 +32,7 @@
 
 #define TT_MULFIX  FT_MulFix
 #define TT_MULDIV  FT_MulDiv
-
 #define TT_INT64   FT_Int64
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -825,6 +824,7 @@
   }
 
 
+ /* return length of given vector */
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
 
   static FT_F26Dot6  Norm( FT_F26Dot6  X,
@@ -840,6 +840,18 @@
 
     return (FT_F26Dot6)SQRT_64( T1 );
   }
+
+#else  /* !FT_CONFIG_OPTION_OLD_CALCS */
+
+  static FT_F26Dot6  Norm( FT_F26Dot6  X,
+                           FT_F26Dot6  Y )
+  {
+    FT_Vector  v;
+    
+    v.x = X;
+    v.y = Y;
+    return FT_Vector_Length( &v );
+  }                            
 
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
@@ -1214,21 +1226,9 @@
     {
       FT_Long  x, y;
 
-
-#ifdef FT_CONFIG_OPTION_OLD_CALCS
-
       x = TT_MULDIV( CUR.GS.projVector.x, CUR.tt_metrics.x_ratio, 0x4000 );
       y = TT_MULDIV( CUR.GS.projVector.y, CUR.tt_metrics.y_ratio, 0x4000 );
       CUR.tt_metrics.ratio = Norm( x, y );
-
-#else
-
-      x = TT_MULDIV( CUR.GS.projVector.x, CUR.tt_metrics.x_ratio, 0x8000 );
-      y = TT_MULDIV( CUR.GS.projVector.y, CUR.tt_metrics.y_ratio, 0x8000 );
-      CUR.tt_metrics.ratio = FT_Sqrt32( x * x + y * y ) << 1;
-
-#endif /* FT_CONFIG_OPTION_OLD_CALCS */
-
     }
 
     return CUR.tt_metrics.ratio;
@@ -2287,123 +2287,16 @@
                                FT_F26Dot6      Vy,
                                FT_UnitVector*  R )
   {
-    FT_F26Dot6  u, v, d;
-    FT_Int      shift;
-    FT_ULong    H, L, L2, hi, lo, med;
+    FT_Vector  v;
+    FT_Angle   angle;
+    
+    angle = FT_Atan2( Vx, Vy );
 
-
-    u = ABS( Vx );
-    v = ABS( Vy );
-
-    if ( u < v )
-    {
-      d = u;
-      u = v;
-      v = d;
-    }
-
-    R->x = 0;
-    R->y = 0;
-
-    /* check that we are not trying to normalise zero! */
-    if ( u == 0 )
-      return SUCCESS;
-
-    /* compute (u*u + v*v) on 64 bits with two 32-bit registers [H:L] */
-    hi  = (FT_ULong)u >> 16;
-    lo  = (FT_ULong)u & 0xFFFF;
-    med = hi * lo;
-
-    H     = hi * hi + ( med >> 15 );
-    med <<= 17;
-    L     = lo * lo + med;
-    if ( L < med )
-      H++;
-
-    hi  = (FT_ULong)v >> 16;
-    lo  = (FT_ULong)v & 0xFFFF;
-    med = hi * lo;
-
-    H    += hi * hi + ( med >> 15 );
-    med <<= 17;
-    L2    = lo * lo + med;
-    if ( L2 < med )
-      H++;
-
-    L += L2;
-    if ( L < L2 )
-      H++;
-
-    /* if the value is smaller than 32-bits */
-    if ( H == 0 )
-    {
-      shift = 0;
-      while ( ( L & 0xC0000000L ) == 0 )
-      {
-        L <<= 2;
-        shift++;
-      }
-
-      d = FT_Sqrt32( L );
-      R->x = (FT_F2Dot14)TT_MULDIV( Vx << shift, 0x4000, d );
-      R->y = (FT_F2Dot14)TT_MULDIV( Vy << shift, 0x4000, d );
-    }
-    /* if the value is greater than 64-bits */
-    else
-    {
-      shift = 0;
-      while ( H )
-      {
-        L   = ( L >> 2 ) | ( H << 30 );
-        H >>= 2;
-        shift++;
-      }
-
-      d = FT_Sqrt32( L );
-      R->x = (FT_F2Dot14)TT_MULDIV( Vx >> shift, 0x4000, d );
-      R->y = (FT_F2Dot14)TT_MULDIV( Vy >> shift, 0x4000, d );
-    }
-
-    {
-      FT_ULong  x, y, w;
-      FT_Int    sx, sy;
-
-
-      sx = R->x >= 0 ? 1 : -1;
-      sy = R->y >= 0 ? 1 : -1;
-      x  = (FT_ULong)sx * R->x;
-      y  = (FT_ULong)sy * R->y;
-
-      w = x * x + y * y;
-
-      /* we now want to adjust (x,y) in order to have sqrt(w) == 0x4000 */
-      /* which means 0x1000000 <= w < 0x1004000                         */
-      while ( w <= 0x10000000L )
-      {
-        /* increment the smallest coordinate */
-        if ( x < y )
-          x++;
-        else
-          y++;
-
-        w = x * x + y * y;
-      }
-
-      while ( w >= 0x10040000L )
-      {
-        /* decrement the smallest coordinate */
-        if ( x < y )
-          x--;
-        else
-          y--;
-
-        w = x * x + y * y;
-      }
-
-      R->x = sx * x;
-      R->y = sy * y;
-    }
-
+    FT_Vector_Unit( &v, angle );
+    
+    R->x = v.x >> 2;
+    R->y = v.y >> 2;
+    
     return SUCCESS;
   }
 
