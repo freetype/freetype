@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (body).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -260,7 +260,7 @@
     slot->bitmap.rows  = 0;
     slot->bitmap.pitch = 0;
     slot->bitmap.pixel_mode = 0;
-    /* don't touch 'slot->bitmap.buffer' !! */
+    /* don't touch 'slot->bitmap.buffer'! */
 
     slot->bitmap_left   = 0;
     slot->bitmap_top    = 0;
@@ -748,11 +748,11 @@
   /* <Description>                                                         */
   /*    This function finds a Unicode charmap, if there is one.            */
   /*    And if there is more than one, it tries to favour the more         */
-  /*    extensive one, i.e. one that supports UCS-4 against those which    */
+  /*    extensive one, i.e., one that supports UCS-4 against those which   */
   /*    are limited to the BMP (said UCS-2 encoding.)                      */
   /*                                                                       */
   /*    This function is called from open_face() (just below), and also    */
-  /*    from FT_Select_Charmap( , FT_ENCODING_UNICODE).                    */
+  /*    from FT_Select_Charmap( ..., FT_ENCODING_UNICODE).                 */
   /*                                                                       */
   static FT_Error
   find_unicode_charmap( FT_Face  face )
@@ -771,26 +771,26 @@
       return FT_Err_Invalid_CharMap_Handle;
 
     /*
-     *  the original TrueType specification(s) only specified charmap
+     *  The original TrueType specification(s) only specified charmap
      *  formats that are capable of mapping 8 or 16 bit character codes to
      *  glyph indices.
      *
-     *  however, recent updates to the Apple and OpenType specifications
+     *  However, recent updates to the Apple and OpenType specifications
      *  introduced new formats that are capable of mapping 32-bit character
-     *  codes as well. And these are already used on some fonts, mainly to
+     *  codes as well.  And these are already used on some fonts, mainly to
      *  map non-BMP Asian ideographs as defined in Unicode.
      *
-     *  for compatibility purposes, these fonts generally come with
+     *  For compatibility purposes, these fonts generally come with
      *  *several* Unicode charmaps:
      *
-     *   - one of them in the "old" 16-bit format, that cannot access
-     *     all glyphs in the font
+     *   - One of them in the "old" 16-bit format, that cannot access
+     *     all glyphs in the font.
      *
-     *   - another one in the "new" 32-bit format, that can access all
+     *   - Another one in the "new" 32-bit format, that can access all
      *     the glyphs.
      *
-     *  this function has been written to always favor a 32-bit charmap
-     *  when found. Otherwise, a 16-bit one is returned when found
+     *  This function has been written to always favor a 32-bit charmap
+     *  when found.  Otherwise, a 16-bit one is returned when found.
      */
 
     /* since the `interesting' table, with id's 3,10, is normally the */
@@ -1570,10 +1570,10 @@
     if ( !face )
       return FT_Err_Invalid_Face_Handle;
 
-    /* FT_ENCODING_UNICODE is special. We try to find the `best' Unicode */
-    /* charmap available, i.e. one with UCS-4 characters, if possible.   */
-    /*                                                                   */
-    /* This is done by find_unicode_charmap() above, to share code.      */
+    /* FT_ENCODING_UNICODE is special.  We try to find the `best' Unicode */
+    /* charmap available, i.e., one with UCS-4 characters, if possible.   */
+    /*                                                                    */
+    /* This is done by find_unicode_charmap() above, to share code.       */
     if ( encoding == FT_ENCODING_UNICODE )
       return find_unicode_charmap( face );
 
@@ -1906,11 +1906,11 @@
   /* documentation is in tttables.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Load_Sfnt_Table( FT_Face      face,
-                      FT_ULong     tag,
-                      FT_Long      offset,
-                      FT_Byte*     buffer,
-                      FT_ULong*    length )
+  FT_Load_Sfnt_Table( FT_Face    face,
+                      FT_ULong   tag,
+                      FT_Long    offset,
+                      FT_Byte*   buffer,
+                      FT_ULong*  length )
   {
     SFNT_Load_Table_Func  func;
     FT_Driver             driver;

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType convenience functions to handle glyphs (body).              */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -57,7 +57,7 @@
 
   FT_EXPORT_DEF( void )
   FT_Matrix_Multiply( const FT_Matrix*  a,
-                      FT_Matrix*  b )
+                      FT_Matrix        *b )
   {
     FT_Fixed  xx, xy, yx, yy;
 
