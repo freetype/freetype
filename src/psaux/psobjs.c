@@ -227,6 +227,8 @@
 
     table->capacity = table->cursor;
     FREE( old_base );
+
+    FT_UNUSED( error );
   }
 
 

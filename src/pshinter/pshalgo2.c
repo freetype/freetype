@@ -1500,12 +1500,15 @@
     PSH2_GlyphRec  glyphrec;
     PSH2_Glyph     glyph = &glyphrec;
     FT_Error       error;
+#ifdef DEBUG_HINTER
     FT_Memory      memory;
+#endif
     FT_Int         dimension;
 
-    memory = globals->memory;
 
 #ifdef DEBUG_HINTER
+    memory = globals->memory;
+
     if ( ps2_debug_glyph )
     {
       psh2_glyph_done( ps2_debug_glyph );

@@ -1,3 +1,24 @@
+2002-02-19  Werner Lemberg  <wl@gnu.org>
+
+	* builds/freetype.mk (FT_CFLAGS): Use $(INCLUDE_FLAGS) first.
+
+	* src/cache/ftccache.c (ftc_cache_resize): Mark `error' as unused
+	to avoid compiler warning.
+	* src/cff/cffload.c (CFF_Get_String): Ditto.
+	* src/cff/cffobjs.c (CFF_StrCopy): Ditto.
+	* src/psaux/psobjs.c (PS_Table_Done): Ditto.
+	* src/pcf/pcfread.c (pcf_seek_to_table_type): Ditto.
+	* src/sfnt/sfdriver.c (get_sfnt_postscript_name): Ditto.
+	(pcf_get_bitmaps): The same for `sizebitmaps'.
+	* src/psaux/t1decode.c (T1_Decode_Parse_Charstrings): The same for
+	`orig_y'.
+	(t1operator_seac): Comment out more dead code.
+	* src/pshinter/pshalgo2.c (ps2_hints_apply): Add `DEBUG_HINTER'
+	conditional.
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph,
+	load_truetype_glyph): Add `TT_CONFIG_OPTION_BYTECODE_INTERPRETER'
+	conditional.
+
 2002-02-18  Werner Lemberg  <wl@gnu.org>
 
 	* src/autohint/ahglyph.c (ah_outline_link_segments): Remove unused

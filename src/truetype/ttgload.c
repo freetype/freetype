@@ -609,14 +609,18 @@
     FT_GlyphLoader*  gloader  = load->gloader;
     FT_Outline*      outline  = &gloader->current.outline;
     FT_UInt          n_points = outline->n_points;
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     FT_UInt          n_ins;
+#endif
     TT_GlyphZone*    zone     = &load->zone;
     FT_Error         error    = TT_Err_Ok;
 
     FT_UNUSED( debug );  /* used by truetype interpreter only */
 
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     n_ins = load->glyph->control_len;
+#endif
 
     /* add shadow points */
 
@@ -915,19 +919,26 @@
     else
     {
       TT_GlyphSlot  glyph = (TT_GlyphSlot)loader->glyph;
-      FT_UInt       start_point, start_contour;
+      FT_UInt       start_point;
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+      FT_UInt       start_contour;
       FT_ULong      ins_pos;  /* position of composite instructions, if any */
+#endif
 
 
       /* for each subglyph, read composite header */
       start_point   = gloader->base.outline.n_points;
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
       start_contour = gloader->base.outline.n_contours;
+#endif
 
       error = face->read_composite_glyph( loader );
       if ( error )
         goto Fail;
 
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
       ins_pos = loader->ins_pos;
+#endif
       face->forget_glyph_frame( loader );
       opened_frame = 0;
 
