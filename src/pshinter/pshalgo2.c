@@ -238,9 +238,10 @@
         {
           PSH2_Hint*  sort = table->sort;
           FT_UInt     count2;
-          PSH2_Hint   hint2;
           
 #if 0
+          PSH2_Hint   hint2;
+
           for ( count2 = count; count2 > 0; count2--, sort++ )
           {
             hint2 = sort[0];
