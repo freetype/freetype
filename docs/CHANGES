@@ -6,7 +6,7 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
     - The native  TrueType hinter contained some  bugs which prevented
       some fonts to be rendered correctly, most notably Legendum.otf.
 
-    - The PostScript hinter now produces much improved results.
+    - The PostScript hinter now produces improved results.
 
     - The  linear advance  width  and height  values were  incorrectly
       rounded,  making  them virtually  unusable  if  not loaded  with
@@ -38,6 +38,10 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       rendered correctly in some cases.
 
     - Metrics for BDF and PCF bitmap font formats have been fixed.
+
+    - Autohinting  is now  disabled for  glyphs  which  are vertically
+      distorted  or mirrored  (using a  transformation matrix).   This
+      fixes a bug which produced zero-height glyphs.
 
     - The   `freetype-config'   script   now  handles   --prefix   and
       --exec-prefix correctly; it also  returns the proper --rpath (or

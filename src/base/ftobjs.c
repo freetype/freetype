@@ -517,7 +517,10 @@
         autohint = 0;
     }
 
-    if ( autohint )
+    /* don't apply autohinting if glyph is vertically distorted or */
+    /* mirrored                                                    */
+    if ( autohint && !( face->internal->transform_matrix.yy <= 0 ||
+                        face->internal->transform_matrix.yx != 0 ) )
     {
       FT_AutoHinter_Service  hinting;
 
