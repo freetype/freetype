@@ -618,32 +618,18 @@
 
     /* allocate and build bitmap */
     {
-      FT_Memory  memory = FT_FACE_MEMORY( slot->face );
       FT_Int     pitch  = ( bitmap->width + 7 ) >> 3;
-      FT_Byte*   column;
-      FT_Byte*   write;
 
 
       bitmap->pitch      = pitch;
       bitmap->rows       = font->header.pixel_height;
       bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
 
-      if ( FT_ALLOC( bitmap->buffer, pitch * bitmap->rows ) )
-        goto Exit;
-
-      column = (FT_Byte*)bitmap->buffer;
-
-      for ( ; pitch > 0; pitch--, column++ )
-      {
-        FT_Byte*  limit = p + bitmap->rows;
-
-
-        for ( write = column; p < limit; p++, write += bitmap->pitch )
-          write[0] = p[0];
-      }
+      /* note: we don't allocate a new buffer for the bitmap since we */
+      /*       already store the images in the FT_Face                */
+      ft_glyphslot_set_bitmap( slot, p );
     }
 
-    slot->flags       = FT_GLYPH_OWN_BITMAP;
     slot->bitmap_left = 0;
     slot->bitmap_top  = font->header.ascent;
     slot->format      = FT_GLYPH_FORMAT_BITMAP;

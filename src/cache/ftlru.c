@@ -236,7 +236,7 @@
             goto Exit;
           }
 
-          FT_ASSERT( list->nodes > 0 );
+          FT_ASSERT( list->num_nodes > 0 );
 
           while ( node->next )
           {

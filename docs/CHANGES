@@ -33,6 +33,11 @@ LATEST CHANGES BETWEEN 2.1.4 and 2.1.3
     - the CMap cache is now capable of managing UCS-4 character codes that
       are mapped through extended charmaps in recent TrueType/OpenType fonts
 
+    - the cache sub-system now properly manages out-of-memory conditions,
+      instead of blindly reporting them to the caller. This means that it
+      will try to empty the cache before restarting its allocations to see
+      if that can help.
+
     - the PFR driver didn't return the list of available embedded bitmaps
       properly.
 
@@ -71,6 +76,9 @@ LATEST CHANGES BETWEEN 2.1.4 and 2.1.3
     - the file docs/VERSION.DLL has been updated to explain versioning
       with FreeType (i.e. comparing release/libtool/so numbers, and how
       to use them in Autoconf scripts)
+
+    - the installation documentation has been seriously revamped. Everything
+      is now in the "docs" directory.
 
 ==============================================================================
 LATEST CHANGES BETWEEN 2.1.3 and 2.1.2

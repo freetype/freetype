@@ -1,3 +1,8 @@
+2003-03-20  David Turner  <david@freetype.org>
+
+    * docs/*: serious rewriting of the documentation
+
+
 2003-03-15  David Turner  <david@freetype.org>
 
     * src/truetyoe/ttdriver.c (Set_Char_Sizes): fixed a small rounding bug.

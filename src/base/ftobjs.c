@@ -198,19 +198,59 @@
     return error;
   }
 
+  FT_BASE_DEF( void )
+  ft_glyphslot_free_bitmap( FT_GlyphSlot  slot )
+  {
+    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
+    {
+      FT_Memory  memory = FT_FACE_MEMORY( slot->face );
+      
+      
+      FT_FREE( slot->bitmap.buffer );
+      slot->flags &= ~FT_GLYPH_OWN_BITMAP;
+    }
+    else
+    {
+      /* assume that the bitmap buffer was stolen or not */
+      /* allocated from the heap                         */
+      slot->bitmap.buffer = NULL;
+    }
+  }
+
+
+  FT_BASE_DEF( void )
+  ft_glyphslot_set_bitmap( FT_GlyphSlot  slot,
+                           FT_Pointer    buffer )
+  {
+    ft_glyphslot_free_bitmap( slot );
+    
+    slot->bitmap.buffer = buffer;
+    
+    FT_ASSERT( (slot->flags & FT_GLYPH_OWN_BITMAP) == 0 );
+  }                           
+
+
+  FT_BASE_DEF( FT_Error )
+  ft_glyphslot_alloc_bitmap( FT_GlyphSlot  slot,
+                             FT_ULong      size )
+  {
+    FT_Memory  memory = FT_FACE_MEMORY( slot->face );
+    
+    
+    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
+      FT_FREE( slot->bitmap.buffer );
+    else
+      slot->flags |= FT_GLYPH_OWN_BITMAP;
+    
+    return FT_MEM_ALLOC( slot->bitmap.buffer, size );
+  }                             
+
 
   static void
   ft_glyphslot_clear( FT_GlyphSlot  slot )
   {
     /* free bitmap if needed */
-    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
-    {
-      FT_Memory  memory = FT_FACE_MEMORY( slot->face );
-
-
-      FT_FREE( slot->bitmap.buffer );
-      slot->flags &= ~FT_GLYPH_OWN_BITMAP;
-    }
+    ft_glyphslot_free_bitmap( slot );
 
     /* clear all public fields in the glyph slot */
     FT_ZERO( &slot->metrics );
@@ -248,8 +288,7 @@
       clazz->done_slot( slot );
 
     /* free bitmap buffer if needed */
-    if ( slot->flags & FT_GLYPH_OWN_BITMAP )
-      FT_FREE( slot->bitmap.buffer );
+    ft_glyphslot_free_bitmap( slot );
 
     /* free glyph loader */
     if ( FT_DRIVER_USES_OUTLINES( driver ) )

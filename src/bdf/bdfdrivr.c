@@ -489,8 +489,6 @@ THE SOFTWARE.
     int             i, j, count;
     unsigned char   *p, *pp;
 
-    FT_Memory       memory = face->bdffont->memory;
-
     FT_UNUSED( load_flags );
 
 
@@ -514,9 +512,9 @@ THE SOFTWARE.
       bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
       bitmap->pitch      = glyph.bpr;
 
-      if ( FT_NEW_ARRAY( bitmap->buffer, glyph.bytes ) )
-        goto Exit;
-      FT_MEM_COPY( bitmap->buffer, glyph.bitmap, glyph.bytes );
+     /* note: we don't allocate a new array to hold the bitmap, we */
+     /*       can simply point to it                               */
+      ft_glyphslot_set_bitmap( slot, glyph.bitmap );
     }
     else
     {
@@ -524,7 +522,8 @@ THE SOFTWARE.
       bitmap->pixel_mode = FT_PIXEL_MODE_GRAY;
       bitmap->pitch      = bitmap->width;
 
-      if ( FT_NEW_ARRAY( bitmap->buffer, bitmap->rows * bitmap->pitch ) )
+      error = ft_glyphslot_alloc_bitmap( slot, bitmap->rows * bitmap->pitch );
+      if ( error )
         goto Exit;
 
       switch ( bpp )
@@ -625,7 +624,6 @@ THE SOFTWARE.
 
     slot->linearHoriAdvance = (FT_Fixed)glyph.dwidth << 16;
     slot->format            = FT_GLYPH_FORMAT_BITMAP;
-    slot->flags             = FT_GLYPH_OWN_BITMAP;
 
   Exit:
     return error;

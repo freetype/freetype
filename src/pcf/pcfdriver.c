@@ -355,7 +355,6 @@ THE SOFTWARE.
     PCF_Face    face   = (PCF_Face)FT_SIZE_FACE( size );
     FT_Stream   stream = face->root.stream;
     FT_Error    error  = PCF_Err_Ok;
-    FT_Memory   memory = FT_FACE( face )->memory;
     FT_Bitmap*  bitmap = &slot->bitmap;
     PCF_Metric  metric;
     int         bytes;
@@ -411,7 +410,8 @@ THE SOFTWARE.
     /* XXX: to do: are there cases that need repadding the bitmap? */
     bytes = bitmap->pitch * bitmap->rows;
 
-    if ( FT_ALLOC( bitmap->buffer, bytes ) )
+    error = ft_glyphslot_alloc_bitmap( slot, bytes );
+    if ( error )
       goto Exit;
 
     if ( FT_STREAM_SEEK( metric->bits )          ||
@@ -451,7 +451,6 @@ THE SOFTWARE.
 
     slot->linearHoriAdvance = (FT_Fixed)bitmap->width << 16;
     slot->format            = FT_GLYPH_FORMAT_BITMAP;
-    slot->flags             = FT_GLYPH_OWN_BITMAP;
 
     FT_TRACE4(( " --- ok\n" ));
 

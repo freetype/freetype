@@ -645,11 +645,10 @@
 
         /* Allocate and read bitmap data */
         {
-          FT_Memory  memory = face->root.memory;
-          FT_Long    len    = glyph->root.bitmap.pitch * ysize;
+          FT_ULong    len    = glyph->root.bitmap.pitch * ysize;
 
-
-          if ( !FT_ALLOC( glyph->root.bitmap.buffer, len ) )
+          error = ft_glyphslot_alloc_bitmap( &glyph->root, len );
+          if ( !error )
           {
             error = pfr_load_bitmap_bits( p,
                                           stream->limit,
