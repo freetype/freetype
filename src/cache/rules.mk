@@ -31,6 +31,8 @@ Cache_COMPILE := $(FT_COMPILE)
 Cache_DRV_SRC := $(CACHE_DIR_)ftlru.c    \
                  $(CACHE_DIR_)ftcmanag.c \
                  $(CACHE_DIR_)ftcglyph.c \
+                 $(CACHE_DIR_)ftcchunk.c \
+                 $(CACHE_DIR_)ftcsbits.c \
                  $(CACHE_DIR_)ftcimage.c
 
 # Cache driver headers

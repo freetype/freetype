@@ -464,6 +464,10 @@
         cache->manager = manager;
         cache->memory  = memory;
         cache->clazz   = clazz;
+        
+        /* THIS IS VERY IMPORTANT, THIS WILL WRECH THE MANAGER */
+        /* IF IT IS NOT SET CORRECTLY..                        */
+        cache->cache_index = index;
 
         if ( clazz->init_cache )
           error = clazz->init_cache( cache );

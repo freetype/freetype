@@ -44,12 +44,12 @@
     FT_Error             error = 0;
 
 
-    data->cache_index = (FT_UShort) cache->root.cache_index;
-    data->ref_count   = (FT_Short)  0;
-    node->cset_index  = (FT_UShort) index;
-
-    node->num_elements = (index+1 < cset->element_count)
-                       ? cset->element_count * cset->element_size
+    data->cache_index  = (FT_UShort) cache->root.cache_index;
+    data->ref_count    = (FT_Short)  0;
+    node->cset         = cset;
+    node->cset_index   = (FT_UShort) index;
+    node->num_elements = (index+1 < cset->num_chunks)
+                       ? cset->element_count
                        : cset->element_max   - cset->element_count*index;
     if (alloc)
     {
@@ -227,7 +227,7 @@
       if (!node)
       {
         /* we didn't found the glyph image, we will now create a new one */
-        error = clazz->new_node( cset, glyph_index, &node );
+        error = clazz->new_node( cset, chunk_index, &node );
         if ( error )
           goto Exit;
 
@@ -267,7 +267,7 @@
 
 
 #define FTC_CSET_LRU_GET_CACHE( lru )   \
-          ( (FTC_Chunk_Cache)(lru)->user_data )
+          ( (FTC_Chunk_Cache)((lru)->user_data) )
 
 #define FTC_CSET_LRU_GET_MANAGER( lru ) \
           FTC_CSET_LRU_GET_CACHE( lru )->manager
