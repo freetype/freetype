@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Routines used to compute global metrics automatically (body).        */
 /*                                                                         */
-/*  Copyright 2000-2001 Catharon Productions Inc.                          */
+/*  Copyright 2000-2001, 2002 Catharon Productions Inc.                    */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */

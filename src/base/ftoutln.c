@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType outline management (body).                                  */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -358,13 +358,13 @@
       return FT_Err_Invalid_Argument;
 
     FT_MEM_COPY( target->points, source->points,
-              source->n_points * sizeof ( FT_Vector ) );
+                 source->n_points * sizeof ( FT_Vector ) );
 
     FT_MEM_COPY( target->tags, source->tags,
-              source->n_points * sizeof ( FT_Byte ) );
+                 source->n_points * sizeof ( FT_Byte ) );
 
     FT_MEM_COPY( target->contours, source->contours,
-              source->n_contours * sizeof ( FT_Short ) );
+                 source->n_contours * sizeof ( FT_Short ) );
 
     /* copy all flags, except the `ft_outline_owner' one */
     is_owner      = target->flags & ft_outline_owner;

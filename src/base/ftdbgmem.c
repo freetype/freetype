@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Memory debugger (body).                                              */
 /*                                                                         */
-/*  Copyright 2001 by                                                      */
+/*  Copyright 2001, 2002 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -43,15 +43,15 @@
     FT_Byte*     address;
     FT_Long      size;     /* < 0 if the block was freed */
 
-   const char*  alloc_file_name;
+    const char*  alloc_file_name;
     FT_Long      alloc_line_no;
 
-   const char*  free_file_name;
+    const char*  free_file_name;
     FT_Long      free_line_no;
 
     FT_MemNode   link;
 
- } FT_MemNodeRec;
+  } FT_MemNodeRec;
 
 
   typedef struct  FT_MemTableRec_
@@ -64,16 +64,16 @@
     FT_ULong         alloc_current;
     FT_ULong         alloc_max;
 
-   const char*      file_name;
+    const char*      file_name;
     FT_Long          line_no;
 
     FT_Memory        memory;
-   FT_Pointer       memory_user;
+    FT_Pointer       memory_user;
     FT_Alloc_Func    alloc;
     FT_Free_Func     free;
     FT_Realloc_Func  realloc;
 
- } FT_MemTableRec;
+  } FT_MemTableRec;
 
 
 #define FT_MEM_SIZE_MIN  7
@@ -270,7 +270,7 @@
       table = NULL;
     }
 
- Exit:
+  Exit:
     return table;
   }
 

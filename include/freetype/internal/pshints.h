@@ -6,7 +6,7 @@
 /*    recorders (specification only).  These are used to support native    */
 /*    T1/T2 hints in the "type1", "cid" and "cff" font drivers.            */
 /*                                                                         */
-/*  Copyright 2001 by                                                      */
+/*  Copyright 2001, 2002 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -56,7 +56,7 @@ FT_BEGIN_HEADER
   (*PSH_Globals_DestroyFunc)( PSH_Globals  globals );
 
 
-  typedef struct PSH_Globals_FuncsRec_
+  typedef struct  PSH_Globals_FuncsRec_
   {
     PSH_Globals_NewFunc       create;
     PSH_Globals_SetScaleFunc  set_scale;
@@ -98,7 +98,7 @@ FT_BEGIN_HEADER
   /*      strange happened (e.g. memory shortage).                         */
   /*                                                                       */
   /*    The hints accumulated in the object can later be used by the       */
-  /*    Postscript hinter.                                                 */
+  /*    PostScript hinter.                                                 */
   /*                                                                       */
   typedef struct T1_HintsRec_*  T1_Hints;
 
@@ -215,6 +215,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* @input:                                                               */
   /*    hints     :: A handle to the Type 1 hints recorder.                */
+  /*                                                                       */
   /*    end_point :: The index of the last point in the input glyph in     */
   /*                 which the previously defined hints apply.             */
   /*                                                                       */
@@ -609,6 +610,7 @@ FT_BEGIN_HEADER
   } PSHinter_Interface;
 
   typedef PSHinter_Interface*  PSHinter_Service;
+
 
 FT_END_HEADER
 

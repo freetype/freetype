@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Auto-hinting module implementation (declaration).                    */
 /*                                                                         */
-/*  Copyright 2000-2001 Catharon Productions Inc.                          */
+/*  Copyright 2000-2001, 2002 Catharon Productions Inc.                    */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -25,7 +25,7 @@
 
 
 #ifdef  DEBUG_HINTER
-   extern AH_Hinter*  ah_debug_hinter = NULL;
+   extern AH_Hinter*  ah_debug_hinter       = NULL;
    extern FT_Bool     ah_debug_disable_horz = 0;
    extern FT_Bool     ah_debug_disable_vert = 0;
 #endif
@@ -42,6 +42,7 @@
   ft_autohinter_init( FT_AutoHinter  module )
   {
     FT_Error  error;
+
 
     error = ah_hinter_new( module->root.library, &module->hinter );
 #ifdef DEBUG_HINTER

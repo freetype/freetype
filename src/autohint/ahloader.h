@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Glyph loader for the auto-hinting module (declaration only).         */
 /*                                                                         */
-/*  Copyright 2000-2001 Catharon Productions Inc.                          */
+/*  Copyright 2000-2001, 2002 Catharon Productions Inc.                    */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -21,13 +21,8 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* This defines the AH_GlyphLoader type in two different ways:           */
-  /*                                                                       */
-  /* - If the module is compiled within FreeType 2, the type is simply a   */
-  /*   typedef to FT_GlyphLoader.                                          */
-  /*                                                                       */
-  /* - If the module is compiled as a standalone object, AH_GlyphLoader    */
-  /*   has its own implementation.                                         */
+  /* This defines the AH_GlyphLoader type; it is simply a typedef to       */
+  /* FT_GlyphLoader.                                                       */
   /*                                                                       */
   /*************************************************************************/
 
