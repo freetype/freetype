@@ -29,7 +29,6 @@
 
 #include <ft2build.h>
 #include FT_CACHE_H
-#include FT_CACHE_INTERNAL_GLYPH_H
 
 
 FT_BEGIN_HEADER
@@ -96,6 +95,14 @@ FT_BEGIN_HEADER
 
   } FTC_Image_Desc;
 
+ /* */
+#define  FTC_IMAGE_DESC_COMPARE( d1, d2 )                        \
+             ( FTC_FONT_COMPARE( &(d1)->font, &(d2)->font ) &&   \
+               (d1)->image_type == (d2)->image_type         )
+
+#define  FTC_IMAGE_DESC_HASH(d)                         \
+             (FT_UFast)( FTC_FONT_HASH(&(d)->font) ^    \
+                         ((d)->image_type << 4)    )
 
   /*************************************************************************/
   /*                                                                       */

@@ -25,326 +25,308 @@
 #include "ftcerror.h"
 
 
-  static void
-  lru_build_free_list( FT_LruNode  nodes,
-                       FT_UInt     count,
-                       FT_List     free_list )
-  {
-    FT_LruNode  node  = nodes;
-    FT_LruNode  limit = node + count;
-
-
-    free_list->head = free_list->tail = 0;
-    for ( ; node < limit; node++ )
-      FT_List_Add( free_list, (FT_ListNode)node );
-  }
-
-
   FT_EXPORT_DEF( FT_Error )
-  FT_Lru_New( const FT_Lru_Class*  clazz,
-              FT_UInt              max_elements,
-              FT_Pointer           user_data,
-              FT_Memory            memory,
-              FT_Bool              pre_alloc,
-              FT_Lru              *anlru )
+  FT_LruList_New( FT_LruList_Class  clazz,
+                  FT_UInt           max_nodes,
+                  FT_Pointer        user_data,
+                  FT_Memory         memory,
+                  FT_LruList       *alist )
   {
-    FT_Error  error;
-    FT_Lru    lru;
+    FT_Error    error;
+    FT_LruList  list;
 
-
-    if ( !anlru )
+    if ( !alist || !clazz )
       return FTC_Err_Invalid_Argument;
 
-    *anlru = 0;
-    if ( !ALLOC( lru, sizeof ( *lru ) ) )
+    *alist = NULL;
+    if ( !ALLOC( list, clazz->list_size ) )
     {
-      if ( pre_alloc )
-      {
-        /* allocate static array of lru list nodes */
-        if ( ALLOC_ARRAY( lru->nodes, max_elements, FT_LruNodeRec ) )
-        {
-          FREE( lru );
-          goto Exit;
-        }
+      /* initialize common fields */
+      list->clazz      = clazz;
+      list->memory     = memory;
+      list->max_nodes  = max_nodes;
+      list->user_data  = user_data;
 
-        /* build the `free_nodes' list from the array */
-        lru_build_free_list( lru->nodes, max_elements, &lru->free_nodes );
+      if ( clazz->list_init )
+      {
+        error = clazz->list_init( list );
+        if ( error )
+        {
+          if ( clazz->list_done )
+            clazz->list_done( list );
+
+          FREE( list );
+        }
       }
 
-      /* initialize common fields */
-      lru->clazz        = (FT_Lru_Class*)clazz;
-      lru->max_elements = max_elements;
-      lru->memory       = memory;
-      lru->user_data    = user_data;
-
-      *anlru = lru;
+      *alist = list;
     }
 
-  Exit:
     return error;
   }
 
 
   FT_EXPORT_DEF( void )
-  FT_Lru_Reset( FT_Lru  lru )
+  FT_LruList_Destroy( FT_LruList  list )
   {
-    FT_ListNode    node;
-    FT_Lru_Class*  clazz;
-    FT_Memory      memory;
+    FT_Memory         memory;
+    FT_LruList_Class  clazz;
 
-
-    if ( !lru )
+    if ( !list )
       return;
 
-    node   = lru->elements.head;
-    clazz  = lru->clazz;
-    memory = lru->memory;
+    memory = list->memory;
+    clazz  = list->clazz;
 
-    while ( node )
-    {
-      FT_ListNode  next = node->next;
+    FT_LruList_Reset( list );
 
+    if ( clazz->list_done )
+      clazz->list_done( list );
 
-      clazz->done_element( lru, (FT_LruNode)node );
-      if ( !lru->nodes )
-        FREE( node );
-
-      node = next;
-    }
-
-    /* rebuild free list if necessary */
-    if ( lru->nodes )
-      lru_build_free_list( lru->nodes, lru->max_elements, &lru->free_nodes );
-
-    lru->elements.head = lru->elements.tail = 0;
-    lru->num_elements  = 0;
+    FREE( list );
   }
 
 
+
   FT_EXPORT_DEF( void )
-  FT_Lru_Done( FT_Lru  lru )
+  FT_LruList_Reset( FT_LruList  list )
   {
-    FT_Memory  memory;
+    FT_LruNode        node;
+    FT_LruList_Class  clazz;
+    FT_Memory         memory;
 
 
-    if ( !lru )
+    if ( !list )
       return;
 
-    memory = lru->memory;
+    node   = list->nodes;
+    clazz  = list->clazz;
+    memory = list->memory;
 
-    FT_Lru_Reset( lru );
+    while ( node )
+    {
+      FT_LruNode  next = node->next;
 
-    FREE( lru->nodes );
-    FREE( lru );
+      if ( clazz->node_done )
+        clazz->node_done( node, list );
+
+      FREE( node );
+      node = next;
+    }
+
+    list->nodes     = NULL;
+    list->num_nodes = 0;
   }
 
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Lru_Lookup_Node( FT_Lru       lru,
-                      FT_LruKey    key,
-                      FT_LruNode  *anode )
+  FT_LruList_Lookup( FT_LruList   list,
+                     FT_LruKey    key,
+                     FT_LruNode  *anode )
   {
-    FT_Error       error = 0;
-    FT_ListNode    node;
-    FT_Lru_Class*  clazz;
-    FT_LruNode     found = 0;
-    FT_Memory      memory;
+    FT_Error          error = 0;
+    FT_LruNode        node, *pnode;
+    FT_LruList_Class  clazz;
+    FT_LruNode*       plast;
+    FT_LruNode        result = NULL;
+    FT_Memory         memory;
 
 
-    if ( !lru || !key || !anode )
+    if ( !list || !key || !anode )
       return FTC_Err_Invalid_Argument;
 
-    node   = lru->elements.head;
-    clazz  = lru->clazz;
-    memory = lru->memory;
+    pnode  = &list->nodes;
+    plast  = pnode;
+    node   = NULL;
+    clazz  = list->clazz;
+    memory = list->memory;
 
-    if ( clazz->compare_element )
+    if ( clazz->node_compare )
     {
-      for ( ; node; node = node->next )
-        if ( clazz->compare_element( (FT_LruNode)node, key ) )
-        {
-          found = (FT_LruNode)node;
+      for (;;)
+      {
+        node = *pnode;
+        if ( node == NULL )
           break;
-        }
+
+        if ( clazz->node_compare( node, key, list ) )
+          break;
+
+        plast = pnode;
+        pnode = &(*pnode)->next;
+      }
     }
     else
     {
-      for ( ; node; node = node->next )
-        if ( ((FT_LruNode)node)->key == key )
-        {
-          found = (FT_LruNode)node;
+      for (;;)
+      {
+        node = *pnode;
+        if ( node == NULL )
           break;
-        }
+
+        if ( node->key == key )
+          break;
+
+        plast = pnode;
+        pnode = &(*pnode)->next;
+      }
     }
 
-    if ( found )
+    if ( node )
     {
       /* move element to top of list */
-      FT_List_Up( &lru->elements, node );
-    }
-    else
-    {
-      /* we haven't found the relevant element.  We will now try */
-      /* to create a new one.                                    */
-      if ( lru->num_elements >= lru->max_elements )
+      if ( list->nodes != node )
       {
-        /* this lru list is full; we will now flush */
-        /* the oldest node                          */
-        FT_LruNode  lru_node;
+        *pnode      = node->next;
+        node->next  = list->nodes;
+        list->nodes  = node;
+      }
+      result = node;
+      goto Exit;
+    }
 
+    /* we haven't found the relevant element.  We will now try */
+    /* to create a new one.                                    */
+    /*                                                         */
 
-        node     = lru->elements.tail;
-        lru_node = (FT_LruNode)node;
-        found    = lru_node;
+    /* first, check if our list if full, when appropriate */
+    if ( list->max_nodes > 0 && list->num_nodes >= list->max_nodes )
+    {
+      /* this list list is full; we will now flush */
+      /* the oldest node, if there's one !!       */
+      FT_LruNode  last = *plast;
 
-        if ( clazz->flush_element )
-          error = clazz->flush_element( lru, lru_node, key );
+      if ( last )
+      {
+        if ( clazz->node_flush )
+        {
+          error = clazz->node_flush( last, key, list );
+        }
         else
         {
-          clazz->done_element( lru, lru_node );
-          lru_node->key = key;
-          node->data    = 0;
-          error = clazz->init_element( lru, lru_node );
+          if ( clazz->node_done )
+            clazz->node_done( last, list );
+
+          last->key  = key;
+          error = clazz->node_init( last, key, list );
         }
 
         if ( !error )
         {
-          /* now, move element to top of list */
-          FT_List_Up( &lru->elements, node );
-        }
-        else
-        {
-          /* in case of error, the node must be discarded */
-          FT_List_Remove( &lru->elements, node );
-          lru->num_elements--;
+          /* move it to the top of the list */
+          *plast      = NULL;
+          last->next  = list->nodes;
+          list->nodes = last;
 
-          if ( lru->nodes )
-            FT_List_Insert( &lru->free_nodes, node );
-          else
-            FREE( lru_node );
-
-          found = 0;
-        }
-      }
-      else
-      {
-        FT_LruNode  lru_node;
-
-
-        /* create a new lru list node, then the element for it */
-        if ( lru->nodes )
-        {
-          node          = lru->free_nodes.head;
-          lru_node      = (FT_LruNode)node;
-          lru_node->key = key;
-
-          error = clazz->init_element( lru, lru_node );
-          if ( error )
-            goto Exit;
-
-          FT_List_Remove( &lru->free_nodes, node );
-        }
-        else
-        {
-          if ( ALLOC( lru_node, sizeof ( *lru_node ) ) )
-            goto Exit;
-
-          lru_node->key = key;
-          error = clazz->init_element( lru, lru_node );
-          if ( error )
-          {
-            FREE( lru_node );
-            goto Exit;
-          }
+          result = last;
+          goto Exit;
         }
 
-        found = lru_node;
-        node  = (FT_ListNode)lru_node;
-        FT_List_Insert( &lru->elements, node );
-        lru->num_elements++;
+        /* in case of error during the flush or done/init cycle, */
+        /* we need to discard the node..                         */
+        if ( clazz->node_done )
+          clazz->node_done( last, list );
+
+        *plast = NULL;
+        list->num_nodes--;
+
+        FREE( last );
+        goto Exit;
       }
     }
 
+    /* otherwise, simply allocate a new node */
+    if ( ALLOC( node, clazz->node_size ) )
+      goto Exit;
+
+    node->key = key;
+    error = clazz->node_init( node, key, list );
+    if ( error )
+    {
+      FREE( node );
+      goto Exit;
+    }
+
+    result      = node;
+    node->next  = list->nodes;
+    list->nodes = node;
+    list->num_nodes++;
+
   Exit:
-    *anode = found;
+    *anode = result;
     return error;
   }
 
-
-  FT_EXPORT_DEF( FT_Error )
-  FT_Lru_Lookup( FT_Lru       lru,
-                 FT_LruKey    key,
-                 FT_Pointer  *anobject )
-  {
-    FT_Error    error;
-    FT_LruNode  node;
-
-
-    /* check for valid `lru' and `key' delayed to FT_Lru_Lookup_Node() */
-
-    if ( !anobject )
-      return FTC_Err_Invalid_Argument;
-
-    *anobject = 0;
-    error = FT_Lru_Lookup_Node( lru, key, &node );
-    if ( !error )
-      *anobject = node->root.data;
-
-    return error;
-  }
 
 
   FT_EXPORT_DEF( void )
-  FT_Lru_Remove_Node( FT_Lru      lru,
-                      FT_LruNode  node )
+  FT_LruList_Remove( FT_LruList  list,
+                     FT_LruNode  node )
   {
-    if ( !lru || !node )
+    FT_LruNode  *pnode;
+
+    if ( !list || !node )
       return;
 
-    if ( lru->num_elements > 0 )
+    pnode = &list->nodes;
+    for (;;)
     {
-      FT_List_Remove( &lru->elements, (FT_ListNode)node );
-      lru->clazz->done_element( lru, node );
-
-      if ( lru->nodes )
-        FT_List_Insert( &lru->free_nodes, (FT_ListNode)node );
-      else
+      if ( *pnode == node )
       {
-        FT_Memory  memory = lru->memory;
+        FT_Memory         memory = list->memory;
+        FT_LruList_Class  clazz  = list->clazz;
 
+        *pnode     = node->next;
+        node->next = NULL;
+
+        if ( clazz->node_done )
+          clazz->node_done( node, list );
+
+        FREE( node );
+        list->num_nodes--;
+        break;
+      }
+
+      pnode = &(*pnode)->next;
+    }
+  }
+
+
+
+  FT_EXPORT_DEF( void )
+  FT_LruList_Remove_Selection( FT_LruList             list,
+                               FT_LruNode_SelectFunc  select_func,
+                               FT_Pointer             select_data )
+  {
+    FT_LruNode       *pnode, node;
+    FT_LruList_Class  clazz;
+    FT_Memory         memory;
+
+    if ( !list || !select_func )
+      return;
+
+    memory = list->memory;
+    clazz  = list->clazz;
+    pnode  = &list->nodes;
+
+    for (;;)
+    {
+      node = *pnode;
+      if ( node == NULL )
+        break;
+
+      if ( select_func( node, select_data, list ) )
+      {
+        *pnode     = node->next;
+        node->next = NULL;
+
+        if ( clazz->node_done )
+          clazz->node_done( node, list );
 
         FREE( node );
       }
-
-      lru->num_elements--;
-    }
-  }
-
-
-  FT_EXPORT_DEF( void )
-  FT_Lru_Remove_Selection( FT_Lru           lru,
-                           FT_Lru_Selector  selector,
-                           FT_Pointer       data )
-  {
-    if ( !lru || !selector )
-      return;
-
-    if ( lru->num_elements > 0 )
-    {
-      FT_ListNode  node = lru->elements.head;
-      FT_ListNode  next;
-
-
-      while ( node )
-      {
-        next = node->next;
-        if ( selector( lru, (FT_LruNode)node, data ) )
-        {
-          /* remove this element from the list, and destroy it */
-          FT_Lru_Remove_Node( lru, (FT_LruNode)node );
-        }
-        node = next;
-      }
+      else
+        pnode = &(*pnode)->next;
     }
   }
 

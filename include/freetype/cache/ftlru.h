@@ -66,117 +66,130 @@
 FT_BEGIN_HEADER
 
 
-  /* generic key type */
+  /* generic list key type */
   typedef FT_Pointer  FT_LruKey;
 
+  /* a list list handle */
+  typedef struct FT_LruListRec_*  FT_LruList;
 
-  /* an lru node -- root.data points to the element */
+  /* list class handle */
+  typedef const struct FT_LruList_ClassRec_*   FT_LruList_Class;
+
+  /* an list node handle */
+  typedef struct  FT_LruNodeRec_*   FT_LruNode;
+  
+  /* the list node structure */
   typedef struct  FT_LruNodeRec_
   {
-    FT_ListNodeRec  root;
-    FT_LruKey       key;
+    FT_LruNode  next;
+    FT_LruKey   key;
 
-  } FT_LruNodeRec, *FT_LruNode;
-
-
-  /* forward declaration */
-  typedef struct FT_LruRec_*  FT_Lru;
+  } FT_LruNodeRec;
 
 
-  /* LRU class */
-  typedef struct  FT_Lru_Class_
+  /* the list structure */
+  typedef struct  FT_LruListRec_
   {
-    FT_UInt  lru_size;      /* object size in bytes */
+    FT_Memory          memory;
+    FT_LruList_Class   clazz;
+    FT_LruNode         nodes;
+    FT_UInt            max_nodes;
+    FT_UInt            num_nodes;
+    FT_Pointer         user_data;
 
-    /* this method is used to initialize a new list element node */
-    FT_Error
-    (*init_element)( FT_Lru      lru,
-                     FT_LruNode  node );
+  } FT_LruListRec;
 
-    /* this method is used to finalize a given list element node */
-    void
-    (*done_element)( FT_Lru      lru,
-                     FT_LruNode  node );
 
-    /* If defined, this method is called when the list if full        */
-    /* during the lookup process -- it is used to change the contents */
-    /* of a list element node, instead of calling `done_element()',   */
-    /* then `init_element'.  Set it to 0 for default behaviour.       */
-    FT_Error
-    (*flush_element)( FT_Lru      lru,
-                      FT_LruNode  node,
-                      FT_LruKey   new_key );
+ /* initialize a list list */
+  typedef FT_Error  (*FT_LruList_InitFunc)( FT_LruList  list );
+  
+ /* finalize a list list */
+  typedef void      (*FT_LruList_DoneFunc)( FT_LruList  list );
 
-    /* If defined, this method is used to compare a list element node */
-    /* with a given key during a lookup.  If set to 0, the `key'      */
-    /* fields will be directly compared instead.                      */
-    FT_Bool
-    (*compare_element)( FT_LruNode  node,
-                        FT_LruKey   key );
+ /* this method is used to initialize a new list element node */
+  typedef FT_Error  (*FT_LruNode_InitFunc)( FT_LruNode  node,
+                                            FT_LruKey   key,
+                                            FT_LruList  list );
 
-  } FT_Lru_Class;
+ /* this method is used to finalize a given list element node */
+  typedef void      (*FT_LruNode_DoneFunc)( FT_LruNode  node,
+                                            FT_LruList  list );
 
+ /* If defined, this method is called when the list if full        */
+ /* during the lookup process -- it is used to change the contents */
+ /* of a list element node, instead of calling `done_element()',   */
+ /* then `init_element'.  Set it to 0 for default behaviour.       */
+  typedef FT_Error  (*FT_LruNode_FlushFunc)( FT_LruNode  node,
+                                             FT_LruKey   new_key,
+                                             FT_LruList  list );
+
+ /* If defined, this method is used to compare a list element node */
+ /* with a given key during a lookup.  If set to 0, the `key'      */
+ /* fields will be directly compared instead.                      */
+  typedef FT_Bool   (*FT_LruNode_CompareFunc)( FT_LruNode  node,
+                                               FT_LruKey   key,
+                                               FT_LruList  list );
 
   /* A selector is used to indicate whether a given list element node    */
-  /* is part of a selection for FT_Lru_Remove_Selection().  The function */
+  /* is part of a selection for FT_LruList_Remove_Selection().  The function */
   /* must return true (i.e., non-null) to indicate that the node is part */
   /* of it.                                                              */
-  typedef FT_Bool
-  (*FT_Lru_Selector)( FT_Lru      lru,
-                      FT_LruNode  node,
-                      FT_Pointer  data );
+  typedef FT_Bool    (*FT_LruNode_SelectFunc)( FT_LruNode  node,
+                                               FT_Pointer  data,
+                                               FT_LruList  list );
 
-
-  typedef struct  FT_LruRec_
+  /* LRU class */
+  typedef struct  FT_LruList_ClassRec_
   {
-    FT_Lru_Class*  clazz;
-    FT_UInt        max_elements;
-    FT_UInt        num_elements;
-    FT_ListRec     elements;
-    FT_Memory      memory;
-    FT_Pointer     user_data;
+    FT_UInt                 list_size;
+    FT_LruList_InitFunc     list_init;      /* optional */
+    FT_LruList_DoneFunc     list_done;      /* optional */
+  
+    FT_UInt                 node_size;
+    FT_LruNode_InitFunc     node_init;     /* MANDATORY */
+    FT_LruNode_DoneFunc     node_done;     /* optional  */
+    FT_LruNode_FlushFunc    node_flush;    /* optional  */
+    FT_LruNode_CompareFunc  node_compare;  /* optional  */
 
-    /* the following fields are only meaningful for static lru containers */
-    FT_ListRec     free_nodes;
-    FT_LruNode     nodes;
+  } FT_LruList_ClassRec;
 
-  } FT_LruRec;
+
+ /* the following functions must be exported in the case where applications */
+ /* would want to write their own cache classes..                           */
+
+  FT_EXPORT( FT_Error )
+  FT_LruList_New( FT_LruList_Class  clazz,
+                  FT_UInt           max_elements,
+                  FT_Pointer        user_data,
+                  FT_Memory         memory,
+                  FT_LruList       *alist );
+
+  FT_EXPORT( void )
+  FT_LruList_Reset( FT_LruList  list );
+
+
+  FT_EXPORT( void )
+  FT_LruList_Destroy ( FT_LruList  list );
 
 
   FT_EXPORT( FT_Error )
-  FT_Lru_New( const FT_Lru_Class*  clazz,
-              FT_UInt              max_elements,
-              FT_Pointer           user_data,
-              FT_Memory            memory,
-              FT_Bool              pre_alloc,
-              FT_Lru              *anlru );
+  FT_LruList_Lookup( FT_LruList    list,
+                     FT_LruKey     key,
+                     FT_LruNode   *anode );
+
 
   FT_EXPORT( void )
-  FT_Lru_Reset( FT_Lru  lru );
+  FT_LruList_Remove( FT_LruList  list,
+                     FT_LruNode  node );
+
 
   FT_EXPORT( void )
-  FT_Lru_Done ( FT_Lru  lru );
+  FT_LruList_Remove_Selection( FT_LruList             list,
+                               FT_LruNode_SelectFunc  select_func,
+                               FT_Pointer             select_data );
 
-  FT_EXPORT( FT_Error )
-  FT_Lru_Lookup_Node( FT_Lru        lru,
-                      FT_LruKey     key,
-                      FT_LruNode   *anode );
-
-  FT_EXPORT( FT_Error )
-  FT_Lru_Lookup( FT_Lru       lru,
-                 FT_LruKey    key,
-                 FT_Pointer  *anobject );
-
-  FT_EXPORT( void )
-  FT_Lru_Remove_Node( FT_Lru      lru,
-                      FT_LruNode  node );
-
-  FT_EXPORT( void )
-  FT_Lru_Remove_Selection( FT_Lru           lru,
-                           FT_Lru_Selector  selector,
-                           FT_Pointer       data );
-
-
+ /* */
+ 
 FT_END_HEADER
 
 #endif /* __FTLRU_H__ */

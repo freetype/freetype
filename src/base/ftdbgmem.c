@@ -1,6 +1,7 @@
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_MEMORY_H
 #include FT_SYSTEM_H
 #include FT_ERRORS_H
 #include FT_TYPES_H
@@ -173,7 +174,7 @@
       if ( new_buckets == NULL )
         return;
       
-      memset( new_buckets, 0, sizeof(FT_MemNode)*new_size );
+      MEM_Set( new_buckets, 0, sizeof(FT_MemNode)*new_size );
       
       for ( i = 0; i < table->size; i++ )
       {
@@ -211,7 +212,7 @@
     table = memory->alloc( memory, sizeof(*table) );
     if ( table == NULL ) goto Exit;
     
-    memset( table, 0, sizeof(*table) );
+    MEM_Set( table, 0, sizeof(*table) );
 
     table->size  = FT_MEM_SIZE_MIN;
     table->nodes = 0;
@@ -226,7 +227,7 @@
 
     table->buckets = memory->alloc( memory, table->size * sizeof(FT_MemNode) );
     if ( table->buckets )
-      memset( table->buckets, 0, sizeof(FT_MemNode)*table->size );
+      MEM_Set( table->buckets, 0, sizeof(FT_MemNode)*table->size );
     else
     {
       memory->free( memory, table );
@@ -408,7 +409,7 @@
         
         /* we simply invert the node's size to indicate that the node */
         /* was freed. We also change its content..                    */
-        memset( address, 0xF3, node->size );
+        MEM_Set( address, 0xF3, node->size );
 
         table->alloc_current -= node->size;
         node->size            = -node->size;
