@@ -7,8 +7,8 @@
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -110,12 +110,11 @@
     /* Windows fonts component */
     trace_winfnt,
 
-    /* other trace levels */
-
     /* the last level must always be `trace_max' */
     trace_max
 
   } FT_Trace;
+
 
   /* declared in ftdebug.c */
   extern char  ft_trace_levels[trace_max];
@@ -189,7 +188,7 @@
   FT_EXPORT_DEF( void )  FT_Message( const char*  fmt, ... );
 
   /* print a message and exit */
-  FT_EXPORT_DEF( void )  FT_Panic  ( const char*  fmt, ... );
+  FT_EXPORT_DEF( void )  FT_Panic( const char*  fmt, ... );
 
 #define FT_ERROR( varformat )  FT_XCAT( FT_Message, varformat )
 

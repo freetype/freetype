@@ -2,24 +2,27 @@
 /*                                                                         */
 /*  ftdriver.h                                                             */
 /*                                                                         */
-/*  FreeType font driver interface (specification).                        */
+/*    FreeType font driver interface (specification).                      */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
 
+
 #ifndef FTDRIVER_H
 #define FTDRIVER_H
 
+
 #include <freetype/ftmodule.h>
 #include <freetype/config/ftconfig.h>
+
 
   typedef FT_Error  (*FTDriver_initFace)( FT_Stream      stream,
                                           FT_Face        face,
@@ -27,18 +30,15 @@
                                           FT_Int         num_params,
                                           FT_Parameter*  parameters );
 
-
   typedef void  (*FTDriver_doneFace)( FT_Face  face );
 
 
   typedef FT_Error  (*FTDriver_initSize)( FT_Size  size );
 
-
   typedef void  (*FTDriver_doneSize)( FT_Size  size );
 
 
   typedef FT_Error  (*FTDriver_initGlyphSlot)( FT_GlyphSlot  slot );
-
 
   typedef void  (*FTDriver_doneGlyphSlot)( FT_GlyphSlot  slot );
 
@@ -68,7 +68,8 @@
                                             FT_Vector*   kerning );
 
 
-  typedef FT_Error  (*FTDriver_attachFile)( FT_Face  face, FT_Stream  stream );
+  typedef FT_Error  (*FTDriver_attachFile)( FT_Face    face,
+                                            FT_Stream  stream );
 
 
   typedef FT_Error  (*FTDriver_getAdvances)( FT_Face     face,
@@ -78,95 +79,99 @@
                                              FT_UShort*  advances );
 
 
- /*************************************************************************
-  *
-  *  <Struct>
-  *     FT_Driver_Class
-  *
-  *  <Description>
-  *     The font driver class. This structure mostly contains pointers to
-  *     driver methods.
-  *
-  *  <Fields>
-  *     face_object_size :: size of a face object in bytes
-  *     size_object_size :: size of a size object in bytes
-  *     slot_object_size :: size of a glyph object in bytes
-  *
-  *     init_face    :: format-specific face constructor
-  *     done_face    :: format-specific face destructor
-  *
-  *     init_size    :: format-specific size constructor
-  *     done_size    :: format-specific size destructor
-  *
-  *     init_slot    :: format-specific slot constructor
-  *     done_slot    :: format-specific slot destructor
-  *
-  *     set_char_sizes  ::  handle to a function used to set the new character
-  *                         size in points + resolution. can be set to 0 to
-  *                         indicate default behaviour
-  *
-  *     set_pixel_sizes ::  handme to function used to set the new character
-  *                         size in pixels. can be set to 0 to indicate
-  *                         default behaviour
-  *
-  *     load_glyph      ::  load a given glyph image in a slot. This field
-  *                         is mandatory !
-  *
-  *     get_char_index  ::  return the glyph index of a given character
-  *                         for a given charmap. This field is mandatory !
-  *
-  *     get_kerning     ::  return the unscaled kerning for a given pair
-  *                         of glyphs. can be set to 0 if the format doesn't
-  *                         support kerning.
-  *
-  *     attach_file     ::  reads additional data for a face from another
-  *                         file/stream. For example, this can be used
-  *                         to add data from AFM or PFM files on a Type 1
-  *                         face, or a CIDMap on a CID-keyed face..
-  *
-  *     get_advances    ::  a function used to return the advances of 'count'
-  *                         glyphs, starting at 'index'. the "vertical" flags
-  *                         must be set when vertical advances are queried.
-  *                         the advances buffer is caller-allocated
-  *
-  *     get_bboxes      ::  a function used to return the bounding box of
-  *                         'count' glyphs, starting at 'index'. the bbox
-  *                         buffer is caller-allocated
-  *
-  *  <Note>
-  *     Most function pointers, with the exception of "load_glyph" and
-  *     "get_char_index" can be set to 0 to indicate a the default behaviour
-  *     
-  *
-  *************************************************************************/
-  
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FT_Driver_Class                                                    */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The font driver class.  This structure mostly contains pointers to */
+  /*    driver methods.                                                    */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    root             :: The parent module.                             */
+  /*                                                                       */
+  /*    face_object_size :: The size of a face object in bytes.            */
+  /*                                                                       */
+  /*    size_object_size :: The size of a size object in bytes.            */
+  /*                                                                       */
+  /*    slot_object_size :: The size of a glyph object in bytes.           */
+  /*                                                                       */
+  /*    init_face        :: The format-specific face constructor.          */
+  /*                                                                       */
+  /*    done_face        :: The format-specific face destructor.           */
+  /*                                                                       */
+  /*    init_size        :: The format-specific size constructor.          */
+  /*                                                                       */
+  /*    done_size        :: The format-specific size destructor.           */
+  /*                                                                       */
+  /*    init_slot        :: The format-specific slot constructor.          */
+  /*                                                                       */
+  /*    done_slot        :: The format-specific slot destructor.           */
+  /*                                                                       */
+  /*    set_char_sizes   :: A handle to a function used to set the new     */
+  /*                        character size in points + resolution.  Can be */
+  /*                        set to 0 to indicate default behaviour.        */
+  /*                                                                       */
+  /*    set_pixel_sizes  :: A handle to a function used to set the new     */
+  /*                        character size in pixels.  Can be set to 0 to  */
+  /*                        indicate default behaviour.                    */
+  /*                                                                       */
+  /*    load_glyph       :: A function handle to load a given glyph image  */
+  /*                        in a slot.  This field is mandatory!           */
+  /*                                                                       */
+  /*    get_char_index   :: A function handle to return the glyph index of */
+  /*                        a given character for a given charmap.  This   */
+  /*                        field is mandatory!                            */
+  /*                                                                       */
+  /*    get_kerning      :: A function handle to return the unscaled       */
+  /*                        kerning for a given pair of glyphs.  Can be    */
+  /*                        set to 0 if the format doesn't support         */
+  /*                        kerning.                                       */
+  /*                                                                       */
+  /*    attach_file      :: This function handle is used to read           */
+  /*                        additional data for a face from another        */
+  /*                        file/stream.  For example, this can be used to */
+  /*                        add data from AFM or PFM files on a Type 1     */
+  /*                        face, or a CIDMap on a CID-keyed face.         */
+  /*                                                                       */
+  /*    get_advances     :: A function handle used to return the advances  */
+  /*                        of 'count' glyphs, starting at `index'.  the   */
+  /*                        `vertical' flags must be set when vertical     */
+  /*                        advances are queried.  The advances buffer is  */
+  /*                        caller-allocated.                              */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Most function pointers, with the exception of `load_glyph' and     */
+  /*    `get_char_index' can be set to 0 to indicate a default behaviour.  */
+  /*                                                                       */
   typedef struct  FT_Driver_Class_
   {
-    FT_Module_Class              root;
-    
-    FT_Int                       face_object_size;
-    FT_Int                       size_object_size;
-    FT_Int                       slot_object_size;
+    FT_Module_Class         root;
 
-    FTDriver_initFace            init_face;
-    FTDriver_doneFace            done_face;
-    
-    FTDriver_initSize            init_size;
-    FTDriver_doneSize            done_size;
+    FT_Int                  face_object_size;
+    FT_Int                  size_object_size;
+    FT_Int                  slot_object_size;
 
-    FTDriver_initGlyphSlot       init_slot;
-    FTDriver_doneGlyphSlot       done_slot;
+    FTDriver_initFace       init_face;
+    FTDriver_doneFace       done_face;
 
-    FTDriver_setCharSizes        set_char_sizes;
-    FTDriver_setPixelSizes       set_pixel_sizes;
+    FTDriver_initSize       init_size;
+    FTDriver_doneSize       done_size;
 
-    FTDriver_loadGlyph           load_glyph;
-    FTDriver_getCharIndex        get_char_index;
+    FTDriver_initGlyphSlot  init_slot;
+    FTDriver_doneGlyphSlot  done_slot;
 
-    FTDriver_getKerning          get_kerning;
-    FTDriver_attachFile          attach_file;
+    FTDriver_setCharSizes   set_char_sizes;
+    FTDriver_setPixelSizes  set_pixel_sizes;
 
-    FTDriver_getAdvances         get_advances;
+    FTDriver_loadGlyph      load_glyph;
+    FTDriver_getCharIndex   get_char_index;
+
+    FTDriver_getKerning     get_kerning;
+    FTDriver_attachFile     attach_file;
+
+    FTDriver_getAdvances    get_advances;
 
   } FT_Driver_Class;
 

@@ -7,13 +7,14 @@
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -33,20 +34,20 @@
 #endif
 
 
-  FT_EXPORT_DEF(FT_ListNode)  FT_List_Find( FT_List  list,
-                                            void*    data );
+  FT_EXPORT_DEF( FT_ListNode )  FT_List_Find( FT_List  list,
+                                              void*    data );
 
-  FT_EXPORT_DEF(void)  FT_List_Add( FT_List      list,
-                                    FT_ListNode  node );
+  FT_EXPORT_DEF( void )  FT_List_Add( FT_List      list,
+                                      FT_ListNode  node );
 
-  FT_EXPORT_DEF(void)  FT_List_Insert( FT_List      list,
-                                       FT_ListNode  node );
+  FT_EXPORT_DEF( void )  FT_List_Insert( FT_List      list,
+                                         FT_ListNode  node );
 
-  FT_EXPORT_DEF(void)  FT_List_Remove( FT_List      list,
-                                       FT_ListNode  node );
+  FT_EXPORT_DEF( void )  FT_List_Remove( FT_List      list,
+                                         FT_ListNode  node );
 
-  FT_EXPORT_DEF(void)  FT_List_Up( FT_List      list,
-                                   FT_ListNode  node );
+  FT_EXPORT_DEF( void )  FT_List_Up( FT_List      list,
+                                     FT_ListNode  node );
 
 
   /*************************************************************************/
@@ -60,6 +61,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    node :: The current iteration list node.                           */
+  /*                                                                       */
   /*    user :: A typeless pointer passed to FT_List_Iterate().            */
   /*            Can be used to point to the iteration's state.             */
   /*                                                                       */
@@ -67,9 +69,9 @@
                                          void*        user );
 
 
-  FT_EXPORT_DEF(FT_Error)  FT_List_Iterate( FT_List           list,
-                                            FT_List_Iterator  iterator,
-                                            void*             user );
+  FT_EXPORT_DEF( FT_Error )  FT_List_Iterate( FT_List           list,
+                                              FT_List_Iterator  iterator,
+                                              void*             user );
 
 
   /*************************************************************************/
@@ -84,7 +86,9 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    system :: The current system object.                               */
+  /*                                                                       */
   /*    data   :: The current object to destroy.                           */
+  /*                                                                       */
   /*    user   :: A typeless pointer passed to FT_List_Iterate().  It can  */
   /*              be used to point to the iteration's state.               */
   /*                                                                       */
@@ -93,10 +97,10 @@
                                        void*      user );
 
 
-  FT_EXPORT_DEF(void)  FT_List_Finalize( FT_List             list,
-                                         FT_List_Destructor  destroy,
-                                         FT_Memory           memory,
-                                         void*               user );
+  FT_EXPORT_DEF( void )  FT_List_Finalize( FT_List             list,
+                                           FT_List_Destructor  destroy,
+                                           FT_Memory           memory,
+                                           void*               user );
 
 
 #ifdef __cplusplus

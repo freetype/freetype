@@ -2,21 +2,23 @@
 /*                                                                         */
 /*  ftextend.h                                                             */
 /*                                                                         */
-/*  FreeType extensions implementation (specification).                    */
+/*    FreeType extensions implementation (specification).                  */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
-/*  This file is part of the FreeType project, and may only be used        */
-/*  modified and distributed under the terms of the FreeType project       */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
 
+
 #ifndef FTEXTEND_H
 #define FTEXTEND_H
+
 
 #include <freetype/internal/ftobjs.h>
 
@@ -25,12 +27,14 @@
   extern "C" {
 #endif
 
+
   /*************************************************************************/
   /*                                                                       */
   /* The extensions don't need to be integrated at compile time into the   */
   /* engine, only at link time.                                            */
   /*                                                                       */
   /*************************************************************************/
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -44,6 +48,7 @@
   /*                                                                       */
   /* <InOut>                                                               */
   /*    ext  :: A typeless pointer to the extension data.                  */
+  /*                                                                       */
   /*    face :: A handle to the source face object the extension is        */
   /*            associated with.                                           */
   /*                                                                       */
@@ -55,8 +60,8 @@
   /*    data, as the finalizer will get called later by the function's     */
   /*    caller.                                                            */
   /*                                                                       */
-  typedef FT_Error (*FT_Extension_Initializer)( void*    ext,
-                                                FT_Face  face );
+  typedef FT_Error  (*FT_Extension_Initializer)( void*    ext,
+                                                 FT_Face  face );
 
 
   /*************************************************************************/
@@ -72,6 +77,7 @@
   /*                                                                       */
   /* <InOut>                                                               */
   /*   ext  :: A typeless pointer to the extension data.                   */
+  /*                                                                       */
   /*   face :: A handle to the source face object the extension is         */
   /*           associated with.                                            */
   /*                                                                       */
@@ -93,10 +99,14 @@
   /*    id        :: The extension's ID.  This is a normal C string that   */
   /*                 is used to uniquely reference the extension's         */
   /*                 interface.                                            */
+  /*                                                                       */
   /*    size      :: The size in bytes of the extension data that must be  */
   /*                 associated with each face object.                     */
+  /*                                                                       */
   /*    init      :: A pointer to the extension data's initializer.        */
+  /*                                                                       */
   /*    finalize  :: A pointer to the extension data's finalizer.          */
+  /*                                                                       */
   /*    interface :: This pointer can be anything, but should usually      */
   /*                 point to a table of function pointers which implement */
   /*                 the extension's interface.                            */
@@ -120,8 +130,9 @@
   } FT_Extension_Class;
 
 
-  FT_EXPORT_DEF(FT_Error)  FT_Register_Extension( FT_Driver            driver,
-                                                  FT_Extension_Class*  clazz );
+  FT_EXPORT_DEF( FT_Error )  FT_Register_Extension(
+                               FT_Driver            driver,
+                               FT_Extension_Class*  clazz );
 
 
 #ifdef FT_CONFIG_OPTION_EXTEND_ENGINE
@@ -149,10 +160,12 @@
 #endif
 
 
-  /* Returns an extension's data & interface according to its ID */
-  FT_EXPORT_DEF(void*)     FT_Get_Extension( FT_Face      face,
-                                             const char*  extension_id,
-                                             void*       *extension_interface );
+  /* return an extension's data & interface according to its ID */
+  FT_EXPORT_DEF( void* )  FT_Get_Extension(
+                            FT_Face      face,
+                            const char*  extension_id,
+                            void**       extension_interface );
+
 
 #ifdef __cplusplus
   }

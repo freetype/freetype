@@ -454,10 +454,10 @@
       {
         size->font = cur;
         
-        size->root.metrics.ascender  = cur->header.ascent*64;
-        size->root.metrics.descender =(cur->header.pixel_height -
-                                       cur->header.ascent)*64;
-        size->root.metrics.height    = cur->header.pixel_height*64;
+        size->root.metrics.ascender  = cur->header.ascent * 64;
+        size->root.metrics.descender = ( cur->header.pixel_height -
+                                           cur->header.ascent ) * 64;
+        size->root.metrics.height    = cur->header.pixel_height * 64;
         break;
       }
     }
