@@ -215,9 +215,14 @@ FT_BEGIN_HEADER
   *  in a source outline
   */
   FT_LOCAL( FT_Error )
-  af_glyph_hints_reset( AF_GlyphHints  hints,
-                        AF_Scaler      scaler,
-                        FT_Outline*    outline );
+  af_glyph_hints_reset( AF_GlyphHints     hints,
+                        AF_Scaler         scaler,
+                        AF_ScriptMetrics  metrics,
+                        FT_Outline*       outline );
+
+  FT_LOCAL( void )
+  af_glyph_hints_save( AF_GlyphHints   hints,
+                       FT_Outline*     outline );
 
   FT_LOCAL( void )
   af_glyph_hints_align_edge_points( AF_GlyphHints  hints,
