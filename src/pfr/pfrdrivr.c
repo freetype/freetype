@@ -62,12 +62,12 @@
   static FT_Error
   pfr_get_advance( PFR_Face  face,
                    FT_UInt   gindex,
-                   FT_Pos   *anadvance )
+                   FT_Pos   *aadvance )
   {
     FT_Error  error = PFR_Err_Bad_Argument;
 
 
-    *anadvance = 0;
+    *aadvance = 0;
     if ( face )
     {
       PFR_PhyFont  phys = &face->phy_font;
@@ -75,7 +75,7 @@
 
       if ( gindex < phys->num_chars )
       {
-        *anadvance = phys->chars[gindex].advance;
+        *aadvance = phys->chars[gindex].advance;
         error = 0;
       }
     }
@@ -86,7 +86,7 @@
 
   static FT_Error
   pfr_get_metrics( PFR_Face   face,
-                   FT_UInt   *anoutline_resolution,
+                   FT_UInt   *aoutline_resolution,
                    FT_UInt   *ametrics_resolution,
                    FT_Fixed  *ametrics_x_scale,
                    FT_Fixed  *ametrics_y_scale )
@@ -96,8 +96,8 @@
     FT_Size      size = face->root.size;
 
 
-    if ( anoutline_resolution )
-      *anoutline_resolution = phys->outline_resolution;
+    if ( aoutline_resolution )
+      *aoutline_resolution = phys->outline_resolution;
 
     if ( ametrics_resolution )
       *ametrics_resolution = phys->metrics_resolution;
@@ -107,8 +107,11 @@
 
     if ( size )
     {
-      x_scale = size->metrics.x_scale;
-      y_scale = size->metrics.y_scale;
+      x_scale = FT_DivFix( size->metrics.x_ppem << 6,
+                           phys->metrics_resolution );
+
+      y_scale = FT_DivFix( size->metrics.y_ppem << 6,
+                           phys->metrics_resolution );
     }
 
     if ( ametrics_x_scale )
