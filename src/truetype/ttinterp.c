@@ -1278,21 +1278,21 @@
   /*************************************************************************/
 
 
-  static
+  LOCAL_FUNC_X
   FT_F26Dot6  Read_CVT( EXEC_OP_ FT_ULong  index )
   {
     return CUR.cvt[index];
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_F26Dot6  Read_CVT_Stretched( EXEC_OP_ FT_ULong  index )
   {
     return TT_MULFIX( CUR.cvt[index], CURRENT_Ratio() );
   }
 
 
-  static
+  LOCAL_FUNC_X
   void  Write_CVT( EXEC_OP_ FT_ULong    index,
                             FT_F26Dot6  value )
   {
@@ -1300,7 +1300,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   void  Write_CVT_Stretched( EXEC_OP_ FT_ULong    index,
                                       FT_F26Dot6  value )
   {
@@ -1308,7 +1308,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   void  Move_CVT( EXEC_OP_ FT_ULong    index,
                            FT_F26Dot6  value )
   {
@@ -1316,7 +1316,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   void  Move_CVT_Stretched( EXEC_OP_ FT_ULong    index,
                                      FT_F26Dot6  value )
   {
