@@ -1,3 +1,8 @@
+2003-02-28  Pixel  <pixel@mandrakesoft.com>
+
+    * src/gzip/ftgzip.c (ft_gzip_file_done): fixed memory leak, the ZLib
+    stream was not properly finalized
+
 2003-02-25  Anthony Fok  <anthony@thizlinux.com>
 
     * src/cache/ftccmap.c: the cmap cache now supports UCS-4 charmaps

@@ -276,6 +276,8 @@
   {
     z_stream*  zstream = &zip->zstream;
 
+    inflateEnd( zstream );
+
     /* clear the rest */
     zstream->zalloc    = NULL;
     zstream->zfree     = NULL;
