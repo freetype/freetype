@@ -14,9 +14,6 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 #
-# NOTE: This version requires that GNU Make is invoked from the Windows
-#       Shell (_not_ Cygwin BASH)!
-#
 
 ifndef TOP
   TOP := .
@@ -25,8 +22,8 @@ endif
 DELETE   := rm -f
 SEP      := /
 HOSTSEP  := $(SEP)
-BUILD    := $(TOP)/builds/unix/devel
-PLATFORM := unixdev  # do not set it to "unix", or libtool will trick you..
+BUILD    := $(TOP)/builds/unix/devel # we use a special devel ftoption.h
+PLATFORM := unixdev  # do not set it to `unix', or libtool will trick you
 CC       := gcc
 
 # The directory where all object files are placed.

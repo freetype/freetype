@@ -36,10 +36,10 @@
   /*************************************************************************/
 
   LOCAL_DEF
-  const PS_Table_Funcs    ps_table_funcs;
+  const PS_Table_Funcs  ps_table_funcs;
 
   LOCAL_DEF
-  const T1_Parser_Funcs   t1_parser_funcs;
+  const T1_Parser_Funcs  t1_parser_funcs;
   
   LOCAL_DEF
   const T1_Builder_Funcs  t1_builder_funcs;
@@ -56,11 +56,11 @@
                           FT_Int     length );
 
   LOCAL_DEF
-  void      PS_Table_Done( PS_Table*  table );
+  void  PS_Table_Done( PS_Table*  table );
 
 
   LOCAL_DEF
-  void      PS_Table_Release( PS_Table*  table );
+  void  PS_Table_Release( PS_Table*  table );
 
 
   /*************************************************************************/
@@ -124,13 +124,13 @@
 
 
   LOCAL_DEF
-  void      T1_Init_Parser( T1_Parser*  parser,
-                            FT_Byte*    base,
-                            FT_Byte*    limit,
-                            FT_Memory   memory );
+  void  T1_Init_Parser( T1_Parser*  parser,
+                        FT_Byte*    base,
+                        FT_Byte*    limit,
+                        FT_Memory   memory );
 
   LOCAL_DEF
-  void      T1_Done_Parser( T1_Parser*  parser );
+  void  T1_Done_Parser( T1_Parser*  parser );
 
 
   /*************************************************************************/

@@ -354,10 +354,11 @@
 
   /*************************************************************************/
   /*                                                                       */
-  /* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity.        */
-  /* A minimum of 16 is required..                                         */
+  /* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity.  A     */
+  /* minimum of 16 is required.                                            */
   /*                                                                       */
 #define T1_MAX_CHARSTRINGS_OPERANDS  32
+
 
   /*************************************************************************/
   /*                                                                       */

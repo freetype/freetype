@@ -81,7 +81,7 @@
 #define IS_Z1_SPACE( c )  ( IS_Z1_WHITESPACE( c ) || IS_Z1_LINESPACE( c ) )
 
 
-  typedef struct PFB_Tag_
+  typedef struct  PFB_Tag_
   {
     FT_UShort  tag;
     FT_Long    size;
@@ -92,10 +92,11 @@
 #undef  FT_STRUCTURE
 #define FT_STRUCTURE  PFB_Tag
 
+
   static
   const FT_Frame_Field  pfb_tag_fields[] =
   {
-    FT_FRAME_START(6),
+    FT_FRAME_START( 6 ),
       FT_FRAME_USHORT ( tag ),
       FT_FRAME_LONG_LE( size ),
     FT_FRAME_END
@@ -109,6 +110,7 @@
   {
     FT_Error  error;
     PFB_Tag   head;
+
 
     *tag  = 0;
     *size = 0;
@@ -130,9 +132,10 @@
                            FT_Memory         memory,
                            PSAux_Interface*  psaux )
   {
-    FT_Error  error;
-    FT_UShort tag;
-    FT_Long   size;
+    FT_Error   error;
+    FT_UShort  tag;
+    FT_Long    size;
+
 
     psaux->t1_parser_funcs->init( &parser->root,0, 0, memory );
 
@@ -253,7 +256,7 @@
   static
   int  hexa_value( char  c )
   {
-   unsigned int  d;
+    unsigned int  d;
 
 
     d = (unsigned int)( c - '0' );

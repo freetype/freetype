@@ -84,7 +84,7 @@
     trace_t1load,
     trace_t1objs,
 
-    /* Postcript helper module 'psaux' */
+    /* PostScript helper module `psaux' */
     trace_t1decode,
     trace_psobjs,
 

@@ -46,7 +46,6 @@
 #define FT_COMPONENT  trace_z1gload
 
 
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -68,13 +67,16 @@
   FT_Error  Z1_Parse_Glyph( T1_Decoder*  decoder,
                             FT_UInt      glyph_index )
   {
-    T1_Face  face  = (T1_Face)decoder->builder.face;
-    T1_Font* type1 = &face->type1;
+    T1_Face   face  = (T1_Face)decoder->builder.face;
+    T1_Font*  type1 = &face->type1;
     
-    return decoder->funcs.parse_charstrings( decoder,
-                                        type1->charstrings    [glyph_index],
-                                        type1->charstrings_len[glyph_index] );
+
+    return decoder->funcs.parse_charstrings(
+                      decoder,
+                      type1->charstrings    [glyph_index],
+                      type1->charstrings_len[glyph_index] );
   }
+
 
   LOCAL_FUNC
   FT_Error  Z1_Compute_Max_Advance( T1_Face  face,
@@ -89,7 +91,7 @@
 
     *max_advance = 0;
 
-    /* Initialize load decoder */
+    /* initialize load decoder */
     error = psaux->t1_decoder_funcs->init( &decoder,
                                            (FT_Face)face,
                                            0, /* size       */
@@ -172,10 +174,10 @@
                                  (FT_Byte**)type1->glyph_names,
                                  face->blend,
                                  Z1_Parse_Glyph );
-    if (error)
+    if ( error )
       goto Exit;
                       
-    decoder.builder.no_recurse = ( load_flags & FT_LOAD_NO_RECURSE ) != 0;
+    decoder.builder.no_recurse = ( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
 
     decoder.num_subrs = type1->num_subrs;
     decoder.subrs     = type1->subrs;
@@ -184,7 +186,7 @@
 
     /* now load the unscaled outline */
     error = Z1_Parse_Glyph( &decoder, glyph_index );
-    if (error)
+    if ( error )
       goto Exit;
 
     /* save new glyph tables */
@@ -207,8 +209,8 @@
       }
       else
       {
-        FT_BBox           cbox;
-        FT_Glyph_Metrics* metrics = &glyph->root.metrics;
+        FT_BBox            cbox;
+        FT_Glyph_Metrics*  metrics = &glyph->root.metrics;
 
 
         /* copy the _unscaled_ advance width */
@@ -233,9 +235,11 @@
                               face->type1.font_offset.y );
 
 #if 0
+
         glyph->root.outline.second_pass    = TRUE;
         glyph->root.outline.high_precision = size->root.metrics.y_ppem < 24;
         glyph->root.outline.dropout_mode   = 2;
+
 #endif /* 0 */
 
         if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
@@ -284,6 +288,7 @@
         metrics->horiBearingY = cbox.yMax;
       }
     }
+
   Exit:
     return error;
   }

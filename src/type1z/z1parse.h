@@ -37,9 +37,9 @@
   /*    quickly.                                                           */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    stream       :: The current input stream.                          */
+  /*    root         :: The root parser.                                   */
   /*                                                                       */
-  /*    memory       :: The current memory object.                         */
+  /*    stream       :: The current input stream.                          */
   /*                                                                       */
   /*    base_dict    :: A pointer to the top-level dictionary.             */
   /*                                                                       */
@@ -56,13 +56,6 @@
   /*                                                                       */
   /*    single_block :: A boolean.  Indicates that the private dictionary  */
   /*                    is stored in lieu of the base dictionary.          */
-  /*                                                                       */
-  /*    cursor       :: The current parser cursor.                         */
-  /*                                                                       */
-  /*    limit        :: The current parser limit (first byte after the     */
-  /*                    current dictionary).                               */
-  /*                                                                       */
-  /*    error        :: The current parsing error.                         */
   /*                                                                       */
   typedef struct  Z1_Parser_
   {
@@ -82,24 +75,41 @@
   } Z1_Parser;
 
 
-#define Z1_Add_Table(p,i,o,l)     (p)->funcs.add( (p), i, o, l )
-#define Z1_Done_Table(p)          do { if ((p)->funcs.done) (p)->funcs.done( p ); } while (0)
-#define Z1_Release_Table(p)       do { if ((p)->funcs.release) (p)->funcs.release( p ); } while (0)
+#define Z1_Add_Table( p, i, o, l )  (p)->funcs.add( (p), i, o, l )
+#define Z1_Done_Table( p )          \
+          do                        \
+          {                         \
+            if ( (p)->funcs.done )  \
+              (p)->funcs.done( p ); \
+          } while ( 0 )
+#define Z1_Release_Table( p )          \
+          do                           \
+          {                            \
+            if ( (p)->funcs.release )  \
+              (p)->funcs.release( p ); \
+          } while ( 0 )
 
 
-#define Z1_Skip_Spaces(p)   (p)->root.funcs.skip_spaces( &(p)->root )
-#define Z1_Skip_Alpha(p)    (p)->root.funcs.skip_alpha ( &(p)->root )
+#define Z1_Skip_Spaces( p )  (p)->root.funcs.skip_spaces( &(p)->root )
+#define Z1_Skip_Alpha( p )   (p)->root.funcs.skip_alpha ( &(p)->root )
 
-#define Z1_ToInt(p)        (p)->root.funcs.to_int( &(p)->root )
-#define Z1_ToFixed(p,t)    (p)->root.funcs.to_fixed( &(p)->root, t )
+#define Z1_ToInt( p )       (p)->root.funcs.to_int( &(p)->root )
+#define Z1_ToFixed( p, t )  (p)->root.funcs.to_fixed( &(p)->root, t )
 
-#define Z1_ToCoordArray(p,m,c)     (p)->root.funcs.to_coord_array( &(p)->root, m, c )
-#define Z1_ToFixedArray(p,m,f,t)   (p)->root.funcs.to_fixed_array( &(p)->root, m, f, t )
-#define Z1_ToToken(p,t)            (p)->root.funcs.to_token( &(p)->root, t )
-#define Z1_ToTokenArray(p,t,m,c)   (p)->root.funcs.to_token_array( &(p)->root, t, m, c )
+#define Z1_ToCoordArray( p, m, c )    \
+          (p)->root.funcs.to_coord_array( &(p)->root, m, c )
+#define Z1_ToFixedArray( p, m, f, t ) \
+          (p)->root.funcs.to_fixed_array( &(p)->root, m, f, t )
+#define Z1_ToToken( p, t )            \
+          (p)->root.funcs.to_token( &(p)->root, t )
+#define Z1_ToTokenArray( p, t, m, c ) \
+          (p)->root.funcs.to_token_array( &(p)->root, t, m, c )
 
-#define Z1_Load_Field(p,f,o,m,pf)        (p)->root.funcs.load_field( &(p)->root, f, o, m, pf )
-#define Z1_Load_Field_Table(p,f,o,m,pf)  (p)->root.funcs.load_field_table( &(p)->root, f, o, m, pf )
+#define Z1_Load_Field( p, f, o, m, pf )       \
+          (p)->root.funcs.load_field( &(p)->root, f, o, m, pf )
+#define Z1_Load_Field_Table( p, f, o, m, pf ) \
+          (p)->root.funcs.load_field_table( &(p)->root, f, o, m, pf )
+
 
   LOCAL_DEF
   FT_Error  Z1_New_Parser( Z1_Parser*        parser,
@@ -118,9 +128,11 @@
   LOCAL_DEF
   void  Z1_Done_Parser( Z1_Parser*  parser );
 
+
 #ifdef __cplusplus
   }
 #endif
+
 
 #endif /* Z1PARSE_H */
 

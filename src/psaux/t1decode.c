@@ -1,7 +1,26 @@
+/***************************************************************************/
+/*                                                                         */
+/*  t1decode.c                                                             */
+/*                                                                         */
+/*    PostScript Type 1 decoding routines (body).                          */
+/*                                                                         */
+/*  Copyright 2000 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include <psaux/t1decode.h>
 #include <psaux/psobjs.h>
 #include <freetype/internal/t1errors.h>
 #include <freetype/ftoutln.h>
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -81,11 +100,11 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    lookup_glyph_by_stdcharcode                                        */
+  /*    t1_lookup_glyph_by_stdcharcode                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Looks up a given glyph by its StandardEncoding charcode.  Used     */
-  /*    to implement the SEAC Type 1 operator.                             */
+  /*    Looks up a given glyph by its StandardEncoding charcode.  Used to  */
+  /*    implement the SEAC Type 1 operator.                                */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face     :: The current face object.                               */
@@ -254,13 +273,13 @@
 
       dummy.n_points = base->n_points - n_base_points;
       dummy.points   = base->points   + n_base_points;
+
       FT_Outline_Translate( &dummy, adx - asb, ady );
     }
 
   Exit:
     return error;
   }
-
 
 
   /*************************************************************************/
@@ -279,7 +298,7 @@
   /*    charstring_len  :: The length in bytes of the charstring stream.   */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Free error code.  0 means success.                                 */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
   FT_Error  T1_Decoder_Parse_Charstrings( T1_Decoder*  decoder,
@@ -294,13 +313,14 @@
     FT_Outline*       outline;
     FT_Pos            x, y;
 
+
     /* we don't want to touch the source code -- use macro trick */
-#define  start_point   T1_Builder_Start_Point
-#define  check_points  T1_Builder_Check_Points
-#define  add_point     T1_Builder_Add_Point
-#define  add_point1    T1_Builder_Add_Point1
-#define  add_contour   T1_Builder_Add_Contour
-#define  close_contour T1_Builder_Close_Contour
+#define start_point    T1_Builder_Start_Point
+#define check_points   T1_Builder_Check_Points
+#define add_point      T1_Builder_Add_Point
+#define add_point1     T1_Builder_Add_Point1
+#define add_contour    T1_Builder_Add_Contour
+#define close_contour  T1_Builder_Close_Contour
 
     /* First of all, initialize the decoder */
     decoder->top  = decoder->stack;
@@ -897,7 +917,7 @@
         case op_pop:
           FT_TRACE4(( " pop" ));
 
-          /* theorically, the arguments are already on the stack */
+          /* theoretically, the arguments are already on the stack */
           top++;
           break;
 
@@ -990,17 +1010,19 @@
                              T1_Blend*            blend,
                              T1_Decoder_Callback  parse_callback )
   {
-    MEM_Set( decoder, 0, sizeof(*decoder) );
+    MEM_Set( decoder, 0, sizeof ( *decoder ) );
     
     /* retrieve PSNames interface from list of current modules */
     {
       PSNames_Interface*  psnames = 0;
       
+
       psnames = (PSNames_Interface*)FT_Get_Module_Interface(
                    FT_FACE_LIBRARY(face), "psnames" );
-      if (!psnames)
+      if ( !psnames )
       {
-        FT_ERROR(( "T1_Decoder_Init: the 'psnames' module is not available\n" ));
+        FT_ERROR(( "T1_Decoder_Init: " ));
+        FT_ERROR(( "the `psnames' module is not available\n" ));
         return FT_Err_Unimplemented_Feature;
       }
       
@@ -1014,6 +1036,7 @@
     decoder->parse_callback = parse_callback;
     
     decoder->funcs       = t1_decoder_funcs;
+
     return 0;
   }
 
@@ -1024,3 +1047,5 @@
     T1_Builder_Done( &decoder->builder );
   }
 
+
+/* END */

@@ -45,7 +45,7 @@
   /*    PS_Table_New                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initialises a PS_Table.                                            */
+  /*    Initializes a PS_Table.                                            */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    table  :: The address of the target table.                         */
@@ -1137,7 +1137,8 @@
       FT_Vector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
-      if (builder->shift)
+
+      if ( builder->shift )
       {
         x >>= 16;
         y >>= 16;

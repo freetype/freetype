@@ -36,7 +36,6 @@
 #endif
 
 
-
   LOCAL_DEF
   FT_Error  Z1_Compute_Max_Advance( T1_Face  face,
                                     FT_Int*  max_advance );

@@ -793,7 +793,7 @@
 
     /* prepare dummy slot for rendering */
     error = clazz->glyph_prepare( glyph, &dummy );
-    if (!error)
+    if ( !error )
       error = FT_Render_Glyph_Internal( glyph->library, &dummy, render_mode );
 
     if ( !destroy && origin )
@@ -857,11 +857,6 @@
       FREE( glyph );
     }
   }
-
-
-#if 1
-
-#endif /* 0 -- EXPERIMENTAL STUFF! */
 
 
 /* END */
