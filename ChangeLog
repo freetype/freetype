@@ -3,6 +3,10 @@
 	* builds/hurd/detect.mk: added support to detect the GNU Hurd operating
 	system as Unix-like. Fix submitted by Anthony Fok <foka@debian.org>
 
+	* src/type1/t1gload.c (T1_Load_Glyph): set glyph control data to the
+	the Type 1 glyph charstring. (used by conversion programs).
+	submitted by Ha Shao <hashao@chinese.com>
+
 2001-02-22  David Turner    <david.turner@freetype.org>
 
 	* src/base/ftgrays.c (grays_sweep): the function didn't exit
