@@ -42,6 +42,7 @@
 
 
 #include <ft2build.h>
+#include FT_FREETYPE_H
 #include FT_INTERNAL_DEBUG_H
 
 
@@ -185,7 +186,7 @@
 #else  /* !FT_DEBUG_LEVEL_TRACE */
 
   FT_BASE_DEF( void )
-  ft_debut_init( void )
+  ft_debug_init( void )
   {
     /* nothing */
   }
