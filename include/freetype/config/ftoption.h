@@ -20,6 +20,11 @@
 #define FTOPTION_H
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /*                 USER-SELECTABLE CONFIGURATION MACROS                  */
@@ -387,6 +392,11 @@
   /* driver.                                                               */
   /*                                                                       */
 #undef T1_CONFIG_OPTION_NO_MM_SUPPORT
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* FTOPTION_H */

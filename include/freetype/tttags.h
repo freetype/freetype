@@ -23,6 +23,11 @@
 #include <freetype/freetype.h>   /* for MAKE_TT_TAG() */
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
 #define TTAG_cmap  FT_MAKE_TAG( 'c', 'm', 'a', 'p' )
 #define TTAG_cvt   FT_MAKE_TAG( 'c', 'v', 't', ' ' )
 #define TTAG_CFF   FT_MAKE_TAG( 'C', 'F', 'F', ' ' )
@@ -59,6 +64,11 @@
 #define TTAG_VDMX  FT_MAKE_TAG( 'V', 'D', 'M', 'X' )
 #define TTAG_vhea  FT_MAKE_TAG( 'v', 'h', 'e', 'a' )
 #define TTAG_vmtx  FT_MAKE_TAG( 'v', 'm', 't', 'x' )
+
+#ifdef __cplusplus
+  }
+#endif
+
 
 #endif /* TTAGS_H */
 

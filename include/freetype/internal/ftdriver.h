@@ -24,6 +24,11 @@
 #include <freetype/config/ftconfig.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   typedef FT_Error  (*FTDriver_initFace)( FT_Stream      stream,
                                           FT_Face        face,
                                           FT_Int         typeface_index,
@@ -174,6 +179,11 @@
     FTDriver_getAdvances    get_advances;
 
   } FT_Driver_Class;
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* FTDRIVER_H */

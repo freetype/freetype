@@ -24,6 +24,11 @@
 #include <freetype/freetype.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -212,6 +217,11 @@
     const unsigned short*      adobe_expert_encoding;
 
   } PSNames_Interface;
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* PSNAMES_H */

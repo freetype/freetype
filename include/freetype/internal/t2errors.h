@@ -20,6 +20,11 @@
 #define T2ERRORS_H
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* Error codes declaration                                               */
@@ -113,6 +118,11 @@
 #define T2_Err_Invalid_Vert_Metrics       0x543
 
 #define T2_Err_Could_Not_Find_Context     0x550
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* T2ERRORS_H */

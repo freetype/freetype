@@ -20,6 +20,11 @@
 #define TTERRORS_H
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* Error codes declaration                                               */
@@ -113,6 +118,11 @@
 #define TT_Err_Invalid_Vert_Metrics       0x443
 
 #define TT_Err_Could_Not_Find_Context     0x450
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* TTERRORS_H */

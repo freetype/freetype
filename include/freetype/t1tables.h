@@ -24,6 +24,11 @@
 #include <freetype/freetype.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /* Note that we separate font data in T1_FontInfo and T1_Private */
   /* structures in order to support Multiple Master fonts.         */
 
@@ -227,6 +232,11 @@
     FT_ULong       data_offset;
 
   } CID_Info;
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* T1TABLES_H */

@@ -20,6 +20,11 @@
 #define TTNAMEID_H
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* Possible values for the `platform' identifier code in the name        */
@@ -690,6 +695,11 @@
 
 
 #endif /* !HAVE_LIMIT_ON_IDENTS */
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* TTNAMEID_H */

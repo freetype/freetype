@@ -22,6 +22,11 @@
 #include <freetype/internal/ftdriver.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   typedef struct  WinMZ_Header_
   {
     FT_UShort  magic;
@@ -142,6 +147,11 @@
 
 
   FT_EXPORT_VAR( const FT_Driver_Class )  winfnt_driver_class;
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* WINFNT_H */

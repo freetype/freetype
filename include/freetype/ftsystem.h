@@ -20,6 +20,11 @@
 #define FTSYSTEM_H
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /*                  M E M O R Y   M A N A G E M E N T                    */
@@ -93,6 +98,11 @@
     unsigned char*   cursor;
     unsigned char*   limit;
   };
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* FTSYSTEM_H */

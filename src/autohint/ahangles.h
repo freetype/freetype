@@ -38,6 +38,11 @@
 #include <freetype/internal/ftobjs.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /* PI expressed in ah_angles -- we don't really need an important */
   /* precision, so 256 should be enough                             */
 #define AH_PI       256
@@ -55,6 +60,11 @@
 
   LOCAL_DEF
   AH_Angle  ah_angle( FT_Vector*  v );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* AHANGLES_H */

@@ -34,6 +34,11 @@
 #endif
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /* the maximal number of stem configurations to record */
   /* during optimization                                 */
 #define AH_MAX_CONFIGS  8
@@ -128,6 +133,11 @@
 
   /* release the optimization data */
   void AH_Optimizer_Done( AH_Optimizer*  optimizer );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* AHOPTIM_H */

@@ -24,6 +24,11 @@
 #include <freetype/fttypes.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -119,6 +124,11 @@
                         (_count_)*sizeof ( _type_ ) ) )
 
 #define FREE( _pointer_ )  FT_Free( memory, (void**)&(_pointer_) )
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* FTMEMORY_H */

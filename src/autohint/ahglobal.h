@@ -37,6 +37,11 @@
 #include <freetype/internal/ftobjs.h>  /* for LOCAL_DEF/LOCAL_FUNC */
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
 #define AH_IS_TOP_BLUE( b )  ( (b) == ah_blue_capital_top || \
                                (b) == ah_blue_small_top   )
 
@@ -44,6 +49,11 @@
   /* compute global metrics automatically */
   LOCAL_DEF
   FT_Error  ah_hinter_compute_globals( AH_Hinter*  hinter );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* AHGLOBAL_H */

@@ -73,6 +73,11 @@
 #include <freetype/freetype.h>
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   typedef struct FT_AutoHinterRec_  *FT_AutoHinter;
 
 
@@ -187,6 +192,11 @@
     FT_AutoHinter_Done_Global_Func  done_global_hints;
 
   } FT_AutoHinter_Interface;
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* AUTOHINT_H */

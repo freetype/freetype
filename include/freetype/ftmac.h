@@ -25,6 +25,11 @@
 #define FT_MAC_H
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -59,6 +64,11 @@
                                 Handle      fond,
                                 FT_Long     face_index,
                                 FT_Face*    aface );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* FT_MAC_H */

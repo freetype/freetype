@@ -34,6 +34,11 @@
 #endif
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   typedef enum  AH_UV_
   {
     ah_uv_fxy,
@@ -85,6 +90,11 @@
 
   LOCAL_DEF
   void  ah_outline_done( AH_Outline*  outline );
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* AHGLYPH_H */

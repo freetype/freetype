@@ -44,6 +44,11 @@
 #define FTERRORS_H
 
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
 #ifndef FT_ERRORDEF
 
 #define FT_ERRORDEF( e, v, s )  e = v,
@@ -158,6 +163,11 @@
 #undef FT_ERROR_START_LIST
 #undef FT_ERROR_END_LIST
 #undef FT_ERRORDEF
+
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* FTERRORS_H */

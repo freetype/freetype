@@ -21,7 +21,18 @@
 
 #include <freetype/ftmodule.h>
 
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
+
   FT_EXPORT_VAR( const FT_Module_Class )  psnames_module_class;
+
+#ifdef __cplusplus
+  }
+#endif
+
 
 #endif /* PSDRIVER_H */
 
