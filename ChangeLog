@@ -1,3 +1,7 @@
+2004-12-05  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/install.mk (install): Use $(OBJ_BUILD) for ftconfig.h.
+
 2004-12-03  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
 
 	* include/freetype/ttnameid.h: Updated to latest
