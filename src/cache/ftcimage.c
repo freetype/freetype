@@ -20,6 +20,7 @@
 #include <freetype/fterrors.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftlist.h>
+#include <freetype/fterrors.h>
 
  /**************************************************************************/
  /**************************************************************************/
@@ -123,8 +124,8 @@
 
 
   static
-  FT_Error  ftc_init_mono_image( FTC_Image_Queue  queue,
-                                 FTC_ImageNode    node )
+  FT_Error  ftc_init_glyph_image( FTC_Image_Queue  queue,
+                                  FTC_ImageNode    node )
   {  
     FT_Face   face;
     FT_Size   size;
@@ -136,20 +137,40 @@
     if ( !error )
     {
       FT_UInt  glyph_index = FTC_IMAGENODE_GET_GINDEX( node );
-
+      FT_UInt  load_flags  = FT_LOAD_DEFAULT;
+      FT_UInt  image_type  = queue->descriptor.image_type;
       
-      error = FT_Load_Glyph( face, glyph_index,
-                             FT_LOAD_RENDER | FT_LOAD_MONOCHROME );
+      if ( FTC_IMAGE_FORMAT(image_type) == ftc_image_format_bitmap )
+      {           
+        load_flags |= FT_LOAD_RENDER;           
+        if ( image_type & ftc_image_flag_monochrome )
+          load_flags |= FT_LOAD_MONOCHROME;
+          
+        /* disable embedded bitmaps loading if necessary */
+        if (load_flags & ftc_image_flag_no_sbits)
+          load_flags |= FT_LOAD_NO_BITMAP;
+      }
+      else if ( FTC_IMAGE_FORMAT(image_type) == ftc_image_format_outline )
+      {
+        /* disable embedded bitmaps loading */
+        load_flags |= FT_LOAD_NO_BITMAP;
+        
+        if (image_type & ftc_image_flag_unscaled)
+          load_flags |= FT_LOAD_NO_SCALE;
+      }
+          
+      if (image_type & ftc_image_flag_unhinted)
+        load_flags |= FT_LOAD_NO_HINTING;
+          
+      if (image_type & ftc_image_flag_autohinted)
+        load_flags |= FT_LOAD_FORCE_AUTOHINT;
+
+      error = FT_Load_Glyph( face, glyph_index, load_flags );
       if ( !error )
       {
-        if ( face->glyph->format            != ft_glyph_format_bitmap ||
-             face->glyph->bitmap.pixel_mode != ft_pixel_mode_mono     )
-        {
-          /* there is no monochrome glyph for this font! */
-          error = FT_Err_Invalid_Glyph_Index;
-        }
-        else
-        {
+        if ( face->glyph->format == ft_glyph_format_bitmap  ||
+             face->glyph->format == ft_glyph_format_outline )
+        {             
           /* ok, copy it */
           FT_Glyph  glyph;
           
@@ -158,91 +179,8 @@
           if ( !error )
             FTC_IMAGENODE_SET_GLYPH( node, glyph );
         }
-      }
-    }
-    return error;
-  }
-
-
-  static
-  FT_Error  ftc_init_gray_image( FTC_Image_Queue  queue,
-                                 FTC_ImageNode    node )
-  {  
-    FT_Face   face;
-    FT_Size   size;
-    FT_Error  error;
-    
-
-    error = FTC_Manager_Lookup_Size( queue->manager,
-                                     &queue->descriptor.size,
-                                     &face, &size );
-    if ( !error )
-    {
-      FT_UInt  glyph_index = FTC_IMAGENODE_GET_GINDEX( node );
-      
-
-      error = FT_Load_Glyph( face, glyph_index,
-                             FT_LOAD_RENDER );
-      if ( !error )
-      {
-        if ( face->glyph->format            != ft_glyph_format_bitmap ||
-             face->glyph->bitmap.pixel_mode != ft_pixel_mode_grays )
-        {
-          /* there is no anti-aliased glyph for this font! */
-          error = FT_Err_Invalid_Glyph_Index;
-        }
         else
-        {
-          /* ok, copy it */
-          FT_Glyph  glyph;
-          
-          
-          error = FT_Get_Glyph( face->glyph, &glyph );
-          if ( !error )
-            FTC_IMAGENODE_SET_GLYPH( node, glyph );
-        }
-      }
-    }
-    return error;
-  }
-
-
-  static
-  FT_Error  ftc_init_outline_image( FTC_Image_Queue  queue,
-                                    FTC_ImageNode    node )
-  {  
-    FT_Face   face;
-    FT_Size   size;
-    FT_Error  error;
-    
-
-    error = FTC_Manager_Lookup_Size( queue->manager,
-                                     &queue->descriptor.size,
-                                     &face, &size );
-    if ( !error )
-    {
-      FT_UInt  glyph_index = FTC_IMAGENODE_GET_GINDEX( node );
-      
-
-      error = FT_Load_Glyph( face, glyph_index,
-                             FT_LOAD_NO_BITMAP );
-      if ( !error )
-      {
-        if ( face->glyph->format != ft_glyph_format_outline )
-        {
-          /* there is no outline glyph for this font! */
-          error = FT_Err_Invalid_Glyph_Index;
-        }
-        else
-        {
-          /* ok, copy it */
-          FT_Glyph  glyph;
-          
-          
-          error = FT_Get_Glyph( face->glyph, &glyph );
-          if ( !error )
-            FTC_IMAGENODE_SET_GLYPH( node, glyph );
-        }
+          error = FT_Err_Invalid_Argument;
       }
     }
     return error;
@@ -250,60 +188,12 @@
 
 
 
-  static
-  FT_Error  ftc_init_master_outline_image( FTC_Image_Queue  queue,
-                                           FTC_ImageNode    node )
-  {  
-    FT_Face   face;
-    FT_Size   size;
-    FT_Error  error;
-    
-
-    error = FTC_Manager_Lookup_Size( queue->manager,
-                                     &queue->descriptor.size,
-                                     &face, &size );
-    if ( !error )
-    {
-      FT_UInt  glyph_index = FTC_IMAGENODE_GET_GINDEX( node );
-      
-
-      error = FT_Load_Glyph( face, glyph_index,
-                             FT_LOAD_NO_SCALE | FT_LOAD_NO_BITMAP );
-      if ( !error )
-      {
-        if ( face->glyph->format != ft_glyph_format_outline )
-        {
-          /* there is no outline glyph for this font! */
-          error = FT_Err_Invalid_Glyph_Index;
-        }
-        else
-        {
-          /* ok, copy it */
-          FT_Glyph  glyph;
-          
-          
-          error = FT_Get_Glyph( face->glyph, &glyph );
-          if ( !error )
-            FTC_IMAGENODE_SET_GLYPH( node, glyph );
-        }
-      }
-    }
-    return error;
-  }
 
 
   static
-  const FTC_Image_Class   ftc_mono_image_class =
+  const FTC_Image_Class   ftc_bitmap_image_class =
   {
-    ftc_init_mono_image,
-    ftc_done_glyph_image,
-    ftc_size_bitmap_image
-  };
-  
-  static
-  const FTC_Image_Class   ftc_gray_image_class =
-  {
-    ftc_init_gray_image,
+    ftc_init_glyph_image,
     ftc_done_glyph_image,
     ftc_size_bitmap_image
   };
@@ -311,19 +201,11 @@
   static
   const FTC_Image_Class   ftc_outline_image_class =
   {
-    ftc_init_outline_image,
+    ftc_init_glyph_image,
     ftc_done_glyph_image,
     ftc_size_outline_image
   };
   
-  static
-  const FTC_Image_Class   ftc_master_outline_image_class =
-  {
-    ftc_init_master_outline_image,
-    ftc_done_glyph_image,
-    ftc_size_outline_image
-  };
-
 
   static
   FT_Error  FTC_Image_Queue_New( FTC_Image_Cache   cache,
@@ -346,33 +228,25 @@
     queue->manager    = manager;
     queue->memory     = memory;
     queue->descriptor = *desc;
-    queue->hash_size  = 32;
+    queue->hash_size  = 64;
     
     if ( ALLOC_ARRAY( queue->buckets, queue->hash_size, FT_ListRec ) )
       goto Exit;
 
-    switch ( desc->image_type )
+    switch (FTC_IMAGE_FORMAT(desc->image_type))
     {
-    case ftc_image_mono:
-      clazz = &ftc_mono_image_class;
-      break;
+      case ftc_image_format_bitmap:
+        clazz = &ftc_bitmap_image_class;
+        break;
         
-    case ftc_image_grays:
-      clazz = &ftc_gray_image_class;
-      break;
+      case ftc_image_format_outline:
+        clazz = &ftc_outline_image_class;
+        break;
         
-    case ftc_image_outline:
-      clazz = &ftc_outline_image_class;
-      break;
-        
-    case ftc_image_master_outline:
-      clazz = &ftc_master_outline_image_class;
-      break;
-        
-    default:
-      /* invalid image type! */
-      error = FT_Err_Invalid_Argument;
-      goto Exit;
+      default:
+        /* invalid image type! */
+        error = FT_Err_Invalid_Argument;
+        goto Exit;
     }
 
     queue->clazz = (FTC_Image_Class*)clazz;
@@ -414,6 +288,9 @@
         queue->clazz->done_image( queue, inode );
         FT_List_Remove( glyphs_lru, lrunode );
         
+        cache->num_bytes -= queue->clazz->size_image(queue,inode) +
+                            sizeof(FTC_ImageNodeRec);
+        
         FTC_ImageNode_Done( cache, inode );
       }
       
@@ -433,25 +310,29 @@
     FTC_Image_Cache  cache      = queue->cache;
     FT_UInt          hash_index = glyph_index % queue->hash_size;
     FT_List          bucket     = queue->buckets + hash_index;
-    FT_ListNode      node, next = 0;
+    FT_ListNode      node;
     FT_Error         error;
     FTC_ImageNode    inode;
     
 
     *anode = 0;
-    for ( node = bucket->head; node; node = next )
+    for ( node = bucket->head; node; node = node->next )
     {
-      inode = (FTC_ImageNode)node;
+      FT_UInt  gindex;
       
-      if ( FTC_IMAGENODE_GET_GINDEX( inode ) == glyph_index )
+      inode  = (FTC_ImageNode)node;
+      gindex = FTC_IMAGENODE_GET_GINDEX(inode);
+      
+      if ( gindex == glyph_index )
       {
         /* we found it! -- move glyph to start of the list */
         FT_List_Up( bucket, node );
+        FT_List_Up( &cache->glyphs_lru, FTC_IMAGENODE_TO_LISTNODE( inode ) );
         *anode = inode;
         return 0;
       }
     }
-    
+
     /* we didn't found the glyph image, we will now create a new one */
     error = FTC_ImageNode_New( queue->cache, &inode );
     if ( error )
@@ -473,7 +354,8 @@
     /* insert the node at the start the global LRU glyph list */
     FT_List_Insert( &cache->glyphs_lru, FTC_IMAGENODE_TO_LISTNODE( inode ) );
     
-    cache->num_bytes += queue->clazz->size_image(queue,inode);
+    cache->num_bytes += queue->clazz->size_image(queue,inode) +
+                        sizeof(FTC_ImageNodeRec);
 
     *anode = inode;
 
@@ -570,7 +452,7 @@
   {
     while ( cache->num_bytes > cache->max_bytes )
     {
-      FT_ListNode      cur = cache->glyphs_lru.tail;
+      FT_ListNode      cur;
       FTC_Image_Queue  queue;
       FT_UInt          glyph_index;
       FT_UInt          hash_index;
@@ -583,6 +465,7 @@
       /* we reached the newly created node (which happens always at the */
       /* start of the list)                                             */
       
+      cur   = cache->glyphs_lru.tail;
       inode = FTC_LISTNODE_TO_IMAGENODE( cur );
       if ( !cur || inode == new_node )
         break;
@@ -592,7 +475,8 @@
       queue       = (FTC_Image_Queue)cache->queues_lru->
                       nodes[queue_index].root.data;
       hash_index  = glyph_index % queue->hash_size;
-      size        = queue->clazz->size_image( queue, inode );
+      size        = queue->clazz->size_image( queue, inode ) +
+                    sizeof(FTC_ImageNodeRec);
 
       FT_List_Remove( &cache->glyphs_lru, cur );
       FT_List_Remove( queue->buckets + hash_index, (FT_ListNode)inode );
@@ -601,8 +485,8 @@
       
       cache->num_bytes -= size;
     }
-  }                                    
-  
+  }
+
 
   FT_EXPORT_DEF( FT_Error )  FTC_Image_Cache_New( FTC_Manager       manager,
                                                   FT_ULong          max_bytes,
@@ -684,11 +568,11 @@
 
     *aglyph = 0;    
     queue   = cache->last_queue;
-    if ( !queue                                                     ||
-         queue->descriptor.size.face_id != desc->size.face_id       ||
-         queue->descriptor.size.pix_width != desc->size.pix_width   ||
-         queue->descriptor.size.pix_height != desc->size.pix_height ||
-         queue->descriptor.image_type != desc->image_type           )
+    if ( !queue                                                      ||
+          queue->descriptor.size.face_id    != desc->size.face_id    ||
+          queue->descriptor.size.pix_width  != desc->size.pix_width  ||
+          queue->descriptor.size.pix_height != desc->size.pix_height ||
+          queue->descriptor.image_type      != desc->image_type      )
     {
       error = FT_Lru_Lookup( cache->queues_lru,
                              (FT_LruKey)desc,
@@ -702,7 +586,9 @@
     if ( error )
       goto Exit;
 
-    FTC_Image_Cache_Compress( cache, inode );
+    if (cache->num_bytes > cache->max_bytes)
+      FTC_Image_Cache_Compress( cache, inode );
+
     *aglyph = FTC_IMAGENODE_GET_GLYPH( inode );
 
   Exit:
