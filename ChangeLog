@@ -1,3 +1,20 @@
+2002-09-19  Wolfgang Domröse  <porthos.domroese@harz.de>
+
+	More 16bit fixes.
+
+	* src/autohint/ahglobal.c (sort_values): Use FT_Pos for `swap'.
+	(ah_hinter_compute_widths): Use FT_Pos for `dist'.
+	Use AH_MAX_WIDTHS.
+	* src/autohint/ahglyph.c (ah_outline_scale_blue_edges): Use FT_Pos
+	for `delta'.
+	(ah_outline_compute_edges): Replace some ints with FT_Int and
+	FT_Pos.
+	(ah_test_extrema): Clean up code.
+	(ah_get_orientation): Use 4 FT_Int variables instead of FT_BBox to
+	hold indices.
+	* src/autohint/ahtypes.h (AH_SegmentRec): Change type of `score'
+	to FT_Pos.
+
 2002-09-19  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/config.guess, builds/unix/config.sub: Updated to

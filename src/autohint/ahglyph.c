@@ -164,13 +164,14 @@
 
   /* this function is used by ah_get_orientation (see below) to test */
   /* the fill direction of a given bbox extrema                      */
-  static int
+  static FT_Int
   ah_test_extrema( FT_Outline*  outline,
-                   int          n )
+                   FT_Int       n )
   {
     FT_Vector  *prev, *cur, *next;
     FT_Pos      product;
     FT_Int      first, last, c;
+    FT_Int      retval;
 
 
     /* we need to compute the `previous' and `next' point */
@@ -201,10 +202,11 @@
                          next->x - cur->x,   /* out.x */
                          0x40 );
 
+    retval = 0;
     if ( product )
-      product = product > 0 ? 2 : 1;
+      retval = product > 0 ? 2 : 1;
 
-    return product;
+    return retval;
   }
 
 
@@ -218,18 +220,18 @@
   /*                                                                       */
   /* The function returns either 1 or -1.                                  */
   /*                                                                       */
-  static int
+  static FT_Int
   ah_get_orientation( FT_Outline*  outline )
   {
     FT_BBox  box;
-    FT_BBox  indices;
-    int      n, last;
+    FT_Int   indices_xMin, indices_yMin, indices_xMax, indices_yMax;
+    FT_Int   n, last;
 
 
-    indices.xMin = -1;
-    indices.yMin = -1;
-    indices.xMax = -1;
-    indices.yMax = -1;
+    indices_xMin = -1;
+    indices_yMin = -1;
+    indices_xMax = -1;
+    indices_yMax = -1;
 
     box.xMin = box.yMin =  32767L;
     box.xMax = box.yMax = -32768L;
@@ -249,41 +251,41 @@
       if ( x < box.xMin )
       {
         box.xMin     = x;
-        indices.xMin = n;
+        indices_xMin = n;
       }
       if ( x > box.xMax )
       {
         box.xMax     = x;
-        indices.xMax = n;
+        indices_xMax = n;
       }
 
       y = outline->points[n].y;
       if ( y < box.yMin )
       {
         box.yMin     = y;
-        indices.yMin = n;
+        indices_yMin = n;
       }
       if ( y > box.yMax )
       {
         box.yMax     = y;
-        indices.yMax = n;
+        indices_yMax = n;
       }
     }
 
     /* test orientation of the xmin */
-    n = ah_test_extrema( outline, indices.xMin );
+    n = ah_test_extrema( outline, indices_xMin );
     if ( n )
       goto Exit;
 
-    n = ah_test_extrema( outline, indices.yMin );
+    n = ah_test_extrema( outline, indices_yMin );
     if ( n )
       goto Exit;
 
-    n = ah_test_extrema( outline, indices.xMax );
+    n = ah_test_extrema( outline, indices_xMax );
     if ( n )
       goto Exit;
 
-    n = ah_test_extrema( outline, indices.yMax );
+    n = ah_test_extrema( outline, indices_yMax );
     if ( !n )
       n = 1;
 
@@ -1284,10 +1286,10 @@
       /* now, compute each edge properties */
       for ( edge = edges; edge < edge_limit; edge++ )
       {
-        int  is_round    = 0;  /* does it contain round segments?    */
-        int  is_straight = 0;  /* does it contain straight segments? */
-        int  ups         = 0;  /* number of upwards segments         */
-        int  downs       = 0;  /* number of downwards segments       */
+        FT_Int  is_round    = 0;  /* does it contain round segments?    */
+        FT_Int  is_straight = 0;  /* does it contain straight segments? */
+        FT_Pos  ups         = 0;  /* number of upwards segments         */
+        FT_Pos  downs       = 0;  /* number of downwards segments       */
 
 
         seg = edge->first;
@@ -1561,7 +1563,7 @@
   {
     AH_Edge  edge       = outline->horz_edges;
     AH_Edge  edge_limit = edge + outline->num_hedges;
-    FT_Int   delta;
+    FT_Pos   delta;
 
 
     delta = globals->scaled.blue_refs - globals->design.blue_refs;
