@@ -1050,10 +1050,9 @@
         FT_Memory  memory = loader->face->memory;
 
 
-        if ( (error = TT_Vary_Get_Glyph_Deltas( (TT_Face)(loader->face),
-                                                glyph_index,
-                                                &deltas,
-                                                4 ) ) )
+        error = TT_Vary_Get_Glyph_Delts( (TT_Face)(loader->face),
+                                         glyph_index, &deltas, 4 );
+        if ( error )
           goto Exit;
 
         loader->pp1.x += deltas[0].x; loader->pp1.y += deltas[0].y;
@@ -1201,7 +1200,7 @@
                         face,
                         glyph_index,
                         &deltas,
-                        gloader->current.num_subglyphs + 4 ) ) )
+                        gloader->current.num_subglyphs + 4 )) != 0 )
           goto Exit;
 
         /* Note: No subglyph reallocation here, our pointers are stable. */
