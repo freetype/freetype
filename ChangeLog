@@ -1,3 +1,8 @@
+2003-11-01  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/freetype.h: Check that ft2build.h has been
+	loaded first.
+
 2003-10-31  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/base/fttype1.c (FT_Get_PS_Font_Info, FT_Has_PS_Glyph_Names):
