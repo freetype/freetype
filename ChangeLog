@@ -1,5 +1,19 @@
 2005-03-15  David Turner  <david@freetype.org>
 
+    * src/bdf/bdflib.c: removing compiler warnings
+
+    * docs/CHANGES: updating
+    
+    * src/type1/t1parse.c (T1_New_Parser), src/type42/t42parse.c
+    (t42_parser_init): modifying functions to check the font header before
+    allocating anything on the heap.
+
+    * internal/freetype/ftmemory.h: introducing the new macros FT_ARRAY_MAX
+    and FT_ARRAY_CHECK
+    
+    * src/pcf/pcfread.c, src/pcf/pcfutil.c: minor fixes and simplifications.
+    try to protect the PCF driver from doing stupid things with broken fonts.
+
     * src/lzw/ftlzw.c (FT_Stream_OpenLZW): modified the function to check
     the LZW header before doing anything else. This helps avoid un-necessary
     heap allocations (400 Kb of heap memory for the LZW decoder ! Oh my !)
