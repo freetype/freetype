@@ -426,19 +426,11 @@ FT_BEGIN_HEADER
 
   typedef struct  T1_Builder_Funcs_
   {
-<<<<<<< psaux.h
-    void
-    (*init)( T1_Builder*   builder,
-             FT_Face       face,
-             FT_Size       size,
-             FT_GlyphSlot  slot );
-=======
     void      (*init)( T1_Builder*   builder,
                        FT_Face       face,
                        FT_Size       size,
                        FT_GlyphSlot  slot,
                        FT_Bool       hinting );
->>>>>>> 1.14.2.2
 
     void
     (*done)( T1_Builder*   builder );

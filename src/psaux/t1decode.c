@@ -18,6 +18,7 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
+#include FT_INTERNAL_POSTSCRIPT_HINTS_H
 #include FT_OUTLINE_H
 
 #include "t1decode.h"
@@ -140,7 +141,7 @@
       FT_String*  name = (FT_String*)decoder->glyph_names[n];
 
 
-      if ( name && strcmp( name,glyph_name ) == 0 )
+      if ( name && name[0] == glyph_name[0] && strcmp( name,glyph_name ) == 0 )
         return n;
     }
 
@@ -244,6 +245,7 @@
       glyph->format        = ft_glyph_format_composite;
 
       loader->current.num_subglyphs = 2;
+      goto Exit;
     }
 
     /* First load `bchar' in builder */
@@ -266,6 +268,9 @@
     decoder->builder.left_bearing.x = 0;
     decoder->builder.left_bearing.y = 0;
 
+    decoder->builder.pos_x = adx - asb;
+    decoder->builder.pos_y = ady;
+
     /* Now load `achar' on top of */
     /* the base outline           */
     error = T1_Decoder_Parse_Glyph( decoder, achar_index );
@@ -278,17 +283,22 @@
     decoder->builder.left_bearing = left_bearing;
     decoder->builder.advance      = advance;
 
+    /* XXX: old code doesn't work with postscript hinter */
+#if 0    
     /* Finally, move the accent */
     if ( decoder->builder.load_points )
     {
       FT_Outline  dummy;
-
 
       dummy.n_points = (short)( base->n_points - n_base_points );
       dummy.points   = base->points + n_base_points;
 
       FT_Outline_Translate( &dummy, adx - asb, ady );
     }
+#else    
+    decoder->builder.pos_x = 0;
+    decoder->builder.pos_y = 0;
+#endif
 
   Exit:
     return error;
@@ -323,8 +333,9 @@
     FT_Byte*          ip;
     FT_Byte*          limit;
     T1_Builder*       builder = &decoder->builder;
-    FT_Pos            x, y;
+    FT_Pos            x, y, orig_x, orig_y;
 
+    T1_Hints_Funcs    hinter;
 
     /* we don't want to touch the source code -- use macro trick */
 #define start_point    T1_Builder_Start_Point
@@ -341,14 +352,20 @@
 
     builder->path_begun  = 0;
 
+    hinter = (T1_Hints_Funcs) builder->hints_funcs;
+
     zone->base           = charstring_base;
     limit = zone->limit  = charstring_base + charstring_len;
     ip    = zone->cursor = zone->base;
 
     error = PSaux_Err_Ok;
 
-    x = builder->pos_x;
-    y = builder->pos_y;
+    x = orig_x = builder->pos_x;
+    y = orig_y = builder->pos_y;
+
+    /* begin hints recording session, if any */
+    if ( hinter )
+      hinter->open( hinter->hints );
 
     /* now, execute loop */
     while ( ip < limit )
@@ -613,6 +630,10 @@
             goto Syntax_Error;
           }
           ip += 2;
+          
+          if ( hinter )
+            hinter->reset( hinter->hints, builder->current->n_points );
+            
           break;
 
         case 12:
@@ -707,7 +728,19 @@
           FT_TRACE4(( " endchar" ));
 
           close_contour( builder );
-
+          
+          /* close hints recording session */
+          if ( hinter )
+          {
+            if (hinter->close( hinter->hints, builder->current->n_points ))
+              goto Syntax_Error;
+            
+            /* apply hints to the loaded glyph outline now */
+            hinter->apply( hinter->hints,
+                           builder->current,
+                           (PSH_Globals) builder->hints_globals );
+          }
+          
           /* add current outline to the glyph slot */
           FT_GlyphLoader_Add( builder->loader );
 
@@ -722,8 +755,8 @@
           builder->advance.x       = top[1];
           builder->advance.y       = 0;
 
-          builder->last.x = x = top[0];
-          builder->last.y = y = 0;
+          orig_x = builder->last.x = x = builder->pos_x + top[0];
+          orig_y = builder->last.y = y = builder->pos_y;
 
           /* the `metrics_only' indicates that we only want to compute */
           /* the glyph's metrics (lsb + advance width), not load the   */
@@ -746,8 +779,8 @@
           builder->advance.x       = top[2];
           builder->advance.y       = top[3];
 
-          builder->last.x = x = top[0];
-          builder->last.y = y = top[1];
+          builder->last.x = x = builder->pos_x + top[0];
+          builder->last.y = y = builder->pos_y + top[1];
 
           /* the `metrics_only' indicates that we only want to compute */
           /* the glyph's metrics (lsb + advance width), not load the   */
@@ -973,22 +1006,50 @@
 
         case op_hstem:
           FT_TRACE4(( " hstem" ));
+          
+          /* record horizontal hint */
+          if ( hinter )
+          {
+            /* top[0] += builder->left_bearing.y; */
+            hinter->stem( hinter->hints, 0, top );
+          }
 
           break;
 
         case op_hstem3:
           FT_TRACE4(( " hstem3" ));
 
+          /* record horizontal counter-controlled hints */
+          if ( hinter )
+            hinter->stem3( hinter->hints, 0, top );
+                           
           break;
 
         case op_vstem:
           FT_TRACE4(( " vstem" ));
+
+          /* record vertical  hint */
+          if ( hinter )
+          {
+            top[0] += orig_x;
+            hinter->stem( hinter->hints, 1, top );
+          }
 
           break;
 
         case op_vstem3:
           FT_TRACE4(( " vstem3" ));
 
+          /* record vertical counter-controlled hints */
+          if ( hinter )
+          {
+            FT_Pos  dx = orig_x;
+            
+            top[0] += dx;
+            top[2] += dx;
+            top[4] += dx;
+            hinter->stem3( hinter->hints, 1, top );
+          }
           break;
 
         case op_setcurrentpoint:
@@ -1011,6 +1072,7 @@
     } /* while ip < limit */
 
     FT_TRACE4(( "..end..\n\n" ));
+
     return error;
 
   Syntax_Error:
@@ -1024,6 +1086,7 @@
   }
 
 
+ /* parse a single Type 1 glyph */
   FT_LOCAL_DEF FT_Error
   T1_Decoder_Parse_Glyph( T1_Decoder*  decoder,
                           FT_UInt      glyph )
@@ -1032,6 +1095,7 @@
   }
 
 
+ /* initialise T1 decoder */
   FT_LOCAL_DEF FT_Error
   T1_Decoder_Init( T1_Decoder*          decoder,
                    FT_Face              face,
@@ -1039,6 +1103,7 @@
                    FT_GlyphSlot         slot,
                    FT_Byte**            glyph_names,
                    T1_Blend*            blend,
+                   FT_Bool              hinting,
                    T1_Decoder_Callback  parse_callback )
   {
     MEM_Set( decoder, 0, sizeof ( *decoder ) );
@@ -1059,7 +1124,7 @@
 
       decoder->psnames = psnames;
     }
-    T1_Builder_Init( &decoder->builder, face, size, slot );
+    T1_Builder_Init( &decoder->builder, face, size, slot, hinting );
 
     decoder->num_glyphs     = face->num_glyphs;
     decoder->glyph_names    = glyph_names;
@@ -1072,6 +1137,7 @@
   }
 
 
+ /* finalize T1 decoder */
   FT_LOCAL_DEF void
   T1_Decoder_Done( T1_Decoder*  decoder )
   {

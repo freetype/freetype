@@ -101,7 +101,7 @@
 
   static FT_Error
   reallocate_t1_table( PS_Table*  table,
-                       FT_Long    new_size )
+                       FT_Int     new_size )
   {
     FT_Memory  memory   = table->memory;
     FT_Byte*   old_base = table->block;
@@ -1071,7 +1071,8 @@
   T1_Builder_Init( T1_Builder*   builder,
                    FT_Face       face,
                    FT_Size       size,
-                   FT_GlyphSlot  glyph )
+                   FT_GlyphSlot  glyph,
+                   FT_Bool       hinting )
   {
     builder->path_begun  = 0;
     builder->load_points = 1;
@@ -1085,10 +1086,16 @@
       FT_GlyphLoader*  loader = glyph->internal->loader;
 
 
-      builder->loader  = loader;
-      builder->base    = &loader->base.outline;
-      builder->current = &loader->current.outline;
+      builder->loader     = loader;
+      builder->base       = &loader->base.outline;
+      builder->current    = &loader->current.outline;
       FT_GlyphLoader_Rewind( loader );
+
+      builder->hints_globals = size->internal;
+      builder->hints_funcs   = 0;
+            
+      if (hinting)
+        builder->hints_funcs = glyph->internal->glyph_hints;
     }
 
     if ( size )
