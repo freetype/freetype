@@ -92,7 +92,7 @@
   file_spec_from_path( const char*  pathname,
                        FSSpec*      spec )
   {
-#if TARGET_API_MAC_CARBON
+#if defined( TARGET_API_MAC_CARBON ) && !defined( __MWERKS__ )
 
     OSErr  e;
     FSRef  ref;
@@ -140,7 +140,7 @@
   }
 
 
-#if TARGET_API_MAC_CARBON
+#ifdef TARGET_API_MAC_CARBON
 
   /* is this a Mac OS X .dfont file */
   static Boolean
@@ -662,7 +662,7 @@
   }
 
 
-#if TARGET_API_MAC_CARBON
+#ifdef TARGET_API_MAC_CARBON
 
   /* Create a new FT_Face from a file spec to a suitcase file. */
   static FT_Error
@@ -908,7 +908,7 @@
         return FT_New_Face_From_LWFN( library, &spec, face_index, aface );
     }
 
-#if TARGET_API_MAC_CARBON
+#ifdef TARGET_API_MAC_CARBON
 
     if ( is_dfont( &spec ) )
       return FT_New_Face_From_dfont( library, &spec, face_index, aface );
