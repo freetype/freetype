@@ -1,10 +1,13 @@
 
-  Special note to Unix users
-  ==========================
+  Special notes to Unix users
+  ===========================
 
   Please   read  the  file   "README.UNX",  it   contains  important
   information  regarding  the   installation  of  FreeType  on  Unix
   systems, especially GNU based operating systems like GNU/Linux.
+
+  FreeType 2's library is called `libfreetype', FreeType 1's library
+  is called `libttf'.  They are *not* compatible!
 
 
   FreeType 2.1.0
