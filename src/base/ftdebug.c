@@ -159,7 +159,7 @@
         q = p;
         while ( *p && *p != ':' )
           p++;
-          
+
         if ( *p == ':' && p > q )
         {
           FT_Int  n, i, len = (FT_Int)( p - q );
@@ -221,16 +221,18 @@
 
 
   FT_EXPORT_DEF( FT_Int )
-  FT_Trace_Get_Count( void ) 
+  FT_Trace_Get_Count( void )
   {
-    return 0; 
+    return 0;
   }
 
 
   FT_EXPORT_DEF( const char * )
-  FT_Trace_Get_Name( FT_Int  idx ) 
-  { 
-    return NULL; 
+  FT_Trace_Get_Name( FT_Int  idx )
+  {
+    FT_UNUSED( idx );
+
+    return NULL;
   }
 
 

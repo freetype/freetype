@@ -102,7 +102,7 @@
   }
 
 
-  static FT_Service_GlyphDictRec  t42_service_glyph_dict =
+  static const FT_Service_GlyphDictRec  t42_service_glyph_dict =
   {
     (FT_GlyphDict_GetNameFunc)  t42_get_glyph_name,
     (FT_GlyphDict_NameIndexFunc)t42_get_name_index
@@ -122,7 +122,7 @@
   }
 
 
-  static FT_Service_PsFontNameRec  t42_service_ps_font_name =
+  static const FT_Service_PsFontNameRec  t42_service_ps_font_name =
   {
     (FT_PsName_GetFunc)t42_get_ps_font_name
   };

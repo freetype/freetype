@@ -31,6 +31,8 @@
                             FT_UInt        glyph_index,
                             FT_Int32       load_flags )
   {
+    FT_UNUSED(size);
+
     return af_loader_load_glyph( module->loader, slot->face,
                                  glyph_index, load_flags );
   }

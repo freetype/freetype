@@ -501,7 +501,7 @@ THE SOFTWARE.
   *  BDF SERVICE
   *
   */
-  
+
   static FT_Error
   pcf_get_bdf_property( PCF_Face          face,
                         const char*       prop_name,
@@ -546,7 +546,7 @@ THE SOFTWARE.
   }
 
 
-  static FT_Service_BDFRec  pcf_service_bdf =
+  static const FT_Service_BDFRec  pcf_service_bdf =
   {
     (FT_BDF_GetCharsetIdFunc)pcf_get_charset_id,
     (FT_BDF_GetPropertyFunc) pcf_get_bdf_property
@@ -559,14 +559,14 @@ THE SOFTWARE.
   *
   */
 
-  static FT_ServiceDescRec  pcf_services[] =
+  static const FT_ServiceDescRec  pcf_services[] =
   {
     { FT_SERVICE_ID_BDF,       &pcf_service_bdf },
     { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_PCF },
     { NULL, NULL }
   };
-  
-  
+
+
   static FT_Module_Interface
   pcf_driver_requester( FT_Module    module,
                         const char*  name )

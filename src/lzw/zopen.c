@@ -173,7 +173,7 @@ zclose(s_zstate_t *zs)
  * code in turn.  When the buffer fills up empty it and start over.
  */
 
-static char_type rmask[9] =
+static const char_type rmask[9] =
 	{0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff};
 
 /*
@@ -258,7 +258,7 @@ zread(s_zstate_t *zs)
 		*stackp++ = finchar = tab_suffixof(code);
 
 		/* And put them out in forward order.  */
-middle:		
+middle:
 		if (stackp == de_stack)
 			continue;
 

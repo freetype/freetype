@@ -1,3 +1,15 @@
+2004-04-21  David Turner    <david@freetype.org>
+
+        * src/cff/cffobjs.c (cff_face_init): fixed a small memory leak
+
+        * src/autofit/afloader.c, src/autofit/afmodule.c, src/base/ftdebug.c:
+        removed compiler warnings
+
+        * src/autofit/aftypes.h, src/lzw/zopen.c, src/pcf/pcfdrivr.c,
+        src/pcf/pcfread.c, src/psaux/psobjs.c, src/type42/t42drivr.c:
+        changed data arrays to "const" to avoid populating the ".data"
+        segment
+
 2004-04-20  Werner Lemberg  <wl@gnu.org>
 
 	* src/psaux/psobjs.c (T1Radix): Renamed to...
@@ -262,7 +274,7 @@
 	(psh_blues_snap_stem): Don't use blue_shift but blue_threshold.
 
 	* src/pshinter/pshalgo.c (PSH_STRONG_THRESHOLD_MAXIMUM): New macro.
-	(psh_glyph_find_string_points): Use PSH_STRONG_THRESHOLD_MAXIMUM. 
+	(psh_glyph_find_string_points): Use PSH_STRONG_THRESHOLD_MAXIMUM.
 	(psh_glyph_find_blue_points): New function.  Needed for fonts like
 	p052003l.pfb (URW Palladio L Roman) which have flex curves at the
 	base line within blue zones, but the flex curves aren't covered by
@@ -362,7 +374,7 @@
 	accordingly.  These values are calculated outside of the function
 	now.
 	Add new argument `offsets'.
-	(IsMacResource): Use `FT_Raccess_Get_HeaderInfo' and 
+	(IsMacResource): Use `FT_Raccess_Get_HeaderInfo' and
 	`FT_Raccess_Get_DataOffsets'.
 	(load_face_in_embedded_rfork): New function.
 	(load_mac_face): Use load_face_in_embedded_rfork.
