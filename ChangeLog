@@ -1,7 +1,18 @@
+2003-01-15  Huw D M Davies <h.davies1@physics.ox.ac.uk>
+
+    * include/freetype/config/ftheader.h, include/freetype/internal/fnttypes.h,
+    include/freetype/ftwinfnt.h, src/base/winfnt.c, src/winfonts/winfnt.c,
+    src/base/Jamfile, src/base/rules.mk, src/base/descrip.mms:
+
+      added a Windows .FNT specific API (mostly for Wine). Also fixed a nasty
+      bug in the header loader which would cause invalid memory overwrites
+
 2003-01-14  Graham Asher  <graham.asher@btinternet.com>
-    * /include/freetype/ftglyph.h, /src/base/ftglyph.c
+
+    * include/freetype/ftglyph.h, src/base/ftglyph.c:
     Added 'const' to the type of the first argument to FT_Matrix_Multiply,
     which isn't changed - this adds documentation and convenience.
+
 
 2003-01-13  Graham Asher  <graham.asher@btinternet.com>
 
@@ -11,6 +22,7 @@
     incremental interface has been specified that has a get_glyph_metrics
     function, implying that metrics will be supplied from outside.
     This happens for certain Type 42 fonts passed from GhostScript.
+
 
 2003-01-11  David Chester  <davidchester@qmx.net>
 

@@ -22,9 +22,10 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) base ;
 
 # Add the optional/replaceable files.
 #
-Library  $(FT2_LIB) : ftsystem.c ftinit.c   ftglyph.c  ftmm.c     ftbdf.c
-                      ftbbox.c   ftdebug.c  ftxf86.c   fttype1.c  ftpfr.c
-                      ftstroker.c ;
+Library  $(FT2_LIB) : ftsystem.c   ftinit.c    ftglyph.c  ftmm.c     ftbdf.c
+                      ftbbox.c     ftdebug.c   ftxf86.c   fttype1.c  ftpfr.c
+                      ftstroker.c  ftwinfnt.c
+                      ;
 
 # Add Macintosh-specific file to the library when necessary.
 #
