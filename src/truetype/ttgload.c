@@ -75,7 +75,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Get_Metrics                                                     */
+  /*    tt_face_get_metrics                                                */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Returns the horizontal or vertical metrics in font units for a     */
@@ -132,7 +132,7 @@
       if ( idx < (FT_UInt)k )
       {
         p += 4 * idx;
-        if ( p + 4 >= limit )
+        if ( p + 4 > limit )
           goto NoData;
           
         *aadvance = FT_NEXT_USHORT( p );
