@@ -400,6 +400,7 @@
         root->bbox         = dict->font_bbox;
         root->ascender     = (FT_Short)root->bbox.yMax;
         root->descender    = (FT_Short)root->bbox.yMin;
+        root->height       = ( ( root->ascender - root->descender ) * 12 ) / 10;
 
         /* retrieve font family & style name */
         root->family_name = T2_Get_Name( &cff->name_index, face_index );
