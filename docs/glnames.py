@@ -1403,18 +1403,26 @@ def dump_mac_indices():
     print ""
 
 
-def dump_glyph_list(glyph_list):
+def dump_glyph_list(glyph_list, adobe_extra):
     print "static const char*  standard_glyph_names[] = {"
     for name in glyph_list:
-        print '  "'+name+'"'+','
+        print '  "'+name+'",'
+
+    print "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST"
+    for name in adobe_extra:
+        print '  "'+name+'",'
+        
+    print "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */"
     print "  0 };"
     print ""
+
 
 def dump_unicode_values(glyph_list):
     """build the glyph names to unicode values table"""
     adobe_list, uni_values = the_adobe_glyphs()
     index_list = []
-    
+
+    print "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST"
     print "static const unsigned short  names_to_unicode[" + \
              repr(len(glyph_list)+1) + "] = {"
              
@@ -1428,6 +1436,7 @@ def dump_unicode_values(glyph_list):
             print "  0,"
             
     print "  0 };"
+    print "#endif /* FT_CONFIG_OPTION_ADOBE_GLYPH_LIST */"
     print ""
 
 def dump_encoding( encoding_name, encoding_list ):
@@ -1456,20 +1465,22 @@ def main(argv):
     adobe_list  = count_extra_glyphs( adobe_list, glyph_list )
     count_adobe = len(adobe_list)
     
-    glyph_list  = glyph_list + adobe_list
-    
     print "/* the following tables are generated automatically - do not edit */"
     print ""
 
     # dump glyph list
-    dump_glyph_list( glyph_list )
+    dump_glyph_list( glyph_list, adobe_list )
     
     # dump t1_standard_list
     print "static const char**  t1_standard_glyphs = standard_glyph_names + " + repr(t1_bias) + ";"
     print ""
     print "#define NUM_STD_GLYPHS "+repr(len(t1_standard_strings))
     print ""
+    print "#ifdef FT_CONFIG_OPTION_ADOBE_GLYPH_LIST"
+    print "#define NUM_ADOBE_GLYPHS "+repr(len(glyph_list)+len(adobe_list)-t1_bias)
+    print "#else"
     print "#define NUM_ADOBE_GLYPHS "+repr(len(glyph_list)-t1_bias)
+    print "#endif"
     print ""
 
     # dump mac indices table
