@@ -1675,16 +1675,7 @@
     return 0;
   }
 
-#else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-  FT_LOCAL_DEF( FT_Error )
-  TT_Build_CMaps( TT_Face  face )
-  {
-    FT_ERROR(( "No support for TT_Build_CMaps compiled\n" ));
-    return 0;
-  }
-
-#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
+#endif /* FT_CONFIG_OPTION_USE_CMAPS */
 
 
 /* END */
