@@ -15,34 +15,39 @@
 
 # Unix installation and deinstallation targets.
 install: $(PROJECT_LIBRARY)
-	$(MKINSTALLDIRS) $(libdir)                       \
-                         $(includedir)/freetype/config   \
-                         $(includedir)/freetype/internal \
-                         $(includedir)/freetype/cache
+	$(MKINSTALLDIRS) $(libdir)                                 \
+                         $(includedir)/freetype2/freetype/config   \
+                         $(includedir)/freetype2/freetype/internal \
+                         $(includedir)/freetype2/freetype/cache    \
+			 $(bindir)
 	$(LIBTOOL) --mode=install $(INSTALL) $(PROJECT_LIBRARY) $(libdir)
-	-for P in $(PUBLIC_H) ; do                     \
-          $(INSTALL_DATA) $$P $(includedir)/freetype ; \
+	-for P in $(PUBLIC_H) ; do                               \
+          $(INSTALL_DATA) $$P $(includedir)/freetype2/freetype ; \
         done
-	-for P in $(BASE_H) ; do                                \
-          $(INSTALL_DATA) $$P $(includedir)/freetype/internal ; \
+	-for P in $(BASE_H) ; do                                          \
+          $(INSTALL_DATA) $$P $(includedir)/freetype2/freetype/internal ; \
         done
-	-for P in $(CONFIG_H) ; do                            \
-          $(INSTALL_DATA) $$P $(includedir)/freetype/config ; \
+	-for P in $(CONFIG_H) ; do                                      \
+          $(INSTALL_DATA) $$P $(includedir)/freetype2/freetype/config ; \
         done
-	-for P in $(CACHE_H) ; do                             \
-          $(INSTALL_DATA) $$P $(includedir)/freetype/cache ; \
+	-for P in $(CACHE_H) ; do                                      \
+          $(INSTALL_DATA) $$P $(includedir)/freetype2/freetype/cache ; \
         done
+	$(INSTALL) -m a+x $(BUILD)/freetype-config $(bindir)/freetype-config
+
 
 uninstall:
 	-$(LIBTOOL) --mode=uninstall $(RM) $(libdir)/lib$(PROJECT).$A
-	-$(DELETE) $(includedir)/freetype/cache/*
-	-$(DELDIR) $(includedir)/freetype/cache
-	-$(DELETE) $(includedir)/freetype/config/*
-	-$(DELDIR) $(includedir)/freetype/config
-	-$(DELETE) $(includedir)/freetype/internal/*
-	-$(DELDIR) $(includedir)/freetype/internal
-	-$(DELETE) $(includedir)/freetype/*
-	-$(DELDIR) $(includedir)/freetype
+	-$(DELETE) $(includedir)/freetype2/freetype/cache/*
+	-$(DELDIR) $(includedir)/freetype2/freetype/cache
+	-$(DELETE) $(includedir)/freetype2/freetype/config/*
+	-$(DELDIR) $(includedir)/freetype2/freetype/config
+	-$(DELETE) $(includedir)/freetype2/freetype/internal/*
+	-$(DELDIR) $(includedir)/freetype2/freetype/internal
+	-$(DELETE) $(includedir)/freetype2/freetype/*
+	-$(DELDIR) $(includedir)/freetype2/freetype
+	-$(DELDIR) $(includedir)/freetype2
+	-$(DELETE) $(bindir)/freetype-config
 
 
 # Unix cleaning and distclean rules.
