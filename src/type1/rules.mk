@@ -70,4 +70,5 @@ $(OBJ_)%.$O: $(T1_DIR_)%.c $(FREETYPE_H) $(T1_DRV_H)
 DRV_OBJS_S += $(T1_DRV_OBJ_S)
 DRV_OBJS_M += $(T1_DRV_OBJ_M)
 
+
 # EOF

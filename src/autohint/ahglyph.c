@@ -11,7 +11,7 @@
 /*  This file is part of the Catharon Typography Project and shall only    */
 /*  be used, modified, and distributed under the terms of the Catharon     */
 /*  Open Source License that should come with this file under the name     */
-/*  "CatharonLicense.txt". By continuing to use, modify, or distribute     */
+/*  `CatharonLicense.txt'.  By continuing to use, modify, or distribute    */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
 /*                                                                         */
@@ -547,7 +547,7 @@
               /* a segment is round if either its first or last point */
               /* is a control point                                   */
               if ( ( segment->first->flags | point->flags ) &
-                   ah_flah_control                          )
+                     ah_flah_control                        )
                 segment->flags |= ah_edge_round;
 
               /* compute segment size */
@@ -1150,7 +1150,7 @@
       if ( best_dist > 64 / 4 )
         best_dist = 64 / 4;
 
-      for ( blue = (AH_Blue)0; blue < ah_blue_max; blue++ )
+      for ( blue = ah_blue_capital_top; blue < ah_blue_max; blue++ )
       {
         /* if it is a top zone, check for right edges -- if it is a bottom */
         /* zone, check for left edges                                      */
@@ -1213,79 +1213,87 @@
   }
 
 
- /************************************************************************
-  *
-  * <Function>
-  *    ah_outline_scale_blue_edges
-  *
-  * <Description>
-  *    This functions must be called before hinting in order to re-adjust
-  *    the content of the detected edges (basically change the "blue edge"
-  *    pointer from 'design units' to 'scaled ones'
-  *
-  ************************************************************************/
-
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    ah_outline_scale_blue_edges                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    This functions must be called before hinting in order to re-adjust */
+  /*    the contents of the detected edges (basically change the `blue     */
+  /*    edge' pointer from `design units' to `scaled ones').               */
+  /*                                                                       */
   LOCAL_FUNC
   void  ah_outline_scale_blue_edges( AH_Outline*       outline,
                                      AH_Face_Globals*  globals )
   {
-    AH_Edge*          edge    = outline->horz_edges;
-    AH_Edge*          limit   = edge + outline->num_hedges;
-    FT_Int            delta;
+    AH_Edge*  edge  = outline->horz_edges;
+    AH_Edge*  limit = edge + outline->num_hedges;
+    FT_Int    delta;
+
 
     delta = globals->scaled.blue_refs - globals->design.blue_refs;
+
     for ( ; edge < limit; edge++ )
     {
-      if (edge->blue_edge)
+      if ( edge->blue_edge )
         edge->blue_edge += delta;
     }
   }
 
 
-
-
-
 #ifdef AH_DEBUG_GLYPH
-  extern
-  void ah_dump_edges( AH_Outline*  outline )
+
+  void  ah_dump_edges( AH_Outline*  outline )
   {
     AH_Edge*     edges;
     AH_Edge*     limit;
     AH_Segment*  segments;
     FT_Int       dimension;
 
+
     edges    = outline->horz_edges;
     limit    = edges + outline->num_hedges;
     segments = outline->horz_segments;
+
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
       AH_Edge*  edge;
 
-      printf ( "Table of %s edges:\n", !dimension ? "vertical" : "horizontal" );
-      printf ( "  [ index |  pos |  dir  | link | serif | blue | opos  |  pos  ]\n" );
+
+      printf ( "Table of %s edges:\n",
+               !dimension ? "vertical" : "horizontal" );
+      printf ( "  [ index |  pos |  dir  | link |"
+               " serif | blue | opos  |  pos  ]\n" );
 
       for ( edge = edges; edge < limit; edge++ )
       {
         printf ( "  [ %5d | %4d | %5s | %4d | %5d |  %c  | %5.2f | %5.2f ]\n",
                  edge - edges,
                  (int)edge->fpos,
-                 edge->dir == ah_dir_up ? "up" :
-                 (edge->dir == ah_dir_down ? "down" :
-                  (edge->dir == ah_dir_left ? "left" :
-                   (edge->dir == ah_dir_right ? "right" : "none")
-                  )
-                 ),
-                 edge->link ? (edge->link-edges) : -1,
-                 edge->serif ? (edge->serif-edges) : -1,
+                 edge->dir == ah_dir_up
+                   ? "up"
+                   : ( edge->dir == ah_dir_down
+                         ? "down"
+                         : ( edge->dir == ah_dir_left
+                               ? "left"
+                               : ( edge->dir == ah_dir_right
+                                     ? "right"
+                                     : "none" ) ) ),
+                 edge->link ? ( edge->link - edges ) : -1,
+                 edge->serif ? ( edge->serif - edges ) : -1,
                  edge->blue_edge ? 'y' : 'n',
-                 edge->opos/64.0,
-                 edge->pos/64.0 );
+                 edge->opos / 64.0,
+                 edge->pos / 64.0 );
       }
-
 
       edges = outline->vert_edges;
       limit = edges + outline->num_vedges;
       segments = outline->vert_segments;
     }
   }
-#endif
+
+#endif /* AH_DEBUG_GLYPH */
+
+
+/* END */

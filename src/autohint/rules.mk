@@ -3,28 +3,17 @@
 #
 
 
+# Copyright 2000 Catharon Productions Inc.
+# Author: David Turner
 #
-#  Copyright 2000: Catharon Productions Inc.
-#  Author: David Turner
+# This file is part of the Catharon Typography Project and shall only
+# be used, modified, and distributed under the terms of the Catharon
+# Open Source License that should come with this file under the name
+# `CatharonLicense.txt'.  By continuing to use, modify, or distribute
+# this file you indicate that you have read the license and
+# understand and accept it fully.
 #
-#  This file is part of the Catharon Typography Project and shall only
-#  be used, modified, and distributed under the terms of the Catharon
-#  Open Source License that should come with this file under the name
-#  "CatharonLicense.txt". By continuing to use, modify, or distribute
-#  this file you indicate that you have read the license and
-#  understand and accept it fully.
-#
-#  Note that this license is compatible with the FreeType license
-#
-#
-# Copyright 1996-2000 by
-# David Turner, Robert Wilhelm, and Werner Lemberg.
-#
-# This file is part of the FreeType project, and may only be used, modified,
-# and distributed under the terms of the FreeType project license,
-# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
-# indicate that you have read the license and understand and accept it
-# fully.
+# Note that this license is compatible with the FreeType license.
 
 
 # AUTO driver directory
@@ -48,7 +37,9 @@ AUTO_DRV_SRC := $(AUTO_DIR_)ahangles.c  \
 
 # AUTO driver headers
 #
-AUTO_DRV_H := $(AUTO_DRV_SRC:%c=%h)
+AUTO_DRV_H := $(AUTO_DRV_SRC:%c=%h)  \
+              $(AUTO_DIR_)ahloader.h \
+              $(AUTO_DIR_)ahtypes.h
 
 
 # AUTO driver object(s)
