@@ -16,6 +16,8 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       correctly  treated as a  CID, similar  to FreeType's  CID driver
       module.  Note that CID CMap support is still missing.
 
+    - Embedded bitmaps in SFNT-based CFF fonts are now supported.
+
     - The FT_FACE_FLAGS_GLYPH_NAMES is now  set correctly for all font
       formats.
 

@@ -1,10 +1,31 @@
+2004-03-02  Werner Lemberg  <wl@gnu.org>
+
+	Add embedded bitmap support to CFF driver.
+
+	* src/cff/cffobjs.h (CFF_SizeRec): New structure.
+
+	* src/cff/cffgload.c (cff_builder_init): Updated.
+	(cff_slot_load): Updated.
+	[TT_CONFIG_OPTION_EMBEDDED_BITMAPS]: Load sbit.
+
+	* src/cff/cffobjs.c (sbit_size_reset)
+	[TT_CONFIG_OPTION_EMBEDDED_BITMAPS]: New function.
+	(cff_size_get_globals_funcs, cff_size_done, cff_size_init): Updated.
+	(cff_size_reset): Updated.
+	[TT_CONFIG_OPTION_EMBEDDED_BITMAPS]: Call sbit_size_reset.
+
+	* src/cff/cffdrivr.c (Load_Glyph): Updated.
+	(cff_driver_class): Use CFF_SizeRec.
+
+	* docs/CHANGES: Updated.
+
 2004-03-01  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshglob.c (psh_globals_scale_widths): Don't use
 	FT_RoundFix but FT_PIX_ROUND.
 	(psh_blues_snap_stem): Don't use blue_shift but blue_threshold.
 
-	*src/pshinter/pshalgo.c (PSH_STRONG_THRESHOLD_MAXIMUM): New macro.
+	* src/pshinter/pshalgo.c (PSH_STRONG_THRESHOLD_MAXIMUM): New macro.
 	(psh_glyph_find_string_points): Use PSH_STRONG_THRESHOLD_MAXIMUM. 
 	(psh_glyph_find_blue_points): New function.  Needed for fonts like
 	p052003l.pfb (URW Palladio L Roman) which have flex curves at the
