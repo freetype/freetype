@@ -6176,8 +6176,8 @@
     else
     {
       mask   = FT_Curve_Tag_Touch_Y;
-      V.orgs = (FT_Vector*)( (FT_F26Dot6*)CUR.pts.org + 1 );
-      V.curs = (FT_Vector*)( (FT_F26Dot6*)CUR.pts.cur + 1 );
+      V.orgs = (FT_Vector*)( (FT_Pos*)CUR.pts.org + 1 );
+      V.curs = (FT_Vector*)( (FT_Pos*)CUR.pts.cur + 1 );
     }
 
     contour = 0;

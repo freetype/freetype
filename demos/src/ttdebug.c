@@ -807,6 +807,18 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
 
 
   static
+  int  old_tag_to_new( int  tag )
+  {
+    int  result = tag & 1;
+    if (tag & FT_Curve_Tag_Touch_X)
+      result |= 2;
+    if (tag & FT_Curve_Tag_Touch_Y)
+      result |= 4;
+      
+    return result;
+  }
+
+  static
   FT_Error  RunIns( TT_ExecContext  exc )
   {
     FT_Int    A, diff, key;
@@ -1059,7 +1071,7 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
           printf( "%02hx  ", A );
 
           if ( diff & 16 ) temp = "(%01hx)"; else temp = " %01hx ";
-          printf( temp, save.tags[A] & 7 );
+          printf( temp, old_tag_to_new(save.tags[A]) );
 
           if ( diff & 1 ) temp = "(%08lx)"; else temp = " %08lx ";
           printf( temp, save.org[A].x );
@@ -1078,7 +1090,7 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
           printf( "%02hx  ", A );
 
           if ( diff & 16 ) temp = "[%01hx]"; else temp = " %01hx ";
-          printf( temp, pts.tags[A] & 7 );
+          printf( temp, old_tag_to_new(pts.tags[A]) );
 
           if ( diff & 1 ) temp = "[%08lx]"; else temp = " %08lx ";
           printf( temp, pts.org[A].x );
@@ -1239,7 +1251,7 @@ int    glyph_size;
       glyph = (TT_GlyphSlot)face->root.glyph;
 
       /* Now load glyph */
-      error = FT_Load_Glyph( (FT_Face)face, glyph_index, FT_LOAD_DEFAULT );
+      error = FT_Load_Glyph( (FT_Face)face, glyph_index, FT_LOAD_NO_BITMAP );
       if (error) Panic( "could not load glyph" );
     }
 

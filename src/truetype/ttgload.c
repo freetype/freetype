@@ -980,7 +980,6 @@
         {
           FT_UShort       n_ins;
           TT_ExecContext  exec = loader->exec;
-          FT_UInt         n_points = loader->base.n_points;
           TT_GlyphZone*   pts;
           FT_Vector*      pp1;
 
@@ -1023,7 +1022,7 @@
           pts = &exec->pts;
 
           pts->n_points   = num_points + 2;
-          pts->n_contours = num_contours;
+          pts->n_contours = gloader->base.outline.n_contours;
 
           /* add phantom points */
           pp1    = pts->cur + num_points;
@@ -1044,11 +1043,11 @@
             FT_UInt  k;
 
 
-            for ( k = 0; k < n_points; k++ )
+            for ( k = 0; k < num_points; k++ )
               pts->tags[k] &= FT_Curve_Tag_On;
           }
 
-          cur_to_org( n_points, pts );
+          cur_to_org( num_points+2, pts );
 
           /* now consider hinting */
           if ( IS_HINTED( loader->load_flags ) && n_ins > 0 )
