@@ -268,7 +268,11 @@
       root->available_sizes = 0;
 
       root->bbox         = face->type1.font_bbox;
-      root->units_per_EM = 1000;
+
+      /* Set units_per_EM if we didn't set it in parse_font_matrix. */
+      if ( !root->units_per_EM )
+        root->units_per_EM = 1000;
+
       root->ascender     = (FT_Short)face->type1.font_bbox.yMax;
       root->descender    = (FT_Short)face->type1.font_bbox.yMin;
       root->height       = ( ( root->ascender - root->descender ) * 12 ) / 10;
