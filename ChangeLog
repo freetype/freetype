@@ -4,6 +4,10 @@
         fixed another bug related to the ascender/descender/text height of
         Postscript fonts. Damn, this should have been fixed on 2002-03-04 !
 
+        * src/pshinter/pshalgo2.c: changed 'print_zone' to 'psh2_print_zone'
+        * src/pshinter/pshalgo1.c: changed 'print_zone' to 'psh1_print_zone'
+
+
 2002-03-06  Werner Lemberg  <wl@gnu.org>
 
 	* src/pshinter/pshglob.h (PSH_DimensionRec): s/std/stdw/.
