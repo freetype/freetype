@@ -137,8 +137,8 @@
 #define CHECK_BYTE( d )  ( temp = (FT_Byte)d, temp == d )
 
       /* horizontal advance in pixels */
-      xadvance = ( slot->metrics.horiAdvance + 32 ) >> 6;
-      yadvance = ( slot->metrics.vertAdvance + 32 ) >> 6;
+      xadvance = ( slot->advance.x + 32 ) >> 6;
+      yadvance = ( slot->advance.y + 32 ) >> 6;
 
       if ( !CHECK_BYTE( bitmap->rows  )     ||
            !CHECK_BYTE( bitmap->width )     ||
