@@ -1,6 +1,6 @@
 2001-12-15  Werner Lemberg  <wl@gnu.org>
 
-	* src/base/ftglyph (FT_Glyph_To_Bitmap): Remove compiler warning.
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Remove compiler warning.
 	* include/freetype/ftcache.h (FTC_Node_Unref): Removed.  It is
 	already in ftcmanag.h.
 	* src/cache/ftcsbits.c (ftc_sbit_node_load): Remove unused variable
@@ -104,13 +104,16 @@
 	charmap cache.
 	* src/cache/ftcache.c: Updated.
 
+	* src/autohint/ahhint.c (ah_hinter_hint_edges): s/UNUSED/FT_UNUSED/.
+
 2001-12-06  Leonard Rosenthol  <leonardr@lazerware.com>
 
 	Added support for reading .dfont files on Mac OS X.  Also added a
 	new routine which looks up a given font by name in the Mac OS and
 	returns the disk file where it resides.
 
-	* src/base/ftmac.c (is_dfont): New auxiliary function.
+	* src/base/ftmac.c: Include <Files.h> and <TextUtils.h>.
+	(is_dfont): New auxiliary function.
 	(FT_New_Face_From_dfont): New function.
 	(FT_GetFile_From_Mac_Name): New exported function.
 	(FT_New_Face): Updated.
@@ -118,7 +121,7 @@
 
 2001-12-06  David Turner  <david@freetype.org>
 
-	* src/cache/Jamfile: Updated.
+	* src/cache/Jamfile, src/cache/rules.mk: Updated.
 
 2001-12-06  Werner Lemberg  <wl@gnu.org>
 
@@ -128,6 +131,7 @@
 
 	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Re-ordered code for
 	debugging purposes.
+	Comment out use of `origin'.
 
 	* src/smooth/ftsmooth.c (ft_smooth_render): Fixed a nasty hidden bug
 	where outline shifting wasn't correctly undone after bitmap
@@ -144,13 +148,18 @@
 	src/pshinter/pshalgo1.c (psh1_hint_table_init): Removed compiler
 	warnings.
 
-	* include/freetype/cache/*, src/cache/*: Yet another massive rewrite
-	of the caching sub-system in order to both increase performance and
-	allow simpler cache sub-classing.  As an example, the code for the
-	image and sbit caches is now much simpler.
+	* include/freetype/ftcache.h, include/freetype/cache/*, src/cache/*:
+	Yet another massive rewrite of the caching sub-system in order to
+	both increase performance and allow simpler cache sub-classing.  As
+	an example, the code for the image and sbit caches is now much
+	simpler.
 
 	I still need to update the documentation in
 	www/freetype2/docs/cache.html to reflect the new design though.
+
+	* include/freetype/config/ftheader.h (FT_CACHE_CHARMAP_H): New
+	macro.
+	(FT_CACHE_INTERNAL_CACHE_H): Updated.
 
 2001-12-05  David Krause  <freetype@davidkrause.com>
 
