@@ -83,6 +83,11 @@ typedef struct FT_Frame_Field_
 #define FT_FRAME_SHORT_LE(s,f)  FT_FRAME_FIELD( ft_frame_short_le, s, f )
 #define FT_FRAME_USHORT_LE(s,f) FT_FRAME_FIELD( ft_frame_ushort_le, s, f )
 
+#define FT_FRAME_SKIP_LONG   { ft_frame_long_be, 0, 0 }
+#define FT_FRAME_SKIP_SHORT  { ft_frame_short_be, 0, 0 }
+#define FT_FRAME_SKIP_BYTE   { ft_frame_byte, 0, 0 }
+
+
   /*************************************************************************/
   /*                                                                       */
   /* integer extraction macros - the `buffer' parameter must ALWAYS be of  */

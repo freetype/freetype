@@ -130,7 +130,7 @@
       /* load subheaders */
 
       cmap2->numGlyphId = l =
-        ( ( cmap->length - 2L * ( 256 + 3 ) - num_SH * 8L ) & 0xffff ) / 2;
+        ( ( cmap->length - 2L * ( 256 + 3 ) - num_SH * 8L ) & 0xFFFF ) / 2;
 
       if ( ALLOC_ARRAY( cmap2->subHeaders,
                         num_SH + 1,

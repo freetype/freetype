@@ -1371,7 +1371,7 @@
       {
         /* the arc is y-monotonous, either ascending or descending */
         /* detect a change of direction                            */
-        state_bez =  y1 < y3 ? Ascending : Descending;
+        state_bez = y1 < y3 ? Ascending : Descending;
         if ( ras.state != state_bez )
         {
           /* finalize current profile if any */
@@ -1498,7 +1498,7 @@
       }
       else
       {
-        state_bez = ( y1 <= y4 ) ? Ascending : Descending;
+        state_bez = y1 <= y4 ? Ascending : Descending;
 
         /* detect a change of direction */
         if ( ras.state != state_bez )

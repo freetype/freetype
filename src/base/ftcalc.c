@@ -373,7 +373,7 @@
     else
       a = 0x7FFFFFFFL;
 
-    return ( s < 0 ) ? -a : a;
+    return ( s < 0 ? -a : a );
   }
 
 
@@ -648,14 +648,14 @@
       else
         q = 0x7FFFFFFFL;
 
-      return ( s < 0 ) ? -(FT_Int32)q : (FT_Int32)q;
+      return ( s < 0 ? -(FT_Int32)q : (FT_Int32)q );
     }
 
     r  = x->hi;
     lo = x->lo;
 
     if ( r >= (FT_Word32)y ) /* we know y is to be treated as unsigned here */
-      return ( s < 0 ) ? 0x80000001UL : 0x7FFFFFFFUL;
+      return ( s < 0 ? 0x80000001UL : 0x7FFFFFFFUL );
                              /* Return Max/Min Int32 if division overflow.  */
                              /* This includes division by zero!             */
     q = 0;
@@ -673,7 +673,7 @@
       lo <<= 1;
     }
 
-    return ( s < 0 ) ? -(FT_Int32)q : (FT_Int32)q;
+    return ( s < 0 ? -(FT_Int32)q : (FT_Int32)q );
   }
 
 

@@ -403,6 +403,28 @@
       FT_FRAME_END
     };
 
+    const FT_Frame_Field  strike_start_fields[] =
+    {
+      /* no FT_FRAME_START */
+        FT_FRAME_ULONG( TT_SBit_Strike, ranges_offset ),
+        FT_FRAME_SKIP_LONG,
+        FT_FRAME_ULONG( TT_SBit_Strike, num_ranges ),
+        FT_FRAME_ULONG( TT_SBit_Strike, color_ref ),
+      FT_FRAME_END
+    };
+
+    const FT_Frame_Field  strike_end_fields[] =
+    {
+      /* no FT_FRAME_START */
+        FT_FRAME_USHORT( TT_SBit_Strike, start_glyph ),
+        FT_FRAME_USHORT( TT_SBit_Strike, end_glyph ),
+        FT_FRAME_BYTE  ( TT_SBit_Strike, x_ppem ),
+        FT_FRAME_BYTE  ( TT_SBit_Strike, y_ppem ),
+        FT_FRAME_BYTE  ( TT_SBit_Strike, bit_depth ),
+        FT_FRAME_CHAR  ( TT_SBit_Strike, flags ),
+      FT_FRAME_END
+    };
+
 
     face->num_sbit_strikes = 0;
 
@@ -450,24 +472,12 @@
 
       while ( count > 0 )
       {
-        TT_ULong  indexTablesSize;
-
-
-        strike->ranges_offset = GET_ULong();
-        indexTablesSize       = GET_ULong();  /* don't save */
-
-        strike->num_ranges    = GET_ULong();
-        strike->color_ref     = GET_ULong();
+        (void)READ_Fields( strike_start_fields, strike );
 
         (void)READ_Fields( sbit_line_metrics_fields, &strike->hori );
         (void)READ_Fields( sbit_line_metrics_fields, &strike->vert );
 
-        strike->start_glyph   = GET_UShort();
-        strike->end_glyph     = GET_UShort();
-        strike->x_ppem        = GET_Byte();
-        strike->y_ppem        = GET_Byte();
-        strike->bit_depth     = GET_Byte();
-        strike->flags         = GET_Char();
+        (void)READ_Fields( strike_end_fields, strike );
 
         count--;
         strike++;

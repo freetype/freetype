@@ -531,38 +531,35 @@
       switch ( fields->value )
       {
       case ft_frame_start:  /* access a new frame */
-        {
-          error = FT_Access_Frame( stream, fields->offset );
-          if ( error )
-            goto Exit;
+        error = FT_Access_Frame( stream, fields->offset );
+        if ( error )
+          goto Exit;
 
-          frame_accessed = 1;
-          fields++;
-          continue;  /* loop! */
-        }
+        frame_accessed = 1;
+        fields++;
+        continue;  /* loop! */
 
       case ft_frame_byte:
       case ft_frame_schar:  /* read a single byte */
-        {
-          value = GET_Byte();
-          sign_shift = 24;
-          break;
-        }
+        value = GET_Byte();
+        sign_shift = 24;
+        break;
 
       case ft_frame_short_be:
       case ft_frame_ushort_be:  /* read a 2-byte big-endian short */
-        {
-          value = GET_UShort();
-          sign_shift = 16;
-          break;
-        }
+        value = GET_UShort();
+        sign_shift = 16;
+        break;
 
       case ft_frame_short_le:
       case ft_frame_ushort_le:  /* read a 2-byte little-endian short */
         {
           char* p;
+
+
           value = 0;
           p     = stream->cursor;
+
           if ( p + 1 < stream->limit )
           {
             value = ( FT_UShort)p[0] | ((FT_UShort)p[1] << 8 );
@@ -574,11 +571,9 @@
 
       case ft_frame_long_be:
       case ft_frame_ulong_be:  /* read a 4-byte big-endian long */
-        {
-          value = GET_ULong();
-          sign_shift = 0;
-          break;
-        }
+        value = GET_ULong();
+        sign_shift = 0;
+        break;
 
       case ft_frame_long_le:
       case ft_frame_ulong_le:  /* read a 4-byte little-endian long */
@@ -588,12 +583,13 @@
 
           value = 0;
           p     = stream->cursor;
+
           if ( p + 3 < stream->limit )
           {
-            value =  (FT_ULong)p[0]         |
-                   ( (FT_ULong)p[1] << 8  ) |
-                   ( (FT_ULong)p[2] << 16 ) |
-                   ( (FT_ULong)p[3] << 24 );
+            value =   (FT_ULong)p[0]         |
+                    ( (FT_ULong)p[1] << 8  ) |
+                    ( (FT_ULong)p[2] << 16 ) |
+                    ( (FT_ULong)p[3] << 24 );
             stream->cursor += 4;
           }
           sign_shift = 0;
@@ -602,11 +598,9 @@
 
       case ft_frame_off3_be:
       case ft_frame_uoff3_be:  /* read a 3-byte big-endian long */
-        {
-          value = GET_UOffset();
-          sign_shift = 8;
-          break;
-        }
+        value = GET_UOffset();
+        sign_shift = 8;
+        break;
 
       case ft_frame_off3_le:
       case ft_frame_uoff3_le:  /* read a 3-byte little-endian long */
@@ -616,12 +610,13 @@
 
           value = 0;
           p     = stream->cursor;
+
           if ( p + 3 < stream->limit )
           {
-            value =  (FT_ULong)p[0]         |
-                   ( (FT_ULong)p[1] << 8  ) |
-                   ( (FT_ULong)p[2] << 16 ) |
-                   ( (FT_ULong)p[3] << 24 );
+            value =   (FT_ULong)p[0]         |
+                    ( (FT_ULong)p[1] << 8  ) |
+                    ( (FT_ULong)p[2] << 16 ) |
+                    ( (FT_ULong)p[3] << 24 );
             stream->cursor += 4;
           }
           sign_shift = 8;
