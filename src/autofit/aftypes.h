@@ -17,12 +17,12 @@ FT_BEGIN_HEADER
  /**************************************************************************/
  /**************************************************************************/
 
-#define xxAF_DEBUG
+#define AF_DEBUG
 
 #ifdef AF_DEBUG
 
 #  include <stdio.h>
-#  define AF_LOG( x )  printf ## x
+#  define AF_LOG( x )  printf x
 
 #else
 

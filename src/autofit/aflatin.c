@@ -42,7 +42,9 @@
       scaler->render_mode = 0;
       scaler->flags       = 0;
 
-      error = af_glyph_hints_reset( hints, scaler, &face->glyph->outline );
+      error = af_glyph_hints_reset( hints, scaler,
+                                    (AF_ScriptMetrics) metrics,
+                                    &face->glyph->outline );
       if ( error )
         goto Exit;
 
@@ -143,7 +145,7 @@
       FT_Pos*      blue_ref;
       FT_Pos*      blue_shoot;
 
-      AF_LOG(( "blue %3d: ", blue ));
+      AF_LOG(( "blue %3d: ", bb ));
 
       num_flats  = 0;
       num_rounds = 0;
@@ -329,7 +331,7 @@
   }
 
 
-  static FT_Error
+  FT_LOCAL_DEF( FT_Error )
   af_latin_metrics_init( AF_LatinMetrics  metrics,
                          FT_Face          face )
   {
@@ -868,7 +870,7 @@
         edge_limit++;
 
         /* clear all edge fields */
-        FT_MEM_ZERO( edge, sizeof ( *edge ) );
+        FT_ZERO( edge );
 
         /* add the segment to the new edge's list */
         edge->first    = seg;
@@ -1144,7 +1146,9 @@
     FT_Error        error;
     FT_Render_Mode  mode;
 
-    error = af_glyph_hints_reset( hints, &metrics->scaler, outline );
+    error = af_glyph_hints_reset( hints, &metrics->scaler,
+                                  (AF_ScriptMetrics) metrics,
+                                  outline );
     if (error)
       goto Exit;
 
@@ -1733,6 +1737,7 @@
 
   static FT_Error
   af_latin_hints_apply( AF_GlyphHints    hints,
+                        FT_Outline*      outline,
                         AF_LatinMetrics  metrics )
   {
     AF_Dimension  dim;
@@ -1750,6 +1755,8 @@
         af_glyph_hints_align_weak_points( hints, dim );
       }
     }
+    af_glyph_hints_save( hints, outline );
+
     return 0;
   }
 

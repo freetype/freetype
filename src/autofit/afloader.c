@@ -34,8 +34,9 @@
     FT_Error   error = 0;
 
     loader->face    = face;
-    loader->gloader = face->glyph->internal->loader;
     loader->globals = (AF_FaceGlobals) face->autohint.data;
+
+    FT_GlyphLoader_Rewind( loader->gloader );
 
     if ( loader->globals == NULL )
     {
@@ -123,6 +124,10 @@
                                             slot->outline.n_contours );
         if ( error )
           goto Exit;
+
+        FT_ARRAY_COPY( gloader->current.outline.points,
+                       slot->outline.points,
+                       slot->outline.n_points );
 
         FT_ARRAY_COPY( gloader->current.extra_points,
                        slot->outline.points,
@@ -367,12 +372,12 @@
       slot->metrics.horiAdvance = FT_PIX_ROUND( slot->metrics.horiAdvance );
 
       /* now copy outline into glyph slot */
-      FT_GlyphLoader_Rewind( loader->gloader );
-      error = FT_GlyphLoader_CopyPoints( loader->gloader, gloader );
+      FT_GlyphLoader_Rewind( internal->loader );
+      error = FT_GlyphLoader_CopyPoints( internal->loader, gloader );
       if ( error )
         goto Exit;
 
-      slot->outline = slot->internal->loader->base.outline;
+      slot->outline = internal->loader->base.outline;
       slot->format  = FT_GLYPH_FORMAT_OUTLINE;
     }
 
@@ -419,6 +424,8 @@
       error = af_face_globals_get_metrics( loader->globals, gindex, &metrics );
       if ( !error )
       {
+        loader->metrics = metrics;
+
         metrics->clazz->script_metrics_scale( metrics, &scaler );
 
         load_flags |=  FT_LOAD_NO_SCALE | FT_LOAD_IGNORE_TRANSFORM;

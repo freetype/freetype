@@ -4,54 +4,51 @@
 
 #include <stdio.h>
 
-  void
-  af_glyph_hints_dump_edges( AF_GlyphHints  hints )
+  static const char* af_dir_str( AF_Direction  dir )
   {
-    AF_Edge     edges;
-    AF_Edge     edge_limit;
-    AF_Segment  segments;
-    FT_Int      dimension;
+    const char*  result;
 
-
-    edges      = hints->horz_edges;
-    edge_limit = edges + hints->num_hedges;
-    segments   = hints->horz_segments;
-
-    for ( dimension = 1; dimension >= 0; dimension-- )
+    switch (dir)
     {
-      AF_Edge   edge;
-
-
-      printf ( "Table of %s edges:\n",
-               !dimension ? "vertical" : "horizontal" );
-      printf ( "  [ index |  pos |  dir  | link |"
-               " serif | blue | opos  |  pos  ]\n" );
-
-      for ( edge = edges; edge < edge_limit; edge++ )
-      {
-        printf ( "  [ %5d | %4d | %5s | %4d | %5d |  %c  | %5.2f | %5.2f ]\n",
-                 edge - edges,
-                 (int)edge->fpos,
-                 edge->dir == AF_DIR_UP
-                   ? "up"
-                   : ( edge->dir == AF_DIR_DOWN
-                         ? "down"
-                         : ( edge->dir == AF_DIR_LEFT
-                               ? "left"
-                               : ( edge->dir == AF_DIR_RIGHT
-                                     ? "right"
-                                     : "none" ) ) ),
-                 edge->link ? ( edge->link - edges ) : -1,
-                 edge->serif ? ( edge->serif - edges ) : -1,
-                 edge->blue_edge ? 'y' : 'n',
-                 edge->opos / 64.0,
-                 edge->pos / 64.0 );
-      }
-
-      edges      = hints->vert_edges;
-      edge_limit = edges + hints->num_vedges;
-      segments   = hints->vert_segments;
+     case AF_DIR_UP: result = "up"; break;
+     case AF_DIR_DOWN: result = "down"; break;
+     case AF_DIR_LEFT: result = "left"; break;
+     case AF_DIR_RIGHT: result = "right"; break;
+     default: result = "none";
     }
+    return result;
+  }
+
+#define  AF_INDEX_NUM(ptr,base)  ( (ptr) ? ((ptr)-(base)) : -1 )
+
+  void
+  af_glyph_hints_dump_points( AF_GlyphHints  hints )
+  {
+    AF_Point  points = hints->points;
+    AF_Point  limit  = points + hints->num_points;
+    AF_Point  point;
+
+    printf( "Table of points:\n" );
+    printf(   "  [ index |  xorg |  yorg |  xscale |  yscale |  xfit  |  yfit  |  flags ]\n" );
+    for ( point = points; point < limit; point++ )
+    {
+      printf( "  [ %5d | %5d | %5d | %-5.2f | %-5.2f | %-5.2f | %-5.2f | %c%c%c%c%c%c ]\n",
+              point - points,
+              point->fx,
+              point->fy,
+              point->ox/64.0,
+              point->oy/64.0,
+              point->x/64.0,
+              point->y/64.0,
+              (point->flags & AF_FLAG_WEAK_INTERPOLATION) ? 'w' : ' ',
+              (point->flags & AF_FLAG_INFLECTION)         ? 'i' : ' ',
+              (point->flags & AF_FLAG_EXTREMA_X)          ? '<' : ' ',
+              (point->flags & AF_FLAG_EXTREMA_Y)          ? 'v' : ' ',
+              (point->flags & AF_FLAG_ROUND_X)            ? '(' : ' ',
+              (point->flags & AF_FLAG_ROUND_Y)            ? 'u' : ' '
+            );
+    }
+    printf( "\n" );
   }
 
 
@@ -59,51 +56,77 @@
   void
   af_glyph_hints_dump_segments( AF_GlyphHints  hints )
   {
-    AF_Segment  segments;
-    AF_Segment  segment_limit;
-    AF_Point    points;
+    AF_Point    points = hints->points;
     FT_Int      dimension;
-
-
-    points        = hints->points;
-    segments      = hints->horz_segments;
-    segment_limit = segments + hints->num_hsegments;
 
     for ( dimension = 1; dimension >= 0; dimension-- )
     {
-      AF_Segment  seg;
+      AF_AxisHints  axis = &hints->axis[dimension];
+      AF_Segment    segments = axis->segments;
+      AF_Segment    limit    = segments + axis->num_segments;
+      AF_Segment    seg;
 
 
       printf ( "Table of %s segments:\n",
-               !dimension ? "vertical" : "horizontal" );
+               dimension == AF_DIMENSION_HORZ ? "vertical" : "horizontal" );
       printf ( "  [ index |  pos |  dir  | link | serif |"
                " numl | first | start ]\n" );
 
-      for ( seg = segments; seg < segment_limit; seg++ )
+      for ( seg = segments; seg < limit; seg++ )
       {
         printf ( "  [ %5d | %4d | %5s | %4d | %5d | %4d | %5d | %5d ]\n",
                  seg - segments,
                  (int)seg->pos,
-                 seg->dir == AF_DIR_UP
-                   ? "up"
-                   : ( seg->dir == AF_DIR_DOWN
-                         ? "down"
-                         : ( seg->dir == AF_DIR_LEFT
-                               ? "left"
-                               : ( seg->dir == AF_DIR_RIGHT
-                                     ? "right"
-                                     : "none" ) ) ),
-                 seg->link ? ( seg->link - segments ) : -1,
-                 seg->serif ? ( seg->serif - segments ) : -1,
+                 af_dir_str( seg->dir ),
+                 AF_INDEX_NUM( seg->link, segments ),
+                 AF_INDEX_NUM( seg->serif, segments ),
                  (int)seg->num_linked,
                  seg->first - points,
                  seg->last - points );
       }
-
-      segments      = hints->vert_segments;
-      segment_limit = segments + hints->num_vsegments;
+      printf( "\n" );
     }
   }
+
+
+  void
+  af_glyph_hints_dump_edges( AF_GlyphHints  hints )
+  {
+    FT_Int      dimension;
+
+    for ( dimension = 1; dimension >= 0; dimension-- )
+    {
+      AF_AxisHints  axis  = &hints->axis[ dimension ];
+      AF_Edge       edges = axis->edges;
+      AF_Edge       limit = edges + axis->num_edges;
+      AF_Edge       edge;
+
+     /* note: AF_DIMENSION_HORZ corresponds to _vertical_ edges
+      * since they have constant X coordinate
+      */
+      printf ( "Table of %s edges:\n",
+               dimension == AF_DIMENSION_HORZ ? "vertical" : "horizontal" );
+      printf ( "  [ index |  pos |  dir  | link |"
+               " serif | blue | opos  |  pos  ]\n" );
+
+      for ( edge = edges; edge < limit; edge++ )
+      {
+        printf ( "  [ %5d | %4d | %5s | %4d | %5d |  %c  | %5.2f | %5.2f ]\n",
+                 edge - edges,
+                 (int)edge->fpos,
+                 af_dir_str( edge->dir ),
+                 AF_INDEX_NUM( edge->link, edges ),
+                 AF_INDEX_NUM( edge->serif, edges ),
+                 edge->blue_edge ? 'y' : 'n',
+                 edge->opos / 64.0,
+                 edge->pos / 64.0 );
+      }
+
+      printf( "\n" );
+    }
+  }
+
+
 
 #endif /* AF_DEBUG */
 
@@ -292,9 +315,10 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  af_glyph_hints_reset( AF_GlyphHints  hints,
-                        AF_Scaler      scaler,
-                        FT_Outline*    outline )
+  af_glyph_hints_reset( AF_GlyphHints     hints,
+                        AF_Scaler         scaler,
+                        AF_ScriptMetrics  metrics,
+                        FT_Outline*       outline )
   {
     FT_Error     error        = FT_Err_Ok;
     AF_Point     points;
@@ -304,6 +328,8 @@
     FT_Pos       x_delta = scaler->x_delta;
     FT_Pos       y_delta = scaler->y_delta;
     FT_Memory    memory  = hints->memory;
+
+    hints->metrics = metrics;
 
     hints->scaler_flags = scaler->flags;
     hints->other_flags  = 0;
@@ -351,12 +377,16 @@
 
       new_max = ( new_max + 2 + 7 ) & ~7;
 
+#define OFF_PAD2(x,y)   (((x)+(y)-1) & ~((y)-1))
+#define OFF_PADX(x,y)   ((((x)+(y)-1)/(y))*(y))
+#define OFF_PAD(x,y)    ( ((y) & ((y)-1)) ? OFF_PADX(x,y) : OFF_PAD2(x,y) )
+
 #undef  OFF_INCREMENT
 #define OFF_INCREMENT( _off, _type, _count )   \
-     ( FT_PAD_CEIL( _off, sizeof(_type) ) + (_count)*sizeof(_type))
+     ( OFF_PAD( _off, sizeof(_type) ) + (_count)*sizeof(_type))
 
       off1 = OFF_INCREMENT( 0, AF_PointRec, new_max );
-      off2 = OFF_INCREMENT( off1, AF_SegmentRec, new_max );
+      off2 = OFF_INCREMENT( off1, AF_SegmentRec, new_max*2 );
       off3 = OFF_INCREMENT( off2, AF_EdgeRec, new_max*2 );
 
       FT_FREE( hints->points );
@@ -549,6 +579,28 @@
   }
 
 
+  FT_LOCAL_DEF( void )
+  af_glyph_hints_save( AF_GlyphHints   hints,
+                       FT_Outline*     outline )
+  {
+    AF_Point    point = hints->points;
+    AF_Point    limit = point + hints->num_points;
+    FT_Vector*  vec   = outline->points;
+    char*       tag   = outline->tags;
+
+    for ( ; point < limit; point++, vec++, tag++ )
+    {
+      vec->x = (FT_Pos) point->x;
+      vec->y = (FT_Pos) point->y;
+
+      if ( point->flags & AF_FLAG_CONIC )
+        tag[0] = FT_CURVE_TAG_CONIC;
+      else if ( point->flags & AF_FLAG_CUBIC )
+        tag[0] = FT_CURVE_TAG_CUBIC;
+      else
+        tag[0] = FT_CURVE_TAG_ON;
+    }
+  }
 
 
  /*
