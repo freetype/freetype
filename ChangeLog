@@ -1,3 +1,9 @@
+2003-03-15  David Turner  <david@freetype.org>
+
+    * src/truetyoe/ttdriver.c (Set_Char_Sizes): fixed a small rounding bug.
+    Actually, it seems that previous versions of FreeType didn't perform
+    TrueType rounding exactly as appropriate.
+
 2003-03-14  David Turner  <david@freetype.org>
 
     * src/truetype/ttdriver.c: fixing the small TrueType native rendering
