@@ -62,13 +62,14 @@
   <tr bgcolor="#CCCCFF"
       valign=center><td>
     <h2>
-      II. Glyph mutlines
+      II. Glyph outlines
     </h2>
   </td></tr>
   </table>
 
-  <p>This section describes the way scalable representation of glyph images,
-  called outlines, are used by FreeType as well as client applications.</p>
+  <p>This section describes the way scalable representations of glyph
+  images, called outlines, are used by FreeType as well as client
+  applications.</p>
 
     <a name="section-1">
     <h3>
@@ -94,7 +95,7 @@
     <em>points</em>, rather than device-specific pixels.  Points are a
     simple <em>physical</em> unit, where 1&nbsp;point&nbsp;=&nbsp;1/72th of
     an inch, in digital typography.  As an example, most Roman books are
-    printed with a body text which size is chosen between 10 and
+    printed with a body text whose size is somewhere between 10 and
     14&nbsp;points.</p>
 
     <p>It is thus possible to compute the size of text in pixels from the
@@ -148,7 +149,7 @@
 
     <p>In creating the glyph outlines, a type designer uses an imaginary
     square called the <em>EM square</em>.  Typically, the EM square can be
-    thought of as a tablet on which the character are drawn.  The square's
+    thought of as a tablet on which the characters are drawn.  The square's
     size, i.e., the number of grid units on its sides, is very important for
     two reasons:</p>
 
@@ -218,7 +219,7 @@
 
     <p>As a consequence, proper glyph rendering needs the scaled points to
     be aligned along the target device pixel grid, through an operation
-    called <em>grid-fitting</em>, and often <em>hinting</em>.  One of its
+    called <em>grid-fitting</em> (often called<em>hinting</em>).  One of its
     main purposes is to ensure that important widths and heights are
     respected throughout the whole font (for example, it is very often
     desirable that the "I" and the "T" have their central vertical line of
@@ -255,9 +256,10 @@
         <p><em>automatic grid-fitting</em></p>
 
         <p>Some formats simply include no control information with each
-        glyph outline, apart metrics like the advance width and height.  It
-        is then up to the renderer to "guess" the more interesting features
-        of the outline in order to perform some decent grid-fitting.</p>
+        glyph outline, apart from metrics like the advance width and height. 
+        It is then up to the renderer to "guess" the more interesting
+        features of the outline in order to perform some decent
+        grid-fitting.</p>
       </li>
     </ul>
 
@@ -306,7 +308,7 @@
 
           <p><b>Size.</b> Glyph programs can be long.</p>
 
-          <p><b>Technicity.</b>
+          <p><b>Technical difficulty.</b>
           It is extremely difficult to write good hinting
           programs.  Very few tools available.</p>
         </td>
