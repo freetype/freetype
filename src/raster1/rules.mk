@@ -1,0 +1,74 @@
+#
+# FreeType 2 renderer module build rules
+#
+
+
+# Copyright 1996-2000 by
+# David Turner, Robert Wilhelm, and Werner Lemberg.
+#
+# This file is part of the FreeType project, and may only be used, modified,
+# and distributed under the terms of the FreeType project license,
+# LICENSE.TXT.  By continuing to use, modify, or distribute this file you
+# indicate that you have read the license and understand and accept it
+# fully.
+
+
+# renderer driver directory
+#
+RAS1_DIR  := $(SRC_)raster1
+RAS1_DIR_ := $(RAS1_DIR)$(SEP)
+
+
+# additional include flags used when compiling the driver
+#
+RAS1_INCLUDE := $(RAS1_DIR)
+
+# compilation flags for the driver
+#
+RAS1_CFLAGS  := $(RAS1_INCLUDE:%=$I%)
+RAS1_COMPILE := $(FT_COMPILE) $(RAS1_CFLAGS)
+
+
+# RASTER1 driver sources (i.e., C files)
+#
+RAS1_DRV_SRC := $(RAS1_DIR_)ftraster.c  \
+                $(RAS1_DIR_)ftrend1.c
+
+# RASTER1 driver headers
+#
+RAS1_DRV_H := $(RAS1_DRV_SRC:%c=%h)
+
+
+# RASTER1 driver object(s)
+#
+#   RAS1_DRV_OBJ_M is used during `multi' builds.
+#   RAS1_DRV_OBJ_S is used during `single' builds.
+#
+RAS1_DRV_OBJ_M := $(RAS1_DRV_SRC:$(RAS1_DIR_)%.c=$(OBJ_)%.$O)
+RAS1_DRV_OBJ_S := $(OBJ_)raster1.$O
+
+# RASTER1 driver source file for single build
+#
+RAS1_DRV_SRC_S := $(RAS1_DIR_)raster1.c
+
+
+# RASTER1 driver - single object
+#
+$(RAS1_DRV_OBJ_S): $(RAS1_DRV_SRC_S) $(RAS1_DRV_SRC) \
+                   $(FREETYPE_H) $(RAS1_DRV_H)
+	$(RAS1_COMPILE) $T$@ $(RAS1_DRV_SRC_S)
+
+
+# RASTER1 driver - multiple objects
+#
+$(OBJ_)%.$O: $(RAS1_DIR_)%.c $(FREETYPE_H) $(RAS1_DRV_H)
+	$(RAS1_COMPILE) $T$@ $<
+
+
+# update main driver object lists
+#
+DRV_OBJS_S += $(RAS1_DRV_OBJ_S)
+DRV_OBJS_M += $(RAS1_DRV_OBJ_M)
+
+
+# EOF
