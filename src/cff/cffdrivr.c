@@ -26,7 +26,7 @@
 
 #include FT_SOURCE_FILE(cff,cffdrivr.h)
 #include FT_SOURCE_FILE(cff,cffgload.h)
-
+#include FT_SOURCE_FILE(cff,cffload.h)
 
   /*************************************************************************/
   /*                                                                       */
@@ -219,6 +219,56 @@
   /*************************************************************************/
   /*************************************************************************/
 
+  static
+  FT_Error  get_cff_glyph_name( CFF_Face    face,
+                                FT_UInt     glyph_index,
+                                FT_Pointer  buffer,
+                                FT_UInt     buffer_max )
+  {
+    CFF_Font*           font = (CFF_Font*)face->extra.data;
+    FT_Memory           memory = FT_FACE_MEMORY(face);
+    FT_String*          gname;
+    FT_UShort           sid;
+    PSNames_Interface*  psnames;
+    FT_Error            error;
+
+    psnames = (PSNames_Interface*)FT_Get_Module_Interface( face->root.driver->root.library, "psnames" );
+
+    if ( !psnames )
+    {
+      FT_ERROR(( "CFF_Init_Face:" ));
+      FT_ERROR(( " cannot open CFF & CEF fonts\n" ));
+      FT_ERROR(( "             " ));
+      FT_ERROR(( " without the `PSNames' module\n" ));
+      error = FT_Err_Unknown_File_Format;
+      goto Exit;
+    }
+
+    /* first, locate the sid in the charset table */
+    sid = font->charset.sids[glyph_index];
+
+    /* now, lookup the name itself */
+    gname = CFF_Get_String( &font->string_index, sid, psnames );
+
+    if ( buffer_max > 0 )
+    {
+      FT_UInt  len = strlen( gname );
+
+
+      if (len >= buffer_max)
+        len = buffer_max - 1;
+
+      MEM_Copy( buffer, gname, len );
+      ((FT_Byte*)buffer)[len] = 0;
+    }
+
+    FREE ( gname );
+    error = CFF_Err_Ok;
+
+    Exit:
+      return error;
+  }
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -275,13 +325,16 @@
   /*************************************************************************/
   /*************************************************************************/
 
-
   static
   FT_Module_Interface  cff_get_interface( CFF_Driver   driver,
                                           const char*  interface )
   {
     FT_Module  sfnt;
 
+#ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
+    if ( strcmp( (const char*)interface, "glyph_name" ) == 0 )
+      return (FT_Module_Interface)get_cff_glyph_name;
+#endif
 
     /* we simply pass our request to the `sfnt' module */
     sfnt = FT_Get_Module( driver->root.root.library, "sfnt" );
