@@ -1,3 +1,8 @@
+2003-06-05  Wenlin Institute (Tom Bishop)  <wenlin@wenlin.com>
+
+	* src/base/ftmac.c (file_spec_from_path) [TARGET_API_MAC_CARBON]:
+	Add `#if !defined(__MWERKS__)'.
+
 2003-06-05  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/psaux.h (T1_FieldType): Add
