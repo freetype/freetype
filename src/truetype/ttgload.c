@@ -233,6 +233,7 @@
     /* reading the bytecode instructions                                 */
     
     n_ins = GET_UShort();
+    load->face->root.glyph->control_len = n_ins;
 
     if ( n_points > load->left_points )
     {
