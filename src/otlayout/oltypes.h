@@ -1,8 +1,7 @@
 #ifndef OLTYPES_H
 #define OLTYPES_H
 
-#include <ftobjs.h>
-#include <tttypes.h>
+#include <freetype/internal/ftobjs.h>
 
  /*************************************************************
   *
@@ -48,34 +47,34 @@
   {
     FT_Memory memory;
 
-    TT_Int    num_scripts;
-    TT_Tag*   script_tags;
+    FT_Int    num_scripts;
+    FT_Tag*   script_tags;
 
-    TT_Int    max_languages;
-    TT_Int    num_languages;
-    TT_Tag*   language_tags;
+    FT_Int    max_languages;
+    FT_Int    num_languages;
+    FT_Tag*   language_tags;
 
-    TT_Int    max_features;
-    TT_Tag*   feature_tags;
-    TT_Bool*  features;
+    FT_Int    max_features;
+    FT_Tag*   feature_tags;
+    FT_Bool*  features;
 
-    TT_Int    max_lookups;
-    TT_Bool*  lookups;
+    FT_Int    max_lookups;
+    FT_Bool*  lookups;
 
-    TT_Byte*  scripts_table;
-    TT_Long   scripts_len;
+    FT_Byte*  scripts_table;
+    FT_Long   scripts_len;
 
-    TT_Byte*  features_table;
-    TT_Long*  features_len;
+    FT_Byte*  features_table;
+    FT_Long*  features_len;
 
-    TT_Byte*  lookups_table;
-    TT_Byte*  lookups_len;
+    FT_Byte*  lookups_table;
+    FT_Byte*  lookups_len;
 
-    TT_Byte*  cur_script;   /* current script   */
-    TT_Byte*  cur_language; /* current language */
+    FT_Byte*  cur_script;   /* current script   */
+    FT_Byte*  cur_language; /* current language */
 
-    TT_Byte*  cur_base_values;
-    TT_Byte*  cur_min_max;
+    FT_Byte*  cur_base_values;
+    FT_Byte*  cur_min_max;
 
     OTL_Type  otl_type;
 
@@ -84,57 +83,42 @@
 
   typedef struct OTL_BaseCoord_
   {
-    TT_UShort  format;
-    TT_Short   coordinate;
-    TT_UShort  ref_glyph;
-    TT_UShort  ref_point;
-    TT_Byte*   device;
+    FT_UShort  format;
+    FT_Short   coordinate;
+    FT_UShort  ref_glyph;
+    FT_UShort  ref_point;
+    FT_Byte*   device;
 
   } OTL_BaseCoord;
 
 
   typedef struct OTL_ValueRecord_
   {
-    TT_Vector  placement;
-    TT_Vector  advance;
+    FT_Vector  placement;
+    FT_Vector  advance;
 
-    TT_Byte*   device_pla_x;
-    TT_Byte*   device_pla_y;
-    TT_Byte*   device_adv_x;
-    TT_Byte*   device_adv_y;
+    FT_Byte*   device_pla_x;
+    FT_Byte*   device_pla_y;
+    FT_Byte*   device_adv_x;
+    FT_Byte*   device_adv_y;
 
   } OTL_ValueRecord;
 
 
   typedef struct OTL_Anchor_
   {
-    TT_UInt    format;
-    TT_Vector  coord;
-    TT_UInt    anchor_point;
-    TT_Byte*   device_x;
-    TT_Byte*   device_y;
+    FT_UInt    format;
+    FT_Vector  coord;
+    FT_UInt    anchor_point;
+    FT_Byte*   device_x;
+    FT_Byte*   device_y;
 
   } OTL_Anchor;
 
+
   LOCAL_DEF
-  TT_Error  OTL_Table_Init( OTL_Table*  table,
+  FT_Error  OTL_Table_Init( OTL_Table*  table,
                             FT_Memory   memory );
-
-  LOCAL_DEF
-  TT_Error  OTL_Table_Set_Scripts( OTL_Table*  table,
-                                   TT_Byte*    bytes,
-                                   TT_Long     len,
-                                   OTL_Type    otl_type );
-
-  LOCAL_DEF
-  TT_Error  OTL_Table_Set_Features( OTL_Table*  table,
-                                    TT_Byte*    bytes,
-                                    TT_Long     len );
-
-  LOCAL_DEF
-  TT_Error  OTL_Table_Set_Lookups( OTL_Table*  table,
-                                   TT_Byte*    bytes,
-                                   TT_Long     len );
 
   LOCAL_DEF
   void      OTL_Table_Done( OTL_Table*  table );
@@ -153,6 +137,12 @@
  *      table->num_scripts is the number of scripts
  *
  */
+  LOCAL_DEF
+  FT_Error  OTL_Table_Set_Scripts( OTL_Table*  table,
+                                   FT_Byte*    bytes,
+                                   FT_Long     len,
+                                   OTL_Type    otl_type );
+
 
 /********************************************************
  *
@@ -169,6 +159,18 @@
  *      it is empty (zero-filled) by default.
  *
  */
+  LOCAL_DEF
+  FT_Error  OTL_Table_Set_Features( OTL_Table*  table,
+                                    FT_Byte*    bytes,
+                                    FT_Long     len );
+
+
+
+  LOCAL_DEF
+  FT_Error  OTL_Table_Set_Lookups( OTL_Table*  table,
+                                   FT_Byte*    bytes,
+                                   FT_Long     len );
+
 
 /*******************************************************************
  *
@@ -187,7 +189,7 @@
  */
   LOCAL_DEF
   void  OTL_Get_Languages_List( OTL_Table*  table,
-                                TT_ULong    script_tag );
+                                FT_ULong    script_tag );
 
 
 /*******************************************************************
@@ -208,15 +210,15 @@
  */
   LOCAL_DEF
   void OTL_Get_Features_List( OTL_Table*  table,
-                              TT_ULong    language_tag );
+                              FT_ULong    language_tag );
 
   LOCAL_DEF
   void OTL_Get_Baseline_Values( OTL_Table*  table,
-                                TT_ULong    language_tag );
+                                FT_ULong    language_tag );
 
   LOCAL_DEF
   void OTL_Get_Justification( OTL_Table*  table,
-                              TT_ULong    language_tag );
+                              FT_ULong    language_tag );
 
 /*******************************************************************
  *
@@ -259,52 +261,52 @@
 
 
   LOCAL_DEF
-  TT_Long  OTL_Get_Coverage_Index( TT_Byte*  coverage,
-                                   TT_UInt   glyph_id );
+  FT_Long  OTL_Get_Coverage_Index( FT_Byte*  coverage,
+                                   FT_UInt   glyph_id );
 
   LOCAL_DEF
-  TT_UInt  OTL_Get_Glyph_Class( TT_Byte*  class_def,
-                                TT_UInt   glyph_id );
+  FT_UInt  OTL_Get_Glyph_Class( FT_Byte*  class_def,
+                                FT_UInt   glyph_id );
 
   LOCAL_DEF
-  TT_Int  OTL_Get_Device_Adjustment( TT_Byte* device,
-                                     TT_UInt  size );
+  FT_Int  OTL_Get_Device_Adjustment( FT_Byte* device,
+                                     FT_UInt  size );
 
   LOCAL_DEF
-  void    OTL_Get_Base_Coordinate( TT_Byte*        base_coord,
+  void    OTL_Get_Base_Coordinate( FT_Byte*        base_coord,
                                    OTL_BaseCoord*  coord );
 
 
   LOCAL_DEF
-  TT_Int  OTL_ValueRecord_Size( TT_UShort  value_format );
+  FT_Int  OTL_ValueRecord_Size( FT_UShort  value_format );
 
 
   LOCAL_DEF
-  void  OTL_Get_ValueRecord( TT_Byte*          value_record,
-                             TT_UShort         value_format,
-			     TT_Byte*          pos_table,
+  void  OTL_Get_ValueRecord( FT_Byte*          value_record,
+                             FT_UShort         value_format,
+			     FT_Byte*          pos_table,
 			     OTL_ValueRecord*  record );
 
 
   LOCAL_DEF
-  void  OTL_Get_Anchor( TT_Byte*     anchor_table,
+  void  OTL_Get_Anchor( FT_Byte*     anchor_table,
                         OTL_Anchor*  anchor );
 
 
   LOCAL_DEF
-  void  OTL_Get_Mark( TT_Byte*     mark_array,
-                      TT_UInt      index,
-		      TT_UShort*   clazz,
+  void  OTL_Get_Mark( FT_Byte*     mark_array,
+                      FT_UInt      index,
+		      FT_UShort*   clazz,
 		      OTL_Anchor*  anchor );
 
 
 
 #define OTL_Byte(p)   (p++, p[-1])
 
-#define OTL_UShort(p) (p+=2, ((TT_UShort)p[-2] << 8) | p[-1])
+#define OTL_UShort(p) (p+=2, ((FT_UShort)p[-2] << 8) | p[-1])
 
-#define OTL_ULong(p)  (p+=4, ((TT_ULong)p[-4] << 24) |        \
-                             ((TT_ULong)p[-3] << 16) |        \
-                             ((TT_ULong)p[-2] << 8 ) | p[-1] )
+#define OTL_ULong(p)  (p+=4, ((FT_ULong)p[-4] << 24) |        \
+                             ((FT_ULong)p[-3] << 16) |        \
+                             ((FT_ULong)p[-2] << 8 ) | p[-1] )
 
 #endif /* OLTYPES_H */

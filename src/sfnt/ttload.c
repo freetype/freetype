@@ -436,7 +436,7 @@
     stream = face->root.stream;
     /* the `if' is syntactic sugar for picky compilers */
     if ( FILE_Read_At( offset, buffer, size ) )
-      ;
+      goto Exit;
 
   Exit:
     return error;

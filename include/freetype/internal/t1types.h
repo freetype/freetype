@@ -116,6 +116,7 @@
     FT_Byte          paint_type;
     FT_Byte          font_type;
     FT_Matrix        font_matrix;
+    FT_Vector        font_offset;
     FT_BBox          font_bbox;
     FT_Long          font_id;
 
