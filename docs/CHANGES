@@ -1,29 +1,3 @@
-=====================================================================
-IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT
-
-  During development that followed the 2.1.4 release, some
-  unfortunate changes to the source code did break *binary*
-  compatibility of the library with previous releases. This had the
-  potential to severely break any system where a version of FreeType
-  was installed from recent CVS sources.
-
-  We did undo the changes, and everything should be completely
-  compatible now. However, due to other subtleties too long to be
-  explained here, there may still be a tiny risk that the current
-  sources break some rare applications.
-
-  This package is thus FreeType 2.1.5 release candidate 1 and has
-  been released for testing. If you install it on your system, please
-  be certain to be able to install a previous version in the case
-  where something would go wrong.
-
-  We will make the official 2.1.5 release as soon as we're convinced
-  that it will not break anything.
-
-
-IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT IMPORTANT
-=====================================================================
-
 
 LATEST CHANGES BETWEEN 2.1.5 and 2.1.4
 
