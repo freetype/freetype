@@ -351,15 +351,9 @@
     (i.e. one size per face), while keeping this feature available through
     additional functions.</em></p>
 
-    <p>When a new face object is created, its size object defaults to the
-    character size of 10&nbsp;pixels (both horizontally and vertically) for
-    scalable formats.  For fixed-sizes formats, the size is more or less
-    undefined, which is why you must set it before trying to load a
-    glyph.</p>
-
-    <p>To do that, simply call <tt>FT_Set_Char_Size()</tt>.  Here is an
-    example where the character size is set to 16pt for a 300x300&nbsp;dpi
-    device:</p>
+    <p>Before a glyph can be loaded, the size object must be set up.  To do
+    that, simply call <tt>FT_Set_Char_Size()</tt>.  Here is an example where
+    the character size is set to 16pt for a 300x300&nbsp;dpi device:</p>
 
     <font color="blue">
     <pre>
