@@ -36,6 +36,13 @@
 
 .PHONY: setup
 
+# The `space' variable is used to avoid trailing spaces in defining the
+# `T' variable later.
+#
+empty :=
+space := $(empty) $(empty)
+
+
 ifndef CONFIG_MK
   CONFIG_MK := config.mk
 endif
