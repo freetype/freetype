@@ -50,14 +50,14 @@
 #define SLOW  1  /* we can't use asm-optimized sources here! */
 
   /* Urgh.  `inflate_mask' must not be declared twice -- C++ doesn't like
-     this.  We temporarily rename it and load all necessary header files. */
-#define inflate_mask ft_gzip_dummy
+     this.  We temporarily disable it and load all necessary header files. */
+#define NO_INFLATE_MASK
 #include "zutil.h"
 #include "inftrees.h"
 #include "infblock.h"
 #include "infcodes.h"
 #include "infutil.h"
-#undef  inflate_mask
+#undef  NO_INFLATE_MASK
 
   /* infutil.c must be included before infcodes.c */
 #include "zutil.c"

@@ -1,3 +1,10 @@
+2003-06-09  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/gzip/ftgzip.c: (inflate_mask): Replaced with...
+	(NO_INFLATE_MASK): This.
+	* src/gzip/infutil.h: Declare `inflate_mask' conditionally by
+	NO_INFLATE_MASK.
+
 2003-06-09  Alexis S. L. Carvalho  <alexis@cecm.usp.br>
 
 	* src/gzip/ftgzip.c (ft_gzip_file_fill_output): Handle Z_STREAM_END
@@ -69,7 +76,7 @@
 
 	* devel/ftoption.h: Updated.
 
-2002-06-07  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2003-06-07  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* include/freetype/internal/psaux.h, src/truetype/ttgload.h:
 	s/index/idx/ to fix compiler warnings.
