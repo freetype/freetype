@@ -1,5 +1,9 @@
 2002-03-06  David Turner  <david@freetype.org>
 
+        * include/freetype/freetype.h, include/freetype/internal/ftobjs.h,
+        src/base/ftobjs.c, src/base/ftinit.c: adding the new FT_Library_Version
+        API to return the library's current version in dynamic links.
+
         * src/README: updating for 2.0.9 release
 
         * src/pshinter/pshalgo2.c: changed 'print_zone' to 'psh2_print_zone'
@@ -11,6 +15,10 @@
 
         * src/autohint/ahhint.c, src/cache/ftcimage.c: removed compiler
         warnings (with Visual C++)
+
+        * src/type1/t1objs.c (T1_Face_Init), src/cid/cidobjs.c (CID_Face_Init):
+        fixed another bug related to the ascender/descender/text height of
+        Postscript fonts. Damn, this should have been fixed on 2002-03-04 !
 
 2002-03-06  Werner Lemberg  <wl@gnu.org>
 

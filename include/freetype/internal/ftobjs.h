@@ -609,6 +609,10 @@ FT_BEGIN_HEADER
 
     FT_Generic         generic;
 
+    FT_Int             version_major;
+    FT_Int             version_minor;
+    FT_Int             version_patch;
+
     FT_UInt            num_modules;
     FT_Module          modules[FT_MAX_MODULES];  /* module objects  */
 
