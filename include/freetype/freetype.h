@@ -941,7 +941,7 @@ FT_BEGIN_HEADER
   /*    FT_FACE_FLAG_XXX                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A list of bit flags used in the 'face_flags' field of the          */
+  /*    A list of bit flags used in the `face_flags' field of the          */
   /*    @FT_FaceRec structure.  They inform client applications of         */
   /*    properties of the corresponding face.                              */
   /*                                                                       */
@@ -2030,7 +2030,9 @@ FT_BEGIN_HEADER
   /*                   will be loaded.                                     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    glyph_index :: The index of the glyph in the font file.            */
+  /*    glyph_index :: The index of the glyph in the font file.  For       */
+  /*                   CID-keyed fonts (either in PS or in CFF format)     */
+  /*                   this argument specifies the CID value.              */
   /*                                                                       */
   /*    load_flags  :: A flag indicating what to load for this glyph.  The */
   /*                   @FT_LOAD_XXX constants can be used to control the   */

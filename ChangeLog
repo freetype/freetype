@@ -1,3 +1,10 @@
+2003-12-12  Wolfgang Domröse  <porthos.domroese@harz.de>
+
+	* src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String): Add
+	cast.
+	* src/cff/cffdrivr.c (cff_ps_has_glyph_names): Assure that return
+	value is either 0 or 1.
+
 2003-12-12  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffdrivr.c (cff_get_glyph_name): Improve error message.

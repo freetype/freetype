@@ -81,7 +81,7 @@
     /* For ordinary fonts get the character data stored in the face record. */
     {
       char_string->pointer = type1->charstrings[glyph_index];
-      char_string->length  = type1->charstrings_len[glyph_index];
+      char_string->length  = (FT_Int)type1->charstrings_len[glyph_index];
     }
 
     if ( !error )
@@ -97,6 +97,7 @@
     {
       FT_Incremental_MetricsRec  metrics;
 
+
       metrics.bearing_x = decoder->builder.left_bearing.x;
       metrics.bearing_y = decoder->builder.left_bearing.y;
       metrics.advance   = decoder->builder.advance.x;
@@ -111,7 +112,7 @@
 
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
-  return error;
+    return error;
   }
 
 
@@ -125,6 +126,7 @@
 
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
+
     if ( !error )
     {
       T1_Face  face = (T1_Face)decoder->builder.face;
@@ -135,6 +137,7 @@
           face->root.internal->incremental_interface->object,
           &glyph_data );
     }
+
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
     return error;
