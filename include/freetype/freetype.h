@@ -57,7 +57,7 @@ FT_BEGIN_HEADER
 
   /*************************************************************************
    *
-   * <Section> Base_Interface
+   * <Section> base_interface
    *
    * <Title> Base Interface
    *

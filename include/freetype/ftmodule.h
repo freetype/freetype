@@ -26,6 +26,18 @@
 
 FT_BEGIN_HEADER
 
+  /**************************************************************************
+   *
+   * <Section> Module_Management
+   *
+   * <Title> Module Management
+   *
+   * <Abstract> How to add, upgrade and remove modules from FreeType
+   *
+   * <Description>
+   *    The definitions below are used to manage modules within FreeType.
+   *    Modules can be added, upgraded and removed at runtime.
+   */
 
   /* module bit flags */
   typedef enum  FT_Module_Flags_

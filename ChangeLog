@@ -1,7 +1,11 @@
 2000-01-09  David Turner <david.turner@freetype.org>
 
 	* docs/docmaker.py: improved script to generate table of contents and
-	index pages.
+	index pages. it also supports wildcards on non Unix systems
+
+	* include/freetype/*.h, include/freetype/cache/*.h: updated comments 
+	to include section definitions / delimitations for the API Reference
+	generator..
 
 2000-01-04  Werner Lemberg  <wl@gnu.org>
 

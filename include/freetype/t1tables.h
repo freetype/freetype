@@ -28,6 +28,18 @@
 FT_BEGIN_HEADER
 
 
+  /********************************************************************
+   *
+   * <Section> Type1_Tables
+   *
+   * <Title> Type 1 Tables
+   *
+   * <Abstract> Type 1 (Postscript) specific font tables
+   *
+   * <Description>
+   *    This section ....
+   */
+   
   /* Note that we separate font data in T1_FontInfo and T1_Private */
   /* structures in order to support Multiple Master fonts.         */
 

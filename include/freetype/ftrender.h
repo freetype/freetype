@@ -27,6 +27,9 @@
 
 FT_BEGIN_HEADER
 
+  /****
+   * <Section> Module_Management
+   */
 
   /* create a new glyph object */
   typedef FT_Error  (*FT_Glyph_Init_Func)     ( FT_Glyph      glyph,

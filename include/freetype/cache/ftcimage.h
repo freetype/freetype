@@ -35,6 +35,10 @@
 FT_BEGIN_HEADER
 
 
+  /***
+   * <Section> cache_subsystem
+   */
+   
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -60,7 +64,7 @@ FT_BEGIN_HEADER
 
   /* monochrome bitmap */
 #define ftc_image_mono             ftc_image_format_bitmap | \
-                                    ftc_image_flag_monochrome
+                                   ftc_image_flag_monochrome
   /* anti-aliased bitmap */
 #define ftc_image_grays            ftc_image_format_bitmap
   /* scaled outline */
@@ -159,6 +163,7 @@ FT_BEGIN_HEADER
                                                  FT_UInt          gindex,
                                                  FT_Glyph        *aglyph );
 
+  /* */
 
 FT_END_HEADER
 

@@ -34,6 +34,19 @@
 
 FT_BEGIN_HEADER
 
+  /*******************************************************************
+   *
+   * <Section> Mac_Specific
+   *
+   * <Title> Mac-Specific Interface
+   *
+   * <Abstract>
+   *    Only available on the Macintosh
+   *
+   * <Description>
+   *    The following definitions are only available when FreeType
+   *    is compiled on a Macintosh.
+   */
 
   /*************************************************************************/
   /*                                                                       */
@@ -62,14 +75,18 @@ FT_BEGIN_HEADER
   /*    This function can be used to create FT_Face abjects from fonts     */
   /*    that are installed in the system like so:                          */
   /*                                                                       */
+  /*    {                                                                  */
   /*      fond = GetResource( 'FOND', fontName );                          */
   /*      error = FT_New_Face_From_FOND( library, fond, 0, &face );        */
+  /*                                                                       */
+  /*    }                                                                  */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_New_Face_From_FOND( FT_Library  library,
                                                 Handle      fond,
                                                 FT_Long     face_index,
                                                 FT_Face    *aface );
 
+  /* */
 
 FT_END_HEADER
 

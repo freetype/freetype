@@ -35,7 +35,7 @@ FT_BEGIN_HEADER
 
   /***********************************************************************
    *
-   * <Section> Basic_Types
+   * <Section> basic_types
    *
    */
 

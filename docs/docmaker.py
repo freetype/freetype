@@ -8,7 +8,7 @@
 #   - David
 #
 
-import fileinput, sys, string
+import fileinput, sys, string, glob
 
 html_header = """
 <html>
@@ -771,7 +771,7 @@ class DocSectionList:
 
 
     def append_section( self, block ):
-        name     = block.name
+        name     = string.lower( block.name )
         abstract = block.find_content( "abstract" )
 
         if self.sections.has_key( name ):
@@ -859,12 +859,13 @@ class DocSectionList:
 
         print "<center><table cellpadding=5>"
         for section in self.list:
-            print "<tr valign=top><td>"
-            print '<a href="' + section.filename + '">'
-            print section.title
-            print "</a></td><td>"
-            section.abstract.dump_html()
-            print "</td></tr>"
+            if section.abstract:
+                print "<tr valign=top><td>"
+                print '<a href="' + section.filename + '">'
+                print section.title
+                print "</a></td><td>"
+                section.abstract.dump_html()
+                print "</td></tr>"
 
         print "</table></center>"
 
@@ -980,6 +981,18 @@ def dump_html_1( block_list ):
 def make_block_list_inner():
     """parse a file and extract comments blocks from it"""
 
+    file_list = []
+    sys.stderr.write( repr( sys.argv[1:] ) + '\n' )
+    
+    for pathname in sys.argv[1:]:
+        newpath = glob.glob( pathname )
+        sys.stderr.write ( repr(newpath) + '\n' )
+        last = len(file_list)
+        file_list[last:last] = newpath
+
+    if len( file_list ) == 0:
+        file_list = None
+
     list   = []
     block  = []
     format = 0
@@ -997,7 +1010,7 @@ def make_block_list_inner():
     source      = []
     state       = 0
 
-    for line in fileinput.input():
+    for line in fileinput.input( file_list ):
         l = len( line )
         if l > 0 and line[l - 1] == '\012':
             line = line[0 : l - 1]

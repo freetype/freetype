@@ -26,6 +26,20 @@
 
 FT_BEGIN_HEADER
 
+  /**********************************************************************
+   *
+   *  <Section> Multiple_Masters
+   *
+   *  <Title> Multiple Masters
+   *
+   *  <Abstract>
+   *     How to manage multiple masters fonts
+   *
+   *  <Description>
+   *     The following types and functions are used to manage multiple
+   *     master fonts, i.e. choose specific design instances by setting
+   *     design axis coordinates.
+   */
 
   /*************************************************************************/
   /*                                                                       */
