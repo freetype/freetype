@@ -11,6 +11,10 @@
     * src/sfnt/ttsbit0.c, src/truetype/ttpload.c: removing compiler
     warnings
 
+    * include/freetype/config/ftmodule.h: moving the order of drivers to
+    speed up font loading. the pcf and bdf loaders are still slow and
+    eat memory like crazy.
+
 2005-03-03  Werner Lemberg  <wl@gnu.org>
 
 	* devel/ftoption.h: Updated to recent changes.
