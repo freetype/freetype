@@ -29,9 +29,11 @@ PLATFORM      := cygwin
 #
 FTSYS_SRC = @FTSYS_SRC@
 
-INSTALL       := @INSTALL@
-INSTALL_DATA  := @INSTALL_DATA@
-MKINSTALLDIRS := $(BUILD)/mkinstalldirs
+INSTALL         := @INSTALL@
+INSTALL_DATA    := @INSTALL_DATA@
+INSTALL_PROGRAM := @INSTALL_PROGRAM@
+INSTALL_SCRIPT  := @INSTALL_SCRIPT@
+MKINSTALLDIRS   := $(BUILD)/mkinstalldirs
 
 DISTCLEAN += $(BUILD)/config.cache    \
              $(BUILD)/config.log      \
@@ -76,7 +78,7 @@ endif
 LIB_DIR := $(OBJ_DIR)
 
 
-# the NO_OUTPUT macro is appended to command lines in order to ignore
+# The NO_OUTPUT macro is appended to command lines in order to ignore
 # the output of some programs.
 #
 NO_OUTPUT := 2> /dev/null
