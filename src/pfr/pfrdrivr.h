@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  t1gload.h                                                              */
+/*  pfrdrivr.h                                                             */
 /*                                                                         */
-/*    Type 1 Glyph Loader (specification).                                 */
+/*    High-level Type PFR driver interface                                 */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2002 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,31 +16,23 @@
 /***************************************************************************/
 
 
-#ifndef __T1GLOAD_H__
-#define __T1GLOAD_H__
+#ifndef __PFR_DRIVER_H__
+#define __PFR_DRIVER_H__
 
 
 #include <ft2build.h>
-#include "t1objs.h"
+#include FT_INTERNAL_DRIVER_H
 
 
 FT_BEGIN_HEADER
 
 
-  FT_LOCAL( FT_Error )
-  T1_Compute_Max_Advance( T1_Face  face,
-                          FT_Int*  max_advance );
-
-  FT_LOCAL( FT_Error )
-  T1_Load_Glyph( T1_GlyphSlot  glyph,
-                 T1_Size       size,
-                 FT_UInt       glyph_index,
-                 FT_Int        load_flags );
+  FT_EXPORT_VAR( const FT_Driver_ClassRec )  pfr_driver_class;
 
 
 FT_END_HEADER
 
-#endif /* __T1GLOAD_H__ */
+#endif /* __PFR_DRIVER_H__ */
 
 
 /* END */

@@ -1,3 +1,24 @@
+2002-04-19  David Turner  <david@freetype.org>
+
+        * src/type1/t1gload.h, src/type1/t1gload.c: fixed incorrect
+          parameter sign-ness in callback function
+
+        * include/freetype/config/ftmodule.h,
+          include/freetype/internal/fttrace.h,
+          src/Jamfile, src/pfr/*:
+        
+          adding a PFR font driver to the FreeType sources. Not that it
+          doesn't support embedded bitmaps or kerning tables for now..
+
+
+        * include/freetype/internal/ftmemory.h: adding the FT_MEM_ZERO
+          and FT_ZERO macros
+
+        * include/freetype/internal/ftstream.h: adding the FT_NEXT_OFF3,
+          FT_NEXT_UOFF3, FT_NEXT_OFF3_LE and FT_NEXT_UOFF3_LE to parse
+          in-memory 24-bit integers.
+
+
 2002-04-18  David Turner  <david@freetype.org>
 
 	* src/base/ftobjs.c, builds/win32/ftdebug.c,
