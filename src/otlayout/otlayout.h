@@ -6,6 +6,7 @@
 
 OTL_BEGIN_HEADER
 
+
  /************************************************************************/
  /************************************************************************/
  /*****                                                              *****/
@@ -21,24 +22,26 @@ OTL_BEGIN_HEADER
 
   typedef void*             OTL_Pointer;
 
-  typedef int               OTL_Int;
+  typedef unsigned char     OTL_Bool;
+
+  typedef signed int        OTL_Int;
   typedef unsigned int      OTL_UInt;
 
-  typedef long              OTL_Long;
+  typedef signed long       OTL_Long;
   typedef unsigned long     OTL_ULong;
 
-  typedef short             OTL_Int16;
+  typedef signed short      OTL_Int16;
   typedef unsigned short    OTL_UInt16;
 
 
 #if OTL_SIZEOF_INT == 4
 
-  typedef int               OTL_Int32;
+  typedef signed int        OTL_Int32;
   typedef unsigned int      OTL_UInt32;
 
 #elif OTL_SIZEOF_LONG == 4
 
-  typedef long              OTL_Int32;
+  typedef signed long       OTL_Int32;
   typedef unsigned long     OTL_UInt32;
 
 #else
@@ -46,6 +49,7 @@ OTL_BEGIN_HEADER
 #endif
 
   typedef OTL_UInt32        OTL_Tag;
+
 
  /************************************************************************/
  /************************************************************************/
@@ -55,16 +59,17 @@ OTL_BEGIN_HEADER
  /************************************************************************/
  /************************************************************************/
 
-  typedef enum
+  enum
   {
     OTL_Err_Ok = 0,
-    OTL_Err_InvalidArgument,
     OTL_Err_InvalidFormat,
+    OTL_Err_InvalidSize,
+    OTL_Err_InvalidData,
     OTL_Err_InvalidOffset,
 
     OTL_Err_Max
 
-  } OTL_Error;
+  };
 
 
  /************************************************************************/
@@ -94,6 +99,7 @@ OTL_BEGIN_HEADER
 
   } OTL_MemoryRec, *OTL_Memory;
 
+
  /************************************************************************/
  /************************************************************************/
  /*****                                                              *****/
@@ -107,9 +113,9 @@ OTL_BEGIN_HEADER
 #ifndef  OTL_MAKE_TAG
 #define  OTL_MAKE_TAG(c1,c2,c3,c4)         \
            ( ( (OTL_UInt32)(c1) << 24 ) |  \
-               (OTL_UInt32)(c2) << 16 ) |  \
-               (OTL_UInt32)(c3) <<  8 ) |  \
-               (OTL_UInt32)(c4)         )
+             ( (OTL_UInt32)(c2) << 16 ) |  \
+             ( (OTL_UInt32)(c3) <<  8 ) |  \
+             ( (OTL_UInt32)(c4)       ) )
 #endif
 
   typedef enum OTL_ScriptTag_
@@ -162,6 +168,7 @@ OTL_BEGIN_HEADER
 #define  OTL_NEXT_SHORT(p)   ((OTL_Int16)OTL_NEXT_USHORT(p))
 #define  OTL_NEXT_LONG(p)    ((OTL_Int32)OTL_NEXT_ULONG(p))
 
+
  /************************************************************************/
  /************************************************************************/
  /*****                                                              *****/
@@ -181,8 +188,8 @@ OTL_BEGIN_HEADER
 
   } OTL_ValidatorRec;
 
-  typedef void  (*OTL_ValidateFunc)( OTL_Bytes  table,
-                                     OTL_Valid  valid );
+  typedef void  (*OTL_ValidateFunc)( OTL_Bytes      table,
+                                     OTL_Validator  valid );
 
   OTL_API( void )
   otl_validator_error( OTL_Validator  validator,
@@ -190,8 +197,10 @@ OTL_BEGIN_HEADER
 
 #define  OTL_INVALID(e)  otl_validator_error( valid, e )
 
-#define  OTL_INVALID_TOO_SHORT  OTL_INVALID( OTL_Err_InvalidOffset )
-#define  OTL_INVALID_DATA       OTL_INVALID( OTL_Err_InvalidFormat )
+#define  OTL_INVALID_TOO_SHORT  OTL_INVALID( OTL_Err_InvalidSize )
+#define  OTL_INVALID_OFFSET     OTL_INVALID( OTL_Err_InvalidOffset )
+#define  OTL_INVALID_DATA       OTL_INVALID( OTL_Err_InvalidData )
+#define  OTL_INVALID_FORMAT     OTL_INVALID( OTL_Err_InvalidFormat )
 
 #define  OTL_CHECK(_count)   OTL_BEGIN_STMNT                       \
                                if ( p + (_count) > valid->limit )  \
@@ -202,4 +211,4 @@ OTL_BEGIN_HEADER
 
 OTL_END_HEADER
 
-#endif /* __OPENTYPE_LAYOUT_H__ */
+#endif /* __OT_LAYOUT_H__ */

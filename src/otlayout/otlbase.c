@@ -24,7 +24,7 @@
 
       case 3:
         OTL_CHECK( 2 );
-        otl_device_table_validate( table + OTL_PEEK_USHORT( p ) );
+        otl_device_table_validate( table + OTL_PEEK_USHORT( p ), valid );
         break;
 
       default:
@@ -106,7 +106,7 @@
                             OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   values, default_minmax;
+    OTL_UInt   values, default_minmax, count;
 
     OTL_CHECK(6);
 
@@ -144,7 +144,7 @@
     for ( ; count > 0; count-- )
     {
       p += 4;  /* ignore script tag */
-      otl_base_script_validate( table + OTL_NEXT_USHORT( p ) );
+      otl_base_script_validate( table + OTL_NEXT_USHORT( p ), valid );
     }
   }
 
@@ -159,9 +159,9 @@
 
     tags = OTL_NEXT_USHORT( p );
     if ( tags )
-      otl_base_tag_list_validate   ( table + tags );
+      otl_base_tag_list_validate( table + tags, valid );
 
-    otl_base_script_list_validate( table + OTL_NEXT_USHORT( p ) );
+    otl_base_script_list_validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
 
@@ -176,6 +176,6 @@
     if ( OTL_NEXT_ULONG( p ) != 0x10000UL )
       OTL_INVALID_DATA;
 
-    otl_axis_table_validate( table + OTL_NEXT_USHORT( p ) );
-    otl_axis_table_validate( table + OTL_NEXT_USHORT( p ) );
+    otl_axis_table_validate( table + OTL_NEXT_USHORT( p ), valid );
+    otl_axis_table_validate( table + OTL_NEXT_USHORT( p ), valid );
   }

@@ -126,10 +126,12 @@ OTL_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
 
+#if 0
   /* validate lookup list */
   OTL_LOCALDEF( void )
   otl_lookup_list_validate( OTL_Bytes      table,
                             OTL_Validator  valid );
+#endif
 
   /* return number of lookups in list */
   OTL_LOCALDEF( OTL_UInt )
@@ -146,11 +148,13 @@ OTL_BEGIN_HEADER
                              OTL_UInt   lookup_index,
                              OTL_UInt   table_index );
 
+#if 0
   /* iterate over lookup list */
   OTL_LOCALDEF( void )
   otl_lookup_list_foreach( OTL_Bytes        table,
                            OTL_ForeachFunc  func,
                            OTL_Pointer      func_data );
+#endif
 
 
   /*************************************************************************/
@@ -202,11 +206,13 @@ OTL_BEGIN_HEADER
   otl_feature_list_get_feature( OTL_Bytes  table,
                                 OTL_UInt   idx );
 
+#if 0
   /* iterate over all features in a list */
   OTL_LOCALDEF( void )
   otl_feature_list_foreach( OTL_Bytes        table,
                             OTL_ForeachFunc  func,
                             OTL_Pointer      func_data );
+#endif
 
 
   /*************************************************************************/

@@ -1,6 +1,7 @@
 #include "otlparse.h"
 #include "otlutils.h"
 
+
   static void
   otl_string_ensure( OTL_String  string,
                      OTL_UInt    count,
@@ -18,7 +19,7 @@
         new_count += (new_count >> 1) + 16;
 
       if ( OTL_MEM_RENEW_ARRAY( string->glyphs, old_count, new_count ) )
-        otl_parser_error( parser, OTL_Parse_Err_Memory );
+        otl_parser_error( parser, OTL_Err_Parser_Memory );
 
       string->capacity = new_count;
     }
@@ -26,7 +27,7 @@
 
 #define  OTL_STRING_ENSURE(str,count,parser)                   \
            OTL_BEGIN_STMNT                                     \
-             if ( (str)->length + (count) > (str)>capacity )   \
+             if ( (str)->length + (count) > (str)->capacity )  \
                otl_string_ensure( str, count, parser );        \
            OTL_END_STMNT
 
@@ -36,27 +37,24 @@
   {
     OTL_String  in = parser->str_in;
 
-    if ( in->cursor >= in->num_glyphs )
+    if ( in->cursor >= in->length )
       otl_parser_error( parser, OTL_Err_Parser_Internal );
 
-    return in->str[ in->cursor ].gindex;
+    return in->glyphs[ in->cursor ].gindex;
   }
 
 
   OTL_LOCALDEF( void )
   otl_parser_error( OTL_Parser      parser,
-                    OTL_ParseError  error; )
+                    OTL_ParseError  error )
   {
     parser->error = error;
     otl_longjmp( parser->jump_buffer, 1 );
   }
 
-#define  OTL_PARSER_UNCOVERED(x)  otl_parser_error( x, OTL_Parse_Err_UncoveredGlyph );
-
   OTL_LOCAL( void )
   otl_parser_check_property( OTL_Parser  parser,
                              OTL_UInt    gindex,
-                             OTL_UInt    flags,
                              OTL_UInt   *aproperty );
 
   OTL_LOCALDEF( void )
@@ -68,14 +66,14 @@
     OTL_StringGlyph  glyph, in_glyph;
 
     /* sanity check */
-    if ( in == NULL               ||
-         out == NULL              ||
+    if ( in == 0                  ||
+         out == 0                 ||
          in->length == 0          ||
          in->cursor >= in->length )
     {
       /* report as internal error, since these should */
       /* never happen !!                              */
-      otl_parser_error( parser, OTL_Err_Parse_Internal );
+      otl_parser_error( parser, OTL_Err_Parser_Internal );
     }
 
     OTL_STRING_ENSURE( out, 1, parser );
@@ -83,7 +81,7 @@
     in_glyph = in->glyphs  + in->cursor;
 
     glyph->gindex        = gindex;
-    glyph->property      = in_glyph->property;
+    glyph->properties    = in_glyph->properties;
     glyph->lig_component = in_glyph->lig_component;
     glyph->lig_id        = in_glyph->lig_id;
 
@@ -97,37 +95,37 @@
                         OTL_UInt    count,
                         OTL_Bytes   indices )
   {
-    OTL_UInt         lig_component, lig_id, property;
+    OTL_UInt         lig_component, lig_id, properties;
     OTL_String       in  = parser->str_in;
     OTL_String       out = parser->str_out;
     OTL_StringGlyph  glyph, in_glyph;
     OTL_Bytes        p = indices;
 
     /* sanity check */
-    if ( in == NULL               ||
-         out == NULL              ||
+    if ( in == 0                  ||
+         out == 0                 ||
          in->length == 0          ||
          in->cursor >= in->length )
     {
       /* report as internal error, since these should */
       /* never happen !!                              */
-      otl_parser_error( parser, OTL_Err_Parse_Internal );
+      otl_parser_error( parser, OTL_Err_Parser_Internal );
     }
 
     OTL_STRING_ENSURE( out, count, parser );
     glyph    = out->glyphs + out->length;
     in_glyph = in->glyphs  + in->cursor;
 
-    glyph->gindex = gindex;
+    glyph->gindex = in_glyph->gindex;
 
     lig_component = in_glyph->lig_component;
-    lig_id        = in_glyph->lid_id;
-    property      = in_glyph->property;
+    lig_id        = in_glyph->lig_id;
+    properties    = in_glyph->properties;
 
     for ( ; count > 0; count-- )
     {
       glyph->gindex        = OTL_NEXT_USHORT(p);
-      glyph->property      = property;
+      glyph->properties    = properties;
       glyph->lig_component = lig_component;
       glyph->lig_id        = lig_id;
 
@@ -137,6 +135,3 @@
     out->cursor  = out->length;
     in->cursor  += 1;
   }
-
-
-

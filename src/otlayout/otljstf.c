@@ -69,7 +69,7 @@
                               OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   offset;
+    OTL_UInt   offset, val;
 
     OTL_CHECK( 20 );
 
@@ -186,4 +186,3 @@
       otl_jstf_script_validate( table + OTL_NEXT_USHORT( p ), valid );
     }
   }
-  

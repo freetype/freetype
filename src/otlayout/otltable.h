@@ -38,6 +38,7 @@ OTL_BEGIN_HEADER
   } OTL_TableRec;
 
 
+#if 0
   OTL_API( OTL_Error )
   otl_table_validate( OTL_Bytes      table,
                       OTL_Size       size,
@@ -54,6 +55,7 @@ OTL_BEGIN_HEADER
   otl_table_set_script( OTL_Table      table,
                         OTL_ScriptTag  script,
                         OTL_LangTag    language );
+#endif
 
 OTL_END_HEADER
 
