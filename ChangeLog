@@ -1,3 +1,8 @@
+2005-02-27  David Turner  <david@freetype.org>
+
+  * src/sfnt/ttkern.c (tt_face_load_kern): fixing a small bug which returned
+  invalid (random) values for the horizontal kerning
+
 2005-02-25  David Turner  <david@freetype.org>
 
   * many, many files: several memory optimizations were implemented to
