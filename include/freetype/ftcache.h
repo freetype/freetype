@@ -64,7 +64,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   FTC_Manager_New                                                     */
   /*   FTC_Manager_LookupFace                                              */
-  /*   FTC_Manager_Lookup_Size                                             */
+  /*   FTC_Manager_LookupSize                                              */
   /*                                                                       */
   /*   FTC_Node                                                            */
   /*   FTC_Node_Ref                                                        */
@@ -342,7 +342,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    The @FT_Face object doesn't necessarily have a current size object */
   /*    (i.e., face->size can be 0).  If you need a specific `font size',  */
-  /*    use @FTC_Manager_Lookup_Size instead.                              */
+  /*    use @FTC_Manager_LookupSize instead.                               */
   /*                                                                       */
   /*    Never change the face's transformation matrix (i.e., never call    */
   /*    the @FT_Set_Transform function) on a returned face!  If you need   */
@@ -352,6 +352,94 @@ FT_BEGIN_HEADER
   FTC_Manager_LookupFace( FTC_Manager  manager,
                           FTC_FaceID   face_id,
                           FT_Face     *aface );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Type>                                                                */
+  /*    FTC_Scaler                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Handle to a @FTC_ScalerRec structure.                              */
+  /*                                                                       */
+  typedef struct FTC_FaceIDRec_*  FTC_FaceID;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Struct>                                                              */
+  /*    FTC_ScalerRec                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A structure used to describe a given character size in either      */
+  /*    pixels or points to the cache manager. See @FTC_Manager_LookupSize */
+  /*                                                                       */
+  /* <Fields>                                                              */
+  /*    face_id :: source face id                                          */
+  /*                                                                       */
+  /*    width   :: character width                                         */
+  /*                                                                       */
+  /*    height  :: character height                                        */
+  /*                                                                       */
+  /*    pixel   :: booelan. If TRUE, the "width" and "height" fields       */
+  /*               are interpreted as integer pixel character sizes.       */
+  /*               If false, they are expressed as 1/64th of points        */
+  /*                                                                       */
+  /*    x_res   :: only used when 'pixel' is FALSE. indicates the          */
+  /*               horizontal resolution in dpis                           */
+  /*                                                                       */
+  /*    y_res   :: only used when 'pixel' is FALSE. indicates the          */
+  /*               vertical resolution in dpis                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    This type is mainly used to retrieve @FT_Size objects through the  */
+  /*    cache manager.                                                     */
+  /*                                                                       */
+  typedef struct  FTC_ScalerRec_
+  {
+    FTC_FaceID  face_id;
+    FT_UInt     width;
+    FT_UInt     height;
+    FT_Int      pixel;
+    FT_UInt     x_res;
+    FT_UInt     y_res;
+
+  } FTC_ScalerRec, *FTC_Scaler;
+
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FTC_Manager_LookupSize                                             */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Retrieves the @FT_Size object that corresponds to a given          */
+  /*    @FTC_Scaler through a cache manager.                               */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    manager :: A handle to the cache manager.                          */
+  /*                                                                       */
+  /*    scaler  :: scaler handle.                                          */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    asize   :: A handle to the size object.                            */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The returned @FT_Size object is always owned by the manager.  You  */
+  /*    should never try to discard it yourself.                           */
+  /*                                                                       */
+  /*    You can access the parent @FT_Face object simply as "size->face"   */
+  /*    if you need it. Note that this object is also owner by the         */
+  /*    manager.                                                           */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FTC_Manager_LookupSize( FTC_Manager  manager,
+                          FTC_Scaler   scaler,
+                          FT_Size     *asize );
 
 
   /*************************************************************************/
