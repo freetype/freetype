@@ -4,8 +4,10 @@
 /*                                                                         */
 /*    Definitions for the unpatented TrueType hinting system               */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 2003 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  Written by Graham Asher <graham.asher@btinternet.com>                  */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
 /*  modified, and distributed under the terms of the FreeType project      */

@@ -225,11 +225,11 @@
 #define FAILURE  1
 
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
-#define GUESS_VECTOR( V )                                       \
-  if ( CUR.face->unpatented_hinting )                                 \
-  {                                                             \
-    CUR.GS.V.x = (FT_F2Dot14)(CUR.GS.both_x_axis ? 0x4000 : 0); \
-    CUR.GS.V.y = (FT_F2Dot14)(CUR.GS.both_x_axis ? 0 : 0x4000); \
+#define GUESS_VECTOR( V )                                         \
+  if ( CUR.face->unpatented_hinting )                             \
+  {                                                               \
+    CUR.GS.V.x = (FT_F2Dot14)( CUR.GS.both_x_axis ? 0x4000 : 0 ); \
+    CUR.GS.V.y = (FT_F2Dot14)( CUR.GS.both_x_axis ? 0 : 0x4000 ); \
   }
 #else
 #define GUESS_VECTOR( V )
@@ -758,7 +758,7 @@
     { 0x4000, 0 },
 
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
-	TRUE,
+    TRUE,
 #endif
 
     1, 64, 1,
@@ -1371,7 +1371,7 @@
       }
       else
 #endif
-	  {
+      {
         if ( CUR.GS.projVector.y == 0 )
           CUR.tt_metrics.ratio = CUR.tt_metrics.x_ratio;
 
@@ -1382,12 +1382,15 @@
         {
           FT_Long  x, y;
 
-          x = TT_MULDIV( CUR.GS.projVector.x, CUR.tt_metrics.x_ratio, 0x4000 );
-          y = TT_MULDIV( CUR.GS.projVector.y, CUR.tt_metrics.y_ratio, 0x4000 );
+
+          x = TT_MULDIV( CUR.GS.projVector.x,
+                         CUR.tt_metrics.x_ratio, 0x4000 );
+          y = TT_MULDIV( CUR.GS.projVector.y,
+                         CUR.tt_metrics.y_ratio, 0x4000 );
           CUR.tt_metrics.ratio = TT_VecLen( x, y );
         }
-	  }
-	}
+      }
+    }
     return CUR.tt_metrics.ratio;
   }
 
@@ -1555,11 +1558,11 @@
                         FT_UShort     point,
                         FT_F26Dot6    distance )
   {
-
     FT_F26Dot6  v;
 
+
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
-    FT_ASSERT(!CUR.face->unpatented_hinting);
+    FT_ASSERT( !CUR.face->unpatented_hinting );
 #endif
 
     v = CUR.GS.freeVector.x;
@@ -1585,7 +1588,6 @@
 
       zone->tags[point] |= FT_CURVE_TAG_TOUCH_Y;
     }
-
   }
 
 
@@ -2124,8 +2126,9 @@
                     FT_Vector*  v2 )
   {
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
-    FT_ASSERT(!CUR.face->unpatented_hinting);
+    FT_ASSERT( !CUR.face->unpatented_hinting );
 #endif
+
     return TT_DotFix14( v1->x - v2->x,
                         v1->y - v2->y,
                         CUR.GS.projVector.x,
@@ -2180,13 +2183,14 @@
                          FT_Vector*  v2 )
   {
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
-    FT_ASSERT(!CUR.face->unpatented_hinting);
+    FT_ASSERT( !CUR.face->unpatented_hinting );
 #endif
     return TT_DotFix14( v1->x - v2->x,
                         v1->y - v2->y,
                         CUR.GS.freeVector.x,
                         CUR.GS.freeVector.y );
   }
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2254,16 +2258,17 @@
   {
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
     if ( CUR.face->unpatented_hinting )
-	{
+    {
       /* If both vectors point rightwards along the x axis, set             */
-	  /* 'both-x-axis' true, otherwise set it false. The x values only      */
-	  /* need be tested because the vector has been normalised to a unit    */
-	  /* vector of length 0x4000 = unity.                                   */
-      CUR.GS.both_x_axis = (FT_Bool)(CUR.GS.projVector.x == 0x4000 && CUR.GS.freeVector.x == 0x4000);
+      /* `both-x-axis' true, otherwise set it false.  The x values only     */
+      /* need be tested because the vector has been normalised to a unit    */
+      /* vector of length 0x4000 = unity.                                   */
+      CUR.GS.both_x_axis = (FT_Bool)( CUR.GS.projVector.x == 0x4000 &&
+                                      CUR.GS.freeVector.x == 0x4000 );
 
-      /* Throw away projection  and freedom vector information */
-      /* because the patents don't allow them to be stored.    */
-      /* The relevant US Patents are 5155805 and 5325479.      */
+      /* Throw away projection and freedom vector information */
+      /* because the patents don't allow them to be stored.   */
+      /* The relevant US Patents are 5155805 and 5325479.     */
       CUR.GS.projVector.x = 0;
       CUR.GS.projVector.y = 0;
       CUR.GS.freeVector.x = 0;
@@ -2271,15 +2276,15 @@
 
       if ( CUR.GS.both_x_axis )
       {
-	    CUR.func_project = Project_x;
-	    CUR.func_freeProj = Project_x;
-        CUR.func_move = Direct_Move_X;
+        CUR.func_project  = Project_x;
+        CUR.func_freeProj = Project_x;
+        CUR.func_move     = Direct_Move_X;
       }
-	  else
+      else
       {
-	    CUR.func_project = Project_y;
-	    CUR.func_freeProj = Project_y;
-        CUR.func_move = Direct_Move_Y;
+        CUR.func_project  = Project_y;
+        CUR.func_freeProj = Project_y;
+        CUR.func_move     = Direct_Move_Y;
       }
 
       if ( CUR.GS.dualVector.x == 0x4000 )
@@ -2287,7 +2292,7 @@
       else
       {
         if ( CUR.GS.dualVector.y == 0x4000 )
-            CUR.func_dualproj = Project_y;
+          CUR.func_dualproj = Project_y;
         else
           CUR.func_dualproj = Dual_Project;
       }
@@ -2295,9 +2300,9 @@
       /* Force recalculation of cached aspect ratio */
       CUR.tt_metrics.ratio = 0;
 
-	  return;
-	}
-#endif
+      return;
+    }
+#endif /* TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING */
 
     if ( CUR.GS.freeVector.x == 0x4000 )
     {
@@ -2656,39 +2661,39 @@
 
 
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
-#define DO_GPV                                  \
-    if ( CUR.face->unpatented_hinting )               \
-    {                                           \
-      args[0] = CUR.GS.both_x_axis ? 0x4000 : 0;\
-      args[1] = CUR.GS.both_x_axis ? 0 : 0x4000;\
-    }                                           \
-    else                                        \
-    {                                           \
-      args[0] = CUR.GS.projVector.x;            \
-      args[1] = CUR.GS.projVector.y;            \
+#define DO_GPV                                   \
+    if ( CUR.face->unpatented_hinting )          \
+    {                                            \
+      args[0] = CUR.GS.both_x_axis ? 0x4000 : 0; \
+      args[1] = CUR.GS.both_x_axis ? 0 : 0x4000; \
+    }                                            \
+    else                                         \
+    {                                            \
+      args[0] = CUR.GS.projVector.x;             \
+      args[1] = CUR.GS.projVector.y;             \
     }
 #else
-#define DO_GPV                                  \
-    args[0] = CUR.GS.projVector.x;              \
+#define DO_GPV                                   \
+    args[0] = CUR.GS.projVector.x;               \
     args[1] = CUR.GS.projVector.y;
 #endif
 
 
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
-#define DO_GFV                                  \
-    if ( CUR.face->unpatented_hinting )               \
-    {                                           \
-      args[0] = CUR.GS.both_x_axis ? 0x4000 : 0;\
-      args[1] = CUR.GS.both_x_axis ? 0 : 0x4000;\
-    }                                           \
-    else                                        \
-    {                                           \
-      args[0] = CUR.GS.freeVector.x;            \
-      args[1] = CUR.GS.freeVector.y;            \
+#define DO_GFV                                   \
+    if ( CUR.face->unpatented_hinting )          \
+    {                                            \
+      args[0] = CUR.GS.both_x_axis ? 0x4000 : 0; \
+      args[1] = CUR.GS.both_x_axis ? 0 : 0x4000; \
+    }                                            \
+    else                                         \
+    {                                            \
+      args[0] = CUR.GS.freeVector.x;             \
+      args[1] = CUR.GS.freeVector.y;             \
     }
 #else
-#define DO_GFV                                  \
-    args[0] = CUR.GS.freeVector.x;              \
+#define DO_GFV                                   \
+    args[0] = CUR.GS.freeVector.x;               \
     args[1] = CUR.GS.freeVector.y;
 #endif
 
@@ -5262,7 +5267,7 @@
                            FT_Bool     touch )
   {
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
-    if (CUR.face->unpatented_hinting)
+    if ( CUR.face->unpatented_hinting )
     {
       if ( CUR.GS.both_x_axis )
       {
@@ -5466,16 +5471,16 @@
     }
 
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
-    if ( CUR.face->unpatented_hinting)
+    if ( CUR.face->unpatented_hinting )
     {
       if ( CUR.GS.both_x_axis )
       {
         dx = TT_MulFix14( args[0], 0x4000 );
-		dy = 0;
+        dy = 0;
       }
       else
       {
-		dx = 0;
+        dx = 0;
         dy = TT_MulFix14( args[0], 0x4000 );
       }
     }
@@ -6383,7 +6388,7 @@
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
     /* Delta hinting is covered by US Patent 5159668. */
     if ( CUR.face->unpatented_hinting )
-  	{
+      {
       FT_Long n = args[0] * 2;
       if ( CUR.args < n )
       {
@@ -6391,7 +6396,7 @@
         return;
       }
 
-	  CUR.args -= n;
+      CUR.args -= n;
       CUR.new_top = CUR.args;
       return;
     }
@@ -6471,18 +6476,21 @@
     FT_ULong  A, C;
     FT_Long   B;
 
+
 #ifdef TT_CONFIG_OPTION_COMPILE_UNPATENTED_HINTING
     /* Delta hinting is covered by US Patent 5159668. */
     if ( CUR.face->unpatented_hinting )
-  	{
-      FT_Long n = args[0] * 2;
+    {
+      FT_Long  n = args[0] * 2;
+
+
       if ( CUR.args < n )
       {
         CUR.error = TT_Err_Too_Few_Arguments;
         return;
       }
 
-	  CUR.args -= n;
+      CUR.args -= n;
       CUR.new_top = CUR.args;
       return;
     }
