@@ -1708,8 +1708,8 @@
   {
     FT_Byte*           table = face->cmap_table;
     FT_Byte*           limit = table + face->cmap_size;
-    volatile FT_UInt   num_cmaps;
-    volatile FT_Byte*  p     = table;
+    FT_UInt volatile   num_cmaps;
+    FT_Byte* volatile  p     = table;
 
 
     if ( p + 4 > limit )
@@ -1742,7 +1742,7 @@
       {
         FT_Byte*                       cmap   = table + offset;
         FT_UInt                        format = TT_PEEK_USHORT( cmap );
-        volatile const TT_CMap_Class*  pclazz = tt_cmap_classes;
+        const TT_CMap_Class* volatile  pclazz = tt_cmap_classes;
         TT_CMap_Class                  clazz;
 
 

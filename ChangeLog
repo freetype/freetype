@@ -1,3 +1,36 @@
+2002-11-05  David Turner  <david@freetype.org>
+
+        * include/freetype/config/ftoption.h, src/gzip/ftgzip.c: added
+        support for the FT_CONFIG_OPTION_SYSTEM_ZLIB option, used to specify
+        the use of system-wide zlib.
+
+        Note that this macro, as well as FT_CONFIG_OPTION_BYTECODE_INTERPRETER,
+        is not #undef-ed anymore. This allows the build system to define them
+        depending on the configuration (typically by adding -D flags at
+        compile time).
+
+        * src/sfnt/ttcmap0.c (tt_face_build_cmaps): removed compiler warnings
+        in optimized mode relative to the "volatile" local variables. This was
+        not a compiler bug after all, but the fact that a pointer to a volatile
+        variable is not the same than a volatile pointer to a variable :-)
+
+        the fix was to change  "volatile FT_Byte*  p"
+        into                   "FT_Byte* volatile  p"
+
+        * src/pfr/pfrload.c, src/pfr/pfrdrivr.c, src/gzip/inftrees.c: removed
+        compiler warnings in optimized modes
+
+        * src/gzip/*.[hc]: modified our ZLib copy in order to prevent exporting
+        any zlib function names outside of the component. This prevents linking
+        problems on some platforms, when applications want to link FreeType
+        _and_ ZLib together.
+
+
+2002-11-05  Juliusz  <jch@pps.jussieu.fr>
+
+        * src/psaux/psobjs.c (ps_table_add): modified increment loop in
+        order to implement exponential behaviour
+
 2002-10-31  David Turner  <david@freetype.org>
 
         * include/freetype/ftgzip.h, src/gzip/ftgzip.c:
@@ -132,7 +165,7 @@
 	ft_smooth_render_lcd_v): Ditto.
 	(ft_smooth_render_generic): Change third and fifth parameter to
 	`FT_Render_Mode'.
-	
+
 	* include/freetype/freetype.h, include/freetype/internal/ftobjs.h,
 	include/freetype/ftglyph.h: Updated.
 

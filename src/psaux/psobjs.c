@@ -174,7 +174,11 @@
         in_offset = -1;
 
       while ( new_size < table->cursor + length )
-        new_size += 1024;
+      {
+        /* increase size by 25% and round up to the nearest multiple of 1024 */
+        new_size += (new_size >> 2) + 1;
+        new_size  = ( new_size + 1023 ) & -1024;
+      }
 
       error = reallocate_t1_table( table, new_size );
       if ( error )

@@ -27,13 +27,24 @@
 
 #ifdef FT_CONFIG_OPTION_USE_ZLIB
 
-#  define  NO_DUMMY_DECL
-#  define  BUILDFIXED  /* save code size */
+#ifdef FT_CONFIG_OPTION_SYSTEM_ZLIB
 
 #  include "zlib.h"
 
-#  if 1  /* we choose to include directly the zlib sources in this component */
-         /* this is done to avoid ugly library dependencies                  */
+#else /* !SYSTEM_ZLIB */
+
+ /* in this case, we include our own modified sources of the ZLib   */
+ /* within the "ftgzip" component. The modifications were necessary */
+ /* to #include all files without conflicts, as well as preventing  */
+ /* the definition of "extern" functions that may cause linking     */
+ /* conflicts when a program is linked with both FreeType and the   */
+ /* original ZLib                                                   */
+
+#  define  NO_DUMMY_DECL
+#  define  BUILDFIXED    /* save code size */
+#  define  MY_ZCALLOC
+
+#  include "zlib.h"
 
 #    undef   SLOW
 #    define  SLOW  1  /* we can't use asm-optimized sources here !! */
@@ -46,7 +57,7 @@
 #    include "inflate.c"
 #    include "adler32.c"
 
-#  endif  /* 1 */
+#endif /* !SYSTEM_ZLIB */
 
 
 /***************************************************************************/
@@ -80,6 +91,27 @@
  {
    FT_MEM_FREE( address );
  }
+
+
+#ifndef FT_CONFIG_OPTION_SYSTEM_ZLIB
+
+ local voidpf
+ zcalloc (opaque, items, size)
+    voidpf opaque;
+    unsigned items;
+    unsigned size;
+ {
+   return ft_gzip_alloc( opaque, items, size );
+ }
+
+ local void
+ zcfree( voidpf  opaque,
+         voidpf  ptr )
+ {
+   ft_gzip_free( opaque, ptr );
+ }
+
+#endif /* !SYSTEM_ZLIB */
 
 
 /***************************************************************************/

@@ -233,11 +233,8 @@
       sign = -1;
     }
 
+    /* do not touch serifs widths !! */
 #if 0
-    if ( dist < 32 )
-      dist = 32;
-#else
-    /* do not strengthen serifs */
     if ( base->flags & AH_EDGE_DONE )
     {
       if ( dist >= 64 )
@@ -360,77 +357,50 @@
         if ( edge2->blue_edge || edge2 < edge )
         {
 
-#if 0
-          printf( "strange blue alignment, edge %d to %d\n",
-                  edge - edges, edge2 - edges );
-#endif
-
           ah_align_linked_edge( hinter, edge2, edge, dimension );
           edge->flags |= AH_EDGE_DONE;
           continue;
         }
 
+        if ( !anchor )
         {
-#if 0
-          FT_Bool  min = 0;
-#endif
+          edge->pos = ( edge->opos + 32 ) & -64;
+          anchor    = edge;
+
+          edge->flags |= AH_EDGE_DONE;
+
+          ah_align_linked_edge( hinter, edge, edge2, dimension );
+        }
+        else
+        {
+          FT_Pos   org_pos, org_len, org_center, cur_len;
+          FT_Pos   cur_pos1, cur_pos2, delta1, delta2;
 
 
-          if ( !anchor )
-          {
-            edge->pos = ( edge->opos + 32 ) & -64;
-            anchor    = edge;
+          org_pos    = anchor->pos + (edge->opos - anchor->opos);
+          org_len    = edge2->opos - edge->opos;
+          org_center = org_pos + ( org_len >> 1 );
 
-            edge->flags |= AH_EDGE_DONE;
+          cur_len    = ah_compute_stem_width( hinter, dimension, org_len );
 
-            ah_align_linked_edge( hinter, edge, edge2, dimension );
-          }
-          else
-          {
-            FT_Pos   org_pos, org_len, org_center, cur_len;
-            FT_Pos   cur_pos1, cur_pos2, delta1, delta2;
+          cur_pos1   = ( org_pos + 32 ) & -64;
+          delta1     = ( cur_pos1 + ( cur_len >> 1 ) - org_center );
+          if ( delta1 < 0 )
+            delta1 = -delta1;
 
+          cur_pos2   = ( ( org_pos + org_len + 32 ) & -64 ) - cur_len;
+          delta2     = ( cur_pos2 + ( cur_len >> 1 ) - org_center );
+          if ( delta2 < 0 )
+            delta2 = -delta2;
 
-            org_pos    = anchor->pos + (edge->opos - anchor->opos);
-            org_len    = edge2->opos - edge->opos;
-            org_center = org_pos + ( org_len >> 1 );
+          edge->pos  = ( delta1 <= delta2 ) ? cur_pos1 : cur_pos2;
+          edge2->pos = edge->pos + cur_len;
 
-            cur_len    = ah_compute_stem_width( hinter, dimension, org_len );
+          edge->flags  |= AH_EDGE_DONE;
+          edge2->flags |= AH_EDGE_DONE;
 
-            cur_pos1   = ( org_pos + 32 ) & -64;
-            delta1     = ( cur_pos1 + ( cur_len >> 1 ) - org_center );
-            if ( delta1 < 0 )
-              delta1 = -delta1;
-
-            cur_pos2   = ( ( org_pos + org_len + 32 ) & -64 ) - cur_len;
-            delta2     = ( cur_pos2 + ( cur_len >> 1 ) - org_center );
-            if ( delta2 < 0 )
-              delta2 = -delta2;
-
-            edge->pos  = ( delta1 <= delta2 ) ? cur_pos1 : cur_pos2;
-            edge2->pos = edge->pos + cur_len;
-
-            edge->flags  |= AH_EDGE_DONE;
-            edge2->flags |= AH_EDGE_DONE;
-
-            if ( edge > edges && edge->pos < edge[-1].pos )
-              edge->pos = edge[-1].pos;
-
-#if 0
-            delta = 0;
-            if ( edge2 + 1 < edge_limit        &&
-                 edge2[1].flags & AH_EDGE_DONE )
-              delta = edge2[1].pos - edge2->pos;
-
-            if ( delta < 0 )
-            {
-              edge2->pos += delta;
-              if ( !min )
-                edge->pos += delta;
-            }
-            edge2->flags |= AH_EDGE_DONE;
-#endif
-          }
+          if ( edge > edges && edge->pos < edge[-1].pos )
+            edge->pos = edge[-1].pos;
         }
       }
 

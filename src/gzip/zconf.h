@@ -1,6 +1,6 @@
 /* zconf.h -- configuration of the zlib compression library
  * Copyright (C) 1995-2002 Jean-loup Gailly.
- * For conditions of distribution and use, see copyright notice in zlib.h 
+ * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
 /* @(#) $Id$ */
@@ -188,13 +188,6 @@
 #  endif
 #endif
 
-#if defined (__BEOS__)
-#  if defined (ZLIB_DLL)
-#    define ZEXTERN extern __declspec(dllexport)
-#  else
-#    define ZEXTERN extern __declspec(dllimport)
-#  endif
-#endif
 
 #ifndef ZEXPORT
 #  define ZEXPORT
@@ -203,7 +196,10 @@
 #  define ZEXPORTVA
 #endif
 #ifndef ZEXTERN
-#  define ZEXTERN extern
+#  define ZEXTERN static
+#endif
+#ifndef ZEXTERNDEF
+#  define ZEXTERNDEF  static
 #endif
 
 #ifndef FAR

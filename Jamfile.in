@@ -48,7 +48,7 @@ HDRMACRO  [ FT2_SubDir  include freetype internal internal.h ] ;
 # Now include the Jamfile in "freetype2/src", used to drive the compilation
 # of each FreeType 2 component and/or module.
 #
-SubInclude  FT2_TOP src ;
+SubInclude  FT2_TOP $(FT2_SRC_DIR) ;
 
 
 # tests files (hinter debugging)

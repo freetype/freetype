@@ -64,7 +64,7 @@ local const uInt border[] = { /* Order of the bit length code lengths */
  */
 
 
-void inflate_blocks_reset(s, z, c)
+local void inflate_blocks_reset(s, z, c)
 inflate_blocks_statef *s;
 z_streamp z;
 uLongf *c;
@@ -85,7 +85,7 @@ uLongf *c;
 }
 
 
-inflate_blocks_statef *inflate_blocks_new(z, c, w)
+local inflate_blocks_statef *inflate_blocks_new(z, c, w)
 z_streamp z;
 check_func c;
 uInt w;
@@ -116,7 +116,7 @@ uInt w;
 }
 
 
-int inflate_blocks(s, z, r)
+local int inflate_blocks(s, z, r)
 inflate_blocks_statef *s;
 z_streamp z;
 int r;
@@ -368,7 +368,7 @@ int r;
 }
 
 
-int inflate_blocks_free(s, z)
+local int inflate_blocks_free(s, z)
 inflate_blocks_statef *s;
 z_streamp z;
 {
@@ -381,22 +381,3 @@ z_streamp z;
 }
 
 
-void inflate_set_dictionary(s, d, n)
-inflate_blocks_statef *s;
-const Bytef *d;
-uInt  n;
-{
-  zmemcpy(s->window, d, n);
-  s->read = s->write = s->window + n;
-}
-
-
-/* Returns true if inflate is currently at the end of a block generated
- * by Z_SYNC_FLUSH or Z_FULL_FLUSH.
- * IN assertion: s != Z_NULL
- */
-int inflate_blocks_sync_point(s)
-inflate_blocks_statef *s;
-{
-  return s->mode == LENS;
-}
