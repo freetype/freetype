@@ -936,7 +936,7 @@
     }
   }
 
-  static OTL_ValidateFunc  otl_gpos_validate_funcs[ 9 ] =
+  static OTL_ValidateFunc  otl_gpos_validate_funcs[9] =
   {
     otl_gpos_lookup1_validate,
     otl_gpos_lookup2_validate,
@@ -950,13 +950,21 @@
   };
 
 
- /************************************************************************/
- /************************************************************************/
- /*****                                                              *****/
- /*****                         GPOS TABLE                           *****/
- /*****                                                              *****/
- /************************************************************************/
- /************************************************************************/
+  OTL_LOCALDEF( void )
+  otl_gpos_subtable_validate( OTL_Bytes      table,
+                              OTL_Validator  valid )
+  {
+    otl_lookup_list_validate( table, 9, otl_gpos_validate_funcs, valid );
+  }
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                          GPOS TABLE                           *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
 
   OTL_LOCALDEF( void )
@@ -975,8 +983,7 @@
     features = OTL_NEXT_USHORT( p );
     lookups  = OTL_NEXT_USHORT( p );
 
-    otl_lookup_list_validate( table + lookups, 9, otl_gpos_validate_funcs,
-                              valid );
+    otl_gpos_subtable_validate( table + lookups, valid );
     otl_feature_list_validate( table + features, table + lookups, valid );
     otl_script_list_validate( table + scripts, table + features, valid );
   }
