@@ -108,9 +108,7 @@ T := -o # Don't remove this comment line!  We need the space after `-o'.
 #   Use the ANSIFLAGS variable to define the compiler flags used to enfore
 #   ANSI compliance.
 #
-ifndef CFLAGS
-  CFLAGS := -c @CFLAGS@ @XX_CFLAGS@
-endif
+CFLAGS := -c @XX_CFLAGS@ @CFLAGS@
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
 #
@@ -119,7 +117,13 @@ ANSIFLAGS := @XX_ANSIFLAGS@
 # C compiler to use -- we use libtool!
 #
 #
-CC := $(BUILD)/libtool --mode=compile $(CC)
+CCraw := $(CC)
+CC    := $(BUILD)/libtool --mode=compile $(CCraw)
+
+# linker flags
+#
+LDFLAGS := @LDFLAGS@
+
 
 ifdef BUILD_FREETYPE
 
@@ -147,7 +151,7 @@ ifdef BUILD_FREETYPE
 
   # Librarian to use to build the static library
   #
-  FT_LIBRARIAN := $(BUILD)/libtool --mode=link $(CC)
+  FT_LIBRARIAN := $(BUILD)/libtool --mode=link $(CCraw)
 
 
   # This final rule is used to link all object files into a single library.

@@ -22,50 +22,36 @@ ifeq ($(PLATFORM),ansi)
     COPY     := cp
     DELETE   := rm -f
 
-    # Test whether we are using gcc.  If so, we select the `unix-gcc.mk'
-    # configuration file.  Otherwise, the configure script is called and
+    # If a Unix platform is detected, the configure script is called and
     # `unix.mk' is created.
     #
-    # The use of the configure script can be forced by saying `make unix';
-    # arguments to `configure' should be in the CFG variable.  Example:
+    # Arguments to `configure' should be in the CFG variable.  Example:
     #
-    #   make unix CFG="--prefix=/usr --disable-static"
+    #   make CFG="--prefix=/usr --disable-static"
+    #
+    # If you need to set CFLAGS or LDFLAGS, do it here also.
     #
     # Feel free to add support for other platform specific compilers in this
     # directory (e.g. solaris.mk + changes here to detect the platform).
     #
-    ifneq ($(findstring unix,$(MAKECMDGOALS)),)
-      CONFIG_FILE := unix.mk
-      setup: unix.mk
-      unix: setup
-    else
-      ifeq ($(firstword $(CC)),gcc)
-        is_gcc := 1
-      else
-        ifneq ($(findstring gcc,$(shell $(CC) -v 2>&1)),)
-          is_gcc := 1
-        endif
-      endif
+    CONFIG_FILE := unix.mk
+    setup: unix.mk
+    unix: setup
 
-      ifdef is_gcc
-        CONFIG_FILE := unix-gcc.mk
-      else
-        CONFIG_FILE := unix.mk
-        setup: unix.mk
+    # If `devel' is the requested target, use `-g -O0' as the default value
+    # for CFLAGS if CFLAGS isn't set.
+    #
+    ifneq ($(findstring devel,$(MAKECMDGOALS)),)
+      ifndef CFLAGS
+        USE_CFLAGS := CFLAGS="-g -O0"
       endif
-
-      # If `devel' is the requested target, use the development Makefile.
-      #
-      ifneq ($(findstring devel,$(MAKECMDGOALS)),)
-        CONFIG_FILE := unix-dev.mk
-        devel: setup
-      endif
+      devel: setup
     endif
 
     setup: std_setup
 
     unix.mk: builds/unix/unix.in
-	    cd builds/unix; ./configure $(CFG)
+	    cd builds/unix; $(USE_CFLAGS) ./configure $(CFG)
 
   endif # test Unix
 endif   # test PLATFORM
