@@ -645,7 +645,7 @@
     lo = x->lo;
 
     if ( r >= (FT_Word32)y ) /* we know y is to be treated as unsigned here */
-      return ( s < 0 ) ? 0x80000001L : 0x7FFFFFFFL;
+      return ( s < 0 ) ? 0x80000001UL : 0x7FFFFFFFUL;
                              /* Return Max/Min Int32 if division overflow.  */
                              /* This includes division by zero!             */
     q = 0;

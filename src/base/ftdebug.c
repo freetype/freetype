@@ -31,7 +31,7 @@
 #include <string.h>
 
 
-  FT_EXPORT_FUNC(void)  FT_Message( const char*  fmt, ... )
+  FT_EXPORT_FUNC( void )  FT_Message( const char*  fmt, ... )
   {
     va_list  ap;
 
@@ -42,7 +42,7 @@
   }
 
 
-  FT_EXPORT_FUNC(void)  FT_Panic( const char*  fmt, ... )
+  FT_EXPORT_FUNC( void )  FT_Panic( const char*  fmt, ... )
   {
     va_list  ap;
 
@@ -72,8 +72,8 @@
   /*                 components will be traced.                            */
   /*    level     :: The tracing level.                                    */
   /*                                                                       */
-  FT_EXPORT_FUNC(void)  FT_SetTraceLevel( FT_Trace  component,
-                                          char      level )
+  FT_EXPORT_FUNC( void )  FT_SetTraceLevel( FT_Trace  component,
+                                            char      level )
   {
     if ( component >= trace_max )
       return;

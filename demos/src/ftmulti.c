@@ -2,7 +2,7 @@
 /*                                                                          */
 /*  The FreeType project -- a free and portable quality TrueType renderer.  */
 /*                                                                          */
-/*  Copyright 1996-1999 by                                                  */
+/*  Copyright 1996-2000 by                                                  */
 /*  D. Turner, R.Wilhelm, and W. Lemberg                                    */
 /*                                                                          */
 /*                                                                          */
@@ -30,8 +30,8 @@
 #define  DIM_X   500
 #define  DIM_Y   400
 
-#define  CENTER_X   (bit.width/2)
-#define  CENTER_Y   (bit.rows/2)
+#define  CENTER_X   ( bit.width / 2 )
+#define  CENTER_Y   ( bit.rows / 2 )
 
 #define  MAXPTSIZE  500                 /* dtp */
 
@@ -39,37 +39,38 @@
   char* new_header = 0;
 
   const unsigned char*  Text = (unsigned char*)
-"The quick brown fox jumped over the lazy dog 0123456789 \
-\342\352\356\373\364\344\353\357\366\374\377\340\371\351\350\347 \
-&#~\"\'(-`_^@)=+\260 ABCDEFGHIJKLMNOPQRSTUVWXYZ \
-$\243^\250*\265\371%!\247:/;.,?<>";
-  FT_Library    library;      /* the FreeType library            */
-  FT_Face       face;         /* the font face                   */
-  FT_Size       size;         /* the font size                   */
-  FT_GlyphSlot  glyph;        /* the glyph slot                  */
+    "The quick brown fox jumped over the lazy dog 0123456789 "
+    "\342\352\356\373\364\344\353\357\366\374\377\340\371\351\350\347 "
+    "&#~\"\'(-`_^@)=+\260 ABCDEFGHIJKLMNOPQRSTUVWXYZ "
+    "$\243^\250*\265\371%!\247:/;.,?<>";
 
-  FT_Error      error;        /* error returned by FreeType ?    */
+  FT_Library    library;      /* the FreeType library        */
+  FT_Face       face;         /* the font face               */
+  FT_Size       size;         /* the font size               */
+  FT_GlyphSlot  glyph;        /* the glyph slot              */
 
-  grSurface*     surface;     /* current display surface         */
-  grBitmap       bit;         /* current display bitmap          */
+  FT_Error      error;        /* error returned by FreeType? */
+
+  grSurface*    surface;      /* current display surface     */
+  grBitmap      bit;          /* current display bitmap      */
 
   int  num_glyphs;            /* number of glyphs */
   int  ptsize;                /* current point size */
 
-  int  hinted      = 1;       /* is glyph hinting active ?    */
-  int  antialias   = 1;       /* is anti-aliasing active ?    */
-  int  use_sbits   = 1;       /* do we use embedded bitmaps ? */
-  int  low_prec    = 0;       /* force low precision          */
-  int  Num;                   /* current first glyph index    */
+  int  hinted    = 1;         /* is glyph hinting active?    */
+  int  antialias = 1;         /* is anti-aliasing active?    */
+  int  use_sbits = 1;         /* do we use embedded bitmaps? */
+  int  low_prec  = 0;         /* force low precision         */
+  int  Num;                   /* current first glyph index   */
 
-  int    res = 72;
+  int  res       = 72;
 
   static grColor  fore_color = { 255 };
 
   int            Fail;
   unsigned char  autorun;
 
-  int  graph_init = 0;
+  int  graph_init  = 0;
 
   int  render_mode = 1;
   int  use_grays   = 1;
@@ -78,23 +79,25 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   FT_Raster_Funcs  std_raster;
 
   FT_Multi_Master  multimaster;
-  FT_Long          design_pos[ T1_MAX_MM_AXIS ];
+  FT_Long          design_pos[T1_MAX_MM_AXIS];
 
-#define RASTER_BUFF_SIZE   32768
-  char     raster_buff[ RASTER_BUFF_SIZE ];
+#define RASTER_BUFF_SIZE  32768
+  char             raster_buff[RASTER_BUFF_SIZE];
 
 #define DEBUGxxx
 
 #ifdef DEBUG
-#define LOG(x)  LogMessage##x
+#define LOG( x )  LogMessage##x
 #else
-#define LOG(x)  /* rien */
+#define LOG( x )  /* empty */
 #endif
 
 #ifdef DEBUG
-  static void  LogMessage( const char*  fmt, ... )
+  static
+  void  LogMessage( const char*  fmt, ... )
   {
     va_list  ap;
+
 
     va_start( ap, fmt );
     vfprintf( stderr, fmt, ap );
@@ -102,66 +105,74 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   }
 #endif
 
+
   /* PanicZ */
-  static void PanicZ( const char* message )
+  static
+  void PanicZ( const char*  message )
   {
     fprintf( stderr, "%s\n  error = 0x%04x\n", message, error );
-    exit(1);
+    exit( 1 );
   }
 
 
   /* Clears the Bit bitmap/pixmap */
-  static void  Clear_Display( void )
+  static
+  void  Clear_Display( void )
   {
     long  size = (long)bit.pitch * bit.rows;
 
-    if (size < 0) size = -size;
+
+    if ( size < 0 )
+      size = -size;
     memset( bit.buffer, 0, size );
   }
 
 
-  /* Initialize the display bitmap named Bit */
-  static int  Init_Display()
+  /* Initialize the display bitmap named `bit' */
+  static
+  void  Init_Display( void )
   {
     grInitDevices();
 
-    bit.mode   = gr_pixel_mode_gray;
-    bit.width  = DIM_X;
-    bit.rows   = DIM_Y;
-    bit.grays  = 256;
+    bit.mode  = gr_pixel_mode_gray;
+    bit.width = DIM_X;
+    bit.rows  = DIM_Y;
+    bit.grays = 256;
 
     surface = grNewSurface( 0, &bit );
-    if (!surface)
+    if ( !surface )
       PanicZ( "could not allocate display surface\n" );
 
     graph_init = 1;
-    return 0;
   }
 
 
 #define MAX_BUFFER  300000
 
-#define FLOOR(x)  ((x) & -64)
-#define CEIL(x)   (((x)+63) & -64)
-#define TRUNC(x)  ((x) >> 6)
+#define FLOOR( x )  ( (x) & -64 )
+#define CEIL( x )   ( ( (x) + 63 ) & -64 )
+#define TRUNC( x )  ( (x) >> 6 )
 
   static
-  char   bit_buffer[ MAX_BUFFER ];
+  char  bit_buffer[MAX_BUFFER];
+
 
   /* Render a single glyph with the "grays" component */
-  static FT_Error  Render_Glyph( int  x_offset,
-                                 int  y_offset )
+  static
+  FT_Error  Render_Glyph( int  x_offset,
+                          int  y_offset )
   {
-    /* first, render the glyph into an intermediate buffer */
     FT_Bitmap  bit2;
     grBitmap   bit3;
     int        width, height, pitch, size;
     int        left, right, top, bottom;
     int        x_top, y_top;
 
+    /* first, render the glyph into an intermediate buffer */
+
     left  = FLOOR( glyph->metrics.horiBearingX );
     right = CEIL( glyph->metrics.horiBearingX + glyph->metrics.width );
-    width = TRUNC(right - left);
+    width = TRUNC( right - left );
 
     top    = CEIL( glyph->metrics.horiBearingY );
     bottom = FLOOR( glyph->metrics.horiBearingY - glyph->metrics.height );
@@ -169,10 +180,11 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
     if ( glyph->format == ft_glyph_format_outline )
     {
-      pitch  = ( antialias ? (width+3) & -4 : (width+7) >> 3 );
-      size   = pitch*height;
+      pitch = antialias ? ( width + 3 ) & -4
+                        : ( width + 7 ) >> 3;
+      size  = pitch * height;
 
-      if (size > MAX_BUFFER)
+      if ( size > MAX_BUFFER )
         return FT_Err_Out_Of_Memory;
 
       bit2.width      = width;
@@ -191,7 +203,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       FT_Outline_Translate( &glyph->outline, -left, -bottom );
       memset( bit_buffer, 0, size );
 
-      if (low_prec)
+      if ( low_prec )
         glyph->outline.flags &= ~ft_outline_high_precision;
 
       error = FT_Outline_Get_Bitmap( library, &glyph->outline, &bit2 );
@@ -206,21 +218,27 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       bit3.grays  = 0;
     }
 
-    /* Then, blit the image to the target surface */
-    x_top = x_offset + TRUNC(left);
-    y_top = y_offset - TRUNC(top);
+    /* then, blit the image to the target surface */
 
-/*
-    if (bit.pitch < 0)
+    x_top = x_offset + TRUNC( left );
+    y_top = y_offset - TRUNC( top );
+
+#if 0
+    if ( bit.pitch < 0 )
       y_top = bit.rows - y_top;
-*/
+#endif
+
     grBlitGlyphToBitmap( &bit, &bit3, x_top, y_top, fore_color );
-    return 0;
+
+    return FT_Err_Ok;
   }
 
-  static FT_Error  Reset_Scale( int  pointSize )
+
+  static
+  FT_Error  Reset_Scale( int  pointSize )
   {
     FT_Error  error;
+
 
     error = FT_Set_Char_Size( face, pointSize << 6,
                                     pointSize << 6,
@@ -228,14 +246,19 @@ $\243^\250*\265\371%!\247:/;.,?<>";
                                     res );
     if ( error )
     {
+      /* to be written */
     }
+
     return FT_Err_Ok;
   }
 
 
-  static FT_Error  LoadChar( int  idx, int  hint )
+  static
+  FT_Error  LoadChar( int  idx,
+                      int  hint )
   {
     int  flags;
+
 
     flags = FT_LOAD_DEFAULT;
 
@@ -249,16 +272,18 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   }
 
 
-
-  static FT_Error  Render_All( int  first_glyph, int  ptsize )
+  static
+  FT_Error  Render_All( int  first_glyph,
+                        int  ptsize )
   {
     FT_F26Dot6  start_x, start_y, step_x, step_y, x, y;
     int         i;
 
     FT_Error    error;
 
+
     start_x = 4;
-    start_y = 36 + ptsize ;
+    start_y = 36 + ptsize;
 
     step_x = size->metrics.x_ppem + 4;
     step_y = size->metrics.y_ppem + 10;
@@ -269,25 +294,25 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     i = first_glyph;
 
 #if 0
-     while ( i < first_glyph+1 )
+     while ( i < first_glyph + 1 )
 #else
      while ( i < num_glyphs )
 #endif
     {
-      if ( !(error = LoadChar( i, hinted )) )
+      if ( !( error = LoadChar( i, hinted ) ) )
       {
-        #ifdef DEBUG
-        if (i <= first_glyph+6)
+#ifdef DEBUG
+        if ( i <= first_glyph + 6 )
         {
           LOG(( "metrics[%02d] = [%x %x]\n",
                 i,
                 glyph->metrics.horiBearingX,
                 glyph->metrics.horiAdvance ));
 
-          if (i == first_glyph+6)
-          LOG(( "-------------------------\n"));
+          if ( i == first_glyph + 6 )
+            LOG(( "-------------------------\n" ));
         }
-        #endif
+#endif
 
         Render_Glyph( x, y );
 
@@ -312,13 +337,16 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   }
 
 
-  static FT_Error  Render_Text( int  first_glyph, int  ptsize )
+  static
+  FT_Error  Render_Text( int  first_glyph,
+                         int  ptsize )
   {
     FT_F26Dot6  start_x, start_y, step_x, step_y, x, y;
     int         i;
 
     FT_Error             error;
     const unsigned char* p;
+
 
     start_x = 4;
     start_y = 32 + size->metrics.y_ppem;
@@ -331,24 +359,30 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
     i = first_glyph;
     p = Text;
-    while (i > 0 && *p) { p++; i--; }
+    while ( i > 0 && *p )
+    {
+      p++;
+      i--;
+    }
 
     while ( *p )
     {
-      if ( !(error = LoadChar( FT_Get_Char_Index( face, (unsigned char)*p ), hinted )) )
+      if ( !( error = LoadChar( FT_Get_Char_Index( face,
+                                                   (unsigned char)*p ),
+                                hinted ) ) )
       {
-        #ifdef DEBUG
-        if (i <= first_glyph+6)
+#ifdef DEBUG
+        if ( i <= first_glyph + 6 )
         {
           LOG(( "metrics[%02d] = [%x %x]\n",
                 i,
                 glyph->metrics.horiBearingX,
                 glyph->metrics.horiAdvance ));
 
-          if (i == first_glyph+6)
-          LOG(( "-------------------------\n"));
+          if ( i == first_glyph + 6 )
+          LOG(( "-------------------------\n" ));
         }
-        #endif
+#endif
 
         Render_Glyph( x, y );
 
@@ -374,11 +408,14 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   }
 
 
-  static void Help( )
+  static
+  void Help( void )
   {
     grEvent  dummy_event;
 
+
     Clear_Display();
+
     grGotoxy( 0, 0 );
     grSetMargin( 2, 1 );
     grGotobitmap( &bit );
@@ -388,14 +425,14 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     grWriteln("This program is used to display all glyphs from one or" );
     grWriteln("several font files, with the FreeType library.");
     grLn();
-    grWriteln("Use the following keys :");
+    grWriteln("Use the following keys:");
     grLn();
     grWriteln("  F1 or ?   : display this help screen" );
     grWriteln("  a         : toggle anti-aliasing" );
     grWriteln("  h         : toggle outline hinting" );
     grWriteln("  b         : toggle embedded bitmaps" );
     grWriteln("  l         : toggle low precision rendering" );
-    grWriteln("  g         : toggle between 'smooth' and 'standard' anti-aliaser" );
+    grWriteln("  g         : toggle between `smooth' and `standard' anti-aliaser" );
     grWriteln("  space     : toggle rendering mode" );
     grLn();
     grWriteln("  Up        : increase pointsize by 1 unit" );
@@ -419,7 +456,9 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     grListenSurface( surface, gr_event_key, &dummy_event );
   }
 
-  static void  reset_raster( void )
+
+  static
+  void  reset_raster( void )
   {
     if ( antialias && use_grays )
       FT_Set_Raster( library, &ft_grays_raster );
@@ -428,101 +467,157 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   }
 
 
-  static int  Process_Event( grEvent*  event )
+  static
+  int  Process_Event( grEvent*  event )
   {
     int  i, axis;
 
     switch ( event->key )
     {
     case grKeyEsc:            /* ESC or q */
-    case grKEY('q'):
+    case grKEY( 'q' ):
       return 0;
 
-    case grKEY('a'):
-      antialias = !antialias;
-      new_header = ( antialias
-                   ? "anti-aliasing is now on"
-                   : "anti-aliasing is now off" );
-      reset_raster();
-      return 1;
-
-    case grKEY('b'):
-      use_sbits  = !use_sbits;
-      new_header = ( use_sbits
-                   ? "embedded bitmaps are now used when available"
-                   : "embedded bitmaps are now ignored" );
-      return 1;
-
-    case grKEY('n'):
-    case grKEY('p'):
-      return (int)event->key;
-
-    case grKEY('g'):
-      use_grays = !use_grays;
-      new_header = ( use_grays
-                   ? "now using the smooth anti-aliaser"
-                   : "now using the standard anti-aliaser" );
-      reset_raster();
-      break;
-
-    case grKEY('l'):
-      low_prec = !low_prec;
-      new_header = ( low_prec
-                   ? "rendering precision is now forced to low"
-                   : "rendering precision is now normal" );
-      break;
-
-    case grKEY('h'):
-      hinted = !hinted;
-      new_header = ( hinted
-                   ? "glyph hinting is now active"
-                   : "glyph hinting is now ignored" );
-      break;
-
-    case grKEY(' '):
-      render_mode ^= 1;
-      new_header = ( render_mode
-                   ? "rendering all glyphs in font"
-                   : "rendering test text string" );
-      break;
-
     case grKeyF1:
-    case grKEY('?'):
+    case grKEY( '?' ):
       Help();
       return 1;
 
-    case grKeyF3:  i = -20; axis = 0; goto Do_Axis;
-    case grKeyF4:  i =  20; axis = 0; goto Do_Axis;
-    case grKeyF5:  i = -20; axis = 1; goto Do_Axis;
-    case grKeyF6:  i =  20; axis = 1; goto Do_Axis;
-    case grKeyF7:  i = -20; axis = 2; goto Do_Axis;
-    case grKeyF8:  i =  20; axis = 2; goto Do_Axis;
+    /* mode keys */
 
-    case grKeyPageUp:   i =  10; goto Do_Scale;
-    case grKeyPageDown: i = -10; goto Do_Scale;
-    case grKeyUp:       i =   1; goto Do_Scale;
-    case grKeyDown:     i =  -1; goto Do_Scale;
+    case grKEY( 'a' ):
+      antialias = !antialias;
+      new_header = antialias ? "anti-aliasing is now on"
+                             : "anti-aliasing is now off";
+      reset_raster();
+      return 1;
 
-    case grKeyLeft:  i =  -1; goto Do_Glyph;
-    case grKeyRight: i =   1; goto Do_Glyph;
-    case grKeyF9:    i = -100; goto Do_Glyph;
-    case grKeyF10:   i =  100; goto Do_Glyph;
-    case grKeyF11:   i = -1000; goto Do_Glyph;
-    case grKeyF12:   i =  1000; goto Do_Glyph;
+    case grKEY( 'b' ):
+      use_sbits  = !use_sbits;
+      new_header = use_sbits ? "embedded bitmaps are now used if available"
+                             : "embedded bitmaps are now ignored";
+      return 1;
+
+    case grKEY( 'n' ):
+    case grKEY( 'p' ):
+      return (int)event->key;
+
+    case grKEY( 'g' ):
+      use_grays = !use_grays;
+      new_header = use_grays ? "now using the smooth anti-aliaser"
+                             : "now using the standard anti-aliaser";
+      reset_raster();
+      break;
+
+    case grKEY( 'l' ):
+      low_prec = !low_prec;
+      new_header = low_prec ? "rendering precision is now forced to low"
+                            : "rendering precision is now normal";
+      break;
+
+    case grKEY( 'h' ):
+      hinted = !hinted;
+      new_header = hinted ? "glyph hinting is now active"
+                          : "glyph hinting is now ignored";
+      break;
+
+    case grKEY( ' ' ):
+      render_mode ^= 1;
+      new_header = render_mode ? "rendering all glyphs in font"
+                               : "rendering test text string";
+      break;
+
+    /* MM related keys */
+
+    case grKeyF3:
+      i = -20;
+      axis = 0;
+      goto Do_Axis;
+
+    case grKeyF4:
+      i = 20;
+      axis = 0;
+      goto Do_Axis;
+
+    case grKeyF5:
+      i = -20;
+      axis = 1;
+      goto Do_Axis;
+
+    case grKeyF6:
+      i = 20;
+      axis = 1;
+      goto Do_Axis;
+
+    case grKeyF7:
+      i = -20;
+      axis = 2;
+      goto Do_Axis;
+
+    case grKeyF8:
+      i = 20;
+      axis = 2;
+      goto Do_Axis;
+
+    /* scaling related keys */
+
+    case grKeyPageUp:
+      i = 10;
+      goto Do_Scale;
+
+    case grKeyPageDown:
+      i = -10;
+      goto Do_Scale;
+
+    case grKeyUp:
+      i = 1;
+      goto Do_Scale;
+
+    case grKeyDown:
+      i = -1;
+      goto Do_Scale;
+
+    /* glyph index related keys */
+
+    case grKeyLeft:
+      i = -1;
+      goto Do_Glyph;
+
+    case grKeyRight:
+      i = 1;
+      goto Do_Glyph;
+
+    case grKeyF9:
+      i = -100;
+      goto Do_Glyph;
+
+    case grKeyF10:
+      i = 100;
+      goto Do_Glyph;
+
+    case grKeyF11:
+      i = -1000;
+      goto Do_Glyph;
+
+    case grKeyF12:
+      i = 1000;
+      goto Do_Glyph;
+
     default:
       ;
     }
     return 1;
 
   Do_Axis:
-    if (axis < multimaster.num_axis)
+    if ( axis < multimaster.num_axis )
     {
-      FT_MM_Axis*  a = multimaster.axis + axis;
+      FT_MM_Axis*  a   = multimaster.axis + axis;
       FT_Long      pos = design_pos[axis];
+
       
       pos += i;
-      if (pos < a->minimum)  pos = a->minimum;
-      if (pos > a->maximum)  pos = a->maximum;
+      if ( pos < a->minimum ) pos = a->minimum;
+      if ( pos > a->maximum ) pos = a->maximum;
       
       design_pos[axis] = pos;
       
@@ -532,20 +627,20 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
   Do_Scale:
     ptsize += i;
-    if (ptsize < 1)         ptsize = 1;
-    if (ptsize > MAXPTSIZE) ptsize = MAXPTSIZE;
+    if ( ptsize < 1 )         ptsize = 1;
+    if ( ptsize > MAXPTSIZE ) ptsize = MAXPTSIZE;
     return 1;
 
   Do_Glyph:
     Num += i;
-    if (Num < 0)           Num = 0;
-    if (Num >= num_glyphs) Num = num_glyphs-1;
+    if ( Num < 0 )           Num = 0;
+    if ( Num >= num_glyphs ) Num = num_glyphs - 1;
     return 1;
   }
 
 
-
-  static void  usage( char*  execname )
+  static
+  void  usage( char*  execname )
   {
     fprintf( stderr,  "\n" );
     fprintf( stderr,  "ftmulti: multiple masters font viewer - part of FreeType\n" );
@@ -562,13 +657,13 @@ $\243^\250*\265\371%!\247:/;.,?<>";
   }
 
 
-  int  main( int  argc, char**  argv )
+  int
+  main( int    argc,
+        char*  argv[] )
   {
-    int    i, old_ptsize, orig_ptsize, file;
+    int    old_ptsize, orig_ptsize, file;
     int    first_glyph = 0;
     int    XisSetup = 0;
-    char   filename[128 + 4];
-    char   alt_filename[128 + 4];
     char*  execname;
     int    option;
     int    file_loaded;
@@ -616,7 +711,8 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
     /* Initialize engine */
     error = FT_Init_FreeType( &library );
-    if (error) PanicZ( "Could not initialise FreeType library" );
+    if ( error )
+      PanicZ( "Could not initialize FreeType library" );
 
     /* retrieve the standard raster's interface */
     (void)FT_Get_Raster( library, ft_glyph_format_outline, &std_raster );
@@ -627,61 +723,44 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     hinted      = 1;
     file_loaded = 0;
 
-#ifndef macintosh
-    i = strlen( argv[file] );
-    while ( i > 0 && argv[file][i] != '\\' && argv[file][i] != '/' )
-    {
-      if ( argv[file][i] == '.' )
-        i = 0;
-      i--;
-    }
-#endif
-
-    filename[128] = '\0';
-    alt_filename[128] = '\0';
-
-    strncpy( filename, argv[file], 128 );
-    strncpy( alt_filename, argv[file], 128 );
-
-#ifndef macintosh
-    if ( i >= 0 )
-    {
-      strncpy( filename + strlen( filename ), ".ttf", 4 );
-      strncpy( alt_filename + strlen( alt_filename ), ".ttc", 4 );
-    }
-#endif
-
     /* Load face */
-    error = FT_New_Face( library, filename, 0, &face );
-    if (error) goto Display_Font;
+    error = FT_New_Face( library, argv[file], 0, &face );
+    if ( error )
+      goto Display_Font;
 
     /* retrieve multiple master information */
     error = FT_Get_Multi_Master( face, &multimaster ); 
-    if (error) goto Display_Font;
+    if ( error )
+      goto Display_Font;
 
-    /* set the current position to the minimum of each axis */
+    /* set the current position to the median of each axis */
     {
       int  n;
+
       
       for ( n = 0; n < multimaster.num_axis; n++ )
         design_pos[n] =
-          (multimaster.axis[n].minimum + multimaster.axis[n].maximum)/2;
+          ( multimaster.axis[n].minimum + multimaster.axis[n].maximum ) / 2;
     }
     
-    error = FT_Set_MM_Design_Coordinates( face, multimaster.num_axis, design_pos );
-    if (error) goto Display_Font;
+    error = FT_Set_MM_Design_Coordinates( face,
+                                          multimaster.num_axis,
+                                          design_pos );
+    if ( error )
+      goto Display_Font;
     
     file_loaded++;
 
     error = Reset_Scale( ptsize );
-    if (error) goto Display_Font;
+    if ( error )
+      goto Display_Font;
 
     num_glyphs = face->num_glyphs;
     glyph      = face->glyph;
     size       = face->size;
 
   Display_Font:
-    /* initialise graphics if needed */
+    /* initialize graphics if needed */
     if ( !XisSetup )
     {
       XisSetup = 1;
@@ -697,7 +776,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       Num  = first_glyph;
 
       if ( Num >= num_glyphs )
-        Num = num_glyphs-1;
+        Num = num_glyphs - 1;
 
       if ( Num < 0 )
         Num = 0;
@@ -707,26 +786,27 @@ $\243^\250*\265\371%!\247:/;.,?<>";
     {
       int  key;
 
+
       Clear_Display();
 
       if ( file_loaded >= 1 )
       {
-        switch (render_mode)
+        switch ( render_mode )
         {
-          case 0:
-            Render_Text( Num, ptsize );
-            break;
+        case 0:
+          Render_Text( Num, ptsize );
+          break;
 
-          default:
-            Render_All( Num, ptsize );
+        default:
+          Render_All( Num, ptsize );
         }
 
         sprintf( Header, "%s %s (file %s)",
                          face->family_name,
                          face->style_name,
-                         ft_basename( filename ) );
+                         ft_basename( argv[file] ) );
 
-        if (!new_header)
+        if ( !new_header )
           new_header = Header;
 
         grWriteCellString( &bit, 0, 0, new_header, fore_color );
@@ -735,10 +815,16 @@ $\243^\250*\265\371%!\247:/;.,?<>";
         sprintf( Header, "axis: " );
         {
           int  n;
+
+
           for ( n = 0; n < multimaster.num_axis; n++ )
           {
-            char   temp[32];
-            sprintf( temp, "  %s:%ld", multimaster.axis[n].name, design_pos[n] );
+            char  temp[32];
+
+
+            sprintf( temp, "  %s:%ld",
+                           multimaster.axis[n].name,
+                           design_pos[n] );
             strcat( Header, temp );
           }
         }
@@ -750,8 +836,8 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       }
       else
       {
-        sprintf( Header, "%s : is not a multiple masters font file or could not be opened",
-                         ft_basename(filename) );
+        sprintf( Header, "%s : not an MM font file, or could not be opened",
+                         ft_basename( argv[file] ) );
       }
 
       grWriteCellString( &bit, 0, 8, Header, fore_color );
@@ -759,11 +845,11 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
       grListenSurface( surface, 0, &event );
       if ( !( key = Process_Event( &event ) ) )
-        goto Fin;
+        goto End;
 
       if ( key == 'n' )
       {
-        if (file_loaded >= 1)
+        if ( file_loaded >= 1 )
           FT_Done_Face( face );
 
         if ( file < argc - 1 )
@@ -774,7 +860,7 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
       if ( key == 'p' )
       {
-        if (file_loaded >= 1)
+        if ( file_loaded >= 1 )
           FT_Done_Face( face );
 
         if ( file > 1 )
@@ -792,11 +878,12 @@ $\243^\250*\265\371%!\247:/;.,?<>";
       }
     }
 
-  Fin:
+  End:
 #if 0
-    grDoneSurface(surface);
+    grDoneSurface( surface );
     grDone();
 #endif
+
     printf( "Execution completed successfully.\n" );
     printf( "Fails = %d\n", Fail );
 
@@ -806,4 +893,3 @@ $\243^\250*\265\371%!\247:/;.,?<>";
 
 
 /* End */
-
