@@ -1,3 +1,22 @@
+2003-12-18  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cfftypes.h (CFF_FontRecDictRec): Change type of
+	`cid_count' to `FT_ULong'.
+
+	* src/cff/cffgload.c (cff_slot_load): Take care of empty `cids'
+	array.
+
+	* src/cff/cffload.c (cff_charset_done): Free `cids' array.
+	(cff_font_load): Create cids array only for CID-keyed fonts which
+	are subsetted.
+
+	* src/cff/cffobjs.c (cff_face_init): Check the availability of
+	the PSNames modules for non-pure CFFs also.
+	Set FT_FACE_FLAG_GLYPH_NAMES for a non-pure CFF also if it isn't
+	CID-keyed.
+
+	* src/cff/rules.mk (CFF_DRV_H): Add cfftypes.h.
+
 2003-12-17  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfobjs.c (sfnt_init_face): Don't set

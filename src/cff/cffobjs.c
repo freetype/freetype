@@ -337,10 +337,11 @@
 
     /* now load and parse the CFF table in the file */
     {
-      CFF_Font   cff;
-      FT_Memory  memory = face->root.memory;
-      FT_Face    root;
-      FT_Int32   flags;
+      CFF_Font         cff;
+      CFF_FontRecDict  dict;
+      FT_Memory        memory = face->root.memory;
+      FT_Face          root;
+      FT_Int32         flags;
 
 
       if ( FT_NEW( cff ) )
@@ -360,22 +361,23 @@
       root             = &face->root;
       root->num_glyphs = cff->num_glyphs;
 
+      dict = &cff->top_font.font_dict;
+
+      /* we need the `PSNames' module for CFF and CEF formats */
+      /* which aren't CID-keyed                               */
+      if ( dict->cid_registry == 0xFFFFU && !psnames )
+      {
+        FT_ERROR(( "cff_face_init:" ));
+        FT_ERROR(( " cannot open CFF & CEF fonts\n" ));
+        FT_ERROR(( "              " ));
+        FT_ERROR(( " without the `PSNames' module\n" ));
+        goto Bad_Format;
+      }
+
       if ( pure_cff )
       {
-        CFF_FontRecDict  dict = &cff->top_font.font_dict;
-        char*            style_name;
+        char*  style_name;
 
-
-        /* we need the `PSNames' module for pure-CFF and CEF formats */
-        /* which aren't CID-keyed                                    */
-        if ( dict->cid_registry == 0xFFFFU && !psnames )
-        {
-          FT_ERROR(( "cff_face_init:" ));
-          FT_ERROR(( " cannot open CFF & CEF fonts\n" ));
-          FT_ERROR(( "              " ));
-          FT_ERROR(( " without the `PSNames' module\n" ));
-          goto Bad_Format;
-        }
 
         /* Set up num_faces. */
         root->num_faces = cff->num_faces;
@@ -483,12 +485,6 @@
           flags |= FT_FACE_FLAG_KERNING;
 #endif
 
-#ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
-        /* CID-keyed CFF fonts don't have glyph names */
-        if ( dict->cid_registry == 0xFFFFU )
-          flags |= FT_FACE_FLAG_GLYPH_NAMES;
-#endif
-
         root->face_flags = flags;
 
         /*******************************************************************/
@@ -514,6 +510,13 @@
 
         root->style_flags = flags;
       }
+
+#ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
+      /* CID-keyed CFF fonts don't have glyph names -- the SFNT loader */
+      /* has unset this flag because of the 3.0 `post' table           */
+      if ( dict->cid_registry == 0xFFFFU )
+        root->face_flags |= FT_FACE_FLAG_GLYPH_NAMES;
+#endif
 
       /*******************************************************************/
       /*                                                                 */

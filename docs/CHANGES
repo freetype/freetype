@@ -14,8 +14,8 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       correctly  treated as a CID,  similar to  FreeType's CID  driver
       module.  Note that CID CMaps support is still missing.
 
-    - SFNT  based fonts  no longer  set  the FT_FACE_FLAGS_GLYPH_NAMES
-      flag if a version 3.0 `post' table is present.
+    - The FT_FACE_FLAGS_GLYPH_NAMES is now  set correctly for all font
+      formats.
 
 
   II. IMPORTANT CHANGES
