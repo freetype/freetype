@@ -1,10 +1,12 @@
 Here is a list of items that need to be addressed in FreeType 2:
 
-*  Add synthesized Unicode charmap processing to the CFF driver.
+* Add synthesized Unicode charmap processing to the CFF driver.
 
-*  Investigate usage of casts and bit width of integer types used.  The idea is
-to typedef FT_Fixed, FT_Long, FT_Int, etc... to use the appropriate built in
-integer types.  This is so that we may avoid unnecessary explict typecasts and
-side affects inherent in implict casts.  This is mostly an issue on platforms
-where long integers are 64 bits wide (instead of 32 bits wide).
+* Investigate usage of casts and bit width of integer types used.  The idea is
+  to typedef FT_Fixed, FT_Long, FT_Int, etc. to use the appropriate built in
+  integer types.  This is so that we may avoid unnecessary explict typecasts
+  and side affects inherent in implict casts.  This is mostly an issue on
+  platforms where long integers are 64 bits wide (instead of 32 bits wide).
 
+* Fix exact bbox calculation.  The current code uses an iterative algorithm
+  which can fail miserably.
