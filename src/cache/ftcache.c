@@ -25,6 +25,7 @@
 #include "ftcglyph.c"
 #include "ftcimage.c"
 #include "ftcsbits.c"
+#include "ftccmap.c"
 
 
 /* END */
