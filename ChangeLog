@@ -1,3 +1,12 @@
+2002-11-07  David Turner  <david@freetype.org>
+
+        * src/otlayout/otlayout.h, src/otlyaout/otlconf.h,
+        src/otlayout/otlgsub.c, src/otlayout/otlgsub.h, src/otlayout/otlparse.c,
+        src/otlayout/otlparse.h, src/otlayout/otlutils.h:
+
+          updating the OpenType Layout code, adding support fot the first
+          GSUB lookups. Nothing that really compiles for now though
+
 2002-11-05  David Turner  <david@freetype.org>
 
         * include/freetype/config/ftoption.h, src/gzip/ftgzip.c: added
