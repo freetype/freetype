@@ -553,7 +553,7 @@
 
     if ( ex1 != ex2 )
     {
-      p     = ONE_PIXEL * ( y2 - y1 );
+      p     = ONE_PIXEL * ( y2 - y1 + delta );
       lift  = p / dx;
       rem   = p % dx;
       if ( rem < 0 )
