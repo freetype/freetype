@@ -2087,7 +2087,7 @@
       break;
 
     case 0x30:
-      CUR.phase = GridPeriod * 3 / 4;
+      CUR.phase = CUR.period * 3 / 4;
       break;
     }
 
@@ -5663,7 +5663,8 @@
 
     /* single width cutin test */
 
-    if ( ABS( org_dist ) < CUR.GS.single_width_cutin )
+    if ( ABS( org_dist - CUR.GS.single_width_value ) <
+         CUR.GS.single_width_cutin )
     {
       if ( org_dist >= 0 )
         org_dist = CUR.GS.single_width_value;
@@ -5752,7 +5753,8 @@
 
     /* single width test */
 
-    if ( ABS( cvt_dist ) < CUR.GS.single_width_cutin )
+    if ( ABS( cvt_dist - CUR.GS.single_width_value ) <
+         CUR.GS.single_width_cutin )
     {
       if ( cvt_dist >= 0 )
         cvt_dist =  CUR.GS.single_width_value;

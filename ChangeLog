@@ -1,3 +1,9 @@
+2003-06-09  George Williams  <gww@silcom.com>
+
+	* src/truetype/ttinterp.c (SetSuperRound) <0x30>: Follow Apple's
+	TrueType specification.
+	(Ins_MDRP, Ins_MIRP): Fix single width cut-in test.
+
 2003-06-09  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/gzip/ftgzip.c: (inflate_mask): Replaced with...
