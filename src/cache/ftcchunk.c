@@ -34,8 +34,15 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#define  FTC_CSET_HASH(cset,start)  \
-             ((FT_UFast)(((cset)->hash << 16) | ((start) & 0xFFFF)))
+#define  FTC_CSET_CHUNK_INDEX(cset,gindex)   \
+                  ( (gindex) / (cset)->item_count )
+                  
+#define  FTC_CSET_START(cset,gindex)    \
+                  ( FTC_CSET_CHUNK_INDEX(cset,gindex) * (cset)->item_count )
+
+#define  FTC_CSET_HASH(cset,gindex)  \
+             ((FT_UFast)( ((cset)->hash << 16) | \
+                          (FTC_CSET_CHUNK_INDEX(cset,gindex) & 0xFFFF) ))
 
   /* create a new chunk node, setting its cache index and ref count */
   FT_EXPORT_DEF( FT_Error )
@@ -47,10 +54,10 @@
     FTC_ChunkCache  ccache = cset->ccache;
     FT_Error        error  = 0;
     FT_UInt         len;
-    FT_UInt         start  = (gindex / cset->item_count) * cset->item_count;
+    FT_UInt         start  = FTC_CSET_START(cset,gindex);
 
     cnode->cset       = cset;
-    cnode->node.hash  = FTC_CSET_HASH(cset,start);
+    cnode->node.hash  = FTC_CSET_HASH(cset,gindex);
     cnode->item_start = start;
 
     len = cset->item_total - start;
@@ -149,6 +156,7 @@
   }
 
 
+
   FT_EXPORT_DEF( FT_Error )
   ftc_chunk_cache_init( FTC_ChunkCache    ccache,
                         FT_LruList_Class  cset_class )
@@ -166,6 +174,7 @@
   }
 
 
+
   FT_EXPORT_DEF( FT_Error )
   ftc_chunk_cache_lookup( FTC_ChunkCache   ccache,
                           FTC_ChunkQuery   query,
@@ -177,8 +186,8 @@
     error = FT_LruList_Lookup( ccache->cset_lru, query, &node );
     if ( !error )
     {
-      FTC_ChunkSet  cset = FTC_CHUNK_SET(node);
-      FT_UFast      hash = FTC_CSET_HASH( cset, query->gindex );
+      FTC_ChunkSet  cset  = FTC_CHUNK_SET(node);
+      FT_UFast      hash  = FTC_CSET_HASH( cset, query->gindex );
 
       error = ftc_cache_lookup_node( FTC_CACHE(ccache), hash, query,
                                      FTC_NODE_P(anode) );

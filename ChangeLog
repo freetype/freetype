@@ -1,3 +1,8 @@
+2001-10-27  David Turner       <david@freetype.org>
+
+	* src/cache/ftchunk.c (ftc_chunk_cache_lookup): fixed a bug that
+	considerably lowered the performance of the abstract chunk cache.
+
 2001-10-26  David Turner       <david@freetype.org>
 
         * include/freetype/ftcache.h, include/freetype/cache/*.h,
