@@ -309,9 +309,8 @@
       FT_ULong  al = ua & 0xFFFF;
 
 
-      ua = ( ua >> 16 ) * ub +
-           al * ( ub >> 16 ) +
-           ( al * ( ub & 0xFFFF ) >> 16 );
+      ua = ( ua >> 16 ) * ub +  al * ( ub >> 16 ) +
+           ( ( al * ( ub & 0xFFFF ) + 0x8000 ) >> 16 );
     }
 
     return ( s < 0 ? -(FT_Long)ua : ua );
@@ -551,18 +550,40 @@
   }
 
 
-  FT_EXPORT_DEF( FT_Int32 )  FT_SqrtFixed( FT_Int32  x )
-  {
-    FT_Int64  z;
-
-
-    z.hi = (FT_UInt32)((FT_Int32)(x) >> 16);
-    z.lo = (FT_UInt32)( x << 16 );
-    return FT_Sqrt64( &z );
-  }
-
 
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
+
+
+ /* a not-so-fast but working 16.16 fixed point square root function */
+  FT_EXPORT_DEF( FT_Int32 )  FT_SqrtFixed( FT_Int32  x )
+  {
+    FT_UInt32  root, rem_hi, rem_lo, test_div;
+    FT_Int     count;
+
+    root = 0;
+
+    if ( x > 0 )
+    {
+      rem_hi = 0;
+      rem_lo = x;
+      count  = 32;
+      do
+      {
+        rem_hi   = (rem_hi << 2) | (rem_lo >> 30);
+        rem_lo <<= 2;
+        root   <<= 1;
+        test_div = (root << 1) + 1;
+        if ( rem_hi >= test_div )
+        {
+          rem_hi -= test_div;
+          root   += 1;
+        }
+        count--;
+      }
+    }
+
+    return (FT_Int32)root;
+  }
 
 #endif /* FT_LONG64 */
 
