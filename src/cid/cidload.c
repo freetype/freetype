@@ -57,24 +57,6 @@
   }
 
 
-  FT_LOCAL_DEF( void )
-  cid_decrypt( FT_Byte*   buffer,
-               FT_Offset  length,
-               FT_UShort  seed )
-  {
-    while ( length > 0 )
-    {
-      FT_Byte  plain;
-
-
-      plain     = (FT_Byte)( *buffer ^ ( seed >> 8 ) );
-      seed      = (FT_UShort)( ( *buffer + seed ) * 52845U + 22719 );
-      *buffer++ = plain;
-      length--;
-    }
-  }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -385,14 +367,15 @@
   static FT_Error
   cid_read_subrs( CID_Face  face )
   {
-    CID_FaceInfo  cid    = &face->cid;
-    FT_Memory     memory = face->root.memory;
-    FT_Stream     stream = face->root.stream;
-    FT_Error      error;
-    FT_Int        n;
-    CID_Subrs     subr;
-    FT_UInt       max_offsets = 0;
-    FT_ULong*     offsets = 0;
+    CID_FaceInfo   cid    = &face->cid;
+    FT_Memory      memory = face->root.memory;
+    FT_Stream      stream = face->root.stream;
+    FT_Error       error;
+    FT_Int         n;
+    CID_Subrs      subr;
+    FT_UInt        max_offsets = 0;
+    FT_ULong*      offsets = 0;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
     if ( FT_NEW_ARRAY( face->subrs, cid->num_dicts ) )
@@ -462,7 +445,7 @@
 
 
           len = offsets[count + 1] - offsets[count];
-          cid_decrypt( subr->code[count], len, 4330 );
+          psaux->t1_decrypt( subr->code[count], len, 4330 );
         }
       }
 

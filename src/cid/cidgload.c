@@ -40,15 +40,16 @@
   cid_load_glyph( T1_Decoder  decoder,
                   FT_UInt     glyph_index )
   {
-    CID_Face      face = (CID_Face)decoder->builder.face;
-    CID_FaceInfo  cid  = &face->cid;
-    FT_Byte*      p;
-    FT_UInt       fd_select;
-    FT_Stream     stream = face->root.stream;
-    FT_Error      error  = 0;
-    FT_Byte*      charstring = 0;
-    FT_Memory     memory = face->root.memory;
-    FT_ULong      glyph_length = 0;
+    CID_Face       face = (CID_Face)decoder->builder.face;
+    CID_FaceInfo   cid  = &face->cid;
+    FT_Byte*       p;
+    FT_UInt        fd_select;
+    FT_Stream      stream = face->root.stream;
+    FT_Error       error  = 0;
+    FT_Byte*       charstring = 0;
+    FT_Memory      memory = face->root.memory;
+    FT_ULong       glyph_length = 0;
+    PSAux_Service  psaux = (PSAux_Service)face->psaux;
 
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
@@ -145,7 +146,7 @@
 
       /* Decrypt only if lenIV >= 0. */
       if ( decoder->lenIV >= 0 )
-        cid_decrypt( charstring, glyph_length, 4330 );
+        psaux->t1_decrypt( charstring, glyph_length, 4330 );
 
       error = decoder->funcs.parse_charstrings(
                 decoder, charstring + cs_offset,

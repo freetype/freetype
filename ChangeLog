@@ -1,5 +1,13 @@
 2003-06-11  Werner Lemberg  <wl@gnu.org>
 
+	* src/cid/cidload.c (cid_decrypt): Removed.
+	(cid_read_subrs): Use t1_decrypt from psaux module.
+	* src/cid/cidload.h: Updated.
+	* src/cid/cidgload.c (cid_load_glyph): Use t1_decrypt from psaux
+	module.
+
+2003-06-10  Werner Lemberg  <wl@gnu.org>
+
 	* src/cid/cidobjs.c: Apply change 2003-05-31 from <Ron.Dev@gmx.de>.
 	Compute style flags.
 	Fix computation of root->height.
