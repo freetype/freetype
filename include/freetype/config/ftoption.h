@@ -92,7 +92,7 @@ FT_BEGIN_HEADER
   /*         file "ftconfig.h" either statically, or through Autoconf      */
   /*         on platforms that support it.                                 */
   /*                                                                       */
-#undef FT_CONFIG_OPTION_FORCE_INT64
+#undef  FT_CONFIG_OPTION_FORCE_INT64
 
 
   /*************************************************************************/
@@ -109,6 +109,28 @@ FT_BEGIN_HEADER
   /*   also uses FreeType.                                                 */
   /*                                                                       */
 #define FT_CONFIG_OPTION_USE_ZLIB
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* ZLib library selection                                                */
+  /*                                                                       */
+  /*   This macro is only used when FT_CONFIG_OPTION_USE_ZLIB is defined.  */
+  /*   It allows FreeType's "ftgzip" component to link to the system's     */
+  /*   installation of the ZLib library. This is useful on systems like    */
+  /*   Unix or VMS where it generally is already available.                */
+  /*                                                                       */
+  /*   If you let it undefined, the component will use its own copy        */
+  /*   of the zlib sources instead. These have been modified to be         */
+  /*   included directly within the component and *not* export external    */
+  /*   function names. This allows you to link any program with FreeType   */
+  /*   _and_ ZLib without linking conflicts.                               */
+  /*                                                                       */
+  /*   do not #undef this macro here, since the build system might         */
+  /*   define for certain configurations                                   */
+  /*                                                                       */
+/* #define  FT_CONFIG_OPTION_SYSTEM_ZLIB */
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -145,8 +167,8 @@ FT_BEGIN_HEADER
   /*   will be later automatically defined as `extern return_type' to      */
   /*   allow normal compilation.                                           */
   /*                                                                       */
-#undef FT_EXPORT
-#undef FT_EXPORT_DEF
+/* #define  FT_EXPORT(x)       extern x */
+/* #define  FT_EXPORT_DEF(x)   x */
 
 
   /*************************************************************************/
@@ -199,7 +221,7 @@ FT_BEGIN_HEADER
   /* This allows FreeType to be used with the PostScript language, using   */
   /* the GhostScript interpreter.                                          */
   /*                                                                       */
-#undef FT_CONFIG_OPTION_INCREMENTAL
+/* #define  FT_CONFIG_OPTION_INCREMENTAL */
 
 
   /*************************************************************************/
@@ -236,8 +258,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Don't define any of these macros to compile in `release' mode!      */
   /*                                                                       */
-#undef  FT_DEBUG_LEVEL_ERROR
-#undef  FT_DEBUG_LEVEL_TRACE
+/* #define  FT_DEBUG_LEVEL_ERROR */
+/* #define  FT_DEBUG_LEVEL_TRACE */
 
 
   /*************************************************************************/
@@ -252,7 +274,7 @@ FT_BEGIN_HEADER
   /*   Note that the memory debugger is only activated at runtime when     */
   /*   when the _environment_ variable "FT_DEBUG_MEMORY" is also defined!  */
   /*                                                                       */
-#undef  FT_DEBUG_MEMORY
+/* #define  FT_DEBUG_MEMORY */
 
 
 
@@ -353,7 +375,10 @@ FT_BEGIN_HEADER
   /* By undefining this, you will only compile the code necessary to load  */
   /* TrueType glyphs without hinting.                                      */
   /*                                                                       */
-#undef  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+  /*   do not #undef this macro here, since the build system might         */
+  /*   define for certain configurations                                   */
+  /*                                                                       */
+/* #define  TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
 
   /*************************************************************************/

@@ -11,48 +11,6 @@
 extern void exit OF((int));
 #endif
 
-const char *z_errmsg[10] = {
-"need dictionary",     /* Z_NEED_DICT       2  */
-"stream end",          /* Z_STREAM_END      1  */
-"",                    /* Z_OK              0  */
-"file error",          /* Z_ERRNO         (-1) */
-"stream error",        /* Z_STREAM_ERROR  (-2) */
-"data error",          /* Z_DATA_ERROR    (-3) */
-"insufficient memory", /* Z_MEM_ERROR     (-4) */
-"buffer error",        /* Z_BUF_ERROR     (-5) */
-"incompatible version",/* Z_VERSION_ERROR (-6) */
-""};
-
-
-const char * ZEXPORT zlibVersion()
-{
-    return ZLIB_VERSION;
-}
-
-#ifdef DEBUG
-
-#  ifndef verbose
-#    define verbose 0
-#  endif
-int z_verbose = verbose;
-
-void z_error (m)
-    char *m;
-{
-    fprintf(stderr, "%s\n", m);
-    exit(1);
-}
-#endif
-
-/* exported to allow conversion of error code to string for compress() and
- * uncompress()
- */
-const char * ZEXPORT zError(err)
-    int err;
-{
-    return ERR_MSG(err);
-}
-
 
 #ifndef HAVE_MEMCPY
 

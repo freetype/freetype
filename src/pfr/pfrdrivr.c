@@ -83,7 +83,6 @@
                    FT_Fixed  *ametrics_x_scale,
                    FT_Fixed  *ametrics_y_scale )
   {
-    FT_Error     error = 0;
     PFR_PhyFont  phys  = &face->phy_font;
     FT_Fixed     x_scale, y_scale;
     FT_Size      size = face->root.size;
@@ -111,6 +110,8 @@
 
     if ( ametrics_y_scale )
       *ametrics_y_scale = y_scale;
+
+    return 0;
   }
 
 

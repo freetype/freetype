@@ -2037,7 +2037,7 @@ FT_BEGIN_HEADER
   *     when you want to retrieve the original glyph outlines in font units.
   *
   *   FT_LOAD_NO_HINTING ::
-  *     Don't hint glyph outlines after their scaling to device pixels. 
+  *     Don't hint glyph outlines after their scaling to device pixels.
   *     This generally generates "blurrier" glyphs in anti-aliased modes.
   *
   *     This flag is ignored if @FT_LOAD_NO_SCALE is set.
@@ -2143,10 +2143,11 @@ FT_BEGIN_HEADER
 
   /* */
 
-#define FT_LOAD_TARGET_( x )      ( (FT_Int32)( (x) & 7 ) << 16 )
-#define FT_LOAD_TARGET_MODE( x )  ( (FT_Render_Mode)( ( (x) >> 16 ) & 7 ) )
+#define FT_LOAD_TARGET_( x )      ( (FT_Int32)( (x) & 15 ) << 16 )
+#define FT_LOAD_TARGET_MODE( x )  ( (FT_Render_Mode)( ( (x) >> 16 ) & 15 ) )
 
 #define FT_LOAD_TARGET_NORMAL     FT_LOAD_TARGET_( FT_RENDER_MODE_NORMAL )
+#define FT_LOAD_TARGET_LIGHT      FT_LOAD_TARGET_( FT_RENDER_MODE_LIGHT  )
 #define FT_LOAD_TARGET_MONO       FT_LOAD_TARGET_( FT_RENDER_MODE_MONO   )
 #define FT_LOAD_TARGET_LCD        FT_LOAD_TARGET_( FT_RENDER_MODE_LCD    )
 #define FT_LOAD_TARGET_LCD_V      FT_LOAD_TARGET_( FT_RENDER_MODE_LCD_V  )
@@ -2201,6 +2202,13 @@ FT_BEGIN_HEADER
   /*      This is the default render mode; it corresponds to 8-bit         */
   /*      anti-aliased bitmaps, using 256 levels of opacity.               */
   /*                                                                       */
+  /*    FT_RENDER_MODE_LIGHT ::                                            */
+  /*      This is similar to @FT_RENDER_MODE_NORMAL, except that this      */
+  /*      changes the hinting to prevent stem width quantization. This     */
+  /*      results in glyph shapes that are more similar to the original,   */
+  /*      while being a bit more fuzzy ("better shapes", instead of        */
+  /*      "better contrast" if you want :-)                                */
+  /*                                                                       */
   /*    FT_RENDER_MODE_MONO ::                                             */
   /*      This mode corresponds to 1-bit bitmaps.                          */
   /*                                                                       */
@@ -2224,6 +2232,7 @@ FT_BEGIN_HEADER
   typedef enum  FT_Render_Mode_
   {
     FT_RENDER_MODE_NORMAL = 0,
+    FT_RENDER_MODE_LIGHT,
     FT_RENDER_MODE_MONO,
     FT_RENDER_MODE_LCD,
     FT_RENDER_MODE_LCD_V,

@@ -37,10 +37,6 @@ typedef unsigned short ush;
 typedef ush FAR ushf;
 typedef unsigned long  ulg;
 
-extern const char *z_errmsg[10]; /* indexed by 2-zlib_error */
-/* (size given to avoid silly warnings with Visual C++) */
-
-#define ERR_MSG(err) z_errmsg[Z_NEED_DICT-(err)]
 
 #define ERR_RETURN(strm,err) \
   return (strm->msg = (char*)ERR_MSG(err), (err))
@@ -176,7 +172,7 @@ extern const char *z_errmsg[10]; /* indexed by 2-zlib_error */
 #    define zmemcmp _fmemcmp
 #    define zmemzero(dest, len) _fmemset(dest, 0, len)
 #  else
-#    define zmemcpy memcpy
+#    define zmemcpy ft_memcpy
 #    define zmemcmp memcmp
 #    define zmemzero(dest, len) memset(dest, 0, len)
 #  endif
@@ -209,8 +205,8 @@ extern const char *z_errmsg[10]; /* indexed by 2-zlib_error */
 
 typedef uLong (ZEXPORT *check_func) OF((uLong check, const Bytef *buf,
 				       uInt len));
-voidpf zcalloc OF((voidpf opaque, unsigned items, unsigned size));
-void   zcfree  OF((voidpf opaque, voidpf ptr));
+local voidpf zcalloc OF((voidpf opaque, unsigned items, unsigned size));
+local void   zcfree  OF((voidpf opaque, voidpf ptr));
 
 #define ZALLOC(strm, items, size) \
            (*((strm)->zalloc))((strm)->opaque, (items), (size))

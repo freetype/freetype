@@ -10,7 +10,7 @@
 #  define BUILDFIXED   /* non ANSI compilers may not accept inffixed.h */
 #endif
 
-const char inflate_copyright[] =
+local const char inflate_copyright[] =
    " inflate 1.1.4 Copyright 1995-2002 Mark Adler ";
 /*
   If you use the zlib library in a product, an acknowledgment is welcome
@@ -212,7 +212,7 @@ uIntf *v;               /* working area: values in order of bit length */
 
         /* compute minimum size table less than or equal to l bits */
         z = g - w;
-        z = z > (uInt)l ? l : z;        /* table size upper limit */
+        z = z > (uInt)l ? (uInt)l : z;        /* table size upper limit */
         if ((f = 1 << (j = k - w)) > a + 1)     /* try a k-w bit table */
         {                       /* too few codes for k-w bit table */
           f -= a + 1;           /* deduct codes from patterns left */
@@ -289,7 +289,7 @@ uIntf *v;               /* working area: values in order of bit length */
 }
 
 
-int inflate_trees_bits(c, bb, tb, hp, z)
+local int inflate_trees_bits(c, bb, tb, hp, z)
 uIntf *c;               /* 19 code lengths */
 uIntf *bb;              /* bits tree desired/actual depth */
 inflate_huft * FAR *tb; /* bits tree result */
@@ -316,7 +316,7 @@ z_streamp z;            /* for messages */
 }
 
 
-int inflate_trees_dynamic(nl, nd, c, bl, bd, tl, td, hp, z)
+local int inflate_trees_dynamic(nl, nd, c, bl, bd, tl, td, hp, z)
 uInt nl;                /* number of literal/length codes */
 uInt nd;                /* number of distance codes */
 uIntf *c;               /* that many (total) code lengths */
@@ -394,7 +394,7 @@ local inflate_huft *fixed_td;
 #endif
 
 
-int inflate_trees_fixed(bl, bd, tl, td, z)
+local int inflate_trees_fixed(bl, bd, tl, td, z)
 uIntf *bl;               /* literal desired/actual bit depth */
 uIntf *bd;               /* distance desired/actual bit depth */
 inflate_huft * FAR *tl;  /* literal/length tree result */
