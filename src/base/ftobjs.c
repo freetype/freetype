@@ -2137,10 +2137,18 @@
 
           if ( kern_mode != FT_KERNING_UNFITTED )
           {
-            akerning->x = akerning->x > 0 ? FT_PIX_FLOOR( akerning->x )
-                                          : FT_PIX_CEIL( akerning->x );
-            akerning->y = akerning->y > 0 ? FT_PIX_FLOOR( akerning->y )
-                                          : FT_PIX_CEIL( akerning->y );
+            /* we scale down kerning values for small ppem values */
+            /* to avoid that rounding makes them too big.         */
+            /* `25' has been determined heuristically.            */
+            if ( face->size->metrics.x_ppem < 25 )
+              akerning->x = FT_MulDiv( akerning->x,
+                                       face->size->metrics.x_ppem, 25 );
+            if ( face->size->metrics.y_ppem < 25 )
+              akerning->y = FT_MulDiv( akerning->y,
+                                       face->size->metrics.y_ppem, 25 );
+
+            akerning->x = FT_PIX_ROUND( akerning->x );
+            akerning->y = FT_PIX_ROUND( akerning->y );
           }
         }
       }

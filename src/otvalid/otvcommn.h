@@ -67,7 +67,7 @@ FT_BEGIN_HEADER
 
 
 #undef  FT_INVALID_
-#define FT_INVALID_( _prefix, _error ) \
+#define FT_INVALID_( _prefix, _error )                         \
           ft_validator_error( valid->root, _prefix ## _error )
 
 #define OTV_OPTIONAL_TABLE( _table )  FT_UInt   _table;      \
