@@ -299,11 +299,43 @@
 
   /* this must be kept exported -- it is used by the cache manager */
   /* even though it shouldn't be considered public for now         */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_Size                                                        */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new size object from a given face object.                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: A handle to a parent face object.                          */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    asize :: A handle to a new size object.                            */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   FT_EXPORT( FT_Error )  FT_New_Size( FT_Face   face,
                                       FT_Size*  size );
 
-  FT_EXPORT( FT_Error )  FT_Done_Size( FT_Size  size );
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Done_Size                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Discards a given size object.                                      */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    size :: A handle to a target size object.                          */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )  FT_Done_Size( FT_Size  size );
 
 
   FT_BASE( FT_Error )    FT_New_GlyphSlot( FT_Face        face,
@@ -429,7 +461,7 @@
     FT_ModuleRec           root;
     FT_Renderer_Class*     clazz;
     FT_Glyph_Format        glyph_format;
-    const FT_Glyph_Class   glyph_class;
+    FT_Glyph_Class         glyph_class;
 
     FT_Raster              raster;
     FT_Raster_Render_Func  raster_render;
@@ -597,13 +629,66 @@
 
 #ifndef FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_Stream                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new stream object.                                       */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    filepathname :: The name of the stream (usually a file) to be      */
+  /*                    opened.                                            */
+  /*                                                                       */
+  /*    stream       :: A pointer to the stream object.                    */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   FT_EXPORT( FT_Error )   FT_New_Stream( const char*  filepathname,
                                          FT_Stream    astream );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Done_Stream                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Closes and destroys a stream object.                               */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    stream :: The stream to be closed and destroyed.                   */
+  /*                                                                       */
   FT_EXPORT( void )       FT_Done_Stream( FT_Stream  stream );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_New_Memory                                                      */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Creates a new memory object.                                       */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A pointer to the new memory object.  0 in case of error.           */
+  /*                                                                       */
   FT_EXPORT( FT_Memory )  FT_New_Memory( void );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Done_Memory                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Discards memory manager.                                           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    memory :: A handle to the memory manager.                          */
+  /*                                                                       */
   FT_EXPORT( void )       FT_Done_Memory( FT_Memory  memory );
 
 #endif /* !FT_CONFIG_OPTION_NO_DEFAULT_SYSTEM */

@@ -40,6 +40,22 @@
 
 #define SQRT_64( z )  FT_Sqrt64( z )
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Sqrt64                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Computes the square root of a 64-bit value.  That sounds stupid,   */
+  /*    but it is needed to obtain maximal accuracy in the TrueType        */
+  /*    bytecode interpreter.                                              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    l :: A 64-bit integer.                                             */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The 32-bit square-root.                                            */
+  /*                                                                       */
   FT_EXPORT( FT_Int32 )  FT_Sqrt64( FT_Int64  l );
 
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
@@ -60,14 +76,72 @@
 #define MUL_64( x, y, z )  FT_MulTo64( x, y, &z )
 #define DIV_64( x, y )     FT_Div64by32( &x, y )
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Add64                                                           */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Add two Int64 values.                                              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    x :: A pointer to the first value to be added.                     */
+  /*    y :: A pointer to the second value to be added.                    */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    z :: A pointer to the result of `x + y'.                           */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Will be wrapped by the ADD_64() macro.                             */
+  /*                                                                       */
   FT_EXPORT( void )  FT_Add64( FT_Int64*  x,
                                FT_Int64*  y,
                                FT_Int64  *z );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_MulTo64                                                         */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Multiplies two Int32 integers.  Returns an Int64 integer.          */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    x :: The first multiplier.                                         */
+  /*    y :: The second multiplier.                                        */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    z :: A pointer to the result of `x * y'.                           */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Will be wrapped by the MUL_64() macro.                             */
+  /*                                                                       */
   FT_EXPORT( void )  FT_MulTo64( FT_Int32   x,
                                  FT_Int32   y,
                                  FT_Int64  *z );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Div64by32                                                       */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Divides an Int64 value by an Int32 value.  Returns an Int32        */
+  /*    integer.                                                           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    x :: A pointer to the dividend.                                    */
+  /*    y :: The divisor.                                                  */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The result of `x / y'.                                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Will be wrapped by the DIV_64() macro.                             */
+  /*                                                                       */
   FT_EXPORT( FT_Int32 )  FT_Div64by32( FT_Int64*  x,
                                        FT_Int32   y );
 
@@ -78,6 +152,22 @@
 
 #define SQRT_64( z )  FT_Sqrt64( &z )
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Sqrt64                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Computes the square root of a 64-bits value.  That sounds stupid,  */
+  /*    but it is needed to obtain maximal accuracy in the TrueType        */
+  /*    bytecode interpreter.                                              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    z :: A pointer to a 64-bit integer.                                */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The 32-bit square-root.                                            */
+  /*                                                                       */
   FT_EXPORT( FT_Int32 )  FT_Sqrt64( FT_Int64*  x );
 
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
@@ -90,7 +180,22 @@
 
 #define SQRT_32( x )  FT_Sqrt32( x )
 
-  FT_BASE( FT_Int32 )  FT_Sqrt32( FT_Int32  x );
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Sqrt32                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Computes the square root of an Int32 integer (which will be        */
+  /*    handled as an unsigned long value).                                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    x :: The value to compute the root for.                            */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The result of `sqrt(x)'.                                           */
+  /*                                                                       */
+  FT_EXPORT( FT_Int32 )  FT_Sqrt32( FT_Int32  x );
 
 #endif /* !FT_CONFIG_OPTION_OLD_CALCS */
 

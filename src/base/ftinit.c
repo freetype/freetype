@@ -72,19 +72,8 @@ const FT_Module_Class*  const ft_default_modules[] =
   };
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Add_Default_Modules                                             */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Adds the set of default drivers to a given library object.         */
-  /*    This is only useful when you create a library object with          */
-  /*    FT_New_Library() (usually to plug a custom memory manager).        */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    library :: A handle to a new library object.                       */
-  /*                                                                       */
+  /* documentation is in ftmodule.h */
+
   FT_EXPORT_DEF( void )  FT_Add_Default_Modules( FT_Library  library )
   {
     FT_Error                       error;
@@ -108,21 +97,8 @@ const FT_Module_Class*  const ft_default_modules[] =
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Init_FreeType                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a new FreeType library object.  The set of drivers     */
-  /*    that are registered by this function is determined at build time.  */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    library :: A handle to a new library object.                       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Init_FreeType( FT_Library  *alibrary )
   {
     FT_Error   error;
@@ -150,21 +126,8 @@ const FT_Module_Class*  const ft_default_modules[] =
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_FreeType                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Destroys a given FreeType library object and all of its childs,    */
-  /*    including resources, drivers, faces, sizes, etc.                   */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to the target library object.                  */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Done_FreeType( FT_Library  library )
   {
     if ( library )

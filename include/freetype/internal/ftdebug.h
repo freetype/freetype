@@ -138,6 +138,21 @@
           } while ( 0 )
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_SetTraceLevel                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Sets the trace level for debugging.                                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    component :: The component which should be traced.  See above for  */
+  /*                 a complete list.  If set to `trace_any', all          */
+  /*                 components will be traced.                            */
+  /*                                                                       */
+  /*    level     :: The tracing level.                                    */
+  /*                                                                       */
   FT_EXPORT( void )  FT_SetTraceLevel( FT_Trace  component,
                                        char      level );
 

@@ -52,26 +52,8 @@
   /*************************************************************************/
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Matrix_Multiply                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Performs the matrix operation `b = a*b'.                           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    a :: A pointer to matrix `a'.                                      */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    b :: A pointer to matrix `b'.                                      */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The result is undefined if either `a' or `b' is zero.              */
-  /*                                                                       */
+  /* documentation is in ftglyph.h */
+
   FT_EXPORT_DEF( void )  FT_Matrix_Multiply( FT_Matrix*  a,
                                              FT_Matrix*  b )
   {
@@ -91,24 +73,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Matrix_Invert                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Inverts a 2x2 matrix.  Returns an error if it can't be inverted.   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    matrix :: A pointer to the target matrix.  Remains untouched in    */
-  /*              case of error.                                           */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
+  /* documentation is in ftglyph.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Matrix_Invert( FT_Matrix*  matrix )
   {
     FT_Pos  delta, xx, yy;
@@ -405,24 +371,8 @@
    }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Glyph_Copy                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to copy a glyph image.                             */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    source :: A handle to the source glyph object.                     */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    target :: A handle to the target glyph object.  0 in case of       */
-  /*              error.                                                   */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftglyph.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Glyph_Copy( FT_Glyph   source,
                                             FT_Glyph  *target )
   {
@@ -458,23 +408,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Glyph                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to extract a glyph image from a slot.              */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    slot   :: A handle to the source glyph slot.                       */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    aglyph :: A handle to the glyph object.                            */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftglyph.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Get_Glyph( FT_GlyphSlot  slot,
                                            FT_Glyph     *aglyph )
   {
@@ -538,30 +473,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Glyph_Transform                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Transforms a glyph image if its format is scalable.                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    glyph  :: A handle to the target glyph object.                     */
-  /*                                                                       */
-  /*    matrix :: A pointer to a 2x2 matrix to apply.                      */
-  /*                                                                       */
-  /*    delta  :: A pointer to a 2d vector to apply.  Coordinates are      */
-  /*              expressed in 1/64th of a pixel.                          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code (the glyph format is not scalable if it is     */
-  /*    not zero).                                                         */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The 2x2 transformation matrix is also applied to the glyph's       */
-  /*    advance vector.                                                    */
-  /*                                                                       */
+  /* documentation is in ftglyph.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Glyph_Transform( FT_Glyph    glyph,
                                                  FT_Matrix*  matrix,
                                                  FT_Vector*  delta )
@@ -591,59 +504,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Glyph_Get_CBox                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns the glyph image's bounding box.                            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    glyph :: A handle to the source glyph object.                      */
-  /*                                                                       */
-  /*    mode  :: The mode which indicates how to interpret the returned    */
-  /*             bounding box values.                                      */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    box   :: The glyph bounding box.  Coordinates are expressed in     */
-  /*             1/64th of pixels if it is grid-fitted.                    */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Coordinates are relative to the glyph origin, using the Y-upwards  */
-  /*    convention.                                                        */
-  /*                                                                       */
-  /*    If the glyph has been loaded with FT_LOAD_NO_SCALE, `bbox_mode'    */
-  /*    must be set to `ft_glyph_bbox_unscaled' to get unscaled font       */
-  /*    units.                                                             */
-  /*                                                                       */
-  /*    If `bbox_mode' is set to `ft_glyph_bbox_subpixels' the bbox        */
-  /*    coordinates are returned in 26.6 pixels (i.e. 1/64th of pixels).   */
-  /*                                                                       */
-  /*    Note that the maximum coordinates are exclusive, which means that  */
-  /*    one can compute the width and height of the glyph image (be it in  */
-  /*    integer or 26.6 pixels) as:                                        */
-  /*                                                                       */
-  /*      width  = bbox.xMax - bbox.xMin;                                  */
-  /*      height = bbox.yMax - bbox.yMin;                                  */
-  /*                                                                       */
-  /*    Note also that for 26.6 coordinates, if `bbox_mode' is set to      */
-  /*    `ft_glyph_bbox_gridfit', the coordinates will also be grid-fitted, */
-  /*    which corresponds to:                                              */
-  /*                                                                       */
-  /*      bbox.xMin = FLOOR(bbox.xMin);                                    */
-  /*      bbox.yMin = FLOOR(bbox.yMin);                                    */
-  /*      bbox.xMax = CEILING(bbox.xMax);                                  */
-  /*      bbox.yMax = CEILING(bbox.yMax);                                  */
-  /*                                                                       */
-  /*    To get the bbox in pixel coordinates, set `bbox_mode' to           */
-  /*    `ft_glyph_bbox_truncate'.                                          */
-  /*                                                                       */
-  /*    To get the bbox in grid-fitted pixel coordinates, set `bbox_mode'  */
-  /*    to `ft_glyph_bbox_pixels'.                                         */
-  /*                                                                       */
-  /*    The default value for `bbox_mode' is `ft_glyph_bbox_pixels'.       */
-  /*                                                                       */
+  /* documentation is in ftglyph.h */
+
   FT_EXPORT_DEF( void )  FT_Glyph_Get_CBox( FT_Glyph  glyph,
                                             FT_UInt   bbox_mode,
                                             FT_BBox  *acbox )
@@ -687,77 +549,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Glyph_To_Bitmap                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Converts a given glyph object to a bitmap glyph object.            */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    glyph       :: A pointer to a handle to the target glyph.          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    render_mode :: A set of bit flags that describe how the data is    */
-  /*                                                                       */
-  /*                                                                       */
-  /*    origin      :: A pointer to a vector used to translate the glyph   */
-  /*                   image before rendering.  Can be 0 (if no            */
-  /*                   translation).  The origin is expressed in           */
-  /*                   26.6 pixels.                                        */
-  /*                                                                       */
-  /*    destroy     :: A boolean that indicates that the original glyph    */
-  /*                   image should be destroyed by this function.  It is  */
-  /*                   never destroyed in case of error.                   */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The glyph image is translated with the `origin' vector before      */
-  /*    rendering.  In case of error, it it translated back to its         */
-  /*    original position and the glyph is left untouched.                 */
-  /*                                                                       */
-  /*    The first parameter is a pointer to a FT_Glyph handle, that will   */
-  /*    be replaced by this function.  Typically, you would use (omitting  */
-  /*    error handling):                                                   */
-  /*                                                                       */
-  /*                                                                       */
-  /*      {                                                                */
-  /*        FT_Glyph        glyph;                                         */
-  /*        FT_BitmapGlyph  glyph_bitmap;                                  */
-  /*                                                                       */
-  /*                                                                       */
-  /*        // load glyph                                                  */
-  /*        error = FT_Load_Char( face, glyph_index, FT_LOAD_DEFAUT );     */
-  /*                                                                       */
-  /*        // extract glyph image                                         */
-  /*        error = FT_Get_Glyph( face->glyph, &glyph );                   */
-  /*                                                                       */
-  /*        // convert to a bitmap (default render mode + destroy old)     */
-  /*        if ( glyph->format != ft_glyph_format_bitmap )                 */
-  /*        {                                                              */
-  /*          error = FT_Glyph_To_Bitmap( &glyph, ft_render_mode_default,  */
-  /*                                      0, 1 );                          */
-  /*          if ( error ) // glyph unchanged                              */
-  /*            ...                                                        */
-  /*        }                                                              */
-  /*                                                                       */
-  /*        // access bitmap content by typecasting                        */
-  /*        glyph_bitmap = (FT_BitmapGlyph)glyph;                          */
-  /*                                                                       */
-  /*        // do funny stuff with it, like blitting/drawing               */
-  /*        ...                                                            */
-  /*                                                                       */
-  /*        // discard glyph image (bitmap or not)                         */
-  /*        FT_Done_Glyph( glyph );                                        */
-  /*      }                                                                */
-  /*                                                                       */
-  /*                                                                       */
-  /*    This function will always fail if the glyph's format isn't         */
-  /*    scalable.                                                          */
-  /*                                                                       */
+  /* documentation is in ftglyph.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Glyph_To_Bitmap( FT_Glyph*   the_glyph,
                                                  FT_ULong    render_mode,
                                                  FT_Vector*  origin,
@@ -844,17 +637,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_Glyph                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Destroys a given glyph.                                            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    glyph :: A handle to the target glyph object.                      */
-  /*                                                                       */
+  /* documentation is in ftglyph.h */
+
   FT_EXPORT_DEF( void )  FT_Done_Glyph( FT_Glyph  glyph )
   {
     if ( glyph )

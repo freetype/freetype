@@ -283,17 +283,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_Stream                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Closes and destroys a stream object.                               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    stream :: The stream to be closed and destroyed.                   */
-  /*                                                                       */
+  /* documentation is in ftobjs.h */
+
   FT_EXPORT_DEF( void )  FT_Done_Stream( FT_Stream  stream )
   {
     if ( stream && stream->close )
@@ -857,31 +848,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Transform                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to set the transformation that is applied to glyph */
-  /*    images just before they are converted to bitmaps in a glyph slot   */
-  /*    when FT_Render_Glyph() is called.                                  */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    face   :: A handle to the source face object.                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    matrix :: A pointer to the transformation's 2x2 matrix.  Use 0 for */
-  /*              the identity matrix.                                     */
-  /*    delta  :: A pointer to the translation vector.  Use 0 for the null */
-  /*              vector.                                                  */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The transformation is only applied to scalable image formats after */
-  /*    the glyph has been loaded.  It means that hinting is unaltered by  */
-  /*    the transformation and is performed on the character size given in */
-  /*    the last call to FT_Set_Char_Sizes() or FT_Set_Pixel_Sizes().      */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( void )  FT_Set_Transform( FT_Face     face,
                                            FT_Matrix*  matrix,
                                            FT_Vector*  delta )
@@ -931,39 +899,8 @@
   static FT_Renderer  ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Load_Glyph                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to load a single glyph within a given glyph slot,  */
-  /*    for a given size.                                                  */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face        :: A handle to the target face object where the glyph  */
-  /*                   will be loaded.                                     */
-  /*                                                                       */
-  /*    glyph_index :: The index of the glyph in the font file.            */
-  /*                                                                       */
-  /*    load_flags  :: A flag indicating what to load for this glyph.  The */
-  /*                   FT_LOAD_XXX constants can be used to control the    */
-  /*                   glyph loading process (e.g., whether the outline    */
-  /*                   should be scaled, whether to load bitmaps or not,   */
-  /*                   whether to hint the outline, etc).                  */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    If the glyph image is not a bitmap, and if the bit flag            */
-  /*    FT_LOAD_IGNORE_TRANSFORM is unset, the glyph image will be         */
-  /*    transformed with the information passed to a previous call to      */
-  /*    FT_Set_Transform.                                                  */
-  /*                                                                       */
-  /*    Note that this also transforms the `face.glyph.advance' field, but */
-  /*    *not* the values in `face.glyph.metrics'.                          */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Load_Glyph( FT_Face  face,
                                             FT_UInt  glyph_index,
                                             FT_Int   load_flags )
@@ -1096,44 +1033,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Load_Char                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    A function used to load a single glyph within a given glyph slot,  */
-  /*    for a given size, according to its character code.                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face        :: A handle to a target face object where the glyph    */
-  /*                   will be loaded.                                     */
-  /*                                                                       */
-  /*    char_code   :: The glyph's character code, according to the        */
-  /*                   current charmap used in the face.                   */
-  /*                                                                       */
-  /*    load_flags  :: A flag indicating what to load for this glyph.  The */
-  /*                   FT_LOAD_XXX constants can be used to control the    */
-  /*                   glyph loading process (e.g., whether the outline    */
-  /*                   should be scaled, whether to load bitmaps or not,   */
-  /*                   whether to hint the outline, etc).                  */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    If the face has no current charmap, or if the character code       */
-  /*    is not defined in the charmap, this function will return an        */
-  /*    error.                                                             */
-  /*                                                                       */
-  /*    If the glyph image is not a bitmap, and if the bit flag            */
-  /*    FT_LOAD_IGNORE_TRANSFORM is unset, the glyph image will be         */
-  /*    transformed with the information passed to a previous call to      */
-  /*    FT_Set_Transform().                                                */
-  /*                                                                       */
-  /*    Note that this also transforms the `face.glyph.advance' field, but */
-  /*    *not* the values in `face.glyph.metrics'.                          */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Load_Char( FT_Face   face,
                                            FT_ULong  char_code,
                                            FT_Int    load_flags )
@@ -1296,44 +1197,8 @@
 
 #ifndef macintosh
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_Face                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Creates a new face object from a given resource and typeface index */
-  /*    using a pathname to the font file.                                 */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    library    :: A handle to the library resource.                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    pathname   :: A path to the font file.                             */
-  /*                                                                       */
-  /*    face_index :: The index of the face within the resource.  The      */
-  /*                  first face has index 0.                              */
-  /* <Output>                                                              */
-  /*    aface      :: A handle to a new face object.                       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Unlike FreeType 1.x, this function automatically creates a glyph   */
-  /*    slot for the face object which can be accessed directly through    */
-  /*    `face->glyph'.                                                     */
-  /*                                                                       */
-  /*    Note that additional slots can be added to each face with the      */
-  /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
-  /*    list through their `next' field.                                   */
-  /*                                                                       */
-  /*    FT_New_Face() can be used to determine and/or check the font       */
-  /*    format of a given font resource.  If the `face_index' field is     */
-  /*    negative, the function will _not_ return any face handle in        */
-  /*    `*face'.  Its return value should be 0 if the resource is          */
-  /*    recognized, or non-zero if not.                                    */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_New_Face( FT_Library   library,
                                           const char*  pathname,
                                           FT_Long      face_index,
@@ -1355,46 +1220,8 @@
 #endif  /* !macintosh */
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_Memory_Face                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Creates a new face object from a given resource and typeface index */
-  /*    using a font file already loaded into memory.                      */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    library    :: A handle to the library resource.                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    file_base  :: A pointer to the beginning of the font data.         */
-  /*                                                                       */
-  /*    file_size  :: The size of the memory chunk used by the font data.  */
-  /*                                                                       */
-  /*    face_index :: The index of the face within the resource.  The      */
-  /*                  first face has index 0.                              */
-  /* <Output>                                                              */
-  /*    face       :: A handle to a new face object.                       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Unlike FreeType 1.x, this function automatically creates a glyph   */
-  /*    slot for the face object which can be accessed directly through    */
-  /*    `face->glyph'.                                                     */
-  /*                                                                       */
-  /*    Note that additional slots can be added to each face with the      */
-  /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
-  /*    list through their `next' field.                                   */
-  /*                                                                       */
-  /*    FT_New_Memory_Face() can be used to determine and/or check the     */
-  /*    font format of a given font resource.  If the `face_index' field   */
-  /*    is negative, the function will _not_ return any face handle in     */
-  /*    `*face'.  Its return value should be 0 if the resource is          */
-  /*    recognized, or non-zero if not.                                    */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_New_Memory_Face( FT_Library  library,
                                                  FT_Byte*    file_base,
                                                  FT_Long     file_size,
@@ -1416,46 +1243,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Open_Face                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Opens a face object from a given resource and typeface index using */
-  /*    an `FT_Open_Args' structure.  If the face object doesn't exist, it */
-  /*    will be created.                                                   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    library    :: A handle to the library resource.                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    args       :: A pointer to an `FT_Open_Args' structure which must  */
-  /*                  be filled by the caller.                             */
-  /*                                                                       */
-  /*    face_index :: The index of the face within the resource.  The      */
-  /*                  first face has index 0.                              */
-  /* <Output>                                                              */
-  /*    aface      :: A handle to a new face object.                       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Unlike FreeType 1.x, this function automatically creates a glyph   */
-  /*    slot for the face object which can be accessed directly through    */
-  /*    `face->glyph'.                                                     */
-  /*                                                                       */
-  /*    Note that additional slots can be added to each face with the      */
-  /*    FT_New_GlyphSlot() API function.  Slots are linked in a single     */
-  /*    list through their `next' field.                                   */
-  /*                                                                       */
-  /*    FT_Open_Face() can be used to determine and/or check the font      */
-  /*    format of a given font resource.  If the `face_index' field is     */
-  /*    negative, the function will _not_ return any face handle in        */
-  /*    `*face'.  Its return value should be 0 if the resource is          */
-  /*    recognized, or non-zero if not.                                    */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Open_Face( FT_Library     library,
                                            FT_Open_Args*  args,
                                            FT_Long        face_index,
@@ -1629,38 +1418,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Attach_File                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    `Attaches' a given font file to an existing face.  This is usually */
-  /*    to read additional information for a single face object.  For      */
-  /*    example, it is used to read the AFM files that come with Type 1    */
-  /*    fonts in order to add kerning data and other metrics.              */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    face         :: The target face object.                            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    filepathname :: An 8-bit pathname naming the `metrics' file.       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    If your font file is in memory, or if you want to provide your     */
-  /*    own input stream object, use FT_Attach_Stream().                   */
-  /*                                                                       */
-  /*    The meaning of the `attach' action (i.e., what really happens when */
-  /*    the new file is read) is not fixed by FreeType itself.  It really  */
-  /*    depends on the font format (and thus the font driver).             */
-  /*                                                                       */
-  /*    Client applications are expected to know what they are doing       */
-  /*    when invoking this function.  Most drivers simply do not implement */
-  /*    file attachments.                                                  */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Attach_File( FT_Face      face,
                                              const char*  filepathname )
   {
@@ -1679,32 +1438,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Attach_Stream                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This function is similar to FT_Attach_File() with the exception    */
-  /*    that it reads the attachment from an arbitrary stream.             */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face       :: The target face object.                              */
-  /*                                                                       */
-  /*    parameters :: A pointer to an FT_Open_Args structure used to       */
-  /*                  describe the input stream to FreeType.               */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The meaning of the `attach' (i.e. what really happens when the     */
-  /*    new file is read) is not fixed by FreeType itself.  It really      */
-  /*    depends on the font format (and thus the font driver).             */
-  /*                                                                       */
-  /*    Client applications are expected to know what they are doing       */
-  /*    when invoking this function.  Most drivers simply do not implement */
-  /*    file attachments.                                                  */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Attach_Stream( FT_Face        face,
                                                FT_Open_Args*  parameters )
   {
@@ -1746,21 +1481,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_Face                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Discards a given face object, as well as all of its child slots    */
-  /*    and sizes.                                                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face :: A handle to a target face object.                          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Done_Face( FT_Face  face )
   {
     FT_Error     error;
@@ -1792,23 +1514,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_Size                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Creates a new size object from a given face object.                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face :: A handle to a parent face object.                          */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    asize :: A handle to a new size object.                            */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftobjs.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_New_Size( FT_Face   face,
                                           FT_Size  *asize )
   {
@@ -1868,20 +1575,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_Size                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Discards a given size object.                                      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to a target size object.                          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftobjs.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Done_Size( FT_Size  size )
   {
     FT_Error     error;
@@ -1947,40 +1642,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Char_Size                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Sets the character dimensions of a given face object.  The         */
-  /*    `char_width' and `char_height' values are used for the width and   */
-  /*    height, respectively, expressed in 26.6 fractional points.         */
-  /*                                                                       */
-  /*    If the horizontal or vertical resolution values are zero, a        */
-  /*    default value of 72dpi is used.  Similarly, if one of the          */
-  /*    character dimensions is zero, its value is set equal to the other. */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    size            :: A handle to a target size object.               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    char_width      :: The character width, in 26.6 fractional points. */
-  /*                                                                       */
-  /*    char_height     :: The character height, in 26.6 fractional        */
-  /*                       points.                                         */
-  /*                                                                       */
-  /*    horz_resolution :: The horizontal resolution.                      */
-  /*                                                                       */
-  /*    vert_resolution :: The vertical resolution.                        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    When dealing with fixed-size faces (i.e., non-scalable formats),   */
-  /*    use the function FT_Set_Pixel_Sizes().                             */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Set_Char_Size( FT_Face     face,
                                                FT_F26Dot6  char_width,
                                                FT_F26Dot6  char_height,
@@ -2051,44 +1714,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Pixel_Sizes                                                 */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Sets the character dimensions of a given face object.  The width   */
-  /*    and height are expressed in integer pixels.                        */
-  /*                                                                       */
-  /*    If one of the character dimensions is zero, its value is set equal */
-  /*    to the other.                                                      */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    face         :: A handle to the target face object.                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    pixel_width  :: The character width, in integer pixels.            */
-  /*                                                                       */
-  /*    pixel_height :: The character height, in integer pixels.           */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The values of `pixel_width' and `pixel_height' correspond to the   */
-  /*    pixel values of the _typographic_ character size, which are NOT    */
-  /*    necessarily the same as the dimensions of the glyph `bitmap        */
-  /*    cells".                                                            */
-  /*                                                                       */
-  /*    The `character size' is really the size of an abstract square      */
-  /*    called the `EM', used to design the font.  However, depending      */
-  /*    on the font design, glyphs will be smaller or greater than the     */
-  /*    EM.                                                                */
-  /*                                                                       */
-  /*    This means that setting the pixel size to, say, 8x8 doesn't        */
-  /*    guarantee in any way that you will get glyph bitmaps that all fit  */
-  /*    within an 8x8 cell (sometimes even far from it).                   */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Set_Pixel_Sizes( FT_Face  face,
                                                  FT_UInt  pixel_width,
                                                  FT_UInt  pixel_height )
@@ -2141,39 +1768,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Kerning                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns the kerning vector between two glyphs of a same face.      */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face        :: A handle to a source face object.                   */
-  /*                                                                       */
-  /*    left_glyph  :: The index of the left glyph in the kern pair.       */
-  /*                                                                       */
-  /*    right_glyph :: The index of the right glyph in the kern pair.      */
-  /*                                                                       */
-  /*    kern_mode   :: See FT_Kerning_Mode() for more information.         */
-  /*                   Determines the scale/dimension of the returned      */
-  /*                   kerning vector.                                     */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    kerning     :: The kerning vector.  This is in font units for      */
-  /*                   scalable formats, and in pixels for fixed-sizes     */
-  /*                   formats.                                            */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Only horizontal layouts (left-to-right & right-to-left) are        */
-  /*    supported by this method.  Other layouts, or more sophisticated    */
-  /*    kernings, are out of the scope of this API function -- they can be */
-  /*    implemented through format-specific interfaces.                    */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Get_Kerning( FT_Face     face,
                                              FT_UInt     left_glyph,
                                              FT_UInt     right_glyph,
@@ -2223,27 +1819,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Select_Charmap                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Selects a given charmap by its encoding tag (as listed in          */
-  /*    `freetype.h').                                                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face     :: A handle to the source face object.                    */
-  /*                                                                       */
-  /*    encoding :: A handle to the selected charmap.                      */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function will return an error if no charmap in the face       */
-  /*    corresponds to the encoding queried here.                          */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Select_Charmap( FT_Face      face,
                                                 FT_Encoding  encoding )
   {
@@ -2273,27 +1850,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Charmap                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Selects a given charmap for character code to glyph index          */
-  /*    decoding.                                                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face    :: A handle to the source face object.                     */
-  /*    charmap :: A handle to the selected charmap.                       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function will return an error if the charmap is not part of   */
-  /*    the face (i.e., if it is not listed in the face->charmaps[]        */
-  /*    table).                                                            */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Set_Charmap( FT_Face     face,
                                              FT_CharMap  charmap )
   {
@@ -2322,23 +1880,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Char_Index                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns the glyph index of a given character code.  This function  */
-  /*    uses a charmap object to do the translation.                       */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face     :: A handle to the source face object.                    */
-  /*                                                                       */
-  /*    charcode :: The character code.                                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    The glyph index.  0 means `undefined character code'.              */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_UInt )  FT_Get_Char_Index( FT_Face   face,
                                                FT_ULong  charcode )
   {
@@ -2356,41 +1899,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Glyph_Name                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Retrieves the ASCII name of a given glyph in a face.  This only    */
-  /*    works for those faces where FT_HAS_GLYPH_NAME(face) returns true.  */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face        :: A handle to a source face object.                   */
-  /*                                                                       */
-  /*    glyph_index :: The glyph index.                                    */
-  /*                                                                       */
-  /*    buffer      :: A pointer to a target buffer where the name will be */
-  /*                   copied to.                                          */
-  /*                                                                       */
-  /*    buffer_max  :: The maximal number of bytes available in the        */
-  /*                   buffer.                                             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    An error is returned if the face doesn't provide glyph names or if */
-  /*    the glyph index is invalid.  In all cases of failure, the first    */
-  /*    byte of `buffer' will be set to 0 to indicate an empty name.       */
-  /*                                                                       */
-  /*    The glyph name is truncated to fit within the buffer if it is too  */
-  /*    long.  The returned string is always zero-terminated.              */
-  /*                                                                       */
-  /*    This function is not compiled within the library if the config     */
-  /*    macro FT_CONFIG_OPTION_NO_GLYPH_NAMES is defined in                */
-  /*    `include/freetype/config/ftoptions.h'                              */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Get_Glyph_Name( FT_Face     face,
                                                 FT_UInt     glyph_index,
                                                 FT_Pointer  buffer,
@@ -2428,32 +1938,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Sfnt_Table                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Returns a pointer to a given SFNT table within a face.             */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face :: A handle to the source face object.                        */
-  /*    tag  :: An index of an SFNT table.                                 */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A type-less pointer to the table.  This will be 0 in case of       */
-  /*    error, or if the corresponding table was not found *OR* loaded     */
-  /*    from the file.                                                     */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The table is owned by the face object, and disappears with it.     */
-  /*                                                                       */
-  /*    This function is only useful to access SFNT tables that are loaded */
-  /*    by the sfnt/truetype/opentype drivers.  See the FT_Sfnt_Tag        */
-  /*    enumeration in `tttables.h' for a list.                            */
-  /*                                                                       */
-  /*    You can load any table with a different function.. XXX             */
-  /*                                                                       */
+  /* documentation is in tttables.h */
+
   FT_EXPORT_DEF( void* )  FT_Get_Sfnt_Table( FT_Face      face,
                                              FT_Sfnt_Tag  tag )
   {
@@ -2631,29 +2117,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Renderer                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Retrieves the current renderer for a given glyph format.           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to the library object.                         */
-  /*                                                                       */
-  /*    format  :: The glyph format.                                       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A renderer handle.  0 if none found.                               */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    An error will be returned if a module already exists by that name, */
-  /*    or if the module requires a version of FreeType that is too great. */
-  /*                                                                       */
-  /*    To add a new renderer, simply use FT_Add_Module().  To retrieve a  */
-  /*    renderer by its name, use FT_Get_Module().                         */
-  /*                                                                       */
+  /* documentation is in ftrender.h */
+
   FT_EXPORT_DEF( FT_Renderer )  FT_Get_Renderer( FT_Library       library,
                                                  FT_Glyph_Format  format )
   {
@@ -2663,32 +2128,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Renderer                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Sets the current renderer to use, and set additional mode.         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library    :: A handle to the library object.                      */
-  /*                                                                       */
-  /*    renderer   :: A handle to the renderer object.                     */
-  /*                                                                       */
-  /*    num_params :: The number of additional parameters.                 */
-  /*                                                                       */
-  /*    parameters :: Additional parameters.                               */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    In case of success, the renderer will be used to convert glyph     */
-  /*    images in the renderer's known format into bitmaps.                */
-  /*                                                                       */
-  /*    This doesn't change the current renderer for other formats.        */
-  /*                                                                       */
+  /* documentation is in ftrender.h */
+
   FT_EXPORT( FT_Error )  FT_Set_Renderer( FT_Library     library,
                                           FT_Renderer    renderer,
                                           FT_UInt        num_params,
@@ -2792,27 +2233,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Render_Glyph                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Converts a given glyph image to a bitmap.  It does so by           */
-  /*    inspecting the glyph image format, find the relevant renderer, and */
-  /*    invoke it.                                                         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    slot        :: A handle to the glyph slot containing the image to  */
-  /*                   convert.                                            */
-  /*                                                                       */
-  /*    render_mode :: This is the render mode used to render the glyph    */
-  /*                   image into a bitmap.  See FT_Render_Mode for a list */
-  /*                   of possible values.                                 */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in freetype.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Render_Glyph( FT_GlyphSlot  slot,
                                               FT_UInt       render_mode )
   {
@@ -2888,26 +2310,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Add_Module                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Adds a new module to a given library instance.                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to the library object.                         */
-  /*                                                                       */
-  /*    clazz   :: A pointer to class descriptor for the module.           */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    An error will be returned if a module already exists by that name, */
-  /*    or if the module requires a version of FreeType that is too great. */
-  /*                                                                       */
+  /* documentation is in ftmodule.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Add_Module( FT_Library              library,
                                             const FT_Module_Class*  clazz )
   {
@@ -3032,26 +2436,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Module                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Finds a module by its name.                                        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library     :: A handle to the library object.                     */
-  /*                                                                       */
-  /*    module_name :: The module's name (as an ASCII string).             */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    A module handle.  0 if none was found.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    You should better be familiar with FreeType internals to know      */
-  /*    which module to look for :-)                                       */
-  /*                                                                       */
+  /* documentation is in ftmodule.h */
+
   FT_EXPORT_DEF( FT_Module ) FT_Get_Module( FT_Library   library,
                                             const char*  module_name )
   {
@@ -3112,25 +2498,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Remove_Module                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Removes a given module from a library instance.                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to a library object.                           */
-  /*                                                                       */
-  /*    module  :: A handle to a module object.                            */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The module object is destroyed by the function in case of success. */
-  /*                                                                       */
+  /* documentation is in ftmodule.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Remove_Module( FT_Library  library,
                                                FT_Module   module )
   {
@@ -3183,25 +2552,8 @@
   /*************************************************************************/
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_Library                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    This function is used to create a new FreeType library instance    */
-  /*    from a given memory object.  It is thus possible to use libraries  */
-  /*    with distinct memory allocators within the same program.           */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory   :: A handle to the original memory object.                */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    alibrary :: A pointer to handle of a new library object.           */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftmodule.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_New_Library( FT_Memory    memory,
                                              FT_Library  *alibrary )
   {
@@ -3234,21 +2586,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Done_Library                                                    */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Discards a given library object.  This closes all drivers and      */
-  /*    discards all resource objects.                                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library :: A handle to the target library.                         */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftmodule.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Done_Library( FT_Library  library )
   {
     FT_Memory  memory;
@@ -3286,28 +2625,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_Debug_Hook                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Sets a debug hook function for debugging the interpreter of a font */
-  /*    format.                                                            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    library    :: A handle to the library object.                      */
-  /*                                                                       */
-  /*    hook_index :: The index of the debug hook.  You should use the     */
-  /*                  values defined in ftobjs.h, e.g.                     */
-  /*                  FT_DEBUG_HOOK_TRUETYPE                               */
-  /*                                                                       */
-  /*    debug_hook :: The function used to debug the interpreter.          */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    Currently, four debug hook slots are available, but only two (for  */
-  /*    the TrueType and the Type 1 interpreter) are defined.              */
-  /*                                                                       */
+  /* documentation is in ftmodule.h */
+
   FT_EXPORT_DEF( void )  FT_Set_Debug_Hook( FT_Library         library,
                                             FT_UInt            hook_index,
                                             FT_DebugHook_Func  debug_hook )

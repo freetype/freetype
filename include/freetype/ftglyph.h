@@ -402,9 +402,6 @@
   /* <InOut>                                                               */
   /*    b :: A pointer to matrix `b'.                                      */
   /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
   /* <Note>                                                                */
   /*    The result is undefined if either `a' or `b' is zero.              */
   /*                                                                       */
@@ -426,9 +423,6 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
   /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Matrix_Invert( FT_Matrix*  matrix );
 

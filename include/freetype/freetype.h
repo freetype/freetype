@@ -319,7 +319,7 @@
   /*                                                                       */
   /* <Description>                                                         */
   /*    An enumeration used to specify encodings supported by charmaps.    */
-  /*    Used in the FT_Select_CharMap() API function.                      */
+  /*    Used in the FT_Select_Charmap() API function.                      */
   /*                                                                       */
   /* <Note>                                                                */
   /*    Because of 32-bit charcodes defined in Unicode (i.e., surrogates), */
@@ -1590,6 +1590,22 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    The values of `pixel_width' and `pixel_height' correspond to the   */
+  /*    pixel values of the _typographic_ character size, which are NOT    */
+  /*    necessarily the same as the dimensions of the glyph `bitmap        */
+  /*    cells'.                                                            */
+  /*                                                                       */
+  /*    The `character size' is really the size of an abstract square      */
+  /*    called the `EM', used to design the font.  However, depending      */
+  /*    on the font design, glyphs will be smaller or greater than the     */
+  /*    EM.                                                                */
+  /*                                                                       */
+  /*    This means that setting the pixel size to, say, 8x8 doesn't        */
+  /*    guarantee in any way that you will get glyph bitmaps that all fit  */
+  /*    within an 8x8 cell (sometimes even far from it).                   */
+  /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Set_Pixel_Sizes( FT_Face  face,
                                              FT_UInt  pixel_width,
                                              FT_UInt  pixel_height );
@@ -1624,7 +1640,7 @@
   /*    If the glyph image is not a bitmap, and if the bit flag            */
   /*    FT_LOAD_IGNORE_TRANSFORM is unset, the glyph image will be         */
   /*    transformed with the information passed to a previous call to      */
-  /*    FT_Set_Transform.                                                  */
+  /*    FT_Set_Transform().                                                */
   /*                                                                       */
   /*    Note that this also transforms the `face.glyph.advance' field, but */
   /*    *not* the values in `face.glyph.metrics'.                          */
@@ -2123,10 +2139,10 @@
   /*    decoding.                                                          */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    face     :: A handle to the source face object.                    */
+  /*    face    :: A handle to the source face object.                     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    charmap  :: A handle to the selected charmap.                      */
+  /*    charmap :: A handle to the selected charmap.                       */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
@@ -2262,9 +2278,6 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    matrix :: A pointer to the source 2x2 matrix.                      */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The result is undefined if either `vector' or `matrix' is invalid. */

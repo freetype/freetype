@@ -236,7 +236,7 @@
   /* <Input>                                                               */
   /*    hook_index :: The index of the debug hook.  You should use the     */
   /*                  values defined in ftobjs.h, e.g.                     */
-  /*                  FT_DEBUG_HOOK_TRUETYPE                               */
+  /*                  FT_DEBUG_HOOK_TRUETYPE.                              */
   /*                                                                       */
   /*    debug_hook :: The function used to debug the interpreter.          */
   /*                                                                       */

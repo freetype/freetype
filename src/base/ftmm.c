@@ -30,23 +30,8 @@
 #define FT_COMPONENT  trace_mm
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Get_Multi_Master                                                */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Retrieves the Multiple Master descriptor of a given font.          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face   :: A handle to the source face.                             */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    master :: The Multiple Masters descriptor.                         */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftmm.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Get_Multi_Master( FT_Face           face,
                                                   FT_Multi_Master  *amaster )
   {
@@ -74,26 +59,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_MM_Design_Coordinates                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    For Multiple Masters fonts, choose an interpolated font design     */
-  /*    through design coordinates.                                        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face       :: A handle to the source face.                         */
-  /*                                                                       */
-  /*    num_coords :: The number of design coordinates (must be equal to   */
-  /*                  the number of axes in the font).                     */
-  /*                                                                       */
-  /*    coords     :: The design coordinates.                              */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftmm.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Set_MM_Design_Coordinates(
                                FT_Face   face,
                                FT_UInt   num_coords,
@@ -123,27 +90,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_Set_MM_Blend_Coordinates                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    For Multiple Masters fonts, choose an interpolated font design     */
-  /*    through normalized blend coordinates.                              */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face       :: A handle to the source face.                         */
-  /*                                                                       */
-  /*    num_coords :: The number of design coordinates (must be equal to   */
-  /*                  the number of axes in the font).                     */
-  /*                                                                       */
-  /*    coords     :: The design coordinates (each one must be between 0   */
-  /*                  and 1.0).                                            */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
+  /* documentation is in ftmm.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_Set_MM_Blend_Coordinates(
                                FT_Face    face,
                                FT_UInt    num_coords,

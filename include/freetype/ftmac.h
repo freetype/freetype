@@ -48,8 +48,8 @@
   /* <Input>                                                               */
   /*    fond       :: An FOND resource.                                    */
   /*                                                                       */
-  /*    face_index :: only supported for the -1 `sanity check'             */
-  /*                  special case.                                        */
+  /*    face_index :: Only supported for the -1 `sanity check' special     */
+  /*                  case.                                                */
   /*                                                                       */
   /* <Output>                                                              */
   /*    aface      :: A handle to a new face object.                       */
@@ -60,6 +60,7 @@
   /* <Notes>                                                               */
   /*    This function can be used to create FT_Face abjects from fonts     */
   /*    that are installed in the system like so:                          */
+  /*                                                                       */
   /*      fond = GetResource( 'FOND', fontName );                          */
   /*      error = FT_New_Face_From_FOND( library, fond, 0, &face );        */
   /*                                                                       */

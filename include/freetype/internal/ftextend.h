@@ -130,6 +130,22 @@
   } FT_Extension_Class;
 
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Register_Extension                                              */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Registers a new extension.                                         */
+  /*                                                                       */
+  /* <InOut>                                                               */
+  /*    driver :: A handle to the driver object.                           */
+  /*                                                                       */
+  /*    class  :: A pointer to a class describing the extension.           */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
   FT_EXPORT( FT_Error )  FT_Register_Extension( FT_Driver            driver,
                                                 FT_Extension_Class*  clazz );
 
@@ -159,7 +175,26 @@
 #endif
 
 
-  /* return an extension's data & interface according to its ID */
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_Extension                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Queries an extension block by an extension ID string.              */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face                :: A handle to the face object.                */
+  /*    extension_id        :: An ID string identifying the extension.     */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    extension_interface :: A generic pointer, usually pointing to a    */
+  /*                           table of functions implementing the         */
+  /*                           extension interface.                        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A generic pointer to the extension block.                          */
+  /*                                                                       */
   FT_EXPORT( void* )  FT_Get_Extension( FT_Face      face,
                                         const char*  extension_id,
                                         void**       extension_interface );

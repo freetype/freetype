@@ -31,7 +31,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* To make ftgrays.h independent from configuration files we check       */
-  /* whether FT_EXPORT has been defined already.                           */
+  /* whether FT_EXPORT_VAR has been defined already.                       */
   /*                                                                       */
   /* On some systems and compilers (Win32 mostly), an extra keyword is     */
   /* necessary to compile the library as a DLL.                            */
