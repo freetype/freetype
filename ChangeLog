@@ -91,14 +91,16 @@
 
 2002-09-25  David Turner  <david@freetype.org>
 
-	* src/autohint/ahtypes.h: Disabling metrics hinting in the
-	auto-hinter.  this produces much better anti-aliased text.
+	* src/autohint/ahtypes.h (AH_HINT_METRICS): Disabling metrics
+	hinting in the auto-hinter.  This produces much better anti-aliased
+	text.
 
 	* docs/CHANGES: Updating the changes documentation.
 
 2002-09-25  Anthony Fok  <anthony@thizlinux.com>
 
-	* src/sfnt/ttcmap0.c: Added support for opens___.ttf (it contains a
+	* src/sfnt/ttcmap0.c (tt_cmap4_validate, tt_cmap4_char_index,
+	tt_cmap4_char_next): Added support for opens___.ttf (it contains a
 	charmap that uses offset=0xFFFFU instead of 0x0000 to indicate a
 	missing glyph).
 

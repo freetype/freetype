@@ -73,15 +73,15 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
       displays (under Win32 and X11)
 
 
-    - The cache API has been slightly modified (it's still a beta after all!!):
+    - The cache API has been slightly modified (it's still a beta!):
 
-       - the type FTC_ImageDesc has been removed, it is now replaced by
-         FTC_ImageTypeRec. Note that one of its fields is a 'load_flag'
-         parameter for FT_Load_Glyph
+       - The type FTC_ImageDesc has been removed; it is now replaced by
+         FTC_ImageTypeRec.  Note that one of its fields is a `load_flag'
+         parameter for FT_Load_Glyph.
 
-       - the field "num_grays" of FT_SBitRec has been changed to "max_grays"
-         in order to fit within a single byte. Its maximum value is thus 255
-         (instead of 256 as previously)
+       - The field "num_grays" of FT_SBitRec has been changed to "max_grays"
+         in order to fit within a single byte.  Its maximum value is thus 255
+         (instead of 256 as previously).
 
 
   III. MISCELLANEOUS
