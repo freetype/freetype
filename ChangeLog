@@ -9,6 +9,9 @@
 
         * src/cache/ftcmanag.c: fixed a cache flushing bug
 
+        * src/truetype/ttinterp.c (TT_Normalize): fixed a bug that
+        caused long and unecessary delays when normalizing huge vectors
+
 2004-07-15  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
