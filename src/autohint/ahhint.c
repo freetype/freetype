@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    Glyph hinter (body).                                                 */
 /*                                                                         */
-/*  Copyright 2000-2001 Catharon Productions Inc.                          */
+/*  Copyright 2000-2001, 2002 Catharon Productions Inc.                    */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -1068,13 +1068,13 @@
         goto Exit;
 
       FT_MEM_COPY( gloader->current.extra_points, slot->outline.points,
-                slot->outline.n_points * sizeof ( FT_Vector ) );
+                   slot->outline.n_points * sizeof ( FT_Vector ) );
 
       FT_MEM_COPY( gloader->current.outline.contours, slot->outline.contours,
-                slot->outline.n_contours * sizeof ( short ) );
+                   slot->outline.n_contours * sizeof ( short ) );
 
       FT_MEM_COPY( gloader->current.outline.tags, slot->outline.tags,
-                slot->outline.n_points * sizeof ( char ) );
+                   slot->outline.n_points * sizeof ( char ) );
 
       gloader->current.outline.n_points   = slot->outline.n_points;
       gloader->current.outline.n_contours = slot->outline.n_contours;
@@ -1139,8 +1139,8 @@
 
     case ft_glyph_format_composite:
       {
-        FT_UInt       nn, num_subglyphs = slot->num_subglyphs;
-        FT_UInt       num_base_subgs, start_point;
+        FT_UInt      nn, num_subglyphs = slot->num_subglyphs;
+        FT_UInt      num_base_subgs, start_point;
         FT_SubGlyph  subglyph;
 
 
@@ -1152,7 +1152,7 @@
           goto Exit;
 
         FT_MEM_COPY( gloader->current.subglyphs, slot->subglyphs,
-                  num_subglyphs * sizeof ( FT_SubGlyph ) );
+                     num_subglyphs * sizeof ( FT_SubGlyph ) );
 
         gloader->current.num_subglyphs = num_subglyphs;
         num_base_subgs = gloader->base.num_subglyphs;

@@ -5,7 +5,7 @@
 /*    Basic Type1/Type2 type definitions and interface (specification      */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -88,14 +88,9 @@ FT_BEGIN_HEADER
 
   typedef struct  T1_FontRec_
   {
-    /* font info dictionary */
-    PS_FontInfoRec   font_info;
-
-    /* private dictionary */
-    PS_PrivateRec    private_dict;
-
-    /* top-level dictionary */
-    FT_String*       font_name;
+    PS_FontInfoRec   font_info;         /* font info dictionary */
+    PS_PrivateRec    private_dict;      /* private dictionary   */
+    FT_String*       font_name;         /* top-level dictionary */
 
     T1_EncodingType  encoding_type;
     T1_EncodingRec   encoding;
@@ -183,15 +178,15 @@ FT_BEGIN_HEADER
 
   typedef struct  CID_FaceRec_
   {
-    FT_FaceRec        root;
-    void*             psnames;
-    void*             psaux;
-    CID_FaceInfoRec   cid;
-    void*             afm_data;
-    CID_Subrs         subrs;
+    FT_FaceRec       root;
+    void*            psnames;
+    void*            psaux;
+    CID_FaceInfoRec  cid;
+    void*            afm_data;
+    CID_Subrs        subrs;
     
     /* since FT 2.1 - interface to PostScript hinter */
-    void*             pshinter;
+    void*            pshinter;
 
   } CID_FaceRec;
 

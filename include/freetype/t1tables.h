@@ -5,7 +5,7 @@
 /*    Basic Type 1/Type 2 tables definitions and interface (specification  */
 /*    only).                                                               */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -81,11 +81,11 @@ FT_BEGIN_HEADER
   /*    T1_FontInfo                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    this type is equivalent to @PS_FontInfoRec but has been deprecated */
-  /*    it is kept to maintain source compatibility between various        */
-  /*    versions of FreeType                                               */
+  /*    This type is equivalent to @PS_FontInfoRec.  It is deprecated but  */
+  /*    kept to maintain source compatibility between various versions of  */
+  /*    FreeType.                                                          */
   /*                                                                       */
-  typedef PS_FontInfoRec   T1_FontInfo;
+  typedef PS_FontInfoRec  T1_FontInfo;
 
 
   /*************************************************************************/
@@ -94,9 +94,9 @@ FT_BEGIN_HEADER
   /*    PS_PrivateRec                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A structure used to model a Type1/Type2 private dictionary. Note   */
+  /*    A structure used to model a Type1/Type2 private dictionary.  Note  */
   /*    that for Multiple Master fonts, each instance has its own Private  */
-  /*    dict.                                                              */
+  /*    dictionary.                                                        */
   /*                                                                       */
   typedef struct  PS_PrivateRec_
   {
@@ -143,9 +143,9 @@ FT_BEGIN_HEADER
   /*    T1_Private                                                         */
   /*                                                                       */
   /* <Description>                                                         */
-  /*   this type is equivalent to @PS_PrivateRec but has been deprecated   */
-  /*   it is kept to maintain source compatibility between various         */
-  /*   versions of FreeType                                                */
+  /*   This type is equivalent to @PS_PrivateRec.  It is deprecated but    */
+  /*   kept to maintain source compatibility between various versions of   */
+  /*   FreeType.                                                           */
   /*                                                                       */
   typedef PS_PrivateRec  T1_Private;
 
@@ -186,22 +186,22 @@ FT_BEGIN_HEADER
   } T1_Blend_Flags;
 
 
- /* backwards compatible definitions */
-#define  t1_blend_underline_position   T1_BLEND_UNDERLINE_POSITION
-#define  t1_blend_underline_thickness  T1_BLEND_UNDERLINE_THICKNESS
-#define  t1_blend_italic_angle         T1_BLEND_ITALIC_ANGLE
-#define  t1_blend_blue_values          T1_BLEND_BLUE_VALUES
-#define  t1_blend_other_blues          T1_BLEND_OTHER_BLUES
-#define  t1_blend_standard_widths      T1_BLEND_STANDARD_WIDTH
-#define  t1_blend_standard_height      T1_BLEND_STANDARD_HEIGHT
-#define  t1_blend_stem_snap_widths     T1_BLEND_STEM_SNAP_WIDTHS
-#define  t1_blend_stem_snap_heights    T1_BLEND_STEM_SNAP_HEIGHTS
-#define  t1_blend_blue_scale           T1_BLEND_BLUE_SCALE
-#define  t1_blend_blue_shift           T1_BLEND_BLUE_SHIFT
-#define  t1_blend_family_blues         T1_BLEND_FAMILY_BLUES
-#define  t1_blend_family_other_blues   T1_BLEND_FAMILY_OTHER_BLUES
-#define  t1_blend_force_bold           T1_BLEND_FORCE_BOLD
-#define  t1_blend_max                  T1_BELND_MAX
+  /* backwards compatible definitions */
+#define t1_blend_underline_position   T1_BLEND_UNDERLINE_POSITION
+#define t1_blend_underline_thickness  T1_BLEND_UNDERLINE_THICKNESS
+#define t1_blend_italic_angle         T1_BLEND_ITALIC_ANGLE
+#define t1_blend_blue_values          T1_BLEND_BLUE_VALUES
+#define t1_blend_other_blues          T1_BLEND_OTHER_BLUES
+#define t1_blend_standard_widths      T1_BLEND_STANDARD_WIDTH
+#define t1_blend_standard_height      T1_BLEND_STANDARD_HEIGHT
+#define t1_blend_stem_snap_widths     T1_BLEND_STEM_SNAP_WIDTHS
+#define t1_blend_stem_snap_heights    T1_BLEND_STEM_SNAP_HEIGHTS
+#define t1_blend_blue_scale           T1_BLEND_BLUE_SCALE
+#define t1_blend_blue_shift           T1_BLEND_BLUE_SHIFT
+#define t1_blend_family_blues         T1_BLEND_FAMILY_BLUES
+#define t1_blend_family_other_blues   T1_BLEND_FAMILY_OTHER_BLUES
+#define t1_blend_force_bold           T1_BLEND_FORCE_BOLD
+#define t1_blend_max                  T1_BLEND_MAX
 
 
   /* maximum number of Multiple Masters designs, as defined in the spec */
@@ -223,8 +223,8 @@ FT_BEGIN_HEADER
 
   } PS_DesignMapRec, *PS_DesignMap;
 
- /* backwards-compatible definition */
-  typedef PS_DesignMapRec   T1_DesignMap;
+  /* backwards-compatible definition */
+  typedef PS_DesignMapRec  T1_DesignMap;
 
 
   typedef struct  PS_BlendRec_
@@ -247,8 +247,8 @@ FT_BEGIN_HEADER
   } PS_BlendRec, *PS_Blend;
 
 
- /* backwards-compatible definition */
-  typedef PS_BlendRec   T1_Blend;
+  /* backwards-compatible definition */
+  typedef PS_BlendRec  T1_Blend;
 
 
   typedef struct  CID_FaceDictRec_
@@ -272,8 +272,8 @@ FT_BEGIN_HEADER
   } CID_FaceDictRec, *CID_FaceDict;
 
 
- /* backwards-compatible definition */
-  typedef CID_FaceDictRec   CID_FontDict;
+  /* backwards-compatible definition */
+  typedef CID_FaceDictRec  CID_FontDict;
 
 
   typedef struct  CID_FaceInfoRec_
@@ -292,7 +292,6 @@ FT_BEGIN_HEADER
 
     FT_Int          num_xuid;
     FT_ULong        xuid[16];
-
 
     FT_ULong        cidmap_offset;
     FT_Int          fd_bytes;
@@ -313,11 +312,11 @@ FT_BEGIN_HEADER
   /*    CID_Info                                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*   this type is equivalent to @CID_FaceInfoRec but has been deprecated */
-  /*   it is kept to maintain source compatibility between various         */
-  /*   versions of FreeType                                                */
+  /*   This type is equivalent to @CID_FaceInfoRec. It is deprecated but   */
+  /*   kept to maintain source compatibility between various versions of   */
+  /*   FreeType.                                                           */
   /*                                                                       */
-  typedef CID_FaceInfoRec   CID_Info;
+  typedef CID_FaceInfoRec  CID_Info;
   
   /* */
 

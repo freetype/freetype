@@ -1,3 +1,8 @@
+2002-03-30  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/t1tables.h (t1_blend_max): Fix typo.
+	* src/base/ftstream.c: Simplify FT_ERROR calls.
+
 2002-03-29  Werner Lemberg  <wl@gnu.org>
 
 	* builds/vms/ftconfig.h: Rename LOCAL_DEF and LOCAL_FUNC to
@@ -146,6 +151,8 @@
 	  FT_AutoHinter_Done_Global_Func => FT_AutoHinter_GlobalDoneFunc
 	  etc.
 
+	* ahloader.h [_STANDALONE_]: Removed all conditional code.
+
 	* include/freetype/internal/cfftypes.h, src/cff/*.c: Updating the
 	type definitions of the CFF font driver.
 
@@ -169,17 +176,25 @@
 	  FTDriver_initGlyphSlot => FT_Slot_InitFunc
 	  etc.
 
-	* include/freetype/internal/ftobjs.h, src/base/ftapi.c,
-	src/base/ftobjs.c: Updated a few face method definitions:
+	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c: Updated a
+	few face method definitions:
 
 	  FT_PSName_Requester     => FT_Face_GetPostscriptNameFunc
 	  FT_Glyph_Name_Requester => FT_Face_GetGlyphNameFunc
 	  FT_Name_Index_Requester => FT_Face_GetGlyphNameIndexFunc
 
+	* src/base/ftapi.c: New file.  It contains backwards compatibility
+	functions.
+
 	* include/freetype/internal/psaux.h, src/cid/cidload.c,
 	src/cidtoken.h, src/psaux/psobjs.c, src/psaux/psobjs.h,
 	src/psaux/t1decode.c, stc/type1/t1load.c, src/type1/t1tokens.h:
 	Updated common PostScript type definitions.
+	Renamed all enumeration values like to uppercase variants:
+
+	  t1_token_any      => T1_TOKEN_TYPE_ANY
+	  t1_field_cid_info => T1_FIELD_LOCATION_CID_INFO
+	  etc.
 
 	* include/freetype/internal/psglobals.h,
 	include/freetype/internal/pshints.h, src/pshinter/pshglob.h:
@@ -278,9 +293,9 @@
 	(psh1_print_zone): This.
 
 	* include/freetype/freetype.h, include/freetype/internal/ftobjs.h,
-	src/base/ftobjs.c, src/base/ftinit.c: Adding the new
-	FT_Library_Version API to return the library's current version in
-	dynamic links.
+	src/base/ftobjs.c: Adding the new FT_Library_Version API to return
+	the library's current version in dynamic links.
+	* src/base/ftinit.c (FT_Init_FreeType): Updated.
 
 2002-03-06  Werner Lemberg  <wl@gnu.org>
 
@@ -308,6 +323,9 @@
 	Also improved the name table parser to be able to load
 	Windows-encoded entries before Macintosh or Unicode ones, since it
 	seems some fonts don't have reliable values here anyway.
+
+	* include/freetype/internal/psnames.h: Add typedef for
+	`PSNames_Service'.
 
 2002-03-05  Werner Lemberg  <wl@gnu.org>
 
@@ -405,8 +423,9 @@
 	  ft_close_stream => ft_ansi_stream_close (in base/ftsystem.c only)
 	  ft_io_stream    => ft_ansi_stream_io    (in base/ftsystem.c only)
 
-	* Moving all memory and list management code to "src/base/ftutil.c"
-	(previously in "ftobjs.c" and "ftlist.c" respectively).
+	* src/base/ftutil.c: New file.  Contains all memory and list
+	management code (previously in "ftobjs.c" and "ftlist.c",
+	respectively).
 
 	* include/freetype/internal/ftobjs.h: Moving all code related to
 	glyph loaders to ...

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType auto hinting outline optimization (body).                   */
 /*                                                                         */
-/*  Copyright 2000-2001 Catharon Productions Inc.                          */
+/*  Copyright 2000-2001, 2002 Catharon Productions Inc.                    */
 /*  Author: David Turner                                                   */
 /*                                                                         */
 /*  This file is part of the Catharon Typography Project and shall only    */
@@ -32,11 +32,11 @@
 
 
 #include <ft2build.h>
-#include FT_INTERNAL_OBJECTS_H        /* for FT_ALLOC_ARRAY() and FT_FREE() */
+#include FT_INTERNAL_OBJECTS_H       /* for FT_ALLOC_ARRAY() and FT_FREE() */
 #include "ahoptim.h"
 
 
-  /* define this macro to use brute force optimisation -- this is slow,  */
+  /* define this macro to use brute force optimization -- this is slow,  */
   /* but a good way to perfect the distortion function `by hand' through */
   /* tweaking                                                            */
 #define AH_BRUTE_FORCE
@@ -64,6 +64,7 @@
 #include <string.h>
 
 #define FLOAT( x )  ( (float)( (x) / 64.0 ) )
+
 
   static void
   optim_log( const char*  fmt, ... )

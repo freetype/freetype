@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (body).                            */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -28,6 +28,7 @@
 #include <string.h>     /* for strcmp() */
 #include <setjmp.h>     /* for setjmp() and longjmp() */
 
+
   FT_BASE_DEF( void )
   ft_validator_init( FT_Validator        valid,
                      const FT_Byte*      base,
@@ -46,9 +47,11 @@
   {
     int  result;
     
+
     result = setjmp( valid->jump_buffer );
     return result;
   }
+
 
   FT_BASE_DEF( void )
   ft_validator_error( FT_Validator  valid,
@@ -72,8 +75,8 @@
   /*************************************************************************/
 
 
- /* create a new input stream from a FT_Open_Args structure */
- /*                                                         */
+  /* create a new input stream from a FT_Open_Args structure */
+  /*                                                         */
   static FT_Error
   ft_input_stream_new( FT_Library     library,
                        FT_Open_Args*  args,
@@ -92,6 +95,7 @@
 
     *astream = 0;
     memory   = library->memory;
+
     if ( FT_NEW( stream ) )
       goto Exit;
 
@@ -101,8 +105,8 @@
     {
       /* create a memory-based stream */
       FT_Stream_OpenMemory( stream,
-                           (const FT_Byte*)args->memory_base,
-                           args->memory_size );
+                            (const FT_Byte*)args->memory_base,
+                            args->memory_size );
     }
     else if ( args->flags & ft_open_pathname )
     {
@@ -134,7 +138,6 @@
   }
 
 
-
   static void
   ft_input_stream_free( FT_Stream  stream,
                         FT_Int     external )
@@ -142,6 +145,7 @@
     if ( stream )
     {
       FT_Memory  memory = stream->memory;
+
 
       FT_Stream_Close( stream );
 
@@ -172,7 +176,7 @@
   ft_glyphslot_init( FT_GlyphSlot  slot )
   {
     FT_Driver         driver = slot->face->driver;
-    FT_Driver_Class  clazz  = driver->clazz;
+    FT_Driver_Class   clazz  = driver->clazz;
     FT_Memory         memory = driver->root.memory;
     FT_Error          error  = FT_Err_Ok;
     FT_Slot_Internal  internal;
@@ -232,7 +236,7 @@
   ft_glyphslot_done( FT_GlyphSlot  slot )
   {
     FT_Driver         driver = slot->face->driver;
-    FT_Driver_Class  clazz  = driver->clazz;
+    FT_Driver_Class   clazz  = driver->clazz;
     FT_Memory         memory = driver->root.memory;
 
 
@@ -262,7 +266,7 @@
   {
     FT_Error          error;
     FT_Driver         driver;
-    FT_Driver_Class  clazz;
+    FT_Driver_Class   clazz;
     FT_Memory         memory;
     FT_GlyphSlot      slot;
 
@@ -305,10 +309,10 @@
   {
     if ( slot )
     {
-      FT_Driver         driver = slot->face->driver;
-      FT_Memory         memory = driver->root.memory;
-      FT_GlyphSlot*     parent;
-      FT_GlyphSlot      cur;
+      FT_Driver      driver = slot->face->driver;
+      FT_Memory      memory = driver->root.memory;
+      FT_GlyphSlot*  parent;
+      FT_GlyphSlot   cur;
 
 
       /* Remove slot from its parent face's list */
@@ -497,6 +501,7 @@
       FT_UInt           EM      = face->units_per_EM;
       FT_Size_Metrics*  metrics = &face->size->metrics;
 
+
       slot->linearHoriAdvance = FT_MulDiv( slot->linearHoriAdvance,
                                            (FT_Long)metrics->x_ppem << 16, EM );
 
@@ -596,19 +601,19 @@
     if ( face->autohint.finalizer )
       face->autohint.finalizer( face->autohint.data );
 
-    /* Discard glyph slots for this face                            */
+    /* Discard glyph slots for this face.                           */
     /* Beware!  FT_Done_GlyphSlot() changes the field `face->glyph' */
     while ( face->glyph )
       FT_Done_GlyphSlot( face->glyph );
 
-    /* Discard all sizes for this face */
+    /* discard all sizes for this face */
     FT_List_Finalize( &face->sizes_list,
                      (FT_List_Destructor)destroy_size,
                      memory,
                      driver );
     face->size = 0;
 
-    /* Now discard client data */
+    /* now discard client data */
     if ( face->generic.finalizer )
       face->generic.finalizer( face );
 
@@ -618,10 +623,12 @@
     {
       FT_Int  n;
       
+
       for ( n = 0; n < face->num_charmaps; n++ )
       {
         FT_CMap  cmap = FT_CMAP( face->charmaps[n] );
         
+
         FT_CMap_Done( cmap );
         
         face->charmaps[n] = NULL;
@@ -639,7 +646,8 @@
       clazz->done_face( face );
 
     /* close the stream for this face if needed */
-    ft_input_stream_free( face->stream,
+    ft_input_stream_free(
+      face->stream,
       ( face->face_flags & FT_FACE_FLAG_EXTERNAL_STREAM ) != 0 );
 
     face->stream = 0;
@@ -1066,13 +1074,13 @@
   FT_New_Size( FT_Face   face,
                FT_Size  *asize )
   {
-    FT_Error          error;
-    FT_Memory         memory;
-    FT_Driver         driver;
+    FT_Error         error;
+    FT_Memory        memory;
+    FT_Driver        driver;
     FT_Driver_Class  clazz;
 
-    FT_Size           size = 0;
-    FT_ListNode       node = 0;
+    FT_Size          size = 0;
+    FT_ListNode      node = 0;
 
 
     if ( !face )
@@ -1200,7 +1208,7 @@
   {
     FT_Error          error = FT_Err_Ok;
     FT_Driver         driver;
-    FT_Driver_Class  clazz;
+    FT_Driver_Class   clazz;
     FT_Size_Metrics*  metrics;
     FT_Long           dim_x, dim_y;
 
@@ -1269,7 +1277,7 @@
   {
     FT_Error          error = FT_Err_Ok;
     FT_Driver         driver;
-    FT_Driver_Class  clazz;
+    FT_Driver_Class   clazz;
     FT_Size_Metrics*  metrics = &face->size->metrics;
 
 
@@ -1435,6 +1443,7 @@
       FT_Face        face   = cmap->charmap.face;
       FT_Memory      memory = FT_FACE_MEMORY(face);
 
+
       if ( clazz->done )
         clazz->done( cmap );
 
@@ -1454,6 +1463,7 @@
     FT_Memory  memory;
     FT_CMap    cmap;
 
+
     if ( clazz == NULL || charmap == NULL || charmap->face == NULL )
       return FT_Err_Invalid_Argument;
 
@@ -1468,7 +1478,7 @@
       if ( clazz->init )
       {
         error = clazz->init( cmap, init_data );
-        if (error)
+        if ( error )
           goto Fail;
       }
 
@@ -1478,7 +1488,7 @@
                            face->num_charmaps+1 ) )
         goto Fail;
 
-      face->charmaps[ face->num_charmaps++ ] = (FT_CharMap) cmap;
+      face->charmaps[face->num_charmaps++] = (FT_CharMap)cmap;
     }
 
   Exit:
@@ -1509,14 +1519,13 @@
     {
       FT_CMap  cmap = FT_CMAP( face->charmap );
       
+
       result = cmap->clazz->char_index( cmap, charcode );
     }
     return  result;
   }
 
 #else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-
 
   FT_EXPORT_DEF( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
@@ -1543,8 +1552,9 @@
   FT_Get_First_Char( FT_Face   face,
                      FT_UInt  *agindex )
   {
-    FT_ULong   result = 0;
-    FT_UInt    gindex = 0;
+    FT_ULong  result = 0;
+    FT_UInt   gindex = 0;
+
 
     if ( face && face->charmap )
     {
@@ -1569,14 +1579,15 @@
                     FT_ULong  charcode,
                     FT_UInt  *agindex )
   {
-    FT_ULong   result = 0;
-    FT_UInt    gindex = 0;
+    FT_ULong  result = 0;
+    FT_UInt   gindex = 0;
 
 
     if ( face && face->charmap )
     {
       FT_UInt32  code = (FT_UInt32)charcode;
       FT_CMap    cmap = FT_CMAP( face->charmap );
+
 
       gindex = cmap->clazz->char_next( cmap, &code );
       result = ( gindex == 0 ) ? 0 : code;
@@ -1673,8 +1684,8 @@
          FT_HAS_GLYPH_NAMES( face )              )
     {
       /* now, lookup for glyph name */
-      FT_Driver        driver = face->driver;
-      FT_Module_Class* clazz  = FT_MODULE_CLASS( driver );
+      FT_Driver         driver = face->driver;
+      FT_Module_Class*  clazz  = FT_MODULE_CLASS( driver );
 
 
       if ( clazz->get_interface )
@@ -1707,7 +1718,7 @@
     result = face->internal->postscript_name;
     if ( !result )
     {
-      /* now, lookup for glyph name */
+      /* now, look up glyph name */
       FT_Driver         driver = face->driver;
       FT_Module_Class*  clazz  = FT_MODULE_CLASS( driver );
 
@@ -1792,8 +1803,8 @@
                       FT_Glyph_Format  format,
                       FT_ListNode*     node )
   {
-    FT_ListNode   cur;
-    FT_Renderer   result = 0;
+    FT_ListNode  cur;
+    FT_Renderer  result = 0;
 
 
     if ( !library )
@@ -1938,7 +1949,7 @@
   {
     /* test for valid `library' delayed to FT_Lookup_Renderer() */
 
-    return  FT_Lookup_Renderer( library, format, 0 );
+    return FT_Lookup_Renderer( library, format, 0 );
   }
 
 
@@ -2055,7 +2066,7 @@
   FT_Render_Glyph( FT_GlyphSlot  slot,
                    FT_UInt       render_mode )
   {
-    FT_Library   library;
+    FT_Library  library;
 
 
     if ( !slot )
@@ -2205,7 +2216,7 @@
     if ( FT_MODULE_IS_DRIVER( module ) )
     {
       /* allocate glyph loader if needed */
-      FT_Driver   driver = FT_DRIVER( module );
+      FT_Driver  driver = FT_DRIVER( module );
 
 
       driver->clazz = (FT_Driver_Class)module->clazz;

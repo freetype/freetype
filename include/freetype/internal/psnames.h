@@ -5,7 +5,7 @@
 /*    High-level interface for the `PSNames' module (in charge of          */
 /*    various functions related to Postscript glyph names conversion).     */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -231,6 +231,7 @@ FT_BEGIN_HEADER
 
 
   typedef PSNames_Interface*  PSNames_Service;
+
 
 FT_END_HEADER
 

@@ -1,9 +1,28 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ftgloadr.c                                                             */
+/*                                                                         */
+/*    The FreeType glyph loader (body).                                    */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg                       */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include <ft2build.h>
 #include FT_INTERNAL_GLYPH_LOADER_H
 #include FT_INTERNAL_MEMORY_H
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gloader
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -46,11 +65,11 @@
 
   /* create a new glyph loader */
   FT_BASE_DEF( FT_Error )
-  FT_GlyphLoader_New( FT_Memory         memory,
-                      FT_GlyphLoader   *aloader )
+  FT_GlyphLoader_New( FT_Memory        memory,
+                      FT_GlyphLoader  *aloader )
   {
-    FT_GlyphLoader   loader;
-    FT_Error         error;
+    FT_GlyphLoader  loader;
+    FT_Error        error;
 
 
     if ( !FT_NEW( loader ) )
@@ -64,7 +83,7 @@
 
   /* rewind the glyph loader - reset counters to 0 */
   FT_BASE_DEF( void )
-  FT_GlyphLoader_Rewind( FT_GlyphLoader   loader )
+  FT_GlyphLoader_Rewind( FT_GlyphLoader  loader )
   {
     FT_GlyphLoad  base    = &loader->base;
     FT_GlyphLoad  current = &loader->current;
@@ -81,7 +100,7 @@
   /* reset the glyph loader, frees all allocated tables */
   /* and starts from zero                               */
   FT_BASE_DEF( void )
-  FT_GlyphLoader_Reset( FT_GlyphLoader   loader )
+  FT_GlyphLoader_Reset( FT_GlyphLoader  loader )
   {
     FT_Memory memory = loader->memory;
 
@@ -102,7 +121,7 @@
 
   /* delete a glyph loader */
   FT_BASE_DEF( void )
-  FT_GlyphLoader_Done( FT_GlyphLoader   loader )
+  FT_GlyphLoader_Done( FT_GlyphLoader  loader )
   {
     if ( loader )
     {
@@ -117,7 +136,7 @@
 
   /* re-adjust the `current' outline fields */
   static void
-  FT_GlyphLoader_Adjust_Points( FT_GlyphLoader   loader )
+  FT_GlyphLoader_Adjust_Points( FT_GlyphLoader  loader )
   {
     FT_Outline*  base    = &loader->base.outline;
     FT_Outline*  current = &loader->current.outline;
@@ -135,7 +154,7 @@
 
 
   FT_BASE_DEF( FT_Error )
-  FT_GlyphLoader_CreateExtra( FT_GlyphLoader   loader )
+  FT_GlyphLoader_CreateExtra( FT_GlyphLoader  loader )
   {
     FT_Error   error;
     FT_Memory  memory = loader->memory;
@@ -152,7 +171,7 @@
 
   /* re-adjust the `current' subglyphs field */
   static void
-  FT_GlyphLoader_Adjust_Subglyphs( FT_GlyphLoader   loader )
+  FT_GlyphLoader_Adjust_Subglyphs( FT_GlyphLoader  loader )
   {
     FT_GlyphLoad  base    = &loader->base;
     FT_GlyphLoad  current = &loader->current;
@@ -167,9 +186,9 @@
   /* DOESN'T change the number of points within the loader!                */
   /*                                                                       */
   FT_BASE_DEF( FT_Error )
-  FT_GlyphLoader_CheckPoints( FT_GlyphLoader   loader,
-                               FT_UInt          n_points,
-                               FT_UInt          n_contours )
+  FT_GlyphLoader_CheckPoints( FT_GlyphLoader  loader,
+                               FT_UInt        n_points,
+                               FT_UInt        n_contours )
   {
     FT_Memory    memory  = loader->memory;
     FT_Error     error   = FT_Err_Ok;
@@ -190,11 +209,11 @@
 
       if ( FT_RENEW_ARRAY( base->points, old_max, new_max ) ||
            FT_RENEW_ARRAY( base->tags,   old_max, new_max ) )
-       goto Exit;
+        goto Exit;
 
       if ( loader->use_extra &&
            FT_RENEW_ARRAY( loader->base.extra_points, old_max, new_max ) )
-       goto Exit;
+        goto Exit;
 
       adjust = 1;
       loader->max_points = new_max;
@@ -227,12 +246,12 @@
   /* NOT change the number of subglyphs within the loader!            */
   /*                                                                  */
   FT_BASE_DEF( FT_Error )
-  FT_GlyphLoader_CheckSubGlyphs( FT_GlyphLoader   loader,
-                                  FT_UInt          n_subs )
+  FT_GlyphLoader_CheckSubGlyphs( FT_GlyphLoader  loader,
+                                 FT_UInt         n_subs )
   {
-    FT_Memory  memory = loader->memory;
-    FT_Error   error  = FT_Err_Ok;
-    FT_UInt    new_max, old_max;
+    FT_Memory     memory = loader->memory;
+    FT_Error      error  = FT_Err_Ok;
+    FT_UInt       new_max, old_max;
 
     FT_GlyphLoad  base    = &loader->base;
     FT_GlyphLoad  current = &loader->current;
@@ -258,7 +277,7 @@
 
   /* prepare loader for the addition of a new glyph on top of the base one */
   FT_BASE_DEF( void )
-  FT_GlyphLoader_Prepare( FT_GlyphLoader   loader )
+  FT_GlyphLoader_Prepare( FT_GlyphLoader  loader )
   {
     FT_GlyphLoad  current = &loader->current;
 
@@ -274,14 +293,14 @@
 
   /* add current glyph to the base image - and prepare for another */
   FT_BASE_DEF( void )
-  FT_GlyphLoader_Add( FT_GlyphLoader   loader )
+  FT_GlyphLoader_Add( FT_GlyphLoader  loader )
   {
-    FT_GlyphLoad   base    = &loader->base;
-    FT_GlyphLoad   current = &loader->current;
+    FT_GlyphLoad  base    = &loader->base;
+    FT_GlyphLoad  current = &loader->current;
 
-    FT_UInt        n_curr_contours = current->outline.n_contours;
-    FT_UInt        n_base_points   = base->outline.n_points;
-    FT_UInt        n;
+    FT_UInt       n_curr_contours = current->outline.n_contours;
+    FT_UInt       n_base_points   = base->outline.n_points;
+    FT_UInt       n;
 
 
     base->outline.n_points =
@@ -302,8 +321,8 @@
 
 
   FT_BASE_DEF( FT_Error )
-  FT_GlyphLoader_CopyPoints( FT_GlyphLoader   target,
-                             FT_GlyphLoader   source )
+  FT_GlyphLoader_CopyPoints( FT_GlyphLoader  target,
+                             FT_GlyphLoader  source )
   {
     FT_Error  error;
     FT_UInt   num_points   = source->base.outline.n_points;
@@ -318,16 +337,16 @@
 
 
       FT_MEM_COPY( out->points, in->points,
-                num_points * sizeof ( FT_Vector ) );
+                   num_points * sizeof ( FT_Vector ) );
       FT_MEM_COPY( out->tags, in->tags,
-                num_points * sizeof ( char ) );
+                   num_points * sizeof ( char ) );
       FT_MEM_COPY( out->contours, in->contours,
-                num_contours * sizeof ( short ) );
+                   num_contours * sizeof ( short ) );
 
       /* do we need to copy the extra points? */
       if ( target->use_extra && source->use_extra )
         FT_MEM_COPY( target->base.extra_points, source->base.extra_points,
-                  num_points * sizeof ( FT_Vector ) );
+                     num_points * sizeof ( FT_Vector ) );
 
       out->n_points   = (short)num_points;
       out->n_contours = (short)num_contours;
