@@ -80,7 +80,8 @@
   /* Its parameter is the file pathname, relative to the public root of a  */
   /* given header file.                                                    */
   /*                                                                       */
-#define FT2_PUBLIC_FILE( x )  < ## FT2_ROOT ## / ## x ## >
+#define FT2_PUBLIC_FILE_( x )  < ## FT2_ROOT ## / ## x ## >
+#define FT2_PUBLIC_FILE( x )   FT2_PUBLIC_FILE_(x)
 
 
   /*************************************************************************/
@@ -89,7 +90,8 @@
   /* Its parameter is the file pathname, relative to the configuration     */
   /* root directory of a given header file.                                */
   /*                                                                       */
-#define FT2_CONFIG_FILE( x )  < ## FT2_CONFIG_ROOT ## / ## x ## >
+#define FT2_CONFIG_FILE_( x )  < ## FT2_CONFIG_ROOT ## / ## x ## >
+#define FT2_CONFIG_FILE( x )   FT2_CONFIG_FILE_(x)
 
 
   /*************************************************************************/
@@ -98,7 +100,8 @@
   /* file.  Its parameter is the file pathname, relative to the            */
   /* configuration root directory of a given header file.                  */
   /*                                                                       */
-#define FT2_INTERNAL_FILE( x )  < ## FT2_ROOT ## / ## internal ## / ## x ## >
+#define FT2_INTERNAL_FILE_( x )  < ## FT2_ROOT ## / ## internal ## / ## x ## >
+#define FT2_INTERNAL_FILE( x )   FT2_INTERNAL_FILE_(x)
 
 
   /*************************************************************************/
@@ -116,10 +119,12 @@
   /* FT_FLAT_COMPILATION.                                                  */
   /*                                                                       */
 #ifdef FT_FLAT_COMPILATION
-#define FT_SOURCE_FILE( d, x )  #x
+#define FT_SOURCE_FILE_( d, x )  #x
 #else
-#define FT_SOURCE_FILE( d, x )  < ## d ## / ## x ## >
+#define FT_SOURCE_FILE_( d, x )  < ## d ## / ## x ## >
 #endif
+
+#define FT_SOURCE_FILE( d, x )  FT_SOURCE_FILE_(d,x)
 
 
   /*************************************************************************/
