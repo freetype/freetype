@@ -1028,6 +1028,13 @@ FT_BEGIN_HEADER
   /*      provided by the client application and should not be destroyed   */
   /*      when @FT_Done_Face is called.  Don't read or test this flag.     */
   /*                                                                       */
+  /*    FT_FACE_FLAG_GLYPH_SUBSTITUTION ::                                 */
+  /*      Indicates that the face contains glyph substitution information. */
+  /*      If set, GSUB(otlayout) or mort/morx(gxlayout) is existed in the  */
+  /*      face. You can use glyph substitution functions declared in       */
+  /*      ftlayout.h                                                       */
+  /*                                                                       */
+
 #define FT_FACE_FLAG_SCALABLE          ( 1L <<  0 )
 #define FT_FACE_FLAG_FIXED_SIZES       ( 1L <<  1 )
 #define FT_FACE_FLAG_FIXED_WIDTH       ( 1L <<  2 )
@@ -1039,6 +1046,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_FLAG_MULTIPLE_MASTERS  ( 1L <<  8 )
 #define FT_FACE_FLAG_GLYPH_NAMES       ( 1L <<  9 )
 #define FT_FACE_FLAG_EXTERNAL_STREAM   ( 1L << 10 )
+#define FT_FACE_FLAG_GLYPH_SUBSTITUTION  ( 1L << 20 )
 
   /* */
 
@@ -1188,6 +1196,16 @@ FT_BEGIN_HEADER
 #define FT_HAS_MULTIPLE_MASTERS( face ) \
           ( face->face_flags & FT_FACE_FLAG_MULTIPLE_MASTERS )
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
+  /*    FT_HAS_GLYPH_SUBSTITUTION( face )                                  */
+  /*                                                                       */
+  /* @description:                                                         */
+  /* TODO                                                                  */
+  /*                                                                       */
+#define FT_HAS_GLYPH_SUBSTITUTION( face ) \
+          ( face->face_flags & FT_FACE_FLAG_GLYPH_SUBSTITUTION )
 
   /*************************************************************************/
   /*                                                                       */

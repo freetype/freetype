@@ -1,0 +1,23 @@
+# Copyied from src/gx.
+##
+## FreeType 2 src/gx Jamfile (c) 2003 RedHat K.K.
+##
+
+SubDir  FT2_TOP $(FT2_SRC_DIR) gxlayout ;
+
+{
+  local  _sources ;
+
+  if $(FT2_MULTI)
+  {
+    _sources = gxdriver gxload gxobjs gxlayout gxaccess gxfeatreg gxlfeatreg gxstatetbl gxlookuptbl gxvm gxutils
+  }
+  else
+  {
+    _sources = gx ;
+  }
+
+  Library  $(FT2_LIB) : $(_sources).c ;
+}
+
+# end of src/gx Jamfile

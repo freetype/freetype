@@ -103,5 +103,16 @@ FT_TRACE_DEF( bdflib )
 /* PFR fonts component */
 FT_TRACE_DEF( pfr )
 
+/* GX driver component */
+FT_TRACE_DEF( gxdriver )
+FT_TRACE_DEF( gxobjs )
+FT_TRACE_DEF( gxlayout )
+FT_TRACE_DEF( gxload )
+FT_TRACE_DEF( gxchain )
+FT_TRACE_DEF( gxvm )
+
+/* OT driver component */
+FT_TRACE_DEF( otdriver )
+FT_TRACE_DEF( otobjs )
 
 /* END */

@@ -58,7 +58,8 @@ BASE_EXT_SRC := $(BASE_DIR)/ftbbox.c   \
                 $(BASE_DIR)/ftstroke.c \
                 $(BASE_DIR)/fttype1.c  \
                 $(BASE_DIR)/ftwinfnt.c \
-                $(BASE_DIR)/ftxf86.c
+                $(BASE_DIR)/ftxf86.c   \
+                $(BASE_DIR)/ftlayout.c
 
 # Default extensions objects
 #

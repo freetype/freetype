@@ -167,7 +167,7 @@ FT_BEGIN_HEADER
     FT_Pointer  service_GLYPH_DICT;
     FT_Pointer  service_PFR_METRICS;
     FT_Pointer  service_WINFNT;
-
+    FT_Pointer  service_LAYOUT;
   } FT_ServiceCacheRec, *FT_ServiceCache;
 
 
@@ -248,6 +248,7 @@ FT_BEGIN_HEADER
 #define FT_SERVICE_SFNT_H              <freetype/internal/services/svsfnt.h>
 #define FT_SERVICE_PFR_H               <freetype/internal/services/svpfr.h>
 #define FT_SERVICE_WINFNT_H            <freetype/internal/services/svwinfnt.h>
+#define FT_SERVICE_LAYOUT_H            <freetype/internal/services/svlayout.h>
 #define FT_SERVICE_TT_CMAP_H           <freetype/internal/services/svttcmap.h>
 
  /* */

@@ -45,5 +45,7 @@
 
 #define FT_INTERNAL_AUTOHINT_H            <freetype/internal/autohint.h>
 
+#define FT_INTERNAL_FTL_TYPES_H           <freetype/internal/ftltypes.h>
+
 
 /* END */

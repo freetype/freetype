@@ -1,0 +1,42 @@
+/***************************************************************************/
+/*                                                                         */
+/*  ot.c                                                                   */
+/*                                                                         */
+/*    FreeType OpenType driver component (body only).                      */
+/*                                                                         */
+/*  Copyright 2003 by                                                      */
+/*  Masatake YAMATO and Redhat K.K.                                        */
+/*                                                                         */
+/*  This file may only be used,                                            */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+/***************************************************************************/
+/* Development of the code in this file is support of                      */
+/* Information-technology Promotion Agency, Japan.                         */
+/***************************************************************************/
+
+#define FT_MAKE_OPTION_SINGLE_OBJECT
+
+#include <ft2build.h>
+
+#include "otdriver.c"
+#include "otobjs.c" 
+#include "otlayout.c"
+
+#include "ftxgsub.c"
+#include "ftxgdef.c"
+#include "ftxgpos.c"
+#include "ftxopen.c"
+
+#include "ot-info.c"
+#include "ot-ruleset.c"
+
+#include "ot-array.c"
+#include "ot-unicode.c"
+
+/* END */

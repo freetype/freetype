@@ -227,5 +227,13 @@
   FT_ERRORDEF_( Missing_Bbx_Field,                           0xB6, \
                 "`BBX' field missing" )
 
+  /* GX errors */
+  FT_ERRORDEF_( Old_Kerning_Table,                           0xC0, \
+                "too old kerning format" )
+  FT_ERRORDEF_( Missing_Glyph_Substitution_Data,             0xC1, \
+                "glyph substitution data is missing" )
+  FT_ERRORDEF_( Busy_Extra_Data,                             0xC2, \
+		"TT_Face extra data field is busy" )
+		
 
 /* END */

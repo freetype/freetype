@@ -122,6 +122,8 @@
   FT_MODERRDEF( Type1,    0x1100, "Type 1 module" )
   FT_MODERRDEF( Type42,   0x1200, "Type 42 module" )
   FT_MODERRDEF( Winfonts, 0x1300, "Windows FON/FNT module" )
+  FT_MODERRDEF( GX,       0x1400, "AAT/TrueTypeGX module" )
+  FT_MODERRDEF( OT,       0x1500, "OpenType module" )
 
 
 #ifdef FT_MODERR_END_LIST

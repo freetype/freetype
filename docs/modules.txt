@@ -12,3 +12,5 @@ Note that the use of `psnames' can be controlled in ftconfig.h
   type42       truetype
   psaux        psnames
   sfnt         psnames
+  gx           truetype
+  ot           truetype

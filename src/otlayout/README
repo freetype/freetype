@@ -1,0 +1,145 @@
+This directory contains new otlayout, opentype adapter for ftlayout
+interface.  Old otlayout is developed by FreeType developers and not
+completed yet.  This new otlayout is not completed but works.
+
+New otlayout supports only gsub table. the glyph substitution for 
+Japanese vertical layout is tested. gpos table is not supported.
+The languages other than Japanese is not tested yet by us.
+
+The files in this directory are come from different places.
+
+1. FreeType1/TrueTypeOpen support (via pango)
+2. Pango/opentype
+3. developed at RedHat K.K. supported by Information Technology Promotion Agency, Japan.
+4. glib/gunicode.h
+5. freetype2/otlayout(old otlayout) directory in FreeType CVS repository
+
+The files in 5. are not used in new otlayout.
+
+This new otlayout is experimental in all aspects. 
+One of the biggest issue is that the symbols coming from 1. 
+and 2. have global scope; you cannot link gtk/pango library
+with new otlayout. The symbol may be conflicted.
+
+1. The file coming from FreeType1/TrueTypeOpen support (via pango)
+------------------------------------------------------------------------
+ *  Copyright 1996-2000 by
+ *  David Turner, Robert Wilhelm, and Werner Lemberg.
+ *
+ *  This file is part of the FreeType project, and may only be used
+ *  modified and distributed under the terms of the FreeType project
+ *  license, LICENSE.TXT.  By continuing to use, modify, or distribute
+ *  this file you indicate that you have read the license and
+ *  understand and accept it fully.
+
+ftxgdef.c
+ftxgdef.h
+ftxgpos.c
+ftxgpos.h
+ftxgsub.c
+ftxgsub.h
+ftxopen.c
+ftxopen.h
+ftxopenf.h
+
+2. The file coming from Pango/opentype
+------------------------------------------------------------------------
+ * Copyright (C) 2003 Red Hat, Inc
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+
+ot-array.c
+ot-array.h
+ot-info.c
+ot-info.h
+ot-ruleset.c
+ot-ruleset.h
+ot-types.h
+
+3. The file developed at RedHat K.K. supported by IPA
+------------------------------------------------------------------------
+/*  Copyright 2003 by                                                      */
+/*  Masatake YAMATO and Redhat K.K.                                        */
+/*                                                                         */
+/*  This file may only be used,                                            */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+
+ot.c
+otdriver.c
+otdriver.h
+oterrors.h
+otlayout.c
+otobjs.c
+otobjs.h
+otltypes.h
+substmain.c
+rules.mk
+otdemo.c
+demo.mk
+
+4. glib/gunicode.h
+------------------------------------------------------------------------
+ *  Copyright (C) 1999, 2000 Tom Tromey
+ *  Copyright 2000 Red Hat, Inc.
+ *
+ * The Gnome Library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * The Gnome Library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with the Gnome Library; see the file COPYING.LIB.  If not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+
+ot-unicode.c
+ot-unicode.h
+
+5. The file coming from old otlayout
+------------------------------------------------------------------------
+otlayout.h
+otlbase.c
+otlbase.h
+otlcommn.c
+otlcommn.h
+otlconf.h
+otlgdef.c
+otlgdef.h
+otlgpos.c
+otlgpos.h
+otlgsub.c
+otlgsub.h
+otljstf.c
+otljstf.h
+otlparse.c
+otlparse.h
+otltable.h
+otltags.h
+otlutils.h
+
+Sun Feb  1 18:24:10 2004
+Masatake YAMATO, RedHat K.K.
+<jet@gyve.org> or <yamato@redhat.com>
+
+

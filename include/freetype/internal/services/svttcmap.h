@@ -18,8 +18,10 @@
 /*                                                                         */
 /***************************************************************************/
 
-/* Development of this service is support of 
-   Information-technology Promotion Agency, Japan. */
+/***************************************************************************/
+/* Development of the code in this file is support of                      */
+/* Information-technology Promotion Agency, Japan.                         */
+/***************************************************************************/
 
 #ifndef __SVTTCMAP_H__
 #define __SVTTCMAP_H__ 

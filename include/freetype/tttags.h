@@ -71,6 +71,27 @@ FT_BEGIN_HEADER
 #define TTAG_vhea  FT_MAKE_TAG( 'v', 'h', 'e', 'a' )
 #define TTAG_vmtx  FT_MAKE_TAG( 'v', 'm', 't', 'x' )
 
+#define TTAG_trak FT_MAKE_TAG( 't', 'r', 'a', 'k' )
+#define TTAG_feat FT_MAKE_TAG( 'f', 'e', 'a', 't' )
+#define TTAG_prop FT_MAKE_TAG( 'p', 'r', 'o', 'p' )
+#define TTAG_lcar FT_MAKE_TAG( 'l', 'c', 'a', 'r' )
+#define TTAG_opbd FT_MAKE_TAG( 'o', 'p', 'b', 'd' )
+#define TTAG_bsln FT_MAKE_TAG( 'b', 's', 'l', 'n' )
+#define TTAG_mort FT_MAKE_TAG( 'm', 'o', 'r', 't' )
+#define TTAG_morx FT_MAKE_TAG( 'm', 'o', 'r', 'x' )
+#define TTAG_fmtx FT_MAKE_TAG( 'f', 'm', 't', 'x' )
+
+#define TTAG_fdsc FT_MAKE_TAG( 'f', 'd', 's', 'c' )
+#define TTAG_wght FT_MAKE_TAG( 'w', 'g', 'h', 't' )
+#define TTAG_wdth FT_MAKE_TAG( 'w', 'd', 't', 'h' )
+#define TTAG_slnt FT_MAKE_TAG( 's', 'l', 'n', 't' )
+#define TTAG_opsz FT_MAKE_TAG( 'o', 'p', 's', 'z' )
+#define TTAG_nalf FT_MAKE_TAG( 'n', 'a', 'l', 'f' )
+
+#define TTAG_just FT_MAKE_TAG( 'j', 'u', 's', 't' )
+#define TTAG_cvar FT_MAKE_TAG( 'c', 'v', 'a', 'r' )
+#define TTAG_gvar FT_MAKE_TAG( 'g', 'v', 'a', 'r' )
+
 
 FT_END_HEADER
 

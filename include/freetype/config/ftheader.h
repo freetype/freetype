@@ -529,6 +529,17 @@
   /*                                                                       */
 #define FT_SFNT_NAMES_H  <freetype/ftsnames.h>
 
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
+  /*    FT_LAYOUT_H                                                        */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    FreeType Layout API.                                               */
+  /*                                                                       */
+#define FT_LAYOUT_H  <freetype/ftlayout.h>
+
   /* */
 
 #define FT_TRIGONOMETRY_H       <freetype/fttrigon.h>
@@ -549,6 +560,9 @@
 #define FT_XFREE86_H              <freetype/ftxf86.h>
 
 #define FT_INCREMENTAL_H          <freetype/ftincrem.h>
+
+#define FT_GXLAYOUT_H              <freetype/gxlayout.h>
+#define FT_OTLAYOUT_H              <freetype/otlayout.h>
 
 #define FT_TRUETYPE_UNPATENTED_H  <freetype/ttunpat.h>
 

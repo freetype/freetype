@@ -110,6 +110,7 @@
 #include <stdlib.h>
 
 #define ft_qsort  qsort
+#define ft_bsearch bsearch
 #define ft_exit   exit    /* only used to exit from unhandled exceptions */
 
 #define ft_atol   atol
