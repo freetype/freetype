@@ -61,7 +61,7 @@
 
       FT_Int       count;
       FT_ULong     value = 0;
-      const char*  p     = glyph_name + 4;
+      const char*  p     = glyph_name + 3;
 
 
       for ( count = 4; count > 0; count--, p++ )
@@ -85,10 +85,9 @@
           break;
 
         value = ( value << 4 ) + d;
-
-        if ( count == 0 )
-          return value;
       }
+      if ( count == 0 )
+        return value;
     }
 
     /* look for a non-initial dot in the glyph name in order to */
