@@ -391,8 +391,8 @@
       root->num_fixed_sizes = 0;
       root->available_sizes = 0;
 
-      root->bbox.xMin =   face->type1.font_bbox.xMin >> 16;
-      root->bbox.yMin =   face->type1.font_bbox.yMin >> 16;
+      root->bbox.xMin =   face->type1.font_bbox.xMin             >> 16;
+      root->bbox.yMin =   face->type1.font_bbox.yMin             >> 16;
       root->bbox.xMax = ( face->type1.font_bbox.xMax + 0xFFFFU ) >> 16;
       root->bbox.yMax = ( face->type1.font_bbox.yMax + 0xFFFFU ) >> 16;
 

@@ -1,5 +1,19 @@
 2002-04-02  Werner Lemberg  <wl@gnu.org>
 
+	Fixes from the stable branch:
+
+	* include/freetype/config/ftoption.h (FT_CONFIG_OPTION_OLD_CALCS):
+	Removed.
+	[FT_CONFIG_OPTION_OLD_CALCS]: Removed.
+	* include/freetype/internal/ftcalc.h, src/base/ftcalc.c
+	[FT_CONFIG_OPTION_OLD_CALCS]: Removed.
+
+	* src/base/fttrigon.c (FT_Vector_Length): Change algorithm to match
+	output of FreeType 1.
+
+	* src/pshinter/pshglob.c (psh_globals_scale_widths): Fixed a small
+	bug that created un-even stem widths when hinting Postscript fonts.
+
 	* src/type1/t1driver.c, src/type1/t1parse.c: 16bit fixes.
 
 2002-04-01  Werner Lemberg  <wl@gnu.org>
