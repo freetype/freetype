@@ -198,6 +198,7 @@
     return error;
   }
 
+
   FT_BASE_DEF( void )
   ft_glyphslot_free_bitmap( FT_GlyphSlot  slot )
   {
