@@ -602,7 +602,7 @@
         size->cvt[i] = FT_MulFix( face->cvt[i], size->ttmetrics.scale );
 
       /* All twilight points are originally zero */
-      for ( j = 0; j < size->twilight.n_points; j++ )
+      for ( j = 0; j < (FT_UInt)size->twilight.n_points; j++ )
       {
         size->twilight.org[j].x = 0;
         size->twilight.org[j].y = 0;
@@ -611,7 +611,7 @@
       }
 
       /* clear storage area */
-      for ( i = 0; i < size->storage_size; i++ )
+      for ( i = 0; i < (FT_UInt)size->storage_size; i++ )
         size->storage[i] = 0;
 
       size->GS = tt_default_graphics_state;

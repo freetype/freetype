@@ -97,7 +97,7 @@
     FT_UShort        k = header->number_Of_HMetrics;
 
 
-    if ( index < k )
+    if ( index < (FT_UInt)k )
     {
       longs_m  = (TT_LongMetrics*)header->long_metrics + index;
       *bearing = longs_m->bearing;
