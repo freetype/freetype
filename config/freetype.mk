@@ -53,8 +53,8 @@ BASE_     := $(BASE_DIR)$(SEP)
 OBJ_      := $(OBJ_DIR)$(SEP)
 LIB_      := $(LIB_DIR)$(SEP)
 PUBLIC_   := $(TOP)$(SEP)include$(SEP)freetype$(SEP)
-INTERNAL_ := $(PUBLIC_)$(SEP)internal$(SEP)
-CONFIG_   := $(PUBLIC_)$(SEP)config$(SEP)
+INTERNAL_ := $(PUBLIC_)internal$(SEP)
+CONFIG_   := $(PUBLIC_)config$(SEP)
 
 
 # The name of the final library file.

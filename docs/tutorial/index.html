@@ -25,6 +25,9 @@ FreeType 2.0 Tutorial</h1></center>
 (<a href="http://www.freetype.org">www.freetype.org</a>)
 </h3></center>
 
+<center>
+<table width=650><tr><td>
+
 <p><br>
 <hr WIDTH="100%">
 <br>&nbsp;
@@ -38,17 +41,13 @@ FreeType 2.0 Tutorial</h1></center>
 
 <h3>1. Header files :</h3>
 <ul>
-  You only need to include the public header file named <tt>freetype.h</tt>
-  in your source code. Depending on how the library was installed on your
-  system, you might need to use :<p>
+  To include the main FreeType header file, simply use:<p>
   <ul><font color="blue"><tt>
-      #include &lt;freetype.h&gt;<p>
+      #include &lt;freetype/freetype.h&gt;<p>
   </tt></font></ul>
-  or
-  <ul><font color="blue"><tt>
-      #include &lt;freetype2/freetype.h&gt;<p>
-  </tt></font></ul>
-  in your application to include the public interface to FreeType.<p>
+  in your application code. Note that other files are available in the
+  FreeType include directory, most of them being included by
+  <tt>"freetype.h"</tt>. They will be described later in this tutorial.
 </ul>
 
 <p><hr><p>
@@ -59,7 +58,7 @@ FreeType 2.0 Tutorial</h1></center>
   <tt>library</tt>, and call the function <tt>FT_Init_FreeType</tt> as in:
   
   <font color="blue"><pre>
-       #include &lt;freetype.h&gt;
+       #include &lt;freetype/freetype.h&gt;
        
        FT_Library  library;
        
@@ -103,26 +102,26 @@ FreeType 2.0 Tutorial</h1></center>
     <p>
     <font color="blue"><pre>
     
-          FT_Library   library;   /* handle to library     */
-          FT_Face      face;      /* handle to face object */
-    
-          error = FT_Init_FreeType( &library );
-          if (error) { ..... }
-          
-          error = FT_New_Face( library,
-                               "/usr/share/fonts/truetype/arial.ttf",
-                               0,
-                               &face );
-          if (error == FT_Err_Unknown_File_Format)
-          {
-             .... the font file could be opened and read, but it appears
-             .... that its font format is unsupported
-          }
-          else if (error)
-          {
-             .... another error code means that the font file could not
-             .... be opened, read or simply that it is broken..
-          }
+      FT_Library   library;   /* handle to library     */
+      FT_Face      face;      /* handle to face object */
+
+      error = FT_Init_FreeType( &library );
+      if (error) { ..... }
+      
+      error = FT_New_Face( library,
+                           "/usr/share/fonts/truetype/arial.ttf",
+                           0,
+                           &face );
+      if (error == FT_Err_Unknown_File_Format)
+      {
+         .... the font file could be opened and read, but it appears
+         .... that its font format is unsupported
+      }
+      else if (error)
+      {
+         .... another error code means that the font file could not
+         .... be opened, read or simply that it is broken..
+      }
     </pre></font>
     <p>
     As you certainly imagine, <tt>FT_New_Face</tt> opens a font file then
@@ -639,6 +638,8 @@ FreeType 2.0 Tutorial</h1></center>
   <p>
   </ul>
 </ul>
-  
+
+</td></tr></table>
+</center>  
 <p><hr>
 

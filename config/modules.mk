@@ -25,7 +25,7 @@
 # resides.  For now, it is in `config/ftmodule.h'.
 #
 ifndef FT_MODULE_LIST
-  FT_MODULE_LIST := $(CONFIG_)ftmodule.h
+  FT_MODULE_LIST := $(TOP)$(SEP)include$(SEP)freetype$(SEP)config$(SEP)ftmodule.h
 endif
 
 # To build the modules list, we invoke the `make_module_list' target.
