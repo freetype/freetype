@@ -1990,8 +1990,8 @@
       priv->blue_shift       = 7;
       priv->blue_fuzz        = 1;
       priv->lenIV            = -1;
-      priv->expansion_factor = (FT_Fixed)0.06 * 0x10000L;
-      priv->blue_scale       = (FT_Fixed)0.039625 * 0x10000L;
+      priv->expansion_factor = (FT_Fixed)( 0.06 * 0x10000L );
+      priv->blue_scale       = (FT_Fixed)( 0.039625 * 0x10000L * 1000 );
 
       cff_parser_init( &parser, CFF_CODE_PRIVATE, priv );
 

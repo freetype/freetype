@@ -907,10 +907,18 @@
         goto Store_Integer_P;
 
       case T1_FIELD_TYPE_FIXED:
-        val = t1_tofixed( &cur, limit, 3 );
+        val = t1_tofixed( &cur, limit, 0 );
         goto Store_Integer;
 
       case T1_FIELD_TYPE_FIXED_P:
+        val = t1_tofixed( &cur, limit, 0 );
+        goto Store_Integer_P;
+
+      case T1_FIELD_TYPE_FIXED_1000:
+        val = t1_tofixed( &cur, limit, 3 );
+        goto Store_Integer;
+
+      case T1_FIELD_TYPE_FIXED_1000_P:
         val = t1_tofixed( &cur, limit, 3 );
         goto Store_Integer_P;
 

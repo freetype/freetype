@@ -677,7 +677,7 @@
 
       globals->blues.blue_scale = priv->blue_scale
                                   ? priv->blue_scale
-                                  : 0x28937L;   /* 0.039625 * 0x400000L */
+                                  : 0x27A000L; /* 0.039625 * 0x10000 * 1000 */
 
       globals->blues.blue_shift = priv->blue_shift
                                   ? priv->blue_shift

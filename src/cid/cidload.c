@@ -147,9 +147,10 @@
     if ( keyword->type == T1_FIELD_TYPE_INTEGER_ARRAY ||
          keyword->type == T1_FIELD_TYPE_FIXED_ARRAY   )
       error = cid_parser_load_field_table( &loader->parser, keyword,
-                                    &dummy_object );
+                                           &dummy_object );
     else
-      error = cid_parser_load_field( &loader->parser, keyword, &dummy_object );
+      error = cid_parser_load_field( &loader->parser,
+                                     keyword, &dummy_object );
   Exit:
     return error;
   }

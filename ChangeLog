@@ -1,3 +1,24 @@
+2003-06-05  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/psaux.h (T1_FieldType): Add
+	T1_FIELD_TYPE_FIXED_1000 and T1_FIELD_TYPE_FIXED_1000_P.
+	(T1_FIELD_FIXED_1000, T1_FIELD_FIXED_1000_P): New macros.
+	* src/psaux/psobjs.c (ps_parser_load_field): Handle
+	T1_FIELD_TYPE_FIXED_1000 and T1_FIELD_TYPE_FIXED_1000_P.
+
+	* src/cff/cffparse.c (cff_kind_fixed_thousand): New enumeration.
+	(CFF_FIELD_FIXED_1000): New macro.
+	(cff_parser_run): Handle cff_kind_fixed_thousand.
+	* src/cff/cfftoken.h: Use CFF_FIELD_FIXED_1000 for blue_scale.
+	* src/cff/cffload (cff_subfont_load): Fix default values of
+	expansion_factor and blue_scale.
+
+	* src/cif/cidtoken.h, src/type1/t1tokens.h: Use T1_FIELD_FIXED_1000
+	for blue_scale.
+
+	* src/pshinter/pshglob.c (psh_globals_new): Fix default value of
+	blue_scale.
+
 2003-06-04  Wolfgang Domröse  <porthos.domroese@harz.de>
 
 	* include/freetype/internal/ftdriver.h,
