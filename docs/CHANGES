@@ -67,6 +67,10 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       forks on non-MacOS platforms (for example, Linux can mount MacOS
       file systems).
 
+    - Support for MacOS has been improved; there is now a new function
+      `FT_New_Face_From_FSSpec'  similar to `FT_New_Face'  except that
+      it accepts an FSSpec instead of a path.
+
     - The cache sub-system has been rewritten.
 
       - There is now support for deinstallation of faces.
