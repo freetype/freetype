@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000 by
+# Copyright 1996-2000, 2002 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -21,7 +21,8 @@ install: $(PROJECT_LIBRARY)
                          $(includedir)/freetype2/freetype/config   \
                          $(includedir)/freetype2/freetype/internal \
                          $(includedir)/freetype2/freetype/cache    \
-                         $(bindir)
+                         $(bindir)                                 \
+                         $(prefix)/share/aclocal
 	$(LIBTOOL) --mode=install $(INSTALL) $(PROJECT_LIBRARY) $(libdir)
 	-for P in $(PUBLIC_H) ; do                               \
           $(INSTALL_DATA) $$P $(includedir)/freetype2/freetype ; \
@@ -38,6 +39,8 @@ install: $(PROJECT_LIBRARY)
 	$(INSTALL_DATA) $(BUILD)/ft2unix.h $(includedir)/ft2build.h
 	$(INSTALL_SCRIPT) -m 755 $(OBJ_BUILD)/freetype-config \
           $(bindir)/freetype-config
+	$(INSTALL_SCRIPT) -m 644 $(BUILD)/freetype2.m4 \
+          $(prefix)/share/aclocal/freetype2.m4
 
 
 uninstall:
@@ -53,6 +56,7 @@ uninstall:
 	-$(DELDIR) $(includedir)/freetype2
 	-$(DELETE) $(includedir)/ft2build.h
 	-$(DELETE) $(bindir)/freetype-config
+	-$(DELETE) $(prefix)/share/aclocal/freetype2.m4
 
 
 check:

@@ -1,4 +1,18 @@
-2002-06-14  Detlef Würkner  <TetiSoft@apg.lahn.de>
+2002-06-16  Anthony Fok  <fok@debian.org>
+
+	Install freetype2.m4.
+
+	* builds/unix/install.mk (install, uninstall): Handle it.
+
+2002-06-16  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	Same fix for PFR driver.
+
+	* src/pfr/pfrcmap.c (pfr_cmap_char_index, pfr_cmap_char_next):
+	Increase return value by 1.
+	* src/pfr/pfrobjs.c (pfr_slot_load): Decrease index by 1.
+
+2002-06-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	Fix glyph indices to make index zero always the undefined glyph.
 
