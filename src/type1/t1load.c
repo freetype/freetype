@@ -827,6 +827,7 @@
     FT_Byte*       cur2;
     FT_Byte*       limit;
 
+
     if ( face->type1.font_name )
       /*  with synthetic fonts, it's possible we get here twice  */
       return;
@@ -958,6 +959,7 @@
       PS_Table*     char_table = &loader->encoding_table;
       FT_Memory     memory     = parser->root.memory;
       FT_Error      error;
+
 
       if ( encode->char_index )
         /*  with synthetic fonts, it's possible we get here twice  */
@@ -1100,6 +1102,7 @@
     FT_Int         n;
 
     PSAux_Interface*  psaux = (PSAux_Interface*)face->psaux;
+
 
     if ( loader->num_subrs )
       /*  with synthetic fonts, it's possible we get here twice  */

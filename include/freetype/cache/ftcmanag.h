@@ -81,20 +81,20 @@ FT_BEGIN_HEADER
 
 #define FTC_MAX_FACES_DEFAULT  2
 #define FTC_MAX_SIZES_DEFAULT  4
-#define FTC_MAX_BYTES_DEFAULT  100000L  /* 200kByte by default! */
+#define FTC_MAX_BYTES_DEFAULT  100000L  /* 100kByte by default! */
 
   /* maximum number of caches registered in a single manager */
 #define FTC_MAX_CACHES         16
 
 
- /* handle to cache object */
+  /* handle to cache object */
   typedef struct FTC_CacheRec_*  FTC_Cache;
 
- /* handle to cache class */
+  /* handle to cache class */
   typedef const struct FTC_Cache_ClassRec_*  FTC_Cache_Class;
 
- /* handle to cache node */
-  typedef struct FTC_NodeRec_*   FTC_Node;
+  /* handle to cache node */
+  typedef struct FTC_NodeRec_*  FTC_Node;
 
 
 
@@ -113,7 +113,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    sizes_list   :: The lru list of FT_Size objects in the cache.      */
   /*                                                                       */
-  /*    max_weight   :: The maximum cache pool weight..                    */
+  /*    max_weight   :: The maximum cache pool weight.                     */
   /*                                                                       */
   /*    cur_weight   :: The current cache pool weight.                     */
   /*                                                                       */
@@ -195,23 +195,23 @@ FT_BEGIN_HEADER
   /*                                                                       */
 
 
- /* structure size should be 20 bytes on 32-bits machines */  
-  typedef struct FTC_NodeRec_
+  /* structure size should be 20 bytes on 32-bits machines */  
+  typedef struct  FTC_NodeRec_
   {
-    FTC_Node   mru_next;     /* circular mru list pointer           */
-    FTC_Node   mru_prev;     /* circular mru list pointer           */
-    FTC_Node   link;         /* used for hashing..                  */
-    FT_UInt32  hash;         /* used for hashing too..              */
-    FT_UShort  cache_index;  /* index of cache the node belongs to  */
-    FT_Short   ref_count;    /* reference count for this node..     */
+    FTC_Node   mru_next;     /* circular mru list pointer          */
+    FTC_Node   mru_prev;     /* circular mru list pointer          */
+    FTC_Node   link;         /* used for hashing                   */
+    FT_UInt32  hash;         /* used for hashing too               */
+    FT_UShort  cache_index;  /* index of cache the node belongs to */
+    FT_Short   ref_count;    /* reference count for this node      */
   
   } FTC_NodeRec;
 
-#define  FTC_NODE(x)    ((FTC_Node)(x))
-#define  FTC_NODE_P(x)  ((FTC_Node*)(x))
+#define FTC_NODE( x )    ((FTC_Node)( x ))
+#define FTC_NODE_P( x )  ((FTC_Node*)( x ))
 
 
- /* each cache really implements a dynamic hash table to manage its nodes */
+  /* each cache really implements a dynamic hash table to manage its nodes */
   typedef struct  FTC_CacheRec_
   {
     FTC_Manager      manager;
@@ -228,41 +228,42 @@ FT_BEGIN_HEADER
   } FTC_CacheRec;
 
 
-#define  FTC_CACHE(x)    ((FTC_Cache)(x))
-#define  FTC_CACHE_P(x)  ((FTC_Cache*)(x))
+#define FTC_CACHE( x )    ((FTC_Cache)( x ))
+#define FTC_CACHE_P( x )  ((FTC_Cache*)( x ))
 
 
- /* initialize a given cache */
+  /* initialize a given cache */
   typedef FT_Error
-  (*FTC_Cache_InitFunc)( FTC_Cache   cache );
+  (*FTC_Cache_InitFunc)( FTC_Cache  cache );
   
- /* finalize a given cache */
+  /* finalize a given cache */
   typedef void
-  (*FTC_Cache_DoneFunc)( FTC_Cache   cache );
+  (*FTC_Cache_DoneFunc)( FTC_Cache  cache );
 
- /* initialize a new cache node */
+  /* initialize a new cache node */
   typedef FT_Error
   (*FTC_Node_InitFunc)( FTC_Node    node,
                         FT_Pointer  type,
                         FTC_Cache   cache );
 
- /* compute the weight of a given cache node */
+  /* compute the weight of a given cache node */
   typedef FT_ULong
-  (*FTC_Node_WeightFunc)( FTC_Node    node,
-                          FTC_Cache   cache );
+  (*FTC_Node_WeightFunc)( FTC_Node   node,
+                          FTC_Cache  cache );
 
- /* compare a node to a given key pair */
+  /* compare a node to a given key pair */
   typedef FT_Bool
-  (*FTC_Node_CompareFunc)( FTC_Node   node,
-                           FT_Pointer key,
-                           FTC_Cache  cache );
+  (*FTC_Node_CompareFunc)( FTC_Node    node,
+                           FT_Pointer  key,
+                           FTC_Cache   cache );
 
- /* finalize a given cache node */
+  /* finalize a given cache node */
   typedef void
-  (*FTC_Node_DoneFunc)( FTC_Node    node,
-                        FTC_Cache   cache );
+  (*FTC_Node_DoneFunc)( FTC_Node   node,
+                        FTC_Cache  cache );
 
-  typedef struct FTC_Cache_ClassRec_
+
+  typedef struct  FTC_Cache_ClassRec_
   {
     FT_UInt               cache_size;
     FTC_Cache_InitFunc    cache_init;
@@ -278,9 +279,9 @@ FT_BEGIN_HEADER
 
   /* */
 
-#define  FTC_CACHE_RESIZE_TEST(c)            \
-            ( (c)->nodes*3 < (c)->size  ||   \
-              (c)->size*3  < (c)->nodes )      
+#define FTC_CACHE_RESIZE_TEST( c )       \
+          ( (c)->nodes*3 < (c)->size  || \
+            (c)->size*3  < (c)->nodes )      
 
 
   /* this must be used internally for the moment */
@@ -290,35 +291,35 @@ FT_BEGIN_HEADER
                               FTC_Cache       *acache );
 
 
- /* can be used directory as FTC_Cache_DoneFunc, or called by custom */
- /* cache finalizers..                                               */
+  /* can be used directly as FTC_Cache_DoneFunc(), or called by custom */
+  /* cache finalizers                                                  */
   FT_EXPORT( void )
   ftc_cache_done( FTC_Cache  cache );
 
- /* initalize the hash table within the cache */
+  /* initalize the hash table within the cache */
   FT_EXPORT( FT_Error )
   ftc_cache_init( FTC_Cache  cache );
 
- /* can be used when FTC_CACHE_RESIZE_TEST returns TRUE after a node */
- /* insertion..                                                      */
-  FT_EXPORT(void)
+  /* can be used when FTC_CACHE_RESIZE_TEST returns TRUE after a node */
+  /* insertion                                                        */
+  FT_EXPORT( void )
   ftc_cache_resize( FTC_Cache  cache );
 
 
- /* can be called when the key's hash value has been computed */
-  FT_EXPORT(FT_Error)
-  ftc_cache_lookup_node( FTC_Cache    cache,
-                         FT_UFast     key_hash,
-                         FT_Pointer   key,
-                         FTC_Node    *anode );
+  /* can be called when the key's hash value has been computed */
+  FT_EXPORT( FT_Error )
+  ftc_cache_lookup_node( FTC_Cache   cache,
+                         FT_UFast    key_hash,
+                         FT_Pointer  key,
+                         FTC_Node   *anode );
 
- /* can be called to increment a node's reference count */
-  FT_EXPORT(void)
+  /* can be called to increment a node's reference count */
+  FT_EXPORT( void )
   ftc_node_ref( FTC_Node   node,
                 FTC_Cache  cache );
 
- /* can be called to decrement a node's reference count */
-  FT_EXPORT(void)
+  /* can be called to decrement a node's reference count */
+  FT_EXPORT( void )
   ftc_node_unref( FTC_Node   node,
                   FTC_Cache  cache );
 

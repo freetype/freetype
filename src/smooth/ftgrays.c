@@ -86,7 +86,8 @@
 
 
 /* experimental support for gamma correction within the rasterizer */
-#define  xxxGRAYS_USE_GAMMA
+#define xxxGRAYS_USE_GAMMA
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -144,8 +145,8 @@
 #endif /* _STANDALONE_ */
 
 
-#ifndef    MEM_Set
-#  define  MEM_Set(d,s,c)  memset(d,s,c)
+#ifndef MEM_Set
+#define  MEM_Set( d, s, c )  memset( d, s, c )
 #endif
 
   /* define this to dump debugging information */
@@ -309,8 +310,8 @@
     void*    memory;
     jmp_buf  jump_buffer;
 
-#ifdef  GRAYS_USE_GAMMA
-    FT_Byte   gamma[257];
+#ifdef GRAYS_USE_GAMMA
+    FT_Byte  gamma[257];
 #endif
 
   } TRaster, *PRaster;
@@ -1240,6 +1241,7 @@
     {
       FT_UInt  coverage = spans->coverage;
 
+
 #ifdef GRAYS_USE_GAMMA
       coverage = raster->gamma[(FT_Byte)coverage];
 #endif
@@ -1974,26 +1976,28 @@
   /**** RASTER OBJECT CREATION: In standalone mode, we simply use *****/
   /****                         a static object.                  *****/
 
-#ifdef  GRAYS_USE_GAMMA
+#ifdef GRAYS_USE_GAMMA
 
   /* initialize the "gamma" table. Yes, this is really a crummy function */
-  /* but the results look pretty good for something that simple..        */
+  /* but the results look pretty good for something that simple.         */
   /*                                                                     */
-#define  M_MAX  255
-#define  M_X    128
-#define  M_Y    96
+#define M_MAX  255
+#define M_X    128
+#define M_Y    192
 
   static void
   grays_init_gamma( PRaster  raster )
   {
     FT_UInt  x, a;
 
+
     for ( x = 0; x < 256; x++ )
     {
       if ( x <= M_X )
-        a = (x * M_Y + (M_X/2)) / M_X;
+        a = ( x * M_Y + M_X / 2) / M_X;
       else
-        a = M_Y + ((x-M_X)*(M_MAX-M_Y) + (M_MAX-M_X)/2)/(M_MAX-M_X);
+        a = M_Y + ( ( x - M_X ) * ( M_MAX - M_Y ) +
+            ( M_MAX - M_X ) / 2 ) / ( M_MAX - M_X );
 
       raster->gamma[x] = (FT_Byte)a;
     }

@@ -35,8 +35,9 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#define  FTC_GSET_HASH(gset,gindex)  \
-             ((FT_UFast)(((gset)->hash << 16) | ((gindex) & 0xFFFF)))
+
+#define FTC_GSET_HASH( gset, gindex )                                      \
+          ( (FT_UFast)( ( (gset)->hash << 16 ) | ( (gindex) & 0xFFFF ) ) )
 
 
   /* create a new glyph node, setting its cache index and ref count */
@@ -59,14 +60,14 @@
   /* will happen!                                                 */
 
   FT_EXPORT_DEF( void )
-  ftc_glyph_node_done( FTC_GlyphNode   gnode )
+  ftc_glyph_node_done( FTC_GlyphNode  gnode )
   {
     FTC_GlyphSet  gset = gnode->gset;
     
-    if ( --gset->num_glyphs <= 0 )
-      FT_LruList_Remove( gset->gcache->gset_lru, (FT_LruNode) gset );
-  }
 
+    if ( --gset->num_glyphs <= 0 )
+      FT_LruList_Remove( gset->gcache->gset_lru, (FT_LruNode)gset );
+  }
 
 
   /*************************************************************************/
@@ -77,12 +78,14 @@
   /*************************************************************************/
   /*************************************************************************/
 
+
   FT_EXPORT_DEF( FT_Error )
   ftc_glyph_set_init( FTC_GlyphSet  gset,
-                       FT_LruList   lru )
+                      FT_LruList    lru )
   {
     FTC_GlyphCache  gcache = lru->user_data;
     
+
     gset->gcache     = gcache;
     gset->num_glyphs = 0;
     
@@ -94,7 +97,7 @@
   ftc_glyph_set_done( FTC_GlyphSet  gset )
   {
     /* for now, nothing to be done here */
-    FT_UNUSED(gset);
+    FT_UNUSED( gset );
   }
 
 
@@ -108,7 +111,7 @@
 
 
   FT_EXPORT_DEF( void )
-  ftc_glyph_cache_done(  FTC_GlyphCache  gcache )
+  ftc_glyph_cache_done( FTC_GlyphCache  gcache )
   {
     /* remove all nodes in the cache */
     ftc_cache_done( &gcache->cache );
@@ -128,8 +131,10 @@
   {
     FT_Error  error;
 
-    error = ftc_cache_init( FTC_CACHE(gcache) );
-    if (error) goto Exit;
+
+    error = ftc_cache_init( FTC_CACHE( gcache ) );
+    if ( error )
+      goto Exit;
         
     error = FT_LruList_New( gset_class, 0, gcache,
                             gcache->cache.memory,
@@ -147,18 +152,18 @@
     FT_LruNode    node;
     FT_Error      error;
     
+
     error = FT_LruList_Lookup( gcache->gset_lru, query, &node );
     if ( !error )
     {
-      FTC_GlyphSet  gset = (FTC_GlyphSet) node;
+      FTC_GlyphSet  gset = (FTC_GlyphSet)node;
       FT_UFast      hash = FTC_GSET_HASH( gset, query->gindex );
       
-      error = ftc_cache_lookup_node( FTC_CACHE(gcache), hash, query,
-                                     FTC_NODE_P(anode) );
+      error = ftc_cache_lookup_node( FTC_CACHE( gcache ), hash, query,
+                                     FTC_NODE_P( anode ) );
     }
     return error;
   }
-
 
 
 /* END */

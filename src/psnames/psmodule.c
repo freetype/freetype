@@ -66,8 +66,8 @@
 
       for ( count = 4; count > 0; count--, p++ )
       {
-        char           c = *p;
-        unsigned int   d;
+        char          c = *p;
+        unsigned int  d;
 
 
         d = (unsigned char)c - '0';
@@ -290,7 +290,7 @@
   const FT_Module_Class  psnames_module_class =
   {
     0,  /* this is not a font driver, nor a renderer */
-    sizeof( FT_ModuleRec ),
+    sizeof ( FT_ModuleRec ),
 
     "psnames",  /* driver name                         */
     0x10000L,   /* driver version                      */

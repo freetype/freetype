@@ -30,41 +30,39 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*                 USER-SELECTABLE CONFIGURATION MACROS                  */
   /*                                                                       */
-  /* this file contains the default configuration macro definitions for    */
-  /* a standard build of the FreeType library. There are three ways to     */
+  /* This file contains the default configuration macro definitions for    */
+  /* a standard build of the FreeType library.  There are three ways to    */
   /* use this file to build project-specific versions of the library:      */
   /*                                                                       */
-  /*  - you can modify this file by hand, but this is not recommended      */
-  /*    in cases where you'd like to build several versions of the         */
-  /*    library from a single source directory                             */
+  /*  - You can modify this file by hand, but this is not recommended in   */
+  /*    cases where you would like to build several versions of the        */
+  /*    library from a single source directory.                            */
   /*                                                                       */
-  /*                                                                       */
-  /*  - you can put a copy of this file in your build directory, more      */
+  /*  - You can put a copy of this file in your build directory, more      */
   /*    precisely in "$BUILD/freetype/config/ftoption.h", where "$BUILD"   */
-  /*    is the name of a directory that is included _before_ the           */
-  /*    FreeType include path during compilation.                          */
+  /*    is the name of a directory that is included _before_ the FreeType  */
+  /*    include path during compilation.                                   */
   /*                                                                       */
-  /*    the default FreeType Makefiles and Jamfiles use the build          */
+  /*    The default FreeType Makefiles and Jamfiles use the build          */
   /*    directory "builds/<system>" by default, but you can easily change  */
-  /*    that for your own projects                                         */
+  /*    that for your own projects.                                        */
   /*                                                                       */
+  /*  - Copy the file <ft2build.h> to "$BUILD/ft2build.h" and modify it    */
+  /*    slightly to pre-define the macro FT_CONFIG_OPTIONS_H used to       */
+  /*    locate this file during the build.  For example,                   */
   /*                                                                       */
-  /*  - copy the file <ft2build.h> to "$BUILD/ft2build.h" and modify       */
-  /*    it slightly to pre-define the macro FT_CONFIG_OPTIONS_H used       */
-  /*    to locate this file during the build. For example:                 */
-  /*                                                                       */
-  /*        #define  FT_CONFIG_OPTIONS_H  <myftoptions.h>                  */
-  /*        #include <freetype/config/ftheader.h>                          */
+  /*      #define FT_CONFIG_OPTIONS_H  <myftoptions.h>                     */
+  /*      #include <freetype/config/ftheader.h>                            */
   /*                                                                       */
   /*    will use "$BUILD/myftoptions.h" instead of this file for macro     */
   /*    definitions.                                                       */
   /*                                                                       */
-  /*    note also that you can similarly pre-define the macro              */
-  /*    FT_CONFIG_MODULES_H used to locate the file listing the modules    */
-  /*    that are statically linked to the library at compile time.         */
-  /*    by default, this file is <freetype/config/ftmodule.h>              */
+  /*    Note also that you can similarly pre-define the macro              */
+  /*    FT_CONFIG_MODULES_H used to locate the file listing of the modules */
+  /*    that are statically linked to the library at compile time.  By     */
+  /*    default, this file is <freetype/config/ftmodule.h>.                */
   /*                                                                       */
-  /*  we highly recommend using the third method whenever possible         */
+  /*  We highly recommend using the third method whenever possible.        */
   /*                                                                       */
   /*************************************************************************/
 
@@ -111,7 +109,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   More details can be found in the files ftmoderr.h and fterrors.h.   */
   /*                                                                       */
-#undef  FT_CONFIG_OPTION_USE_MODULE_ERRORS
+#undef FT_CONFIG_OPTION_USE_MODULE_ERRORS
 
 
   /*************************************************************************/
@@ -195,7 +193,7 @@ FT_BEGIN_HEADER
   /*         file "ftconfig.h" either statically, or through Autoconf      */
   /*         on platforms that support it.                                 */
   /*                                                                       */
-#undef   FT_CONFIG_OPTION_FORCE_INT64
+#undef FT_CONFIG_OPTION_FORCE_INT64
 
 
   /*************************************************************************/
@@ -251,8 +249,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Don't define any of these macros to compile in `release' mode!      */
   /*                                                                       */
-#define  FT_DEBUG_LEVEL_ERROR
-#define  FT_DEBUG_LEVEL_TRACE
+#define FT_DEBUG_LEVEL_ERROR
+#define FT_DEBUG_LEVEL_TRACE
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -260,13 +259,14 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   FreeType now comes with an integrated memory debugger that is       */
   /*   capable of detecting simple errors like memory leaks or double      */
-  /*   deletes. To compile it within your build of the library, you should */
-  /*   define FT_DEBUG_MEMORY here.                                        */
+  /*   deletes.  To compile it within your build of the library, you       */
+  /*   should define FT_DEBUG_MEMORY here.                                 */
   /*                                                                       */
-  /*   note that the memory debugger is only activated at runtime when     */
-  /*   when the _environment_ variable "FT_DEBUG_MEMORY" is also defined ! */
+  /*   Note that the memory debugger is only activated at runtime when     */
+  /*   when the _environment_ variable "FT_DEBUG_MEMORY" is also defined!  */
   /*                                                                       */
-#define  FT_DEBUG_MEMORY
+#define FT_DEBUG_MEMORY
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -275,7 +275,7 @@ FT_BEGIN_HEADER
   /*   Used for debugging, this configuration macro should disappear       */
   /*   soon.                                                               */
   /*                                                                       */
-#undef  FT_CONFIG_OPTION_OLD_CALCS
+#undef FT_CONFIG_OPTION_OLD_CALCS
 
 
   /*************************************************************************/
@@ -375,7 +375,7 @@ FT_BEGIN_HEADER
   /* By undefining this, you will only compile the code necessary to load  */
   /* TrueType glyphs without hinting.                                      */
   /*                                                                       */
-#undef  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#undef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
 
   /*************************************************************************/

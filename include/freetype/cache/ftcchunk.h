@@ -58,9 +58,9 @@ FT_BEGIN_HEADER
 #define FTC_MAX_CHUNK_SETS  16
 
 
-  typedef struct FTC_ChunkNodeRec_*    FTC_ChunkNode;
-  typedef struct FTC_ChunkSetRec_*     FTC_ChunkSet;
-  typedef struct FTC_ChunkCacheRec_*   FTC_ChunkCache;
+  typedef struct FTC_ChunkNodeRec_*   FTC_ChunkNode;
+  typedef struct FTC_ChunkSetRec_*    FTC_ChunkSet;
+  typedef struct FTC_ChunkCacheRec_*  FTC_ChunkCache;
 
   typedef struct  FTC_ChunkNodeRec_
   {
@@ -72,42 +72,42 @@ FT_BEGIN_HEADER
 
   } FTC_ChunkNodeRec;
 
-#define FTC_CHUNK_NODE(x)  ((FTC_ChunkNode)(x))
+#define FTC_CHUNK_NODE( x )  ((FTC_ChunkNode)( x ))
 
- /* a chunk set is used to categorize chunks of a given type */
-  typedef struct FTC_ChunkSetRec_
+  /* a chunk set is used to categorize chunks of a given type */
+  typedef struct  FTC_ChunkSetRec_
   {
-    FT_LruNodeRec    lru;
-    FT_UFast         hash;
-    FTC_ChunkCache   ccache;
-    FT_Fast          num_chunks;
-    FT_UInt          item_total;   /* total number of glyphs in set   */
-    FT_UInt          item_size;    /* size of each glyph item in set  */
-    FT_UInt          item_count;   /* number of glyph items per chunk */
+    FT_LruNodeRec   lru;
+    FT_UFast        hash;
+    FTC_ChunkCache  ccache;
+    FT_Fast         num_chunks;
+    FT_UInt         item_total;   /* total number of glyphs in set   */
+    FT_UInt         item_size;    /* size of each glyph item in set  */
+    FT_UInt         item_count;   /* number of glyph items per chunk */
   
   } FTC_ChunkSetRec;
 
-#define  FTC_CHUNK_SET(x)  ((FTC_ChunkSet)(x))
+#define FTC_CHUNK_SET( x )  ((FTC_ChunkSet)( x ))
 
-#define  FTC_CHUNK_SET_MEMORY(x)  ((x)->ccache->cache.memory)
+#define FTC_CHUNK_SET_MEMORY( x )  (( x )->ccache->cache.memory)
 
- /* the abstract chunk cache class */
-  typedef struct FTC_ChunkCacheRec_
+  /* the abstract chunk cache class */
+  typedef struct  FTC_ChunkCacheRec_
   {
-    FTC_CacheRec   cache;
-    FT_LruList     cset_lru;  /* LRU list of chunk sets */
+    FTC_CacheRec  cache;
+    FT_LruList    cset_lru;  /* LRU list of chunk sets */
   
   } FTC_ChunkCacheRec;
 
-#define  FTC_CHUNK_CACHE(x)  ((FTC_ChunkCache)(x))
+#define FTC_CHUNK_CACHE( x )  ((FTC_ChunkCache)( x ))
 
 
-  typedef struct FTC_ChunkQueryRec_
+  typedef struct  FTC_ChunkQueryRec_
   {
-   /* input */
+    /* input */
     FT_UInt       gindex;      /* glyph index */
 
-   /* output */
+    /* output */
     FTC_ChunkSet  cset;
   
   } FTC_ChunkQueryRec, *FTC_ChunkQuery;

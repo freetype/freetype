@@ -511,7 +511,7 @@
     if ( s < 0 )
     {
       x->lo = (FT_UInt32)-(FT_Int32)x->lo;
-      x->hi = ~x->hi + !( x->lo );
+      x->hi = ~x->hi + !x->lo;
     }
     s ^= y;  y = ABS( y );
 
@@ -563,7 +563,7 @@
     if ( s < 0 )
     {
       x->lo = (FT_UInt32)-(FT_Int32)x->lo;
-      x->hi = ~x->hi + !( x->lo );
+      x->hi = ~x->hi + !x->lo;
     }
     s ^= y;  y = ABS( y );
 

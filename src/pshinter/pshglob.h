@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  pshglob.h                                                              */
 /*                                                                         */
-/*    Postscript hinter globals hints management.                          */
+/*    PostScript hinter global hinting management.                         */
 /*                                                                         */
 /*  Copyright 2001 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -15,46 +15,54 @@
 /*                                                                         */
 /***************************************************************************/
 
-#ifndef __PS_HINTER_GLOBALS_H__
-#define __PS_HINTER_GLOBALS_H__
+
+#ifndef __PSHGLOB_H__
+#define __PSHGLOB_H__
+
 
 #include FT_FREETYPE_H
 #include FT_INTERNAL_POSTSCRIPT_GLOBALS_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
 
+
 FT_BEGIN_HEADER
 
- /**********************************************************************/
- /**********************************************************************/
- /*****                                                            *****/
- /*****                    GLOBAL HINTS INTERNALS                  *****/
- /*****                                                            *****/
- /**********************************************************************/
- /**********************************************************************/
 
- /****************************************************************
-  *
-  * @constant: PS_GLOBALS_MAX_BLUE_ZONES
-  *
-  * @description:
-  *   the maximum number of blue zones in a font global hints
-  *   structure. See @PS_Globals_BluesRec
-  */                                             
-#define  PS_GLOBALS_MAX_BLUE_ZONES  16
-
- /****************************************************************
-  *
-  * @constant: PS_GLOBALS_MAX_STD_WIDTHS
-  *
-  * @description:
-  *   the maximum number of standard and snap widths in either the
-  *   horizontal or vertical direction. See @PS_Globals_WidthsRec
-  */                                             
-#define  PS_GLOBALS_MAX_STD_WIDTHS  16
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                    GLOBAL HINTS INTERNALS                     *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
 
- /* standard and snap width */
-  typedef struct PSH_WidthRec_
+  /*************************************************************************/
+  /*                                                                       */
+  /* @constant:                                                            */
+  /*    PS_GLOBALS_MAX_BLUE_ZONES                                          */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    The maximum number of blue zones in a font global hints structure. */
+  /*    See @PS_Globals_BluesRec.                                          */
+  /*                                                                       */
+#define PS_GLOBALS_MAX_BLUE_ZONES  16
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @constant:                                                            */
+  /*    PS_GLOBALS_MAX_STD_WIDTHS                                          */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    The maximum number of standard and snap widths in either the       */
+  /*    horizontal or vertical direction.  See @PS_Globals_WidthsRec.      */
+  /*                                                                       */
+#define PS_GLOBALS_MAX_STD_WIDTHS  16
+
+
+  /* standard and snap width */
+  typedef struct  PSH_WidthRec_
   {
     FT_Int  org;
     FT_Pos  cur;
@@ -63,51 +71,50 @@ FT_BEGIN_HEADER
   } PSH_WidthRec, *PSH_Width;
 
 
- /* standard and snap widths table */
-  typedef struct PSH_WidthsRec_
+  /* standard and snap widths table */
+  typedef struct  PSH_WidthsRec_
   {
     FT_UInt       count;
-    PSH_WidthRec  widths[ PS_GLOBALS_MAX_STD_WIDTHS ];
+    PSH_WidthRec  widths[PS_GLOBALS_MAX_STD_WIDTHS];
 
   } PSH_WidthsRec, *PSH_Widths;
 
 
-  typedef struct PSH_DimensionRec_
+  typedef struct  PSH_DimensionRec_
   {
     PSH_WidthsRec  std;
     FT_Fixed       scale_mult;
     FT_Fixed       scale_delta;
-  
+
   } PSH_DimensionRec, *PSH_Dimension;
 
 
-
- /* blue zone descriptor */
-  typedef struct PSH_Blue_ZoneRec_
+  /* blue zone descriptor */
+  typedef struct  PSH_Blue_ZoneRec_
   {
-    FT_Int    org_ref;
-    FT_Int    org_delta;
-    FT_Int    org_top;
-    FT_Int    org_bottom;
-    
-    FT_Pos    cur_ref;
-    FT_Pos    cur_delta;
-    FT_Pos    cur_bottom;
-    FT_Pos    cur_top;
+    FT_Int  org_ref;
+    FT_Int  org_delta;
+    FT_Int  org_top;
+    FT_Int  org_bottom;
+
+    FT_Pos  cur_ref;
+    FT_Pos  cur_delta;
+    FT_Pos  cur_bottom;
+    FT_Pos  cur_top;
 
   } PSH_Blue_ZoneRec, *PSH_Blue_Zone;
 
 
-  typedef struct PSH_Blue_TableRec_
+  typedef struct  PSH_Blue_TableRec_
   {
     FT_UInt           count;
-    PSH_Blue_ZoneRec  zones[ PS_GLOBALS_MAX_BLUE_ZONES ];
-  
+    PSH_Blue_ZoneRec  zones[PS_GLOBALS_MAX_BLUE_ZONES];
+
   } PSH_Blue_TableRec, *PSH_Blue_Table;
 
 
- /* blue zones table */
-  typedef struct PSH_BluesRec_
+  /* blue zones table */
+  typedef struct  PSH_BluesRec_
   {
     PSH_Blue_TableRec  normal_top;
     PSH_Blue_TableRec  normal_bottom;
@@ -118,8 +125,8 @@ FT_BEGIN_HEADER
   } PSH_BluesRec, *PSH_Blues;
 
 
- /* font globals */
-  typedef struct PSH_GlobalsRec_
+  /* font globals */
+  typedef struct  PSH_GlobalsRec_
   {
     FT_Memory         memory;
     PSH_DimensionRec  dimension[2];
@@ -127,21 +134,21 @@ FT_BEGIN_HEADER
 
   } PSH_GlobalsRec;
 
- 
+
   typedef enum
   {
     PSH_BLUE_ALIGN_TOP = 1,
     PSH_BLUE_ALIGN_BOT = 2
-    
+
   } PSH_Blue_Align;
 
 
-  typedef struct
+  typedef struct  PSH_AlignmentRec_
   {
-    PSH_Blue_Align   align;
-    FT_Pos           align_top;
-    FT_Pos           align_bot;
-    
+    PSH_Blue_Align  align;
+    FT_Pos          align_top;
+    FT_Pos          align_bot;
+
   } PSH_AlignmentRec, *PSH_Alignment;
 
 
@@ -149,13 +156,13 @@ FT_BEGIN_HEADER
   psh_globals_funcs_init( PSH_Globals_FuncsRec*  funcs );
 
 
- /* snap a stem width to fitter coordinates. org_width is in font units */
- /* result is in device pixels (26.6 format)..                          */
+  /* snap a stem width to fitter coordinates.  `org_width' is in font */
+  /* units.  The result is in device pixels (26.6 format).            */
   FT_LOCAL FT_Pos
   psh_dimension_snap_width( PSH_Dimension  dimension,
                             FT_Int         org_width );
 
- /* snap a stem to one or two blue zones */
+  /* snap a stem to one or two blue zones */
   FT_LOCAL void
   psh_blues_snap_stem( PSH_Blues      blues,
                        FT_Int         stem_top,
@@ -164,9 +171,14 @@ FT_BEGIN_HEADER
   /* */
 
 #ifdef DEBUG_HINTER
-  extern PSH_Globals   ps_debug_globals;
-#endif  
+  extern PSH_Globals  ps_debug_globals;
+#endif
+
 
 FT_END_HEADER
 
-#endif /* __T1_FITTER_GLOBALS_H__ */
+
+#endif /* __PSHGLOB_H__ */
+
+
+/* END */

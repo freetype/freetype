@@ -239,21 +239,22 @@
     *have_sfnt        = 0;
     lwfn_file_name[0] = 0;
 
-    fond = (FamRec*)fond_data;
-    assoc = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
+    fond       = (FamRec*)fond_data;
+    assoc      = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
     base_assoc = assoc;
-    assoc += face_index;        /* add on the face_index! */
+    assoc     += face_index;        /* add on the face_index! */
 
-    /* if the face at this index is not scalable, fall back to the first one (old behavior) */
+    /* if the face at this index is not scalable,
+       fall back to the first one (old behavior) */
     if ( assoc->fontSize == 0 )
     {
       *have_sfnt = 1;
-      *sfnt_id = assoc->fontID;
+      *sfnt_id   = assoc->fontID;
     }
-    else if (base_assoc->fontSize == 0)
+    else if ( base_assoc->fontSize == 0 )
     {
       *have_sfnt = 1;
-      *sfnt_id = base_assoc->fontID;
+      *sfnt_id   = base_assoc->fontID;
     }
 
     if ( fond->ffStylOff )
@@ -647,7 +648,7 @@
     FT_Error  error = FT_Err_Unknown_File_Format;
 
 
-    GetResInfo(fond, &fond_id, &fond_type, fond_name);
+    GetResInfo( fond, &fond_id, &fond_type, fond_name );
     if ( ResError() != noErr || fond_type != 'FOND' )
       return FT_Err_Invalid_File_Format;
 

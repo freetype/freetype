@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  pshalgo2.h                                                             */
 /*                                                                         */
-/*    First (basic) Postscript hinting routines                            */
+/*    PostScript hinting algorithm 2 (specification).                      */
 /*                                                                         */
 /*  Copyright 2001 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -15,16 +15,20 @@
 /*                                                                         */
 /***************************************************************************/
 
-#ifndef __PS_HINTER_ALGO2_H__
-#define __PS_HINTER_ALGO2_H__
+
+#ifndef __PSHALGO2_H__
+#define __PSHALGO2_H__
+
 
 #include "pshrec.h"
 #include "pshglob.h"
 #include FT_TRIGONOMETRY_H
 
+
 FT_BEGIN_HEADER
 
-  typedef struct PSH2_HintRec_*   PSH2_Hint;
+
+  typedef struct PSH2_HintRec_*  PSH2_Hint;
 
   typedef enum
   {
@@ -32,17 +36,20 @@ FT_BEGIN_HEADER
     PSH2_HINT_BOTTOM = PS_HINT_FLAG_BOTTOM,
     PSH2_HINT_ACTIVE = 4,
     PSH2_HINT_FITTED = 8
+
   } PSH2_Hint_Flags;
 
-#define  psh2_hint_is_active(x)  (((x)->flags  & PSH2_HINT_ACTIVE) != 0)
-#define  psh2_hint_is_ghost(x)   (((x)->flags  & PSH2_HINT_GHOST)  != 0)
-#define  psh2_hint_is_fitted(x)  (((x)->flags  & PSH2_HINT_FITTED) != 0)
 
-#define  psh2_hint_activate(x)     (x)->flags |=  PSH2_HINT_ACTIVE
-#define  psh2_hint_deactivate(x)   (x)->flags &= ~PSH2_HINT_ACTIVE
-#define  psh2_hint_set_fitted(x)   (x)->flags |=  PSH2_HINT_FITTED
+#define psh2_hint_is_active( x )  ( ( (x)->flags & PSH2_HINT_ACTIVE ) != 0 )
+#define psh2_hint_is_ghost( x )   ( ( (x)->flags & PSH2_HINT_GHOST  ) != 0 )
+#define psh2_hint_is_fitted( x )  ( ( (x)->flags & PSH2_HINT_FITTED ) != 0 )
 
-  typedef struct PSH2_HintRec_
+#define psh2_hint_activate( x )    (x)->flags |=  PSH2_HINT_ACTIVE
+#define psh2_hint_deactivate( x )  (x)->flags &= ~PSH2_HINT_ACTIVE
+#define psh2_hint_set_fitted( x )  (x)->flags |=  PSH2_HINT_FITTED
+
+
+  typedef struct  PSH2_HintRec_
   {
     FT_Int     org_pos;
     FT_Int     org_len;
@@ -55,10 +62,10 @@ FT_BEGIN_HEADER
   } PSH2_HintRec;
 
 
- /* this is an interpolation zone used for strong points   */
- /* weak points are interpolated according to their strong */
- /* neighbours..                                           */
-  typedef struct PSH2_ZoneRec_
+  /* this is an interpolation zone used for strong points;  */
+  /* weak points are interpolated according to their strong */
+  /* neighbours                                             */
+  typedef struct  PSH2_ZoneRec_
   {
     FT_Fixed  scale;
     FT_Fixed  delta;
@@ -68,7 +75,7 @@ FT_BEGIN_HEADER
   } PSH2_ZoneRec, *PSH2_Zone;
 
 
-  typedef struct PSH2_Hint_TableRec_
+  typedef struct  PSH2_Hint_TableRec_
   {
     FT_UInt        max_hints;
     FT_UInt        num_hints;
@@ -89,11 +96,11 @@ FT_BEGIN_HEADER
 
   enum
   {
-    PSH2_DIR_NONE   =  4,
-    PSH2_DIR_UP     =  1,
-    PSH2_DIR_DOWN   = -1,
-    PSH2_DIR_LEFT   = -2,
-    PSH2_DIR_RIGHT  =  2
+    PSH2_DIR_NONE  =  4,
+    PSH2_DIR_UP    =  1,
+    PSH2_DIR_DOWN  = -1,
+    PSH2_DIR_LEFT  = -2,
+    PSH2_DIR_RIGHT =  2
   };
 
   enum
@@ -105,7 +112,7 @@ FT_BEGIN_HEADER
   };
 
 
-  typedef struct PSH2_PointRec_
+  typedef struct  PSH2_PointRec_
   {
     PSH2_Point    prev;
     PSH2_Point    next;
@@ -130,15 +137,16 @@ FT_BEGIN_HEADER
   } PSH2_PointRec;
 
 
-#define  psh2_point_is_strong(p)   ((p)->flags & PSH2_POINT_STRONG)
-#define  psh2_point_is_fitted(p)   ((p)->flags & PSH2_POINT_FITTED)
-#define  psh2_point_is_smooth(p)   ((p)->flags & PSH2_POINT_SMOOTH)
+#define psh2_point_is_strong( p )   ( (p)->flags & PSH2_POINT_STRONG )
+#define psh2_point_is_fitted( p )   ( (p)->flags & PSH2_POINT_FITTED )
+#define psh2_point_is_smooth( p )   ( (p)->flags & PSH2_POINT_SMOOTH )
 
-#define  psh2_point_set_strong(p)  (p)->flags |= PSH2_POINT_STRONG
-#define  psh2_point_set_fitted(p)  (p)->flags |= PSH2_POINT_FITTED
-#define  psh2_point_set_smooth(p)  (p)->flags |= PSH2_POINT_SMOOTH
+#define psh2_point_set_strong( p )  (p)->flags |= PSH2_POINT_STRONG
+#define psh2_point_set_fitted( p )  (p)->flags |= PSH2_POINT_FITTED
+#define psh2_point_set_smooth( p )  (p)->flags |= PSH2_POINT_SMOOTH
 
-  typedef struct PSH2_ContourRec_
+
+  typedef struct  PSH2_ContourRec_
   {
     PSH2_Point  start;
     FT_UInt     count;
@@ -146,8 +154,7 @@ FT_BEGIN_HEADER
   } PSH2_ContourRec;
 
 
-
-  typedef struct PSH2_GlyphRec_
+  typedef struct  PSH2_GlyphRec_
   {
     FT_UInt             num_points;
     FT_UInt             num_contours;
@@ -168,20 +175,28 @@ FT_BEGIN_HEADER
 
 
 #ifdef DEBUG_HINTER
-  extern  PSH2_Hint_Table  ps2_debug_hint_table;
+  extern PSH2_Hint_Table  ps2_debug_hint_table;
 
-  typedef void  (*PSH2_HintFunc)( PSH2_Hint  hint, FT_Bool vertical );
-  extern  PSH2_HintFunc    ps2_debug_hint_func;
+  typedef void
+  (*PSH2_HintFunc)( PSH2_Hint  hint,
+                    FT_Bool    vertical );
 
-  extern  PSH2_Glyph       ps2_debug_glyph;
+  extern PSH2_HintFunc    ps2_debug_hint_func;
+
+  extern PSH2_Glyph       ps2_debug_glyph;
 #endif
 
 
   extern FT_Error
-  ps2_hints_apply( PS_Hints      ps_hints,
-                   FT_Outline*   outline,
-                   PSH_Globals   globals );
+  ps2_hints_apply( PS_Hints     ps_hints,
+                   FT_Outline*  outline,
+                   PSH_Globals  globals );
+
 
 FT_END_HEADER
 
-#endif /* __PS_HINTS_ALGO_2_H__ */
+
+#endif /* __PSHALGO2_H__ */
+
+
+/* END */

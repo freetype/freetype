@@ -108,6 +108,7 @@ FT_BEGIN_HEADER
             FT_Long    size,
             void*     *P );
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -171,7 +172,6 @@ FT_BEGIN_HEADER
            void**     P );
 
 
-
   /* This `#include' is needed by the MEM_xxx() macros; it should be */
   /* available on all platforms we know of.                          */
 #include <string.h>
@@ -181,7 +181,6 @@ FT_BEGIN_HEADER
 #define MEM_Copy( dest, source, count )  memcpy( dest, source, count )
 
 #define MEM_Move( dest, source, count )  memmove( dest, source, count )
-
 
 
   /*************************************************************************/
@@ -200,41 +199,44 @@ FT_BEGIN_HEADER
 
 #ifdef FT_DEBUG_MEMORY
 
-#  define MEM_Alloc( _pointer_, _size_ )                     \
-            FT_Alloc_Debug( memory, _size_, (void**)&(_pointer_), __FILE__, __LINE__ )
+#define MEM_Alloc( _pointer_, _size_ )                               \
+          FT_Alloc_Debug( memory, _size_,                            \
+                          (void**)&(_pointer_), __FILE__, __LINE__ )
 
-#  define MEM_Alloc_Array( _pointer_, _count_, _type_ )    \
-            FT_Alloc_Debug( memory, (_count_)*sizeof ( _type_ ), \
+#define MEM_Alloc_Array( _pointer_, _count_, _type_ )    \
+          FT_Alloc_Debug( memory, (_count_)*sizeof ( _type_ ), \
+                          (void**)&(_pointer_), __FILE__, __LINE__ )
+
+#define MEM_Realloc( _pointer_, _current_, _size_ )                    \
+          FT_Realloc_Debug( memory, _current_, _size_,                 \
                             (void**)&(_pointer_), __FILE__, __LINE__ )
 
-#  define MEM_Realloc( _pointer_, _current_, _size_ )                     \
-          FT_Realloc_Debug( memory, _current_, _size_, (void**)&(_pointer_), __FILE__, __LINE__ )
+#define MEM_Realloc_Array( _pointer_, _current_, _new_, _type_ )       \
+          FT_Realloc_Debug( memory, (_current_)*sizeof ( _type_ ),     \
+                            (_new_)*sizeof ( _type_ ),                 \
+                            (void**)&(_pointer_), __FILE__, __LINE__ )
 
-#  define MEM_Realloc_Array( _pointer_, _current_, _new_, _type_ )        \
-          FT_Realloc_Debug( memory, (_current_)*sizeof ( _type_ ),            \
-                      (_new_)*sizeof ( _type_ ), (void**)&(_pointer_), __FILE__, __LINE__ )
-
-#  define MEM_Free( _pointer_ )     \
+#define MEM_Free( _pointer_ )                                               \
           FT_Free_Debug( memory, (void**)&(_pointer_), __FILE__, __LINE__ )
   
 #else  /* !FT_DEBUG_MEMORY */
 
-#  define MEM_Alloc( _pointer_, _size_ )                     \
-            FT_Alloc( memory, _size_, (void**)&(_pointer_) )
+#define MEM_Alloc( _pointer_, _size_ )                     \
+          FT_Alloc( memory, _size_, (void**)&(_pointer_) )
 
-#  define MEM_Alloc_Array( _pointer_, _count_, _type_ )    \
-            FT_Alloc( memory, (_count_)*sizeof ( _type_ ), \
-                      (void**)&(_pointer_) )
+#define MEM_Alloc_Array( _pointer_, _count_, _type_ )    \
+          FT_Alloc( memory, (_count_)*sizeof ( _type_ ), \
+                    (void**)&(_pointer_) )
 
-#  define MEM_Realloc( _pointer_, _current_, _size_ )                     \
-            FT_Realloc( memory, _current_, _size_, (void**)&(_pointer_) )
+#define MEM_Realloc( _pointer_, _current_, _size_ )                     \
+          FT_Realloc( memory, _current_, _size_, (void**)&(_pointer_) )
 
-#  define MEM_Realloc_Array( _pointer_, _current_, _new_, _type_ )        \
-            FT_Realloc( memory, (_current_)*sizeof ( _type_ ),            \
+#define MEM_Realloc_Array( _pointer_, _current_, _new_, _type_ )        \
+          FT_Realloc( memory, (_current_)*sizeof ( _type_ ),            \
                       (_new_)*sizeof ( _type_ ), (void**)&(_pointer_) )
 
-#  define MEM_Free( _pointer_ )     \
-            FT_Free( memory, (void**)&(_pointer_) )
+#define MEM_Free( _pointer_ )                     \
+          FT_Free( memory, (void**)&(_pointer_) )
 
 #endif /* !FT_DEBUG_MEMORY */
 
@@ -245,16 +247,16 @@ FT_BEGIN_HEADER
 #define REALLOC( _pointer_, _current_, _size_ )                       \
           FT_SET_ERROR( MEM_Realloc( _pointer_, _current_, _size_ ) )
 
-#define ALLOC_ARRAY( _pointer_, _count_, _type_ )       \
-          FT_SET_ERROR( MEM_Alloc( _pointer_,           \
-                        (_count_)*sizeof ( _type_ ) ) )
+#define ALLOC_ARRAY( _pointer_, _count_, _type_ )                  \
+          FT_SET_ERROR( MEM_Alloc( _pointer_,                      \
+                                   (_count_)*sizeof ( _type_ ) ) )
 
-#define REALLOC_ARRAY( _pointer_, _current_, _count_, _type_ ) \
-          FT_SET_ERROR( MEM_Realloc( _pointer_,                \
-                        (_current_)*sizeof ( _type_ ),         \
-                        (_count_)*sizeof ( _type_ ) ) )
+#define REALLOC_ARRAY( _pointer_, _current_, _count_, _type_ )       \
+          FT_SET_ERROR( MEM_Realloc( _pointer_,                      \
+                                     (_current_)*sizeof ( _type_ ),  \
+                                     (_count_)*sizeof ( _type_ ) ) )
 
-#define FREE( _pointer_ )  \
+#define FREE( _pointer_ )       \
           MEM_Free( _pointer_ )
 
 

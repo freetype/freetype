@@ -177,6 +177,7 @@ FT_BEGIN_HEADER
                           FT_Pos       x,
                           FT_Pos       y );
 
+
   FT_LOCAL void
   T1_Builder_Close_Contour( T1_Builder*  builder );
 

@@ -105,14 +105,15 @@ FT_BEGIN_HEADER
   } T1_SizeRec;
 
 
-  FT_LOCAL
-  void T1_Size_Done( T1_Size   size );
+  FT_LOCAL void
+  T1_Size_Done( T1_Size  size );
 
-  FT_LOCAL
-  FT_Error  T1_Size_Reset( T1_Size  size );
+  FT_LOCAL FT_Error
+  T1_Size_Reset( T1_Size  size );
 
-  FT_LOCAL
-  FT_Error  T1_Size_Init( T1_Size  size );
+  FT_LOCAL FT_Error
+  T1_Size_Init( T1_Size  size );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -147,12 +148,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL void
   T1_Face_Done( T1_Face  face );
-
-  FT_LOCAL FT_Error
-  T1_Size_Init( T1_Size  size );
-  
-  FT_LOCAL void
-  T1_Size_Done( T1_Size  size );
 
   FT_LOCAL FT_Error
   T1_GlyphSlot_Init( T1_GlyphSlot  slot );

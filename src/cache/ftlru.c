@@ -35,6 +35,7 @@
     FT_Error    error;
     FT_LruList  list;
 
+
     if ( !alist || !clazz )
       return FTC_Err_Invalid_Argument;
 
@@ -72,6 +73,7 @@
     FT_Memory         memory;
     FT_LruList_Class  clazz;
 
+
     if ( !list )
       return;
 
@@ -85,7 +87,6 @@
 
     FREE( list );
   }
-
 
 
   FT_EXPORT_DEF( void )
@@ -106,6 +107,7 @@
     while ( node )
     {
       FT_LruNode  next = node->next;
+
 
       if ( clazz->node_done )
         clazz->node_done( node, list );
@@ -179,7 +181,7 @@
       {
         *pnode      = node->next;
         node->next  = list->nodes;
-        list->nodes  = node;
+        list->nodes = node;
       }
       result = node;
       goto Exit;
@@ -193,8 +195,9 @@
     if ( list->max_nodes > 0 && list->num_nodes >= list->max_nodes )
     {
       /* this list list is full; we will now flush */
-      /* the oldest node, if there's one !!       */
+      /* the oldest node, if there's one!          */
       FT_LruNode  last = *plast;
+
 
       if ( last )
       {
@@ -223,7 +226,7 @@
         }
 
         /* in case of error during the flush or done/init cycle, */
-        /* we need to discard the node..                         */
+        /* we need to discard the node                           */
         if ( clazz->node_done )
           clazz->node_done( last, list );
 
@@ -258,12 +261,12 @@
   }
 
 
-
   FT_EXPORT_DEF( void )
   FT_LruList_Remove( FT_LruList  list,
                      FT_LruNode  node )
   {
     FT_LruNode  *pnode;
+
 
     if ( !list || !node )
       return;
@@ -275,6 +278,7 @@
       {
         FT_Memory         memory = list->memory;
         FT_LruList_Class  clazz  = list->clazz;
+
 
         *pnode     = node->next;
         node->next = NULL;
@@ -292,7 +296,6 @@
   }
 
 
-
   FT_EXPORT_DEF( void )
   FT_LruList_Remove_Selection( FT_LruList             list,
                                FT_LruNode_SelectFunc  select_func,
@@ -301,6 +304,7 @@
     FT_LruNode       *pnode, node;
     FT_LruList_Class  clazz;
     FT_Memory         memory;
+
 
     if ( !list || !select_func )
       return;

@@ -1527,7 +1527,7 @@ def dump_mac_indices( file, all_glyphs ):
   write( "  {\n" )
 
   for name in mac_standard_names:
-    write( "    " + repr( all_glyphs.index(name) ) + ",\n" )
+    write( "    " + repr( all_glyphs.index( name ) ) + ",\n" )
 
   write( "    0\n" )
   write( "  };\n" )
@@ -1634,22 +1634,24 @@ def main():
 
   count_sid = len( sid_standard_names )
 
-  # mac_extras contains the list of glyph names in the Macintosh standard
-  # encoding which are not in either the Adobe Glyph List or the SID Standard Names
+  # 'mac_extras' contains the list of glyph names in the Macintosh standard
+  # encoding which are not in either the Adobe Glyph List or the SID
+  # Standard Names.
   #
   mac_extras = filter_glyph_names( mac_standard_names, adobe_glyph_names() )
   mac_extras = filter_glyph_names( mac_extras, sid_standard_names )
 
-  # base_list contains the first names of our final glyph names table. It consists
-  # of the "mac_extras" glyph names, followed by the SID Standard names
+  # 'base_list' contains the first names of our final glyph names table.
+  # It consists of the 'mac_extras' glyph names, followed by the SID
+  # Standard names.
   #
   mac_extras_count = len( mac_extras )
   t1_bias          = mac_extras_count
   base_list        = mac_extras + sid_standard_names
 
-  # adobe_list contains the glyph names that are in the AGL, but no in
-  # the base_list, they will be placed after base_list glyph names in
-  # our final table..
+  # 'adobe_list' contains the glyph names that are in the AGL, but not in
+  # the base_list; they will be placed after base_list glyph names in
+  # our final table.
   #
   adobe_list  = filter_glyph_names( adobe_glyph_names(), base_list )
   adobe_count = len( adobe_list )

@@ -50,7 +50,7 @@ THE SOFTWARE.
 
 
 #if defined( FT_DEBUG_LEVEL_TRACE )
-  static char*  tableNames[] =
+  static const char*  tableNames[] =
   {
     "prop", "accl", "mtrcs", "bmps", "imtrcs",
     "enc", "swidth", "names", "accel"
@@ -95,7 +95,7 @@ THE SOFTWARE.
     PCF_Table  tables;
 
     FT_Memory     memory = FT_FACE(face)->memory;
-    unsigned int  i;
+    unsigned int  n;
 
 
     if ( FILE_Seek ( 0 )                   ||
@@ -109,7 +109,7 @@ THE SOFTWARE.
       return PCF_Err_Out_Of_Memory;
 
     tables = face->toc.tables;
-    for ( i = 0; i < toc->count; i++ )
+    for ( n = 0; n < toc->count; n++ )
     {
       if ( READ_Fields( pcf_table_header, tables ) )
         goto Exit;
@@ -119,8 +119,8 @@ THE SOFTWARE.
 #if defined( FT_DEBUG_LEVEL_TRACE )
 
     {
-      unsigned int  i,j;
-      char*         name = "?";
+      unsigned int  i, j;
+      const char    *name = "?";
 
 
       FT_TRACE4(( "Tables count: %ld\n", face->toc.count ));
@@ -129,7 +129,7 @@ THE SOFTWARE.
       {
         for( j = 0; j < sizeof ( tableNames ) / sizeof ( tableNames[0] ); j++ )
           if ( tables[i].type == (unsigned int)( 1 << j ) )
-            name=tableNames[j];
+            name = tableNames[j];
         FT_TRACE4(( "Table %d: type=%-6s format=0x%04lX "
                     "size=0x%06lX (%8ld) offset=0x%04lX\n",
                     i, name,

@@ -73,11 +73,12 @@ FT_BEGIN_HEADER
   typedef struct FT_LruListRec_*  FT_LruList;
 
   /* list class handle */
-  typedef const struct FT_LruList_ClassRec_*   FT_LruList_Class;
+  typedef const struct FT_LruList_ClassRec_*  FT_LruList_Class;
 
-  /* an list node handle */
-  typedef struct  FT_LruNodeRec_*   FT_LruNode;
+  /* a list node handle */
+  typedef struct FT_LruNodeRec_*  FT_LruNode;
   
+
   /* the list node structure */
   typedef struct  FT_LruNodeRec_
   {
@@ -100,40 +101,40 @@ FT_BEGIN_HEADER
   } FT_LruListRec;
 
 
- /* initialize a list list */
+  /* initialize a list list */
   typedef FT_Error  (*FT_LruList_InitFunc)( FT_LruList  list );
   
- /* finalize a list list */
+  /* finalize a list list */
   typedef void      (*FT_LruList_DoneFunc)( FT_LruList  list );
 
- /* this method is used to initialize a new list element node */
+  /* this method is used to initialize a new list element node */
   typedef FT_Error  (*FT_LruNode_InitFunc)( FT_LruNode  node,
                                             FT_LruKey   key,
                                             FT_LruList  list );
 
- /* this method is used to finalize a given list element node */
+  /* this method is used to finalize a given list element node */
   typedef void      (*FT_LruNode_DoneFunc)( FT_LruNode  node,
                                             FT_LruList  list );
 
- /* If defined, this method is called when the list if full        */
- /* during the lookup process -- it is used to change the contents */
- /* of a list element node, instead of calling `done_element()',   */
- /* then `init_element'.  Set it to 0 for default behaviour.       */
+  /* If defined, this method is called when the list if full        */
+  /* during the lookup process -- it is used to change the contents */
+  /* of a list element node, instead of calling `done_element()',   */
+  /* then `init_element()'.  Set it to 0 for default behaviour.     */
   typedef FT_Error  (*FT_LruNode_FlushFunc)( FT_LruNode  node,
                                              FT_LruKey   new_key,
                                              FT_LruList  list );
 
- /* If defined, this method is used to compare a list element node */
- /* with a given key during a lookup.  If set to 0, the `key'      */
- /* fields will be directly compared instead.                      */
+  /* If defined, this method is used to compare a list element node */
+  /* with a given key during a lookup.  If set to 0, the `key'      */
+  /* fields will be directly compared instead.                      */
   typedef FT_Bool   (*FT_LruNode_CompareFunc)( FT_LruNode  node,
                                                FT_LruKey   key,
                                                FT_LruList  list );
 
-  /* A selector is used to indicate whether a given list element node    */
-  /* is part of a selection for FT_LruList_Remove_Selection().  The function */
-  /* must return true (i.e., non-null) to indicate that the node is part */
-  /* of it.                                                              */
+  /* A selector is used to indicate whether a given list element node */
+  /* is part of a selection for FT_LruList_Remove_Selection().  The   */
+  /* functrion must return true (i.e., non-null) to indicate that the */
+  /* node is part of it.                                              */
   typedef FT_Bool    (*FT_LruNode_SelectFunc)( FT_LruNode  node,
                                                FT_Pointer  data,
                                                FT_LruList  list );
@@ -154,8 +155,8 @@ FT_BEGIN_HEADER
   } FT_LruList_ClassRec;
 
 
- /* the following functions must be exported in the case where applications */
- /* would want to write their own cache classes..                           */
+  /* The following functions must be exported in the case where */
+  /* applications would want to write their own cache classes.  */
 
   FT_EXPORT( FT_Error )
   FT_LruList_New( FT_LruList_Class  clazz,
@@ -173,9 +174,9 @@ FT_BEGIN_HEADER
 
 
   FT_EXPORT( FT_Error )
-  FT_LruList_Lookup( FT_LruList    list,
-                     FT_LruKey     key,
-                     FT_LruNode   *anode );
+  FT_LruList_Lookup( FT_LruList  list,
+                     FT_LruKey   key,
+                     FT_LruNode *anode );
 
 
   FT_EXPORT( void )
