@@ -107,6 +107,9 @@
     trace_cidobjs,
     trace_cidparse,
 
+    /* Windows fonts component */
+    trace_winfnt,
+
     /* other trace levels */
 
     /* the last level must always be `trace_max' */
