@@ -10,7 +10,7 @@
   is called `libttf'.  They are *not* compatible!
 
 
-  FreeType 2.1.2
+  FreeType 2.1.3
   ==============
 
   Please   read  the  docs/CHANGES   file,  it   contains  IMPORTANT
@@ -22,9 +22,9 @@
   Note  that the  FreeType 2  documentation  is now  available as  a
   separate package from our sites.  See:
 
-    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.1.2.tar.bz2
-    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.1.2.tar.gz
-    ftp://ftp.freetype.org/pub/freetype2/ftdoc212.zip
+    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.1.3.tar.bz2
+    ftp://ftp.freetype.org/pub/freetype2/ftdocs-2.1.3.tar.gz
+    ftp://ftp.freetype.org/pub/freetype2/ftdoc213.zip
 
 
   Reports
