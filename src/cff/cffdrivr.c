@@ -228,7 +228,7 @@
                       FT_UInt     buffer_max )
   {
     CFF_Font*           font   = (CFF_Font*)face->extra.data;
-    FT_Memory           memory = FT_FACE_MEMORY(face);
+    FT_Memory           memory = FT_FACE_MEMORY( face );
     FT_String*          gname;
     FT_UShort           sid;
     PSNames_Interface*  psnames;
@@ -341,6 +341,7 @@
     CFF_Font*           cff;
     CFF_Charset*        charset;
     PSNames_Interface*  psnames;
+    FT_Memory           memory = FT_FACE_MEMORY( face );
     FT_String*          name;
     FT_UShort           sid;
     FT_UInt             i;
@@ -367,7 +368,7 @@
       if ( sid > 390 )
         FREE( name );
 
-      if ( !ret )
+      if ( !result )
         return i;
     }
 
