@@ -389,6 +389,8 @@
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   ah_outline_load( AH_Outline  outline,
+                   FT_Fixed    x_scale,
+                   FT_Fixed    y_scale,
                    FT_Face     face )
   {
     FT_Memory    memory       = outline->memory;
@@ -461,8 +463,8 @@
       outline->horz_major_dir = AH_DIR_RIGHT;
     }
 
-    outline->x_scale = face->size->metrics.x_scale;
-    outline->y_scale = face->size->metrics.y_scale;
+    outline->x_scale = x_scale;
+    outline->y_scale = y_scale;
 
     points = outline->points;
     if ( outline->num_points == 0 )
@@ -478,8 +480,6 @@
       /* compute coordinates */
       {
         FT_Vector*  vec     = source->points;
-        FT_Fixed    x_scale = outline->x_scale;
-        FT_Fixed    y_scale = outline->y_scale;
 
 
         for ( point = points; point < point_limit; vec++, point++ )

@@ -1391,7 +1391,7 @@
 
       /* now, load the slot image into the auto-outline, and run the */
       /* automatic hinting process                                   */
-      error = ah_outline_load( outline, face );   /* XXX: change to slot */
+      error = ah_outline_load( outline, x_scale, y_scale, face );
       if ( error )
         goto Exit;
 
