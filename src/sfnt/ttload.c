@@ -5,7 +5,7 @@
 /*    Load the basic TrueType tables, i.e., tables that can be either in   */
 /*    TTF or OTF fonts (body).                                             */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -28,6 +28,7 @@
 
 #include <stdlib.h>  /* for qsort */
 
+
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -48,6 +49,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face :: A face object handle.                                      */
+  /*                                                                       */
   /*    tag  :: The searched tag.                                          */
   /*                                                                       */
   /* <Return>                                                              */
@@ -57,8 +59,8 @@
   TT_LookUp_Table( TT_Face   face,
                    FT_ULong  tag  )
   {
-    TT_Table   entry;
-    TT_Table   limit;
+    TT_Table  entry;
+    TT_Table  limit;
 
 
     FT_TRACE3(( "TT_LookUp_Table: %08p, `%c%c%c%c' -- ",
@@ -95,7 +97,9 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A face object handle.                                    */
+  /*                                                                       */
   /*    tag    :: The searched tag.                                        */
+  /*                                                                       */
   /*    stream :: The stream to seek when the table is found.              */
   /*                                                                       */
   /* <Output>                                                              */
@@ -110,8 +114,8 @@
                  FT_Stream  stream,
                  FT_ULong*  length )
   {
-    TT_Table   table;
-    FT_Error   error;
+    TT_Table  table;
+    FT_Error  error;
 
 
     table = TT_LookUp_Table( face, tag );
@@ -134,14 +138,16 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    TT_Load_SFNT_HeaderRec                                                */
+  /*    TT_Load_SFNT_HeaderRec                                             */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the header of a SFNT font file.  Supports collections.       */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face       :: A handle to the target face object.                  */
+  /*                                                                       */
   /*    stream     :: The input stream.                                    */
+  /*                                                                       */
   /*    face_index :: If the font is a collection, the number of the font  */
   /*                  in the collection, ignored otherwise.                */
   /*                                                                       */
@@ -161,9 +167,9 @@
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   TT_Load_SFNT_HeaderRec( TT_Face       face,
-                       FT_Stream     stream,
-                       FT_Long       face_index,
-                       SFNT_Header   sfnt )
+                          FT_Stream     stream,
+                          FT_Long       face_index,
+                          SFNT_Header   sfnt )
   {
     FT_Error   error;
     FT_ULong   format_tag;
@@ -190,21 +196,23 @@
       FT_FRAME_START( 8 ),
         FT_FRAME_LONG( version ),
         FT_FRAME_LONG( count   ),
-      FT_FRAME_END };
+      FT_FRAME_END
+    };
 
 
     FT_TRACE2(( "TT_Load_SFNT_HeaderRec: %08p, %ld\n",
                 face, face_index ));
 
-    face->ttc_header.tag      = 0;
-    face->ttc_header.version  = 0;
-    face->ttc_header.count    = 0;
+    face->ttc_header.tag     = 0;
+    face->ttc_header.version = 0;
+    face->ttc_header.count   = 0;
 
     face->num_tables = 0;
 
     /* first of all, read the first 4 bytes.  If it is `ttcf', then the */
     /* file is a TrueType collection, otherwise it can be any other     */
     /* kind of font.                                                    */
+    /*                                                                  */
     if ( FT_READ_ULONG( format_tag ) )
       goto Exit;
 
@@ -215,8 +223,8 @@
 
       FT_TRACE3(( "TT_Load_SFNT_HeaderRec: file is a collection\n" ));
 
-      /* it's a TrueType collection, i.e. a file containing several */
-      /* font files.  Read the font directory now                   */
+      /* It is a TrueType collection, i.e. a file containing several */
+      /* font files.  Read the font directory now                    */
       if ( FT_STREAM_READ_FIELDS( ttc_header_fields, &face->ttc_header ) )
         goto Exit;
 
@@ -239,7 +247,7 @@
 
       /* seek to the appropriate TrueType file, then read tag */
       if ( FT_STREAM_SEEK( face->ttc_header.offsets[face_index] ) ||
-           FT_READ_LONG( format_tag )                           )
+           FT_READ_LONG( format_tag )                             )
         goto Exit;
     }
 
@@ -284,6 +292,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    stream :: The input stream.                                        */
+  /*                                                                       */
   /*    sfnt   :: The SFNT directory header.                               */
   /*                                                                       */
   /* <Return>                                                              */
@@ -293,14 +302,14 @@
   /*    The stream cursor must be at the font file's origin.               */
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
-  TT_Load_Directory( TT_Face       face,
-                     FT_Stream     stream,
-                     SFNT_Header   sfnt )
+  TT_Load_Directory( TT_Face      face,
+                     FT_Stream    stream,
+                     SFNT_Header  sfnt )
   {
-    FT_Error   error;
-    FT_Memory  memory = stream->memory;
+    FT_Error     error;
+    FT_Memory    memory = stream->memory;
 
-    TT_TableRec *entry, *limit;
+    TT_TableRec  *entry, *limit;
 
 
     FT_TRACE2(( "TT_Load_Directory: %08p\n", face ));
@@ -444,6 +453,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
@@ -545,6 +555,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
@@ -666,7 +677,9 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face     :: A handle to the target face object.                    */
+  /*                                                                       */
   /*    stream   :: The input stream.                                      */
+  /*                                                                       */
   /*    vertical :: A boolean flag.  If set, load vertical metrics.        */
   /*                                                                       */
   /* <Return>                                                              */
@@ -694,6 +707,7 @@
     if ( vertical )
     {
       /* The table is optional, quit silently if it wasn't found       */
+      /*                                                               */
       /* XXX: Some fonts have a valid vertical header with a non-null  */
       /*      `number_of_VMetrics' fields, but no corresponding `vmtx' */
       /*      table to get the metrics from (e.g. mingliu).            */
@@ -753,8 +767,8 @@
       goto Exit;
 
     {
-      TT_LongMetrics   cur   = *longs;
-      TT_LongMetrics   limit = cur + num_longs;
+      TT_LongMetrics  cur   = *longs;
+      TT_LongMetrics  limit = cur + num_longs;
 
 
       for ( ; cur < limit; cur++ )
@@ -806,7 +820,9 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face     :: A handle to the target face object.                    */
+  /*                                                                       */
   /*    stream   :: The input stream.                                      */
+  /*                                                                       */
   /*    vertical :: A boolean flag.  If set, load vertical metrics.        */
   /*                                                                       */
   /* <Return>                                                              */
@@ -906,6 +922,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
@@ -915,14 +932,14 @@
   TT_Load_Names( TT_Face    face,
                  FT_Stream  stream )
   {
-    FT_Error   error;
-    FT_Memory  memory = stream->memory;
+    FT_Error      error;
+    FT_Memory     memory = stream->memory;
 
-    FT_ULong   table_pos, table_len;
-    FT_ULong   storageOffset, storageSize;
-    FT_Byte*   storage;
+    FT_ULong      table_pos, table_len;
+    FT_ULong      storageOffset, storageSize;
+    FT_Byte*      storage;
 
-    TT_NameTable   names;
+    TT_NameTable  names;
 
     const FT_Frame_Field  name_table_fields[] =
     {
@@ -972,10 +989,10 @@
 
     /* check the 'storageOffset' field */
     storageOffset = names->storageOffset;
-    if ( storageOffset <  (FT_ULong)(6 + 12*names->numNameRecords) ||
-         table_len     <= storageOffset                            )
+    if ( storageOffset <  (FT_ULong)( 6 + 12 * names->numNameRecords ) ||
+         table_len     <= storageOffset                                )
     {
-      FT_ERROR(( "TT.load_names: invalid 'name' table\n" ));
+      FT_ERROR(( "TT_Load_Names: invalid `name' table\n" ));
       error = SFNT_Err_Name_Table_Missing;
       goto Exit;
     }
@@ -984,11 +1001,12 @@
 
     /* Allocate the array of name records. */
     if ( FT_ALLOC( names->names,
-                names->numNameRecords*sizeof(TT_NameEntryRec) + storageSize )  ||
-         FT_FRAME_ENTER( names->numNameRecords * 12L ) )
+                   names->numNameRecords * sizeof ( TT_NameEntryRec ) +
+                     storageSize )                                      ||
+         FT_FRAME_ENTER( names->numNameRecords * 12L )                  )
       goto Exit;
 
-    storage = (FT_Byte*)(names->names + names->numNameRecords);
+    storage = (FT_Byte*)( names->names + names->numNameRecords );
 
     /* Load the name records and determine how much storage is needed */
     /* to hold the strings themselves.                                */
@@ -1002,8 +1020,8 @@
         if ( FT_STREAM_READ_FIELDS( name_record_fields, cur ) )
           break;
 
-        /* invalid name entries will have "cur->string" set to NULL !! */
-        if ( (FT_ULong)(cur->stringOffset + cur->stringLength) < storageSize )
+        /* invalid name entries will have "cur->string" set to NULL! */
+        if ( (FT_ULong)( cur->stringOffset + cur->stringLength ) < storageSize )
           cur->string = storage + cur->stringOffset;
         else
         {
@@ -1016,18 +1034,17 @@
 
     FT_FRAME_EXIT();
 
-    if (error)
+    if ( error )
       goto Exit;
 
-    storageOffset -= 6 + 12*names->numNameRecords;
+    storageOffset -= 6 + 12 * names->numNameRecords;
     if ( FT_STREAM_SKIP( storageOffset )        ||
          FT_STREAM_READ( storage, storageSize ) )
       goto Exit;
 
-
 #ifdef FT_DEBUG_LEVEL_TRACE
 
-      /* Print Name Record Table in case of debugging */
+      /* print Name Record Table in case of debugging */
       {
         TT_NameEntryRec*  cur   = names->names;
         TT_NameEntryRec*  limit = cur + names->numNameRecords;
@@ -1039,24 +1056,24 @@
 
 
           FT_TRACE3(( "(%2d %2d %4x %2d)  ",
-                       cur->platformID,
-                       cur->encodingID,
-                       cur->languageID,
-                       cur->nameID ));
+                      cur->platformID,
+                      cur->encodingID,
+                      cur->languageID,
+                      cur->nameID ));
 
           /* I know that M$ encoded strings are Unicode,            */
           /* but this works reasonable well for debugging purposes. */
           if ( cur->string )
             for ( j = 0; j < (FT_UInt)cur->stringLength; j++ )
             {
-              FT_Byte  c = *(FT_Byte*)(cur->string + j);
+              FT_Byte  c = *(FT_Byte*)( cur->string + j );
 
 
               if ( c >= 32 && c < 128 )
                 FT_TRACE3(( "%c", c ));
             }
           else
-            FT_TRACE3(( "INVALID ENTRY !!\n" ));
+            FT_TRACE3(( "Invalid entry!\n" ));
 
           FT_TRACE3(( "\n" ));
         }
@@ -1088,8 +1105,8 @@
   FT_LOCAL_DEF( void )
   TT_Free_Names( TT_Face  face )
   {
-    FT_Memory      memory = face->root.driver->root.memory;
-    TT_NameTable   names  = &face->name_table;
+    FT_Memory     memory = face->root.driver->root.memory;
+    TT_NameTable  names  = &face->name_table;
 
 
     /* free strings table */
@@ -1115,6 +1132,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: A handle to the input stream.                            */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1127,21 +1145,22 @@
   TT_Load_CMap( TT_Face    face,
                 FT_Stream  stream )
   {
-    FT_Error       error;
+    FT_Error  error;
+
 
     error = face->goto_table( face, TTAG_cmap, stream, &face->cmap_size );
     if ( error )
     {
-      FT_TRACE2(( "No 'cmap' table in font !\n" ));
+      FT_TRACE2(( "No `cmap' table in font !\n" ));
       error = SFNT_Err_CMap_Table_Missing;
       goto Exit;
     }
     
     if ( !FT_FRAME_EXTRACT( face->cmap_size, face->cmap_table ) )
-      FT_TRACE2(( "'cmap' table loaded\n" ));
+      FT_TRACE2(( "`cmap' table loaded\n" ));
     else
     {
-      FT_ERROR(( "'cmap' table is too short !!\n" ));
+      FT_ERROR(( "`cmap' table is too short!\n" ));
       face->cmap_size = 0;
     }
     
@@ -1213,7 +1232,7 @@
 
       for ( ; charmap < limit; charmap++ )
       {
-        TT_CMapTable   cmap;
+        TT_CMapTable  cmap;
 
 
         charmap->root.face = (FT_Face)face;
@@ -1234,7 +1253,7 @@
 
 
         if ( FT_STREAM_SEEK( table_start + (FT_Long)cmap->offset ) ||
-             FT_STREAM_READ_FIELDS( cmap_rec_fields, cmap )             )
+             FT_STREAM_READ_FIELDS( cmap_rec_fields, cmap )        )
           goto Exit;
 
         cmap->offset = FT_STREAM_POS();
@@ -1249,6 +1268,7 @@
 
 #endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1259,6 +1279,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: A handle to the input stream.                            */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1352,7 +1373,7 @@
     if ( error )
     {
       FT_TRACE2(( "is missing!\n" ));
-      face->os2.version = 0xFFFF;
+      face->os2.version = 0xFFFFU;
       error = SFNT_Err_Ok;
       goto Exit;
     }
@@ -1401,6 +1422,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: A handle to the input stream.                            */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1459,6 +1481,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: A handle to the input stream.                            */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1526,6 +1549,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1603,6 +1627,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1648,7 +1673,7 @@
 
       if ( coverage == 0x0001 )
       {
-        FT_UInt          num_pairs;
+        FT_UInt        num_pairs;
         TT_Kern0_Pair  pair;
         TT_Kern0_Pair  limit;
 
@@ -1685,7 +1710,7 @@
         /* ensure that the kerning pair table is sorted (yes, some */
         /* fonts have unsorted tables!)                            */
         {
-          FT_UInt          i;
+          FT_UInt        i;
           TT_Kern0_Pair  pair0;
 
 
@@ -1722,6 +1747,7 @@
 #undef  TT_KERN_INDEX
 #define TT_KERN_INDEX( g1, g2 )  ( ( (FT_ULong)g1 << 16 ) | g2 )
 
+
   FT_CALLBACK_DEF( int )
   tt_kern_pair_compare( const void*  a,
                         const void*  b )
@@ -1737,6 +1763,7 @@
            ( index1 > index2 ?  1 : 0 ));
   }
 
+
 #undef TT_KERN_INDEX
 
 
@@ -1750,6 +1777,7 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: A handle to the input stream.                            */
   /*                                                                       */
   /* <Return>                                                              */
@@ -1759,12 +1787,12 @@
   TT_Load_Hdmx( TT_Face    face,
                 FT_Stream  stream )
   {
-    FT_Error  error;
-    FT_Memory memory = stream->memory;
+    FT_Error   error;
+    FT_Memory  memory = stream->memory;
 
-    TT_Hdmx   hdmx = &face->hdmx;
-    FT_Long   num_glyphs;
-    FT_Long   record_size;
+    TT_Hdmx    hdmx = &face->hdmx;
+    FT_Long    num_glyphs;
+    FT_Long    record_size;
 
 
     hdmx->version     = 0;
@@ -1807,7 +1835,7 @@
              FT_READ_BYTE( cur->max_width ) )
           goto Exit;
 
-        if ( FT_ALLOC( cur->widths, num_glyphs )     ||
+        if ( FT_ALLOC( cur->widths, num_glyphs )       ||
              FT_STREAM_READ( cur->widths, num_glyphs ) )
           goto Exit;
 

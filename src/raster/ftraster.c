@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType glyph rasterizer (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -3211,9 +3211,9 @@
 
 
   static void
-  ft_black_set_mode( TRaster_Instance* raster,
-                     unsigned long     mode,
-                     const char*       palette )
+  ft_black_set_mode( TRaster_Instance*  raster,
+                     unsigned long      mode,
+                     const char*        palette )
   {
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
 

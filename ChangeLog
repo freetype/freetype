@@ -6,12 +6,23 @@
 
 	* src/otlayout/otlcommn.c, src/otlayout/otlcommn.h: s/index/idx/.
 	* src/psaux/t1cmap.c: Ditto.
+	* src/sfnt/ttcmap0.c: Ditto.
 
 	* include/freetype/internal/tttypes.h,
 	include/freetype/internal/sfnt.h (TT_Goto_Table_Func): Renamed to ...
 	(TT_Loader_GotoTableFunc): This.
 	* src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings): Fix debug
 	messages.
+	* src/psnames/psmodule.c (psnames_interface)
+	[!FT_CONFIG_OPTION_ADOBE_GLYPH_LIST]: Fix typo.
+	* src/sfnt/sfdriver.c (get_sfnt_table): 16bit fix.
+	* src/sfnt/ttcmap.c: 16bit fixes (0xFFFF -> 0xFFFFU).
+	* src/sfnt/ttcmap0.c: 16bit fixes.
+	(TT_Build_CMaps): Simplify debug messages.
+	(tt_cmap12_char_next): Fix offset.
+	* src/sfnt/ttload.c (TT_Load_Names, TT_Load_CMap): Fix debug
+	messages.
+	(TT_Load_OS2): 16bit fix.
 
 2002-03-30  David Turner  <david@freetype.org>
 
@@ -439,8 +450,8 @@
 	* src/type1/t1cmap.h, src/type1/t1cmap.c: Adding (still
 	experimental) code for Type 1 charmap processing.
 
-	* src/sfnt/ttcmap0.c: Completing the experimental SFNT charmap
-	processing.
+	* src/sfnt/ttcmap0.c: New file.  It contains a new, still
+	experimental SFNT charmap processing support.
 
 	* include/freetype/internal/ftobjs.h: Adding validation support as
 	well as internal charmap object definitions (FT_CMap != FT_CharMap).

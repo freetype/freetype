@@ -5,7 +5,7 @@
 /*    Postcript name table processing for TrueType and OpenType fonts      */
 /*    (body).                                                              */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -32,6 +32,7 @@
 #include "ttload.h"
 
 #include "sferrors.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -155,14 +156,14 @@
   Load_Format_20( TT_Face    face,
                   FT_Stream  stream )
   {
-    FT_Memory  memory = stream->memory;
-    FT_Error   error;
+    FT_Memory   memory = stream->memory;
+    FT_Error    error;
 
-    FT_Int     num_glyphs;
-    FT_UShort  num_names;
+    FT_Int      num_glyphs;
+    FT_UShort   num_names;
 
-    FT_UShort* glyph_indices = 0;
-    FT_Char**  name_strings  = 0;
+    FT_UShort*  glyph_indices = 0;
+    FT_Char**   name_strings  = 0;
 
 
     if ( FT_READ_USHORT( num_glyphs ) )
@@ -241,7 +242,7 @@
 
     /* all right, set table fields and exit successfuly */
     {
-      TT_Post_20   table = &face->postscript_names.names.format_20;
+      TT_Post_20  table = &face->postscript_names.names.format_20;
 
 
       table->num_glyphs    = (FT_UShort)num_glyphs;
@@ -250,7 +251,6 @@
       table->glyph_names   = name_strings;
     }
     return SFNT_Err_Ok;
-
 
   Fail1:
     {
@@ -292,7 +292,7 @@
       goto Exit;
     }
 
-    if ( FT_ALLOC    ( offset_table, num_glyphs ) ||
+    if ( FT_ALLOC( offset_table, num_glyphs )       ||
          FT_STREAM_READ( offset_table, num_glyphs ) )
       goto Fail;
 
@@ -316,7 +316,7 @@
 
     /* OK, set table fields and exit successfuly */
     {
-      TT_Post_25   table = &face->postscript_names.names.format_25;
+      TT_Post_25  table = &face->postscript_names.names.format_25;
 
 
       table->num_glyphs = (FT_UShort)num_glyphs;
@@ -380,8 +380,8 @@
   FT_LOCAL_DEF( void )
   TT_Free_Post_Names( TT_Face  face )
   {
-    FT_Memory       memory = face->root.memory;
-    TT_Post_Names   names  = &face->postscript_names;
+    FT_Memory      memory = face->root.memory;
+    TT_Post_Names  names  = &face->postscript_names;
 
 
     if ( names->loaded )
@@ -390,8 +390,8 @@
       {
       case 0x00020000L:
         {
-          TT_Post_20   table = &names->names.format_20;
-          FT_UShort    n;
+          TT_Post_20  table = &names->names.format_20;
+          FT_UShort   n;
 
 
           FT_FREE( table->glyph_indices );
@@ -407,7 +407,7 @@
 
       case 0x00028000L:
         {
-          TT_Post_25   table = &names->names.format_25;
+          TT_Post_25  table = &names->names.format_25;
 
 
           FT_FREE( table->offsets );
@@ -446,8 +446,8 @@
                   FT_UInt      idx,
                   FT_String**  PSname )
   {
-    FT_Error            error;
-    TT_Post_Names       names;
+    FT_Error         error;
+    TT_Post_Names    names;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     PSNames_Service  psnames;
@@ -480,7 +480,7 @@
 
     case 0x00020000L:
       {
-        TT_Post_20   table = &names->names.format_20;
+        TT_Post_20  table = &names->names.format_20;
 
 
         if ( !names->loaded )
@@ -505,7 +505,7 @@
 
     case 0x00028000L:
       {
-        TT_Post_25   table = &names->names.format_25;
+        TT_Post_25  table = &names->names.format_25;
 
 
         if ( !names->loaded )

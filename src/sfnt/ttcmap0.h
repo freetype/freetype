@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ttcmap.h                                                               */
+/*  ttcmap0.h                                                              */
 /*                                                                         */
-/*    TrueType character mapping table (cmap) support (specification).     */
+/*    TrueType new character mapping table (cmap) support (specification). */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 2002 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -27,19 +27,21 @@
 
 FT_BEGIN_HEADER
 
-  typedef struct TT_CMapRec_
+  typedef struct  TT_CMapRec_
   {
     FT_CMapRec  cmap;
-    FT_Byte*    data;  /* pointer to in-memory cmap table */
+    FT_Byte*    data;           /* pointer to in-memory cmap table */
 
   } TT_CMapRec, *TT_CMap;
 
-  typedef const struct TT_CMap_ClassRec_*   TT_CMap_Class;
+  typedef const struct TT_CMap_ClassRec_*  TT_CMap_Class;
 
-  typedef FT_Error  (*TT_CMap_ValidateFunc)( FT_Byte*      data,
-                                             FT_Validator  valid );
 
-  typedef struct TT_CMap_ClassRec_
+  typedef FT_Error
+  (*TT_CMap_ValidateFunc)( FT_Byte*      data,
+                           FT_Validator  valid );
+
+  typedef struct  TT_CMap_ClassRec_
   {
     FT_CMap_ClassRec      clazz;
     FT_UInt               format;
@@ -47,19 +49,21 @@ FT_BEGIN_HEADER
 
   } TT_CMap_ClassRec;
 
-  typedef struct TT_ValidatorRec_
+
+  typedef struct  TT_ValidatorRec_
   {
     FT_ValidatorRec  validator;
     FT_UInt          num_glyphs;
     
   } TT_ValidatorRec, *TT_Validator;
 
-#define  TT_VALIDATOR(x)          ((TT_Validator)(x))
-#define  TT_VALID_GLYPH_COUNT(v)  TT_VALIDATOR(v)->num_glyphs
+
+#define TT_VALIDATOR( x )          ((TT_Validator)( x ))
+#define TT_VALID_GLYPH_COUNT( x )  TT_VALIDATOR( x )->num_glyphs
 
 
   FT_LOCAL( FT_Error )
-  TT_Build_CMaps( TT_Face   face );
+  TT_Build_CMaps( TT_Face  face );
 
 
 FT_END_HEADER

@@ -5,7 +5,7 @@
 /*    Load the basic TrueType tables, i.e., tables that can be either in   */
 /*    TTF or OTF fonts (specification).                                    */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -42,9 +42,9 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   TT_Load_SFNT_HeaderRec( TT_Face       face,
-                       FT_Stream     stream,
-                       FT_Long       face_index,
-                       SFNT_Header   sfnt );
+                          FT_Stream     stream,
+                          FT_Long       face_index,
+                          SFNT_Header   sfnt );
 
   FT_LOCAL( FT_Error )
   TT_Load_Directory( TT_Face       face,

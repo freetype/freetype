@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    PSNames module implementation (body).                                */
 /*                                                                         */
-/*  Copyright 1996-2001 by                                                 */
+/*  Copyright 1996-2001, 2002 by                                           */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -186,8 +186,8 @@
       count = (FT_UInt)( map - table->maps );
 
       if ( count > 0 && FT_REALLOC( table->maps,
-                                 num_glyphs * sizeof ( PS_UniMap ),
-                                 count * sizeof ( PS_UniMap ) ) )
+                                    num_glyphs * sizeof ( PS_UniMap ),
+                                    count * sizeof ( PS_UniMap ) ) )
         count = 0;
 
       if ( count == 0 )
@@ -311,7 +311,6 @@
 
 #else
 
-    0,
     0,
     0,
     0,
