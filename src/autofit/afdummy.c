@@ -1,4 +1,5 @@
 #include "afdummy.h"
+#include "afhints.h"
 
 
   static FT_Error

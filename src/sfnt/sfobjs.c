@@ -160,7 +160,7 @@
     FT_Int            found_win     = -1;
     FT_Int            found_unicode = -1;
 
-    FT_Bool           is_english;
+    FT_Bool           is_english = 0;
 
     TT_NameEntry_ConvertFunc  convert;
 
