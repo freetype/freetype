@@ -342,16 +342,19 @@
 
 
   /* prototypes used for sweep function dispatch */
-  typedef void  Function_Sweep_Init( RAS_ARGS Short*  min,
-                                              Short*  max );
+  typedef void
+  Function_Sweep_Init( RAS_ARGS Short*  min,
+                                Short*  max );
 
-  typedef void  Function_Sweep_Span( RAS_ARGS Short       y,
-                                              FT_F26Dot6  x1,
-                                              FT_F26Dot6  x2,
-                                              PProfile    left,
-                                              PProfile    right );
+  typedef void
+  Function_Sweep_Span( RAS_ARGS Short       y,
+                                FT_F26Dot6  x1,
+                                FT_F26Dot6  x2,
+                                PProfile    left,
+                                PProfile    right );
 
-  typedef void  Function_Sweep_Step( RAS_ARG );
+  typedef void
+  Function_Sweep_Step( RAS_ARG );
 
 
   /* NOTE: These operations are only valid on 2's complement processors */
@@ -513,8 +516,8 @@
   /*    High :: Set to True for high precision (typically for ppem < 18),  */
   /*            false otherwise.                                           */
   /*                                                                       */
-  static
-  void  Set_High_Precision( RAS_ARGS Int  High )
+  static void
+  Set_High_Precision( RAS_ARGS Int  High )
   {
     if ( High )
     {
@@ -553,8 +556,8 @@
   /*   SUCCESS on success.  FAILURE in case of overflow or of incoherent   */
   /*   profile.                                                            */
   /*                                                                       */
-  static
-  Bool  New_Profile( RAS_ARGS TStates  aState )
+  static Bool
+  New_Profile( RAS_ARGS TStates  aState )
   {
     if ( !ras.fProfile )
     {
@@ -615,8 +618,8 @@
   /* <Return>                                                              */
   /*    SUCCESS on success.  FAILURE in case of overflow or incoherency.   */
   /*                                                                       */
-  static
-  Bool  End_Profile( RAS_ARG )
+  static Bool
+  End_Profile( RAS_ARG )
   {
     Long      h;
     PProfile  oldProfile;
@@ -676,8 +679,8 @@
   /* <Return>                                                              */
   /*    SUCCESS on success.  FAILURE in case of overflow.                  */
   /*                                                                       */
-  static
-  Bool  Insert_Y_Turn( RAS_ARGS Int  y )
+  static Bool
+  Insert_Y_Turn( RAS_ARGS Int  y )
   {
     PLong     y_turns;
     Int       y2, n;
@@ -727,8 +730,8 @@
   /* <Return>                                                              */
   /*    SUCCESS on success.  FAILURE in case of overflow.                  */
   /*                                                                       */
-  static
-  Bool  Finalize_Profile_Table( RAS_ARG )
+  static Bool
+  Finalize_Profile_Table( RAS_ARG )
   {
     Int       bottom, top;
     UShort    n;
@@ -793,8 +796,8 @@
   /*    This routine is the `beef' of this component.  It is  _the_ inner  */
   /*    loop that should be optimized to hell to get the best performance. */
   /*                                                                       */
-  static
-  void  Split_Conic( TPoint*  base )
+  static void
+  Split_Conic( TPoint*  base )
   {
     Long  a, b;
 
@@ -830,8 +833,8 @@
   /*    inner loops that should be optimized like hell to get the best     */
   /*    performance.                                                       */
   /*                                                                       */
-  static
-  void  Split_Cubic( TPoint*  base )
+  static void
+  Split_Cubic( TPoint*  base )
   {
     Long  a, b, c, d;
 
@@ -883,13 +886,13 @@
   /* <Return>                                                              */
   /*    SUCCESS on success, FAILURE on render pool overflow.               */
   /*                                                                       */
-  static
-  Bool  Line_Up( RAS_ARGS Long  x1,
-                          Long  y1,
-                          Long  x2,
-                          Long  y2,
-                          Long  miny,
-                          Long  maxy )
+  static Bool
+  Line_Up( RAS_ARGS Long  x1,
+                    Long  y1,
+                    Long  x2,
+                    Long  y2,
+                    Long  miny,
+                    Long  maxy )
   {
     Long   Dx, Dy;
     Int    e1, e2, f1, f2, size;     /* XXX: is `Short' sufficient? */
@@ -1022,13 +1025,13 @@
   /* <Return>                                                              */
   /*    SUCCESS on success, FAILURE on render pool overflow.               */
   /*                                                                       */
-  static
-  Bool  Line_Down( RAS_ARGS Long  x1,
-                            Long  y1,
-                            Long  x2,
-                            Long  y2,
-                            Long  miny,
-                            Long  maxy )
+  static Bool
+  Line_Down( RAS_ARGS Long  x1,
+                      Long  y1,
+                      Long  x2,
+                      Long  y2,
+                      Long  miny,
+                      Long  maxy )
   {
     Bool  result, fresh;
 
@@ -1069,11 +1072,11 @@
   /* <Return>                                                              */
   /*    SUCCESS on success, FAILURE on render pool overflow.               */
   /*                                                                       */
-  static
-  Bool  Bezier_Up( RAS_ARGS Int        degree,
-                            TSplitter  splitter,
-                            Long       miny,
-                            Long       maxy )
+  static Bool
+  Bezier_Up( RAS_ARGS Int        degree,
+                      TSplitter  splitter,
+                      Long       miny,
+                      Long       maxy )
   {
     Long   y1, y2, e, e2, e0;
     Short  f1;
@@ -1202,11 +1205,11 @@
   /* <Return>                                                              */
   /*    SUCCESS on success, FAILURE on render pool overflow.               */
   /*                                                                       */
-  static
-  Bool  Bezier_Down( RAS_ARGS Int        degree,
-                              TSplitter  splitter,
-                              Long       miny,
-                              Long       maxy )
+  static Bool
+  Bezier_Down( RAS_ARGS Int        degree,
+                        TSplitter  splitter,
+                        Long       miny,
+                        Long       maxy )
   {
     TPoint*  arc = ras.arc;
     Bool     result, fresh;
@@ -1249,9 +1252,9 @@
   /*   SUCCESS on success, FAILURE on render pool overflow or incorrect    */
   /*   profile.                                                            */
   /*                                                                       */
-  static
-  Bool  Line_To( RAS_ARGS Long  x,
-                          Long  y )
+  static Bool
+  Line_To( RAS_ARGS Long  x,
+                    Long  y )
   {
     /* First, detect a change of direction */
 
@@ -1343,11 +1346,11 @@
   /*   SUCCESS on success, FAILURE on render pool overflow or incorrect    */
   /*   profile.                                                            */
   /*                                                                       */
-  static
-  Bool  Conic_To( RAS_ARGS Long  cx,
-                           Long  cy,
-                           Long  x,
-                           Long  y )
+  static Bool
+  Conic_To( RAS_ARGS Long  cx,
+                     Long  cy,
+                     Long  x,
+                     Long  y )
   {
     Long     y1, y2, y3, x3, ymin, ymax;
     TStates  state_bez;
@@ -1457,13 +1460,13 @@
   /*   SUCCESS on success, FAILURE on render pool overflow or incorrect    */
   /*   profile.                                                            */
   /*                                                                       */
-  static
-  Bool  Cubic_To( RAS_ARGS Long  cx1,
-                           Long  cy1,
-                           Long  cx2,
-                           Long  cy2,
-                           Long  x,
-                           Long  y )
+  static Bool
+  Cubic_To( RAS_ARGS Long  cx1,
+                     Long  cy1,
+                     Long  cx2,
+                     Long  cy2,
+                     Long  x,
+                     Long  y )
   {
     Long     y1, y2, y3, y4, x4, ymin1, ymax1, ymin2, ymax2;
     TStates  state_bez;
@@ -1589,10 +1592,10 @@
   /* <Return>                                                              */
   /*    SUCCESS on success, FAILURE on error.                              */
   /*                                                                       */
-  static
-  Bool  Decompose_Curve( RAS_ARGS UShort  first,
-                                  UShort  last,
-                                  int     flipped )
+  static Bool
+  Decompose_Curve( RAS_ARGS UShort  first,
+                            UShort  last,
+                            int     flipped )
   {
     FT_Vector   v_last;
     FT_Vector   v_control;
@@ -1805,8 +1808,8 @@
   /*    SUCCESS on success, FAILURE if any error was encountered during    */
   /*    rendering.                                                         */
   /*                                                                       */
-  static
-  Bool  Convert_Glyph( RAS_ARGS int  flipped )
+  static Bool
+  Convert_Glyph( RAS_ARGS int  flipped )
   {
     int       i;
     unsigned  start;
@@ -1880,8 +1883,8 @@
   /*                                                                       */
   /*    Initializes an empty linked list.                                  */
   /*                                                                       */
-  static
-  void  Init_Linked( TProfileList*  l )
+  static void
+  Init_Linked( TProfileList*  l )
   {
     *l = NULL;
   }
@@ -1893,9 +1896,9 @@
   /*                                                                       */
   /*    Inserts a new profile in a linked list.                            */
   /*                                                                       */
-  static
-  void  InsNew( PProfileList  list,
-                PProfile      profile )
+  static void
+  InsNew( PProfileList  list,
+          PProfile      profile )
   {
     PProfile  *old, current;
     Long       x;
@@ -1924,9 +1927,9 @@
   /*                                                                       */
   /*    Removes an old profile from a linked list.                         */
   /*                                                                       */
-  static
-  void  DelOld( PProfileList  list,
-                PProfile      profile )
+  static void
+  DelOld( PProfileList  list,
+          PProfile      profile )
   {
     PProfile  *old, current;
 
@@ -1957,8 +1960,8 @@
   /*                                                                       */
   /*    Update all X offsets of a drawing list.                            */
   /*                                                                       */
-  static
-  void  Update( PProfile  first )
+  static void
+  Update( PProfile  first )
   {
     PProfile  current = first;
 
@@ -1981,8 +1984,8 @@
   /*    an algorithm which is fast in this case.  Bubble sort is enough    */
   /*    and simple.                                                        */
   /*                                                                       */
-  static
-  void  Sort( PProfileList  list )
+  static void
+  Sort( PProfileList  list )
   {
     PProfile  *old, current, next;
 
@@ -2033,9 +2036,9 @@
   /*                                                                       */
   /*************************************************************************/
 
-  static
-  void  Vertical_Sweep_Init( RAS_ARGS Short*  min,
-                                      Short*  max )
+  static void
+  Vertical_Sweep_Init( RAS_ARGS Short*  min,
+                                Short*  max )
   {
     Long  pitch = ras.target.pitch;
 
@@ -2052,12 +2055,12 @@
   }
 
 
-  static
-  void  Vertical_Sweep_Span( RAS_ARGS Short       y,
-                                      FT_F26Dot6  x1,
-                                      FT_F26Dot6  x2,
-                                      PProfile    left,
-                                      PProfile    right )
+  static void
+  Vertical_Sweep_Span( RAS_ARGS Short       y,
+                                FT_F26Dot6  x1,
+                                FT_F26Dot6  x2,
+                                PProfile    left,
+                                PProfile    right )
   {
     Long   e1, e2;
     int    c1, c2;
@@ -2118,12 +2121,12 @@
   }
 
 
-  static
-  void Vertical_Sweep_Drop( RAS_ARGS Short       y,
-                                     FT_F26Dot6  x1,
-                                     FT_F26Dot6  x2,
-                                     PProfile    left,
-                                     PProfile    right )
+  static void
+  Vertical_Sweep_Drop( RAS_ARGS Short       y,
+                                FT_F26Dot6  x1,
+                                FT_F26Dot6  x2,
+                                PProfile    left,
+                                PProfile    right )
   {
     Long   e1, e2;
     Short  c1, f1;
@@ -2229,8 +2232,8 @@
   }
 
 
-  static
-  void Vertical_Sweep_Step( RAS_ARG )
+  static void
+  Vertical_Sweep_Step( RAS_ARG )
   {
     ras.traceOfs += ras.traceIncr;
   }
@@ -2245,9 +2248,9 @@
   /*                                                                     */
   /***********************************************************************/
 
-  static
-  void  Horizontal_Sweep_Init( RAS_ARGS Short*  min,
-                                        Short*  max )
+  static void
+  Horizontal_Sweep_Init( RAS_ARGS Short*  min,
+                                  Short*  max )
   {
     /* nothing, really */
     FT_UNUSED( raster );
@@ -2256,12 +2259,12 @@
   }
 
 
-  static
-  void  Horizontal_Sweep_Span( RAS_ARGS Short       y,
-                                        FT_F26Dot6  x1,
-                                        FT_F26Dot6  x2,
-                                        PProfile    left,
-                                        PProfile    right )
+  static void
+  Horizontal_Sweep_Span( RAS_ARGS Short       y,
+                                  FT_F26Dot6  x1,
+                                  FT_F26Dot6  x2,
+                                  PProfile    left,
+                                  PProfile    right )
   {
     Long   e1, e2;
     PByte  bits;
@@ -2299,12 +2302,12 @@
   }
 
 
-  static
-  void  Horizontal_Sweep_Drop( RAS_ARGS Short       y,
-                                        FT_F26Dot6  x1,
-                                        FT_F26Dot6  x2,
-                                        PProfile    left,
-                                        PProfile    right )
+  static void
+  Horizontal_Sweep_Drop( RAS_ARGS Short       y,
+                                  FT_F26Dot6  x1,
+                                  FT_F26Dot6  x2,
+                                  PProfile    left,
+                                  PProfile    right )
   {
     Long   e1, e2;
     PByte  bits;
@@ -2395,8 +2398,8 @@
   }
 
 
-  static
-  void Horizontal_Sweep_Step( RAS_ARG )
+  static void
+  Horizontal_Sweep_Step( RAS_ARG )
   {
     /* Nothing, really */
     FT_UNUSED( raster );
@@ -2422,9 +2425,9 @@
   /*                                                                       */
   /*************************************************************************/
 
-  static
-  void  Vertical_Gray_Sweep_Init( RAS_ARGS Short*  min,
-                                           Short*  max )
+  static void
+  Vertical_Gray_Sweep_Init( RAS_ARGS Short*  min,
+                                     Short*  max )
   {
     Long  pitch, byte_len;
 
@@ -2449,8 +2452,8 @@
   }
 
 
-  static
-  void  Vertical_Gray_Sweep_Step( RAS_ARG )
+  static void
+  Vertical_Gray_Sweep_Step( RAS_ARG )
   {
     Int    c1, c2;
     PByte  pix, bit, bit2;
@@ -2538,12 +2541,12 @@
   }
 
 
-  static
-  void  Horizontal_Gray_Sweep_Span( RAS_ARGS Short       y,
-                                             FT_F26Dot6  x1,
-                                             FT_F26Dot6  x2,
-                                             PProfile    left,
-                                             PProfile    right )
+  static void
+  Horizontal_Gray_Sweep_Span( RAS_ARGS Short       y,
+                                       FT_F26Dot6  x1,
+                                       FT_F26Dot6  x2,
+                                       PProfile    left,
+                                       PProfile    right )
   {
     /* nothing, really */
     FT_UNUSED( raster );
@@ -2555,12 +2558,12 @@
   }
 
 
-  static
-  void  Horizontal_Gray_Sweep_Drop( RAS_ARGS Short       y,
-                                             FT_F26Dot6  x1,
-                                             FT_F26Dot6  x2,
-                                             PProfile    left,
-                                             PProfile    right )
+  static void
+  Horizontal_Gray_Sweep_Drop( RAS_ARGS Short       y,
+                                       FT_F26Dot6  x1,
+                                       FT_F26Dot6  x2,
+                                       PProfile    left,
+                                       PProfile    right )
   {
     Long   e1, e2;
     PByte  pixel;
@@ -2648,8 +2651,8 @@
   /*                                                                       */
   /*************************************************************************/
 
-  static
-  Bool  Draw_Sweep( RAS_ARG )
+  static Bool
+  Draw_Sweep( RAS_ARG )
   {
     Short         y, y_change, y_height;
 
@@ -2900,8 +2903,8 @@
   /* <Return>                                                              */
   /*    Renderer error code.                                               */
   /*                                                                       */
-  static
-  int  Render_Single_Pass( RAS_ARGS Bool  flipped )
+  static int
+  Render_Single_Pass( RAS_ARGS Bool  flipped )
   {
     Short  i, j, k;
 
@@ -2972,8 +2975,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  Render_Glyph( RAS_ARG )
+  FT_LOCAL_DEF FT_Error
+  Render_Glyph( RAS_ARG )
   {
     FT_Error  error;
 
@@ -3035,8 +3038,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  Render_Gray_Glyph( RAS_ARG )
+  FT_LOCAL_DEF FT_Error
+  Render_Gray_Glyph( RAS_ARG )
   {
     Long      pixel_width;
     FT_Error  error;
@@ -3106,8 +3109,8 @@
 #endif /* FT_RASTER_OPTION_ANTI_ALIASING */
 
 
-  static
-  void  ft_black_init( TRaster_Instance*  raster )
+  static void
+  ft_black_init( TRaster_Instance*  raster )
   {
     FT_UInt  n;
     FT_ULong c;
@@ -3145,9 +3148,9 @@
 #ifdef _STANDALONE_
 
 
-  static
-  int  ft_black_new( void*      memory,
-                     FT_Raster  *araster )
+  static int
+  ft_black_new( void*      memory,
+                FT_Raster  *araster )
   {
      static FT_RasterRec_  the_raster;
 
@@ -3160,8 +3163,8 @@
   }
 
 
-  static
-  void  ft_black_done( FT_Raster  raster )
+  static void
+  ft_black_done( FT_Raster  raster )
   {
     /* nothing */
     raster->init = 0;
@@ -3171,9 +3174,9 @@
 #else /* _STANDALONE_ */
 
 
-  static
-  int  ft_black_new( FT_Memory           memory,
-                     TRaster_Instance**  araster )
+  static int
+  ft_black_new( FT_Memory           memory,
+                TRaster_Instance**  araster )
   {
     FT_Error           error;
     TRaster_Instance*  raster;
@@ -3192,8 +3195,8 @@
   }
 
 
-  static
-  void ft_black_done( TRaster_Instance*  raster )
+  static void
+  ft_black_done( TRaster_Instance*  raster )
   {
     FT_Memory  memory = (FT_Memory)raster->memory;
     FREE( raster );
@@ -3203,10 +3206,10 @@
 #endif /* _STANDALONE_ */
 
 
-  static
-  void ft_black_reset( TRaster_Instance*  raster,
-                       const char*        pool_base,
-                       long               pool_size )
+  static void
+  ft_black_reset( TRaster_Instance*  raster,
+                  const char*        pool_base,
+                  long               pool_size )
   {
     if ( raster && pool_base && pool_size >= 4096 )
     {
@@ -3217,10 +3220,10 @@
   }
 
 
-  static
-  void ft_black_set_mode( TRaster_Instance* raster,
-                          unsigned long     mode,
-                          const char*       palette )
+  static void
+  ft_black_set_mode( TRaster_Instance* raster,
+                     unsigned long     mode,
+                     const char*       palette )
   {
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING
 
@@ -3244,9 +3247,9 @@
   }
 
 
-  static
-  int  ft_black_render( TRaster_Instance*  raster,
-                        FT_Raster_Params*  params )
+  static int
+  ft_black_render( TRaster_Instance*  raster,
+                   FT_Raster_Params*  params )
   {
     FT_Outline*  outline    = (FT_Outline*)params->source;
     FT_Bitmap*   target_map = params->target;

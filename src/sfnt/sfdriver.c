@@ -36,9 +36,9 @@
 #include <string.h>     /* for strcmp() */
 
 
-  static
-  void*  get_sfnt_table( TT_Face      face,
-                         FT_Sfnt_Tag  tag )
+  static void*
+  get_sfnt_table( TT_Face      face,
+                  FT_Sfnt_Tag  tag )
   {
     void*  table;
 
@@ -84,11 +84,11 @@
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
 
-  static
-  FT_Error  get_sfnt_glyph_name( TT_Face     face,
-                                 FT_UInt     glyph_index,
-                                 FT_Pointer  buffer,
-                                 FT_UInt     buffer_max )
+  static FT_Error
+  get_sfnt_glyph_name( TT_Face     face,
+                       FT_UInt     glyph_index,
+                       FT_Pointer  buffer,
+                       FT_UInt     buffer_max )
   {
     FT_String*  gname;
     FT_Error    error;
@@ -114,7 +114,7 @@
 #endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
 
 
-  FT_CALLBACK_DEF(FT_Module_Interface)
+  FT_CALLBACK_DEF( FT_Module_Interface )
   SFNT_Get_Interface( FT_Module    module,
                       const char*  interface )
   {

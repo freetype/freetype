@@ -28,22 +28,22 @@
 FT_BEGIN_HEADER
 
 
-  FT_LOCAL
-  FT_Error  SFNT_Init_Face( FT_Stream      stream,
-                            TT_Face        face,
-                            FT_Int         face_index,
-                            FT_Int         num_params,
-                            FT_Parameter*  params );
+  FT_LOCAL FT_Error
+  SFNT_Init_Face( FT_Stream      stream,
+                  TT_Face        face,
+                  FT_Int         face_index,
+                  FT_Int         num_params,
+                  FT_Parameter*  params );
 
-  FT_LOCAL
-  FT_Error  SFNT_Load_Face( FT_Stream      stream,
-                            TT_Face        face,
-                            FT_Int         face_index,
-                            FT_Int         num_params,
-                            FT_Parameter*  params );
+  FT_LOCAL FT_Error
+  SFNT_Load_Face( FT_Stream      stream,
+                  TT_Face        face,
+                  FT_Int         face_index,
+                  FT_Int         num_params,
+                  FT_Parameter*  params );
 
-  FT_LOCAL
-  void  SFNT_Done_Face( TT_Face  face );
+  FT_LOCAL void
+  SFNT_Done_Face( TT_Face  face );
 
 
 FT_END_HEADER

@@ -63,13 +63,13 @@
   /*               convention).  A positive y offset indicates a downwards */
   /*               direction!                                              */
   /*                                                                       */
-  static
-  void  blit_sbit( FT_Bitmap*  target,
-                   FT_Byte*    source,
-                   FT_Int      line_bits,
-                   FT_Bool     byte_padded,
-                   FT_Int      x_offset,
-                   FT_Int      y_offset )
+  static void
+  blit_sbit( FT_Bitmap*  target,
+             FT_Byte*    source,
+             FT_Int      line_bits,
+             FT_Bool     byte_padded,
+             FT_Int      x_offset,
+             FT_Int      y_offset )
   {
     FT_Byte*   line_buff;
     FT_Int     line_incr;
@@ -221,9 +221,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  static
-  FT_Error  Load_SBit_Const_Metrics( TT_SBit_Range*  range,
-                                     FT_Stream       stream )
+  static FT_Error
+  Load_SBit_Const_Metrics( TT_SBit_Range*  range,
+                           FT_Stream       stream )
   {
     FT_Error  error;
 
@@ -253,10 +253,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  static
-  FT_Error  Load_SBit_Range_Codes( TT_SBit_Range*  range,
-                                   FT_Stream       stream,
-                                   FT_Bool         load_offsets )
+  static FT_Error
+  Load_SBit_Range_Codes( TT_SBit_Range*  range,
+                         FT_Stream       stream,
+                         FT_Bool         load_offsets )
   {
     FT_Error   error;
     FT_ULong   count, n, size;
@@ -316,9 +316,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  static
-  FT_Error  Load_SBit_Range( TT_SBit_Range*  range,
-                             FT_Stream       stream )
+  static FT_Error
+  Load_SBit_Range( TT_SBit_Range*  range,
+                   FT_Stream       stream )
   {
     FT_Error   error;
     FT_Memory  memory = stream->memory;
@@ -391,9 +391,9 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_SBit_Strikes( TT_Face    face,
-                                  FT_Stream  stream )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_SBit_Strikes( TT_Face    face,
+                        FT_Stream  stream )
   {
     FT_Error   error  = 0;
     FT_Memory  memory = stream->memory;
@@ -588,8 +588,8 @@
   /* <Input>                                                               */
   /*    face :: The target face object.                                    */
   /*                                                                       */
-  FT_LOCAL_DEF
-  void  TT_Free_SBit_Strikes( TT_Face  face )
+  FT_LOCAL_DEF void
+  TT_Free_SBit_Strikes( TT_Face  face )
   {
     FT_Memory        memory       = face->root.memory;
     TT_SBit_Strike*  strike       = face->sbit_strikes;
@@ -623,11 +623,11 @@
   }
 
   
-  FT_LOCAL_DEF
-  FT_Error  TT_Set_SBit_Strike( TT_Face    face,
-                                FT_Int     x_ppem,
-                                FT_Int     y_ppem,
-                                FT_ULong  *astrike_index )
+  FT_LOCAL_DEF FT_Error
+  TT_Set_SBit_Strike( TT_Face    face,
+                      FT_Int     x_ppem,
+                      FT_Int     y_ppem,
+                      FT_ULong  *astrike_index )
   {
     FT_Int  i;
 
@@ -673,11 +673,11 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means the glyph index was found.           */
   /*                                                                       */
-  static
-  FT_Error  Find_SBit_Range( FT_UInt          glyph_index,
-                             TT_SBit_Strike*  strike,
-                             TT_SBit_Range**  arange,
-                             FT_ULong*        aglyph_offset )
+  static FT_Error
+  Find_SBit_Range( FT_UInt          glyph_index,
+                   TT_SBit_Strike*  strike,
+                   TT_SBit_Range**  arange,
+                   FT_ULong*        aglyph_offset )
   {
     TT_SBit_Range  *range, *range_limit;
 
@@ -779,15 +779,16 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.  Returns                    */
-  /*    SFNT_Err_Invalid_Argument if no sbit exists for the requested glyph. */
+  /*    SFNT_Err_Invalid_Argument if no sbit exists for the requested      */
+  /*    glyph.                                                             */
   /*                                                                       */
-  static
-  FT_Error  Find_SBit_Image( TT_Face           face,
-                             FT_UInt           glyph_index,
-                             FT_ULong          strike_index,
-                             TT_SBit_Range*   *arange,
-                             TT_SBit_Strike*  *astrike,
-                             FT_ULong         *aglyph_offset )
+  static FT_Error
+  Find_SBit_Image( TT_Face           face,
+                   FT_UInt           glyph_index,
+                   FT_ULong          strike_index,
+                   TT_SBit_Range*   *arange,
+                   TT_SBit_Strike*  *astrike,
+                   FT_ULong         *aglyph_offset )
   {
     FT_Error         error;
     TT_SBit_Strike*  strike;
@@ -845,10 +846,10 @@
   /*    positioned just after the metrics header in the `EBDT' table on    */
   /*    function exit.                                                     */
   /*                                                                       */
-  static
-  FT_Error  Load_SBit_Metrics( FT_Stream         stream,
-                               TT_SBit_Range*    range,
-                               TT_SBit_Metrics*  metrics )
+  static FT_Error
+  Load_SBit_Metrics( FT_Stream         stream,
+                     TT_SBit_Range*    range,
+                     TT_SBit_Metrics*  metrics )
   {
     FT_Error  error = SFNT_Err_Ok;
 
@@ -931,9 +932,9 @@
   /*                                                                       */
   /*    metrics :: The corresponding metrics structure.                    */
   /*                                                                       */
-  static
-  void  Crop_Bitmap( FT_Bitmap*        map,
-                     TT_SBit_Metrics*  metrics )
+  static void
+  Crop_Bitmap( FT_Bitmap*        map,
+               TT_SBit_Metrics*  metrics )
   {
     /***********************************************************************/
     /*                                                                     */
@@ -1122,14 +1123,14 @@
   }
 
 
-  static
-  FT_Error Load_SBit_Single( FT_Bitmap*        map,
-                             FT_Int            x_offset,
-                             FT_Int            y_offset,
-                             FT_Int            pix_bits,
-                             FT_UShort         image_format,
-                             TT_SBit_Metrics*  metrics,
-                             FT_Stream         stream )
+  static FT_Error
+  Load_SBit_Single( FT_Bitmap*        map,
+                    FT_Int            x_offset,
+                    FT_Int            y_offset,
+                    FT_Int            pix_bits,
+                    FT_UShort         image_format,
+                    TT_SBit_Metrics*  metrics,
+                    FT_Stream         stream )
   {
     FT_Error  error;
 
@@ -1202,16 +1203,16 @@
   }
 
 
-  static
-  FT_Error Load_SBit_Image( TT_SBit_Strike*   strike,
-                            TT_SBit_Range*    range,
-                            FT_ULong          ebdt_pos,
-                            FT_ULong          glyph_offset,
-                            FT_Bitmap*        map,
-                            FT_Int            x_offset,
-                            FT_Int            y_offset,
-                            FT_Stream         stream,
-                            TT_SBit_Metrics*  metrics )
+  static FT_Error
+  Load_SBit_Image( TT_SBit_Strike*   strike,
+                   TT_SBit_Range*    range,
+                   FT_ULong          ebdt_pos,
+                   FT_ULong          glyph_offset,
+                   FT_Bitmap*        map,
+                   FT_Int            x_offset,
+                   FT_Int            y_offset,
+                   FT_Stream         stream,
+                   TT_SBit_Metrics*  metrics )
   {
     FT_Memory  memory = stream->memory;
     FT_Error   error;
@@ -1394,14 +1395,14 @@
   /*  <Note>                                                               */
   /*    The `map.buffer' field is always freed before the glyph is loaded. */
   /*                                                                       */
-  FT_LOCAL_DEF
-  FT_Error  TT_Load_SBit_Image( TT_Face           face,
-                                FT_ULong          strike_index,
-                                FT_UInt           glyph_index,
-                                FT_UInt           load_flags,
-                                FT_Stream         stream,
-                                FT_Bitmap        *map,
-                                TT_SBit_Metrics  *metrics )
+  FT_LOCAL_DEF FT_Error
+  TT_Load_SBit_Image( TT_Face           face,
+                      FT_ULong          strike_index,
+                      FT_UInt           glyph_index,
+                      FT_UInt           load_flags,
+                      FT_Stream         stream,
+                      FT_Bitmap        *map,
+                      TT_SBit_Metrics  *metrics )
   {
     FT_Error         error;
     FT_Memory        memory = stream->memory;
