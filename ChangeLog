@@ -1,3 +1,14 @@
+2003-12-26  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/sfnt.h (TT_Set_SBit_Strike_Func):
+	Use FT_UInt for ppem values.
+	* src/sfnt/ttsbit.c (tt_face_set_sbit_strike): Use FT_UInt for
+	ppem values.
+	* src/sfnt/ttsbit.h: Updated.
+
+	* src/base/ftobjs.c (FT_Set_Pixel_Sizes): Don't allow ppem values
+	larger than -0FFFF.
+
 2003-12-25  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/fttrigon.c, src/base/ftgloadr.c: Inlude

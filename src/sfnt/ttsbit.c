@@ -622,14 +622,14 @@
 
   FT_LOCAL_DEF( FT_Error )
   tt_face_set_sbit_strike( TT_Face    face,
-                           FT_Int     x_ppem,
-                           FT_Int     y_ppem,
+                           FT_UInt    x_ppem,
+                           FT_UInt    y_ppem,
                            FT_ULong  *astrike_index )
   {
     FT_ULong  i;
 
 
-    if ( x_ppem < 0 || x_ppem > 255 ||
+    if ( x_ppem > 255 ||
          y_ppem < 1 || y_ppem > 255 )
       return SFNT_Err_Invalid_PPem;
 

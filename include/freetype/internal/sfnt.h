@@ -250,20 +250,27 @@ FT_BEGIN_HEADER
   /*    returns its metrics.                                               */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face        :: The target face object.                             */
+  /*    face ::                                                            */
+  /*      The target face object.                                          */
   /*                                                                       */
-  /*    x_ppem      :: The horizontal resolution in points per EM.         */
+  /*    strike_index ::                                                    */
+  /*      The strike index.                                                */
   /*                                                                       */
-  /*    y_ppem      :: The vertical resolution in points per EM.           */
+  /*    glyph_index ::                                                     */
+  /*      The current glyph index.                                         */
   /*                                                                       */
-  /*    glyph_index :: The current glyph index.                            */
+  /*    load_flags ::                                                      */
+  /*      The current load flags.                                          */
   /*                                                                       */
-  /*    stream      :: The input stream.                                   */
+  /*    stream ::                                                          */
+  /*      The input stream.                                                */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    amap        :: The target pixmap.                                  */
+  /*    amap ::                                                            */
+  /*      The target pixmap.                                               */
   /*                                                                       */
-  /*    ametrics    :: A big sbit metrics structure for the glyph image.   */
+  /*    ametrics ::                                                        */
+  /*      A big sbit metrics structure for the glyph image.                */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.  Returns an error if no     */
@@ -307,8 +314,8 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef FT_Error
   (*TT_Set_SBit_Strike_Func)( TT_Face    face,
-                              FT_Int     x_ppem,
-                              FT_Int     y_ppem,
+                              FT_UInt    x_ppem,
+                              FT_UInt    y_ppem,
                               FT_ULong  *astrike_index );
 
 
