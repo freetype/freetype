@@ -330,18 +330,20 @@ FT_BEGIN_HEADER
     void
     (*skip_spaces)( PS_Parser  parser );
     void
-    (*skip_alpha)( PS_Parser  parser );
+    (*skip_PS_token)( PS_Parser  parser );
 
     FT_Long
     (*to_int)( PS_Parser  parser );
     FT_Fixed
     (*to_fixed)( PS_Parser  parser,
                  FT_Int     power_ten );
+
     FT_Error
     (*to_bytes)( PS_Parser  parser,
                  FT_Byte*   bytes,
-                 FT_Int     max_bytes,
-                 FT_Int*    pnum_bytes );
+                 FT_Long    max_bytes,
+                 FT_Long*   pnum_bytes,
+                 FT_Bool    delimiters );
 
     FT_Int
     (*to_coord_array)( PS_Parser  parser,

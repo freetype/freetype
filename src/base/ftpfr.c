@@ -26,6 +26,7 @@
   {
     FT_Service_PfrMetrics  service;
 
+
     FT_FACE_LOOKUP_SERVICE( face, service, PFR_METRICS );
 
     return service;
