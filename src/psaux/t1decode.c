@@ -482,10 +482,10 @@
           goto Syntax_Error;
         }
 
-        value = ( (FT_Long)ip[0] << 24 ) |
-                ( (FT_Long)ip[1] << 16 ) |
-                ( (FT_Long)ip[2] << 8  ) |
-                           ip[3];
+        value = (FT_Int32)( ((FT_Long)ip[0] << 24) |
+                            ((FT_Long)ip[1] << 16) |
+                            ((FT_Long)ip[2] << 8 ) |
+                                      ip[3] );
         ip += 4;
         break;
 
