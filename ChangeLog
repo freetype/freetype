@@ -1,3 +1,7 @@
+2003-01-15  David Turner  <david@freetype.org>
+
+    * include/freetype/freetype.h: fixed documentation for FT_Size_Metrics
+
 2003-01-15  James Su  <suzhe@turbolinux.com.cn>
 
     * src/gzip/ftgzip.c: bugfix: couldn't read certain gzip-ed font files

@@ -1133,7 +1133,7 @@ FT_BEGIN_HEADER
   /*                    pixels.  Always positive.                          */
   /*                                                                       */
   /*    descender    :: The descender, expressed in 26.6 fixed point       */
-  /*                    pixels.  Always positive.                          */
+  /*                    pixels.  Always negative.                          */
   /*                                                                       */
   /*    height       :: The text height, expressed in 26.6 fixed point     */
   /*                    pixels.  Always positive.                          */
