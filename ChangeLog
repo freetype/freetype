@@ -1,8 +1,8 @@
 2001-04-27  David Turner  <david@freetype.org>
 
-	* src/base/ftbbox.c (BBox_Cubic_Check): fixed the coefficient     
+	* src/base/ftbbox.c (BBox_Cubic_Check): Fixed the coefficient     
 	normalization algorithm (invalid final bit position, and invalid 
-	shift computation..)
+	shift computation).
 
 2001-04-26  Werner Lemberg  <wl@gnu.org>
 
