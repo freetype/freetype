@@ -829,6 +829,9 @@
       if ( destroy )
         FT_Done_Glyph( glyph );
 
+      /* copy advance - thanks Karsten ;-) */
+      bitmap->root.advance = glyph->advance;
+      
       *the_glyph = FT_GLYPH( bitmap );
     }
 
