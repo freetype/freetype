@@ -2,7 +2,6 @@
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
-exec_prefix_set=no
 
 usage()
 {
@@ -23,7 +22,6 @@ if test $# -eq 0; then
   usage 1 1>&2
 fi
 
-
 while test $# -gt 0; do
   case "$1" in
   -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
@@ -33,6 +31,7 @@ while test $# -gt 0; do
   case $1 in
   --prefix=*)
     prefix=$optarg
+    local_prefix=yes
     ;;
   --prefix)
     echo_prefix=yes
@@ -40,6 +39,7 @@ while test $# -gt 0; do
   --exec-prefix=*)
     exec_prefix=$optarg
     exec_prefix_set=yes
+    local_prefix=yes
     ;;
   --exec-prefix)
     echo_exec_prefix=yes
@@ -64,8 +64,10 @@ while test $# -gt 0; do
   shift
 done
 
-if test "$exec_prefix_set" = "no"; then
-  exec_prefix=$prefix
+if test "$local_prefix" = "yes" ; then
+    if test "$exec_prefix_set" != "yes"; then
+      exec_prefix=$prefix
+    fi
 fi
 
 if test "$echo_prefix" = "yes"; then
