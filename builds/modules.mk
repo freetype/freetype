@@ -32,31 +32,31 @@ endif
 # To build the modules list, we invoke the `make_module_list' target.
 #
 # This rule is commented out by default since FreeType comes already with
-# a ftmodule.h file.
+# an ftmodule.h file.
 #
 #$(MODULE_LIST): make_module_list
+
+
+ifneq ($(findstring $(PLATFORM),dos win32 win16 os2),)
+  OPEN_MODULE   := @echo$(space)
+  CLOSE_MODULE  :=  >> $(subst $(SEP),$(HOSTSEP),$(MODULE_LIST))
+  REMOVE_MODULE := @-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(MODULE_LIST))
+else
+  OPEN_MODULE   := @echo "
+  CLOSE_MODULE  := " >> $(MODULE_LIST)
+  REMOVE_MODULE := @-$(DELETE) $(MODULE_LIST)
+endif
+
 
 # Before the modules list file can be generated, we must remove the file in
 # order to `clean' the list.
 #
 clean_module_list:
-	@-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(MODULE_LIST))
+	$(REMOVE_MODULE)
 	@-echo Regenerating the modules list in $(MODULE_LIST)...
 
 make_module_list: clean_module_list
 	@echo done.
-
-
-# Trailing spaces are protected with a `#' sign to avoid accidental
-# removing.
-#
-ifneq ($(findstring $(PLATFORM),dos win32 win16 os2),)
-  OPEN_MODULE  := @echo$(space)
-  CLOSE_MODULE :=  >> $(subst $(SEP),$(HOSTSEP),$(MODULE_LIST))
-else
-  OPEN_MODULE  := @echo "
-  CLOSE_MODULE := " >> $(MODULE_LIST)
-endif
 
 # $(OPEN_DRIVER) & $(CLOSE_DRIVER) are used to specify a given font driver
 # in the `module.mk' rules file.

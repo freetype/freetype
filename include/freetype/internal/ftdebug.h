@@ -99,6 +99,10 @@ FT_BEGIN_HEADER
     /* Windows fonts component */
     trace_winfnt,
 
+    /* PCF fonts component */
+    trace_pcfdriver,
+    trace_pcfread,
+
     /* the last level must always be `trace_max' */
     trace_max
 
