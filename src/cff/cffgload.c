@@ -543,7 +543,6 @@
     if ( charcode < 0 || charcode > 255 )
       return -1;
 
-
     /* Get code to SID mapping from `cff_standard_encoding'. */
     glyph_sid = CFF_Get_Standard_Encoding( (FT_UInt)charcode );
 

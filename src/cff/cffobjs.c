@@ -50,8 +50,8 @@
   /*                                                                       */
   /*                            SIZE FUNCTIONS                             */
   /*                                                                       */
-  /*  note that we store the global hints in the size's "internal" root    */
-  /*  field                                                                */
+  /*  Note that we store the global hints in the size's "internal" root    */
+  /*  field.                                                               */
   /*                                                                       */
   /*************************************************************************/
 
@@ -59,7 +59,7 @@
   static PSH_Globals_Funcs
   CFF_Size_Get_Globals_Funcs( CFF_Size  size )
   {
-    CFF_Face             face     = (CFF_Face) size->face;
+    CFF_Face             face     = (CFF_Face)size->face;
     CFF_Font*            font     = face->extra.data;
     PSHinter_Interface*  pshinter = font->pshinter;
     FT_Module            module;
@@ -69,7 +69,7 @@
                             "pshinter" );
     return ( module && pshinter && pshinter->get_globals_funcs )
            ? pshinter->get_globals_funcs( module )
-           : 0 ;
+           : 0;
   }
 
 
@@ -99,22 +99,24 @@
 
     if ( funcs )
     {
-      PSH_Globals  globals;
-      CFF_Face     face    = (CFF_Face)size->face;
-      CFF_Font*    font    = face->extra.data;
-      CFF_SubFont* subfont = &font->top_font;
+      PSH_Globals   globals;
+      CFF_Face      face    = (CFF_Face)size->face;
+      CFF_Font*     font    = face->extra.data;
+      CFF_SubFont*  subfont = &font->top_font;
 
-      CFF_Private* cpriv = &subfont->private_dict;
-      T1_Private   priv;
+      CFF_Private*  cpriv   = &subfont->private_dict;
+      T1_Private    priv;
 
-      /* IMPORTANT: the CFF and Type1 private dictionaries have */
-      /*            slightly different structures, we need to   */
-      /* synthetize a type1 dictionary on the fly here !!       */
+
+      /* IMPORTANT: The CFF and Type1 private dictionaries have    */
+      /*            slightly different structures; we need to      */
+      /*            synthetize a type1 dictionary on the fly here. */
 
       {
-        FT_UInt   n, count;
+        FT_UInt  n, count;
 
-        MEM_Set( &priv, 0, sizeof(priv) );
+
+        MEM_Set( &priv, 0, sizeof ( priv ) );
 
         count = priv.num_blue_values = cpriv->num_blue_values;
         for ( n = 0; n < count; n++ )
@@ -136,20 +138,20 @@
         priv.blue_shift = cpriv->blue_shift;
         priv.blue_fuzz  = cpriv->blue_fuzz;
 
-        priv.standard_width[0]  = (FT_UShort) cpriv->standard_width;
-        priv.standard_height[0] = (FT_UShort) cpriv->standard_height;
-        
+        priv.standard_width[0]  = (FT_UShort)cpriv->standard_width;
+        priv.standard_height[0] = (FT_UShort)cpriv->standard_height;
+
         count = priv.num_snap_widths = cpriv->num_snap_widths;
         for ( n = 0; n < count; n++ )
           priv.snap_widths[n] = cpriv->snap_widths[n];
-          
+
         count = priv.num_snap_heights = cpriv->num_snap_heights;
         for ( n = 0; n < count; n++ )
           priv.snap_heights[n] = cpriv->snap_heights[n];
 
-        priv.force_bold           = cpriv->force_bold;
-        priv.language_group       = cpriv->language_group;
-        priv.lenIV                = cpriv->lenIV;
+        priv.force_bold     = cpriv->force_bold;
+        priv.language_group = cpriv->language_group;
+        priv.lenIV          = cpriv->lenIV;
       }
 
       error = funcs->create( size->face->memory, &priv, &globals );
@@ -191,29 +193,32 @@
 
 
   FT_LOCAL_DEF FT_Error
-  CFF_GlyphSlot_Init( CFF_GlyphSlot   slot )
+  CFF_GlyphSlot_Init( CFF_GlyphSlot  slot )
   {
-    CFF_Face              face = (CFF_Face) slot->root.face;
-    CFF_Font*             font = face->extra.data;
-    PSHinter_Interface*   pshinter = font->pshinter;
+    CFF_Face             face     = (CFF_Face)slot->root.face;
+    CFF_Font*            font     = face->extra.data;
+    PSHinter_Interface*  pshinter = font->pshinter;
 
-    if (pshinter)
+
+    if ( pshinter )
     {
       FT_Module  module;
 
-      module = FT_Get_Module( slot->root.face->driver->root.library, "pshinter" );
-      if (module)
+
+      module = FT_Get_Module( slot->root.face->driver->root.library,
+                              "pshinter" );
+      if ( module )
       {
         T2_Hints_Funcs  funcs;
+
 
         funcs = pshinter->get_t2_funcs( module );
         slot->root.internal->glyph_hints = (void*)funcs;
       }
     }
+
     return 0;
   }
-
-
 
 
   /*************************************************************************/
@@ -440,12 +445,12 @@
                  FT_Int         num_params,
                  FT_Parameter*  params )
   {
-    FT_Error            error;
-    SFNT_Interface*     sfnt;
-    PSNames_Interface*  psnames;
-    PSHinter_Interface* pshinter;
-    FT_Bool             pure_cff    = 1;
-    FT_Bool             sfnt_format = 0;
+    FT_Error             error;
+    SFNT_Interface*      sfnt;
+    PSNames_Interface*   psnames;
+    PSHinter_Interface*  pshinter;
+    FT_Bool              pure_cff    = 1;
+    FT_Bool              sfnt_format = 0;
 
 
     sfnt = (SFNT_Interface*)FT_Get_Module_Interface(
@@ -534,13 +539,13 @@
         goto Exit;
 
       cff->pshinter = pshinter;
-      
+
       /* Complement the root flags with some interesting information. */
       /* Note that this is only necessary for pure CFF and CEF fonts. */
 
-      root = &face->root;
-      
+      root             = &face->root;
       root->num_glyphs = cff->num_glyphs;
+
       if ( pure_cff )
       {
         CFF_Font_Dict*  dict = &cff->top_font.font_dict;
