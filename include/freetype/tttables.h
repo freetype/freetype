@@ -663,6 +663,27 @@ FT_BEGIN_HEADER
                       FT_Byte*   buffer,
                       FT_ULong*  length );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Get_CMap_Language_ID                                            */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return TrueType/sfnt specific cmap language ID.  Definitions of    */
+  /*    language ID values are in freetype/ttnameid.h.                     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    charmap ::                                                         */
+  /*      The target charmap.                                              */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    The language ID of `charmap'.  If `charmap' doesn't belong to a    */
+  /*    TrueType/sfnt face, just return 0 as the default value.            */
+  /*                                                                       */
+  FT_EXPORT( FT_ULong )
+  FT_Get_CMap_Language_ID( FT_CharMap  charmap );
+
   /* */
 
 

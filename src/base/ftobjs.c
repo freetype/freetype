@@ -30,6 +30,7 @@
 #include FT_SERVICE_SFNT_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H
 #include FT_SERVICE_GLYPH_DICT_H
+#include FT_SERVICE_TT_CMAP_H
 
 
   FT_BASE_DEF( FT_Pointer )
@@ -2505,6 +2506,28 @@
       return FT_Err_Unimplemented_Feature;
 
     return service->load_table( face, tag, offset, buffer, length );
+  }
+
+
+  FT_EXPORT_DEF( FT_ULong )
+  FT_Get_CMap_Language_ID( FT_CharMap  charmap )
+  {
+    FT_Service_TTCMaps  service;
+    FT_Face             face;
+    TT_CMapInfo         cmap_info;
+
+    
+    if ( !charmap || !charmap->face )
+      return 0;
+
+    face = charmap->face;
+    FT_FACE_FIND_SERVICE( face, service, TT_CMAP );
+    if ( service == NULL )
+      return 0;
+    if ( service->get_cmap_info( charmap, &cmap_info ))
+      return 0;
+
+    return cmap_info.language;
   }
 
 

@@ -34,9 +34,12 @@
 #include "ttpost.h"
 #endif
 
+#include "ttcmap0.h"
+
 #include FT_SERVICE_GLYPH_DICT_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H
 #include FT_SERVICE_SFNT_H
+#include FT_SERVICE_TT_CMAP_H
 
 
  /*
@@ -260,6 +263,15 @@
   };
 
 
+ /*
+  *  TT CMAP INFO
+  *
+  */
+  static const FT_Service_TTCMapsRec  tt_service_get_cmap_info =
+  {
+    (TT_CMap_Info_GetFunc)tt_get_cmap_info
+  };
+
 
  /*
   *  SERVICE LIST
@@ -273,6 +285,7 @@
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
     { FT_SERVICE_ID_GLYPH_DICT,           &sfnt_service_glyph_dict },
 #endif
+    { FT_SERVICE_ID_TT_CMAP,              &tt_service_get_cmap_info },
 
     { NULL, NULL }
   };

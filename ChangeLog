@@ -1,3 +1,28 @@
+2003-12-17  Masatake YAMATO  <jet@gyve.org>
+
+	Add new function FT_Get_CMap_Language_ID to extract the language ID
+	for TrueType/sfnt fonts.
+
+	* include/freetype/internal/services/svttcmap.h: New file.
+	* include/freetype/internal/ftserv.h (FT_SERVICE_TT_CMAP_H): Add
+	svttcmap.h.
+
+	* src/sfnt/sfdriver.c: Include ttcmap0.h.
+	(tt_service_get_cmap_info): New service.
+	(sfnt_services): Updated.
+
+	* src/sfnt/ttcmap0.c (tt_cmap*_get_info): New functions.
+	(tt_cmap*_class_rec): Add tt_cmap*_get_info members.
+	(tt_get_cmap_info): New function.
+	* src/sfnt/ttcmap0.h: Include FT_SERVICE_TT_CMAP_H.
+	(TT_CMap_ClassRec): New field `get_cmap_info'.
+	(tt_get_cmap_info): New declaration.
+
+	* src/base/ftobjs.c: Include FT_SERVICE_TT_CMAP_H.
+	(FT_Get_CMap_Language_ID): New function implementation.
+	* include/freetype/tttables.h (FT_Get_CMap_Language_ID): New
+	function declaration.
+
 2003-12-16  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttcmap.c, src/sfnt/ttcmap.h: Removed.  Obsolete.
@@ -15,7 +40,7 @@
 	TT_CMapDirRec, TT_CMapDirEntryRec, TT_CMap0, TT_CMap2SubHeaderRec,
 	TT_CMap2Rec, TT_CMap4Segment, TT_CMap4Rec, TT_CMap6,
 	TT_CMapGroupRec, TT_CMap8_12Rec, TT_CMap10Rec, TT_CharMap_Func,
-	TT_CharNext_Func, TT_CMapTableRec, TT_CharMapRec): Removed. 
+	TT_CharNext_Func, TT_CMapTableRec, TT_CharMapRec): Removed.
 	Obsolete.
 	* src/cff/cffobjs.h (CFF_CharMapRec): Removed.  Obsolete.
 
@@ -6038,7 +6063,7 @@
 	(html_format): Replaced with ...
 	(html_quote): New function.
 	(html_quote0): New function.
-	(DocCode::dump_html: Small improvement.
+	(DocCode::dump_html): Small improvement.
 	(DocParagraph::dump, DocBlock::html): Use html_quote0 and html_quote.
 
 	* include/freetype/config/ftoption.h: Setting default options for
