@@ -1,3 +1,8 @@
+2000-12-22  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/autohint/ahhint.c (ah_hinter_load_glyph):
+	Removed unnecessary comments and commented-out code.
+
 2000-12-21  David Turner <david.turner@freetype.org>
 
 	* src/cid/cidafm.c, src/cid/cidafm.h: removed un-needed files, 
@@ -6,9 +11,9 @@
 2000-12-21  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/autohint/ahhint.c (ah_hinter_load, ah_hinter_load_glyph):
-	Changed so that	synthetic fonts render correctly.  Previously,
-	the first glyph	rendered from such a font did not have the
-	tranformation matrix applied.
+	Changed so that fonts with a non-standard FontMatrix render
+	correctly.  Previously, the first glyph rendered from such a
+	font did not have the tranformation matrix applied.
 
 2000-12-17  Werner Lemberg  <wl@gnu.org>
 
