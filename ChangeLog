@@ -1,3 +1,19 @@
+2004-05-07  Werner Lemberg  <wl@gnu.org>
+
+	* src/pfr/pfrobjs.c, src/pfr/pfrobjs.h (pfr_face_init,
+	pfr_face_done, pfr_face_get_kerning, pfr_slot_init, pfr_slot_done,
+	pfr_slot_load): Don't use PFR_XXX but FT_XXX arguments which are
+	typecast to the proper PFR_XXX types within the function.
+	Update code accordingly.
+
+	* src/pfr/pfrdrivr.c (pfr_get_kerning, pfr_get_advance,
+	pfr_get_metrics, pfr_get_service): Don't use PFR_XXX but FT_XXX
+	arguments which are typecast to the proper PFR_XXX types within the
+	function.
+	Update code accordingly.
+	Use FT_CALLBACK_DEF throughout.
+	(pfr_metrics_service_rec, pfr_driver_class): Remove casts.
+
 2004-05-06  Masatake YAMATO  <jet@gyve.org>
 
 	* src/truetype/ttgxvar.c (ft_var_load_gvar): Use FT_FACE_STREAM.
