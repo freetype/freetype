@@ -139,7 +139,7 @@
   FT_EXPORT_DEF( void )
   FTC_GCache_Done( FTC_GCache  cache )
   {
-    return ftc_gcache_done( FTC_CACHE(cache) );
+    ftc_gcache_done( FTC_CACHE(cache) );
   }
 
 
