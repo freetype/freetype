@@ -253,7 +253,7 @@
   /*    stream     :: The input stream.                                    */
   /*                                                                       */
   /*    face_index :: If the font is a collection, the number of the font  */
-  /*                  in the collection, ignored otherwise.                */
+  /*                  in the collection.  Must be zero otherwise.          */
   /*                                                                       */
   /* <Output>                                                              */
   /*    sfnt       :: The SFNT header.                                     */
@@ -313,10 +313,9 @@
 
     face->num_tables = 0;
 
-    /* first of all, read the first 4 bytes.  If it is `ttcf', then the */
-    /* file is a TrueType collection, otherwise it can be any other     */
-    /* kind of font.                                                    */
-    /*                                                                  */
+    /* First of all, read the first 4 bytes.  If it is `ttcf', then the   */
+    /* file is a TrueType collection, otherwise it is a single-face font. */
+    /*                                                                    */
     offset = FT_STREAM_POS();
 
     if ( FT_READ_ULONG( format_tag ) )
@@ -357,6 +356,11 @@
       if ( FT_STREAM_SEEK( offset ) ||
            FT_READ_LONG( format_tag )                             )
         goto Exit;
+    }
+    else if ( face_index > 0 )
+    {
+      error = SFNT_Err_Bad_Argument;
+      goto Exit;
     }
 
     /* the format tag was read, now check the rest of the header */

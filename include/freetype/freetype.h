@@ -768,10 +768,12 @@ FT_BEGIN_HEADER
   /*                           collection (i.e., a file which embeds       */
   /*                           several faces), this is the total number of */
   /*                           faces found in the resource.  1 by default. */
+  /*                           Accessing non-existent face indices causes  */
+  /*                           an error.                                   */
   /*                                                                       */
   /*    face_index          :: The index of the face in its font file.     */
   /*                           Usually, this is 0 for all normal font      */
-  /*                           formats.  It can be more in the case of     */
+  /*                           formats.  It can be > 0 in the case of      */
   /*                           collections (which embed several fonts in a */
   /*                           single resource/file).                      */
   /*                                                                       */
@@ -1749,6 +1751,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    face_index :: The index of the face within the resource.  The      */
   /*                  first face has index 0.                              */
+  /*                                                                       */
   /* <Output>                                                              */
   /*    aface      :: A handle to a new face object.                       */
   /*                                                                       */
@@ -1762,9 +1765,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    @FT_New_Face can be used to determine and/or check the font format */
   /*    of a given font resource.  If the `face_index' field is negative,  */
-  /*    the function will _not_ return any face handle in `aface'.  Its    */
-  /*    return value should be 0 if the font format is recognized, or      */
-  /*    non-zero otherwise.                                                */
+  /*    the function will _not_ return any face handle in `aface';  the    */
+  /*    return value is 0 if the font format is recognized, or non-zero    */
+  /*    otherwise.                                                         */
   /*                                                                       */
   /*    Each new face object created with this function also owns a        */
   /*    default @FT_Size object, accessible as `face->size'.               */
@@ -1795,6 +1798,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    face_index :: The index of the face within the resource.  The      */
   /*                  first face has index 0.                              */
+  /*                                                                       */
   /* <Output>                                                              */
   /*    aface      :: A handle to a new face object.                       */
   /*                                                                       */
@@ -1814,8 +1818,8 @@ FT_BEGIN_HEADER
   /*    @FT_New_Memory_Face can be used to determine and/or check the font */
   /*    format of a given font resource.  If the `face_index' field is     */
   /*    negative, the function will _not_ return any face handle in        */
-  /*    `aface'.  Its return value should be 0 if the font format is       */
-  /*    recognized, or non-zero otherwise.                                 */
+  /*    `aface'; the return value is 0 if the font format is recognized,   */
+  /*    or non-zero otherwise.                                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_New_Memory_Face( FT_Library      library,
@@ -1844,6 +1848,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    face_index :: The index of the face within the resource.  The      */
   /*                  first face has index 0.                              */
+  /*                                                                       */
   /* <Output>                                                              */
   /*    aface      :: A handle to a new face object.                       */
   /*                                                                       */
@@ -1855,11 +1860,11 @@ FT_BEGIN_HEADER
   /*    slot for the face object which can be accessed directly through    */
   /*    `face->glyph'.                                                     */
   /*                                                                       */
-  /*    @FT_Open_Face can be used to determine and/or check the font      */
+  /*    @FT_Open_Face can be used to determine and/or check the font       */
   /*    format of a given font resource.  If the `face_index' field is     */
   /*    negative, the function will _not_ return any face handle in        */
-  /*    `*face'.  Its return value should be 0 if the font format is       */
-  /*    recognized, or non-zero otherwise.                                 */
+  /*    `*face'; the return value is 0 if the font format is recognized,   */
+  /*    or non-zero otherwise.                                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Open_Face( FT_Library           library,

@@ -1,3 +1,13 @@
+2004-03-19  Steve Hartwell  <shspamsink@comcast.net>
+
+	* src/sfnt/ttload.c (tt_face_load_sfnt_header): Reject face_index
+	values > 0 if loading non-TTC fonts.
+
+	* src/base/ftmac.c (open_face_from_buffer): Set positive face_index
+	to zero before calling FT_Open_Face.
+
+	* docs/CHANGES: Updated.
+
 2004-03-04  Werner Lemberg  <wl@gnu.org>
 
 	* Jamfile, vms_make.com, builds/win32/visualc/freetype.dsp,
