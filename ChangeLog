@@ -1,3 +1,9 @@
+2004-05-10  George Williams  <gww@silcom.com>
+
+	* src/truetype/ttxgvar.c (ft_var_load_avar): Do free arrays in case
+	of error -- `avar' is optional so we can't rely on tt_done_blend
+	being called automatically.
+
 2004-05-09  George Williams  <gww@silcom.com>
 
 	* src/truetype/ttxgvar.c (ft_var_load_avar, ft_var_load_gvar): Fix
