@@ -223,6 +223,19 @@
       return FT_Err_Cannot_Open_Resource;
     }
 
+    /* here, we ensure that a "fork" will _not_ duplicate  */
+    /* our opened input streams on Unix. This is critical  */
+    /* since it would avoid some (possible) access control */
+    /* issues and clean up the kernel file table a bit.    */
+    /*                                                     */
+#ifdef F_SETFD
+#  ifdef FD_CLOEXEC
+    ret = fcntl ( file, F_SETFD, FD_CLOEXEC);
+#  else
+    ret = fcntl ( file, F_SETFD, 1);
+#  endif /* FD_CLOEXEC */
+#endif /* F_SETFD */
+
     if ( fstat( file, &stat_buf ) < 0 )
     {
       FT_ERROR(( "FT_New_Stream:" ));
