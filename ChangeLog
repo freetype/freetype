@@ -1,3 +1,8 @@
+2003-05-19  David Turner  <david@freetype.org>
+
+	* src/sfnt/ttcmap0.c (tt_cmap4_char_next): Select proper start
+	value for `hi' to avoid infinite loop.
+
 2003-05-18  Yong Sun  <sunyong@njstar.com>
 
 	* src/raster/ftraster.c (Insert_Y_Turn): Fix overflow test.
