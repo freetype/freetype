@@ -1,3 +1,9 @@
+2002-09-18  David Turner  <david@freetype.org>
+
+        * src/base/ftobjs.c (FT_Library_Version): bugfix
+
+        * FreeType 2.1.3rc2 (release candidate 2) is released !!
+
 2002-09-17  David Turner  <david@freetype.org>
 
 	* include/freetype/freetype.h, include/freetype/ftimage.h,
@@ -74,7 +80,7 @@
 	* include/freetype/ftimage.h: Removed incorrect "zft_" definitions
 	and updated constants documentation comments.
 
-	* src/cff/cffparse.c (cff_parser_run): Fixed the CFF table loader. 
+	* src/cff/cffparse.c (cff_parser_run): Fixed the CFF table loader.
 	It didn't accept empty arrays, and this prevented the loading of
 	certain fonts.
 
