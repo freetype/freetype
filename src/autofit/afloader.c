@@ -167,7 +167,7 @@
                                 axis->num_edges - 1; /* rightmost edge */
 
 
-          if ( edge2 > edge1 )
+          if ( axis->num_edges > 1 )
           {
             old_advance = loader->pp2.x;
             old_rsb     = old_advance - edge2->opos;
