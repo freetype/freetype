@@ -1,3 +1,9 @@
+2001-12-10  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
+
+        * src/pcf/pcfdriver.c (PCF_Init_Face): allow Xft to use PCF fonts
+        by setting the "face->metrics.max_advance" correctly..
+
+
 2001-12-07  David Turner  <david@freetype.org>
 
 	* include/freetype/cache/ftccmap.h, src/cache/ftccmap.c: Added new

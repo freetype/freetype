@@ -120,6 +120,8 @@ THE SOFTWARE.
       size->metrics.height    = size->metrics.ascender -
                                 size->metrics.descender;
 
+      size->metrics.max_advance = face->accel.maxbounds.characterWidth << 6;
+
       return PCF_Err_Ok;
     }
     else
