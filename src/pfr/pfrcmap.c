@@ -1,25 +1,45 @@
+/***************************************************************************/
+/*                                                                         */
+/*  pfrcmap.c                                                              */
+/*                                                                         */
+/*    FreeType PFR cmap handling (body).                                   */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
 #include "pfrcmap.h" 
 #include "pfrobjs.h"
 #include FT_INTERNAL_DEBUG_H
 
+
   FT_CALLBACK_DEF( FT_Error )
   pfr_cmap_init( PFR_CMap  cmap )
   {
-    PFR_Face  face = (PFR_Face)FT_CMAP_FACE(cmap);
+    PFR_Face  face = (PFR_Face)FT_CMAP_FACE( cmap );
 
 
     cmap->num_chars = face->phy_font.num_chars;
     cmap->chars     = face->phy_font.chars;
     
     /* just for safety, check that the character entries are correctly */
-    /* sorted in increasing character code order..                     */
+    /* sorted in increasing character code order                       */
     {
       FT_UInt  n;
       
+
       for ( n = 1; n < cmap->num_chars; n++ )
       {
-        if ( cmap->chars[n-1].char_code >= cmap->chars[n].char_code )
-          FT_ASSERT(0);
+        if ( cmap->chars[n - 1].char_code >= cmap->chars[n].char_code )
+          FT_ASSERT( 0 );
       }
     }
     
@@ -63,8 +83,8 @@
 
 
   FT_CALLBACK_DEF( FT_UInt )
-  pfr_cmap_char_next( PFR_CMap   cmap,
-                      FT_UInt32 *pchar_code )
+  pfr_cmap_char_next( PFR_CMap    cmap,
+                      FT_UInt32  *pchar_code )
   {
     FT_UInt    result    = 0;
     FT_UInt32  char_code = *pchar_code + 1;
@@ -122,8 +142,11 @@
   {
     sizeof ( PFR_CMapRec ),
 
-    (FT_CMap_InitFunc)      pfr_cmap_init,
-    (FT_CMap_DoneFunc)      pfr_cmap_done,
-    (FT_CMap_CharIndexFunc) pfr_cmap_char_index,
-    (FT_CMap_CharNextFunc)  pfr_cmap_char_next
+    (FT_CMap_InitFunc)     pfr_cmap_init,
+    (FT_CMap_DoneFunc)     pfr_cmap_done,
+    (FT_CMap_CharIndexFunc)pfr_cmap_char_index,
+    (FT_CMap_CharNextFunc) pfr_cmap_char_next
   };
+
+
+/* END */

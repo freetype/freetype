@@ -1,9 +1,28 @@
-#ifndef __PFR_GLYPH_LOAD_H__
-#define __PFR_GLYPH_LOAD_H__
+/***************************************************************************/
+/*                                                                         */
+/*  pfrgload.h                                                             */
+/*                                                                         */
+/*    FreeType PFR glyph loader (specification).                           */
+/*                                                                         */
+/*  Copyright 2002 by                                                      */
+/*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
+/*                                                                         */
+/*  This file is part of the FreeType project, and may only be used,       */
+/*  modified, and distributed under the terms of the FreeType project      */
+/*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
+/*  this file you indicate that you have read the license and              */
+/*  understand and accept it fully.                                        */
+/*                                                                         */
+/***************************************************************************/
+
+
+#ifndef __PFRGLOAD_H__
+#define __PFRGLOAD_H__
 
 #include "pfrtypes.h"
 
 FT_BEGIN_HEADER
+
 
   FT_LOCAL( void )
   pfr_glyph_init( PFR_Glyph       glyph,
@@ -24,4 +43,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 
-#endif /* __PFR_GLYPH_LOAD_H__ */
+#endif /* __PFRGLOAD_H__ */

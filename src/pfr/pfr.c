@@ -2,9 +2,9 @@
 /*                                                                         */
 /*  pfr.c                                                                  */
 /*                                                                         */
-/*    FreeType PFR driver component                                        */
+/*    FreeType PFR driver component.                                       */
 /*                                                                         */
-/*  Copyright 1996-2002 by                                                 */
+/*  Copyright 2002 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
