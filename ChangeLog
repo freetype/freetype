@@ -1,37 +1,46 @@
+2002-01-09  David Turner  <david@freetype.org>
+
+	* builds/unix/configure.ac: Build top-level Jamfile.
+
 2002-01-09  Maxim Shemanarev  <mcseemagg@yahoo.com>
 
-        * src/smooth/ftgrays.c (gray_render_line): small optimisation to
-        the smooth anti-aliased renderer that deals with vertical segments.
-        This results in a 5-7% speedup in rendering speed..
+	* src/smooth/ftgrays.c (gray_render_line): Small optimization to
+	the smooth anti-aliased renderer that deals with vertical segments.
+	This results in a 5-7% speedup in rendering speed.
 
 2002-01-08  David Turner  <david@freetype.org>
 
-	* configure, install: added some wrapper scripts to make
-	the installation more Unix-friendly..
+	Added some wrapper scripts to make the installation more
+	Unix-friendly.
 
-	* INSTALL, README.UNX: updated installation documentation
-	to use the new 'configure' and 'install' scripts..
+	* configure, install: New files.
 
-        Oh my.., why didn't we do that before the 2.0.6 release :-)
-
+	* INSTALL, README.UNX: Updated installation documentation to use the
+	new 'configure' and 'install' scripts.
 
 2002-01-07  David Turner  <david@freetype.org>
+
 
 	* Version 2.0.6 released.
 	=========================
 
-        * docs/BUGS, docs/CHANGES: updating documentation for 2.0.6 release
 
-        * src/tools/docmaker.py: fixed HTML quoting in sources
+	* docs/BUGS, docs/CHANGES: Updating documentation for 2.0.6 release.
 
-        * include/freetype/config/ftoption.h: setting default options for
-        a release build (debugging off, bytecode interpreter off)
+	* src/tools/docmaker.py: Fixed HTML quoting in sources.
+	(html_format): Replaced with ...
+	(html_quote): New function.
+	(html_quote0): New function.
+	(DocCode::dump_html: Small improvement.
+	(DocParagraph::dump, DocBlock::html): Use html_quote0 and html_quote.
 
-        * src/base/ftobjs.c, src/base/ftoutln.c, src/cache/ftccmap.c,
-        src/cff/cffload.c, src/cff/cffobjs.c, src/pshinter/pshalgo2.c,
-        src/sfnt/ttload.c, src/sfnt/ttsbit.c: removing small compiler
-        warnings (in pedantic compilation modes)
+	* include/freetype/config/ftoption.h: Setting default options for
+	a release build (debugging off, bytecode interpreter off).
 
+	* src/base/ftobjs.c, src/base/ftoutln.c, src/cache/ftccmap.c,
+	src/cff/cffload.c, src/cff/cffobjs.c, src/pshinter/pshalgo2.c,
+	src/sfnt/ttload.c, src/sfnt/ttsbit.c: Removing small compiler
+	warnings (in pedantic compilation modes).
 
 2002-01-05  David Turner  <david@freetype.org>
 

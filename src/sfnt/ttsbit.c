@@ -131,8 +131,8 @@
             val = (FT_Byte)( acc >> 8 );
             if ( shift )
             {
-              cur[0] |= (FT_Byte)(val >> shift);
-              cur[1] |= (FT_Byte)(val << space);
+              cur[0] |= (FT_Byte)( val >> shift );
+              cur[1] |= (FT_Byte)( val << space );
             }
             else
               cur[0] |= val;
@@ -164,10 +164,10 @@
 
         /* now write remaining bits */
         val     = (FT_Byte)( ( (FT_Byte)( acc >> 8 ) ) & ~( 0xFF >> count ) );
-        cur[0] |= (FT_Byte)(val >> shift);
+        cur[0] |= (FT_Byte)( val >> shift );
 
         if ( count > space )
-          cur[1] |= (FT_Byte)(val << space);
+          cur[1] |= (FT_Byte)( val << space );
 
         acc   <<= count;
         loaded -= count;

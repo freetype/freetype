@@ -635,17 +635,18 @@
       goto End;
     }
 
-    /* vertical line - avoids calling gray_render_scanline */
+    /* vertical line - avoid calling gray_render_scanline */
     incr = 1;
 
-    if( dx == 0 )
+    if ( dx == 0 )
     {
-      TScan ex     = TRUNC( ras.x );
-      TScan two_fx = ( ras.x - SUBPIXELS( ex ) ) << 1;
-      TPos  area;
+      TScan  ex     = TRUNC( ras.x );
+      TScan  two_fx = ( ras.x - SUBPIXELS( ex ) ) << 1;
+      TPos   area;
+
 
       first = ONE_PIXEL;
-      if( dy < 0 )
+      if ( dy < 0 )
       {
         first = 0;
         incr  = -1;

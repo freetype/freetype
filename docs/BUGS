@@ -7,7 +7,7 @@ description of the bug is found below the table of opened bugs.
 "Date" is the date when the bug was first reported or entered in this
 document.  Dates are in _European_ format, i.e day/month/year.
 
-"Opened By" is the name of the person who first spotted the bug. Note that
+"Opened By" is the name of the person who first spotted the bug.  Note that
 we can use abbreviations here, like:
 
   "David" for David Turner
@@ -20,8 +20,8 @@ always happens, or only sporadically, etc.
 
 
 
-I. Opened bugs
-==============
+I. Open bugs
+============
 
 
 Identifier                 Date       Opened by                Reproduceable
@@ -36,8 +36,8 @@ ADVANCED-COMPOSITES     25-10-2001     George Williams           always
 
 
 
-II. Table of closed bugs
-========================
+II. Closed bugs
+===============
 
 
 Identifier                Date         Closed by                Closure date
@@ -58,7 +58,8 @@ GLYPH-TO-BITMAP-BUG     15-12-2001     David                     2.0.6
 III. Bug descriptions
 =====================
 
---- START OF OPENED BUGS ---
+
+--- START OF OPEN BUGS ---
 
 
 NO-CID-CMAPS
@@ -81,7 +82,7 @@ BAD-TT-RENDERING
   Some of this has been fixed in 2.0.6; there was a bug in the TrueType
   loader that prevented it from loading composites correctly.  However,
   there are still _subtle_ differences between FT1 and FT2 when it comes to
-  monochrome TrueType-hinted glyphs (the major differences are gone though !!)
+  monochrome TrueType-hinted glyphs (the major differences are gone though).
 
 
 
@@ -143,7 +144,8 @@ ADVANCED-COMPOSITES
 
 
 
---- END OF OPENED BUGS ---
+--- END OF OPEN BUGS ---
+
 
 
 BAD-TTNAMEID.H
@@ -170,6 +172,7 @@ BAD-TTNAMEID.H
   FreeType followed the most recent TrueType/OpenType specification here.
 
 
+
 AUTOHINT-SBITS
 
   When trying to load a glyph, with the auto-hinter activated (i.e., when
@@ -186,6 +189,7 @@ AUTOHINT-SBITS
   further release like FreeType 2.1.
 
 
+
 BAD-T1-CHARMAP
 
   Type1 driver doesn't read "cacute" and "lslash" characters from iso8859-2
@@ -196,6 +200,7 @@ BAD-T1-CHARMAP
   table of glyph names in 'src/psaux/pstables.h'.)
 
 
+
 BAD-UNIXXXX-NAMES
 
   Glyph names like uniXXXX are not recognized as they should be.  It seems
@@ -204,6 +209,7 @@ BAD-UNIXXXX-NAMES
   
   (A simple bug that was left un-noticed due to the fact that I don't have
   any Postscript font that use this convention, unfortunately.)
+
 
 
 GLYPH_TO_BITMAP-BUG
@@ -225,45 +231,45 @@ GLYPH_TO_BITMAP-BUG
 TT-GLYPH-CRASH
 
   The library crashed when trying to load certain glyphs from an
-  automatically generated TrueType file (tt1095m_.ttf submitted by
-  Scott Long).
+  automatically generated TrueType file (tt1095m_.ttf submitted by Scott
+  Long).
   
-  It turned out that the font contained invalid glyph data (i.e. was broken),
-  but the TrueType glyph loader in FreeType wasn't paranoid enough, which
-  resulted in nasty memory overwrites all over the place.
+  It turned out that the font contained invalid glyph data (i.e. was
+  broken), but the TrueType glyph loader in FreeType wasn't paranoid enough,
+  which resulted in nasty memory overwrites all over the place.
 
 
 
 T1-FONT-CRASH
 
-  The library crashed when trying to load the "Stalingrad Regular" face
-  from the "sadn.pfb" font file provided by Anthony Fok (and the Gnome-Print
-  team I believe).
+  The library crashed when trying to load the "Stalingrad Regular" face from
+  the "sadn.pfb" font file provided by Anthony Fok (and the Gnome-Print team
+  I believe).
   
   This was due to the fact that the font missed a full font name entry,
-  though boasted a family name and postscript name. The Type 1 face loader
-  didn't check for these pathetic cases and seg-faulted..
+  though boasted a family name and postscript name.  The Type 1 face loader
+  didn't check for these pathetic cases and seg-faulted.
 
 
 
 BAD-ADVANCES
 
   All scalable font drivers returned un-fitted glyph advances when
-  FT_LOAD_DEFAULT was used, which was incorrect. This problem was pretty
-  old but hadn't been spotted because all test programs actually
-  explicitely or implicitely (i.e. through the cache) rounded the advance
-  widths of glyphs..
+  FT_LOAD_DEFAULT was used, which was incorrect.  This problem was pretty
+  old but hadn't been spotted because all test programs actually explicitly
+  or implicitly (i.e. through the cache) rounded the advance widths of
+  glyphs.
   
-  This resulted in poor rendering of a number of client applications
-  however (it's strange to see they took so long to notice the devel team ?)
+  This resulted in poor rendering of a number of client applications however
+  (it is strange to see they took so long to notify the FreeType team).
 
 
 
 GLYPH-TO-BITMAP-BUG
 
-  the FT_Glyph_ToBitmap did incorrectly modify the source glyph in certain
-  cases, which resulted in random behaviour and bad text rendering. This was
-  spotted to bugs in both the monochrome and smooth rasterizer..
+  FT_Glyph_To_Bitmap() did incorrectly modify the source glyph in certain
+  cases, which resulted in random behaviour and bad text rendering.  This
+  was spotted to bugs in both the monochrome and smooth rasterizer.
 
 
 === end of file ===
