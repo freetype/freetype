@@ -1,3 +1,9 @@
+2003-06-15  Werner Lemberg  <wl@gnu.org>
+
+	* builds/compiler/gcc.mk, builds/compiler/gcc-dev.mk (CFLAGS):
+	Add -fno-strict-aliasing to get rid of zillion warnings from gcc
+	version 3.3.
+
 2003-06-14  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/ftglyph.h (ft_glyph_bbox_unscaled,

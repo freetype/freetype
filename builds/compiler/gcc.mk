@@ -62,7 +62,7 @@ T := -o$(space)
 #   ANSI compliance.
 #
 ifndef CFLAGS
-  CFLAGS := -c -g -O6 -Wall
+  CFLAGS := -c -g -O6 -Wall -fno-strict-aliasing
 endif
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
