@@ -30,7 +30,7 @@ FT_BEGIN_HEADER
  /************************************************************************
   *
   * <Section>
-  *    glyph stroker
+  *    glyph_stroker
   *
   * <Title>
   *    Glyph Stroker

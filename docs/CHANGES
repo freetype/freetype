@@ -23,6 +23,11 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
     - A  new  API `FT_Sfnt_Table_Info'  (in FT_TRUETYPE_TABLES_H)  has
       been added to retrieve name and size information of SFNT tables.
 
+    - A new API `FT_OpenType_Validate' (in FT_OPENTYPE_VALIDATE_H) has
+      been added to validate OpenType tables  (BASE, GDEF, GPOS, GSUB,
+      JSTF).   After validation  it is  no longer  necessary to  check
+      for errors in those tables.
+
 
 LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
 

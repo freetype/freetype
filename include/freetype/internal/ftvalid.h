@@ -49,7 +49,7 @@ FT_BEGIN_HEADER
   /* FT_VALIDATE_DEFAULT ::                                                */
   /*   A table that passes this validation level can be used reliably by   */
   /*   FreeType.  It generally means that all offsets have been checked to */
-  /*   prevent out-of-bound reads, array counts are correct, etc.          */
+  /*   prevent out-of-bound reads, that array counts are correct, etc.     */
   /*                                                                       */
   /* FT_VALIDATE_TIGHT ::                                                  */
   /*   A table that passes this validation level can be used reliably and  */
@@ -58,7 +58,7 @@ FT_BEGIN_HEADER
   /*   be used with FreeType in default mode (the library will simply      */
   /*   return an error later when trying to load the glyph).               */
   /*                                                                       */
-  /*   It also check that fields that must be a multiple of 2, 4, or 8     */
+  /*   It also checks that fields which must be a multiple of 2, 4, or 8,  */
   /*   don't have incorrect values, etc.                                   */
   /*                                                                       */
   /* FT_VALIDATE_PARANOID ::                                               */
