@@ -400,7 +400,7 @@
   check_points( CFF_Builder*  builder,
                 FT_Int        count )
   {
-    return FT_GlyphLoader_Check_Points( builder->loader, count, 0 );
+    return FT_GlyphLoader_CheckPoints( builder->loader, count, 0 );
   }
 
 
@@ -461,7 +461,7 @@
       return CFF_Err_Ok;
     }
 
-    error = FT_GlyphLoader_Check_Points( builder->loader, 0, 1 );
+    error = FT_GlyphLoader_CheckPoints( builder->loader, 0, 1 );
     if ( !error )
     {
       if ( outline->n_contours > 0 )
@@ -589,11 +589,11 @@
     {
       FT_GlyphSlot     glyph  = (FT_GlyphSlot)decoder->builder.glyph;
       FT_GlyphLoader   loader = glyph->internal->loader;
-      FT_SubGlyph*     subg;
+      FT_SubGlyph     subg;
 
 
       /* reallocate subglyph array if necessary */
-      error = FT_GlyphLoader_Check_Subglyphs( loader, 2 );
+      error = FT_GlyphLoader_CheckSubGlyphs( loader, 2 );
       if ( error )
         goto Exit;
 

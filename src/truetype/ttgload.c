@@ -295,7 +295,7 @@
       if ( n_contours > 0 )
         n_points = cur[-1] + 1;
 
-      error = FT_GlyphLoader_Check_Points( gloader, n_points + 2, 0 );
+      error = FT_GlyphLoader_CheckPoints( gloader, n_points + 2, 0 );
       if ( error )
         goto Fail;
 
@@ -471,7 +471,7 @@
     FT_Error         error;
     FT_Stream        stream  = loader->stream;
     FT_GlyphLoader   gloader = loader->gloader;
-    FT_SubGlyph*     subglyph;
+    FT_SubGlyph     subglyph;
     FT_UInt          num_subglyphs;
     FT_Int           byte_len = loader->byte_len;
 
@@ -484,7 +484,7 @@
 
 
       /* check that we can load a new subglyph */
-      error = FT_GlyphLoader_Check_Subglyphs( gloader, num_subglyphs + 1 );
+      error = FT_GlyphLoader_CheckSubGlyphs( gloader, num_subglyphs + 1 );
       if ( error )
         goto Fail;
 
@@ -878,7 +878,7 @@
     if ( contours_count >= 0 )
     {
       /* check that we can add the contours to the glyph */
-      error = FT_GlyphLoader_Check_Points( gloader, 0, contours_count );
+      error = FT_GlyphLoader_CheckPoints( gloader, 0, contours_count );
       if ( error )
         goto Fail;
 
@@ -965,7 +965,7 @@
       /* Now, read each subglyph independently. */
       {
         FT_Int        n, num_base_points, num_new_points;
-        FT_SubGlyph*  subglyph = 0;
+        FT_SubGlyph  subglyph = 0;
 
         FT_UInt num_subglyphs  = gloader->current.num_subglyphs;
         FT_UInt num_base_subgs = gloader->base.num_subglyphs;
@@ -1229,7 +1229,7 @@
       glyph->outline.flags &= ~ft_outline_single_pass;
 
       /* copy outline to our glyph slot */
-      FT_GlyphLoader_Copy_Points( glyph->internal->loader, loader->gloader );
+      FT_GlyphLoader_CopyPoints( glyph->internal->loader, loader->gloader );
       glyph->outline = glyph->internal->loader->base.outline;
 
       /* translate array so that (0,0) is the glyph's origin */

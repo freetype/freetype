@@ -219,11 +219,11 @@
     {
       FT_GlyphSlot     glyph  = (FT_GlyphSlot)decoder->builder.glyph;
       FT_GlyphLoader   loader = glyph->internal->loader;
-      FT_SubGlyph*     subg;
+      FT_SubGlyph     subg;
 
 
       /* reallocate subglyph array if necessary */
-      error = FT_GlyphLoader_Check_Subglyphs( loader, 2 );
+      error = FT_GlyphLoader_CheckSubGlyphs( loader, 2 );
       if ( error )
         goto Exit;
 

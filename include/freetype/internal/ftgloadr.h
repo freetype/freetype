@@ -50,14 +50,15 @@ FT_BEGIN_HEADER
   };
 
 
-  struct  FT_SubGlyph_
+  typedef struct  FT_SubGlyphRec_
   {
     FT_Int     index;
     FT_UShort  flags;
     FT_Int     arg1;
     FT_Int     arg2;
     FT_Matrix  transform;
-  };
+    
+  } FT_SubGlyphRec;
 
 
   typedef struct  FT_GlyphLoadRec_
@@ -65,7 +66,7 @@ FT_BEGIN_HEADER
     FT_Outline    outline;       /* outline             */
     FT_Vector*    extra_points;  /* extra points table  */
     FT_UInt       num_subglyphs; /* number of subglyphs */
-    FT_SubGlyph*  subglyphs;     /* subglyphs           */
+    FT_SubGlyph  subglyphs;     /* subglyphs           */
 
   } FT_GlyphLoadRec, *FT_GlyphLoad;
 
@@ -93,7 +94,7 @@ FT_BEGIN_HEADER
 
  /* add an extra points table to a glyph loader */
   FT_BASE( FT_Error )
-  FT_GlyphLoader_Create_Extra( FT_GlyphLoader   loader );
+  FT_GlyphLoader_CreateExtra( FT_GlyphLoader   loader );
 
  /* destroy a glyph loader */
   FT_BASE( void )
@@ -110,15 +111,15 @@ FT_BEGIN_HEADER
  /* check that there is enough room to add 'n_points' and 'n_contours' */
  /* to the glyph loader..                                              */
   FT_BASE( FT_Error )
-  FT_GlyphLoader_Check_Points( FT_GlyphLoader   loader,
-                               FT_UInt          n_points,
-                               FT_UInt          n_contours );
+  FT_GlyphLoader_CheckPoints( FT_GlyphLoader   loader,
+                              FT_UInt          n_points,
+                              FT_UInt          n_contours );
 
  /* check that there is enough room to add 'n_subs' sub-glyphs to */
  /* a glyph loader                                                */
   FT_BASE( FT_Error )
-  FT_GlyphLoader_Check_Subglyphs( FT_GlyphLoader   loader,
-                                  FT_UInt          n_subs );
+  FT_GlyphLoader_CheckSubGlyphs( FT_GlyphLoader   loader,
+                                 FT_UInt          n_subs );
 
  /* prepare a glyph loader, i.e. empty the current glyph */
   FT_BASE( void )
@@ -130,8 +131,8 @@ FT_BEGIN_HEADER
 
  /* copy points from one glyph loader to another */
   FT_BASE( FT_Error )
-  FT_GlyphLoader_Copy_Points( FT_GlyphLoader   target,
-                              FT_GlyphLoader   source );
+  FT_GlyphLoader_CopyPoints( FT_GlyphLoader   target,
+                             FT_GlyphLoader   source );
 
  /* */
 

@@ -1148,7 +1148,7 @@
   T1_Builder_Check_Points( T1_Builder  builder,
                            FT_Int       count )
   {
-    return FT_GlyphLoader_Check_Points( builder->loader, count, 0 );
+    return FT_GlyphLoader_CheckPoints( builder->loader, count, 0 );
   }
 
 
@@ -1214,7 +1214,7 @@
       return PSaux_Err_Ok;
     }
 
-    error = FT_GlyphLoader_Check_Points( builder->loader, 0, 1 );
+    error = FT_GlyphLoader_CheckPoints( builder->loader, 0, 1 );
     if ( !error )
     {
       if ( outline->n_contours > 0 )

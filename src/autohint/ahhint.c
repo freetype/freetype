@@ -1141,7 +1141,7 @@
       {
         FT_UInt       nn, num_subglyphs = slot->num_subglyphs;
         FT_UInt       num_base_subgs, start_point;
-        FT_SubGlyph*  subglyph;
+        FT_SubGlyph  subglyph;
 
 
         start_point   = gloader->base.outline.n_points;

@@ -1134,7 +1134,7 @@ FT_BEGIN_HEADER
   /*    The subglyph implementation is not part of the high-level API,     */
   /*    hence the forward structure declaration.                           */
   /*                                                                       */
-  typedef struct FT_SubGlyph_  FT_SubGlyph;
+  typedef struct FT_SubGlyphRec_*  FT_SubGlyph;
 
 
   /*************************************************************************/
@@ -1299,7 +1299,7 @@ FT_BEGIN_HEADER
     FT_Outline        outline;
 
     FT_UInt           num_subglyphs;
-    FT_SubGlyph*      subglyphs;
+    FT_SubGlyph       subglyphs;
 
     void*             control_data;
     long              control_len;
