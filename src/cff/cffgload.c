@@ -561,6 +561,62 @@
 
 
   static FT_Error
+  cff_get_glyph_data( TT_Face    face,
+                      FT_UInt    glyph_index,
+                      FT_Byte**  pointer,
+                      FT_ULong*  length )
+  {
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    /* For incremental fonts get the character data using the */
+    /* callback function.                                     */
+    if ( face->root.internal->incremental_interface )
+	{
+	  FT_Data data;
+      FT_Error error = face->root.internal->incremental_interface->funcs->get_glyph_data(
+               face->root.internal->incremental_interface->object,
+               glyph_index, &data );
+      *pointer = (FT_Byte*)data.pointer;
+      *length = data.length;
+      return error;
+    }
+    else
+#endif
+
+    {
+      CFF_Font  cff  = (CFF_Font)(face->extra.data);
+      return cff_index_access_element( &cff->charstrings_index, glyph_index,
+                                       pointer, length );
+    }
+  }
+
+
+  static void
+  cff_free_glyph_data( TT_Face    face,
+                       FT_Byte**  pointer,
+                       FT_ULong   length )
+  {
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+    /* For incremental fonts get the character data using the */
+    /* callback function.                                     */
+    if ( face->root.internal->incremental_interface )
+	{
+      FT_Data data;
+	  data.pointer = *pointer;
+	  data.length = length;
+      face->root.internal->incremental_interface->funcs->free_glyph_data(
+        face->root.internal->incremental_interface->object,&data );
+    }
+    else
+#endif
+
+    {
+      CFF_Font  cff  = (CFF_Font)(face->extra.data);
+      cff_index_forget_element( &cff->charstrings_index, pointer );
+    }
+  }
+
+
+  static FT_Error
   cff_operator_seac( CFF_Decoder*  decoder,
                      FT_Pos        adx,
                      FT_Pos        ady,
@@ -626,8 +682,8 @@
     }
 
     /* First load `bchar' in builder */
-    error = cff_index_access_element( &cff->charstrings_index, bchar_index,
-                                      &charstring, &charstring_len );
+    error = cff_get_glyph_data( face, bchar_index,
+                                &charstring, &charstring_len );
     if ( !error )
     {
       error = cff_decoder_parse_charstrings( decoder, charstring, charstring_len );
@@ -635,7 +691,7 @@
       if ( error )
         goto Exit;
 
-      cff_index_forget_element( &cff->charstrings_index, &charstring );
+      cff_free_glyph_data( face, &charstring, charstring_len );
     }
 
     n_base_points = base->n_points;
@@ -650,8 +706,8 @@
     decoder->builder.left_bearing.y = 0;
 
     /* Now load `achar' on top of the base outline. */
-    error = cff_index_access_element( &cff->charstrings_index, achar_index,
-                                      &charstring, &charstring_len );
+    error = cff_get_glyph_data( face, achar_index,
+                                &charstring, &charstring_len );
     if ( !error )
     {
       error = cff_decoder_parse_charstrings( decoder, charstring, charstring_len );
@@ -659,7 +715,7 @@
       if ( error )
         goto Exit;
 
-      cff_index_forget_element( &cff->charstrings_index, &charstring );
+      cff_free_glyph_data( face, &charstring, charstring_len );
     }
 
     /* Restore the left side bearing and advance width */
@@ -2144,15 +2200,15 @@
 
 
       /* now get load the unscaled outline */
-      error = cff_index_access_element( &cff->charstrings_index, glyph_index,
-                                        &charstring, &charstring_len );
+      error = cff_get_glyph_data( face, glyph_index,
+                                  &charstring, &charstring_len );
       if ( !error )
       {
         cff_decoder_prepare( &decoder, glyph_index );
         error = cff_decoder_parse_charstrings( &decoder,
                                                charstring, charstring_len );
 
-        cff_index_forget_element( &cff->charstrings_index, &charstring );
+        cff_free_glyph_data( face, &charstring, &charstring_len );
       }
 
       /* ignore the error if one has occurred -- skip to next glyph */
@@ -2230,27 +2286,37 @@
         (FT_Bool)( ( load_flags & FT_LOAD_NO_RECURSE ) != 0 );
 
       /* now load the unscaled outline */
-      error = cff_index_access_element( &cff->charstrings_index, glyph_index,
-                                        &charstring, &charstring_len );
+      error = cff_get_glyph_data( face, glyph_index,
+                                  &charstring, &charstring_len );
       if ( !error )
       {
-        CFF_IndexRec csindex = cff->charstrings_index;
-
-
         cff_decoder_prepare( &decoder, glyph_index );
         error = cff_decoder_parse_charstrings( &decoder,
                                                charstring, charstring_len );
 
-        cff_index_forget_element( &cff->charstrings_index, &charstring );
+        cff_free_glyph_data( face, &charstring, charstring_len );
 
+
+#ifdef FT_CONFIG_OPTION_INCREMENTAL
+     	/* Control data and length may not be available for incremental   */
+        /* fonts.                                                         */
+        if ( face->root.internal->incremental_interface )
+        {
+          glyph->root.control_data = 0;
+          glyph->root.control_len = 0;
+        }
+        else
+#endif
         /* We set control_data and control_len if charstrings is loaded.  */
         /* See how charstring loads at cff_index_access_element() in      */
         /* cffload.c.                                                     */
-
+        {
+        CFF_IndexRec csindex = cff->charstrings_index;
         glyph->root.control_data =
           csindex.bytes + csindex.offsets[glyph_index] - 1;
         glyph->root.control_len =
           charstring_len;
+        }
       }
 
       /* save new glyph tables */
