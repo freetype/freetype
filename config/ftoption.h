@@ -170,7 +170,7 @@
   /*   Don't define any of these macros to compile in `release' mode.      */
   /*                                                                       */
 #undef  FT_DEBUG_LEVEL_ERROR
-#undef  FT_DEBUG_LEVEL_TRACE
+#define FT_DEBUG_LEVEL_TRACE
 
 
   /*************************************************************************/
@@ -314,7 +314,7 @@
 #define TT_CONFIG_OPTION_INTERPRETER_SWITCH
 
   /* The maximum number of sub-glyphs in a TrueType composite glyph */
-#define TT_MAX_SUBGLYPHS  32
+#define TT_MAX_SUBGLYPHS  64
 
   /*************************************************************************/
   /*************************************************************************/
