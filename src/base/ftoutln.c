@@ -299,7 +299,7 @@
 
 
   /* documentation is in ftoutln.h */
-  
+
   FT_EXPORT_DEF( FT_Error )
   FT_Outline_Check( FT_Outline*  outline )
   {
@@ -310,18 +310,19 @@
       FT_Int  end0, end;
       FT_Int  n;
 
-      /* empty glyph ?? */
+
+      /* empty glyph? */
       if ( n_points == 0 && n_contours == 0 )
         return 0;
-      
+
       /* check point and contour counts */
       if ( n_points <= 0 || n_contours <= 0 )
         goto Bad;
-      
+
       end0 = -1;
       for ( n = 0; n < n_contours; n++ )
       {
-        end  = outline->contours[n];
+        end = outline->contours[n];
 
         /* note that we don't accept empty contours */
         if ( end <= end0 || end >= n_points )
@@ -329,13 +330,14 @@
 
         end0 = end;
       }
-      
-      if ( end != n_points-1 )
+
+      if ( end != n_points - 1 )
         goto Bad;
 
       /* XXX: check the that array */
       return 0;
     }
+
   Bad:
     return FT_Err_Invalid_Argument;
   }

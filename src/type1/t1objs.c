@@ -377,7 +377,7 @@
                                             : (char *)"Regular" );
         }
         else
-          root->style_name = "Regular";
+          root->style_name = (char *)"Regular";
       }
       else
       {

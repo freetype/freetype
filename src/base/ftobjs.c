@@ -914,7 +914,7 @@
       if ( error )
         goto Exit;
 
-      /* check that the loaded outline is correct !! */      
+      /* check that the loaded outline is correct */
       error = FT_Outline_Check( &slot->outline );
       if ( error )
         goto Exit;
@@ -1944,7 +1944,7 @@
   FT_Get_Postscript_Name( FT_Face  face )
   {
     const char*  result = NULL;
-    
+
 
     if ( !face )
       goto Exit;
@@ -2002,19 +2002,19 @@
   FT_Activate_Size( FT_Size  size )
   {
     FT_Face  face;
-    
+
 
     if ( size == NULL )
       return FT_Err_Bad_Argument;
-      
+
     face = size->face;
     if ( face == NULL || face->driver == NULL )
       return FT_Err_Bad_Argument;
-    
+
     /* we don't need anything more complex than that; all size objects */
     /* are already listed by the face                                  */
     face->size = size;
-    
+
     return FT_Err_Ok;
   }
 
