@@ -688,9 +688,9 @@
   /* first character must be already part of the number */
 
   static FT_Long
-  T1Radix( FT_Long    radixBase,
-           FT_Byte*  *acur,
-           FT_Byte*   limit )
+  ps_radix( FT_Long    radixBase,
+            FT_Byte*  *acur,
+            FT_Byte*   limit )
   {
     FT_Long   result = 0;
     FT_Byte*  cur    = *acur;
@@ -715,6 +715,8 @@
 
       cur++;
     }
+
+    *acur = cur;
 
     return result;
   }
@@ -746,7 +748,7 @@
       if ( *cur == '#' )
       {
         cur++;
-        result = T1Radix( result, &cur, limit );
+        result = ps_radix( result, &cur, limit );
         break;
       }
 
