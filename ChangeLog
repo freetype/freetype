@@ -1,20 +1,37 @@
+2001-12-22  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* builds/amiga/*: Adaptations to latest changes.
+	Support added for MorphOS.
+
+2001-12-22  Werner Lemberg  <wl@gnu.org>
+
+	* src/pshinter/pshrec.c (FT_COMPONENT): Redefine to `trace_pshrec'.
+	(ps_mask_table_merge, ps_hints_open, ps_hints_stem,
+	ps_hints_t1stem3, ps_hints_t2mask, ps_hints_t2counter): Fix
+	FT_ERROR messages.
+	* src/pshinter/pshalgo1.c (FT_COMPONENT): Define as
+	`trace_pshalgo1'.
+	* src/pshinter/pshalgo2.c (FT_COMPONENT): Define as
+	`trace_pshalgo2'.
+	* include/freetype/internal/ftdebug.h (FT_Trace): Updated.
+
+	* docs/modules.txt: New file.
+
 2001-12-21  David Turner  <david@freetype.org>
 
-        * src/cff/cffgload.c: added a comment regarding "cntrmask" operator
-        
-        * src/pshinter/pshrec.c: now ignores invalid "hintmask" and "cntrmask"
-        operators (instead of returning an error). Glyph 2028 of the CFF font
-        "MSung-Light-Acro" couldn't be rendered otherwise (it seems its
-        charstring is buggy, though this requires more analysis)..
+	* src/pshinter/pshrec.c (ps_hints_t2mask, ps_hints_t2counter):
+	Ignore invalid "hintmask" and "cntrmask" operators (instead of
+	returning an error).  Glyph 2028 of the CFF font "MSung-Light-Acro"
+	couldn't be rendered otherwise (it seems its charstring is buggy,
+	though this requires more analysis).
+	(FT_COMPONENT): Define.
 
-        * src/cff/cffgload.c, src/psaux/t1decode.c, src/pshinter/pshrec.c,
-        src/pshinter/ahalgo2.c, src/pshinter/pshglob.h: fixed a bug where
-        the X and Y axis where inversed in the postscript hinter. this
-        caused problem when displaying on non-square surfaces..
+	* src/cff/cffgload.c (CFF_Parse_CharStrings), src/psaux/t1decode.c
+	(T1_Decoder_Parse_Charstrings), src/pshinter/pshalgo2.c (*), Fixed a
+	bug where the X and Y axis where inversed in the postscript hinter. 
+	This caused problem when displaying on non-square surfaces.
 
-        * include/freetype/cache/ftcmanag.h, include/freetype/cache/ftcimage.h,
-        include/freetype/cache/ftcsbits.h: updating documentation to better
-        explain the use of the "anode" output parameter in lookup functions
+	* src/pshinter/pshalgo2.c: s/vertical/dimension/.
 
 	* src/pshinter/pshglob.c (psh_globals_new): Replaced a floating
 	point constant with a fixed-float equivalent.  For some reasons not
@@ -22,9 +39,6 @@
 	constant casted to FT_Fixed, and will link a math library instead.
 
 2001-12-20  Werner Lemberg  <wl@gnu.org>
-
-        * src/cid/cidobjs.c (CID_Face_Done): fixed a memory leak, the subrs
-        routines were never released when CID faces were destroyed
 
 	* src/cache/ftccache.c (ftc_node_destroy, ftc_cache_lookup): Fix
 	tracing strings.
@@ -96,6 +110,11 @@
 
 	* src/type1/t1gload.c (T1_Load_Glyph): Enable font matrix
 	transformation of hinted glyphs.
+
+	* src/cid/cidload.c (cid_read_subrs): Fix error condition.
+
+	* src/cid/cidobjs.c (CID_Face_Done): Fixed a memory leak; the subrs
+	routines were never released when CID faces were destroyed.
 
 	* src/cff/cffload.h, src/cff/cffload.c, src/cff/cffgload.c: Updated
 	to move the definition of encoding tables back within "cffload.c"

@@ -138,7 +138,7 @@ FT_BEGIN_HEADER
   /* Glyph Postscript Names handling                                       */
   /*                                                                       */
   /*   By default, FreeType 2 is compiled with the `PSNames' module.  This */
-  /*   This module is in charge of converting a glyph name string into a   */
+  /*   module is in charge of converting a glyph name string into a        */
   /*   Unicode value, or return a Macintosh standard glyph name for the    */
   /*   use with the TrueType `post' table.                                 */
   /*                                                                       */
@@ -265,7 +265,7 @@ FT_BEGIN_HEADER
   /*   Note that the memory debugger is only activated at runtime when     */
   /*   when the _environment_ variable "FT_DEBUG_MEMORY" is also defined!  */
   /*                                                                       */
-#define  FT_DEBUG_MEMORY
+#define FT_DEBUG_MEMORY
 
 
   /*************************************************************************/
@@ -375,7 +375,7 @@ FT_BEGIN_HEADER
   /* By undefining this, you will only compile the code necessary to load  */
   /* TrueType glyphs without hinting.                                      */
   /*                                                                       */
-#undef  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#undef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
 
   /*************************************************************************/

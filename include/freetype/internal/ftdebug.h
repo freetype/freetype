@@ -81,6 +81,11 @@ FT_BEGIN_HEADER
     trace_t1decode,
     trace_psobjs,
 
+    /* PostScript hinting module `pshinter' */
+    trace_pshrec,
+    trace_pshalgo1,
+    trace_pshalgo2,
+
     /* Type 2 driver components */
     trace_cffdriver,
     trace_cffgload,
