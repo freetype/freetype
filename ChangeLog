@@ -1,3 +1,9 @@
+2004-06-10  David Turner  <david@freetype.org>
+
+        * src/base/ftobject.c, src/base/fthash.c, src/base/ftexcept.c,
+        src/base/ftsysio.c, src/base/ftsysmem.c, src/base/ftlist.c:
+        removing obsolete files
+
 2004-06-08  David Turner  <david@freetype.org>
 
 	* include/freetype/freetype.h (FT_Glyph_Metrics, FT_GlyphSlotRec),
