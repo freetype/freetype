@@ -1094,7 +1094,7 @@
     MEM_Set( idx, 0, sizeof ( *idx ) );
 
     idx->stream = stream;
-    if ( !READ_UShort( count ) &&
+    if ( !FT_READ_USHORT( count ) &&
          count > 0             )
     {
       FT_Byte*   p;
@@ -1105,7 +1105,7 @@
 
       /* there is at least one element; read the offset size,           */
       /* then access the offset table to compute the index's total size */
-      if ( READ_Byte( offsize ) )
+      if ( FT_READ_BYTE( offsize ) )
         goto Exit;
 
       idx->stream   = stream;
@@ -1381,7 +1381,7 @@
 
 
     /* read format */
-    if ( FT_STREAM_SEEK( offset ) || READ_Byte( format ) )
+    if ( FT_STREAM_SEEK( offset ) || FT_READ_BYTE( format ) )
       goto Exit;
 
     select->format      = format;
@@ -1394,7 +1394,7 @@
       goto Load_Data;
 
     case 3:     /* format 3, a tad more complex */
-      if ( READ_UShort( num_ranges ) )
+      if ( FT_READ_USHORT( num_ranges ) )
         goto Exit;
 
       select->data_size = num_ranges * 3 + 2;
@@ -1442,14 +1442,14 @@
         FT_UInt   first, limit;
 
 
-        first = NEXT_UShort( p );
+        first = FT_NEXT_USHORT( p );
         do
         {
           if ( glyph_index < first )
             break;
 
           fd2   = *p++;
-          limit = NEXT_UShort( p );
+          limit = FT_NEXT_USHORT( p );
 
           if ( glyph_index < limit )
           {
@@ -1529,7 +1529,7 @@
 
     /* Get the format of the table. */
     if ( FT_STREAM_SEEK( charset->offset ) ||
-         READ_Byte( charset->format ) )
+         FT_READ_BYTE( charset->format ) )
       goto Exit;
 
     /* If the the offset is greater than 2, we have to parse the */
@@ -1551,7 +1551,7 @@
       case 0:
         for ( j = 1; j < num_glyphs; j++ )
         {
-          if ( READ_UShort( glyph_sid ) )
+          if ( FT_READ_USHORT( glyph_sid ) )
             goto Exit;
 
           charset->sids[j] = glyph_sid;
@@ -1571,18 +1571,18 @@
           {
 
             /* Read the first glyph sid of the range. */
-            if ( READ_UShort( glyph_sid ) )
+            if ( FT_READ_USHORT( glyph_sid ) )
               goto Exit;
 
             /* Read the number of glyphs in the range.  */
             if ( charset->format == 2 )
             {
-              if ( READ_UShort( nleft ) )
+              if ( FT_READ_USHORT( nleft ) )
                 goto Exit;
             }
             else
             {
-              if ( READ_Byte( nleft ) )
+              if ( FT_READ_BYTE( nleft ) )
                 goto Exit;
             }
 
@@ -1747,8 +1747,8 @@
 
       /* we need to parse the table to determine its size */
       if ( FT_STREAM_SEEK( encoding->offset ) ||
-           READ_Byte( encoding->format ) ||
-           READ_Byte( count )            )
+           FT_READ_BYTE( encoding->format ) ||
+           FT_READ_BYTE( count )            )
         goto Exit;
 
       switch ( encoding->format & 0x7F )
@@ -1756,7 +1756,7 @@
       case 0:
         for ( j = 1; j <= count; j++ )
         {
-          if ( READ_Byte( glyph_code ) )
+          if ( FT_READ_BYTE( glyph_code ) )
             goto Exit;
 
           /* Make sure j is not too big. */
@@ -1783,11 +1783,11 @@
           for ( j = 0;  j < count; j++, i += nleft )
           {
             /* Read the first glyph code of the range. */
-            if ( READ_Byte( glyph_code ) )
+            if ( FT_READ_BYTE( glyph_code ) )
               goto Exit;
 
             /* Read the number of codes in the range. */
-            if ( READ_Byte( nleft ) )
+            if ( FT_READ_BYTE( nleft ) )
               goto Exit;
 
             /* Increment nleft, so we read `nleft + 1' codes/sids. */
@@ -1823,17 +1823,17 @@
 
 
         /* count supplements */
-        if ( READ_Byte( count ) )
+        if ( FT_READ_BYTE( count ) )
           goto Exit;
 
         for ( j = 0; j < count; j++ )
         {
           /* Read supplemental glyph code. */
-          if ( READ_Byte( glyph_code ) )
+          if ( FT_READ_BYTE( glyph_code ) )
             goto Exit;
 
           /* Read the SID associated with this glyph code. */
-          if ( READ_UShort( glyph_sid ) )
+          if ( FT_READ_USHORT( glyph_sid ) )
             goto Exit;
 
           /* Assign code to SID mapping. */

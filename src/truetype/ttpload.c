@@ -94,7 +94,7 @@
 
 
         for ( ; loc < limit; loc++ )
-          *loc = GET_Long();
+          *loc = FT_GET_LONG();
       }
 
       FT_FRAME_EXIT();
@@ -118,7 +118,7 @@
 
 
         for ( ; loc < limit; loc++ )
-          *loc = (FT_Long)( (FT_ULong)GET_UShort() * 2 );
+          *loc = (FT_Long)( (FT_ULong)FT_GET_USHORT() * 2 );
       }
       FT_FRAME_EXIT();
     }
@@ -186,7 +186,7 @@
 
 
       for ( ; cur <  limit; cur++ )
-        *cur = GET_Short();
+        *cur = FT_GET_SHORT();
     }
 
     FT_FRAME_EXIT();

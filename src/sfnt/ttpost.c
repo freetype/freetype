@@ -165,7 +165,7 @@
     FT_Char**  name_strings  = 0;
 
 
-    if ( READ_UShort( num_glyphs ) )
+    if ( FT_READ_USHORT( num_glyphs ) )
       goto Exit;
 
     /* UNDOCUMENTED!  The number of glyphs in this table can be smaller */
@@ -190,7 +190,7 @@
         goto Fail;
 
       for ( n = 0; n < num_glyphs; n++ )
-        glyph_indices[n] = GET_UShort();
+        glyph_indices[n] = FT_GET_USHORT();
 
       FT_FRAME_EXIT();
     }
@@ -230,7 +230,7 @@
         FT_UInt  len;
 
 
-        if ( READ_Byte  ( len )                               ||
+        if ( FT_READ_BYTE  ( len )                               ||
              ALLOC_ARRAY( name_strings[n], len + 1, FT_Char ) ||
              FT_STREAM_READ  ( name_strings[n], len )              )
           goto Fail1;
@@ -282,7 +282,7 @@
 
 
     /* UNDOCUMENTED!  This value appears only in the Apple TT specs. */
-    if ( READ_UShort( num_glyphs ) )
+    if ( FT_READ_USHORT( num_glyphs ) )
       goto Exit;
 
     /* check the number of glyphs */

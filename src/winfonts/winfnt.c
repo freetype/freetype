@@ -228,18 +228,18 @@
                            ne_header.resource_tab_offset ) )
           goto Exit;
 
-        size_shift = GET_UShortLE();
+        size_shift = FT_GET_USHORT_LE();
 
         for (;;)
         {
           FT_UShort  type_id, count;
 
 
-          type_id = GET_UShortLE();
+          type_id = FT_GET_USHORT_LE();
           if ( !type_id )
             break;
 
-          count = GET_UShortLE();
+          count = FT_GET_USHORT_LE();
 
           if ( type_id == 0x8008 )
           {
@@ -277,8 +277,8 @@
 
           for ( ; cur < limit; cur++ )
           {
-            cur->offset     = (FT_ULong)GET_UShortLE() << size_shift;
-            cur->fnt_size   = (FT_ULong)GET_UShortLE() << size_shift;
+            cur->offset     = (FT_ULong)FT_GET_USHORT_LE() << size_shift;
+            cur->fnt_size   = (FT_ULong)FT_GET_USHORT_LE() << size_shift;
             cur->size_shift = size_shift;
             stream->cursor += 8;
           }
@@ -655,12 +655,12 @@
     /* jump to glyph entry */
     p = font->fnt_frame + 118 + len * glyph_index;
 
-    bitmap->width = NEXT_ShortLE(p);
+    bitmap->width = FT_NEXT_SHORT_LE(p);
 
     if ( new_format )
-      offset = NEXT_ULongLE(p);
+      offset = FT_NEXT_ULONG_LE(p);
     else
-      offset = NEXT_UShortLE(p);
+      offset = FT_NEXT_USHORT_LE(p);
 
     /* jump to glyph data */
     p = font->fnt_frame + /* font->header.bits_offset */ + offset;

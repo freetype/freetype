@@ -1586,19 +1586,19 @@
       return FT_Err_Invalid_Table;
 
     /* only recognize format 0 */
-    if ( NEXT_UShort(p) != 0 )
+    if ( FT_NEXT_USHORT(p) != 0 )
       return FT_Err_Invalid_Table;
 
-    num_cmaps = NEXT_UShort(p);
+    num_cmaps = FT_NEXT_USHORT(p);
 
     for ( ; num_cmaps > 0 && p + 8 <= limit; num_cmaps-- )
     {
       FT_CharMapRec  charmap;
       FT_UInt32      offset;
 
-      charmap.platform_id = NEXT_UShort(p);
-      charmap.encoding_id = NEXT_UShort(p);
-      offset              = NEXT_ULong(p);
+      charmap.platform_id = FT_NEXT_USHORT(p);
+      charmap.encoding_id = FT_NEXT_USHORT(p);
+      offset              = FT_NEXT_ULONG(p);
 
       if ( offset && table + offset + 2 < limit )
       {
