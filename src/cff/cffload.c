@@ -2242,11 +2242,14 @@
     cff_done_index( &font->name_index );
     cff_done_index( &font->charstrings_index );
 
-    /* release font dictionaries */
-    for ( index = 0; index < font->num_subfonts; index++ )
-      CFF_Done_SubFont( memory, font->subfonts[index] );
+    /* release font dictionaries, but only if working with a CID keyed CFF font */
+    if ( font->num_subfonts > 0 )
+    {
+      for ( index = 0; index < font->num_subfonts; index++ )
+        CFF_Done_SubFont( memory, font->subfonts[index] );
 
-    FREE( font->subfonts );
+      FREE( font->subfonts );
+    }
 
     CFF_Done_Encoding( &font->encoding, font->stream );
     CFF_Done_Charset( &font->charset, font->stream );
