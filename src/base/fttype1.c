@@ -89,8 +89,8 @@
       /* this will probably happen later...                         */
 
       driver_name = face->driver->root.clazz->module_name;
-      result      = ( ft_strcmp( driver_name, "type1" ) ||
-                      ft_strcmp( driver_name, "cff"   ) );
+      result      = ( ft_strcmp( driver_name, "type1" ) == 0 ||
+                      ft_strcmp( driver_name, "cff"   ) == 0 );
     }
 
     return result;
