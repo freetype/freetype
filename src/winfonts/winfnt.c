@@ -50,9 +50,9 @@
 #define FT_STRUCTURE  WinMZ_Header
 
     FT_FRAME_START( 64 ),
-    FT_FRAME_USHORT_LE ( magic ),
-    FT_FRAME_SKIP_BYTES( 29 * 2 ),
-    FT_FRAME_ULONG_LE  ( lfanew ),
+      FT_FRAME_USHORT_LE ( magic ),
+      FT_FRAME_SKIP_BYTES( 29 * 2 ),
+      FT_FRAME_ULONG_LE  ( lfanew ),
     FT_FRAME_END
   };
 
@@ -63,10 +63,10 @@
 #define FT_STRUCTURE  WinNE_Header
 
     FT_FRAME_START( 40 ),
-    FT_FRAME_USHORT_LE ( magic ),
-    FT_FRAME_SKIP_BYTES( 34 ),
-    FT_FRAME_USHORT_LE ( resource_tab_offset ),
-    FT_FRAME_USHORT_LE ( rname_tab_offset ),
+      FT_FRAME_USHORT_LE ( magic ),
+      FT_FRAME_SKIP_BYTES( 34 ),
+      FT_FRAME_USHORT_LE ( resource_tab_offset ),
+      FT_FRAME_USHORT_LE ( rname_tab_offset ),
     FT_FRAME_END
   };
 
@@ -77,42 +77,42 @@
 #define FT_STRUCTURE  WinFNT_Header
 
     FT_FRAME_START( 134 ),
-    FT_FRAME_USHORT_LE( version ),
-    FT_FRAME_ULONG_LE ( file_size ),
-    FT_FRAME_BYTES    ( copyright, 60 ),
-    FT_FRAME_USHORT_LE( file_type ),
-    FT_FRAME_USHORT_LE( nominal_point_size ),
-    FT_FRAME_USHORT_LE( vertical_resolution ),
-    FT_FRAME_USHORT_LE( horizontal_resolution ),
-    FT_FRAME_USHORT_LE( ascent ),
-    FT_FRAME_USHORT_LE( internal_leading ),
-    FT_FRAME_USHORT_LE( external_leading ),
-    FT_FRAME_BYTE     ( italic ),
-    FT_FRAME_BYTE     ( underline ),
-    FT_FRAME_BYTE     ( strike_out ),
-    FT_FRAME_USHORT_LE( weight ),
-    FT_FRAME_BYTE     ( charset ),
-    FT_FRAME_USHORT_LE( pixel_width ),
-    FT_FRAME_USHORT_LE( pixel_height ),
-    FT_FRAME_BYTE     ( pitch_and_family ),
-    FT_FRAME_USHORT_LE( avg_width ),
-    FT_FRAME_USHORT_LE( max_width ),
-    FT_FRAME_BYTE     ( first_char ),
-    FT_FRAME_BYTE     ( last_char ),
-    FT_FRAME_BYTE     ( default_char ),
-    FT_FRAME_BYTE     ( break_char ),
-    FT_FRAME_USHORT_LE( bytes_per_row ),
-    FT_FRAME_ULONG_LE ( device_offset ),
-    FT_FRAME_ULONG_LE ( face_name_offset ),
-    FT_FRAME_ULONG_LE ( bits_pointer ),
-    FT_FRAME_ULONG_LE ( bits_offset ),
-    FT_FRAME_BYTE     ( reserved ),
-    FT_FRAME_ULONG_LE ( flags ),
-    FT_FRAME_USHORT_LE( A_space ),
-    FT_FRAME_USHORT_LE( B_space ),
-    FT_FRAME_USHORT_LE( C_space ),
-    FT_FRAME_USHORT_LE( color_table_offset ),
-    FT_FRAME_BYTES    ( reserved, 4 ),
+      FT_FRAME_USHORT_LE( version ),
+      FT_FRAME_ULONG_LE ( file_size ),
+      FT_FRAME_BYTES    ( copyright, 60 ),
+      FT_FRAME_USHORT_LE( file_type ),
+      FT_FRAME_USHORT_LE( nominal_point_size ),
+      FT_FRAME_USHORT_LE( vertical_resolution ),
+      FT_FRAME_USHORT_LE( horizontal_resolution ),
+      FT_FRAME_USHORT_LE( ascent ),
+      FT_FRAME_USHORT_LE( internal_leading ),
+      FT_FRAME_USHORT_LE( external_leading ),
+      FT_FRAME_BYTE     ( italic ),
+      FT_FRAME_BYTE     ( underline ),
+      FT_FRAME_BYTE     ( strike_out ),
+      FT_FRAME_USHORT_LE( weight ),
+      FT_FRAME_BYTE     ( charset ),
+      FT_FRAME_USHORT_LE( pixel_width ),
+      FT_FRAME_USHORT_LE( pixel_height ),
+      FT_FRAME_BYTE     ( pitch_and_family ),
+      FT_FRAME_USHORT_LE( avg_width ),
+      FT_FRAME_USHORT_LE( max_width ),
+      FT_FRAME_BYTE     ( first_char ),
+      FT_FRAME_BYTE     ( last_char ),
+      FT_FRAME_BYTE     ( default_char ),
+      FT_FRAME_BYTE     ( break_char ),
+      FT_FRAME_USHORT_LE( bytes_per_row ),
+      FT_FRAME_ULONG_LE ( device_offset ),
+      FT_FRAME_ULONG_LE ( face_name_offset ),
+      FT_FRAME_ULONG_LE ( bits_pointer ),
+      FT_FRAME_ULONG_LE ( bits_offset ),
+      FT_FRAME_BYTE     ( reserved ),
+      FT_FRAME_ULONG_LE ( flags ),
+      FT_FRAME_USHORT_LE( A_space ),
+      FT_FRAME_USHORT_LE( B_space ),
+      FT_FRAME_USHORT_LE( C_space ),
+      FT_FRAME_USHORT_LE( color_table_offset ),
+      FT_FRAME_BYTES    ( reserved, 4 ),
     FT_FRAME_END
   };
 
@@ -153,7 +153,7 @@
 
     if ( header->file_type & 1 )
     {
-      FT_TRACE2(( "can't handle vector FNT fonts\n" ));
+      FT_TRACE2(( "[can't handle vector FNT fonts]\n" ));
       error = FT_Err_Unknown_File_Format;
       goto Exit;
     }
@@ -187,6 +187,7 @@
     FREE( face->fonts );
     face->num_fonts = 0;
   }
+
 
   static
   FT_Error  fnt_get_dll_fonts( FNT_Face  face )
@@ -470,7 +471,7 @@
       }
     }
 
-    return ( size->font ? FT_Err_Ok : FT_Err_Invalid_Argument );
+    return ( size->font ? FT_Err_Ok : FT_Err_Invalid_Pixel_Size );
   }
 
 
