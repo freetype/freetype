@@ -25,8 +25,13 @@ PLATFORM      := unixdev # do not set it to 'unix', or libtool will trick you
 
 # The directory where all object files are placed.
 #
-OBJ_DIR := obj
+ifndef OBJ_DIR
+  OBJ_DIR := $(shell cd $(TOP)/obj; pwd)
+endif
 
+# library file name
+#
+LIBRARY := lib$(PROJECT)
 
 # The directory where all library files are placed.
 #
