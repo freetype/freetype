@@ -521,12 +521,7 @@
     {
       AH_Point*  point;
       AH_Edge*   edge;
-      AH_Edge*   before;
-      AH_Edge*   after;
 
-
-      before = 0;
-      after  = 0;
 
       if ( edges < edge_limit )
         for ( point = points; point < point_limit; point++ )
@@ -670,8 +665,7 @@
     {
       for ( p = p1; p <= p2; p++ )
       {
-        FT_Pos  u = p->v;
-
+        u = p->v;
 
         if ( u <= v1 )
           u += d1;

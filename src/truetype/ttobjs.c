@@ -460,10 +460,11 @@
 
   Fail_Memory:
 
-#endif
-
     TT_Done_Size( size );
     return error;
+
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
+
   }
 
 

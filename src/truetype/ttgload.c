@@ -213,15 +213,17 @@
                                    FT_ULong    offset,
                                    FT_UInt     byte_count )
   {
-    FT_Error  error;
-    FT_Stream stream = loader->stream;
+    FT_Error   error;
+    FT_Stream  stream = loader->stream;
 
-
-    /* the following line sets the `error' variable through macros! */
-    (void)( FILE_Seek( offset ) || ACCESS_Frame( byte_count ) );
 
     FT_TRACE5(( "Glyph %ld\n", glyph_index ));
-    return error;
+
+    /* the following line sets the `error' variable through macros! */
+    if ( FILE_Seek( offset ) || ACCESS_Frame( byte_count ) )
+      return error;
+
+    return TT_Err_Ok;
   }
 
 

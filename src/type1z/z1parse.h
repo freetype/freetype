@@ -20,6 +20,7 @@
 #define Z1PARSE_H
 
 #include <freetype/internal/t1types.h>
+#include <freetype/internal/ftstream.h>
 
 #ifdef __cplusplus
   extern "C" {
@@ -72,7 +73,7 @@
   {
     Z1_Field_Type  type;          /* type of field                        */
     FT_UInt        offset;        /* offset of field in object            */
-    FT_UInt        size;          /* size of field in bytes               */
+    FT_Byte        size;          /* size of field in bytes               */
     FT_UInt        array_max;     /* maximum number of elements for array */
     FT_UInt        count_offset;  /* offset of element count for arrays   */
     FT_Int         flag_bit;      /* bit number for field flag            */
@@ -80,76 +81,74 @@
   } Z1_Field_Rec;
 
 
-#define Z1_FIELD_REF( s, f )  ( ((s*)0)->f )
-
-#define Z1_FIELD_BOOL( _ftype, _fname )                      \
-          {                                                  \
-            t1_field_bool,                                   \
-            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
-            sizeof ( Z1_FIELD_REF( _ftype, _fname ) ),       \
-            0, 0, 0                                          \
+#define Z1_FIELD_BOOL( _fname )        \
+          {                            \
+            t1_field_bool,             \
+            FT_FIELD_OFFSET( _fname ), \
+            FT_FIELD_SIZE( _fname ),   \
+            0, 0, 0                    \
           }
 
-#define Z1_FIELD_NUM( _ftype, _fname )                       \
-          {                                                  \
-            t1_field_integer,                                \
-            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
-            sizeof ( Z1_FIELD_REF( _ftype, _fname ) ),       \
-            0, 0, 0                                          \
+#define Z1_FIELD_NUM( _fname )         \
+          {                            \
+            t1_field_integer,          \
+            FT_FIELD_OFFSET( _fname ), \
+            FT_FIELD_SIZE( _fname ),   \
+            0, 0, 0                    \
           }
 
-#define Z1_FIELD_FIXED( _ftype, _fname, _power )             \
-          {                                                  \
-            t1_field_fixed,                                  \
-            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
-            sizeof ( Z1_FIELD_REF( _ftype, _fname ) ),       \
-            0, 0, 0                                          \
+#define Z1_FIELD_FIXED( _fname, _power ) \
+          {                              \
+            t1_field_fixed,              \
+            FT_FIELD_OFFSET( _fname ),   \
+            FT_FIELD_SIZE( _fname ),     \
+            0, 0, 0                      \
           }
 
-#define Z1_FIELD_STRING( _ftype, _fname )                    \
-          {                                                  \
-            t1_field_string,                                 \
-            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
-            sizeof ( Z1_FIELD_REF( _ftype, _fname ) ),       \
-            0, 0, 0                                          \
+#define Z1_FIELD_STRING( _fname )      \
+          {                            \
+            t1_field_string,           \
+            FT_FIELD_OFFSET( _fname ), \
+            FT_FIELD_SIZE( _fname ),   \
+            0, 0, 0                    \
           }
 
-#define Z1_FIELD_NUM_ARRAY( _ftype, _fname, _fcount, _fmax )  \
-          {                                                   \
-            t1_field_integer,                                 \
-            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ),  \
-            sizeof ( Z1_FIELD_REF( _ftype, _fname )[0] ),     \
-            _fmax,                                            \
-            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fcount ), \
-            0                                                 \
+#define Z1_FIELD_NUM_ARRAY( _fname, _fcount, _fmax )  \
+          {                                           \
+            t1_field_integer,                         \
+            FT_FIELD_OFFSET( _fname ),                \
+            FT_FIELD_SIZE_DELTA( _fname ),            \
+            _fmax,                                    \
+            FT_FIELD_OFFSET( _fcount ),               \
+            0                                         \
           }
 
-#define Z1_FIELD_FIXED_ARRAY( _ftype, _fname, _fcount, _fmax ) \
-          {                                                    \
-            t1_field_fixed,                                    \
-            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ),   \
-            sizeof ( Z1_FIELD_REF( _ftype, _fname )[0] ),      \
-            _fmax,                                             \
-            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fcount ),  \
-            0                                                  \
+#define Z1_FIELD_FIXED_ARRAY( _fname, _fcount, _fmax ) \
+          {                                            \
+            t1_field_fixed,                            \
+            FT_FIELD_OFFSET( _fname ),                 \
+            FT_FIELD_SIZE_DELTA( _fname ),             \
+            _fmax,                                     \
+            FT_FIELD_OFFSET( _fcount ),                \
+            0                                          \
           }
 
-#define Z1_FIELD_NUM_ARRAY2( _ftype, _fname, _fmax )         \
-          {                                                  \
-            t1_field_integer,                                \
-            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
-            sizeof ( Z1_FIELD_REF( _ftype, _fname )[0] ),    \
-            _fmax,                                           \
-            0, 0                                             \
+#define Z1_FIELD_NUM_ARRAY2( _fname, _fmax ) \
+          {                                  \
+            t1_field_integer,                \
+            FT_FIELD_OFFSET( _fname ),       \
+            FT_FIELD_SIZE_DELTA( _fname ),   \
+            _fmax,                           \
+            0, 0                             \
           }
 
-#define Z1_FIELD_FIXED_ARRAY2( _ftype, _fname, _fmax )       \
-          {                                                  \
-            t1_field_fixed,                                  \
-            (FT_UInt)(char*)&Z1_FIELD_REF( _ftype, _fname ), \
-            sizeof ( Z1_FIELD_REF( _ftype, _fname )[0] ),    \
-            _fmax,                                           \
-            0, 0                                             \
+#define Z1_FIELD_FIXED_ARRAY2( _fname, _fmax ) \
+          {                                    \
+            t1_field_fixed,                    \
+            FT_FIELD_OFFSTE( _fname ),         \
+            FT_FIELD_SIZE_DELTA( _fname ),     \
+            _fmax,                             \
+            0, 0                               \
           }
 
 

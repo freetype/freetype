@@ -46,64 +46,73 @@
   static
   const FT_Frame_Field  winmz_header_fields[] =
   {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  WinMZ_Header
+
     FT_FRAME_START( 64 ),
-    FT_FRAME_USHORT_LE ( WinMZ_Header, magic ),
+    FT_FRAME_USHORT_LE ( magic ),
     FT_FRAME_SKIP_BYTES( 29 * 2 ),
-    FT_FRAME_ULONG_LE  ( WinMZ_Header, lfanew ),
+    FT_FRAME_ULONG_LE  ( lfanew ),
     FT_FRAME_END
   };
 
   static
   const FT_Frame_Field  winne_header_fields[] =
   {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  WinNE_Header
+
     FT_FRAME_START( 40 ),
-    FT_FRAME_USHORT_LE ( WinNE_Header, magic ),
+    FT_FRAME_USHORT_LE ( magic ),
     FT_FRAME_SKIP_BYTES( 34 ),
-    FT_FRAME_USHORT_LE ( WinNE_Header, resource_tab_offset ),
-    FT_FRAME_USHORT_LE ( WinNE_Header, rname_tab_offset ),
+    FT_FRAME_USHORT_LE ( resource_tab_offset ),
+    FT_FRAME_USHORT_LE ( rname_tab_offset ),
     FT_FRAME_END
   };
 
   static
   const FT_Frame_Field  winfnt_header_fields[] =
   {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  WinFNT_Header
+
     FT_FRAME_START( 134 ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, version ),
-    FT_FRAME_ULONG_LE ( WinFNT_Header, file_size ),
-    FT_FRAME_BYTES    ( WinFNT_Header, copyright, 60 ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, file_type ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, nominal_point_size ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, vertical_resolution ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, horizontal_resolution ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, ascent ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, internal_leading ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, external_leading ),
-    FT_FRAME_BYTE     ( WinFNT_Header, italic ),
-    FT_FRAME_BYTE     ( WinFNT_Header, underline ),
-    FT_FRAME_BYTE     ( WinFNT_Header, strike_out ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, weight ),
-    FT_FRAME_BYTE     ( WinFNT_Header, charset ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, pixel_width ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, pixel_height ),
-    FT_FRAME_BYTE     ( WinFNT_Header, pitch_and_family ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, avg_width ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, max_width ),
-    FT_FRAME_BYTE     ( WinFNT_Header, first_char ),
-    FT_FRAME_BYTE     ( WinFNT_Header, last_char ),
-    FT_FRAME_BYTE     ( WinFNT_Header, default_char ),
-    FT_FRAME_BYTE     ( WinFNT_Header, break_char ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, bytes_per_row ),
-    FT_FRAME_ULONG_LE ( WinFNT_Header, device_offset ),
-    FT_FRAME_ULONG_LE ( WinFNT_Header, face_name_offset ),
-    FT_FRAME_ULONG_LE ( WinFNT_Header, bits_pointer ),
-    FT_FRAME_ULONG_LE ( WinFNT_Header, bits_offset ),
-    FT_FRAME_BYTE     ( WinFNT_Header, reserved ),
-    FT_FRAME_ULONG_LE ( WinFNT_Header, flags ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, A_space ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, B_space ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, C_space ),
-    FT_FRAME_USHORT_LE( WinFNT_Header, color_table_offset ),
-    FT_FRAME_BYTES    ( WinFNT_Header, reserved, 4 ),
+    FT_FRAME_USHORT_LE( version ),
+    FT_FRAME_ULONG_LE ( file_size ),
+    FT_FRAME_BYTES    ( copyright, 60 ),
+    FT_FRAME_USHORT_LE( file_type ),
+    FT_FRAME_USHORT_LE( nominal_point_size ),
+    FT_FRAME_USHORT_LE( vertical_resolution ),
+    FT_FRAME_USHORT_LE( horizontal_resolution ),
+    FT_FRAME_USHORT_LE( ascent ),
+    FT_FRAME_USHORT_LE( internal_leading ),
+    FT_FRAME_USHORT_LE( external_leading ),
+    FT_FRAME_BYTE     ( italic ),
+    FT_FRAME_BYTE     ( underline ),
+    FT_FRAME_BYTE     ( strike_out ),
+    FT_FRAME_USHORT_LE( weight ),
+    FT_FRAME_BYTE     ( charset ),
+    FT_FRAME_USHORT_LE( pixel_width ),
+    FT_FRAME_USHORT_LE( pixel_height ),
+    FT_FRAME_BYTE     ( pitch_and_family ),
+    FT_FRAME_USHORT_LE( avg_width ),
+    FT_FRAME_USHORT_LE( max_width ),
+    FT_FRAME_BYTE     ( first_char ),
+    FT_FRAME_BYTE     ( last_char ),
+    FT_FRAME_BYTE     ( default_char ),
+    FT_FRAME_BYTE     ( break_char ),
+    FT_FRAME_USHORT_LE( bytes_per_row ),
+    FT_FRAME_ULONG_LE ( device_offset ),
+    FT_FRAME_ULONG_LE ( face_name_offset ),
+    FT_FRAME_ULONG_LE ( bits_pointer ),
+    FT_FRAME_ULONG_LE ( bits_offset ),
+    FT_FRAME_BYTE     ( reserved ),
+    FT_FRAME_ULONG_LE ( flags ),
+    FT_FRAME_USHORT_LE( A_space ),
+    FT_FRAME_USHORT_LE( B_space ),
+    FT_FRAME_USHORT_LE( C_space ),
+    FT_FRAME_USHORT_LE( color_table_offset ),
+    FT_FRAME_BYTES    ( reserved, 4 ),
     FT_FRAME_END
   };
 

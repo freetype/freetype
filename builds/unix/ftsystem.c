@@ -235,12 +235,12 @@
       
     stream->size = stat_buf.st_size;
     stream->pos  = 0;
-    stream->base = mmap( NULL,
-                         stream->size,
-                         PROT_READ,
-                         MAP_FILE | MAP_PRIVATE,
-                         file,
-                         0 );
+    stream->base = (unsigned char*)mmap( NULL,
+                                         stream->size,
+                                         PROT_READ,
+                                         MAP_FILE | MAP_PRIVATE,
+                                         file,
+                                         0 );
 
     if ( (long)stream->base == -1 )
     {

@@ -939,13 +939,13 @@
             values = top;
             for ( nn = 0; nn < num_points; nn++ )
             {
-              FT_Int  x = values[0];
+              FT_Int  tmp = values[0];
 
 
               for ( mm = 1; mm < blend->num_designs; mm++ )
-                x += FT_MulFix( *delta++, blend->weight_vector[mm] );
+                tmp += FT_MulFix( *delta++, blend->weight_vector[mm] );
 
-              *values++ = x;
+              *values++ = tmp;
             }
             /* note that `top' will be incremented later by calls to `pop' */
             break;

@@ -2825,31 +2825,22 @@
 
       /* Now finalize the profiles that needs it */
 
+      P = draw_left;
+      while ( P )
       {
-        PProfile  Q, P;
-
-
-        P = draw_left;
-        while ( P )
-        {
-          Q = P->link;
-          if ( P->height == 0 )
-            DelOld( &draw_left, P );
-          P = Q;
-        }
+        Q = P->link;
+        if ( P->height == 0 )
+          DelOld( &draw_left, P );
+        P = Q;
       }
 
+      P = draw_right;
+      while ( P )
       {
-        PProfile  Q, P = draw_right;
-
-
-        while ( P )
-        {
-          Q = P->link;
-          if ( P->height == 0 )
-            DelOld( &draw_right, P );
-          P = Q;
-        }
+        Q = P->link;
+        if ( P->height == 0 )
+          DelOld( &draw_right, P );
+        P = Q;
       }
     }
 

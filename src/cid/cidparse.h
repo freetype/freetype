@@ -20,6 +20,7 @@
 #define CIDPARSE_H
 
 #include <freetype/internal/t1types.h>
+#include <freetype/internal/ftstream.h>
 
 
 #ifdef __cplusplus
@@ -252,7 +253,7 @@
     CID_Field_Type      type;         /* type of field                     */
     CID_Field_Parser    reader;
     FT_UInt             offset;       /* offset of field in object         */
-    FT_UInt             size;         /* size of field in bytes            */
+    FT_Byte             size;         /* size of field in bytes            */
     FT_UInt             array_max;    /* maximal number of elements for    */
                                       /* array                             */
     FT_UInt             count_offset; /* offset of element count for       */
@@ -260,15 +261,13 @@
   } CID_Field_Rec;
 
 
-#define CID_FIELD_REF( s, f )  ( ((s*)0)->f )
-
-#define CID_NEW_SIMPLE_FIELD( _ident, _type, _fname )         \
-          {                                                   \
-            _ident, T1CODE, _type,                            \
-            0,                                                \
-            (FT_UInt)(char*)&CID_FIELD_REF( T1TYPE, _fname ), \
-            sizeof ( CID_FIELD_REF( T1TYPE, _fname ) ),       \
-            0, 0                                              \
+#define CID_NEW_SIMPLE_FIELD( _ident, _type, _fname ) \
+          {                                           \
+            _ident, T1CODE, _type,                    \
+            0,                                        \
+            FT_FIELD_OFFSET( _fname ),                \
+            FT_FIELD_SIZE( _fname ),                  \
+            0, 0                                      \
           },
 
 #define CID_NEW_CALLBACK_FIELD( _ident, _reader ) \
@@ -279,23 +278,23 @@
             0, 0                                  \
           },
 
-#define CID_NEW_TABLE_FIELD( _ident, _type, _fname, _max )           \
-          {                                                          \
-            _ident, T1CODE, _type,                                   \
-            0,                                                       \
-            (FT_UInt)(char*)&CID_FIELD_REF( T1TYPE, _fname ),        \
-            sizeof ( CID_FIELD_REF( T1TYPE, _fname )[0] ),           \
-            _max,                                                    \
-            (FT_UInt)(char*)&CID_FIELD_REF( T1TYPE, num_ ## _fname ) \
+#define CID_NEW_TABLE_FIELD( _ident, _type, _fname, _max ) \
+          {                                                \
+            _ident, T1CODE, _type,                         \
+            0,                                             \
+            FT_FIELD_OFFSET( _fname ),                     \
+            FT_FIELD_SIZE_DELTA( _fname ),                 \
+            _max,                                          \
+            FT_FIELD_OFFSET( num_ ## _fname )              \
           },
 
-#define CID_NEW_TABLE_FIELD2( _ident, _type, _fname, _max )   \
-          {                                                   \
-            _ident, T1CODE, _type,                            \
-            0,                                                \
-            (FT_UInt)(char*)&CID_FIELD_REF( T1TYPE, _fname ), \
-            sizeof ( CID_FIELD_REF( T1TYPE, _fname )[0] ),    \
-            _max, 0                                           \
+#define CID_NEW_TABLE_FIELD2( _ident, _type, _fname, _max ) \
+          {                                                 \
+            _ident, T1CODE, _type,                          \
+            0,                                              \
+            FT_FIELD_OFFSET( _fname ),                      \
+            FT_FIELD_SIZE_DELTA( _fname ),                  \
+            _max, 0                                         \
           },
 
 

@@ -571,11 +571,14 @@
   {
     static const FT_Frame_Field  cff_header_fields[] =
     {
+#undef  FT_STRUCTURE
+#define FT_STRUCTURE  CFF_Font
+
       FT_FRAME_START( 4 ),
-        FT_FRAME_BYTE( CFF_Font, version_major ),
-        FT_FRAME_BYTE( CFF_Font, version_minor ),
-        FT_FRAME_BYTE( CFF_Font, header_size ),
-        FT_FRAME_BYTE( CFF_Font, absolute_offsize ),
+        FT_FRAME_BYTE( version_major ),
+        FT_FRAME_BYTE( version_minor ),
+        FT_FRAME_BYTE( header_size ),
+        FT_FRAME_BYTE( absolute_offsize ),
       FT_FRAME_END
     };
 
