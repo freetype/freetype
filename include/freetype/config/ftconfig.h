@@ -150,7 +150,7 @@ FT_BEGIN_HEADER
 #define FT_LONG64
 #define FT_INT64  long
 
-#elif defined( _MSC_VER )      /* Visual C++ (and Intel C++) */
+#elif defined( _MSC_VER ) && _MSC_VER >= 900  /* Visual C++ (and Intel C++) */
 
   /* this compiler provides the __int64 type */
 #define FT_LONG64
