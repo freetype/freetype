@@ -70,7 +70,8 @@ ifndef CFLAGS
             -Wwrite-strings \
             -Wstrict-prototypes \
             -Wredundant-decls \
-            -Wnested-externs
+            -Wnested-externs \
+            -Wno-long-long
 endif
 
 # ANSIFLAGS: Put there the flags used to make your compiler ANSI-compliant.
