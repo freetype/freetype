@@ -1812,7 +1812,7 @@
            face->root.internal->incremental_interface->funcs->get_glyph_metrics )
       {
         FT_Incremental_MetricsRec  metrics;
-        FT_Error                   error = 0;
+        FT_Error                   error = TT_Err_Ok;
 
 
         metrics.bearing_x = 0;
@@ -1937,7 +1937,7 @@
     face   = (TT_Face)glyph->face;
     sfnt   = (SFNT_Service)face->sfnt;
     stream = face->root.stream;
-    error  = 0;
+    error  = TT_Err_Ok;
 
     if ( !size || ( load_flags & FT_LOAD_NO_SCALE )   ||
                   ( load_flags & FT_LOAD_NO_RECURSE ) )
@@ -2033,7 +2033,7 @@
 
     /* update the glyph zone bounds */
     {
-      FT_GlyphLoader  gloader = FT_FACE_DRIVER(face)->glyph_loader;
+      FT_GlyphLoader  gloader = FT_FACE_DRIVER( face )->glyph_loader;
 
 
       loader.gloader = gloader;
