@@ -1,8 +1,11 @@
+// TetiSoft: replaced vprintf() with KVPrintF() and commented out exit()
+extern void __stdargs KVPrintF( const char *formatString, const void *values );
+
 /***************************************************************************/
 /*                                                                         */
 /*  ftdebug.c                                                              */
 /*                                                                         */
-/*    Debugging and logging component for Win32 (body).                    */
+/*    Debugging and logging component (body).                              */
 /*                                                                         */
 /*  Copyright 1996-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -57,19 +60,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <windows.h>
-
 
   FT_EXPORT_DEF( void )
   FT_Message( const char*  fmt, ... )
   {
-    static char buf[8192];
-    va_list     ap;
+    va_list  ap;
 
 
     va_start( ap, fmt );
-    vsprintf( buf, fmt, ap );
-    OutputDebugStringA( buf );
+//  vprintf( fmt, ap );
+    KVPrintF( fmt, ap );
     va_end( ap );
   }
 
@@ -77,16 +77,15 @@
   FT_EXPORT_DEF( void )
   FT_Panic( const char*  fmt, ... )
   {
-    static char buf[8192];
-    va_list     ap;
+    va_list  ap;
 
 
     va_start( ap, fmt );
-    vsprintf( buf, fmt, ap );
-    OutputDebugStringA( buf );
+//  vprintf( fmt, ap );
+    KVPrintF( fmt, ap );
     va_end( ap );
 
-    exit( EXIT_FAILURE );
+//  exit( EXIT_FAILURE );
   }
 
 
