@@ -215,7 +215,7 @@
                                                  FT_Matrix*  matrix,
                                                  FT_Vector*  delta );
 
-   
+
   enum
   {
     ft_glyph_bbox_pixels    = 0,
@@ -348,7 +348,7 @@
                                                  FT_ULong    render_mode,
                                                  FT_Vector*  origin,
                                                  FT_Bool     destroy );
-                                               
+
 
   /*************************************************************************/
   /*                                                                       */

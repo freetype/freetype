@@ -968,7 +968,7 @@
   /*                                                                       */
   typedef struct FT_GlyphLoader_  FT_GlyphLoader;
 
-  
+
   /*************************************************************************/
   /*                                                                       */
   /*                  FreeType Glyph Slot base class                       */
@@ -1113,11 +1113,11 @@
     FT_Vector         advance;
 
     FT_Glyph_Format   format;
-    
+
     FT_Bitmap         bitmap;
     FT_Int            bitmap_left;
     FT_Int            bitmap_top;
-    
+
     FT_Outline        outline;
 
     FT_UInt           num_subglyphs;
@@ -1939,10 +1939,10 @@
   {
     ft_render_mode_normal = 0,
     ft_render_mode_mono   = 1
-    
+
   } FT_Render_Mode;
 
-  
+
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1992,7 +1992,7 @@
     ft_kerning_default  = 0,
     ft_kerning_unfitted,
     ft_kerning_unscaled
-    
+
   } FT_Kerning_Mode;
 
 
