@@ -356,19 +356,12 @@
       goto Exit;
 
     /* now read postscript table */
-    switch ( format )
-    {
-    case 0x00020000L:
+    if ( format == 0x00020000L )
       error = load_format_20( face, stream );
-      break;
-
-    case 0x00028000L:
+    else if ( format == 0x00028000L )
       error = load_format_25( face, stream );
-      break;
-
-    default:
+    else
       error = SFNT_Err_Invalid_File_Format;
-    }
 
     face->postscript_names.loaded = 1;
 
@@ -382,38 +375,35 @@
   {
     FT_Memory      memory = face->root.memory;
     TT_Post_Names  names  = &face->postscript_names;
+    FT_Fixed       format;
 
 
     if ( names->loaded )
     {
-      switch ( face->postscript.FormatType )
+      format = face->postscript.FormatType;
+
+      if ( format == 0x00020000L )
       {
-      case 0x00020000L:
-        {
-          TT_Post_20  table = &names->names.format_20;
-          FT_UShort   n;
+        TT_Post_20  table = &names->names.format_20;
+        FT_UShort   n;
 
 
-          FT_FREE( table->glyph_indices );
-          table->num_glyphs = 0;
+        FT_FREE( table->glyph_indices );
+        table->num_glyphs = 0;
 
-          for ( n = 0; n < table->num_names; n++ )
-            FT_FREE( table->glyph_names[n] );
+        for ( n = 0; n < table->num_names; n++ )
+          FT_FREE( table->glyph_names[n] );
 
-          FT_FREE( table->glyph_names );
-          table->num_names = 0;
-        }
-        break;
-
-      case 0x00028000L:
-        {
-          TT_Post_25  table = &names->names.format_25;
+        FT_FREE( table->glyph_names );
+        table->num_names = 0;
+      }
+      else if ( format == 0x00028000L )
+      {
+        TT_Post_25  table = &names->names.format_25;
 
 
-          FT_FREE( table->offsets );
-          table->num_glyphs = 0;
-        }
-        break;
+        FT_FREE( table->offsets );
+        table->num_glyphs = 0;
       }
     }
     names->loaded = 0;
@@ -448,6 +438,7 @@
   {
     FT_Error         error;
     TT_Post_Names    names;
+    FT_Fixed         format;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     PSNames_Service  psnames;
@@ -471,62 +462,58 @@
     /* `.notdef' by default */
     *PSname = MAC_NAME( 0 );
 
-    switch ( face->postscript.FormatType )
+    format = face->postscript.FormatType;
+
+    if ( format == 0x00010000L )
     {
-    case 0x00010000L:
       if ( idx < 258 )                    /* paranoid checking */
         *PSname = MAC_NAME( idx );
-      break;
-
-    case 0x00020000L:
-      {
-        TT_Post_20  table = &names->names.format_20;
-
-
-        if ( !names->loaded )
-        {
-          error = load_post_names( face );
-          if ( error )
-            break;
-        }
-
-        if ( idx < (FT_UInt)table->num_glyphs )
-        {
-          FT_UShort  name_index = table->glyph_indices[idx];
-
-
-          if ( name_index < 258 )
-            *PSname = MAC_NAME( name_index );
-          else
-            *PSname = (FT_String*)table->glyph_names[name_index - 258];
-        }
-      }
-      break;
-
-    case 0x00028000L:
-      {
-        TT_Post_25  table = &names->names.format_25;
-
-
-        if ( !names->loaded )
-        {
-          error = load_post_names( face );
-          if ( error )
-            break;
-        }
-
-        if ( idx < (FT_UInt)table->num_glyphs )    /* paranoid checking */
-        {
-          idx    += table->offsets[idx];
-          *PSname = MAC_NAME( idx );
-        }
-      }
-      break;
-
-    case 0x00030000L:
-      break;                                /* nothing to do */
     }
+    else if ( format == 0x00020000L )
+    {
+      TT_Post_20  table = &names->names.format_20;
 
+
+      if ( !names->loaded )
+      {
+        error = load_post_names( face );
+        if ( error )
+          goto End;
+      }
+
+      if ( idx < (FT_UInt)table->num_glyphs )
+      {
+        FT_UShort  name_index = table->glyph_indices[idx];
+
+
+        if ( name_index < 258 )
+          *PSname = MAC_NAME( name_index );
+        else
+          *PSname = (FT_String*)table->glyph_names[name_index - 258];
+      }
+    }
+    else if ( format == 0x00028000L )
+    {
+      TT_Post_25  table = &names->names.format_25;
+
+
+      if ( !names->loaded )
+      {
+        error = load_post_names( face );
+        if ( error )
+          goto End;
+      }
+
+      if ( idx < (FT_UInt)table->num_glyphs )    /* paranoid checking */
+      {
+        idx    += table->offsets[idx];
+        *PSname = MAC_NAME( idx );
+      }
+    }
+    
+    /* nothing to do for format == 0x00030000L */
+
+  End:
     return SFNT_Err_Ok;
   }
 

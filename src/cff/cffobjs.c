@@ -131,8 +131,8 @@
           priv.family_other_blues[n] = (FT_Short)cpriv->family_other_blues[n];
 
         priv.blue_scale = cpriv->blue_scale;
-        priv.blue_shift = cpriv->blue_shift;
-        priv.blue_fuzz  = cpriv->blue_fuzz;
+        priv.blue_shift = (FT_Int)cpriv->blue_shift;
+        priv.blue_fuzz  = (FT_Int)cpriv->blue_fuzz;
 
         priv.standard_width[0]  = (FT_UShort)cpriv->standard_width;
         priv.standard_height[0] = (FT_UShort)cpriv->standard_height;
@@ -335,7 +335,7 @@
       CFF_Font   cff;
       FT_Memory  memory = face->root.memory;
       FT_Face    root;
-      FT_UInt    flags;
+      FT_Int32   flags;
 
 
       if ( FT_NEW( cff ) )
@@ -499,24 +499,23 @@
           cmaprec.face        = root;
           cmaprec.platform_id = 7;  /* Adobe platform id */
 
-          switch( encoding->offset )
+          if ( encoding->offset == 0 )
           {
-            case 0:
-              cmaprec.encoding_id = 0;
-              cmaprec.encoding    = FT_ENCODING_ADOBE_STANDARD;
-              clazz               = &cff_cmap_encoding_class_rec;
-              break;
-
-            case 1:
-              cmaprec.encoding_id = 1;
-              cmaprec.encoding    = FT_ENCODING_ADOBE_EXPERT;
-              clazz               = &cff_cmap_encoding_class_rec;
-              break;
-
-            default:
-              cmaprec.encoding_id = 3;
-              cmaprec.encoding    = FT_ENCODING_ADOBE_CUSTOM;
-              clazz               = &cff_cmap_encoding_class_rec;
+            cmaprec.encoding_id = 0;
+            cmaprec.encoding    = FT_ENCODING_ADOBE_STANDARD;
+            clazz               = &cff_cmap_encoding_class_rec;
+          }
+          else if ( encoding->offset == 1 )
+          {
+            cmaprec.encoding_id = 1;
+            cmaprec.encoding    = FT_ENCODING_ADOBE_EXPERT;
+            clazz               = &cff_cmap_encoding_class_rec;
+          }
+          else
+          {
+            cmaprec.encoding_id = 3;
+            cmaprec.encoding    = FT_ENCODING_ADOBE_CUSTOM;
+            clazz               = &cff_cmap_encoding_class_rec;
           }
 
           FT_CMap_New( clazz, NULL, &cmaprec, NULL );

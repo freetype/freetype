@@ -702,8 +702,8 @@
       /* subglyph 1 = accent character */
       subg->index = achar_index;
       subg->flags = FT_SUBGLYPH_FLAG_ARGS_ARE_XY_VALUES;
-      subg->arg1  = adx;
-      subg->arg2  = ady;
+      subg->arg1  = (FT_Int)adx;
+      subg->arg2  = (FT_Int)ady;
 
       /* set up remaining glyph fields */
       glyph->num_subglyphs = 2;
@@ -796,7 +796,7 @@
   FT_LOCAL_DEF( FT_Error )
   cff_decoder_parse_charstrings( CFF_Decoder*  decoder,
                                  FT_Byte*      charstring_base,
-                                 FT_Int        charstring_len )
+                                 FT_ULong      charstring_len )
   {
     FT_Error           error;
     CFF_Decoder_Zone*  zone;
@@ -913,7 +913,7 @@
       else
       {
         FT_Fixed*  args     = decoder->top;
-        FT_Int     num_args = args - decoder->stack;
+        FT_Int     num_args = (FT_Int)( args - decoder->stack );
         FT_Int     req_args;
 
 
@@ -1676,8 +1676,8 @@
             /* grab up to the last argument */
             for ( count = 5; count > 0; count-- )
             {
-              dx += args[0];
-              dy += args[1];
+              dx += (FT_Int)args[0];
+              dy += (FT_Int)args[1];
               args += 2;
             }
 
@@ -1748,8 +1748,10 @@
           if ( num_args == 4 )
           {
             error = cff_operator_seac( decoder,
-                                       args[0] >> 16, args[1] >> 16,
-                                       args[2] >> 16, args[3] >> 16 );
+                                       args[0] >> 16,
+                                       args[1] >> 16,
+                                       (FT_Int)( args[2] >> 16 ),
+                                       (FT_Int)( args[3] >> 16 ) );
             args += 4;
           }
 
@@ -1886,7 +1888,7 @@
 
         case cff_op_index:
           {
-            FT_Int  idx = args[0] >> 16;
+            FT_Int  idx = (FT_Int)( args[0] >> 16 );
 
 
             FT_TRACE4(( " index" ));

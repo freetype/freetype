@@ -216,7 +216,7 @@
         if ( table.Length != 0x36                ||
              FT_STREAM_SEEK( table.Offset + 12 ) ||
              FT_READ_ULONG( magic )              ||
-             magic != 0x5F0F3CF5U                )
+             magic != 0x5F0F3CF5UL               )
           goto Bad_Format;
 
         if ( FT_STREAM_SEEK( offset + 28 + 16*nn ) )

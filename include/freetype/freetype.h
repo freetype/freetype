@@ -2273,8 +2273,8 @@ FT_BEGIN_HEADER
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FT_Render_Glyph( FT_GlyphSlot  slot,
-                   FT_UInt       render_mode );
+  FT_Render_Glyph( FT_GlyphSlot    slot,
+                   FT_Render_Mode  render_mode );
 
 
   /*************************************************************************/

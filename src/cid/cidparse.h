@@ -61,7 +61,7 @@ FT_BEGIN_HEADER
     FT_Stream     stream;
 
     FT_Byte*      postscript;
-    FT_Int        postscript_len;
+    FT_Long       postscript_len;
 
     FT_ULong      data_offset;
 

@@ -197,7 +197,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   cff_decoder_parse_charstrings( CFF_Decoder*  decoder,
                                  FT_Byte*      charstring_base,
-                                 FT_Int        charstring_len );
+                                 FT_ULong      charstring_len );
 
   FT_LOCAL( FT_Error )
   cff_slot_load( CFF_GlyphSlot  glyph,

@@ -563,7 +563,7 @@
   FNT_Load_Glyph( FT_GlyphSlot  slot,
                   FNT_Size      size,
                   FT_UInt       glyph_index,
-                  FT_Int        load_flags )
+                  FT_Int32      load_flags )
   {
     FNT_Font    font  = size->font;
     FT_Error    error = 0;

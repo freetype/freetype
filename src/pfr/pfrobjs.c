@@ -48,11 +48,16 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  pfr_face_init( FT_Stream  stream,
-                 PFR_Face   face,
-                 FT_Int     face_index )
+  pfr_face_init( FT_Stream      stream,
+                 PFR_Face       face,
+                 FT_Int         face_index,
+                 FT_Int         num_params,
+                 FT_Parameter*  params )
   {
     FT_Error  error;
+
+    FT_UNUSED( num_params );
+    FT_UNUSED( params );
 
 
     /* load the header and check it */
@@ -223,7 +228,7 @@
   pfr_slot_load( PFR_Slot  slot,
                  PFR_Size  size,
                  FT_UInt   gindex,
-                 FT_Int    load_flags )
+                 FT_Int32  load_flags )
   {
     FT_Error     error;
     PFR_Face     face    = (PFR_Face)slot->root.face;

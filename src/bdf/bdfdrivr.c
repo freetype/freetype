@@ -478,7 +478,7 @@ THE SOFTWARE.
   BDF_Glyph_Load( FT_GlyphSlot  slot,
                   FT_Size       size,
                   FT_UInt       glyph_index,
-                  FT_Int        load_flags )
+                  FT_Int32      load_flags )
   {
     BDF_Face        face   = (BDF_Face)FT_SIZE_FACE( size );
     FT_Error        error  = BDF_Err_Ok;

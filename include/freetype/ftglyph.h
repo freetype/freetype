@@ -374,8 +374,8 @@ FT_BEGIN_HEADER
   /*    the_glyph   :: A pointer to a handle to the target glyph.          */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    render_mode :: A set of bit flags that describe how the data is    */
-  /*                                                                       */
+  /*    render_mode :: An enumeration that describe how the data is        */
+  /*                   rendered.                                           */
   /*                                                                       */
   /*    origin      :: A pointer to a vector used to translate the glyph   */
   /*                   image before rendering.  Can be 0 (if no            */
@@ -434,10 +434,10 @@ FT_BEGIN_HEADER
   /*    scalable.                                                          */
   /*                                                                       */
   FT_EXPORT( FT_Error )
-  FT_Glyph_To_Bitmap( FT_Glyph*   the_glyph,
-                      FT_ULong    render_mode,
-                      FT_Vector*  origin,
-                      FT_Bool     destroy );
+  FT_Glyph_To_Bitmap( FT_Glyph*       the_glyph,
+                      FT_Render_Mode  render_mode,
+                      FT_Vector*      origin,
+                      FT_Bool         destroy );
 
 
   /*************************************************************************/

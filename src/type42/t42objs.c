@@ -147,7 +147,7 @@
                  T42_Face       face,
                  FT_Int         face_index,
                  FT_Int         num_params,
-                 FT_Parameter*  params)
+                 FT_Parameter*  params )
   {
     FT_Error          error;
     PSNames_Service   psnames;
@@ -595,7 +595,7 @@
   T42_GlyphSlot_Load( FT_GlyphSlot  glyph,
                       FT_Size       size,
                       FT_Int        glyph_index,
-                      FT_Int        load_flags )
+                      FT_Int32      load_flags )
   {
     FT_Error         error;
     T42_GlyphSlot    t42slot = (T42_GlyphSlot)glyph;

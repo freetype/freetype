@@ -675,7 +675,7 @@
               goto Syntax_Error;
             }
 
-            num_points = top[1] - 13 + ( top[1] == 18 );
+            num_points = (FT_UInt)top[1] - 13 + ( top[1] == 18 );
             if ( top[0] != (FT_Int)( num_points * blend->num_designs ) )
             {
               FT_ERROR(( "t1_decoder_parse_charstrings: " ));
@@ -1146,7 +1146,7 @@
 
     t1_builder_init( &decoder->builder, face, size, slot, hinting );
 
-    decoder->num_glyphs     = face->num_glyphs;
+    decoder->num_glyphs     = (FT_UInt)face->num_glyphs;
     decoder->glyph_names    = glyph_names;
     decoder->hint_flags     = face->internal->hint_flags;
     decoder->hint_mode      = hint_mode;

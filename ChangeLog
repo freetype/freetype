@@ -1,15 +1,106 @@
+2002-09-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttpost.c (load_post_names, tt_face_free_ps_names,
+	tt_face_get_ps_name): Replace switch statement with if clauses to
+	make it more portable.
+
+	* src/cff/cffobjs.c (cff_face_init): Ditto.
+
+	* include/freetype/ftmodule.h (FT_Module_Class): Use `FT_Long' for
+	`module_size'.
+	* include/freetype/ftrender.h (FT_Glyph_Class_): Use `FT_Long' for
+	`glyph_size'.
+
+	* src/base/ftobjs.c (FT_Render_Glyph): Change second parameter to
+	`FT_Render_Mode'.
+	(FT_Render_Glyph_Internal): Change third parameter to
+	`FT_Render_Mode'.
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Change second parameter
+	to `FT_Render_Mode'.
+
+	* src/raster/ftrend1.c (ft_raster1_render): Change third parameter
+	to `FT_Render_Mode'.
+	* src/smooth/ftsmooth.c (ft_smooth_render, ft_smooth_render_lcd,
+	ft_smooth_render_lcd_v): Ditto.
+	(ft_smooth_render_generic): Change third and fifth parameter to
+	`FT_Render_Mode'.
+	
+	* include/freetype/freetype.h, include/freetype/internal/ftobjs.h,
+	include/freetype/ftglyph.h: Updated.
+
+	* src/cff/cffdrivr.c (Load_Glyph), src/pcf/pcfdriver.c
+	(PCF_Glyph_Load), src/pfr/pfrobjs.c (pfr_slot_load),
+	src/winfonts/winfnt.c (FNT_Load_Glyph), src/t42/t42objs.c
+	(T42_GlyphSlot_Load), src/bdf/bdfdrivr.c (BDF_Glyph_Load): Change
+	fourth parameter to `FT_Int32'.
+
+	* src/pfr/pfrobjs.c (pfr_face_init): Add two missing parameters
+	and declare them as unused.
+
+	* src/cid/cidparse.h (CID_Parser): Use FT_Long for `postscript_len'.
+
+	* src/psnames/psnames.h (PS_Unicode_Value_Func): Change return
+	value to FT_UInt32.
+	* src/psnames/psmodule.c (ps_unicode_value, ps_build_unicode_table):
+	Updated accordingly.
+
+2002-09-26  Wolfgang Domröse  <porthos.domroese@harz.de>
+
+	* src/cff/cffdrivr.c (Get_Kerning): Use FT_Long for `middle'.
+	(cff_get_glyph_name): Use cast for result of ft_strlen.
+	* src/cff/cffparse.c (cff_parse_real): User cast for assigning
+	`exp'.
+	* src/cff/cffload.c (cff_index_get_pointers): Use FT_ULong for
+	some local variables.
+	(cff_charset_load, cff_encoding_load): Use casts to FT_UInt for some
+	switch statements.
+	(cff_font_load): Use cast in call to CFF_Load_FD_Select.
+	* src/cff/cffobjs.c (cff_size_init): Use more casts.
+	(cff_face_init): Use FT_Int32 for `flags'.
+	* src/cff/cffgload.c (cff_operator_seac): Use cast for assigning
+	`adx' and `ady'.
+	(cff_decoder_parse_charstrings): Use FT_ULong for third parameter.
+	Use more casts.
+	* src/cff/cffcmap.c (cff_cmap_unicode_init): Use cast for `count'.
+
+	* src/cid/cidload.c (cid_read_subrs): Use FT_ULong for `len'.
+	* src/cid/cidgload.c (cid_load_glyph): Add missing cast for
+	`cid_get_offset'.
+
+	* src/psaux/t1decode.c (t1_decoder_parse_charstrings) <18>: Use
+	cast for `num_points'.
+	(t1_decoder_init): Use cast for assigning `decoder->num_glyphs'.
+
+	* src/base/ftdebug.c (ft_debug_init): Use FT_Int.
+	* include/freetype/internal/ftdriver.h (FT_Slot_LoadFunc): Use
+	`FT_Int32' for fourth parameter.
+	* src/base/ftobjs.c (open_face): Use cast for calling
+	clazz->init_face.
+
+	* src/raster/ftraster.c (Set_High_Precision): Use `1' instead of
+	`1L'.
+	(Finalize_Profile_Table, Line_Up, ft_black_init): Use casts.
+	* src/raster/ftrend1.c (ft_raster1_render): Ditto.
+
+	* src/sfnt/sfnt_dir_check: Compare `magic' with unsigned long
+	constant.
+
+2002-09-26  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* builds/amiga/include/freetype/config/ftmodule.h: Updated.
+
 2002-09-25  David Turner  <david@freetype.org>
 
-        * src/autohint/ahtypes.h: disabling metrics hinting in the auto-hinter.
-        this produces much better anti-aliased text
+	* src/autohint/ahtypes.h: Disabling metrics hinting in the
+	auto-hinter.  this produces much better anti-aliased text.
 
-        * docs/CHANGES: updating the changes documentation
+	* docs/CHANGES: Updating the changes documentation.
 
 2002-09-25  Anthony Fok  <anthony@thizlinux.com>
 
-        * src/sfnt/ttcmap0.c: added support for opens___.ttf (it contains
-        a charmap that uses offset=0xFFFFU instead of 0x0000 to indicate a
-        missing glyph)
+	* src/sfnt/ttcmap0.c: Added support for opens___.ttf (it contains a
+	charmap that uses offset=0xFFFFU instead of 0x0000 to indicate a
+	missing glyph).
 
 2002-09-21  Wolfgang Domröse  <porthos.domroese@harz.de>
 

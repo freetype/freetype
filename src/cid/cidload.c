@@ -448,7 +448,7 @@
       /* set up pointers */
       for ( count = 1; count <= num_subrs; count++ )
       {
-        FT_UInt  len;
+        FT_ULong  len;
 
 
         len               = offsets[count] - offsets[count - 1];
@@ -460,7 +460,7 @@
       {
         for ( count = 0; count < num_subrs; count++ )
         {
-          FT_UInt  len;
+          FT_ULong  len;
 
 
           len = offsets[count + 1] - offsets[count];

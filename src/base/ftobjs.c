@@ -555,6 +555,7 @@
     {
       FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
 
+
       if ( mode == FT_RENDER_MODE_NORMAL      &&
            (load_flags & FT_LOAD_MONOCHROME ) )
         mode = FT_RENDER_MODE_MONO;
@@ -745,7 +746,7 @@
 
     error = clazz->init_face( stream,
                               face,
-                              face_index,
+                              (FT_Int)face_index,
                               num_params,
                               params );
     if ( error )
@@ -1997,9 +1998,9 @@
 
 
   FT_BASE_DEF( FT_Error )
-  FT_Render_Glyph_Internal( FT_Library    library,
-                            FT_GlyphSlot  slot,
-                            FT_UInt       render_mode )
+  FT_Render_Glyph_Internal( FT_Library      library,
+                            FT_GlyphSlot    slot,
+                            FT_Render_Mode  render_mode )
   {
     FT_Error     error = FT_Err_Ok;
     FT_Renderer  renderer;
@@ -2058,8 +2059,8 @@
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
-  FT_Render_Glyph( FT_GlyphSlot  slot,
-                   FT_UInt       render_mode )
+  FT_Render_Glyph( FT_GlyphSlot    slot,
+                   FT_Render_Mode  render_mode )
   {
     FT_Library  library;
 
@@ -2185,7 +2186,7 @@
     }
 
     /* allocate module object */
-    if ( FT_ALLOC( module,clazz->module_size ) )
+    if ( FT_ALLOC( module, clazz->module_size ) )
       goto Exit;
 
     /* base initialization */

@@ -7,7 +7,7 @@
 //#define FT_USE_SMOOTH         // anti-aliasing rasterizer
 //#define FT_USE_TT             // truetype font driver
 //#define FT_USE_T1             // type1 font driver
-//#define FT_USE_T42            // type42 font driver           // yet unstable
+//#define FT_USE_T42            // type42 font driver
 //#define FT_USE_T1CID          // cid-keyed type1 font driver  // no cmap support
 //#define FT_USE_CFF            // opentype font driver
 //#define FT_USE_BDF            // bdf bitmap font driver
@@ -102,6 +102,8 @@ FT_USE_MODULE(sfnt_module_class)
 
 #ifdef FT_USE_SMOOTH
 FT_USE_MODULE(ft_smooth_renderer_class)
+FT_USE_MODULE(ft_smooth_lcd_renderer_class)
+FT_USE_MODULE(ft_smooth_lcdv_renderer_class)
 #endif
 
 #ifdef FT_USE_TT

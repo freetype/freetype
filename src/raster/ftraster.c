@@ -539,7 +539,7 @@
 
     FT_TRACE6(( "Set_High_Precision(%s)\n", High ? "true" : "false" ));
 
-    ras.precision       = 1L << ras.precision_bits;
+    ras.precision       = 1 << ras.precision_bits;
     ras.precision_half  = ras.precision / 2;
     ras.precision_shift = ras.precision_bits - Pixel_Bits;
     ras.precision_mask  = -ras.precision;
@@ -702,7 +702,7 @@
     if ( n >= 0 && y > y_turns[n] )
       while ( n >= 0 )
       {
-        y2 = y_turns[n];
+        y2 = (Int)y_turns[n];
         y_turns[n] = y;
         y = y2;
         n--;
@@ -758,16 +758,16 @@
         switch ( p->flow )
         {
         case Flow_Down:
-          bottom     = p->start - p->height+1;
-          top        = p->start;
+          bottom     = (Int)( p->start - p->height + 1 );
+          top        = (Int)p->start;
           p->start   = bottom;
           p->offset += p->height - 1;
           break;
 
         case Flow_Up:
         default:
-          bottom = p->start;
-          top    = p->start + p->height - 1;
+          bottom = (Int)p->start;
+          top    = (Int)( p->start + p->height - 1 );
         }
 
         if ( Insert_Y_Turn( RAS_VARS bottom )   ||
@@ -922,20 +922,20 @@
     }
     else
     {
-      e1 = TRUNC( y1 );
-      f1 = FRAC( y1 );
+      e1 = (Int)TRUNC( y1 );
+      f1 = (Int)FRAC( y1 );
     }
 
     if ( y2 > maxy )
     {
       /* x2 += FMulDiv( Dx, maxy - y2, Dy );  UNNECESSARY */
-      e2  = TRUNC( maxy );
+      e2  = (Int)TRUNC( maxy );
       f2  = 0;
     }
     else
     {
-      e2 = TRUNC( y2 );
-      f2 = FRAC( y2 );
+      e2 = (Int)TRUNC( y2 );
+      f2 = (Int)FRAC( y2 );
     }
 
     if ( f1 > 0 )
@@ -3116,7 +3116,7 @@
           ( ( c << 2 ) & 0x0030 ) |
                    (c  & 0x0003 );
 
-      raster->count_table[n] = c;
+      raster->count_table[n] = (UInt)c;
     }
 
 #ifdef FT_RASTER_OPTION_ANTI_ALIASING

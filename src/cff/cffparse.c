@@ -244,7 +244,7 @@
       if ( exp_sign )
         exp = -exp;
 
-      power_ten += exp;
+      power_ten += (FT_Int)exp;
     }
 
     /* raise to power of ten if needed */
