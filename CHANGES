@@ -1,5 +1,20 @@
 LATEST CHANGES - 
 
+  - tagged "BETA-6" in the CVS tree. This one is a serious release candidate
+    even though it doesn't incorporate the auto-hinter yet..
+
+  - various obsolete files were removed, and copyright header updated
+
+  - finally updated the standard raster to fix the monochrome rendering bug
+    + re-enable support for 5-gray levels anti-aliasing (suck, suck..)
+
+  - created new header files, and modified sources accordingly:
+  
+       <freetype/fttypes.h>           - simple FreeType types, without the API
+       <freetype/internal/ftmemory.h> - definition of memory-management macros
+
+  - added the "DSIG" (OpenType Digital Signature) tag to <freetype/tttags.h>
+
   - light update/cleaning of the build system + changes to the sources in
     order to get rid of _all_ compiler warnings with three compilers, i.e:
 
@@ -126,7 +141,7 @@ LATEST CHANGES -
 
 
     Compiling a module is now much easier, for example, the following should
-    work when in the TOP directory on an ANSI system:
+    work when in the TOP directory on an ANSI build:
     
        gcc -c -I./include -I./src/base src/base/ftbase.c
        gcc -c -I./include -I./src/sfnt src/sfnt/sfnt.c

@@ -193,17 +193,6 @@ else
   $(OBJ_)compos.$O: $(SRC_DIR_)compos.c
 	  $(COMPILE) $T$@ $<
 
-  $(OBJ_)ftgrays2.$O: $(SRC_DIR_)ftgrays2.c
-	  $(COMPILE) $T$@ $<
-
-  EXTRA_GRAPH_OBJS := $(OBJ_)ftrast.$O $(OBJ_)ftrast2.$O
-
-  $(OBJ_)ftrast.$O: $(SRC_DIR_)ftrast.c
-	  $(COMPILE) $T$@ $<
-
-  $(OBJ_)ftrast2.$O: $(SRC_DIR_)ftrast2.c
-	  $(COMPILE) $T$@ $<
-
   $(OBJ_)fttry.$O: $(SRC_DIR_)fttry.c
 	  $(COMPILE) $T$@ $<
 
@@ -214,14 +203,9 @@ else
   $(OBJ_)ftstring.$O: $(SRC_DIR_)ftstring.c $(GRAPH_LIB)
 	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
 
-  $(OBJ_)try.$O: $(SRC_DIR_)try.c $(GRAPH_LIB)
-	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
-
   $(OBJ_)fttimer.$O: $(SRC_DIR_)fttimer.c $(GRAPH_LIB)
 	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
 
-  $(OBJ_)fttimer2.$O: $(SRC_DIR_)fttimer2.c $(GRAPH_LIB)
-	  $(COMPILE) $(GRAPH_INCLUDES:%=$I%) $T$@ $<
 
 
 # $(OBJ_)ftsbit.$O: $(SRC_DIR)/ftsbit.c $(GRAPH_LIB)
