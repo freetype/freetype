@@ -60,7 +60,7 @@ ANSIFLAGS := -ansi -pedantic
 
 # Library linking
 #
-ifndef
+ifndef CLEAN_LIBRARY
 CLEAN_LIBRARY = $(DELETE) $(subst $(SEP),$(HOSTSEP),$(PROJECT_LIBRARY)) $(NO_OUTPUT)
 endif
 LINK_LIBRARY  = $(AR) -r $@ $(OBJECTS_LIST)
