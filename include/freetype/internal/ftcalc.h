@@ -34,9 +34,7 @@
 
 #define ADD_64( x, y, z )  z = (x) + (y)
 #define MUL_64( x, y, z )  z = (FT_Int64)(x) * (y)
-
-#define DIV_64( x, y )     ( (x) / (y) )
-
+#define DIV_64( x, y )     ((x)/(y))
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
 
@@ -62,7 +60,6 @@
 #define MUL_64( x, y, z )  FT_MulTo64( x, y, &z )
 #define DIV_64( x, y )     FT_Div64by32( &x, y )
 
-
   FT_EXPORT_DEF( void )  FT_Add64( FT_Int64*  x,
                                    FT_Int64*  y,
                                    FT_Int64*  z );
@@ -76,6 +73,8 @@
 
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
+
+  FT_EXPORT_DEF(FT_Int32)   FT_SqrtFixed( FT_Int32  x );
 
 #define SQRT_64( z )  FT_Sqrt64( &z )
 

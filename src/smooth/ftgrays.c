@@ -726,7 +726,7 @@
     dx = dx / ras.conic_level;
     while ( dx > 0 )
     {
-      dx >>= 1;
+      dx >>= 2;
       level++;
     }
 
@@ -874,8 +874,8 @@
     db    = db / ras.conic_level;
     while ( da > 0 || db > 0 )
     {
-      da >>= 1;
-      db >>= 2;
+      da >>= 2;
+      db >>= 3;
       level++;
     }
 
@@ -1740,7 +1740,7 @@
       if ( ras.max_ex > 24 || ras.max_ey > 24 )
         level++;
       if ( ras.max_ex > 120 || ras.max_ey > 120 )
-        level += 2;
+        level ++;
 
       ras.conic_level <<= level;
       ras.cubic_level <<= level;
