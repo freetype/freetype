@@ -1716,16 +1716,19 @@
 
         /* ensure that the kerning pair table is sorted (yes, some */
         /* fonts have unsorted tables!)                            */
+
 #if 1
         if ( num_pairs > 0 )     
         {
           TT_Kern0_Pair  pair0 = face->kern_pairs;
           FT_ULong       prev  = TT_KERN_INDEX( pair0->left, pair0->right );
           
+
           for ( pair0++; pair0 < limit; pair0++ )
           {
             FT_ULong  next = TT_KERN_INDEX( pair0->left, pair0->right );
             
+
             if ( next < prev )
               goto SortIt;
               
@@ -1742,9 +1745,10 @@
           TT_Kern0_Pair  pair0    = face->kern_pairs;
           FT_UInt        i;
           
+
           for ( i = 1; i < num_pairs; i++, pair0++ )
           {
-            if ( tt_kern_pair_compare( pair0, pair0+1 ) != -1 )
+            if ( tt_kern_pair_compare( pair0, pair0 + 1 ) != -1 )
             {
               ft_qsort( (void*)face->kern_pairs, (int)num_pairs,
                         sizeof ( TT_Kern0_PairRec ), tt_kern_pair_compare );
@@ -1753,6 +1757,7 @@
           }
         }
 #endif
+
         goto Exit;
       }
 
