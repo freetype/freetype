@@ -415,7 +415,7 @@
 	FT_UShort  TypeFamily;
 	FT_UShort  CapHeight;
 	FT_UShort  SymbolSet;
-    FT_Char    TypeFace[16];
+        FT_Char    TypeFace[16];
 	FT_Char    CharacterComplement[8];
 	FT_Char    FileName[6];
 	FT_Char    StrokeWeight[6];
