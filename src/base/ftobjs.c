@@ -731,6 +731,29 @@
     if ( !first )
       return FT_Err_Invalid_CharMap_Handle;
 
+    /*
+     *  the original TrueType specification(s) only specified charmap
+     *  formats that are capable of mapping 8 or 16 bit character codes to
+     *  glyph indices.
+     *
+     *  however, recent updates to the Apple and OpenType specifications
+     *  introduced new formats that are capable of mapping 32-bit character
+     *  codes as well. And these are already used on some fonts, mainly to
+     *  map non-BMP asian ideographs as defined in Unicode.
+     *
+     *  for compatibility purposes, these fonts generally come with
+     *  *several* Unicode charmaps:
+     *
+     *   - one of them in the "old" 16-bit format, that cannot access
+     *     all glyphs in the font
+     *
+     *   - another one in the "new" 32-bit format, that can access all
+     *     the glyphs.
+     *
+     *  this function has been written to always favor a 32-bit charmap
+     *  when found. Otherwise, a 16-bit one is returned when found
+     */
+
     /* since the `interesting' table, with id's 3,10, is normally the */
     /* last one, we loop backwards. This looses with type1 fonts with */
     /* non-BMP characters (<.0001%), this wins with .ttf with non-BMP */
@@ -746,10 +769,11 @@
 
         /* XXX If some new encodings to represent UCS-4 are added,  */
         /*     they should be added here.                           */
-        if ( ( cur[0]->platform_id == TT_PLATFORM_MICROSOFT
-                       && cur[0]->encoding_id == TT_MS_ID_UCS_4 )
-          || ( cur[0]->platform_id == TT_PLATFORM_APPLE_UNICODE
-                       && cur[0]->encoding_id == TT_APPLE_ID_UNICODE_32 ) )
+        if ( ( cur[0]->platform_id == TT_PLATFORM_MICROSOFT &&
+               cur[0]->encoding_id == TT_MS_ID_UCS_4        )          ||
+             ( cur[0]->platform_id == TT_PLATFORM_APPLE_UNICODE &&
+               cur[0]->encoding_id == TT_APPLE_ID_UNICODE_32    )      )
+
         /* Hurray! We found a UCS-4 charmap. We can stop the scan! */
         {
           face->charmap = cur[0];
@@ -833,10 +857,13 @@
 
     /* select Unicode charmap by default */
     error2 = find_unicode_charmap( face );
-    /* if no Unicode charmap can be found, return FT_Err_Invalid_Argument */
+
+    /* if no Unicode charmap can be found, FT_Err_Invalid_CharMap_Handle is
+     * returned.
+     */
 
     /* no error should happen, but we want to play safe. */
-    if ( error2 && error2 != FT_Err_Invalid_Argument )
+    if ( error2 && error2 != FT_Err_Invalid_CharMap_Handle )
     {
       error = error2;
       goto Fail;

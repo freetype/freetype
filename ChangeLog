@@ -1,3 +1,11 @@
+2002-12-17  David Turner  <david@freetype.org>
+
+        * src/base/ftobjs.c (find_unicode_charmap): added some comments to
+        better explain what's happening there
+
+        * src/base/ftobjs.c (open_face): included Graham Asher's fix to
+        prevent faces without Unicode charmaps from loading
+
 2002-12-16  David Turner  <david@freetype.org>
 
         * docs/VERSION.DLL: updating document to better explain the differences between
