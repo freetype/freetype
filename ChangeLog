@@ -1,3 +1,10 @@
+2000-12-21  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/autohint/ahhint.c (ah_hinter_load, ah_hinter_load_glyph):
+	Changed so that	synthetic fonts render correctly.  Previously,
+	the first glyph	rendered from such a font did not have the
+	tranformation matrix applied.
+
 2000-12-17  Werner Lemberg  <wl@gnu.org>
 
 	* *.mk: Added lots of `.PHONY' targets.
