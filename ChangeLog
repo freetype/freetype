@@ -1,9 +1,25 @@
+2004-02-23  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+	* include/freetype/internal/ftdebug.h: Include FT_FREETYPE_H.
+
+2004-02-23  Masatake YAMATO  <jet@gyve.org>
+
+	Provide a simple API to control FreeType's tracing levels.
+
+	* include/freetype/internal/ftdebug.h (FT_Trace_Get_Count,
+	FT_Trace_Get_Name): New declarations.
+
+	* src/base/ftdebug.c (FT_Trace_Get_Count, FT_Trace_Get_Name): New
+	functions.
+
 2004-02-23  David Turner  <david@freetype.org>
 
-        * src/autofit/afhints.c, src/autofit/afhints.h, src/autofit/aflatin.c,
-        src/autofit/afloader.c, src/types.h: grave bugs were fixed. The
-        auto-fitter works, doesn't crashes, but still produces unexpected
-        results !!
+	* src/autofit/afhints.c, src/autofit/afhints.h,
+	src/autofit/aflatin.c, src/autofit/afloader.c, src/types.h: Grave
+	bugs have been fixed.  The auto-fitter works, doesn't crash, but
+	still produces unexpected results...
 
 2004-02-21  Werner Lemberg  <wl@gnu.org>
 

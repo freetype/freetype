@@ -6,13 +6,15 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
     - The native  TrueType hinter contained some  bugs which prevented
       some fonts to be rendered correctly, most notably Legendum.otf.
 
+    - The PostScript hinter now produces much improved results.
+
     - The  linear advance  width  and height  values were  incorrectly
       rounded,  making  them virtually  unusable  if  not loaded  with
       FT_LOAD_LINEAR_DESIGN.
 
     - Indexing CID-keyed CFF fonts is  now working: The glyph index is
       correctly  treated as a  CID, similar  to FreeType's  CID driver
-      module.  Note that CID CMaps support is still missing.
+      module.  Note that CID CMap support is still missing.
 
     - The FT_FACE_FLAGS_GLYPH_NAMES is now  set correctly for all font
       formats.
@@ -32,8 +34,8 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
 
     - The flex operator didn't work for CFF fonts.
 
-    - PS glyphs which use the `hintmask' operator haven't been rendered
-      correctly in some cases.
+    - PS glyphs  which  use  the   `hintmask'  operator  haven't  been
+      rendered correctly in some cases.
 
     - Metrics for BDF and PCF bitmap font formats have been fixed.
 
@@ -56,6 +58,10 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       CID-keyed Type 1 fonts is now supported.  While this can't occur
       in  file-based   fonts,  it  can   happen  in  document-embedded
       resources of PostScript documents.
+
+    - A simple  API is  now available  to control  FreeType's  tracing
+      mechanism if compiled  with FT_DEBUG_LEVEL_TRACE.   See the file
+      `ftdebug.h' for more details.
 
     - The cache sub-system has been rewritten.
 
