@@ -1,27 +1,38 @@
+2003-02-25  Anthony Fok  <anthony@thizlinux.com>
+
+    * src/cache/ftccmap.c: the cmap cache now supports UCS-4 charmaps
+    when available in Asian fonts
+
+    * src/sfnt/ttload.c, src/base/ftobjs.c: changed "asian" to "Asian" in
+    comments
+
 2003-02-25  David Turner  <david@freetype.org>
 
     * src/gzip/ftgzip.c: fixed a bug that caused FreeType to loop endlessly
     when trying to read certain compressed gzip files. The following test
     could be used to reveal the bug:
-    
+
        touch 0123456789 ; gzip 0123456789 ; ftdump 0123456789.gz
 
 
     * src/pfr/pfrobjs.c, src/pfr/pfrload.c, src/pfr/pfrtypes.h: several
     fixes to the PFR font driver:
-    
+
       - the list of available embedded bitmaps was not correctly set
         in the root FT_FaceRec structure describing the face
-      
+
       - the glyph loader always tried to load the outlines when
         FT_LOAD_SBITS_ONLY was specified
-        
+
       - the table loaded now scans for *undocumented* elements of a
         physical font's auxiliary data record, this is necessary to
         retrieve the "real" family and style names.
-        
+
         NOTE THAT THIS CHANGES THE FAMILY NAME OF MANY PFR FONTS !!
 
+    * src/truetype/ttdriver.c (Set_Char_Sizes): fixed a rounding bug when
+    computing the scale factors for a given character size in points with
+    resolution.
 
 
 2003-02-18  David Turner  <david@freetype.org>
