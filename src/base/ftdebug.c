@@ -133,7 +133,7 @@
         q = p;
         while ( *p && *p != ':' )
           p++;
-
+          
         if ( *p == ':' && p > q )
         {
           int  n, i, len = p - q;

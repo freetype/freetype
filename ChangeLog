@@ -1,3 +1,9 @@
+2002-07-09  Owen Taylor   <owen@redhat.com>
+
+    * src/pshinter/pshglob.c: fixed a bug that prevented the hinter from using
+    correct standard width and height values. resulting in hinting bugs with
+    certain fonts (e.g. Utopia)
+
 2002-07-07  David Turner  <david@freetype.org>
 
     * src/base/ftglyph.c (FT_Glyph_To_Bitmap): added code to return succesfully
