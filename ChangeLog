@@ -1,3 +1,9 @@
+2002-01-09  Maxim Shemanarev  <mcseemagg@yahoo.com>
+
+        * src/smooth/ftgrays.c (gray_render_line): small optimisation to
+        the smooth anti-aliased renderer that deals with vertical segments.
+        This results in a 5-7% speedup in rendering speed..
+
 2002-01-08  David Turner  <david@freetype.org>
 
 	* configure, install: added some wrapper scripts to make

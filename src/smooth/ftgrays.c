@@ -635,6 +635,45 @@
       goto End;
     }
 
+    /* vertical line - avoids calling gray_render_scanline */
+    incr = 1;
+
+    if( dx == 0 )
+    {
+      TScan ex     = TRUNC( ras.x );
+      TScan two_fx = ( ras.x - SUBPIXELS( ex ) ) << 1;
+      TPos  area;
+
+      first = ONE_PIXEL;
+      if( dy < 0 )
+      {
+        first = 0;
+        incr  = -1;
+      }
+
+      delta      = first - fy1;
+      ras.area  += (TArea)two_fx * delta;
+      ras.cover += delta;
+      ey1       += incr;
+
+      gray_set_cell( raster, ex, ey1 );
+
+      delta = first + first - ONE_PIXEL;
+      area  = (TArea)two_fx * delta;
+      while( ey1 != ey2 )
+      {
+        ras.area  += area;
+        ras.cover += delta;
+        ey1       += incr;
+        gray_set_cell( raster, ex, ey1 );
+      }
+
+      delta      = fy2 - ONE_PIXEL + first;
+      ras.area  += (TArea)two_fx * delta;
+      ras.cover += delta;
+      goto End;
+    }
+
     /* ok, we have to render several scanlines */
     p     = ( ONE_PIXEL - fy1 ) * dx;
     first = ONE_PIXEL;
