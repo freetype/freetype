@@ -26,6 +26,7 @@
 
 #include "sferrors.h"
 
+#include <stdlib.h>  /* for qsort */
 
   /*************************************************************************/
   /*                                                                       */
@@ -1537,6 +1538,10 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
+
+  FT_CALLBACK_DEF(int)
+  tt_kern_pair_compare( const void* a, const void* b );
+
   FT_LOCAL_DEF
   FT_Error  TT_Load_Kern( TT_Face    face,
                           FT_Stream  stream )
@@ -1610,6 +1615,26 @@
 
         face->num_kern_pairs   = num_pairs;
         face->kern_table_index = n;
+        
+        /* ensure that the kerning pair table is sorted (yes, some */
+        /* fonts have unsorted tables !!)                          */
+        {
+          FT_UInt          i;
+          TT_Kern_0_Pair*  pair;
+          
+          pair = face->kern_pairs;
+
+          for ( i=1; i < num_pairs; i++, pair++ )
+          {
+            if ( tt_kern_pair_compare( pair, pair+1 ) != -1 )
+            {
+              qsort( (void*)face->kern_pairs, (int)num_pairs,
+                     sizeof(TT_Kern_0_Pair), tt_kern_pair_compare );
+              break;
+            }
+          }
+        }
+        
         goto Exit;
       }
 
@@ -1626,6 +1651,23 @@
     return error;
   }
 
+#undef  TT_KERN_INDEX
+#define TT_KERN_INDEX(g1,g2)   (((FT_ULong)g1 << 16) | g2)
+
+  FT_CALLBACK_DEF(int)
+  tt_kern_pair_compare( const void* a, const void* b )
+  {
+    TT_Kern_0_Pair*  pair1 = (TT_Kern_0_Pair*)a;
+    TT_Kern_0_Pair*  pair2 = (TT_Kern_0_Pair*)b;
+
+    FT_ULong  index1 = TT_KERN_INDEX( pair1->left, pair1->right );
+    FT_ULong  index2 = TT_KERN_INDEX( pair2->left, pair2->right );
+
+    return ( index1 < index2 ? -1 :
+           ( index1 > index2 ?  1 : 0 ));
+  }
+
+#undef TT_KERN_INDEX
 
   /*************************************************************************/
   /*                                                                       */
