@@ -1,3 +1,19 @@
+2003-03-27  David Turner  <david@freetype.org>
+
+   * README: udpated
+
+   * README.UNX: removed (now replaced by docs/INSTALL.UNX)
+
+   * src/pshinter/pshalgo3.c: the hinter now performs as in 2.1.3 and
+   will ignore stem quantization only when FT_LOAD_TARGET_SMOOTH is used
+
+   * src/base/ftobjs.c: changed the default computations to include rounding
+   in all cases, this is required to provide accurate kerning data when
+   native TrueType hinting is enabled.
+
+   * src/type1/t1load.c: the Type 1 loader now accepts more general names
+   according to the Postscript spec (the previous one was too restrictive)
+
 2003-03-20  David Turner  <david@freetype.org>
 
     * docs/*: serious rewriting of the documentation
