@@ -1,3 +1,7 @@
+2001-09-20  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* builds/amiga/*: Added port to Amiga with the SAS/C compiler.
+
 2001-09-15  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/type1/t1afm.c (T1_Done_AFM): Free `afm'.
