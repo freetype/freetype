@@ -68,11 +68,7 @@
 
 #define MEM_Set( dest, byte, count )  memset( dest, byte, count )
 
-#ifdef HAVE_MEMCPY
 #define MEM_Copy( dest, source, count )  memcpy( dest, source, count )
-#else
-#define MEM_Copy( dest, source, count )  bcopy( source, dest, count )
-#endif
 
 #define MEM_Move( dest, source, count )  memmove( dest, source, count )
 

@@ -51,28 +51,11 @@
   /*                                                                       */
   /*************************************************************************/
 
-
-/* Define to empty if the keyword does not work.  */
-#undef const
-
-/* Define if you have the ANSI C header files.  */
-#undef STDC_HEADERS
-
 /* the number of bytes in an `int' type. */
 #define FT_SIZEOF_INT  4
 
 /* the number of bytes in a `long' type. */
 #define FT_SIZEOF_LONG 4
-
-/* Define if you have the memcpy function.  */
-#undef HAVE_MEMCPY
-
-/* Define if you have the <fcntl.h> header file.  */
-#undef HAVE_FCNTL_H
-
-/* Define if you have the <unistd.h> header file.  */
-#undef HAVE_UNISTD_H
-
 
 /* Preferred alignment of data */
 #define FT_ALIGNMENT  8

@@ -81,14 +81,6 @@
 #error "Unsupported number of bytes in `long' type!"
 #endif
 
-/* Define if you have the memcpy function.  */
-#define HAVE_MEMCPY 1
-
-/* Define if you have the <fcntl.h> header file.  */
-#define HAVE_FCNTL_H 0
-
-/* Define if you have the <unistd.h> header file.  */
-#define HAVE_UNISTD_H 0
 
 
 /* Preferred alignment of data */
