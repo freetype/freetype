@@ -292,7 +292,7 @@ FT_BEGIN_HEADER
   /*                        Only used by the convenience functions.        */
   /*                                                                       */
   /*    hint_flags       :: Some flags used to change the hinters'         */
-  /*                        behaviour. Only used for debugging for now     */
+  /*                        behaviour.  Only used for debugging for now.   */
   /*                                                                       */
   /*    postscript_name  :: Postscript font name for this face.            */
   /*                                                                       */

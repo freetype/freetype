@@ -225,7 +225,7 @@
 
   static FT_String*
   cff_strcpy( FT_Memory         memory,
-               const FT_String*  source )
+              const FT_String*  source )
   {
     FT_Error    error;
     FT_String*  result = 0;
@@ -402,8 +402,8 @@
           root->style_name = cff_strcpy( memory, "Regular" );  /* XXXX */
         else
           root->style_name = cff_index_get_sid_string( &cff->string_index,
-                                             dict->weight,
-                                             psnames );
+                                                       dict->weight,
+                                                       psnames );
 
         /*******************************************************************/
         /*                                                                 */
@@ -453,24 +453,25 @@
       /* Compute char maps.                                              */
       /*                                                                 */
 
-      /* try to synthetize a Unicode charmap if there is none available */
-      /* already. If an OpenType font contains a Unicode "cmap", we     */
-      /* will use it, wathever be in the CFF part of the file..         */
+      /* Try to synthetize a Unicode charmap if there is none available */
+      /* already.  If an OpenType font contains a Unicode "cmap", we    */
+      /* will use it, whatever be in the CFF part of the file.          */
       {
         FT_CharMapRec  cmaprec;
         FT_CharMap     cmap;
         FT_UInt        nn;
         CFF_Encoding   encoding = &cff->encoding;
 
+
         for ( nn = 0; nn < (FT_UInt) root->num_charmaps; nn++ )
         {
           cmap = root->charmaps[nn];
 
-          /* Windows Unicode (3,1) ? */
+          /* Windows Unicode (3,1)? */
           if ( cmap->platform_id == 3 && cmap->encoding_id == 1 )
             goto Skip_Unicode;
 
-          /* Deprecated Unicode platform id  ?? */
+          /* Deprecated Unicode platform id? */
           if ( cmap->platform_id == 0 )
             goto Skip_Unicode; /* Standard Unicode (deprecated) */
         }
@@ -493,6 +494,7 @@
         if ( encoding->count > 0 )
         {
           FT_CMap_Class  clazz;
+
 
           cmaprec.face        = root;
           cmaprec.platform_id = 7;  /* Adobe platform id */

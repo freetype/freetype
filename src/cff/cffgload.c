@@ -434,7 +434,7 @@
 
   /* check space for a new on-curve point, then add it */
   static FT_Error
-  cff_builder_cff_builder_add_point1( CFF_Builder*  builder,
+  cff_builder_add_point1( CFF_Builder*  builder,
                           FT_Pos        x,
                           FT_Pos        y )
   {
@@ -492,7 +492,7 @@
       builder->path_begun = 1;
       error = cff_builder_add_contour( builder );
       if ( !error )
-        error = cff_builder_cff_builder_add_point1( builder, x, y );
+        error = cff_builder_add_point1( builder, x, y );
     }
 
     return error;
@@ -627,7 +627,7 @@
 
     /* First load `bchar' in builder */
     error = cff_index_access_element( &cff->charstrings_index, bchar_index,
-                                &charstring, &charstring_len );
+                                      &charstring, &charstring_len );
     if ( !error )
     {
       error = cff_decoder_parse_charstrings( decoder, charstring, charstring_len );
@@ -651,7 +651,7 @@
 
     /* Now load `achar' on top of the base outline. */
     error = cff_index_access_element( &cff->charstrings_index, achar_index,
-                                &charstring, &charstring_len );
+                                      &charstring, &charstring_len );
     if ( !error )
     {
       error = cff_decoder_parse_charstrings( decoder, charstring, charstring_len );
@@ -705,8 +705,8 @@
   /*                                                                       */
   FT_LOCAL_DEF( FT_Error )
   cff_decoder_parse_charstrings( CFF_Decoder*  decoder,
-                         FT_Byte*      charstring_base,
-                         FT_Int        charstring_len )
+                                 FT_Byte*      charstring_base,
+                                 FT_Int        charstring_len )
   {
     FT_Error           error;
     CFF_Decoder_Zone*  zone;
@@ -1175,8 +1175,8 @@
         case cff_op_rlineto:
           FT_TRACE4(( " rlineto" ));
 
-          if ( cff_builder_start_point ( builder, x, y )         ||
-               check_points( builder, num_args / 2 ) )
+          if ( cff_builder_start_point ( builder, x, y ) ||
+               check_points( builder, num_args / 2 )     )
             goto Memory_Error;
 
           if ( num_args < 2 || num_args & 1 )
@@ -1214,7 +1214,7 @@
               else
                 y += args[0];
 
-              if ( cff_builder_cff_builder_add_point1( builder, x, y ) )
+              if ( cff_builder_add_point1( builder, x, y ) )
                 goto Memory_Error;
 
               args++;
@@ -1231,8 +1231,8 @@
           if ( num_args % 6 != 0 )
             goto Stack_Underflow;
 
-          if ( cff_builder_start_point ( builder, x, y )         ||
-               check_points( builder, num_args / 2 ) )
+          if ( cff_builder_start_point ( builder, x, y ) ||
+               check_points( builder, num_args / 2 )     )
             goto Memory_Error;
 
           args = stack;
@@ -1385,8 +1385,8 @@
             if ( num_args < 8 || ( num_args - 6 ) & 1 )
               goto Stack_Underflow;
 
-            if ( cff_builder_start_point( builder, x, y )           ||
-                 check_points( builder, num_lines + 3 ) )
+            if ( cff_builder_start_point( builder, x, y ) ||
+                 check_points( builder, num_lines + 3 )   )
               goto Memory_Error;
 
             args = stack;
@@ -1425,7 +1425,7 @@
             if ( num_args < 8 || ( num_args - 2 ) % 6 )
               goto Stack_Underflow;
 
-            if ( cff_builder_start_point ( builder, x, y )             ||
+            if ( cff_builder_start_point ( builder, x, y ) ||
                  check_points( builder, num_curves*3 + 2 ) )
               goto Memory_Error;
 
@@ -1468,7 +1468,7 @@
             /* make sure we have enough space for the start point if it    */
             /* needs to be added..                                         */
             if ( cff_builder_start_point( builder, x, y ) ||
-                 check_points( builder, 6 )   )
+                 check_points( builder, 6 )               )
               goto Memory_Error;
 
             /* Record the starting point's y postion for later use */
@@ -1519,7 +1519,7 @@
 
             /* adding six more points; 4 control points, 2 on-curve points */
             if ( cff_builder_start_point( builder, x, y ) ||
-                 check_points ( builder, 6 )  )
+                 check_points ( builder, 6 )              )
               goto Memory_Error;
 
             /* record the starting point's y-position for later use */
@@ -1571,7 +1571,7 @@
 
             /* adding six more points; 4 control points, 2 on-curve points */
             if ( cff_builder_start_point( builder, x, y ) ||
-                 check_points( builder, 6 )   )
+                 check_points( builder, 6 )               )
                goto Memory_Error;
 
             /* record the starting point's x, y postion for later use */
@@ -1634,7 +1634,7 @@
             FT_TRACE4(( " flex" ));
 
             if ( cff_builder_start_point( builder, x, y ) ||
-                 check_points( builder, 6 )   )
+                 check_points( builder, 6 )               )
               goto Memory_Error;
 
             args = stack;
@@ -1643,7 +1643,7 @@
               x += args[0];
               y += args[1];
               cff_builder_add_point( builder, x, y,
-                         (FT_Bool)( count == 3 || count == 0 ) );
+                                     (FT_Bool)( count == 3 || count == 0 ) );
               args += 2;
             }
 
@@ -1974,7 +1974,8 @@
 
             if ( zone - decoder->zones >= CFF_MAX_SUBRS_CALLS )
             {
-              FT_ERROR(( "cff_decoder_parse_charstrings: too many nested subrs\n" ));
+              FT_ERROR(( "cff_decoder_parse_charstrings:"
+                         " too many nested subrs\n" ));
               goto Syntax_Error;
             }
 
@@ -1987,7 +1988,8 @@
 
             if ( !zone->base )
             {
-              FT_ERROR(( "cff_decoder_parse_charstrings: invoking empty subrs!\n" ));
+              FT_ERROR(( "cff_decoder_parse_charstrings:"
+                         " invoking empty subrs!\n" ));
               goto Syntax_Error;
             }
 
@@ -2014,7 +2016,8 @@
 
             if ( zone - decoder->zones >= CFF_MAX_SUBRS_CALLS )
             {
-              FT_ERROR(( "cff_decoder_parse_charstrings: too many nested subrs\n" ));
+              FT_ERROR(( "cff_decoder_parse_charstrings:"
+                         " too many nested subrs\n" ));
               goto Syntax_Error;
             }
 
@@ -2027,7 +2030,8 @@
 
             if ( !zone->base )
             {
-              FT_ERROR(( "cff_decoder_parse_charstrings: invoking empty subrs!\n" ));
+              FT_ERROR(( "cff_decoder_parse_charstrings:"
+                         " invoking empty subrs!\n" ));
               goto Syntax_Error;
             }
 
@@ -2042,7 +2046,8 @@
 
           if ( decoder->zone <= decoder->zones )
           {
-            FT_ERROR(( "cff_decoder_parse_charstrings: unexpected return\n" ));
+            FT_ERROR(( "cff_decoder_parse_charstrings:"
+                       " unexpected return\n" ));
             goto Syntax_Error;
           }
 
@@ -2140,11 +2145,12 @@
 
       /* now get load the unscaled outline */
       error = cff_index_access_element( &cff->charstrings_index, glyph_index,
-                                  &charstring, &charstring_len );
+                                        &charstring, &charstring_len );
       if ( !error )
       {
         cff_decoder_prepare( &decoder, glyph_index );
-        error = cff_decoder_parse_charstrings( &decoder, charstring, charstring_len );
+        error = cff_decoder_parse_charstrings( &decoder,
+                                               charstring, charstring_len );
 
         cff_index_forget_element( &cff->charstrings_index, &charstring );
       }
@@ -2225,19 +2231,21 @@
 
       /* now load the unscaled outline */
       error = cff_index_access_element( &cff->charstrings_index, glyph_index,
-                                  &charstring, &charstring_len );
+                                        &charstring, &charstring_len );
       if ( !error )
       {
         CFF_IndexRec csindex = cff->charstrings_index;
 
 
         cff_decoder_prepare( &decoder, glyph_index );
-        error = cff_decoder_parse_charstrings( &decoder, charstring, charstring_len );
+        error = cff_decoder_parse_charstrings( &decoder,
+                                               charstring, charstring_len );
 
         cff_index_forget_element( &cff->charstrings_index, &charstring );
 
         /* We set control_data and control_len if charstrings is loaded.  */
-        /* See how charstring loads at cff_index_access_element() in cffload.c. */
+        /* See how charstring loads at cff_index_access_element() in      */
+        /* cffload.c.                                                     */
 
         glyph->root.control_data =
           csindex.bytes + csindex.offsets[glyph_index] - 1;

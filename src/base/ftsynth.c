@@ -41,6 +41,7 @@
     FT_Matrix    transform;
     FT_Outline*  outline = &slot->outline;
 
+
     /* only oblique outline glyphs */
     if ( slot->format != ft_glyph_format_outline )
       return;
@@ -208,6 +209,7 @@
     FT_Face      face = FT_SLOT_FACE( slot );
     FT_Angle     rotate, angle_in, angle_out;
     FT_Int       c, n, first, orientation;
+
 
     /* only embolden outline glyph images */
     if ( slot->format != ft_glyph_format_outline )

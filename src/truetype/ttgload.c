@@ -756,11 +756,11 @@
     FT_Bool         opened_frame = 0;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-	struct FT_StreamRec_ inc_stream;
+    struct FT_StreamRec_  inc_stream;
 #endif
 
+
     /* check glyph index */
-    glyph_index;
     if ( glyph_index >= (FT_UInt)face->root.num_glyphs )
     {
       error = TT_Err_Invalid_Glyph_Index;
@@ -784,21 +784,27 @@
       FT_UShort  advance_width = 0;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-	  FT_Bool metrics_found = FALSE;
+      FT_Bool    metrics_found = FALSE;
 
-	  /* If this is an incrementally loaded font see if there are overriding metrics for this glyph. */
-      if (face->root.incremental_interface && face->root.incremental_interface->funcs->get_glyph_metrics)
+
+      /* If this is an incrementally loaded font see if there are */
+      /* overriding metrics for this glyph.                       */
+      if ( face->root.incremental_interface &&
+           face->root.incremental_interface->funcs->get_glyph_metrics )
       {
-        FT_Basic_Glyph_Metrics m;
-        error = face->root.incremental_interface->funcs->get_glyph_metrics(face->root.incremental_interface->object,
-            glyph_index,FALSE,&m,&metrics_found);
-        if (error)
-	      goto Exit;
-        left_bearing = (FT_Short)m.bearing_x;
+        FT_Basic_Glyph_Metrics  m;
+
+
+        error = face->root.incremental_interface->funcs->get_glyph_metrics(
+                  face->root.incremental_interface->object,
+                  glyph_index, FALSE, &m, &metrics_found );
+        if ( error )
+          goto Exit;
+        left_bearing  = (FT_Short)m.bearing_x;
         advance_width = (FT_UShort)m.advance;
       }
 
-	  if (!metrics_found)
+      if ( !metrics_found )
         Get_HMetrics( face, glyph_index,
                       (FT_Bool)!( loader->load_flags &
                                   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ),
@@ -806,13 +812,14 @@
                       &advance_width );
 
 #else
+
       Get_HMetrics( face, glyph_index,
                     (FT_Bool)!( loader->load_flags &
                                 FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ),
                     &left_bearing,
                     &advance_width );
 
-#endif
+#endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
       loader->left_bearing = left_bearing;
       loader->advance      = advance_width;
@@ -825,28 +832,36 @@
     }
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-	/*
-	Set 'offset' to the start of the glyph program relative to the start of the 'glyf' table,
-	and 'count' to the length of the glyph program in bytes.
 
-	If we are loading glyph data via the incremental interface, set the loader stream to a memory
-	stream reading the data returned by the interface.
-	*/
-    if (face->root.incremental_interface)
+    /* Set `offset' to the start of the glyph program relative to the  */
+    /* start of the 'glyf' table, and `count' to the length of the     */
+    /* glyph program in bytes.                                         */
+    /*                                                                 */
+    /* If we are loading glyph data via the incremental interface, set */
+    /* the loader stream to a memory stream reading the data returned  */
+    /* by the interface.                                               */
+
+    if ( face->root.incremental_interface )
     {
       FT_Data data;
-      error = face->root.incremental_interface->funcs->get_glyph_data(face->root.incremental_interface->object,
-	          glyph_index,&data);
-      if (error)
+
+
+      error = face->root.incremental_interface->funcs->get_glyph_data(
+                face->root.incremental_interface->object,
+                glyph_index, &data );
+      if ( error )
         goto Exit;
+
       offset = 0;
-      count = data.length;
-      memset(&inc_stream,0,sizeof(inc_stream));
-      FT_Stream_OpenMemory(&inc_stream,data.pointer,data.length);
+      count  = data.length;
+      ft_memset( &inc_stream, 0, sizeof ( inc_stream ) );
+      FT_Stream_OpenMemory( &inc_stream, data.pointer, data.length );
       loader->stream = &inc_stream;
     }
+
     else
-#endif
+
+#endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
     {
       offset = face->glyph_locations[glyph_index];
@@ -1335,19 +1350,27 @@
       FT_Bool    metrics_found = FALSE;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-      /* If this is an incrementally loaded font see if there are overriding metrics for this glyph. */
-      if (face->root.incremental_interface && face->root.incremental_interface->funcs->get_glyph_metrics)
+
+      /* If this is an incrementally loaded font see if there are */
+      /* overriding metrics for this glyph.                       */
+      if ( face->root.incremental_interface &&
+           face->root.incremental_interface->funcs->get_glyph_metrics )
       {
-        FT_Basic_Glyph_Metrics m;
-        FT_Error error =
-          face->root.incremental_interface->funcs->get_glyph_metrics(face->root.incremental_interface->object,
-            glyph_index,TRUE,&m,&metrics_found);
-        if (error)
+        FT_Basic_Glyph_Metrics  m;
+        FT_Error                error =
+          face->root.incremental_interface->funcs->get_glyph_metrics(
+            face->root.incremental_interface->object,
+            glyph_index, TRUE, &m, &metrics_found );
+
+
+        if ( error )
           return error;
-        top_bearing = (FT_Short)m.bearing_y;
+
+        top_bearing    = (FT_Short)m.bearing_y;
         advance_height = (FT_UShort)m.advance;
       }
-#endif
+
+#endif /* FT_CONFIG_OPTION_INCREMENTAL */
 
       /* Get the unscaled top bearing and advance height. */
       if ( !metrics_found && face->vertical_info &&
@@ -1568,18 +1591,22 @@
     /* seek to the beginning of the glyph table.  For Type 42 fonts      */
     /* the table might be accessed from a Postscript stream or something */
     /* else...                                                           */
+
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-	/* Don't look for the glyph table if this is an incremental font. */
-    if (!face->root.incremental_interface)
+
+    /* Don't look for the glyph table if this is an incremental font. */
+    if ( !face->root.incremental_interface )
+
 #endif
-	{
+
+    {
       error = face->goto_table( face, TTAG_glyf, stream, 0 );
       if ( error )
       {
         FT_ERROR(( "TT_Load_Glyph: could not access glyph table\n" ));
         goto Exit;
       }
-	}
+    }
 
     FT_MEM_SET( &loader, 0, sizeof ( loader ) );
 
@@ -1628,11 +1655,14 @@
     loader.stream = stream;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    if (face->root.incremental_interface)
+
+    if ( face->root.incremental_interface )
       loader.glyf_offset = 0;
-	else
+    else
+
 #endif
-      loader.glyf_offset  = FT_STREAM_POS();
+
+      loader.glyf_offset = FT_STREAM_POS();
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 

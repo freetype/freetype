@@ -702,7 +702,7 @@
              FT_Parameter*  params,
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-			 FT_Incremental_Interface*	incremental_interface,
+             FT_Incremental_Interface*  incremental_interface,
 #endif
 
              FT_Face*       aface )
@@ -730,7 +730,7 @@
     face->memory   = memory;
     face->stream   = stream;
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-	face->incremental_interface = incremental_interface;
+    face->incremental_interface = incremental_interface;
 #endif
 
     error = clazz->init_face( stream,
@@ -745,6 +745,7 @@
     {
       FT_Int      nn;
       FT_CharMap  unicmap = NULL, cmap;
+
 
       for ( nn = 0; nn < face->num_charmaps; nn++ )
       {
@@ -877,8 +878,9 @@
         FT_Parameter*  params     = 0;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-		FT_Incremental_Interface* incremental_interface =
-			(args->flags & ft_open_incremental) ? args->incremental_interface : 0;
+        FT_Incremental_Interface*  incremental_interface =
+          ( args->flags & ft_open_incremental ) ? args->incremental_interface
+                                                : 0;
 #endif
 
         if ( args->flags & ft_open_params )
@@ -920,8 +922,9 @@
           FT_Parameter*  params     = 0;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-		  FT_Incremental_Interface* incremental_interface =
-            (args->flags & ft_open_incremental) ? args->incremental_interface : 0;
+          FT_Incremental_Interface* incremental_interface =
+            ( args->flags & ft_open_incremental ) ? args->incremental_interface
+                                                  : 0;
 #endif
 
           driver = FT_DRIVER( cur[0] );

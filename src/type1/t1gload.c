@@ -53,50 +53,64 @@
   /*************************************************************************/
 
 
-FT_LOCAL_DEF(FT_Error) T1_Parse_Glyph_And_Get_Char_String( T1_Decoder decoder,
-                                                           FT_UInt glyph_index,
-                                                           FT_Data* char_string )
+  FT_LOCAL_DEF( FT_Error )
+  T1_Parse_Glyph_And_Get_Char_String( T1_Decoder  decoder,
+                                      FT_UInt     glyph_index,
+                                      FT_Data*    char_string )
   {
-    T1_Face face = (T1_Face)decoder->builder.face;
-    T1_Font type1 = &face->type1;
-    FT_Error error = 0;
+    T1_Face   face  = (T1_Face)decoder->builder.face;
+    T1_Font   type1 = &face->type1;
+    FT_Error  error = 0;
+
 
     decoder->font_matrix = type1->font_matrix;
     decoder->font_offset = type1->font_offset;
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
-    /* For incremental fonts get the character data using the callback function. */
-    if (face->root.incremental_interface)
-      error = face->root.incremental_interface->funcs->get_glyph_data(face->root.incremental_interface->object,
-        glyph_index,char_string);
+
+    /* For incremental fonts get the character data using the */
+    /* callback function.                                     */
+    if ( face->root.incremental_interface )
+      error = face->root.incremental_interface->funcs->get_glyph_data(
+                face->root.incremental_interface->object,
+                glyph_index, char_string );
     else
+
 #endif
 
     /* For ordinary fonts get the character data stored in the face record. */
     {
       char_string->pointer = type1->charstrings[glyph_index];
-      char_string->length = type1->charstrings_len[glyph_index];
+      char_string->length  = type1->charstrings_len[glyph_index];
     }
 
-    if (!error)
-      error = decoder->funcs.parse_charstrings(decoder,(FT_Byte*)char_string->pointer,char_string->length);
+    if ( !error )
+      error = decoder->funcs.parse_charstrings(
+                decoder, (FT_Byte*)char_string->pointer,
+                char_string->length );
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
+
     /* Incremental fonts can optionally override the metrics. */
-    if (!error && face->root.incremental_interface && face->root.incremental_interface->funcs->get_glyph_metrics)
+    if ( !error && face->root.incremental_interface                 &&
+         face->root.incremental_interface->funcs->get_glyph_metrics )
     {
-      FT_Bool found = FALSE;
-      FT_Basic_Glyph_Metrics metrics;
-      error = face->root.incremental_interface->funcs->get_glyph_metrics(face->root.incremental_interface->object,
-        glyph_index,FALSE,&metrics,&found);
-      if (found)
+      FT_Bool                 found = FALSE;
+      FT_Basic_Glyph_Metrics  metrics;
+
+
+      error = face->root.incremental_interface->funcs->get_glyph_metrics(
+                face->root.incremental_interface->object,
+                glyph_index, FALSE, &metrics, &found );
+      if ( found )
       {
         decoder->builder.left_bearing.x = metrics.bearing_x;
         decoder->builder.left_bearing.y = metrics.bearing_y;
-        decoder->builder.advance.x = metrics.advance;
-        decoder->builder.advance.y = 0;
+        decoder->builder.advance.x      = metrics.advance;
+        decoder->builder.advance.y      = 0;
       }
     }
+
 #endif
 
   return error;
@@ -107,8 +121,10 @@ FT_LOCAL_DEF(FT_Error) T1_Parse_Glyph_And_Get_Char_String( T1_Decoder decoder,
   T1_Parse_Glyph( T1_Decoder  decoder,
                   FT_UInt     glyph_index )
   {
-    FT_Data data;
-    return T1_Parse_Glyph_And_Get_Char_String(decoder,glyph_index,&data);
+    FT_Data  data;
+
+
+    return T1_Parse_Glyph_And_Get_Char_String( decoder, glyph_index, &data );
   }
 
 
@@ -230,7 +246,8 @@ FT_LOCAL_DEF(FT_Error) T1_Parse_Glyph_And_Get_Char_String( T1_Decoder decoder,
     decoder.subrs_len = type1->subrs_len;
 
     /* now load the unscaled outline */
-    error = T1_Parse_Glyph_And_Get_Char_String( &decoder, glyph_index, &char_string );
+    error = T1_Parse_Glyph_And_Get_Char_String( &decoder, glyph_index,
+                                                &char_string );
     if ( error )
       goto Exit;
 

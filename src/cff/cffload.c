@@ -1535,7 +1535,7 @@
       case 0:
         if ( num_glyphs > 0 )
         {
-          if ( FT_FRAME_ENTER( (num_glyphs-1)*2 ) )
+          if ( FT_FRAME_ENTER( ( num_glyphs - 1 ) * 2 ) )
             goto Exit;
             
           for ( j = 1; j < num_glyphs; j++ )
@@ -1699,7 +1699,6 @@
                      FT_ULong      base_offset,
                      FT_ULong      offset )
   {
-    FT_Memory   memory = stream->memory;
     FT_Error    error  = 0;
     FT_UInt     count;
     FT_UInt     j;
@@ -1744,7 +1743,7 @@
            FT_READ_BYTE( count )              )
         goto Exit;
 
-      encoding->count = (count+1);
+      encoding->count = count + 1;
 
       switch ( encoding->format & 0x7F )
       {
@@ -1752,10 +1751,11 @@
         {
           FT_Byte*  p;
           
+
           if ( FT_FRAME_ENTER( count ) )
             goto Exit;
 
-          p = (FT_Byte*) stream->cursor;
+          p = (FT_Byte*)stream->cursor;
           
           for ( j = 1; j <= count; j++ )
           {
@@ -1778,9 +1778,9 @@
 
       case 1:
         {
-          FT_Byte   nleft;
-          FT_UInt   i = 1;
-          FT_UInt   k;
+          FT_Byte  nleft;
+          FT_UInt  i = 1;
+          FT_UInt  k;
 
 
           /* Parse the Format1 ranges. */
@@ -1981,8 +1981,8 @@
         goto Exit;
 
       error = cff_parser_run( &parser,
-                             (FT_Byte*)stream->cursor,
-                             (FT_Byte*)stream->limit );
+                              (FT_Byte*)stream->cursor,
+                              (FT_Byte*)stream->limit );
       FT_FRAME_EXIT();
       if ( error )
         goto Exit;
@@ -2001,7 +2001,7 @@
 
       font->num_local_subrs = font->local_subrs_index.count;
       error = cff_index_get_pointers( &font->local_subrs_index,
-                                  &font->local_subrs );
+                                      &font->local_subrs );
       if ( error )
         goto Exit;
     }
@@ -2178,7 +2178,7 @@
     font->num_glyphs       = font->charstrings_index.count;
 
     error = cff_index_get_pointers( &font->global_subrs_index,
-                                &font->global_subrs ) ;
+                                    &font->global_subrs ) ;
 
     if ( error )
       goto Exit;

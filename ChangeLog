@@ -1,189 +1,379 @@
+2002-07-26  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (load_truetype_glyph)
+	[FT_CONFIG_OPTION_INCREMENTAL]: s/memset/ft_memset/.
+
+	* src/autohint/ahhint.c (ah_hint_edges_3): Fix compiler warning.
+	* src/cff/cffload.c (cff_encoding_load): Remove `memory' variable.
+	* src/cff/cffcmap.c (cff_cmap_encoding_init): Remove `psnames'
+	variable.
+	* src/truetype/ttgload.c (load_truetype_glyph): Remove statement
+	without effect.
+	* src/truetype/ttdriver (Get_Char_Index, Get_Next_Char): Removed.
+
 2002-07-24  Graham Asher  <graham.asher@btinternet.com>
 
-    * src/truetype/ttobjs.c: fix for bug reported by Sven Neumann [sven@gimp.org]
-    on the FreeType development forum: "If FT_CONFIG_OPTION_INCREMENTAL is undefined
-    (this is the default), the TrueType loader crashes in line 852 of src/truetype/ttgload.c
-    when it tries to access face->glyph_locations."
+	* src/truetype/ttobjs.c: Fix for bug reported by Sven Neumann
+	[sven@gimp.org] on the FreeType development forum: "If
+	FT_CONFIG_OPTION_INCREMENTAL is undefined (this is the default), the
+	TrueType loader crashes in line 852 of src/truetype/ttgload.c when
+	it tries to access face->glyph_locations."
 
 2002-07-18  Graham Asher  <graham.asher@btinternet.com>
 
-    * include/freetype/freetype.h:
-    Added types and structures to support incremental typeface loading.
-    The FT_Incremental_Interface structure, defined in freetype.h,
-    is designed to be passed to FT_Open_Face to provide callback
-    functions to obtain glyph recipes and metrics, for fonts like
-    those passed from PostScript that do not necessarily provide
-    all, or any, glyph information, when first opened.
+	Added types and structures to support incremental typeface loading. 
+	The FT_Incremental_Interface structure, defined in freetype.h, is
+	designed to be passed to FT_Open_Face to provide callback functions
+	to obtain glyph recipes and metrics, for fonts like those passed
+	from PostScript that do not necessarily provide all, or any, glyph
+	information, when first opened.
 
-    * include/freetype/config/ftoption.h
-    Added a new configuration macro, FT_CONFIG_OPTION_INCREMENTAL,
-    to enable incremental face loading. By default it is not defined.
+	* include/freetype/config/ftoption.h (FT_CONFIG_OPTION_INCREMENTAL):
+	New configuration macro to enable incremental face loading.  By
+	default it is not defined.
 
-    * /src/base/ftobjs.c
-    Added incremental loading capability to FT_Open_Face.
+	* include/freetype/freetype.h (FT_Basic_Glyph_Metrics,
+	FT_Get_Glyph_Data_Func, FT_Get_Glyph_Metrics_Func,
+	FT_Incremental_Interface_Funcs, FT_Incremental_Interface)
+	[FT_CONFIG_OPTION_INCREMENTAL]: New.
+	(FT_Open_Args, FT_FaceRec) [FT_CONFIG_OPTION_INCREMENTAL]: New field
+	`incremental_interface'.
+	(FT_Open_Flags) [FT_CONFIG_OPTION_INCREMENTAL]: New enum
+	`ft_open_incremental'.
 
-    * /src/truetype/ttgload.c
-    Added the incremental loading system for the TrueType driver.
+	* include/freetype/fttypes.h: Include FT_CONFIG_CONFIG_H.
+	(FT_Data): New structure to represent binary data.
 
-    * /src/truetype/ttobjs.c
-    Added the incremental loading system for the TrueType driver.
+	* src/base/ftobjs.c (open_face) [FT_CONFIG_OPTION_INCREMENTAL]:
+	Add parameter for incremental loading.
+	(FT_Open_Face) [FT_CONFIG_OPTION_INCREMENTAL]: Use incremental
+	interface.
 
-    * /src/cid/cidgload.c
-    Added the incremental loading system for the CID driver.
+	* src/truetype/ttgload.c (load_truetype_glyph)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Added the incremental loading system
+	for the TrueType driver.
+	(compute_glyph_metrics): Return FT_Error.
+	[FT_CONFIG_OPTION_INCREMENTAL]: Check for overriding metrics.
+	(TT_Load_Glyph) [FT_CONFIG_OPTION_INCREMENTAL]: Don't look for
+	the glyph table while handling an incremental font.
+	Get glyph offset.
 
-    * /src/sfnt/sfobjs.c
-    Changes to support incremental Type 42 fonts: assume a font has glyphs if it
-    has an incremental interface object.
+	* src/truetype/ttobjs.c (TT_Face_Init)
+	[FT_CONFIG_OPTION_INCOREMENTAL]: Added the incremental loading
+	system for the TrueType driver.
 
-    * /src/type1/t1gload.c
-    Added support for incrementally loaded Type 1 faces.
+	* src/cid/cidgload.c (cid_load_glyph)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Added the incremental loading system
+	for the CID driver.
+
+	* src/sfnt/sfobjs.c (SFNT_Load_Face) [FT_CONFIG_OPTION_INCREMENTAL]:
+	Changes to support incremental Type 42 fonts: Assume a font has
+	glyphs if it has an incremental interface object.
+
+	* src/type1/t1gload.c (T1_Parse_Glyph): Renamed to...
+	(T1_Parse_Glyph_And_Get_Char_String): This.
+	[FT_CONFIG_OPTION_INCREMENTAL]: Added support for incrementally
+	loaded Type 1 faces.
+	(T1_Parse_Glyph): New function.
+	(T1_Load_Glyph): Updated.
 
 2002-07-17  David Turner  <david@freetype.org>
 
-    * include/freetype/cache/ftccache.h, src/cache/ftccache.i,
-    src/cache/ftccache.c: cleaning up the cache sub-system code, linear
-    hashing is now the default
+	Cleaning up the cache sub-system code; linear hashing is now the
+	default.
 
-    * include/freetype/config/ftoption.h, include/freetype/internal/tttypes.h,
-    src/base/ftobjs.c, src/bdf/bdfdrivr.c, src/cff/cffobjs.c,
-    src/pcf/pcfdrivr.c, src/sfnt/sfobjs.c, src/sfnt/ttcmap0.c,
-    src/sfnt/ttcmap0.h, src/sfnt/ttload.c, src/type1/t1objs.c,
-    src/type42/t42objs.c, src/type42/t42objs.h, src/type42/t42drivr.c,
-    src/winfonts/winfnt.c: code cleanup, FT_CONFIG_OPTION_USE_CMAPS is now
-    the default
+	* include/freetype/cache/ftccache.h, src/cache/ftccache.i,
+	src/cache/ftccache.c [!FTC_CACHE_USE_LINEAR_HASHING]: Removed.
+	(FTC_CACHE_USE_LINEAR_HASHING: Removed also.
 
-    * src/sfnt/ttload.c (TT_Load_SFNT_Header): fixed a recent bug that prevented
-    OpenType fonts to be recognized by FreeType
+	FT_CONFIG_OPTION_USE_CMAPS is now the default.
+
+	* include/freetype/internal/ftdriver.h (FT_Driver_ClassRec): Remove
+	`get_char_index' and `get_next_char'.
+
+	* include/freetype/config/ftoption.h,
+	include/freetype/internal/tttypes.h, src/base/ftobjs.c,
+	src/bdf/bdfdrivr.c, src/cff/cffobjs.c, src/pcf/pcfdrivr.c,
+	src/pfr/pfrdrivr.c, src/sfnt/sfobjs.c, src/sfnt/ttcmap0.c,
+	src/sfnt/ttcmap0.h, src/sfnt/ttload.c, src/type1/t1objs.c,
+	src/type42/t42objs.c, src/winfonts/winfnt.c
+	[!FT_CONFIG_OPTION_USE_CMAPS]: Removed.  The new cmap code is now
+	the default.
+
+	* src/type42/t42objs.c (T42_CMap_CharIndex, T42_CMap_CharNext):
+	Removed.
+	* src/type42/t42objs.h: Updated.
+
+	* src/cid/cidriver.c (Cid_Get_Char_Index, Cid_Get_Next_Char):
+	Removed.
+	(t1_cid_driver_class): Updated.
+	* src/truetype/ttdriver.c (tt_driver_class): Updated.
+	* src/type1/t1driver.c (Get_Char_Index, Get_Next_Char): Removed
+	(t1_driver_class): Updated.
+	* src/type42/t42drivr.c (t42_driver_class): Updated.
+
+	* src/base/ftobjs.c (open_face): Select Unicode cmap by default.
+
+	* src/sfnt/ttload.c (TT_Load_SFNT_Header): Fixed a recent bug that
+	prevented OpenType fonts to be recognized by FreeType.
 
 2002-07-11  David Turner  <david@freetype.org>
 
-    * src/sfnt/ttload.c, src/sfnt/ttload.h, src/sfnt/ttdriver.c: changing
-    the SFNT loader to check for SFNT-based font files differently. We now
-    ignore the range "helper" fields and check the "head" table's magic
-    number instead.
+	Changing the SFNT loader to check for SFNT-based font files
+	differently.  We now ignore the range "helper" fields and check the
+	"head" table's magic number instead.
 
-    * src/base/ftobject.c, src/base/fthash.c: updated object sub-system and
-    dynamic hash table implementation (still experimental, don't use)
+	* include/freetype/internal/tttypes.h (SFNT_HeaderRec): Add `offset'
+	field.
 
-    * include/freetype/t1tables.h, include/freetype/internal/psaux.h,
-    src/psaux/psobjs.c, src/type1/t1load.c, src/type1/t1tokens.h:
-    fixing a bug in the Type 1 loader that prevented valid font bounding
-    boxes to be loaded from multiple master fonts.
+	* src/sfnt/ttload.c (sfnt_dir_check): New function.
+	(TT_Load_SFNT_HeaderRec): Renamed to...
+	(TT_Load_SFNT_Header): This.
+	Implement new functionality.
+	* src/sfnt/ttload.h: Updated.
+	* src/sfnt/sfdriver.c (sfnt_interface): Updated.
+
+	* src/base/ftobject.c, src/base/fthash.c: Updated object sub-system
+	and dynamic hash table implementation (still experimental, don't
+	use).
+	* include/freetype/internal/fthash.h: Updated.
+	* include/freetype/internal/ftobjs.h (FT_LibraryRec): New member
+	`meta_class'.
+
+	Fixing a bug in the Type 1 loader that prevented valid font bounding
+	boxes to be loaded from multiple master fonts.
+
+	* include/freetype/t1tables.h (PS_BlendRec): Add `bboxes' field.
+
+	* include/freetype/internal/psaux.h (T1_FieldType): Add
+	`T1_FIELD_TYPE_BBOX'.
+	(T1_FieldLocation): Add `T1_FIELD_LOCATION_BBOX'.
+	(T1_FIELD_BBOX): New macro.
+
+	* src/psaux/psobjs.c (PS_Parser_LoadField): Handle T1_FIELD_TYPE_BBOX.
+	* src/type1/t1load.c (t1_allocate_blend): Create blend->bboxes.
+	(T1_Done_Blend): Free blend->bboxes.
+	(t1_load_keyword): Handle T1_FIELD_LOCATION_BBOX.
+	(parse_font_bbox): Commented out.
+	(t1_keywords): Comment out `parse_font_bbox'.
+	* src/type1/t1tokens.h: Define `FontBBox' field.
 
 2002-07-10  David Turner  <david@freetype.org>
 
-    * src/cff/cffobjs.c: small fix to select the Unicode charmap by default
-    when needed
+	* src/cff/cffobjs.c: Small fix to select the Unicode charmap by
+	default when needed.
+	Small fix to allow OpenType fonts to support Adobe charmaps when
+	needed.
 
-    * src/cff/cffobjs.c: small fix to allow OpenType fonts to support Adobe
-    charmaps when needed.
+	* src/cff/cffcmap.c, src/cff/cffcmap.h: New files to support
+	charmaps for CFF fonts.
 
-    * src/cff/cffcmap.c, src/cff/cffcmap.h, Jamfile, rules.mk: new files added
-    to support charmaps for CFF fonts
+	* src/cff/cff.c, src/cff/Jamfile, src/cff/rules.mk: Updated.
 
-    * src/cff/cffload.c, src/cff/cffload.h, src/cff/cffobjs.c,
-    src/cff/cffobjs.h, src/cff/cffparse.c, src/cffparse.h, src/cff/cffgload.c,
-    src/cff/cffgload.h: adding support for CFF charmaps, reformatting the
-    sources, and removing some bugs in the Encoding and Charset loaders
+	* include/freetype/internal/cfftypes.h (CFF_EncodingRec): Use
+	fixed-length arrays for `sids' and `codes'.  Add `count' member.
+	(CFF_FontRec): Add `psnames' member.
 
-2002-07-09  Owen Taylor   <owen@redhat.com>
+	* src/cff/cffdrivr.c, src/cff/cffload.c, src/cff/cffload.h,
+	src/cff/cffobjs.c, src/cff/cffobjs.h, src/cff/cffparse.c,
+	src/cffparse.h, src/cff/cffgload.c, src/cff/cffgload.h: Adding
+	support for CFF charmaps, reformatting the sources, and removing
+	some bugs in the Encoding and Charset loaders.
+	Many fonts renamed to use lowercase only:
 
-    * src/pshinter/pshglob.c: fixed a bug that prevented the hinter from using
-    correct standard width and height values. resulting in hinting bugs with
-    certain fonts (e.g. Utopia)
+	  CFF_Builder_Init -> cff_builder_init
+	  CFF_Builder_Done -> cff_builder_done
+	  CFF_Init_Decoder -> cff_decoder_init
+	  CFF_Parse_CharStrings -> cff_decoder_parse_charstrings
+	  CFF_Load_Glyph -> cff_slot_load
+	  CFF_Init_Decoder -> cff_decoder_init
+	  CFF_Prepare_Decoder -> cff_decoder_prepare
+	  CFF_Get_Standard_Encoding -> cff_get_standard_encoding
+	  CFF_Access_Element -> cff_index_access_element
+	  CFF_Forget_Element -> cff_index_forget_element
+	  CFF_Get_Name -> cff_index_get_name
+	  CFF_Get_String -> cff_index_get_sid_string
+	  CFF_Get_FD -> cff_fd_select_get
+	  CFF_Done_Charset -> cff_charset_done
+	  CFF_Load_Charset -> cff_charset_load
+	  CFF_Done_Encoding -> cff_encoding_done
+	  CFF_Load_Encoding -> cff_encoding_load
+	  CFF_Done_SubFont -> cff_subfont_done
+	  CFF_Load_Font -> cff_font_load
+	  CFF_Done_Font -> cff_font_done
+	  CFF_Size_Get_Global_Funcs -> cff_size_get_global_funcs
+	  CFF_Size_Done -> cff_size_done
+	  CFF_Size_Init -> cff_size_init
+	  CFF_Size_Reset -> cff_size_reset
+	  CFF_GlyphSlot_Done -> cff_slot_done
+	  CFF_GlyphSlot_Init -> cff_slot_init
+	  CFF_StrCopy -> cff_strcpy
+	  CFF_Face_Init -> cff_face_init
+	  CFF_Face_Done -> cff_face_done
+	  CFF_Driver_Init -> cff_driver_init
+	  CFF_Driver_Done -> cff_driver_done
+	  CFF_Parser_Init -> cff_parser_init
+	  CFF_Parser_Run -> cff_parser_run
+
+	  add_point -> cff_builder_add_point
+	  add_point1 -> cff_builder_add_point1
+	  add_contour -> cff_builder_add_contour
+	  close_contour -> cff_builder_close_contour
+	  cff_explicit_index -> cff_index_get_pointers
+
+2002-07-09  Owen Taylor  <owen@redhat.com>
+
+	* src/pshinter/pshglob.c (psh_globals_new): Fixed a bug that
+	prevented the hinter from using correct standard width and height
+	values, resulting in hinting bugs with certain fonts (e.g. Utopia).
 
 2002-07-07  David Turner  <david@freetype.org>
 
-    * src/base/ftglyph.c (FT_Glyph_To_Bitmap): added code to return succesfully
-    when the function is called with a bitmap glyph (the previous code simply
-    returned with an error)
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Added code to return
+	successfully when the function is called with a bitmap glyph (the
+	previous code simply returned with an error).
 
-    * docs/DEBUG.TXT: adding debugging support documentation
+	* docs/DEBUG.TXT: Adding debugging support documentation.
 
-    * src/base/ftdebug.c (ft_debug_init), builds/win32/ftdebug.c
-    (ft_debug_init), builds/amiga/src/ftdebug.c (ft_debug_init): changed the
-    syntax of the FT2_DEBUG environment variable  used to control debugging
-    output (i.e. logging and error messages). It must now look like:
+	* src/base/ftdebug.c (ft_debug_init), builds/win32/ftdebug.c
+	(ft_debug_init), builds/amiga/src/ftdebug.c (ft_debug_init): Changed
+	the syntax of the FT2_DEBUG environment variable used to control
+	debugging output (i.e. logging and error messages).  It must now
+	look like:
 
-       any:6 memory:4 io:3   or
-       any:6,memory:4,io:3   or
-       any:6;memory:4;io:3
+	  any:6 memory:4 io:3   or
+	  any:6,memory:4,io:3   or
+	  any:6;memory:4;io:3
 
 2002-07-07  Owen Taylor  <owen@redhat.com>
 
-    * src/pshinter/pshglob.h, src/pshinter/pshglob.c: adding support for
-    blue fuzz
+	* src/pshinter/pshglob.c (psh_blues_snap_stem): Adding support for
+	blue fuzz.
+	* src/pshinter/pshglob.h (PSH_BluesRec): Add `blue_fuzz' field.
+	* src/type1/t1load.c (T1_Open_Face): Initialize `blue_fuzz'.
 
-    * include/freetype/freetype.h, src/base/ftobjs.h,
-    freetype/internal/ftobjs.h, freetype/internal/psaux.h,
-    freetype/internal/pshints.h, src/psaux/t1decode.c, src/cff/cffgload.h,
-    src/cff/cffgload.c, src/pshinter/pshalgo1.h, src/pshinter/pshalgo1.c,
-    src/pshinter/pshalgo2.h, src/pshinter/pshalgo2.c, src/pshinter/pshalgo3.h,
-    src/pshinter/pshalgo3.c: Adding support for hinter-specific bit flags,
-    and the new FT_Set_Hint_Flags high-level API
+	Adding support for hinter-specific bit flags, and the new
+	FT_Set_Hint_Flags high-level API.
+
+	* include/freetype/freetype.h (FT_Set_Hint_Flags): New function.
+	(FT_HINT_NO_INTEGER_STEM, FT_HINT_NO_HSTEM_ALIGN,
+	FT_HINT_NO_VSTEM_ALIGN): New macros.
+
+	* include/freetype/internal/ftobjs.h (FT_Face_InternalRec): Add
+	`hint_flags' member.
+
+	* src/base/ftobjs.c (FT_Set_Hint_Flags): New function.
+
+	* include/freetype/internal/psaux.h (T1_DecoderRec): Add `hint_flags'
+	member.
+
+	* include/freetype/internal/pshints.h (T1_Hints_ApplyFunc,
+	T2_Hints_ApplyFunc): Add parameter to pass hint flags.
+
+	* src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings,
+	T1_Decoder_Init): Use decoder->hint_flags.
+	* src/cff/cffgload.h (CFF_Builder): Add `hint_flags' field.
+	* src/cff/cffgload.c (CFF_Builder_Init): Set builder->hint_flags.
+	(CFF_Parse_CharStrings): Updated.
+	* src/pshinter/pshalgo1.c (ps1_hints_apply): Add parameter to handle
+	hint flags (unused).
+	* src/pshinter/pshalgo1.h: Updated.
+	* src/pshinter/pshalgo2.c (ps2_hints_apply): Add parameter to handle
+	hint flags (unused).
+	* src/pshinter/pshalgo2.h: Updated.
+	* src/pshinter/pshalgo3.c (ps3_hints_apply): Add parameter to handle
+	hint flags.
+	* src/pshinter/pshalgo3.h: Updated.
 
 2002-07-04  David Turner  <david@freetype.org>
 
-    * src/pfr/pfrobjs.c (pfr_slot_load): fixed a small bug that returned
-    incorrect advances when the outline resolution was different from the
-    metrics resolution
+	* src/pfr/pfrobjs.c (pfr_slot_load): Fixed a small bug that returned
+	incorrect advances when the outline resolution was different from
+	the metrics resolution.
 
-    * src/autohint/ahhint.c: removing compiler warnings
+	* src/autohint/ahhint.c: Removing compiler warnings.
 
-    * src/autohint/ahglyph.c: slight improvements to the serif detection
-    code. More work is needed though..
+	* src/autohint/ahglyph.c: s/FT_MEM_SET/FT_ZERO/ where appropriate.
+	(ah_outline_link_segments): Slight improvements to the serif
+	detection code.  More work is needed though.
 
 2002-07-03  David Turner  <david@freetype.org>
 
-    * src/autohint/ahglobal.c, src/autohint/ahtypes.h, src/autohint/ahhint.c:
-    small improvements to the automatic hinter. un-even stem-widths have now
-    disappeared and everything looks much better, even if there are still
-    issues with serifed fonts.
+	Small improvements to the automatic hinter.  Uneven stem-widths have
+	now disappeared and everything looks much better, even if there are
+	still issues with serifed fonts.
+
+	* src/autohint/ahtypes.h (AH_Globals): Added `stds' array.
+	* src/autohint/ahhint.c (OPTIM_STEM_SNAP): New #define.
+	(ah_snap_width): Commented out.
+	(ah_align_linked_edge): Renamed to...
+	(ah_compute_stem_width): This.
+	Don't allow uneven stem-widths.
+	(ah_align_linked_edge): New function.
+	(ah_align_serifed_edge): Don't strengthen serifs.
+	(ah_hint_edges_3, ah_hinter_scale_globals): Updated.
 
 2002-07-03  Owen Taylor  <owen@redhat.com>
 
-    * src/pshinter/pshalgo3.c, src/pshinter/pshalgo3.h, src/pshinter/pshalgo.h,
-    src/pshinter/pshinter.c: adding new algorithm based on Owen Taylor's recent
-    work
+	Adding new algorithm based on Owen Taylor's recent work.
+
+	* src/pshinter/pshalgo3.c, src/pshinter/pshalgo3.h: New files.
+	* src/pshinter/pshalgo.h: Updated.
+	Use pshalgo3 by default.
+	* src/pshinter/pshinter.c: Include pshalgo3.c.
+
+	* src/pshinter/Jamfile, src/pshinter/rules.mk: Updated.
 
 2002-07-01  Owen Taylor  <owen@redhat.com>
 
-    * src/pshinter/pshalgo2.c (psh2_glyph_find_strong_points): fix a bug
-    where, if a glyph has more than hint mask, the second mask gets applied
-    to points that should have been covered by the first mask.
+	* src/pshinter/pshalgo2.c (psh2_glyph_find_strong_points): Fix a bug
+	where, if a glyph has more than hint mask, the second mask gets
+	applied to points that should have been covered by the first mask.
 
 2002-07-01  Keith Packard  <keithp@keithp.com>
 
-    * src/sfnt/ttcmap0.c: fixing the cmap 8 and 12 parsing routines
+	* src/sfnt/ttcmap0.c (tt_cmap8_char_next, tt_cmap12_char_next):
+	Fixing the cmap 8 and 12 parsing routines.
 
-2002-07-01  David Turner
+2002-07-01  David Turner  <david@freetype.org>
 
-    * include/freetype/ftsynth.h, src/base/ftsynth.c: rewriting the automatic
-    style synthesis functions, now renamed to FT_GlyphSlot_Oblique and
-    FT_GlyphSlot_Embolden
+	* src/base/ftsynth.c: Include FT_TRIGONOMETRY_H.
+	(FT_Outline_Embolden): Renamed to...
+	(FT_GlyphSlot_Embolden): This.
+	Updated to new trigonometric functions.
+	(FT_Outline_Oblique): Renamed to...
+	(FT_GlyphSlot_Oblique): This.
+	(ft_norm): Removed.
+	* include/freetype/ftsynth.h: Updated.
 
-2002-06-26  David Turner
+2002-06-26  David Turner  <david@freetype.org>
 
-    * include/freetype/internal/ftobject.h: updating the object sub-system
-    definitions (still experimental)
+	* include/freetype/internal/ftobject.h: Updating the object
+	sub-system definitions (still experimental).
 
-    * src/base/fthash.c (ft_hash_remove): fixing a small reallocation bug
+	* src/base/fthash.c (ft_hash_remove): Fixing a small reallocation
+	bug.
 
-    * include/freetype/fttrigon.h, src/base/fttrigon.c: adding
-    FT_Vector_From_Polar and FT_Angle_Diff to the trigonometric functions
+	* src/base/fttrigon.c (FT_Vector_From_Polar, FT_Angle_Diff): New
+	functions.
+	* include/freetype/fttrigon.h: Updated.
 
-    * include/freetype/ftstroker.h, src/base/ftstroker.c, src/base/Jamfile:
-    adding path stroker component (work in progress)
 
-    * src/truetype/ttgload.c (TT_Load_Composite_Glyph),
-    src/base/ftoutln.c (FT_Vector_Transform): fixed Werner's latest
-    fix. FT_Vector_Transform wasn't buggy, the TrueType composite loader
-    was...
+	Adding path stroker component (work in progress).
+
+	* include/freetype/ftstroker.h, src/base/ftstroker.c: New files.
+	* src/base/Jamfile: Updated.
+
+	* include/freetype/config/ftheader.h (FT_STROKER_H): New macro.
+
+
+	* src/truetype/ttgload.c (TT_Load_Composite_Glyph),
+	src/base/ftoutln.c (FT_Vector_Transform): Fixed Werner's latest fix.
+	FT_Vector_Transform wasn't buggy, the TrueType composite loader was.
 
 2002-06-24  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/freetype.h (FREETYPE_PATCH): Set to 3.
-
 
 2002-06-21  David Turner  <david@freetype.org>
 
@@ -272,7 +462,7 @@
 
 	Updated Win32/VC++ projects to include the new PFR driver.
 
-	* builds\win32\visualc\freetype.dsp: Updated.
+	* builds/win32/visualc/freetype.dsp: Updated.
 
 2002-06-16  Anthony Fok  <fok@debian.org>
 
@@ -814,16 +1004,21 @@
 	function.  This will be used in the near future to panic in case of
 	unexpected exception (which shouldn't happen in theory).
 
-	* include/freetype/internal/fthash.h, src/base/fthash.c: Adding a
-	generic implementation of dynamic hash tables using a linear
-	algorithm (to get rid of `stalls' during resizes).  This will be
-	used in the future in at least three parts of the library: the cache
+	* include/freetype/internal/fthash.h, src/base/fthash.c: New files.
+	This is generic implementation of dynamic hash tables using a linear
+	algorithm (to get rid of `stalls' during resizes).  In the future
+	this will be used in at least three parts of the library: the cache
 	sub-system, the object sub-system, and the memory debugger.
 
-	* include/freetype/internal/ftcore.h: Added this header file to
-	group all new definitions related to exception handling and memory
-	management.  It is very likely that this file will disappear or be
-	renamed in the future.
+	* src/base/Jamfile: Updated.
+
+	* include/freetype/internal/internal.h (FT_INTERNAL_HASH_H,
+	FT_INTERNAL_OBJECT_H): New macros.
+
+	* include/freetype/internal/ftcore.h: New file to group all new
+	definitions related to exception handling and memory management.  It
+	is very likely that this file will disappear or be renamed in the
+	future.
 
 	* include/freetype/internal/ftobject.h, include/freetype/ftsysmem.h:
 	Adding comments to better explain the object sub-system as well as
