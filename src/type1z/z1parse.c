@@ -765,9 +765,19 @@
           Store_Integer:
             switch (field->size)
             {
-              case 1:  *(FT_Byte*)q   = (FT_Byte)val;   break;
-              case 2:  *(FT_UShort*)q = (FT_UShort)val; break;
-              default: *(FT_Long*)q   = val;
+            case 1:
+              *(FT_Byte*)q = (FT_Byte)val;
+              break;
+            case 2:
+              *(FT_UShort*)q = (FT_UShort)val;
+              break;
+#if SIZEOF_INT == 4
+            case 4:
+              *(FT_Int*)q = (FT_Int)val;
+              break;
+#endif
+            default:
+              *(FT_Long*)q = val;
             }
           }
           break;
