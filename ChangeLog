@@ -1,3 +1,8 @@
+2003-04-23  Joe Marcus Clarke  <marcus@FreeBSD.org>
+
+	* src/base/ftbdf.c (FT_Get_BDF_Property): Check for valid
+	`get_interface'.
+
 2003-04-23  Paul Miller  <paulm@profoundeffects.com>
 
 	* src/base/ftmac.c (parse_fond): Fix handling of style names.
