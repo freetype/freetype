@@ -1,3 +1,8 @@
+2004-01-29  Antoine Leca  <Antoine-Freetype@Leca-Marti.org>
+
+    * builds/win32/visualc/index.html: detailled explanations
+    about forcing CR+LF line endings for the VC++ project files.
+
 2004-01-22  Garrick Meeker  <garrick@digitalanarchy.com>
 
 	* src/cff/cffload.c (cff_subfont_load): Initialize `dict'.
