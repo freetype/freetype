@@ -1,0 +1,304 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.6 [en] (X11; I; Linux 2.2.9-19mdk i586) [Netscape]">
+</head>
+<body>
+
+<center><font size=+2>MiGS Overview</font>
+<br><font size=+2>A Minimalist Graphics Subsystem</font>
+<p>
+<hr WIDTH="100%"></center>
+
+<h1>
+<font size=+0>Introduction</font></h1>
+
+<blockquote>This document details the design and implementation of MiGS,
+the minimalist graphics subsystem used by the FreeType 2 demonstration
+programs. Its purpose is mainly to help writers of new demo programs, as
+well as developers who would like port the subsystem to other platforms.</blockquote>
+
+<hr WIDTH="100%">
+<h1>
+I - Design goals</h1>
+
+<blockquote>MiGS is a tiny graphics subsystem used to demo text rendering
+through the FreeType library. It was mainly written to provide the abilities
+to :</blockquote>
+
+<ul>
+<ul>
+<li>
+draw a monochrome glyph bitmap to many kinds of target surfaces (i.e. really
+bitmaps/pixmaps)</li>
+
+<li>
+draw an anti-aliased glyph bitmap, with any level of grays, to many kinds
+of target surfaces</li>
+
+<li>
+display a simple window on many systems like X11, OS/2 and Windows</li>
+
+<li>
+accept simple events (keypresses and mouse buttons) in this window.</li>
+
+<li>
+to be portable and present a unified API on all running systems</li>
+</ul>
+
+<p><br>MiGS uses system-specific "drivers" in order to perform display
+and event handling. The blitting functions are not device-specific. MiGS
+can be built and/or used with no system-specific features, like for example,
+to generate simple GIF, PNG, TIFF, etc.. images without ever needing to
+display them.</ul>
+
+<h1>
+
+<hr WIDTH="100%"></h1>
+
+<h1>
+II - Surfaces, bitmaps and windows</h1>
+
+<blockquote>A surface in MiGS models a drawable region where glyph images
+can be rendered, a surface always contains a bitmap descriptor as well
+as a few other things that will be described later in this section.
+<p>Some surfaces can be displayed, they are then either called <i>windowed
+surfaces</i> or <i>screen surfaces</i> depending on the nature of the <i>device</i>
+used to display them. Each <i>device</i> is implemented by a very simple
+<i>driver</i> in the MiGS code. Here are a few example devices that are
+or could be written to display surfaces :
+<p>- an X11 device
+<br>- a Win 32 GDI device
+<br>- an OS/2 Presentation Manager device
+<br>- a fullscreen SVGALib device on Linux
+<br>- a GGI visual device
+<br>- an OS/2 "Dive" device, or the equivalent Win32 "DirectX" device
+<p>etc..
+<p><b>NOTE: </b>For now, only the X11 device was written and tested.. More
+devices should come later
+<p>Before explaining how to create a surface, we need to explain how MiGS
+manages bitmaps and renders glyph images to them.
+<h3>
+1. Bitmaps :</h3>
+
+<blockquote>A bitmap in MiGS features the following things :
+<ul>
+<li>
+a <b><i>width</i></b> in pixels</li>
+
+<li>
+a <b><i>height</i></b> in pixels</li>
+
+<li>
+a <b><i>pixel mode</i></b>, which indicates how the pixels are stored in
+the surface's buffer</li>
+
+<li>
+a <b><i>pitch</i></b>, whose absolute values is the number of bytes taken
+by each surface row</li>
+
+<li>
+a <b><i>number</i></b> of valid <b><i>gray</i></b> levels (see below)</li>
+
+<li>
+a <b><i>buffer</i></b>, holding the surface's pixels</li>
+</ul>
+
+<p><br>MiGS uses the <i>"Y downwards"</i> convention, which means that
+<i>increasing
+Y</i> coordinates correspond to <i>lower rows</i> of the bitmap. Hence,
+the coordinate <i>(0,0)</i> always corresponds to the bitmap's
+<i>top-left
+pixel</i>.
+<p>The bitmap's rows can be stored either <i>"downwards"</i> or <i>"upwards"</i>
+in the pixel buffer.
+<p>In the first case (<i>downwards</i>), increasing memory addresses in
+the pixel buffer correspond to lower rows of the bitmap(e.g. PC video modes),
+and the <b><i>pitch</i></b> should be equal to <b><i>the number of bytes
+taken by each row</i></b>. The first pixel buffer byte corresponds to the
+upper row.
+<p>In the second case (<i>upwards</i>), increasing memory addresses in
+the pixel buffer correspond to upper rows of the bitmap and the <b><i>pitch</i></b>
+should be equal to the <b><i>opposite</i></b> of <i>the number of bytes
+taken by each row</i>. The first pixel buffer byte corresponds to the lower
+row.
+<p>In all cases, the <b><i>pitch</i></b> is the <i>increment to be used
+to go from one bitmap row to the one below it</i>.
+<p>The supported pixel modes are :
+<ul>
+<li>
+1-bit monochrome bitmaps. With "0" as the background, and "1" as the foreground.</li>
+
+<li>
+4-bit color bitmaps, using an arbitrary palette.</li>
+
+<li>
+8-bit color bitmaps, using an arbitrary palette.</li>
+
+<li>
+8-bit gray bitmaps, using a given N number of gray levels in the range
+0..N-1.</li>
+
+<li>
+15-bit color bitmaps, also known as RGB555</li>
+
+<li>
+16-bit color bitmaps, also known as RGB565</li>
+
+<li>
+24-bit color bitmaps, also known as RGB</li>
+
+<li>
+32-bit color bitmaps, also known as RGBA (though the A is ignored by MiGS)</li>
+</ul>
+The bitmap's <b><i>number of gray levels</i></b> is only relevant for <b><i>8-bit
+gray bitmaps</i></b>, and indicates the range of gray levels that can be
+found in the bitmap. If a bitmap as N gray levels, it is said to be <i>N-grayscales</i>,
+and the pixels within it must all have values between 0, considered as
+the <i>background</i> color, and N-1, considered as the <i>foreground</i>
+color.
+<p>N-grayscale bitmaps are crucial for the rendering of anti-aliased text.
+<br>&nbsp;</blockquote>
+
+<h3>
+2. Glyph images :</h3>
+
+<blockquote>The glyph images that can be drawn on bitmaps through MiGS
+are bitmaps themselves, though limited to the following pixel modes :
+<p><b>1-bit monochrome glyph bitmaps</b>
+<blockquote>These can be drawn on any kind of bitmap. Note that <i>only
+the "lit" pixels</i> (i.e. the bits set to 1) are effectively drawn to
+the target, as opaque blitting isn't supported (remember, it's a minimalist
+library !)</blockquote>
+
+<p><br><b>N-grayscales glyph images </b>(with any value of N >= 2)
+<blockquote>These can be drawn to <i>all RGB bitmaps</i> (15, 16, 24 &amp;
+32 bits/pixel), as well as any other M-grayscales bitmaps. In the latter
+case, the values of N and M <i>need not be equal</i>, as the library is
+able to perform automatic conversions <i>on the fly</i>.
+<p>For example, it is possible to render a 5-grayscales glyph image into
+a 128-grayscales bitmap. Moreover, it is also possible to render a 17-grayscales
+glyph image into a 5-grayscales bitmap, even if this will result in <i>a
+loss of quality</i>. This feature is crucial in order to experiment easily
+with other anti-aliasing algorithms for FreeType
+<br>&nbsp;</blockquote>
+Note that you can <i>only</i> draw <i>monochrome</i> bitmaps to the following
+pixel modes : monochrome, 4-bit color and 8-bit color.</blockquote>
+
+<h3>
+3. Windows and Screens:</h3>
+
+<blockquote>In order to debug FreeType, displaying a surface in a window
+or in full-screen mode, is required. MiGS thus makes a difference between
+<i>simple
+surfaces</i>, which only contain a bitmap, <i>windowed surfaces</i>, which
+are used to display their content in a window, and <i>screen surfaces</i>,
+which are used to display their content in a full-screen mode (SVGAlib,
+DirectX, GGI or wathever).
+<p>A few important things must be said about non-simple surfaces.
+<br>&nbsp;
+<ul>
+<li>
+First, they might contain some system-specific data which is used to manage
+the display in a window or on the screen. This must be <i>completely hidden</i>
+to MiGS clients. Indeed, rendering to any kind of surface is achieved through
+<i>exactly
+the same function calls</i>.</li>
+</ul>
+
+<ul>
+<li>
+Second, they may contain a bitmap whose pixel mode doesn't correspond to
+the screen's depth used to display it. For example, the surface might contain
+an 128-grayscale bitmap, while the screen is in RGB24 mode. Some conversion
+must be performed to display the surface. This can either happen in the
+system-specific graphics library (e.g. on OS/2, a single Presentation Manager
+call is used to blit a N-grayscale image to <i>any</i> kind of window)
+or in the system-specific part of MiGS (e.g. the X11 MiGS driver must convert
+the surface's bitmap into the appropriate <i>X11 image</i> each time a
+repaint is requested). Again this must be completely hidden to MiGS clients</li>
+</ul>
+Surfaces have also a few fields that are only used when displaying them
+in Windows :
+<p><b>a title string</b>
+<blockquote>This is simply a text string that is displayed on the title
+bar of the surface's window. It can also appear at the top or bottom of
+full-screen surfaces if the MiGS driver supports it. The title string can
+be changed with a call to <tt>grSetTitle</tt>, and is ignored for simple
+surfaces.</blockquote>
+
+<p><br><b>a refresh flag</b>
+<blockquote>This boolean flag is only used for window surfaces, and some
+fullscreen ones (depending on the driver implementation). When set, it
+indicates that each glyph image blit must be displayed immediately. By
+default, this flag is set to False, which means that demo programs must
+call the <tt>grRefreshSurface(surface)</tt> function to display the whole
+contents of a surface one it has been updated.
+<p>The refresh flag can be set with <tt>grSetSurfaceRefresh(surface,flag)</tt>.
+Note that a single surface rectangle can be forced to be displayed with
+a call to <tt>grRefreshRectangle(surface,x,y,w,h)</tt> at any time.</blockquote>
+</blockquote>
+
+<h3>
+4. Devices :</h3>
+
+<blockquote>As said before, each device is in charge of displaying a surface
+in a given window or screen. Each device is managed through a very simple
+driver, described to MiGS through a very simple "grDevice" structure.
+<p>A grDevice contains, among other things, pointers to the functions used
+to:
+<p>- refresh/display a given rectangle of the surface to the window/screen
+<br>- listen events (key presses and mouse) and send them back to client
+apps.
+<br>- for windowed devices, update the title bar.
+<p>As said before, this is a highly minimalist system..
+<br>&nbsp;</blockquote>
+</blockquote>
+
+<hr WIDTH="100%">
+<h1>
+III - Important implementation issues :</h1>
+
+<blockquote>
+<h3>
+1. Display surface negociation :</h3>
+
+<blockquote>A display surface is created with the function grNewScreenSurface
+which takes parameters indicating which device should be used, the pixel
+dimensions of the requested surface, as well as its pixel mode.
+<p>Because of some device-specific limitations, the resulting surface's
+properties might not match exactly those requested for the call. Hence,
+a developper should <b>always take care </b>of reading a new display surface's
+<b>bitmap</b> descriptor in order to get its <i>real</i> dimensions, pixel
+mode and eventually number of grays.
+<p>The function grNewSurface will create a memory surface with the corresponding
+bitmap.
+<br>The function grNewBitmapSurface will create a surface from a pre-existing
+bitmap.&nbsp;This is useful to draw text on loaded images, for example.
+<p>Any surface (display or not) is destroyed with grDoneSurface.</blockquote>
+
+<h3>
+</h3>
+
+<h3>
+2. Supporting 8-bit grayscale mode :</h3>
+
+<blockquote>It is important, for the debugging of FreeType anti-aliased
+renderer(s), that <b><i>_all_ devices should support the 8-bit gray mode</i></b>.
+The number of gray levels can be fixed or negociated as required by implementation-specific
+issues.
+<p>As most existing devices do not provide direct support for such a mode,
+each 8-bit surface must thus contain :
+<p>- an internal N-grayscale bitmap, used as the target of all glyph drawings
+<br>- its own device-specific "image", which matches the display depth.
+<p>Each time the device's "refresh_rect" function is called, it should
+then :
+<br>- convert the grayscales within the bitmap's rectangle into the image's
+buffer and format.
+<br>- display the corresponding image rectangle.
+<p>This scheme is used, for example, by the X11 device.</blockquote>
+</blockquote>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+#*******************************************************************
+#*
+#*  FreeType 2 Configuration rules for Unix + gcc
+#*
+#*  Copyright 1996-1999 by
+#*  David Turner, Robert Wilhelm, and Werner Lemberg.
+#*
+#*  This file is part of the FreeType project, and may only be used
+#*  modified and distributed under the terms of the FreeType project
+#*  license, LICENSE.TXT.  By continuing to use, modify, or distribute
+#*  this file you indicate that you have read the license and
+#*  understand and accept it fully.
+#*
+#*
+#*  The purpose of this sub-Makefile is to define various build and
+#*  platform specific variables before including the sub-Makefile
+#*  containing the FreeType library rules, found in
+#*
+#*     $(TOP)/config/freetype.mk
+#*
+#*  The following variables must be defined before including this
+#*  file :
+#*
+#*     TOP          Pathname to the top of the FreeType sources
+#*                  hierarchy
+#*
+#*  This file should define the following variables before including
+#*  the FreeType library rules file :
+#*
+#*     BUILD        Pathname to the platform-specific files used
+#*                  for the build. Usually `$(TOP)/config/<system>'
+#*
+#*     SEP          Directory separator for the current platform.
+#*                  Either / or \ (maybe : on Macs)
+#* 
+#*     DELETE       The forced remove/delete command to erase one or more
+#*                  files
+#*
+#*     INCLUDE      The location of all public header files. e.g.
+#*                  `$(TOP)/include'include'                                      *
+#*                                                                          
+#*     SRC          The directory containing all sources. e.g.              
+#*                  '$(TOP)/src'                                           
+#*                                                                           
+#*     OBJ_DIR      The location where compiled object files will be         
+#*                  placed, e.g. '$(TOP)/obj'                              
+#*                                                                           
+#*     LIB_DIR      The location where the resulting library file will be    
+#*                  placed, e.g. '$(TOP)/obj'                        
+#*                                                                           
+#*     LIBRARY      The filename of the resulting library file, without      
+#*                  its extension.. e.g. 'libfreetype' or 'freetype'         
+#*                                                                           
+#*     O            The object file suffix.  Can be '.o', '.obj,' '.lo,'     
+#*                  ';coff,' etc.                                            
+#*                                                                           
+#*     A            The library file suffix.  Can be '.a' '.so,' '.lib'      
+#*                  '.dll,' etc.                                             
+#*                                                                           
+#*     I            The path inclusion flag.  Some compilers use a           
+#*                  different flag than '-I' to specify an additional        
+#*                  include path.  Examples are '/i=' or '-J ', etc.         
+#*                                                                           
+#*     D            The macro definition flag.  I haven't met compilers      
+#*                  which don't use the '-D' switch to define a macro, but   
+#*                  who knows...                                             
+#*                                                                           
+#*     T            The compilation flag used to identify the target. Some   
+#*                  compilers use a different flag than '-o ' to specify     
+#*                  the name of the target object file.                      
+#*                                                                           
+#*     CFLAGS       The set of flags used to compile object files.
+#*                  (usually contains the flag '-c').
+#*                                                                           
+#*
+#*
+#*******************************************************************
+
+ifndef TOP
+TOP := .
+endif
+
+DELETE   := rm -f
+SEP      := /
+BUILD    := $(TOP)/config/unix
+PLATFORM := unix
+
+# the directory where all object files are placed
+#
+OBJ_DIR := $(TOP)/obj
+
+
+# the directory where all library files are placed
+#
+#  by default, this is the same as OBJ_DIR, however, this can be
+#  changed to suit particular needs..
+#
+LIB_DIR := $(OBJ_DIR)
+
+
+# the object file extension, this can be .o, .tco, .obj, etc..
+# depending on the platform
+#
+O := o
+
+# the library file extension, this can be .a, .lib, etc..
+# depending on the platform
+#
+A := a
+
+
+# The name of the final library file.
+# Note that the DOS-specific Makefile uses a shorter (8.3) name
+#
+LIBRARY := libfreetype
+
+
+# path inclusion flag.
+#
+#  Some compilers use a different flag than '-I' to specify an
+#  additional include path. Examples are "/i=" or "-J", etc...
+#
+I := -I
+
+
+# The link flag used to specify a given library file on link.
+# Note that this is only used to compile the demo programs, not
+# the library itself.
+#
+L := -l
+
+
+# C flag used to define a macro before the compilation of a given
+# source object. Usually is '-D' like in "-DDEBUG"
+#
+D := -D
+
+
+# Target flag - beware, there is a space after the 'o' !!
+#
+#
+T := -o 
+
+# C flags
+#
+#   These should concern :
+#
+#     - debug output
+#     - optimization
+#     - warnings
+#     - ansi compliance..
+#
+ifndef CFLAGS
+CFLAGS := -c -g -O6 -Wall
+endif
+
+ifdef BUILD_FREETYPE
+
+include $(TOP)/config/freetype.mk
+
+
+# This final rule is used to link all object files into a single
+# library. It is part of the system-specific sub-Makefile because not
+# all librarians accept a simple syntax like :
+#
+#    librarian library_file {list of object files} 
+#
+$(FT_LIBRARY): $(OBJECTS_LIST)
+	-$(DELETE) $@
+	$(AR) -r $@ $(OBJECTS_LIST)
+
+endif

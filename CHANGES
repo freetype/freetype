@@ -1,0 +1,176 @@
+This file summarizes the changes that occured since the last "beta" of FreeType 2.
+Because the list is important, it has been divided into separate sections:
+
+
+-----------------------------------------------------------------------------------------
+High-Level Interface :
+
+  The high-level API has been considerably simplified. Here is how :
+
+    - resource objects have disappeared. this means that face objects can now
+      be created with a single function call (see FT_New_Face and
+      FT_Open_Face)
+    
+    - when calling either FT_New_Face & FT_Open_Face, a size object and a
+      glyph slot object are automatically created for the face, and can be
+      accessed through "face->glyph" and "face->size" if one really needs to.
+      In most cases, there's no need to call FT_New_Size or FT_New_Glyph.
+    
+    - similarly, FT_Load_Glyph now only takes a "face" argument (instead of
+      a glyph slot and a size). Also, it's "result" parameter is gone, as
+      the glyph image type is returned in the field "face->glyph.format"
+    
+    - the list of available charmaps is directly accessible through
+      "face->charmaps", counting "face->num_charmaps" elements. Each
+      charmap has an 'encoding' field which specifies which known encoding
+      it deals with. Valid values are, for example :
+    
+          ft_encoding_unicode      (for ASCII, Latin-1 and Unicode)
+          ft_encoding_apple_roman
+          ft_encoding_sjis
+          ft_encoding_adobe_standard
+    
+      other values may be added in the future. Each charmap still holds its
+      "platform_id" and "encoding_id" values in case the encoding is too
+      exotic for the current library
+
+
+-----------------------------------------------------------------------------------------
+Directory Structure:
+
+  Should seem obvious to most of you:
+
+     freetype/
+         config/        -- configuration sub-makefiles
+            ansi/
+            unix/
+            win32/
+            os2/
+            msdos/
+
+         include/       -- public header files, those to be included directly
+                           by client apps
+
+         src/           -- sources of the library
+           base/        -- the base layer
+           sfnt/        -- the sfnt "driver" (see the drivers section below)
+           truetype/    -- the truetype driver
+           type1/       -- the type1 driver
+           shared/      -- some header files shared between drivers
+
+         demos/         -- demos/tools
+
+         docs/          -- documentation (a bit empty for now)
+
+-----------------------------------------------------------------------------------------
+Glyph Image Formats :
+
+  Drivers are now able to register new glyph image formats within the library.
+  For now, the base layer supports of course bitmaps and vector outlines, but
+  one could imagine something different like colored bitmaps, bi-color
+  vectors or wathever else (Metafonts anyone ??).
+
+  See the file `include/ftimage.h'. Note also that the type FT_Raster_Map is
+  gone, and is now replaced by FT_Bitmap, which should encompass all known
+  bitmap types.
+
+  Each new image format must provide at least one "raster", i.e. a module
+  capable of transforming the glyph image into a bitmap. It is also possible
+  to change the default raster used for a given glyph image format.
+
+  The default outline scan-converter now uses 128 levels of grays by default,
+  which tends to smooth many things. Note that the demo programs have been
+  updated significantly to be able to display these..
+
+
+-----------------------------------------------------------------------------------------
+Build system :
+
+  You still need GNU Make to build the library. The build system has been
+  very seriously re-vamped in order to provide things like :
+
+   - automatic host platform detection (reverting to 'config/ansi'
+     if it is not detected, with pseudo-standard compilation flags)
+
+   - the ability to compile from the Makefiles with very different and
+     exotic compilers. Note that linking the library can be difficult for
+     some platforms.
+
+     For example, the file `config/win32/lcclib.bat' is invoked by the
+     build system to create the ".lib" file with LCC-Win32 because its
+     librarian has too many flaws to be invoked directly from the Makefile.
+
+  Here's how it works :
+
+  - the first time you type `make', the build system runs a series of
+    sub-makefiles in order to detect your host platform. It then dumps
+    what it found, and creates a file called `config.mk' in the current
+    directory. This is a sub-Makefile used to define many important Make
+    variables used to build the library.
+
+  - the second time, the build system detects the `config.mk' then use it
+    to build the library. All object files go into 'obj' by default, as
+    well as the library file, but  this can easily be changed.
+
+  Note that you can run "make setup" to force another host platform detection
+  even if a `config.mk' is present in the current directory. Another solution
+  is simply to delete the file, then re-run make.
+
+  Finally, the default compiler for all platforms is gcc (for now, this will
+  hopefully changed in the future). You can however specify a different
+  compiler by specifying it after the 'setup' target as in :
+
+      gnumake setup lcc         on Win32 to use the LCC compiler
+      gnumake setup visualc     on Win32 to use Visual C++
+
+  See the file `config/<system>/detect.mk' for a list of supported compilers
+  for your platforms.
+
+  It should be relatively easy to write new detection rules files and
+  config.mk..
+
+  Finally, to build the demo programs, go to `demos' and launch GNU Make,
+  it will use the `config.mk' in the top directory to build the test
+  programs..
+
+-----------------------------------------------------------------------------------------
+Portability :
+
+  In the previous beta, a single FT_System object was used to encompass
+  all low-level operations like thread synchronisation, memory management
+  and i/o access. This has been greatly simplified :
+
+    - thread synchronisation has been dropped, for the simple reason that
+      the library is already re-entrant, and that if you really need two
+      threads accessing the same FT_Library, you should really synchronize
+      access to it yourself with a simple mutex.
+
+    - memory management is performed through a very simple object called
+      "FT_Memory", which really is a table containing a table of pointers
+      to functions like malloc, realloc and free as well as some user data
+      (closure).
+
+    - resources have disappeared (they created more problems than they
+      solved), and i/o management have been simplified greatly as a
+      result. Streams are defined through FT_Stream objects, which can
+      be either memory-based or disk-based.
+
+      Note that each face has its own stream, which is closed only when
+      the face object is destroyed. Hence, a function like TT_Flush_Face
+      in 1.x cannot be directly supported. However, if you really need
+      something like this, you can easily tailor your own streams to achieve
+      the same feature at a lower level (and use FT_Open_Face instead of
+      FT_New_Face to create the face).
+
+  See the file "include/ftsystem.h" for more details, as well as the
+  implementations found in "config/unix" and "config/ansi".
+
+
+-----------------------------------------------------------------------------------------
+Drivers Interface :
+  (To be written)
+
+-----------------------------------------------------------------------------------------
+Extensions support :
+  (To be defined)
+
