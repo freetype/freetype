@@ -1149,9 +1149,11 @@
 
     void*             other;
 
-    /*@private begin*/
+    /*@private begin */
+
     FT_GlyphLoader*   loader;
-    /*@private end*/
+
+    /*@private end */
 
   } FT_GlyphSlotRec;
 

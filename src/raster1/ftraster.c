@@ -2971,8 +2971,6 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  /* XXX Fixme: ftraster's error codes don't harmonize with FT2's ones!    */
-  /*                                                                       */
   LOCAL_FUNC
   FT_Error  Render_Glyph( RAS_ARG )
   {

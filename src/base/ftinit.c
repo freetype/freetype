@@ -66,7 +66,7 @@
 
 static
 const FT_Module_Class*  const ft_default_modules[] =
-const {
+  {
 #include <freetype/config/ftmodule.h>
     0
   };
@@ -87,8 +87,8 @@ const {
   /*                                                                       */
   FT_EXPORT_FUNC( void )  FT_Add_Default_Modules( FT_Library  library )
   {
-    FT_Error                 error;
-    const FT_Module_Class**  cur;
+    FT_Error                       error;
+    const FT_Module_Class* const*  cur;
 
 
     /* test for valid `library' delayed to FT_Add_Module() */

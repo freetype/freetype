@@ -172,7 +172,7 @@
                "negative height while rastering" )
 
   /* cache errors */
-  
+
   FT_ERRORDEF( FT_Err_Too_Many_Caches,              0x0070, \
                "too many registered caches" )
 
