@@ -11,6 +11,9 @@
 	to support chapters and section block ordering.  Updated the public
 	header files accordingly.
 
+	* src/base/ftglyph.c: fixed a bug in FT_Glyph_Copy, where the advance
+	and glyph format were not correctly copied..
+
 2001-02-08  Tom Kacvinsky  <tjk@ams.org>
 
 	* src/cff/cffparse.c (cff_parse_font_matrix): Removed an
