@@ -19,8 +19,5 @@ not exactly bugs, but should be considered though:
 
 * Possibly add support for reading PFM files.
 
-* Is the anti-aliased glyphs feature of BDF also available in PCF format?
-  If yes, add support to the PCF driver.
-
 
 --- end of TODO ---

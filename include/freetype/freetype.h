@@ -1143,12 +1143,12 @@ FT_BEGIN_HEADER
   /*                    fixed point pixels.  Always positive.              */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The values of `ascender', `descender', and `height' are only the   */
-  /*    scaled versions of `face->ascender', `face->descender', and        */
-  /*    `face->height'.                                                    */
+  /*    For scalable fonts, the values of `ascender', `descender', and     */
+  /*    `height' are scaled versions of `face->ascender',                  */
+  /*    `face->descender', and `face->height', respectively.               */
   /*                                                                       */
   /*    Unfortunately, due to glyph hinting, these values might not be     */
-  /*    exact for certain fonts, they thus must be treated as unreliable   */
+  /*    exact for certain fonts.  They thus must be treated as unreliable  */
   /*    with an error margin of at least one pixel!                        */
   /*                                                                       */
   /*    Indeed, the only way to get the exact pixel ascender and descender */
@@ -1854,7 +1854,7 @@ FT_BEGIN_HEADER
   /*    character dimensions is zero, its value is set equal to the other. */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    size            :: A handle to a target size object.               */
+  /*    face            :: A handle to a target face object.               */
   /*                                                                       */
   /* <Input>                                                               */
   /*    char_width      :: The character width, in 26.6 fractional points. */
