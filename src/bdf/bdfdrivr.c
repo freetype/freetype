@@ -64,7 +64,7 @@ THE SOFTWARE.
     BDF_Face  face = (BDF_Face)FT_CMAP_FACE( cmap );
 
 
-    cmap->num_encodings = face->bdffont->glyphs_used - 1;
+    cmap->num_encodings = face->bdffont->glyphs_used;
     cmap->encodings     = face->en_table;
 
     return FT_Err_Ok;
@@ -101,7 +101,7 @@ THE SOFTWARE.
 
       if ( charcode == code )
       {
-        result = encodings[mid].glyph;
+        result = encodings[mid].glyph + 1;
         break;
       }
 
@@ -138,7 +138,7 @@ THE SOFTWARE.
 
       if ( charcode == code )
       {
-        result = encodings[mid].glyph;
+        result = encodings[mid].glyph + 1;
         goto Exit;
       }
 
@@ -152,7 +152,7 @@ THE SOFTWARE.
     if ( min < cmap->num_encodings )
     {
       charcode = encodings[min].enc;
-      result   = encodings[min].glyph;
+      result   = encodings[min].glyph + 1;
     }
 
   Exit:
@@ -196,10 +196,10 @@ THE SOFTWARE.
       else if ( char_code > en_table[mid].enc )
         low = mid + 1;
       else
-        return en_table[mid].glyph;
+        return en_table[mid].glyph + 1;
     }
 
-    return face->bdffont->default_glyph;
+    return face->bdffont->default_glyph + 1;
   }
 
 
@@ -559,6 +559,9 @@ THE SOFTWARE.
       error = BDF_Err_Invalid_Argument;
       goto Exit;
     }
+
+    if ( glyph_index > 0 )
+      glyph_index--;
 
     /* slot, bitmap => freetype, glyph => bdflib */
     glyph = face->bdffont->glyphs[glyph_index];

@@ -2424,6 +2424,12 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    The glyph index.  0 means `undefined character code'.              */
   /*                                                                       */
+  /* <Note>                                                                */
+  /*    FreeType computes its own glyph indices which are not necessarily  */
+  /*    the same as used in the font in case the font is based on glyph    */
+  /*    indices.  Reason for this behaviour is to assure that index 0 is   */
+  /*    never used, representing the missing glyph.                        */
+  /*                                                                       */
   FT_EXPORT( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
                      FT_ULong  charcode );

@@ -95,7 +95,7 @@ THE SOFTWARE.
 
       if ( charcode == code )
       {
-        result = encodings[mid].glyph;
+        result = encodings[mid].glyph + 1;
         break;
       }
 
@@ -132,7 +132,7 @@ THE SOFTWARE.
 
       if ( charcode == code )
       {
-        result = encodings[mid].glyph;
+        result = encodings[mid].glyph + 1;
         goto Exit;
       }
 
@@ -146,7 +146,7 @@ THE SOFTWARE.
     if ( min < cmap->num_encodings )
     {
       charcode = encodings[min].enc;
-      result   = encodings[min].glyph;
+      result   = encodings[min].glyph + 1;
     }
 
   Exit:
@@ -187,7 +187,7 @@ THE SOFTWARE.
       else if ( char_code > en_table[mid].enc )
         low = mid + 1;
       else
-        return en_table[mid].glyph;
+        return en_table[mid].glyph + 1;
     }
 
     return 0;
@@ -432,6 +432,9 @@ THE SOFTWARE.
       error = PCF_Err_Invalid_Argument;
       goto Exit;
     }
+
+    if ( glyph_index > 0 )
+      glyph_index--;
 
     metric = face->metrics + glyph_index;
 
