@@ -81,7 +81,7 @@
   /*    This function will much probably move to another component in the  */
   /*    near future, but I haven't decided which yet.                      */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   TT_Get_Metrics( TT_HoriHeader*  header,
                   FT_UInt         index,
                   FT_Short*       bearing,
@@ -581,7 +581,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   TT_Init_Glyph_Loading( TT_Face  face )
   {
     face->access_glyph_frame   = TT_Access_Glyph_Frame;
@@ -1416,7 +1416,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   TT_Load_Glyph( TT_Size       size,
                  TT_GlyphSlot  glyph,
                  FT_UShort     glyph_index,

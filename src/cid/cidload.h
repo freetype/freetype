@@ -36,16 +36,16 @@ FT_BEGIN_HEADER
   } CID_Loader;
 
 
-  FT_LOCAL FT_Long
+  FT_LOCAL( FT_Long )
   cid_get_offset( FT_Byte**  start,
                   FT_Byte    offsize );
 
-  FT_LOCAL void
+  FT_LOCAL( void )
   cid_decrypt( FT_Byte*   buffer,
                FT_Offset  length,
                FT_UShort  seed );
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   CID_Open_Face( CID_Face  face );
 
 

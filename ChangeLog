@@ -1,24 +1,28 @@
 2002-02-28  David Turner   <david@freetype.org>
 
+        * include/freetype/ftconfig.h: changed FT_LOCAL xxxx to FT_LOCAL( xxxx )
+        everywhere in the source. Sames goes for FT_LOCAL_DEF xxxx translated
+        into FT_LOCAL_DEF( xxxxx )
+
         * include/freetype/freetype.h: changing version to 2.1.0 to indicate
         an unstable branch. Added the declarations of FT_Get_First_Char and
         FT_Get_Next_Char
-        
+
         * src/base/ftobjs.c: implemented FT_Get_First_Char and FT_Get_Next_Char
 
         * include/freetype/t1tables.h: re-naming structure types. This done
         basically:
-        
+
           typedef T1_Struct_
           {
           } T1_Struct;
-          
+
         becomes:
-        
+
           typedef PS_StructRec_
           {
           } PS_StructRec, *PS_Struct;
-          
+
           typedef PS_StructRec  T1_Struct;  /* backwards-compatibility */
 
 

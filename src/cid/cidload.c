@@ -41,7 +41,7 @@
 
 
   /* read a single offset */
-  FT_LOCAL_DEF FT_Long
+  FT_LOCAL_DEF( FT_Long )
   cid_get_offset( FT_Byte**  start,
                   FT_Byte    offsize )
   {
@@ -60,7 +60,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   cid_decrypt( FT_Byte*   buffer,
                FT_Offset  length,
                FT_UShort  seed )
@@ -515,7 +515,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CID_Open_Face( CID_Face  face )
   {
     CID_Loader  loader;

@@ -44,14 +44,14 @@
   /*                                                                       */
   /*************************************************************************/
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   CID_GlyphSlot_Done( CID_GlyphSlot  slot )
   {
     slot->root.internal->glyph_hints = 0;
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CID_GlyphSlot_Init( CID_GlyphSlot   slot )
   {
     CID_Face             face;
@@ -105,7 +105,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   CID_Size_Done( CID_Size  size )
   {
     if ( size->root.internal )
@@ -122,7 +122,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CID_Size_Init( CID_Size  size )
   {
     FT_Error           error = 0;
@@ -146,7 +146,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CID_Size_Reset( CID_Size  size )
   {
     PSH_Globals_Funcs  funcs = CID_Size_Get_Globals_Funcs( size );
@@ -182,7 +182,7 @@
   /* <Input>                                                               */
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   CID_Face_Done( CID_Face  face )
   {
     FT_Memory  memory;
@@ -262,7 +262,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CID_Face_Init( FT_Stream      stream,
                  CID_Face       face,
                  FT_Int         face_index,
@@ -511,7 +511,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CID_Driver_Init( CID_Driver  driver )
   {
     FT_UNUSED( driver );
@@ -531,7 +531,7 @@
   /* <Input>                                                               */
   /*    driver :: A handle to the target CID driver.                       */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   CID_Driver_Done( CID_Driver  driver )
   {
     FT_UNUSED( driver );

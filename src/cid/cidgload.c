@@ -138,7 +138,7 @@
   /*************************************************************************/
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CID_Compute_Max_Advance( CID_Face  face,
                            FT_Int*   max_advance )
   {
@@ -201,7 +201,7 @@
   /*************************************************************************/
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CID_Load_Glyph( CID_GlyphSlot  glyph,
                   CID_Size       size,
                   FT_Int         glyph_index,

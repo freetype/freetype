@@ -71,7 +71,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   T1_Size_Done( T1_Size  size )
   {
     if ( size->root.internal )
@@ -88,7 +88,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Size_Init( T1_Size  size )
   {
     FT_Error           error = 0;
@@ -111,7 +111,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Size_Reset( T1_Size  size )
   {
     PSH_Globals_Funcs  funcs = T1_Size_Get_Globals_Funcs( size );
@@ -133,14 +133,14 @@
   /*                                                                       */
   /*************************************************************************/
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   T1_GlyphSlot_Done( T1_GlyphSlot  slot )
   {
     slot->root.internal->glyph_hints = 0;
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_GlyphSlot_Init( T1_GlyphSlot   slot )
   {
     T1_Face              face;
@@ -183,7 +183,7 @@
   /* <Input>                                                               */
   /*    face :: A typeless pointer to the face object to destroy.          */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   T1_Face_Done( T1_Face  face )
   {
     FT_Memory  memory;
@@ -267,7 +267,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Face_Init( FT_Stream      stream,
                 T1_Face        face,
                 FT_Int         face_index,
@@ -530,7 +530,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Driver_Init( T1_Driver  driver )
   {
     FT_UNUSED( driver );
@@ -550,7 +550,7 @@
   /* <Input>                                                               */
   /*    driver  :: A handle to the target Type 1 driver.                   */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   T1_Driver_Done( T1_Driver  driver )
   {
     FT_UNUSED( driver );

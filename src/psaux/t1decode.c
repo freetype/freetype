@@ -330,7 +330,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Decoder_Parse_Charstrings( T1_Decoder  decoder,
                                 FT_Byte*     charstring_base,
                                 FT_UInt      charstring_len )
@@ -1097,7 +1097,7 @@
 
 
   /* parse a single Type 1 glyph */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Decoder_Parse_Glyph( T1_Decoder  decoder,
                           FT_UInt      glyph )
   {
@@ -1106,7 +1106,7 @@
 
 
   /* initialise T1 decoder */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   T1_Decoder_Init( T1_Decoder          decoder,
                    FT_Face              face,
                    FT_Size              size,
@@ -1148,7 +1148,7 @@
 
 
   /* finalize T1 decoder */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   T1_Decoder_Done( T1_Decoder  decoder )
   {
     T1_Builder_Done( &decoder->builder );

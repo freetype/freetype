@@ -106,7 +106,7 @@
   /*    opened).  In case of error, all partially allocated tables are     */
   /*    released.                                                          */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   TT_CharMap_Load( TT_Face        face,
                    TT_CMapTable*  cmap,
                    FT_Stream      stream )
@@ -414,7 +414,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   TT_CharMap_Free( TT_Face        face,
                    TT_CMapTable*  cmap )
   {

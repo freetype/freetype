@@ -356,7 +356,7 @@
 #endif
 
 
-  FT_LOCAL_DEF  FT_Error
+  FT_LOCAL_DEF( FT_Error )
   psh1_hint_table_optimize( PSH1_Hint_Table  table,
                             PSH_Globals      globals,
                             FT_Outline*      outline,

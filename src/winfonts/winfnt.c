@@ -310,6 +310,141 @@
   }
 
 
+
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+
+  typedef struct FNT_CMapRec_
+  {
+    FT_CMapRec  cmap;
+    FT_UInt32   first;
+    FT_UInt32   count;
+
+  } FNT_CMapRec, *FNT_CMap;
+
+
+  static FT_Error
+  fnt_cmap_init( FT_CMap  cmap )
+  {
+    FNT_Face   face = (FNT_Face) FT_CMAP_FACE(cmap);
+    FNT_Font*  font = face->fonts;
+
+    cmap->first = (FT_UInt32) font->header.first_char;
+    cmap->count = (FT_UInt32)(font->header.last_char - cmap->first + 1);
+
+    return 0;
+  }
+
+
+  static FT_UInt
+  fnt_cmap_char_index( FT_CMap    cmap,
+                       FT_UInt32  char_code )
+  {
+    FT_UInt    gindex = 0;
+
+    char_code -= cmap->first;
+    if ( char_code < cmap->count )
+      gindex = char_code + 1;
+
+    return gindex;
+  }
+
+
+  static FT_UInt32
+  fnt_cmap_char_next( FT_CMap    cmap,
+                      FT_UInt32  char_code,
+                      FT_UInt   *agindex )
+  {
+    FT_UInt    gindex = 0;
+    FT_UInt32  result = 0;
+
+    char_code ++;
+    if ( char_code <= cmap->first )
+    {
+      result = cmap->first;
+      gindex = 1;
+    }
+    else
+    {
+      char_code -= cmap->first;
+      if ( char_code < cmap->count )
+      {
+        result = cmap->first + char_code;
+        gindex = char_code + 1;
+      }
+    }
+
+    *agindex = gindex;
+    return result;
+  }
+
+  static FT_CMap_ClassRec  fnt_cmap_class_rec =
+  {
+    sizeof( FNT_CMapRec ),
+    (FT_CMap_InitFunc)        fnt_cmap_init,
+    (FT_CMap_DoneFunc)        NULL,
+    (FT_CMap_CharIndexFunc)   fnt_cmap_char_index,
+    (FT_CMap_CharNextFunc)    fnt_cmap_char_next
+  };
+
+  static FT_CMap_Class   fnt_cmap_class = &fnt_cmap_class_rec;
+
+#else /* !FT_CONFIG_OPTION_USE_CMAPS */
+
+  static FT_UInt
+  FNT_Get_Char_Index( FT_CharMap  charmap,
+                      FT_Long     char_code )
+  {
+    FT_Long  result = char_code;
+
+
+    if ( charmap )
+    {
+      FNT_Font*  font  = ((FNT_Face)charmap->face)->fonts;
+      FT_Long    first = font->header.first_char;
+      FT_Long    count = font->header.last_char - first + 1;
+
+
+      char_code -= first;
+      if ( char_code < count )
+        result = char_code + 1;
+      else
+        result = 0;
+    }
+
+    return result;
+  }
+
+  static FT_Long
+  FNT_Get_Next_Char( FT_CharMap  charmap,
+                     FT_Long     char_code )
+  {
+    FT_ULong  result = 0;
+    FT_UInt   gindex = 0;
+
+    char_code++;
+    if ( charmap )
+    {
+      FNT_Font*  font  = ((FNT_Face)charmap->face)->fonts;
+      FT_Long    first = font->header.first_char;
+
+
+      if ( char_code < first )
+        char_code = first;
+      if ( char_code <= font->header.last_char )
+        return char_code;
+    }
+    else
+      return char_code;
+    return 0;
+  }
+
+#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
+
+
+
+
+
+
   static void
   FNT_Face_Done( FNT_Face  face )
   {
@@ -399,6 +534,25 @@
         }
       }
 
+#ifdef FT_CONFIG_OPTION_USE_CMAPS
+
+      {
+        FT_CharMapRec  charmap;
+
+        charmap.encoding    = ft_encoding_unicode;
+        charmap.platform_id = 3;
+        charmap.encoding_id = 1;
+        charmap.face        = root;
+
+        error = FT_CMap_New( fnt_cmap_class,
+                             NULL,
+                             &charmap,
+                             NULL );
+        if (error) goto Fail;
+      }
+
+#else /* !FT_CONFIG_OPTION_USE_CMAPS */
+
       /* Setup the `charmaps' array */
       root->charmaps     = &face->charmap_handle;
       root->num_charmaps = 1;
@@ -411,6 +565,8 @@
       face->charmap_handle = &face->charmap;
 
       root->charmap = face->charmap_handle;
+
+#endif /* !FT_CONFIG_OPTION_USE_CMAPS */
 
       /* setup remaining flags */
       root->num_glyphs = fonts->header.last_char -
@@ -467,52 +623,6 @@
     }
 
     return ( size->font ? FNT_Err_Ok : FNT_Err_Invalid_Pixel_Size );
-  }
-
-
-  static FT_UInt
-  FNT_Get_Char_Index( FT_CharMap  charmap,
-                      FT_Long     char_code )
-  {
-    FT_Long  result = char_code;
-
-
-    if ( charmap )
-    {
-      FNT_Font*  font  = ((FNT_Face)charmap->face)->fonts;
-      FT_Long    first = font->header.first_char;
-      FT_Long    count = font->header.last_char - first + 1;
-
-
-      char_code -= first;
-      if ( char_code < count )
-        result = char_code + 1;
-      else
-        result = 0;
-    }
-
-    return result;
-  }
-
-  static FT_Long
-  FNT_Get_Next_Char( FT_CharMap  charmap,
-                     FT_Long     char_code )
-  {
-    char_code++;
-    if ( charmap )
-    {
-      FNT_Font*  font  = ((FNT_Face)charmap->face)->fonts;
-      FT_Long    first = font->header.first_char;
-
-
-      if ( char_code < first )
-        char_code = first;
-      if ( char_code <= font->header.last_char )
-        return char_code;
-    }
-    else
-      return char_code;
-    return 0;
   }
 
 

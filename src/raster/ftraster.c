@@ -2965,7 +2965,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   Render_Glyph( RAS_ARG )
   {
     FT_Error  error;
@@ -3028,7 +3028,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   Render_Gray_Glyph( RAS_ARG )
   {
     Long      pixel_width;
@@ -3086,17 +3086,17 @@
     return Raster_Err_Ok;
   }
 
-#else /* FT_RASTER_OPTION_ANTI_ALIASING */
+#else /* !FT_RASTER_OPTION_ANTI_ALIASING */
 
-  FT_LOCAL_DEF
-  FT_Error  Render_Gray_Glyph( RAS_ARG )
+  FT_LOCAL_DEF( FT_Error )
+  Render_Gray_Glyph( RAS_ARG )
   {
     FT_UNUSED_RASTER;
 
     return Raster_Err_Cannot_Render_Glyph;
   }
 
-#endif /* FT_RASTER_OPTION_ANTI_ALIASING */
+#endif /* !FT_RASTER_OPTION_ANTI_ALIASING */
 
 
   static void

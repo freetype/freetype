@@ -1046,7 +1046,7 @@
 #endif
 
 
-  FT_LOCAL_DEF FT_UShort
+  FT_LOCAL_DEF( FT_UShort )
   CFF_Get_Standard_Encoding( FT_UInt  charcode )
   {
     return  (FT_UShort)(charcode < 256 ? cff_standard_encoding[charcode] : 0);
@@ -1204,7 +1204,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CFF_Access_Element( CFF_Index  index,
                       FT_UInt     element,
                       FT_Byte**   pbytes,
@@ -1269,7 +1269,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   CFF_Forget_Element( CFF_Index  index,
                       FT_Byte**   pbytes )
   {
@@ -1283,7 +1283,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_String*
+  FT_LOCAL_DEF( FT_String* )
   CFF_Get_Name( CFF_Index  index,
                 FT_UInt     element )
   {
@@ -1310,7 +1310,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_String*
+  FT_LOCAL_DEF( FT_String* )
   CFF_Get_String( CFF_Index          index,
                   FT_UInt             sid,
                   PSNames_Service  interface )
@@ -1413,7 +1413,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Byte
+  FT_LOCAL_DEF( FT_Byte )
   CFF_Get_FD( CFF_FD_Select*  select,
               FT_UInt         glyph_index )
   {
@@ -2056,7 +2056,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CFF_Load_Font( FT_Stream  stream,
                  FT_Int     face_index,
                  CFF_Font*  font )
@@ -2239,7 +2239,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   CFF_Done_Font( CFF_Font*  font )
   {
     FT_Memory  memory = font->memory;

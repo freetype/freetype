@@ -30,13 +30,13 @@ FT_BEGIN_HEADER
 #if 0
 
   /* Compute the maximum advance width of a font through quick parsing */
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   CID_Compute_Max_Advance( CID_Face  face,
                            FT_Int*   max_advance );
 
 #endif /* 0 */
 
-  FT_LOCAL FT_Error
+  FT_LOCAL( FT_Error )
   CID_Load_Glyph( CID_GlyphSlot  glyph,
                   CID_Size       size,
                   FT_Int         glyph_index,

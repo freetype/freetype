@@ -45,32 +45,13 @@
 #define  TT_NEXT_ULong   FT_NEXT_ULONG_BE
 
 
-  typedef struct TT_CMap_InfoRec_
-  {
-    FT_ByteP            base;
-    FT_ByteP            limit;
-    FT_ValidationLevel  level;
-
-  } TT_CMap_InfoRec, *TT_CMap_Info;
-
-
   FT_CALLBACK_DEF  FT_Error
-  tt_cmap_init( FT_CMap       cmap,
-                TT_CMap_Info  info )
+  tt_cmap_init( TT_CMap   cmap,
+                FT_Byte*  data )
   {
-    FT_Error         error;
-    TT_CMap_Class    clazz = (TT_CMap_Class) FT_CMAP_CLASS(cmap);
-    FT_ValidatorRec  valid;
-    
-    cmap->data = info->base;
-    
-    ft_validator_init( &valid, info->base, info->limit, info->level );
-    
-    if ( setjmp( valid->jump_buffer, 0 ) == 0 )
-      clazz->validate( info->base, &valid );
-      
-    return valid.error;
-  }                
+    cmap->data = data;
+    return 0;
+  }
 
 
  /************************************************************************/
@@ -124,19 +105,22 @@
 
 
   FT_CALLBACK_DEF FT_UInt
-  tt_cmap0_char_index( FT_Byte*   table,
-                       FT_ULong   char_code )
+  tt_cmap0_char_index( TT_CMap    cmap,
+                       FT_UInt32  char_code )
   {
+    FT_Byte*  table = cmap->data;
+
     return  ( char_code < 256 ? table[6+char_code] : 0 );
   }
 
 
-  FT_CALLBACK_DEF FT_ULong
-  tt_cmap0_char_next( FT_Byte*  table,
-                      FT_ULong  char_code,
+  FT_CALLBACK_DEF FT_UInt32
+  tt_cmap0_char_next( TT_CMap    cmap,
+                      FT_UInt32  char_code,
                       FT_UInt   *agindex )
   {
-    FT_ULong  result = 0;
+    FT_Byte*  table  = cmap->data;
+    FT_UInt32 result = 0;
     FT_UInt   gindex = 0;
 
     table += 6;  /* go to glyph ids */
@@ -157,20 +141,21 @@
   }
 
 
-  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap0_class_rec =
+  FT_CALLBACK_TABLE const TT_CMap_ClassRec  tt_cmap0_class_rec =
   {
     {
       sizeof( FT_CMapRec ),
-      
+
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
       (FT_CMap_CharIndexFunc) tt_cmap0_char_index,
       (FT_CMap_CharNextFunc)  tt_cmap0_char_next
     },
+    0,
     (TT_CMap_ValidateFunc)    tt_cmap0_validate
   };
 
-  FT_LOCAL_DEF  TT_CMap_Class tt_cmap0_class = &tt_cmap0_class_rec;
+  FT_LOCAL_DEF( TT_CMap_Class ) tt_cmap0_class = &tt_cmap0_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_0 */
 
@@ -354,8 +339,8 @@
   /* return sub header corresponding to a given character code */
   /* NULL on invalid charcode..                                */
   static FT_Byte*
-  tt_cmap2_get_subheader( FT_Byte*  table,
-                          FT_ULong  char_code )
+  tt_cmap2_get_subheader( FT_Byte*   table,
+                          FT_UInt32  char_code )
   {
     FT_Byte*  result = NULL;
 
@@ -401,9 +386,10 @@
 
 
   FT_CALLBACK_DEF FT_UInt
-  tt_cmap2_char_index( FT_Byte*   table,
-                       FT_ULong   char_code )
+  tt_cmap2_char_index( TT_CMap    cmap,
+                       FT_UInt32  char_code )
   {
+    FT_Byte*  table   = cmap->data;
     FT_UInt   result  = 0;
     FT_Byte*  subheader;
 
@@ -437,10 +423,11 @@
 
 
   FT_CALLBACK_DEF FT_UInt
-  tt_cmap2_char_next( FT_Byte*  table,
-                      FT_ULong  char_code,
+  tt_cmap2_char_next( TT_CMap    cmap,
+                      FT_UInt32  char_code,
                       FT_UInt   *agindex )
   {
+    FT_Byte*  table     = cmap->data;
     FT_UInt   result    = 0;
     FT_UInt   n, gindex = 0;
     FT_Byte*  subheader;
@@ -502,20 +489,21 @@
     return result;
   }
 
-  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap2_class_rec =
+  FT_CALLBACK_TABLE const TT_CMap_ClassRec  tt_cmap2_class_rec =
   {
     {
       sizeof( FT_CMapRec ),
-      
+
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
       (FT_CMap_CharIndexFunc) tt_cmap2_char_index,
       (FT_CMap_CharNextFunc)  tt_cmap2_char_next
     },
+    2,
     (TT_CMap_ValidateFunc)    tt_cmap2_validate
   };
 
-  FT_LOCAL_DEF  TT_CMap_Class tt_cmap2_class = &tt_cmap2_class_rec;
+  FT_LOCAL_DEF( TT_CMap_Class )  tt_cmap2_class = &tt_cmap2_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_2 */
 
@@ -700,9 +688,10 @@
 
 
   FT_CALLBACK_DEF FT_UInt
-  tt_cmap4_char_index( FT_Byte*  table,
-                       FT_ULong  char_code )
+  tt_cmap4_char_index( TT_CMap    cmap,
+                       FT_UInt32  char_code )
   {
+    FT_Byte*  table  = cmap->data;
     FT_UInt   result = 0;
 
     if ( char_code < 0x10000U )
@@ -749,12 +738,13 @@
 
 
 
-  FT_CALLBACK_DEF FT_ULong
-  tt_cmap4_char_next( FT_Byte*  table,
-                      FT_ULong  char_code,
-                      FT_UInt  *agindex )
+  FT_CALLBACK_DEF FT_UInt32
+  tt_cmap4_char_next( TT_CMap    cmap,
+                      FT_UInt32  char_code,
+                      FT_UInt   *agindex )
   {
-    FT_ULong  result = 0;
+    FT_Byte*  table  = cmap->data;
+    FT_UInt32 result = 0;
     FT_UInt   gindex = 0;
     FT_Byte*  p;
     FT_UInt   code, num_segs2;
@@ -830,20 +820,21 @@
     return result;
   }
 
-  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap4_class_rec =
+  FT_CALLBACK_TABLE const TT_CMap_ClassRec  tt_cmap4_class_rec =
   {
     {
       sizeof( FT_CMapRec ),
-      
+
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
       (FT_CMap_CharIndexFunc) tt_cmap4_char_index,
       (FT_CMap_CharNextFunc)  tt_cmap4_char_next
     },
+    4,
     (TT_CMap_ValidateFunc)    tt_cmap4_validate
   };
 
-  FT_LOCAL_DEF  TT_CMap_Class tt_cmap4_class = &tt_cmap4_class_rec;
+  static TT_CMap_Class tt_cmap4_class = &tt_cmap4_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_4 */
 
@@ -912,9 +903,10 @@
 
 
   FT_CALLBACK_DEF FT_UInt
-  tt_cmap6_char_index( FT_Byte*   table,
-                       FT_ULong   char_code )
+  tt_cmap6_char_index( TT_CMap    cmap,
+                       FT_UInt32  char_code )
   {
+    FT_Byte*  table  = cmap->data;
     FT_UInt   result = 0;
     FT_Byte*  p      = table + 6;
     FT_UInt   start  = TT_NEXT_USHORT(p);
@@ -930,12 +922,13 @@
   }
 
 
-  FT_CALLBACK_DEF FT_ULong
-  tt_cmap6_char_next( FT_Byte*    table,
-                      FT_ULong    char_code,
+  FT_CALLBACK_DEF FT_UInt32
+  tt_cmap6_char_next( TT_CMap     cmap,
+                      FT_UInt32   char_code,
                       FT_UInt    *agindex )
   {
-    FT_ULong  result = 0;
+    FT_Byte*  table  = cmap->data;
+    FT_UInt32 result = 0;
     FT_UInt   gindex = 0;
     FT_Byte*  p      = table + 6;
     FT_UInt   start  = TT_NEXT_USHORT(p);
@@ -971,20 +964,21 @@
   }
 
 
-  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap6_class_rec =
+  FT_CALLBACK_TABLE const TT_CMap_ClassRec  tt_cmap6_class_rec =
   {
     {
       sizeof( FT_CMapRec ),
-      
+
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
       (FT_CMap_CharIndexFunc) tt_cmap6_char_index,
       (FT_CMap_CharNextFunc)  tt_cmap6_char_next
     },
+    6,
     (TT_CMap_ValidateFunc)    tt_cmap6_validate
   };
 
-  FT_LOCAL_DEF  TT_CMap_Class tt_cmap6_class = &tt_cmap6_class_rec;
+  FT_LOCAL_DEF( TT_CMap_Class )  tt_cmap6_class = &tt_cmap6_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_6 */
 
@@ -1054,8 +1048,8 @@
   {
     FT_Byte*   p = table + 4;
     FT_Byte*   is32;
-    FT_ULong   length;
-    FT_ULong   num_groups;
+    FT_UInt32  length;
+    FT_UInt32  num_groups;
 
     if ( table + 16 + 8192 > valid->limit )
       INVALID_TOO_SHORT;
@@ -1073,7 +1067,7 @@
 
     /* check groups, they must be in increasing order */
     {
-      FT_ULong  n, start, end, start_id, count, last = 0;
+      FT_UInt32  n, start, end, start_id, count, last = 0;
 
       for ( n = 0; n < num_groups; n++ )
       {
@@ -1095,7 +1089,7 @@
           if ( start_id + end - start >= valid->num_glyphs )
             INVALID_GLYPH_ID;
 
-          count = (FT_ULong)(end - start + 1);
+          count = (FT_UInt32)(end - start + 1);
 
           if ( start & ~0xFFFFU )
           {
@@ -1139,13 +1133,14 @@
 
 
   FT_CALLBACK_DEF FT_UInt
-  tt_cmap8_char_index( FT_Byte*   table,
-                       FT_ULong   char_code )
+  tt_cmap8_char_index( TT_CMap     cmap,
+                       FT_UInt32   char_code )
   {
-    FT_UInt   result     = 0;
-    FT_Byte*  p          = table + 8204;
-    FT_ULong  num_groups = TT_NEXT_ULONG(p);
-    FT_ULong  n, start, end, start_id;
+    FT_Byte*   table      = cmap->data;
+    FT_UInt    result     = 0;
+    FT_Byte*   p          = table + 8204;
+    FT_UInt32  num_groups = TT_NEXT_ULONG(p);
+    FT_UInt32  n, start, end, start_id;
 
     for ( ; num_groups > 0; num_groups-- )
     {
@@ -1166,16 +1161,16 @@
   }
 
 
-  FT_CALLBACK_DEF FT_ULong
-  tt_cmap8_char_next( FT_Byte*   table,
-                      FT_ULong   char_code,
+  FT_CALLBACK_DEF FT_UInt32
+  tt_cmap8_char_next( TT_CMap    cmap,
+                      FT_UInt32  char_code,
                       FT_UInt   *agindex )
   {
-    FT_ULong   result     = 0;
+    FT_UInt32  result     = 0;
     FT_UInt    gindex     = 0;
     FT_Byte*   p          = table + 8204;
-    FT_ULong   num_groups = TT_NEXT_ULONG(p);
-    FT_ULong   n, start, end, start_id;
+    FT_UInt32  num_groups = TT_NEXT_ULONG(p);
+    FT_UInt32  n, start, end, start_id;
 
     ++char_code;
     p = table + 8208;
@@ -1208,20 +1203,21 @@
   }
 
 
-  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap8_class_rec =
+  FT_CALLBACK_TABLE const TT_CMap_ClassRec  tt_cmap8_class_rec =
   {
     {
       sizeof( FT_CMapRec ),
-      
+
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
       (FT_CMap_CharIndexFunc) tt_cmap8_char_index,
       (FT_CMap_CharNextFunc)  tt_cmap8_char_next
     },
+    8,
     (TT_CMap_ValidateFunc)    tt_cmap8_validate
   };
 
-  FT_LOCAL_DEF  TT_CMap_Class tt_cmap8_class = &tt_cmap8_class_rec;
+  FT_LOCAL_DEF( TT_CMap_Class )  tt_cmap8_class = &tt_cmap8_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_8 */
 
@@ -1286,14 +1282,15 @@
 
 
   FT_CALLBACK_DEF FT_UInt
-  tt_cmap10_char_index( FT_Byte*   table,
-                        FT_ULong   char_code )
+  tt_cmap10_char_index( TT_CMap    cmap,
+                        FT_UInt32  char_code )
   {
-    FT_UInt   result = 0;
-    FT_Byte*  p      = table + 12;
-    FT_ULong  start  = TT_NEXT_ULONG(p);
-    FT_ULong  count  = TT_NEXT_ULONG(p);
-    FT_ULong  index  = (FT_ULong)( char_code - start );
+    FT_Byte*   table  = cmap->data;
+    FT_UInt    result = 0;
+    FT_Byte*   p      = table + 12;
+    FT_UInt32  start  = TT_NEXT_ULONG(p);
+    FT_UInt32  count  = TT_NEXT_ULONG(p);
+    FT_UInt32  index  = (FT_ULong)( char_code - start );
 
     if ( index < count )
     {
@@ -1304,23 +1301,24 @@
   }
 
 
-  FT_CALLBACK_DEF FT_ULong
-  tt_cmap10_char_next( FT_Byte*    table,
-                       FT_ULong    char_code,
+  FT_CALLBACK_DEF FT_UInt32
+  tt_cmap10_char_next( TT_CMap     cmap,
+                       FT_UInt32   char_code,
                        FT_UInt    *agindex )
   {
-    FT_ULong  result = 0;
-    FT_UInt   gindex = 0;
-    FT_Byte*  p      = table + 12;
-    FT_ULong  start  = TT_NEXT_ULONG(p);
-    FT_ULong  count  = TT_NEXT_ULONG(p);
-    FT_ULong  index;
+    FT_Byte*   table  = cmap->data;
+    FT_UInt32  result = 0;
+    FT_UInt    gindex = 0;
+    FT_Byte*   p      = table + 12;
+    FT_UInt32  start  = TT_NEXT_ULONG(p);
+    FT_UInt32  count  = TT_NEXT_ULONG(p);
+    FT_UInt32  index;
 
     char_code++;
     if ( char_code < start )
       char_code = start;
 
-    index = (FT_ULong)( char_code - start );
+    index = (FT_UInt32)( char_code - start );
     p    += 2*index;
 
     for ( ; index < count; index++ )
@@ -1342,20 +1340,21 @@
   }
 
 
-  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap10_class_rec =
+  FT_CALLBACK_TABLE const TT_CMap_ClassRec  tt_cmap10_class_rec =
   {
     {
       sizeof( FT_CMapRec ),
-      
+
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
       (FT_CMap_CharIndexFunc) tt_cmap10_char_index,
       (FT_CMap_CharNextFunc)  tt_cmap10_char_next
     },
+    10,
     (TT_CMap_ValidateFunc)    tt_cmap10_validate
   };
 
-  FT_LOCAL_DEF  TT_CMap_Class tt_cmap10_class = &tt_cmap10_class_rec;
+  FT_LOCAL_DEF( TT_CMap_Class )  tt_cmap10_class = &tt_cmap10_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_10 */
 
@@ -1445,13 +1444,13 @@
 
 
   FT_CALLBACK_DEF FT_UInt
-  tt_cmap12_char_index( FT_Byte*   table,
-                        FT_ULong   char_code )
+  tt_cmap12_char_index( TT_CMap    cmap,
+                        FT_UInt32  char_code )
   {
-    FT_UInt   result     = 0;
-    FT_Byte*  p          = table + 12;
-    FT_ULong  num_groups = TT_NEXT_ULONG(p);
-    FT_ULong  n, start, end, start_id;
+    FT_UInt    result     = 0;
+    FT_Byte*   p          = table + 12;
+    FT_UInt32  num_groups = TT_NEXT_ULONG(p);
+    FT_UInt32  n, start, end, start_id;
 
     for ( ; num_groups > 0; num_groups-- )
     {
@@ -1472,16 +1471,17 @@
   }
 
 
-  FT_CALLBACK_DEF FT_ULong
-  tt_cmap12_char_next( FT_Byte*   table,
-                       FT_ULong   char_code,
+  FT_CALLBACK_DEF FT_UInt32
+  tt_cmap12_char_next( TT_CMap    cmap,
+                       FT_UInt32  char_code,
                        FT_UInt   *agindex )
   {
-    FT_ULong   result     = 0;
+    FT_Byte*   table      = cmap->data;
+    FT_UInt32  result     = 0;
     FT_UInt    gindex     = 0;
     FT_Byte*   p          = table + 12;
-    FT_ULong   num_groups = TT_NEXT_ULONG(p);
-    FT_ULong   n, start, end, start_id;
+    FT_UInt32  num_groups = TT_NEXT_ULONG(p);
+    FT_UInt32  n, start, end, start_id;
 
     ++char_code;
     p = table + 8208;
@@ -1514,21 +1514,124 @@
   }
 
 
-  FT_CALLBACK_TABLE const TT_Cmap_ClassRec  tt_cmap12_class_rec =
+  FT_CALLBACK_TABLE const TT_CMap_ClassRec  tt_cmap12_class_rec =
   {
     {
       sizeof( FT_CMapRec ),
-      
+
       (FT_CMap_InitFunc)      tt_cmap_init,
       (FT_CMap_DoneFunc)      NULL,
       (FT_CMap_CharIndexFunc) tt_cmap12_char_index,
       (FT_CMap_CharNextFunc)  tt_cmap12_char_next
     },
+    12,
     (TT_CMap_ValidateFunc)    tt_cmap12_validate
   };
 
-  FT_LOCAL_DEF  TT_CMap_Class tt_cmap12_class = &tt_cmap12_class_rec;
+  FT_LOCAL_DEF( TT_CMap_Class )  tt_cmap12_class = &tt_cmap12_class_rec;
 
 #endif /* TT_CONFIG_CMAP_FORMAT_12 */
+
+
+
+  static TT_CMap_Class  tt_cmap_classes[] =
+  {
+#ifdef TT_CONFIG_CMAP_FORMAT_0
+    tt_cmap0_class,
+#endif
+
+#ifdef TT_CONFIG_CMAP_FORMAT_2
+    tt_cmap2_class,
+#endif
+
+#ifdef TT_CONFIG_CMAP_FORMAT_4
+    tt_cmap4_class,
+#endif
+
+#ifdef TT_CONFIG_CMAP_FORMAT_6
+    tt_cmap6_class,
+#endif
+
+#ifdef TT_CONFIG_CMAP_FORMAT_8
+    tt_cmap8_class,
+#endif
+
+#ifdef TT_CONFIG_CMAP_FORMAT_10
+    tt_cmap10_class,
+#endif
+
+#ifdef TT_CONFIG_CMAP_FORMAT_12
+    tt_cmap12_class,
+#endif
+
+    NULL,
+  };
+
+
+ /* parse the 'cmap' table and build the corresponding TT_CMap objects */
+ /* in the current face..                                              */
+ /*                                                                    */
+  FT_LOCAL_DEF( FT_Error )
+  TT_Build_CMaps( TT_Face   face )
+  {
+    TT_CMap_Class    clazz;
+    FT_ValidatorRec  valid;
+    FT_UInt          num_cmaps;
+    FT_Byte*         table = face->cmap_table;
+    FT_Byte*         limit = table + face->cmap_size;
+    FT_Byte*         p     = table;
+    FT_UInt          format;
+
+    if ( p + 4 < limit )
+      return FT_Err_Invalid_Table;
+
+    /* only recognize format 0 */
+    if ( NEXT_UShort(p) != 0 )
+      return FT_Err_Invalid_Table;
+
+    num_cmaps = NEXT_UShort(p);
+
+    for ( ; num_cmaps > 0 && p + 8 <= limit; num_cmaps-- )
+    {
+      FT_CharMapRec  charmap;
+      FT_UInt32      offset;
+
+      charmap.platform_id = NEXT_UShort(p);
+      charmap.encoding_id = NEXT_UShort(p);
+      offset              = NEXT_ULong(p);
+
+      if ( offset && table + offset + 2 < limit )
+      {
+        FT_Byte*         cmap   = table + offset;
+        FT_UInt          format = PEEK_UShort(cmap);
+        TT_CMap_Class*   pclazz = tt_cmap_classes;
+        TT_CMap_Class    clazz;
+
+        for ( ; *pclazz; pclazz++ )
+        {
+          clazz = *pclazz;
+          if ( clazz->format == format )
+          {
+            volatile FT_Validator  valid;
+
+            ft_validator_init( &valid, cmap, limit,
+                               FT_VALIDATE_LEVEL_DEFAULT );
+
+            if ( setjmp( valid.jump_buffer ) == 0 )
+              clazz->validate( cmap, &valid );
+
+            if ( valid.error == 0 )
+              (void)FT_CMap_New( clazz, cmap, face, NULL );
+            else
+              FT_ERROR(( "TT_Build_CMaps: broken cmap sub-table ignored !!\n" ));
+          }
+        }
+      }
+    }
+
+    return 0;
+  }
+
+
 
 /* END */

@@ -73,7 +73,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   CFF_Size_Done( CFF_Size  size )
   {
     if ( size->internal )
@@ -90,7 +90,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CFF_Size_Init( CFF_Size  size )
   {
     FT_Error           error = 0;
@@ -163,7 +163,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CFF_Size_Reset( CFF_Size  size )
   {
     PSH_Globals_Funcs  funcs = CFF_Size_Get_Globals_Funcs( size );
@@ -185,14 +185,14 @@
   /*                                                                       */
   /*************************************************************************/
 
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   CFF_GlyphSlot_Done( CFF_GlyphSlot  slot )
   {
     slot->root.internal->glyph_hints = 0;
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CFF_GlyphSlot_Init( CFF_GlyphSlot  slot )
   {
     CFF_Face             face     = (CFF_Face)slot->root.face;
@@ -441,7 +441,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CFF_Face_Init( FT_Stream      stream,
                  CFF_Face       face,
                  FT_Int         face_index,
@@ -700,7 +700,7 @@
   /* <Input>                                                               */
   /*    face :: A pointer to the face object to destroy.                   */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   CFF_Face_Done( CFF_Face  face )
   {
     FT_Memory        memory = face->root.memory;
@@ -737,7 +737,7 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  FT_LOCAL_DEF FT_Error
+  FT_LOCAL_DEF( FT_Error )
   CFF_Driver_Init( CFF_Driver  driver )
   {
     /* init extension registry if needed */
@@ -767,7 +767,7 @@
   /* <Input>                                                               */
   /*    driver :: A handle to the target OpenType driver.                  */
   /*                                                                       */
-  FT_LOCAL_DEF void
+  FT_LOCAL_DEF( void )
   CFF_Driver_Done( CFF_Driver  driver )
   {
     /* destroy extensions registry if needed */
