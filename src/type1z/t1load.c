@@ -83,7 +83,7 @@
   /* each callback is in charge of loading a value and storing it in a  */
   /* given field of the Type 1 face..                                   */
  
-#define PARSE_(x)  static void parse_##x##( T1_Face  face, T1_Loader* loader )
+#define PARSE_(x)  static void parse_##x ( T1_Face  face, T1_Loader* loader )
 
 #define PARSE_STRING(s,x)   PARSE_(x)                               \
         {                                                           \
