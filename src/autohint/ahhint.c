@@ -1049,7 +1049,21 @@
     switch ( slot->format )
     {
     case ft_glyph_format_outline:
-      /* first of all, copy the outline points in the loader's current  */
+    
+      /* translate glyph outline if we need to */
+      if (hinter->transformed)
+      {
+        FT_UInt     n     = slot->outline.n_points;
+        FT_Vector*  point = slot->outline.points;
+        
+        for ( ; n > 0; point++, n-- )
+        {
+          point->x += hinter->trans_delta.x;
+          point->y += hinter->trans_delta.y;
+        }
+      }
+      
+      /* copy the outline points in the loader's current                */
       /* extra points, which is used to keep original glyph coordinates */
       error = ah_loader_check_points( gloader, slot->outline.n_points + 2,
                                       slot->outline.n_contours );
@@ -1270,6 +1284,9 @@
     {
       FT_BBox  bbox;
 
+      /* transform the hinted outline if needed */
+      if ( hinter->transformed )
+        FT_Outline_Transform( &gloader->base.outline, &hinter->trans_matrix );
 
       /* we must translate our final outline by -pp1.x, and compute */
       /* the new metrics                                            */
@@ -1318,7 +1335,6 @@
     FT_Fixed          y_scale      = size->metrics.y_scale;
     AH_Face_Globals*  face_globals = FACE_GLOBALS( face );
 
-
     /* first of all, we need to check that we're using the correct face and */
     /* global hints to load the glyph                                       */
     if ( hinter->face != face || hinter->globals != face_globals )
@@ -1344,6 +1360,23 @@
 
     ah_loader_rewind( hinter->loader );
 
+    {
+      FT_Slot_Internal  internal = slot->internal;
+      
+      hinter->transformed = internal->glyph_transformed;
+      if (hinter->transformed)
+      {
+        FT_Matrix  imatrix;
+        
+        imatrix              = internal->glyph_matrix;
+        hinter->trans_delta  = internal->glyph_delta;
+        hinter->trans_matrix = imatrix;
+
+        FT_Matrix_Invert( &imatrix );
+        FT_Vector_Transform( &hinter->trans_delta, &imatrix );
+      }
+    }
+    
     error = ah_hinter_load( hinter, glyph_index, load_flags, 0 );
 
   Exit:

@@ -488,6 +488,10 @@
     FT_Vector         pp1;
     FT_Vector         pp2;
 
+    FT_Bool           transformed;
+    FT_Vector         trans_delta;
+    FT_Matrix         trans_matrix;
+
   } AH_Hinter;
 
 
