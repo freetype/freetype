@@ -131,7 +131,7 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    FT_AutoHinter_GlobalResetFunc                                             */
+  /*    FT_AutoHinter_GlobalResetFunc                                      */
   /*                                                                       */
   /* <Description>                                                         */
   /*    This function is used to recompute the global metrics in a given   */

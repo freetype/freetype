@@ -126,7 +126,7 @@
     return 0;
   }
 
-  FT_CALLBACK_TABLE const T1_CMap_ClassRec
+  FT_CALLBACK_TABLE const FT_CMap_ClassRec
   t1_cmap_expert_class_rec =
   {
     sizeof( T1_CMapStdRec ),
@@ -138,7 +138,7 @@
   };
 
 
-  FT_LOCAL_DEF( T1_CMap_Class )
+  FT_LOCAL_DEF( FT_CMap_Class )
   t1_cmap_expert_class = &t1_cmap_expert_class_rec;
 
 

@@ -305,7 +305,7 @@
 
   FT_BASE_DEF( FT_Error )
   FT_GlyphLoader_CopyPoints( FT_GlyphLoader   target,
-                              FT_GlyphLoader   source )
+                             FT_GlyphLoader   source )
   {
     FT_Error  error;
     FT_UInt   num_points   = source->base.outline.n_points;

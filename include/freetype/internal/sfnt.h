@@ -163,9 +163,9 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef FT_Error
   (*TT_Load_SFNT_HeaderRec_Func)( TT_Face       face,
-                               FT_Stream     stream,
-                               FT_Long       face_index,
-                               SFNT_Header   sfnt );
+                                  FT_Stream     stream,
+                                  FT_Long       face_index,
+                                  SFNT_Header   sfnt );
 
 
   /*************************************************************************/
