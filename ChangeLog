@@ -1,6 +1,72 @@
+2004-05-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/cache/ftcbasic.c (ftc_basic_family_compare,
+	ftc_basic_family_init, ftc_basic_family_get_count,
+	ftc_basic_family_load_bitmap, ftc_basic_family_load_glyph,
+	ftc_basic_gnode_compare_faceid): Adjust parameters and return types
+	to prototypes given in header files from include/freetype/cache.
+	Use casts to proper types locally.
+	(ftc_basic_image_family_class, ftc_basic_image_cache_class,
+	ftc_basic_sbit_family_class, ftc_basic_sbit_cache_class): Remove
+	casts.
+
+	* src/cache/ftccback.h: Adjust parameters and return types to
+	prototypes given in header files from include/freetype/cache.
+
+	* src/cache/ftcimage.c (ftc_inode_free, ftc_inode_new,
+	ftc_inode_weight): Adjust parameters and return types to prototypes
+	given in header files from include/freetype/cache.  Use casts to
+	proper types locally.
+
+	* src/cache/ftcsbits.c (ftc_snode_free, ftc_snode_new,
+	ftc_snode_weight, ftc_snode_compare): Adjust parameters and return
+	types to prototypes given in header files from
+	include/freetype/cache.  Use casts to proper types locally.
+
+	* src/cache/ftccmap.c (ftc_cmap_node_free, ftc_cmap_node_new,
+	ftc_cmap_node_weight, ftc_cmap_node_compare,
+	ftc_cmap_node_remove_faceid): Adjust parameters and return types to
+	prototypes given in header files from include/freetype/cache.  Use
+	casts to proper types locally.
+	(ftc_cmap_cache_class): Remove casts.
+
+	* src/cache/ftcglyph.c (ftc_gnode_compare, ftc_gcache_init,
+	ftc_gcache_done): Adjust parameters and return types to prototypes
+	given in header files from include/freetype/cache.  Use casts to
+	proper types locally.
+
+	* src/cache/ftcmanag.c (ftc_size_node_done, ftc_size_node_compare,
+	ftc_size_node_init, ftc_size_node_reset,
+	ftc_size_node_compare_faceid, ftc_face_node_init,
+	ftc_face_node_done, ftc_face_node_compare: Adjust parameters and
+	return types to prototypes given in header files from
+	include/freetype/cache.  Use casts to proper types locally.
+
+	(ftc_size_list_class, ftc_face_list_class): Remove casts.
+
+2004-05-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/autohint/ahmodule.c (ft_autohinter_init, ft_autohinter_done):
+	Use FT_Module as parameter and do a cast to FT_AutoHinter locally.
+	(autohint_module_class): Remove casts.
+
+	* src/base/ftglyph.c (ft_bitmap_glyph_init, ft_bitmap_glyph_copy,
+	ft_bitmap_glyph_done, ft_bitmap_glyph_bbox, ft_outline_glyph_init,
+	ft_outline_glyph_done, ft_outline_glyph_copy,
+	ft_outline_glyph_transform, ft_outline_glyph_bbox,
+	ft_outline_glyph_prepare): Use FT_Glyph as parameter and do a cast
+	to FT_XXXGlyph locally.
+	Use FT_CALLBACK_DEF throughout.
+	(ft_bitmap_glyph_class, ft_outline_glyph_class): Remove casts.
+
+	* src/bdf/bdfdrivr.c (bdf_cmap_init, bdf_cmap_done,
+	bdf_cmap_char_index, bdf_cmap_char_next): Use FT_CMap as parameter
+	and do a cast to BDF_CMap locally.
+	(bdf_cmap_class): Remove casts.
+
 2004-05-12  Werner Lemberg  <wl@gnu.org>
 
-	* src/cff/cffgload.h (CFF_Builder): Remove `error'
+	* src/cff/cffgload.h (CFF_Builder): Remove `error'.
 	* src/cff/cffgload.c (cff_decoder_parse_charstrings): Replace
 	`Memory_Error' with `Fail' und update all users.
 

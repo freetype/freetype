@@ -77,9 +77,12 @@
 
 
   FT_LOCAL_DEF( void )
-  ftc_snode_free( FTC_SNode  snode,
+  ftc_snode_free( FTC_Node   ftcsnode,
                   FTC_Cache  cache )
   {
+    FTC_SNode  snode = (FTC_SNode)ftcsnode;
+
+
     FTC_SNode_Free( snode, cache );
   }
 
@@ -240,10 +243,14 @@
 
 
   FT_LOCAL_DEF( FT_Error )
-  ftc_snode_new( FTC_SNode  *psnode,
-                 FTC_GQuery  gquery,
+  ftc_snode_new( FTC_Node   *ftcpsnode,
+                 FT_Pointer  ftcgquery,
                  FTC_Cache   cache )
   {
+    FTC_SNode  *psnode = (FTC_SNode*)ftcpsnode;
+    FTC_GQuery  gquery = (FTC_GQuery)ftcgquery;
+
+
     return FTC_SNode_New( psnode, gquery, cache );
   }
 
@@ -280,8 +287,13 @@
 
 
   FT_LOCAL_DEF( FT_ULong )
-  ftc_snode_weight( FTC_SNode  snode )
+  ftc_snode_weight( FTC_Node   ftcsnode,
+                    FTC_Cache  cache )
   {
+    FTC_SNode  snode = (FTC_SNode)ftcsnode;
+    FT_UNUSED( cache );
+
+
     return FTC_SNode_Weight( snode );
   }
 
@@ -322,10 +334,14 @@
 
 
   FT_LOCAL_DEF( FT_Bool )
-  ftc_snode_compare( FTC_SNode   snode,
-                     FTC_GQuery  gquery,
+  ftc_snode_compare( FTC_Node    ftcsnode,
+                     FT_Pointer  ftcgquery,
                      FTC_Cache   cache )
   {
+    FTC_SNode   snode  = (FTC_SNode)ftcsnode;
+    FTC_GQuery  gquery = (FTC_GQuery)ftcgquery;
+
+
     return FTC_SNode_Compare( snode, gquery, cache );
   }
 
