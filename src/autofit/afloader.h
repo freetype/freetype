@@ -21,22 +21,26 @@ FT_BEGIN_HEADER
 
   } AF_LoaderRec, *AF_Loader;
 
-  FT_LOCAL( void )
+
+  FT_LOCAL( FT_Error )
   af_loader_init( AF_Loader  loader,
                   FT_Memory  memory );
 
+
   FT_LOCAL( FT_Error )
-  af_loader_reset( AF_Loader   loader,
-                   FT_Face     face );
+  af_loader_reset( AF_Loader  loader,
+                   FT_Face    face );
+
 
   FT_LOCAL( void )
-  af_loader_done( AF_Loader   loader );
+  af_loader_done( AF_Loader  loader );
+
 
   FT_LOCAL( FT_Error )
-  af_loader_load_glyph( AF_Loader   loader,
-                        FT_UInt     gindex,
-                        FT_UInt32   load_flags,
-                        FT_UInt     depth );
+  af_loader_load_glyph( AF_Loader  loader,
+                        FT_Face    face,
+                        FT_UInt    gindex,
+                        FT_UInt32  load_flags );
 
 /* */
 

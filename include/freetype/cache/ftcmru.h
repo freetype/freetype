@@ -168,14 +168,15 @@ FT_BEGIN_HEADER
 
 #ifdef FTC_INLINE
 
-#define FTC_MRULIST_LOOKUP( list, key, node, error )                     \
-  FT_BEGIN_STMNT                                                         \
-    FTC_MruNode_CompareFunc  _compare = (list)->clazz.node_compare;      \
+#define FTC_MRULIST_LOOKUP_CMP( list, key, compare, node, error )           \
+  FT_BEGIN_STMNT                                                            \
+    FTC_MruNode*             _pfirst  = &(list)->nodes;                     \
+    FTC_MruNode_CompareFunc  _compare = (FTC_MruNode_CompareFunc)(compare); \
     FTC_MruNode              _first, _node;                              \
                                                                          \
                                                                          \
     error  = 0;                                                          \
-    _first = (list)->nodes;                                              \
+    _first = *(_pfirst);                                                 \
     _node  = NULL;                                                       \
                                                                          \
     if ( _first )                                                        \
@@ -185,8 +186,11 @@ FT_BEGIN_HEADER
       {                                                                  \
         if ( _compare( _node, (key) ) )                                  \
         {                                                                \
+          if ( _node != _first )                                         \
+            FTC_MruNode_Up( _pfirst, _node );                            \
+                                                                         \
           *(FTC_MruNode*)&(node) = _node;                                \
-          goto _Ok;                                                      \
+          goto _MruOk;                                                   \
         }                                                                \
         _node = _node->next;                                             \
                                                                          \
@@ -194,13 +198,16 @@ FT_BEGIN_HEADER
     }                                                                    \
                                                                          \
     error = FTC_MruList_New( (list), (key), (FTC_MruNode*)&(node) );     \
-  _Ok:                                                                   \
+  _MruOk:                                                                \
     ;                                                                    \
   FT_END_STMNT
 
+#define FTC_MRULIST_LOOKUP( list, key, node, error ) \
+  FTC_MRULIST_LOOKUP_CMP( list, key, (list)->clazz.node_compare, node, error )
+
 #else  /* !FTC_INLINE */
 
-#define FTC_MRULIST_LOOKUP_CMP( list, key, node, error ) \
+#define FTC_MRULIST_LOOKUP( list, key, node, error ) \
   error = FTC_MruList_Lookup( (list), (key), (FTC_MruNode*)&(node) ) 
 
 #endif /* !FTC_INLINE */

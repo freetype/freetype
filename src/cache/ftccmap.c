@@ -240,7 +240,7 @@
                           node, error );
 #else
     error = FTC_Cache_Lookup( cache, hash, &query, (FTC_Node*) &node );
-#endif    
+#endif
     if ( error )
       goto Exit;
 

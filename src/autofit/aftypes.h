@@ -226,12 +226,10 @@ FT_BEGIN_HEADER
 
 
   typedef FT_Error  (*AF_Script_InitHintsFunc)( AF_GlyphHints     hints,
-                                                AF_Scaler         scaler,
                                                 FT_Outline*       outline,
                                                 AF_ScriptMetrics  metrics );
 
   typedef void      (*AF_Script_ApplyHintsFunc)( AF_GlyphHints     hints,
-                                                 AF_Scaler         scaler,
                                                  FT_Outline*       outline,
                                                  AF_ScriptMetrics  metrics );
 

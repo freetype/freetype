@@ -269,9 +269,12 @@
     query.attrs.scaler.pixel   = 1;
     query.attrs.load_flags     = type->flags;
 
+    query.attrs.scaler.x_res   = 0;  /* make compilers happy */
+    query.attrs.scaler.y_res   = 0;
+
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) + gindex;
-    
-#if 1  /* inlining is about 50% faster! */ 
+
+#if 1  /* inlining is about 50% faster! */
     FTC_GCACHE_LOOKUP_CMP( cache,
                            ftc_basic_family_compare,
                            FTC_GNode_Compare,
@@ -376,11 +379,14 @@
     query.attrs.scaler.pixel   = 1;
     query.attrs.load_flags     = type->flags;
 
+    query.attrs.scaler.x_res   = 0;  /* make compilers happy */
+    query.attrs.scaler.y_res   = 0;
+
     /* beware, the hash must be the same for all glyph ranges! */
     hash = FTC_BASIC_ATTR_HASH( &query.attrs ) +
            gindex / FTC_SBIT_ITEMS_PER_NODE;
 
-#if 1  /* inlining is about 50% faster! */ 
+#if 1  /* inlining is about 50% faster! */
     FTC_GCACHE_LOOKUP_CMP( cache,
                            ftc_basic_family_compare,
                            FTC_SNode_Compare,
@@ -394,7 +400,7 @@
                                gindex,
                                FTC_GQUERY( &query ),
                                (FTC_Node*)&node );
-#endif                               
+#endif
     if ( error )
       goto Exit;
 

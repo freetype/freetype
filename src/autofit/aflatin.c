@@ -374,11 +374,27 @@
 
     axis = & metrics->axis[ dim ];
 
-    if ( axis->scale == scale && axis->delta == delta )
+    if ( axis->org_scale == scale && axis->org_delta == delta )
       return;
 
+    axis->org_scale = scale;
+    axis->org_delta = delta;
+
+   /* XXX: TODO: Correct Y and X scale according to Chester rules
+    */
     axis->scale = scale;
     axis->delta = delta;
+
+    if ( dim == AF_DIMENSION_HORZ )
+    {
+      metrics->scaler.x_scale = scale;
+      metrics->scaler.x_delta = delta;
+    }
+    else
+    {
+      metrics->scaler.y_scale = scale;
+      metrics->scaler.y_delta = delta;
+    }
 
    /* scale the standard widths
     */
@@ -419,6 +435,8 @@
   af_latin_metrics_scale( AF_LatinMetrics  metrics,
                           AF_Scaler        scaler )
   {
+    metrics->scaler = scaler[0];
+
     af_latin_metrics_scale_dim( metrics, scaler, AF_DIMENSION_HORZ );
     af_latin_metrics_scale_dim( metrics, scaler, AF_DIMENSION_VERT );
   }
@@ -1120,14 +1138,13 @@
 
   static FT_Error
   af_latin_hints_init( AF_GlyphHints    hints,
-                       AF_Scaler        scaler,
                        FT_Outline*      outline,
                        AF_LatinMetrics  metrics )
   {
     FT_Error        error;
     FT_Render_Mode  mode;
 
-    error = af_glyph_hints_reset( hints, scaler, outline );
+    error = af_glyph_hints_reset( hints, &metrics->scaler, outline );
     if (error)
       goto Exit;
 
@@ -1135,7 +1152,7 @@
    /* compute flags depending on render mode, etc...
     */
 
-    mode = scaler->render_mode;
+    mode = metrics->scaler.render_mode;
 
    /* we snap the width of vertical stems for the monochrome and
     * horizontal LCD rendering targets only.
@@ -1716,12 +1733,10 @@
 
   static FT_Error
   af_latin_hints_apply( AF_GlyphHints    hints,
-                        AF_Scaler        scaler,
                         AF_LatinMetrics  metrics )
   {
     AF_Dimension  dim;
 
-    FT_UNUSED( scaler );
     FT_UNUSED( metrics );
 
     for ( dim = 0; dim < AF_DIMENSION_MAX; dim++ )
