@@ -1,5 +1,7 @@
 2002-05-21  David Turner  <david@freetype.org>
 
+        * src/type42/t32drivr.c: removing compiler warnings
+
         * include/freetype/internal/ftbdf.h, src/base/ftbdf.c,
           src/base/descrip.mms, src/base/Jamfile, src/base/rules.mk:
           
