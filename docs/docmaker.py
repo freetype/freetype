@@ -3,6 +3,10 @@
 # DocMaker is a very simple program used to generate HTML documentation
 # from the source files of the FreeType packages.
 #
+# I should really be using regular expressions to do this, but hey,
+# i'm too lazy right now, and the damn thing seems to work :-)
+#   - David
+#
 
 import fileinput, sys, string
 
@@ -110,6 +114,34 @@ source_footer = """</pre></table>
 # instead of "<MAKRER>". All marker identifiers are converted to
 # lower case during parsing, in order to simply sorting..
 #
+# We associate with each block the following source lines that do not
+# begin with a comment. For example, the following:
+#
+#   /**********************************
+#    *
+#    * <mytag>  blabla
+#    *
+#    */
+#
+#    bla_bla_bla
+#     bilip_bilip
+#
+#   /* - this comment acts as a separator - */
+#
+#     blo_blo_blo
+#
+#
+#  will only keep the first two lines of sources with
+#  the "blabla" block
+#
+#  However, the comment will be kept, with following source lines
+#  if it contains a starting '#' or '@' as in:
+#
+#     /*@.....*/
+#     /*#.....*/
+#     /* @.....*/
+#     /* #.....*/
+#
 
 
 def make_block_list():
@@ -146,9 +178,19 @@ def make_block_list():
         # if this line begins with a comment and we are processing some
         # source, exit to state 0
         #
+        # unless we encounter something like:
+        #
+        #    /*@.....
+        #    /*#.....
+        #
+        #    /* @.....
+        #    /* #.....
+        #
         if format >= 4 and l > 2 and line2[0 : 2] == '/*':
-            list.append( ( block, source ) )
-            format = 0
+            if l < 4 or ( line2[3] != '@' and line2[3:4] != ' @' and
+                          line2[3] != '#' and line2[3:4] != ' #'):
+                list.append( ( block, source ) )
+                format = 0
 
         if format == 0:  #### wait for beginning of comment ####
 
