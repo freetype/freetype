@@ -1,3 +1,29 @@
+2001-01-03  Tom Kacvinsky  <tjk@ams.org>
+
+	* src/cff/rules.mk: Use cffgload.{c,h} instead of t2gload.{c,h}.
+	
+	* include/freetype/internal/internal.h: Changed to use cfftypes.h
+	(cfferrs.h) instead of t2types.h (t2errors.h, respectively).
+
+	* include/freetype/internal/cfftypes.h: Merged in changes from
+	t2types.h and made this the canonical `types' header for the CFF
+	driver.
+
+	* include/freetype/internal/t2types.h: This file was merged with
+	cfftypes.h and is no longer necessary.
+
+	* include/freetype/internal/t2errors.h:	Renamed to cfferrs.h.
+
+	* src/cff/cffobjs.c, src/cff/cffobjs.h, src/cff/cffparse.c,
+	src/cff/cffdrivr.c, src/cff/cff.c, src/cff/cffload.c,
+	src/cff/cffgload.c, src/cff/cffgload.h: Changed to use
+	cffgload.{c,h} instead of t2gload.{c,h}.  All occurences of t2_
+	(T2_) were replaced with cff_ (CFF_, respectively).
+
+	* src/cff/t2gload.h: Renamed cffgload.h.
+
+	* src/cff/t2gload.c: Renamed cffgload.c
+	
 2000-01-02  Jouk Jansen  <joukj@hrem.stm.tudelft.nl>
 
 	* builds/vms: Support files for VMS architecture added.
