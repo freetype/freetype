@@ -3,6 +3,9 @@
 	* src/pshinter/pshalgo3.c (psh3_glyph_compute_extrema): Skip
 	contours with only a single point to avoid segfault.
 
+	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Activate code for
+	handling `origin'.
+
 2003-05-24  Werner Lemberg  <wl@gnu.org>
 
 	* src/autohint/ahtypes.h (AH_OPTION_NO_STRONG_INTERPOLATION):

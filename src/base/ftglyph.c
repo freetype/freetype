@@ -592,7 +592,7 @@
 
     clazz = glyph->clazz;
 
-    /* when called with a bitmap glyph, do nothing and return succesfully */
+    /* when called with a bitmap glyph, do nothing and return successfully */
     if ( clazz == &ft_bitmap_glyph_class )
       goto Exit;
 
@@ -609,7 +609,7 @@
     if ( error )
       goto Exit;
 
-#if 0
+#if 1
     /* if `origin' is set, translate the glyph image */
     if ( origin )
       FT_Glyph_Transform( glyph, 0, origin );
@@ -622,7 +622,7 @@
     if ( !error )
       error = FT_Render_Glyph_Internal( glyph->library, &dummy, render_mode );
 
-#if 0
+#if 1
     if ( !destroy && origin )
     {
       FT_Vector  v;
