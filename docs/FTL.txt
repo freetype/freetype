@@ -26,7 +26,7 @@ Introduction
   and  use of  free  software in  commercial  and freeware  products
   alike.  As a consequence, its main points are that:
 
-    o We don't promise that this software works.  However, we are be
+    o We don't promise that this software works. However, we will be
       interested in any kind of bug reports. (`as is' distribution)
 
     o You can  use this software for whatever you  want, in parts or
