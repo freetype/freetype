@@ -319,6 +319,9 @@
 	FT_RENDER_MODE_LIGHT hinting mode in the auto and postscript
 	hinters.
 
+	* include/freetype/freetype.h (FT_Render_Mode): Add
+	FT_RENDER_MODE_LIGHT.
+
 	* src/truetype/ttgload.c: Fixing the TrueType loader to handle
 	invalid composites correctly by limiting the recursion depth.
 
@@ -431,6 +434,11 @@
 	* src/autohint/ahhint.c: Disabled serif stem width quantization.  It
 	produces slightly better shapes though this is not distinguishable
 	with many fonts.
+
+2002-11-06  David Turner  <david@freetype.org>
+
+	* include/freetype/freetype.h (FT_LOAD_TARGET_LIGHT): New macro.
+	(FT_LOAD_TARGET, FT_LOAD_TARGET_MODE): Use `& 15' instead of `& 7'.
 
 2002-11-05  David Turner  <david@freetype.org>
 
