@@ -20,7 +20,7 @@
   /*                                                                       */
   /* An LRU is a list that cannot hold more than a certain number of       */
   /* elements (`max_elements').  All elements on the list are sorted in    */
-  /* lest-recently-used order, i.e., the `oldest' element is at the tail   */
+  /* least-recently-used order, i.e., the `oldest' element is at the tail  */
   /* of the list.                                                          */
   /*                                                                       */
   /* When doing a lookup (either through `Lookup()' or `Lookup_Node()'),   */

@@ -74,9 +74,9 @@
 
 
   /* default values */
-#define FTC_MAX_FACES_DEFAULT  4
-#define FTC_MAX_SIZES_DEFAULT  8
-#define FTC_MAX_BYTES_DEFAULT  300000  /* 300kByte by default! */
+#define FTC_MAX_FACES_DEFAULT  2
+#define FTC_MAX_SIZES_DEFAULT  4
+#define FTC_MAX_BYTES_DEFAULT  200000  /* 200kByte by default! */
 
   /* maximum number of caches registered in a single manager */
 #define FTC_MAX_CACHES         16
@@ -114,7 +114,7 @@
   /* the global_lru list of the manager.  Its `data' field however is used */
   /* as a reference count for now.                                         */
   /*                                                                       */
-  /* A node can be anything, depending on the type of information hold by  */
+  /* A node can be anything, depending on the type of information held by  */
   /* the cache.  It can be an individual glyph image, a set of bitmaps     */
   /* glyphs for a given size, some metrics, etc.                           */
   /*                                                                       */
@@ -123,7 +123,7 @@
   typedef FTC_CacheNodeRec*  FTC_CacheNode;
 
 
-  /* the fields `cachenode.data' is typecast to this type */
+  /* the fields `cachenode.data' is typecasted to this type */
   typedef struct  FTC_CacheNode_Data_
   {
     FT_UShort  cache_index;
@@ -169,8 +169,7 @@
 
 
   typedef FT_Error  (*FTC_Cache_InitFunc)( FTC_Cache  cache );
-
-  typedef void  (*FTC_Cache_DoneFunc)( FTC_Cache  cache );
+  typedef void      (*FTC_Cache_DoneFunc)( FTC_Cache  cache );
 
 
   struct  FTC_Cache_Class_

@@ -49,7 +49,6 @@
 
 
 #include <freetype/cache/ftcmanag.h>
-#include <freetype/ftglyph.h>
 #include <stddef.h>
 
 
@@ -58,7 +57,7 @@
 #endif
 
 
-  /* maximum number of queues per image cache; must be < 256 */
+  /* maximum number of queues per glyph cache; must be < 256 */
 #define FTC_MAX_GLYPH_QUEUES  16
 
 #define FTC_QUEUE_HASH_SIZE_DEFAULT  64
@@ -70,35 +69,14 @@
   typedef struct  FTC_GlyphNodeRec_
   {
     FTC_CacheNodeRec  root;
-
-    /* link.data contains a handle to a FT_Glyph object */
-    FT_ListNodeRec    link;
-
+    FTC_GlyphNode     queue_next;   /* next in queue's bucket list */
     FT_UShort         glyph_index;
     FT_UShort         queue_index;
 
   } FTC_GlyphNodeRec;
 
 
-#define FTC_GLYPHNODE_GET_GLYPH( n ) \
-          ( (FT_Glyph)((n)->link.data) )
-#define FTC_GLYPHNODE_SET_GLYPH( n, g ) \
-          do                            \
-          {                             \
-            (n)->link.data = (g);       \
-          } while ( 0 )
-
-  /* this macro is used to extract a handle to the bucket's lru list */
-  /* corresponding to a given image node                             */
-#define FTC_GLYPHNODE_TO_LISTNODE( n ) \
-          ( (FT_ListNode)&(n)->link )
-
-  /* this macro is used to extract a handle to a given image node from */
-  /* the corresponding LRU glyph list node. That's a bit hackish...    */
-#define FTC_LISTNODE_TO_GLYPHNODE( p )                             \
-          ( (FTC_GlyphNode)( (char*)(p) -                          \
-                             offsetof( FTC_GlyphNodeRec,link ) ) )
-
+#define FTC_GLYPHNODE(x)               ( (FTC_GlyphNode)(x) )
 #define FTC_GLYPHNODE_TO_LRUNODE( n )  ( (FT_ListNode)(n) )
 #define FTC_LRUNODE_TO_GLYPHNODE( n )  ( (FTC_GlyphNode)(n) )
 
@@ -150,7 +128,7 @@
     FTC_Glyph_Queue_Class*  clazz;
     FTC_Image_Desc          descriptor;
     FT_UInt                 hash_size;
-    FT_List                 buckets;
+    FTC_GlyphNode*          buckets;
     FT_UInt                 queue_index;  /* index in parent cache    */
 
   } FTC_Glyph_QueueRec;
@@ -170,7 +148,7 @@
   {
     FTC_CacheRec     root;
     FT_Lru           queues_lru;  /* static queues lru list */
-    FTC_Glyph_Queue  last_queue;  /* small cache            */
+    FTC_Glyph_Queue  last_queue;  /* small cache :-)        */
 
   } FTC_Glyph_CacheRec;
 
@@ -182,9 +160,10 @@
   /* cache sub-system internals.                                           */
   /*                                                                       */
 
-  FT_EXPORT_FUNC( void )  FTC_GlyphNode_Init( FTC_GlyphNode    node,
-                                              FTC_Glyph_Queue  queue,
-                                              FT_UInt          gindex );
+  FT_EXPORT_FUNC( void )
+  FTC_GlyphNode_Init( FTC_GlyphNode    node,
+                      FTC_Glyph_Queue  queue,
+                      FT_UInt          gindex );
 
 #define FTC_GlyphNode_Ref( n ) \
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count++
@@ -193,21 +172,30 @@
           FTC_CACHENODE_TO_DATA_P( &(n)->root )->ref_count--
 
 
-  FT_EXPORT_DEF( void )  FTC_Destroy_Glyph_Node( FTC_GlyphNode    node,
-                                                 FTC_Glyph_Cache  cache );
+  FT_EXPORT_DEF( void )
+  FTC_Destroy_Glyph_Node( FTC_GlyphNode    node,
+                          FTC_Glyph_Cache  cache );
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Glyph_Cache_Init( FTC_Glyph_Cache  cache );
 
-  FT_EXPORT_DEF( void )  FTC_Glyph_Cache_Done( FTC_Glyph_Cache  cache );
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Glyph_Cache_Init( FTC_Glyph_Cache  cache );
 
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Glyph_Queue_New( FTC_Glyph_Cache   cache,
-                                                  FT_Pointer        type,
-                                                  FTC_Glyph_Queue*  aqueue );
+  FT_EXPORT_DEF( void )
+  FTC_Glyph_Cache_Done( FTC_Glyph_Cache  cache );
 
-  FT_EXPORT_DEF( FT_Error )  FTC_Glyph_Queue_Lookup_Node(
-                               FTC_Glyph_Queue  queue,
+
+
+
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Glyph_Queue_New( FTC_Glyph_Cache   cache,
+                       FT_Pointer        type,
+                       FTC_Glyph_Queue*  aqueue );
+
+
+  FT_EXPORT_DEF( FT_Error )
+  FTC_Glyph_Queue_Lookup_Node( FTC_Glyph_Queue  queue,
                                FT_UInt          glyph_index,
                                FTC_GlyphNode*   anode );
 
