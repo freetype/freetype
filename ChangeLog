@@ -6,6 +6,9 @@
         * src/base/ftobjs.c (open_face): included Graham Asher's fix to
         prevent faces without Unicode charmaps from loading
 
+        * src/winfonts/winfnt.c: included George Williams' fix to support
+        version 2 fonts correctly
+
 2002-12-16  David Turner  <david@freetype.org>
 
         * docs/VERSION.DLL: updating document to better explain the differences between
