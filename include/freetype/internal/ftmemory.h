@@ -159,9 +159,6 @@ FT_BEGIN_HEADER
   /*    P      :: This is the _address_ of a _pointer_ which points to the */
   /*              allocated block.  It is always set to NULL on exit.      */
   /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
   /* <Note>                                                                */
   /*    If P or *P are NULL, this function should return successfully.     */
   /*    This is a strong convention within all of FreeType and its         */

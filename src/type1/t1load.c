@@ -425,7 +425,7 @@
         token->start++;
 
       len = token->limit - token->start;
-      if ( len <= 0 )
+      if ( len == 0 )
       {
         error = T1_Err_Invalid_File_Format;
         goto Exit;

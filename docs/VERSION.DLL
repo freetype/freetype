@@ -77,22 +77,27 @@ The libtool numbers are a bit inconsistent due to the library's history:
 
 Lars Clausen contributed the following autoconf fragment to detect which
 version of  FreeType is  installed on  a system.  This  one tests  for a
-version that is at least 2.0.9; you should change the last line to check
-against other release numbers.
+version that  is at least 2.0.9;  you should change  it to check against
+other release numbers.
 
-  AC_MSG_CHECKING([for version of FreeType])
-  FREETYPE_INCLUDE=`freetype-config --cflags | cut -c3-`
-  FREETYPE_MAJOR=`grep '^#define FREETYPE_MAJOR' \
-                  $FREETYPE_INCLUDE/freetype/freetype.h | cut -d' ' -f3`
-  FREETYPE_MINOR=`grep '^#define FREETYPE_MINOR' \
-                  $FREETYPE_INCLUDE/freetype/freetype.h | cut -d' ' -f3`
-  FREETYPE_PATCH=`grep '^#define FREETYPE_PATCH' \
-                  $FREETYPE_INCLUDE/freetype/freetype.h | cut -d' ' -f3`
-  FREETYPE_VERSION=`echo | awk "BEGIN { printf \"%d\", \
-                     ($FREETYPE_MAJOR * 1000 + $FREETYPE_MINOR) * 1000 \
-                     + $FREETYPE_PATCH;}"`
-  AC_MSG_RESULT([$FREETYPE_MAJOR.$FREETYPE_MINOR.$FREETYPE_PATCH])
-  if test "$FREETYPE_VERSION" -ge 2000009; then
+
+  AC_MSG_CHECKING([whether FreeType version is 2.0.9 or higher])
+  old_CPPFLAGS="$CPPFLAGS"
+  CPPFLAGS=`freetype-config --cflags`
+  AC_TRY_CPP([
+#include <freetype/freetype.h>
+#if (FREETYPE_MAJOR*1000 + FREETYPE_MINOR)*1000 + FREETYPE_PATCH < 2000009
+#error Freetype version too low.
+#endif
+  ],[
+    AC_MSG_RESULT(yes)
+    FREETYPE_LIBS=`freetype-config --libs`
+    AC_SUBST(FREETYPE_LIBS)
+    AC_DEFINE(HAVE_FREETYPE,1,[Define if you have the FreeType2 library])
+    CPPFLAGS="$old_CPPFLAGS"
+  ],[
+    AC_MSG_ERROR([Need FreeType library version 2.0.9 or higher])
+  ])
 
 
 --- end of VERSION.DLL ---
