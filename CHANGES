@@ -1,5 +1,8 @@
 LATEST CHANGES
 
+  - fixed some compiler warnings that happened since the TrueType
+    bytecode decoder was deactivated by default..
+
   - fixed two memory leaks:
        - the memory manager (16 bytes) isn't released in FT_Done_FreeType !!
        
