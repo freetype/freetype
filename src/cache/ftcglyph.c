@@ -249,7 +249,7 @@
       if ( !node )
         break;
 
-      if ( node->glyph_index == glyph_index )
+      if ( (FT_UInt)node->glyph_index == glyph_index )
       {
         /* we found it! -- move glyph to start of the lists */
         *pnode          = node->gset_next;

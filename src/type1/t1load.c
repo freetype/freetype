@@ -293,7 +293,7 @@
         FT_Fixed*      blends  = map->blend_points;
         FT_Int         before  = -1, after = -1;
 
-        for ( p = 0; p < map->num_points; p++ )
+        for ( p = 0; p < (FT_UInt)map->num_points; p++ )
         {
           FT_Fixed  p_design = designs[p];
 
