@@ -1189,7 +1189,9 @@
 
 
     num_glyphs = (FT_Int)T1_ToInt( parser );
-    if ( parser->root.error )
+    /* some fonts like Optima-Oblique not only define the /CharStrings */
+    /* array but access it also                                        */
+    if ( num_glyphs == 0 || parser->root.error )
       return;
 
     /* initialize tables, leaving space for addition of .notdef, */

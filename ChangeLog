@@ -1,18 +1,24 @@
+2004-02-01  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_charstrings): Exit immediately if
+	there are no elements in /CharStrings.  This is needed for fonts
+	like Optima-Oblique which not only define /CharStrings but access it
+	also.
+
 2004-02-01  David Turner  <david@freetype.org>
 
-        * src/sfnt/Jamfile: removing "ttcmap" from the list of sources
+	* src/sfnt/Jamfile: Removing `ttcmap' from the list of sources.
 
-        * src/cache/*, include/freetype/cache/*: fixing a bug after heavy
-        testing. The current sources are now "release candidates" for the
-        final version of the cache sub-system
+	* src/cache/*, include/freetype/cache/*: Fixing a bug after heavy
+	testing.  The current sources are now `release candidates' for the
+	final version of the cache sub-system.
 
-        * Jamfile: updating "refdoc" target, and adding "autohint" to the
-        list of modules to build. Both the autohinter and autofitter will be
-        built by default. But which one will be used is determined by
-        the content of "ftmodule.h"
+	* Jamfile: Updating `refdoc' target, and adding `autohint' to the
+	list of modules to build.  Both the autohinter and autofitter will
+	be built by default.  But which one will be used is determined by
+	the content of `ftmodule.h'.
 
-        * src/autofit/*: much updates, but the code is still buggy as hell.
-        Aargh..
+	* src/autofit/*: Much updates, but the code is still buggy...
 
 2004-01-31  Werner Lemberg  <wl@gnu.org>
 
