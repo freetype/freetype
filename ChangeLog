@@ -1,3 +1,7 @@
+2002-05-06  Werner Lemberg  <wl@gnu.org>
+
+	* README: Add a note regarding libttf vs. libfreetype.
+
 2002-05-05  Werner Lemberg  <wl@gnu.org>
 
 	FreeType 2 can now be built in an external directory with the
