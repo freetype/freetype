@@ -1419,10 +1419,10 @@
     FT_Bool      external_stream;
 
 
-    /* test for valid `library' and `args' delayed to */
-    /* ft_new_input_stream()                          */
+    /* test for valid `library' delayed to */
+    /* ft_new_input_stream()               */
 
-    if ( !aface )
+    if ( !aface || !args )
       return FT_Err_Invalid_Argument;
 
     *aface = 0;
@@ -1438,7 +1438,7 @@
 
     /* If the font driver is specified in the `args' structure, use */
     /* it.  Otherwise, we scan the list of registered drivers.      */
-    if ( args->flags & ft_open_driver && args->driver )
+    if ( ( args->flags & ft_open_driver ) && args->driver )
     {
       driver = FT_DRIVER( args->driver );
 
@@ -1508,7 +1508,7 @@
     }
 
   Success:
-    FT_TRACE4(( "FT_New_Face: New face object, adding to list\n" ));
+    FT_TRACE4(( "FT_Open_Face: New face object, adding to list\n" ));
 
     /* set the FT_FACE_FLAG_EXTERNAL_STREAM bit for FT_Done_Face */
     if ( external_stream )

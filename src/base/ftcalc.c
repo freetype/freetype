@@ -296,8 +296,9 @@
   }
 
 
-  FT_EXPORT_DEF(FT_Int32)   FT_SqrtFixed( FT_Int32  x )
+  FT_EXPORT_DEF( FT_Int32 )   FT_SqrtFixed( FT_Int32  x )
   {
+
     FT_Int64  z;
     
     z = (FT_Int64)(x) << 16;
@@ -768,14 +769,16 @@
   }
 
 
-  FT_EXPORT_DEF(FT_Int32)   FT_SqrtFixed( FT_Int32  x )
+  FT_EXPORT_DEF( FT_Int32 )   FT_SqrtFixed( FT_Int32  x )
   {
     FT_Int64  z;
+
     
     z.hi = (FT_UInt32)((FT_Int32)(x) >> 16);
     z.lo = (FT_UInt32)( x << 16 );
     return FT_Sqrt64( &z );
   }
+
 
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 

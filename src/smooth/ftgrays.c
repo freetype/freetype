@@ -1740,7 +1740,7 @@
       if ( ras.max_ex > 24 || ras.max_ey > 24 )
         level++;
       if ( ras.max_ex > 120 || ras.max_ey > 120 )
-        level ++;
+        level++;
 
       ras.conic_level <<= level;
       ras.cubic_level <<= level;
