@@ -280,15 +280,62 @@
 
 
   static void
-  ft_stroke_border_close( FT_StrokeBorder  border )
+  ft_stroke_border_close( FT_StrokeBorder  border,
+                          FT_Bool          reverse )
   {
+    FT_UInt  start = border->start;
+    FT_UInt  count = border->num_points;
+
     FT_ASSERT( border->start >= 0 );
 
     /* don't record empty paths! */
-    if ( border->num_points > (FT_UInt)border->start )
+    if ( count <= start + 1U )
+      border->num_points = start;
+    else
     {
-      border->tags[border->start         ] |= FT_STROKE_TAG_BEGIN;
-      border->tags[border->num_points - 1] |= FT_STROKE_TAG_END;
+     /* copy the last point to the start of this sub-path, since
+      * it contains the "adjusted" starting coordinates
+      */
+      border->num_points    = --count;
+      border->points[start] = border->points[count];
+
+      if ( reverse )
+      {
+       /* reverse the points
+        */
+        {
+          FT_Vector*  vec1 = border->points + start + 1;
+          FT_Vector*  vec2 = border->points + count - 1;
+
+          for ( ; vec1 < vec2; vec1++, vec2-- )
+          {
+            FT_Vector  tmp;
+
+            tmp   = *vec1;
+            *vec1 = *vec2;
+            *vec2 = tmp;
+          }
+        }
+
+       /* then the tags
+        */
+        {
+          FT_Byte*  tag1 = border->tags + start + 1;
+          FT_Byte*  tag2 = border->tags + count - 1;
+
+          for ( ; tag1 < tag2; tag1++, tag2-- )
+          {
+            FT_Byte  tmp;
+
+            tmp   = *tag1;
+            *tag1 = *tag2;
+            *tag2 = tmp;
+          }
+        }
+      }
+
+      border->tags[ start     ] |= FT_STROKE_TAG_BEGIN;
+      border->tags[ count - 1 ] |= FT_STROKE_TAG_END;
     }
 
     border->start   = -1;
@@ -473,7 +520,7 @@
   {
     /* close current open path if any ? */
     if ( border->start >= 0 )
-      ft_stroke_border_close( border );
+      ft_stroke_border_close( border, 0 );
 
     border->start   = border->num_points;
     border->movable = 0;
@@ -630,9 +677,9 @@
   static void
   ft_stroke_border_reverse( FT_StrokeBorder  border )
   {
-    FT_Vector*  point1 = border->points + border->start;
+    FT_Vector*  point1 = border->points + border->start + 1;
     FT_Vector*  point2 = border->points + border->num_points-1;
-    FT_Byte*    tag1   = border->tags + border->start;
+    FT_Byte*    tag1   = border->tags + border->start + 1;
     FT_Byte*    tag2   = border->tags + border->num_points-1;
 
     while ( point1 < point2 )
@@ -872,7 +919,7 @@
 
     thcos  = FT_Cos( theta );
 
-   /* TODO: find better criterion
+   /* TODO: find better criterion to switch off the optimisation
     */
     if ( thcos < 0x4000 )
     {
@@ -1465,7 +1512,7 @@
 
       /* Now end the right subpath accordingly.  The left one is */
       /* rewind and doesn't need further processing.             */
-      ft_stroke_border_close( right );
+      ft_stroke_border_close( right, 0 );
     }
     else
     {
@@ -1506,11 +1553,9 @@
           goto Exit;
       }
 
-      ft_stroke_border_reverse( stroker->borders+0 );
-
       /* then end our two subpaths */
-      ft_stroke_border_close( stroker->borders + 0 );
-      ft_stroke_border_close( stroker->borders + 1 );
+      ft_stroke_border_close( stroker->borders + 0, 1 );
+      ft_stroke_border_close( stroker->borders + 1, 0 );
     }
 
   Exit:
