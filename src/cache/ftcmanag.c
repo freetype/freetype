@@ -293,7 +293,7 @@
                                                       FT_Face*     aface )
   {
     if ( !manager )
-      return FT_Err_Invalid_Argument;
+      return FT_Err_Invalid_Cache_Handle;
 
     return  FT_Lru_Lookup( manager->faces_lru,
                            (FT_LruKey)face_id, 
