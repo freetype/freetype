@@ -1,3 +1,7 @@
+2002-07-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/ttload.c (sfnt_dir_check): Make it work with TTCs.
+
 2002-07-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (load_truetype_glyph)

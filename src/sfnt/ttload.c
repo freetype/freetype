@@ -159,8 +159,8 @@
     FT_Error        error;
     FT_UInt         nn, has_head = 0;
 
-	const FT_ULong  glyx_tag = FT_MAKE_TAG('g','l','y','x');
-	const FT_ULong  locx_tag = FT_MAKE_TAG('l','o','c','x');
+    const FT_ULong  glyx_tag = FT_MAKE_TAG('g','l','y','x');
+    const FT_ULong  locx_tag = FT_MAKE_TAG('l','o','c','x');
 
     static const FT_Frame_Field  sfnt_dir_entry_fields[] =
     {
@@ -202,8 +202,8 @@
       if ( FT_STREAM_READ_FIELDS( sfnt_dir_entry_fields, &table ) )
         goto Bad_Format;
 
-      if ( offset + table.Offset + table.Length > stream->size &&
-		   table.Tag != glyx_tag && table.Tag != locx_tag      )
+      if ( table.Offset + table.Length > stream->size     &&
+           table.Tag != glyx_tag && table.Tag != locx_tag )
         goto Bad_Format;
 
       if ( table.Tag == TTAG_head )
@@ -213,10 +213,10 @@
 
         has_head = 1;
 
-        if ( table.Length != 0x36                         ||
-             FT_STREAM_SEEK( offset + table.Offset + 12 ) ||
-             FT_READ_ULONG( magic )                       ||
-             magic != 0x5F0F3CF5U                         )
+        if ( table.Length != 0x36                ||
+             FT_STREAM_SEEK( table.Offset + 12 ) ||
+             FT_READ_ULONG( magic )              ||
+             magic != 0x5F0F3CF5U                )
           goto Bad_Format;
 
         if ( FT_STREAM_SEEK( offset + 28 + 16*nn ) )
@@ -349,7 +349,7 @@
       }
 
       /* seek to the appropriate TrueType file, then read tag */
-      offset = face->ttc_header.offsets[ face_index ];
+      offset = face->ttc_header.offsets[face_index];
 
       if ( FT_STREAM_SEEK( offset ) ||
            FT_READ_LONG( format_tag )                             )
