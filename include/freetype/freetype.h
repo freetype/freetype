@@ -2272,9 +2272,10 @@ FT_BEGIN_HEADER
   *
   *   FT_LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH ::
   *     Indicates that the glyph loader should ignore the global advance
-  *     width defined in the font.  As far as we know, this is only used by
-  *     the X-TrueType font server, in order to deal correctly with the
-  *     incorrect metrics contained in DynaLab's TrueType CJK fonts.
+  *     width defined in the font.  For historical reasons, FreeType uses
+  *     the value of the `advanceWidthMax' field in the `htmx' table for
+  *     all glyphs if the font is monospaced.  Activating this flags makes
+  *     FreeType use the metric values given in the `htmx' table.
   *
   *   FT_LOAD_NO_RECURSE ::
   *     This flag is only used internally.  It merely indicates that the
