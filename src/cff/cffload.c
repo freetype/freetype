@@ -1595,7 +1595,7 @@
       /* In order to use a predefined charset, the following must be  */
       /* true: The charset constructed for the glyphs in the font's   */
       /* charstrings dictionary must match the predefined charset in  */
-      /* the first num_glyphs                                         */
+      /* the first num_glyphs.                                        */
 
       charset->offset = offset;  /* record charset type */
 
@@ -1749,9 +1749,10 @@
         {
           FT_Byte*  p;
 
-          /* by convention, GID 0 is always ".notdef" and is never */
-          /* coded in the font. Hence, the number of codes found   */
-          /* in the table is 'count+1'                             */
+
+          /* By convention, GID 0 is always ".notdef" and is never */
+          /* coded in the font.  Hence, the number of codes found  */
+          /* in the table is `count+1'.                            */
           /*                                                       */
           encoding->count = count + 1;
 
@@ -1821,7 +1822,7 @@
             }
           }
 
-          /* simple check, one never knows what can be found in a font */
+          /* simple check; one never knows what can be found in a font */
           if ( encoding->count > 256 )
             encoding->count = 256;
         }
@@ -1923,8 +1924,8 @@
               encoding->codes[j] = (FT_UShort)i;
 
               /* update encoding count */
-              if ( encoding->count < j+1 )
-                encoding->count = j+1;
+              if ( encoding->count < j + 1 )
+                encoding->count = j + 1;
             }
           }
         }

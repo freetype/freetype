@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType sbits manager (body).                                       */
 /*                                                                         */
-/*  Copyright 2000-2001, 2002 by                                           */
+/*  Copyright 2000-2001, 2002, 2003 by                                     */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -189,7 +189,7 @@
           sbit->format    = (FT_Byte)bitmap->pixel_mode;
           sbit->max_grays = (FT_Byte)(bitmap->num_grays - 1);
 
-#if 0 /* this doesn't work well with embedded bitmaps !! */
+#if 0 /* this doesn't work well with embedded bitmaps */
 
           /* grab the bitmap when possible - this is a hack! */
           if ( slot->flags & FT_GLYPH_OWN_BITMAP )
