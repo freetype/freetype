@@ -1,6 +1,6 @@
-2001-06-23  Anthony Fok   <fok@debian.org>
+2001-06-23  Anthony Fok  <fok@debian.org>
 
-	* debian/*: Added Debian package build directory for 2.0.4
+	* debian/*: Added Debian package build directory for 2.0.4.
 
 2001-06-22  David Turner  <david@freetype.org>
 
