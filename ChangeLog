@@ -1,3 +1,9 @@
+2004-12-09  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (FT_Get_Kerning): Always round towards zero
+	for FT_KERNING_DEFAULT.  This greatly enhances the kerning for
+	small ppem values.
+
 2004-12-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftobjs.c (ft_glyphslot_clear): Reset `lsb_delta' and
