@@ -18,6 +18,7 @@
 
 #include <psaux/t1decode.h>
 #include <psaux/psobjs.h>
+#include <freetype/internal/ftdebug.h> /* for FT_ERROR() */
 #include <freetype/internal/t1errors.h>
 #include <freetype/ftoutln.h>
 
