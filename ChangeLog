@@ -1,27 +1,122 @@
+2003-09-29  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/internal/t1types.h: Don't include
+	FT_INTERNAL_OBJECTS_H but FT_INTERNAL_SERVICE_H.
+	* src/truetype/ttobjs.c: Don't include
+	FT_SERVICE_POSTSCRIPT_NAMES_H.
+
 2003-09-29  David Turner  <david@freetype.org>
 
-        * src/base/ftglyph.c (FT_Get_Glyph): fixing small bug, thanks
-        to Henry Maddocks for spotting this
+	Added new service to handle glyph name dictionaries, replacing the
+	old internal header named `psnames.h' by `services/svpsname.h'. 
+	Note that this is different from `services/svpostnm.h' which only
+	handles the retrieval of PostScript font names for a given face. 
+	(Should we merge these two services into a single header?)
 
-        * include/freetype/internal/services/svpsname.h (added),
-        include/freetype/internal/psnames.h (removed),
-        include/freetype/internal/internal.h (FT_SERVICE_POSTSCRIPT_NAMES):
+	* include/freetype/internal/psnames.h: Removed.  Most of its
+	contents is moved to...
+	* include/freetype/internal/services/svpsname.h: New file.
 
-          added new service to handle glyph name dictionaries, replacing
-          the old internal header named "psnames.h" by "services/svpsname.h"
-          note that this is different from "services/svpostnm.h" which only
-          handles the retrieval of Postscript font name for a given face.
-          (should we merge these two services into a single header ??)
+	* include/freetype/internal/services/svpostnm.h
+	(FT_SERVICE_ID_POSTSCRIPT_NAME): Replaced with...
+	(FT_SERVICE_ID_POSTSCRIPT_FONT_NAME): New macro.
+	(PsName): Service named changed to...
+	(PsFontName): This.
+	Updated `FT_Service_PsName' -> `FT_Service_PsFontName' and
+	`POSTSCRIPT_NAME' -> `POSTSCRIPT_FONT_NAME' everywhere.
+
+	* include/freetype/internal/internal.h
+	(FT_INTERNAL_POSTSCRIPT_NAMES_H): Removed.
+	* include/freetype/internal/psaux.h: Include
+	FT_SERVICE_POSTSCRIPT_NAMES_H.
+	(T1_DecoderRec): Updated type of `psnames'.
+	* include/freetype/internal/t1types.h: Don't include
+	FT_INTERNAL_POSTSCRIPT_NAMES_H but FT_SERVICE_POSTSCRIPT_NAMES_H.
+	Include FT_INTERNAL_OBJECTS_H.
+	* include/freetype/internal/t42types.h: Don't include
+	FT_INTERNAL_POSTSCRIPT_NAMES_H.
+	* include/freetype/internal/tttypes.h (TT_FaceRec): Updated.
+
+	* include/freetype/internal/ftserv.h (FT_FACE_FIND_SERVICE): Changed
+	order of parameters.  All callers updated.
+	(FT_FACE_FIND_GLOBAL_SERVICE): New macro to look up a service
+	globally, checking all modules.
+	(FT_ServiceCacheRec): Updated.
+	(FT_SERVICE_POSTSCRIPT_NAMES_H): New macro for accessing
+	`svpsname.h'.
+
+	* include/freetype/internal/ftobjs.h, src/base/ftobjs.c
+	(ft_module_get_service): New function.
+
+	* src/cff/cffdrivr.c: Don't include FT_INTERNAL_POSTSCRIPT_NAMES_H
+	but FT_SERVICE_POSTSCRIPT_NAMES_H.
+	(cff_get_glyph_name, cff_get_name_index): Use new POSTSCRIPT_NAMES
+	service.
+	* src/cff/cffcmap.c (cff_cmap_unicode_init): Updated.
+	* src/cff/cffload.c, src/cff/cffload.h:  Don't include
+	FT_INTERNAL_POSTSCRIPT_NAMES_H but FT_SERVICE_POSTSCRIPT_NAMES_H.
+	(cff_index_get_sid_string): Updated.
+	* src/cff/cffobjs.c:  Don't include FT_INTERNAL_POSTSCRIPT_NAMES_H
+	but FT_SERVICE_POSTSCRIPT_NAMES_H.
+	(cff_face_init): Use new POSTSCRIPT_NAMES service.
+	* src/cff/cffobjs.h:  Don't include FT_INTERNAL_POSTSCRIPT_NAMES_H
+	but FT_SERVICE_POSTSCRIPT_NAMES_H.
+
+	* src/cid/cidobjs.c:  Don't include FT_INTERNAL_POSTSCRIPT_NAMES_H
+	but FT_SERVICE_POSTSCRIPT_NAMES_H.
+	(cid_face_init): Use new POSTSCRIPT_NAMES service.
+	* src/cid/cidriver.c: Don't include FT_INTERNAL_POSTSCRIPT_NAMES_H.
+
+	* src/psaux/t1cmap.c (t1_cmap_std_init, t1_cmap_unicode_init): Use
+	new POSTSCRIPT_NAMES service.
+	* src/psaux/t1decode.h (t1_lookup_glyph_by_stdcharcode,
+	t1_decode_init): Use new POSTSCRIPT_NAMES service.
+	* src/psaux/t1cmap.h, src/psaux/t1decode.h: Dont' include
+	FT_INTERNAL_POSTSCRIPT_NAMES_H.
+
+	* src/psnames/psmodule.c:  Don't include
+	FT_INTERNAL_POSTSCRIPT_NAMES_H but FT_SERVICE_POSTSCRIPT_NAMES_H.
+	(ps_build_unicode_table): Renamed to...
+	(ps_unicodes_init): This.
+	(ps_lookup_unicode): Renamed to...
+	(ps_unicodes_char_index): This.
+	(ps_next_unicode): Renamed to...
+	(ps_unicodes_char_next): This.
+	(psnames_interface): Updated.
+	(psnames_services): New services list.
+	(psnames_get_service): New function.
+	(psnames_module_class): Updated.
+
+	* src/sfnt/sfobjs.c: Don't include FT_INTERNAL_POSTSCRIPT_NAMES_H
+	but FT_SERVICE_POSTSCRIPT_NAMES_H.
+	(sfnt_init_face): Use new POSTSCRIPT_NAMES service.
+	* src/sfnt/ttpost.c: Don't include FT_INTERNAL_POSTSCRIPT_NAMES_H
+	but FT_SERVICE_POSTSCRIPT_NAMES_H.
+	(tt_face_get_ps_name): Updated.
+
+	* src/truetype/ttobjs.c:  Don't include
+	FT_INTERNAL_POSTSCRIPT_NAMES_H but FT_SERVICE_POSTSCRIPT_NAMES_H.
+
+	* src/type1/t1driver.c:  Don't include
+	FT_INTERNAL_POSTSCRIPT_NAMES_H but FT_SERVICE_POSTSCRIPT_NAMES_H.
+	* src/type1/t1objs.c:  Don't include
+	FT_INTERNAL_POSTSCRIPT_NAMES_H but FT_SERVICE_POSTSCRIPT_NAMES_H.
+	(T1_Face_Init): Use new POSTSCRIPT_NAMES service.
+
+	* src/type42/t42drivr.c (t42_get_ps_name): Renamed to...
+	(t42_get_ps_font_name): This.
+	(t42_service_ps_name): Renamed to...
+	(t42_service_ps_font_name): This.
+	(t42_services): Updated.
+	* src/type42/t42objs.c (T42_Face_Init): Use new POSTSCRIPT_NAMES
+	service.
+	* src/type42/t42objs.h:  Don't include
+	FT_INTERNAL_POSTSCRIPT_NAMES_H but FT_SERVICE_POSTSCRIPT_NAMES_H.
 
 
-        * include/freetype/internal/ftserv.h: adding
-        FT_FACE_FIND_GLOBAL_SERVICE (used to lookup a service globally,
-        instead of only within the current module)
-
-        * include/freetype/internal/ftobjs.h, src/base/ftobjs.c: adding
-        the new base function ft_module_get_service
-
-
+	* src/base/ftglyph.c (FT_Get_Glyph): Don't access `slot' before
+	testing its validity.  Reported by Henry Maddocks
+	<maddocks@metservice.com>.
 
 2003-09-21  Werner Lemberg  <wl@gnu.org>
 
