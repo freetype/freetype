@@ -24,19 +24,31 @@
 
 #include "sfdriver.h"
 #include "ttload.h"
-#include "ttsbit.h"
-#include "ttpost.h"
 #include "ttcmap.h"
 #include "sfobjs.h"
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+#include "ttsbit.h"
+#endif
+
+#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+#include "ttpost.h"
+#endif
 
 #else
 
 #include <sfnt/sfdriver.h>
 #include <sfnt/ttload.h>
-#include <sfnt/ttsbit.h>
-#include <sfnt/ttpost.h>
 #include <sfnt/ttcmap.h>
 #include <sfnt/sfobjs.h>
+
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+#include <sfnt/ttsbit.h>
+#endif
+
+#ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+#include <sfnt/ttpost.h>
+#endif
 
 #endif
 

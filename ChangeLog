@@ -1,3 +1,23 @@
+2000-11-29  Werner Lemberg  <wl@gnu.org>
+
+	* src/sfnt/sfdriver.c: Include ttsbit.h and ttpost.h only
+	conditionally.
+
+	* src/truetype/ttdriver.c (Set_Char_Sizes, Set_Pixel_Sizes): Set
+	`size->strike_index' only conditionally.
+
+	* src/type1/t1driver.c, src/type1/t1objs.c: Include t1afm.h only
+	conditionally.
+
+	* src/winfonts/winfnt.h: Move all type definitions to...
+	* src/include/freetype/internal/fnttypes.h: New file.
+	* src/winfonts/winfnt.c: Use it.
+
+2000-11-29  ??? ???  <darin@eazel.com>
+
+	* include/freetype/internal/ftdebug.h: Replaced FT_CAT and FT_XCAT
+	with a direct solution (which also satifies picky compilers).
+
 2000-11-28  YAMANO-UCHI Hidetoshi <mer@din.or.jp>
 
 	* src/truetype/ttobjs.c (TT_Init_Size): Fix #ifdef's to work with
