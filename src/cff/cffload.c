@@ -8,7 +8,7 @@
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
-/*  modified, and distributed under the terms of the FreeType project      */
+/*  modified, and xdistributed under the terms of the FreeType project      */
 /*  license, LICENSE.TXT.  By continuing to use, modify, or distribute     */
 /*  this file you indicate that you have read the license and              */
 /*  understand and accept it fully.                                        */
@@ -24,8 +24,8 @@
 #include FT_INTERNAL_CFF_ERRORS_H
 #include FT_TRUETYPE_TAGS_H
 
-#include FT_SOURCE_FILE(cff,cffload.h)
-#include FT_SOURCE_FILE(cff,cffparse.h)
+#include "cffload.h"
+#include "cffparse.h"
 
 
   /*************************************************************************/
@@ -1790,7 +1790,7 @@
             for ( k = i; k < nleft + i; k++, glyph_code++ )
             {
               /* Make sure k is not too big. */
-              if ( k > num_glyphs )
+              if ( (FT_UInt)k > num_glyphs )
                 goto Exit;
 
               /* Assign code to GID mapping. */

@@ -19,7 +19,7 @@ CFF_DIR  := $(SRC_)cff
 CFF_DIR_ := $(CFF_DIR)$(SEP)
 
 
-CFF_COMPILE := $(FT_COMPILE)
+CFF_COMPILE := $(FT_COMPILE) $I$(CFF_DIR)
 
 
 # CFF driver sources (i.e., C files)

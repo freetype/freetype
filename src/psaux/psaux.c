@@ -19,9 +19,9 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(psaux,psobjs.c)
-#include FT_SOURCE_FILE(psaux,psauxmod.c)
-#include FT_SOURCE_FILE(psaux,t1decode.c)
+#include "psobjs.c"
+#include "psauxmod.c"
+#include "t1decode.c"
 
 
 /* END */

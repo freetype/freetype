@@ -22,7 +22,7 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_FNT_TYPES_H
-#include FT_SOURCE_FILE(winfonts,winfnt.h)
+#include "winfnt.h"
 
 
   /*************************************************************************/

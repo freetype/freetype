@@ -22,7 +22,7 @@
 #include FT_MULTIPLE_MASTERS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
 #include FT_INTERNAL_TYPE1_ERRORS_H
-#include FT_SOURCE_FILE(cid,cidload.h)
+#include "cidload.h"
 
 #include <stdio.h>
 #include <ctype.h>  /* for isspace(), isalnum() */
@@ -271,15 +271,7 @@
   const T1_Field  cid_field_records[] =
   {
 
-#ifdef FT_FLAT_COMPILE
-
 #include "cidtokens.h"
-
-#else
-
-#include <cid/cidtokens.h>
-
-#endif
 
     T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
     T1_FIELD_CALLBACK( "FDArray", parse_fd_array )

@@ -21,7 +21,7 @@ PSAUX_DIR_ := $(PSAUX_DIR)$(SEP)
 
 # compilation flags for the driver
 #
-PSAUX_COMPILE := $(FT_COMPILE)
+PSAUX_COMPILE := $(FT_COMPILE) $I$(PSAUX_DIR)
 
 
 # PSAUX driver sources (i.e., C files)

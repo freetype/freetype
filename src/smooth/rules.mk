@@ -20,7 +20,7 @@ SMOOTH_DIR_ := $(SMOOTH_DIR)$(SEP)
 
 # compilation flags for the driver
 #
-SMOOTH_COMPILE := $(FT_COMPILE)
+SMOOTH_COMPILE := $(FT_COMPILE) $I$(SMOOTH_DIR)
 
 
 # smooth driver sources (i.e., C files)

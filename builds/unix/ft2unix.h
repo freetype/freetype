@@ -34,7 +34,7 @@
 #define FT2_CONFIG_FILE( x )    <freetype2/freetype/config/ ## x ## >
 #define FT2_INTERNAL_FILE( x )  <freetype2/freetype/internal/ ## x ## >
 
-#include FT2_CONFIG_FILE( ft2build.h )
+#include FT2_CONFIG_FILE( ftheader.h )
 
 #endif /* __FT2_BUILD_UNIX_H__ */
 

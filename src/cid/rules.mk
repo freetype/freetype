@@ -19,7 +19,7 @@ CID_DIR  := $(SRC_)cid
 CID_DIR_ := $(CID_DIR)$(SEP)
 
 
-CID_COMPILE := $(FT_COMPILE)
+CID_COMPILE := $(FT_COMPILE) $I$(CID_DIR)
 
 
 # CID driver sources (i.e., C files)

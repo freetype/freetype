@@ -21,7 +21,7 @@
 
 #include <ft2build.h>
 #include FT_MODULE_H
-#include FT_SOURCE_FILE(autohint,ahhint.h)
+#include "ahhint.h"
 
 
   typedef struct  FT_AutoHinterRec_

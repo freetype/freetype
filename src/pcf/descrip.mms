@@ -25,7 +25,7 @@
 # THE SOFTWARE.
 
 
-CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=[--.include]
+CFLAGS=$(COMP_FLAGS)$(DEBUG)/include=([--.include],[--.src.pcf])
 
 OBJS=pcf.obj
 

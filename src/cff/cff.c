@@ -19,11 +19,11 @@
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(cff,cffdrivr.c)
-#include FT_SOURCE_FILE(cff,cffparse.c)
-#include FT_SOURCE_FILE(cff,cffload.c)
-#include FT_SOURCE_FILE(cff,cffobjs.c)
-#include FT_SOURCE_FILE(cff,cffgload.c)
+#include "cffdrivr.c"
+#include "cffparse.c"
+#include "cffload.c"
+#include "cffobjs.c"
+#include "cffgload.c"
 
 
 /* END */

@@ -21,7 +21,7 @@
 
 
 #include <ft2build.h>
-#include FT_SOURCE_FILE(cid,cidobjs.h)
+#include "cidobjs.h"
 
 
 FT_BEGIN_HEADER

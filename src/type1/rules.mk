@@ -21,7 +21,7 @@ T1_DIR_ := $(T1_DIR)$(SEP)
 
 # compilation flags for the driver
 #
-T1_COMPILE := $(FT_COMPILE)
+T1_COMPILE := $(FT_COMPILE) $I$(T1_DIR)
 
 
 # Type1 driver sources (i.e., C files)

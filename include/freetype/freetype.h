@@ -2339,10 +2339,6 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    The result of `(a + 0x8000) & -0x10000'.                           */
   /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function assumes that the target platform supports 32-bit     */
-  /*    signed integers.                                                   */
-  /*                                                                       */
   FT_EXPORT( FT_Fixed )  FT_RoundFix( FT_Fixed  a );
 
 
@@ -2361,10 +2357,6 @@ FT_BEGIN_HEADER
   /* <Return>                                                              */
   /*    The result of `(a + 0x10000 - 1) & -0x10000'.                      */
   /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function assumes that the target platform supports 32-bit     */
-  /*    signed integers.                                                   */
-  /*                                                                       */
   FT_EXPORT( FT_Fixed )  FT_CeilFix( FT_Fixed  a );
 
 
@@ -2382,10 +2374,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /* <Return>                                                              */
   /*    The result of `a & -0x10000'.                                      */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    This function assumes that the target platform supports 32-bit     */
-  /*    signed integers.                                                   */
   /*                                                                       */
   FT_EXPORT( FT_Fixed )  FT_FloorFix( FT_Fixed  a );
 

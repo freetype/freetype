@@ -32,9 +32,9 @@ THE SOFTWARE.
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
 
-#include FT_SOURCE_FILE(pcf,pcf.h)
-#include FT_SOURCE_FILE(pcf,pcfdriver.h)
-#include FT_SOURCE_FILE(pcf,pcfutil.h)
+#include "pcf.h"
+#include "pcfdriver.h"
+#include "pcfutil.h"
 
 
   /*************************************************************************/

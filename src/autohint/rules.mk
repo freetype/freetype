@@ -24,7 +24,7 @@ AUTO_DIR_ := $(AUTO_DIR)$(SEP)
 
 # compilation flags for the driver
 #
-AUTO_COMPILE := $(FT_COMPILE)
+AUTO_COMPILE := $(FT_COMPILE) $I$(AUTO_DIR)
 
 
 # AUTO driver sources (i.e., C files)

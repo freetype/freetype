@@ -24,8 +24,8 @@
 #include FT_OUTLINE_H
 #include FT_TRUETYPE_TAGS_H
 
-#include FT_SOURCE_FILE(cff,cffload.h)
-#include FT_SOURCE_FILE(cff,cffgload.h)
+#include "cffload.h"
+#include "cffgload.h"
 
 #include FT_INTERNAL_CFF_ERRORS_H
 
@@ -74,7 +74,7 @@
 
     cff_op_hintmask,
     cff_op_cntrmask,
-    cff_op_dotsection,
+    cff_op_dotsection,  /* deprecated, acts as no-op */
 
     cff_op_abs,
     cff_op_add,
@@ -1092,11 +1092,6 @@
           args = stack;
           break;
 
-        case cff_op_dotsection:
-
-          FT_TRACE4(( " dotsection" ));
-          break;
-
         case cff_op_rmoveto:
           FT_TRACE4(( " rmoveto" ));
 
@@ -1842,6 +1837,13 @@
           FT_TRACE4(( " load" ));
 
           goto Unimplemented;
+
+        case cff_op_dotsection:
+          {
+            /* this operator is deprecated and ignored by the parser */
+            FT_TRACE4(( " dotsection" ));
+          }
+          break;
 
         case cff_op_and:
           {

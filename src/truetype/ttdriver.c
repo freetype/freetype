@@ -21,8 +21,8 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_NAMES_H
-#include FT_SOURCE_FILE(truetype,ttdriver.h)
-#include FT_SOURCE_FILE(truetype,ttgload.h)
+#include "ttdriver.h"
+#include "ttgload.h"
 
 
   /*************************************************************************/
