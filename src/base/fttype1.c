@@ -36,7 +36,7 @@
       FT_Service_PsInfo  service = NULL;
 
 
-      FT_FACE_FIND_SERVICE( face, face, POSTSCRIPT_INFO );
+      FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
 
       if ( service && service->ps_get_font_info )
         error = service->ps_get_font_info( face, afont_info );
