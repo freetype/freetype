@@ -17,6 +17,34 @@
 
   /*************************************************************************/
   /*                                                                       */
+  /*  This file can be compiled without the rest of the FreeType engine,   */
+  /*  by defining the _STANDALONE_ macro when compiling it. You also need  */
+  /*  to put the files "ftgrays.h" and "ftimage.h" in the current          */
+  /*  compilation directory. Typically, you could do something like:       */
+  /*                                                                       */
+  /*   - copy "src/base/ftgrays.c" to your current directory               */
+  /*                                                                       */
+  /*   - copy "include/freetype/ftimage.h" and                             */
+  /*     "include/freetype/ftgrays.h" to the same directory                */
+  /*                                                                       */
+  /*   - compile the "ftgrays" with the _STANDALONE_ macro defined, as in: */
+  /*                                                                       */
+  /*        cc -c -D_STANDALONE_ ftgrays.c                                 */
+  /*                                                                       */
+  /*   - the renderer can be initialised with a call to:                   */
+  /*                                                                       */
+  /*           ft_grays_raster.init                                        */
+  /*                                                                       */
+  /*   - an anti-aliased bitmap can be generated with a call to:           */
+  /*                                                                       */
+  /*           ft_grays_raster.render                                      */
+  /*                                                                       */
+  /*   See the comments and documentation in the file "ftimage.h" for      */
+  /*   more details on how the raster works..                              */
+  /*                                                                       */
+
+  /*************************************************************************/
+  /*                                                                       */
   /*  This is a new anti-aliasing scan-converter for FreeType 2.  The      */
   /*  algorithm used here is _very_ different from the one in the standard */
   /*  `ftraster' module.  Actually, `ftgrays' computes the _exact_         */
@@ -56,14 +84,22 @@
   /*************************************************************************/
 
 
-#include <freetype/ftgrays.h>
 #include <string.h>             /* for memcpy() */
 
 #define ErrRaster_Invalid_Outline  -1
 
 #ifdef _STANDALONE_
-#error "implementation of FT_Outline_Decompose missing!"
+
+#include "ftimage.h"
+#include "ftgrays.h"
+/* this macro is used to indicate that a function parameter is unused  */
+/* its purpose is simply to reduce compiler warnings. Note also that   */
+/* simply defining it as "(void)x" doesn't avoid warnings with certain */
+/* ANSI compilers, like LCC                                            */
+#define UNUSED(x)   (x)=(x)
+
 #else
+#include <freetype/ftgrays.h>
 #include <freetype/internal/ftobjs.h> /* for UNUSED() */
 #include <freetype/freetype.h>        /* to link to FT_Outline_Decompose() */
 #endif
@@ -1365,6 +1401,210 @@
   }
 
 
+#ifdef _STANDALONE_
+ /************************************************************************
+  *
+  *  The Following function should only compile in stand_alone mode,
+  *  i.e. when building this component without the rest of FreeType.
+  *
+  *
+  *
+  *
+  *
+  */
+  static int  FT_Outline_Decompose( FT_Outline*        outline,
+                                    FT_Outline_Funcs*  interface,
+                                    void*              user )
+  {
+#undef SCALED
+#define SCALED( x )   ( ((x) << shift) - delta )
+
+    FT_Vector  v_last;
+    FT_Vector  v_control;
+    FT_Vector  v_start;
+
+    FT_Vector* point;
+    FT_Vector* limit;
+    char*      tags;
+
+    int    n;         /* index of contour in outline     */
+    int    first;     /* index of first point in contour */
+    int    error;
+    char   tag;       /* current point's state           */
+
+    int    shift   = interface->shift;
+    FT_Pos delta   = interface->delta;
+
+    first = 0;
+
+    for ( n = 0; n < outline->n_contours; n++ )
+    {
+      int  last;  /* index of last point in contour */
+
+      last  = outline->contours[n];
+      limit = outline->points + last;
+
+      v_start = outline->points[first];
+      v_last  = outline->points[last];
+
+      v_start.x = SCALED(v_start.x);  v_start.y = SCALED(v_start.y);
+      v_last.x  = SCALED(v_last.x);   v_last.y  = SCALED(v_last.y);
+
+      v_control = v_start;
+
+      point = outline->points + first;
+      tags  = outline->tags  + first;
+      tag   = FT_CURVE_TAG( tags[0] );
+
+      /* A contour cannot start with a cubic control point! */
+      if ( tag == FT_Curve_Tag_Cubic )
+        goto Invalid_Outline;
+
+      /* check first point to determine origin */
+      if ( tag == FT_Curve_Tag_Conic )
+      {
+        /* first point is conic control.  Yes, this happens. */
+        if ( FT_CURVE_TAG( outline->tags[last] ) == FT_Curve_Tag_On )
+        {
+          /* start at last point if it is on the curve */
+          v_start = v_last;
+          limit--;
+        }
+        else
+        {
+          /* if both first and last points are conic,         */
+          /* start at their middle and record its position    */
+          /* for closure                                      */
+          v_start.x = ( v_start.x + v_last.x ) / 2;
+          v_start.y = ( v_start.y + v_last.y ) / 2;
+
+          v_last = v_start;
+        }
+        point--;
+        tags--;
+      }
+
+      error = interface->move_to( &v_start, user );
+      if (error) goto Exit;
+
+      while (point < limit)
+      {
+        point++;
+        tags++;
+
+        tag = FT_CURVE_TAG( tags[0] );
+        switch (tag)
+        {
+          case FT_Curve_Tag_On:  /* emit a single line_to */
+            {
+              FT_Vector  vec;
+
+              vec.x = SCALED(point->x);
+              vec.y = SCALED(point->y);
+
+              error = interface->line_to( &vec, user );
+              if (error) goto Exit;
+              continue;
+            }
+
+
+          case FT_Curve_Tag_Conic:  /* consume conic arcs */
+            {
+              v_control.x = SCALED(point->x);
+              v_control.y = SCALED(point->y);
+
+            Do_Conic:
+              if (point < limit)
+              {
+                FT_Vector  vec;
+                FT_Vector  v_middle;
+
+                point++;
+                tags++;
+                tag = FT_CURVE_TAG( tags[0] );
+
+                vec.x = SCALED(point->x);
+                vec.y = SCALED(point->y);
+
+                if (tag == FT_Curve_Tag_On)
+                {
+                  error = interface->conic_to( &v_control, &vec, user );
+                  if (error) goto Exit;
+                  continue;
+                }
+
+                if (tag != FT_Curve_Tag_Conic)
+                  goto Invalid_Outline;
+
+                v_middle.x = (v_control.x + vec.x)/2;
+                v_middle.y = (v_control.y + vec.y)/2;
+
+                error = interface->conic_to( &v_control, &v_middle, user );
+                if (error) goto Exit;
+
+                v_control = vec;
+                goto Do_Conic;
+              }
+
+              error = interface->conic_to( &v_control, &v_start, user );
+              goto Close;
+            }
+
+          default:  /* FT_Curve_Tag_Cubic */
+            {
+              FT_Vector  vec1, vec2;
+
+              if ( point+1 > limit         ||
+                   FT_CURVE_TAG( tags[1] ) != FT_Curve_Tag_Cubic )
+                goto Invalid_Outline;
+
+              point += 2;
+              tags  += 2;
+
+              vec1.x = SCALED(point[-2].x);  vec1.y = SCALED(point[-2].y);
+              vec2.x = SCALED(point[-1].x);  vec2.y = SCALED(point[-1].y);
+
+              if (point <= limit)
+              {
+                FT_Vector  vec;
+
+                vec.x = SCALED(point->x);
+                vec.y = SCALED(point->y);
+
+                error = interface->cubic_to( &vec1, &vec2, &vec, user );
+                if (error) goto Exit;
+                continue;
+              }
+
+              error = interface->cubic_to( &vec1, &vec2, &v_start, user );
+              goto Close;
+            }
+        }
+      }
+
+      /* close the contour with a line segment */
+      error = interface->line_to( &v_start, user );
+
+   Close:
+      if (error) goto Exit;
+      first = last+1;
+    }
+
+    return 0;
+  Exit:
+    return error;
+
+  Invalid_Outline:
+    return -1;
+  }
+#endif /* _STANDALONE_ */
+
+
+
+
+
+
+
   typedef struct  TBand_
   {
     FT_Pos  min, max;
@@ -1564,12 +1804,13 @@
   int  grays_raster_new( void*       memory,
                          FT_Raster*  araster )
   {
-     static FT_RasterRec_  the_raster;
+    static TRaster  the_raster;
 
-
-     *araster = &the_raster;
-     memset( &the_raster, sizeof ( the_raster ), 0 );
-     return 0;
+    UNUSED(memory);
+    
+    *araster = (FT_Raster)&the_raster;
+    memset( &the_raster, 0, sizeof(the_raster) );
+    return 0;
   }
 
 

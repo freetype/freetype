@@ -22,7 +22,11 @@
   extern "C" {
 #endif
 
+#ifdef _STANDALONE_
+#include "ftimage.h"
+#else
 #include <freetype/ftimage.h>
+#endif
 
   /*************************************************************************/
   /*                                                                       */
