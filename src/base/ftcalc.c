@@ -189,6 +189,7 @@
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
 
+#if 0
   /* a helper function for FT_Sqrt64() */
 
   static
@@ -237,6 +238,7 @@
     z = (FT_Int64)(x) << 16;
     return FT_Sqrt64( z );
   }
+#endif
 
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
@@ -554,6 +556,10 @@
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
+
+#endif /* FT_LONG64 */
+
+
  /* a not-so-fast but working 16.16 fixed point square root function */
   FT_EXPORT_DEF( FT_Int32 )  FT_SqrtFixed( FT_Int32  x )
   {
@@ -566,8 +572,8 @@
     {
       rem_hi = 0;
       rem_lo = x;
-      count  = 32;
-      do
+      count  = 24;
+	  do
       {
         rem_hi   = (rem_hi << 2) | (rem_lo >> 30);
         rem_lo <<= 2;
@@ -578,14 +584,12 @@
           rem_hi -= test_div;
           root   += 1;
         }
-        count--;
       }
+	  while (--count);
     }
 
     return (FT_Int32)root;
   }
-
-#endif /* FT_LONG64 */
 
 
 /* END */

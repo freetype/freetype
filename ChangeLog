@@ -1,3 +1,11 @@
+2001-04-26  David Turner  <david@freetype.org>
+
+	* src/base/ftcalc.c (FT_SqrtFixed): corrected/optimised the 32-bit
+	fixed-point square root. it is now used even with 64-bits
+	ints, as it's simply _much_ faster than calling FT_Sqrt64 :-)
+
+    * src/base/ftbbox.c : removed invalid "#include FT_BEZIER_H" line
+
 2001-04-25  David Turner  <david@freetype.org>
 
         * src/base/ftbbox.c (BBox_Cubic_Check): rewrote function to use

@@ -28,7 +28,6 @@
 #include FT_BBOX_H
 #include FT_IMAGE_H
 #include FT_OUTLINE_H
-#include FT_BEZIER_H
 
 
   typedef struct  TBBox_Rec_
@@ -37,7 +36,7 @@
     FT_BBox    bbox;
 
   } TBBox_Rec;
-
+                          
 
   /*************************************************************************/
   /*                                                                       */
@@ -293,8 +292,8 @@
     FT_Pos   y;
     FT_Fixed uu;
     
-    /* the polynom is "a*x^3 + 3b*x^2 + 3c*x + d", however, we also      */
-    /* have dP/dx(u) = 0, which implies that P(t0) = b*t0^2 + 2c*t0 + d  */
+    /* the polynom is "a*x^3 + 3b*x^2 + 3c*x + d", however, we also   */
+    /* have dP/dx(u) = 0, which implies that P(u) = b*u^2 + 2c*u + d  */
     if ( u > 0 && u < 0x10000L )
     {
       uu = FT_MulFix( u, u );
@@ -369,7 +368,6 @@
         
         if ( t1 > 0xFFFFFFL )
         {
-          /* on 64-bit machines .. */
           do
           {
             shift--;
