@@ -1,3 +1,8 @@
+2005-02-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/cff/cffcmap.c (cff_cmap_unicode_init): Don't try to build
+	a cmap for a CID-keyed font which doesn't have SIDs.
+
 2005-02-13  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (read_binary_data): Return more meaningful
