@@ -238,6 +238,9 @@ FT_BEGIN_HEADER
 
     CFF_FD_Select  fd_select;
 
+    /* interface to PostScript hinter */
+    void*          pshinter;
+
   } CFF_Font;
 
 

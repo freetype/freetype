@@ -109,19 +109,34 @@ FT_BEGIN_HEADER
   } CFF_DriverRec;
 
 
+  FT_LOCAL FT_Error
+  CFF_Size_Init( CFF_Size  size );
+
+  FT_LOCAL void
+  CFF_Size_Done( CFF_Size  size );
+
+  FT_LOCAL FT_Error
+  CFF_Size_Reset( CFF_Size  size );
+
+  FT_LOCAL void
+  CFF_GlyphSlot_Done( CFF_GlyphSlot  slot );
+
+  FT_LOCAL FT_Error
+  CFF_GlyphSlot_Init( CFF_GlyphSlot   slot );
+
   /*************************************************************************/
   /*                                                                       */
   /* Face functions                                                        */
   /*                                                                       */
   FT_LOCAL FT_Error
-  CFF_Init_Face( FT_Stream      stream,
+  CFF_Face_Init( FT_Stream      stream,
                  CFF_Face       face,
                  FT_Int         face_index,
                  FT_Int         num_params,
                  FT_Parameter*  params );
 
   FT_LOCAL void
-  CFF_Done_Face( CFF_Face  face );
+  CFF_Face_Done( CFF_Face  face );
 
 
   /*************************************************************************/
@@ -129,10 +144,10 @@ FT_BEGIN_HEADER
   /* Driver functions                                                      */
   /*                                                                       */
   FT_LOCAL FT_Error
-  CFF_Init_Driver( CFF_Driver  driver );
+  CFF_Driver_Init( CFF_Driver  driver );
 
   FT_LOCAL void
-  CFF_Done_Driver( CFF_Driver  driver );
+  CFF_Driver_Done( CFF_Driver  driver );
 
 
 FT_END_HEADER

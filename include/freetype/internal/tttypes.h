@@ -1640,7 +1640,6 @@ FT_BEGIN_HEADER
 
     /* for possible extensibility in other formats */
     void*            other;
-
   };
 
 

@@ -1158,24 +1158,32 @@
                   FT_Int     count,
                   FT_Fixed*  coords )
   {
-    FT_Long  stems[32], n, total = count;
+    FT_Pos  stems[32], y, n, total = count;
 
 
+    y = 0;
     while ( total > 0 )
     {
       /* determine number of stems to write */
       count = total;
-      if ( count > 32 )
-        count = 32;
+      if ( count > 16 )
+        count = 16;
 
-      /* compute integer stem position in font units */
+      /* compute integer stem positions in font units */
       for ( n = 0; n < count * 2; n++ )
-        stems[n] = ( coords[n] + 0x8000 ) >> 16;
+      {
+        y       += coords[n];
+        stems[n] = ( y + 0x8000 ) >> 16;
+      }
+
+      /* compute lengths */
+      for ( n = 0; n < count*2; n += 2 )
+        stems[n+1] = stems[n+1] - stems[n];
 
       /* add them to the current dimension */
       ps_hints_stem( (PS_Hints)hints, dimension, count, stems );
 
-      total -= count >> 1;
+      total -= count;
     }
   }
 

@@ -2646,6 +2646,10 @@
       library->generic.finalizer( library );
 
     /* Close all modules in the library */
+#if 1    
+    while ( library->num_modules > 0 )
+      FT_Remove_Module( library, library->modules[0] );
+#else    
     for ( n = 0; n < library->num_modules; n++ )
     {
       FT_Module  module = library->modules[n];
@@ -2657,6 +2661,7 @@
         library->modules[n] = 0;
       }
     }
+#endif
 
     /* Destroy raster objects */
     FREE( library->raster_pool );

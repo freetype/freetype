@@ -171,7 +171,8 @@ FT_BEGIN_HEADER
   CFF_Init_Decoder( CFF_Decoder*   decoder,
                     TT_Face        face,
                     CFF_Size       size,
-                    CFF_GlyphSlot  slot );
+                    CFF_GlyphSlot  slot,
+                    FT_Bool        hinting );
 
   FT_LOCAL void
   CFF_Prepare_Decoder( CFF_Decoder*  decoder,

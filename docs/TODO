@@ -5,3 +5,5 @@ Here is a list of items that need to be addressed in FreeType 2; they are
 not exactly bugs, but should be considered though:
 
 * Add synthesized Unicode charmap processing to the CFF driver.
+
+* Implement stem3/counter hints properly in the Postscript hinter
