@@ -23,7 +23,7 @@
 #include "pshglob.h"
 
 #ifdef DEBUG_HINTER
-  extern PSH_Globals  ps_debug_globals = 0;
+  PSH_Globals  ps_debug_globals = 0;
 #endif
 
 

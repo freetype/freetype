@@ -7,28 +7,35 @@ test_programs = gview ;
 
 SubDirHdrs [ FT2_SubDir  .. nirvana include ] ;
 
-NV_TOP = [ FT2_SubDir  .. .. nirvana ] ;
+NV_TOP = [ FT2_SubDir .. .. nirvana ] ;
 
-NIRVANA_LINKLIBS = $(NV_TOP)\\objs\\nirvana$(SUFLIB) ;
+NIRVANA_LINKLIBS = $(NV_TOP)/objs/libnirvana$(SUFLIB) ;
 
 {
   local t ;
-  
+
   for t in $(test_programs)
   {
     Main  $(t) : $(t).c ;
-    
+
     LinkLibraries $(t) : $(FT2_LIB) ;
-    
-    if $(TOOLSET) = MINGW
+
+    if $(WIN)
     {
-      LINKKLIBS on $(t)$(SUFEXE) = "-luser32 -lgdi32" ;
+      if $(TOOLSET) = MINGW
+      {
+        LINKKLIBS on $(t)$(SUFEXE) = "-luser32 -lgdi32" ;
+      }
+      else
+      {
+        LINKLIBS on $(t)$(SUFEXE) = user32.lib gdi32.lib ;
+      }
     }
     else
     {
-      LINKLIBS on $(t)$(SUFEXE) = user32.lib gdi32.lib ;
+      LINKLIBS on $(t)$(SUFEXE) = -L/usr/X11R6/lib -lX11 -lm ;
     }
-    
+
     NEEDLIBS on $(t)$(SUFEXE) += $(NIRVANA_LINKLIBS) ;
   }
 }

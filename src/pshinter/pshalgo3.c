@@ -27,15 +27,16 @@
 
 
 #ifdef DEBUG_HINTER
-  extern PSH3_Hint_Table  ps3_debug_hint_table = 0;
-  extern PSH3_HintFunc    ps3_debug_hint_func  = 0;
-  extern PSH3_Glyph       ps3_debug_glyph      = 0;
+  PSH3_Hint_Table  ps3_debug_hint_table = 0;
+  PSH3_HintFunc    ps3_debug_hint_func  = 0;
+  PSH3_Glyph       ps3_debug_glyph      = 0;
 #endif
 
 
 #undef  SNAP_STEMS
 #undef  ONLY_ALIGN_Y
 
+#define  COMPUTE_INFLEXS
 
   /*************************************************************************/
   /*************************************************************************/
@@ -51,7 +52,7 @@
                      PSH3_Hint  hint2 )
   {
     return ( hint1->org_pos + hint1->org_len >= hint2->org_pos &&
-             hint2->org_pos + hint2->org_len >= hint1->org_pos );
+              hint2->org_pos + hint2->org_len >= hint1->org_pos );
   }
 
 
@@ -427,7 +428,7 @@
       hint->cur_len = fit_len;
 
       /* check blue zones for horizontal stems */
-      align.align = PSH_BLUE_ALIGN_NONE;
+      align.align     = PSH_BLUE_ALIGN_NONE;
       align.align_bot = align.align_top = 0;
 
       if ( dimension == 1 )
@@ -469,9 +470,9 @@
             if ( !psh3_hint_is_fitted( parent ) )
               psh3_hint_align( parent, globals, dimension, hint_flags );
 
-            par_org_center = parent->org_pos + ( parent->org_len / 2 );
-            par_cur_center = parent->cur_pos + ( parent->cur_len / 2 );
-            cur_org_center = hint->org_pos   + ( hint->org_len   / 2 );
+            par_org_center = parent->org_pos + ( parent->org_len >> 1 );
+            par_cur_center = parent->cur_pos + ( parent->cur_len >> 1 );
+            cur_org_center = hint->org_pos   + ( hint->org_len   >> 1 );
 
             cur_delta = FT_MulFix( cur_org_center - par_org_center, scale );
             pos       = par_cur_center + cur_delta - ( len >> 1 );
@@ -480,7 +481,7 @@
           if ( ( hint_flags & FT_HINT_NO_INTEGER_STEM ) == 0 )
           {
             /* normal processing */
-            if ( ( fit_len / 64 ) & 1 )
+            if ( fit_len & 64 )
             {
               /* odd number of pixels */
               fit_center = ( ( pos + ( len >> 1 ) ) & -64 ) + 32;
@@ -663,39 +664,107 @@
   /*************************************************************************/
   /*************************************************************************/
 
-  static int
-  psh3_point_is_extremum( PSH3_Point  point )
+#ifdef COMPUTE_INFLEXS
+ /* compute all inflex points in a given glyph */
+  static void
+  psh3_glyph_compute_inflections( PSH3_Glyph  glyph )
   {
-    PSH3_Point  before = point;
-    PSH3_Point  after  = point;
-    FT_Pos      d_before;
-    FT_Pos      d_after;
+    FT_UInt  n;
 
-
-    do
+    for ( n = 0; n < glyph->num_contours; n++ )
     {
-      before = before->prev;
-      if ( before == point )
-        return 0;
+      PSH3_Point  first, start, end, before, after;
+      FT_Angle    angle_in, angle_seg, angle_out;
+      FT_Angle    diff_in, diff_out;
+      FT_Int      finished = 0;
 
-      d_before = before->org_u - point->org_u;
+      /* we need at least 4 points to create an inflection point */
+      if ( glyph->contours[n].count < 4 )
+        continue;
 
-    } while ( d_before == 0 );
+      /* compute first segment in contour */
+      first  = glyph->contours[n].start;
 
-    do
-    {
-      after = after->next;
-      if ( after == point )
-        return 0;
+      start = end = first;
+      do
+      {
+        end = end->next;
+        if ( end == first )
+          goto Skip;
+      }
+      while ( PSH3_POINT_EQUAL_ORG( end, first ) );
 
-      d_after = after->org_u - point->org_u;
+      angle_seg = PSH3_POINT_ANGLE( start, end );
 
-    } while ( d_after == 0 );
+      /* extend the segment start whenever possible */
+      before = start;
+      do
+      {
+        do
+        {
+          start  = before;
+          before = before->prev;
+          if ( before == first )
+            goto Skip;
+        }
+        while ( PSH3_POINT_EQUAL_ORG( before, start ) );
 
-    return ( ( d_before > 0 && d_after > 0 ) ||
-             ( d_before < 0 && d_after < 0 ) );
+        angle_in = PSH3_POINT_ANGLE( before, start );
+      }
+      while ( angle_in == angle_seg );
+
+      first   = start;
+      diff_in = FT_Angle_Diff( angle_in, angle_seg );
+
+      /* now, process all segments in the contour */
+      do
+      {
+        /* first, extend current segment's end whenever possible */
+        after = end;
+        do
+        {
+          do
+          {
+            end   = after;
+            after = after->next;
+            if ( after == first )
+              finished = 1;
+          }
+          while ( PSH3_POINT_EQUAL_ORG( end, after ) );
+
+          angle_out = PSH3_POINT_ANGLE( end, after );
+        }
+        while ( angle_out == angle_seg );
+
+        diff_out = FT_Angle_Diff( angle_seg, angle_out );
+
+        if ( diff_in ^ diff_out < 0 )
+        {
+          /* diff_in and diff_out have different signs, we have */
+          /* inflection points here...                          */
+
+          do
+          {
+            psh3_point_set_inflex( start );
+            start = start->next;
+          }
+          while ( start != end );
+
+          psh3_point_set_inflex( start );
+        }
+
+        start     = end;
+        end       = after;
+        angle_seg = angle_out;
+        diff_in   = diff_out;
+      }
+      while ( !finished );
+
+    Skip:
+      ;
+    }
   }
-
+#endif /* COMPUTE_INFLEXS */
 
   static void
   psh3_glyph_done( PSH3_Glyph  glyph )
@@ -739,6 +808,81 @@
     }
 
     return result;
+  }
+
+
+  /* load outline point coordinates into hinter glyph */
+  static void
+  psh3_glyph_load_points( PSH3_Glyph  glyph,
+                          FT_Int      dimension )
+  {
+    FT_Vector*  vec   = glyph->outline->points;
+    PSH3_Point  point = glyph->points;
+    FT_UInt     count = glyph->num_points;
+
+
+    for ( ; count > 0; count--, point++, vec++ )
+    {
+      point->flags2 = 0;
+      point->hint   = NULL;
+      if ( dimension == 0 )
+      {
+        point->org_u = vec->x;
+        point->org_v = vec->y;
+      }
+      else
+      {
+        point->org_u = vec->y;
+        point->org_v = vec->x;
+      }
+
+#ifdef DEBUG_HINTER
+      point->org_x = vec->x;
+      point->org_y = vec->y;
+#endif
+
+    }
+  }
+
+
+  /* save hinted point coordinates back to outline */
+  static void
+  psh3_glyph_save_points( PSH3_Glyph  glyph,
+                          FT_Int      dimension )
+  {
+    FT_UInt     n;
+    PSH3_Point  point = glyph->points;
+    FT_Vector*  vec   = glyph->outline->points;
+    char*       tags  = glyph->outline->tags;
+
+
+    for ( n = 0; n < glyph->num_points; n++ )
+    {
+      if ( dimension == 0 )
+        vec[n].x = point->cur_u;
+      else
+        vec[n].y = point->cur_u;
+
+      if ( psh3_point_is_strong( point ) )
+        tags[n] |= (char)( ( dimension == 0 ) ? 32 : 64 );
+
+#ifdef DEBUG_HINTER
+
+      if ( dimension == 0 )
+      {
+        point->cur_x   = point->cur_u;
+        point->flags_x = point->flags2 | point->flags;
+      }
+      else
+      {
+        point->cur_y   = point->cur_u;
+        point->flags_y = point->flags2 | point->flags;
+      }
+
+#endif
+
+      point++;
+    }
   }
 
 
@@ -866,6 +1010,11 @@
     glyph->outline = outline;
     glyph->globals = globals;
 
+#ifdef COMPUTE_INFLEXS
+    psh3_glyph_load_points( glyph, 0 );
+    psh3_glyph_compute_inflections( glyph );
+#endif /* COMPUTE_INFLEXS */
+
     /* now deal with hints tables */
     error = psh3_hint_table_init( &glyph->hint_tables [0],
                                   &ps_hints->dimension[0].hints,
@@ -888,78 +1037,133 @@
   }
 
 
-  /* load outline point coordinates into hinter glyph */
+
+
+ /* compute all extrema in a glyph for a given dimension */
   static void
-  psh3_glyph_load_points( PSH3_Glyph  glyph,
-                          FT_Int      dimension )
+  psh3_glyph_compute_extrema( PSH3_Glyph  glyph )
   {
-    FT_Vector*  vec   = glyph->outline->points;
-    PSH3_Point  point = glyph->points;
-    FT_UInt     count = glyph->num_points;
+    FT_UInt       first = 0, next, n;
+    PSH3_Point    points  = glyph->points;
+    PSH3_Contour  contour = glyph->contours;
 
-
-    for ( ; count > 0; count--, point++, vec++ )
+    /* first of all, compute all local extrema */
+    for ( n = 0; n < glyph->num_contours; n++ )
     {
-      point->flags &= PSH3_POINT_OFF | PSH3_POINT_SMOOTH;
-      point->hint   = 0;
-      if ( dimension == 0 )
-        point->org_u = vec->x;
-      else
-        point->org_u = vec->y;
+      PSH3_Point  first = glyph->contours[n].start;
+      PSH3_Point  point, before, after;
 
-#ifdef DEBUG_HINTER
-      point->org_x = vec->x;
-      point->org_y = vec->y;
-#endif
+      point  = first;
+      before = point;
+      after  = point;
 
+      do
+      {
+        before = before->prev;
+        if ( before == first )
+          goto Skip;
+
+      } while ( before->org_u == point->org_u );
+
+      first = point = before->next;
+
+      for (;;)
+      {
+        after = point;
+        do
+        {
+          after = after->next;
+          if ( after == first )
+            goto Next;
+        }
+        while ( after->org_u == point->org_u );
+
+        if ( before->org_u < point->org_u )
+        {
+          if ( after->org_u < point->org_u )
+          {
+            /* local maximum */
+            goto Extremum;
+          }
+        }
+        else /* before->org_u > point->org_u */
+        {
+          if ( after->org_u > point->org_u )
+          {
+            /* local minimum */
+          Extremum:
+            do
+            {
+              psh3_point_set_extremum( point );
+              point = point->next;
+            }
+            while ( point != after );
+          }
+        }
+
+        before = after->prev;
+        point  = after;
+
+      } /* for  */
+
+    Next:
+      ;
     }
-  }
 
-
-  /* save hinted point coordinates back to outline */
-  static void
-  psh3_glyph_save_points( PSH3_Glyph  glyph,
-                          FT_Int      dimension )
-  {
-    FT_UInt     n;
-    PSH3_Point  point = glyph->points;
-    FT_Vector*  vec   = glyph->outline->points;
-    char*       tags  = glyph->outline->tags;
-
-
+  /* for each extrema, determine its direction along the */
+  /* orthogonal axis                                     */
     for ( n = 0; n < glyph->num_points; n++ )
     {
-      if ( dimension == 0 )
-        vec[n].x = point->cur_u;
-      else
-        vec[n].y = point->cur_u;
+      PSH3_Point  point, before, after;
 
-      if ( psh3_point_is_strong( point ) )
-        tags[n] |= (char)( ( dimension == 0 ) ? 32 : 64 );
-
-#ifdef DEBUG_HINTER
-
-      if ( dimension == 0 )
+      point = &glyph->points[n];
+      if ( psh3_point_is_extremum( point ) )
       {
-        point->cur_x   = point->cur_u;
-        point->flags_x = point->flags;
+        PSH3_Point  before = point;
+        PSH3_Point  after  = point;
+
+        do
+        {
+          before = before->prev;
+          if ( before == point )
+            goto Skip;
+        }
+        while ( before->org_v == point->org_v );
+
+        do
+        {
+          after = after->next;
+          if ( after == point )
+            goto Skip;
+        }
+        while ( after->org_v == point->org_v );
       }
-      else
+
+      if ( before->org_v < point->org_v &&
+           after->org_v  > point->org_v )
       {
-        point->cur_y   = point->cur_u;
-        point->flags_y = point->flags;
+        psh3_point_set_positive( point );
       }
-
-#endif
-
-      point++;
+      else if ( before->org_v > point->org_v &&
+                after->org_v  < point->org_v )
+      {
+        psh3_point_set_negative( point );
+      }
+    Skip:
+      ;
     }
   }
 
 
-#define PSH3_STRONG_THRESHOLD  10
 
 
+#define PSH3_STRONG_THRESHOLD  30
+
+
+  /* major_dir is the direction for points on the bottom/left of the stem;
+   * Points on the top/right of the stem will have a direction of
+   * -major_dir.
+   */
   static void
   psh3_hint_table_find_strong_point( PSH3_Hint_Table  table,
                                      PSH3_Point       point,
@@ -967,47 +1171,97 @@
   {
     PSH3_Hint*   sort      = table->sort;
     FT_UInt      num_hints = table->num_hints;
+    FT_Int       point_dir = 0;
+    FT_UInt      flag;
 
+    if ( PSH3_DIR_COMPARE( point->dir_in, major_dir ) )
+      point_dir = point->dir_in;
 
-    for ( ; num_hints > 0; num_hints--, sort++ )
+    else if ( PSH3_DIR_COMPARE( point->dir_out, major_dir ) )
+      point_dir = point->dir_out;
+
+    if ( point_dir )
     {
-      PSH3_Hint  hint = sort[0];
+      FT_UInt  flag;
 
-
-      if ( ABS( point->dir_in )  == major_dir ||
-           ABS( point->dir_out ) == major_dir )
+      for ( ; num_hints > 0; num_hints--, sort++ )
       {
-        FT_Pos  d;
+        PSH3_Hint  hint = sort[0];
+        FT_Pos     d;
 
-
-        d = point->org_u - hint->org_pos;
-        if ( ABS( d ) < PSH3_STRONG_THRESHOLD )
+        if ( point_dir == major_dir )
         {
-        Is_Strong:
-          psh3_point_set_strong( point );
-          point->hint = hint;
-          break;
+          flag = PSH3_POINT_EDGE_MIN;
+          d    = point->org_u - hint->org_pos;
+          if ( ABS( d ) < PSH3_STRONG_THRESHOLD )
+          {
+          Is_Strong:
+            psh3_point_set_strong( point );
+            point->flags2 |= flag;
+            point->hint    = hint;
+            break;
+          }
+        }
+        else if ( point_dir == -major_dir )
+        {
+          flag  = PSH3_POINT_EDGE_MAX;
+          d     = point->org_u - hint->org_pos - hint->org_len;
+          if ( ABS( d ) < PSH3_STRONG_THRESHOLD )
+            goto Is_Strong;
+        }
+      }
+    }
+#if 1
+    else if ( psh3_point_is_extremum( point ) )
+    {
+      /* treat extrema as special cases for stem edge alignment */
+      FT_UInt  min_flag, max_flag;
+
+      if ( major_dir == PSH3_DIR_HORIZONTAL )
+      {
+        min_flag = PSH3_POINT_POSITIVE;
+        max_flag = PSH3_POINT_NEGATIVE;
+      }
+      else
+      {
+        min_flag = PSH3_POINT_NEGATIVE;
+        max_flag = PSH3_POINT_POSITIVE;
+      }
+
+      for ( ; num_hints > 0; num_hints--, sort++ )
+      {
+        PSH3_Hint  hint = sort[0];
+        FT_Pos     d, flag;
+
+        if ( point->flags2 & min_flag )
+        {
+          flag = PSH3_POINT_EDGE_MIN;
+          d    = point->org_u - hint->org_pos;
+          if ( ABS( d ) < PSH3_STRONG_THRESHOLD )
+          {
+          Is_Strong2:
+            point->flags2 |= flag;
+            point->hint    = hint;
+            psh3_point_set_strong( point );
+            break;
+          }
+        }
+        else if ( point->flags2 & max_flag )
+        {
+          flag = PSH3_POINT_EDGE_MAX;
+          d    = point->org_u - hint->org_pos - hint->org_len;
+          if ( ABS( d ) < PSH3_STRONG_THRESHOLD )
+            goto Is_Strong2;
         }
 
-        d -= hint->org_len;
-        if ( ABS( d ) < PSH3_STRONG_THRESHOLD )
-          goto Is_Strong;
+        if ( point->org_u >= hint->org_pos                 &&
+             point->org_u <= hint->org_pos + hint->org_len )
+        {
+          point->hint = hint;
+        }
       }
-
-#if 1
-
-      if ( point->org_u >= hint->org_pos &&
-           point->org_u <= hint->org_pos + hint->org_len &&
-           psh3_point_is_extremum( point ) )
-      {
-        /* attach to hint, but don't mark as strong */
-        point->hint = hint;
-        break;
-      }
-
-#endif
-
     }
+#endif
   }
 
 
@@ -1023,8 +1277,8 @@
       PS_Mask          mask      = table->hint_masks->masks;
       FT_UInt          num_masks = table->hint_masks->num_masks;
       FT_UInt          first     = 0;
-      FT_Int           major_dir = dimension == 0 ? PSH3_DIR_UP
-                                                  : PSH3_DIR_RIGHT;
+      FT_Int           major_dir = dimension == 0 ? PSH3_DIR_VERTICAL
+                                                  : PSH3_DIR_HORIZONTAL;
 
 
       /* process secondary hints to "selected" points */
@@ -1107,22 +1361,31 @@
         {
           FT_Pos  delta;
 
-
-          delta = point->org_u - hint->org_pos;
-
-          if ( delta <= 0 )
-            point->cur_u = hint->cur_pos + FT_MulFix( delta, scale );
-
-          else if ( delta >= hint->org_len )
-            point->cur_u = hint->cur_pos + hint->cur_len +
-                           FT_MulFix( delta - hint->org_len, scale );
-
-          else if ( hint->org_len > 0 )
-            point->cur_u = hint->cur_pos +
-                           FT_MulDiv( delta, hint->cur_len, hint->org_len );
-          else
+          if ( psh3_point_is_edge_min( point ) )
+          {
             point->cur_u = hint->cur_pos;
+          }
+          else if ( psh3_point_is_edge_max( point ) )
+          {
+            point->cur_u = hint->cur_pos + hint->cur_len;
+          }
+          else
+          {
+            delta = point->org_u - hint->org_pos;
 
+            if ( delta <= 0 )
+              point->cur_u = hint->cur_pos + FT_MulFix( delta, scale );
+
+            else if ( delta >= hint->org_len )
+              point->cur_u = hint->cur_pos + hint->cur_len +
+                            FT_MulFix( delta - hint->org_len, scale );
+
+            else if ( hint->org_len > 0 )
+              point->cur_u = hint->cur_pos +
+                            FT_MulDiv( delta, hint->cur_len, hint->org_len );
+            else
+              point->cur_u = hint->cur_pos;
+          }
           psh3_point_set_fitted( point );
         }
       }
@@ -1435,6 +1698,9 @@
     {
       /* load outline coordinates into glyph */
       psh3_glyph_load_points( glyph, dimension );
+      
+      /* compute local extrema */
+      psh3_glyph_compute_extrema( glyph );
 
       /* compute aligned stem/hints positions */
       psh3_hint_table_align_hints( &glyph->hint_tables[dimension],

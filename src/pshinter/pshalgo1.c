@@ -25,8 +25,8 @@
 #define FT_COMPONENT  trace_pshalgo1
 
 #ifdef DEBUG_HINTER
-  extern PSH1_Hint_Table  ps1_debug_hint_table = 0;
-  extern PSH1_HintFunc    ps1_debug_hint_func  = 0;
+  PSH1_Hint_Table  ps1_debug_hint_table = 0;
+  PSH1_HintFunc    ps1_debug_hint_func  = 0;
 #endif
 
 

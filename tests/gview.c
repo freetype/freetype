@@ -9,6 +9,7 @@
 #include <../src/pshinter/pshrec.h>
 #include <../src/pshinter/pshalgo1.h>
 #include <../src/pshinter/pshalgo2.h>
+#include <../src/pshinter/pshalgo3.h>
 
 #include <../src/autohint/ahtypes.h>
 
@@ -610,6 +611,155 @@ ps2_draw_control_points( void )
   }
 }
 
+ /************************************************************************/
+ /************************************************************************/
+ /*****                                                              *****/
+ /*****            POSTSCRIPT HINTER ALGORITHM 3 ROUTINES            *****/
+ /*****                                                              *****/
+ /************************************************************************/
+ /************************************************************************/
+
+#include <../src/pshinter/pshalgo3.h>
+
+static void
+draw_ps3_hint( PSH3_Hint   hint, FT_Bool  vertical )
+{
+  int        x1, x2;
+  NV_Vector  v;
+
+  if ( pshint_vertical != vertical )
+  {
+    if (vertical)
+      pshint_cpos = 40;
+    else
+      pshint_cpos = 10;
+
+    pshint_vertical = vertical;
+  }
+
+  if (!vertical)
+  {
+    if ( !option_show_vert_hints )
+      return;
+
+    v.x = hint->cur_pos;
+    v.y = 0;
+    nv_vector_transform( &v, &size_transform );
+    x1 = (int)(v.x + 0.5);
+
+    v.x = hint->cur_pos + hint->cur_len;
+    v.y = 0;
+    nv_vector_transform( &v, &size_transform );
+    x2 = (int)(v.x + 0.5);
+
+    nv_pixmap_fill_rect( target, x1, 0, 1, target->height,
+                         psh3_hint_is_ghost(hint)
+                         ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    if ( psh3_hint_is_ghost(hint) )
+    {
+      x1 --;
+      x2 = x1 + 2;
+    }
+    else
+      nv_pixmap_fill_rect( target, x2, 0, 1, target->height,
+                           psh3_hint_is_ghost(hint)
+                           ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    nv_pixmap_fill_rect( target, x1, pshint_cpos, x2+1-x1, 1,
+                         STEM_JOIN_COLOR );
+  }
+  else
+  {
+    if (!option_show_horz_hints)
+      return;
+
+    v.y = hint->cur_pos;
+    v.x = 0;
+    nv_vector_transform( &v, &size_transform );
+    x1 = (int)(v.y + 0.5);
+
+    v.y = hint->cur_pos + hint->cur_len;
+    v.x = 0;
+    nv_vector_transform( &v, &size_transform );
+    x2 = (int)(v.y + 0.5);
+
+    nv_pixmap_fill_rect( target, 0, x1, target->width, 1,
+                         psh3_hint_is_ghost(hint)
+                         ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    if ( psh3_hint_is_ghost(hint) )
+    {
+      x1 --;
+      x2 = x1 + 2;
+    }
+    else
+      nv_pixmap_fill_rect( target, 0, x2, target->width, 1,
+                           psh3_hint_is_ghost(hint)
+                           ? GHOST_HINT_COLOR : STEM_HINT_COLOR );
+
+    nv_pixmap_fill_rect( target, pshint_cpos, x2, 1, x1+1-x2,
+                         STEM_JOIN_COLOR );
+  }
+
+#if 0
+  printf( "[%7.3f %7.3f] %c\n", hint->cur_pos/64.0, (hint->cur_pos+hint->cur_len)/64.0, vertical ? 'v' : 'h' );
+#endif
+
+  pshint_cpos += 10;
+}
+
+
+static void
+ps3_draw_control_points( void )
+{
+  if ( ps3_debug_glyph )
+  {
+    PSH3_Glyph    glyph = ps3_debug_glyph;
+    PSH3_Point    point = glyph->points;
+    FT_UInt       count = glyph->num_points;
+    NV_Transform  transform, *trans = &transform;
+    NV_Path       vert_rect;
+    NV_Path       horz_rect;
+    NV_Path       dot, circle;
+
+    for ( ; count > 0; count--, point++ )
+    {
+      NV_Vector  vec;
+
+      vec.x = point->cur_x;
+      vec.y = point->cur_y;
+      nv_vector_transform( &vec, &size_transform );
+
+      nv_transform_set_translate( trans, vec.x, vec.y );
+
+      if ( option_show_smooth && !psh3_point_is_smooth(point) )
+      {
+        nv_painter_set_color( painter, SMOOTH_COLOR, 256 );
+        nv_painter_fill_path( painter, trans, 0, symbol_circle );
+      }
+
+      if (option_show_horz_hints)
+      {
+        if ( point->flags_y & PSH3_POINT_STRONG )
+        {
+          nv_painter_set_color( painter, STRONG_COLOR, 256 );
+          nv_painter_fill_path( painter, trans, 0, symbol_rect_h );
+        }
+      }
+
+      if (option_show_vert_hints)
+      {
+        if ( point->flags_x & PSH3_POINT_STRONG )
+        {
+          nv_painter_set_color( painter, STRONG_COLOR, 256 );
+          nv_painter_fill_path( painter, trans, 0, symbol_rect_v );
+        }
+      }
+    }
+  }
+}
+
 
 static void
 ps_print_hints( void )
@@ -742,7 +892,7 @@ ah_draw_edges( void )
 
     if ( option_show_edges )
     {
-      /* draw verticla edges */
+      /* draw vertical edges */
       if ( option_show_vert_hints )
       {
         count = glyph->num_vedges;
@@ -956,12 +1106,11 @@ draw_glyph( int  glyph_index )
 
   ps1_debug_hint_func = option_show_ps_hints ? draw_ps1_hint : 0;
   ps2_debug_hint_func = option_show_ps_hints ? draw_ps2_hint : 0;
+  ps3_debug_hint_func = option_show_ps_hints ? draw_ps3_hint : 0;
 
   ah_debug_hinter = NULL;
 
-  error = FT_Load_Glyph( face, glyph_index, option_hinting
-                                          ? FT_LOAD_NO_BITMAP
-                                          : FT_LOAD_NO_BITMAP | FT_LOAD_NO_HINTING );
+  error = FT_Load_Glyph( face, glyph_index, FT_LOAD_NO_BITMAP );
   if (error) Panic( "could not load glyph" );
 
   if ( face->glyph->format != ft_glyph_format_outline )
@@ -1182,6 +1331,9 @@ handle_event( NVV_EventRec*   ev )
       TOGGLE_OPTION( option_show_blues, "blue zones display" );
 
     case NVV_KEY('h'):
+      ps_debug_no_horz_hints = option_hinting;
+      ps_debug_no_vert_hints = option_hinting;
+
       TOGGLE_OPTION( option_hinting, "hinting" )
 
     case NVV_KEY('H'):
@@ -1302,7 +1454,7 @@ int  main( int  argc, char**  argv )
 
       draw_ps_blue_zones();
       draw_glyph( glyph_index );
-      ps2_draw_control_points();
+      ps3_draw_control_points();
 
       nvv_surface_refresh( surface, NULL );
 
