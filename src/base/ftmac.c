@@ -614,36 +614,8 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FT_New_Face_From_FOND                                              */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Creates a new face object from an FOND resource.                   */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    library    :: A handle to the library resource.                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    fond       :: An FOND resource.                                    */
-  /*                                                                       */
-  /*    face_index :: Only supported for the -1 `sanity check' special     */
-  /*                  case.                                                */
-  /*                                                                       */
-  /* <Output>                                                              */
-  /*    aface      :: A handle to a new face object.                       */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Notes>                                                               */
-  /*    This function can be used to create FT_Face objects from fonts     */
-  /*    that are installed in the system like so:                          */
-  /*                                                                       */
-  /*      fond = GetResource( 'FOND', fontName );                          */
-  /*      error = FT_New_Face_From_FOND( library, fond, 0, &face );        */
-  /*                                                                       */
+  /* documentation in ftmac.h */
+
   FT_EXPORT_DEF( FT_Error )  FT_New_Face_From_FOND( FT_Library  library,
                                                     Handle      fond,
                                                     FT_Long     face_index,
@@ -698,7 +670,7 @@
   /*    This is the Mac-specific implementation of FT_New_Face.  In        */
   /*    addition to the standard FT_New_Face() functionality, it also      */
   /*    accepts pathnames to Mac suitcase files.  For further              */
-  /*    documentation see the original FT_New_Face() in ftobjs.c.          */
+  /*    documentation see the original FT_New_Face() in freetype.h.        */
   /*                                                                       */
   FT_EXPORT_DEF( FT_Error )  FT_New_Face( FT_Library   library,
                                           const char*  pathname,

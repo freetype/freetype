@@ -84,9 +84,6 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    No.                                                                */
-  /*                                                                       */
   /* <Note>                                                                */
   /*    The reason why this function takes a `library' parameter is simply */
   /*    to use the library's memory allocator.                             */
@@ -120,9 +117,6 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    No.                                                                */
   /*                                                                       */
   /* <Note>                                                                */
   /*    If the outline's `owner' field is not set, only the outline        */
@@ -162,9 +156,6 @@
   /* <Output>                                                              */
   /*    acbox   :: The outline's control box.                              */
   /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
-  /*                                                                       */
   FT_EXPORT( void )  FT_Outline_Get_CBox( FT_Outline*  outline,
                                           FT_BBox     *acbox );
 
@@ -184,9 +175,6 @@
   /*    xOffset :: The horizontal offset.                                  */
   /*                                                                       */
   /*    yOffset :: The vertical offset.                                    */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
   /*                                                                       */
   FT_EXPORT( void )  FT_Outline_Translate( FT_Outline*  outline,
                                            FT_Pos       xOffset,
@@ -219,22 +207,21 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    FT_Vector_Transform                                                */
+  /*    FT_Outline_Transform                                               */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Transforms a single vector through a 2x2 matrix.                   */
+  /*    Applies a simple 2x2 matrix to all of an outline's points.  Useful */
+  /*    for applying rotations, slanting, flipping, etc.                   */
   /*                                                                       */
   /* <InOut>                                                               */
-  /*    vector :: The target vector to transform.                          */
+  /*    outline :: A pointer to the target outline descriptor.             */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    matrix :: A pointer to the source 2x2 matrix.                      */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    Yes.                                                               */
+  /*    matrix  :: A pointer to the transformation matrix.                 */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The result is undefined if either `vector' or `matrix' is invalid. */
+  /*    You can use FT_Outline_Translate() if you need to translate the    */
+  /*    outline's points.                                                  */
   /*                                                                       */
   FT_EXPORT( void )  FT_Outline_Transform( FT_Outline*  outline,
                                            FT_Matrix*   matrix );
@@ -282,10 +269,6 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    YES.  Rendering is synchronized, so that concurrent calls to the   */
-  /*    scan-line converter will be serialized.                            */
-  /*                                                                       */
   /* <Note>                                                                */
   /*    This function does NOT CREATE the bitmap, it only renders an       */
   /*    outline image within the one you pass to it!                       */
@@ -319,10 +302,6 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <MT-Note>                                                             */
-  /*    YES.  Rendering is synchronized, so that concurrent calls to the   */
-  /*    scan-line converter will be serialized.                            */
   /*                                                                       */
   /* <Note>                                                                */
   /*    You should know what you are doing and how FT_Raster_Params works  */

@@ -243,7 +243,28 @@
   FT_Error  TT_Clear_CodeRange( TT_ExecContext  exec,
                                 FT_Int          range );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    TT_New_Context                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Queries the face context for a given font.  Note that there is     */
+  /*    now a _single_ execution context in the TrueType driver which is   */
+  /*    shared among faces.                                                */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    face :: A handle to the source face object.                        */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    A handle to the execution context.  Initialized for `face'.        */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Only the glyph loader and debugger should call this function.      */
+  /*                                                                       */
   FT_EXPORT( TT_ExecContext )  TT_New_Context( TT_Face  face );
+
 
   FT_LOCAL
   FT_Error  TT_Done_Context( TT_ExecContext  exec );
@@ -265,6 +286,28 @@
   FT_Error  TT_Run_Context( TT_ExecContext  exec,
                             FT_Bool         debug );
 
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    TT_RunIns                                                          */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Executes one or more instruction in the execution context.  This   */
+  /*    is the main function of the TrueType opcode interpreter.           */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    exec :: A handle to the target execution context.                  */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    Only the object manager and debugger should call this function.    */
+  /*                                                                       */
+  /*    This function is publicly exported because it is directly          */
+  /*    invoked by the TrueType debugger.                                  */
+  /*                                                                       */
   FT_EXPORT( FT_Error )  TT_RunIns( TT_ExecContext  exec );
 
 

@@ -81,7 +81,7 @@
   /*    Retrieves the number of name strings in the SFNT `name' table.     */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face   :: A handle to the source face.                             */
+  /*    face :: A handle to the source face.                               */
   /*                                                                       */
   /* <Return>                                                              */
   /*    The number of strings in the `name' table.                         */

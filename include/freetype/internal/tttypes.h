@@ -22,6 +22,7 @@
 
 
 #include <freetype/tttables.h>
+#include <freetype/internal/ftobjs.h>
 
 
 #ifdef __cplusplus

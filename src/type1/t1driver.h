@@ -26,7 +26,7 @@
 #endif
 
 
-  FT_EXPORT_VAR( const  FT_Driver_Class )  t1_driver_class;
+  FT_EXPORT_VAR( const FT_Driver_Class )  t1_driver_class;
 
 #ifdef __cplusplus
   }

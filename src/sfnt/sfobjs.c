@@ -19,10 +19,12 @@
 #ifdef FT_FLAT_COMPILE
 
 #include "sfobjs.h"
+#include "ttload.h"
 
 #else
 
 #include <sfnt/sfobjs.h>
+#include <sfnt/ttload.h>
 
 #endif
 
@@ -30,6 +32,7 @@
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/psnames.h>
 #include <freetype/ttnameid.h>
+#include <freetype/tttags.h>
 #include <freetype/internal/tterrors.h>
 
 
