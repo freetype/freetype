@@ -29,9 +29,11 @@ PLATFORM      := unix
 #
 FTSYS_SRC = @FTSYS_SRC@
 
-INSTALL       := @INSTALL@
-INSTALL_DATA  := @INSTALL_DATA@
-MKINSTALLDIRS := $(BUILD)/mkinstalldirs
+INSTALL         := @INSTALL@
+INSTALL_DATA    := @INSTALL_DATA@
+INSTALL_PROGRAM := @INSTALL_PROGRAM@
+INSTALL_SCRIPT  := @INSTALL_SCRIPT@
+MKINSTALLDIRS   := $(BUILD)/mkinstalldirs
 
 DISTCLEAN += $(BUILD)/config.cache    \
              $(BUILD)/config.log      \
