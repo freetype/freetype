@@ -69,6 +69,7 @@
       {      
         PFR_ExtraItem  extra = item_list;
 
+
         for ( extra = item_list; extra->parser != NULL; extra++ )
         {
           if ( extra->type == item_type )
@@ -506,13 +507,14 @@
                                      FT_Byte*     limit,
                                      PFR_PhyFont  phy_font )
   {
-    FT_Int       count;
-    FT_UShort    base_adj;
-    FT_UInt      flags;
-    FT_UInt      num_pairs;
-    PFR_KernPair pairs;
-    FT_Error     error  = 0;
-    FT_Memory    memory = phy_font->memory;
+    FT_Int        count;
+    FT_UShort     base_adj;
+    FT_UInt       flags;
+    FT_UInt       num_pairs;
+    PFR_KernPair  pairs;
+    FT_Error      error  = 0;
+    FT_Memory     memory = phy_font->memory;
+
 
     /* XXX: there may be multiple extra items for kerning */
     if ( phy_font->kern_pairs != NULL )
@@ -527,7 +529,7 @@
     flags     = PFR_NEXT_BYTE( p );
     
 #ifndef PFR_CONFIG_NO_CHECKS
-    count  = 3;
+    count = 3;
     
     if ( flags & PFR_KERN_2BYTE_CHAR )
       count += 2;
@@ -573,7 +575,8 @@
   
   Too_Short:
     error = PFR_Err_Invalid_Table;
-    FT_ERROR(( "pfr_extra_item_load_kerning_pairs: invalid kerning pairs table\n" ));
+    FT_ERROR(( "pfr_extra_item_load_kerning_pairs: "
+               "invalid kerning pairs table\n" ));
     goto Exit;
   }                                 
 

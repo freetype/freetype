@@ -1,20 +1,36 @@
-2002-06-22  Roberto Alameda  <ojancano@geekmail.de>.
+2002-06-21  Roberto Alameda  <ojancano@geekmail.de>.
 
-    * include/freetype/internal/t42types.h, src/base/fttype1.c,
-    src/type42/t42objs.h: removed duplicate definition of T42_FaceRec
+	* include/freetype/internal/t42types.h (T42_Font): Removed since
+	it is already in t42objs.h.
+	(T42_Face): Use T1_FontRec.
 
-2002-06-22  Detlef Würkner  <TetiSoft@apg.lahn.de>
+	* src/base/fttype1.c (FT_Get_PS_Font_Info): Updated.
+	(FT_Has_PS_Glyph_Names): Check for type42 driver name also.
+	* src/type42/t42objs.h: Include FT_INTERNAL_TYPE42_TYPES_H.
+	(T42_Face): Removed since it is already in t42types.h.
 
-    * src/pfr/pfrgload.c (pfr_glyph_load_compound): fixing a small composite
-    glyph loader bug that caused accents to be misplaced in a number of
-    glyphs..
+2002-06-21  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
-2002-06-21  Sven Neuman   <sven@convergence.de>
+	* src/pfrgload.c (pfr_glyph_load_compound): Fix loading of composite
+	glyphs.
 
-    * src/pfr/pfrobjs.h, src/pfr/pfrobjs.c, src/pfr/pfrload.c,
-    src/pfr/pfrtypes.h: adding Kerning support to the PFR driver
+2002-06-21  Sven Neumann  <sven@convergence.de>
 
-    * README, docs/CHANGES: preparing for the 2.1.2 release
+	* src/prf/pfrtypes.h (PFR_KernPair): New structure.
+	(PFR_PhyFont): Use it.
+	(PFR_KernFlags): New enumeration.
+	* src/pfr/pfrload.c (pfr_extra_item_load_kerning_pairs): New
+	function.
+	(pfr_phy_font_extra_items): Use it.
+	(pfr_phy_font_done): Updated.
+	* src/pfr/pfrobjs.c (pfr_face_init): Set kerning flag conditionally.
+	(pfr_face_get_kerning): New function.
+	* src/pfr/pfrobjs.h: Updated.
+	* src/pfr/pfrdrivr.c (pfr_driver_class): Updated.
+
+2002-06-21  David Turner  <david@freetype.org>
+
+	* README, docs/CHANGES: Preparing the 2.1.2 release.
 
 2002-06-19  Detlef Würkner  <TetiSoft@apg.lahn.de>
 

@@ -31,6 +31,7 @@
 
 FT_BEGIN_HEADER
 
+
   /* Type42 size */
   typedef struct  T42_SizeRec_
   {
