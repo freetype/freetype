@@ -115,8 +115,8 @@ FT_BEGIN_HEADER
   struct  PS_Table_
   {
     FT_Byte*        block;          /* current memory block           */
-    FT_Int          cursor;         /* current cursor in memory block */
-    FT_Int          capacity;       /* current size of memory block   */
+    FT_Offset       cursor;         /* current cursor in memory block */
+    FT_Offset       capacity;       /* current size of memory block   */
     FT_Long         init;
 
     FT_Int          max_elems;
