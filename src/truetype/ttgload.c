@@ -891,6 +891,7 @@
           if ( error )
             goto Fail;
 
+          /* restore subglyph pointer */
           subglyph = gloader->base.subglyphs + num_base_subgs + n;
 
           if ( subglyph->flags & USE_MY_METRICS )
@@ -971,8 +972,16 @@
             }
           }
 
-          translate_array( num_new_points, loader->zone.cur, x, y );
-          cur_to_org( num_new_points, &loader->zone );
+          if ( x | y )
+          {
+            translate_array( num_new_points,
+                             gloader->base.outline.points + num_base_points,
+                             x, y );
+
+            translate_array( num_new_points,
+                             gloader->base.extra_points + num_base_points,
+                             x, y );
+          }
         }
 
         /*******************************************************************/

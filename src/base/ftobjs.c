@@ -423,22 +423,23 @@
     FT_Outline*  current = &loader->current.outline;
     FT_Bool      adjust  = 1;
 
-    FT_UInt      new_max;
+    FT_UInt      new_max, old_max;
 
 
     /* check points & tags */
     new_max = base->n_points + current->n_points + n_points;
-    if ( new_max > loader->max_points )
+    old_max = loader->max_points;
+
+    if ( new_max > old_max )
     {
       new_max = ( new_max + 7 ) & -8;
-      if ( REALLOC_ARRAY( base->points, base->n_points,
-                          new_max, FT_Vector )          ||
-           REALLOC_ARRAY( base->tags, base->n_points,
-                          new_max, FT_Byte   )          )
+
+      if ( REALLOC_ARRAY( base->points, old_max, new_max, FT_Vector )    ||
+           REALLOC_ARRAY( base->tags,   old_max, new_max, FT_Byte   )    )
        goto Exit;
 
       if ( loader->use_extra &&
-           REALLOC_ARRAY( loader->base.extra_points, base->n_points,
+           REALLOC_ARRAY( loader->base.extra_points, old_max,
                           new_max, FT_Vector ) )
        goto Exit;
 
@@ -447,13 +448,13 @@
     }
 
     /* check contours */
+    old_max = loader->max_contours;
     new_max = base->n_contours + current->n_contours +
               n_contours;
-    if ( new_max > loader->max_contours )
+    if ( new_max > old_max )
     {
       new_max = ( new_max + 3 ) & -4;
-      if ( REALLOC_ARRAY( base->contours, base->n_contours,
-                          new_max, FT_Short ) )
+      if ( REALLOC_ARRAY( base->contours, old_max, new_max, FT_Short ) )
         goto Exit;
 
       adjust = 1;
@@ -478,18 +479,18 @@
   {
     FT_Memory  memory = loader->memory;
     FT_Error   error  = FT_Err_Ok;
-    FT_UInt    new_max;
+    FT_UInt    new_max, old_max;
 
     FT_GlyphLoad*  base    = &loader->base;
     FT_GlyphLoad*  current = &loader->current;
 
 
     new_max = base->num_subglyphs + current->num_subglyphs + n_subs;
-    if ( new_max > loader->max_subglyphs )
+    old_max = loader->max_subglyphs;
+    if ( new_max > old_max )
     {
       new_max = ( new_max + 1 ) & -2;
-      if ( REALLOC_ARRAY( base->subglyphs, base->num_subglyphs,
-                          new_max, FT_SubGlyph ) )
+      if ( REALLOC_ARRAY( base->subglyphs, old_max, new_max, FT_SubGlyph ) )
         goto Exit;
 
       loader->max_subglyphs = new_max;
@@ -759,7 +760,7 @@
                                            FT_Vector*  delta )
   {
     FT_Face_Internal  internal;
-    
+
 
     if ( !face )
       return;
@@ -901,8 +902,8 @@
     if ( ( load_flags & FT_LOAD_IGNORE_TRANSFORM ) == 0 )
     {
       FT_Face_Internal  internal = face->internal;
-      
-      
+
+
       /* now, transform the glyph image if needed */
       if ( internal->transform_flags )
       {
@@ -1066,7 +1067,7 @@
 
     if ( ALLOC( internal, sizeof ( *internal ) ) )
       goto Fail;
-      
+
     face->internal = internal;
 
     face->driver   = driver;
@@ -1299,13 +1300,13 @@
     /* initialize internal face data */
     {
       FT_Face_Internal  internal = face->internal;
-      
+
 
       internal->transform_matrix.xx = 0x10000L;
       internal->transform_matrix.xy = 0;
       internal->transform_matrix.yx = 0;
       internal->transform_matrix.yy = 0x10000L;
-  
+
       internal->transform_delta.x = 0;
       internal->transform_delta.y = 0;
     }
@@ -1454,7 +1455,7 @@
       goto Exit;
 
     size->face = face;
-    
+
     /* for now, do not use any internal fields in size objects */
     size->internal = 0;
 
