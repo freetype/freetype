@@ -1930,6 +1930,8 @@
     FT_Bool     hinting;
     CFF_Font*   cff = (CFF_Font*)face->extra.data;
 
+    FT_Matrix   font_matrix;
+    FT_Vector   font_offset;
 
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
@@ -1975,17 +1977,26 @@
       T2_Done_Builder( &decoder.builder );
     }
 
+    font_matrix = cff->top_font.font_dict.font_matrix;
+    font_offset = cff->top_font.font_dict.font_offset;
+
     /* Now, set the metrics -- this is rather simple, as   */
     /* the left side bearing is the xMin, and the top side */
     /* bearing the yMax.                                   */
     if ( !error )
     {
+
       /* for composite glyphs, return only left side bearing and */
       /* advance width                                           */
-      if ( glyph->root.format == ft_glyph_format_composite )
+      if ( load_flags & FT_LOAD_NO_RECURSE )
       {
+        FT_Slot_Internal  internal = glyph->root.internal;
+        
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
         glyph->root.metrics.horiAdvance  = decoder.glyph_width;
+        internal->glyph_matrix           = font_matrix;
+        internal->glyph_delta            = font_offset;
+        internal->glyph_transformed      = 1;
       }
       else
       {
@@ -1996,6 +2007,7 @@
         /* copy the _unscaled_ advance width */
         metrics->horiAdvance          = decoder.glyph_width;
         glyph->root.linearHoriAdvance = decoder.glyph_width;
+        glyph->root.internal->glyph_transformed = 0;
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;
@@ -2011,6 +2023,13 @@
           glyph->root.outline.flags |= ft_outline_high_precision;
 
         glyph->root.outline.flags |= ft_outline_reverse_fill;
+
+        /* apply the font matrix */
+        FT_Outline_Transform( &glyph->root.outline, &font_matrix );
+
+        FT_Outline_Translate( &glyph->root.outline,
+                              font_offset.x,
+                              font_offset.y );
 
         if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
         {
@@ -2038,11 +2057,6 @@
           metrics->vertBearingX = FT_MulFix( metrics->vertBearingX, x_scale );
           metrics->vertBearingY = FT_MulFix( metrics->vertBearingY, y_scale );
         }
-
-#if 0
-        /* apply the font matrix */
-        FT_Outline_Transform( &glyph->root.outline, cff->font_matrix );
-#endif
 
         /* compute the other metrics */
         FT_Outline_Get_CBox( &glyph->root.outline, &cbox );
