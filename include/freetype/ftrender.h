@@ -174,10 +174,10 @@
   /*                                                                       */
   /*    This doesn't change the current renderer for other formats.        */
   /*                                                                       */
-  FT_EXPORT_DEF(FT_Error) FT_Set_Renderer( FT_Library     library,
-                                           FT_Renderer    renderer,
-                                           FT_UInt        num_params,
-                                           FT_Parameter*  parameters );
+  FT_EXPORT_DEF( FT_Error )  FT_Set_Renderer( FT_Library     library,
+                                              FT_Renderer    renderer,
+                                              FT_UInt        num_params,
+                                              FT_Parameter*  parameters );
 
 
 #ifdef __cplusplus

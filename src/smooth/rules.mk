@@ -1,5 +1,5 @@
 #
-# FreeType 2 renderer module build rules
+# FreeType 2 smooth renderer module build rules
 #
 
 
