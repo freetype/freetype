@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  t1gload.h                                                              */
+/*  pfr.c                                                                  */
 /*                                                                         */
-/*    Type 1 Glyph Loader (specification).                                 */
+/*    FreeType PFR driver component                                        */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002 by                                           */
+/*  Copyright 1996-2002 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -15,32 +15,14 @@
 /*                                                                         */
 /***************************************************************************/
 
-
-#ifndef __T1GLOAD_H__
-#define __T1GLOAD_H__
-
+#define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
-#include "t1objs.h"
 
-
-FT_BEGIN_HEADER
-
-
-  FT_LOCAL( FT_Error )
-  T1_Compute_Max_Advance( T1_Face  face,
-                          FT_Int*  max_advance );
-
-  FT_LOCAL( FT_Error )
-  T1_Load_Glyph( T1_GlyphSlot  glyph,
-                 T1_Size       size,
-                 FT_UInt       glyph_index,
-                 FT_Int        load_flags );
-
-
-FT_END_HEADER
-
-#endif /* __T1GLOAD_H__ */
-
+#include "pfrload.c"
+#include "pfrgload.c"
+#include "pfrcmap.c"
+#include "pfrobjs.c"
+#include "pfrdrivr.c"
 
 /* END */

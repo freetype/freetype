@@ -21,6 +21,7 @@ SubInclude  FT2_TOP src cache ;
 SubInclude  FT2_TOP src cff ;
 SubInclude  FT2_TOP src cid ;
 SubInclude  FT2_TOP src pcf ;
+SubInclude  FT2_TOP src pfr ;
 SubInclude  FT2_TOP src psaux ;
 SubInclude  FT2_TOP src psnames ;
 SubInclude  FT2_TOP src raster ;
