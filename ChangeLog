@@ -1,3 +1,18 @@
+2004-05-03  Steve Hartwell  <shspamsink@comcast.net>
+
+	* src/truetype/ttobjs.h, src/truetype/ttobjs.c (tt_face_init,
+	tt_face_done, tt_size_init, tt_size_done, tt_driver_init,
+	tt_driver_done): Don't use TT_XXX but FT_XXX arguments which are
+	typecast to the proper TT_XXX within the function.
+	Update code accordingly.
+
+	* src/truetype/ttdriver.c (Get_Kerning, Set_Char_Sizes,
+	Set_Pixel_Sizes, Load_Glyph, tt_get_interface): Don't use TT_XXX but
+	FT_XXX arguments which are typecast to the proper TT_XXX within the
+	function.
+	Update code accordingly.
+	(tt_driver_class): Remove casts.
+
 2004-05-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttload.c (tt_face_free_names): Check that `table->names'
