@@ -25,7 +25,7 @@ SubDirHdr  += $(FT2_INCLUDE) ;
 #
 # FT2_MULTI = true ;
 
-# The file <freetype/config/ft2build.h> is used to define macros that are
+# The file <freetype/config/ftheader.h> is used to define macros that are
 # later used in #include statements.  It needs to be parsed in order to
 # record these definitions.
 #
