@@ -302,7 +302,7 @@
 
   /* The FT_DriverInterface structure is defined in ftdriver.h. */
 
-  FT_EXPORT_VAR( const FT_Driver_Class )  cff_driver_class =
+  FT_CPLUSPLUS( const FT_Driver_Class )  cff_driver_class =
   {
     /* begin with the FT_Module_Class fields */
     {

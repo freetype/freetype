@@ -163,7 +163,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  parse_font_bbox( CID_Face     face,
                              CID_Parser*  parser )
   {
@@ -182,7 +182,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  parse_font_matrix( CID_Face     face,
                                CID_Parser*  parser )
   {
@@ -208,7 +208,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  parse_fd_array( CID_Face     face,
                             CID_Parser*  parser )
   {

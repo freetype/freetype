@@ -92,7 +92,7 @@
   /* <Return>                                                              */
   /*    block  :: The address of newly allocated block.                    */
   /*                                                                       */
-  static
+  LOCAL_FUNC_X
   void*  ft_alloc( FT_Memory  memory,
                    long       size )
   {
@@ -122,7 +122,7 @@
   /* <Return>                                                              */
   /*    The address of the reallocated memory block.                       */
   /*                                                                       */
-  static
+  LOCAL_FUNC_X
   void*  ft_realloc( FT_Memory  memory,
                      long       cur_size,
                      long       new_size,
@@ -148,7 +148,7 @@
   /*                                                                       */
   /*    block   :: The address of block in memory to be freed.             */
   /*                                                                       */
-  static
+  LOCAL_FUNC_X
   void  ft_free( FT_Memory  memory,
                  void*      block )
   {
@@ -190,7 +190,7 @@
   /* <Input>                                                               */
   /*    stream :: A pointer to the stream object.                          */
   /*                                                                       */
-  static
+  LOCAL_FUNC_X
   void  ft_close_stream( FT_Stream  stream )
   {
     munmap( (MUNMAP_ARG_CAST)stream->descriptor.pointer, stream->size );

@@ -207,7 +207,7 @@
   /*                                                                       */
   /*************************************************************************/
 
-  static
+  LOCAL_FUNC_X
   FT_Error  TT_Access_Glyph_Frame( TT_Loader*  loader,
                                    FT_UInt     glyph_index,
                                    FT_ULong    offset,
@@ -227,7 +227,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   void  TT_Forget_Glyph_Frame( TT_Loader*  loader )
   {
     FT_Stream  stream = loader->stream;
@@ -237,7 +237,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  TT_Load_Glyph_Header( TT_Loader*  loader )
   {
     FT_Stream   stream = loader->stream;
@@ -260,7 +260,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  TT_Load_Simple_Glyph( TT_Loader*  load )
   {
     FT_Error         error;
@@ -419,7 +419,7 @@
   }
 
 
-  static
+  LOCAL_FUNC_X
   FT_Error  TT_Load_Composite_Glyph( TT_Loader*  loader )
   {
     FT_Error         error;
