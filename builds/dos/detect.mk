@@ -22,8 +22,8 @@ ifeq ($(PLATFORM),ansi)
 
   ifdef COMSPEC
     #
-    # we try to recognize a Cygwin session, in which case we're
-    # certainly not running on DOS !!
+    # We try to recognize a Cygwin session, in which case we're
+    # certainly not running on DOS!
     #
     ifneq ($(OSTYPE),cygwin)
       is_dos := $(findstring Dos,$(shell ver))

@@ -913,8 +913,7 @@
     matrix->xy = temp[2];
     matrix->yy = temp[3];
     
-    /* note that the offset must be expressed in */
-    /* integer font units..                      */
+    /* note that the offsets must be expressed in integer font units */
     offset->x  = temp[4] >> 16;
     offset->y  = temp[5] >> 16;
   }

@@ -1,22 +1,25 @@
-FreeType 2 compilation how-to
+
+
+                       FreeType 2 compilation how-to
+                       =============================
 
 
 Introduction:
 
-Welcome to this version of the FreeType 2 library. You'll find in this
+Welcome to this version of the FreeType 2 library.  You'll find in this
 document instructions on how to compile the library on your favorite
 platform.
 
 
-I. QUICK COMMAND-LINE GUIDE:
-----------------------------
+I. QUICK COMMAND-LINE GUIDE
+---------------------------
 
   Install GNU Make, then try the following on Unix or any system with gcc:
 
      make    // this will setup the build
      make    // this will build the library
 
-  On Win32+Visual C++:
+  On Win32 + Visual C++:
 
      make setup visualc    // setup the build for VisualC++ on Win32
      make                  // build the library
@@ -27,19 +30,19 @@ I. QUICK COMMAND-LINE GUIDE:
 
 
   Note that on Unix, the first "make" invocation will run a configure
-  script (which is located in "freetype2/builds/unix/". You can also
+  script (which is located in "freetype2/builds/unix/".  You can also
   pass parameters to this script with the CFG variable, as in:
   
      make CFG="--prefix=/usr/local"
      make
 
 
-  If this doesn't work, read the following..
+  If this doesn't work, read the following.
 
 
 
-II. COMMAND-LINE COMPILATION:
------------------------------
+II. COMMAND-LINE COMPILATION
+----------------------------
 
   Note that if you do not want to compile FreeType 2 from a command line
   shell, please skip to section III below (DETAILED COMPILATION)

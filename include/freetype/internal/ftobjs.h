@@ -211,7 +211,7 @@
   BASE_DEF( FT_Error )  FT_New_GlyphSlot( FT_Face        face,
                                           FT_GlyphSlot*  aslot );
 
-  BASE_DEF( void )      FT_Done_GlyphSlot( FT_GlyphSlot  slot );
+  BASE_DEF( void )  FT_Done_GlyphSlot( FT_GlyphSlot  slot );
 
 
   /*************************************************************************/
