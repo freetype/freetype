@@ -300,6 +300,7 @@
     /* fonts within PDF documents, so don't check for them.            */
     (void)LOAD_( max_profile );
     (void)LOAD_( charmaps );
+
       
     /* the following tables are optional in PCL fonts -- */
     /* don't check for errors                            */
