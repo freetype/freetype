@@ -1128,9 +1128,6 @@
                 FT_Stream  stream )
   {
     FT_Error       error;
-    FT_Memory      memory = stream->memory;
-    FT_Long        table_start;
-    TT_CMapDirRec  cmap_dir;
 
     error = face->goto_table( face, TTAG_cmap, stream, &face->cmap_size );
     if ( error )

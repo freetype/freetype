@@ -72,10 +72,10 @@ THE SOFTWARE.
                  
 
   FT_CALLBACK_DEF( FT_UInt )
-  pcf_cmap_char_index( FT_CMap    cmap,
+  pcf_cmap_char_index( PCF_CMap   cmap,
                        FT_UInt32  charcode )
   {
-    PCF_Encoding  encoding = cmap->encodings;
+    PCF_Encoding  encodings = cmap->encodings;
     FT_UInt       min, max, mid;
     FT_UInt       result = 0;
     
@@ -140,7 +140,7 @@ THE SOFTWARE.
     if ( ++min < cmap->num_encodings )
     {
       charcode = encodings[min].enc;
-      glyph    = encodings[min].glyph;
+      result   = encodings[min].glyph;
     }
     
   Exit:

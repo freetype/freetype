@@ -19,6 +19,7 @@
 #include <ft2build.h>
 #include "sfobjs.h"
 #include "ttload.h"
+#include "ttcmap0.h"
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_TRUETYPE_IDS_H
@@ -384,7 +385,6 @@
     {
       FT_Face     root = &face->root;
       FT_Int      flags = 0;
-      TT_CharMap  charmap;
       FT_Int      n;
       FT_Memory   memory;
 
@@ -456,12 +456,12 @@
       /*                                                                   */
 #ifdef FT_CONFIG_OPTION_USE_CMAPS
 
-      error = TT_Build_CMaps( face );
-      if (error) goto Exit;
+      TT_Build_CMaps( face );  /* ignore errors */
+      
       
       /* set the encoding fields */
       {
-        FT_UInt  n;
+        FT_Int  n;
         
         for ( n = 0; n < root->num_charmaps; n++ )
         {
@@ -480,32 +480,36 @@
       }
 
 #else /* !FT_CONFIG_OPTION_USE_CMAPS */
-
-      charmap            = face->charmaps;
-      root->num_charmaps = face->num_charmaps;
-
-      /* allocate table of pointers */
-      if ( FT_NEW_ARRAY( root->charmaps, root->num_charmaps ) )
-        goto Exit;
-
-      for ( n = 0; n < root->num_charmaps; n++, charmap++ )
+      
       {
-        FT_Int  platform = charmap->cmap.platformID;
-        FT_Int  encoding = charmap->cmap.platformEncodingID;
-
-
-        charmap->root.face        = (FT_Face)face;
-        charmap->root.platform_id = (FT_UShort)platform;
-        charmap->root.encoding_id = (FT_UShort)encoding;
-        charmap->root.encoding    = sfnt_find_encoding( platform, encoding );
-
-        /* now, set root->charmap with a unicode charmap */
-        /* wherever available                            */
-        if ( !root->charmap                                &&
-             charmap->root.encoding == ft_encoding_unicode )
-          root->charmap = (FT_CharMap)charmap;
-
-        root->charmaps[n] = (FT_CharMap)charmap;
+        TT_CharMap  charmap = face->charmaps;
+        
+        charmap            = face->charmaps;
+        root->num_charmaps = face->num_charmaps;
+  
+        /* allocate table of pointers */
+        if ( FT_NEW_ARRAY( root->charmaps, root->num_charmaps ) )
+          goto Exit;
+  
+        for ( n = 0; n < root->num_charmaps; n++, charmap++ )
+        {
+          FT_Int  platform = charmap->cmap.platformID;
+          FT_Int  encoding = charmap->cmap.platformEncodingID;
+  
+  
+          charmap->root.face        = (FT_Face)face;
+          charmap->root.platform_id = (FT_UShort)platform;
+          charmap->root.encoding_id = (FT_UShort)encoding;
+          charmap->root.encoding    = sfnt_find_encoding( platform, encoding );
+  
+          /* now, set root->charmap with a unicode charmap */
+          /* wherever available                            */
+          if ( !root->charmap                                &&
+               charmap->root.encoding == ft_encoding_unicode )
+            root->charmap = (FT_CharMap)charmap;
+  
+          root->charmaps[n] = (FT_CharMap)charmap;
+        }
       }
 
 #endif /* !FT_CONFIG_OPTION_USE_CMAPS */

@@ -49,8 +49,8 @@ FT_BEGIN_HEADER
 
   typedef struct TT_ValidatorRec_
   {
-    FT_Validator   validator;
-    FT_UInt        num_glyphs;
+    FT_ValidatorRec  validator;
+    FT_UInt          num_glyphs;
     
   } TT_ValidatorRec, *TT_Validator;
 

@@ -127,8 +127,8 @@ FT_BEGIN_HEADER
  /* validator structure */
   typedef struct FT_ValidatorRec_
   {
-    FT_Byte*            base;   /* address of table in memory           */
-    FT_Byte*            limit;  /* 'base' + sizeof(table) in memory     */
+    const FT_Byte*      base;   /* address of table in memory           */
+    const FT_Byte*      limit;  /* 'base' + sizeof(table) in memory     */
     FT_ValidationLevel  level;  /* validation level                     */
     FT_Error            error;  /* error returned. 0 means success      */
 
@@ -136,12 +136,16 @@ FT_BEGIN_HEADER
 
   } FT_ValidatorRec;
 
+#define FT_VALIDATOR(x)  ((FT_Validator)(x))
 
   FT_BASE( void )
   ft_validator_init( FT_Validator        valid,
-                     FT_Byte*            base,
-                     FT_Byte*            limit,
+                     const FT_Byte*      base,
+                     const FT_Byte*      limit,
                      FT_ValidationLevel  level );
+
+  FT_BASE( FT_Int )
+  ft_validator_run( FT_Validator  valid );
 
  /* sets the error field in a validator, then calls 'longjmp' to return */
  /* to high-level caller. Using 'setjmp/longjmp' avoids many stupid     */
@@ -450,6 +454,7 @@ FT_BEGIN_HEADER
 #define FT_FACE_DRIVER( x )   FT_FACE( x )->driver
 #define FT_FACE_LIBRARY( x )  FT_FACE_DRIVER( x )->root.library
 #define FT_FACE_MEMORY( x )   FT_FACE( x )->memory
+#define FT_FACE_STREAM( x )   FT_FACE( x )->stream
 
 #define FT_SIZE_FACE( x )     FT_SIZE( x )->face
 #define FT_SLOT_FACE( x )     FT_SLOT( x )->face
