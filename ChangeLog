@@ -16,6 +16,15 @@
           removing various compiler warnings
 
 
+        * include/freetype/internal/fnttypes.h,
+        include/freetype/internal/ftserv.h, src/base/ftbdf.c, src/base/ftmm.c,
+        src/base/ftobjs.c, src/base/ftpfr.c, src/base/ftwinfnt.c,
+        src/base/ftxf86.c, src/pfr/pfrdrivr.c, src/winfonts/winfnt.c,
+        src/winfonts/winfnt.h, include/freetype/internal/service/svwinfnt.h,:
+
+          simplification of service lookup macros, updating the PFR and
+          WINFNT font drivers to new services
+
 
 2003-09-19  David Bevan  <dbevan@emtex.com>
 

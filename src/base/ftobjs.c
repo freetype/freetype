@@ -38,7 +38,7 @@
   {
     FT_Pointer      result = NULL;
     FT_ServiceDesc  desc   = service_descriptors;
-    
+
 
     if ( desc && service_id )
     {
@@ -53,7 +53,7 @@
     }
 
     return result;
-  }                          
+  }
 
 
   FT_BASE_DEF( void )
@@ -1188,7 +1188,7 @@
     pfb_data[4] = 0;
     pfb_data[5] = 0;
     pfb_pos     = 7;
-    pfb_lenpos  = 2;      
+    pfb_lenpos  = 2;
 
     len = 0;
     type = 1;
@@ -1527,12 +1527,12 @@
 
 #ifdef FT_MACINTOSH
     /*
-       I know this section is within code which is normally turned off 
+       I know this section is within code which is normally turned off
        for the Mac.  It provides an alternative approach to reading the
        mac resource forks on OS/X in the event that a user does not wish
        to compile ftmac.c.
      */
-         
+
     if ( ( FT_ERROR_BASE( error ) == FT_Err_Unknown_File_Format      ||
            FT_ERROR_BASE( error ) == FT_Err_Invalid_Stream_Operation )  &&
            ( args->flags & FT_OPEN_PATHNAME )                           )
@@ -2399,33 +2399,9 @@
       FT_Service_GlyphDict  service;
 
 
-#if 0
-
       FT_FACE_LOOKUP_SERVICE( face,
-                              FT_Service_GlyphDict, service,
-                              glyph_dict,
-                              FT_SERVICE_ID_GLYPH_DICT );
-
-#else
-
-      service = (FT_Service_GlyphDict)face->internal->services.glyph_dict;
-      if ( service == FT_SERVICE_UNAVAILABLE )
-        service = NULL;
-      else if ( service == NULL )
-      {
-        FT_Module  module = FT_MODULE( face->driver );
-
-       
-        if ( module->clazz->get_interface )
-          service = (FT_Service_GlyphDict)module->clazz->get_interface(
-                      module, FT_SERVICE_ID_GLYPH_DICT );
-     
-        face->internal->services.glyph_dict =
-          service != NULL ? (FT_Pointer)service
-                          : FT_SERVICE_UNAVAILABLE;
-      }
-
-#endif /* 1 */
+                              service,
+                              GLYPH_DICT );
 
       if ( service && service->name_index )
         result = service->name_index( face, glyph_name );
@@ -2458,9 +2434,8 @@
 
 
       FT_FACE_LOOKUP_SERVICE( face,
-                              FT_Service_GlyphDict, service,
-                              glyph_dict,
-                              FT_SERVICE_ID_GLYPH_DICT );
+                              service,
+                              GLYPH_DICT );
 
       if ( service && service->get_name )
         error = service->get_name( face, glyph_index, buffer, buffer_max );
@@ -2487,9 +2462,8 @@
 
 
       FT_FACE_LOOKUP_SERVICE( face,
-                              FT_Service_PsName, service,
-                              postscript_name,
-                              FT_SERVICE_ID_POSTSCRIPT_NAME );
+                              service,
+                              POSTSCRIPT_NAME );
 
       if ( service && service->get_ps_name )
         result = service->get_ps_name( face );
@@ -2512,13 +2486,13 @@
 
     if ( face && FT_IS_SFNT( face ) )
     {
-      FT_FACE_FIND_SERVICE( FT_Service_SFNT_Table, service,
+      FT_FACE_FIND_SERVICE( service,
                             face,
-                            FT_SERVICE_ID_SFNT_TABLE );
+                            SFNT_TABLE );
       if ( service != NULL )
         table = service->get_table( face, tag );
     }
-      
+
     return table;
   }
 
@@ -2538,12 +2512,12 @@
     if ( !face || !FT_IS_SFNT( face ) )
       return FT_Err_Invalid_Face_Handle;
 
-    FT_FACE_FIND_SERVICE( FT_Service_SFNT_Table, service,
+    FT_FACE_FIND_SERVICE( service,
                           face,
-                          FT_SERVICE_ID_SFNT_TABLE );
+                          SFNT_TABLE );
     if ( service == NULL )
       return FT_Err_Unimplemented_Feature;
-      
+
     return service->load_table( face, tag, offset, buffer, length );
   }
 

@@ -1,10 +1,10 @@
 /***************************************************************************/
 /*                                                                         */
-/*  ftxf86.c                                                               */
+/*  svwinfnt.h                                                             */
 /*                                                                         */
-/*    FreeType utility file for X11 support (body).                        */
+/*    The FreeType Windows FNT/FONT service                                */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2003 by                                                      */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -16,24 +16,32 @@
 /***************************************************************************/
 
 
-#include <ft2build.h>
-#include FT_XFREE86_H
-#include FT_INTERNAL_OBJECTS_H
-#include FT_SERVICE_XFREE86_NAME_H
+#ifndef __SVWINFNT_H__
+#define __SVWINFNT_H__
 
-  FT_EXPORT_DEF( const char* )
-  FT_Get_X11_Font_Format( FT_Face  face )
+
+#include FT_INTERNAL_SERVICE_H
+#include FT_WINFONTS_H
+
+FT_BEGIN_HEADER
+
+
+#define FT_SERVICE_ID_WINFNT  "winfonts"
+
+  typedef FT_Error  (*FT_WinFnt_GetHeaderFunc)( FT_Face               face,
+                                                FT_WinFNT_HeaderRec  *aheader );
+
+  FT_DEFINE_SERVICE( WinFnt )
   {
-    const char*  result = NULL;
+    FT_WinFnt_GetHeaderFunc  get_header;
+  };
+
+  /* */
+
+FT_END_HEADER
 
 
-    if ( face )
-      FT_FACE_FIND_SERVICE( result,
-                            face,
-                            XF86_NAME );
-
-    return result;
-  }
+#endif /* __SVWINFNT_H__ */
 
 
 /* END */
