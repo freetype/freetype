@@ -3,6 +3,9 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_OUTLINE_H
+#include FT_INTERNAL_OBJECTS_H
+#include FT_INTERNAL_DEBUG_H
 
 FT_BEGIN_HEADER
 
@@ -44,9 +47,14 @@ FT_BEGIN_HEADER
   } AF_WidthRec, *AF_Width;
 
 
-  AF_LOCAL( void )
+  FT_LOCAL( void )
   af_sort_pos( FT_UInt   count,
                FT_Pos*   table );
+
+  FT_LOCAL( void )
+  af_sort_widths( FT_UInt   count,
+                  AF_Width  widths );
+
 
  /**************************************************************************/
  /**************************************************************************/
@@ -75,8 +83,8 @@ FT_BEGIN_HEADER
   *
   */
   FT_LOCAL( AF_Angle )
-  af_angle( FT_Pos  dx,
-            FT_Pos  dy );
+  af_angle_atan( FT_Pos  dx,
+                 FT_Pos  dy );
 
 
  /*
@@ -109,7 +117,7 @@ FT_BEGIN_HEADER
   typedef struct AF_OutlineRec_
   {
     FT_Face          face;
-    FT_OutlineRec    outline;
+    FT_Outline       outline;
     FT_UInt          outline_resolution;
 
     FT_Int           advance;
@@ -231,8 +239,9 @@ FT_BEGIN_HEADER
     FT_UInt32    first;
     FT_UInt32    last;
 
-  } AF_Script_UniRangeRec, *AF_Script_UniRange;
+  } AF_Script_UniRangeRec;
 
+  typedef const AF_Script_UniRangeRec *  AF_Script_UniRange;
 
   typedef struct AF_ScriptClassRec_
   {

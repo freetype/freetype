@@ -3,19 +3,19 @@
 
  /* populate this list when you add new scripts
   */
-  static AF_ScriptClass const   af_script_class_list[] =
+  static AF_ScriptClass const   af_script_classes[] =
   {
     & af_latin_script_class,
 
     NULL  /* do not remove */
   };
 
-#define AF_SCRIPT_LIST_DEFAULT   0    /* index of default script in 'af_script_class_list' */
+#define AF_SCRIPT_LIST_DEFAULT   0    /* index of default script in 'af_script_classes' */
 #define AF_SCRIPT_LIST_NONE      255  /* indicates an uncovered glyph                      */
 
  /*
   *  note that glyph_scripts[] is used to map each glyph into
-  *  an index into the 'af_script_class_list' array.
+  *  an index into the 'af_script_classes' array.
   *
   */
   typedef struct AF_FaceGlobalsRec_
@@ -26,7 +26,7 @@
 
     AF_ScriptMetrics   metrics[ AF_SCRIPT_MAX ];
 
-  } AF_FaceGlobalsRec, *AF_FaceGlobals;
+  } AF_FaceGlobalsRec;
 
 
 
@@ -143,7 +143,6 @@
       }
     }
 
-  Exit:
     *aglobals = globals;
     return error;
   }
@@ -163,7 +162,7 @@
         {
           AF_ScriptClass  clazz = af_script_classes[nn];
 
-          FT_ASSERT( globals->metrics[nn].clazz == clazz );
+          FT_ASSERT( globals->metrics[nn]->clazz == clazz );
 
           if ( clazz->script_metrics_done )
             clazz->script_metrics_done( globals->metrics[nn] );
@@ -172,7 +171,7 @@
         }
       }
 
-      globals->glyph_count   = NULL;
+      globals->glyph_count   = 0;
       globals->glyph_scripts = NULL;  /* no need to free this one !! */
       globals->face          = NULL;
       FT_FREE( globals );
@@ -185,7 +184,7 @@
                                FT_UInt            gindex,
                                AF_ScriptMetrics  *ametrics )
   {
-    FT_Script         script;
+    AF_Script         script;
     AF_ScriptMetrics  metrics = NULL;
     FT_UInt           index;
     AF_ScriptClass    clazz;
@@ -198,7 +197,7 @@
     }
 
     index   = globals->glyph_scripts[ gindex ];
-    clazz   = af_script_class_list[ index ];
+    clazz   = af_script_classes[ index ];
     metrics = globals->metrics[ clazz->script ];
     if ( metrics == NULL )
     {
@@ -211,7 +210,7 @@
 
       if ( clazz->script_metrics_init )
       {
-        error = clazz->script_metrics_init( metrics, face );
+        error = clazz->script_metrics_init( metrics, globals->face );
         if ( error )
         {
           if ( clazz->script_metrics_done )

@@ -460,7 +460,7 @@
       }
     }
     goto AddNode;
-  }                     
+  }
 
 
   FT_EXPORT_DEF( FT_Error )
@@ -529,7 +529,7 @@
   {
     FT_UFast     i, count;
     FTC_Manager  manager = cache->manager;
-    FTC_Node     free    = NULL;
+    FTC_Node     frees   = NULL;
 
     count = cache->p + cache->mask;
     for ( i = 0; i < count; i++ )
@@ -547,8 +547,8 @@
         if ( cache->clazz.node_remove_faceid( node, face_id, cache ) )
         {
           *pnode = node->link;
-          node->link = free;
-          free       = node;
+          node->link = frees;
+          frees      = node;
         }
         else
           pnode = &node->link;
@@ -557,12 +557,12 @@
 
    /* remove all nodes in the free list
     */
-    while ( free )
+    while ( frees )
     {
       FTC_Node  node;
 
-      node = free;
-      free = node->link;
+      node  = frees;
+      frees = node->link;
 
       manager->cur_weight -= cache->clazz.node_weight( node, cache );
       ftc_node_mru_unlink( node, manager );

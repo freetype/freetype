@@ -1,3 +1,11 @@
+2003-12-24  David Turner  <david@freetype.org>
+
+        * fixed compilation problems in the cache sub-system
+
+        * partial updates to src/autofit
+
+        * MERRY X-MAS !
+
 2003-12-23  Werner Lemberg  <wl@gnu.org>
 
 	* src/cff/cffgload.c (cff_lookup_glyph_by_stdcharcode): Handle
@@ -7,10 +15,13 @@
 
 	* include/freetype/internal/ftobjs.h (FT_PAD_FLOOR, FT_PAD_ROUND,
 	FT_PAD_CEIL, FT_PIX_FLOOR, FT_PIX_ROUND, FT_CEIL): New macros.  They
-	are used to avoid compiler warnings with very pedantic compilers. 
+	are used to avoid compiler warnings with very pedantic compilers.
 	Note that `(x) & -64' causes a warning if (x) is not signed.  Use
 	`(x) & ~63' instead!
 	Updated all related code.
+
+        * include/freetype/ftstroke.h, src/base/ftstroke.c: added support
+        for extraction of "inside" and "outside" borders
 
 2003-12-22  Werner Lemberg  <wl@gnu.org>
 

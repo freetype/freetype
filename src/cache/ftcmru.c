@@ -258,7 +258,6 @@
                    FTC_MruNode  *anode )
   {
     FTC_MruNode  node;
-    FT_Error     error = 0;
 
     node = FTC_MruList_Find( list, key );
     if ( node == NULL )

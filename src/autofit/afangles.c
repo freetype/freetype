@@ -2,6 +2,7 @@
 
   /* this table was generated for AF_ANGLE_PI = 256 */
 #define AF_ANGLE_MAX_ITERS  8
+#define AF_TRIG_MAX_ITERS   9
 
   static const FT_Fixed
   af_angle_arctan_table[9] =
@@ -118,7 +119,7 @@
     if ( theta >= 0 )
       theta = FT_PAD_ROUND( theta, 4 );
     else
-      theta = - FT_PAD_ROUND( -theta, 4 );
+      theta = - FT_PAD_ROUND( theta, 4 );
 
     vec->x = x;
     vec->y = theta;
@@ -171,8 +172,8 @@
   af_sort_pos( FT_UInt   count,
                FT_Pos*   table )
   {
-    FT_Int  i, j;
-    FT_Pos  swap;
+    FT_UInt  i, j;
+    FT_Pos   swap;
 
 
     for ( i = 1; i < count; i++ )
@@ -188,4 +189,26 @@
       }
     }
   }
- 
+
+
+  FT_LOCAL_DEF( void )
+  af_sort_widths( FT_UInt   count,
+                  AF_Width  table )
+  {
+    FT_UInt      i, j;
+    AF_WidthRec  swap;
+
+
+    for ( i = 1; i < count; i++ )
+    {
+      for ( j = i; j > 0; j-- )
+      {
+        if ( table[j].org > table[j - 1].org )
+          break;
+
+        swap         = table[j];
+        table[j]     = table[j - 1];
+        table[j - 1] = swap;
+      }
+    }
+  }
