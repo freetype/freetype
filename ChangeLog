@@ -1,3 +1,7 @@
+2002-08-27  Werner Lemberg  <wl@gnu.org>
+
+	* docs/VERSION.DLL: New file.
+
 2002-08-23  Graham Asher  <graham.asher@btinternet.com>
 
     * /src/cff/cffgload.c (cff_operator_seac)
