@@ -987,6 +987,12 @@
 
     /* check the 'storageOffset' field */
     storageOffset = names->storageOffset;
+
+    /* some broken asian fonts have a storage offset whose value is */
+    /* 12*numNameRecords. We deal with them here..                  */
+    if ( storageOffset == 12 * names->numNameRecords )
+      storageOffset += 6;
+    
     if ( storageOffset <  (FT_ULong)( 6 + 12 * names->numNameRecords ) ||
          table_len     <= storageOffset                                )
     {
