@@ -1,3 +1,9 @@
+2001-03-04  Antoine Leca  <Antoine.Leca@renault.fr>
+
+	* include/freetype/ttnameid.h: Correct a stupid typo which prevented
+	correct compilation (TT_MS_LANGID_TIGRIGNA_ETHIOPIA appeared twice).
+	I am sorry for the inconvenience :-(.
+
 2001-03-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/autohint/ahtypes.h (AH_Hinter): Add elements
@@ -35,7 +41,7 @@
 	the Type 1 glyph charstring (used by conversion programs).
 	Submitted by Ha Shao <hashao@chinese.com>.
 
-2001-02-22  David Turner  <david.turner@freetype.org>
+2001-02-22  David Turner    <david.turner@freetype.org>
 
 	* src/base/ftgrays.c (grays_sweep): The function didn't exit
 	immediately if `num_cells' was 0 as it should.  Thanks to Boris for

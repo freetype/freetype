@@ -517,7 +517,7 @@ FT_BEGIN_HEADER
  /* language codes from 0x0466 to 0x0471 are unknown. */
 #define TT_MS_LANGID_OROMO_ETHIOPIA                    0x0472
 #define TT_MS_LANGID_TIGRIGNA_ETHIOPIA                 0x0473
-#define TT_MS_LANGID_TIGRIGNA_ETHIOPIA                 0x0873
+#define TT_MS_LANGID_TIGRIGNA_ERYTHREA                 0x0873
 
 
 
