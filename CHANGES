@@ -1,16 +1,124 @@
 LATEST CHANGES BETWEEN 2.0.2 and 2.0.1
 
-    - changed the library header files inclusion scheme. Right now,
-      a client application can do something like this:
-      
-         #include <ft2build.h>   -- include build and setup configuration file
-         #include FT_FREETYPE_H  -- main API file
-         #include FT_GLYPH_H     -- abstract glyph image handling, etc..
 
+  I. CHANGES TO THE MODULES / FONT DRIVERS:
+
+    - THE TRUETYPE BYTECODE INTERPRETER IS NOW TURNED OFF, in order to
+	  avoid legal problems with the Apple patents. It seems that we
+	  mistakenly turned this option on in previous releases of the build.
+	  
+	  note that if you want to use the bytecode interpreter, in order to
+	  get high-quality TrueType rendering, you'll need to toggle by hand
+	  the definition of the TT_CONFIG_OPTION_BYTECODE_INTERPRETER macro
+	  in the file "include/freetype/config/ftoption.h"
+
+    - The CFF driver has been improved by Tom Kacvinsky:
+	
+	      * support for "seac" emulation
+		  * support for "dotsection"
+		  * support for retrieving glyph names through "FT_Get_Glyph_Name"
+
+      The first two items are necessary to correctly a large number of
+	  Type 1 fonts converted to the CFF formats by Adobe Acrobat.
+
+
+    - the Type 1 driver was also improved by Tom:
+	
+	      * better EM size computation
+		  * better support for synthetic (transformed) fonts
+          * the Type 1 driver returns the charstrings corresponding to
+		    each glyph in the "glyph->control_data" field after a call to
+			"FT_Load_Glyph"
+
+
+    - various other bugfixes, including the following:
+	
+	      * fixed a nasty memory leak in the Type 1 driver
+		  
+		  * the autohinter and the pcf driver used static writable data
+		    when they shouldn't
+			
+          * many casts were added to make the code more 64-bits safe.
+		    it also now compiles on Windows XP 64-bits without warnings
+
+          * some incorrect writable statics were removed in the "autohint"
+		    and "pcf" drivers. FT2 now compiles on Epoc again..
+
+
+  II. CHANGES TO THE HIGH-LEVEL API
+  
+    - the library header files inclusion scheme has been changed. The old
+	  scheme looked like:
+	  
+	       #include <freetype/freetype.h>
+		   #include <freetype/ftglyph.h>
+		   #include <freetype/ftcache.h>
+		   #include <freetype/cache/ftimage.h>
+		   
+      use:
+	  
+	       #include <ft2build.h>
+		   #include FT_FREETYPE_H
+		   #include FT_GLYPH_H
+		   #include FT_CACHE_H
+		   #include FT_CACHE_IMAGE_H
+		   
+      NOTE THAT THE OLD INCLUSION SCHEME WILL STILL WORK WITH THIS RELEASE.
+	  HOWEVER, WE DON'T GUARANTEE THAT THIS WILL STILL BE TRUE IN THE NEXT
+	  ONE (A.K.A. FREETYPE 2.1)
+
+      the file <ft2build.h> is used to define the header filename macros.
+	  The complete and commented list of macros is available in the API
+	  reference under the section name "Header File Macros" in Chapter I.
+
+    - many, many comments have been added to the public source file in
+	  order to automatically generate the API Reference through the
+	  "docmaker.py" Python script.
+	  
+	  The latter has been updated to support the grouping of sections
+	  in chapters, and better index sort. See:
+
+	       http://www.freetype.org/freetype2/docs/reference/ft2-toc.html
+
+
+  III. CHANGES TO THE BUILD PROCESS
+  
+
+    - if you're not building FreeType 2 with our own build system (i.e. with
+	  your own Makefiles or project files), you'll need to be aware that the
+	  build process as changed a little bit. Namely:
+	  
+	      - you don't need to put the "src" directory in the include path
+		    when compiling any FT2 component
+			
+	      - instead, simply put the component's directory in the current
+		    include path.
+			
+	  So, if you were doing something like:
+	  
+	        cc -c -Iinclude -Isrc src/base/ftbase.c
+			
+	  change the line to:
+	  
+	        cc -c -Iinclude -Isrc/base src/base/ftbase.c
+			
+	  
+	  If you were doing something like:
+	  
+	        cd src/base
+			cc -c -I../../include -I.. ftbase.c
+			
+	  change it to:
+	  
+	        cd src/base
+			cc -c -I../../include ftbase.c
+
+	  
     - the build system has changed slightly when compiling by hand (either
       from the command line or from an IDE). You don't need to put the "src"
       directory in the include path anymore. Rather, place each component's
       path.. See INSTALL and "docs/BUILD" for details..
+
 
 
 =========================================================================
