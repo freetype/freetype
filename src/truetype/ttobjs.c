@@ -373,6 +373,11 @@
     FREE( face->root.family_name );
     FREE( face->root.style_name );
 
+    /* freeing sbit size table */
+    face->root.num_fixed_sizes = 0;
+    if ( face->root.available_sizes )
+      FREE( face->root.available_sizes );
+
     face->sfnt = 0;
   }
 

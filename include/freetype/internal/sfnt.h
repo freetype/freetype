@@ -166,6 +166,7 @@
                                         TT_Int            x_ppem,
                                         TT_Int            y_ppem,
                                         TT_UInt           glyph_index,
+                                        TT_UInt           load_flags,
                                         FT_Stream         stream,
                                         FT_Bitmap*        map,
                                         TT_SBit_Metrics*  metrics );

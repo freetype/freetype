@@ -1,5 +1,10 @@
 LATEST_CHANGES
 
+  - fixed some bugs in the sbit loader (src/base/sfnt/ttsbit.c) + added
+    a new flag, FT_LOAD_CROP_BITMAP to query that bitmaps be cropped when
+    loaded from a file (maybe I should move the bitmap cropper to the
+    base layer ??).
+
   - changed the default number of gray levels of the smooth renderer to
     256 (instead of the previous 128). Of course, the human eye can't
 	see any difference ;-)

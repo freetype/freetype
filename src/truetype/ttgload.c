@@ -1231,6 +1231,7 @@
                                      size->root.metrics.x_ppem,
                                      size->root.metrics.y_ppem,
                                      glyph_index,
+                                     load_flags,
                                      stream,
                                      &glyph->bitmap,
                                      &metrics );

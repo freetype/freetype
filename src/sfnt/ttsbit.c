@@ -58,7 +58,7 @@
   /*                                                                       */
   static
   void  blit_sbit( FT_Bitmap*  target,
-                   char*       source,
+                   FT_Byte*    source,
                    FT_Int      line_bits,
                    FT_Bool     byte_padded,
                    FT_Int      x_offset,
@@ -115,19 +115,19 @@
             /* ensure that there are at least 8 bits in the accumulator */
             if ( loaded < 8 )
             {
-              acc    |= ((FT_UShort)*source++) << (8 - loaded);
+              acc    |= (FT_UShort)*source++ << (8 - loaded);
               loaded += 8;
             }
 
             /* now write one byte */
-            val     = (FT_Byte)(acc >> 8);
+            val = (FT_Byte)(acc >> 8);
             if (shift)
             {
               cur[0] |= val >> shift;
               cur[1] |= val << space;
             }
             else
-              cur[0] = val;
+              cur[0] |= val;
 
             cur++;
             acc   <<= 8;  /* remove bits from accumulator */
@@ -150,7 +150,7 @@
         /* ensure that there are at least `count' bits in the accumulator */
         if ( loaded < count )
         {
-          acc    |= ((FT_UShort)*source++) << (8 - loaded);
+          acc    |= (FT_UShort)*source++ << (8 - loaded);
           loaded += 8;
         }
 
@@ -464,6 +464,7 @@
     TT_ULong   num_strikes;
     TT_ULong   table_base;
 
+    face->num_sbit_strikes = 0;
 
     /* this table is optional */
     error = face->goto_table( face, TTAG_EBLC, stream, 0 );
@@ -724,7 +725,7 @@
                 else
                   *aglyph_offset = range->image_offset +
                                    n * range->image_size;
-                break;
+                goto Found;
               }
             }
           }
@@ -734,9 +735,9 @@
             goto Fail;
         }
 
+    Found:
         /* return successfully! */
         *arange  = range;
-
         return 0;
       }
     }
@@ -851,54 +852,55 @@
     TT_Error  error = TT_Err_Ok;
 
 
-    switch ( range->index_format )
+    switch ( range->image_format )
     {
-    case 1:  /* variable metrics */
-    case 3:
-    case 4:
-      {
-        switch ( range->image_format )
+    case 1:
+    case 2:
+    case 8:
+        /* variable small metrics */
         {
-        case 1:  /* small metrics */
-        case 2:
-        case 8:
-          {
-            TT_SBit_Small_Metrics  smetrics;
+          TT_SBit_Small_Metrics  smetrics;
 
-
-            /* read small metrics */
-            if ( ACCESS_Frame( 5L ) )
-              goto Exit;
-            TT_Load_Small_SBit_Metrics( &smetrics, stream );
-            FORGET_Frame();
-
-            /* convert it to a big metrics */
-            metrics->height       = smetrics.height;
-            metrics->width        = smetrics.width;
-            metrics->horiBearingX = smetrics.bearingX;
-            metrics->horiBearingY = smetrics.bearingY;
-            metrics->horiAdvance  = smetrics.advance;
-
-            /* these metrics are made up at a higher level when */
-            /* needed.                                          */
-            metrics->vertBearingX = 0;
-            metrics->vertBearingY = 0;
-            metrics->vertAdvance  = 0;
-          }
-          break;
-
-        default:  /* big metrics */
-          if ( ACCESS_Frame( 8L ) )
+          /* read small metrics */
+          if ( ACCESS_Frame( 5L ) )
             goto Exit;
-          TT_Load_SBit_Metrics( metrics, stream );
+          TT_Load_Small_SBit_Metrics( &smetrics, stream );
           FORGET_Frame();
+
+          /* convert it to a big metrics */
+          metrics->height       = smetrics.height;
+          metrics->width        = smetrics.width;
+          metrics->horiBearingX = smetrics.bearingX;
+          metrics->horiBearingY = smetrics.bearingY;
+          metrics->horiAdvance  = smetrics.advance;
+
+          /* these metrics are made up at a higher level when */
+          /* needed.                                          */
+          metrics->vertBearingX = 0;
+          metrics->vertBearingY = 0;
+          metrics->vertAdvance  = 0;
         }
+        break;
+
+    case 6:
+    case 7:
+    case 9:
+      /* variable big metrics */
+      {
+        if ( ACCESS_Frame( 8L ) )
+         goto Exit;
+        TT_Load_SBit_Metrics( metrics, stream );
+        FORGET_Frame();
       }
       break;
 
-    default:  /* constant metrics */
-      *metrics = range->metrics;
-    }
+    case 5:
+   default:  /* constant metrics */
+      if ( range->index_format == 2 || range->index_format == 5 )
+        *metrics = range->metrics;
+      else
+        return FT_Err_Invalid_File_Format;
+   }
 
   Exit:
     return error;
@@ -1177,7 +1179,7 @@
       /* don't forget to multiply `x_offset' by `map->pix_bits' as */
       /* the sbit blitter doesn't make a difference between pixmap */
       /* depths.                                                   */
-      blit_sbit( map, stream->cursor, line_bits, pad_bytes,
+      blit_sbit( map, (FT_Byte*)stream->cursor, line_bits, pad_bytes,
                  x_offset * pix_bits, y_offset );
 
       FORGET_Frame();
@@ -1267,6 +1269,9 @@
                                range->image_format, metrics, stream );
 
     case 8:  /* compound format */
+      FT_Skip_Stream( stream, 1L );
+      /* fallthrough */
+
     case 9:
       break;
 
@@ -1377,6 +1382,7 @@
                                 TT_Int            x_ppem,
                                 TT_Int            y_ppem,
                                 TT_UInt           glyph_index,
+                                TT_UInt           load_flags,
                                 FT_Stream         stream,
                                 FT_Bitmap*        map,
                                 TT_SBit_Metrics*  metrics )
@@ -1432,8 +1438,9 @@
       metrics->vertAdvance  =  advance * 12 / 10;
     }
 
-    /* Crop the bitmap now */
-    Crop_Bitmap( map, metrics );
+    /* Crop the bitmap now, unless specified otherwise */
+    if (load_flags & FT_LOAD_CROP_BITMAP)
+      Crop_Bitmap( map, metrics );
 
   Exit:
     return error;

@@ -1532,6 +1532,20 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Constant>                                                            */
+  /*    FT_LOAD_CROP_BITMAP                                                */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    A bit-field constant, used with FT_Load_Glyph() to indicate that   */
+  /*    the font driver should try to crop the bitmap (i.e. remove all     */
+  /*    space around its black bits) when loading it. For now, this        */
+  /*    really only works with Embedded Bitmaps in TrueType fonts..        */
+  /*                                                                       */
+  /*                                                                       */
+#define FT_LOAD_CROP_BITMAP  64
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Constant>                                                            */
   /*    FT_LOAD_PEDANTIC                                                   */
   /*                                                                       */
   /* <Description>                                                         */

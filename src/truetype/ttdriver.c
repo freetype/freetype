@@ -239,8 +239,30 @@
         root->charmaps[n] = (FT_CharMap)charmap;
       }
 
-      root->num_fixed_sizes = 0;
-      root->available_sizes = 0;
+#ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+      if ( face->num_sbit_strikes )
+      {
+       face->root.num_fixed_sizes = face->num_sbit_strikes;
+       if ( ALLOC_ARRAY( face->root.available_sizes,
+                         face->num_sbit_strikes,
+                         FT_Bitmap_Size ) )
+         return error;
+
+       for ( n = 0 ; n < face->num_sbit_strikes ; n++ )
+       {
+         face->root.available_sizes[n].width =
+           face->sbit_strikes[n].x_ppem;
+         face->root.available_sizes[n].height =
+           face->sbit_strikes[n].y_ppem;
+       }
+      }
+      else
+#else
+      {
+       root->num_fixed_sizes = 0;
+       root->available_sizes = 0;
+      }
+#endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
 
       /*****************************************************************/
       /*                                                               */
