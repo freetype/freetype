@@ -1,3 +1,8 @@
+2004-01-03  Masatake YAMATO  <jet@gyve.org>
+
+	* src/base/ftobjs.c (destroy_charmaps): New function.
+	(destroy_face, open_face): Use `destroy_charmaps'.
+
 2004-01-01  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.
