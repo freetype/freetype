@@ -96,6 +96,12 @@
     { VK_F12,       grKeyF12       }
   };
 
+  static
+  Translator  syskey_translators[] =
+  {
+    { VK_F1,        grKeyF1        }
+  };
+
   /* This is a minimalist driver, it is only able to display */
   /* a _single_ window. Moreover, only monochrome and gray   */
   /* bitmaps are supported..                                 */
@@ -209,18 +215,15 @@ void done_surface( grSurface*  surface )
       SetWindowText( hwndGraphic, the_title );
       title_set = 1;
     }
-    
-    do
+
+    eventToProcess = 0;    
+    while (GetMessage( &msg, 0, 0, 0 ))
     {
-      while ( PeekMessage( &msg, 0, 0, 0, PM_REMOVE ) )
-      {
-        TranslateMessage( &msg );
-        DispatchMessage( &msg );
-      }
-      if (!eventToProcess)
-        WaitMessage();
+      TranslateMessage( &msg );
+      DispatchMessage( &msg );
+      if (eventToProcess)
+        break;
     }
-    while (!eventToProcess);
     
     *grevent = ourevent;
   }
@@ -400,7 +403,7 @@ LRESULT CALLBACK Message_Process( HWND handle, UINT mess,
       hwndGraphic    = 0;
       PostQuitMessage ( 0 );
       DeleteObject ( hbm );
-      break;
+      return 0;
 
     case WM_CREATE:
       {
@@ -432,17 +435,33 @@ LRESULT CALLBACK Message_Process( HWND handle, UINT mess,
       SelectObject ( memDC, oldbm );
       DeleteObject ( memDC );
       EndPaint ( handle, &ps );
-    }
+      return 0;
+      }
 
-    case WM_KEYDOWN:
     case WM_SYSKEYDOWN:
+      {
+        int          count = sizeof( syskey_translators )/sizeof( syskey_translators[0] );
+        Translator*  trans = syskey_translators;
+        Translator*  limit = trans + count;
+        for ( ; trans < limit; trans++ )
+          if ( wParam == trans->winkey )
+          {
+            ourevent.key = trans->grkey;
+            goto Do_Key_Event;
+          }
+        return DefWindowProc( handle, mess, wParam, lParam );
+      }
+
+      
+    case WM_KEYDOWN:
       switch ( wParam )
       {
       case VK_ESCAPE:
         ourevent.type  = gr_event_key;
         ourevent.key   = grKeyEsc;
         eventToProcess = 1;
-        break;
+        PostQuitMessage ( 0 );
+        return 0;
 
       default:
         /* lookup list of translated keys */
@@ -457,7 +476,11 @@ LRESULT CALLBACK Message_Process( HWND handle, UINT mess,
               goto Do_Key_Event;
             }
         }
-      }
+        
+        /* the key isn't found, default processing               */
+        /* return DefWindowProc( handle, mess, wParam, lParam ); */
+        return DefWindowProc( handle, mess, wParam, lParam );
+    }
 
     case WM_CHAR:
       {
@@ -472,7 +495,6 @@ LRESULT CALLBACK Message_Process( HWND handle, UINT mess,
     default:
        return DefWindowProc( handle, mess, wParam, lParam );
     }
-
     return 0;
   }
 
