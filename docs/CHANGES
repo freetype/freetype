@@ -10,6 +10,10 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
       rounded,  making  them virtually  unusable  if  not loaded  with
       FT_LOAD_LINEAR_DESIGN.
 
+    - Indexing CID-keyed CFF fonts is now working:  The glyph index is
+      correctly  treated as a CID,  similar to  FreeType's CID  driver
+      module.  Note that CID CMaps support is still missing.
+
 
   II. IMPORTANT CHANGES
 

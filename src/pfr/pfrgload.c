@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    FreeType PFR glyph loader (body).                                    */
 /*                                                                         */
-/*  Copyright 2002 by                                                      */
+/*  Copyright 2002, 2003 by                                                */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -198,7 +198,7 @@
     /* indicate that a new contour has started */
     glyph->path_begun = 1;
 
-    /* check that there is room for a new contour and a new point */
+    /* check that there is space for a new contour and a new point */
     error = FT_GlyphLoader_CheckPoints( loader, 1, 1 );
     if ( !error )
       /* add new start point */

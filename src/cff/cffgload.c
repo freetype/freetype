@@ -398,7 +398,7 @@
   }
 
 
-  /* check that there is enough room for `count' more points */
+  /* check that there is enough space for `count' more points */
   static FT_Error
   check_points( CFF_Builder*  builder,
                 FT_Int        count )
@@ -451,7 +451,7 @@
   }
 
 
-  /* check room for a new contour, then add it */
+  /* check space for a new contour, then add it */
   static FT_Error
   cff_builder_add_contour( CFF_Builder*  builder )
   {
@@ -2314,6 +2314,11 @@
       FT_Byte*  charstring;
       FT_ULong  charstring_len;
 
+
+      /* in a CID-keyed font, consider `glyph_index' as a CID and map */
+      /* it immediately to the real glyph_index                       */
+      if ( cff->top_font.font_dict.cid_registry != 0xFFFFU )
+        glyph_index = cff->charset.cids[glyph_index];
 
       cff_decoder_init( &decoder, face, size, glyph, hinting,
                         FT_LOAD_TARGET_MODE(load_flags) );

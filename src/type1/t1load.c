@@ -1191,9 +1191,9 @@
     if ( parser->root.error )
       return;
 
-    /* initialize tables, leaving room for addition of .notdef, */
-    /* if necessary, and a few other glyphs to handle buggy     */
-    /* fonts which have more glyphs than specified.             */
+    /* initialize tables, leaving space for addition of .notdef, */
+    /* if necessary, and a few other glyphs to handle buggy      */
+    /* fonts which have more glyphs than specified.              */
 
     error = psaux->ps_table_funcs->init(
               code_table, loader->num_glyphs + 1 + TABLE_EXTEND, memory );

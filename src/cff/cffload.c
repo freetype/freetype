@@ -1511,7 +1511,8 @@
                     FT_UInt      num_glyphs,
                     FT_Stream    stream,
                     FT_ULong     base_offset,
-                    FT_ULong     offset )
+                    FT_ULong     offset,
+                    FT_Bool      invert )
   {
     FT_Memory  memory = stream->memory;
     FT_Error   error  = 0;
@@ -1611,8 +1612,8 @@
       case 0:
         if ( num_glyphs > 229 )
         {
-          FT_ERROR(("cff_charset_load: implicit charset larger than\n"
-                    "predefined charset (Adobe ISO-Latin)!\n" ));
+          FT_ERROR(( "cff_charset_load: implicit charset larger than\n"
+                     "predefined charset (Adobe ISO-Latin)!\n" ));
           error = CFF_Err_Invalid_File_Format;
           goto Exit;
         }
@@ -1671,17 +1672,36 @@
       }
     }
 
-  Exit:
+    /* we have to invert the `sids' array for CID-keyed fonts */
+    if ( invert )
+    {
+      FT_UInt    i;
+      FT_UShort  max_cid = 0;
 
+
+      for ( i = 0; i < num_glyphs; i++ )
+        if ( charset->sids[i] > max_cid )
+          max_cid = charset->sids[i];
+      max_cid++;
+
+      if ( FT_NEW_ARRAY( charset->cids, max_cid ) )
+        goto Exit;
+      FT_MEM_ZERO( charset->cids, sizeof ( FT_UShort ) * max_cid );
+
+      for ( i = 0; i < num_glyphs; i++ )
+        charset->cids[charset->sids[i]] = i;
+    }
+
+  Exit:
     /* Clean up if there was an error. */
     if ( error )
-      if ( charset->sids )
-      {
-        FT_FREE( charset->sids );
-        charset->format = 0;
-        charset->offset = 0;
-        charset->sids   = 0;
-      }
+    {
+      FT_FREE( charset->sids );
+      FT_FREE( charset->cids );
+      charset->format = 0;
+      charset->offset = 0;
+      charset->sids   = 0;
+    }
 
     return error;
   }
@@ -2225,7 +2245,8 @@
     if ( font->num_glyphs > 0 )
     {
       error = cff_charset_load( &font->charset, font->num_glyphs, stream,
-                                base_offset, dict->charset_offset );
+                                base_offset, dict->charset_offset,
+                                dict->cid_registry != 0xFFFFU );
       if ( error )
         goto Exit;
 
