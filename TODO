@@ -2,13 +2,12 @@ Here is a list of items that need to be addressed in FreeType 2:
 
 * Add synthesized Unicode charmap processing to the CFF driver.
 
-* Fix Visual C++ project file.
-
 * Fix a bug in the TrueType driver: linear horizontal advances of composites
   are not returned properly.
 
-* Change the build system to work with the "Jam" tool instead of the
-  terribly complex and error-prone GNU Makefiles we are currently using.
-
 * Fix exact bbox calculation for cubics.  The current code uses an iterative
   algorithm which can fail miserably.
+
+* Fix 64-bit issues (the code compiles and seems to work, but we've not
+  make a thorough check so some fonts could still core dump the library !!)
+
