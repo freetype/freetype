@@ -465,7 +465,7 @@
         subr->code[count] = subr->code[count - 1] + len;
       }
 
-      /* decrypt subroutines, but only if lenIV >= 0. */
+      /* decrypt subroutines, but only if lenIV >= 0 */
       if ( lenIV >= 0 )
       {
         for ( count = 0; count < num_subrs; count++ )

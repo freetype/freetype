@@ -1,3 +1,10 @@
+2001-03-12  Werner Lemberg  <wl@gnu.org>
+
+	* src/psaux/t1decode.c (T1_Decoder_Parse_Charstrings): Fix error
+	messages.
+
+	* INSTALL, docs/BUILD: We need GNU make 3.78.1 or newer.
+
 2001-03-12  Tom Kacvinsky  <tjk@ams.org>
 
 	* include/freetype/internal/psaux.h:  Changed the lenIV member of
