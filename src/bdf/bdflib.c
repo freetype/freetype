@@ -725,7 +725,7 @@
 
           /* Restore the character at the end of the line. */
           *hp = (char)hold;
-        }     
+        }
       }
     }
 
@@ -1301,11 +1301,11 @@
       case BDF_CARDINAL:
         fp->value.card32 = _bdf_atoul( value, 0, 10 );
         break;
-      
+
       default:
         ;
       }
-      
+
       goto Exit;
     }
 
@@ -1740,6 +1740,10 @@
         /* the scalable width from the device width.                      */
         FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG9, lineno ));
 
+        ps = (double)font->point_size;
+        rx = (double)font->resolution_x;
+        dw = (double)glyph->dwidth;
+
         glyph->swidth = (unsigned short)FT_MulDiv(
                           glyph->dwidth, 72000L,
                           (FT_Long)( font->point_size *
@@ -1966,8 +1970,8 @@
     bdf_font_t*        font;
     char               *s;
 
-    FT_Memory          memory;
-    FT_Error           error = BDF_Err_Ok;
+    FT_Memory          memory = NULL;
+    FT_Error           error  = BDF_Err_Ok;
 
     FT_UNUSED( lineno );            /* only used in debug mode */
 
@@ -2090,7 +2094,7 @@
       p->font->bbx.x_offset = _bdf_atos( p->list.field[3], 0, 10 );
       p->font->bbx.y_offset = _bdf_atos( p->list.field[4], 0, 10 );
 
-      p->font->bbx.ascent  = (short)( p->font->bbx.height + 
+      p->font->bbx.ascent  = (short)( p->font->bbx.height +
                                       p->font->bbx.y_offset );
 
       p->font->bbx.descent = (short)( -p->font->bbx.y_offset );
@@ -2193,8 +2197,8 @@
     unsigned long  lineno;
     _bdf_parse_t   p;
 
-    FT_Memory      memory;
-    FT_Error       error = BDF_Err_Ok;
+    FT_Memory      memory = NULL;
+    FT_Error       error  = BDF_Err_Ok;
 
 
     FT_MEM_SET( &p, 0, sizeof ( _bdf_parse_t ) );

@@ -8,6 +8,10 @@
 
 2005-05-28  David Turner  <david@freetype.org>
 
+    * docs/CHANGES: updating file for upcoming release (2.1.1)
+
+    * src/bdf/bdflib.c: removing compiler warnings
+
 	* include/freetype/ftxf86.h, src/base/ftxf86.c: New files.
 	They provad a new API (FT_Get_X11_Font_Format) an X11-compatible
 	string describing the font format of a given face.  This was put in

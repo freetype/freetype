@@ -1,3 +1,57 @@
+LATEST CHANGES BETWEEN 2.1.1 and 2.1.0
+
+  I. IMPORTANT BUG FIXES
+
+    - the 'version_info' returned by "freetype-config" in 2.1.0 returned an
+      invalid value. It now returns 9:1:3 (2.0.9 returned 9:0:3)
+
+    - 2.1.0 couldn't be linked against applications on Win32 and Amiga
+      systems, due to a new debug function that wasn't properly propagated
+      to the system-specific directory in 'builds'.
+
+    - various MacOS and Mac OS X specific fixes
+
+    - fixed a bug in the TrueType charmap validation routines that made
+      2.1.0 over-restrictive over the fonts it could accept.
+
+    - surprisingly, there was still a very small difference between the
+      monochrome glyph bitmaps produced by FT 1.x and FT 2.x with the
+      bytecode interpreter enabled. This was caused by an invalid flag
+      setting in the TrueType glyph loader that caused the rasterizer to
+      change its drop-out control mode. This is now fixed, and results
+      should _really_ be 100% identical
+
+    - the TrueType name table loader has been improved to support many
+      popular though buggy Asian fonts. It now ignores empty name entries,
+      invalid pointer offsets and a few other sad things. Moreover, name
+      strings are now loaded on demand, which reduces the memory load of
+      many faces (e.g. the ARIAL.TTF font file contains a 10Kb name table
+      containing 70 names)
+
+    - fixed a bug in the Postscript hinter that prevented family blues
+      substitution to happen correctly.
+
+
+  II. NEW FEATURES
+
+    - Three new font drivers in this release !!
+
+        * a BDF font driver, contributed by Franco Narda Zapelli, and
+          heavily modified by Werner Lemberg, it also supports anti-aliased
+          bitmaps
+
+        * a Type42 font driver, contributed by ..... This one is still
+          experimental but seems to work relatively well but lacks some
+          charmap support for now
+
+        * a PFR font driver, contributed by David Turner himself. It doesn't
+          support PFR hinting Beware that BitStream has at least two patents
+          on this format !!
+
+
+
+========================================================================
+
 LATEST CHANGES BETWEEN 2.1.0 and 2.0.9
 
   I. IMPORTANT BUG FIXES
@@ -12,7 +66,7 @@ LATEST CHANGES BETWEEN 2.1.0 and 2.0.9
       been optimized and placed within the "ttinterp.c" file.
 
     - Fixed the parsing of accelerator tables in the PCF font driver.
-    
+
     - Fixed the Type1 glyph loader routine used to compute the font's
       maximum advance width.
 
