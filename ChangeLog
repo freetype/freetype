@@ -1,3 +1,25 @@
+2002-02-06  David Turner   <david@freetype.org>
+
+        * src/sfnt/ttcmap.c: removing compiler warnings
+
+        * src/pcf/pcfread.c, src/pcf/pcf.h, src/pcf/pcfdriver.c:
+        removing minor bugs (delaying format checks out of
+        FT_Access_Frame .. FT_Forget_Frame blocks to avoid leaving the
+        stream in an incorrect state when encountering an invalid PCF
+        font)
+        
+        reformatting / renaming a few functions for the sake of consistency
+
+
+2002-02-06  Detlef Würkner
+
+        * src/pcf/pcfdriver.c (FT_Done_Face): fixed small memory leak
+        
+        * src/pcf/pcfread.c (pcf_load_font): now handles the "AVERAGE_WIDTH"
+        property to return correct character pixel (width/height) pairs for
+        embedded bitmaps..
+
+
 2002-02-04  Keith Packard  <keithp@keithp.com>
 
 	Adding the function `FT_Get_Next_Char', doing the obvious thing

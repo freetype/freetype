@@ -48,24 +48,32 @@ THE SOFTWARE.
 #define FT_COMPONENT  trace_pcfdriver
 
 
-  FT_LOCAL_DEF FT_Error
-  PCF_Done_Face( PCF_Face  face )
+  static FT_Error
+  PCF_Face_Done( PCF_Face  face )
   {
     FT_Memory    memory = FT_FACE_MEMORY( face );
-    PCF_Property tmp    = face->properties;
-    int i;
 
 
     FREE( face->encodings );
     FREE( face->metrics );
 
-    for ( i = 0; i < face->nprops; i++ )
+    /* free properties */
     {
-      FREE( tmp->name );
-      if ( tmp->isString )
-        FREE( tmp->value );
+      PCF_Property prop = face->properties;
+      FT_Int       i;
+      
+      for ( i = 0; i < face->nprops; i++ )
+      {
+        prop = &face->properties[i];
+        
+        FREE( prop->name );
+        if ( prop->isString )
+          FREE( prop->value );
+      }
+      
+      FREE( face->properties );
     }
-    FREE( face->properties );
+    
     FREE( face->toc.tables );
     FREE( face->root.family_name );
     FREE( face->root.available_sizes );
@@ -79,7 +87,7 @@ THE SOFTWARE.
 
 
   static FT_Error
-  PCF_Init_Face( FT_Stream      stream,
+  PCF_Face_Init( FT_Stream      stream,
                  PCF_Face       face,
                  FT_Int         face_index,
                  FT_Int         num_params,
@@ -100,7 +108,7 @@ THE SOFTWARE.
 
   Fail:
     FT_TRACE2(( "[not a valid PCF file]\n" ));
-    PCF_Done_Face( face );
+    PCF_Face_Done( face );
 
     return PCF_Err_Unknown_File_Format; /* error */
   }
@@ -138,19 +146,19 @@ THE SOFTWARE.
 
 
   static FT_Error
-  PCF_Load_Glyph( FT_GlyphSlot  slot,
+  PCF_Glyph_Load( FT_GlyphSlot  slot,
                   FT_Size       size,
                   FT_UInt       glyph_index,
                   FT_Int        load_flags )
   {
     PCF_Face    face   = (PCF_Face)FT_SIZE_FACE( size );
+    FT_Stream   stream = face->root.stream;
     FT_Error    error  = PCF_Err_Ok;
     FT_Memory   memory = FT_FACE(face)->memory;
     FT_Bitmap*  bitmap = &slot->bitmap;
     PCF_Metric  metric;
     int         bytes;
 
-    FT_Stream   stream = face->root.stream;
 
     FT_UNUSED( load_flags );
 
@@ -249,7 +257,7 @@ THE SOFTWARE.
 
 
   static FT_UInt
-  PCF_Get_Char_Index( FT_CharMap  charmap,
+  PCF_Char_Get_Index( FT_CharMap  charmap,
                       FT_Long     char_code )
   {
     PCF_Face      face     = (PCF_Face)charmap->face;
@@ -277,7 +285,7 @@ THE SOFTWARE.
 
 
   static FT_Long
-  PCF_Get_Next_Char( FT_CharMap  charmap,
+  PCF_Char_Get_Next( FT_CharMap  charmap,
                      FT_Long     char_code )
   {
     PCF_Face      face     = (PCF_Face)charmap->face;
@@ -285,7 +293,7 @@ THE SOFTWARE.
     int           low, high, mid;
 
 
-    FT_TRACE4(( "get_char_index %ld\n", char_code ));
+    FT_TRACE4(( "get_next_char %ld\n", char_code ));
     
     char_code++;
     low  = 0;
@@ -338,8 +346,8 @@ THE SOFTWARE.
     sizeof( FT_SizeRec ),
     sizeof( FT_GlyphSlotRec ),
 
-    (FTDriver_initFace)     PCF_Init_Face,
-    (FTDriver_doneFace)     PCF_Done_Face,
+    (FTDriver_initFace)     PCF_Face_Init,
+    (FTDriver_doneFace)     PCF_Face_Done,
     (FTDriver_initSize)     0,
     (FTDriver_doneSize)     0,
     (FTDriver_initGlyphSlot)0,
@@ -348,14 +356,14 @@ THE SOFTWARE.
     (FTDriver_setCharSizes) PCF_Set_Pixel_Size,
     (FTDriver_setPixelSizes)PCF_Set_Pixel_Size,
 
-    (FTDriver_loadGlyph)    PCF_Load_Glyph,
-    (FTDriver_getCharIndex) PCF_Get_Char_Index,
+    (FTDriver_loadGlyph)    PCF_Glyph_Load,
+    (FTDriver_getCharIndex) PCF_Char_Get_Index,
 
     (FTDriver_getKerning)   0,
     (FTDriver_attachFile)   0,
     (FTDriver_getAdvances)  0,
 
-    (FTDriver_getNextChar)  PCF_Get_Next_Char
+    (FTDriver_getNextChar)  PCF_Char_Get_Next,
   };
 
 
