@@ -1,263 +1,293 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en"
+          "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
-<head><title>The Design of FreeType 2 - Public Objects</title>
-<basefont face="Georgia, Arial, Helvetica, Geneva">
-<style content="text/css">
-  P { text-align=justify }
-  H1 { text-align=center }
-  H2 { text-align=center }
-  LI { text-align=justify }
-</style>
+<head>
+  <meta http-equiv="Content-Type"
+        content="text/html; charset=iso-8859-1">
+  <meta name="Author"
+        content="David Turner">
+  <title>The Design of FreeType 2 - Public Objects</title>
 </head>
-<body text=#000000 bgcolor=#ffffff>
 
-<center><table width="500"><tr><td>
+<body text="#000000"
+      bgcolor="#ffffff">
 
-<center><h1>The Design of FreeType 2</h1></center>
+<h1 align=center>
+  The Design of FreeType&nbsp;2
+</h1>
 
-<table width="100%" cellpadding=5><tr bgcolor="#ccccee"><td>
-<h1>II. Public Objects and Classes</h1>
-</td></tr></table>
+<center>
+<table width="75%">
+<tr><td>
 
-<p>We will now detail the abstractions provided by FreeType 2 to
-   client applications to manage font files and data. As you would
-   normally expect, these are implemented through objects/classes.</p>
+  <table width="100%">
+  <tr bgcolor="#ccccee"><td>
+    <h1>
+      II. Public Objects and Classes
+    </h1>
+  </td></tr>
+  </table>
 
-<h2>1. Object Orientation in FreeType 2:</h2>
+  <p>We will now explain the abstractions provided by FreeType&nbsp;2 to
+  client applications to manage font files and data.  As you would normally
+  expect, these are implemented through objects/classes.</p>
 
-<p>Though written in ANSI C, the library employs a few
-   techniques, inherited from object-oriented programming, to make
-   it easy to extend. Hence, the following conventions apply in
-   the FT2 source code:</p>
+    <h2>
+      1. Object Orientation in FreeType&nbsp;2
+    </h2>
 
-<ol>
-  <li><p>
-     each object type/class has a corresponding <em>structure type</em> <b>and</b>
-     a corresponding <em>structure pointer type</em>. the latter is called the
-     <em>handle type</em> for the type/class.</p>
+    <p>Though written in ANSI&nbsp;C, the library employs a few techniques,
+    inherited from object-oriented programming, to make it easy to extend. 
+    Hence, the following conventions apply in the FreeType&nbsp;2 source
+    code:</p>
 
-  <p>Consider that we need to manage objects of type "foo" in FT2.
-     We would define the following structure and handle types as
-     follow:</p>
+    <ol>
+      <li>
+        <p>Each object type/class has a corresponding <em>structure
+        type</em> <b>and</b> a corresponding <em>structure pointer
+        type</em>.  The latter is called the <em>handle type</em> for the
+        type/class.</p>
 
-  <pre><font color="blue">
-     typedef struct FT_FooRec_*    FT_Foo;
+        <p>Consider that we need to manage objects of type "foo" in
+        FreeType&nbsp;2.  We would define the following structure and handle
+        types as follows:</p>
 
-     typedef struct FT_FooRec_
-     {
-       // fields for the "foo" class
-       ...
+        <font color="blue"><pre>
+    typedef struct FT_FooRec_*  FT_Foo;
 
-     } FT_FooRec;
-  </font></pre>
+    typedef struct  FT_FooRec_
+    {
+      // fields for the "foo" class
+      ...
 
-  <p>As a convention, handle types use simple but meaningful identifiers
-     beginning with "FT_", as in "FT_Foo", while structures use the same
-     name with a "Rec" suffix appended to it ('Rec' is short for "record").
-     <em>Note that each class type has a corresponding handle type</em>.
-     </p>
+    } FT_FooRec;</pre>
+        </font>
 
+        <p>As a convention, handle types use simple but meaningful
+        identifiers beginning with <tt>FT_</tt>, as in <tt>FT_Foo</tt>,
+        while structures use the same name with a <tt>Rec</tt> suffix
+        appended to it ("Rec" is short for "record").  <em>Note that each
+        class type has a corresponding handle type</em>.</p>
+      </li>
+      <li>
+        <p>Class derivation is achieved internally by wrapping base class
+        structures into new ones.  As an example, we define a "foobar" class
+        that is derived from "foo".  We would do something like:</p>
 
-  <li><p>
-     class derivation is achieved internally by wrapping base class
-     structures into new ones. As an example, let's define a "foobar"
-     class that is derived from "foo". We would do something like:</p>
+        <font color="blue"><pre>
+    typedef struct FT_FooBarRec_*  FT_FooBar;
 
-  <pre><font color="blue">
-     typedef struct FT_FooBarRec_*    FT_FooBar;
+    typedef struct  FT_FooBarRec_
+    {
+      // the base "foo" class fields
+      FT_FooRec  root;
 
-     typedef struct FT_FooBarRec_
-     {
-       // the base "foo" class fields
-       FT_FooRec     root;
+      // fields proper to the "foobar" class
+      ...
+    } FT_FooBarRec;</pre>
+        </font>
 
-       // fields proper to the "foobar" class
-       ...
+        <p>As you can see, we ensure that a "foobar" object is also a "foo"
+        object by placing a <tt>FT_FooRec</tt> at the start of the
+        <tt>FT_FooBarRec</tt> definition.  It is called <b>root</b> by
+        convention.</p>
 
-     } FT_FooBarRec;
-  </font></pre>
+        <p>Note that a <tt>FT_FooBar</tt> handle also points to a "foo"
+        object and can be typecasted to <tt>FT_Foo</tt>.  Similarly, when
+        the library returns a <tt>FT_Foo</tt> handle to client applications,
+        the object can be really implemented as a <tt>FT_FooBar</tt> or any
+        derived class from "foo".</p>
+      </li>
+    </ol>
 
-  <p>As you can see, we ensure that a "foobar" object is also a "foo"
-     object by placing a <tt>FT_FooRec</tt> at the start of the
-     <tt>FT_FooBarRec</tt> definition. It is called <b>root</b>
-     by convention.</p>
+    <p>In the following sections of this chapter, we will refer to "the
+    <tt>FT_Foo</tt> class" to indicate the type of objects handled through
+    <tt>FT_Foo</tt> pointers, be they implemented as "foo" or "foobar".</p>
 
-  <p>Note that a <tt>FT_FooBar</tt> handle also points to a "foo" object
-     and can be typecasted to <tt>FT_Foo</tt>. Similarly, when the
-     library handles a <tt>FT_Foo</tt> handle to client applications,
-     the object can be really implemented as a <tt>FT_FooBar</tt> or any
-     derived class from "foo".</p>
+    <hr>
 
-  </p></li>
-</ul>
+    <h2>
+      2. The <tt>FT_Library</tt> class
+    </h2>
 
-<p>Note that in the following sections of this chapter, we will refer
-   to "the <tt>FT_Foo</tt> class" to indicate the type of objects
-   handled through <tt>FT_Foo</tt> pointers, be they implemented as
-   "foo" or "foobar".</p>
+    <p>This type corresponds to a handle to a single instance of the
+    library.  Note that the corresponding structure <tt>FT_LibraryRec</tt>
+    is not defined in public header files, making client applications unable
+    to access its internal fields.</p>
 
-<hr>
+    <p>The library object is the <em>parent</em> of all other objects in
+    FreeType&nbsp;2.  You need to create a new library instance before doing
+    anything else with the library.  Similarly, destroying it will
+    automatically destroy all its children (i.e. faces and modules).</p>
 
-<h2>2. The <em><b>FT_Library</b></em> class:</h2>
+    <p>Typical client applications should call <tt>FT_Init_FreeType()</tt>
+    in order to create a new library object, ready to be used for further
+    actions.</p>
 
-<p>This type corresponds to a handle to a single instance of the
-   library. Note that the corresponding structure <tt>FT_LibraryRec</tt>
-   is not defined in public header files, making client applications
-   unable to access its internal fields.</p>
+    <p>Another alternative is to create a fresh new library instance by
+    calling the function <tt>FT_New_Library()</tt>, defined in the
+    <tt>&lt;freetype/ftmodule.h&gt;</tt> public header file.  This function
+    will however return an "empty" library instance with no module
+    registered in it.  You can "install" modules in the instance by calling
+    <tt>FT_Add_Module()</tt> manually.</p>
 
-<p>The library object is the "parent" of all other objects in FreeType 2.
-   You need to create a new library instance before doing anything else
-   with the library. Similarly, destroying it will automatically
-   destroy all its children (i.e. faces and modules).</p>
+    <p>Calling <tt>FT_Init_FreeType()</tt> is a lot more convenient, because
+    this function basically registers a set of default modules into each new
+    library instance.  The way this list is accessed and/or computed is
+    determined at build time, and depends on the content of the
+    <tt>ftinit</tt> component.  This process is explained in details later
+    in this document.</p>
 
-<p>Typical client applications should call <tt>FT_Init_FreeType</tt>,
-   in order to create a new library object, ready to be used for
-   further action.</p>
+    <p>For now, one should consider that library objects are created with
+    <tt>FT_Init_FreeType()</tt>, and destroyed along with all children with
+    <tt>FT_Done_FreeType()</tt>.</p>
 
-<p>Another alternative is to create a fresh new library instance
-   by calling the function <tt>FT_New_Library</tt>, defined in the
-   <tt>&lt;freetype/ftmodule.h&gt;</tt> public header file. This
-   function will however return an "empty" library instance with
-   no module registered in it. You can "install" modules in the
-   instance by calling <tt>FT_Add_Module</tt> manually.</p>
+    <hr>
 
-<p>Calling <tt>FT_Init_FreeType</tt> is a lot more convenient, because
-   this function basically registers a set of default modules into
-   each new library instance. The way this list is accessed and/or
-   computed is determined at build time, and depends on the content
-   of the <b>ftinit</b> component. This process is explained in
-   details later in this document.</p>
+    <h2>
+      3. The <tt>FT_Face</tt> class
+    </h2>
 
-<p>For now, one should consider that library objects are created
-   with <tt>FT_Init_FreeType</tt>, and destroyed along with all
-   children with <tt>FT_Done_FreeType</tt>.</p>
-<hr>
+    <p>A face object corresponds to a single <em>font face</em>, i.e., a
+    specific typeface with a specific style.  For example, "Arial" and
+    "Arial Italic" correspond to two distinct faces.</p>
 
-<h2>3. The <em><b>FT_Face</b></em> class:</h2>
+    <p>A face object is normally created through <tt>FT_New_Face()</tt>. 
+    This function takes the following parameters: an <tt>FT_Library</tt>
+    handle, a C file pathname used to indicate which font file to open, an
+    index used to decide which face to load from the file (a single file may
+    contain several faces in certain cases), and the address of a
+    <tt>FT_Face</tt> handle.  It returns an error code:</p>
 
-<p>A face object corresponds to a single <em>font face</em>, i.e.
-   a specific typeface with a specific style. For example, "Arial"
-   and "Arial Italic" correspond to two distinct faces.</p>
+    <font color="blue"><pre>
+    FT_Error  FT_New_Face( FT_Library   library,
+                           const char*  filepathname,
+                           FT_Long      face_index,
+                           FT_Face*     face );</pre>
+    </font>
 
-<p>A face object is normally created through <tt>FT_New_Face</tt>.
-   This function takes the following parameters: a <tt>FT_Library</tt>
-   handle, a C file pathname used to indicate which font file to
-   open, an index used to decide which face to load from the file
-   (a single file may contain several faces in certain cases),
-   as well as the address of a <tt>FT_Face</tt> handle. It returns
-   an error code:</p>
+    <p>In case of success, the function will return&nbsp;0, and the handle
+    pointed to by the <tt>face</tt> parameter will be set to a non-NULL
+    value.</p>
 
-<pre><font color="blue">
-  FT_Error  FT_New_Face( FT_Library   library,
-                         const char*  filepathname,
-                         FT_Long      face_index,
-                         FT_Face     *face );
-</font></pre>
+    <p>Note that the face object contains several fields used to describe
+    global font data that can be accessed directly by client applications. 
+    For example, the total number of glyphs in the face, the face's family
+    name, style name, the EM size for scalable formats, etc.  For more
+    details, look at the <tt>FT_FaceRec</tt> definition in the
+    FreeType&nbsp;2 API Reference.</p>
 
-<p>in case of success, the function will return 0, and the handle
-   pointed to by the "face" parameter will be set to a non-NULL value.</p>
+    <hr>
 
-<p>Note that the face object contains several fields used to
-   describe global font data that can be accessed directly by
-   client applications. For example, the total number of glyphs
-   in the face, the face's family name, style name, the EM size
-   for scalable formats, etc.. For more details, look at the
-   <tt>FT_FaceRec</tt> definition in the FT2 API Reference.</p>
+    <h2>
+      4. The <tt>FT_Size</tt> class
+    </h2>
 
-<hr>
+    <p>Each <tt>FT_Face</tt> object <em>has</em> one or more
+    <tt>FT_Size</tt> objects.  A <em>size object</em> is used to store data
+    specific to a given character width and height.  Each newly created face
+    object has one size, which is directly accessible as
+    <tt>face-&gt;size</tt>.</p>
 
-<h2>4. The <em><b>FT_Size</b></em> class:</h2>
+    <p>The contents of a size object can be changed by calling either
+    <tt>FT_Set_Pixel_Sizes()</tt> or <tt>FT_Set_Char_Size()</tt>.</p>
 
-<p>Each <tt>FT_Face</tt> object <em>has</em> one or more <tt>FT_Size</tt>
-   objects. A <em>size object</em> is used to store data specific to a
-   given character width and height. Each newly created face object
-   has one size, which is directly accessible as <tt>face-&gt;size</tt>.</p>
+    <p>A new size object can be created with <tt>FT_New_Size()</tt>, and
+    destroyed manually with </tt>FT_Done_Size()</tt>.  Note that typical
+    applications don't need to do this normally: they tend to use the
+    default size object provided with each <tt>FT_Face</tt>.</p>
 
-<p>The content of a size object can be changed by calling either
-   <tt>FT_Set_Pixel_Sizes</tt> or <tt>FT_Set_Char_Size</tt>.</p>
+    <p>The public fields of <tt>FT_Size</tt> objects are defined in a very
+    small structure named <tt>FT_SizeRec</tt>.  However, it is important to
+    understand that some font drivers define their own derivatives of
+    <tt>FT_Size</tt> to store important internal data that is re-computed
+    each time the character size changes.  Most of the time, these are
+    size-specific <em>font hints</em>./p>
 
-<p>A new size object can be created with <tt>FT_New_Size</tt>, and
-   destroyed manually with </tt>FT_Done_Size</tt>. Note that typical
-   applications don't need to do this normally: they tend to use
-   the default size object provided with each <tt>FT_Face</tt>.</p>
+    <p>For example, the TrueType driver stores the scaled CVT table that
+    results from the execution of the "cvt" program in a <tt>TT_Size</tt>
+    structure, while the Type&nbsp;1 driver stores scaled global metrics
+    (like blue zones) in a <tt>T1_Size</tt> object.  Don't worry if you
+    don't understand the current paragraph; most of this stuff is highly
+    font format specific and doesn't need to be explained to client
+    developers&nbsp;:-)</p>
 
-<p>The public fields of <tt>FT_Size</tt> objects are defined in
-   a very small structure named <tt>FT_SizeRec</tt>. However, it is
-   important to understand that some font drivers define their own
-   derivatives of <tt>FT_Size</tt> to store important internal data
-   that is re-computed each time the character size changes. Most of
-   the time, these are size-specific <em>font hints</em>./p>
+    <hr>
 
-<p>For example, the TrueType driver stores the scaled CVT table that
-   results from the execution of the "cvt" program in a <tt>TT_Size</tt>,
-   while the Type 1 driver stores scaled global metrics (like blue zones)
-   in a <tt>T1_Size</tt> object. Don't worry if you don't understand
-   the current paragraph, most of this stuff is highly font format
-   specific and doesn't need to be explained to client developers :-)</p>
+    <h2>
+      5. The <tt>FT_GlyphSlot</tt> class
+    </h2>
 
-<hr>
+    <p>The purpose of a glyph slot is to provide a place where glyph images
+    can be loaded one by one easily, independently of the glyph image format
+    (bitmap, vector outline, or anything else).</p>
 
-<h2>5. The <em><b>FT_GlyphSlot</b></em> class:</h2>
+    <p>Ideally, once a glyph slot is created, any glyph image can be loaded
+    into it without additional memory allocation.  In practice, this is only
+    possible with certain formats like TrueType which explicitly provide
+    data to compute a slot's maximum size.</p>
 
-<p>The purpose of a glyph slot is to provide a place where glyph
-   images can be loaded one by one easily, independently of the
-   glyph image format (bitmap, vector outline, or anything else).</p>
+    <p>Another reason for glyph slots is that they are also used to hold
+    format-specific hints for a given glyphs as well as all other data
+    necessary to correctly load the glyph.</p>
 
-<p>Ideally, once a glyph slot is created, any glyph image can
-   be loaded into it without additional memory allocation. In practice,
-   this is only possible with certain formats like TrueType which
-   explicitely provide data to compute a slot's maximum size.</p>
+    <p>The base <tt>FT_GlyphSlotRec</tt> structure only presents glyph
+    metrics and images to client applications, while actual implementation
+    may contain more sophisticated data.</p>
 
-<p>Another reason for glyph slots is that they're also used to hold
-   format-specific hints for a given glyphs has well as all other
-   data necessary to correctly load the glyph.</p>
+    <p>As an example, the TrueType-specific <tt>TT_GlyphSlotRec</tt>
+    structure contains additional fields to hold glyph-specific bytecode,
+    transient outlines used during the hinting process, and a few other
+    things.
 
-<p>The base <tt>FT_GlyphSlotRec</tt> structure only presents glyph
-   metrics and images to client applications, while actual implementation
-   may contain more sophisticated data.</p>
+    The Type&nbsp;1-specific <tt>T1_GlyphSlotRec</tt> structure holds glyph
+    hints during glyph loading, as well as additional logic used to properly
+    hint the glyphs when a native Type&nbsp;1 hinter is used.</p>
 
-<p>As an example, the TrueType-specific <tt>TT_GlyphSlotRec</tt>
-   structure contains additional fields to hold glyph-specific bytecode,
-   transient outlines used during the hinting process, and a few other
-   things.
+    <p>Finally, each face object has a single glyph slot that is directly
+    accessible as <tt>face-&gt;glyph</tt>.</p>
 
-   the Type1-specific <tt>T1_GlyphSlotRec</tt> structure holds
-   glyph hints during glyph loading, as well as additional logic used
-   to properly hint the glyphs when a native T1 hinter is used.</p>
+    <hr>
 
-<p>Finally, each face object has a single glyph slot, that is directly
-   accessible as <tt>face-&gt;glyph</tt>.</p>
+    <h2>
+      6. The <tt>FT_CharMap</tt> class
+    </h2>
 
-<hr>
+    <p>The <tt>FT_CharMap</tt> type is used as a handle to character map
+    objects, or <em>charmaps</em>.  A charmap is simply some sort of table
+    or dictionary which is used to translate character codes in a given
+    encoding into glyph indices for the font.</p>
 
-<h2>6. The <em><b>FT_CharMap</b></em> class:</h2>
+    <p>A single face may contain several charmaps.  Each one of them
+    corresponds to a given character repertoire, like Unicode, Apple Roman,
+    Windows codepages, and other encodings.</p>
 
-<p>Finally, the <tt>FT_CharMap</tt> type is used as a handle to
-   character map objects, or "charmaps" to be brief. A charmap is
-   simply some sort of table or dictionary which is used to translate
-   character codes in a given encoding into glyph indices for the
-   font.</p>
+    <p>Each <tt>FT_CharMap</tt> object contains a "platform" and an
+    "encoding" field used to identify precisely the character repertoire
+    corresponding to it.</p>
 
-<p>A single face may contain several charmaps. Each one of them
-   corresponds to a given character repertoire, like Unicode, Apple Roman,
-   Windows codepages, and other ugly "standards".</p>
+    <p>Each font format provides its own derivative of
+    <tt>FT_CharMapRec</tt> and thus needs to implement these objects.</p>
 
-<p>Each <tt>FT_CharMap</tt> object contains a "platform" and an "encoding"
-   field used to identify precisely the character repertoire corresponding
-   to it.</p>
+    <hr>
 
-<p>Each font format provides its own derivative of <tt>FT_CharMapRec</tt>
-   and thus needs to implement these objects.</p>
+    <h2>
+      7. Objects relationships
+    </h2>
 
-<hr>
-<h2>7. Objects relationships:</h2>
+    <p>The following diagram summarizes what we have just said regarding the
+    public objects managed by the library, as well as explicitely describes
+    their relationships</p>
 
-<p>The following diagram summarizes what we just said regarding the
-   public objects managed by the library, as well as explicitely
-   describes their relationships:</p>
+    <center>
+      <image alt="to be added">
+    </center>
 
-<p>Note that this picture will be updated at the end of the next
-   chapter, related to <em>internal objects</em>.</p>
+    <p>Note that this picture will be updated at the end of the next
+    chapter, related to <em>internal objects</em>.</p>
 
-</td></tr></table></center>
+</td></tr>
+</table>
+</center>
 </body>
 </html>
