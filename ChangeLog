@@ -1,3 +1,8 @@
+2001-12-25  Antoine Leca <Antoine-Freetype@Leca-Marti.org>
+
+        * builds/dos/detect.mk: Correcting the order for Borland compilers:
+        16-bit bcc was never selected, always overriden by 32-bit bcc32.
+
 2001-12-22  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
 
 	* src/pfc/pcfread.c (pcf_load_font): Handle property `POINT_SIZE'
