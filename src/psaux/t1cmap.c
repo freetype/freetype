@@ -73,9 +73,8 @@
                          FT_UInt32   *pchar_code )
   {
     FT_UInt   result    = 0;
-    FT_UInt32 char_code = *pchar_code;
+    FT_UInt32 char_code = *pchar_code + 1;
 
-    ++char_code;
     while ( char_code < 256 )
     {
       result = t1_cmap_standard_char_index( cmap, char_code );
@@ -409,6 +408,3 @@
     t1_cmap_unicode_char_index,
     t1_cmap_unicode_char_next
   };
-
-
-  
