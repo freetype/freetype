@@ -15,7 +15,7 @@
 
 DELETE   := del
 HOSTSEP  := $(strip \ )
-BUILD    := $(TOP)$(SEP)builds$(SEP)win32
+BUILD    := $(TOP_DIR)$(SEP)builds$(SEP)win32
 PLATFORM := win32
 
 # by default, we use "\" as a separator on Win32
@@ -30,13 +30,13 @@ endif
 #
 # This lets you build the library in your own directory with something like
 #
-#   set TOP=.../path/to/freetype2/top/dir...
+#   set TOP_DIR=.../path/to/freetype2/top/dir...
 #   set OBJ_DIR=.../path/to/obj/dir
-#   make -f %TOP%/Makefile setup [options]
-#   make -f %TOP%/Makefile
+#   make -f %TOP_DIR%/Makefile setup [options]
+#   make -f %TOP_DIR%/Makefile
 #
 ifndef OBJ_DIR
-  OBJ_DIR := $(TOP)$(SEP)objs
+  OBJ_DIR := $(TOP_DIR)$(SEP)objs
 endif
 
 

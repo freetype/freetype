@@ -14,17 +14,17 @@
 # fully.
 
 
-ifndef TOP
-  TOP := .
+ifndef TOP_DIR
+  TOP_DIR := .
 endif
-TOP := $(shell cd $(TOP); pwd)
+TOP_DIR := $(shell cd $(TOP_DIR); pwd)
 
 DELETE   := rm -f
 SEP      := /
 HOSTSEP  := $(SEP)
 
 # we use a special devel ftoption.h
-BUILD    := $(TOP)/builds/devel
+BUILD    := $(TOP_DIR)/builds/devel
 
 # do not set the platform to `unix', or libtool will trick you
 PLATFORM := unixdev
@@ -33,7 +33,7 @@ PLATFORM := unixdev
 # The directory where all object files are placed.
 #
 ifndef OBJ_DIR
-  OBJ_DIR := $(shell cd $(TOP)/objs; pwd)
+  OBJ_DIR := $(shell cd $(TOP_DIR)/objs; pwd)
 endif
 
 

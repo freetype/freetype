@@ -11,9 +11,9 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
-include $(TOP)/builds/compiler/ansi-cc.mk
-include $(TOP)/builds/beos/beos-def.mk
-include $(TOP)/builds/link_std.mk
+include $(TOP_DIR)/builds/compiler/ansi-cc.mk
+include $(TOP_DIR)/builds/beos/beos-def.mk
+include $(TOP_DIR)/builds/link_std.mk
 
 # EOF
 

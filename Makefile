@@ -20,13 +20,13 @@ PROJECT_TITLE := FreeType
 
 USE_MODULES := 1
 
-# The variable TOP holds the path to the topmost directory in the project
+# The variable TOP_DIR holds the path to the topmost directory in the project
 # engine source hierarchy.  If it is not defined, default it to `.'.
 #
-ifndef TOP
-  TOP := .
+ifndef TOP_DIR
+  TOP_DIR := .
 endif
 
-include $(TOP)/builds/toplevel.mk
+include $(TOP_DIR)/builds/toplevel.mk
 
 # EOF

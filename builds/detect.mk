@@ -34,13 +34,13 @@
 #
 # You need to set the following variable(s) before calling it:
 #
-#   TOP          The top-most directory in the FreeType library source
+#   TOP_DIR      The top-most directory in the FreeType library source
 #                hierarchy.  If not defined, it will default to `.'.
 
-# If TOP is not defined, default it to `.'
+# If TOP_DIR is not defined, default it to `.'
 #
-ifndef TOP
-  TOP := .
+ifndef TOP_DIR
+  TOP_DIR := .
 endif
 
 # Set auto-detection default to `ansi' resp. UNIX-like operating systems.
@@ -52,7 +52,7 @@ DELETE   := $(RM)
 COPY     := cp
 SEP      := /
 
-BUILD_CONFIG_ = $(TOP)$(SEP)builds$(SEP)
+BUILD_CONFIG_ = $(TOP_DIR)$(SEP)builds$(SEP)
 BUILD         = $(BUILD_CONFIG_)$(PLATFORM)
 CONFIG_RULES  = $(BUILD)$(SEP)$(CONFIG_FILE)
 

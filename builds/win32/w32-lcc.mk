@@ -14,11 +14,11 @@
 
 
 SEP := /
-include $(TOP)/builds/win32/win32-def.mk
-include $(TOP)/builds/compiler/win-lcc.mk
+include $(TOP_DIR)/builds/win32/win32-def.mk
+include $(TOP_DIR)/builds/compiler/win-lcc.mk
 
 # include linking instructions
-include $(TOP)/builds/link_dos.mk
+include $(TOP_DIR)/builds/link_dos.mk
 
 # EOF
 

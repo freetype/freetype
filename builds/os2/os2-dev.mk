@@ -15,19 +15,19 @@
 # fully.
 
 
-ifndef TOP
-  TOP := .
+ifndef TOP_DIR
+  TOP_DIR := .
 endif
 
 SEP   := /
 
-include $(TOP)/builds/os2/os2-def.mk
-BUILD := $(TOP)/builds/devel
+include $(TOP_DIR)/builds/os2/os2-def.mk
+BUILD := $(TOP_DIR)/builds/devel
 
-include $(TOP)/builds/compiler/gcc-dev.mk
+include $(TOP_DIR)/builds/compiler/gcc-dev.mk
 
 # include linking instructions
-include $(TOP)/builds/link_dos.mk
+include $(TOP_DIR)/builds/link_dos.mk
 
 
 # EOF

@@ -19,19 +19,19 @@
 #       Shell (_not_ Cygwin BASH)!
 #
 
-ifndef TOP
-  TOP := .
+ifndef TOP_DIR
+  TOP_DIR := .
 endif
 
 SEP   := /
 
-include $(TOP)/builds/win32/win32-def.mk
-BUILD := $(TOP)/builds/devel
+include $(TOP_DIR)/builds/win32/win32-def.mk
+BUILD := $(TOP_DIR)/builds/devel
 
-include $(TOP)/builds/compiler/gcc-dev.mk
+include $(TOP_DIR)/builds/compiler/gcc-dev.mk
 
 # include linking instructions
-include $(TOP)/builds/link_dos.mk
+include $(TOP_DIR)/builds/link_dos.mk
 
 
 

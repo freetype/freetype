@@ -12,10 +12,10 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
-have_mk := $(strip $(wildcard $(TOP)/builds/unix/unix-def.mk))
+have_mk := $(strip $(wildcard $(TOP_DIR)/builds/unix/unix-def.mk))
 ifneq ($(have_mk),)
-  include $(TOP)/builds/unix/unix-def.mk
-  include $(TOP)/builds/unix/unix-cc.mk
+  include $(TOP_DIR)/builds/unix/unix-def.mk
+  include $(TOP_DIR)/builds/unix/unix-cc.mk
 else
   # we are building FT2 not in the src tree
   include $(OBJ_DIR)/unix-def.mk
@@ -29,7 +29,7 @@ ifdef BUILD_PROJECT
   # Now include the main sub-makefile.  It contains all the rules used to
   # build the library with the previous variables defined.
   #
-  include $(TOP)/builds/$(PROJECT).mk
+  include $(TOP_DIR)/builds/$(PROJECT).mk
 
 
   # The cleanup targets.
@@ -52,6 +52,6 @@ endif
 
 endif
 
-include $(TOP)/builds/unix/install.mk
+include $(TOP_DIR)/builds/unix/install.mk
 
 # EOF

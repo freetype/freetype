@@ -1270,7 +1270,7 @@ OLD CHANGES 16 May 2000
 
     Here's a layout of the new directory hierarchy:
 
-    TOP
+    TOP_DIR
       include/
          freetype/
             freetype.h
@@ -1298,7 +1298,7 @@ OLD CHANGES 16 May 2000
 
 
     Compiling a module is now  much easier, for example, the following
-    should work when in the TOP directory on an ANSI build:
+    should work when in the TOP_DIR directory on an ANSI build:
 
        gcc -c -I./include -I./src/base src/base/ftbase.c
        gcc -c -I./include -I./src/sfnt src/sfnt/sfnt.c
