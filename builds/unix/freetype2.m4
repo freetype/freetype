@@ -55,8 +55,8 @@ else
          sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
   ft_min_micro_version=`echo $min_ft_version | \
          sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
-  if test "x$enable_fttest" = "xyes" ; then
-    ft_config_is_lt=no
+  if test x$enable_fttest = xyes ; then
+    ft_config_is_lt=""
     if test $ft_config_major_version -lt $ft_min_major_version ; then
       ft_config_is_lt=yes
     else
@@ -72,8 +72,8 @@ else
         fi
       fi
     fi
-    if test "x$ft_config_is_lt" = "xno" ; then
-      ifelse([$3], , :, [$3])
+    if test x$ft_config_is_lt = xyes ; then
+      no_ft=yes
     else
       ac_save_CFLAGS="$CFLAGS"
       ac_save_LIBS="$LIBS"
@@ -108,9 +108,9 @@ main()
       CFLAGS="$ac_save_CFLAGS"
       LIBS="$ac_save_LIBS"
     fi             # test $ft_config_version -lt $ft_min_version
-  fi               # test "x$enable_fttest" = "xyes"
+  fi               # test x$enable_fttest = xyes
 fi                 # test "$FT2_CONFIG" = "no"
-if test "x$no_ft" = x ; then
+if test x$no_ft = x ; then
    AC_MSG_RESULT(yes)
    ifelse([$2], , :, [$2])
 else
@@ -121,10 +121,18 @@ else
      echo "*** your path, or set the FT2_CONFIG environment variable to the"
      echo "*** full path to freetype-config."
    else
-     echo "*** The FreeType test program failed to run.  If your system uses"
-     echo "*** shared libraries and they are installed outside the normal"
-     echo "*** system library path, make sure the variable LD_LIBRARY_PATH"
-     echo "*** (or whatever is appropiate for your system) is correctly set."
+     if test x$ft_config_is_lt = xyes ; then
+       echo "*** Your installed version of the FreeType 2 library is too old."
+       echo "*** If you have different versions of FreeType 2, make sure that"
+       echo "*** correct values for --with-ft-prefix or --with-ft-exec-prefix"
+       echo "*** are used, or set the FT2_CONFIG environment variable to the"
+       echo "*** full path to freetype-config."
+     else
+       echo "*** The FreeType test program failed to run.  If your system uses"
+       echo "*** shared libraries and they are installed outside the normal"
+       echo "*** system library path, make sure the variable LD_LIBRARY_PATH"
+       echo "*** (or whatever is appropiate for your system) is correctly set."
+     fi
    fi
    FT2_CFLAGS=""
    FT2_LIBS=""

@@ -18,11 +18,11 @@ EOF
   exit $1
 }
 
-if test $# -eq 0; then
+if test $# -eq 0 ; then
   usage 1 1>&2
 fi
 
-while test $# -gt 0; do
+while test $# -gt 0 ; do
   case "$1" in
   -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
   *) optarg= ;;
@@ -65,25 +65,28 @@ while test $# -gt 0; do
 done
 
 if test "$local_prefix" = "yes" ; then
-    if test "$exec_prefix_set" != "yes"; then
+    if test "$exec_prefix_set" != "yes" ; then
       exec_prefix=$prefix
     fi
 fi
 
-if test "$echo_prefix" = "yes"; then
+if test "$echo_prefix" = "yes" ; then
  echo $prefix
 fi
 
-if test "$echo_exec_prefix" = "yes"; then
+if test "$echo_exec_prefix" = "yes" ; then
  echo $exec_prefix
 fi
 
-if test "$echo_cflags" = "yes"; then
+if test "$echo_cflags" = "yes" ; then
  cflags="-I@includedir@/freetype2"
- echo $cflags $includes
+ if test "@includedir@" != "/usr/include" ; then
+  echo -I@includedir@ $cflags
+ else
+  echo $cflags
 fi
 
-if test "$echo_libs" = "yes"; then
+if test "$echo_libs" = "yes" ; then
  libs="-lfreetype"
  if test "@libdir@" != "/usr/lib" ; then
   echo -L@libdir@ $libs
@@ -92,7 +95,7 @@ if test "$echo_libs" = "yes"; then
  fi
 fi
 
-if test "$echo_libtool" = "yes"; then
+if test "$echo_libtool" = "yes" ; then
  convlib="libfreetype.la"
  echo @libdir@/$convlib
 fi
