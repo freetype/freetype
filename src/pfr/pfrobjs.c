@@ -217,14 +217,17 @@
   {
     FT_Error     error;
     PFR_Face     face    = (PFR_Face)slot->root.face;
-    PFR_Char     gchar   = face->phy_font.chars + gindex;
+    PFR_Char     gchar;
     FT_Outline*  outline = &slot->root.outline;
     FT_ULong     gps_offset;
 
+    if (gindex > 0)
+      gindex--;
 
     /* check that the glyph index is correct */
     FT_ASSERT( gindex < face->phy_font.num_chars );
 
+    gchar               = face->phy_font.chars + gindex;
     slot->root.format   = ft_glyph_format_outline;
     outline->n_points   = 0;
     outline->n_contours = 0;
