@@ -791,7 +791,7 @@
     }
 
     /* Chou blanc! */
-    return FT_Err_Invalid_Argument;
+    return FT_Err_Invalid_CharMap_Handle;
   }
 
 
