@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    The FreeType private base classes (body).                            */
 /*                                                                         */
-/*  Copyright 1996-2001, 2002, 2003, 2004 by                               */
+/*  Copyright 1996-2001, 2002, 2003, 2004, 2005 by                         */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -68,7 +68,7 @@
     valid->base  = base;
     valid->limit = limit;
     valid->level = level;
-    valid->error = 0;
+    valid->error = FT_Err_Ok;
   }
 
 
@@ -817,10 +817,10 @@
      *  when found.  Otherwise, a 16-bit one is returned when found.
      */
 
-    /* since the `interesting' table, with id's 3,10, is normally the */
-    /* last one, we loop backwards. This looses with type1 fonts with */
-    /* non-BMP characters (<.0001%), this wins with .ttf with non-BMP */
-    /* chars (.01% ?), and this is the same about 99.99% of the time! */
+    /* Since the `interesting' table, with IDs (3,10), is normally the */
+    /* last one, we loop backwards.  This looses with type1 fonts with */
+    /* non-BMP characters (<.0001%), this wins with .ttf with non-BMP  */
+    /* chars (.01% ?), and this is the same about 99.99% of the time!  */
 
     cur = first + face->num_charmaps;  /* points after the last one */
 
@@ -837,7 +837,7 @@
              ( cur[0]->platform_id == TT_PLATFORM_APPLE_UNICODE &&
                cur[0]->encoding_id == TT_APPLE_ID_UNICODE_32    )      )
 
-        /* Hurray! We found a UCS-4 charmap. We can stop the scan! */
+        /* Hurray!  We found a UCS-4 charmap.  We can stop the scan! */
         {
           face->charmap = cur[0];
           return 0;
@@ -845,8 +845,8 @@
       }
     }
 
-    /* We do not have any UCS-4 charmap. Sigh.                           */
-    /* Let's see if we have  some other kind of Unicode charmap, though. */
+    /* We do not have any UCS-4 charmap.  Sigh.                         */
+    /* Let's see if we have some other kind of Unicode charmap, though. */
     if ( unicmap != NULL )
     {
       face->charmap = unicmap[0];
@@ -2270,7 +2270,7 @@
                FT_CharMap      charmap,
                FT_CMap        *acmap )
   {
-    FT_Error   error = 0;
+    FT_Error   error = FT_Err_Ok;
     FT_Face    face;
     FT_Memory  memory;
     FT_CMap    cmap;
@@ -2297,7 +2297,7 @@
       /* add it to our list of charmaps */
       if ( FT_RENEW_ARRAY( face->charmaps,
                            face->num_charmaps,
-                           face->num_charmaps+1 ) )
+                           face->num_charmaps + 1 ) )
         goto Fail;
 
       face->charmaps[face->num_charmaps++] = (FT_CharMap)cmap;
