@@ -237,8 +237,11 @@
   FT_CALLBACK_DEF( FT_Error )
   TT_Load_Glyph_Header( TT_Loader*  loader )
   {
-    FT_Stream   stream = loader->stream;
+    FT_Stream   stream   = loader->stream;
+    FT_Int      byte_len = loader->byte_len - 10;
 
+    if ( byte_len < 0 )
+      return TT_Err_Invalid_Outline;
 
     loader->n_contours = GET_Short();
 
@@ -252,6 +255,7 @@
                                             loader->bbox.xMax ));
     FT_TRACE5(( "  yMin: %4d  yMax: %4d\n", loader->bbox.yMin,
                                             loader->bbox.yMax ));
+    loader->byte_len = byte_len;
 
     return TT_Err_Ok;
   }
@@ -269,6 +273,7 @@
     TT_GlyphSlot     slot    = (TT_GlyphSlot)load->glyph;
     FT_UShort        n_ins;
     FT_Int           n, n_points;
+    FT_Int           byte_len = load->byte_len;
 
 
     /* reading the contours endpoints & number of points */
@@ -276,6 +281,10 @@
       short*  cur   = gloader->current.outline.contours;
       short*  limit = cur + n_contours;
 
+      /* check room for contours array + instructions count */
+      byte_len -= 2*(n_contours+1);
+      if ( byte_len < 0 )
+        goto Invalid_Outline;
 
       for ( ; cur < limit; cur++ )
         cur[0] = GET_UShort();
@@ -288,7 +297,12 @@
       if ( error )
         goto Fail;
 
+      /* we'd better check the contours table right now */
       outline = &gloader->current.outline;
+
+      for ( cur = outline->contours + 1; cur < limit; cur++ )
+        if ( cur[-1] >= cur[0] )
+          goto Invalid_Outline;
     }
 
     /* reading the bytecode instructions */
@@ -306,7 +320,8 @@
       goto Fail;
     }
 
-    if ( stream->cursor + n_ins > stream->limit )
+    byte_len -= n_ins;
+    if ( byte_len < 0 )
     {
       FT_TRACE0(( "ERROR: Instruction count mismatch!\n" ));
       error = TT_Err_Too_Many_Hints;
@@ -330,23 +345,50 @@
     stream->cursor += n_ins;
 
     /* reading the point tags */
-
     {
       FT_Byte*  flag  = (FT_Byte*)outline->tags;
       FT_Byte*  limit = flag + n_points;
       FT_Byte   c, count;
 
 
-      for ( ; flag < limit; flag++ )
+      while ( flag < limit )
       {
-        *flag = c = GET_Byte();
+        if ( --byte_len < 0 )
+          goto Invalid_Outline;
+
+        *flag++ = c = GET_Byte();
         if ( c & 8 )
         {
-          for ( count = GET_Byte(); count > 0; count-- )
-            *++flag = c;
+          if ( --byte_len < 0 )
+            goto Invalid_Outline;
+
+          count = GET_Byte();
+          if ( flag + count > limit )
+            goto Invalid_Outline;
+
+          for ( ; count > 0; count-- )
+            *flag++ = c;
         }
       }
+
+      /* check that there is enough room to load the coordinates */
+      for ( flag = (FT_Byte*)outline->tags; flag < limit; flag++ )
+      {
+        if ( *flag & 2 )
+          byte_len -= 1;
+        else if ( (*flag & 16) == 0 )
+          byte_len -= 2;
+
+        if ( *flag & 4 )
+          byte_len -= 1;
+        else if ( (*flag & 32) == 0 )
+          byte_len -= 2;
+      }
+
+      if ( byte_len < 0 )
+        goto Invalid_Outline;
     }
+
 
     /* reading the X coordinates */
 
@@ -411,8 +453,14 @@
     outline->n_points   = (FT_UShort)n_points;
     outline->n_contours = (FT_Short) n_contours;
 
+    load->byte_len = byte_len;
+
   Fail:
     return error;
+
+  Invalid_Outline:
+    error = TT_Err_Invalid_Outline;
+    goto Fail;
   }
 
 
@@ -424,6 +472,7 @@
     FT_GlyphLoader*  gloader = loader->gloader;
     FT_SubGlyph*     subglyph;
     FT_UInt          num_subglyphs;
+    FT_Int           byte_len = loader->byte_len;
 
 
     num_subglyphs = 0;
@@ -438,12 +487,31 @@
       if ( error )
         goto Fail;
 
+      /* check room */
+      byte_len -= 4;
+      if ( byte_len < 0 )
+        goto Invalid_Composite;
+
       subglyph = gloader->current.subglyphs + num_subglyphs;
 
       subglyph->arg1 = subglyph->arg2 = 0;
 
       subglyph->flags = GET_UShort();
       subglyph->index = GET_UShort();
+
+      /* check room */
+      byte_len -= 2;
+      if ( subglyph->flags & ARGS_ARE_WORDS )
+        byte_len -= 2;
+      if ( subglyph->flags & WE_HAVE_A_SCALE )
+        byte_len -= 2;
+      else if ( subglyph->flags & WE_HAVE_AN_XY_SCALE )
+        byte_len -= 4;
+      else if ( subglyph->flags & WE_HAVE_A_2X2 )
+        byte_len -= 8;
+
+      if ( byte_len < 0 )
+        goto Invalid_Composite;
 
       /* read arguments */
       if ( subglyph->flags & ARGS_ARE_WORDS )
@@ -501,8 +569,14 @@
     }
 #endif
 
+    loader->byte_len = byte_len;
+
   Fail:
     return error;
+
+  Invalid_Composite:
+    error = TT_Err_Invalid_Composite;
+    goto Fail;
   }
 
 
@@ -749,8 +823,10 @@
       goto Exit;
     }
 
+    loader->byte_len = (FT_Int) count;
+
+#if 0
     /* temporary hack */
-#if 1
     if ( count < 10 )
     {
       /* This glyph is corrupted -- it does not have a complete header */

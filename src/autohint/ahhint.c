@@ -139,6 +139,9 @@
 
         else if ( dist < 128 )
           dist = ( dist + 42 ) & -64;
+        else
+          /* XXX: round otherwise, prevent color fringes in LCD mode */
+          dist = ( dist + 32 ) & -64;
       }
     }
 
