@@ -1,3 +1,13 @@
+2003-10-15:  Graham Asher  <graham.asher@btinternet.com>
+
+	* src/autohint/ahglobal.c (blue_chars), src/winfonts/winfnt.c
+	(fnt_cmap_class_rec, fnt_cmap_class), src/bdf/bdflib.c (empty,
+	_num_bdf_properties), src/gzip/infutil.c (inflate_mask),
+	src/gzip/inffixed.h (fixed_bl, fixed_bd, fixed_tl, fixed_td),
+	src/gzip/inftrees.h (inflate_trees_fixed), srf/gzip/inftrees.c
+	(inflate_trees_fixed): Decorate with more `const' to avoid
+	writable global variables which are disallowed on ARM.
+
 2003-10-08  Werner Lemberg  <wl@gnu.org>
 
 	* src/type1/t1load.c (parse_font_matrix, parse_charstrings): Remove
@@ -41,7 +51,7 @@
 	(ps_parser_skip_PS_token): New function.  This is a better
 	replacement of...
 	(ps_parser_skip_alpha): Removed.
-	(ps_parser_to_token, ps+parser_to_token_array): Updated.
+	(ps_parser_to_token, ps_parser_to_token_array): Updated.
 	(T1Radix): Rewritten, using `ft_char_table'.
 	(t1_toint): Renamed to...
 	(ps_toint): This.  Update all callers.
