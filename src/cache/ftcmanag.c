@@ -639,7 +639,7 @@
         result++;
       }
 
-      if ( prev == manager->nodes_list )
+      if ( node == first )
         break;
 
       node = prev;

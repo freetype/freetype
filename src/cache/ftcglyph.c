@@ -27,6 +27,7 @@
 #include "ftcerror.h"
 
 
+
   /* create a new chunk node, setting its cache index and ref count */
   FT_EXPORT_DEF( void )
   FTC_GNode_Init( FTC_GNode   gnode,
@@ -48,8 +49,7 @@
 
     gnode->family = NULL;
     if ( family && --family->num_nodes <= 0 )
-      FTC_MruList_Remove( &FTC_GCACHE( cache )->families,
-                          (FTC_MruNode)family );
+      FTC_FAMILY_FREE( family, cache );
   }
 
 
@@ -180,8 +180,19 @@
 
     FTC_MRULIST_LOOKUP( &cache->families, query, query->family, error );
     if ( !error )
+    {
+      FTC_Family  family = query->family;
+
+     /* prevent the family from being destroyed too early when an out-of-memory
+      * condition occurs during glyph node initialization.
+      */
+      family->num_nodes++;
+
       error = FTC_Cache_Lookup( FTC_CACHE( cache ), hash, query, anode );
 
+      if ( --family->num_nodes <= 0 )
+        FTC_FAMILY_FREE( family, cache );
+    }
     return error;
   }
 

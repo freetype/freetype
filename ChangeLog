@@ -1,3 +1,14 @@
+2004-07-17  David Turner  <david@freetype.org>
+
+        * include/freetype/cache/ftcglyph.h, src/cache/ftcglyph.c:
+        fixed a dangling pointer bug that happened in very rare cases:
+        i.e. when a new family object was destroyed by an out-of-memory
+        condition during a glyph node initialization. The function
+        FTC_Cache_Lookup would flush the cache and restart the lookup
+        with a bad pointer.
+
+        * src/cache/ftcmanag.c: fixed a cache flushing bug
+
 2004-07-15  Werner Lemberg  <wl@gnu.org>
 
 	* docs/CHANGES: Updated.

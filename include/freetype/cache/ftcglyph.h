@@ -255,6 +255,12 @@ FT_BEGIN_HEADER
                      FTC_Node    *anode );
 
 
+  /* */
+#define  FTC_FAMILY_FREE(family,cache)                          \
+           FTC_MruList_Remove( &FTC_GCACHE((cache))->families,  \
+                               (FTC_MruNode)(family) )
+
+
 #ifdef FTC_INLINE
 
 #define FTC_GCACHE_LOOKUP_CMP( cache, famcmp, nodecmp, hash,                \
@@ -270,7 +276,16 @@ FT_BEGIN_HEADER
     FTC_MRULIST_LOOKUP_CMP( &_gcache->families, _gquery, _fcompare,         \
                             _gquery->family, error );                       \
     if ( !error )                                                           \
+    {                                                                       \
+      FTC_Family  _gqfamily = _gquery->family;                              \
+                                                                            \
+      _gqfamily->num_nodes++;                                               \
+                                                                            \
       FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error );     \
+                                                                            \
+      if ( --_gqfamily->num_nodes == 0 )                                    \
+        FTC_FAMILY_FREE( _gqfamily, _gcache );                              \
+    }                                                                       \
   FT_END_STMNT
   /* */
 

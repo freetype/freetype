@@ -2474,7 +2474,7 @@
     W = Vx * Vx + Vy * Vy;
 
     /* Now, we want that Sqrt( W ) = 0x4000 */
-    /* Or 0x1000000 <= W < 0x1004000        */
+    /* Or 0x10000000 <= W < 0x10004000        */
 
     if ( Vx < 0 )
     {
@@ -2492,7 +2492,7 @@
     else
       S2 = FALSE;
 
-    while ( W < 0x1000000L )
+    while ( W < 0x10000000L )
     {
       /* We need to increase W by a minimal amount */
       if ( Vx < Vy )
@@ -2503,7 +2503,7 @@
       W = Vx * Vx + Vy * Vy;
     }
 
-    while ( W >= 0x1004000L )
+    while ( W >= 0x10004000L )
     {
       /* We need to decrease W by a minimal amount */
       if ( Vx < Vy )
