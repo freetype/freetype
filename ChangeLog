@@ -10,8 +10,9 @@
 
 2003-04-09  Mike Fabian  <mfabian@suse.de>
 
-	* src/bdf/bdfdrivr.h, src/pcf/pcf.h: Changed FT_Short to FT_UShort
-	in order to be able to access more than 32768 glyphs in fonts.
+	* src/bdf/bdfdrivr.h (BDF_encoding_el), src/pcf/pcf.h: Changed
+	FT_Short to FT_UShort in order to be able to access more than 32768
+	glyphs in fonts.
 
 2003-04-08  David Turner  <david@freetype.org>
 
@@ -75,7 +76,12 @@
 	* src/base/ftobjs.c: Implement them.
 	(ft_glyphslot_done): Use ft_glyphslot_free_bitmap.
 
-	* src/bdf/bdfdrivr.c, src/pcf/pcfdriver.c, src/pfr/pfrsbit.c,
+	* src/bdf/bdfdrivr.c (BDF_Glyph_Load): Remove unused variable
+	`memory'.
+	Use `ft_glyphslot_*' functions.
+	Don't set `FT_GLYPH_OWN_BITMAP'.
+
+	* src/pcf/pcfdriver.c, src/pfr/pfrsbit.c,
 	src/sfnt/ttsbit.c, src/type42/t42objs.c, src/winfonts/winfnt.c:
 
 	* src/cache/ftlru.c: Fixed an invalid assertion check.
@@ -257,7 +263,11 @@
 	(FT_Get_BDF_Charset_ID): Use `test_font_type'.
 	(FT_Get_BDF_Property): New function.
 
-	* src/bdf/bdfdrivr.c, src/pcf/pcfdrivr.c, src/pcf/pcfread.h:
+	* src/bdf/bdfdrivr.c: Include FT_BDF_H.
+	(bdf_get_bdf_property, bdf_driver_requester): New functions.
+	(bdf_driver_class): Use `bdf_driver_requester'.
+
+	* src/pcf/pcfdrivr.c, src/pcf/pcfread.h:
 
 	* src/sfnt/ttload.c (sfnt_dir_check): Relaxed the "head" table size
 	verification to accept a few broken fonts who pad the size
