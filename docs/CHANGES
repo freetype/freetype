@@ -1,3 +1,25 @@
+LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
+
+  I. IMPORTANT BUG FIXES
+
+    - The size comparison for BDF and PCF files could fail sometimes.
+
+    - Some  CFF files  were still not  loaded  correctly.   Patch from
+      Derek Noonburg.
+
+    - The stroker still had some serious bugs.
+
+
+  II. IMPORTANT CHANGES
+
+    - George Williams  contributed code to read  kerning data from PFM
+      files.
+
+    - FreeType   now   uses    the   TT_NAME_ID_PREFERRED_FAMILY   and
+      TT_NAME_ID_PREFERRED_SUBFAMILY   strings   (if   available)  for
+      setting  family  and  style in SFNT  fonts  (patch from Kornfeld
+      Eliyahu Peter).
+
 
 LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
 

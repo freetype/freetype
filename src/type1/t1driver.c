@@ -294,7 +294,7 @@
     (FT_Face_AttachFunc)      0,
 #else
     (FT_Face_GetKerningFunc)  Get_Kerning,
-    (FT_Face_AttachFunc)      T1_Read_AFM,
+    (FT_Face_AttachFunc)      T1_Read_Metrics,
 #endif
     (FT_Face_GetAdvancesFunc) 0
   };

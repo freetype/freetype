@@ -1,3 +1,22 @@
+2004-08-01  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+2004-08-01  George Williams  <gww@silcom.com>
+
+	FreeType now can read kerning values from PFM files.
+
+	* src/type1/t1afm.c (T1_Done_AFM): Renamed to...
+	(T1_Done_Metrics): This.
+	Update all callers.
+	(T1_Read_AFM): Make it static.
+	Don't enter and leave a frame.
+	(LITTLE_ENDIAN_USHORT, LITTLE_ENDIAN_UINT): New macros.
+	(T1_Read_PFM): New function.
+	(T1_Read_Metrics): New higher-level function to be used instead of
+	T1Read_AFM.
+	Update all callers.
+
 2004-07-31  Werner Lemberg  <wl@gnu.org>
 
 	* src/pcf/pcfread (pcf_load_font), src/bdf/bdfdrivr.c
