@@ -8,8 +8,10 @@
 	Fix syntax.
 	(block_header, block_footer, description_header, description_footer,
 	marker_header, marker_footer, source_header, source_footer,
-	chapter_header, chapter_footer): Don't use <center>...</center> but
-	`align=center' table attribute.
+	chapter_header): Don't use <center>...</center> but `align=center'
+	table attribute.
+	(chapter_inter, chapter_footer): Add <li> and use special <ul>
+	class.
 	Use double quotes around table widths given in percent.
 	(keyword_prefix, keyword_suffix): Don't change font colour directly
 	but use a new <span> class.
@@ -21,8 +23,10 @@
 	(print_html_field_list): Ditto.
 	(index_exit): Don't use <center>...</center> but `align=center'
 	table attribute.
-	(toc_exit, section_enter): Ditto.
+	(section_enter): Ditto.
+	(toc_exit): Don't emit </table>.
 	(block_enter): Use <h4><a>, not <a><h4>.
+	(__init__): Fix tag order in self.html_footer.
 
 2003-07-25  David Turner  <david@freetype.org>
 
