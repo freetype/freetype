@@ -41,6 +41,7 @@
   /* Include the header file containing all developer build options */
 #include <ft2build.h>
 #include FT_CONFIG_OPTIONS_H
+#include FT_CONFIG_STANDARD_LIBRARY_H
 
 FT_BEGIN_HEADER
 

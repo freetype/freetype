@@ -1,5 +1,8 @@
 2002-04-12  David Turner  <david@freetype.org>
 
+        * builds/unix/ftconfig.in, builds/vms/ftconfig.h: Oops, forgot to
+          update these files too
+
         * README.UNX: updated the Unix-specific quick-compilation guide to
           warn about the GNU Make requirement at compile time..
 
