@@ -10,7 +10,7 @@ SubDirHdrs  [ FT2_SubDir  src pshinter ] ;
 
   if $(FT2_MULTI)
   {
-    _sources = pshrec pshglob pshalgo1 pshalgo2 pshmod ;
+    _sources = pshrec pshglob pshalgo1 pshalgo2 pshalgo3 pshmod ;
   }
   else
   {

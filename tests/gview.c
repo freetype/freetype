@@ -130,15 +130,17 @@ init_symbols( void )
   nv_path_new_rectangle( renderer, -1, -1, 3, 3, 0, 0, &symbol_square );
   nv_path_new_rectangle( renderer, -1, -6, 2, 12, 0, 0, &symbol_rect_v );
   nv_path_new_rectangle( renderer, -6, -1, 12, 2, 0, 0, &symbol_rect_h );
+
   nv_path_new_circle( renderer, 0, 0, 3., &symbol_dot );
+
   nv_path_stroke( symbol_dot, 0.6,
                   nv_path_linecap_butt,
                   nv_path_linejoin_miter, 1.,
                   &symbol_circle );
 
   nv_path_destroy( symbol_dot );
-  nv_path_new_circle( renderer, 0, 0, 2., &symbol_dot );
 
+  nv_path_new_circle( renderer, 0, 0, 2., &symbol_dot );
  }
 
 static void
