@@ -184,7 +184,7 @@ static void  dump_mem( void )
     }
   }
   if (!bad)
-    fprintf( stderr, "no leaked memory block, congratulations ;-)" );
+    fprintf( stderr, "no leaked memory block\n\n" );
 }
 
 /****************************************************************************/
@@ -302,7 +302,7 @@ int  main( int argc, char** argv )
       {
         for ( id = 0; id < num_glyphs; id++ )
         {
-          error = FT_Load_Glyph( face, id, FT_LOAD_DEFAULT );
+          error = FT_Load_Glyph( face, id, FT_LOAD_RENDER | FT_LOAD_ANTI_ALIAS );
           if (error)
           {
             if ( Fail < 10 )

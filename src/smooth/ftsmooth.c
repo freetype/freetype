@@ -84,7 +84,7 @@
     }
     
     /* check mode */
-    if ( !(mode & ft_render_mode_antialias) )
+    if ( mode != ft_render_mode_antialias )
       return FT_Err_Cannot_Render_Glyph;
       
     outline = &slot->outline;

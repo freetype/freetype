@@ -2,7 +2,7 @@
 /*                                                                         */
 /*  autohint.h                                                             */
 /*                                                                         */
-/*    High-level `autohint" driver interface (specification)               */
+/*    High-level `autohint" module-specific interface (specification)      */
 /*                                                                         */
 /*  Copyright 1996-2000 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
@@ -111,47 +111,6 @@
  /***********************************************************************
   *
   * <FuncType>
-  *    FT_AutoHinter_Init_Func
-  *
-  * <Description>
-  *    Compute or set the global hints for a given face object.
-  *
-  * <Input>
-  *    hinter       :: handle to source auto-hinter module
-  *    face         :: handle to target face object.
-  *    global_hints :: typeless pointer to global hints. If 0, the
-  *                    hints are computed for the face
-  *
-  * <Note>
-  *    it is up to client applications to ensure that the global hints
-  *    were retrieved for the same face object. Strange results may occur
-  *    otherwise..
-  *
-  */
-  typedef FT_Error   (*FT_AutoHinter_Init_Func)( FT_AutoHinter  hinter,
-                                                 FT_Face        face,
-                                                 void*          global_hints );
-
- /***********************************************************************
-  *
-  * <FuncType>
-  *    FT_AutoHinter_Done_Func
-  *
-  * <Description>
-  *    Discards the global hints for a given face..
-  *
-  * <Input>
-  *    hinter       :: handle to source auto-hinter module
-  *    face         :: handle to target face object.
-  *
-  */
-  typedef FT_Error   (*FT_AutoHinter_Done_Func)( FT_AutoHinter  hinter,
-                                                 FT_Face        face );
-
-
- /***********************************************************************
-  *
-  * <FuncType>
   *    FT_AutoHinter_Reset_Func
   *
   * <Description>
@@ -165,8 +124,8 @@
   *
   *
   */
-  typedef  FT_Error    (*FT_AutoHinter_Reset_Func)( FT_AutoHinter  hinter,
-                                                    FT_Face        face );
+  typedef  void    (*FT_AutoHinter_Reset_Func)( FT_AutoHinter  hinter,
+                                                FT_Face        face );
 
  /***********************************************************************
   *
@@ -190,9 +149,12 @@
   *    set..
   *
   */
-  typedef  FT_Error    (*FT_AutoHinter_Load_Func)( FT_Face   face,
-                                                   FT_UInt   glyph_index,
-   					                               FT_ULong  load_flags );
+  typedef  FT_Error    (*FT_AutoHinter_Load_Func)(
+                               FT_AutoHinter  hinter,
+                               FT_GlyphSlot   slot,
+			       FT_Size        size,
+                               FT_UInt        glyph_index,
+  			       FT_ULong       load_flags );
 
  /***********************************************************************
   *
@@ -205,10 +167,8 @@
   */
   typedef struct FT_AutoHinter_Interface
   {
-    FT_AutoHinter_Init_Func   init_autohinter;
-    FT_AutoHinter_Done_Func   done_autohinter;
-    FT_AutoHinter_Reset_Func  reset_face;
-    FT_AutoHinter_Load_Func   load_glyph;
+    FT_AutoHinter_Reset_Func        reset_face;
+    FT_AutoHinter_Load_Func         load_glyph;
 
     FT_AutoHinter_Get_Global_Func   get_global_hints;
     FT_AutoHinter_Done_Global_Func  done_global_hints;

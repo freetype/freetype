@@ -645,7 +645,7 @@
     FT_CharMap       charmap;
     FT_ListRec       sizes_list;
 
-    void*            autohint_globals;
+    FT_Generic       autohint;
     void*            extensions;
 
     FT_UShort        max_points;

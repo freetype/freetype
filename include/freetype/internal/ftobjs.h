@@ -28,6 +28,7 @@
 #include <freetype/internal/ftmemory.h>
 #include <freetype/ftrender.h>
 #include <freetype/internal/ftdriver.h>
+#include <freetype/internal/autohint.h>
 
   /*************************************************************************/
   /*                                                                       */
@@ -120,12 +121,20 @@
 #define  FT_MODULE_IS_RENDERER(x)  (FT_MODULE_CLASS(x)->module_flags & \
                                      ft_module_renderer )
 
+#define  FT_MODULE_IS_HINTER(x) (FT_MODULE_CLASS(x)->module_flags & \
+                                     ft_module_hinter )
+
+#define  FT_MODULE_IS_STYLER(x) (FT_MODULE_CLASS(x)->module_flags & \
+                                     ft_module_styler )
+
 #define  FT_DRIVER_IS_SCALABLE(x)  (FT_MODULE_CLASS(x)->module_flags & \
                                      ft_module_driver_scalable )
 
 #define  FT_DRIVER_USES_OUTLINES(x)  !(FT_MODULE_CLASS(x)->module_flags & \
                                        ft_module_driver_no_outlines )
 
+#define  FT_DRIVER_HAS_HINTER(x)  (FT_MODULE_CLASS(x)->module_flags & \
+                                       ft_module_driver_has_hinter )
 
   /*************************************************************************/
   /*************************************************************************/
@@ -389,6 +398,7 @@
 
     FT_ListRec          renderers;     /* list of renderers        */
     FT_Renderer         cur_renderer;  /* current outline renderer */
+    FT_Module           auto_hinter;
 
     void*               raster_pool;      /* scan-line conversion render pool */
     unsigned long       raster_pool_size; /* size of render pool in bytes     */

@@ -678,8 +678,15 @@
   static
   void  ft_glyphslot_clear( FT_GlyphSlot  slot )
   {
+    /* free bitmap if needed */
+    if ( slot->flags & ft_glyph_own_bitmap )
+    {
+      FT_Memory  memory = FT_FACE_MEMORY( slot->face );
+      FREE( slot->bitmap.buffer );
+      slot->flags &= ~ft_glyph_own_bitmap;
+    }
+  
     /* clear all public fields in the glyph slot */
-
     MEM_Set( &slot->metrics, 0, sizeof ( slot->metrics ) );
     MEM_Set( &slot->outline, 0, sizeof ( slot->outline ) );
     MEM_Set( &slot->bitmap,  0, sizeof ( slot->bitmap )  );
@@ -931,6 +938,9 @@
     FT_Error      error;
     FT_Driver     driver;
     FT_GlyphSlot  slot;
+    FT_Library    library;
+    FT_Bool       autohint;
+    FT_Module     hinter;
 
 
     if ( !face || !face->size || !face->glyph )
@@ -948,10 +958,31 @@
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
 
-    error = driver->clazz->load_glyph( slot,
-                                       face->size,
-                                       glyph_index,
-                                       load_flags );
+    /* do we need to load the glyph through the auto-hinter ?? */
+    library  = driver->root.library;
+    hinter   = library->auto_hinter;
+    autohint = hinter &&
+               !(load_flags & (FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING));
+    if (autohint)
+    {
+      if ( FT_DRIVER_HAS_HINTER( driver ) &&
+           !(load_flags & FT_LOAD_FORCE_AUTOHINT) )
+	autohint = 0;
+    }	       
+    
+    if (autohint)
+    {
+      FT_AutoHinter_Interface*  hinting;
+      
+      hinting = (FT_AutoHinter_Interface*)hinter->clazz->module_interface;
+      error = hinting->load_glyph( (FT_AutoHinter)hinter, slot,  face->size,
+                                   glyph_index, load_flags );
+    }
+    else
+      error = driver->clazz->load_glyph( slot,
+                                         face->size,
+					 glyph_index,
+					 load_flags );
     if ( error )
       goto Exit;
 
@@ -981,6 +1012,16 @@
       /* transform advance */
       FT_Vector_Transform( &slot->advance, &face->transform_matrix );
     }
+
+    /* do we need to render the image now ? */
+    if ( !error                                    &&
+         slot->format != ft_glyph_format_bitmap    &&
+         slot->format != ft_glyph_format_composite &&
+	 load_flags & FT_LOAD_RENDER )
+    {
+      error = FT_Render_Glyph( slot, (load_flags & FT_LOAD_ANTI_ALIAS) ?
+                                ft_render_mode_antialias : 0 );
+    }	 
 
   Exit:
     return error;
@@ -1039,8 +1080,7 @@
     if ( face->charmap )
       glyph_index = FT_Get_Char_Index( face, char_code );
 
-    return glyph_index ? FT_Load_Glyph( face, glyph_index, load_flags )
-                       : FT_Err_Invalid_Character_Code;
+    return FT_Load_Glyph( face, glyph_index, load_flags );
   }
 
 
@@ -2618,13 +2658,17 @@
   static
   void  Destroy_Module( FT_Module  module )
   {
-    FT_Memory         memory = module->memory;
-    FT_Module_Class*  clazz  = module->clazz;
+    FT_Memory         memory  = module->memory;
+    FT_Module_Class*  clazz   = module->clazz;
+    FT_Library        library = module->library;
 
 
     /* finalize client-data - before anything else */
     if ( module->generic.finalizer )
       module->generic.finalizer( module );
+
+    if ( library && library->auto_hinter == module )
+      library->auto_hinter = 0;
 
     /* if the module is a renderer */
     if ( FT_MODULE_IS_RENDERER( module ) )
@@ -2729,6 +2773,10 @@
         goto Fail;
     }
 
+    /* is the module a auto-hinter ? */
+    if ( FT_MODULE_IS_HINTER(module) )
+      library->auto_hinter = module;
+      
     /* if the module is a font driver */
     if ( FT_MODULE_IS_DRIVER( module ) )
     {

@@ -423,7 +423,10 @@
   const FT_Driver_Class  tt_driver_class =
   {
     {
-      ft_module_font_driver | ft_module_driver_scalable,
+      ft_module_font_driver     |
+      ft_module_driver_scalable |
+      ft_module_driver_has_hinter,
+      
       sizeof ( TT_DriverRec ),
     
       "truetype",      /* driver name                           */
