@@ -20,6 +20,7 @@
 #define FTSTREAM_H
 
 #include <freetype/internal/ftobjs.h>
+#include <stddef.h>                     /* for offsetof() macro */
 
 
 #ifdef __cplusplus
@@ -95,7 +96,7 @@
 #define FT_FIELD_SIZE_DELTA( f ) \
           (FT_Byte)sizeof ( ((FT_STRUCTURE*)0)->f[0] )
 #define FT_FIELD_OFFSET( f ) \
-          (FT_UShort)( (char*)&(((FT_STRUCTURE*)0)->f) - (char*)0 )
+          (FT_UShort)( offsetof( FT_STRUCTURE, f ) )
 
 #define FT_FRAME_FIELD( frame_op, field ) \
           {                               \
