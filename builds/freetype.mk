@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000, 2001, 2002, 2003 by
+# Copyright 1996-2000, 2001, 2002, 2003, 2004 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -254,7 +254,7 @@ library: $(PROJECT_LIBRARY)
 refdoc:
 	python $(SRC_DIR)/tools/docmaker/docmaker.py \
                --prefix=ft2                          \
-               --title=FreeType-2.1.7                \
+               --title=FreeType-2.1.8                \
                --output=$(DOC_DIR)                   \
                $(PUBLIC_DIR)/*.h                     \
                $(PUBLIC_DIR)/config/*.h              \

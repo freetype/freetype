@@ -1,3 +1,16 @@
+2004-04-01  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/ft-munmap.m4 (FT_MUNMAP_PARAM): Fix arguments of
+	AC_COMPILE_IFELSE.
+	* builds/unix/aclocal.m4: Regenerated with `aclocal -I .' from
+	automake 1.8a.
+	* builds/unix/configure: Regenerated with autoconf 2.59a.
+	* builds/unix/config.guess, builds/unix/config.sub: Updated from
+	`config' CVS module at subversions.gnu.org
+	* builds/unix/install-sh, builds/unix/mkinstalldirs: Updated from
+	`texinfo' CVS module at subversions.gnu.org.
+	* builds/freetype.mk (refdoc): Updated.
+
 2004-03-31  Werner Lemberg  <wl@gnu.org>
 
 	Handle broken FNT files which don't have a trailing NULL byte

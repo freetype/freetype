@@ -397,8 +397,8 @@
     /*      "scale < bluescale"                               */
     /*                                                        */
     /* Note that `blue_scale' is stored 1000 times its real   */
-    /* real value, and that `scale' converts from font units  */
-    /* to fractional pixels.                                  */
+    /* value, and that `scale' converts from font units to    */
+    /* fractional pixels.                                     */
     /*                                                        */
 
     /* 1000 / 64 = 125 / 8 */
