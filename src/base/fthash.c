@@ -45,7 +45,7 @@
 
 
 
-  FT_BASE_DEF( void )
+  FT_BASE_DEF( FT_Error )
   ft_hash_init( FT_Hash              table,
                 FT_Hash_CompareFunc  compare,
                 FT_Memory            memory )
@@ -196,7 +196,7 @@
         table->mask >>= 1;
         p             = table->mask;
 
-        FT_RENEW_ARRAY( hash->buckets, (mask+1)*2, (mask) );
+        FT_RENEW_ARRAY( hash->buckets, (mask+1)*2, (mask+1) );
       }
       else
         p--;

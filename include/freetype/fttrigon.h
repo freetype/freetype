@@ -291,6 +291,28 @@ FT_BEGIN_HEADER
   FT_Vector_Polarize( FT_Vector*  vec,
                       FT_Fixed   *length,
                       FT_Angle   *angle );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @function:                                                            */
+  /*    FT_Vector_From_Polar                                               */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    Compute vector coordinates from a length and angle.                */
+  /*                                                                       */
+  /* @output:                                                              */
+  /*    vec    :: The address of source vector.                            */
+  /*                                                                       */
+  /* @input:                                                               */
+  /*    length :: The vector length.                                       */
+  /*    angle  :: The vector angle.                                        */
+  /*                                                                       */
+  FT_EXPORT( void )
+  FT_Vector_From_Polar( FT_Vector*  vec,
+                        FT_Fixed    length,
+                        FT_Angle    angle );
+
   /* */
 
 

@@ -1,9 +1,20 @@
 2002-06-26  David Turner
 
-        * src/truetype/ttgload.c (TT_Load_Composite_Glyph),
-        src/base/ftoutln.c (FT_Vector_Transform): fixed Werner's latest
-        fix. FT_Vector_Transform wasn't buggy, the TrueType composite loader
-        was...
+    * include/freetype/internal/ftobject.h: updating the object sub-system
+    definitions (still experimental)
+
+    * src/base/fthash.c (ft_hash_remove): fixing a small reallocation bug
+
+    * include/freetype/fttrigon.h, src/base/fttrigon.c: adding
+    FT_Vector_From_Polar and FT_Angle_Diff to the trigonometric functions
+
+    * include/freetype/ftstroker.h, src/base/ftstroker.c: adding path stroker
+    component (work in progress)
+
+    * src/truetype/ttgload.c (TT_Load_Composite_Glyph),
+    src/base/ftoutln.c (FT_Vector_Transform): fixed Werner's latest
+    fix. FT_Vector_Transform wasn't buggy, the TrueType composite loader
+    was...
 
 2002-06-24  Werner Lemberg  <wl@gnu.org>
 

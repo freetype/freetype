@@ -815,7 +815,7 @@
             segment_dir = point->out_dir;
 
             /* clear all segment fields */
-            FT_MEM_SET( segment, 0, sizeof ( *segment ) );
+            FT_ZERO( segment );
 
             segment->dir      = segment_dir;
             segment->flags    = ah_edge_normal;
@@ -877,7 +877,7 @@
         if ( min_point )
         {
           /* clear all segment fields */
-          FT_MEM_SET( segment, 0, sizeof ( *segment ) );
+          FT_ZERO( segment );
 
           segment->dir   = segment_dir;
           segment->flags = ah_edge_normal;
@@ -893,7 +893,7 @@
         if ( max_point )
         {
           /* clear all segment fields */
-          FT_MEM_SET( segment, 0, sizeof ( *segment ) );
+          FT_ZERO( segment );
 
           segment->dir   = segment_dir;
           segment->flags = ah_edge_normal;
