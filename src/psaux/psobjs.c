@@ -874,8 +874,12 @@
       }
     }
 
+#if 0  /* obsolete - keep for reference */
     if ( pflags )
       *pflags |= 1L << field->flag_bit;
+#else
+    FT_UNUSED(pflags);      
+#endif
 
     error = FT_Err_Ok;
 
@@ -906,6 +910,11 @@
     FT_Byte*   old_limit;
     T1_Field   fieldrec = *(T1_Field*)field;
 
+#if 1
+    fieldrec.type = t1_field_integer;
+    if ( field->type == t1_field_fixed_array )
+      fieldrec.type = t1_field_fixed;
+#endif
 
     T1_ToTokenArray( parser, elements, 32, &num_elements );
     if ( num_elements < 0 )
@@ -930,8 +939,12 @@
       fieldrec.offset += fieldrec.size;
     }
 
+#if 0  /* obsolete -- keep for reference */
     if ( pflags )
       *pflags |= 1L << field->flag_bit;
+#else
+    FT_UNUSED(pflags);      
+#endif
 
     parser->cursor = old_cursor;
     parser->limit  = old_limit;

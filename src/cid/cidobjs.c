@@ -34,6 +34,7 @@
 
 
 #include <freetype/internal/psnames.h>
+#include <freetype/internal/psaux.h>
 
 
   /*************************************************************************/
@@ -132,6 +133,7 @@
   {
     FT_Error            error;
     PSNames_Interface*  psnames;
+    PSAux_Interface*    psaux;
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -148,6 +150,15 @@
                   FT_FACE_LIBRARY( face ), "psnames" );
 
       face->psnames = psnames;
+    }
+
+    psaux = (PSAux_Interface*)face->psaux;
+    if ( !psaux )
+    {
+      psaux = (PSAux_Interface*)FT_Get_Module_Interface(
+                  FT_FACE_LIBRARY( face ), "psaux" );
+                  
+      face->psaux = psaux;
     }
 
     /* open the tokenizer; this will also check the font format */

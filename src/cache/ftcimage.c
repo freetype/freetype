@@ -426,7 +426,7 @@
     FTC_Image_Cache  cache      = queue->cache;
     FT_UInt          hash_index = glyph_index % queue->hash_size;
     FT_List          bucket     = queue->buckets + hash_index;
-    FT_ListNode      node, next;
+    FT_ListNode      node, next = 0;
     FT_Error         error;
     FTC_ImageNode    inode;
     

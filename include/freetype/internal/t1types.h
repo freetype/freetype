@@ -181,6 +181,7 @@
   {
     FT_FaceRec  root;
     void*       psnames;
+    void*       psaux;
     CID_Info    cid;
     void*       afm_data;
     CID_Subrs*  subrs;

@@ -67,9 +67,11 @@
   FT_Error  Z1_Parse_Glyph( T1_Decoder*  decoder,
                             FT_UInt      glyph_index )
   {
-    T1_Face   face  = (T1_Face)decoder->builder.face;
-    T1_Font*  type1 = &face->type1;
-    
+    T1_Face  face  = (T1_Face)decoder->builder.face;
+    T1_Font* type1 = &face->type1;
+
+    decoder->font_matrix = type1->font_matrix;
+    decoder->font_offset = type1->font_offset;
 
     return decoder->funcs.parse_charstrings(
                       decoder,
@@ -99,7 +101,9 @@
                                            (FT_Byte**)type1->glyph_names,
                                            face->blend,
                                            Z1_Parse_Glyph );
-
+    if (error)
+      return error;
+      
     decoder.builder.metrics_only = 1;
     decoder.builder.load_points  = 0;
 
@@ -117,7 +121,7 @@
     }
 
     *max_advance = decoder.builder.advance.x;
-    return T1_Err_Ok;
+    return FT_Err_Ok;
   }
 
 
@@ -152,6 +156,8 @@
     PSAux_Interface*        psaux         = (PSAux_Interface*)face->psaux;
     const T1_Decoder_Funcs* decoder_funcs = psaux->t1_decoder_funcs;
 
+    FT_Matrix               font_matrix;
+    FT_Vector               font_offset;
 
     if ( load_flags & FT_LOAD_NO_RECURSE )
       load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_HINTING;
@@ -188,6 +194,9 @@
     error = Z1_Parse_Glyph( &decoder, glyph_index );
     if ( error )
       goto Exit;
+
+    font_matrix = decoder.font_matrix;
+    font_offset = decoder.font_offset;
 
     /* save new glyph tables */
     decoder_funcs->done( &decoder );
@@ -227,12 +236,11 @@
           glyph->root.outline.flags |= ft_outline_high_precision;
 
         /* apply the font matrix */
-        FT_Outline_Transform( &glyph->root.outline,
-                              &face->type1.font_matrix );
+        FT_Outline_Transform( &glyph->root.outline, &font_matrix );
 
         FT_Outline_Translate( &glyph->root.outline,
-                              face->type1.font_offset.x,
-                              face->type1.font_offset.y );
+                              font_offset.x,
+                              font_offset.y );
 
 #if 0
 

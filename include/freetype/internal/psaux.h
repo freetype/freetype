@@ -134,6 +134,7 @@
   /*************************************************************************/
   /*************************************************************************/
 
+  typedef struct  T1_Parser_  T1_Parser;
 
   /* simple enumeration type used to identify token types */
   typedef enum  T1_Token_Type_
@@ -169,95 +170,114 @@
     t1_field_string,
     t1_field_integer_array,
     t1_field_fixed_array,
+    t1_field_callback,
 
     /* do not remove */
     t1_field_max
 
   } T1_Field_Type;
 
+  typedef enum  T1_Field_Location_
+  {
+    t1_field_cid_info,
+    t1_field_font_dict,
+    t1_field_font_info,
+    t1_field_private,
+
+    /* do not remove */
+    t1_field_location_max
+  
+  } T1_Field_Location;
+
+  typedef void      (*T1_Field_Parser)( FT_Face     face,
+                                        FT_Pointer  parser );
+
 
   /* structure type used to model object fields */
   typedef struct  T1_Field_
   {
-    T1_Field_Type  type;          /* type of field                        */
-    FT_UInt        offset;        /* offset of field in object            */
-    FT_Byte        size;          /* size of field in bytes               */
-    FT_UInt        array_max;     /* maximum number of elements for array */
-    FT_UInt        count_offset;  /* offset of element count for arrays   */
-    FT_Int         flag_bit;      /* bit number for field flag            */
-
+    const char*         ident;        /* field identifier                  */
+    T1_Field_Location   location;
+    T1_Field_Type       type;         /* type of field                     */
+    T1_Field_Parser     reader;
+    FT_UInt             offset;       /* offset of field in object         */
+    FT_Byte             size;         /* size of field in bytes            */
+    FT_UInt             array_max;    /* maximal number of elements for    */
+                                      /* array                             */
+    FT_UInt             count_offset; /* offset of element count for       */
+                                      /* arrays                            */
   } T1_Field;
 
 
-#define T1_FIELD_BOOL( _fname )        \
-          {                            \
-            t1_field_bool,             \
-            FT_FIELD_OFFSET( _fname ), \
-            FT_FIELD_SIZE( _fname ),   \
-            0, 0, 0                    \
-          }
-
-#define T1_FIELD_NUM( _fname )         \
-          {                            \
-            t1_field_integer,          \
-            FT_FIELD_OFFSET( _fname ), \
-            FT_FIELD_SIZE( _fname ),   \
-            0, 0, 0                    \
-          }
-
-#define T1_FIELD_FIXED( _fname, _power ) \
-          {                              \
-            t1_field_fixed,              \
-            FT_FIELD_OFFSET( _fname ),   \
-            FT_FIELD_SIZE( _fname ),     \
-            0, 0, 0                      \
-          }
-
-#define T1_FIELD_STRING( _fname )      \
-          {                            \
-            t1_field_string,           \
-            FT_FIELD_OFFSET( _fname ), \
-            FT_FIELD_SIZE( _fname ),   \
-            0, 0, 0                    \
-          }
-
-#define T1_FIELD_NUM_ARRAY( _fname, _fcount, _fmax )  \
+#define T1_NEW_SIMPLE_FIELD( _ident, _type, _fname ) \
           {                                           \
-            t1_field_integer,                         \
+            _ident, T1CODE, _type,                    \
+            0,                                        \
             FT_FIELD_OFFSET( _fname ),                \
-            FT_FIELD_SIZE_DELTA( _fname ),            \
-            _fmax,                                    \
-            FT_FIELD_OFFSET( _fcount ),               \
-            0                                         \
-          }
+            FT_FIELD_SIZE( _fname ),                  \
+            0, 0                                      \
+          },
 
-#define T1_FIELD_FIXED_ARRAY( _fname, _fcount, _fmax ) \
-          {                                            \
-            t1_field_fixed,                            \
-            FT_FIELD_OFFSET( _fname ),                 \
-            FT_FIELD_SIZE_DELTA( _fname ),             \
-            _fmax,                                     \
-            FT_FIELD_OFFSET( _fcount ),                \
-            0                                          \
-          }
+#define T1_NEW_CALLBACK_FIELD( _ident, _reader ) \
+          {                                      \
+            _ident, T1CODE, t1_field_callback,   \
+            (T1_Field_Parser)_reader,            \
+            0, 0,                                \
+            0, 0                                 \
+          },
 
-#define T1_FIELD_NUM_ARRAY2( _fname, _fmax ) \
-          {                                  \
-            t1_field_integer,                \
-            FT_FIELD_OFFSET( _fname ),       \
-            FT_FIELD_SIZE_DELTA( _fname ),   \
-            _fmax,                           \
-            0, 0                             \
-          }
+#define T1_NEW_TABLE_FIELD( _ident, _type, _fname, _max ) \
+          {                                                \
+            _ident, T1CODE, _type,                         \
+            0,                                             \
+            FT_FIELD_OFFSET( _fname ),                     \
+            FT_FIELD_SIZE_DELTA( _fname ),                 \
+            _max,                                          \
+            FT_FIELD_OFFSET( num_ ## _fname )              \
+          },
 
-#define T1_FIELD_FIXED_ARRAY2( _fname, _fmax ) \
-          {                                    \
-            t1_field_fixed,                    \
-            FT_FIELD_OFFSTE( _fname ),         \
-            FT_FIELD_SIZE_DELTA( _fname ),     \
-            _fmax,                             \
-            0, 0                               \
-          }
+#define T1_NEW_TABLE_FIELD2( _ident, _type, _fname, _max ) \
+          {                                                 \
+            _ident, T1CODE, _type,                          \
+            0,                                              \
+            FT_FIELD_OFFSET( _fname ),                      \
+            FT_FIELD_SIZE_DELTA( _fname ),                  \
+            _max, 0                                         \
+          },
+
+
+#define T1_FIELD_BOOL( _ident, _fname )                           \
+          T1_NEW_SIMPLE_FIELD( _ident, t1_field_bool, _fname )
+
+#define T1_FIELD_NUM( _ident, _fname )                            \
+          T1_NEW_SIMPLE_FIELD( _ident, t1_field_integer, _fname )
+
+#define T1_FIELD_FIXED( _ident, _fname )                          \
+          T1_NEW_SIMPLE_FIELD( _ident, t1_field_fixed, _fname )
+
+#define T1_FIELD_STRING( _ident, _fname )                         \
+          T1_NEW_SIMPLE_FIELD( _ident, t1_field_string, _fname )
+
+#define T1_FIELD_NUM_TABLE( _ident, _fname, _fmax )               \
+          T1_NEW_TABLE_FIELD( _ident, t1_field_integer_array,     \
+                               _fname, _fmax )
+
+#define T1_FIELD_FIXED_TABLE( _ident, _fname, _fmax )             \
+          T1_NEW_TABLE_FIELD( _ident, t1_field_fixed_array,       \
+                               _fname, _fmax )
+
+#define T1_FIELD_NUM_TABLE2( _ident, _fname, _fmax )              \
+          T1_NEW_TABLE_FIELD2( _ident, t1_field_integer_array,    \
+                                _fname, _fmax )
+
+#define T1_FIELD_FIXED_TABLE2( _ident, _fname, _fmax )            \
+          T1_NEW_TABLE_FIELD2( _ident, t1_field_fixed_array,      \
+                                _fname, _fmax )
+
+#define T1_FIELD_CALLBACK( _ident, _name )                        \
+          T1_NEW_CALLBACK_FIELD( _ident, _name )
+
+
 
 
   /*************************************************************************/
@@ -267,10 +287,6 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
-  typedef struct  T1_Parser_  T1_Parser;
-
 
   typedef struct  T1_Parser_Funcs_
   {
@@ -579,6 +595,7 @@
     FT_Int*              subrs_len;    /* array of subrs length (optional) */
 
     FT_Matrix            font_matrix;
+    FT_Vector            font_offset;
 
     FT_Int               flex_state;
     FT_Int               num_flex_vectors;

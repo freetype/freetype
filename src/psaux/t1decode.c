@@ -185,6 +185,15 @@
     /* seac weirdness */
     adx += decoder->builder.left_bearing.x;
 
+    /* glyph_names is set to 0 for CID fonts which do not  */
+    /* include an encoding.. How can we deal with these ?? */
+    if (decoder->glyph_names == 0)
+    {
+      FT_ERROR(( "t1operator_seac:" ));
+      FT_ERROR(( " glyph names table not available in this font !!\n" ));
+      return T1_Err_Syntax_Error;
+    }
+    
     bchar_index = t1_lookup_glyph_by_stdcharcode( decoder, bchar );
     achar_index = t1_lookup_glyph_by_stdcharcode( decoder, achar );
 

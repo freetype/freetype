@@ -1,5 +1,7 @@
 LATEST CHANGES
 
+  - changed "cid" to use "psaux" too..
+
   - added the cache sub-system. See <freetype/ftcache.h> as well as the
     sources in "src/cache". Note that it compiles but is still untested
     for now ..
