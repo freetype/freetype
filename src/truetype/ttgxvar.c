@@ -516,7 +516,7 @@
         apply = FT_MulDiv( apply,
                            blend->normalizedcoords[i] > 0
                              ? blend->normalizedcoords[i]
-                             : blend->normalizedcoords[i],
+                             : -blend->normalizedcoords[i],
                            0x10000L );
 
       else if ( blend->normalizedcoords[i] <= im_start_coords[i] ||
