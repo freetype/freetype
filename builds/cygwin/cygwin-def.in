@@ -33,12 +33,13 @@ INSTALL       := @INSTALL@
 INSTALL_DATA  := @INSTALL_DATA@
 MKINSTALLDIRS := $(BUILD)/mkinstalldirs
 
-DISTCLEAN += $(BUILD)/config.cache  \
-             $(BUILD)/config.log    \
-             $(BUILD)/config.status \
-             $(BUILD)/cygwin-def.mk \
-             $(BUILD)/cygwin-cc.mk  \
-             $(BUILD)/ftconfig.h    \
+DISTCLEAN += $(BUILD)/config.cache     \
+             $(BUILD)/config.log       \
+             $(BUILD)/config.status    \
+             $(BUILD)/cygwin-def.mk    \
+             $(BUILD)/cygwin-cc.mk     \
+             $(BUILD)/ftconfig.h       \
+	     $(BUILD)/freetype-config  \
              $(LIBTOOL)
 
 
