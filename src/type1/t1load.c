@@ -1653,6 +1653,9 @@
     /* default lenIV */
     type1->private_dict.lenIV = 4;
 
+    /* default blue fuzz, we put it there since 0 is a valid value */
+    type1->private_dict.blue_fuzz = 1;
+
     parser = &loader.parser;
     error  = T1_New_Parser( parser,
                             face->root.stream,
