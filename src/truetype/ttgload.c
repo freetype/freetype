@@ -779,6 +779,7 @@
     FT_Bool               glyph_data_loaded = 0;
 #endif
 
+
     if ( recurse_count >= TT_MAX_COMPOSITE_RECURSE )
     {
       error = TT_Err_Invalid_Composite;
@@ -1276,6 +1277,10 @@
                                     tt_coderange_glyph,
                                     exec->glyphIns,
                                     n_ins );
+          if ( error )
+            goto Fail;
+
+          error = FT_GlyphLoader_CheckPoints( gloader, num_points + 2, 0 );
           if ( error )
             goto Fail;
 
