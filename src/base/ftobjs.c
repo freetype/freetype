@@ -1520,13 +1520,7 @@
     if ( FT_ERROR_BASE( error ) == FT_Err_Unknown_File_Format )
       error = IsMacResource( library, stream, 0, face_index, aface );
 
-#ifdef FT_MACINTOSH
-    /*
-       I know this section is within code which is normally turned off
-       for the Mac.  It provides an alternative approach to reading the
-       mac resource forks on OS/X in the event that a user does not wish
-       to compile ftmac.c.
-     */
+    /* Only meaningful on sytems with hfs+ drivers (or Macs) */
 
     if ( ( FT_ERROR_BASE( error ) == FT_Err_Unknown_File_Format      ||
            FT_ERROR_BASE( error ) == FT_Err_Invalid_Stream_Operation )  &&
@@ -1540,8 +1534,10 @@
 
       memory = library->memory;
 
-      FT_ALLOC( newpath,
-                ft_strlen( args->pathname ) + ft_strlen( "/rsrc" ) + 1 );
+      if ( FT_ALLOC( newpath,
+                     ft_strlen( args->pathname ) + ft_strlen( "/rsrc" ) + 1 ) )
+        goto Fail;
+
       ft_strcpy( newpath, args->pathname );
       ft_strcat( newpath, "/rsrc" );
 
@@ -1556,8 +1552,7 @@
       FT_FREE( newpath );
     }
 
-#endif  /* FT_MACINTOSH */
-
+  Fail:
     return error;
   }
 
