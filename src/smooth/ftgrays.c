@@ -367,8 +367,8 @@
       return;
     }
 
-    ras.min_ex = ras.max_ex = vec->x;
-    ras.min_ey = ras.max_ey = vec->y;
+    ras.min_ex = ras.max_ex = (TCoord)vec->x;
+    ras.min_ey = ras.max_ey = (TCoord)vec->y;
 
     vec++;
 
@@ -378,10 +378,10 @@
       TPos  y = vec->y;
 
 
-      if ( x < ras.min_ex ) ras.min_ex = x;
-      if ( x > ras.max_ex ) ras.max_ex = x;
-      if ( y < ras.min_ey ) ras.min_ey = y;
-      if ( y > ras.max_ey ) ras.max_ey = y;
+      if ( x < ras.min_ex ) ras.min_ex = (TCoord)x;
+      if ( x > ras.max_ex ) ras.max_ex = (TCoord)x;
+      if ( y < ras.min_ey ) ras.min_ey = (TCoord)y;
+      if ( y > ras.max_ey ) ras.max_ey = (TCoord)y;
     }
 
     /* truncate the bounding box to integer pixels */
@@ -513,10 +513,10 @@
 
     dx = x2 - x1;
 
-    ex1 = TRUNC( x1 ); /* if (ex1 >= ras.max_ex) ex1 = ras.max_ex-1; */
-    ex2 = TRUNC( x2 ); /* if (ex2 >= ras.max_ex) ex2 = ras.max_ex-1; */
-    fx1 = x1 - SUBPIXELS( ex1 );
-    fx2 = x2 - SUBPIXELS( ex2 );
+    ex1 = (TCoord)TRUNC( x1 ); /* if (ex1 >= ras.max_ex) ex1 = ras.max_ex-1; */
+    ex2 = (TCoord)TRUNC( x2 ); /* if (ex2 >= ras.max_ex) ex2 = ras.max_ex-1; */
+    fx1 = (TCoord)( x1 - SUBPIXELS( ex1 ) );
+    fx2 = (TCoord)( x2 - SUBPIXELS( ex2 ) );
 
     /* trivial case.  Happens often */
     if ( y1 == y2 )
@@ -550,12 +550,12 @@
       dx    = -dx;
     }
 
-    delta = p / dx;
-    mod   = p % dx;
+    delta = (TCoord)( p / dx );
+    mod   = (TCoord)( p % dx );
     if ( mod < 0 )
     {
       delta--;
-      mod += dx;
+      mod += (TCoord)dx;
     }
 
     ras.area  += (TArea)( fx1 + first ) * delta;
@@ -568,12 +568,12 @@
     if ( ex1 != ex2 )
     {
       p     = ONE_PIXEL * ( y2 - y1 + delta );
-      lift  = p / dx;
-      rem   = p % dx;
+      lift  = (TCoord)( p / dx );
+      rem   = (TCoord)( p % dx );
       if ( rem < 0 )
       {
         lift--;
-        rem += dx;
+        rem += (TCoord)dx;
       }
 
       mod -= dx;
@@ -584,7 +584,7 @@
         mod  += rem;
         if ( mod >= 0 )
         {
-          mod -= dx;
+          mod -= (TCoord)dx;
           delta++;
         }
 
@@ -612,13 +612,14 @@
   {
     TCoord  ey1, ey2, fy1, fy2;
     TPos    dx, dy, x, x2;
-    int     p, rem, mod, lift, delta, first, incr;
+    long    p, first;
+    int     delta, rem, mod, lift, incr;
 
 
-    ey1 = TRUNC( ras.last_ey );
-    ey2 = TRUNC( to_y ); /* if (ey2 >= ras.max_ey) ey2 = ras.max_ey-1; */
-    fy1 = ras.y - ras.last_ey;
-    fy2 = to_y - SUBPIXELS( ey2 );
+    ey1 = (TCoord)TRUNC( ras.last_ey );
+    ey2 = (TCoord)TRUNC( to_y ); /* if (ey2 >= ras.max_ey) ey2 = ras.max_ey-1; */
+    fy1 = (TCoord)( ras.y - ras.last_ey );
+    fy2 = (TCoord)( to_y - SUBPIXELS( ey2 ) );
 
     dx = to_x - ras.x;
     dy = to_y - ras.y;
@@ -654,8 +655,8 @@
 
     if ( dx == 0 )
     {
-      TCoord  ex     = TRUNC( ras.x );
-      TCoord  two_fx = ( ras.x - SUBPIXELS( ex ) ) << 1;
+      TCoord  ex     = (TCoord)TRUNC( ras.x );
+      TCoord  two_fx = (TCoord)( ( ras.x - SUBPIXELS( (TPos)ex ) ) << 1 );
       TPos    area;
 
 
@@ -666,16 +667,16 @@
         incr  = -1;
       }
 
-      delta      = first - fy1;
+      delta      = (int)( first - fy1 );
       ras.area  += (TArea)two_fx * delta;
       ras.cover += delta;
       ey1       += incr;
 
       gray_set_cell( raster, ex, ey1 );
 
-      delta = first + first - ONE_PIXEL;
+      delta = (int)( first + first - ONE_PIXEL );
       area  = (TArea)two_fx * delta;
-      while( ey1 != ey2 )
+      while ( ey1 != ey2 )
       {
         ras.area  += area;
         ras.cover += delta;
@@ -683,50 +684,50 @@
         gray_set_cell( raster, ex, ey1 );
       }
 
-      delta      = fy2 - ONE_PIXEL + first;
+      delta      = (int)( fy2 - ONE_PIXEL + first );
       ras.area  += (TArea)two_fx * delta;
       ras.cover += delta;
       goto End;
     }
 
     /* ok, we have to render several scanlines */
-    p     = ( ONE_PIXEL - fy1 ) * dx;
-    first = ONE_PIXEL;
+    p     = (int)( ( ONE_PIXEL - fy1 ) * dx );
+    first = (int)ONE_PIXEL;
     incr  = 1;
 
     if ( dy < 0 )
     {
-      p     = fy1 * dx;
+      p     = fy1 * (int)dx;
       first = 0;
       incr  = -1;
       dy    = -dy;
     }
 
-    delta = p / dy;
-    mod   = p % dy;
+    delta = (int)( p / dy );
+    mod   = (int)( p % dy );
     if ( mod < 0 )
     {
       delta--;
-      mod += dy;
+      mod += (TCoord)dy;
     }
 
     x = ras.x + delta;
     gray_render_scanline( RAS_VAR_ ey1, ras.x, fy1, x, first );
 
     ey1 += incr;
-    gray_set_cell( RAS_VAR_ TRUNC( x ), ey1 );
+    gray_set_cell( RAS_VAR_ (TCoord)TRUNC( x ), ey1 );
 
     if ( ey1 != ey2 )
     {
-      p     = ONE_PIXEL * dx;
-      lift  = p / dy;
-      rem   = p % dy;
+      p     = (int)( ONE_PIXEL * dx );
+      lift  = (int)( p / dy );
+      rem   = (int)( p % dy );
       if ( rem < 0 )
       {
         lift--;
-        rem += dy;
+        rem += (int)dy;
       }
-      mod -= dy;
+      mod -= (int)dy;
 
       while ( ey1 != ey2 )
       {
@@ -734,12 +735,14 @@
         mod  += rem;
         if ( mod >= 0 )
         {
-          mod -= dy;
+          mod -= (int)dy;
           delta++;
         }
 
         x2 = x + delta;
-        gray_render_scanline( RAS_VAR_ ey1, x, ONE_PIXEL - first, x2, first );
+        gray_render_scanline( RAS_VAR_ ey1, x,
+                                       (TCoord)( ONE_PIXEL - first ), x2,
+                                       first );
         x = x2;
 
         ey1 += incr;
@@ -747,7 +750,9 @@
       }
     }
 
-    gray_render_scanline( RAS_VAR_ ey1, x, ONE_PIXEL - first, to_x, fy2 );
+    gray_render_scanline( RAS_VAR_ ey1, x,
+                                   (TCoord)( ONE_PIXEL - first ), to_x,
+                                   fy2 );
 
   End:
     ras.x       = to_x;
@@ -1237,7 +1242,8 @@
     x = UPSCALE( to->x );
     y = UPSCALE( to->y );
 
-    gray_start_cell( (PRaster)raster, TRUNC( x ), TRUNC( y ) );
+    gray_start_cell( (PRaster)raster,
+                     (TCoord)TRUNC( x ), (TCoord)TRUNC( y ) );
 
     ((PRaster)raster)->x = x;
     ((PRaster)raster)->y = y;
@@ -1361,8 +1367,8 @@
     /*                                                           */
     /* the coverage percentage is area/(PIXEL_BITS*PIXEL_BITS*2) */
     /*                                                           */
-    coverage = area >> ( PIXEL_BITS * 2 + 1 - 8);  /* use range 0..256 */
-
+    coverage = (int)( area >> ( PIXEL_BITS * 2 + 1 - 8 ) );
+                                                    /* use range 0..256 */
     if ( coverage < 0 )
       coverage = -coverage;
 
@@ -1593,14 +1599,14 @@
     FT_Vector*  limit;
     char*       tags;
 
-    int     n;         /* index of contour in outline     */
-    int     first;     /* index of first point in contour */
-    int     error;
-    char    tag;       /* current point's state           */
+    int   n;         /* index of contour in outline     */
+    int   first;     /* index of first point in contour */
+    int   error;
+    char  tag;       /* current point's state           */
 
 #if 0
-    int     shift = func_interface->shift;
-    FT_Pos  delta = func_interface->delta;
+    int   shift = func_interface->shift;
+    TPos  delta = func_interface->delta;
 #endif
 
 
@@ -1784,7 +1790,7 @@
 
   typedef struct  TBand_
   {
-    FT_Pos  min, max;
+    TPos  min, max;
 
   } TBand;
 
@@ -1839,11 +1845,11 @@
          ras.max_ey <= clip->yMin || ras.min_ey >= clip->yMax )
       return 0;
 
-    if ( ras.min_ex < clip->xMin ) ras.min_ex = clip->xMin;
-    if ( ras.min_ey < clip->yMin ) ras.min_ey = clip->yMin;
+    if ( ras.min_ex < clip->xMin ) ras.min_ex = (TCoord)clip->xMin;
+    if ( ras.min_ey < clip->yMin ) ras.min_ey = (TCoord)clip->yMin;
 
-    if ( ras.max_ex > clip->xMax ) ras.max_ex = clip->xMax;
-    if ( ras.max_ey > clip->yMax ) ras.max_ey = clip->yMax;
+    if ( ras.max_ex > clip->xMax ) ras.max_ex = (TCoord)clip->xMax;
+    if ( ras.max_ey > clip->yMax ) ras.max_ey = (TCoord)clip->yMax;
 
     /* simple heuristic used to speed-up the bezier decomposition -- see */
     /* the code in gray_render_conic() and gray_render_cubic() for more  */
@@ -1886,14 +1892,14 @@
 
       while ( band >= bands )
       {
-        FT_Pos  bottom, top, middle;
-        int     error;
+        TPos  bottom, top, middle;
+        int   error;
 
 
         ras.num_cells = 0;
         ras.invalid   = 1;
-        ras.min_ey    = band->min;
-        ras.max_ey    = band->max;
+        ras.min_ey    = (TCoord)band->min;
+        ras.max_ey    = (TCoord)band->max;
 
 #if 1
         error = gray_convert_glyph_inner( RAS_VAR );
@@ -2136,7 +2142,7 @@
     if ( raster && pool_base && pool_size >= 4096 )
       gray_init_cells( rast, (char*)pool_base, pool_size );
 
-    rast->band_size  = ( pool_size / sizeof ( TCell ) ) / 8;
+    rast->band_size  = (int)( ( pool_size / sizeof ( TCell ) ) / 8 );
   }
 
 

@@ -1518,10 +1518,10 @@ FT_BEGIN_HEADER
     TT_PCLT               pclt;
 
     /* embedded bitmaps support */
-    FT_Int                num_sbit_strikes;
+    FT_ULong              num_sbit_strikes;
     TT_SBit_Strike        sbit_strikes;
 
-    FT_Int                num_sbit_scales;
+    FT_ULong              num_sbit_scales;
     TT_SBit_Scale         sbit_scales;
 
     /* postscript names table */

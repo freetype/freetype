@@ -626,7 +626,7 @@
                            FT_Int     y_ppem,
                            FT_ULong  *astrike_index )
   {
-    FT_Int  i;
+    FT_ULong  i;
 
 
     if ( x_ppem < 0 || x_ppem > 255 ||
@@ -791,8 +791,8 @@
     TT_SBit_Strike  strike;
 
 
-    if ( !face->sbit_strikes                                ||
-         ( face->num_sbit_strikes <= (FT_Int)strike_index ) )
+    if ( !face->sbit_strikes                        ||
+         ( face->num_sbit_strikes <= strike_index ) )
       goto Fail;
 
     strike = &face->sbit_strikes[strike_index];

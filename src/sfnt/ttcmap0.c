@@ -940,7 +940,7 @@
 
       code++;
     }
-    return result;
+    return (FT_UInt)result;
 
   Exit:
     *pchar_code = result;
@@ -1281,7 +1281,7 @@
 
       if ( char_code <= end )
       {
-        result = start_id + char_code - start;
+        result = (FT_UInt)( start_id + char_code - start );
         break;
       }
     }
@@ -1588,7 +1588,7 @@
 
       if ( char_code <= end )
       {
-        result = start_id + char_code - start;
+        result = (FT_UInt)( start_id + char_code - start );
         break;
       }
     }
@@ -1747,7 +1747,7 @@
             ft_validator_init( FT_VALIDATOR( &valid ), cmap, limit,
                                FT_VALIDATE_DEFAULT );
 
-            valid.num_glyphs = face->root.num_glyphs;
+            valid.num_glyphs = (FT_UInt)face->root.num_glyphs;
 
             if ( ft_setjmp( FT_VALIDATOR( &valid )->jump_buffer ) == 0 )
             {

@@ -1,3 +1,32 @@
+2002-09-27  Werner Lemberg  <wl@gnu.org>
+
+	* src/include/freetype/internal/tttypes.h (num_sbit_strikes,
+	num_sbit_scales): Use `FT_ULong'.
+	* src/sfnt/sfobjs.c (sfnt_load_face): Updated accordingly.
+	* src/sfnt/ttsbit.c (tt_face_set_sbit_strike): Ditto.
+	(find_sbit_image): Remove cast.
+	* src/raster/ftrend1.c (ft_raster1_render): Fix cast.
+
+2002-09-27  Wolfgang Domröse  <porthos.domroese@harz.de>
+
+	* src/sfnt/ttload.c (tt_face_load_names): Use cast.
+	* src/sfnt/ttcmap.c (code_to_next2): Use long constant.
+	(code_to_index4): Use cast.
+	(code_to_index8_12): Fix cast.
+	* src/sfnt/ttcmap0.c (tt_cmap4_char_next, tt_cmap8_char_index,
+	tt_cmap12_char_index): Use cast for `result'.
+	(tt_face_build_cmaps): Use cast.
+	* src/sfnt/sfobjs.c (tt_name_entry_ascii_from_ucs4): Use cast for
+	`code'.
+	(sfnt_load_face): Use FT_Int32 for `flags'.
+
+	* src/smooth/ftgrays.c (gray_render_scanline, gray_render_line,
+	gray_compute_cbox, gray_convert_glyph, gray_raster_reset): Add casts
+	to `TCoord' and `int'.
+	More 16bit fixes.
+	s/FT_Pos/TPos/.
+	* src/smooth/ftsmooth.c (ft_smooth_render_generic): Add casts.
+
 2002-09-26  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/ttpost.c (load_post_names, tt_face_free_ps_names,

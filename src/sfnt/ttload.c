@@ -1139,7 +1139,7 @@
         entry++;
       }
 
-      table->numNameRecords = entry - table->names;
+      table->numNameRecords = (FT_UInt)( entry - table->names );
     }
 
     FT_FRAME_EXIT();
