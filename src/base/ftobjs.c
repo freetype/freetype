@@ -31,6 +31,7 @@
 #include FT_SERVICE_POSTSCRIPT_NAME_H
 #include FT_SERVICE_GLYPH_DICT_H
 
+
   FT_BASE_DEF( FT_Pointer )
   ft_service_list_lookup( FT_ServiceDesc  service_descriptors,
                           const char*     service_id )
@@ -38,19 +39,22 @@
     FT_Pointer      result = NULL;
     FT_ServiceDesc  desc   = service_descriptors;
     
+
     if ( desc && service_id )
     {
       for ( ; desc->serv_id != NULL; desc++ )
       {
         if ( ft_strcmp( desc->serv_id, service_id ) == 0 )
         {
-          result = (FT_Pointer) desc->serv_data;
+          result = (FT_Pointer)desc->serv_data;
           break;
         }
       }
     }
+
     return result;
   }                          
+
 
   FT_BASE_DEF( void )
   ft_validator_init( FT_Validator        valid,
@@ -1215,8 +1219,8 @@
         type = flags >> 8;
         len = rlen;
 
-        pfb_data[pfb_pos++] = (FT_Byte) type;
-        pfb_lenpos          = (FT_Byte) pfb_pos;
+        pfb_data[pfb_pos++] = (FT_Byte)type;
+        pfb_lenpos          = (FT_Byte)pfb_pos;
         pfb_data[pfb_pos++] = 0;        /* 4-byte length, fill in later */
         pfb_data[pfb_pos++] = 0;
         pfb_data[pfb_pos++] = 0;
@@ -1378,7 +1382,7 @@
     if ( error )
       goto Exit;
 
-    head2[15] = (FT_Byte)(head[15] + 1);       /* make it be different */
+    head2[15] = (FT_Byte)( head[15] + 1 );     /* make it be different */
 
     error = FT_Stream_Read( stream, (FT_Byte*)head2, 16 );
     if ( error )
@@ -2394,31 +2398,38 @@
     {
       FT_Service_GlyphDict  service;
 
+
 #if 0
+
       FT_FACE_LOOKUP_SERVICE( face, service,
                               glyph_dict,
                               FT_SERVICE_ID_GLYPH_DICT );
-#else
-     service = face->internal->services . glyph_dict;
-     if ( service == FT_SERVICE_UNAVAILABLE )
-       service = NULL;
-     else if ( service == NULL )
-     {
-       FT_Module  module = FT_MODULE(face->driver);
-       
-       if ( module->clazz->get_interface )
-         service = module->clazz->get_interface( module,
-                                                 FT_SERVICE_ID_GLYPH_DICT );
-     
-       face->internal->services . glyph_dict = service != NULL
-                                             ? service
-                                             : FT_SERVICE_UNAVAILABLE;
-     }
 
-#endif
+#else
+
+      service = face->internal->services.glyph_dict;
+      if ( service == FT_SERVICE_UNAVAILABLE )
+        service = NULL;
+      else if ( service == NULL )
+      {
+        FT_Module  module = FT_MODULE( face->driver );
+
+       
+        if ( module->clazz->get_interface )
+          service = module->clazz->get_interface( module,
+                                                  FT_SERVICE_ID_GLYPH_DICT );
+     
+        face->internal->services.glyph_dict =
+          service != NULL ? service
+                          : FT_SERVICE_UNAVAILABLE;
+      }
+
+#endif /* 1 */
+
       if ( service && service->name_index )
         result = service->name_index( face, glyph_name );
-      }
+    }
+
     return result;
   }
 
@@ -2444,14 +2455,13 @@
     {
       FT_Service_GlyphDict  service;
 
+
       FT_FACE_LOOKUP_SERVICE( face, service,
                               glyph_dict,
                               FT_SERVICE_ID_GLYPH_DICT );
 
       if ( service && service->get_name )
-      {
         error = service->get_name( face, glyph_index, buffer, buffer_max );
-      }
     }
 
     return error;
@@ -2473,6 +2483,7 @@
     {
       FT_Service_PsName  service;
 
+
       FT_FACE_LOOKUP_SERVICE( face, service,
                               postscript_name,
                               FT_SERVICE_ID_POSTSCRIPT_NAME );
@@ -2480,6 +2491,7 @@
       if ( service && service->get_ps_name )
         result = service->get_ps_name( face );
     }
+
   Exit:
     return result;
   }
@@ -2493,6 +2505,7 @@
   {
     void*                   table = 0;
     FT_Service_SFNT_Table   service;
+
 
     if ( face && FT_IS_SFNT( face ) )
     {

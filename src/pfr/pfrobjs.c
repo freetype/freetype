@@ -425,6 +425,7 @@
 
     FT_UNUSED( error ); /* just needed as syntactical sugar */
 
+
     kerning->x = 0;
     kerning->y = 0;
 
@@ -433,10 +434,11 @@
     
     while ( min < max )
     {
-      FT_UInt       mid  = (min+max) >> 1;
+      FT_UInt       mid  = ( min + max ) >> 1;
       PFR_KernPair  pair = pairs + mid;
       FT_UInt32     pidx = PFR_KERN_PAIR_INDEX( pair );
       
+
       if ( pidx == idx )
       {
         kerning->x = pair->kerning;
@@ -444,7 +446,7 @@
       }
       
       if ( pidx < idx )
-        min = mid+1;
+        min = mid + 1;
       else
         max = mid;
     }

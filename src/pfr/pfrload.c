@@ -609,22 +609,25 @@
   }
 
 
- /* the kerning data embedded in a PFR font are (charcode,charcode)
-  * pairs, we need to translate them to (gindex,gindex) and sort
-  * the resulting array
+ /*
+  *  The kerning data embedded in a PFR font are (charcode,charcode)
+  *  pairs; we need to translate them to (gindex,gindex) and sort
+  *  the resulting array.
   */
   static FT_UInt
-  pfr_get_gindex( PFR_Char     chars,
-                  FT_UInt      count,
-                  FT_UInt      charcode )
+  pfr_get_gindex( PFR_Char  chars,
+                  FT_UInt   count,
+                  FT_UInt   charcode )
   {
-    FT_UInt    min    = 0;
-    FT_UInt    max    = count;
+    FT_UInt  min = 0;
+    FT_UInt  max = count;
+
 
     while ( min < max )
     {
-      FT_UInt   mid = (min+max) >> 1;
+      FT_UInt   mid = ( min + max ) >> 1;
       PFR_Char  c   = chars + mid;
+
 
       if ( c->char_code == charcode )
         return mid + 1;
@@ -639,11 +642,12 @@
 
 
   FT_CALLBACK_DEF( int )
-  pfr_compare_kern_pairs( const void*   pair1,
-                          const void*   pair2 )
+  pfr_compare_kern_pairs( const void*  pair1,
+                          const void*  pair2 )
   {
     FT_UInt32  p1 = PFR_KERN_PAIR_INDEX( (PFR_KernPair)pair1 );
     FT_UInt32  p2 = PFR_KERN_PAIR_INDEX( (PFR_KernPair)pair2 );
+
 
     if ( p1 < p2 )
       return -1;
@@ -654,8 +658,8 @@
 
 
   static FT_Error
-  pfr_sort_kerning_pairs( FT_Stream     stream,
-                          PFR_PhyFont   phy_font )
+  pfr_sort_kerning_pairs( FT_Stream    stream,
+                          PFR_PhyFont  phy_font )
   {
     FT_Error      error;
     FT_Memory     memory = stream->memory;
@@ -664,6 +668,7 @@
     PFR_Char      chars     = phy_font->chars;
     FT_UInt       num_chars = phy_font->num_chars;
     FT_UInt       count;
+
 
    /* create kerning pairs array
     */
@@ -682,6 +687,7 @@
       FT_UInt   limit = count + item->pair_count;
       FT_Byte*  p;
 
+
       if ( limit > phy_font->num_kern_pairs )
       {
         error = PFR_Err_Invalid_Table;
@@ -699,6 +705,7 @@
         PFR_KernPair  pair = pairs + count;
         FT_UInt       char1, char2;
         FT_Int        kerning;
+
 
         if ( item->flags & PFR_KERN_2BYTE_CHAR )
         {
@@ -744,10 +751,10 @@
 
   static const PFR_ExtraItemRec  pfr_phy_font_extra_items[] =
   {
-    { 1, (PFR_ExtraItem_ParseFunc) pfr_extra_item_load_bitmap_info },
-    { 2, (PFR_ExtraItem_ParseFunc) pfr_extra_item_load_font_id },
-    { 3, (PFR_ExtraItem_ParseFunc) pfr_extra_item_load_stem_snaps },
-    { 4, (PFR_ExtraItem_ParseFunc) pfr_extra_item_load_kerning_pairs },
+    { 1, (PFR_ExtraItem_ParseFunc)pfr_extra_item_load_bitmap_info },
+    { 2, (PFR_ExtraItem_ParseFunc)pfr_extra_item_load_font_id },
+    { 3, (PFR_ExtraItem_ParseFunc)pfr_extra_item_load_stem_snaps },
+    { 4, (PFR_ExtraItem_ParseFunc)pfr_extra_item_load_kerning_pairs },
     { 0, NULL }
   };
 

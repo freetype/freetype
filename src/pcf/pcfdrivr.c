@@ -510,10 +510,11 @@ THE SOFTWARE.
     return PCF_Err_Invalid_Argument;
   }
 
+
   static FT_Service_BDFRec  pcf_service_bdf =
   {
-    (FT_BDF_GetCharsetIdFunc)  NULL,  /* unimplemented ? */
-    (FT_BDF_GetPropertyFunc)   pcf_get_bdf_property
+    (FT_BDF_GetCharsetIdFunc)NULL,  /* unimplemented ? */
+    (FT_BDF_GetPropertyFunc) pcf_get_bdf_property
   };
 
 
@@ -525,7 +526,7 @@ THE SOFTWARE.
 
   static FT_ServiceDescRec  pcf_services[] =
   {
-    { FT_SERVICE_ID_BDF,       & pcf_service_bdf },
+    { FT_SERVICE_ID_BDF, &pcf_service_bdf },
     { FT_SERVICE_ID_XF86_NAME, FT_XF86_FORMAT_PCF },
     { NULL, NULL }
   };

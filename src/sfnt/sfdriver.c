@@ -119,11 +119,12 @@
 
   static const FT_Service_GlyphDictRec  sfnt_service_glyph_dict =
   {
-    (FT_GlyphDict_GetNameFunc)    sfnt_get_glyph_name,
-    (FT_GlyphDict_NameIndexFunc)  NULL
+    (FT_GlyphDict_GetNameFunc)  sfnt_get_glyph_name,
+    (FT_GlyphDict_NameIndexFunc)NULL
   };
 
 #endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
+
 
  /*
   *  POSTSCRIPT NAME SERVICE
