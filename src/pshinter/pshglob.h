@@ -129,7 +129,9 @@ FT_BEGIN_HEADER
   } PSH_BluesRec, *PSH_Blues;
 
 
-  /* font globals */
+  /* font globals.                                         */
+  /* dimension 0 => X coordinates + vertical hints/stems   */
+  /* dimension 1 => Y coordinates + horizontal hints/stems */
   typedef struct  PSH_GlobalsRec_
   {
     FT_Memory         memory;

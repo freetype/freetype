@@ -330,7 +330,7 @@
   ps2_simple_scale( PSH2_Hint_Table  table,
                     FT_Fixed         scale,
                     FT_Fixed         delta,
-                    FT_Int           vertical )
+                    FT_Int           dimension )
   {
     PSH2_Hint  hint;
     FT_UInt    count;
@@ -344,7 +344,7 @@
       hint->cur_len = FT_MulFix( hint->org_len, scale );
 
       if ( ps2_debug_hint_func )
-        ps2_debug_hint_func( hint, vertical );
+        ps2_debug_hint_func( hint, dimension );
     }
   }
 #endif
@@ -353,9 +353,9 @@
   static void
   psh2_hint_align( PSH2_Hint    hint,
                    PSH_Globals  globals,
-                   FT_Int       vertical )
+                   FT_Int       dimension )
   {
-    PSH_Dimension  dim   = &globals->dimension[vertical];
+    PSH_Dimension  dim   = &globals->dimension[dimension];
     FT_Fixed       scale = dim->scale_mult;
     FT_Fixed       delta = dim->scale_delta;
 
@@ -388,7 +388,7 @@
       align.align = 0;
       align.align_bot = align.align_top = 0;
 
-      if ( !vertical )
+      if ( dimension == 1 )
         psh_blues_snap_stem( &globals->blues,
                              hint->org_pos + hint->org_len,
                              hint->org_pos,
@@ -425,7 +425,7 @@
 
             /* ensure that parent is already fitted */
             if ( !psh2_hint_is_fitted( parent ) )
-              psh2_hint_align( parent, globals, vertical );
+              psh2_hint_align( parent, globals, dimension );
 
             par_org_center = parent->org_pos + ( parent->org_len / 2);
             par_cur_center = parent->cur_pos + ( parent->cur_len / 2);
@@ -461,7 +461,7 @@
 
 #ifdef DEBUG_HINTER
       if ( ps2_debug_hint_func )
-        ps2_debug_hint_func( hint, vertical );
+        ps2_debug_hint_func( hint, dimension );
 #endif
     }
   }
@@ -470,26 +470,26 @@
   static void
   psh2_hint_table_align_hints( PSH2_Hint_Table  table,
                                PSH_Globals      globals,
-                               FT_Int           vertical )
+                               FT_Int           dimension )
   {
     PSH2_Hint      hint;
     FT_UInt        count;
 
 #ifdef DEBUG_HINTER
-    PSH_Dimension  dim   = &globals->dimension[vertical];
+    PSH_Dimension  dim   = &globals->dimension[dimension];
     FT_Fixed       scale = dim->scale_mult;
     FT_Fixed       delta = dim->scale_delta;
 
 
-    if ( ps_debug_no_vert_hints && vertical )
+    if ( ps_debug_no_vert_hints && dimension == 0 )
     {
-      ps2_simple_scale( table, scale, delta, vertical );
+      ps2_simple_scale( table, scale, delta, dimension );
       return;
     }
 
-    if ( ps_debug_no_horz_hints && !vertical )
+    if ( ps_debug_no_horz_hints && dimension == 1 )
     {
-      ps2_simple_scale( table, scale, delta, vertical );
+      ps2_simple_scale( table, scale, delta, dimension );
       return;
     }
 #endif
@@ -498,7 +498,7 @@
     count = table->max_hints;
 
     for ( ; count > 0; count--, hint++ )
-      psh2_hint_align( hint, globals, vertical );
+      psh2_hint_align( hint, globals, dimension );
   }
 
 
@@ -688,13 +688,13 @@
   psh2_hint_table_tune_outline( PSH2_Hint_Table  table,
                                 FT_Outline*      outline,
                                 PSH_Globals      globals,
-                                FT_Int           vertical )
+                                FT_Int           dimension )
 
   {
     FT_UInt        count, first, last;
     PS_Mask_Table  hint_masks = table->hint_masks;
     PS_Mask        mask;
-    PSH_Dimension  dim        = &globals->dimension[vertical];
+    PSH_Dimension  dim        = &globals->dimension[dimension];
     FT_Fixed       scale      = dim->scale_mult;
     FT_Fixed       delta      = dim->scale_delta;
 
@@ -716,7 +716,7 @@
 
 
           psh2_hint_table_activate_mask( table, mask );
-          psh2_hint_table_optimize( table, globals, outline, vertical );
+          psh2_hint_table_optimize( table, globals, outline, dimension );
           psh2_hint_table_setup_zones( table, scale, delta );
           last = mask->end_point;
 
@@ -728,7 +728,7 @@
             FT_Pos  x, *px;
 
 
-            px  = vertical ? &vec->x : &vec->y;
+            px  = dimension ? &vec->y : &vec->x;
             x   = *px;
 
             *px = psh2_hint_table_tune_coord( table, (FT_Int)x );
@@ -746,7 +746,7 @@
       vec   = outline->points;
       count = outline->n_points;
 
-      if ( vertical )
+      if ( dimension == 0 )
       {
         for ( ; count > 0; count--, vec++ )
           vec->x = FT_MulFix( vec->x, scale ) + delta;
@@ -999,7 +999,7 @@
   /* load outline point coordinates into hinter glyph */
   static void
   psh2_glyph_load_points( PSH2_Glyph  glyph,
-                          FT_Int      vertical )
+                          FT_Int      dimension )
   {
     FT_Vector*  vec   = glyph->outline->points;
     PSH2_Point  point = glyph->points;
@@ -1010,7 +1010,7 @@
     {
       point->flags &= PSH2_POINT_OFF | PSH2_POINT_SMOOTH;
       point->hint   = 0;
-      if ( vertical )
+      if ( dimension == 0 )
         point->org_u = vec->x;
       else
         point->org_u = vec->y;
@@ -1026,7 +1026,7 @@
   /* save hinted point coordinates back to outline */
   static void
   psh2_glyph_save_points( PSH2_Glyph  glyph,
-                          FT_Int      vertical )
+                          FT_Int      dimension )
   {
     FT_UInt     n;
     PSH2_Point  point = glyph->points;
@@ -1036,16 +1036,16 @@
 
     for ( n = 0; n < glyph->num_points; n++ )
     {
-      if ( vertical )
+      if ( dimension == 0 )
         vec[n].x = point->cur_u;
       else
         vec[n].y = point->cur_u;
 
       if ( psh2_point_is_strong( point ) )
-        tags[n] |= vertical ? 32 : 64;
+        tags[n] |= (dimension == 0) ? 32 : 64;
 
 #ifdef DEBUG_HINTER
-      if ( vertical )
+      if ( dimension == 0 )
       {
         point->cur_x   = point->cur_u;
         point->flags_x = point->flags;
@@ -1115,16 +1115,16 @@
   /* find strong points in a glyph */
   static void
   psh2_glyph_find_strong_points( PSH2_Glyph  glyph,
-                                 FT_Int      vertical )
+                                 FT_Int      dimension )
   {
     /* a point is strong if it is located on a stem                   */
     /* edge and has an "in" or "out" tangent to the hint's direction  */
     {
-      PSH2_Hint_Table  table     = &glyph->hint_tables[vertical];
+      PSH2_Hint_Table  table     = &glyph->hint_tables[dimension];
       PS_Mask          mask      = table->hint_masks->masks;
       FT_UInt          num_masks = table->hint_masks->num_masks;
       FT_UInt          first     = 0;
-      FT_Int           major_dir = vertical ? PSH2_DIR_UP : PSH2_DIR_RIGHT;
+      FT_Int           major_dir = dimension == 0 ? PSH2_DIR_UP : PSH2_DIR_RIGHT;
 
 
       /* process secondary hints to "selected" points */
@@ -1186,9 +1186,9 @@
   /* interpolate strong points with the help of hinted coordinates */
   static void
   psh2_glyph_interpolate_strong_points( PSH2_Glyph  glyph,
-                                        FT_Int      vertical )
+                                        FT_Int      dimension )
   {
-    PSH_Dimension    dim   = &glyph->globals->dimension[vertical];
+    PSH_Dimension    dim   = &glyph->globals->dimension[dimension];
     FT_Fixed         scale = dim->scale_mult;
 
 
@@ -1231,10 +1231,10 @@
 
   static void
   psh2_glyph_interpolate_normal_points( PSH2_Glyph  glyph,
-                                        FT_Int      vertical )
+                                        FT_Int      dimension )
   {
 #if 1
-    PSH_Dimension    dim   = &glyph->globals->dimension[vertical];
+    PSH_Dimension    dim   = &glyph->globals->dimension[dimension];
     FT_Fixed         scale = dim->scale_mult;
 
 
@@ -1344,9 +1344,9 @@
   /* interpolate other points */
   static void
   psh2_glyph_interpolate_other_points( PSH2_Glyph  glyph,
-                                       FT_Int      vertical )
+                                       FT_Int      dimension )
   {
-    PSH_Dimension dim          = &glyph->globals->dimension[vertical];
+    PSH_Dimension dim          = &glyph->globals->dimension[dimension];
     FT_Fixed      scale        = dim->scale_mult;
     FT_Fixed      delta        = dim->scale_delta;
     PSH2_Contour  contour      = glyph->contours;
@@ -1520,7 +1520,7 @@
     if ( error )
       goto Exit;
 
-    for ( dimension = 1; dimension >= 0; dimension-- )
+    for ( dimension = 0; dimension < 2; dimension++ )
     {
       /* load outline coordinates into glyph */
       psh2_glyph_load_points( glyph, dimension );

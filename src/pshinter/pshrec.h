@@ -129,7 +129,9 @@ FT_BEGIN_HEADER
 #define PS_HINTS_MAGIC  0x68696e74   /* "hint" */
 
 
-  /* glyph hints descriptor */
+  /* glyph hints descriptor                                */
+  /* dimension 0 => X coordinates + vertical hints/stems   */
+  /* dimension 1 => Y coordinates + horizontal hints/stems */
   typedef struct  PS_HintsRec_
   {
     FT_Memory        memory;

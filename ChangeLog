@@ -1,5 +1,10 @@
 2001-12-21  David Turner  <david@freetype.org>
 
+        * src/cff/cffgload.c, src/psaux/t1decode.c, src/pshinter/pshrec.c,
+        src/pshinter/ahalgo2.c, src/pshinter/pshglob.h: fixed a bug where
+        the X and Y axis where inversed in the postscript hinter. this
+        caused problem when displaying on non-square surfaces..
+
         * include/freetype/cache/ftcmanag.h, include/freetype/cache/ftcimage.h,
         include/freetype/cache/ftcsbits.h: updating documentation to better
         explain the use of the "anode" output parameter in lookup functions
