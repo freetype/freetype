@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000 by
+# Copyright 1996-2000, 2002 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -18,12 +18,17 @@ ifndef TOP
 endif
 TOP := $(shell cd $(TOP); pwd)
 
-DELETE        := @RMF@
-DELDIR        := @RMDIR@
-SEP           := /
-HOSTSEP       := $(SEP)
-BUILD         := $(TOP)/builds/unix
-PLATFORM      := unix
+DELETE   := @RMF@
+DELDIR   := @RMDIR@
+SEP      := /
+HOSTSEP  := $(SEP)
+BUILD    := $(TOP)/builds/unix
+PLATFORM := unix
+
+# this is used for `make distclean' and `make install'
+ifndef OBJ_BUILD
+  OBJ_BUILD := $(BUILD)
+endif
 
 # don't use `:=' here since the path stuff will be included after this file
 #
@@ -35,14 +40,15 @@ INSTALL_PROGRAM := @INSTALL_PROGRAM@
 INSTALL_SCRIPT  := @INSTALL_SCRIPT@
 MKINSTALLDIRS   := $(BUILD)/mkinstalldirs
 
-DISTCLEAN += $(BUILD)/config.cache    \
-             $(BUILD)/config.log      \
-             $(BUILD)/config.status   \
-             $(BUILD)/unix-def.mk     \
-             $(BUILD)/unix-cc.mk      \
-             $(BUILD)/ftconfig.h      \
-             $(BUILD)/freetype-config \
-             $(LIBTOOL)
+DISTCLEAN += $(OBJ_BUILD)/config.cache    \
+             $(OBJ_BUILD)/config.log      \
+             $(OBJ_BUILD)/config.status   \
+             $(OBJ_BUILD)/unix-def.mk     \
+             $(OBJ_BUILD)/unix-cc.mk      \
+             $(OBJ_BUILD)/ftconfig.h      \
+             $(OBJ_BUILD)/freetype-config \
+             $(LIBTOOL)                   \
+             $(OBJ_BUILD)/Makefile
 
 
 # Standard installation variables.

@@ -3,7 +3,7 @@
 #
 
 
-# Copyright 1996-2000 by
+# Copyright 1996-2000, 2002 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
 # This file is part of the FreeType project, and may only be used, modified,
@@ -12,9 +12,15 @@
 # indicate that you have read the license and understand and accept it
 # fully.
 
-
-include $(TOP)/builds/unix/unix-def.mk
-include $(TOP)/builds/unix/unix-cc.mk
+have_mk := $(strip $(wildcard $(TOP)/builds/unix/unix-def.mk))
+ifneq ($(have_mk),)
+  include $(TOP)/builds/unix/unix-def.mk
+  include $(TOP)/builds/unix/unix-cc.mk
+else
+  # we are building FT2 not in the src tree
+  include $(OBJ_DIR)/unix-def.mk
+  include $(OBJ_DIR)/unix-cc.mk
+endif
 
 ifdef BUILD_PROJECT
 

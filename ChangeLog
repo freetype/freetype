@@ -1,3 +1,31 @@
+2002-05-05  Werner Lemberg  <wl@gnu.org>
+
+	FreeType 2 can now be built in an external directory with the
+	configure script also.
+
+	* builds/freetype.mk (INCLUDES): Add `OBJ_DIR'.
+
+	* builds/unix/detect.mk (have_mk): New variable to test for
+	external build.
+	(unix-def.mk): Defined according to value of `have_mk'.
+	* builds/unix/unix.mk (have_mk): New variable to test for
+	external build.
+	Select include paths for unix-def.mk and unix-cc.mk according
+	to value of `have_mk'.
+	* builds/unix/unix-def.in (OBJ_BUILD): New variable.
+	(DISTCLEAN): Use it.
+	* builds/unix/unix-cc.in (LIBTOOL): Define default value only
+	if not yet defined.
+	* builds/unix/install.mk (install): Use `OBJ_BUILD' for installing
+	freetype-config.
+
+	* configure: Don't depend on bash features.
+	(ft2_dir, abs_curr_dir, abs_ft2_dir): New variables (code
+	partially taken from Autoconf).
+	Build a dummy Makefile if not building in source tree.
+
+	* docs/INSTALL: Document it.
+
 2002-05-04  David Turner  <david@freetype.org>
 
 	* src/truetype/ttgload.c (TT_Load_Glyph): Finally fixing the last
