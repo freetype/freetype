@@ -153,8 +153,8 @@
   /*    assemble composite glyphs.                                         */
   /*                                                                       */
   static
-  void  mount_zone( TT_GlyphZone*  source,
-                    TT_GlyphZone*  target )
+  void  mount_zone( FT_GlyphZone*  source,
+                    FT_GlyphZone*  target )
   {
     TT_UInt  np;
     TT_Int   nc;
@@ -164,7 +164,7 @@
 
     target->org   = source->org + np;
     target->cur   = source->cur + np;
-    target->touch = source->touch + np;
+    target->flags = source->flags + np;
 
     target->contours = source->contours + nc;
 
@@ -194,7 +194,7 @@
   {
     TT_Error       error;
     FT_Stream      stream = load->stream;
-    TT_GlyphZone*  zone   = &load->zone;
+    FT_GlyphZone*  zone   = &load->zone;
     TT_Face        face = load->face;
 
     TT_UShort      n_ins;
@@ -258,11 +258,14 @@
     }
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
-    MEM_Copy( load->exec->glyphIns, stream->cursor, n_ins );
+    if ( (load->load_flags & (FT_LOAD_NO_SCALE|FT_LOAD_NO_HINTING))==0 )
+    {
+      MEM_Copy( load->exec->glyphIns, stream->cursor, n_ins );
 
-    error = TT_Set_CodeRange( load->exec, tt_coderange_glyph,
-                              load->exec->glyphIns, n_ins );
-    if (error) goto Fail;
+      error = TT_Set_CodeRange( load->exec, tt_coderange_glyph,
+                                load->exec->glyphIns, n_ins );
+      if (error) goto Fail;
+    }
 #endif
 
     stream->cursor += n_ins;
@@ -271,7 +274,7 @@
     /* reading the point flags                                           */
 
     {    
-      TT_Byte*  flag  = load->zone.touch;
+      TT_Byte*  flag  = load->zone.flags;
       TT_Byte*  limit = flag + n_points;
       TT_Byte   c, count;
       
@@ -292,7 +295,7 @@
     {
       TT_Vector*  vec   = zone->org;
       TT_Vector*  limit = vec + n_points;
-      TT_Byte*    flag  = zone->touch;
+      TT_Byte*    flag  = zone->flags;
       TT_Pos      x     = 0;
       
       for ( ; vec < limit; vec++, flag++ )
@@ -313,12 +316,12 @@
     }
 
     /*********************************************************************/
-    /* reading the YX coordinates                                         */
+    /* reading the Y coordinates                                         */
 
     {
       TT_Vector*  vec   = zone->org;
       TT_Vector*  limit = vec + n_points;
-      TT_Byte*    flag  = zone->touch;
+      TT_Byte*    flag  = zone->flags;
       TT_Pos      x     = 0;
       
       for ( ; vec < limit; vec++, flag++ )
@@ -362,10 +365,10 @@
         
       /* clear the touch flags */
       for ( n = 0; n < n_points; n++ )
-        zone->touch[n] &= FT_Curve_Tag_On;
+        zone->flags[n] &= FT_Curve_Tag_On;
 
-      zone->touch[n_points    ] = 0;
-      zone->touch[n_points + 1] = 0;
+      zone->flags[n_points    ] = 0;
+      zone->flags[n_points + 1] = 0;
     }
     /* Note that we return two more points that are not */
     /* part of the glyph outline.                       */
@@ -418,7 +421,7 @@
           load->exec->is_composite     = FALSE;
           load->exec->pedantic_hinting = (TT_Bool)(load->load_flags & FT_LOAD_PEDANTIC);
           load->exec->pts              = *zone;
-          load->exec->pts.n_points   += 2;
+          load->exec->pts.n_points    += 2;
 
           error = TT_Run_Context( load->exec, debug );
           if ( error && load->exec->pedantic_hinting )
@@ -485,6 +488,7 @@
     
     x_scale = 0x10000;
     y_scale = 0x10000;
+    if ( (loader->load_flags & FT_LOAD_NO_SCALE)==0 )
     {
       x_scale = loader->size->root.metrics.x_scale;
       y_scale = loader->size->root.metrics.y_scale;
@@ -819,7 +823,7 @@
           TT_UShort       n_ins;
           TT_ExecContext  exec = loader->exec;
           TT_UInt         n_points = loader->base.n_points;
-          TT_GlyphZone*   pts;
+          FT_GlyphZone*   pts;
           TT_Vector*      pp1;
           
           /* read size of instructions */
@@ -857,8 +861,8 @@
           pp1[0] = loader->pp1;
           pp1[1] = loader->pp2;
       
-          pts->touch[num_points - 1] = 0;
-          pts->touch[num_points - 2] = 0;
+          pts->flags[num_points + 1] = 0;
+          pts->flags[num_points + 2] = 0;
       
           /* if hinting, round the phantom points */
           if ( IS_HINTED(loader->load_flags) )
@@ -870,7 +874,7 @@
           {
             TT_UInt  k;
             for ( k = 0; k < n_points; k++ )
-              pts->touch[k] &= FT_Curve_Tag_On;
+              pts->flags[k] &= FT_Curve_Tag_On;
           }
       
           cur_to_org( n_points, pts );
@@ -946,7 +950,7 @@
       for ( u = 0; u < num_points + 2; u++ )
       {
         glyph->outline.points[u] = loader->base.cur[u];
-        glyph->outline.flags [u] = loader->base.touch[u];
+        glyph->outline.flags [u] = loader->base.flags[u];
       }
 
       for ( u = 0; u < num_contours; u++ )
@@ -1148,6 +1152,7 @@
     FT_Memory        memory;
     TT_Error         error;
     TT_Loader        loader;
+    FT_GlyphZone*    zone;
     
     face   = (TT_Face)glyph->face;
     sfnt   = (SFNT_Interface*)face->sfnt;
@@ -1209,10 +1214,22 @@
     if (error)
     {
       FT_ERROR(( "TT.GLoad: could not access glyph table\n" ));
-      return error;
+      goto Exit;
     }
 
     MEM_Set( &loader, 0, sizeof(loader) );
+
+    /* update the glyph zone bounds */
+    zone   = &((TT_Driver)face->root.driver)->zone;
+    error  = FT_Update_GlyphZone( zone,
+                                  face->root.max_points,
+                                  face->root.max_contours );
+    if (error)
+    {
+      FT_ERROR(( "TT.GLoad: could not update loader glyph zone\n" ));
+      goto Exit;
+    }
+    loader.base = *zone;
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     if ( size )
@@ -1234,11 +1251,7 @@
       glyph->outline.high_precision = ( size->root.metrics.y_ppem < 24 );
 
     /************************************************************************/
-    /* let's initialise our loader now                                      */
-    error = TT_New_GlyphZone( memory, &loader.base,
-                              face->root.max_points, face->root.max_contours );
-    if (error) return error;
-
+    /* let's initialise the rest of our loader now                          */
     loader.left_points   = face->root.max_points;
     loader.left_contours = face->root.max_contours;
     loader.load_flags    = load_flags;
@@ -1267,7 +1280,7 @@
       TT_Done_Context( loader.exec );
 #endif
 
-    TT_Done_GlyphZone( memory, &loader.base );
+  Exit:
     return error;
   }
 

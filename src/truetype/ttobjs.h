@@ -161,24 +161,6 @@
   } TT_DefRecord, *TT_DefArray;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* This type defining a set of glyph points will be used to represent    */
-  /* each zone (regular and twilight) during instructions decoding.        */
-  /*                                                                       */
-  typedef struct  TT_GlyphZone_
-  {
-    TT_UShort   n_points;   /* number of points in zone    */
-    TT_Short    n_contours; /* number of contours          */
-
-    TT_Vector*  org;        /* original point coordinates  */
-    TT_Vector*  cur;        /* current point coordinates   */
-
-    TT_Byte*    touch;      /* current touch flags         */
-    TT_UShort*  contours;   /* contour end points          */
-
-  } TT_GlyphZone;
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -210,7 +192,7 @@
     TT_Pos        left_bearing;
     TT_Pos        advance;
 
-    TT_GlyphZone  zone;
+    FT_GlyphZone  zone;
 
     TT_Long       arg1;         /* first argument                      */
     TT_Long       arg2;         /* second argument                     */
@@ -352,7 +334,7 @@
     TT_UShort          storage_size; /* The storage area is now part of */
     TT_Long*           storage;      /* the instance                    */
 
-    TT_GlyphZone       twilight;     /* The instance's twilight zone    */
+    FT_GlyphZone       twilight;     /* The instance's twilight zone    */
 
     /* debugging variables */
 
@@ -375,215 +357,44 @@
   typedef struct  TT_DriverRec_
   {
     FT_DriverRec    root;
-    TT_ExecContext  context;  /* execution context */
+    TT_ExecContext  context;  /* execution context        */
+    FT_GlyphZone    zone;     /* glyph loader points zone */
 
     void*           extension_component;
 
   } TT_DriverRec;
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_New_GlyphZone                                                   */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Allocates a new glyph zone.                                        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory      :: A handle to the current memory object.              */
-  /*                                                                       */
-  /*    maxPoints   :: The capacity of glyph zone in points.               */
-  /*                                                                       */
-  /*    maxContours :: The capacity of glyph zone in contours.             */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    pts         :: A pointer to the target glyph zone record.          */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
- LOCAL_DEF
- TT_Error  TT_New_GlyphZone( FT_Memory      memory,
-                             TT_GlyphZone*  pts,
-                             TT_UShort      maxPoints,
-                             TT_Short       maxContours );
+ /*************************************************************************/
+ /*  Face Funcs                                                           */ 
+
+  LOCAL_DEF TT_Error  TT_Init_Face( FT_Stream  stream,
+                                    TT_Long    face_index,
+                                    TT_Face    face );
+
+  LOCAL_DEF void      TT_Done_Face( TT_Face  face );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Done_GlyphZone                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Deallocates a glyph zone.                                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    memory :: A handle to the current memory object.                   */
-  /*                                                                       */
-  /*    pts    :: A pointer to the target glyph zone record.               */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_FUNC
-  TT_Error  TT_Done_GlyphZone( FT_Memory      memory,
-                               TT_GlyphZone*  pts );
+ /*************************************************************************/
+ /*  Size funcs                                                           */ 
+
+  LOCAL_DEF TT_Error  TT_Init_Size ( TT_Size  size );
+  LOCAL_DEF void      TT_Done_Size ( TT_Size  size );
+  LOCAL_DEF TT_Error  TT_Reset_Size( TT_Size  size );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Init_Face                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a given TrueType face object.                          */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    resource   :: The source font resource.                            */
-  /*    face_index :: The index of the font face in the resource.          */
-  /*    face       :: The newly built face object.                         */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_DEF
-  TT_Error  TT_Init_Face( FT_Stream  stream,
-                          TT_Long    face_index,
-                          TT_Face    face );
+ /*************************************************************************/
+ /*  GlyphSlot funcs                                                      */ 
+
+  LOCAL_DEF TT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot );
+  LOCAL_DEF void      TT_Done_GlyphSlot( TT_GlyphSlot  slot );
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Done_Face                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Finalizes a given face object.                                     */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    face :: The target face object to finalize.                        */
-  /*                                                                       */
-  LOCAL_DEF
-  void  TT_Done_Face( TT_Face  face );
+ /*************************************************************************/
+ /*  Driver funcs                                                         */ 
 
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Init_Size                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a new TrueType size object.                            */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to the size object.                               */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_DEF
-  TT_Error  TT_Init_Size( TT_Size  size );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Done_Size                                                       */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The TrueType size object finalizer.                                */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to the target size object.                        */
-  /*                                                                       */
-  LOCAL_DEF
-  void  TT_Done_Size( TT_Size  size );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Reset_Size                                                      */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Resets a TrueType size when resolutions and character dimensions   */
-  /*    have been changed.                                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    size :: A handle to the target size object.                        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_DEF
-  TT_Error  TT_Reset_Size( TT_Size  size );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Init_GlyphSlot                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The TrueType glyph slot initializer.                               */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    glyph :: The glyph record to build.                                */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_DEF
-  TT_Error  TT_Init_GlyphSlot( TT_GlyphSlot  slot );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Done_GlyphSlot                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    The TrueType glyph slot finalizer.                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    glyph :: A handle to the glyph slot object.                        */
-  /*                                                                       */
-  LOCAL_DEF
-  void  TT_Done_GlyphSlot( TT_GlyphSlot  slot );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Init_Driver                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Initializes a given TrueType driver object.                        */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    driver :: A handle to the target driver object.                    */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  LOCAL_DEF
-  TT_Error  TT_Init_Driver( TT_Driver  driver );
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    TT_Done_Driver                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Finalizes a given TrueType driver.                                 */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    driver :: A handle to the target TrueType driver.                  */
-  /*                                                                       */
-  LOCAL_DEF
-  void  TT_Done_Driver( TT_Driver  driver );
+  LOCAL_DEF  TT_Error  TT_Init_Driver( TT_Driver  driver );
+  LOCAL_DEF  void      TT_Done_Driver( TT_Driver  driver );
 
 
 #ifdef __cplusplus

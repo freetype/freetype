@@ -71,7 +71,7 @@
                                                  TT_F26Dot6  compensation );
 
   /* Point displacement along the freedom vector routine */
-  typedef void  (*TT_Move_Func)( EXEC_OP_ TT_GlyphZone*  zone,
+  typedef void  (*TT_Move_Func)( EXEC_OP_ FT_GlyphZone*  zone,
                                           TT_UInt        point,
                                           TT_F26Dot6     distance );
 
@@ -125,7 +125,7 @@
     TT_Long         args;
     TT_UInt         new_top;    /* new top after exec.  */
 
-    TT_GlyphZone    zp0,        /* zone records */
+    FT_GlyphZone    zp0,        /* zone records */
                     zp1,
                     zp2,
                     pts,

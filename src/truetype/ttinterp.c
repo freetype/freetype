@@ -383,7 +383,6 @@
     exec->loadSize = 0;
 
     /* points zone */
-    TT_Done_GlyphZone( exec->memory, &exec->pts );
     exec->maxPoints   = 0;
     exec->maxContours = 0;
 
@@ -518,57 +517,6 @@
   }
 
 
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    Update_Zone                                                        */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    Checks the size of a zone and reallocates it if necessary.         */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    newPoints   :: The new capacity for points.  We add two slots for  */
-  /*                   phantom points.                                     */
-  /*                                                                       */
-  /*    newContours :: The new capacity for contours.                      */
-  /*                                                                       */
-  /* <InOut>                                                               */
-  /*    zone        :: The address of the target zone.                     */
-  /*                                                                       */
-  /*    maxPoints   :: The address of the zone's current capacity for      */
-  /*                   points.                                             */
-  /*                                                                       */
-  /*    maxContours :: The address of the zone's current capacity for      */
-  /*                   contours.                                           */
-  /*                                                                       */
-  static
-  TT_Error  Update_Zone( FT_Memory      memory,
-                         TT_GlyphZone*  zone,
-                         TT_UShort*     maxPoints,
-                         TT_Short*      maxContours,
-                         TT_UShort      newPoints,
-                         TT_Short       newContours )
-  {
-    newPoints += 2;
-
-    if ( *maxPoints < newPoints || *maxContours < newContours )
-    {
-      TT_Error  error;
-
-
-      TT_Done_GlyphZone( memory, zone );
-
-      error = TT_New_GlyphZone( memory, zone, newPoints, newContours );
-      if ( error )
-        return error;
-
-      *maxPoints   = newPoints;
-      *maxContours = newContours;
-    }
-
-    return TT_Err_Ok;
-  }
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -600,7 +548,6 @@
     TT_ULong        tmp;
     TT_MaxProfile*  maxp;
     TT_Error        error;
-
 
     exec->face = face;
     maxp       = &face->max_profile;
@@ -662,16 +609,6 @@
                         (void**)&exec->glyphIns,
                         maxp->maxSizeOfInstructions );
     exec->glyphSize = (TT_UShort)tmp;
-    if ( error )
-      return error;
-
-    /* XXX: Update_Zone() reserves two positions for the phantom points! */
-    error = Update_Zone( exec->memory,
-                         &exec->pts,
-                         &exec->maxPoints,
-                         &exec->maxContours,
-                         exec->face->root.max_points,
-                         exec->face->root.max_contours );
     if ( error )
       return error;
 
@@ -1427,7 +1364,7 @@
   /*    zone     :: The affected glyph zone.                               */
   /*                                                                       */
   static
-  void  Direct_Move( EXEC_OP_ TT_GlyphZone*  zone,
+  void  Direct_Move( EXEC_OP_ FT_GlyphZone*  zone,
                               TT_UShort      point,
                               TT_F26Dot6     distance )
   {
@@ -1446,7 +1383,7 @@
                                        v * 0x10000L,
                                        CUR.F_dot_P );
 #endif
-      zone->touch[point] |= FT_Curve_Tag_Touch_X;
+      zone->flags[point] |= FT_Curve_Tag_Touch_X;
     }
 
     v = CUR.GS.freeVector.y;
@@ -1461,7 +1398,7 @@
                                        v * 0x10000L,
                                        CUR.F_dot_P );
 #endif
-      zone->touch[point] |= FT_Curve_Tag_Touch_Y;
+      zone->flags[point] |= FT_Curve_Tag_Touch_Y;
     }
   }
 
@@ -1476,26 +1413,26 @@
   /*************************************************************************/
 
   static
-  void  Direct_Move_X( EXEC_OP_ TT_GlyphZone*  zone,
+  void  Direct_Move_X( EXEC_OP_ FT_GlyphZone*  zone,
                                 TT_UShort      point,
                                 TT_F26Dot6     distance )
   {
     UNUSED_EXEC;
 
     zone->cur[point].x += distance;
-    zone->touch[point] |= FT_Curve_Tag_Touch_X;
+    zone->flags[point] |= FT_Curve_Tag_Touch_X;
   }
 
 
   static
-  void  Direct_Move_Y( EXEC_OP_ TT_GlyphZone*  zone,
+  void  Direct_Move_Y( EXEC_OP_ FT_GlyphZone*  zone,
                                 TT_UShort      point,
                                 TT_F26Dot6     distance )
   {
     UNUSED_EXEC;
 
     zone->cur[point].y += distance;
-    zone->touch[point] |= FT_Curve_Tag_Touch_Y;
+    zone->flags[point] |= FT_Curve_Tag_Touch_Y;
   }
 
 
@@ -4854,7 +4791,7 @@
         }
       }
       else
-        CUR.pts.touch[point] ^= FT_Curve_Tag_On;
+        CUR.pts.flags[point] ^= FT_Curve_Tag_On;
 
       CUR.GS.loop--;
     }
@@ -4888,7 +4825,7 @@
     }
 
     for ( I = L; I <= K; I++ )
-      CUR.pts.touch[I] |= FT_Curve_Tag_On;
+      CUR.pts.flags[I] |= FT_Curve_Tag_On;
   }
 
 
@@ -4916,17 +4853,17 @@
     }
 
     for ( I = L; I <= K; I++ )
-      CUR.pts.touch[I] &= ~FT_Curve_Tag_On;
+      CUR.pts.flags[I] &= ~FT_Curve_Tag_On;
   }
 
 
   static
   TT_Bool  Compute_Point_Displacement( EXEC_OP_ TT_F26Dot6*    x,
                                                 TT_F26Dot6*    y,
-                                                TT_GlyphZone*  zone,
+                                                FT_GlyphZone*  zone,
                                                 TT_UShort*     refp )
   {
-    TT_GlyphZone  zp;
+    FT_GlyphZone  zp;
     TT_UShort     p;
     TT_F26Dot6    d;
 
@@ -4979,14 +4916,14 @@
     {
       CUR.zp2.cur[point].x += dx;
       if ( touch )
-        CUR.zp2.touch[point] |= FT_Curve_Tag_Touch_X;
+        CUR.zp2.flags[point] |= FT_Curve_Tag_Touch_X;
     }
 
     if ( CUR.GS.freeVector.y != 0 )
     {
       CUR.zp2.cur[point].y += dy;
       if ( touch )
-        CUR.zp2.touch[point] |= FT_Curve_Tag_Touch_Y;
+        CUR.zp2.flags[point] |= FT_Curve_Tag_Touch_Y;
     }
   }
 
@@ -5000,7 +4937,7 @@
   static
   void  Ins_SHP( INS_ARG )
   {
-    TT_GlyphZone  zp;
+    FT_GlyphZone  zp;
     TT_UShort     refp;
 
     TT_F26Dot6    dx,
@@ -5053,7 +4990,7 @@
   static
   void  Ins_SHC( INS_ARG )
   {
-    TT_GlyphZone zp;
+    FT_GlyphZone zp;
     TT_UShort    refp;
     TT_F26Dot6   dx,
                  dy;
@@ -5109,7 +5046,7 @@
   static
   void  Ins_SHZ( INS_ARG )
   {
-    TT_GlyphZone zp;
+    FT_GlyphZone zp;
     TT_UShort    refp;
     TT_F26Dot6   dx,
                  dy;
@@ -5660,7 +5597,7 @@
     dx = CUR.zp0.cur[b0].x - CUR.zp1.cur[a0].x;
     dy = CUR.zp0.cur[b0].y - CUR.zp1.cur[a0].y;
 
-    CUR.zp2.touch[point] |= FT_Curve_Tag_Touch_Both;
+    CUR.zp2.flags[point] |= FT_Curve_Tag_Touch_Both;
 
     discriminant = TT_MULDIV( dax, -dby, 0x40 ) +
                    TT_MULDIV( day, dbx, 0x40 );
@@ -5843,7 +5780,7 @@
     if ( CUR.GS.freeVector.y != 0 )
       mask &= ~FT_Curve_Tag_Touch_Y;
 
-    CUR.zp0.touch[point] &= mask;
+    CUR.zp0.flags[point] &= mask;
   }
 
 
@@ -5996,7 +5933,7 @@
       end_point   = CUR.pts.contours[contour];
       first_point = point;
 
-      while ( point <= end_point && (CUR.pts.touch[point] & mask) == 0 )
+      while ( point <= end_point && (CUR.pts.flags[point] & mask) == 0 )
         point++;
 
       if ( point <= end_point )
@@ -6008,7 +5945,7 @@
 
         while ( point <= end_point )
         {
-          if ( (CUR.pts.touch[point] & mask) != 0 )
+          if ( (CUR.pts.flags[point] & mask) != 0 )
           {
             if ( point > 0 )
               Interp( cur_touched + 1,
@@ -7657,8 +7594,8 @@
 
     TT_Error  error = 0;
 
-    TT_GlyphZone  save;
-    TT_GlyphZone  pts;
+    FT_GlyphZone  save;
+    FT_GlyphZone  pts;
 
 #define TT_Round_Off             5
 #define TT_Round_To_Half_Grid    0
@@ -7695,7 +7632,7 @@
 
     MEM_Alloc( save.org, sizeof ( TT_Vector ) * save.n_points );
     MEM_Alloc( save.cur, sizeof ( TT_Vector ) * save.n_points );
-    MEM_Alloc( save.touch, sizeof ( TT_Byte ) * save.n_points );
+    MEM_Alloc( save.flags, sizeof ( TT_Byte ) * save.n_points );
 
     exc->instruction_trap = 1;
 
@@ -7858,7 +7795,7 @@
 
       MEM_Copy( save.org,   pts.org, pts.n_points * sizeof ( TT_Vector ) );
       MEM_Copy( save.cur,   pts.cur, pts.n_points * sizeof ( TT_Vector ) );
-      MEM_Copy( save.touch, pts.touch, pts.n_points );
+      MEM_Copy( save.flags, pts.flags, pts.n_points );
 
       /* a return indicate the last command */
       if (ch == '\r')
@@ -7912,14 +7849,14 @@
         if ( save.org[A].y != pts.org[A].y ) diff |= 2;
         if ( save.cur[A].x != pts.cur[A].x ) diff |= 4;
         if ( save.cur[A].y != pts.cur[A].y ) diff |= 8;
-        if ( save.touch[A] != pts.touch[A] ) diff |= 16;
+        if ( save.flags[A] != pts.flags[A] ) diff |= 16;
 
         if ( diff )
         {
           FT_TRACE0(( "%02hx  ", A ));
 
           if ( diff & 16 ) temp = "(%01hx)"; else temp = " %01hx ";
-          FT_TRACE0(( temp, save.touch[A] & 7 ));
+          FT_TRACE0(( temp, save.flags[A] & 7 ));
 
           if ( diff & 1 ) temp = "(%08lx)"; else temp = " %08lx ";
           FT_TRACE0(( temp, save.org[A].x ));
@@ -7938,7 +7875,7 @@
           FT_TRACE0(( "%02hx  ", A ));
 
           if ( diff & 16 ) temp = "[%01hx]"; else temp = " %01hx ";
-          FT_TRACE0(( temp, pts.touch[A] & 7 ));
+          FT_TRACE0(( temp, pts.flags[A] & 7 ));
 
           if ( diff & 1 ) temp = "[%08lx]"; else temp = " %08lx ";
           FT_TRACE0(( temp, pts.org[A].x ));

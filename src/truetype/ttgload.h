@@ -53,8 +53,8 @@
     TT_ULong        glyf_offset;
         
     /* the zone where we load our glyphs */
-    TT_GlyphZone    base;
-    TT_GlyphZone    zone;
+    FT_GlyphZone    base;
+    FT_GlyphZone    zone;
     
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
     TT_ExecContext  exec;
