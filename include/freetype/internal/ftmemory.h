@@ -65,8 +65,8 @@
                                     FT_Long    size,
                                     void**     P );
 
-  BASE_DEF( void )  FT_Free( FT_Memory  memory,
-                             void**     P );
+  BASE_DEF( void )      FT_Free( FT_Memory  memory,
+                                 void**     P );
 
 
 

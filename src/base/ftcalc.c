@@ -295,6 +295,15 @@
     return r;
   }
 
+
+  FT_EXPORT_DEF(FT_Int32)   FT_SqrtFixed( FT_Int32  x )
+  {
+    FT_Int64  z;
+    
+    z = (FT_Int64)(x) << 16;
+    return FT_Sqrt64( z );
+  }
+
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
 
 
@@ -488,21 +497,14 @@
     else
     {
       /* we need more bits; we have to do it by hand */
-      FT_UInt32  c;
+      FT_Int64  temp, temp2;
 
-
-      q  = ( a / b ) << 16;
-      c  = a % b;
-
-      /* we must compute C*0x10000/B: we simply shift C and B so */
-      /* C becomes smaller than 16 bits                          */
-      while ( c >> 16 )
-      {
-        c >>= 1;
-        b <<= 1;
-      }
-
-      q += ( c << 16 ) / b;
+      temp.hi  = (FT_Int32) (a >> 16);
+      temp.lo  = (FT_UInt32)(a << 16);
+      temp2.hi = (FT_Int32)( b >> 31 );
+      temp2.lo = (FT_UInt32)( b / 2 );
+      FT_Add64( &temp, &temp2, &temp );
+      q = FT_Div64by32( &temp, b );
     }
 
     return ( s < 0 ? -(FT_Int32)q : (FT_Int32)q );
@@ -763,6 +765,16 @@
     } while ( r > s || (FT_Int32)l2.hi < 0 );
 
     return r;
+  }
+
+
+  FT_EXPORT_DEF(FT_Int32)   FT_SqrtFixed( FT_Int32  x )
+  {
+    FT_Int64  z;
+    
+    z.hi = (FT_UInt32)((FT_Int32)(x) >> 16);
+    z.lo = (FT_UInt32)( x << 16 );
+    return FT_Sqrt64( &z );
   }
 
 #endif /* FT_CONFIG_OPTION_OLD_CALCS */
