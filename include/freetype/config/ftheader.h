@@ -338,6 +338,18 @@
   /*************************************************************************/
   /*                                                                       */
   /* @macro:                                                               */
+  /*    FT_BEZIER_H                                                        */
+  /*                                                                       */
+  /* @description:                                                         */
+  /*    A macro used in #include statements to name the file containing    */
+  /*    a small useful API to handle bezier arcs. Note that you _must_     */
+  /*    include FT_FREETYPE_H or FT_IMAGE_H before this header..           */
+  /*                                                                       */
+#define FT_BEZIER_H  <freetype/ftbezier.h>
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* @macro:                                                               */
   /*    FT_CACHE_H                                                         */
   /*                                                                       */
   /* @description:                                                         */

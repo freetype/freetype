@@ -436,7 +436,7 @@
                                     /* no horizontal pass during gray      */
                                     /* rendering.                          */
 
-    TPoint    arcs[2 * MaxBezier + 1]; /* The Bezier stack                 */
+    TPoint    arcs[3 * MaxBezier + 1]; /* The Bezier stack                 */
 
     TBand     band_stack[16];       /* band stack used for sub-banding     */
     Int       band_top;             /* band stack top                      */

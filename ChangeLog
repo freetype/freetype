@@ -1,23 +1,27 @@
-2001-04-24  Werner Lemberg  <wl@gnu.org>
+2001-04-25  David Turner  <david@freetype.org>
 
-	* builds/unix/config.guess, builds/unix/config.sub: Updated to
-	latest versions from gnu.org.
+        * src/base/ftbbox.c (BBox_Cubic_Check): rewrote function to use
+        direct computations with 16.16 values instead of sub-divisions.
+        It is now slower, but proves a point :-)
 
-2001-04-22  Werner Lemberg  <wl@gnu.org>
+        * src/raster/ftraster.c, src/smooth/ftgrays.c, src/base/ftbbox.c :
+        fixed the bezier stack depths..
 
-	* builds/compiler/gcc-dev.mk: Add `-Wno-long-long' flag.
+        * src/base/ftcalc.c (FT_MulFix): minor rounding fix
+
+        * builds/beos : added BeOS-specific files to the old build system
+        (no changes were necessary to support BeOS in the Jamfile though)
 
 2001-04-20  David Turner  <david@freetype.org>
 
-	* ftconfig.h, ftoption.h: Updated "ftconfig.h" to detect 64-bit int
-	types on platforms where Autoconf is not available.  Also removed
-	FTCALC_USE_LONG_LONG and replaced it with
-	FT_CONFIG_OPTION_FORCE_INT64.
+	* ftconfig.h, ftoption.h: updated "ftconfig.h" to detect 64-bit int
+	types on platforms where Autoconf is not available). Also removed
+	FTCALC_USE_LONG_LONG and replaced it with FT_CONFIG_OPTION_FORCE_INT64
+	
+	* builds/win32/freetype.dsp: updated the Visual C++ project file. Doesn't
+	create a DLL yet..
 
-	* builds/win32/freetype.dsp: Updated the Visual C++ project file.
-	Doesn't create a DLL yet.
-
-	* cffgload.c: Removed a compilation warning.
+	* cffgload.c: removed a compilation warning
 
 2001-04-10  Tom Kacvinsky  <tjk@ams.org>
 

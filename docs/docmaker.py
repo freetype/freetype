@@ -10,10 +10,18 @@
 
 import fileinput, sys, string, glob
 
-html_header = """\
+# the Project's title, this can be over-ridden from the command line with
+# an option
+project_title = "Project"
+
+# The following defines the HTML header used by all generated pages
+#
+html_header_1 = """\
 <html>
 <header>
-<title>FreeType 2 API Reference</title>
+<title>"""
+
+html_header_2= """ API Reference</title>
 <basefont face="Georgia, Arial, Helvetica, Geneva">
 <style content="text/css">
   P { text-align=justify }
@@ -26,35 +34,57 @@ html_header = """\
       link=#0000EF
       vlink=#51188E
       alink=#FF0000>
-<center><h1>FreeType 2 API Reference</h1></center>
-"""
+<center><h1>"""
 
+html_header_3=""" API Reference</h1></center>
+"""
+# this is recomputed later when the project title changes
+html_header = html_header_1 + project_title + html_header_2 + project_title + html_header_3
+
+# The HTML footer used by all generated pages
+#
 html_footer = """\
 </body>
 </html>"""
 
+# The header and footer used for each section
+#
 section_title_header = "<center><h1>"
 section_title_footer = "</h1></center>"
 
+# The header and footer used for code segments
+#
 code_header = "<font color=blue><pre>"
 code_footer = "</pre></font>"
 
+# Paragraph header and footer
+#
 para_header = "<p>"
 para_footer = "</p>"
 
+# Block header and footer
+#
 block_header = "<center><table width=75%><tr><td>"
 block_footer = "</td></tr></table><hr width=75%></center>"
 
+# Description header/footer
+#
 description_header = "<center><table width=87%><tr><td>"
 description_footer = "</td></tr></table></center><br>"
 
+# Marker header/inter/footer combination
+#
 marker_header = "<center><table width=87% cellpadding=5><tr bgcolor=#EEEEFF><td><em><b>"
 marker_inter  = "</b></em></td></tr><tr><td>"
 marker_footer = "</td></tr></table></center>"
 
+# Source code extracts header/footer
+#
 source_header = "<center><table width=87%><tr bgcolor=#D6E8FF width=100%><td><pre>"
 source_footer = "</pre></table></center><br>"
 
+# Chapter header/inter/footer
+#
 chapter_header = "<center><table width=75%><tr><td><h2>"
 chapter_inter  = "</h2><ul>"
 chapter_footer = "</ul></td></tr></table></center>"
@@ -106,6 +136,16 @@ def sort_order_list( input_list, order_list ):
     return new_list
 
 
+# translate a single line of source to HTML. This will convert
+# a "<" into "&lt.", ">" into "&gt.", etc..
+#
+def html_format( line )
+    result = string.replace( line, "<", "&lt." )
+    result = string.replace( line, ">", "&gt." )
+    result = string.replace( line, "&", "&amp." )
+    return result
+
+
 # The FreeType 2 reference is extracted from the source files. These contain
 # various comment blocks that follow one of the following formats:
 #
@@ -153,7 +193,7 @@ def sort_order_list( input_list, order_list ):
 # The first two markers contain arbitrary text, while the last one contains
 # a list of fields.
 #
-# Each field is simple of the format:  WORD :: TEXT...
+# Each field is simply of the format:  WORD :: TEXT...
 #
 # Note that typically each comment block is followed by some source
 # code declaration that may need to be kept in the reference.
@@ -242,8 +282,8 @@ class DocCode:
         # line to avoid an additional blank line
         #
         sys.stdout.write( code_header )
-        for line in self.lines[0 : l+1]:
-            sys.stdout.write( '\n' + line )
+        for line in self.lines[0 : l+1]:            
+            sys.stdout.write( '\n' + html_format(line) )
         sys.stdout.write( code_footer )
 
 
@@ -320,7 +360,7 @@ class DocParagraph:
                     word = '?' + word
 
             if cursor + len( word ) + 1 > max_width:
-                print line
+                print html_format( line )
                 cursor = 0
                 line = ""
 
@@ -335,7 +375,7 @@ class DocParagraph:
             #
             if extra:
                 if cursor + len( extra ) + 1 > max_width:
-                    print line
+                    print html_format( line )
                     cursor = 0
                     line   = ""
 
@@ -344,7 +384,7 @@ class DocParagraph:
                 extra  = None
 
         if cursor > 0:
-            print line
+            print html_format(line)
 
         # print "§" # for debugging only
 

@@ -28,6 +28,7 @@
 #include FT_BBOX_H
 #include FT_IMAGE_H
 #include FT_OUTLINE_H
+#include FT_BEZIER_H
 
 
   typedef struct  TBBox_Rec_
@@ -101,7 +102,7 @@
                           FT_Pos*  min,
                           FT_Pos*  max )
   {
-    if ( y1 == y3 )
+    if ( y1 <= y3 )
     {
       if ( y2 == y1 )               /* Flat arc */
         goto Suite;
@@ -205,6 +206,7 @@
   /*    min :: The address of the current minimum.                         */
   /*    max :: The address of the current maximum.                         */
   /*                                                                       */
+#if 0
   static
   void  BBox_Cubic_Check( FT_Pos   p1,
                           FT_Pos   p2,
@@ -213,7 +215,7 @@
                           FT_Pos*  min,
                           FT_Pos*  max )
   {
-    FT_Pos  stack[33], *arc;
+    FT_Pos  stack[32*3+1], *arc;
 
 
     arc = stack;
@@ -252,7 +254,7 @@
         }
       }
 
-      /* Unknown direction, split the arc in two */
+      /* Unknown direction - split the arc in two */
       arc[6] = y4;
       arc[1] = y1 = ( y1 + y2 ) / 2;
       arc[5] = y4 = ( y4 + y3 ) / 2;
@@ -273,6 +275,164 @@
       ;
     } while ( arc >= stack );
   }
+#else
+
+  static void
+  test_cubic_zero( FT_Pos    y1,
+                   FT_Pos    y2,
+                   FT_Pos    y3,
+                   FT_Pos    y4,
+                   FT_Fixed  u,
+                   FT_Pos*   min,
+                   FT_Pos*   max )
+  {
+    FT_Pos   a = y4 - 3*y3 + 3*y2 - y1;
+    FT_Pos   b = y3 - 2*y2 + y1;
+    FT_Pos   c = y2 - y1;
+    FT_Pos   d = y1;
+    FT_Pos   y;
+    FT_Fixed uu;
+    
+    /* the polynom is "a*x^3 + 3b*x^2 + 3c*x + d", however, we also      */
+    /* have dP/dx(u) = 0, which implies that P(t0) = b*t0^2 + 2c*t0 + d  */
+    if ( u > 0 && u < 0x10000L )
+    {
+      uu = FT_MulFix( u, u );
+      y  = d + FT_MulFix( c, 2*u ) + FT_MulFix( b, uu );
+
+      if ( y < *min ) *min = y;
+      if ( y > *max ) *max = y;
+    }
+  }
+
+
+  static
+  void  BBox_Cubic_Check( FT_Pos   y1,
+                          FT_Pos   y2,
+                          FT_Pos   y3,
+                          FT_Pos   y4,
+                          FT_Pos*  min,
+                          FT_Pos*  max )
+  {
+    /* always compare first and last points */
+    if      ( y1 < *min )  *min = y1;
+    else if ( y1 > *max )  *max = y1;
+    
+    if      ( y4 < *min )  *min = y4;
+    else if ( y4 > *max )  *max = y4;
+
+    /* now, try to see if there are split points here */
+    if ( y1 <= y4 )
+    {
+      /* flat or ascending arc test */
+      if ( y1 <= y2 && y2 <= y4 && y1 <= y3 && y3 <= y4 )
+        return;
+    }
+    else /* y1 > y4 */
+    {
+      /* descending arc test */
+      if ( y1 >= y2 && y2 >= y4 && y1 >= y3 && y3 >= y4 )
+        return;
+    }
+
+    /* there are some split points, now, find them.. */
+    {
+      FT_Pos    a = y4 - 3*y3 + 3*y2 - y1;
+      FT_Pos    b = y3 - 2*y2 + y1;
+      FT_Pos    c = y2 - y1;
+      FT_Pos    d, t1;
+      FT_Fixed  t;
+      
+      /* we need to solve "ax²+2bx+c" here, without floating points !!     */
+      /* the trick is to normalize to a different representation in order  */
+      /* to use our 16.16 fixed point routines..                           */
+      /*                                                                   */
+      /* we're going to compute FT_MulFix(b,b) and FT_MulFix(a,c) after    */
+      /* the normalisation. these values must fit in a single 16.16        */
+      /* value.                                                            */
+      /*                                                                   */
+      /* we normalize a, b and c to "8.16" fixed float values to ensure    */
+      /* that their product is held in a "16.16" value..                   */
+      /*                                                                   */
+      {
+        FT_ULong  t1, t2;
+        int       shift = 0;
+        
+        t1  = (FT_ULong)((a >= 0) ? a : -a );
+        t2  = (FT_ULong)((b >= 0) ? b : -b );
+        t1 |= t2;
+        t2  = (FT_ULong)((c >= 0) ? c : -c );
+        t1 |= t2;
+        
+        if ( t1 == 0 )  /* all coefficients are 0 !! */
+          return;
+        
+        if ( t1 > 0xFFFFFFL )
+        {
+          /* on 64-bit machines .. */
+          do
+          {
+            shift--;
+            t1 >>= 1;
+          }
+          while ( t1 > 0xFFFFFFL );
+          
+          a >>= shift;
+          b >>= shift;
+          c >>= shift;
+        }
+        else if ( t1 < 0x800000L )
+        {
+          do
+          {
+            shift++;
+            t1 <<= 1;
+          }
+          while ( t1 < 0x800000L );
+          
+          a <<= shift;
+          b <<= shift;
+          c <<= shift;
+        }
+      }
+
+      /* handle a == 0 */
+      if ( a == 0 )
+      {
+        if ( b != 0 )
+        {
+          t = - FT_DivFix( c, b )/2;
+          test_cubic_zero( y1, y2, y3, y4, t, min, max );
+        }
+      }
+      else
+      {
+        /* solve the equation now */
+        d = FT_MulFix( b, b ) - FT_MulFix( a, c );
+        if ( d < 0 )
+          return;
+
+        if ( d == 0 )
+        {
+          /* there is a single split point, at -b/a */
+          t = - FT_DivFix( b, a );
+          test_cubic_zero( y1, y2, y3, y4, t, min, max );
+        }
+        else
+        {
+          /* there are two solutions, we need to filter them though */
+          d = FT_SqrtFixed( (FT_Int32)d );
+          t = - FT_DivFix( b - d, a );
+          test_cubic_zero( y1, y2, y3, y4, t, min, max );
+          
+          t = - FT_DivFix( b + d, a );
+          test_cubic_zero( y1, y2, y3, y4, t, min, max );
+        }
+      }
+    }
+ }
+
+#endif
 
 
   /*************************************************************************/
@@ -368,6 +528,7 @@
     vec = outline->points;
     bbox.xMin = bbox.xMax = cbox.xMin = cbox.xMax = vec->x;
     bbox.yMin = bbox.yMax = cbox.yMin = cbox.yMax = vec->y;
+    vec++;
 
     for ( n = 1; n < outline->n_points; n++ )
     {
