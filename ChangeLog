@@ -1,3 +1,10 @@
+2003-12-31  Wolfgang Domröse  <porthos.domroese@harz.de>
+
+	* src/cff/cffgload.c (cff_decoder_parse_charstrings)
+	[FT_DEBUG_LEVEL_TRACE]: Use `%ld' in FT_TRACE4.
+	<cff_op_flex1>: Change type of dx and dy to FT_Pos and remove
+	cast for accessing arguments.
+
 2003-12-31  Werner Lemberg  <wl@gnu.org>
 
 	* src/truetype/ttgload.c (TT_Load_Simple_Glyph): Revert previous

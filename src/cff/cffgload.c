@@ -907,7 +907,7 @@
 
 #ifdef FT_DEBUG_LEVEL_TRACE
         if ( !( val & 0xFFFFL ) )
-          FT_TRACE4(( " %d", (FT_Int32)( val >> 16 ) ));
+          FT_TRACE4(( " %ld", (FT_Int32)( val >> 16 ) ));
         else
           FT_TRACE4(( " %.2f", val / 65536.0 ));
 #endif
@@ -1653,11 +1653,11 @@
 
         case cff_op_flex1:
           {
-            FT_Pos  start_x, start_y; /* record start x, y values for alter */
-                                      /* use                                */
-            FT_Int  dx = 0, dy = 0;   /* used in horizontal/vertical        */
-                                      /* algorithm below                    */
-            FT_Int  horizontal, count;
+            FT_Pos    start_x, start_y; /* record start x, y values for */
+                                        /* alter use                                */
+            FT_Fixed  dx = 0, dy = 0;   /* used in horizontal/vertical  */
+                                        /* algorithm below              */
+            FT_Int    horizontal, count;
 
 
             FT_TRACE4(( " flex1" ));
@@ -1679,8 +1679,8 @@
             /* grab up to the last argument */
             for ( count = 5; count > 0; count-- )
             {
-              dx += (FT_Int)args[0];
-              dy += (FT_Int)args[1];
+              dx += args[0];
+              dy += args[1];
               args += 2;
             }
 
