@@ -1,45 +1,43 @@
 LATEST CHANGES BETWEEN 2.0.5 and 2.0.4
 
-  NOTE THAT 2.0.5 DOES NOT CONTAIN THE POSTSCRIPT HINTER. THIS MODULE WILL
+  NOTE THAT 2.0.5 DOES NOT CONTAIN THE POSTSCRIPT HINTER.  THIS MODULE WILL
   BE PART OF THE NEXT RELEASE (EITHER 2.0.6 or 2.1)
 
+  - Fixed a bug that made certain glyphs, like "Cacute", "cacute" and
+    "lslash" unavailable from Unicode charmaps of Postscript fonts.  This
+    prevented the correct display of Polish text, for example.
 
-  - fixed a bug that made certain glyphs, like "Cacute", "cacute" and "lslash"
-    unavailable from Unicode charmaps of Postscript fonts. This prevented the
-    correct display of Polish text, for example.
+  - The kerning table of Type 1 fonts was loaded by FreeType, when its AFM
+    file was attached to its face, but the FT_FACE_FLAG_HAS_KERNING bit
+    flags was not set correctly, preventing FT_Get_Kerning to return
+    meaningful values.
 
-  - the kerning table of Type 1 fonts was loaded by FreeType, when its AFM
-    file was attached to its face, but the FT_FACE_FLAG_HAS_KERNING bit flags
-    was not set correctly, preventing FT_Get_Kerning to return meaningful
-    values..
-  
-  - improved SFNT (TrueType & OpenType) charmap support. Slightly better
+  - Improved SFNT (TrueType & OpenType) charmap support.  Slightly better
     performance, as well as support for the new formats defined by the
-    OpenType 1.3 specification (8, 10 and 12)
-  
-  - fixed a serious typo in "src/base/ftcalc.c" which caused invalid
-    computations in certain rare cases, producing ugly artefacts..
-  
-  - the size of the EM square is computed with a more accurate algorithm
-    for Postscript fonts. The old one caused slight errors with embedded
-    fonts found in PDF documents..
+    OpenType 1.3 specification (8, 10, and 12)
 
-  - fixed a bug in the cache manager that prevented normal LRU behaviour
-    within the cache manager, causing unecessary reloads (for FT_Face and
-    FT_Size objects only)
-  
-  - added a new function named "FT_Get_Name_Index" to retrieve the glyph
+  - Fixed a serious typo in "src/base/ftcalc.c" which caused invalid
+    computations in certain rare cases, producing ugly artefacts.
+
+  - The size of the EM square is computed with a more accurate algorithm
+    for Postscript fonts.  The old one caused slight errors with embedded
+    fonts found in PDF documents.
+
+  - Fixed a bug in the cache manager that prevented normal LRU behaviour
+    within the cache manager, causing unnecessary reloads (for FT_Face and
+    FT_Size objects only).
+
+  - Added a new function named "FT_Get_Name_Index" to retrieve the glyph
     index of a given glyph name, when found in a face.
 
-  - fixed a reallocation bug that generated a dangling pointer (and possibly
-    memory leaks) with Postscript fonts (in src/psaux/psobjs.c)
-    
-  - many 16-bit correctness fixes
-  
-  - removed many pedantic compiler warnings from the sources
+  - Fixed a reallocation bug that generated a dangling pointer (and possibly
+    memory leaks) with Postscript fonts (in src/psaux/psobjs.c).
 
-  - added an Amiga build directory in "builds/amiga"
+  - Many fixes for 16-bit correctness.
 
+  - Removed many pedantic compiler warnings from the sources.
+
+  - Added an Amiga build directory in "builds/amiga".
 
 ============================================================================
 
@@ -48,17 +46,17 @@ LATEST CHANGES BETWEEN 2.0.4 and 2.0.3
   - Fixed a rather annoying bug that was introduced in 2.0.3.  Namely, the
     font transformation set through FT_Set_Transform was applied twice to
     auto-hinted glyphs, resulting in incorrectly rotated text output.
-    
+
   - Fixed _many_ compiler warnings.  FT2 should now compile cleanly with
     Visual C++'s most pedantic warning level (/W4).  It already compiled
     fine with GCC and a few other compilers.
 
-  - fixed a bug that prevented the linear advance width of composite
-    TrueType glyphs to be correctly returned
+  - Fixed a bug that prevented the linear advance width of composite
+    TrueType glyphs to be correctly returned.
 
   - Fixed the Visual C++ project files located in "builds/win32/visualc"
     (previous versions used older names of the library).
-  
+
   - Many 32-bit constants have an "L" appended to their value, in order
     to improve the 16-bitness of the code.  Someone is actually trying to
     use FT2 on an Atari ST machine!
@@ -67,7 +65,7 @@ LATEST CHANGES BETWEEN 2.0.4 and 2.0.3
     FT2 on AIX systems.  AIX uses "/usr/sbin/init" instead of "/sbin/init"
     and wasn't previously detected as a Unix platform by the FreeType build
     system.
-                                                       
+
   - Updated the Unix-specific portions of the build system (new libtool
     version, etc.).
 
@@ -79,21 +77,21 @@ LATEST CHANGES BETWEEN 2.0.4 and 2.0.3
 LATEST CHANGES BETWEEN 2.0.3 and 2.0.2
 
   I. CHANGES TO THE MODULES / FONT DRIVERS
-  
+
     - THE AUTO-HINTER HAS BEEN SLIGHTLY IMPROVED, in order to fix several
       annoying artefacts, mainly:
-      
+
         - Blue zone alignement of horizontal stems wasn't performed
           correctly, resulting in artefacts like the "d" being placed one
           pixel below the "b" in some fonts like Time New Roman.
-          
+
         - Overshoot thresholding wasn't performed correctly, creating
           unpleasant artefacts at large character pixel sizes.
-          
+
         - Composite glyph loading has been simplified.  This gets rid
           of various artefacts where the components of a composite glyphs
           were not correctly spaced.
-          
+
       These are the last changes to the current auto-hinting module.  A new
       hinting sub-system is currently in the work in order to support native
       hints in Type 1 / CFF / OpenType fonts, as well as globally improve
@@ -101,7 +99,7 @@ LATEST CHANGES BETWEEN 2.0.3 and 2.0.2
 
     - The PCF driver has been fixed.  It reported invalid glyph dimensions
       for the fonts available on Solaris.
-    
+
     - The Type 1, CID and CFF drivers have been modified to fix the
       computation of the EM size.
 
@@ -115,20 +113,20 @@ LATEST CHANGES BETWEEN 2.0.3 and 2.0.2
 
 
   II. HIGH-LEVEL API CHANGES
-                              
+
     - The error code enumeration values have been changed.  An error value
       is decomposed in a generic error code, and a module number.  see
       <freetype/fterrors.h> for details.
 
     - A new public header file has been introduced, named FT_TRIGONOMETRY_H
       (include/freetype/fttrig.h), providing trigonometric functions to
-      compute sines, cosines, arctangents, etc. with 16.16 fixed precision. 
+      compute sines, cosines, arctangents, etc. with 16.16 fixed precision.
       The implementation is based on the CORDIC algorithm and is very fast
       while being sufficiently accurate.
 
 
   III. INTERNALS
-             
+
     - Added BeOS-specific files in the old build sub-system.  Note that
       no changes were required to compile the library with Jam.
 
@@ -139,7 +137,7 @@ LATEST CHANGES BETWEEN 2.0.3 and 2.0.2
 
     - A small memory leak that happened when opening 0-sized files (duh!)
       have been fixed.
-          
+
     - Fixed bezier stack depth bug in the routines provided by the
       FT_BBOX_H header file.  Also fixed similar bugs in the rasterizers.
 
@@ -150,25 +148,25 @@ LATEST CHANGES BETWEEN 2.0.3 and 2.0.2
     - The build system has been improved and fixed, mainly to support "make"
       on Windows 2000 correctly, avoid problems with "make distclean" on non
       Unix systems, etc.
-      
+
     - Hexadecimal constants have been suffixed with "U" to avoid problems
       with certain compilers on 64-bit platforms.
 
     - A new directory named "src/tools" has been created.  It contains
       Python scripts and simple unit test programs used to develop the
       library.
-      
+
     - The DocMaker tool has been moved from "docs" to "src/tools" and
       has been updated with the following:
-      
+
          - Now accepts the "--title=XXXX" or "-t XXXX" option from the
            command line to set the project's name in the generated API
            reference.
-           
+
          - Now accepts the "--output=DIR" or "-o DIR" option from the
            command line to set the output directory for all generated HTML
            files.
-           
+
          - Now accepts the "--prefix=XXXX" or "-p XXX" option from the
            command line to set the file prefix to use for all generated HTML
            files.
@@ -178,7 +176,7 @@ LATEST CHANGES BETWEEN 2.0.3 and 2.0.2
 
       DocMaker can be used with other projects now, not only FT2 (e.g. MLib,
       FTLayout, etc.).
-                                                                
+
 ===========================================================================
 
 LATEST CHANGES BETWEEN 2.0.2 and 2.0.1

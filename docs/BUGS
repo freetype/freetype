@@ -1,30 +1,30 @@
 List of known FreeType 2 Bugs
 -----------------------------
 
-"Identifier" is a unique string used to uniquely identify the bug
-A more complete description of the bug is found below the table of
-opened bugs..
+"Identifier" is a string to uniquely identify the bug.  A more detailed
+description of the bug is found below the table of opened bugs.
 
-"Date" is the date where the bug was first reported or entered
-in this document. Dates are in _european_ format, i.e day/month/year
+"Date" is the date when the bug was first reported or entered in this
+document.  Dates are in _European_ format, i.e day/month/year.
 
-"Opened By" is the name of the people who first spotted the bug.
-Note that we can use abbreviations here, like:
+"Opened By" is the name of the person who first spotted the bug. Note that
+we can use abbreviations here, like:
 
-   "David"  for David Turner
-   "Werner" for Werner Lemberg
-    etc..
+  "David" for David Turner
+  "Werner" for Werner Lemberg
+   etc.
 
-"Reproducable" indicates wether the bug could be reproduced by the
-development team or not (it can be specific to a given platform),
-wether it always happen, or only sporadically, etc..
-
+"Reproduceable" indicates whether the bug could be reproduced by the
+development team or not (it can be specific to a given platform), whether it
+always happens, or only sporadically, etc.
 
 
-I. Opened bugs:
-===============
 
-Identifier                Date        Opened by                 Reproducable
+I. Opened bugs
+==============
+
+
+Identifier                 Date       Opened by                Reproduceable
 ------------------------------------------------------------------------------
 NO-CID-CMAPS            13-09-2001     David                     always
 AUTOHINT-NO-SBITS       13-09-2001     David                     always
@@ -36,8 +36,9 @@ NOT-WINDOWS-METRICS     07-10-2001     David                     always
 
 
 
-II. Table of closed bugs:
-=========================
+II. Table of closed bugs
+========================
+
 
 Identifier                Date         Closed by                Closure date
 ------------------------------------------------------------------------------
@@ -48,70 +49,76 @@ BAD-TTNAMEID.H          12-09-2001     Antoine                   N/A
 
 
 
-II. Bug descriptions:
+III. Bug descriptions
 =====================
 
-NO-CID-CMAPS:
-   Not exactly a bug, but the CFF font driver doesn't build a Unicode
-   charmap from the content of font files, which prevents efficiently
-   using fonts in this format..
-   
-   
-BAD-TTNAMEID.H
-   the file "ttnameid.h" contains various constant macro definitions
-   corresponding to important values defined by the TrueType specification.
-   
-   Joe Man <trmetal@yahoo.com.hk> reports that:
-   
-        According to the information from
-        TrueType v1.66
-        
-        Platform ID = 3 (Microsoft)
-        the Encoding ID of GB2312 = 4
-        the Encoding ID of big5 = 3
-        
-        However, I have found that 
-        in ttnameid.h
-        TT_MS_ID_GB2312 = 3
-        TT_MS_ID_BIG_5 = 4
-        
-        Which one is correct?
 
-  Antoine replied that this was a bug in the TT 1.66 specification, and
-  that FreeType followed the most recent TrueType/OpenType specification
-  here !!
-        
+NO-CID-CMAPS
+
+  Not exactly a bug, but the CFF font driver doesn't build a Unicode charmap
+  from the contents of font files, which prevents efficiently using fonts in
+  this format.
+
+
+BAD-TTNAMEID.H
+
+  The file "ttnameid.h" contains various constant macro definitions
+  corresponding to important values defined by the TrueType specification.
+
+  Joe Man <trmetal@yahoo.com.hk> reports that:
+
+    According to the information from TrueType v1.66:
+
+      Platform ID = 3 (Microsoft)
+      the Encoding ID of GB2312 = 4
+      the Encoding ID of big5 = 3
+
+    However, I have found that in ttnameid.h:
+
+      TT_MS_ID_GB2312 = 3
+      TT_MS_ID_BIG_5 = 4
+
+    Which one is correct?
+
+  Antoine replied that this was a bug in the TT 1.66 specification, and that
+  FreeType followed the most recent TrueType/OpenType specification here!
+
 
 AUTOHINT-SBITS
-   when trying to load a glyph, with the auto-hinter activated (i.e.
-   when using FT_LOAD_FORCE_AUTOHINT, or when the font driver doesn't
-   provide its own hinter), embedded bitmaps are _never_ loaded, unlike
-   the default behaviour described by the API specification.
 
-   this seems to be a bug in FT_Load_Glyph, but there is no way to solve it
-   efficiently without making a few important internal changes to the library's
-   design (more importantly, to the font driver interface)
-      
-   
-   
+  When trying to load a glyph, with the auto-hinter activated (i.e., when
+  using FT_LOAD_FORCE_AUTOHINT, or when the font driver doesn't provide its
+  own hinter), embedded bitmaps are _never_ loaded, unlike the default
+  behaviour described by the API specification.
+
+  This seems to be a bug in FT_Load_Glyph(), but there is no way to solve it
+  efficiently without making a few important internal changes to the
+  library's design (more importantly, to the font driver interface).
+
+
 BAD-TT-RENDERING
-   according to Paul Pedriana <PPedriana@maxis.com>, there is a rather
-   important difference between the rendering of TrueType-hinted glyphs
-   of current FT2 and old betas..
-   
-   Tests and comparisons show a _major_ discrepancy of monochrome truetype
-   bytecode-hinted glyphs !! Something seems to be really fucked here !!
 
+  According to Paul Pedriana <PPedriana@maxis.com>, there is a rather
+  important difference between the rendering of TrueType-hinted glyphs of
+  current FT2 and old betas.
+
+  Tests and comparisons show a _major_ discrepancy of monochrome truetype
+  bytecode-hinted glyphs!  Something seems to be really broken here!
 
 
 BAD-THIN-LINES
-   it seems that the anti-aliased renderer in FreeType has problems
-   rendering extremely thin straight lines correctly, at least when using
-   the FT_Outline_Render functions..
+
+  It seems that the anti-aliased renderer in FreeType has problems rendering
+  extremely thin straight lines correctly, at least when using the
+  FT_Outline_Render() function.
 
 
 NOT-WINDOWS-METRICS
-   FreeType doesn't always return the same metrics as Windows for ascender,
-   descender and text height, depending on character pixel sizes. A lot of
-   testing on Windows is needed to debug this properly. It might be due to
-   a rounding bug when computing the "x_scale" and "y_scale" values.
+
+  FreeType doesn't always return the same metrics as Windows for ascender,
+  descender, and text height, depending on character pixel sizes.  A lot of
+  testing on Windows is needed to debug this properly.  It might be due to a
+  rounding bug when computing the "x_scale" and "y_scale" values.
+
+
+=== end of file ===

@@ -255,8 +255,7 @@
   /*    A macro used in #include statements to name the file containing    */
   /*    the API used to manage multiple @FT_Size objects per face.         */
   /*                                                                       */
-#define FT_SIZES_H    <freetype/ftsizes.h>
-
+#define FT_SIZES_H  <freetype/ftsizes.h>
 
 
   /*************************************************************************/

@@ -4,7 +4,7 @@
 /*                                                                         */
 /*    A new `perfect' anti-aliasing renderer (body).                       */
 /*                                                                         */
-/*  Copyright 2000 by                                                      */
+/*  Copyright 2000-2001 by                                                 */
 /*  David Turner, Robert Wilhelm, and Werner Lemberg.                      */
 /*                                                                         */
 /*  This file is part of the FreeType project, and may only be used,       */
@@ -32,8 +32,8 @@
   /*      cc -c -D_STANDALONE_ ftgrays.c                                   */
   /*                                                                       */
   /*  The renderer can be initialized with a call to                       */
-  /*  `ft_gray_raster.gray_raster_new'; an anti-aliased bitmap can be    */
-  /*  generated with a call to `ft_gray_raster.gray_raster_render'.      */
+  /*  `ft_gray_raster.gray_raster_new'; an anti-aliased bitmap can be      */
+  /*  generated with a call to `ft_gray_raster.gray_raster_render'.        */
   /*                                                                       */
   /*  See the comments and documentation in the file `ftimage.h' for       */
   /*  more details on how the raster works.                                */
@@ -202,16 +202,16 @@
   /*   TYPE DEFINITIONS                                                    */
   /*                                                                       */
   
- /* don't change the following types to FT_Int or FT_Pos, since we might */
- /* need to define them to "float" or "double" when experimenting with   */
- /* new algorithms..                                                     */
+  /* don't change the following types to FT_Int or FT_Pos, since we might */
+  /* need to define them to "float" or "double" when experimenting with   */
+  /* new algorithms                                                       */
 
   typedef int   TScan;   /* integer scanline/pixel coordinate */
   typedef long  TPos;    /* sub-pixel coordinate              */
 
- /* determine the type used to store cell areas. This normally takes at */
- /* least PIXEL_BYTES*2 + 1, on 16-bit systems, we need to use 'longs'  */
- /* instead of 'ints'.. otherwise bad things happen..                   */
+  /* determine the type used to store cell areas.  This normally takes at */
+  /* least PIXEL_BYTES*2 + 1.  On 16-bit systems, we need to use `long'   */
+  /* instead of `int', otherwise bad things happen                        */
  
 #if PIXEL_BITS <= 7
 
@@ -219,13 +219,14 @@
 
 #else /* PIXEL_BITS >= 8 */
 
- /* approximately determine the size of integers using an ANSI-C header */
-#  include <limits.h>
-#  if UINT_MAX == 0xFFFFU
+  /* approximately determine the size of integers using an ANSI-C header */
+#include <limits.h>
+
+#if UINT_MAX == 0xFFFFU
   typedef long  TArea;
-#  else
-  typedef int   TArea;
-#  endif
+#else
+  typedef int  TArea;
+#endif
 
 #endif /* PIXEL_BITS >= 8 */
 
@@ -292,12 +293,12 @@
     void*                render_span_data;
     int                  span_y;
 
-    int     band_size;
-    int     band_shoot;
-    int     conic_level;
-    int     cubic_level;
+    int  band_size;
+    int  band_shoot;
+    int  conic_level;
+    int  cubic_level;
 
-    void*   memory;
+    void*    memory;
     jmp_buf  jump_buffer;
 
   } TRaster, *PRaster;
@@ -739,7 +740,7 @@
     if ( level <= 1 )
     {
       /* we compute the mid-point directly in order to avoid */
-      /* calling gray_split_conic()                               */
+      /* calling gray_split_conic()                          */
       TPos   to_x, to_y, mid_x, mid_y;
 
 
@@ -1182,7 +1183,7 @@
                 FT_Raster   raster )
   {
     gray_render_line( (PRaster)raster,
-                  UPSCALE( to->x ), UPSCALE( to->y ) );
+                      UPSCALE( to->x ), UPSCALE( to->y ) );
     return 0;
   }
 
@@ -1505,9 +1506,9 @@
   {
 #undef SCALED
 #if 0
-#  define SCALED( x )  ( ( (x) << shift ) - delta )
+#define SCALED( x )  ( ( (x) << shift ) - delta )
 #else
-#  define SCALED( x)   (x)
+#define SCALED( x )  (x)
 #endif
 
     FT_Vector   v_last;
@@ -1720,10 +1721,10 @@
     static
     const FT_Outline_Funcs  interface =
     {
-      (FT_Outline_MoveTo_Func)  gray_move_to,
-      (FT_Outline_LineTo_Func)  gray_line_to,
-      (FT_Outline_ConicTo_Func) gray_conic_to,
-      (FT_Outline_CubicTo_Func) gray_cubic_to,
+      (FT_Outline_MoveTo_Func) gray_move_to,
+      (FT_Outline_LineTo_Func) gray_line_to,
+      (FT_Outline_ConicTo_Func)gray_conic_to,
+      (FT_Outline_CubicTo_Func)gray_cubic_to,
       0,
       0
     };
@@ -1770,7 +1771,8 @@
     if ( ras.max_ey > clip->yMax ) ras.max_ey = clip->yMax;
 
     /* simple heuristic used to speed-up the bezier decomposition -- see */
-    /* the code in gray_render_conic() and gray_render_cubic() for more details    */
+    /* the code in gray_render_conic() and gray_render_cubic() for more  */
+    /* details                                                           */
     ras.conic_level = 32;
     ras.cubic_level = 16;
 
