@@ -295,7 +295,7 @@
       FT_Face      root    = &face->root;
       FT_CharMap   charmap = face->charmaprecs;
 
-      /* synthetize a Unicode charmap if there is support in the "psnames" */
+      /* synthesize a Unicode charmap if there is support in the "psnames" */
       /* module..                                                          */
       if (face->psnames)
       {
