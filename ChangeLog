@@ -61,9 +61,14 @@
 	provide accurate kerning data when native TrueType hinting is
 	enabled.
 
-	* src/type1/t1load.c: The Type 1 loader now accepts more general
-	names according to the PostScript specification (the previous one
-	was too restrictive).
+	* src/type1/t1load.c (is_name_char): The Type 1 loader now accepts
+	more general names according to the PostScript specification (the
+	previous one was too restrictive).
+
+	(parse_font_name, parse_encoding, parse_charstrings, parse_dict):
+	Use `is_name_char'.
+
+	(parse_subrs): Handle empty arrays.
 
 2003-03-20  David Turner  <david@freetype.org>
 
@@ -111,7 +116,13 @@
 	Don't handle `FT_GLYPH_OWN_BITMAP'.
 	Update call to Load_SBit_Image.
 
-	* src/type42/t42objs.c, src/winfonts/winfnt.c:
+	* src/type42/t42objs.c (ft_glyphslot_clear): Renamed to...
+	(t42_glyphslot_clear): This.  Updated caller.
+	Call `ft_glyphslot_free_bitmap'.
+
+	* src/winfonts/winfnt.c (FNT_Load_Glyph): Use
+	`ft_glyphslot_set_bitmap'.
+	Don't handle `FT_GLYPH_OWN_BITMAP'.
 
 	* src/cache/ftlru.c (FT_LruList_Lookup): Fixed an invalid assertion
 	check.
@@ -273,7 +284,8 @@
 	(compute_glyph_metrics) [FT_CONFIG_OPTION_INCREMENTAL]: Code block
 	moved down.
 
-	* src/type1/t1gload.c [FT_CONFIG_OPTION_INCREMENTAL]:
+	* src/type1/t1gload.c (T1_Parse_Glyph_And_Get_Char_String)
+	[FT_CONFIG_OPTION_INCREMENTAL]: Updated.
 
 	* include/freetype/ftincrem.h: Updated.
 
@@ -397,7 +409,9 @@
 	to...
 	* include/freetype/ftwinfnt.h: This new file.
 	* src/base/ftwinfnt.c: New file, providing `FT_Get_WinFNT_Header'.
-	* src/winfonts/winfnt.c:
+	* src/winfonts/winfnt.c (winfnt_header_fields): Updated.
+	Rename `reserved2' to `reserved1'.
+	(fnt_font_load): Updated.
 
 	* src/base/Jamfile, src/base/descrip.mms, src/base/rules.mk:
 	Updated.
@@ -465,8 +479,8 @@
 
 2003-01-08  Huw Dawies  <huw@codeweavers.com>
 
-	* src/winfonts/winfnt.c: Read 16 bytes into "reserved2", not
-	"reserved".
+	* src/winfonts/winfnt.c (winfnt_header_fields): Read 16 bytes into
+	"reserved2", not "reserved".
 
 	* src/base/ftobjs.c (find_unicode_charmap): Fixed the error code
 	returned when the font doesn't contain a Unicode charmap.  This
@@ -564,6 +578,9 @@
 
 	* src/winfonts/winfnt.c: Included George Williams's fix to support
 	version 2 fonts correctly.
+	(winfnt_header_fields): Updated.
+	(fnt_font_load): Handle version 2 fonts.
+	(FNT_Load_Glyph): Updated.
 
 2002-12-16  David Turner  <david@freetype.org>
 
