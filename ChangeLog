@@ -7,6 +7,10 @@
         * src/pshinter/pshalgo2.c: changed 'print_zone' to 'psh2_print_zone'
         * src/pshinter/pshalgo1.c: changed 'print_zone' to 'psh1_print_zone'
 
+        * include/freetype/freetype.h, include/freetype/internal/ftobjs.h,
+        src/base/ftobjs.c, src/base/ftinit.c: adding the new FT_Library_Version
+        API to return the library's current version in dynamic links.
+
 
 2002-03-06  Werner Lemberg  <wl@gnu.org>
 

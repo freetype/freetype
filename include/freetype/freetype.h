@@ -106,6 +106,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_Init_FreeType                                                   */
   /*    FT_Done_FreeType                                                   */
+  /*    FT_Library_Version                                                 */
   /*                                                                       */
   /*    FT_New_Face                                                        */
   /*    FT_Done_Face                                                       */
@@ -1336,6 +1337,40 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Init_FreeType( FT_Library  *alibrary );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FT_Library_Version                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Return the version of the FreeType library being used. This        */
+  /*    is useful when dynamically linking to the library, since one       */
+  /*    cannot use the macros FT_FREETYPE_MAJOR, FT_FREETYPE_MINOR and     */
+  /*    FT_FREETYPE_PATCH.                                                 */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    library :: source library handle.                                  */
+  /*                                                                       */
+  /* <Output>                                                              */
+  /*    amajor :: major version number                                     */
+  /*    aminor :: minor version number                                     */
+  /*    apatch :: patch version number                                     */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*    the reason why this function takes a 'library' argument is         */
+  /*    because certain programs implement library initialisation in       */
+  /*    a custom way that doesn't use FT_Init_FreeType.                    */
+  /*                                                                       */
+  /*    in certain such cases, the library version cannot be known until   */
+  /*    the library object has been created..                              */
+  /*                                                                       */
+  FT_EXPORT( void )
+  FT_Library_Version( FT_Library   library,
+                      FT_Int      *amajor,
+                      FT_Int      *aminor,
+                      FT_Int      *apatch );
 
 
   /*************************************************************************/
