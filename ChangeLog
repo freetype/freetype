@@ -1,3 +1,10 @@
+2000-11-30  Tom Kacvinsky  <tjk@ams.org>
+
+	* t2objs.c (T2_Init_Face): Added calculation of `face->height' for
+	pure CFF fonts.
+
+	* t1objs.c (T1_Init_Face): Fixed computation of `face->height'.
+
 2000-11-29  David Turner  <david.turner@freetype.org>
 
 	* src/base/ftbbox.c (BBox_Conic_Check): Fixed a really stupid
