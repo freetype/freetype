@@ -22,6 +22,8 @@
 #include "ftrend1.h"
 #include "ftraster.h"
 
+#include "rasterrs.h"
+
 
   /* initialize renderer -- init its raster */
   static
@@ -34,7 +36,7 @@
                                                library->raster_pool,
                                                library->raster_pool_size );
 
-    return FT_Err_Ok;
+    return Raster_Err_Ok;
   }
 
 
@@ -58,12 +60,12 @@
                                   FT_Matrix*    matrix,
                                   FT_Vector*    delta )
   {
-    FT_Error error = FT_Err_Ok;
+    FT_Error error = Raster_Err_Ok;
 
 
     if ( slot->format != render->glyph_format )
     {
-      error = FT_Err_Invalid_Argument;
+      error = Raster_Err_Invalid_Argument;
       goto Exit;
     }
 
@@ -111,7 +113,7 @@
     /* check glyph image format */
     if ( slot->format != render->glyph_format )
     {
-      error = FT_Err_Invalid_Argument;
+      error = Raster_Err_Invalid_Argument;
       goto Exit;
     }
 
@@ -120,13 +122,13 @@
     {
       /* raster1 is only capable of producing monochrome bitmaps */
       if ( render->clazz == &ft_raster1_renderer_class )
-        return FT_Err_Cannot_Render_Glyph;
+        return Raster_Err_Cannot_Render_Glyph;
     }
     else
     {
       /* raster5 is only capable of producing 5-gray-levels bitmaps */
       if ( render->clazz == &ft_raster5_renderer_class )
-        return FT_Err_Cannot_Render_Glyph;
+        return Raster_Err_Cannot_Render_Glyph;
     }
 
     outline = &slot->outline;

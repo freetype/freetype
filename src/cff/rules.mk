@@ -33,7 +33,8 @@ CFF_DRV_SRC := $(CFF_DIR_)cffobjs.c   \
 # CFF driver headers
 #
 CFF_DRV_H := $(CFF_DRV_SRC:%.c=%.h) \
-            $(CFF_DIR_)cfftoken.h
+             $(CFF_DIR_)cfftoken.h \
+             $(CFF_DIR_)cfferrs.h
 
 
 # CFF driver object(s)

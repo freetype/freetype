@@ -35,7 +35,8 @@ SFNT_DRV_SRC := $(SFNT_DIR_)ttload.c   \
 
 # SFNT driver headers
 #
-SFNT_DRV_H := $(SFNT_DRV_SRC:%c=%h)
+SFNT_DRV_H := $(SFNT_DRV_SRC:%c=%h) \
+              $(SFNT_DIR_)sferrors.h
 
 
 # SFNT driver object(s)

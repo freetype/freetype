@@ -22,11 +22,13 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_IDS_H
-#include FT_INTERNAL_CFF_ERRORS_H
 
 #include "cffdrivr.h"
 #include "cffgload.h"
 #include "cffload.h"
+
+#include "cfferrs.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -180,7 +182,7 @@
 
 
     if ( !slot )
-      return CFF_Err_Invalid_Glyph_Handle;
+      return CFF_Err_Invalid_Slot_Handle;
 
     /* check whether we want a scaled outline or bitmap */
     if ( !size )

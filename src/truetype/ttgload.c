@@ -26,6 +26,8 @@
 
 #include "ttgload.h"
 
+#include "tterrors.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -300,14 +302,14 @@
     if ( n_ins > face->max_profile.maxSizeOfInstructions )
     {
       FT_TRACE0(( "ERROR: Too many instructions!\n" ));
-      error = TT_Err_Too_Many_Ins;
+      error = TT_Err_Too_Many_Hints;
       goto Fail;
     }
 
     if ( stream->cursor + n_ins > stream->limit )
     {
       FT_TRACE0(( "ERROR: Instruction count mismatch!\n" ));
-      error = TT_Err_Too_Many_Ins;
+      error = TT_Err_Too_Many_Hints;
       goto Fail;
     }
 
@@ -1019,7 +1021,7 @@
           {
             FT_TRACE0(( "Too many instructions (%d) in composite glyph %ld\n",
                         n_ins, subglyph->index ));
-            return TT_Err_Too_Many_Ins;
+            return TT_Err_Too_Many_Hints;
           }
 
           /* read the instructions */

@@ -44,7 +44,8 @@ PCF_DRV_SRC := $(PCF_DIR_)pcfread.c   \
 #
 PCF_DRV_H := $(PCF_DIR_)pcf.h       \
              $(PCF_DIR_)pcfdriver.h \
-             $(PCF_DIR_)pcfutil.h
+             $(PCF_DIR_)pcfutil.h   \
+             $(PCF_DIR_)pcferror.h
 
 # pcf driver object(s)
 #

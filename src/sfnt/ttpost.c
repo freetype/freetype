@@ -27,11 +27,11 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_STREAM_H
-#include FT_INTERNAL_TRUETYPE_ERRORS_H
 #include FT_TRUETYPE_TAGS_H
 #include "ttpost.h"
 #include "ttload.h"
 
+#include "sferrors.h"
 
   /*************************************************************************/
   /*                                                                       */
@@ -176,7 +176,7 @@
 
     if ( num_glyphs > face->root.num_glyphs )
     {
-      error = TT_Err_Invalid_File_Format;
+      error = SFNT_Err_Invalid_File_Format;
       goto Exit;
     }
 
@@ -249,7 +249,7 @@
       table->glyph_indices = glyph_indices;
       table->glyph_names   = name_strings;
     }
-    return TT_Err_Ok;
+    return SFNT_Err_Ok;
 
 
   Fail1:
@@ -288,7 +288,7 @@
     /* check the number of glyphs */
     if ( num_glyphs > face->root.num_glyphs || num_glyphs > 258 )
     {
-      error = TT_Err_Invalid_File_Format;
+      error = SFNT_Err_Invalid_File_Format;
       goto Exit;
     }
 
@@ -308,7 +308,7 @@
 
         if ( index < 0 || index > num_glyphs )
         {
-          error = TT_Err_Invalid_File_Format;
+          error = SFNT_Err_Invalid_File_Format;
           goto Fail;
         }
       }
@@ -323,7 +323,7 @@
       table->offsets    = offset_table;
     }
 
-    return TT_Err_Ok;
+    return SFNT_Err_Ok;
 
   Fail:
     FREE( offset_table );
@@ -367,7 +367,7 @@
       break;
 
     default:
-      error = TT_Err_Invalid_File_Format;
+      error = SFNT_Err_Invalid_File_Format;
     }
 
     face->postscript_names.loaded = 1;
@@ -455,15 +455,15 @@
 
 
     if ( !face )
-      return TT_Err_Invalid_Face_Handle;
+      return SFNT_Err_Invalid_Face_Handle;
 
     if ( index >= (FT_UInt)face->root.num_glyphs )
-      return TT_Err_Invalid_Glyph_Index;
+      return SFNT_Err_Invalid_Glyph_Index;
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     psnames = (PSNames_Interface*)face->psnames;
     if ( !psnames )
-      return TT_Err_Unimplemented_Feature;
+      return SFNT_Err_Unimplemented_Feature;
 #endif
 
     names = &face->postscript_names;
@@ -527,7 +527,7 @@
       break;                                /* nothing to do */
     }
 
-    return TT_Err_Ok;
+    return SFNT_Err_Ok;
   }
 
 

@@ -21,6 +21,8 @@
 #include FT_CACHE_IMAGE_H
 #include FT_INTERNAL_MEMORY_H
 
+#include "ftcerror.h"
+
 #include <string.h>     /* memcmp() */
 #include <stdlib.h>     /* labs()   */
 
@@ -143,7 +145,7 @@
             node->ft_glyph = glyph;
         }
         else
-          error = FT_Err_Invalid_Argument;
+          error = FTC_Err_Invalid_Argument;
       }
     }
 
@@ -284,7 +286,7 @@
     /* some argument checks are delayed to FTC_Glyph_Cache_Lookup */
 
     if (!aglyph)
-      return FT_Err_Invalid_Argument;
+      return FTC_Err_Invalid_Argument;
 
     error = FTC_Glyph_Cache_Lookup( (FTC_Glyph_Cache)cache,
                                     desc, gindex, &node );

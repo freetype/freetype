@@ -23,6 +23,8 @@
 #include FT_ERRORS_H
 #include FT_INTERNAL_OBJECTS_H
 
+#include "ftcerror.h"
+
 
   /*************************************************************************/
   /*************************************************************************/
@@ -223,7 +225,7 @@
     *anode = 0;
 
     if ( glyph_index >= cset->element_max )
-      error = FT_Err_Invalid_Argument;
+      error = FTC_Err_Invalid_Argument;
     else
     {
       FT_UInt         chunk_size  = cset->element_count;
@@ -401,7 +403,7 @@
     /* check for valid `desc' delayed to FT_Lru_Lookup() */
 
     if ( !cache || !anode || !aindex )
-      return FT_Err_Invalid_Argument;
+      return FTC_Err_Invalid_Argument;
 
     *anode  = 0;
     *aindex = 0;

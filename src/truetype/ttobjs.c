@@ -24,10 +24,11 @@
 #include FT_TRUETYPE_TAGS_H
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
-#include FT_INTERNAL_TRUETYPE_ERRORS_H
 
 #include "ttgload.h"
 #include "ttpload.h"
+
+#include "tterrors.h"
 
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 #include "ttinterp.h"

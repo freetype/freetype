@@ -23,6 +23,7 @@
 #include "ahhint.h"
 #include "ahglyph.h"
 #include "ahangles.h"
+#include "aherrors.h"
 #include FT_OUTLINE_H
 
 
@@ -1241,7 +1242,7 @@
             if ( start_point + k >= num_base_points          ||
                                l >= (FT_UInt)num_new_points  )
             {
-              error = FT_Err_Invalid_Composite;
+              error = AH_Err_Invalid_Composite;
               goto Exit;
             }
 
@@ -1279,7 +1280,7 @@
 
     default:
       /* we don't support other formats (yet?) */
-      error = FT_Err_Unimplemented_Feature;
+      error = AH_Err_Unimplemented_Feature;
     }
 
   Hint_Metrics:

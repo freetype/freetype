@@ -19,8 +19,11 @@
 #include <ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_INTERNAL_OBJECTS_H
+
 #include "psmodule.h"
 #include "pstables.h"
+
+#include "psnamerr.h"
 
 #include <stdlib.h>     /* for qsort()             */
 #include <string.h>     /* for strcmp(), strncpy() */
@@ -192,7 +195,7 @@
       {
         FREE( table->maps );
         if ( !error )
-          error = FT_Err_Invalid_Argument;  /* no unicode chars here! */
+          error = PSnames_Err_Invalid_Argument;  /* no unicode chars here! */
       }
       else
         /* sort the table in increasing order of unicode values */

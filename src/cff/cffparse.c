@@ -18,8 +18,9 @@
 
 #include <ft2build.h>
 #include "cffparse.h"
-#include FT_INTERNAL_CFF_ERRORS_H
 #include FT_INTERNAL_STREAM_H
+
+#include "cfferrs.h"
 
 
   /*************************************************************************/

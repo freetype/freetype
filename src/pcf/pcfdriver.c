@@ -27,7 +27,6 @@ THE SOFTWARE.
 
 #include <ft2build.h>
 
-#include FT_ERRORS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
@@ -35,6 +34,8 @@ THE SOFTWARE.
 #include "pcf.h"
 #include "pcfdriver.h"
 #include "pcfutil.h"
+
+#include "pcferror.h"
 
 
   /*************************************************************************/
@@ -68,7 +69,7 @@ THE SOFTWARE.
 
     FT_TRACE4(( "DONE_FACE!!!\n" ));
 
-    return FT_Err_Ok;
+    return PCF_Err_Ok;
   }
 
 
@@ -79,7 +80,7 @@ THE SOFTWARE.
                            FT_Int         num_params,
                            FT_Parameter*  params )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error = PCF_Err_Ok;
   
     FT_UNUSED( num_params );
     FT_UNUSED( params );
@@ -90,13 +91,13 @@ THE SOFTWARE.
     if ( error )
       goto Fail;
 
-    return FT_Err_Ok;
+    return PCF_Err_Ok;
 
   Fail: 
     FT_TRACE2(( "[not a valid PCF file]\n" ));
     PCF_Done_Face( face );
 
-    return FT_Err_Unknown_File_Format; /* error */
+    return PCF_Err_Unknown_File_Format; /* error */
   }
 
 
@@ -119,12 +120,12 @@ THE SOFTWARE.
       size->metrics.height    = size->metrics.ascender -
                                 size->metrics.descender;
       
-      return FT_Err_Ok;
+      return PCF_Err_Ok;
     }
     else
     {
       FT_TRACE4(( "size WRONG\n" ));
-      return FT_Err_Invalid_Pixel_Size;
+      return PCF_Err_Invalid_Pixel_Size;
     }
   }
 
@@ -136,7 +137,7 @@ THE SOFTWARE.
                             FT_Int        load_flags )
   { 
     PCF_Face    face   = (PCF_Face)FT_SIZE_FACE( size );
-    FT_Error    error  = FT_Err_Ok;
+    FT_Error    error  = PCF_Err_Ok;
     FT_Memory   memory = FT_FACE(face)->memory;
     FT_Bitmap*  bitmap = &slot->bitmap;
     PCF_Metric  metric;
@@ -151,7 +152,7 @@ THE SOFTWARE.
 
     if ( !face )
     {
-      error = FT_Err_Invalid_Argument;
+      error = PCF_Err_Invalid_Argument;
       goto Exit;
     }
 
@@ -186,7 +187,7 @@ THE SOFTWARE.
       break;
 
     default:
-      return FT_Err_Invalid_File_Format;
+      return PCF_Err_Invalid_File_Format;
     }
 
     /* XXX: to do: are there cases that need repadding the bitmap? */

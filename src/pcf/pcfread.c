@@ -27,13 +27,14 @@ THE SOFTWARE.
 
 #include <ft2build.h>
 
-#include FT_ERRORS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
 
 #include "pcf.h"
 #include "pcfdriver.h"
+
+#include "pcferror.h"
 
 #include <string.h>     /* strlen(), strcpy() */
 
@@ -98,13 +99,13 @@ THE SOFTWARE.
 
     if ( FILE_Seek ( 0 )                   ||
          READ_Fields ( pcf_toc_header, toc ) )
-      return FT_Err_Cannot_Open_Resource;
+      return PCF_Err_Cannot_Open_Resource;
   
     if ( toc->version != PCF_FILE_VERSION )
-      return FT_Err_Invalid_File_Format;
+      return PCF_Err_Invalid_File_Format;
 
     if ( ALLOC( face->toc.tables, toc->count * sizeof ( PCF_TableRec ) ) )
-      return FT_Err_Out_Of_Memory;
+      return PCF_Err_Out_Of_Memory;
 
     tables = face->toc.tables;
     for ( i = 0; i < toc->count; i++ )
@@ -139,7 +140,7 @@ THE SOFTWARE.
 
 #endif
 
-    return FT_Err_Ok;
+    return PCF_Err_Ok;
 
   Exit:
     FREE( face->toc.tables );
@@ -202,13 +203,13 @@ THE SOFTWARE.
                               const FT_Frame_Field*  header, 
                               PCF_Metric             metric )
   {
-    FT_Error  error = FT_Err_Ok;
+    FT_Error  error = PCF_Err_Ok;
   
 
     if ( READ_Fields( header, metric ) )
       return error;
   
-    return FT_Err_Ok;
+    return PCF_Err_Ok;
   }
 
 
@@ -217,7 +218,7 @@ THE SOFTWARE.
                                          PCF_Metric  metric )
   {
     PCF_Compressed_MetricRec  compr_metric;
-    FT_Error                  error = FT_Err_Ok;
+    FT_Error                  error = PCF_Err_Ok;
   
 
     if ( READ_Fields( pcf_compressed_metric_header, &compr_metric ) )
@@ -230,7 +231,7 @@ THE SOFTWARE.
     metric->descent          = (FT_Short)compr_metric.descent - 0x80;
     metric->attributes       = 0;
   
-    return FT_Err_Ok;
+    return PCF_Err_Ok;
   }
 
 
@@ -239,7 +240,7 @@ THE SOFTWARE.
                             FT_ULong    format,
                             PCF_Metric  metric )
   {
-    FT_Error error = FT_Err_Ok;
+    FT_Error error = PCF_Err_Ok;
 
 
     if ( PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
@@ -272,15 +273,15 @@ THE SOFTWARE.
       if ( tables[i].type == type )
       {
         if ( stream->pos > tables[i].offset )
-          return FT_Err_Invalid_Stream_Skip;
+          return PCF_Err_Invalid_Stream_Skip;
         if ( FILE_Skip( tables[i].offset - stream->pos ) )
-          return FT_Err_Invalid_Stream_Skip;
+          return PCF_Err_Invalid_Stream_Skip;
         *sizep   = tables[i].size;  /* unused - to be removed */
         *formatp = tables[i].format;
-        return FT_Err_Ok;
+        return PCF_Err_Ok;
       }
 
-    return FT_Err_Invalid_File_Format;
+    return PCF_Err_Invalid_File_Format;
   }
 
 
@@ -466,7 +467,7 @@ THE SOFTWARE.
     FREE( props );
     FREE( strings );
   
-    return FT_Err_Ok;
+    return PCF_Err_Ok;
  
   Bail:
     FREE( props );
@@ -480,7 +481,7 @@ THE SOFTWARE.
   FT_Error  pcf_get_metrics( FT_Stream  stream,
                              PCF_Face   face )
   { 
-    FT_Error    error    = FT_Err_Ok;
+    FT_Error    error    = PCF_Err_Ok;
     FT_Memory   memory   = FT_FACE(face)->memory;
     FT_ULong    format   = 0;
     FT_ULong    size     = 0;
@@ -502,7 +503,7 @@ THE SOFTWARE.
 
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT )   &&
          !PCF_FORMAT_MATCH( format, PCF_COMPRESSED_METRICS ) )
-      return FT_Err_Invalid_File_Format;
+      return PCF_Err_Invalid_File_Format;
 
     if ( PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
     {
@@ -519,12 +520,12 @@ THE SOFTWARE.
         (void)READ_UShortLE( nmetrics );
     }
     if ( error || nmetrics == -1 )
-      return FT_Err_Invalid_File_Format;
+      return PCF_Err_Invalid_File_Format;
   
     face->nmetrics = nmetrics;
 
     if ( ALLOC( face->metrics, nmetrics * sizeof ( PCF_MetricRec ) ) )
-      return FT_Err_Out_Of_Memory;
+      return PCF_Err_Out_Of_Memory;
 
     metrics = face->metrics;
     for ( i = 0; i < nmetrics; i++ )
@@ -557,7 +558,7 @@ THE SOFTWARE.
   FT_Error  pcf_get_bitmaps( FT_Stream  stream,
                              PCF_Face   face )
   {
-    FT_Error   error  = FT_Err_Ok;
+    FT_Error   error  = PCF_Err_Ok;
     FT_Memory  memory = FT_FACE(face)->memory;
     FT_Long*   offsets;
     FT_Long    bitmapSizes[GLYPHPADOPTIONS];
@@ -580,7 +581,7 @@ THE SOFTWARE.
       return error;
     format = GET_ULongLE();
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
-      return FT_Err_Invalid_File_Format;
+      return PCF_Err_Invalid_File_Format;
   
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )
       nbitmaps  = GET_ULong();
@@ -588,7 +589,7 @@ THE SOFTWARE.
       nbitmaps  = GET_ULongLE();
     FT_Forget_Frame( stream );
     if ( nbitmaps != face->nmetrics )
-      return FT_Err_Invalid_File_Format;
+      return PCF_Err_Invalid_File_Format;
 
     if ( ALLOC( offsets, nbitmaps * sizeof ( FT_ULong ) ) )
       return error;
@@ -647,7 +648,7 @@ THE SOFTWARE.
   FT_Error  pcf_get_encodings( FT_Stream  stream,
                                PCF_Face   face )
   {
-    FT_Error      error   = FT_Err_Ok;
+    FT_Error      error   = PCF_Err_Ok;
     FT_Memory     memory  = FT_FACE(face)->memory;
     FT_ULong      format, size;
     int           firstCol, lastCol;
@@ -671,7 +672,7 @@ THE SOFTWARE.
       return error;
     format = GET_ULongLE();
     if ( !PCF_FORMAT_MATCH( format, PCF_DEFAULT_FORMAT ) )
-      return FT_Err_Invalid_File_Format;
+      return PCF_Err_Invalid_File_Format;
   
     if ( PCF_BYTE_ORDER( format ) == MSBFirst )
     {
@@ -698,7 +699,7 @@ THE SOFTWARE.
     nencoding = ( lastCol - firstCol + 1 ) * ( lastRow - firstRow + 1 );
 
     if ( ALLOC( tmpEncoding, nencoding * sizeof ( PCF_EncodingRec ) ) )
-      return FT_Err_Out_Of_Memory;
+      return PCF_Err_Out_Of_Memory;
   
     error = FT_Access_Frame( stream, 2 * nencoding );
     if ( error )
@@ -799,7 +800,7 @@ THE SOFTWARE.
                            FT_ULong   type )
   {
     FT_ULong   format, size;
-    FT_Error   error = FT_Err_Ok;
+    FT_Error   error = PCF_Err_Ok;
     PCF_Accel  accel = &face->accel;
 
 
@@ -860,7 +861,7 @@ THE SOFTWARE.
   FT_Error  pcf_load_font( FT_Stream  stream,
                            PCF_Face   face )
   {
-    FT_Error   error  = FT_Err_Ok;
+    FT_Error   error  = PCF_Err_Ok;
     FT_Memory  memory = FT_FACE(face)->memory;
     FT_Bool    hasBDFAccelerators;
 
@@ -1033,7 +1034,7 @@ THE SOFTWARE.
               face->charmap.face        = root;
               face->charmap_handle
 
-              return FT_Err_Ok;
+              return PCF_Err_Ok;
             }
 #endif
           }
@@ -1047,11 +1048,11 @@ THE SOFTWARE.
       face->charmap_handle      = &face->charmap;
       root->charmap             = face->charmap_handle;
     }  
-    return FT_Err_Ok;
+    return PCF_Err_Ok;
 
   Bail:
     PCF_Done_Face( face );
-    return FT_Err_Invalid_File_Format;
+    return PCF_Err_Invalid_File_Format;
   }
 
 

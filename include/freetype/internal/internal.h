@@ -36,19 +36,14 @@
 #define FT_INTERNAL_SFNT_H              <freetype/internal/sfnt.h>
 
 #define FT_INTERNAL_TRUETYPE_TYPES_H    <freetype/internal/tttypes.h>
-#define FT_INTERNAL_TRUETYPE_ERRORS_H   <freetype/internal/tterrors.h>
-
-#define FT_INTERNAL_TYPE1_ERRORS_H      <freetype/internal/t1errors.h>
 #define FT_INTERNAL_TYPE1_TYPES_H       <freetype/internal/t1types.h>
-
-#define FT_INTERNAL_CFF_ERRORS_H        <freetype/internal/cfferrs.h>
 #define FT_INTERNAL_CFF_TYPES_H         <freetype/internal/cfftypes.h>
+#define FT_INTERNAL_FNT_TYPES_H         <freetype/internal/fnttypes.h>
 
 #define FT_INTERNAL_POSTSCRIPT_NAMES_H  <freetype/internal/psnames.h>
 #define FT_INTERNAL_POSTSCRIPT_AUX_H    <freetype/internal/psaux.h>
 
 #define FT_INTERNAL_AUTOHINT_H          <freetype/internal/autohint.h>
-#define FT_INTERNAL_FNT_TYPES_H         <freetype/internal/fnttypes.h>
 
 
 /* END */

@@ -39,7 +39,8 @@ AUTO_DRV_SRC := $(AUTO_DIR_)ahangles.c  \
 #
 AUTO_DRV_H := $(AUTO_DRV_SRC:%c=%h)  \
               $(AUTO_DIR_)ahloader.h \
-              $(AUTO_DIR_)ahtypes.h
+              $(AUTO_DIR_)ahtypes.h \
+              $(AUTO_DIR_)aherrors.h
 
 
 # AUTO driver object(s)

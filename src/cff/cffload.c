@@ -21,11 +21,12 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
-#include FT_INTERNAL_CFF_ERRORS_H
 #include FT_TRUETYPE_TAGS_H
 
 #include "cffload.h"
 #include "cffparse.h"
+
+#include "cfferrs.h"
 
 
   /*************************************************************************/

@@ -23,7 +23,8 @@
 #include FT_INTERNAL_POSTSCRIPT_NAMES_H
 #include FT_TRUETYPE_IDS_H
 #include FT_TRUETYPE_TAGS_H
-#include FT_INTERNAL_TRUETYPE_ERRORS_H
+
+#include "sferrors.h"
 
 
   /*************************************************************************/
@@ -199,7 +200,7 @@
       sfnt = (SFNT_Interface*)FT_Get_Module_Interface( library, "sfnt" );
       if ( !sfnt )
       {
-        error = TT_Err_Invalid_File_Format;
+        error = SFNT_Err_Invalid_File_Format;
         goto Exit;
       }
 
@@ -237,7 +238,7 @@
 
 #undef  LOAD_
 #define LOAD_( x )  ( ( error = sfnt->load_##x( face, stream ) ) \
-                      != TT_Err_Ok )
+                      != SFNT_Err_Ok )
 
 
   FT_LOCAL_DEF
@@ -327,8 +328,8 @@
     if ( sfnt->load_sbits && LOAD_( sbits ) )
     {
       /* return an error if this font file has no outlines */
-      if ( error == TT_Err_Table_Missing && has_outline )
-        error = TT_Err_Ok;
+      if ( error == SFNT_Err_Table_Missing && has_outline )
+        error = SFNT_Err_Ok;
       else
         goto Exit;
     }
@@ -341,7 +342,7 @@
       goto Exit;
 
 #ifdef TT_CONFIG_OPTION_EXTEND_ENGINE
-    if ( ( error = TT_Extension_Create( face ) ) != TT_Err_Ok )
+    if ( ( error = TT_Extension_Create( face ) ) != SFNT_Err_Ok )
       goto Exit;
 #endif
 

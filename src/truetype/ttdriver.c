@@ -21,8 +21,11 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include FT_TRUETYPE_IDS_H
+
 #include "ttdriver.h"
 #include "ttgload.h"
+
+#include "tterrors.h"
 
 
   /*************************************************************************/
@@ -298,7 +301,7 @@
 
 
     if ( !slot )
-      return TT_Err_Invalid_Glyph_Handle;
+      return TT_Err_Invalid_Slot_Handle;
 
     /* check whether we want a scaled outline or bitmap */
     if ( !size )

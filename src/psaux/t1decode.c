@@ -18,10 +18,12 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_TYPE1_ERRORS_H
 #include FT_OUTLINE_H
+
 #include "t1decode.h"
 #include "psobjs.h"
+
+#include "psauxerr.h"
 
 
   /*************************************************************************/
@@ -193,7 +195,7 @@
     {
       FT_ERROR(( "t1operator_seac:" ));
       FT_ERROR(( " glyph names table not available in this font!\n" ));
-      return T1_Err_Syntax_Error;
+      return PSaux_Err_Syntax_Error;
     }
 
     bchar_index = t1_lookup_glyph_by_stdcharcode( decoder, bchar );
@@ -203,7 +205,7 @@
     {
       FT_ERROR(( "t1operator_seac:" ));
       FT_ERROR(( " invalid seac character code arguments\n" ));
-      return T1_Err_Syntax_Error;
+      return PSaux_Err_Syntax_Error;
     }
 
     /* if we are trying to load a composite glyph, do not load the */
@@ -344,7 +346,7 @@
     limit = zone->limit  = charstring_base + charstring_len;
     ip    = zone->cursor = zone->base;
 
-    error   = T1_Err_Ok;
+    error   = PSaux_Err_Ok;
     outline = builder->current;
 
     x = builder->pos_x;
@@ -713,7 +715,7 @@
 
           /* return now! */
           FT_TRACE4(( "\n\n" ));
-          return T1_Err_Ok;
+          return PSaux_Err_Ok;
 
         case op_hsbw:
           FT_TRACE4(( " hsbw" ));
@@ -729,7 +731,7 @@
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it; so exit immediately                           */
           if ( builder->metrics_only )
-            return T1_Err_Ok;
+            return PSaux_Err_Ok;
 
           break;
 
@@ -753,7 +755,7 @@
           /* the glyph's metrics (lsb + advance width), not load the   */
           /* rest of it; so exit immediately                           */
           if ( builder->metrics_only )
-            return T1_Err_Ok;
+            return PSaux_Err_Ok;
 
           break;
 
@@ -1014,10 +1016,10 @@
     return error;
 
   Syntax_Error:
-    return T1_Err_Syntax_Error;
+    return PSaux_Err_Syntax_Error;
 
   Stack_Underflow:
-    return T1_Err_Stack_Underflow;
+    return PSaux_Err_Stack_Underflow;
 
   Memory_Error:
     return builder->error;
@@ -1054,7 +1056,7 @@
       {
         FT_ERROR(( "T1_Decoder_Init: " ));
         FT_ERROR(( "the `psnames' module is not available\n" ));
-        return T1_Err_Unimplemented_Feature;
+        return PSaux_Err_Unimplemented_Feature;
       }
 
       decoder->psnames = psnames;

@@ -17,12 +17,14 @@
 
 
 #include <ft2build.h>
-#include FT_ERRORS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_FNT_TYPES_H
+
 #include "winfnt.h"
+
+#include "fnterrs.h"
 
 
   /*************************************************************************/
@@ -139,14 +141,14 @@
          header->version != 0x300 )
     {
       FT_TRACE2(( "[not a valid FNT file]\n" ));
-      error = FT_Err_Unknown_File_Format;
+      error = FNT_Err_Unknown_File_Format;
       goto Exit;
     }
 
     if ( header->file_type & 1 )
     {
       FT_TRACE2(( "[can't handle vector FNT fonts]\n" ));
-      error = FT_Err_Unknown_File_Format;
+      error = FNT_Err_Unknown_File_Format;
       goto Exit;
     }
 
@@ -198,7 +200,7 @@
          READ_Fields( winmz_header_fields, &mz_header ) )
       goto Exit;
 
-    error = FT_Err_Unknown_File_Format;
+    error = FNT_Err_Unknown_File_Format;
     if ( mz_header.magic == WINFNT_MZ_MAGIC )
     {
       /* yes, now look for a NE header in the file */
@@ -209,7 +211,7 @@
            READ_Fields( winne_header_fields, &ne_header ) )
         goto Exit;
 
-      error = FT_Err_Unknown_File_Format;
+      error = FNT_Err_Unknown_File_Format;
       if ( ne_header.magic == WINFNT_NE_MAGIC )
       {
         /* good, now look in the resource table for each FNT resource */
@@ -254,7 +256,7 @@
         if ( !font_count || !font_offset )
         {
           FT_TRACE2(( "this file doesn't contain any FNT resources!\n" ));
-          error = FT_Err_Unknown_File_Format;
+          error = FNT_Err_Unknown_File_Format;
           goto Exit;
         }
 
@@ -464,7 +466,7 @@
       }
     }
 
-    return ( size->font ? FT_Err_Ok : FT_Err_Invalid_Pixel_Size );
+    return ( size->font ? FNT_Err_Ok : FNT_Err_Invalid_Pixel_Size );
   }
 
 
@@ -513,7 +515,7 @@
 
     if ( !font )
     {
-      error = FT_Err_Invalid_Argument;
+      error = FNT_Err_Invalid_Argument;
       goto Exit;
     }
 

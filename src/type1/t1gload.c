@@ -23,6 +23,8 @@
 #include FT_OUTLINE_H
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 
+#include "t1errors.h"
+
 #include <string.h>     /* for strcmp() */
 
 

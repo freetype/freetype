@@ -23,6 +23,8 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_OUTLINE_H
 
+#include "ciderrs.h"
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -175,7 +177,7 @@
 
     *max_advance = decoder.builder.advance.x;
 
-    return T1_Err_Ok;
+    return CID_Err_Ok;
   }
 
 

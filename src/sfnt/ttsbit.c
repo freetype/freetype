@@ -18,10 +18,11 @@
 
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
-#include FT_INTERNAL_TRUETYPE_ERRORS_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
 #include "ttsbit.h"
+
+#include "sferrors.h"
 
 
   /*************************************************************************/
@@ -363,7 +364,7 @@
       break;
 
     default:
-      error = TT_Err_Invalid_File_Format;
+      error = SFNT_Err_Invalid_File_Format;
     }
 
   Exit:
@@ -469,7 +470,7 @@
          num_strikes >= 0x10000L    )
     {
       FT_ERROR(( "TT_Load_SBit_Strikes: invalid table version!\n" ));
-      error = TT_Err_Invalid_File_Format;
+      error = SFNT_Err_Invalid_File_Format;
 
       goto Exit;
     }
@@ -630,7 +631,7 @@
 
     if ( x_ppem < 0 || x_ppem > 255 ||
          y_ppem < 1 || y_ppem > 255 )
-      return TT_Err_Invalid_PPem;
+      return SFNT_Err_Invalid_PPem;
 
     for ( i = 0; i < face->num_sbit_strikes; i++ )
     {
@@ -639,11 +640,11 @@
              ( face->sbit_strikes[i].x_ppem == x_ppem ) ) )
       {
         *astrike_index = i;
-        return TT_Err_Ok;
+        return SFNT_Err_Ok;
       }
     }
 
-    return TT_Err_Invalid_PPem;
+    return SFNT_Err_Invalid_PPem;
   }
 
 
@@ -746,7 +747,7 @@
     *arange        = 0;
     *aglyph_offset = 0;
 
-    return TT_Err_Invalid_Argument;
+    return SFNT_Err_Invalid_Argument;
   }
 
 
@@ -775,7 +776,7 @@
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.  Returns                    */
-  /*    TT_Err_Invalid_Argument if no sbit exists for the requested glyph. */
+  /*    SFNT_Err_Invalid_Argument if no sbit exists for the requested glyph. */
   /*                                                                       */
   static
   FT_Error  Find_SBit_Image( TT_Face           face,
@@ -802,7 +803,7 @@
 
     *astrike = strike;
 
-    return TT_Err_Ok;
+    return SFNT_Err_Ok;
 
   Fail:
     /* no embedded bitmap for this glyph in face */
@@ -810,7 +811,7 @@
     *astrike       = 0;
     *aglyph_offset = 0;
 
-    return TT_Err_Invalid_Argument;
+    return SFNT_Err_Invalid_Argument;
   }
 
 
@@ -846,7 +847,7 @@
                                TT_SBit_Range*    range,
                                TT_SBit_Metrics*  metrics )
   {
-    FT_Error  error = TT_Err_Ok;
+    FT_Error  error = SFNT_Err_Ok;
 
 
     switch ( range->image_format )
@@ -905,7 +906,7 @@
       if ( range->index_format == 2 || range->index_format == 5 )
         *metrics = range->metrics;
       else
-        return TT_Err_Invalid_File_Format;
+        return SFNT_Err_Invalid_File_Format;
    }
 
   Exit:
@@ -1134,7 +1135,7 @@
     if ( x_offset < 0 || x_offset + metrics->width  > map->width ||
          y_offset < 0 || y_offset + metrics->height > map->rows  )
     {
-      error = TT_Err_Invalid_Argument;
+      error = SFNT_Err_Invalid_Argument;
 
       goto Exit;
     }
@@ -1177,7 +1178,7 @@
         break;
 
       default:  /* invalid format */
-        return TT_Err_Invalid_File_Format;
+        return SFNT_Err_Invalid_File_Format;
       }
 
       /* Now read data and draw glyph into target pixmap       */
@@ -1256,7 +1257,7 @@
         break;
 
       default:
-        return TT_Err_Invalid_File_Format;
+        return SFNT_Err_Invalid_File_Format;
       }
 
       size = map->rows * map->pitch;
@@ -1287,7 +1288,7 @@
       break;
 
     default: /* invalid image format */
-      return TT_Err_Invalid_File_Format;
+      return SFNT_Err_Invalid_File_Format;
     }
 
     /* All right, we have a compound format.  First of all, read */

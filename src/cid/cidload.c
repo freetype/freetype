@@ -21,8 +21,10 @@
 #include FT_CONFIG_CONFIG_H
 #include FT_MULTIPLE_MASTERS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
-#include FT_INTERNAL_TYPE1_ERRORS_H
+
 #include "cidload.h"
+
+#include "ciderrs.h"
 
 #include <stdio.h>
 #include <ctype.h>  /* for isspace(), isalnum() */
@@ -125,7 +127,7 @@
         {
           FT_ERROR(( "cid_load_keyword: invalid use of `%s'!\n",
                      keyword->ident ));
-          error = T1_Err_Syntax_Error;
+          error = CID_Err_Syntax_Error;
           goto Exit;
         }
 
@@ -170,7 +172,7 @@
     bbox->xMax = FT_RoundFix( temp[2] );
     bbox->yMax = FT_RoundFix( temp[3] );
 
-    return T1_Err_Ok;       /* this is a callback function; */
+    return CID_Err_Ok;       /* this is a callback function; */
                             /* we must return an error code */
   }
 
@@ -224,7 +226,7 @@
       offset->y  = temp[5] >> 16;
     }
 
-    return T1_Err_Ok;       /* this is a callback function; */
+    return CID_Err_Ok;       /* this is a callback function; */
                             /* we must return an error code */
   }
 
@@ -235,7 +237,7 @@
   {
     CID_Info*  cid    = &face->cid;
     FT_Memory  memory = face->root.memory;
-    FT_Error   error  = T1_Err_Ok;
+    FT_Error   error  = CID_Err_Ok;
     FT_Long    num_dicts;
 
 
@@ -271,7 +273,7 @@
   const T1_Field  cid_field_records[] =
   {
 
-#include "cidtokens.h"
+#include "cidtoken.h"
 
     T1_FIELD_CALLBACK( "FontBBox", parse_font_bbox )
     T1_FIELD_CALLBACK( "FDArray", parse_fd_array )
