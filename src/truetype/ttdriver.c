@@ -193,6 +193,7 @@
     FT_Size_Metrics*  metrics  = &size->root.metrics;
     FT_Size_Metrics*  metrics2 = &size->metrics;
     TT_Face           face     = (TT_Face)size->root.face;
+    FT_Long           dim_x, dim_y;
 
 
     *metrics2 = *metrics;
@@ -203,19 +204,25 @@
     /*                                                                */
     if ( ( face->header.Flags & 8 ) != 0 )
     {
-      FT_Long  dim_x, dim_y;
-
      /* we need to use rounding in the following computations. Otherwise,
       * the resulting hinted outlines will be very slightly distorted
       */
-      dim_x = ( char_width  * horz_resolution + 36 ) / 72;
-      dim_y = ( char_height * vert_resolution + 36 ) / 72;
-
-      metrics2->x_ppem  = (FT_UShort)( dim_x >> 6 );
-      metrics2->y_ppem  = (FT_UShort)( dim_y >> 6 );
-      metrics2->x_scale = FT_DivFix( dim_x, face->root.units_per_EM );
-      metrics2->y_scale = FT_DivFix( dim_y, face->root.units_per_EM );
+      dim_x = ( ( ( char_width  * horz_resolution ) / 72 ) + 32 ) & -64;
+      dim_y = ( ( ( char_height * vert_resolution ) / 72 ) + 32 ) & -64;
     }
+    else
+    {
+      dim_x = ( ( char_width  * horz_resolution + 36 ) / 72 );
+      dim_y = ( ( char_height * vert_resolution + 36 ) / 72 );
+    }
+
+    /* we only modify "metrics2", not "metrics", so these changes have */
+    /* no effect on the result of the auto-hinter when it is used      */
+    /*                                                                 */
+    metrics2->x_ppem  = (FT_UShort)( dim_x >> 6 );
+    metrics2->y_ppem  = (FT_UShort)( dim_y >> 6 );
+    metrics2->x_scale = FT_DivFix( dim_x, face->root.units_per_EM );
+    metrics2->y_scale = FT_DivFix( dim_y, face->root.units_per_EM );
 
     size->ttmetrics.valid = FALSE;
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
