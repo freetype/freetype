@@ -2370,7 +2370,7 @@
   EXPORT_DEF
   FT_Error  FT_Set_Raster_Mode( FT_Library      library,
                                 FT_Glyph_Format format,
-                                const char*     mode,
+                                unsigned long   mode,
                                 void*           args );
 
 

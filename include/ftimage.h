@@ -857,14 +857,14 @@
   *
   * <Input>
   *    raster    :: handle to new raster object
-  *    mode      :: an C string naming the mode or property to change
+  *    mode      :: a 4-byte tag used to name the mode or property           
   *    args      :: a pointer to the new mode/property to use
   *
   **************************************************************************/
 
-  typedef int (*FT_Raster_Set_Mode_Func)( FT_Raster    raster,
-                                          const char*  mode,
-                                          void*        args );
+  typedef int (*FT_Raster_Set_Mode_Func)( FT_Raster      raster,
+                                          unsigned long  mode,
+                                          void*          args );
 
  /**************************************************************************
   *
