@@ -677,8 +677,8 @@ THE SOFTWARE.
       bitmap->pixel_mode = FT_PIXEL_MODE_MONO;
       bitmap->pitch      = glyph.bpr;
 
-     /* note: we don't allocate a new array to hold the bitmap, we */
-     /*       can simply point to it                               */
+      /* note: we don't allocate a new array to hold the bitmap; */
+      /*       we can simply point to it                         */
       ft_glyphslot_set_bitmap( slot, glyph.bitmap );
     }
     else

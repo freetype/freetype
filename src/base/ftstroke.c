@@ -24,6 +24,9 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
 
+
+  /* documentation is in ftstroke.h */
+
   FT_EXPORT_DEF( FT_StrokerBorder )
   FT_Outline_GetInsideBorder( FT_Outline*  outline )
   {
@@ -34,6 +37,8 @@
                                         : FT_STROKER_BORDER_LEFT ;
   }
 
+
+  /* documentation is in ftstroke.h */
 
   FT_EXPORT_DEF( FT_StrokerBorder )
   FT_Outline_GetOutsideBorder( FT_Outline*  outline )
@@ -708,6 +713,8 @@
   } FT_StrokerRec;
 
 
+  /* documentation is in ftstroke.h */
+
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_New( FT_Memory    memory,
                   FT_Stroker  *astroker )
@@ -728,6 +735,8 @@
   }
 
 
+  /* documentation is in ftstroke.h */
+
   FT_EXPORT_DEF( void )
   FT_Stroker_Set( FT_Stroker           stroker,
                   FT_Fixed             radius,
@@ -744,6 +753,8 @@
   }
 
 
+  /* documentation is in ftstroke.h */
+
   FT_EXPORT_DEF( void )
   FT_Stroker_Rewind( FT_Stroker  stroker )
   {
@@ -754,6 +765,8 @@
     }
   }
 
+
+  /* documentation is in ftstroke.h */
 
   FT_EXPORT_DEF( void )
   FT_Stroker_Done( FT_Stroker  stroker )
@@ -1086,6 +1099,8 @@
   }
 
 
+  /* documentation is in ftstroke.h */
+
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_LineTo( FT_Stroker  stroker,
                      FT_Vector*  to )
@@ -1146,6 +1161,8 @@
     return error;
   }
 
+
+  /* documentation is in ftstroke.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_ConicTo( FT_Stroker  stroker,
@@ -1242,6 +1259,8 @@
     return error;
   }
 
+
+  /* documentation is in ftstroke.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_CubicTo( FT_Stroker  stroker,
@@ -1351,6 +1370,8 @@
   }
 
 
+  /* documentation is in ftstroke.h */
+
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_BeginSubPath( FT_Stroker  stroker,
                            FT_Vector*  to,
@@ -1432,6 +1453,8 @@
     return error;
   }
 
+
+  /* documentation is in ftstroke.h */
 
   /* there's a lot of magic in this function! */
   FT_EXPORT_DEF( FT_Error )
@@ -1515,6 +1538,8 @@
   }
 
 
+  /* documentation is in ftstroke.h */
+
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_GetBorderCounts( FT_Stroker        stroker,
                               FT_StrokerBorder  border,
@@ -1543,6 +1568,8 @@
     return error;
   }
 
+
+  /* documentation is in ftstroke.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Stroker_GetCounts( FT_Stroker  stroker,
@@ -1574,6 +1601,8 @@
   }
 
 
+  /* documentation is in ftstroke.h */
+
   FT_EXPORT_DEF( void )
   FT_Stroker_ExportBorder( FT_Stroker        stroker,
                            FT_StrokerBorder  border,
@@ -1591,6 +1620,8 @@
   }
 
 
+  /* documentation is in ftstroke.h */
+
   FT_EXPORT_DEF( void )
   FT_Stroker_Export( FT_Stroker   stroker,
                      FT_Outline*  outline )
@@ -1599,6 +1630,8 @@
     FT_Stroker_ExportBorder( stroker, FT_STROKER_BORDER_RIGHT, outline );
   }
 
+
+  /* documentation is in ftstroke.h */
 
   /*
    *  The following is very similar to FT_Outline_Decompose, except
@@ -1809,6 +1842,8 @@
   extern const FT_Glyph_Class  ft_outline_glyph_class;
 
 
+  /* documentation is in ftstroke.h */
+
   FT_EXPORT_DEF( FT_Error )
   FT_Glyph_Stroke( FT_Glyph    *pglyph,
                    FT_Stroker   stroker,
@@ -1878,6 +1913,8 @@
     return error;
   }
 
+
+  /* documentation is in ftstroke.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Glyph_StrokeBorder( FT_Glyph    *pglyph,

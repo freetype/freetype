@@ -77,6 +77,8 @@
   }
 
 
+  /* documentation is in ftmemory.h */
+
   FT_BASE_DEF( FT_Error )
   FT_QAlloc( FT_Memory  memory,
              FT_Long    size,
@@ -148,6 +150,8 @@
     return FT_Err_Out_Of_Memory;
   }
 
+
+  /* documentation is in ftmemory.h */
 
   FT_BASE_DEF( FT_Error )
   FT_QRealloc( FT_Memory  memory,

@@ -2543,6 +2543,8 @@
   }
 
 
+  /* documentation is in tttables.h */
+
   FT_EXPORT_DEF( FT_ULong )
   FT_Get_CMap_Language_ID( FT_CharMap  charmap )
   {
@@ -2564,6 +2566,8 @@
     return cmap_info.language;
   }
 
+
+  /* documentation is in ftsizes.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Activate_Size( FT_Size  size )
