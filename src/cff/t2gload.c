@@ -464,7 +464,7 @@
                          FT_Pos       x,
                          FT_Pos       y )
   {
-    FT_Error  error;
+    FT_Error  error = 0;
     
     /* test whether we are building a new contour */
     if ( !builder->path_begun )
