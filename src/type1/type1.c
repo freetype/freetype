@@ -28,16 +28,6 @@
 /***************************************************************************/
 
 
-
-#if 0
-#define FT_MAKE_OPTION_SINGLE_OBJECT
-#include <t1driver.c>   /* driver interface  */
-#include <t1objs.c>     /* object manager    */
-#include <t1load.c>     /* table loader      */
-#include <t1hint.c>     /* hinter            */
-#include <t1gload.c>    /* glyph loader      */
-#endif
-
 #include <t1driver.c>
 #include <t1objs.c>
 #include <t1load.c>     /* table loader      */

@@ -55,8 +55,8 @@
   /*    time).                                                             */
   /*                                                                       */
   static
-  void*  Get_Interface)( FT_Driver         driver,
-                         const FT_String*  interface )
+  void*  Get_Interface( FT_Driver         driver,
+                        const FT_String*  interface )
   {
     if ( strcmp( (const char*)interface, "attach_file" ) == 0 )
       return T1_Read_AFM;
@@ -140,35 +140,11 @@
                             T1_UInt      horz_resolution,
                             T1_UInt      vert_resolution )
   {
-    FT_Size_Metrics*  metrics;
-    T1_Face           face;
-  
-    if (!size)
-      return T1_Err_Invalid_Size_Handle;
-    
-    if ( char_width  < 1*64 ) char_width = 1*64;
-    if ( char_height < 1*64 ) char_height = 1*64;
+    UNUSED(char_width);
+    UNUSED(horz_resolution);
+    UNUSED(vert_resolution);
 
-    metrics = &size->root.metrics;
-    face    = (T1_Face)size->root.face;
-    
-    metrics->x_ppem = ( char_width  * horz_resolution + 36 )/72;
-    metrics->y_ppem = ( char_height * vert_resolution + 36 )/72;
-    
-    metrics->x_ppem = ( metrics->x_ppem + 32 ) & -64;
-    metrics->y_ppem = ( metrics->y_ppem + 32 ) & -64;
-    
-    metrics->x_scale = FT_MulDiv( metrics->x_ppem, 0x10000,
-                                  face->root.units_per_EM );
-    
-    metrics->y_scale = FT_MulDiv( metrics->y_ppem, 0x10000,
-                                  face->root.units_per_EM );
-
-    metrics->x_ppem >>= 6;
-    metrics->y_ppem >>= 6;
-    
     size->valid = FALSE;
-
     return T1_Reset_Size( size );
   }
 
@@ -203,32 +179,12 @@
                              T1_Int      pixel_width,
                              T1_Int      pixel_height )
   {
-    FT_Size_Metrics*   metrics;
-    T1_Face            face;
-  
-    if (!size)
-      return T1_Err_Invalid_Size_Handle;
-    
-    if ( pixel_width  < 1 ) pixel_width = 1;
-    if ( pixel_height < 1 ) pixel_height = 1;
-  
-    metrics = &size->root.metrics;
-    face    = (T1_Face)size->root.face;
-  
-    metrics->x_ppem    = pixel_width;
-    metrics->y_ppem    = pixel_height;
-  
-    metrics->x_scale = FT_MulDiv( metrics->x_ppem * 64,
-                                  0x10000, face->root.units_per_EM );
-  
-    metrics->y_scale = FT_MulDiv( metrics->y_ppem * 64,
-                                  0x10000, face->root.units_per_EM );
-  
-    size->valid = 0;
-  
+    UNUSED(pixel_width);
+    UNUSED(pixel_height);
+
+    size->valid = FALSE; 
     return T1_Reset_Size(size);
   }
-
 
   /*************************************************************************/
   /*                                                                       */

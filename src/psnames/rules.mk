@@ -76,11 +76,9 @@ $(PSNAMES_DRV_OBJ_S): $(BASE_H) $(SHARED_H) $(PSNAMES_DRV_H) $(PSNAMES_DRV_SRC) 
 #
 #   All objects are recompiled if any of the header files is changed
 #
-$(OBJ_)tt%.$O: $(PSNAMES_DIR_)tt%.c $(BASE_H) $(SHARED_H) $(PSNAMES_DRV_H)
+$(OBJ_)ps%.$O: $(PSNAMES_DIR_)ps%.c $(BASE_H) $(SHARED_H) $(PSNAMES_DRV_H)
 	$(PSNAMES_COMPILE) $T$@ $<
 
-$(OBJ_)sf%.$O: $(PSNAMES_DIR_)sf%.c $(BASE_H) $(SHARED_H) $(PSNAMES_DRV_H)
-	$(PSNAMES_COMPILE) $T$@ $<
 
 # update main driver object lists
 #

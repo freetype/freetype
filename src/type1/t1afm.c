@@ -142,7 +142,7 @@
       goto Exit;
     
     /* allocate the pairs */
-    if ( ALLOC(       afm, sizeof(*afm )                     ||
+    if ( ALLOC(       afm, sizeof(*afm ) )                   ||
          ALLOC_ARRAY( afm->kern_pairs, count, T1_Kern_Pair ) )
       goto Exit;
     
@@ -151,7 +151,7 @@
     afm->num_pairs = count;
     
     /* save in face object */
-    ((T1_Face*)t1_face)->afm_data = afm;
+    ((T1_Face)t1_face)->afm_data = afm;
 
     for ( p = start; p < limit-3; p++ )
     {

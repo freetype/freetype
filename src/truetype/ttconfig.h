@@ -37,7 +37,7 @@
   /* By undefining this, you'll only compile the code necessary to load    */
   /* TrueType glyphs without hinting..                                     */
   /*                                                                       */
-#undef  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+#define  TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
   /*************************************************************************/
   /*                                                                       */
@@ -57,7 +57,7 @@
   /* Define TT_CONFIG_OPTION_EMBEDDED_BITMAPS if you want to support       */
   /* embedded bitmaps in the TrueType/OpenType driver.                     */
   /*                                                                       */
-#undef  TT_CONFIG_OPTION_EMBEDDED_BITMAPS
+#define  TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
 
   /*************************************************************************/
@@ -66,7 +66,7 @@
   /* load and enumerate the glyph Postscript names in a TrueType or        */
   /* OpenType file.                                                        */
   /*                                                                       */
-#undef  TT_CONFIG_OPTION_POSTSCRIPT_NAMES
+#define  TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
   /* The maximum number of sub-glyphs in a TrueType composite glyph */
 #define TT_MAX_SUBGLYPHS  32

@@ -1421,10 +1421,9 @@
     glyph->root.outline.n_points   = 0;
     glyph->root.outline.n_contours = 0;
 
-    hinting = ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
-              ( load_flags & FT_LOAD_NO_HINTING ) == 0;
-
     glyph->root.format = ft_glyph_format_none;
+
+    hinting = 0;
 
 #ifndef T1_CONFIG_OPTION_DISABLE_HINTER
     /*****************************************************************/
@@ -1441,6 +1440,8 @@
     /*    Then, a second pass is performed to load the outline       */
     /*    points as well as hint/scale them correctly.               */
     /*                                                               */
+
+    hinting = (load_flags & (FT_LOAD_NO_SCALE|FT_LOAD_NO_HINTING)) == 0;
 
     if ( hinting )
     {

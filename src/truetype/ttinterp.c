@@ -20,7 +20,11 @@
 #include <ftsystem.h>
 #include <ftcalc.h>
 
+#include <ttobjs.h>
 #include <ttinterp.h>
+
+#ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+
 
 #define TT_MULFIX   FT_MulFix
 #define TT_MULDIV   FT_MulDiv
@@ -7964,5 +7968,6 @@
 
 #endif /* DEBUG_INTERPRETER */
 
+#endif /* TT_CONFIG_OPTION_BYTECODE_INTERPRETER */
 
 /* END */
