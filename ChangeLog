@@ -1,4 +1,14 @@
-2002-01-31  David Turner  <david@freetype.org>
+2003-02-13  Graham Asher  <graham.asher@btinternet.com>
+
+	* include/freetype/ftincrem.h, src/cff/cffgload.c, src/cid/cidgload.c,
+	src/truetype/ttgload.c, src/type1/t1gload.c
+	[FT_CONFIG_OPTION_INCREMENTAL]: I have changed the incremental loading
+	interface in a way that makes it simpler and allows glyph metrics to
+	be changed (e.g., by adding a constant, as required by CFF fonts)
+	rather than just overridden. This was required to make the GhsotScript-
+	to-FreeType bridge work.
+
+2003-01-31  David Turner  <david@freetype.org>
 
     * docs/CHANGES, docs/VERSION.DLL, docs/TODO: updating documentation for
     the 2.1.4 release
