@@ -352,7 +352,7 @@
                     CFF_GlyphSlot  slot,
                     FT_Bool        hinting )
   {
-    CFF_Font*  cff = (CFF_Font*)face->extra.data;
+    CFF_Font  cff = (CFF_Font)face->extra.data;
 
 
     /* clear everything */
@@ -373,8 +373,8 @@
   CFF_Prepare_Decoder( CFF_Decoder*  decoder,
                        FT_UInt       glyph_index )
   {
-    CFF_Font*     cff = (CFF_Font*)decoder->builder.face->extra.data;
-    CFF_SubFont*  sub = &cff->top_font;
+    CFF_Font     cff = (CFF_Font)decoder->builder.face->extra.data;
+    CFF_SubFont  sub = &cff->top_font;
 
 
     /* manage CID fonts */
@@ -532,7 +532,7 @@
 
 
   static FT_Int
-  cff_lookup_glyph_by_stdcharcode( CFF_Font*  cff,
+  cff_lookup_glyph_by_stdcharcode( CFF_Font  cff,
                                    FT_Int     charcode )
   {
     FT_UInt    n;
@@ -567,7 +567,7 @@
     FT_Int       bchar_index, achar_index, n_base_points;
     FT_Outline*  base = decoder->builder.base;
     TT_Face      face = decoder->builder.face;
-    CFF_Font*    cff  = (CFF_Font*)(face->extra.data);
+    CFF_Font    cff  = (CFF_Font)(face->extra.data);
     FT_Vector    left_bearing, advance;
     FT_Byte*     charstring;
     FT_ULong     charstring_len;
@@ -2115,7 +2115,7 @@
     FT_Error     error = 0;
     CFF_Decoder  decoder;
     FT_Int       glyph_index;
-    CFF_Font*    cff = (CFF_Font*)face->other;
+    CFF_Font    cff = (CFF_Font)face->other;
 
 
     *max_advance = 0;
@@ -2185,7 +2185,7 @@
     CFF_Decoder  decoder;
     TT_Face      face = (TT_Face)glyph->root.face;
     FT_Bool      hinting;
-    CFF_Font*    cff = (CFF_Font*)face->extra.data;
+    CFF_Font    cff = (CFF_Font)face->extra.data;
 
     FT_Matrix    font_matrix;
     FT_Vector    font_offset;

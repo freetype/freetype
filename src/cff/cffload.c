@@ -1357,7 +1357,7 @@
 
 
   static void
-  CFF_Done_FD_Select( CFF_FD_Select*  select,
+  CFF_Done_FD_Select( CFF_FDSelect  select,
                       FT_Stream       stream )
   {
     if ( select->data )
@@ -1370,7 +1370,7 @@
 
 
   static FT_Error
-  CFF_Load_FD_Select( CFF_FD_Select*  select,
+  CFF_Load_FD_Select( CFF_FDSelect  select,
                       FT_UInt         num_glyphs,
                       FT_Stream       stream,
                       FT_ULong        offset )
@@ -1414,7 +1414,7 @@
 
 
   FT_LOCAL_DEF( FT_Byte )
-  CFF_Get_FD( CFF_FD_Select*  select,
+  CFF_Get_FD( CFF_FDSelect  select,
               FT_UInt         glyph_index )
   {
     FT_Byte  fd = 0;
@@ -1500,7 +1500,7 @@
 
 
   static void
-  CFF_Done_Charset( CFF_Charset*  charset,
+  CFF_Done_Charset( CFF_Charset  charset,
                     FT_Stream     stream )
   {
     FT_Memory  memory = stream->memory;
@@ -1514,7 +1514,7 @@
 
 
   static FT_Error
-  CFF_Load_Charset( CFF_Charset*  charset,
+  CFF_Load_Charset( CFF_Charset  charset,
                     FT_UInt       num_glyphs,
                     FT_Stream     stream,
                     FT_ULong      base_offset,
@@ -1694,7 +1694,7 @@
 
   static FT_Error
   CFF_Load_Encoding( CFF_Encoding  encoding,
-                     CFF_Charset*   charset,
+                     CFF_Charset   charset,
                      FT_UInt        num_glyphs,
                      FT_Stream      stream,
                      FT_ULong       base_offset,
@@ -1957,7 +1957,7 @@
 
 
   static FT_Error
-  CFF_Load_SubFont( CFF_SubFont*  font,
+  CFF_Load_SubFont( CFF_SubFont  font,
                     CFF_Index     idx,
                     FT_UInt       font_index,
                     FT_Stream     stream,
@@ -1967,7 +1967,7 @@
     CFF_Parser      parser;
     FT_Byte*        dict;
     FT_ULong        dict_len;
-    CFF_Font_Dict*  top  = &font->font_dict;
+    CFF_FontRecDict  top  = &font->font_dict;
     CFF_Private    priv = &font->private_dict;
 
 
@@ -2046,7 +2046,7 @@
 
   static void
   CFF_Done_SubFont( FT_Memory     memory,
-                    CFF_SubFont*  subfont )
+                    CFF_SubFont  subfont )
   {
     if ( subfont )
     {
@@ -2059,12 +2059,12 @@
   FT_LOCAL_DEF( FT_Error )
   CFF_Load_Font( FT_Stream  stream,
                  FT_Int     face_index,
-                 CFF_Font*  font )
+                 CFF_Font  font )
   {
     static const FT_Frame_Field  cff_header_fields[] =
     {
 #undef  FT_STRUCTURE
-#define FT_STRUCTURE  CFF_Font
+#define FT_STRUCTURE  CFF_FontRec
 
       FT_FRAME_START( 4 ),
         FT_FRAME_BYTE( version_major ),
@@ -2077,7 +2077,7 @@
     FT_Error        error;
     FT_Memory       memory = stream->memory;
     FT_ULong        base_offset;
-    CFF_Font_Dict*  dict;
+    CFF_FontRecDict  dict;
 
 
     MEM_Set( font, 0, sizeof ( *font ) );
@@ -2138,7 +2138,7 @@
     if ( dict->cid_registry )
     {
       CFF_IndexRec  fd_index;
-      CFF_SubFont*  sub;
+      CFF_SubFont  sub;
       FT_UInt       idx;
 
 
@@ -2159,7 +2159,7 @@
 
       /* allocate & read each font dict independently */
       font->num_subfonts = fd_index.count;
-      if ( ALLOC_ARRAY( sub, fd_index.count, CFF_SubFont ) )
+      if ( ALLOC_ARRAY( sub, fd_index.count, CFF_SubFontRec ) )
         goto Fail_CID;
 
       /* setup pointer table */
@@ -2240,7 +2240,7 @@
 
 
   FT_LOCAL_DEF( void )
-  CFF_Done_Font( CFF_Font*  font )
+  CFF_Done_Font( CFF_Font  font )
   {
     FT_Memory  memory = font->memory;
     FT_UInt    idx;
