@@ -1108,7 +1108,7 @@
             /* `glyph_width' to `nominal_width' plus number on the stack   */
             /* -- for either case.                                         */
 
-            FT_Int set_width_ok;
+            FT_Int  set_width_ok;
 
 
             switch ( op )
@@ -1123,6 +1123,8 @@
             case cff_op_hstemhm:
             case cff_op_vstemhm:
             case cff_op_rmoveto:
+            case cff_op_hintmask:
+            case cff_op_cntrmask:
               set_width_ok = num_args & 1;
               break;
 
@@ -1744,12 +1746,18 @@
           /* We are going to emulate the seac operator. */
           if ( num_args == 4 )
           {
+            /* Save glyph width so that the subglyphs don't overwrite it. */
+            FT_Pos  glyph_width = decoder->glyph_width;
+
+
             error = cff_operator_seac( decoder,
                                        args[0],
                                        args[1],
                                        (FT_Int)( args[2] >> 16 ),
                                        (FT_Int)( args[3] >> 16 ) );
             args += 4;
+
+            decoder->glyph_width = glyph_width;
           }
           else
           {
