@@ -643,11 +643,13 @@
                            priv->family_blues, priv->num_family_other_blues,
                            priv->family_other_blues, priv->blue_fuzz, 1 );
 
-      globals->blues.blue_scale = priv->blue_scale ? priv->blue_scale
-                                                   : ( 0.039625 * 0x400000L );
+      globals->blues.blue_scale = priv->blue_scale
+                                ? priv->blue_scale
+                                : 0x28937L; /* ( 0.039625 * 0x400000L ) !! */
 
-      globals->blues.blue_shift = priv->blue_shift ? priv->blue_shift
-                                                   : 7;
+      globals->blues.blue_shift = priv->blue_shift
+                                ? priv->blue_shift
+                                : 7;
 
       globals->dimension[0].scale_mult  = 0;
       globals->dimension[0].scale_delta = 0;
