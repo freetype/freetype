@@ -530,6 +530,9 @@
     FT_FREE( phy_font->chars );
     phy_font->num_chars    = 0;
     phy_font->chars_offset = 0;
+
+    FT_FREE( phy_font->blue_values );
+    phy_font->num_blue_values = 0;
   }
   
 

@@ -1,3 +1,7 @@
+2002-06-02  Detlef Würkner  <TetiSoft@apg.lahn.de>
+
+	* src/pfr/pfrload.c (pfr_phy_font_done): Free `blue_values' array.
+
 2002-05-29  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
 	* src/bdf/bdflib.c (_bdf_readstream): Allocate `buf' dynamically.
