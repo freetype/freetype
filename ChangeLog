@@ -1,3 +1,12 @@
+2002-05-24  Tim Mooney  <enchanter@users.sourceforge.net>
+
+	* builds/unix/ft-munmap.m4: New file, extracted FT_MUNMAP_DECL and
+	FT_MUNMAP_PARAM from aclocal.m4 into here, so aclocal.m4 can be
+	rebuilt from sources.  Set macro serial to 1, and use third argument
+	to AC_DEFINE for our two custom symbols, so ftconfig.in could one day
+	be rebuilt with autoheader (not recommended now, ftconfig.in is a
+	custom source file)
+
 2002-05-22  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/config/ftheader.h (FT_BEZIER_H): Removed.
