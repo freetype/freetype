@@ -1740,10 +1740,6 @@
         /* the scalable width from the device width.                      */
         FT_TRACE2(( "_bdf_parse_glyphs: " ACMSG9, lineno ));
 
-        ps = (double)font->point_size;
-        rx = (double)font->resolution_x;
-        dw = (double)glyph->dwidth;
-
         glyph->swidth = (unsigned short)FT_MulDiv(
                           glyph->dwidth, 72000L,
                           (FT_Long)( font->point_size *
