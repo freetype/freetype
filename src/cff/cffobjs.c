@@ -120,34 +120,34 @@
 
         count = priv.num_blue_values = cpriv->num_blue_values;
         for ( n = 0; n < count; n++ )
-          priv.blue_values[n] = (FT_Short) cpriv->blue_values[n];
+          priv.blue_values[n] = (FT_Short)cpriv->blue_values[n];
 
         count = priv.num_other_blues = cpriv->num_other_blues;
         for ( n = 0; n < count; n++ )
-          priv.other_blues[n] = (FT_Short) cpriv->other_blues[n];
+          priv.other_blues[n] = (FT_Short)cpriv->other_blues[n];
 
         count = priv.num_family_blues = cpriv->num_family_blues;
         for ( n = 0; n < count; n++ )
-          priv.family_blues[n] = (FT_Short) cpriv->family_blues[n];
+          priv.family_blues[n] = (FT_Short)cpriv->family_blues[n];
 
         count = priv.num_family_other_blues = cpriv->num_family_other_blues;
         for ( n = 0; n < count; n++ )
-          priv.family_other_blues[n] = (FT_Short) cpriv->family_other_blues[n];
+          priv.family_other_blues[n] = (FT_Short)cpriv->family_other_blues[n];
 
         priv.blue_scale = cpriv->blue_scale;
         priv.blue_shift = cpriv->blue_shift;
         priv.blue_fuzz  = cpriv->blue_fuzz;
 
-        priv.standard_width[0]  = (FT_UShort) cpriv->standard_width;
-        priv.standard_height[0] = (FT_UShort) cpriv->standard_height;
+        priv.standard_width[0]  = (FT_UShort)cpriv->standard_width;
+        priv.standard_height[0] = (FT_UShort)cpriv->standard_height;
 
         count = priv.num_snap_widths = cpriv->num_snap_widths;
         for ( n = 0; n < count; n++ )
-          priv.snap_widths[n] = (FT_Short) cpriv->snap_widths[n];
+          priv.snap_widths[n] = (FT_Short)cpriv->snap_widths[n];
 
         count = priv.num_snap_heights = cpriv->num_snap_heights;
         for ( n = 0; n < count; n++ )
-          priv.snap_heights[n] = (FT_Short) cpriv->snap_heights[n];
+          priv.snap_heights[n] = (FT_Short)cpriv->snap_heights[n];
 
         priv.force_bold     = cpriv->force_bold;
         priv.language_group = cpriv->language_group;

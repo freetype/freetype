@@ -25,15 +25,14 @@ LATEST CHANGES BETWEEN 2.0.6 and 2.0.5
     - "glnames.py" still contained a bug that made FreeType return invalid
       names for certain glyphs.
 
-
-    - the library crashed when loading certain Type 1 fonts like "sadn.pfb"
+    - The library crashed when loading certain Type 1 fonts like "sadn.pfb"
       ("Stalingrad Normal"), which appear to contain pathetic font info
-      dictionaries..
+      dictionaries.
 
-    - the TrueType glyph loader is now much more paranoid and checks everything
-      when loading a given glyph image. This was necessary to avoid problems
-      (crashes and/or memory overwrites) with broken fonts that came from a
-      really buggy automatic font converter..
+    - The TrueType glyph loader is now much more paranoid and checks everything
+      when loading a given glyph image.  This was necessary to avoid
+      problems (crashes and/or memory overwrites) with broken fonts that
+      came from a really buggy automatic font converter.
 
 
   II. IMPORTANT UPDATES AND NEW FEATURES
@@ -80,19 +79,18 @@ LATEST CHANGES BETWEEN 2.0.6 and 2.0.5
       These are most probably due to small differences in the monochrome
       rasterizers and will be worked out in an upcoming release.
 
-
     - We have decided to fork the sources in a "stable" branch, and an
       "unstable" one, since FreeType is becoming a critical component of
       many Unix systems.
       
-      The next bug-fix releases of the library will be named 2.0.7,
-      2.0.8, etc.. while the "2.1" branch will contain a version of the
-      sources where we'll start major reworking of the library's internals,
-      in order to produce FreeType 2.2.0 (or even 3.0) in a more distant
+      The next bug-fix releases of the library will be named 2.0.7, 2.0.8,
+      etc., while the "2.1" branch will contain a version of the sources
+      where we will start major reworking of the library's internals, in
+      order to produce FreeType 2.2.0 (or even 3.0) in a more distant
       future.
       
       We also hope that this scheme will allow much more frequent releases
-      than in the past
+      than in the past.
 
 
 ============================================================================
