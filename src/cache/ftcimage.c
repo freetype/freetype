@@ -613,7 +613,10 @@
     FTC_Image_Cache  cache;
     
     
-    if ( !acache || !manager || !manager->library )
+    if ( !manager )
+      return FT_Err_Invalid_Cache_Handle;
+
+    if ( !acache || !manager->library )
       return FT_Err_Invalid_Argument;
 
     *acache = 0;
