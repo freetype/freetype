@@ -50,16 +50,16 @@ LATEST CHANGES BETWEEN 2.1.1 and 2.1.0
 
   III. MISCELLANEOUS
 
-    - The cache sub-system has been optimized in important ways. Cache hits are
-      now significantly faster. For example, using the CMap cache is about
-      twice faster than calling FT_Get_Char_Index on most platforms. Similarly,
-      using a SBit cache is about 5x faster than loading the bitmaps from a
-      bitmap file, and 300x to 500x than generating them from a scalable
-      format :-)
+    - The cache sub-system has been optimized in important ways.  Cache hits
+      are now significantly faster.  For example, using the CMap cache is
+      about twice faster than calling FT_Get_Char_Index on most platforms. 
+      Similarly, using an SBit cache is about five times faster than loading
+      the bitmaps from a bitmap file, and 300 to 500 times faster than
+      generating them from a scalable format.
 
       Note that you should recompile your sources if you designed a custom
       cache class for the FT2 Cache subsystem, since the changes performed
-      are source, but not binary, compatible...
+      are source, but not binary, compatible.
 
 
 ========================================================================
