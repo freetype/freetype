@@ -1,17 +1,32 @@
+2004-07-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftstroke (ft_stroke_border_reverse): Removed.  Unused.
+
 2004-07-12  David Turner  <david@freetype.org>
 
-        * src/base/ftstroke.c: last (?) bugfixes to the stroker.
+	* src/base/ftstroke.c (ft_stroke_border_close): Add second parameter
+	to indicate reversion of points.
+	Update all callers.
+	(ft_stroke_border_reverse): Fix initialization of `point1' and
+	`tag1'.
 
-        * src/cache/ftcsbits.c: fixing advance computation for
-        transformed glyphs
+	* src/cache/ftcsbits.c (ftc_snode_load): Fixing advance computation
+	for transformed glyphs.
         
 2004-07-11  David Turner  <david@freetype.org>
 
-        * src/base/ftstroke.c: fixed a bug that prevented the stroker to
-        correctly generate stroked paths from closed paths, i.e. nearly
-        all glyphs in vectorial fonts :-)
+	Fix bugs that prevented the stroker to correctly generate stroked
+	paths from closed paths, i.e., nearly all glyphs in vectorial fonts.
 
-        The code is still _very_ buggy though, treat with special care.
+	The code is still _very_ buggy though; treat with special care.
+
+	* src/base/ftstroke.c (FT_STROKE_TAG_BEGIN_END): New macro.
+	(ft_stroke_border_reverse): New function.
+	(ft_stroker_inside): Remove local variable `sigma'; use different
+	threshold.
+	(ft_stroker_add_reverse_left): Switch begin/end tags if necessary.
+	(FT_Stroker_EndSubPath): Call ft_stroker_inside and
+	ft_stroke_border_reverse.
 
 2004-06-26  Peter Kovar  <peter.kovar@r3.roburnet.sk>
 
@@ -24,8 +39,8 @@
 
 2004-06-24  David Turner  <david@freetype.org>
 
-        * src/truetype/ttgload.c, src/truetype/ttxgvar.c: removing
-        compiler warnings
+	* src/truetype/ttgload.c, src/truetype/ttxgvar.c: Removing
+	compiler warnings.
 
 2004-06-23  Werner Lemberg  <wl@gnu.org>
 
