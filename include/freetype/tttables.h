@@ -21,6 +21,10 @@
 
 #include <freetype/freetype.h>
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -556,6 +560,10 @@
 
   EXPORT_DEF(void*)  FT_Get_Sfnt_Table( FT_Face      face,
                                         FT_Sfnt_Tag  tag );
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 #endif /* TTTABLES_H */

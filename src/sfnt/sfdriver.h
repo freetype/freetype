@@ -20,6 +20,7 @@
 #define SFDRIVER_H
 
 #include <freetype/internal/ftdriver.h>
+#include <freetype/internal/ftobjs.h>
 
   EXPORT_VAR(const FT_DriverInterface)  sfnt_driver_interface;
 

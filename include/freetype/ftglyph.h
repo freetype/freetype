@@ -28,6 +28,10 @@
 
 #include <freetype/freetype.h>
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
+
   typedef enum {
 
     ft_glyph_type_none    = 0,
@@ -311,5 +315,9 @@
 
   EXPORT_DEF(void)  FT_Glyph_Get_Box( FT_Glyph  glyph,
                                       FT_BBox  *box );
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif /* FTGLYPH_H */
