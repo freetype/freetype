@@ -231,6 +231,8 @@
   };
 
 
+  /* documentation is in ftcache.h */
+
   FT_EXPORT_DEF( FT_Error )
   FTC_ImageCache_New( FTC_Manager      manager,
                       FTC_ImageCache  *acache )
@@ -240,7 +242,7 @@
   }
 
 
-  /* documentation is in ftcimage.h */
+  /* documentation is in ftcache.h */
 
   FT_EXPORT_DEF( FT_Error )
   FTC_ImageCache_Lookup( FTC_ImageCache  cache,
@@ -347,6 +349,8 @@
   };
 
 
+  /* documentation is in ftcache.h */
+
   FT_EXPORT_DEF( FT_Error )
   FTC_SBitCache_New( FTC_Manager     manager,
                      FTC_SBitCache  *acache )
@@ -355,6 +359,8 @@
                            (FTC_GCache*)acache );
   }
 
+
+  /* documentation is in ftcache.h */
 
   FT_EXPORT_DEF( FT_Error )
   FTC_SBitCache_Lookup( FTC_SBitCache  cache,

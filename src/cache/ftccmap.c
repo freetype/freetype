@@ -196,7 +196,7 @@
   };
 
 
-  /* documentation is in ftccmap.h */
+  /* documentation is in ftcache.h */
 
   FT_EXPORT_DEF( FT_Error )
   FTC_CMapCache_New( FTC_Manager     manager,
@@ -208,7 +208,7 @@
   }
 
 
-  /* documentation is in ftccmap.h */
+  /* documentation is in ftcache.h */
 
   FT_EXPORT_DEF( FT_UInt )
   FTC_CMapCache_Lookup( FTC_CMapCache  cmap_cache,
