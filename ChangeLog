@@ -1,3 +1,24 @@
+2002-09-14  Werner Lemberg  <wl@gnu.org>
+
+	Making ftgrays.c compile stand-alone again.
+
+	* include/freetype/ftimage.h: Include ft2build.h only if _STANDALONE_
+	isn't defined.
+	* src/smooth/ftgrays.c [_STANDALONE_]: Define ft_memset,
+	FT_BEGIN_HEADER, FT_END_HEADER.
+	(FT_MEM_ZERO): Define.
+	(TRaster) [GRAYS_USE_GAMMA]: Use `unsigned char' instead of FT_Byte.
+	(gray_render_span, gray_init_gamma): Don't use `FT_UInt'.
+	Don't cast with `FT_Byte'.
+	(grays_init_gamma): Don't use `FT_UInt'.
+
+2002-09-14  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftinit.c (FT_Add_Default_Modules): Improve error message.
+	* src/pcf/pcfdriver.c (PCF_Face_Done): Improve tracing message.
+	* include/freetype/config/ftoption.h (FT_MAX_MODULES): Increased
+	to 32.
+
 2002-09-10  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/configure.ac (version_info): Set to 9:2:3.
