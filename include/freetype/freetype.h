@@ -189,34 +189,80 @@ FT_BEGIN_HEADER
   /*    instead.                                                           */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*    width        :: The glyph's width.                                 */
+  /*    width ::                                                           */
+  /*      The glyph's width.                                               */
   /*                                                                       */
-  /*    height       :: The glyph's height.                                */
+  /*    height ::                                                          */
+  /*      The glyph's height.                                              */
   /*                                                                       */
-  /*    horiBearingX :: Horizontal left side bearing.                      */
+  /*    horiBearingX ::                                                    */
+  /*      Left side bearing for horizontal layout.                         */
   /*                                                                       */
-  /*    horiBearingY :: Horizontal top side bearing.                       */
+  /*    horiBearingY ::                                                    */
+  /*      Top side bearing for horizontal layout.                          */
   /*                                                                       */
-  /*    horiAdvance  :: Horizontal advance width.                          */
+  /*    horiAdvance ::                                                     */
+  /*      Advance width for horizontal layout.                             */
   /*                                                                       */
-  /*    vertBearingX :: Vertical left side bearing.                        */
+  /*    vertBearingX ::                                                    */
+  /*      Left side bearing for vertical layout.                           */
   /*                                                                       */
-  /*    vertBearingY :: Vertical top side bearing.                         */
+  /*    vertBearingY ::                                                    */
+  /*      Top side bearing for vertical layout.                            */
   /*                                                                       */
-  /*    vertAdvance  :: Vertical advance height.                           */
+  /*    vertAdvance ::                                                     */
+  /*      Advance height for vertical layout.                              */
+  /*                                                                       */
+  /*    lsb_delta ::                                                       */
+  /*      The difference between hinted and unhinted left side bearing     */
+  /*      while autohinting is active.  Zero otherwise.                    */
+  /*                                                                       */
+  /*    rsb_delta ::                                                       */
+  /*      The difference between hinted and unhinted right side bearing    */
+  /*      while autohinting is active.  Zero otherwise.                    */
+  /*                                                                       */
+  /* <Note>                                                                */
+  /*   Here a small pseudo code fragment which shows how to use            */
+  /*  `lsb_delta' and `rsb_delta':                                         */
+  /*                                                                       */
+  /*     FT_Pos  origin_x       = 0;                                       */
+  /*     FT_Pos  prev_rsb_delta = 0;                                       */
+  /*                                                                       */
+  /*                                                                       */
+  /*     for all glyphs do                                                 */
+  /*       <compute kern between current and previous glyph and add it to  */
+  /*        `origin_x'>                                                    */
+  /*                                                                       */
+  /*       <load glyph with `FT_Load_Glyph'>                               */
+  /*                                                                       */
+  /*       if ( prev_rsb_delta - face->glyph->metrics.lsb_delta >= 32 )    */
+  /*         origin_x -= 64;                                               */
+  /*       else if                                                         */
+  /*          ( prev_rsb_delta - face->glyph->metrics.lsb_delta < -32 )    */
+  /*         origin_x += 64;                                               */
+  /*                                                                       */
+  /*       prev_rsb_delta = face->glyph->metrics.rsb_delta;                */
+  /*                                                                       */
+  /*       <save glyph image, or render glyph, or ...>                     */
+  /*                                                                       */
+  /*       origin_x += face->glyph->advance.x;                             */
+  /*     endfor                                                            */
   /*                                                                       */
   typedef struct  FT_Glyph_Metrics_
   {
-    FT_Pos  width;         /* glyph width  */
-    FT_Pos  height;        /* glyph height */
+    FT_Pos  width;
+    FT_Pos  height;
 
-    FT_Pos  horiBearingX;  /* left side bearing in horizontal layouts */
-    FT_Pos  horiBearingY;  /* top side bearing in horizontal layouts  */
-    FT_Pos  horiAdvance;   /* advance width for horizontal layout     */
+    FT_Pos  horiBearingX;
+    FT_Pos  horiBearingY;
+    FT_Pos  horiAdvance;
 
-    FT_Pos  vertBearingX;  /* left side bearing in vertical layouts */
-    FT_Pos  vertBearingY;  /* top side bearing in vertical layouts  */
-    FT_Pos  vertAdvance;   /* advance height for vertical layout    */
+    FT_Pos  vertBearingX;
+    FT_Pos  vertBearingY;
+    FT_Pos  vertAdvance;
+
+    FT_Pos  lsb_delta;
+    FT_Pos  rsb_delta; 
 
   } FT_Glyph_Metrics;
 

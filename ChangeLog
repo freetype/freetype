@@ -1,15 +1,29 @@
+2004-06-04  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
+2004-06-04  David Chester  <davidchester@gmx.net>
+
+	Improve inter-letter spacing for autohinted glyphs.
+
+	* include/freetype/freetype.h (FT_Glyph_Metrics): Add elements
+	`lsb_delta' and `rsb_delta'.
+
+	* src/autohint/ahhint.c (ah_hinter_load): Set `lsb_delta' and
+	`rsb_delta' in slot->metrics.
+
 2004-06-04  David Turner  <david@freetype.org>
 
-        * src/autofit/*: important fixes to the auto-fitter. The output
-        now seems to be 100% equivalent to the auto-hinter, while being
-        about 2% faster (which proves that script-specific algorithm
-        selection isn't a performance problem).
+	* src/autofit/*: Important fixes to the auto-fitter.  The output
+	now seems to be 100% equivalent to the auto-hinter, while being
+	about 2% faster (which proves that script-specific algorithm
+	selection isn't a performance problem).
 
-        to test it, change "autohint" to "autofit" in
-        <freetype/config/ftmodule.h> and recompile.
+	To test it, change `autohint' to `autofit' in
+	<freetype/config/ftmodule.h> and recompile.
 
-        a few more testing is needed before making this the official
-        auto-hinting module
+	A few more testing is needed before making this the official
+	auto-hinting module.
 
 2004-06-02  Werner Lemberg  <wl@gnu.org>
 
