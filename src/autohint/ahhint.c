@@ -1010,14 +1010,15 @@
                             FT_UInt     load_flags,
                             FT_UInt     depth )
   {
-    FT_Face           face    = hinter->face;
-    FT_GlyphSlot      slot    = face->glyph;
-    FT_Fixed          x_scale = face->size->metrics.x_scale;
-    FT_Fixed          y_scale = face->size->metrics.y_scale;
+    FT_Face           face     = hinter->face;
+    FT_GlyphSlot      slot     = face->glyph;
+    FT_Slot_Internal  internal = slot->internal;
+    FT_Fixed          x_scale  = face->size->metrics.x_scale;
+    FT_Fixed          y_scale  = face->size->metrics.y_scale;
     FT_Glyph_Metrics  metrics;  /* temporary metrics */
     FT_Error          error;
-    AH_Outline*       outline = hinter->glyph;
-    AH_Loader*        gloader = hinter->loader;
+    AH_Outline*       outline  = hinter->glyph;
+    AH_Loader*        gloader  = hinter->loader;
     FT_Bool           no_horz_hints =
                         ( load_flags & AH_HINT_NO_HORZ_EDGES ) != 0;
     FT_Bool           no_vert_hints =
@@ -1028,6 +1029,21 @@
     error = FT_Load_Glyph( face, glyph_index, load_flags );
     if ( error )
       goto Exit;
+
+    /* Set `hinter->transformed' after loading with FT_LOAD_NO_RECURSE. */
+    hinter->transformed = internal->glyph_transformed;
+
+    if ( hinter->transformed )
+    {
+      FT_Matrix  imatrix;
+
+      imatrix              = internal->glyph_matrix;
+      hinter->trans_delta  = internal->glyph_delta;
+      hinter->trans_matrix = imatrix;
+
+      FT_Matrix_Invert( &imatrix );
+      FT_Vector_Transform( &hinter->trans_delta, &imatrix );
+    }
 
     /* save current glyph metrics */
     metrics = slot->metrics;
@@ -1338,9 +1354,22 @@
         error = ah_hinter_new_face_globals( hinter, face, 0 );
         if ( error )
           goto Exit;
+
       }
       hinter->globals = FACE_GLOBALS( face );
       face_globals    = FACE_GLOBALS( face );
+
+      /* Immediately call ourself.  Fixes weird problem whereby computation */
+      /* of global hints throws off the rendering of the first glyph shown  */
+      /* in a synthetic font.                                               */
+
+      /*
+      error = ah_hinter_load_glyph( hinter, slot, size,
+                                    glyph_index, load_flags );
+      if ( error )
+        goto Exit;
+      */
+
     }
 
     /* now, we must check the current character pixel size to see if we */
@@ -1349,29 +1378,10 @@
          face_globals->y_scale != y_scale )
       ah_hinter_scale_globals( hinter, x_scale, y_scale );
 
-    load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE;
-
     ah_loader_rewind( hinter->loader );
 
-    {
-      FT_Slot_Internal  internal = slot->internal;
-      
+    load_flags |= FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE;
 
-      hinter->transformed = internal->glyph_transformed;
-      if ( hinter->transformed )
-      {
-        FT_Matrix  imatrix;
-        
-
-        imatrix              = internal->glyph_matrix;
-        hinter->trans_delta  = internal->glyph_delta;
-        hinter->trans_matrix = imatrix;
-
-        FT_Matrix_Invert( &imatrix );
-        FT_Vector_Transform( &hinter->trans_delta, &imatrix );
-      }
-    }
-    
     error = ah_hinter_load( hinter, glyph_index, load_flags, 0 );
 
   Exit:
