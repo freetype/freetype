@@ -1,14 +1,19 @@
-2001-01-11  David Turner <david.turner@freetype.org>
+2001-01-11  Matthew Crosby  <mcrosby@marthon.org>
+
+	* builds/unix/freetype-config.in: Fix problems with separate
+	--prefix and --exec-prefix.
+
+2001-01-11  David Turner  <david.turner@freetype.org>
 
 	* docs/docmaker.py: Added cross-references generation as well as  
-	more robust handling of pathname wildward matching
+	more robust handling of pathname wildcard matching.
 
 2001-01-10  Werner Lemberg  <wl@gnu.org>
 
 	* docs/docmaker.py: Minor improvements to reduce unwanted spaces
 	and empty lines in output.
 
-2001-01-09  David Turner <david.turner@freetype.org>
+2001-01-09  David Turner  <david.turner@freetype.org>
 
 	* docs/docmaker.py: Improved script to generate table of contents
 	and index pages.  It also supports wildcards on non Unix systems.
@@ -127,7 +132,7 @@
 	* src/autohint/ahhint.c (ah_hinter_load_glyph):
 	Removed unnecessary comments and commented-out code.
 
-2000-12-21  David Turner <david.turner@freetype.org>
+2000-12-21  David Turner  <david.turner@freetype.org>
 
 	* src/cid/cidafm.c, src/cid/cidafm.h: removed un-needed files, 
 	we'll work on supporting CID AFM files later I guess :-)
@@ -153,7 +158,7 @@
 
 	* INSTALL: Added info about makepp.
 
-2000-12-14  David Turner <david.turner@freetype.org>
+2000-12-14  David Turner  <david.turner@freetype.org>
 
 	Added support for clipped direct rendering in the smooth renderer. 
 	This should not break binary compatibility of existing applications.
@@ -172,7 +177,7 @@
 	* src/raster/ftraster.c (ft_black_render): Test for unsupported
 	direct rendering before testing arguments.
 
-2000-12-13  David Turner <david.turner@freetype.org>
+2000-12-13  David Turner  <david.turner@freetype.org>
 
 	* include/freetype/config/ft2build.h,
 	include/freetype/internal/internal.h: Fixed header inclusion macros
@@ -412,7 +417,7 @@
 	* include/freetype/internal/ftdebug.h: Replaced FT_CAT and FT_XCAT
 	with a direct solution (which also satifies picky compilers).
 
-2000-11-28  YAMANO-UCHI Hidetoshi <mer@din.or.jp>
+2000-11-28  YAMANO-UCHI Hidetoshi  <mer@din.or.jp>
 
 	* src/truetype/ttobjs.c (TT_Init_Size): Fix #ifdef's to work with
 	disabled interpreter also.
@@ -465,7 +470,7 @@
 	* src/cff/t2load.c (T2_Get_String): Called T2_Get_Name with a
 	sid that was off by one.
 
-2000-11-16  David Turner <david@freetype.org>
+2000-11-16  David Turner  <david@freetype.org>
 
 	* src/autohint/ahtypes.h (AH_Hinter): Added new fields to control
 	auto-hinting of synthetic Type 1 fonts.
