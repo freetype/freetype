@@ -3309,18 +3309,23 @@
         if (b < 127) b++;
         bits[0] = (64-x1) + (b >> 1);
         
-        e2--;
-        while (e2 > 0)
+        if ( ras.precision > 64 )
         {
-          bits += incr;
-          b     = bits[0];
-          
-          if (b < 127)
-            bits[0] = (Byte)(63+((b+1) >> 1));  
-          
           e2--;
+          while (e2 > 0)
+          {
+            bits += incr;
+            b     = bits[0];
+           
+            if (b < 127)
+              bits[0] = (Byte)(63+((b+1) >> 1));  
+          
+            e2--;
+          }
         }
-        
+        else
+          bits += incr*(e2-1);
+          
         if (x2)
         {
           bits += incr;
@@ -3328,7 +3333,6 @@
           if (b < 127) b++;
           bits[0] = (Byte)(x2 + (b >> 1));
         }
-        
       }
       else
       {
