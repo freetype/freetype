@@ -175,8 +175,8 @@
           break;
         }
 
-      default:   /* unknown charset format  !! */
-        FT_ERROR(( "CFF: unknown charset format !!\n" ));
+      default:   /* unknown charset format! */
+        FT_ERROR(( "CFF: unknown charset format!\n" ));
         error = FT_Err_Invalid_File_Format;
         goto Fail;
     }

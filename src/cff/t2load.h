@@ -20,6 +20,7 @@
 #define T2LOAD_H
 
 #include <freetype/internal/t2types.h>
+#include <freetype/internal/psnames.h>
 
 #ifdef __cplusplus
   extern "C" {
