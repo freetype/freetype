@@ -30,6 +30,25 @@
 FT_BEGIN_HEADER
 
 
+  /**************************************************************************
+   *
+   * <Section> SFNT_Names
+   *
+   * <Title> SFNT Names
+   *
+   * <Abstract> Access the names embedded in TrueType and OpenType files
+   *
+   * <Description>
+   *    The TrueType and OpenType specification allow the inclusion of
+   *    a special "names table" in font files. This table contains textual
+   *    (and internationalised) information regarding the font, like
+   *    family name, copyright, version, etc..
+   *
+   *    the definitions below are used to access them when available
+   *
+   *    note that this has nothing to do with "glyph names" !!
+   */
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -118,7 +137,7 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )  FT_Get_Sfnt_Name( FT_Face       face,
                                            FT_UInt       index,
                                            FT_SfntName  *aname );
-
+  /* */
 
 FT_END_HEADER
 

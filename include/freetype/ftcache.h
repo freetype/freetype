@@ -50,6 +50,19 @@ FT_BEGIN_HEADER
 #define FT_CACHE_INTERNAL_GLYPH_H  FT2_PUBLIC_FILE(cache/ftcglyph.h)
 #define FT_CACHE_INTERNAL_CHUNK_H  FT2_PUBLIC_FILE(cache/ftcchunk.h)
 
+  /**************************************************************************
+   *
+   * <Section> cache_subsystem
+   *
+   * <Title> Cache Sub-System
+   *
+   * <Abstract>
+   *    How to cache face, size and glyph data with FreeType 2
+   *
+   * <Description>
+   *   This section details the FreeType 2 cache sub-system which is still
+   *   in beta.
+   */
 
   /*************************************************************************/
   /*************************************************************************/

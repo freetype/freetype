@@ -70,6 +70,9 @@
 
 FT_BEGIN_HEADER
 
+  /***
+   * <Section> cache_subsystem
+   */
 
 #define FTC_MAX_FACES_DEFAULT  2
 #define FTC_MAX_SIZES_DEFAULT  4
