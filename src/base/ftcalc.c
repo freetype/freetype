@@ -496,6 +496,61 @@
 
   /* documentation is in ftcalc.h */
 
+  /* apparently, the second version of this code is not compiled correctly */
+  /* on Mac machines with the MPW C compiler..  tsss, tsss, tss...         */
+#if 1
+  FT_EXPORT_DEF( FT_Int32 )
+  FT_Div64by32( FT_Int64*  x,
+                FT_Int32   y )
+  {
+    FT_Int32   s;
+    FT_UInt32  q, r, i, lo;
+
+
+    s  = x->hi;
+    if ( s < 0 )
+    {
+      x->lo = (FT_UInt32)-(FT_Int32)x->lo;
+      x->hi = ~x->hi + !( x->lo );
+    }
+    s ^= y;  y = ABS( y );
+
+    /* Shortcut */
+    if ( x->hi == 0 )
+    {
+      if ( y > 0 )
+        q = x->lo / y;
+      else
+        q = 0x7FFFFFFFL;
+
+      return ( s < 0 ? -(FT_Int32)q : (FT_Int32)q );
+    }
+
+    r  = x->hi;
+    lo = x->lo;
+
+    if ( r >= (FT_UInt32)y ) /* we know y is to be treated as unsigned here */
+      return ( s < 0 ? 0x80000001UL : 0x7FFFFFFFUL );
+                             /* Return Max/Min Int32 if division overflow. */
+                             /* This includes division by zero! */
+    q = 0;
+    for ( i = 0; i < 32; i++ )
+    {
+      r <<= 1;
+      q <<= 1;
+      r  |= lo >> 31;
+
+      if ( r >= (FT_UInt32)y )
+      {
+        r -= y;
+        q |= 1;
+      }
+      lo <<= 1;
+    }
+
+    return ( s < 0 ? -(FT_Int32)q : (FT_Int32)q );
+  }
+#else
   FT_EXPORT_DEF( FT_Int32 )
   FT_Div64by32( FT_Int64*  x,
                 FT_Int32   y )
@@ -527,6 +582,7 @@
 
     return ( s < 0 ? -(FT_Int32)q : (FT_Int32)q );
   }
+#endif
 
 
 #ifdef FT_CONFIG_OPTION_OLD_CALCS
