@@ -8,13 +8,24 @@ LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
       `FT_Get_Charmap_Index'.   (This function is needed  to implement
       cmap caches.)
 
+    - `FT_Outline_Get_BBox'  sometimes returned  incorrect values  for
+      conic outlines (e.g. for TrueType fonts).
+
+    - Handling of `bhed' table has been fixed.
 
   II. IMPORTANT CHANGES
 
     - George  Williams   contributed  code  to   handle  Apple's  font
       distortion technology found in GX fonts (`avar', `cvar', `fvar',
       and `gvar' tables;  the Multiple Masters  API has been  slightly
-      extended to cope with the new functionality.
+      extended to cope with the new functionality).
+
+    - The `FT_Glyph_Metrics' structure has been extended: The elements
+      `lsb_delta' and  `rsb_delta' give the difference  between hinted
+      and  unhinted  left and right  side bearings  if autohinting  is
+      active.  Using those values can improve the inter-letter spacing
+      considerably.   See the documentation of  `FT_Glyph_Metrics' and
+      the `ftstring' demo program how to use it.
 
 
   III. MISCELLANEOUS
