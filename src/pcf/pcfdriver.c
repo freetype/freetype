@@ -274,10 +274,21 @@ THE SOFTWARE.
       if ( ( charset_registry != NULL ) &&
            ( charset_encoding != NULL ) )
       {
-        if ( !ft_strcmp( face->charset_registry, "ISO10646" )     ||
-             ( !ft_strcmp( face->charset_registry, "ISO8859" ) &&
-               !ft_strcmp( face->charset_encoding, "1" )       )  )
+        char*  s = face->charset_registry;
+
+
+        /* Uh, oh, compare first letters manually to avoid dependency
+           on locales. */
+        if ( ( s[0] == 'i' || s[0] == 'I' ) &&
+             ( s[1] == 's' || s[1] == 'S' ) &&
+             ( s[2] == 'o' || s[2] == 'O' ) )
+        {
+          s += 3;
+          if ( !ft_strcmp( s, "10646" )                      ||
+               ( !ft_strcmp( s, "8859" ) &&
+                 !ft_strcmp( face->charset_encoding, "1" ) ) )
           unicode_charmap = 1;
+        }
       }
 
       {

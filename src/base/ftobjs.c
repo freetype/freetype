@@ -1535,9 +1535,10 @@
 
       memory = library->memory;
 
-      FT_ALLOC( newpath, strlen( args->pathname ) + strlen( "/rsrc" ) + 1 );
-      strcpy( newpath, args->pathname );
-      strcat( newpath, "/rsrc" );
+      FT_ALLOC( newpath,
+                ft_strlen( args->pathname ) + ft_strlen( "/rsrc" ) + 1 );
+      ft_strcpy( newpath, args->pathname );
+      ft_strcat( newpath, "/rsrc" );
 
       args2.flags    = FT_OPEN_PATHNAME;
       args2.pathname = (char*)newpath;
