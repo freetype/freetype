@@ -811,7 +811,7 @@ TT_CodeRange_Tag  debug_coderange = tt_coderange_glyph;
   {
     FT_Int    A, diff, key;
     FT_Long   next_IP;
-    FT_Char   ch, oldch, *temp;
+    FT_Char   ch, oldch = '\0', *temp;
 
     TT_Error  error = 0;
 
