@@ -1428,9 +1428,11 @@
         hinter->pp1.x = ( ( new_lsb    - old_lsb ) + 32 ) & -64;
         hinter->pp2.x = ( ( edge2->pos + old_rsb ) + 32 ) & -64;
 
+#if 0
         /* try to fix certain bad advance computations */
         if ( hinter->pp2.x + hinter->pp1.x == edge2->pos && old_rsb > 4 )
           hinter->pp2.x += 64;
+#endif
       }
 
       /* good, we simply add the glyph to our loader's base */
