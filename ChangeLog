@@ -1,3 +1,8 @@
+2001-12-17  Werner Lemberg  <wl@gnu.org>
+
+	* src/truetype/ttgload.c (load_truetype_glyph): Fix test for invalid
+	glyph header.
+
 2001-12-15  Werner Lemberg  <wl@gnu.org>
 
 	* src/base/ftglyph.c (FT_Glyph_To_Bitmap): Remove compiler warning.

@@ -1873,6 +1873,7 @@
     return result;
   }
 
+
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
