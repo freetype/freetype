@@ -1,0 +1,169 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="blob">
+   <meta name="GENERATOR" content="Mozilla/4.5 [fr] (Win98; I) [Netscape]">
+   <title>FreeType Glyph Conventions</title>
+</head>
+<body>
+
+<body text="#000000"
+      bgcolor="#FFFFFF"
+      link="#0000EF"
+      vlink="#51188E"
+      alink="#FF0000">
+
+<center><h1>
+FreeType Glyph Conventions
+</h1></center>
+
+<center><h2>
+version 2.1
+</h2></center>
+
+<center><h3>
+Copyright 1998-2000 David Turner (<a href="mailto:david@freetype.org">david@freetype.org</a>)<br>
+Copyright 2000 The FreeType Development Team (<a href="devel@freetype.org">devel@freetype.org</a>)
+</h3></center>
+
+<center><table width=650><tr><td>
+
+<center><table width="100%" border=0 cellpadding=5><tr bgcolor="#CCFFCC" valign=center>
+<td align=center width="30%">
+&nbsp;
+</td>
+<td align=center width="30%">
+<a href="index.html">Contents</a>
+</td>
+<td align=center width="30%">
+<a href="glyphs-2.html">Next</a>
+</td>
+</tr></table></center>
+
+<table width="100%" cellpadding=5><tr bgcolor="#CCCCFF" valign=center><td>
+<h2>
+I. Basic typographic concepts
+</h2>
+</td></tr></table>
+
+<a name="section-1"><h3>
+1. Font files, format and information
+</h3><blockquote>
+
+<p>
+A font is a collection of various character images that can
+be used to display or print text. The images in a single font share some
+common properties, including look, style, serifs, etc.. Typographically
+speaking, one has to distinguish between a <b>font family</b> and its
+multiple <b>font faces</b>, which usually differ in style though come
+from the same template.</p>
+
+For example, "<i>Palatino Regular</i>" and "<i>Palatino Italic</i>" are
+two distinct <i>faces</i> from the same famous <i>family</i>, called
+"<i>Palatino</i>" itself.</p>
+
+<p>The single term font is nearly always used in ambiguous ways to refer
+to either a given family or given face, depending on the context. For example,
+most users of word-processors use "font" to describe a font family (e.g.
+Courier, Palatino, etc..); however most of these families are implemented
+through several data files depending on the file format : for TrueType,
+this is usually one per face (i.e. ARIAL.TFF for "Arial Regular", ARIALI.TTF
+for "Arial Italic", etc..). The file is also called a "font" but really
+contains a font face.
+</p>
+
+<p>A <i>digital font</i> is thus a data file that may contain <i>one or
+more font faces</i>. For each of these, it contains character images,
+character metrics, as well as other kind of information important to the
+layout of text and the processing of specific character encodings. In some
+awkward formats, like Adobe Type1, a single font face is described through
+several files (i.e. one contains the character images, another one the
+character metrics). We will ignore this implementation issue in most of
+this document and consider digital fonts as single files, though FreeType
+2.0 is able to support multiple-files fonts correctly.
+</p>
+
+<p>As a convenience, a font file containing more than one face is called
+a font collection. This case is rather rare but can be seen in many asian
+fonts, which contain images for two or more scripts for a given language.
+</p>
+
+
+
+</blockquote><h3><a name="section-2">
+2. Character images and mappings :
+</h3><blockquote>
+
+
+
+<p>The character images are called <b>glyphs</b>. A single character
+can have several distinct images, i.e. several glyphs, depending on script,
+usage or context. Several characters can also take a single glyph (good
+examples are roman ligatures like "oe" and "fi" which can be represented
+by a single glyph). The relationships between characters
+and glyphs can be a very complex one but won't be detailed in this document.
+Moreover, some formats use more or less awkward schemes to store and access
+the glyphs. For the sake of clarity, we'll only retain the following notions
+when working with FreeType :</p>
+
+<ul>
+<p><li>
+A font file contains a set of glyphs, each one can be stored as a bitmap,
+a vector representation or any other scheme (e.g. most scalable formats
+use a combination of math representation and control data/programs). These
+glyphs can be stored in any order in the font file, and is typically accessed
+through a simple glyph index.
+</li></p>
+
+<p><li>
+The font file contains one (or more) table, called a character map (or
+charmap in short), which is used to convert character codes for a given
+encoding (e.g. ASCII, Unicode, DBCS, Big5, etc..) into glyph indexes
+relative to the font file. A single font face may contain several charmaps.
+For example, most TrueType fonts contain an Apple-specific charmap as well
+as a Unicode charmap, which makes them usable on both Mac and Windows
+platforms.
+</li></p>
+</ul>
+
+
+
+</blockquote><h3><a name="section-3">
+3. Character and font metrics :
+</h3><blockquote>
+
+<p>Each glyph image is associated to various metrics which are used to
+describe the way it must be placed and managed when rendering text. Though
+they are described in more details in section III, they relate to glyph
+placement, cursor advances as well as text layouts. They are extremely
+important to compute the flow of text when rendering string of text.
+</p>
+
+<p>Each scalable format also contains some global metrics, expressed in
+notional units, used to describe some properties of all glyphs in a same
+face. For example : the maximum glyph bounding box, the ascender, descender
+and text height for the font.
+</p>
+
+<p>Though these metrics also exist for non-scalable formats, they only
+apply for a set of given character dimensions and resolutions, and they're
+usually expressed in pixels then.</p>
+
+<center><table width="100%" border=0 cellpadding=5><tr bgcolor="#CCFFCC" valign=center>
+<td align=center width="30%">
+&nbsp;
+</td>
+<td align=center width="30%">
+<a href="index.html">Contents</a>
+</td>
+<td align=center width="30%">
+<a href="glyphs-2.html">Next</a>
+</td>
+</tr></table></center>
+
+</td></tr></table></center>
+
+
+</body>
+</html>

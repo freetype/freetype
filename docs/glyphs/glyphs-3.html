@@ -1,0 +1,309 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="blob">
+   <meta name="GENERATOR" content="Mozilla/4.5 [fr] (Win98; I) [Netscape]">
+   <title>FreeType Glyph Conventions</title>
+</head>
+<body>
+
+<body text="#000000"
+      bgcolor="#FFFFFF"
+      link="#0000EF"
+      vlink="#51188E"
+      alink="#FF0000">
+
+<center>
+<h1>
+FreeType Glyph Conventions</h1></center>
+
+<center>
+<h2>
+version 2.1</h2></center>
+
+<center>
+<h3>
+Copyright 1998-2000 David Turner (<a href="mailto:david@freetype.org">david@freetype.org</a>)<br>
+Copyright 2000 The FreeType Development Team (<a href="devel@freetype.org">devel@freetype.org</a>)</h3></center>
+
+<center><table width=650><tr><td>
+
+<center><table width="100%" border=0 cellpadding=5><tr bgcolor="#CCFFCC" valign=center>
+<td align=center width="30%">
+<a href="glyphs-2.html">Previous</a>
+</td>
+<td align=center width="30%">
+<a href="index.html">Contents</a>
+</td>
+<td align=center width="30%">
+<a href="glyphs-4.html">Next</a>
+</td>
+</tr></table></center>
+
+<table width="100%"><tr valign=center bgcolor="#ccccff"><td><h2>
+III. Glyph metrics
+</h2></td></tr></table>
+
+<h3><a name="section-1">
+1. Baseline, Pens and Layouts
+</h3><blockquote>
+
+<p>The baseline is an imaginary line that is used to "guide" glyphs when
+rendering text. It can be horizontal (e.g. Roman, Cyrillic, Arabic, etc.)
+or vertical (e.g. Chinese, Japanese, Korean, etc). Moreover, to render
+text, a virtual point, located on the baseline, called the "pen position"
+or "origin", is used to locate glyphs.
+</p>
+
+<p>Each layout uses a different convention for glyph placement:</p>
+<ul>
+  <li>
+    with horizontal layout, glyphs simply "rest" on the baseline. Text
+    is rendered by incrementing the pen position, either to the right or
+    to the left.
+  </li>
+
+
+  <p>the distance between two successive pen positions is glyph-specific
+  and is called the <b>advance width</b>. Note that its value is _always_
+  positive, even for right-to-left oriented alphabets, like Arabic. This
+  introduces some differences in the way text is rendered.
+  </p>
+
+  <p>IMPORTANT NOTE:&nbsp; The pen position is always placed on the baseline.
+  </p>
+
+  <p><center><img SRC="Image1.png" height=179 width=458></center></p>
+
+
+  <li>with a vertical layout, glyphs are centered around the baseline:</li>
+
+  <p><center><img SRC="Image2.png" height=275 width=162></center></p>
+
+</ul>
+
+</blockquote><h3><a name="section-2">
+2. Typographic metrics and bounding boxes
+</h3><blockquote>
+
+<p>A various number of face metrics are defined for all glyphs in a given
+font.</p>
+
+<p><b>the ascent</b></p>
+<ul>
+<p>this is the distance from the baseline to the highest/upper grid coordinate
+used to place an outline point. It is a positive value, due to the grid's
+orientation with the Y axis upwards.
+</p>
+</ul>
+
+<p><br><b>the descent</b></p>
+<ul><p>
+the distance from the baseline to the lowest grid coordinate used to
+place an outline point. This is a negative value, due to the grid's
+orientation.
+</p></ul>
+
+<p><br><b>the linegap</b>
+<ul>the distance that must be placed between two lines of text. The baseline-to-baseline
+distance should be computed as:
+<center>
+<p><tt>ascent - descent + linegap</tt></center>
+if you use the typographic values.</ul>
+Other, simpler metrics are:
+<p><b>the glyph's bounding box</b>, also called "<b>bbox</b>"
+<ul>this is an imaginary box that encloses all glyphs from the font, as
+tightly as possible. It is represented by four fields, namely <tt>xMin</tt>,
+<tt>yMin</tt>,
+<tt>xMax</tt>,
+and <tt>yMax</tt>, that can be computed for any outline. Their values can
+be in font units (if measured in the original outline) or in fractional/integer
+pixel units (when measured on scaled outlines).
+<p>Note that if it wasn't for grid-fitting, you wouldn't need to know a
+box's complete values, but only its dimensions to know how big is a glyph
+outline/bitmap. However, correct rendering of hinted glyphs needs the preservation
+of important grid alignment on each glyph translation/placement on the
+baseline.</ul>
+<b>the internal leading</b>
+<ul>this concept comes directly from the world of traditional typography.
+It represents the amount of space within the "leading" which is reserved
+for glyph features that lay outside of the EM square (like accentuation).
+It usually can be computed as:
+<center>
+<p><tt>internal leading = ascent - descent - EM_size</tt></center>
+</ul>
+<b>the external leading</b>
+<ul>this is another name for the line gap.</ul>
+</ul>
+
+<h3><a name="section-3">
+3. Bearings and Advances</h3>
+
+<ul>Each glyph has also distances called "bearings" and "advances". Their
+definition is constant, but their values depend on the layout, as the same
+glyph can be used to render text either horizontally or vertically:
+<p><b>the left side bearing: a.k.a. bearingX</b>
+<ul>this is the horizontal distance from the current pen position to the
+glyph's left bbox edge. It is positive for horizontal layouts, and most
+generally negative for vertical one.</ul>
+
+<p><br><b>the top side bearing: a.k.a. bearingY</b>
+<ul>this is the vertical distance from the baseline to the top of the glyph's
+bbox. It is usually positive for horizontal layouts, and negative for vertical
+ones</ul>
+
+<p><br><b>the advance width: a.k.a. advanceX</b>
+<ul>is the horizontal distance the pen position must be incremented (for
+left-to-right writing) or decremented (for right-to-left writing) by after
+each glyph is rendered when processing text. It is always positive for
+horizontal layouts, and null for vertical ones.</ul>
+
+<p><br><b>the advance height: a.k.a. advanceY</b>
+<ul>is the vertical distance the pen position must be decremented by after
+each glyph is rendered. It is always null for horizontal layouts, and positive
+for vertical layouts.</ul>
+
+<p><br><b>the glyph width</b>
+<ul>this is simply the glyph's horizontal extent. More simply it is (bbox.xMax-bbox.xMin)
+for unscaled font coordinates. For scaled glyphs, its computation requests
+specific care, described in the grid-fitting chapter below.</ul>
+
+<p><br><b>the glyph height</b>
+<ul>this is simply the glyph's vertical extent. More simply, it is (bbox.yMax-bbox.yMin)
+for unscaled font coordinates. For scaled glyphs, its computation requests
+specific care, described in the grid-fitting chapter below.</ul>
+
+<p><br><b>the right side bearing</b>
+<ul>is only used for horizontal layouts to describe the distance from the
+bbox's right edge to the advance width. It is in most cases a non-negative
+number.</ul>
+
+<center><tt>advance_width - left_side_bearing - (xMax-xMin)</tt></center>
+
+<p>Here is a picture giving all the details for horizontal metrics :
+<center>
+<p><img SRC="Image3.png" height=253 width=388></center>
+
+<p>And here is another one for the vertical metrics :
+<center>
+<p><img SRC="Image4.png" height=278 width=294></center>
+</ul>
+
+<h3><a name="section-4">
+4. The effects of grid-fitting</h3>
+
+<ul>Because hinting aligns the glyph's control points to the pixel grid,
+this process slightly modifies the dimensions of character images in ways
+that differ from simple scaling.
+<p>For example, the image of the lowercase "m" letter sometimes fits a
+square in the master grid. However, to make it readable at small pixel
+sizes, hinting tends to enlarge its scaled outline in order to keep its
+three legs distinctly visible, resulting in a larger character bitmap.
+<p>The glyph metrics are also influenced by the grid-fitting process. Mainly
+because :
+<br>&nbsp;
+<ul>
+<li>
+The image's width and height are altered. Even if this is only by one pixel,
+it can make a big difference at small pixel sizes</li>
+
+<li>
+The image's bounding box is modified, thus modifying the bearings</li>
+
+<li>
+The advances must be updated. For example, the advance width must be incremented
+when the hinted bitmap is larger than the scaled one, to reflect the augmented
+glyph width.</li>
+</ul>
+
+<p><br>Note also that :
+<br>&nbsp;
+<ul>
+<li>
+Because of hinting, simply scaling the font ascent or descent might not
+give correct results. A simple solution consists in keeping the ceiling
+of the scaled ascent, and floor of the scaled descent.</li>
+</ul>
+
+<ul>
+<li>
+There is no easy way to get the hinted glyph and advance widths of a range
+of glyphs, as hinting works differently on each outline. The only solution
+is to hint each glyph separately and record the returned values. Some formats,
+like TrueType, even include a table of pre-computed values for a small
+set of common character pixel sizes.</li>
+</ul>
+
+<ul>
+<li>
+Hinting depends on the final character width and height in pixels, which
+means that it is highly resolution-dependent. This property makes correct
+WYSIWYG layouts difficult to implement.</li>
+</ul>
+
+<p><br><b>IMPORTANT NOTE:</b>
+<br>Performing 2D transforms on glyph outlines is very easy with FreeType.
+However, when using translation on a hinted outlines, one should aways
+take care of&nbsp; <b>exclusively using integer pixel distances</b> (which
+means that the parameters to the FT_Translate_Outline API should all be
+multiples of 64, as the point coordinates are in 26.6 fixed float format).
+<p><b>Otherwise</b>, the translation will simply <b>ruin the hinter's work</b>,
+resulting in a very low quality bitmaps.
+<br>&nbsp;
+<br>&nbsp;</ul>
+
+<h3><a name="section-5">
+&nbsp;5. Text widths and bounding box :</h3>
+
+<ul>As seen before, the "origin" of a given glyph corresponds to the position
+of the pen on the baseline. It is not necessarily located on one of the
+glyph's bounding box corners, unlike many typical bitmapped font formats.
+In some cases, the origin can be out of the bounding box, in others, it
+can be within it, depending on the shape of the given glyph.
+<p>Likewise, the glyph's "advance width" is the increment to apply to the
+pen position during layout, and is not related to the glyph's "width",
+which really is the glyph's bounding width.
+<br>&nbsp;
+<p>The same conventions apply to strings of text. This means that :
+<br>&nbsp;
+<ul>
+<ul>
+<li>
+The bounding box of a given string of text doesn't necessarily contain
+the text cursor, nor is the latter located on one of its corners.</li>
+</ul>
+
+<ul>
+<li>
+The string's advance width isn't related to its bounding box's dimensions.
+Especially if it contains beginning and terminal spaces or tabs.</li>
+</ul>
+
+<ul>
+<li>
+Finally, additional processing like kerning creates strings of text whose
+dimensions are not directly related to the simple juxtaposition of individual
+glyph metrics. For example, the advance width of "VA" isn't the sum of
+the advances of "V" and "A" taken separately.</li>
+</ul>
+</ul>
+</ul>
+</ul>
+
+<center><table width="100%" border=0 cellpadding=5><tr bgcolor="#CCFFCC" valign=center>
+<td align=center width="30%">
+<a href="glyphs-2.html">Previous</a>
+</td>
+<td align=center width="30%">
+<a href="index.html">Contents</a>
+</td>
+<td align=center width="30%">
+<a href="glyphs-4.html">Next</a>
+</td>
+</tr></table></center>
+
+</td></tr></table></center>
+
+</body>
+</html>
