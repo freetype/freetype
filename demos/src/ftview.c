@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "graph.h"
 #include "grfont.h"
@@ -33,7 +34,6 @@
 #define  CENTER_Y   (bit.rows/2)
 
 #define  MAXPTSIZE  500                 /* dtp */
-
 
   char  Header[128];
   char* new_header = 0;
@@ -64,6 +64,24 @@
 
   int  graph_init = 0;
 
+#define DEBUGxxx
+
+#ifdef DEBUG
+#define LOG(x)  LogMessage##x
+#else
+#define LOG(x)  /* rien */
+#endif
+
+#ifdef DEBUG
+  static void  LogMessage( const char*  fmt, ... )
+  {
+    va_list  ap;
+
+    va_start( ap, fmt );
+    vfprintf( stderr, fmt, ap );
+    va_end( ap );
+  }
+#endif
 
   /* PanicZ */
   static void PanicZ( const char* message )
@@ -77,6 +95,8 @@
   static void  Clear_Display( void )
   {
     long  size = (long)bit.pitch * bit.rows;
+
+    if (size < 0) size = -size;
     memset( bit.buffer, 0, size );
   }
 
@@ -100,7 +120,7 @@
   }
 
 
-#define MAX_BUFFER  65000
+#define MAX_BUFFER  300000
 
 #define FLOOR(x)  ((x) & -64)
 #define CEIL(x)   (((x)+63) & -64)
@@ -118,6 +138,7 @@
     grBitmap   bit3;
     int        width, height, pitch, size;
     int        left, right, top, bottom;
+    int        x_top, y_top;
 
     left  = FLOOR( glyph->metrics.horiBearingX );
     right = CEIL( glyph->metrics.horiBearingX + glyph->metrics.width );
@@ -167,10 +188,17 @@
     }
       
     /* Then, blit the image to the target surface */
+    x_top = x_offset + TRUNC(left);
+    y_top = y_offset - TRUNC(top);
+
+/*
+    if (bit.pitch < 0)
+      y_top = bit.rows - y_top;
+*/
     grBlitGlyphToBitmap( &bit,
                          &bit3,
-                         x_offset + TRUNC(left),
-                         y_offset - TRUNC(top),
+                         x_top,
+                         y_top,
                          (grColor)127L ); 
     return 0;
   }
@@ -215,7 +243,6 @@
 
     FT_Error    error;
 
-
     start_x = 4;
     start_y = 16 + ptsize ;
 
@@ -231,6 +258,19 @@
     {
       if ( !(error = LoadChar( i, hinted )) )
       {
+#ifdef DEBUG
+        if (i <= first_glyph+6)
+        {
+          LOG(( "metrics[%02d] = [%x %x]\n",
+                i,
+                glyph->metrics.horiBearingX,
+                glyph->metrics.horiAdvance ));
+
+          if (i == first_glyph+6)
+          LOG(( "-------------------------\n"));
+        }
+        
+#endif
         Render_Glyph( x, y );
 
         x += ( glyph->metrics.horiAdvance >> 6 ) + 1;

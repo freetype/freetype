@@ -77,7 +77,7 @@
 
   short  visual;      /* display glyphs while rendering */
   short  gray_render; /* smooth fonts with gray levels  */
-
+  short  force_low;
 
 
   static void Clear_Buffer();
@@ -152,8 +152,10 @@
       return error;
 
     glyph->outline.second_pass    = 0;
-    glyph->outline.high_precision = 0;
     glyph->outline.dropout_mode   = 0;
+
+    if (force_low)
+      glyph->outline.high_precision = 0;
 
     /* debugging */
 #if 0
@@ -174,8 +176,10 @@
                     &outlines[cur_glyph] );
 
     /* copy the glyph outline into it */
-    glyph->outline.high_precision = 0;
     glyph->outline.second_pass    = 0;
+    if (force_low)
+      glyph->outline.high_precision = 0;
+
     FT_Copy_Outline( &glyph->outline, &outlines[cur_glyph] );
 
     /* center outline around 0 */
@@ -208,8 +212,6 @@
   FT_Error  ConvertRaster( int  index )
   {
     outlines[index].second_pass    = 0;
-    outlines[index].high_precision = 0;
-
     return FT_Get_Outline_Bitmap( library, &outlines[index], &Bit );
   }
 
@@ -224,6 +226,7 @@
       fprintf( stderr, "   -s : character pixel size (default is 600)\n" );
       fprintf( stderr, "   -v : display results..\n" );
       fprintf( stderr, "   -g : render anti-aliased glyphs\n" );
+      fprintf( stderr, "   -l : force low quality even at small sizes\n" );
       exit(1);
   }
 
@@ -243,6 +246,7 @@
 
     gray_render = 0;
     visual      = 0;
+    force_low   = 0;
 
     while ( argc > 1 && argv[1][0] == '-' )
     {
@@ -250,6 +254,10 @@
       {
       case 'g':
         gray_render = 1;
+        break;
+
+      case 'l':
+        force_low = 1;
         break;
 
       case 'v':
