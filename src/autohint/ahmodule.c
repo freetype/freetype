@@ -26,6 +26,8 @@
 
 #ifdef  DEBUG_HINTER
    extern AH_Hinter*  ah_debug_hinter = NULL;
+   extern FT_Bool     ah_debug_disable_horz = 0;
+   extern FT_Bool     ah_debug_disable_vert = 0;
 #endif
 
   typedef struct  FT_AutoHinterRec_

@@ -63,14 +63,17 @@ static  int   pixel_size = 12;
  /************************************************************************/
  /************************************************************************/
 
-static  int   option_show_axis   = 1;
-static  int   option_show_dots   = 1;
-static  int   option_show_stroke = 0;
-static  int   option_show_glyph  = 1;
-static  int   option_show_grid   = 1;
-static  int   option_show_em     = 0;
-static  int   option_show_smooth = 1;
-static  int   option_show_blues  = 0;
+static  int   option_show_axis     = 1;
+static  int   option_show_dots     = 1;
+static  int   option_show_stroke   = 0;
+static  int   option_show_glyph    = 1;
+static  int   option_show_grid     = 1;
+static  int   option_show_em       = 0;
+static  int   option_show_smooth   = 1;
+static  int   option_show_blues    = 0;
+static  int   option_show_edges    = 0;
+static  int   option_show_segments = 1;
+static  int   option_show_links    = 1;
 
 static  int   option_show_ps_hints   = 1;
 static  int   option_show_horz_hints = 1;
@@ -105,6 +108,11 @@ static  NV_Path   symbol_rect_v  = NULL;
 #define  GHOST_HINT_COLOR  0xE00000FF
 #define  STEM_HINT_COLOR   0xE02020FF
 #define  STEM_JOIN_COLOR   0xE020FF20
+
+#define  EDGE_COLOR        0xF0704070
+#define  SEGMENT_COLOR     0xF0206040
+#define  LINK_COLOR        0xF0FFFF00
+#define  SERIF_LINK_COLOR  0xF0FF808F  
 
 /* print message and abort program */
 static void
@@ -607,18 +615,251 @@ ps2_draw_control_points( void )
  /************************************************************************/
  /************************************************************************/
 
-static void
-ah_draw_smooth_points( AH_Hinter  hinter )
+static NV_Path
+ah_link_path( NV_Vector*   p1,
+              NV_Vector*   p4,
+              NV_Bool      vertical )
 {
-  if ( ah_debug_hinter )
+  NV_PathWriter  writer;
+  NV_Vector      p2, p3;
+  NV_Path        path, stroke;
+
+  if ( vertical )
   {
+    p2.x = p4->x;
+    p2.y = p1->y;
     
+    p3.x = p1->x;
+    p3.y = p4->y;
+  }
+  else
+  {
+    p2.x = p1->x;
+    p2.y = p4->y;
+    
+    p3.x = p4->x;
+    p3.y = p1->y;
+  }  
+  
+  nv_path_writer_new( renderer, &writer );
+  nv_path_writer_moveto( writer, p1 );
+  nv_path_writer_cubicto( writer, &p2, &p3, p4 );
+  nv_path_writer_end( writer );
+  
+  path = nv_path_writer_get_path( writer );
+  nv_path_writer_destroy( writer );
+  
+  nv_path_stroke( path, 1., nv_path_linecap_butt, nv_path_linejoin_round, 1.,  &stroke );
+  
+  nv_path_destroy( path );
+  
+  return stroke;
+}              
+
+
+static void
+ah_draw_smooth_points( void )
+{
+  if ( ah_debug_hinter && option_show_smooth )
+  {
+    AH_Outline*  glyph = ah_debug_hinter->glyph;
+    FT_UInt      count = glyph->num_points;
+    AH_Point*    point = glyph->points;
+    
+    nv_painter_set_color( painter, SMOOTH_COLOR, 256 );
+    
+    for ( ; count > 0; count--, point++ )
+    {
+      if ( !( point->flags & ah_flag_weak_interpolation ) )
+      {
+        NV_Transform  transform, *trans = &transform;
+        NV_Vector     vec;
+        
+        vec.x = point->x - ah_debug_hinter->pp1.x;
+        vec.y = point->y;
+        nv_vector_transform( &vec, &size_transform );
+        
+        nv_transform_set_translate( &transform, vec.x, vec.y );
+        nv_painter_fill_path( painter, trans, 0, symbol_circle );
+      }
+    }
   }
 }
 
+
 static void
-ah_draw_edges( AH_Hinter  hinter )
+ah_draw_edges( void )
 {
+  if ( ah_debug_hinter )
+  {
+    AH_Outline*  glyph = ah_debug_hinter->glyph;
+    FT_UInt      count;
+    AH_Edge*     edge;
+    FT_Pos       pp1 = ah_debug_hinter->pp1.x;
+    
+    nv_painter_set_color( painter, EDGE_COLOR, 256 );
+
+    if ( option_show_edges )
+    {
+      /* draw verticla edges */
+      if ( option_show_vert_hints )
+      {    
+        count = glyph->num_vedges;
+        edge  = glyph->vert_edges;
+        for ( ; count > 0; count--, edge++ )
+        {
+          NV_Vector     vec;
+          NV_Pos        x;
+          
+          vec.x = edge->pos - pp1;
+          vec.y = 0;
+          
+          nv_vector_transform( &vec, &size_transform );
+          x = (FT_Pos)( vec.x + 0.5 );
+          
+          nv_pixmap_fill_rect( target, x, 0, 1, target->height, EDGE_COLOR );
+        }
+      }
+  
+      /* draw horizontal edges */
+      if ( option_show_horz_hints )
+      {
+        count = glyph->num_hedges;
+        edge  = glyph->horz_edges;
+        for ( ; count > 0; count--, edge++ )
+        {
+          NV_Vector     vec;
+          NV_Pos        x;
+          
+          vec.x = 0;
+          vec.y = edge->pos;
+          
+          nv_vector_transform( &vec, &size_transform );
+          x = (FT_Pos)( vec.y + 0.5 );
+          
+          nv_pixmap_fill_rect( target, 0, x, target->width, 1, EDGE_COLOR );
+        }
+      }
+    }
+    
+    if ( option_show_segments )
+    {
+      /* draw vertical segments */
+      if ( option_show_vert_hints )
+      {
+        AH_Segment*  seg   = glyph->vert_segments;
+        FT_UInt      count = glyph->num_vsegments;
+        
+        for ( ; count > 0; count--, seg++ )
+        {
+          AH_Point  *first, *last;
+          NV_Vector  v1, v2;
+          NV_Pos     y1, y2, x;
+          
+          first = seg->first;
+          last  = seg->last;
+          
+          v1.x = v2.x = first->x - pp1;
+          
+          if ( first->y <= last->y )
+          {
+            v1.y = first->y;
+            v2.y = last->y;
+          }
+          else
+          {
+            v1.y = last->y;
+            v2.y = first->y;
+          }
+          
+          nv_vector_transform( &v1, &size_transform );
+          nv_vector_transform( &v2, &size_transform );
+          
+          y1 = (NV_Pos)( v1.y + 0.5 );
+          y2 = (NV_Pos)( v2.y + 0.5 );
+          x  = (NV_Pos)( v1.x + 0.5 );
+          
+          nv_pixmap_fill_rect( target, x-1, y2, 3, ABS(y1-y2)+1, SEGMENT_COLOR );
+        }
+      }
+      
+      /* draw horizontal segments */
+      if ( option_show_horz_hints )
+      {
+        AH_Segment*  seg   = glyph->horz_segments;
+        FT_UInt      count = glyph->num_hsegments;
+        
+        for ( ; count > 0; count--, seg++ )
+        {
+          AH_Point  *first, *last;
+          NV_Vector  v1, v2;
+          NV_Pos     y1, y2, x;
+          
+          first = seg->first;
+          last  = seg->last;
+          
+          v1.y = v2.y = first->y;
+          
+          if ( first->x <= last->x )
+          {
+            v1.x = first->x - pp1;
+            v2.x = last->x - pp1;
+          }
+          else
+          {
+            v1.x = last->x - pp1;
+            v2.x = first->x - pp1;
+          }
+          
+          nv_vector_transform( &v1, &size_transform );
+          nv_vector_transform( &v2, &size_transform );
+          
+          y1 = (NV_Pos)( v1.x + 0.5 );
+          y2 = (NV_Pos)( v2.x + 0.5 );
+          x  = (NV_Pos)( v1.y + 0.5 );
+          
+          nv_pixmap_fill_rect( target, y1, x-1, ABS(y1-y2)+1, 3, SEGMENT_COLOR );
+        }
+      }
+
+
+      if ( option_show_vert_hints && option_show_links )
+      {
+        AH_Segment*  seg   = glyph->vert_segments;
+        FT_UInt      count = glyph->num_vsegments;
+        
+        for ( ; count > 0; count--, seg++ )
+        {
+          AH_Segment*  seg2 = NULL;
+          NV_Path      link;
+          NV_Vector    v1, v2;
+          
+          if ( seg->link )
+          {
+            if ( seg->link > seg )
+              seg2 = seg->link;
+          }
+          else if ( seg->serif )
+            seg2 = seg->serif;
+          
+          if ( seg2 )
+          {
+            v1.x = seg->first->x  - pp1;
+            v2.x = seg2->first->x - pp1;
+            v1.y = (seg->first->y + seg->last->y)/2;
+            v2.y = (seg2->first->y + seg2->last->y)/2;
+            
+            link = ah_link_path( &v1, &v2, 1 );
+            
+            nv_painter_set_color( painter, seg->serif ? SERIF_LINK_COLOR : LINK_COLOR, 256 );
+            nv_painter_fill_path( painter, &size_transform, 0, link );
+  
+            nv_path_destroy( link );
+          }
+        }
+      }
+    }
+  }
 }
 
  /************************************************************************/
@@ -717,6 +958,9 @@ draw_glyph( int  glyph_index )
     }
   }
 
+  ah_draw_smooth_points();
+  ah_draw_edges();
+  
   nv_path_destroy( path );
   
   /* autre infos */
@@ -908,7 +1152,7 @@ parse_options( int*  argc_p, char*** argv_p )
 
 int  main( int  argc, char**  argv )
 {
-  char*  filename = "/fonts/lcdxsr.pfa";
+  char*  filename = "/winnt/fonts/arial.ttf";
   
   parse_options( &argc, &argv );
   
@@ -958,7 +1202,12 @@ int  main( int  argc, char**  argv )
       clear_background();
       draw_grid();
 
-      ps_debug_hints = 0;
+      ps_debug_hints  = 0;
+      ah_debug_hinter = 0;
+
+      ah_debug_disable_vert = ps_debug_no_vert_hints;
+      ah_debug_disable_horz = ps_debug_no_horz_hints;
+
       draw_ps_blue_zones();
       draw_glyph( glyph_index );
       ps2_draw_control_points();
