@@ -83,7 +83,7 @@ FT_BEGIN_HEADER
   /* detected and later hinted through strong interpolation to correct     */
   /* some unpleasant artefacts.                                            */
   /*                                                                       */
-#define AH_OPTION_NO_STRONG_INTERPOLATION
+#undef  AH_OPTION_NO_STRONG_INTERPOLATION
 
 
   /*************************************************************************/

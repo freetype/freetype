@@ -149,7 +149,8 @@
   static void
   ah_align_serif_edge( AH_Hinter*  hinter,
                        AH_Edge*    base,
-                       AH_Edge*    serif )
+                       AH_Edge*    serif,
+                       int         vertical )
   {
     FT_Pos  dist;
     FT_Pos  sign = 1;
@@ -167,10 +168,10 @@
     /* do not strengthen serifs */
     if ( base->flags & ah_edge_done )
     {
-      if ( dist > 64 )
-        dist = ( dist + 16 ) & -64;
+      if ( dist >= 64 )
+        dist = ( dist + 8 ) & -64;
 
-      else if ( dist <= 32 )
+      else if ( dist <= 32 && !vertical )
         dist = ( dist + 33 ) >> 1;
     }
 
@@ -257,8 +258,8 @@
 
           if ( !anchor )
             anchor = edge;
-         }
-       }
+        }
+      }
 
       /* now, we will align all stem edges, trying to maintain the */
       /* relative order of stems in the glyph..                    */
@@ -343,7 +344,7 @@
 
         if ( edge->serif )
         {
-          ah_align_serif_edge( hinter, edge->serif, edge );
+          ah_align_serif_edge( hinter, edge->serif, edge, dimension );
         }
         else if ( !anchor )
         {

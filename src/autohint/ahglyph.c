@@ -29,7 +29,6 @@
 #include <stdio.h>
 
 
-
 #ifdef AH_DEBUG
 
   void
@@ -39,7 +38,6 @@
     AH_Edge*     edge_limit;
     AH_Segment*  segments;
     FT_Int       dimension;
-
 
     edges      = outline->horz_edges;
     edge_limit = edges + outline->num_hedges;
@@ -938,19 +936,23 @@
       AH_Segment*  seg1;
       AH_Segment*  seg2;
 
-
       /* now compare each segment to the others */
       for ( seg1 = segments; seg1 < segment_limit; seg1++ )
       {
-        FT_Pos       best_score   = 32000;
-        AH_Segment*  best_segment = 0;
-
+        FT_Pos       best_score;
+        AH_Segment*  best_segment;
 
         /* the fake segments are introduced to hint the metrics -- */
         /* we must never link them to anything                     */
         if ( seg1->first == seg1->last )
           continue;
 
+        best_segment = seg1->link;
+        if ( best_segment )
+          best_score = seg1->score;
+        else
+          best_score = 32000;
+          
         for ( seg2 = segments; seg2 < segment_limit; seg2++ )
           if ( seg1 != seg2 && seg1->dir + seg2->dir == 0 )
           {
@@ -970,17 +972,10 @@
             if ( pos1 == pos2 || !(is_dir ^ is_pos) )
               continue;
 
-            /* Check the two segments.  We now have a better algorithm */
-            /* that doesn't rely on the segment points themselves but  */
-            /* on their relative position.  This gets rids of many     */
-            /* unpleasant artefacts and incorrect stem/serifs          */
-            /* computations.                                           */
-
-            /* first of all, compute the size of the `common' height */
             {
               FT_Pos  min = seg1->min_coord;
               FT_Pos  max = seg1->max_coord;
-              FT_Pos  len, score;
+              FT_Pos  len, dist, score;
               FT_Pos  size1, size2;
 
 
@@ -990,22 +985,24 @@
               if ( min < seg2->min_coord )
                 min = seg2->min_coord;
 
-              if ( max < seg2->max_coord )
+              if ( max > seg2->max_coord )
                 max = seg2->max_coord;
 
               len   = max - min;
-              score = seg2->pos - seg1->pos;
-              if ( score < 0 )
-                score = -score;
+              dist  = seg2->pos - seg1->pos;
+              if ( dist < 0 )
+                dist = -dist;
 
-              /* before comparing the scores, take care that the segments */
-              /* are really facing each other (often not for italics..)   */
-              if ( 16 * len >= size1 && 16 * len >= size2 )
-                if ( score < best_score )
-                {
-                  best_score   = score;
-                  best_segment = seg2;
-                }
+              if ( len < 8 )
+                score = 300 + dist;
+              else
+                score = dist + 300/len;
+
+              if ( score < best_score )
+              {
+                best_score   = score;
+                best_segment = seg2;
+              }
             }
           }
 
