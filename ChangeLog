@@ -1,3 +1,25 @@
+2003-05-21  Martin Zinser  <zinser@decus.de>
+
+	* t1load.c (parse_blend_axis_types): Fix compiler warning.
+
+2003-05-21  Weiqi Gao  <weiqigao@networkusa.net>
+
+	* src/gzip/ftgzip.c (ft_gzip_file_io): Avoid zero value of `delta'
+	to prevent infinite loop.
+
+2003-05-21  Lars Clausen  <lrclause@cs.uiuc.edu>
+
+	* docs/VERSION.DLL: Provide better autoconf snippet to check
+	FreeType version.
+
+2003-05-21  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftobjs.c (open_face): Free `internal' not
+	`face->internal' in case of error to avoid possible segfault.
+
+	* src/pshinter/pshalgo3.c (ps3_hints_apply): Check whether we
+	actually have an outline.
+
 2003-05-20  David Chester  <davidchester@qmx.net>
 
 	* src/pshinter/pshalgo3.c (ps3_hints_apply): Try to optimize
@@ -221,7 +243,7 @@
 	Updated.
 
 	* src/gzip/ftgzip.c: C++ doesn't like that the array `inflate_mask'
-	is declared twice.  It is perhaps better to modify the zlip source
+	is declared twice.  It is perhaps better to modify the zlib source
 	files directly instead of this hack.
 	(zcalloc, zfree, ft_gzip_stream_close, ft_gzip_stream_io): Add casts
 	to make build with g++ successful.

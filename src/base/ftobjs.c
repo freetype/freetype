@@ -853,7 +853,7 @@
              FT_Face*       aface )
   {
     FT_Memory         memory;
-    FT_Driver_Class  clazz;
+    FT_Driver_Class   clazz;
     FT_Face           face = 0;
     FT_Error          error, error2;
     FT_Face_Internal  internal;
@@ -916,7 +916,7 @@
     if ( error )
     {
       clazz->done_face( face );
-      FT_FREE( face->internal );
+      FT_FREE( internal );
       FT_FREE( face );
       *aface = 0;
     }
@@ -1136,7 +1136,7 @@
     if ( face_index == -1 )
       face_index = 0;
     if ( face_index != 0 )
-      return FT_Err_Cannot_Open_Resource;
+      return error;
 
     if ( FT_ALLOC( offsets, (FT_Long)resource_cnt * sizeof ( FT_Long ) ) )
       return error;
