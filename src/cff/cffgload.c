@@ -2442,12 +2442,13 @@
                               font_offset.y );
 
         advance.x = metrics->horiAdvance;
+        advance.y = 0;
+        FT_Vector_Transform( &advance, &font_matrix );
+        metrics->horiAdvance = advance.x + font_offset.x;
+        advance.x = 0;
         advance.y = metrics->vertAdvance;
         FT_Vector_Transform( &advance, &font_matrix );
-        advance.x += font_offset.x;
-        advance.y += font_offset.y;
-        metrics->horiAdvance = advance.x;
-        metrics->vertAdvance = advance.y;
+        metrics->vertAdvance = advance.y + font_offset.y;
 
         if ( ( load_flags & FT_LOAD_NO_SCALE ) == 0 )
         {
