@@ -9,12 +9,25 @@ LATEST CHANGES BETWEEN 2.1.6 and 2.1.5
     - Type 1 font  files in  binary format  (PFB) with  an end-of-file
       indicator weren't accepted by the FreeType engine.
 
+    - Fonts which contain /PaintType  and /StrokeWidth no longer cause
+      a segfault.  This bug has been introduced in version 2.1.5.
+
+    - Fonts  loaded  with   FT_LOAD_RENDER  no  longer  cause  strange
+      results.  This bug has been introduced in version 2.1.5.
+
+    - Some  Windows   (bitmap)  FNT/FON  files   couldn't  be  handled
+      correctly.
+
   II. IMPORTANT CHANGES
 
     - The internal  module API  has been heavily  changed in  favor of
       massive simplifications within the font engine.  This also means
       that authors of third-party modules must adapt their code to the
       new scheme.
+
+    - The PostScript  parser has been enhanced to  handle comments and
+      strings   correctly.   Additionally,   more  syntax   forms  are
+      recognized.
 
 
 =====================================================================
@@ -39,14 +52,14 @@ LATEST CHANGES BETWEEN 2.1.5 and 2.1.4
       longer overwritten.
 
     - The font matrix  wasn't applied to the advance  width for Type1,
-      CID, and  CFF fonts.  This  caused problem when  loading certain
-      synthetic Type 1 fonts like "Helvetica Narrow"
+      CID, and  CFF fonts.  This caused problems  when loading certain
+      synthetic Type 1 fonts like `Helvetica Narrow'.
 
     - The test  for the charset registry  in BDF and PCF  fonts is now
       case-insensitive.
 
-    - FT_Vector_Rotate rotating sometimes  returned strange values due
-      to rounding errors.
+    - FT_Vector_Rotate  sometimes  returned   strange  values  due  to
+      rounding errors.
 
     - The  PCF  driver  now  returns  the  correct  number  of  glyphs
       (including an artificial `notdef' glyph at index 0).

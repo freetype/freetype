@@ -1,3 +1,15 @@
+2003-10-22  Werner Lemberg  <wl@gnu.org>
+
+	* src/type1/t1load.c (parse_encoding): Handle `/Encoding [ ... ]'.
+
+	* src/type1/t1parse.c (T1_Get_Private_Dict): Test whether `eexec'
+	is real.
+
+	* src/type42/t42parse.c (t42_parse_encoding): Improve boundary
+	checking while parsing.
+
+	* docs/CHANGES: Updated.
+
 2003-10-21  Josselin Mouette  <joss@debian.org>
 
 	* include/freetype/internal/t1types.h (T1_FontRec): `paint_type'
@@ -488,7 +500,7 @@
 	step towards a massive simplification of the engine's internals, in
 	order to get rid of various numbers of hacks.
 
-	Note that this changes will break source & binary compatibility for
+	Note that these changes will break source & binary compatibility for
 	authors of external font drivers.
 
 	* include/freetype/config/ftconfig.h (FT_BEGIN_STMNT, FT_END_STMNT,

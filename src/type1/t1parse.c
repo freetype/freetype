@@ -299,24 +299,18 @@
       FT_Byte   c;
 
 
+    Again:
       for (;;)
       {
         c = cur[0];
         if ( c == 'e' && cur + 9 < limit )  /* 9 = 5 letters for `eexec' + */
                                             /* newline + 4 chars           */
         {
-          if ( cur[1] == 'e' && cur[2] == 'x' &&
-               cur[3] == 'e' && cur[4] == 'c' )
-          {
-            cur += 6; /* we skip the newline after the `eexec' */
-
-            /* XXX: Some fonts use DOS-linefeeds, i.e. \r\n; we need to */
-            /*      skip the extra \n if we find it                     */
-            if ( cur[0] == '\n' )
-              cur++;
-
+          if ( cur[1] == 'e' &&
+               cur[2] == 'x' &&
+               cur[3] == 'e' &&
+               cur[4] == 'c' )
             break;
-          }
         }
         cur++;
         if ( cur >= limit )
@@ -328,9 +322,42 @@
         }
       }
 
+      /* check whether `eexec' was real -- it could be in a comment */
+      /* or string (as e.g. in u003043t.gsf from ghostscript)       */
+
+      parser->root.cursor = parser->base_dict;
+      parser->root.limit  = cur + 9;
+
+      cur   = parser->root.cursor;
+      limit = parser->root.limit;
+
+      while ( cur < limit )
+      {
+        if ( *cur == 'e' && ft_strncmp( (char*)cur, "eexec", 5 ) == 0 )
+          goto Found;
+
+        T1_Skip_PS_Token( parser );
+        T1_Skip_Spaces  ( parser );
+        cur = parser->root.cursor;
+      }
+
+      /* we haven't found the correct `eexec'; go back and continue */
+      /* searching                                                  */
+
+      cur   = limit;
+      limit = parser->base_dict + parser->base_len;
+      goto Again;
+
       /* now determine where to write the _encrypted_ binary private  */
       /* dictionary.  We overwrite the base dictionary for disk-based */
       /* resources and allocate a new block otherwise                 */
+
+    Found:
+      parser->root.limit = parser->base_dict + parser->base_len;
+
+      T1_Skip_PS_Token( parser );
+      T1_Skip_Spaces  ( parser );
+      cur = parser->root.cursor;
 
       size = (FT_Long)( parser->base_len - ( cur - parser->base_dict ) );
 
