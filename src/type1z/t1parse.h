@@ -38,6 +38,29 @@
 #endif
 
 
+  /* simple enumeration type used to identify token types */
+  typedef enum T1_Token_Type_
+  {
+    t1_token_none = 0,
+    t1_token_any,
+    t1_token_string,
+    t1_token_array,
+    
+    /* do not remove */
+    t1_token_max
+    
+  } T1_Token_Type;
+
+  /* a simple structure used to identify tokens */
+  typedef struct T1_Token_Rec_
+  {
+    T1_Byte*       start;   /* first character of token in input stream */
+    T1_Byte*       limit;   /* first character after the token          */
+    T1_Token_Type  type;    /* type of token..                          */
+  
+  } T1_Token_Rec;  
+
+  /* enumeration type used to identify object fields */
   typedef enum T1_Field_Type_
   {
     t1_field_none = 0,
@@ -45,22 +68,84 @@
     t1_field_integer,
     t1_field_fixed,
     t1_field_string,
+    t1_field_integer_array,
     t1_field_fixed_array,
-    t1_field_coord_array
+    
+    /* do not remove */
+    t1_field_max
     
   } T1_Field_Type;
-  
-  
+
+  /* structure type used to model object fields */
   typedef struct T1_Field_Rec_
   {
-    T1_Field_Type  type;      /* type of field                        */
-    FT_UInt        offset;    /* offset of field in object            */
-    FT_UInt        size;      /* size of field in bytes               */
-    T1_Int         array_max; /* maximum number of elements for array */
-    T1_Int         power_ten; /* power of ten for "fixed" fields      */
-    
+    T1_Field_Type  type;          /* type of field                        */
+    T1_UInt        offset;        /* offset of field in object            */
+    T1_UInt        size;          /* size of field in bytes               */
+    T1_UInt        array_max;     /* maximum number of elements for array */
+    T1_UInt        count_offset;  /* offset of element count for arrays   */
+    T1_Int         flag_bit;      /* bit number for field flag            */
+   
   } T1_Field_Rec;
-  
+
+#define T1_FIELD_REF(s,f)  (((s*)0)->f)
+
+#define T1_FIELD_BOOL( _ftype, _fname )               \
+    { t1_field_bool,                                  \
+      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
+      sizeof(T1_FIELD_REF(_ftype,_fname)),            \
+      0, 0, 0 }
+
+#define T1_FIELD_NUM( _ftype, _fname )                \
+    { t1_field_integer,                               \
+      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
+      sizeof(T1_FIELD_REF(_ftype,_fname)),            \
+      0, 0, 0 }
+
+#define T1_FIELD_FIXED( _ftype, _fname, _power )      \
+    { t1_field_fixed,                                 \
+      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
+      sizeof(T1_FIELD_REF(_ftype,_fname)),            \
+      0, 0, 0 }
+
+#define T1_FIELD_STRING( _ftype, _fname )             \
+    { t1_field_string,                                \
+      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),   \
+      sizeof(T1_FIELD_REF(_ftype,_fname)),            \
+      0, 0, 0 }
+
+#define T1_FIELD_NUM_ARRAY( _ftype, _fname, _fcount, _fmax ) \
+    { t1_field_integer,                                      \
+      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),          \
+      sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                \
+      _fmax,                                                 \
+      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fcount),         \
+      0 }
+
+#define T1_FIELD_FIXED_ARRAY( _ftype, _fname, _fcount, _fmax ) \
+    { t1_field_fixed,                                          \
+      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),            \
+      sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                  \
+      _fmax,                                                   \
+      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fcount),           \
+      0 }
+
+#define T1_FIELD_NUM_ARRAY2( _ftype, _fname, _fmax )         \
+    { t1_field_integer,                                      \
+      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),          \
+      sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                \
+      _fmax,                                                 \
+      0, 0 }
+
+#define T1_FIELD_FIXED_ARRAY2( _ftype, _fname, _fmax )         \
+    { t1_field_fixed,                                          \
+      (T1_UInt)(char*)&T1_FIELD_REF(_ftype,_fname),            \
+      sizeof(T1_FIELD_REF(_ftype,_fname)[0]),                  \
+      _fmax,                                                   \
+      0, 0 }
+
+
+
 /*************************************************************************
  *
  * <Struct> T1_Table
@@ -214,6 +299,32 @@
                            void*          object,
                            T1_Field_Rec*  field );
 #endif
+
+
+
+
+
+  LOCAL_DEF
+  void      T1_Skip_Spaces( T1_Parser*  parser );
+
+  LOCAL_DEF
+  void      T1_ToToken( T1_Parser*    parser,
+                        T1_Token_Rec* token );
+
+  LOCAL_DEF
+  T1_Error  T1_Load_Field( T1_Parser*           parser,
+                           const T1_Field_Rec*  field,
+                           void**               objects,
+                           T1_UInt              max_objects,
+                           T1_ULong*            pflags );
+
+  LOCAL_DEF
+  T1_Error  T1_Load_Field_Table( T1_Parser*           parser,
+                                 const T1_Field_Rec*  field,
+                                 void**               objects,
+                                 T1_UInt              max_objects,
+                                 T1_ULong*            pflags );
+
 
   LOCAL_DEF
   T1_Error  T1_New_Parser( T1_Parser*  parser,

@@ -39,6 +39,18 @@
 #define FT_COMPONENT  trace_t1load
 
 /*************************************************************************/
+/*************************************************************************/
+/*************************************************************************/
+/*****                                                               *****/
+/*****           IMPLEMENTATION OF T1_TABLE OBJECT                   *****/
+/*****                                                               *****/
+/*****                                                               *****/
+/*************************************************************************/
+/*************************************************************************/
+/*************************************************************************/
+
+
+/*************************************************************************/
 /*                                                                       */
 /* <Function> T1_New_Table                                               */
 /*                                                                       */
@@ -220,6 +232,163 @@
       table->init = 0;
     }
   }
+
+/*************************************************************************/
+/*************************************************************************/
+/*************************************************************************/
+/*****                                                               *****/
+/*****               INPUT STREAM PARSER                             *****/
+/*****                                                               *****/
+/*****                                                               *****/
+/*************************************************************************/
+/*************************************************************************/
+/*************************************************************************/
+
+  #define IS_T1_WHITESPACE(c)  ( (c) == ' '  || (c) == '\t' )
+  #define IS_T1_LINESPACE(c)   ( (c) == '\r' || (c) == '\n' )
+
+  #define IS_T1_SPACE(c)  ( IS_T1_WHITESPACE(c) || IS_T1_LINESPACE(c) )
+
+  LOCAL_FUNC
+  void     T1_Skip_Spaces( T1_Parser*  parser )
+  {
+    T1_Byte* cur   = parser->cursor;
+    T1_Byte* limit = parser->limit;
+
+    while (cur < limit)
+    {
+      T1_Byte  c = *cur;
+      if (!IS_T1_SPACE(c))
+        break;
+      cur++;
+    }
+    parser->cursor = cur;
+  }
+
+  LOCAL_FUNC
+  void  T1_ToToken( T1_Parser*     parser,
+                    T1_Token_Rec*  token )
+  {
+    T1_Byte*  cur;
+    T1_Byte*  limit;
+    T1_Byte   starter, ender;
+    T1_Int    embed;
+
+    token->type  = t1_token_none;
+    token->start = 0;
+    token->limit = 0;
+
+    /* first of all, skip space */
+    T1_Skip_Spaces(parser);
+
+    cur   = parser->cursor;
+    limit = parser->limit;
+
+    if ( cur < limit )
+    {
+      switch (*cur)
+      {
+        /************* check for strings ***********************/
+        case '(':
+          token->type = t1_token_string;
+          ender = ')';
+          goto Lookup_Ender;
+
+        /************* check for programs/array ****************/
+        case '{':
+          token->type = t1_token_array;
+          ender = '}';
+          goto Lookup_Ender;
+
+        /************* check for table/array ******************/
+        case '[':
+          token->type = t1_token_array;
+          ender = ']';
+
+        Lookup_Ender:
+          embed   = 1;
+          starter = *cur++;
+          token->start = cur;
+          while (cur < limit)
+          {
+            if (*cur == starter)
+              embed++;
+            else if (*cur == ender)
+            {
+              embed--;
+              if (embed <= 0)
+              {
+                token->limit = cur++;
+                break;
+              }
+            }
+            cur++;
+          }
+          break;
+
+        /* **************** otherwise, it's any token **********/
+        default:
+          token->start = cur++;
+          token->type  = t1_token_any;
+          while (cur < limit && !IS_T1_SPACE(*cur))
+            cur++;
+
+          token->limit = cur;
+      }
+
+      if (!token->limit)
+      {
+        token->start = 0;
+        token->type  = t1_token_none;
+      }
+
+      parser->cursor = cur;
+    }
+  }
+
+
+  LOCAL_FUNC
+  void  T1_ToTokenArray( T1_Parser*     parser,
+                         T1_Token_Rec*  tokens,
+                         T1_UInt        max_tokens,
+                         T1_Int        *pnum_tokens )
+  {
+    T1_Token_Rec  master;
+
+    *pnum_tokens = -1;
+
+    T1_ToToken( parser, &master );
+    if (master.type == t1_token_array)
+    {
+      T1_Byte*       old_cursor = parser->cursor;
+      T1_Byte*       old_limit  = parser->limit;
+      T1_Token_Rec*  cur        = tokens;
+      T1_Token_Rec*  limit      = cur + max_tokens;
+
+      parser->cursor = master.start;
+      parser->limit  = master.limit;
+
+      while (parser->cursor < parser->limit)
+      {
+        T1_Token_Rec  token;
+        
+        T1_ToToken( parser, &token );
+        if (!token.type)
+          break;
+          
+        if (cur < limit)
+          *cur = token;
+          
+        cur++;
+      }
+
+      *pnum_tokens = cur - tokens;
+
+      parser->cursor = old_cursor;
+      parser->limit  = old_limit;
+    }
+  }
+
 
   static
   T1_Long  t1_toint( T1_Byte* *cursor,
@@ -533,6 +702,165 @@
   }
 
 
+
+ /* Loads a simple field (i.e. non-table) into the current list of objects */
+  LOCAL_FUNC
+  T1_Error  T1_Load_Field( T1_Parser*           parser,
+                           const T1_Field_Rec*  field,
+                           void**               objects,
+                           T1_UInt              max_objects,
+                           T1_ULong*            pflags )
+  {
+    T1_Token_Rec  token;
+    T1_Byte*      cur;
+    T1_Byte*      limit;
+    T1_UInt       count;
+    T1_UInt       index;
+    T1_Error      error;
+
+    T1_ToToken( parser, &token );
+    if (!token.type)
+      goto Fail;
+
+    count = 1;
+    index = 0;
+    cur   = token.start;
+    limit = token.limit;
+
+    if (token.type == t1_token_array)
+    {
+      /* if this is an array, and we have no blend, an error occurs */
+      if (max_objects == 0)
+        goto Fail;
+        
+      count = max_objects;
+      index = 1;
+    }
+
+    for ( ; count > 0; count--, index++ )
+    {
+      T1_Byte*   q = (T1_Byte*)objects[index] + field->offset;
+      T1_Long    val;
+      T1_String* string;
+
+      switch (field->type)
+      {
+        case t1_field_bool:
+          {
+            val = t1_tobool( &cur, limit );
+            goto Store_Integer;
+          }
+
+        case t1_field_fixed:
+          {
+            val = t1_tofixed( &cur, limit, 3 );
+            goto Store_Integer;
+          }
+
+        case t1_field_integer:
+          {
+            val = t1_toint( &cur, limit );
+          Store_Integer:
+            switch (field->size)
+            {
+              case 1:  *(T1_Byte*)q   = (T1_Byte)val;   break;
+              case 2:  *(T1_UShort*)q = (T1_UShort)val; break;
+              default: *(T1_Long*)q   = val;
+            }
+          }
+          break;
+
+        case t1_field_string:
+          {
+            FT_Memory  memory = parser->memory;
+            FT_UInt    len    = limit-cur;
+            
+            if ( ALLOC( string, len+1 ) )
+              goto Exit;
+              
+            MEM_Copy( string, cur, len );
+            string[len] = 0;              
+
+            *(T1_String**)q = string;
+          }
+          break;
+          
+        default:
+          /* an error occured */
+          goto Fail;
+      }
+    }
+    if (pflags)
+      *pflags |= 1L << field->flag_bit;
+    error    = 0;
+
+  Exit:
+    return error;
+  Fail:
+    error = T1_Err_Invalid_File_Format;
+    goto Exit;
+  }
+
+
+#define T1_MAX_TABLE_ELEMENTS  32
+
+  LOCAL_FUNC
+  T1_Error  T1_Load_Field_Table( T1_Parser*           parser,
+                                 const T1_Field_Rec*  field,
+                                 void**               objects,
+                                 T1_UInt              max_objects,
+                                 T1_ULong*            pflags )
+  {
+    T1_Token_Rec  elements[T1_MAX_TABLE_ELEMENTS];
+    T1_Token_Rec* token;
+    T1_Int        num_elements;
+    T1_Error      error = 0;
+    T1_Byte*      old_cursor;
+    T1_Byte*      old_limit;
+    T1_Field_Rec  fieldrec = *(T1_Field_Rec*)field;
+    
+    T1_ToTokenArray( parser, elements, 32, &num_elements );
+    if (num_elements < 0)
+      goto Fail;
+
+    if (num_elements > T1_MAX_TABLE_ELEMENTS)
+      num_elements = T1_MAX_TABLE_ELEMENTS;
+
+    old_cursor = parser->cursor;
+    old_limit  = parser->limit;
+
+    /* we store the elements count */
+    *(T1_Byte*)((T1_Byte*)objects[0] + field->count_offset) = num_elements;
+
+    /* we now load each element, adjusting the field.offset on each one */
+    token = elements;
+    for ( ; num_elements > 0; num_elements--, token++ )
+    {
+      parser->cursor = token->start;
+      parser->limit  = token->limit;
+      T1_Load_Field( parser, &fieldrec, objects, max_objects, 0 );
+      fieldrec.offset += fieldrec.size;
+    }
+
+    if (pflags)
+      *pflags |= 1L << field->flag_bit;
+      
+    parser->cursor = old_cursor;
+    parser->limit  = old_limit;
+
+  Exit:
+    return error;
+  Fail:
+    error = T1_Err_Invalid_File_Format;
+    goto Exit;
+  }
+
+
+
+
+
+
+
   LOCAL_FUNC
   T1_Long  T1_ToInt  ( T1_Parser*  parser )
   {
@@ -580,41 +908,6 @@
   }
 
 
-#if 0
-  /* load a single field in an object */
-  LOCAL_FUNC
-  T1_Error  T1_Load_Field( T1_Parser*     parser,
-                           void*          object,
-                           T1_Field_Rec*  field )
-  {
-    FT_Byte*  p       = (FT_Byte*)object + field->offset;
-    FT_Byte** pcursor = &parser->cursor;
-    FT_Byte*  limit   = parser->limit;
-    
-    switch (field->type)
-    {
-      case t1_field_boolean:
-        *(T1_Bool*)p = t1_tobool( pcursor, limit );
-        break;
-        
-      case t1_field_string:
-        *(T1_String**)p = t1_tostring( pcursor, limit, parser->memory );
-        break;
-        
-      case t1_field_int:
-        *(T1_Long*)p = t1_toint( pcursor, limit );
-        break;
-        
-      case t1_field_fixed:
-        *(T1_Fixed*)p = t1_tofixed( pcursor, limit, field->power_ten );
-        break;
-        
-      default:
-        return T1_Err_Invalid_Argument;
-    }
-    return 0;
-  }                           
-#endif
 
   static
   FT_Error  read_pfb_tag( FT_Stream  stream, T1_UShort *tag, T1_Long*  size )

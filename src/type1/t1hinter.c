@@ -291,7 +291,7 @@
 
     /* start with horizontal snap zones */
     direction      = 0;
-    standard_width = priv->standard_width;
+    standard_width = priv->standard_width[0];
     n_zones        = priv->num_snap_widths;
     base_zone      = hints->snap_widths;
     orgs           = priv->stem_snap_widths;
@@ -458,7 +458,7 @@
 
       /* continue with vertical snap zone */
       direction++;
-      standard_width = priv->standard_height;
+      standard_width = priv->standard_height[0];
       n_zones        = priv->num_snap_heights;
       base_zone      = hints->snap_heights;
       orgs           = priv->stem_snap_heights;

@@ -39,6 +39,7 @@
 
     T1_Int           num_subrs;
     T1_Table         subrs;
+    T1_Bool          fontdata;
 
   } T1_Loader;
 

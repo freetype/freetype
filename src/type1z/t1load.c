@@ -70,82 +70,312 @@
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1load
 
+ /***************************************************************************/
+ /***************************************************************************/
+ /*****                                                                 *****/
+ /*****                    MULTIPLE MASTERS SUPPORT                     *****/
+ /*****                                                                 *****/
+ /***************************************************************************/
+ /***************************************************************************/
+
+ static  T1_Error  t1_allocate_blend( T1_Face   face,
+                                      T1_UInt   num_designs,
+                                      T1_UInt   num_axis )
+ {
+   T1_Blend*  blend;
+   FT_Memory  memory = face->root.memory;
+   T1_Error   error  = 0;
+   
+   blend = face->blend;
+   if (!blend)
+   {
+     if ( ALLOC( blend, sizeof(*blend) ) )
+       goto Exit;
+       
+     face->blend = blend;
+   }
+   
+   /* allocate design data if needed */
+   if (num_designs > 0)
+   {
+     if (blend->num_designs == 0)
+     {
+       /* allocate the blend "private" and "font_info" dictionaries */
+       if ( ALLOC_ARRAY( blend->font_infos[1], num_designs, T1_FontInfo ) ||
+            ALLOC_ARRAY( blend->privates[1], num_designs, T1_Private )     )
+         goto Exit;
+  
+       blend->font_infos[0] = &face->type1.font_info;
+       blend->privates  [0] = &face->type1.private_dict;
+       blend->num_designs   = num_designs;
+     }
+     else if (blend->num_designs != num_designs)
+       goto Fail;
+   }
+   
+   /* allocate axis data if needed */
+   if (num_axis > 0)
+   {
+     if (blend->num_axis != 0 && blend->num_axis != num_axis)
+       goto Fail;
+       
+     blend->num_axis = num_axis;
+   }
+   
+   /* allocate the blend design pos table if needed */
+   num_designs = blend->num_designs;
+   num_axis    = blend->num_axis;
+   if ( num_designs && num_axis && blend->design_pos[0] == 0)
+   {
+     FT_UInt  n;
+     
+     if ( ALLOC_ARRAY( blend->design_pos[0], num_designs*num_axis, FT_Fixed ) )
+       goto Exit;
+       
+     for ( n = 1; n < num_designs; n++ )
+       blend->design_pos[n] = blend->design_pos[0] + num_axis*n;       
+   }
+   
+ Exit:
+   return error;
+ Fail:
+   error = -1;
+   goto Exit;
+ }                                  
+
+
+ static  void t1_done_blend( T1_Face  face )
+ {
+   FT_Memory  memory = face->root.memory;
+   T1_Blend*  blend  = face->blend;
+   
+   if (blend)
+   {
+     T1_UInt  num_designs = blend->num_designs;
+     T1_UInt  num_axis    = blend->num_axis;
+     T1_UInt  n;
+          
+     /* release design pos table */
+     FREE( blend->design_pos[0] );
+     for ( n = 1; n < num_designs; n++ )
+       blend->design_pos[n] = 0;
+
+     /* release blend "private" and "font info" dictionaries */
+     FREE( blend->privates[1] );
+     FREE( blend->font_infos[1] );
+     for ( n = 0; n < num_designs; n++ )
+     {
+       blend->privates  [n] = 0;
+       blend->font_infos[n] = 0;
+     }
+
+     /* release axis names */
+     for ( n = 0; n < num_axis; n++ )
+       FREE( blend->axis_names[n] );
+     
+     /* release design map */
+     for ( n = 0; n < num_axis; n++ )
+     {
+       T1_DesignMap*  dmap = blend->design_map + n;
+       FREE( dmap->design_points );
+       FREE( dmap->blend_points );
+       dmap->num_points = 0;
+     }
+     
+     FREE( face->blend );
+   }
+ }
+
+ /***************************************************************************/
+ /***************************************************************************/
+ /*****                                                                 *****/
+ /*****                      TYPE 1 SYMBOL PARSING                      *****/
+ /*****                                                                 *****/
+ /***************************************************************************/
+ /***************************************************************************/
+
+ /*********************************************************************
+  *
+  *  First of all, define the token field static variables. This is
+  *  a set of T1_Field_Rec variables used later..
+  *
+  *********************************************************************/
+
+#define T1_NEW_STRING( _name, _field ) \
+   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_STRING( T1TYPE, _field );
+
+#define T1_NEW_BOOL( _name, _field )   \
+   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_BOOL( T1TYPE, _field );
+   
+#define T1_NEW_NUM( _name, _field )    \
+   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_NUM( T1TYPE, _field );
+   
+#define T1_NEW_FIXED( _name, _field )  \
+   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_FIXED( T1TYPE, _field, _power );
+
+#define T1_NEW_NUM_TABLE( _name, _field, _max, _count ) \
+   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_NUM_ARRAY( T1TYPE, _field, _count, _max );
+   
+#define T1_NEW_FIXED_TABLE( _name, _field, _max, _count ) \
+   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_FIXED_ARRAY( T1TYPE, _field, _count, _max );
+
+#define T1_NEW_NUM_TABLE2( _name, _field, _max ) \
+   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_NUM_ARRAY2( T1TYPE, _field, _max );
+   
+#define T1_NEW_FIXED_TABLE2( _name, _field, _max ) \
+   static const  T1_Field_Rec  t1_field_ ## _field = T1_FIELD_FIXED_ARRAY2( T1TYPE, _field, _max );
+
+
+#define T1_FONTINFO_STRING(n,f)        T1_NEW_STRING(n,f)
+#define T1_FONTINFO_NUM(n,f)           T1_NEW_NUM(n,f)
+#define T1_FONTINFO_BOOL(n,f)          T1_NEW_BOOL(n,f)
+#define T1_PRIVATE_NUM(n,f)            T1_NEW_NUM(n,f)
+#define T1_PRIVATE_FIXED(n,f)          T1_NEW_FIXED(n,f)
+#define T1_PRIVATE_NUM_TABLE(n,f,m,c)  T1_NEW_NUM_TABLE(n,f,m,c)
+#define T1_PRIVATE_NUM_TABLE2(n,f,m)   T1_NEW_NUM_TABLE2(n,f,m)
+#define T1_TOPDICT_NUM(n,f)            T1_NEW_NUM(n,f)
+#define T1_TOPDICT_NUM_FIXED2(n,f,m)   T1_NEW_FIXED_TABLE2(n,f,m)
+
+/* including this file defines all field variables */
+#include <t1tokens.h>
+
+ /*********************************************************************
+  *
+  *  Second, define the keyword variables. This is a set of T1_KeyWord
+  *  structures used to model the way each keyword is "loaded"..
+  *
+  *********************************************************************/
+
   typedef  void  (*T1_Parse_Func)( T1_Face   face, T1_Loader*  loader );
 
+  typedef enum T1_KeyWord_Type_
+  {
+    t1_keyword_callback = 0,
+    t1_keyword_field,
+    t1_keyword_field_table
+    
+  } T1_KeyWord_Type;
+  
+  typedef enum T1_KeyWord_Location_
+  {
+    t1_keyword_type1 = 0,
+    t1_keyword_font_info,
+    t1_keyword_private
+  
+  } T1_KeyWord_Location;
+  
   typedef  struct T1_KeyWord_
   {
-    const char*    name;
-    T1_Parse_Func  parsing;
+    const char*          name;
+    T1_KeyWord_Type      type;
+    T1_KeyWord_Location  location;
+    T1_Parse_Func        parsing;
+    const T1_Field_Rec*  field;
 
   } T1_KeyWord;
 
-  /* some handy macros used to easily define parsing callback functions */
-  /* each callback is in charge of loading a value and storing it in a  */
-  /* given field of the Type 1 face..                                   */
 
-#define PARSE_(x)  static void FT_XCAT(parse_,x) ( T1_Face  face, T1_Loader* loader )
+#define T1_KEYWORD_CALLBACK( name, callback )  \
+         { name, t1_keyword_callback, t1_keyword_type1, callback, 0 }
 
-#define FIELD   FACE.x
+#define T1_KEYWORD_TYPE1( name, f ) \
+         { name, t1_keyword_field, t1_keyword_type1, 0, &t1_field_ ## f }
+         
+#define T1_KEYWORD_FONTINFO( name, f ) \
+         { name, t1_keyword_field, t1_keyword_font_info, 0, &t1_field_ ## f }
 
-#define PARSE_STRING(s,x)   PARSE_(x)                               \
-        {                                                           \
-          FACE.x = T1_ToString(&loader->parser);                  \
-          FT_TRACE2(( "type1.parse_%s: \"%s\"\n", #x, FACE.x ));   \
+#define T1_KEYWORD_PRIVATE( name, f ) \
+         { name, t1_keyword_field, t1_keyword_private, 0, &t1_field_ ## f }
+
+#define T1_KEYWORD_FONTINFO_TABLE( name, f ) \
+         { name, t1_keyword_field_table, t1_keyword_font_info, 0, &t1_field_ ## f }
+
+#define T1_KEYWORD_PRIVATE_TABLE( name, f ) \
+         { name, t1_keyword_field_table, t1_keyword_private, 0, &t1_field_ ## f }
+
+#undef  T1_FONTINFO_STRING
+#undef  T1_FONTINFO_NUM
+#undef  T1_FONTINFO_BOOL
+#undef  T1_PRIVATE_NUM
+#undef  T1_PRIVATE_FIXED
+#undef  T1_PRIVATE_NUM_TABLE
+#undef  T1_PRIVATE_NUM_TABLE2
+#undef  T1_TOPDICT_NUM
+#undef  T1_TOPDICT_NUM_FIXED2
+
+#define T1_FONTINFO_STRING(n,f)        T1_KEYWORD_FONTINFO(n,f),
+#define T1_FONTINFO_NUM(n,f)           T1_KEYWORD_FONTINFO(n,f),
+#define T1_FONTINFO_BOOL(n,f)          T1_KEYWORD_FONTINFO(n,f),
+#define T1_PRIVATE_NUM(n,f)            T1_KEYWORD_PRIVATE(n,f),
+#define T1_PRIVATE_FIXED(n,f)          T1_KEYWORD_PRIVATE(n,f),
+#define T1_PRIVATE_NUM_TABLE(n,f,m,c)  T1_KEYWORD_PRIVATE_TABLE(n,f),
+#define T1_PRIVATE_NUM_TABLE2(n,f,m)   T1_KEYWORD_PRIVATE_TABLE(n,f),
+#define T1_TOPDICT_NUM(n,f)            T1_KEYWORD_TYPE1(n,f),
+#define T1_TOPDICT_NUM_FIXED2(n,f,m)   T1_KEYWORD_TYPE1(n,f),
+
+
+  static  T1_Error   t1_load_keyword( T1_Face     face,
+                                      T1_Loader*  loader,
+                                      T1_KeyWord* keyword )
+  {
+    T1_Error  error;
+    void*     dummy_object;
+    void**    objects;
+    T1_UInt   max_objects;
+    T1_Blend* blend = face->blend;
+    
+    /* if the keyword has a dedicated callback, call it */
+    if (keyword->type == t1_keyword_callback)
+    {
+      keyword->parsing( face, loader );
+      error = loader->parser.error;
+      goto Exit;
+    }
+    
+    /* now, the keyword is either a simple field, or a table of fields */
+    /* we are now going to take care of it..                           */
+    switch (keyword->location)
+    {
+      case t1_keyword_font_info:
+        {
+          dummy_object = &face->type1.font_info;
+          objects      = &dummy_object;
+          max_objects  = 0;
+          if (blend)
+          {
+            objects     = (void**)blend->font_infos;
+            max_objects = blend->num_designs;
+          }
         }
-
-#define PARSE_NUM(s,x,t)  PARSE_(x)                                 \
-        {                                                           \
-          FACE.x = (t)T1_ToInt(&loader->parser);                  \
-          FT_TRACE2(( "type1.parse_%s: \"%d\"\n", #x, FACE.x ));   \
+        break;
+        
+      case t1_keyword_private:
+        {
+          dummy_object = &face->type1.private_dict;
+          objects      = &dummy_object;
+          max_objects  = 0;
+          if (blend)
+          {
+            objects     = (void**)blend->privates;
+            max_objects = blend->num_designs;
+          }
         }
-
-#define PARSE_INT(s,x)   PARSE_(x)                                  \
-        {                                                           \
-          FACE.x = T1_ToInt(&loader->parser);                     \
-          FT_TRACE2(( "type1.parse_%s: \"%d\"\n", #x, FACE.x ));   \
-        }
-
-#define PARSE_BOOL(s,x)   PARSE_(x)                                 \
-        {                                                           \
-          FACE.x = T1_ToBool(&loader->parser);                    \
-          FT_TRACE2(( "type1.parse_%s : \"%s\"\n",                \
-                       #x, FACE.x ? "true" : "false" ));              \
-        }
-
-#define PARSE_FIXED(s,x)   PARSE_(x)                                        \
-        {                                                                   \
-          FACE.x = T1_ToFixed(&loader->parser,3);                         \
-          FT_TRACE2(( "type1.parse_%s: \"%f\"\n", #x, FACE.x/65536.0 ));   \
-        }
-
-#define PARSE_COORDS(s,c,m,x)   PARSE_(x)                                         \
-        {                                                                         \
-          FACE.c = T1_ToCoordArray(&loader->parser, m, (T1_Short*)FACE.x );   \
-          FT_TRACE2(( "type1.parse_%s\n", #x ));                                   \
-        }
-
-#define PARSE_FIXEDS(s,c,m,x)   PARSE_(x)                                           \
-        {                                                                           \
-          FACE.c = T1_ToFixedArray(&loader->parser, m, (T1_Fixed*)FACE.x, 3 );  \
-          FT_TRACE2(( "type1.parse_%s\n", #x ));                                     \
-        }
-
-
-#define PARSE_COORDS2(s,m,x)   PARSE_(x)                                     \
-        {                                                                    \
-          (void)T1_ToCoordArray( &loader->parser, m, (T1_Short*)&FACE.x );  \
-          FT_TRACE2(( "type1.parse_%s\n", #x ));                              \
-        }
-
-#define PARSE_FIXEDS2(s,m,x)   PARSE_(x)                                           \
-        {                                                                           \
-          (void)T1_ToFixedArray(&loader->parser, m, (T1_Fixed*)&FACE.x, 3 );  \
-          FT_TRACE2(( "type1.parse_%s\n", #x ));                                     \
-        }
-
-
-/* define all parsing callbacks */
-#include <t1tokens.h>
+        break;
+      
+      default:
+        dummy_object = &face->type1;
+        objects      = &dummy_object;
+        max_objects  = 0;
+    }
+    
+    if (keyword->type == t1_keyword_field_table)
+      error = T1_Load_Field_Table( &loader->parser, keyword->field, objects, max_objects, 0 );
+    else
+      error = T1_Load_Field( &loader->parser, keyword->field, objects, max_objects, 0 );
+    
+  Exit:
+    return error;
+  }                                
 
 
   static
@@ -272,6 +502,22 @@
     bbox->xMax = temp[2];
     bbox->yMax = temp[3];
   }
+
+  static
+  void  parse_font_matrix( T1_Face  face, T1_Loader*  loader )
+  {
+    T1_Parser*  parser = &loader->parser;
+    FT_Matrix*  matrix = &face->type1.font_matrix;
+    T1_Fixed    temp[4];
+
+    (void)T1_ToFixedArray( parser, 4, temp, 3 );
+    matrix->xx = temp[0];
+    matrix->yx = temp[1];
+    matrix->xy = temp[2];
+    matrix->yy = temp[3];
+  }
+
+
 
   static
   void  parse_encoding( T1_Face  face, T1_Loader*  loader )
@@ -542,40 +788,21 @@
   }
 
 
-#undef PARSE_STRING
-#undef PARSE_INT
-#undef PARSE_NUM
-#undef PARSE_BOOL
-#undef PARSE_FIXED
-#undef PARSE_COORDS
-#undef PARSE_FIXEDS
-#undef PARSE_COORDS2
-#undef PARSE_FIXEDS2
 
-#undef PARSE_
-#define PARSE_(s,x)   { s, parse_##x },
-
-#define PARSE_STRING(s,x)      PARSE_(s,x)
-#define PARSE_INT(s,x)         PARSE_(s,x)
-#define PARSE_NUM(s,x,t)       PARSE_(s,x)
-#define PARSE_BOOL(s,x)        PARSE_(s,x)
-#define PARSE_FIXED(s,x)       PARSE_(s,x)
-#define PARSE_COORDS(s,c,m,x)  PARSE_(s,x)
-#define PARSE_FIXEDS(s,c,m,x)  PARSE_(s,x)
-#define PARSE_COORDS2(s,m,x)   PARSE_(s,x)
-#define PARSE_FIXEDS2(s,m,x)   PARSE_(s,x)
 
   static
   const T1_KeyWord  t1_keywords[] =
   {
-#include <t1tokens.h>
+#include <t1tokens.h>  
+    
     /* now add the special functions... */
-    { "FontName",    parse_font_name   },
-    { "FontBBox",    parse_font_bbox   },
-    { "Encoding",    parse_encoding    },
-    { "Subrs",       parse_subrs       },
-    { "CharStrings", parse_charstrings },
-    { 0, 0 }
+    T1_KEYWORD_CALLBACK( "FontName", parse_font_name ),
+    T1_KEYWORD_CALLBACK( "FontBBox", parse_font_bbox ),
+    T1_KEYWORD_CALLBACK( "FontMatrix", parse_font_matrix ),
+    T1_KEYWORD_CALLBACK( "Encoding", parse_encoding  ),
+    T1_KEYWORD_CALLBACK( "Subrs",    parse_subrs     ),
+    T1_KEYWORD_CALLBACK( "CharStrings", parse_charstrings ),
+    T1_KEYWORD_CALLBACK( 0, 0 )
   };
 
 
@@ -585,7 +812,7 @@
                         T1_Byte*    base,
                         T1_Long     size )
   {
-    T1_Parser*  parser = &loader->parser;
+    T1_Parser*  parser   = &loader->parser;
 
     parser->cursor = base;
     parser->limit  = base + size;
@@ -597,8 +824,37 @@
 
       for ( ;cur < limit; cur++ )
       {
+        /* look for "FontDirectory", which causes problems on some fonts */
+        if ( *cur == 'F' && cur+25 < limit &&
+             strncmp( (char*)cur, "FontDirectory", 13 ) == 0 )
+        {
+          T1_Byte*  cur2;
+          
+          /* skip the "FontDirectory" keyword */
+          cur += 13;
+          cur2 = cur;
+          
+          /* lookup the 'known' keyword */
+          while (cur < limit && *cur != 'k' && strncmp( (char*)cur, "known", 5 ) )
+            cur++;
+          
+          if (cur < limit)
+          {
+            T1_Token_Rec  token;
+            
+            /* skip the "known" keyword and the token following it */
+            cur += 5;
+            loader->parser.cursor = cur;
+            T1_ToToken( &loader->parser, &token );
+            
+            /* if the last token was an array, skip it !! */
+            if (token.type == t1_token_array)
+              cur2 = parser->cursor;
+          }
+          cur = cur2;
+        }
         /* look for immediates */
-        if (*cur == '/' && cur+2 < limit)
+        else if (*cur == '/' && cur+2 < limit)
         {
           T1_Byte* cur2;
           T1_Int   len;
@@ -610,38 +866,46 @@
 
           if (len > 0 && len < 20)
           {
-            /* now, compare the immediate name to the keyword table */
-            T1_KeyWord*  keyword = (T1_KeyWord*)t1_keywords;
-
-            for (;;)
+            if (!loader->fontdata)
             {
-              T1_Byte*  name;
-
-              name = (T1_Byte*)keyword->name;
-              if (!name) break;
-
-              if ( cur[0] == name[0] &&
-                   len == (T1_Int)strlen((const char*)name) )
+              if ( strncmp( (char*)cur, "FontInfo", 8 ) == 0 )
+                loader->fontdata = 1;
+            }
+            else
+            {
+              /* now, compare the immediate name to the keyword table */
+              T1_KeyWord*  keyword = (T1_KeyWord*)t1_keywords;
+  
+              for (;;)
               {
-                T1_Int  n;
-                for ( n = 1; n < len; n++ )
-                  if (cur[n] != name[n])
-                    break;
-
-                if (n >= len)
+                T1_Byte*  name;
+  
+                name = (T1_Byte*)keyword->name;
+                if (!name) break;
+  
+                if ( cur[0] == name[0] &&
+                     len == (T1_Int)strlen((const char*)name) )
                 {
-                  /* we found it - run the parsing callback !! */
-                  parser->cursor = cur2;
-                  skip_whitespace( parser );
-                  keyword->parsing( face, loader );
-                  if (parser->error)
-                    return parser->error;
-
-                  cur = parser->cursor;
-                  break;
+                  T1_Int  n;
+                  for ( n = 1; n < len; n++ )
+                    if (cur[n] != name[n])
+                      break;
+  
+                  if (n >= len)
+                  {
+                    /* we found it - run the parsing callback !! */
+                    parser->cursor = cur2;
+                    skip_whitespace( parser );
+                    parser->error = t1_load_keyword( face, loader, keyword );
+                    if (parser->error)
+                      return parser->error;
+  
+                    cur = parser->cursor;
+                    break;
+                  }
                 }
+                keyword++;
               }
-              keyword++;
             }
           }
         }
@@ -664,6 +928,7 @@
     loader->charstrings.init    = 0;
     loader->glyph_names.init    = 0;
     loader->subrs.init          = 0;
+    loader->fontdata            = 0;
   }
 
   static

@@ -330,7 +330,7 @@
 
         /* now compute the maximum advance width */
 
-        root->max_advance_width = type1->private_dict.standard_width;
+        root->max_advance_width = type1->private_dict.standard_width[0];
 
         /* compute max advance width for proportional fonts */
         if (!type1->font_info.is_fixed_pitch)

@@ -84,8 +84,8 @@
     FT_Int       blue_shift;
     FT_Int       blue_fuzz;
 
-    FT_UShort    standard_width;
-    FT_UShort    standard_height;
+    FT_UShort    standard_width[1];
+    FT_UShort    standard_height[1];
 
     FT_Byte      num_snap_widths;
     FT_Byte      num_snap_heights;
@@ -116,10 +116,8 @@
   */
   typedef enum
   {
-    t1_blend_none = 0,
-
     /* required fields in a FontInfo blend dictionary */
-    t1_blend_underline_position,
+    t1_blend_underline_position = 0,
     t1_blend_underline_thickness,
     t1_blend_italic_angle,
 
@@ -139,38 +137,35 @@
     /* never remove */
     t1_blend_max
 
-  } T1_Flags;
+  } T1_Blend_Flags;
 
+  /* maximum number of multiple-masters designs, per-se the spec */
+  #define T1_MAX_MM_DESIGNS  16
+  #define T1_MAX_MM_AXIS     4
 
-  typedef struct T1_Blend_Pos
+  /* this structure is used to store the BlendDesignMap entry for an axis */
+  typedef struct T1_DesignMap_
   {
-    FT_Fixed  min;
-    FT_Fixed  max;
+    FT_Byte    num_points;
+    FT_Fixed*  design_points;
+    FT_Fixed*  blend_points;
+    
+  } T1_DesignMap;
 
-  } T1_Blend_Pos;
-
- /*************************************************************************
-  *
-  * <Struct>
-  *    T1_Blend
-  *
-  * <Description>
-  *    A structure used to describe the multiple-master fonts information
-  *    of a given Type 1 font.
-  *
-  */
   typedef struct T1_Blend_
   {
-    FT_Int       num_axis;
-    FT_String*   axis_types[4];
-
-    /* XXXX : add /BlendDesignMap entries */
-
-    FT_Int       num_blends;
-    T1_Flags*    flags    [17];
-    T1_Private*  privates [17];
-    T1_FontInfo* fontinfos[17];
-
+    FT_UInt       num_designs;
+    FT_UInt       num_axis;
+    
+    FT_String*    axis_names[ T1_MAX_MM_AXIS ];
+    FT_Fixed*     design_pos[ T1_MAX_MM_DESIGNS ];
+    T1_DesignMap  design_map[ T1_MAX_MM_AXIS ];
+    
+    T1_FontInfo*  font_infos[ T1_MAX_MM_DESIGNS+1 ];
+    T1_Private*   privates  [ T1_MAX_MM_DESIGNS+1 ];
+    
+    FT_ULong      blend_bitflags;
+  
   } T1_Blend;
 
 

@@ -17,6 +17,52 @@
  *
  ******************************************************************/
 
+#undef  T1TYPE
+#define T1TYPE  T1_FontInfo
+
+  T1_FONTINFO_STRING( "version", version )
+  T1_FONTINFO_STRING( "Notice", notice )
+  T1_FONTINFO_STRING( "FullName", full_name )
+  T1_FONTINFO_STRING( "FamilyName", family_name )
+  T1_FONTINFO_STRING( "Weight", weight )
+
+  T1_FONTINFO_NUM( "ItalicAngle", italic_angle )
+  T1_FONTINFO_BOOL( "isFixedPitch", is_fixed_pitch )
+  T1_FONTINFO_NUM( "UnderlinePosition", underline_position )
+  T1_FONTINFO_NUM( "UnderlineThickness", underline_thickness )
+
+#undef  T1TYPE
+#define T1TYPE  T1_Private
+
+  T1_PRIVATE_NUM  ( "UniqueID", unique_id )
+  T1_PRIVATE_NUM  ( "lenIV", lenIV )
+  T1_PRIVATE_NUM  ( "LanguageGroup", language_group )
+  T1_PRIVATE_NUM  ( "password", password )
+  
+  T1_PRIVATE_FIXED( "BlueScale", blue_scale )
+  T1_PRIVATE_NUM  ( "BlueShift", blue_shift )
+  T1_PRIVATE_NUM  ( "BlueFuzz",  blue_fuzz )
+  
+  T1_PRIVATE_NUM_TABLE( "BlueValues", blue_values, 14, num_blues )
+  T1_PRIVATE_NUM_TABLE( "OtherBlues", other_blues, 10, num_other_blues )
+  T1_PRIVATE_NUM_TABLE( "FamilyBlues", family_blues, 14, num_family_blues )
+  T1_PRIVATE_NUM_TABLE( "FamilyOtherBlues", family_other_blues, 10, num_family_other_blues )
+
+  T1_PRIVATE_NUM_TABLE2( "StdHW", standard_width,  1 )
+  T1_PRIVATE_NUM_TABLE2( "StdVW", standard_height, 1 )
+  T1_PRIVATE_NUM_TABLE2( "MinFeature", min_feature, 2 )
+  
+  T1_PRIVATE_NUM_TABLE ( "StemSnapH", stem_snap_widths, 12, num_snap_widths )
+  T1_PRIVATE_NUM_TABLE ( "StemSnapV", stem_snap_heights, 12, num_snap_heights )
+
+#undef  T1TYPE
+#define T1TYPE  T1_Font
+
+  T1_TOPDICT_NUM( "PaintType", paint_type )
+  T1_TOPDICT_NUM( "FontType", font_type )
+  T1_TOPDICT_NUM( "StrokeWidth", stroke_width )
+
+#if 0
  /* define the font info dictionary parsing callbacks */
 #undef  FACE
 #define FACE  (face->type1.font_info)
@@ -75,5 +121,5 @@
    PARSE_INT( "StrokeWidth", stroke_width )
 
 #undef FACE
-
+#endif
 
