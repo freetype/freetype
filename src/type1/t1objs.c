@@ -103,6 +103,7 @@
       FREE( type1->glyph_names_block );
 
       FREE( type1->encoding.char_index );
+      FREE( type1->encoding.char_name );
       FREE( type1->font_name );
 
 #ifndef T1_CONFIG_OPTION_NO_AFM
@@ -273,14 +274,14 @@
       if ( !root->units_per_EM )
         root->units_per_EM = 1000;
 
-      root->ascender     = (FT_Short)face->type1.font_bbox.yMax;
-      root->descender    = (FT_Short)face->type1.font_bbox.yMin;
+      root->ascender     = face->type1.font_bbox.yMax >> 16;
+      root->descender    = face->type1.font_bbox.yMin >> 16;
       root->height       = ( ( root->ascender - root->descender ) * 12 ) / 10;
 
       /* now compute the maximum advance width */
 
 
-      root->max_advance_width = (FT_Short)face->type1.font_bbox.xMax;
+      root->max_advance_width = face->type1.font_bbox.xMax >> 16;
       {
         FT_Int  max_advance;
 
