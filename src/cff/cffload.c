@@ -2267,6 +2267,9 @@
         if ( error )
           goto Exit;
       }
+      else
+        /* CID-keyed fonts only need CIDs */
+        FT_FREE( font->charset.sids );
     }
 
     /* get the font name (/CIDFontName for CID-keyed fonts, */
