@@ -1,9 +1,14 @@
+2004-06-21  Werner Lemberg  <wl@gnu.org>
+
+	* docs/CHANGES: Updated.
+
 2004-06-21  David Turner  <david@freetype.org>
 
-        * src/base/ftobjs.c: documentation fix
-
-        * src/truetype/ttgload.c: fixing a scaling bug that caused incorrect
-        rendering when the bytecode interpreter was enabled.
+	* src/truetype/ttgload.c (TT_Process_Simple_Glyph,
+	load_truetype_glyph): Don't access (unrounded)
+	`TT_Size.root.metrics' but (rounded) `TT_Size.metrics'.  This fixes
+	a scaling bug that caused incorrect rendering when the bytecode
+	interpreter was enabled.
 
 2004-06-14  Huw D M Davies  <h.davies1@physics.ox.ac.uk>
 
