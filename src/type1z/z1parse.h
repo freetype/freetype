@@ -30,13 +30,13 @@
   /* simple enumeration type used to identify token types */
   typedef enum  Z1_Token_Type_
   {
-    t1_token_none = 0,
-    t1_token_any,
-    t1_token_string,
-    t1_token_array,
+    z1_token_none = 0,
+    z1_token_any,
+    z1_token_string,
+    z1_token_array,
 
     /* do not remove */
-    t1_token_max
+    z1_token_max
 
   } Z1_Token_Type;
 
@@ -54,16 +54,16 @@
   /* enumeration type used to identify object fields */
   typedef enum  Z1_Field_Type_
   {
-    t1_field_none = 0,
-    t1_field_bool,
-    t1_field_integer,
-    t1_field_fixed,
-    t1_field_string,
-    t1_field_integer_array,
-    t1_field_fixed_array,
+    z1_field_none = 0,
+    z1_field_bool,
+    z1_field_integer,
+    z1_field_fixed,
+    z1_field_string,
+    z1_field_integer_array,
+    z1_field_fixed_array,
 
     /* do not remove */
-    t1_field_max
+    z1_field_max
 
   } Z1_Field_Type;
 
@@ -83,7 +83,7 @@
 
 #define Z1_FIELD_BOOL( _fname )        \
           {                            \
-            t1_field_bool,             \
+            z1_field_bool,             \
             FT_FIELD_OFFSET( _fname ), \
             FT_FIELD_SIZE( _fname ),   \
             0, 0, 0                    \
@@ -91,7 +91,7 @@
 
 #define Z1_FIELD_NUM( _fname )         \
           {                            \
-            t1_field_integer,          \
+            z1_field_integer,          \
             FT_FIELD_OFFSET( _fname ), \
             FT_FIELD_SIZE( _fname ),   \
             0, 0, 0                    \
@@ -99,7 +99,7 @@
 
 #define Z1_FIELD_FIXED( _fname, _power ) \
           {                              \
-            t1_field_fixed,              \
+            z1_field_fixed,              \
             FT_FIELD_OFFSET( _fname ),   \
             FT_FIELD_SIZE( _fname ),     \
             0, 0, 0                      \
@@ -107,7 +107,7 @@
 
 #define Z1_FIELD_STRING( _fname )      \
           {                            \
-            t1_field_string,           \
+            z1_field_string,           \
             FT_FIELD_OFFSET( _fname ), \
             FT_FIELD_SIZE( _fname ),   \
             0, 0, 0                    \
@@ -115,7 +115,7 @@
 
 #define Z1_FIELD_NUM_ARRAY( _fname, _fcount, _fmax )  \
           {                                           \
-            t1_field_integer,                         \
+            z1_field_integer,                         \
             FT_FIELD_OFFSET( _fname ),                \
             FT_FIELD_SIZE_DELTA( _fname ),            \
             _fmax,                                    \
@@ -125,7 +125,7 @@
 
 #define Z1_FIELD_FIXED_ARRAY( _fname, _fcount, _fmax ) \
           {                                            \
-            t1_field_fixed,                            \
+            z1_field_fixed,                            \
             FT_FIELD_OFFSET( _fname ),                 \
             FT_FIELD_SIZE_DELTA( _fname ),             \
             _fmax,                                     \
@@ -135,7 +135,7 @@
 
 #define Z1_FIELD_NUM_ARRAY2( _fname, _fmax ) \
           {                                  \
-            t1_field_integer,                \
+            z1_field_integer,                \
             FT_FIELD_OFFSET( _fname ),       \
             FT_FIELD_SIZE_DELTA( _fname ),   \
             _fmax,                           \
@@ -144,7 +144,7 @@
 
 #define Z1_FIELD_FIXED_ARRAY2( _fname, _fmax ) \
           {                                    \
-            t1_field_fixed,                    \
+            z1_field_fixed,                    \
             FT_FIELD_OFFSTE( _fname ),         \
             FT_FIELD_SIZE_DELTA( _fname ),     \
             _fmax,                             \

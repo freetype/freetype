@@ -33,7 +33,6 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/ftoutln.h>
 
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */

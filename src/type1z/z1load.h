@@ -20,7 +20,7 @@
 #define Z1LOAD_H
 
 #include <freetype/internal/ftstream.h>
-#include <freetype/internal/t1types.h>
+#include <freetype/internal/psaux.h>
 #include <freetype/ftmm.h>
 
 

@@ -326,7 +326,7 @@
     FT_Int    embed;
 
 
-    token->type  = t1_token_none;
+    token->type  = z1_token_none;
     token->start = 0;
     token->limit = 0;
 
@@ -342,19 +342,19 @@
       {
         /************* check for strings ***********************/
       case '(':
-        token->type = t1_token_string;
+        token->type = z1_token_string;
         ender = ')';
         goto Lookup_Ender;
 
         /************* check for programs/array ****************/
       case '{':
-        token->type = t1_token_array;
+        token->type = z1_token_array;
         ender = '}';
         goto Lookup_Ender;
 
         /************* check for table/array ******************/
       case '[':
-        token->type = t1_token_array;
+        token->type = z1_token_array;
         ender = ']';
 
       Lookup_Ender:
@@ -381,7 +381,7 @@
         /* **************** otherwise, it's any token **********/
       default:
         token->start = cur++;
-        token->type  = t1_token_any;
+        token->type  = z1_token_any;
         while ( cur < limit && !IS_Z1_SPACE( *cur ) )
           cur++;
 
@@ -391,7 +391,7 @@
       if ( !token->limit )
       {
         token->start = 0;
-        token->type  = t1_token_none;
+        token->type  = z1_token_none;
       }
 
       parser->cursor = cur;
@@ -411,7 +411,7 @@
     *pnum_tokens = -1;
 
     Z1_ToToken( parser, &master );
-    if ( master.type == t1_token_array )
+    if ( master.type == z1_token_array )
     {
       FT_Byte*       old_cursor = parser->cursor;
       FT_Byte*       old_limit  = parser->limit;
@@ -819,7 +819,7 @@
     cur   = token.start;
     limit = token.limit;
 
-    if ( token.type == t1_token_array )
+    if ( token.type == z1_token_array )
     {
       /* if this is an array, and we have no blend, an error occurs */
       if ( max_objects == 0 )
@@ -837,15 +837,15 @@
 
       switch ( field->type )
       {
-      case t1_field_bool:
+      case z1_field_bool:
         val = t1_tobool( &cur, limit );
         goto Store_Integer;
 
-      case t1_field_fixed:
+      case z1_field_fixed:
         val = t1_tofixed( &cur, limit, 3 );
         goto Store_Integer;
 
-      case t1_field_integer:
+      case z1_field_integer:
         val = t1_toint( &cur, limit );
 
       Store_Integer:
@@ -868,7 +868,7 @@
         }
         break;
 
-      case t1_field_string:
+      case z1_field_string:
         {
           FT_Memory  memory = parser->memory;
           FT_UInt    len    = limit-cur;

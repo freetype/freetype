@@ -229,7 +229,7 @@
     FT_Memory  memory = table->memory;
 
 
-    if ( table->init == 0xDEADBEEFL )
+    if ( (FT_ULong)table->init == 0xDEADBEEFUL )
     {
       FREE( table->block );
       FREE( table->elements );
@@ -1133,9 +1133,13 @@
       FT_Vector*  point   = outline->points + outline->n_points;
       FT_Byte*    control = (FT_Byte*)outline->tags + outline->n_points;
 
-
-      point->x = x >> 16;
-      point->y = y >> 16;
+      if (builder->shift)
+      {
+        x >>= 16;
+        y >>= 16;
+      }
+      point->x = x;
+      point->y = y;
       *control = flag ? FT_Curve_Tag_On : FT_Curve_Tag_Cubic;
 
       builder->last = *point;

@@ -634,7 +634,7 @@
     }
 
     Z1_ToToken( parser, &master );
-    if ( master.type != t1_token_array )
+    if ( master.type != z1_token_array )
     {
       FT_ERROR(( "parse_weight_vector: incorrect format!\n" ));
       error = T1_Err_Invalid_File_Format;
@@ -699,42 +699,42 @@
 
 #define Z1_NEW_STRING( _name, _field )              \
           static                                    \
-          const Z1_Field_Rec  t1_field_ ## _field = \
+          const Z1_Field_Rec  z1_field_ ## _field = \
             Z1_FIELD_STRING( _field );
 
 #define Z1_NEW_BOOL( _name, _field )                \
           static                                    \
-          const Z1_Field_Rec  t1_field_ ## _field = \
+          const Z1_Field_Rec  z1_field_ ## _field = \
             Z1_FIELD_BOOL( _field );
 
 #define Z1_NEW_NUM( _name, _field )                 \
           static                                    \
-          const Z1_Field_Rec  t1_field_ ## _field = \
+          const Z1_Field_Rec  z1_field_ ## _field = \
             Z1_FIELD_NUM( _field );
 
 #define Z1_NEW_FIXED( _name, _field )                 \
           static                                      \
-          const Z1_Field_Rec  t1_field_ ## _field =   \
+          const Z1_Field_Rec  z1_field_ ## _field =   \
             Z1_FIELD_FIXED( _field, _power );
 
 #define Z1_NEW_NUM_TABLE( _name, _field, _max, _count )         \
           static                                                \
-          const Z1_Field_Rec  t1_field_ ## _field =             \
+          const Z1_Field_Rec  z1_field_ ## _field =             \
             Z1_FIELD_NUM_ARRAY( _field, _count, _max );
 
 #define Z1_NEW_FIXED_TABLE( _name, _field, _max, _count )         \
           static                                                  \
-          const Z1_Field_Rec  t1_field_ ## _field =               \
+          const Z1_Field_Rec  z1_field_ ## _field =               \
             Z1_FIELD_FIXED_ARRAY( _field, _count, _max );
 
 #define Z1_NEW_NUM_TABLE2( _name, _field, _max )         \
           static                                         \
-          const Z1_Field_Rec  t1_field_ ## _field =      \
+          const Z1_Field_Rec  z1_field_ ## _field =      \
             Z1_FIELD_NUM_ARRAY2( _field, _max );
 
 #define Z1_NEW_FIXED_TABLE2( _name, _field, _max )         \
           static                                           \
-          const Z1_Field_Rec  t1_field_ ## _field =        \
+          const Z1_Field_Rec  z1_field_ ## _field =        \
             Z1_FIELD_FIXED_ARRAY2( _field, _max );
 
 
@@ -808,29 +808,29 @@
 
 #define Z1_KEYWORD_TYPE1( name, f )                                    \
         {                                                              \
-          name, t1_keyword_field, t1_keyword_type1, 0, &t1_field_ ## f \
+          name, t1_keyword_field, t1_keyword_type1, 0, &z1_field_ ## f \
         }
 
 #define Z1_KEYWORD_FONTINFO( name, f )                                     \
         {                                                                  \
-          name, t1_keyword_field, t1_keyword_font_info, 0, &t1_field_ ## f \
+          name, t1_keyword_field, t1_keyword_font_info, 0, &z1_field_ ## f \
         }
 
 #define Z1_KEYWORD_PRIVATE( name, f )                                    \
         {                                                                \
-          name, t1_keyword_field, t1_keyword_private, 0, &t1_field_ ## f \
+          name, t1_keyword_field, t1_keyword_private, 0, &z1_field_ ## f \
         }
 
 #define Z1_KEYWORD_FONTINFO_TABLE( name, f )                     \
         {                                                        \
           name, t1_keyword_field_table, t1_keyword_font_info, 0, \
-          &t1_field_ ## f                                        \
+          &z1_field_ ## f                                        \
         }
 
 #define Z1_KEYWORD_PRIVATE_TABLE( name, f )                    \
         {                                                      \
           name, t1_keyword_field_table, t1_keyword_private, 0, \
-          &t1_field_ ## f                                      \
+          &z1_field_ ## f                                      \
         }
 
 
@@ -1518,7 +1518,7 @@
             Z1_ToToken( &loader->parser, &token );
 
             /* if the last token was an array, skip it! */
-            if ( token.type == t1_token_array )
+            if ( token.type == z1_token_array )
               cur2 = parser->cursor;
           }
           cur = cur2;
