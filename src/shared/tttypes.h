@@ -1999,6 +1999,10 @@
     /* the basic TrueType tables in the face object                    */
     void*              sfnt;
 
+    /* a typeless pointer to the PSNames_Interface table used to       */
+    /* handle glyph names <-> unicode & Mac values                     */
+    void*              psnames;
+
     /***********************************************************************/
     /*                                                                     */
     /* Optional TrueType/OpenType tables                                   */

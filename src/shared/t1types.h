@@ -22,7 +22,7 @@
 #define T1TYPES_H
 
 #include <freetype.h>
-
+#include <psnames.h>
 
 #ifdef __cplusplus
   extern "C" {
@@ -290,7 +290,7 @@
     T1_Int      code_first;
     T1_Int      code_last;
 
-    T1_Short*   char_index;
+    T1_UShort*  char_index;
     T1_String** char_name;
 
   } T1_Encoding;
@@ -427,8 +427,13 @@
 
   typedef struct T1_FaceRec_
   {
-    FT_FaceRec      root;
-    T1_Font         type1;
+    FT_FaceRec    root;
+    T1_Font       type1;
+    void*         psnames;
+    void*         afm_data;
+    FT_CharMapRec charmaprecs[2];
+    FT_CharMap    charmaps[2];
+    PS_Unicodes   unicode_map;
 
   } T1_FaceRec;
 
