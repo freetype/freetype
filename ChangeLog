@@ -1,12 +1,16 @@
+2001-03-07  Werner Lemberg  <wl@gnu.org>
+
+	* INSTALL, docs/BUILD: We need GNU make 3.78 or newer.
+
 2001-03-07  Tom Kacvinsky  <tjk@ams.org>
 
-	* src/type1/t1objs.c (T1_Init_Face): Minor correction:  we must wait
+	* src/type1/t1objs.c (T1_Init_Face): Minor correction: We must wait
 	until parse_font_bbox is changed before we use logical shift rights
 	in the assignments of `root->ascender', `root->descender', and
 	`root->max_advance_width'.
 
 	(T1_Done_Face): Free `char_name' table to avoid a memory leak.
-	Submitted by Sander van der Wal <svdwal@xs4all.nl>
+	Submitted by Sander van der Wal <svdwal@xs4all.nl>.
 
 2001-03-05  Tom Kacvinsky  <tjk@ams.org>
 
