@@ -30,9 +30,10 @@
 #ifdef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
 
 
-#define TT_MULFIX  FT_MulFix
-#define TT_MULDIV  FT_MulDiv
-#define TT_INT64   FT_Int64
+#define TT_MULFIX           FT_MulFix
+#define TT_MULDIV           FT_MulDiv
+#define TT_MULDIV_NO_ROUND  FT_MulDiv_No_Round
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -2973,12 +2974,11 @@
     args[0] -= args[1];
 
 
-#define DO_DIV                                      \
-    if ( args[1] == 0 )                             \
-      CUR.error = TT_Err_Divide_By_Zero;            \
-    else                                            \
-/* Should args[0] be cast to FT_Int64 first? */     \
-      args[0] = ( args[0] * 64L ) / args[1];
+#define DO_DIV                                               \
+    if ( args[1] == 0 )                                      \
+      CUR.error = TT_Err_Divide_By_Zero;                     \
+    else                                                     \
+      args[0] = TT_MULDIV_NO_ROUND( args[0], 64L, args[1] );
 
 
 #define DO_MUL                                    \

@@ -1,3 +1,16 @@
+2003-11-23  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftcalc.c (FT_MulDiv_No_Round): New function (32 and
+	64 bit version).
+	* include/freetype/internal/ftcalc.h: Updated.
+
+	* src/truetype/ttinterp.c (TT_MULDIV_NO_ROUND): New macro.
+	(TT_INT64): Removed.
+	(DO_DIV): Use TT_MULDIV_NO_ROUND.
+
+	* src/pfr/pfrdrivr.c (pfr_get_metrics): Directly use
+	metrics->x_scale and metrics->y_scale.
+
 2003-11-22  Rogier van Dalen  <R.C.van.Dalen@umail.leidenuniv.nl>
 
 	* src/truetype/ttinterp.c (CUR_Func_move_orig): New macro.
