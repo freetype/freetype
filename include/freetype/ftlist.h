@@ -50,6 +50,13 @@ FT_BEGIN_HEADER
   /*    This section contains various definitions related to list          */
   /*    processing using doubly-linked nodes.                              */
   /*                                                                       */
+  /* <Order>                                                               */
+  /*    FT_List FT_ListNode FT_ListRec FT_ListNodeRec                      */
+  /*                                                                       */
+  /*    FT_List_Add FT_List_Insert FT_List_Find FT_List_Remove FT_List_Up  */
+  /*    FT_List_Iterate FT_List_Iterator FT_List_Finalize                  */
+  /*    FT_List_Destructor                                                 */
+  /*                                                                       */
   /*************************************************************************/
 
   
