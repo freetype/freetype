@@ -89,7 +89,7 @@
     OTL_Bytes  p = table;
     OTL_Bytes  coverage;
     OTL_UInt   format, gindex, property;
-    OTL_Int    index;
+    OTL_Long   index;
     OTL_Bool   subst = 0;
 
     if ( parser->context_len != 0xFFFFU && parser->context_len < 1 )
@@ -109,36 +109,40 @@
     {
       switch ( format )
       {
-        case 1:
-          {
-            OTL_Int  delta = OTL_NEXT_SHORT(p);
+      case 1:
+        {
+          OTL_Int  delta = OTL_NEXT_SHORT( p );
 
-            gindex = ( gindex + delta ) & 0xFFFFU;
-            otl_parser_replace_1( parser, gindex );
+
+          gindex = ( gindex + delta ) & 0xFFFFU;
+          otl_parser_replace_1( parser, gindex );
+          subst = 1;
+        }
+        break;
+
+      case 2:
+        {
+          OTL_UInt  count = OTL_NEXT_USHORT( p );
+
+
+          if ( (OTL_UInt)index < count )
+          {
+            p += index * 2;
+            otl_parser_replace_1( parser, OTL_PEEK_USHORT( p ) );
             subst = 1;
           }
-          break;
+        }
+        break;
 
-        case 2:
-          {
-            OTL_UInt  count = OTL_NEXT_USHORT(p);
-
-            if ( (OTL_UInt) index < count )
-            {
-              p += index*2;
-              otl_parser_replace_1( parser, OTL_PEEK_USHORT(p) );
-              subst = 1;
-            }
-          }
-          break;
-
-        default:
-          ;
+      default:
+        ;
       }
     }
+
   Exit:
     return subst;
   }
+
 
  /************************************************************************/
  /************************************************************************/
@@ -225,7 +229,8 @@
   {
     OTL_Bytes  p = table;
     OTL_Bytes  coverage, sequence;
-    OTL_UInt   format, gindex, index, property, context_len, seq_count, count;
+    OTL_UInt   format, gindex, property, context_len, seq_count, count;
+    OTL_Long   index;
     OTL_Bool   subst = 0;
 
     if ( parser->context_len != 0xFFFFU && parser->context_len < 1 )
@@ -237,18 +242,18 @@
     if ( parser->error )
       goto Exit;
 
-    p        += 2;  /* skip format */
-    coverage  = table + OTL_NEXT_USHORT(p);
-    seq_count = OTL_NEXT_USHORT(p);
+    p        += 2;                              /* skip format */
+    coverage  = table + OTL_NEXT_USHORT( p );
+    seq_count = OTL_NEXT_USHORT( p );
     index     = otl_coverage_get_index( coverage, gindex );
 
-    if ( (OTL_UInt) index >= seq_count )
+    if ( (OTL_UInt)index >= seq_count || index < 0 )
       goto Exit;
 
-    p       += index*2;
-    sequence = table + OTL_PEEK_USHORT(p);
+    p       += index * 2;
+    sequence = table + OTL_PEEK_USHORT( p );
     p        = sequence;
-    count    = OTL_NEXT_USHORT(p);
+    count    = OTL_NEXT_USHORT( p );
 
     otl_parser_replace_n( parser, count, p );
     subst = 1;
@@ -256,6 +261,7 @@
    Exit:
     return subst;
   }
+
 
  /************************************************************************/
  /************************************************************************/
@@ -341,7 +347,8 @@
   {
     OTL_Bytes  p = table;
     OTL_Bytes  coverage, alternates;
-    OTL_UInt   format, gindex, index, property, seq_count, count;
+    OTL_UInt   format, gindex, property, seq_count, count;
+    OTL_Long   index;
     OTL_Bool   subst = 0;
 
     OTL_GSUB_Alternate  alternate = parser->alternate;
@@ -358,18 +365,18 @@
     if ( parser->error )
       goto Exit;
 
-    p        += 2;  /* skip format */
-    coverage  = table + OTL_NEXT_USHORT(p);
-    seq_count = OTL_NEXT_USHORT(p);
+    p        += 2;                              /* skip format */
+    coverage  = table + OTL_NEXT_USHORT( p );
+    seq_count = OTL_NEXT_USHORT( p );
     index     = otl_coverage_get_index( coverage, gindex );
 
-    if ( (OTL_UInt) index >= seq_count )
+    if ( (OTL_UInt)index >= seq_count || index < 0 )
       goto Exit;
 
-    p         += index*2;
-    alternates = table + OTL_PEEK_USHORT(p);
+    p         += index * 2;
+    alternates = table + OTL_PEEK_USHORT( p );
     p          = alternates;
-    count      = OTL_NEXT_USHORT(p);
+    count      = OTL_NEXT_USHORT( p );
 
     gindex = alternate->handler_func(
                  gindex, count, p, alternate->handler_data );
@@ -870,9 +877,8 @@
     features = OTL_NEXT_USHORT( p );
     lookups  = OTL_NEXT_USHORT( p );
 
-    otl_script_list_validate ( table + scripts, valid );
-    otl_feature_list_validate( table + features, valid );
-
     otl_lookup_list_validate( table + lookups, 7, otl_gsub_validate_funcs,
                               valid );
+    otl_feature_list_validate( table + features, table + lookups, valid );
+    otl_script_list_validate( table + scripts, table + features, valid );
   }

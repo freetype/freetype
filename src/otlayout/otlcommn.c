@@ -31,23 +31,21 @@
   otl_coverage_validate( OTL_Bytes      table,
                          OTL_Validator  valid )
   {
-    OTL_Bytes  p;
+    OTL_Bytes  p = table;
     OTL_UInt   format;
 
 
-    if ( table + 4 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    OTL_CHECK( 4 );
 
     format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
     case 1:
       {
-        OTL_UInt  count = OTL_NEXT_USHORT( p );
+        OTL_UInt  num_glyphs = OTL_NEXT_USHORT( p );
 
 
-        if ( p + count * 2 >= valid->limit )
-          OTL_INVALID_TOO_SHORT;
+        OTL_CHECK( num_glyphs * 2 );
 
         /* XXX: check glyph indices */
       }
@@ -56,19 +54,19 @@
     case 2:
       {
         OTL_UInt  n, num_ranges = OTL_NEXT_USHORT( p );
-        OTL_UInt  start, end, start_cover, total = 0, last = 0;
+        OTL_UInt  start, end, start_coverage, total = 0, last = 0;
 
 
-        if ( p + num_ranges * 6 >= valid->limit )
-          OTL_INVALID_TOO_SHORT;
+        OTL_CHECK( num_ranges * 6 );
 
+        /* scan range records */
         for ( n = 0; n < num_ranges; n++ )
         {
-          start       = OTL_NEXT_USHORT( p );
-          end         = OTL_NEXT_USHORT( p );
-          start_cover = OTL_NEXT_USHORT( p );
+          start          = OTL_NEXT_USHORT( p );
+          end            = OTL_NEXT_USHORT( p );
+          start_coverage = OTL_NEXT_USHORT( p );
 
-          if ( start > end || start_cover != total )
+          if ( start > end || start_coverage != total )
             OTL_INVALID_DATA;
 
           if ( n > 0 && start <= last )
@@ -124,7 +122,7 @@
   }
 
 
-  OTL_LOCALDEF( OTL_Int )
+  OTL_LOCALDEF( OTL_Long )
   otl_coverage_get_index( OTL_Bytes  table,
                           OTL_UInt   glyph_index )
   {
@@ -148,7 +146,7 @@
           gindex = OTL_PEEK_USHORT( p );
 
           if ( glyph_index == gindex )
-            return (OTL_Int)mid;
+            return (OTL_Long)mid;
 
           if ( glyph_index < gindex )
             max = mid;
@@ -161,7 +159,7 @@
     case 2:
       {
         OTL_UInt  min = 0, max = count, mid;
-        OTL_UInt  start, end, delta, start_cover;
+        OTL_UInt  start, end;
 
 
         table += 4;
@@ -177,7 +175,7 @@
           else if ( glyph_index > end )
             min = mid + 1;
           else
-            return (OTL_Int)( glyph_index + OTL_NEXT_USHORT( p ) - start );
+            return (OTL_Long)( glyph_index + OTL_NEXT_USHORT( p ) - start );
         }
       }
       break;
@@ -206,24 +204,20 @@
     OTL_UInt   format;
 
 
-    if ( p + 4 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    OTL_CHECK( 4 );
 
     format = OTL_NEXT_USHORT( p );
     switch ( format )
     {
     case 1:
       {
-        OTL_UInt  count, start = OTL_NEXT_USHORT( p );
+        OTL_UInt  num_glyphs, start = OTL_NEXT_USHORT( p );
 
 
-        if ( p + 2 > valid->limit )
-          OTL_INVALID_TOO_SHORT;
+        OTL_CHECK( 2 );
+        num_glyphs = OTL_NEXT_USHORT( p );
 
-        count = OTL_NEXT_USHORT( p );
-
-        if ( p + count * 2 > valid->limit )
-          OTL_INVALID_TOO_SHORT;
+        OTL_CHECK( num_glyphs * 2 );
 
         /* XXX: check glyph indices */
       }
@@ -232,17 +226,17 @@
     case 2:
       {
         OTL_UInt  n, num_ranges = OTL_NEXT_USHORT( p );
-        OTL_UInt  start, end, value, last = 0;
+        OTL_UInt  start, end, last = 0;
 
 
-        if ( p + num_ranges * 6 > valid->limit )
-          OTL_INVALID_TOO_SHORT;
+        OTL_CHECK( num_ranges * 6 );
 
+        /* scan class range records */
         for ( n = 0; n < num_ranges; n++ )
         {
           start = OTL_NEXT_USHORT( p );
           end   = OTL_NEXT_USHORT( p );
-          value = OTL_NEXT_USHORT( p );  /* ignored */
+          p    += 2;                        /* ignored */
 
           if ( start > end || ( n > 0 && start <= last ) )
             OTL_INVALID_DATA;
@@ -258,6 +252,7 @@
   }
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_class_definition_get_value( OTL_Bytes  table,
                                   OTL_UInt   glyph_index )
@@ -313,6 +308,7 @@
 
     return 0;
   }
+#endif
 
 
   /*************************************************************************/
@@ -331,8 +327,7 @@
     OTL_UInt   start, end, count, format;
 
 
-    if ( p + 8 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    OTL_CHECK( 8 );
 
     start  = OTL_NEXT_USHORT( p );
     end    = OTL_NEXT_USHORT( p );
@@ -341,13 +336,13 @@
     if ( format < 1 || format > 3 || end < start )
       OTL_INVALID_DATA;
 
-    count = (OTL_UInt)( end - start + 1 );
+    count = end - start + 1;
 
-    if ( p + ( ( 1 << format ) * count ) / 8 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    OTL_CHECK( ( 1 << format ) * count / 8 );
   }
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_device_table_get_start( OTL_Bytes  table )
   {
@@ -356,8 +351,10 @@
 
     return OTL_PEEK_USHORT( p );
   }
+#endif
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_device_table_get_end( OTL_Bytes  table )
   {
@@ -366,8 +363,10 @@
 
     return OTL_PEEK_USHORT( p );
   }
+#endif
 
 
+#if 0
   OTL_LOCALDEF( OTL_Int )
   otl_device_table_get_delta( OTL_Bytes  table,
                               OTL_UInt   size )
@@ -422,42 +421,43 @@
 
     return result;
   }
+#endif
 
 
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****                      LOOKUP LISTS                             *****/
+  /*****                         LOOKUPS                               *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
 
   OTL_LOCALDEF( void )
-  otl_lookup_validate( OTL_Bytes      table,
-                       OTL_Validator  valid )
+  otl_lookup_validate( OTL_Bytes          table,
+                       OTL_UInt           type_count,
+                       OTL_ValidateFunc*  type_funcs,
+                       OTL_Validator      valid )
   {
-    OTL_Bytes  p = table;
-    OTL_UInt   num_tables;
+    OTL_Bytes         p = table;
+    OTL_UInt          lookup_type, lookup_flag, num_subtables;
+    OTL_ValidateFunc  validate;
 
 
-    if ( table + 6 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    OTL_CHECK( 6 );
+    lookup_type   = OTL_NEXT_USHORT( p );
+    lookup_flag   = OTL_NEXT_USHORT( p );
+    num_subtables = OTL_NEXT_USHORT( p );
 
-    p += 4;
-    num_tables = OTL_NEXT_USHORT( p );
+    if ( lookup_type == 0 || lookup_type >= type_count )
+      OTL_INVALID_DATA;
 
-    if ( p + num_tables * 2 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    validate = type_funcs[lookup_type - 1];
 
-    for ( ; num_tables > 0; num_tables-- )
-    {
-      OTL_UInt offset = OTL_NEXT_USHORT( p );
+    OTL_CHECK( 2 * num_subtables );
 
-      if ( table + offset >= valid->limit )
-        OTL_INVALID_OFFSET;
-    }
-
-    /* XXX: check sub-tables? */
+    /* scan subtables */
+    for ( ; num_subtables > 0; num_subtables-- )
+      validate( table + OTL_NEXT_USHORT( p ), valid );
   }
 
 
@@ -471,6 +471,7 @@
   }
 
 
+#if 0
   OTL_LOCALDEF( OTL_Bytes )
   otl_lookup_get_table( OTL_Bytes  table,
                         OTL_UInt   idx )
@@ -489,6 +490,7 @@
 
     return result;
   }
+#endif
 
 
   /*************************************************************************/
@@ -499,33 +501,28 @@
   /*************************************************************************/
   /*************************************************************************/
 
-#if 0
   OTL_LOCALDEF( void )
-  otl_lookup_list_validate( OTL_Bytes      table,
-                            OTL_Validator  valid )
+  otl_lookup_list_validate( OTL_Bytes          table,
+                            OTL_UInt           type_count,
+                            OTL_ValidateFunc*  type_funcs,
+                            OTL_Validator      valid )
   {
-    OTL_Bytes  p = table, q;
-    OTL_UInt   num_lookups, offset;
+    OTL_Bytes  p = table;
+    OTL_UInt   num_lookups;
 
 
-    if ( p + 2 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
-
+    OTL_CHECK( 2 );
     num_lookups = OTL_NEXT_USHORT( p );
+    OTL_CHECK( 2 * num_lookups );
 
-    if ( p + num_lookups * 2 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
-
+    /* scan lookup records */
     for ( ; num_lookups > 0; num_lookups-- )
-    {
-      offset = OTL_NEXT_USHORT( p );
-
-      otl_lookup_validate( table + offset, valid );
-    }
+      otl_lookup_validate( table + OTL_NEXT_USHORT( p ),
+                           type_count, type_funcs, valid );
   }
-#endif
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_lookup_list_get_count( OTL_Bytes  table )
   {
@@ -534,8 +531,10 @@
 
     return OTL_PEEK_USHORT( p );
   }
+#endif
 
 
+#if 0
   OTL_LOCALDEF( OTL_Bytes )
   otl_lookup_list_get_lookup( OTL_Bytes  table,
                               OTL_UInt   idx )
@@ -554,8 +553,10 @@
 
     return result;
   }
+#endif
 
 
+#if 0
   OTL_LOCALDEF( OTL_Bytes )
   otl_lookup_list_get_table( OTL_Bytes  table,
                              OTL_UInt   lookup_index,
@@ -570,6 +571,7 @@
 
     return result;
   }
+#endif
 
 
 #if 0
@@ -598,22 +600,21 @@
 
   OTL_LOCALDEF( void )
   otl_feature_validate( OTL_Bytes      table,
+                        OTL_UInt       lookup_count,
                         OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   feat_params, num_lookups;
+    OTL_UInt   num_lookups;
 
 
-    if ( p + 4 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    OTL_CHECK( 4 );
+    p           += 2;                       /* unused */
+    num_lookups  = OTL_NEXT_USHORT( p );
+    OTL_CHECK( 2 * num_lookups );
 
-    feat_params = OTL_NEXT_USHORT( p );  /* ignored */
-    num_lookups = OTL_NEXT_USHORT( p );
-
-    if ( p + num_lookups * 2 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
-
-    /* XXX: check lookup indices */
+    for ( ; num_lookups > 0; num_lookups-- )
+      if ( OTL_NEXT_USHORT( p ) >= lookup_count )
+        OTL_INVALID_DATA;
   }
 
 
@@ -627,6 +628,7 @@
   }
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_feature_get_lookups( OTL_Bytes  table,
                            OTL_UInt   start,
@@ -651,6 +653,7 @@
 
     return result;
   }
+#endif
 
 
   /*************************************************************************/
@@ -663,30 +666,31 @@
 
   OTL_LOCALDEF( void )
   otl_feature_list_validate( OTL_Bytes      table,
+                             OTL_Bytes      lookups,
                              OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   num_features, offset;
+    OTL_UInt   num_features, lookup_count;
 
 
-    if ( table + 2 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
-
+    OTL_CHECK( 2 );
     num_features = OTL_NEXT_USHORT( p );
+    OTL_CHECK( 2 * num_features );
 
-    if ( p + num_features * 2 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    lookup_count = otl_lookup_get_count( lookups );
 
+    /* scan feature records */
     for ( ; num_features > 0; num_features-- )
     {
-      p     += 4;                       /* skip tag */
-      offset = OTL_NEXT_USHORT( p );
+      p += 4;       /* skip tag */
 
-      otl_feature_validate( table + offset, valid );
+      otl_feature_validate( table + OTL_NEXT_USHORT( p ), lookup_count,
+                            valid );
     }
   }
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_feature_list_get_count( OTL_Bytes  table )
   {
@@ -695,8 +699,10 @@
 
     return OTL_PEEK_USHORT( p );
   }
+#endif
 
 
+#if 0
   OTL_LOCALDEF( OTL_Bytes )
   otl_feature_list_get_feature( OTL_Bytes  table,
                                 OTL_UInt   idx )
@@ -716,6 +722,7 @@
 
     return result;
   }
+#endif
 
 
 #if 0
@@ -748,39 +755,44 @@
 
   OTL_LOCALDEF( void )
   otl_lang_validate( OTL_Bytes      table,
+                     OTL_UInt       feature_count,
                      OTL_Validator  valid )
   {
     OTL_Bytes  p = table;
-    OTL_UInt   lookup_order;
     OTL_UInt   req_feature;
     OTL_UInt   num_features;
 
 
-    if ( table + 6 >= valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    OTL_CHECK( 6 );
 
-    lookup_order = OTL_NEXT_USHORT( p );
+    p           += 2;                       /* unused */
     req_feature  = OTL_NEXT_USHORT( p );
     num_features = OTL_NEXT_USHORT( p );
 
-    /* XXX: check req_feature if not 0xFFFFU */
+    if ( req_feature != 0xFFFFU && req_feature >= feature_count )
+      OTL_INVALID_DATA;
 
-    if ( p + 2 * num_features >= valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    OTL_CHECK( 2 * num_features );
 
-    /* XXX: check features indices! */
+    for ( ; num_features > 0; num_features-- )
+      if ( OTL_NEXT_USHORT( p ) >= feature_count )
+        OTL_INVALID_DATA;
   }
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_lang_get_count( OTL_Bytes  table )
   {
     OTL_Bytes  p = table + 4;
 
+
     return OTL_PEEK_USHORT( p );
   }
+#endif
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_lang_get_req_feature( OTL_Bytes  table )
   {
@@ -789,8 +801,10 @@
 
     return OTL_PEEK_USHORT( p );
   }
+#endif
 
 
+#if 0
   OTL_LOCALDEF( OTL_UInt )
   otl_lang_get_features( OTL_Bytes  table,
                          OTL_UInt   start,
@@ -813,8 +827,7 @@
 
     return result;
   }
-
-
+#endif
 
 
   /*************************************************************************/
@@ -825,17 +838,16 @@
   /*************************************************************************/
   /*************************************************************************/
 
-
   OTL_LOCALDEF( void )
   otl_script_validate( OTL_Bytes      table,
+                       OTL_UInt       feature_count,
                        OTL_Validator  valid )
   {
     OTL_UInt   default_lang, num_langs;
     OTL_Bytes  p = table;
 
 
-    if ( table + 4 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    OTL_CHECK( 4 );
 
     default_lang = OTL_NEXT_USHORT( p );
     num_langs    = OTL_NEXT_USHORT( p );
@@ -846,101 +858,42 @@
         OTL_INVALID_OFFSET;
     }
 
-    if ( p + num_langs * 6 >= valid->limit )
-      OTL_INVALID_OFFSET;
+    OTL_CHECK( num_langs * 6 );
 
+    /* scan langsys records */
     for ( ; num_langs > 0; num_langs-- )
     {
-      OTL_UInt  offset;
+      p += 4;       /* skip tag */
 
-
-      p     += 4;  /* skip tag */
-      offset = OTL_NEXT_USHORT( p );
-
-      otl_lang_validate( table + offset, valid );
+      otl_lang_validate( table + OTL_NEXT_USHORT( p ), feature_count, valid );
     }
   }
 
 
   OTL_LOCALDEF( void )
   otl_script_list_validate( OTL_Bytes      list,
+                            OTL_Bytes      features,
                             OTL_Validator  valid )
   {
-    OTL_UInt   num_scripts;
+    OTL_UInt   num_scripts, feature_count;
     OTL_Bytes  p = list;
 
 
-    if ( list + 2 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
-
+    OTL_CHECK( 2 );
     num_scripts = OTL_NEXT_USHORT( p );
+    OTL_CHECK( num_scripts * 6 );
 
-    if ( p + num_scripts * 6 > valid->limit )
-      OTL_INVALID_TOO_SHORT;
+    feature_count = otl_feature_get_count( features );
 
+    /* scan script records */
     for ( ; num_scripts > 0; num_scripts-- )
     {
-      OTL_UInt  offset;
+      p += 4;       /* skip tag */
 
-
-      p     += 4;                       /* skip tag */
-      offset = OTL_NEXT_USHORT( p );
-
-      otl_script_validate( list + offset, valid );
+      otl_script_validate( list + OTL_NEXT_USHORT( p ), feature_count,
+                           valid );
     }
   }
 
-
-  /*************************************************************************/
-  /*************************************************************************/
-  /*****                                                               *****/
-  /*****                         LOOKUP LISTS                          *****/
-  /*****                                                               *****/
-  /*************************************************************************/
-  /*************************************************************************/
-
-  static void
-  otl_lookup_table_validate( OTL_Bytes          table,
-                             OTL_UInt           type_count,
-                             OTL_ValidateFunc*  type_funcs,
-                             OTL_Validator      valid )
-  {
-    OTL_Bytes         p = table;
-    OTL_UInt          lookup_type, lookup_flag, count;
-    OTL_ValidateFunc  validate;
-
-    OTL_CHECK( 6 );
-    lookup_type = OTL_NEXT_USHORT( p );
-    lookup_flag = OTL_NEXT_USHORT( p );
-    count       = OTL_NEXT_USHORT( p );
-
-    if ( lookup_type == 0 || lookup_type >= type_count )
-      OTL_INVALID_DATA;
-
-    validate = type_funcs[ lookup_type - 1 ];
-
-    OTL_CHECK( 2*count );
-    for ( ; count > 0; count-- )
-      validate( table + OTL_NEXT_USHORT( p ), valid );
-  }
-
-
-  OTL_LOCALDEF( void )
-  otl_lookup_list_validate( OTL_Bytes          table,
-                            OTL_UInt           type_count,
-                            OTL_ValidateFunc*  type_funcs,
-                            OTL_Validator      valid )
-  {
-    OTL_Bytes  p = table;
-    OTL_UInt   count;
-
-    OTL_CHECK( 2 );
-    count = OTL_NEXT_USHORT( p );
-
-    OTL_CHECK( 2*count );
-    for ( ; count > 0; count-- )
-      otl_lookup_table_validate( table + OTL_NEXT_USHORT( p ),
-                                 type_count, type_funcs, valid );
-  }
 
 /* END */

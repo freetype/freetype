@@ -1,3 +1,53 @@
+2004-08-13  Werner Lemberg  <wl@gnu.org>
+
+	* src/otlayout/otcommn.c: Use OTL_CHECK everywhere.
+	(otl_coverage_validate): Initialize `p',
+	s/count/num_glyphs/.
+	s/start_cover/start_coverage/.
+	(otl_coverage_get_index): Return OTL_Long, not OTL_Int.
+	Remove unused variables.
+	(otl_class_definition_validate): s/count/num_glyphs/.
+	Remove unused variables.
+	(otl_class_definition_get_value, otl_device_table_get_start,
+	otl_device_table_get_end, otl_device_table_get_delta,
+	otl_lookup_get_table, otl_lookup_list_get_count,
+	otl_lookup_list_get_lookup, otl_lookup_list_get_table,
+	otl_feature_get_lookups, otl_feature_list_get_count,
+	otl_feature_list_get_feature, otl_lang_get_count,
+	otl_lang_get_req_feature, otl_lang_get_features): Commented out
+	temporarily until we really need it.
+	(otl_lookup_validate): Removed.
+	(otl_lookup_table_validate): Renamed to ...
+	(otl_lookup_validate): This.  Update callers.
+	(otl_lookup_list_validate): Remove already commented out definition
+	and move the other definition up.
+	(otl_feature_validate): Add parameter to pass number of lookups.
+	Update callers.
+	Check lookup indices.
+	(otl_feature_list_validate): Add parameter to pass lookup table.
+	Update callers.
+	(otl_lang_validate): Add parameter to pass number of features.
+	Update callers.
+	Handle req_feature and check feature indices.
+	(otl_script_validate): Add parameter to pass number of features.
+	Update callers.
+	(otl_script_list_validate): Add parameter to pass feature table.
+	Update callers.
+
+	* src/otlayout/otcommn.h: s/LOCALDEF/LOCAL/.
+	Comment out the same functions as in otcommn.c.
+	(otl_script_list_get_script): Removed.
+
+	* src/otlayout/otlgsub.c (otl_gsub_lookup1_apply): Change `index' to
+	type OTL_Long.
+	(otl_gsub_lookup2_apply, otl_gsub_lookup3_apply): Change `index' to
+	type OTL_Long.
+	Fix test.
+	(otl_gsub_validate): Fix order of validation.
+
+	* src/otlayout/otlgpos.c (otl_gpos_validate): Fix order of
+	validation.
+
 2004-08-12  Werner Lemberg  <wl@gnu.org>
 
 	Make otlayout module compile (without actually working).

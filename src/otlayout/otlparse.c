@@ -25,6 +25,7 @@
     }
   }
 
+
 #define  OTL_STRING_ENSURE(str,count,parser)                   \
            OTL_BEGIN_STMNT                                     \
              if ( (str)->length + (count) > (str)->capacity )  \
@@ -52,10 +53,15 @@
     otl_longjmp( parser->jump_buffer, 1 );
   }
 
-  OTL_LOCAL( void )
+
+  OTL_LOCALDEF( void )
   otl_parser_check_property( OTL_Parser  parser,
                              OTL_UInt    gindex,
-                             OTL_UInt   *aproperty );
+                             OTL_UInt   *aproperty )
+  {
+    /* XXX: to do */
+  }
+
 
   OTL_LOCALDEF( void )
   otl_parser_replace_1( OTL_Parser  parser,
@@ -89,6 +95,7 @@
     out->cursor  = out->length;
     in->cursor  += 1;
   }
+
 
   OTL_LOCALDEF( void )
   otl_parser_replace_n( OTL_Parser  parser,
