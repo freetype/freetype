@@ -212,7 +212,11 @@
   
     while ( c )
     {
+#ifndef macintosh
       if ( c == '/' || c == '\\' )
+#else
+      if ( c == ':' )
+#endif
         base = current + 1;
 
       current++;
