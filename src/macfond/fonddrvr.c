@@ -42,10 +42,10 @@
       a TrueType font and/or (!) a Type 1 font available.
 
     - If there is a Type 1 font available (as a separate 'LWFN' file),
-      read it's data into memory, massage it slightly so it becomes
+      read its data into memory, massage it slightly so it becomes
       PFB data, wrap it into a memory stream, load the Type 1 driver
-      and delegate the rest of the work to it, by calling
-        t1_driver->interface.init_face( ... )
+      and delegate the rest of the work to it, by calling the init_face()
+      method of the Type 1 driver.
       (XXX TODO: after this has been done, the kerning data from the FOND
       resource should be appended to the face: on the Mac there are usually
       no AFM files available. However, this is tricky since we need to map
@@ -53,18 +53,21 @@
 
     - If there is a TrueType font (an 'sfnt' resource), read it into
       memory, wrap it into a memory stream, load the TrueType driver
-      and delegate the rest of the work to it, by calling
-        tt_driver->interface.init_face( ... )
+      and delegate the rest of the work to it, by calling the init_face()
+      method if the TrueType driver.
 
     - In both cases, the original stream gets closed and *reinitialized*
       to become a memory stream. Additionally, the face->driver field --
       which is set to the FOND driver upon entering our init_face() --
       gets *reset* to either the TT or the T1 driver. I had to make a minor
       change to ftobjs.c to make this work.
+
+    - We might consider creating an FT_New_Face_Mac() API call, as this
+      would avoid some of the mess described above.
 */
 
-#include <freetype/internal/ttobjs.h>
-#include <freetype/internal/t1objs.h>
+#include <truetype/ttobjs.h>
+#include <type1z/z1objs.h>
 
 #include <Resources.h>
 #include <Fonts.h>
@@ -103,7 +106,9 @@
 
 
   /* The FOND face object is just a union of TT and T1: both is possible,
-     and we don't need anything else. */
+     and we don't need anything else. We still need to be able to hold
+     either, as the face object is not allocated by us. Again, creating
+     an FT_New_Face_Mac() would avoid this kludge. */
   typedef union FOND_FaceRec_
   {
     TT_FaceRec     tt;
@@ -148,7 +153,8 @@
   }
 
 
-  /* Quick 'n' Dirty Pascal string to C string converter. */
+  /* Quick 'n' Dirty Pascal string to C string converter.
+     Warning: this call is not thread safe! Use with caution. */
   static
   char * p2c_str( unsigned char *pstr )
   {
@@ -250,12 +256,14 @@
   /* Read Type 1 data from the POST resources inside the LWFN file, return a
      PFB buffer -- apparently FT doesn't like a pure binary T1 stream. */
   static
-  char* read_type1_data( FT_Memory memory, FSSpec* lwfn_spec, unsigned long *size )
+  unsigned char* read_type1_data( FT_Memory memory, FSSpec* lwfn_spec, unsigned long *size )
   {
     short          res_ref, res_id;
-    unsigned char  *buffer, *p;
+    unsigned char  *buffer, *p, *size_p;
     unsigned long  total_size = 0;
+    unsigned long  post_size, pfb_chunk_size;
     Handle         post_data;
+    char           code, last_code;
 
     res_ref = FSpOpenResFile( lwfn_spec, fsRdPerm );
     if ( ResError() )
@@ -265,14 +273,22 @@
     /* first pass: load all POST resources, and determine the size of
        the output buffer */
     res_id = 501;
+    last_code = -1;
     for (;;)
     {
       post_data = Get1Resource( 'POST', res_id++ );
-      if ( post_data == NULL ) break;
-      if ( (*post_data)[0] != 5 )
-        total_size += GetHandleSize( post_data ) + 4;
-      else
-        total_size += 2;
+      if ( post_data == NULL )
+        break;
+      code = (*post_data)[0];
+      if ( code != last_code )
+      {
+        if ( code == 5 )
+          total_size += 2; /* just the end code */
+        else
+          total_size += 6; /* code + 4 bytes chunk length */
+      }
+      total_size += GetHandleSize( post_data ) - 2;
+      last_code = code;
     }
 
     buffer = memory->alloc( memory, total_size );
@@ -282,39 +298,50 @@
     /* second pass: append all POST data to the buffer, add PFB fields */
     p = buffer;
     res_id = 501;
+    last_code = -1;
+    pfb_chunk_size = 0;
     for (;;)
     {
-      long  chunk_size;
-      char  code;
-
       post_data = Get1Resource( 'POST', res_id++ );
-      if ( post_data == NULL ) break;
-      chunk_size = GetHandleSize( post_data ) - 2;
-
-      *p++ = 0x80;
-
+      if ( post_data == NULL )
+        break;
+      post_size = GetHandleSize( post_data ) - 2;
       code = (*post_data)[0];
-      if ( code == 5 )
-        *p++ = 0x03;  /* the end */
-      else if ( code == 2 )
-        *p++ = 0x02;  /* binary segment */
-      else
-        *p++ = 0x01;  /* ASCII segment */
-      if ( code != 5 )
+      if ( code != last_code )
       {
-        *p++ = chunk_size & 0xFF;
-        *p++ = (chunk_size >> 8) & 0xFF;
-        *p++ = (chunk_size >> 16) & 0xFF;
-        *p++ = (chunk_size >> 24) & 0xFF;
+        if ( last_code != -1 )
+        {
+          /* we're done adding a chunk, fill in the size field */
+          *size_p++ = pfb_chunk_size & 0xFF;
+          *size_p++ = (pfb_chunk_size >> 8) & 0xFF;
+          *size_p++ = (pfb_chunk_size >> 16) & 0xFF;
+          *size_p++ = (pfb_chunk_size >> 24) & 0xFF;
+          pfb_chunk_size = 0;
+        }
+        *p++ = 0x80;
+        if ( code == 5 )
+          *p++ = 0x03;  /* the end */
+        else if ( code == 2 )
+          *p++ = 0x02;  /* binary segment */
+        else
+          *p++ = 0x01;  /* ASCII segment */
+        if ( code != 5 )
+        {
+          size_p = p;   /* save for later */
+          p += 4;       /* make space for size field */
+        }
       }
-      memcpy( p, *post_data + 2, chunk_size );
-      p += chunk_size;
+      memcpy( p, *post_data + 2, post_size );
+      pfb_chunk_size += post_size;
+      p += post_size;
+      last_code = code;
     }
 
     CloseResFile( res_ref );
 
     *size = total_size;
-    return (char*)buffer;
+/*    printf( "XXX %d %d\n", p - buffer, total_size ); */
+    return buffer;
 
 error:
     CloseResFile( res_ref );
@@ -353,9 +380,11 @@ error:
      suitcase or not; then determine if we're dealing with Type 1
      or TrueType; delegate the work to the proper driver. */
   static
-  FT_Error init_face( FT_Stream  stream,
-                      FT_Long    face_index,
-                      FT_Face    face )
+  FT_Error init_face( FT_Stream      stream,
+                      FT_Face        face,
+                      FT_Int         face_index,
+                      FT_Int         num_params,
+                      FT_Parameter*  parameters )
   {
     FT_Error      err;
     FSSpec        suit_spec, lwfn_spec;
@@ -365,13 +394,13 @@ error:
     Str255        lwfn_file_name;
 
     if ( !stream->pathname.pointer )
-      return FT_Err_Invalid_Argument;
+      return FT_Err_Unknown_File_Format;
 
     if ( make_file_spec( stream->pathname.pointer, &suit_spec ) )
       return FT_Err_Invalid_Argument;
 
     if ( !is_suitcase( &suit_spec ) )
-      return FT_Err_Invalid_File_Format;
+      return FT_Err_Unknown_File_Format;
 
     res_ref = FSpOpenResFile( &suit_spec, fsRdPerm );
     if ( ResError() )
@@ -383,7 +412,10 @@ error:
     if ( face_index < 0)
       res_index = 1;
     else
+    {
       res_index = face_index + 1;
+      face_index = 0;
+    }
     fond_data = Get1IndResource( 'FOND', res_index );
     if ( ResError() )
     {
@@ -400,7 +432,7 @@ error:
     if ( err )
     {
       CloseResFile( res_ref );
-      return FT_Err_Invalid_Resource_Handle;
+      return FT_Err_Invalid_Handle;
     }
 
     if ( lwfn_file_name[0] )
@@ -415,9 +447,9 @@ error:
 
     if ( lwfn_file_name[0] && ( !have_sfnt || PREFER_LWFN ) )
     {
-      FT_Driver     t1_driver;
-      char*         type1_data;
-      unsigned long size;
+      FT_Driver       t1_driver;
+      unsigned char*  type1_data;
+      unsigned long   size;
 
       CloseResFile( res_ref ); /* XXX still need to read kerning! */
 
@@ -452,12 +484,12 @@ error:
       stream->size = size;
       stream->pos = 0; /* just in case */
 
-      /* delegate the work to the Type 1 driver */
-      t1_driver = FT_Get_Driver( face->driver->library, "type1" );
+      /* delegate the work to the Type 1 module */
+      t1_driver = (FT_Driver)FT_Get_Module( face->driver->root.library, "type1" );
       if ( t1_driver )
       {
         face->driver = t1_driver;
-        return t1_driver->interface.init_face( stream, 0, face );
+        return t1_driver->clazz->init_face( stream, face, face_index, 0, NULL );
       }
       else
         return FT_Err_Invalid_Driver_Handle;
@@ -470,7 +502,7 @@ error:
       if ( ResError() )
       {
         CloseResFile( res_ref );
-        return FT_Err_Invalid_Resource_Handle;
+        return FT_Err_Invalid_Handle;
       }
       DetachResource( sfnt_data );
       CloseResFile( res_ref );
@@ -482,16 +514,16 @@ error:
       stream->close = sfnt_stream_close;
       stream->descriptor.pointer = sfnt_data;
       stream->read = 0; /* it's now memory based */
-      stream->base = *sfnt_data;
+      stream->base = (unsigned char *)*sfnt_data;
       stream->size = GetHandleSize( sfnt_data );
       stream->pos = 0; /* just in case */
 
       /* delegate the work to the TrueType driver */
-      tt_driver = FT_Get_Driver( face->driver->library, "truetype" );
+      tt_driver = (FT_Driver)FT_Get_Module( face->driver->root.library, "truetype" );
       if ( tt_driver )
       {
         face->driver = tt_driver;
-        return tt_driver->interface.init_face( stream, 0, face );
+        return tt_driver->clazz->init_face( stream, face, face_index, 0, NULL );
       }
       else
         return FT_Err_Invalid_Driver_Handle;
@@ -504,6 +536,11 @@ error:
   }
 
 
+  static
+  void  done_face( FT_Face  face )
+  {
+    /* nothing to do */
+  }
 
   /* The FT_DriverInterface structure is defined in ftdriver.h. */
 
@@ -529,7 +566,7 @@ error:
     0,
 
     (FTDriver_initFace)          init_face,
-    (FTDriver_doneFace)          0,
+    (FTDriver_doneFace)          done_face,
     (FTDriver_initSize)          0,
     (FTDriver_doneSize)          0,
     (FTDriver_initGlyphSlot)     0,
