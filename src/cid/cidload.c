@@ -612,6 +612,9 @@
     if ( face_index < 0 )
       goto Exit;
 
+    if ( FT_NEW( face->cid_stream ) )
+      goto Exit;
+
     if ( parser->binary_length )
     {
       /* we must convert the data section from hexadecimal to binary */
@@ -620,16 +623,13 @@
                               parser->data_offset, face )               )
         goto Exit;
 
-      if ( FT_NEW( face->cid_stream ) )
-        goto Exit;
-
       FT_Stream_OpenMemory( face->cid_stream,
                             face->binary_data, parser->binary_length );
       face->cid.data_offset = 0;
     }
     else
     {
-      face->cid_stream = face->root.stream;
+      *face->cid_stream     = *face->root.stream;
       face->cid.data_offset = loader.parser.data_offset;
     }
 
