@@ -4,6 +4,12 @@
 	dynamic array when loading a glyph from a PFR font. This fixes
 	bug #11921
 
+	* src/base/ftbitmap.c (FT_Bitmap_Convert): small improvements to the
+	conversion function (mainly stupid optimization, because I like
+	these... shame on me)
+
+	* src/base/Jamfile: adding ftbitmap.c to the list of compiled files
+
 2005-02-10  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/freetype-config.in: Add new flag `--ftversion' to

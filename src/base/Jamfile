@@ -10,7 +10,7 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) base ;
   if $(FT2_MULTI)
   {
     _sources = ftutil ftdbgmem ftstream ftcalc fttrigon ftgloadr ftoutln
-               ftobjs ftnames ftrfork ;
+               ftobjs ftnames  ftrfork  ;
   }
   else
   {
@@ -24,7 +24,7 @@ SubDir  FT2_TOP $(FT2_SRC_DIR) base ;
 #
 Library  $(FT2_LIB) : ftsystem.c   ftinit.c    ftglyph.c  ftmm.c     ftbdf.c
                       ftbbox.c     ftdebug.c   ftxf86.c   fttype1.c  ftpfr.c
-                      ftstroke.c   ftwinfnt.c  ftotval.c ;
+                      ftstroke.c   ftwinfnt.c  ftotval.c  ftbitmap.c ;
 
 # Add Macintosh-specific file to the library when necessary.
 #
