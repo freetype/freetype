@@ -155,7 +155,7 @@
                   FT_UInt      num_tables )
   {
     FT_Error  error;
-    FT_UInt   nn;
+    FT_UInt   nn, has_head = 0;
 
     static const FT_Frame_Field  sfnt_dir_entry_fields[] =
     {
@@ -201,6 +201,8 @@
       {
         FT_UInt32  magic;
 
+        has_head = 1;
+
         if ( table.Length != 0x36                         ||
              FT_STREAM_SEEK( offset + table.Offset + 12 ) ||
              FT_READ_ULONG( magic )                       ||
@@ -211,6 +213,9 @@
           goto Bad_Format;
       }
     }
+
+    if ( has_head == 0 )
+      goto Bad_Format;
 
   Exit:
     return  error;
