@@ -1,7 +1,16 @@
+2002-02-02  Keith Packard  <keithp@keithp.com>
+
+	* builds/unix/freetype-config.in: Add missing `fi'.
+
+
+	* Version 2.0.7 released.
+	=========================
+
+
 2002-02-01  David Turner  <david@freetype.org>
 
-        * include/freetype/freetype.h: increasing FREETYPE_PATCH to 7
-        for the new release
+	* include/freetype/freetype.h: Increasing FREETYPE_PATCH to 7
+	for the new release.
 
 2002-01-31  David Turner  <david@freetype.org>
 

@@ -84,6 +84,7 @@ if test "$echo_cflags" = "yes" ; then
   echo -I@includedir@ $cflags
  else
   echo $cflags
+ fi
 fi
 
 if test "$echo_libs" = "yes" ; then
