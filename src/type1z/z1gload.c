@@ -168,7 +168,7 @@
 
     glyph->root.outline.n_points   = 0;
     glyph->root.outline.n_contours = 0;
-
+    
     hinting = ( load_flags & FT_LOAD_NO_SCALE   ) == 0 &&
               ( load_flags & FT_LOAD_NO_HINTING ) == 0;
 
@@ -224,12 +224,15 @@
 
 
         /* copy the _unscaled_ advance width */
-        metrics->horiAdvance = decoder.builder.advance.x;
+        metrics->horiAdvance          = decoder.builder.advance.x;
+        glyph->root.linearHoriAdvance = decoder.builder.advance.x;
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;
         metrics->vertBearingY = 0;
         metrics->vertAdvance  = 0;
+
+        glyph->root.linearVertAdvance = 0;
 
         glyph->root.format = ft_glyph_format_outline;
 

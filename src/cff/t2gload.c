@@ -1970,12 +1970,15 @@
 
 
         /* copy the _unscaled_ advance width */
-        metrics->horiAdvance = decoder.glyph_width;
+        metrics->horiAdvance          = decoder.glyph_width;
+        glyph->root.linearHoriAdvance = decoder.glyph_width;
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;
         metrics->vertBearingY = 0;
         metrics->vertAdvance  = 0;
+
+        glyph->root.linearVertAdvance = 0;
 
         glyph->root.format = ft_glyph_format_outline;
 

@@ -274,13 +274,15 @@
 
 
         /* copy the _unscaled_ advance width */
-        metrics->horiAdvance = decoder.builder.advance.x;
+        metrics->horiAdvance          = decoder.builder.advance.x;
+        glyph->root.linearHoriAdvance = decoder.builder.advance.x;
 
         /* make up vertical metrics */
         metrics->vertBearingX = 0;
         metrics->vertBearingY = 0;
         metrics->vertAdvance  = 0;
 
+        glyph->root.linearVertAdvance = 0;
         glyph->root.format = ft_glyph_format_outline;
 
         if ( size && size->root.metrics.y_ppem < 24 )
