@@ -16,8 +16,8 @@
 /***************************************************************************/
 
 
-#ifndef FTOPTION_H
-#define FTOPTION_H
+#ifndef __FTOPTION_H__
+#define __FTOPTION_H__
 
 
 #ifdef __cplusplus
@@ -359,7 +359,7 @@
   /*                                                                       */
   /* The Chinese font MingTiEG-Medium (CNS 11643 character set) needs 256. */
   /*                                                                       */
-#define T1_MAX_CHARSTRINGS_OPERANDS  64
+#define T1_MAX_CHARSTRINGS_OPERANDS  256
 
 
   /*************************************************************************/
@@ -394,7 +394,7 @@
 #endif
 
 
-#endif /* FTOPTION_H */
+#endif /* __FTOPTION_H__ */
 
 
 /* END */
