@@ -3,6 +3,8 @@
         * src/autohint/ahtypes.h: disabling metrics hinting in the auto-hinter.
         this produces much better anti-aliased text
 
+        * docs/CHANGES: updating the changes documentation
+
 2002-09-25  Anthony Fok  <anthony@thizlinux.com>
 
         * src/sfnt/ttcmap0.c: added support for opens___.ttf (it contains

@@ -32,7 +32,7 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
       offsets are computed).
 
 
-  II. MISCELLANEOUS
+  II. IMPORTANT CHANGES
 
     - The automatic and postscript hinters have both been updated.  This
       results in a relatively important increase of rendering quality since
@@ -41,44 +41,6 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
         http://www.freetype.org/freetype2/smooth-hinting.html
 
       for additional details on this topic.
-
-    - Added support for the DESTDIR variable during "make install".  This
-      simplifies packaging of FreeType.
-
-    - The DocMaker tool used to generate the on-line API reference has been
-      completely rewritten.  It is now located in
-      "src/tools/docmaker/docmaker.py".  Features:
-
-        - better cross-referenced output
-        - more polished output
-        - uses Python regular expressions (though it didn't speed the
-          program)
-        - much more modular structure, which allows for different "backends"
-          in order to generate HTML, XML, or whatever format.
-
-      One can regenerate the API reference by calling:
-
-         python src/tools/docmaker/docmaker.py \
-                --prefix=ft2 \
-                --title=FreeType-2.1.3 \
-                --output=<outputdirectory> 
-                include/freetype/*.h \
-                include/freetype/config/*.h \
-                include/freetype/cache/*.h
-
-    - A new, experimental, support for incremental font loading (i.e.,
-      loading of fonts where the glyphs are not in the font file itself, but
-      provided by an external component, like a Postscript interpreter) has
-      been added by Graham Asher.  This is still work in progress, however.
-
-    - A new, experimental, path stroker has been added.  It doesn't suffer
-      from severe rounding errors and treat bezier arcs directly.  Still
-      work in progress (i.e. not part of the official API).  See the file
-      <freetype/ftstroker.h> for some of the details.
-
-    - The massive re-formatting of sources and internal re-design is still
-      under-way.  Many internal functions, constants, and types have been
-      renamed.
 
     - The "load_flags" parameter of FT_Load_Glyph is now an FT_Int32
       (instead of just being an FT_Int).  This breaks source and binary
@@ -105,6 +67,62 @@ LATEST CHANGES BETWEEN 2.1.3 and 2.1.2
 
       FT_LOAD_MONOCHROME is still supported, but only affects rendering, not
       the hinting.
+
+      Note that the 'ftview' demo program available in the 'ft2demos' package
+      has been updated to support LCD-optimized display on non-paletted
+      displays (under Win32 and X11)
+
+
+    - The cache API has been slightly modified (it's still a beta after all!!):
+
+       - the type FTC_ImageDesc has been removed, it is now replaced by
+         FTC_ImageTypeRec. Note that one of its fields is a 'load_flag'
+         parameter for FT_Load_Glyph
+
+       - the field "num_grays" of FT_SBitRec has been changed to "max_grays"
+         in order to fit within a single byte. Its maximum value is thus 255
+         (instead of 256 as previously)
+
+
+  III. MISCELLANEOUS
+
+    - Added support for the DESTDIR variable during "make install".  This
+      simplifies packaging of FreeType.
+
+    - The DocMaker tool used to generate the on-line API reference has been
+      completely rewritten.  It is now located in
+      "src/tools/docmaker/docmaker.py".  Features:
+
+        - better cross-referenced output
+        - more polished output
+        - uses Python regular expressions (though it didn't speed the
+          program)
+        - much more modular structure, which allows for different "backends"
+          in order to generate HTML, XML, or whatever format.
+
+      One can regenerate the API reference by calling:
+
+         python src/tools/docmaker/docmaker.py \
+                --prefix=ft2 \
+                --title=FreeType-2.1.3 \
+                --output=<outputdirectory>
+                include/freetype/*.h \
+                include/freetype/config/*.h \
+                include/freetype/cache/*.h
+
+    - A new, experimental, support for incremental font loading (i.e.,
+      loading of fonts where the glyphs are not in the font file itself, but
+      provided by an external component, like a Postscript interpreter) has
+      been added by Graham Asher.  This is still work in progress, however.
+
+    - A new, experimental, path stroker has been added.  It doesn't suffer
+      from severe rounding errors and treat bezier arcs directly.  Still
+      work in progress (i.e. not part of the official API).  See the file
+      <freetype/ftstroker.h> for some of the details.
+
+    - The massive re-formatting of sources and internal re-design is still
+      under-way.  Many internal functions, constants, and types have been
+      renamed.
 
 
 ========================================================================
