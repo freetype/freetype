@@ -1059,7 +1059,7 @@
   {
     FT_Open_Args  args = ft_default_open_args;
     
-    args.pathname = (FT_Byte*)pathname;
+    args.pathname = (char*)pathname;
     return FT_Open_Face( library, &args, face_index, aface );
   }
 
@@ -1281,7 +1281,7 @@
     {
       FT_Attach_Reader  reader;
       
-      reader = (FT_Attach_Reader)get_interface( driver, "attach_file" );
+      reader = (FT_Attach_Reader)(get_interface( driver, "attach_file" ));
       if (reader)
         error = reader( face, stream );
     }
