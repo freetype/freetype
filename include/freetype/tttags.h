@@ -22,9 +22,9 @@
 
 #include <freetype/freetype.h>   /* for MAKE_TT_TAG() */
 
-
 #define TTAG_cmap  FT_MAKE_TAG( 'c', 'm', 'a', 'p' )
 #define TTAG_cvt   FT_MAKE_TAG( 'c', 'v', 't', ' ' )
+#define TTAG_DSIG  FT_MAKE_TAG( 'D', 'S', 'I', 'G' )
 #define TTAG_EBDT  FT_MAKE_TAG( 'E', 'B', 'D', 'T' )
 #define TTAG_EBLC  FT_MAKE_TAG( 'E', 'B', 'L', 'C' )
 #define TTAG_EBSC  FT_MAKE_TAG( 'E', 'B', 'S', 'C' )
@@ -52,7 +52,6 @@
 #define TTAG_VDMX  FT_MAKE_TAG( 'V', 'D', 'M', 'X' )
 #define TTAG_vhea  FT_MAKE_TAG( 'v', 'h', 'e', 'a' )
 #define TTAG_vmtx  FT_MAKE_TAG( 'v', 'm', 't', 'x' )
-
 
 #endif /* TTAGS_H */
 
