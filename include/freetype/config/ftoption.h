@@ -246,7 +246,7 @@
   /*                                                                       */
   /*    This must be greater than 4 Kb                                     */
   /*                                                                       */
-#define FT_RENDER_POOL_SIZE   8192
+#define FT_RENDER_POOL_SIZE   16384
 
 
   /*************************************************************************/

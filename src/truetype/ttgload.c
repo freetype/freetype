@@ -1368,13 +1368,13 @@
         glyph->format = ft_glyph_format_bitmap;
         if ( load_flags & FT_LOAD_VERTICAL_LAYOUT )
         {
-          glyph->bitmap_left = metrics.horiBearingX;
-          glyph->bitmap_top  = metrics.horiBearingY;
+          glyph->bitmap_left = metrics.vertBearingX;
+          glyph->bitmap_top  = metrics.vertBearingY;
         }
         else
         {
-          glyph->bitmap_left = metrics.vertBearingX;
-          glyph->bitmap_top  = metrics.vertBearingY;
+          glyph->bitmap_left = metrics.horiBearingX;
+          glyph->bitmap_top  = metrics.horiBearingY;
         }
         return error;
       }

@@ -281,7 +281,6 @@
   {
     FT_Error     error;
     FT_Int       bchar_index, achar_index, n_base_points;
-    FT_Outline*  cur  = decoder->builder.current;
     FT_Outline*  base = decoder->builder.base;
     FT_Vector    left_bearing, advance;
     T1_Face      face  = decoder->builder.face;
@@ -352,7 +351,7 @@
     if ( error )
       goto Exit;
 
-    n_base_points = cur->n_points;
+    n_base_points = base->n_points;
 
     /* save the left bearing and width of the base character */
     /* as they will be erased by the next load.              */
