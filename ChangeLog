@@ -1,3 +1,7 @@
+2005-03-03  Werner Lemberg  <wl@gnu.org>
+
+	* devel/ftoption.h: Updated to recent changes.
+
 2005-03-02  Werner Lemberg  <wl@gnu.org>
 
 	* src/autofit/afdummy.c, src/autofit/afdummy.h
