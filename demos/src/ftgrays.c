@@ -56,6 +56,10 @@
 
 #include <ftimage.h>
 
+#if 1
+#include <string.h>
+#endif
+
 #define ErrRaster_Invalid_Outline  -1
 
 #include "ftgrays.h"
