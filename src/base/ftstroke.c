@@ -286,6 +286,7 @@
     FT_UInt  start = border->start;
     FT_UInt  count = border->num_points;
 
+
     FT_ASSERT( border->start >= 0 );
 
     /* don't record empty paths! */
@@ -293,23 +294,23 @@
       border->num_points = start;
     else
     {
-     /* copy the last point to the start of this sub-path, since
-      * it contains the "adjusted" starting coordinates
-      */
+      /* copy the last point to the start of this sub-path, since */
+      /* it contains the `adjusted' starting coordinates          */
       border->num_points    = --count;
       border->points[start] = border->points[count];
 
       if ( reverse )
       {
-       /* reverse the points
-        */
+        /* reverse the points */
         {
           FT_Vector*  vec1 = border->points + start + 1;
           FT_Vector*  vec2 = border->points + count - 1;
 
+
           for ( ; vec1 < vec2; vec1++, vec2-- )
           {
             FT_Vector  tmp;
+
 
             tmp   = *vec1;
             *vec1 = *vec2;
@@ -317,15 +318,16 @@
           }
         }
 
-       /* then the tags
-        */
+        /* then the tags */
         {
           FT_Byte*  tag1 = border->tags + start + 1;
           FT_Byte*  tag2 = border->tags + count - 1;
 
+
           for ( ; tag1 < tag2; tag1++, tag2-- )
           {
             FT_Byte  tmp;
+
 
             tmp   = *tag1;
             *tag1 = *tag2;
@@ -334,8 +336,8 @@
         }
       }
 
-      border->tags[ start     ] |= FT_STROKE_TAG_BEGIN;
-      border->tags[ count - 1 ] |= FT_STROKE_TAG_END;
+      border->tags[start    ] |= FT_STROKE_TAG_BEGIN;
+      border->tags[count - 1] |= FT_STROKE_TAG_END;
     }
 
     border->start   = -1;
@@ -674,54 +676,6 @@
   }
 
 
-  static void
-  ft_stroke_border_reverse( FT_StrokeBorder  border )
-  {
-    FT_Vector*  point1 = border->points + border->start + 1;
-    FT_Vector*  point2 = border->points + border->num_points-1;
-    FT_Byte*    tag1   = border->tags + border->start + 1;
-    FT_Byte*    tag2   = border->tags + border->num_points-1;
-
-    while ( point1 < point2 )
-    {
-      FT_Vector  tpoint;
-      FT_Byte    ttag1, ttag2, ttag;
-
-     /* swap the points
-      */
-      tpoint  = *point1;
-      *point1 = *point2;
-      *point2 = tpoint;
-
-     /* swap the tags
-      */
-      ttag1 = *tag1;
-      ttag2 = *tag2;
-
-#if 0
-      ttag = ttag1 & FT_STROKE_TAG_BEGIN_END;
-      if ( ttag == FT_STROKE_TAG_BEGIN ||
-           ttag == FT_STROKE_TAG_END   )
-        ttag1 ^= FT_STROKE_TAG_BEGIN_END;
-
-      ttag = ttag2 & FT_STROKE_TAG_BEGIN_END;
-      if ( ttag == FT_STROKE_TAG_BEGIN ||
-           ttag == FT_STROKE_TAG_END   )
-        ttag2 ^= FT_STROKE_TAG_BEGIN_END;
-#endif
-
-      *tag1 = ttag2;
-      *tag2 = ttag1;
-
-      point1++;
-      point2--;
-      tag1++;
-      tag2--;
-    }
-  }
-
-
-
  /***************************************************************************/
  /***************************************************************************/
  /*****                                                                 *****/
@@ -919,8 +873,7 @@
 
     thcos  = FT_Cos( theta );
 
-   /* TODO: find better criterion to switch off the optimisation
-    */
+    /* TODO: find better criterion to switch off the optimization */
     if ( thcos < 0x4000 )
     {
       FT_Vector_From_Polar( &delta, stroker->radius,
@@ -1453,12 +1406,11 @@
           {
             FT_Byte  ttag = dst_tag[0] & FT_STROKE_TAG_BEGIN_END;
 
-            /* switch begin/end tags if necessary.. */
+
+            /* switch begin/end tags if necessary */
             if ( ttag == FT_STROKE_TAG_BEGIN ||
                  ttag == FT_STROKE_TAG_END   )
-            {
               dst_tag[0] ^= FT_STROKE_TAG_BEGIN_END;
-            }
 
           }
 
