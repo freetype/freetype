@@ -1186,7 +1186,7 @@
 
     /* don't forget to hint the advance when we need to */
     if ( IS_HINTED( loader->load_flags ) )
-      glyph->metrics.horiAdvance = (glyph->metrics.horiAdvance+32) & -64;
+      glyph->metrics.horiAdvance = ( glyph->metrics.horiAdvance + 32 ) & -64;
 
     /* Now take care of vertical metrics.  In the case where there is    */
     /* no vertical information within the font (relatively common), make */

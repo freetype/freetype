@@ -1,27 +1,62 @@
+2001-12-15  Werner Lemberg  <wl@gnu.org>
+
+	* src/base/ftglyph (FT_Glyph_To_Bitmap): Remove compiler warning.
+	* include/freetype/ftcache.h (FTC_Node_Unref): Removed.  It is
+	already in ftcmanag.h.
+	* src/cache/ftcsbits.c (ftc_sbit_node_load): Remove unused variable
+	`gfam'.
+	* src/cache/ftcmanag.c (ftc_family_table_alloc,
+	* ftc_family_table_free): Use FT_EXPORT_DEF.
+	* include/freetype/cache/ftcmanag.h: Updated.
+	* src/cache/ftccache.c (ftc_node_destroy): Use FT_EXPORT_DEF.
+	* src/cache/ftccmap.c (ftc_cmap_node_init): Remove unused variable
+	`cfam'.
+	Remove compiler warning.
+	(FTC_CMapCache_Lookup): Remove compiler warnings.
+	(ftc_cmap_family_init): Ditto.
+	(FTC_CMapCache_Lookup): Ditto.
+
+	* builds/unix/configure.ac: Increase `version_info' to 8:0:2.
+	* builds/unix/configure: Regenerated.
+
+2001-12-14  Werner Lemberg  <wl@gnu.org>
+
+	* builds/mac/README: Updated.
+
 2001-12-14  Scott Long  <scott@swiftview.com>
 
-    * src/truetype/ttgload.c (load_truetype_glyph): fixing crash when dealing
-    with invalid fonts (i.e. glyph size < 10 bytes)..
+	* src/truetype/ttgload.c (load_truetype_glyph): Fixing crash when
+	dealing with invalid fonts (i.e. glyph size < 10 bytes).
 
 2001-12-14  Sam Latinga <slouken@devolution.com>
 
-    * builds/mac/freetype.mac: a new Makefile to build with MPW on MacOS
-    classic..
+	* builds/mac/freetype.make: A new Makefile to build with MPW on
+	MacOS classic.
 
 2001-12-14  David Turner  <david@freetype.org>
 
-    * src/truetype/ttgload.c (TT_Load_Glyph), src/type1/t1gload.c
-    (T1_Load_Glyph), src/cid/cidgload.c (CID_Load_Glyph), src/cff/cffgload.c
-    (CFF_Load_Glyph): fixed an important bug common to all font drivers (the
-    advance width was never hinted when it should)
+	* src/truetype/ttgload.c (TT_Load_Glyph), src/type1/t1gload.c
+	(T1_Load_Glyph), src/cid/cidgload.c (CID_Load_Glyph),
+	src/cff/cffgload.c (CFF_Load_Glyph): Fixed a serious bug common to
+	all font drivers (the advance width was never hinted when it
+	should).
 
+	* include/freetype/freetype.h (FREETYPE_PATCH): New macro.
+	* src/base/ftdbgmem.c (debug_mem_dummy) [!FT_DEBUG_MEMORY]: Don't
+	use `extern' keyword.
 
 2001-12-12  David Turner  <david@freetype.org>
 
-    * src/pshint/pshglob.c: adding correct BlueScale/BlueShift support,
-    plus family blues processing
+	* src/pshint/pshglob.c (psh_blues_scale_zones, psh_blues_snap_stem
+	psh_globals_new): Adding correct BlueScale/BlueShift support, plus
+	family blues processing.
+	* src/pshint/pshglob.h (PSH_BluesRec): Updated.
 
-    * src/cff/cffgload.c: started adding support for the Postscript hinter
+	Started adding support for the Postscript hinter in the CFF module.
+
+	* src/cff/cffgload.c: Include FT_INTERNAL_POSTSCRIPT_HINTS_H.
+	(CFF_Parse_CharStrings): Implement it.
+	* src/cff/cffgload.h: Updated.
 
 2001-12-12  Werner Lemberg  <wl@gnu.org>
 
@@ -49,14 +84,14 @@
 	* INSTALL: Updated the instructions to build shared libraries with
 	Jam.  They were simply wrong.
 
-	* src/base/fttrigon.c (FT_Cos): Fixed a small bug that caused slightly
-	improper results for FT_Cos and FT_Sin (example: FT_Sin(0) == -1!).
+	* src/base/fttrigon.c (FT_Cos): Fixed a small bug that caused
+	slightly improper results for `FT_Cos' and `FT_Sin' (example:
+	FT_Sin(0) == -1!).
 
 2001-12-11  Detlef Würkner  <TetiSoft@apg.lahn.de>
 
-	* include/freetype/internal/ftstream.h: Fixed the definitions of
-	GET_LongLE and GET_ULongLE which where incorrect (creating problems
-	in the pcf driver).
+	* include/freetype/internal/ftstream.h (GET_LongLE, GET_ULongLE):
+	Fixed incorrect argument types.
 
 2001-12-10  Francesco Zappa Nardelli  <Francesco.Zappa.Nardelli@ens.fr>
 
@@ -67,6 +102,7 @@
 
 	* include/freetype/cache/ftccmap.h, src/cache/ftccmap.c: Added new
 	charmap cache.
+	* src/cache/ftcache.c: Updated.
 
 2001-12-06  Leonard Rosenthol  <leonardr@lazerware.com>
 

@@ -346,23 +346,23 @@
     PSH_Blue_Table  table = 0;
 
     /*                                                        */
-    /* determine wether we need to suppress overshoots or not */
-    /* we simply need to compare the vertical scale parameter */
-    /* to the raw bluescale value. Here's why                 */
+    /* Determine whether we need to suppress overshoots or    */
+    /* not.  We simply need to compare the vertical scale     */
+    /* parameter to the raw bluescale value.  Here is why:    */
     /*                                                        */
-    /*   we need to suppress overshoots for all pointsizes    */
-    /*   at 300dpi that satisfy:                              */
+    /*   We need to suppress overshoots for all pointsizes.   */
+    /*   At 300dpi that satisfy:                              */
     /*                                                        */
     /*      pointsize < 240*bluescale + 0.49                  */
     /*                                                        */
-    /*   this corresponds to:                                 */
+    /*   This corresponds to:                                 */
     /*                                                        */
     /*      pixelsize < 1000*bluescale + 49/24                */
     /*                                                        */
     /*      scale*EM_Size < 1000*bluescale + 49/24            */
     /*                                                        */
-    /*   however, for normal Type 1 fonts, EM_Size is 1000 !! */
-    /*   we thus only check:                                  */
+    /*   However, for normal Type 1 fonts, EM_Size is 1000!   */
+    /*   We thus only check:                                  */
     /*                                                        */
     /*      scale < bluescale + 49/24000                      */
     /*                                                        */
@@ -373,16 +373,17 @@
     blues->no_overshoots = FT_BOOL( scale < blues->blue_scale );
 
     /*                                                        */
-    /*  the blue threshold is the font units distance under   */
+    /*  The blue threshold is the font units distance under   */
     /*  which overshoots are suppressed due to the BlueShift  */
-    /*  even if the scale is greater than BlueScale           */
+    /*  even if the scale is greater than BlueScale.          */
     /*                                                        */
-    /*  it's the smallest distance such that                  */
+    /*  It is the smallest distance such that                 */
     /*                                                        */
     /*    dist <= BlueShift && dist*scale <= 0.5 pixels       */
     /*                                                        */
     {
       FT_Int  threshold = blues->blue_shift;
+
 
       while ( threshold > 0 && FT_MulFix( threshold, scale ) > 32 )
         threshold --;
@@ -433,32 +434,36 @@
     }
 
     /* process the families now */
+
     for ( num = 0; num < 2; num++ )
     {
-      PSH_Blue_Zone    zone1, zone2;
-      FT_UInt          count1, count2;
-      PSH_Blue_Table   normal, family;
+      PSH_Blue_Zone   zone1, zone2;
+      FT_UInt         count1, count2;
+      PSH_Blue_Table  normal, family;
 
-      switch (num)
+
+      switch ( num )
       {
-        case 0:
-          normal = &blues->normal_top;
-          family = &blues->family_top;
-          break;
+      case 0:
+        normal = &blues->normal_top;
+        family = &blues->family_top;
+        break;
 
-        default:
-          normal = &blues->normal_bottom;
-          family = &blues->family_bottom;
+      default:
+        normal = &blues->normal_bottom;
+        family = &blues->family_bottom;
       }
 
       zone1  = normal->zones;
       count1 = normal->count;
+
       for ( ; count1 > 0; count1--, zone1++ )
       {
         /* try to find a family zone whose reference position is less */
-        /* than 1 pixel far from the current zone..                   */
+        /* than 1 pixel far from the current zone                     */
         zone2  = family->zones;
         count2 = family->count;
+
         for ( ; count2 > 0; count2--, zone2++ )
         {
           if ( FT_MulFix( zone1->org_ref - zone2->org_ref, scale ) < 64 )
@@ -639,7 +644,7 @@
                            priv->family_other_blues, priv->blue_fuzz, 1 );
 
       globals->blues.blue_scale = priv->blue_scale ? priv->blue_scale
-                                                   : (0.039625*0x400000L);
+                                                   : ( 0.039625 * 0x400000L );
 
       globals->blues.blue_shift = priv->blue_shift ? priv->blue_shift
                                                    : 7;

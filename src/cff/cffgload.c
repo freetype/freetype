@@ -704,6 +704,7 @@
 
     T2_Hints_Funcs     hinter;
 
+
     /* set default width */
     decoder->num_hints  = 0;
     decoder->read_width = 1;
@@ -1064,18 +1065,17 @@
           /* the number of arguments is always even here */
           FT_TRACE4(( op == cff_op_hstem   ? " hstem"   :
                     ( op == cff_op_vstem   ? " vstem"   :
-                    ( op == cff_op_hstemhm ? " hstemhm" : " vstemhm" )) ));
+                    ( op == cff_op_hstemhm ? " hstemhm" : " vstemhm" ) ) ));
 
           if ( hinter )
             hinter->stems( hinter->hints,
                            ( op == cff_op_vstem || op == cff_op_vstemhm ),
-                           num_args/2,
+                           num_args / 2,
                            args );
 
           decoder->num_hints += num_args / 2;
           args = stack;
           break;
-
 
         case cff_op_hintmask:
         case cff_op_cntrmask:
@@ -1088,11 +1088,11 @@
             if ( op == cff_op_hintmask )
               hinter->hintmask( hinter->hints,
                                 builder->current->n_points,
-                                (decoder->num_hints+7) >> 3,
+                                ( decoder->num_hints + 7 ) >> 3,
                                 ip );
             else
               hinter->counter( hinter->hints,
-                               (decoder->num_hints+7) >> 3,
+                               ( decoder->num_hints + 7 ) >> 3,
                                ip );
           }
 
@@ -1645,7 +1645,7 @@
           /* close hints recording session */
           if ( hinter )
           {
-            if (hinter->close( hinter->hints, builder->current->n_points ))
+            if (hinter->close( hinter->hints, builder->current->n_points ) )
               goto Syntax_Error;
 
             /* apply hints to the loaded glyph outline now */
@@ -2304,11 +2304,11 @@
 
           if ( hinting )
           {
-            metrics->horiAdvance = (metrics->horiAdvance+32) & -64;
-            metrics->vertAdvance = (metrics->vertAdvance+32) & -64;
+            metrics->horiAdvance = ( metrics->horiAdvance + 32 ) & -64;
+            metrics->vertAdvance = ( metrics->vertAdvance + 32 ) & -64;
 
-            metrics->vertBearingX = (metrics->vertBearingX+32) & -64;
-            metrics->vertBearingY = (metrics->vertBearingY+32) & -64;
+            metrics->vertBearingX = ( metrics->vertBearingX + 32 ) & -64;
+            metrics->vertBearingY = ( metrics->vertBearingY + 32 ) & -64;
           }
         }
 

@@ -107,9 +107,9 @@
                       FTC_CMapQuery  cquery,
                       FTC_Cache      cache )
   {
-    FTC_CMapFamily  cfam = FTC_CMAP_FAMILY( FTC_QUERY(cquery)->family );
-    FT_UInt32       first;
-    FT_UInt         n;
+    FT_UInt32  first;
+    FT_UInt    n;
+    FT_UNUSED( cache );
 
 
     first = (cquery->char_code / FTC_CMAP_INDICES_MAX) * FTC_CMAP_INDICES_MAX;
@@ -158,7 +158,7 @@
   {
     FTC_Manager   manager = cache->manager;
     FTC_CMapDesc  desc = cquery->desc;
-    FT_UInt32     hash;
+    FT_UInt32     hash = 0;
     FT_Error      error;
     FT_Face       face;
 
@@ -331,7 +331,7 @@
     FTC_CMapQueryRec  cquery;
     FTC_CMapNode      node;
     FT_Error          error;
-    FT_UInt           gindex;
+    FT_UInt           gindex = 0;
 
     if ( !cache || !desc )
     {
@@ -353,7 +353,7 @@
       if ( gindex == FTC_CMAP_UNKNOWN )
       {
         FT_Face     face;
-        FT_CharMap  old, cmap, limit;
+
 
         /* we need to use @FT_Get_Char_Index */
         gindex = 0;
@@ -385,7 +385,6 @@
 
     return gindex;
   }
-
 
 
 /* END */

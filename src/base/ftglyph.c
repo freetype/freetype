@@ -608,6 +608,8 @@
     /* if `origin' is set, translate the glyph image */
     if ( origin )
       FT_Glyph_Transform( glyph, 0, origin );
+#else
+    FT_UNUSED( origin );
 #endif
 
     /* prepare dummy slot for rendering */

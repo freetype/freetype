@@ -54,14 +54,14 @@ FT_BEGIN_HEADER
 #define  FTC_NODE(x)    ((FTC_Node)(x))
 #define  FTC_NODE_P(x)  ((FTC_Node*)(x))
 
- /* can be used as a FTC_Node_DoneFunc */
-  FT_EXPORT(void)
+  /* can be used as a FTC_Node_DoneFunc */
+  FT_EXPORT( void )
   ftc_node_done( FTC_Node   node,
                  FTC_Cache  cache );
 
 
- /* reserved for manager's use */
-  FT_EXPORT(void)
+  /* reserved for manager's use */
+  FT_EXPORT( void )
   ftc_node_destroy( FTC_Node     node,
                     FTC_Manager  manager );
 
