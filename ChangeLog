@@ -1,3 +1,8 @@
+2001-04-24  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/config.guess, builds/unix/config.sub: Updated to
+	latest versions from gnu.org.
+
 2001-04-22  Werner Lemberg  <wl@gnu.org>
 
 	* builds/compiler/gcc-dev.mk: Add `-Wno-long-long' flag.
