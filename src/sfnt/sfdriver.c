@@ -37,6 +37,13 @@
 
 #include FT_SERVICE_GLYPH_DICT_H
 #include FT_SERVICE_POSTSCRIPT_NAME_H
+#include FT_SERVICE_SFNT_H
+
+
+ /*
+  *  SFNT TABLE SERVICE
+  *
+  */
 
   static void*
   get_sfnt_table( TT_Face      face,
@@ -81,6 +88,13 @@
 
     return table;
   }
+
+
+  static const FT_Service_SFNT_TableRec  sfnt_service_sfnt_table =
+  {
+    (FT_SFNT_TableLoadFunc)tt_face_load_any,
+    (FT_SFNT_TableGetFunc) get_sfnt_table
+  };
 
 
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
@@ -255,6 +269,7 @@
 
   static const FT_ServiceDescRec  sfnt_services[] =
   {
+    { FT_SERVICE_ID_SFNT_TABLE,           &sfnt_service_sfnt_table },
     { FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &sfnt_service_ps_name },
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
     { FT_SERVICE_ID_GLYPH_DICT,           &sfnt_service_glyph_dict },
