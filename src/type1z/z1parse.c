@@ -451,7 +451,7 @@
   {
     FT_Long   result = 0;
     FT_Byte*  cur    = *cursor;
-    FT_Byte   c, d;
+    FT_Byte   c = '\0', d;
 
 
     for ( ; cur < limit; cur++ )
