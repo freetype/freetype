@@ -1,3 +1,13 @@
+2004-10-13  Werner Lemberg  <wl@gnu.org>
+
+	* include/freetype/config/ftstdlib.h: Include `stddef.h'.
+	(ft_ptrdiff_t): Define.
+
+	* include/freetype/fttypes.h (FT_PtrDist): Use `ft_ptrdiff_t'.
+
+	* src/cid/cidload.c (cid_parse_dict), src/type1/t1load.c
+	(parse_dict): Fix compiler warning.
+
 2004-10-11  Joshua Neal  <jneal@csdaily.com>
 
 	* src/sfnt/ttcmap.c (tt_face_build_cmaps): Check for pointer
