@@ -219,8 +219,11 @@
       matrix->yx = temp[1];
       matrix->xy = temp[2];
       matrix->yy = temp[3];
-      offset->x  = temp[4];
-      offset->y  = temp[5];
+      
+      /* note that the font offset are expressed in */
+      /* integer font units..                       */
+      offset->x  = temp[4] >> 16;
+      offset->y  = temp[5] >> 16;
     }
 
     return T1_Err_Ok;       /* this is a callback function; */
