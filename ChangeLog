@@ -1,3 +1,36 @@
+2001-05-11  David Turner  <david@freetype.org>
+
+    * include/freetype/fttrigon.h, src/base/fttrigon.c, src/base/ftbase.c,
+    src/base/Jamfile, src/base/rules.mk: adding trigonometric functions
+    to the core API (using Cordic algorithms).
+
+    * builds/top_level.mk, builds/newline, builds/detect.mk: fixed problems
+    with Make on Windows 2000, as well as problems when "make distclean" is
+    invoked on a non-Unix platform when there is no "config.mk" in the
+    current directory..
+
+    * builds/freetype.mk: fixed a problem with object deletions under
+    Dos/Windows/OS/2 systems
+
+    * src/tools: added new directory to hold tools and test programs
+    moved docmaker.py, glnames.py to it..
+
+    * src/tools/docmaker.py: improved the script to add the current date
+    at the footer of each web page (useful to distinguish between versions)
+
+    * Jamfile: fixed incorrect HDRMACRO argument.
+
+    * TODO: removed the cubic arc bbox computation note, since it has been
+    fixed recently..
+
+    * include/freetype/t1tables.h, include/freetype/config/ftoption.h:
+    formatting
+
+2001-05-10  David Turner  <david@freetype.org>
+
+        * src/base/ftobjs.c (FT_Open_Face): fixed a small memory leaked
+        which happened when trying to open 0-size font files !!
+
 2001-05-09  Werner Lemberg  <wl@gnu.org>
 
 	* include/freetype/internal/ftcalc.h: Move declaration of
@@ -21,8 +54,8 @@
 
 2001-04-27  David Turner  <david@freetype.org>
 
-	* src/base/ftbbox.c (BBox_Cubic_Check): Fixed the coefficient     
-	normalization algorithm (invalid final bit position, and invalid 
+	* src/base/ftbbox.c (BBox_Cubic_Check): Fixed the coefficient
+	normalization algorithm (invalid final bit position, and invalid
 	shift computation).
 
 2001-04-26  Werner Lemberg  <wl@gnu.org>
@@ -66,7 +99,7 @@
 	types on platforms where Autoconf is not available).  Also removed
 	FTCALC_USE_LONG_LONG and replaced it with
 	FT_CONFIG_OPTION_FORCE_INT64.
-	
+
 	* builds/win32/freetype.dsp: Updated the Visual C++ project file.
 	Doesn't create a DLL yet.
 
