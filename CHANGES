@@ -1,5 +1,43 @@
 LATEST CHANGES
 
+  - CHANGES TO THE HIGH-LEVEL API
+  
+    o FT_Get_Kerning has a new parameter that allows you to select
+      the coordinates of the kerning vector ( font units, scaled,
+      scaled + grid-fitted ).
+      
+    o the outline functions are now in <freetype/ftoutln.h> and not
+      part of <freetype/freetype.h> anymore
+      
+    o <freetype/ftmodule.h> now contains declarations for
+       FT_New_Library, FT_Done_Library, FT_Add_Default_Modules
+
+    o the so-called convenience functions have moved from "ftoutln.c"
+      to "ftglyph.c", and are thus available with this optional component
+      of the library. They are declared in <freetype/ftglyph.h> now..
+
+    o anti-aliased rendering is now the default for FT_Render_Glyph
+      (i.e. corresponds to render_mode == 0 == ft_render_mode_normal).
+      To generate a monochrome bitmap, use ft_render_mode_mono, or the
+      FT_LOAD_MONOCHROME flag in FT_Load_Glyph/FT_Load_Char.
+      
+      FT_LOAD_ANTI_ALIAS is still defined, but values to 0.
+      
+    o <freetype/freetype.h> now include <freetype/config/ftconfig.h>,
+      solving a few headaches :-)
+
+    o the type FT_GlyphSlotRec has now a "library" field.
+
+
+
+  - CHANGES TO THE "ftglyph.h" API
+  
+    This API has been severely modified in order to make it simpler,
+    clearer, and more efficient. It certainly now looks like a real
+    "glyph factory" object, and allows client applications to manage
+    (i.e. transform, bbox and render) glyph images without ever knowing
+    their original format.
+
   - added support for CID-keyed fonts to the CFF driver.
     maybe support for pure CFF + CEF fonts should come in ??
 
@@ -13,6 +51,22 @@ LATEST CHANGES
     Also removed the use of "cidafm" for now, even if the source files
     are still there. This functionality will certainly go into a specific
     module..
+
+
+
+  - ADDED SUPPORT FOR THE AUTO-HINTER    
+  
+    It works :-) I have a demo program which simply is a copy of "ftview"
+    that does a FT_Add_Module( library, &autohinter_module_class ) after
+    library initialisation, and Type 1 & OpenType/CFF fonts are now hinted.
+    
+    CID fonts are not hinted, as they include no charmap and the auto-hinter
+    doesn't include "generic" global metrics computations yet..
+    
+    Now, I need to release this thing to the FreeType 2 source..
+
+
+  
     
 
   - CHANGES TO THE RENDERER MODULES

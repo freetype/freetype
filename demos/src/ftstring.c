@@ -190,48 +190,6 @@
 
  /**************************************************************
   *
-  *  Compute the dimension of a string of glyphs in pixels
-  *
-  */
-  static void  compute_bbox( FT_BBox*  abbox )
-  {
-    PGlyph  glyph = glyphs;
-    FT_BBox bbox;
-    int     n;
-
-    bbox.xMin = 32000; bbox.xMax = -32000;
-    bbox.yMin = 32000; bbox.yMax = -32000;
-
-    for ( n = 0; n < num_glyphs; n++, glyph++ )
-    {
-      FT_BBox  cbox;
-      FT_Pos   x, y;
-
-      if (!glyph->image) continue;
-
-      x = glyph->pos.x;
-      y = glyph->pos.y;
-
-      FT_Glyph_Get_CBox( glyph->image,
-                         ft_glyph_bbox_gridfit,
-                         &cbox );
-
-      cbox.xMin += x;
-      cbox.yMin += y;
-      cbox.xMax += x;
-      cbox.yMax += y;
-
-      if (cbox.xMin < bbox.xMin) bbox.xMin = cbox.xMin;
-      if (cbox.xMax > bbox.xMax) bbox.xMax = cbox.xMax;
-      if (cbox.yMin < bbox.yMin) bbox.yMin = cbox.yMin;
-      if (cbox.yMax > bbox.yMax) bbox.yMax = cbox.yMax;
-    }
-    *abbox = bbox;
-  }
-
-
- /**************************************************************
-  *
   *  Layout a string of glyphs, the glyphs are untransformed..
   *
   */
@@ -346,7 +304,8 @@
         {             
           /* convert to a bitmap - destroy native image */
           error = FT_Glyph_To_Bitmap( &image,
-                                      ft_render_mode_normal,
+                                      antialias ? ft_render_mode_normal
+                                                : ft_render_mode_mono,
                                       0, 1 );
           if (!error)
           {
@@ -586,8 +545,8 @@
   static void  usage( char*  execname )
   {
     fprintf( stderr,  "\n" );
-    fprintf( stderr,  "ftview: simple string viewer -- part of the FreeType project\n" );
-    fprintf( stderr,  "------------------------------------------------------------\n" );
+    fprintf( stderr,  "ftstring: string viewer -- part of the FreeType project\n" );
+    fprintf( stderr,  "-------------------------------------------------------\n" );
     fprintf( stderr,  "\n" );
     fprintf( stderr,  "Usage: %s [options below] ppem fontname[.ttf|.ttc] ...\n",
              execname );
@@ -679,6 +638,10 @@
     strncpy( filename, argv[file], 128 );
     strncpy( alt_filename, argv[file], 128 );
 
+   /* first, try to load the glyph name as-is */
+    error = FT_New_Face( library, filename, 0, &face );
+    if (!error) goto Success;
+
 #ifndef macintosh
     if ( i >= 0 )
     {
@@ -687,11 +650,11 @@
     }
 #endif
 
-    /* Load face */
-
+   /* if it didn't work, try to add ".ttf" at the end */
     error = FT_New_Face( library, filename, 0, &face );
     if (error) goto Display_Font;
 
+  Success:
     /* prepare the text to be rendered */
     prepare_text( (unsigned char*)Text );
 
@@ -733,11 +696,8 @@
       {
         /* layout & render string */
         {
-          FT_BBox  bbox;
-
           reset_transform();
           layout_glyphs();
-          compute_bbox( &bbox );
           render_string( bit.width/2, bit.rows/2 );
         }
 

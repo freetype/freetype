@@ -1822,7 +1822,7 @@
   /*    FT_Render_Glyph.                                                   */
   /*                                                                       */
   /*                                                                       */
-#define FT_LOAD_MONOCHROME  0  /* this is the default */
+#define FT_LOAD_MONOCHROME  4096
 
 
   /*************************************************************************/
