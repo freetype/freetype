@@ -41,10 +41,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    T1_Table                                                           */
+  /*    PS_Table                                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A T1_Table is a simple object used to store an array of objects in */
+  /*    A PS_Table is a simple object used to store an array of objects in */
   /*    a single memory block.                                             */
   /*                                                                       */
   /* <Fields>                                                              */
@@ -68,7 +68,7 @@
   /*    memory    :: The object used for memory operations                 */
   /*                 (alloc/realloc).                                      */
   /*                                                                       */
-  typedef struct  T1_Table_
+  typedef struct  PS_Table_
   {
     FT_Byte*   block;          /* current memory block           */
     FT_Int     cursor;         /* current cursor in memory block */
@@ -82,17 +82,17 @@
 
     FT_Memory  memory;
 
-  } T1_Table;
+  } PS_Table;
 
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
-  /*    T1_Table_Funcs                                                     */
+  /*    PS_Table_Funcs                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    A set of function pointers used to manage T1_Table objects..       */
+  /*    A set of function pointers used to manage PS_Table objects..       */
   /*                                                                       */
   /* <Fields>                                                              */
   /*    table_init    :: used to initialise a a table                      */
@@ -100,22 +100,22 @@
   /*    table_add     :: add one new object to a table                     */
   /*    table_release :: release table data, then finalize it              */
   /*                                                                       */
-  typedef  struct T1_Table_Funcs_
+  typedef  struct PS_Table_Funcs_
   {
-    FT_Error   (*init)   ( T1_Table*   table,
+    FT_Error   (*init)   ( PS_Table*   table,
                            FT_Int     count,
                            FT_Memory  memory );
   
-    void       (*done)   ( T1_Table*  table );                              
+    void       (*done)   ( PS_Table*  table );                              
   
-    FT_Error   (*add)    ( T1_Table*   table,
+    FT_Error   (*add)    ( PS_Table*   table,
                            FT_Int      index,
                            void*       object,
                            FT_Int      length );
 
-    void       (*release)( T1_Table*  table );                              
+    void       (*release)( PS_Table*  table );                              
   
-  } T1_Table_Funcs;
+  } PS_Table_Funcs;
 
 
   /*************************************************************************/
@@ -395,7 +395,7 @@
   /*                    the metrics of a given glyph, not load all of its  */
   /*                    points.                                            */
   /*                                                                       */
-  typedef struct  T2_Builder_
+  typedef struct  T1_Builder_
   {
     FT_Memory        memory;
     FT_Face          face;
@@ -426,30 +426,30 @@
   } T1_Builder;
 
 
-  typedef FT_Error  (*T1_Builder_Check_Points_Func)( T1_Builder*  builder,
-                                                     FT_Int       count );
+  typedef FT_Error  (*T1_Builder_Check_Points_Func) ( T1_Builder*  builder,
+                                                      FT_Int       count );
                                                       
-  typedef void  (*T1_Builder_Add_Point_Func)( T1_Builder*  builder,
-                                              FT_Pos       x,
-                                              FT_Pos       y,
-                                              FT_Byte      flag );    
+  typedef void      (*T1_Builder_Add_Point_Func)    ( T1_Builder*  builder,
+                                                      FT_Pos       x,
+                                                      FT_Pos       y,
+                                                      FT_Byte      flag );    
   
-  typedef void  (*T1_Builder_Add_Point1_Func)( T1_Builder*  builder,
-                                               FT_Pos       x,
-                                               FT_Pos       y );
+  typedef void      (*T1_Builder_Add_Point1_Func)   ( T1_Builder*  builder,
+                                                      FT_Pos       x,
+                                                      FT_Pos       y );
                                                     
-  typedef FT_Error  (*T1_Builder_Add_Contour_Func)( T1_Builder*  builder );                                                    
+  typedef FT_Error  (*T1_Builder_Add_Contour_Func)  ( T1_Builder*  builder );
 
-  typedef FT_Error  (*T1_Builder_Start_Point_Func)( T1_Builder*  builder,
-                                                    FT_Pos       x,
-                                                    FT_Pos       y );
+  typedef FT_Error  (*T1_Builder_Start_Point_Func)  ( T1_Builder*  builder,
+                                                      FT_Pos       x,
+                                                      FT_Pos       y );
 
-  typedef void  (*T1_Builder_Close_Contour_Func)( T1_Builder*  builder );
+  typedef void      (*T1_Builder_Close_Contour_Func)( T1_Builder*  builder );
 
 
   typedef struct  T1_Builder_Funcs_
   {
-    FT_Error  (*init)( T1_Builder*   builder,
+    void      (*init)( T1_Builder*   builder,
                        FT_Face       face,
                        FT_Size       size,
                        FT_GlyphSlot  slot );
@@ -457,14 +457,13 @@
     void      (*done)( T1_Builder*   builder );
     
     T1_Builder_Check_Points_Func   check_points;
-    T1_Builder_Add_Points_Func     add_point;
+    T1_Builder_Add_Point_Func      add_point;
     T1_Builder_Add_Point1_Func     add_point1;
     T1_Builder_Add_Contour_Func    add_contour;
     T1_Builder_Start_Point_Func    start_point;
     T1_Builder_Close_Contour_Func  close_contour;
   
   } T1_Builder_Funcs;
-
 
   /*************************************************************************/
   /*************************************************************************/
@@ -476,10 +475,13 @@
 
   typedef struct  PSAux_Interface_
   {
-    const T1_Table_Funcs*    t1_table_funcs;
-    const T1_Parser_Funcs*   t1_parser_funcs;
-    const T1_Builder_Funcs*  t1_builder_funcs;
+    const PS_Table_Funcs*   t1_table_funcs;
+    const T1_Parser_Funcs*  t1_parser_funcs;
+    const T1_Builder_Funcs* t1_builder_funcs;
 
+    void                  (*t1_decrypt)( FT_Byte*   buffer,
+                                         FT_Int     length,
+                                         FT_UShort  seed );
   } PSAux_Interface;
 
 

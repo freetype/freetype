@@ -18,6 +18,7 @@
 
 #include <freetype/internal/psaux.h>
 #include <freetype/fterrors.h>
+#include <freetype/internal/ftdebug.h>
 
 #ifdef FT_FLAT_COMPILE
 
@@ -33,7 +34,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
-  /*****                             T1_TABLE                          *****/
+  /*****                             PS_TABLE                          *****/
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
@@ -41,10 +42,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_New_Table                                                       */
+  /*    PS_Table_New                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Initializes a T1_Table.                                            */
+  /*    Initialises a PS_Table.                                            */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    table  :: The address of the target table.                         */
@@ -59,7 +60,7 @@
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   LOCAL_FUNC
-  FT_Error  T1_New_Table( T1_Table*  table,
+  FT_Error  PS_Table_New( PS_Table*  table,
                           FT_Int     count,
                           FT_Memory  memory )
   {
@@ -87,7 +88,7 @@
 
 
   static
-  void  shift_elements( T1_Table*  table,
+  void  shift_elements( PS_Table*  table,
                         FT_Byte*   old_base )
   {
     FT_Long    delta  = table->block - old_base;
@@ -105,7 +106,7 @@
 
 
   static
-  FT_Error  reallocate_t1_table( T1_Table*  table,
+  FT_Error  reallocate_t1_table( PS_Table*  table,
                                  FT_Int     new_size )
   {
     FT_Memory  memory   = table->memory;
@@ -130,10 +131,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Add_Table                                                       */
+  /*    PS_Table_Add                                                       */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Adds an object to a T1_Table, possibly growing its memory block.   */
+  /*    Adds an object to a PS_Table, possibly growing its memory block.   */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    table  :: The target table.                                        */
@@ -150,14 +151,14 @@
   /*    reallocation fails.                                                */
   /*                                                                       */
   LOCAL_DEF
-  FT_Error  T1_Add_Table( T1_Table*  table,
+  FT_Error  PS_Table_Add( PS_Table*  table,
                           FT_Int     index,
                           void*      object,
                           FT_Int     length )
   {
     if ( index < 0 || index > table->max_elems )
     {
-      FT_ERROR(( "T1_Add_Table: invalid index\n" ));
+      FT_ERROR(( "PS_Table_Add: invalid index\n" ));
       return FT_Err_Invalid_Argument;
     }
 
@@ -189,10 +190,10 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Done_Table                                                      */
+  /*    PS_Table_Done                                                      */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Finalizes a T1_Table (i.e., reallocate it to its current cursor).  */
+  /*    Finalizes a PS_Table (i.e., reallocate it to its current cursor).  */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    table :: The target table.                                         */
@@ -202,7 +203,7 @@
   /*    to the caller to clean it, or reference it in its own structures.  */
   /*                                                                       */
   LOCAL_FUNC
-  void  T1_Done_Table( T1_Table*  table )
+  void  PS_Table_Done( PS_Table*  table )
   {
     FT_Memory  memory = table->memory;
     FT_Error   error;
@@ -223,7 +224,7 @@
 
 
   LOCAL_FUNC
-  void  T1_Release_Table( T1_Table*  table )
+  void  PS_Table_Release( PS_Table*  table )
   {
     FT_Memory  memory = table->memory;
 
@@ -1005,7 +1006,7 @@
   {
     parser->error  = 0;
     parser->base   = base;
-    parser->limit  = base;
+    parser->limit  = limit;
     parser->cursor = base;
     parser->memory = memory;
   }                            
@@ -1029,7 +1030,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Init_Builder                                                    */
+  /*    T1_Builder_Init                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Initializes a given glyph builder.                                 */
@@ -1044,8 +1045,8 @@
   /*                                                                       */
   /*    glyph   :: The current glyph object.                               */
   /*                                                                       */
-  LOCALFUNC
-  void  T1_Init_Builder( T1_Builder*   builder,
+  LOCAL_FUNC
+  void  T1_Builder_Init( T1_Builder*   builder,
                          FT_Face       face,
                          FT_Size       size,
                          FT_GlyphSlot  glyph )
@@ -1055,11 +1056,11 @@
 
     builder->face   = face;
     builder->glyph  = glyph;
-    builder->memory = face->root.memory;
+    builder->memory = face->memory;
 
     if ( glyph )
     {
-      FT_GlyphLoader*  loader = glyph->root.loader;
+      FT_GlyphLoader*  loader = glyph->loader;
 
 
       builder->loader  = loader;
@@ -1087,7 +1088,7 @@
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
-  /*    T1_Done_Builder                                                    */
+  /*    T1_Builder_Done                                                    */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Finalizes a given glyph builder.  Its contents can still be used   */
@@ -1097,14 +1098,14 @@
   /* <Input>                                                               */
   /*    builder :: A pointer to the glyph builder to finalize.             */
   /*                                                                       */
-  LOCALFUNC
-  void  T1_Done_Builder( T1_Builder*  builder )
+  LOCAL_FUNC
+  void  T1_Builder_Done( T1_Builder*  builder )
   {
-    T1_GlyphSlot  glyph = builder->glyph;
+    FT_GlyphSlot  glyph = builder->glyph;
 
 
     if ( glyph )
-      glyph->root.outline = *builder->base;
+      glyph->outline = *builder->base;
   }
 
 
@@ -1152,9 +1153,9 @@
     FT_Error  error;
 
 
-    error = check_points( builder, 1 );
+    error = T1_Builder_Check_Points( builder, 1 );
     if ( !error )
-      add_point( builder, x, y, 1 );
+      T1_Builder_Add_Point( builder, x, y, 1 );
 
     return error;
   }
@@ -1171,7 +1172,7 @@
     if ( !builder->load_points )
     {
       outline->n_contours++;
-      return T1_Err_Ok;
+      return FT_Err_Ok;
     }
 
     error = FT_GlyphLoader_Check_Points( builder->loader, 0, 1 );
@@ -1200,9 +1201,9 @@
     if ( !builder->path_begun )
     {
       builder->path_begun = 1;
-      error = add_contour( builder );
+      error = T1_Builder_Add_Contour( builder );
       if ( !error )
-        error = add_point1( builder, x, y );
+        error = T1_Builder_Add_Point1( builder, x, y );
     }
     return error;
   }
@@ -1245,7 +1246,6 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
 
   LOCAL_FUNC
   void  T1_Decrypt( FT_Byte*   buffer,

@@ -37,21 +37,22 @@
 
 
   LOCAL_DEF
-  FT_Error  T1_New_Table( T1_Table*  table,
+  FT_Error  PS_Table_New( PS_Table*  table,
                           FT_Int     count,
                           FT_Memory  memory );
  
   LOCAL_DEF
-  FT_Error  T1_Add_Table( T1_Table*  table,
+  FT_Error  PS_Table_Add( PS_Table*  table,
                           FT_Int     index,
                           void*      object,
                           FT_Int     length );
 
   LOCAL_DEF
-  void  T1_Done_Table( T1_Table*  table );
+  void      PS_Table_Done( PS_Table*  table );
+
 
   LOCAL_DEF
-  void  T1_Release_Table( T1_Table*  table );
+  void      PS_Table_Release( PS_Table*  table );
 
 
   /*************************************************************************/
@@ -115,14 +116,68 @@
 
 
   LOCAL_DEF
-  void  T1_Init_Parser( T1_Parser*  parser,
-                        FT_Byte*    base,
-                        FT_Byte*    limit,
-                        FT_Memory   memory );
+  void      T1_Init_Parser( T1_Parser*  parser,
+                            FT_Byte*    base,
+                            FT_Byte*    limit,
+                            FT_Memory   memory );
 
   LOCAL_DEF
-  void  T1_Done_Parser( T1_Parser*  parser )
+  void      T1_Done_Parser( T1_Parser*  parser );
 
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                            T1 BUILDER                         *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
+
+  LOCAL_DEF
+  void  T1_Builder_Init( T1_Builder*   builder,
+                         FT_Face       face,
+                         FT_Size       size,
+                         FT_GlyphSlot  glyph );
+
+  LOCAL_DEF
+  void  T1_Builder_Done( T1_Builder*  builder );
+  
+  LOCAL_DEF
+  FT_Error  T1_Builder_Check_Points( T1_Builder*  builder,
+                                     FT_Int       count );
+  
+  LOCAL_DEF
+  void  T1_Builder_Add_Point( T1_Builder*  builder,
+                              FT_Pos       x,
+                              FT_Pos       y,
+                              FT_Byte      flag );
+
+  LOCAL_DEF
+  FT_Error  T1_Builder_Add_Point1( T1_Builder*  builder,
+                                   FT_Pos       x,
+                                   FT_Pos       y );
+                                   
+  LOCAL_DEF
+  FT_Error  T1_Builder_Add_Contour( T1_Builder*  builder );
+  
+
+  LOCAL_DEF
+  FT_Error  T1_Builder_Start_Point( T1_Builder*  builder,
+                                    FT_Pos       x,
+                                    FT_Pos       y );
+
+
+  LOCAL_DEF
+  void  T1_Builder_Close_Contour( T1_Builder*  builder );
+
+
+  /*************************************************************************/
+  /*************************************************************************/
+  /*****                                                               *****/
+  /*****                            OTHER                              *****/
+  /*****                                                               *****/
+  /*************************************************************************/
+  /*************************************************************************/
 
   LOCAL_DEF
   void  T1_Decrypt( FT_Byte*   buffer,

@@ -218,9 +218,10 @@
 
   enum
   {
-    ft_glyph_bbox_pixels    = 0,
-    ft_glyph_bbox_subpixels = 1,
-    ft_glyph_bbox_gridfit   = 2
+    ft_glyph_bbox_subpixels = 0, /* return unfitted coordinates in 26.6 pixels */
+    ft_glyph_bbox_gridfit   = 1, /* return grid-fitted coordinates             */
+    ft_glyph_bbox_truncate  = 2, /* return coordinates in integer pixels       */
+    ft_glyph_bbox_pixels    = 3  /* return grid-fitted pixel coordinates       */
   };
 
 
