@@ -31,15 +31,15 @@ endif
 # Check that we have a working `config.mk' in the above directory.
 # If not, issue a warning message, then stop there..
 #
-ifeq ($wildcard $(CONFIG_MK),)
+ifeq ($(wildcard $(CONFIG_MK)),)
 no_config_mk := 1
 endif
 
 ifdef no_config_mk
 exes:
 	@echo Please compile the library before the demo programs!
-    @echo I need "$(TOP)/config.mk" to do that !!
-
+clean distclean:
+	@echo "I need \`$(TOP)/config.mk' to do that!"
 else
 
 ####################################################################
