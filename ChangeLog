@@ -2,7 +2,14 @@
 
 	* src/cid/cidobjs.c, src/cid/cidload.c, src/pcf/pcfread.c,         
 	src/type1/t1load.c, src/type1/t1objs.c: added a few casts to remove
-    compiler warnings in pedantic modes..
+	compiler warnings in pedantic modes..
+
+	* include/config/ft2build.h, include/config/ftheader.h: the file
+	"ft2build.h" was renamed to "ftheader.h" to avoid conflicts with the
+	top-level <ft2build.h>
+	
+	* include/config/ftheader.h: added new section describing the #include
+	macros..
 
 2001-03-17  Tom Kacvinsky  <tjk@ams.org>
 

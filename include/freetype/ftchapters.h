@@ -17,6 +17,7 @@
 /*    sfnt_names                                                           */
 /*    module_management                                                    */
 /*    system_interface                                                     */
+/*    header_file_macros                                                   */
 /*                                                                         */
 /***************************************************************************/
 
