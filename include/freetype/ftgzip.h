@@ -62,9 +62,9 @@ FT_BEGIN_HEADER
   * @note:
   *   The source stream must be opened _before_ calling this function.
   *
-  *   Calling @FT_Stream_Close on the new stream will *not* call
-  *   @FT_Stream_Close on the source stream.  None of the stream objects
-  *   will be released to the heap.
+  *   Calling the internal function FT_Stream_Close on the new stream will
+  *   *not* call FT_Stream_Close on the source stream.  None of the stream
+  *   objects will be released to the heap.
   *
   *   The stream implementation is very basic and resets the decompression
   *   process each time seeking backwards is needed within the stream.

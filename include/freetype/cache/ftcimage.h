@@ -202,13 +202,14 @@ FT_BEGIN_HEADER
   /* scaled outline */
 #define ftc_image_outline          ftc_image_format_outline
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
   /*    FTC_Image_Desc                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    THIS TYPE IS DEPRECATED.  Use @FTC_ImageDescRec instead.           */
+  /*    THIS TYPE IS DEPRECATED.  Use @FTC_ImageTypeRec instead.           */
   /*                                                                       */
   /*    A simple structure used to describe a given glyph image category.  */
   /*                                                                       */

@@ -199,7 +199,7 @@ FT_BEGIN_HEADER
    * 
    * @description:
    *   A table of functions for accessing fonts that load data
-   *   incrementally.  Used in @FT_Incremental_Interface.
+   *   incrementally.  Used in @FT_Incremental_InterfaceRec.
    * 
    * @fields:
    *   get_glyph_data ::

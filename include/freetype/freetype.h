@@ -35,7 +35,7 @@
   /*                                                                       */
 #define FREETYPE_MAJOR 2
 #define FREETYPE_MINOR 1
-#define FREETYPE_PATCH 4
+#define FREETYPE_PATCH 5
 
 
 #include <ft2build.h>
@@ -146,6 +146,12 @@ FT_BEGIN_HEADER
   /*    FT_LOAD_FORCE_AUTOHINT                                             */
   /*    FT_LOAD_NO_RECURSE                                                 */
   /*    FT_LOAD_PEDANTIC                                                   */
+  /*                                                                       */
+  /*    FT_LOAD_TARGET_NORMAL                                              */
+  /*    FT_LOAD_TARGET_LIGHT                                               */
+  /*    FT_LOAD_TARGET_MONO                                                */
+  /*    FT_LOAD_TARGET_LCD                                                 */
+  /*    FT_LOAD_TARGET_LCD_V                                               */
   /*                                                                       */
   /*    FT_Render_Glyph                                                    */
   /*    FT_Render_Mode                                                     */
@@ -534,7 +540,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   FT_ENCODING_ADOBE_STANDARD ::                                       */
   /*     Corresponds to the Adobe Standard encoding, as found in Type 1,   */
-  /*     CFF, and OpenType/CFF fonts.  It is limited to 256character       */
+  /*     CFF, and OpenType/CFF fonts.  It is limited to 256 character      */
   /*     codes.                                                            */
   /*                                                                       */
   /*   FT_ENCODING_ADOBE_EXPERT ::                                         */
@@ -955,7 +961,7 @@ FT_BEGIN_HEADER
   /*      Indicates that the font contains glyph names that can be         */
   /*      retrieved through @FT_Get_Glyph_Name.  Note that some TrueType   */
   /*      fonts contain broken glyph name tables.  Use the function        */
-  /*      @FT_Has_PS_Glyph_Name when needed.                               */
+  /*      @FT_Has_PS_Glyph_Names when needed.                              */
   /*                                                                       */
   /*    FT_FACE_FLAG_EXTERNAL_STREAM ::                                    */
   /*      Used internally by FreeType to indicate that a face's stream was */
@@ -1370,8 +1376,8 @@ FT_BEGIN_HEADER
   /*    num_subglyphs     :: The number of subglyphs in a composite glyph. */
   /*                         This field is only valid for the composite    */
   /*                         glyph format that should normally only be     */
-  /*                         loaded with the FT_LOAD_NO_RECURSE flag.  For */
-  /*                         now this is internal to FreeType.             */
+  /*                         loaded with the @FT_LOAD_NO_RECURSE flag.     */
+  /*                         For now this is internal to FreeType.         */
   /*                                                                       */
   /*    subglyphs         :: An array of subglyph descriptors for          */
   /*                         composite glyphs.  There are `num_subglyphs'  */
@@ -1547,15 +1553,15 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*    FT_OPEN_PARAMS      :: Use the `num_params' & `params' field.      */
   /*                                                                       */
-  /*    ft_open_memory      :: Deprecated. use @FT_OPEN_MEMORY instead.    */
+  /*    ft_open_memory      :: Deprecated; use @FT_OPEN_MEMORY instead.    */
   /*                                                                       */
-  /*    ft_open_stream      :: Deprecated. use @FT_OPEN_STREAM instead.    */
+  /*    ft_open_stream      :: Deprecated; use @FT_OPEN_STREAM instead.    */
   /*                                                                       */
-  /*    ft_open_pathname    :: Deprecated. use @FT_OPEN_PATHNAME instead.  */
+  /*    ft_open_pathname    :: Deprecated; use @FT_OPEN_PATHNAME instead.  */
   /*                                                                       */
-  /*    ft_open_driver      :: Deprecated, use @FT_OPEN_DRIVER instead.    */
+  /*    ft_open_driver      :: Deprecated; use @FT_OPEN_DRIVER instead.    */
   /*                                                                       */
-  /*    ft_open_params      :: Deprecated, use @FT_OPEN_PARAMS instead.    */
+  /*    ft_open_params      :: Deprecated; use @FT_OPEN_PARAMS instead.    */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The `FT_OPEN_MEMORY', `FT_OPEN_STREAM', and `FT_OPEN_PATHNAME'     */
@@ -2065,7 +2071,7 @@ FT_BEGIN_HEADER
                 FT_Int32  load_flags );
 
 
- /****************************************************************************
+ /***************************************************************************
   *
   * @enum:
   *   FT_LOAD_XXX
@@ -2186,6 +2192,7 @@ FT_BEGIN_HEADER
   *     being used.  This can be important for certain fonts where unhinted
   *     output is better than auto-hinted one.
   */
+#define FT_LOAD_DEFAULT                      0x0
 #define FT_LOAD_NO_SCALE                     0x1
 #define FT_LOAD_NO_HINTING                   0x2
 #define FT_LOAD_RENDER                       0x4
@@ -2206,8 +2213,35 @@ FT_BEGIN_HEADER
 
   /* */
 
+
 #define FT_LOAD_TARGET_( x )      ( (FT_Int32)( (x) & 15 ) << 16 )
 #define FT_LOAD_TARGET_MODE( x )  ( (FT_Render_Mode)( ( (x) >> 16 ) & 15 ) )
+
+
+ /***************************************************************************
+  *
+  * @enum:
+  *   FT_LOAD_TARGET_XXX
+  *
+  * @description:
+  *   A list of load targets.  XXX
+  *
+  * @values:
+  *   FT_LOAD_TARGET_NORMAL ::
+  *     XXX
+  *
+  *   FT_LOAD_TARGET_LIGHT ::
+  *     XXX
+  *
+  *   FT_LOAD_TARGET_MONO ::
+  *     XXX
+  *
+  *   FT_LOAD_TARGET_LCD ::
+  *     XXX
+  *
+  *   FT_LOAD_TARGET_LCD_V ::
+  *     XXX
+  */
 
 #define FT_LOAD_TARGET_NORMAL     FT_LOAD_TARGET_( FT_RENDER_MODE_NORMAL )
 #define FT_LOAD_TARGET_LIGHT      FT_LOAD_TARGET_( FT_RENDER_MODE_LIGHT  )
@@ -2215,7 +2249,7 @@ FT_BEGIN_HEADER
 #define FT_LOAD_TARGET_LCD        FT_LOAD_TARGET_( FT_RENDER_MODE_LCD    )
 #define FT_LOAD_TARGET_LCD_V      FT_LOAD_TARGET_( FT_RENDER_MODE_LCD_V  )
 
-#define FT_LOAD_DEFAULT           0x0
+  /* */
 
 
   /*************************************************************************/
@@ -2241,7 +2275,7 @@ FT_BEGIN_HEADER
   /*    The transformation is only applied to scalable image formats after */
   /*    the glyph has been loaded.  It means that hinting is unaltered by  */
   /*    the transformation and is performed on the character size given in */
-  /*    the last call to @FT_Set_Char_Sizes or @FT_Set_Pixel_Sizes.        */
+  /*    the last call to @FT_Set_Char_Size or @FT_Set_Pixel_Sizes.         */
   /*                                                                       */
   FT_EXPORT( void )
   FT_Set_Transform( FT_Face     face,
@@ -2826,7 +2860,7 @@ FT_BEGIN_HEADER
   /* <Note>                                                                */
   /*    The optimization for FT_DivFix() is simple: If (a << 16) fits in   */
   /*    32 bits, then the division is computed directly.  Otherwise, we    */
-  /*    use a specialized version of the old @FT_MulDiv64.                 */
+  /*    use a specialized version of @FT_MulDiv.                           */
   /*                                                                       */
   FT_EXPORT( FT_Long )
   FT_DivFix( FT_Long  a,

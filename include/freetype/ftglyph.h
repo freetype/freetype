@@ -282,7 +282,64 @@ FT_BEGIN_HEADER
                       FT_Matrix*  matrix,
                       FT_Vector*  delta );
 
-  /* */
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Enum>                                                                */
+  /*    FT_Glyph_BBox_Mode                                                 */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    The mode how the values of @FT_Glyph_Get_CBox are returned.        */
+  /*                                                                       */
+  /* <Values>                                                              */
+  /*    FT_GLYPH_BBOX_UNSCALED ::                                          */
+  /*      Return unscaled font units.                                      */
+  /*                                                                       */
+  /*    FT_GLYPH_BBOX_SUBPIXELS ::                                         */
+  /*      Return unfitted 26.6 coordinates.                                */
+  /*                                                                       */
+  /*    FT_GLYPH_BBOX_GRIDFIT ::                                           */
+  /*      Return grid-fitted 26.6 coordinates.                             */
+  /*                                                                       */
+  /*    FT_GLYPH_BBOX_TRUNCATE ::                                          */
+  /*      Return coordinates in integer pixels.                            */
+  /*                                                                       */
+  /*    FT_GLYPH_BBOX_PIXELS ::                                            */
+  /*      Return grid-fitted pixel coordinates.                            */
+  /*                                                                       */
+  typedef enum  FT_Glyph_BBox_Mode_
+  {
+    FT_GLYPH_BBOX_UNSCALED  = 0,
+    FT_GLYPH_BBOX_SUBPIXELS = 0,
+    FT_GLYPH_BBOX_GRIDFIT   = 1,
+    FT_GLYPH_BBOX_TRUNCATE  = 2,
+    FT_GLYPH_BBOX_PIXELS    = 3
+
+  } FT_Glyph_BBox_Mode;
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Enum>                                                                */
+  /*    ft_glyph_bbox_xxx                                                  */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    These constants are deprecated.  Use the corresponding             */
+  /*    @FT_Glyph_BBox_Mode values instead.                                */
+  /*                                                                       */
+  /* <Values>                                                              */
+  /*   ft_glyph_bbox_unscaled  :: see @FT_GLYPH_BBOX_UNSCALED              */
+  /*   ft_glyph_bbox_subpixels :: see @FT_GLYPH_BBOX_SUBPIXELS             */
+  /*   ft_glyph_bbox_gridfit   :: see @FT_GLYPH_BBOX_GRIDFIT               */
+  /*   ft_glyph_bbox_truncate  :: see @FT_GLYPH_BBOX_TRUNCATE              */
+  /*   ft_glyph_bbox_pixels    :: see @FT_GLYPH_BBOX_PIXELS                */
+  /*                                                                       */
+#define ft_glyph_bbox_unscaled   FT_GLYPH_BBOX_UNSCALED
+#define ft_glyph_bbox_subpixels  FT_GLYPH_BBOX_SUBPIXELS
+#define ft_glyph_bbox_gridfit    FT_GLYPH_BBOX_GRIDFIT
+#define ft_glyph_bbox_truncate   FT_GLYPH_BBOX_TRUNCATE
+#define ft_glyph_bbox_pixels     FT_GLYPH_BBOX_PIXELS
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -342,40 +399,6 @@ FT_BEGIN_HEADER
   /*    To get the bbox in grid-fitted pixel coordinates, set `bbox_mode'  */
   /*    to `FT_GLYPH_BBOX_PIXELS'.                                         */
   /*                                                                       */
-  typedef enum  FT_Glyph_BBox_Mode_
-  {
-    FT_GLYPH_BBOX_UNSCALED  = 0, /* return unscaled font units           */
-    FT_GLYPH_BBOX_SUBPIXELS = 0, /* return unfitted 26.6 coordinates     */
-    FT_GLYPH_BBOX_GRIDFIT   = 1, /* return grid-fitted 26.6 coordinates  */
-    FT_GLYPH_BBOX_TRUNCATE  = 2, /* return coordinates in integer pixels */
-    FT_GLYPH_BBOX_PIXELS    = 3  /* return grid-fitted pixel coordinates */
-
-  } FT_Glyph_BBox_Mode;
-
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Enum>                                                                */
-  /*    ft_glyph_bbox_xxx                                                  */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    These constats are deprecated.  Use the corresponding              */
-  /*    @FT_Glyph_BBox_Mode values instead.                                */
-  /*                                                                       */
-  /* <Values>                                                              */
-  /*   ft_glyph_bbox_unscaled  :: see @FT_GLYPH_BBOX_UNSCALED              */
-  /*   ft_glyph_bbox_subpixels :: see @FT_GLYPH_BBOX_SUBPIXELS             */
-  /*   ft_glyph_bbox_gridfit   :: see @FT_GLYPH_BBOX_GRIDFIT               */
-  /*   ft_glyph_bbox_truncate  :: see @FT_GLYPH_BBOX_TRUNCATE              */
-  /*   ft_glyph_bbox_pixels    :: see @FT_GLYPH_BBOX_PIXELS                */
-  /*                                                                       */
-#define ft_glyph_bbox_unscaled   FT_GLYPH_BBOX_UNSCALED
-#define ft_glyph_bbox_subpixels  FT_GLYPH_BBOX_SUBPIXELS
-#define ft_glyph_bbox_gridfit    FT_GLYPH_BBOX_GRIDFIT
-#define ft_glyph_bbox_truncate   FT_GLYPH_BBOX_TRUNCATE
-#define ft_glyph_bbox_pixels     FT_GLYPH_BBOX_PIXELS
-
-
   FT_EXPORT( void )
   FT_Glyph_Get_CBox( FT_Glyph  glyph,
                      FT_UInt   bbox_mode,
