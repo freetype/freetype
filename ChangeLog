@@ -1,3 +1,8 @@
+2003-11-06  David Turner  <david@freetype.org>
+
+        * install: removed obsolete file
+        * tagging VER-2-1-6 !!
+
 2003-11-04  Werner Lemberg  <wl@gnu.org>
 
 	* src/sfnt/sfdriver.c: Include FT_SERVICE_SFNT_H.
