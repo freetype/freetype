@@ -972,7 +972,13 @@ THE SOFTWARE.
       else
         root->family_name = 0;
 
-      root->num_glyphs = face->nmetrics;
+     /* note: we shift all glyph indices by +1 since we must
+      * respect the convention that glyph 0 always correspond
+      * to the "missing glyph".
+      *
+      * this implies bumping the number of "available" glyphs by 1
+      */
+      root->num_glyphs = face->nmetrics + 1;
 
       root->num_fixed_sizes = 1;
       if ( FT_NEW_ARRAY( root->available_sizes, 1 ) )
