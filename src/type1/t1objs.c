@@ -270,10 +270,8 @@
 
       /* now compute the maximum advance width */
 
-      root->max_advance_width = face->type1.private_dict.standard_width[0];
 
-      /* compute max advance width for proportional fonts */
-      if ( !face->type1.font_info.is_fixed_pitch )
+      root->max_advance_width = face->type1.font_bbox.xMax;
       {
         FT_Int  max_advance;
 
