@@ -504,52 +504,45 @@ error:
   }
 
 
-  static
-  void done_face( FOND_Face  face )
-  {
-    /*
-       We'll *only* get here if init_face() doesn't succeed,
-       since if it *does* succeed, it has set the face->driver
-       to either the TrueType driver or the Type 1 driver.
-       And since we promise not leave any garbage if init_face()
-       fails, there's nothing left to do.
-    */
-  }
-
 
   /* The FT_DriverInterface structure is defined in ftdriver.h. */
 
-  const FT_DriverInterface  fond_driver_interface =
+  const FT_Driver_Class  fond_driver_class =
   {
-    sizeof ( FT_DriverRec ),
+    {
+      ft_module_font_driver | ft_module_driver_scalable,
+      sizeof ( FT_DriverRec ),
+
+      "fond",          /* driver name                           */
+      100,             /* driver version == 1.0                 */
+      200,             /* driver requires FreeType 2.0 or above */
+  
+      (void*)0,
+  
+      (FT_Module_Constructor)     init_driver,
+      (FT_Module_Destructor)      done_driver,
+      (FT_Module_Requester)       0
+    },
+
     sizeof ( FOND_FaceRec ),
     0,
     0,
 
-    "fond",          /* driver name                           */
-    100,             /* driver version == 1.0                 */
-    200,             /* driver requires FreeType 2.0 or above */
-
-    (void*)0,
-
-    (FTDriver_initDriver)        init_driver,
-    (FTDriver_doneDriver)        done_driver,
-    (FTDriver_getInterface)      0,
-
     (FTDriver_initFace)          init_face,
-    (FTDriver_doneFace)          done_face,
-    (FTDriver_getKerning)        0,
-
+    (FTDriver_doneFace)          0,
     (FTDriver_initSize)          0,
     (FTDriver_doneSize)          0,
-    (FTDriver_setCharSizes)      0,
-    (FTDriver_setPixelSizes)     0,
-
     (FTDriver_initGlyphSlot)     0,
     (FTDriver_doneGlyphSlot)     0,
-    (FTDriver_loadGlyph)         0,
 
+    (FTDriver_setCharSizes)      0,
+    (FTDriver_setPixelSizes)     0,
+    (FTDriver_loadGlyph)         0,
     (FTDriver_getCharIndex)      0,
+
+    (FTDriver_getKerning)        0,
+    (FTDriver_attachFile)        0,
+    (FTDriver_getAdvances)       0
   };
 
 
@@ -575,9 +568,9 @@ error:
   /*                                                                       */
 #ifdef FT_CONFIG_OPTION_DYNAMIC_DRIVERS
 
-  FT_EXPORT_FUNC(FT_DriverInterface*)  getDriverInterface( void )
+  FT_EXPORT_FUNC(const FT_Driver_Class*)  getDriverClass( void )
   {
-    return &fond_driver_interface;
+    return &fond_driver_class;
   }
 
 #endif /* CONFIG_OPTION_DYNAMIC_DRIVERS */
