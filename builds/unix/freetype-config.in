@@ -12,14 +12,21 @@ hardcode_libdir_flag_spec='@hardcode_libdir_flag_spec@'
 usage()
 {
   cat <<EOF
-Usage: freetype-config [OPTIONS] [LIBRARIES]
+Usage: freetype-config [OPTION]...
+Get FreeType compilation and linking information.
+
 Options:
- [--prefix[=DIR]]
- [--exec-prefix[=DIR]]
- [--version]
- [--libs]
- [--libtool]
- [--cflags]
+  --prefix               display \`--prefix' value used for building the
+                         FreeType library
+  --prefix=PREFIX        override \`--prefix' value with PREFIX
+  --exec-prefix          display \`--exec-prefix' value used for building
+                         the FreeType library
+  --exec-prefix=EPREFIX  override \`--exec-prefix' value with EPREFIX
+  --version              display libtool version of the FreeType library
+  --libs                 display flags for linking with the FreeType library
+  --libtool              display library name for linking with libtool
+  --cflags               display flags for compiling with the FreeType
+                         library
 EOF
   exit $1
 }
