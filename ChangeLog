@@ -1,5 +1,21 @@
 2002-04-28  Werner Lemberg  <wl@gnu.org>
 
+	* src/pfr/pfrerror.h: New file.
+	* include/freetype/ftmoderr.h: Add PFR error codes.
+	* src/pfr/pfrgload.c: Include pfrerror.h.
+	Use PCF error codes.
+	(pfr_extra_item_load_stem_snaps): Fix debug message.
+	* src/pfr/pfrgload.c: Include pfrerror.h.
+	Use PCF error codes.
+	(pfr_extra_item_load_bitmap_info, pfr_glyph_load_simple,
+	pfr_glyph_load_compound): Fix debug message.
+	* src/pfr/pfrobjs.c: Include pfrerror.h.
+	Use PCF error codes.
+	(pfr_face_init): Return PFR_Err_Unknown_File_Format.
+	* src/pfr/rules.mk (PFR_DRV_H): Include pfrerror.h.
+
+2002-04-27  Werner Lemberg  <wl@gnu.org>
+
 	* src/cache/ftccache.c (ftc_cache_lookup),
 	src/cache/ftccmap.c (ftc_cmap_family_init),
 	src/cache/ftcmanag.c (ftc_family_table_alloc),

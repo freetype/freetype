@@ -20,6 +20,8 @@
 #include "pfrload.h"            /* for macro definitions */
 #include FT_INTERNAL_DEBUG_H
 
+#include "pfrerror.h"
+
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pfr
 
@@ -517,8 +519,8 @@
     return error;
 
   Too_Short:
-    error = FT_Err_Invalid_Table;
-    FT_ERROR(( "pfr_glyph_load: invalid glyph data\n" ));
+    error = PFR_Err_Invalid_Table;
+    FT_ERROR(( "pfr_glyph_load_simple: invalid glyph data\n" ));
     goto Exit;
   }
 
@@ -667,8 +669,8 @@
     return error;
 
   Too_Short:
-    error = FT_Err_Invalid_Table;
-    FT_ERROR(( "pfr_glyph_load: invalid glyph data\n" ));
+    error = PFR_Err_Invalid_Table;
+    FT_ERROR(( "pfr_glyph_load_compound: invalid glyph data\n" ));
     goto Exit;
   }
 

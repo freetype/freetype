@@ -23,6 +23,8 @@
 #include FT_OUTLINE_H
 #include FT_INTERNAL_DEBUG_H
 
+#include "pfrerror.h"
+
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_pfr
 
@@ -61,7 +63,7 @@
     if ( !pfr_header_check( &face->header ) )
     {
       FT_TRACE4(( "pfr_face_init: not a valid PFR font\n" ));
-      error = FT_Err_Invalid_Argument;
+      error = PFR_Err_Unknown_File_Format;
       goto Exit;
     }
 
@@ -85,7 +87,7 @@
     if ( face_index >= face->root.num_faces )
     {
       FT_ERROR(( "pfr_face_init: invalid face index\n" ));
-      error = FT_Err_Invalid_Argument;
+      error = PFR_Err_Invalid_Argument;
       goto Exit;
     }
 

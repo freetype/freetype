@@ -652,7 +652,7 @@
     /* check that segments are sorted in increasing order and do not */
     /* overlap; check also the offsets                               */
     {
-      FT_UInt  start, end, last = 0,offset, n;
+      FT_UInt  start, end, last = 0, offset, n;
       FT_Int   delta;
 
 
