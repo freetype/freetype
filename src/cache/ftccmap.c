@@ -348,6 +348,8 @@
       FT_UInt  offset = (FT_UInt)( char_code - node->first );
 
 
+      FT_ASSERT( offset < FTC_CMAP_INDICES_MAX );
+
       gindex = node->indices[offset];
       if ( gindex == FTC_CMAP_UNKNOWN )
       {
