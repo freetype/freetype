@@ -568,7 +568,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
 #define  ft_encoding_none            FT_ENCODING_NONE
 #define  ft_encoding_unicode         FT_ENCODING_UNICODE
-#define  ft_encoding_symbol          FT_ENCODING_SYMBOL
+#define  ft_encoding_symbol          FT_ENCODING_MS_SYMBOL
 #define  ft_encoding_latin_1         FT_ENCODING_ADOBE_LATIN_1
 #define  ft_encoding_latin_2         FT_ENCODING_OLD_LATIN_2
 #define  ft_encoding_sjis            FT_ENCODING_MS_SJIS
