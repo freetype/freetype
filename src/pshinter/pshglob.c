@@ -421,7 +421,7 @@
 
 
       while ( threshold > 0 && FT_MulFix( threshold, scale ) > 32 )
-        threshold --;
+        threshold--;
 
       blues->blue_threshold = threshold;
     }
@@ -539,7 +539,7 @@
 
     no_shoots = blues->no_overshoots;
 
-    /* lookup stem top in top zones table */
+    /* look up stem top in top zones table */
     table = &blues->normal_top;
     count = table->count;
     zone  = table->zones;
@@ -653,7 +653,7 @@
           read++;
         }
 
-        dim->stdw.count = priv->num_snap_widths;
+        dim->stdw.count = priv->num_snap_widths + 1;
       }
 
       /* copy standard heights */
@@ -672,7 +672,7 @@
           read++;
         }
 
-        dim->stdw.count = priv->num_snap_heights;
+        dim->stdw.count = priv->num_snap_heights + 1;
       }
 
       /* copy blue zones */
@@ -684,15 +684,9 @@
                            priv->family_blues, priv->num_family_other_blues,
                            priv->family_other_blues, priv->blue_fuzz, 1 );
 
-      globals->blues.blue_scale = priv->blue_scale
-                                  ? priv->blue_scale
-                                  : 0x27A000L; /* 0.039625 * 0x10000 * 1000 */
-
-      globals->blues.blue_shift = priv->blue_shift
-                                  ? priv->blue_shift
-                                  : 7;
-
-      globals->blues.blue_fuzz = priv->blue_fuzz;
+      globals->blues.blue_scale = priv->blue_scale;
+      globals->blues.blue_shift = priv->blue_shift;
+      globals->blues.blue_fuzz  = priv->blue_fuzz;
 
       globals->dimension[0].scale_mult  = 0;
       globals->dimension[0].scale_delta = 0;

@@ -1321,8 +1321,8 @@
       ;
     }
 
-    /* for each extrema, determine its direction along the */
-    /* orthogonal axis                                     */
+    /* for each extremum, determine its direction along the */
+    /* orthogonal axis                                      */
     for ( n = 0; n < glyph->num_points; n++ )
     {
       PSH_Point  point, before, after;
@@ -1554,8 +1554,8 @@
       }
     }
 
-    /* now, certain points may have been attached to hint and */
-    /* not marked as strong; update their flags then          */
+    /* now, certain points may have been attached to a hint and */
+    /* not marked as strong; update their flags then            */
     {
       FT_UInt    count = glyph->num_points;
       PSH_Point  point = glyph->points;
@@ -1626,7 +1626,7 @@
   {
 
 #if 1
-    /* first technique: a point is strong if it is a local extrema */
+    /* first technique: a point is strong if it is a local extremum */
 
     PSH_Dimension  dim   = &glyph->globals->dimension[dimension];
     FT_Fixed       scale = dim->scale_mult;
@@ -1640,7 +1640,7 @@
       if ( psh_point_is_strong( point ) )
         continue;
 
-      /* sometimes, some local extremas are smooth points */
+      /* sometimes, some local extrema are smooth points */
       if ( psh_point_is_smooth( point ) )
       {
         if ( point->dir_in == PSH_DIR_NONE   ||
@@ -1671,7 +1671,7 @@
         {
           if ( psh_point_is_strong( cur ) )
           {
-            FT_Pos  diff = cur->org_u - u;;
+            FT_Pos  diff = cur->org_u - u;
 
 
             if ( diff <= 0 )
