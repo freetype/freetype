@@ -79,14 +79,16 @@
       hash   = query->hash;
 
 #ifdef FTC_CACHE_USE_LINEAR_HASHING
-      FT_UInt  index;
+      {
+        FT_UInt  index;
 
 
-      index = hash & cache->mask;
-      if ( index < cache->p )
-        index = hash & ( cache->mask * 2 + 1 );
+        index = hash & cache->mask;
+        if ( index < cache->p )
+          index = hash & ( cache->mask * 2 + 1 );
 
-      bucket  = cache->buckets + index;
+        bucket  = cache->buckets + index;
+      }
 #else
       bucket  = cache->buckets + ( hash % cache->size );
 #endif
