@@ -41,11 +41,11 @@
 /* we need to define a 64-bits data type here */
 #ifndef FT_CONFIG_OPTION_OLD_CALCS
 
-#  ifdef FT_LONG64
+#ifdef FT_LONG64
 
   typedef FT_INT64  FT_Int64;
 
-#  else
+#else
 
   typedef struct  FT_Int64_
   {
@@ -54,9 +54,9 @@
 
   } FT_Int64;
 
-#  endif
+#endif /* FT_LONG64 */
 
-#endif
+#endif /* !FT_CONFIG_OPTION_OLD_CALCS */
 
 
   /*************************************************************************/

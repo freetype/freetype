@@ -1,12 +1,20 @@
 2001-06-14  David Turner  <david@freetype.org>
 
-        * src/base/ftcalc.c, include/internal/ftcalc.h, src/truetype/ttinterp.c,
-        include/config/ftoption.h: modified the TrueType interpreter to let it
-        use the new trigonometric functions provided in "fttrigon.h". This
-        gets rid of some old 64-bit computation routines, as well as many
-        warnings when compiling the library with the "long long" 64-bit
-        integer type.
+	Modified the TrueType interpreter to let it use the new
+	trigonometric functions provided in "fttrigon.h".  This gets rid of
+	some old 64-bit computation routines, as well as many warnings when
+	compiling the library with the "long long" 64-bit integer type.
 
+	* include/freetype/config/ftoption.h: Undefine
+	FT_CONFIG_OPTION_OLD_CALCS.
+	* include/freetype/internal/ftcalc.h: Rearrange use of
+	FT_CONFIG_OPTION_OLD_CALCS.
+	* src/base/ftcalc.c: Add declaration of FT_Int64 if
+	FT_CONFIG_OPTION_OLD_CALCS isn't defined.
+	* src/truetype/ttinterp.c: Use FT_TRIGONOMETRY_H.
+	(Norm): Add a special version if FT_CONFIG_OPTION_OLD_CALCS isn't
+	defined.
+	(Current_Ratio, Normalize): Simplify code.
 
 2001-06-11  Mike Owens  <MOwens@amtdatasouth.com>
 
