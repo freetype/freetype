@@ -19,6 +19,7 @@
 #ifndef SFNT_H
 #define SFNT_H
 
+
 #include <freetype/freetype.h>
 #include <freetype/internal/ftdriver.h>
 #include <freetype/internal/tttypes.h>
@@ -30,28 +31,34 @@
   /*    TT_Init_Face_Func                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    First part of the SFNT face object initialisation. This will       */
-  /*    find the face in a SFNT file or collection, and load its           */
-  /*    format tag in face->format_tag.                                    */
+  /*    First part of the SFNT face object initialization.  This will find */
+  /*    the face in a SFNT file or collection, and load its format tag in  */
+  /*    face->format_tag.                                                  */
   /*                                                                       */
   /* <Input>                                                               */
   /*    stream     :: The input stream.                                    */
+  /*                                                                       */
   /*    face       :: A handle to the target face object.                  */
-  /*    faceIndex  :: The index of the TrueType font, if we're opening a   */
+  /*                                                                       */
+  /*    face_index :: The index of the TrueType font, if we are opening a  */
   /*                  collection.                                          */
-  /*    num_params :: number of additional parameters                      */
-  /*    params     :: optional additional parameters                       */
+  /*                                                                       */
+  /*    num_params :: The number of additional parameters.                 */
+  /*                                                                       */
+  /*    params     :: Optional additional parameters.                      */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The stream cursor must be at the font file's origin                */
-  /*    This function recognizes fonts embedded in a "TrueType collection" */
+  /*    The stream cursor must be at the font file's origin.               */
+  /*                                                                       */
+  /*    This function recognizes fonts embedded in a `TrueType             */
+  /*    collection'.                                                       */
   /*                                                                       */
   /*    Once the format tag has been validated by the font driver, it      */
-  /*    should then call the TT_Load_Face_Func callback to read the rest   */
-  /*    of the SFNT tables in the object..                                 */
+  /*    should then call the TT_Load_Face_Func() callback to read the rest */
+  /*    of the SFNT tables in the object.                                  */
   /*                                                                       */
   typedef
   FT_Error  (*TT_Init_Face_Func)( FT_Stream      stream,
@@ -60,29 +67,34 @@
                                   FT_Int         num_params,
                                   FT_Parameter*  params );
 
+
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
   /*    TT_Load_Face_Func                                                  */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Second part of the SFNT face object initialisation. This will      */
-  /*    load the common SFNT tables (head, OS/2, maxp, metrics, etc..)     */
-  /*    in the face object..                                               */
+  /*    Second part of the SFNT face object initialization.  This will     */
+  /*    load the common SFNT tables (head, OS/2, maxp, metrics, etc.) in   */
+  /*    the face object.                                                   */
   /*                                                                       */
   /* <Input>                                                               */
   /*    stream     :: The input stream.                                    */
+  /*                                                                       */
   /*    face       :: A handle to the target face object.                  */
-  /*    faceIndex  :: The index of the TrueType font, if we're opening a   */
+  /*                                                                       */
+  /*    face_index :: The index of the TrueType font, if we are opening a  */
   /*                  collection.                                          */
-  /*    num_params :: number of additional parameters                      */
-  /*    params     :: optional additional parameters                       */
+  /*                                                                       */
+  /*    num_params :: The number of additional parameters.                 */
+  /*                                                                       */
+  /*    params     :: Optional additional parameters.                      */
   /*                                                                       */
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This function must be called after TT_Init_Face_Func               */
+  /*    This function must be called after TT_Init_Face_Func().            */
   /*                                                                       */
   typedef
   FT_Error  (*TT_Load_Face_Func)( FT_Stream      stream,
@@ -90,6 +102,7 @@
                                   FT_Int         face_index,
                                   FT_Int         num_params,
                                   FT_Parameter*  params );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -100,13 +113,13 @@
   /*    A callback used to delete the common SFNT data from a face.        */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face       :: A handle to the target face object.                  */
+  /*    face :: A handle to the target face object.                        */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    This function does NOT destroy the face object..                   */
+  /*    This function does NOT destroy the face object.                    */
   /*                                                                       */
   typedef
-  void    (*TT_Done_Face_Func)( TT_Face   face );
+  void  (*TT_Done_Face_Func)( TT_Face  face );
 
 
   typedef
@@ -117,33 +130,40 @@
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Load_SFNT_Header                                                */
+  /*    TT_Load_SFNT_Header_Func                                           */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads the header of a SFNT font file. Supports collections..       */
+  /*    Loads the header of a SFNT font file.  Supports collections.       */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face      :: A handle to the target face object.                   */
-  /*    stream    :: The input stream.                                     */
+  /*    face       :: A handle to the target face object.                  */
+  /*                                                                       */
+  /*    stream     :: The input stream.                                    */
+  /*                                                                       */
+  /*    face_index :: The index of the TrueType font, if we are opening a  */
+  /*                  collection.                                          */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    sfnt      :: the sfnt header                                       */
+  /*    sfnt       :: The SFNT header.                                     */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The stream cursor must be at the font file's origin                */
-  /*    This function recognizes fonts embedded in a "TrueType collection" */
+  /*    The stream cursor must be at the font file's origin.               */
+  /*                                                                       */
+  /*    This function recognizes fonts embedded in a `TrueType             */
+  /*    collection'.                                                       */
   /*                                                                       */
   /*    This function checks that the header is valid by looking at the    */
-  /*    values of "search_range", "entry_selector" and "range_shift"..     */
+  /*    values of `search_range', `entry_selector', and `range_shift'.     */
   /*                                                                       */
   typedef
-  FT_Error  (*TT_Load_SFNT_Header_Func)( TT_Face      face,
-                                         FT_Stream    stream,
-                                         FT_Long      faceIndex,
-                                         SFNT_Header* sfnt );
+  FT_Error  (*TT_Load_SFNT_Header_Func)( TT_Face       face,
+                                         FT_Stream     stream,
+                                         FT_Long       face_index,
+                                         SFNT_Header*  sfnt );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -155,16 +175,18 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face      :: A handle to the target face object.                   */
+  /*                                                                       */
   /*    stream    :: The input stream.                                     */
-  /*    sfnt      :: sfnt header                                           */
+  /*                                                                       */
+  /*    sfnt      :: The SFNT header.                                      */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
-  /*    The stream cursor must be on the first byte after the 4-byte       */
-  /*    font format tag. This is the case just after a call to             */
-  /*    TT_Load_Format_Tag                                                 */
+  /*    The stream cursor must be on the first byte after the 4-byte font  */
+  /*    format tag.  This is the case just after a call to                 */
+  /*    TT_Load_Format_Tag().                                              */
   /*                                                                       */
   typedef
   FT_Error  (*TT_Load_Directory_Func)( TT_Face       face,
@@ -178,13 +200,12 @@
   /*    TT_Load_Any_Func                                                   */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads any font table into client memory.  Used by the              */
-  /*    TT_Get_Font_Data() API function.                                   */
+  /*    Loads any font table into client memory.                           */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: The face object to look for.                             */
   /*                                                                       */
-  /*    tag    :: The tag of table to load.  Use the value 0 if you  want  */
+  /*    tag    :: The tag of table to load.  Use the value 0 if you want   */
   /*              to access the whole font file, else set this parameter   */
   /*              to a valid TrueType table tag that you can forge with    */
   /*              the MAKE_TT_TAG macro.                                   */
@@ -243,10 +264,11 @@
   /*                                                                       */
   /* <Output>                                                              */
   /*    map         :: The target pixmap.                                  */
+  /*                                                                       */
   /*    metrics     :: A big sbit metrics structure for the glyph image.   */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.  Returns an error if no     */
+  /*    FreeType error code.  0 means success.  Returns an error if no     */
   /*    glyph sbit exists for the index.                                   */
   /*                                                                       */
   /*  <Note>                                                               */
@@ -261,6 +283,7 @@
                                         FT_Stream         stream,
                                         FT_Bitmap*        map,
                                         TT_SBit_Metrics*  metrics );
+
 
   /*************************************************************************/
   /*                                                                       */
@@ -279,35 +302,36 @@
   /*              You must not modify the returned string!                 */
   /*                                                                       */
   /* <Output>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   typedef
-  FT_Error (*TT_Get_PS_Name_Func)( TT_Face      face,
-                                   FT_UInt      index,
-                                   FT_String**  PSname );
+  FT_Error  (*TT_Get_PS_Name_Func)( TT_Face      face,
+                                    FT_UInt      index,
+                                    FT_String**  PSname );
 
 
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Load_Metrics                                                    */
+  /*    TT_Load_Metrics_Func                                               */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads the horizontal or vertical header in a face object.          */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face     :: A handle to the target face object.                    */
+  /*                                                                       */
   /*    stream   :: The input stream.                                      */
+  /*                                                                       */
   /*    vertical :: A boolean flag.  If set, load vertical metrics.        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   typedef
   FT_Error  (*TT_Load_Metrics_Func)( TT_Face    face,
                                      FT_Stream  stream,
                                      FT_Bool    vertical );
-
 
 
   /*************************************************************************/
@@ -320,13 +344,14 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the parent face object.                      */
+  /*                                                                       */
   /*    stream :: A handle to the current stream object.                   */
   /*                                                                       */
   /* <InOut>                                                               */
   /*    cmap   :: A pointer to a cmap object.                              */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The function assumes that the stream is already in use (i.e.,      */
@@ -349,10 +374,11 @@
   /*                                                                       */
   /* <Input>                                                               */
   /*    face :: A handle to the parent face object.                        */
+  /*                                                                       */
   /*    cmap :: A handle to a cmap object.                                 */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    Error code.  0 means success.                                      */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   typedef
   FT_Error  (*TT_CharMap_Free_Func)( TT_Face        face,
@@ -362,21 +388,22 @@
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Load_Table                                                      */
+  /*    TT_Load_Table_Func                                                 */
   /*                                                                       */
   /* <Description>                                                         */
   /*    Loads a given TrueType table.                                      */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: A handle to the target face object.                      */
+  /*                                                                       */
   /*    stream :: The input stream.                                        */
   /*                                                                       */
   /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
+  /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
   /* <Note>                                                                */
   /*    The function will use `face->goto_table' to seek the stream to     */
-  /*    the start of the table                                             */
+  /*    the start of the table.                                            */
   /*                                                                       */
   typedef
   FT_Error  (*TT_Load_Table_Func)( TT_Face    face,
@@ -386,25 +413,16 @@
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
-  /*    TT_Load_Table                                                      */
+  /*    TT_Free_Table_Func                                                 */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads a given TrueType table.                                      */
+  /*    Frees a given TrueType table.                                      */
   /*                                                                       */
   /* <Input>                                                               */
-  /*    face   :: A handle to the target face object.                      */
-  /*    stream :: The input stream.                                        */
-  /*                                                                       */
-  /* <Return>                                                              */
-  /*    TrueType error code.  0 means success.                             */
-  /*                                                                       */
-  /* <Note>                                                                */
-  /*    The function will use `face->goto_table' to seek the stream to     */
-  /*    the start of the table                                             */
+  /*    face :: A handle to the target face object.                        */
   /*                                                                       */
   typedef
   void  (*TT_Free_Table_Func)( TT_Face  face );
-
 
 
   /*************************************************************************/
@@ -413,65 +431,60 @@
   /*    SFNT_Interface                                                     */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    this structure holds pointers to the functions used to load and    */
+  /*    This structure holds pointers to the functions used to load and    */
   /*    free the basic tables that are required in a `sfnt' font file.     */
   /*                                                                       */
   /* <Fields>                                                              */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
-  /*                                                                       */
+  /*    Check the various xxx_Func() descriptions for details.             */
   /*                                                                       */
   typedef struct  SFNT_Interface_
   {
-    TT_Goto_Table_Func       goto_table;
+    TT_Goto_Table_Func        goto_table;
 
-    TT_Init_Face_Func        init_face;
-    TT_Load_Face_Func        load_face;
-    TT_Done_Face_Func        done_face;
-    SFNT_Get_Interface_Func  get_interface;
+    TT_Init_Face_Func         init_face;
+    TT_Load_Face_Func         load_face;
+    TT_Done_Face_Func         done_face;
+    SFNT_Get_Interface_Func   get_interface;
     
-    TT_Load_Any_Func         load_any;
-    TT_Load_SFNT_Header_Func load_sfnt_header;
-    TT_Load_Directory_Func   load_directory;
+    TT_Load_Any_Func          load_any;
+    TT_Load_SFNT_Header_Func  load_sfnt_header;
+    TT_Load_Directory_Func    load_directory;
 
-    /* these functions are called by "load_face" but they can also */
-    /* be called from external modules, if there is a need to      */
-    TT_Load_Table_Func       load_header;
-    TT_Load_Metrics_Func     load_metrics;
-    TT_Load_Table_Func       load_charmaps;
-    TT_Load_Table_Func       load_max_profile;
-    TT_Load_Table_Func       load_os2;
-    TT_Load_Table_Func       load_psnames;
+    /* these functions are called by `load_face' but they can also  */
+    /* be called from external modules, if there is a need to do so */
+    TT_Load_Table_Func        load_header;
+    TT_Load_Metrics_Func      load_metrics;
+    TT_Load_Table_Func        load_charmaps;
+    TT_Load_Table_Func        load_max_profile;
+    TT_Load_Table_Func        load_os2;
+    TT_Load_Table_Func        load_psnames;
 
-    TT_Load_Table_Func       load_names;
-    TT_Free_Table_Func       free_names;
+    TT_Load_Table_Func        load_names;
+    TT_Free_Table_Func        free_names;
 
     /* optional tables */
-    TT_Load_Table_Func       load_hdmx;
-    TT_Free_Table_Func       free_hdmx;
+    TT_Load_Table_Func        load_hdmx;
+    TT_Free_Table_Func        free_hdmx;
 
-    TT_Load_Table_Func       load_kerning;
-    TT_Load_Table_Func       load_gasp;
-	TT_Load_Table_Func       load_pclt;
+    TT_Load_Table_Func        load_kerning;
+    TT_Load_Table_Func        load_gasp;
+	TT_Load_Table_Func        load_pclt;
 
     /* see `ttsbit.h' */
-    TT_Load_Table_Func       load_sbits;
-    TT_Load_SBit_Image_Func  load_sbit_image;
-    TT_Free_Table_Func       free_sbits;
+    TT_Load_Table_Func        load_sbits;
+    TT_Load_SBit_Image_Func   load_sbit_image;
+    TT_Free_Table_Func        free_sbits;
 
     /* see `ttpost.h' */
-    TT_Get_PS_Name_Func      get_psname;
-    TT_Free_Table_Func       free_psnames;
+    TT_Get_PS_Name_Func       get_psname;
+    TT_Free_Table_Func        free_psnames;
 
     /* see `ttcmap.h' */
-    TT_CharMap_Load_Func     load_charmap;
-    TT_CharMap_Free_Func     free_charmap;
+    TT_CharMap_Load_Func      load_charmap;
+    TT_CharMap_Free_Func      free_charmap;
 
   } SFNT_Interface;
+
 
 #endif /* SFNT_H */
 

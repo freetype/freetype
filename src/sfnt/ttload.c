@@ -350,8 +350,7 @@
   /*    TT_Load_Any                                                        */
   /*                                                                       */
   /* <Description>                                                         */
-  /*    Loads any font table into client memory.  Used by the              */
-  /*    TT_Get_Font_Data() API function.                                   */
+  /*    Loads any font table into client memory.                           */
   /*                                                                       */
   /* <Input>                                                               */
   /*    face   :: The face object to look for.                             */
