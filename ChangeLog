@@ -1,3 +1,7 @@
+2002-04-29  Jouk Jansen  <joukj@hrem.stm.tudelft.nl>
+
+	* descrip.mms (all): Add pfr driver.
+
 2002-04-28  Werner Lemberg  <wl@gnu.org>
 
 	* src/pfr/pfrerror.h: New file.
