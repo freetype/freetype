@@ -809,8 +809,8 @@
   /* <Return>                                                              */
   /*    FreeType error code.  0 means success.                             */
   /*                                                                       */
-  BASE_FUNC( FT_Error )  FT_Outline_Copy( FT_Outline*  source,
-                                          FT_Outline*  target )
+  FT_EXPORT_FUNC( FT_Error )  FT_Outline_Copy( FT_Outline*  source,
+                                               FT_Outline*  target )
   {
     FT_Int  is_owner;
 
@@ -857,8 +857,8 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  BASE_FUNC( void )  FT_Matrix_Multiply( FT_Matrix*  a,
-                                         FT_Matrix*  b )
+  FT_EXPORT_FUNC( void )  FT_Matrix_Multiply( FT_Matrix*  a,
+                                              FT_Matrix*  b )
   {
     FT_Fixed  xx, xy, yx, yy;
 
@@ -891,7 +891,7 @@
   /* <MT-Note>                                                             */
   /*    Yes.                                                               */
   /*                                                                       */
-  BASE_FUNC( FT_Error )  FT_Matrix_Invert( FT_Matrix*  matrix )
+  FT_EXPORT_FUNC( FT_Error )  FT_Matrix_Invert( FT_Matrix*  matrix )
   {
     FT_Pos  delta, xx, yy;
 
