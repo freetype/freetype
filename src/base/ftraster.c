@@ -2283,7 +2283,9 @@
       (FT_Outline_MoveTo_Func)Move_To,
       (FT_Outline_LineTo_Func)Line_To,
       (FT_Outline_ConicTo_Func)Conic_To,
-      (FT_Outline_CubicTo_Func)Cubic_To
+      (FT_Outline_CubicTo_Func)Cubic_To,
+      0,
+      0
     };
 
     /* Set up state in the raster object */

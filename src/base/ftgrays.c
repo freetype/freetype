@@ -1241,7 +1241,9 @@ int  check_sort( PCell  cells, int count )
       (FT_Outline_MoveTo_Func)Move_To,
       (FT_Outline_LineTo_Func)Line_To,
       (FT_Outline_ConicTo_Func)Conic_To,
-      (FT_Outline_CubicTo_Func)Cubic_To
+      (FT_Outline_CubicTo_Func)Cubic_To,
+      0,
+      0
     };
 
     TBand    bands[40], *band;

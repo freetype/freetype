@@ -467,6 +467,9 @@
     FT_Outline_ConicTo_Func  conic_to;
     FT_Outline_CubicTo_Func  cubic_to;
 
+    int                      shift;
+    FT_Pos                   delta;
+
   } FT_Outline_Funcs;
 
 
