@@ -1,5 +1,6 @@
 #include "grx11.h"
 
+#define TEST
 
 #ifdef TEST
 #include "grfont.h"
@@ -87,6 +88,7 @@
     Visual*        visual;
     Colormap       colormap;
     int            depth;
+    XDepth*        xdepth;
     Bool           gray;
     
     GC             gc;
@@ -200,6 +202,40 @@
         /* note, the 32-bit modes return a depth of 24, and 32 bits per pixel */          
         else if ( format->depth == 24 )
         {
+#ifdef TEST 
+          {
+            int           count2;
+            XVisualInfo*  visuals;
+            XVisualInfo*  visual;
+            const char*  string = "unknown";
+    
+            template.depth = format->depth;
+            visuals        = XGetVisualInfo( display,
+                                             VisualDepthMask,
+                                             &template,
+                                             &count2 );
+            visual = visuals;
+            
+            switch (visual->class)
+            {
+              case TrueColor:   string = "TrueColor";    break;
+              case DirectColor: string = "DirectColor";  break;
+              case PseudoColor: string = "PseudoColor";  break;
+              case StaticGray : string = "StaticGray";   break;
+              case StaticColor: string = "StaticColor";  break;
+              case GrayScale:   string = "GrayScale";    break;
+            }
+
+            printf( ">   RGB %04lx:%04lx:%04lx, colors %3d, bits %2d  %s\n",
+                    visual->red_mask,
+                    visual->green_mask,
+                    visual->blue_mask,
+                    visual->colormap_size,
+                    visual->bits_per_rgb,
+                    string );
+            visual++;
+          }        
+#endif
           if ( format->bits_per_pixel == 24 )
             add_pixel_mode( gr_pixel_mode_rgb24, format );
             
@@ -235,13 +271,14 @@
               case GrayScale:   string = "GrayScale";    break;
             }
 
-            printf( ">   RGB %02x:%02x:%02x, colors %3d, bits %2d  %s\n",
+            printf( ">   RGB %04lx:%04lx:%04lx, colors %3d, bits %2d  %s\n",
                     visual->red_mask,
                     visual->green_mask,
                     visual->blue_mask,
                     visual->colormap_size,
                     visual->bits_per_rgb,
                     string );
+                    
 #endif
             if ( visual->red_mask   == 0xf800 &&
                  visual->green_mask == 0x07e0 &&
@@ -271,11 +308,6 @@
     
     return 0;
   }
-
-
-
-
-
 
 
 
@@ -361,11 +393,11 @@
       
       for ( ; _write < limit; _write += 3, _read++ )
       {
-        byte  color = *_read;
-        
-        _write[0] =
-        _write[1] =
-        _write[2] = color;
+        XColor*   color = surface->color + *_read;
+       
+        _write[0] = color->red;
+        _write[1] = color->green;
+        _write[2] = color->blue;
       }
 
       write += target->pitch;
@@ -396,11 +428,8 @@
       for ( ; _write < limit; _write += 4, _read++ )
       {
         byte  color = *_read;
-        
-        _write[0] =
-        _write[1] =
-        _write[2] =
-        _write[3] = color;
+
+        *(unsigned long*)_write = surface->color[color].pixel;
       }
 
       write += target->pitch;
@@ -443,7 +472,7 @@
     /* convert the rectangle to the target depth for gray surfaces */
     if (surface->gray)
     {
-      switch (surface->depth)
+      switch (surface->xdepth->bits_per_pixel)
       {
         case 8 : convert_gray_to_pal8( surface, x, y, w, h ); break;
         case 16: convert_gray_to_16  ( surface, x, y, w, h ); break;
@@ -635,6 +664,7 @@
         if ( image_depth == pixel_depth[i].depth )
         {
           format = pixel_depth + i;
+          surface->xdepth = format;
           break;
         }
     }
@@ -648,6 +678,7 @@
         if ( pixel_modes[i] == bitmap->mode )
         {
           format = pixel_depth + i;
+          surface->xdepth = format;
           break;
         }
     }
@@ -855,6 +886,7 @@ const grKeyName  key_names[] =
   { grKeyReturn,   "Return" }
 };
 
+#if 0
 int  main( void )
 {
   grSurface*  surface;
@@ -932,5 +964,6 @@ int  main( void )
   
   
 }
+#endif /* O */
 #endif /* TEST */
 
