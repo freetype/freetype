@@ -178,7 +178,7 @@ ifdef BUILD_FREETYPE
 include $(TOP)/config/freetype.mk
 
 clean_freetype: clean_freetype_std
-distclean_freetype: clean_freetype_library_std
+distclean_freetype: distclean_freetype_std
 
 # This final rule is used to link all object files into a single
 # library. It is part of the system-specific sub-Makefile because not

@@ -54,16 +54,37 @@ include $(CONFIG_MK)
 # Define a few important variables now
 #
 #
-TOP_ := $(TOP)$(SEP)
-SRC_ := $(TOP)$(SEP)src$(SEP)
+TOP_  := $(TOP)$(SEP)
+TOP2_ := $(TOP2)$(SEP)
+SRC_  := $(TOP)$(SEP)src$(SEP)
 
 BIN_ := bin$(SEP)
 OBJ_ := obj$(SEP)
 
 GRAPH_DIR := graph
 
+ifeq ($(TOP),..)
 SRC_DIR  := src
+else
+SRC_DIR  := $(TOP2_)src
+endif
+
 SRC_DIR_ := $(SRC_DIR)$(SEP)
+
+FT_INCLUDES := $(BUILD) $(TOP_)include $(SRC_)base $(SRC_DIR)
+TT_INCLUDES := $(SRC_)shared $(SRC_)truetype
+T1_INCLUDES := $(SRC_)shared $(SRC_)type1
+
+COMPILE    = $(CC) $(CFLAGS) $(INCLUDES:%=$I%)
+LINK      := $(CC)
+FTLIB     := $(TOP_)$(LIB_DIR)$(SEP)$(LIBRARY).$A
+
+# the default commands used to link the executables. These can
+# be re-defined for platform-specific stuff..
+#
+LINK = $(CC) $T$@ $< $(FTLIB) $(EFENCE)
+COMMON_LINK = $(LINK) $(COMMON_OBJ)
+GRAPH_LINK  = $(COMMON_LINK) $(GRAPH_LIB)
 
 
 .PHONY: exes clean distclean
@@ -115,35 +136,6 @@ endif
 
 clean: clean_demo
 distclean: distclean_demo
-
-####################################################################
-#
-# Define a few important variables now
-#
-#
-TOP_  := $(TOP)$(SEP)
-TOP2_ := $(TOP2)$(SEP)
-SRC_  := $(TOP)$(SEP)src$(SEP)
-
-BIN_ := bin$(SEP)
-OBJ_ := obj$(SEP)
-
-GRAPH_DIR := $(TOP2_)graph
-
-SRC_DIR  := $(TOP2_)src
-SRC_DIR_ := $(SRC_DIR)$(SEP)
-
-
-FT_INCLUDES := $(BUILD) $(TOP_)include $(SRC_)base $(SRC_DIR)
-TT_INCLUDES := $(SRC_)shared $(SRC_)truetype
-T1_INCLUDES := $(SRC_)shared $(SRC_)type1
-
-COMPILE    = $(CC) $(CFLAGS) $(INCLUDES:%=$I%)
-LINK      := $(CC)
-FTLIB     := $(TOP_)$(LIB_DIR)$(SEP)$(LIBRARY).$A
-
-LINK = $(CC) $(LINKT)$@ $< $(FTLIB) $(EFENCE)
-COMMON_LINK = $(COMMON_OBJ)
 
 ####################################################################
 #

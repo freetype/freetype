@@ -183,16 +183,15 @@ library: $(FT_LIBRARY)
 # on all systems though..
 #
 clean_freetype_std:
-	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(OBJ_S) $(OBJ_M))
+	-$(DELETE) $(OBJ_S) $(OBJ_M)
 
 distclean_freetype_std: clean_freetype_std
-	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(FT_LIBRARY))
+	-$(DELETE) $(FT_LIBRARY)
 	-$(DELETE) *.orig *~ core *.core
 
 # The Dos command shell does not support very long list of arguments
 # so we're stuck with wildcards
 #
-#SYSOBJ_ := $(subst $(SEP),\,$(OBJ_))
 
 clean_freetype_dos:
 	-del $(subst $(SEP),$(HOSTSEP),$(OBJ_))*.$O 2> nul
@@ -201,7 +200,7 @@ distclean_freetype_dos: clean_freetype_dos
 	-del $(subst $(SEP),$(HOSTSEP),$(FT_LIBRARY)) 2> nul
 
 remove_config_mk:
-	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(CONFIG_MK)) 2> nul
+	-$(DELETE) $(subst $(SEP),$(HOSTSEP),$(CONFIG_MK))
 
 # the "config.mk" must define 'clean_freetype' and 'distclean_freetype'
 # implementations may use to relay these to either the 'std' or 'dos'

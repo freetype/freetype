@@ -47,7 +47,7 @@
 
 GRAPH_INCLUDES := $(TOP2_)graph
 GRAPH_LIB      := $(OBJ_)graph.$A
-GRAPH_LINK     := $(GRAPH_LIB)
+#GRAPH_LINK     := $(GRAPH_LIB)
 
 GRAPH_ := $(TOP2_)graph$(SEP)
 
