@@ -333,11 +333,11 @@
 
           if ( hinting )
           {
-            metrics->horiAdvance = (metrics->horiAdvance+32) & -64;
-            metrics->vertAdvance = (metrics->vertAdvance+32) & -64;
+            metrics->horiAdvance = ( metrics->horiAdvance + 32 ) & -64;
+            metrics->vertAdvance = ( metrics->vertAdvance + 32 ) & -64;
 
-            metrics->vertBearingX = (metrics->vertBearingX+32) & -64;
-            metrics->vertBearingY = (metrics->vertBearingY+32) & -64;
+            metrics->vertBearingX = ( metrics->vertBearingX + 32 ) & -64;
+            metrics->vertBearingY = ( metrics->vertBearingY + 32 ) & -64;
           }
         }
 

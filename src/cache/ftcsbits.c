@@ -128,7 +128,6 @@
   {
     FT_Error          error;
     FTC_GlyphNode     gnode = FTC_GLYPH_NODE(snode);
-    FTC_GlyphFamily   gfam  = FTC_GLYPH_FAMILY(sfam);
     FT_Memory         memory;
     FT_Face           face;
     FT_Size           size;

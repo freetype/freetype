@@ -292,7 +292,7 @@
     v.y = 0;
     ft_trig_pseudo_rotate( &v, angle );
 
-    return v.x/(1 << 12);
+    return v.x / ( 1 << 12 );
   }
 
 

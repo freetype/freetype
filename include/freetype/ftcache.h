@@ -67,6 +67,7 @@ FT_BEGIN_HEADER
   /*   FTC_Manager_Lookup_Size                                             */
   /*                                                                       */
   /*   FTC_Node                                                            */
+  /*   FTC_Node_Ref                                                        */
   /*   FTC_Node_Unref                                                      */
   /*                                                                       */
   /*   FTC_Font                                                            */
@@ -86,7 +87,7 @@ FT_BEGIN_HEADER
   /*   FTC_Image_Cache_Lookup                                              */
   /*                                                                       */
   /*   FTC_SBit_Cache                                                      */
-  /*   FTC_Sbit_Cache_Lookup                                               */
+  /*   FTC_SBit_Cache_Lookup                                               */
   /*                                                                       */
   /*************************************************************************/
 
@@ -398,26 +399,6 @@ FT_BEGIN_HEADER
                            FTC_Font     font,
                            FT_Face     *aface,
                            FT_Size     *asize );
-
-  /*************************************************************************/
-  /*                                                                       */
-  /* <Function>                                                            */
-  /*    FTC_Node_Unref                                                     */
-  /*                                                                       */
-  /* <Description>                                                         */
-  /*    decrement a cache node's internal reference count. when the count  */
-  /*    reaches 0, it is not destroyed but becomes eligible for subsequent */
-  /*    cache flushes..                                                    */
-  /*                                                                       */
-  /* <Input>                                                               */
-  /*    node    :: cache node handle                                       */
-  /*    manager :: cache manager handle                                    */
-  /*                                                                       */
-  FT_EXPORT( void )
-  FTC_Node_Unref( FTC_Node     node,
-                  FTC_Manager  manager );
-
-  /* */
 
 
 FT_END_HEADER

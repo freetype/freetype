@@ -345,7 +345,7 @@
   }
 
 
-  FT_LOCAL_DEF FT_Error
+  FT_EXPORT_DEF( FT_Error )
   ftc_family_table_alloc( FTC_FamilyTable   table,
                           FT_Memory         memory,
                           FTC_FamilyEntry  *aentry )
@@ -411,7 +411,7 @@
   }
 
 
-  FT_LOCAL_DEF void
+  FT_EXPORT_DEF( void )
   ftc_family_table_free( FTC_FamilyTable  table,
                          FT_UInt          index )
   {

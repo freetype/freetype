@@ -108,13 +108,13 @@ FT_BEGIN_HEADER
   } FTC_FamilyTableRec, *FTC_FamilyTable;
 
 
-  FT_LOCAL FT_Error 
+  FT_EXPORT( FT_Error )
   ftc_family_table_alloc( FTC_FamilyTable   table,
                           FT_Memory         memory,
                           FTC_FamilyEntry  *aentry );
 
 
-  FT_LOCAL void 
+  FT_EXPORT( void )
   ftc_family_table_free( FTC_FamilyTable  table,
                          FT_UInt          index );
 
@@ -210,8 +210,22 @@ FT_BEGIN_HEADER
                 FTC_Manager  manager );
 
 
- /* can be called to decrement a node's reference count */
-  FT_EXPORT(void)
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
+  /*    FTC_Node_Unref                                                     */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Decrement a cache node's internal reference count.  When the count */
+  /*    reaches 0, it is not destroyed but becomes eligible for subsequent */
+  /*    cache flushes.                                                     */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    node    :: The cache node handle.                                  */
+  /*                                                                       */
+  /*    manager :: The cache manager handle.                               */
+  /*                                                                       */
+  FT_EXPORT( void )
   FTC_Node_Unref( FTC_Node     node,
                   FTC_Manager  manager );
 
