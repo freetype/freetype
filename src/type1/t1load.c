@@ -795,7 +795,7 @@
              c != '}' &&
              c != '/' &&
              c != '%' &&
-             ! is_space( c ) 
+             ! is_space( c )
              );
  }
 
@@ -1793,6 +1793,15 @@
             }
           }
       }
+     /* yes, this happens, certain PDF-embedded fonts have only a ".notdef"
+      * glyph defined !
+      */
+      if ( min_char > max_char )
+      {
+        min_char = 0;
+        max_char = loader.encoding_table.max_elems;
+      }
+
       type1->encoding.code_first = min_char;
       type1->encoding.code_last  = max_char;
       type1->encoding.num_chars  = loader.num_chars;
