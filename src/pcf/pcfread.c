@@ -117,8 +117,8 @@ THE SOFTWARE.
 #if defined( FT_DEBUG_LEVEL_TRACE )
 
     {
-      int    i,j;
-      char*  name;
+      unsigned int  i,j;
+      char*         name = "?";
 
 
       FT_TRACE4(( "Tables count: %ld\n", face->toc.count ));
@@ -126,7 +126,7 @@ THE SOFTWARE.
       for ( i = 0; i < toc->count; i++ )
       {
         for( j = 0; j < sizeof ( tableNames ) / sizeof ( tableNames[0] ); j++ )
-          if ( tables[i].type == ( 1 << j ) )
+          if ( tables[i].type == (unsigned int)( 1 << j ) )
             name=tableNames[j];
         FT_TRACE4(( "Table %d: type=%-6s format=0x%04lX "
                     "size=0x%06lX (%8ld) offset=0x%04lX\n",
