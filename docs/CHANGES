@@ -20,6 +20,9 @@ LATEST CHANGES BETWEEN 2.1.10 and 2.1.9
       setting  family  and  style in SFNT  fonts  (patch from Kornfeld
       Eliyahu Peter).
 
+    - A  new  API `FT_Sfnt_Table_Info'  (in FT_TRUETYPE_TABLES_H)  has
+      been added to retrieve name and size information of SFNT tables.
+
 
 LATEST CHANGES BETWEEN 2.1.9 and 2.1.8
 
