@@ -181,6 +181,24 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
+  /*    FT_Outline_Check                                                   */
+  /*                                                                       */
+  /* <Description>                                                         */
+  /*    Check the content of an outline descriptor                         */
+  /*                                                                       */
+  /* <Input>                                                               */
+  /*    outline :: handle to source outline                                */
+  /*                                                                       */
+  /* <Return>                                                              */
+  /*    FreeType error code.  0 means success.                             */
+  /*                                                                       */
+  FT_EXPORT( FT_Error )
+  FT_Outline_Check( FT_Outline*  outline );
+
+
+  /*************************************************************************/
+  /*                                                                       */
+  /* <Function>                                                            */
   /*    FT_Outline_Get_CBox                                                */
   /*                                                                       */
   /* <Description>                                                         */

@@ -365,15 +365,19 @@
         char*  full   = face->type1.font_info.full_name;
         char*  family = root->family_name;
 
-
-        while ( *family && *full == *family )
+        if ( full )
         {
-          family++;
-          full++;
+          while ( *family && *full == *family )
+          {
+            family++;
+            full++;
+          }
+  
+          root->style_name = ( *full == ' ' ? full + 1
+                                            : (char *)"Regular" );
         }
-
-        root->style_name = ( *full == ' ' ? full + 1
-                                          : (char *)"Regular" );
+        else
+          root->style_name = "Regular";
       }
       else
       {
