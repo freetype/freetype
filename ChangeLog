@@ -1,3 +1,9 @@
+2002-01-13  Werner Lemberg  <wl@gnu.org>
+
+	* builds/unix/freetype2.a4: The script was still buggy.
+	* builds/unix/freetype-config.in: Make it really work for any install
+	prefix.
+
 2002-01-10  Werner Lemberg  <wl@gnu.org>
 
 	* builds/unix/freetype2.a4: Fix some serious bugs.
