@@ -2420,13 +2420,13 @@
       patch = library->version_patch;
     }
 
-    if ( *amajor )
+    if ( amajor )
       *amajor = major;
 
-    if ( *aminor )
+    if ( aminor )
       *aminor = minor;
 
-    if ( *apatch )
+    if ( apatch )
       *apatch = patch;
   }
 
