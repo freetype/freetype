@@ -153,7 +153,7 @@ else
   #
   EXES := ftlint ftview fttimer compos ftstring
 
-  ifneq ($(findstring $(PLATFORM),os2 unix),)
+  ifneq ($(findstring $(PLATFORM),os2 unix win32),)
     EXES += ttdebug
   endif
 
@@ -182,9 +182,6 @@ else
 	  $(COMPILE) $T$@ $<
 
   $(OBJ_)compos.$O: $(SRC_DIR_)compos.c
-	  $(COMPILE) $T$@ $<
-
-  $(OBJ_)ftgrays.$O: $(SRC_DIR_)ftgrays.c
 	  $(COMPILE) $T$@ $<
 
   $(OBJ_)ftgrays2.$O: $(SRC_DIR_)ftgrays2.c
@@ -264,18 +261,18 @@ else
 	  $(LINK)
 
 
-  $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays.$O
-	  $(GRAPH_LINK) $(OBJ_)ftgrays.$O
+  $(BIN_)ftview$E: $(OBJ_)ftview.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
+	  $(GRAPH_LINK)
 
-  $(BIN_)ftstring$E: $(OBJ_)ftstring.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays.$O
-	  $(GRAPH_LINK) $(OBJ_)ftgrays.$O
+  $(BIN_)ftstring$E: $(OBJ_)ftstring.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
+	  $(GRAPH_LINK)
 
 
   $(BIN_)try$E: $(OBJ_)try.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays2.$O
 	  $(GRAPH_LINK) $(OBJ_)ftgrays2.$O
 
-  $(BIN_)fttimer$E: $(OBJ_)fttimer.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays.$O
-	  $(GRAPH_LINK) $(OBJ_)ftgrays.$O
+  $(BIN_)fttimer$E: $(OBJ_)fttimer.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ)
+	  $(GRAPH_LINK)
 
   $(BIN_)fttimer2$E: $(OBJ_)fttimer2.$O $(FTLIB) $(GRAPH_LIB) $(COMMON_OBJ) $(OBJ_)ftgrays2.$O
 	  $(GRAPH_LINK) $(OBJ_)ftgrays2.$O
