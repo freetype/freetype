@@ -32,6 +32,9 @@ LATEST CHANGES BETWEEN 2.1.8 and 2.1.7
 
     - The flex operator didn't work for CFF fonts.
 
+    - PS glyphs which use the `hintmask' operator haven't been rendered
+      correctly in some cases.
+
     - Metrics for BDF and PCF bitmap font formats have been fixed.
 
     - The   `freetype-config'   script   now  handles   --prefix   and
