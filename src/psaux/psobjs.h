@@ -82,27 +82,27 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   PS_Parser_ToToken( PS_Parser  parser,
-              T1_Token   token );
+                     T1_Token   token );
 
   FT_LOCAL( void )
   PS_Parser_ToTokenArray( PS_Parser  parser,
-                   T1_Token   tokens,
-                   FT_UInt     max_tokens,
-                   FT_Int*     pnum_tokens );
+                          T1_Token   tokens,
+                          FT_UInt    max_tokens,
+                          FT_Int*    pnum_tokens );
 
   FT_LOCAL( FT_Error )
   PS_Parser_LoadField( PS_Parser       parser,
-                 const T1_Field  field,
-                 void**           objects,
-                 FT_UInt          max_objects,
-                 FT_ULong*        pflags );
+                       const T1_Field  field,
+                       void**          objects,
+                       FT_UInt         max_objects,
+                       FT_ULong*       pflags );
 
   FT_LOCAL( FT_Error )
   PS_Parser_LoadFieldTable( PS_Parser       parser,
-                       const T1_Field  field,
-                       void**           objects,
-                       FT_UInt          max_objects,
-                       FT_ULong*        pflags );
+                            const T1_Field  field,
+                            void**          objects,
+                            FT_UInt         max_objects,
+                            FT_ULong*       pflags );
 
   FT_LOCAL( FT_Long )
   PS_Parser_ToInt( PS_Parser  parser );
@@ -115,14 +115,14 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Int )
   PS_Parser_ToCoordArray( PS_Parser  parser,
-                   FT_Int      max_coords,
-                   FT_Short*   coords );
+                          FT_Int     max_coords,
+                          FT_Short*  coords );
 
   FT_LOCAL( FT_Int )
   PS_Parser_ToFixedArray( PS_Parser  parser,
-                   FT_Int      max_values,
-                   FT_Fixed*   values,
-                   FT_Int      power_ten );
+                          FT_Int     max_values,
+                          FT_Fixed*  values,
+                          FT_Int     power_ten );
 
 
   FT_LOCAL( void )
